@@ -1,0 +1,406 @@
+﻿/* YUI Overrides 
+----------------------------------------------------------*/
+#doc4 {margin:10px auto;}
+
+#doc3 {margin: auto 0px; min-width:970px;}
+
+#bd {padding:14px; background:#f9faf5; margin:0 4px;}
+
+#ft {text-align:center;}
+
+/* TinyMCE Overides 
+----------------------------------------------------------*/
+
+.defaultSkin table.mceLayout {
+    width:90% !important;
+    margin: 0 0 20px 0 !important;
+    }
+
+/*Defaults
+----------------------------------------------------------*/
+
+/*TODO - Remove one of the background colors*/
+html {height: 100%;	color:#525e50; background-color:#b0b4a1; background-color:#8a8f7a;}
+
+body {font-family: Frutiger, "Frutiger Linotype", Univers, Calibri, "Gill Sans", "Gill Sans MT", "Myriad Pro", Myriad, "DejaVu Sans Condensed", "Liberation Sans", "Nimbus Sans L", Tahoma, Geneva, "Helvetica Neue", Helvetica, Arial, sans-serif;
+	height: 100%;
+	width:100%;
+	text-align:left;
+	color:#5a5b32;
+	font-size: 93%; /*12px*/
+}
+
+/* ---------- Headings and defaults ---------- */
+h1,h2,h3,h4,h5,h6,legend {padding:4px 0; font-family:"Palatino Linotype", Palatino, Palladio, "URW Palladio L", "Book Antiqua", Baskerville, "Bookman Old Style", "Bitstream Charter", "Nimbus Roman No9 L", Garamond, "Apple Garamond", "ITC Garamond Narrow", "New Century Schoolbook", "Century Schoolbook", "Century Schoolbook L", Georgia, serif; font-weight:normal; font-style: normal;}
+
+h1 {font-size: 182%;} /*24px*/
+h2 {font-size: 161.6%;} /*21px*/
+h3 {font-size: 138.5%;} /*18px*/
+h4 {font-size: 123.1%;} /*16px*/
+h5 {font-size: 116%;} /*15px*/ 
+h6 {font-size: 108%;} /*14px*/ 
+.largeText {font-size: 108%;} /*14px*/
+.defaultText {font-size: 100%;} /*13px*/
+.smallText {font-size: 85%;} /*12px*/
+
+p {margin:4px;}
+
+strong {font-weight:700;}
+
+/* ---------- Links ---------- */
+a, a:link, a:visited {text-decoration:none; color:#1e5d7d;}
+a:hover, a:active {text-decoration:underline; color:#1e5d7d;}
+
+a.linkButton, a.linkButton:visited {
+font-family: Frutiger, "Frutiger Linotype", Univers, Calibri, "Gill Sans", "Gill Sans MT", "Myriad Pro", Myriad, "DejaVu Sans Condensed", "Liberation Sans", "Nimbus Sans L", Tahoma, Geneva, "Helvetica Neue", Helvetica, Arial, sans-serif;
+    display:inline-block;
+	text-align:center;
+	text-decoration:none;
+    padding: 3px 8px 3px 8px;
+	margin:20px 4px 0 4px;
+	background:url(../images/tableHeaderBackground.gif) repeat-x top left #dddfcb;
+	border:1px solid #d2d6c6;
+	color:#5a5b32;
+	cursor:pointer;
+}
+
+
+/* Header - Branding and Login  
+----------------------------------------------------------*/
+#hd {
+	min-width:960px;
+	display:block;
+	height:60px;
+	background:url(../images/background_header.jpg) no-repeat bottom right #8a8f7a;
+}
+
+#hd h1 a {
+	background:url(../images/orchardLogo.jpg) no-repeat;
+	float:left;
+	width:105px;
+	height:60px;
+	position:relative;
+	top:-4px;
+	margin:0 0 -14px 18px;
+	z-index:0;
+	}
+
+#hd a, #hd a:visited, #hd a:active {
+	display:block;
+	position:relative;
+	padding:14px 0 0 12px;
+	color: #e2e4dd;
+}
+
+#login{
+	float:right;
+	display:block;
+	margin:20px 20px 0 0;
+	color:#1a1505;
+}
+
+#login a, #login a:visited, #login a:active {color: #e2e4dd; display:inline; padding:0px;}
+
+#login a:hover {color:#ffea9b;}
+
+
+/* Left navigation pane
+----------------------------------------------------------*/
+
+.leftNavMod {
+	/*border:1px #bdb791 solid; Old border color*/
+	border:1px solid #d2d6c6;
+	margin: 10px 0 14px 0;
+	background:#FFF;
+	}
+
+.leftNavMod h4 {
+	padding: 4px 4px 6px 8px;
+	background:url(../images/tableHeaderBackground.gif) repeat-x top left #dddfcb;
+    cursor:pointer;
+    }
+
+/* Unordered list links in left navigation pane
+----------------------------------------------------------*/
+
+.leftNavMod ul a {
+	color:#5a5b32;
+	display:block;
+	height:28px;
+	line-height:28px;
+	padding:0px 0px 0px 12px;
+	text-decoration:none;
+}
+
+.leftNavMod ul a:visited{
+    color: #2b2b2b;
+}
+
+.leftNavMod ul a:hover {
+	color: #3e4301;
+	background:#f0ecd2;
+	text-decoration:underline;
+}
+
+/* Confirmations;
+----------------------------------------------------------*/
+
+div.confirmation, div.warning, div.critical {
+    padding:4px;
+	margin: 10px 0 4px 0;
+}
+
+.confirmation {
+	background:#e6f1c9;
+	border:1px solid #cfe493;
+}
+
+.warning {
+	background:#fdf5bc;
+	border:1px solid #ffea9b;
+}
+
+.critical {
+	background:#e68585;
+	border:1px solid #990808;
+	color:#fff;
+}
+
+/* Forms   
+----------------------------------------------------------*/
+
+.formList li {
+	line-height:24px;
+}
+
+fieldset {
+	margin:10px;
+	padding:10px;
+	border:1px solid #d2d6c6;
+}
+
+label {
+	display: block;
+	font-weight:700;
+	margin:8px 4px -2px 0px;
+}
+
+label span {
+	font-weight:normal;
+}
+
+legend {
+	font-size:150%;
+	color:#525e50;
+}
+
+select, textarea, #PublishLaterDate, .inputText{
+	font-family: Frutiger, "Frutiger Linotype", Univers, Calibri, "Gill Sans", "Gill Sans MT", "Myriad Pro", Myriad, "DejaVu Sans Condensed", "Liberation Sans", "Nimbus Sans L", Tahoma, Geneva, "Helvetica Neue", Helvetica, Arial, sans-serif;
+	font-size:102%;
+	margin:4px 4px 4px 0;
+	padding:2px;
+	border:1px solid #d2d6c6;
+	color:#5a5b32;
+}
+
+textarea {
+	width:80%;
+	height:260px;
+}
+
+.radioButton {
+margin:0 6px 0 0;
+}
+
+input[button], button, .button {
+	font-family: Frutiger, "Frutiger Linotype", Univers, Calibri, "Gill Sans", "Gill Sans MT", "Myriad Pro", Myriad, "DejaVu Sans Condensed", "Liberation Sans", "Nimbus Sans L", Tahoma, Geneva, "Helvetica Neue", Helvetica, Arial, sans-serif;
+	text-align:center;
+	padding: 0px 8px;
+	height: 26px;
+	margin:20px 4px 0 4px;
+	background:url(../images/tableHeaderBackground.gif) repeat-x top left #dddfcb;
+	border:1px solid #d2d6c6;
+	color:#5a5b32;
+	cursor:pointer;
+}
+
+.buttonFocus {color:#f6faea; border:1px solid #666d51; background:#8a8f7a;}
+
+
+#permalink{
+	width:200px;
+}
+
+.inputText {
+	width:80%;
+}
+
+.inputTextLarge {
+	font-size:130%;
+	font-weight:500;
+}
+
+.helperText {
+	margin:-4px 0 8px 0;
+}
+
+
+#Revision_Slug{
+    width:245px;
+}
+/* ---------- Sidebar forms ---------- */
+
+.sideBar fieldset {margin:0px; border:none;}
+
+#Date {width:80px; margin:4px 4px 4px 16px;}
+#Hour, #Minutes {width:30px;}
+
+/* ---------- Actions form elements and filtering ---------- */
+ol.actions {margin:20px 0 0 0;}
+
+ol.actions .button {margin:4px 4px 4px -8px;}
+
+ol.actions label {
+	margin:6px 0 0 0;
+	font-size:112%;
+	}
+
+.filterActions {
+	float:right;
+	margin:10px 2px 0 0;
+}
+
+/* Tables;
+----------------------------------------------------------*/
+
+
+table {
+	border-collapse: separate;
+	width: 100%;
+	border-spacing: 0px;
+	border:1px solid #B0B083;
+	background:#fff;
+}
+
+tbody 
+{
+	border-spacing: 0px;
+	vertical-align: middle;
+}
+
+thead, th {
+	font-size:100%; /*13px*/
+	font-weight:700;
+	text-align:left;
+	background:url(../images/tableHeaderBackground.gif) repeat-x top left #dddfcb;
+	overflow:hidden;
+}
+
+
+.trhover{background-color:#f0f3d6;}
+
+th, td {
+	padding: 8px 12px;
+	border-spacing: 0px;
+	display:table-cell;
+	vertical-align: middle;
+	border-bottom: 1px solid #EAE9D9;
+}
+
+caption {
+	text-indent: 0px;
+	font-size:110%;
+	padding:8px 0 8px 0;
+}
+
+col {
+	border-spacing: 0px;
+	display: table-column;
+	}
+	
+colgroup 
+{
+	border-spacing: 0px;
+	display: table-column-group;
+}
+
+tr.critical {background:#e68585; border:inherit;}
+
+tr.warning {background:#fdf5bc; border:inherit;}
+
+/* Horizontal lists
+----------------------------------------------------------*/
+
+ul.horizontal, ol.horizontal {
+	margin:0;
+	padding:0;
+	list-style:none;
+}
+
+ul.horizontal li, ol.horizontal li {
+	float:left;
+	margin:0 4px;
+}
+
+ul.horizontal li a, ul.horizontal li a:visited, ul.horizontal li a:active, ol.horizontal li a, ol.horizontal li a:visited, ol.horizontal li a:active {
+	display:block;
+	text-decoration: none;
+}
+
+/* Miscellaneous;
+----------------------------------------------------------*/
+
+.templateThumbnail{
+ width: 124px;
+ height: 144px;
+ border:1px solid #000;
+ margin: 4px 4px 20px 16px;
+}
+
+.previewImage {
+	width:70%;
+	height:70%;
+	border:1px solid #525e50;
+}
+
+
+
+/* Extensions;
+----------------------------------------------------------*/
+
+.floatLeft {float: left;} /*Use this class to float anything to the left*/
+
+.floatRight {float: right;}  /*Use this class to float anything to the right*/
+
+.alignRight {text-align: right;}
+
+.Inline {display: inline;}
+
+.center {margin:0 auto;}  /*Center*/
+
+.clearLayout {clear:both;}  /*Use this class clear layout*/
+
+.disabled {color:#CCC;}
+
+.topSpacer{margin-top: 20px;}
+
+.bottomSpacer{margin-bottom: 20px;}
+
+.displayText {display:none;}
+
+.separator {border-bottom:1px dashed #E4E7DC; margin-bottom:8px; padding-bottom:2px;}
+
+/*TODO - Remove roundCorners class*/
+table, textarea, #bd, .button, .inputText, .inputTextLarge, .inputTextPermalink, .linkButton, .leftNavMod, div.confirmation, div.warning, div.critical, .roundCorners {
+
+	-moz-border-radius-bottomleft:4px;
+	-moz-border-radius-bottomright:4px;
+	-moz-border-radius-topleft:4px;
+	-moz-border-radius-topright:4px;
+	
+	-webkit-border-top-left-radius: 4px;
+	-webkit-border-top-right-radius: 4px;
+	-webkit-border-bottom-left-radius: 4px;
+	-webkit-border-bottom-right-radius: 4px;
+}
+

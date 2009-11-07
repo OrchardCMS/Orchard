@@ -1,0 +1,325 @@
+﻿/*----------------------------------------------------------
+The base color for this template is #696969. If you'd like
+to use a different color start by replacing all instances of
+#696969 with your new color.
+----------------------------------------------------------*/
+body,div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pre,form,fieldset,input,textarea,p,
+blockquote,th,td {margin:0; padding:0; }
+table { border-collapse:collapse; border-spacing:0; }
+fieldset,img { border:0; }
+address,caption,cite,code,dfn,em,strong,th,var { font-style:normal; font-weight:normal; }
+ol,ul { list-style:none; }
+caption,th { text-align:left; }
+h1,h2,h3,h4,h5,h6 { font-size:100%; font-weight:normal; }
+q:before,q:after { content:”; }
+abbr,acronym { border:0; }
+
+body
+{
+    background-color: #edebd5;
+    font-size: .80em;
+    font-family:"Helvetica Neue", "Lucida Grande", Segoe UI, Arial, Helvetica, Verdana, sans-serif;
+    margin: 0;
+    padding: 0;
+    color: #696969;
+}
+
+a:link
+{
+    color: #034af3;
+    text-decoration: underline;
+}
+a:visited
+{
+    color: #505abc;
+}
+a:hover
+{
+    color: #1d60ff;
+    text-decoration: none;
+}
+a:active
+{
+    color: #12eb87;
+}
+
+p
+{
+    line-height: 1.9em;
+	margin: 1em .5em .5em .8em;
+
+}
+
+
+/* HEADINGS   
+----------------------------------------------------------*/
+h1, h2, h3, h4, h5, h6
+{
+    font-size: 1.5em;
+    font-family:Georgia,serif;
+	color:#666;
+	font-variant: small-caps; text-transform: none; font-weight: 200; margin-bottom: 0;
+
+}
+
+h1
+{
+    font-size: 1.6em;
+    padding-bottom: 0;
+    margin-bottom: 0;
+}
+h2
+{
+	font-size: 1.5em;
+	padding: 10px 10px 0px 0px;
+    border-bottom:1px dotted #999;
+}
+h3
+{
+    font-size: 1.2em;
+}
+h4
+{
+    font-size: 1.1em;
+}
+h5, h6
+{
+    font-size: 1em;
+}
+
+/* this rule styles <h2> tags that are the 
+first child of the left and right table columns */
+.rightColumn > h1, .rightColumn > h2, .leftColumn > h1, .leftColumn > h2
+{
+    margin-top: 0;
+}
+
+/* PRIMARY LAYOUT ELEMENTS   
+----------------------------------------------------------*/
+
+/* you can specify a greater or lesser pixel width for the 
+page. */
+
+#header
+{
+    width: 100%;
+    height: 75px;
+    border-bottom:1px #d0ceb3 solid;
+    background: #fff url('/Content/Images/header_background.gif') repeat top left;
+}
+
+#innerheader
+{
+    width: 960px;
+	height: 74px;
+	margin: 0px auto 0px auto;
+	border:1px #d0ceb3 solid;
+	background: #fff url('/Content/Images/innerheader_background.gif') repeat top left;
+}
+
+#innerheader h1
+{
+    font-weight:400; 
+    border: none;
+	margin:10px 0px 0px 12px;
+    padding:4px 8px 8px 8px;
+    font-size: 22px !important;
+}
+
+
+#page
+{
+    width: 960px;
+    margin-left: auto;
+    margin-right: auto;
+    border:1px #d0ceb3 solid;
+    border-top:1px #edebd5 solid;
+	background: #fff url('/Content/Images/nav_background.gif') repeat-y top left;
+}
+
+
+#main
+{
+    background-color: #fff;
+    min-height: 420px;
+    width: 700px;
+    margin:10px 10px 30px 22px;
+    float:left;
+    height: auto;
+}
+
+#sideBar {
+    float:left;
+    width:198px;
+    }
+
+#footer
+{
+    clear: both;
+}
+
+/* NAV   
+----------------------------------------------------------*/
+
+#menucontainer
+{
+	border-top:1px dotted #999;
+	border-bottom:1px dotted #999;
+	display:block;
+	margin:43px 6px 0 6px;
+}
+
+
+ul#menu
+{
+    list-style:none;
+}
+
+
+ul#menu li a
+{
+   display: block;
+   padding: 0 1.5em;
+   line-height: 2.25em;
+   text-decoration:none;
+   border:1px #FFF solid;
+    }
+
+
+ul#menu li a:hover
+{
+   display: block;
+   padding: 0 1.5em;
+   line-height: 2.25em;
+   text-decoration:none;
+   background-color:#EEE;
+   border:1px #DDD solid;
+
+
+}
+
+/* Form LAYOUT ELEMENTS   
+----------------------------------------------------------*/
+
+fieldset {
+margin: 1em 0;
+margin: 1em .5em .5em .8em;
+padding: 1em;
+border:1px #d0ceb3 solid;
+width: 520px;
+}
+
+legend {
+font-size: 1.1em;
+font-weight: 600;
+color: #666;
+padding: 2px 4px 8px 4px;
+}
+
+label {
+display: block;
+}
+
+p.formEntry{
+margin: 2px 12px 2px 10px;
+}
+
+input.confirmPassword, input.password, input.textbox {
+width: 200px;
+border:1px #d0ceb3 solid;
+}
+
+
+input[type="radio"] {
+}
+
+input[type="checkbox"] {
+}
+
+input[type="submit"] {
+font-weight: 600;
+padding: 2px 6px 2px 6px;
+margin: 10px 0px 0px 0px;
+color: #666;
+border-top: 1px solid #CCC;
+border-right: 1px solid #a8aeb6;
+border-bottom: 1px solid #a8aeb6;
+border-left: 1px solid #CCC;
+background: #dcdfe2;
+cursor:pointer;
+}
+
+
+.field-validation-error
+{
+    color: #ff0000;
+    margin: 0px 0px 0px 10px;
+}
+
+.input-validation-error.textbox
+{
+    border: 1px solid #ff0000;
+    background-color: #ffeeee;
+}
+
+.input-validation-error.password
+{
+    border: 1px solid #ff0000;
+    background-color: #ffeeee;
+}
+
+.input-validation-error.confirmPassword
+{
+    border: 1px solid #ff0000;
+    background-color: #ffeeee;
+}
+
+.validation-summary-errors
+{
+    font-weight: bold;
+    color: #ff0000;
+}
+
+/* MISC  
+----------------------------------------------------------*/
+.clear
+{
+    clear: both;
+}
+
+.error
+{
+    color:Red;
+}
+
+
+#title
+{
+    float:left;
+    text-align:left;
+    margin:8px 0px;
+    background: url('/Content/Images/title_background.gif') no-repeat;
+    height:55px;
+	width:329px;
+
+}
+
+#logindisplay
+{
+    font-size:1.1em;
+    display:block;
+    text-align:right;
+    margin:10px;
+}
+
+#logindisplay a:link
+{
+    text-decoration: underline;
+}
+
+#logindisplay a:visited
+{
+    text-decoration: underline;
+}
+
+

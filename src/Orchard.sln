@@ -1,0 +1,146 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual Studio 2008
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orchard", "Orchard\Orchard.csproj", "{2D1D92BB-4555-4CBE-8D0E-63563D6CE4C6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orchard.Tests", "Orchard.Tests\Orchard.Tests.csproj", "{ABC826D4-2FA1-4F2F-87DE-E6095F653810}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orchard.Web", "Orchard.Web\Orchard.Web.csproj", "{50B779EA-EC00-4699-84C0-03B395C365D2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orchard.Web.Tests", "Orchard.Web.Tests\Orchard.Web.Tests.csproj", "{F112851D-B023-4746-B6B1-8D2E5AD8F7AA}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Packages", "Packages", "{E9C9F120-07BA-4DFB-B9C3-3AFB9D44C9D5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orchard.CmsPages", "Orchard.Web\Packages\Orchard.CmsPages\Orchard.CmsPages.csproj", "{1ECC1131-0D0C-4822-AD90-E979868C63F3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orchard.CmsPages.Tests", "Orchard.Web\Packages\Orchard.CmsPages.Tests\Orchard.CmsPages.Tests.csproj", "{0BF56F10-3023-4465-B273-026D22206355}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TinyMce", "Orchard.Web\Packages\TinyMce\TinyMce.csproj", "{954CA994-D204-468B-9D69-51F6AD3E1C29}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orchard.Media", "Orchard.Web\Packages\Orchard.Media\Orchard.Media.csproj", "{D9A7B330-CD22-4DA1-A95A-8DE1982AD8EB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orchard.Media.Tests", "Orchard.Web\Packages\Orchard.Media.Tests\Orchard.Media.Tests.csproj", "{15CFEF40-F2C2-44DD-ADAF-18A26DA2320C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orchard.XmlRpc", "Orchard.Web\Packages\Orchard.XmlRpc\Orchard.XmlRpc.csproj", "{0DC6B598-6D03-4923-A6C2-274D09854117}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orchard.XmlRpc.Tests", "Orchard.Web\Packages\Orchard.XmlRpc.Tests\Orchard.XmlRpc.Tests.csproj", "{58506223-CB7D-474F-B936-6E17D53B0FB8}"
+EndProject
+Global
+	GlobalSection(TeamFoundationVersionControl) = preSolution
+		SccNumberOfProjects = 9
+		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
+		SccTeamFoundationServer = https://tfs10.codeplex.com/
+		SccProjectUniqueName0 = Orchard\\Orchard.csproj
+		SccProjectName0 = Orchard
+		SccAuxPath0 = https://tfs10.codeplex.com
+		SccLocalPath0 = Orchard
+		SccProvider0 = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
+		SccProjectUniqueName1 = Orchard.Tests\\Orchard.Tests.csproj
+		SccProjectName1 = Orchard.Tests
+		SccAuxPath1 = https://tfs10.codeplex.com
+		SccLocalPath1 = Orchard.Tests
+		SccProvider1 = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
+		SccProjectUniqueName2 = Orchard.Web\\Orchard.Web.csproj
+		SccProjectName2 = Orchard.Web
+		SccAuxPath2 = https://tfs10.codeplex.com
+		SccLocalPath2 = Orchard.Web
+		SccProvider2 = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
+		SccProjectUniqueName3 = Orchard.Web.Tests\\Orchard.Web.Tests.csproj
+		SccProjectName3 = Orchard.Web.Tests
+		SccAuxPath3 = https://tfs10.codeplex.com
+		SccLocalPath3 = Orchard.Web.Tests
+		SccProvider3 = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
+		SccProjectUniqueName4 = Orchard.Web\\Packages\\Orchard.CmsPages\\Orchard.CmsPages.csproj
+		SccProjectTopLevelParentUniqueName4 = Orchard.sln
+		SccProjectName4 = Orchard.Web/Packages/Orchard.CmsPages
+		SccAuxPath4 = https://tfs10.codeplex.com
+		SccLocalPath4 = Orchard.Web\\Packages\\Orchard.CmsPages
+		SccProvider4 = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
+		SccProjectUniqueName5 = Orchard.Web\\Packages\\Orchard.CmsPages.Tests\\Orchard.CmsPages.Tests.csproj
+		SccProjectTopLevelParentUniqueName5 = Orchard.sln
+		SccProjectName5 = Orchard.Web/Packages/Orchard.CmsPages.Tests
+		SccAuxPath5 = https://tfs10.codeplex.com
+		SccLocalPath5 = Orchard.Web\\Packages\\Orchard.CmsPages.Tests
+		SccProvider5 = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
+		SccProjectUniqueName6 = Orchard.Web\\Packages\\Orchard.Media\\Orchard.Media.csproj
+		SccProjectTopLevelParentUniqueName6 = Orchard.sln
+		SccProjectName6 = Orchard.Web/Packages/Orchard.Media
+		SccAuxPath6 = https://tfs10.codeplex.com
+		SccLocalPath6 = Orchard.Web\\Packages\\Orchard.Media
+		SccProvider6 = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
+		SccProjectUniqueName7 = Orchard.Web\\Packages\\TinyMce\\TinyMce.csproj
+		SccProjectTopLevelParentUniqueName7 = Orchard.sln
+		SccProjectName7 = Orchard.Web/Packages/TinyMce
+		SccAuxPath7 = https://tfs10.codeplex.com
+		SccLocalPath7 = Orchard.Web\\Packages\\TinyMce
+		SccProvider7 = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
+		SccProjectUniqueName8 = Orchard.Web\\Packages\\Orchard.Media.Tests\\Orchard.Media.Tests.csproj
+		SccProjectTopLevelParentUniqueName8 = Orchard.sln
+		SccProjectName8 = Orchard.Web/Packages/Orchard.Media.Tests
+		SccAuxPath8 = https://tfs10.codeplex.com
+		SccLocalPath8 = Orchard.Web\\Packages\\Orchard.Media.Tests
+		SccProvider8 = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
+	EndGlobalSection
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{2D1D92BB-4555-4CBE-8D0E-63563D6CE4C6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2D1D92BB-4555-4CBE-8D0E-63563D6CE4C6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2D1D92BB-4555-4CBE-8D0E-63563D6CE4C6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2D1D92BB-4555-4CBE-8D0E-63563D6CE4C6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ABC826D4-2FA1-4F2F-87DE-E6095F653810}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ABC826D4-2FA1-4F2F-87DE-E6095F653810}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ABC826D4-2FA1-4F2F-87DE-E6095F653810}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ABC826D4-2FA1-4F2F-87DE-E6095F653810}.Release|Any CPU.Build.0 = Release|Any CPU
+		{50B779EA-EC00-4699-84C0-03B395C365D2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{50B779EA-EC00-4699-84C0-03B395C365D2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{50B779EA-EC00-4699-84C0-03B395C365D2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{50B779EA-EC00-4699-84C0-03B395C365D2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F112851D-B023-4746-B6B1-8D2E5AD8F7AA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F112851D-B023-4746-B6B1-8D2E5AD8F7AA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F112851D-B023-4746-B6B1-8D2E5AD8F7AA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F112851D-B023-4746-B6B1-8D2E5AD8F7AA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1ECC1131-0D0C-4822-AD90-E979868C63F3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1ECC1131-0D0C-4822-AD90-E979868C63F3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1ECC1131-0D0C-4822-AD90-E979868C63F3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1ECC1131-0D0C-4822-AD90-E979868C63F3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0BF56F10-3023-4465-B273-026D22206355}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0BF56F10-3023-4465-B273-026D22206355}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0BF56F10-3023-4465-B273-026D22206355}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0BF56F10-3023-4465-B273-026D22206355}.Release|Any CPU.Build.0 = Release|Any CPU
+		{954CA994-D204-468B-9D69-51F6AD3E1C29}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{954CA994-D204-468B-9D69-51F6AD3E1C29}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{954CA994-D204-468B-9D69-51F6AD3E1C29}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{954CA994-D204-468B-9D69-51F6AD3E1C29}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D9A7B330-CD22-4DA1-A95A-8DE1982AD8EB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D9A7B330-CD22-4DA1-A95A-8DE1982AD8EB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D9A7B330-CD22-4DA1-A95A-8DE1982AD8EB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D9A7B330-CD22-4DA1-A95A-8DE1982AD8EB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{15CFEF40-F2C2-44DD-ADAF-18A26DA2320C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{15CFEF40-F2C2-44DD-ADAF-18A26DA2320C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{15CFEF40-F2C2-44DD-ADAF-18A26DA2320C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{15CFEF40-F2C2-44DD-ADAF-18A26DA2320C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0DC6B598-6D03-4923-A6C2-274D09854117}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0DC6B598-6D03-4923-A6C2-274D09854117}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0DC6B598-6D03-4923-A6C2-274D09854117}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0DC6B598-6D03-4923-A6C2-274D09854117}.Release|Any CPU.Build.0 = Release|Any CPU
+		{58506223-CB7D-474F-B936-6E17D53B0FB8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{58506223-CB7D-474F-B936-6E17D53B0FB8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{58506223-CB7D-474F-B936-6E17D53B0FB8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{58506223-CB7D-474F-B936-6E17D53B0FB8}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{1ECC1131-0D0C-4822-AD90-E979868C63F3} = {E9C9F120-07BA-4DFB-B9C3-3AFB9D44C9D5}
+		{0BF56F10-3023-4465-B273-026D22206355} = {E9C9F120-07BA-4DFB-B9C3-3AFB9D44C9D5}
+		{954CA994-D204-468B-9D69-51F6AD3E1C29} = {E9C9F120-07BA-4DFB-B9C3-3AFB9D44C9D5}
+		{D9A7B330-CD22-4DA1-A95A-8DE1982AD8EB} = {E9C9F120-07BA-4DFB-B9C3-3AFB9D44C9D5}
+		{15CFEF40-F2C2-44DD-ADAF-18A26DA2320C} = {E9C9F120-07BA-4DFB-B9C3-3AFB9D44C9D5}
+		{0DC6B598-6D03-4923-A6C2-274D09854117} = {E9C9F120-07BA-4DFB-B9C3-3AFB9D44C9D5}
+		{58506223-CB7D-474F-B936-6E17D53B0FB8} = {E9C9F120-07BA-4DFB-B9C3-3AFB9D44C9D5}
+	EndGlobalSection
+EndGlobal

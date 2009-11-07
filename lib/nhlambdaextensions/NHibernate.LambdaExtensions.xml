@@ -1,0 +1,1187 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>NHibernate.LambdaExtensions</name>
+    </assembly>
+    <members>
+        <member name="T:NHibernate.LambdaExtensions.DetachedCriteria`1">
+            <summary>
+            Provides extra factory method for DetachedCriteria to allow creation with an alias
+            </summary>
+            <remarks>
+            cannot add extension methods to simulate static method on DetachedCriteria
+            </remarks>
+        </member>
+        <member name="M:NHibernate.LambdaExtensions.DetachedCriteria`1.#ctor">
+            <summary>
+            Protected constructor - class not for instantiation
+            </summary>
+        </member>
+        <member name="M:NHibernate.LambdaExtensions.DetachedCriteria`1.Create(System.Linq.Expressions.Expression{System.Func{System.Object}})">
+            <summary>
+            Create a DetachedCriteria with a strongly typed alias
+            </summary>
+            <param name="alias">Lambda expression returning alias reference</param>
+            <returns>Newly created DetachedCriteria</returns>
+        </member>
+        <member name="T:NHibernate.LambdaExtensions.DetachedCriteriaExtensions">
+            <summary>
+            Extension methods for NHibernate DetachedCriteria
+            </summary>
+        </member>
+        <member name="M:NHibernate.LambdaExtensions.DetachedCriteriaExtensions.Add``1(NHibernate.Criterion.DetachedCriteria,System.Linq.Expressions.Expression{System.Func{``0,System.Boolean}})">
+            <summary>
+            Add criterion expressed as a lambda expression
+            </summary>
+            <typeparam name="T">Type (same as criteria type)</typeparam>
+            <param name="criteria">criteria instance</param>
+            <param name="expression">Lambda expression</param>
+            <returns>criteria instance</returns>
+        </member>
+        <member name="M:NHibernate.LambdaExtensions.DetachedCriteriaExtensions.Add(NHibernate.Criterion.DetachedCriteria,System.Linq.Expressions.Expression{System.Func{System.Boolean}})">
+            <summary>
+            Add criterion expressed as a lambda expression
+            </summary>
+            <param name="criteria">criteria instance</param>
+            <param name="expression">Lambda expression</param>
+            <returns>criteria instance</returns>
+        </member>
+        <member name="M:NHibernate.LambdaExtensions.DetachedCriteriaExtensions.AddOrder``1(NHibernate.Criterion.DetachedCriteria,System.Linq.Expressions.Expression{System.Func{``0,System.Object}},System.Func{System.String,NHibernate.Criterion.Order})">
+            <summary>
+            Add order expressed as a lambda expression
+            </summary>
+            <typeparam name="T">Type (same as criteria type)</typeparam>
+            <param name="criteria">criteria instance</param>
+            <param name="expression">Lamba expression</param>
+            <param name="orderDelegate">Order delegate (direction)</param>
+            <returns>criteria instance</returns>
+        </member>
+        <member name="M:NHibernate.LambdaExtensions.DetachedCriteriaExtensions.AddOrder(NHibernate.Criterion.DetachedCriteria,System.Linq.Expressions.Expression{System.Func{System.Object}},System.Func{System.String,NHibernate.Criterion.Order})">
+            <summary>
+            Add order expressed as a lambda expression
+            </summary>
+            <param name="criteria">criteria instance</param>
+            <param name="expression">Lamba expression</param>
+            <param name="orderDelegate">Order delegate (direction)</param>
+            <returns>criteria instance</returns>
+        </member>
+        <member name="M:NHibernate.LambdaExtensions.DetachedCriteriaExtensions.CreateCriteria``1(NHibernate.Criterion.DetachedCriteria,System.Linq.Expressions.Expression{System.Func{``0,System.Object}})">
+            <summary>
+            Create a new DetachedCriteria, "rooted" at the associated entity
+            </summary>
+            <typeparam name="T">Type (same as criteria type)</typeparam>
+            <param name="criteria">criteria instance</param>
+            <param name="expression">Lambda expression returning association path</param>
+            <returns>The created "sub criteria"</returns>
+        </member>
+        <member name="M:NHibernate.LambdaExtensions.DetachedCriteriaExtensions.CreateCriteria(NHibernate.Criterion.DetachedCriteria,System.Linq.Expressions.Expression{System.Func{System.Object}})">
+            <summary>
+            Create a new DetachedCriteria, "rooted" at the associated entity
+            </summary>
+            <param name="criteria">criteria instance</param>
+            <param name="expression">Lambda expression returning association path</param>
+            <returns>The created "sub criteria"</returns>
+        </member>
+        <member name="M:NHibernate.LambdaExtensions.DetachedCriteriaExtensions.CreateCriteria``1(NHibernate.Criterion.DetachedCriteria,System.Linq.Expressions.Expression{System.Func{``0,System.Object}},NHibernate.SqlCommand.JoinType)">
+            <summary>
+            Create a new DetachedCriteria, "rooted" at the associated entity
+            </summary>
+            <typeparam name="T">Type (same as criteria type)</typeparam>
+            <param name="criteria">criteria instance</param>
+            <param name="expression">Lambda expression returning association path</param>
+            <param name="joinType">The type of join to use</param>
+            <returns>The created "sub criteria"</returns>
+        </member>
+        <member name="M:NHibernate.LambdaExtensions.DetachedCriteriaExtensions.CreateCriteria(NHibernate.Criterion.DetachedCriteria,System.Linq.Expressions.Expression{System.Func{System.Object}},NHibernate.SqlCommand.JoinType)">
+            <summary>
+            Create a new DetachedCriteria, "rooted" at the associated entity
+            </summary>
+            <param name="criteria">criteria instance</param>
+            <param name="expression">Lambda expression returning association path</param>
+            <param name="joinType">The type of join to use</param>
+            <returns>The created "sub criteria"</returns>
+        </member>
+        <member name="M:NHibernate.LambdaExtensions.DetachedCriteriaExtensions.CreateCriteria``1(NHibernate.Criterion.DetachedCriteria,System.Linq.Expressions.Expression{System.Func{``0,System.Object}},System.Linq.Expressions.Expression{System.Func{System.Object}})">
+            <summary>
+            Create a new DetachedCriteria, "rooted" at the associated entity
+            </summary>
+            <typeparam name="T">Type (same as criteria type)</typeparam>
+            <param name="criteria">criteria instance</param>
+            <param name="expression">Lambda expression returning association path</param>
+            <param name="alias">Lambda expression returning alias reference</param>
+            <returns>The created "sub criteria"</returns>
+        </member>
+        <member name="M:NHibernate.LambdaExtensions.DetachedCriteriaExtensions.CreateCriteria(NHibernate.Criterion.DetachedCriteria,System.Linq.Expressions.Expression{System.Func{System.Object}},System.Linq.Expressions.Expression{System.Func{System.Object}})">
+            <summary>
+            Create a new DetachedCriteria, "rooted" at the associated entity
+            </summary>
+            <param name="criteria">criteria instance</param>
+            <param name="expression">Lambda expression returning association path</param>
+            <param name="alias">Lambda expression returning alias reference</param>
+            <returns>The created "sub criteria"</returns>
+        </member>
+        <member name="M:NHibernate.LambdaExtensions.DetachedCriteriaExtensions.CreateCriteria``1(NHibernate.Criterion.DetachedCriteria,System.Linq.Expressions.Expression{System.Func{``0,System.Object}},System.Linq.Expressions.Expression{System.Func{System.Object}},NHibernate.SqlCommand.JoinType)">
+            <summary>
+            Create a new DetachedCriteria, "rooted" at the associated entity
+            </summary>
+            <typeparam name="T">Type (same as criteria type)</typeparam>
+            <param name="criteria">criteria instance</param>
+            <param name="expression">Lambda expression returning association path</param>
+            <param name="alias">Lambda expression returning alias reference</param>
+            <param name="joinType">The type of join to use</param>
+            <returns>The created "sub criteria"</returns>
+        </member>
+        <member name="M:NHibernate.LambdaExtensions.DetachedCriteriaExtensions.CreateCriteria(NHibernate.Criterion.DetachedCriteria,System.Linq.Expressions.Expression{System.Func{System.Object}},System.Linq.Expressions.Expression{System.Func{System.Object}},NHibernate.SqlCommand.JoinType)">
+            <summary>
+            Create a new DetachedCriteria, "rooted" at the associated entity
+            </summary>
+            <param name="criteria">criteria instance</param>
+            <param name="expression">Lambda expression returning association path</param>
+            <param name="alias">Lambda expression returning alias reference</param>
+            <param name="joinType">The type of join to use</param>
+            <returns>The created "sub criteria"</returns>
+        </member>
+        <member name="M:NHibernate.LambdaExtensions.DetachedCriteriaExtensions.CreateAlias``1(NHibernate.Criterion.DetachedCriteria,System.Linq.Expressions.Expression{System.Func{``0,System.Object}},System.Linq.Expressions.Expression{System.Func{System.Object}})">
+            <summary>
+            Join an association, assigning an alias to the joined entity
+            </summary>
+            <typeparam name="T">type of association</typeparam>
+            <param name="criteria">criteria instance</param>
+            <param name="expression">Lambda expression returning association path</param>
+            <param name="alias">Lambda expression returning alias reference</param>
+            <returns>criteria instance</returns>
+        </member>
+        <member name="M:NHibernate.LambdaExtensions.DetachedCriteriaExtensions.CreateAlias(NHibernate.Criterion.DetachedCriteria,System.Linq.Expressions.Expression{System.Func{System.Object}},System.Linq.Expressions.Expression{System.Func{System.Object}})">
+            <summary>
+            Join an association, assigning an alias to the joined entity
+            </summary>
+            <param name="criteria">criteria instance</param>
+            <param name="expression">Lambda expression returning association path</param>
+            <param name="alias">Lambda expression returning alias reference</param>
+            <returns>criteria instance</returns>
+        </member>
+        <member name="M:NHibernate.LambdaExtensions.DetachedCriteriaExtensions.CreateAlias``1(NHibernate.Criterion.DetachedCriteria,System.Linq.Expressions.Expression{System.Func{``0,System.Object}},System.Linq.Expressions.Expression{System.Func{System.Object}},NHibernate.SqlCommand.JoinType)">
+            <summary>
+            Join an association, assigning an alias to the joined entity
+            </summary>
+            <typeparam name="T">type of association</typeparam>
+            <param name="criteria">criteria instance</param>
+            <param name="expression">Lambda expression returning association path</param>
+            <param name="alias">Lambda expression returning alias reference</param>
+            <param name="joinType">The type of join to use</param>
+            <returns>criteria instance</returns>
+        </member>
+        <member name="M:NHibernate.LambdaExtensions.DetachedCriteriaExtensions.CreateAlias(NHibernate.Criterion.DetachedCriteria,System.Linq.Expressions.Expression{System.Func{System.Object}},System.Linq.Expressions.Expression{System.Func{System.Object}},NHibernate.SqlCommand.JoinType)">
+            <summary>
+            Join an association, assigning an alias to the joined entity
+            </summary>
+            <param name="criteria">criteria instance</param>
+            <param name="expression">Lambda expression returning association path</param>
+            <param name="alias">Lambda expression returning alias reference</param>
+            <param name="joinType">The type of join to use</param>
+            <returns>criteria instance</returns>
+        </member>
+        <member name="M:NHibernate.LambdaExtensions.DetachedCriteriaExtensions.SetFetchMode``1(NHibernate.Criterion.DetachedCriteria,System.Linq.Expressions.Expression{System.Func{``0,System.Object}},NHibernate.FetchMode)">
+            <summary>
+            Specify an association fetching strategy.
+            </summary>
+            <typeparam name="T">Type (same as criteria type)</typeparam>
+            <param name="criteria">criteria instance</param>
+            <param name="alias">Lambda expression returning alias reference</param>
+            <param name="fetchMode">The Fetch mode.</param>
+            <returns>criteria instance</returns>
+        </member>
+        <member name="M:NHibernate.LambdaExtensions.DetachedCriteriaExtensions.SetFetchMode(NHibernate.Criterion.DetachedCriteria,System.Linq.Expressions.Expression{System.Func{System.Object}},NHibernate.FetchMode)">
+            <summary>
+            Specify an association fetching strategy.
+            </summary>
+            <param name="criteria">criteria instance</param>
+            <param name="alias">Lambda expression returning alias reference</param>
+            <param name="fetchMode">The Fetch mode.</param>
+            <returns>criteria instance</returns>
+        </member>
+        <member name="M:NHibernate.LambdaExtensions.DetachedCriteriaExtensions.As``1(NHibernate.Criterion.DetachedCriteria)">
+            <summary>
+            Extension method to allow comparison of detached criteria (always returns null)
+            </summary>
+            <typeparam name="T">type returned by detached criteria</typeparam>
+            <param name="criteria">the DetachedCriteria instance</param>
+            <returns>returns null (or value-type default)</returns>
+        </member>
+        <member name="M:NHibernate.LambdaExtensions.DetachedCriteriaExtensions.GetCriteriaByAlias(NHibernate.Criterion.DetachedCriteria,System.Linq.Expressions.Expression{System.Func{System.Object}})">
+            <summary>
+            Alows to get a sub criteria by alias.
+            Will return null if the criteria does not exists
+            </summary>
+            <param name="criteria">criteria instance</param>
+            <param name="alias">Lambda expression returning alias reference</param>
+            <returns>The "sub criteria"</returns>
+        </member>
+        <member name="M:NHibernate.LambdaExtensions.DetachedCriteriaExtensions.GetCriteriaByPath``1(NHibernate.Criterion.DetachedCriteria,System.Linq.Expressions.Expression{System.Func{``0,System.Object}})">
+            <summary>
+            Allows to get a sub criteria by path.  Will return null if the criteria does
+            not exists.
+            </summary>
+            <typeparam name="T">Type (same as criteria type)</typeparam>
+            <param name="criteria">criteria instance</param>
+            <param name="expression">Lambda expression returning association path</param>
+            <returns>The "sub criteria"</returns>
+        </member>
+        <member name="M:NHibernate.LambdaExtensions.DetachedCriteriaExtensions.GetCriteriaByPath(NHibernate.Criterion.DetachedCriteria,System.Linq.Expressions.Expression{System.Func{System.Object}})">
+            <summary>
+            Allows to get a sub criteria by path.  Will return null if the criteria does
+            not exists.
+            </summary>
+            <param name="criteria">criteria instance</param>
+            <param name="expression">Lambda expression returning association path</param>
+            <returns>The "sub criteria"</returns>
+        </member>
+        <member name="T:NHibernate.LambdaExtensions.LambdaSubqueryType">
+            <summary>
+            Subquery type enumeration
+            </summary>
+        </member>
+        <member name="F:NHibernate.LambdaExtensions.LambdaSubqueryType.Exact">
+            <summary>exact</summary>
+        </member>
+        <member name="F:NHibernate.LambdaExtensions.LambdaSubqueryType.All">
+            <summary>all</summary>
+        </member>
+        <member name="F:NHibernate.LambdaExtensions.LambdaSubqueryType.Some">
+            <summary>some</summary>
+        </member>
+        <member name="T:NHibernate.LambdaExtensions.ExpressionProcessor">
+            <summary>
+            Converts lambda expressions to NHibernate criterion/order
+            </summary>
+        </member>
+        <member name="M:NHibernate.LambdaExtensions.ExpressionProcessor.#ctor">
+            <summary>
+            Protected constructor - class not for instantiation
+            </summary>
+        </member>
+        <member name="M:NHibernate.LambdaExtensions.ExpressionProcessor.FindMemberExpression(System.Linq.Expressions.Expression)">
+            <summary>
+            Retrieves the name of the property from a member expression
+            </summary>
+            <param name="expression">An expression tree that can contain either a member, or a conversion from a member.
+            If the member is referenced from a null valued object, then the container is treated as an alias.</param>
+            <returns>The name of the member property</returns>
+        </member>
+        <member name="M:NHibernate.LambdaExtensions.ExpressionProcessor.FindDetachedCriteria(System.Linq.Expressions.Expression)">
+            <summary>
+            Retrieves a detached criteria from an appropriate lambda expression
+            </summary>
+            <param name="expression">Expresson for detached criteria using .As&lt;>() extension"/></param>
+            <returns>Evaluated detached criteria</returns>
+        </member>
+        <member name="M:NHibernate.LambdaExtensions.ExpressionProcessor.ProcessExpression``1(System.Linq.Expressions.Expression{System.Func{``0,System.Boolean}})">
+            <summary>
+            Convert a lambda expression to NHibernate ICriterion
+            </summary>
+            <typeparam name="T">The type of the lambda expression</typeparam>
+            <param name="expression">The lambda expression to convert</param>
+            <returns>NHibernate ICriterion</returns>
+        </member>
+        <member name="M:NHibernate.LambdaExtensions.ExpressionProcessor.ProcessExpression(System.Linq.Expressions.Expression{System.Func{System.Boolean}})">
+            <summary>
+            Convert a lambda expression to NHibernate ICriterion
+            </summary>
+            <param name="expression">The lambda expression to convert</param>
+            <returns>NHibernate ICriterion</returns>
+        </member>
+        <member name="M:NHibernate.LambdaExtensions.ExpressionProcessor.ProcessOrder``1(System.Linq.Expressions.Expression{System.Func{``0,System.Object}},System.Func{System.String,NHibernate.Criterion.Order})">
+            <summary>
+            Convert a lambda expression to NHibernate Order
+            </summary>
+            <typeparam name="T">The type of the lambda expression</typeparam>
+            <param name="expression">The lambda expression to convert</param>
+            <param name="orderDelegate">The appropriate order delegate (order direction)</param>
+            <returns>NHibernate Order</returns>
+        </member>
+        <member name="M:NHibernate.LambdaExtensions.ExpressionProcessor.ProcessOrder(System.Linq.Expressions.Expression{System.Func{System.Object}},System.Func{System.String,NHibernate.Criterion.Order})">
+            <summary>
+            Convert a lambda expression to NHibernate Order
+            </summary>
+            <param name="expression">The lambda expression to convert</param>
+            <param name="orderDelegate">The appropriate order delegate (order direction)</param>
+            <returns>NHibernate Order</returns>
+        </member>
+        <member name="M:NHibernate.LambdaExtensions.ExpressionProcessor.ProcessSubquery``1(NHibernate.LambdaExtensions.LambdaSubqueryType,System.Linq.Expressions.Expression{System.Func{``0,System.Boolean}})">
+            <summary>
+            Convert a lambda expression to NHibernate subquery AbstractCriterion
+            </summary>
+            <typeparam name="T">type of member expression</typeparam>
+            <param name="subqueryType">type of subquery</param>
+            <param name="expression">lambda expression to convert</param>
+            <returns>NHibernate.ICriterion.AbstractCriterion</returns>
+        </member>
+        <member name="M:NHibernate.LambdaExtensions.ExpressionProcessor.ProcessSubquery(NHibernate.LambdaExtensions.LambdaSubqueryType,System.Linq.Expressions.Expression{System.Func{System.Boolean}})">
+            <summary>
+            Convert a lambda expression to NHibernate subquery AbstractCriterion
+            </summary>
+            <param name="subqueryType">type of subquery</param>
+            <param name="expression">lambda expression to convert</param>
+            <returns>NHibernate.ICriterion.AbstractCriterion</returns>
+        </member>
+        <member name="T:NHibernate.LambdaExtensions.ICriteriaExtensions">
+            <summary>
+            Extension methods for NHibernate ICriteria interface
+            </summary>
+        </member>
+        <member name="M:NHibernate.LambdaExtensions.ICriteriaExtensions.Add``1(NHibernate.ICriteria,System.Linq.Expressions.Expression{System.Func{``0,System.Boolean}})">
+            <summary>
+            Add criterion expressed as a lambda expression
+            </summary>
+            <typeparam name="T">Type (same as criteria type)</typeparam>
+            <param name="criteria">criteria instance</param>
+            <param name="expression">Lambda expression</param>
+            <returns>criteria instance</returns>
+        </member>
+        <member name="M:NHibernate.LambdaExtensions.ICriteriaExtensions.Add(NHibernate.ICriteria,System.Linq.Expressions.Expression{System.Func{System.Boolean}})">
+            <summary>
+            Add criterion expressed as a lambda expression
+            </summary>
+            <param name="criteria">criteria instance</param>
+            <param name="expression">Lambda expression</param>
+            <returns>criteria instance</returns>
+        </member>
+        <member name="M:NHibernate.LambdaExtensions.ICriteriaExtensions.AddOrder``1(NHibernate.ICriteria,System.Linq.Expressions.Expression{System.Func{``0,System.Object}},System.Func{System.String,NHibernate.Criterion.Order})">
+            <summary>
+            Add order expressed as a lambda expression
+            </summary>
+            <typeparam name="T">Type (same as criteria type)</typeparam>
+            <param name="criteria">criteria instance</param>
+            <param name="expression">Lambda expression</param>
+            <param name="orderDelegate">Order delegate (direction)</param>
+            <returns>criteria instance</returns>
+        </member>
+        <member name="M:NHibernate.LambdaExtensions.ICriteriaExtensions.AddOrder(NHibernate.ICriteria,System.Linq.Expressions.Expression{System.Func{System.Object}},System.Func{System.String,NHibernate.Criterion.Order})">
+            <summary>
+            Add order expressed as a lambda expression
+            </summary>
+            <param name="criteria">criteria instance</param>
+            <param name="expression">Lambda expression</param>
+            <param name="orderDelegate">Order delegate (direction)</param>
+            <returns>criteria instance</returns>
+        </member>
+        <member name="M:NHibernate.LambdaExtensions.ICriteriaExtensions.CreateCriteria``1(NHibernate.ICriteria,System.Linq.Expressions.Expression{System.Func{``0,System.Object}})">
+            <summary>
+            Create a new NHibernate.ICriteria, "rooted" at the associated entity
+            </summary>
+            <typeparam name="T">Type (same as criteria type)</typeparam>
+            <param name="criteria">criteria instance</param>
+            <param name="expression">Lambda expression returning association path</param>
+            <returns>The created "sub criteria"</returns>
+        </member>
+        <member name="M:NHibernate.LambdaExtensions.ICriteriaExtensions.CreateCriteria(NHibernate.ICriteria,System.Linq.Expressions.Expression{System.Func{System.Object}})">
+            <summary>
+            Create a new NHibernate.ICriteria, "rooted" at the associated entity
+            </summary>
+            <param name="criteria">criteria instance</param>
+            <param name="expression">Lambda expression returning association path</param>
+            <returns>The created "sub criteria"</returns>
+        </member>
+        <member name="M:NHibernate.LambdaExtensions.ICriteriaExtensions.CreateCriteria``1(NHibernate.ICriteria,System.Linq.Expressions.Expression{System.Func{``0,System.Object}},NHibernate.SqlCommand.JoinType)">
+            <summary>
+            Create a new NHibernate.ICriteria, "rooted" at the associated entity
+            </summary>
+            <typeparam name="T">Type (same as criteria type)</typeparam>
+            <param name="criteria">criteria instance</param>
+            <param name="expression">Lambda expression returning association path</param>
+            <param name="joinType">The type of join to use</param>
+            <returns>The created "sub criteria"</returns>
+        </member>
+        <member name="M:NHibernate.LambdaExtensions.ICriteriaExtensions.CreateCriteria(NHibernate.ICriteria,System.Linq.Expressions.Expression{System.Func{System.Object}},NHibernate.SqlCommand.JoinType)">
+            <summary>
+            Create a new NHibernate.ICriteria, "rooted" at the associated entity
+            </summary>
+            <param name="criteria">criteria instance</param>
+            <param name="expression">Lambda expression returning association path</param>
+            <param name="joinType">The type of join to use</param>
+            <returns>The created "sub criteria"</returns>
+        </member>
+        <member name="M:NHibernate.LambdaExtensions.ICriteriaExtensions.CreateCriteria``1(NHibernate.ICriteria,System.Linq.Expressions.Expression{System.Func{``0,System.Object}},System.Linq.Expressions.Expression{System.Func{System.Object}})">
+            <summary>
+            Create a new NHibernate.ICriteria, "rooted" at the associated entity
+            </summary>
+            <typeparam name="T">Type (same as criteria type)</typeparam>
+            <param name="criteria">criteria instance</param>
+            <param name="expression">Lambda expression returning association path</param>
+            <param name="alias">Lambda expression returning alias reference</param>
+            <returns>The created "sub criteria"</returns>
+        </member>
+        <member name="M:NHibernate.LambdaExtensions.ICriteriaExtensions.CreateCriteria(NHibernate.ICriteria,System.Linq.Expressions.Expression{System.Func{System.Object}},System.Linq.Expressions.Expression{System.Func{System.Object}})">
+            <summary>
+            Create a new NHibernate.ICriteria, "rooted" at the associated entity
+            </summary>
+            <param name="criteria">criteria instance</param>
+            <param name="expression">Lambda expression returning association path</param>
+            <param name="alias">Lambda expression returning alias reference</param>
+            <returns>The created "sub criteria"</returns>
+        </member>
+        <member name="M:NHibernate.LambdaExtensions.ICriteriaExtensions.CreateCriteria``1(NHibernate.ICriteria,System.Linq.Expressions.Expression{System.Func{``0,System.Object}},System.Linq.Expressions.Expression{System.Func{System.Object}},NHibernate.SqlCommand.JoinType)">
+            <summary>
+            Create a new NHibernate.ICriteria, "rooted" at the associated entity
+            </summary>
+            <typeparam name="T">Type (same as criteria type)</typeparam>
+            <param name="criteria">criteria instance</param>
+            <param name="expression">Lambda expression returning association path</param>
+            <param name="alias">Lambda expression returning alias reference</param>
+            <param name="joinType">The type of join to use</param>
+            <returns>The created "sub criteria"</returns>
+        </member>
+        <member name="M:NHibernate.LambdaExtensions.ICriteriaExtensions.CreateCriteria(NHibernate.ICriteria,System.Linq.Expressions.Expression{System.Func{System.Object}},System.Linq.Expressions.Expression{System.Func{System.Object}},NHibernate.SqlCommand.JoinType)">
+            <summary>
+            Create a new NHibernate.ICriteria, "rooted" at the associated entity
+            </summary>
+            <param name="criteria">criteria instance</param>
+            <param name="expression">Lambda expression returning association path</param>
+            <param name="alias">Lambda expression returning alias reference</param>
+            <param name="joinType">The type of join to use</param>
+            <returns>The created "sub criteria"</returns>
+        </member>
+        <member name="M:NHibernate.LambdaExtensions.ICriteriaExtensions.CreateAlias``1(NHibernate.ICriteria,System.Linq.Expressions.Expression{System.Func{``0,System.Object}},System.Linq.Expressions.Expression{System.Func{System.Object}})">
+            <summary>
+            Join an association, assigning an alias to the joined entity
+            </summary>
+            <typeparam name="T">type of association</typeparam>
+            <param name="criteria">criteria instance</param>
+            <param name="expression">Lambda expression returning association path</param>
+            <param name="alias">Lambda expression returning alias reference</param>
+            <returns>criteria instance</returns>
+        </member>
+        <member name="M:NHibernate.LambdaExtensions.ICriteriaExtensions.CreateAlias(NHibernate.ICriteria,System.Linq.Expressions.Expression{System.Func{System.Object}},System.Linq.Expressions.Expression{System.Func{System.Object}})">
+            <summary>
+            Join an association, assigning an alias to the joined entity
+            </summary>
+            <param name="criteria">criteria instance</param>
+            <param name="expression">Lambda expression returning association path</param>
+            <param name="alias">Lambda expression returning alias reference</param>
+            <returns>criteria instance</returns>
+        </member>
+        <member name="M:NHibernate.LambdaExtensions.ICriteriaExtensions.CreateAlias``1(NHibernate.ICriteria,System.Linq.Expressions.Expression{System.Func{``0,System.Object}},System.Linq.Expressions.Expression{System.Func{System.Object}},NHibernate.SqlCommand.JoinType)">
+            <summary>
+            Join an association, assigning an alias to the joined entity
+            </summary>
+            <typeparam name="T">type of association</typeparam>
+            <param name="criteria">criteria instance</param>
+            <param name="expression">Lambda expression returning association path</param>
+            <param name="alias">Lambda expression returning alias reference</param>
+            <param name="joinType">The type of join to use</param>
+            <returns>criteria instance</returns>
+        </member>
+        <member name="M:NHibernate.LambdaExtensions.ICriteriaExtensions.CreateAlias(NHibernate.ICriteria,System.Linq.Expressions.Expression{System.Func{System.Object}},System.Linq.Expressions.Expression{System.Func{System.Object}},NHibernate.SqlCommand.JoinType)">
+            <summary>
+            Join an association, assigning an alias to the joined entity
+            </summary>
+            <param name="criteria">criteria instance</param>
+            <param name="expression">Lambda expression returning association path</param>
+            <param name="alias">Lambda expression returning alias reference</param>
+            <param name="joinType">The type of join to use</param>
+            <returns>criteria instance</returns>
+        </member>
+        <member name="M:NHibernate.LambdaExtensions.ICriteriaExtensions.SetFetchMode``1(NHibernate.ICriteria,System.Linq.Expressions.Expression{System.Func{``0,System.Object}},NHibernate.FetchMode)">
+            <summary>
+            Specify an association fetching strategy.
+            </summary>
+            <typeparam name="T">Type (same as criteria type)</typeparam>
+            <param name="criteria">criteria instance</param>
+            <param name="alias">Lambda expression returning alias reference</param>
+            <param name="fetchMode">The Fetch mode.</param>
+            <returns>criteria instance</returns>
+        </member>
+        <member name="M:NHibernate.LambdaExtensions.ICriteriaExtensions.SetFetchMode(NHibernate.ICriteria,System.Linq.Expressions.Expression{System.Func{System.Object}},NHibernate.FetchMode)">
+            <summary>
+            Specify an association fetching strategy.
+            </summary>
+            <param name="criteria">criteria instance</param>
+            <param name="alias">Lambda expression returning alias reference</param>
+            <param name="fetchMode">The Fetch mode.</param>
+            <returns>criteria instance</returns>
+        </member>
+        <member name="M:NHibernate.LambdaExtensions.ICriteriaExtensions.SetLockMode(NHibernate.ICriteria,System.Linq.Expressions.Expression{System.Func{System.Object}},NHibernate.LockMode)">
+            <summary>
+            Set the lock mode of the aliased entity
+            </summary>
+            <param name="criteria">criteria instance</param>
+            <param name="alias">Lambda expression returning alias reference</param>
+            <param name="lockMode">the lock mode</param>
+            <returns>criteria instance</returns>
+        </member>
+        <member name="M:NHibernate.LambdaExtensions.ICriteriaExtensions.GetCriteriaByAlias(NHibernate.ICriteria,System.Linq.Expressions.Expression{System.Func{System.Object}})">
+            <summary>
+            Alows to get a sub criteria by alias.
+            Will return null if the criteria does not exists
+            </summary>
+            <param name="criteria">criteria instance</param>
+            <param name="alias">Lambda expression returning alias reference</param>
+            <returns>The "sub criteria"</returns>
+        </member>
+        <member name="M:NHibernate.LambdaExtensions.ICriteriaExtensions.GetCriteriaByPath``1(NHibernate.ICriteria,System.Linq.Expressions.Expression{System.Func{``0,System.Object}})">
+            <summary>
+            Allows to get a sub criteria by path.  Will return null if the criteria does
+            not exists.
+            </summary>
+            <typeparam name="T">Type (same as criteria type)</typeparam>
+            <param name="criteria">criteria instance</param>
+            <param name="expression">Lambda expression returning association path</param>
+            <returns>The "sub criteria"</returns>
+        </member>
+        <member name="M:NHibernate.LambdaExtensions.ICriteriaExtensions.GetCriteriaByPath(NHibernate.ICriteria,System.Linq.Expressions.Expression{System.Func{System.Object}})">
+            <summary>
+            Allows to get a sub criteria by path.  Will return null if the criteria does
+            not exists.
+            </summary>
+            <param name="criteria">criteria instance</param>
+            <param name="expression">Lambda expression returning association path</param>
+            <returns>The "sub criteria"</returns>
+        </member>
+        <member name="T:NHibernate.LambdaExtensions.ISessionExtensions">
+            <summary>
+            Extension methods for NHibernate ISession interface
+            </summary>
+        </member>
+        <member name="M:NHibernate.LambdaExtensions.ISessionExtensions.CreateCriteria(NHibernate.ISession,System.Type,System.Linq.Expressions.Expression{System.Func{System.Object}})">
+            <summary>
+            Creates a new Criteria for the entity class with a specific alias
+            </summary>
+            <param name="session">session instance</param>
+            <param name="persistentType">The class to Query</param>
+            <param name="alias">The alias of the entity</param>
+            <returns>An ICriteria object</returns>
+        </member>
+        <member name="T:NHibernate.LambdaExtensions.JunctionExtensions">
+            <summary>
+            Extension methods for NHibernate Junction class
+            </summary>
+        </member>
+        <member name="M:NHibernate.LambdaExtensions.JunctionExtensions.Add``1(NHibernate.Criterion.Junction,System.Linq.Expressions.Expression{System.Func{``0,System.Boolean}})">
+            <summary>
+            Adds an NHibernate.Criterion.ICriterion to the list of NHibernate.Criterion.ICriterions
+            to junction together.
+            </summary>
+            <typeparam name="T">Generic type</typeparam>
+            <param name="junction">NHibernate junction</param>
+            <param name="expression">Lambda expression</param>
+            <returns>This NHibernate.Criterion.Junction instance.</returns>
+        </member>
+        <member name="M:NHibernate.LambdaExtensions.JunctionExtensions.Add(NHibernate.Criterion.Junction,System.Linq.Expressions.Expression{System.Func{System.Boolean}})">
+            <summary>
+            Adds an NHibernate.Criterion.ICriterion to the list of NHibernate.Criterion.ICriterions
+            to junction together.
+            </summary>
+            <param name="junction">NHibernate junction</param>
+            <param name="expression">Lambda expression</param>
+            <returns>This NHibernate.Criterion.Junction instance.</returns>
+        </member>
+        <member name="T:NHibernate.LambdaExtensions.LambdaProjection">
+            <summary>
+            Provides typesafe projections using lambda expressions to express properties
+            </summary>
+        </member>
+        <member name="M:NHibernate.LambdaExtensions.LambdaProjection.#ctor">
+            <summary>
+            Protected constructor - class not for instantiation
+            </summary>
+        </member>
+        <member name="M:NHibernate.LambdaExtensions.LambdaProjection.Property``1(System.Linq.Expressions.Expression{System.Func{``0,System.Object}})">
+            <summary>
+            Create an IProjection for the specified property expression
+            </summary>
+            <typeparam name="T">generic type</typeparam>
+            <param name="expression">lambda expression</param>
+            <returns>return NHibernate.Criterion.PropertyProjection</returns>
+        </member>
+        <member name="M:NHibernate.LambdaExtensions.LambdaProjection.Property(System.Linq.Expressions.Expression{System.Func{System.Object}})">
+            <summary>
+            Create an IProjection for the specified property expression
+            </summary>
+            <param name="expression">lambda expression</param>
+            <returns>return NHibernate.Criterion.PropertyProjection</returns>
+        </member>
+        <member name="M:NHibernate.LambdaExtensions.LambdaProjection.Alias(NHibernate.Criterion.IProjection,System.Linq.Expressions.Expression{System.Func{System.Object}})">
+            <summary>
+            Assign an alias to a projection by wrapping it
+            </summary>
+            <param name="projection">the projection to wrap</param>
+            <param name="alias">LambdaExpression returning an alias</param>
+            <returns>return NHibernate.Criterion.IProjection</returns>
+        </member>
+        <member name="M:NHibernate.LambdaExtensions.LambdaProjection.Avg``1(System.Linq.Expressions.Expression{System.Func{``0,System.Object}})">
+            <summary>
+            Average projection
+            </summary>
+            <typeparam name="T">generic type</typeparam>
+            <param name="expression">lambda expression</param>
+            <returns>return NHibernate.Criterion.AggregateProjection</returns>
+        </member>
+        <member name="M:NHibernate.LambdaExtensions.LambdaProjection.Avg(System.Linq.Expressions.Expression{System.Func{System.Object}})">
+            <summary>
+            Average projection
+            </summary>
+            <param name="expression">lambda expression</param>
+            <returns>return NHibernate.Criterion.AggregateProjection</returns>
+        </member>
+        <member name="M:NHibernate.LambdaExtensions.LambdaProjection.Count``1(System.Linq.Expressions.Expression{System.Func{``0,System.Object}})">
+            <summary>
+            Count projection
+            </summary>
+            <typeparam name="T">generic type</typeparam>
+            <param name="expression">lambda expression</param>
+            <returns>return NHibernate.Criterion.CountProjection</returns>
+        </member>
+        <member name="M:NHibernate.LambdaExtensions.LambdaProjection.Count(System.Linq.Expressions.Expression{System.Func{System.Object}})">
+            <summary>
+            Count projection
+            </summary>
+            <param name="expression">lambda expression</param>
+            <returns>return NHibernate.Criterion.CountProjection</returns>
+        </member>
+        <member name="M:NHibernate.LambdaExtensions.LambdaProjection.CountDistinct``1(System.Linq.Expressions.Expression{System.Func{``0,System.Object}})">
+            <summary>
+            CountDistinct projection
+            </summary>
+            <typeparam name="T">generic type</typeparam>
+            <param name="expression">lambda expression</param>
+            <returns>return NHibernate.Criterion.CountProjection</returns>
+        </member>
+        <member name="M:NHibernate.LambdaExtensions.LambdaProjection.CountDistinct(System.Linq.Expressions.Expression{System.Func{System.Object}})">
+            <summary>
+            CountDistinct projection
+            </summary>
+            <param name="expression">lambda expression</param>
+            <returns>return NHibernate.Criterion.CountProjection</returns>
+        </member>
+        <member name="M:NHibernate.LambdaExtensions.LambdaProjection.GroupProperty``1(System.Linq.Expressions.Expression{System.Func{``0,System.Object}})">
+            <summary>
+            Group property projection
+            </summary>
+            <typeparam name="T">generic type</typeparam>
+            <param name="expression">lambda expression</param>
+            <returns>return NHibernate.Criterion.PropertyProjection</returns>
+        </member>
+        <member name="M:NHibernate.LambdaExtensions.LambdaProjection.GroupProperty(System.Linq.Expressions.Expression{System.Func{System.Object}})">
+            <summary>
+            Group property projection
+            </summary>
+            <param name="expression">lambda expression</param>
+            <returns>return NHibernate.Criterion.PropertyProjection</returns>
+        </member>
+        <member name="M:NHibernate.LambdaExtensions.LambdaProjection.Max``1(System.Linq.Expressions.Expression{System.Func{``0,System.Object}})">
+            <summary>
+            Max projection
+            </summary>
+            <typeparam name="T">generic type</typeparam>
+            <param name="expression">lambda expression</param>
+            <returns>return NHibernate.Criterion.AggregateProjection</returns>
+        </member>
+        <member name="M:NHibernate.LambdaExtensions.LambdaProjection.Max(System.Linq.Expressions.Expression{System.Func{System.Object}})">
+            <summary>
+            Max projection
+            </summary>
+            <param name="expression">lambda expression</param>
+            <returns>return NHibernate.Criterion.AggregateProjection</returns>
+        </member>
+        <member name="M:NHibernate.LambdaExtensions.LambdaProjection.Min``1(System.Linq.Expressions.Expression{System.Func{``0,System.Object}})">
+            <summary>
+            Min projection
+            </summary>
+            <typeparam name="T">generic type</typeparam>
+            <param name="expression">lambda expression</param>
+            <returns>return NHibernate.Criterion.AggregateProjection</returns>
+        </member>
+        <member name="M:NHibernate.LambdaExtensions.LambdaProjection.Min(System.Linq.Expressions.Expression{System.Func{System.Object}})">
+            <summary>
+            Min projection
+            </summary>
+            <param name="expression">lambda expression</param>
+            <returns>return NHibernate.Criterion.AggregateProjection</returns>
+        </member>
+        <member name="M:NHibernate.LambdaExtensions.LambdaProjection.Sum``1(System.Linq.Expressions.Expression{System.Func{``0,System.Object}})">
+            <summary>
+            Sum projection
+            </summary>
+            <typeparam name="T">generic type</typeparam>
+            <param name="expression">lambda expression</param>
+            <returns>return NHibernate.Criterion.AggregateProjection</returns>
+        </member>
+        <member name="M:NHibernate.LambdaExtensions.LambdaProjection.Sum(System.Linq.Expressions.Expression{System.Func{System.Object}})">
+            <summary>
+            Sum projection
+            </summary>
+            <param name="expression">lambda expression</param>
+            <returns>return NHibernate.Criterion.AggregateProjection</returns>
+        </member>
+        <member name="T:NHibernate.LambdaExtensions.LambdaSubquery">
+            <summary>
+            Provides typesafe sub-queries using lambda expressions to express properties
+            </summary>
+        </member>
+        <member name="M:NHibernate.LambdaExtensions.LambdaSubquery.#ctor">
+            <summary>
+            Protected constructor - class not for instantiation
+            </summary>
+        </member>
+        <member name="M:NHibernate.LambdaExtensions.LambdaSubquery.Property``1(System.Linq.Expressions.Expression{System.Func{``0,System.Object}})">
+            <summary>
+            Create a ICriterion for the specified property subquery expression
+            </summary>
+            <typeparam name="T">generic type</typeparam>
+            <param name="expression">lambda expression</param>
+            <returns>returns LambdaSubqueryBuilder</returns>
+        </member>
+        <member name="M:NHibernate.LambdaExtensions.LambdaSubquery.Property(System.Linq.Expressions.Expression{System.Func{System.Object}})">
+            <summary>
+            Create a ICriterion for the specified property subquery expression
+            </summary>
+            <param name="expression">lambda expression</param>
+            <returns>returns LambdaSubqueryBuilder</returns>
+        </member>
+        <member name="M:NHibernate.LambdaExtensions.LambdaSubquery.Where``1(System.Linq.Expressions.Expression{System.Func{``0,System.Boolean}})">
+            <summary>
+            Create ICriterion for subquery expression using lambda syntax
+            </summary>
+            <typeparam name="T">type of property</typeparam>
+            <param name="expression">lambda expression</param>
+            <returns>NHibernate.ICriterion.AbstractCriterion</returns>
+        </member>
+        <member name="M:NHibernate.LambdaExtensions.LambdaSubquery.Where(System.Linq.Expressions.Expression{System.Func{System.Boolean}})">
+            <summary>
+            Create ICriterion for (exact) subquery expression using lambda syntax
+            </summary>
+            <param name="expression">lambda expression</param>
+            <returns>NHibernate.ICriterion.AbstractCriterion</returns>
+        </member>
+        <member name="M:NHibernate.LambdaExtensions.LambdaSubquery.WhereAll``1(System.Linq.Expressions.Expression{System.Func{``0,System.Boolean}})">
+            <summary>
+            Create ICriterion for (all) subquery expression using lambda syntax
+            </summary>
+            <typeparam name="T">type of property</typeparam>
+            <param name="expression">lambda expression</param>
+            <returns>NHibernate.ICriterion.AbstractCriterion</returns>
+        </member>
+        <member name="M:NHibernate.LambdaExtensions.LambdaSubquery.WhereAll(System.Linq.Expressions.Expression{System.Func{System.Boolean}})">
+            <summary>
+            Create ICriterion for (all) subquery expression using lambda syntax
+            </summary>
+            <param name="expression">lambda expression</param>
+            <returns>NHibernate.ICriterion.AbstractCriterion</returns>
+        </member>
+        <member name="M:NHibernate.LambdaExtensions.LambdaSubquery.WhereSome``1(System.Linq.Expressions.Expression{System.Func{``0,System.Boolean}})">
+            <summary>
+            Create ICriterion for (some) subquery expression using lambda syntax
+            </summary>
+            <typeparam name="T">type of property</typeparam>
+            <param name="expression">lambda expression</param>
+            <returns>NHibernate.ICriterion.AbstractCriterion</returns>
+        </member>
+        <member name="M:NHibernate.LambdaExtensions.LambdaSubquery.WhereSome(System.Linq.Expressions.Expression{System.Func{System.Boolean}})">
+            <summary>
+            Create ICriterion for (some) subquery expression using lambda syntax
+            </summary>
+            <param name="expression">lambda expression</param>
+            <returns>NHibernate.ICriterion.AbstractCriterion</returns>
+        </member>
+        <member name="T:NHibernate.LambdaExtensions.LambdaSubqueryBuilder">
+            <summary>
+            Provides syntax extensions to allow building of subquery criterion for LambdaSubquery class
+            </summary>
+        </member>
+        <member name="M:NHibernate.LambdaExtensions.LambdaSubqueryBuilder.#ctor(System.String)">
+            <summary>
+            Constructed with property name
+            </summary>
+        </member>
+        <member name="M:NHibernate.LambdaExtensions.LambdaSubqueryBuilder.In(NHibernate.Criterion.DetachedCriteria)">
+            <summary>
+            Create a property in subquery criterion
+            </summary>
+            <param name="detachedCriteria">detached criteria subquery</param>
+            <returns>returns NHibernate.Criterion.AbstractCriterion</returns>
+        </member>
+        <member name="M:NHibernate.LambdaExtensions.LambdaSubqueryBuilder.NotIn(NHibernate.Criterion.DetachedCriteria)">
+            <summary>
+            Create a property not in subquery criterion
+            </summary>
+            <param name="detachedCriteria">detached criteria subquery</param>
+            <returns>returns NHibernate.Criterion.AbstractCriterion</returns>
+        </member>
+        <member name="M:NHibernate.LambdaExtensions.LambdaSubqueryBuilder.Eq(NHibernate.Criterion.DetachedCriteria)">
+            <summary>
+            Create a property equal subquery criterion
+            </summary>
+            <param name="detachedCriteria">detached criteria subquery</param>
+            <returns>returns NHibernate.Criterion.AbstractCriterion</returns>
+        </member>
+        <member name="M:NHibernate.LambdaExtensions.LambdaSubqueryBuilder.Ne(NHibernate.Criterion.DetachedCriteria)">
+            <summary>
+            Create a property not equal subquery criterion
+            </summary>
+            <param name="detachedCriteria">detached criteria subquery</param>
+            <returns>returns NHibernate.Criterion.AbstractCriterion</returns>
+        </member>
+        <member name="M:NHibernate.LambdaExtensions.LambdaSubqueryBuilder.Gt(NHibernate.Criterion.DetachedCriteria)">
+            <summary>
+            Create a property greater than subquery criterion
+            </summary>
+            <param name="detachedCriteria">detached criteria subquery</param>
+            <returns>returns NHibernate.Criterion.AbstractCriterion</returns>
+        </member>
+        <member name="M:NHibernate.LambdaExtensions.LambdaSubqueryBuilder.Ge(NHibernate.Criterion.DetachedCriteria)">
+            <summary>
+            Create a property greater than or equal subquery criterion
+            </summary>
+            <param name="detachedCriteria">detached criteria subquery</param>
+            <returns>returns NHibernate.Criterion.AbstractCriterion</returns>
+        </member>
+        <member name="M:NHibernate.LambdaExtensions.LambdaSubqueryBuilder.Lt(NHibernate.Criterion.DetachedCriteria)">
+            <summary>
+            Create a property less than subquery criterion
+            </summary>
+            <param name="detachedCriteria">detached criteria subquery</param>
+            <returns>returns NHibernate.Criterion.AbstractCriterion</returns>
+        </member>
+        <member name="M:NHibernate.LambdaExtensions.LambdaSubqueryBuilder.Le(NHibernate.Criterion.DetachedCriteria)">
+            <summary>
+            Create a property less than or equal subquery criterion
+            </summary>
+            <param name="detachedCriteria">detached criteria subquery</param>
+            <returns>returns NHibernate.Criterion.AbstractCriterion</returns>
+        </member>
+        <member name="M:NHibernate.LambdaExtensions.LambdaSubqueryBuilder.EqAll(NHibernate.Criterion.DetachedCriteria)">
+            <summary>
+            Create a property equal all subquery criterion
+            </summary>
+            <param name="detachedCriteria">detached criteria subquery</param>
+            <returns>returns NHibernate.Criterion.AbstractCriterion</returns>
+        </member>
+        <member name="M:NHibernate.LambdaExtensions.LambdaSubqueryBuilder.GtAll(NHibernate.Criterion.DetachedCriteria)">
+            <summary>
+            Create a property greater than all subquery criterion
+            </summary>
+            <param name="detachedCriteria">detached criteria subquery</param>
+            <returns>returns NHibernate.Criterion.AbstractCriterion</returns>
+        </member>
+        <member name="M:NHibernate.LambdaExtensions.LambdaSubqueryBuilder.GeAll(NHibernate.Criterion.DetachedCriteria)">
+            <summary>
+            Create a property greater than or equal all subquery criterion
+            </summary>
+            <param name="detachedCriteria">detached criteria subquery</param>
+            <returns>returns NHibernate.Criterion.AbstractCriterion</returns>
+        </member>
+        <member name="M:NHibernate.LambdaExtensions.LambdaSubqueryBuilder.LtAll(NHibernate.Criterion.DetachedCriteria)">
+            <summary>
+            Create a property less than all subquery criterion
+            </summary>
+            <param name="detachedCriteria">detached criteria subquery</param>
+            <returns>returns NHibernate.Criterion.AbstractCriterion</returns>
+        </member>
+        <member name="M:NHibernate.LambdaExtensions.LambdaSubqueryBuilder.LeAll(NHibernate.Criterion.DetachedCriteria)">
+            <summary>
+            Create a property less than or equal all subquery criterion
+            </summary>
+            <param name="detachedCriteria">detached criteria subquery</param>
+            <returns>returns NHibernate.Criterion.AbstractCriterion</returns>
+        </member>
+        <member name="M:NHibernate.LambdaExtensions.LambdaSubqueryBuilder.GtSome(NHibernate.Criterion.DetachedCriteria)">
+            <summary>
+            Create a property greater than some subquery criterion
+            </summary>
+            <param name="detachedCriteria">detached criteria subquery</param>
+            <returns>returns NHibernate.Criterion.AbstractCriterion</returns>
+        </member>
+        <member name="M:NHibernate.LambdaExtensions.LambdaSubqueryBuilder.GeSome(NHibernate.Criterion.DetachedCriteria)">
+            <summary>
+            Create a property greater than or equal some subquery criterion
+            </summary>
+            <param name="detachedCriteria">detached criteria subquery</param>
+            <returns>returns NHibernate.Criterion.AbstractCriterion</returns>
+        </member>
+        <member name="M:NHibernate.LambdaExtensions.LambdaSubqueryBuilder.LtSome(NHibernate.Criterion.DetachedCriteria)">
+            <summary>
+            Create a property less than some subquery criterion
+            </summary>
+            <param name="detachedCriteria">detached criteria subquery</param>
+            <returns>returns NHibernate.Criterion.AbstractCriterion</returns>
+        </member>
+        <member name="M:NHibernate.LambdaExtensions.LambdaSubqueryBuilder.LeSome(NHibernate.Criterion.DetachedCriteria)">
+            <summary>
+            Create a property less than or equal some subquery criterion
+            </summary>
+            <param name="detachedCriteria">detached criteria subquery</param>
+            <returns>returns NHibernate.Criterion.AbstractCriterion</returns>
+        </member>
+        <member name="T:NHibernate.LambdaExtensions.ProjectionExtensions">
+            <summary>
+            Extension methods for NHibernate projections
+            </summary>
+        </member>
+        <member name="M:NHibernate.LambdaExtensions.ProjectionExtensions.As(NHibernate.Criterion.SimpleProjection,System.Linq.Expressions.Expression{System.Func{System.Object}})">
+            <summary>
+            Create an alias for a projection
+            </summary>
+            <param name="projection">the projection instance</param>
+            <param name="alias">LambdaExpression returning an alias</param>
+            <returns>return NHibernate.Criterion.IProjection</returns>
+        </member>
+        <member name="T:NHibernate.LambdaExtensions.SqlExpression">
+            <summary>
+            Provides extra Expression factory methods for SQL expressions
+            </summary>
+            <remarks>
+            cannot inherit from NHibernate.Criterion.Restrictions cos its constructor is internal
+            </remarks>
+        </member>
+        <member name="M:NHibernate.LambdaExtensions.SqlExpression.#ctor">
+            <summary>
+            Protected constructor - class not for instantiation
+            </summary>
+        </member>
+        <member name="M:NHibernate.LambdaExtensions.SqlExpression.CriterionFor``1(System.Linq.Expressions.Expression{System.Func{``0,System.Boolean}})">
+            <summary>
+            Create an ICriterion for the supplied LambdaExpression
+            </summary>
+            <typeparam name="T">generic type</typeparam>
+            <param name="expression">lambda expression</param>
+            <returns>return NHibernate.Criterion.ICriterion</returns>
+        </member>
+        <member name="M:NHibernate.LambdaExtensions.SqlExpression.CriterionFor(System.Linq.Expressions.Expression{System.Func{System.Boolean}})">
+            <summary>
+            Create an ICriterion for the supplied LambdaExpression
+            </summary>
+            <param name="expression">lambda expression</param>
+            <returns>return NHibernate.Criterion.ICriterion</returns>
+        </member>
+        <member name="M:NHibernate.LambdaExtensions.SqlExpression.Between``1(System.Linq.Expressions.Expression{System.Func{``0,System.Object}},System.Object,System.Object)">
+            <summary>
+            Apply a "between" constraint to the named property
+            </summary>
+            <param name="expression">lambda expression returning type's property</param>
+            <param name="lo">low value of between</param>
+            <param name="hi">high value of between</param>
+            <returns>A NHibernate.Criterion.BetweenExpression.</returns>
+        </member>
+        <member name="M:NHibernate.LambdaExtensions.SqlExpression.Between(System.Linq.Expressions.Expression{System.Func{System.Object}},System.Object,System.Object)">
+            <summary>
+            Apply a "between" constraint to the named property
+            </summary>
+            <param name="expression">lambda expression returning type's property</param>
+            <param name="lo">low value of between</param>
+            <param name="hi">high value of between</param>
+            <returns>A NHibernate.Criterion.BetweenExpression.</returns>
+        </member>
+        <member name="M:NHibernate.LambdaExtensions.SqlExpression.Like``1(System.Linq.Expressions.Expression{System.Func{``0,System.Object}},System.Object)">
+            <summary>
+            Apply a "like" constraint to the named property
+            </summary>
+            <param name="expression">lambda expression returning type's property</param>
+            <param name="value">The value for the Property.</param>
+            <returns>A NHibernate.Criterion.LikeExpression.</returns>
+        </member>
+        <member name="M:NHibernate.LambdaExtensions.SqlExpression.Like``1(System.Linq.Expressions.Expression{System.Func{``0,System.Object}},System.String,NHibernate.Criterion.MatchMode)">
+            <summary>
+            Apply a "like" constraint to the named property
+            </summary>
+            <param name="expression">lambda expression returning type's property</param>
+            <param name="value">The value for the Property.</param>
+            <param name="matchMode">The MatchMode.</param>
+            <returns>A NHibernate.Criterion.LikeExpression.</returns>
+        </member>
+        <member name="M:NHibernate.LambdaExtensions.SqlExpression.Like``1(System.Linq.Expressions.Expression{System.Func{``0,System.Object}},System.String,NHibernate.Criterion.MatchMode,System.Nullable{System.Char})">
+            <summary>
+            Apply a "like" constraint to the named property
+            </summary>
+            <param name="expression">lambda expression returning type's property</param>
+            <param name="value">The value for the Property.</param>
+            <param name="matchMode">The MatchMode.</param>
+            <param name="escapeChar">The escape character.</param>
+            <returns>A NHibernate.Criterion.LikeExpression.</returns>
+        </member>
+        <member name="M:NHibernate.LambdaExtensions.SqlExpression.Like(System.Linq.Expressions.Expression{System.Func{System.Object}},System.Object)">
+            <summary>
+            Apply a "like" constraint to the named property
+            </summary>
+            <param name="expression">lambda expression returning type's property</param>
+            <param name="value">The value for the Property.</param>
+            <returns>A NHibernate.Criterion.LikeExpression.</returns>
+        </member>
+        <member name="M:NHibernate.LambdaExtensions.SqlExpression.Like(System.Linq.Expressions.Expression{System.Func{System.Object}},System.String,NHibernate.Criterion.MatchMode)">
+            <summary>
+            Apply a "like" constraint to the named property
+            </summary>
+            <param name="expression">lambda expression returning type's property</param>
+            <param name="value">The value for the Property.</param>
+            <param name="matchMode">The MatchMode.</param>
+            <returns>A NHibernate.Criterion.LikeExpression.</returns>
+        </member>
+        <member name="M:NHibernate.LambdaExtensions.SqlExpression.Like(System.Linq.Expressions.Expression{System.Func{System.Object}},System.String,NHibernate.Criterion.MatchMode,System.Nullable{System.Char})">
+            <summary>
+            Apply a "like" constraint to the named property
+            </summary>
+            <param name="expression">lambda expression returning type's property</param>
+            <param name="value">The value for the Property.</param>
+            <param name="matchMode">The MatchMode.</param>
+            <param name="escapeChar">The escape character.</param>
+            <returns>A NHibernate.Criterion.LikeExpression.</returns>
+        </member>
+        <member name="M:NHibernate.LambdaExtensions.SqlExpression.InsensitiveLike``1(System.Linq.Expressions.Expression{System.Func{``0,System.Object}},System.Object)">
+            <summary>
+            A case-insensitive "like", similar to Postgres "ilike" operator
+            </summary>
+            <typeparam name="T">generic type</typeparam>
+            <param name="expression">lambda expression returning type's property</param>
+            <param name="value">The value for the Property.</param>
+            <returns>A NHibernate.Criterion.LikeExpression.</returns>
+        </member>
+        <member name="M:NHibernate.LambdaExtensions.SqlExpression.InsensitiveLike``1(System.Linq.Expressions.Expression{System.Func{``0,System.Object}},System.String,NHibernate.Criterion.MatchMode)">
+            <summary>
+            A case-insensitive "like", similar to Postgres "ilike" operator
+            </summary>
+            <typeparam name="T">generic type</typeparam>
+            <param name="expression">lambda expression returning type's property</param>
+            <param name="value">The value for the Property.</param>
+            <param name="matchMode">The matching mode</param>
+            <returns>A NHibernate.Criterion.LikeExpression.</returns>
+        </member>
+        <member name="M:NHibernate.LambdaExtensions.SqlExpression.InsensitiveLike(System.Linq.Expressions.Expression{System.Func{System.Object}},System.Object)">
+            <summary>
+            A case-insensitive "like", similar to Postgres "ilike" operator
+            </summary>
+            <param name="expression">lambda expression returning type's property</param>
+            <param name="value">The value for the Property.</param>
+            <returns>A NHibernate.Criterion.LikeExpression.</returns>
+        </member>
+        <member name="M:NHibernate.LambdaExtensions.SqlExpression.InsensitiveLike(System.Linq.Expressions.Expression{System.Func{System.Object}},System.String,NHibernate.Criterion.MatchMode)">
+            <summary>
+            A case-insensitive "like", similar to Postgres "ilike" operator
+            </summary>
+            <param name="expression">lambda expression returning type's property</param>
+            <param name="value">The value for the Property.</param>
+            <param name="matchMode">The matching mode</param>
+            <returns>A NHibernate.Criterion.LikeExpression.</returns>
+        </member>
+        <member name="M:NHibernate.LambdaExtensions.SqlExpression.IsNull``1(System.Linq.Expressions.Expression{System.Func{``0,System.Object}})">
+            <summary>
+            Apply an "is null" constraint to the named property
+            </summary>
+            <param name="expression">lambda expression returning type's property</param>
+            <returns>A NHibernate.Criterion.NullExpression.</returns>
+        </member>
+        <member name="M:NHibernate.LambdaExtensions.SqlExpression.IsNull(System.Linq.Expressions.Expression{System.Func{System.Object}})">
+            <summary>
+            Apply an "is null" constraint to the named property
+            </summary>
+            <param name="expression">lambda expression returning type's property</param>
+            <returns>A NHibernate.Criterion.NullExpression.</returns>
+        </member>
+        <member name="M:NHibernate.LambdaExtensions.SqlExpression.IsNotNull``1(System.Linq.Expressions.Expression{System.Func{``0,System.Object}})">
+            <summary>
+            Apply an "is not null" constraint to the named property
+            </summary>
+            <param name="expression">lambda expression returning type's property</param>
+            <returns>A NHibernate.Criterion.NotNullExpression.</returns>
+        </member>
+        <member name="M:NHibernate.LambdaExtensions.SqlExpression.IsNotNull(System.Linq.Expressions.Expression{System.Func{System.Object}})">
+            <summary>
+            Apply an "is not null" constraint to the named property
+            </summary>
+            <param name="expression">lambda expression returning type's property</param>
+            <returns>A NHibernate.Criterion.NotNullExpression.</returns>
+        </member>
+        <member name="M:NHibernate.LambdaExtensions.SqlExpression.IsEmpty``1(System.Linq.Expressions.Expression{System.Func{``0,System.Collections.IEnumerable}})">
+            <summary>
+            Apply an "is empty" constraint to the named property
+            </summary>
+            <param name="expression">lambda expression returning type's property</param>
+            <returns>A NHibernate.Criterion.IsEmptyExpression.</returns>
+        </member>
+        <member name="M:NHibernate.LambdaExtensions.SqlExpression.IsEmpty(System.Linq.Expressions.Expression{System.Func{System.Collections.IEnumerable}})">
+            <summary>
+            Apply an "is empty" constraint to the named property
+            </summary>
+            <param name="expression">lambda expression returning type's property</param>
+            <returns>A NHibernate.Criterion.IsEmptyExpression.</returns>
+        </member>
+        <member name="M:NHibernate.LambdaExtensions.SqlExpression.IsNotEmpty``1(System.Linq.Expressions.Expression{System.Func{``0,System.Collections.IEnumerable}})">
+            <summary>
+            Apply an "is not empty" constraint to the named property
+            </summary>
+            <param name="expression">lambda expression returning type's property</param>
+            <returns>A NHibernate.Criterion.IsNotEmptyExpression.</returns>
+        </member>
+        <member name="M:NHibernate.LambdaExtensions.SqlExpression.IsNotEmpty(System.Linq.Expressions.Expression{System.Func{System.Collections.IEnumerable}})">
+            <summary>
+            Apply an "is not empty" constraint to the named property
+            </summary>
+            <param name="expression">lambda expression returning type's property</param>
+            <returns>A NHibernate.Criterion.IsNotEmptyExpression.</returns>
+        </member>
+        <member name="M:NHibernate.LambdaExtensions.SqlExpression.In``1(System.Linq.Expressions.Expression{System.Func{``0,System.Object}},System.Collections.ICollection)">
+            <summary>
+            Apply an "in" constraint to the named property
+            </summary>
+            <param name="expression">lambda expression returning type's property</param>
+            <param name="values">An ICollection of values.</param>
+            <returns>An NHibernate.Criterion.InExpression.</returns>
+        </member>
+        <member name="M:NHibernate.LambdaExtensions.SqlExpression.In``1(System.Linq.Expressions.Expression{System.Func{``0,System.Object}},System.Object[])">
+            <summary>
+            Apply an "in" constraint to the named property
+            </summary>
+            <param name="expression">lambda expression returning type's property</param>
+            <param name="values">An object[] of values.</param>
+            <returns>An NHibernate.Criterion.InExpression.</returns>
+        </member>
+        <member name="M:NHibernate.LambdaExtensions.SqlExpression.In(System.Linq.Expressions.Expression{System.Func{System.Object}},System.Collections.ICollection)">
+            <summary>
+            Apply an "in" constraint to the named property
+            </summary>
+            <param name="expression">lambda expression returning type's property</param>
+            <param name="values">An ICollection of values.</param>
+            <returns>An NHibernate.Criterion.InExpression.</returns>
+        </member>
+        <member name="M:NHibernate.LambdaExtensions.SqlExpression.In(System.Linq.Expressions.Expression{System.Func{System.Object}},System.Object[])">
+            <summary>
+            Apply an "in" constraint to the named property
+            </summary>
+            <param name="expression">lambda expression returning type's property</param>
+            <param name="values">An ICollection of values.</param>
+            <returns>An NHibernate.Criterion.InExpression.</returns>
+        </member>
+        <member name="M:NHibernate.LambdaExtensions.SqlExpression.InG``2(System.Linq.Expressions.Expression{System.Func{``0,``1}},System.Collections.Generic.ICollection{``1})">
+            <summary>
+            Apply an "in" constraint to the named property.
+            </summary>
+            <typeparam name="T">Generic type</typeparam>
+            <typeparam name="U">Generic type</typeparam>
+            <param name="expression">lambda expression returning type's property</param>
+            <param name="values">An System.Collections.Generic.ICollection&lt;U> of values.</param>
+            <returns>An NHibernate.Criterion.InExpression.</returns>
+        </member>
+        <member name="M:NHibernate.LambdaExtensions.SqlExpression.InG``1(System.Linq.Expressions.Expression{System.Func{``0}},System.Collections.Generic.ICollection{``0})">
+            <summary>
+            Apply an "in" constraint to the named property.
+            </summary>
+            <typeparam name="T">Generic type</typeparam>
+            <param name="expression">lambda expression returning type's property</param>
+            <param name="values">An System.Collections.Generic.ICollection&lt;T> of values.</param>
+            <returns>An NHibernate.Criterion.InExpression.</returns>
+        </member>
+        <member name="M:NHibernate.LambdaExtensions.SqlExpression.Not``1(System.Linq.Expressions.Expression{System.Func{``0,System.Boolean}})">
+            <summary>
+            Return the negation of an expression
+            </summary>
+            <typeparam name="T">Generic type</typeparam>
+            <param name="expression">Lambda expression</param>
+            <returns>A NHibernate.Criterion.NotExpression.</returns>
+        </member>
+        <member name="M:NHibernate.LambdaExtensions.SqlExpression.Not(System.Linq.Expressions.Expression{System.Func{System.Boolean}})">
+            <summary>
+            Return the negation of an expression
+            </summary>
+            <param name="expression">Lambda expression</param>
+            <returns>A NHibernate.Criterion.NotExpression.</returns>
+        </member>
+    </members>
+</doc>

@@ -1,0 +1,11 @@
+The source for this release can be downloaded from the Subversion repository at the following addresses:
+
+Tagged release:
+https://svn.castleproject.org/svn/castle/tags/Windsor-2.0
+
+Release branch:
+https://svn.castleproject.org/svn/castle/branches/windsor-2.x
+
+Trunk version: r5654
+
+To get the source from Subversion, you need to make use of a subversion client, such as TortoiseSvn or the svn command line client.

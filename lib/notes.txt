@@ -1,0 +1,12 @@
+
+nunit binaries from 2.4.2 zip
+
+aspnetmvc from MVC 2 Preview 2 msi
+
+autofac built from svn branches/1.4 against MVC 2 Preview 2 assemblies
+
+fluentnhibernate 1.0RTM, build 593, using nhibernate 2.1.0.400
+
+sqlite from 1.0.65 zip
+
+linq to nhibernate 
