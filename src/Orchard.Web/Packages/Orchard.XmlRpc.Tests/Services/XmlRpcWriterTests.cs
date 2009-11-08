@@ -34,12 +34,12 @@ namespace Orchard.XmlRpc.Tests.Services {
             var element = arrayMapper.Map(arr);
 
             Assert.That(NoSpace(element.ToString()), Is.EqualTo(NoSpace(@"
-<array>
+<array><data>
 <value><struct>
-<members><member><name>Hello</name><value><string>world</string></value></member></members>
+<member><name>Hello</name><value><string>world</string></value></member>
 </struct></value>
 <value><int>19</int></value>
-</array>
+</data></array>
 ")));
         }
 
