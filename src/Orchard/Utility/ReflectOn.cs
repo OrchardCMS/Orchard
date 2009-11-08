@@ -50,11 +50,11 @@ namespace Orchard.Utility {
         }
 
         public static string NameOf(Expression<Action<T>> expression) {
-            return Reflect.GetNameOf(expression.Body);
+            return Reflect.GetNameOf(expression);
         }
 
         public static string NameOf<TResult>(Expression<Func<T, TResult>> expression) {
-            return Reflect.GetNameOf(expression.Body);
+            return Reflect.GetNameOf(expression);
         }
     }
 }

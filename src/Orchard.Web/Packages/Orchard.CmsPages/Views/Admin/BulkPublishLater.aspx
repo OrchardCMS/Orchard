@@ -35,9 +35,8 @@
                 int pageIndex = 0;
                 foreach (var pageEntry in Model.PageEntries.Where(e => e.IsChecked)) {
             %>
-                    <%--TODO: Use "NameOf" when it supports these expressions--%>
-                    <input type="hidden" value="<%=pageEntry.PageId %>" name="<%=string.Format("PageEntries[{0}].PageId", pageIndex)%>"/>
-                    <input type="hidden" value="<%=pageEntry.IsChecked %>" name="<%=string.Format("PageEntries[{0}].IsChecked", pageIndex)%>"/>
+                    <input type="hidden" value="<%=pageEntry.PageId %>" name="<%=Html.NameOf(m => m.PageEntries[pageIndex].PageId)%>"/>
+                    <input type="hidden" value="<%=pageEntry.IsChecked %>" name="<%=Html.NameOf(m => m.PageEntries[pageIndex].IsChecked)%>"/>
             <%  pageIndex++;
             }%>
     </div>

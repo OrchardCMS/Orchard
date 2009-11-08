@@ -99,9 +99,8 @@ string SplitDateTime(DateTime dt)
             %>
             <tr>
                 <td>
-                    <%--TODO: Use "NameOf" when it supports these expressions--%>
-                    <input type="hidden" value="<%=Model.PageEntries[pageIndex].PageId %>" name="<%=string.Format("PageEntries[{0}].PageId", pageIndex)%>"/>
-                    <input type="checkbox" value="true" name="<%=string.Format("PageEntries[{0}].IsChecked", pageIndex)%>"/>
+                    <input type="hidden" value="<%=Model.PageEntries[pageIndex].PageId %>" name="<%=Html.NameOf(m => m.PageEntries[pageIndex].PageId)%>"/>
+                    <input type="checkbox" value="true" name="<%=Html.NameOf(m => m.PageEntries[pageIndex].IsChecked)%>"/>
                 </td>
                 <td>
                 <% if (pageEntry.IsPublished) { %>

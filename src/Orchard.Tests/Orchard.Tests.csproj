@@ -130,6 +130,8 @@
     <Compile Include="Records\Foo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Stubs\StubHttpContext.cs" />
+    <Compile Include="Utility\ReflectOnTests.cs" />
+    <Compile Include="Utility\ReflectTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Orchard\Orchard.csproj">

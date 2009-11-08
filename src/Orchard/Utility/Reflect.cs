@@ -1,7 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq.Expressions;
 using System.Reflection;
-using System.Web.Mvc;
+using System.Text;
+using System.Linq;
 using Orchard.Validation;
 
 namespace Orchard.Utility {
@@ -45,11 +48,11 @@ namespace Orchard.Utility {
         }
 
         public static string NameOf<T>(T value, Expression<Action<T>> expression) {
-            return GetNameOf(expression.Body);
+            return GetNameOf(expression);
         }
 
         public static string NameOf<T, TResult>(T value, Expression<Func<T, TResult>> expression) {
-            return GetNameOf(expression.Body);
+            return GetNameOf(expression);
         }
 
         internal static MemberInfo GetMemberInfo(LambdaExpression lambda) {
@@ -76,18 +79,108 @@ namespace Orchard.Utility {
             return memberExpression;
         }
 
-        internal static string GetNameOf(Expression expression) {
-            MemberExpression memberExpression = GetMemberExpression(expression);
-            if (memberExpression == null) {
-                LambdaExpression lambda = expression as LambdaExpression;
-                if (lambda == null)
-                    return null;
-                return GetMemberInfo(lambda).Name;
+        internal static void AddNames(Expression expression, NameBuilder nb) {
+            if (expression == null)
+                return;
+
+            switch (expression.NodeType) {
+                case ExpressionType.MemberAccess:
+                    var memberExpression = (MemberExpression)expression;
+                    AddNames(memberExpression.Expression, nb);
+                    if (nb.DotNeeded)
+                        nb.Append(".");
+                    nb.Append(memberExpression.Member.Name);
+                    break;
+
+                //case ExpressionType.Convert:
+                //    var unaryExpression = (UnaryExpression)expression;
+                //    AddNames(unaryExpression.Operand, nb);
+                //    break;
+
+                case ExpressionType.Call:
+                    var callExpression = (MethodCallExpression)expression;
+                    MethodInfo method = callExpression.Method;
+                    bool isIndexer = (method.Name == "get_Item" && method.IsSpecialName);
+                    if (!isIndexer) {
+                        goto default;
+                    }
+
+                    AddNames(callExpression.Object, nb);
+                    nb.Append("[" + GetArguments(callExpression.Arguments).Aggregate((a, b) => a + b) + "]");
+                    break;
+
+                case ExpressionType.Parameter:
+                    break;
+
+                default:
+                    throw new InvalidOperationException(
+                        string.Format("Unsupported expression type \"{0}\" in named expression", Enum.GetName(typeof(ExpressionType), expression.NodeType)));
             }
-            string parentName = GetNameOf(memberExpression.Expression);
-            if (parentName == null)
-                return memberExpression.Member.Name;
-            return parentName + "." + memberExpression.Member.Name;
+        }
+
+        private static IEnumerable<string> GetArguments(IEnumerable<Expression> expressions) {
+            foreach (var expression in expressions) {
+                object value = GetExpressionConstantValue(expression);
+                string result = value == null ? null : value.ToString();
+                yield return result;
+            }
+        }
+
+        private static object GetExpressionConstantValue(Expression expression) {
+            switch (expression.NodeType) {
+                case ExpressionType.Constant:
+                    var constantExpression = (ConstantExpression)expression;
+                    return constantExpression.Value;
+
+                case ExpressionType.MemberAccess:
+                    var memberExpression = (MemberExpression)expression;
+                    object value = GetExpressionConstantValue(memberExpression.Expression);
+                    if (value == null)
+                        throw new InvalidOperationException("Member access to \"null\" instance is not supported");
+
+                    FieldInfo fieldInfo = memberExpression.Member as FieldInfo;
+                    if (fieldInfo != null){
+                        return fieldInfo.GetValue(value);
+                    }
+
+                    PropertyInfo propertyInfo = memberExpression.Member as PropertyInfo;
+                    if (propertyInfo != null) {
+                        return propertyInfo.GetValue(value, null);
+                    }
+                    throw new InvalidOperationException(
+                        string.Format("Member access expression \"{0}\" not supported", memberExpression.GetType().FullName));
+
+                default:
+                    throw new InvalidOperationException(
+                        string.Format("Unsupported expression type\"{0}\" in method or indexer argument", Enum.GetName(typeof(ExpressionType), expression.NodeType)));
+            }
+        }
+
+        internal static string GetNameOf(LambdaExpression expression) {
+            var nb = new NameBuilder(expression);
+            AddNames(expression.Body, nb);
+            return nb.ToString();
+        }
+
+        internal class NameBuilder {
+            private readonly StringBuilder _stringBuilder = new StringBuilder();
+            private readonly LambdaExpression _expression;
+
+            public NameBuilder(LambdaExpression expression) {
+                _expression = expression;
+            }
+
+            public override string ToString() {
+                return _stringBuilder.ToString();
+            }
+
+            public bool DotNeeded {
+                get { return _stringBuilder.Length > 0; }
+            }
+
+                public void Append(string s) {
+                _stringBuilder.Append(s);
+            }
         }
     }
 }
