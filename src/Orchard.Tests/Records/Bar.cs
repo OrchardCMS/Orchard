@@ -1,4 +1,4 @@
-namespace Orchard.Tests.Models {
+namespace Orchard.Tests.Records {
     public class Bar {
         public virtual int Id { get; set; }
         public virtual decimal Height { get; set; }

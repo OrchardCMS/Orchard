@@ -9,7 +9,7 @@ using NHibernate;
 using NHibernate.Criterion;
 using NHibernate.Tool.hbm2ddl;
 using NUnit.Framework;
-using Orchard.Tests.Models;
+using Orchard.Tests.Records;
 
 namespace Orchard.Tests {
     [TestFixture]

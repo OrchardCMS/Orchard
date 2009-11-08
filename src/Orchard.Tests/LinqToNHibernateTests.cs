@@ -2,7 +2,7 @@
 using NHibernate;
 using NHibernate.Linq;
 using NUnit.Framework;
-using Orchard.Tests.Models;
+using Orchard.Tests.Records;
 
 namespace Orchard.Tests {
     [TestFixture]

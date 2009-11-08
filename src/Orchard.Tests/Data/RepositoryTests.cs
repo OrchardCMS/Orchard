@@ -5,7 +5,7 @@ using System.Linq;
 using NHibernate;
 using NUnit.Framework;
 using Orchard.Data;
-using Orchard.Tests.Models;
+using Orchard.Tests.Records;
 
 namespace Orchard.Tests.Data {
     [TestFixture]

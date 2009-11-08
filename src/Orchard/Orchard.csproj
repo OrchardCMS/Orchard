@@ -122,6 +122,14 @@
     <Compile Include="Logging\LoggingModule.cs" />
     <Compile Include="Logging\NullLogger.cs" />
     <Compile Include="Logging\NullLoggerFactory.cs" />
+    <Compile Include="Models\DefaultModelManager.cs" />
+    <Compile Include="Models\Driver\NewModelContext.cs" />
+    <Compile Include="Models\IModelManager.cs" />
+    <Compile Include="Models\Driver\IModelDriver.cs" />
+    <Compile Include="Models\IModel.cs" />
+    <Compile Include="Models\ModelExtensions.cs" />
+    <Compile Include="Models\ModelPart.cs" />
+    <Compile Include="Models\ModelRoot.cs" />
     <Compile Include="Mvc\Html\HtmlHelperExtensions.cs" />
     <Compile Include="Mvc\Filters\FilterProvider.cs" />
     <Compile Include="Mvc\Filters\FilterResolvingActionInvoker.cs" />
