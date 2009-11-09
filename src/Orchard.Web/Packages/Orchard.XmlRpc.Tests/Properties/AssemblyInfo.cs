@@ -8,9 +8,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("Orchard.XmlRpc.Tests")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Microsoft IT")]
 [assembly: AssemblyProduct("Orchard.XmlRpc.Tests")]
-[assembly: AssemblyCopyright("Copyright © Microsoft IT 2009")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
