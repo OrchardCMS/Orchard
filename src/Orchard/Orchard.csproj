@@ -145,6 +145,8 @@
     <Compile Include="Notify\NotifierExtensions.cs" />
     <Compile Include="Notify\NotifyEntry.cs" />
     <Compile Include="Notify\NotifyFilter.cs" />
+    <Compile Include="Security\IPermissionProvider.cs" />
+    <Compile Include="Security\Permission.cs" />
     <Compile Include="Services\Clock.cs" />
     <Compile Include="Storage\FileSystemStorageProvider.cs" />
     <Compile Include="Storage\IStorageFile.cs" />
