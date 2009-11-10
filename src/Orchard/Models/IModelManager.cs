@@ -1,5 +1,3 @@
-using Orchard.Security;
-
 namespace Orchard.Models {
     public interface IModelManager : IDependency {
         IModel New(string modelType);

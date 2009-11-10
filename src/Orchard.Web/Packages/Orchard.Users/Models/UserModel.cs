@@ -1,5 +1,4 @@
-﻿using System;
-using Orchard.Models;
+﻿using Orchard.Models;
 using Orchard.Security;
 
 namespace Orchard.Users.Models {
