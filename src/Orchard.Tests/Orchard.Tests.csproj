@@ -101,7 +101,7 @@
     <Compile Include="Data\RepositoryTests.cs" />
     <Compile Include="Data\StubLocator.cs" />
     <Compile Include="Environment\DefaultOrchardHostTests.cs" />
-    <Compile Include="Environment\DefaultOrchardRuntimeTests.cs" />
+    <Compile Include="Environment\DefaultOrchardShellTests.cs" />
     <Compile Include="Environment\OrchardStarterTests.cs" />
     <Compile Include="Logging\LoggingModuleTests.cs" />
     <Compile Include="Models\DefaultModelBuilderTests.cs" />

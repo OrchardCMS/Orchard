@@ -90,8 +90,8 @@
     <Compile Include="Data\ISessionLocator.cs" />
     <Compile Include="Data\DataModule.cs" />
     <Compile Include="Data\Orderable.cs" />
-    <Compile Include="Environment\DefaultOrchardRuntime.cs" />
-    <Compile Include="Environment\IOrchardRuntime.cs" />
+    <Compile Include="Environment\DefaultOrchardShell.cs" />
+    <Compile Include="Environment\IOrchardShell.cs" />
     <Compile Include="Environment\OrchardStarter.cs" />
     <Compile Include="IDependency.cs" />
     <Compile Include="Mvc\Html\ThemeExtensions.cs" />

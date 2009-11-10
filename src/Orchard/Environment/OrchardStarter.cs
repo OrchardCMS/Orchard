@@ -17,8 +17,8 @@ namespace Orchard.Environment {
                 .SingletonScoped();
             builder.Register<DefaultCompositionStrategy>().As<ICompositionStrategy>()
                 .SingletonScoped();
-            builder.Register<DefaultOrchardRuntime>().As<IOrchardRuntime>()
-                .ContainerScoped().InContext("runtime");
+            builder.Register<DefaultOrchardShell>().As<IOrchardShell>()
+                .ContainerScoped().InContext("shell");
 
             // The container provider gives you access to the lowest container at the time, 
             // and dynamically creates a per-request container. The DisposeRequestContainer method

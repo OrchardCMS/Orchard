@@ -12,7 +12,7 @@ namespace Orchard.Environment {
         private readonly ICompositionStrategy _compositionStrategy;
         private readonly ControllerBuilder _controllerBuilder;
 
-        private IOrchardRuntime _current;
+        private IOrchardShell _current;
 
 
         public DefaultOrchardHost(
@@ -26,14 +26,14 @@ namespace Orchard.Environment {
         }
 
 
-        public IOrchardRuntime Current {
+        public IOrchardShell Current {
             get { return _current; }
         }
 
         protected virtual void Initialize() {
-            var runtime = CreateRuntime();
-            runtime.Activate();
-            _current = runtime;
+            var shell = CreateShell();
+            shell.Activate();
+            _current = shell;
 
             _controllerBuilder.SetControllerFactory(new OrchardControllerFactory());
             ServiceLocator.SetLocator(t=>_containerProvider.RequestContainer.Resolve(t));
@@ -44,7 +44,7 @@ namespace Orchard.Environment {
         }
 
 
-        protected virtual IOrchardRuntime CreateRuntime() {
+        protected virtual IOrchardShell CreateShell() {
 
             // add module types to container being built
             var addingModulesAndServices = new ContainerBuilder();
@@ -59,18 +59,18 @@ namespace Orchard.Environment {
                         addingModulesAndServices.Register(serviceType).As(interfaceType).ContainerScoped();
             }
 
-            var runtimeContainer = _container.CreateInnerContainer();
-            runtimeContainer.TagWith("runtime");
-            addingModulesAndServices.Build(runtimeContainer);
+            var shellContainer = _container.CreateInnerContainer();
+            shellContainer.TagWith("shell");
+            addingModulesAndServices.Build(shellContainer);
 
             // instantiate and register modules on container being built
             var addingModules = new ContainerBuilder();
-            foreach (var module in runtimeContainer.Resolve<IEnumerable<IModule>>()) {
+            foreach (var module in shellContainer.Resolve<IEnumerable<IModule>>()) {
                 addingModules.RegisterModule(module);
             }
-            addingModules.Build(runtimeContainer);
+            addingModules.Build(shellContainer);
 
-            return runtimeContainer.Resolve<IOrchardRuntime>();
+            return shellContainer.Resolve<IOrchardShell>();
         }
 
         #region IOrchardHost Members
@@ -81,8 +81,8 @@ namespace Orchard.Environment {
         void IOrchardHost.EndRequest() {
             EndRequest();
         }
-        IOrchardRuntime IOrchardHost.CreateRuntime() {
-            return CreateRuntime();
+        IOrchardShell IOrchardHost.CreateShell() {
+            return CreateShell();
         }
         #endregion
     }

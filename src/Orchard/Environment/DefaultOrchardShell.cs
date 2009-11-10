@@ -3,13 +3,13 @@ using System.Linq;
 using Orchard.Mvc;
 
 namespace Orchard.Environment {
-    public class DefaultOrchardRuntime : IOrchardRuntime {
+    public class DefaultOrchardShell : IOrchardShell {
         private readonly IEnumerable<IRouteProvider> _routeProviders;
         private readonly IRoutePublisher _routePublisher;
         private readonly IEnumerable<IModelBinderProvider> _modelBinderProviders;
         private readonly IModelBinderPublisher _modelBinderPublisher;
 
-        public DefaultOrchardRuntime(
+        public DefaultOrchardShell(
             IEnumerable<IRouteProvider> routeProviders,
             IRoutePublisher routePublisher,
             IEnumerable<IModelBinderProvider> modelBinderProviders,

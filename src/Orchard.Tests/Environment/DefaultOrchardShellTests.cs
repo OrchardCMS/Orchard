@@ -10,7 +10,7 @@ using Orchard.Mvc;
 
 namespace Orchard.Tests.Environment {
     [TestFixture]
-    public class DefaultOrchardRuntimeTests {
+    public class DefaultOrchardShellTests {
         static RouteDescriptor Desc(string name, string url) {
             return new RouteDescriptor { Name = name, Route = new Route(url, new MvcRouteHandler()) };
         }
@@ -30,7 +30,7 @@ namespace Orchard.Tests.Environment {
             var modelBinderProvider2 = new StubModelBinderProvider(new[] { BinderDesc(typeof(int), null), BinderDesc(typeof(long), null) });
             var modelBinderPublisher = new StubModelBinderPublisher();
 
-            var runtime = new DefaultOrchardRuntime(
+            var runtime = new DefaultOrchardShell(
                 new[] { provider1, provider2 },
                 publisher,
                 new[] { modelBinderProvider1, modelBinderProvider2 },

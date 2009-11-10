@@ -1,5 +1,5 @@
 namespace Orchard.Environment {
-    public interface IOrchardRuntime {
+    public interface IOrchardShell {
         void Activate();
     }
 }
