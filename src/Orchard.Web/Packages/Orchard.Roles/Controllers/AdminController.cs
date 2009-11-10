@@ -1,18 +1,31 @@
-﻿using System.Web.Mvc;
+﻿using System.Linq;
+using System.Web.Mvc;
+using Orchard.Data;
 using Orchard.Notify;
+using Orchard.Roles.Models;
+using Orchard.Roles.ViewModels;
 
 namespace Orchard.Roles.Controllers {
     [ValidateInput(false)]
     public class AdminController : Controller {
+        private readonly IRepository<RoleRecord> _roleRepository;
         private readonly INotifier _notifier;
 
-        public AdminController(INotifier notifier) {
+        public AdminController(IRepository<RoleRecord> roleRepository, INotifier notifier) {
+            _roleRepository = roleRepository;
             _notifier = notifier;
         }
 
-
         public ActionResult Index() {
-            return View();
+            var model = new RolesIndexViewModel {
+                                                    Rows = _roleRepository.Fetch(x => x.Name != null)
+                                                        .Select(x => new RolesIndexViewModel.Row {
+                                                                                                     Role = x
+                                                                                                 })
+                                                        .ToList()
+                                                };
+
+            return View(model);
         }
     }
 }

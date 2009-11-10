@@ -28,7 +28,7 @@
 						<span class="filterActions">
 						    <%=Html.ActionLink("Add a new folder", "Create") %>
 						</span>
-						<table id="Table1" cellspacing="0" class="roundCorners clearLayout" summary="This is a table of the pages currently available for use in your application.">
+						<table id="Table1" cellspacing="0" class="roundCorners clearLayout" summary="This is a table of the media folders currently available for use in your application.">
 							<colgroup>
 								<col id="Col1" />
 								<col id="Col2" />
