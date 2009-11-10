@@ -28,8 +28,15 @@ namespace Orchard.Roles.Controllers {
             return View(model);
         }
 
+        //TODO: NYI
         public ActionResult Create() {
             var model = new RoleCreateViewModel();
+            return View(model);
+        }
+
+        //TODO: NYI
+        public ActionResult Edit(int id) {
+            var model = new RoleEditViewModel();
             return View(model);
         }
     }
