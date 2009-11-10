@@ -27,5 +27,10 @@ namespace Orchard.Roles.Controllers {
 
             return View(model);
         }
+
+        public ActionResult Create() {
+            var model = new RoleCreateViewModel();
+            return View(model);
+        }
     }
 }
