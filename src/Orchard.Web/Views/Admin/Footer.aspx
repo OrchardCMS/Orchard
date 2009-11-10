@@ -24,6 +24,17 @@
                     <li><%=Html.ActionLink("Manage Folders", "Index", new {area="Orchard.Media",controller="Admin"}) %></li>
                 </ul>
             </div>
+            <div class="leftNavMod">
+                <h4>
+                    Users</h4>
+                <ul>
+                    <li><%=Html.ActionLink("Manage Roles", "Index", new {area="Orchard.Roles",controller="Admin"}) %></li>
+                </ul>
+                <ul>
+                    <li><%=Html.ActionLink("Add a Role", "Create", new {area="Orchard.Roles",controller="Admin"}) %></li>
+                </ul>
+            </div>
+            
         </div>
     </div><%-- bd --%>
     <div id="ft" role="contentinfo">
