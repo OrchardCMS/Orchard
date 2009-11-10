@@ -21,7 +21,7 @@ namespace Orchard.Tests.Mvc {
         public void Init() {
             var builder = new ContainerBuilder();
             builder.Register<ReplacementFooController>().As<IController>()
-                .Named("controller.orchard.web.foo")
+                .Named("controller.orchard.foo")
                 .FactoryScoped();
 
             var container = builder.Build();

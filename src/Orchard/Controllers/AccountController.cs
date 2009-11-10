@@ -17,14 +17,14 @@ namespace Orchard.Controllers {
         // This constructor is not used by the MVC framework but is instead provided for ease
         // of unit testing this type. See the comments at the end of this file for more
         // information.
-        public AccountController(IFormsAuthentication formsAuth, IMembershipService service) {
+        public AccountController(IFormsAuthentication formsAuth, IMembershipServiceShim service) {
             FormsAuth = formsAuth ?? new FormsAuthenticationService();
             MembershipService = service ?? new AccountMembershipService();
         }
 
         public IFormsAuthentication FormsAuth { get; private set; }
 
-        public IMembershipService MembershipService { get; private set; }
+        public IMembershipServiceShim MembershipService { get; private set; }
 
         public ActionResult LogOn() {
             return View();
@@ -238,7 +238,7 @@ namespace Orchard.Controllers {
         #endregion
     }
 
-    public interface IMembershipService {
+    public interface IMembershipServiceShim {
         int MinPasswordLength { get; }
 
         bool ValidateUser(string userName, string password);
@@ -246,7 +246,7 @@ namespace Orchard.Controllers {
         bool ChangePassword(string userName, string oldPassword, string newPassword);
     }
 
-    public class AccountMembershipService : IMembershipService {
+    public class AccountMembershipService : IMembershipServiceShim {
         private readonly MembershipProvider _provider;
 
         public AccountMembershipService()

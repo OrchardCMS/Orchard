@@ -161,6 +161,7 @@
     <Compile Include="Packages\PackageFolders.cs" />
     <Compile Include="Packages\PackageDescriptor.cs" />
     <Compile Include="Packages\PackageManager.cs" />
+    <Compile Include="Security\CreateUserParams.cs" />
     <Compile Include="Security\IAuthorizationService.cs" />
     <Compile Include="Security\IMembershipService.cs" />
     <Compile Include="Security\IUser.cs" />

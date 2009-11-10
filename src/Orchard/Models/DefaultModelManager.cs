@@ -8,12 +8,15 @@ namespace Orchard.Models {
     public class DefaultModelManager : IModelManager {
         private readonly IEnumerable<IModelDriver> _drivers;
         private readonly IRepository<ModelRecord> _modelRepository;
+        private readonly IRepository<ModelTypeRecord> _modelTypeRepository;
 
         public DefaultModelManager(
             IEnumerable<IModelDriver> drivers,
-            IRepository<ModelRecord> modelRepository) {
+            IRepository<ModelRecord> modelRepository,
+            IRepository<ModelTypeRecord> modelTypeRepository) {
             _drivers = drivers;
             _modelRepository = modelRepository;
+            _modelTypeRepository = modelTypeRepository;
         }
 
         public virtual IModel New(string modelType) {
@@ -47,12 +50,44 @@ namespace Orchard.Models {
             // set the id
             context.Instance.As<ModelRoot>().Id = context.Id;
 
-            // invoke drivers to weld aspects onto kernel
+            // invoke drivers to acquire state, or at least establish lazy loading callbacks
             foreach (var driver in _drivers) {
                 driver.Load(context);
             }
 
             return context.Instance;
+        }
+
+        public void Create(IModel model) {
+            // produce root record to determine the model id
+            var modelRecord = new ModelRecord {ModelType = AcquireModelTypeRecord(model.ModelType)};
+            _modelRepository.Create(modelRecord);
+
+            // build a context with the initialized instance to create
+            var context = new CreateModelContext {
+                Id = modelRecord.Id,
+                ModelType = modelRecord.ModelType.Name,
+                Instance = model.As<ModelRoot>().Welded
+            };
+
+            // set the id
+            context.Instance.As<ModelRoot>().Id = context.Id;
+
+
+            // invoke drivers to add information to persistent stores
+            foreach (var driver in _drivers) {
+                driver.Create(context);
+            }
+        }
+
+        private ModelTypeRecord AcquireModelTypeRecord(string modelType) {
+            var modelTypeRecord = _modelTypeRepository.Get(x => x.Name == modelType);
+            if (modelTypeRecord == null) {
+                //TEMP: this is not safe... Model types could be created concurrently?
+                modelTypeRecord = new ModelTypeRecord {Name = modelType};
+                _modelTypeRepository.Create(modelTypeRecord);
+            }
+            return modelTypeRecord;
         }
     }
 }

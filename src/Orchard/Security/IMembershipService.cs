@@ -7,6 +7,9 @@ using System.Web.Security;
 namespace Orchard.Security {
     public interface IMembershipService : IDependency {
         void ReadSettings(MembershipSettings settings);
+
+        IUser CreateUser(CreateUserParams createUserParams);
+        IUser GetUser(string username);
     }
 
     public class MembershipSettings {

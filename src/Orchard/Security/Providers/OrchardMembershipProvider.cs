@@ -8,9 +8,6 @@ using Orchard.Environment;
 
 namespace Orchard.Security.Providers {
     public class OrchardMembershipProvider : MembershipProvider {
-        public OrchardMembershipProvider() {
-            int x =5;
-        }
 
         static IMembershipService GetService() {
             return ServiceLocator.Resolve<IMembershipService>();
@@ -33,10 +30,34 @@ namespace Orchard.Security.Providers {
             return settings;
         }
 
+        private MembershipUser BuildMembershipUser(IUser user) {
+            return new MembershipUser(Name,
+                user.UserName,
+                user.Id,
+                user.Email,
+                null,
+                null,
+                true,
+                false,
+                DateTime.UtcNow,
+                DateTime.UtcNow,
+                DateTime.UtcNow,
+                DateTime.UtcNow,
+                DateTime.UtcNow);
+        }
 
         public override MembershipUser CreateUser(string username, string password, string email, string passwordQuestion, string passwordAnswer, bool isApproved, object providerUserKey, out MembershipCreateStatus status) {
-            throw new NotImplementedException();
+            var user = GetService().CreateUser(new CreateUserParams(username, password, email, passwordQuestion, passwordAnswer, isApproved));
+
+            if (user == null) {
+                status = MembershipCreateStatus.ProviderError;
+                return null;
+            }
+
+            status = MembershipCreateStatus.Success;
+            return BuildMembershipUser(user);
         }
+
 
         public override bool ChangePasswordQuestionAndAnswer(string username, string password, string newPasswordQuestion, string newPasswordAnswer) {
             throw new NotImplementedException();

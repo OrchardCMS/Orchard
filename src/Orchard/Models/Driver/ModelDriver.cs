@@ -1,3 +1,4 @@
+using System;
 using Orchard.Data;
 using Orchard.Logging;
 
@@ -10,12 +11,16 @@ namespace Orchard.Models.Driver {
         public ILogger Logger{ get; set;}
 
         void IModelDriver.New(NewModelContext context) {New(context);}
-        void IModelDriver.Load(LoadModelContext context) {Load(context);}
+        void IModelDriver.Create(CreateModelContext context) { Create(context); }
+        void IModelDriver.Load(LoadModelContext context) { Load(context); }
 
         protected virtual void New(NewModelContext context) {
         }
 
         protected virtual void Load(LoadModelContext context) {
+        }
+
+        protected virtual void Create(CreateModelContext context) {
         }
 
         protected void WeldModelPart<TPart>(NewModelContext context) where TPart : class,IModel,new() {

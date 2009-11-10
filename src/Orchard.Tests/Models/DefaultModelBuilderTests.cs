@@ -136,6 +136,15 @@ namespace Orchard.Tests.Models {
 
         }
 
+        [Test]
+        public void CreateShouldMakeModelAndModelTypeRecords() {
+            var beta = _manager.New("beta");
+            _manager.Create(beta);
+
+            var modelRecord = _container.Resolve<IRepository<ModelRecord>>().Get(beta.Id);
+            Assert.That(modelRecord, Is.Not.Null);
+            Assert.That(modelRecord.ModelType.Name, Is.EqualTo("beta"));
+        }
 
         private ModelRecord CreateModelRecord(string modelType) {
             var modelRepository = _container.Resolve<IRepository<ModelRecord>>();
