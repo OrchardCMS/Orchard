@@ -95,6 +95,10 @@
     </Reference>
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
+    <Reference Include="Yaml, Version=1.0.3370.39839, Culture=neutral, PublicKeyToken=187a3d240e44a135, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\yaml\Yaml.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DataUtility.cs" />
@@ -120,6 +124,8 @@
     <Compile Include="Mvc\RouteCollectionPublisherTests.cs" />
     <Compile Include="Notify\NotifierTests.cs" />
     <Compile Include="Notify\NotifyFilterTests.cs" />
+    <Compile Include="Packages\PackageFoldersTests.cs" />
+    <Compile Include="Packages\PackageManagerTests.cs" />
     <Compile Include="Services\ClockTests.cs" />
     <Compile Include="Storage\FileSystemStorageProviderTests.cs" />
     <Compile Include="Stubs\StubClock.cs" />
@@ -140,6 +146,13 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Packages\FoldersData\Sample2\Two.txt" />
+    <EmbeddedResource Include="Packages\FoldersData\Sample1\Package.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Packages\FoldersData\Sample3\Package.txt" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Utility\" />

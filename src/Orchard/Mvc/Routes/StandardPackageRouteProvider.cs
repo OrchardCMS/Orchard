@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Web.Mvc;
 using System.Web.Routing;
 
@@ -74,5 +75,11 @@ namespace Orchard.Mvc.Routes {
                                                  },
                          };
         }
+
+        public void GetRoutes(ICollection<RouteDescriptor> routes) {
+            foreach (var routeDescriptor in GetRoutes())
+                routes.Add(routeDescriptor);
+        }
+
     }
 }

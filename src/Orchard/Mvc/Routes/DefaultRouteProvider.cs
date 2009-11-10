@@ -28,6 +28,11 @@ namespace Orchard.Mvc.Routes {
                          };
         }
 
+        public void GetRoutes(ICollection<RouteDescriptor> routes) {
+            foreach(var routeDescriptor in GetRoutes())
+                routes.Add(routeDescriptor);
+        }
+
         //TEMP: this is hardcoded to allow base web app controllers to pass
         public class HomeOrAccount : IRouteConstraint {
             public bool Match(HttpContextBase httpContext, Route route, string parameterName, RouteValueDictionary values, RouteDirection routeDirection) {

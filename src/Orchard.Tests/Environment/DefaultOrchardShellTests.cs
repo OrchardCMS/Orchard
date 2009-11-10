@@ -53,6 +53,11 @@ namespace Orchard.Tests.Environment {
             public IEnumerable<RouteDescriptor> GetRoutes() {
                 return _routes;
             }
+            public void GetRoutes(ICollection<RouteDescriptor> routes) {
+                foreach (var routeDescriptor in GetRoutes())
+                    routes.Add(routeDescriptor);
+            }
+
         }
 
         public class StubRoutePublisher : IRoutePublisher {

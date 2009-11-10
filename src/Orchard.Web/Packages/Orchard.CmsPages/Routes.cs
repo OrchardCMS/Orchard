@@ -15,6 +15,11 @@ namespace Orchard.CmsPages {
             _pageManager = pageManager;
         }
 
+        public void GetRoutes(ICollection<RouteDescriptor> routes) {
+            foreach (var routeDescriptor in GetRoutes())
+                routes.Add(routeDescriptor);
+        }
+
         public IEnumerable<RouteDescriptor> GetRoutes() {
             IRouteConstraint slugConstraint = this;
             return new[] {

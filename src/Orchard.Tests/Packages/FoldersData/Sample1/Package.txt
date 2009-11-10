@@ -1,0 +1,8 @@
+﻿name: Le plug-in français
+author: Bertrand Le Roy
+description:
+    This plug-in replaces
+    'the' with 'le'
+version: 1.0
+tags: plug-in, français, the, le
+homepage: http://weblogs.asp.net/bleroy

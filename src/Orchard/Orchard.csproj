@@ -83,6 +83,10 @@
     </Reference>
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
+    <Reference Include="Yaml, Version=1.0.3370.39839, Culture=neutral, PublicKeyToken=187a3d240e44a135, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\yaml\Yaml.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Data\HackSessionLocator.cs" />
@@ -144,12 +148,17 @@
     <Compile Include="Mvc\ModelBinders\KeyedListModelBinder.cs" />
     <Compile Include="Mvc\ModelBinders\ModelBinderDescriptor.cs" />
     <Compile Include="Mvc\OrchardControllerIdentificationStrategy.cs" />
+    <Compile Include="Mvc\Routes\RouteExtensions.cs" />
     <Compile Include="Mvc\ViewModels\AdminViewModel.cs" />
     <Compile Include="Mvc\ViewModels\BaseViewModel.cs" />
     <Compile Include="Notify\Notifier.cs" />
     <Compile Include="Notify\NotifierExtensions.cs" />
     <Compile Include="Notify\NotifyEntry.cs" />
     <Compile Include="Notify\NotifyFilter.cs" />
+    <Compile Include="Packages\PackageEntry.cs" />
+    <Compile Include="Packages\PackageFolders.cs" />
+    <Compile Include="Packages\PackageDescriptor.cs" />
+    <Compile Include="Packages\PackageManager.cs" />
     <Compile Include="Security\IAuthorizationService.cs" />
     <Compile Include="Security\IMembershipService.cs" />
     <Compile Include="Security\IUser.cs" />
