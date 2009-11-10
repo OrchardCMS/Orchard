@@ -122,6 +122,7 @@
     <Compile Include="Mvc\OrchardControllerFactoryTests.cs" />
     <Compile Include="Mvc\OrchardControllerIdentificationStrategyTests.cs" />
     <Compile Include="Mvc\RouteCollectionPublisherTests.cs" />
+    <Compile Include="Mvc\Routes\StandardPackageRouteProviderTests.cs" />
     <Compile Include="Notify\NotifierTests.cs" />
     <Compile Include="Notify\NotifyFilterTests.cs" />
     <Compile Include="Packages\PackageFoldersTests.cs" />

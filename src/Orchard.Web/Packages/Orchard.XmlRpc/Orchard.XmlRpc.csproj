@@ -64,6 +64,7 @@
     <Reference Include="System.Web.Mobile" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Package.txt" />
     <Content Include="Views\Home\Index.aspx" />
     <Content Include="Web.config" />
   </ItemGroup>

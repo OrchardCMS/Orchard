@@ -13,7 +13,7 @@ namespace Orchard.Mvc {
             var container = GetRequestContainer(routeData);
 
             // Determine the area name for the request, and fall back to stock orchard controllers
-            var areaName = GetAreaName(routeData) ?? "Orchard.Web";
+            var areaName = GetAreaName(routeData) ?? "Orchard";
 
             // Service name pattern matches the identification strategy
             var serviceName = ("controller." + areaName + "." + controllerName).ToLowerInvariant();

@@ -74,5 +74,6 @@ version: 2.x
             Assert.That(descriptor.Description, Is.EqualTo("This is the description"));
             Assert.That(descriptor.Version, Is.EqualTo("2.x"));
         }
+
     }
 }

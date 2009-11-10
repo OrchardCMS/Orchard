@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using Yaml.Grammar;
 
 namespace Orchard.Packages {
-    public interface IPackageManager : IDependency {
+    public interface IPackageManager {
         IEnumerable<PackageDescriptor> AvailablePackages();
         IEnumerable<PackageEntry> ActivePackages();
     }
@@ -38,15 +39,26 @@ namespace Orchard.Packages {
         }
 
         private static string GetValue(
-            IDictionary<string, DataItem> fields, 
+            IDictionary<string, DataItem> fields,
             string key) {
-            
+
             DataItem value;
             return fields.TryGetValue(key, out value) ? value.ToString() : null;
         }
 
         public IEnumerable<PackageEntry> ActivePackages() {
-            throw new NotImplementedException();
+            foreach (var descriptor in AvailablePackages()) {
+                //TODO: this component needs access to some "current settings" to know which are active
+                yield return BuildEntry(descriptor);
+            }
+        }
+
+        private static PackageEntry BuildEntry(PackageDescriptor descriptor) {
+            var entry = new PackageEntry {
+                Descriptor = descriptor,
+                Assembly = Assembly.Load(descriptor.Name)
+            };
+            return entry;
         }
     }
 

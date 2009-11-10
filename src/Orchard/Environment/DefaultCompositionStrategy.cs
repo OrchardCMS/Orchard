@@ -5,6 +5,7 @@ using System.Reflection;
 using System.Text;
 using System.Web.Compilation;
 using Autofac;
+using Orchard.Packages;
 
 namespace Orchard.Environment {
     //TEMP: This will be replaced by packaging system
@@ -16,8 +17,17 @@ namespace Orchard.Environment {
     }
 
     public class DefaultCompositionStrategy : ICompositionStrategy {
+        private readonly IPackageManager _packageManager;
+
+        public DefaultCompositionStrategy(IPackageManager packageManager) {
+            _packageManager = packageManager;
+        }
+
         public IEnumerable<Assembly> GetAssemblies() {
-            return BuildManager.GetReferencedAssemblies().OfType<Assembly>();
+            return _packageManager.ActivePackages()
+                .Select(entry => entry.Assembly)
+                .Concat(new[]{typeof(IOrchardHost).Assembly});
+            //return BuildManager.GetReferencedAssemblies().OfType<Assembly>();
         }
 
         public IEnumerable<Type> GetModuleTypes() {

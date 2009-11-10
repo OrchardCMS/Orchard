@@ -59,6 +59,7 @@
     <Reference Include="System.Web.Mobile" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Package.txt" />
     <Content Include="Scripts\langs\en.js" />
     <Content Include="Scripts\license.txt" />
     <Content Include="Scripts\plugins\autoresize\editor_plugin.js" />

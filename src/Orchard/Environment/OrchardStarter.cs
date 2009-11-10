@@ -1,8 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web.Hosting;
 using Autofac;
 using Autofac.Builder;
 using Autofac.Integration.Web;
 using Autofac.Modules;
+using Orchard.Packages;
 
 namespace Orchard.Environment {
     public static class OrchardStarter {
@@ -24,6 +28,17 @@ namespace Orchard.Environment {
             // and dynamically creates a per-request container. The DisposeRequestContainer method
             // still needs to be called on end request, but that's the host component's job to worry about.
             builder.Register<ContainerProvider>().As<IContainerProvider>().ContainerScoped();
+
+            builder.Register<PackageManager>().As<IPackageManager>()
+                .SingletonScoped();
+
+            //builder.Register((ctx, p) => new PackageFolders(MapPaths(p.Named<IEnumerable<string>>("paths"))))
+            //    .As<IPackageFolders>()
+            //    .WithExtendedProperty("paths", new[] { "~/Packages" })
+            //    .SingletonScoped();
+            builder.Register<PackageFolders>().As<IPackageFolders>()
+                .WithArguments(new NamedParameter("paths", new[] { "~/Packages" }))
+                .SingletonScoped();
 
             registrations(builder);
 

@@ -66,6 +66,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Package.txt" />
     <Content Include="Web.config" />
     <Content Include="Views\Web.config" />
   </ItemGroup>
