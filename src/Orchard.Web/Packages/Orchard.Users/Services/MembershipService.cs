@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+using Orchard.Logging;
 using Orchard.Models;
 using Orchard.Security;
 using Orchard.Users.Models;
@@ -12,18 +10,24 @@ namespace Orchard.Users.Services {
 
         public MembershipService(IModelManager modelManager) {
             _modelManager = modelManager;
+            Logger = NullLogger.Instance;
         }
+
+        public ILogger Logger { get; set; }
 
         public void ReadSettings(MembershipSettings settings) {
             // accepting defaults
         }
 
         public IUser CreateUser(CreateUserParams createUserParams) {
-            var user = _modelManager.New("user").As<UserModel>();
-            user.UserName = createUserParams.Username;
-            user.Email = createUserParams.Email;
+            Logger.Information("CreateUser {0} {1}", createUserParams.Username, createUserParams.Email);
+            var user = _modelManager.New("user");
+            user.As<UserModel>().Record = new UserRecord {
+                UserName = createUserParams.Username,
+                Email = createUserParams.Email
+            };
             _modelManager.Create(user);
-            return user;
+            return user.As<IUser>();
         }
 
         public IUser GetUser(string username) {

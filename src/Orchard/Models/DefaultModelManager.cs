@@ -44,6 +44,7 @@ namespace Orchard.Models {
             var context = new LoadModelContext {
                 Id = modelRecord.Id,
                 ModelType = modelRecord.ModelType.Name,
+                Record = modelRecord,
                 Instance = New(modelRecord.ModelType.Name)
             };
 
@@ -60,13 +61,14 @@ namespace Orchard.Models {
 
         public void Create(IModel model) {
             // produce root record to determine the model id
-            var modelRecord = new ModelRecord {ModelType = AcquireModelTypeRecord(model.ModelType)};
+            var modelRecord = new ModelRecord { ModelType = AcquireModelTypeRecord(model.ModelType) };
             _modelRepository.Create(modelRecord);
 
             // build a context with the initialized instance to create
             var context = new CreateModelContext {
                 Id = modelRecord.Id,
                 ModelType = modelRecord.ModelType.Name,
+                Record = modelRecord,
                 Instance = model.As<ModelRoot>().Welded
             };
 
@@ -84,7 +86,7 @@ namespace Orchard.Models {
             var modelTypeRecord = _modelTypeRepository.Get(x => x.Name == modelType);
             if (modelTypeRecord == null) {
                 //TEMP: this is not safe... Model types could be created concurrently?
-                modelTypeRecord = new ModelTypeRecord {Name = modelType};
+                modelTypeRecord = new ModelTypeRecord { Name = modelType };
                 _modelTypeRepository.Create(modelTypeRecord);
             }
             return modelTypeRecord;

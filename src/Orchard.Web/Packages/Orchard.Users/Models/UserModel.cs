@@ -1,14 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using Orchard.Models;
 using Orchard.Security;
 
 namespace Orchard.Users.Models {
-    public class UserModel : ModelPart, IUser {
-        public string UserName { get; set; }
-
-        public string Email { get; set; }
+    public sealed class UserModel : ModelPartWithRecord<UserRecord>, IUser {
+        string IUser.UserName {get { return Record.UserName; }}
+        string IUser.Email {get { return Record.Email; }}
     }
 }

@@ -26,8 +26,10 @@ namespace Orchard.Data {
                 var database =
                     SQLiteConfiguration.Standard.UsingFile(HttpContext.Current.Server.MapPath("~/App_Data/hack.db"));
 
-                var automaps = new AutoPersistenceModel[] {
+                var automaps = new[] {
                     CreatePersistenceModel(Assembly.Load("Orchard.CmsPages")),
+                    CreatePersistenceModel(Assembly.Load("Orchard.Users")),
+                    CreatePersistenceModel(Assembly.Load("Orchard")),
                 };
 
                 return _sessionFactory ??
@@ -36,21 +38,30 @@ namespace Orchard.Data {
                            Fluently.Configure()
                                .Database(database)
                                .Mappings(m => {
-                                             foreach (var automap in automaps) {
-                                                 m.AutoMappings.Add(automap);
-                                             }
-                                         })
+                                   foreach (var automap in automaps) {
+                                       m.AutoMappings.Add(automap);
+                                   }
+                               })
                                .ExposeConfiguration(
                                c => new SchemaUpdate(c).Execute(false /*script*/, true /*doUpdate*/))
                                .BuildSessionFactory(), null) ?? _sessionFactory;
             }
         }
 
-        private AutoPersistenceModel CreatePersistenceModel(Assembly assembly) {
+        private static AutoPersistenceModel CreatePersistenceModel(Assembly assembly) {
             return AutoMap.Assembly(assembly)
-                .Where(t => t.Namespace.EndsWith(".Models") && t.GetProperty("Id") != null)
-                .Alterations(alt => alt.Add(new AutoMappingOverrideAlteration(assembly)))
+                .Where(IsModelType)
+                .Alterations(alt => alt
+                    .Add(new AutoMappingOverrideAlteration(assembly))
+                    .AddFromAssemblyOf<DataModule>())
                 .Conventions.AddFromAssemblyOf<DataModule>();
+        }
+
+        private static bool IsModelType(Type type) {
+            return (type.Namespace.EndsWith(".Models") || type.Namespace.EndsWith(".Records")) &&
+                   type.GetProperty("Id") != null &&
+                   !type.IsSealed &&
+                   !type.IsAbstract;
         }
 
         public ISession For(Type entityType) {

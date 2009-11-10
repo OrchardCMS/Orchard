@@ -1,7 +1,7 @@
 using System;
 
 namespace Orchard.Models {
-    public class ModelPart : IModel {
+    public abstract class ModelPart : IModel {
         protected IModel Next { get; set; }
         protected ModelRoot Root { get; set; }
 
@@ -29,15 +29,5 @@ namespace Orchard.Models {
         public T As<T>() where T : class, IModel {
             return Root.WeldedAs<T>();
         }
-    }
-
-    public class ModelPart<TRecord> : ModelPart {
-        private TRecord _record;
-
-        public TRecord Record {
-            get { return _record; }
-            set {_record = value;}
-        }
-
     }
 }

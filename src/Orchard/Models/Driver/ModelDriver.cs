@@ -1,9 +1,8 @@
 using System;
-using Orchard.Data;
 using Orchard.Logging;
 
 namespace Orchard.Models.Driver {
-    public class ModelDriver : IModelDriver {
+    public abstract class ModelDriver : IModelDriver {
         protected ModelDriver() {
             Logger = NullLogger.Instance;
         }
@@ -27,22 +26,6 @@ namespace Orchard.Models.Driver {
             var newPart = new TPart();
             newPart.Weld(context.Instance);
             context.Instance = newPart;
-        }
-    }
-
-    public class ModelDriver<TRecord> : ModelDriver {
-        private readonly IRepository<TRecord> _repository;
-
-        public ModelDriver(IRepository<TRecord> repository) {
-            _repository = repository;
-        }
-
-        protected override void Load(LoadModelContext context) {
-            var instance = context.Instance.As<ModelPart<TRecord>>();
-            if (instance != null)
-                instance.Record = _repository.Get(context.Id);
-
-            base.Load(context);
         }
     }
 }

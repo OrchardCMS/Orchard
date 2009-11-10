@@ -80,7 +80,7 @@ namespace Orchard.Security.Providers {
         }
 
         public override bool ValidateUser(string username, string password) {
-            throw new NotImplementedException();
+            return true;
         }
 
         public override bool UnlockUser(string userName) {

@@ -23,9 +23,9 @@ namespace Orchard.Tests.Models {
             var databaseFileName = System.IO.Path.GetTempFileName();
             _sessionFactory = DataUtility.CreateSessionFactory(
                 databaseFileName,
+                typeof(GammaRecord),
                 typeof(ModelRecord),
-                typeof(ModelTypeRecord),
-                typeof(GammaRecord));
+                typeof(ModelTypeRecord));
         }
 
         [TestFixtureTearDown]
@@ -111,6 +111,8 @@ namespace Orchard.Tests.Models {
         [Test]
         public void ModelPartWithRecordShouldCallRepositoryToPopulate() {
 
+            CreateModelRecord("gamma");
+            CreateModelRecord("gamma");
             var modelRecord = CreateModelRecord("gamma");
 
             var model = _manager.Get(modelRecord.Id);

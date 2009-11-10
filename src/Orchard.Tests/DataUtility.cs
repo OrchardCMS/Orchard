@@ -28,7 +28,8 @@ namespace Orchard.Tests {
         private static void AddAlterations(AutoMappingAlterationCollection alterations, Type[] types) {
             foreach (var assembly in types.Select(t => t.Assembly).Distinct()) {
                 alterations.Add(new AutoMappingOverrideAlteration(assembly));
-            }            
+            }
+            alterations.AddFromAssemblyOf<DataModule>();
         }
 
         public static ISessionFactory CreateSessionFactory(params Type[] types) {

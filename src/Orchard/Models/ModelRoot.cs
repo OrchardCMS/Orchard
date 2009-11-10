@@ -1,7 +1,7 @@
 using System;
 
 namespace Orchard.Models {
-    public class ModelRoot : IModel {
+    public sealed class ModelRoot : IModel {
         public ModelRoot(string modelType) {
             Welded = this;
             ModelType = modelType;
