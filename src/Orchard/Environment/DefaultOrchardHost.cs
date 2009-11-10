@@ -36,6 +36,7 @@ namespace Orchard.Environment {
             _current = runtime;
 
             _controllerBuilder.SetControllerFactory(new OrchardControllerFactory());
+            ServiceLocator.SetLocator(t=>_containerProvider.RequestContainer.Resolve(t));
         }
 
         protected virtual void EndRequest() {

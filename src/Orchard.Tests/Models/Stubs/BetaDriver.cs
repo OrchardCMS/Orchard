@@ -5,7 +5,7 @@ using System.Text;
 using Orchard.Models.Driver;
 
 namespace Orchard.Tests.Models.Stubs {
-    public class BetaDriver : ModelDriverBase {
+    public class BetaDriver : ModelDriver {
         protected override void New(NewModelContext context) {
             if (context.ModelType == "beta") {
                 WeldModelPart<Beta>(context);

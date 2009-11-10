@@ -5,6 +5,7 @@ namespace Orchard.Security {
     /// Interface provided by the "user" model. 
     /// </summary>
     public interface IUser : IModel {
-        string Name { get; }
+        string UserName { get; }
+        string Email { get; }
     }
 }

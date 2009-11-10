@@ -60,6 +60,7 @@
       <HintPath>..\..\lib\linqnhibernate\NHibernate.Linq.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
@@ -114,6 +115,7 @@
   <ItemGroup>
     <Compile Include="Data\Conventions\AttributeCollectionConvention.cs" />
     <Compile Include="Data\Conventions\CascadeAllDeleteOrphanAttribute.cs" />
+    <Compile Include="Environment\ServiceLocator.cs" />
     <Compile Include="Logging\CastleLogger.cs" />
     <Compile Include="Logging\CastleLoggerFactory.cs" />
     <Compile Include="Logging\ILogger.cs" />
@@ -123,6 +125,7 @@
     <Compile Include="Logging\NullLogger.cs" />
     <Compile Include="Logging\NullLoggerFactory.cs" />
     <Compile Include="Models\DefaultModelManager.cs" />
+    <Compile Include="Models\Driver\ModelDriver.cs" />
     <Compile Include="Models\Driver\NewModelContext.cs" />
     <Compile Include="Models\IModelManager.cs" />
     <Compile Include="Models\Driver\IModelDriver.cs" />
@@ -130,6 +133,8 @@
     <Compile Include="Models\ModelExtensions.cs" />
     <Compile Include="Models\ModelPart.cs" />
     <Compile Include="Models\ModelRoot.cs" />
+    <Compile Include="Models\Records\ModelTypeRecord.cs" />
+    <Compile Include="Models\Records\ModelRecord.cs" />
     <Compile Include="Mvc\Html\HtmlHelperExtensions.cs" />
     <Compile Include="Mvc\Filters\FilterProvider.cs" />
     <Compile Include="Mvc\Filters\FilterResolvingActionInvoker.cs" />
@@ -146,9 +151,12 @@
     <Compile Include="Notify\NotifyEntry.cs" />
     <Compile Include="Notify\NotifyFilter.cs" />
     <Compile Include="Security\IAuthorizationService.cs" />
+    <Compile Include="Security\IMembershipService.cs" />
     <Compile Include="Security\IUser.cs" />
     <Compile Include="Security\Permissions\IPermissionProvider.cs" />
     <Compile Include="Security\Permissions\Permission.cs" />
+    <Compile Include="Security\Providers\OrchardMembershipProvider.cs" />
+    <Compile Include="Security\Providers\OrchardRoleProvider.cs" />
     <Compile Include="Services\Clock.cs" />
     <Compile Include="Storage\FileSystemStorageProvider.cs" />
     <Compile Include="Storage\IStorageFile.cs" />

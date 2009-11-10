@@ -25,6 +25,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orchard.XmlRpc", "Orchard.W
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orchard.XmlRpc.Tests", "Orchard.Web\Packages\Orchard.XmlRpc.Tests\Orchard.XmlRpc.Tests.csproj", "{58506223-CB7D-474F-B936-6E17D53B0FB8}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orchard.Users", "Orchard.Web\Packages\Orchard.Users\Orchard.Users.csproj", "{79AED36E-ABD0-4747-93D3-8722B042454B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orchard.Tests.Packages", "Orchard.Tests.Packages\Orchard.Tests.Packages.csproj", "{6CB3EB30-F725-45C0-9742-42599BA8E8D2}"
+EndProject
 Global
 	GlobalSection(TeamFoundationVersionControl) = preSolution
 		SccNumberOfProjects = 9
@@ -130,6 +134,14 @@ Global
 		{58506223-CB7D-474F-B936-6E17D53B0FB8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{58506223-CB7D-474F-B936-6E17D53B0FB8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{58506223-CB7D-474F-B936-6E17D53B0FB8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{79AED36E-ABD0-4747-93D3-8722B042454B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{79AED36E-ABD0-4747-93D3-8722B042454B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{79AED36E-ABD0-4747-93D3-8722B042454B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{79AED36E-ABD0-4747-93D3-8722B042454B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6CB3EB30-F725-45C0-9742-42599BA8E8D2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6CB3EB30-F725-45C0-9742-42599BA8E8D2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6CB3EB30-F725-45C0-9742-42599BA8E8D2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6CB3EB30-F725-45C0-9742-42599BA8E8D2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -142,5 +154,6 @@ Global
 		{15CFEF40-F2C2-44DD-ADAF-18A26DA2320C} = {E9C9F120-07BA-4DFB-B9C3-3AFB9D44C9D5}
 		{0DC6B598-6D03-4923-A6C2-274D09854117} = {E9C9F120-07BA-4DFB-B9C3-3AFB9D44C9D5}
 		{58506223-CB7D-474F-B936-6E17D53B0FB8} = {E9C9F120-07BA-4DFB-B9C3-3AFB9D44C9D5}
+		{79AED36E-ABD0-4747-93D3-8722B042454B} = {E9C9F120-07BA-4DFB-B9C3-3AFB9D44C9D5}
 	EndGlobalSection
 EndGlobal

@@ -111,6 +111,7 @@
     <Compile Include="Models\Stubs\BetaDriver.cs" />
     <Compile Include="Models\Stubs\Flavored.cs" />
     <Compile Include="Models\Stubs\FlavoredDriver.cs" />
+    <Compile Include="Models\Stubs\Gamma.cs" />
     <Compile Include="Models\Stubs\Styled.cs" />
     <Compile Include="Models\Stubs\StyledDriver.cs" />
     <Compile Include="Mvc\ModelBinders\KeyedListModelBinderTests.cs" />
@@ -130,8 +131,6 @@
     <Compile Include="Records\Foo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Stubs\StubHttpContext.cs" />
-    <Compile Include="Utility\ReflectOnTests.cs" />
-    <Compile Include="Utility\ReflectTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Orchard\Orchard.csproj">
@@ -141,6 +140,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Utility\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

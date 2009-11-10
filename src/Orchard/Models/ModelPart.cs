@@ -30,4 +30,14 @@ namespace Orchard.Models {
             return Root.WeldedAs<T>();
         }
     }
+
+    public class ModelPart<TRecord> : ModelPart {
+        private TRecord _record;
+
+        public TRecord Record {
+            get { return _record; }
+            set {_record = value;}
+        }
+
+    }
 }
