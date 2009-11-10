@@ -13,6 +13,8 @@ using Autofac.Modules;
 using NUnit.Framework;
 using Orchard.Environment;
 using Orchard.Mvc;
+using Orchard.Mvc.ModelBinders;
+using Orchard.Mvc.Routes;
 using Orchard.Tests.Stubs;
 
 namespace Orchard.Tests.Environment {

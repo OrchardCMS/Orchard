@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Web.Routing;
 using Autofac.Integration.Web;
 
-namespace Orchard.Mvc {
+namespace Orchard.Mvc.Routes {
     public class RoutePublisher : IRoutePublisher {
         private readonly RouteCollection _routeCollection;
         private readonly IContainerProvider _containerProvider;

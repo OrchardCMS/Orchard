@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Orchard.Mvc {
+namespace Orchard.Mvc.ModelBinders {
     public interface IModelBinderProvider : IDependency {
         IEnumerable<ModelBinderDescriptor> GetModelBinders();
     }

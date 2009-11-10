@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Web.Mvc;
-using Orchard.Mvc;
 using Orchard.Mvc.ModelBinders;
 
 namespace Orchard.CmsPages.Models {

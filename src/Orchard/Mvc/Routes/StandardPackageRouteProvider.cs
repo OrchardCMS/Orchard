@@ -2,7 +2,7 @@
 using System.Web.Mvc;
 using System.Web.Routing;
 
-namespace Orchard.Mvc.RouteProviders {
+namespace Orchard.Mvc.Routes {
     public class StandardPackageRouteProvider : IRouteProvider {
         public IEnumerable<RouteDescriptor> GetRoutes() {
             //TEMP: Need to rely on a service that gives the list of active packages
@@ -39,7 +39,7 @@ namespace Orchard.Mvc.RouteProviders {
                                                                                   },
                                                          new MvcRouteHandler())
                                                  },
-                            new RouteDescriptor {
+                             new RouteDescriptor {
                                                      Priority = -10,
                                                      Route = new Route(
                                                          "Admin/Media/{action}/{id}",
@@ -54,7 +54,7 @@ namespace Orchard.Mvc.RouteProviders {
                                                                                       {"area", "Orchard.Media"}
                                                                                   },
                                                          new MvcRouteHandler())
-                            },
+                                                 },
                              new RouteDescriptor {
                                                      Priority = -10,
                                                      Route = new Route(

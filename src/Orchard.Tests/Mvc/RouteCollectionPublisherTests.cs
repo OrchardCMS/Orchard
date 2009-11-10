@@ -5,7 +5,7 @@ using System.Threading;
 using System.Web.Mvc;
 using System.Web.Routing;
 using NUnit.Framework;
-using Orchard.Mvc;
+using Orchard.Mvc.Routes;
 using Orchard.Tests.Stubs;
 
 namespace Orchard.Tests.Mvc {

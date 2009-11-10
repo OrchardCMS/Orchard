@@ -1,6 +1,6 @@
 using System.Web.Routing;
 
-namespace Orchard.Mvc {
+namespace Orchard.Mvc.Routes {
     public class RouteDescriptor {
         public string Name { get; set; }
         public int Priority { get; set; }

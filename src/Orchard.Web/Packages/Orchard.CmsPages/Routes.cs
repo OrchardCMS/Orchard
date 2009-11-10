@@ -5,7 +5,7 @@ using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
 using Orchard.CmsPages.Services;
-using Orchard.Mvc;
+using Orchard.Mvc.Routes;
 
 namespace Orchard.CmsPages {
     public class Routes : IRouteProvider, IRouteConstraint {

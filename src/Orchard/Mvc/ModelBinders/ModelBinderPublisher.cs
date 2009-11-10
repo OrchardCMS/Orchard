@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Web.Mvc;
 
-namespace Orchard.Mvc {
+namespace Orchard.Mvc.ModelBinders {
     public class ModelBinderPublisher : IModelBinderPublisher {
         private readonly ModelBinderDictionary _binders;
 
