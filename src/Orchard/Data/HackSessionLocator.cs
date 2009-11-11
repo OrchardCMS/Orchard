@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
-using System.Text;
 using System.Threading;
 using System.Web;
 using FluentNHibernate.Automapping;
@@ -29,6 +26,7 @@ namespace Orchard.Data {
                 var automaps = new[] {
                     CreatePersistenceModel(Assembly.Load("Orchard.CmsPages")),
                     CreatePersistenceModel(Assembly.Load("Orchard.Users")),
+                    CreatePersistenceModel(Assembly.Load("Orchard.Roles")),
                     CreatePersistenceModel(Assembly.Load("Orchard")),
                 };
 

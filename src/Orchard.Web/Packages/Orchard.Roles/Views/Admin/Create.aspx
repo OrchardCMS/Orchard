@@ -10,11 +10,13 @@
 </head>
 <body>
     <% Html.Include("Header"); %>
+    <% Html.BeginForm(); %>
+    <%= Html.ValidationSummary() %>
                     <div class="yui-g">
 						<h2 class="separator">Add a Role</h2>
 						<h3>Information</h3>
 						<label for="pageTitle">Role Name:</label>
-						<input id="pageTitle" class="inputText inputTextLarge" name="pageTitle" type="text" />
+						<input id="Name" class="inputText inputTextLarge" name="Name" type="text" value="<%= Model.Name %>" />
 					
 						<h3>Permissions</h3>
 						
@@ -43,9 +45,9 @@
 								<td><input type="checkbox" value="" /></td>
 							</tr>
 							</table>
-								<input type="button" class="button" value="Save" />
-								<input type="button" class="button" value="Delete" />
+					       <input type="submit" class="button" value="Save" />
 					</div>
+	<% Html.EndForm(); %>
     <% Html.Include("Footer"); %>
 </body>
 </html>

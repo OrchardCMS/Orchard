@@ -39,9 +39,9 @@
 			</thead>
 			<%foreach (var row in Model.Rows) { %>
                 <tr>
-                    <td><input type="checkbox" value="true" name="<%= "Checkbox." + row.Role.Name %>"/></td>
-                    <td><%=Html.Encode(row.Role.Name) %></td>
-                    <td><%=Html.ActionLink("Edit", "Edit", new { row.Role.Id })%></td>
+                    <td><input type="checkbox" value="true" name="<%= "Checkbox." + row.Id %>"/></td>
+                    <td><%=Html.Encode(row.Name) %></td>
+                    <td><%=Html.ActionLink("Edit", "Edit", new { row.Id })%></td>
                 </tr>
             <%}%>
 	    </table>
