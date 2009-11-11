@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Web;
+using System.Web.Hosting;
 using Orchard.CmsPages.ViewModels;
 using Orchard.Logging;
 using Orchard.XmlRpc;
@@ -20,12 +21,16 @@ namespace Orchard.CmsPages.Services {
         public ILogger Logger { get; set; }
 
         public void Process(XmlRpcContext context) {
+            var uriBuilder = new UriBuilder(context.HttpContext.Request.Url);
+            uriBuilder.Path = context.HttpContext.Request.ApplicationPath;
+            uriBuilder.Query = string.Empty;
+
 
             if (context.Request.MethodName == "blogger.getUsersBlogs") {
                 context.Response = new XRpcMethodResponse()
                     .Add(new XRpcArray()
                              .Add(new XRpcStruct()
-                                      .Set("url", "http://localhost:40245/")
+                                      .Set("url", uriBuilder.Uri.AbsoluteUri)
                                       .Set("blogid", "Orchard.CmsPages")
                                       .Set("blogName", "Orchard Pages")));
             }
@@ -61,6 +66,7 @@ namespace Orchard.CmsPages.Services {
 
             if (context.Request.MethodName == "metaWeblog.newMediaObject") {
                 var result = MetaWeblogNewMediaObject(
+                    uriBuilder,
                     Convert.ToString(context.Request.Params[0].Value),
                     Convert.ToString(context.Request.Params[1].Value),
                     Convert.ToString(context.Request.Params[2].Value),
@@ -140,6 +146,7 @@ namespace Orchard.CmsPages.Services {
         }
 
         private XRpcStruct MetaWeblogNewMediaObject(
+            UriBuilder uriBuilder,
             string blogId,
             string user,
             string password,
@@ -147,13 +154,14 @@ namespace Orchard.CmsPages.Services {
             var name = file.Optional<string>("name");
             var bits = file.Optional<byte[]>("bits");
 
-            var target = HttpContext.Current.Server.MapPath("~/Files/"+name);
+            var target = HttpContext.Current.Server.MapPath("~/Files/" + name);
             Directory.CreateDirectory(Path.GetDirectoryName(target));
             using (var stream = new FileStream(target, FileMode.Create, FileAccess.Write, FileShare.ReadWrite)) {
                 stream.Write(bits, 0, bits.Length);
             }
 
-            return new XRpcStruct().Set("url", "http://localhost:40245/Files/" + name);
+            uriBuilder.Path = uriBuilder.Path.TrimEnd('/') + "/Files/" + name.TrimStart('/');
+            return new XRpcStruct().Set("url", uriBuilder.Uri.AbsoluteUri);
         }
     }
 }

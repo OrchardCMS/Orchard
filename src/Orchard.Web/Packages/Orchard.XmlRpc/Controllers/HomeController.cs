@@ -41,7 +41,7 @@ namespace Orchard.XmlRpc.Controllers {
         }
 
         private XRpcMethodResponse Dispatch(XRpcMethodCall request) {
-            var context = new XmlRpcContext { Request = request };
+            var context = new XmlRpcContext { HttpContext = HttpContext, Request = request };
             foreach (var handler in _xmlRpcHandlers)
                 handler.Process(context);
             return context.Response;
