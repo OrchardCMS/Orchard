@@ -138,6 +138,9 @@
     <Compile Include="Records\Foo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Stubs\StubHttpContext.cs" />
+    <Compile Include="UI\Navigation\MenuItemComparerTests.cs" />
+    <Compile Include="UI\Navigation\NavigationManagerTests.cs" />
+    <Compile Include="UI\Navigation\PositionComparerTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Orchard\Orchard.csproj">

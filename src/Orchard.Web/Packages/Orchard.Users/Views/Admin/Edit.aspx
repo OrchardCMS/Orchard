@@ -14,7 +14,7 @@
         <h2 class="separator">
             Edit User</h2>
         <p class="bottomSpacer">
-        <%=Html.ActionLink("Users", "Index") %> > Edit #<%=Model.Id%> <strong><%=Html.Encode(Model.UserName)%></strong>
+        <%=Html.ActionLink("Users", "Index") %> > Edit #<%= Model.Id%> <strong><%=Html.Encode(Model.UserName)%></strong>
         </p>
     </div>
     <div class="yui-u">

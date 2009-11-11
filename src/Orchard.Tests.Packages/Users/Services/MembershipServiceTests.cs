@@ -39,6 +39,7 @@ namespace Orchard.Tests.Packages.Users.Services {
             var databaseFileName = System.IO.Path.GetTempFileName();
             _sessionFactory = DataUtility.CreateSessionFactory(
                 databaseFileName,
+                typeof(UserRecord),
                 typeof(ModelRecord),
                 typeof(ModelTypeRecord));
         }

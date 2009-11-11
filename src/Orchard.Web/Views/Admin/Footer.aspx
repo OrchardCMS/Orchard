@@ -1,4 +1,5 @@
-<%@ Page Language="C#" Inherits="System.Web.Mvc.ViewPage" %>
+<%@ Page Language="C#" Inherits="System.Web.Mvc.ViewPage<AdminViewModel>" %>
+<%@ Import Namespace="Orchard.Mvc.ViewModels"%>
 
 
             </div><%-- yui-b --%>
@@ -9,31 +10,15 @@
                 <h4>
                     Dashboard</h4>
             </div>
-            <div class="leftNavMod">
-                <h4>
-                    Pages</h4>
-                <ul>
-                    <li><%=Html.ActionLink("Manage Pages", "Index", new {area="Orchard.CmsPages",controller="Admin"}) %></li>
-                    <li><%=Html.ActionLink("Add a Page", "Create", new {area="Orchard.CmsPages",controller="Admin"}) %></li>
-                </ul>
-            </div>
-            <div class="leftNavMod">
-                <h4>
-                    Media</h4>
-                <ul>
-                    <li><%=Html.ActionLink("Manage Folders", "Index", new {area="Orchard.Media",controller="Admin"}) %></li>
-                </ul>
-            </div>
-            <div class="leftNavMod">
-                <h4>
-                    Users</h4>
-                <ul>
-                    <li><%=Html.ActionLink("Manage Roles", "Index", new {area="Orchard.Roles",controller="Admin"}) %></li>
-                </ul>
-                <ul>
-                    <li><%=Html.ActionLink("Add a Role", "Create", new {area="Orchard.Roles",controller="Admin"}) %></li>
-                </ul>
-            </div>
+            
+            <%if (Model.AdminMenu != null) {
+                  foreach (var menuSection in Model.AdminMenu) {%>
+                  <div class="leftNavMod"><h4><%=Html.Encode(menuSection.Text)%></h4><ul><%foreach (var menuItem in menuSection.Contained) { %>
+                  <li><%=Html.ActionLink(menuItem.Text, (string)menuItem.RouteValues["action"], menuItem.RouteValues)%></li>
+                  <%} %></ul></div>
+            <%
+                }
+              }%>
             
         </div>
     </div><%-- bd --%>
