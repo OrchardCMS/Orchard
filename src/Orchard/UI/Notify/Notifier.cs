@@ -1,8 +1,7 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using Orchard.Logging;
 
-namespace Orchard.Notify {
+namespace Orchard.UI.Notify {
     public interface INotifier : IDependency {
         void Add(NotifyType type, string message);
         IEnumerable<NotifyEntry> List();

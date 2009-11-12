@@ -1,7 +1,7 @@
 ﻿using NUnit.Framework;
-using Orchard.Notify;
+using Orchard.UI.Notify;
 
-namespace Orchard.Tests.Notify {
+namespace Orchard.Tests.UI.Notify {
     [TestFixture]
     public class NotifierTests {
 

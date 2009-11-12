@@ -11,8 +11,8 @@ using Orchard.CmsPages.Services;
 using Orchard.CmsPages.Services.Templates;
 using Orchard.CmsPages.ViewModels;
 using Orchard.Data;
-using Orchard.Notify;
 using Orchard.Tests.Stubs;
+using Orchard.UI.Notify;
 using Orchard.Utility;
 
 namespace Orchard.CmsPages.Tests.Controllers {

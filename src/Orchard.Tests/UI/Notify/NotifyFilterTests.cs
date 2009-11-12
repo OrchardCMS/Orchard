@@ -3,10 +3,10 @@ using System.Web.Routing;
 using Moq;
 using NUnit.Framework;
 using Orchard.Mvc.ViewModels;
-using Orchard.Notify;
 using Orchard.Tests.Stubs;
+using Orchard.UI.Notify;
 
-namespace Orchard.Tests.Notify {
+namespace Orchard.Tests.UI.Notify {
     [TestFixture]
     public class NotifyFilterTests {
         private static ActionExecutedContext BuildContext() {

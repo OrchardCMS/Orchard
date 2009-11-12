@@ -1,4 +1,4 @@
-namespace Orchard.Notify {
+namespace Orchard.UI.Notify {
     public enum NotifyType {
         Information,
         Warning,

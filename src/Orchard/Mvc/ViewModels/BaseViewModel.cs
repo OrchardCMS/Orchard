@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
-using Orchard.Notify;
 using Orchard.Security;
+using Orchard.UI.Notify;
 
 namespace Orchard.Mvc.ViewModels {
     public class BaseViewModel {

@@ -3,8 +3,8 @@ using System.Linq;
 using System.Web.Mvc;
 using Orchard.Data;
 using Orchard.Models;
-using Orchard.Notify;
 using Orchard.Security;
+using Orchard.UI.Notify;
 using Orchard.Users.Models;
 using Orchard.Users.ViewModels;
 

@@ -1,5 +1,5 @@
-<%@ Control Language="C#" Inherits="System.Web.Mvc.ViewUserControl<IEnumerable<Orchard.Notify.NotifyEntry>>" %>
-<%@ Import Namespace="Orchard.Notify"%>
+<%@ Control Language="C#" Inherits="System.Web.Mvc.ViewUserControl<IEnumerable<NotifyEntry>>" %>
+<%@ Import Namespace="Orchard.UI.Notify"%>
 
 <script runat="server">
 string CssClassName(NotifyType type) {

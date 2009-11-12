@@ -1,4 +1,4 @@
-namespace Orchard.Notify {
+namespace Orchard.UI.Notify {
     public static class NotifierExtensions {
         public static void Information(this INotifier notifier, string message) {
             notifier.Add(NotifyType.Information, message);

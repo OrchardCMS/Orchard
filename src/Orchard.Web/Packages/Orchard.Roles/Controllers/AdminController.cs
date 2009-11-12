@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Web;
 using System.Web.Mvc;
-using Orchard.Notify;
 using Orchard.Roles.Models;
 using Orchard.Roles.Services;
 using Orchard.Roles.ViewModels;
+using Orchard.UI.Notify;
 
 namespace Orchard.Roles.Controllers {
     [ValidateInput(false)]

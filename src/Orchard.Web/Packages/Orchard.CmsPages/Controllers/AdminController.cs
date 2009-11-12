@@ -10,7 +10,7 @@ using Orchard.CmsPages.Services.Templates;
 using Orchard.CmsPages.ViewModels;
 using Orchard.Data;
 using Orchard.Logging;
-using Orchard.Notify;
+using Orchard.UI.Notify;
 
 namespace Orchard.CmsPages.Controllers {
     [ValidateInput(false)]

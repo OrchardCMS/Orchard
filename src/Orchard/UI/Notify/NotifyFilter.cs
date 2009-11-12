@@ -6,7 +6,7 @@ using System.Web.Mvc;
 using Orchard.Mvc.Filters;
 using Orchard.Mvc.ViewModels;
 
-namespace Orchard.Notify {
+namespace Orchard.UI.Notify {
     public class NotifyFilter : FilterProvider, IActionFilter, IResultFilter {
         private const string TempDataMessages = "messages";
         private readonly INotifier _notifier;
