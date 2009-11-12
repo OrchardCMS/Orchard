@@ -20,11 +20,12 @@
 					    <input type="hidden" value="<%= Model.Id %>" name="Id" />
 						<h3>Permissions</h3>
 						
-						<h4>Pages Module</h4>
-						<table id="pluginListTable" cellspacing="0" class="roundCorners clearLayout" >
+						<% foreach (var packageName in Model.PackagePermissions.Keys) { %>
+						<h4><%= packageName %> Module</h4>
+						<table id="Table1" cellspacing="0" class="roundCorners clearLayout" >
 							<colgroup>
-								<col id="Permission" />
-								<col id="Allow" />
+								<col id="Col1" />
+								<col id="Col2" />
 							</colgroup>
 							<thead>
 								<tr>
@@ -32,19 +33,20 @@
 									<th scope="col">Allow</th>
 								</tr>
 							</thead>
-							<tr>
-								<td>View pages</td>
-								<td><input type="checkbox" value="" /></td>
+							<% foreach (var permission in Model.PackagePermissions[packageName]) {%>
+                            <tr>
+								<td><%=permission.Description%></td>
+								<td>
+								    <% if (Model.CurrentPermissions.Contains(permission.Name)) {%>
+								        <input type="checkbox" value="true" name="<%="Checkbox." + permission.Name%>" checked="checked"/>
+								    <% } else {%>
+								        <input type="checkbox" value="true" name="<%="Checkbox." + permission.Name%>"/>
+								    <% }%>
+								</td>
 							</tr>
-							<tr>
-								<td>Create draft pages</td>
-								<td><input type="checkbox" value="" /></td>
-							</tr>
-							<tr>
-								<td>Edit any page</td>
-								<td><input type="checkbox" value="" /></td>
-							</tr>
+							<% } %>
 							</table>
+							<% } %>
 								<input type="submit" class="button" name="submit.Save" value="Save" />
 								<input type="submit" class="button" name="submit.Delete" value="Delete" />
 					</div>

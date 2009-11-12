@@ -69,6 +69,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AdminMenu.cs" />
+    <Compile Include="CmsPagesPermissions.cs" />
     <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Controllers\TemplatesController.cs" />
     <Compile Include="Models\ContentItem.cs" />

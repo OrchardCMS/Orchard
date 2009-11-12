@@ -72,6 +72,7 @@
     <Compile Include="AdminMenu.cs" />
     <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Helpers\MediaHelpers.cs" />
+    <Compile Include="MediaPermissions.cs" />
     <Compile Include="Models\FolderNavigation.cs" />
     <Compile Include="Models\MediaFile.cs" />
     <Compile Include="Models\MediaFolder.cs" />

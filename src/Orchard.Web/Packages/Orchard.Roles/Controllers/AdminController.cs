@@ -42,7 +42,7 @@ namespace Orchard.Roles.Controllers {
         }
 
         public ActionResult Create() {
-            var model = new RoleCreateViewModel();
+            var model = new RoleCreateViewModel { PackagePermissions = _roleService.GetInstalledPermissions() };
             return View(model);
         }
 
@@ -52,11 +52,18 @@ namespace Orchard.Roles.Controllers {
             try {
                 UpdateModel(viewModel, input.ToValueProvider());
                 _roleService.CreateRole(viewModel.Name);
+                foreach (string key in input.Keys) {
+                    if (key.StartsWith("Checkbox.") && input[key] == "true") {
+                        string permissionName = key.Substring("Checkbox.".Length);
+                        _roleService.CreatePermissionForRole(viewModel.Name, 
+                                                             permissionName);
+                    }
+                }
                 return RedirectToAction("Index");
             }
             catch (Exception exception) {
                 _notifier.Error("Creating Role failed: " + exception.Message);
-                return View(viewModel);
+                return RedirectToAction("Create");
             }
         }
 
@@ -66,7 +73,9 @@ namespace Orchard.Roles.Controllers {
                 //TODO: Error message
                 throw new HttpException(404, "page with id " + id + " was not found");
             }
-            var model = new RoleEditViewModel { Name = role.Name, Id = role.Id };
+            var model = new RoleEditViewModel { Name = role.Name, Id = role.Id, 
+                                                PackagePermissions = _roleService.GetInstalledPermissions(),
+                                                CurrentPermissions = _roleService.GetPermissionsForRole(id)};
 
             return View(model);
         }
@@ -78,7 +87,14 @@ namespace Orchard.Roles.Controllers {
                 UpdateModel(viewModel, input.ToValueProvider());
                 // Save
                 if (!String.IsNullOrEmpty(HttpContext.Request.Form["submit.Save"])) {
-                    _roleService.UpdateRole(viewModel.Id, viewModel.Name);
+                    List<string> rolePermissions = new List<string>();
+                    foreach (string key in input.Keys) {
+                        if (key.StartsWith("Checkbox.") && input[key] == "true") {
+                            string permissionName = key.Substring("Checkbox.".Length);
+                            rolePermissions.Add(permissionName);
+                        }
+                    }
+                    _roleService.UpdateRole(viewModel.Id, viewModel.Name, rolePermissions);
                 }
                 else if (!String.IsNullOrEmpty(HttpContext.Request.Form["submit.Delete"])) {
                     _roleService.DeleteRole(viewModel.Id);
@@ -86,8 +102,8 @@ namespace Orchard.Roles.Controllers {
                 return RedirectToAction("Index");
             }
             catch (Exception exception) {
-                _notifier.Error("Editing media file failed: " + exception.Message);
-                return View(viewModel);
+                _notifier.Error("Editing Role failed: " + exception.Message);
+                return RedirectToAction("Edit", viewModel.Id);
             }
         }
     }

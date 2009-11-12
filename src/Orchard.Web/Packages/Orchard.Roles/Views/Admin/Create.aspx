@@ -19,8 +19,8 @@
 						<input id="Name" class="inputText inputTextLarge" name="Name" type="text" value="<%= Model.Name %>" />
 					
 						<h3>Permissions</h3>
-						
-						<h4>Pages Module</h4>
+						<% foreach (var packageName in Model.PackagePermissions.Keys) { %>
+						<h4><%= packageName %> Module</h4>
 						<table id="pluginListTable" cellspacing="0" class="roundCorners clearLayout" >
 							<colgroup>
 								<col id="Permission" />
@@ -32,19 +32,16 @@
 									<th scope="col">Allow</th>
 								</tr>
 							</thead>
-							<tr>
-								<td>View pages</td>
-								<td><input type="checkbox" value="" /></td>
+							<% foreach (var permission in Model.PackagePermissions[packageName]) {%>
+                            <tr>
+								<td><%=permission.Description%></td>
+								<td>
+								    <input type="checkbox" value="true" name="<%="Checkbox." + permission.Name%>"/>
+								</td>
 							</tr>
-							<tr>
-								<td>Create draft pages</td>
-								<td><input type="checkbox" value="" /></td>
-							</tr>
-							<tr>
-								<td>Edit any page</td>
-								<td><input type="checkbox" value="" /></td>
-							</tr>
+							<% } %>
 							</table>
+							<% } %>
 					       <input type="submit" class="button" value="Save" />
 					</div>
 	<% Html.EndForm(); %>
