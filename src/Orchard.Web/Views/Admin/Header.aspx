@@ -1,6 +1,6 @@
 <%@ Page Language="C#" Inherits="System.Web.Mvc.ViewPage<AdminViewModel>" %>
-<%@ Import Namespace="Orchard.Mvc.ViewModels"%>
 
+<%@ Import Namespace="Orchard.Mvc.ViewModels" %>
 <div id="doc3" class="yui-t2">
     <div id="hd" role="banner">
         <div class="yui-g">
@@ -11,14 +11,16 @@
                 <%= Html.ActionLink("Your Site", "Index", new { Area = "", Controller = "Home" })%>
             </div>
             <div class="yui-u">
-                <%--<div id="login">
-                    User: JoWall | <a href="#">Logout</a></div>--%>
+            <% if (Model.CurrentUser != null) { %>
+                <div id="login">
+                    User:
+                    <%=Model.CurrentUser.UserName%>
+                    | <%=Html.ActionLink("Logout", "LogOff", "Account", new {}, new{area=""})%></div>
+                    <%} %>
             </div>
         </div>
     </div>
     <div id="bd" role="main">
         <div id="yui-main">
             <div class="yui-b">
-            
-            <% Html.RenderPartial("Messages", Model.Messages); %>
-            
+                <% Html.RenderPartial("Messages", Model.Messages); %>

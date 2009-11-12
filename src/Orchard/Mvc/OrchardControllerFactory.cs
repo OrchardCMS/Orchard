@@ -21,7 +21,7 @@ namespace Orchard.Mvc {
             // Now that the request container is known - try to resolve the controller            
             object controller;
             if (container != null &&
-                container.TryResolve(serviceName, out controller)) {
+                container.TryResolve(serviceName, out controller, TypedParameter.From(requestContext))) {
                 return (IController) controller;
             }
             return base.CreateController(requestContext, controllerName);

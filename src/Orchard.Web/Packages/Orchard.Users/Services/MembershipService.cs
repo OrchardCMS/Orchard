@@ -1,4 +1,5 @@
 ﻿using System;
+using Orchard.Data;
 using Orchard.Logging;
 using Orchard.Models;
 using Orchard.Security;
@@ -7,9 +8,11 @@ using Orchard.Users.Models;
 namespace Orchard.Users.Services {
     public class MembershipService : IMembershipService {
         private readonly IModelManager _modelManager;
+        private readonly IRepository<UserRecord> _userRepository;
 
-        public MembershipService(IModelManager modelManager) {
+        public MembershipService(IModelManager modelManager, IRepository<UserRecord> userRepository) {
             _modelManager = modelManager;
+            _userRepository = userRepository;
             Logger = NullLogger.Instance;
         }
 
@@ -31,7 +34,15 @@ namespace Orchard.Users.Services {
         }
 
         public IUser GetUser(string username) {
-            throw new NotImplementedException();
+            var userRecord = _userRepository.Get(x => x.UserName == username);
+            if (userRecord == null) {
+                return null;
+            }
+            return _modelManager.Get(userRecord.Id).As<IUser>();
+        }
+
+        public IUser Identify(string username, string password) {
+            return GetUser(username);
         }
     }
 }

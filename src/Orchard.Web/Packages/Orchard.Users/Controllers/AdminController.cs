@@ -1,13 +1,15 @@
+using System;
 using System.Linq;
 using System.Web.Mvc;
 using Orchard.Data;
 using Orchard.Models;
 using Orchard.Notify;
+using Orchard.Security;
 using Orchard.Users.Models;
 using Orchard.Users.ViewModels;
 
 namespace Orchard.Users.Controllers {
-    public class AdminController : Controller {
+    public class AdminController : Controller, ICurrentUser {
         private readonly IModelManager _modelManager;
         private readonly IRepository<UserRecord> _userRepository;
         private readonly INotifier _notifier;
@@ -62,6 +64,8 @@ namespace Orchard.Users.Controllers {
             _notifier.Information("User information updated");
             return RedirectToAction("Edit", new { id });
         }
+
+        public IUser CurrentUser { get; set; }
     }
 
 }

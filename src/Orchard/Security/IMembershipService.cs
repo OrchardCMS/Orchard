@@ -10,6 +10,8 @@ namespace Orchard.Security {
 
         IUser CreateUser(CreateUserParams createUserParams);
         IUser GetUser(string username);
+
+        IUser Identify(string username, string password);
     }
 
     public class MembershipSettings {

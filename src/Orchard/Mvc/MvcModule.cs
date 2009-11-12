@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Web;
 using Autofac.Builder;
 using Autofac.Integration.Web.Mvc;
 using Orchard.Environment;
@@ -20,10 +21,14 @@ namespace Orchard.Mvc {
 
             var module = new AutofacControllerModule(assemblies) {
                 ActionInvokerType = typeof(FilterResolvingActionInvoker),
-                IdentificationStrategy = new OrchardControllerIdentificationStrategy() 
+                IdentificationStrategy = new OrchardControllerIdentificationStrategy()
             };
 
             moduleBuilder.RegisterModule(module);
+            moduleBuilder
+                .Register(ctx => HttpContext.Current ==null ? null : new HttpContextWrapper(HttpContext.Current))
+                .As<HttpContextBase>()
+                .FactoryScoped();
         }
     }
 }

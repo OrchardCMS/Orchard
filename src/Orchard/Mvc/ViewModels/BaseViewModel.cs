@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Orchard.Notify;
+using Orchard.Security;
 
 namespace Orchard.Mvc.ViewModels {
     public class BaseViewModel {
@@ -8,5 +9,6 @@ namespace Orchard.Mvc.ViewModels {
         }
 
         public IList<NotifyEntry> Messages { get; set; }
+        public IUser CurrentUser { get; set; }
     }
 }

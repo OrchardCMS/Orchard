@@ -4,27 +4,19 @@ using System.Globalization;
 using System.Security.Principal;
 using System.Web.Mvc;
 using System.Web.Security;
+using Orchard.Security;
 
 namespace Orchard.Controllers {
     [HandleError]
     public class AccountController : Controller {
-        // This constructor is used by the MVC framework to instantiate the controller using
-        // the default forms authentication and membership providers.
+        private readonly IAuthenticationService _authenticationService;
+        private readonly IMembershipService _membershipService;
 
-        public AccountController()
-            : this(null, null) {}
 
-        // This constructor is not used by the MVC framework but is instead provided for ease
-        // of unit testing this type. See the comments at the end of this file for more
-        // information.
-        public AccountController(IFormsAuthentication formsAuth, IMembershipServiceShim service) {
-            FormsAuth = formsAuth ?? new FormsAuthenticationService();
-            MembershipService = service ?? new AccountMembershipService();
+        public AccountController(IAuthenticationService authenticationService, IMembershipService membershipService) {
+            _authenticationService = authenticationService;
+            _membershipService = membershipService;
         }
-
-        public IFormsAuthentication FormsAuth { get; private set; }
-
-        public IMembershipServiceShim MembershipService { get; private set; }
 
         public ActionResult LogOn() {
             return View();
@@ -34,11 +26,13 @@ namespace Orchard.Controllers {
         [SuppressMessage("Microsoft.Design", "CA1054:UriParametersShouldNotBeStrings",
             Justification = "Needs to take same parameter type as Controller.Redirect()")]
         public ActionResult LogOn(string userName, string password, bool rememberMe, string returnUrl) {
-            if (!ValidateLogOn(userName, password)) {
+            var user = ValidateLogOn(userName, password);
+            if (!ModelState.IsValid) {
                 return View();
             }
 
-            FormsAuth.SignIn(userName, rememberMe);
+            _authenticationService.SignIn(user, rememberMe);
+
             if (!String.IsNullOrEmpty(returnUrl)) {
                 return Redirect(returnUrl);
             }
@@ -48,31 +42,40 @@ namespace Orchard.Controllers {
         }
 
         public ActionResult LogOff() {
-            FormsAuth.SignOut();
+            _authenticationService.SignOut();
 
             return RedirectToAction("Index", "Home");
         }
 
+        int MinPasswordLength {
+            get {
+                var settings = new MembershipSettings();
+                _membershipService.ReadSettings(settings);
+                return settings.MinRequiredPasswordLength;
+            }
+        }
+
         public ActionResult Register() {
-            ViewData["PasswordLength"] = MembershipService.MinPasswordLength;
+            ViewData["PasswordLength"] = MinPasswordLength;
 
             return View();
         }
 
         [AcceptVerbs(HttpVerbs.Post)]
         public ActionResult Register(string userName, string email, string password, string confirmPassword) {
-            ViewData["PasswordLength"] = MembershipService.MinPasswordLength;
+            ViewData["PasswordLength"] = MinPasswordLength;
 
             if (ValidateRegistration(userName, email, password, confirmPassword)) {
                 // Attempt to register the user
-                var createStatus = MembershipService.CreateUser(userName, password, email);
+                var user = _membershipService.CreateUser(new CreateUserParams(userName, password, email, null, null, true));
+                
 
-                if (createStatus == MembershipCreateStatus.Success) {
-                    FormsAuth.SignIn(userName, false /* createPersistentCookie */);
+                if (user != null) {
+                    _authenticationService.SignIn(user, false /* createPersistentCookie */);
                     return RedirectToAction("Index", "Home");
                 }
                 else {
-                    ModelState.AddModelError("_FORM", ErrorCodeToString(createStatus));
+                    ModelState.AddModelError("_FORM", ErrorCodeToString(/*createStatus*/MembershipCreateStatus.ProviderError));
                 }
             }
 
@@ -82,7 +85,7 @@ namespace Orchard.Controllers {
 
         [Authorize]
         public ActionResult ChangePassword() {
-            ViewData["PasswordLength"] = MembershipService.MinPasswordLength;
+            ViewData["PasswordLength"] = MinPasswordLength;
 
             return View();
         }
@@ -92,14 +95,14 @@ namespace Orchard.Controllers {
         [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes",
             Justification = "Exceptions result in password not being changed.")]
         public ActionResult ChangePassword(string currentPassword, string newPassword, string confirmPassword) {
-            ViewData["PasswordLength"] = MembershipService.MinPasswordLength;
+            ViewData["PasswordLength"] = MinPasswordLength;
 
             if (!ValidateChangePassword(currentPassword, newPassword, confirmPassword)) {
                 return View();
             }
 
             try {
-                if (MembershipService.ChangePassword(User.Identity.Name, currentPassword, newPassword)) {
+                if (true/*MembershipService.ChangePassword(User.Identity.Name, currentPassword, newPassword)*/) {
                     return RedirectToAction("ChangePasswordSuccess");
                 }
                 else {
@@ -130,11 +133,11 @@ namespace Orchard.Controllers {
             if (String.IsNullOrEmpty(currentPassword)) {
                 ModelState.AddModelError("currentPassword", "You must specify a current password.");
             }
-            if (newPassword == null || newPassword.Length < MembershipService.MinPasswordLength) {
+            if (newPassword == null || newPassword.Length < MinPasswordLength) {
                 ModelState.AddModelError("newPassword",
                                          String.Format(CultureInfo.CurrentCulture,
                                                        "You must specify a new password of {0} or more characters.",
-                                                       MembershipService.MinPasswordLength));
+                                                       MinPasswordLength));
             }
 
             if (!String.Equals(newPassword, confirmPassword, StringComparison.Ordinal)) {
@@ -144,18 +147,19 @@ namespace Orchard.Controllers {
             return ModelState.IsValid;
         }
 
-        private bool ValidateLogOn(string userName, string password) {
+        private IUser ValidateLogOn(string userName, string password) {
             if (String.IsNullOrEmpty(userName)) {
                 ModelState.AddModelError("username", "You must specify a username.");
             }
             if (String.IsNullOrEmpty(password)) {
                 ModelState.AddModelError("password", "You must specify a password.");
             }
-            if (!MembershipService.ValidateUser(userName, password)) {
+            var user = _membershipService.Identify(userName, password);
+            if (user == null) {
                 ModelState.AddModelError("_FORM", "The username or password provided is incorrect.");
             }
 
-            return ModelState.IsValid;
+            return user;
         }
 
         private bool ValidateRegistration(string userName, string email, string password, string confirmPassword) {
@@ -165,11 +169,11 @@ namespace Orchard.Controllers {
             if (String.IsNullOrEmpty(email)) {
                 ModelState.AddModelError("email", "You must specify an email address.");
             }
-            if (password == null || password.Length < MembershipService.MinPasswordLength) {
+            if (password == null || password.Length < MinPasswordLength) {
                 ModelState.AddModelError("password",
                                          String.Format(CultureInfo.CurrentCulture,
                                                        "You must specify a password of {0} or more characters.",
-                                                       MembershipService.MinPasswordLength));
+                                                       MinPasswordLength));
             }
             if (!String.Equals(password, confirmPassword, StringComparison.Ordinal)) {
                 ModelState.AddModelError("_FORM", "The new password and confirmation password do not match.");
@@ -219,24 +223,6 @@ namespace Orchard.Controllers {
         #endregion
     }
 
-    public interface IFormsAuthentication {
-        void SignIn(string userName, bool createPersistentCookie);
-        void SignOut();
-    }
-
-    public class FormsAuthenticationService : IFormsAuthentication {
-        #region IFormsAuthentication Members
-
-        public void SignIn(string userName, bool createPersistentCookie) {
-            FormsAuthentication.SetAuthCookie(userName, createPersistentCookie);
-        }
-
-        public void SignOut() {
-            FormsAuthentication.SignOut();
-        }
-
-        #endregion
-    }
 
     public interface IMembershipServiceShim {
         int MinPasswordLength { get; }
@@ -250,7 +236,7 @@ namespace Orchard.Controllers {
         private readonly MembershipProvider _provider;
 
         public AccountMembershipService()
-            : this(null) {}
+            : this(null) { }
 
         public AccountMembershipService(MembershipProvider provider) {
             _provider = provider ?? Membership.Provider;
