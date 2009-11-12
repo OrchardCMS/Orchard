@@ -66,6 +66,10 @@
     <Reference Include="System.Web.Services" />
     <Reference Include="System.EnterpriseServices" />
     <Reference Include="System.Web.Mobile" />
+    <Reference Include="Yaml, Version=1.0.3370.39839, Culture=neutral, PublicKeyToken=187a3d240e44a135, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\lib\yaml\Yaml.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AdminMenu.cs" />
@@ -90,7 +94,7 @@
     <Compile Include="Services\Templates\TemplateEntryProvider.cs" />
     <Compile Include="Services\Templates\TemplateDescriptor.cs" />
     <Compile Include="Services\Templates\MetadataEntry.cs" />
-    <Compile Include="Services\Templates\MetadataParser.cs" />
+    <Compile Include="Services\Templates\TemplateMetadataParser.cs" />
     <Compile Include="Services\XmlRpcHandler.cs" />
     <Compile Include="ViewModels\ChooseTemplateViewModel.cs" />
     <Compile Include="ViewModels\PageCreateViewModel.cs" />

@@ -11,9 +11,11 @@ namespace Orchard.CmsPages.Services.Templates {
 
     public class TemplateProvider : ITemplateProvider {
         private readonly ITemplateEntryProvider _entryProvider;
+        private readonly ITemplateMetadataParser _parser;
 
-        public TemplateProvider(ITemplateEntryProvider entryProvider) {
+        public TemplateProvider(ITemplateEntryProvider entryProvider, ITemplateMetadataParser parser) {
             _entryProvider = entryProvider;
+            _parser = parser;
         }
 
         public IList<TemplateDescriptor> List() {
@@ -33,9 +35,8 @@ namespace Orchard.CmsPages.Services.Templates {
                 .SingleOrDefault();
         }
 
-        private static TemplateDescriptor CreateDescriptor(TemplateEntry entry) {
-            var parser = new MetadataParser();
-            var metadataEntries = parser.Parse(new CommentExtractor().FirstComment(entry.Content));
+        private TemplateDescriptor CreateDescriptor(TemplateEntry entry) {
+            var metadataEntries = _parser.Parse(new CommentExtractor().FirstComment(entry.Content));
 
             var descriptor = new TemplateDescriptor {Name = entry.Name};
 

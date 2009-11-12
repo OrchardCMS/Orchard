@@ -32,6 +32,7 @@ namespace Orchard.CmsPages.Tests.Controllers {
             builder.Register<TemplatesController>();
             builder.Register<PageManager>().As<IPageManager>();
             builder.Register<TemplateProvider>().As<ITemplateProvider>();
+            builder.Register<TemplateMetadataParser>().As<ITemplateMetadataParser>();
             builder.Register(new StubTemplateEntryProvider()).As<ITemplateEntryProvider>();
         }
 

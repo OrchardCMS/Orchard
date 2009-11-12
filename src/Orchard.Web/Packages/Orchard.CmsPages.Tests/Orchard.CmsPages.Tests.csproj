@@ -82,7 +82,7 @@
     <Compile Include="Services\Templates\TestTemplateProvider.cs" />
     <Compile Include="Services\Templates\TemplateProviderTests.cs" />
     <Compile Include="Services\Templates\CommentExtractorTests.cs" />
-    <Compile Include="Services\Templates\MetadataParserTests.cs" />
+    <Compile Include="Services\Templates\TemplateMetadataParserTests.cs" />
     <Compile Include="Controllers\AdminControllerTests.cs" />
     <Compile Include="Controllers\TemplatesControllerTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

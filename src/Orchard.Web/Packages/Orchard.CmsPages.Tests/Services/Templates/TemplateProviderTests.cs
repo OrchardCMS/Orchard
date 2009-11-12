@@ -10,7 +10,7 @@ namespace Orchard.CmsPages.Tests.Services.Templates {
         [SetUp]
         public void Init() {
             _entryProvider = new StubTemplateEntryProvider();
-            _provider = new TemplateProvider(_entryProvider);
+            _provider = new TemplateProvider(_entryProvider, new TemplateMetadataParser());
             _entryProvider.AddTemplate("test1", @"
 <%@Page %>
 <%--
