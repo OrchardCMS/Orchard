@@ -137,6 +137,8 @@
     <Compile Include="UI\Navigation\MenuItemComparerTests.cs" />
     <Compile Include="UI\Navigation\NavigationManagerTests.cs" />
     <Compile Include="UI\Navigation\PositionComparerTests.cs" />
+    <Compile Include="Utility\ReflectOnTests.cs" />
+    <Compile Include="Utility\ReflectTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Orchard\Orchard.csproj">
@@ -153,9 +155,6 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Packages\FoldersData\Sample3\Package.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Utility\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

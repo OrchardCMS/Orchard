@@ -4,18 +4,6 @@ using Orchard.Utility;
 namespace Orchard.Tests.Utility {
     [TestFixture]
     public class ReflectOnTests {
-        #region Setup/Teardown
-
-        [TestFixtureSetUp]
-        public void InitFixture() {
-        }
-
-        [TestFixtureTearDown]
-        public void TermFixture() {
-        }
-
-        #endregion
-
         private class TestClass {
             public int MyField;
             public int MyField2;
