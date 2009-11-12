@@ -27,7 +27,7 @@ namespace Orchard.Tests.Packages.Users.Controllers {
             builder.Register<AdminController>();
             builder.Register<DefaultModelManager>().As<IModelManager>();
             builder.Register<UserDriver>().As<IModelDriver>();
-            builder.Register(new Moq.Mock<INotifier>().Object);
+            builder.Register(new Mock<INotifier>().Object);
         }
 
         protected override IEnumerable<Type> DatabaseTypes {

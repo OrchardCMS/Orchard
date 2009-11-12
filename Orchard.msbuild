@@ -15,6 +15,6 @@
   <Target Name="TeamCity" DependsOnTargets="BuildSolution">
     <!-- TODO: This will change once we have a proper build task into the "dist" directory -->
     <!-- Note: We use x86 because we are using a x86 version of SQLite -->
-    <NUnit Platform="x86" NUnitVersion="NUnit-2.5.0" Assemblies="src\Orchard.Tests\bin\Debug\Orchard.Tests.dll;src\Orchard.Web.Tests\bin\Debug\Orchard.Web.Tests.dll;src\Orchard.Web\Packages\Orchard.CmsPages.Tests\bin\debug\Orchard.CmsPages.Tests.dll"/>
+    <NUnit Platform="x86" NUnitVersion="NUnit-2.5.0" Assemblies="src\Orchard.Tests\bin\Debug\Orchard.Tests.dll;src\Orchard.Web.Tests\bin\Debug\Orchard.Web.Tests.dll;src\Orchard.Tests.Packages\bin\Debug\Orchard.Tests.Packages.dll;src\Orchard.Web\Packages\Orchard.CmsPages.Tests\bin\debug\Orchard.CmsPages.Tests.dll"/>
   </Target>
 </Project>

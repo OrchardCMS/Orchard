@@ -155,7 +155,6 @@
     <Compile Include="Mvc\ViewModels\AdminViewModel.cs" />
     <Compile Include="Mvc\ViewModels\BaseViewModel.cs" />
     <Compile Include="Security\IAuthenticationService.cs" />
-    <Compile Include="Security\ICurrentUser.cs" />
     <Compile Include="Security\Providers\FormsAuthenticationService.cs" />
     <Compile Include="Security\SecurityFilter.cs" />
     <Compile Include="Security\SecurityModule.cs" />

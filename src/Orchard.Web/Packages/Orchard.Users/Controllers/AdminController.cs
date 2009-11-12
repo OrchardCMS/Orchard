@@ -9,7 +9,7 @@ using Orchard.Users.Models;
 using Orchard.Users.ViewModels;
 
 namespace Orchard.Users.Controllers {
-    public class AdminController : Controller, ICurrentUser {
+    public class AdminController : Controller {
         private readonly IModelManager _modelManager;
         private readonly IRepository<UserRecord> _userRepository;
         private readonly INotifier _notifier;
@@ -22,6 +22,8 @@ namespace Orchard.Users.Controllers {
             _userRepository = userRepository;
             _notifier = notifier;
         }
+
+        public IUser CurrentUser { get; set; }
 
         public ActionResult Index() {
             var model = new UsersIndexViewModel();
@@ -65,7 +67,6 @@ namespace Orchard.Users.Controllers {
             return RedirectToAction("Edit", new { id });
         }
 
-        public IUser CurrentUser { get; set; }
     }
 
 }

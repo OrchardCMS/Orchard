@@ -1,23 +1,29 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Web;
 using System.Web.Mvc;
-using Autofac.Builder;
+using Module=Autofac.Builder.Module;
 
 namespace Orchard.Security {
     public class SecurityModule : Module {
         protected override void AttachToComponentRegistration(Autofac.IContainer container, Autofac.IComponentRegistration registration) {
-            if (typeof(ICurrentUser).IsAssignableFrom(registration.Descriptor.BestKnownImplementationType)) {
-                registration.Activated += OnActivated;
+
+            var userProperty = FindUserProperty(registration.Descriptor.BestKnownImplementationType);
+
+            if (userProperty != null) {
+                registration.Activated += (sender, e) => {
+                                              var authenticationService = e.Context.Resolve<IAuthenticationService>();
+                                              var currentUser = authenticationService.Authenticated();
+                                              userProperty.SetValue(e.Instance, currentUser, null);
+                                          };
             }
         }
 
-        static void OnActivated(object sender, Autofac.ActivatedEventArgs e) {
-            var userContainer = (ICurrentUser)e.Instance;
-            var authenticationService = e.Context.Resolve<IAuthenticationService>();
-            userContainer.CurrentUser = authenticationService.Authenticated();
+        private static PropertyInfo FindUserProperty(Type type) {
+            return type.GetProperty("CurrentUser", typeof (IUser));
         }
     }
 }
