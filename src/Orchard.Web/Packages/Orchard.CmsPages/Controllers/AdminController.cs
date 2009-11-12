@@ -11,6 +11,7 @@ using Orchard.CmsPages.ViewModels;
 using Orchard.Data;
 using Orchard.Logging;
 using Orchard.UI.Notify;
+using Orchard.Security;
 
 namespace Orchard.CmsPages.Controllers {
     [ValidateInput(false)]
@@ -19,20 +20,27 @@ namespace Orchard.CmsPages.Controllers {
         private readonly IPageScheduler _pageScheduler;
         private readonly IRepository<Page> _repository;
         private readonly ITemplateProvider _templateProvider;
+        private readonly IAuthorizationService _authorizationService;
         private readonly INotifier _notifier;
 
         public AdminController(IPageManager pageManager,
             IPageScheduler pageScheduler,
             IRepository<Page> repository,
             ITemplateProvider templateProvider,
+            IAuthorizationService authorizationService,
             INotifier notifier) {
             _pageManager = pageManager;
             _pageScheduler = pageScheduler;
             _repository = repository;
             _templateProvider = templateProvider;
+            _authorizationService = authorizationService;
             _notifier = notifier;
             Logger = NullLogger.Instance;
         }
+
+        // That's what it takes to get the CurrentUser for a module.
+        // See Orchard.Security.SecurityModule.
+        public IUser CurrentUser { get; set; }
 
         public ILogger Logger { get; set; }
 
@@ -87,6 +95,13 @@ namespace Orchard.CmsPages.Controllers {
 
                     case PageIndexBulkAction.PublishNow:
                         //TODO: Transaction
+                        if (!_authorizationService.CheckAccess(CurrentUser, CmsPagesPermissionsProvider.PublishPagesPermission)) {
+                            _notifier.Error("Couldn't publish page, user " + 
+                                (CurrentUser != null ? CurrentUser.UserName : String.Empty) + " doesn't have " + 
+                                CmsPagesPermissionsProvider.PublishPagesPermission.Name);
+                            //return new HttpUnauthorizedResult();
+                            break;
+                        }
                         foreach (PageEntry entry in checkedEntries) {
                             entry.Page = _repository.Get(entry.PageId);
                             _pageScheduler.ClearTasks(entry.Page);
@@ -96,6 +111,13 @@ namespace Orchard.CmsPages.Controllers {
                         break;
 
                     case PageIndexBulkAction.PublishLater:
+                        if (!_authorizationService.CheckAccess(CurrentUser, CmsPagesPermissionsProvider.SchedulePagesPermission)) {
+                            _notifier.Error("Couldn't publish page, user " + 
+                                (CurrentUser != null ? CurrentUser.UserName : String.Empty) + " doesn't have " + 
+                                CmsPagesPermissionsProvider.SchedulePagesPermission.Name);
+                            //return new HttpUnauthorizedResult();
+                            break;
+                        }
                         if (viewModel.Options.BulkPublishLaterDate != null) {
                             //TODO: Transaction
                             foreach (PageEntry entry in checkedEntries) {
@@ -111,6 +133,13 @@ namespace Orchard.CmsPages.Controllers {
                         break;
 
                     case PageIndexBulkAction.Unpublish:
+                        if (!_authorizationService.CheckAccess(CurrentUser, CmsPagesPermissionsProvider.UnpublishPagesPermission)) {
+                            _notifier.Error("Couldn't unpublish page, user " + 
+                                (CurrentUser != null ? CurrentUser.UserName : String.Empty) + " doesn't have " +
+                                CmsPagesPermissionsProvider.UnpublishPagesPermission.Name);
+                            //return new HttpUnauthorizedResult();
+                            break;
+                        }
                         foreach (PageEntry entry in checkedEntries) {
                             var page = _repository.Get(entry.PageId);
                             _pageManager.UnpublishPage(page);
@@ -118,6 +147,13 @@ namespace Orchard.CmsPages.Controllers {
                         break;
 
                     case PageIndexBulkAction.Delete:
+                        if (!_authorizationService.CheckAccess(CurrentUser, CmsPagesPermissionsProvider.DeletePagesPermission)) {
+                            _notifier.Error("Couldn't delete page, user " + 
+                                (CurrentUser != null ? CurrentUser.UserName : String.Empty) + " doesn't have " +
+                                CmsPagesPermissionsProvider.DeletePagesPermission.Name);
+                            //return new HttpUnauthorizedResult();
+                            break;
+                        }
                         if (viewModel.Options.BulkDeleteConfirmed) {
                             //TODO: Transaction
                             foreach (PageEntry entry in checkedEntries) {
@@ -176,6 +212,13 @@ namespace Orchard.CmsPages.Controllers {
             var viewModel = new PageCreateViewModel { Templates = _templateProvider.List() };
             try {
                 UpdateModel(viewModel, input.ToValueProvider());
+                if (!_authorizationService.CheckAccess(CurrentUser, CmsPagesPermissionsProvider.CreatePagesPermission)) {
+                    _notifier.Error("Couldn't create page, user " + 
+                        (CurrentUser != null ? CurrentUser.UserName : String.Empty) + " doesn't have " +
+                        CmsPagesPermissionsProvider.CreatePagesPermission.Name);
+                    //return new HttpUnauthorizedResult();
+                    return View(viewModel);
+                }
                 Logger.Information("Creating CmsPage slug:{0} title{1}: template{2}",
                     viewModel.Slug, viewModel.Title, viewModel.TemplateName);
                 var revision = _pageManager.CreatePage(viewModel);
@@ -225,11 +268,32 @@ namespace Orchard.CmsPages.Controllers {
                 RemoveUnusedContentItems(model.Revision, model.Template);
 
                 _pageScheduler.ClearTasks(model.Revision.Page);
+                if (!_authorizationService.CheckAccess(CurrentUser, CmsPagesPermissionsProvider.ModifyPagesPermission)) {
+                    _notifier.Error("Couldn't edit page, user " + 
+                        (CurrentUser != null ? CurrentUser.UserName : String.Empty) + " doesn't have " +
+                        CmsPagesPermissionsProvider.ModifyPagesPermission.Name);
+                    //return new HttpUnauthorizedResult();
+                    return RedirectToAction("Index");
+                }
                 switch (model.Command) {
                     case PageEditCommand.PublishNow:
+                        if (!_authorizationService.CheckAccess(CurrentUser, CmsPagesPermissionsProvider.PublishPagesPermission)) {
+                            _notifier.Error("Couldn't publish page, user " + 
+                                (CurrentUser != null ? CurrentUser.UserName : String.Empty) + " doesn't have " +
+                                CmsPagesPermissionsProvider.PublishPagesPermission.Name);
+                            //return new HttpUnauthorizedResult();
+                            break;
+                        }
                         _pageManager.Publish(model.Revision, new PublishOptions());
                         break;
                     case PageEditCommand.PublishLater:
+                        if (!_authorizationService.CheckAccess(CurrentUser, CmsPagesPermissionsProvider.SchedulePagesPermission)) {
+                            _notifier.Error("Couldn't publish page, user " + 
+                                (CurrentUser != null ? CurrentUser.UserName : String.Empty) + " doesn't have " + 
+                                CmsPagesPermissionsProvider.SchedulePagesPermission.Name);
+                            //return new HttpUnauthorizedResult();
+                            break;
+                        }
                         if (model.PublishLaterDate == null)
                             throw new ArgumentNullException("No pub later value");
                         _pageScheduler.AddPublishTask(model.Revision, model.PublishLaterDate.Value);
@@ -255,6 +319,14 @@ namespace Orchard.CmsPages.Controllers {
         [FormValueRequired("submit.DeleteDraft")]
         public ActionResult DeleteDraft(int id) {
 #warning UNIT TEST!!!!
+            if (!_authorizationService.CheckAccess(CurrentUser, CmsPagesPermissionsProvider.DeleteDraftPagesPermission)) {
+                _notifier.Error("Couldn't delete draft page, user " + 
+                    (CurrentUser != null ? CurrentUser.UserName : String.Empty) + " doesn't have " +
+                    CmsPagesPermissionsProvider.DeleteDraftPagesPermission.Name);
+                //return new HttpUnauthorizedResult();
+                return RedirectToAction("Edit", new { id });
+            }
+
             var lastRevision = _pageManager.GetLastRevision(id);
             if (!lastRevision.IsPublished())
                 lastRevision.Page.Revisions.Remove(lastRevision);

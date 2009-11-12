@@ -67,6 +67,7 @@
     <Compile Include="Models\RoleRecord.cs" />
     <Compile Include="Models\RolesPermissions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\RolesBasedAuthorizationService.cs" />
     <Compile Include="Services\RoleService.cs" />
     <Compile Include="ViewModels\RoleCreateViewModel.cs" />
     <Compile Include="ViewModels\RoleEditViewModel.cs" />

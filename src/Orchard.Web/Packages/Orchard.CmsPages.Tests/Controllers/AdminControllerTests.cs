@@ -11,6 +11,8 @@ using Orchard.CmsPages.Services;
 using Orchard.CmsPages.Services.Templates;
 using Orchard.CmsPages.ViewModels;
 using Orchard.Data;
+using Orchard.Security;
+using Orchard.Security.Permissions;
 using Orchard.Tests.Stubs;
 using Orchard.UI.Notify;
 using Orchard.Utility;
@@ -21,6 +23,7 @@ namespace Orchard.CmsPages.Tests.Controllers {
         private AdminController _controller;
         private IPageManager _pageManager;
         private IPageScheduler _pageScheduler;
+        private IAuthorizationService _authorizationService;
         private ITemplateProvider _templateProvider;
         private int _slugPageId;
         private IRepository<Page> _pagesRepository;
@@ -34,6 +37,7 @@ namespace Orchard.CmsPages.Tests.Controllers {
             _pageManager = _container.Resolve<IPageManager>();
             _pageScheduler = _container.Resolve<IPageScheduler>();
             _templateProvider = _container.Resolve<ITemplateProvider>();
+            _authorizationService = _container.Resolve<IAuthorizationService>();
             var page = _pageManager.CreatePage(new PageCreateViewModel { Slug = "slug", Templates = _templateProvider.List() });
             _slugPageId = page.Id;
 
@@ -47,6 +51,7 @@ namespace Orchard.CmsPages.Tests.Controllers {
             builder.Register<PageScheduler>().As<IPageScheduler>();
             builder.Register<Notifier>().As<INotifier>();
             builder.Register(new StubTemplateProvider()).As<ITemplateProvider>();
+            builder.Register(new StubAuthorizationService()).As<IAuthorizationService>();
         }
 
         class StubTemplateProvider : ITemplateProvider {
@@ -66,6 +71,16 @@ namespace Orchard.CmsPages.Tests.Controllers {
                 }
                 return null;
             }
+        }
+
+        class StubAuthorizationService : IAuthorizationService {
+            #region Implementation of IAuthorizationService
+
+            public bool CheckAccess(IUser user, Permission permission) {
+                return true;
+            }
+
+            #endregion
         }
 
         [Test]
