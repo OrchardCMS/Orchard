@@ -76,7 +76,7 @@ namespace Orchard.Security.Providers {
         }
 
         public override bool ValidateUser(string username, string password) {
-            return true;
+            return (GetService().ValidateUser(username, password) != null);
         }
 
         public override bool UnlockUser(string userName) {

@@ -1,4 +1,5 @@
 namespace Orchard.Security {
+    //TEMP: Add setters, provide default constructor and remove parameterized constructor
     public class CreateUserParams {
         private readonly string _username;
         private readonly string _password;

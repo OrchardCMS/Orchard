@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 namespace Orchard.Storage {
     public class FileSystemStorageProvider : IStorageProvider {
@@ -10,7 +11,7 @@ namespace Orchard.Storage {
             if (!File.Exists(path)) {
                 throw new ArgumentException("File " + path + " does not exist");
             }
-            return new FileSystemStorageFile(path);
+            return new FileSystemStorageFile(new FileInfo(path));
         }
 
         public IEnumerable<IStorageFile> ListFiles(string path) {
@@ -18,12 +19,11 @@ namespace Orchard.Storage {
                 throw new ArgumentException("Directory " + path + " does not exist");
             }
 
-            List<IStorageFile> files = new List<IStorageFile>();
-            foreach (string file in Directory.GetFiles(path)) {
-                files.Add(new FileSystemStorageFile(file));
-            }
-
-            return files;
+            return new DirectoryInfo(path)
+                .GetFiles()
+                .Where(fi => !IsHidden(fi))
+                .Select<FileInfo, IStorageFile>(fi => new FileSystemStorageFile(fi))
+                .ToList();
         }
 
         public IEnumerable<IStorageFolder> ListFolders(string path) {
@@ -31,13 +31,15 @@ namespace Orchard.Storage {
                 throw new ArgumentException("Directory " + path + " does not exist");
             }
 
-            List<IStorageFolder> folders = new List<IStorageFolder>();
+            return new DirectoryInfo(path)
+                .GetDirectories()
+                .Where(di => !IsHidden(di))
+                .Select<DirectoryInfo, IStorageFolder>(di => new FileSystemStorageFolder(di))
+                .ToList();
+        }
 
-            foreach (string folder in Directory.GetDirectories(path)) {
-                folders.Add(new FileSystemStorageFolder(folder));
-            }
-
-            return folders;
+        private static bool IsHidden(FileSystemInfo di) {
+            return (di.Attributes & FileAttributes.Hidden) != 0;
         }
 
         public void CreateFolder(string path) {
@@ -64,17 +66,18 @@ namespace Orchard.Storage {
             if (Directory.Exists(newPath)) {
                 throw new ArgumentException("Directory " + newPath + " already exists");
             }
-            
+
             Directory.Move(path, newPath);
         }
 
         public IStorageFile CreateFile(string path) {
-            if (!File.Exists(path)) {
+            if (File.Exists(path)) {
                 throw new ArgumentException("File " + path + " already exists");
             }
 
-            File.Create(path);
-            return new FileSystemStorageFile(path);
+            var fileInfo = new FileInfo(path);
+            fileInfo.Create();
+            return new FileSystemStorageFile(fileInfo);
         }
 
         public void DeleteFile(string path) {
@@ -102,8 +105,8 @@ namespace Orchard.Storage {
         private class FileSystemStorageFile : IStorageFile {
             private readonly FileInfo _fileInfo;
 
-            public FileSystemStorageFile(string path) {
-                _fileInfo = new FileInfo(path);
+            public FileSystemStorageFile(FileInfo fileInfo) {
+                _fileInfo = fileInfo;
             }
 
             #region Implementation of IStorageFile
@@ -138,8 +141,8 @@ namespace Orchard.Storage {
         private class FileSystemStorageFolder : IStorageFolder {
             private readonly DirectoryInfo _directoryInfo;
 
-            public FileSystemStorageFolder(string path) {
-                _directoryInfo = new DirectoryInfo(path);
+            public FileSystemStorageFolder(DirectoryInfo directoryInfo) {
+                _directoryInfo = directoryInfo;
             }
 
             #region Implementation of IStorageFolder
@@ -158,9 +161,9 @@ namespace Orchard.Storage {
 
             public IStorageFolder GetParent() {
                 if (_directoryInfo.Parent != null) {
-                    return new FileSystemStorageFolder(_directoryInfo.Parent.FullName);
+                    return new FileSystemStorageFolder(_directoryInfo.Parent);
                 }
-                throw new ArgumentException("Directory " + _directoryInfo.Name + "does not have a parent directory");
+                throw new ArgumentException("Directory " + _directoryInfo.Name + " does not have a parent directory");
             }
 
             #endregion

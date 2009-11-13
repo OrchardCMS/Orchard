@@ -163,7 +163,7 @@
     <Compile Include="Security\SecurityModule.cs" />
     <Compile Include="UI\Menus\AdminMenuFilter.cs" />
     <Compile Include="UI\Models\ModelEditor.cs" />
-    <Compile Include="UI\Navigation\INavigationBuilder.cs" />
+    <Compile Include="UI\Navigation\NavigationBuilder.cs" />
     <Compile Include="UI\Navigation\INavigationProvider.cs" />
     <Compile Include="UI\Navigation\MenuItem.cs" />
     <Compile Include="UI\Navigation\MenuItemComparer.cs" />

@@ -54,7 +54,7 @@ namespace Orchard.Tests.UI.Navigation {
         public void PositionAndChildrenDontMatter() {
             var item1 = new MenuItem { Text = "hello", RouteValues = new RouteValueDictionary(new { one = "1", two = "2" }) };
             var item2 = new MenuItem { Text = "hello", RouteValues = new RouteValueDictionary(new { one = "1", two = "2" }), Position = "4.0" };
-            var item3 = new MenuItem { Text = "hello", RouteValues = new RouteValueDictionary(new { one = "1", two = "2" }), Contained = new[] { new MenuItem() } };
+            var item3 = new MenuItem { Text = "hello", RouteValues = new RouteValueDictionary(new { one = "1", two = "2" }), Items = new[] { new MenuItem() } };
             AssertSameSameSame(item1, item2, item3);
         }
 

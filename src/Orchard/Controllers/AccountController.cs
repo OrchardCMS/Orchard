@@ -154,7 +154,7 @@ namespace Orchard.Controllers {
             if (String.IsNullOrEmpty(password)) {
                 ModelState.AddModelError("password", "You must specify a password.");
             }
-            var user = _membershipService.Identify(userName, password);
+            var user = _membershipService.ValidateUser(userName, password);
             if (user == null) {
                 ModelState.AddModelError("_FORM", "The username or password provided is incorrect.");
             }

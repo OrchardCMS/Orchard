@@ -41,7 +41,7 @@ namespace Orchard.Users.Services {
             return _modelManager.Get(userRecord.Id).As<IUser>();
         }
 
-        public IUser Identify(string username, string password) {
+        public IUser ValidateUser(string username, string password) {
             return GetUser(username);
         }
     }

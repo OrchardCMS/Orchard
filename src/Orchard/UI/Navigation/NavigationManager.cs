@@ -45,7 +45,7 @@ namespace Orchard.UI.Navigation {
             var joined = new MenuItem {
                 Text = items.First().Text,
                 RouteValues = items.First().RouteValues,
-                Contained = Merge(items.Select(x => x.Contained)).ToArray(),
+                Items = Merge(items.Select(x => x.Items)).ToArray(),
                 Position = SelectBestPositionValue(items.Select(x => x.Position))
             };
             return joined;

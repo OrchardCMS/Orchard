@@ -24,8 +24,8 @@ namespace Orchard.Tests.UI.Navigation {
             Assert.That(menuItems.Count(), Is.EqualTo(2));
             Assert.That(menuItems.First(), Has.Property("Text").EqualTo("Foo"));
             Assert.That(menuItems.Last(), Has.Property("Text").EqualTo("Bar"));
-            Assert.That(menuItems.Last().Contained.Count(), Is.EqualTo(1));
-            Assert.That(menuItems.Last().Contained.Single().Text, Is.EqualTo("Frap"));
+            Assert.That(menuItems.Last().Items.Count(), Is.EqualTo(1));
+            Assert.That(menuItems.Last().Items.Single().Text, Is.EqualTo("Frap"));
         }
 
         [Test]
@@ -46,9 +46,9 @@ namespace Orchard.Tests.UI.Navigation {
             Assert.That(item3.Text, Is.EqualTo("Frap"));
             Assert.That(item3.Position, Is.EqualTo("3.0"));
 
-            Assert.That(item2.Contained.Count(), Is.EqualTo(2));
-            var subitem1 = item2.Contained.First();
-            var subitem2 = item2.Contained.Last();
+            Assert.That(item2.Items.Count(), Is.EqualTo(2));
+            var subitem1 = item2.Items.First();
+            var subitem2 = item2.Items.Last();
             Assert.That(subitem1.Text, Is.EqualTo("Quad"));
             Assert.That(subitem1.Position, Is.EqualTo("1.a"));
             Assert.That(subitem2.Text, Is.EqualTo("Frap"));
