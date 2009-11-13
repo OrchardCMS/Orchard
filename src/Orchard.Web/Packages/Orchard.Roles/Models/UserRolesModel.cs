@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using Orchard.Models;
 
 namespace Orchard.Roles.Models.NoRecord {
-    public interface IUserRoles {
+    public interface IUserRoles : IModel {
         IList<string> Roles { get; }
     }
 

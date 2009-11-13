@@ -1,4 +1,8 @@
-﻿using Orchard.Logging;
+﻿using System;
+using System.Collections.Generic;
+using Orchard.Logging;
+using Orchard.Roles.Models;
+using Orchard.Roles.Models.NoRecord;
 using Orchard.Security;
 using Orchard.Security.Permissions;
 
@@ -16,10 +20,25 @@ namespace Orchard.Roles.Services {
         #region Implementation of IAuthorizationService
 
         public bool CheckAccess(IUser user, Permission permission) {
-            //TODO: Get roles for user
-            //TODO: Get permissions for Roles of the IUser from the role service
-            //TODO: Return false if current user doesn't have the permission
-            return true;
+            if (user == null) {
+                return false;
+            }
+
+            if (String.Equals(user.UserName, "Administrator", StringComparison.OrdinalIgnoreCase)) {
+                return true;
+            }
+
+            IEnumerable<string> rolesForUser = user.As<IUserRoles>().Roles;
+            foreach (var role in rolesForUser) {
+                RoleRecord roleRecord = _roleService.GetRoleByName(role);
+                foreach (var permissionName in _roleService.GetPermissionsForRole(roleRecord.Id)) {
+                    if (String.Equals(permissionName, permission.Name, StringComparison.OrdinalIgnoreCase)) {
+                        return true;
+                    }
+                }
+            }
+
+            return false;
         }
 
         #endregion

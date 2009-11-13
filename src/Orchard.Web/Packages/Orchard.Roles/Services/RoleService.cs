@@ -10,6 +10,7 @@ namespace Orchard.Roles.Services {
     public interface IRoleService : IDependency {
         IEnumerable<RoleRecord> GetRoles();
         RoleRecord GetRole(int id);
+        RoleRecord GetRoleByName(string name);
         void CreateRole(string roleName);
         void CreatePermissionForRole(string roleName, string permissionName);
         void UpdateRole(int id, string roleName, IEnumerable<string> rolePermissions);
@@ -45,6 +46,10 @@ namespace Orchard.Roles.Services {
             return _roleRepository.Get(id);
         }
 
+        public RoleRecord GetRoleByName(string name) {
+            return _roleRepository.Get(x => x.Name == name);
+        }
+
         public void CreateRole(string roleName) {
             _roleRepository.Create(new RoleRecord { Name = roleName });
         }
@@ -57,7 +62,7 @@ namespace Orchard.Roles.Services {
                                                                       PackageName = GetPackageName(permissionName)
                                                                   });
             }
-            RoleRecord roleRecord = _roleRepository.Get(x => x.Name == roleName);
+            RoleRecord roleRecord = GetRoleByName(roleName);
             PermissionRecord permissionRecord = _permissionRepository.Get(x => x.Name == permissionName);
             roleRecord.RolesPermissions.Add(new RolesPermissions { Permission = permissionRecord, Role = roleRecord });
         }
