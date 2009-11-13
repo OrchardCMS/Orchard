@@ -3,13 +3,14 @@ using System.Linq;
 using System.Web.Mvc;
 using Orchard.Data;
 using Orchard.Models;
+using Orchard.Models.Driver;
 using Orchard.Security;
 using Orchard.UI.Notify;
 using Orchard.Users.Models;
 using Orchard.Users.ViewModels;
 
 namespace Orchard.Users.Controllers {
-    public class AdminController : Controller {
+    public class AdminController : Controller, IModelUpdater {
         private readonly IModelManager _modelManager;
         private readonly IRepository<UserRecord> _userRepository;
         private readonly INotifier _notifier;
@@ -54,12 +55,15 @@ namespace Orchard.Users.Controllers {
 
         public ActionResult Edit(int id) {
             var model = new UserEditViewModel { User = _modelManager.Get(id) };
+            model.Editors = _modelManager.GetEditors(model.User);
             return View(model);
         }
 
         [HttpPost]
         public ActionResult Edit(int id, FormCollection input) {
             var model = new UserEditViewModel { User = _modelManager.Get(id) };
+            model.Editors = _modelManager.UpdateEditors(model.User, this);
+
             if (!TryUpdateModel(model, input.ToValueProvider())) {
                 return View(model);
             }
@@ -67,6 +71,10 @@ namespace Orchard.Users.Controllers {
             return RedirectToAction("Edit", new { id });
         }
 
+
+        bool IModelUpdater.TryUpdateModel<TModel>(TModel model, string prefix, string[] includeProperties, string[] excludeProperties) {
+            return TryUpdateModel(model, prefix, includeProperties, excludeProperties);
+        }
     }
 
 }

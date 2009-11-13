@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Web.Mvc;
 using Orchard.Data;
 using Orchard.Models.Driver;
 using Orchard.Models.Records;
+using Orchard.UI.Models;
 
 namespace Orchard.Models {
     public class DefaultModelManager : IModelManager {
@@ -80,6 +82,22 @@ namespace Orchard.Models {
             foreach (var driver in _drivers) {
                 driver.Create(context);
             }
+        }
+
+        public IEnumerable<ModelEditor> GetEditors(IModel model) {
+            var context = new GetModelEditorsContext(model);
+            foreach (var driver in _drivers) {
+                driver.GetEditors(context);
+            }
+            return context.Editors;
+        }
+
+        public IEnumerable<ModelEditor> UpdateEditors(IModel model, IModelUpdater updater) {
+            var context = new UpdateModelContext(model, updater);
+            foreach (var driver in _drivers) {
+                driver.UpdateEditors(context);
+            }
+            return context.Editors;
         }
 
         private ModelTypeRecord AcquireModelTypeRecord(string modelType) {

@@ -65,13 +65,17 @@
     <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Models\PermissionRecord.cs" />
     <Compile Include="Models\RoleRecord.cs" />
+    <Compile Include="Models\UserRolesModel.cs" />
+    <Compile Include="Models\UserRolesModelDriver.cs" />
     <Compile Include="Models\RolesPermissions.cs" />
+    <Compile Include="Models\UserRolesRecord.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\RolesBasedAuthorizationService.cs" />
     <Compile Include="Services\RoleService.cs" />
     <Compile Include="ViewModels\RoleCreateViewModel.cs" />
     <Compile Include="ViewModels\RoleEditViewModel.cs" />
     <Compile Include="ViewModels\RolesIndexViewModel.cs" />
+    <Compile Include="ViewModels\UserRolesViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Package.txt" />
