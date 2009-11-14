@@ -5,7 +5,7 @@ namespace Orchard.Localization {
             _instance = (format, args) => (args == null || args.Length == 0) ? format : string.Format(format, args);
         }
         
-        public static Localizer _instance;
+        static readonly Localizer _instance;
 
         public static Localizer Instance { get { return _instance; } }
     }

@@ -4,6 +4,7 @@ using System.Globalization;
 using System.Security.Principal;
 using System.Web.Mvc;
 using System.Web.Security;
+using Orchard.Mvc.ViewModels;
 using Orchard.Security;
 
 namespace Orchard.Controllers {
@@ -19,7 +20,7 @@ namespace Orchard.Controllers {
         }
 
         public ActionResult LogOn() {
-            return View();
+            return View(new BaseViewModel());
         }
 
         [AcceptVerbs(HttpVerbs.Post)]

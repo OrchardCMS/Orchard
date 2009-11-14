@@ -161,6 +161,7 @@
     <Content Include="Views\Shared\ExtraUserControl.ascx" />
     <Content Include="Views\Shared\Footer.ascx" />
     <Content Include="Views\Shared\Header.ascx" />
+    <Content Include="Views\Shared\Messages.ascx" />
     <Content Include="Views\Shared\Navigation.ascx" />
   </ItemGroup>
   <ItemGroup>

@@ -1,3 +1,4 @@
+using System.Web.Mvc;
 using Orchard.Localization;
 
 namespace Orchard.UI.Notify {
