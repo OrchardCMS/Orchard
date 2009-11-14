@@ -1,17 +1,17 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Web.Mvc;
 using Autofac.Builder;
 using NUnit.Framework;
 using Orchard.CmsPages.Controllers;
 using Orchard.CmsPages.Services;
 using Orchard.CmsPages.Services.Templates;
-using Orchard.CmsPages.Tests.Services.Templates;
 using Orchard.CmsPages.ViewModels;
 using Orchard.CmsPages.Models;
 using System.Web;
-using System;
+using Orchard.Tests.Packages.Pages.Services.Templates;
 
-namespace Orchard.CmsPages.Tests.Controllers {
+namespace Orchard.Tests.Packages.Pages.Controllers {
     [TestFixture]
     public class TemplatesControllerTests : DatabaseEnabledTestsBase {
         private TemplatesController _controller;

@@ -103,6 +103,7 @@
     <Compile Include="Environment\DefaultOrchardHostTests.cs" />
     <Compile Include="Environment\DefaultOrchardShellTests.cs" />
     <Compile Include="Environment\OrchardStarterTests.cs" />
+    <Compile Include="Localization\NullLocalizerTests.cs" />
     <Compile Include="Logging\LoggingModuleTests.cs" />
     <Compile Include="Models\DefaultModelBuilderTests.cs" />
     <Compile Include="Models\Stubs\Alpha.cs" />

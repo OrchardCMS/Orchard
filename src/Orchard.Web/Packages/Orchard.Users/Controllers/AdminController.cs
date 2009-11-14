@@ -24,12 +24,12 @@ namespace Orchard.Users.Controllers {
             _modelManager = modelManager;
             _userRepository = userRepository;
             _notifier = notifier;
+            T = NullLocalizer.Instance;
         }
 
         public IUser CurrentUser { get; set; }
-        //public IText T { get; set; }
 
-        public Func<string, LocalizedString> T { get; set; }
+        public Localizer T { get; set; }
 
         public ActionResult Index() {
             var model = new UsersIndexViewModel();

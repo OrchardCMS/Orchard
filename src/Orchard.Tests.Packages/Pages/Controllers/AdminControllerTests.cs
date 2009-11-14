@@ -17,7 +17,7 @@ using Orchard.Tests.Stubs;
 using Orchard.UI.Notify;
 using Orchard.Utility;
 
-namespace Orchard.CmsPages.Tests.Controllers {
+namespace Orchard.Tests.Packages.Pages.Controllers {
     [TestFixture]
     public class AdminControllerTests : DatabaseEnabledTestsBase {
         private AdminController _controller;
@@ -66,9 +66,9 @@ namespace Orchard.CmsPages.Tests.Controllers {
         class StubTemplateProvider : ITemplateProvider {
             public IList<TemplateDescriptor> List() {
                 return new List<TemplateDescriptor> {
-                    new TemplateDescriptor { Name = "twocolumn", Zones = new[] { "content1", "content2" } },
-                    new TemplateDescriptor { Name = "threecolumn", Zones = new[] { "content1", "content2", "content3" } }
-                };
+                                                        new TemplateDescriptor { Name = "twocolumn", Zones = new[] { "content1", "content2" } },
+                                                        new TemplateDescriptor { Name = "threecolumn", Zones = new[] { "content1", "content2", "content3" } }
+                                                    };
             }
 
             public TemplateDescriptor Get(string name) {
@@ -122,9 +122,9 @@ namespace Orchard.CmsPages.Tests.Controllers {
             var pageDoesntExist = _pageManager.GetPublishedBySlug("slug2");
 
             var input = new FormCollection { 
-                { ReflectOn<PageCreateViewModel>.NameOf(m => m.Slug), "slug2" }, 
-                { ReflectOn<PageCreateViewModel>.NameOf(m => m.TemplateName), "threecolumn" } 
-            };
+                                               { ReflectOn<PageCreateViewModel>.NameOf(m => m.Slug), "slug2" }, 
+                                               { ReflectOn<PageCreateViewModel>.NameOf(m => m.TemplateName), "threecolumn" } 
+                                           };
 
             var result = _controller.Create(input);
 
@@ -258,9 +258,9 @@ namespace Orchard.CmsPages.Tests.Controllers {
             DateTime scheduledDate = _clock.FutureMoment(TimeSpan.FromMinutes(1));
 
             var input = new FormCollection {
-                { ReflectOn<PageIndexViewModel>.NameOf(m => m.Options.BulkAction), PageIndexBulkAction.PublishLater.ToString() } ,
-                { ReflectOn<PageIndexViewModel>.NameOf(m => m.Options.BulkPublishLaterDate), string.Format("{0:d} {0:T}", scheduledDate) } 
-            };
+                                               { ReflectOn<PageIndexViewModel>.NameOf(m => m.Options.BulkAction), PageIndexBulkAction.PublishLater.ToString() } ,
+                                               { ReflectOn<PageIndexViewModel>.NameOf(m => m.Options.BulkPublishLaterDate), string.Format("{0:d} {0:T}", scheduledDate) } 
+                                           };
             for (int i = 0; i < 2; i++) {
                 //TODO: Use "NameOf" when it supports these expressions
                 input.Add(string.Format("PageEntries[{0}].PageId", i), pages[i].Id.ToString());
@@ -300,9 +300,9 @@ namespace Orchard.CmsPages.Tests.Controllers {
 
             // Build controller input
             var input = new FormCollection { 
-                { ReflectOn<PageIndexViewModel>.NameOf(m => m.Options.BulkAction), PageIndexBulkAction.Delete.ToString() },
-                { ReflectOn<PageIndexViewModel>.NameOf(m => m.Options.BulkDeleteConfirmed), true.ToString() }
-            };
+                                               { ReflectOn<PageIndexViewModel>.NameOf(m => m.Options.BulkAction), PageIndexBulkAction.Delete.ToString() },
+                                               { ReflectOn<PageIndexViewModel>.NameOf(m => m.Options.BulkDeleteConfirmed), true.ToString() }
+                                           };
 
             for (int i = 0; i < 2; i++) {
                 //TODO: Use "NameOf" when it supports these expressions
@@ -334,8 +334,8 @@ namespace Orchard.CmsPages.Tests.Controllers {
 
             // Build controller input
             var input = new FormCollection { 
-                { ReflectOn<PageIndexViewModel>.NameOf(m => m.Options.BulkAction), PageIndexBulkAction.Unpublish.ToString() },
-            };
+                                               { ReflectOn<PageIndexViewModel>.NameOf(m => m.Options.BulkAction), PageIndexBulkAction.Unpublish.ToString() },
+                                           };
 
             for (int i = 0; i < 2; i++) {
                 //TODO: Use "NameOf" when it supports these expressions
@@ -366,9 +366,9 @@ namespace Orchard.CmsPages.Tests.Controllers {
             var pageBeforeEdit = _pageManager.GetLastRevision(_slugPageId);
 
             var input = new FormCollection { 
-                { ReflectOn<PageEditViewModel>.NameOf(m => m.Revision.Slug), "new-slug-value" },
-                { ReflectOn<PageEditViewModel>.NameOf(m => m.Command), PageEditCommand.PublishNow.ToString() }
-            };
+                                               { ReflectOn<PageEditViewModel>.NameOf(m => m.Revision.Slug), "new-slug-value" },
+                                               { ReflectOn<PageEditViewModel>.NameOf(m => m.Command), PageEditCommand.PublishNow.ToString() }
+                                           };
             var result = _controller.Edit(_slugPageId, input);
 
             var pageNotFoundAnymore = _pageManager.GetPublishedBySlug("slug");
@@ -470,8 +470,8 @@ namespace Orchard.CmsPages.Tests.Controllers {
             ClearSession();
 
             var chooseTemplateInput = new FormCollection {
-                                                      {"TemplateName", "twocolumn"},
-                                                  };
+                                                             {"TemplateName", "twocolumn"},
+                                                         };
             _controller.ChooseTemplate(pageId, chooseTemplateInput);
             ClearSession();
 
@@ -480,11 +480,11 @@ namespace Orchard.CmsPages.Tests.Controllers {
 
 
             var publishInput2 = new FormCollection {
-                                                      {"Command", "PublishNow"},
-                                                      {"Revision.Contents[content1].Content", "alpha"},
-                                                      {"Revision.Contents[content2].Content", "beta"},
-                                                      {"Revision.Contents[content3].Content", ""},
-                                                  };
+                                                       {"Command", "PublishNow"},
+                                                       {"Revision.Contents[content1].Content", "alpha"},
+                                                       {"Revision.Contents[content2].Content", "beta"},
+                                                       {"Revision.Contents[content3].Content", ""},
+                                                   };
             _controller.Edit(pageId, publishInput2);
             ClearSession();
             var revision2 = _pageManager.GetLastRevision(pageId);

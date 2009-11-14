@@ -121,6 +121,7 @@
     <Compile Include="Localization\LocalizationModule.cs" />
     <Compile Include="Localization\Localizer.cs" />
     <Compile Include="Localization\LocalizedString.cs" />
+    <Compile Include="Localization\NullLocalizer.cs" />
     <Compile Include="Models\Driver\IModelUpdater.cs" />
     <Compile Include="Environment\ServiceLocator.cs" />
     <Compile Include="Logging\CastleLogger.cs" />
