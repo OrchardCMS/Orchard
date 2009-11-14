@@ -10,20 +10,7 @@ namespace Orchard.Security.Providers {
         }
 
         static MembershipSettings GetSettings() {
-            var settings = new MembershipSettings {
-                EnablePasswordRetrieval = false,
-                EnablePasswordReset = true,
-                RequiresQuestionAndAnswer = true,
-                RequiresUniqueEmail = true,
-                MaxInvalidPasswordAttempts = 5,
-                PasswordAttemptWindow = 10,
-                MinRequiredPasswordLength = 7,
-                MinRequiredNonAlphanumericCharacters = 1,
-                PasswordStrengthRegularExpression = "",
-                PasswordFormat = MembershipPasswordFormat.Hashed,
-            };
-            GetService().ReadSettings(settings);
-            return settings;
+            return GetService().GetSettings();
         }
 
         private MembershipUser BuildMembershipUser(IUser user) {

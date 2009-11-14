@@ -50,9 +50,7 @@ namespace Orchard.Controllers {
 
         int MinPasswordLength {
             get {
-                var settings = new MembershipSettings();
-                _membershipService.ReadSettings(settings);
-                return settings.MinRequiredPasswordLength;
+                return _membershipService.GetSettings().MinRequiredPasswordLength;
             }
         }
 

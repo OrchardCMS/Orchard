@@ -18,8 +18,10 @@ namespace Orchard.Users.Services {
 
         public ILogger Logger { get; set; }
 
-        public void ReadSettings(MembershipSettings settings) {
+        public MembershipSettings GetSettings() {
+            var settings = new MembershipSettings();
             // accepting defaults
+            return settings;
         }
 
         public IUser CreateUser(CreateUserParams createUserParams) {
