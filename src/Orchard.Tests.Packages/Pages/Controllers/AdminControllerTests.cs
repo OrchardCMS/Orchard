@@ -11,6 +11,7 @@ using Orchard.CmsPages.Services;
 using Orchard.CmsPages.Services.Templates;
 using Orchard.CmsPages.ViewModels;
 using Orchard.Data;
+using Orchard.Localization;
 using Orchard.Security;
 using Orchard.Security.Permissions;
 using Orchard.Tests.Stubs;
@@ -23,7 +24,7 @@ namespace Orchard.Tests.Packages.Pages.Controllers {
         private AdminController _controller;
         private IPageManager _pageManager;
         private IPageScheduler _pageScheduler;
-        private IAuthorizationService _authorizationService;
+        private IAuthorizer _authorizer;
         private ITemplateProvider _templateProvider;
         private int _slugPageId;
         private IRepository<Page> _pagesRepository;
@@ -37,12 +38,13 @@ namespace Orchard.Tests.Packages.Pages.Controllers {
             _pageManager = _container.Resolve<IPageManager>();
             _pageScheduler = _container.Resolve<IPageScheduler>();
             _templateProvider = _container.Resolve<ITemplateProvider>();
-            _authorizationService = _container.Resolve<IAuthorizationService>();
+            _authorizer = _container.Resolve<IAuthorizer>();
             var page = _pageManager.CreatePage(new PageCreateViewModel { Slug = "slug", Templates = _templateProvider.List() });
             _slugPageId = page.Id;
 
             _controller = _container.Resolve<AdminController>();
             _controller.ControllerContext = new ControllerContext(new StubHttpContext("~/admin/cmspages"), new RouteData(), _controller);
+            _controller.T = new Localizer(StubLocalizer.Get);
         }
 
         public override void Register(Autofac.Builder.ContainerBuilder builder) {
@@ -51,7 +53,7 @@ namespace Orchard.Tests.Packages.Pages.Controllers {
             builder.Register<PageScheduler>().As<IPageScheduler>();
             builder.Register<Notifier>().As<INotifier>();
             builder.Register(new StubTemplateProvider()).As<ITemplateProvider>();
-            builder.Register(new StubAuthorizationService()).As<IAuthorizationService>();
+            builder.Register(new StubAuthorizer()).As<IAuthorizer>();
         }
 
         protected override IEnumerable<Type> DatabaseTypes {
@@ -82,14 +84,22 @@ namespace Orchard.Tests.Packages.Pages.Controllers {
             }
         }
 
-        class StubAuthorizationService : IAuthorizationService {
-            #region Implementation of IAuthorizationService
+        class StubAuthorizer: IAuthorizer {
+            #region IAuthorizer Members
 
-            public bool CheckAccess(IUser user, Permission permission) {
+            public bool Authorize(Permission permission, LocalizedString message) {
                 return true;
             }
 
             #endregion
+        }
+
+        class StubLocalizer {
+            public static LocalizedString Get(string textHint, params object[] args) {
+                var localizedFormat = textHint;
+                var localizedText = string.Format(localizedFormat, args);
+                return new LocalizedString(localizedText);
+            }
         }
 
         [Test]
@@ -315,7 +325,7 @@ namespace Orchard.Tests.Packages.Pages.Controllers {
 
             // Verify result, check database state
             ClearSession();
-            pages = _pagesRepository.Table.ToList();
+            _pagesRepository.Table.ToList();
             Assert.That(result, Is.InstanceOf<RedirectToRouteResult>());
         }
 

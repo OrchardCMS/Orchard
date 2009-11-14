@@ -75,8 +75,12 @@ namespace Orchard.Tests.UI.Notify {
 
             Assert.That(model.Messages, Is.Not.Null);
             Assert.That(model.Messages, Has.Count.EqualTo(2));
-            Assert.That(model.Messages, Has.Some.Property("Message").EqualTo("dont-destroy"));
-            Assert.That(model.Messages, Has.Some.Property("Message").EqualTo("Working"));
+            foreach (var notifyEntries in model.Messages) {
+                Assert.That(new[] { notifyEntries.Message.ToString() }, Is.SubsetOf(new[]
+                {
+                    "dont-destroy", "Working"
+                }));
+            }
         }
     }
 }

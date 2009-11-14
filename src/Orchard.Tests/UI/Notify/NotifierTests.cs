@@ -13,9 +13,12 @@ namespace Orchard.Tests.UI.Notify {
             notifier.Error("Boom");
 
             Assert.That(notifier.List(), Has.Count.EqualTo(3));
-            Assert.That(notifier.List(), Has.Some.Property("Message").EqualTo("Hello world"));
-            Assert.That(notifier.List(), Has.Some.Property("Message").EqualTo("More Info"));
-            Assert.That(notifier.List(), Has.Some.Property("Message").EqualTo("Boom"));
+            foreach (var notifyEntries in notifier.List()) {
+                Assert.That(new[] {notifyEntries.Message.ToString()}, Is.SubsetOf(new[]
+                {
+                    "Hello world", "More Info", "Boom"
+                }));
+            }
         }
     }
 }

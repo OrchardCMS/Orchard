@@ -127,7 +127,7 @@ namespace Orchard.CmsPages.Controllers {
                         break;
 
                     case PageIndexBulkAction.Unpublish:
-                        if (!_authorizer.Authorize(Permissions.UnpublishPages, T("Couldn't publish page")))
+                        if (!_authorizer.Authorize(Permissions.UnpublishPages, T("Couldn't unpublish page")))
                             return new HttpUnauthorizedResult();
 
                         foreach (PageEntry entry in checkedEntries) {

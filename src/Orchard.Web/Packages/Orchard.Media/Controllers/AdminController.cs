@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Web;
 using System.Web.Mvc;
+using Orchard.Localization;
 using Orchard.Media.Models;
 using Orchard.Media.Services;
 using Orchard.Media.ViewModels;
@@ -12,18 +13,20 @@ namespace Orchard.Media.Controllers {
     [ValidateInput(false)]
     public class AdminController : Controller {
         private readonly IMediaService _mediaService;
-        private readonly IAuthorizationService _authorizationService;
+        private readonly IAuthorizer _authorizer;
         private readonly INotifier _notifier;
 
-        public AdminController(IMediaService mediaService, IAuthorizationService authorizationService, INotifier notifier) {
+        public AdminController(IMediaService mediaService, IAuthorizer authorizer, INotifier notifier) {
             _mediaService = mediaService;
-            _authorizationService = authorizationService;
+            _authorizer = authorizer;
             _notifier = notifier;
         }
 
         // That's what it takes to get the CurrentUser for a module.
         // See Orchard.Security.SecurityModule.
         public IUser CurrentUser { get; set; }
+
+        public Localizer T { get; set; }
 
         public ActionResult Index() {
             // Root media folders
@@ -58,13 +61,8 @@ namespace Orchard.Media.Controllers {
             var viewModel = new MediaFolderCreateViewModel();
             try {
                 UpdateModel(viewModel, input.ToValueProvider());
-                if (!_authorizationService.CheckAccess(CurrentUser, Permissions.CreateMediaFolder)) {
-                    _notifier.Error("Couldn't create media folder, user " + 
-                        (CurrentUser != null ? CurrentUser.UserName : String.Empty) + " doesn't have " + 
-                        Permissions.CreateMediaFolder.Name);
-                    //return new HttpUnauthorizedResult();
-                    return View(viewModel);
-                }
+                if (!_authorizer.Authorize(Permissions.CreateMediaFolder, T("Couldn't create media folder")))
+                    return new HttpUnauthorizedResult();
                 _mediaService.CreateFolder(viewModel.MediaPath, viewModel.Name);
                 return RedirectToAction("Index");
             }
@@ -88,25 +86,15 @@ namespace Orchard.Media.Controllers {
                     if (key.StartsWith("Checkbox.File.") && input[key] == "true") {
                         string fileName = key.Substring("Checkbox.File.".Length);
                         string folderName = input[fileName];
-                        if (!_authorizationService.CheckAccess(CurrentUser, Permissions.DeleteMedia)) {
-                            _notifier.Error("Couldn't delete media file, user " +
-                                (CurrentUser != null ? CurrentUser.UserName : String.Empty) + " doesn't have " +
-                                Permissions.DeleteMedia.Name);
-                            //return new HttpUnauthorizedResult();
-                            return RedirectToAction("Index");
-                        }
+                        if (!_authorizer.Authorize(Permissions.DeleteMedia, T("Couldn't delete media file")))
+                            return new HttpUnauthorizedResult();
                         _mediaService.DeleteFile(fileName, folderName);
                     }
                     else if (key.StartsWith("Checkbox.Folder.") && input[key] == "true") {
                         string folderName = key.Substring("Checkbox.Folder.".Length);
                         string folderPath = input[folderName];
-                        if (!_authorizationService.CheckAccess(CurrentUser, Permissions.DeleteMediaFolder)) {
-                            _notifier.Error("Couldn't delete media folder, user " +
-                                (CurrentUser != null ? CurrentUser.UserName : String.Empty) + " doesn't have " +
-                                Permissions.DeleteMediaFolder.Name);
-                            //return new HttpUnauthorizedResult();
-                            return RedirectToAction("Index");
-                        }
+                        if (!_authorizer.Authorize(Permissions.DeleteMediaFolder, T("Couldn't delete media folder")))
+                            return new HttpUnauthorizedResult();
                         _mediaService.DeleteFolder(folderPath);
                     }
                 }
@@ -131,24 +119,14 @@ namespace Orchard.Media.Controllers {
                 //TODO: There may be better ways to do this.
                 // Delete
                 if (!String.IsNullOrEmpty(HttpContext.Request.Form["submit.Delete"])) {
-                    if (!_authorizationService.CheckAccess(CurrentUser, Permissions.DeleteMediaFolder)) {
-                        _notifier.Error("Couldn't delete media folder, user " + 
-                            (CurrentUser != null ? CurrentUser.UserName : String.Empty) + " doesn't have " + 
-                            Permissions.DeleteMediaFolder.Name);
-                        //return new HttpUnauthorizedResult();
-                        return View(viewModel);
-                    }
+                    if (!_authorizer.Authorize(Permissions.DeleteMediaFolder, T("Couldn't delete media folder")))
+                        return new HttpUnauthorizedResult();
                     _mediaService.DeleteFolder(viewModel.MediaPath);
                 }
                 // Save
                 else {
-                    if (!_authorizationService.CheckAccess(CurrentUser, Permissions.RenameMediaFolder)) {
-                        _notifier.Error("Couldn't rename media folder, user " + 
-                            (CurrentUser != null ? CurrentUser.UserName : String.Empty) + " doesn't have " + 
-                            Permissions.RenameMediaFolder.Name);
-                        //return new HttpUnauthorizedResult();
-                        return View(viewModel);
-                    }
+                    if (!_authorizer.Authorize(Permissions.RenameMediaFolder, T("Couldn't rename media folder")))
+                        return new HttpUnauthorizedResult();
                     _mediaService.RenameFolder(viewModel.MediaPath, viewModel.Name);
                 }
 
@@ -170,14 +148,8 @@ namespace Orchard.Media.Controllers {
             var viewModel = new MediaItemAddViewModel();
             try {
                 UpdateModel(viewModel, input.ToValueProvider());
-
-                if (!_authorizationService.CheckAccess(CurrentUser, Permissions.UploadMedia)) {
-                    _notifier.Error("Couldn't upload media file, user " + 
-                        (CurrentUser != null ? CurrentUser.UserName : String.Empty) + " doesn't have " +
-                        Permissions.UploadMedia.Name);
-                    //return new HttpUnauthorizedResult();
-                    return View(viewModel);
-                }
+                if (!_authorizer.Authorize(Permissions.UploadMedia, T("Couldn't upload media file")))
+                    return new HttpUnauthorizedResult();
 
                 foreach (string fileName in Request.Files) {
                     HttpPostedFileBase file = Request.Files[fileName];
@@ -208,23 +180,12 @@ namespace Orchard.Media.Controllers {
             var viewModel = new MediaItemEditViewModel();
             try {
                 UpdateModel(viewModel, input.ToValueProvider());
-                if (!_authorizationService.CheckAccess(CurrentUser, Permissions.ModifyMedia)) {
-                    _notifier.Error("Couldn't modify media file, user " + 
-                        (CurrentUser != null ? CurrentUser.UserName : String.Empty) + " doesn't have " +
-                        Permissions.ModifyMedia.Name);
-                    //return new HttpUnauthorizedResult();
-                    return View(viewModel);
-                }
-                //TODO: There may be better ways to do this.
+                if (!_authorizer.Authorize(Permissions.ModifyMedia, T("Couldn't modify media file")))
+                    return new HttpUnauthorizedResult();
                 // Delete
                 if (!String.IsNullOrEmpty(HttpContext.Request.Form["submit.Delete"])) {
-                    if (!_authorizationService.CheckAccess(CurrentUser, Permissions.DeleteMedia)) {
-                        _notifier.Error("Couldn't delete media file, user " + 
-                            (CurrentUser != null ? CurrentUser.UserName : String.Empty) + " doesn't have " + 
-                            Permissions.DeleteMedia.Name);
-                        //return new HttpUnauthorizedResult();
-                        return View(viewModel);
-                    }
+                    if (!_authorizer.Authorize(Permissions.DeleteMedia, T("Couldn't delete media file")))
+                        return new HttpUnauthorizedResult();
                     _mediaService.DeleteFile(viewModel.Name, viewModel.MediaPath);
                     return RedirectToAction("Edit", new { name = viewModel.FolderName, mediaPath = viewModel.MediaPath });
                 }
