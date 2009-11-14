@@ -3,15 +3,15 @@ using Orchard.Security.Permissions;
 
 namespace Orchard.CmsPages {
     public class Permissions : IPermissionProvider {
-        public static readonly Permission ViewPagesPermission = new Permission { Description = "Viewing CMS Pages", Name = "ViewPagesPermission" };
-        public static readonly Permission CreatePagesPermission = new Permission { Description = "Creating CMS Pages", Name = "CreatePagesPermission" };
-        public static readonly Permission CreateDraftPagesPermission = new Permission { Description = "Creating CMS Page Drafts", Name = "CreateDraftPagesPermission" };
-        public static readonly Permission DeleteDraftPagesPermission = new Permission { Description = "Deleting CMS Page Drafts", Name = "DeleteDraftPagesPermission" };
-        public static readonly Permission ModifyPagesPermission = new Permission { Description = "Modifying CMS Pages", Name = "ModifyPagesPermission" };
-        public static readonly Permission DeletePagesPermission = new Permission { Description = "Deleting CMS Pages", Name = "DeletePagesPermission" };
-        public static readonly Permission PublishPagesPermission = new Permission { Description = "Publishing CMS Pages", Name = "PublishPagesPermission" };
-        public static readonly Permission UnpublishPagesPermission = new Permission { Description = "Unpublishing CMS Pages", Name = "UnpublishPagesPermission" };
-        public static readonly Permission SchedulePagesPermission = new Permission { Description = "Scheduling CMS Pages", Name = "SchedulePagesPermission" };
+        public static readonly Permission ViewPages = new Permission { Description = "Viewing CMS Pages", Name = "ViewPages" };
+        public static readonly Permission CreatePages = new Permission { Description = "Creating CMS Pages", Name = "CreatePages" };
+        public static readonly Permission CreateDraftPages = new Permission { Description = "Creating CMS Page Drafts", Name = "CreateDraftPages" };
+        public static readonly Permission DeleteDraftPages = new Permission { Description = "Deleting CMS Page Drafts", Name = "DeleteDraftPages" };
+        public static readonly Permission ModifyPages = new Permission { Description = "Modifying CMS Pages", Name = "ModifyPages" };
+        public static readonly Permission DeletePages = new Permission { Description = "Deleting CMS Pages", Name = "DeletePages" };
+        public static readonly Permission PublishPages = new Permission { Description = "Publishing CMS Pages", Name = "PublishPages" };
+        public static readonly Permission UnpublishPages = new Permission { Description = "Unpublishing CMS Pages", Name = "UnpublishPages" };
+        public static readonly Permission SchedulePages = new Permission { Description = "Scheduling CMS Pages", Name = "SchedulePages" };
 
         public string PackageName {
             get {
@@ -21,15 +21,15 @@ namespace Orchard.CmsPages {
 
         public IEnumerable<Permission> GetPermissions() {
             return new List<Permission> {
-                ViewPagesPermission,
-                CreatePagesPermission,
-                CreateDraftPagesPermission,
-                DeleteDraftPagesPermission,
-                ModifyPagesPermission,
-                DeletePagesPermission,
-                PublishPagesPermission,
-                UnpublishPagesPermission,
-                SchedulePagesPermission
+                ViewPages,
+                CreatePages,
+                CreateDraftPages,
+                DeleteDraftPages,
+                ModifyPages,
+                DeletePages,
+                PublishPages,
+                UnpublishPages,
+                SchedulePages
             };
         }
    }

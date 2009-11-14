@@ -97,10 +97,10 @@ namespace Orchard.CmsPages.Controllers {
 
                     case PageIndexBulkAction.PublishNow:
                         //TODO: Transaction
-                        if (!_authorizationService.CheckAccess(CurrentUser, Permissions.PublishPagesPermission)) {
+                        if (!_authorizationService.CheckAccess(CurrentUser, Permissions.PublishPages)) {
                             _notifier.Error(T("Couldn't publish page, user {0} doesn't have {1}", 
                                 (CurrentUser != null ? CurrentUser.UserName : String.Empty),
-                                Permissions.PublishPagesPermission.Name));
+                                Permissions.PublishPages.Name));
                             //return new HttpUnauthorizedResult();
                             break;
                         }
@@ -113,10 +113,10 @@ namespace Orchard.CmsPages.Controllers {
                         break;
 
                     case PageIndexBulkAction.PublishLater:
-                        if (!_authorizationService.CheckAccess(CurrentUser, Permissions.SchedulePagesPermission)) {
+                        if (!_authorizationService.CheckAccess(CurrentUser, Permissions.SchedulePages)) {
                             _notifier.Error("Couldn't publish page, user " + 
                                 (CurrentUser != null ? CurrentUser.UserName : String.Empty) + " doesn't have " + 
-                                Permissions.SchedulePagesPermission.Name);
+                                Permissions.SchedulePages.Name);
                             //return new HttpUnauthorizedResult();
                             break;
                         }
@@ -135,10 +135,10 @@ namespace Orchard.CmsPages.Controllers {
                         break;
 
                     case PageIndexBulkAction.Unpublish:
-                        if (!_authorizationService.CheckAccess(CurrentUser, Permissions.UnpublishPagesPermission)) {
+                        if (!_authorizationService.CheckAccess(CurrentUser, Permissions.UnpublishPages)) {
                             _notifier.Error("Couldn't unpublish page, user " + 
                                 (CurrentUser != null ? CurrentUser.UserName : String.Empty) + " doesn't have " +
-                                Permissions.UnpublishPagesPermission.Name);
+                                Permissions.UnpublishPages.Name);
                             //return new HttpUnauthorizedResult();
                             break;
                         }
@@ -149,10 +149,10 @@ namespace Orchard.CmsPages.Controllers {
                         break;
 
                     case PageIndexBulkAction.Delete:
-                        if (!_authorizationService.CheckAccess(CurrentUser, Permissions.DeletePagesPermission)) {
+                        if (!_authorizationService.CheckAccess(CurrentUser, Permissions.DeletePages)) {
                             _notifier.Error("Couldn't delete page, user " + 
                                 (CurrentUser != null ? CurrentUser.UserName : String.Empty) + " doesn't have " +
-                                Permissions.DeletePagesPermission.Name);
+                                Permissions.DeletePages.Name);
                             //return new HttpUnauthorizedResult();
                             break;
                         }
@@ -214,10 +214,10 @@ namespace Orchard.CmsPages.Controllers {
             var viewModel = new PageCreateViewModel { Templates = _templateProvider.List() };
             try {
                 UpdateModel(viewModel, input.ToValueProvider());
-                if (!_authorizationService.CheckAccess(CurrentUser, Permissions.CreatePagesPermission)) {
+                if (!_authorizationService.CheckAccess(CurrentUser, Permissions.CreatePages)) {
                     _notifier.Error(T("Couldn't create page, user {0} doesn't have {1}",
                         (CurrentUser != null ? CurrentUser.UserName : String.Empty),
-                        Permissions.CreatePagesPermission.Name));
+                        Permissions.CreatePages.Name));
                     //return new HttpUnauthorizedResult();
                     return View(viewModel);
                 }
@@ -270,29 +270,29 @@ namespace Orchard.CmsPages.Controllers {
                 RemoveUnusedContentItems(model.Revision, model.Template);
 
                 _pageScheduler.ClearTasks(model.Revision.Page);
-                if (!_authorizationService.CheckAccess(CurrentUser, Permissions.ModifyPagesPermission)) {
+                if (!_authorizationService.CheckAccess(CurrentUser, Permissions.ModifyPages)) {
                     _notifier.Error("Couldn't edit page, user " + 
                         (CurrentUser != null ? CurrentUser.UserName : String.Empty) + " doesn't have " +
-                        Permissions.ModifyPagesPermission.Name);
+                        Permissions.ModifyPages.Name);
                     //return new HttpUnauthorizedResult();
                     return RedirectToAction("Index");
                 }
                 switch (model.Command) {
                     case PageEditCommand.PublishNow:
-                        if (!_authorizationService.CheckAccess(CurrentUser, Permissions.PublishPagesPermission)) {
+                        if (!_authorizationService.CheckAccess(CurrentUser, Permissions.PublishPages)) {
                             _notifier.Error("Couldn't publish page, user " + 
                                 (CurrentUser != null ? CurrentUser.UserName : String.Empty) + " doesn't have " +
-                                Permissions.PublishPagesPermission.Name);
+                                Permissions.PublishPages.Name);
                             //return new HttpUnauthorizedResult();
                             break;
                         }
                         _pageManager.Publish(model.Revision, new PublishOptions());
                         break;
                     case PageEditCommand.PublishLater:
-                        if (!_authorizationService.CheckAccess(CurrentUser, Permissions.SchedulePagesPermission)) {
+                        if (!_authorizationService.CheckAccess(CurrentUser, Permissions.SchedulePages)) {
                             _notifier.Error("Couldn't publish page, user " + 
                                 (CurrentUser != null ? CurrentUser.UserName : String.Empty) + " doesn't have " + 
-                                Permissions.SchedulePagesPermission.Name);
+                                Permissions.SchedulePages.Name);
                             //return new HttpUnauthorizedResult();
                             break;
                         }
@@ -321,10 +321,10 @@ namespace Orchard.CmsPages.Controllers {
         [FormValueRequired("submit.DeleteDraft")]
         public ActionResult DeleteDraft(int id) {
 #warning UNIT TEST!!!!
-            if (!_authorizationService.CheckAccess(CurrentUser, Permissions.DeleteDraftPagesPermission)) {
+            if (!_authorizationService.CheckAccess(CurrentUser, Permissions.DeleteDraftPages)) {
                 _notifier.Error("Couldn't delete draft page, user " + 
                     (CurrentUser != null ? CurrentUser.UserName : String.Empty) + " doesn't have " +
-                    Permissions.DeleteDraftPagesPermission.Name);
+                    Permissions.DeleteDraftPages.Name);
                 //return new HttpUnauthorizedResult();
                 return RedirectToAction("Edit", new { id });
             }
