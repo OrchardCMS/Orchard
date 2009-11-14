@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Autofac.Builder;
 using NUnit.Framework;
-using Orchard.Roles.Models;
+using Orchard.Roles.Records;
 using Orchard.Roles.Services;
 
 namespace Orchard.Tests.Packages.Roles.Services {

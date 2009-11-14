@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Web.Mvc;
+using Orchard.Localization;
 using Orchard.Mvc.Filters;
 using Orchard.Mvc.ViewModels;
 
@@ -36,7 +37,7 @@ namespace Orchard.UI.Notify {
             foreach (var entry in _notifier.List()) {
                 sb.Append(Convert.ToString(entry.Type))
                     .Append(':')
-                    .AppendLine(entry.Message);
+                    .AppendLine(entry.Message.ToString());
             }
 
             // assign values into temp data
@@ -67,13 +68,13 @@ namespace Orchard.UI.Notify {
                     var type = (NotifyType)Enum.Parse(typeof(NotifyType), line.Substring(0, delimiterIndex));
                     messageEntries.Add(new NotifyEntry {
                                                            Type = type,
-                                                           Message = line.Substring(delimiterIndex + 1)
+                                                           Message = new LocalizedString(line.Substring(delimiterIndex + 1))
                                                        });
                 }
                 else {
                     messageEntries.Add(new NotifyEntry {
                                                            Type = NotifyType.Information,
-                                                           Message = line.Substring(delimiterIndex + 1)
+                                                           Message = new LocalizedString(line.Substring(delimiterIndex + 1))
                                                        });
                 }
             }

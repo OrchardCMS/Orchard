@@ -11,7 +11,7 @@ namespace Orchard.Security {
             if (userProperty != null) {
                 registration.Activated += (sender, e) => {
                                               var authenticationService = e.Context.Resolve<IAuthenticationService>();
-                                              var currentUser = authenticationService.Authenticated();
+                                              var currentUser = authenticationService.GetAuthenticatedUser();
                                               userProperty.SetValue(e.Instance, currentUser, null);
                                           };
             }

@@ -1,3 +1,5 @@
+using Orchard.Localization;
+
 namespace Orchard.UI.Notify {
     public enum NotifyType {
         Information,
@@ -7,6 +9,6 @@ namespace Orchard.UI.Notify {
 
     public class NotifyEntry {
         public NotifyType Type { get; set; }
-        public string Message { get; set; }
+        public LocalizedString Message { get; set; }
     }
 }

@@ -84,7 +84,7 @@ namespace Orchard.Models {
             }
         }
 
-        public IEnumerable<ModelEditor> GetEditors(IModel model) {
+        public IEnumerable<ModelTemplate> GetEditors(IModel model) {
             var context = new GetModelEditorsContext(model);
             foreach (var driver in _drivers) {
                 driver.GetEditors(context);
@@ -92,7 +92,7 @@ namespace Orchard.Models {
             return context.Editors;
         }
 
-        public IEnumerable<ModelEditor> UpdateEditors(IModel model, IModelUpdater updater) {
+        public IEnumerable<ModelTemplate> UpdateEditors(IModel model, IModelUpdater updater) {
             var context = new UpdateModelContext(model, updater);
             foreach (var driver in _drivers) {
                 driver.UpdateEditors(context);

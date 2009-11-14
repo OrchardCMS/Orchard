@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using Orchard.Mvc.ViewModels;
-using Orchard.Roles.Models;
+using Orchard.Roles.Records;
 
 namespace Orchard.Roles.ViewModels {
     public class RolesIndexViewModel : AdminViewModel {

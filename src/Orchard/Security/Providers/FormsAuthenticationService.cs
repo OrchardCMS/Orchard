@@ -58,7 +58,7 @@ namespace Orchard.Security.Providers {
             FormsAuthentication.SignOut();
         }
 
-        public IUser Authenticated() {
+        public IUser GetAuthenticatedUser() {
             if (!_httpContext.Request.IsAuthenticated || !(_httpContext.User.Identity is FormsIdentity)) {
                 return null;
             }

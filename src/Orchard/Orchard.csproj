@@ -117,6 +117,10 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Data\Conventions\AttributeCollectionConvention.cs" />
     <Compile Include="Data\Conventions\CascadeAllDeleteOrphanAttribute.cs" />
+    <Compile Include="Localization\IText.cs" />
+    <Compile Include="Localization\LocalizationModule.cs" />
+    <Compile Include="Localization\Localizer.cs" />
+    <Compile Include="Localization\LocalizedString.cs" />
     <Compile Include="Models\Driver\IModelUpdater.cs" />
     <Compile Include="Environment\ServiceLocator.cs" />
     <Compile Include="Logging\CastleLogger.cs" />
@@ -157,12 +161,15 @@
     <Compile Include="Mvc\Routes\RouteExtensions.cs" />
     <Compile Include="Mvc\ViewModels\AdminViewModel.cs" />
     <Compile Include="Mvc\ViewModels\BaseViewModel.cs" />
+    <Compile Include="Mvc\ViewPage.cs">
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
     <Compile Include="Security\IAuthenticationService.cs" />
     <Compile Include="Security\Providers\FormsAuthenticationService.cs" />
     <Compile Include="Security\SecurityFilter.cs" />
     <Compile Include="Security\SecurityModule.cs" />
     <Compile Include="UI\Menus\AdminMenuFilter.cs" />
-    <Compile Include="UI\Models\ModelEditor.cs" />
+    <Compile Include="UI\Models\ModelTemplate.cs" />
     <Compile Include="UI\Navigation\NavigationBuilder.cs" />
     <Compile Include="UI\Navigation\INavigationProvider.cs" />
     <Compile Include="UI\Navigation\MenuItem.cs" />

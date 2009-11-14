@@ -7,6 +7,6 @@
     <%=Html.EditorFor(m=>m.Email, "inputTextLarge") %>
 </ol>
 
-<% foreach(var editor in Model.Editors) {
-     Html.RenderPartial(editor.PartialName, editor.ViewData);
-} %>
+<% foreach(var e in Model.Editors) {%>
+     <%=Html.EditorFor(m => e.Model, e.TemplateName, e.Prefix)%>
+<%} %>

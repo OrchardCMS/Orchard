@@ -20,7 +20,7 @@ namespace Orchard.Security {
                 return;
 
             if (baseViewModel.CurrentUser == null)
-                baseViewModel.CurrentUser = _authenticationService.Authenticated();
+                baseViewModel.CurrentUser = _authenticationService.GetAuthenticatedUser();
         }
 
         public void OnResultExecuted(ResultExecutedContext filterContext) {

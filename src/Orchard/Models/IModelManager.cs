@@ -8,7 +8,7 @@ namespace Orchard.Models {
         IModel New(string modelType);
         IModel Get(int id);
         void Create(IModel model);
-        IEnumerable<ModelEditor> GetEditors(IModel model);
-        IEnumerable<ModelEditor> UpdateEditors(IModel model, IModelUpdater updater);
+        IEnumerable<ModelTemplate> GetEditors(IModel model);
+        IEnumerable<ModelTemplate> UpdateEditors(IModel model, IModelUpdater updater);
     }
 }

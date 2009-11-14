@@ -1,8 +1,8 @@
 ﻿using System.Linq;
 using Orchard.Data;
-using Orchard.Logging;
 using Orchard.Models.Driver;
 using Orchard.Roles.Models.NoRecord;
+using Orchard.Roles.Records;
 using Orchard.Roles.Services;
 using Orchard.Roles.ViewModels;
 using Orchard.Security;
@@ -10,12 +10,12 @@ using Orchard.UI.Models;
 using Orchard.UI.Notify;
 
 namespace Orchard.Roles.Models {
-    public class UserRolesModelDriver : ModelDriver {
+    public class UserRolesDriver : ModelDriver {
         private readonly IRepository<UserRolesRecord> _userRolesRepository;
         private readonly IRoleService _roleService;
         private readonly INotifier _notifier;
 
-        public UserRolesModelDriver(IRepository<UserRolesRecord> userRolesRepository, IRoleService roleService, INotifier notifier) {
+        public UserRolesDriver(IRepository<UserRolesRecord> userRolesRepository, IRoleService roleService, INotifier notifier) {
             _userRolesRepository = userRolesRepository;
             _roleService = roleService;
             _notifier = notifier;
@@ -58,7 +58,7 @@ namespace Orchard.Roles.Models {
                     Roles = roles.ToList(),
                 };
 
-                context.Editors.Add(ModelEditor.For("UserRoles", viewModel));
+                context.Editors.Add(ModelTemplate.For(viewModel, "UserRoles"));
             }
         }
 
@@ -66,7 +66,7 @@ namespace Orchard.Roles.Models {
             var userRoles = context.Instance.As<UserRolesModel>();
             if (userRoles != null) {
                 var viewModel = new UserRolesViewModel();
-                if (context.Updater.TryUpdateModel(viewModel, null, null, null)) {
+                if (context.Updater.TryUpdateModel(viewModel, "UserRoles", null, null)) {
 
                     var currentUserRoleRecords = _userRolesRepository.Fetch(x => x.UserId == userRoles.Id);
                     var currentRoleRecords = currentUserRoleRecords.Select(x => x.Role);
@@ -83,7 +83,7 @@ namespace Orchard.Roles.Models {
                     }
 
                 }
-                context.Editors.Add(ModelEditor.For("UserRoles", viewModel));
+                context.Editors.Add(ModelTemplate.For(viewModel, "UserRoles"));
             }
         }
     }

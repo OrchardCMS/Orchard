@@ -1,4 +1,5 @@
 using System;
+using Orchard.Localization;
 
 namespace Orchard.Logging {
     public enum LogLevel {

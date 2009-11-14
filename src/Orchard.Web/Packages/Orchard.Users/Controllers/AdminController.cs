@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using System.Web.Mvc;
 using Orchard.Data;
+using Orchard.Localization;
 using Orchard.Models;
 using Orchard.Models.Driver;
 using Orchard.Security;
@@ -10,6 +11,7 @@ using Orchard.Users.Models;
 using Orchard.Users.ViewModels;
 
 namespace Orchard.Users.Controllers {
+
     public class AdminController : Controller, IModelUpdater {
         private readonly IModelManager _modelManager;
         private readonly IRepository<UserRecord> _userRepository;
@@ -25,6 +27,9 @@ namespace Orchard.Users.Controllers {
         }
 
         public IUser CurrentUser { get; set; }
+        //public IText T { get; set; }
+
+        public Func<string, LocalizedString> T { get; set; }
 
         public ActionResult Index() {
             var model = new UsersIndexViewModel();
@@ -67,7 +72,8 @@ namespace Orchard.Users.Controllers {
             if (!TryUpdateModel(model, input.ToValueProvider())) {
                 return View(model);
             }
-            _notifier.Information("User information updated");
+
+            _notifier.Information(T("User information updated"));
             return RedirectToAction("Edit", new { id });
         }
 

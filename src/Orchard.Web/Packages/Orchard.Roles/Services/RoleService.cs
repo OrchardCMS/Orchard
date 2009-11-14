@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Orchard.Data;
 using Orchard.Logging;
-using Orchard.Roles.Models;
+using Orchard.Roles.Records;
 using Orchard.Security.Permissions;
 
 namespace Orchard.Roles.Services {

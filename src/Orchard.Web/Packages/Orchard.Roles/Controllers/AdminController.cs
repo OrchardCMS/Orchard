@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Web;
 using System.Web.Mvc;
-using Orchard.Roles.Models;
+using Orchard.Roles.Records;
 using Orchard.Roles.Services;
 using Orchard.Roles.ViewModels;
 using Orchard.UI.Notify;
