@@ -22,7 +22,7 @@ namespace Orchard.Tests.Models.Stubs {
 
         protected override void New(NewModelContext context) {
             if (context.ModelType == "gamma") {
-                WeldModelPart<Gamma>(context);
+                context.Builder.Weld<Gamma>();
             }
         }
     }

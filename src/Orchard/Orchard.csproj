@@ -137,6 +137,7 @@
     <Compile Include="Models\DefaultModelManager.cs" />
     <Compile Include="Models\Driver\CreateModelContext.cs" />
     <Compile Include="Models\Driver\LoadModelContext.cs" />
+    <Compile Include="Models\Driver\ModelBuilder.cs" />
     <Compile Include="Models\Driver\ModelDriver.cs" />
     <Compile Include="Models\Driver\ModelDriverWithRecord.cs" />
     <Compile Include="Models\Driver\NewModelContext.cs" />

@@ -23,7 +23,7 @@ namespace Orchard.Roles.Models {
 
         protected override void New(NewModelContext context) {
             if (context.ModelType == "user") {
-                WeldModelPart<UserRolesModel>(context);
+                context.Builder.Weld<UserRolesModel>();
             }
         }
 

@@ -12,7 +12,7 @@ using Orchard.Tests.Models.Stubs;
 
 namespace Orchard.Tests.Models {
     [TestFixture]
-    public class DefaultModelBuilderTests {
+    public class DefaultModelManagerTests {
         private IContainer _container;
         private IModelManager _manager;
         private ISessionFactory _sessionFactory;

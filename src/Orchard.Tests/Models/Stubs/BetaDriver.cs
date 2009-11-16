@@ -8,7 +8,7 @@ namespace Orchard.Tests.Models.Stubs {
     public class BetaDriver : ModelDriver {
         protected override void New(NewModelContext context) {
             if (context.ModelType == "beta") {
-                WeldModelPart<Beta>(context);
+                context.Builder.Weld<Beta>();
             }
         }
     }

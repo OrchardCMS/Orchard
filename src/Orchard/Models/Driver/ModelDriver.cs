@@ -29,17 +29,5 @@ namespace Orchard.Models.Driver {
 
         protected virtual void UpdateEditors(UpdateModelContext context) {
         }
-
-        /// <summary>
-        /// TODO: move this - make a modelbuilder class or something
-        /// </summary>
-        /// <typeparam name="TPart"></typeparam>
-        /// <param name="context"></param>
-        protected void WeldModelPart<TPart>(NewModelContext context) where TPart : class,IModel,new() {
-            var newPart = new TPart();
-            newPart.Weld(context.Instance);
-            context.Instance = newPart;
-        }
-
     }
 }

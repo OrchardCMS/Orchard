@@ -26,7 +26,7 @@ namespace Orchard.Models {
             // create a new kernel for the model instance
             var context = new NewModelContext {
                 ModelType = modelType,
-                Instance = new ModelRoot(modelType)
+                Builder = new ModelBuilder(modelType)
             };
 
             // invoke drivers to weld aspects onto kernel
@@ -35,7 +35,7 @@ namespace Orchard.Models {
             }
 
             // composite result is returned
-            return context.Instance;
+            return context.Builder.Build();
         }
 
         public virtual IModel Get(int id) {
