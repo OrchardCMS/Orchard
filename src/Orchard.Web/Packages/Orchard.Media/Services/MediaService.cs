@@ -27,8 +27,7 @@ namespace Orchard.Media.Services {
         public MediaService (
             IStorageProvider storageProvider) {
             _storageProvider = storageProvider;
-            //TODO: Module config should decide where is the Media module's root media directory.
-            _rootPath = HttpContext.Current.Server.MapPath("~/Packages/Orchard.Media/Media");
+            _rootPath = HttpContext.Current.Server.MapPath("~/Media");
             Logger = NullLogger.Instance;
         }
 
@@ -101,7 +100,7 @@ namespace Orchard.Media.Services {
         }
 
         public void UploadMediaFile(string folderName, HttpPostedFileBase postedFile) {
-            string targetFolder = HttpContext.Current.Server.MapPath("~/Packages/Orchard.Media/Media/" + folderName);
+            string targetFolder = HttpContext.Current.Server.MapPath("~/Media/" + folderName);
             if (postedFile.FileName.EndsWith(".zip")) {
                 UnzipMediaFileArchive(targetFolder, postedFile);
                 // Don't save the zip file.
@@ -152,8 +151,7 @@ namespace Orchard.Media.Services {
             do {
                 IStorageFolder parentFolder = folder.GetParent();
                 string parentName = parentFolder.GetName();
-                if (String.Equals(parentName, "Media", StringComparison.OrdinalIgnoreCase) &&
-                    String.Equals(parentFolder.GetParent().GetName(), "Orchard.Media", StringComparison.OrdinalIgnoreCase)) {
+                if (String.Equals(parentName, "Media", StringComparison.OrdinalIgnoreCase)) {
                     break;
                 }
                 parentHierarchy.Insert(0, parentName);

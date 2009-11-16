@@ -62,7 +62,7 @@
 							<fieldset>
 							<ol>
 								<li>
-								<img src="<%=ResolveUrl("~/Packages/Orchard.Media/Media/" + Model.RelativePath + "/" + Model.Name)%>" class="previewImage" alt="<%= Model.Caption %>" />
+								<img src="<%=ResolveUrl("~/Media/" + Model.RelativePath + "/" + Model.Name)%>" class="previewImage" alt="<%= Model.Caption %>" />
 								</li>
 								<li>
 								<strong>Dimensions:</strong> 500 x 375 pixels
@@ -75,7 +75,7 @@
 								</li>
 								<li>
 								<label for="embedPath">Embed:</label>
-								<input id="embedPath" class="inputText" name="embedPath" type="text" readonly="readonly" value="&lt;img src=&quot;<%=ResolveUrl("~/Packages/Orchard.Media/Media/" + Model.RelativePath + "/" + Model.Name)%>&quot; width=&quot;500&quot; height=&quot;375&quot; alt=&quot;<%= Model.Caption %>&quot; /&gt;" />
+								<input id="embedPath" class="inputText" name="embedPath" type="text" readonly="readonly" value="&lt;img src=&quot;<%=ResolveUrl("~/Media/" + Model.RelativePath + "/" + Model.Name)%>&quot; width=&quot;500&quot; height=&quot;375&quot; alt=&quot;<%= Model.Caption %>&quot; /&gt;" />
 								<p class="helperText">Copy this html to add this image to your site.</p>
 								</li>
 							</ol>
