@@ -173,11 +173,15 @@ namespace Orchard.Storage {
 
                 FileInfo[] fileInfos = directoryInfo.GetFiles();
                 foreach (FileInfo fileInfo in fileInfos) {
-                    size += fileInfo.Length;
+                    if (!IsHidden(fileInfo)) {
+                        size += fileInfo.Length;
+                    }
                 }
                 DirectoryInfo[] directoryInfos = directoryInfo.GetDirectories();
                 foreach (DirectoryInfo dInfo in directoryInfos) {
-                    size += GetDirectorySize(dInfo);
+                    if (!IsHidden(dInfo)) {
+                        size += GetDirectorySize(dInfo);
+                    }
                 }
 
                 return size;
