@@ -55,7 +55,9 @@ namespace Orchard.Security.Providers {
             var user = service.ValidateUser(username, oldPassword);
             if (user == null)
                 return false;
+
             service.SetPassword(user, newPassword);
+            return true;
         }
 
         public override string ResetPassword(string username, string answer) {
