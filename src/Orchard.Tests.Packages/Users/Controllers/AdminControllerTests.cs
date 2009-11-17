@@ -16,6 +16,7 @@ using Orchard.Security;
 using Orchard.UI.Notify;
 using Orchard.Users.Controllers;
 using Orchard.Users.Models;
+using Orchard.Users.Services;
 using Orchard.Users.ViewModels;
 
 namespace Orchard.Tests.Packages.Users.Controllers {
@@ -26,6 +27,7 @@ namespace Orchard.Tests.Packages.Users.Controllers {
         public override void Register(ContainerBuilder builder) {
             builder.Register<AdminController>();
             builder.Register<DefaultModelManager>().As<IModelManager>();
+            builder.Register<MembershipService>().As<IMembershipService>();
             builder.Register<UserDriver>().As<IModelDriver>();
             builder.Register(new Mock<INotifier>().Object);
         }
@@ -76,7 +78,7 @@ namespace Orchard.Tests.Packages.Users.Controllers {
         [Test]
         public void CreateShouldAddUserAndRedirect() {
             var controller = _container.Resolve<AdminController>();
-            var result = controller.Create(new UserCreateViewModel { UserName = "four" });
+            var result = controller.Create(new UserCreateViewModel { UserName = "four",Password="five",ConfirmPassword="five" });
             Assert.That(result, Is.TypeOf<RedirectToRouteResult>());
 
             var redirect = (RedirectToRouteResult)result;

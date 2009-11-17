@@ -13,14 +13,17 @@ using Orchard.Users.ViewModels;
 namespace Orchard.Users.Controllers {
 
     public class AdminController : Controller, IModelUpdater {
+        private readonly IMembershipService _membershipService;
         private readonly IModelManager _modelManager;
         private readonly IRepository<UserRecord> _userRepository;
         private readonly INotifier _notifier;
 
         public AdminController(
+            IMembershipService membershipService,
             IModelManager modelManager,
             IRepository<UserRecord> userRepository,
             INotifier notifier) {
+            _membershipService = membershipService;
             _modelManager = modelManager;
             _userRepository = userRepository;
             _notifier = notifier;
@@ -49,12 +52,17 @@ namespace Orchard.Users.Controllers {
 
         [HttpPost]
         public ActionResult Create(UserCreateViewModel model) {
+            if (model.Password != model.ConfirmPassword) {
+                ModelState.AddModelError("ConfirmPassword", T("Password confirmation must match").ToString());
+            }
             if (ModelState.IsValid == false) {
                 return View(model);
             }
-            var user = _modelManager.New("user");
-            user.As<UserModel>().Record = new UserRecord { UserName = model.UserName, Email = model.Email };
-            _modelManager.Create(user);
+            var user = _membershipService.CreateUser(new CreateUserParams(
+                                              model.UserName,
+                                              model.Password,
+                                              model.Email,
+                                              null, null, true));
             return RedirectToAction("edit", new { user.Id });
         }
 

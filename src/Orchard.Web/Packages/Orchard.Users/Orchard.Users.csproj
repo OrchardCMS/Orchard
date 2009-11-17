@@ -77,6 +77,7 @@
     <Content Include="Package.txt" />
     <Content Include="Views\Admin\Edit.aspx" />
     <Content Include="Views\Admin\Create.aspx" />
+    <Content Include="Views\Admin\EditorTemplates\inputPasswordLarge.ascx" />
     <Content Include="Views\Admin\EditorTemplates\UserEditViewModel.ascx" />
     <Content Include="Views\Admin\EditorTemplates\inputTextLarge.ascx" />
     <Content Include="Views\Admin\EditorTemplates\UserCreateViewModel.ascx" />

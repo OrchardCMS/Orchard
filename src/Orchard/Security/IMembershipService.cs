@@ -8,6 +8,7 @@ namespace Orchard.Security {
         IUser GetUser(string username);
 
         IUser ValidateUser(string username, string password);
+        void SetPassword(IUser user, string password);
     }
 
     public class MembershipSettings {
