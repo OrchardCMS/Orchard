@@ -2,6 +2,7 @@
 using System.Web.Routing;
 using Moq;
 using NUnit.Framework;
+using Orchard.Localization;
 using Orchard.Mvc.ViewModels;
 using Orchard.Tests.Stubs;
 using Orchard.UI.Notify;
@@ -73,14 +74,12 @@ namespace Orchard.Tests.UI.Notify {
             filter.OnActionExecuted(context);
             filter.OnResultExecuting(new ResultExecutingContext(context, context.Result));
 
+            var T = NullLocalizer.Instance;
+
             Assert.That(model.Messages, Is.Not.Null);
             Assert.That(model.Messages, Has.Count.EqualTo(2));
-            foreach (var notifyEntries in model.Messages) {
-                Assert.That(new[] { notifyEntries.Message.ToString() }, Is.SubsetOf(new[]
-                {
-                    "dont-destroy", "Working"
-                }));
-            }
+            Assert.That(model.Messages, Has.Some.Property("Message").EqualTo(T("dont-destroy")));
+            Assert.That(model.Messages, Has.Some.Property("Message").EqualTo(T("Working")));
         }
     }
 }

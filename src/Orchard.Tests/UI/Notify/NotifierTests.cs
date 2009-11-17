@@ -1,4 +1,5 @@
 ﻿using NUnit.Framework;
+using Orchard.Localization;
 using Orchard.UI.Notify;
 
 namespace Orchard.Tests.UI.Notify {
@@ -12,13 +13,12 @@ namespace Orchard.Tests.UI.Notify {
             notifier.Information("More Info");
             notifier.Error("Boom");
 
+            Localizer T = NullLocalizer.Instance;
+
             Assert.That(notifier.List(), Has.Count.EqualTo(3));
-            foreach (var notifyEntries in notifier.List()) {
-                Assert.That(new[] {notifyEntries.Message.ToString()}, Is.SubsetOf(new[]
-                {
-                    "Hello world", "More Info", "Boom"
-                }));
-            }
+            Assert.That(notifier.List(), Has.Some.Property("Message").EqualTo(T("Hello world")));
+            Assert.That(notifier.List(), Has.Some.Property("Message").EqualTo(T("More Info")));
+            Assert.That(notifier.List(), Has.Some.Property("Message").EqualTo(T("Boom")));
         }
     }
 }

@@ -44,7 +44,6 @@ namespace Orchard.Tests.Packages.Pages.Controllers {
 
             _controller = _container.Resolve<AdminController>();
             _controller.ControllerContext = new ControllerContext(new StubHttpContext("~/admin/cmspages"), new RouteData(), _controller);
-            _controller.T = new Localizer(StubLocalizer.Get);
         }
 
         public override void Register(Autofac.Builder.ContainerBuilder builder) {

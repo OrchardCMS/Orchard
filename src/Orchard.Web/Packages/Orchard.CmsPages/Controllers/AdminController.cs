@@ -37,6 +37,7 @@ namespace Orchard.CmsPages.Controllers {
             _templateProvider = templateProvider;
             _notifier = notifier;
             Logger = NullLogger.Instance;
+            T = NullLocalizer.Instance;
         }
 
         // That's what it takes to get the CurrentUser for a module.
@@ -290,7 +291,7 @@ namespace Orchard.CmsPages.Controllers {
         public ActionResult DeleteDraft(int id) {
 #warning UNIT TEST!!!!
             if (!_authorizer.Authorize(Permissions.DeleteDraftPages, T("Couldn't delete draft page")))
-                return new HttpUnauthorizedResult();            
+                return new HttpUnauthorizedResult();
 
             var lastRevision = _pageManager.GetLastRevision(id);
             if (!lastRevision.IsPublished())
