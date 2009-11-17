@@ -51,7 +51,11 @@ namespace Orchard.Security.Providers {
         }
 
         public override bool ChangePassword(string username, string oldPassword, string newPassword) {
-            throw new NotImplementedException();
+            var service = GetService();
+            var user = service.ValidateUser(username, oldPassword);
+            if (user == null)
+                return false;
+            service.SetPassword(user, newPassword);
         }
 
         public override string ResetPassword(string username, string answer) {

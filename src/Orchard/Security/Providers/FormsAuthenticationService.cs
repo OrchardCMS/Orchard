@@ -65,6 +65,7 @@ namespace Orchard.Security.Providers {
             int userId;
             if (!int.TryParse(userData, out userId)) {
                 Logger.Fatal("User id not a parsable integer");
+                return null;
             }
             return _modelManager.Get(userId).As<IUser>();
         }
