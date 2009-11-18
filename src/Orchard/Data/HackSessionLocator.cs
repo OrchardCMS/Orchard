@@ -8,6 +8,7 @@ using FluentNHibernate.Cfg;
 using FluentNHibernate.Cfg.Db;
 using NHibernate;
 using NHibernate.Tool.hbm2ddl;
+using Orchard.Models;
 
 namespace Orchard.Data {
     public class HackSessionLocator : ISessionLocator, IDisposable {
@@ -28,6 +29,7 @@ namespace Orchard.Data {
                     CreatePersistenceModel(Assembly.Load("Orchard.Users")),
                     CreatePersistenceModel(Assembly.Load("Orchard.Roles")),
                     CreatePersistenceModel(Assembly.Load("Orchard")),
+                    CreatePersistenceModel(Assembly.Load("Orchard.Core")),
                 };
 
                 return _sessionFactory ??
@@ -48,18 +50,19 @@ namespace Orchard.Data {
 
         private static AutoPersistenceModel CreatePersistenceModel(Assembly assembly) {
             return AutoMap.Assembly(assembly)
-                .Where(IsModelType)
+                .Where(IsRecordType)
                 .Alterations(alt => alt
                     .Add(new AutoMappingOverrideAlteration(assembly))
                     .AddFromAssemblyOf<DataModule>())
                 .Conventions.AddFromAssemblyOf<DataModule>();
         }
 
-        private static bool IsModelType(Type type) {
+        private static bool IsRecordType(Type type) {
             return (type.Namespace.EndsWith(".Models") || type.Namespace.EndsWith(".Records")) &&
                    type.GetProperty("Id") != null &&
                    !type.IsSealed &&
-                   !type.IsAbstract;
+                   !type.IsAbstract &&
+                   !typeof(IModel).IsAssignableFrom(type);
         }
 
         public ISession For(Type entityType) {

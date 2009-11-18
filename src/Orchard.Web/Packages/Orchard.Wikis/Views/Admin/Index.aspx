@@ -14,6 +14,7 @@
     <% Html.BeginForm(); %>
     <div class="yui-g">
         <h2>Wiki Admin</h2>
+        <p><%=Html.ActionLink("Create", "Create") %></p>
     </div>
     <% Html.EndForm(); %>
     <% Html.Include("Footer"); %>

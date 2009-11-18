@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Web.Mvc;
+using Autofac;
 using Orchard.Data;
 using Orchard.Models.Driver;
 using Orchard.Models.Records;
@@ -8,17 +9,26 @@ using Orchard.UI.Models;
 
 namespace Orchard.Models {
     public class DefaultModelManager : IModelManager {
-        private readonly IEnumerable<IModelDriver> _drivers;
+        private readonly IContext _context;
         private readonly IRepository<ModelRecord> _modelRepository;
         private readonly IRepository<ModelTypeRecord> _modelTypeRepository;
 
         public DefaultModelManager(
-            IEnumerable<IModelDriver> drivers,
+            IContext context,
             IRepository<ModelRecord> modelRepository,
             IRepository<ModelTypeRecord> modelTypeRepository) {
-            _drivers = drivers;
+            _context = context;
             _modelRepository = modelRepository;
             _modelTypeRepository = modelTypeRepository;
+        }
+
+        private IEnumerable<IModelDriver> _drivers;
+        public IEnumerable<IModelDriver> Drivers {
+            get {
+                if (_drivers == null)
+                    _drivers = _context.Resolve<IEnumerable<IModelDriver>>();
+                return _drivers;
+            }            
         }
 
         public virtual IModel New(string modelType) {
@@ -30,12 +40,19 @@ namespace Orchard.Models {
             };
 
             // invoke drivers to weld aspects onto kernel
-            foreach (var driver in _drivers) {
+            foreach (var driver in Drivers) {
                 driver.New(context);
+            }
+            var context2 = new NewedModelContext {
+                ModelType = modelType,
+                Instance = context.Builder.Build()
+            };
+            foreach (var driver in Drivers) {
+                driver.Newed(context2);
             }
 
             // composite result is returned
-            return context.Builder.Build();
+            return context2.Instance;
         }
 
         public virtual IModel Get(int id) {
@@ -54,8 +71,11 @@ namespace Orchard.Models {
             context.Instance.As<ModelRoot>().Id = context.Id;
 
             // invoke drivers to acquire state, or at least establish lazy loading callbacks
-            foreach (var driver in _drivers) {
+            foreach (var driver in Drivers) {
                 driver.Load(context);
+            }
+            foreach (var driver in Drivers) {
+                driver.Loaded(context);
             }
 
             return context.Instance;
@@ -79,14 +99,17 @@ namespace Orchard.Models {
 
 
             // invoke drivers to add information to persistent stores
-            foreach (var driver in _drivers) {
+            foreach (var driver in Drivers) {
                 driver.Create(context);
+            }
+            foreach (var driver in Drivers) {
+                driver.Created(context);
             }
         }
 
         public IEnumerable<ModelTemplate> GetEditors(IModel model) {
             var context = new GetModelEditorsContext(model);
-            foreach (var driver in _drivers) {
+            foreach (var driver in Drivers) {
                 driver.GetEditors(context);
             }
             return context.Editors;
@@ -94,7 +117,7 @@ namespace Orchard.Models {
 
         public IEnumerable<ModelTemplate> UpdateEditors(IModel model, IModelUpdater updater) {
             var context = new UpdateModelContext(model, updater);
-            foreach (var driver in _drivers) {
+            foreach (var driver in Drivers) {
                 driver.UpdateEditors(context);
             }
             return context.Editors;

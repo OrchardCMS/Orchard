@@ -7,7 +7,7 @@ namespace Orchard.Wikis {
         public void GetNavigation(NavigationBuilder builder) {
             builder.Add("Wiki", "9",
                         menu => menu
-                                    .Add("Wiki Pages", "1.0", item => item.Action("Index", "Admin", new { area = "Orchard.Wiki" }))
+                                    .Add("Wiki Pages", "1.0", item => item.Action("Index", "Admin", new { area = "Orchard.Wikis" }))
                                     );
         }
     }
