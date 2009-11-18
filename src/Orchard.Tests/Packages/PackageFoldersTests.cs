@@ -63,7 +63,7 @@ namespace Orchard.Tests.Packages {
         public void PackageTxtShouldBeParsedAndReturnedAsYamlDocument() {
             var folders = new PackageFolders(new[] { _tempFolderName });
             var sample1 = folders.ParseManifest("Sample1");
-            var mapping = (Mapping)sample1.Root;
+            var mapping = (Mapping)sample1.YamlDocument.Root;
             var entities = mapping.Entities
                 .Where(x=>x.Key is Scalar)
                 .ToDictionary(x => ((Scalar)x.Key).Text, x => x.Value);

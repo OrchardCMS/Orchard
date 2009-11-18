@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Xml.Linq;
-using Orchard.XmlRpc.Models;
+using Orchard.Core.XmlRpc.Models;
 
-namespace Orchard.XmlRpc.Services {
+namespace Orchard.Core.XmlRpc.Services {
     public class XmlRpcReader :
         IMapper<XElement, XRpcMethodCall>,
         IMapper<XElement, XRpcData>,

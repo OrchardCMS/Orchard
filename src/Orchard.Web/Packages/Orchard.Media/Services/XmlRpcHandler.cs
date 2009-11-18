@@ -1,11 +1,9 @@
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Web;
+using Orchard.Core.XmlRpc;
+using Orchard.Core.XmlRpc.Models;
 using Orchard.Security;
-using Orchard.XmlRpc;
-using Orchard.XmlRpc.Models;
 
 namespace Orchard.Media.Services {
     public class XmlRpcHandler : IXmlRpcHandler {

@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace Orchard.XmlRpc.Models {
+namespace Orchard.Core.XmlRpc.Models {
     public class XRpcArray {
         public XRpcArray() {
             Data = new List<XRpcData>();

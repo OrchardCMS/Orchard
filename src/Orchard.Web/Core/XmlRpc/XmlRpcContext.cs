@@ -1,7 +1,7 @@
 using System.Web;
-using Orchard.XmlRpc.Models;
+using Orchard.Core.XmlRpc.Models;
 
-namespace Orchard.XmlRpc {
+namespace Orchard.Core.XmlRpc {
     public class XmlRpcContext {
         public HttpContextBase HttpContext { get; set; }
         public XRpcMethodCall Request { get; set; }

@@ -26,8 +26,17 @@ namespace Orchard.Web {
                 );
         }
 
-        static string[] Replace(IEnumerable<string> source, string find, string replace) {
-            return source.Select(format => format.Replace(find, replace)).ToArray();
+        static IEnumerable<string> OrchardLocationFormats() {
+            return new[] {
+                "~/Packages/{2}/Views/{1}/{0}.aspx",
+                "~/Packages/{2}/Views/{1}/{0}.ascx",
+                "~/Packages/{2}/Views/Shared/{0}.aspx",
+                "~/Packages/{2}/Views/Shared/{0}.ascx",
+                "~/Core/{2}/Views/{1}/{0}.aspx",
+                "~/Core/{2}/Views/{1}/{0}.ascx",
+                "~/Core/{2}/Views/Shared/{0}.aspx",
+                "~/Core/{2}/Views/Shared/{0}.ascx",
+            };
         }
 
         protected void Application_Start() {
@@ -35,8 +44,9 @@ namespace Orchard.Web {
 
             //TEMP: Modules should be able to register their stuff
             var viewEngine = ViewEngines.Engines.OfType<VirtualPathProviderViewEngine>().Single();
-            viewEngine.AreaViewLocationFormats = Replace(viewEngine.AreaViewLocationFormats, "~/Areas/{2}", "~/Packages/{2}/");
-            viewEngine.AreaPartialViewLocationFormats = Replace(viewEngine.AreaPartialViewLocationFormats, "~/Areas/{2}", "~/Packages/{2}/");
+            viewEngine.AreaViewLocationFormats = OrchardLocationFormats().Concat(viewEngine.AreaViewLocationFormats).ToArray();
+            viewEngine.AreaPartialViewLocationFormats = OrchardLocationFormats().Concat(viewEngine.AreaPartialViewLocationFormats).ToArray();
+
 
             _host = OrchardStarter.CreateHost(MvcSingletons);
             _host.Initialize();

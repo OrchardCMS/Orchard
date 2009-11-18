@@ -109,6 +109,10 @@
       <Project>{ABC826D4-2FA1-4F2F-87DE-E6095F653810}</Project>
       <Name>Orchard.Tests</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Orchard.Web\Core\Orchard.Core.csproj">
+      <Project>{9916839C-39FC-4CEB-A5AF-89CA7E87119F}</Project>
+      <Name>Orchard.Core</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Orchard.Web\Packages\Orchard.CmsPages\Orchard.CmsPages.csproj">
       <Project>{1ECC1131-0D0C-4822-AD90-E979868C63F3}</Project>
       <Name>Orchard.CmsPages</Name>
@@ -120,10 +124,6 @@
     <ProjectReference Include="..\Orchard.Web\Packages\Orchard.Users\Orchard.Users.csproj">
       <Project>{79AED36E-ABD0-4747-93D3-8722B042454B}</Project>
       <Name>Orchard.Users</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Orchard.Web\Packages\Orchard.XmlRpc\Orchard.XmlRpc.csproj">
-      <Project>{0DC6B598-6D03-4923-A6C2-274D09854117}</Project>
-      <Name>Orchard.XmlRpc</Name>
     </ProjectReference>
     <ProjectReference Include="..\Orchard\Orchard.csproj">
       <Project>{2D1D92BB-4555-4CBE-8D0E-63563D6CE4C6}</Project>

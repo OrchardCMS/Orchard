@@ -4,11 +4,10 @@ using System.Web;
 using System.Web.Mvc;
 using System.Xml;
 using System.Xml.Linq;
+using Orchard.Core.XmlRpc.Models;
 using Orchard.Logging;
-using Orchard.XmlRpc.Models;
 
-namespace Orchard.XmlRpc.Controllers {
-
+namespace Orchard.Core.XmlRpc.Controllers {
     public class HomeController : Controller {
         private readonly IMapper<XRpcMethodResponse, XElement> _writer;
         private readonly IEnumerable<IXmlRpcHandler> _xmlRpcHandlers;

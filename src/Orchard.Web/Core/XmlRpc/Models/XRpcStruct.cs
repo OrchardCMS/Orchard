@@ -1,7 +1,6 @@
-using System;
 using System.Collections.Generic;
 
-namespace Orchard.XmlRpc.Models {
+namespace Orchard.Core.XmlRpc.Models {
     public class XRpcStruct {
         public XRpcStruct() {
             Members = new Dictionary<string, XRpcData>();

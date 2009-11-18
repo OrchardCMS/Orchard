@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
-using Orchard.XmlRpc.Models;
+using Orchard.Core.XmlRpc.Models;
 
-namespace Orchard.XmlRpc.Services {
+namespace Orchard.Core.XmlRpc.Services {
     public class XmlRpcWriter :
         IMapper<XRpcMethodResponse, XElement>,
         IMapper<XRpcStruct, XElement>,
@@ -66,5 +66,5 @@ namespace Orchard.XmlRpc.Services {
             return new XElement("value", _dispatch[data.Type](data));
         }
 
-    }
+        }
 }

@@ -7,7 +7,7 @@ using System.Xml;
 using System.Xml.Linq;
 using Orchard.Mvc.ModelBinders;
 
-namespace Orchard.XmlRpc.Models {
+namespace Orchard.Core.XmlRpc.Models {
     public class ModelBinderProvider : IModelBinderProvider, IModelBinder {
         private readonly IMapper<XElement, XRpcMethodCall> _mapper;
 

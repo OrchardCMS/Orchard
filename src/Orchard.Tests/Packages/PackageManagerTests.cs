@@ -37,14 +37,21 @@ namespace Orchard.Tests.Packages {
                 return Manifests.Keys;
             }
 
-            public YamlDocument ParseManifest(string name) {
+            public ParseResult ParseManifest(string name) {
                 var parser = new YamlParser();
                 bool success;
                 var stream = parser.ParseYamlStream(new TextInput(Manifests[name]), out success);
-                return success ? stream.Documents.Single() : null;
+                if (success) {
+                    return new ParseResult {
+                        Location = "~/InMemory",
+                        Name = name,
+                        YamlDocument = stream.Documents.Single()
+                    };
+                }
+                return null;
             }
-
         }
+
 
         [Test]
         public void AvailablePackagesShouldFollowCatalogLocations() {

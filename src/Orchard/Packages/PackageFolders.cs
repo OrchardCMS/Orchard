@@ -9,7 +9,13 @@ using Yaml.Grammar;
 namespace Orchard.Packages {
     public interface IPackageFolders {
         IEnumerable<string> ListNames();
-        YamlDocument ParseManifest(string name);
+        ParseResult ParseManifest(string name);
+    }
+
+    public class ParseResult {
+        public string Location { get; set; }
+        public string Name { get; set; }
+        public YamlDocument YamlDocument { get; set; }
     }
 
     public class PackageFolders : IPackageFolders {
@@ -19,36 +25,39 @@ namespace Orchard.Packages {
             _paths = paths;
         }
 
-        private IEnumerable<string> GetPhysicalPaths() {
-            foreach(var path in _paths) {
-                if (path.StartsWith("~") && HostingEnvironment.IsHosted) {
-                    yield return HostingEnvironment.MapPath(path);
-                }
-                else {
-                    yield return path;
-                }
+        static string GetPhysicalPath(string path) {
+            if (path.StartsWith("~") && HostingEnvironment.IsHosted) {
+                return HostingEnvironment.MapPath(path);
             }
+
+            return path;
+
         }
 
 
+
         public IEnumerable<string> ListNames() {
-            foreach (var path in GetPhysicalPaths()) {
-                foreach (var directoryName in Directory.GetDirectories(path)) {
+            foreach (var path in _paths) {
+                foreach (var directoryName in Directory.GetDirectories(GetPhysicalPath(path))) {
                     if (File.Exists(Path.Combine(directoryName, "Package.txt")))
                         yield return Path.GetFileName(directoryName);
                 }
             }
         }
 
-        public YamlDocument ParseManifest(string name) {
-            foreach (var path in GetPhysicalPaths()) {
-                var packageDirectoryPath = Path.Combine(path, name);
+        public ParseResult ParseManifest(string name) {
+            foreach (var path in _paths) {
+                var packageDirectoryPath = Path.Combine(GetPhysicalPath(path), name);
                 var packageManifestPath = Path.Combine(packageDirectoryPath, "Package.txt");
                 if (!File.Exists(packageManifestPath)) {
                     continue;
                 }
                 var yamlStream = YamlParser.Load(packageManifestPath);
-                return yamlStream.Documents.Single();
+                return new ParseResult {
+                    Location = path,
+                    Name = name,
+                    YamlDocument = yamlStream.Documents.Single()
+                };
             }
             return null;
         }

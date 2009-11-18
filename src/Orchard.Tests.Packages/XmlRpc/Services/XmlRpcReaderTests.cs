@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Xml.Linq;
 using NUnit.Framework;
-using Orchard.XmlRpc.Models;
-using Orchard.XmlRpc.Services;
+using Orchard.Core.XmlRpc.Models;
+using Orchard.Core.XmlRpc.Services;
 
 namespace Orchard.Tests.Packages.XmlRpc.Services {
     [TestFixture]

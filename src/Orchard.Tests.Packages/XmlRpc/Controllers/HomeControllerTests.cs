@@ -2,10 +2,10 @@
 using Autofac.Builder;
 using Autofac.Modules;
 using NUnit.Framework;
-using Orchard.XmlRpc;
-using Orchard.XmlRpc.Controllers;
-using Orchard.XmlRpc.Models;
-using Orchard.XmlRpc.Services;
+using Orchard.Core.XmlRpc;
+using Orchard.Core.XmlRpc.Controllers;
+using Orchard.Core.XmlRpc.Models;
+using Orchard.Core.XmlRpc.Services;
 
 namespace Orchard.Tests.Packages.XmlRpc.Controllers {
     [TestFixture]

@@ -8,5 +8,6 @@ namespace Orchard.Packages {
     public class PackageEntry {
         public PackageDescriptor Descriptor { get; set; }
         public Assembly Assembly { get; set; }
+        public IEnumerable<Type> ExportedTypes { get; set; }
     }
 }

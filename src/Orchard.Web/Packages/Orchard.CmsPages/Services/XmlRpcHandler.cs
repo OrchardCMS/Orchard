@@ -5,9 +5,9 @@ using System.Linq;
 using System.Web;
 using System.Web.Hosting;
 using Orchard.CmsPages.ViewModels;
+using Orchard.Core.XmlRpc;
+using Orchard.Core.XmlRpc.Models;
 using Orchard.Logging;
-using Orchard.XmlRpc;
-using Orchard.XmlRpc.Models;
 
 namespace Orchard.CmsPages.Services {
     public class XmlRpcHandler : IXmlRpcHandler {

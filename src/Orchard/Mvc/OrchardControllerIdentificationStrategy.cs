@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using Autofac;
 using Autofac.Integration.Web.Mvc;
 
@@ -11,9 +12,19 @@ namespace Orchard.Mvc {
         }
 
         public Service ServiceForControllerType(Type controllerType) {
+            var controllerNamespace = controllerType.Namespace;
             var assemblySimpleName = controllerType.Assembly.GetName().Name;
+            string areaName;
+            if (assemblySimpleName == "Orchard.Core" && 
+                controllerNamespace.StartsWith("Orchard.Core.")) {
+
+                areaName = controllerNamespace.Split('.').Skip(2).FirstOrDefault();
+            }
+            else {
+                areaName = assemblySimpleName;
+            }
             var controllerName = controllerType.Name.Replace("Controller", "");
-            return new NamedService(("controller." + assemblySimpleName + "." + controllerName).ToLowerInvariant());
+            return new NamedService(("controller." + areaName + "." + controllerName).ToLowerInvariant());
         }
     }
 }

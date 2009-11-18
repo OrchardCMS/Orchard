@@ -37,7 +37,7 @@ namespace Orchard.Environment {
             //    .WithExtendedProperty("paths", new[] { "~/Packages" })
             //    .SingletonScoped();
             builder.Register<PackageFolders>().As<IPackageFolders>()
-                .WithArguments(new NamedParameter("paths", new[] { "~/Packages" }))
+                .WithArguments(new NamedParameter("paths", new[] { "~/Core", "~/Packages" }))
                 .SingletonScoped();
 
             registrations(builder);

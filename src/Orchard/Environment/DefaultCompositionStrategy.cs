@@ -31,22 +31,16 @@ namespace Orchard.Environment {
         }
 
         public IEnumerable<Type> GetModuleTypes() {
-            var assemblies = GetAssemblies();
-            var notFromAutofac = assemblies.Where(a => !IsAutofacAssembly(a));
-            var types = notFromAutofac.SelectMany(a => a.GetExportedTypes());
+            var types = _packageManager.ActivePackages().SelectMany(x => x.ExportedTypes);
+            types = types.Concat(typeof (IOrchardHost).Assembly.GetExportedTypes());
             var nonAbstractClasses = types.Where(t => t.IsClass && !t.IsAbstract);
             var modules = nonAbstractClasses.Where(t => typeof(IModule).IsAssignableFrom(t));
             return modules;
         }
 
-        private static bool IsAutofacAssembly(Assembly assembly) {
-            return assembly == typeof(Autofac.IModule).Assembly ||
-                   assembly == typeof(Autofac.Integration.Web.IContainerProvider).Assembly;
-        }
-
         public IEnumerable<Type> GetDependencyTypes() {
-            var assemblies = GetAssemblies();
-            var types = assemblies.SelectMany(a => a.GetExportedTypes());
+            var types = _packageManager.ActivePackages().SelectMany(x => x.ExportedTypes);
+            types = types.Concat(typeof(IOrchardHost).Assembly.GetExportedTypes());
             var nonAbstractClasses = types.Where(t => t.IsClass && !t.IsAbstract);
             var modules = nonAbstractClasses.Where(t => typeof(IDependency).IsAssignableFrom(t));
             return modules;

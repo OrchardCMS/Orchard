@@ -22,14 +22,15 @@ namespace Orchard.Packages {
         public IEnumerable<PackageDescriptor> AvailablePackages() {
             var names = _folders.ListNames();
             foreach (var name in names) {
-                var document = _folders.ParseManifest(name);
-                var mapping = (Mapping)document.Root;
+                var parseResult = _folders.ParseManifest(name);
+                var mapping = (Mapping)parseResult.YamlDocument.Root;
                 var fields = mapping.Entities
                     .Where(x => x.Key is Scalar)
                     .ToDictionary(x => ((Scalar)x.Key).Text, x => x.Value);
 
 
                 yield return new PackageDescriptor {
+                    Location = parseResult.Location,
                     Name = name,
                     DisplayName = GetValue(fields, "name"),
                     Description = GetValue(fields, "description"),
@@ -54,11 +55,27 @@ namespace Orchard.Packages {
         }
 
         private static PackageEntry BuildEntry(PackageDescriptor descriptor) {
-            var entry = new PackageEntry {
-                Descriptor = descriptor,
-                Assembly = Assembly.Load(descriptor.Name)
-            };
-            return entry;
+            if (descriptor.Location == "~/Core") {
+
+                var assembly = Assembly.Load("Orchard.Core");
+                return new PackageEntry {
+                    Descriptor = descriptor,
+                    Assembly = assembly,
+                    ExportedTypes = assembly.GetExportedTypes().Where(x => IsTypeFromPackage(x, descriptor))
+                };
+            }
+            else {
+                var assembly = Assembly.Load(descriptor.Name);
+                return new PackageEntry {
+                    Descriptor = descriptor,
+                    Assembly = assembly,
+                    ExportedTypes = assembly.GetExportedTypes()
+                };
+            }
+        }
+
+        private static bool IsTypeFromPackage(Type type, PackageDescriptor descriptor) {
+            return (type.Namespace + ".").StartsWith("Orchard.Core." + descriptor.Name + ".");
         }
     }
 
