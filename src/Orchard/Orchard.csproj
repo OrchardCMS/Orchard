@@ -173,6 +173,9 @@
     <Compile Include="Security\Providers\FormsAuthenticationService.cs" />
     <Compile Include="Security\SecurityFilter.cs" />
     <Compile Include="Security\SecurityModule.cs" />
+    <Compile Include="Settings\ISite.cs" />
+    <Compile Include="Settings\ISiteService.cs" />
+    <Compile Include="Settings\SettingsModule.cs" />
     <Compile Include="UI\Menus\AdminMenuFilter.cs" />
     <Compile Include="UI\Models\ModelTemplate.cs" />
     <Compile Include="UI\Navigation\NavigationBuilder.cs" />
