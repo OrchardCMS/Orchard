@@ -6,7 +6,7 @@ using Orchard.Models.Driver;
 
 namespace Orchard.Tests.Models.Stubs {
     public class BetaDriver : ModelDriver {
-        protected override void New(NewModelContext context) {
+        protected override void Activating(ActivatingModelContext context) {
             if (context.ModelType == "beta") {
                 context.Builder.Weld<Beta>();
             }

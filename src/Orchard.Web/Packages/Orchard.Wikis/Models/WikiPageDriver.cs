@@ -7,7 +7,7 @@ using Orchard.Models.Driver;
 
 namespace Orchard.Wikis.Models {
     public class WikiPageDriver : ModelDriver {
-        protected override void New(NewModelContext context) {
+        protected override void Activating(ActivatingModelContext context) {
             if (context.ModelType == "wikipage") {
                 context.Builder
                     .Weld<CommonModel>()

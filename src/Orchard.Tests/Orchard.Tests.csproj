@@ -107,6 +107,7 @@
     <Compile Include="Logging\LoggingModuleTests.cs" />
     <Compile Include="Models\DefaultModelManagerTests.cs" />
     <Compile Include="Models\Drivers\ModelBuilderTests.cs" />
+    <Compile Include="Models\Drivers\ModelDriverTests.cs" />
     <Compile Include="Models\Stubs\Alpha.cs" />
     <Compile Include="Models\Stubs\AlphaDriver.cs" />
     <Compile Include="Models\Stubs\Beta.cs" />

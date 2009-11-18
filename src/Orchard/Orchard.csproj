@@ -124,6 +124,10 @@
     <Compile Include="Localization\Localizer.cs" />
     <Compile Include="Localization\LocalizedString.cs" />
     <Compile Include="Localization\NullLocalizer.cs" />
+    <Compile Include="Models\Driver\ActivatingFilter.cs" />
+    <Compile Include="Models\Driver\IModelActivatingFilter.cs" />
+    <Compile Include="Models\Driver\IModelFilter.cs" />
+    <Compile Include="Models\Driver\IModelStorageFilter.cs" />
     <Compile Include="Models\Driver\IModelUpdater.cs" />
     <Compile Include="Environment\ServiceLocator.cs" />
     <Compile Include="Logging\CastleLogger.cs" />
@@ -139,9 +143,10 @@
     <Compile Include="Models\Driver\LoadModelContext.cs" />
     <Compile Include="Models\Driver\ModelBuilder.cs" />
     <Compile Include="Models\Driver\ModelDriver.cs" />
-    <Compile Include="Models\Driver\ModelDriverWithRecord.cs" />
-    <Compile Include="Models\Driver\NewModelContext.cs" />
+    <Compile Include="Models\Driver\ActivatingModelContext.cs" />
     <Compile Include="Models\Driver\GetModelEditorsContext.cs" />
+    <Compile Include="Models\Driver\StorageFilterForRecord.cs" />
+    <Compile Include="Models\Driver\StorageFilterBase.cs" />
     <Compile Include="Models\IModelManager.cs" />
     <Compile Include="Models\Driver\IModelDriver.cs" />
     <Compile Include="Models\IModel.cs" />

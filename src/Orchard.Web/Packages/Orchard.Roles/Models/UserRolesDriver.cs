@@ -21,19 +21,19 @@ namespace Orchard.Roles.Models {
             _notifier = notifier;
         }
 
-        protected override void New(NewModelContext context) {
+        protected override void Activating(ActivatingModelContext context) {
             if (context.ModelType == "user") {
                 context.Builder.Weld<UserRolesModel>();
             }
         }
 
-        protected override void Create(CreateModelContext context) {
+        protected override void Creating(CreateModelContext context) {
             var userRoles = context.Instance.As<UserRolesModel>();
             if (userRoles != null) {
             }
         }
 
-        protected override void Load(LoadModelContext context) {
+        protected override void Loading(LoadModelContext context) {
             var userRoles = context.Instance.As<UserRolesModel>();
             if (userRoles != null) {
                 userRoles.Roles = _userRolesRepository.Fetch(x => x.UserId == userRoles.Id)

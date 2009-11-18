@@ -1,7 +1,4 @@
-﻿using System;
-using FluentNHibernate.Automapping;
-using FluentNHibernate.Automapping.Alterations;
-using Orchard.Data;
+﻿using Orchard.Data;
 using Orchard.Models;
 using Orchard.Models.Driver;
 using Orchard.Models.Records;
@@ -15,15 +12,10 @@ namespace Orchard.Tests.Models.Stubs {
     }
 
 
-    public class GammaDriver : ModelDriverWithRecord<GammaRecord> {
-        public GammaDriver(IRepository<GammaRecord> repository)
-            : base(repository) {
-        }
-
-        protected override void New(NewModelContext context) {
-            if (context.ModelType == "gamma") {
-                context.Builder.Weld<Gamma>();
-            }
+    public class GammaDriver : ModelDriver {
+        public GammaDriver(IRepository<GammaRecord> repository){
+            Filters.Add(new ActivatingFilter<Gamma>(x => x == "gamma"));
+            Filters.Add(new StorageFilterForRecord<GammaRecord>(repository));
         }
     }
 }

@@ -2,7 +2,7 @@
 
 namespace Orchard.Tests.Models.Stubs {
     public class StyledDriver : ModelDriver {
-        protected override void New(NewModelContext context) {
+        protected override void Activating(ActivatingModelContext context) {
             if (context.ModelType == "alpha") {
                 context.Builder.Weld<Styled>();
             }

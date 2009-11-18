@@ -3,8 +3,9 @@ using Orchard.Data;
 using Orchard.Models.Driver;
 
 namespace Orchard.Core.Common.Models {
-    public class RoutableDriver : ModelDriverWithRecord<RoutableRecord> {
-        public RoutableDriver(IRepository<RoutableRecord> repository) : base(repository) {
+    public class RoutableDriver : ModelDriver {
+        public RoutableDriver(IRepository<RoutableRecord> repository) {
+            Filters.Add(new StorageFilterForRecord<RoutableRecord>(repository));
         }
     }
 }

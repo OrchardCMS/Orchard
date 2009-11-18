@@ -1,10 +1,10 @@
 ﻿namespace Orchard.Models.Driver {
     public interface IModelDriver : IDependency {
-        void New(NewModelContext context);
-        void Newed(NewedModelContext context);
-        void Create(CreateModelContext context);
+        void Activating(ActivatingModelContext context);
+        void Activated(ActivatedModelContext context);
+        void Creating(CreateModelContext context);
         void Created(CreateModelContext context);
-        void Load(LoadModelContext context);
+        void Loading(LoadModelContext context);
         void Loaded(LoadModelContext context);
 
         void GetEditors(GetModelEditorsContext context);

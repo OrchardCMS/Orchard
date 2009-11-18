@@ -34,21 +34,21 @@ namespace Orchard.Models {
         public virtual IModel New(string modelType) {
 
             // create a new kernel for the model instance
-            var context = new NewModelContext {
+            var context = new ActivatingModelContext {
                 ModelType = modelType,
                 Builder = new ModelBuilder(modelType)
             };
 
             // invoke drivers to weld aspects onto kernel
             foreach (var driver in Drivers) {
-                driver.New(context);
+                driver.Activating(context);
             }
-            var context2 = new NewedModelContext {
+            var context2 = new ActivatedModelContext {
                 ModelType = modelType,
                 Instance = context.Builder.Build()
             };
             foreach (var driver in Drivers) {
-                driver.Newed(context2);
+                driver.Activated(context2);
             }
 
             // composite result is returned
@@ -72,7 +72,7 @@ namespace Orchard.Models {
 
             // invoke drivers to acquire state, or at least establish lazy loading callbacks
             foreach (var driver in Drivers) {
-                driver.Load(context);
+                driver.Loading(context);
             }
             foreach (var driver in Drivers) {
                 driver.Loaded(context);
@@ -100,7 +100,7 @@ namespace Orchard.Models {
 
             // invoke drivers to add information to persistent stores
             foreach (var driver in Drivers) {
-                driver.Create(context);
+                driver.Creating(context);
             }
             foreach (var driver in Drivers) {
                 driver.Created(context);
