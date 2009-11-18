@@ -120,6 +120,10 @@
       <Project>{9916839C-39FC-4CEB-A5AF-89CA7E87119F}</Project>
       <Name>Orchard.Core</Name>
     </ProjectReference>
+    <ProjectReference Include="Packages\Orchard.Blogs\Orchard.Blogs.csproj">
+      <Project>{63FBD4D9-E1DA-4A7B-AA6A-D6074FE50867}</Project>
+      <Name>Orchard.Blogs</Name>
+    </ProjectReference>
     <ProjectReference Include="Packages\Orchard.CmsPages\Orchard.CmsPages.csproj">
       <Project>{1ECC1131-0D0C-4822-AD90-E979868C63F3}</Project>
       <Name>Orchard.CmsPages</Name>
