@@ -5,6 +5,7 @@ using Orchard.Roles.Models.NoRecord;
 using Orchard.Roles.Records;
 using Orchard.Security;
 using Orchard.Security.Permissions;
+using Orchard.Settings;
 
 namespace Orchard.Roles.Services {
     public class RolesBasedAuthorizationService : IAuthorizationService {
@@ -16,6 +17,7 @@ namespace Orchard.Roles.Services {
         }
 
         public ILogger Logger { get; set; }
+        public ISite CurrentSite { get; set; }
 
         #region Implementation of IAuthorizationService
 
@@ -24,7 +26,9 @@ namespace Orchard.Roles.Services {
                 return false;
             }
 
-            if (String.Equals(user.UserName, "Administrator", StringComparison.OrdinalIgnoreCase)) {
+            if (String.Equals(user.UserName, "Administrator", StringComparison.OrdinalIgnoreCase) || 
+                ((!String.IsNullOrEmpty(CurrentSite.SuperUser) &&
+                   String.Equals(user.UserName, CurrentSite.SuperUser, StringComparison.OrdinalIgnoreCase)))) {
                 return true;
             }
 
