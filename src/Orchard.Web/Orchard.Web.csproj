@@ -168,8 +168,6 @@
     <Content Include="Content\Images\title_background.gif" />
     <Content Include="Content\Site2.css" />
     <Content Include="Content\Site3.css" />
-    <Content Include="Views\Admin\EditorTemplates\UserRolesViewModel.ascx" />
-    <Content Include="Views\Admin\EditorTemplates\WikiSettingsRecord.ascx" />
     <Content Include="Views\Admin\Messages.ascx" />
     <Content Include="Views\Shared\ExtraUserControl.ascx" />
     <Content Include="Views\Shared\Footer.ascx" />

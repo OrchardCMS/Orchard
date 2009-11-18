@@ -42,10 +42,6 @@ namespace Orchard.Web {
         protected void Application_Start() {
             RegisterRoutes(RouteTable.Routes);
 
-            //TEMP: Modules should be able to register their stuff
-            var viewEngine = ViewEngines.Engines.OfType<VirtualPathProviderViewEngine>().Single();
-            viewEngine.AreaViewLocationFormats = OrchardLocationFormats().Concat(viewEngine.AreaViewLocationFormats).ToArray();
-            viewEngine.AreaPartialViewLocationFormats = OrchardLocationFormats().Concat(viewEngine.AreaPartialViewLocationFormats).ToArray();
 
 
             _host = OrchardStarter.CreateHost(MvcSingletons);

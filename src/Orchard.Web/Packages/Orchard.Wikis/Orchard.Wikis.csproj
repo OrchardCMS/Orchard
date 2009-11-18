@@ -70,6 +70,7 @@
   <ItemGroup>
     <Content Include="Package.txt" />
     <Content Include="Views\Admin\Index.aspx" />
+    <Content Include="Views\Models\EditorTemplates\WikiSettingsRecord.ascx" />
     <Content Include="Web.config" />
     <Content Include="Views\Web.config" />
   </ItemGroup>

@@ -8,6 +8,7 @@ using NUnit.Framework;
 using Orchard.Environment;
 using Orchard.Mvc.ModelBinders;
 using Orchard.Mvc.Routes;
+using Orchard.Packages;
 
 namespace Orchard.Tests.Environment {
     [TestFixture]
@@ -35,7 +36,9 @@ namespace Orchard.Tests.Environment {
                 new[] { provider1, provider2 },
                 publisher,
                 new[] { modelBinderProvider1, modelBinderProvider2 },
-                modelBinderPublisher);
+                modelBinderPublisher, 
+                new ViewEngineCollection(),
+                new Moq.Mock<IPackageManager>().Object);
 
             runtime.Activate();
 
