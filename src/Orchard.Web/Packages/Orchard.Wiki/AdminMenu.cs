@@ -1,6 +1,6 @@
 ﻿using Orchard.UI.Navigation;
 
-namespace Orchard.Wiki {
+namespace Orchard.Wikis {
     public class AdminMenu : INavigationProvider {
         public string MenuName { get { return "admin"; } }
 

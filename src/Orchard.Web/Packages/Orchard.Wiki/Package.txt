@@ -1,1 +1,1 @@
-﻿name: Wiki
+﻿name: Wikis

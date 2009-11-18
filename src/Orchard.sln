@@ -23,7 +23,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orchard.Tests.Packages", "O
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orchard.Roles", "Orchard.Web\Packages\Orchard.Roles\Orchard.Roles.csproj", "{D10AD48F-407D-4DB5-A328-173EC7CB010F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orchard.Wiki", "Orchard.Web\Packages\Orchard.Wiki\Orchard.Wiki.csproj", "{17C44253-65A2-4597-98C7-16EE576824B6}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orchard.Wikis", "Orchard.Web\Packages\Orchard.Wiki\Orchard.Wikis.csproj", "{17C44253-65A2-4597-98C7-16EE576824B6}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orchard.Core", "Orchard.Web\Core\Orchard.Core.csproj", "{9916839C-39FC-4CEB-A5AF-89CA7E87119F}"
 EndProject
