@@ -9,17 +9,23 @@ namespace Orchard.Models.Driver {
             _repository = repository;
         }
 
+        public bool AutomaticallyCreateMissingRecord { get; set; }
+
         protected override void Activated(ActivatedModelContext context, ModelPartWithRecord<TRecord> instance) {
             instance.Record = new TRecord();
         }
 
         protected override void Creating(CreateModelContext context, ModelPartWithRecord<TRecord> instance) {
-            instance.Record.Model = context.Record;
+            instance.Record.Model = context.ModelRecord;
             _repository.Create(instance.Record);
         }
 
         protected override void Loading(LoadModelContext context, ModelPartWithRecord<TRecord> instance) {
             instance.Record = _repository.Get(instance.Id);
+            if (instance.Record == null && AutomaticallyCreateMissingRecord) {
+                instance.Record = new TRecord {Model = context.ModelRecord};
+                _repository.Create(instance.Record);
+            }
         }
     }
 }

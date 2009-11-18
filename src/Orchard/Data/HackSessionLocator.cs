@@ -30,6 +30,7 @@ namespace Orchard.Data {
                     CreatePersistenceModel(Assembly.Load("Orchard.Roles")),
                     CreatePersistenceModel(Assembly.Load("Orchard")),
                     CreatePersistenceModel(Assembly.Load("Orchard.Core")),
+                    CreatePersistenceModel(Assembly.Load("Orchard.Wikis")),
                 };
 
                 return _sessionFactory ??

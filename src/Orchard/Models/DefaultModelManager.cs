@@ -63,7 +63,7 @@ namespace Orchard.Models {
             var context = new LoadModelContext {
                 Id = modelRecord.Id,
                 ModelType = modelRecord.ModelType.Name,
-                Record = modelRecord,
+                ModelRecord = modelRecord,
                 Instance = New(modelRecord.ModelType.Name)
             };
 
@@ -90,7 +90,7 @@ namespace Orchard.Models {
             var context = new CreateModelContext {
                 Id = modelRecord.Id,
                 ModelType = modelRecord.ModelType.Name,
-                Record = modelRecord,
+                ModelRecord = modelRecord,
                 Instance = model.As<ModelRoot>().Welded
             };
 

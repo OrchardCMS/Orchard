@@ -124,6 +124,7 @@
     <Compile Include="Localization\Localizer.cs" />
     <Compile Include="Localization\LocalizedString.cs" />
     <Compile Include="Localization\NullLocalizer.cs" />
+    <Compile Include="Models\Driver\ActivatedModelContext.cs" />
     <Compile Include="Models\Driver\ActivatingFilter.cs" />
     <Compile Include="Models\Driver\IModelActivatingFilter.cs" />
     <Compile Include="Models\Driver\IModelFilter.cs" />
