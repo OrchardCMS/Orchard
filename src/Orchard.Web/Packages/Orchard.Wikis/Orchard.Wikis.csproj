@@ -5,7 +5,7 @@
     <ProductVersion>9.0.30729</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{17C44253-65A2-4597-98C7-16EE576824B6}</ProjectGuid>
-    <ProjectTypeGuids>{F85E285D-A4E0-4152-9332-AB1D724D3325};{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Orchard.Wikis</RootNamespace>
@@ -63,14 +63,25 @@
   <ItemGroup>
     <Compile Include="AdminMenu.cs" />
     <Compile Include="Controllers\AdminController.cs" />
+    <Compile Include="Controllers\PageController.cs" />
+    <Compile Include="Models\WikiPage.cs" />
     <Compile Include="Models\WikiPageHandler.cs" />
+    <Compile Include="Models\WikiPageRecord.cs" />
     <Compile Include="Models\WikiSettings.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ViewModels\PageEditViewModel.cs" />
+    <Compile Include="ViewModels\PageCreateViewModel.cs" />
+    <Compile Include="ViewModels\PageShowViewModel.cs" />
+    <Compile Include="ViewModels\PageIndexViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Package.txt" />
     <Content Include="Views\Admin\Index.aspx" />
     <Content Include="Views\Models\EditorTemplates\WikiSettingsRecord.ascx" />
+    <Content Include="Views\Page\Edit.aspx" />
+    <Content Include="Views\Page\Create.aspx" />
+    <Content Include="Views\Page\Show.aspx" />
+    <Content Include="Views\Page\Index.aspx" />
     <Content Include="Web.config" />
     <Content Include="Views\Web.config" />
   </ItemGroup>
