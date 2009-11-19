@@ -1,15 +1,7 @@
 <%@ Page Language="C#" Inherits="System.Web.Mvc.ViewPage<Orchard.CmsPages.ViewModels.ChooseTemplateViewModel>" %>
 <%@ Import Namespace="Orchard.CmsPages.Services.Templates"%>
 <%@ Import Namespace="Orchard.Mvc.Html" %>
-
-<!DOCTYPE html>
-<html>
-<head id="Head1" runat="server">
-    <title>Index2</title>
-    <% Html.Include("Head"); %>
-</head>
-<body>
-    <% Html.Include("Header"); %>
+<% Html.Include("Header"); %>
     <div class="yui-u">
         <h2 class="separator">Change Template</h2>
         <p class="bottomSpacer">
@@ -46,6 +38,4 @@
 
         <%}/*EndForm*/%>
     </div>
-    <% Html.Include("Footer"); %>
-</body>
-</html>
+<% Html.Include("Footer"); %>

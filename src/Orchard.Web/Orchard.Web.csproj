@@ -155,7 +155,6 @@
     <Content Include="Content\Admin\images\tableHeaderBackground.gif" />
     <Content Include="Content\Admin\Site.css" />
     <Content Include="Views\Admin\Footer.aspx" />
-    <Content Include="Views\Admin\Head.aspx" />
     <Content Include="Views\Admin\Header.aspx" />
   </ItemGroup>
   <ItemGroup>

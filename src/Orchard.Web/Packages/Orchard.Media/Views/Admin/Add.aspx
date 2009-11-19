@@ -2,16 +2,8 @@
 <%@ Import Namespace="Orchard.Media.Helpers"%>
 <%@ Import Namespace="Orchard.Media.Models"%>
 <%@ Import Namespace="Orchard.Media.ViewModels"%>
-
 <%@ Import Namespace="Orchard.Mvc.Html" %>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head id="Head1" runat="server">
-    <title>Add Media</title>
-    <% Html.Include("Head"); %>
-</head>
-<body>
-    <% Html.Include("Header"); %>
+<% Html.Include("Header"); %>
 					<div class="yui-g">
 						<h2 class="separator">Add Media </h2>
 						<p class="bottomSpacer">
@@ -38,6 +30,4 @@
                         <% } %>    
                         </div>
 					</div>
-    <% Html.Include("Footer"); %>
-</body>
-</html>
+<% Html.Include("Footer"); %>

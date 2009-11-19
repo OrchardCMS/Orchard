@@ -1,14 +1,6 @@
 <%@ Page Language="C#" Inherits="System.Web.Mvc.ViewPage<Orchard.Roles.ViewModels.RolesIndexViewModel>" %>
-
 <%@ Import Namespace="Orchard.Mvc.Html" %>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head id="Head1" runat="server">
-    <title>Manage Roles</title>
-    <% Html.Include("Head"); %>
-</head>
-<body>
-    <% Html.Include("Header"); %>
+<% Html.Include("Header"); %>
     <% Html.BeginForm(); %>
     <div class="yui-g">
         <h2 class="separator">Manage Roles</h2>
@@ -47,6 +39,4 @@
 	    </table>
     </div>
     <% Html.EndForm(); %>
-    <% Html.Include("Footer"); %>
-</body>
-</html>
+<% Html.Include("Footer"); %>

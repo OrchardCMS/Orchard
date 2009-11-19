@@ -1,14 +1,6 @@
 <%@ Page Language="C#" Inherits="System.Web.Mvc.ViewPage<System.Collections.Generic.IEnumerable<Orchard.CmsPages.Models.Page>>" %>
 <%@ Import Namespace="Orchard.Mvc.Html" %>
-
-<!DOCTYPE html>
-<html>
-<head id="Head1" runat="server">
-    <title>Index2</title>
-    <% Html.Include("Head"); %>
-</head>
-<body>
-    <% Html.Include("Header"); %>
+<% Html.Include("Header"); %>
     <div class="yui-g">
         <h2>
             Export</h2>
@@ -25,6 +17,4 @@
             <%} %></ol>
             </li><%} %></ol>
     </div>
-    <% Html.Include("Footer"); %>
-</body>
-</html>
+<% Html.Include("Footer"); %>

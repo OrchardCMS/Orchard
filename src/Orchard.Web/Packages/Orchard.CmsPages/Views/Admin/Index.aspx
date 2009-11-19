@@ -2,7 +2,7 @@
 <%@ Import Namespace="Orchard.Utility"%>
 <%@ Import Namespace="Orchard.CmsPages.ViewModels"%>
 <%@ Import Namespace="Orchard.Mvc.Html" %>
-
+<%-- todo: (nheskew) not this --%>
 <script runat="server">
 public string DefaultText(string valueText, string defaultText)
 {
@@ -16,15 +16,7 @@ string SplitDateTime(DateTime dt)
            string.Format("{0:t}", dt);
 }
 </script>
-
-<!DOCTYPE html>
-<html>
-<head id="Head1" runat="server">
-    <title>Index2</title>
-    <% Html.Include("Head"); %>
-</head>
-<body>
-    <% Html.Include("Header"); %>
+<% Html.Include("Header"); %>
     <% Html.BeginForm(); %>
     <div class="yui-g">
         <h2>
@@ -132,6 +124,4 @@ string SplitDateTime(DateTime dt)
         <%=Html.ActionLink("Add a page", "Create", new {}, new {@class="floatRight bottomSpacer"}) %>
     </div>
     <% Html.EndForm(); %>
-    <% Html.Include("Footer"); %>
-</body>
-</html>
+<% Html.Include("Footer"); %>

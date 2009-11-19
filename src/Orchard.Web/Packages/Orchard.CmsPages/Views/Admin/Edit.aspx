@@ -1,25 +1,7 @@
 <%@ Page Language="C#" Inherits="Orchard.Mvc.ViewPage<Orchard.CmsPages.ViewModels.PageEditViewModel>" %>
 <%@ Import Namespace="Orchard.CmsPages.Models"%>
 <%@ Import Namespace="Orchard.Mvc.Html" %>
-
-<!DOCTYPE html>
-<html>
-<head id="Head1" runat="server">
-    <title>Index2</title>
-    <% Html.Include("Head"); %>
-    <script type="text/javascript" src="<%=ResolveUrl("~/Packages/TinyMce/Scripts/tiny_mce.js") %>"></script>
-    <script type="text/javascript">
-        tinyMCE.init({ 
-            theme: "advanced",
-            mode: "textareas",
-            plugins: "fullscreen,autoresize",
-            theme_advanced_toolbar_location: "top",
-            theme_advanced_toolbar_align : "left",
-	        theme_advanced_buttons3_add : "fullscreen"
-        });</script>
-</head>
-<body>
-    <% Html.Include("Header"); %>
+<% Html.Include("Header"); %>
     <div class="yui-g">    
         <h2><%=T("Edit Page")%></h2>
         <p class="bottomSpacer"><%=T("about setting up a page")%></p>
@@ -72,7 +54,4 @@
         </div>
         <%}/*EndForm*/%>
     </div>
-    <% Html.Include("Footer"); %>
-</body>
-</html>
-
+<% Html.Include("Footer"); %>
