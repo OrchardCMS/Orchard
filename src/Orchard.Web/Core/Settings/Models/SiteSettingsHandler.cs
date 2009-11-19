@@ -3,9 +3,9 @@ using Orchard.Data;
 using Orchard.Models.Driver;
 
 namespace Orchard.Core.Settings.Models {
-    public class SiteDriver : ContentHandler {
-        public SiteDriver(IRepository<SiteSettingsRecord> repository){
-            Filters.Add(new ActivatingFilter<SiteModel>("site"));
+    public class SiteSettingsHandler : ContentHandler {
+        public SiteSettingsHandler(IRepository<SiteSettingsRecord> repository){
+            Filters.Add(new ActivatingFilter<SiteSettings>("site"));
             Filters.Add(new StorageFilterForRecord<SiteSettingsRecord>(repository));
         }
     }

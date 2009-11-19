@@ -63,7 +63,7 @@
   <ItemGroup>
     <Compile Include="AdminMenu.cs" />
     <Compile Include="Controllers\AdminController.cs" />
-    <Compile Include="Models\WikiPageDriver.cs" />
+    <Compile Include="Models\WikiPageHandler.cs" />
     <Compile Include="Models\WikiSettings.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

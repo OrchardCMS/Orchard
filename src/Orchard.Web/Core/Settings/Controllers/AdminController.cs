@@ -25,14 +25,14 @@ namespace Orchard.Core.Settings.Controllers {
 
         public ActionResult Index() {
             var model = new Orchard.Core.Settings.ViewModels.SettingsIndexViewModel { 
-                Site = _siteService.GetSiteSettings().As<SiteModel>() };
+                Site = _siteService.GetSiteSettings().As<SiteSettings>() };
             model.Editors = _modelManager.GetEditors(model.Site.ContentItem);
             return View(model);
         }
 
         [AcceptVerbs(HttpVerbs.Post)]
         public ActionResult Index(FormCollection input) {
-            var viewModel = new SettingsIndexViewModel { Site = _siteService.GetSiteSettings().As<SiteModel>() };
+            var viewModel = new SettingsIndexViewModel { Site = _siteService.GetSiteSettings().As<SiteSettings>() };
             viewModel.Editors = _modelManager.UpdateEditors(viewModel.Site.ContentItem, this);
 
             if (!TryUpdateModel(viewModel, input.ToValueProvider())) {

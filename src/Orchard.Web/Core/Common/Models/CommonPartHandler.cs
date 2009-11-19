@@ -6,12 +6,12 @@ using Orchard.Security;
 using Orchard.Services;
 
 namespace Orchard.Core.Common.Models {
-    public class CommonDriver : Orchard.Models.Driver.ContentHandler {
+    public class CommonPartHandler : ContentHandler {
         private readonly IClock _clock;
         private readonly IAuthenticationService _authenticationService;
         private readonly IContentManager _contentManager;
 
-        public CommonDriver(
+        public CommonPartHandler(
             IRepository<CommonRecord> repository,
             IClock clock,
             IAuthenticationService authenticationService,
@@ -21,12 +21,12 @@ namespace Orchard.Core.Common.Models {
             _authenticationService = authenticationService;
             _contentManager = contentManager;
 
-            AddOnCreating<CommonModel>(SetCreateTimesAndAuthor);
+            AddOnCreating<CommonPart>(SetCreateTimesAndAuthor);
             Filters.Add(new StorageFilterForRecord<CommonRecord>(repository));
-            AddOnLoaded<CommonModel>(LoadOwnerModel);
+            AddOnLoaded<CommonPart>(LoadOwnerModel);
         }
 
-        void SetCreateTimesAndAuthor(CreateContentContext context, CommonModel instance) {
+        void SetCreateTimesAndAuthor(CreateContentContext context, CommonPart instance) {
             if (instance.Record.CreatedUtc == null) {
                 instance.Record.CreatedUtc = _clock.UtcNow;
             }
@@ -40,7 +40,7 @@ namespace Orchard.Core.Common.Models {
             }
         }
 
-        void LoadOwnerModel(LoadContentContext context, CommonModel instance) {
+        void LoadOwnerModel(LoadContentContext context, CommonPart instance) {
             if (instance.Record.OwnerId != 0) {
                 instance.Owner = _contentManager.Get(instance.Record.OwnerId).As<IUser>();
             }

@@ -37,7 +37,7 @@ namespace Orchard.Users.Services {
             SetPassword(record, createUserParams.Password);
 
             var user = _contentManager.New("user");
-            user.As<UserModel>().Record = record;
+            user.As<User>().Record = record;
             _contentManager.Create(user);
             return user.As<IUser>();
         }
@@ -61,10 +61,10 @@ namespace Orchard.Users.Services {
 
 
         public void SetPassword(IUser user, string password) {
-            if (!user.Is<UserModel>())
+            if (!user.Is<User>())
                 throw new InvalidCastException();
 
-            var userRecord = user.As<UserModel>().Record;
+            var userRecord = user.As<User>().Record;
             SetPassword(userRecord, password);
         }
 

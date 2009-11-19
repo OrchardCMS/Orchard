@@ -6,8 +6,8 @@ namespace Orchard.Roles.Models.NoRecord {
         IList<string> Roles { get; }
     }
 
-    public class UserRolesModel : ContentItemPart, IUserRoles {
-        public UserRolesModel() {
+    public class UserRoles : ContentItemPart, IUserRoles {
+        public UserRoles() {
             Roles = new List<string>();
         }
 

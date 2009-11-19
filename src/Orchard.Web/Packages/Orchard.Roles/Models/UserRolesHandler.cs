@@ -11,12 +11,12 @@ using Orchard.UI.Models;
 using Orchard.UI.Notify;
 
 namespace Orchard.Roles.Models {
-    public class UserRolesDriver : ContentHandler {
+    public class UserRolesHandler : ContentHandler {
         private readonly IRepository<UserRolesRecord> _userRolesRepository;
         private readonly IRoleService _roleService;
         private readonly INotifier _notifier;
 
-        public UserRolesDriver(IRepository<UserRolesRecord> userRolesRepository, IRoleService roleService, INotifier notifier) {
+        public UserRolesHandler(IRepository<UserRolesRecord> userRolesRepository, IRoleService roleService, INotifier notifier) {
             _userRolesRepository = userRolesRepository;
             _roleService = roleService;
             _notifier = notifier;
@@ -24,18 +24,18 @@ namespace Orchard.Roles.Models {
 
         protected override void Activating(ActivatingContentContext context) {
             if (context.ContentType == "user") {
-                context.Builder.Weld<UserRolesModel>();
+                context.Builder.Weld<UserRoles>();
             }
         }
 
         protected override void Creating(CreateContentContext context) {
-            var userRoles = context.ContentItem.As<UserRolesModel>();
+            var userRoles = context.ContentItem.As<UserRoles>();
             if (userRoles != null) {
             }
         }
 
         protected override void Loading(LoadContentContext context) {
-            var userRoles = context.ContentItem.As<UserRolesModel>();
+            var userRoles = context.ContentItem.As<UserRoles>();
             if (userRoles != null) {
                 userRoles.Roles = _userRolesRepository.Fetch(x => x.UserId == context.ContentItem.Id)
                     .Select(x => x.Role.Name).ToList();
@@ -43,7 +43,7 @@ namespace Orchard.Roles.Models {
         }
 
         protected override void GetEditors(GetContentEditorsContext context) {
-            var userRoles = context.ContentItem.As<UserRolesModel>();
+            var userRoles = context.ContentItem.As<UserRoles>();
             if (userRoles != null) {
                 var roles =
                     _roleService.GetRoles().Select(
@@ -64,7 +64,7 @@ namespace Orchard.Roles.Models {
         }
 
         protected override void UpdateEditors(UpdateContentContext context) {
-            var userRoles = context.ContentItem.As<UserRolesModel>();
+            var userRoles = context.ContentItem.As<UserRoles>();
             if (userRoles != null) {
                 var viewModel = new UserRolesViewModel();
                 if (context.Updater.TryUpdateModel(viewModel, "UserRoles", null, null)) {

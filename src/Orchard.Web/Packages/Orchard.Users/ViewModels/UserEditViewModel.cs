@@ -8,7 +8,7 @@ using Orchard.Users.Models;
 
 namespace Orchard.Users.ViewModels {
     public class UserEditViewModel : AdminViewModel {
-        public UserModel User { get; set; }
+        public User User { get; set; }
         public IEnumerable<ModelTemplate> Editors { get; set; }
 
         [HiddenInput(DisplayValue = false)]
@@ -18,14 +18,14 @@ namespace Orchard.Users.ViewModels {
 
         [Required]
         public string UserName {
-            get { return User.As<UserModel>().Record.UserName; }
-            set { User.As<UserModel>().Record.UserName = value; }
+            get { return User.As<User>().Record.UserName; }
+            set { User.As<User>().Record.UserName = value; }
         }
 
         [Required]
         public string Email {
-            get { return User.As<UserModel>().Record.Email; }
-            set { User.As<UserModel>().Record.Email = value; }
+            get { return User.As<User>().Record.Email; }
+            set { User.As<User>().Record.Email = value; }
         }
     }
 }

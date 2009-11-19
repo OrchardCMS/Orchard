@@ -7,7 +7,7 @@ using Orchard.UI.Models;
 
 namespace Orchard.Core.Settings.ViewModels {
     public class SettingsIndexViewModel : AdminViewModel {
-        public SiteModel Site { get; set; }
+        public SiteSettings Site { get; set; }
         public IEnumerable<ModelTemplate> Editors { get; set; }
 
         [HiddenInput(DisplayValue = false)]
@@ -16,13 +16,13 @@ namespace Orchard.Core.Settings.ViewModels {
         }
 
         public string SiteName {
-            get { return Site.As<SiteModel>().Record.SiteName; }
-            set { Site.As<SiteModel>().Record.SiteName = value; }
+            get { return Site.As<SiteSettings>().Record.SiteName; }
+            set { Site.As<SiteSettings>().Record.SiteName = value; }
         }
 
         public string SuperUser {
-            get { return Site.As<SiteModel>().Record.SuperUser; }
-            set { Site.As<SiteModel>().Record.SuperUser = value; }
+            get { return Site.As<SiteSettings>().Record.SuperUser; }
+            set { Site.As<SiteSettings>().Record.SuperUser = value; }
         }
     }
 }

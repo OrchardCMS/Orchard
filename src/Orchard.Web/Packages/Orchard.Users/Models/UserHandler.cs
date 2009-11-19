@@ -2,9 +2,9 @@
 using Orchard.Models.Driver;
 
 namespace Orchard.Users.Models {
-    public class UserDriver : ContentHandler {
-        public UserDriver(IRepository<UserRecord> repository) {
-            Filters.Add(new ActivatingFilter<UserModel>("user"));
+    public class UserHandler : ContentHandler {
+        public UserHandler(IRepository<UserRecord> repository) {
+            Filters.Add(new ActivatingFilter<User>("user"));
             Filters.Add(new StorageFilterForRecord<UserRecord>(repository));
         }
     }

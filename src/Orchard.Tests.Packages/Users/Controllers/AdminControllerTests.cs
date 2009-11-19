@@ -28,7 +28,7 @@ namespace Orchard.Tests.Packages.Users.Controllers {
             builder.Register<AdminController>();
             builder.Register<DefaultContentManager>().As<IContentManager>();
             builder.Register<MembershipService>().As<IMembershipService>();
-            builder.Register<UserDriver>().As<IContentHandler>();
+            builder.Register<UserHandler>().As<IContentHandler>();
             builder.Register(new Mock<INotifier>().Object);
         }
 
@@ -43,15 +43,15 @@ namespace Orchard.Tests.Packages.Users.Controllers {
 
             var manager = _container.Resolve<IContentManager>();
 
-            var userOne = manager.New("user").As<UserModel>();
+            var userOne = manager.New("user").As<User>();
             userOne.Record = new UserRecord { UserName = "one" };
             manager.Create(userOne);
 
-            var userTwo = manager.New("user").As<UserModel>();
+            var userTwo = manager.New("user").As<User>();
             userTwo.Record = new UserRecord { UserName = "two" };
             manager.Create(userTwo);
 
-            var userThree = manager.New("user").As<UserModel>();
+            var userThree = manager.New("user").As<User>();
             userThree.Record = new UserRecord { UserName = "three" };
             manager.Create(userThree);
 

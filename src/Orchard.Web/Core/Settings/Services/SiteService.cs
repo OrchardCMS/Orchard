@@ -25,7 +25,7 @@ namespace Orchard.Core.Settings.Services {
             string applicationName = HttpContext.Current.Request.ApplicationPath;
             SiteSettingsRecord record = _siteSettingsRepository.Get(x => x.SiteUrl == applicationName);
             if (record == null) {
-                SiteModel site = _contentManager.New("site").As<SiteModel>();
+                SiteSettings site = _contentManager.New("site").As<SiteSettings>();
                 site.Record.SiteUrl = applicationName;
                 _contentManager.Create(site);
                 return site;

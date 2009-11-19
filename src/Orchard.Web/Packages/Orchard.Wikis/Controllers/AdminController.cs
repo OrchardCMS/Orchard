@@ -26,7 +26,7 @@ namespace Orchard.Wikis.Controllers {
         }
 
         public ActionResult View(int id) {
-            var page = _contentManager.Get(id).As<CommonModel>();
+            var page = _contentManager.Get(id).As<CommonPart>();
             return View(page);
         }
     }

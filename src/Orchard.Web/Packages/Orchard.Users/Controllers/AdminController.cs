@@ -38,7 +38,7 @@ namespace Orchard.Users.Controllers {
             var model = new UsersIndexViewModel();
             model.Rows = _userRepository.Fetch(x => x.UserName != null)
                 .Select(x => new UsersIndexViewModel.Row {
-                    User = _contentManager.Get(x.Id).As<UserModel>()
+                    User = _contentManager.Get(x.Id).As<User>()
                 })
                 .ToList();
 
@@ -67,14 +67,14 @@ namespace Orchard.Users.Controllers {
         }
 
         public ActionResult Edit(int id) {
-            var model = new UserEditViewModel { User = _contentManager.Get<UserModel>(id) };
+            var model = new UserEditViewModel { User = _contentManager.Get<User>(id) };
             model.Editors = _contentManager.GetEditors(model.User.ContentItem);
             return View(model);
         }
 
         [HttpPost]
         public ActionResult Edit(int id, FormCollection input) {
-            var model = new UserEditViewModel { User = _contentManager.Get<UserModel>(id) };
+            var model = new UserEditViewModel { User = _contentManager.Get<User>(id) };
             model.Editors = _contentManager.UpdateEditors(model.User.ContentItem, this);
 
             if (!TryUpdateModel(model, input.ToValueProvider())) {
