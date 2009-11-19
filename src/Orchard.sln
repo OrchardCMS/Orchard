@@ -35,6 +35,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orchard.Blogs", "Orchard.We
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orchard.Comments", "Orchard.Web\Packages\Orchard.Comments\Orchard.Comments.csproj", "{14C049FD-B35B-415A-A824-87F26B26E7FD}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orchard.DevTools", "Orchard.Web\Packages\Orchard.DevTools\Orchard.DevTools.csproj", "{67C1D3AF-A0EC-46B2-BAE1-DF1DA8E0B890}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -101,6 +103,10 @@ Global
 		{14C049FD-B35B-415A-A824-87F26B26E7FD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{14C049FD-B35B-415A-A824-87F26B26E7FD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{14C049FD-B35B-415A-A824-87F26B26E7FD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{67C1D3AF-A0EC-46B2-BAE1-DF1DA8E0B890}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{67C1D3AF-A0EC-46B2-BAE1-DF1DA8E0B890}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{67C1D3AF-A0EC-46B2-BAE1-DF1DA8E0B890}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{67C1D3AF-A0EC-46B2-BAE1-DF1DA8E0B890}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -118,5 +124,6 @@ Global
 		{17C44253-65A2-4597-98C7-16EE576824B6} = {E9C9F120-07BA-4DFB-B9C3-3AFB9D44C9D5}
 		{63FBD4D9-E1DA-4A7B-AA6A-D6074FE50867} = {E9C9F120-07BA-4DFB-B9C3-3AFB9D44C9D5}
 		{14C049FD-B35B-415A-A824-87F26B26E7FD} = {E9C9F120-07BA-4DFB-B9C3-3AFB9D44C9D5}
+		{67C1D3AF-A0EC-46B2-BAE1-DF1DA8E0B890} = {E9C9F120-07BA-4DFB-B9C3-3AFB9D44C9D5}
 	EndGlobalSection
 EndGlobal

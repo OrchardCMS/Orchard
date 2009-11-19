@@ -128,6 +128,10 @@
       <Project>{1ECC1131-0D0C-4822-AD90-E979868C63F3}</Project>
       <Name>Orchard.CmsPages</Name>
     </ProjectReference>
+    <ProjectReference Include="Packages\Orchard.DevTools\Orchard.DevTools.csproj">
+      <Project>{67C1D3AF-A0EC-46B2-BAE1-DF1DA8E0B890}</Project>
+      <Name>Orchard.DevTools</Name>
+    </ProjectReference>
     <ProjectReference Include="Packages\Orchard.Media\Orchard.Media.csproj">
       <Project>{D9A7B330-CD22-4DA1-A95A-8DE1982AD8EB}</Project>
       <Name>Orchard.Media</Name>

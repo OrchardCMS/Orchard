@@ -10,8 +10,8 @@ namespace Orchard.Models {
         private readonly IList<IContentItemPart> _parts;
 
         public int Id { get; set; }
-
         public string ContentType { get; set; }
+        public IEnumerable<IContentItemPart> Parts { get { return _parts; } }
 
         public bool Has<TPart>() {
             return _parts.Any(part => part is TPart);

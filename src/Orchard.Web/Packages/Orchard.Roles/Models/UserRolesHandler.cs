@@ -20,26 +20,13 @@ namespace Orchard.Roles.Models {
             _userRolesRepository = userRolesRepository;
             _roleService = roleService;
             _notifier = notifier;
-        }
 
-        protected override void Activating(ActivatingContentContext context) {
-            if (context.ContentType == "user") {
-                context.Builder.Weld<UserRoles>();
-            }
-        }
-
-        protected override void Creating(CreateContentContext context) {
-            var userRoles = context.ContentItem.As<UserRoles>();
-            if (userRoles != null) {
-            }
-        }
-
-        protected override void Loading(LoadContentContext context) {
-            var userRoles = context.ContentItem.As<UserRoles>();
-            if (userRoles != null) {
-                userRoles.Roles = _userRolesRepository.Fetch(x => x.UserId == context.ContentItem.Id)
+            Filters.Add(new ActivatingFilter<UserRoles>("user"));
+            AddOnLoaded<UserRoles>((context, userRoles) => {
+                userRoles.Roles = _userRolesRepository
+                    .Fetch(x => x.UserId == context.ContentItem.Id)
                     .Select(x => x.Role.Name).ToList();
-            }
+            });
         }
 
         protected override void GetEditors(GetContentEditorsContext context) {
