@@ -1,12 +1,12 @@
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
 using System.Web.Mvc;
 using Orchard.Comments.Models;
 using Orchard.Localization;
 using Orchard.Logging;
+using Orchard.Settings;
 using Orchard.UI.Notify;
 using Orchard.Security;
 using Orchard.Comments.ViewModels;
@@ -102,6 +102,34 @@ namespace Orchard.Comments.Controllers {
             }
 
             return RedirectToAction("Index");
+        }
+
+        public ActionResult Create() {
+            return View(new CommentsCreateViewModel());
+        }
+
+        [AcceptVerbs(HttpVerbs.Post)]
+        public ActionResult Create(FormCollection input) {
+            var viewModel = new CommentsCreateViewModel();
+            try {
+                UpdateModel(viewModel, input.ToValueProvider());
+                if (!_authorizer.Authorize(Permissions.AddComment, T("Couldn't add comment")))
+                    return new HttpUnauthorizedResult();
+                Comment comment = new Comment {
+                    Author = viewModel.Name,
+                    CommentDate = DateTime.Now,
+                    CommentText = viewModel.CommentText,
+                    Email = viewModel.Email,
+                    SiteName = viewModel.SiteName,
+                    UserName = CurrentUser.UserName ?? "Anonymous"
+                };
+                _commentService.CreateComment(comment);
+                return RedirectToAction("Index");
+            }
+            catch (Exception exception) {
+                _notifier.Error(T("Creating Comment failed: " + exception.Message));
+                return View(viewModel);
+            }
         }
 
         private static CommentEntry CreateCommentEntry(Comment comment) {

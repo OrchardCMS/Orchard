@@ -1,28 +1,38 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Orchard.Comments.Models;
 using Orchard.Data;
 using Orchard.Logging;
+using Orchard.Security;
+using Orchard.Settings;
+using Orchard.UI.Notify;
 
 namespace Orchard.Comments.Services {
     public interface ICommentService : IDependency {
         IEnumerable<Comment> GetComments();
         IEnumerable<Comment> GetComments(CommentStatus status);
         Comment GetComment(int id);
+        void CreateComment(Comment comment);
         void MarkCommentAsSpam(int commentId);
         void DeleteComment(int commentId);
     }
 
     public class CommentService : ICommentService {
         private readonly IRepository<Comment> _commentRepository;
+        private readonly ICommentValidator _commentValidator;
+        private readonly IAuthorizer _authorizer;
+        private readonly INotifier _notifier;
 
-        public CommentService(IRepository<Comment> commentRepository) {
+        public CommentService(IRepository<Comment> commentRepository, ICommentValidator commentValidator, IAuthorizer authorizer, INotifier notifier) {
             _commentRepository = commentRepository;
+            _commentValidator = commentValidator;
+            _authorizer = authorizer;
+            _notifier = notifier;
             Logger = NullLogger.Instance;
         }
 
         public ILogger Logger { get; set; }
+        public ISite CurrentSite { get; set; }
 
         #region Implementation of ICommentService
 
@@ -31,11 +41,16 @@ namespace Orchard.Comments.Services {
         }
 
         public IEnumerable<Comment> GetComments(CommentStatus status) {
-            return from comment in _commentRepository.Table.ToList() where comment.Status == CommentStatus.Approved select comment;
+            return from comment in _commentRepository.Table.ToList() where comment.Status == status select comment;
         }
 
         public Comment GetComment(int id) {
             return _commentRepository.Get(id);
+        }
+
+        public void CreateComment(Comment comment) {
+            comment.Status = _commentValidator.ValidateComment(comment) ? CommentStatus.Approved : CommentStatus.Spam;
+            _commentRepository.Create(comment);
         }
 
         public void MarkCommentAsSpam(int commentId) {

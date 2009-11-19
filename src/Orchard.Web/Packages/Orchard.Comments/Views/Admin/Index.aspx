@@ -7,6 +7,7 @@
     <div class="yui-g">
 						<h2 class="separator">Manage Comments</h2>
 						<%=Html.ValidationSummary() %>
+						<%=Html.ActionLink("Add a new comment", "Create", new {}, new {@class="floatRight topSpacer"}) %>
 						<ol class="horizontal actions floatLeft">
                         <li>
                             <label class="floatLeft" for="publishActions"> Actions:</label>
@@ -64,8 +65,8 @@
                                 <td><% if (commentEntry.Comment.Status == CommentStatus.Spam) {%> Spam <% } %>
                                 <% else {%> Approved <% } %>
                                 </td>
-                                <td><%= commentEntry.Comment.Author %></td>
-			                    <td><%= commentEntry.Comment.CommentText.Substring(32) %></td>
+                                <td><%= commentEntry.Comment.UserName %></td>
+			                    <td><%= commentEntry.Comment.CommentText == null ? String.Empty : commentEntry.Comment.CommentText.Substring(32) %></td>
 				                <td><%= commentEntry.Comment.CommentDate %></td>
 				                <td>Link to commented item</td>
                             </tr>
