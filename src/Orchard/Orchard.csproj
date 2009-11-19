@@ -130,6 +130,7 @@
     <Compile Include="Models\Driver\IContentActivatingFilter.cs" />
     <Compile Include="Models\Driver\IContentFilter.cs" />
     <Compile Include="Models\Driver\IContentStorageFilter.cs" />
+    <Compile Include="Models\Driver\IContentTemplateFilter.cs" />
     <Compile Include="Models\Driver\IUpdateModel.cs" />
     <Compile Include="Environment\ServiceLocator.cs" />
     <Compile Include="Logging\CastleLogger.cs" />
@@ -149,6 +150,8 @@
     <Compile Include="Models\Driver\GetContentEditorsContext.cs" />
     <Compile Include="Models\Driver\StorageFilterForRecord.cs" />
     <Compile Include="Models\Driver\StorageFilterBase.cs" />
+    <Compile Include="Models\Driver\TemplateFilterBase.cs" />
+    <Compile Include="Models\Driver\TemplateFilterForRecord.cs" />
     <Compile Include="Models\IContentManager.cs" />
     <Compile Include="Models\Driver\IContentHandler.cs" />
     <Compile Include="Models\ContentExtensions.cs" />

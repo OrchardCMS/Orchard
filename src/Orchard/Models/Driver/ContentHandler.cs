@@ -70,8 +70,16 @@ namespace Orchard.Models.Driver {
             Loaded(context);
         }
 
-        void IContentHandler.GetEditors(GetContentEditorsContext context) { GetEditors(context); }
-        void IContentHandler.UpdateEditors(UpdateContentContext context) { UpdateEditors(context); }
+        void IContentHandler.GetEditors(GetContentEditorsContext context) {
+            foreach (var filter in Filters.OfType<IContentTemplateFilter>())
+                filter.GetEditors(context);
+            GetEditors(context);
+        }
+        void IContentHandler.UpdateEditors(UpdateContentContext context) {
+            foreach (var filter in Filters.OfType<IContentTemplateFilter>())
+                filter.UpdateEditors(context);
+            UpdateEditors(context);
+        }
 
         protected virtual void Activating(ActivatingContentContext context) { }
         protected virtual void Activated(ActivatedContentContext context) { }
