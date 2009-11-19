@@ -59,6 +59,10 @@ namespace Orchard.Models {
             // obtain root record to determine the model type
             var contentItemRecord = _contentItemRepository.Get(id);
 
+            // no record of that id means content item doesn't exist
+            if (contentItemRecord == null)
+                return null;
+
             // create a context with a new instance to load
             var context = new LoadContentContext {
                 Id = contentItemRecord.Id,
