@@ -11,7 +11,7 @@
     <% Html.Include("Header"); %>
     <div class="yui-u">
         <h2 class="separator">
-            Edit Site Settings</h2>
+            Edit Settings</h2>
     </div>
     <div class="yui-u">
         <%using (Html.BeginForm()) { %>

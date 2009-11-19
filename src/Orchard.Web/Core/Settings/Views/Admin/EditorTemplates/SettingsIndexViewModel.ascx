@@ -2,7 +2,7 @@
 <%@ Import Namespace="Orchard.Core.Settings.ViewModels"%>
 <%@ Import Namespace="Orchard.Utility" %>
 
-<h3>Site Settings</h3>
+<h3>Global Settings</h3>
 <ol>
 <%=Html.EditorFor(s=>s.Id) %>
     <li>
