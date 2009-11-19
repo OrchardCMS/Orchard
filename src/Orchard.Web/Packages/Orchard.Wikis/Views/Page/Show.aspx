@@ -26,6 +26,9 @@
             <div>
                 body
             </div>
+            <%foreach (var display in Model.Displays) { %>
+            <%=Html.DisplayFor(m=>display.Model, display.TemplateName, display.Prefix) %>
+            <%} %>
         </div>
         <div id="footer">
             <% Html.Include("footer"); %>

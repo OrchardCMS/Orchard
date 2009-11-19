@@ -18,7 +18,7 @@ namespace Orchard.Media.Models {
             Filters.Add(new StorageFilterForRecord<MediaSettingsRecord>(repository) { AutomaticallyCreateMissingRecord = true });
         }
 
-        protected override void GetEditors(GetContentEditorsContext context) {
+        protected override void GetEditors(GetEditorsContext context) {
             var model = context.ContentItem.As<MediaSettings>();
             if (model == null)
                 return;

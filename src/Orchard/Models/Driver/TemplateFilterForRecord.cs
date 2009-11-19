@@ -13,7 +13,7 @@ namespace Orchard.Models.Driver {
             _prefix = prefix;
         }
 
-        protected override void GetEditors(GetContentEditorsContext context, ContentPartForRecord<TRecord> part) {
+        protected override void GetEditors(GetEditorsContext context, ContentPartForRecord<TRecord> part) {
             context.Editors.Add(ModelTemplate.For(part.Record, _prefix));
         }
 

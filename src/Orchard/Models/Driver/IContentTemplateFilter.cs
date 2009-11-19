@@ -5,7 +5,8 @@ using System.Text;
 
 namespace Orchard.Models.Driver {
     interface IContentTemplateFilter : IContentFilter {
-        void GetEditors(GetContentEditorsContext context);
+        void GetDisplays(GetDisplaysContext context);
+        void GetEditors(GetEditorsContext context);
         void UpdateEditors(UpdateContentContext context);
     }
 }

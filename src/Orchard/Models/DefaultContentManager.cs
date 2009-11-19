@@ -107,8 +107,17 @@ namespace Orchard.Models {
             }
         }
 
+
+        public IEnumerable<ModelTemplate> GetDisplays(ContentItem contentItem) {
+            var context = new GetDisplaysContext(contentItem);
+            foreach (var driver in Drivers) {
+                driver.GetDisplays(context);
+            }
+            return context.Displays;
+        }
+
         public IEnumerable<ModelTemplate> GetEditors(ContentItem contentItem) {
-            var context = new GetContentEditorsContext(contentItem);
+            var context = new GetEditorsContext(contentItem);
             foreach (var driver in Drivers) {
                 driver.GetEditors(context);
             }

@@ -147,7 +147,7 @@
     <Compile Include="Models\Driver\ContentItemBuilder.cs" />
     <Compile Include="Models\Driver\ContentHandler.cs" />
     <Compile Include="Models\Driver\ActivatingContentContext.cs" />
-    <Compile Include="Models\Driver\GetContentEditorsContext.cs" />
+    <Compile Include="Models\Driver\GetEditorsContext.cs" />
     <Compile Include="Models\Driver\StorageFilterForRecord.cs" />
     <Compile Include="Models\Driver\StorageFilterBase.cs" />
     <Compile Include="Models\Driver\TemplateFilterBase.cs" />

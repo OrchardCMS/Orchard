@@ -31,6 +31,7 @@ namespace Orchard.Wikis.Controllers
             var model = new PageShowViewModel {
                 Page = _contentManager.Get<WikiPage>(id)
             };
+            model.Displays = _contentManager.GetDisplays(model.Page.ContentItem);
             return View(model);
         }
 

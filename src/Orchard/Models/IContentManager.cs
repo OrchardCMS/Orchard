@@ -8,6 +8,7 @@ namespace Orchard.Models {
         ContentItem Get(int id);
         void Create(ContentItem contentItem);
 
+        IEnumerable<ModelTemplate> GetDisplays(ContentItem contentItem);
         IEnumerable<ModelTemplate> GetEditors(ContentItem contentItem);
         IEnumerable<ModelTemplate> UpdateEditors(ContentItem contentItem, IUpdateModel updater);
     }

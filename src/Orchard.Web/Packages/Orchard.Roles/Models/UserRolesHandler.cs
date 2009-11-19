@@ -29,7 +29,7 @@ namespace Orchard.Roles.Models {
             });
         }
 
-        protected override void GetEditors(GetContentEditorsContext context) {
+        protected override void GetEditors(GetEditorsContext context) {
             var userRoles = context.ContentItem.As<UserRoles>();
             if (userRoles != null) {
                 var roles =

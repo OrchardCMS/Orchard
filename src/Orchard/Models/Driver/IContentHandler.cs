@@ -7,7 +7,8 @@
         void Loading(LoadContentContext context);
         void Loaded(LoadContentContext context);
 
-        void GetEditors(GetContentEditorsContext context);
+        void GetDisplays(GetDisplaysContext context);
+        void GetEditors(GetEditorsContext context);
         void UpdateEditors(UpdateContentContext context);
     }
 }

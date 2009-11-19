@@ -70,7 +70,13 @@ namespace Orchard.Models.Driver {
             Loaded(context);
         }
 
-        void IContentHandler.GetEditors(GetContentEditorsContext context) {
+
+        void IContentHandler.GetDisplays(GetDisplaysContext context) {
+            foreach (var filter in Filters.OfType<IContentTemplateFilter>())
+                filter.GetDisplays(context);
+            GetDisplays(context);
+        }
+        void IContentHandler.GetEditors(GetEditorsContext context) {
             foreach (var filter in Filters.OfType<IContentTemplateFilter>())
                 filter.GetEditors(context);
             GetEditors(context);
@@ -90,8 +96,8 @@ namespace Orchard.Models.Driver {
         protected virtual void Creating(CreateContentContext context) { }
         protected virtual void Created(CreateContentContext context) { }
 
-        protected virtual void GetEditors(GetContentEditorsContext context) {}
-
+        protected virtual void GetDisplays(GetDisplaysContext context) { }
+        protected virtual void GetEditors(GetEditorsContext context) { }
         protected virtual void UpdateEditors(UpdateContentContext context) {}
     }
 }
