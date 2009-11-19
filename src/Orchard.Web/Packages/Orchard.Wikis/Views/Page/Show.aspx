@@ -21,14 +21,14 @@
         <div id="main">
             <h3>
                 <%=Html.Encode(Model.Page.Record.Name) %></h3>
-            <p>
-                <%=Html.ActionLink("edit", "edit", new{Model.Page.ContentItem.Id}, new{}) %></p>
             <div>
-                body
+                TODO: page body
             </div>
             <%foreach (var display in Model.Displays) { %>
             <%=Html.DisplayFor(m=>display.Model, display.TemplateName, display.Prefix) %>
             <%} %>
+            <p>
+                <%=Html.ActionLink("Edit this page", "edit", new{Model.Page.ContentItem.Id}, new{}) %>, <%=Html.ActionLink("Return to list", "index") %></p>
         </div>
         <div id="footer">
             <% Html.Include("footer"); %>
