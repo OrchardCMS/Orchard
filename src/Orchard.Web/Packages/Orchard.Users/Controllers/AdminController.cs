@@ -12,7 +12,7 @@ using Orchard.Users.ViewModels;
 
 namespace Orchard.Users.Controllers {
 
-    public class AdminController : Controller, IModelUpdater {
+    public class AdminController : Controller, IUpdateModel {
         private readonly IMembershipService _membershipService;
         private readonly IContentManager _contentManager;
         private readonly IRepository<UserRecord> _userRepository;
@@ -86,7 +86,7 @@ namespace Orchard.Users.Controllers {
         }
 
 
-        bool IModelUpdater.TryUpdateModel<TModel>(TModel model, string prefix, string[] includeProperties, string[] excludeProperties) {
+        bool IUpdateModel.TryUpdateModel<TModel>(TModel model, string prefix, string[] includeProperties, string[] excludeProperties) {
             return TryUpdateModel(model, prefix, includeProperties, excludeProperties);
         }
     }

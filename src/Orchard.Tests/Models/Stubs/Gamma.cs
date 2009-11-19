@@ -12,7 +12,7 @@ namespace Orchard.Tests.Models.Stubs {
     }
 
 
-    public class GammaDriver : ModelDriver {
+    public class GammaDriver : ContentHandler {
         public GammaDriver(IRepository<GammaRecord> repository){
             Filters.Add(new ActivatingFilter<Gamma>(x => x == "gamma"));
             Filters.Add(new StorageFilterForRecord<GammaRecord>(repository));

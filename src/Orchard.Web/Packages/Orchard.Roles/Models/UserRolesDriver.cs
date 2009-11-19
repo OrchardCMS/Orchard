@@ -11,7 +11,7 @@ using Orchard.UI.Models;
 using Orchard.UI.Notify;
 
 namespace Orchard.Roles.Models {
-    public class UserRolesDriver : ModelDriver {
+    public class UserRolesDriver : ContentHandler {
         private readonly IRepository<UserRolesRecord> _userRolesRepository;
         private readonly IRoleService _roleService;
         private readonly INotifier _notifier;
@@ -22,19 +22,19 @@ namespace Orchard.Roles.Models {
             _notifier = notifier;
         }
 
-        protected override void Activating(ActivatingModelContext context) {
-            if (context.ModelType == "user") {
+        protected override void Activating(ActivatingContentContext context) {
+            if (context.ContentType == "user") {
                 context.Builder.Weld<UserRolesModel>();
             }
         }
 
-        protected override void Creating(CreateModelContext context) {
+        protected override void Creating(CreateContentContext context) {
             var userRoles = context.ContentItem.As<UserRolesModel>();
             if (userRoles != null) {
             }
         }
 
-        protected override void Loading(LoadModelContext context) {
+        protected override void Loading(LoadContentContext context) {
             var userRoles = context.ContentItem.As<UserRolesModel>();
             if (userRoles != null) {
                 userRoles.Roles = _userRolesRepository.Fetch(x => x.UserId == context.ContentItem.Id)
@@ -42,7 +42,7 @@ namespace Orchard.Roles.Models {
             }
         }
 
-        protected override void GetEditors(GetModelEditorsContext context) {
+        protected override void GetEditors(GetContentEditorsContext context) {
             var userRoles = context.ContentItem.As<UserRolesModel>();
             if (userRoles != null) {
                 var roles =
@@ -63,7 +63,7 @@ namespace Orchard.Roles.Models {
             }
         }
 
-        protected override void UpdateEditors(UpdateModelContext context) {
+        protected override void UpdateEditors(UpdateContentContext context) {
             var userRoles = context.ContentItem.As<UserRolesModel>();
             if (userRoles != null) {
                 var viewModel = new UserRolesViewModel();

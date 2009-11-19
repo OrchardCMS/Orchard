@@ -28,7 +28,7 @@ namespace Orchard.Tests.Packages.Users.Controllers {
             builder.Register<AdminController>();
             builder.Register<DefaultContentManager>().As<IContentManager>();
             builder.Register<MembershipService>().As<IMembershipService>();
-            builder.Register<UserDriver>().As<IModelDriver>();
+            builder.Register<UserDriver>().As<IContentHandler>();
             builder.Register(new Mock<INotifier>().Object);
         }
 

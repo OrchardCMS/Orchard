@@ -38,11 +38,11 @@ namespace Orchard.Tests.Models {
             var builder = new ContainerBuilder();
             builder.RegisterModule(new ImplicitCollectionSupportModule());
             builder.Register<DefaultContentManager>().As<IContentManager>();
-            builder.Register<AlphaDriver>().As<IModelDriver>();
-            builder.Register<BetaDriver>().As<IModelDriver>();
-            builder.Register<GammaDriver>().As<IModelDriver>();
-            builder.Register<FlavoredDriver>().As<IModelDriver>();
-            builder.Register<StyledDriver>().As<IModelDriver>();
+            builder.Register<AlphaDriver>().As<IContentHandler>();
+            builder.Register<BetaDriver>().As<IContentHandler>();
+            builder.Register<GammaDriver>().As<IContentHandler>();
+            builder.Register<FlavoredDriver>().As<IContentHandler>();
+            builder.Register<StyledDriver>().As<IContentHandler>();
 
             builder.RegisterGeneric(typeof(Repository<>)).As(typeof(IRepository<>));
 
@@ -139,7 +139,7 @@ namespace Orchard.Tests.Models {
         }
 
         [Test]
-        public void CreateShouldMakeModelAndModelTypeRecords() {
+        public void CreateShouldMakeModelAndContentTypeRecords() {
             var beta = _manager.New("beta");
             _manager.Create(beta);
 
@@ -148,13 +148,13 @@ namespace Orchard.Tests.Models {
             Assert.That(modelRecord.ContentType.Name, Is.EqualTo("beta"));
         }
 
-        private ContentItemRecord CreateModelRecord(string modelType) {
-            var modelRepository = _container.Resolve<IRepository<ContentItemRecord>>();
-            var modelTypeRepository = _container.Resolve<IRepository<ContentTypeRecord>>();
+        private ContentItemRecord CreateModelRecord(string contentType) {
+            var contentItemRepository = _container.Resolve<IRepository<ContentItemRecord>>();
+            var contentTypeRepository = _container.Resolve<IRepository<ContentTypeRecord>>();
 
-            var modelRecord = new ContentItemRecord { ContentType = new ContentTypeRecord { Name = modelType } };
-            modelTypeRepository.Create(modelRecord.ContentType);
-            modelRepository.Create(modelRecord);
+            var modelRecord = new ContentItemRecord { ContentType = new ContentTypeRecord { Name = contentType } };
+            contentTypeRepository.Create(modelRecord.ContentType);
+            contentItemRepository.Create(modelRecord);
 
             _session.Flush();
             _session.Clear();

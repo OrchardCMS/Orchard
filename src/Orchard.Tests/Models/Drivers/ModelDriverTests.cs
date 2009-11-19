@@ -14,7 +14,7 @@ namespace Orchard.Tests.Models.Drivers {
             var part = new TestModelPart();
             contentItem.Weld(part);
 
-            ((IModelDriver)modelDriver).Creating(new CreateModelContext { ContentItem = contentItem });
+            ((IContentHandler)modelDriver).Creating(new CreateContentContext { ContentItem = contentItem });
             Assert.That(part.CreatingCalled, Is.True);
         }
 
@@ -23,7 +23,7 @@ namespace Orchard.Tests.Models.Drivers {
             var modelDriver = new TestModelDriver();
 
             var builder = new ContentItemBuilder("testing");
-            ((IModelDriver)modelDriver).Activating(new ActivatingModelContext { Builder = builder, ModelType = "testing" });
+            ((IContentHandler)modelDriver).Activating(new ActivatingContentContext { Builder = builder, ContentType = "testing" });
             var model = builder.Build();
             Assert.That(model.Is<TestModelPart>(), Is.True);
             Assert.That(model.As<TestModelPart>(), Is.Not.Null);
@@ -34,7 +34,7 @@ namespace Orchard.Tests.Models.Drivers {
         }
 
 
-        public class TestModelDriver : ModelDriver {
+        public class TestModelDriver : ContentHandler {
             public TestModelDriver() {
                 Filters.Add(new ActivatingFilter<TestModelPart>(x => x == "testing"));
                 Filters.Add(new TestModelStorageFilter());
@@ -42,7 +42,7 @@ namespace Orchard.Tests.Models.Drivers {
         }
 
         public class TestModelStorageFilter : StorageFilterBase<TestModelPart> {
-            protected override void Creating(CreateModelContext context, TestModelPart instance) {
+            protected override void Creating(CreateContentContext context, TestModelPart instance) {
                 instance.CreatingCalled = true;
             }
         }

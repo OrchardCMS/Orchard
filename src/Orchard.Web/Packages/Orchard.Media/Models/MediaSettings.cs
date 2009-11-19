@@ -12,13 +12,13 @@ namespace Orchard.Media.Models {
         public virtual string RootMediaFolder { get; set; }
     }
 
-    public class MediaSettingsDriver : ModelDriver {
+    public class MediaSettingsDriver : ContentHandler {
         public MediaSettingsDriver(IRepository<MediaSettingsRecord> repository) {
             Filters.Add(new ActivatingFilter<MediaSettings>("site"));
             Filters.Add(new StorageFilterForRecord<MediaSettingsRecord>(repository) { AutomaticallyCreateMissingRecord = true });
         }
 
-        protected override void GetEditors(GetModelEditorsContext context) {
+        protected override void GetEditors(GetContentEditorsContext context) {
             var model = context.ContentItem.As<MediaSettings>();
             if (model == null)
                 return;
@@ -26,7 +26,7 @@ namespace Orchard.Media.Models {
             context.Editors.Add(ModelTemplate.For(model.Record, "MediaSettings"));
         }
 
-        protected override void UpdateEditors(UpdateModelContext context) {
+        protected override void UpdateEditors(UpdateContentContext context) {
             var model = context.ContentItem.As<MediaSettings>();
             if (model == null)
                 return;

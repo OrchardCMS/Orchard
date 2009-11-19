@@ -9,7 +9,7 @@ using Orchard.Models.Driver;
 
 namespace Orchard.Core.Settings.Controllers {
     [ValidateInput(false)]
-    public class AdminController : Controller, IModelUpdater {
+    public class AdminController : Controller, IUpdateModel {
         private readonly ISiteService _siteService;
         private readonly IContentManager _modelManager;
         private readonly INotifier _notifier;
@@ -43,9 +43,9 @@ namespace Orchard.Core.Settings.Controllers {
             return RedirectToAction("Index");
         }
 
-        #region IModelUpdater Members
+        #region IUpdateModel Members
 
-        bool IModelUpdater.TryUpdateModel<TModel>(TModel model, string prefix, string[] includeProperties, string[] excludeProperties) {
+        bool IUpdateModel.TryUpdateModel<TModel>(TModel model, string prefix, string[] includeProperties, string[] excludeProperties) {
             return TryUpdateModel(model, prefix, includeProperties, excludeProperties);
         }
 

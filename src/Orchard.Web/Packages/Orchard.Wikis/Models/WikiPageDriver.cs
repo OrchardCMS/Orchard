@@ -6,9 +6,9 @@ using Orchard.Core.Common.Models;
 using Orchard.Models.Driver;
 
 namespace Orchard.Wikis.Models {
-    public class WikiPageDriver : ModelDriver {
-        protected override void Activating(ActivatingModelContext context) {
-            if (context.ModelType == "wikipage") {
+    public class WikiPageDriver : ContentHandler {
+        protected override void Activating(ActivatingContentContext context) {
+            if (context.ContentType == "wikipage") {
                 context.Builder
                     .Weld<CommonModel>()
                     .Weld<RoutableModel>()

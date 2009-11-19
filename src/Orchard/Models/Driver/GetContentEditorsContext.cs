@@ -2,8 +2,8 @@ using System.Collections.Generic;
 using Orchard.UI.Models;
 
 namespace Orchard.Models.Driver {
-    public class GetModelEditorsContext {
-        public GetModelEditorsContext(ContentItem part) {
+    public class GetContentEditorsContext {
+        public GetContentEditorsContext(ContentItem part) {
             ContentItem = part;
             Editors= new List<ModelTemplate>();
         }

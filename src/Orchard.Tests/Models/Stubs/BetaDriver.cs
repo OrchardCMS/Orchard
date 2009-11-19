@@ -5,9 +5,9 @@ using System.Text;
 using Orchard.Models.Driver;
 
 namespace Orchard.Tests.Models.Stubs {
-    public class BetaDriver : ModelDriver {
-        protected override void Activating(ActivatingModelContext context) {
-            if (context.ModelType == "beta") {
+    public class BetaDriver : ContentHandler {
+        protected override void Activating(ActivatingContentContext context) {
+            if (context.ContentType == "beta") {
                 context.Builder.Weld<Beta>();
             }
         }

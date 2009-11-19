@@ -1,6 +1,6 @@
 namespace Orchard.Models.Driver {
-    public class ActivatingModelContext {
-        public string ModelType { get; set; }
+    public class ActivatingContentContext {
+        public string ContentType { get; set; }
         public ContentItemBuilder Builder { get; set; }
     }
 }

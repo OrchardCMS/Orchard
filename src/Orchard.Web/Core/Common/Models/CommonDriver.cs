@@ -6,7 +6,7 @@ using Orchard.Security;
 using Orchard.Services;
 
 namespace Orchard.Core.Common.Models {
-    public class CommonDriver : ModelDriver {
+    public class CommonDriver : Orchard.Models.Driver.ContentHandler {
         private readonly IClock _clock;
         private readonly IAuthenticationService _authenticationService;
         private readonly IContentManager _contentManager;
@@ -26,7 +26,7 @@ namespace Orchard.Core.Common.Models {
             AddOnLoaded<CommonModel>(LoadOwnerModel);
         }
 
-        void SetCreateTimesAndAuthor(CreateModelContext context, CommonModel instance) {
+        void SetCreateTimesAndAuthor(CreateContentContext context, CommonModel instance) {
             if (instance.Record.CreatedUtc == null) {
                 instance.Record.CreatedUtc = _clock.UtcNow;
             }
@@ -40,7 +40,7 @@ namespace Orchard.Core.Common.Models {
             }
         }
 
-        void LoadOwnerModel(LoadModelContext context, CommonModel instance) {
+        void LoadOwnerModel(LoadContentContext context, CommonModel instance) {
             if (instance.Record.OwnerId != 0) {
                 instance.Owner = _contentManager.Get(instance.Record.OwnerId).As<IUser>();
             }

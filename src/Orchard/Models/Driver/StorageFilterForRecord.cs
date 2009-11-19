@@ -11,16 +11,16 @@ namespace Orchard.Models.Driver {
 
         public bool AutomaticallyCreateMissingRecord { get; set; }
 
-        protected override void Activated(ActivatedModelContext context, ContentItemPartWithRecord<TRecord> instance) {
+        protected override void Activated(ActivatedContentContext context, ContentItemPartWithRecord<TRecord> instance) {
             instance.Record = new TRecord();
         }
 
-        protected override void Creating(CreateModelContext context, ContentItemPartWithRecord<TRecord> instance) {
+        protected override void Creating(CreateContentContext context, ContentItemPartWithRecord<TRecord> instance) {
             instance.Record.ContentItem = context.ContentItemRecord;
             _repository.Create(instance.Record);
         }
 
-        protected override void Loading(LoadModelContext context, ContentItemPartWithRecord<TRecord> instance) {
+        protected override void Loading(LoadContentContext context, ContentItemPartWithRecord<TRecord> instance) {
             instance.Record = _repository.Get(instance.ContentItem.Id);
             if (instance.Record == null && AutomaticallyCreateMissingRecord) {
                 instance.Record = new TRecord {ContentItem = context.ContentItemRecord};

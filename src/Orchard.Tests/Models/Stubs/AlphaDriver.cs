@@ -1,9 +1,9 @@
 ﻿using Orchard.Models.Driver;
 
 namespace Orchard.Tests.Models.Stubs {
-    public class AlphaDriver : ModelDriver {
-        protected override void Activating(ActivatingModelContext context) {
-            if (context.ModelType == "alpha") {
+    public class AlphaDriver : ContentHandler {
+        protected override void Activating(ActivatingContentContext context) {
+            if (context.ContentType == "alpha") {
                 context.Builder.Weld<Alpha>();
             }
         }

@@ -16,7 +16,7 @@ namespace Orchard.Wikis.Models {
         public virtual string WikiEditTheme { get; set; }
     }
 
-    public class WikiSettingsDriver : ModelDriver {
+    public class WikiSettingsDriver : ContentHandler {
         public WikiSettingsDriver(IRepository<WikiSettingsRecord> repository) {
             Filters.Add(new ActivatingFilter<WikiSettings>("site"));
             Filters.Add(new StorageFilterForRecord<WikiSettingsRecord>(repository) { AutomaticallyCreateMissingRecord = true });
@@ -25,7 +25,7 @@ namespace Orchard.Wikis.Models {
             Filters.Add(new ActivatingFilter<WikiSettings>("user"));
         }
 
-        protected override void GetEditors(GetModelEditorsContext context) {
+        protected override void GetEditors(GetContentEditorsContext context) {
             var model = context.ContentItem.As<WikiSettings>();
             if (model == null)
                 return;
@@ -33,7 +33,7 @@ namespace Orchard.Wikis.Models {
             context.Editors.Add(ModelTemplate.For(model.Record, "WikiSettings"));
         }
 
-        protected override void UpdateEditors(UpdateModelContext context) {
+        protected override void UpdateEditors(UpdateContentContext context) {
             var model = context.ContentItem.As<WikiSettings>();
             if (model == null)
                 return;
