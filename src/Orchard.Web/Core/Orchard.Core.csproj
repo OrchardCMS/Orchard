@@ -108,6 +108,7 @@
     <Content Include="Settings\Views\Web.config" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Settings\Views\Admin\EditorTemplates\SettingsIndexViewModel.ascx" />
     <Content Include="XmlRpc\Views\Web.config" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

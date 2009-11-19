@@ -17,14 +17,13 @@
         <%using (Html.BeginForm()) { %>
         <ol>
             <%= Html.ValidationSummary() %>
-            
+            <%= Html.EditorForModel() %>
             <li class="clearLayout">
-            <label for="SiteName">Site Name:</label>
+            <%--<label for="SiteName">Site Name:</label>
                 <input id="SiteName" class="inputText inputTextLarge roundCorners" name="SiteName" type="text" value="<%= Model.SiteSettings.SiteName %>" />    
             <label for="SuperUser">Super User Name:</label>    
                 <input id="SuperUser" class="inputText inputTextLarge roundCorners" name="SuperUser" type="text" value="<%= Model.SiteSettings.SuperUser %>" />
-<%--				<input id="MediaPath" name="MediaPath" type="hidden" value="<%=Model.MediaPath %>" />--%>
-                <input class="button" type="submit" value="Save" /> 
+--%>                <input class="button" type="submit" value="Save" /> 
                 <%=Html.ActionLink("Cancel", "Index", new{}, new{@class="button"}) %>
                 </li>
         </ol>
