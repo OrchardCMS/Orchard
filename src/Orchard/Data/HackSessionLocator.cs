@@ -64,7 +64,7 @@ namespace Orchard.Data {
                    type.GetProperty("Id") != null &&
                    !type.IsSealed &&
                    !type.IsAbstract &&
-                   !typeof(IModel).IsAssignableFrom(type);
+                   !typeof(IContentItemPart).IsAssignableFrom(type);
         }
 
         public ISession For(Type entityType) {

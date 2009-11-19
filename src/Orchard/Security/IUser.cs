@@ -4,7 +4,8 @@ namespace Orchard.Security {
     /// <summary>
     /// Interface provided by the "user" model. 
     /// </summary>
-    public interface IUser : IModel {
+    public interface IUser : IContentItemPart {
+        int Id { get; }
         string UserName { get; }
         string Email { get; }
     }

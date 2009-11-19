@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Orchard.Logging;
+using Orchard.Models;
 using Orchard.Roles.Models.NoRecord;
 using Orchard.Roles.Records;
 using Orchard.Security;

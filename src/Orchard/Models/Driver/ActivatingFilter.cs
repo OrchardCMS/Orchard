@@ -2,7 +2,7 @@ using System;
 using System.Linq;
 
 namespace Orchard.Models.Driver {
-    public class ActivatingFilter<TPart> : IModelActivatingFilter where TPart : class, IModel, new() {
+    public class ActivatingFilter<TPart> : IModelActivatingFilter where TPart : class, IContentItemPart, new() {
         private readonly Func<string, bool> _predicate;
 
         public ActivatingFilter(Func<string, bool> predicate) {

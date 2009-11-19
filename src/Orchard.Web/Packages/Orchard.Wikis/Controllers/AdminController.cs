@@ -6,10 +6,10 @@ using Orchard.Security;
 
 namespace Orchard.Wikis.Controllers {
     public class AdminController : Controller {
-        private readonly IModelManager _modelManager;
+        private readonly IContentManager _contentManager;
 
-        public AdminController(IModelManager modelManager) {
-            _modelManager = modelManager;
+        public AdminController(IContentManager contentManager) {
+            _contentManager = contentManager;
         }
 
         public ActionResult Index() {
@@ -19,14 +19,14 @@ namespace Orchard.Wikis.Controllers {
         public IUser CurrentUser { get; set; }
 
         public ActionResult Create() {
-            var page = _modelManager.New("wikipage");
-            _modelManager.Create(page);
+            var page = _contentManager.New("wikipage");
+            _contentManager.Create(page);
             
             return RedirectToAction("View", new{page.Id});
         }
 
         public ActionResult View(int id) {
-            var page = _modelManager.Get(id).As<CommonModel>();
+            var page = _contentManager.Get(id).As<CommonModel>();
             return View(page);
         }
     }

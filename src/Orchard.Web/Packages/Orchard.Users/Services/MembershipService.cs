@@ -11,11 +11,11 @@ using Orchard.Users.Models;
 
 namespace Orchard.Users.Services {
     public class MembershipService : IMembershipService {
-        private readonly IModelManager _modelManager;
+        private readonly IContentManager _contentManager;
         private readonly IRepository<UserRecord> _userRepository;
 
-        public MembershipService(IModelManager modelManager, IRepository<UserRecord> userRepository) {
-            _modelManager = modelManager;
+        public MembershipService(IContentManager contentManager, IRepository<UserRecord> userRepository) {
+            _contentManager = contentManager;
             _userRepository = userRepository;
             Logger = NullLogger.Instance;
         }
@@ -36,9 +36,9 @@ namespace Orchard.Users.Services {
             };
             SetPassword(record, createUserParams.Password);
 
-            var user = _modelManager.New("user");
+            var user = _contentManager.New("user");
             user.As<UserModel>().Record = record;
-            _modelManager.Create(user);
+            _contentManager.Create(user);
             return user.As<IUser>();
         }
 
@@ -47,7 +47,7 @@ namespace Orchard.Users.Services {
             if (userRecord == null) {
                 return null;
             }
-            return _modelManager.Get(userRecord.Id).As<IUser>();
+            return _contentManager.Get(userRecord.Id).As<IUser>();
         }
 
         public IUser ValidateUser(string username, string password) {
@@ -55,7 +55,7 @@ namespace Orchard.Users.Services {
             if (userRecord == null || ValidatePassword(userRecord, password) == false)
                 return null;
 
-            return _modelManager.Get(userRecord.Id).As<IUser>();
+            return _contentManager.Get(userRecord.Id).As<IUser>();
         }
 
 

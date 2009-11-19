@@ -9,11 +9,11 @@ using System.Web;
 namespace Orchard.Core.Settings.Services {
     public class SiteService : ISiteService {
         private readonly IRepository<SiteSettingsRecord> _siteSettingsRepository;
-        private readonly IModelManager _modelManager;
+        private readonly IContentManager _contentManager;
 
-        public SiteService(IRepository<SiteSettingsRecord> siteSettingsRepository, IModelManager modelManager) {
+        public SiteService(IRepository<SiteSettingsRecord> siteSettingsRepository, IContentManager contentManager) {
             _siteSettingsRepository = siteSettingsRepository;
-            _modelManager = modelManager;
+            _contentManager = contentManager;
             Logger = NullLogger.Instance;
         }
 
@@ -25,12 +25,12 @@ namespace Orchard.Core.Settings.Services {
             string applicationName = HttpContext.Current.Request.ApplicationPath;
             SiteSettingsRecord record = _siteSettingsRepository.Get(x => x.SiteUrl == applicationName);
             if (record == null) {
-                SiteModel site = _modelManager.New("site").As<SiteModel>();
+                SiteModel site = _contentManager.New("site").As<SiteModel>();
                 site.Record.SiteUrl = applicationName;
-                _modelManager.Create(site);
+                _contentManager.Create(site);
                 return site;
             }
-            return _modelManager.Get(record.Id).As<ISite>();
+            return _contentManager.Get(record.Id).As<ISite>();
         }
 
         #endregion

@@ -10,8 +10,11 @@ namespace Orchard.Tests.Models.Drivers {
         public void ModelDriverShouldUsePersistenceFilterToDelegateCreateAndLoad() {
             var modelDriver = new TestModelDriver();
 
+            var contentItem = new ContentItem();
             var part = new TestModelPart();
-            ((IModelDriver)modelDriver).Creating(new CreateModelContext { Instance = part });
+            contentItem.Weld(part);
+
+            ((IModelDriver)modelDriver).Creating(new CreateModelContext { ContentItem = contentItem });
             Assert.That(part.CreatingCalled, Is.True);
         }
 
@@ -19,14 +22,14 @@ namespace Orchard.Tests.Models.Drivers {
         public void PartShouldBeAddedBasedOnSimplePredicate() {
             var modelDriver = new TestModelDriver();
 
-            var builder = new ModelBuilder("testing");
+            var builder = new ContentItemBuilder("testing");
             ((IModelDriver)modelDriver).Activating(new ActivatingModelContext { Builder = builder, ModelType = "testing" });
             var model = builder.Build();
             Assert.That(model.Is<TestModelPart>(), Is.True);
             Assert.That(model.As<TestModelPart>(), Is.Not.Null);
         }
 
-        public class TestModelPart : ModelPart {
+        public class TestModelPart : ContentItemPart {
             public bool CreatingCalled { get; set; }
         }
 

@@ -14,17 +14,17 @@ namespace Orchard.Users.Controllers {
 
     public class AdminController : Controller, IModelUpdater {
         private readonly IMembershipService _membershipService;
-        private readonly IModelManager _modelManager;
+        private readonly IContentManager _contentManager;
         private readonly IRepository<UserRecord> _userRepository;
         private readonly INotifier _notifier;
 
         public AdminController(
             IMembershipService membershipService,
-            IModelManager modelManager,
+            IContentManager contentManager,
             IRepository<UserRecord> userRepository,
             INotifier notifier) {
             _membershipService = membershipService;
-            _modelManager = modelManager;
+            _contentManager = contentManager;
             _userRepository = userRepository;
             _notifier = notifier;
             T = NullLocalizer.Instance;
@@ -38,7 +38,7 @@ namespace Orchard.Users.Controllers {
             var model = new UsersIndexViewModel();
             model.Rows = _userRepository.Fetch(x => x.UserName != null)
                 .Select(x => new UsersIndexViewModel.Row {
-                    User = _modelManager.Get(x.Id).As<UserModel>()
+                    User = _contentManager.Get(x.Id).As<UserModel>()
                 })
                 .ToList();
 
@@ -67,15 +67,15 @@ namespace Orchard.Users.Controllers {
         }
 
         public ActionResult Edit(int id) {
-            var model = new UserEditViewModel { User = _modelManager.Get(id) };
-            model.Editors = _modelManager.GetEditors(model.User);
+            var model = new UserEditViewModel { User = _contentManager.Get<UserModel>(id) };
+            model.Editors = _contentManager.GetEditors(model.User.ContentItem);
             return View(model);
         }
 
         [HttpPost]
         public ActionResult Edit(int id, FormCollection input) {
-            var model = new UserEditViewModel { User = _modelManager.Get(id) };
-            model.Editors = _modelManager.UpdateEditors(model.User, this);
+            var model = new UserEditViewModel { User = _contentManager.Get<UserModel>(id) };
+            model.Editors = _contentManager.UpdateEditors(model.User.ContentItem, this);
 
             if (!TryUpdateModel(model, input.ToValueProvider())) {
                 return View(model);

@@ -14,7 +14,7 @@ namespace Orchard.Tests.Models {
     [TestFixture]
     public class DefaultModelManagerTests {
         private IContainer _container;
-        private IModelManager _manager;
+        private IContentManager _manager;
         private ISessionFactory _sessionFactory;
         private ISession _session;
 
@@ -24,8 +24,8 @@ namespace Orchard.Tests.Models {
             _sessionFactory = DataUtility.CreateSessionFactory(
                 databaseFileName,
                 typeof(GammaRecord),
-                typeof(ModelRecord),
-                typeof(ModelTypeRecord));
+                typeof(ContentItemRecord),
+                typeof(ContentTypeRecord));
         }
 
         [TestFixtureTearDown]
@@ -37,7 +37,7 @@ namespace Orchard.Tests.Models {
         public void Init() {
             var builder = new ContainerBuilder();
             builder.RegisterModule(new ImplicitCollectionSupportModule());
-            builder.Register<DefaultModelManager>().As<IModelManager>();
+            builder.Register<DefaultContentManager>().As<IContentManager>();
             builder.Register<AlphaDriver>().As<IModelDriver>();
             builder.Register<BetaDriver>().As<IModelDriver>();
             builder.Register<GammaDriver>().As<IModelDriver>();
@@ -50,7 +50,7 @@ namespace Orchard.Tests.Models {
             builder.Register(new TestSessionLocator(_session)).As<ISessionLocator>();
 
             _container = builder.Build();
-            _manager = _container.Resolve<IModelManager>();
+            _manager = _container.Resolve<IContentManager>();
         }
 
         public class TestSessionLocator : ISessionLocator {
@@ -103,7 +103,7 @@ namespace Orchard.Tests.Models {
             var modelRecord = CreateModelRecord("alpha");
 
             var model = _manager.Get(modelRecord.Id);
-            Assert.That(model.ModelType, Is.EqualTo("alpha"));
+            Assert.That(model.ContentType, Is.EqualTo("alpha"));
             Assert.That(model.Id, Is.EqualTo(modelRecord.Id));
         }
 
@@ -119,7 +119,7 @@ namespace Orchard.Tests.Models {
 
             // create a gamma record
             var gamma = new GammaRecord {
-                Model = _container.Resolve<IRepository<ModelRecord>>().Get(model.Id),
+                ContentItem = _container.Resolve<IRepository<ContentItemRecord>>().Get(model.Id),
                 Frap = "foo"
             };
 
@@ -130,11 +130,11 @@ namespace Orchard.Tests.Models {
             // re-fetch from database
             model = _manager.Get(modelRecord.Id);
 
-            Assert.That(model.ModelType, Is.EqualTo("gamma"));
+            Assert.That(model.ContentType, Is.EqualTo("gamma"));
             Assert.That(model.Id, Is.EqualTo(modelRecord.Id));
             Assert.That(model.Is<Gamma>(), Is.True);
             Assert.That(model.As<Gamma>().Record, Is.Not.Null);
-            Assert.That(model.As<Gamma>().Record.Model.Id, Is.EqualTo(model.Id));
+            Assert.That(model.As<Gamma>().Record.ContentItem.Id, Is.EqualTo(model.Id));
 
         }
 
@@ -143,17 +143,17 @@ namespace Orchard.Tests.Models {
             var beta = _manager.New("beta");
             _manager.Create(beta);
 
-            var modelRecord = _container.Resolve<IRepository<ModelRecord>>().Get(beta.Id);
+            var modelRecord = _container.Resolve<IRepository<ContentItemRecord>>().Get(beta.Id);
             Assert.That(modelRecord, Is.Not.Null);
-            Assert.That(modelRecord.ModelType.Name, Is.EqualTo("beta"));
+            Assert.That(modelRecord.ContentType.Name, Is.EqualTo("beta"));
         }
 
-        private ModelRecord CreateModelRecord(string modelType) {
-            var modelRepository = _container.Resolve<IRepository<ModelRecord>>();
-            var modelTypeRepository = _container.Resolve<IRepository<ModelTypeRecord>>();
+        private ContentItemRecord CreateModelRecord(string modelType) {
+            var modelRepository = _container.Resolve<IRepository<ContentItemRecord>>();
+            var modelTypeRepository = _container.Resolve<IRepository<ContentTypeRecord>>();
 
-            var modelRecord = new ModelRecord { ModelType = new ModelTypeRecord { Name = modelType } };
-            modelTypeRepository.Create(modelRecord.ModelType);
+            var modelRecord = new ContentItemRecord { ContentType = new ContentTypeRecord { Name = modelType } };
+            modelTypeRepository.Create(modelRecord.ContentType);
             modelRepository.Create(modelRecord);
 
             _session.Flush();

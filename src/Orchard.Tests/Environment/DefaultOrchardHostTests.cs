@@ -15,6 +15,8 @@ using Orchard.Environment;
 using Orchard.Mvc;
 using Orchard.Mvc.ModelBinders;
 using Orchard.Mvc.Routes;
+using Orchard.Packages;
+using Orchard.Tests.Mvc.Routes;
 using Orchard.Tests.Stubs;
 
 namespace Orchard.Tests.Environment {
@@ -42,7 +44,19 @@ namespace Orchard.Tests.Environment {
                     builder.Register(_controllerBuilder);
                     builder.Register(_routeCollection);
                     builder.Register(_modelBinderDictionary);
+                    builder.Register(new ViewEngineCollection());
+                    builder.Register(new StuPackageManager()).As<IPackageManager>();
                 });
+        }
+
+        public class StuPackageManager : IPackageManager {
+            public IEnumerable<PackageDescriptor> AvailablePackages() {
+                return Enumerable.Empty<PackageDescriptor>();
+            }
+
+            public IEnumerable<PackageEntry> ActivePackages() {
+                return Enumerable.Empty<PackageEntry>();
+            }
         }
 
         [Test]

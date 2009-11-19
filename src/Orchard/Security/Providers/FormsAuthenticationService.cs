@@ -8,12 +8,12 @@ using Orchard.Services;
 namespace Orchard.Security.Providers {
     public class FormsAuthenticationService : IAuthenticationService {
         private readonly IClock _clock;
-        private readonly IModelManager _modelManager;
+        private readonly IContentManager _contentManager;
         private readonly HttpContextBase _httpContext;
 
-        public FormsAuthenticationService(IClock clock, IModelManager modelManager, HttpContextBase httpContext) {
+        public FormsAuthenticationService(IClock clock, IContentManager contentManager, HttpContextBase httpContext) {
             _clock = clock;
-            _modelManager = modelManager;
+            _contentManager = contentManager;
             _httpContext = httpContext;
             Logger = NullLogger.Instance;
             
@@ -67,7 +67,7 @@ namespace Orchard.Security.Providers {
                 Logger.Fatal("User id not a parsable integer");
                 return null;
             }
-            return _modelManager.Get(userId).As<IUser>();
+            return _contentManager.Get(userId).As<IUser>();
         }
     }
 }

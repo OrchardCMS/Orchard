@@ -13,17 +13,17 @@ namespace Orchard.Models.Driver {
         public List<IModelFilter> Filters { get; set; }
         public ILogger Logger { get; set; }
 
-        public void AddOnActivated<TPart>(Action<ActivatedModelContext, TPart> handler) where TPart : class, IModel {
+        public void AddOnActivated<TPart>(Action<ActivatedModelContext, TPart> handler) where TPart : class, IContentItemPart {
             Filters.Add(new InlineStorageFilter<TPart> { OnActivated = handler });
         }
-        public void AddOnCreating<TPart>(Action<CreateModelContext, TPart> handler) where TPart : class, IModel {
+        public void AddOnCreating<TPart>(Action<CreateModelContext, TPart> handler) where TPart : class, IContentItemPart {
             Filters.Add(new InlineStorageFilter<TPart> { OnCreating = handler });
         }
-        public void AddOnLoaded<TPart>(Action<LoadModelContext, TPart> handler) where TPart : class, IModel {
+        public void AddOnLoaded<TPart>(Action<LoadModelContext, TPart> handler) where TPart : class, IContentItemPart {
             Filters.Add(new InlineStorageFilter<TPart> { OnLoaded = handler });
         }
 
-        class InlineStorageFilter<TPart> : StorageFilterBase<TPart> where TPart : class, IModel {
+        class InlineStorageFilter<TPart> : StorageFilterBase<TPart> where TPart : class, IContentItemPart {
             public Action<ActivatedModelContext, TPart> OnActivated { get; set; }
             public Action<CreateModelContext, TPart> OnCreating { get; set; }
             public Action<CreateModelContext, TPart> OnCreated { get; set; }

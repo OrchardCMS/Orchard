@@ -101,7 +101,10 @@ namespace Orchard.Controllers {
             }
 
             try {
-                if (true/*MembershipService.ChangePassword(User.Identity.Name, currentPassword, newPassword)*/) {
+                var validated = _membershipService.ValidateUser(User.Identity.Name, currentPassword);
+                
+                if (validated != null) {
+                    _membershipService.SetPassword(validated, newPassword);
                     return RedirectToAction("ChangePasswordSuccess");
                 }
                 else {

@@ -8,18 +8,18 @@ using Orchard.Models.Records;
 using Orchard.UI.Models;
 
 namespace Orchard.Models {
-    public class DefaultModelManager : IModelManager {
+    public class DefaultContentManager : IContentManager {
         private readonly IContext _context;
-        private readonly IRepository<ModelRecord> _modelRepository;
-        private readonly IRepository<ModelTypeRecord> _modelTypeRepository;
+        private readonly IRepository<ContentItemRecord> _contentItemRepository;
+        private readonly IRepository<ContentTypeRecord> _contentTypeRepository;
 
-        public DefaultModelManager(
+        public DefaultContentManager(
             IContext context,
-            IRepository<ModelRecord> modelRepository,
-            IRepository<ModelTypeRecord> modelTypeRepository) {
+            IRepository<ContentItemRecord> contentItemRepository,
+            IRepository<ContentTypeRecord> contentTypeRepository) {
             _context = context;
-            _modelRepository = modelRepository;
-            _modelTypeRepository = modelTypeRepository;
+            _contentItemRepository = contentItemRepository;
+            _contentTypeRepository = contentTypeRepository;
         }
 
         private IEnumerable<IModelDriver> _drivers;
@@ -31,12 +31,12 @@ namespace Orchard.Models {
             }            
         }
 
-        public virtual IModel New(string modelType) {
+        public virtual ContentItem New(string modelType) {
 
             // create a new kernel for the model instance
             var context = new ActivatingModelContext {
                 ModelType = modelType,
-                Builder = new ModelBuilder(modelType)
+                Builder = new ContentItemBuilder(modelType)
             };
 
             // invoke drivers to weld aspects onto kernel
@@ -44,31 +44,31 @@ namespace Orchard.Models {
                 driver.Activating(context);
             }
             var context2 = new ActivatedModelContext {
-                ModelType = modelType,
-                Instance = context.Builder.Build()
+                ContentType = modelType,
+                ContentItem = context.Builder.Build()
             };
             foreach (var driver in Drivers) {
                 driver.Activated(context2);
             }
 
             // composite result is returned
-            return context2.Instance;
+            return context2.ContentItem;
         }
 
-        public virtual IModel Get(int id) {
+        public virtual ContentItem Get(int id) {
             // obtain root record to determine the model type
-            var modelRecord = _modelRepository.Get(id);
+            var contentItemRecord = _contentItemRepository.Get(id);
 
             // create a context with a new instance to load
             var context = new LoadModelContext {
-                Id = modelRecord.Id,
-                ModelType = modelRecord.ModelType.Name,
-                ModelRecord = modelRecord,
-                Instance = New(modelRecord.ModelType.Name)
+                Id = contentItemRecord.Id,
+                ModelType = contentItemRecord.ContentType.Name,
+                ContentItemRecord = contentItemRecord,
+                ContentItem = New(contentItemRecord.ContentType.Name)
             };
 
             // set the id
-            context.Instance.As<ModelRoot>().Id = context.Id;
+            context.ContentItem.Id = context.Id;
 
             // invoke drivers to acquire state, or at least establish lazy loading callbacks
             foreach (var driver in Drivers) {
@@ -78,24 +78,24 @@ namespace Orchard.Models {
                 driver.Loaded(context);
             }
 
-            return context.Instance;
+            return context.ContentItem;
         }
 
-        public void Create(IModel model) {
+        public void Create(ContentItem contentItem) {
             // produce root record to determine the model id
-            var modelRecord = new ModelRecord { ModelType = AcquireModelTypeRecord(model.ModelType) };
-            _modelRepository.Create(modelRecord);
+            var modelRecord = new ContentItemRecord { ContentType = AcquireContentTypeRecord(contentItem.ContentType) };
+            _contentItemRepository.Create(modelRecord);
 
             // build a context with the initialized instance to create
             var context = new CreateModelContext {
                 Id = modelRecord.Id,
-                ModelType = modelRecord.ModelType.Name,
-                ModelRecord = modelRecord,
-                Instance = model.As<ModelRoot>().Welded
+                ModelType = modelRecord.ContentType.Name,
+                ContentItemRecord = modelRecord,
+                ContentItem = contentItem
             };
 
             // set the id
-            context.Instance.As<ModelRoot>().Id = context.Id;
+            context.ContentItem.Id = context.Id;
 
 
             // invoke drivers to add information to persistent stores
@@ -107,28 +107,28 @@ namespace Orchard.Models {
             }
         }
 
-        public IEnumerable<ModelTemplate> GetEditors(IModel model) {
-            var context = new GetModelEditorsContext(model);
+        public IEnumerable<ModelTemplate> GetEditors(ContentItem contentItem) {
+            var context = new GetModelEditorsContext(contentItem);
             foreach (var driver in Drivers) {
                 driver.GetEditors(context);
             }
             return context.Editors;
         }
 
-        public IEnumerable<ModelTemplate> UpdateEditors(IModel model, IModelUpdater updater) {
-            var context = new UpdateModelContext(model, updater);
+        public IEnumerable<ModelTemplate> UpdateEditors(ContentItem contentItem, IModelUpdater updater) {
+            var context = new UpdateModelContext(contentItem, updater);
             foreach (var driver in Drivers) {
                 driver.UpdateEditors(context);
             }
             return context.Editors;
         }
 
-        private ModelTypeRecord AcquireModelTypeRecord(string modelType) {
-            var modelTypeRecord = _modelTypeRepository.Get(x => x.Name == modelType);
+        private ContentTypeRecord AcquireContentTypeRecord(string contentType) {
+            var modelTypeRecord = _contentTypeRepository.Get(x => x.Name == contentType);
             if (modelTypeRecord == null) {
-                //TEMP: this is not safe... Model types could be created concurrently?
-                modelTypeRecord = new ModelTypeRecord { Name = modelType };
-                _modelTypeRepository.Create(modelTypeRecord);
+                //TEMP: this is not safe... ContentItem types could be created concurrently?
+                modelTypeRecord = new ContentTypeRecord { Name = contentType };
+                _contentTypeRepository.Create(modelTypeRecord);
             }
             return modelTypeRecord;
         }

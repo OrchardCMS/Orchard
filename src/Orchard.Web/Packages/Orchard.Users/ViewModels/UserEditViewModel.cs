@@ -8,7 +8,7 @@ using Orchard.Users.Models;
 
 namespace Orchard.Users.ViewModels {
     public class UserEditViewModel : AdminViewModel {
-        public IModel User { get; set; }
+        public UserModel User { get; set; }
         public IEnumerable<ModelTemplate> Editors { get; set; }
 
         [HiddenInput(DisplayValue = false)]

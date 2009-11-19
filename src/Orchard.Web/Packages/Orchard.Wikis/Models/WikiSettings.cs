@@ -6,10 +6,10 @@ using Orchard.Models.Records;
 using Orchard.UI.Models;
 
 namespace Orchard.Wikis.Models {
-    public class WikiSettings : ModelPartWithRecord<WikiSettingsRecord> {
+    public class WikiSettings : ContentItemPartWithRecord<WikiSettingsRecord> {
     }
 
-    public class WikiSettingsRecord : ModelPartRecord {
+    public class WikiSettingsRecord : ContentPartRecordBase {
         public virtual bool AllowAnonymousEdits { get; set; }
         
         [Required]
@@ -26,7 +26,7 @@ namespace Orchard.Wikis.Models {
         }
 
         protected override void GetEditors(GetModelEditorsContext context) {
-            var model = context.Instance.As<WikiSettings>();
+            var model = context.ContentItem.As<WikiSettings>();
             if (model == null)
                 return;
 
@@ -34,7 +34,7 @@ namespace Orchard.Wikis.Models {
         }
 
         protected override void UpdateEditors(UpdateModelContext context) {
-            var model = context.Instance.As<WikiSettings>();
+            var model = context.ContentItem.As<WikiSettings>();
             if (model == null)
                 return;
 

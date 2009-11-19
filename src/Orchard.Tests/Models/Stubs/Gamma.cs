@@ -4,10 +4,10 @@ using Orchard.Models.Driver;
 using Orchard.Models.Records;
 
 namespace Orchard.Tests.Models.Stubs {
-    public class Gamma : ModelPartWithRecord<GammaRecord> {
+    public class Gamma : ContentItemPartWithRecord<GammaRecord> {
     }
 
-    public class GammaRecord : ModelPartRecord {
+    public class GammaRecord : ContentPartRecordBase {
         public virtual string Frap { get; set; }
     }
 

@@ -26,7 +26,7 @@ namespace Orchard.Tests.Packages.Users.Controllers {
 
         public override void Register(ContainerBuilder builder) {
             builder.Register<AdminController>();
-            builder.Register<DefaultModelManager>().As<IModelManager>();
+            builder.Register<DefaultContentManager>().As<IContentManager>();
             builder.Register<MembershipService>().As<IMembershipService>();
             builder.Register<UserDriver>().As<IModelDriver>();
             builder.Register(new Mock<INotifier>().Object);
@@ -34,14 +34,14 @@ namespace Orchard.Tests.Packages.Users.Controllers {
 
         protected override IEnumerable<Type> DatabaseTypes {
             get {
-                return new[] { typeof(UserRecord), typeof(ModelRecord), typeof(ModelTypeRecord) };
+                return new[] { typeof(UserRecord), typeof(ContentItemRecord), typeof(ContentTypeRecord) };
             }
         }
 
         public override void Init() {
             base.Init();
 
-            var manager = _container.Resolve<IModelManager>();
+            var manager = _container.Resolve<IContentManager>();
 
             var userOne = manager.New("user").As<UserModel>();
             userOne.Record = new UserRecord { UserName = "one" };
@@ -83,7 +83,7 @@ namespace Orchard.Tests.Packages.Users.Controllers {
 
             var redirect = (RedirectToRouteResult)result;
             var id = Convert.ToInt32(redirect.RouteValues["id"]);
-            var manager = _container.Resolve<IModelManager>();
+            var manager = _container.Resolve<IContentManager>();
             var user = manager.Get(id).As<IUser>();
             Assert.That(user.UserName, Is.EqualTo("four"));
         }

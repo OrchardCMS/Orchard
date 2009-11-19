@@ -3,11 +3,11 @@ using Orchard.UI.Models;
 
 namespace Orchard.Models.Driver {
     public class GetModelEditorsContext {
-        public GetModelEditorsContext(IModel model) {
-            Instance = model;
+        public GetModelEditorsContext(ContentItem part) {
+            ContentItem = part;
             Editors= new List<ModelTemplate>();
         }
-        public IModel Instance { get; set; }
+        public ContentItem ContentItem { get; set; }
         public IList<ModelTemplate> Editors { get; set; }
     }
 }

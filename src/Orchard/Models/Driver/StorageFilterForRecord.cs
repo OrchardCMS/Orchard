@@ -2,7 +2,7 @@ using Orchard.Data;
 using Orchard.Models.Records;
 
 namespace Orchard.Models.Driver {
-    public class StorageFilterForRecord<TRecord> : StorageFilterBase<ModelPartWithRecord<TRecord>> where TRecord : ModelPartRecord,new() {
+    public class StorageFilterForRecord<TRecord> : StorageFilterBase<ContentItemPartWithRecord<TRecord>> where TRecord : ContentPartRecordBase,new() {
         private readonly IRepository<TRecord> _repository;
 
         public StorageFilterForRecord(IRepository<TRecord> repository) {
@@ -11,19 +11,19 @@ namespace Orchard.Models.Driver {
 
         public bool AutomaticallyCreateMissingRecord { get; set; }
 
-        protected override void Activated(ActivatedModelContext context, ModelPartWithRecord<TRecord> instance) {
+        protected override void Activated(ActivatedModelContext context, ContentItemPartWithRecord<TRecord> instance) {
             instance.Record = new TRecord();
         }
 
-        protected override void Creating(CreateModelContext context, ModelPartWithRecord<TRecord> instance) {
-            instance.Record.Model = context.ModelRecord;
+        protected override void Creating(CreateModelContext context, ContentItemPartWithRecord<TRecord> instance) {
+            instance.Record.ContentItem = context.ContentItemRecord;
             _repository.Create(instance.Record);
         }
 
-        protected override void Loading(LoadModelContext context, ModelPartWithRecord<TRecord> instance) {
-            instance.Record = _repository.Get(instance.Id);
+        protected override void Loading(LoadModelContext context, ContentItemPartWithRecord<TRecord> instance) {
+            instance.Record = _repository.Get(instance.ContentItem.Id);
             if (instance.Record == null && AutomaticallyCreateMissingRecord) {
-                instance.Record = new TRecord {Model = context.ModelRecord};
+                instance.Record = new TRecord {ContentItem = context.ContentItemRecord};
                 _repository.Create(instance.Record);
             }
         }

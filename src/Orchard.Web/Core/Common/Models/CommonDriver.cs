@@ -9,17 +9,17 @@ namespace Orchard.Core.Common.Models {
     public class CommonDriver : ModelDriver {
         private readonly IClock _clock;
         private readonly IAuthenticationService _authenticationService;
-        private readonly IModelManager _modelManager;
+        private readonly IContentManager _contentManager;
 
         public CommonDriver(
             IRepository<CommonRecord> repository,
             IClock clock,
             IAuthenticationService authenticationService,
-            IModelManager modelManager) {
+            IContentManager contentManager) {
 
             _clock = clock;
             _authenticationService = authenticationService;
-            _modelManager = modelManager;
+            _contentManager = contentManager;
 
             AddOnCreating<CommonModel>(SetCreateTimesAndAuthor);
             Filters.Add(new StorageFilterForRecord<CommonRecord>(repository));
@@ -42,7 +42,7 @@ namespace Orchard.Core.Common.Models {
 
         void LoadOwnerModel(LoadModelContext context, CommonModel instance) {
             if (instance.Record.OwnerId != 0) {
-                instance.Owner = _modelManager.Get(instance.Record.OwnerId).As<IUser>();
+                instance.Owner = _contentManager.Get(instance.Record.OwnerId).As<IUser>();
             }
         }
     }

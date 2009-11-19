@@ -43,8 +43,8 @@ namespace Orchard.Tests.Packages.Users.Services {
             _sessionFactory = DataUtility.CreateSessionFactory(
                 databaseFileName,
                 typeof(UserRecord),
-                typeof(ModelRecord),
-                typeof(ModelTypeRecord));
+                typeof(ContentItemRecord),
+                typeof(ContentTypeRecord));
         }
 
         [TestFixtureTearDown]
@@ -57,7 +57,7 @@ namespace Orchard.Tests.Packages.Users.Services {
             var builder = new ContainerBuilder();
             builder.RegisterModule(new ImplicitCollectionSupportModule());
             builder.Register<MembershipService>().As<IMembershipService>();
-            builder.Register<DefaultModelManager>().As<IModelManager>();
+            builder.Register<DefaultContentManager>().As<IContentManager>();
             builder.Register<UserDriver>().As<IModelDriver>();
             builder.RegisterGeneric(typeof(Repository<>)).As(typeof(IRepository<>));
             _session = _sessionFactory.OpenSession();

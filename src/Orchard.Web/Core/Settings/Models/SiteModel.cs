@@ -3,7 +3,7 @@ using Orchard.Models;
 using Orchard.Settings;
 
 namespace Orchard.Core.Settings.Models {
-    public sealed class SiteModel : ModelPartWithRecord<SiteSettingsRecord>, ISite {
+    public sealed class SiteModel : ContentItemPartWithRecord<SiteSettingsRecord>, ISite {
         public string SiteName {
             get { return Record.SiteName; }
             set { Record.SiteName = value; }
