@@ -5,10 +5,10 @@ using Orchard.Models.Records;
 using Orchard.UI.Models;
 
 namespace Orchard.Media.Models {
-    public class MediaSettings : ModelPartWithRecord<MediaSettingsRecord> {
+    public class MediaSettings : ContentItemPartWithRecord<MediaSettingsRecord> {
     }
 
-    public class MediaSettingsRecord : ModelPartRecord {
+    public class MediaSettingsRecord : ContentPartRecordBase {
         public virtual string RootMediaFolder { get; set; }
     }
 
@@ -19,7 +19,7 @@ namespace Orchard.Media.Models {
         }
 
         protected override void GetEditors(GetModelEditorsContext context) {
-            var model = context.Instance.As<MediaSettings>();
+            var model = context.ContentItem.As<MediaSettings>();
             if (model == null)
                 return;
 
@@ -27,7 +27,7 @@ namespace Orchard.Media.Models {
         }
 
         protected override void UpdateEditors(UpdateModelContext context) {
-            var model = context.Instance.As<MediaSettings>();
+            var model = context.ContentItem.As<MediaSettings>();
             if (model == null)
                 return;
 

@@ -7,12 +7,12 @@ using Orchard.UI.Models;
 
 namespace Orchard.Core.Settings.ViewModels {
     public class SettingsIndexViewModel : AdminViewModel {
-        public IModel Site { get; set; }
+        public SiteModel Site { get; set; }
         public IEnumerable<ModelTemplate> Editors { get; set; }
 
         [HiddenInput(DisplayValue = false)]
         public int Id {
-            get { return Site.Id; }
+            get { return Site.ContentItem.Id; }
         }
 
         public string SiteName {
