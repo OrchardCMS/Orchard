@@ -61,9 +61,12 @@
     <Reference Include="System.Web.Mobile" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Models\CommentSettings.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Package.txt" />
+    <Content Include="Views\Models\EditorTemplates\CommentSettingsRecord.ascx" />
     <Content Include="Web.config" />
     <Content Include="Views\Web.config" />
   </ItemGroup>
@@ -77,7 +80,6 @@
     <Folder Include="App_Data\" />
     <Folder Include="Content\" />
     <Folder Include="Controllers\" />
-    <Folder Include="Models\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v9.0\WebApplications\Microsoft.WebApplication.targets" />
