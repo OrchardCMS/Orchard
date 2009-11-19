@@ -2,6 +2,6 @@ using Orchard.Core.Common.Records;
 using Orchard.Models;
 
 namespace Orchard.Core.Common.Models {
-    public class RoutablePart : ContentItemPartWithRecord<RoutableRecord> {
+    public class RoutablePart : ContentPartForRecord<RoutableRecord> {
     }
 }

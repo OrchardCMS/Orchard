@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Reflection;
 using System.Threading;
 using System.Web;
@@ -62,6 +63,7 @@ namespace Orchard.Data {
         private static bool IsRecordType(Type type) {
             return (type.Namespace.EndsWith(".Models") || type.Namespace.EndsWith(".Records")) &&
                    type.GetProperty("Id") != null &&
+                   type.GetProperty("Id").GetAccessors().All(x => x.IsVirtual) &&
                    !type.IsSealed &&
                    !type.IsAbstract &&
                    !typeof(IContentItemPart).IsAssignableFrom(type);

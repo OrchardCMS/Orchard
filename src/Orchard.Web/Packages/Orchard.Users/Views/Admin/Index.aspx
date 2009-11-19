@@ -1,4 +1,5 @@
 <%@ Page Language="C#" Inherits="System.Web.Mvc.ViewPage<Orchard.Users.ViewModels.UsersIndexViewModel>" %>
+<%@ Import Namespace="Orchard.Models"%>
 
 <%@ Import Namespace="Orchard.Security" %>
 <%@ Import Namespace="Orchard.Mvc.Html" %>
@@ -38,10 +39,10 @@
             <% foreach (var row in Model.Rows) { %>
             <tr>
                 <td>
-                    <%=Html.Encode(row.User.As<IUser>().UserName) %>
+                    <%=Html.Encode(row.User.UserName) %>
                 </td>
                 <td>
-                    <%=Html.Encode(row.User.As<IUser>().Email) %>
+                    <%=Html.Encode(row.User.Email) %>
                 </td>
                 <td>
                     <%=Html.ActionLink("Edit", "Edit", new { row.User.Id })%>

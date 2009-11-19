@@ -4,18 +4,18 @@ using FluentNHibernate.Automapping;
 using FluentNHibernate.Automapping.Alterations;
 
 namespace Orchard.Models.Records {
-    public abstract class ContentPartRecordBase {
+    public abstract class ContentPartRecord {
         public virtual int Id { get; set; }
         public virtual ContentItemRecord ContentItem { get; set; }
     }
 
 
-    public class ModelPartRecordAlteration : IAutoMappingAlteration {
+    public class ContentPartRecordAlteration : IAutoMappingAlteration {
         public void Alter(AutoPersistenceModel model) {
 
             model.OverrideAll(mapping => {
                 var genericArguments = mapping.GetType().GetGenericArguments();
-                if (!genericArguments.Single().IsSubclassOf(typeof(ContentPartRecordBase))) {
+                if (!genericArguments.Single().IsSubclassOf(typeof(ContentPartRecord))) {
                     return;
                 }
 
@@ -30,7 +30,7 @@ namespace Orchard.Models.Records {
             void Override(object mapping);
         }
 
-        class Alteration<T> : IAlteration where T : ContentPartRecordBase {
+        class Alteration<T> : IAlteration where T : ContentPartRecord {
             public void Override(object o) {
                 var mapping = (AutoMapping<T>)o;
                 mapping.Id(x => x.Id).GeneratedBy.Foreign("ContentItem");

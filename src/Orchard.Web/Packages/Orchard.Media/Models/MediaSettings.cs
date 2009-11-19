@@ -5,10 +5,10 @@ using Orchard.Models.Records;
 using Orchard.UI.Models;
 
 namespace Orchard.Media.Models {
-    public class MediaSettings : ContentItemPartWithRecord<MediaSettingsRecord> {
+    public class MediaSettings : ContentPartForRecord<MediaSettingsRecord> {
     }
 
-    public class MediaSettingsRecord : ContentPartRecordBase {
+    public class MediaSettingsRecord : ContentPartRecord {
         public virtual string RootMediaFolder { get; set; }
     }
 

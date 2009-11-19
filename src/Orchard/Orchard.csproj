@@ -124,6 +124,7 @@
     <Compile Include="Localization\Localizer.cs" />
     <Compile Include="Localization\LocalizedString.cs" />
     <Compile Include="Localization\NullLocalizer.cs" />
+    <Compile Include="Models\ContentItem.cs" />
     <Compile Include="Models\Driver\ActivatedContentContext.cs" />
     <Compile Include="Models\Driver\ActivatingFilter.cs" />
     <Compile Include="Models\Driver\IContentActivatingFilter.cs" />
@@ -153,9 +154,8 @@
     <Compile Include="Models\ContentExtensions.cs" />
     <Compile Include="Models\ContentItemPart.cs" />
     <Compile Include="Models\IContentItemPart.cs" />
-    <Compile Include="Models\ContentItemPartWithRecord.cs" />
-    <Compile Include="Models\ModelRoot.cs" />
-    <Compile Include="Models\Records\ContentPartRecordBase.cs" />
+    <Compile Include="Models\ContentPartForRecord.cs" />
+    <Compile Include="Models\Records\ContentPartRecord.cs" />
     <Compile Include="Models\Records\ContentTypeRecord.cs" />
     <Compile Include="Models\Records\ContentItemRecord.cs" />
     <Compile Include="Models\Driver\UpdateContentContext.cs" />

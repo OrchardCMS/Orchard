@@ -2,7 +2,7 @@ using System.Web.Security;
 using Orchard.Models.Records;
 
 namespace Orchard.Users.Models {
-    public class UserRecord : ContentPartRecordBase {
+    public class UserRecord : ContentPartRecord {
         public virtual string UserName { get; set; }
         public virtual string Email { get; set; }
 
