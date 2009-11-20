@@ -25,6 +25,9 @@
             <ul>
                 <li>
                     <%=Html.LabelFor(x => x.Page.Record.Name)%><%=Html.EditorFor(x => x.Page.Record.Name)%></li>
+                    <%foreach (var x in Model.Editors) { %>
+            <%=Html.EditorFor(m=>x.Model, x.TemplateName, x.Prefix) %>
+            <%} %>
                 <li>
                     <input type="submit" name="submit" value="Save" /></li>
             </ul>

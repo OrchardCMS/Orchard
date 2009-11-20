@@ -27,7 +27,7 @@
 <ul>
 <li><%=Html.ActionLink("Create new page", "create") %></li>
 <%foreach(var item in Model.Pages.OrderBy(x=>x.Record.Name)){%>
-<li><%=Html.ActionLink(item.Record.Name, "show", new { item.ContentItem.Id }, new{})%></li>
+<li><%=Html.ActionLink(item.Record.Name??"(no name)", "show", new { item.ContentItem.Id }, new{})%></li>
 <%}%>
 </ul>
 
