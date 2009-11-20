@@ -13,6 +13,8 @@ namespace Orchard.DevTools.ViewModels {
 
         public IEnumerable<Type> PartTypes { get; set; }
 
+        public IEnumerable<ModelTemplate> Displays { get; set; }
+
         public IEnumerable<ModelTemplate> Editors { get; set; }
 
         public object Locate(Type type) {

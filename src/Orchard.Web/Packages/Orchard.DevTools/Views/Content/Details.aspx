@@ -82,6 +82,21 @@
                 <%                      
                     }%>
             </ul>
+            <h3>
+                Displays</h3>
+            <ul>
+                <%foreach (var display in Model.Displays) {%>
+                <li><span style="font-weight: bold">
+                    <%=Html.Encode(display.Prefix)%></span>
+                    <%=Html.Encode(display.Model.GetType().Name)%>
+                    (<%=Html.Encode(display.Model.GetType().Namespace)%>)
+                    <div style="margin-left: 20px; border: solid 1px black;">
+                        <%=Html.DisplayFor(x => display.Model, display.TemplateName, display.Prefix)%>
+                    </div>
+                </li>
+                <%                      
+                    }%>
+            </ul>
         </div>
         <div id="footer">
             <% Html.Include("footer"); %>

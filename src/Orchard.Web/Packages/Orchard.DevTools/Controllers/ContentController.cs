@@ -41,6 +41,7 @@ namespace Orchard.DevTools.Controllers
                 .Select(x => x.GetType())
                 .SelectMany(x => AllTypes(x))
                 .Distinct();
+            model.Displays = _contentManager.GetDisplays(model.Item);
             model.Editors = _contentManager.GetEditors(model.Item);
 
             return View(model);
