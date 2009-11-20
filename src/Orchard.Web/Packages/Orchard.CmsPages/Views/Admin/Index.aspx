@@ -16,7 +16,7 @@ string SplitDateTime(DateTime dt)
            string.Format("{0:t}", dt);
 }
 </script>
-<% Html.Include("Header"); %>
+<% Html.Include("Head"); %>
     <% Html.BeginForm(); %>
     <div class="yui-g">
         <h2>
@@ -124,4 +124,4 @@ string SplitDateTime(DateTime dt)
         <%=Html.ActionLink("Add a page", "Create", new {}, new {@class="floatRight bottomSpacer"}) %>
     </div>
     <% Html.EndForm(); %>
-<% Html.Include("Footer"); %>
+<% Html.Include("Foot"); %>

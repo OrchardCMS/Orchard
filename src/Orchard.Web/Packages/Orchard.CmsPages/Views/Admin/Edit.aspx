@@ -3,21 +3,21 @@
 <%@ Import Namespace="Orchard.Mvc.Html" %>
 <% Html.Include("Header"); %>
     <div class="yui-g">    
-        <h2><%=T("Edit Page")%></h2>
-        <p class="bottomSpacer"><%=T("about setting up a page")%></p>
+        <h2><%=_Encoded("Edit Page")%></h2>
+        <p class="bottomSpacer"><%=_Encoded("about setting up a page")%></p>
         <%=Html.ValidationSummary() %>
     </div>
     <div class="yui-gc">
         <%using (Html.BeginForm()) {%>
         <div class="yui-u first">
-            <h3><%= T("Page Content") %></h3>
+            <h3><%=_Encoded("Page Content") %></h3>
             <ol>
                 <%=Html.EditorFor(m => m.Revision.Title, "inputTextLarge")%>
                 <%=Html.EditorFor(m => m.Revision.Slug, "inputTextPermalink")%>
                 
                 <%foreach (ContentItem content in Model.Revision.Contents) {%>
                 <label for="<%="Revision.Contents[" + content.ZoneName + "].Content" %>">
-                <%=T("Zone Name")%>: <%= content.ZoneName %></label>
+                <%=_Encoded("Zone Name")%>: <%= content.ZoneName %></label>
                 <%if (Model.Template != null && Model.Template.Zones.Contains(content.ZoneName) == false) {%>
                 <div class="warning">These contents are assigned to a zone that does not exist in the current template. Please delete it or copy it to another zone.</div>
                 <%}%>
@@ -36,7 +36,7 @@
             </ol>
         </div>
         <div class="yui-u sideBar">
-            <h3><%=T("Publish Settings") %></h3>
+            <h3><%=_Encoded("Publish Settings")%></h3>
             <fieldset>
             <ol class="formList">
                 <li><label for="Command_PublishNow"><%=Html.RadioButton("Command", "PublishNow", new { id = "Command_PublishNow" })%> Publish Now</label></li>

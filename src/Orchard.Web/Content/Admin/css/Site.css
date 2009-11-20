@@ -58,7 +58,7 @@ font-family: Frutiger, "Frutiger Linotype", Univers, Calibri, "Gill Sans", "Gill
 	text-decoration:none;
     padding: 3px 8px 3px 8px;
 	margin:20px 4px 0 4px;
-	background:url(../images/tableHeaderBackground.gif) repeat-x top left #dddfcb;
+	background:url(images/tableHeaderBackground.gif) repeat-x top left #dddfcb;
 	border:1px solid #d2d6c6;
 	color:#5a5b32;
 	cursor:pointer;
@@ -71,11 +71,11 @@ font-family: Frutiger, "Frutiger Linotype", Univers, Calibri, "Gill Sans", "Gill
 	min-width:960px;
 	display:block;
 	height:60px;
-	background:url(../images/background_header.jpg) no-repeat bottom right #8a8f7a;
+	background:url(images/background_header.jpg) no-repeat bottom right #8a8f7a;
 }
 
 #hd h1 a {
-	background:url(../images/orchardLogo.jpg) no-repeat;
+	background:url(images/orchardLogo.jpg) no-repeat;
 	float:left;
 	width:105px;
 	height:60px;
@@ -116,7 +116,7 @@ font-family: Frutiger, "Frutiger Linotype", Univers, Calibri, "Gill Sans", "Gill
 
 .leftNavMod h4 {
 	padding: 4px 4px 6px 8px;
-	background:url(../images/tableHeaderBackground.gif) repeat-x top left #dddfcb;
+	background:url(images/tableHeaderBackground.gif) repeat-x top left #dddfcb;
     cursor:pointer;
     }
 
@@ -218,7 +218,7 @@ input[button], button, .button {
 	padding: 0px 8px;
 	height: 26px;
 	margin:20px 4px 0 4px;
-	background:url(../images/tableHeaderBackground.gif) repeat-x top left #dddfcb;
+	background:url(images/tableHeaderBackground.gif) repeat-x top left #dddfcb;
 	border:1px solid #d2d6c6;
 	color:#5a5b32;
 	cursor:pointer;
@@ -292,7 +292,7 @@ thead, th {
 	font-size:100%; /*13px*/
 	font-weight:700;
 	text-align:left;
-	background:url(../images/tableHeaderBackground.gif) repeat-x top left #dddfcb;
+	background:url(images/tableHeaderBackground.gif) repeat-x top left #dddfcb;
 	overflow:hidden;
 }
 
