@@ -1,5 +1,7 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using Orchard.Models.Records;
 
 namespace Orchard.Models {
     public class ContentItem {
@@ -11,14 +13,17 @@ namespace Orchard.Models {
 
         public int Id { get; set; }
         public string ContentType { get; set; }
+        public ContentItemRecord ContentItemRecord { get; set; }
+
         public IEnumerable<IContentItemPart> Parts { get { return _parts; } }
 
-        public bool Has<TPart>() {
-            return _parts.Any(part => part is TPart);
+
+        public bool Has(Type partType) {
+            return _parts.Any(part => partType.IsAssignableFrom(part.GetType()));
         }
 
-        public TPart Get<TPart>() {
-            return _parts.OfType<TPart>().FirstOrDefault();
+        public IContentItemPart Get(Type partType) {
+            return _parts.FirstOrDefault(part => partType.IsAssignableFrom(part.GetType()));
         }
 
         public void Weld(IContentItemPart part) {

@@ -1,4 +1,5 @@
 <%@ Page Language="C#" Inherits="System.Web.Mvc.ViewPage<Orchard.DevTools.ViewModels.ContentDetailsViewModel>" %>
+<%@ Import Namespace="Orchard.Models"%>
 
 <%@ Import Namespace="System.Reflection" %>
 <%@ Import Namespace="Orchard.Mvc.Html" %>
@@ -36,13 +37,23 @@
                     <%=Html.Encode(" (" + partType.GetGenericArguments().First().Namespace + ")")%><%}
                       else {%><%=Html.Encode(partType.Name)%></span>
                     <%=Html.Encode( " (" + partType.Namespace + ")")%><%
-                                                                        }%>
+                                                                        }
+                      
+                      %>
                     <ul style="margin-left: 20px">
                         <%foreach (var prop in partType.GetProperties().Where(x => x.DeclaringType == partType)) {
                               var value = prop.GetValue(Model.Locate(partType), null);%>
                         <li style="font-weight: normal;">
                             <%=Html.Encode(prop.Name) %>:
                             <%=Html.Encode(value) %>
+                            <%var valueItem = value as ContentItem;
+                              if (valueItem == null && value is IContentItemPart) {
+                                  valueItem = (value as IContentItemPart).ContentItem;
+                              }
+                              if (valueItem != null) {
+                                  %><%=Html.ActionLink(valueItem.ContentType + " #" + valueItem.Id, "details", new { valueItem.Id }, new { })%><%
+                              }
+                              %>
                             <ul style="margin-left: 20px">
                                 <%if (value == null || prop.PropertyType.IsPrimitive || prop.PropertyType == typeof(string)) { }
                                   else if (typeof(IEnumerable).IsAssignableFrom(prop.PropertyType)) {

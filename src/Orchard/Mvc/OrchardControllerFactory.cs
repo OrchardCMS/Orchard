@@ -35,7 +35,7 @@ namespace Orchard.Mvc {
             return null;
         }
 
-        private static IContext GetRequestContainer(RouteData routeData) {
+        public static IContext GetRequestContainer(RouteData routeData) {
             object dataTokenValue;
             if (routeData != null &&
                 routeData.DataTokens != null &&

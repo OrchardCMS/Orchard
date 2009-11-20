@@ -20,14 +20,10 @@ todo: (heskew) rework how/what pages are assembled when we get into theming --%>
 </head>
 <body>
     <div id="banner" role="banner">
-        <h1><%=Html.ActionLink(_("Project Orchard"), "Index", new { Area = "", Controller = "Home" })%></h1>
-        <div><%=Html.ActionLink(_("Your Site"), "Index", new { Area = "", Controller = "Home" })%></div>
+        <h1><%=Html.ActionLink(T("Project Orchard").ToString(), "Index", new { Area = "", Controller = "Home" })%></h1>
+        <div><%=Html.ActionLink(T("Your Site").ToString(), "Index", new { Area = "", Controller = "Home" })%></div>
         <% if (Model.CurrentUser != null) {
-            %><div id="login"><%=_(
-                                  "User: {0} | {1}",
-                                  Model.CurrentUser.UserName, /* todo: (heskew) need some encode extension methods */
-                                  Html.ActionLink("Logout", "LogOff", new { Area = "", Controller = "Account" }).ToString()
-                                  )%></div><%
+            %><div id="login"><%=T("User")%><%=H(Model.CurrentUser.UserName)%> | <%=Html.ActionLink(T("Logout").ToString(), "LogOff", new { Area = "", Controller = "Account" }) %></div><%
             } %>
     </div>
     <div id="main" role="main">

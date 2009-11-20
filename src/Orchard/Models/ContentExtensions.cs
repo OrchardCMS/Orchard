@@ -16,35 +16,41 @@ namespace Orchard.Models {
         }
 
         public static T Get<T>(this IContentManager manager, int id) where T : class, IContentItemPart {
-            return manager.Get(id).Get<T>();
+            var contentItem = manager.Get(id);
+            return contentItem == null ? null : contentItem.Get<T>();
         }
 
         public static void Create(this IContentManager manager, IContentItemPart part) {
             manager.Create(part.ContentItem);
         }
 
-        public static bool Has<T>(this IContentItemPart part) {
-            return part.ContentItem.Has<T>();
+        public static bool Is<T>(this ContentItem contentItem) {
+            return contentItem == null ? false : contentItem.Has(typeof(T));
         }
-
-        public static T Get<T>(this IContentItemPart part) {
-            return part.ContentItem.Get<T>();
+        public static bool Has<T>(this ContentItem contentItem) {
+            return contentItem == null ? false : contentItem.Has(typeof(T));
+        }
+        public static T As<T>(this ContentItem contentItem) where T : class {
+            return contentItem == null ? null : (T)contentItem.Get(typeof(T));
+        }
+        public static T Get<T>(this ContentItem contentItem) where T : class {
+            return contentItem == null ? null : (T)contentItem.Get(typeof(T));
         }
 
         public static bool Is<T>(this IContentItemPart part) {
-            return part.ContentItem.Has<T>();
+            return part == null ? false : part.ContentItem.Has(typeof(T));
+        }
+        public static bool Has<T>(this IContentItemPart part) {
+            return part == null ? false : part.ContentItem.Has(typeof(T));
+        }
+        public static T As<T>(this IContentItemPart part) where T : class {
+            return part == null ? null : (T)part.ContentItem.Get(typeof(T));
+        }
+        public static T Get<T>(this IContentItemPart part) where T : class {
+            return part == null ? null : (T)part.ContentItem.Get(typeof(T));
         }
 
-        public static T As<T>(this IContentItemPart part) {
-            return part.ContentItem.Get<T>();
-        }
 
-        public static bool Is<T>(this ContentItem contentItem) {
-            return contentItem.Has<T>();
-        }
-        public static T As<T>(this ContentItem contentItem) {
-            return contentItem.Get<T>();
-        }
 
     }
 }

@@ -40,10 +40,17 @@ namespace Orchard.Core.Common.Models {
             }
         }
 
-        void LoadOwnerModel(LoadContentContext context, CommonPart instance) {
-            if (instance.Record.OwnerId != 0) {
-                instance.Owner = _contentManager.Get(instance.Record.OwnerId).As<IUser>();
-            }
+        protected override void UpdateEditors(UpdateContentContext context) {
+            var part = context.ContentItem.As<CommonPart>();
+            if (part==null)
+                return;
+
+            part.Record.ModifiedUtc = _clock.UtcNow;
+        }
+
+        void LoadOwnerModel(LoadContentContext context, CommonPart part) {
+            part.LoadOwner(() => _contentManager.Get<IUser>(part.Record.OwnerId));
+            part.LoadContainer(() => part.Record.Container == null ? null : _contentManager.Get(part.Record.Container.Id));
         }
     }
 }

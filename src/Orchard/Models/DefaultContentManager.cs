@@ -63,12 +63,16 @@ namespace Orchard.Models {
             if (contentItemRecord == null)
                 return null;
 
-            // create a context with a new instance to load
+            // allocate instance and set record property
+            var contentItem = New(contentItemRecord.ContentType.Name);
+            contentItem.ContentItemRecord = contentItemRecord;
+
+            // create a context with a new instance to load            
             var context = new LoadContentContext {
                 Id = contentItemRecord.Id,
                 ContentType = contentItemRecord.ContentType.Name,
                 ContentItemRecord = contentItemRecord,
-                ContentItem = New(contentItemRecord.ContentType.Name)
+                ContentItem = contentItem
             };
 
             // set the id
@@ -89,6 +93,7 @@ namespace Orchard.Models {
             // produce root record to determine the model id
             var modelRecord = new ContentItemRecord { ContentType = AcquireContentTypeRecord(contentItem.ContentType) };
             _contentItemRepository.Create(modelRecord);
+            contentItem.ContentItemRecord = modelRecord;
 
             // build a context with the initialized instance to create
             var context = new CreateContentContext {

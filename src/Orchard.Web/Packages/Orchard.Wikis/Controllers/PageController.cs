@@ -1,9 +1,11 @@
 using System;
 using System.Linq;
 using System.Web.Mvc;
+using Orchard.Core.Common.Models;
 using Orchard.Data;
 using Orchard.Models;
 using Orchard.Models.Driver;
+using Orchard.Settings;
 using Orchard.Wikis.Models;
 using Orchard.Wikis.ViewModels;
 
@@ -39,10 +41,13 @@ namespace Orchard.Wikis.Controllers
             return View(new PageCreateViewModel());
         }
 
+        public ISite CurrentSite { get; set; }
+
         [HttpPost]
         public ActionResult Create(PageCreateViewModel model) {
             var page = _contentManager.New<WikiPage>("wikipage");
             page.Record.Name = model.Name;
+            page.As<CommonPart>().Container = CurrentSite.ContentItem;
             _contentManager.Create(page);
             return RedirectToAction("show", new {page.ContentItem.Id});
         }

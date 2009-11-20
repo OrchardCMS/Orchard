@@ -6,28 +6,28 @@ using Orchard.Security;
 
 namespace Orchard.Wikis.Controllers {
     public class AdminController : Controller {
-        private readonly IContentManager _contentManager;
+        //private readonly IContentManager _contentManager;
 
-        public AdminController(IContentManager contentManager) {
-            _contentManager = contentManager;
-        }
+        //public AdminController(IContentManager contentManager) {
+        //    _contentManager = contentManager;
+        //}
 
-        public ActionResult Index() {
-            return View(new AdminViewModel());
-        }
+        //public ActionResult Index() {
+        //    return View(new AdminViewModel());
+        //}
 
-        public IUser CurrentUser { get; set; }
+        //public IUser CurrentUser { get; set; }
 
-        public ActionResult Create() {
-            var page = _contentManager.New("wikipage");
-            _contentManager.Create(page);
+        //public ActionResult Create() {
+        //    var page = _contentManager.New("wikipage");
+        //    _contentManager.Create(page);
             
-            return RedirectToAction("View", new{page.Id});
-        }
+        //    return RedirectToAction("View", new{page.Id});
+        //}
 
-        public ActionResult View(int id) {
-            var page = _contentManager.Get(id).As<CommonPart>();
-            return View(page);
-        }
+        //public ActionResult View(int id) {
+        //    var page = _contentManager.Get(id).As<CommonPart>();
+        //    return View(page);
+        //}
     }
 }

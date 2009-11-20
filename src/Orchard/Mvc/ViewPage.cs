@@ -3,20 +3,26 @@ using Orchard.Localization;
 
 namespace Orchard.Mvc {
     public class ViewPage<TModel> : System.Web.Mvc.ViewPage<TModel> {
-        public string _(string textHint)
-        {
-            return new LocalizedString(textHint).ToString();
+        public ViewPage() {
+            T = NullLocalizer.Instance;
         }
-        public string _(string textHint, params string[] formatTokens)
-        {
-            return string.Format(_(textHint), formatTokens);
+
+        public override void RenderView(ViewContext viewContext) {
+            T = LocalizationUtilities.Resolve(viewContext, AppRelativeVirtualPath);
+            base.RenderView(viewContext);
         }
-        public MvcHtmlString _Encoded(string textHint)
-        {
-            return MvcHtmlString.Create(Html.Encode(_(textHint)));
+
+        public Localizer T { get; set; }
+
+        public MvcHtmlString H(string value) {
+            return MvcHtmlString.Create(Html.Encode(value));
+        }
+
+        public MvcHtmlString _Encoded(string textHint) {
+            return MvcHtmlString.Create(Html.Encode(T(textHint)));
         }
         public MvcHtmlString _Encoded(string textHint, params string[] formatTokens) {
-            return MvcHtmlString.Create(Html.Encode(_(textHint, formatTokens)));
+            return MvcHtmlString.Create(Html.Encode(T(textHint, formatTokens)));
         }
     }
 }

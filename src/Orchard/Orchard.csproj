@@ -121,6 +121,7 @@
     <Compile Include="Data\Conventions\CascadeAllDeleteOrphanAttribute.cs" />
     <Compile Include="Localization\IText.cs" />
     <Compile Include="Localization\LocalizationModule.cs" />
+    <Compile Include="Localization\LocalizationUtilities.cs" />
     <Compile Include="Localization\Localizer.cs" />
     <Compile Include="Localization\LocalizedString.cs" />
     <Compile Include="Localization\NullLocalizer.cs" />

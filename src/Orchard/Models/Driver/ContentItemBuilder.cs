@@ -2,7 +2,7 @@
 
 namespace Orchard.Models.Driver {
     public class ContentItemBuilder {
-        private ContentItem _item;
+        private readonly ContentItem _item;
 
         public ContentItemBuilder(string contentType) {
             _item = new ContentItem { ContentType = contentType };
