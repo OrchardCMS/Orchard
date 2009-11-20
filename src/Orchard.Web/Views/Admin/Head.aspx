@@ -19,13 +19,14 @@ todo: (heskew) rework how/what pages are assembled when we get into theming --%>
     <script type="text/javascript">tinyMCE.init({ theme: "advanced", mode: "textareas", plugins: "fullscreen,autoresize", theme_advanced_toolbar_location: "top", theme_advanced_toolbar_align: "left", theme_advanced_buttons3_add: "fullscreen" });</script>
 </head>
 <body>
-    <div id="banner" role="banner">
+    <div id="header" role="banner">
         <h1><%=Html.ActionLink(T("Project Orchard").ToString(), "Index", new { Area = "", Controller = "Home" })%></h1>
-        <div><%=Html.ActionLink(T("Your Site").ToString(), "Index", new { Area = "", Controller = "Home" })%></div>
-        <% if (Model.CurrentUser != null) {
-            %><div id="login"><%=T("User")%><%=H(Model.CurrentUser.UserName)%> | <%=Html.ActionLink(T("Logout").ToString(), "LogOff", new { Area = "", Controller = "Account" }) %></div><%
+        <div id="site"><%=Html.ActionLink(T("Your Site").ToString(), "Index", new { Area = "", Controller = "Home" })%></div>
+        <% if (Model.CurrentUser != null) { //todo: (heskew) localize the string format "User: <username> | a:logoff"
+            %><div id="login"><%=T("User")%>: <%=H(Model.CurrentUser.UserName)%> | <%=Html.ActionLink(T("Logout").ToString(), "LogOff", new { Area = "", Controller = "Account" }) %></div><%
             } %>
     </div>
-    <div id="main" role="main">
-        <div id="content">
+    <div id="content">
+        <div id="navshortcut"><a href="#navigation"><%=T("Skip to navigation") %></a></div>
+        <div id="main" role="main">
             <% Html.RenderPartial("Messages", Model.Messages); %>

@@ -6,13 +6,15 @@ body {
 	color:#5a5b32;
     font-family:Frutiger, "Frutiger Linotype", Univers, Calibri, "Gill Sans", "Gill Sans MT", "Myriad Pro", Myriad, "DejaVu Sans Condensed", "Liberation Sans", "Nimbus Sans L", Tahoma, Geneva, "Helvetica Neue", Helvetica, Arial, sans-serif;
     font-size:62.5%; /* 10px */
+    max-width:120.4em;
+    margin:0 auto 1em;
     min-width:96em; /* 960px */
 }
 body#preview {
     min-width:0;
 }
-#main {
-    font-size:1.2em; /* 12px */
+#content {
+    background:#f9faf5;
 }
 
 /* Headings and defaults
@@ -64,14 +66,14 @@ a.linkButton, a.linkButton:visited {
 
 /* Header - Branding and Login  
 ----------------------------------------------------------*/
-#banner {
+#header {
 	background:#8a8f7a url(images/background_header.jpg) no-repeat bottom right;
 	height:60px;
 }
-#banner h1 {
+#header h1 {
     float:left;
 }
-#banner h1 a {
+#header h1 a {
 	background:url(images/orchardLogo.jpg) no-repeat;
 	display:block;
 	height:60px;
@@ -80,24 +82,56 @@ a.linkButton, a.linkButton:visited {
 	width:105px;
 }
 
-#hd a, #hd a:visited, #hd a:active {
-	display:block;
+#site, #login {
+    font-size:1.5em;
+}
+
+#site a, #site a:visited, #site a:active {
+	color:#e2e4dd;
+	float:left;
+	line-height:2.2em;
+	padding:14px 0 0 6px;
 	position:relative;
-	padding:14px 0 0 12px;
-	color: #e2e4dd;
 }
 
 #login{
-	float:right;
-	display:block;
-	margin:20px 20px 0 0;
 	color:#1a1505;
+	display:block;
+	float:right;
+	margin:20px 20px 0 0;
+	white-space:nowrap;
 }
 
-#login a, #login a:visited, #login a:active {color: #e2e4dd; display:inline; padding:0px;}
+#login a, #login a:visited, #login a:active {
+    color:#e2e4dd;
+    padding:0;
+}
+#login a:hover, #login a:focus {
+    color:#ffea9b;
+}
 
-#login a:hover {color:#ffea9b;}
 
+/* temp rough structure */
+#header, #footer {
+    width:100%;
+}
+#header {
+    overflow:hidden;
+}
+#content {
+    overflow:auto;
+    padding:1.4em;
+}
+#main {
+    display:inline;
+    float:right;
+    width:77.41%;
+}
+#navigation {
+    display:inline;
+    float:left;
+    width:20.93%;
+}
 
 /* Left navigation pane
 ----------------------------------------------------------*/
@@ -386,17 +420,11 @@ ul.horizontal li a, ul.horizontal li a:visited, ul.horizontal li a:active, ol.ho
 .separator {border-bottom:1px dashed #E4E7DC; margin-bottom:8px; padding-bottom:2px;}
 
 /*TODO - Remove roundCorners class*/
-table, textarea, #bd, .button, .inputText, .inputTextLarge, .inputTextPermalink, .linkButton, .leftNavMod, div.confirmation, div.warning, div.critical, .roundCorners {
-
-	-moz-border-radius-bottomleft:4px;
-	-moz-border-radius-bottomright:4px;
-	-moz-border-radius-topleft:4px;
-	-moz-border-radius-topright:4px;
-	
-	-webkit-border-top-left-radius: 4px;
-	-webkit-border-top-right-radius: 4px;
-	-webkit-border-bottom-left-radius: 4px;
-	-webkit-border-bottom-right-radius: 4px;
+table, textarea, #content, .button, .inputText, .inputTextLarge,
+.inputTextPermalink, .linkButton, .leftNavMod, div.confirmation,
+div.warning, div.critical, .roundCorners {
+	-moz-border-radius:4px;
+	-webkit-border-top-radius:4px;
 }
 
 

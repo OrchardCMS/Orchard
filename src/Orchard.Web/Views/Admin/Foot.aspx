@@ -1,8 +1,7 @@
 <%@ Page Language="C#" Inherits="System.Web.Mvc.ViewPage<AdminViewModel>" %>
 <%@ Import Namespace="Orchard.Mvc.ViewModels"%>
-        </div><%-- #content --%>
-        <%-- Navigation --%>
-        <div id="navigation">
+        </div><%-- #main --%>
+        <div id="navigation" role="navigation">
             <div class="leftNavMod">
                 <h4>Dashboard</h4>
             </div>
@@ -15,6 +14,7 @@
                 }
               }%>
         </div>
-    </div><%-- #main --%>
+    </div><%-- #content --%>
+    <div id="footer" role="contentinfo"></div><%-- #contentinfo --%>
 </body>
 </html>
