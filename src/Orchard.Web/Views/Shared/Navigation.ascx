@@ -7,6 +7,6 @@
         <li>
             <%= Html.ActionLink("About", "About", "Home", new { Area = "" }, new{})%></li>
         <li>
-            <%= Html.ActionLink("Admin", "Index", new{Area="Orchard.CmsPages", Controller="Admin"})%></li>
+            <%= Html.ActionLink("Admin", "Index", new{Area="Orchard.Media", Controller="Admin"})%></li>
     </ul>
 </div>
