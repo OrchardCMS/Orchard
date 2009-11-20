@@ -13,6 +13,7 @@ namespace Orchard.Comments.Models {
         public virtual bool EnableCommentsOnPosts { get; set; }
         public virtual bool EnableSpamProtection { get; set; }
         public virtual string AkismetKey { get; set; }
+        public virtual string AkismetUrl { get; set; }
     }
 
     public class CommentSettingsHandler : ContentHandler {

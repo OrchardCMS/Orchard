@@ -32,6 +32,7 @@ namespace Orchard.Comments.Services {
         public bool ValidateComment(Comment comment) {
             CommentSettingsRecord commentSettingsRecord = CurrentSite.As<CommentSettings>().Record;
             string akismetKey = commentSettingsRecord.AkismetKey;
+            string akismetUrl = commentSettingsRecord.AkismetUrl;
             bool enableSpamProtection = commentSettingsRecord.EnableSpamProtection;
             if (enableSpamProtection == false) {
                 return true;
@@ -40,7 +41,10 @@ namespace Orchard.Comments.Services {
                 _notifer.Information(T("Please configure your Akismet key for spam protection"));
                 return true;
             }
-            Akismet akismetApi = new Akismet(akismetKey, "http://www.orchardproject.net", null);
+            if (String.IsNullOrEmpty(akismetUrl)) {
+                akismetUrl = "http://www.orchardproject.net";
+            }
+            Akismet akismetApi = new Akismet(akismetKey, akismetUrl, null);
             AkismetComment akismetComment = new AkismetComment {
                 CommentAuthor = comment.Author,
                 CommentAuthorEmail = comment.Email,

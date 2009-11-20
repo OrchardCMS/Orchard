@@ -26,4 +26,9 @@
         <%= Html.EditorFor(x=>x.AkismetKey) %>
         <%= Html.ValidationMessage("AkismetKey", "*")%>
     </li>
+     <li>
+        <%= Html.LabelFor(x=>x.AkismetUrl) %>
+        <%= Html.EditorFor(x=>x.AkismetUrl) %>
+        <%= Html.ValidationMessage("AkismetUrl", "*")%>
+    </li>
 </ol>
