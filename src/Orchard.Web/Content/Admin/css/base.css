@@ -6,9 +6,10 @@ body {
 	color:#5a5b32;
     font-family:Frutiger, "Frutiger Linotype", Univers, Calibri, "Gill Sans", "Gill Sans MT", "Myriad Pro", Myriad, "DejaVu Sans Condensed", "Liberation Sans", "Nimbus Sans L", Tahoma, Geneva, "Helvetica Neue", Helvetica, Arial, sans-serif;
     font-size:62.5%; /* 10px */
-    max-width:120.4em;
+    /*max-width:120.4em;*/
     margin:0 auto 1em;
     min-width:96em; /* 960px */
+    padding:0 .4em;
 }
 body#preview {
     min-width:0;
@@ -26,15 +27,15 @@ h1, h2, h3, h4, h5, h6, legend {
     font-weight:normal;
 }
 
-h1 { font-size:2.4em; } /* 24px */
-h2 { font-size:2.1em; } /* 21px */
-h3 { font-size:1.8em; } /* 18px */
-h4 { font-size:1.6em; } /* 16px */
-h5 { font-size:1.5em; } /* 15px */
-h6 { font-size:1.4em; } /* 14px */
+h1 { font-size:2.8em; } /* 28px */
+h2 { font-size:2.4em; } /* 24px */
+h3 { font-size:2em; } /* 20px */
+h4 { font-size:1.8em; } /* 18px */
+h5 { font-size:1.6em; } /* 16px */
+h6, p, label, input, select, th, td { font-size:1.5em; } /* 15px */
 
 p {
-    margin:4em;
+    margin:4px;
 }
 strong {
     font-weight:700;
@@ -47,6 +48,7 @@ a, a:link, a:visited {
 }
 a:hover, a:active, a:focus {
     color:#1e5d7d;
+    outline:0;
     text-decoration:underline;
 }
 
@@ -77,7 +79,7 @@ a.linkButton, a.linkButton:visited {
 	background:url(images/orchardLogo.jpg) no-repeat;
 	display:block;
 	height:60px;
-	margin:-10px 0 0 18px;
+	margin:-10px 0 0 14px;
 	text-indent:-9999px;
 	width:105px;
 }
@@ -90,7 +92,7 @@ a.linkButton, a.linkButton:visited {
 	color:#e2e4dd;
 	float:left;
 	line-height:2.2em;
-	padding:14px 0 0 6px;
+	padding:14px 0 0 12px;
 	position:relative;
 }
 
@@ -101,7 +103,6 @@ a.linkButton, a.linkButton:visited {
 	margin:20px 20px 0 0;
 	white-space:nowrap;
 }
-
 #login a, #login a:visited, #login a:active {
     color:#e2e4dd;
     padding:0;
@@ -125,51 +126,64 @@ a.linkButton, a.linkButton:visited {
 #main {
     display:inline;
     float:right;
-    width:77.41%;
+    width:83.06%;
 }
 #navigation {
     display:inline;
     float:left;
-    width:20.93%;
+    width:15.28%;
 }
 
-/* Left navigation pane
+/* Navigation
 ----------------------------------------------------------*/
+#navshortcut {
+    height:0;
+    overflow:hidden;
+    width:0;
+}
 
-.leftNavMod {
-	/*border:1px #bdb791 solid; Old border color*/
+#navigation li {
+	background:#fff;
 	border:1px solid #d2d6c6;
-	margin: 10px 0 14px 0;
-	background:#FFF;
-	}
-
-.leftNavMod h4 {
-	padding: 4px 4px 6px 8px;
-	background:url(images/tableHeaderBackground.gif) repeat-x top left #dddfcb;
-    cursor:pointer;
-    }
-
-/* Unordered list links in left navigation pane
-----------------------------------------------------------*/
-
-.leftNavMod ul a {
+	margin:10px 0 14px 0;
+}
+#navigation ul li {
+    border:0;
+    margin:0;
+}
+#navigation li h4 {
+	background:#dddfcb url(images/tableHeaderBackground.gif) repeat-x top left;
+	padding:4px 4px 6px 8px;
+}
+#navigation ul a {
 	color:#5a5b32;
 	display:block;
+	font-size:1.5em;
 	height:28px;
 	line-height:28px;
-	padding:0px 0px 0px 12px;
+	padding:0 0 0 12px;
 	text-decoration:none;
 }
-
-.leftNavMod ul a:visited{
+/* todo: (heskew) what's the point of a :visited color for an admin nav?
+#navigation ul a:visited{
     color: #2b2b2b;
-}
-
-.leftNavMod ul a:hover {
-	color: #3e4301;
+} */
+#navigation ul a:hover, #navigation ul a:focus {
 	background:#f0ecd2;
+	color: #3e4301;
+	outline:0;
 	text-decoration:underline;
 }
+
+/* Content
+----------------------------------------------------------*/
+#content h2 {
+    border-bottom:1px dashed #e4e7dc;
+    margin:3px 0 8px;
+    padding:0 0 2px;
+}
+
+
 
 /* Confirmations;
 ----------------------------------------------------------*/
@@ -225,8 +239,7 @@ legend {
 
 select, textarea, #PublishLaterDate, .inputText{
 	font-family: Frutiger, "Frutiger Linotype", Univers, Calibri, "Gill Sans", "Gill Sans MT", "Myriad Pro", Myriad, "DejaVu Sans Condensed", "Liberation Sans", "Nimbus Sans L", Tahoma, Geneva, "Helvetica Neue", Helvetica, Arial, sans-serif;
-	font-size:102%;
-	margin:4px 4px 4px 0;
+	margin:4px;
 	padding:2px;
 	border:1px solid #d2d6c6;
 	color:#5a5b32;
@@ -291,7 +304,6 @@ ol.actions .button {margin:4px 4px 4px -8px;}
 
 ol.actions label {
 	margin:6px 0 0 0;
-	font-size:112%;
 	}
 
 .filterActions {
@@ -318,7 +330,6 @@ tbody
 }
 
 thead, th {
-	font-size:100%; /*13px*/
 	font-weight:700;
 	text-align:left;
 	background:url(images/tableHeaderBackground.gif) repeat-x top left #dddfcb;
@@ -420,8 +431,9 @@ ul.horizontal li a, ul.horizontal li a:visited, ul.horizontal li a:active, ol.ho
 .separator {border-bottom:1px dashed #E4E7DC; margin-bottom:8px; padding-bottom:2px;}
 
 /*TODO - Remove roundCorners class*/
-table, textarea, #content, .button, .inputText, .inputTextLarge,
-.inputTextPermalink, .linkButton, .leftNavMod, div.confirmation,
+#content, #navigation li,
+table, textarea, .button, .inputText, .inputTextLarge,
+.inputTextPermalink, .linkButton, div.confirmation,
 div.warning, div.critical, .roundCorners {
 	-moz-border-radius:4px;
 	-webkit-border-top-radius:4px;

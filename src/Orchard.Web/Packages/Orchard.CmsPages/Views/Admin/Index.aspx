@@ -29,7 +29,7 @@ string SplitDateTime(DateTime dt)
         <ol class="horizontal actions floatLeft">
             <li>
                 <label class="floatLeft" for="publishActions">
-                    Actions:</label>
+                    Actions: </label>
                 <select id="publishActions" name="<%=Html.NameOf(m => m.Options.BulkAction)%>">
                     <%=Html.SelectOption(Model.Options.BulkAction, PageIndexBulkAction.None, "Choose action...")%>
                     <%=Html.SelectOption(Model.Options.BulkAction, PageIndexBulkAction.PublishNow, "Publish Now")%>
@@ -57,7 +57,7 @@ string SplitDateTime(DateTime dt)
                 <input class="button roundCorners" type="submit" name="submit.Filter" value="Filter"/>
             </li>
         </ol>
-        <%=Html.ActionLink("Add a page", "Create", new {}, new {@class="floatRight topSpacer"}) %>
+        <p><%=Html.ActionLink("Add a page", "Create", new {}, new {@class="floatRight topSpacer"}) %></p>
         <table id="pluginListTable" cellspacing="0" class="clearLayout" summary="This is a table of the PageEntries currently available for use in your application.">
             <colgroup>
                 <col id="Actions" />
@@ -121,7 +121,7 @@ string SplitDateTime(DateTime dt)
             <% pageIndex++;
             }%>
         </table>
-        <%=Html.ActionLink("Add a page", "Create", new {}, new {@class="floatRight bottomSpacer"}) %>
+        <p><%=Html.ActionLink("Add a page", "Create", new {}, new {@class="floatRight bottomSpacer"}) %></p>
     </div>
     <% Html.EndForm(); %>
 <% Html.Include("Foot"); %>
