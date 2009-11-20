@@ -66,7 +66,11 @@
                                 <% else {%> Approved <% } %>
                                 </td>
                                 <td><%= commentEntry.Comment.UserName %></td>
-			                    <td><%= commentEntry.Comment.CommentText == null ? String.Empty : commentEntry.Comment.CommentText.Substring(32) %></td>
+			                    <td>
+			                    <% if (commentEntry.Comment.CommentText != null) {%>
+			                        <%= commentEntry.Comment.CommentText.Length > 23 ? commentEntry.Comment.CommentText.Substring(0, 24) : commentEntry.Comment.CommentText %>
+			                    <% } %> 
+			                    </td>
 				                <td><%= commentEntry.Comment.CommentDate %></td>
 				                <td>Link to commented item</td>
                             </tr>

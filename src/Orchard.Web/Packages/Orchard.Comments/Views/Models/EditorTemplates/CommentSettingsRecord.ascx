@@ -16,4 +16,14 @@
         <%= Html.EditorFor(x=>x.EnableCommentsOnPosts) %>
         <%= Html.ValidationMessage("EnableCommentsOnPosts", "*")%>
     </li>
+    <li>
+        <%= Html.LabelFor(x=>x.EnableSpamProtection) %>
+        <%= Html.EditorFor(x=>x.EnableSpamProtection) %>
+        <%= Html.ValidationMessage("EnableSpamProtection", "*")%>
+    </li>
+     <li>
+        <%= Html.LabelFor(x=>x.AkismetKey) %>
+        <%= Html.EditorFor(x=>x.AkismetKey) %>
+        <%= Html.ValidationMessage("AkismetKey", "*")%>
+    </li>
 </ol>
