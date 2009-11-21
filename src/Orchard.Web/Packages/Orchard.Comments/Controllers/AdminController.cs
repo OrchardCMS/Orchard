@@ -136,6 +136,131 @@ namespace Orchard.Comments.Controllers {
             }
         }
 
+        public ActionResult Details(int id, CommentDetailsOptions options) {
+            // Default options
+            if (options == null)
+                options = new CommentDetailsOptions();
+
+            // Filtering
+            IEnumerable<Comment> comments;
+            try {
+                switch (options.Filter) {
+                    case CommentDetailsFilter.All:
+                        comments = _commentService.GetCommentsForCommentedContent(id);
+                        break;
+                    case CommentDetailsFilter.Approved:
+                        comments = _commentService.GetCommentsForCommentedContent(id, CommentStatus.Approved);
+                        break;
+                    case CommentDetailsFilter.Spam:
+                        comments = _commentService.GetCommentsForCommentedContent(id, CommentStatus.Spam);
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
+                var entries = comments.Select(comment => CreateCommentEntry(comment)).ToList();
+                var model = new CommentsDetailsViewModel {
+                    Comments = entries,
+                    Options = options,
+                    DisplayNameForCommentedItem = _commentService.GetDisplayForCommentedContent(id).DisplayText,
+                    CommentedItemId = id,
+                };
+                return View(model);
+            }
+            catch (Exception exception) {
+                _notifier.Error(T("Listing comments failed: " + exception.Message));
+                return Index(new CommentIndexOptions());
+            }
+        }
+
+        [HttpPost]
+        [FormValueRequired("submit.BulkEdit")]
+        public ActionResult Details(FormCollection input) {
+            var viewModel = new CommentsDetailsViewModel { Comments = new List<CommentEntry>(), Options = new CommentDetailsOptions() };
+            UpdateModel(viewModel, input.ToValueProvider());
+
+            try {
+                IEnumerable<CommentEntry> checkedEntries = viewModel.Comments.Where(c => c.IsChecked);
+                switch (viewModel.Options.BulkAction) {
+                    case CommentDetailsBulkAction.None:
+                        break;
+                    case CommentDetailsBulkAction.MarkAsSpam:
+                        if (!_authorizer.Authorize(Permissions.ModerateComment, T("Couldn't moderate comment")))
+                            return new HttpUnauthorizedResult();
+                        //TODO: Transaction
+                        foreach (CommentEntry entry in checkedEntries) {
+                            _commentService.MarkCommentAsSpam(entry.Comment.Id);
+                        }
+                        break;
+                    case CommentDetailsBulkAction.Delete:
+                        if (!_authorizer.Authorize(Permissions.ModerateComment, T("Couldn't delete comment")))
+                            return new HttpUnauthorizedResult();
+
+                        foreach (CommentEntry entry in checkedEntries) {
+                            _commentService.DeleteComment(entry.Comment.Id);
+                        }
+                        break;
+
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
+            }
+            catch (Exception exception) {
+                _notifier.Error(T("Editing comments failed: " + exception.Message));
+                return Details(viewModel.CommentedItemId, viewModel.Options);
+            }
+
+            return RedirectToAction("Details", new { viewModel.CommentedItemId, viewModel.Options });
+        }
+
+        public ActionResult Close(int commentedItemId) {
+            try {
+                if (!_authorizer.Authorize(Permissions.CloseComment, T("Couldn't close comments")))
+                    return new HttpUnauthorizedResult();
+                _commentService.CloseCommentsForCommentedContent(commentedItemId);
+                return RedirectToAction("Index");
+            }
+            catch (Exception exception) {
+                _notifier.Error(T("Closing Comments failed: " + exception.Message));
+                return RedirectToAction("Index");
+            }
+        }
+
+        public ActionResult Edit(int id) {
+            try {
+                Comment comment = _commentService.GetComment(id);
+                var viewModel = new CommentsEditViewModel {
+                    CommentText = comment.CommentText,
+                    Email = comment.Email,
+                    Id = comment.Id,
+                    Name = comment.Author,
+                    SiteName = comment.SiteName
+                };
+                return View(viewModel);
+
+            }
+            catch (Exception exception) {
+                _notifier.Error(T("Editing comment failed: " + exception.Message));
+                return Index(new CommentIndexOptions());
+            }
+        }
+
+        [AcceptVerbs(HttpVerbs.Post)]
+        public ActionResult Edit(FormCollection input) {
+            var viewModel = new CommentsEditViewModel();
+            try {
+                UpdateModel(viewModel, input.ToValueProvider());
+                if (!_authorizer.Authorize(Permissions.ModerateComment, T("Couldn't edit comment")))
+                    return new HttpUnauthorizedResult();
+
+                _commentService.UpdateComment(viewModel.Id, viewModel.Name, viewModel.Email, viewModel.SiteName, viewModel.CommentText);
+                return RedirectToAction("Index");
+            }
+            catch (Exception exception) {
+                _notifier.Error(T("Editing Comment failed: " + exception.Message));
+                return View(viewModel);
+            }
+        }
+
         private CommentEntry CreateCommentEntry(Comment comment) {
             return new CommentEntry {
                 Comment = comment,

@@ -13,6 +13,11 @@ namespace Orchard.Comments.Models {
         public virtual int CommentedOn { get; set; }
     }
 
+    public class ClosedComments {
+        public virtual int Id { get; set; }
+        public virtual int ContentItemId { get; set; }
+    }
+
     public enum CommentStatus {
         Approved,
         Spam

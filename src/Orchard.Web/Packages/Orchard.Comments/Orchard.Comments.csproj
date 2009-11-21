@@ -75,10 +75,14 @@
     <Compile Include="Services\CommentService.cs" />
     <Compile Include="Services\CommentValidator.cs" />
     <Compile Include="ViewModels\CommentsCreateViewModel.cs" />
+    <Compile Include="ViewModels\CommentsDetailsViewModel.cs" />
+    <Compile Include="ViewModels\CommentsEditViewModel.cs" />
     <Compile Include="ViewModels\CommentsIndexViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Package.txt" />
+    <Content Include="Views\Admin\Details.aspx" />
+    <Content Include="Views\Admin\Edit.aspx" />
     <Content Include="Views\Admin\Index.aspx" />
     <Content Include="Views\Admin\Create.aspx" />
     <Content Include="Views\Models\DisplayTemplates\HasComments.ascx" />
