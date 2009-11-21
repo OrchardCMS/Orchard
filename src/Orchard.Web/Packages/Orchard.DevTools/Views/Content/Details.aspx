@@ -27,7 +27,7 @@
                 <%=Model.Item.Id %></p>
             <p>
                 ContentType:
-                <%=Model.Item.ContentType%></p>
+                <%=Model.Item.ContentType%> <%=Html.ItemDisplayLink(Model.Item) %> <%=Html.ItemEditLink("edit", Model.Item) %></p>
             <h3>
                 Content Item Parts</h3>
             <ul>

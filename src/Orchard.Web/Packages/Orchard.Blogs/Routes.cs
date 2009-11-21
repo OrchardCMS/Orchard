@@ -27,22 +27,22 @@ namespace Orchard.Blogs {
                                                                                   },
                                                          new MvcRouteHandler())
                                                  },
-                             new RouteDescriptor {
-                                                     Route = new Route(
-                                                         "{blogSlug}",
-                                                         new RouteValueDictionary {
-                                                                                      {"area", "Orchard.Blogs"},
-                                                                                      {"controller", "Blog"},
-                                                                                      {"action", "Item"}
-                                                                                  },
-                                                         new RouteValueDictionary()/* {
-                                                                                      {"blogSlug", new IsBlogConstraint()}
-                                                                                  }*/,
-                                                         new RouteValueDictionary {
-                                                                                      {"area", "Orchard.Blogs"}
-                                                                                  },
-                                                         new MvcRouteHandler())
-                                                 }
+                             //new RouteDescriptor {
+                             //                        Route = new Route(
+                             //                            "{blogSlug}",
+                             //                            new RouteValueDictionary {
+                             //                                                         {"area", "Orchard.Blogs"},
+                             //                                                         {"controller", "Blog"},
+                             //                                                         {"action", "Item"}
+                             //                                                     },
+                             //                            new RouteValueDictionary()/* {
+                             //                                                         {"blogSlug", new IsBlogConstraint()}
+                             //                                                     }*/,
+                             //                            new RouteValueDictionary {
+                             //                                                         {"area", "Orchard.Blogs"}
+                             //                                                     },
+                             //                            new MvcRouteHandler())
+                             //                    }
                          };
         }
     }

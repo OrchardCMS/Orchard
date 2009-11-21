@@ -9,6 +9,7 @@ namespace Orchard.Models {
             _parts = new List<IContentItemPart>();
         }
 
+
         private readonly IList<IContentItemPart> _parts;
 
         public int Id { get; set; }
