@@ -9,27 +9,26 @@ namespace Orchard.Blogs.Services {
         private readonly IContentManager _contentManager;
         private readonly IRepository<BlogRecord> _repository;
 
-        public BlogService(IContentManager contentManager, IRepository<BlogRecord> blogPostRepository) {
+        public BlogService(IContentManager contentManager, IRepository<BlogRecord> repository) {
             _contentManager = contentManager;
-            _repository = blogPostRepository;
+            _repository = repository;
         }
 
         public Blog Get(string slug) {
-            BlogRecord record = _repository.Get(br => br.Slug == slug);
+            BlogRecord record = _repository.Get(br => br.Slug == slug && br.Enabled);
             ContentItem item = _contentManager.Get(record.Id);
 
             return item != null ? item.As<Blog>() : null;
         }
 
         public IEnumerable<Blog> Get() {
-            IEnumerable<BlogRecord> blogs =_repository.Fetch(br => br.Enabled, bpr => bpr.Asc(bpr2 => bpr2.Name));
+            IEnumerable<BlogRecord> blogs =_repository.Fetch(br => br.Enabled, br => br.Asc(br2 => br2.Name));
 
             return blogs.Select(br => _contentManager.Get(br.Id).As<Blog>());
         }
 
         public Blog CreateBlog(CreateBlogParams parameters) {
-            BlogRecord record = new BlogRecord()
-                                {Name = parameters.Name, Slug = parameters.Slug, Enabled = parameters.Enabled};
+            BlogRecord record = new BlogRecord() {Name = parameters.Name, Slug = parameters.Slug, Enabled = parameters.Enabled};
 
             //TODO: (erikpo) Need an extension method or something for this default behavior
             ContentItem contentItem = _contentManager.New("blog");

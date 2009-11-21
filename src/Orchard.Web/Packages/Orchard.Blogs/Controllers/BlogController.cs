@@ -16,8 +16,8 @@ namespace Orchard.Blogs.Controllers {
         }
 
         //TODO: (erikpo) Should think about moving the slug parameter and get call and null check up into a model binder or action filter
-        public ActionResult Item(string slug) {
-            Blog blog = _blogService.Get(slug);
+        public ActionResult Item(string blogSlug) {
+            Blog blog = _blogService.Get(blogSlug);
 
             if (blog == null)
                 return new NotFoundResult();

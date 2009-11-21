@@ -5,6 +5,6 @@
 <% Html.Include("Header"); %>
     <div class="yui-g">
         <h2>Blog</h2>
-        <div><%=Html.Encode(Model.Slug) %></div>
+        <div><%=Html.Encode(Model.Name) %></div>
     </div>
 <% Html.Include("Footer"); %>
