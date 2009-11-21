@@ -4,7 +4,7 @@ using Orchard.Models;
 using Orchard.Security;
 
 namespace Orchard.Core.Common.Models {
-    public class CommonPart : ContentPartForRecord<CommonRecord> {
+    public class CommonPart : ContentPart<CommonRecord> {
         private readonly Lazy<IUser> _owner = new Lazy<IUser>();
         private readonly Lazy<IContent> _container = new Lazy<IContent>();
 

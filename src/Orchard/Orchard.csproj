@@ -148,7 +148,7 @@
     <Compile Include="Models\Driver\ContentProvider.cs" />
     <Compile Include="Models\Driver\ActivatingContentContext.cs" />
     <Compile Include="Models\Driver\GetEditorsContext.cs" />
-    <Compile Include="Models\Driver\StorageFilterForRecord.cs" />
+    <Compile Include="Models\Driver\StorageFilter.cs" />
     <Compile Include="Models\Driver\StorageFilterBase.cs" />
     <Compile Include="Models\Driver\TemplateFilterBase.cs" />
     <Compile Include="Models\Driver\TemplateFilterForRecord.cs" />
@@ -158,7 +158,6 @@
     <Compile Include="Models\ContentExtensions.cs" />
     <Compile Include="Models\ContentPart.cs" />
     <Compile Include="Models\IContent.cs" />
-    <Compile Include="Models\ContentPartForRecord.cs" />
     <Compile Include="Models\Records\ContentPartRecord.cs" />
     <Compile Include="Models\Records\ContentTypeRecord.cs" />
     <Compile Include="Models\Records\ContentItemRecord.cs" />

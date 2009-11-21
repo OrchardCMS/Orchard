@@ -20,20 +20,17 @@ namespace Orchard.Blogs.Services {
         }
 
         public IEnumerable<Blog> Get() {
-            IEnumerable<BlogRecord> blogs =_repository.Fetch(br => br.Enabled, br => br.Asc(br2 => br2.Name));
+            IEnumerable<BlogRecord> blogs = _repository.Fetch(br => br.Enabled, br => br.Asc(br2 => br2.Name));
 
-            return blogs.Select(br => _contentManager.Get(br.Id).As<Blog>());
+            return blogs.Select(br => _contentManager.Get<Blog>(br.Id));
         }
 
         public Blog CreateBlog(CreateBlogParams parameters) {
-            BlogRecord record = new BlogRecord() {Name = parameters.Name, Slug = parameters.Slug, Enabled = parameters.Enabled};
-
-            //TODO: (erikpo) Need an extension method or something for this default behavior
-            Blog blog = _contentManager.New<Blog>("blog");
-            blog.Record = record;
-            _contentManager.Create(blog);
-
-            return blog;
+            return _contentManager.Create<Blog>("blog", init => {
+                init.Record.Name = parameters.Name;
+                init.Record.Slug = parameters.Slug;
+                init.Record.Enabled = parameters.Enabled;
+            });
         }
     }
 }

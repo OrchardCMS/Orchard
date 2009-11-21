@@ -30,16 +30,12 @@ namespace Orchard.Users.Services {
 
         public IUser CreateUser(CreateUserParams createUserParams) {
             Logger.Information("CreateUser {0} {1}", createUserParams.Username, createUserParams.Email);
-            var record = new UserRecord {
-                UserName = createUserParams.Username,
-                Email = createUserParams.Email
-            };
-            SetPassword(record, createUserParams.Password);
-
-            var user = _contentManager.New("user");
-            user.As<User>().Record = record;
-            _contentManager.Create(user);
-            return user.As<IUser>();
+            
+            return _contentManager.Create<User>("user", init => {
+                init.Record.UserName = createUserParams.Username;
+                init.Record.Email = createUserParams.Email;
+                SetPassword(init.Record, createUserParams.Password);
+            });
         }
 
         public IUser GetUser(string username) {
@@ -47,7 +43,7 @@ namespace Orchard.Users.Services {
             if (userRecord == null) {
                 return null;
             }
-            return _contentManager.Get(userRecord.Id).As<IUser>();
+            return _contentManager.Get<IUser>(userRecord.Id);
         }
 
         public IUser ValidateUser(string username, string password) {
@@ -55,7 +51,7 @@ namespace Orchard.Users.Services {
             if (userRecord == null || ValidatePassword(userRecord, password) == false)
                 return null;
 
-            return _contentManager.Get(userRecord.Id).As<IUser>();
+            return _contentManager.Get<IUser>(userRecord.Id);
         }
 
 

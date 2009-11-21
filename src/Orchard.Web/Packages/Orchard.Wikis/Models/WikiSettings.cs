@@ -14,8 +14,8 @@ namespace Orchard.Wikis.Models {
 
     public class WikiSettingsProvider : ContentProvider {
         public WikiSettingsProvider(IRepository<WikiSettingsRecord> repository) {
-            Filters.Add(new ActivatingFilter<ContentPartForRecord<WikiSettingsRecord>>("site"));
-            Filters.Add(new StorageFilterForRecord<WikiSettingsRecord>(repository) { AutomaticallyCreateMissingRecord = true });
+            Filters.Add(new ActivatingFilter<ContentPart<WikiSettingsRecord>>("site"));
+            Filters.Add(new StorageFilter<WikiSettingsRecord>(repository) { AutomaticallyCreateMissingRecord = true });
             Filters.Add(new TemplateFilterForRecord<WikiSettingsRecord>("WikiSettings"));
         }
     }

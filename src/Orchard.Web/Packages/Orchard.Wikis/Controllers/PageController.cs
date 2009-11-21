@@ -45,11 +45,11 @@ namespace Orchard.Wikis.Controllers
 
         [HttpPost]
         public ActionResult Create(PageCreateViewModel model) {
-            var page = _contentManager.New<WikiPage>("wikipage");
-            page.Record.Name = model.Name;
-            page.As<CommonPart>().Container = CurrentSite.ContentItem;
-            _contentManager.Create(page);
-            return RedirectToAction("show", new {page.ContentItem.Id});
+            var page = _contentManager.Create<WikiPage>("wikipage", item => {
+                item.Record.Name = model.Name;
+                item.As<CommonPart>().Container = CurrentSite.ContentItem;
+            });
+            return RedirectToAction("show", new { page.ContentItem.Id });
         }
 
 

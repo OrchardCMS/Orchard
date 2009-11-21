@@ -25,12 +25,12 @@ namespace Orchard.Core.Settings.Services {
             string applicationName = HttpContext.Current.Request.ApplicationPath;
             SiteSettingsRecord record = _siteSettingsRepository.Get(x => x.SiteUrl == applicationName);
             if (record == null) {
-                SiteSettings site = _contentManager.New("site").As<SiteSettings>();
-                site.Record.SiteUrl = applicationName;
-                _contentManager.Create(site);
+                ISite site = _contentManager.Create<SiteSettings>("site", item => {
+                    item.Record.SiteUrl = applicationName;
+                });
                 return site;
             }
-            return _contentManager.Get(record.Id).As<ISite>();
+            return _contentManager.Get<ISite>(record.Id);
         }
 
         #endregion

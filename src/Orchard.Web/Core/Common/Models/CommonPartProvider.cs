@@ -22,7 +22,7 @@ namespace Orchard.Core.Common.Models {
             _contentManager = contentManager;
 
             AddOnCreating<CommonPart>(SetCreateTimesAndAuthor);
-            Filters.Add(new StorageFilterForRecord<CommonRecord>(repository));
+            Filters.Add(new StorageFilter<CommonRecord>(repository));
             AddOnLoaded<CommonPart>(LoadOwnerModel);
         }
 

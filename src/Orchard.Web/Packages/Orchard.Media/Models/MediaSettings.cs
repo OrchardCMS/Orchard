@@ -5,7 +5,7 @@ using Orchard.Models.Records;
 using Orchard.UI.Models;
 
 namespace Orchard.Media.Models {
-    public class MediaSettings : ContentPartForRecord<MediaSettingsRecord> {
+    public class MediaSettings : ContentPart<MediaSettingsRecord> {
     }
 
     public class MediaSettingsRecord : ContentPartRecord {
@@ -15,7 +15,7 @@ namespace Orchard.Media.Models {
     public class MediaSettingsProvider : ContentProvider {
         public MediaSettingsProvider(IRepository<MediaSettingsRecord> repository) {
             Filters.Add(new ActivatingFilter<MediaSettings>("site"));
-            Filters.Add(new StorageFilterForRecord<MediaSettingsRecord>(repository) { AutomaticallyCreateMissingRecord = true });
+            Filters.Add(new StorageFilter<MediaSettingsRecord>(repository) { AutomaticallyCreateMissingRecord = true });
         }
 
         protected override void GetEditors(GetEditorsContext context) {

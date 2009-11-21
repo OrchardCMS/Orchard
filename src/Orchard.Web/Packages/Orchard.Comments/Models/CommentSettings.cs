@@ -4,7 +4,7 @@ using Orchard.Models.Driver;
 using Orchard.Models.Records;
 
 namespace Orchard.Comments.Models {
-    public class CommentSettings : ContentPartForRecord<CommentSettingsRecord> {
+    public class CommentSettings : ContentPart<CommentSettingsRecord> {
     }
 
     public class CommentSettingsRecord : ContentPartRecord {
@@ -19,7 +19,7 @@ namespace Orchard.Comments.Models {
     public class CommentSettingsProvider : ContentProvider {
         public CommentSettingsProvider(IRepository<CommentSettingsRecord> repository) {
             Filters.Add(new ActivatingFilter<CommentSettings>("site"));
-            Filters.Add(new StorageFilterForRecord<CommentSettingsRecord>(repository) { AutomaticallyCreateMissingRecord = true });
+            Filters.Add(new StorageFilter<CommentSettingsRecord>(repository) { AutomaticallyCreateMissingRecord = true });
             Filters.Add(new TemplateFilterForRecord<CommentSettingsRecord>("CommentSettings"));
         }
     }

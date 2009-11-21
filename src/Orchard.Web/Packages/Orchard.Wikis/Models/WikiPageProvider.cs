@@ -9,7 +9,7 @@ namespace Orchard.Wikis.Models {
             Filters.Add(new ActivatingFilter<CommonPart>("wikipage"));
             Filters.Add(new ActivatingFilter<RoutablePart>("wikipage"));
             Filters.Add(new ActivatingFilter<BodyPart>("wikipage"));
-            Filters.Add(new StorageFilterForRecord<WikiPageRecord>(wikiPageRepository) { AutomaticallyCreateMissingRecord = true });
+            Filters.Add(new StorageFilter<WikiPageRecord>(wikiPageRepository) { AutomaticallyCreateMissingRecord = true });
         }
     }
 }
