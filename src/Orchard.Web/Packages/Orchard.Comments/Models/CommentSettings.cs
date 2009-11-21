@@ -16,8 +16,8 @@ namespace Orchard.Comments.Models {
         public virtual string AkismetUrl { get; set; }
     }
 
-    public class CommentSettingsHandler : ContentHandler {
-        public CommentSettingsHandler(IRepository<CommentSettingsRecord> repository) {
+    public class CommentSettingsProvider : ContentProvider {
+        public CommentSettingsProvider(IRepository<CommentSettingsRecord> repository) {
             Filters.Add(new ActivatingFilter<CommentSettings>("site"));
             Filters.Add(new StorageFilterForRecord<CommentSettingsRecord>(repository) { AutomaticallyCreateMissingRecord = true });
             Filters.Add(new TemplateFilterForRecord<CommentSettingsRecord>("CommentSettings"));

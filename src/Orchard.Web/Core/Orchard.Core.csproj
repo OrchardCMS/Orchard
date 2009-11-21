@@ -61,18 +61,18 @@
     <Reference Include="System.Web.Mobile" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Common\Models\CommonPartHandler.cs" />
+    <Compile Include="Common\Models\CommonPartProvider.cs" />
     <Compile Include="Common\Models\CommonPart.cs" />
-    <Compile Include="Common\Models\ContentPartHandler.cs" />
-    <Compile Include="Common\Models\ContentPart.cs" />
+    <Compile Include="Common\Models\BodyPartProvider.cs" />
+    <Compile Include="Common\Models\BodyPart.cs" />
     <Compile Include="Common\Models\RoutablePart.cs" />
-    <Compile Include="Common\Models\RoutablePartHandler.cs" />
+    <Compile Include="Common\Models\RoutablePartProvider.cs" />
     <Compile Include="Common\Records\CommonRecord.cs" />
     <Compile Include="Common\Records\RoutableRecord.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Settings\AdminMenu.cs" />
     <Compile Include="Settings\Controllers\AdminController.cs" />
-    <Compile Include="Settings\Models\SiteSettingsHandler.cs" />
+    <Compile Include="Settings\Models\SiteSettingsProvider.cs" />
     <Compile Include="Settings\Models\SiteSettings.cs" />
     <Compile Include="Settings\Records\SiteSettingsRecord.cs" />
     <Compile Include="Settings\Services\SiteService.cs" />

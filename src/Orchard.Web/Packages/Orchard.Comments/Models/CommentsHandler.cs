@@ -6,7 +6,7 @@ using Orchard.Models.Driver;
 using Orchard.UI.Models;
 
 namespace Orchard.Comments.Models {
-    public class HasComments : ContentItemPart {
+    public class HasComments : ContentPart {
         public HasComments() {
             Comments = new List<Comment>();
         }
@@ -14,10 +14,10 @@ namespace Orchard.Comments.Models {
         public IEnumerable<Comment> Comments { get; set; }
     }
 
-    public class HasCommentsHandler : ContentHandler {
+    public class HasCommentsProvider : ContentProvider {
         private readonly IRepository<Comment> _commentsRepository;
 
-        public HasCommentsHandler(IRepository<Comment> commentsRepository) {
+        public HasCommentsProvider(IRepository<Comment> commentsRepository) {
             _commentsRepository = commentsRepository;
             Filters.Add(new ActivatingFilter<HasComments>("wikipage"));
         }

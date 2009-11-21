@@ -6,14 +6,14 @@ using Orchard.Security;
 namespace Orchard.Core.Common.Models {
     public class CommonPart : ContentPartForRecord<CommonRecord> {
         private readonly Lazy<IUser> _owner = new Lazy<IUser>();
-        private readonly Lazy<ContentItem> _container = new Lazy<ContentItem>();
+        private readonly Lazy<IContent> _container = new Lazy<IContent>();
 
         public IUser Owner {
             get { return _owner.Value; }
             set { _owner.Value = value; }
         }
 
-        public ContentItem Container {
+        public IContent Container {
             get { return _container.Value; }
             set { _container.Value = value; }
         }
@@ -21,7 +21,7 @@ namespace Orchard.Core.Common.Models {
         public void LoadOwner(Func<IUser> loader) {
             _owner.Loader(loader);
         }
-        public void LoadContainer(Func<ContentItem> loader) {
+        public void LoadContainer(Func<IContent> loader) {
             _container.Loader(loader);
         }
     }

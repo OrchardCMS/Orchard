@@ -12,7 +12,7 @@ namespace Orchard.Models.Driver {
             return _item;
         }
 
-        public ContentItemBuilder Weld<TPart>() where TPart : class, IContentItemPart, new() {
+        public ContentItemBuilder Weld<TPart>() where TPart : ContentPart, new() {
             var part = new TPart();
             _item.Weld(part);
             return this;

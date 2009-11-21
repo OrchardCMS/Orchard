@@ -37,7 +37,7 @@ namespace Orchard.DevTools.Controllers
             var model = new ContentDetailsViewModel {
                                                         Item = _contentManager.Get(id)
                                                     };
-            model.PartTypes = model.Item.Parts
+            model.PartTypes = model.Item.ContentItem.Parts
                 .Select(x => x.GetType())
                 .SelectMany(x => AllTypes(x))
                 .Distinct();
@@ -49,7 +49,7 @@ namespace Orchard.DevTools.Controllers
 
         static IEnumerable<Type> AllTypes(Type type) {
             var scan = type;
-            while(scan != null && scan != typeof(Object) && scan != typeof(ContentItemPart)) {
+            while(scan != null && scan != typeof(Object) && scan != typeof(ContentPart)) {
                 yield return scan;
                 scan = scan.BaseType;
             }

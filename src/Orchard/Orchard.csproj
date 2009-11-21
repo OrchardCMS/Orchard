@@ -145,19 +145,19 @@
     <Compile Include="Models\Driver\CreateContentContext.cs" />
     <Compile Include="Models\Driver\LoadContentContext.cs" />
     <Compile Include="Models\Driver\ContentItemBuilder.cs" />
-    <Compile Include="Models\Driver\ContentHandler.cs" />
+    <Compile Include="Models\Driver\ContentProvider.cs" />
     <Compile Include="Models\Driver\ActivatingContentContext.cs" />
     <Compile Include="Models\Driver\GetEditorsContext.cs" />
     <Compile Include="Models\Driver\StorageFilterForRecord.cs" />
     <Compile Include="Models\Driver\StorageFilterBase.cs" />
     <Compile Include="Models\Driver\TemplateFilterBase.cs" />
     <Compile Include="Models\Driver\TemplateFilterForRecord.cs" />
-    <Compile Include="Models\IContentItemDisplay.cs" />
+    <Compile Include="Models\IContentDisplayInfo.cs" />
     <Compile Include="Models\IContentManager.cs" />
-    <Compile Include="Models\Driver\IContentHandler.cs" />
+    <Compile Include="Models\Driver\IContentProvider.cs" />
     <Compile Include="Models\ContentExtensions.cs" />
-    <Compile Include="Models\ContentItemPart.cs" />
-    <Compile Include="Models\IContentItemPart.cs" />
+    <Compile Include="Models\ContentPart.cs" />
+    <Compile Include="Models\IContent.cs" />
     <Compile Include="Models\ContentPartForRecord.cs" />
     <Compile Include="Models\Records\ContentPartRecord.cs" />
     <Compile Include="Models\Records\ContentTypeRecord.cs" />
@@ -222,6 +222,9 @@
     <Compile Include="Utility\ReflectOn.cs" />
     <Compile Include="Validation\JetBrains.Annotations.cs" />
     <Compile Include="IMapper.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Models\Diagram.cd" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

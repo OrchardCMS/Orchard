@@ -5,6 +5,6 @@ using System.Text;
 using Orchard.Models;
 
 namespace Orchard.Tests.Models.Stubs {
-    public class Styled : ContentItemPart {
+    public class Styled : ContentPart {
     }
 }

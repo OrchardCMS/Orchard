@@ -16,9 +16,7 @@ namespace Orchard.Blogs.Services {
 
         public Blog Get(string slug) {
             BlogRecord record = _repository.Get(br => br.Slug == slug && br.Enabled);
-            ContentItem item = _contentManager.Get(record.Id);
-
-            return item != null ? item.As<Blog>() : null;
+            return _contentManager.Get<Blog>(record.Id);
         }
 
         public IEnumerable<Blog> Get() {
@@ -31,11 +29,11 @@ namespace Orchard.Blogs.Services {
             BlogRecord record = new BlogRecord() {Name = parameters.Name, Slug = parameters.Slug, Enabled = parameters.Enabled};
 
             //TODO: (erikpo) Need an extension method or something for this default behavior
-            ContentItem contentItem = _contentManager.New("blog");
-            contentItem.As<Blog>().Record = record;
-            _contentManager.Create(contentItem);
+            Blog blog = _contentManager.New<Blog>("blog");
+            blog.Record = record;
+            _contentManager.Create(blog);
 
-            return contentItem.As<Blog>();
+            return blog;
         }
     }
 }

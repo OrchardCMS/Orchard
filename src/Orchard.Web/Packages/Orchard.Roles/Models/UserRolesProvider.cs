@@ -11,12 +11,12 @@ using Orchard.UI.Models;
 using Orchard.UI.Notify;
 
 namespace Orchard.Roles.Models {
-    public class UserRolesHandler : ContentHandler {
+    public class UserRolesProvider : ContentProvider {
         private readonly IRepository<UserRolesRecord> _userRolesRepository;
         private readonly IRoleService _roleService;
         private readonly INotifier _notifier;
 
-        public UserRolesHandler(IRepository<UserRolesRecord> userRolesRepository, IRoleService roleService, INotifier notifier) {
+        public UserRolesProvider(IRepository<UserRolesRecord> userRolesRepository, IRoleService roleService, INotifier notifier) {
             _userRolesRepository = userRolesRepository;
             _roleService = roleService;
             _notifier = notifier;

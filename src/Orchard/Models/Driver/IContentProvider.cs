@@ -1,5 +1,5 @@
 ﻿namespace Orchard.Models.Driver {
-    public interface IContentHandler : IDependency {
+    public interface IContentProvider : IDependency {
         void Activating(ActivatingContentContext context);
         void Activated(ActivatedContentContext context);
         void Creating(CreateContentContext context);

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 
 namespace Orchard.Models.Driver {
-    public abstract class TemplateFilterBase<TPart> : IContentTemplateFilter where TPart : class, IContentItemPart {
+    public abstract class TemplateFilterBase<TPart> : IContentTemplateFilter where TPart : class, IContent {
 
         protected virtual void GetDisplays(GetDisplaysContext context, TPart instance) { }
         protected virtual void GetEditors(GetEditorsContext context, TPart instance) { }

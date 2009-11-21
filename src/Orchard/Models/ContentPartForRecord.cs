@@ -1,5 +1,5 @@
 namespace Orchard.Models {
-    public class ContentPartForRecord<TRecord> : ContentItemPart {
+    public class ContentPartForRecord<TRecord> : ContentPart {
         public TRecord Record { get; set; }
     }
 }

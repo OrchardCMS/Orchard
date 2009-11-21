@@ -3,8 +3,8 @@ using Orchard.UI.Models;
 
 namespace Orchard.Models.Driver {
     public class GetEditorsContext {
-        public GetEditorsContext(ContentItem part) {
-            ContentItem = part;
+        public GetEditorsContext(IContent content) {
+            ContentItem = content.ContentItem;
             Editors= new List<ModelTemplate>();
         }
         public ContentItem ContentItem { get; set; }
@@ -12,8 +12,8 @@ namespace Orchard.Models.Driver {
     }
 
     public class GetDisplaysContext {
-        public GetDisplaysContext(ContentItem part) {
-            ContentItem = part;
+        public GetDisplaysContext(IContent content) {
+            ContentItem = content.ContentItem;
             Displays = new List<ModelTemplate>();
         }
         public ContentItem ContentItem { get; set; }

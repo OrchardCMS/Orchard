@@ -3,7 +3,7 @@
 namespace Orchard.Models {
 
     public static class ContentExtensions {
-        public static T New<T>(this IContentManager manager, string contentType) where T : class, IContentItemPart {
+        public static T New<T>(this IContentManager manager, string contentType) where T : class, IContent {
             var contentItem = manager.New(contentType);
             if (contentItem == null)
                 return null;
@@ -15,12 +15,12 @@ namespace Orchard.Models {
             return part;
         }
 
-        public static T Get<T>(this IContentManager manager, int id) where T : class, IContentItemPart {
+        public static T Get<T>(this IContentManager manager, int id) where T : class, IContent {
             var contentItem = manager.Get(id);
             return contentItem == null ? null : contentItem.Get<T>();
         }
 
-        public static void Create(this IContentManager manager, IContentItemPart part) {
+        public static void Create(this IContentManager manager, IContent part) {
             manager.Create(part.ContentItem);
         }
 
@@ -37,16 +37,16 @@ namespace Orchard.Models {
             return contentItem == null ? null : (T)contentItem.Get(typeof(T));
         }
 
-        public static bool Is<T>(this IContentItemPart part) {
+        public static bool Is<T>(this IContent part) {
             return part == null ? false : part.ContentItem.Has(typeof(T));
         }
-        public static bool Has<T>(this IContentItemPart part) {
+        public static bool Has<T>(this IContent part) {
             return part == null ? false : part.ContentItem.Has(typeof(T));
         }
-        public static T As<T>(this IContentItemPart part) where T : class {
+        public static T As<T>(this IContent part) where T : class {
             return part == null ? null : (T)part.ContentItem.Get(typeof(T));
         }
-        public static T Get<T>(this IContentItemPart part) where T : class {
+        public static T Get<T>(this IContent part) where T : class {
             return part == null ? null : (T)part.ContentItem.Get(typeof(T));
         }
 

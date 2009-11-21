@@ -5,24 +5,24 @@ using Orchard.Models;
 
 namespace Orchard.Mvc.Html {
     public static class ContentItemExtensions {
-        public static MvcHtmlString ItemDisplayLink(this HtmlHelper html, string linkText, IContentItemPart item) {
+        public static MvcHtmlString ItemDisplayLink(this HtmlHelper html, string linkText, IContent item) {
             return ItemDisplayLink(html, linkText, item.ContentItem);
         }
 
-        public static MvcHtmlString ItemDisplayLink(this HtmlHelper html, IContentItemPart item) {
+        public static MvcHtmlString ItemDisplayLink(this HtmlHelper html, IContent item) {
             return ItemDisplayLink(html, item.ContentItem);
         }
 
-        public static MvcHtmlString ItemEditLink(this HtmlHelper html, string linkText, IContentItemPart item) {
+        public static MvcHtmlString ItemEditLink(this HtmlHelper html, string linkText, IContent item) {
             return ItemEditLink(html, linkText, item.ContentItem);
         }
 
-        public static MvcHtmlString ItemEditLink(this HtmlHelper html, IContentItemPart item) {
+        public static MvcHtmlString ItemEditLink(this HtmlHelper html, IContent item) {
             return ItemEditLink(html, item.ContentItem);
         }
 
         public static MvcHtmlString ItemDisplayLink(this HtmlHelper html, string linkText, ContentItem item) {
-            var display = item.As<IContentItemDisplay>();
+            var display = item.As<IContentDisplayInfo>();
             if (display == null)
                 return null;
 
@@ -35,7 +35,7 @@ namespace Orchard.Mvc.Html {
         }
 
         public static MvcHtmlString ItemEditLink(this HtmlHelper html, string linkText, ContentItem item) {
-            var display = item.As<IContentItemDisplay>();
+            var display = item.As<IContentDisplayInfo>();
             if (display == null)
                 return null;
 

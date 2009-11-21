@@ -12,8 +12,8 @@ namespace Orchard.Wikis.Models {
         public virtual string WikiEditTheme { get; set; }
     }
 
-    public class WikiSettingsHandler : ContentHandler {
-        public WikiSettingsHandler(IRepository<WikiSettingsRecord> repository) {
+    public class WikiSettingsProvider : ContentProvider {
+        public WikiSettingsProvider(IRepository<WikiSettingsRecord> repository) {
             Filters.Add(new ActivatingFilter<ContentPartForRecord<WikiSettingsRecord>>("site"));
             Filters.Add(new StorageFilterForRecord<WikiSettingsRecord>(repository) { AutomaticallyCreateMissingRecord = true });
             Filters.Add(new TemplateFilterForRecord<WikiSettingsRecord>("WikiSettings"));

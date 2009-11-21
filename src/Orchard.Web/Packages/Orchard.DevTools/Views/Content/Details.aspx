@@ -47,8 +47,8 @@
                             <%=Html.Encode(prop.Name) %>:
                             <%=Html.Encode(value) %>
                             <%var valueItem = value as ContentItem;
-                              if (valueItem == null && value is IContentItemPart) {
-                                  valueItem = (value as IContentItemPart).ContentItem;
+                              if (valueItem == null && value is IContent) {
+                                  valueItem = (value as IContent).ContentItem;
                               }
                               if (valueItem != null) {
                                   %><%=Html.ActionLink(valueItem.ContentType + " #" + valueItem.Id, "details", new { valueItem.Id }, new { })%><%

@@ -13,7 +13,7 @@ namespace Orchard.Comments.Services {
         IEnumerable<Comment> GetComments();
         IEnumerable<Comment> GetComments(CommentStatus status);
         Comment GetComment(int id);
-        IContentItemDisplay GetDisplayForCommentedContent(int id);
+        IContentDisplayInfo GetDisplayForCommentedContent(int id);
         void CreateComment(Comment comment);
         void MarkCommentAsSpam(int commentId);
         void DeleteComment(int commentId);
@@ -56,8 +56,8 @@ namespace Orchard.Comments.Services {
             return _commentRepository.Get(id);
         }
 
-        public IContentItemDisplay GetDisplayForCommentedContent(int id) {
-            return _contentManager.Get(id).As<IContentItemDisplay>();
+        public IContentDisplayInfo GetDisplayForCommentedContent(int id) {
+            return _contentManager.Get(id).As<IContentDisplayInfo>();
         }
 
         public void CreateComment(Comment comment) {

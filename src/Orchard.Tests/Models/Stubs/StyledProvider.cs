@@ -1,10 +1,10 @@
 ﻿using Orchard.Models.Driver;
 
 namespace Orchard.Tests.Models.Stubs {
-    public class FlavoredDriver : ContentHandler {
+    public class StyledProvider : ContentProvider {
         protected override void Activating(ActivatingContentContext context) {
-            if (context.ContentType == "beta" || context.ContentType == "alpha") {
-                context.Builder.Weld<Flavored>();
+            if (context.ContentType == "alpha") {
+                context.Builder.Weld<Styled>();
             }
         }
     }

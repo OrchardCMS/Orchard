@@ -22,16 +22,16 @@ namespace Orchard.Models {
             _contentTypeRepository = contentTypeRepository;
         }
 
-        private IEnumerable<IContentHandler> _drivers;
-        public IEnumerable<IContentHandler> Drivers {
+        private IEnumerable<IContentProvider> _drivers;
+        public IEnumerable<IContentProvider> Drivers {
             get {
                 if (_drivers == null)
-                    _drivers = _context.Resolve<IEnumerable<IContentHandler>>();
+                    _drivers = _context.Resolve<IEnumerable<IContentProvider>>();
                 return _drivers;
             }            
         }
 
-        public virtual ContentItem New(string contentType) {
+        public virtual IContent New(string contentType) {
 
             // create a new kernel for the model instance
             var context = new ActivatingContentContext {
@@ -55,7 +55,7 @@ namespace Orchard.Models {
             return context2.ContentItem;
         }
 
-        public virtual ContentItem Get(int id) {
+        public virtual IContent Get(int id) {
             // obtain root record to determine the model type
             var contentItemRecord = _contentItemRepository.Get(id);
 
@@ -64,15 +64,15 @@ namespace Orchard.Models {
                 return null;
 
             // allocate instance and set record property
-            var contentItem = New(contentItemRecord.ContentType.Name);
-            contentItem.ContentItemRecord = contentItemRecord;
+            var content = New(contentItemRecord.ContentType.Name);
+            content.ContentItem.Record = contentItemRecord;
 
             // create a context with a new instance to load            
             var context = new LoadContentContext {
                 Id = contentItemRecord.Id,
                 ContentType = contentItemRecord.ContentType.Name,
                 ContentItemRecord = contentItemRecord,
-                ContentItem = contentItem
+                ContentItem = content.ContentItem
             };
 
             // set the id
@@ -89,18 +89,18 @@ namespace Orchard.Models {
             return context.ContentItem;
         }
 
-        public void Create(ContentItem contentItem) {
+        public void Create(IContent content) {
             // produce root record to determine the model id
-            var modelRecord = new ContentItemRecord { ContentType = AcquireContentTypeRecord(contentItem.ContentType) };
+            var modelRecord = new ContentItemRecord { ContentType = AcquireContentTypeRecord(content.ContentItem.ContentType) };
             _contentItemRepository.Create(modelRecord);
-            contentItem.ContentItemRecord = modelRecord;
+            content.ContentItem.Record = modelRecord;
 
             // build a context with the initialized instance to create
             var context = new CreateContentContext {
                 Id = modelRecord.Id,
                 ContentType = modelRecord.ContentType.Name,
                 ContentItemRecord = modelRecord,
-                ContentItem = contentItem
+                ContentItem = content.ContentItem
             };
 
             // set the id
@@ -117,24 +117,24 @@ namespace Orchard.Models {
         }
 
 
-        public IEnumerable<ModelTemplate> GetDisplays(ContentItem contentItem) {
-            var context = new GetDisplaysContext(contentItem);
+        public IEnumerable<ModelTemplate> GetDisplays(IContent content) {
+            var context = new GetDisplaysContext(content);
             foreach (var driver in Drivers) {
                 driver.GetDisplays(context);
             }
             return context.Displays;
         }
 
-        public IEnumerable<ModelTemplate> GetEditors(ContentItem contentItem) {
-            var context = new GetEditorsContext(contentItem);
+        public IEnumerable<ModelTemplate> GetEditors(IContent content) {
+            var context = new GetEditorsContext(content);
             foreach (var driver in Drivers) {
                 driver.GetEditors(context);
             }
             return context.Editors;
         }
 
-        public IEnumerable<ModelTemplate> UpdateEditors(ContentItem contentItem, IUpdateModel updater) {
-            var context = new UpdateContentContext(contentItem, updater);
+        public IEnumerable<ModelTemplate> UpdateEditors(IContent content, IUpdateModel updater) {
+            var context = new UpdateContentContext(content, updater);
             foreach (var driver in Drivers) {
                 driver.UpdateEditors(context);
             }

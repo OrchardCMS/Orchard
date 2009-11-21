@@ -1,5 +1,5 @@
 namespace Orchard.Models {
-    public abstract class ContentItemPart : IContentItemPart {
+    public abstract class ContentPart : IContent {
         public ContentItem ContentItem { get; set; }
     }
 }

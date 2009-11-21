@@ -1,5 +1,5 @@
 namespace Orchard.Models.Driver {
-    public abstract class StorageFilterBase<TPart> : IContentStorageFilter where TPart : class, IContentItemPart {
+    public abstract class StorageFilterBase<TPart> : IContentStorageFilter where TPart : class, IContent {
 
         protected virtual void Activated(ActivatedContentContext context, TPart instance) { }
         protected virtual void Creating(CreateContentContext context, TPart instance) { }

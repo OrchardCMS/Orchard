@@ -1,6 +1,6 @@
 namespace Orchard.Models.Driver {
     public class UpdateContentContext : GetEditorsContext {
-        public UpdateContentContext(ContentItem contentItem, IUpdateModel updater) : base(contentItem) {
+        public UpdateContentContext(IContent content, IUpdateModel updater) : base(content) {
             Updater = updater;
         }
 

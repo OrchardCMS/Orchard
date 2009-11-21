@@ -4,12 +4,12 @@ using Orchard.UI.Models;
 
 namespace Orchard.Models {
     public interface IContentManager : IDependency {
-        ContentItem New(string contentType);
-        ContentItem Get(int id);
-        void Create(ContentItem contentItem);
+        IContent New(string contentType);
+        IContent Get(int id);
+        void Create(IContent contentItem);
 
-        IEnumerable<ModelTemplate> GetDisplays(ContentItem contentItem);
-        IEnumerable<ModelTemplate> GetEditors(ContentItem contentItem);
-        IEnumerable<ModelTemplate> UpdateEditors(ContentItem contentItem, IUpdateModel updater);
+        IEnumerable<ModelTemplate> GetDisplays(IContent contentItem);
+        IEnumerable<ModelTemplate> GetEditors(IContent contentItem);
+        IEnumerable<ModelTemplate> UpdateEditors(IContent contentItem, IUpdateModel updater);
     }
 }

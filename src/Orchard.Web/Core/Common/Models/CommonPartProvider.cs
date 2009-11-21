@@ -6,12 +6,12 @@ using Orchard.Security;
 using Orchard.Services;
 
 namespace Orchard.Core.Common.Models {
-    public class CommonPartHandler : ContentHandler {
+    public class CommonPartProvider : ContentProvider {
         private readonly IClock _clock;
         private readonly IAuthenticationService _authenticationService;
         private readonly IContentManager _contentManager;
 
-        public CommonPartHandler(
+        public CommonPartProvider(
             IRepository<CommonRecord> repository,
             IClock clock,
             IAuthenticationService authenticationService,

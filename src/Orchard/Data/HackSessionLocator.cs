@@ -68,7 +68,7 @@ namespace Orchard.Data {
                    type.GetProperty("Id").GetAccessors().All(x => x.IsVirtual) &&
                    !type.IsSealed &&
                    !type.IsAbstract &&
-                   !typeof(IContentItemPart).IsAssignableFrom(type);
+                   !typeof(IContent).IsAssignableFrom(type);
         }
 
         public ISession For(Type entityType) {

@@ -9,7 +9,7 @@ using Orchard.UI.Models;
 
 namespace Orchard.DevTools.ViewModels {
     public class ContentDetailsViewModel : BaseViewModel {
-        public ContentItem Item { get; set; }
+        public IContent Item { get; set; }
 
         public IEnumerable<Type> PartTypes { get; set; }
 
@@ -18,11 +18,7 @@ namespace Orchard.DevTools.ViewModels {
         public IEnumerable<ModelTemplate> Editors { get; set; }
 
         public object Locate(Type type) {
-            foreach(var part in Item.Parts) {
-                if (type.IsAssignableFrom(part.GetType()))
-                    return (part);
-            }
-            return null;
+            return Item.ContentItem.Get(type);
         }
     }
 }
