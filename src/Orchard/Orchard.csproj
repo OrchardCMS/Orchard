@@ -107,7 +107,6 @@
     <Compile Include="Data\Repository.cs" />
     <Compile Include="Environment\DefaultCompositionStrategy.cs" />
     <Compile Include="Environment\DefaultOrchardHost.cs" />
-    <Compile Include="Mvc\Results\MvcModule.cs" />
     <Compile Include="Mvc\OrchardControllerFactory.cs" />
     <Compile Include="Environment\HostContext.cs" />
     <Compile Include="Environment\IOrchardHost.cs" />
@@ -163,6 +162,7 @@
     <Compile Include="Models\Records\ContentTypeRecord.cs" />
     <Compile Include="Models\Records\ContentItemRecord.cs" />
     <Compile Include="Models\Driver\UpdateContentContext.cs" />
+    <Compile Include="Mvc\MvcModule.cs" />
     <Compile Include="Mvc\Html\HtmlHelperExtensions.cs" />
     <Compile Include="Mvc\Filters\FilterProvider.cs" />
     <Compile Include="Mvc\Filters\FilterResolvingActionInvoker.cs" />
@@ -171,7 +171,7 @@
     <Compile Include="Mvc\ModelBinders\IModelBinderPublisher.cs" />
     <Compile Include="Mvc\ModelBinders\KeyedListModelBinder.cs" />
     <Compile Include="Mvc\ModelBinders\ModelBinderDescriptor.cs" />
-    <Compile Include="Mvc\NotFoundResult.cs" />
+    <Compile Include="Mvc\Results\NotFoundResult.cs" />
     <Compile Include="Mvc\OrchardControllerIdentificationStrategy.cs" />
     <Compile Include="Mvc\Routes\RouteExtensions.cs" />
     <Compile Include="Mvc\ViewModels\AdminViewModel.cs" />
