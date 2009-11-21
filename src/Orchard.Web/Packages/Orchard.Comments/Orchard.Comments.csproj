@@ -69,6 +69,7 @@
     <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Models\Comment.cs" />
     <Compile Include="Models\CommentSettings.cs" />
+    <Compile Include="Models\CommentsHandler.cs" />
     <Compile Include="Permissions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\CommentService.cs" />
@@ -80,6 +81,7 @@
     <Content Include="Package.txt" />
     <Content Include="Views\Admin\Index.aspx" />
     <Content Include="Views\Admin\Create.aspx" />
+    <Content Include="Views\Models\DisplayTemplates\HasComments.ascx" />
     <Content Include="Views\Models\EditorTemplates\CommentSettingsRecord.ascx" />
     <Content Include="Web.config" />
     <Content Include="Views\Web.config" />

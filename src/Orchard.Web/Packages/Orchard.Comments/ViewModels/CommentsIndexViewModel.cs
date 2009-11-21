@@ -10,6 +10,7 @@ namespace Orchard.Comments.ViewModels {
 
     public class CommentEntry {
         public Comment Comment { get; set; }
+        public string CommentedOn { get; set; }
         public bool IsChecked { get; set; }
     }
 

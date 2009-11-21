@@ -3,6 +3,7 @@ using System.Linq;
 using Orchard.Comments.Models;
 using Orchard.Data;
 using Orchard.Logging;
+using Orchard.Models;
 using Orchard.Security;
 using Orchard.Settings;
 using Orchard.UI.Notify;
@@ -12,6 +13,7 @@ namespace Orchard.Comments.Services {
         IEnumerable<Comment> GetComments();
         IEnumerable<Comment> GetComments(CommentStatus status);
         Comment GetComment(int id);
+        IContentItemDisplay GetDisplayForCommentedContent(int id);
         void CreateComment(Comment comment);
         void MarkCommentAsSpam(int commentId);
         void DeleteComment(int commentId);
@@ -20,12 +22,18 @@ namespace Orchard.Comments.Services {
     public class CommentService : ICommentService {
         private readonly IRepository<Comment> _commentRepository;
         private readonly ICommentValidator _commentValidator;
+        private readonly IContentManager _contentManager;
         private readonly IAuthorizer _authorizer;
         private readonly INotifier _notifier;
 
-        public CommentService(IRepository<Comment> commentRepository, ICommentValidator commentValidator, IAuthorizer authorizer, INotifier notifier) {
+        public CommentService(IRepository<Comment> commentRepository, 
+                              ICommentValidator commentValidator,
+                              IContentManager contentManager,
+                              IAuthorizer authorizer, 
+                              INotifier notifier) {
             _commentRepository = commentRepository;
             _commentValidator = commentValidator;
+            _contentManager = contentManager;
             _authorizer = authorizer;
             _notifier = notifier;
             Logger = NullLogger.Instance;
@@ -46,6 +54,10 @@ namespace Orchard.Comments.Services {
 
         public Comment GetComment(int id) {
             return _commentRepository.Get(id);
+        }
+
+        public IContentItemDisplay GetDisplayForCommentedContent(int id) {
+            return _contentManager.Get(id).As<IContentItemDisplay>();
         }
 
         public void CreateComment(Comment comment) {

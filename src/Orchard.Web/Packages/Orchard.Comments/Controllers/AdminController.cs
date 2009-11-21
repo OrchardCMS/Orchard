@@ -109,7 +109,7 @@ namespace Orchard.Comments.Controllers {
         }
 
         [AcceptVerbs(HttpVerbs.Post)]
-        public ActionResult Create(FormCollection input) {
+        public ActionResult Create(FormCollection input, string returnUrl) {
             var viewModel = new CommentsCreateViewModel();
             try {
                 UpdateModel(viewModel, input.ToValueProvider());
@@ -121,9 +121,13 @@ namespace Orchard.Comments.Controllers {
                     CommentText = viewModel.CommentText,
                     Email = viewModel.Email,
                     SiteName = viewModel.SiteName,
-                    UserName = CurrentUser.UserName ?? "Anonymous"
+                    UserName = CurrentUser.UserName ?? "Anonymous",
+                    CommentedOn = viewModel.CommentedOn
                 };
                 _commentService.CreateComment(comment);
+                if (!String.IsNullOrEmpty(returnUrl)) {
+                    return Redirect(returnUrl);
+                }
                 return RedirectToAction("Index");
             }
             catch (Exception exception) {
@@ -132,9 +136,10 @@ namespace Orchard.Comments.Controllers {
             }
         }
 
-        private static CommentEntry CreateCommentEntry(Comment comment) {
+        private CommentEntry CreateCommentEntry(Comment comment) {
             return new CommentEntry {
                 Comment = comment,
+                CommentedOn = _commentService.GetDisplayForCommentedContent(comment.CommentedOn).DisplayText,
                 IsChecked = false,
             };
         }

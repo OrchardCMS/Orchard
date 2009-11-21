@@ -23,5 +23,4 @@ namespace Orchard.Comments.Models {
             Filters.Add(new TemplateFilterForRecord<CommentSettingsRecord>("CommentSettings"));
         }
     }
-
 }

@@ -7,7 +7,6 @@
     <div class="yui-g">
 						<h2 class="separator">Manage Comments</h2>
 						<%=Html.ValidationSummary() %>
-						<%=Html.ActionLink("Add a new comment", "Create", new {}, new {@class="floatRight topSpacer"}) %>
 						<ol class="horizontal actions floatLeft">
                         <li>
                             <label class="floatLeft" for="publishActions"> Actions:</label>
@@ -72,7 +71,7 @@
 			                    <% } %> 
 			                    </td>
 				                <td><%= commentEntry.Comment.CommentDate %></td>
-				                <td>Link to commented item</td>
+				                <td><%=Html.ActionLink(commentEntry.CommentedOn, "Details", new {}, new {@class="floatRight topSpacer"}) %></td>
                             </tr>
                             <%
                                 commentIndex++;
