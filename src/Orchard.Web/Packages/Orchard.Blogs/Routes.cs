@@ -1,11 +1,19 @@
 ﻿using System.Collections.Generic;
 using System.Web.Mvc;
 using System.Web.Routing;
+using Orchard.Blogs.Routing;
+using Orchard.Blogs.Services;
 using Orchard.Mvc.Routes;
 
 namespace Orchard.Blogs {
     public class Routes : IRouteProvider
     {
+        private readonly IBlogService _blogService;
+
+        public Routes(IBlogService blogService) {
+            _blogService = blogService;
+        }
+
         public void GetRoutes(ICollection<RouteDescriptor> routes) {
             foreach (var routeDescriptor in GetRoutes())
                 routes.Add(routeDescriptor);
@@ -27,22 +35,22 @@ namespace Orchard.Blogs {
                                                                                   },
                                                          new MvcRouteHandler())
                                                  },
-                             //new RouteDescriptor {
-                             //                        Route = new Route(
-                             //                            "{blogSlug}",
-                             //                            new RouteValueDictionary {
-                             //                                                         {"area", "Orchard.Blogs"},
-                             //                                                         {"controller", "Blog"},
-                             //                                                         {"action", "Item"}
-                             //                                                     },
-                             //                            new RouteValueDictionary()/* {
-                             //                                                         {"blogSlug", new IsBlogConstraint()}
-                             //                                                     }*/,
-                             //                            new RouteValueDictionary {
-                             //                                                         {"area", "Orchard.Blogs"}
-                             //                                                     },
-                             //                            new MvcRouteHandler())
-                             //                    }
+                             new RouteDescriptor {
+                                                     Route = new Route(
+                                                         "{blogSlug}",
+                                                         new RouteValueDictionary {
+                                                                                      {"area", "Orchard.Blogs"},
+                                                                                      {"controller", "Blog"},
+                                                                                      {"action", "Item"}
+                                                                                  },
+                                                         new RouteValueDictionary() {
+                                                                                      {"blogSlug", new IsBlogConstraint(_blogService)}
+                                                                                  },
+                                                         new RouteValueDictionary {
+                                                                                      {"area", "Orchard.Blogs"}
+                                                                                  },
+                                                         new MvcRouteHandler())
+                                                 }
                          };
         }
     }
