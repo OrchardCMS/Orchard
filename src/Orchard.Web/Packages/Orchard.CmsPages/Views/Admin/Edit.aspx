@@ -1,7 +1,7 @@
 <%@ Page Language="C#" Inherits="Orchard.Mvc.ViewPage<Orchard.CmsPages.ViewModels.PageEditViewModel>" %>
 <%@ Import Namespace="Orchard.CmsPages.Models"%>
 <%@ Import Namespace="Orchard.Mvc.Html" %>
-<% Html.Include("Header"); %>
+<% Html.Include("Head"); %>
     <div class="yui-g">    
         <h2><%=_Encoded("Edit Page")%></h2>
         <p class="bottomSpacer"><%=_Encoded("about setting up a page")%></p>
@@ -54,4 +54,4 @@
         </div>
         <%}/*EndForm*/%>
     </div>
-<% Html.Include("Footer"); %>
+<% Html.Include("Foot"); %>

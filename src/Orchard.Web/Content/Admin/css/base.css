@@ -1,4 +1,49 @@
-﻿html {
+﻿/* begin: reset
+   todo: (nheskew) pare down and combine with existing selectors where appropriate */
+/* http://meyerweb.com/eric/tools/css/reset/ */
+/* v1.0 | 20080212 */
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, font, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td {
+	border:0;
+	font-size:100%;
+	margin:0;
+	padding:0;
+	vertical-align:baseline;
+}
+ol, ul {
+	list-style:none;
+}
+blockquote, q {
+	quotes:none;
+}
+blockquote:before, blockquote:after,
+q:before, q:after {
+	content:'';
+	content:none;
+}
+:focus {
+	outline:0;
+}
+ins {
+	text-decoration:none;
+}
+del {
+	text-decoration:line-through;
+}
+table {
+	border-collapse:collapse;
+	border-spacing:0;
+}
+/* end: reset */
+
+html {
     background:#8a8f7a;
     color:#525e50;
 }
@@ -6,7 +51,7 @@ body {
 	color:#5a5b32;
     font-family:Frutiger, "Frutiger Linotype", Univers, Calibri, "Gill Sans", "Gill Sans MT", "Myriad Pro", Myriad, "DejaVu Sans Condensed", "Liberation Sans", "Nimbus Sans L", Tahoma, Geneva, "Helvetica Neue", Helvetica, Arial, sans-serif;
     font-size:62.5%; /* 10px */
-    /*max-width:120.4em;*/
+	line-height:1.6em;
     margin:0 auto 1em;
     min-width:96em; /* 960px */
     padding:0 .4em;
@@ -48,7 +93,6 @@ a, a:link, a:visited {
 }
 a:hover, a:active, a:focus {
     color:#1e5d7d;
-    outline:0;
     text-decoration:underline;
 }
 
@@ -79,7 +123,7 @@ a.linkButton, a.linkButton:visited {
 	background:url(images/orchardLogo.jpg) no-repeat;
 	display:block;
 	height:60px;
-	margin:-10px 0 0 14px;
+	margin:-11px 0 0 14px;
 	text-indent:-9999px;
 	width:105px;
 }
@@ -126,12 +170,16 @@ a.linkButton, a.linkButton:visited {
 #main {
     display:inline;
     float:right;
-    width:83.06%;
+    margin-left:-22em;
+    width:100%;
+}
+#main .wrapper {
+    margin-left:22em;
 }
 #navigation {
     display:inline;
     float:left;
-    width:15.28%;
+    width:20.5em;
 }
 
 /* Navigation
@@ -145,7 +193,7 @@ a.linkButton, a.linkButton:visited {
 #navigation li {
 	background:#fff;
 	border:1px solid #d2d6c6;
-	margin:10px 0 14px 0;
+	margin:10px 0 15px 0;
 }
 #navigation ul li {
     border:0;
@@ -153,7 +201,7 @@ a.linkButton, a.linkButton:visited {
 }
 #navigation li h4 {
 	background:#dddfcb url(images/tableHeaderBackground.gif) repeat-x top left;
-	padding:4px 4px 6px 8px;
+	padding:6px 4px 8px 8px;
 }
 #navigation ul a {
 	color:#5a5b32;
@@ -171,16 +219,16 @@ a.linkButton, a.linkButton:visited {
 #navigation ul a:hover, #navigation ul a:focus {
 	background:#f0ecd2;
 	color: #3e4301;
-	outline:0;
 	text-decoration:underline;
 }
 
 /* Content
 ----------------------------------------------------------*/
-#content h2 {
+#main h2, #main h3, #main h4 {
+    margin:.23em 0 1em;
+}
+#main h2 {
     border-bottom:1px dashed #e4e7dc;
-    margin:3px 0 8px;
-    padding:0 0 2px;
 }
 
 
@@ -218,7 +266,6 @@ div.confirmation, div.warning, div.critical {
 
 fieldset {
 	margin:10px;
-	padding:10px;
 	border:1px solid #d2d6c6;
 }
 

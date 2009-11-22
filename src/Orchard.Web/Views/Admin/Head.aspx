@@ -8,7 +8,6 @@ todo: (heskew) rework how/what pages are assembled when we get into theming --%>
     <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
     <%-- todo: (heskew) get this from the menu system
     --%><title>Admin :: Orchard</title>
-    <link href="<%=Page.ResolveClientUrl("~/Content/Admin/css/yui.reset-3.0.0.css") %>" rel="stylesheet" type="text/css" />
     <%-- todo: (heskew) same as scripts [below]
     --%><link href="<%=Page.ResolveClientUrl("~/Content/Admin/css/base.css") %>" rel="stylesheet" type="text/css" />
     <%-- todo: (heskew) this should come from the admin "page" (partial) 
@@ -29,4 +28,5 @@ todo: (heskew) rework how/what pages are assembled when we get into theming --%>
     <div id="content">
         <div id="navshortcut"><a href="#navigation"><%=T("Skip to navigation") %></a></div>
         <div id="main" role="main">
-            <% Html.RenderPartial("Messages", Model.Messages); %>
+            <div class="wrapper">
+                <% Html.RenderPartial("Messages", Model.Messages); %>

@@ -1,9 +1,9 @@
 <%@ Page Language="C#" Inherits="System.Web.Mvc.ViewPage<Orchard.CmsPages.ViewModels.ChooseTemplateViewModel>" %>
 <%@ Import Namespace="Orchard.CmsPages.Services.Templates"%>
 <%@ Import Namespace="Orchard.Mvc.Html" %>
-<% Html.Include("Header"); %>
+<% Html.Include("Head"); %>
     <div class="yui-u">
-        <h2 class="separator">Change Template</h2>
+        <h2>Change Template</h2>
         <p class="bottomSpacer">
             Select your layout from one of the templates below.</p>
     </div>
@@ -20,7 +20,7 @@
             <li>
             <ul>
             <li class="clearLayout">
-            <h4 class="separator"><%=Html.Encode(template.DisplayName)%></h4>
+            <h3><%=Html.Encode(template.DisplayName)%></h3>
             </li>
             <li>
             <label title="<%=Html.Encode(template.DisplayName)%>" for="TemplateName_<%=template.Name%>">
@@ -38,4 +38,4 @@
 
         <%}/*EndForm*/%>
     </div>
-<% Html.Include("Footer"); %>
+<% Html.Include("Foot"); %>

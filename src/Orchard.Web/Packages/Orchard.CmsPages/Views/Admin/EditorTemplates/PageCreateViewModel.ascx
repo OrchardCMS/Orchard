@@ -14,7 +14,7 @@
             <li>
             <ul>
             <li class="clearLayout">
-            <h4 class="separator"><%=Html.Encode(template.DisplayName)%></h4>
+            <h3><%=Html.Encode(template.DisplayName)%></h3>
             </li>
             <li>
             <label title="<%=Html.Encode(template.DisplayName)%>" for="TemplateName_<%=template.Name%>">

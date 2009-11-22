@@ -164,8 +164,6 @@
     <Content Include="Config\Diagnostics.config" />
     <Content Include="Content\Admin\css\base.css" />
     <Content Include="Content\Admin\css\Site.css" />
-    <Content Include="Content\Admin\css\yui.reset-3.0.0.min.css" />
-    <Content Include="Content\Admin\css\yui.reset-3.0.0.css" />
     <Content Include="Content\Images\headerBackground.gif" />
     <Content Include="Content\Images\header_background.gif" />
     <Content Include="Content\Images\innerheader_background.gif" />

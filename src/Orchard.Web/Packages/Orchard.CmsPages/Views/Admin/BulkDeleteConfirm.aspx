@@ -3,9 +3,9 @@
 <%@ Import Namespace="Orchard.Utility"%>
 <%@ Import Namespace="Orchard.CmsPages.Services.Templates"%>
 <%@ Import Namespace="Orchard.Mvc.Html" %>
-<% Html.Include("Header"); %>
+<% Html.Include("Head"); %>
     <div class="yui-u">
-        <h2 class="separator">Delete pages</h2>
+        <h2>Delete pages</h2>
         <p class="bottomSpacer">
             Are you sure you want to delete the pages?</p>
     </div>
@@ -34,4 +34,4 @@
             }%>
         <%}/*EndForm*/%>
     </div>
-<% Html.Include("Footer"); %>
+<% Html.Include("Foot"); %>

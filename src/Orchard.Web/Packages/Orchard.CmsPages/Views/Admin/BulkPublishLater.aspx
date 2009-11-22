@@ -3,10 +3,10 @@
 <%@ Import Namespace="Orchard.Utility"%>
 <%@ Import Namespace="Orchard.CmsPages.Services.Templates"%>
 <%@ Import Namespace="Orchard.Mvc.Html" %>
-<% Html.Include("Header"); %>
+<% Html.Include("Head"); %>
     <%using (Html.BeginForm()) { %>
     <div class="yui-u">
-        <h2 class="separator">Publish later</h2>
+        <h2>Publish later</h2>
         <p class="bottomSpacer">Enter the scheduled publication date:</p>
         <%=Html.EditorFor(m => m.Options.BulkPublishLaterDate)%>
     </div>
@@ -33,4 +33,4 @@
             }%>
     </div>
     <%}/*EndForm*/%>
-<% Html.Include("Footer"); %>
+<% Html.Include("Foot"); %>

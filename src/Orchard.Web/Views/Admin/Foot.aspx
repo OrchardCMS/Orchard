@@ -1,5 +1,6 @@
 <%@ Page Language="C#" Inherits="System.Web.Mvc.ViewPage<AdminViewModel>" %>
 <%@ Import Namespace="Orchard.Mvc.ViewModels"%>
+            </div><%-- .wrapper --%>
         </div><%-- #main --%>
         <ul id="navigation" role="navigation">
             <li class="first"><h4>Dashboard</h4></li>

@@ -1,9 +1,8 @@
 <%@ Page Language="C#" Inherits="System.Web.Mvc.ViewPage<System.Collections.Generic.IEnumerable<Orchard.CmsPages.Models.Page>>" %>
 <%@ Import Namespace="Orchard.Mvc.Html" %>
-<% Html.Include("Header"); %>
+<% Html.Include("Head"); %>
     <div class="yui-g">
-        <h2>
-            Export</h2>
+        <h2>Export</h2>
         <p class="bottomSpacer">
             Possible text about setting up a page goes here. Lorem ipsum dolor sit amet, consectetur
             adipiscing elit. Nulla erat turpis, blandit eget feugiat nec, tempus vel quam. Mauris
@@ -17,4 +16,4 @@
             <%} %></ol>
             </li><%} %></ol>
     </div>
-<% Html.Include("Footer"); %>
+<% Html.Include("Foot"); %>

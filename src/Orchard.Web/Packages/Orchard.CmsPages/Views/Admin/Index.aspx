@@ -19,8 +19,7 @@ string SplitDateTime(DateTime dt)
 <% Html.Include("Head"); %>
     <% Html.BeginForm(); %>
     <div class="yui-g">
-        <h2>
-            Manage Pages</h2>
+        <h2>Manage Pages</h2>
         <p class="bottomSpacer">
             Possible text about setting up a page goes here. Lorem ipsum dolor sit amet, consectetur
             adipiscing elit. Nulla erat turpis, blandit eget feugiat nec, tempus vel quam. Mauris
