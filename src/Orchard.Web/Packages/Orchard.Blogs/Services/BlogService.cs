@@ -16,7 +16,8 @@ namespace Orchard.Blogs.Services {
 
         public Blog Get(string slug) {
             BlogRecord record = _repository.Get(br => br.Slug == slug && br.Enabled);
-            return _contentManager.Get<Blog>(record.Id);
+
+            return record != null ?_contentManager.Get<Blog>(record.Id) : null;
         }
 
         public IEnumerable<Blog> Get() {
