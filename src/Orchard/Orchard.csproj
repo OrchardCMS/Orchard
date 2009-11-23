@@ -124,6 +124,7 @@
     <Compile Include="Localization\Localizer.cs" />
     <Compile Include="Localization\LocalizedString.cs" />
     <Compile Include="Localization\NullLocalizer.cs" />
+    <Compile Include="Models\Aspects\ICommonAspect.cs" />
     <Compile Include="Models\ContentItem.cs" />
     <Compile Include="Models\Driver\ActivatedContentContext.cs" />
     <Compile Include="Models\Driver\ActivatingFilter.cs" />

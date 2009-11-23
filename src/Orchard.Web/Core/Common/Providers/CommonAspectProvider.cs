@@ -2,6 +2,7 @@ using Orchard.Core.Common.Models;
 using Orchard.Core.Common.Records;
 using Orchard.Data;
 using Orchard.Models;
+using Orchard.Models.Aspects;
 using Orchard.Models.Driver;
 using Orchard.Security;
 using Orchard.Services;
@@ -22,10 +23,10 @@ namespace Orchard.Core.Common.Providers {
             _authenticationService = authenticationService;
             _contentManager = contentManager;
 
-            Filters.Add(new StorageFilter<CommonRecord>(repository));
+            AddOnActivated<CommonAspect>(PropertySetHandlers);
             AddOnCreating<CommonAspect>(DefaultTimestampsAndOwner);
             AddOnLoaded<CommonAspect>(LazyLoadHandlers);
-            AddOnActivated<CommonAspect>(PropertySetHandlers);
+            Filters.Add(new StorageFilter<CommonRecord>(repository));
         }
 
         void DefaultTimestampsAndOwner(CreateContentContext context, CommonAspect instance) {
@@ -39,9 +40,7 @@ namespace Orchard.Core.Common.Providers {
 
             // and use the current user as Owner
             if (instance.Record.OwnerId == 0) {
-                instance.Owner = _authenticationService.GetAuthenticatedUser();
-                if (instance.Owner != null)
-                    instance.Record.OwnerId = instance.Owner.Id;
+                ((ICommonAspect)instance).Owner = _authenticationService.GetAuthenticatedUser();
             }
         }
 
