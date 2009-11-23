@@ -22,13 +22,26 @@ namespace Orchard.CmsPages.Services {
         public PublishHistory History { get; set; }
     }
 
+    public class CreatePageParams {
+        public CreatePageParams(){}
+        public CreatePageParams(string title, string slug, string templateName) {
+            Title = title;
+            Slug = slug;
+            TemplateName = templateName;
+        }
+
+        public string Title { get; set; }
+        public string Slug { get; set; }
+        public string TemplateName { get; set; }
+    }
+
     public interface IPageManager : IDependency {
         IEnumerable<string> GetCurrentlyPublishedSlugs();
         PageRevision GetPublishedBySlug(string slug);
 
         PageRevision GetLastRevision(int pageId);
 
-        PageRevision CreatePage(PageCreateViewModel pageCreate);
+        PageRevision CreatePage(CreatePageParams createPageParams);
         PageRevision AcquireDraft(int pageId);
         void ApplyTemplateName(PageRevision revision, string templateName);
         void Publish(PageRevision revision, [NotNull] PublishOptions options);
@@ -60,7 +73,8 @@ namespace Orchard.CmsPages.Services {
 
         public ILogger Logger { get; set; }
 
-        public PageRevision CreatePage(PageCreateViewModel pageCreate) {
+
+        public PageRevision CreatePage(CreatePageParams createPageParams) {
             Logger.Information("CreatePage");
 
             //var templateDescriptor = _templateProvider.Get(pageCreate.TemplateName);
@@ -68,9 +82,8 @@ namespace Orchard.CmsPages.Services {
             var page = new Page();
             var revision = new PageRevision {
                 Page = page,
-                Title = pageCreate.Title,
-                Slug = pageCreate.Slug,
-                TemplateName = pageCreate.TemplateName,
+                Title = createPageParams.Title,
+                Slug = createPageParams.Slug,
                 ModifiedDate = _clock.UtcNow,
                 Number = 1
             };
@@ -81,7 +94,7 @@ namespace Orchard.CmsPages.Services {
             //        revision.Contents.Add(new ContentItem { PageRevision = revision, ZoneName = zone });
             //    }
             //}
-            ApplyTemplateName(revision, pageCreate.TemplateName);
+            ApplyTemplateName(revision, createPageParams.TemplateName);
 
             _pageRepository.Create(page);
 

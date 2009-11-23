@@ -75,10 +75,7 @@ namespace Orchard.CmsPages.Services {
             var title = content.Optional<string>("title");
             var description = content.Optional<string>("description");
 
-            var pageRevision = _pageManager.CreatePage(new PageCreateViewModel {
-                Title = title,
-                TemplateName = "TwoColumns"
-            });
+            var pageRevision = _pageManager.CreatePage(new CreatePageParams(title, null, "TwoColumns"));
             pageRevision.Contents.First().Content = description;
 
             if (publish) {

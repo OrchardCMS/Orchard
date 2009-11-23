@@ -65,8 +65,9 @@ namespace Orchard.Tests.Packages.Pages.Services {
             Assert.That(page.Contents, Has.Some.Property("ZoneName").EqualTo("content2"));
         }
 
-        private PageCreateViewModel PageCreate(string slug, string title, string template) {
-            return new PageCreateViewModel { Slug = slug, Title = title, TemplateName = template, Templates = _templateProvider.List() };
+        private CreatePageParams PageCreate(string slug, string title, string template) {
+            return new CreatePageParams(title, slug, template);
+            //return new CreatePageParams { Slug = slug, Title = title, TemplateName = template, Templates = _templateProvider.List() };
         }
 
         [Test]
@@ -95,7 +96,7 @@ namespace Orchard.Tests.Packages.Pages.Services {
 
         [Test]
         public void GetPublishedBySlugShouldOnlyReturnPageAfterItIsPublished() {
-            var revision = _manager.CreatePage(new PageCreateViewModel { Slug = "hello-world", Templates = _templateProvider.List() });
+            var revision = _manager.CreatePage(new CreatePageParams { Slug = "hello-world" });
 
             var notPublishedYet = _manager.GetPublishedBySlug("hello-world");
             Assert.That(notPublishedYet, Is.Null);
@@ -109,7 +110,7 @@ namespace Orchard.Tests.Packages.Pages.Services {
         [Test]
         [Ignore("Linq to NHib doesn't support calling 'String.Equals' in expressions. Figure out a workaround.")]
         public void GetPublishedBySlugShouldBeCaseInsensitive() {
-            var revision = _manager.CreatePage(new PageCreateViewModel { Slug = "hello-world", Templates = _templateProvider.List() });
+            var revision = _manager.CreatePage(new CreatePageParams { Slug = "hello-world" });
             _manager.Publish(revision, new PublishOptions());
 
             var publishedNow = _manager.GetPublishedBySlug("hello-WORLD");
@@ -118,9 +119,9 @@ namespace Orchard.Tests.Packages.Pages.Services {
 
         [Test]
         public void PublishingPagesAddsToCurrentlyPublishedSlugList() {
-            _manager.Publish(_manager.CreatePage(new PageCreateViewModel { Slug = "one", Templates = _templateProvider.List() }), new PublishOptions());
-            _manager.Publish(_manager.CreatePage(new PageCreateViewModel { Slug = "two", Templates = _templateProvider.List() }), new PublishOptions());
-            _manager.Publish(_manager.CreatePage(new PageCreateViewModel { Slug = "three", Templates = _templateProvider.List() }), new PublishOptions());
+            _manager.Publish(_manager.CreatePage(new CreatePageParams { Slug = "one" }), new PublishOptions());
+            _manager.Publish(_manager.CreatePage(new CreatePageParams { Slug = "two" }), new PublishOptions());
+            _manager.Publish(_manager.CreatePage(new CreatePageParams { Slug = "three" }), new PublishOptions());
 
             var slugs = _manager.GetCurrentlyPublishedSlugs();
             Assert.That(slugs, Has.Count.GreaterThanOrEqualTo(3));
@@ -131,9 +132,9 @@ namespace Orchard.Tests.Packages.Pages.Services {
 
         [Test]
         public void PublishingPagesDoesNotChangeSlugCasing() {
-            _manager.Publish(_manager.CreatePage(new PageCreateViewModel { Slug = "One", Templates = _templateProvider.List() }), new PublishOptions());
-            _manager.Publish(_manager.CreatePage(new PageCreateViewModel { Slug = "TWO", Templates = _templateProvider.List() }), new PublishOptions());
-            _manager.Publish(_manager.CreatePage(new PageCreateViewModel { Slug = "thRee", Templates = _templateProvider.List() }), new PublishOptions());
+            _manager.Publish(_manager.CreatePage(new CreatePageParams { Slug = "One" }), new PublishOptions());
+            _manager.Publish(_manager.CreatePage(new CreatePageParams { Slug = "TWO" }), new PublishOptions());
+            _manager.Publish(_manager.CreatePage(new CreatePageParams { Slug = "thRee" }), new PublishOptions());
 
             var slugs = _manager.GetCurrentlyPublishedSlugs();
             Assert.That(slugs, Has.Count.GreaterThanOrEqualTo(3));
@@ -144,7 +145,7 @@ namespace Orchard.Tests.Packages.Pages.Services {
 
         [Test]
         public void PublishingThePublishedRevisionDoesNothing() {
-            var initial = _manager.CreatePage(new PageCreateViewModel { Slug = "foo", Templates = _templateProvider.List() });
+            var initial = _manager.CreatePage(new CreatePageParams { Slug = "foo" });
             _manager.Publish(initial, new PublishOptions());
 
             DateTime initialRevisionTime = initial.PublishedDate.Value;
@@ -161,14 +162,14 @@ namespace Orchard.Tests.Packages.Pages.Services {
 
         [Test]
         public void AcquireDraftOnUnpublishedPageShouldReturnExistingRevision() {
-            var initial = _manager.CreatePage(new PageCreateViewModel { Slug = "foo", Templates = _templateProvider.List() });
+            var initial = _manager.CreatePage(new CreatePageParams { Slug = "foo" });
             var draft = _manager.AcquireDraft(initial.Page.Id);
             Assert.That(initial, Is.SameAs(draft));
         }
 
         [Test]
         public void AcquireDraftForUpdateOnPublishedPageShouldCreateNewRevision() {
-            var initial = _manager.CreatePage(new PageCreateViewModel { Slug = "foo", Templates = _templateProvider.List() });
+            var initial = _manager.CreatePage(new CreatePageParams { Slug = "foo" });
             _manager.Publish(initial, new PublishOptions());
             var draft = _manager.AcquireDraft(initial.Page.Id);
             Assert.That(initial, Is.Not.SameAs(draft));
@@ -177,7 +178,7 @@ namespace Orchard.Tests.Packages.Pages.Services {
 
         [Test]
         public void PublishingDraftWithKeepHistoryFalseShouldDeletePreviousPublishedRevision() {
-            var initial = _manager.CreatePage(new PageCreateViewModel { Slug = "foo", Templates = _templateProvider.List() });
+            var initial = _manager.CreatePage(new CreatePageParams { Slug = "foo" });
             var pageId = initial.Page.Id;
 
             _manager.Publish(initial, new PublishOptions());
@@ -196,7 +197,7 @@ namespace Orchard.Tests.Packages.Pages.Services {
 
         [Test]
         public void PublishingDraftWithKeepHistoryTrueShouldLeavePreviousRevisionIntact() {
-            var initial = _manager.CreatePage(new PageCreateViewModel { Slug = "foo", Templates = _templateProvider.List() });
+            var initial = _manager.CreatePage(new CreatePageParams { Slug = "foo" });
             var pageId = initial.Page.Id;
 
             Trace.WriteLine("Publish initial");
@@ -218,7 +219,7 @@ namespace Orchard.Tests.Packages.Pages.Services {
 
         [Test]
         public void PublishDateIsSetWhenPublishOccurs() {
-            var initial = _manager.CreatePage(new PageCreateViewModel { Slug = "foo", Templates = _templateProvider.List() });
+            var initial = _manager.CreatePage(new CreatePageParams { Slug = "foo" });
             Assert.That(initial.PublishedDate, Is.Null);
             _manager.Publish(initial, new PublishOptions());
             Assert.That(initial.PublishedDate, Is.EqualTo(_clock.UtcNow));
@@ -228,7 +229,7 @@ namespace Orchard.Tests.Packages.Pages.Services {
         public void ModifiedDateIsSetWhenPageIsCreatedAndWhenAcquireDraftIsCalled() {
             var mark1 = _clock.UtcNow;
 
-            var initial = _manager.CreatePage(new PageCreateViewModel { Slug = "foo", Templates = _templateProvider.List() });
+            var initial = _manager.CreatePage(new CreatePageParams { Slug = "foo" });
             Assert.That(initial.PublishedDate, Is.Null);
             Assert.That(initial.ModifiedDate, Is.EqualTo(mark1));
 
@@ -267,7 +268,7 @@ namespace Orchard.Tests.Packages.Pages.Services {
 
         [Test]
         public void PublishedPropertyShouldCascadeInsertsAndDeletesWhenSetAndNulled() {
-            var page = new Page {Published = new Published()};
+            var page = new Page { Published = new Published() };
             page.Published.Page = page;
 
             var pageRepos = _container.Resolve<IRepository<Page>>();

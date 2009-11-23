@@ -25,7 +25,7 @@ namespace Orchard.Tests.Packages.Pages.Controllers {
             _templateProvider = _container.Resolve<ITemplateProvider>();
             _controller = _container.Resolve<TemplatesController>();
 
-            var revision = _pageManager.CreatePage(new PageCreateViewModel { Slug = "slug", Templates = _templateProvider.List() });
+            var revision = _pageManager.CreatePage(new CreatePageParams(null, "slug", null));
             _pageManager.Publish(revision, new PublishOptions());
         }
 

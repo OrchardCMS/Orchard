@@ -39,7 +39,7 @@ namespace Orchard.Tests.Packages.Pages.Controllers {
             _pageScheduler = _container.Resolve<IPageScheduler>();
             _templateProvider = _container.Resolve<ITemplateProvider>();
             _authorizer = _container.Resolve<IAuthorizer>();
-            var page = _pageManager.CreatePage(new PageCreateViewModel { Slug = "slug", Templates = _templateProvider.List() });
+            var page = _pageManager.CreatePage(new CreatePageParams(null, "slug", null));
             _slugPageId = page.Id;
 
             _controller = _container.Resolve<AdminController>();
@@ -155,11 +155,11 @@ namespace Orchard.Tests.Packages.Pages.Controllers {
 
         [Test]
         public void IndexShouldReturnTheListOfFilteredPages() {
-            var createPage = new PageCreateViewModel { Title = "hello", Slug = "world", TemplateName = "twocolumn" };
+            var createPage = new CreatePageParams { Title = "hello", Slug = "world", TemplateName = "twocolumn" };
             var revision = _pageManager.CreatePage(createPage);
             _pageManager.Publish(revision, new PublishOptions());
 
-            var createPage2 = new PageCreateViewModel { Title = "hello2", Slug = "world2", TemplateName = "twocolumn" };
+            var createPage2 = new CreatePageParams { Title = "hello2", Slug = "world2", TemplateName = "twocolumn" };
             var revision2 = _pageManager.CreatePage(createPage2);
             _pageScheduler.AddPublishTask(revision2, _clock.FutureMoment(TimeSpan.FromMinutes(1)));
 
@@ -212,7 +212,7 @@ namespace Orchard.Tests.Packages.Pages.Controllers {
 
         [Test]
         public void IndexPostShouldPerformBulkPublishNow() {
-            var createPage = new PageCreateViewModel { Title = "hello", Slug = "world", TemplateName = "twocolumn" };
+            var createPage = new CreatePageParams { Title = "hello", Slug = "world", TemplateName = "twocolumn" };
             var revision = _pageManager.CreatePage(createPage);
 
             // Add a scheduled publish task to make sure it's deleted when bulk "PublishNow" is called
@@ -249,7 +249,7 @@ namespace Orchard.Tests.Packages.Pages.Controllers {
 
         [Test]
         public void IndexPostShouldPerformBulkPublishLater() {
-            var createPage = new PageCreateViewModel { Title = "hello", Slug = "world", TemplateName = "twocolumn" };
+            var createPage = new CreatePageParams { Title = "hello", Slug = "world", TemplateName = "twocolumn" };
             var revision = _pageManager.CreatePage(createPage);
 
             // Add a scheduled publish task to make sure it's deleted when bulk "PublishNow" is called
@@ -293,7 +293,7 @@ namespace Orchard.Tests.Packages.Pages.Controllers {
 
         [Test]
         public void IndexPostShouldPerformBulkDelete() {
-            var createPage = new PageCreateViewModel { Title = "hello", Slug = "world", TemplateName = "twocolumn" };
+            var createPage = new CreatePageParams { Title = "hello", Slug = "world", TemplateName = "twocolumn" };
             var revision = _pageManager.CreatePage(createPage);
 
             // Add a scheduled publish task to make sure it's deleted when bulk "PublishNow" is called
@@ -330,7 +330,7 @@ namespace Orchard.Tests.Packages.Pages.Controllers {
 
         [Test]
         public void IndexPostShouldPerformBulkUnpublish() {
-            var createPage = new PageCreateViewModel { Title = "hello", Slug = "world", TemplateName = "twocolumn" };
+            var createPage = new CreatePageParams { Title = "hello", Slug = "world", TemplateName = "twocolumn" };
             var revision = _pageManager.CreatePage(createPage);
             _pageManager.Publish(revision, new PublishOptions());
 
@@ -394,7 +394,7 @@ namespace Orchard.Tests.Packages.Pages.Controllers {
 
         [Test]
         public void ChooseTemplateListsAvailableTemplatesWithCurrentOneSelected() {
-            var createPage = new PageCreateViewModel { Title = "hello", Slug = "world", TemplateName = "twocolumn" };
+            var createPage = new CreatePageParams { Title = "hello", Slug = "world", TemplateName = "twocolumn" };
             var revision = _pageManager.CreatePage(createPage);
             var result = _controller.ChooseTemplate(revision.Id);
 
@@ -407,7 +407,7 @@ namespace Orchard.Tests.Packages.Pages.Controllers {
 
         [Test]
         public void PostingDifferentTemplateResultsInDraftAndExtendsNamedContentItems() {
-            var createPage = new PageCreateViewModel { Title = "hello", Slug = "world", TemplateName = "twocolumn" };
+            var createPage = new CreatePageParams { Title = "hello", Slug = "world", TemplateName = "twocolumn" };
             var revision = _pageManager.CreatePage(createPage);
             _pageManager.Publish(revision, new PublishOptions());
 
@@ -436,7 +436,7 @@ namespace Orchard.Tests.Packages.Pages.Controllers {
 
         [Test, Ignore("This can't be properly implementated until a transaction scope with rollback abilities is available to the controller")]
         public void PostingSameTemplateDoesNotResultInDraftBeingCreated() {
-            var createPage = new PageCreateViewModel { Title = "hello", Slug = "world", TemplateName = "twocolumn" };
+            var createPage = new CreatePageParams { Title = "hello", Slug = "world", TemplateName = "twocolumn" };
             var revision = _pageManager.CreatePage(createPage);
             _pageManager.Publish(revision, new PublishOptions());
 

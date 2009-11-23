@@ -204,7 +204,7 @@ namespace Orchard.CmsPages.Controllers {
 
                 Logger.Information("Creating CmsPage slug:{0} title{1}: template{2}",
                     viewModel.Slug, viewModel.Title, viewModel.TemplateName);
-                var revision = _pageManager.CreatePage(viewModel);
+                var revision = _pageManager.CreatePage(new CreatePageParams(viewModel.Title, viewModel.Slug, viewModel.TemplateName));
                 return RedirectToAction("Edit", new { revision.Page.Id });
             }
             catch (Exception ex) {
