@@ -61,8 +61,10 @@
     <Reference Include="System.Web.Mobile" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AdminMenu.cs" />
     <Compile Include="Controllers\BlogPostController.cs" />
     <Compile Include="Extensions\BlogCreateViewModelExtensions.cs" />
+    <Compile Include="Extensions\UrlHelperExtensions.cs" />
     <Compile Include="Routing\IsBlogConstraint.cs" />
     <Compile Include="Services\BlogService.cs" />
     <Compile Include="Controllers\BlogController.cs" />
@@ -90,6 +92,11 @@
     <Content Include="Views\Blog\Edit.aspx" />
     <Content Include="Views\Blog\Item.aspx" />
     <Content Include="Views\Blog\List.aspx" />
+    <Content Include="Views\Shared\Foot.aspx" />
+    <Content Include="Views\Shared\Footer.aspx" />
+    <Content Include="Views\Shared\Head.aspx" />
+    <Content Include="Views\Shared\Header.aspx" />
+    <Content Include="Views\Shared\Messages.ascx" />
     <Content Include="Web.config" />
     <Content Include="Views\Web.config" />
   </ItemGroup>

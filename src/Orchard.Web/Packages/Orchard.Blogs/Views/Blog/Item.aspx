@@ -1,4 +1,5 @@
 <%@ Page Language="C#" Inherits="System.Web.Mvc.ViewPage<BlogViewModel>" %>
+<%@ Import Namespace="Orchard.Blogs.Extensions"%>
 <%@ Import Namespace="Orchard.Blogs.ViewModels"%>
 <%@ Import Namespace="Orchard.Blogs.Models"%>
 <%@ Import Namespace="Orchard.Mvc.Html"%>
@@ -11,7 +12,7 @@
         if (Model.Posts.Count() > 0) { %>
         <ul><%
             foreach (BlogPost post in Model.Posts) { %>
-            <li><%=post.Title %></li><%
+            <li><a href="<%=Url.BlogPost(post.BlogSlug, post.Slug) %>"><%=Html.Encode(post.Title) %></a></li><%
             } %>
         </ul><%
         } %>

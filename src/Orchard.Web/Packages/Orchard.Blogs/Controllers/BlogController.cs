@@ -56,7 +56,7 @@ namespace Orchard.Blogs.Controllers {
 
             Blog blog = _blogService.CreateBlog(model.ToCreateBlogParams());
 
-            return RedirectToAction("edit", new { blog.Record.Id });
+            return Redirect(Url.BlogEdit(blog.Slug));
         }
 
         public ActionResult Edit(string blogSlug) {
@@ -75,7 +75,7 @@ namespace Orchard.Blogs.Controllers {
 
             _notifier.Information(T("Blog information updated"));
 
-            return RedirectToAction("Edit", new { blogSlug });
+            return Redirect(Url.BlogEdit(model.Slug));
         }
 
         bool IUpdateModel.TryUpdateModel<TModel>(TModel model, string prefix, string[] includeProperties, string[] excludeProperties) {
