@@ -61,12 +61,13 @@
     <Reference Include="System.Web.Mobile" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Common\Models\CommonPartProvider.cs" />
-    <Compile Include="Common\Models\CommonPart.cs" />
-    <Compile Include="Common\Models\BodyPartProvider.cs" />
-    <Compile Include="Common\Models\BodyPart.cs" />
-    <Compile Include="Common\Models\RoutablePart.cs" />
-    <Compile Include="Common\Models\RoutablePartProvider.cs" />
+    <Compile Include="Common\Utilities\LazyField.cs" />
+    <Compile Include="Common\Providers\CommonAspectProvider.cs" />
+    <Compile Include="Common\Models\CommonAspect.cs" />
+    <Compile Include="Common\Providers\BodyAspectProvider.cs" />
+    <Compile Include="Common\Models\BodyAspect.cs" />
+    <Compile Include="Common\Models\RoutableAspect.cs" />
+    <Compile Include="Common\Providers\RoutableAspectProvider.cs" />
     <Compile Include="Common\Records\CommonRecord.cs" />
     <Compile Include="Common\Records\RoutableRecord.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

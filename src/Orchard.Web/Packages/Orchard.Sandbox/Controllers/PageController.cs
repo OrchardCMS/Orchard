@@ -47,7 +47,7 @@ namespace Orchard.Sandbox.Controllers
         public ActionResult Create(PageCreateViewModel model) {
             var page = _contentManager.Create<SandboxPage>("sandboxpage", item => {
                 item.Record.Name = model.Name;
-                item.As<CommonPart>().Container = CurrentSite.ContentItem;
+                item.As<CommonAspect>().Container = CurrentSite.ContentItem;
             });
             return RedirectToAction("show", new { page.ContentItem.Id });
         }
