@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
+using Orchard.Sandbox.Models;
 using Orchard.UI.Models;
-using Orchard.Wikis.Models;
 
-namespace Orchard.Wikis.ViewModels {
+namespace Orchard.Sandbox.ViewModels {
     public class PageEditViewModel {
-        public WikiPage Page { get; set; }
+        public SandboxPage Page { get; set; }
         public IEnumerable<ModelTemplate> Editors { get; set; }
     }
 }

@@ -29,7 +29,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orchard.Core.Tests", "Orcha
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{74E681ED-FECC-4034-B9BD-01B0BB1BDECA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orchard.Wikis", "Orchard.Web\Packages\Orchard.Wikis\Orchard.Wikis.csproj", "{17C44253-65A2-4597-98C7-16EE576824B6}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orchard.Sandbox", "Orchard.Web\Packages\Orchard.Wikis\Orchard.Sandbox.csproj", "{17C44253-65A2-4597-98C7-16EE576824B6}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orchard.Blogs", "Orchard.Web\Packages\Orchard.Blogs\Orchard.Blogs.csproj", "{63FBD4D9-E1DA-4A7B-AA6A-D6074FE50867}"
 EndProject

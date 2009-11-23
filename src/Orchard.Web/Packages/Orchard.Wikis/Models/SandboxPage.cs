@@ -1,8 +1,8 @@
 using System.Web.Routing;
 using Orchard.Models;
 
-namespace Orchard.Wikis.Models {
-    public class WikiPage : ContentPart<WikiPageRecord>, IContentDisplayInfo {
+namespace Orchard.Sandbox.Models {
+    public class SandboxPage : ContentPart<SandboxPageRecord>, IContentDisplayInfo {
 
         string IContentDisplayInfo.DisplayText {
             get { return Record.Name; }

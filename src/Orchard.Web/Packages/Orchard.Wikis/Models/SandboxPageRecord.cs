@@ -4,8 +4,8 @@ using System.Linq;
 using System.Web;
 using Orchard.Models.Records;
 
-namespace Orchard.Wikis.Models {
-    public class WikiPageRecord : ContentPartRecord{
+namespace Orchard.Sandbox.Models {
+    public class SandboxPageRecord : ContentPartRecord{
         public virtual string Name { get; set; }
     }
 }

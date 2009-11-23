@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using Orchard.Mvc.ViewModels;
-using Orchard.Wikis.Models;
+using Orchard.Sandbox.Models;
 
-namespace Orchard.Wikis.ViewModels {
+namespace Orchard.Sandbox.ViewModels {
     public class PageIndexViewModel : BaseViewModel {
-        public IList<WikiPage> Pages { get; set; }
+        public IList<SandboxPage> Pages { get; set; }
     } 
 }

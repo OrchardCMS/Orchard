@@ -1,5 +1,5 @@
 <%@ Page Language="C#" Inherits="System.Web.Mvc.ViewPage<PageIndexViewModel>" %>
-<%@ Import Namespace="Orchard.Wikis.ViewModels"%>
+<%@ Import Namespace="Orchard.Sandbox.ViewModels"%>
 <%@ Import Namespace="Orchard.Mvc.Html"%>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -23,7 +23,7 @@
 </div>
 
 <div id="main">
-<h3>Wiki Pages</h3>
+<h3>Sandbox Pages</h3>
 <ul>
 <li><%=Html.ActionLink("Create new page", "create") %></li>
 <%foreach(var item in Model.Pages.OrderBy(x=>x.Record.Name)){%>

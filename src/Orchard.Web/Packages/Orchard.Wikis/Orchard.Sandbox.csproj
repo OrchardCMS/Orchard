@@ -8,8 +8,8 @@
     <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Orchard.Wikis</RootNamespace>
-    <AssemblyName>Orchard.Wikis</AssemblyName>
+    <RootNamespace>Orchard.Sandbox</RootNamespace>
+    <AssemblyName>Orchard.Sandbox</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <MvcBuildViews>false</MvcBuildViews>
   </PropertyGroup>
@@ -65,10 +65,10 @@
     <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\PageController.cs" />
-    <Compile Include="Models\WikiPage.cs" />
-    <Compile Include="Models\WikiPageProvider.cs" />
-    <Compile Include="Models\WikiPageRecord.cs" />
-    <Compile Include="Models\WikiSettings.cs" />
+    <Compile Include="Models\SandboxPage.cs" />
+    <Compile Include="Models\SandboxContentProvider.cs" />
+    <Compile Include="Models\SandboxPageRecord.cs" />
+    <Compile Include="Models\SandboxSettingsRecord.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ViewModels\PageEditViewModel.cs" />
     <Compile Include="ViewModels\PageCreateViewModel.cs" />
@@ -78,7 +78,7 @@
   <ItemGroup>
     <Content Include="Package.txt" />
     <Content Include="Views\Admin\Index.aspx" />
-    <Content Include="Views\Models\EditorTemplates\WikiSettingsRecord.ascx" />
+    <Content Include="Views\Models\EditorTemplates\SandboxSettingsRecord.ascx" />
     <Content Include="Views\Page\Edit.aspx" />
     <Content Include="Views\Page\Create.aspx" />
     <Content Include="Views\Page\Show.aspx" />

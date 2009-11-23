@@ -32,7 +32,7 @@ namespace Orchard.Data {
                     CreatePersistenceModel(Assembly.Load("Orchard")),
                     CreatePersistenceModel(Assembly.Load("Orchard.Media")),
                     CreatePersistenceModel(Assembly.Load("Orchard.Core")),
-                    CreatePersistenceModel(Assembly.Load("Orchard.Wikis")),
+                    CreatePersistenceModel(Assembly.Load("Orchard.Sandbox")),
                     CreatePersistenceModel(Assembly.Load("Orchard.Comments")),
                     CreatePersistenceModel(Assembly.Load("Orchard.Blogs")),
                 };

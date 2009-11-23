@@ -144,9 +144,9 @@
       <Project>{79AED36E-ABD0-4747-93D3-8722B042454B}</Project>
       <Name>Orchard.Users</Name>
     </ProjectReference>
-    <ProjectReference Include="Packages\Orchard.Wikis\Orchard.Wikis.csproj">
+    <ProjectReference Include="Packages\Orchard.Wikis\Orchard.Sandbox.csproj">
       <Project>{17C44253-65A2-4597-98C7-16EE576824B6}</Project>
-      <Name>Orchard.Wikis</Name>
+      <Name>Orchard.Sandbox</Name>
     </ProjectReference>
     <ProjectReference Include="Packages\TinyMce\TinyMce.csproj">
       <Project>{954CA994-D204-468B-9D69-51F6AD3E1C29}</Project>

@@ -4,10 +4,10 @@ using System.Web.Mvc;
 using Orchard.Data;
 using Orchard.Models;
 using Orchard.Models.Driver;
-using Orchard.Wikis.Models;
-using Orchard.Wikis.ViewModels;
+using Orchard.Sandbox.Models;
+using Orchard.Sandbox.ViewModels;
 
-namespace Orchard.Wikis.Controllers
+namespace Orchard.Sandbox.Controllers
 {
     public class Home : Controller {
         

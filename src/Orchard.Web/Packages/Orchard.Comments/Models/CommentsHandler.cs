@@ -22,7 +22,7 @@ namespace Orchard.Comments.Models {
         public HasCommentsProvider(IRepository<Comment> commentsRepository, IRepository<ClosedComments> closedCommentsRepository) {
             _commentsRepository = commentsRepository;
             _closedCommentsRepository = closedCommentsRepository;
-            Filters.Add(new ActivatingFilter<HasComments>("wikipage"));
+            Filters.Add(new ActivatingFilter<HasComments>("sandboxpage"));
         }
 
         protected override void GetDisplays(GetDisplaysContext context) {
