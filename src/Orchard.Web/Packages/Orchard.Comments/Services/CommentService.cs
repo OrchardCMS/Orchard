@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Orchard.Comments.Models;
 using Orchard.Data;
@@ -20,7 +21,9 @@ namespace Orchard.Comments.Services {
         void UpdateComment(int id, string name, string email, string siteName, string commentText);
         void MarkCommentAsSpam(int commentId);
         void DeleteComment(int commentId);
+        bool CommentsClosedForCommentedContent(int id);
         void CloseCommentsForCommentedContent(int id);
+        void EnableCommentsForCommentedContent(int id);
     }
 
     public class CommentService : ICommentService {
@@ -97,8 +100,19 @@ namespace Orchard.Comments.Services {
             _commentRepository.Delete(GetComment(commentId));
         }
 
+        public bool CommentsClosedForCommentedContent(int id) {
+            return _closedCommentsRepository.Get(x => x.ContentItemId == id) == null ? false : true;
+        }
+
         public void CloseCommentsForCommentedContent(int id) {
             _closedCommentsRepository.Create(new ClosedComments { ContentItemId = id });
+        }
+
+        public void EnableCommentsForCommentedContent(int id) {
+            ClosedComments closedComments = _closedCommentsRepository.Get(x => x.ContentItemId == id);
+            if (closedComments != null) {
+                _closedCommentsRepository.Delete(closedComments);
+            }
         }
 
         #endregion

@@ -14,8 +14,7 @@
 </ol>
 <% if (Model.Closed) { %>
 <p>Comments have been disabled for this content.</p>
-<% } %>
-<% else { %>
+<% } else { %>
 <% Html.BeginForm("Create", "Admin", new { area = "Orchard.Comments" }); %>
     <%= Html.ValidationSummary() %>
                     <div class="yui-g">

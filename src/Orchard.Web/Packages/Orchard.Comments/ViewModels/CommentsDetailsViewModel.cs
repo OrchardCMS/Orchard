@@ -7,6 +7,7 @@ namespace Orchard.Comments.ViewModels {
         public CommentDetailsOptions Options { get; set; }
         public string DisplayNameForCommentedItem { get; set; }
         public int CommentedItemId { get; set; }
+        public bool CommentsClosedOnItem { get; set; }
     }
 
     public class CommentDetailsOptions {

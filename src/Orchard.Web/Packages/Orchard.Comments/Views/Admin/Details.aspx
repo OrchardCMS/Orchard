@@ -81,8 +81,16 @@
                                 } %>
 				        </table>
 				<li class="clearLayout">
-				<%=Html.ActionLink("Close Comments", "Close", new {commentedItemId = Model.CommentedItemId}, new {@class="floatRight topSpacer"}) %>
+				<% if (Model.CommentsClosedOnItem) {%>
+				    <%=Html.ActionLink("Enable Comments", "Enable", 
+				                                    new {commentedItemId = Model.CommentedItemId}, 
+				                                    new {@class="floatRight topSpacer"}) %>
+				<%} else {%>
+				    <%=Html.ActionLink("Close Comments", "Close",
+                                                    new {commentedItemId = Model.CommentedItemId},
+                                                    new {@class = "floatRight topSpacer"})%>
 				</li>
+				<% }%>
 	</div>
 	
 	<% Html.EndForm(); %>

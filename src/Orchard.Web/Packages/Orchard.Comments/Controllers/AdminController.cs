@@ -166,6 +166,7 @@ namespace Orchard.Comments.Controllers {
                     Options = options,
                     DisplayNameForCommentedItem = _commentService.GetDisplayForCommentedContent(id).DisplayText,
                     CommentedItemId = id,
+                    CommentsClosedOnItem = _commentService.CommentsClosedForCommentedContent(id),
                 };
                 return View(model);
             }
@@ -224,6 +225,19 @@ namespace Orchard.Comments.Controllers {
             }
             catch (Exception exception) {
                 _notifier.Error(T("Closing Comments failed: " + exception.Message));
+                return RedirectToAction("Index");
+            }
+        }
+
+        public ActionResult Enable(int commentedItemId) {
+            try {
+                if (!_authorizer.Authorize(Permissions.EnableComment, T("Couldn't enable comments")))
+                    return new HttpUnauthorizedResult();
+                _commentService.EnableCommentsForCommentedContent(commentedItemId);
+                return RedirectToAction("Index");
+            }
+            catch (Exception exception) {
+                _notifier.Error(T("Enabling Comments failed: " + exception.Message));
                 return RedirectToAction("Index");
             }
         }
