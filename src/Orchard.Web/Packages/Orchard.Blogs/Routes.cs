@@ -23,7 +23,37 @@ namespace Orchard.Blogs {
             return new[] {
                              new RouteDescriptor {
                                                      Route = new Route(
-                                                         "Blogs",
+                                                         "Admin/Blogs/Create",
+                                                         new RouteValueDictionary {
+                                                                                      {"area", "Orchard.Blogs"},
+                                                                                      {"controller", "Blog"},
+                                                                                      {"action", "Create"}
+                                                                                  },
+                                                         new RouteValueDictionary(),
+                                                         new RouteValueDictionary {
+                                                                                      {"area", "Orchard.Blogs"}
+                                                                                  },
+                                                         new MvcRouteHandler())
+                                                 },
+                             new RouteDescriptor {
+                                                     Route = new Route(
+                                                         "Admin/Blogs/{blogSlug}/Edit",
+                                                         new RouteValueDictionary {
+                                                                                      {"area", "Orchard.Blogs"},
+                                                                                      {"controller", "Blog"},
+                                                                                      {"action", "Edit"}
+                                                                                  },
+                                                         new RouteValueDictionary {
+                                                                                      {"blogSlug", new IsBlogConstraint(_blogService)}
+                                                                                  },
+                                                         new RouteValueDictionary {
+                                                                                      {"area", "Orchard.Blogs"}
+                                                                                  },
+                                                         new MvcRouteHandler())
+                                                 },
+                             new RouteDescriptor {
+                                                     Route = new Route(
+                                                         "Admin/Blogs",
                                                          new RouteValueDictionary {
                                                                                       {"area", "Orchard.Blogs"},
                                                                                       {"controller", "Blog"},
@@ -43,7 +73,7 @@ namespace Orchard.Blogs {
                                                                                       {"controller", "Blog"},
                                                                                       {"action", "Item"}
                                                                                   },
-                                                         new RouteValueDictionary() {
+                                                         new RouteValueDictionary {
                                                                                       {"blogSlug", new IsBlogConstraint(_blogService)}
                                                                                   },
                                                          new RouteValueDictionary {

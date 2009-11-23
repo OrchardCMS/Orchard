@@ -65,7 +65,6 @@
     <Compile Include="Extensions\BlogCreateViewModelExtensions.cs" />
     <Compile Include="Routing\IsBlogConstraint.cs" />
     <Compile Include="Services\BlogService.cs" />
-    <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Controllers\BlogController.cs" />
     <Compile Include="Models\Blog.cs" />
     <Compile Include="Models\BlogProvider.cs" />
@@ -82,12 +81,13 @@
     <Compile Include="ViewModels\BlogsViewModel.cs" />
     <Compile Include="ViewModels\BlogViewModel.cs" />
     <Compile Include="ViewModels\CreateBlogViewModel.cs" />
+    <Compile Include="ViewModels\BlogEditViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Package.txt" />
-    <Content Include="Views\Admin\Create.aspx" />
-    <Content Include="Views\Admin\Index.aspx" />
+    <Content Include="Views\Blog\Create.aspx" />
     <Content Include="Views\BlogPost\ListByBlog.aspx" />
+    <Content Include="Views\Blog\Edit.aspx" />
     <Content Include="Views\Blog\Item.aspx" />
     <Content Include="Views\Blog\List.aspx" />
     <Content Include="Web.config" />
