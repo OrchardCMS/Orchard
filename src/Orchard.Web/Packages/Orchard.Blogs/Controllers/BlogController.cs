@@ -4,6 +4,7 @@ using Orchard.Blogs.Extensions;
 using Orchard.Blogs.Models;
 using Orchard.Blogs.Services;
 using Orchard.Blogs.ViewModels;
+using Orchard.Data;
 using Orchard.Localization;
 using Orchard.Models;
 using Orchard.Models.Driver;
@@ -17,16 +18,17 @@ namespace Orchard.Blogs.Controllers {
         private readonly INotifier _notifier;
         private readonly IBlogService _blogService;
         private readonly IBlogPostService _blogPostService;
+        private readonly ISessionLocator _sessionLocator;
 
-        public BlogController(IContentManager contentManager, INotifier notifier, IBlogService blogService, IBlogPostService blogPostService) {
+        public BlogController(IContentManager contentManager, INotifier notifier, IBlogService blogService, IBlogPostService blogPostService, ISessionLocator sessionLocator) {
             _contentManager = contentManager;
             _notifier = notifier;
             _blogService = blogService;
             _blogPostService = blogPostService;
+            _sessionLocator = sessionLocator;
             T = NullLocalizer.Instance;
         }
 
-        public IUser CurrentUser { get; set; }
         public Localizer T { get; set; }
 
         public ActionResult List() {
@@ -55,8 +57,12 @@ namespace Orchard.Blogs.Controllers {
                 return View(model);
 
             Blog blog = _blogService.CreateBlog(model.ToCreateBlogParams());
+            
+            //TEMP: (erikpo) ensure information has committed for this record
+            var session = _sessionLocator.For(typeof(BlogRecord));
+            session.Flush();
 
-            return Redirect(Url.BlogEdit(blog.Slug));
+            return Redirect(Url.BlogEdit(model.Slug));
         }
 
         public ActionResult Edit(string blogSlug) {
@@ -70,12 +76,14 @@ namespace Orchard.Blogs.Controllers {
             var model = new BlogEditViewModel { Blog = _blogService.Get(blogSlug) };
             model.Editors = _contentManager.UpdateEditors(model.Blog.ContentItem, this);
 
-            if (!TryUpdateModel(model, input.ToValueProvider()))
+            IValueProvider values = input.ToValueProvider();
+            if (!TryUpdateModel(model, values))
                 return View(model);
 
             _notifier.Information(T("Blog information updated"));
 
-            return Redirect(Url.BlogEdit(model.Slug));
+            //TODO: (erikpo) Since the model isn't actually updated yet and it's possible the slug changed I'm getting the slug from input. Lame?!?!
+            return Redirect(Url.BlogEdit(values.GetValue(ControllerContext, "Slug").RawValue as string));
         }
 
         bool IUpdateModel.TryUpdateModel<TModel>(TModel model, string prefix, string[] includeProperties, string[] excludeProperties) {

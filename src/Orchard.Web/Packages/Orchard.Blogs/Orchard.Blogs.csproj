@@ -31,6 +31,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="NHibernate, Version=2.1.0.4000, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\lib\fluentnhibernate\NHibernate.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.ComponentModel.DataAnnotations">
@@ -93,9 +97,7 @@
     <Content Include="Views\Blog\Item.aspx" />
     <Content Include="Views\Blog\List.aspx" />
     <Content Include="Views\Shared\Foot.aspx" />
-    <Content Include="Views\Shared\Footer.aspx" />
     <Content Include="Views\Shared\Head.aspx" />
-    <Content Include="Views\Shared\Header.aspx" />
     <Content Include="Views\Shared\Messages.ascx" />
     <Content Include="Web.config" />
     <Content Include="Views\Web.config" />
