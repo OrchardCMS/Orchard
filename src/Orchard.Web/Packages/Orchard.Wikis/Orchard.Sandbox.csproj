@@ -62,7 +62,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AdminMenu.cs" />
-    <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\PageController.cs" />
     <Compile Include="Models\SandboxPage.cs" />
@@ -77,7 +76,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Package.txt" />
-    <Content Include="Views\Admin\Index.aspx" />
     <Content Include="Views\Models\EditorTemplates\SandboxSettingsRecord.ascx" />
     <Content Include="Views\Page\Edit.aspx" />
     <Content Include="Views\Page\Create.aspx" />

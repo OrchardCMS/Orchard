@@ -9,11 +9,11 @@ namespace Orchard.Sandbox.Models {
         }
 
         RouteValueDictionary IContentDisplayInfo.DisplayRouteValues() {
-            return new RouteValueDictionary(new { area = "Orchard.Wikis", controller = "Page", action = "Show", id = ContentItem.Id });
+            return new RouteValueDictionary(new { area = "Orchard.Sandbox", controller = "Page", action = "Show", id = ContentItem.Id });
         }
 
         RouteValueDictionary IContentDisplayInfo.EditRouteValues() {
-            return new RouteValueDictionary(new { area = "Orchard.Wikis", controller = "Page", action = "Edit", id = ContentItem.Id });
+            return new RouteValueDictionary(new { area = "Orchard.Sandbox", controller = "Page", action = "Edit", id = ContentItem.Id });
         }
 
     }
