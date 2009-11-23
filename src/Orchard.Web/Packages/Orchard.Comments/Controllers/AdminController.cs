@@ -6,6 +6,7 @@ using System.Web.Mvc;
 using Orchard.Comments.Models;
 using Orchard.Localization;
 using Orchard.Logging;
+using Orchard.Models;
 using Orchard.Settings;
 using Orchard.UI.Notify;
 using Orchard.Security;
@@ -113,15 +114,17 @@ namespace Orchard.Comments.Controllers {
             var viewModel = new CommentsCreateViewModel();
             try {
                 UpdateModel(viewModel, input.ToValueProvider());
-                if (!_authorizer.Authorize(Permissions.AddComment, T("Couldn't add comment")))
-                    return new HttpUnauthorizedResult();
+                if (CurrentSite.As<CommentSettings>().Record.RequireLoginToAddComment) {
+                    if (!_authorizer.Authorize(Permissions.AddComment, T("Couldn't add comment")))
+                        return new HttpUnauthorizedResult();
+                }
                 Comment comment = new Comment {
                     Author = viewModel.Name,
                     CommentDate = DateTime.Now,
                     CommentText = viewModel.CommentText,
                     Email = viewModel.Email,
                     SiteName = viewModel.SiteName,
-                    UserName = CurrentUser.UserName ?? "Anonymous",
+                    UserName = CurrentUser == null ? "Anonymous" : CurrentUser.UserName,
                     CommentedOn = viewModel.CommentedOn
                 };
                 _commentService.CreateComment(comment);
