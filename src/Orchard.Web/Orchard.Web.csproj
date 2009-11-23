@@ -140,6 +140,10 @@
       <Project>{D10AD48F-407D-4DB5-A328-173EC7CB010F}</Project>
       <Name>Orchard.Roles</Name>
     </ProjectReference>
+    <ProjectReference Include="Packages\Orchard.Tags\Orchard.Tags.csproj">
+      <Project>{5D0F00F0-26C9-4785-AD61-B85710C60EB0}</Project>
+      <Name>Orchard.Tags</Name>
+    </ProjectReference>
     <ProjectReference Include="Packages\Orchard.Users\Orchard.Users.csproj">
       <Project>{79AED36E-ABD0-4747-93D3-8722B042454B}</Project>
       <Name>Orchard.Users</Name>

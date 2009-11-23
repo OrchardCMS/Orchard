@@ -34,6 +34,7 @@ namespace Orchard.Data {
                     CreatePersistenceModel(Assembly.Load("Orchard.Core")),
                     CreatePersistenceModel(Assembly.Load("Orchard.Sandbox")),
                     CreatePersistenceModel(Assembly.Load("Orchard.Comments")),
+                    CreatePersistenceModel(Assembly.Load("Orchard.Tags")),
                     CreatePersistenceModel(Assembly.Load("Orchard.Blogs")),
                 };
 
