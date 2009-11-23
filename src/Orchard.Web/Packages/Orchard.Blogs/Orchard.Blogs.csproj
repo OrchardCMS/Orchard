@@ -79,6 +79,8 @@
     <Compile Include="Services\IBlogPostService.cs" />
     <Compile Include="Services\CreateBlogParams.cs" />
     <Compile Include="Services\IBlogService.cs" />
+    <Compile Include="ViewModels\BlogsViewModel.cs" />
+    <Compile Include="ViewModels\BlogViewModel.cs" />
     <Compile Include="ViewModels\CreateBlogViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
