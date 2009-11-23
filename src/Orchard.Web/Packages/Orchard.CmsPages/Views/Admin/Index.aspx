@@ -2,7 +2,7 @@
 <%@ Import Namespace="Orchard.Utility"%>
 <%@ Import Namespace="Orchard.CmsPages.ViewModels"%>
 <%@ Import Namespace="Orchard.Mvc.Html" %>
-<%-- todo: (nheskew) not this --%>
+<%-- todo: (heskew) not this --%>
 <script runat="server">
 public string DefaultText(string valueText, string defaultText)
 {

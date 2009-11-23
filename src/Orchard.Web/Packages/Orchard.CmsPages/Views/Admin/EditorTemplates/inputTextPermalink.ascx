@@ -7,8 +7,7 @@ Permalink:
 </label>
 <span class="floatLeft">
 <%--<input id="permalink" class="inputText floatLeft roundCorners" type="text" name="permalink"/>--%>
-<%=Html.TextBox("", Model, new { @class = "inputText floatLeft" })%>
-<p class="helperText smallText clearLayout">How to write a permalink.</p>
+<%=Html.TextBox("", Model, new { @class = "text" })%> <span class="helperText smallText clearLayout"> &laquo; How to write a permalink. &raquo; </span>
 </span>
 </li>
 <div class="clearLayout" />

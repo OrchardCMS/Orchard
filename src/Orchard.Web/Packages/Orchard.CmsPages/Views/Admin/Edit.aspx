@@ -2,15 +2,14 @@
 <%@ Import Namespace="Orchard.CmsPages.Models"%>
 <%@ Import Namespace="Orchard.Mvc.Html" %>
 <% Html.Include("Head"); %>
-    <div class="yui-g">    
-        <h2><%=_Encoded("Edit Page")%></h2>
-        <p class="bottomSpacer"><%=_Encoded("about setting up a page")%></p>
-        <%=Html.ValidationSummary() %>
-    </div>
-    <div class="yui-gc">
+    <h2><%=_Encoded("Edit Page")%></h2>
+    <p class="bottomSpacer"><%=_Encoded("about setting up a page")%></p>
+    <%=Html.ValidationSummary() %>
+    <div class="sections">
         <%using (Html.BeginForm()) {%>
-        <div class="yui-u first">
+        <div class="primary">
             <h3><%=_Encoded("Page Content") %></h3>
+            <%-- todo: (heskew) change the editors to be self-contained (fieldset > editor) --%>
             <ol>
                 <%=Html.EditorFor(m => m.Revision.Title, "inputTextLarge")%>
                 <%=Html.EditorFor(m => m.Revision.Slug, "inputTextPermalink")%>
@@ -35,7 +34,7 @@
                 </li>
             </ol>
         </div>
-        <div class="yui-u sideBar">
+        <div class="secondary">
             <h3><%=_Encoded("Publish Settings")%></h3>
             <fieldset>
             <ol class="formList">
