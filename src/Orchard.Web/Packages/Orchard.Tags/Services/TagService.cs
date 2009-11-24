@@ -3,7 +3,6 @@ using System.Linq;
 using Orchard.Data;
 using Orchard.Localization;
 using Orchard.Logging;
-using Orchard.Security;
 using Orchard.Settings;
 using Orchard.Tags.Models;
 using Orchard.UI.Notify;
@@ -11,8 +10,10 @@ using Orchard.UI.Notify;
 namespace Orchard.Tags.Services {
     public interface ITagService : IDependency {
         IEnumerable<Tag> GetTags();
+        Tag GetTag(int id);
         Tag GetTagByName(string tagName);
         void CreateTag(string tagName);
+        void DeleteTag(int id);
         void TagContentItem(int contentItemId, string tagName);
         void UpdateTagsForContentItem(int contentItemId, IEnumerable<int> tagsForContentItem);
     }
@@ -20,15 +21,13 @@ namespace Orchard.Tags.Services {
     public class TagService : ITagService {
         private readonly IRepository<Tag> _tagRepository;
         private readonly IRepository<TagsContentItems> _tagsContentItemsRepository;
-        private readonly IAuthorizer _authorizer;
         private readonly INotifier _notifier;
 
         public TagService(IRepository<Tag> tagRepository, 
                           IRepository<TagsContentItems> tagsContentItemsRepository,
-                          IAuthorizer authorizer, INotifier notifier) {
+                          INotifier notifier) {
             _tagRepository = tagRepository;
             _tagsContentItemsRepository = tagsContentItemsRepository;
-            _authorizer = authorizer;
             _notifier = notifier;
             Logger = NullLogger.Instance;
             T = NullLocalizer.Instance;
@@ -44,6 +43,10 @@ namespace Orchard.Tags.Services {
             return from tags in _tagRepository.Table.ToList() select tags;
         }
 
+        public Tag GetTag(int id) {
+            return _tagRepository.Get(x => x.Id == id);
+        }
+
         public Tag GetTagByName(string tagName) {
             return _tagRepository.Get(x => x.TagName == tagName);
         }
@@ -55,6 +58,14 @@ namespace Orchard.Tags.Services {
             }
             else {
                 _notifier.Warning(T("Couldn't create tag: " + tagName + "it already exixts"));
+            }
+        }
+
+        public void DeleteTag(int id) {
+            _tagRepository.Delete(GetTag(id));
+            IEnumerable<TagsContentItems> tagsContentItems = _tagsContentItemsRepository.Fetch(x => x.TagId == id);
+            foreach (var tagContentItem in tagsContentItems) {
+                _tagsContentItemsRepository.Delete(tagContentItem);
             }
         }
 

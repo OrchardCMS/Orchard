@@ -5,6 +5,7 @@ namespace Orchard.Tags {
     public class Permissions : IPermissionProvider {
         public static readonly Permission CreateTag = new Permission { Description = "Creating a Tag", Name = "CreateTag" };
         public static readonly Permission ApplyTag = new Permission { Description = "Applying a Tag", Name = "ApplyTag" };
+        public static readonly Permission DeleteTag = new Permission { Description = "Deleting a Tag", Name = "DeleteTag" };
 
         public string PackageName {
             get {
@@ -16,6 +17,7 @@ namespace Orchard.Tags {
             return new List<Permission> {
                 CreateTag,
                 ApplyTag,
+                DeleteTag,
             };
         }
     }
