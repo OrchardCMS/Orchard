@@ -4,6 +4,6 @@
     <ul id="menu">
         <li><%= Html.ActionLink("Home", "Index", "Home", new {Area = ""}, new {})%></li>
         <li><%= Html.ActionLink("About", "About", "Home", new {Area = ""}, new {})%></li>
-        <li><%= Html.ActionLink("Admin", "Index", new {Area = "Orchard.Media", Controller = "Admin"})%></li>
+        <li><%= Html.ActionLink("Admin", "Index", new {Area = "Orchard.CMSPages", Controller = "Admin"})%></li>
     </ul>
 </div>
