@@ -94,7 +94,7 @@ namespace Orchard.Tags.Controllers {
                 return RedirectToAction("Index");
             }
             catch (Exception exception) {
-                _notifier.Error(T("Creating Tag failed: " + exception.Message));
+                _notifier.Error(T("Creating tag failed: " + exception.Message));
                 return View(viewModel);
             }
         }
@@ -110,7 +110,7 @@ namespace Orchard.Tags.Controllers {
 
             }
             catch (Exception exception) {
-                _notifier.Error(T("Editing tag failed: " + exception.Message));
+                _notifier.Error(T("Retrieving tag information failed: " + exception.Message));
                 return Index();
             }
         }
@@ -127,7 +127,7 @@ namespace Orchard.Tags.Controllers {
                 return RedirectToAction("Index");
             }
             catch (Exception exception) {
-                _notifier.Error(T("Editing Comment failed: " + exception.Message));
+                _notifier.Error(T("Editing tag failed: " + exception.Message));
                 return View(viewModel);
             }
         }
