@@ -297,7 +297,6 @@ div.confirmation, div.warning, div.critical {
 
 /* Forms   
 ----------------------------------------------------------*/
-
 fieldset.bulk.actions {
     display:inline;
     margin:0 1.4em -.7em 0;
@@ -314,11 +313,15 @@ label span {
 	font-weight:normal;
 }
 
+/* todo: (heskew) try to get .text on stuff like #PublishLaterDate */
 select, textarea, input.text, #PublishLaterDate {
 	margin:3px 4px 4px;
 	padding:2px;
 	border:1px solid #d2d6c6;
 	color:#5a5b32;
+}
+select:focus, textarea:focus, input.text:focus, #PublishLaterDate:focus {
+	border-color:#666d51;
 }
 
 input.large.text, textarea, fieldset {
@@ -363,7 +366,7 @@ button, .button {
 button:hover, .button:hover,
 button:focus, .button:focus {
     background:#8a8f7a;
-    border:1px solid #666d51;
+    border-color:#666d51;
     color:#f6faea;
     text-decoration:none;
 }
