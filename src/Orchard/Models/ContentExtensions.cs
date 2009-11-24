@@ -21,7 +21,7 @@ namespace Orchard.Models {
                 return null;
 
             initialize(content);
-            manager.Create(content);
+            manager.Create(content.ContentItem);
             return content;
         }
 

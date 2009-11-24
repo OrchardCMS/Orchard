@@ -4,9 +4,10 @@ using Orchard.UI.Models;
 
 namespace Orchard.Models {
     public interface IContentManager : IDependency {
-        IContent New(string contentType);
-        IContent Get(int id);
-        void Create(IContent contentItem);
+        ContentItem New(string contentType);
+        void Create(ContentItem contentItem);
+
+        ContentItem Get(int id);
 
         IEnumerable<ModelTemplate> GetDisplays(IContent contentItem);
         IEnumerable<ModelTemplate> GetEditors(IContent contentItem);

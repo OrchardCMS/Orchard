@@ -102,7 +102,7 @@ namespace Orchard.Tests.Models {
         public void GetByIdShouldDetermineTypeAndLoadParts() {
             var modelRecord = CreateModelRecord("alpha");
 
-            var contentItem = _manager.Get(modelRecord.Id).ContentItem;
+            var contentItem = _manager.Get(modelRecord.Id);
             Assert.That(contentItem.ContentType, Is.EqualTo("alpha"));
             Assert.That(contentItem.Id, Is.EqualTo(modelRecord.Id));
         }
@@ -119,7 +119,7 @@ namespace Orchard.Tests.Models {
 
             // create a gamma record
             var gamma = new GammaRecord {
-                ContentItem = _container.Resolve<IRepository<ContentItemRecord>>().Get(model.ContentItem.Id),
+                ContentItem = _container.Resolve<IRepository<ContentItemRecord>>().Get(model.Id),
                 Frap = "foo"
             };
 
@@ -130,11 +130,11 @@ namespace Orchard.Tests.Models {
             // re-fetch from database
             model = _manager.Get(modelRecord.Id);
 
-            Assert.That(model.ContentItem.ContentType, Is.EqualTo("gamma"));
-            Assert.That(model.ContentItem.Id, Is.EqualTo(modelRecord.Id));
+            Assert.That(model.ContentType, Is.EqualTo("gamma"));
+            Assert.That(model.Id, Is.EqualTo(modelRecord.Id));
             Assert.That(model.Is<Gamma>(), Is.True);
             Assert.That(model.As<Gamma>().Record, Is.Not.Null);
-            Assert.That(model.As<Gamma>().Record.ContentItem.Id, Is.EqualTo(model.ContentItem.Id));
+            Assert.That(model.As<Gamma>().Record.ContentItem.Id, Is.EqualTo(model.Id));
 
         }
 
@@ -143,7 +143,7 @@ namespace Orchard.Tests.Models {
             var beta = _manager.New("beta");
             _manager.Create(beta);
 
-            var modelRecord = _container.Resolve<IRepository<ContentItemRecord>>().Get(beta.ContentItem.Id);
+            var modelRecord = _container.Resolve<IRepository<ContentItemRecord>>().Get(beta.Id);
             Assert.That(modelRecord, Is.Not.Null);
             Assert.That(modelRecord.ContentType.Name, Is.EqualTo("beta"));
         }

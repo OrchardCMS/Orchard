@@ -43,17 +43,17 @@ namespace Orchard.Tests.Packages.Users.Controllers {
 
             var manager = _container.Resolve<IContentManager>();
 
-            var userOne = manager.New("user").As<User>();
+            var userOne = manager.New<User>("user");
             userOne.Record = new UserRecord { UserName = "one" };
-            manager.Create(userOne);
+            manager.Create(userOne.ContentItem);
 
-            var userTwo = manager.New("user").As<User>();
+            var userTwo = manager.New<User>("user");
             userTwo.Record = new UserRecord { UserName = "two" };
-            manager.Create(userTwo);
+            manager.Create(userTwo.ContentItem);
 
-            var userThree = manager.New("user").As<User>();
+            var userThree = manager.New<User>("user");
             userThree.Record = new UserRecord { UserName = "three" };
-            manager.Create(userThree);
+            manager.Create(userThree.ContentItem);
 
             _controller = _container.Resolve<AdminController>();
 

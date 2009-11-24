@@ -31,7 +31,7 @@ namespace Orchard.Models {
             }            
         }
 
-        public virtual IContent New(string contentType) {
+        public virtual ContentItem New(string contentType) {
 
             // create a new kernel for the model instance
             var context = new ActivatingContentContext {
@@ -55,28 +55,26 @@ namespace Orchard.Models {
             return context2.ContentItem;
         }
 
-        public virtual IContent Get(int id) {
+        public virtual ContentItem Get(int id) {
             // obtain root record to determine the model type
-            var contentItemRecord = _contentItemRepository.Get(id);
+            var record = _contentItemRepository.Get(id);
 
             // no record of that id means content item doesn't exist
-            if (contentItemRecord == null)
+            if (record == null)
                 return null;
 
             // allocate instance and set record property
-            var content = New(contentItemRecord.ContentType.Name);
-            content.ContentItem.Record = contentItemRecord;
+            var contentItem = New(record.ContentType.Name);
+            contentItem.Id = record.Id;
+            contentItem.Record = record;
 
             // create a context with a new instance to load            
             var context = new LoadContentContext {
-                Id = contentItemRecord.Id,
-                ContentType = contentItemRecord.ContentType.Name,
-                ContentItemRecord = contentItemRecord,
-                ContentItem = content.ContentItem
+                Id = contentItem.Id,
+                ContentType = contentItem.ContentType,
+                ContentItemRecord = record,
+                ContentItem = contentItem,
             };
-
-            // set the id
-            context.ContentItem.Id = context.Id;
 
             // invoke drivers to acquire state, or at least establish lazy loading callbacks
             foreach (var driver in Drivers) {
@@ -89,18 +87,18 @@ namespace Orchard.Models {
             return context.ContentItem;
         }
 
-        public void Create(IContent content) {
+        public void Create(ContentItem contentItem) {
             // produce root record to determine the model id
-            var modelRecord = new ContentItemRecord { ContentType = AcquireContentTypeRecord(content.ContentItem.ContentType) };
+            var modelRecord = new ContentItemRecord { ContentType = AcquireContentTypeRecord(contentItem.ContentType) };
             _contentItemRepository.Create(modelRecord);
-            content.ContentItem.Record = modelRecord;
+            contentItem.Record = modelRecord;
 
             // build a context with the initialized instance to create
             var context = new CreateContentContext {
                 Id = modelRecord.Id,
                 ContentType = modelRecord.ContentType.Name,
                 ContentItemRecord = modelRecord,
-                ContentItem = content.ContentItem
+                ContentItem = contentItem
             };
 
             // set the id
