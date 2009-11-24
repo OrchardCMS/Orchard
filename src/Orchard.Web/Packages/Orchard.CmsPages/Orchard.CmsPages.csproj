@@ -127,11 +127,11 @@
     <Content Include="Views\Admin\BulkDeleteConfirm.aspx" />
     <Content Include="Views\Admin\BulkPublishLater.aspx" />
     <Content Include="Views\Admin\EditorTemplates\inputTextPermalink.ascx" />
+    <Content Include="Views\Admin\EditorTemplates\TemplateDescriptor.ascx" />
     <Content Include="Views\Admin\Export.aspx" />
     <Content Include="Views\Admin\Edit.aspx" />
     <Content Include="Views\Admin\Create.aspx" />
     <Content Include="Views\Admin\EditorTemplates\PageCreateViewModel.ascx" />
-    <Content Include="Views\Admin\EditorTemplates\inputTextArea.ascx" />
     <Content Include="Views\Admin\EditorTemplates\inputTextLarge.ascx" />
     <Content Include="Views\Templates\ExtraUserControl.ascx" />
     <Content Include="Views\Templates\ThreeColumns.aspx" />

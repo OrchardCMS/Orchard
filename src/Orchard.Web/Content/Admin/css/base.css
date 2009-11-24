@@ -149,7 +149,7 @@ h2 { font-size:2.4em; } /* 24px */
 h3 { font-size:2.1em; } /* 21px */
 h4 { font-size:1.8em; } /* 18px */
 h5 { font-size:1.6em; } /* 16px */
-h6, p, label, input, select, th, td { font-size:1.5em; } /* 15px */
+h6, p, label, input, .button, .cancel, select, th, td { font-size:1.5em; } /* 15px */
 
 /* ---------- Links ---------- */
 a, a:link {
@@ -300,7 +300,7 @@ div.confirmation, div.warning, div.critical {
 
 fieldset.bulk.actions {
     display:inline;
-    margin:.4em 1.4em -.8em 0;
+    margin:0 1.4em -.7em 0;
 }
 
 label {
@@ -325,7 +325,7 @@ input.large.text, textarea, fieldset {
     clear:both;
 }
 fieldset {
-    margin:.7em 0 .2em;
+    margin:.7em 0 .4em;
 }
 textarea {
     min-height:8em;
@@ -370,10 +370,13 @@ button:focus, .button:focus {
 .button {
     line-height:26px;
 }
+.cancel {
+    margin:0 0 0 .93em;
+}
 #main .manage {
     float:right;
     overflow:hidden;
-    margin:4px 0 4px 4px;
+    margin:3px 0 6px 4px;
 }
 .manage a.button {
     float:right;
@@ -498,11 +501,16 @@ ul.horizontal li a, ul.horizontal li a:visited, ul.horizontal li a:active, ol.ho
 /* Miscellaneous;
 ----------------------------------------------------------*/
 
-.templateThumbnail{
- width: 124px;
- height: 144px;
- border:1px solid #000;
- margin: 4px 4px 20px 16px;
+/* CMSPages */
+.templates p {
+    overflow:hidden;
+}
+.templates p img {
+    border:1px solid #000;
+    float:left;
+    height:144px;
+    margin:.27em .93em .93em .54em;
+    width:124px;
 }
 
 .previewImage {

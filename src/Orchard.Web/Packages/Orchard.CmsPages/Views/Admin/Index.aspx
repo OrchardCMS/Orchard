@@ -29,7 +29,7 @@
             </select>
             <input class="button" type="submit" name="submit.Filter" value="Apply"/>
         </fieldset>
-        <p class="manage"><%=Html.ActionLink("Add a page", "Create", new {}, new { @class = "button" }) %></p>
+        <div class="manage"><%=Html.ActionLink("Add a page", "Create", new {}, new { @class = "button" }) %></div>
         <fieldset>
             <table summary="This is a table of the PageEntries currently available for use in your application.">
                 <colgroup>
@@ -95,6 +95,6 @@
             }%>
             </table>
         </fieldset>
-        <p class="manage"><%=Html.ActionLink("Add a page", "Create", new {}, new { @class = "button"}) %></p>
+        <div class="manage"><%=Html.ActionLink("Add a page", "Create", new {}, new { @class = "button"}) %></div>
     <% } %>
 <% Html.Include("Foot"); %>
