@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Web.Mvc;
 using Orchard.Blogs.Models;
+using Orchard.Core.Common.Models;
 using Orchard.Models;
 using Orchard.Mvc.ViewModels;
 using Orchard.UI.Models;
@@ -18,19 +19,24 @@ namespace Orchard.Blogs.ViewModels {
 
         [Required]
         public string Name {
-            get { return Blog.As<Blog>().Record.Name; }
-            set { Blog.As<Blog>().Record.Name = value; }
+            get { return Blog.As<RoutableAspect>().Record.Title; }
+            set { Blog.As<RoutableAspect>().Record.Title = value; }
         }
 
         [Required]
         public string Slug {
-            get { return Blog.As<Blog>().Record.Slug; }
-            set { Blog.As<Blog>().Record.Slug = value; }
+            get { return Blog.As<RoutableAspect>().Record.Slug; }
+            set { Blog.As<RoutableAspect>().Record.Slug = value; }
         }
 
-        public bool Enabled {
-            get { return Blog.As<Blog>().Record.Enabled; }
-            set { Blog.As<Blog>().Record.Enabled = value; }
+        public string Description {
+            get { return Blog.Record.Description; }
+            set { Blog.Record.Description = value; }
         }
+
+        //public bool Enabled {
+        //    get { return Blog.As<Blog>().Record.Enabled; }
+        //    set { Blog.As<Blog>().Record.Enabled = value; }
+        //}
     }
 }

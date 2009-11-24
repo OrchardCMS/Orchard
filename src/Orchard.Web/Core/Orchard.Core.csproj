@@ -68,6 +68,7 @@
     <Compile Include="Common\Models\BodyAspect.cs" />
     <Compile Include="Common\Models\RoutableAspect.cs" />
     <Compile Include="Common\Providers\RoutableAspectProvider.cs" />
+    <Compile Include="Common\Records\BodyRecord.cs" />
     <Compile Include="Common\Records\CommonRecord.cs" />
     <Compile Include="Common\Records\RoutableRecord.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

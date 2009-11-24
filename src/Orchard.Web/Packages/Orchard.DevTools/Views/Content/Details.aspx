@@ -24,10 +24,10 @@
                 Content Item</h3>
             <p>
                 Id:
-                <%=Model.Item.Id %></p>
+                <%=Model.Item.ContentItem.Id %></p>
             <p>
                 ContentType:
-                <%=Model.Item.ContentType%> <%=Html.ItemDisplayLink(Model.Item) %> <%=Html.ItemEditLink("edit", Model.Item) %></p>
+                <%=Model.Item.ContentItem.ContentType%> <%=Html.ItemDisplayLink(Model.Item) %> <%=Html.ItemEditLink("edit", Model.Item) %></p>
             <h3>
                 Content Item Parts</h3>
             <ul>

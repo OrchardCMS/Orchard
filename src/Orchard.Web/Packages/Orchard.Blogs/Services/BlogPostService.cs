@@ -15,14 +15,14 @@ namespace Orchard.Blogs.Services {
         }
 
         public BlogPost Get(Blog blog, string slug) {
-            BlogPostRecord record = _repository.Get(bpr => bpr.Blog.Id == blog.Record.Id && bpr.Blog.Enabled && bpr.Slug == slug);
+            BlogPostRecord record = _repository.Get(bpr => bpr.Blog.Id == blog.Record.Id/* && bpr.Blog.Enabled*/ && bpr.Slug == slug);
 
             return _contentManager.Get<BlogPost>(record.Id);
         }
 
         public IEnumerable<BlogPost> Get(Blog blog) {
             //TODO: (erikpo) Sort by published desc
-            IEnumerable<BlogPostRecord> items =_repository.Fetch(bpr => bpr.Blog.Id == blog.Record.Id && bpr.Blog.Enabled/*, bpr => bpr.Asc(bpr2 => bpr2.Slug)*/);
+            IEnumerable<BlogPostRecord> items =_repository.Fetch(bpr => bpr.Blog.Id == blog.Record.Id/* && bpr.Blog.Enabled, bpr => bpr.Asc(bpr2 => bpr2.Slug)*/);
 
             return items.Select(br => _contentManager.Get(br.Id).As<BlogPost>());
         }
