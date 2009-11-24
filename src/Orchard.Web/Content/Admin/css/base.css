@@ -31,6 +31,9 @@ q:before, q:after {
 :focus {
 	outline:0;
 }
+button::-moz-focus-inner, input.button::-moz-focus-inner {
+    border:0;
+}
 ins {
 	text-decoration:none;
 }
@@ -148,15 +151,8 @@ h4 { font-size:1.8em; } /* 18px */
 h5 { font-size:1.6em; } /* 16px */
 h6, p, label, input, select, th, td { font-size:1.5em; } /* 15px */
 
-p {
-    margin:4px;
-}
-strong {
-    font-weight:700;
-}
-
 /* ---------- Links ---------- */
-a, a:link, a:visited {
+a, a:link {
     color:#1e5d7d;
     text-decoration:none;
 }
@@ -266,7 +262,7 @@ a.linkButton, a.linkButton:visited {
 
 /* Content
 ----------------------------------------------------------*/
-#main h2, #main h3, #main h4 {
+#main h2, #main h3, #main h4, #main p, #main form {
     margin:.23em 0 1em;
 }
 #main h2, #main h3 {
@@ -302,44 +298,45 @@ div.confirmation, div.warning, div.critical {
 /* Forms   
 ----------------------------------------------------------*/
 
-.formList li {
-	line-height:24px;
+fieldset.bulk.actions {
+    display:inline;
+    margin:.4em 1.4em -.8em 0;
 }
 
 label {
 	display: block;
 	font-weight:700;
-	margin:8px 4px -2px 0px;
 }
-
+fieldset.bulk.actions label, label.sub {
+    display:inline;
+}
 label span {
 	font-weight:normal;
 }
 
-legend {
-	font-size:150%;
-	color:#525e50;
-}
-
 select, textarea, input.text, #PublishLaterDate {
-	margin:4px;
+	margin:3px 4px 4px;
 	padding:2px;
 	border:1px solid #d2d6c6;
 	color:#5a5b32;
 }
 
-textarea {
-	height:8em;
-	width:80%;
+input.large.text, textarea, fieldset {
+    clear:both;
 }
-/* todo: (heskew) move editor specific style elsewhere and make to not suck :| */
-.primary input.large.text,
-.primary textarea,
-.primary fieldset {
+fieldset {
+    margin:.7em 0 .2em;
+}
+textarea {
+    min-height:8em;
+}
+.primary input.large.text, .primary textarea {
     margin:.613% 0 .613% .613%;
     padding:4px;
     width:98.161%;
 }
+
+/* todo: (heskew) move editor specific style elsewhere */
 .primary .mceEditor {
     display:block;
     margin:.613% 0 .613% .613%;
@@ -354,18 +351,34 @@ textarea {
 margin:0 6px 0 0;
 }
 
-input[button], button, .button {
+button, .button {
 	background:#dddfcb url(images/tableHeaderBackground.gif) repeat-x top left;
 	border:1px solid #d2d6c6;
 	color:#5a5b32;
 	cursor:pointer;
 	height:26px;
-	margin:20px 4px 0 4px;
 	padding:0 8px;
 	text-align:center;
 }
+button:hover, .button:hover,
+button:focus, .button:focus {
+    background:#8a8f7a;
+    border:1px solid #666d51;
+    color:#f6faea;
+    text-decoration:none;
+}
+.button {
+    line-height:26px;
+}
+#main .manage {
+    float:right;
+    overflow:hidden;
+    margin:4px 0 4px 4px;
+}
+.manage a.button {
+    float:right;
+}
 
-.buttonFocus {color:#f6faea; border:1px solid #666d51; background:#8a8f7a;}
 
 
 #permalink{
