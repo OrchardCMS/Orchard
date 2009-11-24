@@ -1,37 +1,25 @@
-<%@ Page Language="C#" Inherits="System.Web.Mvc.ViewPage<Orchard.CmsPages.ViewModels.PageIndexViewModel>" %>
+<%@ Page Language="C#" Inherits="System.Web.Mvc.ViewPage<PageIndexViewModel>" %>
 <%@ Import Namespace="Orchard.CmsPages.ViewModels"%>
 <%@ Import Namespace="Orchard.Utility"%>
 <%@ Import Namespace="Orchard.CmsPages.Services.Templates"%>
 <%@ Import Namespace="Orchard.Mvc.Html" %>
 <% Html.Include("Head"); %>
-    <div class="yui-u">
-        <h2>Delete pages</h2>
-        <p class="bottomSpacer">
-            Are you sure you want to delete the pages?</p>
-    </div>
-    
-    <div class="yui-u">
-        <%using (Html.BeginForm()) { %>
+    <h2>Delete pages</h2>
+    <p>Are you sure you want to delete the pages?</p>
+    <% using (Html.BeginForm()) { %>
         <%= Html.ValidationSummary() %>
-
-            <div class="yui-u first">
-            <ol>
-                <li class="clearLayout">
-                    <input type="hidden" name="<%=Html.NameOf(m => m.Options.BulkAction)%>" value="<%=PageIndexBulkAction.Delete%>" />
-                    <input type="hidden" name="<%=Html.NameOf(m => m.Options.BulkDeleteConfirmed)%>" value="true" />
-                    <input class="button" type="submit" name="submit.BulkEdit" value="Delete" />
-                </li>
-            </ol>
-            </div>
-
+        <fieldset>
+            <input type="hidden" name="<%=Html.NameOf(m => m.Options.BulkAction)%>" value="<%=PageIndexBulkAction.Delete%>" />
+            <input type="hidden" name="<%=Html.NameOf(m => m.Options.BulkDeleteConfirmed)%>" value="true" />
+            <input class="button" type="submit" name="submit.BulkEdit" value="Delete" />
             <%
-                int pageIndex = 0;
-                foreach (var pageEntry in Model.PageEntries.Where(e => e.IsChecked)) {
-            %>
-                    <input type="hidden" value="<%=pageEntry.PageId %>" name="<%=Html.NameOf(m => m.PageEntries[pageIndex].PageId)%>"/>
-                    <input type="hidden" value="<%=pageEntry.IsChecked %>" name="<%=Html.NameOf(m => m.PageEntries[pageIndex].IsChecked)%>"/>
-            <%  pageIndex++;
-            }%>
-        <%}/*EndForm*/%>
-    </div>
+            int pageIndex = 0;
+            foreach (var pageEntry in Model.PageEntries.Where(e => e.IsChecked)) {
+                var pi = pageIndex;
+                %><input type="hidden" value="<%=pageEntry.PageId %>" name="<%=Html.NameOf(m => m.PageEntries[pi].PageId)%>"/>
+            <input type="hidden" value="<%=pageEntry.IsChecked %>" name="<%=Html.NameOf(m => m.PageEntries[pi].IsChecked)%>"/><%
+                pageIndex++;
+            } %>
+        </fieldset>
+    <% } %>
 <% Html.Include("Foot"); %>

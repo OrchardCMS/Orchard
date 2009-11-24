@@ -1,5 +1,5 @@
 ﻿<%@ Control Language="C#" Inherits="System.Web.Mvc.ViewUserControl<TemplateDescriptor>" %>
-<%@ Import Namespace="Orchard.CmsPages.Services.Templates"%>
+<%@ Import Namespace="Orchard.CmsPages.Services.Templates" %>
 <ul>
     <li>
         <h3><%=Html.Encode(Model.DisplayName)%></h3>
@@ -7,7 +7,7 @@
     <li>
         <label title="<%=Html.Encode(Model.DisplayName)%>" for="TemplateName_<%=Model.Name%>">
         <%-- todo: (heskew) need to know if this template descriptor is what's currently set. view model? --%>
-        <%=Html.RadioButton("TemplateName", Model.Name, "" == Model.Name, new { id="TemplateName_" + Model.Name })%>
+        <input type="radio" name="TemplateName" checked="<%="" == Model.Name ? "checked" : ""%>" value="<%=Model.Name %>" id="<%=string.Format("TemplateName_{0}", Model.Name) %>" />
         Select this template</label>
     </li>
     <li>

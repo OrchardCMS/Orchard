@@ -8,8 +8,8 @@
               var t = template; %>
             <li>
                 <%=Html.EditorFor(m => t) %>
-            </li>
-        <% } %>
+            </li><%
+           } %>
     </ol>
 </fieldset>
 <div><input class="button" type="submit" value="Create" /></div>

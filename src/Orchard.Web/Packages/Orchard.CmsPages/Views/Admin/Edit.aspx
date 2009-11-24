@@ -31,18 +31,18 @@
         <div class="secondary">
             <h3><%=_Encoded("Publish Settings") %></h3>
             <fieldset>
-            <ol class="formList">
-                <li><label for="Command_PublishNow"><%=Html.RadioButton("Command", "PublishNow", new { id = "Command_PublishNow" }) %> Publish Now</label></li>
-                <li>
+                <label for="Command_PublishNow"><%=Html.RadioButton("Command", "PublishNow", new { id = "Command_PublishNow" }) %> Publish Now</label>
+            </fieldset>
+            <fieldset>
                 <label for="Command_PublishLater"><%=Html.RadioButton("Command", "PublishLater", new { id = "Command_PublishLater" }) %> Publish Later</label>
                 <%=Html.EditorFor(m => m.PublishLaterDate) %>
-                </li>
-                <li><label for="Command_SaveDraft"><%=Html.RadioButton("Command", "SaveDraft", new { id = "Command_SaveDraft" }) %> Save Draft</label></li>
-                <li>
-                    <input class="button" type="submit" name="submit.Save" value="Save"/>
-                    <input class="button" type="submit" name="submit.DeleteDraft" value="Delete Draft" <%=Model.CanDeleteDraft ? "" : "disabled" %>/>
-                </li>
-            </ol>
+            </fieldset>
+            <fieldset>
+                <label for="Command_SaveDraft"><%=Html.RadioButton("Command", "SaveDraft", new { id = "Command_SaveDraft" }) %> Save Draft</label></li>
+            </fieldset>
+            <fieldset>
+                <input class="button" type="submit" name="submit.Save" value="Save"/>
+                <input class="button" type="submit" name="submit.DeleteDraft" value="Delete Draft" <%=Model.CanDeleteDraft ? "" : "disabled" %>/>
             </fieldset>
         </div>
         <%}/*EndForm*/%>

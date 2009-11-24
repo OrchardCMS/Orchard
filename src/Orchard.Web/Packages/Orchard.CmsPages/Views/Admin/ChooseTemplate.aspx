@@ -7,13 +7,13 @@
     <% using (Html.BeginForm()) {
         %><%= Html.ValidationSummary() %>
         <fieldset>
-            <ol class="templates">
-                <% foreach (var template in Model.Templates) {
-                      var t = template; %>
-                    <li>
-                        <%=Html.EditorFor(m => t) %>
-                    </li>
-                <% } %>
+            <ol class="templates"><%
+                foreach (var template in Model.Templates) {
+                    var t = template; %>
+                <li><%=
+                    Html.EditorFor(m => t) %>
+                </li><%
+                } %>
             </ol>
         </fieldset>
         <div>
