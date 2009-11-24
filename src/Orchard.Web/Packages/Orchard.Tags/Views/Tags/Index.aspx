@@ -10,5 +10,4 @@
                             &nbsp;
                         <% } %>
 	</div>
-	<% Html.EndForm(); %>
 <% Html.Include("Footer"); %>
