@@ -71,6 +71,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\TagService.cs" />
     <Compile Include="ViewModels\TagsAdminCreateViewModel.cs" />
+    <Compile Include="ViewModels\TagsAdminEditViewModel.cs" />
     <Compile Include="ViewModels\TagsAdminIndexViewModel.cs" />
     <Compile Include="ViewModels\TagsCreateViewModel.cs" />
     <Compile Include="ViewModels\TagsIndexViewModel.cs" />
@@ -78,6 +79,7 @@
   <ItemGroup>
     <Content Include="Package.txt" />
     <Content Include="Views\Admin\Create.aspx" />
+    <Content Include="Views\Admin\Edit.aspx" />
     <Content Include="Views\Admin\Index.aspx" />
     <Content Include="Views\Models\DisplayTemplates\HasTags.ascx" />
     <Content Include="Views\Models\EditorTemplates\TagSettingsRecord.ascx" />

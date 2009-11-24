@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Orchard.Data;
 using Orchard.Localization;
@@ -14,6 +15,7 @@ namespace Orchard.Tags.Services {
         Tag GetTagByName(string tagName);
         void CreateTag(string tagName);
         void DeleteTag(int id);
+        void UpdateTag(int id, string tagName);
         void TagContentItem(int contentItemId, string tagName);
         void UpdateTagsForContentItem(int contentItemId, IEnumerable<int> tagsForContentItem);
     }
@@ -67,6 +69,15 @@ namespace Orchard.Tags.Services {
             foreach (var tagContentItem in tagsContentItems) {
                 _tagsContentItemsRepository.Delete(tagContentItem);
             }
+        }
+
+        public void UpdateTag(int id, string tagName) {
+            Tag tag = _tagRepository.Get(id);
+            if (String.IsNullOrEmpty(tagName)) {
+                _notifier.Warning(T("Couldn't rename tag: name was empty"));
+                return;
+            }
+            tag.TagName = tagName;
         }
 
         public void TagContentItem(int contentItemId, string tagName) {

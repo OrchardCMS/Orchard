@@ -99,6 +99,39 @@ namespace Orchard.Tags.Controllers {
             }
         }
 
+        public ActionResult Edit(int id) {
+            try {
+                Tag tag = _tagService.GetTag(id);
+                var viewModel = new TagsAdminEditViewModel {
+                    Id = tag.Id,
+                    TagName = tag.TagName,
+                };
+                return View(viewModel);
+
+            }
+            catch (Exception exception) {
+                _notifier.Error(T("Editing tag failed: " + exception.Message));
+                return Index();
+            }
+        }
+
+        [AcceptVerbs(HttpVerbs.Post)]
+        public ActionResult Edit(FormCollection input) {
+            var viewModel = new TagsAdminEditViewModel();
+            try {
+                UpdateModel(viewModel, input.ToValueProvider());
+                if (!_authorizer.Authorize(Permissions.RenameTag, T("Couldn't edit tag")))
+                    return new HttpUnauthorizedResult();
+
+                _tagService.UpdateTag(viewModel.Id, viewModel.TagName);
+                return RedirectToAction("Index");
+            }
+            catch (Exception exception) {
+                _notifier.Error(T("Editing Comment failed: " + exception.Message));
+                return View(viewModel);
+            }
+        }
+
         private static TagEntry CreateTagEntry(Tag tag) {
             return new TagEntry {
                 Tag = tag,
