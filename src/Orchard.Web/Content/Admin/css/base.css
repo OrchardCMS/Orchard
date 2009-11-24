@@ -151,6 +151,8 @@ h4 { font-size:1.8em; } /* 18px */
 h5 { font-size:1.6em; } /* 16px */
 h6, p, label, input, .button, .cancel, select, th, td { font-size:1.5em; } /* 15px */
 
+h3 span { font-size:.57em; }
+
 /* ---------- Links ---------- */
 a, a:link {
     color:#1e5d7d;

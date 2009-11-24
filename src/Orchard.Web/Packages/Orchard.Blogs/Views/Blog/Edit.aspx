@@ -4,7 +4,7 @@
 <%@ Import Namespace="Orchard.Blogs.ViewModels"%>
 <% Html.Include("Head"); %>
     <h2>Edit Blog</h2>
-    <p><a href="<%=Url.Blogs() %>">Manage Blogs</a> > Edit #<%= Model.Id%> <strong><%=Html.Encode(Model.Name)%></strong></p>
+    <p><a href="<%=Url.Blogs() %>">Manage Blogs</a> > Editing <strong><%=Html.Encode(Model.Name)%></strong> (#<%= Model.Id%>)</p>
     <% using (Html.BeginForm()) { %>
         <%= Html.ValidationSummary() %>
         <%= Html.EditorForModel()%>
