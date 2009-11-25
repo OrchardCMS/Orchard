@@ -9,6 +9,7 @@ using Orchard.Models;
 using Orchard.Mvc.Results;
 
 namespace Orchard.Blogs.Controllers {
+    [ValidateInput(false)]
     public class BlogPostController : Controller {
         private readonly ISessionLocator _sessionLocator;
         private readonly IBlogService _blogService;

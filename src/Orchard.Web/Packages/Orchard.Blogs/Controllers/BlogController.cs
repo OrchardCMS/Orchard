@@ -10,10 +10,10 @@ using Orchard.Localization;
 using Orchard.Models;
 using Orchard.Models.Driver;
 using Orchard.Mvc.Results;
-using Orchard.Security;
 using Orchard.UI.Notify;
 
 namespace Orchard.Blogs.Controllers {
+    [ValidateInput(false)]
     public class BlogController : Controller, IUpdateModel {
         private readonly IContentManager _contentManager;
         private readonly INotifier _notifier;
