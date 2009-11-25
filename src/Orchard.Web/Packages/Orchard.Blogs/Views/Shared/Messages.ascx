@@ -13,5 +13,5 @@ string CssClassName(NotifyType type) {
 }</script>
 
 <% foreach (var item in Model) { %>
-<div class="<%=CssClassName(item.Type) %>"><%=Html.Encode(item.Message) %></div>
+<div class="<%=CssClassName(item.Type) %> message"><%=Html.Encode(item.Message) %></div>
 <% } %>

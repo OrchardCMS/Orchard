@@ -16,7 +16,7 @@
                 %><fieldset>
                 <label for="<%="Revision.Contents[" + content.ZoneName + "].Content" %>"><%=_Encoded("Zone Name") %>: <%= content.ZoneName %></label>
                 <% if (Model.Template != null && Model.Template.Zones.Contains(content.ZoneName) == false) {
-                    %><span class="warning">These contents are assigned to a zone that does not exist in the current template. Please delete it or copy it to another zone.</span><%
+                    %><span class="warning message">These contents are assigned to a zone that does not exist in the current template. Please delete it or copy it to another zone.</span><%
                    } %>
                 <%= Html.TextArea("Revision.Contents[" + content.ZoneName + "].Content", content.Content) %>
             </fieldset><%
@@ -42,7 +42,7 @@
             </fieldset>
             <fieldset>
                 <input class="button" type="submit" name="submit.Save" value="Save"/>
-                <input class="button" type="submit" name="submit.DeleteDraft" value="Delete Draft" <%=Model.CanDeleteDraft ? "" : "disabled" %>/>
+                <input class="delete button" type="submit" name="submit.DeleteDraft" value="Delete Draft" <%=Model.CanDeleteDraft ? "" : "disabled" %>/>
             </fieldset>
         </div>
         <%}/*EndForm*/%>

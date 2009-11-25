@@ -131,7 +131,8 @@ number of columns: 24; actual width: 946; column width: 26; gutter width:14
     width:74.543%;
 }
 .sections .secondary {
-    float:right;
+    float:left;
+    margin-left:1.71%;
     width:23.629%;
 }
 
@@ -149,12 +150,13 @@ h2 { font-size:2.4em; } /* 24px */
 h3 { font-size:2.1em; } /* 21px */
 h4 { font-size:1.8em; } /* 18px */
 h5 { font-size:1.6em; } /* 16px */
-h6, p, label, input, .button, .cancel, select, th, td { font-size:1.5em; } /* 15px */
+h6, p, label, input, select, .button, .cancel /* todo: (heskew) need to do something better with cancel */,
+.message, th, td { font-size:1.5em; } /* 15px */
 
 h3 span { font-size:.57em; }
 
 /* ---------- Links ---------- */
-a, a:link {
+a, a:link, a:visited {
     color:#1e5d7d;
     text-decoration:none;
 }
@@ -275,23 +277,26 @@ a.linkButton, a.linkButton:visited {
 
 /* Confirmations;
 ----------------------------------------------------------*/
-
-div.confirmation, div.warning, div.critical {
+.message {
+	margin:10px 0 4px 0;
     padding:4px;
-	margin: 10px 0 4px 0;
+}
+span.message {
+    display:block;
+	margin:4px 0 4px 4px;
 }
 
-.confirmation {
+.confirmation.message {
 	background:#e6f1c9;
 	border:1px solid #cfe493;
 }
 
-.warning {
+.warning.message {
 	background:#fdf5bc;
 	border:1px solid #ffea9b;
 }
 
-.critical {
+.critical.message {
 	background:#e68585;
 	border:1px solid #990808;
 	color:#fff;
@@ -356,7 +361,7 @@ textarea {
 margin:0 6px 0 0;
 }
 
-button, .button {
+button, .button, .button:link, .button:visited {
 	background:#dddfcb url(images/tableHeaderBackground.gif) repeat-x top left;
 	border:1px solid #d2d6c6;
 	color:#5a5b32;
@@ -374,6 +379,9 @@ button:focus, .button:focus {
 }
 .button {
     line-height:26px;
+}
+.delete.button {
+    float:right;
 }
 .cancel {
     margin:0 0 0 .93em;
@@ -556,8 +564,8 @@ ul.horizontal li a, ul.horizontal li a:visited, ul.horizontal li a:active, ol.ho
 /*TODO - Remove roundCorners class*/
 #content, #navigation li,
 table, textarea, .button, input.text, .inputTextLarge,
-.inputTextPermalink, .linkButton, div.confirmation,
-div.warning, div.critical, .roundCorners {
+.inputTextPermalink, .linkButton, .confirmation.message,
+.warning.message, .critical.message, .roundCorners {
 	-moz-border-radius:4px;
 	-webkit-border-top-radius:4px;
 	border-radius:4px;
