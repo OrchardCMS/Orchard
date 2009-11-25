@@ -7,6 +7,7 @@
 <%=Html.EditorFor(m => m.Slug, "BlogPermalink") %>
 </fieldset>
     <label for="">Description</label>
+    <%-- todo: (heskew) shouldn't be TinyMCE'd --%>
     <%=Html.TextAreaFor(m => m.Description) %>
 <fieldset>
 </fieldset>

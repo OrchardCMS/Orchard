@@ -68,6 +68,7 @@
     <Compile Include="AdminMenu.cs" />
     <Compile Include="Controllers\BlogPostController.cs" />
     <Compile Include="Extensions\BlogCreateViewModelExtensions.cs" />
+    <Compile Include="Extensions\BlogPostCreateViewModelExtensions.cs" />
     <Compile Include="Extensions\UrlHelperExtensions.cs" />
     <Compile Include="Routing\IsBlogConstraint.cs" />
     <Compile Include="Services\BlogService.cs" />
@@ -81,19 +82,25 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Routes.cs" />
     <Compile Include="Services\BlogPostService.cs" />
+    <Compile Include="Services\CreateBlogPostParams.cs" />
     <Compile Include="Services\IBlogPostService.cs" />
     <Compile Include="Services\CreateBlogParams.cs" />
     <Compile Include="Services\IBlogService.cs" />
     <Compile Include="ViewModels\BlogsViewModel.cs" />
     <Compile Include="ViewModels\BlogViewModel.cs" />
+    <Compile Include="ViewModels\CreateBlogPostViewModel.cs" />
     <Compile Include="ViewModels\CreateBlogViewModel.cs" />
     <Compile Include="ViewModels\BlogEditViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Package.txt" />
+    <Content Include="Views\BlogPost\Create.aspx" />
     <Content Include="Views\Blog\Create.aspx" />
     <Content Include="Views\BlogPost\ListByBlog.aspx" />
     <Content Include="Views\Blog\Edit.aspx" />
+    <Content Include="Views\Blog\EditorTemplates\BlogEditViewModel.ascx" />
+    <Content Include="Views\Blog\EditorTemplates\BlogPermalink.ascx" />
+    <Content Include="Views\Blog\EditorTemplates\CreateBlogViewModel.ascx" />
     <Content Include="Views\Blog\Item.aspx" />
     <Content Include="Views\Blog\List.aspx" />
     <Content Include="Views\Shared\Foot.aspx" />

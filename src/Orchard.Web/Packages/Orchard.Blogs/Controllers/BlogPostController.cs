@@ -1,14 +1,21 @@
 using System.Web.Mvc;
+using Orchard.Blogs.Extensions;
 using Orchard.Blogs.Models;
 using Orchard.Blogs.Services;
+using Orchard.Blogs.ViewModels;
+using Orchard.Core.Common.Models;
+using Orchard.Data;
+using Orchard.Models;
 using Orchard.Mvc.Results;
 
 namespace Orchard.Blogs.Controllers {
     public class BlogPostController : Controller {
+        private readonly ISessionLocator _sessionLocator;
         private readonly IBlogService _blogService;
         private readonly IBlogPostService _blogPostService;
 
-        public BlogPostController(IBlogService blogService, IBlogPostService blogPostService) {
+        public BlogPostController(ISessionLocator sessionLocator, IBlogService blogService, IBlogPostService blogPostService) {
+            _sessionLocator = sessionLocator;
             _blogService = blogService;
             _blogPostService = blogPostService;
         }
@@ -35,6 +42,38 @@ namespace Orchard.Blogs.Controllers {
                 return new NotFoundResult();
 
             return View(post);
+        }
+
+        public ActionResult Create(string blogSlug)
+        {
+            //TODO: (erikpo) Move looking up the current blog up into a modelbinder
+            Blog blog = _blogService.Get(blogSlug);
+
+            if (blog == null)
+                return new NotFoundResult();
+
+            return View(new CreateBlogPostViewModel() {Blog = blog});
+        }
+
+        [HttpPost]
+        public ActionResult Create(string blogSlug, CreateBlogPostViewModel model)
+        {
+            //TODO: (erikpo) Move looking up the current blog up into a modelbinder
+            Blog blog = _blogService.Get(blogSlug);
+
+            if (blog == null)
+                return new NotFoundResult();
+
+            if (!ModelState.IsValid)
+                return View(model);
+
+            BlogPost blogPost = _blogPostService.Create(model.ToCreateBlogPostParams(blog));
+
+            //TEMP: (erikpo) ensure information has committed for this record
+            var session = _sessionLocator.For(typeof(BlogPostRecord));
+            session.Flush();
+
+            return Redirect(Url.BlogPostEdit(blogSlug, blogPost.As<RoutableAspect>().Slug));
         }
     }
 }

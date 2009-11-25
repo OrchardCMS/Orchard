@@ -4,6 +4,7 @@ using Orchard.Blogs.Extensions;
 using Orchard.Blogs.Models;
 using Orchard.Blogs.Services;
 using Orchard.Blogs.ViewModels;
+using Orchard.Core.Common.Models;
 using Orchard.Data;
 using Orchard.Localization;
 using Orchard.Models;
@@ -56,13 +57,13 @@ namespace Orchard.Blogs.Controllers {
             if (!ModelState.IsValid)
                 return View(model);
 
-            Blog blog = _blogService.CreateBlog(model.ToCreateBlogParams());
+            Blog blog = _blogService.Create(model.ToCreateBlogParams());
             
             //TEMP: (erikpo) ensure information has committed for this record
             var session = _sessionLocator.For(typeof(BlogRecord));
             session.Flush();
 
-            return Redirect(Url.BlogEdit(model.Slug));
+            return Redirect(Url.BlogEdit(blog.As<RoutableAspect>().Slug));
         }
 
         public ActionResult Edit(string blogSlug) {

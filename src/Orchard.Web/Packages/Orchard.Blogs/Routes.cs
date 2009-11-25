@@ -53,6 +53,38 @@ namespace Orchard.Blogs {
                                                  },
                              new RouteDescriptor {
                                                      Route = new Route(
+                                                         "Admin/Blogs/{blogSlug}/Posts",
+                                                         new RouteValueDictionary {
+                                                                                      {"area", "Orchard.Blogs"},
+                                                                                      {"controller", "BlogPost"},
+                                                                                      {"action", "ListForAdmin"}
+                                                                                  },
+                                                         new RouteValueDictionary {
+                                                                                      {"blogSlug", new IsBlogConstraint(_blogService)}
+                                                                                  },
+                                                         new RouteValueDictionary {
+                                                                                      {"area", "Orchard.Blogs"}
+                                                                                  },
+                                                         new MvcRouteHandler())
+                                                 },
+                             new RouteDescriptor {
+                                                     Route = new Route(
+                                                         "Admin/Blogs/{blogSlug}/Posts/Create",
+                                                         new RouteValueDictionary {
+                                                                                      {"area", "Orchard.Blogs"},
+                                                                                      {"controller", "BlogPost"},
+                                                                                      {"action", "Create"}
+                                                                                  },
+                                                         new RouteValueDictionary {
+                                                                                      {"blogSlug", new IsBlogConstraint(_blogService)}
+                                                                                  },
+                                                         new RouteValueDictionary {
+                                                                                      {"area", "Orchard.Blogs"}
+                                                                                  },
+                                                         new MvcRouteHandler())
+                                                 },
+                             new RouteDescriptor {
+                                                     Route = new Route(
                                                          "Admin/Blogs",
                                                          new RouteValueDictionary {
                                                                                       {"area", "Orchard.Blogs"},
