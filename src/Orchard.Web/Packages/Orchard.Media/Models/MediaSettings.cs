@@ -16,6 +16,11 @@ namespace Orchard.Media.Models {
         public MediaSettingsProvider(IRepository<MediaSettingsRecord> repository) {
             Filters.Add(new ActivatingFilter<MediaSettings>("site"));
             Filters.Add(new StorageFilter<MediaSettingsRecord>(repository) { AutomaticallyCreateMissingRecord = true });
+            AddOnActivated<MediaSettings>(DefaultSettings);
+        }
+
+        private static void DefaultSettings(ActivatedContentContext context, MediaSettings settings) {
+            settings.Record.RootMediaFolder = "~/Media";
         }
 
         protected override void GetEditors(GetEditorsContext context) {

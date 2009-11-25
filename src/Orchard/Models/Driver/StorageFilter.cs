@@ -21,8 +21,11 @@ namespace Orchard.Models.Driver {
         }
 
         protected override void Loading(LoadContentContext context, ContentPart<TRecord> instance) {
-            instance.Record = _repository.Get(instance.ContentItem.Id);
-            if (instance.Record == null && AutomaticallyCreateMissingRecord) {
+            var record = _repository.Get(instance.ContentItem.Id);
+            if (record != null) {
+                instance.Record = record;
+            }
+            else if (AutomaticallyCreateMissingRecord) {
                 instance.Record = new TRecord {ContentItem = context.ContentItemRecord};
                 _repository.Create(instance.Record);
             }
