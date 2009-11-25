@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using System.Web.Mvc;
 using Orchard.Localization;
 using Orchard.Logging;
@@ -129,6 +128,23 @@ namespace Orchard.Tags.Controllers {
             catch (Exception exception) {
                 _notifier.Error(T("Editing tag failed: " + exception.Message));
                 return View(viewModel);
+            }
+        }
+
+        public ActionResult Search(int id) {
+            try {
+                Tag tag = _tagService.GetTag(id);
+                IEnumerable<IContent> contents = _tagService.GetTaggedContentItems(id).ToList();
+                var viewModel = new TagsAdminSearchViewModel {
+                    TagName = tag.TagName,
+                    Contents = contents,
+                };
+                return View(viewModel);
+
+            }
+            catch (Exception exception) {
+                _notifier.Error(T("Retrieving tagged items failed: " + exception.Message));
+                return Index();
             }
         }
 

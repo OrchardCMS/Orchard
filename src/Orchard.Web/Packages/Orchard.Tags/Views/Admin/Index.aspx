@@ -4,7 +4,7 @@
 <% Html.Include("Header"); %>
     <% Html.BeginForm(); %>
     <div class="yui-g">
-						<h2 class="separator">Manage Comments</h2>
+						<h2 class="separator">Manage Tags</h2>
 						<%=Html.ValidationSummary() %>
 						<ol class="horizontal actions floatLeft">
                         <li>
@@ -44,7 +44,7 @@
                                     <input type="checkbox" value="true" name="<%=Html.NameOf(m => m.Tags[tagIndex].IsChecked)%>"/>
                                 </td>
                                 <td>
-                                    <%= tagEntry.Tag.TagName %>
+                                    <%=Html.ActionLink(tagEntry.Tag.TagName, "Search", new {id = tagEntry.Tag.Id}, new {@class="floatRight topSpacer"}) %>
                                 </td>
 				                <td>
 				                <%=Html.ActionLink("Edit", "Edit", new {id = tagEntry.Tag.Id}, new {@class="floatRight topSpacer"}) %>
