@@ -69,6 +69,7 @@
     <Compile Include="Models\TagsHandler.cs" />
     <Compile Include="Permissions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Routes.cs" />
     <Compile Include="Services\TagService.cs" />
     <Compile Include="ViewModels\TagsAdminCreateViewModel.cs" />
     <Compile Include="ViewModels\TagsAdminEditViewModel.cs" />

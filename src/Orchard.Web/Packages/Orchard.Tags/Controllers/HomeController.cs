@@ -93,7 +93,7 @@ namespace Orchard.Tags.Controllers {
             }
             catch (Exception exception) {
                 _notifier.Error(T("Retrieving tagged items failed: " + exception.Message));
-                return Index();
+                return RedirectToAction("Index");
             }
         }
     }
