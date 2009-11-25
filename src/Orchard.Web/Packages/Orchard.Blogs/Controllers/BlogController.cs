@@ -84,7 +84,7 @@ namespace Orchard.Blogs.Controllers {
             _notifier.Information(T("Blog information updated"));
 
             //TODO: (erikpo) Since the model isn't actually updated yet and it's possible the slug changed I'm getting the slug from input. Lame?!?!
-            return Redirect(Url.BlogEdit(values.GetValue(ControllerContext, "Slug").RawValue as string));
+            return Redirect(Url.Blogs());
         }
 
         bool IUpdateModel.TryUpdateModel<TModel>(TModel model, string prefix, string[] includeProperties, string[] excludeProperties) {
