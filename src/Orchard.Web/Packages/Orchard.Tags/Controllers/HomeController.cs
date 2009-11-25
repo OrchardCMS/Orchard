@@ -13,14 +13,13 @@ using Orchard.UI.Notify;
 using Orchard.Security;
 
 namespace Orchard.Tags.Controllers {
-    //TODO: might as well make this the home controller...
     [ValidateInput(false)]
-    public class TagsController : Controller {
+    public class HomeController : Controller {
         private readonly ITagService _tagService;
         private readonly IAuthorizer _authorizer;
         private readonly INotifier _notifier;
 
-        public TagsController(ITagService tagService, INotifier notifier, IAuthorizer authorizer) {
+        public HomeController(ITagService tagService, INotifier notifier, IAuthorizer authorizer) {
             _tagService = tagService;
             _authorizer = authorizer;
             _notifier = notifier;

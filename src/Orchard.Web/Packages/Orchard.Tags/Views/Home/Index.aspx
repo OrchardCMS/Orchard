@@ -1,4 +1,4 @@
-<%@ Page Language="C#" Inherits="System.Web.Mvc.ViewPage<TagsIndexViewModel>" %>
+﻿<%@ Page Language="C#" Inherits="System.Web.Mvc.ViewPage<TagsIndexViewModel>" %>
 <%@ Import Namespace="Orchard.Tags.ViewModels"%>
 <%@ Import Namespace="Orchard.Mvc.Html"%>
 <% Html.Include("Header"); %>

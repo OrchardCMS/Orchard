@@ -9,8 +9,8 @@
 						<%=Html.ValidationSummary() %>
 						<table id="Table1" cellspacing="0" class="roundCorners clearLayout">
 							<colgroup>
+								<col id="Col1" />
 								<col id="Col2" />
-								<col id="Col3" />
 							</colgroup>
 							<thead>
 								<tr>

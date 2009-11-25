@@ -44,10 +44,10 @@
                                     <input type="checkbox" value="true" name="<%=Html.NameOf(m => m.Tags[tagIndex].IsChecked)%>"/>
                                 </td>
                                 <td>
-                                    <%=Html.ActionLink(tagEntry.Tag.TagName, "Search", new {id = tagEntry.Tag.Id}, new {@class="floatRight topSpacer"}) %>
+                                    <%=Html.ActionLink(tagEntry.Tag.TagName, "Search", new {id = tagEntry.Tag.Id}) %>
                                 </td>
 				                <td>
-				                <%=Html.ActionLink("Edit", "Edit", new {id = tagEntry.Tag.Id}, new {@class="floatRight topSpacer"}) %>
+				                <%=Html.ActionLink("Edit", "Edit", new {id = tagEntry.Tag.Id}) %>
 				                </td>
                             </tr>
                             <% tagIndex++; } %>

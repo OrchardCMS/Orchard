@@ -63,7 +63,7 @@
   <ItemGroup>
     <Compile Include="AdminMenu.cs" />
     <Compile Include="Controllers\AdminController.cs" />
-    <Compile Include="Controllers\TagsController.cs" />
+    <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Models\Tag.cs" />
     <Compile Include="Models\TagSettings.cs" />
     <Compile Include="Models\TagsHandler.cs" />
@@ -83,10 +83,10 @@
     <Content Include="Views\Admin\Edit.aspx" />
     <Content Include="Views\Admin\Index.aspx" />
     <Content Include="Views\Admin\Search.aspx" />
+    <Content Include="Views\Home\Index.aspx" />
+    <Content Include="Views\Home\Search.aspx" />
     <Content Include="Views\Models\DisplayTemplates\HasTags.ascx" />
     <Content Include="Views\Models\EditorTemplates\TagSettingsRecord.ascx" />
-    <Content Include="Views\Tags\Index.aspx" />
-    <Content Include="Views\Tags\Search.aspx" />
     <Content Include="Web.config" />
     <Content Include="Views\Web.config" />
   </ItemGroup>
