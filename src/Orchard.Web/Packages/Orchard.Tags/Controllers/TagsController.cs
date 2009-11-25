@@ -4,13 +4,16 @@ using System.Linq;
 using System.Web.Mvc;
 using Orchard.Localization;
 using Orchard.Logging;
+using Orchard.Models;
 using Orchard.Settings;
+using Orchard.Tags.Models;
 using Orchard.Tags.Services;
 using Orchard.Tags.ViewModels;
 using Orchard.UI.Notify;
 using Orchard.Security;
 
 namespace Orchard.Tags.Controllers {
+    //TODO: might as well make this the home controller...
     [ValidateInput(false)]
     public class TagsController : Controller {
         private readonly ITagService _tagService;
@@ -78,8 +81,21 @@ namespace Orchard.Tags.Controllers {
             }
         }
 
-        public ActionResult TagName(int tagId) {
-            return RedirectToAction("Index");
+        public ActionResult Search(string tagName) {
+            try {
+                Tag tag = _tagService.GetTagByName(tagName);
+                IEnumerable<IContent> contents = _tagService.GetTaggedContentItems(tag.Id).ToList();
+                var viewModel = new TagsSearchViewModel {
+                    TagName = tag.TagName,
+                    Contents = contents,
+                };
+                return View(viewModel);
+
+            }
+            catch (Exception exception) {
+                _notifier.Error(T("Retrieving tagged items failed: " + exception.Message));
+                return Index();
+            }
         }
     }
 }

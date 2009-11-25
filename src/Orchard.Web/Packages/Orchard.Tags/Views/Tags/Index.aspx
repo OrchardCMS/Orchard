@@ -6,7 +6,7 @@
 						<h2 class="separator">Tags</h2>
 						<%=Html.ValidationSummary() %>
                         <% foreach (var tag in Model.Tags) { %>
-                            <%=Html.ActionLink(tag.TagName, "Search", new {tagId = tag.Id}, new {@class="floatRight topSpacer"}) %>
+                            <%=Html.ActionLink(tag.TagName, "Search", new {tagName = tag.TagName}, new {@class="floatRight topSpacer"}) %>
                             &nbsp;
                         <% } %>
 	</div>
