@@ -110,7 +110,7 @@ number of columns: 24; actual width: 946; column width: 26; gutter width:14
     overflow:hidden;
 }
 #content {
-    overflow:hidden;
+    overflow:auto;
     padding:1.4em;
 }
 #main {
@@ -127,10 +127,12 @@ number of columns: 24; actual width: 946; column width: 26; gutter width:14
     overflow:hidden;
 }
 .sections .primary {
+    display:inline;
     float:left;
     width:74.543%;
 }
 .sections .secondary {
+    display:inline;
     float:left;
     margin-left:1.71%;
     width:23.629%;
@@ -515,11 +517,13 @@ ul.horizontal li a, ul.horizontal li a:visited, ul.horizontal li a:active, ol.ho
 ----------------------------------------------------------*/
 
 /* CMSPages */
+.templates fieldset {
+    margin:0 0 .933%;
+}
 .templates p {
     overflow:hidden;
 }
 .templates p img {
-    border:1px solid #000;
     float:left;
     height:144px;
     margin:.27em .93em .93em .54em;
