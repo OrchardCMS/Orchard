@@ -21,7 +21,7 @@ namespace Orchard.Blogs.Services {
                 _routableRepository.Get(r => r.ContentItem.ContentType.Name == "blogpost" && r.Slug == slug);
             BlogPost blogPost = record != null ? _contentManager.Get<BlogPost>(record.Id) : null;
 
-            return blogPost != null && blogPost.Blog.ContentItem.Id == blog.ContentItem.Id ? blogPost : null;
+            return blogPost != null && blogPost.Record.Blog.Id == blog.ContentItem.Id ? blogPost : null;
         }
 
         public IEnumerable<BlogPost> Get(Blog blog) {
@@ -30,10 +30,10 @@ namespace Orchard.Blogs.Services {
                 _routableRepository.Fetch(rr => rr.ContentItem.ContentType.Name == "blogpost"
                     /*, bpr => bpr.Asc(bpr2 => bpr2.Published.GetValueOrDefault(new DateTime(2099, 1, 1)))*/);
 
-            //TODO: (erikpo) Need to filter by blog in the line above instead of manually here
+            //TODO: (erikpo) Need to filter by blog in the line above instead of filtering here
             return
                 records.Select(r => _contentManager.Get(r.Id).As<BlogPost>()).Where(
-                    bp => bp.Blog.ContentItem.Id == blog.ContentItem.Id);
+                    bp => bp.Record.Blog.Id == blog.ContentItem.Id);
         }
 
         public BlogPost Create(CreateBlogPostParams parameters) {

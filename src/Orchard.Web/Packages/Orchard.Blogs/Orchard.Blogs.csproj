@@ -88,6 +88,7 @@
     <Compile Include="Services\IBlogService.cs" />
     <Compile Include="ViewModels\BlogsViewModel.cs" />
     <Compile Include="ViewModels\BlogViewModel.cs" />
+    <Compile Include="ViewModels\BlogPostViewModel.cs" />
     <Compile Include="ViewModels\CreateBlogPostViewModel.cs" />
     <Compile Include="ViewModels\CreateBlogViewModel.cs" />
     <Compile Include="ViewModels\BlogEditViewModel.cs" />
@@ -95,6 +96,7 @@
   <ItemGroup>
     <Content Include="Package.txt" />
     <Content Include="Views\BlogPost\Create.aspx" />
+    <Content Include="Views\BlogPost\Item.aspx" />
     <Content Include="Views\Blog\Create.aspx" />
     <Content Include="Views\BlogPost\ListByBlog.aspx" />
     <Content Include="Views\Blog\Edit.aspx" />

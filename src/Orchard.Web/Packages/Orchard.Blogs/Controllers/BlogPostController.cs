@@ -42,7 +42,7 @@ namespace Orchard.Blogs.Controllers {
             if (post == null)
                 return new NotFoundResult();
 
-            return View(post);
+            return View(new BlogPostViewModel {Blog = blog, Post = post});
         }
 
         public ActionResult Create(string blogSlug)

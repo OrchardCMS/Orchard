@@ -1,4 +1,5 @@
-<%@ Page Language="C#" Inherits="System.Web.Mvc.ViewPage<IEnumerable<BlogPost>>" %>
+<%@ Page Language="C#" Inherits="System.Web.Mvc.ViewPage<BlogViewModel>" %>
+<%@ Import Namespace="Orchard.Blogs.ViewModels"%>
 <%@ Import Namespace="Orchard.Core.Common.Models"%>
 <%@ Import Namespace="Orchard.Models"%>
 <%@ Import Namespace="Orchard.Blogs.Extensions"%>
@@ -9,10 +10,10 @@
     <div class="yui-g">
         <h2>Posts</h2><%
         //TODO: (erikpo) Replace this with an Html extension method of some sort (ListForModel?)
-        if (Model.Count() > 0) { %>
+        if (Model.Posts.Count() > 0) { %>
         <ul><%
-            foreach (BlogPost post in Model) { %>
-            <li><a href="<%=Url.BlogPost(post.Blog.Slug, post.As<RoutableAspect>().Slug) %>"><%=Html.Encode(post.As<RoutableAspect>().Title) %></a></li><%
+            foreach (BlogPost post in Model.Posts) { %>
+            <li><a href="<%=Url.BlogPost(Model.Blog.Slug, post.As<RoutableAspect>().Slug) %>"><%=Html.Encode(post.As<RoutableAspect>().Title) %></a></li><%
             } %>
         </ul><%
         } %>

@@ -14,7 +14,7 @@
         if (Model.Posts.Count() > 0) { %>
         <ul><%
             foreach (BlogPost post in Model.Posts) { %>
-            <li><a href="<%=Url.BlogPost(post.Blog.Slug, post.As<RoutableAspect>().Slug) %>"><%=Html.Encode(post.As<RoutableAspect>().Title) %></a></li><%
+            <li><a href="<%=Url.BlogPost(Model.Blog.Slug, post.As<RoutableAspect>().Slug) %>"><%=Html.Encode(post.As<RoutableAspect>().Title) %></a></li><%
             } %>
         </ul><%
         } %>
