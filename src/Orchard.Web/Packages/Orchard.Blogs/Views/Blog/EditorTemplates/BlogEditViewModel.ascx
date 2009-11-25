@@ -7,8 +7,7 @@
 <%=Html.EditorFor(m => m.Slug, "BlogPermalink") %>
 </fieldset>
     <label for="">Description</label>
-    <%-- todo: (heskew) shouldn't be TinyMCE'd --%>
-    <%=Html.TextAreaFor(m => m.Description) %>
+    <%=Html.TextAreaFor(m => m.Description, 5, 60, null)%>
 <fieldset>
 </fieldset>
     <input class="button" type="submit" value="Save" />

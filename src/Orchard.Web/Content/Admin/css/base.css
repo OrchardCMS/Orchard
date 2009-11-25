@@ -309,14 +309,14 @@ label span {
 	font-weight:normal;
 }
 
-/* todo: (heskew) try to get .text on stuff like #PublishLaterDate */
-select, textarea, input.text, #PublishLaterDate {
+/* todo: (heskew) try to get .text on stuff like #PublishLaterDate and .text-box */
+select, textarea, input.text, input.text-box, #PublishLaterDate {
 	margin:3px 4px 4px;
 	padding:2px;
 	border:1px solid #d2d6c6;
 	color:#5a5b32;
 }
-select:focus, textarea:focus, input.text:focus, #PublishLaterDate:focus {
+select:focus, textarea:focus, input.text:focus, input.text-box:focus, #PublishLaterDate:focus {
 	border-color:#666d51;
 }
 
@@ -566,7 +566,7 @@ ul.horizontal li a, ul.horizontal li a:visited, ul.horizontal li a:active, ol.ho
 
 /*TODO - Remove roundCorners class*/
 #content, #navigation li,
-table, textarea, .button, input.text, .inputTextLarge,
+table, textarea, .button, input.text, input.text-box, .inputTextLarge,
 .inputTextPermalink, .linkButton, .confirmation.message,
 .warning.message, .critical.message, .roundCorners {
 	-moz-border-radius:4px;

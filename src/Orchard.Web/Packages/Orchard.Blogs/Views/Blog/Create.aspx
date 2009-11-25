@@ -5,8 +5,8 @@
 <% Html.Include("Head"); %>
     <h2>Create New Blog</h2>
     <p><a href="<%=Url.Blogs() %>">Manage Blogs</a> > Create Blog</p>
-    <%using (Html.BeginForm()) { %>
-        <%= Html.ValidationSummary() %>
-        <%= Html.EditorForModel() %>
-    <%}/*EndForm*/%>
+    <% using (Html.BeginForm()) { %>
+        <%=Html.ValidationSummary() %>
+        <%=Html.EditorForModel() %>
+    <% } %>
 <% Html.Include("Foot"); %>

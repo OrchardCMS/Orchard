@@ -18,7 +18,7 @@
                 <% if (Model.Template != null && Model.Template.Zones.Contains(content.ZoneName) == false) {
                     %><span class="warning message">These contents are assigned to a zone that does not exist in the current template. Please delete it or copy it to another zone.</span><%
                    } %>
-                <%= Html.TextArea("Revision.Contents[" + content.ZoneName + "].Content", content.Content) %>
+                <%= Html.TextArea("Revision.Contents[" + content.ZoneName + "].Content", content.Content, new { @class = "html" }) %>
             </fieldset><%
                } %>
             <fieldset>

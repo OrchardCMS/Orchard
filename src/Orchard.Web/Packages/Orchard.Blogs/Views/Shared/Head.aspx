@@ -19,7 +19,8 @@ todo: (heskew) rework how/what pages are assembled when we get into theming --%>
     <script type="text/javascript">
         tinyMCE.init({
             theme: "advanced",
-            mode: "textareas",
+            mode: "specific_textareas",
+            editor_selector: "html",
             plugins: "fullscreen,autoresize,searchreplace",
             theme_advanced_toolbar_location: "top",
             theme_advanced_toolbar_align: "left",
