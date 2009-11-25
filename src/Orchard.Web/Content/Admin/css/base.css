@@ -154,6 +154,7 @@ h4 { font-size:1.8em; } /* 18px */
 h5 { font-size:1.6em; } /* 16px */
 h6, p, label, input, select, .button, .cancel /* todo: (heskew) need to do something better with cancel */,
 .message, th, td { font-size:1.5em; } /* 15px */
+p .button { font-size:inherit; }
 
 h3 span { font-size:.57em; }
 
@@ -165,20 +166,6 @@ a, a:link, a:visited {
 a:hover, a:active, a:focus {
     color:#1e5d7d;
     text-decoration:underline;
-}
-
-/* todo: (heskew) see what's necessary - looks like a link styled as a button */
-a.linkButton, a.linkButton:visited {
-    font-family: Frutiger, "Frutiger Linotype", Univers, Calibri, "Gill Sans", "Gill Sans MT", "Myriad Pro", Myriad, "DejaVu Sans Condensed", "Liberation Sans", "Nimbus Sans L", Tahoma, Geneva, "Helvetica Neue", Helvetica, Arial, sans-serif;
-    display:inline-block;
-	text-align:center;
-	text-decoration:none;
-    padding: 3px 8px 3px 8px;
-	margin:20px 4px 0 4px;
-	background:url(images/tableHeaderBackground.gif) repeat-x top left #dddfcb;
-	border:1px solid #d2d6c6;
-	color:#5a5b32;
-	cursor:pointer;
 }
 
 /* Header - Branding and Login  
@@ -372,6 +359,10 @@ button, .button, .button:link, .button:visited {
 	padding:0 8px;
 	text-align:center;
 }
+a.button, a.button:link, a.button:visited {
+    line-height:1em;
+    padding:.2em .6em;
+}
 button:hover, .button:hover,
 button:focus, .button:focus {
     background:#8a8f7a;
@@ -393,8 +384,16 @@ button:focus, .button:focus {
     overflow:hidden;
     margin:3px 0 6px 4px;
 }
-.manage a.button {
+#main div.actions {
+    height:2em;
+    padding:.6em 0 0;
+    text-align:right;
+}
+#main .manage a.button {
     float:right;
+    height:inherit;
+    padding-bottom:.3em;
+    padding-top:.3em;
 }
 
 

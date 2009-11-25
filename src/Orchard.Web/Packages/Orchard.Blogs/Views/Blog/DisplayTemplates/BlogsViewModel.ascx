@@ -2,7 +2,7 @@
 <%@ Import Namespace="Orchard.Blogs.Extensions"%>
 <%@ Import Namespace="Orchard.Blogs.Models"%>
 <%@ Import Namespace="Orchard.Blogs.ViewModels"
-%><p><a href="<%=Url.BlogCreate() %>">Create a New Blog</a></p><%
+%><div class="actions"><a class="add button" href="<%=Url.BlogCreate() %>">Create a New Blog</a></div><%
 if (Model.Blogs.Count() > 0) { %>
 <ul><%
     foreach (Blog blog in Model.Blogs) { %>
@@ -13,5 +13,5 @@ if (Model.Blogs.Count() > 0) { %>
     </li><%
     } %>
 </ul>
-<p><a href="<%=Url.BlogCreate() %>">Create a New Blog</a></p><%
+<div class="actions"><a class="add button" href="<%=Url.BlogCreate() %>">Create a New Blog</a></div><%
 } %>

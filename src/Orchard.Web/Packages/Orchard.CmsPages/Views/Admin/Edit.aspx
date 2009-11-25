@@ -24,7 +24,7 @@
             <fieldset>
                 <p><strong>Current layout:</strong>
                     <%=Html.Encode(Model.Revision.TemplateName) %>
-                    <%=Html.ActionLink("Change Template", "ChooseTemplate", new { Model.Revision.Page.Id }, new { @class = "linkButton" }) %>
+                    <%=Html.ActionLink("Change Template", "ChooseTemplate", new { Model.Revision.Page.Id }, new { @class = "button" }) %>
                     </p>
             </fieldset>
         </div>
