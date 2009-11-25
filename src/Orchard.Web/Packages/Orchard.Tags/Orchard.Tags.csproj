@@ -85,7 +85,6 @@
     <Content Include="Views\Admin\Search.aspx" />
     <Content Include="Views\Models\DisplayTemplates\HasTags.ascx" />
     <Content Include="Views\Models\EditorTemplates\TagSettingsRecord.ascx" />
-    <Content Include="Views\Tags\Create.aspx" />
     <Content Include="Views\Tags\Index.aspx" />
     <Content Include="Web.config" />
     <Content Include="Views\Web.config" />

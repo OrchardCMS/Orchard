@@ -78,26 +78,6 @@ namespace Orchard.Tags.Controllers {
             }
         }
 
-        public ActionResult Create() {
-            return View(new TagsCreateViewModel());
-        }
-
-        [HttpPost]
-        public ActionResult Create(FormCollection input) {
-            var viewModel = new TagsCreateViewModel();
-            try {
-                UpdateModel(viewModel, input.ToValueProvider());
-                if (!_authorizer.Authorize(Permissions.CreateTag, T("Couldn't create tag")))
-                    return new HttpUnauthorizedResult();
-                _tagService.CreateTag(viewModel.TagName);
-                return RedirectToAction("Index");
-            }
-            catch (Exception exception) {
-                _notifier.Error(T("Creating Tag failed: " + exception.Message));
-                return View(viewModel);
-            }
-        }
-
         public ActionResult TagName(int tagId) {
             return RedirectToAction("Index");
         }
