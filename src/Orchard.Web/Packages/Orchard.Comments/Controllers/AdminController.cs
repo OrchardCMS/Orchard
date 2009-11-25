@@ -250,7 +250,8 @@ namespace Orchard.Comments.Controllers {
                     Email = comment.Email,
                     Id = comment.Id,
                     Name = comment.Author,
-                    SiteName = comment.SiteName
+                    SiteName = comment.SiteName,
+                    Status = comment.Status,
                 };
                 return View(viewModel);
 
@@ -269,12 +270,26 @@ namespace Orchard.Comments.Controllers {
                 if (!_authorizer.Authorize(Permissions.ModerateComment, T("Couldn't edit comment")))
                     return new HttpUnauthorizedResult();
 
-                _commentService.UpdateComment(viewModel.Id, viewModel.Name, viewModel.Email, viewModel.SiteName, viewModel.CommentText);
+                _commentService.UpdateComment(viewModel.Id, viewModel.Name, viewModel.Email, viewModel.SiteName, viewModel.CommentText, viewModel.Status);
                 return RedirectToAction("Index");
             }
             catch (Exception exception) {
                 _notifier.Error(T("Editing Comment failed: " + exception.Message));
                 return View(viewModel);
+            }
+        }
+
+        public ActionResult Delete(int id) {
+            try {
+                if (!_authorizer.Authorize(Permissions.ModerateComment, T("Couldn't delete comment")))
+                    return new HttpUnauthorizedResult();
+                int commentedOn = _commentService.GetComment(id).CommentedOn;
+                _commentService.DeleteComment(id);
+                return RedirectToAction("Details", new { id = commentedOn });
+            }
+            catch (Exception exception) {
+                _notifier.Error(T("Deleting comment failed: " + exception.Message));
+                return Index(new CommentIndexOptions());
             }
         }
 

@@ -1,11 +1,12 @@
 ﻿<%@ Page Language="C#" Inherits="System.Web.Mvc.ViewPage<CommentsEditViewModel>" %>
+<%@ Import Namespace="Orchard.Comments.Models"%>
 <%@ Import Namespace="Orchard.Comments.ViewModels"%>
 <%@ Import Namespace="Orchard.Mvc.Html" %>
 <% Html.Include("Header"); %>
     <% Html.BeginForm(); %>
     <%= Html.ValidationSummary() %>
                     <div class="yui-g">
-						<h2 class="separator">Add a Comment</h2>
+						<h2 class="separator">Edit a Comment</h2>
 						<h3>Information</h3>
 						<ol>
 						<li>
@@ -27,6 +28,17 @@
 					    <%= Model.CommentText %>
 					    </textarea>
                         </li>
+                        <h3>Status</h3>
+                       <li> 
+                        <label for="Status_Approved">
+                            <%=Html.RadioButton("Status", "Approved", (Model.Status == CommentStatus.Approved), new { id = "Status_Approved" }) %> Approved
+                        </label>
+                       </li>
+                       <li>
+                        <label for="Status_Spam">
+                            <%=Html.RadioButton("Status", "Spam", (Model.Status == CommentStatus.Spam), new { id = "Status_Spam" }) %> Mark As Spam
+                        </label>
+                       </li>
 					    <li>
 					    <input type="submit" class="button" value="Save" />
 					    </li>

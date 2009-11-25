@@ -73,7 +73,9 @@
 			                    <% } %> 
 			                    </td>
 				                <td><%= commentEntry.Comment.CommentDate %></td>
-				                <td><%=Html.ActionLink("Edit", "Edit", new {commentEntry.Comment.Id}, new {@class="floatRight topSpacer"}) %> 
+				                <td>
+				                <%=Html.ActionLink("Edit", "Edit", new {commentEntry.Comment.Id}) %> |
+				                <%=Html.ActionLink("Delete", "Delete", new {id = commentEntry.Comment.Id, redirectToAction = "Details"}) %>
 				                </td>
                             </tr>
                             <%

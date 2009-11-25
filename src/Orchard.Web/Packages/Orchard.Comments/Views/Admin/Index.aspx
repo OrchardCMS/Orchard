@@ -41,6 +41,7 @@
 								<col id="Col4" />
 								<col id="Col5" />
 								<col id="Col6" />
+								<col id="Col7" />
 							</colgroup>
 							<thead>
 								<tr>
@@ -50,6 +51,7 @@
 									<th scope="col">Comment</th>
 									<th scope="col">Date</th>
 									<th scope="col">Commented On</th>
+								    <th scope="col"></th>
 								</tr>
 							</thead>
 			                <%
@@ -71,7 +73,13 @@
 			                    <% } %> 
 			                    </td>
 				                <td><%= commentEntry.Comment.CommentDate %></td>
-				                <td><%=Html.ActionLink(commentEntry.CommentedOn, "Details", new {id = commentEntry.Comment.CommentedOn}, new {@class="floatRight topSpacer"}) %></td>
+				                <td>
+				                <%=Html.ActionLink(commentEntry.CommentedOn, "Details", new {id = commentEntry.Comment.CommentedOn}) %>
+				                </td>
+				                <td>
+				                <%=Html.ActionLink("Edit", "Edit", new {commentEntry.Comment.Id}) %> |
+				                <%=Html.ActionLink("Delete", "Delete", new {id = commentEntry.Comment.Id, redirectToAction = "Index"}) %>
+				                </td>
                             </tr>
                             <%
                                 commentIndex++;

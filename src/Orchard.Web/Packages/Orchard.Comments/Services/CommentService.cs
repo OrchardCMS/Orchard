@@ -17,7 +17,7 @@ namespace Orchard.Comments.Services {
         Comment GetComment(int id);
         IContentDisplayInfo GetDisplayForCommentedContent(int id);
         void CreateComment(Comment comment);
-        void UpdateComment(int id, string name, string email, string siteName, string commentText);
+        void UpdateComment(int id, string name, string email, string siteName, string commentText, CommentStatus status);
         void MarkCommentAsSpam(int commentId);
         void DeleteComment(int commentId);
         bool CommentsClosedForCommentedContent(int id);
@@ -82,12 +82,13 @@ namespace Orchard.Comments.Services {
             _commentRepository.Create(comment);
         }
 
-        public void UpdateComment(int id, string name, string email, string siteName, string commentText) {
+        public void UpdateComment(int id, string name, string email, string siteName, string commentText, CommentStatus status) {
             Comment comment = GetComment(id);
             comment.Author = name;
             comment.Email = email;
             comment.SiteName = siteName;
             comment.CommentText = commentText;
+            comment.Status = status;
         }
 
         public void MarkCommentAsSpam(int commentId) {
