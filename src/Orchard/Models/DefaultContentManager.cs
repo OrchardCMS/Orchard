@@ -55,6 +55,12 @@ namespace Orchard.Models {
             return context2.ContentItem;
         }
 
+        public virtual IEnumerable<ContentItem> Get(IEnumerable<int> ids) {
+            foreach(var id in ids) {
+                yield return Get(id);
+            }
+        }
+
         public virtual ContentItem Get(int id) {
             // obtain root record to determine the model type
             var record = _contentItemRepository.Get(id);

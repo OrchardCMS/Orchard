@@ -5,24 +5,8 @@ using Orchard.Models;
 
 namespace Orchard.Mvc.Html {
     public static class ContentItemExtensions {
-        public static MvcHtmlString ItemDisplayLink(this HtmlHelper html, string linkText, IContent item) {
-            return ItemDisplayLink(html, linkText, item.ContentItem);
-        }
-
-        public static MvcHtmlString ItemDisplayLink(this HtmlHelper html, IContent item) {
-            return ItemDisplayLink(html, item.ContentItem);
-        }
-
-        public static MvcHtmlString ItemEditLink(this HtmlHelper html, string linkText, IContent item) {
-            return ItemEditLink(html, linkText, item.ContentItem);
-        }
-
-        public static MvcHtmlString ItemEditLink(this HtmlHelper html, IContent item) {
-            return ItemEditLink(html, item.ContentItem);
-        }
-
-        public static MvcHtmlString ItemDisplayLink(this HtmlHelper html, string linkText, ContentItem item) {
-            var display = item.As<IContentDisplayInfo>();
+        public static MvcHtmlString ItemDisplayLink(this HtmlHelper html, string linkText, IContent content) {
+            var display = content.As<IContentDisplayInfo>();
             if (display == null)
                 return null;
 
@@ -30,12 +14,12 @@ namespace Orchard.Mvc.Html {
             return html.ActionLink(linkText ?? display.DisplayText, Convert.ToString(values["action"]), values);
         }
 
-        public static MvcHtmlString ItemDisplayLink(this HtmlHelper html, ContentItem item) {
-            return ItemDisplayLink(html, null, item);
+        public static MvcHtmlString ItemDisplayLink(this HtmlHelper html, IContent content) {
+            return ItemDisplayLink(html, null, content);
         }
 
-        public static MvcHtmlString ItemEditLink(this HtmlHelper html, string linkText, ContentItem item) {
-            var display = item.As<IContentDisplayInfo>();
+        public static MvcHtmlString ItemEditLink(this HtmlHelper html, string linkText, IContent content) {
+            var display = content.As<IContentDisplayInfo>();
             if (display == null)
                 return null;
 
@@ -43,8 +27,8 @@ namespace Orchard.Mvc.Html {
             return html.ActionLink(linkText ?? display.DisplayText, Convert.ToString(values["action"]), values);
         }
 
-        public static MvcHtmlString ItemEditLink(this HtmlHelper html, ContentItem item) {
-            return ItemEditLink(html, null, item);
+        public static MvcHtmlString ItemEditLink(this HtmlHelper html, IContent content) {
+            return ItemEditLink(html, null, content);
         }
     }
 }
