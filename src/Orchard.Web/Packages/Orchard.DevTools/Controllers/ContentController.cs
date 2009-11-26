@@ -9,10 +9,8 @@ using Orchard.DevTools.ViewModels;
 using Orchard.Models;
 using Orchard.Models.Records;
 
-namespace Orchard.DevTools.Controllers
-{
-    public class ContentController : Controller
-    {
+namespace Orchard.DevTools.Controllers {
+    public class ContentController : Controller {
         private readonly IRepository<ContentItemRecord> _contentItemRepository;
         private readonly IRepository<ContentTypeRecord> _contentTypeRepository;
         private readonly IContentManager _contentManager;
@@ -28,15 +26,15 @@ namespace Orchard.DevTools.Controllers
 
         public ActionResult Index() {
             return View(new ContentIndexViewModel {
-                Items = _contentItemRepository.Table.ToList(),
+                Items = _contentManager.Query().OrderBy<ContentItemRecord, int>(x => x.Id).List(),
                 Types = _contentTypeRepository.Table.ToList()
             });
         }
 
         public ActionResult Details(int id) {
             var model = new ContentDetailsViewModel {
-                                                        Item = _contentManager.Get(id)
-                                                    };
+                Item = _contentManager.Get(id)
+            };
             model.PartTypes = model.Item.ContentItem.Parts
                 .Select(x => x.GetType())
                 .SelectMany(x => AllTypes(x))
@@ -49,11 +47,11 @@ namespace Orchard.DevTools.Controllers
 
         static IEnumerable<Type> AllTypes(Type type) {
             var scan = type;
-            while(scan != null && scan != typeof(Object) && scan != typeof(ContentPart)) {
+            while (scan != null && scan != typeof(Object) && scan != typeof(ContentPart)) {
                 yield return scan;
                 scan = scan.BaseType;
             }
-            foreach(var itf in type.GetInterfaces()) {
+            foreach (var itf in type.GetInterfaces()) {
                 yield return itf;
             }
         }

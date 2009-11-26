@@ -19,6 +19,7 @@
             <% Html.Include("Navigation"); %>
         </div>
         <div id="main">
+            <% Html.RenderPartial("Messages", Model.Messages); %>
             <h3>
                 Create Page</h3>
             <%using (Html.BeginForm()) { %>

@@ -12,6 +12,6 @@ string CssClassName(NotifyType type) {
     return "validation-summary-errors";
 }</script>
 
-<% foreach (var item in Model) { %>
+<%if (Model != null){ foreach (var item in Model) { %>
 <div class="<%=CssClassName(item.Type) %> message"><%=Html.Encode(item.Message) %></div>
-<% } %>
+<% }} %>

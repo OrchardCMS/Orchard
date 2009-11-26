@@ -19,6 +19,7 @@
             <% Html.Include("Navigation"); %>
         </div>
         <div id="main">
+            <% Html.RenderPartial("Messages", Model.Messages); %>
             <h3>
                 <%=Html.Encode(Model.Page.Record.Name) %></h3>
             <div>

@@ -155,7 +155,10 @@ namespace Orchard.Tests.Models {
             _manager.Create<Gamma>("gamma", init => { init.Record.Frap = "three"; });
             _manager.Create<Gamma>("gamma", init => { init.Record.Frap = "four"; });
             _session.Flush();
-            var twoOrFour = _manager.Query().Where<GammaRecord>(x => x.Frap == "one" || x.Frap == "four").List();
+
+            var twoOrFour = _manager.Query()
+                .Where<GammaRecord>(x => x.Frap == "one" || x.Frap == "four")
+                .List();
 
             Assert.That(twoOrFour.Count(), Is.EqualTo(2));
             Assert.That(twoOrFour.Count(x => x.Has<Gamma>()), Is.EqualTo(2));

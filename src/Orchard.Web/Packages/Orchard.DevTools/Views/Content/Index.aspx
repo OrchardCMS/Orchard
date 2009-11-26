@@ -25,14 +25,16 @@
 <h3>Content Types</h3>
 <ul>
 <%foreach(var item in Model.Types.OrderBy(x=>x.Name)){%>
-<li><%=Html.Encode(item.Name) %></li>
+<li><%=Html.Encode(item.Name) %> </li>
 <%}%>
 </ul>
 
 <h3>Content Items</h3>
 <ul>
 <%foreach(var item in Model.Items.OrderBy(x=>x.Id)){%>
-<li><%=Html.ActionLink(item.Id+": "+item.ContentType.Name, "details", "content", new{item.Id},new{}) %></li>
+<li><%=Html.ActionLink(item.Id+": "+item.ContentType, "details", "content", new{item.Id},new{}) %>
+<%=Html.ItemDisplayLink("view", item) %>
+ <%=Html.ItemEditLink("edit", item) %></li>
 <%}%>
 </ul>
 
