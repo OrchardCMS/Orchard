@@ -124,7 +124,7 @@ namespace Orchard.Models {
                 criteria = criteria.SetFirstResult(skip);
             if (count != 0)
                 criteria = criteria.SetMaxResults(skip);
-            criteria
+            return criteria
                 .List<ContentItemRecord>()
                 .Select(x => ContentManager.Get(x.Id));
         }
