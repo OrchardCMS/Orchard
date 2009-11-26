@@ -33,6 +33,18 @@ namespace Orchard.Models {
         }
 
 
+        public static IContentQuery Query(this IContentManager manager, params string[] contentTypeNames)  {
+            return manager.Query().ForType(contentTypeNames);
+        }
+        public static IEnumerable<T> List<T>(this IContentManager manager, params string[] contentTypeNames) where T : class, IContent {
+            return manager.Query(contentTypeNames).List<T>();
+        }
+
+        public static IEnumerable<T> List<T>(this IContentQuery query) where T : class, IContent {
+            return query.List().AsPart<T>();
+        }
+
+
 
         public static bool Is<T>(this IContent content) {
             return content == null ? false : content.ContentItem.Has(typeof(T));

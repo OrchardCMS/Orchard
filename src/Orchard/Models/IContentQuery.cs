@@ -11,7 +11,10 @@ namespace Orchard.Models {
         IContentQuery Where<TRecord>();
         IContentQuery Where<TRecord>(Expression<Func<TRecord, bool>> predicate);
 
-        IEnumerable<ContentItem> Select();
+        IContentQuery OrderBy<TRecord, TKey>(Expression<Func<TRecord, TKey>> keySelector);
+        IContentQuery OrderByDescending<TRecord, TKey>(Expression<Func<TRecord, TKey>> keySelector);
 
+        IEnumerable<ContentItem> List();
+        IEnumerable<ContentItem> Slice(int skip, int count);
     }
 }

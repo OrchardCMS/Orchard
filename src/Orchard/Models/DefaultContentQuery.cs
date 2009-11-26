@@ -37,6 +37,11 @@ namespace Orchard.Models {
 
         ICriteria BindCriteriaByPath(string path) {
             var itemCriteria = BindItemCriteria();
+            
+            // special if the content item is ever used as where or order
+            if (path == typeof(ContentItemRecord).Name)
+                return itemCriteria;
+
             return itemCriteria.GetCriteriaByPath(path) ?? itemCriteria.CreateCriteria(path);
         }
 
@@ -65,16 +70,58 @@ namespace Orchard.Models {
 
             // attach the criterion from the predicate to this query's criteria for the record
             var recordCriteria = BindCriteriaByPath(typeof(TRecord).Name);
-            foreach (var entry in criteria.IterateExpressionEntries()) {
-                recordCriteria.Add(entry.Criterion);
+            foreach (var expressionEntry in criteria.IterateExpressionEntries()) {
+                recordCriteria.Add(expressionEntry.Criterion);
             }
 
             return this;
         }
 
+        public IContentQuery OrderBy<TRecord, TKey>(Expression<Func<TRecord, TKey>> keySelector) {
+            // build a linq to nhibernate expression
+            var options = new QueryOptions();
+            var queryProvider = new NHibernateQueryProvider(BindSession(), options);
+            var queryable = new Query<TRecord>(queryProvider, options).OrderBy(keySelector);
 
-        public IEnumerable<ContentItem> Select() {
+            // translate it into the nhibernate ordering
+            var criteria = (CriteriaImpl)queryProvider.TranslateExpression(queryable.Expression);
+            
+            // attaching orderings to the query's criteria
+            var recordCriteria = BindCriteriaByPath(typeof(TRecord).Name);
+            foreach(var ordering in criteria.IterateOrderings()){
+                recordCriteria.AddOrder(ordering.Order);
+            }
+
+            return this;
+        }
+
+        public IContentQuery OrderByDescending<TRecord, TKey>(Expression<Func<TRecord, TKey>> keySelector) {
+            // build a linq to nhibernate expression
+            var options = new QueryOptions();
+            var queryProvider = new NHibernateQueryProvider(BindSession(), options);
+            var queryable = new Query<TRecord>(queryProvider, options).OrderByDescending(keySelector);
+
+            // translate it into the nhibernate ICriteria implementation
+            var criteria = (CriteriaImpl)queryProvider.TranslateExpression(queryable.Expression);
+
+            // attaching orderings to the query's criteria
+            var recordCriteria = BindCriteriaByPath(typeof(TRecord).Name);
+            foreach (var ordering in criteria.IterateOrderings()) {
+                recordCriteria.AddOrder(ordering.Order);
+            }
+            return this;
+        }
+
+        public IEnumerable<ContentItem> List() {
             return BindItemCriteria()
+                .List<ContentItemRecord>()
+                .Select(x => ContentManager.Get(x.Id));
+        }
+
+        public IEnumerable<ContentItem> Slice(int skip, int count) {
+            return BindItemCriteria()
+                .SetFirstResult(skip)
+                .SetMaxResults(count)
                 .List<ContentItemRecord>()
                 .Select(x => ContentManager.Get(x.Id));
         }

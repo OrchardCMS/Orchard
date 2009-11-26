@@ -36,11 +36,12 @@ namespace Orchard.Users.Controllers {
 
         public ActionResult Index() {
             var model = new UsersIndexViewModel();
-            model.Rows = _userRepository.Fetch(x => x.UserName != null)
-                .Select(x => new UsersIndexViewModel.Row {
-                    User = _contentManager.Get(x.Id).As<User>()
-                })
-                .ToList();
+
+            var users = _contentManager.Query("user")
+                .Where<UserRecord>(x => x.UserName != null)
+                .List<User>();
+
+            model.Rows = users.Select(x => new UsersIndexViewModel.Row {User = x}).ToList();
 
             return View(model);
         }

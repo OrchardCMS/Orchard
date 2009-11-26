@@ -116,8 +116,8 @@ namespace Orchard.Tests.Models {
         [Test]
         public void AllItemsAreReturnedByDefault() {
             AddSampleData();
-            
-            var allItems = _manager.Query().Select();
+
+            var allItems = _manager.Query().List();
 
             Assert.That(allItems.Count(), Is.EqualTo(4));
             Assert.That(allItems.Count(x => x.Has<Alpha>()), Is.EqualTo(1));
@@ -125,12 +125,12 @@ namespace Orchard.Tests.Models {
             Assert.That(allItems.Count(x => x.Has<Gamma>()), Is.EqualTo(1));
             Assert.That(allItems.Count(x => x.Has<Delta>()), Is.EqualTo(1));
         }
-        
+
         [Test]
         public void SpecificTypeIsReturnedWhenSpecified() {
             AddSampleData();
 
-            var alphaBeta = _manager.Query().ForType("alpha", "beta").Select();
+            var alphaBeta = _manager.Query().ForType("alpha", "beta").List();
 
             Assert.That(alphaBeta.Count(), Is.EqualTo(2));
             Assert.That(alphaBeta.Count(x => x.Has<Alpha>()), Is.EqualTo(1));
@@ -138,7 +138,7 @@ namespace Orchard.Tests.Models {
             Assert.That(alphaBeta.Count(x => x.Has<Gamma>()), Is.EqualTo(0));
             Assert.That(alphaBeta.Count(x => x.Has<Delta>()), Is.EqualTo(0));
 
-            var gammaDelta = _manager.Query().ForType("gamma", "delta").Select();
+            var gammaDelta = _manager.Query().ForType("gamma", "delta").List();
 
             Assert.That(gammaDelta.Count(), Is.EqualTo(2));
             Assert.That(gammaDelta.Count(x => x.Has<Alpha>()), Is.EqualTo(0));
@@ -155,7 +155,7 @@ namespace Orchard.Tests.Models {
             _manager.Create<Gamma>("gamma", init => { init.Record.Frap = "three"; });
             _manager.Create<Gamma>("gamma", init => { init.Record.Frap = "four"; });
             _session.Flush();
-            var twoOrFour = _manager.Query().Where<GammaRecord>(x => x.Frap == "one" || x.Frap == "four").Select();
+            var twoOrFour = _manager.Query().Where<GammaRecord>(x => x.Frap == "one" || x.Frap == "four").List();
 
             Assert.That(twoOrFour.Count(), Is.EqualTo(2));
             Assert.That(twoOrFour.Count(x => x.Has<Gamma>()), Is.EqualTo(2));
@@ -167,8 +167,8 @@ namespace Orchard.Tests.Models {
         [Test]
         public void EmptyWherePredicateRequiresRecord() {
             AddSampleData();
-            var gammas = _manager.Query().Where<GammaRecord>().Select();
-            var deltas = _manager.Query().Where<DeltaRecord>().Select();
+            var gammas = _manager.Query().Where<GammaRecord>().List();
+            var deltas = _manager.Query().Where<DeltaRecord>().List();
 
             Assert.That(gammas.Count(), Is.EqualTo(1));
             Assert.That(deltas.Count(), Is.EqualTo(1));
@@ -176,6 +176,56 @@ namespace Orchard.Tests.Models {
             Assert.That(deltas.AsPart<Delta>().Single().Record.Quux, Is.EqualTo("the quux value"));
         }
 
+        [Test]
+        public void OrderMaySortOnJoinedRecord() {
+            AddSampleData();
+            _manager.Create<Gamma>("gamma", init => { init.Record.Frap = "one"; });
+            _manager.Create<Gamma>("gamma", init => { init.Record.Frap = "two"; });
+            _manager.Create<Gamma>("gamma", init => { init.Record.Frap = "three"; });
+            _manager.Create<Gamma>("gamma", init => { init.Record.Frap = "four"; });
+            _session.Flush();
+
+            var ascending = _manager.Query("gamma")
+                .OrderBy<GammaRecord, string>(x => x.Frap)
+                .List<Gamma>();
+
+            Assert.That(ascending.Count(), Is.EqualTo(5));
+            Assert.That(ascending.First().Record.Frap, Is.EqualTo("four"));
+            Assert.That(ascending.Last().Record.Frap, Is.EqualTo("two"));
+
+
+            var descending = _manager.Query("gamma")
+                .OrderByDescending<GammaRecord, string>(x => x.Frap)
+                .List<Gamma>();
+
+            Assert.That(descending.Count(), Is.EqualTo(5));
+            Assert.That(descending.First().Record.Frap, Is.EqualTo("two"));
+            Assert.That(descending.Last().Record.Frap, Is.EqualTo("four"));
+        }
+
+        [Test]
+        public void SkipAndTakeProvidePagination() {
+            AddSampleData();
+            _manager.Create<Gamma>("gamma", init => { init.Record.Frap = "one"; });
+            _manager.Create<Gamma>("gamma", init => { init.Record.Frap = "two"; });
+            _manager.Create<Gamma>("gamma", init => { init.Record.Frap = "three"; });
+            _manager.Create<Gamma>("gamma", init => { init.Record.Frap = "four"; });
+            _session.Flush();
+
+            var reverseById = _manager.Query()
+                .OrderByDescending<ContentItemRecord, int>(x => x.Id)
+                .List();
+
+            var subset = _manager.Query()
+                .OrderByDescending<ContentItemRecord, int>(x => x.Id)
+                .Slice(2, 3);
+
+            Assert.That(subset.Count(), Is.EqualTo(3));
+            Assert.That(subset.First().Id, Is.EqualTo(reverseById.Skip(2).First().Id));
+            Assert.That(subset.Skip(1).First().Id, Is.EqualTo(reverseById.Skip(3).First().Id));
+            Assert.That(subset.Skip(2).First().Id, Is.EqualTo(reverseById.Skip(4).First().Id));
+
+        }
     }
 }
 
