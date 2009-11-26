@@ -140,7 +140,7 @@ number of columns: 24; actual width: 946; column width: 26; gutter width:14
 
 /* Headings and defaults
 ----------------------------------------------------------*/
-h1, h2, h3, h4, h5, h6, legend {
+h1, h2, h3, h4, h5, legend {
     padding:.4em 0;
     font-family:"Palatino Linotype", Palatino, Palladio, "URW Palladio L", "Book Antiqua", Baskerville, "Bookman Old Style", "Bitstream Charter", "Nimbus Roman No9 L", Garamond, "Apple Garamond", "ITC Garamond Narrow", "New Century Schoolbook", "Century Schoolbook", "Century Schoolbook L", Georgia, serif;
     font-style: normal;
@@ -153,7 +153,7 @@ h3 { font-size:2.1em; } /* 21px */
 h4 { font-size:1.8em; } /* 18px */
 h5 { font-size:1.6em; } /* 16px */
 h6, p, label, input, select, .button, .cancel /* todo: (heskew) need to do something better with cancel */,
-.message, th, td { font-size:1.5em; } /* 15px */
+.message, th, td { font-size:1.5em; line-height:1.5em; } /* 15px */
 p .button { font-size:inherit; }
 
 h3 span { font-size:.57em; }
@@ -253,6 +253,9 @@ a:hover, a:active, a:focus {
 ----------------------------------------------------------*/
 #main h2, #main h3, #main h4, #main p {
     margin:.23em 0 1em;
+}
+#main p {
+    margin:0 0 1.5em;
 }
 #main form {
     margin:.345em 0 1.5em;

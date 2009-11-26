@@ -13,6 +13,8 @@
             <span><%=Html.TextBoxFor(m => m.Slug, new { id = "permalink", @class = "text" })%> <span> &laquo; How to write a permalink. &raquo; </span></span>
         </fieldset>
         <fieldset>
+            <label for="body">Excerpt:</label>
+            <span>[still needed]</span>
             <label for="body">Body:</label>
             <span><%=Html.TextAreaFor(m => m.Body, new { id = "body", @class = "html" })%></span>
         </fieldset>

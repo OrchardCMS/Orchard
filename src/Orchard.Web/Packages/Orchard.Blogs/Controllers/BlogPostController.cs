@@ -74,7 +74,7 @@ namespace Orchard.Blogs.Controllers {
             var session = _sessionLocator.For(typeof(BlogPostRecord));
             session.Flush();
 
-            return Redirect(Url.BlogPostEdit(blogSlug, blogPost.As<RoutableAspect>().Slug));
+            return Redirect(Url.BlogPost(blogSlug, blogPost.As<RoutableAspect>().Slug));
         }
     }
 }
