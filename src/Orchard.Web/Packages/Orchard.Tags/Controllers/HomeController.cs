@@ -63,8 +63,11 @@ namespace Orchard.Tags.Controllers {
                 else {
                     if (!_authorizer.Authorize(Permissions.CreateTag, T("Couldn't create tag")))
                         return new HttpUnauthorizedResult();
-                    _tagService.CreateTag(newTagName);
-                    _tagService.TagContentItem(taggedContentId, newTagName);
+                    if (!String.IsNullOrEmpty(newTagName)) {
+                        _tagService.CreateTag(newTagName);
+                        _tagService.TagContentItem(taggedContentId, newTagName);
+                    }
+
                 }
                 if (!String.IsNullOrEmpty(returnUrl)) {
                     return Redirect(returnUrl);
