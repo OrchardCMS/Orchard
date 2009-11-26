@@ -43,6 +43,15 @@ namespace Orchard.Models {
         public static IEnumerable<T> List<T>(this IContentQuery query) where T : class, IContent {
             return query.List().AsPart<T>();
         }
+        public static IEnumerable<T> Slice<T>(this IContentQuery query, int skip, int count) where T : class, IContent {
+            return query.Slice(skip, count).AsPart<T>();
+        }
+        public static IEnumerable<T> Slice<T>(this IContentQuery query, int count) where T : class, IContent {
+            return query.Slice(0, count).AsPart<T>();
+        }
+        public static IEnumerable<ContentItem> Slice(this IContentQuery query, int count)  {
+            return query.Slice(0, count);
+        }
 
 
 

@@ -37,7 +37,7 @@ namespace Orchard.Models {
 
         ICriteria BindCriteriaByPath(string path) {
             var itemCriteria = BindItemCriteria();
-            
+
             // special if the content item is ever used as where or order
             if (path == typeof(ContentItemRecord).Name)
                 return itemCriteria;
@@ -85,10 +85,10 @@ namespace Orchard.Models {
 
             // translate it into the nhibernate ordering
             var criteria = (CriteriaImpl)queryProvider.TranslateExpression(queryable.Expression);
-            
+
             // attaching orderings to the query's criteria
             var recordCriteria = BindCriteriaByPath(typeof(TRecord).Name);
-            foreach(var ordering in criteria.IterateOrderings()){
+            foreach (var ordering in criteria.IterateOrderings()) {
                 recordCriteria.AddOrder(ordering.Order);
             }
 
@@ -119,9 +119,12 @@ namespace Orchard.Models {
         }
 
         public IEnumerable<ContentItem> Slice(int skip, int count) {
-            return BindItemCriteria()
-                .SetFirstResult(skip)
-                .SetMaxResults(count)
+            var criteria = BindItemCriteria();
+            if (skip != 0)
+                criteria = criteria.SetFirstResult(skip);
+            if (count != 0)
+                criteria = criteria.SetMaxResults(skip);
+            criteria
                 .List<ContentItemRecord>()
                 .Select(x => ContentManager.Get(x.Id));
         }
