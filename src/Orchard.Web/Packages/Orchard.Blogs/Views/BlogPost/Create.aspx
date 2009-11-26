@@ -9,6 +9,5 @@
     <%using (Html.BeginForm()) { %>
         <%= Html.ValidationSummary() %>
         <%= Html.EditorForModel() %>
-        <fieldset><input class="button" type="submit" value="Create" /></fieldset>
     <% } %>
 <% Html.Include("Foot"); %>
