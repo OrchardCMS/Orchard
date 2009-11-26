@@ -27,6 +27,7 @@ namespace Orchard.Tests.Packages.Users.Controllers {
         public override void Register(ContainerBuilder builder) {
             builder.Register<AdminController>();
             builder.Register<DefaultContentManager>().As<IContentManager>();
+            builder.Register<DefaultContentQuery>().As<IContentQuery>().FactoryScoped();
             builder.Register<MembershipService>().As<IMembershipService>();
             builder.Register<UserProvider>().As<IContentProvider>();
             builder.Register(new Mock<INotifier>().Object);
