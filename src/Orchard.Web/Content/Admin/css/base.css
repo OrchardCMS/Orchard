@@ -243,10 +243,6 @@ a:hover, a:active, a:focus {
 	padding:0 0 0 12px;
 	text-decoration:none;
 }
-/* todo: (heskew) what's the point of a :visited color for an admin nav?
-#navigation ul a:visited{
-    color: #2b2b2b;
-} */
 #navigation ul a:hover, #navigation ul a:focus {
 	background:#f0ecd2;
 	color: #3e4301;
@@ -255,16 +251,17 @@ a:hover, a:active, a:focus {
 
 /* Content
 ----------------------------------------------------------*/
-#main h2, #main h3, #main h4, #main p, #main form {
+#main h2, #main h3, #main h4, #main p {
     margin:.23em 0 1em;
+}
+#main form {
+    margin:.345em 0 1.5em;
 }
 #main h2, #main h3 {
     border-bottom:1px dashed #e4e7dc;
 }
 
-
-
-/* Confirmations;
+/* Confirmations, Messages and the like
 ----------------------------------------------------------*/
 .message {
 	margin:10px 0 4px 0;
@@ -346,10 +343,6 @@ textarea {
     width:98.662%;
 }
 
-.radioButton {
-margin:0 6px 0 0;
-}
-
 button, .button, .button:link, .button:visited {
 	background:#dddfcb url(images/tableHeaderBackground.gif) repeat-x top left;
 	border:1px solid #d2d6c6;
@@ -381,8 +374,8 @@ button:focus, .button:focus {
 }
 #main .manage {
     float:right;
-    overflow:hidden;
     margin:3px 0 6px 4px;
+    overflow:hidden;
 }
 #main div.actions {
     height:2em;
@@ -398,124 +391,115 @@ button:focus, .button:focus {
 
 
 
+
+/* todo: (heskew) needs attention */
 #permalink{
 	width:200px;
 }
-
 input.large.text {
 	font-size:130%;
 	font-weight:500;
 }
-
 .helperText {
 	margin:-4px 0 8px 0;
 }
-
-
 #Revision_Slug{
     width:245px;
 }
 /* ---------- Sidebar forms ---------- */
-
 .sideBar fieldset {margin:0px; border:none;}
-
 #Date {width:80px; margin:4px 4px 4px 16px;}
 #Hour, #Minutes {width:30px;}
-
 /* ---------- Actions form elements and filtering ---------- */
 ol.actions {margin:20px 0 0 0;}
-
 ol.actions .button {margin:4px 4px 4px -8px;}
-
 ol.actions label {
 	margin:9px 0 0;
 }
-
 .filterActions {
 	float:right;
 	margin:10px 2px 0 0;
 }
 
-/* Tables;
+
+
+
+/* Tables
 ----------------------------------------------------------*/
-
-
 table {
-	border-collapse: separate;
-	width: 100%;
-	border-spacing: 0px;
-	border:1px solid #B0B083;
 	background:#fff;
+	border:1px solid #B0B083;
+	border-collapse:separate;
+	border-spacing:0;
+	width:100%;
 }
-
 tbody 
 {
-	border-spacing: 0px;
-	vertical-align: middle;
+	border-spacing:0;
+	vertical-align:middle;
 }
-
 thead, th {
-	font-weight:700;
-	text-align:left;
 	background:url(images/tableHeaderBackground.gif) repeat-x top left #dddfcb;
+	font-weight:700;
 	overflow:hidden;
+	text-align:left;
 }
-
-
+/* todo: (heskew) hook back up */
 .trhover{background-color:#f0f3d6;}
-
 th, td {
-	padding: 8px 12px;
-	border-spacing: 0px;
+	border-bottom:1px solid #EAE9D9;
+	border-spacing:0px;
 	display:table-cell;
-	vertical-align: middle;
-	border-bottom: 1px solid #EAE9D9;
+	padding:8px 12px;
+	vertical-align:middle;
 }
-
 caption {
-	text-indent: 0px;
 	font-size:110%;
 	padding:8px 0 8px 0;
+	text-indent:0;
 }
-
 col {
-	border-spacing: 0px;
-	display: table-column;
-	}
-	
+	border-spacing:;
+	display:table-column;
+}
 colgroup 
 {
-	border-spacing: 0px;
-	display: table-column-group;
+	border-spacing:0;
+	display:table-column-group;
 }
 
 tr.critical {background:#e68585; border:inherit;}
-
 tr.warning {background:#fdf5bc; border:inherit;}
 
+
+
+
+/* todo: (heskew) needs attention */
 /* Horizontal lists
 ----------------------------------------------------------*/
-
 ul.horizontal, ol.horizontal {
 	margin:0;
 	padding:0;
 	list-style:none;
 }
-
 ul.horizontal li, ol.horizontal li {
 	float:left;
 	margin:0 4px;
 }
-
 ul.horizontal li a, ul.horizontal li a:visited, ul.horizontal li a:active, ol.horizontal li a, ol.horizontal li a:visited, ol.horizontal li a:active {
 	display:block;
 	text-decoration: none;
 }
 
-/* Miscellaneous;
+
+
+
+/* MISC.
+todo: (heskew) pull out into relevant modules where appropriate
 ----------------------------------------------------------*/
 
-/* CMSPages */
+/* CMSPages
+----------------------------------------------------------*/
 .templates fieldset {
     margin:0 0 .933%;
 }
@@ -528,43 +512,37 @@ ul.horizontal li a, ul.horizontal li a:visited, ul.horizontal li a:active, ol.ho
     margin:.27em .93em .93em .54em;
     width:124px;
 }
-
 .previewImage {
-	width:70%;
-	height:70%;
 	border:1px solid #525e50;
+	height:70%;
+	width:70%;
+}
+
+/* Blogs
+----------------------------------------------------------*/
+ul.blogs li {
+    margin:0.575em 0 2.5em;
 }
 
 
-
+/* todo: (heskew) needs attention */
 /* Extensions;
 ----------------------------------------------------------*/
-
 .floatLeft {float: left;} /*Use this class to float anything to the left*/
-
 .floatRight {float: right;}  /*Use this class to float anything to the right*/
-
 .alignRight {text-align: right;}
-
 .Inline {display: inline;}
-
 .center {margin:0 auto;}  /*Center*/
-
 .clearLayout {clear:both;}  /*Use this class clear layout*/
-
 .disabled {color:#CCC;}
-
 .topSpacer{margin-top: 20px;}
-
 .bottomSpacer{margin-bottom: 20px;}
-
 .displayText {display:none;}
-
 /*
 .separator {border-bottom:1px dashed #E4E7DC; margin-bottom:8px; padding-bottom:2px;}
 */
 
-/*TODO - Remove roundCorners class*/
+/* todo: (heskew) remove roundCorners class */
 #content, #navigation li,
 table, textarea, .button, input.text, input.text-box, .inputTextLarge,
 .inputTextPermalink, .linkButton, .confirmation.message,

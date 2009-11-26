@@ -96,9 +96,11 @@
   <ItemGroup>
     <Content Include="Package.txt" />
     <Content Include="Views\BlogPost\Create.aspx" />
+    <Content Include="Views\BlogPost\EditorTemplates\CreateBlogPostViewModel.ascx" />
     <Content Include="Views\BlogPost\Item.aspx" />
     <Content Include="Views\Blog\Create.aspx" />
     <Content Include="Views\BlogPost\ListByBlog.aspx" />
+    <Content Include="Views\Blog\DisplayTemplates\Blog.ascx" />
     <Content Include="Views\Blog\Edit.aspx" />
     <Content Include="Views\Blog\EditorTemplates\BlogEditViewModel.ascx" />
     <Content Include="Views\Blog\EditorTemplates\BlogPermalink.ascx" />

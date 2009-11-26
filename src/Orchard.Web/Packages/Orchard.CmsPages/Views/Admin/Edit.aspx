@@ -6,7 +6,7 @@
     <p class="bottomSpacer"><%=_Encoded("about setting up a page") %></p>
     <%=Html.ValidationSummary() %>
     <div class="sections">
-        <%using (Html.BeginForm()) { %>
+        <% using (Html.BeginForm()) { %>
         <div class="primary">
             <h3><%=_Encoded("Page Content") %></h3>
             <%-- todo: (heskew) change the editors to be self-contained (fieldset > editor) --%>
@@ -45,6 +45,6 @@
                 <input class="delete button" type="submit" name="submit.DeleteDraft" value="Delete Draft" <%=Model.CanDeleteDraft ? "" : "disabled" %>/>
             </fieldset>
         </div>
-        <%}/*EndForm*/%>
+        <% } %>
     </div>
 <% Html.Include("Foot"); %>
