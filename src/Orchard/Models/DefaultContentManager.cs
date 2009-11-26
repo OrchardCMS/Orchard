@@ -145,6 +145,10 @@ namespace Orchard.Models {
             return context.Editors;
         }
 
+        public IContentQuery Query() {
+            return _context.Resolve<IContentQuery>(TypedParameter.From<IContentManager>(this));
+        }
+
         private ContentTypeRecord AcquireContentTypeRecord(string contentType) {
             var contentTypeRecord = _contentTypeRepository.Get(x => x.Name == contentType);
             if (contentTypeRecord == null) {

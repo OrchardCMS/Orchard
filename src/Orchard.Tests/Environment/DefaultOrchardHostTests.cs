@@ -80,6 +80,10 @@ namespace Orchard.Tests.Environment {
             public IEnumerable<Type> GetDependencyTypes() {
                 return Enumerable.Empty<Type>();
             }
+
+            public IEnumerable<Type> GetRecordTypes() {
+                return Enumerable.Empty<Type>();
+            }
         }
 
         [Test]

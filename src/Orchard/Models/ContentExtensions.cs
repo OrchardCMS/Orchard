@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Orchard.Models {
 
@@ -47,6 +49,9 @@ namespace Orchard.Models {
         }
 
 
+        public static IEnumerable<T> AsPart<T>(this IEnumerable<ContentItem> items) where T : class {
+            return items == null ? null : items.Where(item => item.Is<T>()).Select(item => item.As<T>());
+        }
 
     }
 }

@@ -8,6 +8,7 @@ using Orchard.Data;
 using Orchard.Models;
 using Orchard.Models.Driver;
 using Orchard.Models.Records;
+using Orchard.Tests.Models.Records;
 using Orchard.Tests.Models.Stubs;
 
 namespace Orchard.Tests.Models {

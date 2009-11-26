@@ -13,5 +13,7 @@ namespace Orchard.Models {
         IEnumerable<ModelTemplate> GetDisplays(IContent contentItem);
         IEnumerable<ModelTemplate> GetEditors(IContent contentItem);
         IEnumerable<ModelTemplate> UpdateEditors(IContent contentItem, IUpdateModel updater);
+        
+        IContentQuery Query();
     }
 }

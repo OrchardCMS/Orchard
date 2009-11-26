@@ -13,10 +13,11 @@ using Orchard.Data;
 namespace Orchard.Tests {
     public static class DataUtility {
         public static ISessionFactory CreateSessionFactory(string fileName, params Type[] types) {
-            
-            var persistenceModel = AutoMap.Source(new Types(types))
-                .Alterations(alt => AddAlterations(alt, types))
-                .Conventions.AddFromAssemblyOf<DataModule>();
+
+            //var persistenceModel = AutoMap.Source(new Types(types))
+            //    .Alterations(alt => AddAlterations(alt, types))
+            //    .Conventions.AddFromAssemblyOf<DataModule>();
+            var persistenceModel = HackSessionLocator.CreatePersistenceModel(types);
 
             return Fluently.Configure()
                 .Database(SQLiteConfiguration.Standard.UsingFile(fileName).ShowSql())
@@ -25,9 +26,10 @@ namespace Orchard.Tests {
                 .BuildSessionFactory();
         }
 
-        private static void AddAlterations(AutoMappingAlterationCollection alterations, Type[] types) {
+        private static void AddAlterations(AutoMappingAlterationCollection alterations, IEnumerable<Type> types) {
             foreach (var assembly in types.Select(t => t.Assembly).Distinct()) {
                 alterations.Add(new AutoMappingOverrideAlteration(assembly));
+                alterations.AddFromAssembly(assembly);
             }
             alterations.AddFromAssemblyOf<DataModule>();
         }

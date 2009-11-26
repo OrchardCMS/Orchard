@@ -126,6 +126,8 @@
     <Compile Include="Localization\NullLocalizer.cs" />
     <Compile Include="Models\Aspects\ICommonAspect.cs" />
     <Compile Include="Models\ContentItem.cs" />
+    <Compile Include="Models\ContentModule.cs" />
+    <Compile Include="Models\DefaultContentQuery.cs" />
     <Compile Include="Models\Driver\ActivatedContentContext.cs" />
     <Compile Include="Models\Driver\ActivatingFilter.cs" />
     <Compile Include="Models\Driver\IContentActivatingFilter.cs" />
@@ -159,7 +161,10 @@
     <Compile Include="Models\ContentExtensions.cs" />
     <Compile Include="Models\ContentPart.cs" />
     <Compile Include="Models\IContent.cs" />
+    <Compile Include="Models\IContentQuery.cs" />
+    <Compile Include="Models\Records\ContentItemRecordAlteration.cs" />
     <Compile Include="Models\Records\ContentPartRecord.cs" />
+    <Compile Include="Models\Records\ContentPartRecordAlteration.cs" />
     <Compile Include="Models\Records\ContentTypeRecord.cs" />
     <Compile Include="Models\Records\ContentItemRecord.cs" />
     <Compile Include="Models\Driver\UpdateContentContext.cs" />
