@@ -6,11 +6,11 @@ using JetBrains.Annotations;
 using Orchard.CmsPages.Models;
 using Orchard.Data;
 using Orchard.Services;
+using Orchard.Tasks;
 
 namespace Orchard.CmsPages.Services {
-    public interface IPageScheduler : IDependency {
+    public interface IPageScheduler : IBackgroundTask {
         void AddPublishTask(PageRevision revision, DateTime moment);
-        void Sweep();
         void ClearTasks(Page page);
     }
 

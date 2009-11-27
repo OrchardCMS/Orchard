@@ -38,7 +38,8 @@ namespace Orchard.Tests.Environment {
                 new[] { modelBinderProvider1, modelBinderProvider2 },
                 modelBinderPublisher, 
                 new ViewEngineCollection(),
-                new Moq.Mock<IPackageManager>().Object);
+                new Moq.Mock<IPackageManager>().Object,
+                Enumerable.Empty<IOrchardShellEvents>());
 
             runtime.Activate();
 

@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Web.Mvc;
+using Orchard.Logging;
 using Orchard.Mvc.ModelBinders;
 using Orchard.Mvc.Routes;
 using Orchard.Packages;
+using Orchard.Tasks;
 
 namespace Orchard.Environment {
     public class DefaultOrchardShell : IOrchardShell {
@@ -15,6 +17,7 @@ namespace Orchard.Environment {
         private readonly IModelBinderPublisher _modelBinderPublisher;
         private readonly ViewEngineCollection _viewEngines;
         private readonly IPackageManager _packageManager;
+        private readonly IEnumerable<IOrchardShellEvents> _events;
 
         public DefaultOrchardShell(
             IEnumerable<IRouteProvider> routeProviders,
@@ -22,14 +25,20 @@ namespace Orchard.Environment {
             IEnumerable<IModelBinderProvider> modelBinderProviders,
             IModelBinderPublisher modelBinderPublisher,
             ViewEngineCollection viewEngines,
-            IPackageManager packageManager) {
+            IPackageManager packageManager,
+            IEnumerable<IOrchardShellEvents> events) {
             _routeProviders = routeProviders;
             _routePublisher = routePublisher;
             _modelBinderProviders = modelBinderProviders;
             _modelBinderPublisher = modelBinderPublisher;
             _viewEngines = viewEngines;
             _packageManager = packageManager;
+            _events = events;
+
+            Logger = NullLogger.Instance;
         }
+
+        public ILogger Logger { get; set; }
 
 
         static IEnumerable<string> OrchardLocationFormats() {
@@ -49,8 +58,8 @@ namespace Orchard.Environment {
             _routePublisher.Publish(_routeProviders.SelectMany(provider => provider.GetRoutes()));
             _modelBinderPublisher.Publish(_modelBinderProviders.SelectMany(provider => provider.GetModelBinders()));
 
-            
-            var viewEngine = ViewEngines.Engines.OfType<VirtualPathProviderViewEngine>().Single();
+
+            var viewEngine = _viewEngines.OfType<VirtualPathProviderViewEngine>().Single();
             viewEngine.AreaViewLocationFormats = OrchardLocationFormats()
                 .Concat(viewEngine.AreaViewLocationFormats)
                 .Distinct()
@@ -66,7 +75,15 @@ namespace Orchard.Environment {
                 .Concat(viewEngine.PartialViewLocationFormats)
                 .Distinct()
                 .ToArray();
+
+            _events.Invoke(x => x.Activated(), Logger);
         }
+
+
+        public void Terminate() {
+            _events.Invoke(x => x.Terminating(), Logger);
+        }
+
 
         private static string ModelsLocationFormat(PackageDescriptor descriptor) {
             return Path.Combine(Path.Combine(descriptor.Location, descriptor.Name), "Views/Models/{0}.ascx");

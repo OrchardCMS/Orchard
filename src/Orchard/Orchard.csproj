@@ -118,6 +118,8 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Data\Conventions\AttributeCollectionConvention.cs" />
     <Compile Include="Data\Conventions\CascadeAllDeleteOrphanAttribute.cs" />
+    <Compile Include="Environment\IOrchardShellEvents.cs" />
+    <Compile Include="IEvents.cs" />
     <Compile Include="Localization\IText.cs" />
     <Compile Include="Localization\LocalizationModule.cs" />
     <Compile Include="Localization\LocalizationUtilities.cs" />
@@ -194,6 +196,9 @@
     <Compile Include="Settings\ISite.cs" />
     <Compile Include="Settings\ISiteService.cs" />
     <Compile Include="Settings\SettingsModule.cs" />
+    <Compile Include="Tasks\BackgroundService.cs" />
+    <Compile Include="Tasks\IBackgroundTask.cs" />
+    <Compile Include="Tasks\SweepGenerator.cs" />
     <Compile Include="UI\Menus\AdminMenuFilter.cs" />
     <Compile Include="UI\Models\ModelTemplate.cs" />
     <Compile Include="UI\Navigation\NavigationBuilder.cs" />

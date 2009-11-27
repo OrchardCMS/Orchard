@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reflection;
 using System.Threading;
 using System.Web;
+using System.Web.Hosting;
 using FluentNHibernate.Automapping;
 using FluentNHibernate.Automapping.Alterations;
 using FluentNHibernate.Cfg;
@@ -29,8 +30,9 @@ namespace Orchard.Data {
             // that would eventually imply the need for configuration against one or more actual sources
             // and a means to enlist record types from active packages into correct session factory
 
-            var database =
-                SQLiteConfiguration.Standard.UsingFile(HttpContext.Current.Server.MapPath("~/App_Data/hack.db"));
+            var hackPath = HostingEnvironment.MapPath("~/App_Data/hack.db");
+
+            var database = SQLiteConfiguration.Standard.UsingFile(hackPath);
 
             var recordTypes = _compositionStrategy.GetRecordTypes();
 
