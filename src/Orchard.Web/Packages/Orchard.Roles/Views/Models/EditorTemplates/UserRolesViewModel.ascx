@@ -7,6 +7,7 @@
 <li>
     
     <%= Html.Hidden("Roles[" + index + "].RoleId", entry.RoleId)%>
+    <%= Html.Hidden("Roles[" + index + "].Name", entry.Name)%>
     
     <label for="<%="Roles[" + index + "]_Granted"%>"><%= Html.CheckBox("Roles[" + index + "].Granted", entry.Granted)%> <%=Html.Encode(entry.Name)%></label>
 </li>

@@ -37,26 +37,31 @@ namespace Orchard.Users.Controllers {
         public ActionResult Index() {
             var model = new UsersIndexViewModel();
 
-            var users = _contentManager.Query<User,UserRecord>("user")
+            var users = _contentManager.Query<User, UserRecord>("user")
                 .Where(x => x.UserName != null)
                 .List();
 
-            model.Rows = users.Select(x => new UsersIndexViewModel.Row {User = x}).ToList();
+            model.Rows = users.Select(x => new UsersIndexViewModel.Row { User = x }).ToList();
 
             return View(model);
         }
 
         public ActionResult Create() {
-            var model = new UserCreateViewModel();
+            var user = _contentManager.New("user");
+            var model = new UserCreateViewModel {
+                Editors = _contentManager.GetEditors(user)
+            };
             return View(model);
         }
 
         [HttpPost]
         public ActionResult Create(UserCreateViewModel model) {
+
             if (model.Password != model.ConfirmPassword) {
                 ModelState.AddModelError("ConfirmPassword", T("Password confirmation must match").ToString());
             }
             if (ModelState.IsValid == false) {
+                model.Editors = _contentManager.UpdateEditors(_contentManager.New("user"), this);
                 return View(model);
             }
             var user = _membershipService.CreateUser(new CreateUserParams(
@@ -64,6 +69,12 @@ namespace Orchard.Users.Controllers {
                                               model.Password,
                                               model.Email,
                                               null, null, true));
+            model.Editors = _contentManager.UpdateEditors(user, this);
+            if (ModelState.IsValid == false) {
+                //TODO: rollback transaction
+                return View(model);
+            }
+
             return RedirectToAction("edit", new { user.Id });
         }
 

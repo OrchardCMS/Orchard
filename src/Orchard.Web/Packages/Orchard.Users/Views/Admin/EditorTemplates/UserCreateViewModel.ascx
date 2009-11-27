@@ -7,3 +7,7 @@
     <%=Html.EditorFor(m=>m.Password, "inputPasswordLarge") %>
     <%=Html.EditorFor(m=>m.ConfirmPassword, "inputPasswordLarge") %>
 </ol>
+
+<% foreach(var e in Model.Editors) {%>
+     <%=Html.EditorFor(m => e.Model, e.TemplateName, e.Prefix)%>
+<%} %>

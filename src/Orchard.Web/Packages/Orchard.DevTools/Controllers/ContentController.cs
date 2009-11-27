@@ -11,15 +11,12 @@ using Orchard.Models.Records;
 
 namespace Orchard.DevTools.Controllers {
     public class ContentController : Controller {
-        private readonly IRepository<ContentItemRecord> _contentItemRepository;
         private readonly IRepository<ContentTypeRecord> _contentTypeRepository;
         private readonly IContentManager _contentManager;
 
-        public ContentController(
-            IRepository<ContentItemRecord> contentItemRepository,
+        public ContentController(            
             IRepository<ContentTypeRecord> contentTypeRepository,
             IContentManager contentManager) {
-            _contentItemRepository = contentItemRepository;
             _contentTypeRepository = contentTypeRepository;
             _contentManager = contentManager;
         }
