@@ -29,18 +29,19 @@ namespace Orchard.Sandbox.Controllers {
 
         public ActionResult Index() {
             var model = new PageIndexViewModel {
-                Pages = _contentManager.Query()
-                    .OrderBy<SandboxPageRecord, string>(x => x.Name)
-                    .List<SandboxPage>()
+                Pages = _contentManager.Query<SandboxPage, SandboxPageRecord>()
+                    .OrderBy(x => x.Name)
+                    .List()
             };
             return View(model);
         }
 
         public ActionResult Show(int id) {
+            var page = _contentManager.Get<SandboxPage>(id);
             var model = new PageShowViewModel {
-                Page = _contentManager.Get<SandboxPage>(id)
+                Page = page,
+                Displays = _contentManager.GetDisplays(page)
             };
-            model.Displays = _contentManager.GetDisplays(model.Page.ContentItem);
             return View(model);
         }
 
@@ -74,7 +75,7 @@ namespace Orchard.Sandbox.Controllers {
             var settings = CurrentSite.Get<ContentPart<SandboxSettingsRecord>>();
             if (settings.Record.AllowAnonymousEdits == false && CurrentUser == null) {
                 _notifier.Error(T("Anonymous users can not edit pages"));
-                return RedirectToAction("show", new{id});
+                return RedirectToAction("show", new { id });
             }
 
             var model = new PageEditViewModel { Page = _contentManager.Get<SandboxPage>(id) };

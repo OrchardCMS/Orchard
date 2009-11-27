@@ -120,7 +120,7 @@ namespace Orchard.Tests.Models {
 
             // create a gamma record
             var gamma = new GammaRecord {
-                ContentItem = _container.Resolve<IRepository<ContentItemRecord>>().Get(model.Id),
+                ContentItemRecord = _container.Resolve<IRepository<ContentItemRecord>>().Get(model.Id),
                 Frap = "foo"
             };
 
@@ -135,7 +135,7 @@ namespace Orchard.Tests.Models {
             Assert.That(model.Id, Is.EqualTo(modelRecord.Id));
             Assert.That(model.Is<Gamma>(), Is.True);
             Assert.That(model.As<Gamma>().Record, Is.Not.Null);
-            Assert.That(model.As<Gamma>().Record.ContentItem.Id, Is.EqualTo(model.Id));
+            Assert.That(model.As<Gamma>().Record.ContentItemRecord.Id, Is.EqualTo(model.Id));
 
         }
 

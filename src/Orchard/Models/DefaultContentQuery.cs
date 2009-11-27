@@ -46,19 +46,19 @@ namespace Orchard.Models {
         }
 
 
-        public IContentQuery ForType(params string[] contentTypeNames) {
+        private void ForType(params string[] contentTypeNames) {
             BindCriteriaByPath("ContentType").Add(Restrictions.InG("Name", contentTypeNames));
-            return this;
+            return;
         }
 
 
-        public IContentQuery Where<TRecord>() {
+        private void Where<TRecord>() {
             // this simply demands an inner join
             BindCriteriaByPath(typeof(TRecord).Name);
-            return this;
+            return;
         }
 
-        public IContentQuery Where<TRecord>(Expression<Func<TRecord, bool>> predicate) {
+        private void Where<TRecord>(Expression<Func<TRecord, bool>> predicate) {
 
             // build a linq to nhibernate expression
             var options = new QueryOptions();
@@ -74,10 +74,10 @@ namespace Orchard.Models {
                 recordCriteria.Add(expressionEntry.Criterion);
             }
 
-            return this;
+            return;
         }
 
-        public IContentQuery OrderBy<TRecord, TKey>(Expression<Func<TRecord, TKey>> keySelector) {
+        private void OrderBy<TRecord, TKey>(Expression<Func<TRecord, TKey>> keySelector) {
             // build a linq to nhibernate expression
             var options = new QueryOptions();
             var queryProvider = new NHibernateQueryProvider(BindSession(), options);
@@ -92,10 +92,10 @@ namespace Orchard.Models {
                 recordCriteria.AddOrder(ordering.Order);
             }
 
-            return this;
+            return;
         }
 
-        public IContentQuery OrderByDescending<TRecord, TKey>(Expression<Func<TRecord, TKey>> keySelector) {
+        private void OrderByDescending<TRecord, TKey>(Expression<Func<TRecord, TKey>> keySelector) {
             // build a linq to nhibernate expression
             var options = new QueryOptions();
             var queryProvider = new NHibernateQueryProvider(BindSession(), options);
@@ -109,16 +109,16 @@ namespace Orchard.Models {
             foreach (var ordering in criteria.IterateOrderings()) {
                 recordCriteria.AddOrder(ordering.Order);
             }
-            return this;
+            return;
         }
 
-        public IEnumerable<ContentItem> List() {
+        private IEnumerable<ContentItem> List() {
             return BindItemCriteria()
                 .List<ContentItemRecord>()
                 .Select(x => ContentManager.Get(x.Id));
         }
 
-        public IEnumerable<ContentItem> Slice(int skip, int count) {
+        private IEnumerable<ContentItem> Slice(int skip, int count) {
             var criteria = BindItemCriteria();
             if (skip != 0)
                 criteria = criteria.SetFirstResult(skip);
@@ -128,5 +128,82 @@ namespace Orchard.Models {
                 .List<ContentItemRecord>()
                 .Select(x => ContentManager.Get(x.Id));
         }
-    }
+
+        IContentQuery<TPart> IContentQuery.ForPart<TPart>() {
+            return new ContentQuery<TPart>(this);
+        }
+
+        class ContentQuery<T> : IContentQuery<T> where T : IContent {
+            protected readonly DefaultContentQuery _query;
+
+            public ContentQuery(DefaultContentQuery query) {
+                _query = query;
+            }
+
+            public IContentManager ContentManager {
+                get { return _query.ContentManager; }
+            }
+
+            public IContentQuery<TPart> ForPart<TPart>() where TPart : IContent {
+                return new ContentQuery<TPart>(_query);
+            }
+
+            public IContentQuery<T> ForType(params string[] contentTypes) {
+                _query.ForType(contentTypes);
+                return this;
+            }
+
+            public IEnumerable<T> List() {
+                return _query.List().AsPart<T>();
+            }
+
+            public IEnumerable<T> Slice(int skip, int count) {
+                return _query.Slice(skip, count).AsPart<T>();
+            }
+
+            public IContentQuery<T, TRecord> Join<TRecord>() where TRecord : ContentPartRecord {
+                _query.Where<TRecord>();
+                return new ContentQuery<T, TRecord>(_query);
+            }
+
+            public IContentQuery<T, TRecord> Where<TRecord>(Expression<Func<TRecord, bool>> predicate) where TRecord : ContentPartRecord {
+                _query.Where(predicate);
+                return new ContentQuery<T, TRecord>(_query);
+            }
+
+            public IContentQuery<T, TRecord> OrderBy<TRecord, TKey>(Expression<Func<TRecord, TKey>> keySelector) where TRecord : ContentPartRecord {
+                _query.OrderBy(keySelector);
+                return new ContentQuery<T, TRecord>(_query);
+            }
+
+            public IContentQuery<T, TRecord> OrderByDescending<TRecord, TKey>(Expression<Func<TRecord, TKey>> keySelector) where TRecord : ContentPartRecord {
+                _query.OrderByDescending(keySelector);
+                return new ContentQuery<T, TRecord>(_query);
+            }
+        }
+
+        class ContentQuery<T, TR> : ContentQuery<T>, IContentQuery<T, TR>
+            where T : IContent
+            where TR : ContentPartRecord {
+            public ContentQuery(DefaultContentQuery query)
+                : base(query) {
+            }
+
+            public IContentQuery<T, TR> Where(Expression<Func<TR, bool>> predicate) {
+                _query.Where(predicate);
+                return this;
+            }
+
+            public IContentQuery<T, TR> OrderBy<TKey>(Expression<Func<TR, TKey>> keySelector) {
+                _query.OrderBy(keySelector);
+                return this;
+            }
+
+            public IContentQuery<T, TR> OrderByDescending<TKey>(Expression<Func<TR, TKey>> keySelector) {
+                _query.OrderByDescending(keySelector);
+                return this;
+            }
+        }
+
+   }
 }

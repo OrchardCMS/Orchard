@@ -16,7 +16,7 @@ namespace Orchard.Models.Driver {
         }
 
         protected override void Creating(CreateContentContext context, ContentPart<TRecord> instance) {
-            instance.Record.ContentItem = context.ContentItemRecord;
+            instance.Record.ContentItemRecord = context.ContentItemRecord;
             _repository.Create(instance.Record);
         }
 
@@ -26,7 +26,7 @@ namespace Orchard.Models.Driver {
                 instance.Record = record;
             }
             else if (AutomaticallyCreateMissingRecord) {
-                instance.Record = new TRecord {ContentItem = context.ContentItemRecord};
+                instance.Record = new TRecord {ContentItemRecord = context.ContentItemRecord};
                 _repository.Create(instance.Record);
             }
         }

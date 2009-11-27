@@ -17,13 +17,13 @@ namespace Orchard.Blogs.Services {
         }
 
         public Blog Get(string slug) {
-            RoutableRecord record = _routableRepository.Get(r => r.ContentItem.ContentType.Name == "blog" && r.Slug == slug);
+            RoutableRecord record = _routableRepository.Get(r => r.ContentItemRecord.ContentType.Name == "blog" && r.Slug == slug);
 
             return record != null ?_contentManager.Get<Blog>(record.Id) : null;
         }
 
         public IEnumerable<Blog> Get() {
-            IEnumerable<RoutableRecord> records = _routableRepository.Fetch(rr => rr.ContentItem.ContentType.Name == "blog", rr => rr.Asc(rr2 => rr2.Title));
+            IEnumerable<RoutableRecord> records = _routableRepository.Fetch(rr => rr.ContentItemRecord.ContentType.Name == "blog", rr => rr.Asc(rr2 => rr2.Title));
 
             return records.Select(rr => _contentManager.Get<Blog>(rr.Id));
         }

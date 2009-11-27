@@ -63,7 +63,7 @@ namespace Orchard.Environment {
                    (type.GetProperty("Id").GetAccessors() ?? Enumerable.Empty<MethodInfo>()).All(x => x.IsVirtual) &&
                    !type.IsSealed &&
                    !type.IsAbstract &&
-                   !typeof(IContent).IsAssignableFrom(type);
+                   (!typeof(IContent).IsAssignableFrom(type) || typeof(ContentPartRecord).IsAssignableFrom(type));
         }
     }
 }

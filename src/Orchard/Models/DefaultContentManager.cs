@@ -139,8 +139,9 @@ namespace Orchard.Models {
             return context.Editors;
         }
 
-        public IContentQuery Query() {
-            return _context.Resolve<IContentQuery>(TypedParameter.From<IContentManager>(this));
+        public IContentQuery<ContentItem> Query() {
+            var query = _context.Resolve<IContentQuery>(TypedParameter.From<IContentManager>(this));
+            return query.ForPart<ContentItem>();
         }
 
         private ContentTypeRecord AcquireContentTypeRecord(string contentType) {

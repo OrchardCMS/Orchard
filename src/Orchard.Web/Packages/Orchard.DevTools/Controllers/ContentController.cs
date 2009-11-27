@@ -26,7 +26,7 @@ namespace Orchard.DevTools.Controllers {
 
         public ActionResult Index() {
             return View(new ContentIndexViewModel {
-                Items = _contentManager.Query().OrderBy<ContentItemRecord, int>(x => x.Id).List(),
+                Items = _contentManager.Query().List(),
                 Types = _contentTypeRepository.Table.ToList()
             });
         }

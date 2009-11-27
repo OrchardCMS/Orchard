@@ -156,8 +156,8 @@ namespace Orchard.Tests.Models {
             _manager.Create<Gamma>("gamma", init => { init.Record.Frap = "four"; });
             _session.Flush();
 
-            var twoOrFour = _manager.Query()
-                .Where<GammaRecord>(x => x.Frap == "one" || x.Frap == "four")
+            var twoOrFour = _manager.Query<Gamma, GammaRecord>()
+                .Where(x => x.Frap == "one" || x.Frap == "four")
                 .List();
 
             Assert.That(twoOrFour.Count(), Is.EqualTo(2));
@@ -170,8 +170,8 @@ namespace Orchard.Tests.Models {
         [Test]
         public void EmptyWherePredicateRequiresRecord() {
             AddSampleData();
-            var gammas = _manager.Query().Where<GammaRecord>().List();
-            var deltas = _manager.Query().Where<DeltaRecord>().List();
+            var gammas = _manager.Query().Join<GammaRecord>().List();
+            var deltas = _manager.Query().Join<DeltaRecord>().List();
 
             Assert.That(gammas.Count(), Is.EqualTo(1));
             Assert.That(deltas.Count(), Is.EqualTo(1));
@@ -197,9 +197,9 @@ namespace Orchard.Tests.Models {
             Assert.That(ascending.Last().Record.Frap, Is.EqualTo("two"));
 
 
-            var descending = _manager.Query("gamma")
-                .OrderByDescending<GammaRecord, string>(x => x.Frap)
-                .List<Gamma>();
+            var descending = _manager.Query<Gamma, GammaRecord>()
+                .OrderByDescending(x => x.Frap)
+                .List();
 
             Assert.That(descending.Count(), Is.EqualTo(5));
             Assert.That(descending.First().Record.Frap, Is.EqualTo("two"));
@@ -216,11 +216,11 @@ namespace Orchard.Tests.Models {
             _session.Flush();
 
             var reverseById = _manager.Query()
-                .OrderByDescending<ContentItemRecord, int>(x => x.Id)
+                .OrderByDescending<GammaRecord, int>(x => x.Id)
                 .List();
 
             var subset = _manager.Query()
-                .OrderByDescending<ContentItemRecord, int>(x => x.Id)
+                .OrderByDescending<GammaRecord, int>(x => x.Id)
                 .Slice(2, 3);
 
             Assert.That(subset.Count(), Is.EqualTo(3));

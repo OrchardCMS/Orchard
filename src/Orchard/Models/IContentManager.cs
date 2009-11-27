@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Orchard.Models.Driver;
+using Orchard.Models.Records;
 using Orchard.UI.Models;
 
 namespace Orchard.Models {
@@ -8,7 +9,8 @@ namespace Orchard.Models {
         void Create(ContentItem contentItem);
 
         ContentItem Get(int id);
-        IContentQuery Query();
+
+        IContentQuery<ContentItem> Query();
 
         IEnumerable<ModelTemplate> GetDisplays(IContent contentItem);
         IEnumerable<ModelTemplate> GetEditors(IContent contentItem);

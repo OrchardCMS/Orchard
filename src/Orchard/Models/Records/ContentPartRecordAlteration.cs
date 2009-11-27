@@ -8,15 +8,15 @@ namespace Orchard.Models.Records {
         public void Alter(AutoPersistenceModel model) {
 
             model.OverrideAll(mapping => {
-                                  var genericArguments = mapping.GetType().GetGenericArguments();
-                                  if (!genericArguments.Single().IsSubclassOf(typeof(ContentPartRecord))) {
-                                      return;
-                                  }
+                var genericArguments = mapping.GetType().GetGenericArguments();
+                if (!genericArguments.Single().IsSubclassOf(typeof(ContentPartRecord))) {
+                    return;
+                }
 
-                                  var type = typeof(Alteration<>).MakeGenericType(genericArguments);
-                                  var alteration = (IAlteration)Activator.CreateInstance(type);
-                                  alteration.Override(mapping);
-                              });
+                var type = typeof(Alteration<>).MakeGenericType(genericArguments);
+                var alteration = (IAlteration)Activator.CreateInstance(type);
+                alteration.Override(mapping);
+            });
 
         }
 
@@ -27,8 +27,9 @@ namespace Orchard.Models.Records {
         class Alteration<T> : IAlteration where T : ContentPartRecord {
             public void Override(object mappingObj) {
                 var mapping = (AutoMapping<T>)mappingObj;
-                mapping.Id(x => x.Id).GeneratedBy.Foreign("ContentItem");
-                mapping.HasOne(x => x.ContentItem).Constrained();
+                mapping.Id(x => x.Id).GeneratedBy.Foreign("ContentItemRecord");
+                mapping.HasOne(x => x.ContentItemRecord).Constrained();
+                mapping.IgnoreProperty(x => x.ContentItem);                
             }
         }
     }

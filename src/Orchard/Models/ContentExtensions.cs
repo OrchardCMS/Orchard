@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Orchard.Models.Records;
 
 namespace Orchard.Models {
 
@@ -33,23 +34,37 @@ namespace Orchard.Models {
         }
 
 
-        public static IContentQuery Query(this IContentManager manager, params string[] contentTypeNames)  {
-            return manager.Query().ForType(contentTypeNames);
+        public static IContentQuery<TPart> Query<TPart>(this IContentManager manager)
+            where TPart : ContentPart {
+            return manager.Query().ForPart<TPart>();
         }
-        public static IEnumerable<T> List<T>(this IContentManager manager, params string[] contentTypeNames) where T : class, IContent {
-            return manager.Query(contentTypeNames).List<T>();
+        public static IContentQuery<TPart, TRecord> Query<TPart, TRecord>(this IContentManager manager)
+            where TPart : ContentPart<TRecord>
+            where TRecord : ContentPartRecord {
+            return manager.Query().ForPart<TPart>().Join<TRecord>();
         }
 
-        public static IEnumerable<T> List<T>(this IContentQuery query) where T : class, IContent {
-            return query.List().AsPart<T>();
+        public static IContentQuery<ContentItem> Query(this IContentManager manager, params string[] contentTypeNames)  {
+            return manager.Query().ForType(contentTypeNames);
         }
-        public static IEnumerable<T> Slice<T>(this IContentQuery query, int skip, int count) where T : class, IContent {
-            return query.Slice(skip, count).AsPart<T>();
+        public static IContentQuery<TPart> Query<TPart>(this IContentManager manager, params string[] contentTypeNames) where TPart : ContentPart {
+            return manager.Query().ForPart<TPart>().ForType(contentTypeNames);
         }
-        public static IEnumerable<T> Slice<T>(this IContentQuery query, int count) where T : class, IContent {
-            return query.Slice(0, count).AsPart<T>();
+        public static IContentQuery<TPart,TRecord> Query<TPart,TRecord>(this IContentManager manager, params string[] contentTypeNames) where TPart : ContentPart<TRecord> where TRecord : ContentPartRecord {
+            return manager.Query().ForPart<TPart>().ForType(contentTypeNames).Join<TRecord>();
         }
-        public static IEnumerable<ContentItem> Slice(this IContentQuery query, int count)  {
+
+
+
+        public static IEnumerable<T> List<T>(this IContentManager manager, params string[] contentTypeNames) where T : ContentPart {
+            return manager.Query<T>(contentTypeNames).List();
+        }
+
+        public static IEnumerable<T> List<T>(this IContentQuery query) where T : IContent {
+            return query.ForPart<T>().List();
+        }
+
+        public static IEnumerable<T> Slice<T>(this IContentQuery<T> query, int count) where T : IContent {
             return query.Slice(0, count);
         }
 
@@ -58,19 +73,19 @@ namespace Orchard.Models {
         public static bool Is<T>(this IContent content) {
             return content == null ? false : content.ContentItem.Has(typeof(T));
         }
-        public static T As<T>(this IContent content) where T : class {
-            return content == null ? null : (T)content.ContentItem.Get(typeof(T));
+        public static T As<T>(this IContent content) where T : IContent {
+            return content == null ? default(T) : (T)content.ContentItem.Get(typeof(T));
         }
 
         public static bool Has<T>(this IContent content) {
             return content == null ? false : content.ContentItem.Has(typeof(T));
         }
-        public static T Get<T>(this IContent content) where T : class {
-            return content == null ? null : (T)content.ContentItem.Get(typeof(T));
+        public static T Get<T>(this IContent content) where T : IContent {
+            return content == null ? default(T) : (T)content.ContentItem.Get(typeof(T));
         }
 
 
-        public static IEnumerable<T> AsPart<T>(this IEnumerable<ContentItem> items) where T : class {
+        public static IEnumerable<T> AsPart<T>(this IEnumerable<ContentItem> items) where T : IContent {
             return items == null ? null : items.Where(item => item.Is<T>()).Select(item => item.As<T>());
         }
 

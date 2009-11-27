@@ -37,9 +37,9 @@ namespace Orchard.Users.Controllers {
         public ActionResult Index() {
             var model = new UsersIndexViewModel();
 
-            var users = _contentManager.Query("user")
-                .Where<UserRecord>(x => x.UserName != null)
-                .List<User>();
+            var users = _contentManager.Query<User,UserRecord>("user")
+                .Where(x => x.UserName != null)
+                .List();
 
             model.Rows = users.Select(x => new UsersIndexViewModel.Row {User = x}).ToList();
 

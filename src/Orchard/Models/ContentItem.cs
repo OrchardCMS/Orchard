@@ -21,10 +21,12 @@ namespace Orchard.Models {
 
 
         public bool Has(Type partType) {
-            return _parts.Any(part => partType.IsAssignableFrom(part.GetType()));
+            return partType==typeof(ContentItem) || _parts.Any(part => partType.IsAssignableFrom(part.GetType()));
         }
 
         public IContent Get(Type partType) {
+            if (partType == typeof(ContentItem))
+                return this;
             return _parts.FirstOrDefault(part => partType.IsAssignableFrom(part.GetType()));
         }
 
