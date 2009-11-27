@@ -44,7 +44,7 @@ namespace Orchard.Tests.Environment {
                     builder.Register(_controllerBuilder);
                     builder.Register(_routeCollection);
                     builder.Register(_modelBinderDictionary);
-                    builder.Register(new ViewEngineCollection());
+                    builder.Register(new ViewEngineCollection{new WebFormViewEngine()});
                     builder.Register(new StuPackageManager()).As<IPackageManager>();
                 });
         }
