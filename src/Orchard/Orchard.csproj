@@ -129,6 +129,7 @@
     <Compile Include="Models\Aspects\ICommonAspect.cs" />
     <Compile Include="Models\ContentItem.cs" />
     <Compile Include="Models\ContentModule.cs" />
+    <Compile Include="Models\ContentType.cs" />
     <Compile Include="Models\DefaultContentQuery.cs" />
     <Compile Include="Models\Driver\ActivatedContentContext.cs" />
     <Compile Include="Models\Driver\ActivatingFilter.cs" />

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using Autofac;
 using Autofac.Builder;
 using Autofac.Modules;
@@ -147,6 +148,15 @@ namespace Orchard.Tests.Models {
             var modelRecord = _container.Resolve<IRepository<ContentItemRecord>>().Get(beta.Id);
             Assert.That(modelRecord, Is.Not.Null);
             Assert.That(modelRecord.ContentType.Name, Is.EqualTo("beta"));
+        }
+
+        [Test]
+        public void GetContentTypesShouldReturnAllTypes() {
+            var types = _manager.GetContentTypes();
+            Assert.That(types.Count(), Is.EqualTo(3));
+            Assert.That(types, Has.Some.With.Property("Name").EqualTo("alpha"));
+            Assert.That(types, Has.Some.With.Property("Name").EqualTo("beta"));
+            Assert.That(types, Has.Some.With.Property("Name").EqualTo("gamma"));
         }
 
         private ContentItemRecord CreateModelRecord(string contentType) {

@@ -1,5 +1,9 @@
-﻿namespace Orchard.Models.Driver {
+﻿using System.Collections.Generic;
+
+namespace Orchard.Models.Driver {
     public interface IContentProvider : IDependency {
+        IEnumerable<ContentType> GetContentTypes();
+
         void Activating(ActivatingContentContext context);
         void Activated(ActivatedContentContext context);
         void Creating(CreateContentContext context);

@@ -5,6 +5,8 @@ using Orchard.Security;
 
 namespace Orchard.Blogs.Models {
     public class BlogPost : ContentPart<BlogPostRecord> {
+        public readonly static ContentType ContentType = new ContentType { Name = "blogpost", DisplayName = "Blog Post" };
+
         public Blog Blog { get; set; }
         public string Title { get { return this.As<RoutableAspect>().Title; } }
         public string Body { get { return this.As<BodyAspect>().Body; } }

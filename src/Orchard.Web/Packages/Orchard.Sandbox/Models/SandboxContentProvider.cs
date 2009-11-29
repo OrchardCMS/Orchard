@@ -1,19 +1,25 @@
-﻿using Orchard.Core.Common.Models;
+﻿using System.Collections.Generic;
+using Orchard.Core.Common.Models;
 using Orchard.Data;
 using Orchard.Models;
 using Orchard.Models.Driver;
 
 namespace Orchard.Sandbox.Models {
     public class SandboxContentProvider : ContentProvider {
+
+        public override IEnumerable<ContentType> GetContentTypes() {
+            return new[] {SandboxPage.ContentType};
+        }
+
         public SandboxContentProvider(
             IRepository<SandboxPageRecord> pageRepository, 
             IRepository<SandboxSettingsRecord> settingsRepository) {
 
             // define the "sandboxpage" content type
-            Filters.Add(new ActivatingFilter<SandboxPage>("sandboxpage"));
-            Filters.Add(new ActivatingFilter<CommonAspect>("sandboxpage"));
-            Filters.Add(new ActivatingFilter<RoutableAspect>("sandboxpage"));
-            Filters.Add(new ActivatingFilter<BodyAspect>("sandboxpage"));
+            Filters.Add(new ActivatingFilter<SandboxPage>(SandboxPage.ContentType.Name));
+            Filters.Add(new ActivatingFilter<CommonAspect>(SandboxPage.ContentType.Name));
+            Filters.Add(new ActivatingFilter<RoutableAspect>(SandboxPage.ContentType.Name));
+            Filters.Add(new ActivatingFilter<BodyAspect>(SandboxPage.ContentType.Name));
             Filters.Add(new StorageFilter<SandboxPageRecord>(pageRepository) { AutomaticallyCreateMissingRecord = true });
 
             // add settings to site, and simple record-template gui

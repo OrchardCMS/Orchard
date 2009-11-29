@@ -34,6 +34,10 @@ namespace Orchard.Models.Driver {
             protected override void Loaded(LoadContentContext context, TPart instance) { if (OnLoaded != null) OnLoaded(context, instance); }
         }
 
+        public virtual IEnumerable<ContentType> GetContentTypes() {
+            return Enumerable.Empty<ContentType>();
+        }
+
         void IContentProvider.Activating(ActivatingContentContext context) {
             foreach (var filter in Filters.OfType<IContentActivatingFilter>())
                 filter.Activating(context);

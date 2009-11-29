@@ -5,6 +5,8 @@ using Orchard.UI.Models;
 
 namespace Orchard.Models {
     public interface IContentManager : IDependency {
+        IEnumerable<ContentType> GetContentTypes();
+
         ContentItem New(string contentType);
         void Create(ContentItem contentItem);
 

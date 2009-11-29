@@ -4,6 +4,8 @@ using Orchard.Models;
 namespace Orchard.Sandbox.Models {
     public class SandboxPage : ContentPart<SandboxPageRecord>, IContentDisplayInfo {
 
+        public readonly static ContentType ContentType = new ContentType {Name = "sandboxpage", DisplayName = "Sandbox Page"};
+
         string IContentDisplayInfo.DisplayText {
             get { return Record.Name; }
         }

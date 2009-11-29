@@ -3,6 +3,8 @@ using Orchard.Models;
 
 namespace Orchard.Blogs.Models {
     public class Blog : ContentPart<BlogRecord> {
+        public readonly static ContentType ContentType = new ContentType { Name = "blog", DisplayName = "Blog" };
+
         public int Id { get { return ContentItem.Id; } }
         public string Name { get { return this.As<RoutableAspect>().Title; } }
         public string Slug { get { return this.As<RoutableAspect>().Slug; } }

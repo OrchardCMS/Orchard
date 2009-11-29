@@ -1,6 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Web.Mvc;
+﻿using System.Collections.Generic;
+using System.Linq;
 using Autofac;
 using Orchard.Data;
 using Orchard.Models.Driver;
@@ -29,6 +28,12 @@ namespace Orchard.Models {
                     _drivers = _context.Resolve<IEnumerable<IContentProvider>>();
                 return _drivers;
             }            
+        }
+
+        public IEnumerable<ContentType> GetContentTypes() {
+            return Drivers.Aggregate(
+                Enumerable.Empty<ContentType>(),
+                (contentTypes, contentProvider) => contentTypes.Concat(contentProvider.GetContentTypes()));
         }
 
         public virtual ContentItem New(string contentType) {
