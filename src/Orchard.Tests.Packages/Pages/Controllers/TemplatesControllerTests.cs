@@ -27,6 +27,8 @@ namespace Orchard.Tests.Packages.Pages.Controllers {
 
             var revision = _pageManager.CreatePage(new CreatePageParams(null, "slug", null));
             _pageManager.Publish(revision, new PublishOptions());
+
+            _container.Resolve<ISlugConstraint>().SetCurrentlyPublishedSlugs(_pageManager.GetCurrentlyPublishedSlugs());
         }
 
         public override void Register(ContainerBuilder builder) {
@@ -35,6 +37,7 @@ namespace Orchard.Tests.Packages.Pages.Controllers {
             builder.Register<TemplateProvider>().As<ITemplateProvider>();
             builder.Register<TemplateMetadataParser>().As<ITemplateMetadataParser>();
             builder.Register(new StubTemplateEntryProvider()).As<ITemplateEntryProvider>();
+            builder.Register<SlugConstraint>().As<ISlugConstraint>();
         }
 
         protected override IEnumerable<Type> DatabaseTypes {
@@ -67,6 +70,14 @@ namespace Orchard.Tests.Packages.Pages.Controllers {
         public void SlugShouldBeUsedToGetPageFromRepository() {
             var result = _controller.Show("slug");
             var page = (PageRevision) (((ViewResult) result).ViewData.Model);
+            Assert.That(page.Slug, Is.EqualTo("slug"));
+        }
+
+
+        [Test]
+        public void TheWrongCaseShouldStillWork() {
+            var result = _controller.Show("sLUg");
+            var page = (PageRevision)(((ViewResult)result).ViewData.Model);
             Assert.That(page.Slug, Is.EqualTo("slug"));
         }
     }

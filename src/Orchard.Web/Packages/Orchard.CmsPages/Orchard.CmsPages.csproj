@@ -96,6 +96,7 @@
     <Compile Include="Services\Templates\MetadataEntry.cs" />
     <Compile Include="Services\Templates\TemplateMetadataParser.cs" />
     <Compile Include="Services\XmlRpcHandler.cs" />
+    <Compile Include="Services\SlugConstraint.cs" />
     <Compile Include="ViewModels\ChooseTemplateViewModel.cs" />
     <Compile Include="ViewModels\PageCreateViewModel.cs" />
     <Compile Include="ViewModels\PageEditViewModel.cs" />

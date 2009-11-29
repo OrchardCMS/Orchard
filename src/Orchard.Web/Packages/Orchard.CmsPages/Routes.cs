@@ -1,18 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+﻿using System.Collections.Generic;
 using System.Web.Mvc;
 using System.Web.Routing;
 using Orchard.CmsPages.Services;
 using Orchard.Mvc.Routes;
 
 namespace Orchard.CmsPages {
-    public class Routes : IRouteProvider, IRouteConstraint {
-        private readonly IPageManager _pageManager;
 
-        public Routes(IPageManager pageManager) {
-            _pageManager = pageManager;
+    public class Routes : IRouteProvider {
+        private readonly ISlugConstraint _slugConstraint;
+
+        public Routes(ISlugConstraint slugConstraint) {
+            _slugConstraint = slugConstraint;
         }
 
         public void GetRoutes(ICollection<RouteDescriptor> routes) {
@@ -21,7 +19,6 @@ namespace Orchard.CmsPages {
         }
 
         public IEnumerable<RouteDescriptor> GetRoutes() {
-            IRouteConstraint slugConstraint = this;
             return new[] {
                              new RouteDescriptor {
                                                      Priority = 10,
@@ -33,7 +30,7 @@ namespace Orchard.CmsPages {
                                                                                       {"action", "show"}
                                                                                   },
                                                          new RouteValueDictionary {
-                                                                                      {"slug", slugConstraint}
+                                                                                      {"slug", _slugConstraint}
                                                                                   },
                                                          new RouteValueDictionary {
                                                                                       {"area", "Orchard.CmsPages"}
@@ -43,15 +40,5 @@ namespace Orchard.CmsPages {
                          };
         }
 
-        public bool Match(HttpContextBase httpContext, Route route, string parameterName, RouteValueDictionary values, RouteDirection routeDirection) {
-            //TEMP: direct db call... 
-            object value;
-            if (values.TryGetValue(parameterName, out value)) {
-                var parameterValue = Convert.ToString(value);
-                bool result = _pageManager.GetCurrentlyPublishedSlugs().Count(slug => slug == parameterValue) != 0;
-                return result;
-            }
-            return false;
-        }
     }
 }

@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -7,7 +6,6 @@ using Orchard.Logging;
 using Orchard.Mvc.ModelBinders;
 using Orchard.Mvc.Routes;
 using Orchard.Packages;
-using Orchard.Tasks;
 
 namespace Orchard.Environment {
     public class DefaultOrchardShell : IOrchardShell {

@@ -45,7 +45,12 @@ namespace Orchard.Environment {
 
 
         protected virtual IOrchardShell CreateShell() {
+            var shellContainer = CreateShellContainer();
 
+            return shellContainer.Resolve<IOrchardShell>();
+        }
+
+        public virtual IContainer CreateShellContainer() {
             // add module types to container being built
             var addingModulesAndServices = new ContainerBuilder();
             foreach (var moduleType in _compositionStrategy.GetModuleTypes()) {
@@ -55,8 +60,18 @@ namespace Orchard.Environment {
             // add components by the IDependency interfaces they expose
             foreach (var serviceType in _compositionStrategy.GetDependencyTypes()) {
                 foreach (var interfaceType in serviceType.GetInterfaces())
-                    if (typeof(IDependency).IsAssignableFrom(interfaceType))
-                        addingModulesAndServices.Register(serviceType).As(interfaceType).ContainerScoped();
+                    if (typeof(IDependency).IsAssignableFrom(interfaceType)) {
+                        var registrar = addingModulesAndServices.Register(serviceType).As(interfaceType);
+                        if (typeof(ISingletonDependency).IsAssignableFrom(interfaceType)){
+                            registrar.SingletonScoped();
+                        }
+                        else if (typeof(ITransientDependency).IsAssignableFrom(interfaceType)){
+                            registrar.FactoryScoped();
+                        }
+                        else {
+                            registrar.ContainerScoped();
+                        }
+                    }
             }
 
             var shellContainer = _container.CreateInnerContainer();
@@ -69,8 +84,7 @@ namespace Orchard.Environment {
                 addingModules.RegisterModule(module);
             }
             addingModules.Build(shellContainer);
-
-            return shellContainer.Resolve<IOrchardShell>();
+            return shellContainer;
         }
 
         #region IOrchardHost Members

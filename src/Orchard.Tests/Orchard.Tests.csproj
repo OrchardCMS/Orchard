@@ -104,6 +104,7 @@
     <Compile Include="Environment\DefaultOrchardHostTests.cs" />
     <Compile Include="Environment\DefaultOrchardShellTests.cs" />
     <Compile Include="Environment\OrchardStarterTests.cs" />
+    <Compile Include="Environment\TestDependencies\TestDependency.cs" />
     <Compile Include="EventsTests.cs" />
     <Compile Include="Localization\NullLocalizerTests.cs" />
     <Compile Include="Logging\LoggingModuleTests.cs" />

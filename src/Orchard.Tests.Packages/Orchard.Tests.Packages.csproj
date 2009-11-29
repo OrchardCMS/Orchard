@@ -90,6 +90,7 @@
     <Compile Include="Pages\Controllers\TemplatesControllerTests.cs" />
     <Compile Include="Pages\Services\PageManagerTests.cs" />
     <Compile Include="Pages\Services\PageSchedulerTests.cs" />
+    <Compile Include="Pages\Services\SlugConstraintTests.cs" />
     <Compile Include="Pages\Services\Templates\CommentExtractorTests.cs" />
     <Compile Include="Pages\Services\Templates\TemplateMetadataParserTests.cs" />
     <Compile Include="Pages\Services\Templates\TemplateProviderTests.cs" />

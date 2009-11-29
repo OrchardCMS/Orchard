@@ -16,6 +16,7 @@ using Orchard.Mvc;
 using Orchard.Mvc.ModelBinders;
 using Orchard.Mvc.Routes;
 using Orchard.Packages;
+using Orchard.Tests.Environment.TestDependencies;
 using Orchard.Tests.Mvc.Routes;
 using Orchard.Tests.Stubs;
 
@@ -44,7 +45,7 @@ namespace Orchard.Tests.Environment {
                     builder.Register(_controllerBuilder);
                     builder.Register(_routeCollection);
                     builder.Register(_modelBinderDictionary);
-                    builder.Register(new ViewEngineCollection{new WebFormViewEngine()});
+                    builder.Register(new ViewEngineCollection { new WebFormViewEngine() });
                     builder.Register(new StuPackageManager()).As<IPackageManager>();
                 });
         }
@@ -78,7 +79,11 @@ namespace Orchard.Tests.Environment {
             }
 
             public IEnumerable<Type> GetDependencyTypes() {
-                return Enumerable.Empty<Type>();
+                return new[] {
+                                 typeof (TestDependency),
+                                 typeof (TestSingletonDependency),
+                                 typeof(TestTransientDependency)
+                             };
             }
 
             public IEnumerable<Type> GetRecordTypes() {
@@ -92,6 +97,106 @@ namespace Orchard.Tests.Environment {
             var runtime1 = host.CreateShell();
             var runtime2 = host.CreateShell();
             Assert.That(runtime1, Is.Not.SameAs(runtime2));
+        }
+
+
+        [Test]
+        public void NormalDependenciesShouldBeUniquePerRequestContainer() {
+            var host = (DefaultOrchardHost)_container.Resolve<IOrchardHost>();
+            var container1 = host.CreateShellContainer();
+            var container2 = host.CreateShellContainer();
+            var requestContainer1a = container1.CreateInnerContainer();
+            var requestContainer1b = container1.CreateInnerContainer();
+            var requestContainer2a = container2.CreateInnerContainer();
+            var requestContainer2b = container2.CreateInnerContainer();
+
+            var dep1 = container1.Resolve<ITestDependency>();
+            var dep1a = requestContainer1a.Resolve<ITestDependency>();
+            var dep1b = requestContainer1b.Resolve<ITestDependency>();
+            var dep2 = container2.Resolve<ITestDependency>();
+            var dep2a = requestContainer2a.Resolve<ITestDependency>();
+            var dep2b = requestContainer2b.Resolve<ITestDependency>();
+
+            Assert.That(dep1, Is.Not.SameAs(dep2));
+            Assert.That(dep1, Is.Not.SameAs(dep1a));
+            Assert.That(dep1, Is.Not.SameAs(dep1b));
+            Assert.That(dep2, Is.Not.SameAs(dep2a));
+            Assert.That(dep2, Is.Not.SameAs(dep2b));
+
+            var again1 = container1.Resolve<ITestDependency>();
+            var again1a = requestContainer1a.Resolve<ITestDependency>();
+            var again1b = requestContainer1b.Resolve<ITestDependency>();
+            var again2 = container2.Resolve<ITestDependency>();
+            var again2a = requestContainer2a.Resolve<ITestDependency>();
+            var again2b = requestContainer2b.Resolve<ITestDependency>();
+
+            Assert.That(again1, Is.SameAs(dep1));
+            Assert.That(again1a, Is.SameAs(dep1a));
+            Assert.That(again1b, Is.SameAs(dep1b));
+            Assert.That(again2, Is.SameAs(dep2));
+            Assert.That(again2a, Is.SameAs(dep2a));
+            Assert.That(again2b, Is.SameAs(dep2b));
+        }
+        [Test]
+        public void SingletonDependenciesShouldBeUniquePerShell() {
+            var host = (DefaultOrchardHost)_container.Resolve<IOrchardHost>();
+            var container1 = host.CreateShellContainer();
+            var container2 = host.CreateShellContainer();
+            var requestContainer1a = container1.CreateInnerContainer();
+            var requestContainer1b = container1.CreateInnerContainer();
+            var requestContainer2a = container2.CreateInnerContainer();
+            var requestContainer2b = container2.CreateInnerContainer();
+
+            var dep1 = container1.Resolve<ITestSingletonDependency>();
+            var dep1a = requestContainer1a.Resolve<ITestSingletonDependency>();
+            var dep1b = requestContainer1b.Resolve<ITestSingletonDependency>();
+            var dep2 = container2.Resolve<ITestSingletonDependency>();
+            var dep2a = requestContainer2a.Resolve<ITestSingletonDependency>();
+            var dep2b = requestContainer2b.Resolve<ITestSingletonDependency>();
+
+            Assert.That(dep1, Is.Not.SameAs(dep2));
+            Assert.That(dep1, Is.SameAs(dep1a));
+            Assert.That(dep1, Is.SameAs(dep1b));
+            Assert.That(dep2, Is.SameAs(dep2a));
+            Assert.That(dep2, Is.SameAs(dep2b));
+        }
+        [Test]
+        public void TransientDependenciesShouldBeUniquePerResolve() {
+            var host = (DefaultOrchardHost)_container.Resolve<IOrchardHost>();
+            var container1 = host.CreateShellContainer();
+            var container2 = host.CreateShellContainer();
+            var requestContainer1a = container1.CreateInnerContainer();
+            var requestContainer1b = container1.CreateInnerContainer();
+            var requestContainer2a = container2.CreateInnerContainer();
+            var requestContainer2b = container2.CreateInnerContainer();
+
+            var dep1 = container1.Resolve<ITestTransientDependency>();
+            var dep1a = requestContainer1a.Resolve<ITestTransientDependency>();
+            var dep1b = requestContainer1b.Resolve<ITestTransientDependency>();
+            var dep2 = container2.Resolve<ITestTransientDependency>();
+            var dep2a = requestContainer2a.Resolve<ITestTransientDependency>();
+            var dep2b = requestContainer2b.Resolve<ITestTransientDependency>();
+
+            Assert.That(dep1, Is.Not.SameAs(dep2));
+            Assert.That(dep1, Is.Not.SameAs(dep1a));
+            Assert.That(dep1, Is.Not.SameAs(dep1b));
+            Assert.That(dep2, Is.Not.SameAs(dep2a));
+            Assert.That(dep2, Is.Not.SameAs(dep2b));
+
+            var again1 = container1.Resolve<ITestTransientDependency>();
+            var again1a = requestContainer1a.Resolve<ITestTransientDependency>();
+            var again1b = requestContainer1b.Resolve<ITestTransientDependency>();
+            var again2 = container2.Resolve<ITestTransientDependency>();
+            var again2a = requestContainer2a.Resolve<ITestTransientDependency>();
+            var again2b = requestContainer2b.Resolve<ITestTransientDependency>();
+
+            Assert.That(again1, Is.Not.SameAs(dep1));
+            Assert.That(again1a, Is.Not.SameAs(dep1a));
+            Assert.That(again1b, Is.Not.SameAs(dep1b));
+            Assert.That(again2, Is.Not.SameAs(dep2));
+            Assert.That(again2a, Is.Not.SameAs(dep2a));
+            Assert.That(again2b, Is.Not.SameAs(dep2b));
+
         }
     }
 }
