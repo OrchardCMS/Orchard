@@ -1,8 +1,7 @@
+using Orchard.Core.Common.Records;
 using Orchard.Models;
 
 namespace Orchard.Core.Common.Models {
-    public class BodyAspect : ContentPart {
-        public string Body { get; set; }
-        public string Format { get; set; }
+    public class BodyAspect : ContentPart<BodyRecord> {
     }
 }

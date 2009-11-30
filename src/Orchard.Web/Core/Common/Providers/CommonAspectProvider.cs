@@ -23,9 +23,9 @@ namespace Orchard.Core.Common.Providers {
             _authenticationService = authenticationService;
             _contentManager = contentManager;
 
-            AddOnActivated<CommonAspect>(PropertySetHandlers);
-            AddOnCreating<CommonAspect>(DefaultTimestampsAndOwner);
-            AddOnLoaded<CommonAspect>(LazyLoadHandlers);
+            OnActivated<CommonAspect>(PropertySetHandlers);
+            OnCreating<CommonAspect>(DefaultTimestampsAndOwner);
+            OnLoaded<CommonAspect>(LazyLoadHandlers);
             Filters.Add(new StorageFilter<CommonRecord>(repository));
         }
 

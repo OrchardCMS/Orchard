@@ -22,7 +22,7 @@ namespace Orchard.Roles.Models {
             _notifier = notifier;
 
             Filters.Add(new ActivatingFilter<UserRoles>("user"));
-            AddOnLoaded<UserRoles>((context, userRoles) => {
+            OnLoaded<UserRoles>((context, userRoles) => {
                 userRoles.Roles = _userRolesRepository
                     .Fetch(x => x.UserId == context.ContentItem.Id)
                     .Select(x => x.Role.Name).ToList();
