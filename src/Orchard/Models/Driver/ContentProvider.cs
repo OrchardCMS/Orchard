@@ -58,10 +58,10 @@ namespace Orchard.Models.Driver {
                 if (OnCreating != null) OnCreating(context, instance);
             }
             protected override void Created(CreateContentContext context, TPart instance) {
-                if (OnCreating != null) OnCreated(context, instance);
+                if (OnCreated != null) OnCreated(context, instance);
             }
             protected override void Loading(LoadContentContext context, TPart instance) {
-                if (OnLoaded != null) OnLoading(context, instance);
+                if (OnLoading != null) OnLoading(context, instance);
             }
             protected override void Loaded(LoadContentContext context, TPart instance) {
                 if (OnLoaded != null) OnLoaded(context, instance);
