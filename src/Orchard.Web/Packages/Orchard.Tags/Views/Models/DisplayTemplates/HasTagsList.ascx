@@ -1,8 +1,12 @@
 <%@ Control Language="C#" Inherits="System.Web.Mvc.ViewUserControl<HasTags>" %>
 <%@ Import Namespace="Orchard.Mvc.Html" %>
 <%@ Import Namespace="Orchard.Tags.Models" %>
-<ul class="tags">
-    <%foreach (var tag in Model.CurrentTags) {%>
-    <li class="tag"><%=Html.ActionLink(tag.TagName, "Search", "Home", new{ area="Orchard.Tags", tagName=tag.TagName},new{}) %></li>
-    <%}%>
-</ul>
+Tag<%=Model.CurrentTags.Count == 1 ? "" : "s" %>: <%
+    int tagCount = 0;
+    foreach (Tag tag in Model.CurrentTags) {
+        if (tagCount > 0) {
+            %>, <%
+        }
+        %><%=Html.ActionLink(tag.TagName, "Search", "Home", new{ area="Orchard.Tags", tagName=tag.TagName}, new {}) %><%
+        tagCount++;
+    } %>

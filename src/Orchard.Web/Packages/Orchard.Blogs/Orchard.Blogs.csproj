@@ -99,6 +99,7 @@
     <Content Include="Package.txt" />
     <Content Include="Views\BlogPost\Create.aspx" />
     <Content Include="Views\BlogPost\Edit.aspx" />
+    <Content Include="Views\BlogPost\EditorTemplates\BlogPostEditViewModel.ascx" />
     <Content Include="Views\Blog\ListForAdmin.aspx" />
     <Content Include="Views\Shared\BlogPostPreview.ascx" />
     <Content Include="Views\BlogPost\EditorTemplates\CreateBlogPostViewModel.ascx" />
