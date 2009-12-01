@@ -58,7 +58,7 @@ namespace Orchard.Environment {
 
 
         private static bool IsRecordType(Type type) {
-            return (type.Namespace.EndsWith(".Models") || type.Namespace.EndsWith(".Records")) &&
+            return ((type.Namespace ?? "").EndsWith(".Models") || (type.Namespace ?? "").EndsWith(".Records")) &&
                    type.GetProperty("Id") != null &&
                    (type.GetProperty("Id").GetAccessors() ?? Enumerable.Empty<MethodInfo>()).All(x => x.IsVirtual) &&
                    !type.IsSealed &&

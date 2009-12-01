@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using Orchard.Packages.Loaders;
 using Yaml.Grammar;
 
 namespace Orchard.Packages {
@@ -13,9 +14,12 @@ namespace Orchard.Packages {
 
     public class PackageManager : IPackageManager {
         private readonly IPackageFolders _folders;
+        private readonly IEnumerable<IPackageLoader> _loaders;
+        private IEnumerable<PackageEntry> _activePackages;
 
-        public PackageManager(IPackageFolders folders) {
+        public PackageManager(IPackageFolders folders, IEnumerable<IPackageLoader> loaders) {
             _folders = folders;
+            _loaders = loaders.OrderBy(x => x.Order);
         }
 
 
@@ -48,35 +52,28 @@ namespace Orchard.Packages {
         }
 
         public IEnumerable<PackageEntry> ActivePackages() {
+            if (_activePackages == null) {
+                _activePackages = BuildActivePackages().ToList();
+            }
+            return _activePackages;
+        }
+
+        private IEnumerable<PackageEntry> BuildActivePackages() {
             foreach (var descriptor in AvailablePackages()) {
                 //TODO: this component needs access to some "current settings" to know which are active
                 yield return BuildEntry(descriptor);
             }
         }
 
-        private static PackageEntry BuildEntry(PackageDescriptor descriptor) {
-            if (descriptor.Location == "~/Core") {
-
-                var assembly = Assembly.Load("Orchard.Core");
-                return new PackageEntry {
-                    Descriptor = descriptor,
-                    Assembly = assembly,
-                    ExportedTypes = assembly.GetExportedTypes().Where(x => IsTypeFromPackage(x, descriptor))
-                };
+        private PackageEntry BuildEntry(PackageDescriptor descriptor) {
+            foreach (var loader in _loaders) {
+                var entry = loader.Load(descriptor);
+                if (entry != null)
+                    return entry;
             }
-            else {
-                var assembly = Assembly.Load(descriptor.Name);
-                return new PackageEntry {
-                    Descriptor = descriptor,
-                    Assembly = assembly,
-                    ExportedTypes = assembly.GetExportedTypes()
-                };
-            }
+            return null;
         }
 
-        private static bool IsTypeFromPackage(Type type, PackageDescriptor descriptor) {
-            return (type.Namespace + ".").StartsWith("Orchard.Core." + descriptor.Name + ".");
-        }
     }
 
 }

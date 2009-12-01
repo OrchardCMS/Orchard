@@ -189,6 +189,11 @@
     <Compile Include="Mvc\ViewPage.cs">
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
+    <Compile Include="Packages\Loaders\DynamicPackageLoader.cs" />
+    <Compile Include="Packages\Loaders\PrecompiledPackageLoader.cs" />
+    <Compile Include="Packages\Loaders\CorePackageLoader.cs" />
+    <Compile Include="Packages\Loaders\IPackageLoader.cs" />
+    <Compile Include="Packages\Loaders\ReferencedPackageLoader.cs" />
     <Compile Include="Security\IAuthenticationService.cs" />
     <Compile Include="Security\Authorizer.cs" />
     <Compile Include="Security\Providers\FormsAuthenticationService.cs" />

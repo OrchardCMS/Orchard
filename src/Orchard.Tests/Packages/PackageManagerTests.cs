@@ -5,8 +5,10 @@ using System.Linq;
 using System.Text;
 using Autofac;
 using Autofac.Builder;
+using Autofac.Modules;
 using NUnit.Framework;
 using Orchard.Packages;
+using Orchard.Packages.Loaders;
 using Yaml.Grammar;
 
 namespace Orchard.Tests.Packages {
@@ -20,6 +22,7 @@ namespace Orchard.Tests.Packages {
         public void Init() {
             var builder = new ContainerBuilder();
             _folders = new StubFolders();
+            builder.RegisterModule(new ImplicitCollectionSupportModule());
             builder.Register(_folders).As<IPackageFolders>();
             builder.Register<PackageManager>().As<IPackageManager>();
             _container = builder.Build();

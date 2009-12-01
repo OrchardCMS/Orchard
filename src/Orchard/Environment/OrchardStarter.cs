@@ -7,6 +7,7 @@ using Autofac.Builder;
 using Autofac.Integration.Web;
 using Autofac.Modules;
 using Orchard.Packages;
+using Orchard.Packages.Loaders;
 
 namespace Orchard.Environment {
     public static class OrchardStarter {
@@ -29,8 +30,11 @@ namespace Orchard.Environment {
             // still needs to be called on end request, but that's the host component's job to worry about.
             builder.Register<ContainerProvider>().As<IContainerProvider>().ContainerScoped();
 
-            builder.Register<PackageManager>().As<IPackageManager>()
-                .SingletonScoped();
+            builder.Register<PackageManager>().As<IPackageManager>().SingletonScoped();
+            builder.Register<CorePackageLoader>().As<IPackageLoader>().SingletonScoped();
+            builder.Register<ReferencedPackageLoader>().As<IPackageLoader>().SingletonScoped();
+            builder.Register<PrecompiledPackageLoader>().As<IPackageLoader>().SingletonScoped();
+            builder.Register<DynamicPackageLoader>().As<IPackageLoader>().SingletonScoped();
 
             //builder.Register((ctx, p) => new PackageFolders(MapPaths(p.Named<IEnumerable<string>>("paths"))))
             //    .As<IPackageFolders>()
