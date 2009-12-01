@@ -27,7 +27,7 @@ namespace Orchard.Blogs.Models {
         }
 
         public RouteValueDictionary EditRouteValues() {
-            throw new NotImplementedException();
+            return new RouteValueDictionary(new { area = "Orchard.Blogs", controller = "BlogPost", action = "Edit", blogSlug = Blog.Slug, postSlug = Slug });
         }
 
         #endregion

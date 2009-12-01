@@ -13,7 +13,6 @@
         <div class="posted">Posted by <%=Html.Encode(Model.Post.Creator.UserName) %> <%=Model.Post.Published.HasValue ? "on" : "as a" %> <%=Html.Published(Model.Post) %></div>
         <div><a href="<%=Url.BlogPostEdit(Model.Blog.Slug, Model.Post.Slug) %>">(edit)</a></div>
     </div>
-    <div class="content"><%=Model.Post.Body %></div>
     
     <%foreach (var display in Model.Displays) { %>
             <%=Html.DisplayFor(m=>display.Model, display.TemplateName, display.Prefix) %>
