@@ -25,14 +25,13 @@ namespace Orchard.Tags.Models {
             _tagsRepository = tagsRepository;
             _tagsContentItemsRepository = tagsContentItemsRepository;
             Filters.Add(new ActivatingFilter<HasTags>("sandboxpage"));
+
+            OnGetDisplays<HasTags>((context, part) => {
+                context.Displays.Add(new ModelTemplate(context.ContentItem.Get<HasTags>()) { Position = "2", TemplateName = "HasTagsList" });
+                context.Displays.Add(new ModelTemplate(context.ContentItem.Get<HasTags>()) { Position = "5" });
+            });
         }
 
-        protected override void GetDisplays(GetDisplaysContext context) {
-            if (context.ContentItem.Has<HasTags>() == false) {
-                return;
-            }
-            context.Displays.Add(new ModelTemplate(context.ContentItem.Get<HasTags>()));
-        }
 
         protected override void Loading(LoadContentContext context) {
             if (context.ContentItem.Has<HasTags>() == false) {
