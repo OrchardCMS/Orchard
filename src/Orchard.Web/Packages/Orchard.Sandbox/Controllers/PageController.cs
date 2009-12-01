@@ -83,7 +83,7 @@ namespace Orchard.Sandbox.Controllers {
             return View(model);
         }
 
-        [HttpPost]
+        [HttpPost, ValidateInput(false)]
         public ActionResult Edit(int id, FormCollection input) {
             var settings = CurrentSite.Get<ContentPart<SandboxSettingsRecord>>();
             if (settings.Record.AllowAnonymousEdits == false && CurrentUser == null) {

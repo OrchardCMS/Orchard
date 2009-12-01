@@ -9,7 +9,7 @@ namespace Orchard.Blogs.Models {
 
         public Blog Blog { get; set; }
         public string Title { get { return this.As<RoutableAspect>().Title; } }
-        public string Body { get { return this.As<BodyAspect>().Record.Body; } }
+        public string Body { get { return this.As<BodyAspect>().Record.Text; } }
         public string Slug { get { return this.As<RoutableAspect>().Slug; } }
         public IUser Creator { get { return this.As<CommonAspect>().OwnerField.Value; } }
         public DateTime? Published { get { return Record.Published; } }

@@ -20,11 +20,7 @@
         </div>
         <div id="main">
             <% Html.RenderPartial("Messages", Model.Messages); %>
-            <h3>
-                <%=Html.Encode(Model.Page.Record.Name) %></h3>
-            <div>
-                TODO: page body
-            </div>
+            <h1><%=Html.Encode(Model.Page.Record.Name) %></h1>
             <%foreach (var display in Model.Displays) { %>
             <%=Html.DisplayFor(m=>display.Model, display.TemplateName, display.Prefix) %>
             <%} %>
