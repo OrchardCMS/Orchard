@@ -15,24 +15,24 @@ using Orchard.UI.Notify;
 namespace Orchard.Blogs.Controllers {
     [ValidateInput(false)]
     public class BlogController : Controller, IUpdateModel {
+        private readonly ISessionLocator _sessionLocator;
         private readonly IContentManager _contentManager;
         private readonly INotifier _notifier;
         private readonly IBlogService _blogService;
         private readonly IBlogPostService _blogPostService;
-        private readonly ISessionLocator _sessionLocator;
 
-        public BlogController(IContentManager contentManager, INotifier notifier, IBlogService blogService, IBlogPostService blogPostService, ISessionLocator sessionLocator) {
+        public BlogController(ISessionLocator sessionLocator, IContentManager contentManager, INotifier notifier, IBlogService blogService, IBlogPostService blogPostService) {
+            _sessionLocator = sessionLocator;
             _contentManager = contentManager;
             _notifier = notifier;
             _blogService = blogService;
             _blogPostService = blogPostService;
-            _sessionLocator = sessionLocator;
             T = NullLocalizer.Instance;
         }
 
         public Localizer T { get; set; }
 
-        public ActionResult List() {
+        public ActionResult ListForAdmin() {
             return View(new BlogsViewModel {Blogs = _blogService.Get()});
         }
 
@@ -67,14 +67,26 @@ namespace Orchard.Blogs.Controllers {
         }
 
         public ActionResult Edit(string blogSlug) {
-            var model = new BlogEditViewModel { Blog = _blogService.Get(blogSlug) };
+            //TODO: (erikpo) Move looking up the current blog up into a modelbinder
+            Blog blog = _blogService.Get(blogSlug);
+
+            if (blog == null)
+                return new NotFoundResult();
+
+            var model = new BlogEditViewModel { Blog = blog };
             model.Editors = _contentManager.GetEditors(model.Blog.ContentItem);
             return View(model);
         }
 
         [HttpPost]
         public ActionResult Edit(string blogSlug, FormCollection input) {
-            var model = new BlogEditViewModel { Blog = _blogService.Get(blogSlug) };
+            //TODO: (erikpo) Move looking up the current blog up into a modelbinder
+            Blog blog = _blogService.Get(blogSlug);
+
+            if (blog == null)
+                return new NotFoundResult();
+
+            var model = new BlogEditViewModel { Blog = blog };
             model.Editors = _contentManager.UpdateEditors(model.Blog.ContentItem, this);
 
             IValueProvider values = input.ToValueProvider();
@@ -83,7 +95,7 @@ namespace Orchard.Blogs.Controllers {
 
             _notifier.Information(T("Blog information updated"));
 
-            //TODO: (erikpo) Since the model isn't actually updated yet and it's possible the slug changed I'm getting the slug from input. Lame?!?!
+            //TODO: (erikpo) This should redirect to the blog homepage in the admin once that page is created
             return Redirect(Url.Blogs());
         }
 

@@ -8,13 +8,14 @@
 <%@ Import Namespace="Orchard.Mvc.ViewModels"%>
 <%-- todo: (heskew) make master-less when we get into theming --%>
 <asp:Content ContentPlaceHolderID="MainContent" runat="server">
-    <h2>Blog</h2>
-    <div><%=Html.Encode(Model.Blog.Name) %></div><%
+    <h1><%=Html.Encode(Model.Blog.Name) %></h1>
+    <div><%=Html.Encode(Model.Blog.Description) %></div>
+    <div><a href="<%=Url.BlogEdit(Model.Blog.Slug) %>">(edit)</a></div><%
     //TODO: (erikpo) Move this into a helper
     if (Model.Posts.Count() > 0) { %>
     <ul><%
         foreach (BlogPost post in Model.Posts) { %>
-        <li><a href="<%=Url.BlogPost(Model.Blog.Slug, post.As<RoutableAspect>().Slug) %>"><%=Html.Encode(post.As<RoutableAspect>().Title) %></a></li><%
+        <li><% Html.RenderPartial("BlogPostPreview", post); %></li><%
         } %>
     </ul><%
     } %>

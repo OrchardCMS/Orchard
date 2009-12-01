@@ -69,6 +69,7 @@
     <Compile Include="Controllers\BlogPostController.cs" />
     <Compile Include="Extensions\BlogCreateViewModelExtensions.cs" />
     <Compile Include="Extensions\BlogPostCreateViewModelExtensions.cs" />
+    <Compile Include="Extensions\HtmlHelperExtensions.cs" />
     <Compile Include="Extensions\UrlHelperExtensions.cs" />
     <Compile Include="Routing\IsBlogConstraint.cs" />
     <Compile Include="Services\BlogService.cs" />
@@ -89,6 +90,7 @@
     <Compile Include="ViewModels\BlogsViewModel.cs" />
     <Compile Include="ViewModels\BlogViewModel.cs" />
     <Compile Include="ViewModels\BlogPostViewModel.cs" />
+    <Compile Include="ViewModels\BlogPostEditViewModel.cs" />
     <Compile Include="ViewModels\CreateBlogPostViewModel.cs" />
     <Compile Include="ViewModels\CreateBlogViewModel.cs" />
     <Compile Include="ViewModels\BlogEditViewModel.cs" />
@@ -96,6 +98,9 @@
   <ItemGroup>
     <Content Include="Package.txt" />
     <Content Include="Views\BlogPost\Create.aspx" />
+    <Content Include="Views\BlogPost\Edit.aspx" />
+    <Content Include="Views\Blog\ListForAdmin.aspx" />
+    <Content Include="Views\Shared\BlogPostPreview.ascx" />
     <Content Include="Views\BlogPost\EditorTemplates\CreateBlogPostViewModel.ascx" />
     <Content Include="Views\BlogPost\Item.aspx" />
     <Content Include="Views\Blog\Create.aspx" />
@@ -107,7 +112,6 @@
     <Content Include="Views\Blog\DisplayTemplates\BlogsViewModel.ascx" />
     <Content Include="Views\Blog\EditorTemplates\CreateBlogViewModel.ascx" />
     <Content Include="Views\Blog\Item.aspx" />
-    <Content Include="Views\Blog\List.aspx" />
     <Content Include="Views\Shared\Foot.aspx" />
     <Content Include="Views\Shared\Head.aspx" />
     <Content Include="Views\Shared\Messages.ascx" />

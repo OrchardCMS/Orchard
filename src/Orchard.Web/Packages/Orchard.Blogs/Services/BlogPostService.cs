@@ -40,6 +40,8 @@ namespace Orchard.Blogs.Services {
             return _contentManager.Create<BlogPost>("blogpost", bp =>
             {
                 bp.Record.Blog = parameters.Blog.Record;
+                bp.As<BodyAspect>().Record.Text = parameters.Body;
+                bp.As<BodyAspect>().Record.Format = "html";
                 bp.Record.Published = parameters.Published;
                 bp.As<RoutableAspect>().Record.Title = parameters.Title;
                 bp.As<RoutableAspect>().Record.Slug = parameters.Slug;
