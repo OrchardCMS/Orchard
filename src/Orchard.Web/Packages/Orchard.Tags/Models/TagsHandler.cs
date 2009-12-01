@@ -31,7 +31,7 @@ namespace Orchard.Tags.Models {
             if (context.ContentItem.Has<HasTags>() == false) {
                 return;
             }
-            context.Displays.Add(new ModelTemplate { Model = context.ContentItem.Get<HasTags>(), Prefix = String.Empty });
+            context.Displays.Add(new ModelTemplate(context.ContentItem.Get<HasTags>()));
         }
 
         protected override void Loading(LoadContentContext context) {

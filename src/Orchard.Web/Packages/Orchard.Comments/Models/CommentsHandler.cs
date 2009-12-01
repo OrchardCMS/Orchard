@@ -29,7 +29,7 @@ namespace Orchard.Comments.Models {
             if (context.ContentItem.Has<HasComments>() == false) {
                 return;
             }
-            context.Displays.Add(new ModelTemplate { Model = context.ContentItem.Get<HasComments>(), Prefix = String.Empty });  
+            context.Displays.Add(new ModelTemplate(context.ContentItem.Get<HasComments>()));
         }
 
         protected override void Loading(LoadContentContext context) {

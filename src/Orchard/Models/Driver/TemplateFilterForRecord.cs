@@ -10,12 +10,12 @@ namespace Orchard.Models.Driver {
         }
 
         protected override void GetEditors(GetEditorsContext context, ContentPart<TRecord> part) {
-            context.Editors.Add(ModelTemplate.For(part.Record, _prefix));
+            context.Editors.Add(new ModelTemplate(part.Record, _prefix));
         }
 
         protected override void UpdateEditors(UpdateContentContext context, ContentPart<TRecord> part) {
             context.Updater.TryUpdateModel(part.Record, _prefix, null, null);
-            context.Editors.Add(ModelTemplate.For(part.Record, _prefix));
+            context.Editors.Add(new ModelTemplate(part.Record, _prefix));
         }
     }
 }

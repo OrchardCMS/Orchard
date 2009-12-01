@@ -46,7 +46,7 @@ namespace Orchard.Roles.Models {
                     Roles = roles.ToList(),
                 };
 
-                context.Editors.Add(ModelTemplate.For(viewModel, "UserRoles"));
+                context.Editors.Add(new ModelTemplate(viewModel, "UserRoles"));
             }
         }
 
@@ -71,7 +71,7 @@ namespace Orchard.Roles.Models {
                     }
 
                 }
-                context.Editors.Add(ModelTemplate.For(viewModel, "UserRoles"));
+                context.Editors.Add(new ModelTemplate(viewModel, "UserRoles"));
             }
         }
     }

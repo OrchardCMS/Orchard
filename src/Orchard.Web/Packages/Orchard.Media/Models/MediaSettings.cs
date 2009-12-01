@@ -28,7 +28,7 @@ namespace Orchard.Media.Models {
             if (model == null)
                 return;
 
-            context.Editors.Add(ModelTemplate.For(model.Record, "MediaSettings"));
+            context.Editors.Add(new ModelTemplate(model.Record, "MediaSettings"));
         }
 
         protected override void UpdateEditors(UpdateContentContext context) {
@@ -37,7 +37,7 @@ namespace Orchard.Media.Models {
                 return;
 
             context.Updater.TryUpdateModel(model.Record, "MediaSettings", null, null);
-            context.Editors.Add(ModelTemplate.For(model.Record, "MediaSettings"));
+            context.Editors.Add(new ModelTemplate(model.Record, "MediaSettings"));
         }
     }
 }
