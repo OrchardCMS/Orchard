@@ -61,7 +61,7 @@ namespace Orchard.Comments.Controllers {
             }
             catch (Exception exception) {
                 _notifier.Error(T("Listing comments failed: " + exception.Message));
-                return Index(options);
+                return View(new CommentsIndexViewModel());
             }
         }
 

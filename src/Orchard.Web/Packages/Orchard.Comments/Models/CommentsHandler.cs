@@ -23,6 +23,7 @@ namespace Orchard.Comments.Models {
             _commentsRepository = commentsRepository;
             _closedCommentsRepository = closedCommentsRepository;
             Filters.Add(new ActivatingFilter<HasComments>("sandboxpage"));
+            Filters.Add(new ActivatingFilter<HasComments>("blogpost"));
         }
 
         protected override void GetDisplays(GetDisplaysContext context) {

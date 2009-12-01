@@ -52,7 +52,7 @@ namespace Orchard.Blogs.Controllers {
             if (post == null)
                 return new NotFoundResult();
 
-            return View(new BlogPostViewModel {Blog = blog, Post = post});
+            return View(new BlogPostViewModel {Blog = blog, Post = post, Displays = _contentManager.GetDisplays(post.ContentItem)});
         }
 
         public ActionResult Create(string blogSlug) {
@@ -62,7 +62,7 @@ namespace Orchard.Blogs.Controllers {
             if (blog == null)
                 return new NotFoundResult();
 
-            return View(new CreateBlogPostViewModel() {Blog = blog});
+            return View(new CreateBlogPostViewModel {Blog = blog});
         }
 
         [HttpPost]

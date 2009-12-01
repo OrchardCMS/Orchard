@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Orchard.Data;
 using Orchard.Models;
@@ -25,6 +24,7 @@ namespace Orchard.Tags.Models {
             _tagsRepository = tagsRepository;
             _tagsContentItemsRepository = tagsContentItemsRepository;
             Filters.Add(new ActivatingFilter<HasTags>("sandboxpage"));
+            Filters.Add(new ActivatingFilter<HasTags>("blogpost"));
 
             OnGetDisplays<HasTags>((context, part) => {
                 context.Displays.Add(new ModelTemplate(context.ContentItem.Get<HasTags>()) { Position = "2", TemplateName = "HasTagsList" });

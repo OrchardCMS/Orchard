@@ -14,4 +14,8 @@
         <div><a href="<%=Url.BlogPostEdit(Model.Blog.Slug, Model.Post.Slug) %>">(edit)</a></div>
     </div>
     <div class="content"><%=Model.Post.Body %></div>
+    
+    <%foreach (var display in Model.Displays) { %>
+            <%=Html.DisplayFor(m=>display.Model, display.TemplateName, display.Prefix) %>
+    <%} %>
 </asp:Content>

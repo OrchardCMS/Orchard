@@ -1,10 +1,11 @@
 using System;
+using System.Web.Routing;
 using Orchard.Core.Common.Models;
 using Orchard.Models;
 using Orchard.Security;
 
 namespace Orchard.Blogs.Models {
-    public class BlogPost : ContentPart<BlogPostRecord> {
+    public class BlogPost : ContentPart<BlogPostRecord>, IContentDisplayInfo {
         public readonly static ContentType ContentType = new ContentType { Name = "blogpost", DisplayName = "Blog Post" };
 
         public Blog Blog { get; set; }
@@ -14,5 +15,21 @@ namespace Orchard.Blogs.Models {
         public string Slug { get { return this.As<RoutableAspect>().Slug; } }
         public IUser Creator { get { return this.As<CommonAspect>().OwnerField.Value; } }
         public DateTime? Published { get { return Record.Published; } }
+
+        #region IContentDisplayInfo Members
+
+        public string DisplayText {
+            get { return Title; }
+        }
+
+        public RouteValueDictionary DisplayRouteValues() {
+            return new RouteValueDictionary(new { area = "Orchard.Blogs", controller = "BlogPost", action = "Item", blogSlug = Blog.Slug, postSlug = Slug });
+        }
+
+        public RouteValueDictionary EditRouteValues() {
+            throw new NotImplementedException();
+        }
+
+        #endregion
     }
 }
