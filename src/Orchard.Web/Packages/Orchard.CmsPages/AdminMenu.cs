@@ -8,7 +8,7 @@ namespace Orchard.CmsPages {
             builder.Add("Pages", "1",
                         menu => menu
                                     .Add("Manage Pages", "1.0", item => item.Action("Index", "Admin", new { area = "Orchard.CmsPages" }))
-                                    .Add("Add a Page", "1.1", item => item.Action("Create", "Admin", new { area = "Orchard.CmsPages" }))
+                                    .Add("Add a Page", "1.1", item => item.Action("Create", "Admin", new { area = "Orchard.CmsPages" }).Permission(Permissions.CreatePages))
                                     );
         }
     }

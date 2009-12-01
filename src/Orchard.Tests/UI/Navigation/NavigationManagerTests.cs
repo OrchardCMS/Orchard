@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using NUnit.Framework;
+using Orchard.Security;
+using Orchard.Security.Permissions;
 using Orchard.UI.Navigation;
 
 namespace Orchard.Tests.UI.Navigation {
@@ -10,15 +12,21 @@ namespace Orchard.Tests.UI.Navigation {
     public class NavigationManagerTests {
         [Test]
         public void EmptyMenuIfNameDoesntMatch() {
-            var manager = new NavigationManager(new[] { new StubProvider() });
+            var manager = new NavigationManager(new[] { new StubProvider() }, new StubAuth());
 
             var menuItems = manager.BuildMenu("primary");
             Assert.That(menuItems.Count(), Is.EqualTo(0));
         }
 
+        public class StubAuth : IAuthorizationService {
+            public bool CheckAccess(IUser user, Permission permission) {
+                return true;
+            }
+        }
+
         [Test]
         public void NavigationManagerShouldUseProvidersToBuildNamedMenu() {
-            var manager = new NavigationManager(new[] { new StubProvider() });
+            var manager = new NavigationManager(new[] { new StubProvider() }, new StubAuth());
 
             var menuItems = manager.BuildMenu("admin");
             Assert.That(menuItems.Count(), Is.EqualTo(2));
@@ -30,7 +38,7 @@ namespace Orchard.Tests.UI.Navigation {
 
         [Test]
         public void NavigationManagerShouldMergeAndOrderNavigation() {
-            var manager = new NavigationManager(new INavigationProvider[] { new StubProvider(), new Stub2Provider() });
+            var manager = new NavigationManager(new INavigationProvider[] { new StubProvider(), new Stub2Provider() }, new StubAuth());
 
             var menuItems = manager.BuildMenu("admin");
             Assert.That(menuItems.Count(), Is.EqualTo(3));

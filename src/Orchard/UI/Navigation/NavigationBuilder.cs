@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Routing;
+using Orchard.Security.Permissions;
 
 namespace Orchard.UI.Navigation {
     public class NavigationBuilder {
@@ -53,6 +54,11 @@ namespace Orchard.UI.Navigation {
 
         public NavigationItemBuilder Position(string position) {
             _item.Position = position;
+            return this;
+        }
+
+        public NavigationItemBuilder Permission(Permission permission) {
+            _item.Permissions = _item.Permissions.Concat(new[]{permission});
             return this;
         }
 
