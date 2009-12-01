@@ -172,7 +172,26 @@ namespace Orchard.Tests.Models {
             return modelRecord;
         }
 
+        [Test]
+        public void EditorsShouldBeOrderedByPositionAndDefaultPositionIsSix() {
+            var alpha = _manager.New("alpha");
+            var templates = _manager.GetDisplays(alpha);
+            Assert.That(templates.Count(), Is.EqualTo(3));
 
+            var t0 = templates.First();
+            var t1 = templates.Skip(1).First();
+            var t2 = templates.Skip(2).First();
+
+            Assert.That(t0.Model, Is.TypeOf<Alpha>());
+            Assert.That(t1.Model, Is.TypeOf<Flavored>());
+            Assert.That(t2.Model, Is.TypeOf<Styled>());
+
+            Assert.That(t0.Position, Is.EqualTo("3"));
+            Assert.That(t1.Position, Is.Null);
+            Assert.That(t2.Position, Is.EqualTo("10"));
+
+
+        }
 
     }
 }

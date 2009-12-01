@@ -1,10 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Autofac;
 using Orchard.Data;
 using Orchard.Models.Driver;
 using Orchard.Models.Records;
 using Orchard.UI.Models;
+using Orchard.UI.Navigation;
 
 namespace Orchard.Models {
     public class DefaultContentManager : IContentManager {
@@ -125,7 +127,7 @@ namespace Orchard.Models {
             foreach (var driver in Drivers) {
                 driver.GetDisplays(context);
             }
-            return context.Displays;
+            return OrderTemplates(context.Displays);
         }
 
         public IEnumerable<ModelTemplate> GetEditors(IContent content) {
@@ -133,7 +135,7 @@ namespace Orchard.Models {
             foreach (var driver in Drivers) {
                 driver.GetEditors(context);
             }
-            return context.Editors;
+            return OrderTemplates(context.Editors);
         }
 
         public IEnumerable<ModelTemplate> UpdateEditors(IContent content, IUpdateModel updater) {
@@ -141,7 +143,13 @@ namespace Orchard.Models {
             foreach (var driver in Drivers) {
                 driver.UpdateEditors(context);
             }
-            return context.Editors;
+            return OrderTemplates(context.Editors);
+        }
+
+        private static IEnumerable<ModelTemplate> OrderTemplates(IEnumerable<ModelTemplate> templates) {
+            var comparer = new PositionComparer();
+            return templates.OrderBy(x => x.Position ?? "6", comparer);
+            
         }
 
         public IContentQuery<ContentItem> Query() {

@@ -13,5 +13,6 @@
         public string Prefix { get; set; }
         public string TemplateName { get; set; }
 
+        public string Position { get; set; }
     }
 }
