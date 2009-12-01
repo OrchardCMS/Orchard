@@ -10,4 +10,10 @@
         <%=Html.EditorForModel() %>
         <fieldset><input class="button" type="submit" value="Save" /></fieldset>
     <% } %>
+    <%foreach (var editor in Model.Editors) { %>
+        <%-- TODO: why is Body in editors? --%>
+        <% if (!String.Equals(editor.Prefix, "Body")) { %>
+            <%=Html.EditorFor(m=>editor.Model, editor.TemplateName, editor.Prefix) %>
+        <% } %>
+    <%} %>
 <% Html.Include("Foot"); %>

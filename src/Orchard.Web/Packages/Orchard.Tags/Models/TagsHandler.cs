@@ -32,6 +32,19 @@ namespace Orchard.Tags.Models {
             });
         }
 
+        protected override void GetEditors(GetEditorsContext context) {
+            if (context.ContentItem.Has<HasTags>() == false) {
+                return;
+            }
+            context.Editors.Add(new ModelTemplate(context.ContentItem.Get<HasTags>()));
+        }
+
+        protected override void UpdateEditors(UpdateContentContext context) {
+            if (context.ContentItem.Has<HasTags>() == false) {
+                return;
+            }
+            context.Editors.Add(new ModelTemplate(context.ContentItem.Get<HasTags>()));
+        }
 
         protected override void Loading(LoadContentContext context) {
             if (context.ContentItem.Has<HasTags>() == false) {

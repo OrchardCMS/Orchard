@@ -87,6 +87,7 @@
     <Content Include="Views\Admin\Create.aspx" />
     <Content Include="Views\Models\DisplayTemplates\HasComments.ascx" />
     <Content Include="Views\Models\EditorTemplates\CommentSettingsRecord.ascx" />
+    <Content Include="Views\Models\EditorTemplates\HasComments.ascx" />
     <Content Include="Web.config" />
     <Content Include="Views\Web.config" />
   </ItemGroup>

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Orchard.Data;
 using Orchard.Models;
 using Orchard.Models.Driver;
@@ -31,6 +30,20 @@ namespace Orchard.Comments.Models {
                 return;
             }
             context.Displays.Add(new ModelTemplate(context.ContentItem.Get<HasComments>()));
+        }
+
+        protected override void GetEditors(GetEditorsContext context) {
+            if (context.ContentItem.Has<HasComments>() == false) {
+                return;
+            }
+            context.Editors.Add(new ModelTemplate(context.ContentItem.Get<HasComments>()));
+        }
+
+        protected override void UpdateEditors(UpdateContentContext context) {
+            if (context.ContentItem.Has<HasComments>() == false) {
+                return;
+            }
+            context.Editors.Add(new ModelTemplate(context.ContentItem.Get<HasComments>()));
         }
 
         protected override void Loading(LoadContentContext context) {
