@@ -9,10 +9,6 @@ using Orchard.UI.Notify;
 using Joel.Net;
 
 namespace Orchard.Comments.Services {
-    public interface ICommentValidator : IDependency {
-        bool ValidateComment(Comment comment);
-    }
-
     //This uses an akismet api implementation from http://akismetapi.codeplex.com/ 
     //Since the implementation is trivial, it may make sense to implement it to reduce dependencies.
     public class AkismetCommentValidator : ICommentValidator {

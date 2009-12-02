@@ -69,11 +69,15 @@
     <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Models\Comment.cs" />
     <Compile Include="Models\CommentSettings.cs" />
+    <Compile Include="Models\CommentSettingsProvider.cs" />
+    <Compile Include="Models\CommentSettingsRecord.cs" />
     <Compile Include="Models\CommentsHandler.cs" />
+    <Compile Include="Models\HasComments.cs" />
     <Compile Include="Permissions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\CommentService.cs" />
     <Compile Include="Services\CommentValidator.cs" />
+    <Compile Include="Services\ICommentValidator.cs" />
     <Compile Include="ViewModels\CommentsCreateViewModel.cs" />
     <Compile Include="ViewModels\CommentsDetailsViewModel.cs" />
     <Compile Include="ViewModels\CommentsEditViewModel.cs" />

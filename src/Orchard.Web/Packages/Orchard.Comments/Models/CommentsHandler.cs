@@ -5,15 +5,6 @@ using Orchard.Models.Driver;
 using Orchard.UI.Models;
 
 namespace Orchard.Comments.Models {
-    public class HasComments : ContentPart {
-        public HasComments() {
-            Comments = new List<Comment>();
-        }
-
-        public IEnumerable<Comment> Comments { get; set; }
-        public bool Closed { get; set; }
-    }
-
     public class HasCommentsProvider : ContentProvider {
         private readonly IRepository<Comment> _commentsRepository;
         private readonly IRepository<ClosedComments> _closedCommentsRepository;

@@ -10,7 +10,7 @@
 <asp:Content ContentPlaceHolderID="MainContent" runat="server">
     <h1><%=Html.Encode(Model.Post.Title) %></h1>
     <div class="metadata">
-        <div class="posted">Posted by <%=Html.Encode(Model.Post.Creator.UserName) %> <%=Model.Post.Published.HasValue ? "on" : "as a" %> <%=Html.Published(Model.Post) %></div>
+        <div class="posted">Posted by <%=Html.Encode(Model.Post.Creator.UserName) %> <%=Html.Published(Model.Post) %></div>
         <div><a href="<%=Url.BlogPostEdit(Model.Blog.Slug, Model.Post.Slug) %>">(edit)</a></div>
     </div>
     

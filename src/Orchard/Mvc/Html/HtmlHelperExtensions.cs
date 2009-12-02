@@ -4,6 +4,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
 using System.Web.Mvc;
+using System.Web.Routing;
 using Orchard.Utility;
 
 namespace Orchard.Mvc.Html {
@@ -84,5 +85,87 @@ namespace Orchard.Mvc.Html {
 
         #endregion
 
+        #region Format Date/Time
+
+        //TODO: (erikpo) This method needs localized
+        public static string DateTime(this HtmlHelper htmlHelper, DateTime value)
+        {
+            TimeSpan time = System.DateTime.UtcNow - value;
+
+            if (time.TotalDays > 7)
+                //TODO: (erikpo) This format should come from a site setting
+                return "at " + value.ToString("MMM d yyyy h:mm tt");
+            if (time.TotalHours > 24)
+                return string.Format("{0} day{1} ago", time.Days, time.Days == 1 ? "" : "s");
+            if (time.TotalMinutes > 60)
+                return string.Format("{0} hour{1} ago", time.Hours, time.Hours == 1 ? "" : "s");
+            if (time.TotalSeconds > 60)
+                return string.Format("{0} minute{1} ago", time.Minutes, time.Minutes == 1 ? "" : "s");
+            else if (time.TotalSeconds > 10)
+                return string.Format("{0} second{1} ago", time.Seconds, time.Seconds == 1 ? "" : "s");
+            else
+                return "a moment ago";
+        }
+
+        public static string DateTime(this HtmlHelper htmlHelper, DateTime? value, string defaultIfNull) {
+            return value.HasValue ? htmlHelper.DateTime(value.Value) : defaultIfNull;
+        }
+
+        #endregion
+
+        #region Link
+
+        public static string Link(this HtmlHelper htmlHelper, string linkContents, string href)
+        {
+            return htmlHelper.Link(linkContents, href, null);
+        }
+
+        public static string Link(this HtmlHelper htmlHelper, string linkContents, string href, object htmlAttributes)
+        {
+            return htmlHelper.Link(linkContents, href, new RouteValueDictionary(htmlAttributes));
+        }
+
+        public static string Link(this HtmlHelper htmlHelper, string linkContents, string href, IDictionary<string, object> htmlAttributes)
+        {
+            TagBuilder tagBuilder = new TagBuilder("a")
+            {
+                InnerHtml = linkContents
+            };
+            tagBuilder.MergeAttributes(htmlAttributes);
+            tagBuilder.MergeAttribute("href", href);
+            return tagBuilder.ToString(TagRenderMode.Normal);
+        }
+
+        #endregion
+
+        #region LinkOrDefault
+
+        public static string LinkOrDefault(this HtmlHelper htmlHelper, string linkContents, string href)
+        {
+            return htmlHelper.LinkOrDefault(linkContents, href, null);
+        }
+
+        public static string LinkOrDefault(this HtmlHelper htmlHelper, string linkContents, string href, object htmlAttributes)
+        {
+            return htmlHelper.LinkOrDefault(linkContents, href, new RouteValueDictionary(htmlAttributes));
+        }
+
+        public static string LinkOrDefault(this HtmlHelper htmlHelper, string linkContents, string href, IDictionary<string, object> htmlAttributes)
+        {
+            if (!string.IsNullOrEmpty(href))
+            {
+                TagBuilder tagBuilder = new TagBuilder("a")
+                {
+                    InnerHtml = linkContents
+                };
+                tagBuilder.MergeAttributes(htmlAttributes);
+                tagBuilder.MergeAttribute("href", href);
+                linkContents = tagBuilder.ToString(TagRenderMode.Normal);
+            }
+
+            return linkContents;
+        }
+
+        #endregion
     }
 }

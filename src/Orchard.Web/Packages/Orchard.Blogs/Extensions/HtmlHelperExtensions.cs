@@ -1,5 +1,6 @@
 using System.Web.Mvc;
 using Orchard.Blogs.Models;
+using Orchard.Mvc.Html;
 
 namespace Orchard.Blogs.Extensions {
     public static class HtmlHelperExtensions {
@@ -8,8 +9,7 @@ namespace Orchard.Blogs.Extensions {
         }
 
         public static string Published(this HtmlHelper htmlHelper, BlogPost blogPost) {
-            //TODO: (erikpo) Relative time instead would be nice.
-            return blogPost.Published.HasValue ? blogPost.Published.Value.ToString("{0:M d yyyy h:mm tt}") : "Draft";
+            return htmlHelper.DateTime(blogPost.Published, "as a Draft");
         }
     }
 }
