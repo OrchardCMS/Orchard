@@ -174,7 +174,9 @@
     <Compile Include="Models\Records\ContentTypeRecord.cs" />
     <Compile Include="Models\Records\ContentItemRecord.cs" />
     <Compile Include="Models\Driver\UpdateContentContext.cs" />
-    <Compile Include="Models\ViewModels\ContentViewModel.cs" />
+    <Compile Include="Models\ViewModels\TemplateViewModel.cs" />
+    <Compile Include="Models\ViewModels\ItemDisplayViewModel.cs" />
+    <Compile Include="Models\ViewModels\ItemEditorViewModel.cs" />
     <Compile Include="Mvc\Html\ContentItemExtensions.cs" />
     <Compile Include="Mvc\MvcModule.cs" />
     <Compile Include="Mvc\Html\HtmlHelperExtensions.cs" />
