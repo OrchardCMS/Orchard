@@ -19,7 +19,7 @@ namespace Orchard.Tags.Services {
         void UpdateTag(int id, string tagName);
         IEnumerable<IContent> GetTaggedContentItems(int id);
         void TagContentItem(int contentItemId, string tagName);
-        void UpdateTagsForContentItem(int contentItemId, IEnumerable<int> tagsForContentItem);
+        void UpdateTagsForContentItem(int contentItemId, IEnumerable<string> tagNamesForContentItem);
     }
 
     public class TagService : ITagService {
@@ -100,7 +100,22 @@ namespace Orchard.Tags.Services {
             _tagsContentItemsRepository.Create(tagsContentItems);
         }
 
-        public void UpdateTagsForContentItem(int contentItemId, IEnumerable<int> tagsForContentItem) {
+        public void UpdateTagsForContentItem(int contentItemId, IEnumerable<string> tagNamesForContentItem) {
+            List<int> tags = new List<int>();
+            foreach (var tagName in tagNamesForContentItem) {
+                Tag tag = GetTagByName(tagName);
+                if (tag == null) {
+                    CreateTag(tagName);
+                    tag = GetTagByName(tagName);
+                }
+                tags.Add(tag.Id);
+            }
+            ModifyTagsForContentItem(contentItemId, tags);
+        }
+
+        #endregion
+
+        private void ModifyTagsForContentItem(int contentItemId, IEnumerable<int> tagsForContentItem) {
             List<int> newTagsForContentItem = new List<int>(tagsForContentItem);
             IEnumerable<TagsContentItems> currentTagsForContentItem = _tagsContentItemsRepository.Fetch(x => x.ContentItemId == contentItemId);
             foreach (var tagContentItem in currentTagsForContentItem) {
@@ -115,7 +130,5 @@ namespace Orchard.Tags.Services {
                 _tagsContentItemsRepository.Create(new TagsContentItems { ContentItemId = contentItemId, TagId = newTagForContentItem });
             }
         }
-
-        #endregion
     }
 }

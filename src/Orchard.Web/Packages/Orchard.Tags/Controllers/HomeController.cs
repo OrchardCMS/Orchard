@@ -48,26 +48,15 @@ namespace Orchard.Tags.Controllers {
         [HttpPost]
         public ActionResult Edit(FormCollection input, int taggedContentId, string returnUrl, string newTagName) {
             try {
-                if (!String.IsNullOrEmpty(HttpContext.Request.Form["submit.Save"])) {
-                    if (!_authorizer.Authorize(Permissions.ApplyTag, T("Couldn't apply tag")))
-                        return new HttpUnauthorizedResult();
-                    List<int> tagsForContentItem = new List<int>();
-                    foreach (string key in input.Keys) {
-                        if (key.StartsWith("Checkbox.") && input[key] == "true") {
-                            int tagId = Convert.ToInt32(key.Substring("Checkbox.".Length));
-                            tagsForContentItem.Add(tagId);
+                if (!_authorizer.Authorize(Permissions.CreateTag, T("Couldn't create tag")))
+                    return new HttpUnauthorizedResult();
+                if (!String.IsNullOrEmpty(newTagName)) {
+                    foreach (var tagName in ParseCommaSeparatedTagNames(newTagName)) {
+                        if (_tagService.GetTagByName(tagName) == null) {
+                            _tagService.CreateTag(tagName);
                         }
+                        _tagService.TagContentItem(taggedContentId, tagName);
                     }
-                    _tagService.UpdateTagsForContentItem(taggedContentId, tagsForContentItem);
-                }
-                else {
-                    if (!_authorizer.Authorize(Permissions.CreateTag, T("Couldn't create tag")))
-                        return new HttpUnauthorizedResult();
-                    if (!String.IsNullOrEmpty(newTagName)) {
-                        _tagService.CreateTag(newTagName);
-                        _tagService.TagContentItem(taggedContentId, newTagName);
-                    }
-
                 }
                 if (!String.IsNullOrEmpty(returnUrl)) {
                     return Redirect(returnUrl);
@@ -81,6 +70,38 @@ namespace Orchard.Tags.Controllers {
                 }
                 return RedirectToAction("Index");
             }
+        }
+
+        [HttpPost]
+        public ActionResult Update(string tags, int taggedContentId, string returnUrl) {
+            try {
+                if (!_authorizer.Authorize(Permissions.CreateTag, T("Couldn't create tag")))
+                    return new HttpUnauthorizedResult();
+                List<string> tagNames = ParseCommaSeparatedTagNames(tags);
+                _tagService.UpdateTagsForContentItem(taggedContentId, tagNames);
+                if (!String.IsNullOrEmpty(returnUrl)) {
+                    return Redirect(returnUrl);
+                }
+                return RedirectToAction("Index");
+            }
+            catch (Exception exception) {
+                _notifier.Error(T("Updating tags failed: " + exception.Message));
+                if (!String.IsNullOrEmpty(returnUrl)) {
+                    return Redirect(returnUrl);
+                }
+                return RedirectToAction("Index");
+            }
+        }
+
+        private static List<string> ParseCommaSeparatedTagNames(string tags) {
+            IEnumerable<string> tagNames = tags.Split(',');
+            List<string> sanitizedTagNames = new List<string>();
+            foreach (var tagName in tagNames) {
+                if (!String.IsNullOrEmpty(tagName)) {
+                    sanitizedTagNames.Add(tagName);
+                }
+            }
+            return sanitizedTagNames;
         }
 
         public ActionResult Search(string tagName) {
