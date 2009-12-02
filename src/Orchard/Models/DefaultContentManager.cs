@@ -5,7 +5,7 @@ using Autofac;
 using Orchard.Data;
 using Orchard.Models.Driver;
 using Orchard.Models.Records;
-using Orchard.UI.Models;
+using Orchard.Models.ViewModels;
 using Orchard.UI.Navigation;
 
 namespace Orchard.Models {
@@ -136,34 +136,37 @@ namespace Orchard.Models {
             return context.Metadata;
         }
 
-        public IEnumerable<ModelTemplate> GetDisplays(IContent content) {
+        public ItemDisplayViewModel GetDisplays(IContent content, string tabName, string displayType) {
             var context = new GetDisplaysContext(content);
             foreach (var driver in Drivers) {
                 driver.GetDisplays(context);
             }
-            return OrderTemplates(context.Displays);
+            context.ItemView.Displays = OrderTemplates(context.ItemView.Displays);
+            return context.ItemView;
         }
 
-        public IEnumerable<ModelTemplate> GetEditors(IContent content) {
+        public ItemEditorViewModel GetEditors(IContent content, string tabName) {
             var context = new GetEditorsContext(content);
             foreach (var driver in Drivers) {
                 driver.GetEditors(context);
             }
-            return OrderTemplates(context.Editors);
+            context.ItemView.Editors = OrderTemplates(context.ItemView.Editors);
+            return context.ItemView;
         }
 
-        public IEnumerable<ModelTemplate> UpdateEditors(IContent content, IUpdateModel updater) {
+        public ItemEditorViewModel UpdateEditors(IContent content, string tabName, IUpdateModel updater) {
+
             var context = new UpdateContentContext(content, updater);
             foreach (var driver in Drivers) {
                 driver.UpdateEditors(context);
             }
-            return OrderTemplates(context.Editors);
+            context.ItemView.Editors = OrderTemplates(context.ItemView.Editors);
+            return context.ItemView;
         }
 
-        private static IEnumerable<ModelTemplate> OrderTemplates(IEnumerable<ModelTemplate> templates) {
+        private static IEnumerable<TemplateViewModel> OrderTemplates(IEnumerable<TemplateViewModel> templates) {
             var comparer = new PositionComparer();
-            return templates.OrderBy(x => x.Position ?? "6", comparer);
-
+            return templates.OrderBy(x => (x.ZoneName ?? "*") + "." + (x.Position ?? "5"), comparer);
         }
 
         public IContentQuery<ContentItem> Query() {

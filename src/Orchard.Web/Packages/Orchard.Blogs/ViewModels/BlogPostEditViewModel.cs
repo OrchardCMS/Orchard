@@ -5,14 +5,14 @@ using System.Web.Mvc;
 using Orchard.Blogs.Models;
 using Orchard.Core.Common.Models;
 using Orchard.Models;
+using Orchard.Models.ViewModels;
 using Orchard.Mvc.ViewModels;
-using Orchard.UI.Models;
 
 namespace Orchard.Blogs.ViewModels {
     public class BlogPostEditViewModel : AdminViewModel {
         public Blog Blog { get; set; }
         public BlogPost Post { get; set; }
-        public IEnumerable<ModelTemplate> Editors { get; set; }
+        public ItemEditorViewModel ItemView { get; set; }
 
         [HiddenInput(DisplayValue = false)]
         public int Id {

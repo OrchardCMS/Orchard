@@ -3,7 +3,7 @@ using System.Linq;
 using Orchard.Data;
 using Orchard.Models;
 using Orchard.Models.Driver;
-using Orchard.UI.Models;
+using Orchard.Models.ViewModels;
 
 namespace Orchard.Tags.Models {
     public class HasTags : ContentPart {
@@ -27,8 +27,8 @@ namespace Orchard.Tags.Models {
             Filters.Add(new ActivatingFilter<HasTags>("blogpost"));
 
             OnGetDisplays<HasTags>((context, hasTags) => {
-                context.Displays.Add(new ModelTemplate(hasTags) { Position = "2", TemplateName = "HasTagsList" });
-                context.Displays.Add(new ModelTemplate(hasTags) { Position = "5" });
+                context.AddDisplay(new TemplateViewModel(hasTags) { Position = "2", TemplateName = "HasTagsList" });
+                context.AddDisplay(new TemplateViewModel(hasTags) { Position = "5" });
             });
         }
 
@@ -36,14 +36,14 @@ namespace Orchard.Tags.Models {
             if (context.ContentItem.Has<HasTags>() == false) {
                 return;
             }
-            context.Editors.Add(new ModelTemplate(context.ContentItem.Get<HasTags>()));
+            context.AddEditor(new TemplateViewModel(context.ContentItem.Get<HasTags>()));
         }
 
         protected override void UpdateEditors(UpdateContentContext context) {
             if (context.ContentItem.Has<HasTags>() == false) {
                 return;
             }
-            context.Editors.Add(new ModelTemplate(context.ContentItem.Get<HasTags>()));
+            context.AddEditor(new TemplateViewModel(context.ContentItem.Get<HasTags>()));
         }
 
         protected override void Loading(LoadContentContext context) {

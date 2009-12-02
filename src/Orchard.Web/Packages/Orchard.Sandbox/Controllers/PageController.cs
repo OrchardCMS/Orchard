@@ -40,7 +40,7 @@ namespace Orchard.Sandbox.Controllers {
             var page = _contentManager.Get<SandboxPage>(id);
             var model = new PageShowViewModel {
                 Page = page,
-                Displays = _contentManager.GetDisplays(page)
+                ItemView = _contentManager.GetDisplays(page, null, null)
             };
             return View(model);
         }
@@ -79,7 +79,7 @@ namespace Orchard.Sandbox.Controllers {
             }
 
             var model = new PageEditViewModel { Page = _contentManager.Get<SandboxPage>(id) };
-            model.Editors = _contentManager.GetEditors(model.Page);
+            model.ItemView = _contentManager.GetEditors(model.Page, null);
             return View(model);
         }
 
@@ -92,7 +92,7 @@ namespace Orchard.Sandbox.Controllers {
             }
 
             var model = new PageEditViewModel { Page = _contentManager.Get<SandboxPage>(id) };
-            model.Editors = _contentManager.UpdateEditors(model.Page, this);
+            model.ItemView = _contentManager.UpdateEditors(model.Page, null, this);
             if (!TryUpdateModel(model, input.ToValueProvider()))
                 return View(model);
 

@@ -4,8 +4,8 @@ using System.Linq;
 using System.Web;
 using Orchard.Models;
 using Orchard.Models.Records;
+using Orchard.Models.ViewModels;
 using Orchard.Mvc.ViewModels;
-using Orchard.UI.Models;
 
 namespace Orchard.DevTools.ViewModels {
     public class ContentDetailsViewModel : BaseViewModel {
@@ -13,9 +13,13 @@ namespace Orchard.DevTools.ViewModels {
 
         public IEnumerable<Type> PartTypes { get; set; }
 
-        public IEnumerable<ModelTemplate> Displays { get; set; }
+        public ItemDisplayViewModel DisplayView { get; set; }
 
-        public IEnumerable<ModelTemplate> Editors { get; set; }
+        public ItemEditorViewModel EditorView { get; set; }
+
+        public IEnumerable<TemplateViewModel> Displays { get { return DisplayView.Displays; } }
+
+        public IEnumerable<TemplateViewModel> Editors { get { return EditorView.Editors; } }
 
         public object Locate(Type type) {
             return Item.ContentItem.Get(type);

@@ -2,7 +2,7 @@
 using Orchard.Data;
 using Orchard.Models;
 using Orchard.Models.Driver;
-using Orchard.UI.Models;
+using Orchard.Models.ViewModels;
 
 namespace Orchard.Comments.Models {
     public class HasCommentsProvider : ContentProvider {
@@ -20,21 +20,21 @@ namespace Orchard.Comments.Models {
             if (context.ContentItem.Has<HasComments>() == false) {
                 return;
             }
-            context.Displays.Add(new ModelTemplate(context.ContentItem.Get<HasComments>()));
+            context.AddDisplay(new TemplateViewModel(context.ContentItem.Get<HasComments>()));
         }
 
         protected override void GetEditors(GetEditorsContext context) {
             if (context.ContentItem.Has<HasComments>() == false) {
                 return;
             }
-            context.Editors.Add(new ModelTemplate(context.ContentItem.Get<HasComments>()));
+            context.AddEditor(new TemplateViewModel(context.ContentItem.Get<HasComments>()));
         }
 
         protected override void UpdateEditors(UpdateContentContext context) {
             if (context.ContentItem.Has<HasComments>() == false) {
                 return;
             }
-            context.Editors.Add(new ModelTemplate(context.ContentItem.Get<HasComments>()));
+            context.AddEditor(new TemplateViewModel(context.ContentItem.Get<HasComments>()));
         }
 
         protected override void Loading(LoadContentContext context) {

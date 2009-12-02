@@ -26,7 +26,7 @@
             <ul>
                 <li>
                     <%=Html.LabelFor(x => x.Page.Record.Name)%><%=Html.EditorFor(x => x.Page.Record.Name)%></li>
-                <%foreach (var x in Model.Editors) { %>
+                <%foreach (var x in Model.ItemView.Editors) { %>
                 <%=Html.EditorFor(m=>x.Model, x.TemplateName, x.Prefix) %>
                 <%} %>
                 <li>

@@ -1,15 +1,17 @@
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Web.Mvc;
 using Orchard.Models;
+using Orchard.Models.ViewModels;
 using Orchard.Mvc.ViewModels;
-using Orchard.UI.Models;
 using Orchard.Users.Models;
 
 namespace Orchard.Users.ViewModels {
     public class UserEditViewModel : AdminViewModel {
         public User User { get; set; }
-        public IEnumerable<ModelTemplate> Editors { get; set; }
+        public ItemEditorViewModel ItemView { get; set; }
+
 
         [HiddenInput(DisplayValue = false)]
         public int Id {
@@ -27,5 +29,6 @@ namespace Orchard.Users.ViewModels {
             get { return User.As<User>().Record.Email; }
             set { User.As<User>().Record.Email = value; }
         }
+
     }
 }

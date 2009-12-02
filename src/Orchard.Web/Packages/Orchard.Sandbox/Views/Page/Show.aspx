@@ -21,7 +21,7 @@
         <div id="main">
             <% Html.RenderPartial("Messages", Model.Messages); %>
             <h1><%=Html.Encode(Model.Page.Record.Name) %></h1>
-            <%foreach (var display in Model.Displays) { %>
+            <%foreach (var display in Model.ItemView.Displays) { %>
             <%=Html.DisplayFor(m=>display.Model, display.TemplateName, display.Prefix) %>
             <%} %>
             <p>

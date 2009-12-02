@@ -1,12 +1,12 @@
 ﻿using System.Collections.Generic;
 using Orchard.Models;
 using Orchard.Models.Driver;
-using Orchard.UI.Models;
+using Orchard.Models.ViewModels;
 
 namespace Orchard.Tests.Models.Stubs {
     public class AlphaProvider : ContentProvider {
         public AlphaProvider() {
-            OnGetDisplays<Alpha>((ctx, part) => ctx.Displays.Add(new ModelTemplate(part) { Position = "3" }));
+            OnGetDisplays<Alpha>((ctx, part) => ctx.AddDisplay(new TemplateViewModel(part) { Position = "3" }));
         }
         public override IEnumerable<ContentType> GetContentTypes() {
             return new[] { new ContentType { Name = "alpha" } };

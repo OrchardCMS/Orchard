@@ -2,12 +2,12 @@
 using Orchard.Data;
 using Orchard.Models;
 using Orchard.Models.Driver;
+using Orchard.Models.ViewModels;
 using Orchard.Roles.Models.NoRecord;
 using Orchard.Roles.Records;
 using Orchard.Roles.Services;
 using Orchard.Roles.ViewModels;
 using Orchard.Security;
-using Orchard.UI.Models;
 using Orchard.UI.Notify;
 
 namespace Orchard.Roles.Models {
@@ -46,7 +46,7 @@ namespace Orchard.Roles.Models {
                     Roles = roles.ToList(),
                 };
 
-                context.Editors.Add(new ModelTemplate(viewModel, "UserRoles"));
+                context.AddEditor(new TemplateViewModel(viewModel, "UserRoles"));
             }
         }
 
@@ -71,7 +71,7 @@ namespace Orchard.Roles.Models {
                     }
 
                 }
-                context.Editors.Add(new ModelTemplate(viewModel, "UserRoles"));
+                context.AddEditor(new TemplateViewModel(viewModel, "UserRoles"));
             }
         }
     }

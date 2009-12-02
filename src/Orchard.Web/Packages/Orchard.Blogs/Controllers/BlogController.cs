@@ -33,7 +33,7 @@ namespace Orchard.Blogs.Controllers {
         public Localizer T { get; set; }
 
         public ActionResult ListForAdmin() {
-            return View(new BlogsViewModel {Blogs = _blogService.Get()});
+            return View(new BlogsViewModel { Blogs = _blogService.Get() });
         }
 
         //TODO: (erikpo) Should move the slug parameter and get call and null check up into a model binder
@@ -45,7 +45,7 @@ namespace Orchard.Blogs.Controllers {
 
             IEnumerable<BlogPost> posts = _blogPostService.Get(blog);
 
-            return View(new BlogViewModel {Blog = blog, Posts = posts});
+            return View(new BlogViewModel { Blog = blog, Posts = posts });
         }
 
         public ActionResult Create() {
@@ -58,7 +58,7 @@ namespace Orchard.Blogs.Controllers {
                 return View(model);
 
             Blog blog = _blogService.Create(model.ToCreateBlogParams());
-            
+
             //TEMP: (erikpo) ensure information has committed for this record
             var session = _sessionLocator.For(typeof(BlogRecord));
             session.Flush();
@@ -74,7 +74,7 @@ namespace Orchard.Blogs.Controllers {
                 return new NotFoundResult();
 
             var model = new BlogEditViewModel { Blog = blog };
-            model.Editors = _contentManager.GetEditors(model.Blog.ContentItem);
+            model.ItemView = _contentManager.GetEditors(model.Blog.ContentItem, "");
             return View(model);
         }
 
@@ -87,7 +87,7 @@ namespace Orchard.Blogs.Controllers {
                 return new NotFoundResult();
 
             var model = new BlogEditViewModel { Blog = blog };
-            model.Editors = _contentManager.UpdateEditors(model.Blog.ContentItem, this);
+            model.ItemView = _contentManager.UpdateEditors(model.Blog.ContentItem, "",this);
 
             IValueProvider values = input.ToValueProvider();
             if (!TryUpdateModel(model, values))

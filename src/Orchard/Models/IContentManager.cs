@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using Orchard.Models.Driver;
 using Orchard.Models.Records;
-using Orchard.UI.Models;
+using Orchard.Models.ViewModels;
 
 namespace Orchard.Models {
     public interface IContentManager : IDependency {
@@ -15,8 +15,8 @@ namespace Orchard.Models {
         IContentQuery<ContentItem> Query();
 
         ContentItemMetadata GetItemMetadata(IContent contentItem);
-        IEnumerable<ModelTemplate> GetDisplays(IContent contentItem);
-        IEnumerable<ModelTemplate> GetEditors(IContent contentItem);
-        IEnumerable<ModelTemplate> UpdateEditors(IContent contentItem, IUpdateModel updater);
+        ItemDisplayViewModel GetDisplays(IContent contentItem, string tabName, string displayType);
+        ItemEditorViewModel GetEditors(IContent contentItem, string tabName);
+        ItemEditorViewModel UpdateEditors(IContent contentItem, string tabName, IUpdateModel updater);
     }
 }

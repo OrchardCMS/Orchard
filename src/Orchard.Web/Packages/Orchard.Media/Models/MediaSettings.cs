@@ -2,7 +2,7 @@
 using Orchard.Models;
 using Orchard.Models.Driver;
 using Orchard.Models.Records;
-using Orchard.UI.Models;
+using Orchard.Models.ViewModels;
 
 namespace Orchard.Media.Models {
     public class MediaSettings : ContentPart<MediaSettingsRecord> {
@@ -28,7 +28,7 @@ namespace Orchard.Media.Models {
             if (model == null)
                 return;
 
-            context.Editors.Add(new ModelTemplate(model.Record, "MediaSettings"));
+            context.AddEditor(new TemplateViewModel(model.Record, "MediaSettings"));
         }
 
         protected override void UpdateEditors(UpdateContentContext context) {
@@ -37,7 +37,7 @@ namespace Orchard.Media.Models {
                 return;
 
             context.Updater.TryUpdateModel(model.Record, "MediaSettings", null, null);
-            context.Editors.Add(new ModelTemplate(model.Record, "MediaSettings"));
+            context.AddEditor(new TemplateViewModel(model.Record, "MediaSettings"));
         }
     }
 }

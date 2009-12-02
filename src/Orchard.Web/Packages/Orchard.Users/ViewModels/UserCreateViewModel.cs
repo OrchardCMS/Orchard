@@ -1,7 +1,8 @@
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using Orchard.Models.ViewModels;
 using Orchard.Mvc.ViewModels;
-using Orchard.UI.Models;
 
 namespace Orchard.Users.ViewModels {
     public class UserCreateViewModel : AdminViewModel {
@@ -17,7 +18,6 @@ namespace Orchard.Users.ViewModels {
         [Required, DataType(DataType.Password)]
         public string ConfirmPassword { get; set; }
 
-        public IEnumerable<ModelTemplate> Editors { get; set; }
-
+        public ItemEditorViewModel ItemView { get; set; }
     }
 }

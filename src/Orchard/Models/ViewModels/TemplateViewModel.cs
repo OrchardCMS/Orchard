@@ -1,9 +1,9 @@
-﻿namespace Orchard.UI.Models {
-    public class ModelTemplate {
-        public ModelTemplate(object model)
+﻿namespace Orchard.Models.ViewModels {
+    public class TemplateViewModel {
+        public TemplateViewModel(object model)
             : this(model, string.Empty) {
         }
-        public ModelTemplate(object model, string prefix) {
+        public TemplateViewModel(object model, string prefix) {
             Model = model;
             Prefix = prefix;
         }
@@ -13,6 +13,7 @@
         public string Prefix { get; set; }
         public string TemplateName { get; set; }
 
+        public string ZoneName { get; set; }
         public string Position { get; set; }
     }
 }

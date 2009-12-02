@@ -52,7 +52,7 @@ namespace Orchard.Blogs.Controllers {
             if (post == null)
                 return new NotFoundResult();
 
-            return View(new BlogPostViewModel {Blog = blog, Post = post, Displays = _contentManager.GetDisplays(post.ContentItem)});
+            return View(new BlogPostViewModel { Blog = blog, Post = post, ItemView = _contentManager.GetDisplays(post.ContentItem, null, "detail") });
         }
 
         public ActionResult Create(string blogSlug) {
@@ -62,7 +62,7 @@ namespace Orchard.Blogs.Controllers {
             if (blog == null)
                 return new NotFoundResult();
 
-            return View(new CreateBlogPostViewModel {Blog = blog});
+            return View(new CreateBlogPostViewModel { Blog = blog });
         }
 
         [HttpPost]
@@ -98,7 +98,7 @@ namespace Orchard.Blogs.Controllers {
                 return new NotFoundResult();
 
             var model = new BlogPostEditViewModel { Blog = blog, Post = post };
-            model.Editors = _contentManager.GetEditors(model.Post.ContentItem);
+            model.ItemView = _contentManager.GetEditors(model.Post.ContentItem, null);
             return View(model);
         }
 
@@ -116,7 +116,7 @@ namespace Orchard.Blogs.Controllers {
                 return new NotFoundResult();
 
             var model = new BlogPostEditViewModel { Blog = blog, Post = post };
-            model.Editors = _contentManager.UpdateEditors(model.Post.ContentItem, this);
+            model.ItemView = _contentManager.UpdateEditors(model.Post.ContentItem, null, this);
 
             IValueProvider values = input.ToValueProvider();
             if (!TryUpdateModel(model, values))

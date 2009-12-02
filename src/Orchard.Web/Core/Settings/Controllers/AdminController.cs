@@ -23,17 +23,17 @@ namespace Orchard.Core.Settings.Controllers {
 
         public Localizer T { get; set; }
 
-        public ActionResult Index() {
+        public ActionResult Index(string tabName) {
             var model = new Orchard.Core.Settings.ViewModels.SettingsIndexViewModel { 
                 Site = _siteService.GetSiteSettings().As<SiteSettings>() };
-            model.Editors = _modelManager.GetEditors(model.Site.ContentItem);
+            model.ItemView = _modelManager.GetEditors(model.Site, tabName);
             return View(model);
         }
 
         [AcceptVerbs(HttpVerbs.Post)]
-        public ActionResult Index(FormCollection input) {
+        public ActionResult Index(string tabName, FormCollection input) {
             var viewModel = new SettingsIndexViewModel { Site = _siteService.GetSiteSettings().As<SiteSettings>() };
-            viewModel.Editors = _modelManager.UpdateEditors(viewModel.Site.ContentItem, this);
+            viewModel.ItemView = _modelManager.UpdateEditors(viewModel.Site.ContentItem, tabName, this);
 
             if (!TryUpdateModel(viewModel, input.ToValueProvider())) {
                 return View(viewModel);

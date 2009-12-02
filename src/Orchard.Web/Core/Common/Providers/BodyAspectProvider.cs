@@ -3,7 +3,7 @@ using Orchard.Core.Common.Records;
 using Orchard.Core.Common.ViewModels;
 using Orchard.Data;
 using Orchard.Models.Driver;
-using Orchard.UI.Models;
+using Orchard.Models.ViewModels;
 
 namespace Orchard.Core.Common.Providers {
     public class BodyAspectProvider : ContentProvider {
@@ -16,18 +16,18 @@ namespace Orchard.Core.Common.Providers {
 
             OnGetDisplays<BodyAspect>((context, body) => {
                 var model = new BodyDisplayViewModel { BodyAspect = body };
-                context.Displays.Add(new ModelTemplate(model, TemplatePrefix) { TemplateName = TemplateName, Position = "3" });
+                context.AddDisplay(new TemplateViewModel(model, TemplatePrefix) { TemplateName = TemplateName, Position = "3" });
             });
 
             OnGetEditors<BodyAspect>((context, body) => {
                 var model = new BodyEditorViewModel { BodyAspect = body, TextEditorTemplate = DefaultTextEditorTemplate };
-                context.Editors.Add(new ModelTemplate(model, TemplatePrefix) { TemplateName = TemplateName, Position = "3" });
+                context.AddEditor(new TemplateViewModel(model, TemplatePrefix) { TemplateName = TemplateName, Position = "3" });
             });
 
             OnUpdateEditors<BodyAspect>((context, body) => {
                 var model = new BodyEditorViewModel { BodyAspect = body, TextEditorTemplate = DefaultTextEditorTemplate };
                 context.Updater.TryUpdateModel(model, TemplatePrefix, null, null);
-                context.Editors.Add(new ModelTemplate(model, TemplatePrefix) { TemplateName = TemplateName, Position = "3" });
+                context.AddEditor(new TemplateViewModel(model, TemplatePrefix) { TemplateName = TemplateName, Position = "3" });
             });
         }
     }

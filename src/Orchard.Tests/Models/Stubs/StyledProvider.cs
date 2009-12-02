@@ -1,10 +1,10 @@
 ﻿using Orchard.Models.Driver;
-using Orchard.UI.Models;
+using Orchard.Models.ViewModels;
 
 namespace Orchard.Tests.Models.Stubs {
     public class StyledProvider : ContentProvider {
         public StyledProvider() {
-            OnGetDisplays<Styled>((ctx, part) => ctx.Displays.Add(new ModelTemplate(part) { Position = "10" }));
+            OnGetDisplays<Styled>((ctx, part) => ctx.AddDisplay(new TemplateViewModel(part) { Position = "10" }));
         }
 
         protected override void Activating(ActivatingContentContext context) {

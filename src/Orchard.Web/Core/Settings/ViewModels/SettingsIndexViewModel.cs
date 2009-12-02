@@ -1,14 +1,15 @@
 ﻿using System.Collections.Generic;
 using System.Web.Mvc;
 using Orchard.Models;
+using Orchard.Models.ViewModels;
 using Orchard.Mvc.ViewModels;
 using Orchard.Core.Settings.Models;
-using Orchard.UI.Models;
 
 namespace Orchard.Core.Settings.ViewModels {
     public class SettingsIndexViewModel : AdminViewModel {
         public SiteSettings Site { get; set; }
-        public IEnumerable<ModelTemplate> Editors { get; set; }
+        public ItemEditorViewModel ItemView { get; set; }
+        
 
         [HiddenInput(DisplayValue = false)]
         public int Id {

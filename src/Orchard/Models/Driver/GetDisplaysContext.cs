@@ -1,13 +1,22 @@
 using System.Collections.Generic;
-using Orchard.UI.Models;
+using System.Linq;
+using Orchard.Models.ViewModels;
 
 namespace Orchard.Models.Driver {
     public class GetDisplaysContext {
         public GetDisplaysContext(IContent content) {
             ContentItem = content.ContentItem;
-            Displays = new List<ModelTemplate>();
+            ItemView = new ItemDisplayViewModel {
+                ContentItem = ContentItem,
+                Displays = Enumerable.Empty<TemplateViewModel>(),
+            };
         }
+        
         public ContentItem ContentItem { get; set; }
-        public IList<ModelTemplate> Displays { get; set; }
+        public ItemDisplayViewModel ItemView { get; set; }
+        
+        public void AddDisplay(TemplateViewModel display) {
+            ItemView.Displays = ItemView.Displays.Concat(new[] { display });
+        }
     }
 }
