@@ -9,6 +9,9 @@
     <li>
         Posted by <%= comment.UserName %> on <%= comment.CommentDate %>
     </li>
+    <li>
+	    <%=Html.ActionLink("Delete", "Delete", new {Area="Orchard.Comments", Controller="Admin", id = comment.Id, returnUrl = Context.Request.Url}) %>
+    </li>
     <hr />
     <% } %>
 </ol>
@@ -17,35 +20,4 @@
 <%= Html.ActionLink("Enable Comments for this content", "Enable", new { Area="Orchard.Comments", Controller="Admin", returnUrl = Context.Request.Url, commentedItemId = Model.ContentItem.Id })%>
 <% } else { %>
 <%= Html.ActionLink("Close Comments for this content", "Close", new { Area="Orchard.Comments", Controller="Admin", returnUrl = Context.Request.Url, commentedItemId = Model.ContentItem.Id })%>
-<% Html.BeginForm("Create", "Admin", new { area = "Orchard.Comments" }); %>
-    <%= Html.ValidationSummary() %>
-                    <div class="yui-g">
-						<h2 class="separator">Add a Comment</h2>
-						<h3>Information</h3>
-						<ol>
-						<li>
-						<%= Html.Hidden("CommentedOn", Model.ContentItem.Id) %>
-						<%= Html.Hidden("ReturnUrl", Context.Request.Url) %>
-					    <label for="Name">Name:</label>
-						<input id="Text1" class="inputText inputTextLarge" name="Name" type="text" />
-						</li>
-						<li>
-				        <label for="Email">Email:</label>
-					    <input id="Email" class="inputText inputTextLarge" name="Email" type="text" />					
-						</li>
-                        <li>
-                        <label for="SiteName">SiteName:</label>
-					    <input id="SiteName" class="inputText inputTextLarge" name="SiteName" type="text" />
-                        </li>
-                        <li>
-                        <label for="CommentText">Leave a comment</label>
-					    <textarea id="CommentText" rows="10" cols="30" name="CommentText">
-					    </textarea>
-                        </li>
-					    <li>
-					    <input type="submit" class="button" value="Submit Comment" />
-					    </li>
-					    </ol>
-					</div>
-	<% Html.EndForm(); %>
-<% } %>
+<% } %> | <%=Html.ActionLink("Go to comments management for this post", "Details", new {Area="Orchard.Comments", Controller="Admin", id = Model.ContentItem.Id, returnUrl = Context.Request.Url}) %>

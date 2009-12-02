@@ -228,6 +228,9 @@ namespace Orchard.Comments.Controllers {
             }
             catch (Exception exception) {
                 _notifier.Error(T("Closing Comments failed: " + exception.Message));
+                if (!String.IsNullOrEmpty(returnUrl)) {
+                    return Redirect(returnUrl);
+                }
                 return RedirectToAction("Index");
             }
         }
@@ -244,6 +247,9 @@ namespace Orchard.Comments.Controllers {
             }
             catch (Exception exception) {
                 _notifier.Error(T("Enabling Comments failed: " + exception.Message));
+                if (!String.IsNullOrEmpty(returnUrl)) {
+                    return Redirect(returnUrl);
+                }
                 return RedirectToAction("Index");
             }
         }
@@ -285,16 +291,22 @@ namespace Orchard.Comments.Controllers {
             }
         }
 
-        public ActionResult Delete(int id) {
+        public ActionResult Delete(int id, string returnUrl) {
             try {
                 if (!_authorizer.Authorize(Permissions.ModerateComment, T("Couldn't delete comment")))
                     return new HttpUnauthorizedResult();
                 int commentedOn = _commentService.GetComment(id).CommentedOn;
                 _commentService.DeleteComment(id);
+                if (!String.IsNullOrEmpty(returnUrl)) {
+                    return Redirect(returnUrl);
+                }
                 return RedirectToAction("Details", new { id = commentedOn });
             }
             catch (Exception exception) {
                 _notifier.Error(T("Deleting comment failed: " + exception.Message));
+                if (!String.IsNullOrEmpty(returnUrl)) {
+                    return Redirect(returnUrl);
+                }
                 return Index(new CommentIndexOptions());
             }
         }
