@@ -128,11 +128,14 @@
     <Compile Include="Localization\NullLocalizer.cs" />
     <Compile Include="Models\Aspects\ICommonAspect.cs" />
     <Compile Include="Models\ContentItem.cs" />
+    <Compile Include="Models\ContentItemMetadata.cs" />
     <Compile Include="Models\ContentModule.cs" />
     <Compile Include="Models\ContentType.cs" />
     <Compile Include="Models\DefaultContentQuery.cs" />
     <Compile Include="Models\Driver\ActivatedContentContext.cs" />
     <Compile Include="Models\Driver\ActivatingFilter.cs" />
+    <Compile Include="Models\Driver\GetDisplaysContext.cs" />
+    <Compile Include="Models\Driver\GetItemMetadataContext.cs" />
     <Compile Include="Models\Driver\IContentActivatingFilter.cs" />
     <Compile Include="Models\Driver\IContentFilter.cs" />
     <Compile Include="Models\Driver\IContentStorageFilter.cs" />

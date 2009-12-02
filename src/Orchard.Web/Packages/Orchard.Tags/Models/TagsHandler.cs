@@ -26,9 +26,9 @@ namespace Orchard.Tags.Models {
             Filters.Add(new ActivatingFilter<HasTags>("sandboxpage"));
             Filters.Add(new ActivatingFilter<HasTags>("blogpost"));
 
-            OnGetDisplays<HasTags>((context, part) => {
-                context.Displays.Add(new ModelTemplate(context.ContentItem.Get<HasTags>()) { Position = "2", TemplateName = "HasTagsList" });
-                context.Displays.Add(new ModelTemplate(context.ContentItem.Get<HasTags>()) { Position = "5" });
+            OnGetDisplays<HasTags>((context, hasTags) => {
+                context.Displays.Add(new ModelTemplate(hasTags) { Position = "2", TemplateName = "HasTagsList" });
+                context.Displays.Add(new ModelTemplate(hasTags) { Position = "5" });
             });
         }
 

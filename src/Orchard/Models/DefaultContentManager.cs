@@ -29,7 +29,7 @@ namespace Orchard.Models {
                 if (_drivers == null)
                     _drivers = _context.Resolve<IEnumerable<IContentProvider>>();
                 return _drivers;
-            }            
+            }
         }
 
         public IEnumerable<ContentType> GetContentTypes() {
@@ -54,6 +54,10 @@ namespace Orchard.Models {
                 ContentType = contentType,
                 ContentItem = context.Builder.Build()
             };
+
+            // back-reference for convenience (e.g. getting metadata when in a view)
+            context2.ContentItem.ContentManager = this;
+
             foreach (var driver in Drivers) {
                 driver.Activated(context2);
             }
@@ -121,6 +125,16 @@ namespace Orchard.Models {
             }
         }
 
+        public ContentItemMetadata GetItemMetadata(IContent content) {
+            var context = new GetItemMetadataContext {
+                ContentItem = content.ContentItem,
+                Metadata = new ContentItemMetadata()
+            };
+            foreach (var driver in Drivers) {
+                driver.GetItemMetadata(context);
+            }
+            return context.Metadata;
+        }
 
         public IEnumerable<ModelTemplate> GetDisplays(IContent content) {
             var context = new GetDisplaysContext(content);
@@ -149,7 +163,7 @@ namespace Orchard.Models {
         private static IEnumerable<ModelTemplate> OrderTemplates(IEnumerable<ModelTemplate> templates) {
             var comparer = new PositionComparer();
             return templates.OrderBy(x => x.Position ?? "6", comparer);
-            
+
         }
 
         public IContentQuery<ContentItem> Query() {

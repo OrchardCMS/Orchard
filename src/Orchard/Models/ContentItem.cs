@@ -19,6 +19,7 @@ namespace Orchard.Models {
 
         public IEnumerable<ContentPart> Parts { get { return _parts; } }
 
+        public IContentManager ContentManager { get; set; }
 
         public bool Has(Type partType) {
             return partType==typeof(ContentItem) || _parts.Any(part => partType.IsAssignableFrom(part.GetType()));

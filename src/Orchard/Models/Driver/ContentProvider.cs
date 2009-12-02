@@ -33,6 +33,9 @@ namespace Orchard.Models.Driver {
             Filters.Add(new InlineStorageFilter<TPart> { OnLoaded = handler });
         }
 
+        protected void OnGetItemMetadata<TPart>(Action<GetItemMetadataContext, TPart> handler) where TPart : class, IContent {
+            Filters.Add(new InlineTemplateFilter<TPart> { OnGetItemMetadata = handler });
+        }
         protected void OnGetDisplays<TPart>(Action<GetDisplaysContext, TPart> handler) where TPart : class, IContent {
             Filters.Add(new InlineTemplateFilter<TPart> { OnGetDisplays = handler });
         }
@@ -69,9 +72,13 @@ namespace Orchard.Models.Driver {
         }
 
         class InlineTemplateFilter<TPart> : TemplateFilterBase<TPart> where TPart : class, IContent {
+            public Action<GetItemMetadataContext, TPart> OnGetItemMetadata { get; set; }
             public Action<GetDisplaysContext, TPart> OnGetDisplays { get; set; }
             public Action<GetEditorsContext, TPart> OnGetEditors { get; set; }
             public Action<UpdateContentContext, TPart> OnUpdateEditors { get; set; }
+            protected override void GetItemMetadata(GetItemMetadataContext context, TPart instance) {
+                if (OnGetItemMetadata != null) OnGetItemMetadata(context, instance);
+            }
             protected override void GetDisplays(GetDisplaysContext context, TPart instance) {
                 if (OnGetDisplays != null) OnGetDisplays(context, instance);
             }
@@ -124,6 +131,11 @@ namespace Orchard.Models.Driver {
         }
 
 
+        void IContentProvider.GetItemMetadata(GetItemMetadataContext context) {
+            foreach (var filter in Filters.OfType<IContentTemplateFilter>())
+                filter.GetItemMetadata(context);
+            GetItemMetadata(context);
+        }
         void IContentProvider.GetDisplays(GetDisplaysContext context) {
             foreach (var filter in Filters.OfType<IContentTemplateFilter>())
                 filter.GetDisplays(context);
@@ -149,6 +161,7 @@ namespace Orchard.Models.Driver {
         protected virtual void Creating(CreateContentContext context) { }
         protected virtual void Created(CreateContentContext context) { }
 
+        protected virtual void GetItemMetadata(GetItemMetadataContext context) { }
         protected virtual void GetDisplays(GetDisplaysContext context) { }
         protected virtual void GetEditors(GetEditorsContext context) { }
         protected virtual void UpdateEditors(UpdateContentContext context) {}

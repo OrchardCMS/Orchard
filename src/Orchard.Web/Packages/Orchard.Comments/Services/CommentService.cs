@@ -15,7 +15,7 @@ namespace Orchard.Comments.Services {
         IEnumerable<Comment> GetCommentsForCommentedContent(int id);
         IEnumerable<Comment> GetCommentsForCommentedContent(int id, CommentStatus status);
         Comment GetComment(int id);
-        IContentDisplayInfo GetDisplayForCommentedContent(int id);
+        ContentItemMetadata GetDisplayForCommentedContent(int id);
         void CreateComment(Comment comment);
         void UpdateComment(int id, string name, string email, string siteName, string commentText, CommentStatus status);
         void MarkCommentAsSpam(int commentId);
@@ -73,8 +73,11 @@ namespace Orchard.Comments.Services {
             return _commentRepository.Get(id);
         }
 
-        public IContentDisplayInfo GetDisplayForCommentedContent(int id) {
-            return _contentManager.Get(id).As<IContentDisplayInfo>();
+        public ContentItemMetadata GetDisplayForCommentedContent(int id) {
+            var content = _contentManager.Get(id);
+            if (content == null)
+                return null;
+            return _contentManager.GetItemMetadata(content);
         }
 
         public void CreateComment(Comment comment) {

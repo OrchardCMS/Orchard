@@ -21,10 +21,10 @@
 			                <% foreach (var contentItem in Model.Contents) { %>
                             <tr>
                                 <td>
-                                    <%=contentItem.As<IContentDisplayInfo>().DisplayText%>
+                                    <%=Html.ItemDisplayText(contentItem)%>
                                 </td>
 				                <td>
-				                     <%=Html.ItemDisplayLink(contentItem)%>
+				                    <%=Html.ItemDisplayLink(contentItem)%>
 				                </td>
                             </tr>
                             <% } %>

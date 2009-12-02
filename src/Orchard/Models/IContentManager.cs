@@ -14,6 +14,7 @@ namespace Orchard.Models {
 
         IContentQuery<ContentItem> Query();
 
+        ContentItemMetadata GetItemMetadata(IContent contentItem);
         IEnumerable<ModelTemplate> GetDisplays(IContent contentItem);
         IEnumerable<ModelTemplate> GetEditors(IContent contentItem);
         IEnumerable<ModelTemplate> UpdateEditors(IContent contentItem, IUpdateModel updater);
