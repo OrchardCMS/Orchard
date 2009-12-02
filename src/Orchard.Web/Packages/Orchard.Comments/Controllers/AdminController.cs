@@ -216,11 +216,14 @@ namespace Orchard.Comments.Controllers {
             return RedirectToAction("Details", new { viewModel.CommentedItemId, viewModel.Options });
         }
 
-        public ActionResult Close(int commentedItemId) {
+        public ActionResult Close(int commentedItemId, string returnUrl) {
             try {
                 if (!_authorizer.Authorize(Permissions.CloseComment, T("Couldn't close comments")))
                     return new HttpUnauthorizedResult();
                 _commentService.CloseCommentsForCommentedContent(commentedItemId);
+                if (!String.IsNullOrEmpty(returnUrl)) {
+                    return Redirect(returnUrl);
+                }
                 return RedirectToAction("Index");
             }
             catch (Exception exception) {
@@ -229,11 +232,14 @@ namespace Orchard.Comments.Controllers {
             }
         }
 
-        public ActionResult Enable(int commentedItemId) {
+        public ActionResult Enable(int commentedItemId, string returnUrl) {
             try {
                 if (!_authorizer.Authorize(Permissions.EnableComment, T("Couldn't enable comments")))
                     return new HttpUnauthorizedResult();
                 _commentService.EnableCommentsForCommentedContent(commentedItemId);
+                if (!String.IsNullOrEmpty(returnUrl)) {
+                    return Redirect(returnUrl);
+                }
                 return RedirectToAction("Index");
             }
             catch (Exception exception) {

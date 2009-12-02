@@ -14,7 +14,9 @@
 </ol>
 <% if (Model.Closed) { %>
 <p>Comments have been disabled for this content.</p>
+<%= Html.ActionLink("Enable Comments for this content", "Enable", new { Area="Orchard.Comments", Controller="Admin", returnUrl = Context.Request.Url, commentedItemId = Model.ContentItem.Id })%>
 <% } else { %>
+<%= Html.ActionLink("Close Comments for this content", "Close", new { Area="Orchard.Comments", Controller="Admin", returnUrl = Context.Request.Url, commentedItemId = Model.ContentItem.Id })%>
 <% Html.BeginForm("Create", "Admin", new { area = "Orchard.Comments" }); %>
     <%= Html.ValidationSummary() %>
                     <div class="yui-g">
