@@ -71,6 +71,7 @@
     <Compile Include="Extensions\BlogPostCreateViewModelExtensions.cs" />
     <Compile Include="Extensions\HtmlHelperExtensions.cs" />
     <Compile Include="Extensions\UrlHelperExtensions.cs" />
+    <Compile Include="Permissions.cs" />
     <Compile Include="Routing\IsBlogConstraint.cs" />
     <Compile Include="Services\BlogService.cs" />
     <Compile Include="Controllers\BlogController.cs" />
