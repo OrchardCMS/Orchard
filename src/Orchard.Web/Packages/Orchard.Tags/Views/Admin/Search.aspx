@@ -2,7 +2,7 @@
 <%@ Import Namespace="Orchard.Models"%>
 <%@ Import Namespace="Orchard.Tags.ViewModels"%>
 <%@ Import Namespace="Orchard.Mvc.Html"%>
-<% Html.Include("Header"); %>
+<% Html.Include("AdminHead"); %>
     <% Html.BeginForm(); %>
     <div class="yui-g">
 						<h2 class="separator">List of contents tagged with <%= Model.TagName %></h2>
@@ -31,4 +31,4 @@
 				        </table>
 	</div>
 	<% Html.EndForm(); %>
-<% Html.Include("Footer"); %>
+<% Html.Include("AdminFoot"); %>

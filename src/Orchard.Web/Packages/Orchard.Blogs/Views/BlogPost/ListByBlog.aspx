@@ -6,7 +6,8 @@
 <%@ Import Namespace="Orchard.Blogs.Models"%>
 <%@ Import Namespace="Orchard.Mvc.Html"%>
 <%@ Import Namespace="Orchard.Mvc.ViewModels"%>
-<% Html.Include("Header"); %>
+<%-- todo: (heskew) make master-less when we get into theming --%>
+<asp:Content ContentPlaceHolderID="MainContent" runat="server">
     <div class="yui-g">
         <h2>Posts</h2><%
         //TODO: (erikpo) Replace this with an Html extension method of some sort (ListForModel?)
@@ -18,4 +19,4 @@
         </ul><%
         } %>
     </div>
-<% Html.Include("Footer"); %>
+</asp:Content>

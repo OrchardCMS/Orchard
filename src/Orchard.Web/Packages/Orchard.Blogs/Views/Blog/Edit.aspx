@@ -2,7 +2,7 @@
 <%@ Import Namespace="Orchard.Mvc.Html"%>
 <%@ Import Namespace="Orchard.Blogs.Extensions"%>
 <%@ Import Namespace="Orchard.Blogs.ViewModels"%>
-<% Html.Include("Head"); %>
+<% Html.Include("AdminHead"); %>
     <h2>Edit Blog</h2>
     <p><a href="<%=Url.Blogs() %>">Manage Blogs</a> &gt; Editing <strong><%=Html.Encode(Model.Name)%></strong></p>
     <% using (Html.BeginForm()) { %>
@@ -10,4 +10,4 @@
         <%=Html.EditorForModel() %>
         <fieldset><input class="button" type="submit" value="Save" /></fieldset>
     <% } %>
-<% Html.Include("Foot"); %>
+<% Html.Include("AdminFoot"); %>

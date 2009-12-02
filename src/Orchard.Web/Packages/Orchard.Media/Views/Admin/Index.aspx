@@ -1,13 +1,11 @@
 <%@ Page Language="C#" Inherits="System.Web.Mvc.ViewPage<MediaFolderIndexViewModel>" %>
 <%@ Import Namespace="Orchard.Media.ViewModels"%>
 <%@ Import Namespace="Orchard.Mvc.Html"%>
-<% Html.Include("Header"); %>
+<% Html.Include("AdminHead"); %>
+	<h2>Manage Media Folders</h2>
     <% Html.BeginForm(); %>
-    <div class="yui-g">
-						<h2 class="separator">Manage Media Folders</h2>
-						<p class="bottomSpacer">
-						<%=Html.ActionLink("Media Folders", "Index")%> &#62; 
-						Manage Media Folders</p>
+		<p><%=Html.ActionLink("Media Folders", "Index")%> &#62; Manage Media Folders</p>
+        <%=Html.ValidationSummary() %>
 						<ol class="horizontal actions floatLeft">
 							<li><label class="floatLeft" for="bulkActions">Actions:</label>
 							<select id="Select1" name="publishActions">
@@ -55,4 +53,4 @@
 				        </table>
 	</div>
 	<% Html.EndForm(); %>
-<% Html.Include("Footer"); %>
+<% Html.Include("AdminFoot"); %>

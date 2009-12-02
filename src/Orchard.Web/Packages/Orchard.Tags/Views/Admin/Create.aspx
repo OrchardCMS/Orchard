@@ -1,14 +1,14 @@
 ﻿<%@ Page Language="C#" Inherits="System.Web.Mvc.ViewPage<TagsAdminCreateViewModel>" %>
 <%@ Import Namespace="Orchard.Tags.ViewModels"%>
 <%@ Import Namespace="Orchard.Mvc.Html" %>
-<% Html.Include("Header"); %>
+<% Html.Include("AdminHead"); %>
+	<h2>Add a Tag</h2>
     <% Html.BeginForm(); %>
-    <%= Html.ValidationSummary() %>
-                    <div class="yui-g">
-						<h2 class="separator">Add a Tag</h2>
-					    <label for="TagName">Name:</label>
-						<input id="TagName" class="inputText inputTextLarge" name="TagName" type="text" value="<%= Model.TagName %>" />
-					    <input type="submit" class="button" value="Save" />
-					</div>
+        <%= Html.ValidationSummary() %>
+        <fieldset>
+	        <label for="TagName">Name:</label>
+		    <input id="TagName" class="text" name="TagName" type="text" value="<%= Model.TagName %>" />
+	        <input type="submit" class="button" value="Save" />
+        </fieldset>
 	<% Html.EndForm(); %>
-<% Html.Include("Footer"); %>
+<% Html.Include("AdminFoot"); %>

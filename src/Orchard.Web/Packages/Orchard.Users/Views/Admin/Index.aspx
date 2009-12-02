@@ -2,7 +2,7 @@
 <%@ Import Namespace="Orchard.Models"%>
 <%@ Import Namespace="Orchard.Security" %>
 <%@ Import Namespace="Orchard.Mvc.Html" %>
-<% Html.Include("Header"); %>
+<% Html.Include("AdminHead"); %>
     <% Html.BeginForm(); %>
     <div class="yui-g">
         <h2>
@@ -44,4 +44,4 @@
         </table>
     </div>
     <% Html.EndForm(); %>
-<% Html.Include("Footer"); %>
+<% Html.Include("AdminFoot"); %>

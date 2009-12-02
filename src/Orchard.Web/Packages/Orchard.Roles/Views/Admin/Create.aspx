@@ -1,7 +1,7 @@
 <%@ Page Language="C#" Inherits="System.Web.Mvc.ViewPage<RoleCreateViewModel>" %>
 <%@ Import Namespace="Orchard.Roles.ViewModels"%>
 <%@ Import Namespace="Orchard.Mvc.Html" %>
-<% Html.Include("Header"); %>
+<% Html.Include("AdminHead"); %>
     <% Html.BeginForm(); %>
     <%= Html.ValidationSummary() %>
                     <div class="yui-g">
@@ -37,4 +37,4 @@
 					       <input type="submit" class="button" value="Save" />
 					</div>
 	<% Html.EndForm(); %>
-<% Html.Include("Footer"); %>
+<% Html.Include("AdminFoot"); %>

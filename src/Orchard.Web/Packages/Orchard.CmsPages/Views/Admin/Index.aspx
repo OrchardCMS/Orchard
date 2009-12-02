@@ -3,7 +3,7 @@
 <%@ Import Namespace="Orchard.CmsPages.ViewModels"%>
 <%@ Import Namespace="Orchard.Mvc.Html" %>
 <%-- todo: (heskew) localize --%>
-<% Html.Include("Head"); %>
+<% Html.Include("AdminHead"); %>
     <h2>Manage Pages</h2>
     <p>Possible text about setting up a page goes here. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla erat turpis, blandit eget feugiat nec, tempus vel quam. Mauris et neque eget justo suscipit blandit.</p>
     <% using (Html.BeginForm()) { %>
@@ -97,4 +97,4 @@
         </fieldset>
         <div class="manage"><%=Html.ActionLink("Add a page", "Create", new {}, new { @class = "button"}) %></div>
     <% } %>
-<% Html.Include("Foot"); %>
+<% Html.Include("AdminFoot"); %>

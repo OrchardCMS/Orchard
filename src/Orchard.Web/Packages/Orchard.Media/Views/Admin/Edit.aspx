@@ -3,7 +3,7 @@
 <%@ Import Namespace="Orchard.Media.Helpers"%>
 <%@ Import Namespace="Orchard.Media.ViewModels"%>
 <%@ Import Namespace="Orchard.Mvc.Html"%>
-<% Html.Include("Header"); %>
+<% Html.Include("AdminHead"); %>
     <% Html.BeginForm(); %>
     <div class="yui-g">
 						<h2 class="separator">Manage Folder</h2>
@@ -92,4 +92,4 @@
 				        </table>
 	</div>
 	<% Html.EndForm(); %>
-<% Html.Include("Footer"); %>
+<% Html.Include("AdminFoot"); %>

@@ -1,6 +1,6 @@
 <%@ Page Language="C#" Inherits="System.Web.Mvc.ViewPage<IEnumerable<Orchard.CmsPages.Models.Page>>" %>
 <%@ Import Namespace="Orchard.Mvc.Html" %>
-<% Html.Include("Head"); %>
+<% Html.Include("AdminHead"); %>
     <h2>Export</h2>
     <p>Possible text about setting up a page goes here. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla erat turpis, blandit eget feugiat nec, tempus vel quam. Mauris et neque eget justo suscipit blandit.</p>
         <ol>
@@ -16,4 +16,4 @@
             </li><%
                } %>
         </ol>
-<% Html.Include("Foot"); %>
+<% Html.Include("AdminFoot"); %>

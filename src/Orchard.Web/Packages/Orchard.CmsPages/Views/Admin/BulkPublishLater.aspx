@@ -3,7 +3,7 @@
 <%@ Import Namespace="Orchard.Utility"%>
 <%@ Import Namespace="Orchard.CmsPages.Services.Templates"%>
 <%@ Import Namespace="Orchard.Mvc.Html" %>
-<% Html.Include("Head"); %>
+<% Html.Include("AdminHead"); %>
     <% using (Html.BeginForm()) { %>
         <h2>Publish later</h2>
         <p>Enter the scheduled publication date:</p>
@@ -22,4 +22,4 @@
             } %>
         </fieldset>
     <% } %>
-<% Html.Include("Foot"); %>
+<% Html.Include("AdminFoot"); %>

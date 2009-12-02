@@ -161,8 +161,6 @@
     <Content Include="Content\Admin\css\images\background_header.jpg" />
     <Content Include="Content\Admin\css\images\orchardLogo.jpg" />
     <Content Include="Content\Admin\css\images\tableHeaderBackground.gif" />
-    <Content Include="Views\Admin\Footer.aspx" />
-    <Content Include="Views\Admin\Header.aspx" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Config\Diagnostics.config" />
@@ -176,8 +174,8 @@
     <Content Include="Content\Images\title_background.gif" />
     <Content Include="Content\Site2.css" />
     <Content Include="Content\Site3.css" />
-    <Content Include="Views\Admin\Head.aspx" />
-    <Content Include="Views\Admin\Foot.aspx" />
+    <Content Include="Views\Shared\AdminHead.aspx" />
+    <Content Include="Views\Shared\AdminFoot.aspx" />
     <Content Include="Views\Admin\Messages.ascx" />
     <Content Include="Views\Shared\ExtraUserControl.ascx" />
     <Content Include="Views\Shared\Footer.ascx" />

@@ -1,7 +1,7 @@
 <%@ Page Language="C#" Inherits="System.Web.Mvc.ViewPage<Orchard.Users.ViewModels.UserCreateViewModel>" %>
 <%@ Import Namespace="Orchard.Security" %>
 <%@ Import Namespace="Orchard.Mvc.Html" %>
-<% Html.Include("Header"); %>
+<% Html.Include("AdminHead"); %>
     <div class="yui-u">
         <h2 class="separator">
             Add a new User</h2>
@@ -18,4 +18,4 @@
         </ol>
         <%}/*EndForm*/%>
     </div>
-<% Html.Include("Footer"); %>
+<% Html.Include("AdminFoot"); %>

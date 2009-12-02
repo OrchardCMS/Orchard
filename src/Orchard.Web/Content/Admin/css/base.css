@@ -51,15 +51,13 @@ html {
     color:#525e50;
 }
 body {
+	color:#5a5b32;
+    font-family:Frutiger, "Frutiger Linotype", Univers, Calibri, "Gill Sans", "Gill Sans MT", "Myriad Pro", Myriad, "DejaVu Sans Condensed", "Liberation Sans", "Nimbus Sans L", Tahoma, Geneva, "Helvetica Neue", Helvetica, Arial, sans-serif;
     font-size:62.5%; /* 10px */
 	line-height:1.6em;
     margin:0 auto 1em;
     min-width:94.6em; /* 946px */
     padding:0 .4em;
-}
-body, input, select, textarea {
-	color:#5a5b32;
-    font-family:Frutiger, "Frutiger Linotype", Univers, Calibri, "Gill Sans", "Gill Sans MT", "Myriad Pro", Myriad, "DejaVu Sans Condensed", "Liberation Sans", "Nimbus Sans L", Tahoma, Geneva, "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 body#preview {
     min-width:0;
@@ -152,11 +150,13 @@ h2 { font-size:2.4em; } /* 24px */
 h3 { font-size:2.1em; } /* 21px */
 h4 { font-size:1.8em; } /* 18px */
 h5 { font-size:1.6em; } /* 16px */
+
 h6, p, label, input, select, .button, .cancel /* todo: (heskew) need to do something better with cancel */,
 .message, th, td { font-size:1.5em; line-height:1.5em; } /* 15px */
-p .button { font-size:inherit; }
+p .button,
+td *, .mceLayout td { font-size:inherit; }
 
-h3 span { font-size:.57em; }
+h3 span { font-size:.57em; } /* 12px */
 
 /* ---------- Links ---------- */
 a, a:link, a:visited {
@@ -382,7 +382,7 @@ button:focus, .button:focus {
 }
 #main div.actions {
     height:2em;
-    padding:.6em 0 0;
+    padding:.6em 0 .1em;
     text-align:right;
 }
 #main .manage a.button {

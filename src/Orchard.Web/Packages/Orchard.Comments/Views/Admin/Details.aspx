@@ -2,7 +2,7 @@
 <%@ Import Namespace="Orchard.Comments.Models"%>
 <%@ Import Namespace="Orchard.Comments.ViewModels"%>
 <%@ Import Namespace="Orchard.Mvc.Html"%>
-<% Html.Include("Header"); %>
+<% Html.Include("AdminHead"); %>
     <% Html.BeginForm(); %>
     <div class="yui-g">
 						<h2 class="separator">Comments for <%= Model.DisplayNameForCommentedItem %></h2>
@@ -96,4 +96,4 @@
 	</div>
 	
 	<% Html.EndForm(); %>
-<% Html.Include("Footer"); %>
+<% Html.Include("AdminFoot"); %>

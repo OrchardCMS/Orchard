@@ -3,7 +3,7 @@
 <%@ Import Namespace="Orchard.Utility"%>
 <%@ Import Namespace="Orchard.CmsPages.Services.Templates"%>
 <%@ Import Namespace="Orchard.Mvc.Html" %>
-<% Html.Include("Head"); %>
+<% Html.Include("AdminHead"); %>
     <h2>Delete pages</h2>
     <p>Are you sure you want to delete the pages?</p>
     <% using (Html.BeginForm()) { %>
@@ -22,4 +22,4 @@
             } %>
         </fieldset>
     <% } %>
-<% Html.Include("Foot"); %>
+<% Html.Include("AdminFoot"); %>

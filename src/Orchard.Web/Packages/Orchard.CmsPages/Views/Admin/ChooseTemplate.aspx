@@ -1,7 +1,7 @@
 <%@ Page Language="C#" Inherits="System.Web.Mvc.ViewPage<Orchard.CmsPages.ViewModels.ChooseTemplateViewModel>" %>
 <%@ Import Namespace="Orchard.CmsPages.Services.Templates"%>
 <%@ Import Namespace="Orchard.Mvc.Html" %>
-<% Html.Include("Head"); %>
+<% Html.Include("AdminHead"); %>
     <h2>Change Template</h2>
     <p>Select your layout from one of the templates below.</p>    
     <% using (Html.BeginForm()) {
@@ -20,4 +20,4 @@
             <%=Html.ActionLink("Cancel", "Edit", new { Id = ViewContext.RouteData.GetRequiredString("id") }, new { @class = "cancel" })%>
         </div><%
        } %>
-<% Html.Include("Foot"); %>
+<% Html.Include("AdminFoot"); %>

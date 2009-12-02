@@ -1,6 +1,6 @@
 ﻿<%@ Page Language="C#" Inherits="System.Web.Mvc.ViewPage<Orchard.Core.Settings.ViewModels.SettingsIndexViewModel>" %>
 <%@ Import Namespace="Orchard.Mvc.Html"%>
-<% Html.Include("Header"); %>
+<% Html.Include("AdminHead"); %>
     <div class="yui-u">
         <h2 class="separator">
             Edit Settings</h2>
@@ -21,4 +21,4 @@
         </ol>
         <%}/*EndForm*/%>
     </div>
-<% Html.Include("Footer"); %>
+<% Html.Include("AdminFoot"); %>

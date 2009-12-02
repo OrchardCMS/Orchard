@@ -1,7 +1,7 @@
 <%@ Page Language="C#" Inherits="System.Web.Mvc.ViewPage<CommentsCreateViewModel>" %>
 <%@ Import Namespace="Orchard.Comments.ViewModels"%>
 <%@ Import Namespace="Orchard.Mvc.Html" %>
-<% Html.Include("Header"); %>
+<% Html.Include("AdminHead"); %>
     <% Html.BeginForm(); %>
     <%= Html.ValidationSummary() %>
                     <div class="yui-g">
@@ -32,4 +32,4 @@
 					    </ol>
 					</div>
 	<% Html.EndForm(); %>
-<% Html.Include("Footer"); %>
+<% Html.Include("AdminFoot"); %>

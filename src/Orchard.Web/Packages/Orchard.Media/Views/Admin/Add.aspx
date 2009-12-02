@@ -3,7 +3,7 @@
 <%@ Import Namespace="Orchard.Media.Models"%>
 <%@ Import Namespace="Orchard.Media.ViewModels"%>
 <%@ Import Namespace="Orchard.Mvc.Html" %>
-<% Html.Include("Header"); %>
+<% Html.Include("AdminHead"); %>
 					<div class="yui-g">
 						<h2 class="separator">Add Media </h2>
 						<p class="bottomSpacer">
@@ -30,4 +30,4 @@
                         <% } %>    
                         </div>
 					</div>
-<% Html.Include("Footer"); %>
+<% Html.Include("AdminFoot"); %>
