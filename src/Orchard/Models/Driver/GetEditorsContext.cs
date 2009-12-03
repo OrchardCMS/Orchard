@@ -5,15 +5,14 @@ using Orchard.Models.ViewModels;
 
 namespace Orchard.Models.Driver {
     public class GetEditorsContext {
-        public GetEditorsContext(IContent content) {
-            ContentItem = content.ContentItem;
-            ItemView = new ItemEditorViewModel {
-                ContentItem = ContentItem,
-                Editors = Enumerable.Empty<TemplateViewModel>(),
-            };
+        public GetEditorsContext(ItemEditorViewModel itemView, string groupName) {
+            ContentItem = itemView.Item;
+            GroupName = groupName;
+            ItemView = itemView;
         }
 
         public ContentItem ContentItem { get; set; }
+        public string GroupName { get; set; }
         public ItemEditorViewModel ItemView { get; set; }
 
         public void AddEditor(TemplateViewModel editor) {

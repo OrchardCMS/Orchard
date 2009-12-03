@@ -7,7 +7,7 @@ namespace Orchard.Models {
         public RouteValueDictionary DisplayRouteValues { get; set; }
         public RouteValueDictionary EditorRouteValues { get; set; }
 
-        public IEnumerable<string> DisplayTabs { get; set; }
-        public IEnumerable<string> EditorTabs { get; set; }
+        public IEnumerable<string> DisplayGroups { get; set; }
+        public IEnumerable<string> EditorGroups { get; set; }
     }
 }

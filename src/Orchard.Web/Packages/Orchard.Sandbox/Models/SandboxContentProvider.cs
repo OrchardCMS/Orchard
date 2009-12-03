@@ -4,6 +4,7 @@ using Orchard.Core.Common.Models;
 using Orchard.Data;
 using Orchard.Models;
 using Orchard.Models.Driver;
+using Orchard.Models.ViewModels;
 
 namespace Orchard.Sandbox.Models {
     public class SandboxContentProvider : ContentProvider {
@@ -42,6 +43,15 @@ namespace Orchard.Sandbox.Models {
                             id = context.ContentItem.Id,
                         });
             });
+
+            //TODO: helper that glues this for free - include list of known-displaytype prefixes
+
+            OnGetDisplays<SandboxPage>((context, page) => context.ItemView.TemplateName = "SandboxPage" + context.DisplayType);
+            OnGetEditors<SandboxPage>((context, page) => context.ItemView.TemplateName = "SandboxPage");
+            OnUpdateEditors<SandboxPage>((context, page) => {
+                                             context.Updater.TryUpdateModel((ItemEditorViewModel<SandboxPage>)context.ItemView, "", null, null);
+                                             context.ItemView.TemplateName = "SandboxPage";
+                                         });
 
             // add settings to site, and simple record-template gui
             Filters.Add(new ActivatingFilter<ContentPart<SandboxSettingsRecord>>("site"));

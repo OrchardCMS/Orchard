@@ -20,13 +20,14 @@
         </div>
         <div id="main">
             <% Html.RenderPartial("Messages", Model.Messages); %>
-            <h1><%=Html.Encode(Model.Page.Record.Name) %></h1>
+            <%=Html.DisplayFor(m => m.ItemView, Model.ItemView.TemplateName, "")%>
+<%--            <h1><%=Html.Encode(Model.Page.Record.Name) %></h1>
             <%foreach (var display in Model.ItemView.Displays) { %>
             <%=Html.DisplayFor(m=>display.Model, display.TemplateName, display.Prefix) %>
             <%} %>
             <p>
                 <%=Html.ActionLink("Edit this page", "edit", new{Model.Page.ContentItem.Id}, new{}) %>, <%=Html.ActionLink("Return to list", "index") %></p>
-        </div>
+--%>        </div>
         <div id="footer">
             <% Html.Include("footer"); %>
         </div>

@@ -40,7 +40,7 @@ namespace Orchard.Sandbox.Controllers {
             var page = _contentManager.Get<SandboxPage>(id);
             var model = new PageShowViewModel {
                 Page = page,
-                ItemView = _contentManager.GetDisplays(page, null, null)
+                ItemView = _contentManager.GetDisplays(page, null, "Detail")
             };
             return View(model);
         }

@@ -15,13 +15,14 @@ namespace Orchard.Tasks {
             _timer = new Timer();
             _timer.Elapsed += Elapsed;
             Logger = NullLogger.Instance;
+            Interval = TimeSpan.FromMinutes(5);
         }
 
         public ILogger Logger { get; set; }
 
         public TimeSpan Interval {
             get { return TimeSpan.FromMilliseconds(_timer.Interval); }
-            set { _timer.Interval = value.Milliseconds; }
+            set { _timer.Interval = value.TotalMilliseconds; }
         }
 
         public void Activated() {

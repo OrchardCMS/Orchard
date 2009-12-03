@@ -24,13 +24,17 @@
                 Edit Page</h3>
             <%using (Html.BeginForm()) { %>
             <ul>
-                <li>
+                <%=Html.EditorFor(m => m.ItemView, Model.ItemView.TemplateName, Model.ItemView.Prefix ?? "")%>
+
+                <li><input type="submit" name="submit" value="Save" /></li>
+
+                <%-- <li>
                     <%=Html.LabelFor(x => x.Page.Record.Name)%><%=Html.EditorFor(x => x.Page.Record.Name)%></li>
                 <%foreach (var x in Model.ItemView.Editors) { %>
                 <%=Html.EditorFor(m=>x.Model, x.TemplateName, x.Prefix) %>
                 <%} %>
                 <li>
-                    <input type="submit" name="submit" value="Save" /></li>
+                    <input type="submit" name="submit" value="Save" /></li>--%>
             </ul>
             <%} %>
         </div>
