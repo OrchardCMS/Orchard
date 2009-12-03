@@ -260,8 +260,11 @@ a:hover, a:active, a:focus {
 #main form {
     margin:.345em 0 1.5em;
 }
-#main h2, #main h3 {
+#main h2 {
     border-bottom:1px dashed #e4e7dc;
+}
+#main h3 {
+    border-bottom:2px solid #e4e7dc;
 }
 
 /* Confirmations, Messages and the like
@@ -375,17 +378,24 @@ button:focus, .button:focus {
 .cancel {
     margin:0 0 0 .93em;
 }
-#main .manage {
+.manage {
     float:right;
     margin:3px 0 6px 4px;
     overflow:hidden;
 }
-#main div.actions {
+.actions {
     height:2em;
+    overflow:hidden;
     padding:.6em 0 .1em;
     text-align:right;
 }
-#main .manage a.button {
+.actions .construct {
+    float:left;
+}
+.actions .destruct {
+    float:right;
+}
+.manage a.button {
     float:right;
     height:inherit;
     margin-left:.3em;
@@ -524,8 +534,26 @@ todo: (heskew) pull out into relevant modules where appropriate
 
 /* Blogs
 ----------------------------------------------------------*/
+ul.blogs {
+    margin:1.4em 0;
+}
 ul.blogs li {
-    margin:0.575em 0 2.5em;
+    margin:0;
+    overflow:hidden;
+    padding:0 0 .4em;
+}
+#main ul.blogs li h3 {
+    margin:0 0 .5em;
+}
+/* todo: (heskew) clean up since this is a bit of a hack specific to a single page */
+#main ul.blogs li .actions {
+    height:auto;
+    margin:-1.5em 0 0;
+    padding:0 0 .1em;
+    visibility:hidden;
+}
+#main ul.blogs li:hover .actions {
+    visibility:visible;
 }
 
 
