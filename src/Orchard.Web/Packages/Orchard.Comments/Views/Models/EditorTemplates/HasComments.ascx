@@ -7,7 +7,7 @@
         <%= comment.CommentText %>
     </li>
     <li>
-        Posted by <%= comment.UserName %> on <%= comment.CommentDate %>
+        Posted by <%= comment.UserName %> on <%= comment.CommentDate.ToLocalTime() %>
     </li>
     <li>
 	    <%=Html.ActionLink("Delete", "Delete", new {Area="Orchard.Comments", Controller="Admin", id = comment.Id, returnUrl = Context.Request.Url}) %>

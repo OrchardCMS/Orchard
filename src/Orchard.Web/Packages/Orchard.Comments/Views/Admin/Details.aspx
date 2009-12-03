@@ -72,7 +72,7 @@
 			                        <%= commentEntry.Comment.CommentText.Length > 23 ? commentEntry.Comment.CommentText.Substring(0, 24) : commentEntry.Comment.CommentText %> ...
 			                    <% } %> 
 			                    </td>
-				                <td><%= commentEntry.Comment.CommentDate %></td>
+				                <td><%= commentEntry.Comment.CommentDate.ToLocalTime() %></td>
 				                <td>
 				                <%=Html.ActionLink("Edit", "Edit", new {commentEntry.Comment.Id}) %> |
 				                <%=Html.ActionLink("Delete", "Delete", new {id = commentEntry.Comment.Id, redirectToAction = "Details"}) %>

@@ -8,7 +8,7 @@
             <%= Html.Hidden("TaggedContentId", Model.ContentItem.Id) %>
             <%= Html.Hidden("ReturnUrl", Context.Request.Url) %>
           
-			<h3>Add a new tag</h3>
+			<h3>Add new tags</h3>
 			<ol>
 			    <li>
 			        <input id="NewTagName" class="inputText inputTextLarge" name="NewTagName" type="text" value="" />

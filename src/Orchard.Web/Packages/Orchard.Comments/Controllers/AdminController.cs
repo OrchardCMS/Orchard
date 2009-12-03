@@ -120,7 +120,7 @@ namespace Orchard.Comments.Controllers {
                 }
                 Comment comment = new Comment {
                     Author = viewModel.Name,
-                    CommentDate = DateTime.Now,
+                    CommentDate = DateTime.UtcNow,
                     CommentText = viewModel.CommentText,
                     Email = viewModel.Email,
                     SiteName = viewModel.SiteName,
