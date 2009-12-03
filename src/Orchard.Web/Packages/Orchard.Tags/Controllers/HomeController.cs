@@ -17,11 +17,14 @@ namespace Orchard.Tags.Controllers {
     public class HomeController : Controller {
         private readonly ITagService _tagService;
         private readonly IAuthorizer _authorizer;
+        private readonly IContentManager _contentManager;
         private readonly INotifier _notifier;
 
-        public HomeController(ITagService tagService, INotifier notifier, IAuthorizer authorizer) {
+        public HomeController(ITagService tagService, INotifier notifier, IAuthorizer authorizer,
+            IContentManager contentManager) {
             _tagService = tagService;
             _authorizer = authorizer;
+            _contentManager = contentManager;
             _notifier = notifier;
             Logger = NullLogger.Instance;
             T = NullLocalizer.Instance;
@@ -110,7 +113,7 @@ namespace Orchard.Tags.Controllers {
                 IEnumerable<IContent> contents = _tagService.GetTaggedContentItems(tag.Id).ToList();
                 var viewModel = new TagsSearchViewModel {
                     TagName = tag.TagName,
-                    Contents = contents,
+                    Contents = contents.Select(x=>_contentManager.GetDisplayViewModel(x, null, "SummaryTag")),
                 };
                 return View(viewModel);
 

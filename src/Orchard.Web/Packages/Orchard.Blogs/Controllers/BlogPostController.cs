@@ -60,7 +60,7 @@ namespace Orchard.Blogs.Controllers {
             if (post == null)
                 return new NotFoundResult();
 
-            return View(new BlogPostViewModel { Blog = blog, Post = post, ItemView = _contentManager.GetDisplays(post.ContentItem, null, "detail") });
+            return View(new BlogPostViewModel { Blog = blog, Post = post, ItemView = _contentManager.GetDisplayViewModel(post.ContentItem, null, "detail") });
         }
 
         public ActionResult Create(string blogSlug) {
@@ -70,7 +70,7 @@ namespace Orchard.Blogs.Controllers {
             if (blog == null)
                 return new NotFoundResult();
 
-            return View(new CreateBlogPostViewModel { Blog = blog, ItemView = _contentManager.GetEditors(_contentManager.New("blogpost"), null) });
+            return View(new CreateBlogPostViewModel { Blog = blog, ItemView = _contentManager.GetEditorViewModel(_contentManager.New("blogpost"), null) });
         }
 
         [HttpPost]
@@ -85,12 +85,12 @@ namespace Orchard.Blogs.Controllers {
                 return new NotFoundResult();
 
             if (ModelState.IsValid == false) {
-                model.ItemView = _contentManager.UpdateEditors(_contentManager.New("blogpost"), null, this);
+                model.ItemView = _contentManager.UpdateEditorViewModel(_contentManager.New("blogpost"), null, this);
                 return View(model);
             }
 
             BlogPost blogPost = _blogPostService.Create(model.ToCreateBlogPostParams(blog));
-            model.ItemView = _contentManager.UpdateEditors(blogPost, null, this);
+            model.ItemView = _contentManager.UpdateEditorViewModel(blogPost, null, this);
 
             //TEMP: (erikpo) ensure information has committed for this record
             var session = _sessionLocator.For(typeof(BlogPostRecord));
@@ -115,7 +115,7 @@ namespace Orchard.Blogs.Controllers {
                 return new NotFoundResult();
 
             var model = new BlogPostEditViewModel { Blog = blog, Post = post };
-            model.ItemView = _contentManager.GetEditors(model.Post.ContentItem, null);
+            model.ItemView = _contentManager.GetEditorViewModel(model.Post.ContentItem, null);
             return View(model);
         }
 
@@ -136,7 +136,7 @@ namespace Orchard.Blogs.Controllers {
                 return new NotFoundResult();
 
             var model = new BlogPostEditViewModel { Blog = blog, Post = post };
-            model.ItemView = _contentManager.UpdateEditors(model.Post.ContentItem, null, this);
+            model.ItemView = _contentManager.UpdateEditorViewModel(model.Post.ContentItem, null, this);
 
             IValueProvider values = input.ToValueProvider();
             TryUpdateModel(model, values);

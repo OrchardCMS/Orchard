@@ -6,6 +6,6 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="MainContent" runat="server">
     <h2>List of contents tagged with <%= Model.TagName %></h2><%
     foreach (var contentItem in Model.Contents) { %>
-    <%=Html.ItemDisplayLink(contentItem)%><%
+    <%=Html.DisplayForItem(x=>contentItem)%><%
     } %>
 </asp:Content>

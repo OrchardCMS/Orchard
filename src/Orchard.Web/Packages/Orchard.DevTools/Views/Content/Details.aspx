@@ -79,23 +79,6 @@
                 <%}%>
             </ul>
             <h3>
-                Editors</h3>
-            <ul>
-                <%foreach (var editor in Model.Editors) {%>
-                <li><span style="font-weight: bold">
-                    <%=Html.Encode(editor.Prefix) %></span>
-                    <%=Html.Encode(editor.Model.GetType().Name) %>                    
-                    (<%=Html.Encode(editor.Model.GetType().Namespace) %>)
-                    Prefix:<%=Html.Encode(editor.Prefix ?? "(null)")%>
-                    Position:<%=Html.Encode(editor.Position??"(null)") %>
-                    <div style="margin-left: 20px; border: solid 1px black;">
-                        <%=Html.EditorFor(x=>editor.Model, editor.TemplateName, editor.Prefix) %>
-                    </div>
-                </li>
-                <%                      
-                    }%>
-            </ul>
-            <h3>
                 Displays</h3>
             <ul>
                 <%foreach (var display in Model.Displays) {%>
@@ -104,9 +87,28 @@
                     <%=Html.Encode(display.Model.GetType().Name)%>
                     (<%=Html.Encode(display.Model.GetType().Namespace)%>)
                     Prefix:<%=Html.Encode(display.Prefix ?? "(null)")%>
+                    Zone:<%=Html.Encode(display.ZoneName ?? "(null)")%>
                     Position:<%=Html.Encode(display.Position ?? "(null)")%>
                     <div style="margin-left: 20px; border: solid 1px black;">
                         <%=Html.DisplayFor(x => display.Model, display.TemplateName, display.Prefix)%>
+                    </div>
+                </li>
+                <%                      
+                    }%>
+            </ul>
+            <h3>
+                Editors</h3>
+            <ul>
+                <%foreach (var editor in Model.Editors) {%>
+                <li><span style="font-weight: bold">
+                    <%=Html.Encode(editor.Prefix) %></span>
+                    <%=Html.Encode(editor.Model.GetType().Name) %>                    
+                    (<%=Html.Encode(editor.Model.GetType().Namespace) %>)
+                    Prefix:<%=Html.Encode(editor.Prefix ?? "(null)")%>
+                    Zone:<%=Html.Encode(editor.ZoneName ?? "(null)")%>
+                    Position:<%=Html.Encode(editor.Position??"(null)") %>
+                    <div style="margin-left: 20px; border: solid 1px black;">
+                        <%=Html.EditorFor(x=>editor.Model, editor.TemplateName, editor.Prefix) %>
                     </div>
                 </li>
                 <%                      

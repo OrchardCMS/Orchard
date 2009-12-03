@@ -4,6 +4,7 @@ using Orchard.Core.Common.Models;
 using Orchard.Data;
 using Orchard.Models;
 using Orchard.Models.Driver;
+using Orchard.Models.ViewModels;
 
 namespace Orchard.Sandbox.Models {
     public class SandboxContentProvider : ContentProvider {
@@ -44,6 +45,8 @@ namespace Orchard.Sandbox.Models {
                         });
             });
 
+            OnGetDisplayViewModel<SandboxPage>((context, page) =>
+                context.AddDisplay(new TemplateViewModel(page) { TemplateName = "ContentItemTitle", ZoneName = "title" }));
 
 
 

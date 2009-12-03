@@ -75,7 +75,7 @@ namespace Orchard.Core.Common.Providers {
         }
 
 
-        protected override void UpdateEditors(UpdateContentContext context) {
+        protected override void UpdateEditorViewModel(UpdateEditorViewModelContext context) {
             var part = context.ContentItem.As<CommonAspect>();
             if (part == null)
                 return;

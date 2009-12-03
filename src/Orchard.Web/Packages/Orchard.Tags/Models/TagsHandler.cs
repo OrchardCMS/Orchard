@@ -30,20 +30,20 @@ namespace Orchard.Tags.Models {
             Filters.Add(new ActivatingFilter<HasTags>("sandboxpage"));
             Filters.Add(new ActivatingFilter<HasTags>("blogpost"));
 
-            OnGetDisplays<HasTags>((context, hasTags) => {
+            OnGetDisplayViewModel<HasTags>((context, hasTags) => {
                 context.AddDisplay(new TemplateViewModel(hasTags) { ZoneName="metatop", Position = "2",  TemplateName = "HasTagsList" });
                 context.AddDisplay(new TemplateViewModel(hasTags) { ZoneName = "metabottom", Position = "5" });
             });
         }
 
-        protected override void GetEditors(GetEditorsContext context) {
+        protected override void GetEditorViewModel(GetEditorViewModelContext context) {
             if (context.ContentItem.Has<HasTags>() == false) {
                 return;
             }
             context.AddEditor(new TemplateViewModel(context.ContentItem.Get<HasTags>()));
         }
 
-        protected override void UpdateEditors(UpdateContentContext context) {
+        protected override void UpdateEditorViewModel(UpdateEditorViewModelContext context) {
             if (context.ContentItem.Has<HasTags>() == false) {
                 return;
             }

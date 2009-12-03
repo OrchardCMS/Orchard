@@ -2,7 +2,7 @@
 <%@ Import Namespace="Orchard.Mvc.Html"%>
 <%@ Import Namespace="Orchard.Tags.Models"%>
 <h3>Tags</h3>
-    <div class="yui-g">
+<% Html.BeginForm("Update", "Home", new { area = "Orchard.Tags" }); %><%= Html.ValidationSummary() %>    <div class="yui-g">
         <h2 class="separator">Edit Tags</h2>       
 			     <% 
 			     string tags = ""; 

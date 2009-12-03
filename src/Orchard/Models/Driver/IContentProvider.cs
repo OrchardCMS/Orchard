@@ -12,8 +12,8 @@ namespace Orchard.Models.Driver {
         void Loaded(LoadContentContext context);
 
         void GetItemMetadata(GetItemMetadataContext context);
-        void GetDisplays(GetDisplaysContext context);
-        void GetEditors(GetEditorsContext context);
-        void UpdateEditors(UpdateContentContext context);
+        void GetDisplayViewModel(GetDisplayViewModelContext context);
+        void GetEditorViewModel(GetEditorViewModelContext context);
+        void UpdateEditorViewModel(UpdateEditorViewModelContext context);
     }
 }

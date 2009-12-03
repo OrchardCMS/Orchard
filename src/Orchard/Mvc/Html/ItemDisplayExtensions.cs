@@ -13,8 +13,13 @@ namespace Orchard.Mvc.Html {
             var metadata = ModelMetadata.FromLambdaExpression(expression, html.ViewData);
             var model = (TItemViewModel)metadata.Model;
 
+            if (model.Adaptor != null) {
+                return model.Adaptor(html, model).DisplayForModel(model.TemplateName, model.Prefix ?? "");
+            }
+            
             return html.DisplayFor(expression, model.TemplateName, model.Prefix ?? "");
         }
+
 
         public static MvcHtmlString DisplayZone<TModel>(this HtmlHelper<TModel> html, string zoneName) where TModel : ItemDisplayViewModel {
             var templates = html.ViewData.Model.Displays.Where(x => x.ZoneName == zoneName && x.WasUsed == false);

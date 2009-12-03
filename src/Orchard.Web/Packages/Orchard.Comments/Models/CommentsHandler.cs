@@ -16,21 +16,21 @@ namespace Orchard.Comments.Models {
             Filters.Add(new ActivatingFilter<HasComments>("blogpost"));
         }
 
-        protected override void GetDisplays(GetDisplaysContext context) {
+        protected override void GetDisplayViewModel(GetDisplayViewModelContext context) {
             if (context.ContentItem.Has<HasComments>() == false) {
                 return;
             }
             context.AddDisplay(new TemplateViewModel(context.ContentItem.Get<HasComments>()));
         }
 
-        protected override void GetEditors(GetEditorsContext context) {
+        protected override void GetEditorViewModel(GetEditorViewModelContext context) {
             if (context.ContentItem.Has<HasComments>() == false) {
                 return;
             }
             context.AddEditor(new TemplateViewModel(context.ContentItem.Get<HasComments>()));
         }
 
-        protected override void UpdateEditors(UpdateContentContext context) {
+        protected override void UpdateEditorViewModel(UpdateEditorViewModelContext context) {
             if (context.ContentItem.Has<HasComments>() == false) {
                 return;
             }

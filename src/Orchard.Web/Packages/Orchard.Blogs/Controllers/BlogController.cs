@@ -91,7 +91,7 @@ namespace Orchard.Blogs.Controllers {
                 return new NotFoundResult();
 
             var model = new BlogEditViewModel { Blog = blog };
-            model.ItemView = _contentManager.GetEditors(model.Blog.ContentItem, "");
+            model.ItemView = _contentManager.GetEditorViewModel(model.Blog.ContentItem, "");
             return View(model);
         }
 
@@ -104,7 +104,7 @@ namespace Orchard.Blogs.Controllers {
                 return new NotFoundResult();
 
             var model = new BlogEditViewModel { Blog = blog };
-            model.ItemView = _contentManager.UpdateEditors(model.Blog.ContentItem, "",this);
+            model.ItemView = _contentManager.UpdateEditorViewModel(model.Blog.ContentItem, "",this);
 
             IValueProvider values = input.ToValueProvider();
             if (!TryUpdateModel(model, values))

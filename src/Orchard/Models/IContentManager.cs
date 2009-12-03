@@ -15,8 +15,9 @@ namespace Orchard.Models {
         IContentQuery<ContentItem> Query();
 
         ContentItemMetadata GetItemMetadata(IContent contentItem);
-        ItemDisplayViewModel<TContentPart> GetDisplays<TContentPart>(TContentPart contentItem, string groupName, string displayType) where TContentPart : IContent;
-        ItemEditorViewModel<TContentPart> GetEditors<TContentPart>(TContentPart contentItem, string groupName) where TContentPart : IContent;
-        ItemEditorViewModel<TContentPart> UpdateEditors<TContentPart>(TContentPart contentItem, string groupName, IUpdateModel updater) where TContentPart : IContent;
+
+        ItemDisplayViewModel<TContent> GetDisplayViewModel<TContent>(TContent content, string groupName, string displayType) where TContent : IContent;
+        ItemEditorViewModel<TContent> GetEditorViewModel<TContent>(TContent content, string groupName) where TContent : IContent;
+        ItemEditorViewModel<TContent> UpdateEditorViewModel<TContent>(TContent content, string groupName, IUpdateModel updater) where TContent : IContent;
     }
 }

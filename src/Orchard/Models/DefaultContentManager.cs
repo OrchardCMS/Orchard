@@ -136,34 +136,34 @@ namespace Orchard.Models {
             return context.Metadata;
         }
 
-        public ItemDisplayViewModel<TContentPart> GetDisplays<TContentPart>(TContentPart content, string groupName, string displayType) where TContentPart : IContent {
+        public ItemDisplayViewModel<TContentPart> GetDisplayViewModel<TContentPart>(TContentPart content, string groupName, string displayType) where TContentPart : IContent {
             var itemView = new ItemDisplayViewModel<TContentPart> {Item = content, Displays = Enumerable.Empty<TemplateViewModel>()};
-            var context = new GetDisplaysContext(itemView, groupName, displayType);
+            var context = new GetDisplayViewModelContext(itemView, groupName, displayType);
             foreach (var driver in Drivers) {
-                driver.GetDisplays(context);
+                driver.GetDisplayViewModel(context);
             }
-            context.ItemView.Displays = OrderTemplates(context.ItemView.Displays);
+            context.ViewModel.Displays = OrderTemplates(context.ViewModel.Displays);
             return itemView;
         }
 
-        public ItemEditorViewModel<TContentPart> GetEditors<TContentPart>(TContentPart content, string groupName) where TContentPart : IContent {
+        public ItemEditorViewModel<TContentPart> GetEditorViewModel<TContentPart>(TContentPart content, string groupName) where TContentPart : IContent {
             var itemView = new ItemEditorViewModel<TContentPart> { Item = content, Editors = Enumerable.Empty<TemplateViewModel>() };
-            var context = new GetEditorsContext(itemView, groupName);
+            var context = new GetEditorViewModelContext(itemView, groupName);
             foreach (var driver in Drivers) {
-                driver.GetEditors(context);
+                driver.GetEditorViewModel(context);
             }
-            context.ItemView.Editors = OrderTemplates(context.ItemView.Editors);
+            context.ViewModel.Editors = OrderTemplates(context.ViewModel.Editors);
             return itemView;
         }
 
-        public ItemEditorViewModel<TContentPart> UpdateEditors<TContentPart>(TContentPart content, string groupName, IUpdateModel updater) where TContentPart : IContent {
+        public ItemEditorViewModel<TContentPart> UpdateEditorViewModel<TContentPart>(TContentPart content, string groupName, IUpdateModel updater) where TContentPart : IContent {
             var itemView = new ItemEditorViewModel<TContentPart> { Item = content, Editors = Enumerable.Empty<TemplateViewModel>() };
 
-            var context = new UpdateContentContext(itemView, groupName, updater);
+            var context = new UpdateEditorViewModelContext(itemView, groupName, updater);
             foreach (var driver in Drivers) {
-                driver.UpdateEditors(context);
+                driver.UpdateEditorViewModel(context);
             }
-            context.ItemView.Editors = OrderTemplates(context.ItemView.Editors);
+            context.ViewModel.Editors = OrderTemplates(context.ViewModel.Editors);
             return itemView;
         }
 

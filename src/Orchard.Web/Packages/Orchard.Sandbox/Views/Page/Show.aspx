@@ -20,7 +20,6 @@
         </div>
         <div id="main">
             <% Html.RenderPartial("Messages", Model.Messages); %>
-            
             <%= Html.DisplayForItem(m => m.Page) %>
         </div>
         <div id="footer">

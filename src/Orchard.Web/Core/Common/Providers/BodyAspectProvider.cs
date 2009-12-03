@@ -14,17 +14,17 @@ namespace Orchard.Core.Common.Providers {
         public BodyAspectProvider(IRepository<BodyRecord> bodyRepository) {
             Filters.Add(new StorageFilter<BodyRecord>(bodyRepository) { AutomaticallyCreateMissingRecord = true });
 
-            OnGetDisplays<BodyAspect>((context, body) => {
+            OnGetDisplayViewModel<BodyAspect>((context, body) => {
                 var model = new BodyDisplayViewModel { BodyAspect = body };
                 context.AddDisplay(new TemplateViewModel(model, TemplatePrefix) { TemplateName = TemplateName, ZoneName = "body" });
             });
 
-            OnGetEditors<BodyAspect>((context, body) => {
+            OnGetEditorViewModel<BodyAspect>((context, body) => {
                 var model = new BodyEditorViewModel { BodyAspect = body, TextEditorTemplate = DefaultTextEditorTemplate };
                 context.AddEditor(new TemplateViewModel(model, TemplatePrefix) { TemplateName = TemplateName, ZoneName = "body" });
             });
 
-            OnUpdateEditors<BodyAspect>((context, body) => {
+            OnUpdateEditorViewModel<BodyAspect>((context, body) => {
                 var model = new BodyEditorViewModel { BodyAspect = body, TextEditorTemplate = DefaultTextEditorTemplate };
                 context.Updater.TryUpdateModel(model, TemplatePrefix, null, null);
                 context.AddEditor(new TemplateViewModel(model, TemplatePrefix) { TemplateName = TemplateName, ZoneName = "body" });
