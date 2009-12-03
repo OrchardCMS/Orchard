@@ -20,7 +20,7 @@ namespace Orchard.Mvc.Html {
 
             return html.ActionLink(
                 linkText ?? metadata.DisplayText,
-                Convert.ToString(metadata.DisplayRouteValues["action"]), 
+                Convert.ToString(metadata.DisplayRouteValues["action"]),
                 metadata.DisplayRouteValues);
         }
 

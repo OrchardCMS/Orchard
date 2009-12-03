@@ -75,8 +75,8 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Package.txt" />
-    <Content Include="Views\Models\DisplayTemplates\SandboxPageList.ascx" />
-    <Content Include="Views\Models\DisplayTemplates\SandboxPageDetail.ascx" />
+    <Content Include="Views\Models\DisplayTemplates\SandboxPageSummary.ascx" />
+    <Content Include="Views\Models\DisplayTemplates\SandboxPage.ascx" />
     <Content Include="Views\Models\EditorTemplates\SandboxPage.ascx" />
     <Content Include="Views\Models\EditorTemplates\SandboxSettingsRecord.ascx" />
     <Content Include="Views\Page\Edit.aspx" />

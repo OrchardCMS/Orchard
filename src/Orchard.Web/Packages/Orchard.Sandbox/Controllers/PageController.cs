@@ -32,6 +32,7 @@ namespace Orchard.Sandbox.Controllers {
                 Pages = _contentManager.Query<SandboxPage, SandboxPageRecord>()
                     .OrderBy(x => x.Name)
                     .List()
+                    .Select(x => _contentManager.GetDisplays(x, null, "SummaryList"))
             };
             return View(model);
         }
@@ -39,8 +40,7 @@ namespace Orchard.Sandbox.Controllers {
         public ActionResult Show(int id) {
             var page = _contentManager.Get<SandboxPage>(id);
             var model = new PageShowViewModel {
-                Page = page,
-                ItemView = _contentManager.GetDisplays(page, null, "Detail")
+                Page = _contentManager.GetDisplays(page, null, "Detail")
             };
             return View(model);
         }
@@ -78,8 +78,10 @@ namespace Orchard.Sandbox.Controllers {
                 return RedirectToAction("show", new { id });
             }
 
-            var model = new PageEditViewModel { Page = _contentManager.Get<SandboxPage>(id) };
-            model.ItemView = _contentManager.GetEditors(model.Page, null);
+            var page = _contentManager.Get<SandboxPage>(id);
+            var model = new PageEditViewModel {
+                Page = _contentManager.GetEditors(page, null)
+            };
             return View(model);
         }
 
@@ -91,9 +93,11 @@ namespace Orchard.Sandbox.Controllers {
                 return RedirectToAction("show", new { id });
             }
 
-            var model = new PageEditViewModel { Page = _contentManager.Get<SandboxPage>(id) };
-            model.ItemView = _contentManager.UpdateEditors(model.Page, null, this);
-            if (!TryUpdateModel(model, input.ToValueProvider()))
+            var page = _contentManager.Get<SandboxPage>(id);
+            var model = new PageEditViewModel {
+                Page = _contentManager.UpdateEditors(page, null, this)
+            };
+            if (!ModelState.IsValid)
                 return View(model);
 
             return RedirectToAction("show", new { id });

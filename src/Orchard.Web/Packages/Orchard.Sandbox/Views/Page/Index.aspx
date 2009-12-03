@@ -22,12 +22,12 @@
             <% Html.RenderPartial("Messages", Model.Messages); %>
             <h3>
                 Sandbox Pages</h3>
-            <ul>
-                <li>
-                    <%=Html.ActionLink("Create new page", "create") %></li>
-                <%foreach (var item in Model.Pages.OrderBy(x => x.Record.Name)) {%>
-                <li>
-                    <%=Html.ActionLink(item.Record.Name??"(no name)", "show", new { item.ContentItem.Id }, new{})%></li>
+            
+                    <p><%=Html.ActionLink("Create new page", "create") %></p>
+                    
+                    
+                <%foreach (var item in Model.Pages) {%>                
+                <%=Html.DisplayForItem(x=>item) %>
                 <%}%>
             </ul>
         </div>

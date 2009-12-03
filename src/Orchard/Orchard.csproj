@@ -134,6 +134,7 @@
     <Compile Include="Models\DefaultContentQuery.cs" />
     <Compile Include="Models\Driver\ActivatedContentContext.cs" />
     <Compile Include="Models\Driver\ActivatingFilter.cs" />
+    <Compile Include="Models\Driver\ContentItemTemplates.cs" />
     <Compile Include="Models\Driver\GetDisplaysContext.cs" />
     <Compile Include="Models\Driver\GetItemMetadataContext.cs" />
     <Compile Include="Models\Driver\IContentActivatingFilter.cs" />
@@ -178,6 +179,8 @@
     <Compile Include="Models\ViewModels\ItemDisplayViewModel.cs" />
     <Compile Include="Models\ViewModels\ItemEditorViewModel.cs" />
     <Compile Include="Mvc\Html\ContentItemExtensions.cs" />
+    <Compile Include="Mvc\Html\ItemDisplayExtensions.cs" />
+    <Compile Include="Mvc\Html\ItemEditorExtensions.cs" />
     <Compile Include="Mvc\MvcModule.cs" />
     <Compile Include="Mvc\Html\HtmlHelperExtensions.cs" />
     <Compile Include="Mvc\Filters\FilterProvider.cs" />
