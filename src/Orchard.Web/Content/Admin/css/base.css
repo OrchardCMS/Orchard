@@ -155,6 +155,7 @@ h6, p, label, input, select, .button, .cancel /* todo: (heskew) need to do somet
 .message, th, td { font-size:1.5em; line-height:1.5em; } /* 15px */
 p .button,
 td *, .mceLayout td { font-size:inherit; }
+.meta { font-size:1.2em; }
 
 h3 span { font-size:.57em; } /* 12px */
 
@@ -256,6 +257,10 @@ a:hover, a:active, a:focus {
 }
 #main p {
     margin:0 0 1.5em;
+}
+#main .meta {
+    font-style:italic;
+    margin:0 0 .75em;
 }
 #main form {
     margin:.345em 0 1.5em;
@@ -536,25 +541,25 @@ todo: (heskew) pull out into relevant modules where appropriate
 
 /* Blogs
 ----------------------------------------------------------*/
-ul.blogs {
-    margin:1.4em 0;
+ul.blogs, ul.posts {
+    margin:0 0 1.4em;
 }
-ul.blogs li {
+ul.blogs li, ul.posts li {
     margin:0;
     overflow:hidden;
     padding:0 0 .4em;
 }
-#main ul.blogs li h3 {
+#main ul.blogs li h3, #main ul.posts li h3 {
     margin:0 0 .5em;
 }
 /* todo: (heskew) clean up since this is a bit of a hack specific to a single page */
-#main ul.blogs li .actions {
+#main ul.blogs li .actions, #main ul.posts li .actions {
     height:auto;
     margin:-1.5em 0 0;
     padding:0 0 .1em;
     visibility:hidden;
 }
-#main ul.blogs li:hover .actions {
+#main ul.blogs li:hover .actions, #main ul.posts li:hover .actions {
     visibility:visible;
 }
 

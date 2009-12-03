@@ -2,6 +2,7 @@
 <%@ Import Namespace="Orchard.Blogs.Extensions"%>
 <%@ Import Namespace="Orchard.Blogs.Models"%>
 <h3><a href="<%=Url.BlogForAdmin(Model.Slug) %>"><%=Html.Encode(Model.Name) %></a></h3>
+<div class="meta"><%=Model.PostCount %> posts</div>
 <%--<p>[list of authors] [modify blog access]</p>--%>
 <p><%=Model.Description %></p>
 <p class="actions">
