@@ -259,7 +259,6 @@ a:hover, a:active, a:focus {
     margin:0 0 1.5em;
 }
 #main .meta {
-    font-style:italic;
     margin:0 0 .4em;
 }
 #main form {
@@ -267,9 +266,6 @@ a:hover, a:active, a:focus {
 }
 #main h2 {
     border-bottom:1px dashed #e4e7dc;
-}
-#main h3 {
-    border-bottom:2px solid #e4e7dc;
 }
 
 /* Confirmations, Messages and the like
@@ -410,7 +406,30 @@ button:focus, .button:focus {
     padding-top:.3em;
 }
 
-
+/* Icon buttons
+----------------------------------------------------------*/
+a.ibutton {
+    background:url(images/icons.png) 20px 20px;
+    border:none;
+    display:inline;
+    float:left;
+    height:16px;
+    overflow:hidden;
+    padding:0 0 0 16px;
+    width:0;
+}
+a.ibutton.add.page:hover,
+a.ibutton.add.page:focus { background-position:-40px 0; }
+a.ibutton.add.page { background-position:-40px -20px; }
+a.ibutton.edit:hover,
+a.ibutton.edit:focus { background-position:-60px 0; }
+a.ibutton.edit { background-position:-60px -20px; }
+a.ibutton.remove:hover,
+a.ibutton.remove:focus { background-position:0 0; }
+a.ibutton.remove { background-position:0 -20px; }
+a.ibutton.view:hover,
+a.ibutton.view:focus { background-position:-20px 0; }
+a.ibutton.view { background-position:-20px -20px; }
 
 
 /* todo: (heskew) needs attention */
@@ -480,7 +499,7 @@ caption {
 	text-indent:0;
 }
 col {
-	border-spacing:;
+	border-spacing:0;
 	display:table-column;
 }
 colgroup 
@@ -542,26 +561,46 @@ todo: (heskew) pull out into relevant modules where appropriate
 /* Blogs
 ----------------------------------------------------------*/
 ul.blogs, ul.posts {
-    margin:0 0 1.4em;
+    background:#FFF;
+    border:1px solid #B0B083;
+	-moz-border-radius:4px;
+	-webkit-border-top-radius:4px;
+	border-radius:4px;
+    margin:1.4em 0;
+    padding:2px;
 }
 ul.blogs li, ul.posts li {
+    background:#FFF;
+    border-bottom:1px solid #EAE9D9;
     margin:0;
     overflow:hidden;
-    padding:0 0 1.4em;
+    padding:.7em 1.4em;
+}
+ul.blogs li.last, ul.posts li.last {
+    border-bottom:0;
 }
 #main ul.blogs li h3, #main ul.posts li h3 {
-    margin:0 0 .5em;
+    margin:0 0 .1em;
 }
 /* todo: (heskew) clean up since this is a bit of a hack specific to a single page */
 #main ul.blogs li .actions, #main ul.posts li .actions {
+    color:#EAE9D9;
     height:auto;
     margin:-1.3em 0 0;
     padding:0 0 .1em;
-    visibility:hidden;
 }
-#main ul.blogs li:hover .actions, #main ul.posts li:hover .actions {
-    visibility:visible;
+#main ul.blogs li .actions .ibutton {
+    margin-right:8px;
 }
+#main ul.blogs li .actions .destruct .ibutton {
+    margin-left:8px;
+    margin-right:0;
+}
+#main ul.blogs li:hover a.ibutton.add.page { background-position:-40px 0; }
+#main ul.blogs li:hover a.ibutton.edit { background-position:-60px 0; }
+#main ul.blogs li:hover a.ibutton.remove { background-position:0 0; }
+#main ul.blogs li:hover a.ibutton.view { background-position:-20px 0; }
+
 
 
 /* todo: (heskew) needs attention */

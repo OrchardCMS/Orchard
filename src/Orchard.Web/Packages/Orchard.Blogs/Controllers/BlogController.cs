@@ -112,11 +112,10 @@ namespace Orchard.Blogs.Controllers {
 
             _notifier.Information(T("Blog information updated"));
 
-            //TODO: (erikpo) This should redirect to the blog homepage in the admin once that page is created
             return Redirect(Url.BlogsForAdmin());
         }
 
-        [HttpPost]
+        //[HttpPost] <- todo: (heskew) make all add/edit/remove POST only and verify the AntiForgeryToken
         public ActionResult Delete(string blogSlug) {
             //TODO: (erikpo) Move looking up the current blog up into a modelbinder
             Blog blog = _blogService.Get(blogSlug);
@@ -128,7 +127,7 @@ namespace Orchard.Blogs.Controllers {
 
             _notifier.Information(T("Blog was successfully deleted"));
 
-            return Redirect(Url.Blogs());
+            return Redirect(Url.BlogsForAdmin());
         }
 
         bool IUpdateModel.TryUpdateModel<TModel>(TModel model, string prefix, string[] includeProperties, string[] excludeProperties) {

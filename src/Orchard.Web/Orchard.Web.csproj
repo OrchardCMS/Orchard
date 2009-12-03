@@ -165,6 +165,7 @@
   <ItemGroup>
     <Content Include="Config\Diagnostics.config" />
     <Content Include="Content\Admin\css\base.css" />
+    <Content Include="Content\Admin\css\images\icons.png" />
     <Content Include="Content\Admin\css\Site.css" />
     <Content Include="Content\Images\headerBackground.gif" />
     <Content Include="Content\Images\header_background.gif" />
