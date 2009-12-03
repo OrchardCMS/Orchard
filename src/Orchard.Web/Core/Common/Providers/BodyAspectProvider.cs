@@ -16,18 +16,18 @@ namespace Orchard.Core.Common.Providers {
 
             OnGetDisplays<BodyAspect>((context, body) => {
                 var model = new BodyDisplayViewModel { BodyAspect = body };
-                context.AddDisplay(new TemplateViewModel(model, TemplatePrefix) { TemplateName = TemplateName, Position = "3" });
+                context.AddDisplay(new TemplateViewModel(model, TemplatePrefix) { TemplateName = TemplateName, ZoneName = "body" });
             });
 
             OnGetEditors<BodyAspect>((context, body) => {
                 var model = new BodyEditorViewModel { BodyAspect = body, TextEditorTemplate = DefaultTextEditorTemplate };
-                context.AddEditor(new TemplateViewModel(model, TemplatePrefix) { TemplateName = TemplateName, Position = "3" });
+                context.AddEditor(new TemplateViewModel(model, TemplatePrefix) { TemplateName = TemplateName, ZoneName = "body" });
             });
 
             OnUpdateEditors<BodyAspect>((context, body) => {
                 var model = new BodyEditorViewModel { BodyAspect = body, TextEditorTemplate = DefaultTextEditorTemplate };
                 context.Updater.TryUpdateModel(model, TemplatePrefix, null, null);
-                context.AddEditor(new TemplateViewModel(model, TemplatePrefix) { TemplateName = TemplateName, Position = "3" });
+                context.AddEditor(new TemplateViewModel(model, TemplatePrefix) { TemplateName = TemplateName, ZoneName = "body" });
             });
         }
     }

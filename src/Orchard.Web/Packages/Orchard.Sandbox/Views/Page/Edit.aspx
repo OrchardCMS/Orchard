@@ -20,8 +20,7 @@
         </div>
         <div id="main">
             <% Html.RenderPartial("Messages", Model.Messages); %>
-            <h3>
-                Edit Page</h3>
+            <h3>Edit Page</h3>
             <%using (Html.BeginForm()) { %>
             <%=Html.EditorForItem(m=>m.Page) %>
             <input type="submit" name="submit" value="Save" />

@@ -15,5 +15,6 @@
 
         public string ZoneName { get; set; }
         public string Position { get; set; }
+        public bool WasUsed { get; set; }
     }
 }
