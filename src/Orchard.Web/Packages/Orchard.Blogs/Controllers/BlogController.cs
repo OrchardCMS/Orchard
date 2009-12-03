@@ -51,6 +51,19 @@ namespace Orchard.Blogs.Controllers {
             return View(new BlogViewModel { Blog = blog, Posts = posts });
         }
 
+        //TODO: (erikpo) Should move the slug parameter and get call and null check up into a model binder
+        public ActionResult ItemForAdmin(string blogSlug)
+        {
+            Blog blog = _blogService.Get(blogSlug);
+
+            if (blog == null)
+                return new NotFoundResult();
+
+            IEnumerable<BlogPost> posts = _blogPostService.Get(blog);
+
+            return View(new BlogForAdminViewModel { Blog = blog, Posts = posts });
+        }
+
         public ActionResult Create() {
             return View(new CreateBlogViewModel());
         }
