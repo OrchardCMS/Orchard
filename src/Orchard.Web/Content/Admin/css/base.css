@@ -409,27 +409,32 @@ button:focus, .button:focus {
 /* Icon buttons
 ----------------------------------------------------------*/
 a.ibutton {
-    background:url(images/icons.png) 20px 20px;
+    background:url(images/icons.png) 0 -20px;
     border:none;
     display:inline;
     float:left;
-    height:16px;
+    height:17px;
     overflow:hidden;
-    padding:0 0 0 16px;
+    padding:0 0 0 17px;
     width:0;
 }
-a.ibutton.add.page:hover,
-a.ibutton.add.page:focus { background-position:-40px 0; }
-a.ibutton.add.page { background-position:-40px -20px; }
-a.ibutton.edit:hover,
-a.ibutton.edit:focus { background-position:-60px 0; }
-a.ibutton.edit { background-position:-60px -20px; }
+a.ibutton:hover,
+a.ibutton:focus { background-position:0 0; }
 a.ibutton.remove:hover,
-a.ibutton.remove:focus { background-position:0 0; }
-a.ibutton.remove { background-position:0 -20px; }
+a.ibutton.remove:focus { background-position:-20px 0; }
+a.ibutton.remove { background-position:-20px -20px; }
 a.ibutton.view:hover,
-a.ibutton.view:focus { background-position:-20px 0; }
-a.ibutton.view { background-position:-20px -20px; }
+a.ibutton.view:focus { background-position:-40px 0; }
+a.ibutton.view { background-position:-40px -20px; }
+a.ibutton.add.page:hover,
+a.ibutton.add.page:focus { background-position:-60px 0; }
+a.ibutton.add.page { background-position:-60px -20px; }
+a.ibutton.edit:hover,
+a.ibutton.edit:focus { background-position:-80px 0; }
+a.ibutton.edit { background-position:-80px -20px; }
+a.ibutton.publish:hover,
+a.ibutton.publish:focus { background-position:-100px 0; }
+a.ibutton.publish { background-position:-100px -20px; }
 
 
 /* todo: (heskew) needs attention */
@@ -461,8 +466,48 @@ ol.actions label {
 	margin:10px 2px 0 0;
 }
 
-
-
+/* Content item lists
+----------------------------------------------------------*/
+ul.contentItems {
+    background:#FFF;
+    border:1px solid #B0B083;
+    margin:1.4em 0;
+    padding:2px;
+}
+ul.contentItems li {
+    background:#FFF;
+    border-bottom:1px solid #EAE9D9;
+    margin:0;
+    overflow:hidden;
+    padding:.7em 1.4em;
+}
+ul.contentItems li.last {
+    border-bottom:0;
+}
+#main ul.contentItems li h3 {
+    margin:0 0 .1em;
+}
+/* todo: (heskew) clean up since this is a bit of a hack specific to a single page */
+#main ul.contentItems li .actions {
+    color:#EAE9D9;
+    height:auto;
+    margin:-1.3em 0 0;
+    padding:0 0 .1em;
+}
+#main ul.contentItems li .actions .ibutton {
+    margin-right:6px;
+}
+#main ul.contentItems li .actions .destruct .ibutton {
+    margin-left:8px;
+    margin-right:0;
+}
+#main ul.contentItems li:hover { background:#fafbed; }
+#main ul.contentItems li:hover a.ibutton { background-position:0 0; }
+#main ul.contentItems li:hover a.ibutton.remove { background-position:-20px 0; }
+#main ul.contentItems li:hover a.ibutton.view { background-position:-40px 0; }
+#main ul.contentItems li:hover a.ibutton.add.page { background-position:-60px 0; }
+#main ul.contentItems li:hover a.ibutton.edit { background-position:-80px 0; }
+#main ul.contentItems li:hover a.ibutton.publish { background-position:-100px 0; }
 
 /* Tables
 ----------------------------------------------------------*/
@@ -558,50 +603,6 @@ todo: (heskew) pull out into relevant modules where appropriate
 	width:70%;
 }
 
-/* Blogs
-----------------------------------------------------------*/
-ul.blogs, ul.posts {
-    background:#FFF;
-    border:1px solid #B0B083;
-	-moz-border-radius:4px;
-	-webkit-border-top-radius:4px;
-	border-radius:4px;
-    margin:1.4em 0;
-    padding:2px;
-}
-ul.blogs li, ul.posts li {
-    background:#FFF;
-    border-bottom:1px solid #EAE9D9;
-    margin:0;
-    overflow:hidden;
-    padding:.7em 1.4em;
-}
-ul.blogs li.last, ul.posts li.last {
-    border-bottom:0;
-}
-#main ul.blogs li h3, #main ul.posts li h3 {
-    margin:0 0 .1em;
-}
-/* todo: (heskew) clean up since this is a bit of a hack specific to a single page */
-#main ul.blogs li .actions, #main ul.posts li .actions {
-    color:#EAE9D9;
-    height:auto;
-    margin:-1.3em 0 0;
-    padding:0 0 .1em;
-}
-#main ul.blogs li .actions .ibutton {
-    margin-right:8px;
-}
-#main ul.blogs li .actions .destruct .ibutton {
-    margin-left:8px;
-    margin-right:0;
-}
-#main ul.blogs li:hover a.ibutton.add.page { background-position:-40px 0; }
-#main ul.blogs li:hover a.ibutton.edit { background-position:-60px 0; }
-#main ul.blogs li:hover a.ibutton.remove { background-position:0 0; }
-#main ul.blogs li:hover a.ibutton.view { background-position:-20px 0; }
-
-
 
 /* todo: (heskew) needs attention */
 /* Extensions;
@@ -620,10 +621,10 @@ ul.blogs li.last, ul.posts li.last {
 .separator {border-bottom:1px dashed #E4E7DC; margin-bottom:8px; padding-bottom:2px;}
 */
 
-/* todo: (heskew) remove roundCorners class */
+/* todo: (heskew) remove roundCorners class and anything else that shouldn't be used (inputText*, linkButton, .<something>.message -> .message */
 #content, #navigation li,
-table, textarea, .button, input.text, input.text-box, .inputTextLarge,
-.inputTextPermalink, .linkButton, .confirmation.message,
+table, textarea, .button, input.text, ul.contentItems,
+input.text-box, .inputTextLarge, .inputTextPermalink, .linkButton, .confirmation.message,
 .warning.message, .critical.message, .roundCorners {
 	-moz-border-radius:4px;
 	-webkit-border-top-radius:4px;

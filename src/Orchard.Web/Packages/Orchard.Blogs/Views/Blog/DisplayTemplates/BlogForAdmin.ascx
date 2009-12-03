@@ -10,7 +10,7 @@
     <span class="construct">
         <a href="<%=Url.BlogEdit(Model.Slug) %>" class="ibutton edit" title="Edit Blog">Edit Blog</a>
         <a href="<%=Url.Blog(Model.Slug) %>" class="ibutton view" title="View Blog">View Blog</a>
-        <a href="<%=Url.BlogPostCreate(Model.Slug) %>" class="ibutton add page" title="Create a Blog Post">Create a Blog Post</a>
+        <a href="<%=Url.BlogPostCreate(Model.Slug) %>" class="ibutton add page" title="Add Post">Add Post</a>
     </span>
     <span class="destruct"><a href="<%=Url.BlogDelete(Model.Slug) %>" class="ibutton remove" title="Delete Blog">Remove Blog</a></span>
 </p>

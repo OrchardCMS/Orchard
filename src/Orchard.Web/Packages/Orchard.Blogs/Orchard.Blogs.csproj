@@ -121,7 +121,7 @@
     <Content Include="Views\Blog\DisplayTemplates\BlogsViewModel.ascx" />
     <Content Include="Views\Blog\EditorTemplates\CreateBlogViewModel.ascx" />
     <Content Include="Views\Blog\Item.aspx" />
-    <Content Include="Views\Shared\BlogPostPreviewForAdmin.ascx" />
+    <Content Include="Views\Shared\DisplayTemplates\BlogPostPreviewForAdmin.ascx" />
     <Content Include="Views\Shared\Messages.ascx" />
     <Content Include="Web.config" />
     <Content Include="Views\Web.config" />
