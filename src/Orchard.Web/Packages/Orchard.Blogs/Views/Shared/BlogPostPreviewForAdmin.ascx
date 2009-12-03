@@ -9,8 +9,11 @@
 <p class="actions">
     <%-- todo: (heskew) make into a ul --%>
     <span class="construct">
-        <a href="<%=Url.BlogPostEdit(Model.Blog.Slug, Model.As<RoutableAspect>().Slug) %>">edit</a>
-        | <a href="<%=Url.BlogPost(Model.Blog.Slug, Model.As<RoutableAspect>().Slug) %>">view</a>
+        <a href="<%=Url.BlogPostEdit(Model.Blog.Slug, Model.As<RoutableAspect>().Slug) %>">Edit</a>
+        | <a href="<%=Url.BlogPost(Model.Blog.Slug, Model.As<RoutableAspect>().Slug) %>">View</a><%
+        if (Model.Published == null) { // todo: (heskew) be smart about this and maybe have other contextual actions %>
+        | <a href="<%=Url.BlogPost(Model.Blog.Slug, Model.As<RoutableAspect>().Slug) %>">Publish</a>
+        <% } %>
     </span>
-    <span class="destruct"><a href="#">delete</a></span>
+    <span class="destruct"><a href="#">Delete Blog Post</a></span>
 </p>

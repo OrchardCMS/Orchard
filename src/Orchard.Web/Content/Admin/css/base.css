@@ -260,7 +260,7 @@ a:hover, a:active, a:focus {
 }
 #main .meta {
     font-style:italic;
-    margin:0 0 .75em;
+    margin:0 0 .4em;
 }
 #main form {
     margin:.345em 0 1.5em;
@@ -547,7 +547,7 @@ ul.blogs, ul.posts {
 ul.blogs li, ul.posts li {
     margin:0;
     overflow:hidden;
-    padding:0 0 .4em;
+    padding:0 0 1.4em;
 }
 #main ul.blogs li h3, #main ul.posts li h3 {
     margin:0 0 .5em;
@@ -555,7 +555,7 @@ ul.blogs li, ul.posts li {
 /* todo: (heskew) clean up since this is a bit of a hack specific to a single page */
 #main ul.blogs li .actions, #main ul.posts li .actions {
     height:auto;
-    margin:-1.5em 0 0;
+    margin:-1.3em 0 0;
     padding:0 0 .1em;
     visibility:hidden;
 }

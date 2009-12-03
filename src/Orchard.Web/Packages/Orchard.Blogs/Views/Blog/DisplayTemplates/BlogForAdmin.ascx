@@ -8,10 +8,10 @@
 <p class="actions">
     <%-- todo: (heskew) make into a ul --%>
     <span class="construct">
-        <a href="<%=Url.BlogForAdmin(Model.Slug) %>">manage posts</a>
-        | <a href="<%=Url.BlogEdit(Model.Slug) %>">edit</a>
-        | <a href="<%=Url.Blog(Model.Slug) %>">view</a>
-        | <a href="<%=Url.BlogPostCreate(Model.Slug) %>">create post</a>
+        <a href="<%=Url.BlogForAdmin(Model.Slug) %>">All Posts</a>
+        | <a href="<%=Url.BlogEdit(Model.Slug) %>">Edit</a>
+        | <a href="<%=Url.Blog(Model.Slug) %>">View</a>
+        | <a href="<%=Url.BlogPostCreate(Model.Slug) %>">Create a Blog Post</a>
     </span>
-    <span class="destruct"><a href="#">delete</a></span>
+    <span class="destruct"><a href="#">Delete Blog</a></span>
 </p>
