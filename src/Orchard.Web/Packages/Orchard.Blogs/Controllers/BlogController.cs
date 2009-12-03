@@ -116,6 +116,21 @@ namespace Orchard.Blogs.Controllers {
             return Redirect(Url.BlogsForAdmin());
         }
 
+        [HttpPost]
+        public ActionResult Delete(string blogSlug) {
+            //TODO: (erikpo) Move looking up the current blog up into a modelbinder
+            Blog blog = _blogService.Get(blogSlug);
+
+            if (blog == null)
+                return new NotFoundResult();
+
+            _blogService.Delete(blog);
+
+            _notifier.Information(T("Blog was successfully deleted"));
+
+            return Redirect(Url.Blogs());
+        }
+
         bool IUpdateModel.TryUpdateModel<TModel>(TModel model, string prefix, string[] includeProperties, string[] excludeProperties) {
             return TryUpdateModel(model, prefix, includeProperties, excludeProperties);
         }

@@ -53,6 +53,22 @@ namespace Orchard.Blogs {
                                                  },
                              new RouteDescriptor {
                                                      Route = new Route(
+                                                         "Admin/Blogs/{blogSlug}/Delete",
+                                                         new RouteValueDictionary {
+                                                                                      {"area", "Orchard.Blogs"},
+                                                                                      {"controller", "Blog"},
+                                                                                      {"action", "Delete"}
+                                                                                  },
+                                                         new RouteValueDictionary {
+                                                                                      {"blogSlug", new IsBlogConstraint(_blogService)}
+                                                                                  },
+                                                         new RouteValueDictionary {
+                                                                                      {"area", "Orchard.Blogs"}
+                                                                                  },
+                                                         new MvcRouteHandler())
+                                                 },
+                             new RouteDescriptor {
+                                                     Route = new Route(
                                                          "Admin/Blogs/{blogSlug}",
                                                          new RouteValueDictionary {
                                                                                       {"area", "Orchard.Blogs"},
@@ -90,6 +106,22 @@ namespace Orchard.Blogs {
                                                                                       {"area", "Orchard.Blogs"},
                                                                                       {"controller", "BlogPost"},
                                                                                       {"action", "Edit"}
+                                                                                  },
+                                                         new RouteValueDictionary {
+                                                                                      {"blogSlug", new IsBlogConstraint(_blogService)}
+                                                                                  },
+                                                         new RouteValueDictionary {
+                                                                                      {"area", "Orchard.Blogs"}
+                                                                                  },
+                                                         new MvcRouteHandler())
+                                                 },
+                             new RouteDescriptor {
+                                                     Route = new Route(
+                                                         "Admin/Blogs/{blogSlug}/Posts/{postSlug}/Delete",
+                                                         new RouteValueDictionary {
+                                                                                      {"area", "Orchard.Blogs"},
+                                                                                      {"controller", "BlogPost"},
+                                                                                      {"action", "Delete"}
                                                                                   },
                                                          new RouteValueDictionary {
                                                                                       {"blogSlug", new IsBlogConstraint(_blogService)}

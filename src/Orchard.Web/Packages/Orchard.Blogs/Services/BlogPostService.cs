@@ -9,10 +9,12 @@ using Orchard.Models;
 namespace Orchard.Blogs.Services {
     public class BlogPostService : IBlogPostService {
         private readonly IContentManager _contentManager;
+        private readonly IRepository<BlogPostRecord> _blogPostRepository;
         private readonly IRepository<RoutableRecord> _routableRepository;
 
-        public BlogPostService(IContentManager contentManager, IRepository<RoutableRecord> routableRepository) {
+        public BlogPostService(IContentManager contentManager, IRepository<BlogPostRecord> blogPostRepository, IRepository<RoutableRecord> routableRepository) {
             _contentManager = contentManager;
+            _blogPostRepository = blogPostRepository;
             _routableRepository = routableRepository;
         }
 
@@ -47,6 +49,10 @@ namespace Orchard.Blogs.Services {
                 bp.As<RoutableAspect>().Record.Slug = parameters.Slug;
                 bp.Record.Blog.PostCount++;
             });
+        }
+
+        public void Delete(BlogPost blogPost) {
+            _blogPostRepository.Delete(blogPost.Record);
         }
     }
 }

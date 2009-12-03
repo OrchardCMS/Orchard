@@ -26,6 +26,10 @@ namespace Orchard.Blogs.Extensions {
             return urlHelper.Action("Edit", "Blog", new {blogSlug, area = "Orchard.Blogs"});
         }
 
+        public static string BlogDelete(this UrlHelper urlHelper, string blogSlug) {
+            return urlHelper.Action("Delete", "Blog", new {blogSlug, area = "Orchard.Blogs"});
+        }
+
         public static string BlogPost(this UrlHelper urlHelper, string blogSlug, string postSlug) {
             return urlHelper.Action("Item", "BlogPost", new {blogSlug, postSlug, area = "Orchard.Blogs"});
         }
@@ -36,6 +40,10 @@ namespace Orchard.Blogs.Extensions {
 
         public static string BlogPostEdit(this UrlHelper urlHelper, string blogSlug, string postSlug) {
             return urlHelper.Action("Edit", "BlogPost", new {blogSlug, postSlug, area = "Orchard.Blogs"});
+        }
+
+        public static string BlogPostDelete(this UrlHelper urlHelper, string blogSlug, string postSlug) {
+            return urlHelper.Action("Delete", "BlogPost", new {blogSlug, postSlug, area = "Orchard.Blogs"});
         }
     }
 }

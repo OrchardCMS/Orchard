@@ -6,5 +6,6 @@ namespace Orchard.Blogs.Services {
         Blog Get(string slug);
         IEnumerable<Blog> Get();
         Blog Create(CreateBlogParams parameters);
+        void Delete(Blog blog);
     }
 }
