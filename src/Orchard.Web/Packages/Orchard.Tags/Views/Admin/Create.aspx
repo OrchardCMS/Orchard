@@ -3,6 +3,7 @@
 <%@ Import Namespace="Orchard.Mvc.Html" %>
 <% Html.Include("AdminHead"); %>
 	<h2>Add a Tag</h2>
+	<%-- todo: (heskew) change all of the explicit begin/end forms to using blocks --%>
     <% Html.BeginForm(); %>
         <%= Html.ValidationSummary() %>
         <fieldset>

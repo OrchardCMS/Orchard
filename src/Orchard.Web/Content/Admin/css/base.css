@@ -388,6 +388,7 @@ button:focus, .button:focus {
 #main .manage a.button {
     float:right;
     height:inherit;
+    margin-left:.3em;
     padding-bottom:.3em;
     padding-top:.3em;
 }

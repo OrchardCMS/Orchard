@@ -4,27 +4,20 @@
 <%@ Import Namespace="Orchard.Media.ViewModels"%>
 <%@ Import Namespace="Orchard.Mvc.Html" %>
 <% Html.Include("AdminHead"); %>
-                    <div class="yui-g">
-						<h2 class="separator">Add a New Folder</h2>
-						<p class="bottomSpacer">
-						<%=Html.ActionLink("Media Folders", "Index")%> &#62; 
-						<%foreach (FolderNavigation navigation in MediaHelpers.GetFolderNavigationHierarchy(Model.MediaPath)) {%>
-						    <%=Html.ActionLink(navigation.FolderName, "Edit",
-                                      new {name = navigation.FolderName, mediaPath = navigation.FolderPath})%> &#62;
-						    
-						<% } %>
-						Add a new Folder</p>
-						        <%using (Html.BeginForm()) { %>
-                                <%= Html.ValidationSummary() %>
-                                <ol>
-								<li><label for="Name">Folder Name:</label>
-								<input id="Name" class="inputText inputTextLarge roundCorners" name="Name" type="text" />
-								<input id="MediaPath" name="MediaPath" type="hidden" value="<%= Model.MediaPath %>" />
-								</li>
-								<li>
-								<input type="submit" class="button buttonFocus roundCorners" value="Save" />
-								</li>
-						        </ol>
-                                <%}%>
-					</div>
+	<h2>Add a Folder</h2>
+	<p><%=Html.ActionLink("Media Folders", "Index")%> &#62; 
+			<%foreach (FolderNavigation navigation in MediaHelpers.GetFolderNavigationHierarchy(Model.MediaPath)) {%>
+			    <%=Html.ActionLink(navigation.FolderName, "Edit",
+                          new {name = navigation.FolderName, mediaPath = navigation.FolderPath})%> &#62;
+			<% } %>
+			Add a Folder</p>
+    <%using (Html.BeginForm()) { %>
+        <%= Html.ValidationSummary() %>
+        <fieldset>
+            <label for="Name">Folder Name:</label>
+			<input id="Name" class="text" name="Name" type="text" />
+			<input id="MediaPath" name="MediaPath" type="hidden" value="<%= Model.MediaPath %>" />
+		    <input type="submit" class="button" value="Save" />
+        </fieldset>
+     <% } %>
 <% Html.Include("AdminFoot"); %>
