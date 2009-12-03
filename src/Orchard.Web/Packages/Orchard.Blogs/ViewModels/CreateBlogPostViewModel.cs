@@ -1,6 +1,7 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 using Orchard.Blogs.Models;
+using Orchard.Models.ViewModels;
 using Orchard.Mvc.ViewModels;
 
 namespace Orchard.Blogs.ViewModels {
@@ -18,5 +19,7 @@ namespace Orchard.Blogs.ViewModels {
         public string Slug { get; set; }
 
         public DateTime? Published { get; set; }
+
+        public ItemEditorViewModel ItemView { get; set; }
     }
 }

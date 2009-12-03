@@ -1,9 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Orchard.Data;
 using Orchard.Models;
 using Orchard.Models.Driver;
 using Orchard.Models.ViewModels;
+using Orchard.Tags.Services;
 
 namespace Orchard.Tags.Models {
     public class HasTags : ContentPart {
@@ -19,10 +21,12 @@ namespace Orchard.Tags.Models {
     public class HasTagsProvider : ContentProvider {
         private readonly IRepository<Tag> _tagsRepository;
         private readonly IRepository<TagsContentItems> _tagsContentItemsRepository;
+        private readonly ITagService _tagService;
 
-        public HasTagsProvider(IRepository<Tag> tagsRepository, IRepository<TagsContentItems> tagsContentItemsRepository) {
+        public HasTagsProvider(IRepository<Tag> tagsRepository, IRepository<TagsContentItems> tagsContentItemsRepository, ITagService tagService) {
             _tagsRepository = tagsRepository;
             _tagsContentItemsRepository = tagsContentItemsRepository;
+            _tagService = tagService;
             Filters.Add(new ActivatingFilter<HasTags>("sandboxpage"));
             Filters.Add(new ActivatingFilter<HasTags>("blogpost"));
 
@@ -43,6 +47,12 @@ namespace Orchard.Tags.Models {
             if (context.ContentItem.Has<HasTags>() == false) {
                 return;
             }
+
+            TagsViewModel viewModel = new TagsViewModel();
+            context.Updater.TryUpdateModel(viewModel, String.Empty, null, null);
+            List<string> tagNames = ParseCommaSeparatedTagNames(viewModel.Tags);
+            _tagService.UpdateTagsForContentItem(context.ContentItem.Id, tagNames);
+
             context.AddEditor(new TemplateViewModel(context.ContentItem.Get<HasTags>()));
         }
 
@@ -58,6 +68,24 @@ namespace Orchard.Tags.Models {
                 Tag tag = _tagsRepository.Get(tagContentItem.TagId);
                 tags.CurrentTags.Add(tag);
             }
+        }
+
+        private static List<string> ParseCommaSeparatedTagNames(string tags) {
+            if (String.IsNullOrEmpty(tags)) {
+                return new List<string>();
+            }
+            IEnumerable<string> tagNames = tags.Split(',');
+            List<string> sanitizedTagNames = new List<string>();
+            foreach (var tagName in tagNames) {
+                if (!String.IsNullOrEmpty(tagName)) {
+                    sanitizedTagNames.Add(tagName);
+                }
+            }
+            return sanitizedTagNames;
+        }
+
+        public class TagsViewModel {
+            public string Tags { get; set; }
         }
     }
 }

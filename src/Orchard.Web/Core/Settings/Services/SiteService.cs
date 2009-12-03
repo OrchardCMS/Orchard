@@ -1,4 +1,5 @@
-﻿using Orchard.Core.Settings.Models;
+﻿using System.Linq;
+using Orchard.Core.Settings.Models;
 using Orchard.Core.Settings.Records;
 using Orchard.Data;
 using Orchard.Logging;
@@ -23,7 +24,7 @@ namespace Orchard.Core.Settings.Services {
 
         public ISite GetSiteSettings() {
             string applicationName = HttpContext.Current.Request.ApplicationPath;
-            SiteSettingsRecord record = _siteSettingsRepository.Get(x => x.SiteUrl == applicationName);
+            SiteSettingsRecord record = _siteSettingsRepository.Fetch(x => x.SiteUrl == applicationName).FirstOrDefault();
             if (record == null) {
                 ISite site = _contentManager.Create<SiteSettings>("site", item => {
                     item.Record.SiteUrl = applicationName;

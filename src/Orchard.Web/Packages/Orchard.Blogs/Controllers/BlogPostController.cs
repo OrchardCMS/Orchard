@@ -70,7 +70,7 @@ namespace Orchard.Blogs.Controllers {
             if (blog == null)
                 return new NotFoundResult();
 
-            return View(new CreateBlogPostViewModel { Blog = blog });
+            return View(new CreateBlogPostViewModel { Blog = blog, ItemView = _contentManager.GetEditors(_contentManager.New("blogpost"), null) });
         }
 
         [HttpPost]
@@ -84,10 +84,13 @@ namespace Orchard.Blogs.Controllers {
             if (blog == null)
                 return new NotFoundResult();
 
-            if (!ModelState.IsValid)
+            if (ModelState.IsValid == false) {
+                model.ItemView = _contentManager.UpdateEditors(_contentManager.New("blogpost"), null, this);
                 return View(model);
+            }
 
             BlogPost blogPost = _blogPostService.Create(model.ToCreateBlogPostParams(blog));
+            model.ItemView = _contentManager.UpdateEditors(blogPost, null, this);
 
             //TEMP: (erikpo) ensure information has committed for this record
             var session = _sessionLocator.For(typeof(BlogPostRecord));
@@ -136,8 +139,7 @@ namespace Orchard.Blogs.Controllers {
             model.ItemView = _contentManager.UpdateEditors(model.Post.ContentItem, null, this);
 
             IValueProvider values = input.ToValueProvider();
-            if (!TryUpdateModel(model, values))
-                return View(model);
+            TryUpdateModel(model, values);
 
             _notifier.Information(T("Blog post information updated"));
 
