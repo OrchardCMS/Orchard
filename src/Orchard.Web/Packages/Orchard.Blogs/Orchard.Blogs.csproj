@@ -70,6 +70,7 @@
     <Compile Include="Extensions\BlogCreateViewModelExtensions.cs" />
     <Compile Include="Extensions\BlogPostCreateViewModelExtensions.cs" />
     <Compile Include="Extensions\HtmlHelperExtensions.cs" />
+    <Compile Include="Extensions\UriExtensions.cs" />
     <Compile Include="Extensions\UrlHelperExtensions.cs" />
     <Compile Include="Permissions.cs" />
     <Compile Include="Routing\IsBlogConstraint.cs" />
