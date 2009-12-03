@@ -281,6 +281,9 @@ span.message {
     display:block;
 	margin:4px 0 4px 4px;
 }
+.message a {
+    font-weight:bold;
+}
 
 .confirmation.message {
 	background:#e6f1c9;
@@ -296,9 +299,8 @@ span.message {
 	color:#fff;
 }
 .info.message {
-    background:#f8f8ff; /* GhostWhite :P */
-    border-color:#ccc;
-    border-style:dashed;
+    background:#fff;
+	border:1px dashed #D2D6C6;
 }
 
 /* Forms   
@@ -328,7 +330,7 @@ select, textarea, input.text, input.text-box, #PublishLaterDate {
 	border:1px solid #d2d6c6;
 	color:#5a5b32;
 }
-input.text {
+input.text, input.text-box {
     line-height:1.2em;
 }
 select:focus, textarea:focus, input.text:focus, input.text-box:focus, #PublishLaterDate:focus {
@@ -508,7 +510,6 @@ ul.contentItems li.last {
 #main ul.contentItems li h3 {
     margin:0 0 .1em;
 }
-/* todo: (heskew) clean up since this is a bit of a hack specific to a single page */
 #main ul.contentItems li .actions {
     color:#EAE9D9;
     height:auto;
@@ -638,15 +639,10 @@ todo: (heskew) pull out into relevant modules where appropriate
 .topSpacer{margin-top: 20px;}
 .bottomSpacer{margin-bottom: 20px;}
 .displayText {display:none;}
-/*
-.separator {border-bottom:1px dashed #E4E7DC; margin-bottom:8px; padding-bottom:2px;}
-*/
 
-/* todo: (heskew) remove roundCorners class and anything else that shouldn't be used (inputText*, linkButton, .<something>.message -> .message */
-#content, #navigation li,
-table, textarea, .button, input.text, ul.contentItems,
-input.text-box, .inputTextLarge, .inputTextPermalink, .linkButton, .confirmation.message,
-.warning.message, .critical.message, .roundCorners {
+#content, #navigation li, button, .button,
+table, textarea, input.text, input.text-box,
+ul.contentItems, .message {
 	-moz-border-radius:4px;
 	-webkit-border-radius:4px;
 	border-radius:4px;
