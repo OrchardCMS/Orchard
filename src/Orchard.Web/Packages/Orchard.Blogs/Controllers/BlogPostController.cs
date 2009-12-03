@@ -149,6 +149,9 @@ namespace Orchard.Blogs.Controllers {
 
         [HttpPost]
         public ActionResult Delete(string blogSlug, string postSlug) {
+            if (!_authorizer.Authorize(Permissions.DeletePost, T("Couldn't delete blog post")))
+                return new HttpUnauthorizedResult();
+
             //TODO: (erikpo) Move looking up the current blog up into a modelbinder
             Blog blog = _blogService.Get(blogSlug);
 

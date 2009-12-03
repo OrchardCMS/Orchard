@@ -11,6 +11,9 @@ namespace Orchard.Blogs {
         public static readonly Permission PublishPost = new Permission { Description = "Publishing a Blog Post", Name = "PublishPost" };
         public static readonly Permission UnpublishPost = new Permission { Description = "Unpublishing a Blog Post", Name = "UnpublishPost" };
         public static readonly Permission SchedulePost = new Permission { Description = "Scheduling a Blog Post", Name = "SchedulePost" };
+        public static readonly Permission CreateBlog = new Permission { Description = "Creating a Blog", Name = "CreateBlog" };
+        public static readonly Permission ModifyBlog = new Permission { Description = "Mofifying a Blog", Name = "ModifyBlog" };
+        public static readonly Permission DeleteBlog = new Permission { Description = "Deleting a Blog", Name = "DeleteBlog" };
 
         public string PackageName {
             get {
@@ -27,7 +30,10 @@ namespace Orchard.Blogs {
                 DeletePost,
                 PublishPost,
                 UnpublishPost,
-                SchedulePost
+                SchedulePost,
+                CreateBlog,
+                ModifyBlog,
+                DeleteBlog
             };
         }
     }

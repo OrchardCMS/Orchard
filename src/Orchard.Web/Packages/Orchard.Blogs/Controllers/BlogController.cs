@@ -9,6 +9,7 @@ using Orchard.Localization;
 using Orchard.Models;
 using Orchard.Models.Driver;
 using Orchard.Mvc.Results;
+using Orchard.Security;
 using Orchard.UI.Notify;
 
 namespace Orchard.Blogs.Controllers {
@@ -16,13 +17,17 @@ namespace Orchard.Blogs.Controllers {
     public class BlogController : Controller, IUpdateModel {
         private readonly ISessionLocator _sessionLocator;
         private readonly IContentManager _contentManager;
+        private readonly IAuthorizer _authorizer;
         private readonly INotifier _notifier;
         private readonly IBlogService _blogService;
         private readonly IBlogPostService _blogPostService;
 
-        public BlogController(ISessionLocator sessionLocator, IContentManager contentManager, INotifier notifier, IBlogService blogService, IBlogPostService blogPostService) {
+        public BlogController(ISessionLocator sessionLocator, IContentManager contentManager, 
+                              IAuthorizer authorizer, INotifier notifier, 
+                              IBlogService blogService, IBlogPostService blogPostService) {
             _sessionLocator = sessionLocator;
             _contentManager = contentManager;
+            _authorizer = authorizer;
             _notifier = notifier;
             _blogService = blogService;
             _blogPostService = blogPostService;
@@ -70,6 +75,9 @@ namespace Orchard.Blogs.Controllers {
 
         [HttpPost]
         public ActionResult Create(CreateBlogViewModel model) {
+            if (!_authorizer.Authorize(Permissions.CreateBlog, T("Couldn't create blog")))
+                return new HttpUnauthorizedResult();
+
             if (!ModelState.IsValid)
                 return View(model);
 
@@ -97,6 +105,9 @@ namespace Orchard.Blogs.Controllers {
 
         [HttpPost]
         public ActionResult Edit(string blogSlug, FormCollection input) {
+            if (!_authorizer.Authorize(Permissions.ModifyBlog, T("Couldn't edit blog")))
+                return new HttpUnauthorizedResult();
+
             //TODO: (erikpo) Move looking up the current blog up into a modelbinder
             Blog blog = _blogService.Get(blogSlug);
 
@@ -117,6 +128,9 @@ namespace Orchard.Blogs.Controllers {
 
         //[HttpPost] <- todo: (heskew) make all add/edit/remove POST only and verify the AntiForgeryToken
         public ActionResult Delete(string blogSlug) {
+            if (!_authorizer.Authorize(Permissions.DeleteBlog, T("Couldn't delete blog")))
+                return new HttpUnauthorizedResult();
+
             //TODO: (erikpo) Move looking up the current blog up into a modelbinder
             Blog blog = _blogService.Get(blogSlug);
 
