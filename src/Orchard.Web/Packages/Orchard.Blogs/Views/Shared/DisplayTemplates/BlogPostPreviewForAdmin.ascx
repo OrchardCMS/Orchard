@@ -1,10 +1,14 @@
 ﻿<%@ Control Language="C#" Inherits="System.Web.Mvc.ViewUserControl<BlogPost>" %>
+<%@ Import Namespace="Orchard.Comments.Models"%>
 <%@ Import Namespace="Orchard.Models"%>
 <%@ Import Namespace="Orchard.Blogs.Extensions"%>
 <%@ Import Namespace="Orchard.Core.Common.Models"%>
 <%@ Import Namespace="Orchard.Blogs.Models"%>
 <h3><a href="<%=Url.BlogPostEdit(Model.Blog.Slug, Model.Slug) %>"><%=Html.Encode(Model.Title) %></a></h3>
-<div class="meta"><%=Html.Published() %></div>
+<div class="meta">
+    <%=Html.Published() %>
+    | <%var commentCount = Model.As<HasComments>().Comments.Count(); %><a href="#"><%=string.Format("{0} comment{1}", commentCount, commentCount == 1 ? "" : "s") %></a>
+</div>
 <div class="content"><%=Model.Body ?? "<p><em>there's no content for this blog post</em></p>" %></div>
 <p class="actions">
     <%-- todo: (heskew) make into a ul --%>

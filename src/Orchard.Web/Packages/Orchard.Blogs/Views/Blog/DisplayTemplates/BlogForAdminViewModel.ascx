@@ -4,12 +4,13 @@
 <%@ Import Namespace="Orchard.Blogs.Extensions"%>
 <%@ Import Namespace="Orchard.Blogs.Models"%>
 <h2><a href="<%=Url.BlogForAdmin(Model.Blog.Slug) %>"><%=Html.Encode(Model.Blog.Name) %></a></h2>
-<div class="manage">
-    <a href="<%=Url.BlogEdit(Model.Blog.Slug) %>" class="button">Edit Blog</a>
-    <a href="<%=Url.BlogPostCreate(Model.Blog.Slug) %>" class="add button">Add Post</a>
+<div class="main actions">
+    <span class="construct"><a href="<%=Url.BlogEdit(Model.Blog.Slug) %>" class="button">Edit Blog</a></span>
+    <span class="destruct"><a href="<%=Url.BlogDelete(Model.Blog.Slug) %>" class="remove button">Remove Blog</a></span>
 </div>
-<%--<p><a href="<%=Url.BlogsForAdmin() %>">Manage Blogs</a> &gt; <%=Html.Encode(Model.Blog.Name) %></p>--%>
-<p><%=Model.Blog.Description %></p><%
+<p><%=Model.Blog.Description %></p>
+<div class="actions"><a href="<%=Url.BlogPostCreate(Model.Blog.Slug) %>" class="add button">Add Post</a></div><%
 if (Model.Posts.Count() > 0) { %>
-<%=Html.UnorderedList(Model.Posts, (p, i) => Html.DisplayFor(blog => p, "BlogPostPreviewForAdmin").ToHtmlString(), "contentItems")%><%
+<%=Html.UnorderedList(Model.Posts, (p, i) => Html.DisplayFor(blog => p, "BlogPostPreviewForAdmin").ToHtmlString(), "contentItems")%>
+<div class="actions"><a href="<%=Url.BlogPostCreate(Model.Blog.Slug) %>" class="add button">Add Post</a></div><%
 } %>

@@ -258,6 +258,9 @@ a:hover, a:active, a:focus {
 #main p {
     margin:0 0 1.5em;
 }
+#main .main.actions {
+    margin:0 0 1.4em;
+}
 #main .meta {
     margin:0 0 .4em;
 }
@@ -283,16 +286,19 @@ span.message {
 	background:#e6f1c9;
 	border:1px solid #cfe493;
 }
-
 .warning.message {
 	background:#fdf5bc;
 	border:1px solid #ffea9b;
 }
-
 .critical.message {
 	background:#e68585;
 	border:1px solid #990808;
 	color:#fff;
+}
+.info.message {
+    background:#f8f8ff; /* GhostWhite :P */
+    border-color:#ccc;
+    border-style:dashed;
 }
 
 /* Forms   
@@ -364,6 +370,12 @@ button, .button, .button:link, .button:visited {
 	padding:0 8px;
 	text-align:center;
 }
+button.remove, .remove.button, .remove.button:link, .remove.button:visited {
+    background-color:#DECCCA;
+    background-image:url(images/tableHeaderBackgroundRed.gif);
+    border-color:#d6c9c7;
+    color:#5c3732;
+}
 a.button, a.button:link, a.button:visited {
     line-height:1em;
     padding:.2em .6em;
@@ -374,6 +386,12 @@ button:focus, .button:focus {
     border-color:#666d51;
     color:#f6faea;
     text-decoration:none;
+}
+button.remove:hover, .remove.button:hover,
+button.remove:focus, .remove.button:focus {
+    background:#8f7c79;
+    border-color:#6e5551;
+    color:#faedeb;
 }
 .button {
     line-height:26px;
