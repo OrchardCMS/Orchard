@@ -1,6 +1,6 @@
 <%@ Control Language="C#" Inherits="System.Web.Mvc.ViewUserControl<string>" %>
-<li>
+<fieldset>
     <%=Html.LabelForModel() %>
-    <%=Html.TextBox("",Model,new{@class="inputText inputTextLarge"}) %>
+    <%=Html.TextBox("",Model,new{@class="text"}) %>
     <%=Html.ValidationMessage("","*")%>
-</li>
+</fieldset>

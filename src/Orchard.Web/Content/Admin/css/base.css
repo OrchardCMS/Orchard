@@ -322,6 +322,9 @@ select, textarea, input.text, input.text-box, #PublishLaterDate {
 	border:1px solid #d2d6c6;
 	color:#5a5b32;
 }
+input.text {
+    line-height:1.2em;
+}
 select:focus, textarea:focus, input.text:focus, input.text-box:focus, #PublishLaterDate:focus {
 	border-color:#666d51;
 }
