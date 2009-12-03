@@ -13,8 +13,8 @@
             <span><%=Html.TextBoxFor(m => m.Slug, new { id = "permalink", @class = "text" })%> <span> &laquo; How to write a permalink. &raquo; </span></span>
         </fieldset>
         <fieldset>
-            <label for="body">Excerpt:</label>
-            <span>[still needed]</span>
+            <%--<label for="body">Excerpt:</label>
+            <span>[still needed]</span>--%>
             <label for="body">Body:</label>
             <span><%=Html.TextAreaFor(m => m.Body, new { id = "body", @class = "html" })%></span>
         </fieldset>
@@ -29,7 +29,7 @@
             <%=Html.EditorFor(m => m.Published) %>
         </fieldset>
         <fieldset>
-            <label for="Command_SaveDraft"><%=Html.RadioButton("Command", "SaveDraft", new { id = "Command_SaveDraft" }) %> Save Draft</label></li>
+            <label for="Command_SaveDraft"><%=Html.RadioButton("Command", "SaveDraft", new { id = "Command_SaveDraft" }) %> Save Draft</label>
         </fieldset>
         <fieldset>
             <input class="button" type="submit" name="submit.Save" value="Save"/>
