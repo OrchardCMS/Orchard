@@ -9,6 +9,7 @@ using Orchard.Localization;
 using Orchard.Models;
 using Orchard.Models.Driver;
 using Orchard.Mvc.Results;
+using Orchard.Security;
 using Orchard.UI.Notify;
 
 namespace Orchard.Blogs.Controllers {
@@ -16,13 +17,17 @@ namespace Orchard.Blogs.Controllers {
     public class BlogPostController : Controller, IUpdateModel {
         private readonly ISessionLocator _sessionLocator;
         private readonly IContentManager _contentManager;
+        private readonly IAuthorizer _authorizer;
         private readonly INotifier _notifier;
         private readonly IBlogService _blogService;
         private readonly IBlogPostService _blogPostService;
 
-        public BlogPostController(ISessionLocator sessionLocator, IContentManager contentManager, INotifier notifier, IBlogService blogService, IBlogPostService blogPostService) {
+        public BlogPostController(ISessionLocator sessionLocator, IContentManager contentManager, 
+                                  IAuthorizer authorizer, INotifier notifier, 
+                                  IBlogService blogService, IBlogPostService blogPostService) {
             _sessionLocator = sessionLocator;
             _contentManager = contentManager;
+            _authorizer = authorizer;
             _notifier = notifier;
             _blogService = blogService;
             _blogPostService = blogPostService;
@@ -42,6 +47,9 @@ namespace Orchard.Blogs.Controllers {
 
         //TODO: (erikpo) Should think about moving the slug parameters and get calls and null checks up into a model binder or action filter
         public ActionResult Item(string blogSlug, string postSlug) {
+            if (!_authorizer.Authorize(Permissions.ViewPost, T("Couldn't view blog post")))
+                return new HttpUnauthorizedResult();
+
             Blog blog = _blogService.Get(blogSlug);
 
             if (blog == null)
@@ -67,6 +75,9 @@ namespace Orchard.Blogs.Controllers {
 
         [HttpPost]
         public ActionResult Create(string blogSlug, CreateBlogPostViewModel model) {
+            if (!_authorizer.Authorize(Permissions.CreatePost, T("Couldn't create blog post")))
+                return new HttpUnauthorizedResult();
+
             //TODO: (erikpo) Move looking up the current blog up into a modelbinder
             Blog blog = _blogService.Get(blogSlug);
 
@@ -86,6 +97,9 @@ namespace Orchard.Blogs.Controllers {
         }
 
         public ActionResult Edit(string blogSlug, string postSlug) {
+            if (!_authorizer.Authorize(Permissions.ModifyPost, T("Couldn't edit blog post")))
+                return new HttpUnauthorizedResult();
+
             //TODO: (erikpo) Move looking up the current blog up into a modelbinder
             Blog blog = _blogService.Get(blogSlug);
 
@@ -104,6 +118,9 @@ namespace Orchard.Blogs.Controllers {
 
         [HttpPost]
         public ActionResult Edit(string blogSlug, string postSlug, FormCollection input) {
+            if (!_authorizer.Authorize(Permissions.ModifyPost, T("Couldn't edit blog post")))
+                return new HttpUnauthorizedResult();
+
             //TODO: (erikpo) Move looking up the current blog up into a modelbinder
             Blog blog = _blogService.Get(blogSlug);
 
