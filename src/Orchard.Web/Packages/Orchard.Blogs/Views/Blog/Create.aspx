@@ -4,7 +4,7 @@
 <%@ Import Namespace="Orchard.Mvc.Html" %>
 <% Html.Include("AdminHead"); %>
     <h2>Create New Blog</h2>
-    <p><a href="<%=Url.Blogs() %>">Manage Blogs</a> &gt; Create Blog</p>
+    <p><a href="<%=Url.BlogsForAdmin() %>">Manage Blogs</a> &gt; Create Blog</p>
     <% using (Html.BeginForm()) { %>
         <%=Html.ValidationSummary() %>
         <%=Html.EditorForModel() %>

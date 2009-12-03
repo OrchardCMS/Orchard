@@ -4,7 +4,7 @@
 <%@ Import Namespace="Orchard.Blogs.ViewModels"%>
 <% Html.Include("AdminHead"); %>
     <h2>Edit Blog Post</h2>
-    <p><a href="<%=Url.Blogs() %>">Manage Blogs</a> &gt; <a href="<%=Url.BlogEdit(Model.Blog.Slug) %>"><%=Html.Encode(Model.Blog.Name)%></a> &gt; <a href="<%=Url.BlogPostEdit(Model.Blog.Slug, Model.Post.Slug) %>"><%=Model.Title %></a></p>
+    <p><a href="<%=Url.BlogsForAdmin() %>">Manage Blogs</a> &gt; <a href="<%=Url.BlogEdit(Model.Blog.Slug) %>"><%=Html.Encode(Model.Blog.Name)%></a> &gt; <a href="<%=Url.BlogPostEdit(Model.Blog.Slug, Model.Post.Slug) %>"><%=Model.Title %></a></p>
     <% using (Html.BeginForm()) { %>
         <%=Html.ValidationSummary() %>
         <%=Html.EditorForModel() %>

@@ -10,5 +10,6 @@ namespace Orchard.Blogs.Models {
         public string Slug { get { return this.As<RoutableAspect>().Slug; } }
         public string Description { get { return Record.Description; } }
         //public bool Enabled { get { return Record.Enabled; } }
+        public int PostCount { get { return Record.PostCount; } }
     }
 }

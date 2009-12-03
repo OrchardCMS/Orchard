@@ -45,6 +45,7 @@ namespace Orchard.Blogs.Services {
                 bp.Record.Published = parameters.Published;
                 bp.As<RoutableAspect>().Record.Title = parameters.Title;
                 bp.As<RoutableAspect>().Record.Slug = parameters.Slug;
+                bp.Record.Blog.PostCount++;
             });
         }
     }

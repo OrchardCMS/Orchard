@@ -3,6 +3,10 @@ using System.Web.Mvc;
 namespace Orchard.Blogs.Extensions {
     public static class UrlHelperExtensions {
         public static string Blogs(this UrlHelper urlHelper) {
+            return urlHelper.Action("List", "Blog", new {area = "Orchard.Blogs"});
+        }
+
+        public static string BlogsForAdmin(this UrlHelper urlHelper) {
             return urlHelper.Action("ListForAdmin", "Blog", new {area = "Orchard.Blogs"});
         }
 

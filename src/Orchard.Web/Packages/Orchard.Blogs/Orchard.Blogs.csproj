@@ -88,10 +88,11 @@
     <Compile Include="Services\IBlogPostService.cs" />
     <Compile Include="Services\CreateBlogParams.cs" />
     <Compile Include="Services\IBlogService.cs" />
-    <Compile Include="ViewModels\BlogsViewModel.cs" />
+    <Compile Include="ViewModels\BlogsForAdminViewModel.cs" />
     <Compile Include="ViewModels\BlogViewModel.cs" />
     <Compile Include="ViewModels\BlogPostViewModel.cs" />
     <Compile Include="ViewModels\BlogPostEditViewModel.cs" />
+    <Compile Include="ViewModels\BlogsViewModel.cs" />
     <Compile Include="ViewModels\CreateBlogPostViewModel.cs" />
     <Compile Include="ViewModels\CreateBlogViewModel.cs" />
     <Compile Include="ViewModels\BlogEditViewModel.cs" />
@@ -101,6 +102,9 @@
     <Content Include="Views\BlogPost\Create.aspx" />
     <Content Include="Views\BlogPost\Edit.aspx" />
     <Content Include="Views\BlogPost\EditorTemplates\BlogPostEditViewModel.ascx" />
+    <Content Include="Views\Blog\DisplayTemplates\BlogsForAdminViewModel.ascx" />
+    <Content Include="Views\Blog\DisplayTemplates\BlogForAdmin.ascx" />
+    <Content Include="Views\Blog\List.aspx" />
     <Content Include="Views\Blog\ListForAdmin.aspx" />
     <Content Include="Views\Shared\BlogPostPreview.ascx" />
     <Content Include="Views\BlogPost\EditorTemplates\CreateBlogPostViewModel.ascx" />

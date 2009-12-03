@@ -4,7 +4,6 @@ using Orchard.Blogs.Extensions;
 using Orchard.Blogs.Models;
 using Orchard.Blogs.Services;
 using Orchard.Blogs.ViewModels;
-using Orchard.Core.Common.Models;
 using Orchard.Data;
 using Orchard.Localization;
 using Orchard.Models;
@@ -32,8 +31,12 @@ namespace Orchard.Blogs.Controllers {
 
         public Localizer T { get; set; }
 
-        public ActionResult ListForAdmin() {
+        public ActionResult List() {
             return View(new BlogsViewModel { Blogs = _blogService.Get() });
+        }
+
+        public ActionResult ListForAdmin() {
+            return View(new BlogsForAdminViewModel { Blogs = _blogService.Get() });
         }
 
         //TODO: (erikpo) Should move the slug parameter and get call and null check up into a model binder
@@ -63,7 +66,8 @@ namespace Orchard.Blogs.Controllers {
             var session = _sessionLocator.For(typeof(BlogRecord));
             session.Flush();
 
-            return Redirect(Url.BlogEdit(blog.As<RoutableAspect>().Slug));
+            //TODO: (erikpo) This should redirect to the blog homepage in the admin once that page is created
+            return Redirect(Url.BlogsForAdmin());
         }
 
         public ActionResult Edit(string blogSlug) {
@@ -96,7 +100,7 @@ namespace Orchard.Blogs.Controllers {
             _notifier.Information(T("Blog information updated"));
 
             //TODO: (erikpo) This should redirect to the blog homepage in the admin once that page is created
-            return Redirect(Url.Blogs());
+            return Redirect(Url.BlogsForAdmin());
         }
 
         bool IUpdateModel.TryUpdateModel<TModel>(TModel model, string prefix, string[] includeProperties, string[] excludeProperties) {
