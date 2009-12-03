@@ -87,8 +87,7 @@ namespace Orchard.Blogs.Controllers {
             var session = _sessionLocator.For(typeof(BlogRecord));
             session.Flush();
 
-            //TODO: (erikpo) This should redirect to the blog homepage in the admin once that page is created
-            return Redirect(Url.BlogsForAdmin());
+            return Redirect(Url.BlogForAdmin(blog.Slug));
         }
 
         public ActionResult Edit(string blogSlug) {
