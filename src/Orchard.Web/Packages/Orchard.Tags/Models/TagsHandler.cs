@@ -5,6 +5,7 @@ using Orchard.Data;
 using Orchard.Models;
 using Orchard.Models.Driver;
 using Orchard.Models.ViewModels;
+using Orchard.Tags.Helpers;
 using Orchard.Tags.Services;
 
 namespace Orchard.Tags.Models {
@@ -50,7 +51,7 @@ namespace Orchard.Tags.Models {
 
             TagsViewModel viewModel = new TagsViewModel();
             context.Updater.TryUpdateModel(viewModel, String.Empty, null, null);
-            List<string> tagNames = ParseCommaSeparatedTagNames(viewModel.Tags);
+            List<string> tagNames = TagHelpers.ParseCommaSeparatedTagNames(viewModel.Tags);
             _tagService.UpdateTagsForContentItem(context.ContentItem.Id, tagNames);
 
             context.AddEditor(new TemplateViewModel(context.ContentItem.Get<HasTags>()));
@@ -68,20 +69,6 @@ namespace Orchard.Tags.Models {
                 Tag tag = _tagsRepository.Get(tagContentItem.TagId);
                 tags.CurrentTags.Add(tag);
             }
-        }
-
-        private static List<string> ParseCommaSeparatedTagNames(string tags) {
-            if (String.IsNullOrEmpty(tags)) {
-                return new List<string>();
-            }
-            IEnumerable<string> tagNames = tags.Split(',');
-            List<string> sanitizedTagNames = new List<string>();
-            foreach (var tagName in tagNames) {
-                if (!String.IsNullOrEmpty(tagName)) {
-                    sanitizedTagNames.Add(tagName);
-                }
-            }
-            return sanitizedTagNames;
         }
 
         public class TagsViewModel {

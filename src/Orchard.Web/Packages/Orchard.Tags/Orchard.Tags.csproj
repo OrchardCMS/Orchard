@@ -64,6 +64,7 @@
     <Compile Include="AdminMenu.cs" />
     <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Helpers\TagHelpers.cs" />
     <Compile Include="Models\Tag.cs" />
     <Compile Include="Models\TagSettings.cs" />
     <Compile Include="Models\TagsHandler.cs" />

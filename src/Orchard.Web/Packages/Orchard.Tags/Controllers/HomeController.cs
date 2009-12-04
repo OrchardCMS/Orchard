@@ -6,6 +6,7 @@ using Orchard.Localization;
 using Orchard.Logging;
 using Orchard.Models;
 using Orchard.Settings;
+using Orchard.Tags.Helpers;
 using Orchard.Tags.Models;
 using Orchard.Tags.Services;
 using Orchard.Tags.ViewModels;
@@ -54,7 +55,7 @@ namespace Orchard.Tags.Controllers {
                 if (!_authorizer.Authorize(Permissions.CreateTag, T("Couldn't create tag")))
                     return new HttpUnauthorizedResult();
                 if (!String.IsNullOrEmpty(newTagName)) {
-                    foreach (var tagName in ParseCommaSeparatedTagNames(newTagName)) {
+                    foreach (var tagName in TagHelpers.ParseCommaSeparatedTagNames(newTagName)) {
                         if (_tagService.GetTagByName(tagName) == null) {
                             _tagService.CreateTag(tagName);
                         }
@@ -80,7 +81,7 @@ namespace Orchard.Tags.Controllers {
             try {
                 if (!_authorizer.Authorize(Permissions.CreateTag, T("Couldn't create tag")))
                     return new HttpUnauthorizedResult();
-                List<string> tagNames = ParseCommaSeparatedTagNames(tags);
+                List<string> tagNames = TagHelpers.ParseCommaSeparatedTagNames(tags);
                 _tagService.UpdateTagsForContentItem(taggedContentId, tagNames);
                 if (!String.IsNullOrEmpty(returnUrl)) {
                     return Redirect(returnUrl);
@@ -94,17 +95,6 @@ namespace Orchard.Tags.Controllers {
                 }
                 return RedirectToAction("Index");
             }
-        }
-
-        private static List<string> ParseCommaSeparatedTagNames(string tags) {
-            IEnumerable<string> tagNames = tags.Split(',');
-            List<string> sanitizedTagNames = new List<string>();
-            foreach (var tagName in tagNames) {
-                if (!String.IsNullOrEmpty(tagName)) {
-                    sanitizedTagNames.Add(tagName);
-                }
-            }
-            return sanitizedTagNames;
         }
 
         public ActionResult Search(string tagName) {
