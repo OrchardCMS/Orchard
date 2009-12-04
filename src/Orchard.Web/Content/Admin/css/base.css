@@ -264,8 +264,11 @@ a:hover, a:active, a:focus {
 
 /* Content
 ----------------------------------------------------------*/
-#main h2, #main h3, #main h4, #main p {
+#main h2 {
     margin:.23em 0 1em;
+}
+#main h3, #main h4 {
+    margin:.5em 0;
 }
 #main p {
     margin:0 0 1.5em;
@@ -274,7 +277,7 @@ a:hover, a:active, a:focus {
     margin:0 0 1.4em;
 }
 #main .meta {
-    margin:0 0 .4em;
+    margin:-.4em 0 .4em;
 }
 #main form {
     margin:.345em 0 1.5em;
@@ -317,6 +320,15 @@ span.message {
     background:#fff;
 	border:1px dashed #D2D6C6;
 }
+.debug.message {
+    background:#eee;
+	border:1px dashed #D2D6C6;
+	color:#7a7a7a;
+	margin:20px 0 14px 0;
+}
+.debug.message:before {
+    content:"DEBUG » ";
+}
 
 /* Forms   
 ----------------------------------------------------------*/
@@ -336,6 +348,9 @@ fieldset.bulk.actions label, label.sub {
 }
 label span {
 	font-weight:normal;
+}
+label input {
+    vertical-align:text-top;
 }
 
 /* todo: (heskew) try to get .text on stuff like #PublishLaterDate and .text-box */
@@ -512,46 +527,46 @@ ol.actions label {
 
 /* Content item lists
 ----------------------------------------------------------*/
-ul.contentItems {
+.contentItems {
     background:#FFF;
     border:1px solid #B0B083;
     margin:1.4em 0;
     padding:2px;
 }
-ul.contentItems li {
+.contentItems li {
     background:#FFF;
     border-bottom:1px solid #EAE9D9;
     margin:0;
     overflow:hidden;
     padding:.7em 1.4em;
 }
-ul.contentItems li.last {
+.contentItems li.last {
     border-bottom:0;
 }
-#main ul.contentItems li h3 {
+#main .contentItems li h3 {
     border-bottom:0;
-    margin:0 0 .1em;
+    margin-top:0;
 }
-#main ul.contentItems li .actions {
+#main .contentItems li .actions {
     color:#EAE9D9;
     height:auto;
     margin:-1.3em 0 0;
     padding:0 0 .1em;
 }
-#main ul.contentItems li .actions .ibutton {
+#main .contentItems li .actions .ibutton {
     margin-right:6px;
 }
-#main ul.contentItems li .actions .destruct .ibutton {
+#main .contentItems li .actions .destruct .ibutton {
     margin-left:8px;
     margin-right:0;
 }
-#main ul.contentItems li:hover { background:#fafbed; }
-#main ul.contentItems li:hover a.ibutton { background-position:0 0; }
-#main ul.contentItems li:hover a.ibutton.remove { background-position:-20px 0; }
-#main ul.contentItems li:hover a.ibutton.view { background-position:-40px 0; }
-#main ul.contentItems li:hover a.ibutton.add.page { background-position:-60px 0; }
-#main ul.contentItems li:hover a.ibutton.edit { background-position:-80px 0; }
-#main ul.contentItems li:hover a.ibutton.publish { background-position:-100px 0; }
+#main .contentItems li:hover { background:#fafbed; }
+#main .contentItems li:hover a.ibutton { background-position:0 0; }
+#main .contentItems li:hover a.ibutton.remove { background-position:-20px 0; }
+#main .contentItems li:hover a.ibutton.view { background-position:-40px 0; }
+#main .contentItems li:hover a.ibutton.add.page { background-position:-60px 0; }
+#main .contentItems li:hover a.ibutton.edit { background-position:-80px 0; }
+#main .contentItems li:hover a.ibutton.publish { background-position:-100px 0; }
 
 /* Tables
 ----------------------------------------------------------*/
@@ -664,7 +679,7 @@ todo: (heskew) pull out into relevant modules where appropriate
 
 #content, #navigation li, button, .button,
 table, textarea, input.text, input.text-box,
-ul.contentItems, .message {
+.contentItems, .message {
 	-moz-border-radius:4px;
 	-webkit-border-radius:4px;
 	border-radius:4px;

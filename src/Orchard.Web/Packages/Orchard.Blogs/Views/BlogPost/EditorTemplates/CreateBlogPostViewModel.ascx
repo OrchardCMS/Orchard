@@ -2,7 +2,7 @@
 <%@ Import Namespace="Orchard.Blogs.ViewModels"%>
 <div class="sections">
     <div class="primary">
-        <h3>Blog Post Content</h3>
+        <h3>Content</h3>
         <%-- todo: (heskew) thin out the fieldsets if they become overkill --%>
         <fieldset>
             <label for="title">Title:</label>
@@ -21,15 +21,15 @@
     </div>
     <div class="secondary">
         <h3>Publish Settings</h3>
-        <fieldset>
+        <%--<fieldset>
             <label for="Command_PublishNow"><%=Html.RadioButton("Command", "PublishNow", new { id = "Command_PublishNow" }) %> Publish Now</label>
         </fieldset>
         <fieldset>
             <label for="Command_PublishLater"><%=Html.RadioButton("Command", "PublishLater", new { id = "Command_PublishLater" }) %> Publish Later</label>
             <%=Html.EditorFor(m => m.Published) %>
-        </fieldset>
+        </fieldset>--%>
         <fieldset>
-            <label for="Command_SaveDraft"><%=Html.RadioButton("Command", "SaveDraft", new { id = "Command_SaveDraft" }) %> Save Draft</label></li>
+            <label for="Command_SaveDraft"><%=Html.RadioButton("Command", "SaveDraft", true, new { id = "Command_SaveDraft" }) %> Save Draft</label></li>
         </fieldset>
         <fieldset>
             <input class="button" type="submit" name="submit.Save" value="Save"/>

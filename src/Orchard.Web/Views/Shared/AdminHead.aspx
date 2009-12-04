@@ -28,7 +28,7 @@ todo: (heskew) rework how/what pages are assembled when we get into theming --%>
             theme_advanced_buttons2: "",
             theme_advanced_buttons3: ""
             });
-        </script>
+     </script>
 </head>
 <body>
     <div id="header" role="banner">
