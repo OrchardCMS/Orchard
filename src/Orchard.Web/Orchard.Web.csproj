@@ -178,11 +178,10 @@
     <Content Include="Content\Site3.css" />
     <Content Include="Views\Shared\AdminHead.aspx" />
     <Content Include="Views\Shared\AdminFoot.aspx" />
-    <Content Include="Views\Admin\Messages.ascx" />
+    <Content Include="Views\Shared\Messages.ascx" />
     <Content Include="Views\Shared\ExtraUserControl.ascx" />
     <Content Include="Views\Shared\Footer.ascx" />
     <Content Include="Views\Shared\Header.ascx" />
-    <Content Include="Views\Shared\Messages.ascx" />
     <Content Include="Views\Shared\Navigation.ascx" />
   </ItemGroup>
   <ItemGroup>

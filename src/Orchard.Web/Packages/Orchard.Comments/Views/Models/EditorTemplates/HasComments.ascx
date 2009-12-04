@@ -1,18 +1,14 @@
 ﻿<%@ Control Language="C#" Inherits="System.Web.Mvc.ViewUserControl<HasComments>" %>
 <%@ Import Namespace="Orchard.Comments.Models"%>
-<% if (Model.ContentItem.Id != 0) { %>
-<h3>Comments</h3>
-<div class="meta">
-    <% var commentCount = Model.Comments.Count(); %>
+<fieldset>
+    <legend>Comments<% if (Model.ContentItem.Id != 0) { %>: <% var commentCount = Model.Comments.Count(); %>
     <%=Html.ActionLink(
             string.Format("{0} comment{1}", commentCount, commentCount == 1 ? "" : "s"),
             "Details",
             new { Area = "Orchard.Comments", Controller = "Admin", id = Model.ContentItem.Id, returnUrl = Context.Request.Url }
             ) %>
-    / <a href="#">0 pending</a>
-</div>
-<fieldset>
-    <label for="Closed"><%=Html.CheckBox("Allow comments", Model.Closed, new { id = "Closed" }) %> Close comments</label>
+    - <a href="#">0 pending</a><% } %></legend>
+    <label for="Closed"><%=Html.EditorFor(hc => hc.Closed) %> Close comments</label>
 </fieldset>
 <%--
 todo: (heskew) would be better to have a ↑ checkbox ↑ instead of a ↓ button ↓
@@ -34,4 +30,3 @@ todo: (heskew) shouldn't have comments when editing a content item. besides bein
     </li>
     <% } %>
 </ol>--%>
-<% } %>

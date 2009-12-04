@@ -151,7 +151,7 @@ h3 { font-size:2.1em; } /* 21px */
 h4 { font-size:1.8em; } /* 18px */
 h5 { font-size:1.6em; } /* 16px */
 
-h6, p, label, input, select, .button, .cancel /* todo: (heskew) need to do something better with cancel */,
+h6, p, legend, label, input, select, .button, .cancel /* todo: (heskew) need to do something better with cancel */,
 .message, th, td { font-size:1.5em; line-height:1.5em; } /* 15px */
 p .button,
 td *, .mceLayout td { font-size:inherit; }
@@ -304,20 +304,20 @@ span.message {
 }
 
 .confirmation.message {
-	background:#e6f1c9;
+	background:#e6f1c9; /* green */
 	border:1px solid #cfe493;
 }
 .warning.message {
-	background:#fdf5bc;
+	background:#fdf5bc; /* yellow */
 	border:1px solid #ffea9b;
 }
 .critical.message {
-	background:#e68585;
+	background:#e68585; /* red */
 	border:1px solid #990808;
 	color:#fff;
 }
 .info.message {
-    background:#fff;
+    background:#fff; /* orange :P */
 	border:1px dashed #D2D6C6;
 }
 .debug.message {
@@ -355,7 +355,6 @@ label input {
 
 /* todo: (heskew) try to get .text on stuff like #PublishLaterDate and .text-box */
 select, textarea, input.text, input.text-box, #PublishLaterDate {
-	margin:3px 4px 4px;
 	padding:2px;
 	border:1px solid #d2d6c6;
 	color:#5a5b32;
@@ -377,15 +376,15 @@ textarea {
     min-height:8em;
 }
 .primary input.large.text, .primary textarea {
-    margin:.613% 0 .613% .613%;
+    margin:0;
     padding:4px;
-    width:98.161%;
+    width:98%;
 }
 
 /* todo: (heskew) move editor specific style elsewhere */
 .primary .mceEditor {
     display:block;
-    margin:.613% 0 .613% .613%;
+    margin:0;
 }
 .secondary fieldset {
     margin:.446% 0 .446% .446%;

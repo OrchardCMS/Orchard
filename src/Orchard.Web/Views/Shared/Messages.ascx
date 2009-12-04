@@ -5,13 +5,13 @@
 string CssClassName(NotifyType type) {
     switch(type) {
         case NotifyType.Error:
-            return "validation-summary-errors";
+            return "critical";
         case NotifyType.Warning:
-            return "validation-summary-errors";
+            return "warning";
     }
-    return "validation-summary-errors";
+    return "info";
 }</script>
 
-<%if (Model != null){ foreach (var item in Model) { %>
+<% foreach (var item in Model) { %>
 <div class="<%=CssClassName(item.Type) %> message"><%=Html.Encode(item.Message) %></div>
-<% }} %>
+<% } %>

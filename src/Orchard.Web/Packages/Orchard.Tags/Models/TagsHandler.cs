@@ -40,7 +40,7 @@ namespace Orchard.Tags.Models {
             if (context.ContentItem.Has<HasTags>() == false) {
                 return;
             }
-            context.AddEditor(new TemplateViewModel(context.ContentItem.Get<HasTags>()));
+            context.AddEditor(new TemplateViewModel(context.ContentItem.Get<HasTags>()) { Position = "0" });
         }
 
         protected override void UpdateEditorViewModel(UpdateEditorViewModelContext context) {

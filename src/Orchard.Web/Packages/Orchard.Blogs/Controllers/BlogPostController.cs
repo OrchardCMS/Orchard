@@ -70,7 +70,11 @@ namespace Orchard.Blogs.Controllers {
             if (blog == null)
                 return new NotFoundResult();
 
-            return View(new CreateBlogPostViewModel { Blog = blog, ItemView = _contentManager.GetEditorViewModel(_contentManager.New("blogpost"), null) });
+            var model = new CreateBlogPostViewModel {
+                Blog = blog,
+                ItemView = _contentManager.GetEditorViewModel(_contentManager.New("blogpost"), null)
+            };
+            return View(model);
         }
 
         [HttpPost]
