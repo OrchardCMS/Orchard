@@ -14,5 +14,5 @@ if (Model.Posts.Count() > 0) { %>
 <%=Html.UnorderedList(Model.Posts, (p, i) => Html.DisplayFor(blog => p, "BlogPostPreviewForAdmin").ToHtmlString(), "contentItems")%>
 <div class="actions"><a href="<%=Url.BlogPostCreate(Model.Blog.Slug) %>" class="add button">New Post</a></div><%
 } else { %>
-<div class="info message">This blog is sad as it has no posts. But don't fret, you can add a new post right <a href="<%=Url.BlogPostCreate(Model.Blog.Slug) %>">here</a>!</div><%
+<div class="info message">This blog is sad with no posts, but don't fret. You can add a new post right <a href="<%=Url.BlogPostCreate(Model.Blog.Slug) %>">here</a>!</div><%
 } %>
