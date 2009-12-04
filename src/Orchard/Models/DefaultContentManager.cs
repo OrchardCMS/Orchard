@@ -169,6 +169,7 @@ namespace Orchard.Models {
 
         private static IEnumerable<TemplateViewModel> OrderTemplates(IEnumerable<TemplateViewModel> templates) {
             var comparer = new PositionComparer();
+            //TODO: rethink this comparison because it adds a requirement on naming zones.
             return templates.OrderBy(x => (x.ZoneName ?? "*") + "." + (x.Position ?? "5"), comparer);
         }
 
