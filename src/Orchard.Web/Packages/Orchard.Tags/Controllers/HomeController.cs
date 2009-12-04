@@ -113,7 +113,7 @@ namespace Orchard.Tags.Controllers {
                 IEnumerable<IContent> contents = _tagService.GetTaggedContentItems(tag.Id).ToList();
                 var viewModel = new TagsSearchViewModel {
                     TagName = tag.TagName,
-                    Contents = contents.Select(x=>_contentManager.GetDisplayViewModel(x, null, "SummaryTag")),
+                    Contents = contents
                 };
                 return View(viewModel);
 
