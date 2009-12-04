@@ -1,17 +1,20 @@
-﻿using System.Collections.Generic;
+﻿using System;
 using Orchard.Data;
 using Orchard.Models;
 using Orchard.Models.Driver;
 using Orchard.Models.ViewModels;
+using Orchard.Comments.Services;
 
 namespace Orchard.Comments.Models {
     public class HasCommentsProvider : ContentProvider {
         private readonly IRepository<Comment> _commentsRepository;
         private readonly IRepository<ClosedComments> _closedCommentsRepository;
+        private readonly ICommentService _commentService;
 
-        public HasCommentsProvider(IRepository<Comment> commentsRepository, IRepository<ClosedComments> closedCommentsRepository) {
+        public HasCommentsProvider(IRepository<Comment> commentsRepository, IRepository<ClosedComments> closedCommentsRepository, ICommentService commentService) {
             _commentsRepository = commentsRepository;
             _closedCommentsRepository = closedCommentsRepository;
+            _commentService = commentService;
             Filters.Add(new ActivatingFilter<HasComments>("sandboxpage"));
             Filters.Add(new ActivatingFilter<HasComments>("blogpost"));
         }
@@ -34,6 +37,19 @@ namespace Orchard.Comments.Models {
             if (context.ContentItem.Has<HasComments>() == false) {
                 return;
             }
+            CommentsViewModel viewModel = new CommentsViewModel();
+            context.Updater.TryUpdateModel(viewModel, String.Empty, null, null);
+            bool closed = viewModel.Closed == null ? false : true;
+            bool currentStatus = _commentService.CommentsClosedForCommentedContent(context.ContentItem.Id);
+            if (currentStatus != closed) {
+                if (closed) {
+                    _commentService.CloseCommentsForCommentedContent(context.ContentItem.Id);
+                }
+                else {
+                    _commentService.EnableCommentsForCommentedContent(context.ContentItem.Id);
+                }
+            }
+
             context.AddEditor(new TemplateViewModel(context.ContentItem.Get<HasComments>()));
         }
 
@@ -47,6 +63,10 @@ namespace Orchard.Comments.Models {
             if (_closedCommentsRepository.Get(x => x.ContentItemId == context.ContentItem.Id) != null) {
                 comments.Closed = true;
             }
+        }
+
+        public class CommentsViewModel {
+            public String Closed { get; set; }
         }
     }
 }
