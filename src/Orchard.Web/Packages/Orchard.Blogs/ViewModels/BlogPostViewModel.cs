@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using Orchard.Blogs.Models;
 using Orchard.Models.ViewModels;
 using Orchard.Mvc.ViewModels;

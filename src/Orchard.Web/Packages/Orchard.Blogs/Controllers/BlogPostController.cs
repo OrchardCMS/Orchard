@@ -1,3 +1,4 @@
+using System.Text.RegularExpressions;
 using System.Web.Mvc;
 using Orchard.Blogs.Extensions;
 using Orchard.Blogs.Models;
@@ -61,6 +62,28 @@ namespace Orchard.Blogs.Controllers {
                 return new NotFoundResult();
 
             return View(new BlogPostViewModel { Blog = blog, Post = post, ItemView = _contentManager.GetDisplayViewModel(post.ContentItem, null, "detail") });
+        }
+
+        public ActionResult Slugify(string value) {
+            string slug = value;
+
+            if (!string.IsNullOrEmpty(value)) {
+                Regex regex = new Regex("([^a-z0-9-_]?)", RegexOptions.IgnoreCase | RegexOptions.Compiled);
+
+                slug = value.Trim();
+                slug = slug.Replace(' ', '-');
+                slug = slug.Replace("---", "-");
+                slug = slug.Replace("--", "-");
+                slug = regex.Replace(slug, "");
+
+                if (slug.Length * 2 < value.Length)
+                    return Json("");
+
+                if (slug.Length > 100)
+                    slug = slug.Substring(0, 100);
+            }
+
+            return Json(slug);
         }
 
         public ActionResult Create(string blogSlug) {
