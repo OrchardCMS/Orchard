@@ -206,11 +206,11 @@ a:hover, a:active, a:focus {
 	margin:20px 20px 0 0;
 	white-space:nowrap;
 }
-#login a, #login a:visited, #login a:active {
+#login a, #login a:link, #login a:visited {
     color:#e2e4dd;
     padding:0;
 }
-#login a:hover, #login a:focus {
+#login a:hover, #login a:active, #login a:focus {
     color:#ffea9b;
 }
 
@@ -232,10 +232,22 @@ a:hover, a:active, a:focus {
     margin:0;
 }
 #navigation li h4 {
+    padding:0;
+}
+#navigation li h4 a, #navigation li h4 span {
 	background:#dddfcb url(images/tableHeaderBackground.gif) repeat-x top left;
+    display:block;
 	padding:6px 4px 8px 8px;
 }
-#navigation ul a {
+#navigation li h4 a, #navigation li h4 a:link, #navigation li h4 a:visited {
+    color:inherit;
+}
+#navigation li h4 a:hover, #navigation li h4 a:active, #navigation li h4 a:focus {
+    background:#8a8f7a;
+    color:#f6faea;
+    text-decoration:none;
+}
+#navigation ul a, #navigation ul a:link, #navigation ul a:visited {
 	color:#5a5b32;
 	display:block;
 	font-size:1.5em;
@@ -244,7 +256,7 @@ a:hover, a:active, a:focus {
 	padding:0 0 0 12px;
 	text-decoration:none;
 }
-#navigation ul a:hover, #navigation ul a:focus {
+#navigation ul a:hover, #navigation ul a:active, #navigation ul a:focus {
 	background:#f0ecd2;
 	color: #3e4301;
 	text-decoration:underline;
@@ -269,6 +281,9 @@ a:hover, a:active, a:focus {
 }
 #main h2 {
     border-bottom:1px dashed #e4e7dc;
+}
+#main h3 {
+    border-bottom:1px solid #e4e7dc;
 }
 
 /* Confirmations, Messages and the like
@@ -383,6 +398,7 @@ a.button, a.button:link, a.button:visited {
     padding:.2em .6em;
 }
 button:hover, .button:hover,
+button:active, .button:active,
 button:focus, .button:focus {
     background:#8a8f7a;
     border-color:#666d51;
@@ -390,6 +406,7 @@ button:focus, .button:focus {
     text-decoration:none;
 }
 button.remove:hover, .remove.button:hover,
+button.remove:active, .remove.button:active,
 button.remove:focus, .remove.button:focus {
     background:#8f7c79;
     border-color:#6e5551;
@@ -431,7 +448,7 @@ button.remove:focus, .remove.button:focus {
 
 /* Icon buttons
 ----------------------------------------------------------*/
-a.ibutton {
+a.ibutton, a.ibutton:link, a.ibutton:visited {
     background:url(images/icons.png) 0 -20px;
     border:none;
     display:inline;
@@ -441,23 +458,27 @@ a.ibutton {
     padding:0 0 0 17px;
     width:0;
 }
-a.ibutton:hover,
-a.ibutton:focus { background-position:0 0; }
-a.ibutton.remove:hover,
-a.ibutton.remove:focus { background-position:-20px 0; }
-a.ibutton.remove { background-position:-20px -20px; }
-a.ibutton.view:hover,
-a.ibutton.view:focus { background-position:-40px 0; }
-a.ibutton.view { background-position:-40px -20px; }
-a.ibutton.add.page:hover,
-a.ibutton.add.page:focus { background-position:-60px 0; }
-a.ibutton.add.page { background-position:-60px -20px; }
-a.ibutton.edit:hover,
-a.ibutton.edit:focus { background-position:-80px 0; }
-a.ibutton.edit { background-position:-80px -20px; }
-a.ibutton.publish:hover,
-a.ibutton.publish:focus { background-position:-100px 0; }
-a.ibutton.publish { background-position:-100px -20px; }
+a.ibutton:hover, a.ibutton:active, a.ibutton:focus { background-position:0 0; }
+a.ibutton.remove,
+a.ibutton.remove:link,
+a.ibutton.remove:visited { background-position:-20px -20px; }
+a.ibutton.remove:hover, a.ibutton.remove:active, a.ibutton.remove:focus { background-position:-20px 0; }
+a.ibutton.view,
+a.ibutton.view:link,
+a.ibutton.view:visited { background-position:-40px -20px; }
+a.ibutton.view:hover, a.ibutton.view:active, a.ibutton.view:focus { background-position:-40px 0; }
+a.ibutton.add.page,
+a.ibutton.add.page:link,
+a.ibutton.add.page:visited { background-position:-60px -20px; }
+a.ibutton.add.page:hover, a.ibutton.add.page:active, a.ibutton.add.page:focus { background-position:-60px 0; }
+a.ibutton.edit,
+a.ibutton.edit:link,
+a.ibutton.edit:visited { background-position:-80px -20px; }
+a.ibutton.edit:hover, a.ibutton.edit:active, a.ibutton.edit:focus { background-position:-80px 0; }
+a.ibutton.publish,
+a.ibutton.publish:link,
+a.ibutton.publish:visited { background-position:-100px -20px; }
+a.ibutton.publish:hover, a.ibutton.publish:active, a.ibutton.publish:focus { background-position:-100px 0; }
 
 
 /* todo: (heskew) needs attention */
@@ -508,6 +529,7 @@ ul.contentItems li.last {
     border-bottom:0;
 }
 #main ul.contentItems li h3 {
+    border-bottom:0;
     margin:0 0 .1em;
 }
 #main ul.contentItems li .actions {
@@ -646,4 +668,9 @@ ul.contentItems, .message {
 	-moz-border-radius:4px;
 	-webkit-border-radius:4px;
 	border-radius:4px;
+}
+#navigation li h4 a {
+	-moz-border-radius:3px 3px 0 0;
+	-webkit-border-radius:3px 3px 0 0;
+	border-radius:3px 3px 0 0;
 }

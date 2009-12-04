@@ -3,8 +3,7 @@
 <%@ Import Namespace="Orchard.Security" %>
 <%@ Import Namespace="Orchard.Mvc.Html" %>
 <% Html.Include("AdminHead"); %>
-    <h2>Create a Blog</h2>
-    <p><a href="<%=Url.BlogsForAdmin() %>">Manage Blogs</a> &gt; Create a Blog</p>
+    <h2>Add Blog</h2>
     <% using (Html.BeginForm()) { %>
         <%=Html.ValidationSummary() %>
         <%=Html.EditorForModel() %>
