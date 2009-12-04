@@ -14,7 +14,7 @@
      <% } else { %>
         <input id="Closed" name="Closed" type="checkbox" />
      <% } %> 
-        Comments are disabled for this post 
+        Comments are disabled
      </label>
 </fieldset>
 
