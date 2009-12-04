@@ -8,7 +8,7 @@
     <p class="comment">
         <%--TODO: (erikpo) Need to clean the name and url so nothing dangerous goes out--%>
         <strong><%=Html.LinkOrDefault(comment.UserName, comment.SiteName, new { rel = "nofollow" })%></strong>
-        <span>said<br /><%=Html.Link(Html.DateTime(comment.CommentDate), "#")%></span>
+        <span>said<br /><%=Html.Link(Html.DateTimeRelative(comment.CommentDate), "#")%></span>
     </p>
     <div class="text">
         <p><%=comment.CommentText %></p>

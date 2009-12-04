@@ -11,7 +11,7 @@
     <h1><%=Html.Encode(Model.Post.Title) %></h1>
     <div class="metadata">
     <%if (Model.Post.Creator != null) {%>
-        <div class="posted">Posted by <%=Html.Encode(Model.Post.Creator.UserName)%> <%=Html.Published(Model.Post)%></div>
+        <div class="posted">Posted by <%=Html.Encode(Model.Post.Creator.UserName)%> <%=Html.PublishedWhen(Model.Post)%></div>
         <%}%>
         <div><a href="<%=Url.BlogPostEdit(Model.Blog.Slug, Model.Post.Slug) %>">(edit)</a></div>
     </div>

@@ -87,28 +87,36 @@ namespace Orchard.Mvc.Html {
 
         #region Format Date/Time
 
+        public static string DateTimeRelative(this HtmlHelper htmlHelper, DateTime? value, string defaultIfNull) {
+            return value.HasValue ? htmlHelper.DateTimeRelative(value.Value) : defaultIfNull;
+        }
+
         //TODO: (erikpo) This method needs localized
-        public static string DateTime(this HtmlHelper htmlHelper, DateTime value)
-        {
+        public static string DateTimeRelative(this HtmlHelper htmlHelper, DateTime value) {
             TimeSpan time = System.DateTime.UtcNow - value;
 
             if (time.TotalDays > 7)
-                //TODO: (erikpo) This format should come from a site setting
-                return "at " + value.ToString("MMM d yyyy h:mm tt");
+                return "at " + htmlHelper.DateTime(value);
             if (time.TotalHours > 24)
                 return string.Format("{0} day{1} ago", time.Days, time.Days == 1 ? "" : "s");
             if (time.TotalMinutes > 60)
                 return string.Format("{0} hour{1} ago", time.Hours, time.Hours == 1 ? "" : "s");
             if (time.TotalSeconds > 60)
                 return string.Format("{0} minute{1} ago", time.Minutes, time.Minutes == 1 ? "" : "s");
-            else if (time.TotalSeconds > 10)
+            if (time.TotalSeconds > 10)
                 return string.Format("{0} second{1} ago", time.Seconds, time.Seconds == 1 ? "" : "s");
-            else
-                return "a moment ago";
+
+            return "a moment ago";
         }
 
-        public static string DateTime(this HtmlHelper htmlHelper, DateTime? value, string defaultIfNull) {
+        public static string DateTime(this HtmlHelper htmlHelper, DateTime? value, string defaultIfNull)
+        {
             return value.HasValue ? htmlHelper.DateTime(value.Value) : defaultIfNull;
+        }
+
+        //TODO: (erikpo) This format should come from a site setting
+        public static string DateTime(this HtmlHelper htmlHelper, DateTime value) {
+            return value.ToString("MMM d yyyy h:mm tt");
         }
 
         #endregion

@@ -493,6 +493,10 @@ a.ibutton.publish,
 a.ibutton.publish:link,
 a.ibutton.publish:visited { background-position:-100px -20px; }
 a.ibutton.publish:hover, a.ibutton.publish:active, a.ibutton.publish:focus { background-position:-100px 0; }
+a.ibutton.blog,
+a.ibutton.blog:link,
+a.ibutton.blog:visited { background-position:-120px -20px; }
+a.ibutton.blog:hover, a.ibutton.blog:active, a.ibutton.blog:focus { background-position:-120px 0; }
 
 
 /* todo: (heskew) needs attention */
@@ -566,6 +570,7 @@ ol.actions label {
 #main .contentItems li:hover a.ibutton.add.page { background-position:-60px 0; }
 #main .contentItems li:hover a.ibutton.edit { background-position:-80px 0; }
 #main .contentItems li:hover a.ibutton.publish { background-position:-100px 0; }
+#main .contentItems li:hover a.ibutton.blog { background-position:-120px 0; }
 
 /* Tables
 ----------------------------------------------------------*/

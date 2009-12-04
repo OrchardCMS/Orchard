@@ -5,7 +5,8 @@
 <%@ Import Namespace="Orchard.Blogs.Models"%>
 <h3><a href="<%=Url.BlogPostEdit(Model.Blog.Slug, Model.Slug) %>"><%=Html.Encode(Model.Title) %></a></h3>
 <div class="meta">
-    <%=Html.Published() %>
+    <%=Html.PublishedState() %>
+    | <a href="#">?? comments</a>
 </div>
 <div class="content"><%=Model.Body ?? "<p><em>there's no content for this blog post</em></p>" %></div>
 <p class="actions">
