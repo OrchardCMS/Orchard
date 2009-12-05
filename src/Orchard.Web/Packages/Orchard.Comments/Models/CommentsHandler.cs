@@ -23,7 +23,7 @@ namespace Orchard.Comments.Models {
             if (context.ContentItem.Has<HasComments>() == false) {
                 return;
             }
-            context.AddDisplay(new TemplateViewModel(context.ContentItem.Get<HasComments>()));
+            context.AddDisplay(new TemplateViewModel(context.ContentItem.Get<HasComments>()) { Position = "999" });
         }
 
         protected override void GetEditorViewModel(GetEditorViewModelContext context) {

@@ -32,8 +32,8 @@ namespace Orchard.Tags.Models {
             Filters.Add(new ActivatingFilter<HasTags>("blogpost"));
 
             OnGetDisplayViewModel<HasTags>((context, hasTags) => {
-                context.AddDisplay(new TemplateViewModel(hasTags) { ZoneName="metatop", Position = "2",  TemplateName = "HasTagsList" });
-                context.AddDisplay(new TemplateViewModel(hasTags) { ZoneName = "metabottom", Position = "5" });
+                context.AddDisplay(new TemplateViewModel(hasTags) { Position = "1",  TemplateName = "HasTagsList" });
+                context.AddDisplay(new TemplateViewModel(hasTags) { Position = "1" });
             });
         }
 

@@ -16,7 +16,7 @@ namespace Orchard.Core.Common.Providers {
 
             OnGetDisplayViewModel<BodyAspect>((context, body) => {
                 var model = new BodyDisplayViewModel { BodyAspect = body };
-                context.AddDisplay(new TemplateViewModel(model, TemplatePrefix) { TemplateName = TemplateName, ZoneName = "body" });
+                context.AddDisplay(new TemplateViewModel(model, TemplatePrefix) { TemplateName = TemplateName });
             });
 
             OnGetEditorViewModel<BodyAspect>((context, body) => {

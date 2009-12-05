@@ -1,7 +1,7 @@
 <%@ Control Language="C#" Inherits="System.Web.Mvc.ViewUserControl<HasTags>" %>
 <%@ Import Namespace="Orchard.Mvc.Html"%>
 <%@ Import Namespace="Orchard.Tags.Models"%>
-<h3>Tags</h3>
+<%--<h3>Tags</h3>
 <% Html.BeginForm("Edit", "Home", new { area = "Orchard.Tags" }); %>
 <%= Html.ValidationSummary() %>
     <div class="yui-g">
@@ -16,4 +16,4 @@
 			    </li>
 			</ol>
 	</div>
-<% Html.EndForm(); %>
+<% Html.EndForm(); %>--%>

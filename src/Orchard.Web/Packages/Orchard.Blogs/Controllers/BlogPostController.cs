@@ -168,7 +168,7 @@ namespace Orchard.Blogs.Controllers {
             IValueProvider values = input.ToValueProvider();
             TryUpdateModel(model, values);
 
-            _notifier.Information(T("Blog post information updated"));
+            _notifier.Information(T("Blog post information updated."));
 
             //TODO: (erikpo) Since the model isn't actually updated yet and it's possible the slug changed I'm getting the slug from input. Lame?!?!
             return Redirect(Url.BlogPostEdit(blog.Slug, values.GetValue(ControllerContext, "Slug").AttemptedValue));

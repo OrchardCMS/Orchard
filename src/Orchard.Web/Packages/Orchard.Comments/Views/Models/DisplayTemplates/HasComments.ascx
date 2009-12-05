@@ -1,51 +1,38 @@
 ﻿<%@ Control Language="C#" Inherits="System.Web.Mvc.ViewUserControl<HasComments>" %>
 <%@ Import Namespace="Orchard.Mvc.Html"%>
 <%@ Import Namespace="Orchard.Comments.Models"%>
-<h3><%=Model.Comments.Count() %> Comment<%=Model.Comments.Count() == 1 ? "" : "s" %></h3><%
+<h3 id="comments"><%=Model.Comments.Count() %> Comment<%=Model.Comments.Count() == 1 ? "" : "s" %></h3><%
     foreach (var comment in Model.Comments) { %>
-<div class="name">
-    <div><!-- GRAVATAR --></div>
-    <p class="comment">
+<div>
+    <div class="comment">
         <%--TODO: (erikpo) Need to clean the name and url so nothing dangerous goes out--%>
-        <strong><%=Html.LinkOrDefault(comment.UserName, comment.SiteName, new { rel = "nofollow" })%></strong>
-        <span>said<br /><%=Html.Link(Html.DateTimeRelative(comment.CommentDate), "#")%></span>
-    </p>
+        <span class="who"><%=Html.LinkOrDefault(comment.UserName, comment.SiteName, new { rel = "nofollow" })%></span>
+        <span>said <%=Html.Link(Html.DateTimeRelative(comment.CommentDate), "#")%></span>
+    </div>
     <div class="text">
         <p><%=comment.CommentText %></p>
     </div>
 </div><%
     }
-    if (Model.Closed) { %>
-<p>Comments have been disabled for this content.</p><%
-    }
-    else { %>
-<% Html.BeginForm("Create", "Admin", new { area = "Orchard.Comments" }); %>
-<%=Html.ValidationSummary() %>
-<div class="yui-g">
-    <h2 class="separator">Add a Comment</h2>
-    <ol>
-        <li>
+if (Model.Closed) { %>
+    <p>Comments have been disabled for this content.</p><%
+} else { %>
+    <% using(Html.BeginForm("Create", "Admin", new { area = "Orchard.Comments" }, FormMethod.Post, new { @class = "comments" })) { %>
+        <%=Html.ValidationSummary() %>
+        <fieldset class="who">
             <%= Html.Hidden("CommentedOn", Model.ContentItem.Id) %>
             <%= Html.Hidden("ReturnUrl", Context.Request.Url) %>
-            <label for="Name">Name:</label>
-            <input id="Text1" class="inputText inputTextLarge" name="Name" type="text" />
-        </li>
-        <li>
-            <label for="Email">Email:</label>
-            <input id="Email" class="inputText inputTextLarge" name="Email" type="text" />					
-        </li>
-        <li>
-            <label for="SiteName">Url:</label>
-            <input id="SiteName" class="inputText inputTextLarge" name="SiteName" type="text" />
-        </li>
-        <li>
+            <label for="Name">Name</label>
+            <input id="Name" class="text" name="Name" type="text" /><br />
+            <label for="Email">Email</label>
+            <input id="Email" class="text" name="Email" type="text" /><br />				
+            <label for="SiteName">Url</label>
+            <input id="SiteName" class="text" name="SiteName" type="text" /><br />
+        </fieldset>
+        <fieldset class="what">
             <label for="CommentText">Leave a comment</label>
-            <textarea id="CommentText" rows="10" cols="30" name="CommentText"></textarea>
-        </li>
-        <li>
+            <textarea id="CommentText" rows="10" cols="30" name="CommentText"></textarea><br />
             <input type="submit" class="button" value="Submit Comment" />
-        </li>
-    </ol>
-</div>
-<% Html.EndForm(); %><%
-    } %>
+        </fieldset><%
+   }
+} %>

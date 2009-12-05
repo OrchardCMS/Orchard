@@ -315,3 +315,86 @@ div#title
     font-weight: bold;
     color: #ff0000;
 }
+
+
+/* ALL THAT IS BELOW IS TEMPORARY TO MAKE THINGS LOOK DECENT IN THIS SKIN */
+.manage {
+    float:right;
+}
+.metadata {
+    color:#999;
+    margin-top:-2em;
+}
+.blog.metadata {
+    margin-top:-1.5em;
+}
+.metadata, p.tags {
+    font-size:95%;
+}
+ul.blogs, ul.posts {
+    padding-left:0;
+}
+ul.blogs li, ul.posts li {
+    list-style-type:none;
+}
+
+/* Icon buttons
+----------------------------------------------------------*/
+a.ibutton, a.ibutton:link, a.ibutton:visited {
+    background:url(Admin/css/images/icons.png) 0 -20px;
+    border:none;
+    display:inline;
+    float:left;
+    height:17px;
+    overflow:hidden;
+    padding:0 0 0 17px;
+    width:0;
+}
+a.ibutton:hover, a.ibutton:active, a.ibutton:focus { background-position:0 0; }
+a.ibutton.remove,
+a.ibutton.remove:link,
+a.ibutton.remove:visited { background-position:-20px -20px; }
+a.ibutton.remove:hover, a.ibutton.remove:active, a.ibutton.remove:focus { background-position:-20px 0; }
+a.ibutton.view,
+a.ibutton.view:link,
+a.ibutton.view:visited { background-position:-40px -20px; }
+a.ibutton.view:hover, a.ibutton.view:active, a.ibutton.view:focus { background-position:-40px 0; }
+a.ibutton.add.page,
+a.ibutton.add.page:link,
+a.ibutton.add.page:visited { background-position:-60px -20px; }
+a.ibutton.add.page:hover, a.ibutton.add.page:active, a.ibutton.add.page:focus { background-position:-60px 0; }
+a.ibutton.edit,
+a.ibutton.edit:link,
+a.ibutton.edit:visited { background-position:-80px -20px; }
+a.ibutton.edit:hover, a.ibutton.edit:active, a.ibutton.edit:focus { background-position:-80px 0; }
+a.ibutton.publish,
+a.ibutton.publish:link,
+a.ibutton.publish:visited { background-position:-100px -20px; }
+a.ibutton.publish:hover, a.ibutton.publish:active, a.ibutton.publish:focus { background-position:-100px 0; }
+a.ibutton.blog,
+a.ibutton.blog:link,
+a.ibutton.blog:visited { background-position:-120px -20px; }
+a.ibutton.blog:hover, a.ibutton.blog:active, a.ibutton.blog:focus { background-position:-120px 0; }
+
+/* Forms   
+----------------------------------------------------------*/
+fieldset {
+    border:0;
+    margin:0 0 1em;
+    padding:0;
+}
+form.comments {
+    overflow:hidden;
+}
+form.comments fieldset.who, form.comments fieldset.what {
+    float:left;
+    margin-right:15px;
+}
+form.comments label {
+    font-weight:bold;
+    margin-top:15px;
+}
+form.comments .button {
+    margin-top:15px;
+    
+}
