@@ -110,6 +110,7 @@
     <Content Include="Views\Blog\DisplayTemplates\BlogForAdmin.ascx" />
     <Content Include="Views\Blog\List.aspx" />
     <Content Include="Views\Blog\ListForAdmin.aspx" />
+    <Content Include="Views\Models\DisplayTemplates\BlogPostSummary.ascx" />
     <Content Include="Views\Shared\BlogPostPreview.ascx" />
     <Content Include="Views\BlogPost\EditorTemplates\CreateBlogPostViewModel.ascx" />
     <Content Include="Views\BlogPost\Item.aspx" />
@@ -139,6 +140,9 @@
       <Project>{79AED36E-ABD0-4747-93D3-8722B042454B}</Project>
       <Name>Orchard.Users</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Views\Models\EditorTemplates\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v9.0\WebApplications\Microsoft.WebApplication.targets" />

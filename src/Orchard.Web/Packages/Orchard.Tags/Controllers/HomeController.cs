@@ -100,10 +100,13 @@ namespace Orchard.Tags.Controllers {
         public ActionResult Search(string tagName) {
             try {
                 Tag tag = _tagService.GetTagByName(tagName);
-                IEnumerable<IContent> contents = _tagService.GetTaggedContentItems(tag.Id).ToList();
+                var contentItems = _tagService.GetTaggedContentItems(tag.Id);
+                var contentViewModels = contentItems.Select(
+                    item => _contentManager.GetDisplayViewModel(item, null, "Summary"));
+
                 var viewModel = new TagsSearchViewModel {
                     TagName = tag.TagName,
-                    Contents = contents
+                    Items = contentViewModels.ToList(),
                 };
                 return View(viewModel);
 
