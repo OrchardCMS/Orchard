@@ -12,7 +12,7 @@
 <p class="actions">
     <%-- todo: (heskew) make into a ul --%>
     <span class="construct">
-        <a href="<%=Url.BlogEdit(Model.Slug) %>" class="ibutton blog" title="Manage Blog">Manage Blog</a>
+        <a href="<%=Url.BlogForAdmin(Model.Slug) %>" class="ibutton blog" title="Manage Blog">Manage Blog</a>
         <a href="<%=Url.BlogEdit(Model.Slug) %>" class="ibutton edit" title="Edit Blog">Edit Blog</a>
         <a href="<%=Url.Blog(Model.Slug) %>" class="ibutton view" title="View Blog">View Blog</a>
         <a href="<%=Url.BlogPostCreate(Model.Slug) %>" class="ibutton add page" title="New Post">New Post</a>

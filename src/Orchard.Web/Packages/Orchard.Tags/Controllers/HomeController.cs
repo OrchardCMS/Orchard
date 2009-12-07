@@ -99,14 +99,14 @@ namespace Orchard.Tags.Controllers {
 
         public ActionResult Search(string tagName) {
             try {
-                Tag tag = _tagService.GetTagByName(tagName);
-                var contentItems = _tagService.GetTaggedContentItems(tag.Id);
-                var contentViewModels = contentItems.Select(
-                    item => _contentManager.GetDisplayViewModel(item, null, "Summary"));
+                var tag = _tagService.GetTagByName(tagName);
+                var items =
+                    _tagService.GetTaggedContentItems(tag.Id).Select(
+                        ic => _contentManager.GetDisplayViewModel(ic, null, "ForList"));
 
                 var viewModel = new TagsSearchViewModel {
                     TagName = tag.TagName,
-                    Items = contentViewModels.ToList(),
+                    Items = items.ToList()
                 };
                 return View(viewModel);
 

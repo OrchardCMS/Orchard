@@ -4,6 +4,7 @@ using Orchard.Core.Common.Models;
 using Orchard.Data;
 using Orchard.Models;
 using Orchard.Models.Driver;
+using Orchard.Models.ViewModels;
 
 namespace Orchard.Blogs.Models {
     public class BlogPostProvider : ContentProvider {
@@ -17,8 +18,7 @@ namespace Orchard.Blogs.Models {
             Filters.Add(new ActivatingFilter<RoutableAspect>("blogpost"));
             Filters.Add(new ActivatingFilter<BodyAspect>("blogpost"));
             Filters.Add(new StorageFilter<BlogPostRecord>(repository));
-            Filters.Add(new ContentItemTemplates<BlogPost>("BlogPost", "Summary"));
-
+            Filters.Add(new ContentItemTemplates<BlogPost>("BlogPost", "ForList"));
 
             OnLoaded<BlogPost>((context, bp) => bp.Blog = contentManager.Get<Blog>(bp.Record.Blog.Id));
 

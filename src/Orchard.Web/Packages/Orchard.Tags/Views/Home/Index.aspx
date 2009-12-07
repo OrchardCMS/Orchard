@@ -4,9 +4,14 @@
 <%-- todo: (heskew) make master-less when we get into theming --%>
 <asp:Content ContentPlaceHolderID="MainContent" runat="server">
     <h2>Tags</h2>
-    <%=Html.ValidationSummary() %>
-    <% foreach (var tag in Model.Tags) { %>
-        <%=Html.ActionLink(tag.TagName, "Search", new {tagName = tag.TagName}, new {@class="floatRight topSpacer"}) %>
-        &nbsp;
-    <% } %>
+    <%=Html.UnorderedList(
+        Model.Tags,
+        (t, i) => Html.ActionLink(
+            t.TagName,
+            "Search",
+            new { tagName = t.TagName },
+            new { @class = "" /* todo: (heskew) classify according to tag use */ }
+            ).ToHtmlString(),
+        "tagCloud")
+         %>
 </asp:Content>
