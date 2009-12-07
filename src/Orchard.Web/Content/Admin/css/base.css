@@ -500,8 +500,17 @@ a.ibutton.blog:hover, a.ibutton.blog:active, a.ibutton.blog:focus { background-p
 
 
 /* todo: (heskew) needs attention */
-#permalink{
-	width:200px;
+#permalink {
+    background:transparent;
+    border-color:#EAE9D9;
+    border-style:dashed;
+    margin-left:0;
+	width:350px;
+}
+#permalink:focus {
+    background:#FFF;
+    border-color:#666d51;
+    border-style:solid;
 }
 input.large.text {
 	font-size:130%;

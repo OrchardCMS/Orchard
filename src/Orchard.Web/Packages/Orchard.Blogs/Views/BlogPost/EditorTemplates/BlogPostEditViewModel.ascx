@@ -10,7 +10,7 @@
         </fieldset>
         <fieldset>
             <label class="sub" for="permalink">Permalink<br /><span><%=Request.Url.ToRootString() %>/<%=Model.Blog.Slug %>/</span></label>
-            <span><%=Html.TextBoxFor(m => m.Slug, new { id = "permalink", @class = "text" })%></span>
+            <span><%=Html.TextBoxFor(m => m.Slug, new { id = "permalink", @class = "text", size = "100" })%></span>
         </fieldset>
         <fieldset>
             <%--<label for="body">Excerpt</label>
