@@ -17,6 +17,10 @@ namespace Orchard.Models.ViewModels {
             Item = viewModel.Item;
         }
 
+        public ItemDisplayViewModel(ContentItem item) {
+            Item = item;
+        }
+
         public ContentItem Item {
             get { return _item; }
             set { SetItem(value); }

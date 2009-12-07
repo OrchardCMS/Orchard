@@ -4,8 +4,7 @@
 <%@ Import Namespace="Orchard.Mvc.Html"%>
 <%-- todo: (heskew) make master-less when we get into theming --%>
 <asp:Content ID="Content1" ContentPlaceHolderID="MainContent" runat="server">
-    <h2>List of contents tagged with <%= Model.TagName %></h2><%
-    foreach (var contentItem in Model.Contents) { %>
-    <%=Html.ItemDisplayLink(contentItem)%>&nbsp;
-    <% } %>
+    <h2>List of contents tagged with <%= Model.TagName %></h2>
+    <!-- TODO: (erikpo) The class being used for the lists "posts" should be made into something more generic like "contentItems" for the front end -->
+    <%=Html.UnorderedList(Model.Contents, (c, i) => Html.ItemDisplayTemplate(c, "Summary").ToHtmlString(), "posts")%>
 </asp:Content>
