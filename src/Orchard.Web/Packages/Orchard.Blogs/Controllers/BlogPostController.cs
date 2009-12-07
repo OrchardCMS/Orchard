@@ -163,7 +163,7 @@ namespace Orchard.Blogs.Controllers {
                 return new NotFoundResult();
 
             var model = new BlogPostEditViewModel { Blog = blog, Post = post };
-            model.ItemView = _contentManager.UpdateEditorViewModel(model.Post.ContentItem, null, this);
+            model.ItemView = _contentManager.UpdateEditorViewModel(model.Post, null, this);
 
             IValueProvider values = input.ToValueProvider();
             TryUpdateModel(model, values);
