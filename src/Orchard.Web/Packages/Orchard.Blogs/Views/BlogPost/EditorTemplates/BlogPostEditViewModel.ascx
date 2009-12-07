@@ -9,7 +9,7 @@
             <span><%=Html.TextBoxFor(m => m.Title, new { id = "title", @class = "large text" })%></span>
         </fieldset>
         <fieldset>
-            <label class="sub" for="permalink">Permalink: <span><%=Request.Url.ToRootString() %>/<%=Model.Blog.Slug %>/</span></label>
+            <label class="sub" for="permalink">Permalink<br /><span><%=Request.Url.ToRootString() %>/<%=Model.Blog.Slug %>/</span></label>
             <span><%=Html.TextBoxFor(m => m.Slug, new { id = "permalink", @class = "text" })%></span>
         </fieldset>
         <fieldset>
