@@ -10,13 +10,6 @@
 <asp:Content ContentPlaceHolderID="MainContent" runat="server">
     <div class="manage"><a href="<%=Url.BlogEdit(Model.Blog.Slug) %>" class="ibutton edit">edit</a></div>
     <h2><%=Html.Encode(Model.Blog.Name) %></h2>
-    <div><%=Html.Encode(Model.Blog.Description) %></div><%
-    //TODO: (erikpo) Move this into a helper
-    if (Model.Posts.Count() > 0) { %>
-    <ul class="posts"><%
-        foreach (BlogPost post in Model.Posts) { %>
-        <li><% Html.RenderPartial("BlogPostPreview", post); %></li><%
-        } %>
-    </ul><%
-    } %>
+    <div><%=Html.Encode(Model.Blog.Description) %></div>
+    <%=Html.UnorderedList(Model.Posts, (bp, i) => Html.DisplayForItem(bp).ToHtmlString(), "posts contentItems") %>
 </asp:Content>

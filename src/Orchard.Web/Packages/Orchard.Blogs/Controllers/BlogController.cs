@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Web.Mvc;
 using Orchard.Blogs.Extensions;
 using Orchard.Blogs.Models;
@@ -8,6 +9,7 @@ using Orchard.Data;
 using Orchard.Localization;
 using Orchard.Models;
 using Orchard.Models.Driver;
+using Orchard.Models.ViewModels;
 using Orchard.Mvc.Results;
 using Orchard.Security;
 using Orchard.UI.Notify;
@@ -51,7 +53,7 @@ namespace Orchard.Blogs.Controllers {
             if (blog == null)
                 return new NotFoundResult();
 
-            IEnumerable<BlogPost> posts = _blogPostService.Get(blog);
+            var posts = _blogPostService.Get(blog).Select(bp => _contentManager.GetDisplayViewModel(bp, null, "Summary"));
 
             return View(new BlogViewModel { Blog = blog, Posts = posts });
         }

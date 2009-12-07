@@ -8,6 +8,9 @@ using Orchard.Models.ViewModels;
 
 namespace Orchard.Mvc.Html {
     public static class ItemDisplayExtensions {
+        public static MvcHtmlString DisplayForItem<TModel, TItemViewModel>(this HtmlHelper<TModel> html, TItemViewModel itemViewModel) where TItemViewModel : ItemDisplayViewModel {
+            return html.DisplayForItem(x => itemViewModel);
+        }
         public static MvcHtmlString DisplayForItem<TModel, TItemViewModel>(this HtmlHelper<TModel> html, Expression<Func<TModel, TItemViewModel>> expression) where TItemViewModel : ItemDisplayViewModel {
 
             var metadata = ModelMetadata.FromLambdaExpression(expression, html.ViewData);

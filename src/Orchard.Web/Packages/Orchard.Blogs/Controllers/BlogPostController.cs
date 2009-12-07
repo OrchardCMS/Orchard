@@ -37,15 +37,6 @@ namespace Orchard.Blogs.Controllers {
 
         public Localizer T { get; set; }
 
-        public ActionResult ListByBlog(string blogSlug) {
-            Blog blog = _blogService.Get(blogSlug);
-
-            if (blog == null)
-                return new NotFoundResult();
-
-            return View(_blogPostService.Get(blog));
-        }
-
         //TODO: (erikpo) Should think about moving the slug parameters and get calls and null checks up into a model binder or action filter
         public ActionResult Item(string blogSlug, string postSlug) {
             if (!_authorizer.Authorize(Permissions.ViewPost, T("Couldn't view blog post")))

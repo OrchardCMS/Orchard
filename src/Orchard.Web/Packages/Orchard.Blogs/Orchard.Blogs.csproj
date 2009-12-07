@@ -110,12 +110,11 @@
     <Content Include="Views\Blog\DisplayTemplates\BlogForAdmin.ascx" />
     <Content Include="Views\Blog\List.aspx" />
     <Content Include="Views\Blog\ListForAdmin.aspx" />
-    <Content Include="Views\Models\DisplayTemplates\BlogPostForList.ascx" />
+    <Content Include="Views\Models\DisplayTemplates\BlogPostSummary.ascx" />
     <Content Include="Views\Shared\BlogPostPreview.ascx" />
     <Content Include="Views\BlogPost\EditorTemplates\CreateBlogPostViewModel.ascx" />
     <Content Include="Views\BlogPost\Item.aspx" />
     <Content Include="Views\Blog\Create.aspx" />
-    <Content Include="Views\BlogPost\ListByBlog.aspx" />
     <Content Include="Views\Blog\DisplayTemplates\Blog.ascx" />
     <Content Include="Views\Blog\Edit.aspx" />
     <Content Include="Views\Blog\EditorTemplates\BlogEditViewModel.ascx" />

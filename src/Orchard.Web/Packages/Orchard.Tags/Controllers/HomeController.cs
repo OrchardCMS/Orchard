@@ -102,7 +102,7 @@ namespace Orchard.Tags.Controllers {
                 var tag = _tagService.GetTagByName(tagName);
                 var items =
                     _tagService.GetTaggedContentItems(tag.Id).Select(
-                        ic => _contentManager.GetDisplayViewModel(ic, null, "ForList"));
+                        ic => _contentManager.GetDisplayViewModel(ic, null, "SummaryForSearch"));
 
                 var viewModel = new TagsSearchViewModel {
                     TagName = tag.TagName,
