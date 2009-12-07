@@ -512,6 +512,14 @@ a.ibutton.blog:hover, a.ibutton.blog:active, a.ibutton.blog:focus { background-p
     border-color:#666d51;
     border-style:solid;
 }
+.withActions {
+    overflow:hidden;
+}
+.withActions a {
+    display:inline;
+    float:left;
+    margin-right:7px;
+}
 input.large.text {
 	font-size:130%;
 	font-weight:500;
