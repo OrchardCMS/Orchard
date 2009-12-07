@@ -32,8 +32,8 @@ namespace Orchard.Tags.Models {
             Filters.Add(new ActivatingFilter<HasTags>("blogpost"));
 
             OnGetDisplayViewModel<HasTags>((context, hasTags) => {
-                context.AddDisplay(new TemplateViewModel(hasTags) { Position = "1",  TemplateName = "HasTagsList" });
-                context.AddDisplay(new TemplateViewModel(hasTags) { Position = "1" });
+                context.AddDisplay(new TemplateViewModel(hasTags) { Position = "6",  TemplateName = "HasTagsList" });
+                context.AddDisplay(new TemplateViewModel(hasTags) { Position = "6" });
             });
         }
 
