@@ -6,12 +6,12 @@ using Orchard.Models.Driver;
 using Orchard.Models.ViewModels;
 
 namespace Orchard.Core.Common.Providers {
-    public class BodyAspectProvider : ContentProvider {
+    public class BodyAspectHandler : ContentHandler {
         private const string TemplatePrefix = "Body";
         private const string TemplateName = "BodyAspect";
         private const string DefaultTextEditorTemplate = "TinyMceTextEditor";
 
-        public BodyAspectProvider(IRepository<BodyRecord> bodyRepository) {
+        public BodyAspectHandler(IRepository<BodyRecord> bodyRepository) {
             Filters.Add(new StorageFilter<BodyRecord>(bodyRepository) { AutomaticallyCreateMissingRecord = true });
 
             OnGetDisplayViewModel<BodyAspect>((context, body) => {

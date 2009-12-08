@@ -12,12 +12,12 @@ namespace Orchard.Tests.Models.Stubs {
     }
 
 
-    public class DeltaProvider : ContentProvider {
+    public class DeltaHandler : ContentHandler {
         public override System.Collections.Generic.IEnumerable<Orchard.Models.ContentType> GetContentTypes() {
             return new[] { new ContentType { Name = "delta" } };
         }
 
-        public DeltaProvider(IRepository<DeltaRecord> repository) {
+        public DeltaHandler(IRepository<DeltaRecord> repository) {
             Filters.Add(new ActivatingFilter<Delta>(x => x == "delta"));
             Filters.Add(new StorageFilter<DeltaRecord>(repository));
         }

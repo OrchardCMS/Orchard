@@ -3,8 +3,8 @@ using Orchard.Data;
 using Orchard.Models.Driver;
 
 namespace Orchard.Core.Common.Providers {
-    public class RoutableAspectProvider : ContentProvider {
-        public RoutableAspectProvider(IRepository<RoutableRecord> repository) {
+    public class RoutableAspectHandler : ContentHandler {
+        public RoutableAspectHandler(IRepository<RoutableRecord> repository) {
             Filters.Add(new StorageFilter<RoutableRecord>(repository));
         }
     }

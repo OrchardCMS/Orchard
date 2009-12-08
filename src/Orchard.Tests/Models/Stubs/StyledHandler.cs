@@ -2,8 +2,8 @@
 using Orchard.Models.ViewModels;
 
 namespace Orchard.Tests.Models.Stubs {
-    public class StyledProvider : ContentProvider {
-        public StyledProvider() {
+    public class StyledHandler : ContentHandler {
+        public StyledHandler() {
             OnGetDisplayViewModel<Styled>((ctx, part) => ctx.AddDisplay(new TemplateViewModel(part) { Position = "10" }));
         }
 

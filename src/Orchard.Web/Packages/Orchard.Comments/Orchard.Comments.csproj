@@ -69,7 +69,7 @@
     <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Models\Comment.cs" />
     <Compile Include="Models\CommentSettings.cs" />
-    <Compile Include="Models\CommentSettingsProvider.cs" />
+    <Compile Include="Models\CommentSettingsHandler.cs" />
     <Compile Include="Models\CommentSettingsRecord.cs" />
     <Compile Include="Models\CommentsHandler.cs" />
     <Compile Include="Models\HasComments.cs" />

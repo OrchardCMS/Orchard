@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 
 namespace Orchard.Models.Driver {
-    public interface IContentProvider : IDependency {
+    public interface IContentHandler : IEvents {
         IEnumerable<ContentType> GetContentTypes();
 
         void Activating(ActivatingContentContext context);

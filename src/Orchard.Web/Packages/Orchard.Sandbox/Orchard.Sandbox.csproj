@@ -64,7 +64,7 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\PageController.cs" />
     <Compile Include="Models\SandboxPage.cs" />
-    <Compile Include="Models\SandboxContentProvider.cs" />
+    <Compile Include="Models\SandboxContentHandler.cs" />
     <Compile Include="Models\SandboxPageRecord.cs" />
     <Compile Include="Models\SandboxSettingsRecord.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

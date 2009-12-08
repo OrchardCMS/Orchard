@@ -9,12 +9,12 @@ using Orchard.Models.Driver;
 using Orchard.Models.ViewModels;
 
 namespace Orchard.Blogs.Models {
-    public class BlogPostProvider : ContentProvider {
+    public class BlogPostHandler : ContentHandler {
         public override IEnumerable<ContentType> GetContentTypes() {
             return new[] { BlogPost.ContentType };
         }
 
-        public BlogPostProvider(
+        public BlogPostHandler(
             IRepository<BlogPostRecord> repository,
             IContentManager contentManager,
             IBlogPostService blogPostService) {

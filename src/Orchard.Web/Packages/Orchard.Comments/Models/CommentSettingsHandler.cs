@@ -2,10 +2,10 @@ using Orchard.Data;
 using Orchard.Models.Driver;
 
 namespace Orchard.Comments.Models {
-    public class CommentSettingsProvider : ContentProvider {
+    public class CommentSettingsHandler : ContentHandler {
         private readonly IRepository<CommentSettingsRecord> _commentSettingsRepository;
 
-        public CommentSettingsProvider(IRepository<CommentSettingsRecord> repository) {
+        public CommentSettingsHandler(IRepository<CommentSettingsRecord> repository) {
             _commentSettingsRepository = repository;
             Filters.Add(new ActivatingFilter<CommentSettings>("site"));
             Filters.Add(new StorageFilter<CommentSettingsRecord>(_commentSettingsRepository) { AutomaticallyCreateMissingRecord = true });

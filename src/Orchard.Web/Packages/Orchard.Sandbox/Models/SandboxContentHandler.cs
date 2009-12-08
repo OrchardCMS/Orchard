@@ -7,13 +7,13 @@ using Orchard.Models.Driver;
 using Orchard.Models.ViewModels;
 
 namespace Orchard.Sandbox.Models {
-    public class SandboxContentProvider : ContentProvider {
+    public class SandboxContentHandler : ContentHandler {
 
         public override IEnumerable<ContentType> GetContentTypes() {
             return new[] { SandboxPage.ContentType };
         }
 
-        public SandboxContentProvider(
+        public SandboxContentHandler(
             IRepository<SandboxPageRecord> pageRepository,
             IRepository<SandboxSettingsRecord> settingsRepository) {
 

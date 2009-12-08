@@ -11,12 +11,12 @@ namespace Orchard.Tests.Models.Stubs {
     }
 
 
-    public class GammaProvider : ContentProvider {
+    public class GammaHandler : ContentHandler {
         public override System.Collections.Generic.IEnumerable<Orchard.Models.ContentType> GetContentTypes() {
             return new[] { new ContentType { Name = "gamma" } };
         }
 
-        public GammaProvider(IRepository<GammaRecord> repository) {
+        public GammaHandler(IRepository<GammaRecord> repository) {
             Filters.Add(new ActivatingFilter<Gamma>(x => x == "gamma"));
             Filters.Add(new StorageFilter<GammaRecord>(repository));
         }

@@ -6,12 +6,12 @@ using Orchard.Models.ViewModels;
 using Orchard.Comments.Services;
 
 namespace Orchard.Comments.Models {
-    public class HasCommentsProvider : ContentProvider {
+    public class HasCommentsHandler : ContentHandler {
         private readonly IRepository<Comment> _commentsRepository;
         private readonly IRepository<ClosedComments> _closedCommentsRepository;
         private readonly ICommentService _commentService;
 
-        public HasCommentsProvider(IRepository<Comment> commentsRepository, IRepository<ClosedComments> closedCommentsRepository, ICommentService commentService) {
+        public HasCommentsHandler(IRepository<Comment> commentsRepository, IRepository<ClosedComments> closedCommentsRepository, ICommentService commentService) {
             _commentsRepository = commentsRepository;
             _closedCommentsRepository = closedCommentsRepository;
             _commentService = commentService;

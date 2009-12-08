@@ -6,7 +6,7 @@ using Orchard.Models;
 using Orchard.Models.Driver;
 
 namespace Orchard.Tests.Models.Stubs {
-    public class BetaProvider : ContentProvider {
+    public class BetaHandler : ContentHandler {
         public override System.Collections.Generic.IEnumerable<Orchard.Models.ContentType> GetContentTypes() {
             return new[] { new ContentType { Name = "beta" } };
         }

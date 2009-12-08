@@ -46,12 +46,12 @@ namespace Orchard.Tests.Models {
             builder.RegisterModule(new ImplicitCollectionSupportModule());
             builder.RegisterModule(new ContentModule());
             builder.Register<DefaultContentManager>().As<IContentManager>();
-            builder.Register<AlphaProvider>().As<IContentProvider>();
-            builder.Register<BetaProvider>().As<IContentProvider>();
-            builder.Register<GammaProvider>().As<IContentProvider>();
-            builder.Register<DeltaProvider>().As<IContentProvider>();
-            builder.Register<FlavoredProvider>().As<IContentProvider>();
-            builder.Register<StyledProvider>().As<IContentProvider>();
+            builder.Register<AlphaHandler>().As<IContentHandler>();
+            builder.Register<BetaHandler>().As<IContentHandler>();
+            builder.Register<GammaHandler>().As<IContentHandler>();
+            builder.Register<DeltaHandler>().As<IContentHandler>();
+            builder.Register<FlavoredHandler>().As<IContentHandler>();
+            builder.Register<StyledHandler>().As<IContentHandler>();
 
             builder.RegisterGeneric(typeof(Repository<>)).As(typeof(IRepository<>));
 

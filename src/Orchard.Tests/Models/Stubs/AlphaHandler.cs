@@ -4,8 +4,8 @@ using Orchard.Models.Driver;
 using Orchard.Models.ViewModels;
 
 namespace Orchard.Tests.Models.Stubs {
-    public class AlphaProvider : ContentProvider {
-        public AlphaProvider() {
+    public class AlphaHandler : ContentHandler {
+        public AlphaHandler() {
             OnGetDisplayViewModel<Alpha>((ctx, part) => ctx.AddDisplay(new TemplateViewModel(part) { Position = "3" }));
         }
         public override IEnumerable<ContentType> GetContentTypes() {

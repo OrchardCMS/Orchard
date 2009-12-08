@@ -2,7 +2,7 @@
 using Orchard.Models.ViewModels;
 
 namespace Orchard.DevTools.Models {
-    public class DebugLinkProvider : ContentProvider {
+    public class DebugLinkHandler : ContentHandler {
         protected override void GetDisplayViewModel(GetDisplayViewModelContext context) {
             context.AddDisplay(new TemplateViewModel(new ShowDebugLink { ContentItem = context.ContentItem }) { ZoneName = "recap", Position = "9999" });
         }

@@ -5,7 +5,7 @@ using Orchard.Models;
 using Orchard.Models.Driver;
 
 namespace Orchard.Blogs.Models {
-    public class BlogProvider : ContentProvider {
+    public class BlogProvider : ContentHandler {
         public override IEnumerable<ContentType> GetContentTypes() {
             return new[] { Blog.ContentType };
         }

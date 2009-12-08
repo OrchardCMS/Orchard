@@ -4,8 +4,8 @@ using System.Linq;
 using Orchard.Logging;
 
 namespace Orchard.Models.Driver {
-    public abstract class ContentProvider : IContentProvider {
-        protected ContentProvider() {
+    public abstract class ContentHandler : IContentHandler {
+        protected ContentHandler() {
             Filters = new List<IContentFilter>();
             Logger = NullLogger.Instance;
         }
@@ -94,59 +94,59 @@ namespace Orchard.Models.Driver {
             return Enumerable.Empty<ContentType>();
         }
 
-        void IContentProvider.Activating(ActivatingContentContext context) {
+        void IContentHandler.Activating(ActivatingContentContext context) {
             foreach (var filter in Filters.OfType<IContentActivatingFilter>())
                 filter.Activating(context);
             Activating(context);
         }
 
-        void IContentProvider.Activated(ActivatedContentContext context) {
+        void IContentHandler.Activated(ActivatedContentContext context) {
             foreach (var filter in Filters.OfType<IContentStorageFilter>())
                 filter.Activated(context);
             Activated(context);
         }
 
-        void IContentProvider.Creating(CreateContentContext context) {
+        void IContentHandler.Creating(CreateContentContext context) {
             foreach (var filter in Filters.OfType<IContentStorageFilter>())
                 filter.Creating(context);
             Creating(context);
         }
 
-        void IContentProvider.Created(CreateContentContext context) {
+        void IContentHandler.Created(CreateContentContext context) {
             foreach (var filter in Filters.OfType<IContentStorageFilter>())
                 filter.Created(context);
             Created(context);
         }
 
-        void IContentProvider.Loading(LoadContentContext context) {
+        void IContentHandler.Loading(LoadContentContext context) {
             foreach (var filter in Filters.OfType<IContentStorageFilter>())
                 filter.Loading(context);
             Loading(context);
         }
 
-        void IContentProvider.Loaded(LoadContentContext context) {
+        void IContentHandler.Loaded(LoadContentContext context) {
             foreach (var filter in Filters.OfType<IContentStorageFilter>())
                 filter.Loaded(context);
             Loaded(context);
         }
 
 
-        void IContentProvider.GetItemMetadata(GetItemMetadataContext context) {
+        void IContentHandler.GetItemMetadata(GetItemMetadataContext context) {
             foreach (var filter in Filters.OfType<IContentTemplateFilter>())
                 filter.GetItemMetadata(context);
             GetItemMetadata(context);
         }
-        void IContentProvider.GetDisplayViewModel(GetDisplayViewModelContext context) {
+        void IContentHandler.GetDisplayViewModel(GetDisplayViewModelContext context) {
             foreach (var filter in Filters.OfType<IContentTemplateFilter>())
                 filter.GetDisplayViewModel(context);
             GetDisplayViewModel(context);
         }
-        void IContentProvider.GetEditorViewModel(GetEditorViewModelContext context) {
+        void IContentHandler.GetEditorViewModel(GetEditorViewModelContext context) {
             foreach (var filter in Filters.OfType<IContentTemplateFilter>())
                 filter.GetEditorViewModel(context);
             GetEditorViewModel(context);
         }
-        void IContentProvider.UpdateEditorViewModel(UpdateEditorViewModelContext context) {
+        void IContentHandler.UpdateEditorViewModel(UpdateEditorViewModelContext context) {
             foreach (var filter in Filters.OfType<IContentTemplateFilter>())
                 filter.UpdateEditorViewModel(context);
             UpdateEditorViewModel(context);

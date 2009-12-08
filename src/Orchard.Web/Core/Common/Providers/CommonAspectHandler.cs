@@ -12,14 +12,14 @@ using Orchard.Security;
 using Orchard.Services;
 
 namespace Orchard.Core.Common.Providers {
-    public class CommonAspectProvider : ContentProvider {
+    public class CommonAspectHandler : ContentHandler {
         private readonly IClock _clock;
         private readonly IAuthenticationService _authenticationService;
         private readonly IAuthorizationService _authorizationService;
         private readonly IMembershipService _membershipService;
         private readonly IContentManager _contentManager;
 
-        public CommonAspectProvider(
+        public CommonAspectHandler(
             IRepository<CommonRecord> repository,
             IClock clock,
             IAuthenticationService authenticationService,

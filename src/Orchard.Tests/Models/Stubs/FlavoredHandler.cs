@@ -2,8 +2,8 @@
 using Orchard.Models.ViewModels;
 
 namespace Orchard.Tests.Models.Stubs {
-    public class FlavoredProvider : ContentProvider {
-        public FlavoredProvider() {
+    public class FlavoredHandler : ContentHandler {
+        public FlavoredHandler() {
             OnGetDisplayViewModel<Flavored>((ctx, part) => ctx.AddDisplay(new TemplateViewModel(part)));
         }
         protected override void Activating(ActivatingContentContext context) {

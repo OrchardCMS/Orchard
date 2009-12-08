@@ -6,7 +6,7 @@
       <Property Name="IContent.ContentItem" Hidden="true" />
     </Members>
     <TypeIdentifier>
-      <HashCode>AAACAAAAAAACAAhAABAAAAAAAAAAQAAAAAAQAAAEBAA=</HashCode>
+      <HashCode>AAACAAAAAAACAAhAABAAAAAAAAAAQABAAAAQAAAEBAA=</HashCode>
       <FileName>Models\ContentItem.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
@@ -28,11 +28,11 @@
     </ShowAsAssociation>
     <Lollipop Position="0.2" />
   </Class>
-  <Class Name="Orchard.Models.ContentPartForRecord&lt;TRecord&gt;">
+  <Class Name="Orchard.Models.ContentPart&lt;TRecord&gt;">
     <Position X="5.25" Y="4" Width="2.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAA=</HashCode>
-      <FileName>Models\ContentPartForRecord.cs</FileName>
+      <FileName>Models\ContentPart.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Orchard.Models.Records.ContentItemRecord">
@@ -62,15 +62,15 @@
   <Interface Name="Orchard.Models.IContentManager">
     <Position X="4" Y="5.75" Width="6" />
     <TypeIdentifier>
-      <HashCode>AAAACAAAAAAIACBAAACAAAAAAAAAAEAAAAAAAAAAAAA=</HashCode>
+      <HashCode>AAAAEAAAAAAAACBBAIAAAAAAAAEAAEgAAACAAAAAAAA=</HashCode>
       <FileName>Models\IContentManager.cs</FileName>
     </TypeIdentifier>
   </Interface>
-  <Interface Name="Orchard.Models.Driver.IContentProvider">
-    <Position X="4.25" Y="8.5" Width="3.75" />
+  <Interface Name="Orchard.Models.Driver.IContentHandler">
+    <Position X="4.5" Y="8.75" Width="4.75" />
     <TypeIdentifier>
-      <HashCode>AAAACAAAAAEIAABAAACAAIAAACAAAAQAAAAAAAAAAAg=</HashCode>
-      <FileName>Models\Driver\IContentProvider.cs</FileName>
+      <HashCode>AAAAEAAAAAEAAABBAIAAAIAAACEAAAQAAACAAAAAAAg=</HashCode>
+      <FileName>Models\Driver\IContentHandler.cs</FileName>
     </TypeIdentifier>
   </Interface>
   <Font Name="Segoe UI" Size="9" />

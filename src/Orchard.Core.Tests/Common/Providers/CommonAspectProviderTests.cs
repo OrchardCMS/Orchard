@@ -23,8 +23,8 @@ namespace Orchard.Core.Tests.Common.Providers {
 
         public override void Register(ContainerBuilder builder) {
             builder.Register<DefaultContentManager>().As<IContentManager>();
-            builder.Register<TestProvider>().As<IContentProvider>();
-            builder.Register<CommonAspectProvider>().As<IContentProvider>();
+            builder.Register<TestHandler>().As<IContentHandler>();
+            builder.Register<CommonAspectHandler>().As<IContentHandler>();
 
             _authn = new Mock<IAuthenticationService>();
             _authz = new Mock<IAuthorizationService>();
@@ -41,8 +41,8 @@ namespace Orchard.Core.Tests.Common.Providers {
             }
         }
 
-        class TestProvider : ContentProvider {
-            public TestProvider() {
+        class TestHandler : ContentHandler {
+            public TestHandler() {
                 Filters.Add(new ActivatingFilter<CommonAspect>("test-item"));
                 Filters.Add(new ActivatingFilter<TestUser>("user"));
             }

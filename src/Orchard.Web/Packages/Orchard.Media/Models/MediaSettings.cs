@@ -12,8 +12,8 @@ namespace Orchard.Media.Models {
         public virtual string RootMediaFolder { get; set; }
     }
 
-    public class MediaSettingsProvider : ContentProvider {
-        public MediaSettingsProvider(IRepository<MediaSettingsRecord> repository) {
+    public class MediaSettingsHandler : ContentHandler {
+        public MediaSettingsHandler(IRepository<MediaSettingsRecord> repository) {
             Filters.Add(new ActivatingFilter<MediaSettings>("site"));
             Filters.Add(new StorageFilter<MediaSettingsRecord>(repository) { AutomaticallyCreateMissingRecord = true });
             OnActivated<MediaSettings>(DefaultSettings);

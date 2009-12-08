@@ -19,12 +19,12 @@ namespace Orchard.Tags.Models {
         public IList<Tag> CurrentTags { get; set; }
     }
 
-    public class HasTagsProvider : ContentProvider {
+    public class HasTagsHandler : ContentHandler {
         private readonly IRepository<Tag> _tagsRepository;
         private readonly IRepository<TagsContentItems> _tagsContentItemsRepository;
         private readonly ITagService _tagService;
 
-        public HasTagsProvider(IRepository<Tag> tagsRepository, IRepository<TagsContentItems> tagsContentItemsRepository, ITagService tagService) {
+        public HasTagsHandler(IRepository<Tag> tagsRepository, IRepository<TagsContentItems> tagsContentItemsRepository, ITagService tagService) {
             _tagsRepository = tagsRepository;
             _tagsContentItemsRepository = tagsContentItemsRepository;
             _tagService = tagService;

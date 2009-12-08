@@ -23,19 +23,19 @@ namespace Orchard.Models {
             _contentTypeRepository = contentTypeRepository;
         }
 
-        private IEnumerable<IContentProvider> _drivers;
-        public IEnumerable<IContentProvider> Drivers {
+        private IEnumerable<IContentHandler> _handlers;
+        public IEnumerable<IContentHandler> Handlers {
             get {
-                if (_drivers == null)
-                    _drivers = _context.Resolve<IEnumerable<IContentProvider>>();
-                return _drivers;
+                if (_handlers == null)
+                    _handlers = _context.Resolve<IEnumerable<IContentHandler>>();
+                return _handlers;
             }
         }
 
         public IEnumerable<ContentType> GetContentTypes() {
-            return Drivers.Aggregate(
+            return Handlers.Aggregate(
                 Enumerable.Empty<ContentType>(),
-                (contentTypes, contentProvider) => contentTypes.Concat(contentProvider.GetContentTypes()));
+                (types, handler) => types.Concat(handler.GetContentTypes()));
         }
 
         public virtual ContentItem New(string contentType) {
@@ -46,9 +46,9 @@ namespace Orchard.Models {
                 Builder = new ContentItemBuilder(contentType)
             };
 
-            // invoke drivers to weld aspects onto kernel
-            foreach (var driver in Drivers) {
-                driver.Activating(context);
+            // invoke handlers to weld aspects onto kernel
+            foreach (var handler in Handlers) {
+                handler.Activating(context);
             }
             var context2 = new ActivatedContentContext {
                 ContentType = contentType,
@@ -58,8 +58,8 @@ namespace Orchard.Models {
             // back-reference for convenience (e.g. getting metadata when in a view)
             context2.ContentItem.ContentManager = this;
 
-            foreach (var driver in Drivers) {
-                driver.Activated(context2);
+            foreach (var handler in Handlers) {
+                handler.Activated(context2);
             }
 
             // composite result is returned
@@ -87,12 +87,12 @@ namespace Orchard.Models {
                 ContentItem = contentItem,
             };
 
-            // invoke drivers to acquire state, or at least establish lazy loading callbacks
-            foreach (var driver in Drivers) {
-                driver.Loading(context);
+            // invoke handlers to acquire state, or at least establish lazy loading callbacks
+            foreach (var handler in Handlers) {
+                handler.Loading(context);
             }
-            foreach (var driver in Drivers) {
-                driver.Loaded(context);
+            foreach (var handler in Handlers) {
+                handler.Loaded(context);
             }
 
             return context.ContentItem;
@@ -116,12 +116,12 @@ namespace Orchard.Models {
             context.ContentItem.Id = context.Id;
 
 
-            // invoke drivers to add information to persistent stores
-            foreach (var driver in Drivers) {
-                driver.Creating(context);
+            // invoke handlers to add information to persistent stores
+            foreach (var handler in Handlers) {
+                handler.Creating(context);
             }
-            foreach (var driver in Drivers) {
-                driver.Created(context);
+            foreach (var handler in Handlers) {
+                handler.Created(context);
             }
         }
 
@@ -130,8 +130,8 @@ namespace Orchard.Models {
                 ContentItem = content.ContentItem,
                 Metadata = new ContentItemMetadata()
             };
-            foreach (var driver in Drivers) {
-                driver.GetItemMetadata(context);
+            foreach (var handler in Handlers) {
+                handler.GetItemMetadata(context);
             }
             return context.Metadata;
         }
@@ -139,8 +139,8 @@ namespace Orchard.Models {
         public ItemDisplayViewModel<TContentPart> GetDisplayViewModel<TContentPart>(TContentPart content, string groupName, string displayType) where TContentPart : IContent {
             var itemView = new ItemDisplayViewModel<TContentPart> {Item = content, Displays = Enumerable.Empty<TemplateViewModel>()};
             var context = new GetDisplayViewModelContext(itemView, groupName, displayType);
-            foreach (var driver in Drivers) {
-                driver.GetDisplayViewModel(context);
+            foreach (var handler in Handlers) {
+                handler.GetDisplayViewModel(context);
             }
             context.ViewModel.Displays = OrderTemplates(context.ViewModel.Displays);
             return itemView;
@@ -149,8 +149,8 @@ namespace Orchard.Models {
         public ItemEditorViewModel<TContentPart> GetEditorViewModel<TContentPart>(TContentPart content, string groupName) where TContentPart : IContent {
             var itemView = new ItemEditorViewModel<TContentPart> { Item = content, Editors = Enumerable.Empty<TemplateViewModel>() };
             var context = new GetEditorViewModelContext(itemView, groupName);
-            foreach (var driver in Drivers) {
-                driver.GetEditorViewModel(context);
+            foreach (var handler in Handlers) {
+                handler.GetEditorViewModel(context);
             }
             context.ViewModel.Editors = OrderTemplates(context.ViewModel.Editors);
             return itemView;
@@ -160,8 +160,8 @@ namespace Orchard.Models {
             var itemView = new ItemEditorViewModel<TContentPart> { Item = content, Editors = Enumerable.Empty<TemplateViewModel>() };
 
             var context = new UpdateEditorViewModelContext(itemView, groupName, updater);
-            foreach (var driver in Drivers) {
-                driver.UpdateEditorViewModel(context);
+            foreach (var handler in Handlers) {
+                handler.UpdateEditorViewModel(context);
             }
             context.ViewModel.Editors = OrderTemplates(context.ViewModel.Editors);
             return itemView;

@@ -11,8 +11,8 @@ namespace Orchard.Tags.Models {
         public virtual bool EnableTagsOnPages { get; set; }
     }
 
-    public class TagSettingsProvider : ContentProvider {
-        public TagSettingsProvider(IRepository<TagSettingsRecord> repository) {
+    public class TagSettingsHandler : ContentHandler {
+        public TagSettingsHandler(IRepository<TagSettingsRecord> repository) {
             Filters.Add(new ActivatingFilter<TagSettings>("site"));
             Filters.Add(new StorageFilter<TagSettingsRecord>(repository) { AutomaticallyCreateMissingRecord = true });
             Filters.Add(new TemplateFilterForRecord<TagSettingsRecord>("TagSettings"));
