@@ -3,8 +3,8 @@
 <%@ Import Namespace="Orchard.Models.ViewModels"%>
 <%@ Import Namespace="Orchard.Blogs.Extensions"%>
 <%@ Import Namespace="Orchard.Blogs.Models"%>
-<div class="manage"><a href="<%=Url.BlogEdit(Model.Item.Slug) %>" class="ibutton edit">edit</a></div>
-<h2><%=Html.Encode(Model.Item.Name) %></h2>
-<div><%=Html.Encode(Model.Item.Description) %></div>
+<h3><%=Html.Link(Html.Encode(Model.Item.Name), Url.Blog(Model.Item.Slug)) %></h3>
+<div class="blog metadata"><a href="<%=Url.Blog(Model.Item.Slug) %>"><%=Model.Item.PostCount %> post<%=Model.Item.PostCount == 1 ? "" : "s" %></a></div>
+<p><%=Model.Item.Description %></p>
 <%--TODO: (erikpo) Need to figure out which zones should be displayed in this template--%>
-<%=Html.DisplayZonesAny() %>
+<%--<%=Html.DisplayZonesAny() %>--%>

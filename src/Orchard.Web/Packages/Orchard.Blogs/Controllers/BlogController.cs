@@ -39,7 +39,10 @@ namespace Orchard.Blogs.Controllers {
         public Localizer T { get; set; }
 
         public ActionResult List() {
-            return View(new BlogsViewModel { Blogs = _blogService.Get() });
+            IEnumerable<ItemDisplayViewModel<Blog>> blogs =
+                _blogService.Get().Select(b => _contentManager.GetDisplayViewModel(b, null, "Summary"));
+
+            return View(new BlogsViewModel {Blogs = blogs});
         }
 
         public ActionResult ListForAdmin() {
@@ -50,11 +53,8 @@ namespace Orchard.Blogs.Controllers {
         public ActionResult Item(string blogSlug) {
             Blog blog = _blogService.Get(blogSlug);
 
-
             if (blog == null)
                 return new NotFoundResult();
-
-//            var posts = _blogPostService.Get(blog).Select(bp => _contentManager.GetDisplayViewModel(bp, null, "Summary"));
 
             return View(new BlogViewModel {
                 Blog = _contentManager.GetDisplayViewModel(blog, null, "Detail")
