@@ -22,31 +22,34 @@ namespace Orchard.Blogs.Controllers {
         private readonly IAuthorizer _authorizer;
         private readonly INotifier _notifier;
         private readonly IBlogService _blogService;
-        private readonly IBlogPostService _blogPostService;
 
         public BlogController(ISessionLocator sessionLocator, IContentManager contentManager,
                               IAuthorizer authorizer, INotifier notifier,
-                              IBlogService blogService, IBlogPostService blogPostService) {
+                              IBlogService blogService) {
             _sessionLocator = sessionLocator;
             _contentManager = contentManager;
             _authorizer = authorizer;
             _notifier = notifier;
             _blogService = blogService;
-            _blogPostService = blogPostService;
             T = NullLocalizer.Instance;
         }
 
         public Localizer T { get; set; }
 
         public ActionResult List() {
-            IEnumerable<ItemDisplayViewModel<Blog>> blogs =
-                _blogService.Get().Select(b => _contentManager.GetDisplayViewModel(b, null, "Summary"));
+            var model = new BlogsViewModel {
+                Blogs = _blogService.Get().Select(b => _contentManager.GetDisplayViewModel(b, null, "Summary"))
+            };
 
-            return View(new BlogsViewModel {Blogs = blogs});
+            return View(model);
         }
 
         public ActionResult ListForAdmin() {
-            return View(new BlogsForAdminViewModel { Blogs = _blogService.Get() });
+            var model = new BlogsForAdminViewModel {
+                Blogs = _blogService.Get().Select(b => _contentManager.GetDisplayViewModel(b, null, "SummaryAdmin"))
+            };
+
+            return View(model);
         }
 
         //TODO: (erikpo) Should move the slug parameter and get call and null check up into a model binder
@@ -56,9 +59,11 @@ namespace Orchard.Blogs.Controllers {
             if (blog == null)
                 return new NotFoundResult();
 
-            return View(new BlogViewModel {
+            var model = new BlogViewModel {
                 Blog = _contentManager.GetDisplayViewModel(blog, null, "Detail")
-            });
+            };
+
+            return View(model);
         }
 
         //TODO: (erikpo) Should move the slug parameter and get call and null check up into a model binder
@@ -68,9 +73,11 @@ namespace Orchard.Blogs.Controllers {
             if (blog == null)
                 return new NotFoundResult();
 
-            IEnumerable<BlogPost> posts = _blogPostService.Get(blog);
+            var model = new BlogForAdminViewModel {
+                Blog = _contentManager.GetDisplayViewModel(blog, null, "DetailAdmin")
+            };
 
-            return View(new BlogForAdminViewModel { Blog = blog, Posts = posts });
+            return View(model);
         }
 
         public ActionResult Create() {

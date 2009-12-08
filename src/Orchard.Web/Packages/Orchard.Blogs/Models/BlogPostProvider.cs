@@ -24,7 +24,7 @@ namespace Orchard.Blogs.Models {
             Filters.Add(new ActivatingFilter<RoutableAspect>("blogpost"));
             Filters.Add(new ActivatingFilter<BodyAspect>("blogpost"));
             Filters.Add(new StorageFilter<BlogPostRecord>(repository));
-            Filters.Add(new ContentItemTemplates<BlogPost>("BlogPost", "Detail", "Summary"));
+            Filters.Add(new ContentItemTemplates<BlogPost>("BlogPost", "Detail", "Summary", "SummaryAdmin"));
 
             OnLoaded<BlogPost>((context, bp) => bp.Blog = contentManager.Get<Blog>(bp.Record.Blog.Id));
 
@@ -51,14 +51,27 @@ namespace Orchard.Blogs.Models {
             });
 
             OnGetDisplayViewModel<Blog>((context, blog) => {
-                if (context.DisplayType != "Detail") {
+                if (!context.DisplayType.StartsWith("Detail"))
                     return;
-                }
 
                 var posts = blogPostService.Get(blog);
-                var viewModels = posts.Select(
-                    bp => contentManager.GetDisplayViewModel(bp, null, "Summary"));
-                context.AddDisplay(new TemplateViewModel(viewModels) { TemplateName = "BlogPostList", ZoneName = "body" });
+
+                switch(context.DisplayType) {
+                    case "Detail":
+                        context.AddDisplay(
+                            new TemplateViewModel(posts.Select(bp => contentManager.GetDisplayViewModel(bp, null, "Summary"))) {
+                                TemplateName = "BlogPostList",
+                                ZoneName = "body"
+                            });
+                        break;
+                    case "DetailAdmin":
+                        context.AddDisplay(
+                            new TemplateViewModel(posts.Select(bp => contentManager.GetDisplayViewModel(bp, null, "SummaryAdmin"))) {
+                                TemplateName = "BlogPostListAdmin",
+                                ZoneName = "body"
+                            });
+                        break;
+                }
             });
         }
 

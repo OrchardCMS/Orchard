@@ -104,10 +104,9 @@
     <Content Include="Views\BlogPost\Create.aspx" />
     <Content Include="Views\BlogPost\Edit.aspx" />
     <Content Include="Views\BlogPost\EditorTemplates\BlogPostEditViewModel.ascx" />
-    <Content Include="Views\Blog\DisplayTemplates\BlogForAdminViewModel.ascx" />
+    <Content Include="Views\Models\DisplayTemplates\BlogDetailAdmin.ascx" />
     <Content Include="Views\Blog\ItemForAdmin.aspx" />
-    <Content Include="Views\Blog\DisplayTemplates\BlogsForAdminViewModel.ascx" />
-    <Content Include="Views\Blog\DisplayTemplates\BlogForAdmin.ascx" />
+    <Content Include="Views\Models\DisplayTemplates\BlogSummaryAdmin.ascx" />
     <Content Include="Views\Blog\List.aspx" />
     <Content Include="Views\Blog\ListForAdmin.aspx" />
     <Content Include="Views\Models\DisplayTemplates\BlogPostDetail.ascx" />
@@ -123,7 +122,8 @@
     <Content Include="Views\Blog\EditorTemplates\BlogPermalink.ascx" />
     <Content Include="Views\Blog\EditorTemplates\CreateBlogViewModel.ascx" />
     <Content Include="Views\Blog\Item.aspx" />
-    <Content Include="Views\Shared\DisplayTemplates\BlogPostPreviewForAdmin.ascx" />
+    <Content Include="Views\Models\DisplayTemplates\BlogPostSummaryAdmin.ascx" />
+    <Content Include="Views\Models\DisplayTemplates\BlogPostListAdmin.ascx" />
     <Content Include="Web.config" />
     <Content Include="Views\Web.config" />
   </ItemGroup>
