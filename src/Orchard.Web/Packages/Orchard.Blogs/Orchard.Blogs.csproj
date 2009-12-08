@@ -115,7 +115,6 @@
     <Content Include="Views\Models\DisplayTemplates\BlogDetail.ascx" />
     <Content Include="Views\Models\DisplayTemplates\BlogPostList.ascx" />
     <Content Include="Views\Models\DisplayTemplates\BlogSummary.ascx" />
-    <Content Include="Views\Shared\BlogPostPreview.ascx" />
     <Content Include="Views\BlogPost\EditorTemplates\CreateBlogPostViewModel.ascx" />
     <Content Include="Views\BlogPost\Item.aspx" />
     <Content Include="Views\Blog\Create.aspx" />
