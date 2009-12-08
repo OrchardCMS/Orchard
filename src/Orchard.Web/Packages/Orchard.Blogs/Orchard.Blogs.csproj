@@ -110,8 +110,9 @@
     <Content Include="Views\Blog\DisplayTemplates\BlogForAdmin.ascx" />
     <Content Include="Views\Blog\List.aspx" />
     <Content Include="Views\Blog\ListForAdmin.aspx" />
+    <Content Include="Views\Models\DisplayTemplates\BlogPostDetail.ascx" />
     <Content Include="Views\Models\DisplayTemplates\BlogPostSummary.ascx" />
-    <Content Include="Views\Models\DisplayTemplates\Blog.ascx" />
+    <Content Include="Views\Models\DisplayTemplates\BlogDetail.ascx" />
     <Content Include="Views\Models\DisplayTemplates\BlogPostList.ascx" />
     <Content Include="Views\Models\DisplayTemplates\BlogSummary.ascx" />
     <Content Include="Views\Shared\BlogPostPreview.ascx" />

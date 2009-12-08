@@ -5,7 +5,6 @@ using Orchard.Mvc.ViewModels;
 namespace Orchard.Blogs.ViewModels {
     public class BlogPostViewModel : BaseViewModel {
         public Blog Blog { get; set; }
-        public BlogPost Post { get; set; }
-        public ItemDisplayViewModel ItemView { get; set; }
+        public ItemDisplayViewModel<BlogPost> BlogPost { get; set; }
     }
 }

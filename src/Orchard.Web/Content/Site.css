@@ -331,12 +331,6 @@ div#title
 .metadata, p.tags {
     font-size:95%;
 }
-ul.blogs, ul.posts {
-    padding-left:0;
-}
-ul.blogs li, ul.posts li {
-    list-style-type:none;
-}
 
 /* Icon buttons
 ----------------------------------------------------------*/

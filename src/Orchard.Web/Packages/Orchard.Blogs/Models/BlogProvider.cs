@@ -15,7 +15,7 @@ namespace Orchard.Blogs.Models {
             Filters.Add(new ActivatingFilter<CommonAspect>("blog"));
             Filters.Add(new ActivatingFilter<RoutableAspect>("blog"));
             Filters.Add(new StorageFilter<BlogRecord>(repository));
-            Filters.Add(new ContentItemTemplates<Blog>("Blog", "Summary"));
+            Filters.Add(new ContentItemTemplates<Blog>("Blog", "Detail", "Summary"));
         }
     }
 }

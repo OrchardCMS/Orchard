@@ -52,7 +52,12 @@ namespace Orchard.Blogs.Controllers {
             if (post == null)
                 return new NotFoundResult();
 
-            return View(new BlogPostViewModel { Blog = blog, Post = post, ItemView = _contentManager.GetDisplayViewModel(post.ContentItem, null, "detail") });
+            var model = new BlogPostViewModel {
+                Blog = blog,
+                BlogPost = _contentManager.GetDisplayViewModel(post, null, "Detail")
+            };
+
+            return View(model);
         }
 
         public ActionResult Slugify(string value) {
