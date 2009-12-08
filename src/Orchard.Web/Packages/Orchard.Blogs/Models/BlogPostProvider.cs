@@ -1,9 +1,12 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Web.Routing;
+using Orchard.Blogs.Services;
 using Orchard.Core.Common.Models;
 using Orchard.Data;
 using Orchard.Models;
 using Orchard.Models.Driver;
+using Orchard.Models.ViewModels;
 
 namespace Orchard.Blogs.Models {
     public class BlogPostProvider : ContentProvider {
@@ -11,7 +14,11 @@ namespace Orchard.Blogs.Models {
             return new[] { BlogPost.ContentType };
         }
 
-        public BlogPostProvider(IRepository<BlogPostRecord> repository, IContentManager contentManager) {
+        public BlogPostProvider(
+            IRepository<BlogPostRecord> repository,
+            IContentManager contentManager,
+            IBlogPostService blogPostService) {
+
             Filters.Add(new ActivatingFilter<BlogPost>("blogpost"));
             Filters.Add(new ActivatingFilter<CommonAspect>("blogpost"));
             Filters.Add(new ActivatingFilter<RoutableAspect>("blogpost"));
@@ -42,6 +49,19 @@ namespace Orchard.Blogs.Models {
                             postSlug = bp.Slug
                         });
             });
+
+            OnGetDisplayViewModel<Blog>((context, blog) => {
+                if (context.DisplayType != "Detail") {
+                    return;
+                }
+
+                var posts = blogPostService.Get(blog);
+                var viewModels = posts.Select(
+                    bp => contentManager.GetDisplayViewModel(bp, null, "Summary"));
+                context.AddDisplay(new TemplateViewModel(viewModels) { TemplateName = "BlogPostList", ZoneName = "body" });
+            });
         }
+
+
     }
 }

@@ -24,8 +24,8 @@ namespace Orchard.Blogs.Controllers {
         private readonly IBlogService _blogService;
         private readonly IBlogPostService _blogPostService;
 
-        public BlogController(ISessionLocator sessionLocator, IContentManager contentManager, 
-                              IAuthorizer authorizer, INotifier notifier, 
+        public BlogController(ISessionLocator sessionLocator, IContentManager contentManager,
+                              IAuthorizer authorizer, INotifier notifier,
                               IBlogService blogService, IBlogPostService blogPostService) {
             _sessionLocator = sessionLocator;
             _contentManager = contentManager;
@@ -50,17 +50,19 @@ namespace Orchard.Blogs.Controllers {
         public ActionResult Item(string blogSlug) {
             Blog blog = _blogService.Get(blogSlug);
 
+
             if (blog == null)
                 return new NotFoundResult();
 
-            var posts = _blogPostService.Get(blog).Select(bp => _contentManager.GetDisplayViewModel(bp, null, "Summary"));
+//            var posts = _blogPostService.Get(blog).Select(bp => _contentManager.GetDisplayViewModel(bp, null, "Summary"));
 
-            return View(new BlogViewModel { Blog = blog, Posts = posts });
+            return View(new BlogViewModel {
+                Blog = _contentManager.GetDisplayViewModel(blog, null, "Detail")
+            });
         }
 
         //TODO: (erikpo) Should move the slug parameter and get call and null check up into a model binder
-        public ActionResult ItemForAdmin(string blogSlug)
-        {
+        public ActionResult ItemForAdmin(string blogSlug) {
             Blog blog = _blogService.Get(blogSlug);
 
             if (blog == null)
@@ -116,7 +118,7 @@ namespace Orchard.Blogs.Controllers {
                 return new NotFoundResult();
 
             var model = new BlogEditViewModel { Blog = blog };
-            model.ItemView = _contentManager.UpdateEditorViewModel(model.Blog.ContentItem, "",this);
+            model.ItemView = _contentManager.UpdateEditorViewModel(model.Blog.ContentItem, "", this);
 
             IValueProvider values = input.ToValueProvider();
             if (!TryUpdateModel(model, values))
