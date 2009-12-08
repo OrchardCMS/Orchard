@@ -1,9 +1,13 @@
+using System;
 using Orchard.Core.Common.Models;
 using Orchard.Core.Common.Records;
+using Orchard.Core.Common.ViewModels;
 using Orchard.Data;
+using Orchard.Localization;
 using Orchard.Models;
 using Orchard.Models.Aspects;
 using Orchard.Models.Driver;
+using Orchard.Models.ViewModels;
 using Orchard.Security;
 using Orchard.Services;
 
@@ -11,23 +15,36 @@ namespace Orchard.Core.Common.Providers {
     public class CommonAspectProvider : ContentProvider {
         private readonly IClock _clock;
         private readonly IAuthenticationService _authenticationService;
+        private readonly IAuthorizationService _authorizationService;
+        private readonly IMembershipService _membershipService;
         private readonly IContentManager _contentManager;
 
         public CommonAspectProvider(
             IRepository<CommonRecord> repository,
             IClock clock,
             IAuthenticationService authenticationService,
+            IAuthorizationService authorizationService,
+            IMembershipService membershipService,
             IContentManager contentManager) {
 
             _clock = clock;
             _authenticationService = authenticationService;
+            _authorizationService = authorizationService;
+            _membershipService = membershipService;
             _contentManager = contentManager;
+            T = NullLocalizer.Instance;
 
             OnActivated<CommonAspect>(PropertySetHandlers);
             OnCreating<CommonAspect>(DefaultTimestampsAndOwner);
             OnLoaded<CommonAspect>(LazyLoadHandlers);
             Filters.Add(new StorageFilter<CommonRecord>(repository));
+
+            //OnGetDisplayViewModel<CommonAspect>();
+            OnGetEditorViewModel<CommonAspect>(GetEditor);
+            OnUpdateEditorViewModel<CommonAspect>(UpdateEditor);
         }
+
+        public Localizer T { get; set; }
 
         void DefaultTimestampsAndOwner(CreateContentContext context, CommonAspect instance) {
             // assign default create/modified dates
@@ -75,15 +92,39 @@ namespace Orchard.Core.Common.Providers {
         }
 
 
-        protected override void UpdateEditorViewModel(UpdateEditorViewModelContext context) {
-            var part = context.ContentItem.As<CommonAspect>();
-            if (part == null)
+        private void GetEditor(GetEditorViewModelContext context, CommonAspect instance) {
+            var currentUser = _authenticationService.GetAuthenticatedUser();
+            if (!_authorizationService.CheckAccess(currentUser, Permissions.ChangeOwner)) {
                 return;
-
-            // this event is hooked so the modified timestamp is changed when an edit-post occurs.
-            // kind of a loose rule of thumb. may not be sufficient
-            part.Record.ModifiedUtc = _clock.UtcNow;
+            }
+            var viewModel = new OwnerEditorViewModel { Owner = instance.Owner.UserName };
+            context.AddEditor(new TemplateViewModel(viewModel, "CommonAspect") );
         }
 
+
+        private void UpdateEditor(UpdateEditorViewModelContext context, CommonAspect instance) {
+            // this event is hooked so the modified timestamp is changed when an edit-post occurs.
+            // kind of a loose rule of thumb. may not be sufficient
+            instance.Record.ModifiedUtc = _clock.UtcNow;
+
+            var currentUser = _authenticationService.GetAuthenticatedUser();
+            if (!_authorizationService.CheckAccess(currentUser, Permissions.ChangeOwner)) {
+                return;
+            }
+
+            var viewModel = new OwnerEditorViewModel { Owner = instance.Owner.UserName };
+            context.Updater.TryUpdateModel(viewModel, "CommonAspect", null, null);
+
+            if (viewModel.Owner != instance.Owner.UserName) {
+                var newOwner = _membershipService.GetUser(viewModel.Owner);
+                if (newOwner == null) {
+                    context.Updater.AddModelError("CommonAspect.Owner", T("Invalid user name"));
+                }
+                else {
+                    instance.Owner = newOwner;
+                }
+            }
+            context.AddEditor(new TemplateViewModel(viewModel, "CommonAspect"));
+        }
     }
 }

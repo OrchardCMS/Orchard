@@ -49,6 +49,10 @@ namespace Orchard.Core.Settings.Controllers {
             return TryUpdateModel(model, prefix, includeProperties, excludeProperties);
         }
 
+        void IUpdateModel.AddModelError(string key, LocalizedString errorMessage) {
+            ModelState.AddModelError(key, errorMessage.ToString());
+        }
+
         #endregion
     }
 }

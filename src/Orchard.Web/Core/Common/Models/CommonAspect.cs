@@ -29,12 +29,12 @@ namespace Orchard.Core.Common.Models {
             set { Record.ModifiedUtc = value;}
         }
 
-        IUser ICommonAspect.Owner {
+        public IUser Owner {
             get { return _owner.Value; }
             set { _owner.Value = value; }
         }
 
-        IContent ICommonAspect.Container {
+        public IContent Container {
             get { return _container.Value; }
             set { _container.Value = value; }
         }
