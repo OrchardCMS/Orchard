@@ -76,7 +76,7 @@
     <Compile Include="Services\BlogService.cs" />
     <Compile Include="Controllers\BlogController.cs" />
     <Compile Include="Models\Blog.cs" />
-    <Compile Include="Models\BlogProvider.cs" />
+    <Compile Include="Models\BlogHandler.cs" />
     <Compile Include="Models\BlogPost.cs" />
     <Compile Include="Models\BlogPostHandler.cs" />
     <Compile Include="Models\BlogPostRecord.cs" />

@@ -6,12 +6,12 @@ using Orchard.Models.Driver;
 using Orchard.Models.ViewModels;
 
 namespace Orchard.Blogs.Models {
-    public class BlogProvider : ContentHandler {
+    public class BlogHandler : ContentHandler {
         public override IEnumerable<ContentType> GetContentTypes() {
             return new[] { Blog.ContentType };
         }
 
-        public BlogProvider(IRepository<BlogRecord> repository) {
+        public BlogHandler(IRepository<BlogRecord> repository) {
             Filters.Add(new ActivatingFilter<Blog>("blog"));
             Filters.Add(new ActivatingFilter<CommonAspect>("blog"));
             Filters.Add(new ActivatingFilter<RoutableAspect>("blog"));
