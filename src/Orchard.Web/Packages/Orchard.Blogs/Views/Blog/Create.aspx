@@ -1,9 +1,6 @@
 <%@ Page Language="C#" Inherits="System.Web.Mvc.ViewPage<CreateBlogViewModel>" %>
+<%@ Import Namespace="Orchard.Mvc.Html"%>
 <%@ Import Namespace="Orchard.Blogs.ViewModels"%>
-<%@ Import Namespace="Orchard.Blogs.Models"%>
-<%@ Import Namespace="Orchard.Blogs.Extensions"%>
-<%@ Import Namespace="Orchard.Security" %>
-<%@ Import Namespace="Orchard.Mvc.Html" %>
 <% Html.Include("AdminHead"); %>
     <h2>Add Blog</h2>
     <% using (Html.BeginForm()) { %>

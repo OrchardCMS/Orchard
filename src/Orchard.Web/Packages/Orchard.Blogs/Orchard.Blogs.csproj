@@ -117,7 +117,6 @@
     <Content Include="Views\BlogPost\Item.aspx" />
     <Content Include="Views\Blog\Create.aspx" />
     <Content Include="Views\Blog\Edit.aspx" />
-    <Content Include="Views\Blog\EditorTemplates\BlogEditViewModel.ascx" />
     <Content Include="Views\Blog\EditorTemplates\BlogPermalink.ascx" />
     <Content Include="Views\Blog\Item.aspx" />
     <Content Include="Views\Models\DisplayTemplates\BlogPostSummaryAdmin.ascx" />

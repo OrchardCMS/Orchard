@@ -86,11 +86,15 @@ namespace Orchard.Blogs.Controllers {
                 return new HttpUnauthorizedResult();
 
             Blog blog = _contentManager.New<Blog>("blog");
-            CreateBlogViewModel viewModel = new CreateBlogViewModel {
+
+            if (blog == null)
+                return new NotFoundResult();
+
+            var model = new CreateBlogViewModel {
                 Blog = _contentManager.GetEditorViewModel(blog, null)
             };
 
-            return View(viewModel);
+            return View(model);
         }
 
         [HttpPost]
@@ -114,14 +118,20 @@ namespace Orchard.Blogs.Controllers {
         }
 
         public ActionResult Edit(string blogSlug) {
+            //TODO: (erikpo) Might think about moving this to an ActionFilter/Attribute
+            if (!_authorizer.Authorize(Permissions.ModifyBlog, T("Not allowed to edit blog")))
+                return new HttpUnauthorizedResult();
+
             //TODO: (erikpo) Move looking up the current blog up into a modelbinder
             Blog blog = _blogService.Get(blogSlug);
 
             if (blog == null)
                 return new NotFoundResult();
 
-            var model = new BlogEditViewModel { Blog = blog };
-            model.ItemView = _contentManager.GetEditorViewModel(model.Blog.ContentItem, "");
+            var model = new BlogEditViewModel {
+                Blog = _contentManager.GetEditorViewModel(blog, "")
+            };
+
             return View(model);
         }
 
@@ -136,11 +146,11 @@ namespace Orchard.Blogs.Controllers {
             if (blog == null)
                 return new NotFoundResult();
 
-            var model = new BlogEditViewModel { Blog = blog };
-            model.ItemView = _contentManager.UpdateEditorViewModel(model.Blog.ContentItem, "", this);
+            var model = new BlogEditViewModel {
+                Blog = _contentManager.UpdateEditorViewModel(blog, "", this)
+            };
 
-            IValueProvider values = input.ToValueProvider();
-            if (!TryUpdateModel(model, values))
+            if (!ModelState.IsValid)
                 return View(model);
 
             _notifier.Information(T("Blog information updated"));
