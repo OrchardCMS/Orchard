@@ -97,8 +97,11 @@ namespace Orchard.Core.Common.Providers {
             if (!_authorizationService.CheckAccess(currentUser, Permissions.ChangeOwner)) {
                 return;
             }
-            var viewModel = new OwnerEditorViewModel { Owner = instance.Owner.UserName };
-            context.AddEditor(new TemplateViewModel(viewModel, "CommonAspect") );
+            var viewModel = new OwnerEditorViewModel();
+            if (instance.Owner != null)
+                viewModel.Owner = instance.Owner.UserName;
+
+            context.AddEditor(new TemplateViewModel(viewModel, "CommonAspect"));
         }
 
 
@@ -112,10 +115,14 @@ namespace Orchard.Core.Common.Providers {
                 return;
             }
 
-            var viewModel = new OwnerEditorViewModel { Owner = instance.Owner.UserName };
+            var viewModel = new OwnerEditorViewModel ();
+            if (instance.Owner != null)
+                viewModel.Owner = instance.Owner.UserName;
+
+            var priorOwner = viewModel.Owner;
             context.Updater.TryUpdateModel(viewModel, "CommonAspect", null, null);
 
-            if (viewModel.Owner != instance.Owner.UserName) {
+            if (viewModel.Owner != priorOwner) {
                 var newOwner = _membershipService.GetUser(viewModel.Owner);
                 if (newOwner == null) {
                     context.Updater.AddModelError("CommonAspect.Owner", T("Invalid user name"));
