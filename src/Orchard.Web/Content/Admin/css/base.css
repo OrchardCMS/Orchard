@@ -152,7 +152,7 @@ h4 { font-size:1.8em; } /* 18px */
 h5 { font-size:1.6em; } /* 16px */
 
 h6, p, legend, label, input, select, .button, .cancel /* todo: (heskew) need to do something better with cancel */,
-.message, th, td { font-size:1.5em; line-height:1.5em; } /* 15px */
+.message, .validation-summary-errors, th, td { font-size:1.5em; line-height:1.5em; } /* 15px */
 p .button,
 td *, .mceLayout td { font-size:inherit; }
 .meta { font-size:1.2em; }
@@ -291,7 +291,7 @@ a:hover, a:active, a:focus {
 
 /* Confirmations, Messages and the like
 ----------------------------------------------------------*/
-.message {
+.message, .validation-summary-errors {
 	margin:10px 0 4px 0;
     padding:4px;
 }
@@ -311,9 +311,13 @@ span.message {
 	background:#fdf5bc; /* yellow */
 	border:1px solid #ffea9b;
 }
-.critical.message {
-	background:#e68585; /* red */
+/* todo: (heskew) what else (other inputs) needs this? */
+.critical.message, .validation-summary-errors,
+.input-validation-error.text-box, .input-validation-error.text {
 	border:1px solid #990808;
+}
+.critical.message, .validation-summary-errors {
+	background:#e68585; /* red */
 	color:#fff;
 }
 .info.message {
@@ -699,7 +703,7 @@ todo: (heskew) pull out into relevant modules where appropriate
 
 #content, #navigation li, button, .button,
 table, textarea, input.text, input.text-box,
-.contentItems, .message {
+.contentItems, .message, .validation-summary-errors {
 	-moz-border-radius:4px;
 	-webkit-border-radius:4px;
 	border-radius:4px;
