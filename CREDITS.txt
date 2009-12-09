@@ -1,0 +1,138 @@
+Orchard Project
+ASP.NET Open Source Gallery at CodePlex Foundation
+Copyright 2009 CodePlex Foundation
+
+This product includes software developed at
+The CodePlex Foundation (http://www.codeplex.org/).
+
+Orchard includes or is derivative of works distributed under the licenses listed below. The full text for most of the licenses listed below can be found in the LICENSE.txt file accompanying each work. The original copyright notices have been preserved within the respective files and or packages. Please refer to the specific files and/or packages for more detailed information about the authors, copyright notices, and licenses.
+
+Antlr
+-----
+Website:      http://www.antlr.org/
+Copyright:    Copyright (c) 2003-2008 Terence Parr
+License:      New BSD
+
+ASP.NET MVC
+-----
+Website:      http://aspnet.codeplex.com/wikipage?title=MVC&referringTitle=Home
+Copyright:    Copyright (c) 2008-2009 Microsoft Corporation
+License:      Microsoft Source License for ASP.NET pre-release components
+              http://aspnet.codeplex.com/license
+
+Autofac
+-----
+Website:      http://code.google.com/p/autofac/
+Copyright:    Copyright (c) 2007-2008 Autofac Contributors
+              http://code.google.com/p/autofac/wiki/Contributing
+License:      MIT
+
+Castle
+-----
+Website:      http://www.castleproject.org/container/index.html
+Copyright:    Copyright (c) 2004-2009 Castle Project
+License:      Apache Software Foundation License 2.0
+
+Fam Fam Fam Silk Icons
+-----
+Website:      http://famfamfam.com/lab/icons/silk/
+Copyright:    Copyright (c) 2005-2006 Mark James
+License:      CC Attribution 2.5 http://creativecommons.org/licenses/by/2.5/
+
+Fluent NHibernate
+-----
+Website:      http://fluentnhibernate.org/
+Copyright:    Copyright (c) 2008-2009 James Gregory and contributors
+License:      New BSD
+
+IESI Collections
+-----
+Website:      http://www.codeproject.com/KB/recipes/sets.aspx
+Copyright:    Copyright (c) 2002-2004 Jason Smith
+License:      http://www.codeproject.com/info/Licenses.aspx
+              distributed with NHibernate under LGPL 2.1
+
+jQuery
+-----
+Website:      http://jquery.com
+Copyright:    Copyright (c) 2009 John Resig, http://jquery.com
+License:      MIT
+ 
+jQuery UI 
+-----
+Website:      http://jqueryui.com
+Copyright:    Copyright (c) 2009 Paul Bakaus, http://jqueryui.com
+License:      MIT
+ 
+jQuery Autocomplete
+-----
+Website:      http://bassistance.de/jquery-plugins/jquery-plugin-autocomplete/
+Copyright:    Copyright (c) 2007 Dylan Verheul, Dan G. Switzer, Anjesh Tuladhar, Jörn Zaefferer
+License:      MIT
+
+Log4Net
+-----
+Website:      http://logging.apache.org/log4net/index.html
+Copyright:    Copyright (c) 2007 Apache Software Foundation
+License:      Apache Software Foundation License 2.0
+ 
+NHibernate, NHibernate Linq
+-----
+Website:      http://nhforge.org 
+Copyright:    Copyright (C) 2003 - 2009 NHibernate Project
+License:      LGPL 2.1
+
+NHibernate Lambda Extensions
+-----
+Website:      http://code.google.com/p/nhlambdaextensions/
+Copyright:    Unknown http://code.google.com/p/nhlambdaextensions/people/list
+License:      LGPL 2.1
+
+Moq
+-----
+Website:      http://code.google.com/p/moq/
+Copyright:    Copyright (c) 2007. Clarius Consulting, Manas Technology Solutions, InSTEDD
+License:      New BSD
+
+nUnit
+-----
+Website:      http://www.nunit.org/index.php
+Copyright:    Copyright (c) 2002-2007 NUnit.org
+              Portions Copyright (c) 2002-2008 Charlie Poole or Copyright (c) 2002-2004 James W. Newkirk, Michael C. Two, Alexei A. Vorontsov or Copyright (c) 2000-2002 Philip A. Craig
+License:      Derived from zlib: http://nunit.org/index.php?p=license&r=2.4
+
+SharpZipLib
+-----
+Website:      http://www.icsharpcode.net/OpenSource/SharpZipLib/Default.aspx
+Copyright:    Copyright (c) 2000-2009 IC#Code
+License:      Modified GPL: http://www.icsharpcode.net/OpenSource/SharpZipLib/Default.aspx
+
+SQLite
+-----
+Website:      http://www.sqlite.org
+Copyright:    Public domain http://www.sqlite.org/copyright.html
+License:      Public domain
+
+TinyMCE
+-----
+WebSite:      http://tinymce.moxiecode.com/
+Copyright:    Copyright (c) 2003-2009 Moxiecode Systems AB
+License:      LGPL 2.1
+ 
+Yahoo UI 
+-----
+Website:      http://developer.yahoo.com/yui 
+Copyright:    Copyright (c) 2009, Yahoo! Inc. All rights reserved.
+License:      New BSD
+
+Yamlnet
+-----
+Website:      http://code.google.com/p/yamlnet/
+Copyright:    Copyright (c) 2009, apolanski
+License:      Apache Software Foundation License 2.0
+
+Eric Meyer's Reset CSS
+-----
+Website:      http://meyerweb.com/eric/tools/css/reset/
+Copyright:    Copyright (C) 1995-2005 Eric A. and Kathryn S. Meyer
+License:      Public domain
