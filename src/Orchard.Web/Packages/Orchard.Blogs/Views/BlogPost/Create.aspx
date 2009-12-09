@@ -7,6 +7,6 @@
     <h2>Add Post</h2>
     <%using (Html.BeginForm()) { %>
         <%= Html.ValidationSummary() %>
-        <%= Html.EditorForModel() %>
+        <%= Html.EditorForItem(m => m.BlogPost) %>
     <% } %>
 <% Html.Include("AdminFoot"); %>

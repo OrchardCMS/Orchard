@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
 using Orchard.Blogs.Extensions;
@@ -9,7 +8,6 @@ using Orchard.Data;
 using Orchard.Localization;
 using Orchard.Models;
 using Orchard.Models.Driver;
-using Orchard.Models.ViewModels;
 using Orchard.Mvc.Results;
 using Orchard.Security;
 using Orchard.UI.Notify;
@@ -34,7 +32,7 @@ namespace Orchard.Blogs.Controllers {
             T = NullLocalizer.Instance;
         }
 
-        public Localizer T { get; set; }
+        private Localizer T { get; set; }
 
         public ActionResult List() {
             var model = new BlogsViewModel {

@@ -1,4 +1,5 @@
-﻿<%@ Control Language="C#" Inherits="System.Web.Mvc.ViewUserControl<CreateBlogPostViewModel>" %>
+﻿<%@ Control Language="C#" Inherits="System.Web.Mvc.ViewUserControl<BlogPost>" %>
+<%@ Import Namespace="Orchard.Blogs.Models"%>
 <%@ Import Namespace="Orchard.Blogs.Extensions"%>
 <%@ Import Namespace="Orchard.Blogs.ViewModels"%>
 <div class="sections">
@@ -18,15 +19,6 @@
             <label for="body">Body</label>
             <span><%=Html.TextAreaFor(m => m.Body, new { id = "body", @class = "html" })%></span>
         </fieldset>
-        <% foreach (var e in Model.ItemView.Editors) {
-            var editor = e;
-            // TODO: why is Body in editors?
-            // TODO: because any content type using the body editor doesn't need
-            //  to re-implement the rich editor, media extensions, format filter chain selection, etc
-            if (!String.Equals(editor.Prefix, "Body")) {
-                %><%=Html.EditorFor(m=>editor.Model, editor.TemplateName, editor.Prefix) %>
-            <% }
-           } %>
     </div>
     <div class="secondary">
         <fieldset>

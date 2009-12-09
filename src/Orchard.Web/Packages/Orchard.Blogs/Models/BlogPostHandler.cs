@@ -73,8 +73,16 @@ namespace Orchard.Blogs.Models {
                         break;
                 }
             });
-        }
 
+            OnGetEditorViewModel<BlogPost>((context, blogPost) =>
+                context.AddEditor(new TemplateViewModel(blogPost) {TemplateName = "BlogPostFields"})
+            );
+
+            OnUpdateEditorViewModel<BlogPost>((context, blogPost) => {
+                context.AddEditor(new TemplateViewModel(blogPost) { TemplateName = "BlogPostFields" });
+                context.Updater.TryUpdateModel(blogPost, "", null, null);
+            });
+        }
 
     }
 }

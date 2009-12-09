@@ -1,6 +1,3 @@
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Web.Mvc;
 using Orchard.Blogs.Models;
 using Orchard.Models.ViewModels;
 using Orchard.Mvc.ViewModels;

@@ -35,7 +35,7 @@ namespace Orchard.Blogs.Controllers {
             T = NullLocalizer.Instance;
         }
 
-        public Localizer T { get; set; }
+        private Localizer T { get; set; }
 
         //TODO: (erikpo) Should think about moving the slug parameters and get calls and null checks up into a model binder or action filter
         public ActionResult Item(string blogSlug, string postSlug) {
@@ -83,16 +83,23 @@ namespace Orchard.Blogs.Controllers {
         }
 
         public ActionResult Create(string blogSlug) {
+            //TODO: (erikpo) Might think about moving this to an ActionFilter/Attribute
+            if (!_authorizer.Authorize(Permissions.CreatePost, T("Not allowed to create blog post")))
+                return new HttpUnauthorizedResult();
+            
             //TODO: (erikpo) Move looking up the current blog up into a modelbinder
             Blog blog = _blogService.Get(blogSlug);
 
             if (blog == null)
                 return new NotFoundResult();
 
+            var blogPost = _contentManager.GetEditorViewModel(_contentManager.New<BlogPost>("blogpost"), null);
+            blogPost.Item.Blog = blog;
+
             var model = new CreateBlogPostViewModel {
-                Blog = blog,
-                ItemView = _contentManager.GetEditorViewModel(_contentManager.New("blogpost"), null)
+                BlogPost = blogPost
             };
+
             return View(model);
         }
 
@@ -107,20 +114,19 @@ namespace Orchard.Blogs.Controllers {
             if (blog == null)
                 return new NotFoundResult();
 
-            if (ModelState.IsValid == false) {
-                model.Blog = blog;
-                model.ItemView = _contentManager.UpdateEditorViewModel(_contentManager.New<BlogPost>("blogpost"), null, this);
-                return View(model);
-            }
+            model.BlogPost = _contentManager.UpdateEditorViewModel(_contentManager.New<BlogPost>("blogpost"), null, this);
+            model.BlogPost.Item.Blog = blog;
 
-            BlogPost blogPost = _blogPostService.Create(model.ToCreateBlogPostParams(blog));
-            model.ItemView = _contentManager.UpdateEditorViewModel(blogPost, null, this);
+            if (!ModelState.IsValid)
+                return View(model);
+
+            _contentManager.Create(model.BlogPost.Item.ContentItem);
 
             //TEMP: (erikpo) ensure information has committed for this record
             var session = _sessionLocator.For(typeof(BlogPostRecord));
             session.Flush();
 
-            return Redirect(Url.BlogPost(blogSlug, blogPost.As<RoutableAspect>().Slug));
+            return Redirect(Url.BlogPost(blogSlug, model.BlogPost.Item.Slug));
         }
 
         public ActionResult Edit(string blogSlug, string postSlug) {
@@ -138,8 +144,8 @@ namespace Orchard.Blogs.Controllers {
             if (post == null)
                 return new NotFoundResult();
 
-            var model = new BlogPostEditViewModel { Blog = blog, Post = post };
-            model.ItemView = _contentManager.GetEditorViewModel(model.Post.ContentItem, null);
+            var model = new BlogPostEditViewModel { Blog = blog, BlogPost = null };
+            //model.ItemView = _contentManager.GetEditorViewModel(model.Post.ContentItem, null);
             return View(model);
         }
 
@@ -159,8 +165,8 @@ namespace Orchard.Blogs.Controllers {
             if (post == null)
                 return new NotFoundResult();
 
-            var model = new BlogPostEditViewModel { Blog = blog, Post = post };
-            model.ItemView = _contentManager.UpdateEditorViewModel(model.Post, null, this);
+            var model = new BlogPostEditViewModel { Blog = blog, BlogPost = null };
+            //model.ItemView = _contentManager.UpdateEditorViewModel(model.Post, null, this);
 
             IValueProvider values = input.ToValueProvider();
             TryUpdateModel(model, values);
