@@ -81,24 +81,36 @@ namespace Orchard.Blogs.Controllers {
         }
 
         public ActionResult Create() {
-            return View(new CreateBlogViewModel());
+            //TODO: (erikpo) Might think about moving this to an ActionFilter/Attribute
+            if (!_authorizer.Authorize(Permissions.CreateBlog, T("Not allowed to create blogs")))
+                return new HttpUnauthorizedResult();
+
+            Blog blog = _contentManager.New<Blog>("blog");
+            CreateBlogViewModel viewModel = new CreateBlogViewModel {
+                Blog = _contentManager.GetEditorViewModel(blog, null)
+            };
+
+            return View(viewModel);
         }
 
         [HttpPost]
         public ActionResult Create(CreateBlogViewModel model) {
+            //TODO: (erikpo) Might think about moving this to an ActionFilter/Attribute
             if (!_authorizer.Authorize(Permissions.CreateBlog, T("Couldn't create blog")))
                 return new HttpUnauthorizedResult();
 
+            model.Blog = _contentManager.UpdateEditorViewModel(_contentManager.New<Blog>("blog"), null, this);
+
             if (!ModelState.IsValid)
                 return View(model);
-
-            Blog blog = _blogService.Create(model.ToCreateBlogParams());
+            
+            _contentManager.Create(model.Blog.Item.ContentItem);
 
             //TEMP: (erikpo) ensure information has committed for this record
             var session = _sessionLocator.For(typeof(BlogRecord));
             session.Flush();
 
-            return Redirect(Url.BlogForAdmin(blog.Slug));
+            return Redirect(Url.BlogForAdmin(model.Blog.Item.Slug));
         }
 
         public ActionResult Edit(string blogSlug) {

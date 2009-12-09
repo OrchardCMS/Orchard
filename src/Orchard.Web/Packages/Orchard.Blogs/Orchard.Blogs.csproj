@@ -67,7 +67,6 @@
   <ItemGroup>
     <Compile Include="AdminMenu.cs" />
     <Compile Include="Controllers\BlogPostController.cs" />
-    <Compile Include="Extensions\BlogCreateViewModelExtensions.cs" />
     <Compile Include="Extensions\BlogPostCreateViewModelExtensions.cs" />
     <Compile Include="Extensions\HtmlHelperExtensions.cs" />
     <Compile Include="Extensions\UriExtensions.cs" />
@@ -120,10 +119,11 @@
     <Content Include="Views\Blog\Edit.aspx" />
     <Content Include="Views\Blog\EditorTemplates\BlogEditViewModel.ascx" />
     <Content Include="Views\Blog\EditorTemplates\BlogPermalink.ascx" />
-    <Content Include="Views\Blog\EditorTemplates\CreateBlogViewModel.ascx" />
     <Content Include="Views\Blog\Item.aspx" />
     <Content Include="Views\Models\DisplayTemplates\BlogPostSummaryAdmin.ascx" />
     <Content Include="Views\Models\DisplayTemplates\BlogPostListAdmin.ascx" />
+    <Content Include="Views\Models\EditorTemplates\BlogFields.ascx" />
+    <Content Include="Views\Models\EditorTemplates\Blog.ascx" />
     <Content Include="Web.config" />
     <Content Include="Views\Web.config" />
   </ItemGroup>

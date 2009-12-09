@@ -5,7 +5,6 @@ namespace Orchard.Blogs.Services {
     public interface IBlogService : IDependency {
         Blog Get(string slug);
         IEnumerable<Blog> Get();
-        Blog Create(CreateBlogParams parameters);
         void Delete(Blog blog);
     }
 }

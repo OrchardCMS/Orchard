@@ -1,5 +1,5 @@
-﻿<%@ Control Language="C#" Inherits="System.Web.Mvc.ViewUserControl<CreateBlogViewModel>" %>
-<%@ Import Namespace="Orchard.Blogs.ViewModels"%>
+﻿<%@ Control Language="C#" Inherits="System.Web.Mvc.ViewUserControl<Blog>" %>
+<%@ Import Namespace="Orchard.Blogs.Models" %>
 <fieldset>
     <label for="Name">Blog Name</label>
     <%=Html.EditorFor(m => m.Name) %>

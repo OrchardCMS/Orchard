@@ -30,14 +30,6 @@ namespace Orchard.Blogs.Services {
             return records.Select(rr => _contentManager.Get<Blog>(rr.Id));
         }
 
-        public Blog Create(CreateBlogParams parameters) {
-            return _contentManager.Create<Blog>("blog", init => {
-                init.Record.Description = parameters.Description;
-                init.As<RoutableAspect>().Record.Title = parameters.Name;
-                init.As<RoutableAspect>().Record.Slug = parameters.Slug;
-            });
-        }
-
         public void Delete(Blog blog) {
             _blogRepository.Delete(blog.Record);
         }

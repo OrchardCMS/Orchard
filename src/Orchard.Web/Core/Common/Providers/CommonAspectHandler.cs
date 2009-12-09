@@ -34,10 +34,11 @@ namespace Orchard.Core.Common.Providers {
             _contentManager = contentManager;
             T = NullLocalizer.Instance;
 
-            OnActivated<CommonAspect>(PropertySetHandlers);
-            OnCreating<CommonAspect>(DefaultTimestampsAndOwner);
-            OnLoaded<CommonAspect>(LazyLoadHandlers);
             Filters.Add(new StorageFilter<CommonRecord>(repository));
+
+            OnActivated<CommonAspect>(PropertySetHandlers);
+            OnActivated<CommonAspect>(DefaultTimestampsAndOwner);
+            OnLoaded<CommonAspect>(LazyLoadHandlers);
 
             //OnGetDisplayViewModel<CommonAspect>();
             OnGetEditorViewModel<CommonAspect>(GetEditor);
@@ -46,7 +47,7 @@ namespace Orchard.Core.Common.Providers {
 
         public Localizer T { get; set; }
 
-        void DefaultTimestampsAndOwner(CreateContentContext context, CommonAspect instance) {
+        void DefaultTimestampsAndOwner(ActivatedContentContext context, CommonAspect instance) {
             // assign default create/modified dates
             if (instance.Record.CreatedUtc == null) {
                 instance.Record.CreatedUtc = _clock.UtcNow;

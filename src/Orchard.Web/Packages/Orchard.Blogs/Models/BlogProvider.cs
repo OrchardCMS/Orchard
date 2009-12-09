@@ -3,6 +3,7 @@ using Orchard.Core.Common.Models;
 using Orchard.Data;
 using Orchard.Models;
 using Orchard.Models.Driver;
+using Orchard.Models.ViewModels;
 
 namespace Orchard.Blogs.Models {
     public class BlogProvider : ContentHandler {
@@ -16,6 +17,15 @@ namespace Orchard.Blogs.Models {
             Filters.Add(new ActivatingFilter<RoutableAspect>("blog"));
             Filters.Add(new StorageFilter<BlogRecord>(repository));
             Filters.Add(new ContentItemTemplates<Blog>("Blog", "Detail", "DetailAdmin", "Summary", "SummaryAdmin"));
+
+            OnGetEditorViewModel<Blog>((context, blog) =>
+                context.AddEditor(new TemplateViewModel(blog) {TemplateName = "BlogFields"})
+            );
+
+            OnUpdateEditorViewModel<Blog>((context, blog) => {
+                context.AddEditor(new TemplateViewModel(blog) {TemplateName = "BlogFields"});
+                context.Updater.TryUpdateModel(blog, "", null, null);
+            });
         }
     }
 }
