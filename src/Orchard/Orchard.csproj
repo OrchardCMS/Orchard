@@ -100,7 +100,7 @@
     <Compile Include="Mvc\Routes\IRoutePublisher.cs" />
     <Compile Include="Mvc\Routes\IRouteProvider.cs" />
     <Compile Include="Mvc\Routes\DefaultRouteProvider.cs" />
-    <Compile Include="Mvc\Routes\StandardPackageRouteProvider.cs" />
+    <Compile Include="Mvc\Routes\StandardExtensionRouteProvider.cs" />
     <Compile Include="Mvc\Routes\RoutePublisher.cs" />
     <Compile Include="Mvc\Routes\RouteDescriptor.cs" />
     <Compile Include="Utility\ReadOnlyCollectionExtensions.cs" />
@@ -119,6 +119,15 @@
     <Compile Include="Data\Conventions\AttributeCollectionConvention.cs" />
     <Compile Include="Data\Conventions\CascadeAllDeleteOrphanAttribute.cs" />
     <Compile Include="Environment\IOrchardShellEvents.cs" />
+    <Compile Include="Extensions\ExtensionDescriptor.cs" />
+    <Compile Include="Extensions\ExtensionEntry.cs" />
+    <Compile Include="Extensions\ExtensionFolders.cs" />
+    <Compile Include="Extensions\ExtensionManager.cs" />
+    <Compile Include="Extensions\Loaders\CoreExtensionLoader.cs" />
+    <Compile Include="Extensions\Loaders\DynamicExtensionLoader.cs" />
+    <Compile Include="Extensions\Loaders\IExtensionLoader.cs" />
+    <Compile Include="Extensions\Loaders\PrecompiledExtensionLoader.cs" />
+    <Compile Include="Extensions\Loaders\ReferencedExtensionLoader.cs" />
     <Compile Include="IEvents.cs" />
     <Compile Include="Localization\IText.cs" />
     <Compile Include="Localization\LocalizationModule.cs" />
@@ -198,11 +207,6 @@
     <Compile Include="Mvc\ViewPage.cs">
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="Packages\Loaders\DynamicPackageLoader.cs" />
-    <Compile Include="Packages\Loaders\PrecompiledPackageLoader.cs" />
-    <Compile Include="Packages\Loaders\CorePackageLoader.cs" />
-    <Compile Include="Packages\Loaders\IPackageLoader.cs" />
-    <Compile Include="Packages\Loaders\ReferencedPackageLoader.cs" />
     <Compile Include="Security\IAuthenticationService.cs" />
     <Compile Include="Security\Authorizer.cs" />
     <Compile Include="Security\Providers\FormsAuthenticationService.cs" />
@@ -228,10 +232,6 @@
     <Compile Include="UI\Notify\NotifierExtensions.cs" />
     <Compile Include="UI\Notify\NotifyEntry.cs" />
     <Compile Include="UI\Notify\NotifyFilter.cs" />
-    <Compile Include="Packages\PackageEntry.cs" />
-    <Compile Include="Packages\PackageFolders.cs" />
-    <Compile Include="Packages\PackageDescriptor.cs" />
-    <Compile Include="Packages\PackageManager.cs" />
     <Compile Include="Security\CreateUserParams.cs" />
     <Compile Include="Security\IAuthorizationService.cs" />
     <Compile Include="Security\IMembershipService.cs" />

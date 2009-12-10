@@ -2,12 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
 using Autofac;
-using Autofac.Builder;
 using Autofac.Integration.Web;
 using Autofac.Modules;
 using NUnit.Framework;
@@ -15,9 +12,8 @@ using Orchard.Environment;
 using Orchard.Mvc;
 using Orchard.Mvc.ModelBinders;
 using Orchard.Mvc.Routes;
-using Orchard.Packages;
+using Orchard.Extensions;
 using Orchard.Tests.Environment.TestDependencies;
-using Orchard.Tests.Mvc.Routes;
 using Orchard.Tests.Stubs;
 
 namespace Orchard.Tests.Environment {
@@ -46,17 +42,17 @@ namespace Orchard.Tests.Environment {
                     builder.Register(_routeCollection);
                     builder.Register(_modelBinderDictionary);
                     builder.Register(new ViewEngineCollection { new WebFormViewEngine() });
-                    builder.Register(new StuPackageManager()).As<IPackageManager>();
+                    builder.Register(new StuExtensionManager()).As<IExtensionManager>();
                 });
         }
 
-        public class StuPackageManager : IPackageManager {
-            public IEnumerable<PackageDescriptor> AvailablePackages() {
-                return Enumerable.Empty<PackageDescriptor>();
+        public class StuExtensionManager : IExtensionManager {
+            public IEnumerable<ExtensionDescriptor> AvailableExtensions() {
+                return Enumerable.Empty<ExtensionDescriptor>();
             }
 
-            public IEnumerable<PackageEntry> ActivePackages() {
-                return Enumerable.Empty<PackageEntry>();
+            public IEnumerable<ExtensionEntry> ActiveExtensions() {
+                return Enumerable.Empty<ExtensionEntry>();
             }
         }
 

@@ -5,7 +5,7 @@ using System.Web.Mvc;
 using Orchard.Logging;
 using Orchard.Mvc.ModelBinders;
 using Orchard.Mvc.Routes;
-using Orchard.Packages;
+using Orchard.Extensions;
 
 namespace Orchard.Environment {
     public class DefaultOrchardShell : IOrchardShell {
@@ -14,7 +14,7 @@ namespace Orchard.Environment {
         private readonly IEnumerable<IModelBinderProvider> _modelBinderProviders;
         private readonly IModelBinderPublisher _modelBinderPublisher;
         private readonly ViewEngineCollection _viewEngines;
-        private readonly IPackageManager _packageManager;
+        private readonly IExtensionManager _extensionManager;
         private readonly IEnumerable<IOrchardShellEvents> _events;
 
         public DefaultOrchardShell(
@@ -23,14 +23,14 @@ namespace Orchard.Environment {
             IEnumerable<IModelBinderProvider> modelBinderProviders,
             IModelBinderPublisher modelBinderPublisher,
             ViewEngineCollection viewEngines,
-            IPackageManager packageManager,
+            IExtensionManager extensionManager,
             IEnumerable<IOrchardShellEvents> events) {
             _routeProviders = routeProviders;
             _routePublisher = routePublisher;
             _modelBinderProviders = modelBinderProviders;
             _modelBinderPublisher = modelBinderPublisher;
             _viewEngines = viewEngines;
-            _packageManager = packageManager;
+            _extensionManager = extensionManager;
             _events = events;
 
             Logger = NullLogger.Instance;
@@ -67,7 +67,7 @@ namespace Orchard.Environment {
                 .Distinct()
                 .ToArray();
 
-            var activePackageDescriptors = _packageManager.ActivePackages().Select(x => x.Descriptor);
+            var activePackageDescriptors = _extensionManager.ActiveExtensions().Select(x => x.Descriptor);
             var sharedLocationFormats = activePackageDescriptors.Select(x => ModelsLocationFormat(x));
             viewEngine.PartialViewLocationFormats = sharedLocationFormats
                 .Concat(viewEngine.PartialViewLocationFormats)
@@ -83,7 +83,7 @@ namespace Orchard.Environment {
         }
 
 
-        private static string ModelsLocationFormat(PackageDescriptor descriptor) {
+        private static string ModelsLocationFormat(ExtensionDescriptor descriptor) {
             return Path.Combine(Path.Combine(descriptor.Location, descriptor.Name), "Views/Models/{0}.ascx");
         }
     }

@@ -1,27 +1,24 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Reflection;
-using System.Text;
 using System.Web.Compilation;
 using System.Web.Hosting;
 
-namespace Orchard.Packages.Loaders {
-    public class ReferencedPackageLoader : IPackageLoader {
+namespace Orchard.Extensions.Loaders {
+    public class ReferencedExtensionLoader : IExtensionLoader {
         public int Order { get { return 2; } }
 
-        public PackageEntry Load(PackageDescriptor descriptor) {
+        public ExtensionEntry Load(ExtensionDescriptor descriptor) {
             if (HostingEnvironment.IsHosted == false)
                 return null;
 
             var assembly = BuildManager.GetReferencedAssemblies()
                 .OfType<Assembly>()
-                .FirstOrDefault(x=>x.GetName().Name == descriptor.Name);
-            
+                .FirstOrDefault(x => x.GetName().Name == descriptor.Name);
+
             if (assembly == null)
                 return null;
-            
-            return new PackageEntry {
+
+            return new ExtensionEntry {
                 Descriptor = descriptor,
                 Assembly = assembly,
                 ExportedTypes = assembly.GetExportedTypes()

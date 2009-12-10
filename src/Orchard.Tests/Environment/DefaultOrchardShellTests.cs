@@ -1,14 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Web.Mvc;
 using System.Web.Routing;
 using NUnit.Framework;
 using Orchard.Environment;
 using Orchard.Mvc.ModelBinders;
 using Orchard.Mvc.Routes;
-using Orchard.Packages;
+using Orchard.Extensions;
 
 namespace Orchard.Tests.Environment {
     [TestFixture]
@@ -38,7 +37,7 @@ namespace Orchard.Tests.Environment {
                 new[] { modelBinderProvider1, modelBinderProvider2 },
                 modelBinderPublisher,
                 new ViewEngineCollection { new WebFormViewEngine() },
-                new Moq.Mock<IPackageManager>().Object,
+                new Moq.Mock<IExtensionManager>().Object,
                 Enumerable.Empty<IOrchardShellEvents>());
 
             runtime.Activate();

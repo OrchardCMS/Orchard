@@ -5,25 +5,25 @@ using Autofac.Integration.Web.Mvc;
 using Orchard.Controllers;
 using Orchard.Environment;
 using Orchard.Mvc.Filters;
-using Orchard.Packages;
+using Orchard.Extensions;
 
 namespace Orchard.Mvc {
     public class MvcModule : Module {
         private readonly ICompositionStrategy _compositionStrategy;
-        private readonly IPackageManager _packageManager;
+        private readonly IExtensionManager _extensionManager;
 
-        public MvcModule(ICompositionStrategy compositionStrategy, IPackageManager packageManager) {
+        public MvcModule(ICompositionStrategy compositionStrategy, IExtensionManager extensionManager) {
             _compositionStrategy = compositionStrategy;
-            _packageManager = packageManager;
+            _extensionManager = extensionManager;
         }
 
         protected override void Load(ContainerBuilder moduleBuilder) {
-            var packages = _packageManager.ActivePackages();
-            var assemblies = packages.Select(x => x.Assembly).Concat(new[] { typeof(HomeController).Assembly });
+            var extensions = _extensionManager.ActiveExtensions();
+            var assemblies = extensions.Select(x => x.Assembly).Concat(new[] { typeof(HomeController).Assembly });
 
             var module = new AutofacControllerModule(assemblies.ToArray()) {
                 ActionInvokerType = typeof(FilterResolvingActionInvoker),
-                IdentificationStrategy = new OrchardControllerIdentificationStrategy(packages)
+                IdentificationStrategy = new OrchardControllerIdentificationStrategy(extensions)
             };
 
             moduleBuilder.RegisterModule(module);

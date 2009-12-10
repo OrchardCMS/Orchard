@@ -1,14 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-
-namespace Orchard.Packages.Loaders {
-    public class PrecompiledPackageLoader : IPackageLoader {
+﻿namespace Orchard.Extensions.Loaders {
+    public class PrecompiledExtensionLoader : IExtensionLoader {
         public int Order { get { return 3; } }
 
-        public PackageEntry Load(PackageDescriptor descriptor) {
+        public ExtensionEntry Load(ExtensionDescriptor descriptor) {
             //var assembly = Assembly.Load(descriptor.Name);
             //return new PackageEntry {
             //    Descriptor = descriptor,

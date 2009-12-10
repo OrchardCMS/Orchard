@@ -1,18 +1,18 @@
 ﻿using System.Collections.Generic;
 using System.Web.Mvc;
 using System.Web.Routing;
-using Orchard.Packages;
+using Orchard.Extensions;
 
 namespace Orchard.Mvc.Routes {
-    public class StandardPackageRouteProvider : IRouteProvider {
-        private readonly IPackageManager _packageManager;
+    public class StandardExtensionRouteProvider : IRouteProvider {
+        private readonly IExtensionManager _extensionManager;
 
-        public StandardPackageRouteProvider(IPackageManager packageManager) {
-            _packageManager = packageManager;
+        public StandardExtensionRouteProvider(IExtensionManager extensionManager) {
+            _extensionManager = extensionManager;
         }
 
         public IEnumerable<RouteDescriptor> GetRoutes() {
-            foreach (var entry in _packageManager.ActivePackages()) {
+            foreach (var entry in _extensionManager.ActiveExtensions()) {
                 var areaName = entry.Descriptor.Name;
                 var displayName = entry.Descriptor.DisplayName ?? areaName;
 

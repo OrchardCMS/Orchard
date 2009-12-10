@@ -1,19 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Web.Routing;
 using NUnit.Framework;
 using Orchard.Mvc.Routes;
-using Orchard.Packages;
+using Orchard.Extensions;
 
 namespace Orchard.Tests.Mvc.Routes {
     [TestFixture]
-    public class StandardPackageRouteProviderTests {
+    public class StandardExtensionRouteProviderTests {
         [Test]
-        public void PackageDisplayNameShouldBeUsedInBothStandardRoutes() {
-            var stubManager = new StubPackageManager();
-            var routeProvider = new StandardPackageRouteProvider(stubManager);
+        public void ExtensionDisplayNameShouldBeUsedInBothStandardRoutes() {
+            var stubManager = new StubExtensionManager();
+            var routeProvider = new StandardExtensionRouteProvider(stubManager);
 
             var routes = new List<RouteDescriptor>();
             routeProvider.GetRoutes(routes);
@@ -34,20 +33,20 @@ namespace Orchard.Tests.Mvc.Routes {
             Assert.That(barRoute.DataTokens["area"], Is.EqualTo("Long.Name.Bar"));
         }
 
-        public class StubPackageManager : IPackageManager {
-            public IEnumerable<PackageDescriptor> AvailablePackages() {
+        public class StubExtensionManager : IExtensionManager {
+            public IEnumerable<ExtensionDescriptor> AvailableExtensions() {
                 throw new NotImplementedException();
             }
 
-            public IEnumerable<PackageEntry> ActivePackages() {
-                yield return new PackageEntry {
-                    Descriptor = new PackageDescriptor {
+            public IEnumerable<ExtensionEntry> ActiveExtensions() {
+                yield return new ExtensionEntry {
+                    Descriptor = new ExtensionDescriptor {
                         Name = "Long.Name.Foo",
                         DisplayName = "Foo",
                     }
                 };
-                yield return new PackageEntry {
-                    Descriptor = new PackageDescriptor {
+                yield return new ExtensionEntry {
+                    Descriptor = new ExtensionDescriptor {
                         Name = "Long.Name.Bar",
                         DisplayName = "Bar",
                     }

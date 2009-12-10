@@ -3,14 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using Autofac;
 using Autofac.Integration.Web.Mvc;
-using Orchard.Packages;
+using Orchard.Extensions;
 
 namespace Orchard.Mvc {
     public class OrchardControllerIdentificationStrategy : IControllerIdentificationStrategy {
-        private readonly IEnumerable<PackageEntry> _packages;
+        private readonly IEnumerable<ExtensionEntry> _extensions;
 
-        public OrchardControllerIdentificationStrategy(IEnumerable<PackageEntry> packages) {
-            _packages = packages;
+        public OrchardControllerIdentificationStrategy(IEnumerable<ExtensionEntry> extensions) {
+            _extensions = extensions;
         }
 
         public Service ServiceForControllerName(string controllerName) {
@@ -21,7 +21,7 @@ namespace Orchard.Mvc {
 
         public Service ServiceForControllerType(Type controllerType) {
             var controllerNamespace = controllerType.Namespace;
-            var package = _packages.FirstOrDefault(x => x.Assembly == controllerType.Assembly);
+            var extension = _extensions.FirstOrDefault(x => x.Assembly == controllerType.Assembly);
             var assemblySimpleName = controllerType.Assembly.GetName().Name;
             string areaName;
             if (assemblySimpleName == "Orchard.Core" && 
@@ -29,8 +29,8 @@ namespace Orchard.Mvc {
 
                 areaName = controllerNamespace.Split('.').Skip(2).FirstOrDefault();
             }
-            else if (package != null) {
-                areaName = package.Descriptor.Name;
+            else if (extension != null) {
+                areaName = extension.Descriptor.Name;
             }
             else {
                 areaName = assemblySimpleName;

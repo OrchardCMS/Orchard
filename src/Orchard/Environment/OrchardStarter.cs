@@ -1,13 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web.Hosting;
 using Autofac;
 using Autofac.Builder;
 using Autofac.Integration.Web;
 using Autofac.Modules;
-using Orchard.Packages;
-using Orchard.Packages.Loaders;
+using Orchard.Extensions;
+using Orchard.Extensions.Loaders;
 
 namespace Orchard.Environment {
     public static class OrchardStarter {
@@ -30,17 +27,17 @@ namespace Orchard.Environment {
             // still needs to be called on end request, but that's the host component's job to worry about.
             builder.Register<ContainerProvider>().As<IContainerProvider>().ContainerScoped();
 
-            builder.Register<PackageManager>().As<IPackageManager>().SingletonScoped();
-            builder.Register<CorePackageLoader>().As<IPackageLoader>().SingletonScoped();
-            builder.Register<ReferencedPackageLoader>().As<IPackageLoader>().SingletonScoped();
-            builder.Register<PrecompiledPackageLoader>().As<IPackageLoader>().SingletonScoped();
-            builder.Register<DynamicPackageLoader>().As<IPackageLoader>().SingletonScoped();
+            builder.Register<ExtensionManager>().As<IExtensionManager>().SingletonScoped();
+            builder.Register<CoreExtensionLoader>().As<IExtensionLoader>().SingletonScoped();
+            builder.Register<ReferencedExtensionLoader>().As<IExtensionLoader>().SingletonScoped();
+            builder.Register<PrecompiledExtensionLoader>().As<IExtensionLoader>().SingletonScoped();
+            builder.Register<DynamicExtensionLoader>().As<IExtensionLoader>().SingletonScoped();
 
             //builder.Register((ctx, p) => new PackageFolders(MapPaths(p.Named<IEnumerable<string>>("paths"))))
             //    .As<IPackageFolders>()
             //    .WithExtendedProperty("paths", new[] { "~/Packages" })
             //    .SingletonScoped();
-            builder.Register<PackageFolders>().As<IPackageFolders>()
+            builder.Register<ExtensionFolders>().As<IExtensionFolders>()
                 .WithArguments(new NamedParameter("paths", new[] { "~/Core", "~/Packages" }))
                 .SingletonScoped();
 

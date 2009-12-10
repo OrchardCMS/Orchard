@@ -1,26 +1,26 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Orchard.Packages.Loaders;
+using Orchard.Extensions.Loaders;
 using Yaml.Grammar;
 
-namespace Orchard.Packages {
-    public interface IPackageManager {
-        IEnumerable<PackageDescriptor> AvailablePackages();
-        IEnumerable<PackageEntry> ActivePackages();
+namespace Orchard.Extensions {
+    public interface IExtensionManager {
+        IEnumerable<ExtensionDescriptor> AvailableExtensions();
+        IEnumerable<ExtensionEntry> ActiveExtensions();
     }
 
-    public class PackageManager : IPackageManager {
-        private readonly IPackageFolders _folders;
-        private readonly IEnumerable<IPackageLoader> _loaders;
-        private IEnumerable<PackageEntry> _activePackages;
+    public class ExtensionManager : IExtensionManager {
+        private readonly IExtensionFolders _folders;
+        private readonly IEnumerable<IExtensionLoader> _loaders;
+        private IEnumerable<ExtensionEntry> _activeExtensions;
 
-        public PackageManager(IPackageFolders folders, IEnumerable<IPackageLoader> loaders) {
+        public ExtensionManager(IExtensionFolders folders, IEnumerable<IExtensionLoader> loaders) {
             _folders = folders;
             _loaders = loaders.OrderBy(x => x.Order);
         }
 
 
-        public IEnumerable<PackageDescriptor> AvailablePackages() {
+        public IEnumerable<ExtensionDescriptor> AvailableExtensions() {
             var names = _folders.ListNames();
             foreach (var name in names) {
                 var parseResult = _folders.ParseManifest(name);
@@ -30,7 +30,7 @@ namespace Orchard.Packages {
                     .ToDictionary(x => ((Scalar)x.Key).Text, x => x.Value);
 
 
-                yield return new PackageDescriptor {
+                yield return new ExtensionDescriptor {
                     Location = parseResult.Location,
                     Name = name,
                     DisplayName = GetValue(fields, "name"),
@@ -48,21 +48,21 @@ namespace Orchard.Packages {
             return fields.TryGetValue(key, out value) ? value.ToString() : null;
         }
 
-        public IEnumerable<PackageEntry> ActivePackages() {
-            if (_activePackages == null) {
-                _activePackages = BuildActivePackages().ToList();
+        public IEnumerable<ExtensionEntry> ActiveExtensions() {
+            if (_activeExtensions == null) {
+                _activeExtensions = BuildActiveExtensions().ToList();
             }
-            return _activePackages;
+            return _activeExtensions;
         }
 
-        private IEnumerable<PackageEntry> BuildActivePackages() {
-            foreach (var descriptor in AvailablePackages()) {
+        private IEnumerable<ExtensionEntry> BuildActiveExtensions() {
+            foreach (var descriptor in AvailableExtensions()) {
                 //TODO: this component needs access to some "current settings" to know which are active
                 yield return BuildEntry(descriptor);
             }
         }
 
-        private PackageEntry BuildEntry(PackageDescriptor descriptor) {
+        private ExtensionEntry BuildEntry(ExtensionDescriptor descriptor) {
             foreach (var loader in _loaders) {
                 var entry = loader.Load(descriptor);
                 if (entry != null)

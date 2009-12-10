@@ -6,11 +6,11 @@ using System.Reflection;
 using System.Web.Compilation;
 using System.Web.Hosting;
 
-namespace Orchard.Packages.Loaders {
-    public class DynamicPackageLoader : IPackageLoader {
+namespace Orchard.Extensions.Loaders {
+    public class DynamicExtensionLoader : IExtensionLoader {
         public int Order { get { return 4; } }
 
-        public PackageEntry Load(PackageDescriptor descriptor) {
+        public ExtensionEntry Load(ExtensionDescriptor descriptor) {
             if (HostingEnvironment.IsHosted == false)
                 return null;
 
@@ -20,12 +20,12 @@ namespace Orchard.Packages.Loaders {
             var options = new CompilerParameters(references.ToArray());
 
             var locationPath = HostingEnvironment.MapPath(descriptor.Location);
-            var packagePath = Path.Combine(locationPath, descriptor.Name);
+            var extensionPath = Path.Combine(locationPath, descriptor.Name);
 
-            var fileNames = GetSourceFileNames(packagePath);
+            var fileNames = GetSourceFileNames(extensionPath);
             var results = codeProvider.CompileAssemblyFromFile(options, fileNames.ToArray());
 
-            return new PackageEntry {
+            return new ExtensionEntry {
                 Descriptor = descriptor,
                 Assembly = results.CompiledAssembly,
                 ExportedTypes = results.CompiledAssembly.GetExportedTypes(),
@@ -41,15 +41,15 @@ namespace Orchard.Packages.Loaders {
         }
 
         private IEnumerable<string> GetSourceFileNames(string path) {
-            foreach(var file in Directory.GetFiles(path, "*.cs")) {
+            foreach (var file in Directory.GetFiles(path, "*.cs")) {
                 yield return file;
             }
 
-            foreach(var folder in Directory.GetDirectories(path)) {
+            foreach (var folder in Directory.GetDirectories(path)) {
                 if (Path.GetFileName(folder).StartsWith("."))
                     continue;
 
-                foreach(var file in GetSourceFileNames(folder)) {
+                foreach (var file in GetSourceFileNames(folder)) {
                     yield return file;
                 }
             }

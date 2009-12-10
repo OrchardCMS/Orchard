@@ -5,7 +5,7 @@ using System.Reflection;
 using Autofac;
 using Orchard.Models;
 using Orchard.Models.Records;
-using Orchard.Packages;
+using Orchard.Extensions;
 
 namespace Orchard.Environment {
     //TEMP: This will be replaced by packaging system
@@ -18,21 +18,21 @@ namespace Orchard.Environment {
     }
 
     public class DefaultCompositionStrategy : ICompositionStrategy {
-        private readonly IPackageManager _packageManager;
+        private readonly IExtensionManager _extensionManager;
 
-        public DefaultCompositionStrategy(IPackageManager packageManager) {
-            _packageManager = packageManager;
+        public DefaultCompositionStrategy(IExtensionManager extensionManager) {
+            _extensionManager = extensionManager;
         }
 
         public IEnumerable<Assembly> GetAssemblies() {
-            return _packageManager.ActivePackages()
+            return _extensionManager.ActiveExtensions()
                 .Select(entry => entry.Assembly)
                 .Concat(new[] { typeof(IOrchardHost).Assembly });
             //return BuildManager.GetReferencedAssemblies().OfType<Assembly>();
         }
 
         public IEnumerable<Type> GetModuleTypes() {
-            var types = _packageManager.ActivePackages().SelectMany(x => x.ExportedTypes);
+            var types = _extensionManager.ActiveExtensions().SelectMany(x => x.ExportedTypes);
             types = types.Concat(typeof(IOrchardHost).Assembly.GetExportedTypes());
             var nonAbstractClasses = types.Where(t => t.IsClass && !t.IsAbstract);
             var modules = nonAbstractClasses.Where(t => typeof(IModule).IsAssignableFrom(t));
@@ -40,7 +40,7 @@ namespace Orchard.Environment {
         }
 
         public IEnumerable<Type> GetDependencyTypes() {
-            var types = _packageManager.ActivePackages().SelectMany(x => x.ExportedTypes);
+            var types = _extensionManager.ActiveExtensions().SelectMany(x => x.ExportedTypes);
             types = types.Concat(typeof(IOrchardHost).Assembly.GetExportedTypes());
             var nonAbstractClasses = types.Where(t => t.IsClass && !t.IsAbstract);
             var modules = nonAbstractClasses.Where(t => typeof(IDependency).IsAssignableFrom(t));
@@ -48,7 +48,7 @@ namespace Orchard.Environment {
         }
 
         public IEnumerable<Type> GetRecordTypes() {
-            var types = _packageManager.ActivePackages().SelectMany(x => x.ExportedTypes);
+            var types = _extensionManager.ActiveExtensions().SelectMany(x => x.ExportedTypes);
             var recordTypes = types.Where(IsRecordType)
                 .Concat(new[] { typeof(ContentItemRecord), typeof(ContentPartRecord), typeof(ContentTypeRecord) });
             return recordTypes;

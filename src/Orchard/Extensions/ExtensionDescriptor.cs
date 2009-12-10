@@ -1,11 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Yaml.Grammar;
-
-namespace Orchard.Packages {
-    public class PackageDescriptor {
+﻿namespace Orchard.Extensions {
+    public class ExtensionDescriptor {
         public string Location { get; set; }
         public string Name { get; set; }
 

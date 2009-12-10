@@ -1,13 +1,11 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Web.Hosting;
 using Yaml.Grammar;
 
-namespace Orchard.Packages {
-    public interface IPackageFolders {
+namespace Orchard.Extensions {
+    public interface IExtensionFolders {
         IEnumerable<string> ListNames();
         ParseResult ParseManifest(string name);
     }
@@ -18,10 +16,10 @@ namespace Orchard.Packages {
         public YamlDocument YamlDocument { get; set; }
     }
 
-    public class PackageFolders : IPackageFolders {
+    public class ExtensionFolders : IExtensionFolders {
         private readonly IEnumerable<string> _paths;
 
-        public PackageFolders(IEnumerable<string> paths) {
+        public ExtensionFolders(IEnumerable<string> paths) {
             _paths = paths;
         }
 
@@ -34,8 +32,6 @@ namespace Orchard.Packages {
 
         }
 
-
-
         public IEnumerable<string> ListNames() {
             foreach (var path in _paths) {
                 foreach (var directoryName in Directory.GetDirectories(GetPhysicalPath(path))) {
@@ -47,12 +43,12 @@ namespace Orchard.Packages {
 
         public ParseResult ParseManifest(string name) {
             foreach (var path in _paths) {
-                var packageDirectoryPath = Path.Combine(GetPhysicalPath(path), name);
-                var packageManifestPath = Path.Combine(packageDirectoryPath, "Package.txt");
-                if (!File.Exists(packageManifestPath)) {
+                var extensionDirectoryPath = Path.Combine(GetPhysicalPath(path), name);
+                var extensionManifestPath = Path.Combine(extensionDirectoryPath, "Package.txt");
+                if (!File.Exists(extensionManifestPath)) {
                     continue;
                 }
-                var yamlStream = YamlParser.Load(packageManifestPath);
+                var yamlStream = YamlParser.Load(extensionManifestPath);
                 return new ParseResult {
                     Location = path,
                     Name = name,

@@ -1,16 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
+﻿using System.IO;
 using System.Linq;
-using System.Text;
 using NUnit.Framework;
-using Orchard.Packages;
+using Orchard.Extensions;
 using Yaml.Grammar;
 
-namespace Orchard.Tests.Packages {
+namespace Orchard.Tests.Extensions {
     [TestFixture]
-    public class PackageFoldersTests {
-        private const string DataPrefix = "Orchard.Tests.Packages.FoldersData.";
+    public class ExtensionFoldersTests {
+        private const string DataPrefix = "Orchard.Tests.Extensions.FoldersData.";
         private string _tempFolderName;
 
         [SetUp]
@@ -52,7 +49,7 @@ namespace Orchard.Tests.Packages {
 
         [Test]
         public void NamesFromFoldersWithPackageTxtShouldBeListed() {
-            var folders = new PackageFolders(new[] { _tempFolderName });
+            var folders = new ExtensionFolders(new[] { _tempFolderName });
             var names = folders.ListNames();
             Assert.That(names.Count(), Is.EqualTo(2));
             Assert.That(names, Has.Some.EqualTo("Sample1"));
@@ -61,11 +58,11 @@ namespace Orchard.Tests.Packages {
 
         [Test]
         public void PackageTxtShouldBeParsedAndReturnedAsYamlDocument() {
-            var folders = new PackageFolders(new[] { _tempFolderName });
+            var folders = new ExtensionFolders(new[] { _tempFolderName });
             var sample1 = folders.ParseManifest("Sample1");
             var mapping = (Mapping)sample1.YamlDocument.Root;
             var entities = mapping.Entities
-                .Where(x=>x.Key is Scalar)
+                .Where(x => x.Key is Scalar)
                 .ToDictionary(x => ((Scalar)x.Key).Text, x => x.Value);
             Assert.That(entities.Keys, Has.Some.EqualTo("name"));
             Assert.That(entities.Keys, Has.Some.EqualTo("author"));
