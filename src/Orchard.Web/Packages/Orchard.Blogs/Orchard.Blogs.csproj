@@ -83,9 +83,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Routes.cs" />
     <Compile Include="Services\BlogPostService.cs" />
-    <Compile Include="Services\CreateBlogPostParams.cs" />
     <Compile Include="Services\IBlogPostService.cs" />
-    <Compile Include="Services\CreateBlogParams.cs" />
     <Compile Include="Services\IBlogService.cs" />
     <Compile Include="ViewModels\BlogsForAdminViewModel.cs" />
     <Compile Include="ViewModels\BlogViewModel.cs" />
