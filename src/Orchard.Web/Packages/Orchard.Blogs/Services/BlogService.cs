@@ -9,12 +9,10 @@ namespace Orchard.Blogs.Services {
     public class BlogService : IBlogService {
         private readonly IContentManager _contentManager;
         private readonly IRepository<BlogRecord> _blogRepository;
-        private readonly IRepository<RoutableRecord> _routableRepository;
 
-        public BlogService(IContentManager contentManager, IRepository<BlogRecord> blogRepository, IRepository<RoutableRecord> routableRepository) {
+        public BlogService(IContentManager contentManager, IRepository<BlogRecord> blogRepository) {
             _contentManager = contentManager;
             _blogRepository = blogRepository;
-            _routableRepository = routableRepository;
         }
 
         public Blog Get(string slug) {
