@@ -74,12 +74,14 @@ namespace Orchard.Blogs.Models {
                 }
             });
 
-            OnGetEditorViewModel<BlogPost>((context, blogPost) =>
-                context.AddEditor(new TemplateViewModel(blogPost) {TemplateName = "BlogPostFields"})
-            );
+            OnGetEditorViewModel<BlogPost>((context, blogPost) => {
+                context.AddEditor(new TemplateViewModel(blogPost) { TemplateName = "BlogPostFieldsPrimary", ZoneName = "body", Position = "1" });
+                context.AddEditor(new TemplateViewModel(blogPost) { TemplateName = "BlogPostFieldsSecondary", ZoneName = "sidebar", Position = "1" });
+            });
 
             OnUpdateEditorViewModel<BlogPost>((context, blogPost) => {
-                context.AddEditor(new TemplateViewModel(blogPost) { TemplateName = "BlogPostFields" });
+                context.AddEditor(new TemplateViewModel(blogPost) { TemplateName = "BlogPostFieldsPrimary", ZoneName = "body", Position = "1" });
+                context.AddEditor(new TemplateViewModel(blogPost) { TemplateName = "BlogPostFieldsSecondary", ZoneName = "sidebar", Position = "1" });
                 context.Updater.TryUpdateModel(blogPost, "", null, null);
             });
         }

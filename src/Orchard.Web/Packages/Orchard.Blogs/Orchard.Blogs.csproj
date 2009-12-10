@@ -109,7 +109,7 @@
     <Content Include="Views\Models\DisplayTemplates\BlogDetail.ascx" />
     <Content Include="Views\Models\DisplayTemplates\BlogPostList.ascx" />
     <Content Include="Views\Models\DisplayTemplates\BlogSummary.ascx" />
-    <Content Include="Views\Models\EditorTemplates\BlogPostFields.ascx" />
+    <Content Include="Views\Models\EditorTemplates\BlogPostFieldsSecondary.ascx" />
     <Content Include="Views\BlogPost\Item.aspx" />
     <Content Include="Views\Blog\Create.aspx" />
     <Content Include="Views\Blog\Edit.aspx" />
@@ -119,6 +119,7 @@
     <Content Include="Views\Models\EditorTemplates\BlogFields.ascx" />
     <Content Include="Views\Models\EditorTemplates\Blog.ascx" />
     <Content Include="Views\Models\EditorTemplates\BlogPost.ascx" />
+    <Content Include="Views\Models\EditorTemplates\BlogPostFieldsPrimary.ascx" />
     <Content Include="Web.config" />
     <Content Include="Views\Web.config" />
   </ItemGroup>
