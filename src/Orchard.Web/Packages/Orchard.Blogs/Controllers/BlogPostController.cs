@@ -145,8 +145,10 @@ namespace Orchard.Blogs.Controllers {
             if (post == null)
                 return new NotFoundResult();
 
-            var model = new BlogPostEditViewModel { Blog = blog, BlogPost = null };
-            //model.EditorModel = _contentManager.BuildEditorModel(model.Post.ContentItem, null);
+            var model = new BlogPostEditViewModel {
+                BlogPost = _contentManager.BuildEditorModel(post, null)
+            };
+
             return View(model);
         }
 
@@ -166,8 +168,9 @@ namespace Orchard.Blogs.Controllers {
             if (post == null)
                 return new NotFoundResult();
 
-            var model = new BlogPostEditViewModel { Blog = blog, BlogPost = null };
-            //model.EditorModel = _contentManager.UpdateEditorModel(model.Post, null, this);
+            var model = new BlogPostEditViewModel {
+                BlogPost = _contentManager.UpdateEditorModel(post, null, this)
+            };
 
             IValueProvider values = input.ToValueProvider();
             TryUpdateModel(model, values);
