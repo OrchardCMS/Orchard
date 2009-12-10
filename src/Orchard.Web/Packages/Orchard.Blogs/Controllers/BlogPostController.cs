@@ -114,14 +114,11 @@ namespace Orchard.Blogs.Controllers {
             if (blog == null)
                 return new NotFoundResult();
 
-            BlogPost blogPost = _contentManager.New<BlogPost>("blogpost");
-            blogPost.Blog = blog;
+            BlogPost blogPost = _contentManager.Create<BlogPost>("blogpost", bp => { bp.Blog = blog; });
             model.BlogPost = _contentManager.UpdateEditorModel(blogPost, null, this);
 
             if (!ModelState.IsValid)
                 return View(model);
-
-            _contentManager.Create(model.BlogPost.Item.ContentItem);
 
             //TEMP: (erikpo) ensure information has committed for this record
             var session = _sessionLocator.For(typeof(BlogPostRecord));
