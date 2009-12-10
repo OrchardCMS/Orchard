@@ -101,7 +101,6 @@
     <Content Include="Package.txt" />
     <Content Include="Views\BlogPost\Create.aspx" />
     <Content Include="Views\BlogPost\Edit.aspx" />
-    <Content Include="Views\BlogPost\EditorTemplates\BlogPostEditViewModel.ascx" />
     <Content Include="Views\Models\DisplayTemplates\BlogDetailAdmin.ascx" />
     <Content Include="Views\Blog\ItemForAdmin.aspx" />
     <Content Include="Views\Models\DisplayTemplates\BlogSummaryAdmin.ascx" />

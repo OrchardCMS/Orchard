@@ -15,21 +15,32 @@ namespace Orchard.Blogs.Models {
         public int Id { get { return ContentItem.Id; } }
 
         [Required]
-        public string Title { get { return this.As<RoutableAspect>().Title; } }
+        public string Title {
+            get { return this.As<RoutableAspect>().Title; }
+            set { this.As<RoutableAspect>().Record.Title = value; }
+        }
 
         [Required]
-        public string Slug { get { return this.As<RoutableAspect>().Slug; } }
+        public string Slug {
+            get { return this.As<RoutableAspect>().Slug; }
+            set { this.As<RoutableAspect>().Record.Slug = value; }
+        }
 
         [Required]
-        public string Body { get { return this.As<BodyAspect>().Record.Text; } }
+        public string Body {
+            get { return this.As<BodyAspect>().Record.Text; }
+            set { this.As<BodyAspect>().Record.Text = value; }
+        }
 
-        public IUser Creator { get { return this.As<CommonAspect>().OwnerField.Value; } }
+        public IUser Creator {
+            get { return this.As<CommonAspect>().OwnerField.Value; }
+            set { this.As<CommonAspect>().Record.OwnerId = value.Id; }
+        }
 
         public DateTime? Published
         {
             get { return Record.Published; }
             set { Record.Published = value; }
         }
-
     }
 }
