@@ -83,6 +83,13 @@
     <Compile Include="Settings\Records\SiteSettingsRecord.cs" />
     <Compile Include="Settings\Services\SiteService.cs" />
     <Compile Include="Settings\ViewModels\SettingsIndexViewModel.cs" />
+    <Compile Include="Themes\AdminMenu.cs" />
+    <Compile Include="Themes\Controllers\AdminController.cs" />
+    <Compile Include="Themes\Models\ThemeSiteSettings.cs" />
+    <Compile Include="Themes\Models\ThemeSiteSettingsHandler.cs" />
+    <Compile Include="Themes\Records\ThemeSiteSettingsRecord.cs" />
+    <Compile Include="Themes\Services\ThemeService.cs" />
+    <Compile Include="Themes\ViewModels\ThemesIndexViewModel.cs" />
     <Compile Include="XmlRpc\Controllers\HomeController.cs" />
     <Compile Include="XmlRpc\Controllers\LiveWriterController.cs" />
     <Compile Include="XmlRpc\IXmlRpcHandler.cs" />
@@ -122,6 +129,12 @@
   <ItemGroup>
     <Content Include="Common\Views\Models\EditorTemplates\OwnerEditorViewModel.ascx" />
     <Content Include="Common\Views\Web.config" />
+    <Content Include="Themes\Package.txt" />
+    <Content Include="Themes\Views\Admin\Index.aspx" />
+    <Content Include="Themes\Views\Models\EditorTemplates\ThemeSiteSettingsRecord.ascx" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Themes\Views\Web.config" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v9.0\WebApplications\Microsoft.WebApplication.targets" />

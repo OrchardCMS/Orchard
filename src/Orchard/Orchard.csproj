@@ -214,6 +214,9 @@
     <Compile Include="Tasks\BackgroundService.cs" />
     <Compile Include="Tasks\IBackgroundTask.cs" />
     <Compile Include="Tasks\SweepGenerator.cs" />
+    <Compile Include="Themes\ITheme.cs" />
+    <Compile Include="Themes\IThemeService.cs" />
+    <Compile Include="Themes\ThemesModule.cs" />
     <Compile Include="UI\Menus\AdminMenuFilter.cs" />
     <Compile Include="UI\Navigation\NavigationBuilder.cs" />
     <Compile Include="UI\Navigation\INavigationProvider.cs" />
