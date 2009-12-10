@@ -43,15 +43,29 @@ namespace Orchard.Models {
         }
 
         protected virtual string Prefix { get { return ""; } }
+        protected virtual string Zone { get { return "body"; } }
 
         public TemplateResult PartialView(object model) {
-            return new TemplateResult(model, null, Prefix);
+            return new TemplateResult(model, null, Prefix).Location(Zone);
         }
         public TemplateResult PartialView(object model, string template) {
-            return new TemplateResult(model, template, Prefix);
+            return new TemplateResult(model, template, Prefix).Location(Zone);
         }
         public TemplateResult PartialView(object model, string template, string prefix) {
-            return new TemplateResult(model, template, prefix);
+            return new TemplateResult(model, template, prefix).Location(Zone);
+        }
+    }
+
+    public abstract class AutomaticPartDriver<TPart> : PartDriver<TPart> where TPart : class, IContent {
+        protected override DriverResult Display(TPart part, string groupName, string displayType) {
+            return PartialView(part);
+        }
+        protected override DriverResult Editor(TPart part, string groupName) {
+            return PartialView(part);
+        }
+        protected override DriverResult Editor(TPart part, string groupName, IUpdateModel updater) {
+            updater.TryUpdateModel(part, Prefix, null, null);
+            return PartialView(part);
         }
     }
 
@@ -64,6 +78,8 @@ namespace Orchard.Models {
         public object Model { get; set; }
         public string TemplateName { get; set; }
         public string Prefix { get; set; }
+        public string Zone { get; set; }
+        public string Position { get; set; }
 
         public TemplateResult(object model, string templateName, string prefix) {
             Model = model;
@@ -72,11 +88,30 @@ namespace Orchard.Models {
         }
 
         public override void Apply(BuildDisplayModelContext context) {
-            context.AddDisplay(new TemplateViewModel(Model, Prefix) { TemplateName = TemplateName });
+            context.AddDisplay(new TemplateViewModel(Model, Prefix) {
+                TemplateName = TemplateName,
+                ZoneName = Zone,
+                Position = Position
+            });
         }
 
         public override void Apply(BuildEditorModelContext context) {
-            context.AddEditor(new TemplateViewModel(Model, Prefix) { TemplateName = TemplateName });
+            context.AddEditor(new TemplateViewModel(Model, Prefix) {
+                TemplateName = TemplateName,
+                ZoneName = Zone,
+                Position = Position
+            });
+        }
+
+        public TemplateResult Location(string zone) {
+            Zone = zone;
+            return this;
+        }
+
+        public TemplateResult Location(string zone, string position) {
+            Zone = zone;
+            Position = position;
+            return this;
         }
     }
 

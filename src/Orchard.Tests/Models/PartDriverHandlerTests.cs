@@ -73,19 +73,22 @@ namespace Orchard.Tests.Models {
 
             protected override DriverResult Display(StubPart part, string groupName, string displayType) {
                 var viewModel = new StubViewModel { Foo = string.Join(",", part.Foo) };
-                return PartialView(viewModel);
+                if (displayType.StartsWith("Summary"))
+                    return PartialView(viewModel, "StubViewModelTerse").Location("topmeta");
+
+                return PartialView(viewModel).Location("topmeta");
             }
 
             protected override DriverResult Editor(StubPart part, string groupName) {
                 var viewModel = new StubViewModel { Foo = string.Join(",", part.Foo) };
-                return PartialView(viewModel);
+                return PartialView(viewModel).Location("last", "10");
             }
 
             protected override DriverResult Editor(StubPart part, string groupName, IUpdateModel updater) {
                 var viewModel = new StubViewModel { Foo = string.Join(",", part.Foo) };
                 updater.TryUpdateModel(viewModel, Prefix, null, null);
                 part.Foo = viewModel.Foo.Split(new[] { ',' }).Select(x => x.Trim()).ToArray();
-                return PartialView(viewModel);
+                return PartialView(viewModel).Location("last", "10");
             }
         }
 
