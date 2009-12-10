@@ -85,8 +85,10 @@
     <Compile Include="Settings\ViewModels\SettingsIndexViewModel.cs" />
     <Compile Include="Themes\AdminMenu.cs" />
     <Compile Include="Themes\Controllers\AdminController.cs" />
+    <Compile Include="Themes\Models\Theme.cs" />
     <Compile Include="Themes\Models\ThemeSiteSettings.cs" />
     <Compile Include="Themes\Models\ThemeSiteSettingsHandler.cs" />
+    <Compile Include="Themes\Records\ThemeRecord.cs" />
     <Compile Include="Themes\Records\ThemeSiteSettingsRecord.cs" />
     <Compile Include="Themes\Services\ThemeService.cs" />
     <Compile Include="Themes\ViewModels\ThemesIndexViewModel.cs" />

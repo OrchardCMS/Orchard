@@ -121,13 +121,16 @@
     <Compile Include="Environment\IOrchardShellEvents.cs" />
     <Compile Include="Extensions\ExtensionDescriptor.cs" />
     <Compile Include="Extensions\ExtensionEntry.cs" />
-    <Compile Include="Extensions\ExtensionFolders.cs" />
+    <Compile Include="Extensions\Helpers\PathHelpers.cs" />
+    <Compile Include="Extensions\PackageFolders.cs" />
     <Compile Include="Extensions\ExtensionManager.cs" />
+    <Compile Include="Extensions\IExtensionFolders.cs" />
     <Compile Include="Extensions\Loaders\CoreExtensionLoader.cs" />
     <Compile Include="Extensions\Loaders\DynamicExtensionLoader.cs" />
     <Compile Include="Extensions\Loaders\IExtensionLoader.cs" />
     <Compile Include="Extensions\Loaders\PrecompiledExtensionLoader.cs" />
     <Compile Include="Extensions\Loaders\ReferencedExtensionLoader.cs" />
+    <Compile Include="Extensions\ThemeFolders.cs" />
     <Compile Include="IEvents.cs" />
     <Compile Include="Localization\IText.cs" />
     <Compile Include="Localization\LocalizationModule.cs" />

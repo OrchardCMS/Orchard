@@ -175,6 +175,10 @@
     <Content Include="Content\Images\title_background.gif" />
     <Content Include="Content\Site2.css" />
     <Content Include="Content\Site3.css" />
+    <Content Include="Themes\BlueSky\Theme.gif" />
+    <Content Include="Themes\BlueSky\Theme.txt" />
+    <Content Include="Themes\PinkPretty\Theme.gif" />
+    <Content Include="Themes\PinkPretty\Theme.txt" />
     <Content Include="Views\Shared\AdminHead.aspx" />
     <Content Include="Views\Shared\AdminFoot.aspx" />
     <Content Include="Views\Shared\Messages.ascx" />
@@ -187,7 +191,6 @@
     <Folder Include="App_Data\" />
     <Folder Include="Media\Images\" />
     <Folder Include="Media\Videos\" />
-    <Folder Include="Themes\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v9.0\WebApplications\Microsoft.WebApplication.targets" />

@@ -49,7 +49,7 @@ namespace Orchard.Tests.Extensions {
 
         [Test]
         public void NamesFromFoldersWithPackageTxtShouldBeListed() {
-            var folders = new ExtensionFolders(new[] { _tempFolderName });
+            var folders = new PackageFolders(new[] { _tempFolderName });
             var names = folders.ListNames();
             Assert.That(names.Count(), Is.EqualTo(2));
             Assert.That(names, Has.Some.EqualTo("Sample1"));
@@ -58,7 +58,7 @@ namespace Orchard.Tests.Extensions {
 
         [Test]
         public void PackageTxtShouldBeParsedAndReturnedAsYamlDocument() {
-            var folders = new ExtensionFolders(new[] { _tempFolderName });
+            var folders = new PackageFolders(new[] { _tempFolderName });
             var sample1 = folders.ParseManifest("Sample1");
             var mapping = (Mapping)sample1.YamlDocument.Root;
             var entities = mapping.Entities

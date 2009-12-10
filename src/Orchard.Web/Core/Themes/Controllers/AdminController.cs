@@ -1,4 +1,5 @@
-﻿using System.Web.Mvc;
+﻿using System;
+using System.Web.Mvc;
 using Orchard.Core.Themes.ViewModels;
 using Orchard.Localization;
 using Orchard.Themes;
@@ -19,7 +20,16 @@ namespace Orchard.Core.Themes.Controllers {
         public Localizer T { get; set; }
 
         public ActionResult Index() {
-            return View(new ThemesIndexViewModel());
+            try {
+                var themes = _themeService.GetInstalledThemes();
+                var currentTheme = _themeService.GetCurrentTheme();
+                var model = new ThemesIndexViewModel { CurrentTheme = currentTheme, Themes = themes };
+                return View(model);
+            }
+            catch (Exception exception) {
+                _notifier.Error(T("Listing themes failed: " + exception.Message));
+                return View(new ThemesIndexViewModel());
+            }
         }
     }
 }
