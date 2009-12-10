@@ -66,6 +66,9 @@
       <HintPath>..\..\lib\nunit\nunit.framework.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
@@ -117,6 +120,7 @@
     <Compile Include="Models\DefaultModelManagerTests.cs" />
     <Compile Include="Models\Drivers\ModelBuilderTests.cs" />
     <Compile Include="Models\Drivers\ModelDriverTests.cs" />
+    <Compile Include="Models\PartDriverHandlerTests.cs" />
     <Compile Include="Models\Stubs\Alpha.cs" />
     <Compile Include="Models\Stubs\AlphaHandler.cs" />
     <Compile Include="Models\Stubs\Beta.cs" />

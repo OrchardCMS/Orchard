@@ -19,6 +19,7 @@ namespace Orchard.Models.ViewModels {
 
         public ItemDisplayModel(ContentItem item) {
             Item = item;
+            Displays = Enumerable.Empty<TemplateViewModel>();
         }
 
         public ContentItem Item {
