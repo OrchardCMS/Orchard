@@ -17,28 +17,28 @@ namespace Orchard.Models {
     public abstract class PartDriver<TPart> : IPartDriver where TPart : class, IContent {
         DriverResult IPartDriver.BuildDisplayModel(BuildDisplayModelContext context) {
             var part = context.ContentItem.As<TPart>();
-            return part == null ? null : BuildDisplayModel(part, context.GroupName, context.DisplayType);
+            return part == null ? null : Display(part, context.GroupName, context.DisplayType);
         }
 
         DriverResult IPartDriver.BuildEditorModel(BuildEditorModelContext context) {
             var part = context.ContentItem.As<TPart>();
-            return part == null ? null : BuildEditorModel(part, context.GroupName);
+            return part == null ? null : Editor(part, context.GroupName);
         }
 
         DriverResult IPartDriver.UpdateEditorModel(UpdateEditorModelContext context) {
             var part = context.ContentItem.As<TPart>();
-            return part == null ? null : UpdateEditorModel(part, context.GroupName, context.Updater);
+            return part == null ? null : Editor(part, context.GroupName, context.Updater);
         }
 
-        protected virtual DriverResult BuildDisplayModel(TPart part, string groupName, string displayType) {
+        protected virtual DriverResult Display(TPart part, string groupName, string displayType) {
             return null;
         }
 
-        protected virtual DriverResult BuildEditorModel(TPart part, string groupName) {
+        protected virtual DriverResult Editor(TPart part, string groupName) {
             return null;
         }
 
-        protected virtual DriverResult UpdateEditorModel(TPart part, string groupName, IUpdateModel updater) {
+        protected virtual DriverResult Editor(TPart part, string groupName, IUpdateModel updater) {
             return null;
         }
 

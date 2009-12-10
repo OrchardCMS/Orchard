@@ -50,13 +50,13 @@ namespace Orchard.Tests.Models {
 
         [Test]
         public void TestDriverCanAddDisplay() {
-            var driver = new StubDriver();
+            var driver = new StubPartDriver();
             _container.Build(x => x.Register(driver).As<IPartDriver>());
 
             var contentHandler = _container.Resolve<IContentHandler>();
 
             var item = new ContentItem();
-            item.Weld(new StubPart());
+            item.Weld(new StubPart { Foo = new[] { "a", "b", "c" } });
 
             var ctx = new BuildDisplayModelContext(new ItemDisplayModel(item), null, null);
             Assert.That(ctx.DisplayModel.Displays.Count(), Is.EqualTo(0));
@@ -66,7 +66,7 @@ namespace Orchard.Tests.Models {
 
         }
 
-        private class StubDriver : PartDriver<StubPart> {
+        public class StubPartDriver : PartDriver<StubPart> {
             protected override string Prefix {
                 get { return "Stub"; }
             }
@@ -84,15 +84,16 @@ namespace Orchard.Tests.Models {
             protected override DriverResult Editor(StubPart part, string groupName, IUpdateModel updater) {
                 var viewModel = new StubViewModel { Foo = string.Join(",", part.Foo) };
                 updater.TryUpdateModel(viewModel, Prefix, null, null);
-                part.Foo = viewModel.Foo.Split(new[] {','}).Select(x => x.Trim()).ToArray();
+                part.Foo = viewModel.Foo.Split(new[] { ',' }).Select(x => x.Trim()).ToArray();
                 return PartialView(viewModel);
             }
         }
 
-        private class StubPart : ContentPart {
+        public class StubPart : ContentPart {
             public string[] Foo { get; set; }
         }
-        private class StubViewModel {
+
+        public class StubViewModel {
             [Required]
             public string Foo { get; set; }
         }
