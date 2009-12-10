@@ -114,8 +114,9 @@ namespace Orchard.Blogs.Controllers {
             if (blog == null)
                 return new NotFoundResult();
 
-            model.BlogPost = _contentManager.UpdateEditorViewModel(_contentManager.New<BlogPost>("blogpost"), null, this);
-            model.BlogPost.Item.Blog = blog;
+            BlogPost blogPost = _contentManager.New<BlogPost>("blogpost");
+            blogPost.Blog = blog;
+            model.BlogPost = _contentManager.UpdateEditorViewModel(blogPost, null, this);
 
             if (!ModelState.IsValid)
                 return View(model);

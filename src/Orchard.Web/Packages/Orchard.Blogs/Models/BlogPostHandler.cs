@@ -26,8 +26,6 @@ namespace Orchard.Blogs.Models {
             Filters.Add(new StorageFilter<BlogPostRecord>(repository));
             Filters.Add(new ContentItemTemplates<BlogPost>("BlogPost", "Detail", "Summary", "SummaryAdmin"));
 
-            OnLoaded<BlogPost>((context, bp) => bp.Blog = contentManager.Get<Blog>(bp.Record.Blog.Id));
-
             OnGetItemMetadata<BlogPost>((context, bp) => {
                 context.Metadata.DisplayText = bp.Title;
                 context.Metadata.DisplayRouteValues =

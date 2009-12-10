@@ -9,32 +9,24 @@ namespace Orchard.Blogs.Services {
     public class BlogPostService : IBlogPostService {
         private readonly IContentManager _contentManager;
         private readonly IRepository<BlogPostRecord> _blogPostRepository;
-        private readonly IRepository<RoutableRecord> _routableRepository;
 
-        public BlogPostService(IContentManager contentManager, IRepository<BlogPostRecord> blogPostRepository, IRepository<RoutableRecord> routableRepository) {
+        public BlogPostService(IContentManager contentManager, IRepository<BlogPostRecord> blogPostRepository) {
             _contentManager = contentManager;
             _blogPostRepository = blogPostRepository;
-            _routableRepository = routableRepository;
         }
 
         public BlogPost Get(Blog blog, string slug) {
-            RoutableRecord record =
-                _routableRepository.Get(r => r.ContentItemRecord.ContentType.Name == "blogpost" && r.Slug == slug);
-            BlogPost blogPost = record != null ? _contentManager.Get<BlogPost>(record.Id) : null;
-
-            return blogPost != null && blogPost.Record.Blog.Id == blog.ContentItem.Id ? blogPost : null;
+            return _contentManager.Query<BlogPost, BlogPostRecord >()
+                .Join<RoutableRecord>().Where(x => x.Slug == slug)
+                .Join<CommonRecord>().Where(x => x.Container == blog.Record.ContentItemRecord)
+                .List().FirstOrDefault();
         }
 
         public IEnumerable<BlogPost> Get(Blog blog) {
-            //TODO: (erikpo) Figure out how to sort by published date
-            IEnumerable<RoutableRecord> records =
-                _routableRepository.Fetch(rr => rr.ContentItemRecord.ContentType.Name == "blogpost"
-                    /*, bpr => bpr.Asc(bpr2 => bpr2.Published.GetValueOrDefault(new DateTime(2099, 1, 1)))*/);
-
-            //TODO: (erikpo) Need to filter by blog in the line above instead of filtering here
-            return
-                records.Select(r => _contentManager.Get(r.Id).As<BlogPost>()).Where(
-                    bp => bp.Record.Blog.Id == blog.ContentItem.Id);
+            return _contentManager.Query<BlogPost, BlogPostRecord>()
+                .Join<CommonRecord>().Where(x => x.Container == blog.Record.ContentItemRecord)
+                .OrderByDescending(x=>x.CreatedUtc)
+                .List();
         }
 
         public void Delete(BlogPost blogPost) {

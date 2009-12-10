@@ -12,13 +12,13 @@
         <fieldset>
             <label class="sub" for="permalink">Permalink<br /><span><%=Request.Url.ToRootString() %>/<%=Model.Blog.Slug %>/</span></label>
             <span><%=Html.TextBoxFor(m => m.Slug, new { id = "permalink", @class = "text" })%></span>
-        </fieldset>
+        </fieldset><%--
         <fieldset>
             <%--<label for="body">Excerpt</label>
-            <span>[still needed]</span>--%>
+            <span>[still needed]</span>-- %>
             <label for="body">Body</label>
             <span><%=Html.TextAreaFor(m => m.Body, new { id = "body", @class = "html" })%></span>
-        </fieldset>
+        </fieldset>--%>
     </div>
     <div class="secondary">
         <fieldset>

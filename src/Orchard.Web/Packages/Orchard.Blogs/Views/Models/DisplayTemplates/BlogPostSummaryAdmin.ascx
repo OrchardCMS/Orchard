@@ -1,4 +1,6 @@
 ﻿<%@ Control Language="C#" Inherits="System.Web.Mvc.ViewUserControl<ItemDisplayViewModel<BlogPost>>" %>
+<%@ Import Namespace="Orchard.Models"%>
+<%@ Import Namespace="Orchard.Core.Common.Models"%>
 <%@ Import Namespace="Orchard.Models.ViewModels"%>
 <%@ Import Namespace="Orchard.Blogs.Extensions"%>
 <%@ Import Namespace="Orchard.Blogs.Models"%>
@@ -7,7 +9,7 @@
     <%=Html.PublishedState(Model.Item) %>
     | <a href="#">?? comments</a>
 </div>
-<div class="content"><%=Model.Item.Body ?? "<p><em>there's no content for this blog post</em></p>"%></div>
+<div class="content"><%=Model.Item.As<BodyAspect>().Text ?? "<p><em>there's no content for this blog post</em></p>"%></div>
 <p class="actions">
     <%-- todo: (heskew) make into a ul --%>
     <span class="construct">

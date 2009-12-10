@@ -9,32 +9,29 @@ namespace Orchard.Blogs.Models {
     public class BlogPost : ContentPart<BlogPostRecord> {
         public readonly static ContentType ContentType = new ContentType { Name = "blogpost", DisplayName = "Blog Post" };
 
-        public Blog Blog { get; set; }
-
         [HiddenInput(DisplayValue = false)]
         public int Id { get { return ContentItem.Id; } }
 
         [Required]
         public string Title {
             get { return this.As<RoutableAspect>().Title; }
-            set { this.As<RoutableAspect>().Record.Title = value; }
+            set { this.As<RoutableAspect>().Title = value; }
         }
 
         [Required]
         public string Slug {
             get { return this.As<RoutableAspect>().Slug; }
-            set { this.As<RoutableAspect>().Record.Slug = value; }
+            set { this.As<RoutableAspect>().Slug = value; }
         }
 
-        [Required]
-        public string Body {
-            get { return this.As<BodyAspect>().Record.Text; }
-            set { this.As<BodyAspect>().Record.Text = value; }
+        public Blog Blog {
+            get { return this.As<CommonAspect>().Container.As<Blog>(); }
+            set { this.As<CommonAspect>().Container = value; }
         }
 
         public IUser Creator {
-            get { return this.As<CommonAspect>().OwnerField.Value; }
-            set { this.As<CommonAspect>().Record.OwnerId = value.Id; }
+            get { return this.As<CommonAspect>().Owner; }
+            set { this.As<CommonAspect>().Owner = value; }
         }
 
         public DateTime? Published

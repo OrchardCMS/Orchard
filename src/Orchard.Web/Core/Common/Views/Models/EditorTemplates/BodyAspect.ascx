@@ -3,5 +3,7 @@
 <%@ Import Namespace="Orchard.Core.Common.Models" %>
 <%@ Import Namespace="Orchard.Core.Settings.ViewModels" %>
 <%@ Import Namespace="Orchard.Utility" %>
-<h3>Body</h3>
-<ul><li><%=Html.EditorFor(m=>m.Text, Model.TextEditorTemplate) %></li></ul>
+<fieldset>
+    <label>Body</label>
+    <%=Html.EditorFor(m=>m.Text, Model.TextEditorTemplate) %>
+</fieldset>
