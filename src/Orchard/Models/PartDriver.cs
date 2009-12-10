@@ -57,6 +57,11 @@ namespace Orchard.Models {
     }
 
     public abstract class AutomaticPartDriver<TPart> : PartDriver<TPart> where TPart : class, IContent {
+        protected override string Prefix {
+            get {
+                return (typeof (TPart).Name);
+            }
+        }
         protected override DriverResult Display(TPart part, string groupName, string displayType) {
             return PartialView(part);
         }

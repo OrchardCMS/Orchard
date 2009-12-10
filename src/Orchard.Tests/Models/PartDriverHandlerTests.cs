@@ -58,7 +58,7 @@ namespace Orchard.Tests.Models {
             var item = new ContentItem();
             item.Weld(new StubPart { Foo = new[] { "a", "b", "c" } });
 
-            var ctx = new BuildDisplayModelContext(new ItemDisplayModel(item), null, null);
+            var ctx = new BuildDisplayModelContext(new ItemDisplayModel(item), "", "");
             Assert.That(ctx.DisplayModel.Displays.Count(), Is.EqualTo(0));
             contentHandler.BuildDisplayModel(ctx);
             Assert.That(ctx.DisplayModel.Displays.Count(), Is.EqualTo(1));
