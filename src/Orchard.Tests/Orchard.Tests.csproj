@@ -164,9 +164,9 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Extensions\FoldersData\Sample1\Package.txt" />
-    <Content Include="Extensions\FoldersData\Sample2\Two.txt" />
-    <Content Include="Extensions\FoldersData\Sample3\Package.txt" />
+    <EmbeddedResource Include="Extensions\FoldersData\Sample1\Package.txt" />
+    <EmbeddedResource Include="Extensions\FoldersData\Sample2\Two.txt" />
+    <EmbeddedResource Include="Extensions\FoldersData\Sample3\Package.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
