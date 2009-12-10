@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using Orchard.Blogs.Models;
-using Orchard.Core.Common.Models;
 using Orchard.Core.Common.Records;
 using Orchard.Data;
 using Orchard.Models;
@@ -19,15 +18,16 @@ namespace Orchard.Blogs.Services {
         }
 
         public Blog Get(string slug) {
-            RoutableRecord record = _routableRepository.Get(r => r.ContentItemRecord.ContentType.Name == "blog" && r.Slug == slug);
-
-            return record != null ?_contentManager.Get<Blog>(record.Id) : null;
+            return _contentManager.Query<Blog, BlogRecord>()
+                .Join<RoutableRecord>().Where(rr => rr.Slug == slug)
+                .List().FirstOrDefault();
         }
 
         public IEnumerable<Blog> Get() {
-            IEnumerable<RoutableRecord> records = _routableRepository.Fetch(rr => rr.ContentItemRecord.ContentType.Name == "blog", rr => rr.Asc(rr2 => rr2.Title));
-
-            return records.Select(rr => _contentManager.Get<Blog>(rr.Id));
+            return _contentManager.Query<Blog, BlogRecord>()
+                .Join<RoutableRecord>()
+                .OrderBy(br => br.Title)
+                .List();
         }
 
         public void Delete(Blog blog) {

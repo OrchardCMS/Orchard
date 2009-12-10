@@ -17,15 +17,15 @@ namespace Orchard.Blogs.Services {
 
         public BlogPost Get(Blog blog, string slug) {
             return _contentManager.Query<BlogPost, BlogPostRecord >()
-                .Join<RoutableRecord>().Where(x => x.Slug == slug)
-                .Join<CommonRecord>().Where(x => x.Container == blog.Record.ContentItemRecord)
+                .Join<RoutableRecord>().Where(rr => rr.Slug == slug)
+                .Join<CommonRecord>().Where(cr => cr.Container == blog.Record.ContentItemRecord)
                 .List().FirstOrDefault();
         }
 
         public IEnumerable<BlogPost> Get(Blog blog) {
             return _contentManager.Query<BlogPost, BlogPostRecord>()
-                .Join<CommonRecord>().Where(x => x.Container == blog.Record.ContentItemRecord)
-                .OrderByDescending(x=>x.CreatedUtc)
+                .Join<CommonRecord>().Where(cr => cr.Container == blog.Record.ContentItemRecord)
+                .OrderByDescending(cr => cr.CreatedUtc)
                 .List();
         }
 
