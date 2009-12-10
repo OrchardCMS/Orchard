@@ -23,7 +23,7 @@ namespace Orchard.Media.Models {
             settings.Record.RootMediaFolder = "~/Media";
         }
 
-        protected override void GetEditorViewModel(GetEditorViewModelContext context) {
+        protected override void BuildEditorModel(BuildEditorModelContext context) {
             var model = context.ContentItem.As<MediaSettings>();
             if (model == null)
                 return;
@@ -31,7 +31,7 @@ namespace Orchard.Media.Models {
             context.AddEditor(new TemplateViewModel(model.Record, "MediaSettings"));
         }
 
-        protected override void UpdateEditorViewModel(UpdateEditorViewModelContext context) {
+        protected override void UpdateEditorModel(UpdateEditorModelContext context) {
             var model = context.ContentItem.As<MediaSettings>();
             if (model == null)
                 return;

@@ -1,5 +1,3 @@
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Web.Mvc;
 using Orchard.Models;
@@ -10,7 +8,7 @@ using Orchard.Users.Models;
 namespace Orchard.Users.ViewModels {
     public class UserEditViewModel : AdminViewModel {
         public User User { get; set; }
-        public ItemEditorViewModel ItemView { get; set; }
+        public ItemEditorModel EditorModel { get; set; }
 
 
         [HiddenInput(DisplayValue = false)]

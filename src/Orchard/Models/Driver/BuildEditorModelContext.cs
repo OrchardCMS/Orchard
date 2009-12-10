@@ -4,19 +4,19 @@ using System.Linq;
 using Orchard.Models.ViewModels;
 
 namespace Orchard.Models.Driver {
-    public class GetEditorViewModelContext {
-        public GetEditorViewModelContext(ItemEditorViewModel viewModel, string groupName) {
-            ContentItem = viewModel.Item;
+    public class BuildEditorModelContext {
+        public BuildEditorModelContext(ItemEditorModel editorModel, string groupName) {
+            ContentItem = editorModel.Item;
             GroupName = groupName;
-            ViewModel = viewModel;
+            EditorModel = editorModel;
         }
 
         public ContentItem ContentItem { get; set; }
         public string GroupName { get; set; }
-        public ItemEditorViewModel ViewModel { get; set; }
+        public ItemEditorModel EditorModel { get; set; }
 
         public void AddEditor(TemplateViewModel editor) {
-            ViewModel.Editors = ViewModel.Editors.Concat(new[] { editor });
+            EditorModel.Editors = EditorModel.Editors.Concat(new[] { editor });
         }
     }
 }

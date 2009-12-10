@@ -18,6 +18,6 @@
 </ol>
 
 
-<% foreach(var e in Model.ItemView.Editors) {%>
+<% foreach(var e in Model.EditorModel.Editors) {%>
      <%=Html.EditorFor(m => e.Model, e.TemplateName, e.Prefix)%>
 <%} %>

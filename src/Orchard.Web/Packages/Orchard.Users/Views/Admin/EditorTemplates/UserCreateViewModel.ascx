@@ -6,7 +6,7 @@
     <%=Html.EditorFor(m=>m.Password, "inputPasswordLarge") %>
     <%=Html.EditorFor(m=>m.ConfirmPassword, "inputPasswordLarge") %>
 </fieldset><%
-foreach(var e in Model.ItemView.Editors) {
+foreach(var e in Model.EditorModel.Editors) {
     var editor = e;%>
 <fieldset>
     <%=Html.EditorFor(m => editor.Model, editor.TemplateName, editor.Prefix)%>

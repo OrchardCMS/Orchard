@@ -32,7 +32,7 @@ namespace Orchard.Sandbox.Controllers {
                 Pages = _contentManager.Query<SandboxPage, SandboxPageRecord>()
                     .OrderBy(x => x.Name)
                     .List()
-                    .Select(x => _contentManager.GetDisplayViewModel(x, null, "SummaryList"))
+                    .Select(x => _contentManager.BuildDisplayModel(x, null, "SummaryList"))
             };
             return View(model);
         }
@@ -40,7 +40,7 @@ namespace Orchard.Sandbox.Controllers {
         public ActionResult Show(int id) {
             var page = _contentManager.Get<SandboxPage>(id);
             var model = new PageShowViewModel {
-                Page = _contentManager.GetDisplayViewModel(page, null, "Detail")
+                Page = _contentManager.BuildDisplayModel(page, null, "Detail")
             };
             return View(model);
         }
@@ -80,7 +80,7 @@ namespace Orchard.Sandbox.Controllers {
 
             var page = _contentManager.Get<SandboxPage>(id);
             var model = new PageEditViewModel {
-                Page = _contentManager.GetEditorViewModel(page, null)
+                Page = _contentManager.BuildEditorModel(page, null)
             };
             return View(model);
         }
@@ -95,7 +95,7 @@ namespace Orchard.Sandbox.Controllers {
 
             var page = _contentManager.Get<SandboxPage>(id);
             var model = new PageEditViewModel {
-                Page = _contentManager.UpdateEditorViewModel(page, null, this)
+                Page = _contentManager.UpdateEditorModel(page, null, this)
             };
             if (!ModelState.IsValid)
                 return View(model);

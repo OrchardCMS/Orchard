@@ -13,13 +13,13 @@ namespace Orchard.DevTools.ViewModels {
 
         public IEnumerable<Type> PartTypes { get; set; }
 
-        public ItemDisplayViewModel DisplayView { get; set; }
+        public ItemDisplayModel DisplayModel { get; set; }
 
-        public ItemEditorViewModel EditorView { get; set; }
+        public ItemEditorModel EditorModel { get; set; }
 
-        public IEnumerable<TemplateViewModel> Displays { get { return DisplayView.Displays; } }
+        public IEnumerable<TemplateViewModel> Displays { get { return DisplayModel.Displays; } }
 
-        public IEnumerable<TemplateViewModel> Editors { get { return EditorView.Editors; } }
+        public IEnumerable<TemplateViewModel> Editors { get { return EditorModel.Editors; } }
 
         public object Locate(Type type) {
             return Item.ContentItem.Get(type);

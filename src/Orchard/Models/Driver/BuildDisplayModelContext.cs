@@ -4,22 +4,22 @@ using System.Linq;
 using Orchard.Models.ViewModels;
 
 namespace Orchard.Models.Driver {
-    public class GetDisplayViewModelContext {
-        public GetDisplayViewModelContext(ItemDisplayViewModel viewModel, string groupName, string displayType) {
-            ContentItem = viewModel.Item;
+    public class BuildDisplayModelContext {
+        public BuildDisplayModelContext(ItemDisplayModel displayModel, string groupName, string displayType) {
+            ContentItem = displayModel.Item;
             GroupName = groupName;
             DisplayType = displayType;
-            ViewModel = viewModel;
+            DisplayModel = displayModel;
         }
 
         public ContentItem ContentItem { get; set; }
         public string GroupName { get; set; }
         public string DisplayType { get; set; }
-        public ItemDisplayViewModel ViewModel { get; set; }
+        public ItemDisplayModel DisplayModel { get; set; }
 
 
         public void AddDisplay(TemplateViewModel display) {
-            ViewModel.Displays = ViewModel.Displays.Concat(new[] { display });
+            DisplayModel.Displays = DisplayModel.Displays.Concat(new[] { display });
         }
     }
 }

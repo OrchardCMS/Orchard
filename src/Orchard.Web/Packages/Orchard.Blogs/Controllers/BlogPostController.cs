@@ -54,7 +54,7 @@ namespace Orchard.Blogs.Controllers {
 
             var model = new BlogPostViewModel {
                 Blog = blog,
-                BlogPost = _contentManager.GetDisplayViewModel(post, null, "Detail")
+                BlogPost = _contentManager.BuildDisplayModel(post, null, "Detail")
             };
 
             return View(model);
@@ -93,7 +93,7 @@ namespace Orchard.Blogs.Controllers {
             if (blog == null)
                 return new NotFoundResult();
 
-            var blogPost = _contentManager.GetEditorViewModel(_contentManager.New<BlogPost>("blogpost"), null);
+            var blogPost = _contentManager.BuildEditorModel(_contentManager.New<BlogPost>("blogpost"), null);
             blogPost.Item.Blog = blog;
 
             var model = new CreateBlogPostViewModel {
@@ -116,7 +116,7 @@ namespace Orchard.Blogs.Controllers {
 
             BlogPost blogPost = _contentManager.New<BlogPost>("blogpost");
             blogPost.Blog = blog;
-            model.BlogPost = _contentManager.UpdateEditorViewModel(blogPost, null, this);
+            model.BlogPost = _contentManager.UpdateEditorModel(blogPost, null, this);
 
             if (!ModelState.IsValid)
                 return View(model);
@@ -146,7 +146,7 @@ namespace Orchard.Blogs.Controllers {
                 return new NotFoundResult();
 
             var model = new BlogPostEditViewModel { Blog = blog, BlogPost = null };
-            //model.ItemView = _contentManager.GetEditorViewModel(model.Post.ContentItem, null);
+            //model.EditorModel = _contentManager.BuildEditorModel(model.Post.ContentItem, null);
             return View(model);
         }
 
@@ -167,7 +167,7 @@ namespace Orchard.Blogs.Controllers {
                 return new NotFoundResult();
 
             var model = new BlogPostEditViewModel { Blog = blog, BlogPost = null };
-            //model.ItemView = _contentManager.UpdateEditorViewModel(model.Post, null, this);
+            //model.EditorModel = _contentManager.UpdateEditorModel(model.Post, null, this);
 
             IValueProvider values = input.ToValueProvider();
             TryUpdateModel(model, values);

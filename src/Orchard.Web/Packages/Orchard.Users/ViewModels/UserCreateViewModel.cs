@@ -18,6 +18,6 @@ namespace Orchard.Users.ViewModels {
         [Required, DataType(DataType.Password)]
         public string ConfirmPassword { get; set; }
 
-        public ItemEditorViewModel ItemView { get; set; }
+        public ItemEditorModel EditorModel { get; set; }
     }
 }

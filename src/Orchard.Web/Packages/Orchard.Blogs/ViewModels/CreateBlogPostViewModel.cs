@@ -4,6 +4,6 @@ using Orchard.Mvc.ViewModels;
 
 namespace Orchard.Blogs.ViewModels {
     public class CreateBlogPostViewModel : AdminViewModel {
-        public ItemEditorViewModel<BlogPost> BlogPost { get; set; }
+        public ItemEditorModel<BlogPost> BlogPost { get; set; }
     }
 }

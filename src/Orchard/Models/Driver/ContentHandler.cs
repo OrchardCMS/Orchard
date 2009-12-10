@@ -36,15 +36,15 @@ namespace Orchard.Models.Driver {
         protected void OnGetItemMetadata<TPart>(Action<GetItemMetadataContext, TPart> handler) where TPart : class, IContent {
             Filters.Add(new InlineTemplateFilter<TPart> { OnGetItemMetadata = handler });
         }
-        protected void OnGetDisplayViewModel<TPart>(Action<GetDisplayViewModelContext, TPart> handler) where TPart : class, IContent {
+        protected void OnGetDisplayViewModel<TPart>(Action<BuildDisplayModelContext, TPart> handler) where TPart : class, IContent {
             Filters.Add(new InlineTemplateFilter<TPart> { OnGetDisplayViewModel = handler });
         }
 
-        protected void OnGetEditorViewModel<TPart>(Action<GetEditorViewModelContext, TPart> handler) where TPart : class, IContent {
+        protected void OnGetEditorViewModel<TPart>(Action<BuildEditorModelContext, TPart> handler) where TPart : class, IContent {
             Filters.Add(new InlineTemplateFilter<TPart> { OnGetEditorViewModel = handler });
         }
 
-        protected void OnUpdateEditorViewModel<TPart>(Action<UpdateEditorViewModelContext, TPart> handler) where TPart : class, IContent {
+        protected void OnUpdateEditorViewModel<TPart>(Action<UpdateEditorModelContext, TPart> handler) where TPart : class, IContent {
             Filters.Add(new InlineTemplateFilter<TPart> { OnUpdateEditorViewModel = handler });
         }
 
@@ -73,19 +73,19 @@ namespace Orchard.Models.Driver {
 
         class InlineTemplateFilter<TPart> : TemplateFilterBase<TPart> where TPart : class, IContent {
             public Action<GetItemMetadataContext, TPart> OnGetItemMetadata { get; set; }
-            public Action<GetDisplayViewModelContext, TPart> OnGetDisplayViewModel { get; set; }
-            public Action<GetEditorViewModelContext, TPart> OnGetEditorViewModel { get; set; }
-            public Action<UpdateEditorViewModelContext, TPart> OnUpdateEditorViewModel { get; set; }
+            public Action<BuildDisplayModelContext, TPart> OnGetDisplayViewModel { get; set; }
+            public Action<BuildEditorModelContext, TPart> OnGetEditorViewModel { get; set; }
+            public Action<UpdateEditorModelContext, TPart> OnUpdateEditorViewModel { get; set; }
             protected override void GetItemMetadata(GetItemMetadataContext context, TPart instance) {
                 if (OnGetItemMetadata != null) OnGetItemMetadata(context, instance);
             }
-            protected override void GetDisplayViewModel(GetDisplayViewModelContext context, TPart instance) {
+            protected override void BuildDisplayModel(BuildDisplayModelContext context, TPart instance) {
                 if (OnGetDisplayViewModel != null) OnGetDisplayViewModel(context, instance);
             }
-            protected override void GetEditorViewModel(GetEditorViewModelContext context, TPart instance) {
+            protected override void BuildEditorModel(BuildEditorModelContext context, TPart instance) {
                 if (OnGetEditorViewModel != null) OnGetEditorViewModel(context, instance);
             }
-            protected override void UpdateEditorViewModel(UpdateEditorViewModelContext context, TPart instance) {
+            protected override void UpdateEditorModel(UpdateEditorModelContext context, TPart instance) {
                 if (OnUpdateEditorViewModel != null) OnUpdateEditorViewModel(context, instance);
             }
         }
@@ -136,20 +136,20 @@ namespace Orchard.Models.Driver {
                 filter.GetItemMetadata(context);
             GetItemMetadata(context);
         }
-        void IContentHandler.GetDisplayViewModel(GetDisplayViewModelContext context) {
+        void IContentHandler.BuildDisplayModel(BuildDisplayModelContext context) {
             foreach (var filter in Filters.OfType<IContentTemplateFilter>())
-                filter.GetDisplayViewModel(context);
-            GetDisplayViewModel(context);
+                filter.BuildDisplayModel(context);
+            BuildDisplayModel(context);
         }
-        void IContentHandler.GetEditorViewModel(GetEditorViewModelContext context) {
+        void IContentHandler.BuildEditorModel(BuildEditorModelContext context) {
             foreach (var filter in Filters.OfType<IContentTemplateFilter>())
-                filter.GetEditorViewModel(context);
-            GetEditorViewModel(context);
+                filter.BuildEditorModel(context);
+            BuildEditorModel(context);
         }
-        void IContentHandler.UpdateEditorViewModel(UpdateEditorViewModelContext context) {
+        void IContentHandler.UpdateEditorModel(UpdateEditorModelContext context) {
             foreach (var filter in Filters.OfType<IContentTemplateFilter>())
-                filter.UpdateEditorViewModel(context);
-            UpdateEditorViewModel(context);
+                filter.UpdateEditorModel(context);
+            UpdateEditorModel(context);
         }
 
         protected virtual void Activating(ActivatingContentContext context) { }
@@ -162,8 +162,8 @@ namespace Orchard.Models.Driver {
         protected virtual void Created(CreateContentContext context) { }
 
         protected virtual void GetItemMetadata(GetItemMetadataContext context) { }
-        protected virtual void GetDisplayViewModel(GetDisplayViewModelContext context) { }
-        protected virtual void GetEditorViewModel(GetEditorViewModelContext context) { }
-        protected virtual void UpdateEditorViewModel(UpdateEditorViewModelContext context) {}
+        protected virtual void BuildDisplayModel(BuildDisplayModelContext context) { }
+        protected virtual void BuildEditorModel(BuildEditorModelContext context) { }
+        protected virtual void UpdateEditorModel(UpdateEditorModelContext context) {}
     }
 }

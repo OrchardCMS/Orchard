@@ -8,7 +8,7 @@ namespace Orchard.Models.Driver {
         private readonly string _templateName;
         private readonly string _prefix;
         private readonly string[] _displayTypes;
-        private Action<UpdateEditorViewModelContext, ItemEditorViewModel<TContent>> _updater;
+        private Action<UpdateEditorModelContext, ItemEditorModel<TContent>> _updater;
 
         public ContentItemTemplates(string templateName, params string[] displayTypes) {
             _templateName = templateName;
@@ -16,16 +16,16 @@ namespace Orchard.Models.Driver {
             _updater = (context, viewModel) => context.Updater.TryUpdateModel(viewModel, "", null, null);
         }
 
-        protected override void GetDisplayViewModel(GetDisplayViewModelContext context, TContent instance) {
+        protected override void BuildDisplayModel(BuildDisplayModelContext context, TContent instance) {
             var longestMatch = LongestMatch(context.DisplayType);
-            context.ViewModel.TemplateName = _templateName + longestMatch;
-            context.ViewModel.Prefix = _prefix;
+            context.DisplayModel.TemplateName = _templateName + longestMatch;
+            context.DisplayModel.Prefix = _prefix;
 
-            if (context.ViewModel.GetType() != typeof(ItemDisplayViewModel<TContent>)) {
-                context.ViewModel.Adaptor = (html, viewModel) => {
-                    return new HtmlHelper<ItemDisplayViewModel<TContent>>(
+            if (context.DisplayModel.GetType() != typeof(ItemDisplayModel<TContent>)) {
+                context.DisplayModel.Adaptor = (html, viewModel) => {
+                    return new HtmlHelper<ItemDisplayModel<TContent>>(
                         html.ViewContext,
-                        new ViewDataContainer { ViewData = new ViewDataDictionary(new ItemDisplayViewModel<TContent>(viewModel)) },
+                        new ViewDataContainer { ViewData = new ViewDataDictionary(new ItemDisplayModel<TContent>(viewModel)) },
                         html.RouteCollection);
                 };
             }
@@ -45,18 +45,29 @@ namespace Orchard.Models.Driver {
             });
         }
 
-        protected override void GetEditorViewModel(GetEditorViewModelContext context, TContent instance) {
-            context.ViewModel.TemplateName = _templateName;
-            context.ViewModel.Prefix = _prefix;
+        protected override void BuildEditorModel(BuildEditorModelContext context, TContent instance) {
+            context.EditorModel.TemplateName = _templateName;
+            context.EditorModel.Prefix = _prefix;
+            if (context.EditorModel.GetType() != typeof(ItemEditorModel<TContent>)) {
+                context.EditorModel.Adaptor = (html, viewModel) => {
+                    return new HtmlHelper<ItemEditorModel<TContent>>(
+                        html.ViewContext,
+                        new ViewDataContainer { ViewData = new ViewDataDictionary(new ItemEditorModel<TContent>(viewModel)) },
+                        html.RouteCollection);
+                };
+            }
         }
 
-        protected override void UpdateEditorViewModel(UpdateEditorViewModelContext context, TContent instance) {
-            _updater(context, (ItemEditorViewModel<TContent>)context.ViewModel);
-            context.ViewModel.TemplateName = _templateName;
-            context.ViewModel.Prefix = _prefix;
+        protected override void UpdateEditorModel(UpdateEditorModelContext context, TContent instance) {
+            if (context.EditorModel is ItemEditorModel<TContent>)
+                _updater(context, (ItemEditorModel<TContent>)context.EditorModel);
+            else
+                _updater(context, new ItemEditorModel<TContent>(context.EditorModel));
+            context.EditorModel.TemplateName = _templateName;
+            context.EditorModel.Prefix = _prefix;
         }
 
-        public void Updater(Action<UpdateEditorViewModelContext, ItemEditorViewModel<TContent>> updater) {
+        public void Updater(Action<UpdateEditorModelContext, ItemEditorModel<TContent>> updater) {
             _updater = updater;
         }
     }

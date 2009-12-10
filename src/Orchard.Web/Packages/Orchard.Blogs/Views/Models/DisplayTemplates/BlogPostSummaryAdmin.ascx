@@ -1,4 +1,4 @@
-﻿<%@ Control Language="C#" Inherits="System.Web.Mvc.ViewUserControl<ItemDisplayViewModel<BlogPost>>" %>
+﻿<%@ Control Language="C#" Inherits="System.Web.Mvc.ViewUserControl<ItemDisplayModel<BlogPost>>" %>
 <%@ Import Namespace="Orchard.Models"%>
 <%@ Import Namespace="Orchard.Core.Common.Models"%>
 <%@ Import Namespace="Orchard.Models.ViewModels"%>

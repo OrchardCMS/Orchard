@@ -37,14 +37,14 @@ namespace Orchard.Tags.Models {
             });
         }
 
-        protected override void GetEditorViewModel(GetEditorViewModelContext context) {
+        protected override void BuildEditorModel(BuildEditorModelContext context) {
             if (context.ContentItem.Has<HasTags>() == false) {
                 return;
             }
             context.AddEditor(new TemplateViewModel(context.ContentItem.Get<HasTags>()) { Position = "0" });
         }
 
-        protected override void UpdateEditorViewModel(UpdateEditorViewModelContext context) {
+        protected override void UpdateEditorModel(UpdateEditorModelContext context) {
             if (context.ContentItem.Has<HasTags>() == false) {
                 return;
             }

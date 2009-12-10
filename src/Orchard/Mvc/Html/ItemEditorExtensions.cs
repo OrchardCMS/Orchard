@@ -8,31 +8,35 @@ using Orchard.Models.ViewModels;
 
 namespace Orchard.Mvc.Html {
     public static class ItemEditorExtensions {
-        public static MvcHtmlString EditorForItem<TModel, TItemViewModel>(this HtmlHelper<TModel> html, Expression<Func<TModel, TItemViewModel>> expression) where TItemViewModel : ItemEditorViewModel {
+        public static MvcHtmlString EditorForItem<TModel, TItemViewModel>(this HtmlHelper<TModel> html, Expression<Func<TModel, TItemViewModel>> expression) where TItemViewModel : ItemEditorModel {
 
             var metadata = ModelMetadata.FromLambdaExpression(expression, html.ViewData);
             var model = (TItemViewModel)metadata.Model;
+
+            if (model.Adaptor != null) {
+                return model.Adaptor(html, model).EditorForModel(model.TemplateName, model.Prefix ?? "");
+            }
 
             return html.EditorFor(expression, model.TemplateName, model.Prefix ?? "");
         }
 
 
-        public static MvcHtmlString EditorZone<TModel>(this HtmlHelper<TModel> html, string zoneName) where TModel : ItemEditorViewModel {
+        public static MvcHtmlString EditorZone<TModel>(this HtmlHelper<TModel> html, string zoneName) where TModel : ItemEditorModel {
             var templates = html.ViewData.Model.Editors.Where(x => x.ZoneName == zoneName && x.WasUsed == false);
             return EditorZoneImplementation(html, templates);
         }
 
-        public static MvcHtmlString EditorZonesAny<TModel>(this HtmlHelper<TModel> html) where TModel : ItemEditorViewModel {
+        public static MvcHtmlString EditorZonesAny<TModel>(this HtmlHelper<TModel> html) where TModel : ItemEditorModel {
             var templates = html.ViewData.Model.Editors.Where(x => x.WasUsed == false);
             return EditorZoneImplementation(html, templates);
         }
 
-        public static MvcHtmlString EditorZones<TModel>(this HtmlHelper<TModel> html, params string[] include) where TModel : ItemEditorViewModel {
+        public static MvcHtmlString EditorZones<TModel>(this HtmlHelper<TModel> html, params string[] include) where TModel : ItemEditorModel {
             var templates = html.ViewData.Model.Editors.Where(x => include.Contains(x.ZoneName) && x.WasUsed == false);
             return EditorZoneImplementation(html, templates);
         }
 
-        public static MvcHtmlString EditorZonesExcept<TModel>(this HtmlHelper<TModel> html, params string[] exclude) where TModel : ItemEditorViewModel {
+        public static MvcHtmlString EditorZonesExcept<TModel>(this HtmlHelper<TModel> html, params string[] exclude) where TModel : ItemEditorModel {
             var templates = html.ViewData.Model.Editors.Where(x => !exclude.Contains(x.ZoneName) && x.WasUsed == false);
             return EditorZoneImplementation(html, templates);
         }

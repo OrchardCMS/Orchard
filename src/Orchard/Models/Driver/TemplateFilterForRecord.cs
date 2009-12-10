@@ -9,11 +9,11 @@ namespace Orchard.Models.Driver {
             _prefix = prefix;
         }
 
-        protected override void GetEditorViewModel(GetEditorViewModelContext context, ContentPart<TRecord> part) {
+        protected override void BuildEditorModel(BuildEditorModelContext context, ContentPart<TRecord> part) {
             context.AddEditor(new TemplateViewModel(part.Record, _prefix));
         }
 
-        protected override void UpdateEditorViewModel(UpdateEditorViewModelContext context, ContentPart<TRecord> part) {
+        protected override void UpdateEditorModel(UpdateEditorModelContext context, ContentPart<TRecord> part) {
             context.Updater.TryUpdateModel(part.Record, _prefix, null, null);
             context.AddEditor(new TemplateViewModel(part.Record, _prefix));
         }

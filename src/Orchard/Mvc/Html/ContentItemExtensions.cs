@@ -45,7 +45,7 @@ namespace Orchard.Mvc.Html {
         }
 
         public static MvcHtmlString ItemDisplayTemplate(this HtmlHelper html, IContent content, string template) {
-            return html.Partial(string.Format("{0}/{1}", content.ContentItem.ContentType, template), new ItemDisplayViewModel(content.ContentItem));
+            return html.Partial(string.Format("{0}/{1}", content.ContentItem.ContentType, template), new ItemDisplayModel(content.ContentItem));
         }
     }
 }

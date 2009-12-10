@@ -4,20 +4,20 @@ using System.Linq;
 using System.Web.Mvc;
 
 namespace Orchard.Models.ViewModels {
-    public class ItemDisplayViewModel {
+    public class ItemDisplayModel {
         private ContentItem _item;
 
-        protected ItemDisplayViewModel() {
+        protected ItemDisplayModel() {
         }
 
-        protected ItemDisplayViewModel(ItemDisplayViewModel viewModel) {
-            TemplateName = viewModel.TemplateName;
-            Prefix = viewModel.Prefix;
-            Displays = viewModel.Displays.ToArray();
-            Item = viewModel.Item;
+        protected ItemDisplayModel(ItemDisplayModel displayModel) {
+            TemplateName = displayModel.TemplateName;
+            Prefix = displayModel.Prefix;
+            Displays = displayModel.Displays.ToArray();
+            Item = displayModel.Item;
         }
 
-        public ItemDisplayViewModel(ContentItem item) {
+        public ItemDisplayModel(ContentItem item) {
             Item = item;
         }
 
@@ -30,20 +30,20 @@ namespace Orchard.Models.ViewModels {
             _item = value;
         }
 
-        public Func<HtmlHelper, ItemDisplayViewModel, HtmlHelper> Adaptor { get; set; }
+        public Func<HtmlHelper, ItemDisplayModel, HtmlHelper> Adaptor { get; set; }
         public string TemplateName { get; set; }
         public string Prefix { get; set; }
         public IEnumerable<TemplateViewModel> Displays { get; set; }
     }
 
-    public class ItemDisplayViewModel<TPart> : ItemDisplayViewModel where TPart : IContent {
+    public class ItemDisplayModel<TPart> : ItemDisplayModel where TPart : IContent {
         private TPart _item;
 
-        public ItemDisplayViewModel() {
+        public ItemDisplayModel() {
 
         }
-        public ItemDisplayViewModel(ItemDisplayViewModel viewModel)
-            : base(viewModel) {
+        public ItemDisplayModel(ItemDisplayModel displayModel)
+            : base(displayModel) {
         }
 
         public new TPart Item {

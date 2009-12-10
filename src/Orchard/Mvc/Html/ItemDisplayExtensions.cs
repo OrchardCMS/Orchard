@@ -8,10 +8,10 @@ using Orchard.Models.ViewModels;
 
 namespace Orchard.Mvc.Html {
     public static class ItemDisplayExtensions {
-        public static MvcHtmlString DisplayForItem<TModel, TItemViewModel>(this HtmlHelper<TModel> html, TItemViewModel itemViewModel) where TItemViewModel : ItemDisplayViewModel {
+        public static MvcHtmlString DisplayForItem<TModel, TItemViewModel>(this HtmlHelper<TModel> html, TItemViewModel itemViewModel) where TItemViewModel : ItemDisplayModel {
             return html.DisplayForItem(x => itemViewModel);
         }
-        public static MvcHtmlString DisplayForItem<TModel, TItemViewModel>(this HtmlHelper<TModel> html, Expression<Func<TModel, TItemViewModel>> expression) where TItemViewModel : ItemDisplayViewModel {
+        public static MvcHtmlString DisplayForItem<TModel, TItemViewModel>(this HtmlHelper<TModel> html, Expression<Func<TModel, TItemViewModel>> expression) where TItemViewModel : ItemDisplayModel {
 
             var metadata = ModelMetadata.FromLambdaExpression(expression, html.ViewData);
             var model = (TItemViewModel)metadata.Model;
@@ -24,22 +24,22 @@ namespace Orchard.Mvc.Html {
         }
 
 
-        public static MvcHtmlString DisplayZone<TModel>(this HtmlHelper<TModel> html, string zoneName) where TModel : ItemDisplayViewModel {
+        public static MvcHtmlString DisplayZone<TModel>(this HtmlHelper<TModel> html, string zoneName) where TModel : ItemDisplayModel {
             var templates = html.ViewData.Model.Displays.Where(x => x.ZoneName == zoneName && x.WasUsed == false);
             return DisplayZoneImplementation(html, templates);
         }
 
-        public static MvcHtmlString DisplayZonesAny<TModel>(this HtmlHelper<TModel> html) where TModel : ItemDisplayViewModel {
+        public static MvcHtmlString DisplayZonesAny<TModel>(this HtmlHelper<TModel> html) where TModel : ItemDisplayModel {
             var templates = html.ViewData.Model.Displays.Where(x => x.WasUsed == false);
             return DisplayZoneImplementation(html, templates);
         }
 
-        public static MvcHtmlString DisplayZones<TModel>(this HtmlHelper<TModel> html, params string[] include) where TModel : ItemDisplayViewModel {
+        public static MvcHtmlString DisplayZones<TModel>(this HtmlHelper<TModel> html, params string[] include) where TModel : ItemDisplayModel {
             var templates = html.ViewData.Model.Displays.Where(x => include.Contains(x.ZoneName) && x.WasUsed == false);
             return DisplayZoneImplementation(html, templates);
         }
 
-        public static MvcHtmlString DisplayZonesExcept<TModel>(this HtmlHelper<TModel> html, params string[] exclude) where TModel : ItemDisplayViewModel {
+        public static MvcHtmlString DisplayZonesExcept<TModel>(this HtmlHelper<TModel> html, params string[] exclude) where TModel : ItemDisplayModel {
             var templates = html.ViewData.Model.Displays.Where(x => !exclude.Contains(x.ZoneName) && x.WasUsed == false);
             return DisplayZoneImplementation(html, templates);
         }

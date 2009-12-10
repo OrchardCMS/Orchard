@@ -57,14 +57,14 @@ namespace Orchard.Blogs.Models {
                 switch(context.DisplayType) {
                     case "Detail":
                         context.AddDisplay(
-                            new TemplateViewModel(posts.Select(bp => contentManager.GetDisplayViewModel(bp, null, "Summary"))) {
+                            new TemplateViewModel(posts.Select(bp => contentManager.BuildDisplayModel(bp, null, "Summary"))) {
                                 TemplateName = "BlogPostList",
                                 ZoneName = "body"
                             });
                         break;
                     case "DetailAdmin":
                         context.AddDisplay(
-                            new TemplateViewModel(posts.Select(bp => contentManager.GetDisplayViewModel(bp, null, "SummaryAdmin"))) {
+                            new TemplateViewModel(posts.Select(bp => contentManager.BuildDisplayModel(bp, null, "SummaryAdmin"))) {
                                 TemplateName = "BlogPostListAdmin",
                                 ZoneName = "body"
                             });

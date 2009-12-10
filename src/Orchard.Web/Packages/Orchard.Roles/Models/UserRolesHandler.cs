@@ -29,7 +29,7 @@ namespace Orchard.Roles.Models {
             });
         }
 
-        protected override void GetEditorViewModel(GetEditorViewModelContext context) {
+        protected override void BuildEditorModel(BuildEditorModelContext context) {
             var userRoles = context.ContentItem.As<UserRoles>();
             if (userRoles != null) {
                 var roles =
@@ -50,7 +50,7 @@ namespace Orchard.Roles.Models {
             }
         }
 
-        protected override void UpdateEditorViewModel(UpdateEditorViewModelContext context) {
+        protected override void UpdateEditorModel(UpdateEditorModelContext context) {
             var userRoles = context.ContentItem.As<UserRoles>();
             if (userRoles != null) {
                 var viewModel = new UserRolesViewModel();

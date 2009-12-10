@@ -7,28 +7,28 @@ namespace Orchard.Models.Driver {
     public abstract class TemplateFilterBase<TPart> : IContentTemplateFilter where TPart : class, IContent {
 
         protected virtual void GetItemMetadata(GetItemMetadataContext context, TPart instance) { }
-        protected virtual void GetDisplayViewModel(GetDisplayViewModelContext context, TPart instance) { }
-        protected virtual void GetEditorViewModel(GetEditorViewModelContext context, TPart instance) { }
-        protected virtual void UpdateEditorViewModel(UpdateEditorViewModelContext context, TPart instance) { }
+        protected virtual void BuildDisplayModel(BuildDisplayModelContext context, TPart instance) { }
+        protected virtual void BuildEditorModel(BuildEditorModelContext context, TPart instance) { }
+        protected virtual void UpdateEditorModel(UpdateEditorModelContext context, TPart instance) { }
 
         void IContentTemplateFilter.GetItemMetadata(GetItemMetadataContext context) {
             if (context.ContentItem.Is<TPart>())
                 GetItemMetadata(context, context.ContentItem.As<TPart>());
         }
 
-        void IContentTemplateFilter.GetDisplayViewModel(GetDisplayViewModelContext context) {
+        void IContentTemplateFilter.BuildDisplayModel(BuildDisplayModelContext context) {
             if (context.ContentItem.Is<TPart>())
-                GetDisplayViewModel(context, context.ContentItem.As<TPart>());
+                BuildDisplayModel(context, context.ContentItem.As<TPart>());
         }
 
-        void IContentTemplateFilter.GetEditorViewModel(GetEditorViewModelContext context) {
+        void IContentTemplateFilter.BuildEditorModel(BuildEditorModelContext context) {
             if (context.ContentItem.Is<TPart>())
-                GetEditorViewModel(context, context.ContentItem.As<TPart>());
+                BuildEditorModel(context, context.ContentItem.As<TPart>());
         }
 
-        void IContentTemplateFilter.UpdateEditorViewModel(UpdateEditorViewModelContext context) {
+        void IContentTemplateFilter.UpdateEditorModel(UpdateEditorModelContext context) {
             if (context.ContentItem.Is<TPart>())
-                UpdateEditorViewModel(context, context.ContentItem.As<TPart>());
+                UpdateEditorModel(context, context.ContentItem.As<TPart>());
         }
 
     }

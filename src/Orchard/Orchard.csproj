@@ -144,7 +144,7 @@
     <Compile Include="Models\Driver\ActivatedContentContext.cs" />
     <Compile Include="Models\Driver\ActivatingFilter.cs" />
     <Compile Include="Models\Driver\ContentItemTemplates.cs" />
-    <Compile Include="Models\Driver\GetDisplayViewModelContext.cs" />
+    <Compile Include="Models\Driver\BuildDisplayModelContext.cs" />
     <Compile Include="Models\Driver\GetItemMetadataContext.cs" />
     <Compile Include="Models\Driver\IContentActivatingFilter.cs" />
     <Compile Include="Models\Driver\IContentFilter.cs" />
@@ -166,7 +166,7 @@
     <Compile Include="Models\Driver\ContentItemBuilder.cs" />
     <Compile Include="Models\Driver\ContentHandler.cs" />
     <Compile Include="Models\Driver\ActivatingContentContext.cs" />
-    <Compile Include="Models\Driver\GetEditorViewModelContext.cs" />
+    <Compile Include="Models\Driver\BuildEditorModelContext.cs" />
     <Compile Include="Models\Driver\StorageFilter.cs" />
     <Compile Include="Models\Driver\StorageFilterBase.cs" />
     <Compile Include="Models\Driver\TemplateFilterBase.cs" />
@@ -183,10 +183,10 @@
     <Compile Include="Models\Records\ContentPartRecordAlteration.cs" />
     <Compile Include="Models\Records\ContentTypeRecord.cs" />
     <Compile Include="Models\Records\ContentItemRecord.cs" />
-    <Compile Include="Models\Driver\UpdateEditorViewModelContext.cs" />
+    <Compile Include="Models\Driver\UpdateEditorModelContext.cs" />
     <Compile Include="Models\ViewModels\TemplateViewModel.cs" />
-    <Compile Include="Models\ViewModels\ItemDisplayViewModel.cs" />
-    <Compile Include="Models\ViewModels\ItemEditorViewModel.cs" />
+    <Compile Include="Models\ViewModels\ItemDisplayModel.cs" />
+    <Compile Include="Models\ViewModels\ItemEditorModel.cs" />
     <Compile Include="Mvc\Html\ContentItemExtensions.cs" />
     <Compile Include="Mvc\Html\ItemDisplayExtensions.cs" />
     <Compile Include="Mvc\Html\ItemEditorExtensions.cs" />

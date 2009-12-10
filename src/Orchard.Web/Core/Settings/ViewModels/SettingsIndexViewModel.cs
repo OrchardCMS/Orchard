@@ -8,7 +8,7 @@ using Orchard.Core.Settings.Models;
 namespace Orchard.Core.Settings.ViewModels {
     public class SettingsIndexViewModel : AdminViewModel {
         public SiteSettings Site { get; set; }
-        public ItemEditorViewModel ItemView { get; set; }
+        public ItemEditorModel EditorModel { get; set; }
         
 
         [HiddenInput(DisplayValue = false)]

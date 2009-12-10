@@ -36,7 +36,7 @@ namespace Orchard.Blogs.Controllers {
 
         public ActionResult List() {
             var model = new BlogsViewModel {
-                Blogs = _blogService.Get().Select(b => _contentManager.GetDisplayViewModel(b, null, "Summary"))
+                Blogs = _blogService.Get().Select(b => _contentManager.BuildDisplayModel(b, null, "Summary"))
             };
 
             return View(model);
@@ -44,7 +44,7 @@ namespace Orchard.Blogs.Controllers {
 
         public ActionResult ListForAdmin() {
             var model = new BlogsForAdminViewModel {
-                Blogs = _blogService.Get().Select(b => _contentManager.GetDisplayViewModel(b, null, "SummaryAdmin"))
+                Blogs = _blogService.Get().Select(b => _contentManager.BuildDisplayModel(b, null, "SummaryAdmin"))
             };
 
             return View(model);
@@ -58,7 +58,7 @@ namespace Orchard.Blogs.Controllers {
                 return new NotFoundResult();
 
             var model = new BlogViewModel {
-                Blog = _contentManager.GetDisplayViewModel(blog, null, "Detail")
+                Blog = _contentManager.BuildDisplayModel(blog, null, "Detail")
             };
 
             return View(model);
@@ -72,7 +72,7 @@ namespace Orchard.Blogs.Controllers {
                 return new NotFoundResult();
 
             var model = new BlogForAdminViewModel {
-                Blog = _contentManager.GetDisplayViewModel(blog, null, "DetailAdmin")
+                Blog = _contentManager.BuildDisplayModel(blog, null, "DetailAdmin")
             };
 
             return View(model);
@@ -89,7 +89,7 @@ namespace Orchard.Blogs.Controllers {
                 return new NotFoundResult();
 
             var model = new CreateBlogViewModel {
-                Blog = _contentManager.GetEditorViewModel(blog, null)
+                Blog = _contentManager.BuildEditorModel(blog, null)
             };
 
             return View(model);
@@ -101,7 +101,7 @@ namespace Orchard.Blogs.Controllers {
             if (!_authorizer.Authorize(Permissions.CreateBlog, T("Couldn't create blog")))
                 return new HttpUnauthorizedResult();
 
-            model.Blog = _contentManager.UpdateEditorViewModel(_contentManager.New<Blog>("blog"), null, this);
+            model.Blog = _contentManager.UpdateEditorModel(_contentManager.New<Blog>("blog"), null, this);
 
             if (!ModelState.IsValid)
                 return View(model);
@@ -127,7 +127,7 @@ namespace Orchard.Blogs.Controllers {
                 return new NotFoundResult();
 
             var model = new BlogEditViewModel {
-                Blog = _contentManager.GetEditorViewModel(blog, "")
+                Blog = _contentManager.BuildEditorModel(blog, "")
             };
 
             return View(model);
@@ -145,7 +145,7 @@ namespace Orchard.Blogs.Controllers {
                 return new NotFoundResult();
 
             var model = new BlogEditViewModel {
-                Blog = _contentManager.UpdateEditorViewModel(blog, "", this)
+                Blog = _contentManager.UpdateEditorModel(blog, "", this)
             };
 
             if (!ModelState.IsValid)

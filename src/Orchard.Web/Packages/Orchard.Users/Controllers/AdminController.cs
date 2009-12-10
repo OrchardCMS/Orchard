@@ -49,7 +49,7 @@ namespace Orchard.Users.Controllers {
         public ActionResult Create() {
             var user = _contentManager.New("user");
             var model = new UserCreateViewModel {
-                ItemView = _contentManager.GetEditorViewModel(user, null)
+                EditorModel = _contentManager.BuildEditorModel(user, null)
             };
             return View(model);
         }
@@ -61,7 +61,7 @@ namespace Orchard.Users.Controllers {
                 ModelState.AddModelError("ConfirmPassword", T("Password confirmation must match").ToString());
             }
             if (ModelState.IsValid == false) {
-                model.ItemView = _contentManager.UpdateEditorViewModel(_contentManager.New("user"), null, this);
+                model.EditorModel = _contentManager.UpdateEditorModel(_contentManager.New("user"), null, this);
                 return View(model);
             }
             var user = _membershipService.CreateUser(new CreateUserParams(
@@ -69,7 +69,7 @@ namespace Orchard.Users.Controllers {
                                               model.Password,
                                               model.Email,
                                               null, null, true));
-            model.ItemView = _contentManager.UpdateEditorViewModel(user, null, this);
+            model.EditorModel = _contentManager.UpdateEditorModel(user, null, this);
             if (ModelState.IsValid == false) {
                 //TODO: rollback transaction
                 return View(model);
@@ -80,14 +80,14 @@ namespace Orchard.Users.Controllers {
 
         public ActionResult Edit(int id) {
             var model = new UserEditViewModel { User = _contentManager.Get<User>(id) };
-            model.ItemView = _contentManager.GetEditorViewModel(model.User.ContentItem, null);
+            model.EditorModel = _contentManager.BuildEditorModel(model.User.ContentItem, null);
             return View(model);
         }
 
         [HttpPost]
         public ActionResult Edit(int id, FormCollection input) {
             var model = new UserEditViewModel { User = _contentManager.Get<User>(id) };
-            model.ItemView = _contentManager.UpdateEditorViewModel(model.User.ContentItem, null, this);
+            model.EditorModel = _contentManager.UpdateEditorModel(model.User.ContentItem, null, this);
 
             if (!TryUpdateModel(model, input.ToValueProvider())) {
                 return View(model);

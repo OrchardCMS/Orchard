@@ -93,7 +93,7 @@ namespace Orchard.Core.Common.Providers {
         }
 
 
-        private void GetEditor(GetEditorViewModelContext context, CommonAspect instance) {
+        private void GetEditor(BuildEditorModelContext context, CommonAspect instance) {
             var currentUser = _authenticationService.GetAuthenticatedUser();
             if (!_authorizationService.CheckAccess(currentUser, Permissions.ChangeOwner)) {
                 return;
@@ -106,7 +106,7 @@ namespace Orchard.Core.Common.Providers {
         }
 
 
-        private void UpdateEditor(UpdateEditorViewModelContext context, CommonAspect instance) {
+        private void UpdateEditor(UpdateEditorModelContext context, CommonAspect instance) {
             // this event is hooked so the modified timestamp is changed when an edit-post occurs.
             // kind of a loose rule of thumb. may not be sufficient
             instance.Record.ModifiedUtc = _clock.UtcNow;

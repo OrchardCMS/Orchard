@@ -16,8 +16,8 @@ namespace Orchard.Models {
 
         ContentItemMetadata GetItemMetadata(IContent contentItem);
 
-        ItemDisplayViewModel<TContent> GetDisplayViewModel<TContent>(TContent content, string groupName, string displayType) where TContent : IContent;
-        ItemEditorViewModel<TContent> GetEditorViewModel<TContent>(TContent content, string groupName) where TContent : IContent;
-        ItemEditorViewModel<TContent> UpdateEditorViewModel<TContent>(TContent content, string groupName, IUpdateModel updater) where TContent : IContent;
+        ItemDisplayModel<TContent> BuildDisplayModel<TContent>(TContent content, string groupName, string displayType) where TContent : IContent;
+        ItemEditorModel<TContent> BuildEditorModel<TContent>(TContent content, string groupName) where TContent : IContent;
+        ItemEditorModel<TContent> UpdateEditorModel<TContent>(TContent content, string groupName, IUpdateModel updater) where TContent : IContent;
     }
 }

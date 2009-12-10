@@ -28,8 +28,7 @@ namespace Orchard.Models.Records {
             public void Override(object mappingObj) {
                 var mapping = (AutoMapping<T>)mappingObj;
                 mapping.Id(x => x.Id).GeneratedBy.Foreign("ContentItemRecord");
-                mapping.HasOne(x => x.ContentItemRecord).Constrained();
-                mapping.IgnoreProperty(x => x.ContentItem);                
+                mapping.HasOne(x => x.ContentItemRecord).Constrained();                
             }
         }
     }
