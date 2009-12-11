@@ -5,24 +5,22 @@ using System.Linq;
 using ICSharpCode.SharpZipLib.Zip;
 using Orchard.Extensions.Helpers;
 using Orchard.Extensions.Loaders;
+using Orchard.Localization;
 using Yaml.Grammar;
 using System.Web;
 
 namespace Orchard.Extensions {
-    public interface IExtensionManager {
-        IEnumerable<ExtensionDescriptor> AvailableExtensions();
-        IEnumerable<ExtensionEntry> ActiveExtensions();
-        void InstallExtension(string extensionType, HttpPostedFileBase extensionBundle);
-    }
-
     public class ExtensionManager : IExtensionManager {
         private readonly IEnumerable<IExtensionFolders> _folders;
         private readonly IEnumerable<IExtensionLoader> _loaders;
         private IEnumerable<ExtensionEntry> _activeExtensions;
 
+        public Localizer T { get; set; }
+
         public ExtensionManager(IEnumerable<IExtensionFolders> folders, IEnumerable<IExtensionLoader> loaders) {
             _folders = folders;
             _loaders = loaders.OrderBy(x => x.Order);
+            T = NullLocalizer.Instance;
         }
 
 
@@ -73,7 +71,7 @@ namespace Orchard.Extensions {
 
         public void InstallExtension(string extensionType, HttpPostedFileBase extensionBundle) {
             if (String.IsNullOrEmpty(extensionType)) {
-                throw new ArgumentException("extensionType");
+                throw new ArgumentException(T("extensionType was null or empty").ToString());
             }
             string targetFolder;
             if (String.Equals(extensionType, "Theme", StringComparison.OrdinalIgnoreCase)) {
@@ -83,7 +81,7 @@ namespace Orchard.Extensions {
                 targetFolder = PathHelpers.GetPhysicalPath("~/Packages");
             }
             else {
-                throw new ArgumentException("extensionType");
+                throw new ArgumentException(T("extensionType was not recognized").ToString());
             }
             int postedFileLength = extensionBundle.ContentLength;
             Stream postedFileStream = extensionBundle.InputStream;
@@ -107,6 +105,27 @@ namespace Orchard.Extensions {
                     }
                 }
             }
+        }
+
+        public void UninstallExtension(string extensionType, string extensionName) {
+            if (String.IsNullOrEmpty(extensionType)) {
+                throw new ArgumentException(T("extensionType was null or empty").ToString());
+            }
+            string targetFolder;
+            if (String.Equals(extensionType, "Theme", StringComparison.OrdinalIgnoreCase)) {
+                targetFolder = PathHelpers.GetPhysicalPath("~/Themes");
+            }
+            else if (String.Equals(extensionType, "Package", StringComparison.OrdinalIgnoreCase)) {
+                targetFolder = PathHelpers.GetPhysicalPath("~/Packages");
+            }
+            else {
+                throw new ArgumentException(T("extensionType was not recognized").ToString());
+            }
+            targetFolder = Path.Combine(targetFolder, extensionName);
+            if (!Directory.Exists(targetFolder)) {
+                throw new ArgumentException(T("extension was not found").ToString());
+            }
+            Directory.Delete(targetFolder, true);
         }
 
         private IEnumerable<ExtensionEntry> BuildActiveExtensions() {

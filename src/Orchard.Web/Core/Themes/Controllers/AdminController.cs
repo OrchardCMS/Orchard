@@ -67,7 +67,20 @@ namespace Orchard.Core.Themes.Controllers {
                 return RedirectToAction("Index");
             }
             catch (Exception exception) {
-                _notifier.Error("Installing theme failed: " + exception.Message);
+                _notifier.Error(T("Installing theme failed: " + exception.Message));
+                return RedirectToAction("Index");
+            }
+        }
+
+        public ActionResult Uninstall(string themeName) {
+            try {
+                if (!_authorizer.Authorize(Permissions.InstallUninstallTheme, T("Couldn't uninstall theme")))
+                    return new HttpUnauthorizedResult();
+                _themeService.UninstallTheme(themeName);
+                return RedirectToAction("Index");
+            }
+            catch (Exception exception) {
+                _notifier.Error(T("Uninstalling theme failed: " + exception.Message));
                 return RedirectToAction("Index");
             }
         }

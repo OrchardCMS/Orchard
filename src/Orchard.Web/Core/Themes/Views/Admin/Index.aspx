@@ -27,7 +27,7 @@
             <%= theme.Version %><br />
             <%= theme.Description %><br />
             <%= theme.HomePage %><br />
-            <%=Html.ActionLink("Activate", "Activate", new {themeName = theme.ThemeName}) %>
+            <%=Html.ActionLink("Activate", "Activate", new {themeName = theme.ThemeName}) %> | <%=Html.ActionLink("Uninstall", "Uninstall", new {themeName = theme.ThemeName}) %>
             </p>
         </li>
         <% }

@@ -8,5 +8,6 @@ namespace Orchard.Themes {
         IEnumerable<ITheme> GetInstalledThemes();
         void SetCurrentTheme(string themeName);
         void InstallTheme(HttpPostedFileBase file);
+        void UninstallTheme(string themeName);
     }
 }

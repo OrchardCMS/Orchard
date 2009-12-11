@@ -126,6 +126,7 @@
     <Compile Include="Extensions\ExtensionDescriptor.cs" />
     <Compile Include="Extensions\ExtensionEntry.cs" />
     <Compile Include="Extensions\Helpers\PathHelpers.cs" />
+    <Compile Include="Extensions\IExtensionManager.cs" />
     <Compile Include="Extensions\PackageFolders.cs" />
     <Compile Include="Extensions\ExtensionManager.cs" />
     <Compile Include="Extensions\IExtensionFolders.cs" />

@@ -59,6 +59,10 @@ namespace Orchard.Tests.Environment {
             public void InstallExtension(string extensionType, HttpPostedFileBase extensionBundle) {
                 throw new NotImplementedException();
             }
+
+            public void UninstallExtension(string extensionType, string extensionName) {
+                throw new NotImplementedException();
+            }
         }
 
         [Test]

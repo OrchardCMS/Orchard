@@ -57,6 +57,10 @@ namespace Orchard.Tests.Mvc.Routes {
             public void InstallExtension(string extensionType, HttpPostedFileBase extensionBundle) {
                 throw new NotImplementedException();
             }
+
+            public void UninstallExtension(string extensionType, string extensionName) {
+                throw new NotImplementedException();
+            }
         }
     }
 }

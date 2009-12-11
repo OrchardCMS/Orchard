@@ -76,6 +76,10 @@ namespace Orchard.Core.Themes.Services {
             _extensionManager.InstallExtension("Theme", file);
         }
 
+        public void UninstallTheme(string themeName) {
+            _extensionManager.UninstallExtension("Theme", themeName);
+        }
+
         #endregion
     }
 }
