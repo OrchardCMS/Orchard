@@ -118,12 +118,6 @@ TinyMCE
 WebSite:      http://tinymce.moxiecode.com/
 Copyright:    Copyright (c) 2003-2009 Moxiecode Systems AB
 License:      LGPL 2.1
- 
-Yahoo UI 
------
-Website:      http://developer.yahoo.com/yui 
-Copyright:    Copyright (c) 2009, Yahoo! Inc. All rights reserved.
-License:      New BSD
 
 Yamlnet
 -----

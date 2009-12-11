@@ -3,13 +3,10 @@
 <%@ Import Namespace="Orchard.Security" %>
 <%@ Import Namespace="Orchard.Mvc.Html" %>
 <% Html.Include("AdminHead"); %>
-    <% Html.BeginForm(); %>
-    <div class="yui-g">
-        <h2>
-            Manage Users</h2>
-        
-        <%=Html.ValidationSummary() %>
-        <%=Html.ActionLink("Add a new user", "Create", new {}, new {@class="floatRight topSpacer"}) %>
+    <h2>Manage Users</h2>
+    <% using (Html.BeginForm()) { %>
+        <%=Html.ValidationSummary()%>
+        <%=Html.ActionLink("Add a new user", "Create", new { }, new { @class = "floatRight topSpacer" })%>
         <table id="pluginListTable" cellspacing="0" class="clearLayout">
             <colgroup>
                 <col id="Name" />
@@ -28,13 +25,14 @@
                     </th>
                 </tr>
             </thead>
-            <% foreach (var row in Model.Rows) { %>
+            <% foreach (var row in Model.Rows)
+               { %>
             <tr>
                 <td>
-                    <%=Html.Encode(row.User.UserName) %>
+                    <%=Html.Encode(row.User.UserName)%>
                 </td>
                 <td>
-                    <%=Html.Encode(row.User.Email) %>
+                    <%=Html.Encode(row.User.Email)%>
                 </td>
                 <td>
                     <%=Html.ActionLink("Edit", "Edit", new { row.User.Id })%>
@@ -43,5 +41,5 @@
             <%}%>
         </table>
     </div>
-    <% Html.EndForm(); %>
+    <% } %>
 <% Html.Include("AdminFoot"); %>

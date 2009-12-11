@@ -11,7 +11,7 @@
                 <%=Html.SelectOption(Model.BulkAction, TagAdminIndexBulkAction.None, "Choose action...")%>
                 <%=Html.SelectOption(Model.BulkAction, TagAdminIndexBulkAction.Delete, "Delete")%>
             </select>
-            <input class="button roundCorners" type="submit" name="submit" value="Apply" />
+            <input class="button" type="submit" name="submit" value="Apply" />
         </fieldset>
         <div class="manage"><%=Html.ActionLink("Add a tag", "Create", new { }, new { @class = "button" })%></div>
 		<fieldset>
