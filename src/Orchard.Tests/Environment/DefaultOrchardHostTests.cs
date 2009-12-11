@@ -56,7 +56,7 @@ namespace Orchard.Tests.Environment {
                 return Enumerable.Empty<ExtensionEntry>();
             }
 
-            public void InstallExtension(HttpPostedFileBase extensionBundle) {
+            public void InstallExtension(string extensionType, HttpPostedFileBase extensionBundle) {
                 throw new NotImplementedException();
             }
         }

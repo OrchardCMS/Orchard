@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Web;
 using Orchard.Extensions;
 using Orchard.Logging;
 using Orchard.Models;
@@ -69,6 +70,10 @@ namespace Orchard.Core.Themes.Services {
             if (GetThemeByName(themeName) != null) {
                 CurrentSite.As<ThemeSiteSettings>().Record.CurrentThemeName = themeName;
             }
+        }
+
+        public void InstallTheme(HttpPostedFileBase file) {
+            _extensionManager.InstallExtension("Theme", file);
         }
 
         #endregion

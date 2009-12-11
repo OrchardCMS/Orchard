@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using ICSharpCode.SharpZipLib.Zip;
+using Orchard.Extensions.Helpers;
 using Orchard.Extensions.Loaders;
 using Yaml.Grammar;
 using System.Web;
@@ -9,7 +12,7 @@ namespace Orchard.Extensions {
     public interface IExtensionManager {
         IEnumerable<ExtensionDescriptor> AvailableExtensions();
         IEnumerable<ExtensionEntry> ActiveExtensions();
-        void InstallExtension(HttpPostedFileBase extensionBundle);
+        void InstallExtension(string extensionType, HttpPostedFileBase extensionBundle);
     }
 
     public class ExtensionManager : IExtensionManager {
@@ -68,8 +71,42 @@ namespace Orchard.Extensions {
             return _activeExtensions;
         }
 
-        public void InstallExtension(HttpPostedFileBase extensionBundle) {
-            throw new NotImplementedException();
+        public void InstallExtension(string extensionType, HttpPostedFileBase extensionBundle) {
+            if (String.IsNullOrEmpty(extensionType)) {
+                throw new ArgumentException("extensionType");
+            }
+            string targetFolder;
+            if (String.Equals(extensionType, "Theme", StringComparison.OrdinalIgnoreCase)) {
+                targetFolder = PathHelpers.GetPhysicalPath("~/Themes");
+            }
+            else if (String.Equals(extensionType, "Package", StringComparison.OrdinalIgnoreCase)) {
+                targetFolder = PathHelpers.GetPhysicalPath("~/Packages");
+            }
+            else {
+                throw new ArgumentException("extensionType");
+            }
+            int postedFileLength = extensionBundle.ContentLength;
+            Stream postedFileStream = extensionBundle.InputStream;
+            byte[] postedFileData = new byte[postedFileLength];
+            postedFileStream.Read(postedFileData, 0, postedFileLength);
+
+            using (var memoryStream = new MemoryStream(postedFileData)) {
+                var fileInflater = new ZipInputStream(memoryStream);
+                ZipEntry entry;
+                while ((entry = fileInflater.GetNextEntry()) != null) {
+                    string directoryName = Path.GetDirectoryName(entry.Name);
+                    if (!Directory.Exists(Path.Combine(targetFolder, directoryName))) {
+                        Directory.CreateDirectory(Path.Combine(targetFolder, directoryName));
+                    }
+
+                    if (!entry.IsDirectory && entry.Name.Length > 0) {
+                        var len = Convert.ToInt32(entry.Size);
+                        var extractedBytes = new byte[len];
+                        fileInflater.Read(extractedBytes, 0, len);
+                        File.WriteAllBytes(Path.Combine(targetFolder, entry.Name), extractedBytes);
+                    }
+                }
+            }
         }
 
         private IEnumerable<ExtensionEntry> BuildActiveExtensions() {

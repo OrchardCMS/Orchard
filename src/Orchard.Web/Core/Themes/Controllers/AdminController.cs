@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Web;
 using System.Web.Mvc;
 using Orchard.Core.Themes.ViewModels;
 using Orchard.Localization;
@@ -51,6 +52,10 @@ namespace Orchard.Core.Themes.Controllers {
         [AcceptVerbs(HttpVerbs.Post)]
         public ActionResult Install(FormCollection input) {
             try {
+                foreach (string fileName in Request.Files) {
+                    HttpPostedFileBase file = Request.Files[fileName];
+                    _themeService.InstallTheme(file);
+                }
                 return RedirectToAction("Index");
             }
             catch (Exception exception) {
