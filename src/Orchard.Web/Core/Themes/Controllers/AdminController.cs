@@ -31,5 +31,16 @@ namespace Orchard.Core.Themes.Controllers {
                 return View(new ThemesIndexViewModel());
             }
         }
+
+        public ActionResult Activate(string themeName) {
+            try {
+                _themeService.SetCurrentTheme(themeName);
+                return RedirectToAction("Index");
+            }
+            catch (Exception exception) {
+                _notifier.Error(T("Activating theme failed: " + exception.Message));
+                return RedirectToAction("Index");
+            }
+        }
     }
 }

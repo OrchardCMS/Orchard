@@ -40,7 +40,7 @@ namespace Orchard.Core.Themes.Services {
                         DisplayName = descriptor.DisplayName ?? String.Empty,
                         HomePage = descriptor.HomePage ?? String.Empty,
                         ThemeName = descriptor.Name,
-                        Version = descriptor.Version ?? String.Empty
+                        Version = descriptor.Version ?? String.Empty,
                     };
                 }
             }
@@ -57,12 +57,18 @@ namespace Orchard.Core.Themes.Services {
                         DisplayName = descriptor.DisplayName ?? String.Empty,
                         HomePage = descriptor.HomePage ?? String.Empty,
                         ThemeName = descriptor.Name,
-                        Version = descriptor.Version ?? String.Empty
+                        Version = descriptor.Version ?? String.Empty,
                     };
                     themes.Add(theme);
                 }
             }
             return themes;
+        }
+
+        public void SetCurrentTheme(string themeName) {
+            if (GetThemeByName(themeName) != null) {
+                CurrentSite.As<ThemeSiteSettings>().Record.CurrentThemeName = themeName;
+            }
         }
 
         #endregion
