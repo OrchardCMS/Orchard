@@ -136,6 +136,7 @@
     <Content Include="Themes\Views\Models\EditorTemplates\ThemeSiteSettingsRecord.ascx" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Themes\Views\Admin\Install.aspx" />
     <Content Include="Themes\Views\Web.config" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

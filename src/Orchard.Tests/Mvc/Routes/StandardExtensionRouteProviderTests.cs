@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Web;
 using System.Web.Routing;
 using NUnit.Framework;
 using Orchard.Mvc.Routes;
@@ -51,6 +52,10 @@ namespace Orchard.Tests.Mvc.Routes {
                         DisplayName = "Bar",
                     }
                 };
+            }
+
+            public void InstallExtension(HttpPostedFileBase extensionBundle) {
+                throw new NotImplementedException();
             }
         }
     }

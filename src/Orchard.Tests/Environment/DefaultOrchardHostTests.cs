@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
 using Autofac;
@@ -53,6 +54,10 @@ namespace Orchard.Tests.Environment {
 
             public IEnumerable<ExtensionEntry> ActiveExtensions() {
                 return Enumerable.Empty<ExtensionEntry>();
+            }
+
+            public void InstallExtension(HttpPostedFileBase extensionBundle) {
+                throw new NotImplementedException();
             }
         }
 

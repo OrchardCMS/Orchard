@@ -13,7 +13,8 @@
         <div>
     <h3>Current Theme</h3>
     <% if (Model.CurrentTheme == null) { %>
-           There is no current theme in the application. The built-in theme will be used.
+           <p>There is no current theme in the application. The built-in theme will be used.<br />
+           <%=Html.ActionLink("Install a new Theme", "Install") %></p>
     <% } else { %>
         <h4><%= Model.CurrentTheme.DisplayName %> </h4>
          <p><img src="<%= ResolveUrl("~/Themes/" + Model.CurrentTheme.ThemeName + "/Theme.gif")%>" alt="<%= Model.CurrentTheme.DisplayName %>" /><br />
@@ -21,6 +22,7 @@
             <%= Model.CurrentTheme.Version %><br />
             <%= Model.CurrentTheme.Description %><br />
             <%= Model.CurrentTheme.HomePage %><br />
+            <%=Html.ActionLink("Install a new Theme", "Install") %>
          </p>
     <% } %>
     </div>

@@ -3,11 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using Orchard.Extensions.Loaders;
 using Yaml.Grammar;
+using System.Web;
 
 namespace Orchard.Extensions {
     public interface IExtensionManager {
         IEnumerable<ExtensionDescriptor> AvailableExtensions();
         IEnumerable<ExtensionEntry> ActiveExtensions();
+        void InstallExtension(HttpPostedFileBase extensionBundle);
     }
 
     public class ExtensionManager : IExtensionManager {
@@ -64,6 +66,10 @@ namespace Orchard.Extensions {
                 _activeExtensions = BuildActiveExtensions().ToList();
             }
             return _activeExtensions;
+        }
+
+        public void InstallExtension(HttpPostedFileBase extensionBundle) {
+            throw new NotImplementedException();
         }
 
         private IEnumerable<ExtensionEntry> BuildActiveExtensions() {

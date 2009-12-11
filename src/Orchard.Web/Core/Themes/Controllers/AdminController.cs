@@ -4,6 +4,7 @@ using Orchard.Core.Themes.ViewModels;
 using Orchard.Localization;
 using Orchard.Themes;
 using Orchard.UI.Notify;
+using Orchard.Mvc.ViewModels;
 
 namespace Orchard.Core.Themes.Controllers {
     [ValidateInput(false)]
@@ -39,6 +40,21 @@ namespace Orchard.Core.Themes.Controllers {
             }
             catch (Exception exception) {
                 _notifier.Error(T("Activating theme failed: " + exception.Message));
+                return RedirectToAction("Index");
+            }
+        }
+
+        public ActionResult Install() {
+            return View(new AdminViewModel());
+        }
+
+        [AcceptVerbs(HttpVerbs.Post)]
+        public ActionResult Install(FormCollection input) {
+            try {
+                return RedirectToAction("Index");
+            }
+            catch (Exception exception) {
+                _notifier.Error("Installing theme failed: " + exception.Message);
                 return RedirectToAction("Index");
             }
         }
