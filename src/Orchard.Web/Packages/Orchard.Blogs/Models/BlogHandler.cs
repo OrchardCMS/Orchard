@@ -19,11 +19,11 @@ namespace Orchard.Blogs.Models {
             Filters.Add(new ContentItemTemplates<Blog>("Blog", "Detail", "DetailAdmin", "Summary", "SummaryAdmin"));
 
             OnGetEditorViewModel<Blog>((context, blog) =>
-                context.AddEditor(new TemplateViewModel(blog) {TemplateName = "BlogFields"})
+                context.AddEditor(new TemplateViewModel(blog) { TemplateName = "BlogFields", ZoneName = "primary", Position = "1" })
             );
 
             OnUpdateEditorViewModel<Blog>((context, blog) => {
-                context.AddEditor(new TemplateViewModel(blog) {TemplateName = "BlogFields"});
+                context.AddEditor(new TemplateViewModel(blog) { TemplateName = "BlogFields", ZoneName = "primary", Position = "1" });
                 context.Updater.TryUpdateModel(blog, "", null, null);
             });
         }

@@ -4,11 +4,11 @@
 <%@ Import Namespace="Orchard.Blogs.Models"%>
 <div class="sections">
     <div class="primary">
-        <%=Html.EditorZone("body") %>
-        <%=Html.EditorZonesExcept("sidebar") %>
+        <%=Html.EditorZone("primary") %>
+        <%=Html.EditorZonesExcept("secondary") %>
     </div>
     <div class="secondary">
-        <%=Html.EditorZone("sidebar") %>
+        <%=Html.EditorZone("secondary")%>
         <fieldset>
             <input class="button" type="submit" name="submit.Save" value="Save"/>
         </fieldset>
