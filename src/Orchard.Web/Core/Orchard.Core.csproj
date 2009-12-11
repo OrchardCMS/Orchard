@@ -88,6 +88,7 @@
     <Compile Include="Themes\Models\Theme.cs" />
     <Compile Include="Themes\Models\ThemeSiteSettings.cs" />
     <Compile Include="Themes\Models\ThemeSiteSettingsHandler.cs" />
+    <Compile Include="Themes\Permissions.cs" />
     <Compile Include="Themes\Records\ThemeRecord.cs" />
     <Compile Include="Themes\Records\ThemeSiteSettingsRecord.cs" />
     <Compile Include="Themes\Services\ThemeService.cs" />
