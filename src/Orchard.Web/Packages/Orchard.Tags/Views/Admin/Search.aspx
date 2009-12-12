@@ -7,7 +7,7 @@
     <% using(Html.BeginForm()) { %>
 		<%=Html.ValidationSummary() %>
 		<fieldset>
-			<table cellspacing="0" class="roundCorners clearLayout">
+			<table class="items">
 				<colgroup>
 					<col id="Col1" />
 					<col id="Col2" />

@@ -26,7 +26,7 @@
 			<%=Html.ActionLink("Add a folder", "Create", new { Model.MediaPath }, new { @class = "button" })%>
 	    </div>
 	    <fieldset>
-			<table summary="This is a table of the pages currently available for use in your application.">
+			<table class="items" summary="This is a table of the pages currently available for use in your application.">
 				<colgroup>
 					<col id="Col1" />
 					<col id="Col2" />

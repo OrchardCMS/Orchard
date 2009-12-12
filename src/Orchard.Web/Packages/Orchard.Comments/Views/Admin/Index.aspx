@@ -25,7 +25,7 @@
             <input class="button" type="submit" name="submit.Filter" value="Filter"/>
         </fieldset>
         <fieldset>
-		    <table summary="This is a table of the comments in your application">
+		    <table class="items" summary="This is a table of the comments in your application">
 			    <colgroup>
 				    <col id="Col1" />
 				    <col id="Col2" />

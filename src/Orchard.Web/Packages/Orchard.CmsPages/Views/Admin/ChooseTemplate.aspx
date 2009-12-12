@@ -14,10 +14,10 @@
             </li><%
             } %>
         </ul>
-        <div>
+        <p>
             <input class="button" type="submit" value="Save Template Change" />
             <%-- todo: (heskew) should pull to give the browser some chance of rehydrating the edit page form state --%>
             <%=Html.ActionLink("Cancel", "Edit", new { Id = ViewContext.RouteData.GetRequiredString("id") }, new { @class = "cancel" })%>
-        </div><%
+        </p><%
        } %>
 <% Html.Include("AdminFoot"); %>

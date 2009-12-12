@@ -15,7 +15,7 @@
             <% foreach (var packageName in Model.PackagePermissions.Keys) { %>
             <fieldset>
                 <legend><%=packageName%> Module</legend>
-                <table id="pluginListTable" cellspacing="0" class="roundCorners clearLayout" >
+                <table class="items">
                     <colgroup>
                         <col id="Permission" />
                         <col id="Allow" />

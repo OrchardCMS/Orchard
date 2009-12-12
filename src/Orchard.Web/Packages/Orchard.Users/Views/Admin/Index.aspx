@@ -7,7 +7,7 @@
     <% using (Html.BeginForm()) { %>
         <%=Html.ValidationSummary()%>
         <%=Html.ActionLink("Add a new user", "Create", new { }, new { @class = "floatRight topSpacer" })%>
-        <table id="pluginListTable" cellspacing="0" class="clearLayout">
+        <table class="items">
             <colgroup>
                 <col id="Name" />
                 <col id="Email" />

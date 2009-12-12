@@ -16,7 +16,7 @@
 			<% foreach (var packageName in Model.PackagePermissions.Keys) { %>
             <fieldset>
                 <legend><%=packageName%> Module</legend>
-			    <table id="Table1" cellspacing="0" class="roundCorners clearLayout" >
+			    <table class="items">
 				    <colgroup>
 					    <col id="Col1" />
 					    <col id="Col2" />

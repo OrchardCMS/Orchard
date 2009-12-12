@@ -31,7 +31,7 @@
         </fieldset>
         <div class="manage"><%=Html.ActionLink("Add a page", "Create", new {}, new { @class = "button" }) %></div>
         <fieldset>
-            <table summary="This is a table of the PageEntries currently available for use in your application.">
+            <table class="items" summary="This is a table of the PageEntries currently available for use in your application.">
                 <colgroup>
                     <col id="Actions" />
                     <col id="Status" />

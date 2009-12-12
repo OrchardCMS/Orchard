@@ -15,7 +15,7 @@
         </fieldset>
         <div class="manage"><%=Html.ActionLink("Add a folder", "Create", new {}, new { @class = "button"}) %></div>
         <fieldset>
-		    <table summary="This is a table of the media folders currently available for use in your application.">
+		    <table class="items" summary="This is a table of the media folders currently available for use in your application.">
 			    <colgroup>
 				    <col id="Col1" />
 				    <col id="Col2" />

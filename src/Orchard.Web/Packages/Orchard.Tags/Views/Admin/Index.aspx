@@ -15,7 +15,7 @@
         </fieldset>
         <div class="manage"><%=Html.ActionLink("Add a tag", "Create", new { }, new { @class = "button" })%></div>
 		<fieldset>
-		    <table summary="This is a table of the tags in your application">
+		    <table class="items" summary="This is a table of the tags in your application">
 			    <colgroup>
 				    <col id="Col1" />
 				    <col id="Col2" />
