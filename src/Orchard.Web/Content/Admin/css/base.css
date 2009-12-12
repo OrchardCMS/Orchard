@@ -358,8 +358,7 @@ label span {
 label input {
     vertical-align:text-top;
 }
-
-/* todo: (heskew) try to get .text on stuff like #PublishLaterDate and .text-box */
+/* todo: (heskew) try to get .text on stuff like .text-box */
 select, textarea, input.text, input.text-box {
 	padding:2px;
 	border:1px solid #d2d6c6;
@@ -371,7 +370,6 @@ input.text, input.text-box {
 select:focus, textarea:focus, input.text:focus, input.text-box:focus {
 	border-color:#666d51;
 }
-
 input.large.text, textarea, fieldset {
     clear:both;
 }
@@ -536,9 +534,6 @@ input.large.text {
 }
 .helperText {
 	margin:-4px 0 8px 0;
-}
-#Revision_Slug{
-    width:245px;
 }
 
 
