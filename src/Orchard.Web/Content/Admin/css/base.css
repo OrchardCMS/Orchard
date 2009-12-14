@@ -370,6 +370,18 @@ input.text, input.text-box {
 select:focus, textarea:focus, input.text:focus, input.text-box:focus {
 	border-color:#666d51;
 }
+.permalink input {
+    background:transparent;
+    border-color:#EAE9D9;
+    border-style:dashed;
+    margin-left:0;
+	width:350px;
+}
+.permalink input:focus {
+    background:#FFF;
+    border-color:#666d51;
+    border-style:solid;
+}
 input.large.text, textarea, fieldset {
     clear:both;
 }
@@ -508,18 +520,6 @@ a.ibutton.blog:hover, a.ibutton.blog:active, a.ibutton.blog:focus { background-p
 
 
 /* todo: (heskew) needs attention */
-#permalink {
-    background:transparent;
-    border-color:#EAE9D9;
-    border-style:dashed;
-    margin-left:0;
-	width:350px;
-}
-#permalink:focus {
-    background:#FFF;
-    border-color:#666d51;
-    border-style:solid;
-}
 .withActions {
     overflow:hidden;
 }
@@ -527,13 +527,6 @@ a.ibutton.blog:hover, a.ibutton.blog:active, a.ibutton.blog:focus { background-p
     display:inline;
     float:left;
     margin-right:7px;
-}
-input.large.text {
-	font-size:130%;
-	font-weight:500;
-}
-.helperText {
-	margin:-4px 0 8px 0;
 }
 
 

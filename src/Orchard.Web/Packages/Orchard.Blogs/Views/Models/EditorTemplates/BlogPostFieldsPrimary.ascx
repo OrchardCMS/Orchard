@@ -3,10 +3,10 @@
 <%@ Import Namespace="Orchard.Blogs.Extensions"%>
 <%@ Import Namespace="Orchard.Blogs.ViewModels"%>
 <fieldset>
-    <label for="title">Title</label>
-    <span><%=Html.TextBoxFor(m => m.Title, new { id = "title", @class = "large text" })%></span>
+    <label for="Title">Title</label>
+    <span><%=Html.TextBoxFor(m => m.Title, new { @class = "large text" })%></span>
 </fieldset>
-<fieldset>
-    <label class="sub" for="permalink">Permalink<br /><span><%=Request.Url.ToRootString() %>/<%=Model.Blog.Slug %>/</span></label>
-    <span><%=Html.TextBoxFor(m => m.Slug, new { id = "permalink", @class = "text" })%></span>
+<fieldset class="permalink">
+    <label class="sub" for="Slug">Permalink<br /><span><%=Request.Url.ToRootString() %>/<%=Model.Blog.Slug %>/</span></label>
+    <span><%=Html.TextBoxFor(m => m.Slug, new { @class = "text" })%></span>
 </fieldset>
