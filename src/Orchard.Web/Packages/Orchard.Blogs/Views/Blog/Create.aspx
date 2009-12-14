@@ -3,12 +3,9 @@
 <%@ Import Namespace="Orchard.Blogs.ViewModels"%>
 <% Html.Include("AdminHead"); %>
     <h2>Add Blog</h2>
-    <% using (Html.BeginForm()) { %>
+    <% using (Html.BeginFormAntiForgeryPost()) { %>
         <%=Html.ValidationSummary() %>
         <%=Html.EditorForItem(vm => vm.Blog) %>
-        <fieldset>
-            <%=Html.OrchardAntiForgeryToken() %>
-            <input class="button" type="submit" value="Create" />
-        </fieldset><%
+        <fieldset><input class="button" type="submit" value="Create" /></fieldset><%
        } %>
 <% Html.Include("AdminFoot"); %>
