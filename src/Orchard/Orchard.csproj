@@ -196,6 +196,7 @@
     <Compile Include="Models\ViewModels\TemplateViewModel.cs" />
     <Compile Include="Models\ViewModels\ItemDisplayModel.cs" />
     <Compile Include="Models\ViewModels\ItemEditorModel.cs" />
+    <Compile Include="Mvc\Filters\AntiForgeryAuthorizationFilter.cs" />
     <Compile Include="Mvc\Html\ContentItemExtensions.cs" />
     <Compile Include="Mvc\Html\ItemDisplayExtensions.cs" />
     <Compile Include="Mvc\Html\ItemEditorExtensions.cs" />

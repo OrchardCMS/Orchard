@@ -175,5 +175,16 @@ namespace Orchard.Mvc.Html {
         }
 
         #endregion
+
+        #region OrchardAntiForgeryToken
+
+        public static MvcHtmlString OrchardAntiForgeryToken(this HtmlHelper htmlHelper)
+        {
+            //TODO: (erikpo) Change the salt to be something unique per application like a site setting with a Guid.NewGuid().ToString("N") value
+            
+            return htmlHelper.AntiForgeryToken("Orchard");
+        }
+
+        #endregion
     }
 }

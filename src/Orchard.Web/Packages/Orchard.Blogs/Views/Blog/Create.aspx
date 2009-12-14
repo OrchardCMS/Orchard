@@ -6,6 +6,9 @@
     <% using (Html.BeginForm()) { %>
         <%=Html.ValidationSummary() %>
         <%=Html.EditorForItem(vm => vm.Blog) %>
-        <fieldset><input class="button" type="submit" value="Create" /></fieldset>
-    <% } %>
+        <fieldset>
+            <%=Html.OrchardAntiForgeryToken() %>
+            <input class="button" type="submit" value="Create" />
+        </fieldset><%
+       } %>
 <% Html.Include("AdminFoot"); %>
