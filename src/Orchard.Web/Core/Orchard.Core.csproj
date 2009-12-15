@@ -91,6 +91,7 @@
     <Compile Include="Themes\Permissions.cs" />
     <Compile Include="Themes\Records\ThemeRecord.cs" />
     <Compile Include="Themes\Records\ThemeSiteSettingsRecord.cs" />
+    <Compile Include="Themes\Services\SiteThemeSelector.cs" />
     <Compile Include="Themes\Services\ThemeService.cs" />
     <Compile Include="Themes\ViewModels\ThemesIndexViewModel.cs" />
     <Compile Include="XmlRpc\Controllers\HomeController.cs" />

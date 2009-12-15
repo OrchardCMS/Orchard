@@ -11,7 +11,7 @@ namespace Orchard.Themes {
             if (themeProperty != null) {
                 registration.Activated += (sender, e) => {
                     var themeService = e.Context.Resolve<IThemeService>();
-                    var currentTheme = themeService.GetCurrentTheme();
+                    var currentTheme = themeService.GetSiteTheme();
                     themeProperty.SetValue(e.Instance, currentTheme, null);
                 };
             }

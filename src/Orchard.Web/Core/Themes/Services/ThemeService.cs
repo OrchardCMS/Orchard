@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Web;
+using System.Web.Routing;
 using Orchard.Extensions;
 using Orchard.Logging;
 using Orchard.Models;
@@ -11,9 +13,13 @@ using Orchard.Core.Themes.Models;
 namespace Orchard.Core.Themes.Services {
     public class ThemeService : IThemeService {
         private readonly IExtensionManager _extensionManager;
+        private readonly IEnumerable<IThemeSelector> _themeSelectors;
 
-        public ThemeService(IExtensionManager extensionManager) {
+        public ThemeService(
+            IExtensionManager extensionManager,
+            IEnumerable<IThemeSelector> themeSelectors) {
             _extensionManager = extensionManager;
+            _themeSelectors = themeSelectors;
             Logger = NullLogger.Instance;
         }
 
@@ -22,7 +28,7 @@ namespace Orchard.Core.Themes.Services {
 
         #region Implementation of IThemeService
 
-        public ITheme GetCurrentTheme() {
+        public ITheme GetSiteTheme() {
             string currentThemeName = CurrentSite.As<ThemeSiteSettings>().Record.CurrentThemeName;
 
             if (String.IsNullOrEmpty(currentThemeName)) {
@@ -30,6 +36,27 @@ namespace Orchard.Core.Themes.Services {
             }
 
             return GetThemeByName(currentThemeName);
+        }
+
+        public void SetSiteTheme(string themeName) {
+            if (GetThemeByName(themeName) != null) {
+                CurrentSite.As<ThemeSiteSettings>().Record.CurrentThemeName = themeName;
+            }
+        }
+
+        public ITheme GetRequestTheme(RequestContext requestContext) {
+
+            var requestTheme = _themeSelectors
+                .Select(x => x.GetTheme(requestContext))
+                .Where(x => x != null)
+                .OrderByDescending(x => x.Priority)
+                .FirstOrDefault();
+
+            if (requestTheme == null) {
+                return null;
+            }
+
+            return GetThemeByName(requestTheme.ThemeName);
         }
 
         public ITheme GetThemeByName(string name) {
@@ -66,11 +93,6 @@ namespace Orchard.Core.Themes.Services {
             return themes;
         }
 
-        public void SetCurrentTheme(string themeName) {
-            if (GetThemeByName(themeName) != null) {
-                CurrentSite.As<ThemeSiteSettings>().Record.CurrentThemeName = themeName;
-            }
-        }
 
         public void InstallTheme(HttpPostedFileBase file) {
             _extensionManager.InstallExtension("Theme", file);

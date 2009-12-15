@@ -4,7 +4,7 @@ using Orchard.Security.Permissions;
 namespace Orchard.Core.Themes {
     public class Permissions : IPermissionProvider {
         public static readonly Permission InstallUninstallTheme = new Permission { Description = "Installing or Uninstalling Themes", Name = "InstallUninstallTheme" };
-        public static readonly Permission SetCurrentTheme = new Permission { Description = "Setting the Current Theme", Name = "SetCurrentTheme" };
+        public static readonly Permission SetSiteTheme = new Permission { Description = "Setting the Current Theme", Name = "SetSiteTheme" };
 
         public string PackageName {
             get {
@@ -14,7 +14,7 @@ namespace Orchard.Core.Themes {
 
         public IEnumerable<Permission> GetPermissions() {
             return new List<Permission> {
-                SetCurrentTheme,
+                SetSiteTheme,
                 InstallUninstallTheme
             };
         }

@@ -28,7 +28,7 @@ namespace Orchard.Core.Themes.Controllers {
         public ActionResult Index() {
             try {
                 var themes = _themeService.GetInstalledThemes();
-                var currentTheme = _themeService.GetCurrentTheme();
+                var currentTheme = _themeService.GetSiteTheme();
                 var model = new ThemesIndexViewModel { CurrentTheme = currentTheme, Themes = themes };
                 return View(model);
             }
@@ -40,9 +40,9 @@ namespace Orchard.Core.Themes.Controllers {
 
         public ActionResult Activate(string themeName) {
             try {
-                if (!_authorizer.Authorize(Permissions.SetCurrentTheme, T("Couldn't set the current theme")))
+                if (!_authorizer.Authorize(Permissions.SetSiteTheme, T("Couldn't set the current theme")))
                     return new HttpUnauthorizedResult();
-                _themeService.SetCurrentTheme(themeName);
+                _themeService.SetSiteTheme(themeName);
                 return RedirectToAction("Index");
             }
             catch (Exception exception) {

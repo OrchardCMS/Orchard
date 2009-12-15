@@ -214,9 +214,12 @@
     <Compile Include="Mvc\Results\NotFoundResult.cs" />
     <Compile Include="Mvc\OrchardControllerIdentificationStrategy.cs" />
     <Compile Include="Mvc\Routes\RouteExtensions.cs" />
+    <Compile Include="Mvc\ViewEngines\IViewEngineProvider.cs" />
     <Compile Include="Mvc\ViewEngines\LayoutView.cs" />
     <Compile Include="Mvc\ViewEngines\LayoutViewEngine.cs" />
     <Compile Include="Mvc\ViewEngines\OrchardLayoutContext.cs" />
+    <Compile Include="Mvc\ViewEngines\ViewEngineFilter.cs" />
+    <Compile Include="Mvc\ViewEngines\WebFormsViewEngineProvider.cs" />
     <Compile Include="Mvc\ViewModels\AdminViewModel.cs" />
     <Compile Include="Mvc\ViewModels\BaseViewModel.cs" />
     <Compile Include="Mvc\ViewPage.cs">
@@ -234,6 +237,7 @@
     <Compile Include="Tasks\IBackgroundTask.cs" />
     <Compile Include="Tasks\SweepGenerator.cs" />
     <Compile Include="Themes\ITheme.cs" />
+    <Compile Include="Themes\IThemeSelector.cs" />
     <Compile Include="Themes\IThemeService.cs" />
     <Compile Include="Themes\ThemesModule.cs" />
     <Compile Include="UI\Menus\AdminMenuFilter.cs" />
