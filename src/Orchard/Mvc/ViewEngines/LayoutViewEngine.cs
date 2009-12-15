@@ -36,12 +36,14 @@ namespace Orchard.Mvc.ViewEngines {
             if (bodyView.View == null ||
                 layoutView.View == null ||
                 documentView.View == null) {
-             
-                return new ViewEngineResult(
+                
+                var missingTemplatesResult = new ViewEngineResult(
                     (bodyView.SearchedLocations ?? Enumerable.Empty<string>())
                         .Concat((layoutView.SearchedLocations ?? Enumerable.Empty<string>()))
                         .Concat((documentView.SearchedLocations ?? Enumerable.Empty<string>()))
                     );
+
+                return missingTemplatesResult;
             }
 
             var view = new LayoutView(new[] {

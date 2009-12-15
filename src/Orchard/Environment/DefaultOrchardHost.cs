@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using System.Web.Mvc;
 using Autofac;
 using Autofac.Builder;
@@ -84,6 +85,13 @@ namespace Orchard.Environment {
                 addingModules.RegisterModule(module);
             }
             addingModules.Build(shellContainer);
+
+            foreach (var reg in shellContainer.ComponentRegistrations) {
+                reg.Preparing += (s, e) => {
+                    Debug.WriteLine(e.Component.Descriptor.BestKnownImplementationType.FullName);
+                };
+            }
+
             return shellContainer;
         }
 

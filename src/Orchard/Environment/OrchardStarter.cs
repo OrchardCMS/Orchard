@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using Autofac;
 using Autofac.Builder;
 using Autofac.Integration.Web;
@@ -37,7 +38,7 @@ namespace Orchard.Environment {
                 .WithArguments(new NamedParameter("paths", new[] { "~/Core", "~/Packages" }))
                 .SingletonScoped();
             builder.Register<ThemeFolders>().As<IExtensionFolders>()
-                .WithArguments(new NamedParameter("paths", new[] { "~/Themes" }))
+                .WithArguments(new NamedParameter("paths", new[] { "~/Core", "~/Themes" }))
                 .SingletonScoped();
 
             registrations(builder);
@@ -46,7 +47,9 @@ namespace Orchard.Environment {
         }
 
         public static IOrchardHost CreateHost(Action<ContainerBuilder> registrations) {
-            return CreateHostContainer(registrations).Resolve<IOrchardHost>();
+            var container = CreateHostContainer(registrations);
+            var orchardHost = container.Resolve<IOrchardHost>();
+            return orchardHost;
         }
     }
 }

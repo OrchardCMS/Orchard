@@ -76,6 +76,7 @@
     <Compile Include="Common\ViewModels\BodyEditorViewModel.cs" />
     <Compile Include="Common\ViewModels\OwnerEditorViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Themes\SafeModeThemeSelector.cs" />
     <Compile Include="Settings\AdminMenu.cs" />
     <Compile Include="Settings\Controllers\AdminController.cs" />
     <Compile Include="Settings\Models\SiteSettingsHandler.cs" />
@@ -138,6 +139,7 @@
     <Content Include="Themes\Views\Models\EditorTemplates\ThemeSiteSettingsRecord.ascx" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="SafeMode\Theme.txt" />
     <Content Include="Themes\Views\Admin\Install.aspx" />
     <Content Include="Themes\Views\Web.config" />
   </ItemGroup>

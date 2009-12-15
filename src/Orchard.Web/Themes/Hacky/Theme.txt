@@ -1,0 +1,6 @@
+name: Hacky
+author: Rick Astley
+description: This theme represents a blind attempt to evolve a system in place
+version: 0.1
+tags: blue
+homepage: http://tinyurl.com/2g9mqh

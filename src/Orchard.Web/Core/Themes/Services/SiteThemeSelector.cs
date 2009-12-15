@@ -10,19 +10,17 @@ using Orchard.Themes;
 
 namespace Orchard.Core.Themes.Services {
     public class SiteThemeSelector : IThemeSelector {
-        private readonly IThemeService _themeService;
 
-        public SiteThemeSelector (IThemeService themeService) {
-            _themeService = themeService;
-        }
-
+        public ISite CurrentSite { get; set; }
         
         public ThemeSelectorResult GetTheme(RequestContext context) {
-            var theme = _themeService.GetSiteTheme();
-            if (theme == null) {
+            string currentThemeName = CurrentSite.As<ThemeSiteSettings>().Record.CurrentThemeName;
+
+            if (String.IsNullOrEmpty(currentThemeName)) {
                 return null;
             }
-            return new ThemeSelectorResult {Priority = -5, ThemeName = theme.ThemeName};
+
+            return new ThemeSelectorResult { Priority = -5, ThemeName = currentThemeName };
         }
     }
 }

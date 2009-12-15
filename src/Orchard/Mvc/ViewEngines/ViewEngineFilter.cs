@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -9,8 +8,7 @@ using Orchard.Themes;
 
 namespace Orchard.Mvc.ViewEngines {
 
-    //TEMP: abstract only because it's not functional yet
-    public abstract class ViewEngineFilter : FilterProvider, IResultFilter {
+    public class ViewEngineFilter : FilterProvider, IResultFilter {
         private readonly ViewEngineCollection _viewEngines;
         private readonly IThemeService _themeService;
         private readonly IExtensionManager _extensionManager;
@@ -30,37 +28,44 @@ namespace Orchard.Mvc.ViewEngines {
         public void OnResultExecuting(ResultExecutingContext filterContext) {
             var viewResultBase = filterContext.Result as ViewResultBase;
             if (viewResultBase == null) {
-                return;                
+                return;
             }
 
             //TODO: factor out into a service apart from the filter
+            //TODO: add layout engine first
 
             var requestTheme = _themeService.GetRequestTheme(filterContext.RequestContext);
 
-            var theme = _extensionManager.ActiveExtensions()
-                .Single(x => x.Descriptor.ExtensionType == "Theme" && x.Descriptor.Name == requestTheme.ThemeName);
+            var theme = _extensionManager
+                .AvailableExtensions()
+                .Single(x => x.ExtensionType == "Theme" && x.Name == requestTheme.ThemeName);
 
-            var themeLocation = Path.Combine(theme.Descriptor.Location, theme.Descriptor.Name);
+            var themeLocation = Path.Combine(theme.Location, theme.Name);
 
             var themeViewEngines = _viewEngineProviders
-                .Select(x => x.CreateThemeViewEngine(new CreateThemeViewEngineParams{VirtualPath = themeLocation}));
+                .Select(x => x.CreateThemeViewEngine(new CreateThemeViewEngineParams { VirtualPath = themeLocation }));
 
             var packages = _extensionManager.ActiveExtensions()
                 .Where(x => x.Descriptor.ExtensionType == "Package");
-            
+
             var packageLocations = packages.Select(x => Path.Combine(x.Descriptor.Location, x.Descriptor.Name));
             var packageViewEngines = _viewEngineProviders
-                .Select(x => x.CreatePackagesViewEngine(new CreatePackagesViewEngineParams {VirtualPaths = packageLocations}));
+                .Select(x => x.CreatePackagesViewEngine(new CreatePackagesViewEngineParams { VirtualPaths = packageLocations }));
 
-            viewResultBase.ViewEngineCollection = new ViewEngineCollection(
+            var requestViewEngines = new ViewEngineCollection(
                 themeViewEngines
-                .Concat(packageViewEngines)
-                .Concat(_viewEngines)
-                .ToList());
+                    .Concat(packageViewEngines)
+                    .Concat(_viewEngines)
+                    .ToArray());
+
+            var layoutViewEngine = new LayoutViewEngine(requestViewEngines);
+
+            viewResultBase.ViewEngineCollection = new ViewEngineCollection(_viewEngines);
+            viewResultBase.ViewEngineCollection.Insert(0, layoutViewEngine);
         }
 
         public void OnResultExecuted(ResultExecutedContext filterContext) {
-            
+
         }
     }
 }
