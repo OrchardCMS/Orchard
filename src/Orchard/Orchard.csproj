@@ -200,6 +200,7 @@
     <Compile Include="Mvc\Html\ContentItemExtensions.cs" />
     <Compile Include="Mvc\Html\ItemDisplayExtensions.cs" />
     <Compile Include="Mvc\Html\ItemEditorExtensions.cs" />
+    <Compile Include="Mvc\Html\LayoutHelperExtensions.cs" />
     <Compile Include="Mvc\Html\MvcFormAntiForgeryPost.cs" />
     <Compile Include="Mvc\MvcModule.cs" />
     <Compile Include="Mvc\Html\HtmlHelperExtensions.cs" />
@@ -213,6 +214,9 @@
     <Compile Include="Mvc\Results\NotFoundResult.cs" />
     <Compile Include="Mvc\OrchardControllerIdentificationStrategy.cs" />
     <Compile Include="Mvc\Routes\RouteExtensions.cs" />
+    <Compile Include="Mvc\ViewEngines\LayoutView.cs" />
+    <Compile Include="Mvc\ViewEngines\LayoutViewEngine.cs" />
+    <Compile Include="Mvc\ViewEngines\OrchardLayoutContext.cs" />
     <Compile Include="Mvc\ViewModels\AdminViewModel.cs" />
     <Compile Include="Mvc\ViewModels\BaseViewModel.cs" />
     <Compile Include="Mvc\ViewPage.cs">
