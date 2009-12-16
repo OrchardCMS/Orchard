@@ -1,4 +1,5 @@
-﻿using System.Web.Mvc;
+﻿using System;
+using System.Web.Mvc;
 using Orchard.Mvc.ViewEngines;
 using Orchard.Mvc.ViewModels;
 using Orchard.UI.Zones;
@@ -32,7 +33,12 @@ namespace Orchard.Mvc.Html {
         }
 
         public static void Zone<TModel>(this HtmlHelper<TModel> html, string zoneName) where TModel : BaseViewModel {
-            Zone(html, zoneName, null);
+            Zone(html, zoneName, string.Empty);
+        }
+
+        public static void Zone<TModel>(this HtmlHelper<TModel> html, string zoneName, Action action) where TModel : BaseViewModel {
+            html.ViewData.Model.Zones.AddAction(zoneName, x => action());
+            Zone(html, zoneName, string.Empty);
         }
 
         public static void RenderZone(this HtmlHelper html, string zoneName, string foo) { }
