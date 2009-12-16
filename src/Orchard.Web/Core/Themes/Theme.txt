@@ -1,0 +1,5 @@
+﻿name: SafeMode
+description: This is the default theme for the Themes extension.
+version: 1.0
+tags: safe, default
+homepage: http://www.orchardproject.net

@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -35,15 +36,21 @@ namespace Orchard.Mvc.ViewEngines {
             //TODO: add layout engine first
 
             var requestTheme = _themeService.GetRequestTheme(filterContext.RequestContext);
+            var themeViewEngines = Enumerable.Empty<IViewEngine>();
 
-            var theme = _extensionManager
-                .AvailableExtensions()
-                .Single(x => x.ExtensionType == "Theme" && x.Name == requestTheme.ThemeName);
+            // todo: refactor. also this will probably result in the "SafeMode" theme being used so dump some debug info
+            //   into the context for the theme to use for displaying why the expected theme isn't being used
+            if (requestTheme != null) {
+                var theme = _extensionManager
+                    .AvailableExtensions()
+                    .Single(x => x.ExtensionType == "Theme" && x.Name == requestTheme.ThemeName);
 
-            var themeLocation = Path.Combine(theme.Location, theme.Name);
+                var themeLocation = Path.Combine(theme.Location, theme.Name);
 
-            var themeViewEngines = _viewEngineProviders
-                .Select(x => x.CreateThemeViewEngine(new CreateThemeViewEngineParams { VirtualPath = themeLocation }));
+                themeViewEngines = _viewEngineProviders
+                    .Select(x => x.CreateThemeViewEngine(new CreateThemeViewEngineParams { VirtualPath = themeLocation }));
+            }
+
 
             var packages = _extensionManager.ActiveExtensions()
                 .Where(x => x.Descriptor.ExtensionType == "Package");
