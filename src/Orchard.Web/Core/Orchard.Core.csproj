@@ -139,10 +139,6 @@
     <Content Include="Themes\Views\Models\EditorTemplates\ThemeSiteSettingsRecord.ascx" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Themes\OxiteClassic\Views\Shared\document.aspx" />
-    <Content Include="Themes\OxiteClassic\Views\Shared\layout.ascx" />
-    <Content Include="Themes\OxiteClassic\styles\site.css" />
-    <Content Include="Themes\OxiteClassic\Theme.txt" />
     <Content Include="Themes\Styles\site.css" />
     <Content Include="Themes\Theme.txt" />
     <Content Include="Themes\Views\Admin\Install.aspx" />
