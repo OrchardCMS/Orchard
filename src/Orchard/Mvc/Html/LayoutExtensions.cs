@@ -1,8 +1,10 @@
 ﻿using System.Web.Mvc;
 using Orchard.Mvc.ViewEngines;
+using Orchard.Mvc.ViewModels;
+using Orchard.UI.Zones;
 
 namespace Orchard.Mvc.Html {
-    public static class LayoutHelperExtensions {
+    public static class LayoutExtensions {
         public static void RenderBody(this HtmlHelper html) {
             OrchardLayoutContext layoutContext = OrchardLayoutContext.From(html.ViewContext);
             html.ViewContext.HttpContext.Response.Output.Write(layoutContext.BodyContent);
@@ -23,12 +25,17 @@ namespace Orchard.Mvc.Html {
             return MvcHtmlString.Create(html.Encode(layoutContext.Title));
         }
 
-        public static void RenderZone(this HtmlHelper html, string zoneName) {
-            OrchardLayoutContext layoutContext = OrchardLayoutContext.From(html.ViewContext);
-            html.ViewContext.HttpContext.Response.Output.Write(layoutContext.Title);
+        public static void Zone<TModel>(this HtmlHelper<TModel> html, string zoneName, string partitions) where TModel : BaseViewModel {
+            //is IoC necessary for this to work properly?
+            var manager = new ZoneManager();
+            manager.Render(html, html.ViewData.Model.Zones, zoneName, partitions);
         }
 
-        public static void RenderZone(this HtmlHelper html, string zoneName, string foo) {}
+        public static void Zone<TModel>(this HtmlHelper<TModel> html, string zoneName) where TModel : BaseViewModel {
+            Zone(html, zoneName, null);
+        }
+
+        public static void RenderZone(this HtmlHelper html, string zoneName, string foo) { }
 
         public static void RegisterStyle(this HtmlHelper html, string styleName) {
             //todo: register the style
