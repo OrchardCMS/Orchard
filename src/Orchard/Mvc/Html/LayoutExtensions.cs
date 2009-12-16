@@ -27,7 +27,7 @@ namespace Orchard.Mvc.Html {
         }
 
         public static void Zone<TModel>(this HtmlHelper<TModel> html, string zoneName, string partitions) where TModel : BaseViewModel {
-            //is IoC necessary for this to work properly?
+            //TODO: is IoC necessary for this to work properly?
             var manager = new ZoneManager();
             manager.Render(html, html.ViewData.Model.Zones, zoneName, partitions);
         }
@@ -37,6 +37,7 @@ namespace Orchard.Mvc.Html {
         }
 
         public static void Zone<TModel>(this HtmlHelper<TModel> html, string zoneName, Action action) where TModel : BaseViewModel {
+            //TODO: again, IoC could move this AddAction (or similar) method out of the data-bearing object
             html.ViewData.Model.Zones.AddAction(zoneName, x => action());
             Zone(html, zoneName, string.Empty);
         }
