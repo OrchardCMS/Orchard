@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -67,7 +66,7 @@ namespace Orchard.Mvc.ViewEngines {
 
             var layoutViewEngine = new LayoutViewEngine(requestViewEngines);
 
-            viewResultBase.ViewEngineCollection = new ViewEngineCollection(_viewEngines);
+            viewResultBase.ViewEngineCollection = new ViewEngineCollection(_viewEngines.ToList());
             viewResultBase.ViewEngineCollection.Insert(0, layoutViewEngine);
         }
 

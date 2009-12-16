@@ -28,6 +28,8 @@ namespace Orchard.Mvc.Html {
             html.ViewContext.HttpContext.Response.Output.Write(layoutContext.Title);
         }
 
+        public static void RenderZone(this HtmlHelper html, string zoneName, string foo) {}
+
         public static void RegisterStyle(this HtmlHelper html, string styleName) {
             //todo: register the style
         }

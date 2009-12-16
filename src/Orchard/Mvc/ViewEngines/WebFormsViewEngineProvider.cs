@@ -54,6 +54,7 @@ namespace Orchard.Mvc.ViewEngines {
 
             viewEngine.PartialViewLocationFormats = parameters.VirtualPaths
                 .Select(x => x + "/Views/Shared/{0}.ascx")
+                .Concat(parameters.VirtualPaths.Select(s => s + "/Views/Shared/{0}.aspx"))
                 .ToArray();
 
             return viewEngine;

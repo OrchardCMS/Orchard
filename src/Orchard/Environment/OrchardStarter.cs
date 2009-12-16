@@ -38,7 +38,7 @@ namespace Orchard.Environment {
                 .WithArguments(new NamedParameter("paths", new[] { "~/Core", "~/Packages" }))
                 .SingletonScoped();
             builder.Register<ThemeFolders>().As<IExtensionFolders>()
-                .WithArguments(new NamedParameter("paths", new[] { "~/Core/Themes", "~/Themes" })) // <- info: (heskew) ~/Core/Themes is itself an extension, is that too wrong/weird?
+                .WithArguments(new NamedParameter("paths", new[] { "~/Core", "~/Themes" }))
                 .SingletonScoped();
 
             registrations(builder);
