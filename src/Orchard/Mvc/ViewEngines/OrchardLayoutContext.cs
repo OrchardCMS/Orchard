@@ -1,14 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Web;
+﻿using System.Web;
 using System.Web.Mvc;
 
 namespace Orchard.Mvc.ViewEngines {
     public class OrchardLayoutContext {
         private static readonly object _key = typeof(OrchardLayoutContext);
 
+        public string Title { get; set; }
         public string BodyContent { get; set; }
 
         public static OrchardLayoutContext From(ControllerContext context) {

@@ -139,9 +139,17 @@
     <Content Include="Themes\Views\Models\EditorTemplates\ThemeSiteSettingsRecord.ascx" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="SafeMode\Views\Shared\document.aspx" />
+    <Content Include="SafeMode\Views\Shared\layout.ascx" />
+    <Content Include="SafeMode\styles\site.css" />
     <Content Include="SafeMode\Theme.txt" />
     <Content Include="Themes\Views\Admin\Install.aspx" />
     <Content Include="Themes\Views\Web.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="SafeMode\scripts\" />
+    <Folder Include="SafeMode\styles\images\" />
+    <Folder Include="Themes\Views\Shared\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v9.0\WebApplications\Microsoft.WebApplication.targets" />
