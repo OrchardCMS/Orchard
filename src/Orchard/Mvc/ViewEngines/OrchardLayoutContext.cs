@@ -13,7 +13,7 @@ namespace Orchard.Mvc.ViewEngines {
         }
 
         public static OrchardLayoutContext From(HttpContextBase context) {
-            if (context.Items.Contains(_key)) {
+            if (!context.Items.Contains(_key)) {
                 context.Items.Add(_key, new OrchardLayoutContext());
             }
             return (OrchardLayoutContext)context.Items[_key];

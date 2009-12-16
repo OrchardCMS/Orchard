@@ -30,12 +30,14 @@ namespace Orchard.Mvc.ViewEngines {
             // enable /Views/Shared/"EditorTemplates/+{templateName}
             viewEngine.PartialViewLocationFormats = new[] {
                 parameters.VirtualPath + "/Views/Shared/{0}.ascx",
+                parameters.VirtualPath + "/Views/Shared/{0}.aspx",
             };
 
             // for "routed" request views...
             // enable /Views/{area}/{controller}/{viewName}
             viewEngine.AreaPartialViewLocationFormats = new[] {
                 parameters.VirtualPath + "/Views/{2}/{1}/{0}.ascx",
+                parameters.VirtualPath + "/Views/{2}/{1}/{0}.aspx",
             };
 
             return viewEngine;
