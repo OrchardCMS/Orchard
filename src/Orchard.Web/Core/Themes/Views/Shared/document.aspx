@@ -1,15 +1,14 @@
-﻿<%@ Page Language="C#" Inherits="System.Web.Mvc.ViewPage" %>
+﻿<%@ Page Language="C#" Inherits="System.Web.Mvc.ViewPage<BaseViewModel>" %>
+<%@ Import Namespace="Orchard.Mvc.ViewModels"%>
 <%@ Import Namespace="Orchard.Mvc.Html"
 %><!DOCTYPE html>
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
     <title><%=Html.Title() %> - Safe Mode!</title><%
-        Html.RenderZone("head", ":metas :styles :scripts"); %>
+     Html.Zone("head", ":metas :styles :scripts"); %>
 </head>
 <body><%
-    Html.RenderZone("document-first");
-    Html.RenderBody();
-    Html.RenderZone("document-last"); %>
+    Html.ZoneBody("body"); %>
 </body>
 </html>

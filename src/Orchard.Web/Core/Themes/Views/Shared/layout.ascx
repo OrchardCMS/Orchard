@@ -1,15 +1,16 @@
-﻿<%@ Control Language="C#" Inherits="System.Web.Mvc.ViewUserControl" %>
+﻿<%@ Control Language="C#" Inherits="System.Web.Mvc.ViewUserControl<BaseViewModel>" %>
+<%@ Import Namespace="Orchard.Mvc.ViewModels"%>
 <%@ Import Namespace="Orchard.Mvc.Html" %><%
 Html.RegisterStyle("site.css"); %>
 <div class="page">
     <div id="header"><%
-        Html.RenderZone("header");
-        Html.RenderZone("menu");
+        Html.Zone("header");
+        Html.Zone("menu");
     %></div>
     <div id="main"><%
-        Html.RenderBody();
+        Html.ZoneBody("content");
 %>        <div id="footer"><%
-            Html.RenderZone("footer");
+            Html.Zone("footer");
         %></div>
     </div>
 </div>

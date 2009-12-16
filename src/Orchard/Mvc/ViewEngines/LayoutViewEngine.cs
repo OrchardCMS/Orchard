@@ -1,7 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Web.Mvc;
+using Orchard.Mvc.ViewModels;
 
 namespace Orchard.Mvc.ViewEngines {
     public class LayoutViewEngine : IViewEngine {
@@ -26,7 +25,8 @@ namespace Orchard.Mvc.ViewEngines {
 
             // if action returned a View with explicit master - 
             // this will bypass the multi-pass layout strategy
-            if (!string.IsNullOrEmpty(masterName))
+            if (!string.IsNullOrEmpty(masterName)
+                || !(controllerContext.Controller.ViewData.Model is BaseViewModel))
                 return new ViewEngineResult(Enumerable.Empty<string>());
 
             var bodyView = _viewEngines.FindPartialView(controllerContext, viewName);

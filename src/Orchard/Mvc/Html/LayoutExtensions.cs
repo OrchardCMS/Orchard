@@ -41,7 +41,9 @@ namespace Orchard.Mvc.Html {
             Zone(html, zoneName, string.Empty);
         }
 
-        public static void RenderZone(this HtmlHelper html, string zoneName, string foo) { }
+        public static void ZoneBody<TModel>(this HtmlHelper<TModel> html, string zoneName) where TModel : BaseViewModel {
+            html.Zone(zoneName, () => html.RenderBody());
+        }
 
         public static void RegisterStyle(this HtmlHelper html, string styleName) {
             //todo: register the style
