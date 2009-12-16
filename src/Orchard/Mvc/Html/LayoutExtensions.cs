@@ -2,6 +2,7 @@
 using System.Web.Mvc;
 using Orchard.Mvc.ViewEngines;
 using Orchard.Mvc.ViewModels;
+using Orchard.UI.Resources;
 using Orchard.UI.Zones;
 
 namespace Orchard.Mvc.Html {
@@ -46,8 +47,12 @@ namespace Orchard.Mvc.Html {
             html.Zone(zoneName, () => html.RenderBody());
         }
 
-        public static void RegisterStyle(this HtmlHelper html, string styleName) {
-            //todo: register the style
+        public static void RegisterStyle(this HtmlHelper html, string fileName) {
+            html.Resolve<IResourceManager>().RegisterStyle(fileName);
+        }
+
+        public static void RegisterScript(this HtmlHelper html, string fileName) {
+            html.Resolve<IResourceManager>().RegisterHeadScript(fileName);
         }
     }
 }

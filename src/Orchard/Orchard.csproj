@@ -197,6 +197,7 @@
     <Compile Include="Models\ViewModels\ItemDisplayModel.cs" />
     <Compile Include="Models\ViewModels\ItemEditorModel.cs" />
     <Compile Include="Mvc\Filters\AntiForgeryAuthorizationFilter.cs" />
+    <Compile Include="Mvc\Html\ContainerExtensions.cs" />
     <Compile Include="Mvc\Html\ContentItemExtensions.cs" />
     <Compile Include="Mvc\Html\ItemDisplayExtensions.cs" />
     <Compile Include="Mvc\Html\ItemEditorExtensions.cs" />
@@ -222,6 +223,9 @@
     <Compile Include="Mvc\ViewEngines\WebFormsViewEngineProvider.cs" />
     <Compile Include="Mvc\ViewModels\AdminViewModel.cs" />
     <Compile Include="Mvc\ViewModels\BaseViewModel.cs" />
+    <Compile Include="UI\Resources\IResourceManager.cs" />
+    <Compile Include="UI\Resources\ResourceFilter.cs" />
+    <Compile Include="UI\Resources\ResourceManager.cs" />
     <Compile Include="UI\Zones\DelegateZoneItem.cs" />
     <Compile Include="UI\Zones\ItemDisplayZoneItem.cs" />
     <Compile Include="UI\Zones\RenderPartialZoneItem.cs" />
