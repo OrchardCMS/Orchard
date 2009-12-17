@@ -49,14 +49,18 @@ namespace Orchard.Core.Themes.Services {
             var requestTheme = _themeSelectors
                 .Select(x => x.GetTheme(requestContext))
                 .Where(x => x != null)
-                .OrderByDescending(x => x.Priority)
-                .FirstOrDefault();
+                .OrderByDescending(x => x.Priority);
 
-            if (requestTheme == null) {
+            if (requestTheme.Count() < 1)
                 return null;
+
+            foreach (var theme in requestTheme) {
+                var t = GetThemeByName(theme.ThemeName);
+                if (t != null)
+                    return t;
             }
 
-            return GetThemeByName(requestTheme.ThemeName);
+            return null;
         }
 
         public ITheme GetThemeByName(string name) {

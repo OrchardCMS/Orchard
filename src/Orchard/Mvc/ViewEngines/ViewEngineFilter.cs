@@ -40,11 +40,7 @@ namespace Orchard.Mvc.ViewEngines {
             // todo: refactor. also this will probably result in the "SafeMode" theme being used so dump some debug info
             //   into the context for the theme to use for displaying why the expected theme isn't being used
             if (requestTheme != null) {
-                var theme = _extensionManager
-                    .AvailableExtensions()
-                    .Single(x => x.ExtensionType == "Theme" && x.Name == requestTheme.ThemeName);
-
-                var themeLocation = Path.Combine(theme.Location, theme.Name);
+                var themeLocation = _extensionManager.GetThemeLocation(requestTheme);
 
                 themeViewEngines = _viewEngineProviders
                     .Select(x => x.CreateThemeViewEngine(new CreateThemeViewEngineParams { VirtualPath = themeLocation }));
