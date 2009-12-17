@@ -15,9 +15,9 @@ namespace Orchard.UI.Resources {
 
             if (model != null) {
                 model.Zones.AddAction("head:metas", html => html.ViewContext.HttpContext.Response.Output.Write(_resourceManager.GetMetas()));
-                model.Zones.AddAction("head:styles", html => html.ViewContext.HttpContext.Response.Output.Write(_resourceManager.GetStyles(filterContext.RequestContext)));
-                model.Zones.AddAction("head:scripts", html => html.ViewContext.HttpContext.Response.Output.Write(_resourceManager.GetHeadScripts(filterContext.RequestContext)));
-                model.Zones.AddAction("body:after", html => html.ViewContext.HttpContext.Response.Output.Write(_resourceManager.GetFootScripts(filterContext.RequestContext)));
+                model.Zones.AddAction("head:styles", html => html.ViewContext.HttpContext.Response.Output.Write(_resourceManager.GetStyles()));
+                model.Zones.AddAction("head:scripts", html => html.ViewContext.HttpContext.Response.Output.Write(_resourceManager.GetHeadScripts()));
+                model.Zones.AddAction("body:after", html => html.ViewContext.HttpContext.Response.Output.Write(_resourceManager.GetFootScripts()));
             }
         }
 

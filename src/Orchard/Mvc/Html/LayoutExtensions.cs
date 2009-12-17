@@ -56,15 +56,15 @@ namespace Orchard.Mvc.Html {
         }
 
         public static void RegisterStyle(this HtmlHelper html, string fileName) {
-            html.Resolve<IResourceManager>().RegisterStyle(fileName);
+            html.Resolve<IResourceManager>().RegisterStyle(fileName, html);
         }
 
         public static void RegisterScript(this HtmlHelper html, string fileName) {
-            html.Resolve<IResourceManager>().RegisterHeadScript(fileName);
+            html.Resolve<IResourceManager>().RegisterHeadScript(fileName, html);
         }
 
         public static void RegisterFootScript(this HtmlHelper html, string fileName) {
-            html.Resolve<IResourceManager>().RegisterFootScript(fileName);
+            html.Resolve<IResourceManager>().RegisterFootScript(fileName, html);
         }
     }
 }
