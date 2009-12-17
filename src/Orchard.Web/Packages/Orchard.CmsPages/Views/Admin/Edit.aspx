@@ -37,7 +37,7 @@
             <%=Html.EditorFor(m => m.PublishLaterDate) %>
         </fieldset>
         <fieldset>
-            <label for="Command_SaveDraft"><%=Html.RadioButton("Command", "SaveDraft", new { id = "Command_SaveDraft" }) %> Save Draft</label></li>
+            <label for="Command_SaveDraft"><%=Html.RadioButton("Command", "SaveDraft", new { id = "Command_SaveDraft" }) %> Save Draft</label>
         </fieldset>
         <fieldset>
             <input class="button" type="submit" name="submit.Save" value="Save"/>
