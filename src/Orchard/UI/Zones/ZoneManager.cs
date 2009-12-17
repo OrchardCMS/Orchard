@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Web.Mvc;
 
 namespace Orchard.UI.Zones {
-    public class ZoneManager {
+    public class ZoneManager : IZoneManager {
         public void Render<TModel>(HtmlHelper<TModel> html, ZoneCollection zones, string zoneName, string partitions) {
 
             ZoneEntry zone;

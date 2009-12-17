@@ -5,7 +5,6 @@ namespace Orchard.Mvc.ViewEngines {
     public class OrchardLayoutContext {
         private static readonly object _key = typeof(OrchardLayoutContext);
 
-        public string Title { get; set; }
         public string BodyContent { get; set; }
 
         public static OrchardLayoutContext From(ControllerContext context) {

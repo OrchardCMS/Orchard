@@ -224,11 +224,14 @@
     <Compile Include="Mvc\ViewEngines\WebFormsViewEngineProvider.cs" />
     <Compile Include="Mvc\ViewModels\AdminViewModel.cs" />
     <Compile Include="Mvc\ViewModels\BaseViewModel.cs" />
+    <Compile Include="UI\PageTitle\IPageTitleBuilder.cs" />
+    <Compile Include="UI\PageTitle\PageTitleBuilder.cs" />
     <Compile Include="UI\Resources\IResourceManager.cs" />
     <Compile Include="UI\Resources\ResourceFilter.cs" />
     <Compile Include="UI\Resources\ResourceManager.cs" />
     <Compile Include="UI\Zones\DelegateZoneItem.cs" />
     <Compile Include="UI\Zones\ItemDisplayZoneItem.cs" />
+    <Compile Include="UI\Zones\IZoneManager.cs" />
     <Compile Include="UI\Zones\RenderPartialZoneItem.cs" />
     <Compile Include="UI\Zones\ZoneCollection.cs" />
     <Compile Include="UI\Zones\ZoneEntry.cs" />
