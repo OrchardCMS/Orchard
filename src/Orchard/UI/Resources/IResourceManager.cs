@@ -1,4 +1,5 @@
 using System.Web.Mvc;
+using System.Web.Routing;
 
 namespace Orchard.UI.Resources {
     public interface IResourceManager : IDependency {
@@ -7,8 +8,8 @@ namespace Orchard.UI.Resources {
         void RegisterHeadScript(string fileName);
         void RegisterFootScript(string fileName);
         MvcHtmlString GetMetas();
-        MvcHtmlString GetStyles();
-        MvcHtmlString GetHeadScripts();
-        MvcHtmlString GetFootScripts();
+        MvcHtmlString GetStyles(RequestContext requestContext);
+        MvcHtmlString GetHeadScripts(RequestContext requestContext);
+        MvcHtmlString GetFootScripts(RequestContext requestContext);
     }
 }

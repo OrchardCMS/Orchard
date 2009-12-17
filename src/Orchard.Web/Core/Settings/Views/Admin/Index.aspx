@@ -1,12 +1,10 @@
 ﻿<%@ Page Language="C#" Inherits="System.Web.Mvc.ViewPage<Orchard.Core.Settings.ViewModels.SettingsIndexViewModel>" %>
 <%@ Import Namespace="Orchard.Mvc.Html"%>
-<% Html.Include("AdminHead"); %>
-    <h2>Edit Settings</h2>
-    <%using (Html.BeginForm()) { %>
-        <%= Html.ValidationSummary() %>
-        <%= Html.EditorForModel() %>
-        <fieldset>
-            <input class="button" type="submit" value="Save" /> 
-        </fieldset>
-    <% } %>
-<% Html.Include("AdminFoot"); %>
+<h2>Edit Settings</h2>
+<%using (Html.BeginForm()) { %>
+    <%= Html.ValidationSummary() %>
+    <%= Html.EditorForModel() %>
+    <fieldset>
+        <input class="button" type="submit" value="Save" /> 
+    </fieldset>
+<% } %>

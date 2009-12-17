@@ -60,14 +60,14 @@ namespace Orchard.Blogs.Models {
                     case "Detail":
                         context.AddDisplay(
                             new TemplateViewModel(posts.Select(bp => contentManager.BuildDisplayModel(bp, null, "Summary"))) {
-                                TemplateName = "BlogPostList",
+                                TemplateName = "BlogPost/List",
                                 ZoneName = "body"
                             });
                         break;
                     case "DetailAdmin":
                         context.AddDisplay(
                             new TemplateViewModel(posts.Select(bp => contentManager.BuildDisplayModel(bp, null, "SummaryAdmin"))) {
-                                TemplateName = "BlogPostListAdmin",
+                                TemplateName = "BlogPost/ListAdmin",
                                 ZoneName = "body"
                             });
                         break;
@@ -75,13 +75,13 @@ namespace Orchard.Blogs.Models {
             });
 
             OnGetEditorViewModel<BlogPost>((context, blogPost) => {
-                context.AddEditor(new TemplateViewModel(blogPost) { TemplateName = "BlogPostFieldsPrimary", ZoneName = "primary", Position = "1" });
-                context.AddEditor(new TemplateViewModel(blogPost) { TemplateName = "BlogPostFieldsSecondary", ZoneName = "secondary", Position = "1" });
+                context.AddEditor(new TemplateViewModel(blogPost) { TemplateName = "BlogPost/FieldsPrimary", ZoneName = "primary", Position = "1" });
+                context.AddEditor(new TemplateViewModel(blogPost) { TemplateName = "BlogPost/FieldsSecondary", ZoneName = "secondary", Position = "1" });
             });
 
             OnUpdateEditorViewModel<BlogPost>((context, blogPost) => {
-                context.AddEditor(new TemplateViewModel(blogPost) { TemplateName = "BlogPostFieldsPrimary", ZoneName = "primary", Position = "1" });
-                context.AddEditor(new TemplateViewModel(blogPost) { TemplateName = "BlogPostFieldsSecondary", ZoneName = "secondary", Position = "1" });
+                context.AddEditor(new TemplateViewModel(blogPost) { TemplateName = "BlogPost/FieldsPrimary", ZoneName = "primary", Position = "1" });
+                context.AddEditor(new TemplateViewModel(blogPost) { TemplateName = "BlogPost/FieldsSecondary", ZoneName = "secondary", Position = "1" });
                 context.Updater.TryUpdateModel(blogPost, "", null, null);
             });
         }

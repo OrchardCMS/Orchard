@@ -1,3 +1,4 @@
 ﻿<%@ Master Language="C#" Inherits="System.Web.Mvc.ViewMasterPage" %>
+<h1>DON'T USE THE MASTER PAGE!</h1>
 <asp:ContentPlaceHolder ID="TitleContent" runat="server" />
 <asp:ContentPlaceHolder ID="MainContent" runat="server" />

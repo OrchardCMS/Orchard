@@ -6,6 +6,7 @@ using Orchard.Models.ViewModels;
 namespace Orchard.Models.Driver {
     public class ContentItemTemplates<TContent> : TemplateFilterBase<TContent> where TContent : class, IContent {
         private readonly string _templateName;
+        // todo: (heskew) use _prefix?
         private readonly string _prefix;
         private readonly string[] _displayTypes;
         private Action<UpdateEditorModelContext, ItemEditorModel<TContent>> _updater;
@@ -18,7 +19,7 @@ namespace Orchard.Models.Driver {
 
         protected override void BuildDisplayModel(BuildDisplayModelContext context, TContent instance) {
             var longestMatch = LongestMatch(context.DisplayType);
-            context.DisplayModel.TemplateName = _templateName + longestMatch;
+            context.DisplayModel.TemplateName = _templateName + "/" + longestMatch;
             context.DisplayModel.Prefix = _prefix;
 
             if (context.DisplayModel.GetType() != typeof(ItemDisplayModel<TContent>)) {
@@ -46,7 +47,7 @@ namespace Orchard.Models.Driver {
         }
 
         protected override void BuildEditorModel(BuildEditorModelContext context, TContent instance) {
-            context.EditorModel.TemplateName = _templateName;
+            context.EditorModel.TemplateName = _templateName + "/Detail";
             context.EditorModel.Prefix = _prefix;
             if (context.EditorModel.GetType() != typeof(ItemEditorModel<TContent>)) {
                 context.EditorModel.Adaptor = (html, viewModel) => {

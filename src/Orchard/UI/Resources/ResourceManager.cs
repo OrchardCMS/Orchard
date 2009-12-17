@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
+using System.Web.Routing;
 using Orchard.Extensions;
 using Orchard.Themes;
 
@@ -53,17 +54,16 @@ namespace Orchard.UI.Resources {
                 MvcHtmlString.Create(string.Join("\r\n",
                                                  _metas.Select(m => string.Format(MetaFormat, m.Key, m.Value)).ToArray()));
         }
-
-        public MvcHtmlString GetStyles() {
-            return GetFiles(_styles, StyleFormat, s => GetThemePath("/styles/" + s));
+        public MvcHtmlString GetStyles(RequestContext requestContext) {
+            return GetFiles(_styles, StyleFormat, s => GetThemePath("/styles/" + s, requestContext));
         }
 
-        public MvcHtmlString GetHeadScripts() {
-            return GetFiles(_headScripts, ScriptFormat, s => GetThemePath("/scripts/" + s));
+        public MvcHtmlString GetHeadScripts(RequestContext requestContext) {
+            return GetFiles(_headScripts, ScriptFormat, s => GetThemePath("/scripts/" + s, requestContext));
         }
 
-        public MvcHtmlString GetFootScripts() {
-            return GetFiles(_footScripts, ScriptFormat, s => GetThemePath("/scripts/" + s));
+        public MvcHtmlString GetFootScripts(RequestContext requestContext) {
+            return GetFiles(_footScripts, ScriptFormat, s => GetThemePath("/scripts/" + s, requestContext));
         }
 
         private static MvcHtmlString GetFiles(IEnumerable<string> files, string fileFormat, Func<string, string> getPath) {
@@ -72,8 +72,8 @@ namespace Orchard.UI.Resources {
                                                  files.Select(s => string.Format(fileFormat, getPath(s))).ToArray()));
         }
 
-        private string GetThemePath(string fileName) {
-            var requestTheme = _themeService.GetRequestTheme(null); // <- todo: (erikpo) will need context eventually
+        private string GetThemePath(string fileName, RequestContext requestContext) {
+            var requestTheme = _themeService.GetRequestTheme(requestContext); // <- todo: (erikpo) will need context eventually
 
             if (requestTheme == null)
                 return fileName;

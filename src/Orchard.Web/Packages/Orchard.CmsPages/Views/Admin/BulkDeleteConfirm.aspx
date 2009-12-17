@@ -3,23 +3,21 @@
 <%@ Import Namespace="Orchard.Utility"%>
 <%@ Import Namespace="Orchard.CmsPages.Services.Templates"%>
 <%@ Import Namespace="Orchard.Mvc.Html" %>
-<% Html.Include("AdminHead"); %>
-    <h2>Delete pages</h2>
-    <p>Are you sure you want to delete the pages?</p>
-    <% using (Html.BeginForm()) { %>
-        <%= Html.ValidationSummary() %>
-        <fieldset>
-            <input type="hidden" name="<%=Html.NameOf(m => m.Options.BulkAction)%>" value="<%=PageIndexBulkAction.Delete%>" />
-            <input type="hidden" name="<%=Html.NameOf(m => m.Options.BulkDeleteConfirmed)%>" value="true" />
-            <input class="button" type="submit" name="submit.BulkEdit" value="Delete" />
-            <%
-            int pageIndex = 0;
-            foreach (var pageEntry in Model.PageEntries.Where(e => e.IsChecked)) {
-                var pi = pageIndex;
-                %><input type="hidden" value="<%=pageEntry.PageId %>" name="<%=Html.NameOf(m => m.PageEntries[pi].PageId)%>"/>
-            <input type="hidden" value="<%=pageEntry.IsChecked %>" name="<%=Html.NameOf(m => m.PageEntries[pi].IsChecked)%>"/><%
-                pageIndex++;
-            } %>
-        </fieldset>
-    <% } %>
-<% Html.Include("AdminFoot"); %>
+<h2>Delete pages</h2>
+<p>Are you sure you want to delete the pages?</p>
+<% using (Html.BeginForm()) { %>
+    <%= Html.ValidationSummary() %>
+    <fieldset>
+        <input type="hidden" name="<%=Html.NameOf(m => m.Options.BulkAction)%>" value="<%=PageIndexBulkAction.Delete%>" />
+        <input type="hidden" name="<%=Html.NameOf(m => m.Options.BulkDeleteConfirmed)%>" value="true" />
+        <input class="button" type="submit" name="submit.BulkEdit" value="Delete" />
+        <%
+        int pageIndex = 0;
+        foreach (var pageEntry in Model.PageEntries.Where(e => e.IsChecked)) {
+            var pi = pageIndex;
+            %><input type="hidden" value="<%=pageEntry.PageId %>" name="<%=Html.NameOf(m => m.PageEntries[pi].PageId)%>"/>
+        <input type="hidden" value="<%=pageEntry.IsChecked %>" name="<%=Html.NameOf(m => m.PageEntries[pi].IsChecked)%>"/><%
+            pageIndex++;
+        } %>
+    </fieldset>
+<% } %>

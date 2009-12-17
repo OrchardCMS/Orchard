@@ -175,8 +175,6 @@
     <Content Include="Content\Images\title_background.gif" />
     <Content Include="Content\Site2.css" />
     <Content Include="Content\Site3.css" />
-    <Content Include="Views\Shared\AdminHead.aspx" />
-    <Content Include="Views\Shared\AdminFoot.aspx" />
     <Content Include="Views\Shared\Messages.ascx" />
     <Content Include="Views\Shared\ExtraUserControl.ascx" />
     <Content Include="Views\Shared\Footer.ascx" />
