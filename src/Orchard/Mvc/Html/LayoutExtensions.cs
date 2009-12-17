@@ -28,7 +28,7 @@ namespace Orchard.Mvc.Html {
 
             pageTitleBuilder.AddTitleParts(titleParts);
 
-            return MvcHtmlString.Create(pageTitleBuilder.GenerateTitle());
+            return MvcHtmlString.Create(html.Encode(pageTitleBuilder.GenerateTitle()));
         }
 
         public static void Zone<TModel>(this HtmlHelper<TModel> html, string zoneName, string partitions) where TModel : BaseViewModel {
@@ -51,12 +51,20 @@ namespace Orchard.Mvc.Html {
             html.Zone(zoneName, () => html.RenderBody());
         }
 
+        public static void RegisterMeta(this HtmlHelper html, string name, string content) {
+            html.Resolve<IResourceManager>().RegisterMeta(name, content);
+        }
+
         public static void RegisterStyle(this HtmlHelper html, string fileName) {
             html.Resolve<IResourceManager>().RegisterStyle(fileName);
         }
 
         public static void RegisterScript(this HtmlHelper html, string fileName) {
             html.Resolve<IResourceManager>().RegisterHeadScript(fileName);
+        }
+
+        public static void RegisterFootScript(this HtmlHelper html, string fileName) {
+            html.Resolve<IResourceManager>().RegisterFootScript(fileName);
         }
     }
 }

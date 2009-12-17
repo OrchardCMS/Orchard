@@ -14,6 +14,7 @@ namespace Orchard.UI.Resources {
             BaseViewModel model = filterContext.Controller.ViewData.Model as BaseViewModel;
 
             if (model != null) {
+                model.Zones.AddAction("head:metas", html => html.ViewContext.HttpContext.Response.Output.Write(_resourceManager.GetMetas()));
                 model.Zones.AddAction("head:styles", html => html.ViewContext.HttpContext.Response.Output.Write(_resourceManager.GetStyles()));
                 model.Zones.AddAction("head:scripts", html => html.ViewContext.HttpContext.Response.Output.Write(_resourceManager.GetHeadScripts()));
                 model.Zones.AddAction("body:after", html => html.ViewContext.HttpContext.Response.Output.Write(_resourceManager.GetFootScripts()));
