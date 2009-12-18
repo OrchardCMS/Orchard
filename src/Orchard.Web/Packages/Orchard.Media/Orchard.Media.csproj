@@ -96,7 +96,7 @@
     <Content Include="Views\Admin\EditMedia.aspx" />
     <Content Include="Views\Admin\EditProperties.aspx" />
     <Content Include="Views\Admin\Index.aspx" />
-    <Content Include="Views\Models\EditorTemplates\MediaSettingsRecord.ascx" />
+    <Content Include="Views\Shared\EditorTemplates\MediaSettingsRecord.ascx" />
     <Content Include="Web.config" />
     <Content Include="Content\Site.css" />
     <Content Include="Views\Web.config" />

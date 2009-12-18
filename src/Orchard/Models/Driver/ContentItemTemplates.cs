@@ -64,7 +64,7 @@ namespace Orchard.Models.Driver {
                 _updater(context, (ItemEditorModel<TContent>)context.EditorModel);
             else
                 _updater(context, new ItemEditorModel<TContent>(context.EditorModel));
-            context.EditorModel.TemplateName = _templateName;
+            context.EditorModel.TemplateName = _templateName + "/Detail";
             context.EditorModel.Prefix = _prefix;
         }
 

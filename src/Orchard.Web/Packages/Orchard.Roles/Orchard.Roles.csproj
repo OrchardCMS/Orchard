@@ -82,7 +82,7 @@
     <Content Include="Views\Admin\Create.aspx" />
     <Content Include="Views\Admin\Edit.aspx" />
     <Content Include="Views\Admin\Index.aspx" />
-    <Content Include="Views\Models\EditorTemplates\UserRolesViewModel.ascx" />
+    <Content Include="Views\Shared\EditorTemplates\UserRolesViewModel.ascx" />
     <Content Include="Web.config" />
     <Content Include="Content\Site.css" />
     <Content Include="Views\Web.config" />

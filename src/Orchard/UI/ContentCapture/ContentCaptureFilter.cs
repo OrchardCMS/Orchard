@@ -7,15 +7,15 @@ namespace Orchard.UI.ContentCapture {
         private readonly IContentCapture _contentCapture;
 
         public ContentCaptureFilter(IContentCapture contentCapture) {
-            _contentCapture = contentCapture;
+            //_contentCapture = contentCapture;
         }
 
         public void OnResultExecuting(ResultExecutingContext filterContext) {
-            if (filterContext.Result is ViewResult) {
-                _contentCapture.CaptureStream = filterContext.HttpContext.Response.Filter;
-                filterContext.HttpContext.Response.Filter = _contentCapture as Stream;
-                filterContext.HttpContext.Response.Buffer = false;
-            }
+            //if (filterContext.Result is ViewResult) {
+            //    _contentCapture.CaptureStream = filterContext.HttpContext.Response.Filter;
+            //    filterContext.HttpContext.Response.Filter = _contentCapture as Stream;
+            //    filterContext.HttpContext.Response.Buffer = false;
+            //}
         }
 
         public void OnResultExecuted(ResultExecutedContext filterContext) {

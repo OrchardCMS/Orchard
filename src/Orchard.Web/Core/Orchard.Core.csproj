@@ -127,23 +127,23 @@
     <Content Include="Settings\Views\Web.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Common\Views\Models\DisplayTemplates\BodyAspect.ascx" />
-    <Content Include="Common\Views\Models\EditorTemplates\BodyAspect.ascx" />
     <Content Include="Settings\Views\Admin\EditorTemplates\SettingsIndexViewModel.ascx" />
     <Content Include="XmlRpc\Views\Web.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Common\Views\Models\EditorTemplates\OwnerEditorViewModel.ascx" />
     <Content Include="Common\Views\Web.config" />
     <Content Include="Themes\Package.txt" />
     <Content Include="Themes\Views\Admin\Index.aspx" />
-    <Content Include="Themes\Views\Models\EditorTemplates\ThemeSiteSettingsRecord.ascx" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Common\Views\Shared\DisplayTemplates\BodyAspect.ascx" />
+    <Content Include="Common\Views\Shared\EditorTemplates\BodyAspect.ascx" />
+    <Content Include="Common\Views\Shared\EditorTemplates\OwnerEditorViewModel.ascx" />
     <Content Include="Themes\Styles\site.css" />
     <Content Include="Themes\Theme.txt" />
     <Content Include="Themes\Views\Admin\Install.aspx" />
     <Content Include="Themes\Views\Shared\document.aspx" />
+    <Content Include="Themes\Views\Shared\EditorTemplates\ThemeSiteSettingsRecord.ascx" />
     <Content Include="Themes\Views\Shared\layout.ascx" />
     <Content Include="Themes\Views\Shared\user.ascx" />
     <Content Include="Themes\Views\Shared\menu.ascx" />

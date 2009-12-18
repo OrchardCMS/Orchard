@@ -75,8 +75,8 @@
     <Content Include="Views\Content\Details.aspx" />
     <Content Include="Views\Content\Index.aspx" />
     <Content Include="Views\Home\Index.aspx" />
-    <Content Include="Views\Models\DisplayTemplates\ShowDebugLink.ascx" />
-    <Content Include="Views\Models\EditorTemplates\ShowDebugLink.ascx" />
+    <Content Include="Views\Shared\DisplayTemplates\ShowDebugLink.ascx" />
+    <Content Include="Views\Shared\EditorTemplates\ShowDebugLink.ascx" />
     <Content Include="Web.config" />
     <Content Include="Views\Web.config" />
   </ItemGroup>

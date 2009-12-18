@@ -75,15 +75,15 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Package.txt" />
-    <Content Include="Views\Models\DisplayTemplates\ContentItemTitle.ascx" />
-    <Content Include="Views\Models\DisplayTemplates\SandboxPageSummary.ascx" />
-    <Content Include="Views\Models\DisplayTemplates\SandboxPage.ascx" />
-    <Content Include="Views\Models\EditorTemplates\SandboxPage.ascx" />
-    <Content Include="Views\Models\EditorTemplates\SandboxSettingsRecord.ascx" />
     <Content Include="Views\Page\Edit.aspx" />
     <Content Include="Views\Page\Create.aspx" />
     <Content Include="Views\Page\Show.aspx" />
     <Content Include="Views\Page\Index.aspx" />
+    <Content Include="Views\Shared\DisplayTemplates\ContentItemTitle.ascx" />
+    <Content Include="Views\Shared\DisplayTemplates\SandboxPage.ascx" />
+    <Content Include="Views\Shared\DisplayTemplates\SandboxPageSummary.ascx" />
+    <Content Include="Views\Shared\EditorTemplates\SandboxPage.ascx" />
+    <Content Include="Views\Shared\EditorTemplates\SandboxSettingsRecord.ascx" />
     <Content Include="Web.config" />
     <Content Include="Views\Web.config" />
   </ItemGroup>

@@ -120,12 +120,12 @@
     <Content Include="Scripts\utils\form_utils.js" />
     <Content Include="Scripts\utils\mctabs.js" />
     <Content Include="Scripts\utils\validate.js" />
-    <Content Include="Views\Models\EditorTemplates\TinyMceTextEditor.ascx" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Views\Shared\EditorTemplates\TinyMceTextEditor.ascx" />
     <Content Include="Views\Web.config" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
