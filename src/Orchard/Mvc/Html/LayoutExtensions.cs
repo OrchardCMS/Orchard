@@ -66,5 +66,9 @@ namespace Orchard.Mvc.Html {
         public static void RegisterFootScript(this HtmlHelper html, string fileName) {
             html.Resolve<IResourceManager>().RegisterFootScript(fileName, html);
         }
+
+        public static ContentCaptureBlock RegisterInlineScript(this HtmlHelper html, string name) {
+            return html.CaptureContent("inlinescript:" + name);
+        }
     }
 }
