@@ -3,6 +3,7 @@
 <%@ Import Namespace="Orchard.Models.ViewModels"%>
 <%@ Import Namespace="Orchard.Blogs.Extensions"%>
 <%@ Import Namespace="Orchard.Blogs.Models"%>
+<% Html.Title(Model.Item.Name); %>
 <%-- todo: (heskew) get what actions we can out of the h2 :| --%>
 <h2 class="withActions">
     <a href="<%=Url.BlogForAdmin(Model.Item.Slug) %>"><%=Html.Encode(Model.Item.Name) %></a>

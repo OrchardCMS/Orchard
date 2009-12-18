@@ -2,6 +2,7 @@
 <%@ Import Namespace="Orchard.Models.ViewModels"%>
 <%@ Import Namespace="Orchard.Mvc.Html"%>
 <%@ Import Namespace="Orchard.Blogs.Models"%>
+<% Html.Title(Model.Item.Title); %>
 <div class="sections">
     <div class="primary">
         <%=Html.EditorZone("primary") %>

@@ -15,7 +15,8 @@ namespace Orchard.UI.PageTitle {
         public void AddTitleParts(params string[] titleParts) {
             if (titleParts != null)
                 foreach (string titlePart in titleParts)
-                    _titleParts.Add(titlePart);
+                    if (!string.IsNullOrEmpty(titlePart))
+                        _titleParts.Add(titlePart);
         }
 
         public string GenerateTitle() {
