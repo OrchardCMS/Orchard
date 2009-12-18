@@ -140,7 +140,6 @@
     <Content Include="Common\Views\Shared\EditorTemplates\BodyAspect.ascx" />
     <Content Include="Common\Views\Shared\EditorTemplates\OwnerEditorViewModel.ascx" />
     <Content Include="Themes\Styles\site.css" />
-    <Content Include="Themes\Theme.txt" />
     <Content Include="Themes\Views\Admin\Install.aspx" />
     <Content Include="Themes\Views\Shared\document.aspx" />
     <Content Include="Themes\Views\Shared\EditorTemplates\ThemeSiteSettingsRecord.ascx" />
