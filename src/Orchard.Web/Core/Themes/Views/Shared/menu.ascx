@@ -1,5 +1,4 @@
 ﻿<%@ Control Language="C#" Inherits="System.Web.Mvc.ViewUserControl" %>
-<%@ Import Namespace="Orchard.Blogs.Extensions"%>
 <div id="menucontainer">
     <ul id="menu">
         <li><%= Html.ActionLink("Home", "Index", "Home", new {Area = ""}, new {})%></li>

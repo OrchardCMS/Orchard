@@ -1,4 +1,6 @@
 ﻿<%@ Master Language="C#" Inherits="System.Web.Mvc.ViewMasterPage" %>
-<h1>DON'T USE THE MASTER PAGE!</h1>
+<!-- note: this is bad, real bad, on purpose -->
+<h1><blink><font color=red>DON'T USE THE MASTER PAGE!</font></blink></h1>
+<h3>See the home and account "pages" in Orchard.Web for examples of the new hotness.</h3>
 <asp:ContentPlaceHolder ID="TitleContent" runat="server" />
 <asp:ContentPlaceHolder ID="MainContent" runat="server" />

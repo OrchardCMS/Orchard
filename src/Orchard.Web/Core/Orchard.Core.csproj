@@ -145,6 +145,8 @@
     <Content Include="Themes\Views\Admin\Install.aspx" />
     <Content Include="Themes\Views\Shared\document.aspx" />
     <Content Include="Themes\Views\Shared\layout.ascx" />
+    <Content Include="Themes\Views\Shared\user.ascx" />
+    <Content Include="Themes\Views\Shared\menu.ascx" />
     <Content Include="Themes\Views\Web.config" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

@@ -84,7 +84,7 @@ namespace Orchard.Environment {
 
 
         private static string ModelsLocationFormat(ExtensionDescriptor descriptor) {
-            return Path.Combine(Path.Combine(descriptor.Location, descriptor.Name), "Views/Models/{0}.ascx");
+            return Path.Combine(Path.Combine(descriptor.Location, descriptor.Name), "Views/Shared/{0}.ascx");
         }
     }
 }

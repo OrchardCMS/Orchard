@@ -57,7 +57,7 @@ namespace Orchard.Controllers {
         public ActionResult Register() {
             ViewData["PasswordLength"] = MinPasswordLength;
 
-            return View();
+            return View(new BaseViewModel());
         }
 
         [AcceptVerbs(HttpVerbs.Post)]
@@ -79,14 +79,14 @@ namespace Orchard.Controllers {
             }
 
             // If we got this far, something failed, redisplay form
-            return View();
+            return View(new BaseViewModel());
         }
 
         [Authorize]
         public ActionResult ChangePassword() {
             ViewData["PasswordLength"] = MinPasswordLength;
 
-            return View();
+            return View(new BaseViewModel());
         }
 
         [Authorize]
@@ -110,17 +110,17 @@ namespace Orchard.Controllers {
                 else {
                     ModelState.AddModelError("_FORM",
                                              "The current password is incorrect or the new password is invalid.");
-                    return View();
+                    return View(new BaseViewModel());
                 }
             }
             catch {
                 ModelState.AddModelError("_FORM", "The current password is incorrect or the new password is invalid.");
-                return View();
+                return View(new BaseViewModel());
             }
         }
 
         public ActionResult ChangePasswordSuccess() {
-            return View();
+            return View(new BaseViewModel());
         }
 
         protected override void OnActionExecuting(ActionExecutingContext filterContext) {

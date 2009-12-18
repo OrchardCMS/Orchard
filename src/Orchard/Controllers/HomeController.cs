@@ -12,7 +12,7 @@ namespace Orchard.Controllers {
 
         public ActionResult About() {
 
-            return View();
+            return View(new BaseViewModel());
         }
     }
 }
