@@ -47,16 +47,17 @@ namespace Orchard.Mvc.ViewEngines {
             }
 
             var view = new LayoutView(new[] {
-                                                bodyView.View,
-                                                layoutView.View,
-                                                documentView.View,
+                                                bodyView,
+                                                layoutView,
+                                                documentView,
                                             });
 
             return new ViewEngineResult(view, this);
         }
 
         public void ReleaseView(ControllerContext controllerContext, IView view) {
-
+            var layoutView = (LayoutView) view;
+            layoutView.ReleaseViews(controllerContext);
         }
     }
 

@@ -1,8 +1,10 @@
 ﻿<%@ Control Language="C#" Inherits="System.Web.Mvc.ViewUserControl<string>" %>
-<%@ Import Namespace="System.Web.Mvc.Html" %>
 <%@ Import Namespace="Orchard.Mvc.Html" %>
+<%@ Import Namespace="System.Web.Mvc.Html" %>
 <% Html.RegisterScript("tiny_mce.js"); %>
 <%=Html.TextArea("", Model, 25, 80, new { @class = "html" }) %>
+
+<%using (this.Capture("end-of-page-scripts")) {%>
 <script type="text/javascript">
     tinyMCE.init({
         theme: "advanced",
@@ -16,3 +18,4 @@
         theme_advanced_buttons3: ""
     });
 </script>
+<%}%>

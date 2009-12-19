@@ -1,5 +1,8 @@
 ﻿using System;
+using System.IO;
+using System.Web;
 using System.Web.Mvc;
+using System.Web.UI;
 using Orchard.Mvc.ViewEngines;
 using Orchard.Mvc.ViewModels;
 using Orchard.UI.PageTitle;
@@ -9,14 +12,14 @@ using Orchard.UI.Zones;
 namespace Orchard.Mvc.Html {
     public static class LayoutExtensions {
         public static void RenderBody(this HtmlHelper html) {
-            OrchardLayoutContext layoutContext = OrchardLayoutContext.From(html.ViewContext);
-            html.ViewContext.HttpContext.Response.Output.Write(layoutContext.BodyContent);
+            LayoutViewContext layoutViewContext = LayoutViewContext.From(html.ViewContext);
+            html.ViewContext.HttpContext.Response.Output.Write(layoutViewContext.BodyContent);
         }
 
         public static MvcHtmlString Body(this HtmlHelper html) {
-            OrchardLayoutContext layoutContext = OrchardLayoutContext.From(html.ViewContext);
+            LayoutViewContext layoutViewContext = LayoutViewContext.From(html.ViewContext);
 
-            return MvcHtmlString.Create(layoutContext.BodyContent);
+            return MvcHtmlString.Create(layoutViewContext.BodyContent);
         }
 
         public static void AddTitleParts(this HtmlHelper html, params string[] titleParts) {
@@ -67,8 +70,26 @@ namespace Orchard.Mvc.Html {
             html.Resolve<IResourceManager>().RegisterFootScript(fileName, html);
         }
 
-        public static ContentCaptureBlock RegisterInlineScript(this HtmlHelper html, string name) {
-            return html.CaptureContent("inlinescript:" + name);
+
+        public static IDisposable Capture(this ViewUserControl control, string name) {
+            var writer = LayoutViewContext.From(control.ViewContext).GetNamedContent(name);
+            return new HtmlTextWriterScope(control.Writer, writer);
         }
+
+        class HtmlTextWriterScope : IDisposable {
+            private readonly HtmlTextWriter _context;
+            private readonly TextWriter _writer;
+
+            public HtmlTextWriterScope(HtmlTextWriter context, TextWriter writer) {
+                _context = context;
+                _writer = _context.InnerWriter;
+                _context.InnerWriter = writer;
+            }
+
+            public void Dispose() {
+                _context.InnerWriter = _writer;
+            }
+        }
+
     }
 }

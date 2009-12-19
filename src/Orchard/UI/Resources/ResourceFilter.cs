@@ -1,5 +1,7 @@
+using System.IO;
 using System.Web.Mvc;
 using Orchard.Mvc.Filters;
+using Orchard.Mvc.ViewEngines;
 using Orchard.Mvc.ViewModels;
 
 namespace Orchard.UI.Resources {
@@ -11,14 +13,21 @@ namespace Orchard.UI.Resources {
         }
 
         public void OnResultExecuting(ResultExecutingContext filterContext) {
-            BaseViewModel model = filterContext.Controller.ViewData.Model as BaseViewModel;
-
-            if (model != null) {
-                model.Zones.AddAction("head:metas", html => html.ViewContext.HttpContext.Response.Output.Write(_resourceManager.GetMetas()));
-                model.Zones.AddAction("head:styles", html => html.ViewContext.HttpContext.Response.Output.Write(_resourceManager.GetStyles()));
-                model.Zones.AddAction("head:scripts", html => html.ViewContext.HttpContext.Response.Output.Write(_resourceManager.GetHeadScripts()));
-                model.Zones.AddAction("body:after", html => html.ViewContext.HttpContext.Response.Output.Write(_resourceManager.GetFootScripts()));
+            var model = filterContext.Controller.ViewData.Model as BaseViewModel;
+            if (model == null) {
+                return;
             }
+
+            model.Zones.AddAction("head:metas", html => html.ViewContext.HttpContext.Response.Output.Write(_resourceManager.GetMetas()));
+            model.Zones.AddAction("head:styles", html => html.ViewContext.HttpContext.Response.Output.Write(_resourceManager.GetStyles()));
+            model.Zones.AddAction("head:scripts", html => html.ViewContext.HttpContext.Response.Output.Write(_resourceManager.GetHeadScripts()));
+            model.Zones.AddAction("body:after", html => {
+                html.ViewContext.HttpContext.Response.Output.Write(_resourceManager.GetFootScripts());
+                TextWriter captured;
+                if (LayoutViewContext.From(html.ViewContext).Contents.TryGetValue("end-of-page-scripts", out captured)) {
+                    html.ViewContext.HttpContext.Response.Output.Write(captured);
+                }
+            });
         }
 
         public void OnResultExecuted(ResultExecutedContext filterContext) {
