@@ -6,10 +6,10 @@ using Orchard.Models.ViewModels;
 namespace Orchard.UI.Zones {
     public class ZoneCollection : Dictionary<string, ZoneEntry> {
         public void AddRenderPartial(string location, string templateName, object model) {
-
+            AddZoneItem(location, new RenderPartialZoneItem() { Model = model, TemplateName = templateName });
         }
         public void AddDisplayItem(string location, ItemDisplayModel displayModel) {
-
+            AddZoneItem(location, new ItemDisplayZoneItem { DisplayModel = displayModel });
         }
         public void AddAction(string location, Action<HtmlHelper> action) {
             AddZoneItem(location, new DelegateZoneItem { Action = action });
