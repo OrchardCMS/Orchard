@@ -4,7 +4,7 @@ using Orchard.Models.ViewModels;
 using Orchard.Mvc.ViewModels;
 
 namespace Orchard.Blogs.ViewModels {
-    public class BlogsForAdminViewModel : AdminViewModel {
+    public class AdminBlogsViewModel : AdminViewModel {
         public IEnumerable<ItemDisplayModel<Blog>> Blogs { get; set; }
     }
 }

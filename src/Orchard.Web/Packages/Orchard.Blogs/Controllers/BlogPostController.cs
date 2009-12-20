@@ -4,7 +4,6 @@ using Orchard.Blogs.Extensions;
 using Orchard.Blogs.Models;
 using Orchard.Blogs.Services;
 using Orchard.Blogs.ViewModels;
-using Orchard.Core.Common.Models;
 using Orchard.Data;
 using Orchard.Localization;
 using Orchard.Models;
@@ -23,9 +22,12 @@ namespace Orchard.Blogs.Controllers {
         private readonly IBlogService _blogService;
         private readonly IBlogPostService _blogPostService;
 
-        public BlogPostController(ISessionLocator sessionLocator, IContentManager contentManager, 
-                                  IAuthorizer authorizer, INotifier notifier, 
-                                  IBlogService blogService, IBlogPostService blogPostService) {
+        public BlogPostController(
+            ISessionLocator sessionLocator, IContentManager contentManager, 
+            IAuthorizer authorizer,
+            INotifier notifier, 
+            IBlogService blogService,
+            IBlogPostService blogPostService) {
             _sessionLocator = sessionLocator;
             _contentManager = contentManager;
             _authorizer = authorizer;

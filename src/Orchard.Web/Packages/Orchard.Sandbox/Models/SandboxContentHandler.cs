@@ -8,7 +8,6 @@ using Orchard.Models.ViewModels;
 
 namespace Orchard.Sandbox.Models {
     public class SandboxContentHandler : ContentHandler {
-
         public override IEnumerable<ContentType> GetContentTypes() {
             return new[] { SandboxPage.ContentType };
         }
@@ -23,7 +22,7 @@ namespace Orchard.Sandbox.Models {
             Filters.Add(new ActivatingFilter<RoutableAspect>(SandboxPage.ContentType.Name));
             Filters.Add(new ActivatingFilter<BodyAspect>(SandboxPage.ContentType.Name));
             Filters.Add(new StorageFilter<SandboxPageRecord>(pageRepository) { AutomaticallyCreateMissingRecord = true });
-            Filters.Add(new ContentItemTemplates<SandboxPage>("SandboxPage", "Summary"));
+            Filters.Add(new ContentItemTemplates<SandboxPage>("Summary"));
 
             OnGetItemMetadata<SandboxPage>((context, page) => {
                 context.Metadata.DisplayText = page.Record.Name;

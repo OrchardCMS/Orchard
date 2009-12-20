@@ -7,7 +7,7 @@ namespace Orchard.Blogs.Extensions {
         }
 
         public static string BlogsForAdmin(this UrlHelper urlHelper) {
-            return urlHelper.Action("ListForAdmin", "Blog", new {area = "Orchard.Blogs"});
+            return urlHelper.Action("List", "BlogAdmin", new {area = "Orchard.Blogs"});
         }
 
         public static string Blog(this UrlHelper urlHelper, string blogSlug) {
@@ -15,7 +15,7 @@ namespace Orchard.Blogs.Extensions {
         }
 
         public static string BlogForAdmin(this UrlHelper urlHelper, string blogSlug) {
-            return urlHelper.Action("ItemForAdmin", "Blog", new {blogSlug, area = "Orchard.Blogs"});
+            return urlHelper.Action("Item", "BlogAdmin", new {blogSlug, area = "Orchard.Blogs"});
         }
 
         public static string BlogCreate(this UrlHelper urlHelper) {

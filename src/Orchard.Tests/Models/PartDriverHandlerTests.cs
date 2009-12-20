@@ -41,7 +41,7 @@ namespace Orchard.Tests.Models {
             });
             var contentHandler = _container.Resolve<IContentHandler>();
 
-            var ctx = new BuildDisplayModelContext(new ItemDisplayModel(new ContentItem()), null, null);
+            var ctx = new BuildDisplayModelContext(new ItemDisplayModel(new ContentItem()), null, null, null);
 
             driver1.Verify(x => x.BuildDisplayModel(ctx), Times.Never());
             contentHandler.BuildDisplayModel(ctx);
@@ -58,7 +58,7 @@ namespace Orchard.Tests.Models {
             var item = new ContentItem();
             item.Weld(new StubPart { Foo = new[] { "a", "b", "c" } });
 
-            var ctx = new BuildDisplayModelContext(new ItemDisplayModel(item), "", "");
+            var ctx = new BuildDisplayModelContext(new ItemDisplayModel(item), "", "", null);
             Assert.That(ctx.DisplayModel.Displays.Count(), Is.EqualTo(0));
             contentHandler.BuildDisplayModel(ctx);
             Assert.That(ctx.DisplayModel.Displays.Count(), Is.EqualTo(1));

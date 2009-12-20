@@ -24,7 +24,7 @@ namespace Orchard.Blogs.Models {
             Filters.Add(new ActivatingFilter<RoutableAspect>("blogpost"));
             Filters.Add(new ActivatingFilter<BodyAspect>("blogpost"));
             Filters.Add(new StorageFilter<BlogPostRecord>(repository));
-            Filters.Add(new ContentItemTemplates<BlogPost>("BlogPost", "Detail", "Summary", "SummaryAdmin"));
+            Filters.Add(new ContentItemTemplates<BlogPost>("Detail", "Summary"));
 
             OnCreated<BlogPost>((context, bp) => bp.Blog.PostCount++);
 
@@ -59,15 +59,10 @@ namespace Orchard.Blogs.Models {
                 switch(context.DisplayType) {
                     case "Detail":
                         context.AddDisplay(
-                            new TemplateViewModel(posts.Select(bp => contentManager.BuildDisplayModel(bp, null, "Summary"))) {
-                                TemplateName = "BlogPost/List",
-                                ZoneName = "body"
-                            });
-                        break;
-                    case "DetailAdmin":
-                        context.AddDisplay(
-                            new TemplateViewModel(posts.Select(bp => contentManager.BuildDisplayModel(bp, null, "SummaryAdmin"))) {
-                                TemplateName = "BlogPost/ListAdmin",
+                            //TODO: (erikpo) Need to make templatePath be more convention based so if my controller name has "Admin" in it then "Admin/{type}" is assumed
+                            new TemplateViewModel(posts.Select(bp => contentManager.BuildDisplayModel(bp, null, "Summary", "Admin/BlogPost")))
+                            {
+                                TemplateName = "Admin/BlogPost/List",
                                 ZoneName = "body"
                             });
                         break;

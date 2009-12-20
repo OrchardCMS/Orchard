@@ -21,9 +21,10 @@ namespace Orchard.Blogs.Controllers {
         private readonly INotifier _notifier;
         private readonly IBlogService _blogService;
 
-        public BlogController(ISessionLocator sessionLocator, IContentManager contentManager,
-                              IAuthorizer authorizer, INotifier notifier,
-                              IBlogService blogService) {
+        public BlogController(
+            ISessionLocator sessionLocator, IContentManager contentManager,
+            IAuthorizer authorizer, INotifier notifier,
+            IBlogService blogService) {
             _sessionLocator = sessionLocator;
             _contentManager = contentManager;
             _authorizer = authorizer;
@@ -42,14 +43,6 @@ namespace Orchard.Blogs.Controllers {
             return View(model);
         }
 
-        public ActionResult ListForAdmin() {
-            var model = new BlogsForAdminViewModel {
-                Blogs = _blogService.Get().Select(b => _contentManager.BuildDisplayModel(b, null, "SummaryAdmin"))
-            };
-
-            return View(model);
-        }
-
         //TODO: (erikpo) Should move the slug parameter and get call and null check up into a model binder
         public ActionResult Item(string blogSlug) {
             Blog blog = _blogService.Get(blogSlug);
@@ -59,20 +52,6 @@ namespace Orchard.Blogs.Controllers {
 
             var model = new BlogViewModel {
                 Blog = _contentManager.BuildDisplayModel(blog, null, "Detail")
-            };
-
-            return View(model);
-        }
-
-        //TODO: (erikpo) Should move the slug parameter and get call and null check up into a model binder
-        public ActionResult ItemForAdmin(string blogSlug) {
-            Blog blog = _blogService.Get(blogSlug);
-
-            if (blog == null)
-                return new NotFoundResult();
-
-            var model = new BlogForAdminViewModel {
-                Blog = _contentManager.BuildDisplayModel(blog, null, "DetailAdmin")
             };
 
             return View(model);

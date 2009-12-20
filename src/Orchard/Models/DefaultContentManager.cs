@@ -137,8 +137,12 @@ namespace Orchard.Models {
         }
 
         public ItemDisplayModel<TContentPart> BuildDisplayModel<TContentPart>(TContentPart content, string groupName, string displayType) where TContentPart : IContent {
-            var itemView = new ItemDisplayModel<TContentPart> {Item = content, Displays = Enumerable.Empty<TemplateViewModel>()};
-            var context = new BuildDisplayModelContext(itemView, groupName, displayType);
+            return BuildDisplayModel(content, groupName, displayType, null);
+        }
+
+        public ItemDisplayModel<TContent> BuildDisplayModel<TContent>(TContent content, string groupName, string displayType, string templatePath) where TContent : IContent {
+            var itemView = new ItemDisplayModel<TContent> { Item = content, Displays = Enumerable.Empty<TemplateViewModel>() };
+            var context = new BuildDisplayModelContext(itemView, groupName, displayType, templatePath);
             foreach (var handler in Handlers) {
                 handler.BuildDisplayModel(context);
             }
@@ -146,9 +150,13 @@ namespace Orchard.Models {
             return itemView;
         }
 
-        public ItemEditorModel<TContentPart> BuildEditorModel<TContentPart>(TContentPart content, string groupName) where TContentPart : IContent {
-            var itemView = new ItemEditorModel<TContentPart> { Item = content, Editors = Enumerable.Empty<TemplateViewModel>() };
-            var context = new BuildEditorModelContext(itemView, groupName);
+        public ItemEditorModel<TContent> BuildEditorModel<TContent>(TContent content, string groupName) where TContent : IContent {
+            return BuildEditorModel(content, groupName, null);
+        }
+
+        public ItemEditorModel<TContent> BuildEditorModel<TContent>(TContent content, string groupName, string templatePath) where TContent : IContent {
+            var itemView = new ItemEditorModel<TContent> { Item = content, Editors = Enumerable.Empty<TemplateViewModel>() };
+            var context = new BuildEditorModelContext(itemView, groupName, templatePath);
             foreach (var handler in Handlers) {
                 handler.BuildEditorModel(context);
             }
@@ -156,10 +164,13 @@ namespace Orchard.Models {
             return itemView;
         }
 
-        public ItemEditorModel<TContentPart> UpdateEditorModel<TContentPart>(TContentPart content, string groupName, IUpdateModel updater) where TContentPart : IContent {
-            var itemView = new ItemEditorModel<TContentPart> { Item = content, Editors = Enumerable.Empty<TemplateViewModel>() };
+        public ItemEditorModel<TContent> UpdateEditorModel<TContent>(TContent content, string groupName, IUpdateModel updater) where TContent : IContent {
+            return UpdateEditorModel(content, groupName, updater, null);
+        }
 
-            var context = new UpdateEditorModelContext(itemView, groupName, updater);
+        public ItemEditorModel<TContent> UpdateEditorModel<TContent>(TContent content, string groupName, IUpdateModel updater, string templatePath) where TContent : IContent {
+            var itemView = new ItemEditorModel<TContent> { Item = content, Editors = Enumerable.Empty<TemplateViewModel>() };
+            var context = new UpdateEditorModelContext(itemView, groupName, updater, templatePath);
             foreach (var handler in Handlers) {
                 handler.UpdateEditorModel(context);
             }

@@ -66,6 +66,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AdminMenu.cs" />
+    <Compile Include="Controllers\BlogAdminController.cs" />
     <Compile Include="Controllers\BlogPostController.cs" />
     <Compile Include="Extensions\HtmlHelperExtensions.cs" />
     <Compile Include="Extensions\UriExtensions.cs" />
@@ -85,7 +86,7 @@
     <Compile Include="Services\BlogPostService.cs" />
     <Compile Include="Services\IBlogPostService.cs" />
     <Compile Include="Services\IBlogService.cs" />
-    <Compile Include="ViewModels\BlogsForAdminViewModel.cs" />
+    <Compile Include="ViewModels\AdminBlogsViewModel.cs" />
     <Compile Include="ViewModels\BlogViewModel.cs" />
     <Compile Include="ViewModels\BlogPostViewModel.cs" />
     <Compile Include="ViewModels\BlogPostEditViewModel.cs" />
@@ -99,11 +100,11 @@
     <Content Include="Package.txt" />
     <Content Include="Views\BlogPost\Create.ascx" />
     <Content Include="Views\BlogPost\Edit.ascx" />
-    <Content Include="Views\Shared\DisplayTemplates\Blog\DetailAdmin.ascx" />
-    <Content Include="Views\Blog\ItemForAdmin.ascx" />
-    <Content Include="Views\Shared\DisplayTemplates\Blog\SummaryAdmin.ascx" />
+    <Content Include="Views\Shared\DisplayTemplates\Admin\Blog\Detail.ascx" />
+    <Content Include="Views\BlogAdmin\Item.ascx" />
+    <Content Include="Views\Shared\DisplayTemplates\Admin\Blog\Summary.ascx" />
     <Content Include="Views\Blog\List.ascx" />
-    <Content Include="Views\Blog\ListForAdmin.ascx" />
+    <Content Include="Views\BlogAdmin\List.ascx" />
     <Content Include="Views\Shared\DisplayTemplates\BlogPost\Detail.ascx" />
     <Content Include="Views\Shared\DisplayTemplates\BlogPost\Summary.ascx" />
     <Content Include="Views\Shared\DisplayTemplates\Blog\Detail.ascx" />
@@ -114,8 +115,8 @@
     <Content Include="Views\Blog\Create.ascx" />
     <Content Include="Views\Blog\Edit.ascx" />
     <Content Include="Views\Blog\Item.ascx" />
-    <Content Include="Views\Shared\DisplayTemplates\BlogPost\SummaryAdmin.ascx" />
-    <Content Include="Views\Shared\DisplayTemplates\BlogPost\ListAdmin.ascx" />
+    <Content Include="Views\Shared\DisplayTemplates\Admin\BlogPost\Summary.ascx" />
+    <Content Include="Views\Shared\DisplayTemplates\Admin\BlogPost\List.ascx" />
     <Content Include="Views\Shared\EditorTemplates\Blog\Fields.ascx" />
     <Content Include="Views\Shared\EditorTemplates\Blog\Detail.ascx" />
     <Content Include="Views\Shared\EditorTemplates\BlogPost\Detail.ascx" />

@@ -2,11 +2,11 @@ using Orchard.Models.ViewModels;
 
 namespace Orchard.Models.Driver {
     public class UpdateEditorModelContext : BuildEditorModelContext {
-        public UpdateEditorModelContext(ItemEditorModel editorModel, string groupName, IUpdateModel updater)
-            : base(editorModel, groupName) {
+        public UpdateEditorModelContext(ItemEditorModel editorModel, string groupName, IUpdateModel updater, string templatePath)
+            : base(editorModel, groupName, templatePath) {
             Updater = updater;
         }
 
-        public IUpdateModel Updater { get; set; }
+        public IUpdateModel Updater { get; private set; }
     }
 }
