@@ -1,4 +1,4 @@
-﻿using Orchard.Models;
+﻿using Orchard.ContentManagement;
 using Orchard.Security;
 
 namespace Orchard.Users.Models {

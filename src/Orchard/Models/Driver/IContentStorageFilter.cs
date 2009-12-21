@@ -1,4 +1,4 @@
-namespace Orchard.Models.Driver {
+namespace Orchard.ContentManagement.Handlers {
     public interface IContentStorageFilter : IContentFilter {
         void Activated(ActivatedContentContext context);
         void Creating(CreateContentContext context);

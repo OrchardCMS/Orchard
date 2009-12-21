@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using JetBrains.Annotations;
 using Orchard.Logging;
-using Orchard.Models;
+using Orchard.ContentManagement;
 using Orchard.Roles.Models.NoRecord;
 using Orchard.Roles.Records;
 using Orchard.Security;

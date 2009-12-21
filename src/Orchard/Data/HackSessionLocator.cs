@@ -10,7 +10,7 @@ using FluentNHibernate.Cfg.Db;
 using NHibernate;
 using NHibernate.Tool.hbm2ddl;
 using Orchard.Environment;
-using Orchard.Models.Records;
+using Orchard.ContentManagement.Records;
 
 namespace Orchard.Data {
     public class HackSessionLocator : ISessionLocator, IDisposable {

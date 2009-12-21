@@ -1,5 +1,5 @@
-﻿using Orchard.Models.Driver;
-using Orchard.Models.ViewModels;
+﻿using Orchard.ContentManagement.Handlers;
+using Orchard.ContentManagement.ViewModels;
 
 namespace Orchard.DevTools.Models {
     public class DebugLinkHandler : ContentHandler {

@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using Orchard.Models.ViewModels;
+using Orchard.ContentManagement.ViewModels;
 using Orchard.Mvc.ViewModels;
 using Orchard.Sandbox.Models;
 

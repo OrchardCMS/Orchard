@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
-using Orchard.Models;
-using Orchard.Models.ViewModels;
+using Orchard.ContentManagement;
+using Orchard.ContentManagement.ViewModels;
 using Orchard.Mvc.ViewModels;
 
 namespace Orchard.Tags.ViewModels {

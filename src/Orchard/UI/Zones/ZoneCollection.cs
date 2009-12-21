@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Web.Mvc;
-using Orchard.Models.ViewModels;
+using Orchard.ContentManagement.ViewModels;
 
 namespace Orchard.UI.Zones {
     public class ZoneCollection : Dictionary<string, ZoneEntry> {

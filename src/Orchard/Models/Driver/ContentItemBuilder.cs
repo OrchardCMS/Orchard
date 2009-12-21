@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Orchard.Models.Driver {
+namespace Orchard.ContentManagement.Handlers {
     public class ContentItemBuilder {
         private readonly ContentItem _item;
 

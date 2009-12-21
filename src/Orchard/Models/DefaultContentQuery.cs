@@ -6,10 +6,10 @@ using NHibernate;
 using NHibernate.Criterion;
 using NHibernate.Impl;
 using NHibernate.Linq;
+using Orchard.ContentManagement.Records;
 using Orchard.Data;
-using Orchard.Models.Records;
 
-namespace Orchard.Models {
+namespace Orchard.ContentManagement {
     public class DefaultContentQuery : IContentQuery {
         private readonly ISessionLocator _sessionLocator;
         private ISession _session;

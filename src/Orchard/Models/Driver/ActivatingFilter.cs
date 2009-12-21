@@ -1,7 +1,7 @@
 using System;
 using System.Linq;
 
-namespace Orchard.Models.Driver {
+namespace Orchard.ContentManagement.Handlers {
     public class ActivatingFilter<TPart> : IContentActivatingFilter where TPart : ContentPart, new() {
         private readonly Func<string, bool> _predicate;
 

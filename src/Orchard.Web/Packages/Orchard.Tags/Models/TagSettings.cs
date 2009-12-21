@@ -1,7 +1,7 @@
 ﻿using Orchard.Data;
-using Orchard.Models;
-using Orchard.Models.Driver;
-using Orchard.Models.Records;
+using Orchard.ContentManagement;
+using Orchard.ContentManagement.Handlers;
+using Orchard.ContentManagement.Records;
 
 namespace Orchard.Tags.Models {
     public class TagSettings : ContentPart<TagSettingsRecord> {

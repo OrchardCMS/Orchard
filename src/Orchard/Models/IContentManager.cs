@@ -1,8 +1,8 @@
 using System.Collections.Generic;
-using Orchard.Models.Driver;
-using Orchard.Models.ViewModels;
+using Orchard.ContentManagement.Handlers;
+using Orchard.ContentManagement.ViewModels;
 
-namespace Orchard.Models {
+namespace Orchard.ContentManagement {
     public interface IContentManager : IDependency {
         IEnumerable<ContentType> GetContentTypes();
 

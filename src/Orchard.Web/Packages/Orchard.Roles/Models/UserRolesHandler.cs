@@ -1,8 +1,8 @@
 ﻿using System.Linq;
 using Orchard.Data;
-using Orchard.Models;
-using Orchard.Models.Driver;
-using Orchard.Models.ViewModels;
+using Orchard.ContentManagement;
+using Orchard.ContentManagement.Handlers;
+using Orchard.ContentManagement.ViewModels;
 using Orchard.Roles.Models.NoRecord;
 using Orchard.Roles.Records;
 using Orchard.Roles.Services;

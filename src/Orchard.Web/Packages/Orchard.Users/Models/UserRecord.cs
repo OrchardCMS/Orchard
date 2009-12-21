@@ -1,5 +1,5 @@
 using System.Web.Security;
-using Orchard.Models.Records;
+using Orchard.ContentManagement.Records;
 
 namespace Orchard.Users.Models {
     public class UserRecord : ContentPartRecord {

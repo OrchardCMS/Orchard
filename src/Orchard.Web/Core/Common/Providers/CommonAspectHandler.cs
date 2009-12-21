@@ -4,10 +4,10 @@ using Orchard.Core.Common.Records;
 using Orchard.Core.Common.ViewModels;
 using Orchard.Data;
 using Orchard.Localization;
-using Orchard.Models;
-using Orchard.Models.Aspects;
-using Orchard.Models.Driver;
-using Orchard.Models.ViewModels;
+using Orchard.ContentManagement;
+using Orchard.ContentManagement.Aspects;
+using Orchard.ContentManagement.Handlers;
+using Orchard.ContentManagement.ViewModels;
 using Orchard.Security;
 using Orchard.Services;
 

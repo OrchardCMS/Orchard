@@ -1,9 +1,9 @@
 using System;
 using System.Linq;
 using System.Web.Mvc;
-using Orchard.Models.ViewModels;
+using Orchard.ContentManagement.ViewModels;
 
-namespace Orchard.Models.Driver {
+namespace Orchard.ContentManagement.Handlers {
     public class ContentItemTemplates<TContent> : TemplateFilterBase<TContent> where TContent : class, IContent {
         private readonly string _templateName;
         // todo: (heskew) use _prefix?

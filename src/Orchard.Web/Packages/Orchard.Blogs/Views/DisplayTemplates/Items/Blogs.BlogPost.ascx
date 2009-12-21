@@ -1,6 +1,6 @@
 ﻿<%@ Control Language="C#" Inherits="System.Web.Mvc.ViewUserControl<ItemDisplayModel<BlogPost>>" %>
 <%@ Import Namespace="Orchard.Mvc.Html"%>
-<%@ Import Namespace="Orchard.Models.ViewModels"%>
+<%@ Import Namespace="Orchard.ContentManagement.ViewModels"%>
 <%@ Import Namespace="Orchard.Blogs.Extensions"%>
 <%@ Import Namespace="Orchard.Blogs.Models"%>
 <% Html.Title(Model.Item.Title); %>

@@ -1,5 +1,5 @@
 ﻿using System;
-using Orchard.Models.Records;
+using Orchard.ContentManagement.Records;
 
 namespace Orchard.Core.Common.Records {
     public class CommonRecord : ContentPartRecord {

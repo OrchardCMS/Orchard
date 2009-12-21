@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using NUnit.Framework;
-using Orchard.Models;
-using Orchard.Models.Driver;
+using Orchard.ContentManagement;
+using Orchard.ContentManagement.Handlers;
 using Orchard.Tests.Models.Stubs;
 
 namespace Orchard.Tests.Models.Drivers {

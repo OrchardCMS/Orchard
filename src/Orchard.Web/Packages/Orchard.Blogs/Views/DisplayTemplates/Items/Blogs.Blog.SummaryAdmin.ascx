@@ -1,5 +1,5 @@
 ﻿<%@ Control Language="C#" Inherits="System.Web.Mvc.ViewUserControl<ItemDisplayModel<Blog>>" %>
-<%@ Import Namespace="Orchard.Models.ViewModels"%>
+<%@ Import Namespace="Orchard.ContentManagement.ViewModels"%>
 <%@ Import Namespace="Orchard.Blogs.Extensions"%>
 <%@ Import Namespace="Orchard.Blogs.Models"%>
 <h3><a href="<%=Url.BlogForAdmin(Model.Item.Slug) %>"><%=Html.Encode(Model.Item.Name) %></a></h3>

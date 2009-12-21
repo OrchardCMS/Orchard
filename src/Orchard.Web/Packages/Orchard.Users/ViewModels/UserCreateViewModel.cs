@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using Orchard.Models.ViewModels;
+using Orchard.ContentManagement.ViewModels;
 using Orchard.Mvc.ViewModels;
 using Orchard.Security;
 using Orchard.Users.Models;

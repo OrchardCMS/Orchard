@@ -3,7 +3,7 @@ using System.Linq;
 using FluentNHibernate.Automapping;
 using FluentNHibernate.Automapping.Alterations;
 
-namespace Orchard.Models.Records {
+namespace Orchard.ContentManagement.Records {
     public class ContentPartRecordAlteration : IAutoMappingAlteration {
         public void Alter(AutoPersistenceModel model) {
 

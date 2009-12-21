@@ -8,9 +8,9 @@ using NUnit.Framework;
 using Orchard.Core.Common.Models;
 using Orchard.Core.Common.Providers;
 using Orchard.Core.Common.Records;
-using Orchard.Models;
-using Orchard.Models.Driver;
-using Orchard.Models.Records;
+using Orchard.ContentManagement;
+using Orchard.ContentManagement.Handlers;
+using Orchard.ContentManagement.Records;
 using Orchard.Security;
 using Orchard.Tests.Packages;
 

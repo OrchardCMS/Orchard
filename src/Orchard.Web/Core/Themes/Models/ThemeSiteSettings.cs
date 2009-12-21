@@ -1,5 +1,5 @@
 ﻿using Orchard.Core.Themes.Records;
-using Orchard.Models;
+using Orchard.ContentManagement;
 
 namespace Orchard.Core.Themes.Models {
     public class ThemeSiteSettings : ContentPart<ThemeSiteSettingsRecord> {

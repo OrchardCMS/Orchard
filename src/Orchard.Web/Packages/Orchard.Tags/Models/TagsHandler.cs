@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using Orchard.Data;
-using Orchard.Models;
-using Orchard.Models.Driver;
-using Orchard.Models.ViewModels;
+using Orchard.ContentManagement;
+using Orchard.ContentManagement.Handlers;
+using Orchard.ContentManagement.ViewModels;
 using Orchard.Tags.Helpers;
 using Orchard.Tags.Services;
 

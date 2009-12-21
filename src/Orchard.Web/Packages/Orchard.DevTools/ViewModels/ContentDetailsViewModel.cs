@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
-using Orchard.Models;
-using Orchard.Models.Records;
-using Orchard.Models.ViewModels;
+using Orchard.ContentManagement;
+using Orchard.ContentManagement.Records;
+using Orchard.ContentManagement.ViewModels;
 using Orchard.Mvc.ViewModels;
 
 namespace Orchard.DevTools.ViewModels {

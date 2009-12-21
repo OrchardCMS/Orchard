@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Orchard.Models.Records;
+using Orchard.ContentManagement.Records;
 
-namespace Orchard.Models {
+namespace Orchard.ContentManagement {
     public class ContentItem : IContent {
         public ContentItem() {
             _parts = new List<ContentPart>();

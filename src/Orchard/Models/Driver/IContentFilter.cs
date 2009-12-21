@@ -1,4 +1,4 @@
-namespace Orchard.Models.Driver {
+namespace Orchard.ContentManagement.Handlers {
     public interface IContentFilter {
     }
 }

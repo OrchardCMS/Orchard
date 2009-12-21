@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Web.Routing;
 
-namespace Orchard.Models {
+namespace Orchard.ContentManagement {
     public class ContentItemMetadata {
         public string DisplayText { get; set; }
         public RouteValueDictionary DisplayRouteValues { get; set; }

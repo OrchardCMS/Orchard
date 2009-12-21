@@ -1,6 +1,6 @@
 ﻿using Orchard.Core.Themes.Records;
 using Orchard.Data;
-using Orchard.Models.Driver;
+using Orchard.ContentManagement.Handlers;
 
 namespace Orchard.Core.Themes.Models {
     public class ThemeSiteSettingsHandler : ContentHandler {

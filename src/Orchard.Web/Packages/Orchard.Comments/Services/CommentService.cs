@@ -4,7 +4,7 @@ using JetBrains.Annotations;
 using Orchard.Comments.Models;
 using Orchard.Data;
 using Orchard.Logging;
-using Orchard.Models;
+using Orchard.ContentManagement;
 using Orchard.Security;
 using Orchard.Settings;
 using Orchard.UI.Notify;

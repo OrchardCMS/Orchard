@@ -3,7 +3,7 @@ using System.Linq;
 using Orchard.Blogs.Models;
 using Orchard.Core.Common.Records;
 using Orchard.Data;
-using Orchard.Models;
+using Orchard.ContentManagement;
 
 namespace Orchard.Blogs.Services {
     public class BlogService : IBlogService {

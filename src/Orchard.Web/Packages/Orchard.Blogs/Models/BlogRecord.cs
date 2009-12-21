@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using Orchard.Data.Conventions;
-using Orchard.Models.Records;
+using Orchard.ContentManagement.Records;
 
 namespace Orchard.Blogs.Models {
     public class BlogRecord : ContentPartRecord {

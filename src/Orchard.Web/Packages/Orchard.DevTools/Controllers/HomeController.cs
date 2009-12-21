@@ -6,8 +6,8 @@ using System.Web.Mvc;
 using System.Web.Mvc.Ajax;
 using Orchard.Data;
 using Orchard.DevTools.ViewModels;
-using Orchard.Models;
-using Orchard.Models.Records;
+using Orchard.ContentManagement;
+using Orchard.ContentManagement.Records;
 using Orchard.Mvc.ViewModels;
 
 namespace Orchard.DevTools.Controllers

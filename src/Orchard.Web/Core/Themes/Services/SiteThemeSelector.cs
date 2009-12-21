@@ -5,7 +5,7 @@ using System.Web;
 using System.Web.Routing;
 using JetBrains.Annotations;
 using Orchard.Core.Themes.Models;
-using Orchard.Models;
+using Orchard.ContentManagement;
 using Orchard.Settings;
 using Orchard.Themes;
 

@@ -1,5 +1,5 @@
 using Orchard.Core.Common.Records;
-using Orchard.Models;
+using Orchard.ContentManagement;
 
 namespace Orchard.Core.Common.Models {
     public class RoutableAspect : ContentPart<RoutableRecord> {

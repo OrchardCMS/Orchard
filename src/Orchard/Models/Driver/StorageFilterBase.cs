@@ -1,4 +1,4 @@
-namespace Orchard.Models.Driver {
+namespace Orchard.ContentManagement.Handlers {
     public abstract class StorageFilterBase<TPart> : IContentStorageFilter where TPart : class, IContent {
 
         protected virtual void Activated(ActivatedContentContext context, TPart instance) { }

@@ -1,4 +1,4 @@
-﻿namespace Orchard.Models.ViewModels {
+﻿namespace Orchard.ContentManagement.ViewModels {
     public class TemplateViewModel {
         public TemplateViewModel(object model)
             : this(model, string.Empty) {

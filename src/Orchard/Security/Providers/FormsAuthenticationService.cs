@@ -2,7 +2,7 @@
 using System.Web;
 using System.Web.Security;
 using Orchard.Logging;
-using Orchard.Models;
+using Orchard.ContentManagement;
 using Orchard.Services;
 
 namespace Orchard.Security.Providers {

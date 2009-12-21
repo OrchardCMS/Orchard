@@ -1,5 +1,5 @@
 using Orchard.Data;
-using Orchard.Models.Driver;
+using Orchard.ContentManagement.Handlers;
 
 namespace Orchard.Comments.Models {
     public class CommentSettingsHandler : ContentHandler {

@@ -1,6 +1,6 @@
 using System.Web.Routing;
 
-namespace Orchard.Models {
+namespace Orchard.ContentManagement {
     //public interface IContentDisplayInfo : IContent {
     //    string DisplayText { get; }
     //    RouteValueDictionary DisplayRouteValues();

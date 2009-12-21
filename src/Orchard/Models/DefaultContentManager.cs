@@ -2,13 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using Autofac;
+using Orchard.ContentManagement.Handlers;
+using Orchard.ContentManagement.Records;
+using Orchard.ContentManagement.ViewModels;
 using Orchard.Data;
-using Orchard.Models.Driver;
-using Orchard.Models.Records;
-using Orchard.Models.ViewModels;
 using Orchard.UI.Navigation;
 
-namespace Orchard.Models {
+namespace Orchard.ContentManagement {
     public class DefaultContentManager : IContentManager {
         private readonly IContext _context;
         private readonly IRepository<ContentItemRecord> _contentItemRepository;

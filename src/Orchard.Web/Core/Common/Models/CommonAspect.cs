@@ -1,8 +1,8 @@
 ﻿using System;
 using Orchard.Core.Common.Records;
 using Orchard.Core.Common.Utilities;
-using Orchard.Models;
-using Orchard.Models.Aspects;
+using Orchard.ContentManagement;
+using Orchard.ContentManagement.Aspects;
 using Orchard.Security;
 
 namespace Orchard.Core.Common.Models {

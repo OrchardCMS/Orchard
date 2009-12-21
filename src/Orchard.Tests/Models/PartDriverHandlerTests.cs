@@ -8,9 +8,9 @@ using Autofac.Builder;
 using Autofac.Modules;
 using Moq;
 using NUnit.Framework;
-using Orchard.Models;
-using Orchard.Models.Driver;
-using Orchard.Models.ViewModels;
+using Orchard.ContentManagement;
+using Orchard.ContentManagement.Handlers;
+using Orchard.ContentManagement.ViewModels;
 
 namespace Orchard.Tests.Models {
     [TestFixture]

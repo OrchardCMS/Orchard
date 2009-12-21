@@ -1,5 +1,5 @@
 using System;
-using Orchard.Models.Records;
+using Orchard.ContentManagement.Records;
 
 namespace Orchard.Blogs.Models {
     public class BlogPostRecord : ContentPartRecord {

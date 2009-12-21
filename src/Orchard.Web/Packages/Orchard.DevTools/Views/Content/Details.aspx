@@ -1,5 +1,5 @@
 <%@ Page Language="C#" Inherits="System.Web.Mvc.ViewPage<Orchard.DevTools.ViewModels.ContentDetailsViewModel>" %>
-<%@ Import Namespace="Orchard.Models"%>
+<%@ Import Namespace="Orchard.ContentManagement"%>
 
 <%@ Import Namespace="System.Reflection" %>
 <%@ Import Namespace="Orchard.Mvc.Html" %>

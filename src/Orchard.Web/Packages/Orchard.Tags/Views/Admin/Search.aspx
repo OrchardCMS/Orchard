@@ -1,5 +1,5 @@
 ﻿<%@ Page Language="C#" Inherits="System.Web.Mvc.ViewPage<TagsAdminSearchViewModel>" %>
-<%@ Import Namespace="Orchard.Models"%>
+<%@ Import Namespace="Orchard.ContentManagement"%>
 <%@ Import Namespace="Orchard.Tags.ViewModels"%>
 <%@ Import Namespace="Orchard.Mvc.Html"%>
 <h2>List of contents tagged with <%=Model.TagName %></h2>

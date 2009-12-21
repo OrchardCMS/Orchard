@@ -1,5 +1,5 @@
 <%@ Page Language="C#" Inherits="System.Web.Mvc.ViewPage<Orchard.Users.ViewModels.UsersIndexViewModel>" %>
-<%@ Import Namespace="Orchard.Models"%>
+<%@ Import Namespace="Orchard.ContentManagement"%>
 <%@ Import Namespace="Orchard.Security" %>
 <%@ Import Namespace="Orchard.Mvc.Html" %>
 <h2>Manage Users</h2>

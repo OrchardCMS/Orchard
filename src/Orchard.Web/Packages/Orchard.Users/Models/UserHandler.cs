@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using Orchard.Data;
-using Orchard.Models;
-using Orchard.Models.Driver;
+using Orchard.ContentManagement;
+using Orchard.ContentManagement.Handlers;
 
 namespace Orchard.Users.Models {
     public class UserHandler : ContentHandler {

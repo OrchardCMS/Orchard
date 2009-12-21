@@ -2,8 +2,8 @@ using Orchard.Core.Common.Models;
 using Orchard.Core.Common.Records;
 using Orchard.Core.Common.ViewModels;
 using Orchard.Data;
-using Orchard.Models.Driver;
-using Orchard.Models.ViewModels;
+using Orchard.ContentManagement.Handlers;
+using Orchard.ContentManagement.ViewModels;
 
 namespace Orchard.Core.Common.Providers {
     public class BodyAspectHandler : ContentHandler {

@@ -1,7 +1,7 @@
-﻿using Orchard.Models.Records;
-using Orchard.Models.ViewModels;
+﻿using Orchard.ContentManagement.Records;
+using Orchard.ContentManagement.ViewModels;
 
-namespace Orchard.Models.Driver {
+namespace Orchard.ContentManagement.Handlers {
     public class TemplateFilterForRecord<TRecord> : TemplateFilterBase<ContentPart<TRecord>> where TRecord : ContentPartRecord, new() {
         private readonly string _prefix;
         private readonly string _templateName;

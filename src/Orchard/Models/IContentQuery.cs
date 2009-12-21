@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
-using Orchard.Models.Records;
+using Orchard.ContentManagement.Records;
 
-namespace Orchard.Models {
+namespace Orchard.ContentManagement {
 
     public interface IContentQuery {
         IContentManager ContentManager { get; }

@@ -1,5 +1,5 @@
 using System.Web.Mvc;
-using Orchard.Models.ViewModels;
+using Orchard.ContentManagement.ViewModels;
 using Orchard.Mvc.Html;
 
 namespace Orchard.UI.Zones {

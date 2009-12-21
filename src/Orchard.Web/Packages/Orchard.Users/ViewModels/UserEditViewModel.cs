@@ -1,7 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.Web.Mvc;
-using Orchard.Models;
-using Orchard.Models.ViewModels;
+using Orchard.ContentManagement;
+using Orchard.ContentManagement.ViewModels;
 using Orchard.Mvc.ViewModels;
 using Orchard.Users.Models;
 

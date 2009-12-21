@@ -5,7 +5,7 @@ using System.Text;
 using System.Web.Security;
 using Orchard.Data;
 using Orchard.Logging;
-using Orchard.Models;
+using Orchard.ContentManagement;
 using Orchard.Security;
 using Orchard.Users.Models;
 

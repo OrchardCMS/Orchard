@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Orchard.Logging;
 
-namespace Orchard.Models.Driver {
+namespace Orchard.ContentManagement.Handlers {
     public abstract class ContentHandler : IContentHandler {
         protected ContentHandler() {
             Filters = new List<IContentFilter>();

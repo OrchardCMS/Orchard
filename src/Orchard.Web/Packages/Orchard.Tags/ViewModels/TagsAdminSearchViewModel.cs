@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using Orchard.Models;
+using Orchard.ContentManagement;
 using Orchard.Mvc.ViewModels;
 
 namespace Orchard.Tags.ViewModels {

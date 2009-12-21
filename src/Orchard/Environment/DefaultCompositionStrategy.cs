@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using Autofac;
-using Orchard.Models;
-using Orchard.Models.Records;
+using Orchard.ContentManagement;
+using Orchard.ContentManagement.Records;
 using Orchard.Extensions;
 
 namespace Orchard.Environment {

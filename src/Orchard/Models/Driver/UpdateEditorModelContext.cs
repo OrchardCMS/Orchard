@@ -1,6 +1,6 @@
-using Orchard.Models.ViewModels;
+using Orchard.ContentManagement.ViewModels;
 
-namespace Orchard.Models.Driver {
+namespace Orchard.ContentManagement.Handlers {
     public class UpdateEditorModelContext : BuildEditorModelContext {
         public UpdateEditorModelContext(ItemEditorModel editorModel, IUpdateModel updater)
             : base(editorModel) {

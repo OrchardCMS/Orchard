@@ -6,9 +6,9 @@ using Autofac.Modules;
 using NHibernate;
 using NUnit.Framework;
 using Orchard.Data;
-using Orchard.Models;
-using Orchard.Models.Driver;
-using Orchard.Models.Records;
+using Orchard.ContentManagement;
+using Orchard.ContentManagement.Handlers;
+using Orchard.ContentManagement.Records;
 using Orchard.Tests.Models.Records;
 using Orchard.Tests.Models.Stubs;
 

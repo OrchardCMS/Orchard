@@ -1,7 +1,7 @@
+using Orchard.ContentManagement.Records;
 using Orchard.Data;
-using Orchard.Models.Records;
 
-namespace Orchard.Models.Driver {
+namespace Orchard.ContentManagement.Handlers {
     public class StorageFilter<TRecord> : StorageFilterBase<ContentPart<TRecord>> where TRecord : ContentPartRecord,new() {
         private readonly IRepository<TRecord> _repository;
 

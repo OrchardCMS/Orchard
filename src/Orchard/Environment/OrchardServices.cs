@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using JetBrains.Annotations;
 using Orchard.Data;
-using Orchard.Models;
+using Orchard.ContentManagement;
 using Orchard.Security;
 using Orchard.UI.Notify;
 

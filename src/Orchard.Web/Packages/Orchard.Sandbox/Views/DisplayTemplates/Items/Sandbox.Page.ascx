@@ -1,7 +1,7 @@
 <%@ Control Language="C#" Inherits="System.Web.Mvc.ViewUserControl<ItemDisplayModel<SandboxPage>>" %>
 <%@ Import Namespace="Orchard.Mvc.Html" %>
 <%@ Import Namespace="Orchard.Sandbox.Models" %>
-<%@ Import Namespace="Orchard.Models.ViewModels" %>
+<%@ Import Namespace="Orchard.ContentManagement.ViewModels" %>
 <div class="item">
     <%=Html.DisplayZone("first")%>
     <div class="title">

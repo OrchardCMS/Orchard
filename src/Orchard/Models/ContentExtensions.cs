@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Orchard.Models.Driver;
-using Orchard.Models.Records;
-using Orchard.Models.ViewModels;
+using Orchard.ContentManagement.Handlers;
+using Orchard.ContentManagement.Records;
+using Orchard.ContentManagement.ViewModels;
 
-namespace Orchard.Models {
+namespace Orchard.ContentManagement {
 
     public static class ContentExtensions {
 

@@ -1,5 +1,5 @@
 ﻿using Orchard.Core.Themes.Records;
-using Orchard.Models;
+using Orchard.ContentManagement;
 using Orchard.Themes;
 
 namespace Orchard.Core.Themes.Models {

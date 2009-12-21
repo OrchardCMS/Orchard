@@ -1,7 +1,7 @@
 using System.Linq;
-using Orchard.Models.ViewModels;
+using Orchard.ContentManagement.ViewModels;
 
-namespace Orchard.Models.Driver {
+namespace Orchard.ContentManagement.Handlers {
     public class BuildEditorModelContext {
         public BuildEditorModelContext(ItemEditorModel editorModel) {
             ContentItem = editorModel.Item;            

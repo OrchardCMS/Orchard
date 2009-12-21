@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
-using Orchard.Models;
+using Orchard.ContentManagement;
 
 namespace Orchard.Comments.Models {
     public class HasComments : ContentPart {

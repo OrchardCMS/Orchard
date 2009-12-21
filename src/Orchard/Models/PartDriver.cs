@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using JetBrains.Annotations;
+using Orchard.ContentManagement.Handlers;
+using Orchard.ContentManagement.ViewModels;
 using Orchard.Logging;
-using Orchard.Models.Driver;
-using Orchard.Models.ViewModels;
 
-namespace Orchard.Models {
+namespace Orchard.ContentManagement {
     public interface IPartDriver : IEvents {
         DriverResult BuildDisplayModel(BuildDisplayModelContext context);
         DriverResult BuildEditorModel(BuildEditorModelContext context);

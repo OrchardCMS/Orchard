@@ -1,6 +1,6 @@
 ﻿using System;
 using Orchard.Core.Settings.Records;
-using Orchard.Models;
+using Orchard.ContentManagement;
 using Orchard.Settings;
 
 namespace Orchard.Core.Settings.Models {

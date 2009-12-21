@@ -1,9 +1,9 @@
 using System.Collections.Generic;
 using Orchard.Core.Common.Models;
 using Orchard.Data;
-using Orchard.Models;
-using Orchard.Models.Driver;
-using Orchard.Models.ViewModels;
+using Orchard.ContentManagement;
+using Orchard.ContentManagement.Handlers;
+using Orchard.ContentManagement.ViewModels;
 
 namespace Orchard.Blogs.Models {
     public class BlogHandler : ContentHandler {

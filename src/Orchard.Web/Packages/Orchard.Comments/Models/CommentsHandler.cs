@@ -1,8 +1,8 @@
 ﻿using System;
 using Orchard.Data;
-using Orchard.Models;
-using Orchard.Models.Driver;
-using Orchard.Models.ViewModels;
+using Orchard.ContentManagement;
+using Orchard.ContentManagement.Handlers;
+using Orchard.ContentManagement.ViewModels;
 using Orchard.Comments.Services;
 
 namespace Orchard.Comments.Models {

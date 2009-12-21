@@ -1,4 +1,4 @@
-using Orchard.Models;
+using Orchard.ContentManagement;
 
 namespace Orchard.Security {
     /// <summary>

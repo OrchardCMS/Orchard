@@ -7,7 +7,7 @@ using JetBrains.Annotations;
 using Orchard.Comments.Models;
 using Orchard.Localization;
 using Orchard.Logging;
-using Orchard.Models;
+using Orchard.ContentManagement;
 using Orchard.Settings;
 using Orchard.UI.Notify;
 using Orchard.Security;

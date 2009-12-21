@@ -1,4 +1,4 @@
-using Orchard.Models.Records;
+using Orchard.ContentManagement.Records;
 
 namespace Orchard.Tests.Models.Records {
     public class DeltaRecord : ContentPartRecord {

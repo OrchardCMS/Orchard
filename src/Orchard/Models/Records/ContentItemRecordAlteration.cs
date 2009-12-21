@@ -9,7 +9,7 @@ using System.Reflection.Emit;
 using FluentNHibernate.Automapping;
 using FluentNHibernate.Automapping.Alterations;
 
-namespace Orchard.Models.Records {
+namespace Orchard.ContentManagement.Records {
     class ContentItemRecordAlteration : IAutoMappingAlteration {
         private readonly IEnumerable<Type> _recordTypes;
 

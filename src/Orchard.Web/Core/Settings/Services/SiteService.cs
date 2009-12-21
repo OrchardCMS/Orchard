@@ -3,7 +3,7 @@ using Orchard.Core.Settings.Models;
 using Orchard.Core.Settings.Records;
 using Orchard.Data;
 using Orchard.Logging;
-using Orchard.Models;
+using Orchard.ContentManagement;
 using Orchard.Settings;
 using System.Web;
 

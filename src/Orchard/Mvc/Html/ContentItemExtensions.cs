@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Web.Mvc;
 using System.Web.Mvc.Html;
-using Orchard.Models;
-using Orchard.Models.ViewModels;
+using Orchard.ContentManagement;
+using Orchard.ContentManagement.ViewModels;
 
 namespace Orchard.Mvc.Html {
     public static class ContentItemExtensions {

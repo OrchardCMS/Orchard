@@ -5,7 +5,7 @@ using System.Web.Mvc;
 using JetBrains.Annotations;
 using Orchard.Localization;
 using Orchard.Logging;
-using Orchard.Models;
+using Orchard.ContentManagement;
 using Orchard.Settings;
 using Orchard.Tags.Helpers;
 using Orchard.Tags.Models;

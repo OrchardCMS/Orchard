@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using Orchard.Core.Common.Models;
-using Orchard.Models;
+using Orchard.ContentManagement;
 
 namespace Orchard.Blogs.Models {
     public class Blog : ContentPart<BlogRecord> {

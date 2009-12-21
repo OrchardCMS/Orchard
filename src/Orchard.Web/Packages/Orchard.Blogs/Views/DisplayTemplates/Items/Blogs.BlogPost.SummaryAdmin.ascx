@@ -1,7 +1,7 @@
 ﻿<%@ Control Language="C#" Inherits="System.Web.Mvc.ViewUserControl<ItemDisplayModel<BlogPost>>" %>
-<%@ Import Namespace="Orchard.Models"%>
+<%@ Import Namespace="Orchard.ContentManagement"%>
 <%@ Import Namespace="Orchard.Core.Common.Models"%>
-<%@ Import Namespace="Orchard.Models.ViewModels"%>
+<%@ Import Namespace="Orchard.ContentManagement.ViewModels"%>
 <%@ Import Namespace="Orchard.Blogs.Extensions"%>
 <%@ Import Namespace="Orchard.Blogs.Models"%>
 <h3><a href="<%=Url.BlogPostEdit(Model.Item.Blog.Slug, Model.Item.Slug) %>"><%=Html.Encode(Model.Item.Title)%></a></h3>

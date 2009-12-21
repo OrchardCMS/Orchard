@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using Orchard.Models;
+using Orchard.ContentManagement;
 
 namespace Orchard.Roles.Models.NoRecord {
     public interface IUserRoles : IContent {

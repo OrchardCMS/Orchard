@@ -1,6 +1,6 @@
-using Orchard.Models.Records;
+using Orchard.ContentManagement.Records;
 
-namespace Orchard.Models.Driver {
+namespace Orchard.ContentManagement.Handlers {
     public class CreateContentContext {
         public int Id { get; set; }
         public string ContentType { get; set; }

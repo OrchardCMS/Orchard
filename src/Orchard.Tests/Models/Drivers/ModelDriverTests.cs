@@ -1,6 +1,6 @@
 using NUnit.Framework;
-using Orchard.Models;
-using Orchard.Models.Driver;
+using Orchard.ContentManagement;
+using Orchard.ContentManagement.Handlers;
 
 namespace Orchard.Tests.Models.Drivers {
 

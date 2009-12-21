@@ -1,8 +1,8 @@
 ﻿using Orchard.Data;
-using Orchard.Models;
-using Orchard.Models.Driver;
-using Orchard.Models.Records;
-using Orchard.Models.ViewModels;
+using Orchard.ContentManagement;
+using Orchard.ContentManagement.Handlers;
+using Orchard.ContentManagement.Records;
+using Orchard.ContentManagement.ViewModels;
 
 namespace Orchard.Media.Models {
     public class MediaSettings : ContentPart<MediaSettingsRecord> {

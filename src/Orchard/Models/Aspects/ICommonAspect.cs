@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using Orchard.Security;
 
-namespace Orchard.Models.Aspects {
+namespace Orchard.ContentManagement.Aspects {
     public interface ICommonAspect : IContent {
         DateTime? CreatedUtc { get; set; }
         DateTime? ModifiedUtc { get; set; }

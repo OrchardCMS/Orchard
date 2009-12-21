@@ -5,7 +5,7 @@ using JetBrains.Annotations;
 using Orchard.Data;
 using Orchard.Localization;
 using Orchard.Logging;
-using Orchard.Models;
+using Orchard.ContentManagement;
 using Orchard.Settings;
 using Orchard.Tags.Models;
 using Orchard.UI.Notify;

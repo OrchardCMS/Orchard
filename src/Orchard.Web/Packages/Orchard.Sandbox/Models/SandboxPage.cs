@@ -1,5 +1,5 @@
 using System.Web.Routing;
-using Orchard.Models;
+using Orchard.ContentManagement;
 
 namespace Orchard.Sandbox.Models {
     public class SandboxPage : ContentPart<SandboxPageRecord> {

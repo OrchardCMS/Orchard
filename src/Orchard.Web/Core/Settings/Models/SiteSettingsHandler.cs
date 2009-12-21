@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using Orchard.Core.Settings.Records;
 using Orchard.Data;
-using Orchard.Models;
-using Orchard.Models.Driver;
+using Orchard.ContentManagement;
+using Orchard.ContentManagement.Handlers;
 
 namespace Orchard.Core.Settings.Models {
     public class SiteSettingsHandler : ContentHandler {

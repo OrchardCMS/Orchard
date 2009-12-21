@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Orchard.Models.Driver {
+namespace Orchard.ContentManagement.Handlers {
     public abstract class TemplateFilterBase<TPart> : IContentTemplateFilter where TPart : class, IContent {
 
         protected virtual void GetItemMetadata(GetItemMetadataContext context, TPart instance) { }

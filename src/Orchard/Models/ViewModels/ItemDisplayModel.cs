@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
 
-namespace Orchard.Models.ViewModels {
+namespace Orchard.ContentManagement.ViewModels {
     public class ItemDisplayModel {
         private ContentItem _item;
 

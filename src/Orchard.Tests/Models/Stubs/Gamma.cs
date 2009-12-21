@@ -2,8 +2,8 @@
 using FluentNHibernate.Automapping;
 using FluentNHibernate.Automapping.Alterations;
 using Orchard.Data;
-using Orchard.Models;
-using Orchard.Models.Driver;
+using Orchard.ContentManagement;
+using Orchard.ContentManagement.Handlers;
 using Orchard.Tests.Models.Records;
 
 namespace Orchard.Tests.Models.Stubs {
@@ -12,7 +12,7 @@ namespace Orchard.Tests.Models.Stubs {
 
 
     public class GammaHandler : ContentHandler {
-        public override System.Collections.Generic.IEnumerable<Orchard.Models.ContentType> GetContentTypes() {
+        public override System.Collections.Generic.IEnumerable<Orchard.ContentManagement.ContentType> GetContentTypes() {
             return new[] { new ContentType { Name = "gamma" } };
         }
 

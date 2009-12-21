@@ -4,7 +4,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Web.Mvc;
 using System.Web.Mvc.Html;
-using Orchard.Models.ViewModels;
+using Orchard.ContentManagement.ViewModels;
 
 namespace Orchard.Mvc.Html {
     public static class ItemEditorExtensions {

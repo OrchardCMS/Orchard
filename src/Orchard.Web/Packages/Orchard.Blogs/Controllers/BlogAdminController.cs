@@ -3,7 +3,7 @@ using System.Web.Mvc;
 using Orchard.Blogs.Models;
 using Orchard.Blogs.Services;
 using Orchard.Blogs.ViewModels;
-using Orchard.Models;
+using Orchard.ContentManagement;
 using Orchard.Mvc.Results;
 
 namespace Orchard.Blogs.Controllers {

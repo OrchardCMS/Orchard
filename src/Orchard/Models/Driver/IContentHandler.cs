@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Orchard.Models.Driver {
+namespace Orchard.ContentManagement.Handlers {
     public interface IContentHandler : IEvents {
         IEnumerable<ContentType> GetContentTypes();
 
