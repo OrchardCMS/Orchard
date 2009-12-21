@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using JetBrains.Annotations;
 using Orchard.Logging;
 using Orchard.Models;
 using Orchard.Roles.Models.NoRecord;
@@ -18,7 +19,7 @@ namespace Orchard.Roles.Services {
         }
 
         public ILogger Logger { get; set; }
-        public ISite CurrentSite { get; set; }
+        protected virtual ISite CurrentSite { get; [UsedImplicitly] private set; }
 
         #region Implementation of IAuthorizationService
 

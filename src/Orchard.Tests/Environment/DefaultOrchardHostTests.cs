@@ -75,10 +75,6 @@ namespace Orchard.Tests.Environment {
         }
 
         public class StubCompositionStrategy : ICompositionStrategy {
-            public IEnumerable<Assembly> GetAssemblies() {
-                return Enumerable.Empty<Assembly>();
-            }
-
             public IEnumerable<Type> GetModuleTypes() {
                 return Enumerable.Empty<Type>();
             }

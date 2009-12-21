@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Web.Mvc;
+using JetBrains.Annotations;
 using Orchard.Comments.Models;
 using Orchard.Localization;
 using Orchard.Logging;
@@ -28,8 +29,8 @@ namespace Orchard.Comments.Controllers {
             T = NullLocalizer.Instance;
         }
 
-        public IUser CurrentUser { get; set; }
-        public ISite CurrentSite { get; set; }
+        protected virtual IUser CurrentUser { get; [UsedImplicitly] private set; }
+        protected virtual ISite CurrentSite { get; [UsedImplicitly] private set; }
 
         public ILogger Logger { get; set; }
         public Localizer T { get; set; }

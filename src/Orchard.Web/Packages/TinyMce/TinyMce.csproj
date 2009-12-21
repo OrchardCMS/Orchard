@@ -125,7 +125,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Shared\EditorTemplates\TinyMceTextEditor.ascx" />
+    <Content Include="Views\EditorTemplates\TinyMceTextEditor.ascx" />
     <Content Include="Views\Web.config" />
   </ItemGroup>
   <ItemGroup>

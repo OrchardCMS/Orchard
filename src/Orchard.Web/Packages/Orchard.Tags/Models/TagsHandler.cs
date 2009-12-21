@@ -32,8 +32,7 @@ namespace Orchard.Tags.Models {
             Filters.Add(new ActivatingFilter<HasTags>("blogpost"));
 
             OnGetDisplayViewModel<HasTags>((context, hasTags) => {
-                context.AddDisplay(new TemplateViewModel(hasTags) { Position = "6",  TemplateName = "HasTagsList" });
-                context.AddDisplay(new TemplateViewModel(hasTags) { Position = "6" });
+                context.AddDisplay(new TemplateViewModel(hasTags) { TemplateName = "Parts/Tags.HasTags", Position = "6" });
             });
         }
 
@@ -41,7 +40,7 @@ namespace Orchard.Tags.Models {
             if (context.ContentItem.Has<HasTags>() == false) {
                 return;
             }
-            context.AddEditor(new TemplateViewModel(context.ContentItem.Get<HasTags>()) { Position = "0" });
+            context.AddEditor(new TemplateViewModel(context.ContentItem.Get<HasTags>()) { TemplateName = "Parts/Tags.HasTags", Position = "0" });
         }
 
         protected override void UpdateEditorModel(UpdateEditorModelContext context) {
@@ -54,7 +53,7 @@ namespace Orchard.Tags.Models {
             List<string> tagNames = TagHelpers.ParseCommaSeparatedTagNames(viewModel.Tags);
             _tagService.UpdateTagsForContentItem(context.ContentItem.Id, tagNames);
 
-            context.AddEditor(new TemplateViewModel(context.ContentItem.Get<HasTags>()));
+            context.AddEditor(new TemplateViewModel(context.ContentItem.Get<HasTags>()) { TemplateName = "Parts/Tags.HasTags" });
         }
 
         protected override void Loading(LoadContentContext context) {

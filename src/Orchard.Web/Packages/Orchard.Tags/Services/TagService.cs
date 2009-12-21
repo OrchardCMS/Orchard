@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using JetBrains.Annotations;
 using Orchard.Data;
 using Orchard.Localization;
 using Orchard.Logging;
@@ -41,7 +42,7 @@ namespace Orchard.Tags.Services {
         }
 
         public ILogger Logger { get; set; }
-        public ISite CurrentSite { get; set; }
+        protected virtual ISite CurrentSite { get; [UsedImplicitly] private set; }        
         public Localizer T { get; set; }
 
         #region ITagService Members

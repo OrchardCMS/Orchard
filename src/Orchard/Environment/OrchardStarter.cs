@@ -4,6 +4,7 @@ using Autofac;
 using Autofac.Builder;
 using Autofac.Integration.Web;
 using Autofac.Modules;
+using AutofacContrib.DynamicProxy2;
 using Orchard.Extensions;
 using Orchard.Extensions.Loaders;
 

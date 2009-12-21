@@ -141,11 +141,14 @@
     <Content Include="Themes\Styles\site.css" />
     <Content Include="Themes\Views\Admin\Install.aspx" />
     <Content Include="Themes\Views\document.aspx" />
-    <Content Include="Themes\Views\Shared\EditorTemplates\ThemeSiteSettingsRecord.ascx" />
-    <Content Include="Themes\Views\Shared\layout.ascx" />
-    <Content Include="Themes\Views\Shared\user.ascx" />
-    <Content Include="Themes\Views\Shared\menu.ascx" />
+    <Content Include="Themes\Views\EditorTemplates\Parts\Themes.SiteSettings.ascx" />
+    <Content Include="Themes\Views\layout.ascx" />
+    <Content Include="Themes\Views\user.ascx" />
+    <Content Include="Themes\Views\menu.ascx" />
     <Content Include="Themes\Views\Web.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Themes\Views\Shared\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v9.0\WebApplications\Microsoft.WebApplication.targets" />

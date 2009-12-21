@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Routing;
+using JetBrains.Annotations;
 using Orchard.Extensions;
 using Orchard.Logging;
 using Orchard.Models;
@@ -24,7 +25,7 @@ namespace Orchard.Core.Themes.Services {
         }
 
         public ILogger Logger { get; set; }
-        public ISite CurrentSite { get; set; }
+        protected virtual ISite CurrentSite { get; [UsedImplicitly] private set; }
 
         #region Implementation of IThemeService
 

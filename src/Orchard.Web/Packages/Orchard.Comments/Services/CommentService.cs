@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using JetBrains.Annotations;
 using Orchard.Comments.Models;
 using Orchard.Data;
 using Orchard.Logging;
@@ -49,7 +50,8 @@ namespace Orchard.Comments.Services {
         }
 
         public ILogger Logger { get; set; }
-        public ISite CurrentSite { get; set; }
+        protected virtual ISite CurrentSite { get; [UsedImplicitly] private set; }
+        
 
         #region Implementation of ICommentService
 

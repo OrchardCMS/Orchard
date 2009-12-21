@@ -15,11 +15,13 @@ using Orchard.Models.Records;
 namespace Orchard.Data {
     public class HackSessionLocator : ISessionLocator, IDisposable {
         private readonly ICompositionStrategy _compositionStrategy;
+        private readonly ITransactionManager _transactionManager;
         private static ISessionFactory _sessionFactory;
         private ISession _session;
 
-        public HackSessionLocator(ICompositionStrategy compositionStrategy) {
+        public HackSessionLocator(ICompositionStrategy compositionStrategy, ITransactionManager transactionManager) {
             _compositionStrategy = compositionStrategy;
+            _transactionManager = transactionManager;
         }
 
         private ISessionFactory BindSessionFactory() {
@@ -73,14 +75,16 @@ namespace Orchard.Data {
         }
 
         public ISession For(Type entityType) {
-            return _session ?? Interlocked.CompareExchange(ref _session, BindSessionFactory().OpenSession(), null) ?? _session;
+            var sessionFactory = BindSessionFactory();
+            _transactionManager.Demand();
+            return _session ?? Interlocked.CompareExchange(ref _session, sessionFactory.OpenSession(), null) ?? _session;
         }
 
         public void Dispose() {
-            if (_session != null) {
-                //_session.Flush();
-                _session.Close();
-            }
+            //if (_session != null) {
+            //    //_session.Flush();
+            //    _session.Close();
+            //}
         }
     }
 }

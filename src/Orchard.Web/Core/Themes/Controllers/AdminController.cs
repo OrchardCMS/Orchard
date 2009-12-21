@@ -23,7 +23,6 @@ namespace Orchard.Core.Themes.Controllers {
         }
 
         public Localizer T { get; set; }
-        public IUser CurrentUser { get; set; }
 
         public ActionResult Index() {
             try {

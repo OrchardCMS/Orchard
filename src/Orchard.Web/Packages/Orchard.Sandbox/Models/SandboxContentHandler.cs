@@ -52,7 +52,7 @@ namespace Orchard.Sandbox.Models {
             // add settings to site, and simple record-template gui
             Filters.Add(new ActivatingFilter<ContentPart<SandboxSettingsRecord>>("site"));
             Filters.Add(new StorageFilter<SandboxSettingsRecord>(settingsRepository) { AutomaticallyCreateMissingRecord = true });
-            Filters.Add(new TemplateFilterForRecord<SandboxSettingsRecord>("SandboxSettings"));
+            Filters.Add(new TemplateFilterForRecord<SandboxSettingsRecord>("SandboxSettings", "Parts/Sandbox.SiteSettings"));
 
         }
     }

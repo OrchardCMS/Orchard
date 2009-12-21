@@ -1,24 +1,52 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Reflection;
+using Autofac;
+using AutofacContrib.DynamicProxy2;
+using Castle.Core.Interceptor;
+using Orchard.Security;
 using Module = Autofac.Builder.Module;
 
 namespace Orchard.Settings {
-    public class SettingsModule : Module {
-        protected override void AttachToComponentRegistration(Autofac.IContainer container, Autofac.IComponentRegistration registration) {
-
-            var siteProperty = FindSiteProperty(registration.Descriptor.BestKnownImplementationType);
-
-            if (siteProperty != null) {
-                registration.Activated += (sender, e) => {
-                    var siteService = e.Context.Resolve<ISiteService>();
-                    var currentSite = siteService.GetSiteSettings();
-                    siteProperty.SetValue(e.Instance, currentSite, null);
-                };
+    public class SettingsModule : Module, IComponentInterceptorProvider {
+        public IEnumerable<Service> GetInterceptorServices(IComponentDescriptor descriptor) {
+            var property = FindProperty(descriptor.BestKnownImplementationType);
+            if (property != null) {
+                if (property.GetGetMethod(true).IsVirtual == false) {
+                    throw new ApplicationException(string.Format("CurrentSite property must be virtual on class {0}", descriptor.BestKnownImplementationType.FullName));
+                }
+                yield return new TypedService(typeof(ISettingsModuleInterceptor));
             }
         }
 
-        private static PropertyInfo FindSiteProperty(Type type) {
-            return type.GetProperty("CurrentSite", typeof(ISite));
+        private static PropertyInfo FindProperty(Type type) {
+            return type.GetProperty("CurrentSite",
+                BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance,
+                null,
+                typeof(ISite),
+                new Type[0],
+                null);
+        }        
+    }
+
+    public interface ISettingsModuleInterceptor : IInterceptor, IDependency {
+
+    }
+
+    public class SettingsModuleInterceptor : ISettingsModuleInterceptor {
+        private readonly ISiteService _siteService;
+
+        public SettingsModuleInterceptor(ISiteService siteService) {
+            _siteService = siteService;
+        }
+
+        public void Intercept(IInvocation invocation) {
+            if (invocation.Method.ReturnType == typeof(ISite) && invocation.Method.Name == "get_CurrentSite") {
+                invocation.ReturnValue = _siteService.GetSiteSettings();
+            }
+            else {
+                invocation.Proceed();
+            }
         }
     }
 }

@@ -31,6 +31,14 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Autofac, Version=1.4.4.561, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\lib\autofac\Autofac.dll</HintPath>
+    </Reference>
+    <Reference Include="Autofac.Integration.Web, Version=1.4.4.561, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\lib\autofac\Autofac.Integration.Web.dll</HintPath>
+    </Reference>
     <Reference Include="NHibernate, Version=2.1.0.4000, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\lib\fluentnhibernate\NHibernate.dll</HintPath>
@@ -100,27 +108,26 @@
     <Content Include="Package.txt" />
     <Content Include="Views\BlogPost\Create.ascx" />
     <Content Include="Views\BlogPost\Edit.ascx" />
-    <Content Include="Views\Shared\DisplayTemplates\Admin\Blog\Detail.ascx" />
+    <Content Include="Views\BlogAdmin\DisplayTemplates\Items\Blogs.Blog.Detail.ascx" />
     <Content Include="Views\BlogAdmin\Item.ascx" />
-    <Content Include="Views\Shared\DisplayTemplates\Admin\Blog\Summary.ascx" />
+    <Content Include="Views\BlogAdmin\DisplayTemplates\Items\Blogs.Blog.Summary.ascx" />
     <Content Include="Views\Blog\List.ascx" />
     <Content Include="Views\BlogAdmin\List.ascx" />
-    <Content Include="Views\Shared\DisplayTemplates\BlogPost\Detail.ascx" />
-    <Content Include="Views\Shared\DisplayTemplates\BlogPost\Summary.ascx" />
-    <Content Include="Views\Shared\DisplayTemplates\Blog\Detail.ascx" />
-    <Content Include="Views\Shared\DisplayTemplates\BlogPost\List.ascx" />
-    <Content Include="Views\Shared\DisplayTemplates\Blog\Summary.ascx" />
-    <Content Include="Views\Shared\EditorTemplates\BlogPost\FieldsSecondary.ascx" />
+    <Content Include="Views\DisplayTemplates\Items\Blogs.BlogPost.Detail.ascx" />
+    <Content Include="Views\DisplayTemplates\Items\Blogs.BlogPost.Summary.ascx" />
+    <Content Include="Views\DisplayTemplates\Items\Blogs.Blog.Detail.ascx" />
+    <Content Include="Views\DisplayTemplates\Parts\Blogs.BlogPost.List.ascx" />
+    <Content Include="Views\DisplayTemplates\Items\Blogs.Blog.Summary.ascx" />
+    <Content Include="Views\EditorTemplates\Parts\Blogs.BlogPost.Publish.ascx" />
     <Content Include="Views\BlogPost\Item.ascx" />
     <Content Include="Views\Blog\Create.ascx" />
     <Content Include="Views\Blog\Edit.ascx" />
     <Content Include="Views\Blog\Item.ascx" />
-    <Content Include="Views\Shared\DisplayTemplates\Admin\BlogPost\Summary.ascx" />
-    <Content Include="Views\Shared\DisplayTemplates\Admin\BlogPost\List.ascx" />
-    <Content Include="Views\Shared\EditorTemplates\Blog\Fields.ascx" />
-    <Content Include="Views\Shared\EditorTemplates\Blog\Detail.ascx" />
-    <Content Include="Views\Shared\EditorTemplates\BlogPost\Detail.ascx" />
-    <Content Include="Views\Shared\EditorTemplates\BlogPost\FieldsPrimary.ascx" />
+    <Content Include="Views\BlogAdmin\DisplayTemplates\Items\Blogs.BlogPost.Summary.ascx" />
+    <Content Include="Views\EditorTemplates\Parts\Blogs.Blog.Fields.ascx" />
+    <Content Include="Views\EditorTemplates\Items\Blogs.Blog.ascx" />
+    <Content Include="Views\EditorTemplates\Items\Blogs.BlogPost.ascx" />
+    <Content Include="Views\EditorTemplates\Parts\Blogs.BlogPost.Fields.ascx" />
     <Content Include="Web.config" />
     <Content Include="Views\Web.config" />
   </ItemGroup>

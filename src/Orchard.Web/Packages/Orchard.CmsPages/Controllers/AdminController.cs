@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reflection;
 using System.Web;
 using System.Web.Mvc;
+using JetBrains.Annotations;
 using Orchard.CmsPages.Models;
 using Orchard.CmsPages.Services;
 using Orchard.CmsPages.Services.Templates;
@@ -40,9 +41,6 @@ namespace Orchard.CmsPages.Controllers {
             T = NullLocalizer.Instance;
         }
 
-        // That's what it takes to get the CurrentUser for a module.
-        // See Orchard.Security.SecurityModule.
-        public IUser CurrentUser { get; set; }
 
         public ILogger Logger { get; set; }
         public Localizer T { get; set; }

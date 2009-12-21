@@ -22,9 +22,6 @@ namespace Orchard.Media.Controllers {
             _notifier = notifier;
         }
 
-        // That's what it takes to get the CurrentUser for a module.
-        // See Orchard.Security.SecurityModule.
-        public IUser CurrentUser { get; set; }
 
         public Localizer T { get; set; }
 

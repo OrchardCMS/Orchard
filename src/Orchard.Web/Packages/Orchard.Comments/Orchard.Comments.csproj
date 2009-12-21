@@ -89,9 +89,10 @@
     <Content Include="Views\Admin\Edit.aspx" />
     <Content Include="Views\Admin\Index.aspx" />
     <Content Include="Views\Admin\Create.aspx" />
-    <Content Include="Views\Shared\DisplayTemplates\HasComments.ascx" />
-    <Content Include="Views\Shared\EditorTemplates\CommentSettingsRecord.ascx" />
-    <Content Include="Views\Shared\EditorTemplates\HasComments.ascx" />
+    <Content Include="Views\DisplayTemplates\Parts\Comments.HasComments.ascx" />
+    <Content Include="Views\DisplayTemplates\Parts\Comments.Count.ascx" />
+    <Content Include="Views\EditorTemplates\Parts\Comments.SiteSettings.ascx" />
+    <Content Include="Views\EditorTemplates\Parts\Comments.HasComments.ascx" />
     <Content Include="Web.config" />
     <Content Include="Views\Web.config" />
   </ItemGroup>

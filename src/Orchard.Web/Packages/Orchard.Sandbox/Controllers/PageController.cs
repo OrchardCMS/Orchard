@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using System.Web.Mvc;
+using JetBrains.Annotations;
 using Orchard.Core.Common.Models;
 using Orchard.Data;
 using Orchard.Localization;
@@ -22,8 +23,8 @@ namespace Orchard.Sandbox.Controllers {
             _notifier = notifier;
         }
 
-        public ISite CurrentSite { get; set; }
-        public IUser CurrentUser { get; set; }
+        protected virtual ISite CurrentSite { get; [UsedImplicitly] private set; }
+        protected virtual IUser CurrentUser { get; [UsedImplicitly] private set; }
         public Localizer T { get; set; }
 
 

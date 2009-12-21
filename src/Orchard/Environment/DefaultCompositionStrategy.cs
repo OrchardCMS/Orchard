@@ -11,7 +11,6 @@ namespace Orchard.Environment {
     //TEMP: This will be replaced by packaging system
 
     public interface ICompositionStrategy {
-        IEnumerable<Assembly> GetAssemblies();
         IEnumerable<Type> GetModuleTypes();
         IEnumerable<Type> GetDependencyTypes();
         IEnumerable<Type> GetRecordTypes();
@@ -22,13 +21,6 @@ namespace Orchard.Environment {
 
         public DefaultCompositionStrategy(IExtensionManager extensionManager) {
             _extensionManager = extensionManager;
-        }
-
-        public IEnumerable<Assembly> GetAssemblies() {
-            return _extensionManager.ActiveExtensions()
-                .Select(entry => entry.Assembly)
-                .Concat(new[] { typeof(IOrchardHost).Assembly });
-            //return BuildManager.GetReferencedAssemblies().OfType<Assembly>();
         }
 
         public IEnumerable<Type> GetModuleTypes() {

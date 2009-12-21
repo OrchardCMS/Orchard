@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Web;
+using JetBrains.Annotations;
 using Orchard.Comments.Models;
 using Orchard.Localization;
 using Orchard.Logging;
@@ -21,7 +22,8 @@ namespace Orchard.Comments.Services {
 
         public ILogger Logger { get; set; }
         public Localizer T { get; set; }
-        public ISite CurrentSite { get; set; }
+        protected virtual ISite CurrentSite { get; [UsedImplicitly] private set; }
+        
 
         #region Implementation of ICommentValidator
 

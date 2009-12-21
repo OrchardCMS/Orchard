@@ -19,7 +19,7 @@ namespace Orchard.UI.Navigation {
             _authorizationService = authorizationService;
         }
 
-        public IUser CurrentUser { get; set; }
+        protected virtual IUser CurrentUser { get; [UsedImplicitly] private set; }
 
         public IEnumerable<MenuItem> BuildMenu(string menuName) {
             return Reduce(Merge(AllSources(menuName))).ToArray();

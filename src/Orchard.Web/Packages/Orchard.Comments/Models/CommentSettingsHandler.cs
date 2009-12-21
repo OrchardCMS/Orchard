@@ -9,7 +9,7 @@ namespace Orchard.Comments.Models {
             _commentSettingsRepository = repository;
             Filters.Add(new ActivatingFilter<CommentSettings>("site"));
             Filters.Add(new StorageFilter<CommentSettingsRecord>(_commentSettingsRepository) { AutomaticallyCreateMissingRecord = true });
-            Filters.Add(new TemplateFilterForRecord<CommentSettingsRecord>("CommentSettings"));
+            Filters.Add(new TemplateFilterForRecord<CommentSettingsRecord>("CommentSettings", "Parts/Comments.SiteSettings"));
             OnActivated<CommentSettings>(DefaultSettings);
         }
 

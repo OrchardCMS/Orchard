@@ -10,7 +10,7 @@ namespace Orchard.Core.Themes.Models {
             _themeSiteSettingsRepository = repository;
             Filters.Add(new ActivatingFilter<ThemeSiteSettings>("site"));
             Filters.Add(new StorageFilter<ThemeSiteSettingsRecord>(_themeSiteSettingsRepository) { AutomaticallyCreateMissingRecord = true });
-            Filters.Add(new TemplateFilterForRecord<ThemeSiteSettingsRecord>("ThemeSiteSettings"));
+            Filters.Add(new TemplateFilterForRecord<ThemeSiteSettingsRecord>("ThemeSiteSettings", "Parts/Themes.SiteSettings"));
         }
     }
 }

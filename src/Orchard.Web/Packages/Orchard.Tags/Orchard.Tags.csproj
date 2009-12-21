@@ -87,10 +87,9 @@
     <Content Include="Views\Admin\Search.aspx" />
     <Content Include="Views\Home\Index.aspx" />
     <Content Include="Views\Home\Search.aspx" />
-    <Content Include="Views\Shared\DisplayTemplates\HasTags.ascx" />
-    <Content Include="Views\Shared\DisplayTemplates\HasTagsList.ascx" />
-    <Content Include="Views\Shared\EditorTemplates\HasTags.ascx" />
-    <Content Include="Views\Shared\EditorTemplates\TagSettingsRecord.ascx" />
+    <Content Include="Views\DisplayTemplates\Parts\Tags.HasTags.ascx" />
+    <Content Include="Views\EditorTemplates\Parts\Tags.HasTags.ascx" />
+    <Content Include="Views\EditorTemplates\Parts\Tags.SiteSettings.ascx" />
     <Content Include="Web.config" />
     <Content Include="Views\Web.config" />
   </ItemGroup>

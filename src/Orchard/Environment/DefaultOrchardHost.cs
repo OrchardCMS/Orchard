@@ -1,9 +1,12 @@
+using System;
 using System.Diagnostics;
+using System.Linq;
 using System.Web.Mvc;
 using Autofac;
 using Autofac.Builder;
 using Autofac.Integration.Web;
 using System.Collections.Generic;
+using AutofacContrib.DynamicProxy2;
 using Orchard.Mvc;
 using Orchard.Mvc.ViewEngines;
 
@@ -62,7 +65,7 @@ namespace Orchard.Environment {
 
             // add components by the IDependency interfaces they expose
             foreach (var serviceType in _compositionStrategy.GetDependencyTypes()) {
-                foreach (var interfaceType in serviceType.GetInterfaces())
+                foreach (var interfaceType in serviceType.GetInterfaces()) {
                     if (typeof(IDependency).IsAssignableFrom(interfaceType)) {
                         var registrar = addingModulesAndServices.Register(serviceType).As(interfaceType);
                         if (typeof(ISingletonDependency).IsAssignableFrom(interfaceType)) {
@@ -75,6 +78,7 @@ namespace Orchard.Environment {
                             registrar.ContainerScoped();
                         }
                     }
+                }
             }
 
             var shellContainer = _container.CreateInnerContainer();
@@ -82,17 +86,21 @@ namespace Orchard.Environment {
             addingModulesAndServices.Build(shellContainer);
 
             // instantiate and register modules on container being built
+            var modules = shellContainer.Resolve<IEnumerable<IModule>>();
             var addingModules = new ContainerBuilder();
-            foreach (var module in shellContainer.Resolve<IEnumerable<IModule>>()) {
+            foreach (var module in modules) {
                 addingModules.RegisterModule(module);
             }
+            addingModules.RegisterModule(new ExtensibleInterceptionModule(modules.OfType<IComponentInterceptorProvider>()));
             addingModules.Build(shellContainer);
 
-            foreach (var reg in shellContainer.ComponentRegistrations) {
-                reg.Preparing += (s, e) => {
-                    Debug.WriteLine(e.Component.Descriptor.BestKnownImplementationType.FullName);
-                };
-            }
+
+
+            //foreach (var reg in shellContainer.ComponentRegistrations) {
+            //    reg.Preparing += (s, e) => {
+            //        Debug.WriteLine(e.Component.Descriptor.BestKnownImplementationType.FullName);
+            //    };
+            //}
 
             return shellContainer;
         }
@@ -109,5 +117,26 @@ namespace Orchard.Environment {
             return CreateShell();
         }
         #endregion
+    }
+
+    public class ExtensibleInterceptionModule : InterceptionModule {
+        public ExtensibleInterceptionModule(IEnumerable<IComponentInterceptorProvider> providers)
+            : base(new CombinedProvider(providers.Concat(new[] { new FlexibleInterceptorProvider() })), new FlexibleInterceptorAttacher()) {
+        }
+
+        class CombinedProvider : IComponentInterceptorProvider {
+            private readonly IEnumerable<IComponentInterceptorProvider> _providers;
+
+            public CombinedProvider(IEnumerable<IComponentInterceptorProvider> providers) {
+                _providers = providers;
+            }
+
+            public IEnumerable<Service> GetInterceptorServices(IComponentDescriptor descriptor) {
+                return _providers
+                    .SelectMany(x => x.GetInterceptorServices(descriptor))
+                    .Distinct()
+                    .ToList();
+            }
+        }
     }
 }

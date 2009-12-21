@@ -1,4 +1,5 @@
-﻿using Orchard.Localization;
+﻿using JetBrains.Annotations;
+using Orchard.Localization;
 using Orchard.Security.Permissions;
 using Orchard.UI.Notify;
 
@@ -19,7 +20,7 @@ namespace Orchard.Security {
             T = NullLocalizer.Instance;
         }
 
-        public IUser CurrentUser { get; set; }
+        protected virtual IUser CurrentUser { get; [UsedImplicitly] private set; }
         public Localizer T { get; set; }
 
         public bool Authorize(Permission permission, LocalizedString message) {

@@ -23,14 +23,15 @@ namespace Orchard.Comments.Models {
             if (context.ContentItem.Has<HasComments>() == false) {
                 return;
             }
-            context.AddDisplay(new TemplateViewModel(context.ContentItem.Get<HasComments>()) { Position = "999" });
+            context.AddDisplay(new TemplateViewModel(context.ContentItem.Get<HasComments>()) { TemplateName = "Parts/Comments.Count", ZoneName="body", Position = "above" });
+            context.AddDisplay(new TemplateViewModel(context.ContentItem.Get<HasComments>()) { TemplateName = "Parts/Comments.HasComments", Position = "999" });
         }
 
         protected override void BuildEditorModel(BuildEditorModelContext context) {
             if (context.ContentItem.Has<HasComments>() == false) {
                 return;
             }
-            context.AddEditor(new TemplateViewModel(context.ContentItem.Get<HasComments>()));
+            context.AddEditor(new TemplateViewModel(context.ContentItem.Get<HasComments>()) { TemplateName = "Parts/Comments.HasComments" });
         }
 
         protected override void UpdateEditorModel(UpdateEditorModelContext context) {
@@ -50,7 +51,7 @@ namespace Orchard.Comments.Models {
                 }
             }
 
-            context.AddEditor(new TemplateViewModel(context.ContentItem.Get<HasComments>()));
+            context.AddEditor(new TemplateViewModel(context.ContentItem.Get<HasComments>()) { TemplateName = "Parts/Comments.HasComments" });
         }
 
         protected override void Loading(LoadContentContext context) {

@@ -4,7 +4,7 @@ using System.Web.Mvc;
 using System.Web.UI;
 
 namespace Orchard.Web {
-    public class _Default : Page {
+    public class _Default : Page { 
         public void Page_Load(object sender, EventArgs e) {
             // Change the current path so that the Routing handler can correctly interpret
             // the request, then restore the original path so that the OutputCache module
