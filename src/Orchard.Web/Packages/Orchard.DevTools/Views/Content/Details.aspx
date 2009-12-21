@@ -71,6 +71,7 @@
         <%=Html.Encode(display.Prefix)%></span>
         <%=Html.Encode(display.Model.GetType().Name)%>
         (<%=Html.Encode(display.Model.GetType().Namespace)%>)
+        Template:<%=Html.Encode(display.TemplateName ?? "(null)")%>
         Prefix:<%=Html.Encode(display.Prefix ?? "(null)")%>
         Zone:<%=Html.Encode(display.ZoneName ?? "(null)")%>
         Position:<%=Html.Encode(display.Position ?? "(null)")%>
@@ -90,6 +91,7 @@
         <%=Html.Encode(editor.Prefix) %></span>
         <%=Html.Encode(editor.Model.GetType().Name) %>                    
         (<%=Html.Encode(editor.Model.GetType().Namespace) %>)
+        Template:<%=Html.Encode(editor.TemplateName ?? "(null)")%>
         Prefix:<%=Html.Encode(editor.Prefix ?? "(null)")%>
         Zone:<%=Html.Encode(editor.ZoneName ?? "(null)")%>
         Position:<%=Html.Encode(editor.Position??"(null)") %>

@@ -57,11 +57,12 @@ namespace Orchard.Mvc.ViewEngines {
             var requestViewEngines = new ViewEngineCollection(
                 themeViewEngines
                     .Concat(packageViewEngines)
+                    .Concat(_viewEngines.Where(x => x.GetType().Assembly != typeof(LayoutViewEngine).Assembly))
                     .ToArray());
 
             var layoutViewEngine = new LayoutViewEngine(requestViewEngines);
 
-            viewResultBase.ViewEngineCollection = new ViewEngineCollection();
+            viewResultBase.ViewEngineCollection = new ViewEngineCollection(_viewEngines.ToList());
             viewResultBase.ViewEngineCollection.Insert(0, layoutViewEngine);
         }
 

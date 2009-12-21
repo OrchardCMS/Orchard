@@ -127,7 +127,6 @@
     <Content Include="Settings\Views\Web.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Settings\Views\Admin\EditorTemplates\SettingsIndexViewModel.ascx" />
     <Content Include="XmlRpc\Views\Web.config" />
   </ItemGroup>
   <ItemGroup>
@@ -136,9 +135,9 @@
     <Content Include="Themes\Views\Admin\Index.aspx" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Common\Views\Shared\DisplayTemplates\BodyAspect.ascx" />
-    <Content Include="Common\Views\Shared\EditorTemplates\BodyAspect.ascx" />
-    <Content Include="Common\Views\Shared\EditorTemplates\OwnerEditorViewModel.ascx" />
+    <Content Include="Common\Views\DisplayTemplates\Parts\Common.Body.ascx" />
+    <Content Include="Common\Views\EditorTemplates\Parts\Common.Body.ascx" />
+    <Content Include="Common\Views\EditorTemplates\Parts\Common.Owner.ascx" />
     <Content Include="Themes\Styles\site.css" />
     <Content Include="Themes\Views\Admin\Install.aspx" />
     <Content Include="Themes\Views\document.aspx" />

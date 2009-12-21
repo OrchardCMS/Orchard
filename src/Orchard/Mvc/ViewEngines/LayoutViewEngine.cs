@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Linq;
 using System.Web.Mvc;
 using Orchard.Mvc.ViewModels;
@@ -12,11 +13,6 @@ namespace Orchard.Mvc.ViewEngines {
         }
 
         public ViewEngineResult FindPartialView(ControllerContext controllerContext, string partialViewName, bool useCache) {
-            var scope = Scope.From(controllerContext);
-            if (scope != null && scope.LayoutViewEngine != null) {
-                return scope.LayoutViewEngine._viewEngines.FindPartialView(controllerContext, partialViewName);
-            }
-
             return new ViewEngineResult(Enumerable.Empty<string>());
         }
 
@@ -27,11 +23,11 @@ namespace Orchard.Mvc.ViewEngines {
             bool useCache) {
 
             var skipLayoutViewEngine = false;
-            if (string.IsNullOrEmpty(masterName)==false)
+            if (string.IsNullOrEmpty(masterName) == false)
                 skipLayoutViewEngine = true;
             if (!(controllerContext.Controller.ViewData.Model is BaseViewModel))
                 skipLayoutViewEngine = true;
-            if (_viewEngines == null || _viewEngines.Count== 0)
+            if (_viewEngines == null || _viewEngines.Count == 0)
                 skipLayoutViewEngine = true;
             if (skipLayoutViewEngine)
                 return new ViewEngineResult(Enumerable.Empty<string>());
@@ -92,6 +88,50 @@ namespace Orchard.Mvc.ViewEngines {
                 return (Scope)context.HttpContext.Items[typeof(Scope)];
             }
         }
+
+        public static IViewEngine CreateShim() {
+            return new Shim();
+        }
+
+        class Shim : IViewEngine {
+            public ViewEngineResult FindPartialView(ControllerContext controllerContext, string partialViewName, bool useCache) {
+                var scope = Scope.From(controllerContext);
+                if (scope != null && scope.LayoutViewEngine != null) {
+                    var result = scope.LayoutViewEngine._viewEngines.FindPartialView(controllerContext, partialViewName);
+                    Monitor(result, partialViewName);
+                    return result;
+                }
+
+                return new ViewEngineResult(Enumerable.Empty<string>());
+            }
+
+
+            public ViewEngineResult FindView(ControllerContext controllerContext, string viewName, string masterName, bool useCache) {
+                var scope = Scope.From(controllerContext);
+                if (scope != null && scope.LayoutViewEngine != null) {
+                    var result = scope.LayoutViewEngine._viewEngines.FindView(controllerContext, viewName, masterName);
+                    Monitor(result, viewName);
+                    return result;
+                }
+
+                return new ViewEngineResult(Enumerable.Empty<string>());
+            }
+
+
+            private static void Monitor(ViewEngineResult result, string viewName) {
+                if (result.View == null) {
+                    Trace.WriteLine("Unable to find " + viewName);
+                    foreach (var search in result.SearchedLocations) {
+                        Trace.WriteLine("  location " + search);
+                    }
+                }
+            }
+
+            public void ReleaseView(ControllerContext controllerContext, IView view) {
+                throw new NotImplementedException();
+            }
+        }
+
     }
 
 

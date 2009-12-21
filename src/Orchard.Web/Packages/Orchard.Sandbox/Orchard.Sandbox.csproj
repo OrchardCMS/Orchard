@@ -79,9 +79,9 @@
     <Content Include="Views\Page\Create.aspx" />
     <Content Include="Views\Page\Show.aspx" />
     <Content Include="Views\Page\Index.aspx" />
-    <Content Include="Views\Shared\DisplayTemplates\ContentItemTitle.ascx" />
-    <Content Include="Views\Shared\DisplayTemplates\SandboxPage.ascx" />
-    <Content Include="Views\Shared\DisplayTemplates\SandboxPageSummary.ascx" />
+    <Content Include="Views\DisplayTemplates\Parts\Sandbox.Page.Title.ascx" />
+    <Content Include="Views\DisplayTemplates\Items\Sandbox.Page.ascx" />
+    <Content Include="Views\DisplayTemplates\Items\Sandbox.Page.Summary.ascx" />
     <Content Include="Views\Shared\EditorTemplates\SandboxPage.ascx" />
     <Content Include="Views\Shared\EditorTemplates\SandboxSettingsRecord.ascx" />
     <Content Include="Web.config" />
@@ -101,6 +101,8 @@
     <Folder Include="App_Data\" />
     <Folder Include="Content\" />
     <Folder Include="Scripts\" />
+    <Folder Include="Views\EditorTemplates\" />
+    <Folder Include="Views\Shared\DisplayTemplates\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v9.0\WebApplications\Microsoft.WebApplication.targets" />

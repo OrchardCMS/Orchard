@@ -37,9 +37,9 @@ namespace Orchard.Environment {
             shell.Activate();
             _current = shell;
 
-            ViewEngines.Engines.Insert(0, new LayoutViewEngine(null));
+            ViewEngines.Engines.Insert(0, LayoutViewEngine.CreateShim());
             _controllerBuilder.SetControllerFactory(new OrchardControllerFactory());
-            ServiceLocator.SetLocator(t=>_containerProvider.RequestContainer.Resolve(t));
+            ServiceLocator.SetLocator(t => _containerProvider.RequestContainer.Resolve(t));
         }
 
         protected virtual void EndRequest() {
@@ -65,10 +65,10 @@ namespace Orchard.Environment {
                 foreach (var interfaceType in serviceType.GetInterfaces())
                     if (typeof(IDependency).IsAssignableFrom(interfaceType)) {
                         var registrar = addingModulesAndServices.Register(serviceType).As(interfaceType);
-                        if (typeof(ISingletonDependency).IsAssignableFrom(interfaceType)){
+                        if (typeof(ISingletonDependency).IsAssignableFrom(interfaceType)) {
                             registrar.SingletonScoped();
                         }
-                        else if (typeof(ITransientDependency).IsAssignableFrom(interfaceType)){
+                        else if (typeof(ITransientDependency).IsAssignableFrom(interfaceType)) {
                             registrar.FactoryScoped();
                         }
                         else {

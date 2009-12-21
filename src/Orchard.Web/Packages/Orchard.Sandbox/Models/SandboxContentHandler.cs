@@ -45,7 +45,7 @@ namespace Orchard.Sandbox.Models {
             });
 
             OnGetDisplayViewModel<SandboxPage>((context, page) =>
-                context.AddDisplay(new TemplateViewModel(page) { TemplateName = "ContentItemTitle", ZoneName = "title" }));
+                context.AddDisplay(new TemplateViewModel(page) { TemplateName = "Parts/Sandbox.Page.Title", ZoneName = "title" }));
 
 
 

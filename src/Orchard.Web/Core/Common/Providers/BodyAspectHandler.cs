@@ -8,7 +8,7 @@ using Orchard.Models.ViewModels;
 namespace Orchard.Core.Common.Providers {
     public class BodyAspectHandler : ContentHandler {
         private const string TemplatePrefix = "Body";
-        private const string TemplateName = "BodyAspect";
+        private const string TemplateName = "Parts/Common.Body";
         private const string DefaultTextEditorTemplate = "TinyMceTextEditor";
 
         public BodyAspectHandler(IRepository<BodyRecord> bodyRepository) {
