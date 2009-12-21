@@ -30,7 +30,7 @@ namespace Orchard.Users.Controllers {
 
         public ActionResult Index() {
             var users = Services.ContentManager
-                .Query<User, UserRecord>(Models.User.ContentType.Name)
+                .Query<User, UserRecord>()
                 .Where(x => x.UserName != null)
                 .List();
 

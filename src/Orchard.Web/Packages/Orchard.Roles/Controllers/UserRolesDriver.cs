@@ -57,7 +57,7 @@ namespace Orchard.Roles.Controllers {
                 UserRoles = userRoles,
             };
 
-            if (updater.TryUpdateModel(model, "UserRoles", null, null)) {
+            if (updater.TryUpdateModel(model, Prefix, null, null)) {
 
                 var currentUserRoleRecords = _userRolesRepository.Fetch(x => x.UserId == model.User.Id);
                 var currentRoleRecords = currentUserRoleRecords.Select(x => x.Role);
