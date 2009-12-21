@@ -5,6 +5,7 @@ using Autofac.Builder;
 using Autofac.Integration.Web;
 using System.Collections.Generic;
 using Orchard.Mvc;
+using Orchard.Mvc.ViewEngines;
 
 namespace Orchard.Environment {
     public class DefaultOrchardHost : IOrchardHost {
@@ -36,6 +37,7 @@ namespace Orchard.Environment {
             shell.Activate();
             _current = shell;
 
+            ViewEngines.Engines.Insert(0, new LayoutViewEngine(null));
             _controllerBuilder.SetControllerFactory(new OrchardControllerFactory());
             ServiceLocator.SetLocator(t=>_containerProvider.RequestContainer.Resolve(t));
         }

@@ -22,7 +22,7 @@ namespace Orchard.Sandbox.Models {
             Filters.Add(new ActivatingFilter<RoutableAspect>(SandboxPage.ContentType.Name));
             Filters.Add(new ActivatingFilter<BodyAspect>(SandboxPage.ContentType.Name));
             Filters.Add(new StorageFilter<SandboxPageRecord>(pageRepository) { AutomaticallyCreateMissingRecord = true });
-            Filters.Add(new ContentItemTemplates<SandboxPage>("Summary"));
+            Filters.Add(new ContentItemTemplates<SandboxPage>("Items/Sandbox.Page", "Summary"));
 
             OnGetItemMetadata<SandboxPage>((context, page) => {
                 context.Metadata.DisplayText = page.Record.Name;

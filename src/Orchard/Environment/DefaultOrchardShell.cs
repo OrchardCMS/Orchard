@@ -39,40 +39,40 @@ namespace Orchard.Environment {
         public ILogger Logger { get; set; }
 
 
-        static IEnumerable<string> OrchardLocationFormats() {
-            return new[] {
-                "~/Packages/{2}/Views/{1}/{0}.aspx",
-                "~/Packages/{2}/Views/{1}/{0}.ascx",
-                "~/Packages/{2}/Views/Shared/{0}.aspx",
-                "~/Packages/{2}/Views/Shared/{0}.ascx",
-                "~/Core/{2}/Views/{1}/{0}.aspx",
-                "~/Core/{2}/Views/{1}/{0}.ascx",
-                "~/Core/{2}/Views/Shared/{0}.aspx",
-                "~/Core/{2}/Views/Shared/{0}.ascx",
-            };
-        }
+        //static IEnumerable<string> OrchardLocationFormats() {
+        //    return new[] {
+        //        "~/Packages/{2}/Views/{1}/{0}.aspx",
+        //        "~/Packages/{2}/Views/{1}/{0}.ascx",
+        //        "~/Packages/{2}/Views/Shared/{0}.aspx",
+        //        "~/Packages/{2}/Views/Shared/{0}.ascx",
+        //        "~/Core/{2}/Views/{1}/{0}.aspx",
+        //        "~/Core/{2}/Views/{1}/{0}.ascx",
+        //        "~/Core/{2}/Views/Shared/{0}.aspx",
+        //        "~/Core/{2}/Views/Shared/{0}.ascx",
+        //    };
+        //}
 
         public void Activate() {
             _routePublisher.Publish(_routeProviders.SelectMany(provider => provider.GetRoutes()));
             _modelBinderPublisher.Publish(_modelBinderProviders.SelectMany(provider => provider.GetModelBinders()));
 
 
-            var viewEngine = _viewEngines.OfType<VirtualPathProviderViewEngine>().Single();
-            viewEngine.AreaViewLocationFormats = OrchardLocationFormats()
-                .Concat(viewEngine.AreaViewLocationFormats)
-                .Distinct()
-                .ToArray();
-            viewEngine.AreaPartialViewLocationFormats = OrchardLocationFormats()
-                .Concat(viewEngine.AreaPartialViewLocationFormats)
-                .Distinct()
-                .ToArray();
+            //var viewEngine = _viewEngines.OfType<VirtualPathProviderViewEngine>().Single();
+            //viewEngine.AreaViewLocationFormats = OrchardLocationFormats()
+            //    .Concat(viewEngine.AreaViewLocationFormats)
+            //    .Distinct()
+            //    .ToArray();
+            //viewEngine.AreaPartialViewLocationFormats = OrchardLocationFormats()
+            //    .Concat(viewEngine.AreaPartialViewLocationFormats)
+            //    .Distinct()
+            //    .ToArray();
 
-            var activePackageDescriptors = _extensionManager.ActiveExtensions().Select(x => x.Descriptor);
-            var sharedLocationFormats = activePackageDescriptors.Select(x => ModelsLocationFormat(x));
-            viewEngine.PartialViewLocationFormats = sharedLocationFormats
-                .Concat(viewEngine.PartialViewLocationFormats)
-                .Distinct()
-                .ToArray();
+            //var activePackageDescriptors = _extensionManager.ActiveExtensions().Select(x => x.Descriptor);
+            //var sharedLocationFormats = activePackageDescriptors.Select(x => ModelsLocationFormat(x));
+            //viewEngine.PartialViewLocationFormats = sharedLocationFormats
+            //    .Concat(viewEngine.PartialViewLocationFormats)
+            //    .Distinct()
+            //    .ToArray();
 
             _events.Invoke(x => x.Activated(), Logger);
         }

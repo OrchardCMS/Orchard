@@ -7,26 +7,23 @@ using Orchard.Users.Models;
 
 namespace Orchard.Users.ViewModels {
     public class UserEditViewModel : AdminViewModel {
-        public User User { get; set; }
-        public ItemEditorModel EditorModel { get; set; }
-
-
         [HiddenInput(DisplayValue = false)]
         public int Id {
-            get { return User.Id; }
+            get { return User.Item.Id; }
         }
 
         [Required]
         public string UserName {
-            get { return User.As<User>().Record.UserName; }
-            set { User.As<User>().Record.UserName = value; }
+            get { return User.Item.Record.UserName; }
+            set { User.Item.Record.UserName = value; }
         }
 
         [Required]
         public string Email {
-            get { return User.As<User>().Record.Email; }
-            set { User.As<User>().Record.Email = value; }
+            get { return User.Item.Record.Email; }
+            set { User.Item.Record.Email = value; }
         }
 
+        public ItemEditorModel<User> User { get; set; }
     }
 }

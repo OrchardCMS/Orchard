@@ -66,6 +66,7 @@
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
+    <Reference Include="System.Transactions" />
     <Reference Include="System.Web" />
     <Reference Include="System.Web.Abstractions">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
@@ -122,10 +123,13 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Data\Conventions\AttributeCollectionConvention.cs" />
     <Compile Include="Data\Conventions\CascadeAllDeleteOrphanAttribute.cs" />
+    <Compile Include="Data\TransactionManager.cs" />
     <Compile Include="Environment\IOrchardShellEvents.cs" />
+    <Compile Include="Environment\OrchardServices.cs" />
     <Compile Include="Extensions\ExtensionDescriptor.cs" />
     <Compile Include="Extensions\ExtensionEntry.cs" />
     <Compile Include="Mvc\Filters\AdminFilter.cs" />
+    <Compile Include="IOrchardServices.cs" />
     <Compile Include="Mvc\Html\FileRegistrationContext.cs" />
     <Compile Include="Themes\ExtensionManagerExtensions.cs" />
     <Compile Include="Extensions\Helpers\PathHelpers.cs" />

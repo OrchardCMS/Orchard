@@ -175,7 +175,7 @@ namespace Orchard.Tests.Models {
         [Test]
         public void EditorsShouldBeOrderedByPositionAndDefaultPositionIsSix() {
             var alpha = _manager.New("alpha");
-            var templates = _manager.BuildDisplayModel(alpha, null, null).Displays;
+            var templates = _manager.BuildDisplayModel(alpha, null).Displays;
             Assert.That(templates.Count(), Is.EqualTo(3));
 
             var t0 = templates.First();

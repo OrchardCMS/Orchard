@@ -13,65 +13,64 @@ using Orchard.Users.ViewModels;
 namespace Orchard.Users.Controllers {
 
     public class AdminController : Controller, IUpdateModel {
+
         private readonly IMembershipService _membershipService;
-        private readonly IContentManager _contentManager;
-        private readonly IRepository<UserRecord> _userRepository;
-        private readonly INotifier _notifier;
 
         public AdminController(
-            IMembershipService membershipService,
-            IContentManager contentManager,
-            IRepository<UserRecord> userRepository,
-            INotifier notifier) {
+            IOrchardServices services,
+            IMembershipService membershipService) {
+            Services = services;
             _membershipService = membershipService;
-            _contentManager = contentManager;
-            _userRepository = userRepository;
-            _notifier = notifier;
             T = NullLocalizer.Instance;
         }
 
-        public IUser CurrentUser { get; set; }
-
+        public IOrchardServices Services { get; set; }
         public Localizer T { get; set; }
 
-        public ActionResult Index() {
-            var model = new UsersIndexViewModel();
 
-            var users = _contentManager.Query<User, UserRecord>("user")
+        public ActionResult Index() {
+            var users = Services.ContentManager
+                .Query<User, UserRecord>(Models.User.ContentType.Name)
                 .Where(x => x.UserName != null)
                 .List();
 
-            model.Rows = users.Select(x => new UsersIndexViewModel.Row { User = x }).ToList();
+            var model = new UsersIndexViewModel {
+                Rows = users
+                    .Select(x => new UsersIndexViewModel.Row { User = x })
+                    .ToList()
+            };
 
             return View(model);
         }
 
         public ActionResult Create() {
-            var user = _contentManager.New("user");
+            var user = Services.ContentManager.New<IUser>(Models.User.ContentType.Name);
             var model = new UserCreateViewModel {
-                EditorModel = _contentManager.BuildEditorModel(user, null)
+                User = Services.ContentManager.BuildEditorModel(user)
             };
             return View(model);
         }
 
-        [HttpPost]
-        public ActionResult Create(UserCreateViewModel model) {
+        [HttpPost, ActionName("Create")]
+        public ActionResult _Create() {
 
-            if (model.Password != model.ConfirmPassword) {
-                ModelState.AddModelError("ConfirmPassword", T("Password confirmation must match").ToString());
-            }
-            if (ModelState.IsValid == false) {
-                model.EditorModel = _contentManager.UpdateEditorModel(_contentManager.New("user"), null, this);
-                return View(model);
-            }
+            var model = new UserCreateViewModel();
+            UpdateModel(model);
+
             var user = _membershipService.CreateUser(new CreateUserParams(
                                               model.UserName,
                                               model.Password,
                                               model.Email,
                                               null, null, true));
-            model.EditorModel = _contentManager.UpdateEditorModel(user, null, this);
+
+            model.User = Services.ContentManager.UpdateEditorModel(user, this);
+
+            if (model.Password != model.ConfirmPassword) {
+                AddModelError("ConfirmPassword", T("Password confirmation must match"));
+            }
+
             if (ModelState.IsValid == false) {
-                //TODO: rollback transaction
+                Services.TransactionManager.Cancel();
                 return View(model);
             }
 
@@ -79,29 +78,33 @@ namespace Orchard.Users.Controllers {
         }
 
         public ActionResult Edit(int id) {
-            var model = new UserEditViewModel { User = _contentManager.Get<User>(id) };
-            model.EditorModel = _contentManager.BuildEditorModel(model.User.ContentItem, null);
-            return View(model);
+            return View(new UserEditViewModel {
+                User = Services.ContentManager.BuildEditorModel<User>(id)
+            });
         }
 
-        [HttpPost]
-        public ActionResult Edit(int id, FormCollection input) {
-            var model = new UserEditViewModel { User = _contentManager.Get<User>(id) };
-            model.EditorModel = _contentManager.UpdateEditorModel(model.User.ContentItem, null, this);
+        [HttpPost, ActionName("Edit")]
+        public ActionResult _Edit(int id) {
+            var model = new UserEditViewModel {
+                User = Services.ContentManager.UpdateEditorModel<User>(id, this)
+            };
 
-            if (!TryUpdateModel(model, input.ToValueProvider())) {
+            // apply additional model properties that were posted on form
+            UpdateModel(model);
+
+            if (!ModelState.IsValid) {
+                Services.TransactionManager.Cancel();
                 return View(model);
             }
 
-            _notifier.Information(T("User information updated"));
+            Services.Notifier.Information(T("User information updated"));
             return RedirectToAction("Edit", new { id });
         }
-
 
         bool IUpdateModel.TryUpdateModel<TModel>(TModel model, string prefix, string[] includeProperties, string[] excludeProperties) {
             return TryUpdateModel(model, prefix, includeProperties, excludeProperties);
         }
-        void IUpdateModel.AddModelError(string key, LocalizedString errorMessage) {
+        public void AddModelError(string key, LocalizedString errorMessage) {
             ModelState.AddModelError(key, errorMessage.ToString());
         }
     }

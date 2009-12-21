@@ -36,8 +36,8 @@ namespace Orchard.DevTools.Controllers {
                 .Select(x => x.GetType())
                 .SelectMany(x => AllTypes(x))
                 .Distinct();
-            model.DisplayModel = _contentManager.BuildDisplayModel(model.Item, null, null);
-            model.EditorModel = _contentManager.BuildEditorModel(model.Item, null);
+            model.DisplayModel = _contentManager.BuildDisplayModel(model.Item, null);
+            model.EditorModel = _contentManager.BuildEditorModel(model.Item);
 
             return View(model);
         }

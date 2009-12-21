@@ -17,28 +17,28 @@ namespace Orchard.Models {
     public abstract class PartDriver<TPart> : IPartDriver where TPart : class, IContent {
         DriverResult IPartDriver.BuildDisplayModel(BuildDisplayModelContext context) {
             var part = context.ContentItem.As<TPart>();
-            return part == null ? null : Display(part, context.GroupName, context.DisplayType);
+            return part == null ? null : Display(part, context.DisplayType);
         }
 
         DriverResult IPartDriver.BuildEditorModel(BuildEditorModelContext context) {
             var part = context.ContentItem.As<TPart>();
-            return part == null ? null : Editor(part, context.GroupName);
+            return part == null ? null : Editor(part);
         }
 
         DriverResult IPartDriver.UpdateEditorModel(UpdateEditorModelContext context) {
             var part = context.ContentItem.As<TPart>();
-            return part == null ? null : Editor(part, context.GroupName, context.Updater);
+            return part == null ? null : Editor(part, context.Updater);
         }
 
-        protected virtual DriverResult Display(TPart part, string groupName, string displayType) {
+        protected virtual DriverResult Display(TPart part, string displayType) {
             return null;
         }
 
-        protected virtual DriverResult Editor(TPart part, string groupName) {
+        protected virtual DriverResult Editor(TPart part) {
             return null;
         }
 
-        protected virtual DriverResult Editor(TPart part, string groupName, IUpdateModel updater) {
+        protected virtual DriverResult Editor(TPart part, IUpdateModel updater) {
             return null;
         }
 
@@ -62,13 +62,13 @@ namespace Orchard.Models {
                 return (typeof (TPart).Name);
             }
         }
-        protected override DriverResult Display(TPart part, string groupName, string displayType) {
+        protected override DriverResult Display(TPart part, string displayType) {
             return PartialView(part);
         }
-        protected override DriverResult Editor(TPart part, string groupName) {
+        protected override DriverResult Editor(TPart part) {
             return PartialView(part);
         }
-        protected override DriverResult Editor(TPart part, string groupName, IUpdateModel updater) {
+        protected override DriverResult Editor(TPart part, IUpdateModel updater) {
             updater.TryUpdateModel(part, Prefix, null, null);
             return PartialView(part);
         }

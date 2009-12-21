@@ -62,7 +62,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controllers\AdminController.cs" />
-    <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Models\User.cs" />
     <Compile Include="Models\UserHandler.cs" />
     <Compile Include="Models\UserRecord.cs" />
@@ -78,10 +77,9 @@
     <Content Include="Views\Admin\Edit.aspx" />
     <Content Include="Views\Admin\Create.aspx" />
     <Content Include="Views\Admin\EditorTemplates\inputPasswordLarge.ascx" />
-    <Content Include="Views\Admin\EditorTemplates\UserEditViewModel.ascx" />
     <Content Include="Views\Admin\EditorTemplates\inputTextLarge.ascx" />
-    <Content Include="Views\Admin\EditorTemplates\UserCreateViewModel.ascx" />
     <Content Include="Views\Admin\Index.aspx" />
+    <Content Include="Views\EditorTemplates\Items\Users.User.ascx" />
     <Content Include="Web.config" />
     <Content Include="Views\Web.config" />
   </ItemGroup>

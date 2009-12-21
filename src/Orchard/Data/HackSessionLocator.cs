@@ -78,7 +78,7 @@ namespace Orchard.Data {
 
         public void Dispose() {
             if (_session != null) {
-                _session.Flush();
+                //_session.Flush();
                 _session.Close();
             }
         }

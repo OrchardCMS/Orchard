@@ -50,6 +50,7 @@ namespace Orchard.Tests.Packages {
 
         [TearDown]
         public void Cleanup() {
+            _container.Dispose();
             _session.Close();
         }
 

@@ -8,13 +8,13 @@ using Orchard.Models.ViewModels;
 
 namespace Orchard.Mvc.Html {
     public static class ItemDisplayExtensions {
-        public static MvcHtmlString DisplayForItem<TModel, TItemViewModel>(this HtmlHelper<TModel> html, TItemViewModel itemViewModel) where TItemViewModel : ItemDisplayModel {
-            return html.DisplayForItem(x => itemViewModel);
+        public static MvcHtmlString DisplayForItem<TModel, TItemModel>(this HtmlHelper<TModel> html, TItemModel item) where TItemModel : ItemDisplayModel {
+            return html.DisplayForItem(x => item);
         }
-        public static MvcHtmlString DisplayForItem<TModel, TItemViewModel>(this HtmlHelper<TModel> html, Expression<Func<TModel, TItemViewModel>> expression) where TItemViewModel : ItemDisplayModel {
+        public static MvcHtmlString DisplayForItem<TModel, TItemModel>(this HtmlHelper<TModel> html, Expression<Func<TModel, TItemModel>> expression) where TItemModel : ItemDisplayModel {
 
             var metadata = ModelMetadata.FromLambdaExpression(expression, html.ViewData);
-            var model = (TItemViewModel)metadata.Model;
+            var model = (TItemModel)metadata.Model;
 
             if (model.Adaptor != null) {
                 return model.Adaptor(html, model).DisplayForModel(model.TemplateName, model.Prefix ?? "");

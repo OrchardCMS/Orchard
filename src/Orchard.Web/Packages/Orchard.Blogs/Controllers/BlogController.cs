@@ -37,7 +37,7 @@ namespace Orchard.Blogs.Controllers {
 
         public ActionResult List() {
             var model = new BlogsViewModel {
-                Blogs = _blogService.Get().Select(b => _contentManager.BuildDisplayModel(b, null, "Summary"))
+                Blogs = _blogService.Get().Select(b => _contentManager.BuildDisplayModel(b, "Summary"))
             };
 
             return View(model);
@@ -51,7 +51,7 @@ namespace Orchard.Blogs.Controllers {
                 return new NotFoundResult();
 
             var model = new BlogViewModel {
-                Blog = _contentManager.BuildDisplayModel(blog, null, "Detail")
+                Blog = _contentManager.BuildDisplayModel(blog, "Detail")
             };
 
             return View(model);
@@ -68,7 +68,7 @@ namespace Orchard.Blogs.Controllers {
                 return new NotFoundResult();
 
             var model = new CreateBlogViewModel {
-                Blog = _contentManager.BuildEditorModel(blog, null)
+                Blog = _contentManager.BuildEditorModel(blog)
             };
 
             return View(model);
@@ -80,7 +80,7 @@ namespace Orchard.Blogs.Controllers {
             if (!_authorizer.Authorize(Permissions.CreateBlog, T("Couldn't create blog")))
                 return new HttpUnauthorizedResult();
 
-            model.Blog = _contentManager.UpdateEditorModel(_contentManager.New<Blog>("blog"), null, this);
+            model.Blog = _contentManager.UpdateEditorModel(_contentManager.New<Blog>("blog"), this);
 
             if (!ModelState.IsValid)
                 return View(model);
@@ -106,7 +106,7 @@ namespace Orchard.Blogs.Controllers {
                 return new NotFoundResult();
 
             var model = new BlogEditViewModel {
-                Blog = _contentManager.BuildEditorModel(blog, "")
+                Blog = _contentManager.BuildEditorModel(blog)
             };
 
             return View(model);
@@ -124,7 +124,7 @@ namespace Orchard.Blogs.Controllers {
                 return new NotFoundResult();
 
             var model = new BlogEditViewModel {
-                Blog = _contentManager.UpdateEditorModel(blog, "", this)
+                Blog = _contentManager.UpdateEditorModel(blog, this)
             };
 
             if (!ModelState.IsValid)

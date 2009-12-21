@@ -165,6 +165,7 @@
     <Content Include="Content\Images\title_background.gif" />
     <Content Include="Content\Site2.css" />
     <Content Include="Content\Site3.css" />
+    <Content Include="Themes\BlueSky\Views\layout.ascx" />
     <Content Include="Views\Shared\Messages.ascx" />
   </ItemGroup>
   <ItemGroup>

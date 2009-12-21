@@ -12,6 +12,7 @@ namespace Orchard.Users.Models {
         public UserHandler(IRepository<UserRecord> repository) {
             Filters.Add(new ActivatingFilter<User>("user"));
             Filters.Add(new StorageFilter<UserRecord>(repository));
+            Filters.Add(new ContentItemTemplates<User>("Items/Users.User"));
         }
     }
 }

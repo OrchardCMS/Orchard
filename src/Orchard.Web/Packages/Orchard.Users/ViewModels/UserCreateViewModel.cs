@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using Orchard.Models.ViewModels;
 using Orchard.Mvc.ViewModels;
+using Orchard.Security;
+using Orchard.Users.Models;
 
 namespace Orchard.Users.ViewModels {
     public class UserCreateViewModel : AdminViewModel {
@@ -18,6 +20,6 @@ namespace Orchard.Users.ViewModels {
         [Required, DataType(DataType.Password)]
         public string ConfirmPassword { get; set; }
 
-        public ItemEditorModel EditorModel { get; set; }
+        public ItemEditorModel<IUser> User { get; set; }
     }
 }

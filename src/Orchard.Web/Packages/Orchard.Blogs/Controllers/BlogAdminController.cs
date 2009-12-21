@@ -20,7 +20,7 @@ namespace Orchard.Blogs.Controllers {
         public ActionResult List() {
             //TODO: (erikpo) Need to make templatePath be more convention based so if my controller name has "Admin" in it then "Admin/{type}" is assumed
             var model = new AdminBlogsViewModel {
-                Blogs = _blogService.Get().Select(b => _contentManager.BuildDisplayModel(b, null, "Summary", "Admin/Blog"))
+                Blogs = _blogService.Get().Select(b => _contentManager.BuildDisplayModel(b, "SummaryAdmin"))
             };
 
             return View(model);
@@ -35,7 +35,7 @@ namespace Orchard.Blogs.Controllers {
 
             //TODO: (erikpo) Need to make templatePath be more convention based so if my controller name has "Admin" in it then "Admin/{type}" is assumed
             var model = new BlogForAdminViewModel {
-                Blog = _contentManager.BuildDisplayModel(blog, null, "Detail", "Admin/Blog")
+                Blog = _contentManager.BuildDisplayModel(blog, "DetailAdmin")
             };
 
             return View(model);

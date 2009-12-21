@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Web.Mvc;
 using Orchard.Mvc.ViewModels;
 
@@ -11,6 +12,11 @@ namespace Orchard.Mvc.ViewEngines {
         }
 
         public ViewEngineResult FindPartialView(ControllerContext controllerContext, string partialViewName, bool useCache) {
+            var scope = Scope.From(controllerContext);
+            if (scope != null && scope.LayoutViewEngine != null) {
+                return scope.LayoutViewEngine._viewEngines.FindPartialView(controllerContext, partialViewName);
+            }
+
             return new ViewEngineResult(Enumerable.Empty<string>());
         }
 
@@ -20,14 +26,16 @@ namespace Orchard.Mvc.ViewEngines {
             string masterName,
             bool useCache) {
 
-            // TODO: is there an optimization around useCache for
-            // this implementation? since IView can't re-execute, maybe not...
-
-            // if action returned a View with explicit master - 
-            // this will bypass the multi-pass layout strategy
-            if (!string.IsNullOrEmpty(masterName)
-                || !(controllerContext.Controller.ViewData.Model is BaseViewModel))
+            var skipLayoutViewEngine = false;
+            if (string.IsNullOrEmpty(masterName)==false)
+                skipLayoutViewEngine = true;
+            if (!(controllerContext.Controller.ViewData.Model is BaseViewModel))
+                skipLayoutViewEngine = true;
+            if (_viewEngines == null || _viewEngines.Count== 0)
+                skipLayoutViewEngine = true;
+            if (skipLayoutViewEngine)
                 return new ViewEngineResult(Enumerable.Empty<string>());
+
 
             var bodyView = _viewEngines.FindPartialView(controllerContext, viewName);
             var layoutView = _viewEngines.FindPartialView(controllerContext, "layout");
@@ -36,7 +44,7 @@ namespace Orchard.Mvc.ViewEngines {
             if (bodyView.View == null ||
                 layoutView.View == null ||
                 documentView.View == null) {
-                
+
                 var missingTemplatesResult = new ViewEngineResult(
                     (bodyView.SearchedLocations ?? Enumerable.Empty<string>())
                         .Concat((layoutView.SearchedLocations ?? Enumerable.Empty<string>()))
@@ -46,7 +54,7 @@ namespace Orchard.Mvc.ViewEngines {
                 return missingTemplatesResult;
             }
 
-            var view = new LayoutView(new[] {
+            var view = new LayoutView(this, new[] {
                                                 bodyView,
                                                 layoutView,
                                                 documentView,
@@ -56,8 +64,33 @@ namespace Orchard.Mvc.ViewEngines {
         }
 
         public void ReleaseView(ControllerContext controllerContext, IView view) {
-            var layoutView = (LayoutView) view;
+            var layoutView = (LayoutView)view;
             layoutView.ReleaseViews(controllerContext);
+        }
+
+        public IDisposable CreateScope(ViewContext context) {
+            return new Scope(context) { LayoutViewEngine = this };
+        }
+
+        class Scope : IDisposable {
+            private readonly ControllerContext _context;
+            private readonly Scope _prior;
+
+            public Scope(ControllerContext context) {
+                _context = context;
+                _prior = From(context);
+                context.HttpContext.Items[typeof(Scope)] = this;
+            }
+
+            public LayoutViewEngine LayoutViewEngine { get; set; }
+
+            public void Dispose() {
+                _context.HttpContext.Items[typeof(Scope)] = _prior;
+            }
+
+            public static Scope From(ControllerContext context) {
+                return (Scope)context.HttpContext.Items[typeof(Scope)];
+            }
         }
     }
 

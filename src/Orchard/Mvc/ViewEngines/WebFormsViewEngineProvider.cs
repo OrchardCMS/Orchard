@@ -23,14 +23,15 @@ namespace Orchard.Mvc.ViewEngines {
                 ViewLocationFormats = DisabledFormats,
                 AreaMasterLocationFormats = DisabledFormats,
                 AreaViewLocationFormats = DisabledFormats,
+                AreaPartialViewLocationFormats=DisabledFormats,
             };
 
-            // enable /Views/Shared/{partialName}
-            // enable /Views/Shared/"DisplayTemplates/"+{templateName}
-            // enable /Views/Shared/"EditorTemplates/+{templateName}
+            // enable /Views/{partialName}
+            // enable /Views/"DisplayTemplates/"+{templateName}
+            // enable /Views/"EditorTemplates/+{templateName}
             viewEngine.PartialViewLocationFormats = new[] {
-                parameters.VirtualPath + "/Views/Shared/{0}.ascx",
-                parameters.VirtualPath + "/Views/Shared/{0}.aspx",
+                parameters.VirtualPath + "/Views/{0}.ascx",
+                parameters.VirtualPath + "/Views/{0}.aspx",
             };
 
             // for "routed" request views...
@@ -44,18 +45,28 @@ namespace Orchard.Mvc.ViewEngines {
         }
 
         public IViewEngine CreatePackagesViewEngine(CreatePackagesViewEngineParams parameters) {
+            var areaFormats = new[] {
+                                        "~/Core/{2}/Views/{1}/{0}.ascx",
+                                        "~/Core/{2}/Views/{1}/{0}.aspx",
+                                        "~/Packages/{2}/Views/{1}/{0}.ascx",
+                                        "~/Packages/{2}/Views/{1}/{0}.aspx",
+                                    };
+
+            var universalFormats = parameters.VirtualPaths
+                .SelectMany(x => new[] {
+                                           x + "/Views/{0}.ascx",
+                                           x + "/Views/{0}.aspx",
+                                       })
+                .ToArray();
+
             var viewEngine = new WebFormViewEngine {
                 MasterLocationFormats = DisabledFormats,
-                ViewLocationFormats = DisabledFormats,
+                ViewLocationFormats = universalFormats,
+                PartialViewLocationFormats = universalFormats,
                 AreaMasterLocationFormats = DisabledFormats,
-                AreaViewLocationFormats = DisabledFormats,
-                AreaPartialViewLocationFormats = DisabledFormats,
+                AreaViewLocationFormats = areaFormats,
+                AreaPartialViewLocationFormats = areaFormats,
             };
-
-            viewEngine.PartialViewLocationFormats = parameters.VirtualPaths
-                .Select(x => x + "/Views/Shared/{0}.ascx")
-                .Concat(parameters.VirtualPaths.Select(s => s + "/Views/Shared/{0}.aspx"))
-                .ToArray();
 
             return viewEngine;
         }

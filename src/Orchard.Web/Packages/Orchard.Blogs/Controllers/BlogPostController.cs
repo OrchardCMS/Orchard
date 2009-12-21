@@ -56,7 +56,7 @@ namespace Orchard.Blogs.Controllers {
 
             var model = new BlogPostViewModel {
                 Blog = blog,
-                BlogPost = _contentManager.BuildDisplayModel(post, null, "Detail")
+                BlogPost = _contentManager.BuildDisplayModel(post, "Detail")
             };
 
             return View(model);
@@ -95,7 +95,7 @@ namespace Orchard.Blogs.Controllers {
             if (blog == null)
                 return new NotFoundResult();
 
-            var blogPost = _contentManager.BuildEditorModel(_contentManager.New<BlogPost>("blogpost"), null);
+            var blogPost = _contentManager.BuildEditorModel(_contentManager.New<BlogPost>("blogpost"));
             blogPost.Item.Blog = blog;
 
             var model = new CreateBlogPostViewModel {
@@ -117,7 +117,7 @@ namespace Orchard.Blogs.Controllers {
                 return new NotFoundResult();
 
             BlogPost blogPost = _contentManager.Create<BlogPost>("blogpost", bp => { bp.Blog = blog; });
-            model.BlogPost = _contentManager.UpdateEditorModel(blogPost, null, this);
+            model.BlogPost = _contentManager.UpdateEditorModel(blogPost, this);
 
             if (!ModelState.IsValid)
                 return View(model);
@@ -145,7 +145,7 @@ namespace Orchard.Blogs.Controllers {
                 return new NotFoundResult();
 
             var model = new BlogPostEditViewModel {
-                BlogPost = _contentManager.BuildEditorModel(post, null)
+                BlogPost = _contentManager.BuildEditorModel(post)
             };
 
             return View(model);
@@ -168,7 +168,7 @@ namespace Orchard.Blogs.Controllers {
                 return new NotFoundResult();
 
             var model = new BlogPostEditViewModel {
-                BlogPost = _contentManager.UpdateEditorModel(post, null, this)
+                BlogPost = _contentManager.UpdateEditorModel(post, this)
             };
 
             IValueProvider values = input.ToValueProvider();

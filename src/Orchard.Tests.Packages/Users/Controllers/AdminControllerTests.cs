@@ -9,6 +9,7 @@ using Autofac.Builder;
 using Moq;
 using NUnit.Framework;
 using Orchard.Data;
+using Orchard.Environment;
 using Orchard.Models;
 using Orchard.Models.Driver;
 using Orchard.Models.Records;
@@ -30,7 +31,10 @@ namespace Orchard.Tests.Packages.Users.Controllers {
             builder.Register<DefaultContentQuery>().As<IContentQuery>().FactoryScoped();
             builder.Register<MembershipService>().As<IMembershipService>();
             builder.Register<UserHandler>().As<IContentHandler>();
+            builder.Register<OrchardServices>().As<IOrchardServices>();
+            builder.Register<TransactionManager>().As<ITransactionManager>();
             builder.Register(new Mock<INotifier>().Object);
+            builder.Register(new Mock<IAuthorizer>().Object);
         }
 
         protected override IEnumerable<Type> DatabaseTypes {
@@ -76,10 +80,42 @@ namespace Orchard.Tests.Packages.Users.Controllers {
             Assert.That(model.Rows, Is.Not.Null);
         }
 
+        public static class Values {
+            public static IValueProvider Of<T>(T obj) {
+                return new ValueProvider<T>(obj);
+            }
+            class ValueProvider<T> : IValueProvider {
+                private readonly T _obj;
+
+                public ValueProvider(T obj) {
+                    _obj = obj;
+                }
+
+                public bool ContainsPrefix(ControllerContext controllerContext, string prefix) {
+                    return typeof(T).GetProperties().Any(x => x.Name.StartsWith(prefix));
+                }
+
+                public ValueProviderResult GetValue(ControllerContext controllerContext, string key) {
+                    var property = typeof(T).GetProperty(key);
+                    if (property == null)
+                        return null;
+                    return new ValueProviderResult(
+                        property.GetValue(_obj, null),
+                        Convert.ToString(property.GetValue(_obj, null)),
+                        null);
+                }
+            }
+        }
+
         [Test]
         public void CreateShouldAddUserAndRedirect() {
             var controller = _container.Resolve<AdminController>();
-            var result = controller.Create(new UserCreateViewModel { UserName = "four",Password="five",ConfirmPassword="five" });
+            controller.ValueProvider = Values.Of(new {
+                UserName = "four",
+                Password = "five",
+                ConfirmPassword = "five"
+            });
+            var result = controller._Create();
             Assert.That(result, Is.TypeOf<RedirectToRouteResult>());
 
             var redirect = (RedirectToRouteResult)result;
@@ -97,8 +133,12 @@ namespace Orchard.Tests.Packages.Users.Controllers {
             var model = (UserEditViewModel)result.ViewData.Model;
             Assert.That(model.UserName, Is.EqualTo("two"));
 
-            var input = new FormCollection { { "UserName", "bubba" }, { "Email", "hotep" } };
-            var result2 = _container.Resolve<AdminController>().Edit(id, input);
+            var controller = _container.Resolve<AdminController>();
+            controller.ValueProvider = Values.Of(new {
+                UserName = "bubba",
+                Email = "hotep",
+            });
+            var result2 = controller._Edit(id);
             Assert.That(result2, Is.TypeOf<RedirectToRouteResult>());
         }
     }

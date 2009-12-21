@@ -141,7 +141,7 @@
     <Content Include="Common\Views\Shared\EditorTemplates\OwnerEditorViewModel.ascx" />
     <Content Include="Themes\Styles\site.css" />
     <Content Include="Themes\Views\Admin\Install.aspx" />
-    <Content Include="Themes\Views\Shared\document.aspx" />
+    <Content Include="Themes\Views\document.aspx" />
     <Content Include="Themes\Views\Shared\EditorTemplates\ThemeSiteSettingsRecord.ascx" />
     <Content Include="Themes\Views\Shared\layout.ascx" />
     <Content Include="Themes\Views\Shared\user.ascx" />

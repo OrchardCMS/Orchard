@@ -5,19 +5,29 @@ using Orchard.Models.ViewModels;
 
 namespace Orchard.Models.Driver {
     public class ContentItemTemplates<TContent> : TemplateFilterBase<TContent> where TContent : class, IContent {
+        private readonly string _templateName;
         // todo: (heskew) use _prefix?
         private readonly string _prefix;
         private readonly string[] _displayTypes;
         private Action<UpdateEditorModelContext, ItemEditorModel<TContent>> _updater;
 
-        public ContentItemTemplates(params string[] displayTypes) {
-            _displayTypes = displayTypes;
+        public ContentItemTemplates(string templateName)
+            : this(templateName, "") {
+
+        }
+
+        public ContentItemTemplates(string templateName, string displayTypes) {
+            _templateName = templateName;
+            _displayTypes = (displayTypes ?? "").Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
             _updater = (context, viewModel) => context.Updater.TryUpdateModel(viewModel, "", null, null);
         }
 
         protected override void BuildDisplayModel(BuildDisplayModelContext context, TContent instance) {
+            context.DisplayModel.TemplateName = _templateName;
             var longestMatch = LongestMatch(context.DisplayType);
-            context.DisplayModel.TemplateName = (!string.IsNullOrEmpty(context.TemplatePath) ? context.TemplatePath : typeof(TContent).Name) + "/" + longestMatch;
+            if (!string.IsNullOrEmpty(longestMatch))
+                context.DisplayModel.TemplateName += "." + longestMatch;
+
             context.DisplayModel.Prefix = _prefix;
 
             if (context.DisplayModel.GetType() != typeof(ItemDisplayModel<TContent>)) {
@@ -45,7 +55,7 @@ namespace Orchard.Models.Driver {
         }
 
         protected override void BuildEditorModel(BuildEditorModelContext context, TContent instance) {
-            context.EditorModel.TemplateName = (!string.IsNullOrEmpty(context.TemplatePath) ? context.TemplatePath : typeof(TContent).Name) + "/Detail";
+            context.EditorModel.TemplateName = _templateName;
             context.EditorModel.Prefix = _prefix;
             if (context.EditorModel.GetType() != typeof(ItemEditorModel<TContent>)) {
                 context.EditorModel.Adaptor = (html, viewModel) => {
@@ -62,7 +72,7 @@ namespace Orchard.Models.Driver {
                 _updater(context, (ItemEditorModel<TContent>)context.EditorModel);
             else
                 _updater(context, new ItemEditorModel<TContent>(context.EditorModel));
-            context.EditorModel.TemplateName = (!string.IsNullOrEmpty(context.TemplatePath) ? context.TemplatePath : typeof(TContent).Name) + "/Detail";
+            context.EditorModel.TemplateName = _templateName;
             context.EditorModel.Prefix = _prefix;
         }
 

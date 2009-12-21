@@ -41,7 +41,7 @@ namespace Orchard.Tests.Models {
             });
             var contentHandler = _container.Resolve<IContentHandler>();
 
-            var ctx = new BuildDisplayModelContext(new ItemDisplayModel(new ContentItem()), null, null, null);
+            var ctx = new BuildDisplayModelContext(new ItemDisplayModel(new ContentItem()), null);
 
             driver1.Verify(x => x.BuildDisplayModel(ctx), Times.Never());
             contentHandler.BuildDisplayModel(ctx);
@@ -58,7 +58,7 @@ namespace Orchard.Tests.Models {
             var item = new ContentItem();
             item.Weld(new StubPart { Foo = new[] { "a", "b", "c" } });
 
-            var ctx = new BuildDisplayModelContext(new ItemDisplayModel(item), "", "", null);
+            var ctx = new BuildDisplayModelContext(new ItemDisplayModel(item), "");
             Assert.That(ctx.DisplayModel.Displays.Count(), Is.EqualTo(0));
             contentHandler.BuildDisplayModel(ctx);
             Assert.That(ctx.DisplayModel.Displays.Count(), Is.EqualTo(1));
@@ -71,7 +71,7 @@ namespace Orchard.Tests.Models {
                 get { return "Stub"; }
             }
 
-            protected override DriverResult Display(StubPart part, string groupName, string displayType) {
+            protected override DriverResult Display(StubPart part, string displayType) {
                 var viewModel = new StubViewModel { Foo = string.Join(",", part.Foo) };
                 if (displayType.StartsWith("Summary"))
                     return PartialView(viewModel, "StubViewModelTerse").Location("topmeta");
@@ -79,12 +79,12 @@ namespace Orchard.Tests.Models {
                 return PartialView(viewModel).Location("topmeta");
             }
 
-            protected override DriverResult Editor(StubPart part, string groupName) {
+            protected override DriverResult Editor(StubPart part) {
                 var viewModel = new StubViewModel { Foo = string.Join(",", part.Foo) };
                 return PartialView(viewModel).Location("last", "10");
             }
 
-            protected override DriverResult Editor(StubPart part, string groupName, IUpdateModel updater) {
+            protected override DriverResult Editor(StubPart part, IUpdateModel updater) {
                 var viewModel = new StubViewModel { Foo = string.Join(",", part.Foo) };
                 updater.TryUpdateModel(viewModel, Prefix, null, null);
                 part.Foo = viewModel.Foo.Split(new[] { ',' }).Select(x => x.Trim()).ToArray();

@@ -1,11 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Orchard.Models.Driver;
 using Orchard.Models.Records;
+using Orchard.Models.ViewModels;
 
 namespace Orchard.Models {
 
     public static class ContentExtensions {
+
+        /* Item creation and accessing extension methods */
+
         public static T New<T>(this IContentManager manager, string contentType) where T : class, IContent {
             var contentItem = manager.New(contentType);
             if (contentItem == null)
@@ -16,6 +21,10 @@ namespace Orchard.Models {
                 throw new InvalidCastException();
 
             return part;
+        }
+
+        public static T Create<T>(this IContentManager manager, string contentType) where T : class, IContent {
+            return manager.Create<T>(contentType, init => { });
         }
 
         public static T Create<T>(this IContentManager manager, string contentType, Action<T> initialize) where T : class, IContent {
@@ -33,6 +42,23 @@ namespace Orchard.Models {
             return contentItem == null ? null : contentItem.Get<T>();
         }
 
+
+        /* Display and editor convenience extension methods */
+
+        public static ItemDisplayModel<T> BuildDisplayModel<T>(this IContentManager manager, int id, string displayType) where T : class, IContent {
+            return manager.BuildDisplayModel(manager.Get<T>(id), displayType);
+        }
+
+        public static ItemEditorModel<T> BuildEditorModel<T>(this IContentManager manager, int id) where T : class, IContent {
+            return manager.BuildEditorModel(manager.Get<T>(id));
+        }
+
+        public static ItemEditorModel<T> UpdateEditorModel<T>(this IContentManager manager, int id, IUpdateModel updater) where T : class, IContent {
+            return manager.UpdateEditorModel(manager.Get<T>(id), updater);
+        }
+
+
+        /* Query related extension methods */
 
         public static IContentQuery<TPart> Query<TPart>(this IContentManager manager)
             where TPart : ContentPart {
@@ -69,6 +95,7 @@ namespace Orchard.Models {
         }
 
 
+        /* Aggregate item/part type casting extension methods */
 
         public static bool Is<T>(this IContent content) {
             return content == null ? false : content.ContentItem.Has(typeof(T));
