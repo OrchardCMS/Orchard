@@ -15,41 +15,37 @@ using Orchard.UI.Notify;
 
 namespace Orchard.Sandbox.Controllers {
     public class PageController : Controller, IUpdateModel {
-        private readonly IContentManager _contentManager;
-        private readonly INotifier _notifier;
 
-        public PageController(IContentManager contentManager, INotifier notifier) {
-            _contentManager = contentManager;
-            _notifier = notifier;
+        public PageController(IOrchardServices orchardServices) {
+            Services = orchardServices;
         }
 
-        protected virtual ISite CurrentSite { get; [UsedImplicitly] private set; }
-        protected virtual IUser CurrentUser { get; [UsedImplicitly] private set; }
+        public IOrchardServices Services { get; set; }
+        public virtual ISite CurrentSite { get; set; }
+        public virtual IUser CurrentUser { get; set; }
         public Localizer T { get; set; }
 
 
         public ActionResult Index() {
             var model = new PageIndexViewModel {
-                Pages = _contentManager.Query<SandboxPage, SandboxPageRecord>()
+                Pages = Services.ContentManager.Query<SandboxPage, SandboxPageRecord>()
                     .OrderBy(x => x.Name)
                     .List()
-                    .Select(x => _contentManager.BuildDisplayModel(x, "SummaryList"))
+                    .Select(x => Services.ContentManager.BuildDisplayModel(x, "SummaryList"))
             };
             return View(model);
         }
 
         public ActionResult Show(int id) {
-            var page = _contentManager.Get<SandboxPage>(id);
-            var model = new PageShowViewModel {
-                Page = _contentManager.BuildDisplayModel(page, "Detail")
-            };
-            return View(model);
+            return View(new PageShowViewModel {
+                Page = Services.ContentManager.BuildDisplayModel<SandboxPage>(id, "Detail")
+            });
         }
 
         public ActionResult Create() {
             var settings = CurrentSite.Get<ContentPart<SandboxSettingsRecord>>();
             if (settings.Record.AllowAnonymousEdits == false && CurrentUser == null) {
-                _notifier.Error(T("Anonymous users can not create pages"));
+                Services.Notifier.Error(T("Anonymous users can not create pages"));
                 return RedirectToAction("index");
             }
 
@@ -61,11 +57,11 @@ namespace Orchard.Sandbox.Controllers {
         public ActionResult Create(PageCreateViewModel model) {
             var settings = CurrentSite.Get<ContentPart<SandboxSettingsRecord>>();
             if (settings.Record.AllowAnonymousEdits == false && CurrentUser == null) {
-                _notifier.Error(T("Anonymous users can not create pages"));
+                Services.Notifier.Error(T("Anonymous users can not create pages"));
                 return RedirectToAction("index");
             }
 
-            var page = _contentManager.Create<SandboxPage>("sandboxpage", item => {
+            var page = Services.ContentManager.Create<SandboxPage>("sandboxpage", item => {
                 item.Record.Name = model.Name;
             });
             return RedirectToAction("show", new { page.ContentItem.Id });
@@ -73,35 +69,39 @@ namespace Orchard.Sandbox.Controllers {
 
 
         public ActionResult Edit(int id) {
-            var settings = CurrentSite.Get<ContentPart<SandboxSettingsRecord>>();
-            if (settings.Record.AllowAnonymousEdits == false && CurrentUser == null) {
-                _notifier.Error(T("Anonymous users can not edit pages"));
+            if (IsEditAllowed() == false) {
                 return RedirectToAction("show", new { id });
             }
 
-            var page = _contentManager.Get<SandboxPage>(id);
-            var model = new PageEditViewModel {
-                Page = _contentManager.BuildEditorModel(page)
-            };
-            return View(model);
+            return View(new PageEditViewModel {
+                Page = Services.ContentManager.BuildEditorModel<SandboxPage>(id)
+            });
         }
 
-        [HttpPost, ValidateInput(false)]
-        public ActionResult Edit(int id, FormCollection input) {
-            var settings = CurrentSite.Get<ContentPart<SandboxSettingsRecord>>();
-            if (settings.Record.AllowAnonymousEdits == false && CurrentUser == null) {
-                _notifier.Error(T("Anonymous users can not edit pages"));
+        [HttpPost, ActionName("Edit"), ValidateInput(false)]
+        public ActionResult _Edit(int id) {
+            if (IsEditAllowed() == false) {
                 return RedirectToAction("show", new { id });
             }
 
-            var page = _contentManager.Get<SandboxPage>(id);
             var model = new PageEditViewModel {
-                Page = _contentManager.UpdateEditorModel(page, this)
+                Page = Services.ContentManager.UpdateEditorModel<SandboxPage>(id, this)
             };
-            if (!ModelState.IsValid)
+            if (!ModelState.IsValid) {
+                Services.TransactionManager.Cancel();
                 return View(model);
+            }
 
             return RedirectToAction("show", new { id });
+        }
+
+        bool IsEditAllowed() {
+            var settings = CurrentSite.Get<ContentPart<SandboxSettingsRecord>>();
+            if (settings.Record.AllowAnonymousEdits == false && CurrentUser == null) {
+                Services.Notifier.Error(T("Anonymous users can not edit pages"));
+                return false;
+            }
+            return true;
         }
 
         bool IUpdateModel.TryUpdateModel<TModel>(TModel model, string prefix, string[] includeProperties, string[] excludeProperties) {
