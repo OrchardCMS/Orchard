@@ -108,14 +108,14 @@
     <Content Include="Package.txt" />
     <Content Include="Views\BlogPost\Create.ascx" />
     <Content Include="Views\BlogPost\Edit.ascx" />
-    <Content Include="Views\BlogAdmin\DisplayTemplates\Items\Blogs.Blog.Detail.ascx" />
+    <Content Include="Views\DisplayTemplates\Items\Blogs.Blog.DetailAdmin.ascx" />
     <Content Include="Views\BlogAdmin\Item.ascx" />
-    <Content Include="Views\BlogAdmin\DisplayTemplates\Items\Blogs.Blog.Summary.ascx" />
+    <Content Include="Views\DisplayTemplates\Items\Blogs.Blog.SummaryAdmin.ascx" />
     <Content Include="Views\Blog\List.ascx" />
     <Content Include="Views\BlogAdmin\List.ascx" />
-    <Content Include="Views\DisplayTemplates\Items\Blogs.BlogPost.Detail.ascx" />
+    <Content Include="Views\DisplayTemplates\Items\Blogs.BlogPost.ascx" />
     <Content Include="Views\DisplayTemplates\Items\Blogs.BlogPost.Summary.ascx" />
-    <Content Include="Views\DisplayTemplates\Items\Blogs.Blog.Detail.ascx" />
+    <Content Include="Views\DisplayTemplates\Items\Blogs.Blog.ascx" />
     <Content Include="Views\DisplayTemplates\Parts\Blogs.BlogPost.List.ascx" />
     <Content Include="Views\DisplayTemplates\Items\Blogs.Blog.Summary.ascx" />
     <Content Include="Views\EditorTemplates\Parts\Blogs.BlogPost.Publish.ascx" />
@@ -123,7 +123,7 @@
     <Content Include="Views\Blog\Create.ascx" />
     <Content Include="Views\Blog\Edit.ascx" />
     <Content Include="Views\Blog\Item.ascx" />
-    <Content Include="Views\BlogAdmin\DisplayTemplates\Items\Blogs.BlogPost.Summary.ascx" />
+    <Content Include="Views\DisplayTemplates\Items\Blogs.BlogPost.SummaryAdmin.ascx" />
     <Content Include="Views\EditorTemplates\Parts\Blogs.Blog.Fields.ascx" />
     <Content Include="Views\EditorTemplates\Items\Blogs.Blog.ascx" />
     <Content Include="Views\EditorTemplates\Items\Blogs.BlogPost.ascx" />

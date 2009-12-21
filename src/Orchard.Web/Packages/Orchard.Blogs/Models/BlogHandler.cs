@@ -16,7 +16,7 @@ namespace Orchard.Blogs.Models {
             Filters.Add(new ActivatingFilter<CommonAspect>("blog"));
             Filters.Add(new ActivatingFilter<RoutableAspect>("blog"));
             Filters.Add(new StorageFilter<BlogRecord>(repository));
-            Filters.Add(new ContentItemTemplates<Blog>("Items/Blogs.Blog", "Detail Summary"));
+            Filters.Add(new ContentItemTemplates<Blog>("Items/Blogs.Blog", "Summary DetailAdmin SummaryAdmin"));
 
             OnGetEditorViewModel<Blog>((context, blog) =>
                 context.AddEditor(new TemplateViewModel(blog) { TemplateName = "Parts/Blogs.Blog.Fields", ZoneName = "primary", Position = "1" })

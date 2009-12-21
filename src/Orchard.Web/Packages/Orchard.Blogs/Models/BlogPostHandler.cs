@@ -24,7 +24,7 @@ namespace Orchard.Blogs.Models {
             Filters.Add(new ActivatingFilter<RoutableAspect>("blogpost"));
             Filters.Add(new ActivatingFilter<BodyAspect>("blogpost"));
             Filters.Add(new StorageFilter<BlogPostRecord>(repository));
-            Filters.Add(new ContentItemTemplates<BlogPost>("Items/Blogs.BlogPost", "Detail Summary"));
+            Filters.Add(new ContentItemTemplates<BlogPost>("Items/Blogs.BlogPost", "Summary SummaryAdmin"));
 
             OnCreated<BlogPost>((context, bp) => bp.Blog.PostCount++);
 
@@ -75,13 +75,13 @@ namespace Orchard.Blogs.Models {
             });
 
             OnGetEditorViewModel<BlogPost>((context, blogPost) => {
-                context.AddEditor(new TemplateViewModel(blogPost) { TemplateName = "BlogPost/FieldsPrimary", ZoneName = "primary", Position = "1" });
-                context.AddEditor(new TemplateViewModel(blogPost) { TemplateName = "BlogPost/FieldsSecondary", ZoneName = "secondary", Position = "1" });
+                context.AddEditor(new TemplateViewModel(blogPost) { TemplateName = "Parts/Blogs.BlogPost.Fields", ZoneName = "primary", Position = "1" });
+                context.AddEditor(new TemplateViewModel(blogPost) { TemplateName = "Parts/Blogs.BlogPost.Publish", ZoneName = "secondary", Position = "1" });
             });
 
             OnUpdateEditorViewModel<BlogPost>((context, blogPost) => {
-                context.AddEditor(new TemplateViewModel(blogPost) { TemplateName = "BlogPost/FieldsPrimary", ZoneName = "primary", Position = "1" });
-                context.AddEditor(new TemplateViewModel(blogPost) { TemplateName = "BlogPost/FieldsSecondary", ZoneName = "secondary", Position = "1" });
+                context.AddEditor(new TemplateViewModel(blogPost) { TemplateName = "Parts/Blogs.BlogPost.Fields", ZoneName = "primary", Position = "1" });
+                context.AddEditor(new TemplateViewModel(blogPost) { TemplateName = "Parts/Blogs.BlogPost.Publish", ZoneName = "secondary", Position = "1" });
                 context.Updater.TryUpdateModel(blogPost, "", null, null);
             });
         }
