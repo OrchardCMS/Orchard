@@ -1,0 +1,77 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1" MembersFormat="FullSignature">
+  <Class Name="Orchard.Models.ContentItem">
+    <Position X="0.5" Y="1.25" Width="2.5" />
+    <Members>
+      <Property Name="IContent.ContentItem" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAACAAhAABAAAAAAAAAAQABAAAAQAAAEBAA=</HashCode>
+      <FileName>Models\ContentItem.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Record" />
+    </ShowAsAssociation>
+    <ShowAsCollectionAssociation>
+      <Property Name="Parts" />
+    </ShowAsCollectionAssociation>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Orchard.Models.ContentPart">
+    <Position X="5.75" Y="2.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAA=</HashCode>
+      <FileName>Models\ContentPart.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="ContentItem" />
+    </ShowAsAssociation>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Orchard.Models.ContentPart&lt;TRecord&gt;">
+    <Position X="5.25" Y="4" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAA=</HashCode>
+      <FileName>Models\ContentPart.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Orchard.Models.Records.ContentItemRecord">
+    <Position X="0.5" Y="4.75" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAA=</HashCode>
+      <FileName>Models\Records\ContentItemRecord.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="ContentType" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="Orchard.Models.Records.ContentTypeRecord">
+    <Position X="0.5" Y="6.5" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Records\ContentTypeRecord.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Interface Name="Orchard.Models.IContent">
+    <Position X="5.5" Y="0.5" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAA=</HashCode>
+      <FileName>Models\IContent.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Orchard.Models.IContentManager">
+    <Position X="4" Y="5.75" Width="6" />
+    <TypeIdentifier>
+      <HashCode>AAAAEAAAAAAAACBBAIAAAAAAAAEAAEgAAACAAAAAAAA=</HashCode>
+      <FileName>Models\IContentManager.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Orchard.Models.Driver.IContentHandler">
+    <Position X="4.5" Y="8.75" Width="4.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAEAAAAAEAAABBAIAAAIAAACEAAAQAAACAAAAAAAg=</HashCode>
+      <FileName>Models\Driver\IContentHandler.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

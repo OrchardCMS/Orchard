@@ -75,7 +75,9 @@
   <ItemGroup>
     <Compile Include="AdminMenu.cs" />
     <Compile Include="Controllers\BlogAdminController.cs" />
+    <Compile Include="Controllers\BlogDriver.cs" />
     <Compile Include="Controllers\BlogPostController.cs" />
+    <Compile Include="Controllers\BlogPostDriver.cs" />
     <Compile Include="Extensions\HtmlHelperExtensions.cs" />
     <Compile Include="Extensions\UriExtensions.cs" />
     <Compile Include="Extensions\UrlHelperExtensions.cs" />

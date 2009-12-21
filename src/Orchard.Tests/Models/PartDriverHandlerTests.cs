@@ -9,6 +9,7 @@ using Autofac.Modules;
 using Moq;
 using NUnit.Framework;
 using Orchard.ContentManagement;
+using Orchard.ContentManagement.Drivers;
 using Orchard.ContentManagement.Handlers;
 using Orchard.ContentManagement.ViewModels;
 
