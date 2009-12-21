@@ -1,0 +1,6 @@
+name: Orange
+author: Nathan Heskew
+description: The default ASP.NET MVC look, in orange.
+version: 1.0
+tags: orange
+homepage: http://www.orchardproject.net
