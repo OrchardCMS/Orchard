@@ -147,9 +147,6 @@
     <Content Include="Themes\Views\menu.ascx" />
     <Content Include="Themes\Views\Web.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Themes\Views\Shared\" />
-  </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v9.0\WebApplications\Microsoft.WebApplication.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
