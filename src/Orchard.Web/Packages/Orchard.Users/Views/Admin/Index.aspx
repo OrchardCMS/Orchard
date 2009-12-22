@@ -3,7 +3,7 @@
 <%@ Import Namespace="Orchard.Security" %>
 <%@ Import Namespace="Orchard.Mvc.Html" %>
 <h2>Manage Users</h2>
-<% using (Html.BeginForm()) { %>
+<% using (Html.BeginFormAntiForgeryPost()) { %>
     <%=Html.ValidationSummary()%>
     <div class="manage"><%=Html.ActionLink("Add a new user", "Create", new { }, new { @class = "button" })%></div>
     <fieldset>

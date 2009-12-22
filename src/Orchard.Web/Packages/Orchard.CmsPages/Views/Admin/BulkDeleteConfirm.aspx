@@ -5,7 +5,7 @@
 <%@ Import Namespace="Orchard.Mvc.Html" %>
 <h2>Delete pages</h2>
 <p>Are you sure you want to delete the pages?</p>
-<% using (Html.BeginForm()) { %>
+<% using (Html.BeginFormAntiForgeryPost()) { %>
     <%= Html.ValidationSummary() %>
     <fieldset>
         <input type="hidden" name="<%=Html.NameOf(m => m.Options.BulkAction)%>" value="<%=PageIndexBulkAction.Delete%>" />

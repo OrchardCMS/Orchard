@@ -3,7 +3,7 @@
 <%@ Import Namespace="Orchard.Mvc.Html" %>
 <h2>Change Template</h2>
 <p>Select your layout from one of the templates below.</p>    
-<% using (Html.BeginForm()) {
+<% using (Html.BeginFormAntiForgeryPost()) {
     %><%= Html.ValidationSummary() %>
     <ul class="templates"><%
         foreach (var template in Model.Templates) {

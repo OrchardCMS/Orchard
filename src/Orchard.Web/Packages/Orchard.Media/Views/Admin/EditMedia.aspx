@@ -13,7 +13,7 @@
     <% } %>
     Edit Media </p>
 <div class="sections">
-	<%using (Html.BeginForm()) { %>
+	<%using (Html.BeginFormAntiForgeryPost()) { %>
         <%= Html.ValidationSummary() %>
         <div class="primary">
 		    <h3>About this media</h3>

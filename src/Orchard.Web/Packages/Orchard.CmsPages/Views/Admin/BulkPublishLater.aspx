@@ -3,7 +3,7 @@
 <%@ Import Namespace="Orchard.Utility"%>
 <%@ Import Namespace="Orchard.CmsPages.Services.Templates"%>
 <%@ Import Namespace="Orchard.Mvc.Html" %>
-<% using (Html.BeginForm()) { %>
+<% using (Html.BeginFormAntiForgeryPost()) { %>
     <h2>Publish later</h2>
     <p>Enter the scheduled publication date:</p>
     <%=Html.ValidationSummary() %>

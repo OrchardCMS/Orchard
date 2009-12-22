@@ -4,7 +4,7 @@
 <%@ Import Namespace="Orchard.Mvc.Html" %>
 <h3>
     Create Page</h3>
-<%using (Html.BeginForm()) { %>
+<%using (Html.BeginFormAntiForgeryPost()) { %>
 
     <%=Html.LabelFor(x => x.Name)%><%=Html.EditorFor(x => x.Name)%>
     <input type="submit" name="submit" value="Create" />

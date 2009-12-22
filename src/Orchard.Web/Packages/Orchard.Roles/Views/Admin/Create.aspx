@@ -2,7 +2,7 @@
 <%@ Import Namespace="Orchard.Roles.ViewModels"%>
 <%@ Import Namespace="Orchard.Mvc.Html" %>
 <h2>Add Role</h2>
-<% using (Html.BeginForm()) { %>
+<% using (Html.BeginFormAntiForgeryPost()) { %>
     <%=Html.ValidationSummary()%>
     <fieldset>
 	    <legend>Information</legend>

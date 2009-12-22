@@ -5,7 +5,7 @@
 <p class="bottomSpacer"><%=_Encoded("about setting up a page") %></p>
 <%=Html.ValidationSummary() %>
 <div class="sections">
-    <% using (Html.BeginForm()) { %>
+    <% using (Html.BeginFormAntiForgeryPost()) { %>
     <div class="primary">
         <h3><%=_Encoded("Page Content") %></h3>
         <%-- todo: (heskew) change the editors to be self-contained (fieldset > editor) --%>

@@ -1,7 +1,7 @@
 ﻿<%@ Page Language="C#" Inherits="System.Web.Mvc.ViewPage<Orchard.Core.Settings.ViewModels.SettingsIndexViewModel>" %>
 <%@ Import Namespace="Orchard.Mvc.Html" %>
-<h2>Edit Settings</h2>
-<%using (Html.BeginForm()) { %>
+<h2><%=Html.TitleForPage("Edit Settings")%></h2>
+<%using (Html.BeginFormAntiForgeryPost()) { %>
 <%= Html.ValidationSummary() %>
 <fieldset>
     <legend>Global Settings</legend>

@@ -3,7 +3,7 @@
 <%@ Import Namespace="Orchard.Security" %>
 <%@ Import Namespace="Orchard.Mvc.Html" %>
 <h2>Add User</h2>
-<%using (Html.BeginForm()) { %>
+<%using (Html.BeginFormAntiForgeryPost()) { %>
     <%=Html.ValidationSummary() %>
     <%=Html.EditorFor(m=>m.UserName, "inputTextLarge") %>
     <%=Html.EditorFor(m=>m.Email, "inputTextLarge") %>

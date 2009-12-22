@@ -9,7 +9,7 @@
 <% if (Model != null && Model.Messages != null) Html.RenderPartial("Messages", Model.Messages); %>
 <%= Html.ValidationSummary("Login was unsuccessful. Please correct the errors and try again.") %>
 
-<% using (Html.BeginForm()) { %>
+<% using (Html.BeginFormAntiForgeryPost()) { %>
     <div>
         <fieldset>
             <legend>Account Information</legend>

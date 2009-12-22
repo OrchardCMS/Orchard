@@ -5,7 +5,7 @@
 <%-- todo: (heskew) localize --%>
 <h2>Manage Pages</h2>
 <p>Possible text about setting up a page goes here. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla erat turpis, blandit eget feugiat nec, tempus vel quam. Mauris et neque eget justo suscipit blandit.</p>
-<% using (Html.BeginForm()) { %>
+<% using (Html.BeginFormAntiForgeryPost()) { %>
     <%=Html.ValidationSummary() %>
     <fieldset class="actions bulk">
         <label for="publishActions">Actions: </label>

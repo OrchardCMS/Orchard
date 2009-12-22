@@ -11,7 +11,7 @@
 	    
     <% } %>
     Folder Properties</p>
-<%using (Html.BeginForm()) { %>
+<%using (Html.BeginFormAntiForgeryPost()) { %>
     <%= Html.ValidationSummary() %>
     <fieldset>
         <label for="Name">Folder Name:</label>

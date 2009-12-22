@@ -10,7 +10,7 @@
                       new {name = navigation.FolderName, mediaPath = navigation.FolderPath})%> &#62;
 		<% } %>
 		Add a Folder</p>
-<%using (Html.BeginForm()) { %>
+<%using (Html.BeginFormAntiForgeryPost()) { %>
     <%= Html.ValidationSummary() %>
     <fieldset>
         <label for="Name">Folder Name:</label>
