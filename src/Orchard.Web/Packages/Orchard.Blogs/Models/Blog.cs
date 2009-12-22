@@ -4,7 +4,6 @@ using Orchard.ContentManagement;
 
 namespace Orchard.Blogs.Models {
     public class Blog : ContentPart<BlogRecord> {
-        public readonly static ContentType ContentType = new ContentType { Name = "blog", DisplayName = "Blog" };
 
         public int Id { get { return ContentItem.Id; } }
 

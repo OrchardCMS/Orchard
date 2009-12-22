@@ -44,7 +44,7 @@ namespace Orchard.Users.Controllers {
         }
 
         public ActionResult Create() {
-            var user = Services.ContentManager.New<IUser>(Models.User.ContentType.Name);
+            var user = Services.ContentManager.New<IUser>(UserDriver.ContentType.Name);
             var model = new UserCreateViewModel {
                 User = Services.ContentManager.BuildEditorModel(user)
             };

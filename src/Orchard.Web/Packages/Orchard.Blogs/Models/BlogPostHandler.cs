@@ -1,28 +1,19 @@
-using System.Collections.Generic;
-using System.Linq;
-using System.Web.Routing;
-using Orchard.Blogs.Services;
+using JetBrains.Annotations;
+using Orchard.Blogs.Controllers;
 using Orchard.Core.Common.Models;
 using Orchard.Data;
-using Orchard.ContentManagement;
 using Orchard.ContentManagement.Handlers;
-using Orchard.ContentManagement.ViewModels;
 
 namespace Orchard.Blogs.Models {
+    [UsedImplicitly]
     public class BlogPostHandler : ContentHandler {
-        public override IEnumerable<ContentType> GetContentTypes() {
-            return new[] { BlogPost.ContentType };
-        }
 
-        public BlogPostHandler(
-            IRepository<BlogPostRecord> repository,
-            IContentManager contentManager,
-            IBlogPostService blogPostService) {
+        public BlogPostHandler(IRepository<BlogPostRecord> repository) {
 
-            Filters.Add(new ActivatingFilter<BlogPost>("blogpost"));
-            Filters.Add(new ActivatingFilter<CommonAspect>("blogpost"));
-            Filters.Add(new ActivatingFilter<RoutableAspect>("blogpost"));
-            Filters.Add(new ActivatingFilter<BodyAspect>("blogpost"));
+            Filters.Add(new ActivatingFilter<BlogPost>(BlogPostDriver.ContentType.Name));
+            Filters.Add(new ActivatingFilter<CommonAspect>(BlogPostDriver.ContentType.Name));
+            Filters.Add(new ActivatingFilter<RoutableAspect>(BlogPostDriver.ContentType.Name));
+            Filters.Add(new ActivatingFilter<BodyAspect>(BlogPostDriver.ContentType.Name));
             Filters.Add(new StorageFilter<BlogPostRecord>(repository));
 
 

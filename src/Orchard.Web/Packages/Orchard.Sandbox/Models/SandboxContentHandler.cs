@@ -4,23 +4,21 @@ using Orchard.Core.Common.Models;
 using Orchard.Data;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Handlers;
+using Orchard.Sandbox.Controllers;
 
 namespace Orchard.Sandbox.Models {
     [UsedImplicitly]
     public class SandboxContentHandler : ContentHandler {
-        public override IEnumerable<ContentType> GetContentTypes() {
-            return new[] { SandboxPage.ContentType };
-        }
 
         public SandboxContentHandler(
             IRepository<SandboxPageRecord> pageRepository,
             IRepository<SandboxSettingsRecord> settingsRepository) {
 
             // define the "sandboxpage" content type
-            Filters.Add(new ActivatingFilter<SandboxPage>(SandboxPage.ContentType.Name));
-            Filters.Add(new ActivatingFilter<CommonAspect>(SandboxPage.ContentType.Name));
-            Filters.Add(new ActivatingFilter<RoutableAspect>(SandboxPage.ContentType.Name));
-            Filters.Add(new ActivatingFilter<BodyAspect>(SandboxPage.ContentType.Name));
+            Filters.Add(new ActivatingFilter<SandboxPage>(SandboxPageDriver.ContentType.Name));
+            Filters.Add(new ActivatingFilter<CommonAspect>(SandboxPageDriver.ContentType.Name));
+            Filters.Add(new ActivatingFilter<RoutableAspect>(SandboxPageDriver.ContentType.Name));
+            Filters.Add(new ActivatingFilter<BodyAspect>(SandboxPageDriver.ContentType.Name));
             Filters.Add(new StorageFilter<SandboxPageRecord>(pageRepository) { AutomaticallyCreateMissingRecord = true });
 
 

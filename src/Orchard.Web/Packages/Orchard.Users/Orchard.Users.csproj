@@ -62,6 +62,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controllers\AdminController.cs" />
+    <Compile Include="Controllers\UserDriver.cs" />
     <Compile Include="Models\User.cs" />
     <Compile Include="Models\UserHandler.cs" />
     <Compile Include="Models\UserRecord.cs" />

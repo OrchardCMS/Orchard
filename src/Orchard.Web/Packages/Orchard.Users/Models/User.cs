@@ -3,8 +3,6 @@ using Orchard.Security;
 
 namespace Orchard.Users.Models {
     public sealed class User : ContentPart<UserRecord>, IUser {
-        public readonly static ContentType ContentType = new ContentType { Name = "user", DisplayName = "User Profile" };
-
         public int Id {
             get { return ContentItem.Id; }
         }

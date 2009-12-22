@@ -11,8 +11,13 @@ using Orchard.ContentManagement.Drivers;
 namespace Orchard.Blogs.Controllers {
     [UsedImplicitly]
     public class BlogPostDriver : ItemDriver<BlogPost> {
-        public BlogPostDriver()
-            : base(BlogPost.ContentType) {
+        public readonly static ContentType ContentType = new ContentType {
+            Name = "blogpost",
+            DisplayName = "Blog Post"
+        };
+
+        protected override ContentType GetContentType() {
+            return ContentType;
         }
 
         protected override string Prefix { get { return ""; } }
@@ -41,11 +46,15 @@ namespace Orchard.Blogs.Controllers {
                                             };
         }
 
+        protected override DriverResult Display(BlogPost post, string displayType) {
+            return ItemTemplate("Items/Blogs.BlogPost").LongestMatch(displayType, "Summary", "SummaryAdmin");
+        }
+
         protected override DriverResult Editor(BlogPost post) {
             return Combined(
+                ItemTemplate("Items/Blogs.BlogPost"),
                 PartTemplate(post, "Parts/Blogs.BlogPost.Fields").Location("primary", "1"),
-                PartTemplate(post, "Parts/Blogs.BlogPost.Publish").Location("secondary", "1")
-                );
+                PartTemplate(post, "Parts/Blogs.BlogPost.Publish").Location("secondary", "1"));
         }
 
         protected override DriverResult Editor(BlogPost post, IUpdateModel updater) {

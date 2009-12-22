@@ -11,13 +11,21 @@ using Orchard.ContentManagement.ViewModels;
 namespace Orchard.Blogs.Controllers {
     [UsedImplicitly]
     public class BlogDriver : ItemDriver<Blog> {
+        public readonly static ContentType ContentType = new ContentType {
+            Name = "blog",
+            DisplayName = "Blog"
+        };
+
         private readonly IContentManager _contentManager;
         private readonly IBlogPostService _blogPostService;
 
-        public BlogDriver(IContentManager contentManager, IBlogPostService blogPostService)
-            : base(Blog.ContentType) {
+        public BlogDriver(IContentManager contentManager, IBlogPostService blogPostService) {
             _contentManager = contentManager;
             _blogPostService = blogPostService;
+        }
+
+        protected override ContentType GetContentType() {
+            return ContentType;
         }
 
         protected override string Prefix { get { return ""; } }

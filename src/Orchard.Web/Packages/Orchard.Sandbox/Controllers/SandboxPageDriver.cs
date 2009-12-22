@@ -9,10 +9,14 @@ using Orchard.Sandbox.Models;
 namespace Orchard.Sandbox.Controllers {
     [UsedImplicitly]
     public class SandboxPageDriver : ItemDriver<SandboxPage> {
-        public SandboxPageDriver()
-            : base(SandboxPage.ContentType) {
-        }
+        public readonly static ContentType ContentType = new ContentType {
+            Name = "sandboxpage",
+            DisplayName = "Sandbox Page"
+        };
 
+        protected override ContentType GetContentType() {
+            return ContentType;
+        }
         protected override string GetDisplayText(SandboxPage item) {
             return item.Record.Name;
         }

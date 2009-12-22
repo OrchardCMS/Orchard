@@ -7,8 +7,6 @@ using Orchard.Security;
 
 namespace Orchard.Blogs.Models {
     public class BlogPost : ContentPart<BlogPostRecord> {
-        public readonly static ContentType ContentType = new ContentType { Name = "blogpost", DisplayName = "Blog Post" };
-
         [HiddenInput(DisplayValue = false)]
         public int Id { get { return ContentItem.Id; } }
 
