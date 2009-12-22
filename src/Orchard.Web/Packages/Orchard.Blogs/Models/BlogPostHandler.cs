@@ -24,7 +24,7 @@ namespace Orchard.Blogs.Models {
             Filters.Add(new ActivatingFilter<RoutableAspect>("blogpost"));
             Filters.Add(new ActivatingFilter<BodyAspect>("blogpost"));
             Filters.Add(new StorageFilter<BlogPostRecord>(repository));
-            Filters.Add(new ContentItemTemplates<BlogPost>("Items/Blogs.BlogPost", "Summary SummaryAdmin"));
+
 
             OnCreated<BlogPost>((context, bp) => bp.Blog.PostCount++);
         }

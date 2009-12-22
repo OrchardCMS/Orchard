@@ -49,7 +49,7 @@ namespace Orchard.Roles.Controllers {
                 UserRoles = userRoles,
                 Roles = roles.ToList(),
             };
-            return PartialView(model, "Parts/Roles.UserRoles");
+            return PartTemplate(model, "Parts/Roles.UserRoles");
         }
 
         protected override DriverResult Editor(UserRoles userRoles, IUpdateModel updater) {
@@ -75,7 +75,7 @@ namespace Orchard.Roles.Controllers {
                 }
 
             }
-            return PartialView(model, "Parts/Roles.UserRoles");
+            return PartTemplate(model, "Parts/Roles.UserRoles");
         }
     }
 }

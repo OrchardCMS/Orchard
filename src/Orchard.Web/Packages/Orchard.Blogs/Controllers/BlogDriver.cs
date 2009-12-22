@@ -14,7 +14,8 @@ namespace Orchard.Blogs.Controllers {
         private readonly IContentManager _contentManager;
         private readonly IBlogPostService _blogPostService;
 
-        public BlogDriver(IContentManager contentManager, IBlogPostService blogPostService) {
+        public BlogDriver(IContentManager contentManager, IBlogPostService blogPostService)
+            : base(Blog.ContentType) {
             _contentManager = contentManager;
             _blogPostService = blogPostService;
         }
@@ -44,29 +45,33 @@ namespace Orchard.Blogs.Controllers {
         }
 
         protected override DriverResult Display(Blog blog, string displayType) {
-            if (!displayType.StartsWith("Detail"))
-                return null;
 
-            var posts = _blogPostService.Get(blog);
-
-            IEnumerable<ItemDisplayModel<BlogPost>> model;
+            IEnumerable<ItemDisplayModel<BlogPost>> blogPosts = null;
             if (displayType.StartsWith("DetailAdmin")) {
-                model = posts.Select(bp => _contentManager.BuildDisplayModel(bp, "SummaryAdmin"));
+                blogPosts = _blogPostService.Get(blog)
+                    .Select(bp => _contentManager.BuildDisplayModel(bp, "SummaryAdmin"));
             }
-            else {
-                model = posts.Select(bp => _contentManager.BuildDisplayModel(bp, "Summary"));
+            else if (displayType.StartsWith("Detail")) {
+                blogPosts = _blogPostService.Get(blog)
+                    .Select(bp => _contentManager.BuildDisplayModel(bp, "Summary"));
             }
 
-            return PartialView(model, "Parts/Blogs.BlogPost.List", "").Location("body");
+            return Combined(
+                ItemTemplate("Items/Blogs.Blog").LongestMatch(displayType, "Summary", "DetailAdmin", "SummaryAdmin"),
+                blogPosts == null ? null : PartTemplate(blogPosts, "Parts/Blogs.BlogPost.List", "").Location("body"));
         }
 
         protected override DriverResult Editor(Blog blog) {
-            return PartialView(blog, "Parts/Blogs.Blog.Fields").Location("primary", "1");
+            return Combined(
+                ItemTemplate("Items/Blogs.Blog"),
+                PartTemplate(blog, "Parts/Blogs.Blog.Fields").Location("primary", "1"));
         }
 
         protected override DriverResult Editor(Blog blog, IUpdateModel updater) {
             updater.TryUpdateModel(blog, Prefix, null, null);
-            return PartialView(blog, "Parts/Blogs.Blog.Fields").Location("primary", "1");
+            return Combined(
+                ItemTemplate("Items/Blogs.Blog"),
+                PartTemplate(blog, "Parts/Blogs.Blog.Fields").Location("primary", "1"));
         }
     }
 }

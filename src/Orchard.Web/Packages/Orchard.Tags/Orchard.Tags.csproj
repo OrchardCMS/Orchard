@@ -63,11 +63,14 @@
   <ItemGroup>
     <Compile Include="AdminMenu.cs" />
     <Compile Include="Controllers\AdminController.cs" />
+    <Compile Include="ViewModels\EditTagsViewModel.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\HasTagsDriver.cs" />
     <Compile Include="Helpers\TagHelpers.cs" />
+    <Compile Include="Models\HasTags.cs" />
     <Compile Include="Models\Tag.cs" />
     <Compile Include="Models\TagSettings.cs" />
-    <Compile Include="Models\TagsHandler.cs" />
+    <Compile Include="Models\HasTagsHandler.cs" />
     <Compile Include="Permissions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Routes.cs" />
@@ -87,8 +90,8 @@
     <Content Include="Views\Admin\Search.aspx" />
     <Content Include="Views\Home\Index.aspx" />
     <Content Include="Views\Home\Search.aspx" />
-    <Content Include="Views\DisplayTemplates\Parts\Tags.HasTags.ascx" />
-    <Content Include="Views\EditorTemplates\Parts\Tags.HasTags.ascx" />
+    <Content Include="Views\DisplayTemplates\Parts\Tags.ShowTags.ascx" />
+    <Content Include="Views\EditorTemplates\Parts\Tags.EditTags.ascx" />
     <Content Include="Views\EditorTemplates\Parts\Tags.SiteSettings.ascx" />
     <Content Include="Web.config" />
     <Content Include="Views\Web.config" />

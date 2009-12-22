@@ -137,8 +137,9 @@
     <Compile Include="ContentManagement\Drivers\DriverResult.cs" />
     <Compile Include="ContentManagement\Drivers\ItemDriver.cs" />
     <Compile Include="ContentManagement\Drivers\ItemDriverHandler.cs" />
+    <Compile Include="ContentManagement\Drivers\ItemTemplateResult.cs" />
     <Compile Include="ContentManagement\Drivers\PartDriverHandler.cs" />
-    <Compile Include="ContentManagement\Drivers\TemplateResult.cs" />
+    <Compile Include="ContentManagement\Drivers\PartTemplateResult.cs" />
     <Compile Include="ContentManagement\Handlers\ActivatedContentContext.cs" />
     <Compile Include="ContentManagement\Handlers\ActivatingContentContext.cs" />
     <Compile Include="ContentManagement\Handlers\ActivatingFilter.cs" />

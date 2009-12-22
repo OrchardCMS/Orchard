@@ -1,12 +1,12 @@
 ﻿using System.Collections.Generic;
-using System.Web.Routing;
+using JetBrains.Annotations;
 using Orchard.Core.Common.Models;
 using Orchard.Data;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Handlers;
-using Orchard.ContentManagement.ViewModels;
 
 namespace Orchard.Sandbox.Models {
+    [UsedImplicitly]
     public class SandboxContentHandler : ContentHandler {
         public override IEnumerable<ContentType> GetContentTypes() {
             return new[] { SandboxPage.ContentType };
@@ -22,30 +22,6 @@ namespace Orchard.Sandbox.Models {
             Filters.Add(new ActivatingFilter<RoutableAspect>(SandboxPage.ContentType.Name));
             Filters.Add(new ActivatingFilter<BodyAspect>(SandboxPage.ContentType.Name));
             Filters.Add(new StorageFilter<SandboxPageRecord>(pageRepository) { AutomaticallyCreateMissingRecord = true });
-            Filters.Add(new ContentItemTemplates<SandboxPage>("Items/Sandbox.Page", "Summary"));
-
-            OnGetItemMetadata<SandboxPage>((context, page) => {
-                context.Metadata.DisplayText = page.Record.Name;
-                context.Metadata.DisplayRouteValues =
-                    new RouteValueDictionary(
-                        new {
-                            area = "Orchard.Sandbox",
-                            controller = "Page",
-                            action = "Show",
-                            id = context.ContentItem.Id,
-                        });
-                context.Metadata.EditorRouteValues =
-                    new RouteValueDictionary(
-                        new {
-                            area = "Orchard.Sandbox",
-                            controller = "Page",
-                            action = "Edit",
-                            id = context.ContentItem.Id,
-                        });
-            });
-
-            OnGetDisplayViewModel<SandboxPage>((context, page) =>
-                context.AddDisplay(new TemplateViewModel(page) { TemplateName = "Parts/Sandbox.Page.Title", ZoneName = "title" }));
 
 
 

@@ -8,14 +8,14 @@ namespace Orchard.ContentManagement.Drivers {
             }
         }
         protected override DriverResult Display(TPart part, string displayType) {
-            return PartialView(part);
+            return PartTemplate(part);
         }
         protected override DriverResult Editor(TPart part) {
-            return PartialView(part);
+            return PartTemplate(part);
         }
         protected override DriverResult Editor(TPart part, IUpdateModel updater) {
             updater.TryUpdateModel(part, Prefix, null, null);
-            return PartialView(part);
+            return PartTemplate(part);
         }
     }
 }

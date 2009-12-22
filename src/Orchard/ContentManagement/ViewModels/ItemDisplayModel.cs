@@ -43,6 +43,7 @@ namespace Orchard.ContentManagement.ViewModels {
         public ItemDisplayModel() {
 
         }
+
         public ItemDisplayModel(ItemDisplayModel displayModel)
             : base(displayModel) {
         }

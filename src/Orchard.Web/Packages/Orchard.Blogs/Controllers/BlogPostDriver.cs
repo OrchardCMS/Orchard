@@ -11,6 +11,10 @@ using Orchard.ContentManagement.Drivers;
 namespace Orchard.Blogs.Controllers {
     [UsedImplicitly]
     public class BlogPostDriver : ItemDriver<BlogPost> {
+        public BlogPostDriver()
+            : base(BlogPost.ContentType) {
+        }
+
         protected override string Prefix { get { return ""; } }
 
         protected override string GetDisplayText(BlogPost post) {
@@ -39,8 +43,8 @@ namespace Orchard.Blogs.Controllers {
 
         protected override DriverResult Editor(BlogPost post) {
             return Combined(
-                PartialView(post, "Parts/Blogs.BlogPost.Fields").Location("primary", "1"),
-                PartialView(post, "Parts/Blogs.BlogPost.Publish").Location("secondary", "1")
+                PartTemplate(post, "Parts/Blogs.BlogPost.Fields").Location("primary", "1"),
+                PartTemplate(post, "Parts/Blogs.BlogPost.Publish").Location("secondary", "1")
                 );
         }
 
