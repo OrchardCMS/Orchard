@@ -1,6 +1,6 @@
 ﻿<%@ Control Language="C#" Inherits="System.Web.Mvc.ViewUserControl" %>
 <%@ Import Namespace="Orchard.Mvc.Html"%>
-<% Html.Title("Register"); %>
+<% Html.AddTitleParts("Register"); %>
 <h2>Create a New Account</h2>
 <p>
     Use the form below to create a new account. 

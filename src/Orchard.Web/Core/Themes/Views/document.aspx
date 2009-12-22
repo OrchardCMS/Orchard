@@ -5,7 +5,7 @@
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
-    <title><%=Html.Title() %></title><%
+    <title><%=Html.Title("site name") %></title><%
      Html.Zone("head", ":metas :styles :scripts"); %>
 </head>
 <body><%

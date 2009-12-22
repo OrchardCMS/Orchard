@@ -3,7 +3,7 @@
 <%@ Import Namespace="Orchard.ContentManagement.ViewModels"%>
 <%@ Import Namespace="Orchard.Blogs.Extensions"%>
 <%@ Import Namespace="Orchard.Blogs.Models"%>
-<% Html.Title(Model.Item.Title); %>
+<% Html.AddTitleParts(Model.Item.Title); %>
 <div class="manage"><a href="<%=Url.BlogPostEdit(Model.Item.Blog.Slug, Model.Item.Slug) %>" class="ibutton edit">edit</a></div>
 <h1><%=Html.Encode(Model.Item.Title)%></h1>
 <div class="metadata">

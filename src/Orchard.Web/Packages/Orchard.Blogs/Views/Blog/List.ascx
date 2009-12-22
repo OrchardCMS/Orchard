@@ -1,7 +1,7 @@
 <%@ Control Language="C#" Inherits="System.Web.Mvc.ViewUserControl<BlogsViewModel>" %>
 <%@ Import Namespace="Orchard.Mvc.Html"%>
 <%@ Import Namespace="Orchard.Blogs.ViewModels"%>
-<% Html.Title("Blogs"); %>
+<% Html.AddTitleParts("Blogs"); %>
 <h1>Blogs</h1>
 <p>All of the blogs.</p><%
 if (Model.Blogs.Count() > 0) { %>

@@ -1,10 +1,11 @@
 ﻿<%@ Control Language="C#" Inherits="System.Web.Mvc.ViewUserControl<BaseViewModel>" %>
 <%@ Import Namespace="Orchard.Mvc.ViewModels"%>
 <%@ Import Namespace="Orchard.Mvc.Html" %><%
-Html.RegisterStyle("site.css"); %>
+Html.RegisterStyle("site.css");
+ %>
 <div class="page">
     <div id="header">
-        <div id="title"><h1>My (orange) MVC Application</h1></div><%
+        <div id="title"><h1><%//Html.SiteName(); %></h1></div><%
         Html.Zone("header");
         Html.Zone("menu"); %>
         <%-- todo:(nheskew) this will need to all go in the header zone (user widget) --%>

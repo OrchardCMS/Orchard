@@ -1,7 +1,7 @@
 ﻿<%@ Control Language="C#" Inherits="System.Web.Mvc.ViewUserControl<BaseViewModel>" %>
 <%@ Import Namespace="Orchard.Mvc.Html"%>
 <%@ Import Namespace="Orchard.Mvc.ViewModels"%>
-<% Html.Title("Log On"); %>
+<% Html.AddTitleParts("Log On"); %>
 <h2>Log On</h2>
 <p>
     Please enter your username and password. <%= Html.ActionLink("Register", "Register") %> if you don't have an account.
