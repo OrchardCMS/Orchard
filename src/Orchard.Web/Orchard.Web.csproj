@@ -166,6 +166,8 @@
     <Content Include="Themes\Orange\Theme.txt" />
     <Content Include="Themes\Orange\Views\layout.ascx" />
     <Content Include="Views\Shared\Messages.ascx" />
+    <Content Include="Views\Templates\ThreeColumns.aspx" />
+    <Content Include="Views\Templates\TwoColumns.aspx" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
