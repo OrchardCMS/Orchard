@@ -27,7 +27,9 @@ namespace Orchard.Core.Settings.Services {
             SiteSettingsRecord record = _siteSettingsRepository.Fetch(x => x.SiteUrl == applicationName).FirstOrDefault();
             if (record == null) {
                 ISite site = _contentManager.Create<SiteSettings>("site", item => {
+                    item.Record.SiteName = "My Orchard Project Application";
                     item.Record.SiteUrl = applicationName;
+                    item.Record.PageTitleSeparator = " - ";
                 });
                 return site;
             }

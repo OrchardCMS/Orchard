@@ -5,6 +5,7 @@ namespace Orchard.Settings {
     /// Interface provided by the "settings" model. 
     /// </summary>
     public interface ISite : IContent {
+        string PageTitleSeparator { get; }
         string SiteName { get; }
         string SuperUser { get; }
     }

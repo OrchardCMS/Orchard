@@ -15,7 +15,14 @@ namespace Orchard.Core.Settings.ViewModels {
             get { return Site.ContentItem.Id; }
         }
 
-        public string SiteName {
+        public string PageTitleSeparator
+        {
+            get { return Site.As<SiteSettings>().Record.PageTitleSeparator; }
+            set { Site.As<SiteSettings>().Record.PageTitleSeparator = value; }
+        }
+
+        public string SiteName
+        {
             get { return Site.As<SiteSettings>().Record.SiteName; }
             set { Site.As<SiteSettings>().Record.SiteName = value; }
         }

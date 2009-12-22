@@ -1,15 +1,18 @@
 using System.Collections.Generic;
 using System.Linq;
+using Orchard.Settings;
 
 namespace Orchard.UI.PageTitle {
     public class PageTitleBuilder : IPageTitleBuilder {
+        private readonly ISiteService _siteService;
         private readonly List<string> _titleParts;
         private readonly string _titleSeparator;
 
-        public PageTitleBuilder() {
+        public PageTitleBuilder(ISiteService siteService) {
+            _siteService = siteService;
             _titleParts = new List<string>(5);
             //TODO: (erikpo) Get this from a site setting
-            _titleSeparator = " - ";
+            _titleSeparator = _siteService.GetSiteSettings().PageTitleSeparator;
         }
 
         public void AddTitleParts(params string[] titleParts) {
