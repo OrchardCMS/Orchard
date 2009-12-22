@@ -29,7 +29,7 @@ namespace Orchard.Controllers {
         public ActionResult LogOn(string userName, string password, bool rememberMe, string returnUrl) {
             var user = ValidateLogOn(userName, password);
             if (!ModelState.IsValid) {
-                return View();
+                return LogOn();
             }
 
             _authenticationService.SignIn(user, rememberMe);
@@ -79,7 +79,7 @@ namespace Orchard.Controllers {
             }
 
             // If we got this far, something failed, redisplay form
-            return View(new BaseViewModel());
+            return Register();
         }
 
         [Authorize]
@@ -110,12 +110,12 @@ namespace Orchard.Controllers {
                 else {
                     ModelState.AddModelError("_FORM",
                                              "The current password is incorrect or the new password is invalid.");
-                    return View(new BaseViewModel());
+                    return ChangePassword();
                 }
             }
             catch {
                 ModelState.AddModelError("_FORM", "The current password is incorrect or the new password is invalid.");
-                return View(new BaseViewModel());
+                return ChangePassword();
             }
         }
 

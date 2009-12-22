@@ -23,12 +23,12 @@ namespace Orchard.Core.Settings.Services {
         #region Implementation of ISiteService
 
         public ISite GetSiteSettings() {
-            string applicationName = HttpContext.Current.Request.ApplicationPath;
-            SiteSettingsRecord record = _siteSettingsRepository.Fetch(x => x.SiteUrl == applicationName).FirstOrDefault();
+            string applicationPath = HttpContext.Current.Request.ApplicationPath;
+            SiteSettingsRecord record = _siteSettingsRepository.Fetch(x => x.SiteUrl == applicationPath).FirstOrDefault();
             if (record == null) {
                 ISite site = _contentManager.Create<SiteSettings>("site", item => {
                     item.Record.SiteName = "My Orchard Project Application";
-                    item.Record.SiteUrl = applicationName;
+                    item.Record.SiteUrl = applicationPath;
                     item.Record.PageTitleSeparator = " - ";
                 });
                 return site;

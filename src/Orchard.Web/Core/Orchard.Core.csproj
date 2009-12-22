@@ -61,6 +61,7 @@
     <Reference Include="System.Web.Mobile" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Common\Mvc\Filters\AdminFilter.cs" />
     <Compile Include="Common\Permissions.cs" />
     <Compile Include="Common\Utilities\LazyField.cs" />
     <Compile Include="Common\Providers\CommonAspectHandler.cs" />

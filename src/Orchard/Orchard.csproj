@@ -183,7 +183,6 @@
     <Compile Include="Environment\OrchardServices.cs" />
     <Compile Include="Extensions\ExtensionDescriptor.cs" />
     <Compile Include="Extensions\ExtensionEntry.cs" />
-    <Compile Include="Mvc\Filters\AdminFilter.cs" />
     <Compile Include="IOrchardServices.cs" />
     <Compile Include="Mvc\Html\FileRegistrationContext.cs" />
     <Compile Include="Mvc\Html\SiteServiceExtensions.cs" />
