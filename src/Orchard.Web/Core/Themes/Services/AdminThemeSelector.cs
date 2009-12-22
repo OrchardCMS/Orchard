@@ -17,8 +17,8 @@ namespace Orchard.Core.Themes.Services {
         public ThemeSelectorResult GetTheme(RequestContext context) {
             //todo: (heskew) get at the SiteUrl the "right" way. or is this the right way :|
             var siteUrl = _siteService.GetSiteSettings().ContentItem.As<SiteSettings>().Record.SiteUrl;
-
-            if (!context.HttpContext.Request.Path.StartsWith(Path.Combine(siteUrl, "admin"), true, CultureInfo.InvariantCulture))
+            //todo: (heskew) get at the admin path in a less hacky way
+            if (!context.HttpContext.Request.Path.StartsWith(Path.Combine(siteUrl, "admin").Replace("\\", "/"), true, CultureInfo.InvariantCulture))
                 return null;
 
             return new ThemeSelectorResult { Priority = 0, ThemeName = "TheAdmin" };

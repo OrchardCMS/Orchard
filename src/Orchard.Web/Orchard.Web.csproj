@@ -165,9 +165,23 @@
     <Content Include="Themes\Orange\Theme.gif" />
     <Content Include="Themes\Orange\Theme.txt" />
     <Content Include="Themes\Orange\Views\layout.ascx" />
+    <Content Include="Themes\TheAdmin\Styles\images\background_header.jpg" />
+    <Content Include="Themes\TheAdmin\Styles\images\icons.png" />
+    <Content Include="Themes\TheAdmin\Styles\images\orchardLogo.jpg" />
+    <Content Include="Themes\TheAdmin\Styles\images\tableHeaderBackground.gif" />
+    <Content Include="Themes\TheAdmin\Styles\images\tableHeaderBackgroundRed.gif" />
+    <Content Include="Themes\TheAdmin\Styles\site.css" />
+    <Content Include="Themes\TheAdmin\Theme.gif" />
+    <Content Include="Themes\TheAdmin\Theme.txt" />
+    <Content Include="Themes\TheAdmin\Views\layout.ascx" />
+    <Content Include="Themes\TheAdmin\Views\Shared\document.aspx" />
     <Content Include="Views\Shared\Messages.ascx" />
     <Content Include="Views\Templates\ThreeColumns.aspx" />
     <Content Include="Views\Templates\TwoColumns.aspx" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Themes\TheAdmin\Styles\images\icons.psd" />
+    <Content Include="Themes\Web.config" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

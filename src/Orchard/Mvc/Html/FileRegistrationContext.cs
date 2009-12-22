@@ -7,14 +7,16 @@ namespace Orchard.Mvc.Html {
     public class FileRegistrationContext : RequestContext {
         public FileRegistrationContext(ViewContext viewContext, IViewDataContainer viewDataContainer, string fileName)
             : base(viewContext.HttpContext, viewContext.RouteData) {
-            TemplateControl container = viewDataContainer as TemplateControl;
+            Container = viewDataContainer as TemplateControl;
 
-            if (container != null)
-                ContainerVirtualPath = container.AppRelativeVirtualPath.Substring(0,
-                                                                                  container.AppRelativeVirtualPath.
-                                                                                      IndexOf("/Views",
-                                                                                              StringComparison.
-                                                                                                  InvariantCultureIgnoreCase));
+            if (Container != null)
+                ContainerVirtualPath = Container.AppRelativeVirtualPath.Substring(
+                    0,
+                    Container.AppRelativeVirtualPath.IndexOf(
+                        "/Views",
+                        StringComparison.InvariantCultureIgnoreCase
+                        )
+                    );
 
             FileName = fileName;
         }
@@ -28,13 +30,15 @@ namespace Orchard.Mvc.Html {
             FileRegistrationContext incoming = obj as FileRegistrationContext;
 
             return incoming != null &&
-                   string.Equals(ContainerVirtualPath, incoming.ContainerVirtualPath,
-                                 StringComparison.InvariantCultureIgnoreCase) &&
+                   string.Equals(ContainerVirtualPath, incoming.ContainerVirtualPath, StringComparison.InvariantCultureIgnoreCase) &&
                    string.Equals(FileName, incoming.FileName, StringComparison.InvariantCultureIgnoreCase);
         }
 
         internal string GetFilePath(string containerRelativePath) {
-            return ContainerVirtualPath.Replace("~/", "/") + containerRelativePath + FileName;
+            //todo: (heskew) maybe not here but file paths for non-app locations need to be taken into account
+            return Container != null
+                ? Container.ResolveUrl(ContainerVirtualPath + containerRelativePath + FileName)
+                : (ContainerVirtualPath + containerRelativePath + FileName);
         }
     }
 }

@@ -13,7 +13,7 @@ namespace Orchard.Themes {
         public static string GetThemeLocation(this IExtensionManager extensionManager, ITheme theme) {
             ExtensionDescriptor descriptor = extensionManager.GetExtensionDescriptor("Theme", theme.ThemeName);
             
-            return descriptor != null ? Path.Combine(descriptor.Location, descriptor.Name) : null;
+            return descriptor != null ? Path.Combine(descriptor.Location, descriptor.Name) : "~";
         }
     }
 }

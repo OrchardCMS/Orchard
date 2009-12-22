@@ -14,6 +14,8 @@ namespace Orchard.Extensions {
 
         public IEnumerable<string> ListNames() {
             foreach (var path in _paths) {
+                if (!Directory.Exists(PathHelpers.GetPhysicalPath(path)))
+                    continue;
                 foreach (var directoryName in Directory.GetDirectories(PathHelpers.GetPhysicalPath(path))) {
                     if (File.Exists(Path.Combine(directoryName, "Package.txt")))
                         yield return Path.GetFileName(directoryName);
