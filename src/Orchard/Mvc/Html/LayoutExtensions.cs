@@ -1,6 +1,5 @@
 ﻿using System;
 using System.IO;
-using System.Web;
 using System.Web.Mvc;
 using System.Web.UI;
 using Orchard.Mvc.ViewEngines;
@@ -26,12 +25,25 @@ namespace Orchard.Mvc.Html {
             html.Resolve<IPageTitleBuilder>().AddTitleParts(titleParts);
         }
 
+        public static void AppendTitleParts(this HtmlHelper html, params string[] titleParts) {
+            html.Resolve<IPageTitleBuilder>().AppendTitleParts(titleParts);
+        }
+
         public static MvcHtmlString Title(this HtmlHelper html, params string[] titleParts) {
             IPageTitleBuilder pageTitleBuilder = html.Resolve<IPageTitleBuilder>();
 
-            html.Resolve<IPageTitleBuilder>().AppendTitleParts(titleParts);
+            html.AppendTitleParts(titleParts);
 
             return MvcHtmlString.Create(html.Encode(pageTitleBuilder.GenerateTitle()));
+        }
+
+        public static MvcHtmlString TitleForPage(this HtmlHelper html, params string[] titleParts) {
+            if (titleParts == null || titleParts.Length < 1)
+                return null;
+
+            html.AppendTitleParts(titleParts);
+
+            return MvcHtmlString.Create(html.Encode(titleParts[0]));
         }
 
         public static void Zone<TModel>(this HtmlHelper<TModel> html, string zoneName, string partitions) where TModel : BaseViewModel {

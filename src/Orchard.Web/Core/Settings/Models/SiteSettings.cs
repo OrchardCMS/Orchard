@@ -1,5 +1,4 @@
-﻿using System;
-using Orchard.Core.Settings.Records;
+﻿using Orchard.Core.Settings.Records;
 using Orchard.ContentManagement;
 using Orchard.Settings;
 

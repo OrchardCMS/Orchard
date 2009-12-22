@@ -186,6 +186,7 @@
     <Compile Include="Mvc\Filters\AdminFilter.cs" />
     <Compile Include="IOrchardServices.cs" />
     <Compile Include="Mvc\Html\FileRegistrationContext.cs" />
+    <Compile Include="Mvc\Html\SiteServiceExtensions.cs" />
     <Compile Include="Themes\ExtensionManagerExtensions.cs" />
     <Compile Include="Extensions\Helpers\PathHelpers.cs" />
     <Compile Include="Extensions\IExtensionManager.cs" />
