@@ -3,7 +3,7 @@
 Html.RegisterStyle("site.css"); %>
 <div class="page">
     <div id="header">
-        <div id="title"><h1><%=Html.TitleForPage(Html.SiteName()) %></h1></div><%
+        <div id="title"><%=Html.TitleForPage(Html.SiteName()) %></div><%
         Html.Zone("header");
         Html.Zone("menu"); %>
         <%-- todo:(nheskew) this will need to all go in the header zone (user widget) --%>

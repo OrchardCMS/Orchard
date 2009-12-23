@@ -2,10 +2,9 @@
 <%@ Import Namespace="Orchard.ContentManagement.ViewModels"%>
 <%@ Import Namespace="Orchard.Blogs.Extensions"%>
 <%@ Import Namespace="Orchard.Blogs.Models"%>
-<% Html.AddTitleParts(Model.Item.Name); %>
 <%-- todo: (heskew) get what actions we can out of the h2 :| --%>
 <h2 class="withActions">
-    <a href="<%=Url.BlogForAdmin(Model.Item.Slug) %>"><%=Html.Encode(Model.Item.Name) %></a>
+    <a href="<%=Url.BlogForAdmin(Model.Item.Slug) %>"><%=Html.TitleForPage(Model.Item.Name) %></a>
     <a href="<%=Url.BlogEdit(Model.Item.Slug) %>" class="ibutton edit" title="Edit Blog">Edit Blog</a>
     <span class="actions"><span class="destruct"><a href="<%=Url.BlogDelete(Model.Item.Slug) %>" class="ibutton remove" title="Remove Blog">Remove Blog</a></span></span></h2>
 <p><%=Model.Item.Description%></p>

@@ -97,7 +97,7 @@ page width. Or, you can specify an exact pixel width. */
     padding: 0;
 }
 
-#header h1
+#title
 {
     font-weight: bold;
     padding: 5px 0;
