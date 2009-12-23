@@ -1,7 +1,5 @@
 ﻿<%@ Control Language="C#" Inherits="System.Web.Mvc.ViewUserControl" %>
-<%@ Import Namespace="Orchard.Mvc.Html"%>
-<% Html.AddTitleParts("Change Password"); %>
-<h2>Change Password</h2>
+<h2><%=Html.TitleForPage("Change Password") %></h2>
 <p>Use the form below to change your password. </p>
 <p>New passwords are required to be a minimum of <%=Html.Encode(ViewData["PasswordLength"])%> characters in length.</p>
 <%= Html.ValidationSummary("Password change was unsuccessful. Please correct the errors and try again.")%>

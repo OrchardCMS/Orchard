@@ -1,5 +1,4 @@
 <%@ Page Language="C#" Inherits="System.Web.Mvc.ViewPage<Orchard.CmsPages.Models.PageRevision>" %>
-<%@ Import Namespace="Orchard.Mvc.Html"%>
 <%@ Import Namespace="Orchard.CmsPages.Services.Templates"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <%--

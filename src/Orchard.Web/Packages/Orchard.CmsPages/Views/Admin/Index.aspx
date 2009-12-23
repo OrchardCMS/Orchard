@@ -1,9 +1,8 @@
 <%@ Page Language="C#" Inherits="System.Web.Mvc.ViewPage<PageIndexViewModel>" %>
 <%@ Import Namespace="Orchard.Utility"%>
 <%@ Import Namespace="Orchard.CmsPages.ViewModels"%>
-<%@ Import Namespace="Orchard.Mvc.Html" %>
 <%-- todo: (heskew) localize --%>
-<h2>Manage Pages</h2>
+<h2><%=Html.TitleForPage("Manage Pages") %></h2>
 <p>Possible text about setting up a page goes here. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla erat turpis, blandit eget feugiat nec, tempus vel quam. Mauris et neque eget justo suscipit blandit.</p>
 <% using (Html.BeginFormAntiForgeryPost()) { %>
     <%=Html.ValidationSummary() %>

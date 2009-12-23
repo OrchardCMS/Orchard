@@ -1,6 +1,5 @@
 ﻿<%@ Control Language="C#" Inherits="System.Web.Mvc.ViewUserControl<EditTagsViewModel>" %>
 <%@ Import Namespace="Orchard.Tags.ViewModels" %>
-<%@ Import Namespace="Orchard.Mvc.Html" %>
 <%@ Import Namespace="Orchard.Tags.Models" %>
 <fieldset>
     <%=Html.LabelFor(m=>m.Tags) %>

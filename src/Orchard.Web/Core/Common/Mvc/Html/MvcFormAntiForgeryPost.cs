@@ -1,7 +1,7 @@
 using System.Web.Mvc;
 using System.Web.Mvc.Html;
 
-namespace Orchard.Mvc.Html {
+namespace Orchard.Core.Common.Mvc.Html {
     public class MvcFormAntiForgeryPost : MvcForm {
         private readonly HtmlHelper _htmlHelper;
 

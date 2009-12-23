@@ -1,9 +1,8 @@
 <%@ Page Language="C#" Inherits="System.Web.Mvc.ViewPage<CommentsIndexViewModel>" %>
 <%@ Import Namespace="Orchard.Comments.Models"%>
 <%@ Import Namespace="Orchard.Comments.ViewModels"%>
-<%@ Import Namespace="Orchard.Mvc.Html"%>
-<h2>Manage Comments</h2>
-<% Html.BeginForm(); %>
+<h2><%=Html.TitleForPage("Manage Comments")%></h2>
+<% using(Html.BeginFormAntiForgeryPost()) { %>
 	<%=Html.ValidationSummary() %>
     <fieldset class="actions bulk">
         <label for="publishActions">Actions: </label>
@@ -48,11 +47,12 @@
             <%
                 int commentIndex = 0;
                 foreach (var commentEntry in Model.Comments) {
+                    var ci = commentIndex;
             %>
             <tr>
                 <td>
-                    <input type="hidden" value="<%=Model.Comments[commentIndex].Comment.Id%>" name="<%=Html.NameOf(m => m.Comments[commentIndex].Comment.Id)%>"/>
-                    <input type="checkbox" value="true" name="<%=Html.NameOf(m => m.Comments[commentIndex].IsChecked)%>"/>
+                    <input type="hidden" value="<%=Model.Comments[commentIndex].Comment.Id%>" name="<%=Html.NameOf(m => m.Comments[ci].Comment.Id)%>"/>
+                    <input type="checkbox" value="true" name="<%=Html.NameOf(m => m.Comments[ci].IsChecked)%>"/>
                 </td>
                 <td><% if (commentEntry.Comment.Status == CommentStatus.Spam) {%> Spam <% } %>
                 <% else {%> Approved <% } %>
@@ -77,4 +77,4 @@
                 } %>
         </table>
     </fieldset>
-<% Html.EndForm(); %>
+<% } %>

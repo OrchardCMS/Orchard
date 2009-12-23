@@ -1,6 +1,5 @@
 ﻿<%@ Control Language="C#" Inherits="System.Web.Mvc.ViewUserControl<AdminViewModel>" %>
-<%@ Import Namespace="Orchard.Mvc.ViewModels"%>
-<%@ Import Namespace="Orchard.Mvc.Html" %><%
+<%@ Import Namespace="Orchard.Mvc.ViewModels"%><%
 Html.RegisterStyle("site.css"); %>
 <div id="header" role="banner">
     <h1><%=Html.ActionLink("Project Orchard", "Index", new { Area = "", Controller = "Home" })%></h1>

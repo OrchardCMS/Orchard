@@ -2,8 +2,7 @@
 <%@ Import Namespace="Orchard.CmsPages.ViewModels"%>
 <%@ Import Namespace="Orchard.Utility"%>
 <%@ Import Namespace="Orchard.CmsPages.Services.Templates"%>
-<%@ Import Namespace="Orchard.Mvc.Html" %>
-<h2>Delete pages</h2>
+<h2><%=Html.TitleForPage("Delete pages") %></h2>
 <p>Are you sure you want to delete the pages?</p>
 <% using (Html.BeginFormAntiForgeryPost()) { %>
     <%= Html.ValidationSummary() %>

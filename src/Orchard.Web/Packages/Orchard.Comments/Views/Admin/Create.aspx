@@ -1,9 +1,8 @@
 <%@ Page Language="C#" Inherits="System.Web.Mvc.ViewPage<CommentsCreateViewModel>" %>
 <%@ Import Namespace="Orchard.Comments.ViewModels"%>
-<%@ Import Namespace="Orchard.Mvc.Html" %>
-<h2>Add Comment</h2>
-<% using(Html.BeginForm()) { %>
-    <%= Html.ValidationSummary() %>
+<h2><%=Html.TitleForPage("Add Comment") %></h2>
+<% using(Html.BeginFormAntiForgeryPost()) { %>
+    <%=Html.ValidationSummary() %>
     <fieldset class="who">
         <label for="CommentName">Name</label>
 	    <input id="CommentName" class="text" name="Name" type="text" value="<%=Model.Name %>" /><br />

@@ -2,7 +2,6 @@
 <%@ Import Namespace="Orchard.ContentManagement"%>
 
 <%@ Import Namespace="System.Reflection" %>
-<%@ Import Namespace="Orchard.Mvc.Html" %>
 
 <h3>Content Item</h3>
 <p>

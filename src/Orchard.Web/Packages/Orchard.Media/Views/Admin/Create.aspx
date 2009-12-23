@@ -2,8 +2,7 @@
 <%@ Import Namespace="Orchard.Media.Models"%>
 <%@ Import Namespace="Orchard.Media.Helpers"%>
 <%@ Import Namespace="Orchard.Media.ViewModels"%>
-<%@ Import Namespace="Orchard.Mvc.Html" %>
-<h2>Add a Folder</h2>
+<h2><%=Html.TitleForPage("Add a Folder")%></h2>
 <p><%=Html.ActionLink("Media Folders", "Index")%> &#62; 
 		<%foreach (FolderNavigation navigation in MediaHelpers.GetFolderNavigationHierarchy(Model.MediaPath)) {%>
 		    <%=Html.ActionLink(navigation.FolderName, "Edit",

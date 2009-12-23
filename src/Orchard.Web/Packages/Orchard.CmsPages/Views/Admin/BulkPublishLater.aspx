@@ -2,9 +2,8 @@
 <%@ Import Namespace="Orchard.CmsPages.ViewModels"%>
 <%@ Import Namespace="Orchard.Utility"%>
 <%@ Import Namespace="Orchard.CmsPages.Services.Templates"%>
-<%@ Import Namespace="Orchard.Mvc.Html" %>
+<h2><%=Html.TitleForPage("Publish later") %></h2>
 <% using (Html.BeginFormAntiForgeryPost()) { %>
-    <h2>Publish later</h2>
     <p>Enter the scheduled publication date:</p>
     <%=Html.ValidationSummary() %>
     <fieldset>

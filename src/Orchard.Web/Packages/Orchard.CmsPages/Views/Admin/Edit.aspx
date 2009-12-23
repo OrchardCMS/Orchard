@@ -1,8 +1,7 @@
 <%@ Page Language="C#" Inherits="Orchard.Mvc.ViewPage<Orchard.CmsPages.ViewModels.PageEditViewModel>" %>
 <%@ Import Namespace="Orchard.CmsPages.Models" %>
-<%@ Import Namespace="Orchard.Mvc.Html" %>
-<h2><%=_Encoded("Edit Page") %></h2>
-<p class="bottomSpacer"><%=_Encoded("about setting up a page") %></p>
+<h2><%=Html.TitleForPage("Edit Page") %></h2>
+<p><%=_Encoded("about setting up a page") %></p>
 <%=Html.ValidationSummary() %>
 <div class="sections">
     <% using (Html.BeginFormAntiForgeryPost()) { %>

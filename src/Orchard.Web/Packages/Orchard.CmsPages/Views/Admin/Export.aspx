@@ -1,6 +1,5 @@
 <%@ Page Language="C#" Inherits="System.Web.Mvc.ViewPage<IEnumerable<Orchard.CmsPages.Models.Page>>" %>
-<%@ Import Namespace="Orchard.Mvc.Html" %>
-<h2>Export</h2>
+<h2><%=Html.TitleForPage("Export") %></h2>
 <p>Possible text about setting up a page goes here. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla erat turpis, blandit eget feugiat nec, tempus vel quam. Mauris et neque eget justo suscipit blandit.</p>
     <ol>
         <% foreach (var page in Model) {

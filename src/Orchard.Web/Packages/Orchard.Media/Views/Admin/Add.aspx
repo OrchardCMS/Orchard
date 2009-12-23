@@ -2,8 +2,7 @@
 <%@ Import Namespace="Orchard.Media.Helpers"%>
 <%@ Import Namespace="Orchard.Media.Models"%>
 <%@ Import Namespace="Orchard.Media.ViewModels"%>
-<%@ Import Namespace="Orchard.Mvc.Html" %>
-<h2>Add Media </h2>
+<h2><%=Html.TitleForPage("Add Media")%></h2>
 <p>
     <%=Html.ActionLink("Media Folders", "Index")%> &#62; 
     <%foreach (FolderNavigation navigation in MediaHelpers.GetFolderNavigationHierarchy(Model.MediaPath)) {%>
@@ -21,5 +20,6 @@
         <input id="MediaItemPath" name="MediaItemPath" type="file" class="text" value="Browse" size="64"/>
 		<input type="submit" class="button" value="Upload" /><br />
 		<span>After your files have been uploaded, you can edit the titles and descriptions.</span>
+		<%=Html.AntiForgeryTokenOrchard() %>
 	</fieldset>
 <% } %>

@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using Orchard.Core.Settings.Models;
 using Orchard.Core.Settings.Records;
 using Orchard.Data;
@@ -27,8 +28,9 @@ namespace Orchard.Core.Settings.Services {
             SiteSettingsRecord record = _siteSettingsRepository.Fetch(x => x.SiteUrl == applicationPath).FirstOrDefault();
             if (record == null) {
                 ISite site = _contentManager.Create<SiteSettings>("site", item => {
-                    item.Record.SiteName = "My Orchard Project Application";
+                    item.Record.SiteSalt = Guid.NewGuid().ToString("N");
                     item.Record.SiteUrl = applicationPath;
+                    item.Record.SiteName = "My Orchard Project Application";
                     item.Record.PageTitleSeparator = " - ";
                 });
                 return site;

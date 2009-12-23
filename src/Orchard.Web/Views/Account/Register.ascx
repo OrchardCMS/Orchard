@@ -1,15 +1,8 @@
 ﻿<%@ Control Language="C#" Inherits="System.Web.Mvc.ViewUserControl" %>
-<%@ Import Namespace="Orchard.Mvc.Html"%>
-<% Html.AddTitleParts("Register"); %>
-<h2>Create a New Account</h2>
-<p>
-    Use the form below to create a new account. 
-</p>
-<p>
-    Passwords are required to be a minimum of <%=Html.Encode(ViewData["PasswordLength"])%> characters in length.
-</p>
+<h2><%=Html.TitleForPage("Create a New Account") %></h2>
+<p>Use the form below to create a new account. </p>
+<p>Passwords are required to be a minimum of <%=Html.Encode(ViewData["PasswordLength"])%> characters in length.</p>
 <%= Html.ValidationSummary("Account creation was unsuccessful. Please correct the errors and try again.") %>
-
 <% using (Html.BeginFormAntiForgeryPost()) { %>
     <div>
         <fieldset>

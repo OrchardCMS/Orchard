@@ -1,5 +1,4 @@
 <%@ Page Language="C#" Inherits="System.Web.Mvc.ViewPage<Orchard.DevTools.ViewModels.ContentIndexViewModel>" %>
-<%@ Import Namespace="Orchard.Mvc.Html"%>
 
 
 <h3>Content Types</h3>

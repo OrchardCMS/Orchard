@@ -1,9 +1,8 @@
 ﻿<%@ Page Language="C#" Inherits="System.Web.Mvc.ViewPage<CommentsEditViewModel>" %>
 <%@ Import Namespace="Orchard.Comments.Models"%>
 <%@ Import Namespace="Orchard.Comments.ViewModels"%>
-<%@ Import Namespace="Orchard.Mvc.Html" %>
-<h2>Edit Comment</h2>
-<% using(Html.BeginForm()) { %>
+<h2><%=Html.TitleForPage("Edit Comment")%></h2>
+<% using(Html.BeginFormAntiForgeryPost()) { %>
     <%= Html.ValidationSummary() %>
     <fieldset class="who">
         <label for="CommentName">Name</label>

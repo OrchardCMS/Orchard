@@ -1,7 +1,6 @@
 <%@ Page Language="C#" Inherits="System.Web.Mvc.ViewPage<Orchard.Roles.ViewModels.RolesIndexViewModel>" %>
-<%@ Import Namespace="Orchard.Mvc.Html" %>
-<h2>Manage Roles</h2>
-<% using(Html.BeginForm()) { %>
+<h2><%=Html.TitleForPage("Manage Roles")%></h2>
+<% using(Html.BeginFormAntiForgeryPost()) { %>
     <%=Html.ValidationSummary() %>
     <fieldset class="actions bulk">
         <label for="publishActions">Actions: </label>

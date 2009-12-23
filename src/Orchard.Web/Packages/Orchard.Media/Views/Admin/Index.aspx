@@ -1,9 +1,8 @@
 <%@ Page Language="C#" Inherits="System.Web.Mvc.ViewPage<MediaFolderIndexViewModel>" %>
 <%@ Import Namespace="Orchard.Media.ViewModels"%>
-<%@ Import Namespace="Orchard.Mvc.Html"%>
-<h2>Manage Media Folders</h2>
+<h2><%=Html.TitleForPage("Manage Media Folders")%></h2>
 <p><%=Html.ActionLink("Media Folders", "Index")%> &#62; Manage Media Folders</p>
-<% Html.BeginForm(); %>
+<% using(Html.BeginFormAntiForgeryPost()) { %>
     <%=Html.ValidationSummary() %>
     <fieldset class="actions bulk">
         <label for="publishActions">Actions: </label>
@@ -49,4 +48,4 @@
         </table>
     </fieldset>
     <div class="manage"><%=Html.ActionLink("Add a folder", "Create", new {}, new { @class = "button"}) %></div>
-<% Html.EndForm(); %>
+<% } %>

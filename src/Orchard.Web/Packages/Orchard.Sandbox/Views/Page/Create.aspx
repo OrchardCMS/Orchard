@@ -1,7 +1,5 @@
 <%@ Page Language="C#" Inherits="System.Web.Mvc.ViewPage<PageCreateViewModel>" %>
-
 <%@ Import Namespace="Orchard.Sandbox.ViewModels" %>
-<%@ Import Namespace="Orchard.Mvc.Html" %>
 <h3>
     Create Page</h3>
 <%using (Html.BeginFormAntiForgeryPost()) { %>

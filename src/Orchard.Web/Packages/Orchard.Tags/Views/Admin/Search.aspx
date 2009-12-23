@@ -1,9 +1,8 @@
 ﻿<%@ Page Language="C#" Inherits="System.Web.Mvc.ViewPage<TagsAdminSearchViewModel>" %>
 <%@ Import Namespace="Orchard.ContentManagement"%>
 <%@ Import Namespace="Orchard.Tags.ViewModels"%>
-<%@ Import Namespace="Orchard.Mvc.Html"%>
-<h2>List of contents tagged with <%=Model.TagName %></h2>
-<% using(Html.BeginForm()) { %>
+<h2><%=Html.TitleForPage(string.Format("List of contents tagged with {0}", Model.TagName)) %></h2>
+<% using(Html.BeginFormAntiForgeryPost()) { %>
 	<%=Html.ValidationSummary() %>
 	<fieldset>
 		<table class="items">

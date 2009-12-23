@@ -1,8 +1,7 @@
 ﻿<%@ Page Language="C#" Inherits="System.Web.Mvc.ViewPage<TagsAdminIndexViewModel>" %>
 <%@ Import Namespace="Orchard.Tags.ViewModels"%>
-<%@ Import Namespace="Orchard.Mvc.Html"%>
-<h2>Manage Tags</h2>
-<% Html.BeginForm(); %>
+<h2><%=Html.TitleForPage("Manage Tags")%></h2>
+<% using(Html.BeginFormAntiForgeryPost()) { %>
 	<%=Html.ValidationSummary() %>
     <fieldset class="actions bulk">
         <label for="publishActions">Actions: </label>
@@ -30,11 +29,12 @@
             <%
                 int tagIndex = 0;
                 foreach (var tagEntry in Model.Tags) {
+                    var ti = tagIndex;
             %>
             <tr>
                 <td>
-                    <input type="hidden" value="<%=Model.Tags[tagIndex].Tag.Id%>" name="<%=Html.NameOf(m => m.Tags[tagIndex].Tag.Id)%>"/>
-                    <input type="checkbox" value="true" name="<%=Html.NameOf(m => m.Tags[tagIndex].IsChecked)%>"/>
+                    <input type="hidden" value="<%=Model.Tags[tagIndex].Tag.Id%>" name="<%=Html.NameOf(m => m.Tags[ti].Tag.Id)%>"/>
+                    <input type="checkbox" value="true" name="<%=Html.NameOf(m => m.Tags[ti].IsChecked)%>"/>
                 </td>
                 <td>
                     <%=Html.ActionLink(tagEntry.Tag.TagName, "Search", new {id = tagEntry.Tag.Id}) %>
@@ -47,4 +47,4 @@
         </table>
     </fieldset>
     <div class="manage"><%=Html.ActionLink("Add a tag", "Create", new { }, new { @class = "button" })%></div>
-<% Html.EndForm(); %>
+<% } %>

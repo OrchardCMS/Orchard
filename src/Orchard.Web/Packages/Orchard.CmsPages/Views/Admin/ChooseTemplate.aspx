@@ -1,7 +1,6 @@
 <%@ Page Language="C#" Inherits="System.Web.Mvc.ViewPage<Orchard.CmsPages.ViewModels.ChooseTemplateViewModel>" %>
 <%@ Import Namespace="Orchard.CmsPages.Services.Templates"%>
-<%@ Import Namespace="Orchard.Mvc.Html" %>
-<h2>Change Template</h2>
+<h2><%=Html.TitleForPage("Change Template") %></h2>
 <p>Select your layout from one of the templates below.</p>    
 <% using (Html.BeginFormAntiForgeryPost()) {
     %><%= Html.ValidationSummary() %>

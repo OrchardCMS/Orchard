@@ -1,8 +1,7 @@
 <%@ Page Language="C#" Inherits="System.Web.Mvc.ViewPage<RoleEditViewModel>" %>
 <%@ Import Namespace="Orchard.Roles.ViewModels"%>
-<%@ Import Namespace="Orchard.Mvc.Html" %>
-<h2>Edit Role</h2>
-<% using(Html.BeginForm()) { %>
+<h2><%=Html.TitleForPage("Edit Role")%></h2>
+<% using(Html.BeginFormAntiForgeryPost()) { %>
     <%=Html.ValidationSummary() %>
     <fieldset>
 	    <legend>Information</legend>

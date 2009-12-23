@@ -1,6 +1,5 @@
 ﻿<%@ Control Language="C#" Inherits="System.Web.Mvc.ViewUserControl<BaseViewModel>" %>
-<%@ Import Namespace="Orchard.Mvc.ViewModels"%>
-<%@ Import Namespace="Orchard.Mvc.Html" %><%
+<%@ Import Namespace="Orchard.Mvc.ViewModels"%><%
 Html.RegisterStyle("site.css");
  %>
 <div class="page">

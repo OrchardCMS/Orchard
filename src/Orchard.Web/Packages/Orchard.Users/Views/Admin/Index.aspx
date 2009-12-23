@@ -1,8 +1,7 @@
 <%@ Page Language="C#" Inherits="System.Web.Mvc.ViewPage<Orchard.Users.ViewModels.UsersIndexViewModel>" %>
 <%@ Import Namespace="Orchard.ContentManagement"%>
 <%@ Import Namespace="Orchard.Security" %>
-<%@ Import Namespace="Orchard.Mvc.Html" %>
-<h2>Manage Users</h2>
+<h2><%=Html.TitleForPage("Manage Users") %></h2>
 <% using (Html.BeginFormAntiForgeryPost()) { %>
     <%=Html.ValidationSummary()%>
     <div class="manage"><%=Html.ActionLink("Add a new user", "Create", new { }, new { @class = "button" })%></div>

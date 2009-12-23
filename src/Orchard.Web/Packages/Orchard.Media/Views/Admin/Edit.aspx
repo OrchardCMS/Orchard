@@ -2,8 +2,7 @@
 <%@ Import Namespace="Orchard.Media.Models"%>
 <%@ Import Namespace="Orchard.Media.Helpers"%>
 <%@ Import Namespace="Orchard.Media.ViewModels"%>
-<%@ Import Namespace="Orchard.Mvc.Html"%>
-<h2 class="separator">Manage Folder</h2>
+<h2><%=Html.TitleForPage("Manage Folder")%></h2>
 <div class="manage"><%=Html.ActionLink("Folder Properties", "EditProperties", new { folderName = Model.FolderName, mediaPath = Model.MediaPath }, new { @class = "button"})%></div>
 <p><%=Html.ActionLink("Media Folders", "Index")%> &#62; 
     <%foreach (FolderNavigation navigation in MediaHelpers.GetFolderNavigationHierarchy(Model.MediaPath)) {%>
@@ -12,7 +11,7 @@
 	    
     <% } %>
     Manage Folder</p>
-<% Html.BeginForm(); %>
+<% using(Html.BeginFormAntiForgeryPost()) { %>
     <fieldset class="actions bulk">
         <label for="publishActions">Actions: </label>
 		<select id="Select1" name="publishActions">
@@ -88,4 +87,4 @@
 	    <%=Html.ActionLink("Add media", "Add", new { folderName = Model.FolderName, mediaPath = Model.MediaPath }, new { @class = "button" })%>
 		<%=Html.ActionLink("Add a folder", "Create", new { Model.MediaPath }, new { @class = "button" })%>
     </div>
-<% Html.EndForm(); %>
+<% } %>

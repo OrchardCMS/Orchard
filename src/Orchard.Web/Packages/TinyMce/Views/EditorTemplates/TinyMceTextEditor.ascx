@@ -1,6 +1,4 @@
 ﻿<%@ Control Language="C#" Inherits="System.Web.Mvc.ViewUserControl<string>" %>
-<%@ Import Namespace="Orchard.Mvc.Html" %>
-<%@ Import Namespace="System.Web.Mvc.Html" %>
 <% Html.RegisterScript("tiny_mce.js"); %>
 <%=Html.TextArea("", Model, 25, 80, new { @class = "html" }) %>
 

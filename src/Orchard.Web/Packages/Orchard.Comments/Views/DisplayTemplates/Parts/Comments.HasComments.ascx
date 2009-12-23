@@ -1,5 +1,4 @@
 ﻿<%@ Control Language="C#" Inherits="System.Web.Mvc.ViewUserControl<HasComments>" %>
-<%@ Import Namespace="Orchard.Mvc.Html"%>
 <%@ Import Namespace="Orchard.Comments.Models"%>
 <h3 id="comments"><a name="comments"><%=Model.Comments.Count() %> Comment<%=Model.Comments.Count() == 1 ? "" : "s" %></a></h3><%
     foreach (var comment in Model.Comments) { %>
@@ -33,6 +32,7 @@ if (Model.Closed) { %>
             <label for="CommentText">Leave a comment</label>
             <textarea id="CommentText" rows="10" cols="30" name="CommentText"></textarea><br />
             <input type="submit" class="button" value="Submit Comment" />
+		    <%=Html.AntiForgeryTokenOrchard() %>
         </fieldset><%
    }
 } %>

@@ -1,5 +1,4 @@
 <%@ Control Language="C#" Inherits="System.Web.Mvc.ViewUserControl<HasTags>" %>
-<%@ Import Namespace="Orchard.Mvc.Html" %>
 <%@ Import Namespace="Orchard.Tags.Models" %>
 <p class="tags">
 <% if (Model.CurrentTags.Count > 0) { %><span>Tags:</span> <% } %>
