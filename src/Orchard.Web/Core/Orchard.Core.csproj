@@ -143,6 +143,7 @@
     <Content Include="Themes\Views\document.aspx" />
     <Content Include="Themes\Views\EditorTemplates\Parts\Themes.SiteSettings.ascx" />
     <Content Include="Themes\Views\layout.ascx" />
+    <Content Include="Themes\Views\messages.ascx" />
     <Content Include="Themes\Views\user.ascx" />
     <Content Include="Themes\Views\menu.ascx" />
     <Content Include="Themes\Views\Web.config" />

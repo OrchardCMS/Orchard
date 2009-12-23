@@ -1,6 +1,6 @@
 <%@ Control Language="C#" Inherits="System.Web.Mvc.ViewUserControl<IEnumerable<NotifyEntry>>" %>
 <%@ Import Namespace="Orchard.UI.Notify"%>
-
+<%-- todo: (heskew) not this --%>
 <script runat="server">
 string CssClassName(NotifyType type) {
     switch(type) {
@@ -11,7 +11,6 @@ string CssClassName(NotifyType type) {
     }
     return "info";
 }</script>
-
 <% foreach (var item in Model) { %>
 <div class="<%=CssClassName(item.Type) %> message"><%=Html.Encode(item.Message) %></div>
 <% } %>

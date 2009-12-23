@@ -98,8 +98,6 @@
     <Content Include="Views\Account\Register.ascx" />
     <Content Include="Views\Home\About.ascx" />
     <Content Include="Views\Home\Index.ascx" />
-    <Content Include="Views\Shared\Error.aspx" />
-    <Content Include="Views\Shared\Site.Master" />
     <Content Include="Views\Web.config" />
   </ItemGroup>
   <ItemGroup>
@@ -175,7 +173,6 @@
     <Content Include="Themes\TheAdmin\Theme.txt" />
     <Content Include="Themes\TheAdmin\Views\layout.ascx" />
     <Content Include="Themes\TheAdmin\Views\Shared\document.aspx" />
-    <Content Include="Views\Shared\Messages.ascx" />
     <Content Include="Views\Templates\ThreeColumns.aspx" />
     <Content Include="Views\Templates\TwoColumns.aspx" />
   </ItemGroup>

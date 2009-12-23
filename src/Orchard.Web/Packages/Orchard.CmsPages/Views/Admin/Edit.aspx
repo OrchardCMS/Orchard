@@ -7,7 +7,6 @@
     <% using (Html.BeginFormAntiForgeryPost()) { %>
     <div class="primary">
         <h3><%=_Encoded("Page Content") %></h3>
-        <%-- todo: (heskew) change the editors to be self-contained (fieldset > editor) --%>
         <%=Html.EditorFor(m => m.Revision.Title, "inputTextLarge") %>
         <%=Html.EditorFor(m => m.Revision.Slug, "inputTextPermalink") %>
         <% foreach (ContentItem content in Model.Revision.Contents) {

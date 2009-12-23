@@ -10,6 +10,7 @@ Html.RegisterStyle("site.css"); %>
         Html.Zone("menu"); %>
     </div>
     <div id="main"><%
+        Model.Zones.AddRenderPartial("content:-1", "messages", Model.Messages);
         Html.ZoneBody("content");
 %>        <div id="footer"><%
             Html.Zone("footer");
