@@ -1,13 +1,10 @@
 using System.Globalization;
 using System.IO;
 using System.Web.Mvc;
-using Orchard.ContentManagement;
-using Orchard.Core.Settings.Models;
-using Orchard.Mvc.Filters;
 using Orchard.Security;
 using Orchard.Settings;
 
-namespace Orchard.Core.Common.Mvc.Filters {
+namespace Orchard.Mvc.Filters {
     public class AdminFilter : FilterProvider, IActionFilter
     {
         private readonly IAuthorizer _authorizer;
@@ -21,8 +18,7 @@ namespace Orchard.Core.Common.Mvc.Filters {
 
         public void OnActionExecuting(ActionExecutingContext filterContext)
         {
-            //todo: (heskew) get at the SiteUrl the "right" way. or is this the right way :|
-            var siteUrl = _siteService.GetSiteSettings().ContentItem.As<SiteSettings>().Record.SiteUrl;
+            var siteUrl = _siteService.GetSiteSettings().SiteUrl;
             //todo: (heskew) get at the admin path in a less hacky way
             if (filterContext.HttpContext.Request.RawUrl.StartsWith(Path.Combine(siteUrl, "admin").Replace("\\", "/"), true, CultureInfo.InvariantCulture)
                 && !_authorizer.Authorize(Permissions.AccessAdmin, "Can't access the admin")) {

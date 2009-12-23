@@ -1,10 +1,7 @@
 using System.Web.Mvc;
-using Orchard.ContentManagement;
-using Orchard.Core.Settings.Models;
-using Orchard.Mvc.Filters;
 using Orchard.Settings;
 
-namespace Orchard.Core.Common.Mvc.Filters {
+namespace Orchard.Mvc.Filters {
     public class AntiForgeryAuthorizationFilter : FilterProvider, IAuthorizationFilter {
         private readonly ISiteService _siteService;
 
@@ -16,7 +13,7 @@ namespace Orchard.Core.Common.Mvc.Filters {
             if (!(filterContext.HttpContext.Request.HttpMethod == "POST" && filterContext.RequestContext.HttpContext.Request.IsAuthenticated))
                 return;
 
-            var siteSalt = _siteService.GetSiteSettings().ContentItem.As<SiteSettings>().Record.SiteSalt;
+            var siteSalt = _siteService.GetSiteSettings().SiteSalt;
             ValidateAntiForgeryTokenAttribute validator = new ValidateAntiForgeryTokenAttribute { Salt = siteSalt };
 
             validator.OnAuthorization(filterContext);

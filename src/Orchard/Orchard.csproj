@@ -184,8 +184,12 @@
     <Compile Include="Extensions\ExtensionDescriptor.cs" />
     <Compile Include="Extensions\ExtensionEntry.cs" />
     <Compile Include="IOrchardServices.cs" />
+    <Compile Include="Mvc\Filters\AdminFilter.cs" />
+    <Compile Include="Mvc\Filters\AntiForgeryAuthorizationFilter.cs" />
     <Compile Include="Mvc\Html\FileRegistrationContext.cs" />
+    <Compile Include="Mvc\Html\MvcFormAntiForgeryPost.cs" />
     <Compile Include="Mvc\Html\SiteServiceExtensions.cs" />
+    <Compile Include="Permissions.cs" />
     <Compile Include="Themes\ExtensionManagerExtensions.cs" />
     <Compile Include="Extensions\Helpers\PathHelpers.cs" />
     <Compile Include="Extensions\IExtensionManager.cs" />

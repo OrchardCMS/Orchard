@@ -7,6 +7,8 @@ namespace Orchard.Settings {
     public interface ISite : IContent {
         string PageTitleSeparator { get; }
         string SiteName { get; }
+        string SiteSalt { get; }
+        string SiteUrl { get; }
         string SuperUser { get; }
     }
 }
