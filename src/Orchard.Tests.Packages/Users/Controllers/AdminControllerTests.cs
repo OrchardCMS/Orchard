@@ -91,11 +91,11 @@ namespace Orchard.Tests.Packages.Users.Controllers {
                     _obj = obj;
                 }
 
-                public bool ContainsPrefix(ControllerContext controllerContext, string prefix) {
+                public bool ContainsPrefix( string prefix) {
                     return typeof(T).GetProperties().Any(x => x.Name.StartsWith(prefix));
                 }
 
-                public ValueProviderResult GetValue(ControllerContext controllerContext, string key) {
+                public ValueProviderResult GetValue( string key) {
                     var property = typeof(T).GetProperty(key);
                     if (property == null)
                         return null;

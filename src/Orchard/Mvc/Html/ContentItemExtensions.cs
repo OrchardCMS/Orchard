@@ -20,7 +20,7 @@ namespace Orchard.Mvc.Html {
                 return null;
 
             return html.ActionLink(
-                linkText ?? metadata.DisplayText,
+                linkText ?? metadata.DisplayText ?? "view",
                 Convert.ToString(metadata.DisplayRouteValues["action"]),
                 metadata.DisplayRouteValues);
         }
@@ -35,7 +35,7 @@ namespace Orchard.Mvc.Html {
                 return null;
 
             return html.ActionLink(
-                linkText ?? metadata.DisplayText,
+                linkText ?? metadata.DisplayText ?? "edit",
                 Convert.ToString(metadata.EditorRouteValues["action"]),
                 metadata.EditorRouteValues);
         }

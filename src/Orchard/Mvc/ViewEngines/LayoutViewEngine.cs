@@ -119,12 +119,12 @@ namespace Orchard.Mvc.ViewEngines {
 
 
             private static void Monitor(ViewEngineResult result, string viewName) {
-                if (result.View == null) {
-                    Trace.WriteLine("Unable to find " + viewName);
-                    foreach (var search in result.SearchedLocations) {
-                        Trace.WriteLine("  location " + search);
-                    }
-                }
+                //if (result.View == null) {
+                //    Trace.WriteLine("Unable to find " + viewName);
+                //    foreach (var search in result.SearchedLocations) {
+                //        Trace.WriteLine("  location " + search);
+                //    }
+                //}
             }
 
             public void ReleaseView(ControllerContext controllerContext, IView view) {

@@ -1,11 +1,13 @@
+using System.Collections.Generic;
+using System.Linq;
 using Orchard.ContentManagement.Handlers;
 
 namespace Orchard.ContentManagement.Drivers {
     public class CombinedResult : DriverResult {
-        private readonly DriverResult[] _results;
+        private readonly IEnumerable<DriverResult> _results;
 
-        public CombinedResult(DriverResult[] results) {
-            _results = results;
+        public CombinedResult(IEnumerable<DriverResult> results) {
+            _results = results.Where(x => x != null);
         }
 
         public override void Apply(BuildDisplayModelContext context) {
@@ -15,9 +17,9 @@ namespace Orchard.ContentManagement.Drivers {
         }
 
         public override void Apply(BuildEditorModelContext context) {
-            foreach(var result in _results) {
+            foreach (var result in _results) {
                 result.Apply(context);
             }
-        }        
+        }
     }
 }

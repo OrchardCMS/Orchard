@@ -26,9 +26,14 @@ namespace Orchard.Mvc.ViewEngines {
                     }
                     else {
                         //TEMP: to be replaced with an efficient spooling writer
-                        var childWriter = new StringWriter();
-                        viewEngineResult.View.Render(viewContext, childWriter);
-                        layoutViewContext.BodyContent = childWriter.ToString();
+                        var childContext = new ViewContext(
+                            viewContext,
+                            viewEngineResult.View,
+                            viewContext.ViewData,
+                            viewContext.TempData,
+                            new StringWriter());
+                        viewEngineResult.View.Render(childContext, childContext.Writer);
+                        layoutViewContext.BodyContent = childContext.Writer.ToString();
                     }
                 }
             }

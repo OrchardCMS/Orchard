@@ -67,6 +67,7 @@
   <ItemGroup>
     <Compile Include="AdminMenu.cs" />
     <Compile Include="Controllers\AdminController.cs" />
+    <Compile Include="Controllers\HasCommentsDriver.cs" />
     <Compile Include="Models\Comment.cs" />
     <Compile Include="Models\CommentSettings.cs" />
     <Compile Include="Models\CommentSettingsHandler.cs" />
@@ -82,6 +83,7 @@
     <Compile Include="ViewModels\CommentsDetailsViewModel.cs" />
     <Compile Include="ViewModels\CommentsEditViewModel.cs" />
     <Compile Include="ViewModels\CommentsIndexViewModel.cs" />
+    <Compile Include="ViewModels\EditCommentsViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Package.txt" />

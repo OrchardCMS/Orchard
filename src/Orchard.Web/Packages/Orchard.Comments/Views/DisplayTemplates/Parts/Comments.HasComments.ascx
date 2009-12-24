@@ -1,6 +1,6 @@
 ﻿<%@ Control Language="C#" Inherits="System.Web.Mvc.ViewUserControl<HasComments>" %>
 <%@ Import Namespace="Orchard.Comments.Models"%>
-<h3 id="comments"><a name="comments"><%=Model.Comments.Count() %> Comment<%=Model.Comments.Count() == 1 ? "" : "s" %></a></h3><%
+<h3 id="comments"><a name="comments"><%=Model.CommentCount %> Comment<%=Model.CommentCount == 1 ? "" : "s" %></a></h3><%
     foreach (var comment in Model.Comments) { %>
 <div>
     <div class="comment">
@@ -13,7 +13,7 @@
     </div>
 </div><%
     }
-if (Model.Closed) { %>
+if (Model.CommentsActive == false) { %>
     <p>Comments have been disabled for this content.</p><%
 } else { %>
     <% using(Html.BeginForm("Create", "Admin", new { area = "Orchard.Comments" }, FormMethod.Post, new { @class = "comments" })) { %>
@@ -36,3 +36,5 @@ if (Model.Closed) { %>
         </fieldset><%
    }
 } %>
+
+    

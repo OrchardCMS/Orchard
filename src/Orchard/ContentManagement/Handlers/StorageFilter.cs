@@ -26,7 +26,7 @@ namespace Orchard.ContentManagement.Handlers {
                 instance.Record = record;
             }
             else if (AutomaticallyCreateMissingRecord) {
-                instance.Record = new TRecord {ContentItemRecord = context.ContentItemRecord};
+                instance.Record.ContentItemRecord = context.ContentItemRecord;
                 _repository.Create(instance.Record);
             }
         }

@@ -23,11 +23,13 @@ namespace Orchard.Blogs.Controllers {
         private readonly IBlogPostService _blogPostService;
 
         public BlogPostController(
+            IOrchardServices services,
             ISessionLocator sessionLocator, IContentManager contentManager, 
             IAuthorizer authorizer,
             INotifier notifier, 
             IBlogService blogService,
             IBlogPostService blogPostService) {
+            Services = services;
             _sessionLocator = sessionLocator;
             _contentManager = contentManager;
             _authorizer = authorizer;
@@ -37,6 +39,7 @@ namespace Orchard.Blogs.Controllers {
             T = NullLocalizer.Instance;
         }
 
+        public IOrchardServices Services { get; set; }
         private Localizer T { get; set; }
 
         //TODO: (erikpo) Should think about moving the slug parameters and get calls and null checks up into a model binder or action filter
@@ -151,8 +154,8 @@ namespace Orchard.Blogs.Controllers {
             return View(model);
         }
 
-        [HttpPost]
-        public ActionResult Edit(string blogSlug, string postSlug, FormCollection input) {
+        [HttpPost, ActionName("Edit")]
+        public ActionResult EditPOST(string blogSlug, string postSlug) {
             if (!_authorizer.Authorize(Permissions.ModifyPost, T("Couldn't edit blog post")))
                 return new HttpUnauthorizedResult();
 
@@ -171,13 +174,15 @@ namespace Orchard.Blogs.Controllers {
                 BlogPost = _contentManager.UpdateEditorModel(post, this)
             };
 
-            IValueProvider values = input.ToValueProvider();
-            TryUpdateModel(model, values);
+            TryUpdateModel(model);
+
+            if (ModelState.IsValid==false) {
+                Services.TransactionManager.Cancel();
+                return View(model);
+            }
 
             _notifier.Information(T("Blog post information updated."));
-
-            //TODO: (erikpo) Since the model isn't actually updated yet and it's possible the slug changed I'm getting the slug from input. Lame?!?!
-            return Redirect(Url.BlogPostEdit(blog.Slug, values.GetValue(ControllerContext, "Slug").AttemptedValue));
+            return Redirect(Url.BlogPostEdit(blog.Slug, post.Slug));
         }
 
         [HttpPost]

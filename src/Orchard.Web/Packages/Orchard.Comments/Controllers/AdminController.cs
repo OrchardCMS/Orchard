@@ -111,10 +111,10 @@ namespace Orchard.Comments.Controllers {
         }
 
         [AcceptVerbs(HttpVerbs.Post)]
-        public ActionResult Create(FormCollection input, string returnUrl) {
+        public ActionResult Create(string returnUrl) {
             var viewModel = new CommentsCreateViewModel();
             try {
-                UpdateModel(viewModel, input.ToValueProvider());
+                UpdateModel(viewModel);
                 if (CurrentSite.As<CommentSettings>().Record.RequireLoginToAddComment) {
                     if (!_authorizer.Authorize(Permissions.AddComment, T("Couldn't add comment")))
                         return new HttpUnauthorizedResult();

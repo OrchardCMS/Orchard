@@ -1,73 +1,28 @@
-﻿using System;
+﻿using JetBrains.Annotations;
 using Orchard.Data;
-using Orchard.ContentManagement;
 using Orchard.ContentManagement.Handlers;
-using Orchard.ContentManagement.ViewModels;
-using Orchard.Comments.Services;
 
 namespace Orchard.Comments.Models {
+    [UsedImplicitly]
     public class HasCommentsHandler : ContentHandler {
-        private readonly IRepository<Comment> _commentsRepository;
-        private readonly IRepository<ClosedComments> _closedCommentsRepository;
-        private readonly ICommentService _commentService;
+        public HasCommentsHandler(
+            IRepository<Comment> commentsRepository,
+            IRepository<HasCommentsRecord> hasCommentsRepository) {
 
-        public HasCommentsHandler(IRepository<Comment> commentsRepository, IRepository<ClosedComments> closedCommentsRepository, ICommentService commentService) {
-            _commentsRepository = commentsRepository;
-            _closedCommentsRepository = closedCommentsRepository;
-            _commentService = commentService;
             Filters.Add(new ActivatingFilter<HasComments>("sandboxpage"));
             Filters.Add(new ActivatingFilter<HasComments>("blogpost"));
+            Filters.Add(new StorageFilter<HasCommentsRecord>(hasCommentsRepository) { AutomaticallyCreateMissingRecord = true });
+
+            OnActivated<HasComments>((ctx, x) => {
+                x.CommentsActive = true;
+                x.CommentsShown = true;
+            });
+
+            OnLoading<HasComments>((context, comments) => {
+                comments.Comments = commentsRepository.Fetch(x => x.CommentedOn == context.ContentItem.Id && x.Status == CommentStatus.Approved);
+            });
         }
 
-        protected override void BuildDisplayModel(BuildDisplayModelContext context) {
-            if (context.ContentItem.Has<HasComments>() == false) {
-                return;
-            }
-            context.AddDisplay(new TemplateViewModel(context.ContentItem.Get<HasComments>()) { TemplateName = "Parts/Comments.Count", ZoneName="body", Position = "above" });
-            context.AddDisplay(new TemplateViewModel(context.ContentItem.Get<HasComments>()) { TemplateName = "Parts/Comments.HasComments", Position = "999" });
-        }
 
-        protected override void BuildEditorModel(BuildEditorModelContext context) {
-            if (context.ContentItem.Has<HasComments>() == false) {
-                return;
-            }
-            context.AddEditor(new TemplateViewModel(context.ContentItem.Get<HasComments>()) { TemplateName = "Parts/Comments.HasComments" });
-        }
-
-        protected override void UpdateEditorModel(UpdateEditorModelContext context) {
-            if (context.ContentItem.Has<HasComments>() == false) {
-                return;
-            }
-            CommentsViewModel viewModel = new CommentsViewModel();
-            context.Updater.TryUpdateModel(viewModel, String.Empty, null, null);
-            bool closed = viewModel.Closed == null ? false : true;
-            bool currentStatus = _commentService.CommentsClosedForCommentedContent(context.ContentItem.Id);
-            if (currentStatus != closed) {
-                if (closed) {
-                    _commentService.CloseCommentsForCommentedContent(context.ContentItem.Id);
-                }
-                else {
-                    _commentService.EnableCommentsForCommentedContent(context.ContentItem.Id);
-                }
-            }
-
-            context.AddEditor(new TemplateViewModel(context.ContentItem.Get<HasComments>()) { TemplateName = "Parts/Comments.HasComments" });
-        }
-
-        protected override void Loading(LoadContentContext context) {
-            if (context.ContentItem.Has<HasComments>() == false) {
-                return;
-            }
-
-            HasComments comments = context.ContentItem.Get<HasComments>();
-            comments.Comments = _commentsRepository.Fetch(x => x.CommentedOn == context.ContentItem.Id && x.Status == CommentStatus.Approved);
-            if (_closedCommentsRepository.Get(x => x.ContentItemId == context.ContentItem.Id) != null) {
-                comments.Closed = true;
-            }
-        }
-
-        public class CommentsViewModel {
-            public String Closed { get; set; }
-        }
     }
 }

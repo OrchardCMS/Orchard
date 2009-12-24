@@ -29,19 +29,22 @@ namespace Orchard.Comments.Services {
     public class CommentService : ICommentService {
         private readonly IRepository<Comment> _commentRepository;
         private readonly IRepository<ClosedComments> _closedCommentsRepository;
+        private readonly IRepository<HasCommentsRecord> _hasCommentsRepository;
         private readonly ICommentValidator _commentValidator;
         private readonly IContentManager _contentManager;
         private readonly IAuthorizer _authorizer;
         private readonly INotifier _notifier;
 
-        public CommentService(IRepository<Comment> commentRepository, 
+        public CommentService(IRepository<Comment> commentRepository,
                               IRepository<ClosedComments> closedCommentsRepository,
+                              IRepository<HasCommentsRecord> hasCommentsRepository,
                               ICommentValidator commentValidator,
                               IContentManager contentManager,
-                              IAuthorizer authorizer, 
+                              IAuthorizer authorizer,
                               INotifier notifier) {
             _commentRepository = commentRepository;
             _closedCommentsRepository = closedCommentsRepository;
+            _hasCommentsRepository = hasCommentsRepository;
             _commentValidator = commentValidator;
             _contentManager = contentManager;
             _authorizer = authorizer;
@@ -51,7 +54,7 @@ namespace Orchard.Comments.Services {
 
         public ILogger Logger { get; set; }
         protected virtual ISite CurrentSite { get; [UsedImplicitly] private set; }
-        
+
 
         #region Implementation of ICommentService
 

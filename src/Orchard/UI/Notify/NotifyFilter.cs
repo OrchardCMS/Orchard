@@ -37,7 +37,8 @@ namespace Orchard.UI.Notify {
             foreach (var entry in _notifier.List()) {
                 sb.Append(Convert.ToString(entry.Type))
                     .Append(':')
-                    .AppendLine(entry.Message.ToString());
+                    .AppendLine(entry.Message.ToString())
+                    .AppendLine("-");
             }
 
             // assign values into temp data
@@ -62,7 +63,7 @@ namespace Orchard.UI.Notify {
                 return;// nothing to do, really
 
             var messageEntries = new List<NotifyEntry>();
-            foreach (var line in messages.Split(new[] { System.Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries)) {
+            foreach (var line in messages.Split(new[] { System.Environment.NewLine + "-" + System.Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries)) {
                 var delimiterIndex = line.IndexOf(':');
                 if (delimiterIndex != -1) {
                     var type = (NotifyType)Enum.Parse(typeof(NotifyType), line.Substring(0, delimiterIndex));

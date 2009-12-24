@@ -41,7 +41,7 @@ namespace Orchard.Web {
         protected void Application_Start() {
             // This is temporary until MVC2 is officially released.
             // We want to avoid running against an outdated preview installed in the GAC
-            CheckMvcVersion(new Version("2.0.41116.0")/*MVC2 Beta file version #*/);
+            CheckMvcVersion(new Version("2.0.41211.0")/*MVC2 RC file version #*/);
             RegisterRoutes(RouteTable.Routes);
 
             _host = OrchardStarter.CreateHost(MvcSingletons);
