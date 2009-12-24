@@ -10,7 +10,7 @@
 <p><%=Model.Item.Description%></p>
 <div class="actions"><a href="<%=Url.BlogPostCreate(Model.Item.Slug) %>" class="add button">New Post</a></div>
 <%--TODO: (erikpo) Need to figure out which zones should be displayed in this template--%>
-<%=Html.DisplayZonesAny() %>
+<% Html.ZonesAny(); %>
 
 <%--<%
 if (Model.Posts.Count() > 0) { %>

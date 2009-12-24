@@ -2,24 +2,26 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
+using Orchard.UI.Zones;
 
 namespace Orchard.ContentManagement.ViewModels {
-    public class ItemDisplayModel {
+    public class ItemDisplayModel : IZoneContainer {
         private ContentItem _item;
 
         protected ItemDisplayModel() {
+            Zones = new ZoneCollection();
         }
 
         protected ItemDisplayModel(ItemDisplayModel displayModel) {
             TemplateName = displayModel.TemplateName;
             Prefix = displayModel.Prefix;
-            Displays = displayModel.Displays.ToArray();
+            Zones = displayModel.Zones;
             Item = displayModel.Item;
         }
 
         public ItemDisplayModel(ContentItem item) {
             Item = item;
-            Displays = Enumerable.Empty<TemplateViewModel>();
+            Zones = new ZoneCollection();
         }
 
         public ContentItem Item {
@@ -34,7 +36,24 @@ namespace Orchard.ContentManagement.ViewModels {
         public Func<HtmlHelper, ItemDisplayModel, HtmlHelper> Adaptor { get; set; }
         public string TemplateName { get; set; }
         public string Prefix { get; set; }
-        public IEnumerable<TemplateViewModel> Displays { get; set; }
+        
+            
+        public IEnumerable<TemplateViewModel> Displays {
+            get {
+                return Zones
+                    .SelectMany(z => z.Value.Items
+                        .OfType<PartDisplayZoneItem>()
+                        .Select(x=>new{ZoneName=z.Key,Item=x}))                    
+                    .Select(x => new TemplateViewModel(x.Item.Model,x.Item.Prefix) {
+                        Model = x.Item.Model,
+                        TemplateName=x.Item.TemplateName,
+                        WasUsed=x.Item.WasExecuted,
+                        ZoneName=x.ZoneName,
+                    });
+            }
+        }
+        
+        public ZoneCollection Zones { get; set; }
     }
 
     public class ItemDisplayModel<TPart> : ItemDisplayModel where TPart : IContent {

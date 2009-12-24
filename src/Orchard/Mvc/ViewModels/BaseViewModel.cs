@@ -4,7 +4,7 @@ using Orchard.UI.Notify;
 using Orchard.UI.Zones;
 
 namespace Orchard.Mvc.ViewModels {
-    public class BaseViewModel {
+    public class BaseViewModel : IZoneContainer {
         public BaseViewModel() {
             Messages = new List<NotifyEntry>();
             Zones = new ZoneCollection();

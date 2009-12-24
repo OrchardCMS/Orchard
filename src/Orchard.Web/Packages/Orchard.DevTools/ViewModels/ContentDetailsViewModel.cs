@@ -6,6 +6,7 @@ using Orchard.ContentManagement;
 using Orchard.ContentManagement.Records;
 using Orchard.ContentManagement.ViewModels;
 using Orchard.Mvc.ViewModels;
+using Orchard.UI.Zones;
 
 namespace Orchard.DevTools.ViewModels {
     public class ContentDetailsViewModel : BaseViewModel {
@@ -17,7 +18,20 @@ namespace Orchard.DevTools.ViewModels {
 
         public ItemEditorModel EditorModel { get; set; }
 
-        public IEnumerable<TemplateViewModel> Displays { get { return DisplayModel.Displays; } }
+        public IEnumerable<TemplateViewModel> Displays {
+            get {
+                return DisplayModel.Zones
+                    .SelectMany(z => z.Value.Items
+                        .OfType<PartDisplayZoneItem>()
+                        .Select(x=>new{ZoneName=z.Key,Item=x}))                    
+                    .Select(x => new TemplateViewModel(x.Item.Model,x.Item.Prefix) {
+                        Model = x.Item.Model,
+                        TemplateName=x.Item.TemplateName,
+                        WasUsed=x.Item.WasExecuted,
+                        ZoneName=x.ZoneName,
+                    });
+            }
+        }
 
         public IEnumerable<TemplateViewModel> Editors { get { return EditorModel.Editors; } }
 

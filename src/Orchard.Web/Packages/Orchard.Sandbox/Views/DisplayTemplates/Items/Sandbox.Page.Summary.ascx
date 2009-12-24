@@ -3,7 +3,7 @@
 <%@ Import Namespace="Orchard.ContentManagement.ViewModels" %>
 
 <div class="item">
-<%=Html.DisplayZone("title") %>
-<%=Html.DisplayZone("metatop")%>
-<%=Html.DisplayZone("body") %>
+<% Html.Zone("title"); %>
+<% Html.Zone("metatop"); %>
+<% Html.Zone("body"); %>
 </div>

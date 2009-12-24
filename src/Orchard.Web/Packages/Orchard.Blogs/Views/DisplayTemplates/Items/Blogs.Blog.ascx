@@ -6,4 +6,4 @@
 <h1><%=Html.TitleForPage(Model.Item.Name) %></h1>
 <div><%=Html.Encode(Model.Item.Description) %></div>
 <%--TODO: (erikpo) Need to figure out which zones should be displayed in this template--%>
-<%=Html.DisplayZonesAny() %>
+<% Html.ZonesAny(); %>

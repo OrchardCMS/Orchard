@@ -137,12 +137,11 @@ namespace Orchard.ContentManagement {
         }
 
         public ItemDisplayModel<TContentPart> BuildDisplayModel<TContentPart>(TContentPart content, string displayType) where TContentPart : IContent {
-            var itemView = new ItemDisplayModel<TContentPart> {Item = content, Displays = Enumerable.Empty<TemplateViewModel>()};
+            var itemView = new ItemDisplayModel<TContentPart> {Item = content};
             var context = new BuildDisplayModelContext(itemView, displayType);
             foreach (var handler in Handlers) {
                 handler.BuildDisplayModel(context);
             }
-            context.DisplayModel.Displays = OrderTemplates(context.DisplayModel.Displays);
             return itemView;
         }
 

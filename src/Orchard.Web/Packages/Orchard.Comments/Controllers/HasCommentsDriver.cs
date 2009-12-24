@@ -15,7 +15,7 @@ namespace Orchard.Comments.Controllers {
                     PartTemplate(part, "Parts/Comments.HasComments").Location("body", "below.5"));
             }
 
-            return PartTemplate(part, "Parts/Comments.HasComments").Location("body", "below.5");
+            return PartTemplate(part, "Parts/Comments.Count").Location("body", "above.5");
         }
 
         protected override DriverResult Editor(HasComments part) {

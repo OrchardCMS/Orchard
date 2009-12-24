@@ -4,12 +4,19 @@ using System.Web.Mvc;
 using Orchard.ContentManagement.ViewModels;
 
 namespace Orchard.UI.Zones {
+    public interface IZoneContainer {
+        ZoneCollection Zones { get; }
+    }
+
     public class ZoneCollection : Dictionary<string, ZoneEntry> {
         public void AddRenderPartial(string location, string templateName, object model) {
-            AddZoneItem(location, new RenderPartialZoneItem() { Model = model, TemplateName = templateName });
+            AddZoneItem(location, new RenderPartialZoneItem { Model = model, TemplateName = templateName });
         }
         public void AddDisplayItem(string location, ItemDisplayModel displayModel) {
-            AddZoneItem(location, new ItemDisplayZoneItem { DisplayModel = displayModel });
+            AddZoneItem(location, new ItemDisplayZoneItem() { DisplayModel = displayModel });
+        }
+        public void AddDisplayPart(string location, object model, string templateName, string prefix) {
+            AddZoneItem(location, new PartDisplayZoneItem { Model = model, TemplateName = templateName, Prefix = prefix });
         }
         public void AddAction(string location, Action<HtmlHelper> action) {
             AddZoneItem(location, new DelegateZoneItem { Action = action });

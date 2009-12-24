@@ -14,7 +14,12 @@ namespace Orchard.ContentManagement.Handlers {
         public ItemDisplayModel DisplayModel { get; private set; }
 
         public void AddDisplay(TemplateViewModel display) {
-            DisplayModel.Displays = DisplayModel.Displays.Concat(new[] { display });
+            //TEMP: (loudej) transition code - from TemplateViewMode to ZoneItem
+            DisplayModel.Zones.AddDisplayPart(
+                display.ZoneName+":"+display.Position,
+                display.Model, 
+                display.TemplateName,
+                display.Prefix);
         }
     }
 }

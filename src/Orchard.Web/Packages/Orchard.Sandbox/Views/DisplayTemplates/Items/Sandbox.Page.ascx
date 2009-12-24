@@ -2,22 +2,22 @@
 <%@ Import Namespace="Orchard.Sandbox.Models" %>
 <%@ Import Namespace="Orchard.ContentManagement.ViewModels" %>
 <div class="item">
-    <%=Html.DisplayZone("first")%>
+    <% Html.Zone("first"); %>
     <div class="title">
-        <%=Html.DisplayZone("title")%>
+        <% Html.Zone("title"); %>
     </div>
-    <%=Html.DisplayZone("metatop")%>
+    <% Html.Zone("metatop"); %>
     <div class="actions">
         <%=Html.ItemEditLink("Edit this page", Model.Item) %>
         <%=Html.ActionLink("Return to list", "index") %>
-        <%=Html.DisplayZone("actions") %>
+        <% Html.Zone("actions"); %>
     </div>
     <div class="body">
-        <%=Html.DisplayZone("body")%>
+        <% Html.Zone("body"); %>
     </div>
-    <%=Html.DisplayZone("metabottom")%>
+    <% Html.Zone("metabottom"); %>
     <div class="footer">
-        <%=Html.DisplayZonesExcept("last") %>
-        <%=Html.DisplayZone("last")%>
+        <% Html.ZonesExcept("last"); %>
+        <% Html.Zone("last"); %>
     </div>
 </div>

@@ -46,20 +46,29 @@ namespace Orchard.Mvc.Html {
             return MvcHtmlString.Create(html.Encode(titleParts[0]));
         }
 
-        public static void Zone<TModel>(this HtmlHelper<TModel> html, string zoneName, string partitions) where TModel : BaseViewModel {
-            IZoneManager manager = html.Resolve<IZoneManager>();
+        public static void Zone<TModel>(this HtmlHelper<TModel> html, string zoneName, string partitions) where TModel : IZoneContainer {
+            var manager = html.Resolve<IZoneManager>();
 
-            manager.Render(html, html.ViewData.Model.Zones, zoneName, partitions);
+            manager.Render(html, html.ViewData.Model.Zones, zoneName, partitions, null);
         }
 
-        public static void Zone<TModel>(this HtmlHelper<TModel> html, string zoneName) where TModel : BaseViewModel {
+        public static void Zone<TModel>(this HtmlHelper<TModel> html, string zoneName) where TModel : IZoneContainer {
             html.Zone(zoneName, string.Empty);
         }
 
-        public static void Zone<TModel>(this HtmlHelper<TModel> html, string zoneName, Action action) where TModel : BaseViewModel {
+        public static void Zone<TModel>(this HtmlHelper<TModel> html, string zoneName, Action action) where TModel : IZoneContainer {
             //TODO: again, IoC could move this AddAction (or similar) method out of the data-bearing object
             html.ViewData.Model.Zones.AddAction(zoneName, x => action());
             html.Zone(zoneName, string.Empty);
+        }
+
+        public static void ZonesAny<TModel>(this HtmlHelper<TModel> html) where TModel : IZoneContainer {
+            html.ZonesExcept();
+        }
+
+        public static void ZonesExcept<TModel>(this HtmlHelper<TModel> html, params string[] except) where TModel : IZoneContainer {
+            var manager = html.Resolve<IZoneManager>();
+            manager.Render(html, html.ViewData.Model.Zones, null, null, except);
         }
 
         public static void ZoneBody<TModel>(this HtmlHelper<TModel> html, string zoneName) where TModel : BaseViewModel {
