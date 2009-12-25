@@ -80,37 +80,11 @@ namespace Orchard.Tests.Packages.Users.Controllers {
             Assert.That(model.Rows, Is.Not.Null);
         }
 
-        public static class Values {
-            public static IValueProvider Of<T>(T obj) {
-                return new ValueProvider<T>(obj);
-            }
-            class ValueProvider<T> : IValueProvider {
-                private readonly T _obj;
-
-                public ValueProvider(T obj) {
-                    _obj = obj;
-                }
-
-                public bool ContainsPrefix( string prefix) {
-                    return typeof(T).GetProperties().Any(x => x.Name.StartsWith(prefix));
-                }
-
-                public ValueProviderResult GetValue( string key) {
-                    var property = typeof(T).GetProperty(key);
-                    if (property == null)
-                        return null;
-                    return new ValueProviderResult(
-                        property.GetValue(_obj, null),
-                        Convert.ToString(property.GetValue(_obj, null)),
-                        null);
-                }
-            }
-        }
 
         [Test]
         public void CreateShouldAddUserAndRedirect() {
             var controller = _container.Resolve<AdminController>();
-            controller.ValueProvider = Values.Of(new {
+            controller.ValueProvider = Values.From(new {
                 UserName = "four",
                 Password = "five",
                 ConfirmPassword = "five"
@@ -134,7 +108,7 @@ namespace Orchard.Tests.Packages.Users.Controllers {
             Assert.That(model.UserName, Is.EqualTo("two"));
 
             var controller = _container.Resolve<AdminController>();
-            controller.ValueProvider = Values.Of(new {
+            controller.ValueProvider = Values.From(new {
                 UserName = "bubba",
                 Email = "hotep",
             });

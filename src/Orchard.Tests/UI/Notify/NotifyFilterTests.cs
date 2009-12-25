@@ -65,11 +65,11 @@ namespace Orchard.Tests.UI.Notify {
             var model = new AdminViewModel();
 
             var context = BuildContext();
-            context.Controller.TempData.Add("messages", "dont-destroy" + System.Environment.NewLine);
+            context.Controller.TempData.Add("messages", "dont-destroy" + System.Environment.NewLine + "-" + System.Environment.NewLine);
             context.Result = new ViewResult {
-                                                ViewData = new ViewDataDictionary<AdminViewModel>(model),
-                                                TempData = context.Controller.TempData
-                                            };
+                ViewData = new ViewDataDictionary<AdminViewModel>(model),
+                TempData = context.Controller.TempData
+            };
 
             filter.OnActionExecuted(context);
             filter.OnResultExecuting(new ResultExecutingContext(context, context.Result));

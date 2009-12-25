@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using System.Linq;
 using System.Collections.Generic;
 using System.Web;
@@ -83,7 +84,7 @@ namespace Orchard.Tests.Packages.Pages.Controllers {
             }
         }
 
-        class StubAuthorizer: IAuthorizer {
+        class StubAuthorizer : IAuthorizer {
             #region IAuthorizer Members
 
             public bool Authorize(Permission permission, LocalizedString message) {
@@ -103,8 +104,11 @@ namespace Orchard.Tests.Packages.Pages.Controllers {
 
         [Test]
         public void CreateShouldReturnViewWithErrorIfSlugIsNull() {
-            var input = new FormCollection { { ReflectOn<PageCreateViewModel>.NameOf(m => m.Slug), null } };
-            var result = _controller.Create(input);
+            _controller.ValueProvider = Values.From(new PageCreateViewModel {
+                Slug = null
+            });
+
+            var result = _controller.CreatePOST();
             Assert.That(result, Is.TypeOf<ViewResult>());
             Assert.That(_controller.ModelState.IsValid, Is.False);
         }
@@ -130,12 +134,12 @@ namespace Orchard.Tests.Packages.Pages.Controllers {
 
             var pageDoesntExist = _pageManager.GetPublishedBySlug("slug2");
 
-            var input = new FormCollection { 
-                                               { ReflectOn<PageCreateViewModel>.NameOf(m => m.Slug), "slug2" }, 
-                                               { ReflectOn<PageCreateViewModel>.NameOf(m => m.TemplateName), "threecolumn" } 
-                                           };
-
-            var result = _controller.Create(input);
+            _controller.ValueProvider = Values.From(new PageCreateViewModel {
+                Title = "title2",
+                Slug = "slug2",
+                TemplateName = "threecolumn",
+            });
+            var result = _controller.CreatePOST();
 
             Assert.That(result, Is.TypeOf<RedirectToRouteResult>());
             var redirect = (RedirectToRouteResult)result;
@@ -227,15 +231,21 @@ namespace Orchard.Tests.Packages.Pages.Controllers {
             Assert.That(_pagesRepository.Get(revision.Page.Id).Scheduled.Count, Is.EqualTo(1));
 
             // Build controller input
-            var input = new FormCollection { { ReflectOn<PageIndexViewModel>.NameOf(m => m.Options.BulkAction), PageIndexBulkAction.PublishNow.ToString() } };
+
+            var options = new PageIndexOptions {
+                BulkAction = PageIndexBulkAction.PublishNow
+            };
+
+            var pageEntries = new List<PageEntry>();
             for (int i = 0; i < 2; i++) {
-                //TODO: Use "NameOf" when it supports these expressions
-                input.Add(string.Format("PageEntries[{0}].PageId", i), pages[i].Id.ToString());
-                input.Add(string.Format("PageEntries[{0}].IsChecked", i), true.ToString());
+                pageEntries.Add(new PageEntry {
+                    PageId = pages[i].Id,
+                    IsChecked = true
+                });
             }
 
-            // Call controller
-            var result = _controller.Index(input);
+            // call controller
+            var result = _controller.IndexPOST(options, pageEntries);
 
             // Verify result, check database state
             ClearSession();
@@ -263,21 +273,25 @@ namespace Orchard.Tests.Packages.Pages.Controllers {
             Assert.That(pages[1].Published, Is.Null);
             Assert.That(_pagesRepository.Get(revision.Page.Id).Scheduled.Count, Is.EqualTo(1));
 
-            // Build controller input
-            DateTime scheduledDate = _clock.FutureMoment(TimeSpan.FromMinutes(1));
 
-            var input = new FormCollection {
-                                               { ReflectOn<PageIndexViewModel>.NameOf(m => m.Options.BulkAction), PageIndexBulkAction.PublishLater.ToString() } ,
-                                               { ReflectOn<PageIndexViewModel>.NameOf(m => m.Options.BulkPublishLaterDate), string.Format("{0:d} {0:T}", scheduledDate) } 
-                                           };
+            // Build controller input
+
+            DateTime scheduledDate = _clock.FutureMoment(TimeSpan.FromMinutes(1));
+            var options = new PageIndexOptions {
+                BulkAction = PageIndexBulkAction.PublishLater,
+                BulkPublishLaterDate = scheduledDate,
+            };
+
+            var pageEntries = new List<PageEntry>();
             for (int i = 0; i < 2; i++) {
-                //TODO: Use "NameOf" when it supports these expressions
-                input.Add(string.Format("PageEntries[{0}].PageId", i), pages[i].Id.ToString());
-                input.Add(string.Format("PageEntries[{0}].IsChecked", i), true.ToString());
+                pageEntries.Add(new PageEntry {
+                    PageId = pages[i].Id,
+                    IsChecked = true
+                });
             }
 
-            // Call controller
-            var result = _controller.Index(input);
+            // call controller
+            var result = _controller.IndexPOST(options, pageEntries);
 
             // Verify result, check database state
             ClearSession();
@@ -307,20 +321,24 @@ namespace Orchard.Tests.Packages.Pages.Controllers {
             Assert.That(pages[1].Published, Is.Null);
             Assert.That(_pagesRepository.Get(revision.Page.Id).Scheduled.Count, Is.EqualTo(1));
 
-            // Build controller input
-            var input = new FormCollection { 
-                                               { ReflectOn<PageIndexViewModel>.NameOf(m => m.Options.BulkAction), PageIndexBulkAction.Delete.ToString() },
-                                               { ReflectOn<PageIndexViewModel>.NameOf(m => m.Options.BulkDeleteConfirmed), true.ToString() }
-                                           };
 
+            // Build controller input
+
+            var options = new PageIndexOptions {
+                BulkAction = PageIndexBulkAction.Delete,
+                BulkDeleteConfirmed = true,
+            };
+
+            var pageEntries = new List<PageEntry>();
             for (int i = 0; i < 2; i++) {
-                //TODO: Use "NameOf" when it supports these expressions
-                input.Add(string.Format("PageEntries[{0}].PageId", i), pages[i].Id.ToString());
-                input.Add(string.Format("PageEntries[{0}].IsChecked", i), true.ToString());
+                pageEntries.Add(new PageEntry {
+                    PageId = pages[i].Id,
+                    IsChecked = true
+                });
             }
 
-            // Call controller
-            var result = _controller.Index(input);
+            // call controller
+            var result = _controller.IndexPOST(options, pageEntries);
 
             // Verify result, check database state
             ClearSession();
@@ -342,18 +360,20 @@ namespace Orchard.Tests.Packages.Pages.Controllers {
             Assert.That(pages[1].Published, Is.Not.Null);
 
             // Build controller input
-            var input = new FormCollection { 
-                                               { ReflectOn<PageIndexViewModel>.NameOf(m => m.Options.BulkAction), PageIndexBulkAction.Unpublish.ToString() },
-                                           };
+            var options = new PageIndexOptions {
+                BulkAction = PageIndexBulkAction.Unpublish,
+            };
 
+            var pageEntries = new List<PageEntry>();
             for (int i = 0; i < 2; i++) {
-                //TODO: Use "NameOf" when it supports these expressions
-                input.Add(string.Format("PageEntries[{0}].PageId", i), pages[i].Id.ToString());
-                input.Add(string.Format("PageEntries[{0}].IsChecked", i), true.ToString());
+                pageEntries.Add(new PageEntry {
+                    PageId = pages[i].Id,
+                    IsChecked = true
+                });
             }
 
-            // Call controller
-            var result = _controller.Index(input);
+            // call controller
+            var result = _controller.IndexPOST(options, pageEntries);
 
             // Verify result, check database state
             ClearSession();
@@ -374,11 +394,11 @@ namespace Orchard.Tests.Packages.Pages.Controllers {
         public void PublishNowShouldApplyChangesAndRedirect() {
             var pageBeforeEdit = _pageManager.GetLastRevision(_slugPageId);
 
-            var input = new FormCollection { 
-                                               { ReflectOn<PageEditViewModel>.NameOf(m => m.Revision.Slug), "new-slug-value" },
-                                               { ReflectOn<PageEditViewModel>.NameOf(m => m.Command), PageEditCommand.PublishNow.ToString() }
-                                           };
-            var result = _controller.Edit(_slugPageId, input);
+            _controller.ValueProvider = Values.From(new Dictionary<string, string> {
+                {"Revision.Slug","new-slug-value" },
+                {"Command","PublishNow"},
+            });
+            var result = _controller.EditPOST(_slugPageId);
 
             var pageNotFoundAnymore = _pageManager.GetPublishedBySlug("slug");
             var pageFromNewSlug = _pageManager.GetPublishedBySlug("new-slug-value");
@@ -414,8 +434,10 @@ namespace Orchard.Tests.Packages.Pages.Controllers {
             Assert.That(revision.Contents, Has.Count.EqualTo(2));
             Assert.That(revision.Contents, Has.None.Property("ZoneName").EqualTo("content3"));
 
-            var input = new FormCollection { { "TemplateName", "threecolumn" } };
-            var result = _controller.ChooseTemplate(revision.Id, input);
+            _controller.ValueProvider = Values.From(new Dictionary<string, string> {
+                { "TemplateName", "threecolumn" } 
+            });
+            var result = _controller.ChooseTemplatePOST(revision.Id);
 
             Assert.That(result, Is.TypeOf<RedirectToRouteResult>());
 
@@ -443,8 +465,10 @@ namespace Orchard.Tests.Packages.Pages.Controllers {
             Assert.That(revision.Contents, Has.Count.EqualTo(2));
             Assert.That(revision.Contents, Has.None.Property("ZoneName").EqualTo("content3"));
 
-            var input = new FormCollection { { "TemplateName", "twocolumn" } };
-            var result = _controller.ChooseTemplate(revision.Id, input);
+            _controller.ValueProvider = Values.From(new Dictionary<string, string> {
+                { "TemplateName", "twocolumn" }
+            });
+            var result = _controller.ChooseTemplatePOST(revision.Id);
 
             Assert.That(result, Is.TypeOf<RedirectToRouteResult>());
 
@@ -460,41 +484,41 @@ namespace Orchard.Tests.Packages.Pages.Controllers {
 
         [Test, Ignore("This actually requires the data binder to be registered, because it's going through contoller's update model method.")]
         public void SavingDraftAfterEmptyingUnusedContentItemShouldRemoveUnusedItems() {
-            var createInput = new FormCollection {
-                                                     {"Title", "One"},
-                                                     {"Slug", "Two"},
-                                                     {"TemplateName", "threecolumn"},
-                                                 };
-            var createResult = (RedirectToRouteResult)_controller.Create(createInput);
+            _controller.ValueProvider = Values.From(new PageCreateViewModel {
+                Title = "One",
+                Slug = "Two",
+                TemplateName = "threecolumn",
+            });
+            var createResult = (RedirectToRouteResult)_controller.CreatePOST();
             ClearSession();
             var pageId = (int)createResult.RouteValues["id"];
 
-            var publishInput = new FormCollection {
-                                                      {"Command", "PublishNow"},
-                                                      {"Revision.Contents[content1].Content", "alpha"},
-                                                      {"Revision.Contents[content2].Content", "beta"},
-                                                      {"Revision.Contents[content3].Content", "gamma"},
-                                                  };
-            _controller.Edit(pageId, publishInput);
+            _controller.ValueProvider = Values.From(new Dictionary<string, string> {
+                {"Command", "PublishNow"},
+                {"Revision.Contents[content1].Content", "alpha"},
+                {"Revision.Contents[content2].Content", "beta"},
+                {"Revision.Contents[content3].Content", "gamma"},
+            });
+            _controller.EditPOST(pageId);
             ClearSession();
 
-            var chooseTemplateInput = new FormCollection {
-                                                             {"TemplateName", "twocolumn"},
-                                                         };
-            _controller.ChooseTemplate(pageId, chooseTemplateInput);
+            _controller.ValueProvider = Values.From(new Dictionary<string, string> {
+                {"TemplateName", "twocolumn"},
+            });
+            _controller.ChooseTemplatePOST(pageId);
             ClearSession();
 
             var revision = _pageManager.GetLastRevision(pageId);
             Assert.That(revision.Contents, Has.Count.EqualTo(3));
 
 
-            var publishInput2 = new FormCollection {
-                                                       {"Command", "PublishNow"},
-                                                       {"Revision.Contents[content1].Content", "alpha"},
-                                                       {"Revision.Contents[content2].Content", "beta"},
-                                                       {"Revision.Contents[content3].Content", ""},
-                                                   };
-            _controller.Edit(pageId, publishInput2);
+            _controller.ValueProvider = Values.From(new Dictionary<string, string> {
+                {"Command", "PublishNow"},
+                {"Revision.Contents[content1].Content", "alpha"},
+                {"Revision.Contents[content2].Content", "beta"},
+                {"Revision.Contents[content3].Content", ""},
+            });
+            _controller.EditPOST(pageId);
             ClearSession();
             var revision2 = _pageManager.GetLastRevision(pageId);
             Assert.That(revision2.Contents, Has.Count.EqualTo(2));

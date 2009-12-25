@@ -82,15 +82,15 @@ namespace Orchard.CmsPages.Controllers {
             return View(model);
         }
 
-        [HttpPost]
+        [HttpPost, ActionName("Index")]
         [FormValueRequired("submit.BulkEdit")]
-        public ActionResult Index(FormCollection input) {
-            var viewModel = new PageIndexViewModel();
-            UpdateModel(viewModel, input.ToValueProvider());
+        public ActionResult IndexPOST(PageIndexOptions options, IList<PageEntry> pageEntries) {
+            //var viewModel = new PageIndexViewModel();
+            //UpdateModel(viewModel);
 
             try {
-                IEnumerable<PageEntry> checkedEntries = viewModel.PageEntries.Where(p => p.IsChecked);
-                switch (viewModel.Options.BulkAction) {
+                IEnumerable<PageEntry> checkedEntries = pageEntries.Where(p => p.IsChecked);
+                switch (options.BulkAction) {
                     case PageIndexBulkAction.None:
                         break;
 
@@ -111,17 +111,20 @@ namespace Orchard.CmsPages.Controllers {
                         if (!_authorizer.Authorize(Permissions.SchedulePages, T("Couldn't publish page")))
                             return new HttpUnauthorizedResult();
 
-                        if (viewModel.Options.BulkPublishLaterDate != null) {
+                        if (options.BulkPublishLaterDate != null) {
                             //TODO: Transaction
                             foreach (PageEntry entry in checkedEntries) {
                                 var page = _repository.Get(entry.PageId);
                                 var revision = _pageManager.AcquireDraft(page.Id);
                                 _pageScheduler.ClearTasks(page);
-                                _pageScheduler.AddPublishTask(revision, viewModel.Options.BulkPublishLaterDate.Value);
+                                _pageScheduler.AddPublishTask(revision, options.BulkPublishLaterDate.Value);
                             }
                         }
                         else {
-                            return View("BulkPublishLater", viewModel);
+                            return View("BulkPublishLater", new PageIndexViewModel {
+                                Options = options,
+                                PageEntries = pageEntries
+                            });
                         }
                         break;
 
@@ -139,7 +142,7 @@ namespace Orchard.CmsPages.Controllers {
                         if (!_authorizer.Authorize(Permissions.DeletePages, T("Couldn't delete page")))
                             return new HttpUnauthorizedResult();
 
-                        if (viewModel.Options.BulkDeleteConfirmed) {
+                        if (options.BulkDeleteConfirmed) {
                             //TODO: Transaction
                             foreach (PageEntry entry in checkedEntries) {
                                 var page = _repository.Get(entry.PageId);
@@ -148,7 +151,10 @@ namespace Orchard.CmsPages.Controllers {
                             }
                         }
                         else {
-                            return View("BulkDeleteConfirm", viewModel);
+                            return View("BulkDeleteConfirm", new PageIndexViewModel {
+                                Options = options,
+                                PageEntries = pageEntries
+                            });
                         }
                         break;
 
@@ -159,7 +165,7 @@ namespace Orchard.CmsPages.Controllers {
             catch (Exception ex) {
                 ModelState.AddModelError("", ex);
                 //TODO: Is this a good idea to return to the index view in case of error?
-                return Index(viewModel.Options);
+                return Index(options);
             }
 
             return RedirectToAction("Index");
@@ -191,12 +197,12 @@ namespace Orchard.CmsPages.Controllers {
             return View(model);
         }
 
-        [AcceptVerbs(HttpVerbs.Post)]
-        public ActionResult Create(FormCollection input) {
+        [AcceptVerbs(HttpVerbs.Post), ActionName("Create")]
+        public ActionResult CreatePOST() {
 
             var viewModel = new PageCreateViewModel { Templates = _templateProvider.List() };
             try {
-                UpdateModel(viewModel, input.ToValueProvider());
+                UpdateModel(viewModel);
                 if (!_authorizer.Authorize(Permissions.CreatePages, T("Couldn't create page")))
                     return new HttpUnauthorizedResult();
 
@@ -235,9 +241,9 @@ namespace Orchard.CmsPages.Controllers {
             return View(model);
         }
 
-        [HttpPost]
+        [HttpPost, ActionName("Edit")]
         [FormValueRequired("submit.Save")]
-        public ActionResult Edit(int id, FormCollection input) {
+        public ActionResult EditPOST(int id) {
             var model = new PageEditViewModel();
             try {
                 //TODO: need a transaction to surround this entire lot, really
@@ -245,7 +251,7 @@ namespace Orchard.CmsPages.Controllers {
                 model.Revision = _pageManager.AcquireDraft(id);
                 model.Template = _templateProvider.Get(model.Revision.TemplateName);
 
-                UpdateModel(model, input.ToValueProvider());
+                UpdateModel(model);
                 RemoveUnusedContentItems(model.Revision, model.Template);
 
                 _pageScheduler.ClearTasks(model.Revision.Page);
@@ -342,11 +348,11 @@ namespace Orchard.CmsPages.Controllers {
             return View(viewModel);
         }
 
-        [AcceptVerbs(HttpVerbs.Post)]
-        public ActionResult ChooseTemplate(int id, FormCollection input) {
+        [HttpPost, ActionName("ChooseTemplate")]
+        public ActionResult ChooseTemplatePOST(int id) {
             var viewModel = new ChooseTemplateViewModel();
             try {
-                UpdateModel(viewModel, input.ToValueProvider());
+                UpdateModel(viewModel);
 
                 //todo: needs transaction
                 var draft = _pageManager.AcquireDraft(id);

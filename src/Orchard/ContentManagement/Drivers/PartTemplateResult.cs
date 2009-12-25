@@ -16,19 +16,16 @@ namespace Orchard.ContentManagement.Drivers {
         }
 
         public override void Apply(BuildDisplayModelContext context) {
-            context.AddDisplay(new TemplateViewModel(Model, Prefix) {
-                                                                        TemplateName = TemplateName,
-                                                                        ZoneName = Zone,
-                                                                        Position = Position
-                                                                    });
+            context.DisplayModel.Zones.AddDisplayPart(
+                Zone + ":" + Position, Model, TemplateName, Prefix);
         }
 
         public override void Apply(BuildEditorModelContext context) {
             context.AddEditor(new TemplateViewModel(Model, Prefix) {
-                                                                       TemplateName = TemplateName,
-                                                                       ZoneName = Zone,
-                                                                       Position = Position
-                                                                   });
+                TemplateName = TemplateName,
+                ZoneName = Zone,
+                Position = Position
+            });
         }
 
         public PartTemplateResult Location(string zone) {
