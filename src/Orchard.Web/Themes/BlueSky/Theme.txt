@@ -1,6 +1,0 @@
-name: Blue Sky
-author: Jon Wall
-description: This theme uses the best of colors Blue.
-version: 1.0
-tags: blue
-homepage: http://www.orchardproject.net

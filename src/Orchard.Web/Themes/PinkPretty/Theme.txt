@@ -1,6 +1,0 @@
-name: Pretty in Pink
-author: Bertrand Le Roy
-description: This theme is full of butterflies, hearts and unicorns.
-version: 1.0
-tags: pink,butterfly,heart,unicorn
-homepage: http://weblogs.asp.net/bleroy
