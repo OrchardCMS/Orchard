@@ -177,7 +177,6 @@
     <Content Include="Views\Templates\TwoColumns.aspx" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Themes\Green\Content\Images\Thumbs.db" />
     <None Include="Themes\TheAdmin\Styles\images\icons.psd" />
     <Content Include="Themes\Green\Content\Images\bodyBackground.gif" />
     <Content Include="Themes\Green\Content\Images\bodyBackground.png" />
