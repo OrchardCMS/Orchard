@@ -1,6 +1,0 @@
-name: Super Green
-author: Jon Wall
-description: This is the Green theme. It uses the YUI grid system for layout.
-version: 1.0
-tags: green, YUI
-homepage: http://www.orchardproject.net
