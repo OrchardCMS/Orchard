@@ -177,7 +177,22 @@
     <Content Include="Views\Templates\TwoColumns.aspx" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Themes\Green\Content\Images\Thumbs.db" />
     <None Include="Themes\TheAdmin\Styles\images\icons.psd" />
+    <Content Include="Themes\Green\Content\Images\bodyBackground.gif" />
+    <Content Include="Themes\Green\Content\Images\bodyBackground.png" />
+    <Content Include="Themes\Green\Content\Images\logo.gif" />
+    <Content Include="Themes\Green\Content\Images\logo.png" />
+    <Content Include="Themes\Green\Content\Images\tabLeftOff.gif" />
+    <Content Include="Themes\Green\Content\Images\tabLeftOn.gif" />
+    <Content Include="Themes\Green\Content\Images\tabRightOff.gif" />
+    <Content Include="Themes\Green\Content\Images\tabRightOn.gif" />
+    <Content Include="Themes\Green\Styles\site.css" />
+    <Content Include="Themes\Green\Theme.gif" />
+    <Content Include="Themes\Green\Theme.txt" />
+    <Content Include="Themes\Green\Views\footer.ascx" />
+    <Content Include="Themes\Green\Views\layout.ascx" />
+    <Content Include="Themes\Green\Views\menu.ascx" />
     <Content Include="Themes\Web.config" />
   </ItemGroup>
   <ItemGroup>
