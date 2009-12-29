@@ -28,7 +28,7 @@
 </li>
 <li>
 <p>Paragraph - Regular<br />
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas adipiscing dolor vel nunc molestie laoreet. Curabitur vitae elit et massa consequat interdum. Curabitur blandit leo nec magna dictum vitae mollis tellus gravida. Morbi non condimentum neque. Suspendisse commodo condimentum feugiat. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos.</p>
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas adipiscing dolor vel nunc molestie laoreet. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas adipiscing dolor vel nunc molestie laoreet. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas adipiscing dolor vel nunc molestie laoreet. Curabitur vitae elit et massa consequat interdum. Curabitur blandit leo nec magna dictum vitae mollis tellus gravida. Morbi non condimentum neque. Suspendisse commodo condimentum feugiat. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos.</p>
 </li>
 <li>
 <h1>Heading 1</h1>
