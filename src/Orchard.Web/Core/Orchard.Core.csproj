@@ -140,6 +140,7 @@
     <Content Include="Common\Views\EditorTemplates\Parts\Common.Owner.ascx" />
     <Content Include="Themes\Styles\site.css" />
     <Content Include="Themes\Views\Admin\Install.aspx" />
+    <Content Include="Themes\Views\header.ascx" />
     <Content Include="Themes\Views\document.aspx" />
     <Content Include="Themes\Views\EditorTemplates\Parts\Themes.SiteSettings.ascx" />
     <Content Include="Themes\Views\layout.ascx" />

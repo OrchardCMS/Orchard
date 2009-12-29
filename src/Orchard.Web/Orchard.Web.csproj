@@ -172,7 +172,6 @@
     <Content Include="Themes\TheAdmin\Theme.gif" />
     <Content Include="Themes\TheAdmin\Theme.txt" />
     <Content Include="Themes\TheAdmin\Views\layout.ascx" />
-    <Content Include="Themes\TheAdmin\Views\Shared\document.aspx" />
     <Content Include="Views\Templates\ThreeColumns.aspx" />
     <Content Include="Views\Templates\TwoColumns.aspx" />
   </ItemGroup>
@@ -192,6 +191,9 @@
     <Content Include="Themes\Green\Views\footer.ascx" />
     <Content Include="Themes\Green\Views\layout.ascx" />
     <Content Include="Themes\Green\Views\menu.ascx" />
+    <Content Include="Themes\TheAdmin\Views\menu.ascx" />
+    <Content Include="Themes\TheAdmin\Views\user.ascx" />
+    <Content Include="Themes\TheAdmin\Views\header.ascx" />
     <Content Include="Themes\Web.config" />
   </ItemGroup>
   <ItemGroup>

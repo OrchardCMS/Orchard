@@ -1,18 +1,19 @@
 ﻿<%@ Control Language="C#" Inherits="System.Web.Mvc.ViewUserControl<BaseViewModel>" %>
 <%@ Import Namespace="Orchard.Mvc.ViewModels"%><%
-Html.RegisterStyle("site.css"); %>
+Html.RegisterStyle("site.css");
+Model.Zones.AddRenderPartial("header", "header", Model);
+Model.Zones.AddRenderPartial("header:after", "user", Model);
+Model.Zones.AddRenderPartial("menu", "menu", Model);
+Model.Zones.AddRenderPartial("content:before", "messages", Model.Messages);
+%>
 <div class="page">
-    <div id="header">
-        <div id="title"><%=Html.TitleForPage(Html.SiteName()) %></div><%
-        Model.Zones.AddRenderPartial("header", "user", Model);
+    <div id="header"><%
         Html.Zone("header");
-        Model.Zones.AddRenderPartial("menu", "menu", Model);
         Html.Zone("menu"); %>
     </div>
     <div id="main"><%
-        Model.Zones.AddRenderPartial("content:-1", "messages", Model.Messages);
-        Html.ZoneBody("content");
-%>        <div id="footer"><%
+        Html.ZoneBody("content"); %>
+        <div id="footer"><%
             Html.Zone("footer");
         %></div>
     </div>

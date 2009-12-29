@@ -2,7 +2,6 @@
 <%@ Import Namespace="Orchard.Mvc.ViewModels"%>
 <h2><%=Html.TitleForPage("Log On") %></h2>
 <p>Please enter your username and password. <%= Html.ActionLink("Register", "Register") %> if you don't have an account.</p>
-<% if (Model != null && Model.Messages != null) Html.RenderPartial("Messages", Model.Messages); %>
 <%= Html.ValidationSummary("Login was unsuccessful. Please correct the errors and try again.") %>
 
 <% using (Html.BeginFormAntiForgeryPost()) { %>
