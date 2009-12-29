@@ -145,8 +145,8 @@ html>body #wrapper {height: auto;}
 #content {
     background:url(../Content/Images/background_content.jpg) no-repeat center top #FFF;
     height:100%;
-    margin:0 auto;
-    padding:0;
+    margin:0px auto;
+    padding:0px;
     width:960px;
 }
 
@@ -234,7 +234,7 @@ html>body #wrapper {height: auto;}
 
 #menucontainer ul li a, #menucontainer ul li a:visited, #menucontainer ul li a:active {
 	display:block;
-	padding:12px;
+	padding:12px 12px 10px 12px;
 	color: #e2e4dd;
 	font-size:104%;
 	text-decoration: none;
