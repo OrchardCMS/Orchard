@@ -1,0 +1,6 @@
+﻿name: Orchard
+author: Jonathan Wall
+description: The Orchard Theme.
+version: 1.0
+tags: Orchard
+homepage: http://www.orchardproject.net
