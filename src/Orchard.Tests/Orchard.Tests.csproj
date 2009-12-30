@@ -103,6 +103,37 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ContentManagement\ContentQueryTests.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ContentManagement\DefaultContentManagerTests.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ContentManagement\Handlers\ContentHandlerTests.cs" />
+    <Compile Include="ContentManagement\Handlers\ModelBuilderTests.cs" />
+    <Compile Include="ContentManagement\Models\Alpha.cs" />
+    <Compile Include="ContentManagement\Models\AlphaHandler.cs" />
+    <Compile Include="ContentManagement\Models\Beta.cs" />
+    <Compile Include="ContentManagement\Models\BetaHandler.cs" />
+    <Compile Include="ContentManagement\Models\Delta.cs" />
+    <Compile Include="ContentManagement\Models\Epsilon.cs" />
+    <Compile Include="ContentManagement\Models\Flavored.cs" />
+    <Compile Include="ContentManagement\Models\FlavoredHandler.cs" />
+    <Compile Include="ContentManagement\Models\Gamma.cs" />
+    <Compile Include="ContentManagement\Models\Styled.cs" />
+    <Compile Include="ContentManagement\Models\StyledHandler.cs" />
+    <Compile Include="ContentManagement\PartDriverHandlerTests.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ContentManagement\Records\DeltaRecord.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ContentManagement\Records\EpsilonRecord.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ContentManagement\Records\GammaRecord.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="DataUtility.cs" />
     <Compile Include="Data\RepositoryTests.cs" />
     <Compile Include="Data\StubLocator.cs" />
@@ -116,25 +147,6 @@
     <Compile Include="Extensions\ExtensionManagerTests.cs" />
     <Compile Include="Localization\NullLocalizerTests.cs" />
     <Compile Include="Logging\LoggingModuleTests.cs" />
-    <Compile Include="Models\ContentQueryTests.cs" />
-    <Compile Include="Models\DefaultContentManagerTests.cs" />
-    <Compile Include="Models\Drivers\ModelBuilderTests.cs" />
-    <Compile Include="Models\Drivers\ContentHandlerTests.cs" />
-    <Compile Include="Models\PartDriverHandlerTests.cs" />
-    <Compile Include="Models\Stubs\Alpha.cs" />
-    <Compile Include="Models\Stubs\AlphaHandler.cs" />
-    <Compile Include="Models\Stubs\Beta.cs" />
-    <Compile Include="Models\Stubs\BetaHandler.cs" />
-    <Compile Include="Models\Stubs\Delta.cs" />
-    <Compile Include="Models\Records\DeltaRecord.cs" />
-    <Compile Include="Models\Stubs\Epsilon.cs" />
-    <Compile Include="Models\Records\EpsilonRecord.cs" />
-    <Compile Include="Models\Stubs\Flavored.cs" />
-    <Compile Include="Models\Stubs\FlavoredHandler.cs" />
-    <Compile Include="Models\Stubs\Gamma.cs" />
-    <Compile Include="Models\Records\GammaRecord.cs" />
-    <Compile Include="Models\Stubs\Styled.cs" />
-    <Compile Include="Models\Stubs\StyledHandler.cs" />
     <Compile Include="Mvc\ModelBinders\KeyedListModelBinderTests.cs" />
     <Compile Include="Mvc\OrchardControllerFactoryTests.cs" />
     <Compile Include="Mvc\OrchardControllerIdentificationStrategyTests.cs" />
