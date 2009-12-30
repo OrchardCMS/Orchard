@@ -5,7 +5,7 @@ using System.Text;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Handlers;
 
-namespace Orchard.Tests.Models.Stubs {
+namespace Orchard.Tests.ContentManagement.Models {
     public class BetaHandler : ContentHandler {
         public override System.Collections.Generic.IEnumerable<Orchard.ContentManagement.ContentType> GetContentTypes() {
             return new[] { new ContentType { Name = "beta" } };

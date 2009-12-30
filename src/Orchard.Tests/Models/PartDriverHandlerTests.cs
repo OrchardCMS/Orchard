@@ -13,7 +13,7 @@ using Orchard.ContentManagement.Drivers;
 using Orchard.ContentManagement.Handlers;
 using Orchard.ContentManagement.ViewModels;
 
-namespace Orchard.Tests.Models {
+namespace Orchard.Tests.ContentManagement {
     [TestFixture]
     public class PartDriverHandlerTests {
         private IContainer _container;

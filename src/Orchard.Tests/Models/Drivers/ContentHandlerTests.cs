@@ -2,10 +2,10 @@ using NUnit.Framework;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Handlers;
 
-namespace Orchard.Tests.Models.Drivers {
+namespace Orchard.Tests.ContentManagement.Handlers {
 
     [TestFixture]
-    public class ModelDriverTests {
+    public class ContentHandlerTests {
         [Test]
         public void ModelDriverShouldUsePersistenceFilterToDelegateCreateAndLoad() {
             var modelDriver = new TestModelHandler();

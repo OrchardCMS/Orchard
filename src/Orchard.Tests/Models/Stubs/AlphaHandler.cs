@@ -3,7 +3,7 @@ using Orchard.ContentManagement;
 using Orchard.ContentManagement.Handlers;
 using Orchard.ContentManagement.ViewModels;
 
-namespace Orchard.Tests.Models.Stubs {
+namespace Orchard.Tests.ContentManagement.Models {
     public class AlphaHandler : ContentHandler {
         public AlphaHandler() {
             OnGetDisplayViewModel<Alpha>((ctx, part) => ctx.AddDisplay(new TemplateViewModel(part) { Position = "3" }));

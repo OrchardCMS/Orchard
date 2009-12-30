@@ -119,7 +119,7 @@
     <Compile Include="Models\ContentQueryTests.cs" />
     <Compile Include="Models\DefaultContentManagerTests.cs" />
     <Compile Include="Models\Drivers\ModelBuilderTests.cs" />
-    <Compile Include="Models\Drivers\ModelDriverTests.cs" />
+    <Compile Include="Models\Drivers\ContentHandlerTests.cs" />
     <Compile Include="Models\PartDriverHandlerTests.cs" />
     <Compile Include="Models\Stubs\Alpha.cs" />
     <Compile Include="Models\Stubs\AlphaHandler.cs" />

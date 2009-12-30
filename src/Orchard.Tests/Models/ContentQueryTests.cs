@@ -11,10 +11,10 @@ using Orchard.Data;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Handlers;
 using Orchard.ContentManagement.Records;
-using Orchard.Tests.Models.Records;
-using Orchard.Tests.Models.Stubs;
+using Orchard.Tests.ContentManagement.Records;
+using Orchard.Tests.ContentManagement.Models;
 
-namespace Orchard.Tests.Models {
+namespace Orchard.Tests.ContentManagement {
     [TestFixture]
     public class ContentQueryTests {
         private IContainer _container;

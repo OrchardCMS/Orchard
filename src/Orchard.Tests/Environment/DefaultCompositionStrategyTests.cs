@@ -2,8 +2,8 @@
 using NUnit.Framework;
 using Orchard.Environment;
 using Orchard.Extensions;
-using Orchard.Tests.Models.Records;
-using Orchard.Tests.Models.Stubs;
+using Orchard.Tests.ContentManagement.Records;
+using Orchard.Tests.ContentManagement.Models;
 
 namespace Orchard.Tests.Environment {
     [TestFixture]

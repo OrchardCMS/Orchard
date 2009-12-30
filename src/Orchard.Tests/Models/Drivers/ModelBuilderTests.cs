@@ -5,9 +5,9 @@ using System.Text;
 using NUnit.Framework;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Handlers;
-using Orchard.Tests.Models.Stubs;
+using Orchard.Tests.ContentManagement.Models;
 
-namespace Orchard.Tests.Models.Drivers {
+namespace Orchard.Tests.ContentManagement.Handlers {
     [TestFixture]
     public class ModelBuilderTests {
         [Test]

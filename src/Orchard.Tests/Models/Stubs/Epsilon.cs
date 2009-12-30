@@ -5,9 +5,9 @@ using System.Text;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Handlers;
 using Orchard.Data;
-using Orchard.Tests.Models.Records;
+using Orchard.Tests.ContentManagement.Records;
 
-namespace Orchard.Tests.Models.Stubs {
+namespace Orchard.Tests.ContentManagement.Models {
 
 
     public class Epsilon : ContentPart<EpsilonRecord> {
