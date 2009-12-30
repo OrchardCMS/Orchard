@@ -5,7 +5,6 @@ using Orchard.Localization;
 using Orchard.ContentManagement;
 using Orchard.Settings;
 using Orchard.UI.Notify;
-using Orchard.ContentManagement.Handlers;
 
 namespace Orchard.Core.Settings.Controllers {
     [ValidateInput(false)]
@@ -24,18 +23,19 @@ namespace Orchard.Core.Settings.Controllers {
         public Localizer T { get; set; }
 
         public ActionResult Index(string tabName) {
-            var model = new Orchard.Core.Settings.ViewModels.SettingsIndexViewModel { 
-                Site = _siteService.GetSiteSettings().As<SiteSettings>() };
+            var model = new Orchard.Core.Settings.ViewModels.SettingsIndexViewModel {
+                Site = _siteService.GetSiteSettings().As<SiteSettings>()
+            };
             model.EditorModel = _modelManager.BuildEditorModel(model.Site);
             return View(model);
         }
 
-        [AcceptVerbs(HttpVerbs.Post)]
-        public ActionResult Index(string tabName, FormCollection input) {
+        [HttpPost, ActionName("Index")]
+        public ActionResult IndexPOST(string tabName) {
             var viewModel = new SettingsIndexViewModel { Site = _siteService.GetSiteSettings().As<SiteSettings>() };
             viewModel.EditorModel = _modelManager.UpdateEditorModel(viewModel.Site.ContentItem, this);
 
-            if (!TryUpdateModel(viewModel, input.ToValueProvider())) {
+            if (!TryUpdateModel(viewModel)) {
                 return View(viewModel);
             }
 

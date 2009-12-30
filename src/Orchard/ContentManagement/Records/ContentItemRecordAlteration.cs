@@ -36,25 +36,32 @@ namespace Orchard.ContentManagement.Records {
 
         class Alteration<TPartRecord> : IAlteration where TPartRecord : ContentPartRecord {
             public void Override(AutoMapping<ContentItemRecord> mapping) {
+
+                // public TPartRecord TPartRecord {get;set;}
                 var name = typeof(TPartRecord).Name;
-
-
                 var syntheticMethod = new DynamicMethod(name, typeof(TPartRecord), null, typeof(ContentItemRecord));
-                var syntheticProperty = new FakePropertyInfo(syntheticMethod);
+                var syntheticProperty = new SyntheticPropertyInfo(syntheticMethod);
 
+                // record => record.TPartRecord
                 var parameter = Expression.Parameter(typeof(ContentItemRecord), "record");
                 var syntheticExpression = (Expression<Func<ContentItemRecord, TPartRecord>>)Expression.Lambda(
                     typeof(Func<ContentItemRecord, TPartRecord>),
                     Expression.Property(parameter, syntheticProperty),
                     parameter);
 
-                mapping.HasOne(syntheticExpression).Access.NoOp().Fetch.Select();
+                mapping.References(syntheticExpression)
+                    .Access.NoOp()
+                    .Column("Id")
+                    .Unique()
+                    .Not.Insert()
+                    .Not.Update()
+                    .Cascade.All();
             }
 
-            private class FakePropertyInfo : PropertyInfo {
+            private class SyntheticPropertyInfo : PropertyInfo {
                 private readonly DynamicMethod _getMethod;
 
-                public FakePropertyInfo(DynamicMethod dynamicMethod) {
+                public SyntheticPropertyInfo(DynamicMethod dynamicMethod) {
                     _getMethod = dynamicMethod;
                 }
 

@@ -44,6 +44,10 @@ namespace Orchard.Data {
             Delete(entity);
         }
 
+        void IRepository<T>.Copy(T source, T target) {
+            Copy(source, target);
+        }
+
         T IRepository<T>.Get(int id) {
             return Get(id);
         }
@@ -113,6 +117,14 @@ namespace Orchard.Data {
             Logger.Debug("Delete {0}", entity);
             Session.Delete(entity);            
         }
+
+        public virtual void Copy(T source, T target) {
+            Logger.Debug("Delete {0}", source, target);
+            var metadata = Session.SessionFactory.GetClassMetadata(typeof (T));
+            var values = metadata.GetPropertyValues(source, EntityMode.Poco);
+            metadata.SetPropertyValues(target, values, EntityMode.Poco);
+        }
+
 
         public virtual int Count(Expression<Func<T, bool>> predicate) {
             return Fetch(predicate).Count();

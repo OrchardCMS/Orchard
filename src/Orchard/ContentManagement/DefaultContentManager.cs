@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using Autofac;
 using Orchard.ContentManagement.Handlers;
@@ -11,16 +12,19 @@ using Orchard.UI.Navigation;
 namespace Orchard.ContentManagement {
     public class DefaultContentManager : IContentManager {
         private readonly IContext _context;
-        private readonly IRepository<ContentItemRecord> _contentItemRepository;
         private readonly IRepository<ContentTypeRecord> _contentTypeRepository;
+        private readonly IRepository<ContentItemRecord> _contentItemRepository;
+        private readonly IRepository<ContentItemVersionRecord> _contentItemVersionRepository;
 
         public DefaultContentManager(
             IContext context,
+            IRepository<ContentTypeRecord> contentTypeRepository,
             IRepository<ContentItemRecord> contentItemRepository,
-            IRepository<ContentTypeRecord> contentTypeRepository) {
+            IRepository<ContentItemVersionRecord> contentItemVersionRepository) {
             _context = context;
-            _contentItemRepository = contentItemRepository;
             _contentTypeRepository = contentTypeRepository;
+            _contentItemRepository = contentItemRepository;
+            _contentItemVersionRepository = contentItemVersionRepository;
         }
 
         private IEnumerable<IContentHandler> _handlers;
@@ -67,24 +71,66 @@ namespace Orchard.ContentManagement {
         }
 
         public virtual ContentItem Get(int id) {
-            // obtain root record to determine the model type
-            var record = _contentItemRepository.Get(id);
+            return Get(id, VersionOptions.Published);
+        }
 
-            // no record of that id means content item doesn't exist
-            if (record == null)
+        public virtual ContentItem Get(int id, VersionOptions options) {
+            ContentItemVersionRecord versionRecord = null;
+            var appendLatestVersion = false;
+
+            // obtain the root records based on version options
+            if (options.VersionRecordId != 0) {
+                // explicit version record known
+                versionRecord = _contentItemVersionRepository.Get(options.VersionRecordId);
+            }
+            else {
+                var record = _contentItemRepository.Get(id);
+                if (options.IsPublished) {
+                    versionRecord = _contentItemVersionRepository.Get(x => x.ContentItemRecord == record && x.Published);
+                }
+                else if (options.IsLatest) {
+                    versionRecord = _contentItemVersionRepository.Get(x => x.ContentItemRecord == record && x.Latest);
+                }
+                else if (options.IsDraft || options.IsDraftRequired) {
+                    versionRecord = _contentItemVersionRepository.Get(x => x.ContentItemRecord == record && x.Latest && !x.Published);
+                    if (versionRecord == null && options.IsDraftRequired) {
+                        versionRecord = _contentItemVersionRepository.Get(x => x.ContentItemRecord == record && x.Latest);
+                        appendLatestVersion = true;
+                    }
+                }
+                else if (options.VersionNumber != 0) {
+                    versionRecord = _contentItemVersionRepository.Get(x => x.ContentItemRecord == record && x.Number == options.VersionNumber);
+                }
+
+                //TEMP: this is to transition people with old databases
+                if (versionRecord == null && !record.Versions.Any() && options.IsPublished) {
+                    versionRecord = new ContentItemVersionRecord {
+                        ContentItemRecord = record,
+                        Latest = true,
+                        Published = true,
+                        Number = 1
+                    };
+                    record.Versions.Add(versionRecord);
+                    _contentItemVersionRepository.Create(versionRecord);
+                }
+            }
+
+            // no record means content item doesn't exist
+            if (versionRecord == null) {
                 return null;
+            }
 
             // allocate instance and set record property
-            var contentItem = New(record.ContentType.Name);
-            contentItem.Id = record.Id;
-            contentItem.Record = record;
+            var contentItem = New(versionRecord.ContentItemRecord.ContentType.Name);
+            contentItem.VersionRecord = versionRecord;
 
             // create a context with a new instance to load            
             var context = new LoadContentContext {
                 Id = contentItem.Id,
                 ContentType = contentItem.ContentType,
-                ContentItemRecord = record,
                 ContentItem = contentItem,
+                ContentItemRecord = contentItem.Record,
+                ContentItemVersionRecord = contentItem.VersionRecord,
             };
 
             // invoke handlers to acquire state, or at least establish lazy loading callbacks
@@ -95,25 +141,99 @@ namespace Orchard.ContentManagement {
                 handler.Loaded(context);
             }
 
+            // when draft is required and not currently available a new version is appended 
+            if (appendLatestVersion) {
+                return AppendLatestVersion(context.ContentItem);
+            }
+
             return context.ContentItem;
         }
 
-        public void Create(ContentItem contentItem) {
+        public virtual ContentItem AppendLatestVersion(ContentItem existingContentItem) {
+            var contentItemRecord = existingContentItem.Record;
+
+            // locate the existing and the current latest versions, allocate building version
+            var existingItemVersionRecord = existingContentItem.VersionRecord;
+            var buildingItemVersionRecord = new ContentItemVersionRecord {
+                ContentItemRecord = contentItemRecord,
+                Latest = true,
+                Published = false
+            };
+
+            if (existingItemVersionRecord.Latest == false) {
+                var latestVersion = _contentItemVersionRepository.Get(x => x.ContentItemRecord == contentItemRecord && x.Latest);
+                latestVersion.Latest = false;
+                buildingItemVersionRecord.Number = latestVersion.Number + 1;
+            }
+            else {
+                existingItemVersionRecord.Latest = false;
+                buildingItemVersionRecord.Number = existingItemVersionRecord.Number + 1;
+            }
+
+
+            _contentItemVersionRepository.Create(buildingItemVersionRecord);
+
+            var buildingContentItem = New(existingContentItem.ContentType);
+            buildingContentItem.VersionRecord = buildingItemVersionRecord;
+
+            var context = new VersionContentContext {
+                Id = existingContentItem.Id,
+                ContentType = existingContentItem.ContentType,
+                ContentItemRecord = contentItemRecord,
+                ExistingContentItem = existingContentItem,
+                BuildingContentItem = buildingContentItem,
+                ExistingItemVersionRecord = existingItemVersionRecord,
+                BuildingItemVersionRecord = buildingItemVersionRecord,
+            };
+            foreach (var handler in Handlers) {
+                handler.Versioning(context);
+            }
+            foreach (var handler in Handlers) {
+                handler.Versioned(context);
+            }
+
+            return context.BuildingContentItem;
+        }
+
+        public virtual void Create(ContentItem contentItem) {
+            Create(contentItem, VersionOptions.Published);
+        }
+
+        public virtual void Create(ContentItem contentItem, VersionOptions options) {
             // produce root record to determine the model id
-            var modelRecord = new ContentItemRecord { ContentType = AcquireContentTypeRecord(contentItem.ContentType) };
-            _contentItemRepository.Create(modelRecord);
-            contentItem.Record = modelRecord;
+            contentItem.VersionRecord = new ContentItemVersionRecord {
+                ContentItemRecord = new ContentItemRecord {
+                    ContentType = AcquireContentTypeRecord(contentItem.ContentType)
+                },
+                Number = 1,
+                Latest = true,
+                Published = true
+            };
+            // add to the collection manually for the created case
+            contentItem.VersionRecord.ContentItemRecord.Versions.Add(contentItem.VersionRecord);
+
+            // version may be specified
+            if (options.VersionNumber != 0) {
+                contentItem.VersionRecord.Number = options.VersionNumber;
+            }
+
+            // draft flag on create is required for explicitly-published content items
+            if (options.IsDraft) {
+                contentItem.VersionRecord.Published = false;
+            }
+
+            _contentItemRepository.Create(contentItem.Record);
+            _contentItemVersionRepository.Create(contentItem.VersionRecord);
+
 
             // build a context with the initialized instance to create
             var context = new CreateContentContext {
-                Id = modelRecord.Id,
-                ContentType = modelRecord.ContentType.Name,
-                ContentItemRecord = modelRecord,
+                Id = contentItem.Id,
+                ContentType = contentItem.ContentType,
+                ContentItemRecord = contentItem.Record,
+                ContentItemVersionRecord = contentItem.VersionRecord,
                 ContentItem = contentItem
             };
-
-            // set the id
-            context.ContentItem.Id = context.Id;
 
 
             // invoke handlers to add information to persistent stores
@@ -137,7 +257,7 @@ namespace Orchard.ContentManagement {
         }
 
         public ItemDisplayModel<TContentPart> BuildDisplayModel<TContentPart>(TContentPart content, string displayType) where TContentPart : IContent {
-            var itemView = new ItemDisplayModel<TContentPart> {Item = content};
+            var itemView = new ItemDisplayModel<TContentPart> { Item = content };
             var context = new BuildDisplayModelContext(itemView, displayType);
             foreach (var handler in Handlers) {
                 handler.BuildDisplayModel(context);

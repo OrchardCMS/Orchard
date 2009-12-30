@@ -117,7 +117,7 @@
     <Compile Include="Localization\NullLocalizerTests.cs" />
     <Compile Include="Logging\LoggingModuleTests.cs" />
     <Compile Include="Models\ContentQueryTests.cs" />
-    <Compile Include="Models\DefaultModelManagerTests.cs" />
+    <Compile Include="Models\DefaultContentManagerTests.cs" />
     <Compile Include="Models\Drivers\ModelBuilderTests.cs" />
     <Compile Include="Models\Drivers\ModelDriverTests.cs" />
     <Compile Include="Models\PartDriverHandlerTests.cs" />
@@ -127,6 +127,8 @@
     <Compile Include="Models\Stubs\BetaHandler.cs" />
     <Compile Include="Models\Stubs\Delta.cs" />
     <Compile Include="Models\Records\DeltaRecord.cs" />
+    <Compile Include="Models\Stubs\Epsilon.cs" />
+    <Compile Include="Models\Records\EpsilonRecord.cs" />
     <Compile Include="Models\Stubs\Flavored.cs" />
     <Compile Include="Models\Stubs\FlavoredHandler.cs" />
     <Compile Include="Models\Stubs\Gamma.cs" />

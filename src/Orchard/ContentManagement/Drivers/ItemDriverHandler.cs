@@ -36,6 +36,15 @@ namespace Orchard.ContentManagement.Drivers {
 
         void IContentHandler.Loaded(LoadContentContext context) { }
 
+        void IContentHandler.Versioning(VersionContentContext context) { }
+
+        void IContentHandler.Versioned(VersionContentContext context) { }
+
+        void IContentHandler.Removing(RemoveContentContext context) { }
+
+        void IContentHandler.Removed(RemoveContentContext context) { }
+
+
         void IContentHandler.GetItemMetadata(GetItemMetadataContext context) {
             _drivers.Invoke(driver => driver.GetItemMetadata(context), Logger);
         }
@@ -63,6 +72,8 @@ namespace Orchard.ContentManagement.Drivers {
                     result.Apply(context);
             }, Logger);
         }
+
+
     }
 
 }

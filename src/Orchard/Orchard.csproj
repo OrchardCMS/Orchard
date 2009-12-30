@@ -66,6 +66,9 @@
       <HintPath>..\..\lib\linqnhibernate\NHibernate.Linq.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
@@ -168,8 +171,11 @@
     <Compile Include="ContentManagement\IUpdateModel.cs" />
     <Compile Include="ContentManagement\Records\ContentItemRecord.cs" />
     <Compile Include="ContentManagement\Records\ContentItemRecordAlteration.cs" />
+    <Compile Include="ContentManagement\Records\ContentItemVersionRecord.cs" />
     <Compile Include="ContentManagement\Records\ContentPartRecord.cs" />
     <Compile Include="ContentManagement\Records\ContentPartRecordAlteration.cs" />
+    <Compile Include="ContentManagement\Records\ContentPartVersionRecord.cs" />
+    <Compile Include="ContentManagement\Records\ContentPartVersionRecordAlteration.cs" />
     <Compile Include="ContentManagement\Records\ContentTypeRecord.cs" />
     <Compile Include="ContentManagement\ViewModels\ItemDisplayModel.cs" />
     <Compile Include="ContentManagement\ViewModels\ItemEditorModel.cs" />

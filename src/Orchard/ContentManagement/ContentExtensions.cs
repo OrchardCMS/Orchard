@@ -6,10 +6,9 @@ using Orchard.ContentManagement.Records;
 using Orchard.ContentManagement.ViewModels;
 
 namespace Orchard.ContentManagement {
+    public static class ContentCreateExtensions {
 
-    public static class ContentExtensions {
-
-        /* Item creation and accessing extension methods */
+        /* Item creation extension methods */
 
         public static T New<T>(this IContentManager manager, string contentType) where T : class, IContent {
             var contentItem = manager.New(contentType);
@@ -21,6 +20,11 @@ namespace Orchard.ContentManagement {
                 throw new InvalidCastException();
 
             return part;
+        }
+
+
+        public static ContentItem Create(this IContentManager manager, string contentType) {
+            return manager.Create<ContentItem>(contentType, init => { });
         }
 
         public static T Create<T>(this IContentManager manager, string contentType) where T : class, IContent {
@@ -37,8 +41,36 @@ namespace Orchard.ContentManagement {
             return content;
         }
 
+        public static ContentItem Create(this IContentManager manager, string contentType, VersionOptions options) {
+            return manager.Create<ContentItem>(contentType, options, init => { });
+        }
+
+        public static T Create<T>(this IContentManager manager, string contentType, VersionOptions options) where T : class, IContent {
+            return manager.Create<T>(contentType, options, init => { });
+        }
+
+        public static T Create<T>(this IContentManager manager, string contentType, VersionOptions options, Action<T> initialize) where T : class, IContent {
+            var content = manager.New<T>(contentType);
+            if (content == null)
+                return null;
+
+            initialize(content);
+            manager.Create(content.ContentItem, options);
+            return content;
+        }
+    }
+
+    public static class ContentExtensions {
+
+
+
         public static T Get<T>(this IContentManager manager, int id) where T : class, IContent {
             var contentItem = manager.Get(id);
+            return contentItem == null ? null : contentItem.Get<T>();
+        }
+
+        public static T Get<T>(this IContentManager manager, int id, VersionOptions options) where T : class, IContent {
+            var contentItem = manager.Get(id, options);
             return contentItem == null ? null : contentItem.Get<T>();
         }
 

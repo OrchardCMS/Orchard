@@ -41,8 +41,12 @@ namespace Orchard.Environment {
 
         public IEnumerable<Type> GetRecordTypes() {
             var types = _extensionManager.ActiveExtensions().SelectMany(x => x.ExportedTypes);
-            var recordTypes = types.Where(IsRecordType)
-                .Concat(new[] { typeof(ContentItemRecord), typeof(ContentPartRecord), typeof(ContentTypeRecord) });
+            var coreRecords = new[] {
+                                        typeof (ContentTypeRecord),
+                                        typeof (ContentItemRecord),
+                                        typeof (ContentItemVersionRecord),
+                                    };
+            var recordTypes = types.Where(IsRecordType).Concat(coreRecords);
             return recordTypes;
         }
 

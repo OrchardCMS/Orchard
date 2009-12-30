@@ -13,16 +13,19 @@ namespace Orchard.ContentManagement {
         private readonly IList<ContentPart> _parts;
         ContentItem IContent.ContentItem { get { return this; } }
 
-        public int Id { get; set; }
+        public int Id { get { return Record == null ? 0 : Record.Id; } }
+        public int Version { get { return VersionRecord == null ? 0 : VersionRecord.Number; } }
+
         public string ContentType { get; set; }
-        public ContentItemRecord Record { get; set; }
+        public ContentItemRecord Record { get { return VersionRecord == null ? null : VersionRecord.ContentItemRecord; } }
+        public ContentItemVersionRecord VersionRecord { get; set; }
 
         public IEnumerable<ContentPart> Parts { get { return _parts; } }
 
         public IContentManager ContentManager { get; set; }
 
         public bool Has(Type partType) {
-            return partType==typeof(ContentItem) || _parts.Any(part => partType.IsAssignableFrom(part.GetType()));
+            return partType == typeof(ContentItem) || _parts.Any(part => partType.IsAssignableFrom(part.GetType()));
         }
 
         public IContent Get(Type partType) {

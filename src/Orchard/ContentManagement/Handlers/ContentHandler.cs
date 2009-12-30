@@ -33,6 +33,22 @@ namespace Orchard.ContentManagement.Handlers {
             Filters.Add(new InlineStorageFilter<TPart> { OnLoaded = handler });
         }
 
+        protected void OnVersioning<TPart>(Action<VersionContentContext, TPart, TPart> handler) where TPart : class, IContent {
+            Filters.Add(new InlineStorageFilter<TPart> { OnVersioning = handler });
+        }
+
+        protected void OnVersioned<TPart>(Action<VersionContentContext, TPart, TPart> handler) where TPart : class, IContent {
+            Filters.Add(new InlineStorageFilter<TPart> { OnVersioned = handler });
+        }
+
+        protected void OnRemoving<TPart>(Action<RemoveContentContext, TPart> handler) where TPart : class, IContent {
+            Filters.Add(new InlineStorageFilter<TPart> { OnRemoving = handler });
+        }
+
+        protected void OnRemoved<TPart>(Action<RemoveContentContext, TPart> handler) where TPart : class, IContent {
+            Filters.Add(new InlineStorageFilter<TPart> { OnRemoved = handler });
+        }
+
         protected void OnGetItemMetadata<TPart>(Action<GetItemMetadataContext, TPart> handler) where TPart : class, IContent {
             Filters.Add(new InlineTemplateFilter<TPart> { OnGetItemMetadata = handler });
         }
@@ -54,6 +70,10 @@ namespace Orchard.ContentManagement.Handlers {
             public Action<CreateContentContext, TPart> OnCreated { get; set; }
             public Action<LoadContentContext, TPart> OnLoading { get; set; }
             public Action<LoadContentContext, TPart> OnLoaded { get; set; }
+            public Action<VersionContentContext, TPart, TPart> OnVersioning { get; set; }
+            public Action<VersionContentContext, TPart, TPart> OnVersioned { get; set; }
+            public Action<RemoveContentContext, TPart> OnRemoving { get; set; }
+            public Action<RemoveContentContext, TPart> OnRemoved { get; set; }
             protected override void Activated(ActivatedContentContext context, TPart instance) {
                 if (OnActivated != null) OnActivated(context, instance);
             }
@@ -68,6 +88,18 @@ namespace Orchard.ContentManagement.Handlers {
             }
             protected override void Loaded(LoadContentContext context, TPart instance) {
                 if (OnLoaded != null) OnLoaded(context, instance);
+            }
+            protected override void Versioning(VersionContentContext context, TPart existing, TPart building) {
+                if (OnVersioning != null) OnVersioning(context, existing, building);
+            }
+            protected override void Versioned(VersionContentContext context, TPart existing, TPart building) {
+                if (OnVersioned != null) OnVersioned(context, existing, building);
+            }
+            protected override void Removing(RemoveContentContext context, TPart instance) {
+                if (OnRemoving != null) OnRemoving(context, instance);
+            }
+            protected override void Removed(RemoveContentContext context, TPart instance) {
+                if (OnRemoved != null) OnRemoved(context, instance);
             }
         }
 
@@ -129,6 +161,28 @@ namespace Orchard.ContentManagement.Handlers {
                 filter.Loaded(context);
             Loaded(context);
         }
+        void IContentHandler.Versioning(VersionContentContext context) {
+            foreach (var filter in Filters.OfType<IContentStorageFilter>())
+                filter.Versioning(context);
+            Versioning(context);
+        }
+
+        void IContentHandler.Versioned(VersionContentContext context) {
+            foreach (var filter in Filters.OfType<IContentStorageFilter>())
+                filter.Versioned(context);
+            Versioned(context);
+        }
+        void IContentHandler.Removing(RemoveContentContext context) {
+            foreach (var filter in Filters.OfType<IContentStorageFilter>())
+                filter.Removing(context);
+            Removing(context);
+        }
+
+        void IContentHandler.Removed(RemoveContentContext context) {
+            foreach (var filter in Filters.OfType<IContentStorageFilter>())
+                filter.Removed(context);
+            Removed(context);
+        }
 
 
         void IContentHandler.GetItemMetadata(GetItemMetadataContext context) {
@@ -155,15 +209,21 @@ namespace Orchard.ContentManagement.Handlers {
         protected virtual void Activating(ActivatingContentContext context) { }
         protected virtual void Activated(ActivatedContentContext context) { }
 
+        protected virtual void Creating(CreateContentContext context) { }
+        protected virtual void Created(CreateContentContext context) { }
+
         protected virtual void Loading(LoadContentContext context) { }
         protected virtual void Loaded(LoadContentContext context) { }
 
-        protected virtual void Creating(CreateContentContext context) { }
-        protected virtual void Created(CreateContentContext context) { }
+        protected virtual void Versioning(VersionContentContext context) { }
+        protected virtual void Versioned(VersionContentContext context) { }
+
+        protected virtual void Removing(RemoveContentContext context) { }
+        protected virtual void Removed(RemoveContentContext context) { }
 
         protected virtual void GetItemMetadata(GetItemMetadataContext context) { }
         protected virtual void BuildDisplayModel(BuildDisplayModelContext context) { }
         protected virtual void BuildEditorModel(BuildEditorModelContext context) { }
-        protected virtual void UpdateEditorModel(UpdateEditorModelContext context) {}
+        protected virtual void UpdateEditorModel(UpdateEditorModelContext context) { }
     }
 }

@@ -43,6 +43,7 @@ namespace Orchard.Tests.Packages.Users.Services {
             _sessionFactory = DataUtility.CreateSessionFactory(
                 databaseFileName,
                 typeof(UserRecord),
+                typeof(ContentItemVersionRecord),
                 typeof(ContentItemRecord),
                 typeof(ContentTypeRecord));
         }

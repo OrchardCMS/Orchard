@@ -37,7 +37,7 @@ namespace Orchard.Core.Tests.Common.Providers {
 
         protected override IEnumerable<Type> DatabaseTypes {
             get {
-                return new[] {typeof (ContentTypeRecord), typeof (ContentItemRecord), typeof (CommonRecord)};
+                return new[] { typeof(ContentTypeRecord), typeof(ContentItemRecord), typeof(ContentItemVersionRecord), typeof(CommonRecord) };
             }
         }
 

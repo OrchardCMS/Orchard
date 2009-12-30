@@ -29,6 +29,7 @@ namespace Orchard.Tests.Models {
                 databaseFileName,
                 typeof(GammaRecord),
                 typeof(DeltaRecord),
+                typeof(ContentItemVersionRecord),
                 typeof(ContentItemRecord),
                 typeof(ContentTypeRecord));
         }
@@ -56,10 +57,11 @@ namespace Orchard.Tests.Models {
             builder.RegisterGeneric(typeof(Repository<>)).As(typeof(IRepository<>));
 
             _session = _sessionFactory.OpenSession();
-            builder.Register(new DefaultModelManagerTests.TestSessionLocator(_session)).As<ISessionLocator>();
+            builder.Register(new DefaultContentManagerTests.TestSessionLocator(_session)).As<ISessionLocator>();
 
             _session.Delete("from GammaRecord");
             _session.Delete("from DeltaRecord");
+            _session.Delete("from ContentItemVersionRecord");
             _session.Delete("from ContentItemRecord");
             _session.Delete("from ContentTypeRecord");
             _session.Flush();
@@ -187,19 +189,21 @@ namespace Orchard.Tests.Models {
             _manager.Create<Gamma>("gamma", init => { init.Record.Frap = "three"; });
             _manager.Create<Gamma>("gamma", init => { init.Record.Frap = "four"; });
             _session.Flush();
+            _session.Clear();
 
             var ascending = _manager.Query("gamma")
                 .OrderBy<GammaRecord, string>(x => x.Frap)
-                .List<Gamma>();
+                .List<Gamma>().ToList();
 
             Assert.That(ascending.Count(), Is.EqualTo(5));
             Assert.That(ascending.First().Record.Frap, Is.EqualTo("four"));
             Assert.That(ascending.Last().Record.Frap, Is.EqualTo("two"));
 
+            _session.Clear();
 
             var descending = _manager.Query<Gamma, GammaRecord>()
                 .OrderByDescending(x => x.Frap)
-                .List();
+                .List().ToList();
 
             Assert.That(descending.Count(), Is.EqualTo(5));
             Assert.That(descending.First().Record.Frap, Is.EqualTo("two"));

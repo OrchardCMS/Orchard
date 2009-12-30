@@ -6,6 +6,10 @@ namespace Orchard.ContentManagement.Handlers {
         protected virtual void Created(CreateContentContext context, TPart instance) { }
         protected virtual void Loading(LoadContentContext context, TPart instance) { }
         protected virtual void Loaded(LoadContentContext context, TPart instance) { }
+        protected virtual void Versioning(VersionContentContext context, TPart existing, TPart building) { }
+        protected virtual void Versioned(VersionContentContext context, TPart existing, TPart building) { }
+        protected virtual void Removing(RemoveContentContext context, TPart instance) { }
+        protected virtual void Removed(RemoveContentContext context, TPart instance) { }
 
 
         void IContentStorageFilter.Activated(ActivatedContentContext context) {
@@ -31,6 +35,26 @@ namespace Orchard.ContentManagement.Handlers {
         void IContentStorageFilter.Loaded(LoadContentContext context) {
             if (context.ContentItem.Is<TPart>())
                 Loaded(context, context.ContentItem.As<TPart>());
+        }
+
+        void IContentStorageFilter.Versioning(VersionContentContext context) {
+            if (context.ExistingContentItem.Is<TPart>() || context.BuildingContentItem.Is<TPart>())
+                Versioning(context, context.ExistingContentItem.As<TPart>(), context.BuildingContentItem.As<TPart>());
+        }
+
+        void IContentStorageFilter.Versioned(VersionContentContext context) {
+            if (context.ExistingContentItem.Is<TPart>() || context.BuildingContentItem.Is<TPart>())
+                Versioned(context, context.ExistingContentItem.As<TPart>(), context.BuildingContentItem.As<TPart>());
+        }
+
+        void IContentStorageFilter.Removing(RemoveContentContext context) {
+            if (context.ContentItem.Is<TPart>())
+                Removing(context, context.ContentItem.As<TPart>());
+        }
+
+        void IContentStorageFilter.Removed(RemoveContentContext context) {
+            if (context.ContentItem.Is<TPart>())
+                Removed(context, context.ContentItem.As<TPart>());
         }
     }
 }

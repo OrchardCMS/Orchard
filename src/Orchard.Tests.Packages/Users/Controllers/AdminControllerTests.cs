@@ -39,7 +39,7 @@ namespace Orchard.Tests.Packages.Users.Controllers {
 
         protected override IEnumerable<Type> DatabaseTypes {
             get {
-                return new[] { typeof(UserRecord), typeof(ContentItemRecord), typeof(ContentTypeRecord) };
+                return new[] { typeof(UserRecord), typeof(ContentItemRecord), typeof(ContentItemVersionRecord), typeof(ContentTypeRecord) };
             }
         }
 
