@@ -170,13 +170,13 @@
     <Compile Include="ContentManagement\Drivers\PartDriver.cs" />
     <Compile Include="ContentManagement\IUpdateModel.cs" />
     <Compile Include="ContentManagement\Records\ContentItemRecord.cs" />
-    <Compile Include="ContentManagement\Records\ContentItemRecordAlteration.cs" />
+    <Compile Include="ContentManagement\Records\ContentItemAlteration.cs" />
     <Compile Include="ContentManagement\Records\ContentItemVersionRecord.cs" />
     <Compile Include="ContentManagement\Records\ContentPartRecord.cs" />
-    <Compile Include="ContentManagement\Records\ContentPartRecordAlteration.cs" />
+    <Compile Include="ContentManagement\Records\ContentPartAlteration.cs" />
     <Compile Include="ContentManagement\Records\ContentPartVersionRecord.cs" />
-    <Compile Include="ContentManagement\Records\ContentPartVersionRecordAlteration.cs" />
     <Compile Include="ContentManagement\Records\ContentTypeRecord.cs" />
+    <Compile Include="ContentManagement\Records\Utility.cs" />
     <Compile Include="ContentManagement\ViewModels\ItemDisplayModel.cs" />
     <Compile Include="ContentManagement\ViewModels\ItemEditorModel.cs" />
     <Compile Include="ContentManagement\ViewModels\TemplateViewModel.cs" />

@@ -84,6 +84,7 @@ namespace Orchard.ContentManagement {
                 versionRecord = _contentItemVersionRepository.Get(options.VersionRecordId);
             }
             else {
+                // FIX: rework this so it falls back to an in-memory scan when the results don't fit the criteria
                 var record = _contentItemRepository.Get(id);
                 if (options.IsPublished) {
                     versionRecord = _contentItemVersionRepository.Get(x => x.ContentItemRecord == record && x.Published);
@@ -143,13 +144,47 @@ namespace Orchard.ContentManagement {
 
             // when draft is required and not currently available a new version is appended 
             if (appendLatestVersion) {
-                return AppendLatestVersion(context.ContentItem);
+                return BuildNewVersion(context.ContentItem);
             }
 
             return context.ContentItem;
         }
 
-        public virtual ContentItem AppendLatestVersion(ContentItem existingContentItem) {
+        public virtual IEnumerable<ContentItem> GetAllVersions(int id) {
+            return _contentItemVersionRepository
+                .Fetch(x => x.ContentItemRecord.Id == id)
+                .OrderBy(x => x.Number)
+                .Select(x => Get(x.ContentItemRecord.Id, VersionOptions.VersionRecord(x.Id)));
+        }
+
+        public virtual void Publish(ContentItem contentItem) {
+            if (contentItem.VersionRecord.Published) {
+                return;
+            }
+            var previous = contentItem.Record.Versions.SingleOrDefault(x => x.Published);
+            if (previous != null) {
+                previous.Published = false;
+                //_contentItemVersionRepository.Update(previous);
+            }
+            contentItem.VersionRecord.Published = true;
+            //_contentItemVersionRepository.Update(contentItem.VersionRecord);
+            //TODO: fire content handler events
+        }
+
+        public virtual void Remove(ContentItem contentItem) {
+            var activeVersions = _contentItemVersionRepository.Fetch(x => x.ContentItemRecord == contentItem.Record && (x.Published || x.Latest));
+            foreach (var version in activeVersions) {
+                if (version.Published) {
+                    version.Published = false;
+                }
+                if (version.Latest) {
+                    version.Latest = false;
+                }
+            }
+            //TODO: fire content handler events
+        }
+
+        protected virtual ContentItem BuildNewVersion(ContentItem existingContentItem) {
             var contentItemRecord = existingContentItem.Record;
 
             // locate the existing and the current latest versions, allocate building version
@@ -160,17 +195,18 @@ namespace Orchard.ContentManagement {
                 Published = false
             };
 
-            if (existingItemVersionRecord.Latest == false) {
-                var latestVersion = _contentItemVersionRepository.Get(x => x.ContentItemRecord == contentItemRecord && x.Latest);
+
+            var latestVersion = contentItemRecord.Versions.SingleOrDefault(x => x.Latest);
+
+            if (latestVersion != null) {
                 latestVersion.Latest = false;
                 buildingItemVersionRecord.Number = latestVersion.Number + 1;
             }
             else {
-                existingItemVersionRecord.Latest = false;
-                buildingItemVersionRecord.Number = existingItemVersionRecord.Number + 1;
+                buildingItemVersionRecord.Number = contentItemRecord.Versions.Max(x => x.Number) + 1;
             }
 
-
+            contentItemRecord.Versions.Add(buildingItemVersionRecord);
             _contentItemVersionRepository.Create(buildingItemVersionRecord);
 
             var buildingContentItem = New(existingContentItem.ContentType);

@@ -12,8 +12,10 @@ namespace Orchard.ContentManagement {
 
         ContentItem Get(int id);
         ContentItem Get(int id, VersionOptions options);
+        IEnumerable<ContentItem> GetAllVersions(int id);
 
-        ContentItem AppendLatestVersion(ContentItem sourceVersion);
+        void Publish(ContentItem contentItem);
+        void Remove(ContentItem contentItem);
 
         IContentQuery<ContentItem> Query();
 
@@ -29,6 +31,7 @@ namespace Orchard.ContentManagement {
         public static VersionOptions Published { get { return new VersionOptions { IsPublished = true }; } }
         public static VersionOptions Draft { get { return new VersionOptions { IsDraft = true }; } }
         public static VersionOptions DraftRequired { get { return new VersionOptions { IsDraft = true, IsDraftRequired = true }; } }
+        public static VersionOptions AllVersions { get { return new VersionOptions { IsAllVersions = true }; } }
         public static VersionOptions Number(int version) { return new VersionOptions { VersionNumber = version }; }
         public static VersionOptions VersionRecord(int id) { return new VersionOptions { VersionRecordId = id }; }
 
@@ -36,6 +39,7 @@ namespace Orchard.ContentManagement {
         public bool IsPublished { get; private set; }
         public bool IsDraft { get; private set; }
         public bool IsDraftRequired { get; private set; }
+        public bool IsAllVersions { get; private set; }
         public int VersionNumber { get; private set; }
         public int VersionRecordId { get; private set; }
     }

@@ -29,6 +29,7 @@ namespace Orchard.Tests.ContentManagement {
                 databaseFileName,
                 typeof(GammaRecord),
                 typeof(DeltaRecord),
+                typeof(EpsilonRecord),
                 typeof(ContentItemVersionRecord),
                 typeof(ContentItemRecord),
                 typeof(ContentTypeRecord));
@@ -51,6 +52,7 @@ namespace Orchard.Tests.ContentManagement {
             builder.Register<BetaHandler>().As<IContentHandler>();
             builder.Register<GammaHandler>().As<IContentHandler>();
             builder.Register<DeltaHandler>().As<IContentHandler>();
+            builder.Register<EpsilonHandler>().As<IContentHandler>();
             builder.Register<FlavoredHandler>().As<IContentHandler>();
             builder.Register<StyledHandler>().As<IContentHandler>();
 
@@ -61,6 +63,7 @@ namespace Orchard.Tests.ContentManagement {
 
             _session.Delete("from GammaRecord");
             _session.Delete("from DeltaRecord");
+            _session.Delete("from EpsilonRecord");
             _session.Delete("from ContentItemVersionRecord");
             _session.Delete("from ContentItemRecord");
             _session.Delete("from ContentTypeRecord");
@@ -232,6 +235,206 @@ namespace Orchard.Tests.ContentManagement {
             Assert.That(subset.Skip(1).First().Id, Is.EqualTo(reverseById.Skip(3).First().Id));
             Assert.That(subset.Skip(2).First().Id, Is.EqualTo(reverseById.Skip(4).First().Id));
 
+        }
+
+
+        [Test]
+        public void QueryShouldJoinVersionedRecords() {
+            AddSampleData();
+            _manager.Create<Gamma>("gamma", init => {
+                init.Record.Frap = "one";
+                init.As<Epsilon>().Record.Quad = "1";
+            });
+            _manager.Create<Gamma>("gamma", init => {
+                init.Record.Frap = "two";
+                init.As<Epsilon>().Record.Quad = "2";
+            });
+            _manager.Create<Gamma>("gamma", init => {
+                init.Record.Frap = "three";
+                init.As<Epsilon>().Record.Quad = "3";
+            });
+            _manager.Create<Gamma>("gamma", init => {
+                init.Record.Frap = "four";
+                init.As<Epsilon>().Record.Quad = "4";
+            });
+            _session.Flush();
+            _session.Clear();
+
+            var results = _manager.Query<Epsilon, EpsilonRecord>()
+                .Where(x => x.Quad == "2" || x.Quad == "3")
+                .OrderByDescending(x => x.Quad)
+                .List();
+
+            Assert.That(results.Count(), Is.EqualTo(2));
+            Assert.That(results.First().Record, Has.Property("Quad").EqualTo("3"));
+            Assert.That(results.Last().Record, Has.Property("Quad").EqualTo("2"));
+        }
+
+
+        private void AddGammaVersions() {
+            var gamma1 = _manager.Create<ContentItem>("gamma", init => {
+                init.As<Gamma>().Record.Frap = "one";
+                init.As<Epsilon>().Record.Quad = "v1";
+            });
+            _session.Flush();
+            _session.Clear();
+
+            var gamma2 = _manager.Get(gamma1.Id, VersionOptions.DraftRequired);
+            gamma2.As<Gamma>().Record.Frap = "two";
+            gamma2.As<Epsilon>().Record.Quad = "v2";
+            _session.Flush();
+            _session.Clear();
+
+            var gamma3 = _manager.Create<ContentItem>("gamma", init => {
+                init.As<Gamma>().Record.Frap = "three";
+                init.As<Epsilon>().Record.Quad = "v3";
+            });
+            _session.Flush();
+            _session.Clear();            
+        }
+
+        [Test]
+        public void QueryShouldOnlyReturnPublishedByDefault() {
+            AddGammaVersions();
+
+            var list1 = _manager.Query<Gamma>()
+                .Where<EpsilonRecord>(x => x.Quad == "v1")
+                .List();
+
+            var list2 = _manager.Query<Gamma>()
+                .Where<EpsilonRecord>(x => x.Quad == "v2")
+                .List();
+
+            var list3 = _manager.Query<Gamma>()
+                .Where<EpsilonRecord>(x => x.Quad == "v3")
+                .List();
+
+            var listOne = _manager.Query<Gamma>()
+                .Where<GammaRecord>(x => x.Frap == "one")
+                .List();
+
+            var listTwo = _manager.Query<Gamma>()
+                .Where<GammaRecord>(x => x.Frap == "two")
+                .List();
+
+            var listThree = _manager.Query<Gamma>()
+                .Where<GammaRecord>(x => x.Frap == "three")
+                .List();
+
+            Assert.That(list1.Count(), Is.EqualTo(1));
+            Assert.That(list2.Count(), Is.EqualTo(0));
+            Assert.That(list3.Count(), Is.EqualTo(1));
+            Assert.That(listOne.Count(), Is.EqualTo(0));
+            Assert.That(listTwo.Count(), Is.EqualTo(1));
+            Assert.That(listThree.Count(), Is.EqualTo(1));
+        }
+
+        [Test]
+        public void QueryForLatestShouldNotReturnEarlierVersions() {
+            AddGammaVersions();
+
+            var list1 = _manager.Query<Gamma>(VersionOptions.Latest)
+                .Where<EpsilonRecord>(x => x.Quad == "v1")
+                .List();
+
+            var list2 = _manager.Query<Gamma>(VersionOptions.Latest)
+                .Where<EpsilonRecord>(x => x.Quad == "v2")
+                .List();
+
+            var list3 = _manager.Query<Gamma>(VersionOptions.Latest)
+                .Where<EpsilonRecord>(x => x.Quad == "v3")
+                .List();
+
+            var listOne = _manager.Query<Gamma>(VersionOptions.Latest)
+                .Where<GammaRecord>(x => x.Frap == "one")
+                .List();
+
+            var listTwo = _manager.Query<Gamma>(VersionOptions.Latest)
+                .Where<GammaRecord>(x => x.Frap == "two")
+                .List();
+
+            var listThree = _manager.Query<Gamma>(VersionOptions.Latest)
+                .Where<GammaRecord>(x => x.Frap == "three")
+                .List();
+
+            Assert.That(list1.Count(), Is.EqualTo(0));
+            Assert.That(list2.Count(), Is.EqualTo(1));
+            Assert.That(list3.Count(), Is.EqualTo(1));
+            Assert.That(listOne.Count(), Is.EqualTo(0));
+            Assert.That(listTwo.Count(), Is.EqualTo(1));
+            Assert.That(listThree.Count(), Is.EqualTo(1));
+        }
+
+        [Test]
+        public void QueryForDraftShouldOnlyReturnLatestThatIsNotPublished() {
+            AddGammaVersions();
+
+            var list1 = _manager.Query<Gamma>(VersionOptions.Draft)
+                .Where<EpsilonRecord>(x => x.Quad == "v1")
+                .List();
+
+            var list2 = _manager.Query<Gamma>(VersionOptions.Draft)
+                .Where<EpsilonRecord>(x => x.Quad == "v2")
+                .List();
+
+            var list3 = _manager.Query<Gamma>(VersionOptions.Draft)
+                .Where<EpsilonRecord>(x => x.Quad == "v3")
+                .List();
+
+            var listOne = _manager.Query<Gamma>(VersionOptions.Draft)
+                .Where<GammaRecord>(x => x.Frap == "one")
+                .List();
+
+            var listTwo = _manager.Query<Gamma>(VersionOptions.Draft)
+                .Where<GammaRecord>(x => x.Frap == "two")
+                .List();
+
+            var listThree = _manager.Query<Gamma>(VersionOptions.Draft)
+                .Where<GammaRecord>(x => x.Frap == "three")
+                .List();
+
+            Assert.That(list1.Count(), Is.EqualTo(0));
+            Assert.That(list2.Count(), Is.EqualTo(1));
+            Assert.That(list3.Count(), Is.EqualTo(0));
+            Assert.That(listOne.Count(), Is.EqualTo(0));
+            Assert.That(listTwo.Count(), Is.EqualTo(1));
+            Assert.That(listThree.Count(), Is.EqualTo(0));
+        }
+
+        [Test]
+        public void QueryForAllShouldReturnMultipleQualifiedVersions() {
+            AddGammaVersions();
+
+            var list1 = _manager.Query<Gamma>(VersionOptions.AllVersions)
+                .Where<EpsilonRecord>(x => x.Quad == "v1")
+                .List();
+
+            var list2 = _manager.Query<Gamma>(VersionOptions.AllVersions)
+                .Where<EpsilonRecord>(x => x.Quad == "v2")
+                .List();
+
+            var list3 = _manager.Query<Gamma>(VersionOptions.AllVersions)
+                .Where<EpsilonRecord>(x => x.Quad == "v3")
+                .List();
+
+            var listOne = _manager.Query<Gamma>(VersionOptions.AllVersions)
+                .Where<GammaRecord>(x => x.Frap == "one")
+                .List();
+
+            var listTwo = _manager.Query<Gamma>(VersionOptions.AllVersions)
+                .Where<GammaRecord>(x => x.Frap == "two")
+                .List();
+
+            var listThree = _manager.Query<Gamma>(VersionOptions.AllVersions)
+                .Where<GammaRecord>(x => x.Frap == "three")
+                .List();
+
+            Assert.That(list1.Count(), Is.EqualTo(1));
+            Assert.That(list2.Count(), Is.EqualTo(1));
+            Assert.That(list3.Count(), Is.EqualTo(1));
+            Assert.That(listOne.Count(), Is.EqualTo(0));
+            Assert.That(listTwo.Count(), Is.EqualTo(2));
+            Assert.That(listThree.Count(), Is.EqualTo(1));
         }
     }
 }

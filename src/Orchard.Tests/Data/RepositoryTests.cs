@@ -166,13 +166,12 @@ namespace Orchard.Tests.Data {
         }
 
         [Test]
-        public void RepositoryCanCreateFetchUpdateAndDelete() {
+        public void RepositoryCanCreateFetchAndDelete() {
             var foo1 = new Foo { Name = "yadda" };
             _fooRepos.Create(foo1);
 
             var foo2 = _fooRepos.Get(foo1.Id);
-            foo2.Name = "blah";
-            _fooRepos.Update(foo2);
+            foo2.Name = "blah";            
 
             Assert.That(foo1, Is.SameAs(foo2));
 

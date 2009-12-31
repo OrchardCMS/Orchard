@@ -386,7 +386,7 @@ namespace Orchard.Tests.ContentManagement {
             Assert.That(epsilon2.Record.Quad, Is.EqualTo("epsilon one"));
             epsilon2.Record.Quad = "epsilon two";
             Assert.That(epsilon1.Record.Quad, Is.EqualTo("epsilon one"));
-            Assert.That(epsilon2.Record.Quad, Is.EqualTo("epsilon two"));            
+            Assert.That(epsilon2.Record.Quad, Is.EqualTo("epsilon two"));
 
 
             _session.Flush();
@@ -409,6 +409,56 @@ namespace Orchard.Tests.ContentManagement {
             Assert.That(epsilon1.ContentItem.VersionRecord, Is.Not.SameAs(epsilon2.ContentItem.VersionRecord));
             Assert.That(epsilon1B.ContentItem.VersionRecord, Is.Not.SameAs(epsilon2B.ContentItem.VersionRecord));
         }
+
+        private void Flush() {
+            Trace.WriteLine("flush");
+            _session.Flush();
+
+        }
+        private void FlushAndClear() {
+            Trace.WriteLine("flush");
+            _session.Flush();
+            Trace.WriteLine("clear");
+            _session.Clear();
+        }
+
+        [Test]
+        public void GetAllVersionsShouldReturnHistoryInOrder() {
+            Trace.WriteLine("gamma1");
+            var gamma1 = _manager.Create("gamma", VersionOptions.Published);
+            Flush();
+
+            Trace.WriteLine("gamma2");
+            var gamma2 = _manager.GetDraftRequired(gamma1.Id);
+            Trace.WriteLine("publish");
+            _manager.Publish(gamma2);
+            Flush();
+
+            Trace.WriteLine("gamma3");
+            var gamma3 = _manager.GetDraftRequired(gamma1.Id);
+            Trace.WriteLine("publish");
+            _manager.Publish(gamma3);
+            Flush();
+
+            Trace.WriteLine("gamma4");
+            var gamma4 = _manager.GetDraftRequired(gamma1.Id);
+            Trace.WriteLine("publish");
+            _manager.Publish(gamma2);
+            FlushAndClear();
+
+            Assert.That(gamma1.Version, Is.EqualTo(1));
+            Assert.That(gamma2.Version, Is.EqualTo(2));
+            Assert.That(gamma3.Version, Is.EqualTo(3));
+            Assert.That(gamma4.Version, Is.EqualTo(4));
+
+            var gammas = _manager.GetAllVersions(gamma1.Id).ToList();
+
+            Assert.That(gammas[0].Version, Is.EqualTo(1));
+            Assert.That(gammas[1].Version, Is.EqualTo(2));
+            Assert.That(gammas[2].Version, Is.EqualTo(3));
+            Assert.That(gammas[3].Version, Is.EqualTo(4));
+        }
+
     }
 }
 

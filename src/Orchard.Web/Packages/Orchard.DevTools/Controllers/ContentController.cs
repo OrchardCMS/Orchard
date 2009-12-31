@@ -14,7 +14,7 @@ namespace Orchard.DevTools.Controllers {
         private readonly IRepository<ContentTypeRecord> _contentTypeRepository;
         private readonly IContentManager _contentManager;
 
-        public ContentController(            
+        public ContentController(
             IRepository<ContentTypeRecord> contentTypeRepository,
             IContentManager contentManager) {
             _contentTypeRepository = contentTypeRepository;
@@ -28,9 +28,9 @@ namespace Orchard.DevTools.Controllers {
             });
         }
 
-        public ActionResult Details(int id) {
+        public ActionResult Details(int id, int? version) {
             var model = new ContentDetailsViewModel {
-                Item = _contentManager.Get(id)
+                Item = version == null ? _contentManager.Get(id) : _contentManager.Get(id, VersionOptions.Number((int)version))
             };
             model.PartTypes = model.Item.ContentItem.Parts
                 .Select(x => x.GetType())
@@ -41,6 +41,8 @@ namespace Orchard.DevTools.Controllers {
 
             return View(model);
         }
+
+
 
         static IEnumerable<Type> AllTypes(Type type) {
             var scan = type;

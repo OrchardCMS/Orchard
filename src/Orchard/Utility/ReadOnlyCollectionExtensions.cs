@@ -5,7 +5,7 @@ using System.Linq;
 namespace Orchard.Utility {
     public static class ReadOnlyCollectionExtensions {
         public static IList<T> ToReadOnlyCollection<T>(this IEnumerable<T> enumerable) {
-            return new ReadOnlyCollection<T>(enumerable.ToArray());
+            return new ReadOnlyCollection<T>(enumerable.ToList());
         }
     }
 }

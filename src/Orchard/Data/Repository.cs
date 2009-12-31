@@ -110,7 +110,8 @@ namespace Orchard.Data {
 
         public virtual void Update(T entity) {
             Logger.Debug("Update {0}", entity);
-            Session.Update(entity);
+            Session.Evict(entity);
+            Session.SaveOrUpdateCopy(entity);
         }
 
         public virtual void Delete(T entity) {
@@ -119,7 +120,7 @@ namespace Orchard.Data {
         }
 
         public virtual void Copy(T source, T target) {
-            Logger.Debug("Delete {0}", source, target);
+            Logger.Debug("Copy {0} {1}", source, target);
             var metadata = Session.SessionFactory.GetClassMetadata(typeof (T));
             var values = metadata.GetPropertyValues(source, EntityMode.Poco);
             metadata.SetPropertyValues(target, values, EntityMode.Poco);

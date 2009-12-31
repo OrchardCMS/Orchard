@@ -60,19 +60,93 @@ namespace Orchard.ContentManagement {
         }
     }
 
-    public static class ContentExtensions {
+    public static class ContentQueryExtensions {
+
+        /* Query related extension methods */
+
+        public static IContentQuery<TPart> Query<TPart>(this IContentManager manager)
+            where TPart : ContentPart {
+            return manager.Query().ForPart<TPart>();
+        }
+        public static IContentQuery<TPart, TRecord> Query<TPart, TRecord>(this IContentManager manager)
+            where TPart : ContentPart<TRecord>
+            where TRecord : ContentPartRecord {
+            return manager.Query().ForPart<TPart>().Join<TRecord>();
+        }
+
+        /* Query(VersionOptions options) */
+
+        public static IContentQuery<ContentItem> Query(this IContentManager manager, VersionOptions options) {
+            return manager.Query().ForVersion(options);
+        }
+
+        public static IContentQuery<TPart> Query<TPart>(this IContentManager manager, VersionOptions options) where TPart : ContentPart {
+            return manager.Query().ForPart<TPart>().ForVersion(options);
+        }
+
+        public static IContentQuery<TPart, TRecord> Query<TPart, TRecord>(this IContentManager manager, VersionOptions options)
+            where TPart : ContentPart<TRecord>
+            where TRecord : ContentPartRecord {
+            return manager.Query().ForPart<TPart>().ForVersion(options).Join<TRecord>();
+        }
+
+        /* Query(params string[] contentTypeNames) */
+
+        public static IContentQuery<ContentItem> Query(this IContentManager manager, params string[] contentTypeNames) {
+            return manager.Query().ForType(contentTypeNames);
+        }
+        public static IContentQuery<TPart> Query<TPart>(this IContentManager manager, params string[] contentTypeNames) where TPart : ContentPart {
+            return manager.Query().ForPart<TPart>().ForType(contentTypeNames);
+        }
+        public static IContentQuery<TPart, TRecord> Query<TPart, TRecord>(this IContentManager manager, params string[] contentTypeNames)
+            where TPart : ContentPart<TRecord>
+            where TRecord : ContentPartRecord {
+            return manager.Query().ForPart<TPart>().ForType(contentTypeNames).Join<TRecord>();
+        }
 
 
+
+        public static IEnumerable<T> List<T>(this IContentManager manager, params string[] contentTypeNames) where T : ContentPart {
+            return manager.Query<T>(contentTypeNames).List();
+        }
+
+        public static IEnumerable<T> List<T>(this IContentQuery query) where T : IContent {
+            return query.ForPart<T>().List();
+        }
+
+        public static IEnumerable<T> Slice<T>(this IContentQuery<T> query, int count) where T : IContent {
+            return query.Slice(0, count);
+        }
+
+    }
+
+    public static class ContentGetExtensions {
+
+        public static ContentItem GetLatest(this IContentManager manager, int id) {
+            return manager.Get(id, VersionOptions.Latest);
+        }
+        public static ContentItem GetDraftRequired(this IContentManager manager, int id) {
+            return manager.Get(id, VersionOptions.DraftRequired);
+        }
 
         public static T Get<T>(this IContentManager manager, int id) where T : class, IContent {
             var contentItem = manager.Get(id);
             return contentItem == null ? null : contentItem.Get<T>();
         }
-
         public static T Get<T>(this IContentManager manager, int id, VersionOptions options) where T : class, IContent {
             var contentItem = manager.Get(id, options);
             return contentItem == null ? null : contentItem.Get<T>();
         }
+        public static T GetLatest<T>(this IContentManager manager, int id) where T : class, IContent {
+            return Get<T>(manager, id, VersionOptions.Latest);
+        }
+        public static T GetDraftRequired<T>(this IContentManager manager, int id) where T : class, IContent {
+            return Get<T>(manager, id, VersionOptions.DraftRequired);
+        }
+        
+    }
+
+    public static class ContentExtensions {
 
 
         /* Display and editor convenience extension methods */
@@ -90,41 +164,6 @@ namespace Orchard.ContentManagement {
         }
 
 
-        /* Query related extension methods */
-
-        public static IContentQuery<TPart> Query<TPart>(this IContentManager manager)
-            where TPart : ContentPart {
-            return manager.Query().ForPart<TPart>();
-        }
-        public static IContentQuery<TPart, TRecord> Query<TPart, TRecord>(this IContentManager manager)
-            where TPart : ContentPart<TRecord>
-            where TRecord : ContentPartRecord {
-            return manager.Query().ForPart<TPart>().Join<TRecord>();
-        }
-
-        public static IContentQuery<ContentItem> Query(this IContentManager manager, params string[] contentTypeNames)  {
-            return manager.Query().ForType(contentTypeNames);
-        }
-        public static IContentQuery<TPart> Query<TPart>(this IContentManager manager, params string[] contentTypeNames) where TPart : ContentPart {
-            return manager.Query().ForPart<TPart>().ForType(contentTypeNames);
-        }
-        public static IContentQuery<TPart,TRecord> Query<TPart,TRecord>(this IContentManager manager, params string[] contentTypeNames) where TPart : ContentPart<TRecord> where TRecord : ContentPartRecord {
-            return manager.Query().ForPart<TPart>().ForType(contentTypeNames).Join<TRecord>();
-        }
-
-
-
-        public static IEnumerable<T> List<T>(this IContentManager manager, params string[] contentTypeNames) where T : ContentPart {
-            return manager.Query<T>(contentTypeNames).List();
-        }
-
-        public static IEnumerable<T> List<T>(this IContentQuery query) where T : IContent {
-            return query.ForPart<T>().List();
-        }
-
-        public static IEnumerable<T> Slice<T>(this IContentQuery<T> query, int count) where T : IContent {
-            return query.Slice(0, count);
-        }
 
 
         /* Aggregate item/part type casting extension methods */

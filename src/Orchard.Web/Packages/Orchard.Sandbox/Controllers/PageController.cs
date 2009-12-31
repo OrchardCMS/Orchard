@@ -68,8 +68,9 @@ namespace Orchard.Sandbox.Controllers {
                 return RedirectToAction("show", new { id });
             }
 
+            var latest = Services.ContentManager.GetLatest<SandboxPage>(id);
             return View(new PageEditViewModel {
-                Page = Services.ContentManager.BuildEditorModel<SandboxPage>(id)
+                Page = Services.ContentManager.BuildEditorModel(latest)
             });
         }
 
@@ -78,15 +79,15 @@ namespace Orchard.Sandbox.Controllers {
             if (IsEditAllowed() == false) {
                 return RedirectToAction("show", new { id });
             }
-
+            var latest = Services.ContentManager.GetDraftRequired<SandboxPage>(id);
             var model = new PageEditViewModel {
-                Page = Services.ContentManager.UpdateEditorModel<SandboxPage>(id, this)
+                Page = Services.ContentManager.UpdateEditorModel(latest, this)
             };
             if (!ModelState.IsValid) {
                 Services.TransactionManager.Cancel();
                 return View(model);
             }
-
+            Services.ContentManager.Publish(latest.ContentItem);
             return RedirectToAction("show", new { id });
         }
 

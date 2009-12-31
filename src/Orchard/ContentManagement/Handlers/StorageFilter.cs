@@ -2,7 +2,7 @@ using Orchard.ContentManagement.Records;
 using Orchard.Data;
 
 namespace Orchard.ContentManagement.Handlers {
-    public class StorageFilter<TRecord> : StorageFilterBase<ContentPart<TRecord>> where TRecord : ContentPartRecord,new() {
+    public class StorageFilter<TRecord> : StorageFilterBase<ContentPart<TRecord>> where TRecord : ContentPartRecord, new() {
         private readonly IRepository<TRecord> _repository;
 
         public StorageFilter(IRepository<TRecord> repository) {
@@ -70,7 +70,7 @@ namespace Orchard.ContentManagement.Handlers {
         protected override void Versioning(VersionContentContext context, ContentPart<TRecord> existing, ContentPart<TRecord> building) {
             // move known ORM values over
             _repository.Copy(existing.Record, building.Record);
-            
+
             // only the up-reference to the particular version differs at this point
             building.Record.ContentItemVersionRecord = context.BuildingItemVersionRecord;
 

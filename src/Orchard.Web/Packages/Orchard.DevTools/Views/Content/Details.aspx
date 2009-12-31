@@ -4,9 +4,16 @@
 <h1><%=Html.TitleForPage(string.Format("{0} Content Type", Model.Item.ContentItem.ContentType), "Content")%></h1>
 <h3>Content Item</h3>
 <p>Id:
-    <%=Model.Item.ContentItem.Id %></p>
-<p>ContentType:
-    <%=Model.Item.ContentItem.ContentType%> <%=Html.ItemDisplayLink(Model.Item) %> <%=Html.ItemEditLink("edit", Model.Item) %></p>
+    <%=Model.Item.ContentItem.Id %><br />
+Version:
+    <%=Model.Item.ContentItem.Version %><br />
+ContentType:
+    <%=Model.Item.ContentItem.ContentType%> <br />
+DisplayText: 
+    <%=Html.ItemDisplayText(Model.Item) %><br />
+Links: 
+    <%=Html.ItemDisplayLink("view", Model.Item) %> <%=Html.ItemEditLink("edit", Model.Item) %></p>
+    
 <h3>Content Item Parts</h3>
 <ul>
     <%foreach (var partType in Model.PartTypes.OrderBy(x => x.Name)) {%>

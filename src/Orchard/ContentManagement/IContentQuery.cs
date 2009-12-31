@@ -12,6 +12,8 @@ namespace Orchard.ContentManagement {
 
     public interface IContentQuery<TPart> : IContentQuery where TPart : IContent {
         IContentQuery<TPart> ForType(params string[] contentTypes);
+        IContentQuery<TPart> ForVersion(VersionOptions options);
+
         IEnumerable<TPart> List();
         IEnumerable<TPart> Slice(int skip, int count);
 
@@ -23,9 +25,12 @@ namespace Orchard.ContentManagement {
     }
 
     public interface IContentQuery<TPart, TRecord> : IContentQuery<TPart> where TPart : IContent where TRecord : ContentPartRecord {
+        new IContentQuery<TPart, TRecord> ForVersion(VersionOptions options);
+
         IContentQuery<TPart, TRecord> Where(Expression<Func<TRecord, bool>> predicate);
         IContentQuery<TPart, TRecord> OrderBy<TKey>(Expression<Func<TRecord, TKey>> keySelector);
         IContentQuery<TPart, TRecord> OrderByDescending<TKey>(Expression<Func<TRecord, TKey>> keySelector);
     }
 
 }
+

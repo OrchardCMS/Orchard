@@ -57,7 +57,7 @@ namespace Orchard.Data {
                                      alt.Add(new AutoMappingOverrideAlteration(recordAssembly));
                                  }
                                  alt.AddFromAssemblyOf<DataModule>();
-                                 alt.Add(new ContentItemRecordAlteration(recordTypes));
+                                 alt.Add(new ContentItemAlteration(recordTypes));
                              })
                 .Conventions.AddFromAssemblyOf<DataModule>();
         }
