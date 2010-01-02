@@ -102,7 +102,7 @@ namespace Orchard.Core.Common.Providers {
             if (instance.Owner != null)
                 viewModel.Owner = instance.Owner.UserName;
 
-            context.AddEditor(new TemplateViewModel(viewModel, "CommonAspect") { TemplateName="Parts/Common.Owner", Position = "9" });
+            context.AddEditor(new TemplateViewModel(viewModel, "CommonAspect") { TemplateName = "Parts/Common.Owner", ZoneName = "primary", Position = "999" });
         }
 
 
@@ -132,7 +132,7 @@ namespace Orchard.Core.Common.Providers {
                     instance.Owner = newOwner;
                 }
             }
-            context.AddEditor(new TemplateViewModel(viewModel, "CommonAspect") { TemplateName = "Parts/Common.Owner", Position = "9" });
+            context.AddEditor(new TemplateViewModel(viewModel, "CommonAspect") { TemplateName = "Parts/Common.Owner", ZoneName = "primary", Position = "999" });
         }
     }
 }

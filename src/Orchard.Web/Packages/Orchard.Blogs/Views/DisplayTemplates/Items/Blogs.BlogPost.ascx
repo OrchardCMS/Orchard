@@ -10,4 +10,5 @@
        %><div class="posted">Posted by <%=Html.Encode(Model.Item.Creator.UserName)%> <%=Html.PublishedWhen(Model.Item)%></div><%
        } %>
 </div>
+<% Html.Zone("primary"); %>
 <% Html.ZonesAny(); %>

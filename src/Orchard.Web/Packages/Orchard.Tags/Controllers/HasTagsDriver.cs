@@ -25,7 +25,7 @@ namespace Orchard.Tags.Controllers {
             var model = new EditTagsViewModel {
                 Tags = string.Join(", ", part.CurrentTags.Select((t, i) => t.TagName).ToArray())
             };
-            return PartTemplate(model, "Parts/Tags.EditTags");
+            return PartTemplate(model, "Parts/Tags.EditTags").Location("primary", "9");
         }
 
         protected override DriverResult Editor(HasTags part, IUpdateModel updater) {
@@ -36,7 +36,7 @@ namespace Orchard.Tags.Controllers {
             var tagNames = TagHelpers.ParseCommaSeparatedTagNames(model.Tags);
             _tagService.UpdateTagsForContentItem(part.ContentItem.Id, tagNames);
 
-            return PartTemplate(model, "Parts/Tags.EditTags");
+            return PartTemplate(model, "Parts/Tags.EditTags").Location("primary", "9");
         }
     }
 }
