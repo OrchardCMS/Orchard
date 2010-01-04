@@ -34,12 +34,15 @@ namespace Orchard.ContentManagement {
             return criteria.GetCriteriaByPath(path) ?? criteria.CreateCriteria(path);
         }
 
-
         ICriteria BindTypeCriteria() {
-            return BindCriteriaByPath(BindCriteriaByPath(BindItemVersionCriteria(), "ContentItemRecord"), "ContentType");
+            // ([ContentItemVersionRecord] >join> [ContentItemRecord]) >join> [ContentType]
+
+            return BindCriteriaByPath(BindItemCriteria(), "ContentType");
         }
 
         ICriteria BindItemCriteria() {
+            // [ContentItemVersionRecord] >join> [ContentItemRecord]
+
             return BindCriteriaByPath(BindItemVersionCriteria(), "ContentItemRecord");
         }
 
@@ -141,7 +144,7 @@ namespace Orchard.ContentManagement {
             else if (_versionOptions.IsAllVersions) {
                 // no-op... all versions will be returned by default
             }
-            else  {
+            else {
                 throw new ApplicationException("Invalid VersionOptions for content query");
             }
 

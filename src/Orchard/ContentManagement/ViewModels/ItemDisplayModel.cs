@@ -36,6 +36,7 @@ namespace Orchard.ContentManagement.ViewModels {
         public Func<HtmlHelper, ItemDisplayModel, HtmlHelper> Adaptor { get; set; }
         public string TemplateName { get; set; }
         public string Prefix { get; set; }
+        public ZoneCollection Zones { get; set; }
         
             
         public IEnumerable<TemplateViewModel> Displays {
@@ -53,7 +54,6 @@ namespace Orchard.ContentManagement.ViewModels {
             }
         }
         
-        public ZoneCollection Zones { get; set; }
     }
 
     public class ItemDisplayModel<TPart> : ItemDisplayModel where TPart : IContent {
