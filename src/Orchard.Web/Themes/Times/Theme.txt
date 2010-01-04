@@ -1,6 +1,6 @@
-﻿name: Times
+﻿name: Classical
 author: Jonathan Wall
-description: Theme based on times new roman.
+description: Theme using times new roman.
 version: 1.0
-tags: orange
+tags: times, classical 
 homepage: http://www.orchardproject.net

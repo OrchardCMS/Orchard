@@ -47,6 +47,38 @@ a {
 
 ul {list-style:circle; list-style-position:inside; line-height:22px;}
 
+/* ---------- Forms ---------- */
+
+fieldset {
+    padding: 10px;
+    margin:8px;
+    }
+
+label {
+    display: block;
+    margin: 8px 0 0 0;
+    }
+    
+legend {
+    font-size: 115%;
+    font-weight:700;
+    padding: 2px 5px 8px 5px;
+    background:#FFF;
+    }
+
+#CommentText, input.text {
+    padding:2px;
+    margin:2px 0;
+    border: 1px solid #838c96;
+    width:80%;
+    }
+
+.button {
+    padding:2px 14px;
+    margin:6px 0;
+	font:90% Verdana, Geneva, Tahoma, sans-serif;
+    }
+
 /* ---------- Layout ---------- */
 
 #header {

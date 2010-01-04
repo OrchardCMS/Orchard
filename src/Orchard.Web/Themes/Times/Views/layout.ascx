@@ -8,7 +8,7 @@
 <div id="wrapper">
     <div id="header">
         <h1>
-            Times new roman</h1>
+            My Orchard Site</h1>
         <%-- todo:(nheskew) this will need to all go in the header zone (user widget) --%>
         <% Html.Include("user"); %>
     </div>
