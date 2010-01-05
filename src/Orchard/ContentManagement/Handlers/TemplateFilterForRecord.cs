@@ -19,12 +19,12 @@ namespace Orchard.ContentManagement.Handlers {
         }
 
         protected override void BuildEditorModel(BuildEditorModelContext context, ContentPart<TRecord> part) {
-            context.EditorModel.Zones.AddEditorPart(_location, part.Record, _templateName, _prefix);
+            context.ViewModel.Zones.AddEditorPart(_location, part.Record, _templateName, _prefix);
         }
 
         protected override void UpdateEditorModel(UpdateEditorModelContext context, ContentPart<TRecord> part) {
             context.Updater.TryUpdateModel(part.Record, _prefix, null, null);
-            context.EditorModel.Zones.AddEditorPart(_location, part.Record, _templateName, _prefix);
+            context.ViewModel.Zones.AddEditorPart(_location, part.Record, _templateName, _prefix);
         }
     }
 }

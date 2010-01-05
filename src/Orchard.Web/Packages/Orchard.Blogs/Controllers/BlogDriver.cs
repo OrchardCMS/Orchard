@@ -6,7 +6,7 @@ using Orchard.Blogs.Models;
 using Orchard.Blogs.Services;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
-using Orchard.ContentManagement.ViewModels;
+using Orchard.Mvc.ViewModels;
 
 namespace Orchard.Blogs.Controllers {
     [UsedImplicitly]
@@ -54,7 +54,7 @@ namespace Orchard.Blogs.Controllers {
 
         protected override DriverResult Display(Blog blog, string displayType) {
 
-            IEnumerable<ItemDisplayModel<BlogPost>> blogPosts = null;
+            IEnumerable<ItemViewModel<BlogPost>> blogPosts = null;
             if (displayType.StartsWith("DetailAdmin")) {
                 blogPosts = _blogPostService.Get(blog)
                     .Select(bp => _contentManager.BuildDisplayModel(bp, "SummaryAdmin"));

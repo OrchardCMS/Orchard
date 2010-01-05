@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web.Routing;
 using Orchard.ContentManagement.Handlers;
-using Orchard.ContentManagement.ViewModels;
+using Orchard.Mvc.ViewModels;
 
 namespace Orchard.ContentManagement.Drivers {
     public interface IItemDriver : IEvents {
@@ -44,10 +44,10 @@ namespace Orchard.ContentManagement.Drivers {
             if (part == null) {
                 return null;
             }
-            if (context.DisplayModel.GetType() != typeof(ItemDisplayModel<TContent>)) {
-                return Display(new ItemDisplayModel<TContent>(context.DisplayModel), context.DisplayType);
+            if (context.ViewModel.GetType() != typeof(ItemViewModel<TContent>)) {
+                return Display(new ItemViewModel<TContent>(context.ViewModel), context.DisplayType);
             }
-            return Display((ItemDisplayModel<TContent>)context.DisplayModel, context.DisplayType);
+            return Display((ItemViewModel<TContent>)context.ViewModel, context.DisplayType);
         }
 
         DriverResult IItemDriver.BuildEditorModel(BuildEditorModelContext context) {
@@ -55,10 +55,10 @@ namespace Orchard.ContentManagement.Drivers {
             if (part == null) {
                 return null;
             }
-            if (context.EditorModel.GetType() != typeof(ItemEditorModel<TContent>)) {
-                return Editor(new ItemEditorModel<TContent>(context.EditorModel));
+            if (context.ViewModel.GetType() != typeof(ItemViewModel<TContent>)) {
+                return Editor(new ItemViewModel<TContent>(context.ViewModel));
             }
-            return Editor((ItemEditorModel<TContent>)context.EditorModel);
+            return Editor((ItemViewModel<TContent>)context.ViewModel);
         }
 
         DriverResult IItemDriver.UpdateEditorModel(UpdateEditorModelContext context) {
@@ -66,10 +66,10 @@ namespace Orchard.ContentManagement.Drivers {
             if (part == null) {
                 return null;
             }
-            if (context.EditorModel.GetType() != typeof(ItemEditorModel<TContent>)) {
-                return Editor(new ItemEditorModel<TContent>(context.EditorModel), context.Updater);
+            if (context.ViewModel.GetType() != typeof(ItemViewModel<TContent>)) {
+                return Editor(new ItemViewModel<TContent>(context.ViewModel), context.Updater);
             }
-            return Editor((ItemEditorModel<TContent>)context.EditorModel, context.Updater);
+            return Editor((ItemViewModel<TContent>)context.ViewModel, context.Updater);
         }
 
         protected virtual ContentType GetContentType() { return _contentType; }
@@ -77,9 +77,9 @@ namespace Orchard.ContentManagement.Drivers {
         protected virtual RouteValueDictionary GetDisplayRouteValues(TContent item) { return null; }
         protected virtual RouteValueDictionary GetEditorRouteValues(TContent item) { return null; }
 
-        protected virtual DriverResult Display(ItemDisplayModel<TContent> displayModel, string displayType) { return null; }
-        protected virtual DriverResult Editor(ItemEditorModel<TContent> editorModel) { return null; }
-        protected virtual DriverResult Editor(ItemEditorModel<TContent> editorModel, IUpdateModel updater) { return null; }
+        protected virtual DriverResult Display(ItemViewModel<TContent> viewModel, string displayType) { return null; }
+        protected virtual DriverResult Editor(ItemViewModel<TContent> viewModel) { return null; }
+        protected virtual DriverResult Editor(ItemViewModel<TContent> viewModel, IUpdateModel updater) { return null; }
 
         public ItemTemplateResult<TContent> ItemTemplate(string templateName) {
             return new ItemTemplateResult<TContent>(templateName);

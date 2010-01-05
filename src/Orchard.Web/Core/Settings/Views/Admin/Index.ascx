@@ -24,7 +24,7 @@
     <%=Html.EditorFor(s=>s.Id) %>
 </fieldset>
 
-<%= Html.EditorForItem(Model.EditorModel) %>
+<%= Html.EditorForItem(Model.ViewModel) %>
 
 <fieldset>
     <input class="button" type="submit" value="Save" />

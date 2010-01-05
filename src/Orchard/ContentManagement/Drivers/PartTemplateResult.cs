@@ -16,12 +16,12 @@ namespace Orchard.ContentManagement.Drivers {
         }
 
         public override void Apply(BuildDisplayModelContext context) {
-            context.DisplayModel.Zones.AddDisplayPart(
+            context.ViewModel.Zones.AddDisplayPart(
                 Zone + ":" + Position, Model, TemplateName, Prefix);
         }
 
         public override void Apply(BuildEditorModelContext context) {
-            context.EditorModel.Zones.AddEditorPart(
+            context.ViewModel.Zones.AddEditorPart(
                 Zone + ":" + Position, Model, TemplateName, Prefix);
         }
 

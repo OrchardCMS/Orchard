@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Web.Mvc;
-using Orchard.ContentManagement.ViewModels;
+using Orchard.Mvc.ViewModels;
 
 namespace Orchard.UI.Zones {
     public interface IZoneContainer {
@@ -15,8 +15,8 @@ namespace Orchard.UI.Zones {
         public void AddRenderPartial(string location, string templateName, object model) {
             AddZoneItem(location, new RenderPartialZoneItem { Model = model, TemplateName = templateName });
         }
-        public void AddDisplayItem(string location, ItemDisplayModel displayModel) {
-            AddZoneItem(location, new ItemDisplayZoneItem { DisplayModel = displayModel });
+        public void AddDisplayItem(string location, ItemViewModel viewModel) {
+            AddZoneItem(location, new ItemDisplayZoneItem { ViewModel = viewModel });
         }
         public void AddDisplayPart(string location, object model, string templateName, string prefix) {
             AddZoneItem(location, new PartDisplayZoneItem { Model = model, TemplateName = templateName, Prefix = prefix });

@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using Orchard.ContentManagement.ViewModels;
 using Orchard.Mvc.ViewModels;
 using Orchard.Security;
 using Orchard.Users.Models;
@@ -20,6 +19,6 @@ namespace Orchard.Users.ViewModels {
         [Required, DataType(DataType.Password)]
         public string ConfirmPassword { get; set; }
 
-        public ItemEditorModel<IUser> User { get; set; }
+        public ItemViewModel<IUser> User { get; set; }
     }
 }

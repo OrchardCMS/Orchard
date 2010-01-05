@@ -2,7 +2,7 @@ using System;
 using System.Linq;
 using System.Web.Mvc;
 using Orchard.ContentManagement.Handlers;
-using Orchard.ContentManagement.ViewModels;
+using Orchard.Mvc.ViewModels;
 
 namespace Orchard.ContentManagement.Drivers {
     public class ItemTemplateResult<TContent> : DriverResult where TContent : class, IContent {
@@ -13,24 +13,24 @@ namespace Orchard.ContentManagement.Drivers {
         public string TemplateName { get; set; }
 
         public override void Apply(BuildDisplayModelContext context) {
-            context.DisplayModel.TemplateName = TemplateName;
-            if (context.DisplayModel.GetType() != typeof(ItemDisplayModel<TContent>)) {
-                context.DisplayModel.Adaptor = (html, viewModel) => {
-                    return new HtmlHelper<ItemDisplayModel<TContent>>(
+            context.ViewModel.TemplateName = TemplateName;
+            if (context.ViewModel.GetType() != typeof(ItemViewModel<TContent>)) {
+                context.ViewModel.Adaptor = (html, viewModel) => {
+                    return new HtmlHelper<ItemViewModel<TContent>>(
                         html.ViewContext,
-                        new ViewDataContainer { ViewData = new ViewDataDictionary(new ItemDisplayModel<TContent>(viewModel)) },
+                        new ViewDataContainer { ViewData = new ViewDataDictionary(new ItemViewModel<TContent>(viewModel)) },
                         html.RouteCollection);
                 };
             }
         }
 
         public override void Apply(BuildEditorModelContext context) {
-            context.EditorModel.TemplateName = TemplateName;
-            if (context.EditorModel.GetType() != typeof(ItemEditorModel<TContent>)) {
-                context.EditorModel.Adaptor = (html, viewModel) => {
-                    return new HtmlHelper<ItemEditorModel<TContent>>(
+            context.ViewModel.TemplateName = TemplateName;
+            if (context.ViewModel.GetType() != typeof(ItemViewModel<TContent>)) {
+                context.ViewModel.Adaptor = (html, viewModel) => {
+                    return new HtmlHelper<ItemViewModel<TContent>>(
                         html.ViewContext,
-                        new ViewDataContainer { ViewData = new ViewDataDictionary(new ItemEditorModel<TContent>(viewModel)) },
+                        new ViewDataContainer { ViewData = new ViewDataDictionary(new ItemViewModel<TContent>(viewModel)) },
                         html.RouteCollection);
                 };
             }

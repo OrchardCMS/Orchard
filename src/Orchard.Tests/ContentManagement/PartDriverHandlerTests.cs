@@ -11,7 +11,7 @@ using NUnit.Framework;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
 using Orchard.ContentManagement.Handlers;
-using Orchard.ContentManagement.ViewModels;
+using Orchard.Mvc.ViewModels;
 using Orchard.UI.Zones;
 
 namespace Orchard.Tests.ContentManagement {
@@ -43,7 +43,7 @@ namespace Orchard.Tests.ContentManagement {
             });
             var contentHandler = _container.Resolve<IContentHandler>();
 
-            var ctx = new BuildDisplayModelContext(new ItemDisplayModel(new ContentItem()), null);
+            var ctx = new BuildDisplayModelContext(new ItemViewModel(new ContentItem()), null);
 
             driver1.Verify(x => x.BuildDisplayModel(ctx), Times.Never());
             contentHandler.BuildDisplayModel(ctx);
@@ -60,12 +60,12 @@ namespace Orchard.Tests.ContentManagement {
             var item = new ContentItem();
             item.Weld(new StubPart { Foo = new[] { "a", "b", "c" } });
 
-            var ctx = new BuildDisplayModelContext(new ItemDisplayModel(item), "");
-            Assert.That(ctx.DisplayModel.Zones.Count(), Is.EqualTo(0));
+            var ctx = new BuildDisplayModelContext(new ItemViewModel(item), "");
+            Assert.That(ctx.ViewModel.Zones.Count(), Is.EqualTo(0));
             contentHandler.BuildDisplayModel(ctx);
-            Assert.That(ctx.DisplayModel.Zones.Count(), Is.EqualTo(1));
-            Assert.That(ctx.DisplayModel.Zones.Single().Key, Is.EqualTo("topmeta"));
-            Assert.That(ctx.DisplayModel.Zones.Single().Value.Items.OfType<PartDisplayZoneItem>().Single().Prefix, Is.EqualTo("Stub"));
+            Assert.That(ctx.ViewModel.Zones.Count(), Is.EqualTo(1));
+            Assert.That(ctx.ViewModel.Zones.Single().Key, Is.EqualTo("topmeta"));
+            Assert.That(ctx.ViewModel.Zones.Single().Value.Items.OfType<PartDisplayZoneItem>().Single().Prefix, Is.EqualTo("Stub"));
 
         }
 

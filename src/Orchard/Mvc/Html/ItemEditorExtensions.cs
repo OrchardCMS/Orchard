@@ -2,14 +2,14 @@ using System;
 using System.Linq.Expressions;
 using System.Web.Mvc;
 using System.Web.Mvc.Html;
-using Orchard.ContentManagement.ViewModels;
+using Orchard.Mvc.ViewModels;
 
 namespace Orchard.Mvc.Html {
     public static class ItemEditorExtensions {
-        public static MvcHtmlString EditorForItem<TModel, TItemModel>(this HtmlHelper<TModel> html, TItemModel item) where TItemModel : ItemEditorModel {
+        public static MvcHtmlString EditorForItem<TModel, TItemModel>(this HtmlHelper<TModel> html, TItemModel item) where TItemModel : ItemViewModel {
             return html.EditorForItem(x => item);
         }
-        public static MvcHtmlString EditorForItem<TModel, TItemModel>(this HtmlHelper<TModel> html, Expression<Func<TModel, TItemModel>> expression) where TItemModel : ItemEditorModel {
+        public static MvcHtmlString EditorForItem<TModel, TItemModel>(this HtmlHelper<TModel> html, Expression<Func<TModel, TItemModel>> expression) where TItemModel : ItemViewModel {
 
             var metadata = ModelMetadata.FromLambdaExpression(expression, html.ViewData);
             var model = (TItemModel)metadata.Model;

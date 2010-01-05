@@ -177,8 +177,7 @@
     <Compile Include="ContentManagement\Records\ContentPartVersionRecord.cs" />
     <Compile Include="ContentManagement\Records\ContentTypeRecord.cs" />
     <Compile Include="ContentManagement\Records\Utility.cs" />
-    <Compile Include="ContentManagement\ViewModels\ItemDisplayModel.cs" />
-    <Compile Include="ContentManagement\ViewModels\ItemEditorModel.cs" />
+    <Compile Include="Mvc\ViewModels\ItemViewModel.cs" />
     <Compile Include="ContentManagement\ViewModels\TemplateViewModel.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\HomeController.cs" />

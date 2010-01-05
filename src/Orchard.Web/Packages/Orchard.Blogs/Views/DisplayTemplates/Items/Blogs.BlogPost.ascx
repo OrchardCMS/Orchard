@@ -1,5 +1,5 @@
-﻿<%@ Control Language="C#" Inherits="System.Web.Mvc.ViewUserControl<ItemDisplayModel<BlogPost>>" %>
-<%@ Import Namespace="Orchard.ContentManagement.ViewModels"%>
+﻿<%@ Control Language="C#" Inherits="System.Web.Mvc.ViewUserControl<ItemViewModel<BlogPost>>" %>
+<%@ Import Namespace="Orchard.Mvc.ViewModels"%>
 <%@ Import Namespace="Orchard.Blogs.Extensions"%>
 <%@ Import Namespace="Orchard.Blogs.Models"%>
 <div class="manage"><a href="<%=Url.BlogPostEdit(Model.Item.Blog.Slug, Model.Item.Slug) %>" class="ibutton edit">edit</a></div>

@@ -1,6 +1,6 @@
-<%@ Control Language="C#" Inherits="System.Web.Mvc.ViewUserControl<ItemEditorModel<SandboxPage>>" %>
+<%@ Control Language="C#" Inherits="System.Web.Mvc.ViewUserControl<ItemViewModel<SandboxPage>>" %>
+<%@ Import Namespace="Orchard.Mvc.ViewModels"%>
 <%@ Import Namespace="Orchard.Sandbox.Models" %>
-<%@ Import Namespace="Orchard.ContentManagement.ViewModels" %>
 
 <li>
     <%=Html.LabelFor(m => m.Item.Record.Name)%>

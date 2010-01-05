@@ -1,7 +1,7 @@
-﻿<%@ Control Language="C#" Inherits="System.Web.Mvc.ViewUserControl<ItemDisplayModel<Blog>>" %>
+﻿<%@ Control Language="C#" Inherits="System.Web.Mvc.ViewUserControl<ItemViewModel<Blog>>" %>
+<%@ Import Namespace="Orchard.Mvc.ViewModels"%>
 <%@ Import Namespace="Orchard.Blogs.Extensions"%>
 <%@ Import Namespace="Orchard.Blogs.Models"%>
-<%@ Import Namespace="Orchard.ContentManagement.ViewModels"%>
 <div class="manage"><a href="<%=Url.BlogEdit(Model.Item.Slug) %>" class="ibutton edit">edit</a></div>
 <h1><%=Html.TitleForPage(Model.Item.Name) %></h1>
 <div><%=Html.Encode(Model.Item.Description) %></div>

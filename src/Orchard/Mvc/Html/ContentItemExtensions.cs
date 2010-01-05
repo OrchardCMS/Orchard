@@ -2,7 +2,7 @@
 using System.Web.Mvc;
 using System.Web.Mvc.Html;
 using Orchard.ContentManagement;
-using Orchard.ContentManagement.ViewModels;
+using Orchard.Mvc.ViewModels;
 
 namespace Orchard.Mvc.Html {
     public static class ContentItemExtensions {
@@ -45,7 +45,7 @@ namespace Orchard.Mvc.Html {
         }
 
         public static MvcHtmlString ItemDisplayTemplate(this HtmlHelper html, IContent content, string template) {
-            return html.Partial(string.Format("{0}/{1}", content.ContentItem.ContentType, template), new ItemDisplayModel(content.ContentItem));
+            return html.Partial(string.Format("{0}/{1}", content.ContentItem.ContentType, template), new ItemViewModel(content.ContentItem));
         }
     }
 }

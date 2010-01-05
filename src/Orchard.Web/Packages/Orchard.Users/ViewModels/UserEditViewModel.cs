@@ -1,7 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.Web.Mvc;
 using Orchard.ContentManagement;
-using Orchard.ContentManagement.ViewModels;
 using Orchard.Mvc.ViewModels;
 using Orchard.Users.Models;
 
@@ -24,6 +23,6 @@ namespace Orchard.Users.ViewModels {
             set { User.Item.Record.Email = value; }
         }
 
-        public ItemEditorModel<User> User { get; set; }
+        public ItemViewModel<User> User { get; set; }
     }
 }

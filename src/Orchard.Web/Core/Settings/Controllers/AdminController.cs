@@ -26,14 +26,14 @@ namespace Orchard.Core.Settings.Controllers {
             var model = new Orchard.Core.Settings.ViewModels.SettingsIndexViewModel {
                 Site = _siteService.GetSiteSettings().As<SiteSettings>()
             };
-            model.EditorModel = _modelManager.BuildEditorModel(model.Site);
+            model.ViewModel = _modelManager.BuildEditorModel(model.Site);
             return View(model);
         }
 
         [HttpPost, ActionName("Index")]
         public ActionResult IndexPOST(string tabName) {
             var viewModel = new SettingsIndexViewModel { Site = _siteService.GetSiteSettings().As<SiteSettings>() };
-            viewModel.EditorModel = _modelManager.UpdateEditorModel(viewModel.Site.ContentItem, this);
+            viewModel.ViewModel = _modelManager.UpdateEditorModel(viewModel.Site.ContentItem, this);
 
             if (!TryUpdateModel(viewModel)) {
                 return View(viewModel);

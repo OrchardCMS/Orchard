@@ -1,13 +1,12 @@
 ﻿using System.Web.Mvc;
 using Orchard.ContentManagement;
-using Orchard.ContentManagement.ViewModels;
 using Orchard.Mvc.ViewModels;
 using Orchard.Core.Settings.Models;
 
 namespace Orchard.Core.Settings.ViewModels {
     public class SettingsIndexViewModel : AdminViewModel {
         public SiteSettings Site { get; set; }
-        public ItemEditorModel EditorModel { get; set; }
+        public ItemViewModel ViewModel { get; set; }
         
 
         [HiddenInput(DisplayValue = false)]

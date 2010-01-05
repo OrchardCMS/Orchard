@@ -1,9 +1,9 @@
-using Orchard.ContentManagement.ViewModels;
+using Orchard.Mvc.ViewModels;
 
 namespace Orchard.ContentManagement.Handlers {
     public class UpdateEditorModelContext : BuildEditorModelContext {
-        public UpdateEditorModelContext(ItemEditorModel editorModel, IUpdateModel updater)
-            : base(editorModel) {
+        public UpdateEditorModelContext(ItemViewModel viewModel, IUpdateModel updater)
+            : base(viewModel) {
             Updater = updater;
         }
 

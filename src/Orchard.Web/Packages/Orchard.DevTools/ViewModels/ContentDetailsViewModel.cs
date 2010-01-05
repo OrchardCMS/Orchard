@@ -14,9 +14,9 @@ namespace Orchard.DevTools.ViewModels {
 
         public IEnumerable<Type> PartTypes { get; set; }
 
-        public ItemDisplayModel DisplayModel { get; set; }
+        public ItemViewModel DisplayModel { get; set; }
 
-        public ItemEditorModel EditorModel { get; set; }
+        public ItemViewModel EditorModel { get; set; }
 
         public IEnumerable<TemplateViewModel> Displays {
             get {

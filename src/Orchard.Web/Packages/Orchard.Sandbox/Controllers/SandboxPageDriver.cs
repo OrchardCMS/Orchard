@@ -3,7 +3,7 @@ using System.Web.Routing;
 using JetBrains.Annotations;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
-using Orchard.ContentManagement.ViewModels;
+using Orchard.Mvc.ViewModels;
 using Orchard.Sandbox.Models;
 
 namespace Orchard.Sandbox.Controllers {
@@ -47,11 +47,11 @@ namespace Orchard.Sandbox.Controllers {
                 PartTemplate(part, "Parts/Sandbox.Page.Title").Location("title"));
         }
 
-        protected override DriverResult Editor(ItemEditorModel<SandboxPage> model) {
+        protected override DriverResult Editor(ItemViewModel<SandboxPage> model) {
             return ItemTemplate("Items/Sandbox.Page");
         }
 
-        protected override DriverResult Editor(ItemEditorModel<SandboxPage> model, IUpdateModel updater) {
+        protected override DriverResult Editor(ItemViewModel<SandboxPage> model, IUpdateModel updater) {
             updater.TryUpdateModel(model, Prefix, null, null);
             return ItemTemplate("Items/Sandbox.Page");
         }

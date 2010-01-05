@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Orchard.ContentManagement.Handlers;
 using Orchard.ContentManagement.Records;
-using Orchard.ContentManagement.ViewModels;
+using Orchard.Mvc.ViewModels;
 
 namespace Orchard.ContentManagement {
     public static class ContentCreateExtensions {
@@ -151,15 +151,15 @@ namespace Orchard.ContentManagement {
 
         /* Display and editor convenience extension methods */
 
-        public static ItemDisplayModel<T> BuildDisplayModel<T>(this IContentManager manager, int id, string displayType) where T : class, IContent {
+        public static ItemViewModel<T> BuildDisplayModel<T>(this IContentManager manager, int id, string displayType) where T : class, IContent {
             return manager.BuildDisplayModel(manager.Get<T>(id), displayType);
         }
 
-        public static ItemEditorModel<T> BuildEditorModel<T>(this IContentManager manager, int id) where T : class, IContent {
+        public static ItemViewModel<T> BuildEditorModel<T>(this IContentManager manager, int id) where T : class, IContent {
             return manager.BuildEditorModel(manager.Get<T>(id));
         }
 
-        public static ItemEditorModel<T> UpdateEditorModel<T>(this IContentManager manager, int id, IUpdateModel updater) where T : class, IContent {
+        public static ItemViewModel<T> UpdateEditorModel<T>(this IContentManager manager, int id, IUpdateModel updater) where T : class, IContent {
             return manager.UpdateEditorModel(manager.Get<T>(id), updater);
         }
 

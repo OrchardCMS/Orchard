@@ -1,5 +1,5 @@
-<%@ Control Language="C#" Inherits="System.Web.Mvc.ViewUserControl<ItemEditorModel<Blog>>" %>
-<%@ Import Namespace="Orchard.ContentManagement.ViewModels"%>
+<%@ Control Language="C#" Inherits="System.Web.Mvc.ViewUserControl<ItemViewModel<Blog>>" %>
+<%@ Import Namespace="Orchard.Mvc.ViewModels"%>
 <%@ Import Namespace="Orchard.Blogs.Models"%>
 <% Html.AddTitleParts(Model.Item.Name); %>
 <% Html.Zone("primary"); %>

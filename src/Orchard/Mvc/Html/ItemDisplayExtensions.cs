@@ -2,15 +2,15 @@ using System;
 using System.Linq.Expressions;
 using System.Web.Mvc;
 using System.Web.Mvc.Html;
-using Orchard.ContentManagement.ViewModels;
+using Orchard.Mvc.ViewModels;
 
 namespace Orchard.Mvc.Html {
     public static class ItemDisplayExtensions {
-        public static MvcHtmlString DisplayForItem<TModel, TItemModel>(this HtmlHelper<TModel> html, TItemModel item) where TItemModel : ItemDisplayModel {
+        public static MvcHtmlString DisplayForItem<TModel, TItemModel>(this HtmlHelper<TModel> html, TItemModel item) where TItemModel : ItemViewModel {
             return html.DisplayForItem(x => item);
         }
 
-        public static MvcHtmlString DisplayForItem<TModel, TItemModel>(this HtmlHelper<TModel> html, Expression<Func<TModel, TItemModel>> expression) where TItemModel : ItemDisplayModel {
+        public static MvcHtmlString DisplayForItem<TModel, TItemModel>(this HtmlHelper<TModel> html, Expression<Func<TModel, TItemModel>> expression) where TItemModel : ItemViewModel {
 
             var metadata = ModelMetadata.FromLambdaExpression(expression, html.ViewData);
             var model = (TItemModel)metadata.Model;
