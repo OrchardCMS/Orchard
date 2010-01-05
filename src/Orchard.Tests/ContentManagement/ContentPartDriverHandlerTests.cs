@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Text;
 using Autofac;
 using Autofac.Builder;
 using Autofac.Modules;
@@ -16,14 +13,14 @@ using Orchard.UI.Zones;
 
 namespace Orchard.Tests.ContentManagement {
     [TestFixture]
-    public class PartDriverHandlerTests {
+    public class ContentPartDriverHandlerTests {
         private IContainer _container;
 
         [SetUp]
         public void Init() {
             var builder = new ContainerBuilder();
             builder.RegisterModule(new ImplicitCollectionSupportModule());
-            builder.Register<PartDriverHandler>().As<IContentHandler>();
+            builder.Register<ContentPartDriverHandler>().As<IContentHandler>();
             _container = builder.Build();
         }
 
@@ -35,15 +32,15 @@ namespace Orchard.Tests.ContentManagement {
 
         [Test]
         public void AllDriversShouldBeCalled() {
-            var driver1 = new Mock<IPartDriver>();
-            var driver2 = new Mock<IPartDriver>();
+            var driver1 = new Mock<IContentPartDriver>();
+            var driver2 = new Mock<IContentPartDriver>();
             _container.Build(x => {
                 x.Register(driver1.Object);
                 x.Register(driver2.Object);
             });
             var contentHandler = _container.Resolve<IContentHandler>();
 
-            var ctx = new BuildDisplayModelContext(new ItemViewModel(new ContentItem()), null);
+            var ctx = new BuildDisplayModelContext(new ContentItemViewModel(new ContentItem()), null);
 
             driver1.Verify(x => x.BuildDisplayModel(ctx), Times.Never());
             contentHandler.BuildDisplayModel(ctx);
@@ -53,23 +50,23 @@ namespace Orchard.Tests.ContentManagement {
         [Test]
         public void TestDriverCanAddDisplay() {
             var driver = new StubPartDriver();
-            _container.Build(x => x.Register(driver).As<IPartDriver>());
+            _container.Build(x => x.Register(driver).As<IContentPartDriver>());
 
             var contentHandler = _container.Resolve<IContentHandler>();
 
             var item = new ContentItem();
             item.Weld(new StubPart { Foo = new[] { "a", "b", "c" } });
 
-            var ctx = new BuildDisplayModelContext(new ItemViewModel(item), "");
+            var ctx = new BuildDisplayModelContext(new ContentItemViewModel(item), "");
             Assert.That(ctx.ViewModel.Zones.Count(), Is.EqualTo(0));
             contentHandler.BuildDisplayModel(ctx);
             Assert.That(ctx.ViewModel.Zones.Count(), Is.EqualTo(1));
             Assert.That(ctx.ViewModel.Zones.Single().Key, Is.EqualTo("topmeta"));
-            Assert.That(ctx.ViewModel.Zones.Single().Value.Items.OfType<PartDisplayZoneItem>().Single().Prefix, Is.EqualTo("Stub"));
+            Assert.That(ctx.ViewModel.Zones.Single().Value.Items.OfType<ContentPartDisplayZoneItem>().Single().Prefix, Is.EqualTo("Stub"));
 
         }
 
-        public class StubPartDriver : PartDriver<StubPart> {
+        public class StubPartDriver : ContentPartDriver<StubPart> {
             protected override string Prefix {
                 get { return "Stub"; }
             }
@@ -77,21 +74,21 @@ namespace Orchard.Tests.ContentManagement {
             protected override DriverResult Display(StubPart part, string displayType) {
                 var viewModel = new StubViewModel { Foo = string.Join(",", part.Foo) };
                 if (displayType.StartsWith("Summary"))
-                    return PartTemplate(viewModel, "StubViewModelTerse").Location("topmeta");
+                    return ContentPartTemplate(viewModel, "StubViewModelTerse").Location("topmeta");
 
-                return PartTemplate(viewModel).Location("topmeta");
+                return ContentPartTemplate(viewModel).Location("topmeta");
             }
 
             protected override DriverResult Editor(StubPart part) {
                 var viewModel = new StubViewModel { Foo = string.Join(",", part.Foo) };
-                return PartTemplate(viewModel).Location("last", "10");
+                return ContentPartTemplate(viewModel).Location("last", "10");
             }
 
             protected override DriverResult Editor(StubPart part, IUpdateModel updater) {
                 var viewModel = new StubViewModel { Foo = string.Join(",", part.Foo) };
                 updater.TryUpdateModel(viewModel, Prefix, null, null);
                 part.Foo = viewModel.Foo.Split(new[] { ',' }).Select(x => x.Trim()).ToArray();
-                return PartTemplate(viewModel).Location("last", "10");
+                return ContentPartTemplate(viewModel).Location("last", "10");
             }
         }
 
@@ -104,5 +101,4 @@ namespace Orchard.Tests.ContentManagement {
             public string Foo { get; set; }
         }
     }
-
 }

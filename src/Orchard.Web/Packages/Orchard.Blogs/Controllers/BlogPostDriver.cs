@@ -6,7 +6,7 @@ using Orchard.ContentManagement.Drivers;
 
 namespace Orchard.Blogs.Controllers {
     [UsedImplicitly]
-    public class BlogPostDriver : ItemDriver<BlogPost> {
+    public class BlogPostDriver : ContentItemDriver<BlogPost> {
         public readonly static ContentType ContentType = new ContentType {
             Name = "blogpost",
             DisplayName = "Blog Post"
@@ -43,14 +43,14 @@ namespace Orchard.Blogs.Controllers {
         }
 
         protected override DriverResult Display(BlogPost post, string displayType) {
-            return ItemTemplate("Items/Blogs.BlogPost").LongestMatch(displayType, "Summary", "SummaryAdmin");
+            return ContentItemTemplate("Items/Blogs.BlogPost").LongestMatch(displayType, "Summary", "SummaryAdmin");
         }
 
         protected override DriverResult Editor(BlogPost post) {
             return Combined(
-                ItemTemplate("Items/Blogs.BlogPost"),
-                PartTemplate(post, "Parts/Blogs.BlogPost.Fields").Location("primary", "1"),
-                PartTemplate(post, "Parts/Blogs.BlogPost.Publish").Location("secondary", "1"));
+                ContentItemTemplate("Items/Blogs.BlogPost"),
+                ContentPartTemplate(post, "Parts/Blogs.BlogPost.Fields").Location("primary", "1"),
+                ContentPartTemplate(post, "Parts/Blogs.BlogPost.Publish").Location("secondary", "1"));
         }
 
         protected override DriverResult Editor(BlogPost post, IUpdateModel updater) {

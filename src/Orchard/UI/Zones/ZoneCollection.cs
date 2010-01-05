@@ -15,14 +15,14 @@ namespace Orchard.UI.Zones {
         public void AddRenderPartial(string location, string templateName, object model) {
             AddZoneItem(location, new RenderPartialZoneItem { Model = model, TemplateName = templateName });
         }
-        public void AddDisplayItem(string location, ItemViewModel viewModel) {
-            AddZoneItem(location, new ItemDisplayZoneItem { ViewModel = viewModel });
+        public void AddDisplayItem(string location, ContentItemViewModel viewModel) {
+            AddZoneItem(location, new ContentItemDisplayZoneItem { ViewModel = viewModel });
         }
         public void AddDisplayPart(string location, object model, string templateName, string prefix) {
-            AddZoneItem(location, new PartDisplayZoneItem { Model = model, TemplateName = templateName, Prefix = prefix });
+            AddZoneItem(location, new ContentPartDisplayZoneItem { Model = model, TemplateName = templateName, Prefix = prefix });
         }
         public void AddEditorPart(string location, object model, string templateName, string prefix) {
-            AddZoneItem(location, new PartEditorZoneItem { Model = model, TemplateName = templateName, Prefix = prefix });
+            AddZoneItem(location, new ContentPartEditorZoneItem { Model = model, TemplateName = templateName, Prefix = prefix });
         }
 
         private void AddZoneItem(string location, ZoneItem item) {

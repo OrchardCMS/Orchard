@@ -15,7 +15,7 @@ namespace Orchard.ContentManagement.Handlers {
         void Removing(RemoveContentContext context);
         void Removed(RemoveContentContext context);
 
-        void GetItemMetadata(GetItemMetadataContext context);
+        void GetContentItemMetadata(GetContentItemMetadataContext context);
         void BuildDisplayModel(BuildDisplayModelContext context);
         void BuildEditorModel(BuildEditorModelContext context);
         void UpdateEditorModel(UpdateEditorModelContext context);

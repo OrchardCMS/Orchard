@@ -1,19 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace Orchard.ContentManagement.Handlers {
+﻿namespace Orchard.ContentManagement.Handlers {
     public abstract class TemplateFilterBase<TPart> : IContentTemplateFilter where TPart : class, IContent {
-
-        protected virtual void GetItemMetadata(GetItemMetadataContext context, TPart instance) { }
+        protected virtual void GetContentItemMetadata(GetContentItemMetadataContext context, TPart instance) { }
         protected virtual void BuildDisplayModel(BuildDisplayModelContext context, TPart instance) { }
         protected virtual void BuildEditorModel(BuildEditorModelContext context, TPart instance) { }
         protected virtual void UpdateEditorModel(UpdateEditorModelContext context, TPart instance) { }
 
-        void IContentTemplateFilter.GetItemMetadata(GetItemMetadataContext context) {
+        void IContentTemplateFilter.GetContentItemMetadata(GetContentItemMetadataContext context) {
             if (context.ContentItem.Is<TPart>())
-                GetItemMetadata(context, context.ContentItem.As<TPart>());
+                GetContentItemMetadata(context, context.ContentItem.As<TPart>());
         }
 
         void IContentTemplateFilter.BuildDisplayModel(BuildDisplayModelContext context) {
@@ -30,6 +24,5 @@ namespace Orchard.ContentManagement.Handlers {
             if (context.ContentItem.Is<TPart>())
                 UpdateEditorModel(context, context.ContentItem.As<TPart>());
         }
-
     }
 }

@@ -4,13 +4,13 @@ using Orchard.Mvc.ViewModels;
 
 namespace Orchard.ContentManagement.Handlers {
     public class BuildEditorModelContext {
-        public BuildEditorModelContext(ItemViewModel viewModel) {
+        public BuildEditorModelContext(ContentItemViewModel viewModel) {
             ContentItem = viewModel.Item;            
             ViewModel = viewModel;
         }
 
         public ContentItem ContentItem { get; set; }
-        public ItemViewModel ViewModel { get; set; }
+        public ContentItemViewModel ViewModel { get; set; }
 
         
         public void AddEditor(TemplateViewModel display) {

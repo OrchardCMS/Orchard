@@ -6,7 +6,7 @@ using Orchard.Users.Models;
 
 namespace Orchard.Users.Controllers {
     [UsedImplicitly]
-    public class UserDriver : ItemDriver<User> {
+    public class UserDriver : ContentItemDriver<User> {
         public readonly static ContentType ContentType = new ContentType {
             Name = "user",
             DisplayName = "User Profile"
@@ -31,11 +31,11 @@ namespace Orchard.Users.Controllers {
         }
 
         protected override DriverResult Editor(User part) {
-            return ItemTemplate("Items/Users.User");
+            return ContentItemTemplate("Items/Users.User");
         }
 
         protected override DriverResult Editor(User part, IUpdateModel updater) {
-            return ItemTemplate("Items/Users.User");
+            return ContentItemTemplate("Items/Users.User");
         }
     }
 }

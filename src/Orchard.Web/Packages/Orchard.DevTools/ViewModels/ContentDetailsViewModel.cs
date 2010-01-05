@@ -14,15 +14,15 @@ namespace Orchard.DevTools.ViewModels {
 
         public IEnumerable<Type> PartTypes { get; set; }
 
-        public ItemViewModel DisplayModel { get; set; }
+        public ContentItemViewModel DisplayModel { get; set; }
 
-        public ItemViewModel EditorModel { get; set; }
+        public ContentItemViewModel EditorModel { get; set; }
 
         public IEnumerable<TemplateViewModel> Displays {
             get {
                 return DisplayModel.Zones
                     .SelectMany(z => z.Value.Items
-                        .OfType<PartDisplayZoneItem>()
+                        .OfType<ContentPartDisplayZoneItem>()
                         .Select(x=>new{ZoneName=z.Key,Item=x}))                    
                     .Select(x => new TemplateViewModel(x.Item.Model,x.Item.Prefix) {
                         Model = x.Item.Model,
@@ -37,7 +37,7 @@ namespace Orchard.DevTools.ViewModels {
             get {
                 return EditorModel.Zones
                     .SelectMany(z => z.Value.Items
-                        .OfType<PartEditorZoneItem>()
+                        .OfType<ContentPartEditorZoneItem>()
                         .Select(x => new { ZoneName = z.Key, Item = x }))
                     .Select(x => new TemplateViewModel(x.Item.Model, x.Item.Prefix) {
                         Model = x.Item.Model,

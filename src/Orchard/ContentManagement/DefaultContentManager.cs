@@ -282,18 +282,18 @@ namespace Orchard.ContentManagement {
         }
 
         public ContentItemMetadata GetItemMetadata(IContent content) {
-            var context = new GetItemMetadataContext {
+            var context = new GetContentItemMetadataContext {
                 ContentItem = content.ContentItem,
                 Metadata = new ContentItemMetadata()
             };
             foreach (var handler in Handlers) {
-                handler.GetItemMetadata(context);
+                handler.GetContentItemMetadata(context);
             }
             return context.Metadata;
         }
 
-        public ItemViewModel<TContentPart> BuildDisplayModel<TContentPart>(TContentPart content, string displayType) where TContentPart : IContent {
-            var displayModel = new ItemViewModel<TContentPart>(content);
+        public ContentItemViewModel<TContentPart> BuildDisplayModel<TContentPart>(TContentPart content, string displayType) where TContentPart : IContent {
+            var displayModel = new ContentItemViewModel<TContentPart>(content);
             var context = new BuildDisplayModelContext(displayModel, displayType);
             foreach (var handler in Handlers) {
                 handler.BuildDisplayModel(context);
@@ -301,8 +301,8 @@ namespace Orchard.ContentManagement {
             return displayModel;
         }
 
-        public ItemViewModel<TContentPart> BuildEditorModel<TContentPart>(TContentPart content) where TContentPart : IContent {
-            var editorModel = new ItemViewModel<TContentPart>(content);
+        public ContentItemViewModel<TContentPart> BuildEditorModel<TContentPart>(TContentPart content) where TContentPart : IContent {
+            var editorModel = new ContentItemViewModel<TContentPart>(content);
             var context = new BuildEditorModelContext(editorModel);
             foreach (var handler in Handlers) {
                 handler.BuildEditorModel(context);
@@ -310,8 +310,8 @@ namespace Orchard.ContentManagement {
             return editorModel;
         }
 
-        public ItemViewModel<TContentPart> UpdateEditorModel<TContentPart>(TContentPart content, IUpdateModel updater) where TContentPart : IContent {
-            var editorModel = new ItemViewModel<TContentPart>(content);
+        public ContentItemViewModel<TContentPart> UpdateEditorModel<TContentPart>(TContentPart content, IUpdateModel updater) where TContentPart : IContent {
+            var editorModel = new ContentItemViewModel<TContentPart>(content);
 
             var context = new UpdateEditorModelContext(editorModel, updater);
             foreach (var handler in Handlers) {

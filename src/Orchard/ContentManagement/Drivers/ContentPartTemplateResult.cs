@@ -1,15 +1,14 @@
 using Orchard.ContentManagement.Handlers;
-using Orchard.ContentManagement.ViewModels;
 
 namespace Orchard.ContentManagement.Drivers {
-    public class PartTemplateResult : DriverResult {
+    public class ContentPartTemplateResult : DriverResult {
         public object Model { get; set; }
         public string TemplateName { get; set; }
         public string Prefix { get; set; }
         public string Zone { get; set; }
         public string Position { get; set; }
 
-        public PartTemplateResult(object model, string templateName, string prefix) {
+        public ContentPartTemplateResult(object model, string templateName, string prefix) {
             Model = model;
             TemplateName = templateName;
             Prefix = prefix;
@@ -25,12 +24,12 @@ namespace Orchard.ContentManagement.Drivers {
                 Zone + ":" + Position, Model, TemplateName, Prefix);
         }
 
-        public PartTemplateResult Location(string zone) {
+        public ContentPartTemplateResult Location(string zone) {
             Zone = zone;
             return this;
         }
 
-        public PartTemplateResult Location(string zone, string position) {
+        public ContentPartTemplateResult Location(string zone, string position) {
             Zone = zone;
             Position = position;
             return this;

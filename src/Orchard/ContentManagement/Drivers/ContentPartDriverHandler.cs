@@ -1,17 +1,15 @@
-﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using JetBrains.Annotations;
 using Orchard.ContentManagement.Handlers;
 using Orchard.Logging;
 
 namespace Orchard.ContentManagement.Drivers {
     [UsedImplicitly]
-    public class ItemDriverHandler : IContentHandler {
-        private readonly IEnumerable<IItemDriver> _drivers;
+    public class ContentPartDriverHandler : IContentHandler {
+        private readonly IEnumerable<IContentPartDriver> _drivers;
 
-        public ItemDriverHandler(IEnumerable<IItemDriver> drivers) {
+        public ContentPartDriverHandler(IEnumerable<IContentPartDriver> drivers) {
             _drivers = drivers;
             Logger = NullLogger.Instance;
         }
@@ -19,9 +17,7 @@ namespace Orchard.ContentManagement.Drivers {
         public ILogger Logger { get; set; }
 
         IEnumerable<ContentType> IContentHandler.GetContentTypes() {
-            var contentTypes = new List<ContentType>();
-            _drivers.Invoke(driver=>contentTypes.AddRange(driver.GetContentTypes()), Logger);
-            return contentTypes;
+            return Enumerable.Empty<ContentType>();
         }
 
         void IContentHandler.Activating(ActivatingContentContext context) { }
@@ -44,36 +40,30 @@ namespace Orchard.ContentManagement.Drivers {
 
         void IContentHandler.Removed(RemoveContentContext context) { }
 
-
-        void IContentHandler.GetItemMetadata(GetItemMetadataContext context) {
-            _drivers.Invoke(driver => driver.GetItemMetadata(context), Logger);
-        }
+        void IContentHandler.GetContentItemMetadata(GetContentItemMetadataContext context) { }
 
         void IContentHandler.BuildDisplayModel(BuildDisplayModelContext context) {
             _drivers.Invoke(driver => {
-                var result = driver.BuildDisplayModel(context);
-                if (result != null)
-                    result.Apply(context);
-            }, Logger);
+                                var result = driver.BuildDisplayModel(context);
+                                if (result != null)
+                                    result.Apply(context);
+                            }, Logger);
         }
 
         void IContentHandler.BuildEditorModel(BuildEditorModelContext context) {
             _drivers.Invoke(driver => {
-                var result = driver.BuildEditorModel(context);
-                if (result != null)
-                    result.Apply(context);
-            }, Logger);
+                                var result = driver.BuildEditorModel(context);
+                                if (result != null)
+                                    result.Apply(context);
+                            }, Logger);
         }
 
         void IContentHandler.UpdateEditorModel(UpdateEditorModelContext context) {
             _drivers.Invoke(driver => {
-                var result = driver.UpdateEditorModel(context);
-                if (result != null)
-                    result.Apply(context);
-            }, Logger);
+                                var result = driver.UpdateEditorModel(context);
+                                if (result != null)
+                                    result.Apply(context);
+                            }, Logger);
         }
-
-
     }
-
 }

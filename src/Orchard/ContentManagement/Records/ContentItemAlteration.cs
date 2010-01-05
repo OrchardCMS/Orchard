@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Linq;
 using System.Linq.Expressions;
@@ -18,6 +17,7 @@ namespace Orchard.ContentManagement.Records {
         public ContentItemAlteration() {
             _recordTypes = Enumerable.Empty<Type>();
         }
+
         public ContentItemAlteration(IEnumerable<Type> recordTypes) {
             _recordTypes = recordTypes;
         }
@@ -69,7 +69,8 @@ namespace Orchard.ContentManagement.Records {
                     .Cascade.All();
             }
         }
-        class PartAlteration<TPartRecord> : IAlteration<ContentItemRecord> where TPartRecord : ContentPartRecord {
+
+        class ContentPartAlterationInternal<TPartRecord> : IAlteration<ContentItemRecord> where TPartRecord : ContentPartRecord {
             public void Override(AutoMapping<ContentItemRecord> mapping) {
 
                 // public TPartRecord TPartRecord {get;set;}
@@ -94,7 +95,7 @@ namespace Orchard.ContentManagement.Records {
             }
         }
 
-        class PartVersionAlteration<TPartRecord> : IAlteration<ContentItemVersionRecord> where TPartRecord : ContentPartVersionRecord {
+        class ContentPartVersionAlterationInternal<TPartRecord> : IAlteration<ContentItemVersionRecord> where TPartRecord : ContentPartVersionRecord {
             public void Override(AutoMapping<ContentItemVersionRecord> mapping) {
 
                 // public TPartRecord TPartRecord {get;set;}

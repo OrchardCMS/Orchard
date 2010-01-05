@@ -4,19 +4,19 @@ using Orchard.ContentManagement;
 using Orchard.UI.Zones;
 
 namespace Orchard.Mvc.ViewModels {
-    public class ItemViewModel : IZoneContainer {
+    public class ContentItemViewModel : IZoneContainer {
         private ContentItem _item;
 
-        public ItemViewModel() {
+        public ContentItemViewModel() {
             Zones = new ZoneCollection();
         }
 
-        public ItemViewModel(ContentItem item) {
+        public ContentItemViewModel(ContentItem item) {
             Zones = new ZoneCollection();
             Item = item;
         }
 
-        public ItemViewModel(ItemViewModel viewModel) {
+        public ContentItemViewModel(ContentItemViewModel viewModel) {
             TemplateName = viewModel.TemplateName;
             Prefix = viewModel.Prefix;
             Item = viewModel.Item;
@@ -32,23 +32,23 @@ namespace Orchard.Mvc.ViewModels {
             _item = value;
         }
 
-        public Func<HtmlHelper, ItemViewModel, HtmlHelper> Adaptor { get; set; }
+        public Func<HtmlHelper, ContentItemViewModel, HtmlHelper> Adaptor { get; set; }
         public string TemplateName { get; set; }
         public string Prefix { get; set; }
         public ZoneCollection Zones { get; private set; }
     }
 
-    public class ItemViewModel<TPart> : ItemViewModel where TPart : IContent {
+    public class ContentItemViewModel<TPart> : ContentItemViewModel where TPart : IContent {
         private TPart _item;
 
-        public ItemViewModel() {
+        public ContentItemViewModel() {
         }
 
-        public ItemViewModel(TPart content)
+        public ContentItemViewModel(TPart content)
             : base(content.ContentItem) {
         }
 
-        public ItemViewModel(ItemViewModel viewModel)
+        public ContentItemViewModel(ContentItemViewModel viewModel)
             : base(viewModel) {
         }
 

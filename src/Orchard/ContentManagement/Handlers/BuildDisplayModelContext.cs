@@ -4,7 +4,7 @@ using Orchard.Mvc.ViewModels;
 
 namespace Orchard.ContentManagement.Handlers {
     public class BuildDisplayModelContext {
-        public BuildDisplayModelContext(ItemViewModel viewModel, string displayType) {
+        public BuildDisplayModelContext(ContentItemViewModel viewModel, string displayType) {
             ContentItem = viewModel.Item;            
             DisplayType = displayType;
             ViewModel = viewModel;
@@ -12,7 +12,7 @@ namespace Orchard.ContentManagement.Handlers {
 
         public ContentItem ContentItem { get; private set; }
         public string DisplayType { get; private set; }
-        public ItemViewModel ViewModel { get; private set; }
+        public ContentItemViewModel ViewModel { get; private set; }
 
         public void AddDisplay(TemplateViewModel display) {
             //TEMP: (loudej) transition code - from TemplateViewMode to ZoneItem

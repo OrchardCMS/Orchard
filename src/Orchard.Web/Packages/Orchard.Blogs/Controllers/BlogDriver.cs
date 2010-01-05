@@ -10,7 +10,7 @@ using Orchard.Mvc.ViewModels;
 
 namespace Orchard.Blogs.Controllers {
     [UsedImplicitly]
-    public class BlogDriver : ItemDriver<Blog> {
+    public class BlogDriver : ContentItemDriver<Blog> {
         public readonly static ContentType ContentType = new ContentType {
             Name = "blog",
             DisplayName = "Blog"
@@ -54,7 +54,7 @@ namespace Orchard.Blogs.Controllers {
 
         protected override DriverResult Display(Blog blog, string displayType) {
 
-            IEnumerable<ItemViewModel<BlogPost>> blogPosts = null;
+            IEnumerable<ContentItemViewModel<BlogPost>> blogPosts = null;
             if (displayType.StartsWith("DetailAdmin")) {
                 blogPosts = _blogPostService.Get(blog)
                     .Select(bp => _contentManager.BuildDisplayModel(bp, "SummaryAdmin"));
@@ -65,21 +65,21 @@ namespace Orchard.Blogs.Controllers {
             }
 
             return Combined(
-                ItemTemplate("Items/Blogs.Blog").LongestMatch(displayType, "Summary", "DetailAdmin", "SummaryAdmin"),
-                blogPosts == null ? null : PartTemplate(blogPosts, "Parts/Blogs.BlogPost.List", "").Location("body"));
+                ContentItemTemplate("Items/Blogs.Blog").LongestMatch(displayType, "Summary", "DetailAdmin", "SummaryAdmin"),
+                blogPosts == null ? null : ContentPartTemplate(blogPosts, "Parts/Blogs.BlogPost.List", "").Location("body"));
         }
 
         protected override DriverResult Editor(Blog blog) {
             return Combined(
-                ItemTemplate("Items/Blogs.Blog"),
-                PartTemplate(blog, "Parts/Blogs.Blog.Fields").Location("primary", "1"));
+                ContentItemTemplate("Items/Blogs.Blog"),
+                ContentPartTemplate(blog, "Parts/Blogs.Blog.Fields").Location("primary", "1"));
         }
 
         protected override DriverResult Editor(Blog blog, IUpdateModel updater) {
             updater.TryUpdateModel(blog, Prefix, null, null);
             return Combined(
-                ItemTemplate("Items/Blogs.Blog"),
-                PartTemplate(blog, "Parts/Blogs.Blog.Fields").Location("primary", "1"));
+                ContentItemTemplate("Items/Blogs.Blog"),
+                ContentPartTemplate(blog, "Parts/Blogs.Blog.Fields").Location("primary", "1"));
         }
     }
 }

@@ -5,13 +5,12 @@ using System.Web.Mvc.Html;
 using Orchard.Mvc.ViewModels;
 
 namespace Orchard.Mvc.Html {
-    public static class ItemDisplayExtensions {
-        public static MvcHtmlString DisplayForItem<TModel, TItemModel>(this HtmlHelper<TModel> html, TItemModel item) where TItemModel : ItemViewModel {
+    public static class ContentItemDisplayExtensions {
+        public static MvcHtmlString DisplayForItem<TModel, TItemModel>(this HtmlHelper<TModel> html, TItemModel item) where TItemModel : ContentItemViewModel {
             return html.DisplayForItem(x => item);
         }
 
-        public static MvcHtmlString DisplayForItem<TModel, TItemModel>(this HtmlHelper<TModel> html, Expression<Func<TModel, TItemModel>> expression) where TItemModel : ItemViewModel {
-
+        public static MvcHtmlString DisplayForItem<TModel, TItemModel>(this HtmlHelper<TModel> html, Expression<Func<TModel, TItemModel>> expression) where TItemModel : ContentItemViewModel {
             var metadata = ModelMetadata.FromLambdaExpression(expression, html.ViewData);
             var model = (TItemModel)metadata.Model;
 

@@ -8,7 +8,7 @@ using Orchard.Sandbox.Models;
 
 namespace Orchard.Sandbox.Controllers {
     [UsedImplicitly]
-    public class SandboxPageDriver : ItemDriver<SandboxPage> {
+    public class SandboxPageDriver : ContentItemDriver<SandboxPage> {
         public readonly static ContentType ContentType = new ContentType {
             Name = "sandboxpage",
             DisplayName = "Sandbox Page"
@@ -43,17 +43,17 @@ namespace Orchard.Sandbox.Controllers {
 
         protected override DriverResult Display(SandboxPage part, string displayType) {
             return Combined(
-                ItemTemplate("Items/Sandbox.Page").LongestMatch(displayType, "Summary"),
-                PartTemplate(part, "Parts/Sandbox.Page.Title").Location("title"));
+                ContentItemTemplate("Items/Sandbox.Page").LongestMatch(displayType, "Summary"),
+                ContentPartTemplate(part, "Parts/Sandbox.Page.Title").Location("title"));
         }
 
-        protected override DriverResult Editor(ItemViewModel<SandboxPage> model) {
-            return ItemTemplate("Items/Sandbox.Page");
+        protected override DriverResult Editor(ContentItemViewModel<SandboxPage> model) {
+            return ContentItemTemplate("Items/Sandbox.Page");
         }
 
-        protected override DriverResult Editor(ItemViewModel<SandboxPage> model, IUpdateModel updater) {
+        protected override DriverResult Editor(ContentItemViewModel<SandboxPage> model, IUpdateModel updater) {
             updater.TryUpdateModel(model, Prefix, null, null);
-            return ItemTemplate("Items/Sandbox.Page");
+            return ContentItemTemplate("Items/Sandbox.Page");
         }
     }
 }

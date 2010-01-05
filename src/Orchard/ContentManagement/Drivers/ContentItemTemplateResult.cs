@@ -1,12 +1,11 @@
-using System;
 using System.Linq;
 using System.Web.Mvc;
 using Orchard.ContentManagement.Handlers;
 using Orchard.Mvc.ViewModels;
 
 namespace Orchard.ContentManagement.Drivers {
-    public class ItemTemplateResult<TContent> : DriverResult where TContent : class, IContent {
-        public ItemTemplateResult(string templateName) {
+    public class ContentItemTemplateResult<TContent> : DriverResult where TContent : class, IContent {
+        public ContentItemTemplateResult(string templateName) {
             TemplateName = templateName;
         }
 
@@ -14,11 +13,11 @@ namespace Orchard.ContentManagement.Drivers {
 
         public override void Apply(BuildDisplayModelContext context) {
             context.ViewModel.TemplateName = TemplateName;
-            if (context.ViewModel.GetType() != typeof(ItemViewModel<TContent>)) {
+            if (context.ViewModel.GetType() != typeof(ContentItemViewModel<TContent>)) {
                 context.ViewModel.Adaptor = (html, viewModel) => {
-                    return new HtmlHelper<ItemViewModel<TContent>>(
+                    return new HtmlHelper<ContentItemViewModel<TContent>>(
                         html.ViewContext,
-                        new ViewDataContainer { ViewData = new ViewDataDictionary(new ItemViewModel<TContent>(viewModel)) },
+                        new ViewDataContainer { ViewData = new ViewDataDictionary(new ContentItemViewModel<TContent>(viewModel)) },
                         html.RouteCollection);
                 };
             }
@@ -26,22 +25,21 @@ namespace Orchard.ContentManagement.Drivers {
 
         public override void Apply(BuildEditorModelContext context) {
             context.ViewModel.TemplateName = TemplateName;
-            if (context.ViewModel.GetType() != typeof(ItemViewModel<TContent>)) {
+            if (context.ViewModel.GetType() != typeof(ContentItemViewModel<TContent>)) {
                 context.ViewModel.Adaptor = (html, viewModel) => {
-                    return new HtmlHelper<ItemViewModel<TContent>>(
+                    return new HtmlHelper<ContentItemViewModel<TContent>>(
                         html.ViewContext,
-                        new ViewDataContainer { ViewData = new ViewDataDictionary(new ItemViewModel<TContent>(viewModel)) },
+                        new ViewDataContainer { ViewData = new ViewDataDictionary(new ContentItemViewModel<TContent>(viewModel)) },
                         html.RouteCollection);
                 };
             }
         }
 
-
         class ViewDataContainer : IViewDataContainer {
             public ViewDataDictionary ViewData { get; set; }
         }
 
-        public ItemTemplateResult<TContent> LongestMatch(string displayType, params string[] knownDisplayTypes) {
+        public ContentItemTemplateResult<TContent> LongestMatch(string displayType, params string[] knownDisplayTypes) {
 
             if (string.IsNullOrEmpty(displayType))
                 return this;

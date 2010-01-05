@@ -15,7 +15,7 @@ using Orchard.Security;
 using Orchard.UI.Notify;
 
 namespace Orchard.Roles.Controllers {
-    public class UserRolesDriver : PartDriver<UserRoles> {
+    public class UserRolesDriver : ContentPartDriver<UserRoles> {
         private readonly IRepository<UserRolesRecord> _userRolesRepository;
         private readonly IRoleService _roleService;
         private readonly INotifier _notifier;
@@ -49,7 +49,7 @@ namespace Orchard.Roles.Controllers {
                 UserRoles = userRoles,
                 Roles = roles.ToList(),
             };
-            return PartTemplate(model, "Parts/Roles.UserRoles");
+            return ContentPartTemplate(model, "Parts/Roles.UserRoles");
         }
 
         protected override DriverResult Editor(UserRoles userRoles, IUpdateModel updater) {
@@ -75,7 +75,7 @@ namespace Orchard.Roles.Controllers {
                 }
 
             }
-            return PartTemplate(model, "Parts/Roles.UserRoles");
+            return ContentPartTemplate(model, "Parts/Roles.UserRoles");
         }
     }
 }

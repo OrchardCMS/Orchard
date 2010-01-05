@@ -49,7 +49,7 @@ namespace Orchard.ContentManagement.Handlers {
             Filters.Add(new InlineStorageFilter<TPart> { OnRemoved = handler });
         }
 
-        protected void OnGetItemMetadata<TPart>(Action<GetItemMetadataContext, TPart> handler) where TPart : class, IContent {
+        protected void OnGetContentItemMetadata<TPart>(Action<GetContentItemMetadataContext, TPart> handler) where TPart : class, IContent {
             Filters.Add(new InlineTemplateFilter<TPart> { OnGetItemMetadata = handler });
         }
         protected void OnGetDisplayViewModel<TPart>(Action<BuildDisplayModelContext, TPart> handler) where TPart : class, IContent {
@@ -104,11 +104,11 @@ namespace Orchard.ContentManagement.Handlers {
         }
 
         class InlineTemplateFilter<TPart> : TemplateFilterBase<TPart> where TPart : class, IContent {
-            public Action<GetItemMetadataContext, TPart> OnGetItemMetadata { get; set; }
+            public Action<GetContentItemMetadataContext, TPart> OnGetItemMetadata { get; set; }
             public Action<BuildDisplayModelContext, TPart> OnGetDisplayViewModel { get; set; }
             public Action<BuildEditorModelContext, TPart> OnGetEditorViewModel { get; set; }
             public Action<UpdateEditorModelContext, TPart> OnUpdateEditorViewModel { get; set; }
-            protected override void GetItemMetadata(GetItemMetadataContext context, TPart instance) {
+            protected override void GetContentItemMetadata(GetContentItemMetadataContext context, TPart instance) {
                 if (OnGetItemMetadata != null) OnGetItemMetadata(context, instance);
             }
             protected override void BuildDisplayModel(BuildDisplayModelContext context, TPart instance) {
@@ -185,9 +185,9 @@ namespace Orchard.ContentManagement.Handlers {
         }
 
 
-        void IContentHandler.GetItemMetadata(GetItemMetadataContext context) {
+        void IContentHandler.GetContentItemMetadata(GetContentItemMetadataContext context) {
             foreach (var filter in Filters.OfType<IContentTemplateFilter>())
-                filter.GetItemMetadata(context);
+                filter.GetContentItemMetadata(context);
             GetItemMetadata(context);
         }
         void IContentHandler.BuildDisplayModel(BuildDisplayModelContext context) {
@@ -221,7 +221,7 @@ namespace Orchard.ContentManagement.Handlers {
         protected virtual void Removing(RemoveContentContext context) { }
         protected virtual void Removed(RemoveContentContext context) { }
 
-        protected virtual void GetItemMetadata(GetItemMetadataContext context) { }
+        protected virtual void GetItemMetadata(GetContentItemMetadataContext context) { }
         protected virtual void BuildDisplayModel(BuildDisplayModelContext context) { }
         protected virtual void BuildEditorModel(BuildEditorModelContext context) { }
         protected virtual void UpdateEditorModel(UpdateEditorModelContext context) { }

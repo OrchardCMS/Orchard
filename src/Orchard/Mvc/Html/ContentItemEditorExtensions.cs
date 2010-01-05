@@ -5,12 +5,12 @@ using System.Web.Mvc.Html;
 using Orchard.Mvc.ViewModels;
 
 namespace Orchard.Mvc.Html {
-    public static class ItemEditorExtensions {
-        public static MvcHtmlString EditorForItem<TModel, TItemModel>(this HtmlHelper<TModel> html, TItemModel item) where TItemModel : ItemViewModel {
+    public static class ContentItemEditorExtensions {
+        public static MvcHtmlString EditorForItem<TModel, TItemModel>(this HtmlHelper<TModel> html, TItemModel item) where TItemModel : ContentItemViewModel {
             return html.EditorForItem(x => item);
         }
-        public static MvcHtmlString EditorForItem<TModel, TItemModel>(this HtmlHelper<TModel> html, Expression<Func<TModel, TItemModel>> expression) where TItemModel : ItemViewModel {
 
+        public static MvcHtmlString EditorForItem<TModel, TItemModel>(this HtmlHelper<TModel> html, Expression<Func<TModel, TItemModel>> expression) where TItemModel : ContentItemViewModel {
             var metadata = ModelMetadata.FromLambdaExpression(expression, html.ViewData);
             var model = (TItemModel)metadata.Model;
 

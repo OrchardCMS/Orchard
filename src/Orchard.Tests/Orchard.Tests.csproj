@@ -122,7 +122,7 @@
     <Compile Include="ContentManagement\Models\Gamma.cs" />
     <Compile Include="ContentManagement\Models\Styled.cs" />
     <Compile Include="ContentManagement\Models\StyledHandler.cs" />
-    <Compile Include="ContentManagement\PartDriverHandlerTests.cs">
+    <Compile Include="ContentManagement\ContentPartDriverHandlerTests.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="ContentManagement\Records\DeltaRecord.cs">

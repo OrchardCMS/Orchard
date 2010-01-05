@@ -9,7 +9,7 @@ namespace Orchard.ContentManagement.Handlers {
         // todo: (heskew) use _prefix?
         private readonly string _prefix;
         private readonly string[] _displayTypes;
-        private Action<UpdateEditorModelContext, ItemViewModel<TContent>> _updater;
+        private Action<UpdateEditorModelContext, ContentItemViewModel<TContent>> _updater;
 
         public ContentItemTemplates(string templateName)
             : this(templateName, "") {
@@ -30,11 +30,11 @@ namespace Orchard.ContentManagement.Handlers {
 
             context.ViewModel.Prefix = _prefix;
 
-            if (context.ViewModel.GetType() != typeof(ItemViewModel<TContent>)) {
+            if (context.ViewModel.GetType() != typeof(ContentItemViewModel<TContent>)) {
                 context.ViewModel.Adaptor = (html, viewModel) => {
-                    return new HtmlHelper<ItemViewModel<TContent>>(
+                    return new HtmlHelper<ContentItemViewModel<TContent>>(
                         html.ViewContext,
-                        new ViewDataContainer { ViewData = new ViewDataDictionary(new ItemViewModel<TContent>(viewModel)) },
+                        new ViewDataContainer { ViewData = new ViewDataDictionary(new ContentItemViewModel<TContent>(viewModel)) },
                         html.RouteCollection);
                 };
             }
@@ -57,26 +57,26 @@ namespace Orchard.ContentManagement.Handlers {
         protected override void BuildEditorModel(BuildEditorModelContext context, TContent instance) {
             context.ViewModel.TemplateName = _templateName;
             context.ViewModel.Prefix = _prefix;
-            if (context.ViewModel.GetType() != typeof(ItemViewModel<TContent>)) {
+            if (context.ViewModel.GetType() != typeof(ContentItemViewModel<TContent>)) {
                 context.ViewModel.Adaptor = (html, viewModel) => {
-                    return new HtmlHelper<ItemViewModel<TContent>>(
+                    return new HtmlHelper<ContentItemViewModel<TContent>>(
                         html.ViewContext,
-                        new ViewDataContainer { ViewData = new ViewDataDictionary(new ItemViewModel<TContent>(viewModel)) },
+                        new ViewDataContainer { ViewData = new ViewDataDictionary(new ContentItemViewModel<TContent>(viewModel)) },
                         html.RouteCollection);
                 };
             }
         }
 
         protected override void UpdateEditorModel(UpdateEditorModelContext context, TContent instance) {
-            if (context.ViewModel is ItemViewModel<TContent>)
-                _updater(context, (ItemViewModel<TContent>)context.ViewModel);
+            if (context.ViewModel is ContentItemViewModel<TContent>)
+                _updater(context, (ContentItemViewModel<TContent>)context.ViewModel);
             else
-                _updater(context, new ItemViewModel<TContent>(context.ViewModel));
+                _updater(context, new ContentItemViewModel<TContent>(context.ViewModel));
             context.ViewModel.TemplateName = _templateName;
             context.ViewModel.Prefix = _prefix;
         }
 
-        public void Updater(Action<UpdateEditorModelContext, ItemViewModel<TContent>> updater) {
+        public void Updater(Action<UpdateEditorModelContext, ContentItemViewModel<TContent>> updater) {
             _updater = updater;
         }
     }
