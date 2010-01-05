@@ -30,12 +30,12 @@ body {
 
 h1,h2,h3,h4,h5,h6,legend {font-weight:normal; font-style: normal; margin:0 0 12px 0; color:#670404;}
 
-h1 {font-size: 200%;}
-h2 {font-size: 170%;}
+h1 {font-size: 190%;}
+h2 {font-size: 160%;}
 h3 {font-size: 150%;}
 h4 {font-size: 130%;}
 h5 {font-size: 120%;}
-h6 {font-size: 110%;}
+h6 {font-size: 105%;}
 
 p {line-height:24px; margin:12px 0 0 0;}
 p.small {line-height:22px; font-size:85%;}
@@ -96,7 +96,7 @@ legend {
 
 #header h1{
 	float:left;
-	font-size:290%;
+	font-size:240%;
 	color:#000;
 	padding:18px 0 0 0;
 }

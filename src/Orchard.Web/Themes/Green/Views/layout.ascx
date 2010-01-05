@@ -2,7 +2,10 @@
 <%@ Import Namespace="Orchard.Mvc.ViewModels"%>
 <%@ Import Namespace="Orchard.Mvc.Html" %>
 
-<%Html.RegisterStyle("site.css");%>
+<%
+    Html.RegisterStyle("yui.css");
+    Html.RegisterStyle("site.css");
+    %>
 
 <div id="doc4" class="yui-t6">
 
