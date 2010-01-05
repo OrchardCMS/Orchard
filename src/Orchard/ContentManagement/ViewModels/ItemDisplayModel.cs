@@ -1,6 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Web.Mvc;
 using Orchard.UI.Zones;
 
@@ -15,13 +13,13 @@ namespace Orchard.ContentManagement.ViewModels {
         protected ItemDisplayModel(ItemDisplayModel displayModel) {
             TemplateName = displayModel.TemplateName;
             Prefix = displayModel.Prefix;
-            Zones = displayModel.Zones;
             Item = displayModel.Item;
+            Zones = displayModel.Zones;
         }
 
         public ItemDisplayModel(ContentItem item) {
-            Item = item;
             Zones = new ZoneCollection();
+            Item = item;
         }
 
         public ContentItem Item {
@@ -37,23 +35,6 @@ namespace Orchard.ContentManagement.ViewModels {
         public string TemplateName { get; set; }
         public string Prefix { get; set; }
         public ZoneCollection Zones { get; set; }
-        
-            
-        public IEnumerable<TemplateViewModel> Displays {
-            get {
-                return Zones
-                    .SelectMany(z => z.Value.Items
-                        .OfType<PartDisplayZoneItem>()
-                        .Select(x=>new{ZoneName=z.Key,Item=x}))                    
-                    .Select(x => new TemplateViewModel(x.Item.Model,x.Item.Prefix) {
-                        Model = x.Item.Model,
-                        TemplateName=x.Item.TemplateName,
-                        WasUsed=x.Item.WasExecuted,
-                        ZoneName=x.ZoneName,
-                    });
-            }
-        }
-        
     }
 
     public class ItemDisplayModel<TPart> : ItemDisplayModel where TPart : IContent {
@@ -65,6 +46,10 @@ namespace Orchard.ContentManagement.ViewModels {
 
         public ItemDisplayModel(ItemDisplayModel displayModel)
             : base(displayModel) {
+        }
+
+        public ItemDisplayModel(TPart part)
+            : base(part.ContentItem) {
         }
 
         public new TPart Item {

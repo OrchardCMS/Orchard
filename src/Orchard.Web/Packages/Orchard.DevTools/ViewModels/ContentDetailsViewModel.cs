@@ -33,7 +33,20 @@ namespace Orchard.DevTools.ViewModels {
             }
         }
 
-        public IEnumerable<TemplateViewModel> Editors { get { return EditorModel.Editors; } }
+        public IEnumerable<TemplateViewModel> Editors {
+            get {
+                return EditorModel.Zones
+                    .SelectMany(z => z.Value.Items
+                        .OfType<PartEditorZoneItem>()
+                        .Select(x => new { ZoneName = z.Key, Item = x }))
+                    .Select(x => new TemplateViewModel(x.Item.Model, x.Item.Prefix) {
+                        Model = x.Item.Model,
+                        TemplateName = x.Item.TemplateName,
+                        WasUsed = x.Item.WasExecuted,
+                        ZoneName = x.ZoneName,
+                    });
+            }
+        }
 
         public object Locate(Type type) {
             return Item.ContentItem.Get(type);

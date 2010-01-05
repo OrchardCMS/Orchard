@@ -9,17 +9,20 @@ namespace Orchard.UI.Zones {
     }
 
     public class ZoneCollection : Dictionary<string, ZoneEntry> {
+        public void AddAction(string location, Action<HtmlHelper> action) {
+            AddZoneItem(location, new DelegateZoneItem { Action = action });
+        }
         public void AddRenderPartial(string location, string templateName, object model) {
             AddZoneItem(location, new RenderPartialZoneItem { Model = model, TemplateName = templateName });
         }
         public void AddDisplayItem(string location, ItemDisplayModel displayModel) {
-            AddZoneItem(location, new ItemDisplayZoneItem() { DisplayModel = displayModel });
+            AddZoneItem(location, new ItemDisplayZoneItem { DisplayModel = displayModel });
         }
         public void AddDisplayPart(string location, object model, string templateName, string prefix) {
             AddZoneItem(location, new PartDisplayZoneItem { Model = model, TemplateName = templateName, Prefix = prefix });
         }
-        public void AddAction(string location, Action<HtmlHelper> action) {
-            AddZoneItem(location, new DelegateZoneItem { Action = action });
+        public void AddEditorPart(string location, object model, string templateName, string prefix) {
+            AddZoneItem(location, new PartEditorZoneItem { Model = model, TemplateName = templateName, Prefix = prefix });
         }
 
         private void AddZoneItem(string location, ZoneItem item) {

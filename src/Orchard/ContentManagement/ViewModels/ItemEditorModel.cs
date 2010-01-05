@@ -2,19 +2,26 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
+using Orchard.UI.Zones;
 
 namespace Orchard.ContentManagement.ViewModels {
-    public class ItemEditorModel {
+    public class ItemEditorModel : IZoneContainer {
         private ContentItem _item;
 
         protected ItemEditorModel() {
+            Zones = new ZoneCollection();
         }
 
         protected ItemEditorModel(ItemEditorModel editorModel) {
             TemplateName = editorModel.TemplateName;
             Prefix = editorModel.Prefix;
-            Editors = editorModel.Editors.ToArray();
             Item = editorModel.Item;
+            Zones = editorModel.Zones;
+        }
+
+        public ItemEditorModel(ContentItem item) {
+            Zones = new ZoneCollection();
+            Item = item;
         }
 
         public ContentItem Item {
@@ -29,7 +36,7 @@ namespace Orchard.ContentManagement.ViewModels {
         public Func<HtmlHelper, ItemEditorModel, HtmlHelper> Adaptor { get; set; }
         public string TemplateName { get; set; }
         public string Prefix { get; set; }
-        public IEnumerable<TemplateViewModel> Editors { get; set; }
+        public ZoneCollection Zones { get; set; }
     }
 
     public class ItemEditorModel<TPart> : ItemEditorModel where TPart : IContent {
@@ -39,8 +46,13 @@ namespace Orchard.ContentManagement.ViewModels {
         public ItemEditorModel() {
 
         }
+
         public ItemEditorModel(ItemEditorModel editorModel)
             : base(editorModel) {
+        }
+
+        public ItemEditorModel(TPart content)
+            : base(content.ContentItem) {
         }
 
         public new TPart Item {

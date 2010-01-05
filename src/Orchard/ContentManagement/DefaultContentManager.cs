@@ -293,39 +293,31 @@ namespace Orchard.ContentManagement {
         }
 
         public ItemDisplayModel<TContentPart> BuildDisplayModel<TContentPart>(TContentPart content, string displayType) where TContentPart : IContent {
-            var itemView = new ItemDisplayModel<TContentPart> { Item = content };
-            var context = new BuildDisplayModelContext(itemView, displayType);
+            var displayModel = new ItemDisplayModel<TContentPart>(content);
+            var context = new BuildDisplayModelContext(displayModel, displayType);
             foreach (var handler in Handlers) {
                 handler.BuildDisplayModel(context);
             }
-            return itemView;
+            return displayModel;
         }
 
         public ItemEditorModel<TContentPart> BuildEditorModel<TContentPart>(TContentPart content) where TContentPart : IContent {
-            var itemView = new ItemEditorModel<TContentPart> { Item = content, Editors = Enumerable.Empty<TemplateViewModel>() };
-            var context = new BuildEditorModelContext(itemView);
+            var editorModel = new ItemEditorModel<TContentPart>(content);
+            var context = new BuildEditorModelContext(editorModel);
             foreach (var handler in Handlers) {
                 handler.BuildEditorModel(context);
             }
-            context.EditorModel.Editors = OrderTemplates(context.EditorModel.Editors);
-            return itemView;
+            return editorModel;
         }
 
         public ItemEditorModel<TContentPart> UpdateEditorModel<TContentPart>(TContentPart content, IUpdateModel updater) where TContentPart : IContent {
-            var itemView = new ItemEditorModel<TContentPart> { Item = content, Editors = Enumerable.Empty<TemplateViewModel>() };
+            var editorModel = new ItemEditorModel<TContentPart>(content);
 
-            var context = new UpdateEditorModelContext(itemView, updater);
+            var context = new UpdateEditorModelContext(editorModel, updater);
             foreach (var handler in Handlers) {
                 handler.UpdateEditorModel(context);
             }
-            context.EditorModel.Editors = OrderTemplates(context.EditorModel.Editors);
-            return itemView;
-        }
-
-        private static IEnumerable<TemplateViewModel> OrderTemplates(IEnumerable<TemplateViewModel> templates) {
-            var comparer = new PositionComparer();
-            //TODO: rethink this comparison because it adds a requirement on naming zones.
-            return templates.OrderBy(x => (x.ZoneName ?? "*") + "." + (x.Position ?? "5"), comparer);
+            return editorModel;
         }
 
         public IContentQuery<ContentItem> Query() {

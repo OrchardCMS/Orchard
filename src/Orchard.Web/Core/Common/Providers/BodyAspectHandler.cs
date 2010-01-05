@@ -21,13 +21,13 @@ namespace Orchard.Core.Common.Providers {
 
             OnGetEditorViewModel<BodyAspect>((context, body) => {
                 var model = new BodyEditorViewModel { BodyAspect = body, TextEditorTemplate = DefaultTextEditorTemplate };
-                context.AddEditor(new TemplateViewModel(model, TemplatePrefix) { TemplateName = TemplateName, ZoneName = "primary" });
+                context.AddEditor(new TemplateViewModel(model, TemplatePrefix) { TemplateName = TemplateName, ZoneName = "primary", Position = "5" });
             });
 
             OnUpdateEditorViewModel<BodyAspect>((context, body) => {
                 var model = new BodyEditorViewModel { BodyAspect = body, TextEditorTemplate = DefaultTextEditorTemplate };
                 context.Updater.TryUpdateModel(model, TemplatePrefix, null, null);
-                context.AddEditor(new TemplateViewModel(model, TemplatePrefix) { TemplateName = TemplateName, ZoneName = "primary" });
+                context.AddEditor(new TemplateViewModel(model, TemplatePrefix) { TemplateName = TemplateName, ZoneName = "primary", Position = "5" });
             });
         }
     }

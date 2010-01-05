@@ -4,11 +4,11 @@
 <% Html.AddTitleParts(Model.Item.Title); %>
 <div class="sections">
     <div class="primary">
-        <%=Html.EditorZone("primary") %>
-        <%=Html.EditorZonesExcept("secondary") %>
+        <% Html.Zone("primary"); %>
+        <% Html.ZonesExcept("secondary"); %>
     </div>
     <div class="secondary">
-        <%=Html.EditorZone("secondary")%>
+        <% Html.Zone("secondary");%>
         <fieldset>
             <input class="button" type="submit" name="submit.Save" value="Save"/>
         </fieldset>

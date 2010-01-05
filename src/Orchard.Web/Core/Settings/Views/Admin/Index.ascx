@@ -1,5 +1,7 @@
-﻿<%@ Page Language="C#" Inherits="System.Web.Mvc.ViewPage<Orchard.Core.Settings.ViewModels.SettingsIndexViewModel>" %>
-<h2><%=Html.TitleForPage("Edit Settings")%></h2>
+﻿<%@ Control Language="C#" Inherits="System.Web.Mvc.ViewUserControl<Orchard.Core.Settings.ViewModels.SettingsIndexViewModel>" %>
+
+<h2>
+    <%=Html.TitleForPage("Edit Settings")%></h2>
 <%using (Html.BeginFormAntiForgeryPost()) { %>
 <%= Html.ValidationSummary() %>
 <fieldset>
@@ -21,10 +23,9 @@
     </fieldset>
     <%=Html.EditorFor(s=>s.Id) %>
 </fieldset>
-<% foreach (var e in Model.EditorModel.Editors) {
-    var editor = e;
-    %><%=Html.EditorFor(m => editor.Model, editor.TemplateName, editor.Prefix)%>
-<% } %>
+
+<%= Html.EditorForItem(Model.EditorModel) %>
+
 <fieldset>
     <input class="button" type="submit" value="Save" />
 </fieldset>

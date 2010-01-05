@@ -5,8 +5,4 @@
     <%= Html.EditorFor(x=>x.AllowAnonymousEdits) %>
     <%= Html.ValidationMessage("AllowAnonymousEdits", "*")%>
     <br />
-    <%= Html.LabelFor(x => x.NameOfThemeWhenEditingPage)%>
-    <%= Html.EditorFor(x=>x.NameOfThemeWhenEditingPage) %>
-    <%= Html.ValidationMessage("NameOfThemeWhenEditingPage", "*")%>
-    <br />
 </fieldset>

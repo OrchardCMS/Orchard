@@ -76,6 +76,7 @@
     <Compile Include="Common\ViewModels\BodyEditorViewModel.cs" />
     <Compile Include="Common\ViewModels\OwnerEditorViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Settings\Controllers\SiteSettingsDriver.cs" />
     <Compile Include="Themes\Services\AdminThemeSelector.cs" />
     <Compile Include="Themes\Services\SafeModeThemeSelector.cs" />
     <Compile Include="Settings\AdminMenu.cs" />
@@ -112,7 +113,7 @@
   <ItemGroup>
     <Content Include="Common\Package.txt" />
     <Content Include="Settings\Package.txt" />
-    <Content Include="Settings\Views\Admin\Index.aspx" />
+    <Content Include="Settings\Views\Admin\Index.ascx" />
     <Content Include="Web.config" />
     <Content Include="XmlRpc\Package.txt" />
     <Content Include="XmlRpc\Views\Home\Index.aspx" />
@@ -138,6 +139,7 @@
     <Content Include="Common\Views\DisplayTemplates\Parts\Common.Body.ascx" />
     <Content Include="Common\Views\EditorTemplates\Parts\Common.Body.ascx" />
     <Content Include="Common\Views\EditorTemplates\Parts\Common.Owner.ascx" />
+    <Content Include="Settings\Views\EditorTemplates\Items\Settings.Site.ascx" />
     <Content Include="Themes\Styles\site.css" />
     <Content Include="Themes\Views\Admin\Install.aspx" />
     <Content Include="Themes\Views\header.ascx" />

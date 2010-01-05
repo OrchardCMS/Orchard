@@ -258,6 +258,7 @@
     <Compile Include="UI\Zones\ItemDisplayZoneItem.cs" />
     <Compile Include="UI\Zones\IZoneManager.cs" />
     <Compile Include="UI\Zones\PartDisplayZoneItem.cs" />
+    <Compile Include="UI\Zones\PartEditorZoneItem.cs" />
     <Compile Include="UI\Zones\RenderPartialZoneItem.cs" />
     <Compile Include="UI\Zones\ZoneCollection.cs" />
     <Compile Include="UI\Zones\ZoneEntry.cs" />

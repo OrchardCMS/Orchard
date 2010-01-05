@@ -24,11 +24,11 @@ namespace Orchard.Roles.Controllers {
             return View(model);
         }
 
-        [AcceptVerbs(HttpVerbs.Post)]
-        public ActionResult Index(FormCollection input) {
+        [HttpPost, ActionName("Index")]
+        public ActionResult IndexPOST() {
             try {
-                foreach (string key in input.Keys) {
-                    if (key.StartsWith("Checkbox.") && input[key] == "true") {
+                foreach (string key in Request.Form.Keys) {
+                    if (key.StartsWith("Checkbox.") && Request.Form[key] == "true") {
                         int roleId = Convert.ToInt32(key.Substring("Checkbox.".Length));
                         _roleService.DeleteRole(roleId);
                     }
@@ -46,14 +46,14 @@ namespace Orchard.Roles.Controllers {
             return View(model);
         }
 
-        [AcceptVerbs(HttpVerbs.Post)]
-        public ActionResult Create(FormCollection input) {
+        [HttpPost, ActionName("Create")]
+        public ActionResult CreatePOST() {
             var viewModel = new RoleCreateViewModel();
             try {
-                UpdateModel(viewModel, input.ToValueProvider());
+                UpdateModel(viewModel);
                 _roleService.CreateRole(viewModel.Name);
-                foreach (string key in input.Keys) {
-                    if (key.StartsWith("Checkbox.") && input[key] == "true") {
+                foreach (string key in Request.Form.Keys) {
+                    if (key.StartsWith("Checkbox.") && Request.Form[key] == "true") {
                         string permissionName = key.Substring("Checkbox.".Length);
                         _roleService.CreatePermissionForRole(viewModel.Name, 
                                                              permissionName);
@@ -80,16 +80,16 @@ namespace Orchard.Roles.Controllers {
             return View(model);
         }
 
-        [AcceptVerbs(HttpVerbs.Post)]
-        public ActionResult Edit(FormCollection input) {
+        [HttpPost, ActionName("Edit")]
+        public ActionResult EditPOST() {
             var viewModel = new RoleEditViewModel();
             try {
-                UpdateModel(viewModel, input.ToValueProvider());
+                UpdateModel(viewModel);
                 // Save
                 if (!String.IsNullOrEmpty(HttpContext.Request.Form["submit.Save"])) {
                     List<string> rolePermissions = new List<string>();
-                    foreach (string key in input.Keys) {
-                        if (key.StartsWith("Checkbox.") && input[key] == "true") {
+                    foreach (string key in Request.Form.Keys) {
+                        if (key.StartsWith("Checkbox.") && Request.Form[key] == "true") {
                             string permissionName = key.Substring("Checkbox.".Length);
                             rolePermissions.Add(permissionName);
                         }

@@ -6,4 +6,4 @@
     <%=Html.LabelFor(m => m.Item.Record.Name)%>
     <%=Html.EditorFor(m => m.Item.Record.Name)%>
 </li>
-<%=Html.EditorZonesAny()%>
+<% Html.ZonesAny(); %>

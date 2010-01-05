@@ -12,6 +12,7 @@ using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
 using Orchard.ContentManagement.Handlers;
 using Orchard.ContentManagement.ViewModels;
+using Orchard.UI.Zones;
 
 namespace Orchard.Tests.ContentManagement {
     [TestFixture]
@@ -60,10 +61,11 @@ namespace Orchard.Tests.ContentManagement {
             item.Weld(new StubPart { Foo = new[] { "a", "b", "c" } });
 
             var ctx = new BuildDisplayModelContext(new ItemDisplayModel(item), "");
-            Assert.That(ctx.DisplayModel.Displays.Count(), Is.EqualTo(0));
+            Assert.That(ctx.DisplayModel.Zones.Count(), Is.EqualTo(0));
             contentHandler.BuildDisplayModel(ctx);
-            Assert.That(ctx.DisplayModel.Displays.Count(), Is.EqualTo(1));
-            Assert.That(ctx.DisplayModel.Displays.Single().Prefix, Is.EqualTo("Stub"));
+            Assert.That(ctx.DisplayModel.Zones.Count(), Is.EqualTo(1));
+            Assert.That(ctx.DisplayModel.Zones.Single().Key, Is.EqualTo("topmeta"));
+            Assert.That(ctx.DisplayModel.Zones.Single().Value.Items.OfType<PartDisplayZoneItem>().Single().Prefix, Is.EqualTo("Stub"));
 
         }
 

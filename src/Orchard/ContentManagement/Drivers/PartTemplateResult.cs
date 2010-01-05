@@ -21,11 +21,8 @@ namespace Orchard.ContentManagement.Drivers {
         }
 
         public override void Apply(BuildEditorModelContext context) {
-            context.AddEditor(new TemplateViewModel(Model, Prefix) {
-                TemplateName = TemplateName,
-                ZoneName = Zone,
-                Position = Position
-            });
+            context.EditorModel.Zones.AddEditorPart(
+                Zone + ":" + Position, Model, TemplateName, Prefix);
         }
 
         public PartTemplateResult Location(string zone) {

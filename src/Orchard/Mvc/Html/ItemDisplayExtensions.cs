@@ -21,10 +21,5 @@ namespace Orchard.Mvc.Html {
 
             return html.DisplayFor(expression, model.TemplateName, model.Prefix ?? "");
         }
-
-
-        public static void DisplayZonesAny<TModel>(this HtmlHelper<TModel> html) where TModel : ItemDisplayModel {
-            html.ZonesAny();
-        }
     }
 }
