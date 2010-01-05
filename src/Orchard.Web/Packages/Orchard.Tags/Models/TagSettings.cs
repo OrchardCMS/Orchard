@@ -14,7 +14,7 @@ namespace Orchard.Tags.Models {
     public class TagSettingsHandler : ContentHandler {
         public TagSettingsHandler(IRepository<TagSettingsRecord> repository) {
             Filters.Add(new ActivatingFilter<TagSettings>("site"));
-            Filters.Add(new StorageFilter<TagSettingsRecord>(repository) { AutomaticallyCreateMissingRecord = true });
+            Filters.Add(new StorageFilter<TagSettingsRecord>(repository));
             Filters.Add(new TemplateFilterForRecord<TagSettingsRecord>("TagSettings", "Parts/Tags.SiteSettings"));
             OnActivated<TagSettings>(DefaultSettings);
         }

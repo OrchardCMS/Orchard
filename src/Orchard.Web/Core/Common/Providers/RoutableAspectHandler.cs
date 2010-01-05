@@ -5,7 +5,7 @@ using Orchard.ContentManagement.Handlers;
 namespace Orchard.Core.Common.Providers {
     public class RoutableAspectHandler : ContentHandler {
         public RoutableAspectHandler(IRepository<RoutableRecord> repository) {
-            Filters.Add(new StorageFilter<RoutableRecord>(repository));
+            Filters.Add(StorageFilter.For(repository));
         }
     }
 }

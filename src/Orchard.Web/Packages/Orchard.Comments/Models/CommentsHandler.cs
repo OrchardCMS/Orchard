@@ -11,7 +11,7 @@ namespace Orchard.Comments.Models {
 
             Filters.Add(new ActivatingFilter<HasComments>("sandboxpage"));
             Filters.Add(new ActivatingFilter<HasComments>("blogpost"));
-            Filters.Add(new StorageFilter<HasCommentsRecord>(hasCommentsRepository) { AutomaticallyCreateMissingRecord = true });
+            Filters.Add(new StorageFilter<HasCommentsRecord>(hasCommentsRepository) );
 
             OnActivated<HasComments>((ctx, x) => {
                 x.CommentsActive = true;

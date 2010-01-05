@@ -1,15 +1,25 @@
+using System;
 using Orchard.ContentManagement.Records;
 using Orchard.Data;
 
 namespace Orchard.ContentManagement.Handlers {
+    public static class StorageFilter {
+        public static StorageFilter<TRecord> For<TRecord>(IRepository<TRecord> repository) where TRecord : ContentPartRecord, new() {
+            if (typeof(TRecord).IsSubclassOf(typeof(ContentPartVersionRecord))) {
+                var filterType = typeof(StorageVersionFilter<>).MakeGenericType(typeof(TRecord));
+                return (StorageFilter<TRecord>)Activator.CreateInstance(filterType, repository);
+            }
+            return new StorageFilter<TRecord>(repository);
+        }
+    }
+
     public class StorageFilter<TRecord> : StorageFilterBase<ContentPart<TRecord>> where TRecord : ContentPartRecord, new() {
-        private readonly IRepository<TRecord> _repository;
+        protected readonly IRepository<TRecord> _repository;
 
         public StorageFilter(IRepository<TRecord> repository) {
             _repository = repository;
         }
 
-        public bool AutomaticallyCreateMissingRecord { get; set; }
 
         protected override void Activated(ActivatedContentContext context, ContentPart<TRecord> instance) {
             instance.Record = new TRecord();
@@ -20,14 +30,24 @@ namespace Orchard.ContentManagement.Handlers {
             _repository.Create(instance.Record);
         }
 
+        protected virtual TRecord GetRecord(LoadContentContext context) {
+            return _repository.Get(context.Id);
+        }
+
         protected override void Loading(LoadContentContext context, ContentPart<TRecord> instance) {
-            var record = _repository.Get(context.Id);
+            var record = GetRecord(context);
             if (record != null) {
                 instance.Record = record;
             }
-            else if (AutomaticallyCreateMissingRecord) {
-                instance.Record.ContentItemRecord = context.ContentItemRecord;
-                _repository.Create(instance.Record);
+            else {
+                var createContext = new CreateContentContext {
+                    ContentItem = context.ContentItem,
+                    ContentItemRecord = context.ContentItemRecord,
+                    ContentItemVersionRecord = context.ContentItemVersionRecord,
+                    ContentType = context.ContentType,
+                    Id = context.Id
+                };
+                Creating(createContext, instance);
             }
         }
 
@@ -36,35 +56,19 @@ namespace Orchard.ContentManagement.Handlers {
         }
     }
 
-    public class StorageVersionFilter<TRecord> : StorageFilterBase<ContentPart<TRecord>> where TRecord : ContentPartVersionRecord, new() {
-        private readonly IRepository<TRecord> _repository;
-
-        public StorageVersionFilter(IRepository<TRecord> repository) {
-            _repository = repository;
+    public class StorageVersionFilter<TRecord> : StorageFilter<TRecord> where TRecord : ContentPartVersionRecord, new() {
+        public StorageVersionFilter(IRepository<TRecord> repository)
+            : base(repository) {
         }
 
-        public bool AutomaticallyCreateMissingRecord { get; set; }
-
-        protected override void Activated(ActivatedContentContext context, ContentPart<TRecord> instance) {
-            instance.Record = new TRecord();
+        protected override TRecord GetRecord(LoadContentContext context) {
+            return _repository.Get(context.ContentItemVersionRecord.Id);
         }
 
         protected override void Creating(CreateContentContext context, ContentPart<TRecord> instance) {
             instance.Record.ContentItemRecord = context.ContentItemRecord;
             instance.Record.ContentItemVersionRecord = context.ContentItemVersionRecord;
             _repository.Create(instance.Record);
-        }
-
-        protected override void Loading(LoadContentContext context, ContentPart<TRecord> instance) {
-            var record = _repository.Get(context.ContentItemVersionRecord.Id);
-            if (record != null) {
-                instance.Record = record;
-            }
-            else if (AutomaticallyCreateMissingRecord) {
-                instance.Record.ContentItemRecord = context.ContentItemRecord;
-                instance.Record.ContentItemVersionRecord = context.ContentItemVersionRecord;
-                _repository.Create(instance.Record);
-            }
         }
 
         protected override void Versioning(VersionContentContext context, ContentPart<TRecord> existing, ContentPart<TRecord> building) {

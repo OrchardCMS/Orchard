@@ -19,13 +19,13 @@ namespace Orchard.Sandbox.Models {
             Filters.Add(new ActivatingFilter<CommonAspect>(SandboxPageDriver.ContentType.Name));
             Filters.Add(new ActivatingFilter<RoutableAspect>(SandboxPageDriver.ContentType.Name));
             Filters.Add(new ActivatingFilter<BodyAspect>(SandboxPageDriver.ContentType.Name));
-            Filters.Add(new StorageFilter<SandboxPageRecord>(pageRepository) { AutomaticallyCreateMissingRecord = true });
+            Filters.Add(new StorageFilter<SandboxPageRecord>(pageRepository) );
 
 
 
             // add settings to site, and simple record-template gui
             Filters.Add(new ActivatingFilter<ContentPart<SandboxSettingsRecord>>("site"));
-            Filters.Add(new StorageFilter<SandboxSettingsRecord>(settingsRepository) { AutomaticallyCreateMissingRecord = true });
+            Filters.Add(new StorageFilter<SandboxSettingsRecord>(settingsRepository));
             Filters.Add(new TemplateFilterForRecord<SandboxSettingsRecord>("SandboxSettings", "Parts/Sandbox.SiteSettings"));
 
         }

@@ -34,7 +34,7 @@ namespace Orchard.Core.Common.Providers {
             _contentManager = contentManager;
             T = NullLocalizer.Instance;
 
-            Filters.Add(new StorageFilter<CommonRecord>(repository));
+            Filters.Add(StorageFilter.For(repository));
 
             OnActivated<CommonAspect>(PropertySetHandlers);
             OnActivated<CommonAspect>(DefaultTimestampsAndOwner);
@@ -116,7 +116,7 @@ namespace Orchard.Core.Common.Providers {
                 return;
             }
 
-            var viewModel = new OwnerEditorViewModel ();
+            var viewModel = new OwnerEditorViewModel();
             if (instance.Owner != null)
                 viewModel.Owner = instance.Owner.UserName;
 
