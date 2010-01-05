@@ -7,16 +7,20 @@ namespace Orchard.Mvc.ViewModels {
     public class ItemViewModel : IZoneContainer {
         private ContentItem _item;
 
-        protected ItemViewModel(ItemViewModel viewModel) {
-            TemplateName = viewModel.TemplateName;
-            Prefix = viewModel.Prefix;
-            Item = viewModel.Item;
-            Zones = viewModel.Zones;
+        public ItemViewModel() {
+            Zones = new ZoneCollection();
         }
 
         public ItemViewModel(ContentItem item) {
             Zones = new ZoneCollection();
             Item = item;
+        }
+
+        public ItemViewModel(ItemViewModel viewModel) {
+            TemplateName = viewModel.TemplateName;
+            Prefix = viewModel.Prefix;
+            Item = viewModel.Item;
+            Zones = viewModel.Zones;
         }
 
         public ContentItem Item {
@@ -37,13 +41,15 @@ namespace Orchard.Mvc.ViewModels {
     public class ItemViewModel<TPart> : ItemViewModel where TPart : IContent {
         private TPart _item;
 
-
-        public ItemViewModel(ItemViewModel viewModel)
-            : base(viewModel) {
+        public ItemViewModel() {
         }
 
         public ItemViewModel(TPart content)
             : base(content.ContentItem) {
+        }
+
+        public ItemViewModel(ItemViewModel viewModel)
+            : base(viewModel) {
         }
 
         public new TPart Item {
