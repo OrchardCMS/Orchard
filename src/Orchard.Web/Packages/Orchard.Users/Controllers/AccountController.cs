@@ -6,8 +6,9 @@ using System.Web.Mvc;
 using System.Web.Security;
 using Orchard.Mvc.ViewModels;
 using Orchard.Security;
+using Orchard.Users.ViewModels;
 
-namespace Orchard.Controllers {
+namespace Orchard.Users.Controllers {
     [HandleError]
     public class AccountController : Controller {
         private readonly IAuthenticationService _authenticationService;
@@ -19,8 +20,15 @@ namespace Orchard.Controllers {
             _membershipService = membershipService;
         }
 
-        public ActionResult LogOn() {
+        public ActionResult AccessDenied(string returnUrl) {
+            if (_authenticationService.GetAuthenticatedUser() == null)
+                return View("LogOn", new LogOnViewModel { Title = "Access Denied", ReturnUrl = returnUrl });
+
             return View(new BaseViewModel());
+        }
+
+        public ActionResult LogOn(string returnUrl) {
+            return View("LogOn", new LogOnViewModel { Title = "Log On", ReturnUrl = returnUrl });
         }
 
         [AcceptVerbs(HttpVerbs.Post)]
@@ -29,7 +37,7 @@ namespace Orchard.Controllers {
         public ActionResult LogOn(string userName, string password, bool rememberMe, string returnUrl) {
             var user = ValidateLogOn(userName, password);
             if (!ModelState.IsValid) {
-                return LogOn();
+                return View("LogOn", new LogOnViewModel { Title = "Log On", ReturnUrl = returnUrl });
             }
 
             _authenticationService.SignIn(user, rememberMe);
@@ -38,14 +46,14 @@ namespace Orchard.Controllers {
                 return Redirect(returnUrl);
             }
             else {
-                return RedirectToAction("Index", "Home");
+                return Redirect("~/");
             }
         }
 
         public ActionResult LogOff() {
             _authenticationService.SignOut();
 
-            return RedirectToAction("Index", "Home");
+            return Redirect("~/");
         }
 
         int MinPasswordLength {
@@ -67,11 +75,11 @@ namespace Orchard.Controllers {
             if (ValidateRegistration(userName, email, password, confirmPassword)) {
                 // Attempt to register the user
                 var user = _membershipService.CreateUser(new CreateUserParams(userName, password, email, null, null, true));
-                
+
 
                 if (user != null) {
                     _authenticationService.SignIn(user, false /* createPersistentCookie */);
-                    return RedirectToAction("Index", "Home");
+                    return Redirect("~/");
                 }
                 else {
                     ModelState.AddModelError("_FORM", ErrorCodeToString(/*createStatus*/MembershipCreateStatus.ProviderError));
@@ -102,7 +110,7 @@ namespace Orchard.Controllers {
 
             try {
                 var validated = _membershipService.ValidateUser(User.Identity.Name, currentPassword);
-                
+
                 if (validated != null) {
                     _membershipService.SetPassword(validated, newPassword);
                     return RedirectToAction("ChangePasswordSuccess");
@@ -224,7 +232,6 @@ namespace Orchard.Controllers {
 
         #endregion
     }
-
 
     public interface IMembershipServiceShim {
         int MinPasswordLength { get; }

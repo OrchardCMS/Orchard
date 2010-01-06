@@ -92,10 +92,6 @@
     <Content Include="Default.aspx" />
     <Content Include="Global.asax" />
     <Content Include="Web.config" />
-    <Content Include="Views\Account\ChangePassword.ascx" />
-    <Content Include="Views\Account\ChangePasswordSuccess.ascx" />
-    <Content Include="Views\Account\LogOn.ascx" />
-    <Content Include="Views\Account\Register.ascx" />
     <Content Include="Views\Home\About.ascx" />
     <Content Include="Views\Home\Index.ascx" />
     <Content Include="Views\Web.config" />

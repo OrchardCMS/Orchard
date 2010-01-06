@@ -61,6 +61,7 @@
     <Reference Include="System.Web.Mobile" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Controllers\UserDriver.cs" />
     <Compile Include="Models\User.cs" />
@@ -69,12 +70,18 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\MembershipService.cs" />
     <Compile Include="AdminMenu.cs" />
+    <Compile Include="ViewModels\LogOnViewModel.cs" />
     <Compile Include="ViewModels\UserCreateViewModel.cs" />
     <Compile Include="ViewModels\UserEditViewModel.cs" />
     <Compile Include="ViewModels\UsersIndexViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Package.txt" />
+    <Content Include="Views\Account\ChangePassword.ascx" />
+    <Content Include="Views\Account\ChangePasswordSuccess.ascx" />
+    <Content Include="Views\Account\AccessDenied.ascx" />
+    <Content Include="Views\Account\LogOn.ascx" />
+    <Content Include="Views\Account\Register.ascx" />
     <Content Include="Views\Admin\Edit.aspx" />
     <Content Include="Views\Admin\Create.aspx" />
     <Content Include="Views\Admin\EditorTemplates\inputPasswordLarge.ascx" />
