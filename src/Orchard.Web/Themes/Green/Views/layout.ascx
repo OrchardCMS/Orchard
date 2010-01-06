@@ -31,14 +31,14 @@
 <%-- Begin Page Content --%>
   <div id="bd" role="main">
     <div id="yui-main">
-      <div id="mainColumn" class="yui-b">
+      <div id="maincolumn" class="yui-b">
         <div class="yui-g coreWidget">
           <%--Main Content--%>
           <%Html.ZoneBody("content");%>
         </div>
       </div>
     </div>
-    <div id="subColumn1" class="yui-b">
+    <div id="subcolumn1" class="yui-b">
       <%--Start widgets--%>
       This was our old widget zone
     </div>
