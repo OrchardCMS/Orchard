@@ -129,6 +129,7 @@ legend {
 	float:left;
 	margin:0 0 0 27px;
 	width:520px;
+	min-height:555px;
 }
 
 #sideBar1 {
