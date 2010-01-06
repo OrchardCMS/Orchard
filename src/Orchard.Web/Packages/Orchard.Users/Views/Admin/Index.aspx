@@ -1,10 +1,9 @@
-<%@ Page Language="C#" Inherits="System.Web.Mvc.ViewPage<Orchard.Users.ViewModels.UsersIndexViewModel>" %>
-<%@ Import Namespace="Orchard.ContentManagement"%>
-<%@ Import Namespace="Orchard.Security" %>
-<h2><%=Html.TitleForPage("Manage Users") %></h2>
+<%@ Page Language="C#" Inherits="Orchard.Mvc.ViewPage<UsersIndexViewModel>" %>
+<%@ Import Namespace="Orchard.Users.ViewModels"%>
+<h1><%=Html.TitleForPage(T("Manage Users").ToString()) %></h1>
 <% using (Html.BeginFormAntiForgeryPost()) { %>
     <%=Html.ValidationSummary()%>
-    <div class="manage"><%=Html.ActionLink("Add a new user", "Create", new { }, new { @class = "button" })%></div>
+    <div class="manage"><%=Html.ActionLink(T("Add a new user").ToString(), "Create", new { }, new { @class = "button" })%></div>
     <fieldset>
         <table class="items">
             <colgroup>
@@ -14,14 +13,9 @@
             </colgroup>
             <thead>
                 <tr>
-                    <th scope="col">
-                        Name
-                    </th>
-                    <th scope="col">
-                        Email
-                    </th>
-                    <th scope="col">
-                    </th>
+                    <th scope="col"><%=_Encoded("Name")%></th>
+                    <th scope="col"><%=_Encoded("Email")%></th>
+                    <th scope="col"><%=_Encoded("") %></th>
                 </tr>
             </thead>
             <% foreach (var row in Model.Rows)
@@ -34,7 +28,7 @@
                     <%=Html.Encode(row.User.Email)%>
                 </td>
                 <td>
-                    <%=Html.ActionLink("Edit", "Edit", new { row.User.Id })%>
+                    <%=Html.ActionLink(T("Edit").ToString(), "Edit", new { row.User.Id })%>
                 </td>
             </tr>
             <%}%>

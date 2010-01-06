@@ -1,5 +1,5 @@
 ﻿<%@ Page Language="C#" Inherits="Orchard.Mvc.ViewPage<object>" %>
-<h2><%=Html.TitleForPage("Install Theme") %></h2>
+<h1><%=Html.TitleForPage(T("Install Theme").ToString()) %></h1>
 <% using (Html.BeginForm("Install", "Admin", FormMethod.Post, new { enctype = "multipart/form-data" })) {%>
     <%=Html.ValidationSummary() %>
     <fieldset>

@@ -1,7 +1,6 @@
 ﻿<%@ Control Language="C#" Inherits="System.Web.Mvc.ViewUserControl<string>" %>
 <% Html.RegisterScript("tiny_mce.js"); %>
 <%=Html.TextArea("", Model, 25, 80, new { @class = "html" }) %>
-
 <%using (this.Capture("end-of-page-scripts")) {%>
 <script type="text/javascript">
     tinyMCE.init({

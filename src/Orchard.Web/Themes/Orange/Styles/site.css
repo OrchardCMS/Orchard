@@ -191,7 +191,7 @@ fieldset
     border: 1px solid #CCC;
 }
 
-fieldset p 
+fieldset fieldset 
 {
     margin: 2px 12px 10px 10px;
 }

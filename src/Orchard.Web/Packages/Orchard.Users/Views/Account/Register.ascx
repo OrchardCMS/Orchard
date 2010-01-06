@@ -1,35 +1,33 @@
-﻿<%@ Control Language="C#" Inherits="System.Web.Mvc.ViewUserControl" %>
-<h2><%=Html.TitleForPage("Create a New Account") %></h2>
-<p>Use the form below to create a new account. </p>
-<p>Passwords are required to be a minimum of <%=Html.Encode(ViewData["PasswordLength"])%> characters in length.</p>
-<%= Html.ValidationSummary("Account creation was unsuccessful. Please correct the errors and try again.") %>
+﻿<%@ Control Language="C#" Inherits="Orchard.Mvc.ViewUserControl<object>" %>
+<h1><%=Html.TitleForPage(T("Create a New Account").ToString()) %></h1>
+<p><%=_Encoded("Use the form below to create a new account.")%></p>
+<p><%=_Encoded("Passwords are required to be a minimum of {0} characters in length.", ViewData["PasswordLength"] as string)%></p>
+<%=Html.ValidationSummary(T("Account creation was unsuccessful. Please correct the errors and try again.").ToString()) %>
 <% using (Html.BeginFormAntiForgeryPost()) { %>
-    <div>
+    <fieldset>
+        <legend><%=_Encoded("Account Information")%></legend>
         <fieldset>
-            <legend>Account Information</legend>
-            <p>
-                <label for="username">Username:</label>
-                <%= Html.TextBox("username") %>
-                <%= Html.ValidationMessage("username") %>
-            </p>
-            <p>
-                <label for="email">Email:</label>
-                <%= Html.TextBox("email") %>
-                <%= Html.ValidationMessage("email") %>
-            </p>
-            <p>
-                <label for="password">Password:</label>
-                <%= Html.Password("password") %>
-                <%= Html.ValidationMessage("password") %>
-            </p>
-            <p>
-                <label for="confirmPassword">Confirm password:</label>
-                <%= Html.Password("confirmPassword") %>
-                <%= Html.ValidationMessage("confirmPassword") %>
-            </p>
-            <p>
-                <input type="submit" value="Register" />
-            </p>
+            <label for="username"><%=_Encoded("Username:")%></label>
+            <%= Html.TextBox("username") %>
+            <%= Html.ValidationMessage("username") %>
         </fieldset>
-    </div>
+        <fieldset>
+            <label for="email"><%=_Encoded("Email:")%></label>
+            <%= Html.TextBox("email") %>
+            <%= Html.ValidationMessage("email") %>
+        </fieldset>
+        <fieldset>
+            <label for="password"><%=_Encoded("Password:")%></label>
+            <%= Html.Password("password") %>
+            <%= Html.ValidationMessage("password") %>
+        </fieldset>
+        <fieldset>
+            <label for="confirmPassword"><%=_Encoded("Confirm password:")%></label>
+            <%= Html.Password("confirmPassword") %>
+            <%= Html.ValidationMessage("confirmPassword") %>
+        </fieldset>
+        <fieldset>
+            <input type="submit" value="<%=_Encoded("Register") %>" />
+        </fieldset>
+    </fieldset>
 <% } %>
