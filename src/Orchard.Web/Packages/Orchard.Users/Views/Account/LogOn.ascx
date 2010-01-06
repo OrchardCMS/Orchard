@@ -6,23 +6,18 @@
 <% using (Html.BeginForm(new {Action="LogOn"})) { %>
     <fieldset>
         <legend><%=_Encoded("Account Information")%></legend>
-        <fieldset>
             <label for="username"><%=_Encoded("Username:")%></label>
             <%= Html.TextBox("username") %>
             <%= Html.ValidationMessage("username") %>
-        </fieldset>
-        <fieldset>
+
             <label for="password"><%=_Encoded("Password:")%></label>
             <%= Html.Password("password") %>
             <%= Html.ValidationMessage("password") %>
-        </fieldset>
-        <fieldset>
-            <%= Html.CheckBox("rememberMe") %> <label class="inline" for="rememberMe"><%=_Encoded("Remember me?")%></label>
-        </fieldset>
-        <fieldset>
+
+            <%= Html.CheckBox("rememberMe") %><label class="forcheckbox" for="rememberMe"><%=_Encoded("Remember me?")%></label>
+
             <%=Html.HiddenFor(m=>m.ReturnUrl) %>
             <%=Html.AntiForgeryTokenOrchard() %>
             <input type="submit" value="<%=_Encoded("Log On") %>" />
-        </fieldset>
     </fieldset>
 <% } %>
