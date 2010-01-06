@@ -1,10 +1,10 @@
-﻿<%@ Control Language="C#" Inherits="System.Web.Mvc.ViewUserControl<ThemeSiteSettingsRecord>" %>
+﻿<%@ Control Language="C#" Inherits="Orchard.Mvc.ViewUserControl<ThemeSiteSettingsRecord>" %>
 <%@ Import Namespace="Orchard.Core.Themes.Records"%>
-<h3>Themes</h3>
-<ol>
-    <li>
+<fieldset>
+    <legend><%=_Encoded("Themes")%></legend>
+    <fieldset>
         <%= Html.LabelFor(x=>x.CurrentThemeName) %>
         <%= Html.EditorFor(x=>x.CurrentThemeName) %>
         <%= Html.ValidationMessage("CurrentThemeName", "*")%>
-    </li>
-</ol>
+    </fieldset>
+</fieldset>

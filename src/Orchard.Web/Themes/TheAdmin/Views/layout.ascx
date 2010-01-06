@@ -1,4 +1,4 @@
-﻿<%@ Control Language="C#" Inherits="System.Web.Mvc.ViewUserControl<AdminViewModel>" %>
+﻿<%@ Control Language="C#" Inherits="Orchard.Mvc.ViewUserControl<AdminViewModel>" %>
 <%@ Import Namespace="Orchard.Mvc.ViewModels"%>
 <%@ Import Namespace="Orchard.Mvc.Html"%><%
 Html.RegisterStyle("site.css");
@@ -9,7 +9,7 @@ Model.Zones.AddRenderPartial("content:before", "messages", Model.Messages);
 %>
 <div id="header" role="banner"><% Html.Zone("header"); %></div>
 <div id="content">
-    <div id="navshortcut"><a href="#menu"><%="Skip to navigation" %></a></div>
+    <div id="navshortcut"><a href="#menu"><%=_Encoded("Skip to navigation") %></a></div>
     <div id="main" role="main"><% Html.ZoneBody("content"); %></div>
     <div id="menu"><% Html.Zone("menu"); %></div>
 </div>

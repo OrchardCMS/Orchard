@@ -123,6 +123,33 @@ namespace Orchard.Mvc.Html {
 
         #endregion
 
+        #region Image
+
+        public static MvcHtmlString Image(this HtmlHelper htmlHelper, string src, string alt, object htmlAttributes) {
+            return htmlHelper.Image(src, alt, new RouteValueDictionary(htmlAttributes));
+        }
+
+        public static MvcHtmlString Image(this HtmlHelper htmlHelper, string src, string alt, IDictionary<string, object> htmlAttributes) {
+            UrlHelper url = new UrlHelper(htmlHelper.ViewContext.RequestContext);
+            string imageUrl = url.Content(src);
+            TagBuilder imageTag = new TagBuilder("img");
+
+            if (!string.IsNullOrEmpty(imageUrl))
+                imageTag.MergeAttribute("src", imageUrl);
+
+            if (!string.IsNullOrEmpty(alt))
+                imageTag.MergeAttribute("alt", alt);
+
+            imageTag.MergeAttributes(htmlAttributes, true);
+
+            if (imageTag.Attributes.ContainsKey("alt") && !imageTag.Attributes.ContainsKey("title"))
+                imageTag.MergeAttribute("title", imageTag.Attributes["alt"] ?? "");
+
+            return MvcHtmlString.Create(imageTag.ToString(TagRenderMode.SelfClosing));
+        }
+
+        #endregion
+
         #region Link
 
         public static string Link(this HtmlHelper htmlHelper, string linkContents, string href)

@@ -1,5 +1,5 @@
-﻿<%@ Control Language="C#" Inherits="System.Web.Mvc.ViewUserControl<AdminViewModel>" %>
+﻿<%@ Control Language="C#" Inherits="Orchard.Mvc.ViewUserControl<AdminViewModel>" %>
 <%@ Import Namespace="Orchard.Mvc.ViewModels"%>
-<% if (Model.CurrentUser != null) { //todo: (heskew) localize the string format "User: <username> | a:logoff"
-    %><div id="login"><%="User"%>: <%=Html.Encode(Model.CurrentUser.UserName)%> | <%=Html.ActionLink("Logout", "LogOff", new { Area = "Orchard.Users", Controller = "Account" }) %></div><%
+<% if (Model.CurrentUser != null) {
+    %><div id="login"><%=_Encoded("User:")%> <%=Html.Encode(Model.CurrentUser.UserName)%> | <%=Html.ActionLink(T("Logout").ToString(), "LogOff", new { Area = "Orchard.Users", Controller = "Account" }) %></div><%
    } %>

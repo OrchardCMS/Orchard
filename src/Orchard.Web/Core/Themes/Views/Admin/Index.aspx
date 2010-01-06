@@ -1,31 +1,34 @@
-﻿<%@ Page Language="C#" Inherits="System.Web.Mvc.ViewPage<ThemesIndexViewModel>" %>
+﻿<%@ Page Language="C#" Inherits="Orchard.Mvc.ViewPage<ThemesIndexViewModel>" %>
 <%@ Import Namespace="Orchard.Core.Themes.ViewModels"%>
-<h2><%=Html.TitleForPage("Manage Themes") %></h2>
-<h3>Current Theme</h3>
+<h1><%=Html.TitleForPage("Manage Themes") %></h1>
+<h2><%=_Encoded("Current Theme")%></h2>
 <% if (Model.CurrentTheme == null) {
-    %><p>There is no current theme in the application. The built-in theme will be used.<br /><%=Html.ActionLink("Install a new Theme", "Install") %></p><%
+    %><p><%=_Encoded("There is no current theme in the application. The built-in theme will be used.")
+             %><br /><%=Html.ActionLink(T("Install a new Theme").ToString(), "Install") %></p><%
    } else {
-    %><h4><%= Model.CurrentTheme.DisplayName %></h4>
-     <p><img src="<%= ResolveUrl("~/Themes/" + Model.CurrentTheme.ThemeName + "/Theme.gif")%>" alt="<%= Model.CurrentTheme.DisplayName %>" /><br />
-        By <%= Model.CurrentTheme.Author %><br />
-        <%= Model.CurrentTheme.Version %><br />
-        <%= Model.CurrentTheme.Description %><br />
-        <%= Model.CurrentTheme.HomePage %><br />
-        <%=Html.ActionLink("Install a new Theme", "Install") %>
+    %><h3><%=Html.Encode(Model.CurrentTheme.DisplayName) %></h3>
+     <p>
+        <%=Html.Image(ResolveUrl("~/Themes/" + Model.CurrentTheme.ThemeName + "/Theme.gif"), Html.Encode(Model.CurrentTheme.DisplayName), null) %><br />
+        <%=_Encoded("By") %> <%=Html.Encode(Model.CurrentTheme.Author) %><br />
+        <%=Html.Encode(Model.CurrentTheme.Version) %><br />
+        <%=Html.Encode(Model.CurrentTheme.Description) %><br />
+        <%=Html.Encode(Model.CurrentTheme.HomePage) %><br />
+        <%=Html.ActionLink(T("Install a new Theme").ToString(), "Install") %>
      </p>
 <% } %>
-<h3>Available Themes</h3>
+<h2><%=_Encoded("Available Themes")%></h2>
 <ul class="templates">
 <% foreach (var theme in Model.Themes) {
     if (Model.CurrentTheme == null || theme.ThemeName != Model.CurrentTheme.ThemeName) {
-        %><li>
-        <h4><%= theme.DisplayName %> </h4>
-        <p><img src="<%= ResolveUrl("~/Themes/" + theme.ThemeName + "/Theme.gif") %>" alt="<%= theme.DisplayName %>" /><br />
-        By <%= theme.Author %><br />
-        <%= theme.Version %><br />
-        <%= theme.Description %><br />
-        <%= theme.HomePage %><br />
-        <%=Html.ActionLink("Activate", "Activate", new {themeName = theme.ThemeName}) %> | <%=Html.ActionLink("Uninstall", "Uninstall", new {themeName = theme.ThemeName}) %>
+        %>    <li>
+        <h3><%=Html.Encode(theme.DisplayName) %></h3>
+        <p>
+            <%=Html.Image(ResolveUrl("~/Themes/" + theme.ThemeName + "/Theme.gif"), Html.Encode(theme.DisplayName), null) %><br />
+            <%=_Encoded("By") %> <%=Html.Encode(theme.Author) %><br />
+            <%=Html.Encode(theme.Version) %><br />
+            <%=Html.Encode(theme.Description) %><br />
+            <%=Html.Encode(theme.HomePage) %><br />
+            <%=Html.ActionLink(T("Activate").ToString(), "Activate", new {themeName = theme.ThemeName}) %> | <%=Html.ActionLink(T("Uninstall").ToString(), "Uninstall", new {themeName = theme.ThemeName}) %>
         </p>
     </li>
     <% }

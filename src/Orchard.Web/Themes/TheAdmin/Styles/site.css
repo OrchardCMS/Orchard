@@ -143,12 +143,12 @@ h1, h2, h3, h4, h5, legend {
     font-style: normal;
     font-weight:normal;
 }
-h1 { font-size:2.8em; } /* 28px */
-h2 { font-size:2.4em; } /* 24px */
-h3 { font-size:2.1em; } /* 21px */
-h3 span { font-size:.57em; } /* 12px */
-h4 { font-size:1.8em; } /* 18px */
-h5 { font-size:1.6em; } /* 16px */
+h1 { font-size:2.4em; } /* 24px */
+h2 { font-size:2.1em; } /* 21px */
+h2 span { font-size:.57em; } /* 12px */
+h3 { font-size:1.8em; } /* 18px */
+h4 { font-size:1.6em; } /* 16px */
+h5 { font-size:1.4em; } /* 14px */
 
 h6, p, legend, label, input, select, .button,
 .message, .validation-summary-errors,
@@ -176,10 +176,12 @@ a:hover, a:active, a:focus {
 	background:#8a8f7a url(images/background_header.jpg) no-repeat bottom right;
 	height:60px;
 }
-#header h1 {
+#header #app {
     float:left;
+    font-size:2.4em;
+    padding:.4em 0;
 }
-#header h1 a {
+#header #app a {
 	background:url(images/orchardLogo.jpg) no-repeat;
 	display:block;
 	height:60px;
@@ -230,18 +232,18 @@ a:hover, a:active, a:focus {
     border:0;
     margin:0;
 }
-#navigation li h4 {
+#navigation li h3 {
     padding:0;
 }
-#navigation li h4 a, #navigation li h4 span {
+#navigation li h3 a, #navigation li h3 span {
 	background:#dddfcb url(images/tableHeaderBackground.gif) repeat-x top left;
     display:block;
 	padding:6px 4px 8px 8px;
 }
-#navigation li h4 a, #navigation li h4 a:link, #navigation li h4 a:visited {
+#navigation li h3 a, #navigation li h3 a:link, #navigation li h3 a:visited {
     color:inherit;
 }
-#navigation li h4 a:hover, #navigation li h4 a:active, #navigation li h4 a:focus {
+#navigation li h3 a:hover, #navigation li h3 a:active, #navigation li h3 a:focus {
     background:#8a8f7a;
     color:#f6faea;
     text-decoration:none;
@@ -264,10 +266,10 @@ a:hover, a:active, a:focus {
 
 /* Content
 ----------------------------------------------------------*/
-#main h2 {
+#main h1 {
     margin:.23em 0 1em;
 }
-#main h3, #main h4 {
+#main h2, #main h3 {
     margin:.5em 0;
 }
 #main p {
@@ -282,10 +284,10 @@ a:hover, a:active, a:focus {
 #main form {
     margin:.345em 0 1.5em;
 }
-#main h2 {
+#main h1 {
     border-bottom:1px dashed #e4e7dc;
 }
-#main h3 {
+#main h2 {
     border-bottom:1px solid #e4e7dc;
 }
 

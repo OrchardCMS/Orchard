@@ -1,9 +1,9 @@
-﻿<%@ Control Language="C#" Inherits="System.Web.Mvc.ViewUserControl" %>
+﻿<%@ Control Language="C#" Inherits="Orchard.Mvc.ViewUserControl<object>" %>
 <div id="menucontainer">
     <ul id="menu">
-        <li><%= Html.ActionLink("Home", "Index", "Home", new {Area = ""}, new {})%></li>
-        <li><%= Html.ActionLink("About", "About", "Home", new {Area = ""}, new {})%></li>
-        <li><%= Html.ActionLink("Blogs", "List", "Blog", new {Area = "Orchard.Blogs"}, new {})%></li>
-        <li><%= Html.ActionLink("Admin", "List", new {Area = "Orchard.Blogs", Controller = "BlogAdmin"})%></li>
+        <li><%= Html.ActionLink(T("Home").ToString(), "Index", "Home", new {Area = ""}, new {})%></li>
+        <li><%= Html.ActionLink(T("About").ToString(), "About", "Home", new { Area = "" }, new { })%></li>
+        <li><%= Html.ActionLink(T("Blogs").ToString(), "List", "Blog", new { Area = "Orchard.Blogs" }, new { })%></li>
+        <li><%= Html.ActionLink(T("Admin").ToString(), "List", new { Area = "Orchard.Blogs", Controller = "BlogAdmin" })%></li>
     </ul>
 </div>
