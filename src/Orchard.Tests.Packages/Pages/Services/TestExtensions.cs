@@ -1,6 +1,5 @@
-using Orchard.CmsPages.Models;
-using Orchard.CmsPages.Services;
-using Orchard.CmsPages.ViewModels;
+using Orchard.Pages.Models;
+using Orchard.Pages.Services;
 
 namespace Orchard.Tests.Packages.Pages.Services {
     public static class TestExtensions {

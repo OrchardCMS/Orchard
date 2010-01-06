@@ -1,23 +1,21 @@
 ﻿using System;
-using System.Globalization;
 using System.Linq;
 using System.Collections.Generic;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
 using NUnit.Framework;
-using Orchard.CmsPages.Controllers;
-using Orchard.CmsPages.Models;
-using Orchard.CmsPages.Services;
-using Orchard.CmsPages.Services.Templates;
-using Orchard.CmsPages.ViewModels;
+using Orchard.Pages.Controllers;
+using Orchard.Pages.Models;
+using Orchard.Pages.Services;
+using Orchard.Pages.Services.Templates;
+using Orchard.Pages.ViewModels;
 using Orchard.Data;
 using Orchard.Localization;
 using Orchard.Security;
 using Orchard.Security.Permissions;
 using Orchard.Tests.Stubs;
 using Orchard.UI.Notify;
-using Orchard.Utility;
 
 namespace Orchard.Tests.Packages.Pages.Controllers {
     [TestFixture]
@@ -44,7 +42,7 @@ namespace Orchard.Tests.Packages.Pages.Controllers {
             _slugPageId = page.Id;
 
             _controller = _container.Resolve<AdminController>();
-            _controller.ControllerContext = new ControllerContext(new StubHttpContext("~/admin/cmspages"), new RouteData(), _controller);
+            _controller.ControllerContext = new ControllerContext(new StubHttpContext("~/admin/pages"), new RouteData(), _controller);
         }
 
         public override void Register(Autofac.Builder.ContainerBuilder builder) {

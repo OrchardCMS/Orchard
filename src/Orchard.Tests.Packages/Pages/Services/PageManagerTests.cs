@@ -4,10 +4,9 @@ using System.Diagnostics;
 using System.Linq;
 using Autofac.Builder;
 using NUnit.Framework;
-using Orchard.CmsPages.Models;
-using Orchard.CmsPages.Services;
-using Orchard.CmsPages.Services.Templates;
-using Orchard.CmsPages.ViewModels;
+using Orchard.Pages.Models;
+using Orchard.Pages.Services;
+using Orchard.Pages.Services.Templates;
 using Orchard.Data;
 
 namespace Orchard.Tests.Packages.Pages.Services {

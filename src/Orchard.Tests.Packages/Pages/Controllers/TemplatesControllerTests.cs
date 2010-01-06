@@ -3,11 +3,10 @@ using System.Collections.Generic;
 using System.Web.Mvc;
 using Autofac.Builder;
 using NUnit.Framework;
-using Orchard.CmsPages.Controllers;
-using Orchard.CmsPages.Services;
-using Orchard.CmsPages.Services.Templates;
-using Orchard.CmsPages.ViewModels;
-using Orchard.CmsPages.Models;
+using Orchard.Pages.Controllers;
+using Orchard.Pages.Services;
+using Orchard.Pages.Services.Templates;
+using Orchard.Pages.Models;
 using System.Web;
 using Orchard.Tests.Packages.Pages.Services.Templates;
 

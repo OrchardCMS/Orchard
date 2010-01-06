@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using System.IO;
-using Orchard.CmsPages.Services.Templates;
+using Orchard.Pages.Services.Templates;
 
 namespace Orchard.Tests.Packages.Pages.Services.Templates {
     public class StubTemplateEntryProvider : ITemplateEntryProvider {

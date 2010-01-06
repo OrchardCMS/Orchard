@@ -628,7 +628,7 @@ table.items th, table.items td {
 todo: (heskew) pull out into relevant modules where appropriate
 ----------------------------------------------------------*/
 
-/* CMSPages
+/* Pages
 ----------------------------------------------------------*/
 .templates fieldset {
     margin:0 0 .933%;

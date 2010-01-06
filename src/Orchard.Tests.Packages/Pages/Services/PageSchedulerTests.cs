@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using NUnit.Framework;
-using Orchard.CmsPages.Models;
-using Orchard.CmsPages.Services;
-using Orchard.CmsPages.Services.Templates;
+using Orchard.Pages.Models;
+using Orchard.Pages.Services;
+using Orchard.Pages.Services.Templates;
 using Orchard.Data;
 
 namespace Orchard.Tests.Packages.Pages.Services {

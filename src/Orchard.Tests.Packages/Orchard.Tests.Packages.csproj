@@ -115,9 +115,9 @@
       <Project>{9916839C-39FC-4CEB-A5AF-89CA7E87119F}</Project>
       <Name>Orchard.Core</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Orchard.Web\Packages\Orchard.CmsPages\Orchard.CmsPages.csproj">
-      <Project>{1ECC1131-0D0C-4822-AD90-E979868C63F3}</Project>
-      <Name>Orchard.CmsPages</Name>
+    <ProjectReference Include="..\Orchard.Web\Packages\Orchard.Pages\Orchard.Pages.csproj">
+      <Project>{4A9C04A6-0986-4A92-A610-5F59FF273FB9}</Project>
+      <Name>Orchard.Pages</Name>
     </ProjectReference>
     <ProjectReference Include="..\Orchard.Web\Packages\Orchard.Roles\Orchard.Roles.csproj">
       <Project>{D10AD48F-407D-4DB5-A328-173EC7CB010F}</Project>

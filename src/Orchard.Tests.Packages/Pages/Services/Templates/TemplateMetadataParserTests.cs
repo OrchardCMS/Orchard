@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using NUnit.Framework;
-using Orchard.CmsPages.Services.Templates;
+using Orchard.Pages.Services.Templates;
 
 namespace Orchard.Tests.Packages.Pages.Services.Templates {
     [TestFixture]
