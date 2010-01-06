@@ -4,6 +4,7 @@ using System.Globalization;
 using System.Security.Principal;
 using System.Web.Mvc;
 using System.Web.Security;
+using Orchard.Logging;
 using Orchard.Mvc.ViewModels;
 using Orchard.Security;
 using Orchard.Users.ViewModels;
@@ -15,15 +16,25 @@ namespace Orchard.Users.Controllers {
         private readonly IMembershipService _membershipService;
 
 
-        public AccountController(IAuthenticationService authenticationService, IMembershipService membershipService) {
+        public AccountController(
+            IAuthenticationService authenticationService, 
+            IMembershipService membershipService) {
             _authenticationService = authenticationService;
             _membershipService = membershipService;
+            Logger = NullLogger.Instance;
         }
 
-        public ActionResult AccessDenied(string returnUrl) {
-            if (_authenticationService.GetAuthenticatedUser() == null)
-                return View("LogOn", new LogOnViewModel { Title = "Access Denied", ReturnUrl = returnUrl });
+        public ILogger Logger { get; set; }
 
+        public ActionResult AccessDenied(string returnUrl) {
+            var currentUser = _authenticationService.GetAuthenticatedUser();
+
+            if (currentUser == null) {
+                Logger.Information("Access denied to anonymous request on {0}", returnUrl);
+                return View("LogOn", new LogOnViewModel { Title = "Access Denied", ReturnUrl = returnUrl });
+            }
+
+            Logger.Information("Access denied to user #{0} '{1}' on {2}", currentUser.Id, currentUser.UserName, returnUrl);
             return View(new BaseViewModel());
         }
 

@@ -76,7 +76,7 @@
     <Compile Include="ViewModels\ContentDetailsViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Package.txt" />
+    <Content Include="_Package.txt" />
     <Content Include="Views\Content\Details.aspx" />
     <Content Include="Views\Content\Index.aspx" />
     <Content Include="Views\Home\Index.aspx" />
