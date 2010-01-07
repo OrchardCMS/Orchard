@@ -154,7 +154,7 @@ h6, p, legend, label, input, select, .button,
 .message, .validation-summary-errors,
 table.items th, table.items td, table.items caption { font-size:1.5em; line-height:1.5em; } /* 15px */
 p .button { font-size:inherit; }
-.meta { font-size:1.2em; } /* 12px */
+.meta, .hint { font-size:1.2em; } /* 12px */
 
 
 
@@ -351,6 +351,9 @@ label {
 	display: block;
 	font-weight:700;
 }
+label.forcheckbox {
+    display:inline;
+}
 fieldset.bulk.actions label, label.sub {
     display:inline;
 }
@@ -359,6 +362,12 @@ label span {
 }
 label input {
     vertical-align:text-top;
+}
+.hint {
+    display:block;
+}
+.hint.forcheckbox {
+    text-indent:3ex; /* todo: (heskew) this might look out of place */
 }
 /* todo: (heskew) try to get .text on stuff like .text-box */
 select, textarea, input.text, input.text-box {
@@ -371,6 +380,10 @@ input.text, input.text-box {
 }
 select:focus, textarea:focus, input.text:focus, input.text-box:focus {
 	border-color:#666d51;
+}
+input.check-box {
+    margin-left:0;
+    vertical-align:-.1em;
 }
 .permalink input {
     background:transparent;

@@ -1,6 +1,6 @@
-﻿<%@ Control Language="C#" Inherits="System.Web.Mvc.ViewUserControl<HasComments>" %>
+﻿<%@ Control Language="C#" Inherits="Orchard.Mvc.ViewUserControl<HasComments>" %>
 <%@ Import Namespace="Orchard.Comments.Models"%>
-<h3 id="comments"><a name="comments"><%=Model.CommentCount %> Comment<%=Model.CommentCount == 1 ? "" : "s" %></a></h3><%
+<h2 id="comments"><%=_Encoded("{0} Comment{1}", Model.CommentCount, Model.CommentCount == 1 ? "" : "s") %></h2><%
     foreach (var comment in Model.Comments) { %>
 <div>
     <div class="comment">

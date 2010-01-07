@@ -8,7 +8,5 @@ if (Model.Blogs.Count() > 0) { %>
 <%=Html.UnorderedList(Model.Blogs, (b, i) => Html.DisplayForItem(b).ToHtmlString(), "blogs contentItems") %>
 <div class="actions"><a class="add button" href="<%=Url.BlogCreate() %>"><%=_Encoded("New Blog") %></a></div><%
 } else { %>
-<%-- todo: (heskew) come back to this --%>
-<div class="info message"><%--<%=string.Format(_Encoded("There are no blogs for you to see. Want to {0}?").ToString(), Html.Link(_Encoded("add one").ToString(), Url.BlogCreate())) %>--%>
-<%=string.Format("There are no blogs for you to see. Want to {0}?", Html.Link(_Encoded("add one").ToString(), Url.BlogCreate())) %></div><%
+<div class="info message"><%=T("There are no blogs for you to see. Want to <a href=\"{0}\">add one</a>?", Url.BlogCreate()).ToString()%></div><%
 } %>

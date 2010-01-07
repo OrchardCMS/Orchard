@@ -177,6 +177,7 @@
     <Compile Include="ContentManagement\Records\ContentPartVersionRecord.cs" />
     <Compile Include="ContentManagement\Records\ContentTypeRecord.cs" />
     <Compile Include="ContentManagement\Records\Utility.cs" />
+    <Compile Include="Localization\Text.cs" />
     <Compile Include="Mvc\ViewModels\ContentItemViewModel.cs" />
     <Compile Include="ContentManagement\ViewModels\TemplateViewModel.cs" />
     <Compile Include="Controllers\HomeController.cs" />
