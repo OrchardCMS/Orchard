@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Routing;
-using Orchard.Tasks;
 
 namespace Orchard.Pages.Services {
     public interface ISlugConstraint : IRouteConstraint, ISingletonDependency {
@@ -34,20 +33,6 @@ namespace Orchard.Pages.Services {
                 return _currentlyPublishedSlugs.ContainsKey(parameterValue);
             }
             return false;
-        }
-    }
-
-    public class SlugConstraintUpdater : IBackgroundTask {
-        private readonly IPageManager _pageManager;
-        private readonly ISlugConstraint _slugConstraint;
-
-        public SlugConstraintUpdater(IPageManager pageManager, ISlugConstraint slugConstraint) {
-            _pageManager = pageManager;
-            _slugConstraint = slugConstraint;
-        }
-
-        public void Sweep() {
-            _slugConstraint.SetCurrentlyPublishedSlugs(_pageManager.GetCurrentlyPublishedSlugs());
         }
     }
 }

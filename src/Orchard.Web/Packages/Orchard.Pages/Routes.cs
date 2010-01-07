@@ -25,8 +25,8 @@ namespace Orchard.Pages {
                                                          "{*slug}",
                                                          new RouteValueDictionary {
                                                                                       {"area", "Orchard.Pages"},
-                                                                                      {"controller", "templates"},
-                                                                                      {"action", "show"}
+                                                                                      {"controller", "page"},
+                                                                                      {"action", "item"}
                                                                                   },
                                                          new RouteValueDictionary {
                                                                                       {"slug", _slugConstraint}

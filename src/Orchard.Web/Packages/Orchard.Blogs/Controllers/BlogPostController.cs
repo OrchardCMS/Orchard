@@ -7,7 +7,6 @@ using Orchard.Blogs.ViewModels;
 using Orchard.Data;
 using Orchard.Localization;
 using Orchard.ContentManagement;
-using Orchard.ContentManagement.Handlers;
 using Orchard.Mvc.Results;
 using Orchard.Security;
 using Orchard.UI.Notify;

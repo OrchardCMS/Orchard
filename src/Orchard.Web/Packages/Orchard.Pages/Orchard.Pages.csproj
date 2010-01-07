@@ -74,34 +74,24 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AdminMenu.cs" />
-    <Compile Include="Controllers\AdminController.cs" />
-    <Compile Include="Controllers\TemplatesController.cs" />
-    <Compile Include="Models\ContentItem.cs" />
-    <Compile Include="Models\ContentItemListModelBinder.cs" />
-    <Compile Include="Models\ModelExtensions.cs" />
+    <Compile Include="Controllers\PageController.cs" />
+    <Compile Include="Controllers\PageDriver.cs" />
+    <Compile Include="Extensions\UriExtensions.cs" />
     <Compile Include="Models\Page.cs" />
-    <Compile Include="Models\PageRevision.cs" />
-    <Compile Include="Models\Published.cs" />
-    <Compile Include="Models\Scheduled.cs" />
+    <Compile Include="Models\PageHandler.cs" />
+    <Compile Include="Models\PageRecord.cs" />
     <Compile Include="Permissions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Routes.cs" />
-    <Compile Include="Services\PageManager.cs" />
-    <Compile Include="Services\PageScheduler.cs" />
-    <Compile Include="Services\SlugConstraint.cs" />
-    <Compile Include="Services\Templates\CommentExtractor.cs" />
-    <Compile Include="Services\Templates\MetadataEntry.cs" />
-    <Compile Include="Services\Templates\TemplateDescriptor.cs" />
-    <Compile Include="Services\Templates\TemplateEntry.cs" />
-    <Compile Include="Services\Templates\TemplateEntryProvider.cs" />
-    <Compile Include="Services\Templates\TemplateExtensions.cs" />
-    <Compile Include="Services\Templates\TemplateMetadataParser.cs" />
-    <Compile Include="Services\Templates\TemplateProvider.cs" />
-    <Compile Include="Services\XmlRpcHandler.cs" />
-    <Compile Include="ViewModels\ChooseTemplateViewModel.cs" />
+    <Compile Include="Services\IPageService.cs" />
+    <Compile Include="Services\PageService.cs" />
+    <Compile Include="Services\SlugConstraint.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="ViewModels\PageCreateViewModel.cs" />
     <Compile Include="ViewModels\PageEditViewModel.cs" />
-    <Compile Include="ViewModels\PageIndexViewModel.cs" />
+    <Compile Include="ViewModels\PagesViewModel.cs" />
+    <Compile Include="ViewModels\PageViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\Admin\images\draft.gif" />
@@ -111,17 +101,15 @@
     <Content Include="Content\Admin\images\scheduled.gif" />
     <Content Include="Content\Site.css" />
     <Content Include="Package.txt" />
-    <Content Include="Views\Admin\BulkDeleteConfirm.aspx" />
-    <Content Include="Views\Admin\BulkPublishLater.aspx" />
-    <Content Include="Views\Admin\ChooseTemplate.aspx" />
-    <Content Include="Views\Admin\Create.aspx" />
-    <Content Include="Views\Admin\Edit.aspx" />
-    <Content Include="Views\Admin\EditorTemplates\inputTextLarge.ascx" />
-    <Content Include="Views\Admin\EditorTemplates\inputTextPermalink.ascx" />
-    <Content Include="Views\Admin\EditorTemplates\PageCreateViewModel.ascx" />
-    <Content Include="Views\Admin\EditorTemplates\TemplateDescriptor.ascx" />
-    <Content Include="Views\Admin\Export.aspx" />
-    <Content Include="Views\Admin\Index.aspx" />
+    <Content Include="Views\DisplayTemplates\Items\Pages.Page.ascx" />
+    <Content Include="Views\DisplayTemplates\Items\Pages.Page.Summary.ascx" />
+    <Content Include="Views\EditorTemplates\Items\Pages.Page.ascx" />
+    <Content Include="Views\EditorTemplates\Parts\Pages.Page.Fields.ascx" />
+    <Content Include="Views\EditorTemplates\Parts\Pages.Page.Publish.ascx" />
+    <Content Include="Views\Page\Create.ascx" />
+    <Content Include="Views\Page\Edit.ascx" />
+    <Content Include="Views\Page\Item.ascx" />
+    <Content Include="Views\Page\List.aspx" />
     <Content Include="Views\Templates\ExtraUserControl.ascx" />
     <Content Include="Views\Templates\ThreeColumns.aspx" />
     <Content Include="Views\Templates\ThreeColumns.gif" />
