@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Web.Mvc;
 using Orchard.Data;
 using Orchard.Localization;
@@ -7,7 +8,6 @@ using Orchard.Mvc.Results;
 using Orchard.Pages.Models;
 using Orchard.Pages.Services;
 using Orchard.Pages.ViewModels;
-using Orchard.Security;
 using Orchard.UI.Notify;
 
 namespace Orchard.Pages.Controllers {
@@ -45,7 +45,7 @@ namespace Orchard.Pages.Controllers {
             if (!Services.Authorizer.Authorize(Permissions.CreatePages, T("Not allowed to create a page")))
                 return new HttpUnauthorizedResult();
 
-            var page = Services.ContentManager.BuildEditorModel(Services.ContentManager.New<Page>("page"));
+            var page = Services.ContentManager.BuildEditorModel(_pageService.New());
 
             var model = new PageCreateViewModel {
                 Page = page
@@ -59,7 +59,12 @@ namespace Orchard.Pages.Controllers {
             if (!Services.Authorizer.Authorize(Permissions.CreatePages, T("Couldn't create page")))
                 return new HttpUnauthorizedResult();
 
-            Page page = Services.ContentManager.Create<Page>("page");
+            bool publishNow = false;
+            if (String.Equals(Request.Form["Command"], "PublishNow")) {
+                publishNow = true;
+            }
+
+            Page page = _pageService.Create(publishNow);
             model.Page = Services.ContentManager.UpdateEditorModel(page, this);
 
             if (!ModelState.IsValid)
@@ -68,14 +73,14 @@ namespace Orchard.Pages.Controllers {
             var session = _sessionLocator.For(typeof(Page));
             session.Flush();
 
-            return RedirectToAction("Edit", new { pageSlug = model.Page.Item.Slug });
+            return RedirectToAction("List");
         }
 
         public ActionResult Edit(string pageSlug) {
             if (!Services.Authorizer.Authorize(Permissions.ModifyPages, T("Couldn't edit page")))
                 return new HttpUnauthorizedResult();
 
-            Page page = _pageService.Get(pageSlug);
+            Page page = _pageService.GetPageOrDraft(pageSlug);
 
             if (page == null)
                 return new NotFoundResult();
@@ -92,10 +97,19 @@ namespace Orchard.Pages.Controllers {
             if (!Services.Authorizer.Authorize(Permissions.ModifyPages, T("Couldn't edit page")))
                 return new HttpUnauthorizedResult();
 
-            Page page = _pageService.Get(pageSlug);
+            bool publishNow = false;
+            if (String.Equals(Request.Form["Command"], "PublishNow")) {
+                publishNow = true;
+            }
+
+            Page page = _pageService.GetPageOrDraft(pageSlug);
 
             if (page == null)
                 return new NotFoundResult();
+
+            if (publishNow) {
+                _pageService.Publish(page);
+            }
 
             var model = new PageEditViewModel {
                 Page = Services.ContentManager.UpdateEditorModel(page, this)
@@ -109,7 +123,7 @@ namespace Orchard.Pages.Controllers {
             }
 
             Services.Notifier.Information(T("Page information updated."));
-            return RedirectToAction("Edit", new { pageSlug = page.Slug });
+            return RedirectToAction("List");
         }
 
         [HttpPost]

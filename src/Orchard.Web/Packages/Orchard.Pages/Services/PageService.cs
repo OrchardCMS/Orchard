@@ -1,23 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Orchard.Pages.Models;
 using Orchard.Core.Common.Records;
-using Orchard.Data;
 using Orchard.ContentManagement;
 
 namespace Orchard.Pages.Services {
     public class PageService : IPageService {
         private readonly IContentManager _contentManager;
-        private readonly IRepository<PageRecord> _pageRepository;
 
-        public PageService(IContentManager contentManager, IRepository<PageRecord> pageRepository) {
+        public PageService(IContentManager contentManager) {
             _contentManager = contentManager;
-            _pageRepository = pageRepository;
         }
 
         public IEnumerable<Page> Get() {
-            return _contentManager.Query<Page, PageRecord>().List();
+            return _contentManager.Query<Page, PageRecord>(VersionOptions.Latest).List();
         }
 
         public Page Get(string slug) {
@@ -26,8 +22,27 @@ namespace Orchard.Pages.Services {
                 .List().FirstOrDefault();
         }
 
+        public Page GetPageOrDraft(string slug) {
+            Page page = _contentManager.Query<Page, PageRecord>(VersionOptions.Latest)
+                .Join<RoutableRecord>().Where(rr => rr.Slug == slug)
+                .List().FirstOrDefault();
+            return _contentManager.GetDraftRequired<Page>(page.Id);
+        }
+
+        public Page New() {
+            return _contentManager.New<Page>("page");
+        }
+
+        public Page Create(bool publishNow) {
+            return _contentManager.Create<Page>("page", publishNow ? VersionOptions.Published : VersionOptions.Draft);
+        }
+
         public void Delete(Page page) {
-            _pageRepository.Delete(page.Record);
+            _contentManager.Remove(page.ContentItem);
+        }
+
+        public void Publish(Page page) {
+            _contentManager.Publish(page.ContentItem);
         }
     }
 }

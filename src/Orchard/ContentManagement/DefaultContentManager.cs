@@ -1,13 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Autofac;
 using Orchard.ContentManagement.Handlers;
 using Orchard.ContentManagement.Records;
 using Orchard.Data;
 using Orchard.Mvc.ViewModels;
-using Orchard.UI.Navigation;
 
 namespace Orchard.ContentManagement {
     public class DefaultContentManager : IContentManager {

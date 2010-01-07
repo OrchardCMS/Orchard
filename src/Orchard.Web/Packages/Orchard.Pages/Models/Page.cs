@@ -27,6 +27,39 @@ namespace Orchard.Pages.Models {
             set { this.As<CommonAspect>().Owner = value; }
         }
 
+        public bool IsPublished {
+            get { return ContentItem.VersionRecord.Published; }
+        }
+
+        public bool HasDraft {
+            get {
+                return (
+                    (ContentItem.VersionRecord.Published == false) ||
+                    (ContentItem.VersionRecord.Published && ContentItem.VersionRecord.Latest == false));
+            }
+        }
+
+        public bool HasPublished {
+            get { 
+                if (IsPublished) 
+                    return true;
+                if (ContentItem.ContentManager.Get(Id, VersionOptions.Published) != null) 
+                    return true;
+                return false;
+            }
+        }
+
+        public string PublishedSlug {
+            get {
+                if (IsPublished)
+                    return Slug;
+                Page publishedPage = ContentItem.ContentManager.Get<Page>(Id, VersionOptions.Published);
+                if (publishedPage == null) 
+                    return String.Empty;
+                return publishedPage.Slug;
+            }
+        }
+
         public DateTime? Published {
             get { return Record.Published; }
             set { Record.Published = value; }
@@ -44,9 +77,4 @@ namespace Orchard.Pages.Models {
 
         //public virtual Published Published { get; set; }
     }
-    //public class PageOverride : IAutoMappingOverride<Page> {
-    //    public void Override(AutoMapping<Page> mapping) {
-    //        mapping.HasOne(p => p.Published).PropertyRef(p => p.Page).Cascade.All();
-    //    }
-    //}
 }
