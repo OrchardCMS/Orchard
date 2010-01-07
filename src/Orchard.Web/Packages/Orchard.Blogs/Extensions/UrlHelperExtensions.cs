@@ -14,6 +14,18 @@ namespace Orchard.Blogs.Extensions {
             return urlHelper.Action("Item", "Blog", new {blogSlug, area = "Orchard.Blogs"});
         }
 
+        public static string BlogArchiveYear(this UrlHelper urlHelper, string blogSlug, int year) {
+            return urlHelper.Action("ListByArchive", "BlogPost", new { blogSlug, archiveData = year.ToString(), area = "Orchard.Blogs" });
+        }
+
+        public static string BlogArchiveMonth(this UrlHelper urlHelper, string blogSlug, int year, int month) {
+            return urlHelper.Action("ListByArchive", "BlogPost", new { blogSlug, archiveData = string.Format("{0}/{1}", year, month), area = "Orchard.Blogs" });
+        }
+
+        public static string BlogArchiveDay(this UrlHelper urlHelper, string blogSlug, int year, int month, int day) {
+            return urlHelper.Action("ListByArchive", "BlogPost", new {blogSlug, archiveData = string.Format("{0}/{1}/{2}", year, month, day), area = "Orchard.Blogs"});
+        }
+
         public static string BlogForAdmin(this UrlHelper urlHelper, string blogSlug) {
             return urlHelper.Action("Item", "BlogAdmin", new {blogSlug, area = "Orchard.Blogs"});
         }

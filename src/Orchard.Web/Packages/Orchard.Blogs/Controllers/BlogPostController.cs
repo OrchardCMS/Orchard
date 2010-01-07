@@ -1,3 +1,4 @@
+using System.Linq;
 using System.Text.RegularExpressions;
 using System.Web.Mvc;
 using Orchard.Blogs.Extensions;
@@ -46,6 +47,7 @@ namespace Orchard.Blogs.Controllers {
             if (!_authorizer.Authorize(Permissions.ViewPost, T("Couldn't view blog post")))
                 return new HttpUnauthorizedResult();
 
+            //TODO: (erikpo) Move looking up the current blog up into a modelbinder
             Blog blog = _blogService.Get(blogSlug);
 
             if (blog == null)
@@ -64,9 +66,27 @@ namespace Orchard.Blogs.Controllers {
             return View(model);
         }
 
+        public ActionResult ListByArchive(string blogSlug, string archiveData) {
+            //TODO: (erikpo) Move looking up the current blog up into a modelbinder
+            Blog blog = _blogService.Get(blogSlug);
+
+            if (blog == null)
+                return new NotFoundResult();
+
+            var archive = new ArchiveData(archiveData);
+            var model = new BlogPostArchiveViewModel {
+                Blog = blog,
+                ArchiveData = archive,
+                BlogPosts = _blogPostService.Get(blog, archive).Select(b => _contentManager.BuildDisplayModel(b, "Summary"))
+            };
+
+            return View(model);
+        }
+
         public ActionResult Slugify(string value) {
             string slug = value;
 
+            //TODO: (erikpo) Move this into a utility class
             if (!string.IsNullOrEmpty(value)) {
                 Regex regex = new Regex("([^a-z0-9-_]?)", RegexOptions.IgnoreCase | RegexOptions.Compiled);
 

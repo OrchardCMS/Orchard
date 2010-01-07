@@ -191,6 +191,23 @@ namespace Orchard.Blogs {
                                                  },
                              new RouteDescriptor {
                                                      Route = new Route(
+                                                         "{blogSlug}/Archive/{*archiveData}",
+                                                         new RouteValueDictionary {
+                                                                                      {"area", "Orchard.Blogs"},
+                                                                                      {"controller", "BlogPost"},
+                                                                                      {"action", "ListByArchive"}
+                                                                                  },
+                                                         new RouteValueDictionary {
+                                                                                      {"blogSlug", new IsBlogConstraint(_containerProvider)},
+                                                                                      {"archiveData", new IsArchiveConstraint()}
+                                                                                  },
+                                                         new RouteValueDictionary {
+                                                                                      {"area", "Orchard.Blogs"}
+                                                                                  },
+                                                         new MvcRouteHandler())
+                                                 },
+                             new RouteDescriptor {
+                                                     Route = new Route(
                                                          "{blogSlug}/{postSlug}",
                                                          new RouteValueDictionary {
                                                                                       {"area", "Orchard.Blogs"},

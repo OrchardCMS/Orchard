@@ -66,7 +66,7 @@ namespace Orchard.Blogs.Controllers {
 
             return Combined(
                 ContentItemTemplate("Items/Blogs.Blog").LongestMatch(displayType, "Summary", "DetailAdmin", "SummaryAdmin"),
-                blogPosts == null ? null : ContentPartTemplate(blogPosts, "Parts/Blogs.BlogPost.List", "").Location("body"));
+                blogPosts == null ? null : ContentPartTemplate(blogPosts, "Parts/Blogs.BlogPost.List", "").Location("primary"));
         }
 
         protected override DriverResult Editor(Blog blog) {
