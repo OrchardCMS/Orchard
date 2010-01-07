@@ -110,11 +110,6 @@
     <Content Include="Views\Page\Edit.ascx" />
     <Content Include="Views\Page\Item.ascx" />
     <Content Include="Views\Page\List.aspx" />
-    <Content Include="Views\Templates\ExtraUserControl.ascx" />
-    <Content Include="Views\Templates\ThreeColumns.aspx" />
-    <Content Include="Views\Templates\ThreeColumns.gif" />
-    <Content Include="Views\Templates\TwoColumns.aspx" />
-    <Content Include="Views\Templates\TwoColumns.gif" />
     <Content Include="Web.config" />
     <Content Include="Views\Web.config" />
   </ItemGroup>
