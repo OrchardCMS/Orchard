@@ -14,24 +14,16 @@ namespace Orchard.Pages.Controllers {
     [ValidateInput(false)]
     public class AdminController : Controller, IUpdateModel {
         private readonly ISessionLocator _sessionLocator;
-        private readonly IContentManager _contentManager;
-        private readonly IAuthorizer _authorizer;
-        private readonly INotifier _notifier;
         private readonly IPageService _pageService;
         private readonly ISlugConstraint _slugConstraint;
 
         public AdminController(
             IOrchardServices services,
-            ISessionLocator sessionLocator, IContentManager contentManager,
-            IAuthorizer authorizer,
-            INotifier notifier,
+            ISessionLocator sessionLocator,
             IPageService pageService,
             ISlugConstraint slugConstraint) {
             Services = services;
             _sessionLocator = sessionLocator;
-            _contentManager = contentManager;
-            _authorizer = authorizer;
-            _notifier = notifier;
             _pageService = pageService;
             _slugConstraint = slugConstraint;
             T = NullLocalizer.Instance;
@@ -50,10 +42,10 @@ namespace Orchard.Pages.Controllers {
         }
 
         public ActionResult Create() {
-            if (!_authorizer.Authorize(Permissions.CreatePages, T("Not allowed to create a page")))
+            if (!Services.Authorizer.Authorize(Permissions.CreatePages, T("Not allowed to create a page")))
                 return new HttpUnauthorizedResult();
 
-            var page = _contentManager.BuildEditorModel(_contentManager.New<Page>("page"));
+            var page = Services.ContentManager.BuildEditorModel(Services.ContentManager.New<Page>("page"));
 
             var model = new PageCreateViewModel {
                 Page = page
@@ -64,11 +56,11 @@ namespace Orchard.Pages.Controllers {
 
         [HttpPost, ActionName("Create")]
         public ActionResult CreatePOST(PageCreateViewModel model) {
-            if (!_authorizer.Authorize(Permissions.CreatePages, T("Couldn't create page")))
+            if (!Services.Authorizer.Authorize(Permissions.CreatePages, T("Couldn't create page")))
                 return new HttpUnauthorizedResult();
 
-            Page page = _contentManager.Create<Page>("page");
-            model.Page = _contentManager.UpdateEditorModel(page, this);
+            Page page = Services.ContentManager.Create<Page>("page");
+            model.Page = Services.ContentManager.UpdateEditorModel(page, this);
 
             if (!ModelState.IsValid)
                 return View(model);
@@ -80,7 +72,7 @@ namespace Orchard.Pages.Controllers {
         }
 
         public ActionResult Edit(string pageSlug) {
-            if (!_authorizer.Authorize(Permissions.ModifyPages, T("Couldn't edit page")))
+            if (!Services.Authorizer.Authorize(Permissions.ModifyPages, T("Couldn't edit page")))
                 return new HttpUnauthorizedResult();
 
             Page page = _pageService.Get(pageSlug);
@@ -89,7 +81,7 @@ namespace Orchard.Pages.Controllers {
                 return new NotFoundResult();
 
             var model = new PageEditViewModel {
-                Page = _contentManager.BuildEditorModel(page)
+                Page = Services.ContentManager.BuildEditorModel(page)
             };
 
             return View(model);
@@ -97,7 +89,7 @@ namespace Orchard.Pages.Controllers {
 
         [HttpPost, ActionName("Edit")]
         public ActionResult EditPOST(string pageSlug) {
-            if (!_authorizer.Authorize(Permissions.ModifyPages, T("Couldn't edit page")))
+            if (!Services.Authorizer.Authorize(Permissions.ModifyPages, T("Couldn't edit page")))
                 return new HttpUnauthorizedResult();
 
             Page page = _pageService.Get(pageSlug);
@@ -106,7 +98,7 @@ namespace Orchard.Pages.Controllers {
                 return new NotFoundResult();
 
             var model = new PageEditViewModel {
-                Page = _contentManager.UpdateEditorModel(page, this)
+                Page = Services.ContentManager.UpdateEditorModel(page, this)
             };
 
             TryUpdateModel(model);
@@ -116,13 +108,13 @@ namespace Orchard.Pages.Controllers {
                 return View(model);
             }
 
-            _notifier.Information(T("Page information updated."));
+            Services.Notifier.Information(T("Page information updated."));
             return RedirectToAction("Edit", new { pageSlug = page.Slug });
         }
 
         [HttpPost]
         public ActionResult Delete(string pageSlug) {
-            if (!_authorizer.Authorize(Permissions.DeletePages, T("Couldn't delete page")))
+            if (!Services.Authorizer.Authorize(Permissions.DeletePages, T("Couldn't delete page")))
                 return new HttpUnauthorizedResult();
 
             Page page = _pageService.Get(pageSlug);
@@ -132,7 +124,7 @@ namespace Orchard.Pages.Controllers {
 
             _pageService.Delete(page);
 
-            _notifier.Information(T("Page was successfully deleted"));
+            Services.Notifier.Information(T("Page was successfully deleted"));
 
             return RedirectToAction("List");
         }
