@@ -16,24 +16,16 @@ namespace Orchard.Blogs.Controllers {
     [ValidateInput(false)]
     public class BlogPostController : Controller, IUpdateModel {
         private readonly ISessionLocator _sessionLocator;
-        private readonly IContentManager _contentManager;
-        private readonly IAuthorizer _authorizer;
-        private readonly INotifier _notifier;
         private readonly IBlogService _blogService;
         private readonly IBlogPostService _blogPostService;
 
         public BlogPostController(
             IOrchardServices services,
-            ISessionLocator sessionLocator, IContentManager contentManager, 
-            IAuthorizer authorizer,
-            INotifier notifier, 
+            ISessionLocator sessionLocator,
             IBlogService blogService,
             IBlogPostService blogPostService) {
             Services = services;
             _sessionLocator = sessionLocator;
-            _contentManager = contentManager;
-            _authorizer = authorizer;
-            _notifier = notifier;
             _blogService = blogService;
             _blogPostService = blogPostService;
             T = NullLocalizer.Instance;
@@ -44,7 +36,7 @@ namespace Orchard.Blogs.Controllers {
 
         //TODO: (erikpo) Should think about moving the slug parameters and get calls and null checks up into a model binder or action filter
         public ActionResult Item(string blogSlug, string postSlug) {
-            if (!_authorizer.Authorize(Permissions.ViewPost, T("Couldn't view blog post")))
+            if (!Services.Authorizer.Authorize(Permissions.ViewPost, T("Couldn't view blog post")))
                 return new HttpUnauthorizedResult();
 
             //TODO: (erikpo) Move looking up the current blog up into a modelbinder
@@ -60,7 +52,7 @@ namespace Orchard.Blogs.Controllers {
 
             var model = new BlogPostViewModel {
                 Blog = blog,
-                BlogPost = _contentManager.BuildDisplayModel(post, "Detail")
+                BlogPost = Services.ContentManager.BuildDisplayModel(post, "Detail")
             };
 
             return View(model);
@@ -77,7 +69,7 @@ namespace Orchard.Blogs.Controllers {
             var model = new BlogPostArchiveViewModel {
                 Blog = blog,
                 ArchiveData = archive,
-                BlogPosts = _blogPostService.Get(blog, archive).Select(b => _contentManager.BuildDisplayModel(b, "Summary"))
+                BlogPosts = _blogPostService.Get(blog, archive).Select(b => Services.ContentManager.BuildDisplayModel(b, "Summary"))
             };
 
             return View(model);
@@ -108,7 +100,7 @@ namespace Orchard.Blogs.Controllers {
 
         public ActionResult Create(string blogSlug) {
             //TODO: (erikpo) Might think about moving this to an ActionFilter/Attribute
-            if (!_authorizer.Authorize(Permissions.CreatePost, T("Not allowed to create blog post")))
+            if (!Services.Authorizer.Authorize(Permissions.CreatePost, T("Not allowed to create blog post")))
                 return new HttpUnauthorizedResult();
             
             //TODO: (erikpo) Move looking up the current blog up into a modelbinder
@@ -117,7 +109,7 @@ namespace Orchard.Blogs.Controllers {
             if (blog == null)
                 return new NotFoundResult();
 
-            var blogPost = _contentManager.BuildEditorModel(_contentManager.New<BlogPost>("blogpost"));
+            var blogPost = Services.ContentManager.BuildEditorModel(Services.ContentManager.New<BlogPost>("blogpost"));
             blogPost.Item.Blog = blog;
 
             var model = new CreateBlogPostViewModel {
@@ -129,7 +121,7 @@ namespace Orchard.Blogs.Controllers {
 
         [HttpPost]
         public ActionResult Create(string blogSlug, CreateBlogPostViewModel model) {
-            if (!_authorizer.Authorize(Permissions.CreatePost, T("Couldn't create blog post")))
+            if (!Services.Authorizer.Authorize(Permissions.CreatePost, T("Couldn't create blog post")))
                 return new HttpUnauthorizedResult();
 
             //TODO: (erikpo) Move looking up the current blog up into a modelbinder
@@ -138,8 +130,8 @@ namespace Orchard.Blogs.Controllers {
             if (blog == null)
                 return new NotFoundResult();
 
-            BlogPost blogPost = _contentManager.Create<BlogPost>("blogpost", bp => { bp.Blog = blog; });
-            model.BlogPost = _contentManager.UpdateEditorModel(blogPost, this);
+            BlogPost blogPost = Services.ContentManager.Create<BlogPost>("blogpost", bp => { bp.Blog = blog; });
+            model.BlogPost = Services.ContentManager.UpdateEditorModel(blogPost, this);
 
             if (!ModelState.IsValid)
                 return View(model);
@@ -152,7 +144,7 @@ namespace Orchard.Blogs.Controllers {
         }
 
         public ActionResult Edit(string blogSlug, string postSlug) {
-            if (!_authorizer.Authorize(Permissions.ModifyPost, T("Couldn't edit blog post")))
+            if (!Services.Authorizer.Authorize(Permissions.ModifyPost, T("Couldn't edit blog post")))
                 return new HttpUnauthorizedResult();
 
             //TODO: (erikpo) Move looking up the current blog up into a modelbinder
@@ -167,7 +159,7 @@ namespace Orchard.Blogs.Controllers {
                 return new NotFoundResult();
 
             var model = new BlogPostEditViewModel {
-                BlogPost = _contentManager.BuildEditorModel(post)
+                BlogPost = Services.ContentManager.BuildEditorModel(post)
             };
 
             return View(model);
@@ -175,7 +167,7 @@ namespace Orchard.Blogs.Controllers {
 
         [HttpPost, ActionName("Edit")]
         public ActionResult EditPOST(string blogSlug, string postSlug) {
-            if (!_authorizer.Authorize(Permissions.ModifyPost, T("Couldn't edit blog post")))
+            if (!Services.Authorizer.Authorize(Permissions.ModifyPost, T("Couldn't edit blog post")))
                 return new HttpUnauthorizedResult();
 
             //TODO: (erikpo) Move looking up the current blog up into a modelbinder
@@ -190,7 +182,7 @@ namespace Orchard.Blogs.Controllers {
                 return new NotFoundResult();
 
             var model = new BlogPostEditViewModel {
-                BlogPost = _contentManager.UpdateEditorModel(post, this)
+                BlogPost = Services.ContentManager.UpdateEditorModel(post, this)
             };
 
             TryUpdateModel(model);
@@ -200,13 +192,13 @@ namespace Orchard.Blogs.Controllers {
                 return View(model);
             }
 
-            _notifier.Information(T("Blog post information updated."));
+            Services.Notifier.Information(T("Blog post information updated."));
             return Redirect(Url.BlogPostEdit(blog.Slug, post.Slug));
         }
 
         [HttpPost]
         public ActionResult Delete(string blogSlug, string postSlug) {
-            if (!_authorizer.Authorize(Permissions.DeletePost, T("Couldn't delete blog post")))
+            if (!Services.Authorizer.Authorize(Permissions.DeletePost, T("Couldn't delete blog post")))
                 return new HttpUnauthorizedResult();
 
             //TODO: (erikpo) Move looking up the current blog up into a modelbinder
@@ -222,7 +214,7 @@ namespace Orchard.Blogs.Controllers {
 
             _blogPostService.Delete(post);
 
-            _notifier.Information(T("Blog post was successfully deleted"));
+            Services.Notifier.Information(T("Blog post was successfully deleted"));
 
             return Redirect(Url.BlogForAdmin(blogSlug));
         }
