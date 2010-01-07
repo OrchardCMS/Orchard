@@ -18,7 +18,7 @@ namespace Orchard.Tags.Controllers {
         }
 
         protected override DriverResult Display(HasTags part, string displayType) {
-            return ContentPartTemplate(part, "Parts/Tags.ShowTags").Location("body:above");
+            return ContentPartTemplate(part, "Parts/Tags.ShowTags").Location("primary", "49");
         }
 
         protected override DriverResult Editor(HasTags part) {

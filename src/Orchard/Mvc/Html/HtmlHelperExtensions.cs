@@ -40,7 +40,7 @@ namespace Orchard.Mvc.Html {
         #region UnorderedList
 
         public static string UnorderedList<T>(this HtmlHelper htmlHelper, IEnumerable<T> items, Func<T, int, string> generateContent, string cssClass) {
-            return htmlHelper.UnorderedList(items, generateContent, cssClass, null, (string)null);
+            return htmlHelper.UnorderedList(items, generateContent, cssClass, null, null);
         }
 
         public static string UnorderedList<T>(this HtmlHelper htmlHelper, IEnumerable<T> items, Func<T, int, string> generateContent, string cssClass, string itemCssClass, string alternatingItemCssClass) {

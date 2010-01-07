@@ -1,29 +1,29 @@
-<%@ Page Language="C#" Inherits="System.Web.Mvc.ViewPage<CommentsIndexViewModel>" %>
+<%@ Page Language="C#" Inherits="Orchard.Mvc.ViewPage<CommentsIndexViewModel>" %>
 <%@ Import Namespace="Orchard.Comments.Models"%>
 <%@ Import Namespace="Orchard.Comments.ViewModels"%>
-<h2><%=Html.TitleForPage("Manage Comments")%></h2>
+<h1><%=Html.TitleForPage(T("Manage Comments").ToString())%></h1>
 <% using(Html.BeginFormAntiForgeryPost()) { %>
 	<%=Html.ValidationSummary() %>
     <fieldset class="actions bulk">
-        <label for="publishActions">Actions: </label>
+        <label for="publishActions"><%=_Encoded("Actions:") %></label>
         <select id="publishActions" name="<%=Html.NameOf(m => m.Options.BulkAction)%>">
-            <%=Html.SelectOption(Model.Options.BulkAction, CommentIndexBulkAction.None, "Choose action...")%>
-            <%=Html.SelectOption(Model.Options.BulkAction, CommentIndexBulkAction.Delete, "Delete")%>
-            <%=Html.SelectOption(Model.Options.BulkAction, CommentIndexBulkAction.MarkAsSpam, "Mark as Spam")%>
+            <%=Html.SelectOption(Model.Options.BulkAction, CommentIndexBulkAction.None, _Encoded("Choose action...").ToString()) %>
+            <%=Html.SelectOption(Model.Options.BulkAction, CommentIndexBulkAction.Delete, _Encoded("Delete").ToString())%>
+            <%=Html.SelectOption(Model.Options.BulkAction, CommentIndexBulkAction.MarkAsSpam, _Encoded("Mark as Spam").ToString()) %>
         </select>
-        <input class="button" type="submit" name="submit.BulkEdit" value="Apply" />
+        <input class="button" type="submit" name="submit.BulkEdit" value="<%=_Encoded("Apply") %>" />
     </fieldset>
     <fieldset class="actions bulk">
-        <label for="filterResults">Filter: </label>
+        <label for="filterResults"><%=_Encoded("Filter:")%></label>
         <select id="filterResults" name="<%=Html.NameOf(m => m.Options.Filter)%>">
-            <%=Html.SelectOption(Model.Options.Filter, CommentIndexFilter.All, "All Comments")%>
-            <%=Html.SelectOption(Model.Options.Filter, CommentIndexFilter.Approved, "Approved Comments")%>
-            <%=Html.SelectOption(Model.Options.Filter, CommentIndexFilter.Spam, "Spam")%>
+            <%=Html.SelectOption(Model.Options.Filter, CommentIndexFilter.All, _Encoded("All Comments").ToString()) %>
+            <%=Html.SelectOption(Model.Options.Filter, CommentIndexFilter.Approved, _Encoded("Approved Comments").ToString()) %>
+            <%=Html.SelectOption(Model.Options.Filter, CommentIndexFilter.Spam, _Encoded("Spam").ToString())%>
         </select>
-        <input class="button" type="submit" name="submit.Filter" value="Filter"/>
+        <input class="button" type="submit" name="submit.Filter" value="<%=_Encoded("Filter") %>"/>
     </fieldset>
     <fieldset>
-	    <table class="items" summary="This is a table of the comments in your application">
+	    <table class="items" summary="<%=_Encoded("This is a table of the comments in your application") %>">
 		    <colgroup>
 			    <col id="Col1" />
 			    <col id="Col2" />
@@ -36,11 +36,11 @@
 		    <thead>
 			    <tr>
 				    <th scope="col">&nbsp;&darr;<%-- todo: (heskew) something more appropriate for "this applies to the bulk actions --%></th>
-				    <th scope="col">Status</th>
-				    <th scope="col">Author</th>
-				    <th scope="col">Comment</th>
-				    <th scope="col">Date</th>
-				    <th scope="col">Commented On</th>
+				    <th scope="col"><%=_Encoded("Status") %></th>
+				    <th scope="col"><%=_Encoded("Author") %></th>
+				    <th scope="col"><%=_Encoded("Comment") %></th>
+				    <th scope="col"><%=_Encoded("Date") %></th>
+				    <th scope="col"><%=_Encoded("Commented On") %></th>
 			        <th scope="col"></th>
 			    </tr>
 		    </thead>
@@ -51,25 +51,22 @@
             %>
             <tr>
                 <td>
-                    <input type="hidden" value="<%=Model.Comments[commentIndex].Comment.Id%>" name="<%=Html.NameOf(m => m.Comments[ci].Comment.Id)%>"/>
-                    <input type="checkbox" value="true" name="<%=Html.NameOf(m => m.Comments[ci].IsChecked)%>"/>
+                    <input type="hidden" value="<%=Model.Comments[commentIndex].Comment.Id %>" name="<%=Html.NameOf(m => m.Comments[ci].Comment.Id) %>"/>
+                    <input type="checkbox" value="true" name="<%=Html.NameOf(m => m.Comments[ci].IsChecked) %>"/>
                 </td>
-                <td><% if (commentEntry.Comment.Status == CommentStatus.Spam) {%> Spam <% } %>
-                <% else {%> Approved <% } %>
-                </td>
-                <td><%= commentEntry.Comment.UserName %></td>
+                <td><% if (commentEntry.Comment.Status == CommentStatus.Spam) { %><%=_Encoded("Spam") %><% } else { %><%=_Encoded("Approved") %><% } %></td>
+                <td><%=Html.Encode(commentEntry.Comment.UserName) %></td>
                 <td>
                 <% if (commentEntry.Comment.CommentText != null) {%>
-                    <%= commentEntry.Comment.CommentText.Length > 23 ? commentEntry.Comment.CommentText.Substring(0, 24) : commentEntry.Comment.CommentText %> ...
+                    <%-- todo: (heskew) same text processing comment as on the public display, also need to use the ellipsis character instead of ... --%>
+                    <%=Html.Encode(commentEntry.Comment.CommentText.Length > 23 ? commentEntry.Comment.CommentText.Substring(0, 24) : commentEntry.Comment.CommentText) %><%=_Encoded(" ...") %>
                 <% } %> 
                 </td>
-                <td><%= commentEntry.Comment.CommentDate.ToLocalTime() %></td>
+                <td><%=commentEntry.Comment.CommentDate.ToLocalTime() %></td>
+                <td><%=Html.ActionLink(commentEntry.CommentedOn, "Details", new { id = commentEntry.Comment.CommentedOn }) %></td>
                 <td>
-                <%=Html.ActionLink(commentEntry.CommentedOn, "Details", new {id = commentEntry.Comment.CommentedOn}) %>
-                </td>
-                <td>
-                <%=Html.ActionLink("Edit", "Edit", new {commentEntry.Comment.Id}) %> |
-                <%=Html.ActionLink("Delete", "Delete", new {id = commentEntry.Comment.Id, redirectToAction = "Index"}) %>
+                    <%=Html.ActionLink(T("Edit").ToString(), "Edit", new {commentEntry.Comment.Id}) %> |
+                    <%=Html.ActionLink(T("Delete").ToString(), "Delete", new { id = commentEntry.Comment.Id, redirectToAction = "Index" }) %>
                 </td>
             </tr>
             <%

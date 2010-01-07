@@ -12,12 +12,13 @@ namespace Orchard.Comments.Controllers {
             // todo: (heskew) need to be more flexible with displaying parts somehow. e.g. where should the...
             // comment count go in any given skin or what if the skin builder doesn't want the count
             if (displayType.StartsWith("Detail")) {
-                return Combined(
-                    ContentPartTemplate(part, "Parts/Comments.Count").Location("body", "above.5"),
-                    ContentPartTemplate(part, "Parts/Comments.HasComments").Location("body", "below.5"));
+                //return Combined(
+                //    ContentPartTemplate(part, "Parts/Comments.Count").Location("body", "above.5"),
+                //    ContentPartTemplate(part, "Parts/Comments.HasComments").Location("body", "below.5"));
+                return ContentPartTemplate(part, "Parts/Comments.HasComments").Location("primary", "after.5");
             }
 
-            return ContentPartTemplate(part, "Parts/Comments.Count").Location("body", "above.5");
+            return ContentPartTemplate(part, "Parts/Comments.Count").Location("primary", "before.5");
         }
 
         protected override DriverResult Editor(HasComments part) {

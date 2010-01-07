@@ -423,20 +423,28 @@ fieldset {
     margin:0 0 1em;
     padding:0;
 }
-form.comments {
+
+/* Comments
+----------------------------------------------------------*/
+ul.comments {
+    padding:0;
+}
+ul.comments li {
+    list-style-type:none;
+}
+form.comment {
     overflow:hidden;
 }
-form.comments fieldset.who, form.comments fieldset.what {
+form.comment fieldset.who, form.comment fieldset.what {
     float:left;
     margin-right:15px;
 }
-form.comments label {
+form.comment label {
     font-weight:bold;
     margin-top:15px;
 }
-form.comments .button {
+form.comment .button {
     margin-top:15px;
-    
 }
 
 /* Tag cloud

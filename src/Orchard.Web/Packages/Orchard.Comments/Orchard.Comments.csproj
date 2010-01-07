@@ -90,11 +90,11 @@
     <Content Include="Views\Admin\Details.aspx" />
     <Content Include="Views\Admin\Edit.aspx" />
     <Content Include="Views\Admin\Index.aspx" />
-    <Content Include="Views\Admin\Create.aspx" />
     <Content Include="Views\DisplayTemplates\Parts\Comments.HasComments.ascx" />
     <Content Include="Views\DisplayTemplates\Parts\Comments.Count.ascx" />
     <Content Include="Views\EditorTemplates\Parts\Comments.SiteSettings.ascx" />
     <Content Include="Views\EditorTemplates\Parts\Comments.HasComments.ascx" />
+    <Content Include="Views\ListOfComments.ascx" />
     <Content Include="Web.config" />
     <Content Include="Views\Web.config" />
   </ItemGroup>
