@@ -7,8 +7,8 @@ namespace Orchard.Pages {
         public void GetNavigation(NavigationBuilder builder) {
             builder.Add("Pages", "1",
                         menu => menu
-                                    .Add("Manage Pages", "1.0", item => item.Action("List", "Page", new { area = "Orchard.Pages" }))
-                                    .Add("Add New Page", "1.1", item => item.Action("Create", "Page", new { area = "Orchard.Pages" })));
+                                    .Add("Manage Pages", "1.0", item => item.Action("List", "Admin", new { area = "Orchard.Pages" }))
+                                    .Add("Add New Page", "1.1", item => item.Action("Create", "Admin", new { area = "Orchard.Pages" })));
         }
     }
 }

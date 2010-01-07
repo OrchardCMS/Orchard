@@ -34,7 +34,7 @@ namespace Orchard.Pages.Controllers {
         protected override RouteValueDictionary GetEditorRouteValues(Page page) {
             return new RouteValueDictionary {
                                                 {"Area", "Orchard.Pages"},
-                                                {"Controller", "Page"},
+                                                {"Controller", "Admin"},
                                                 {"Action", "Edit"},
                                                 {"pageSlug", page.Slug},
                                             };

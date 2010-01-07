@@ -41,14 +41,14 @@
                   <img src="<%=ResolveUrl("~/Packages/Orchard.Pages/Content/Admin/images/online.gif") %>" alt="Online" title="The page is currently online" />
                 </td>
                 <td><%=page.Title ?? "(no title)" %></td>
-                <td><%=Html.ActionLink(page.Slug ?? "(no slug)", "Show", new { page.Slug }) %></td>
-                <td>By <%= page.Creator %></td>
+                <td><%=Html.ActionLink(page.Slug ?? "(no slug)", "Item", new { controller = "Page", slug = page.Slug }) %></td>
+                <td>By <%= page.Creator.UserName %></td>
                 <td></td>
                 <td>
                     <img src="<%=ResolveUrl("~/Packages/Orchard.Pages/Content/Admin/images/draft.gif") %>" alt="Draft" title="The page has a draft" />
                 </td>
                 <td></td>
-                <td><%=Html.ActionLink("Edit", "Edit", new { page.Slug }) %></td>
+                <td><%=Html.ActionLink("Edit", "Edit", new { pageSlug = page.Slug }) %></td>
             </tr>
             <% }%>
         </table>

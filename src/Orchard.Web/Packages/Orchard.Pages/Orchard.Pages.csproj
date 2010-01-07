@@ -74,6 +74,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AdminMenu.cs" />
+    <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Controllers\PageController.cs" />
     <Compile Include="Controllers\PageDriver.cs" />
     <Compile Include="Extensions\UriExtensions.cs" />
@@ -106,10 +107,10 @@
     <Content Include="Views\EditorTemplates\Items\Pages.Page.ascx" />
     <Content Include="Views\EditorTemplates\Parts\Pages.Page.Fields.ascx" />
     <Content Include="Views\EditorTemplates\Parts\Pages.Page.Publish.ascx" />
-    <Content Include="Views\Page\Create.ascx" />
-    <Content Include="Views\Page\Edit.ascx" />
+    <Content Include="Views\Admin\Create.ascx" />
+    <Content Include="Views\Admin\Edit.ascx" />
     <Content Include="Views\Page\Item.ascx" />
-    <Content Include="Views\Page\List.aspx" />
+    <Content Include="Views\Admin\List.aspx" />
     <Content Include="Web.config" />
     <Content Include="Views\Web.config" />
   </ItemGroup>
