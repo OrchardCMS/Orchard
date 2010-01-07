@@ -1,15 +1,6 @@
-﻿<%@ Control Language="C#" Inherits="System.Web.Mvc.ViewUserControl<BlogPost>" %>
+﻿<%@ Control Language="C#" Inherits="Orchard.Mvc.ViewUserControl<BlogPost>" %>
 <%@ Import Namespace="Orchard.Blogs.Models"%>
-<%@ Import Namespace="Orchard.Blogs.Extensions"%>
-<%@ Import Namespace="Orchard.Blogs.ViewModels"%>
 <fieldset>
-    <legend>Publish Settings</legend>
-    <label for="Command_SaveDraft"><%=Html.RadioButton("Command", "SaveDraft", true, new { id = "Command_SaveDraft" }) %> Save Draft</label><br />
+    <legend><%=_Encoded("Publish Settings")%></legend>
+    <label for="Command_SaveDraft"><%=Html.RadioButton("Command", "SaveDraft", true, new { id = "Command_SaveDraft" }) %> <%=_Encoded("Save Draft")%></label>
 </fieldset>
-<%--<fieldset>
-    <label for="Command_PublishNow"><%=Html.RadioButton("Command", "PublishNow", new { id = "Command_PublishNow" }) %> Publish Now</label>
-</fieldset>
-<fieldset>
-    <label for="Command_PublishLater"><%=Html.RadioButton("Command", "PublishLater", new { id = "Command_PublishLater" }) %> Publish Later</label>
-    <%=Html.EditorFor(m => m.Published) %>
-</fieldset>--%>

@@ -1,4 +1,4 @@
-<%@ Control Language="C#" Inherits="System.Web.Mvc.ViewUserControl<BlogForAdminViewModel>" %>
+<%@ Control Language="C#" Inherits="Orchard.Mvc.ViewUserControl<BlogForAdminViewModel>" %>
 <%@ Import Namespace="Orchard.Blogs.ViewModels"%>
-<% Html.AddTitleParts("Manage Blog"); %>
+<% Html.AddTitleParts(T("Manage Blog").ToString()); %>
 <%=Html.DisplayForItem(m => m.Blog) %>

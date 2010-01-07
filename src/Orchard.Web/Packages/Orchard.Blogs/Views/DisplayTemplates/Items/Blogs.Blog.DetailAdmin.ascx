@@ -1,21 +1,13 @@
-﻿<%@ Control Language="C#" Inherits="System.Web.Mvc.ViewUserControl<ContentItemViewModel<Blog>>" %>
+﻿<%@ Control Language="C#" Inherits="Orchard.Mvc.ViewUserControl<ContentItemViewModel<Blog>>" %>
 <%@ Import Namespace="Orchard.Mvc.ViewModels"%>
 <%@ Import Namespace="Orchard.Blogs.Extensions"%>
 <%@ Import Namespace="Orchard.Blogs.Models"%>
 <%-- todo: (heskew) get what actions we can out of the h2 :| --%>
-<h2 class="withActions">
+<h1 class="withActions">
     <a href="<%=Url.BlogForAdmin(Model.Item.Slug) %>"><%=Html.TitleForPage(Model.Item.Name) %></a>
-    <a href="<%=Url.BlogEdit(Model.Item.Slug) %>" class="ibutton edit" title="Edit Blog">Edit Blog</a>
-    <span class="actions"><span class="destruct"><a href="<%=Url.BlogDelete(Model.Item.Slug) %>" class="ibutton remove" title="Remove Blog">Remove Blog</a></span></span></h2>
-<p><%=Model.Item.Description%></p>
-<div class="actions"><a href="<%=Url.BlogPostCreate(Model.Item.Slug) %>" class="add button">New Post</a></div>
-<%--TODO: (erikpo) Need to figure out which zones should be displayed in this template--%>
-<% Html.ZonesAny(); %>
-
-<%--<%
-if (Model.Posts.Count() > 0) { %>
-<%=Html.UnorderedList(Model.Posts, (p, i) => Html.DisplayFor(blog => p, "BlogPostPreviewForAdmin").ToHtmlString(), "contentItems")%>
-<div class="actions"><a href="<%=Url.BlogPostCreate(Model.Blog.Slug) %>" class="add button">New Post</a></div><%
-} else { %>
-<div class="info message">This blog is sad with no posts, but don't fret. You can add a new post right <a href="<%=Url.BlogPostCreate(Model.Blog.Slug) %>">here</a>!</div><%
-} %>--%>
+    <a href="<%=Url.BlogEdit(Model.Item.Slug) %>" class="ibutton edit"><%=_Encoded("Edit Blog") %></a>
+    <span class="actions"><span class="destruct"><a href="<%=Url.BlogDelete(Model.Item.Slug) %>" class="ibutton remove"><%=_Encoded("Remove Blog") %></a></span></span></h1>
+<p><%=Html.Encode(Model.Item.Description) %></p>
+<div class="actions"><a href="<%=Url.BlogPostCreate(Model.Item.Slug) %>" class="add button"><%=_Encoded("New Post")%></a></div>
+<% Html.Zone("primary");
+   Html.ZonesAny(); %>

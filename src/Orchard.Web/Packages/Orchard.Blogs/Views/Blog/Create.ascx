@@ -1,8 +1,8 @@
-<%@ Control Language="C#" Inherits="System.Web.Mvc.ViewUserControl<CreateBlogViewModel>" %>
+<%@ Control Language="C#" Inherits="Orchard.Mvc.ViewUserControl<CreateBlogViewModel>" %>
 <%@ Import Namespace="Orchard.Blogs.ViewModels"%>
-<h2><%=Html.TitleForPage("Add Blog") %></h2>
+<h1><%=Html.TitleForPage(T("Add Blog").ToString()) %></h1>
 <% using (Html.BeginFormAntiForgeryPost()) { %>
     <%=Html.ValidationSummary() %>
     <%=Html.EditorForItem(vm => vm.Blog) %>
-    <fieldset><input class="button" type="submit" value="Create" /></fieldset><%
+    <fieldset><input class="button" type="submit" value="<%=_Encoded("Create") %>" /></fieldset><%
    } %>

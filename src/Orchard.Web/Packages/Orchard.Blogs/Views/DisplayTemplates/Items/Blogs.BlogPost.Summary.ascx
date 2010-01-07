@@ -1,12 +1,9 @@
-﻿<%@ Control Language="C#" Inherits="System.Web.Mvc.ViewUserControl<ContentItemViewModel<BlogPost>>" %>
-<%@ Import Namespace="Orchard.Mvc.ViewModels"%>
+﻿<%@ Control Language="C#" Inherits="Orchard.Mvc.ViewUserControl<ContentItemViewModel<BlogPost>>" %>
 <%@ Import Namespace="Orchard.ContentManagement"%>
 <%@ Import Namespace="Orchard.Core.Common.Models"%>
+<%@ Import Namespace="Orchard.Mvc.ViewModels"%>
 <%@ Import Namespace="Orchard.Blogs.Extensions"%>
 <%@ Import Namespace="Orchard.Blogs.Models"%>
-<h3><a href="<%=Url.BlogPost(Model.Item.Blog.Slug, Model.Item.Slug) %>"><%=Html.Encode(Model.Item.Title) %></a></h3>
-<div class="meta">
-    <%=Html.PublishedState(Model.Item) %>
-    | <a href="#">?? comments</a>
-</div>
-<div class="content"><%=Model.Item.As<BodyAspect>().Text ?? "<p><em>there's no content for this blog post</em></p>" %></div>
+<h2><%=Html.Link(Html.Encode(Model.Item.Title), Url.BlogPost(Model.Item.Blog.Slug, Model.Item.Slug)) %></h2>
+<div class="meta"><%=Html.PublishedState(Model.Item) %> | <%=Html.Link(_Encoded("?? comments").ToString(), "") %></div>
+<div class="content"><%=Model.Item.As<BodyAspect>().Text ?? string.Format("<p><em>{0}</em></p>", _Encoded("there's no content for this blog post"))%></div>

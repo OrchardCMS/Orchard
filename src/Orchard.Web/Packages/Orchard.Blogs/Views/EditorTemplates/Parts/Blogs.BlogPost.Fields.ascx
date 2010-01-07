@@ -1,12 +1,11 @@
-﻿<%@ Control Language="C#" Inherits="System.Web.Mvc.ViewUserControl<BlogPost>" %>
-<%@ Import Namespace="Orchard.Blogs.Models"%>
+﻿<%@ Control Language="C#" Inherits="Orchard.Mvc.ViewUserControl<BlogPost>" %>
 <%@ Import Namespace="Orchard.Blogs.Extensions"%>
-<%@ Import Namespace="Orchard.Blogs.ViewModels"%>
+<%@ Import Namespace="Orchard.Blogs.Models"%>
 <fieldset>
-    <label for="Title">Title</label>
-    <span><%=Html.TextBoxFor(m => m.Title, new { @class = "large text" })%></span>
+    <%=Html.LabelFor(m => m.Title) %>
+    <%=Html.TextBoxFor(m => m.Title, new { @class = "large text" })%>
 </fieldset>
 <fieldset class="permalink">
-    <label class="sub" for="Slug">Permalink<br /><span><%=Request.Url.ToRootString() %>/<%=Model.Blog.Slug %>/</span></label>
+    <label class="sub" for="Slug"><%=_Encoded("Permalink")%><br /><span><%=Html.Encode(Request.Url.ToRootString()) %>/<%=Html.Encode(Model.Blog.Slug) %>/</span></label>
     <span><%=Html.TextBoxFor(m => m.Slug, new { @class = "text" })%></span>
 </fieldset>

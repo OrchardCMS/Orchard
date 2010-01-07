@@ -1,10 +1,10 @@
-<%@ Control Language="C#" Inherits="System.Web.Mvc.ViewUserControl<BlogsViewModel>" %>
+<%@ Control Language="C#" Inherits="Orchard.Mvc.ViewUserControl<BlogsViewModel>" %>
 <%@ Import Namespace="Orchard.Blogs.ViewModels"%>
-<h1><%=Html.TitleForPage("Blogs")%></h1>
-<p>All of the blogs.</p><%
+<h1><%=Html.TitleForPage(T("Blogs").ToString())%></h1>
+<p><%=_Encoded("All of the blogs.")%></p><%
 if (Model.Blogs.Count() > 0) { %>
 <%=Html.UnorderedList(Model.Blogs, (b, i) => Html.DisplayForItem(b).ToHtmlString(), "blogs contentItems") %><%
 }
 else { %>
-<p>No blogs found.</p><%
+<p><%=_Encoded("No blogs found.") %></p><%
 } %>
