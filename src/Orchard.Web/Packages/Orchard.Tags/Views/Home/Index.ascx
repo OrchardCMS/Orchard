@@ -1,10 +1,10 @@
-﻿<%@ Control Language="C#" Inherits="System.Web.Mvc.ViewUserControl<TagsIndexViewModel>" %>
+﻿<%@ Control Language="C#" Inherits="Orchard.Mvc.ViewUserControl<TagsIndexViewModel>" %>
 <%@ Import Namespace="Orchard.Tags.ViewModels"%>
-<h2><%=Html.TitleForPage("Tags")%></h2>
+<h1><%=Html.TitleForPage(T("Tags").ToString())%></h1>
 <%=Html.UnorderedList(
     Model.Tags,
     (t, i) => Html.ActionLink(
-        t.TagName,
+        Html.Encode(t.TagName),
         "Search",
         new { tagName = t.TagName },
         new { @class = "" /* todo: (heskew) classify according to tag use */ }

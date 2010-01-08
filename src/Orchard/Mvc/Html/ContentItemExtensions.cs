@@ -6,11 +6,11 @@ using Orchard.Mvc.ViewModels;
 
 namespace Orchard.Mvc.Html {
     public static class ContentItemExtensions {
-        public static string ItemDisplayText(this HtmlHelper html, IContent content) {
+        public static MvcHtmlString ItemDisplayText(this HtmlHelper html, IContent content) {
             var metadata = content.ContentItem.ContentManager.GetItemMetadata(content);
             if (metadata.DisplayText == null)
                 return null;
-            return html.Encode(metadata.DisplayText);
+            return MvcHtmlString.Create(html.Encode(metadata.DisplayText));
         }
 
 

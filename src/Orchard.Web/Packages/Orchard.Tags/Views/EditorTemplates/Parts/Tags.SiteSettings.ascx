@@ -1,10 +1,11 @@
-<%@ Control Language="C#" Inherits="System.Web.Mvc.ViewUserControl<TagSettingsRecord>" %>
+<%@ Control Language="C#" Inherits="Orchard.Mvc.ViewUserControl<TagSettingsRecord>" %>
 <%@ Import Namespace="Orchard.Tags.Models"%>
-<h3>Tags</h3>
-<ol>
-    <li>
-        <%= Html.LabelFor(x=>x.EnableTagsOnPages) %>
+<fieldset>
+    <legend><%=_Encoded("Tags")%></legend>
+    <div>
         <%= Html.EditorFor(x=>x.EnableTagsOnPages) %>
+        <label class="forcheckbox" for="TagSettings_EnableTagsOnPages">Pages can be tagged</label>
         <%= Html.ValidationMessage("EnableTagsOnPages", "*")%>
-    </li>
-</ol>
+        <span class="hint forcheckbox"><%=_Encoded("In the admin, if the user has permission to.") %></span>
+    </div>
+</fieldset>

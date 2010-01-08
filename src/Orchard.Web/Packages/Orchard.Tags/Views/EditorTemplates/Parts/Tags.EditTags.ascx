@@ -1,8 +1,6 @@
 ﻿<%@ Control Language="C#" Inherits="System.Web.Mvc.ViewUserControl<EditTagsViewModel>" %>
-<%@ Import Namespace="Orchard.Tags.ViewModels" %>
-<%@ Import Namespace="Orchard.Tags.Models" %>
+<%@ Import Namespace="Orchard.Tags.ViewModels"%>
 <fieldset>
-    <%=Html.LabelFor(m=>m.Tags) %>
-    <%=Html.EditorFor(m=>m.Tags) %>
+    <%=Html.LabelFor(m => m.Tags) %>
+    <%=Html.TextBoxFor(m => m.Tags, new { @class = "large text" })%>
 </fieldset>
-<%--<input class="large text" id="Tags" name="Tags" type="text" value="<%=Model.Tags %>" />--%>
