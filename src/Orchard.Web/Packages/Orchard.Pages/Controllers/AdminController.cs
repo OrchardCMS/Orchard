@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
 using System.Web.Mvc;
 using Orchard.Data;
 using Orchard.Localization;
@@ -32,13 +34,69 @@ namespace Orchard.Pages.Controllers {
         public IOrchardServices Services { get; set; }
         private Localizer T { get; set; }
 
-        public ActionResult List() {
-            IEnumerable<Page> pages = _pageService.Get();
-            var model = new PagesViewModel {
-                Pages = pages
-            };
+        public ActionResult List(PagesOptions options) {
+            // Default options
+            if (options == null)
+                options = new PagesOptions();
 
+            IEnumerable<Page> pages;
+            // Filtering
+            switch (options.Filter) {
+                case PagesFilter.All:
+                    pages = _pageService.Get();
+                    break;
+                case PagesFilter.Published:
+                    pages = _pageService.Get(PageStatus.Published);
+                    break;
+                case PagesFilter.Offline:
+                    pages = _pageService.Get(PageStatus.Offline);
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+            var entries = pages.Select(page => CreatePageEntry(page)).ToList();
+            var model = new PagesViewModel { Options = options, PageEntries = entries };
             return View(model);
+        }
+
+        [HttpPost, ActionName("List")]
+        [FormValueRequired("submit.BulkEdit")]
+        public ActionResult ListPOST(PagesOptions options, IList<PageEntry> pageEntries) {
+            IEnumerable<PageEntry> checkedEntries = pageEntries.Where(p => p.IsChecked);
+            switch (options.BulkAction) {
+                case PagesBulkAction.None:
+                    break;
+                case PagesBulkAction.PublishNow:
+                    if (!Services.Authorizer.Authorize(Permissions.PublishPages, T("Couldn't publish page")))
+                        return new HttpUnauthorizedResult();
+
+                    foreach (PageEntry entry in checkedEntries) {
+                        var page = _pageService.GetLatest(entry.PageId);
+                        _pageService.Publish(page);
+                    }
+                    break;
+                case PagesBulkAction.Delete:
+                    if (!Services.Authorizer.Authorize(Permissions.DeletePages, T("Couldn't delete page")))
+                        return new HttpUnauthorizedResult();
+
+                    foreach (PageEntry entry in checkedEntries) {
+                        var page = _pageService.GetLatest(entry.PageId);
+                        _pageService.Delete(page);
+                    }
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+
+            return RedirectToAction("List");
+        }
+
+        private static PageEntry CreatePageEntry(Page page) {
+            return new PageEntry {
+                Page = page,
+                IsChecked = false,
+                PageId = page.Id
+            };
         }
 
         public ActionResult Create() {
@@ -148,6 +206,19 @@ namespace Orchard.Pages.Controllers {
         }
         void IUpdateModel.AddModelError(string key, LocalizedString errorMessage) {
             ModelState.AddModelError(key, errorMessage.ToString());
+        }
+
+        public class FormValueRequiredAttribute : ActionMethodSelectorAttribute {
+            private readonly string _submitButtonName;
+
+            public FormValueRequiredAttribute(string submitButtonName) {
+                _submitButtonName = submitButtonName;
+            }
+
+            public override bool IsValidForRequest(ControllerContext controllerContext, MethodInfo methodInfo) {
+                var value = controllerContext.HttpContext.Request.Form[_submitButtonName];
+                return !string.IsNullOrEmpty(value);
+            }
         }
     }
 }

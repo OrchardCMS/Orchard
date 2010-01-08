@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Orchard.Pages.Models;
 using Orchard.Core.Common.Records;
@@ -13,13 +14,37 @@ namespace Orchard.Pages.Services {
         }
 
         public IEnumerable<Page> Get() {
-            return _contentManager.Query<Page, PageRecord>(VersionOptions.Latest).List();
+            return Get(PageStatus.All);
+        }
+
+        public IEnumerable<Page> Get(PageStatus status) {
+            switch (status) {
+                case PageStatus.All:
+                    return _contentManager.Query<Page, PageRecord>(VersionOptions.Latest).List();
+                case PageStatus.Published:
+                    return _contentManager.Query<Page, PageRecord>(VersionOptions.Published).List();
+                case PageStatus.Offline:
+                    IEnumerable<Page> allPages = _contentManager.Query<Page, PageRecord>(VersionOptions.Latest).List();
+                    List<Page> offlinePages = new List<Page>();
+                    foreach (var page in allPages) {
+                        if (page.ContentItem.VersionRecord.Published == false) {
+                            offlinePages.Add(page);
+                        }
+                    }
+                    return offlinePages;
+                default:
+                    return new List<Page>();
+            }
         }
 
         public Page Get(string slug) {
             return _contentManager.Query<Page, PageRecord>()
                 .Join<RoutableRecord>().Where(rr => rr.Slug == slug)
                 .List().FirstOrDefault();
+        }
+
+        public Page GetLatest(int id) {
+            return _contentManager.Get<Page>(id, VersionOptions.Latest);
         }
 
         public Page GetPageOrDraft(string slug) {

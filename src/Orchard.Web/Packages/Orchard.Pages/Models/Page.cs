@@ -65,16 +65,7 @@ namespace Orchard.Pages.Models {
             set { Record.Published = value; }
         }
 
-        //public Page() {
-        //    Revisions = new List<PageRevision>();
-        //    Scheduled = new List<Scheduled>();
-        //}
-        //[CascadeAllDeleteOrphan]
-        //public virtual IList<PageRevision> Revisions { get; protected set; }
-
         //[CascadeAllDeleteOrphan]
         //public virtual IList<Scheduled> Scheduled { get; protected set; }
-
-        //public virtual Published Published { get; set; }
     }
 }
