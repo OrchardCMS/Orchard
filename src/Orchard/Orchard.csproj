@@ -248,6 +248,8 @@
     <Compile Include="Mvc\ViewEngines\WebFormsViewEngineProvider.cs" />
     <Compile Include="Mvc\ViewModels\AdminViewModel.cs" />
     <Compile Include="Mvc\ViewModels\BaseViewModel.cs" />
+    <Compile Include="UI\PageClass\IPageClassBuilder.cs" />
+    <Compile Include="UI\PageClass\PageClassBuilder.cs" />
     <Compile Include="UI\PageTitle\IPageTitleBuilder.cs" />
     <Compile Include="UI\PageTitle\PageTitleBuilder.cs" />
     <Compile Include="UI\Resources\IResourceManager.cs" />

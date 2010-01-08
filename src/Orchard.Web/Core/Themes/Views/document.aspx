@@ -11,7 +11,7 @@
      Html.Zone("head", ":metas :styles :scripts"); %>
     <script type="text/javascript">window.document.documentElement.className="dyn"</script>
 </head>
-<body><%
+<body class="<%=Html.ClassForPage() %>"><%
     Html.ZoneBody("body"); %>
 </body>
 </html>

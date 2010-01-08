@@ -4,6 +4,7 @@ using System.Web.Mvc;
 using System.Web.UI;
 using Orchard.Mvc.ViewEngines;
 using Orchard.Mvc.ViewModels;
+using Orchard.UI.PageClass;
 using Orchard.UI.PageTitle;
 using Orchard.UI.Resources;
 using Orchard.UI.Zones;
@@ -44,6 +45,20 @@ namespace Orchard.Mvc.Html {
             html.AppendTitleParts(titleParts);
 
             return MvcHtmlString.Create(html.Encode(titleParts[0]));
+        }
+
+        public static void AddPageClassNames(this HtmlHelper html, params object[] classNames) {
+            html.Resolve<IPageClassBuilder>().AddClassNames(classNames);
+        }
+
+        public static MvcHtmlString ClassForPage(this HtmlHelper html, params object[] classNames) {
+            IPageClassBuilder pageClassBuilder = html.Resolve<IPageClassBuilder>();
+
+            html.AddPageClassNames(classNames);
+            //todo: (heskew) need ContentItem.ContentType
+            html.AddPageClassNames(html.ViewContext.RouteData.Values["area"]);
+
+            return MvcHtmlString.Create(html.Encode(pageClassBuilder.ToString()));
         }
 
         public static void Zone<TModel>(this HtmlHelper<TModel> html, string zoneName, string partitions) where TModel : IZoneContainer {
