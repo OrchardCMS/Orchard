@@ -47,6 +47,47 @@ a {
 
 ul {list-style:circle; list-style-position:inside; line-height:22px;}
 
+/* Forms
+----------------------------------------------------------*/
+
+input[type="text"], #CommentText, #password {
+    border:1px solid #DDDEDF;
+    display: block;
+}
+
+fieldset {
+    border:1px solid #DDDEDF;
+    margin: 20px 20px 20px 10px;
+    }
+
+label {
+    display: block;
+    margin:20px 0 2px 10px;
+    }
+
+input[type="text"], #CommentText, #password {
+    border-color:#cacec6;
+    padding:2px;
+    margin:2px 0 20px 10px;
+    width:80%;
+    }
+
+input[type="checkbox"] {
+    margin:2px 0 20px 10px;
+}
+
+input[type="submit"], input[type="button"] {
+    padding:2px 14px;
+    display: block;
+    margin:2px 0 20px 10px;
+    font-weight:600;
+    }
+  
+.forcheckbox {
+    margin:0 0 0 4px;
+    display:inline;
+}
+
 /* ---------- Forms ---------- */
 
 fieldset {
@@ -66,12 +107,6 @@ legend {
     background:#FFF;
     }
 
-#CommentText, input.text {
-    padding:2px;
-    margin:2px 0;
-    border: 1px solid #838c96;
-    width:80%;
-    }
 
 .button {
     padding:2px 14px;
