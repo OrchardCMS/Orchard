@@ -28,6 +28,7 @@ namespace Orchard.Pages.ViewModels {
     public enum PagesBulkAction {
         None,
         PublishNow,
+        Unpublish,
         Delete
     }
 }

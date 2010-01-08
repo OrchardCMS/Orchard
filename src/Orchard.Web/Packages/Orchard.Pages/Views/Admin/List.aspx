@@ -12,6 +12,7 @@
         <select id="publishActions" name="<%=Html.NameOf(m => m.Options.BulkAction) %>">
             <%=Html.SelectOption(Model.Options.BulkAction, PagesBulkAction.None, "Choose action...") %>
             <%=Html.SelectOption(Model.Options.BulkAction, PagesBulkAction.PublishNow, "Publish Now") %>
+            <%=Html.SelectOption(Model.Options.BulkAction, PagesBulkAction.Unpublish, "Unpublish") %>
             <%=Html.SelectOption(Model.Options.BulkAction, PagesBulkAction.Delete, "Delete") %>
         </select>
         <input class="button" type="submit" name="submit.BulkEdit" value="Apply" />

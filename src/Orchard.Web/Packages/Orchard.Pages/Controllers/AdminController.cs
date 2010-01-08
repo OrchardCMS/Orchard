@@ -75,6 +75,14 @@ namespace Orchard.Pages.Controllers {
                         _pageService.Publish(page);
                     }
                     break;
+                case PagesBulkAction.Unpublish:
+                    if (!Services.Authorizer.Authorize(Permissions.UnpublishPages, T("Couldn't unpublish page")))
+                        return new HttpUnauthorizedResult();
+                    foreach (PageEntry entry in checkedEntries) {
+                        var page = _pageService.GetLatest(entry.PageId);
+                        _pageService.Unpublish(page);
+                    }
+                    break;
                 case PagesBulkAction.Delete:
                     if (!Services.Authorizer.Authorize(Permissions.DeletePages, T("Couldn't delete page")))
                         return new HttpUnauthorizedResult();

@@ -15,7 +15,7 @@ namespace Orchard.Pages {
 
         public string PackageName {
             get {
-                return "NewPages";
+                return "Pages";
             }
         }
 

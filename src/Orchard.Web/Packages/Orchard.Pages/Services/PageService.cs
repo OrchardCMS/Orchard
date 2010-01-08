@@ -69,5 +69,9 @@ namespace Orchard.Pages.Services {
         public void Publish(Page page) {
             _contentManager.Publish(page.ContentItem);
         }
+
+        public void Unpublish(Page page) {
+            //_contentManager.Unpublish(page.ContentItem);
+        }
     }
 }

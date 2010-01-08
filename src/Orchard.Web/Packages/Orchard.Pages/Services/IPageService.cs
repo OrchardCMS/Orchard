@@ -12,6 +12,7 @@ namespace Orchard.Pages.Services {
         Page Create(bool publishNow);
         void Delete(Page page);
         void Publish(Page page);
+        void Unpublish(Page page);
     }
 
     public enum PageStatus {
