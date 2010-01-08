@@ -1,5 +1,5 @@
 namespace Orchard.UI.PageClass {
     public interface IPageClassBuilder : IDependency {
-        void AddClassNames(params object[] titleParts);
+        void AddClassNames(params object[] classNames);
     }
 }

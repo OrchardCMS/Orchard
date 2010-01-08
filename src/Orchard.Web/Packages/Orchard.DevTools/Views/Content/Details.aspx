@@ -1,20 +1,22 @@
-<%@ Page Language="C#" Inherits="System.Web.Mvc.ViewPage<Orchard.DevTools.ViewModels.ContentDetailsViewModel>" %>
+<%@ Page Language="C#" Inherits="Orchard.Mvc.ViewPage<ContentDetailsViewModel>" %>
+<%@ Import Namespace="Orchard.DevTools.ViewModels"%>
 <%@ Import Namespace="Orchard.ContentManagement"%>
 <%@ Import Namespace="System.Reflection" %>
-<h1><%=Html.TitleForPage(string.Format("{0} Content Type", Model.Item.ContentItem.ContentType), "Content")%></h1>
-<h3>Content Item</h3>
-<p>Id:
+<h1><%=Html.TitleForPage(T("{0} Content Type", Model.Item.ContentItem.ContentType).ToString(), T("Content").ToString())%></h1>
+<h2><%=_Encoded("Content Item")%></h2>
+<p>
+<%=_Encoded("Id:")%>
     <%=Model.Item.ContentItem.Id %><br />
-Version:
+<%=_Encoded("Version:")%>
     <%=Model.Item.ContentItem.Version %><br />
-ContentType:
-    <%=Model.Item.ContentItem.ContentType%> <br />
-DisplayText: 
+<%=_Encoded("ContentType:")%>
+    <%=Model.Item.ContentItem.ContentType %><br />
+<%=_Encoded("DisplayText:")%> 
     <%=Html.ItemDisplayText(Model.Item) %><br />
-Links: 
-    <%=Html.ItemDisplayLink("view", Model.Item) %> <%=Html.ItemEditLink("edit", Model.Item) %></p>
-    
-<h3>Content Item Parts</h3>
+<%=_Encoded("Links:")%> 
+    <%=Html.ItemDisplayLink(T("view").ToString(), Model.Item) %> <%=Html.ItemEditLink(T("edit").ToString(), Model.Item) %>
+</p>
+<h2><%=_Encoded("Content Item Parts")%></h2>
 <ul>
     <%foreach (var partType in Model.PartTypes.OrderBy(x => x.Name)) {%>
     <li><span style="font-weight: bold;">
@@ -36,7 +38,7 @@ Links:
                       valueItem = (value as IContent).ContentItem;
                   }
                   if (valueItem != null) {
-                      %><%=Html.ActionLink(valueItem.ContentType + " #" + valueItem.Id, "details", new { valueItem.Id }, new { })%><%
+                      %><%=Html.ActionLink(T("{0} #{1} v{2}", valueItem.ContentType, valueItem.Id).ToString(), "details", new { valueItem.Id }, new { })%><%
                   }
                   %>
                 <ul style="margin-left: 20px">
