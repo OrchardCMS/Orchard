@@ -1,49 +1,52 @@
-<%@ Page Language="C#" Inherits="System.Web.Mvc.ViewPage<MediaItemEditViewModel>" %>
+<%@ Page Language="C#" Inherits="Orchard.Mvc.ViewPage<MediaItemEditViewModel>" %>
 <%@ Import Namespace="Orchard.Media.Models"%>
 <%@ Import Namespace="Orchard.Media.Helpers"%>
 <%@ Import Namespace="Orchard.Media.ViewModels"%>
-<h2><%=Html.TitleForPage("Edit Media - {0}", Model.Name)%></h2>
-<p>
-    <%=Html.ActionLink("Media Folders", "Index")%> &#62; 
+<h1><%=Html.TitleForPage(T("Edit Media - {0}", Model.Name).ToString())%></h1>
+<p><%=Html.ActionLink(T("Media Folders").ToString(), "Index")%> &#62; 
     <%foreach (FolderNavigation navigation in MediaHelpers.GetFolderNavigationHierarchy(Model.MediaPath)) {%>
         <%=Html.ActionLink(navigation.FolderName, "Edit",
                   new {name = navigation.FolderName, mediaPath = navigation.FolderPath})%> &#62;
-	    
     <% } %>
-    Edit Media </p>
+    <%=_Encoded("Edit Media")%></p>
 <div class="sections">
 	<%using (Html.BeginFormAntiForgeryPost()) { %>
         <%= Html.ValidationSummary() %>
         <div class="primary">
-		    <h3>About this media</h3>
+		    <h2><%=_Encoded("About this media")%></h2>
             <fieldset>
-                <label for="Name">Name:</label>
-			    <input id="Name" name="Name" type="hidden" value="<%= Model.Name %>"/>
-			    <input id="NewName" class="text" name="NewName" type="text" value="<%= Model.Name %>"/>
-			    <label for="Caption">Caption:</label>
-			    <input id="Caption" class="text" name="Caption" type="text" value="<%= Model.Caption %>"/>
-			    <input id="LastUpdated" name="LastUpdated" type="hidden" value="<%= Model.LastUpdated %>"/>
-			    <input id="Size" name="Size" type="hidden" value="<%= Model.Size %>"/>
-			    <input id="FolderName" name="FolderName" type="hidden" value="<%= Model.FolderName %>"/>
-			    <input id="MediaPath" name="MediaPath" type="hidden" value="<%= Model.MediaPath %>" />
-			    <span>This will be used for the image alt tag.</span>
+                <div>
+                    <label for="Name"><%=_Encoded("Name")%></label>
+			        <input id="Name" name="Name" type="hidden" value="<%=Html.Encode(Model.Name) %>"/>
+			        <input id="NewName" class="text" name="NewName" type="text" value="<%=Html.Encode(Model.Name) %>"/>
+			    </div>
+                <div>
+			        <label for="Caption"><%=_Encoded("Caption")%></label>
+			        <input id="Caption" class="text" name="Caption" type="text" value="<%= Model.Caption %>"/>
+			        <span class="hint"><%=_Encoded("This will be used for the image alt tag.")%></span>
+			        <input type="hidden" id="LastUpdated" name="LastUpdated" value="<%= Model.LastUpdated %>"/>
+			        <input type="hidden" id="Size" name="Size" value="<%= Model.Size %>"/>
+			        <input type="hidden" id="FolderName" name="FolderName" value="<%= Model.FolderName %>"/>
+			        <input type="hidden" id="MediaPath" name="MediaPath" value="<%= Model.MediaPath %>" />
+			    </div>
 		    </fieldset>
 		    <fieldset>
-			    <input type="submit" class="button" name="submit.Save" value="Save" />
-			    <%--<input type="submit" class="button" name="submit.Delete" value="Delete" />--%>
+			    <input type="submit" class="button" name="submit.Save" value="<%=_Encoded("Save") %>" />
+			    <%--<input type="submit" class="button" name="submit.Delete" value="<%=_Encoded("Delete") %>" />--%>
             </fieldset>
 	    </div>
 	    <div class="secondary">
-		    <h3>Preview</h3>
-		    <div><img src="<%=ResolveUrl("~/Media/" + Model.RelativePath + "/" + Model.Name)%>" class="previewImage" alt="<%= Model.Caption %>" /></div>
+		    <h2><%=_Encoded("Preview")%></h2>
+		    <div><img src="<%=ResolveUrl("~/Media/" + Html.Encode(Model.RelativePath + "/" + Model.Name))%>" class="previewImage" alt="<%=Html.Encode(Model.Caption) %>" /></div>
 		    <ul>
-			    <li><strong>Dimensions:</strong> 500 x 375 pixels</li>
-			    <li><strong>Size:</strong> <%= Model.Size %></li>
-			    <li><strong>Added on:</strong> <%= Model.LastUpdated %> by Orchard User</li>
+		        <%-- todo: make these real (including markup) --%>
+			    <li><label><%=T("Dimensions: <span>500 x 375 pixels</span>")%></label></li>
+			    <li><label><%=T("Size: <span>{0}</span>", Model.Size)%></label></li>
+			    <li><label><%=T("Added on: <span>{0} by Orchard User</span>", Model.LastUpdated)%></label></li>
 			    <li>
-			        <label for="embedPath">Embed:</label>
-			        <input id="embedPath" class="inputText" name="embedPath" type="text" readonly="readonly" value="&lt;img src=&quot;<%=ResolveUrl("~/Media/" + Model.RelativePath + "/" + Model.Name)%>&quot; width=&quot;500&quot; height=&quot;375&quot; alt=&quot;<%= Model.Caption %>&quot; /&gt;" />
-			        <p class="helperText">Copy this html to add this image to your site.</p>
+			        <label for="embedPath"><%=_Encoded("Embed:")%></label>
+			        <input id="embedPath" class="text" name="embedPath" type="text" readonly="readonly" value="<%=_Encoded("<img src=\"{0}\" width=\"{1}\" height=\"{2}\" alt=\"{3}\" />", ResolveUrl("~/Media/" + Model.RelativePath + "/" + Model.Name), 500, 375, Model.Caption) %>" />
+			        <span class="hint"><%=_Encoded("Copy this html to add this image to your site.") %></p>
 			    </li>
 		    </ul>
 	    </div>

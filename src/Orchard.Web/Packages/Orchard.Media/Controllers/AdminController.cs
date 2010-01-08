@@ -54,10 +54,10 @@ namespace Orchard.Media.Controllers {
         }
 
         [AcceptVerbs(HttpVerbs.Post)]
-        public ActionResult Create(FormCollection input) {
+        public ActionResult Create() {
             var viewModel = new MediaFolderCreateViewModel();
             try {
-                UpdateModel(viewModel, input.ToValueProvider());
+                UpdateModel(viewModel);
                 if (!_authorizer.Authorize(Permissions.CreateMediaFolder, T("Couldn't create media folder")))
                     return new HttpUnauthorizedResult();
                 _mediaService.CreateFolder(viewModel.MediaPath, viewModel.Name);
@@ -109,10 +109,10 @@ namespace Orchard.Media.Controllers {
         }
 
         [AcceptVerbs(HttpVerbs.Post)]
-        public ActionResult EditProperties(FormCollection input) {
+        public ActionResult EditProperties() {
             var viewModel = new MediaFolderEditPropertiesViewModel();
             try {
-                UpdateModel(viewModel, input.ToValueProvider());
+                UpdateModel(viewModel);
                 //TODO: There may be better ways to do this.
                 // Delete
                 if (!String.IsNullOrEmpty(HttpContext.Request.Form["submit.Delete"])) {
@@ -141,10 +141,10 @@ namespace Orchard.Media.Controllers {
         }
 
         [AcceptVerbs(HttpVerbs.Post)]
-        public ActionResult Add(FormCollection input) {
+        public ActionResult Add() {
             var viewModel = new MediaItemAddViewModel();
             try {
-                UpdateModel(viewModel, input.ToValueProvider());
+                UpdateModel(viewModel);
                 if (!_authorizer.Authorize(Permissions.UploadMedia, T("Couldn't upload media file")))
                     return new HttpUnauthorizedResult();
 
@@ -176,7 +176,7 @@ namespace Orchard.Media.Controllers {
         public ActionResult EditMedia(FormCollection input) {
             var viewModel = new MediaItemEditViewModel();
             try {
-                UpdateModel(viewModel, input.ToValueProvider());
+                UpdateModel(viewModel);
                 if (!_authorizer.Authorize(Permissions.ModifyMedia, T("Couldn't modify media file")))
                     return new HttpUnauthorizedResult();
                 // Delete

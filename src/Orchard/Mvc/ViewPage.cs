@@ -21,7 +21,7 @@ namespace Orchard.Mvc {
         public MvcHtmlString _Encoded(string textHint) {
             return MvcHtmlString.Create(Html.Encode(T(textHint)));
         }
-        public MvcHtmlString _Encoded(string textHint, params string[] formatTokens) {
+        public MvcHtmlString _Encoded(string textHint, params object[] formatTokens) {
             return MvcHtmlString.Create(Html.Encode(T(textHint, formatTokens)));
         }
     }

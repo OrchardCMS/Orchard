@@ -1,25 +1,26 @@
-<%@ Page Language="C#" Inherits="System.Web.Mvc.ViewPage<MediaItemAddViewModel>" %>
+<%@ Page Language="C#" Inherits="Orchard.Mvc.ViewPage<MediaItemAddViewModel>" %>
 <%@ Import Namespace="Orchard.Media.Helpers"%>
 <%@ Import Namespace="Orchard.Media.Models"%>
 <%@ Import Namespace="Orchard.Media.ViewModels"%>
-<h2><%=Html.TitleForPage("Add Media")%></h2>
-<p>
-    <%=Html.ActionLink("Media Folders", "Index")%> &#62; 
-    <%foreach (FolderNavigation navigation in MediaHelpers.GetFolderNavigationHierarchy(Model.MediaPath)) {%>
+<h1><%=Html.TitleForPage(T("Add Media").ToString()) %></h1>
+<p><%=Html.ActionLink(T("Media Folders").ToString(), "Index") %> &#62; 
+    <%foreach (FolderNavigation navigation in MediaHelpers.GetFolderNavigationHierarchy(Model.MediaPath)) { %>
         <%=Html.ActionLink(navigation.FolderName, "Edit",
                   new {name = navigation.FolderName, mediaPath = navigation.FolderPath})%> &#62;
 	    
     <% } %>
-    Add Media</p>
-<% using (Html.BeginForm("Add", "Admin", FormMethod.Post, new { enctype = "multipart/form-data" })) {%>
+    <%=_Encoded("Add Media") %></p>
+<% using (Html.BeginForm("Add", "Admin", FormMethod.Post, new { enctype = "multipart/form-data" })) { %>
     <%= Html.ValidationSummary() %>
     <fieldset>
-        <label for="pageTitle">File Path - Multiple files must be in a zipped folder:</label>
-        <input id="FolderName" name="FolderName" type="hidden" value="<%= Model.FolderName %>" />
-        <input id="MediaPath" name="MediaPath" type="hidden" value="<%= Model.MediaPath %>" />
-        <input id="MediaItemPath" name="MediaItemPath" type="file" class="text" value="Browse" size="64"/>
-		<input type="submit" class="button" value="Upload" /><br />
-		<span>After your files have been uploaded, you can edit the titles and descriptions.</span>
+        <label for="pageTitle"><%=T("File Path <span> - multiple files must be in a zipped folder</span>")%></label>
+        <input id="MediaItemPath" name="MediaItemPath" type="file" class="text" value="<%=_Encoded("Browse") %>" size="64"/>
+		<span class="hint"><%=_Encoded("After your files have been uploaded, you can edit the titles and descriptions.")%></span>
+        <input type="hidden" id="FolderName" name="FolderName" value="<%=Html.Encode(Model.FolderName) %>" />
+        <input type="hidden" id="MediaPath" name="MediaPath" value="<%=Html.Encode(Model.MediaPath) %>" />
+    </fieldset>
+    <fieldset>
+		<input type="submit" class="button" value="<%=_Encoded("Upload") %>" />
 		<%=Html.AntiForgeryTokenOrchard() %>
 	</fieldset>
 <% } %>

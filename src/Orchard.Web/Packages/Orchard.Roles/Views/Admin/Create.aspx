@@ -1,18 +1,18 @@
-<%@ Page Language="C#" Inherits="System.Web.Mvc.ViewPage<RoleCreateViewModel>" %>
+<%@ Page Language="C#" Inherits="Orchard.Mvc.ViewPage<RoleCreateViewModel>" %>
 <%@ Import Namespace="Orchard.Roles.ViewModels"%>
-<h2><%=Html.TitleForPage("Add Role")%></h2>
+<h1><%=Html.TitleForPage(T("Add Role").ToString()) %></h1>
 <% using (Html.BeginFormAntiForgeryPost()) { %>
     <%=Html.ValidationSummary()%>
     <fieldset>
-	    <legend>Information</legend>
-	    <label for="pageTitle">Role Name:</label>
-	    <input id="Name" class="inputText inputTextLarge" name="Name" type="text" value="<%= Model.Name %>" />
+	    <legend><%=_Encoded("Information") %></legend>
+	    <label for="pageTitle"><%=_Encoded("Role Name:") %></label>
+	    <input id="Name" class="text" name="Name" type="text" value="<%=Html.Encode(Model.Name) %>" />
     </fieldset>
     <fieldset>
-        <legend>Permissions</legend>
+        <legend><%=_Encoded("Permissions") %></legend>
         <% foreach (var packageName in Model.PackagePermissions.Keys) { %>
         <fieldset>
-            <legend><%=packageName%> Module</legend>
+            <legend><%=_Encoded("{0} Module", packageName) %></legend>
             <table class="items">
                 <colgroup>
                     <col id="Permission" />
@@ -20,14 +20,14 @@
                 </colgroup>
                 <thead>
                     <tr>
-                        <th scope="col">Permission</th>
-                        <th scope="col">Allow</th>
+                        <th scope="col"><%=_Encoded("Permission") %></th>
+                        <th scope="col"><%=_Encoded("Allow") %></th>
                     </tr>
                 </thead>
-                <% foreach (var permission in Model.PackagePermissions[packageName]) {%>
+                <% foreach (var permission in Model.PackagePermissions[packageName]) { %>
                 <tr>
-                    <td><%=permission.Description%></td>
-                    <td style="width:60px;/* todo: (heskew) make not inline :("><input type="checkbox" value="true" name="<%="Checkbox." + permission.Name%>"/></td>
+                    <td><%=Html.Encode(permission.Description) %></td>
+                    <td style="width:60px;/* todo: (heskew) make not inline :( */"><input type="checkbox" value="true" name="<%=_Encoded("Checkbox.{0}", permission.Name) %>"/></td>
                 </tr>
                 <% } %>
             </table>
@@ -35,6 +35,6 @@
         <% } %>
     </fieldset>
     <fieldset>
-       <input type="submit" class="button" value="Save" />
+       <input type="submit" class="button" value="<%=_Encoded("Save") %>" />
     </fieldset>
 <% } %>

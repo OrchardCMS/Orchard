@@ -1,10 +1,10 @@
-<%@ Control Language="C#" Inherits="System.Web.Mvc.ViewUserControl<MediaSettingsRecord>" %>
+<%@ Control Language="C#" Inherits="Orchard.Mvc.ViewUserControl<MediaSettingsRecord>" %>
 <%@ Import Namespace="Orchard.Media.Models"%>
-<h3>Media</h3>
-<ol>
-    <li>
-        <%= Html.LabelFor(x=>x.RootMediaFolder) %>
-        <%= Html.EditorFor(x=>x.RootMediaFolder) %>
-        <%= Html.ValidationMessage("RootMediaFolder", "*")%>
-    </li>
-</ol>
+<fieldset>
+    <legend><%=_Encoded("Media")%></legend>
+    <div>
+        <label for="MediaSettings_RootMediaFolder">Media folder</label>
+        <%=Html.EditorFor(x=>x.RootMediaFolder) %>
+        <%=Html.ValidationMessage("RootMediaFolder", "*")%>
+    </div>
+</fieldset>

@@ -1,19 +1,18 @@
-<%@ Page Language="C#" Inherits="System.Web.Mvc.ViewPage<MediaFolderIndexViewModel>" %>
+<%@ Page Language="C#" Inherits="Orchard.Mvc.ViewPage<MediaFolderIndexViewModel>" %>
 <%@ Import Namespace="Orchard.Media.ViewModels"%>
-<h2><%=Html.TitleForPage("Manage Media Folders")%></h2>
-<p><%=Html.ActionLink("Media Folders", "Index")%> &#62; Manage Media Folders</p>
+<h1><%=Html.TitleForPage(T("Manage Media Folders").ToString()) %></h1>
 <% using(Html.BeginFormAntiForgeryPost()) { %>
     <%=Html.ValidationSummary() %>
     <fieldset class="actions bulk">
-        <label for="publishActions">Actions: </label>
+        <label for="publishActions"><%=_Encoded("Actions:") %></label>
 		<select id="Select1" name="publishActions">
-		    <option value="1">Delete</option>
+		    <option value="1"><%=_Encoded("Delete")%></option>
 		</select>
-		<input class="button roundCorners" type="submit" value="Apply" />
+		<input class="button roundCorners" type="submit" value="<%=_Encoded("Apply") %>" />
     </fieldset>
-    <div class="manage"><%=Html.ActionLink("Add a folder", "Create", new {}, new { @class = "button"}) %></div>
+    <div class="manage"><%=Html.ActionLink(T("Add a folder").ToString(), "Create", new {}, new { @class = "button"}) %></div>
     <fieldset>
-	    <table class="items" summary="This is a table of the media folders currently available for use in your application.">
+	    <table class="items" summary="<%=_Encoded("This is a table of the media folders currently available for use in your application.") %>">
 		    <colgroup>
 			    <col id="Col1" />
 			    <col id="Col2" />
@@ -25,27 +24,29 @@
 		    <thead>
 			    <tr>
 				    <th scope="col">&nbsp;&darr;<%-- todo: (heskew) something more appropriate for "this applies to the bulk actions --%></th>
-				    <th scope="col">Name</th>
-				    <th scope="col">Author</th>
-				    <th scope="col">Last Updated</th>
-				    <th scope="col">Type</th>
-				    <th scope="col">Size</th>
+				    <th scope="col"><%=_Encoded("Name")%></th>
+				    <th scope="col"><%=_Encoded("Author") %></th>
+				    <th scope="col"><%=_Encoded("Last Updated") %></th>
+				    <th scope="col"><%=_Encoded("Type") %></th>
+				    <th scope="col"><%=_Encoded("Size") %></th>
 			    </tr>
 		    </thead>
             <%foreach (var mediaFolder in Model.MediaFolders) {
             %>
             <tr>
-                <td><input type="checkbox" value="true" name="<%= "Checkbox." + mediaFolder.Name %>"/></td>
-                <td><img src="<%=ResolveUrl("~/Packages/Orchard.Media/Content/Admin/images/folder.gif")%>" height="16px" width="16px" class="mediaTypeIcon" alt="Folder" />
+                <td><input type="checkbox" value="true" name="<%=_Encoded("Checkbox.{0}", mediaFolder.Name) %>"/></td>
+                <%-- todo: (heskew) this URL needs to be determined from current package location --%>
+                <td>
+                    <img src="<%=ResolveUrl("~/Packages/Orchard.Media/Content/Admin/images/folder.gif")%>" height="16" width="16" class="mediaTypeIcon" alt="<%=_Encoded("Folder") %>" />
                     <%=Html.ActionLink(mediaFolder.Name, "Edit", new { name = mediaFolder.Name, mediaPath = mediaFolder.MediaPath })%>
                 </td>
-                <td>Orchard User</td>
+                <td><%=_Encoded("Orchard User")%></td>
                 <td><%=mediaFolder.LastUpdated %></td>
-                <td>Folder</td>
+                <td><%=_Encoded("Folder")%></td>
                 <td><%=mediaFolder.Size %></td>
             </tr>
             <%}%>
         </table>
     </fieldset>
-    <div class="manage"><%=Html.ActionLink("Add a folder", "Create", new {}, new { @class = "button"}) %></div>
+    <div class="manage"><%=Html.ActionLink(T("Add a folder").ToString(), "Create", new {}, new { @class = "button"}) %></div>
 <% } %>

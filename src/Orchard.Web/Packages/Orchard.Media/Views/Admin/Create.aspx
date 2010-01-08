@@ -1,20 +1,20 @@
-<%@ Page Language="C#" Inherits="System.Web.Mvc.ViewPage<MediaFolderCreateViewModel>" %>
-<%@ Import Namespace="Orchard.Media.Models"%>
+<%@ Page Language="C#" Inherits="Orchard.Mvc.ViewPage<MediaFolderCreateViewModel>" %>
 <%@ Import Namespace="Orchard.Media.Helpers"%>
+<%@ Import Namespace="Orchard.Media.Models"%>
 <%@ Import Namespace="Orchard.Media.ViewModels"%>
-<h2><%=Html.TitleForPage("Add a Folder")%></h2>
-<p><%=Html.ActionLink("Media Folders", "Index")%> &#62; 
-		<%foreach (FolderNavigation navigation in MediaHelpers.GetFolderNavigationHierarchy(Model.MediaPath)) {%>
+<h1><%=Html.TitleForPage(T("Add a Folder").ToString()) %></h1>
+<p><%=Html.ActionLink(T("Media Folders").ToString(), "Index") %> &#62; 
+		<%foreach (FolderNavigation navigation in MediaHelpers.GetFolderNavigationHierarchy(Model.MediaPath)) { %>
 		    <%=Html.ActionLink(navigation.FolderName, "Edit",
-                      new {name = navigation.FolderName, mediaPath = navigation.FolderPath})%> &#62;
+                      new {name = navigation.FolderName, mediaPath = navigation.FolderPath}) %> &#62;
 		<% } %>
-		Add a Folder</p>
+		<%=_Encoded("Add a Folder") %></p>
 <%using (Html.BeginFormAntiForgeryPost()) { %>
     <%= Html.ValidationSummary() %>
     <fieldset>
-        <label for="Name">Folder Name:</label>
+        <label for="Name"><%=_Encoded("Folder Name") %></label>
 		<input id="Name" class="text" name="Name" type="text" />
-		<input id="MediaPath" name="MediaPath" type="hidden" value="<%= Model.MediaPath %>" />
-	    <input type="submit" class="button" value="Save" />
+		<input type="hidden" id="MediaPath" name="MediaPath" value="<%=Html.Encode(Model.MediaPath) %>" />
+	    <input type="submit" class="button" value="<%=_Encoded("Save") %>" />
     </fieldset>
  <% } %>

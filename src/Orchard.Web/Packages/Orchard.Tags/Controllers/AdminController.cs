@@ -52,7 +52,7 @@ namespace Orchard.Tags.Controllers {
         [HttpPost]
         public ActionResult Index(FormCollection input) {
             var viewModel = new TagsAdminIndexViewModel { Tags = new List<TagEntry>(), BulkAction = new TagAdminIndexBulkAction() };
-            UpdateModel(viewModel, input.ToValueProvider());
+            UpdateModel(viewModel);
 
             try {
                 IEnumerable<TagEntry> checkedEntries = viewModel.Tags.Where(t => t.IsChecked);
@@ -88,7 +88,7 @@ namespace Orchard.Tags.Controllers {
         public ActionResult Create(FormCollection input) {
             var viewModel = new TagsAdminCreateViewModel();
             try {
-                UpdateModel(viewModel, input.ToValueProvider());
+                UpdateModel(viewModel);
                 if (!_authorizer.Authorize(Permissions.CreateTag, T("Couldn't create tag")))
                     return new HttpUnauthorizedResult();
                 _tagService.CreateTag(viewModel.TagName);
@@ -120,7 +120,7 @@ namespace Orchard.Tags.Controllers {
         public ActionResult Edit(FormCollection input) {
             var viewModel = new TagsAdminEditViewModel();
             try {
-                UpdateModel(viewModel, input.ToValueProvider());
+                UpdateModel(viewModel);
                 if (!_authorizer.Authorize(Permissions.RenameTag, T("Couldn't edit tag")))
                     return new HttpUnauthorizedResult();
 
