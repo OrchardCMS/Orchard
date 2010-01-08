@@ -1,7 +1,9 @@
-<%@ Page Language="C#" Inherits="System.Web.Mvc.ViewPage<PageEditViewModel>" %>
+<%@ Page Language="C#" Inherits="Orchard.Mvc.ViewPage<PageEditViewModel>" %>
 <%@ Import Namespace="Orchard.Sandbox.ViewModels" %>
-<h1><%=Html.TitleForPage("Edit Page")%></h1>
+<h1><%=Html.TitleForPage(T("Edit Page").ToString()) %></h1>
 <%using (Html.BeginFormAntiForgeryPost()) { %>
     <%=Html.EditorForItem(Model.Page) %>
-    <input type="submit" name="submit" value="Save" />
+    <fieldset>
+        <input type="submit" name="submit" value="<%=_Encoded("Save") %>" />
+    </fieldset>
 <% } %>

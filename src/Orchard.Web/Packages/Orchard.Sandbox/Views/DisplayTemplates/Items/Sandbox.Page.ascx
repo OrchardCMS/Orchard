@@ -1,4 +1,4 @@
-<%@ Control Language="C#" Inherits="System.Web.Mvc.ViewUserControl<ContentItemViewModel<SandboxPage>>" %>
+<%@ Control Language="C#" Inherits="Orchard.Mvc.ViewUserControl<ContentItemViewModel<SandboxPage>>" %>
 <%@ Import Namespace="Orchard.Mvc.ViewModels"%>
 <%@ Import Namespace="Orchard.Sandbox.Models" %>
 <div class="item">
@@ -8,8 +8,8 @@
     </div>
     <% Html.Zone("metatop"); %>
     <div class="actions">
-        <%=Html.ItemEditLink("Edit this page", Model.Item) %>
-        <%=Html.ActionLink("Return to list", "index") %>
+        <%=Html.ItemEditLink(T("Edit this page").ToString(), Model.Item) %>
+        <%=Html.ActionLink(T("Return to list").ToString(), "index") %>
         <% Html.Zone("actions"); %>
     </div>
     <div class="body">

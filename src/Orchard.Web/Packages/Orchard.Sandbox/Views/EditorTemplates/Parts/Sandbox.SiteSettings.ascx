@@ -1,8 +1,10 @@
-<%@ Control Language="C#" Inherits="System.Web.Mvc.ViewUserControl<Orchard.Sandbox.Models.SandboxSettingsRecord>" %>
+<%@ Control Language="C#" Inherits="Orchard.Mvc.ViewUserControl<SandboxSettingsRecord>" %>
+<%@ Import Namespace="Orchard.Sandbox.Models"%>
 <fieldset>
     <legend>Sandbox</legend>
-    <%= Html.LabelFor(x=>x.AllowAnonymousEdits) %>
-    <%= Html.EditorFor(x=>x.AllowAnonymousEdits) %>
-    <%= Html.ValidationMessage("AllowAnonymousEdits", "*")%>
-    <br />
+    <div>
+        <%=Html.EditorFor(m => m.AllowAnonymousEdits) %>
+        <label class="forcheckbox" for="SandboxSettings_AllowAnonymousEdits"><%=_Encoded("Anyone can create and edit pages") %></label>
+        <%=Html.ValidationMessage("AllowAnonymousEdits", "*") %>
+    </div>
 </fieldset>

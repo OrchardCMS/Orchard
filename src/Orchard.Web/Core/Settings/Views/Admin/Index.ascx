@@ -5,25 +5,25 @@
 <%= Html.ValidationSummary() %>
 <fieldset>
     <legend><%=_Encoded("Global Settings")%></legend>
-    <fieldset>
+    <div>
         <%=Html.LabelFor(x=>x.SiteName) %>
         <%=Html.EditorFor(x=>x.SiteName) %>
         <%=Html.ValidationMessage("SiteName", "*") %>
-    </fieldset>
-    <fieldset>
+    </div>
+    <div>
         <%=Html.LabelFor(x => x.PageTitleSeparator) %>
         <%=Html.EditorFor(x => x.PageTitleSeparator)%>
         <%=Html.ValidationMessage("PageTitleSeparator", "*")%>
-    </fieldset>
-    <fieldset>
+    </div>
+    <div>
         <%=Html.LabelFor(x => x.SuperUser) %>
         <%=Html.EditorFor(x=>x.SuperUser) %>
         <%=Html.ValidationMessage("SuperUser", "*") %>
-    </fieldset>
-    <%=Html.EditorFor(s=>s.Id) %>
+    </div>
 </fieldset>
 <%= Html.EditorForItem(Model.ViewModel) %>
 <fieldset>
+    <%=Html.EditorFor(s => s.Id) %>
     <input class="button" type="submit" value="<%=_Encoded("Save") %>" />
 </fieldset>
 <% } %>

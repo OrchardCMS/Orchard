@@ -2,9 +2,9 @@
 <%@ Import Namespace="Orchard.Core.Themes.Records"%>
 <fieldset>
     <legend><%=_Encoded("Themes")%></legend>
-    <fieldset>
+    <div>
         <%= Html.LabelFor(x=>x.CurrentThemeName) %>
         <%= Html.EditorFor(x=>x.CurrentThemeName) %>
         <%= Html.ValidationMessage("CurrentThemeName", "*")%>
-    </fieldset>
+    </div>
 </fieldset>
