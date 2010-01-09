@@ -117,12 +117,6 @@ legend {
 /* ---------- Layout ---------- */
 
 #header {
-	margin:0 38px 0 55px;
-	height:75px;
-	border-bottom:1px #d6d6d6 solid;
-}
-
-#header {
 	margin:0 38px 0 40px;
 	height:75px;
 	border-bottom:1px #d6d6d6 solid;
