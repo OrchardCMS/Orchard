@@ -8,6 +8,8 @@ namespace Orchard.ContentManagement.Handlers {
         protected virtual void Loaded(LoadContentContext context, TPart instance) { }
         protected virtual void Versioning(VersionContentContext context, TPart existing, TPart building) { }
         protected virtual void Versioned(VersionContentContext context, TPart existing, TPart building) { }
+        protected virtual void Publishing(PublishContentContext context, TPart instance) { }
+        protected virtual void Published(PublishContentContext context, TPart instance) { }
         protected virtual void Removing(RemoveContentContext context, TPart instance) { }
         protected virtual void Removed(RemoveContentContext context, TPart instance) { }
 
@@ -45,6 +47,16 @@ namespace Orchard.ContentManagement.Handlers {
         void IContentStorageFilter.Versioned(VersionContentContext context) {
             if (context.ExistingContentItem.Is<TPart>() || context.BuildingContentItem.Is<TPart>())
                 Versioned(context, context.ExistingContentItem.As<TPart>(), context.BuildingContentItem.As<TPart>());
+        }
+
+        void IContentStorageFilter.Publishing(PublishContentContext context) {
+            if (context.ContentItem.Is<TPart>())
+                Publishing(context, context.ContentItem.As<TPart>());
+        }
+
+        void IContentStorageFilter.Published(PublishContentContext context) {
+            if (context.ContentItem.Is<TPart>())
+                Published(context, context.ContentItem.As<TPart>());
         }
 
         void IContentStorageFilter.Removing(RemoveContentContext context) {

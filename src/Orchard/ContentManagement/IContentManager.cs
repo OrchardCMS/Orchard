@@ -15,6 +15,7 @@ namespace Orchard.ContentManagement {
         IEnumerable<ContentItem> GetAllVersions(int id);
 
         void Publish(ContentItem contentItem);
+        void Unpublish(ContentItem contentItem);
         void Remove(ContentItem contentItem);
 
         IContentQuery<ContentItem> Query();

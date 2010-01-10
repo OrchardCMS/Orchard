@@ -133,8 +133,10 @@ namespace Orchard.Pages.Controllers {
             Page page = _pageService.Create(publishNow);
             model.Page = Services.ContentManager.UpdateEditorModel(page, this);
 
-            if (!ModelState.IsValid)
+            if (!ModelState.IsValid) {
+                Services.TransactionManager.Cancel();
                 return View(model);
+            }
 
             var session = _sessionLocator.For(typeof(Page));
             session.Flush();
@@ -146,7 +148,7 @@ namespace Orchard.Pages.Controllers {
             if (!Services.Authorizer.Authorize(Permissions.ModifyPages, T("Couldn't edit page")))
                 return new HttpUnauthorizedResult();
 
-            Page page = _pageService.GetPageOrDraft(pageSlug);
+            Page page = _pageService.GetLatest(pageSlug);
 
             if (page == null)
                 return new NotFoundResult();

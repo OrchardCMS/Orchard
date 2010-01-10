@@ -161,6 +161,7 @@
     <Compile Include="ContentManagement\Handlers\LoadContentContext.cs" />
     <Compile Include="ContentManagement\Handlers\StorageFilter.cs" />
     <Compile Include="ContentManagement\Handlers\StorageFilterBase.cs" />
+    <Compile Include="ContentManagement\Handlers\StorageVersionFilter.cs" />
     <Compile Include="ContentManagement\Handlers\TemplateFilterBase.cs" />
     <Compile Include="ContentManagement\Handlers\TemplateFilterForRecord.cs" />
     <Compile Include="ContentManagement\Handlers\UpdateEditorModelContext.cs" />

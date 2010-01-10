@@ -7,6 +7,7 @@ namespace Orchard.Pages.Services {
         IEnumerable<Page> Get(PageStatus status);
         Page Get(string slug);
         Page GetPageOrDraft(string slug);
+        Page GetLatest(string slug);
         Page GetLatest(int id);
         Page New();
         Page Create(bool publishNow);

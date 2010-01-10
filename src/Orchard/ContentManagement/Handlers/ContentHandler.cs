@@ -41,6 +41,14 @@ namespace Orchard.ContentManagement.Handlers {
             Filters.Add(new InlineStorageFilter<TPart> { OnVersioned = handler });
         }
 
+        protected void OnPublishing<TPart>(Action<PublishContentContext, TPart> handler) where TPart : class, IContent {
+            Filters.Add(new InlineStorageFilter<TPart> { OnPublishing = handler });
+        }
+
+        protected void OnPublished<TPart>(Action<PublishContentContext, TPart> handler) where TPart : class, IContent {
+            Filters.Add(new InlineStorageFilter<TPart> { OnPublished = handler });
+        }
+
         protected void OnRemoving<TPart>(Action<RemoveContentContext, TPart> handler) where TPart : class, IContent {
             Filters.Add(new InlineStorageFilter<TPart> { OnRemoving = handler });
         }
@@ -72,6 +80,8 @@ namespace Orchard.ContentManagement.Handlers {
             public Action<LoadContentContext, TPart> OnLoaded { get; set; }
             public Action<VersionContentContext, TPart, TPart> OnVersioning { get; set; }
             public Action<VersionContentContext, TPart, TPart> OnVersioned { get; set; }
+            public Action<PublishContentContext, TPart> OnPublishing { get; set; }
+            public Action<PublishContentContext, TPart> OnPublished { get; set; }
             public Action<RemoveContentContext, TPart> OnRemoving { get; set; }
             public Action<RemoveContentContext, TPart> OnRemoved { get; set; }
             protected override void Activated(ActivatedContentContext context, TPart instance) {
@@ -94,6 +104,12 @@ namespace Orchard.ContentManagement.Handlers {
             }
             protected override void Versioned(VersionContentContext context, TPart existing, TPart building) {
                 if (OnVersioned != null) OnVersioned(context, existing, building);
+            }
+            protected override void Publishing(PublishContentContext context, TPart instance) {
+                if (OnPublishing != null) OnPublishing(context, instance);
+            }
+            protected override void Published(PublishContentContext context, TPart instance) {
+                if (OnPublished != null) OnPublished(context, instance);
             }
             protected override void Removing(RemoveContentContext context, TPart instance) {
                 if (OnRemoving != null) OnRemoving(context, instance);
@@ -161,6 +177,7 @@ namespace Orchard.ContentManagement.Handlers {
                 filter.Loaded(context);
             Loaded(context);
         }
+
         void IContentHandler.Versioning(VersionContentContext context) {
             foreach (var filter in Filters.OfType<IContentStorageFilter>())
                 filter.Versioning(context);
@@ -172,6 +189,19 @@ namespace Orchard.ContentManagement.Handlers {
                 filter.Versioned(context);
             Versioned(context);
         }
+
+        void IContentHandler.Publishing(PublishContentContext context) {
+            foreach (var filter in Filters.OfType<IContentStorageFilter>())
+                filter.Publishing(context);
+            Publishing(context);
+        }
+
+        void IContentHandler.Published(PublishContentContext context) {
+            foreach (var filter in Filters.OfType<IContentStorageFilter>())
+                filter.Published(context);
+            Published(context);
+        }
+
         void IContentHandler.Removing(RemoveContentContext context) {
             foreach (var filter in Filters.OfType<IContentStorageFilter>())
                 filter.Removing(context);
@@ -217,6 +247,9 @@ namespace Orchard.ContentManagement.Handlers {
 
         protected virtual void Versioning(VersionContentContext context) { }
         protected virtual void Versioned(VersionContentContext context) { }
+
+        protected virtual void Publishing(PublishContentContext context) { }
+        protected virtual void Published(PublishContentContext context) { }
 
         protected virtual void Removing(RemoveContentContext context) { }
         protected virtual void Removed(RemoveContentContext context) { }

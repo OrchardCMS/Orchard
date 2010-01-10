@@ -12,6 +12,8 @@ namespace Orchard.ContentManagement.Handlers {
         void Loaded(LoadContentContext context);
         void Versioning(VersionContentContext context);
         void Versioned(VersionContentContext context);
+        void Publishing(PublishContentContext context);
+        void Published(PublishContentContext context);
         void Removing(RemoveContentContext context);
         void Removed(RemoveContentContext context);
 

@@ -1,12 +1,11 @@
 using Orchard.ContentManagement.Records;
 
 namespace Orchard.ContentManagement.Handlers {
-    public class CreateContentContext {
-        public int Id { get; set; }
-        public string ContentType { get; set; }
+    public class CreateContentContext : ContentContextBase {
+        public CreateContentContext(ContentItem contentItem) : base(contentItem) {
+            ContentItemVersionRecord = contentItem.VersionRecord;
+        }
 
-        public ContentItem ContentItem { get; set; }
-        public ContentItemRecord ContentItemRecord { get; set; }
         public ContentItemVersionRecord ContentItemVersionRecord { get; set; }
     }
 }

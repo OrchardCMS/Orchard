@@ -125,15 +125,15 @@ namespace Orchard.Tests.ContentManagement {
 
             var model = _manager.Get(modelRecord.Id);
 
-            // create a gamma record
-            var gamma = new GammaRecord {
-                ContentItemRecord = _container.Resolve<IRepository<ContentItemRecord>>().Get(model.Id),
-                Frap = "foo"
-            };
+            //// create a gamma record
+            //var gamma = new GammaRecord {
+            //    ContentItemRecord = _container.Resolve<IRepository<ContentItemRecord>>().Get(model.Id),
+            //    Frap = "foo"
+            //};
 
-            _container.Resolve<IRepository<GammaRecord>>().Create(gamma);
-            _session.Flush();
-            _session.Clear();
+            //_container.Resolve<IRepository<GammaRecord>>().Create(gamma);
+            //_session.Flush();
+            //_session.Clear();
 
             // re-fetch from database
             model = _manager.Get(modelRecord.Id);

@@ -14,7 +14,7 @@ namespace Orchard.Tests.ContentManagement.Handlers {
             var part = new TestModelPart();
             contentItem.Weld(part);
 
-            ((IContentHandler)modelDriver).Creating(new CreateContentContext { ContentItem = contentItem });
+            ((IContentHandler)modelDriver).Creating(new CreateContentContext(contentItem));
             Assert.That(part.CreatingCalled, Is.True);
         }
 

@@ -123,13 +123,7 @@ namespace Orchard.ContentManagement {
             contentItem.VersionRecord = versionRecord;
 
             // create a context with a new instance to load            
-            var context = new LoadContentContext {
-                Id = contentItem.Id,
-                ContentType = contentItem.ContentType,
-                ContentItem = contentItem,
-                ContentItemRecord = contentItem.Record,
-                ContentItemVersionRecord = contentItem.VersionRecord,
-            };
+            var context = new LoadContentContext(contentItem);
 
             // invoke handlers to acquire state, or at least establish lazy loading callbacks
             foreach (var handler in Handlers) {
@@ -158,14 +152,57 @@ namespace Orchard.ContentManagement {
             if (contentItem.VersionRecord.Published) {
                 return;
             }
+            // create a context for the item and it's previous published record
             var previous = contentItem.Record.Versions.SingleOrDefault(x => x.Published);
+            var context = new PublishContentContext(contentItem, previous);
+
+            // invoke handlers to acquire state, or at least establish lazy loading callbacks
+            foreach (var handler in Handlers) {
+                handler.Publishing(context);
+            }
+
             if (previous != null) {
                 previous.Published = false;
-                //_contentItemVersionRepository.Update(previous);
             }
             contentItem.VersionRecord.Published = true;
-            //_contentItemVersionRepository.Update(contentItem.VersionRecord);
-            //TODO: fire content handler events
+
+            foreach (var handler in Handlers) {
+                handler.Published(context);
+            }
+        }
+
+        public virtual void Unpublish(ContentItem contentItem) {
+            ContentItem publishedItem;
+            if (contentItem.VersionRecord.Published) {
+                // the version passed in is the published one
+                publishedItem = contentItem;
+            }
+            else {
+                // try to locate the published version of this item
+                publishedItem = Get(contentItem.Id, VersionOptions.Published);
+            }
+
+            if (publishedItem == null) {
+                // no published version exists. no work to perform.
+                return;
+            }
+
+            // create a context for the item. the publishing version is null in this case
+            // and the previous version is the one active prior to unpublishing. handlers
+            // should take this null check into account
+            var context = new PublishContentContext(contentItem, publishedItem.VersionRecord) {
+                PublishingItemVersionRecord = null
+            };
+
+            foreach (var handler in Handlers) {
+                handler.Publishing(context);
+            }
+
+            publishedItem.VersionRecord.Published = false;
+
+            foreach (var handler in Handlers) {
+                handler.Published(context);
+            }
         }
 
         public virtual void Remove(ContentItem contentItem) {
@@ -260,13 +297,7 @@ namespace Orchard.ContentManagement {
 
 
             // build a context with the initialized instance to create
-            var context = new CreateContentContext {
-                Id = contentItem.Id,
-                ContentType = contentItem.ContentType,
-                ContentItemRecord = contentItem.Record,
-                ContentItemVersionRecord = contentItem.VersionRecord,
-                ContentItem = contentItem
-            };
+            var context = new CreateContentContext(contentItem);
 
 
             // invoke handlers to add information to persistent stores

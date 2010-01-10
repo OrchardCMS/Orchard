@@ -1,17 +1,17 @@
-using System;
+using JetBrains.Annotations;
 using Orchard.Core.Common.Models;
 using Orchard.Core.Common.Records;
 using Orchard.Core.Common.ViewModels;
 using Orchard.Data;
 using Orchard.Localization;
 using Orchard.ContentManagement;
-using Orchard.ContentManagement.Aspects;
 using Orchard.ContentManagement.Handlers;
 using Orchard.ContentManagement.ViewModels;
 using Orchard.Security;
 using Orchard.Services;
 
 namespace Orchard.Core.Common.Providers {
+    [UsedImplicitly]
     public class CommonAspectHandler : ContentHandler {
         private readonly IClock _clock;
         private readonly IAuthenticationService _authenticationService;
@@ -20,7 +20,8 @@ namespace Orchard.Core.Common.Providers {
         private readonly IContentManager _contentManager;
 
         public CommonAspectHandler(
-            IRepository<CommonRecord> repository,
+            IRepository<CommonRecord> commonRepository,
+            IRepository<CommonVersionRecord> commonVersionRepository,
             IClock clock,
             IAuthenticationService authenticationService,
             IAuthorizationService authorizationService,
@@ -34,10 +35,16 @@ namespace Orchard.Core.Common.Providers {
             _contentManager = contentManager;
             T = NullLocalizer.Instance;
 
-            Filters.Add(StorageFilter.For(repository));
+            Filters.Add(StorageFilter.For(commonRepository));
+            Filters.Add(StorageFilter.For(commonVersionRepository));
 
             OnActivated<CommonAspect>(PropertySetHandlers);
-            OnActivated<CommonAspect>(DefaultTimestampsAndOwner);
+            OnActivated<CommonAspect>(AssignCreatingOwner);
+            OnActivated <ContentPart<CommonRecord>>(AssignCreatingDates);
+            OnActivated<ContentPart<CommonVersionRecord>>(AssignCreatingDates);
+            OnVersioned<ContentPart<CommonVersionRecord>>(AssignVersioningDates);
+            OnPublishing<ContentPart<CommonRecord>>(AssignPublishingDates);
+            OnPublishing<ContentPart<CommonVersionRecord>>(AssignPublishingDates);
             OnLoaded<CommonAspect>(LazyLoadHandlers);
 
             //OnGetDisplayViewModel<CommonAspect>();
@@ -47,19 +54,51 @@ namespace Orchard.Core.Common.Providers {
 
         public Localizer T { get; set; }
 
-        void DefaultTimestampsAndOwner(ActivatedContentContext context, CommonAspect instance) {
-            // assign default create/modified dates
-            if (instance.Record.CreatedUtc == null) {
-                instance.Record.CreatedUtc = _clock.UtcNow;
-            }
-            if (instance.Record.ModifiedUtc == null) {
-                instance.Record.ModifiedUtc = _clock.UtcNow;
-            }
 
+        void AssignCreatingOwner(ActivatedContentContext context, CommonAspect part) {     
             // and use the current user as Owner
-            if (instance.Record.OwnerId == 0) {
-                ((ICommonAspect)instance).Owner = _authenticationService.GetAuthenticatedUser();
+            if (part.Record.OwnerId == 0) {
+                part.Owner = _authenticationService.GetAuthenticatedUser();
             }
+        }
+
+        void AssignCreatingDates(ActivatedContentContext context, ContentPart<CommonRecord> part) {
+            // assign default create/modified dates
+            part.Record.CreatedUtc = _clock.UtcNow;
+            part.Record.ModifiedUtc = _clock.UtcNow;
+        }
+
+        void AssignCreatingDates(ActivatedContentContext context, ContentPart<CommonVersionRecord> part) {
+            // assign default create/modified dates
+            part.Record.CreatedUtc = _clock.UtcNow;
+            part.Record.ModifiedUtc = _clock.UtcNow;
+        }
+
+        void AssignVersioningDates(VersionContentContext context, ContentPart<CommonVersionRecord> existing, ContentPart<CommonVersionRecord> building) {
+            // assign create/modified dates for the new version
+            building.Record.CreatedUtc = _clock.UtcNow;
+            building.Record.ModifiedUtc = _clock.UtcNow;
+
+            // publish date should be null until publish method called
+            building.Record.PublishedUtc = null;
+        }
+
+        void AssignPublishingDates(PublishContentContext context, ContentPart<CommonRecord> part) {
+            // don't assign dates when unpublishing
+            if (context.PublishingItemVersionRecord == null)
+                return;
+
+            // assign version-agnostic publish date
+            part.Record.PublishedUtc = _clock.UtcNow;
+        }
+
+        void AssignPublishingDates(PublishContentContext context, ContentPart<CommonVersionRecord> part) {
+            // don't assign dates when unpublishing
+            if (context.PublishingItemVersionRecord == null)
+                return;
+
+            // assign version-specific publish date
+            part.Record.PublishedUtc = _clock.UtcNow;
         }
 
         void LazyLoadHandlers(LoadContentContext context, CommonAspect aspect) {
@@ -109,7 +148,8 @@ namespace Orchard.Core.Common.Providers {
         private void UpdateEditor(UpdateEditorModelContext context, CommonAspect instance) {
             // this event is hooked so the modified timestamp is changed when an edit-post occurs.
             // kind of a loose rule of thumb. may not be sufficient
-            instance.Record.ModifiedUtc = _clock.UtcNow;
+            instance.ModifiedUtc = _clock.UtcNow;
+            instance.VersionModifiedUtc = _clock.UtcNow;
 
             var currentUser = _authenticationService.GetAuthenticatedUser();
             if (!_authorizationService.CheckAccess(currentUser, Permissions.ChangeOwner)) {

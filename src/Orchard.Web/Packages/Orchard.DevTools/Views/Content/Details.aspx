@@ -38,11 +38,11 @@
                       valueItem = (value as IContent).ContentItem;
                   }
                   if (valueItem != null) {
-                      %><%=Html.ActionLink(T("{0} #{1} v{2}", valueItem.ContentType, valueItem.Id).ToString(), "details", new { valueItem.Id }, new { })%><%
+                      %><%=Html.ActionLink(T("{0} #{1} v{2}", valueItem.ContentType, valueItem.Id, valueItem.Version).ToString(), "details", new { valueItem.Id }, new { })%><%
                   }
                   %>
                 <ul style="margin-left: 20px">
-                    <%if (value == null || prop.PropertyType.IsPrimitive || prop.PropertyType == typeof(string)) { }
+                    <%if (value == null || prop.PropertyType.IsPrimitive || prop.PropertyType == typeof(string) || prop.PropertyType == typeof(DateTime?)) { }
                       else if (typeof(IEnumerable).IsAssignableFrom(prop.PropertyType)) {
                           foreach (var item in value as IEnumerable) {
                     %>

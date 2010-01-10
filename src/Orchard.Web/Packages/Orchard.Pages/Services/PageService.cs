@@ -47,10 +47,14 @@ namespace Orchard.Pages.Services {
             return _contentManager.Get<Page>(id, VersionOptions.Latest);
         }
 
-        public Page GetPageOrDraft(string slug) {
-            Page page = _contentManager.Query<Page, PageRecord>(VersionOptions.Latest)
+        public Page GetLatest(string slug) {
+            return _contentManager.Query<Page, PageRecord>(VersionOptions.Latest)
                 .Join<RoutableRecord>().Where(rr => rr.Slug == slug)
-                .List().FirstOrDefault();
+                .Slice(0, 1).FirstOrDefault();
+        }
+
+        public Page GetPageOrDraft(string slug) {
+            Page page = GetLatest(slug);
             return _contentManager.GetDraftRequired<Page>(page.Id);
         }
 

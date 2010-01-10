@@ -22,23 +22,16 @@ namespace Orchard.ContentManagement.Drivers {
         }
 
         void IContentHandler.Activating(ActivatingContentContext context) { }
-
         void IContentHandler.Activated(ActivatedContentContext context) { }
-
         void IContentHandler.Creating(CreateContentContext context) { }
-
         void IContentHandler.Created(CreateContentContext context) { }
-
         void IContentHandler.Loading(LoadContentContext context) { }
-
         void IContentHandler.Loaded(LoadContentContext context) { }
-
         void IContentHandler.Versioning(VersionContentContext context) { }
-
         void IContentHandler.Versioned(VersionContentContext context) { }
-
+        void IContentHandler.Publishing(PublishContentContext context) { }
+        void IContentHandler.Published(PublishContentContext context) { }
         void IContentHandler.Removing(RemoveContentContext context) { }
-
         void IContentHandler.Removed(RemoveContentContext context) { }
 
 
