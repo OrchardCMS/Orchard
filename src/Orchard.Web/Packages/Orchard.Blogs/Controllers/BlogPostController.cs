@@ -5,6 +5,7 @@ using Orchard.Blogs.Extensions;
 using Orchard.Blogs.Models;
 using Orchard.Blogs.Services;
 using Orchard.Blogs.ViewModels;
+using Orchard.ContentManagement.Records;
 using Orchard.Data;
 using Orchard.Localization;
 using Orchard.ContentManagement;
@@ -14,6 +15,7 @@ using Orchard.UI.Notify;
 namespace Orchard.Blogs.Controllers {
     [ValidateInput(false)]
     public class BlogPostController : Controller, IUpdateModel {
+        private readonly IOrchardServices _services;
         private readonly ISessionLocator _sessionLocator;
         private readonly IBlogService _blogService;
         private readonly IBlogPostService _blogPostService;
@@ -23,19 +25,18 @@ namespace Orchard.Blogs.Controllers {
             ISessionLocator sessionLocator,
             IBlogService blogService,
             IBlogPostService blogPostService) {
-            Services = services;
+            _services = services;
             _sessionLocator = sessionLocator;
             _blogService = blogService;
             _blogPostService = blogPostService;
             T = NullLocalizer.Instance;
         }
 
-        public IOrchardServices Services { get; set; }
         private Localizer T { get; set; }
 
         //TODO: (erikpo) Should think about moving the slug parameters and get calls and null checks up into a model binder or action filter
         public ActionResult Item(string blogSlug, string postSlug) {
-            if (!Services.Authorizer.Authorize(Permissions.ViewPost, T("Couldn't view blog post")))
+            if (!_services.Authorizer.Authorize(Permissions.ViewPost, T("Couldn't view blog post")))
                 return new HttpUnauthorizedResult();
 
             //TODO: (erikpo) Move looking up the current blog up into a modelbinder
@@ -53,7 +54,7 @@ namespace Orchard.Blogs.Controllers {
 
             var model = new BlogPostViewModel {
                 Blog = blog,
-                BlogPost = Services.ContentManager.BuildDisplayModel(post, "Detail")
+                BlogPost = _services.ContentManager.BuildDisplayModel(post, "Detail")
             };
 
             return View(model);
@@ -70,7 +71,7 @@ namespace Orchard.Blogs.Controllers {
             var model = new BlogPostArchiveViewModel {
                 Blog = blog,
                 ArchiveData = archive,
-                BlogPosts = _blogPostService.Get(blog, archive).Select(b => Services.ContentManager.BuildDisplayModel(b, "Summary"))
+                BlogPosts = _blogPostService.Get(blog, archive).Select(b => _services.ContentManager.BuildDisplayModel(b, "Summary"))
             };
 
             return View(model);
@@ -101,7 +102,7 @@ namespace Orchard.Blogs.Controllers {
 
         public ActionResult Create(string blogSlug) {
             //TODO: (erikpo) Might think about moving this to an ActionFilter/Attribute
-            if (!Services.Authorizer.Authorize(Permissions.CreatePost, T("Not allowed to create blog post")))
+            if (!_services.Authorizer.Authorize(Permissions.CreatePost, T("Not allowed to create blog post")))
                 return new HttpUnauthorizedResult();
             
             //TODO: (erikpo) Move looking up the current blog up into a modelbinder
@@ -110,7 +111,7 @@ namespace Orchard.Blogs.Controllers {
             if (blog == null)
                 return new NotFoundResult();
             
-            var blogPost = Services.ContentManager.BuildEditorModel(Services.ContentManager.New<BlogPost>("blogpost"));
+            var blogPost = _services.ContentManager.BuildEditorModel(_services.ContentManager.New<BlogPost>("blogpost"));
             blogPost.Item.Blog = blog;
 
             var model = new CreateBlogPostViewModel {
@@ -122,7 +123,7 @@ namespace Orchard.Blogs.Controllers {
 
         [HttpPost]
         public ActionResult Create(string blogSlug, CreateBlogPostViewModel model) {
-            if (!Services.Authorizer.Authorize(Permissions.CreatePost, T("Couldn't create blog post")))
+            if (!_services.Authorizer.Authorize(Permissions.CreatePost, T("Couldn't create blog post")))
                 return new HttpUnauthorizedResult();
 
             //TODO: (erikpo) Move looking up the current blog up into a modelbinder
@@ -136,24 +137,24 @@ namespace Orchard.Blogs.Controllers {
                 publishNow = true;
             }
 
-            BlogPost blogPost = Services.ContentManager.Create<BlogPost>("blogpost", publishNow ? VersionOptions.Published : VersionOptions.Draft, bp => { bp.Blog = blog; });
-            model.BlogPost = Services.ContentManager.UpdateEditorModel(blogPost, this);
+            BlogPost blogPost = _services.ContentManager.Create<BlogPost>("blogpost", publishNow ? VersionOptions.Published : VersionOptions.Draft, bp => { bp.Blog = blog; });
+            model.BlogPost = _services.ContentManager.UpdateEditorModel(blogPost, this);
 
             if (!ModelState.IsValid) {
-                Services.TransactionManager.Cancel();
+                _services.TransactionManager.Cancel();
 
                 return View(model);
             }
 
             //TEMP: (erikpo) ensure information has committed for this record
-            var session = _sessionLocator.For(typeof(BlogPostRecord));
+            var session = _sessionLocator.For(typeof(ContentItemRecord));
             session.Flush();
 
             return Redirect(Url.BlogPost(blogSlug, model.BlogPost.Item.Slug));
         }
 
         public ActionResult Edit(string blogSlug, string postSlug) {
-            if (!Services.Authorizer.Authorize(Permissions.ModifyPost, T("Couldn't edit blog post")))
+            if (!_services.Authorizer.Authorize(Permissions.ModifyPost, T("Couldn't edit blog post")))
                 return new HttpUnauthorizedResult();
 
             //TODO: (erikpo) Move looking up the current blog up into a modelbinder
@@ -168,7 +169,7 @@ namespace Orchard.Blogs.Controllers {
                 return new NotFoundResult();
 
             var model = new BlogPostEditViewModel {
-                BlogPost = Services.ContentManager.BuildEditorModel(post)
+                BlogPost = _services.ContentManager.BuildEditorModel(post)
             };
 
             return View(model);
@@ -176,7 +177,7 @@ namespace Orchard.Blogs.Controllers {
 
         [HttpPost, ActionName("Edit")]
         public ActionResult EditPOST(string blogSlug, string postSlug) {
-            if (!Services.Authorizer.Authorize(Permissions.ModifyPost, T("Couldn't edit blog post")))
+            if (!_services.Authorizer.Authorize(Permissions.ModifyPost, T("Couldn't edit blog post")))
                 return new HttpUnauthorizedResult();
 
             //TODO: (erikpo) Move looking up the current blog up into a modelbinder
@@ -201,25 +202,25 @@ namespace Orchard.Blogs.Controllers {
                 _blogPostService.Unpublish(post);
 
             var model = new BlogPostEditViewModel {
-                BlogPost = Services.ContentManager.UpdateEditorModel(post, this)
+                BlogPost = _services.ContentManager.UpdateEditorModel(post, this)
             };
 
             TryUpdateModel(model);
 
             if (!ModelState.IsValid) {
-                Services.TransactionManager.Cancel();
+                _services.TransactionManager.Cancel();
 
                 return View(model);
             }
 
-            Services.Notifier.Information(T("Blog post information updated."));
+            _services.Notifier.Information(T("Blog post information updated."));
 
             return Redirect(Url.BlogPostEdit(blog.Slug, post.Slug));
         }
 
         [HttpPost]
         public ActionResult Delete(string blogSlug, string postSlug) {
-            if (!Services.Authorizer.Authorize(Permissions.DeletePost, T("Couldn't delete blog post")))
+            if (!_services.Authorizer.Authorize(Permissions.DeletePost, T("Couldn't delete blog post")))
                 return new HttpUnauthorizedResult();
 
             //TODO: (erikpo) Move looking up the current blog up into a modelbinder
@@ -235,7 +236,7 @@ namespace Orchard.Blogs.Controllers {
 
             _blogPostService.Delete(post);
 
-            Services.Notifier.Information(T("Blog post was successfully deleted"));
+            _services.Notifier.Information(T("Blog post was successfully deleted"));
 
             return Redirect(Url.BlogForAdmin(blogSlug));
         }

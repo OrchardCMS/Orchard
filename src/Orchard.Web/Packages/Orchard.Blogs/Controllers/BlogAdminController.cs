@@ -3,24 +3,23 @@ using System.Web.Mvc;
 using Orchard.Blogs.Models;
 using Orchard.Blogs.Services;
 using Orchard.Blogs.ViewModels;
-using Orchard.ContentManagement;
 using Orchard.Mvc.Results;
 
 namespace Orchard.Blogs.Controllers {
     [ValidateInput(false)]
     public class BlogAdminController : Controller {
+        private readonly IOrchardServices _services;
         private readonly IBlogService _blogService;
-        private readonly IContentManager _contentManager;
 
-        public BlogAdminController(IContentManager contentManager, IBlogService blogService) {
-            _contentManager = contentManager;
+        public BlogAdminController(IOrchardServices services, IBlogService blogService) {
+            _services = services;
             _blogService = blogService;
         }
 
         public ActionResult List() {
             //TODO: (erikpo) Need to make templatePath be more convention based so if my controller name has "Admin" in it then "Admin/{type}" is assumed
             var model = new AdminBlogsViewModel {
-                Blogs = _blogService.Get().Select(b => _contentManager.BuildDisplayModel(b, "SummaryAdmin"))
+                Blogs = _blogService.Get().Select(b => _services.ContentManager.BuildDisplayModel(b, "SummaryAdmin"))
             };
 
             return View(model);
@@ -35,7 +34,7 @@ namespace Orchard.Blogs.Controllers {
 
             //TODO: (erikpo) Need to make templatePath be more convention based so if my controller name has "Admin" in it then "Admin/{type}" is assumed
             var model = new BlogForAdminViewModel {
-                Blog = _contentManager.BuildDisplayModel(blog, "DetailAdmin")
+                Blog = _services.ContentManager.BuildDisplayModel(blog, "DetailAdmin")
             };
 
             return View(model);

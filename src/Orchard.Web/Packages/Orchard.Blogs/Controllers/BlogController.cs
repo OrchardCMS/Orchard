@@ -14,18 +14,15 @@ using Orchard.UI.Notify;
 namespace Orchard.Blogs.Controllers {
     [ValidateInput(false)]
     public class BlogController : Controller, IUpdateModel {
+        private readonly IOrchardServices _services;
         private readonly ISessionLocator _sessionLocator;
-        private readonly IContentManager _contentManager;
         private readonly IAuthorizer _authorizer;
         private readonly INotifier _notifier;
         private readonly IBlogService _blogService;
 
-        public BlogController(
-            ISessionLocator sessionLocator, IContentManager contentManager,
-            IAuthorizer authorizer, INotifier notifier,
-            IBlogService blogService) {
+        public BlogController(IOrchardServices services, ISessionLocator sessionLocator, IAuthorizer authorizer, INotifier notifier, IBlogService blogService) {
+            _services = services;
             _sessionLocator = sessionLocator;
-            _contentManager = contentManager;
             _authorizer = authorizer;
             _notifier = notifier;
             _blogService = blogService;
@@ -36,7 +33,7 @@ namespace Orchard.Blogs.Controllers {
 
         public ActionResult List() {
             var model = new BlogsViewModel {
-                Blogs = _blogService.Get().Select(b => _contentManager.BuildDisplayModel(b, "Summary"))
+                Blogs = _blogService.Get().Select(b => _services.ContentManager.BuildDisplayModel(b, "Summary"))
             };
 
             return View(model);
@@ -50,7 +47,7 @@ namespace Orchard.Blogs.Controllers {
                 return new NotFoundResult();
 
             var model = new BlogViewModel {
-                Blog = _contentManager.BuildDisplayModel(blog, "Detail")
+                Blog = _services.ContentManager.BuildDisplayModel(blog, "Detail")
             };
 
             return View(model);
@@ -61,13 +58,13 @@ namespace Orchard.Blogs.Controllers {
             if (!_authorizer.Authorize(Permissions.CreateBlog, T("Not allowed to create blogs")))
                 return new HttpUnauthorizedResult();
 
-            Blog blog = _contentManager.New<Blog>("blog");
+            Blog blog = _services.ContentManager.New<Blog>("blog");
 
             if (blog == null)
                 return new NotFoundResult();
 
             var model = new CreateBlogViewModel {
-                Blog = _contentManager.BuildEditorModel(blog)
+                Blog = _services.ContentManager.BuildEditorModel(blog)
             };
 
             return View(model);
@@ -79,12 +76,12 @@ namespace Orchard.Blogs.Controllers {
             if (!_authorizer.Authorize(Permissions.CreateBlog, T("Couldn't create blog")))
                 return new HttpUnauthorizedResult();
 
-            model.Blog = _contentManager.UpdateEditorModel(_contentManager.New<Blog>("blog"), this);
+            model.Blog = _services.ContentManager.UpdateEditorModel(_services.ContentManager.New<Blog>("blog"), this);
 
             if (!ModelState.IsValid)
                 return View(model);
             
-            _contentManager.Create(model.Blog.Item.ContentItem);
+            _services.ContentManager.Create(model.Blog.Item.ContentItem);
 
             //TEMP: (erikpo) ensure information has committed for this record
             var session = _sessionLocator.For(typeof(BlogRecord));
@@ -105,7 +102,7 @@ namespace Orchard.Blogs.Controllers {
                 return new NotFoundResult();
 
             var model = new BlogEditViewModel {
-                Blog = _contentManager.BuildEditorModel(blog)
+                Blog = _services.ContentManager.BuildEditorModel(blog)
             };
 
             return View(model);
@@ -123,7 +120,7 @@ namespace Orchard.Blogs.Controllers {
                 return new NotFoundResult();
 
             var model = new BlogEditViewModel {
-                Blog = _contentManager.UpdateEditorModel(blog, this)
+                Blog = _services.ContentManager.UpdateEditorModel(blog, this)
             };
 
             if (!ModelState.IsValid)

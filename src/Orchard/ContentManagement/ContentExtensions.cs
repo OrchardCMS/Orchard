@@ -89,6 +89,13 @@ namespace Orchard.ContentManagement {
             return manager.Query().ForPart<TPart>().ForVersion(options).Join<TRecord>();
         }
 
+        public static IContentQuery<ContentItem> Query(this IContentManager manager, VersionOptions options, params string[] contentTypeNames) {
+            return manager.Query().ForVersion(options).ForType(contentTypeNames);
+        }
+        public static IContentQuery<TPart> Query<TPart>(this IContentManager manager, VersionOptions options, params string[] contentTypeNames) where TPart : ContentPart {
+            return manager.Query().ForPart<TPart>().ForVersion(options).ForType(contentTypeNames);
+        }
+
         /* Query(params string[] contentTypeNames) */
 
         public static IContentQuery<ContentItem> Query(this IContentManager manager, params string[] contentTypeNames) {

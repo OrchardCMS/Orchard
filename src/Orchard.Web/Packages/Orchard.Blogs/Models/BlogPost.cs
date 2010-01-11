@@ -7,7 +7,7 @@ using Orchard.ContentManagement;
 using Orchard.Security;
 
 namespace Orchard.Blogs.Models {
-    public class BlogPost : ContentPart<BlogPostRecord> {
+    public class BlogPost : ContentPart {
         [HiddenInput(DisplayValue = false)]
         public int Id { get { return ContentItem.Id; } }
 
@@ -35,8 +35,8 @@ namespace Orchard.Blogs.Models {
 
         public DateTime? Published
         {
-            get { return Record.Published; }
-            set { Record.Published = value; }
+            get { return this.As<CommonAspect>().PublishedUtc; }
+            set { this.As<CommonAspect>().PublishedUtc = value; }
         }
     }
 }

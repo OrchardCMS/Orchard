@@ -19,9 +19,9 @@ namespace Orchard.Blogs.Services {
 
         public BlogPost Get(Blog blog, string slug, VersionOptions versionOptions) {
             return
-                _contentManager.Query<BlogPost, BlogPostRecord>(versionOptions).Join<RoutableRecord>().Where(rr => rr.Slug == slug).
+                _contentManager.Query(versionOptions, "blogpost").Join<RoutableRecord>().Where(rr => rr.Slug == slug).
                     Join<CommonRecord>().Where(cr => cr.Container == blog.Record.ContentItemRecord).List().
-                    SingleOrDefault();
+                    SingleOrDefault().As<BlogPost>();
         }
 
         public IEnumerable<BlogPost> Get(Blog blog) {
@@ -29,7 +29,7 @@ namespace Orchard.Blogs.Services {
         }
 
         public IEnumerable<BlogPost> Get(Blog blog, VersionOptions versionOptions) {
-            return GetBlogQuery(blog, versionOptions).List();
+            return GetBlogQuery(blog, versionOptions).List().Select(ci => ci.As<BlogPost>());
         }
 
         public IEnumerable<BlogPost> Get(Blog blog, ArchiveData archiveData) {
@@ -54,7 +54,7 @@ namespace Orchard.Blogs.Services {
                         cr.CreatedUtc >= new DateTime(archiveData.Year, 1, 1) &&
                         cr.CreatedUtc < new DateTime(archiveData.Year + 1, 1, 1));
 
-            return query.List();
+            return query.List().Select(ci => ci.As<BlogPost>());
         }
 
         public void Delete(BlogPost blogPost) {
@@ -71,9 +71,9 @@ namespace Orchard.Blogs.Services {
             blogPost.Published = null;
         }
 
-        private IContentQuery<BlogPost, CommonRecord> GetBlogQuery(ContentPart<BlogRecord> blog, VersionOptions versionOptions) {
+        private IContentQuery<ContentItem, CommonRecord> GetBlogQuery(ContentPart<BlogRecord> blog, VersionOptions versionOptions) {
             return
-                _contentManager.Query<BlogPost, BlogPostRecord>(versionOptions).Join<CommonRecord>().Where(
+                _contentManager.Query(versionOptions, "blogpost").Join<CommonRecord>().Where(
                     cr => cr.Container == blog.Record.ContentItemRecord).OrderByDescending(cr => cr.CreatedUtc);
         }
     }
