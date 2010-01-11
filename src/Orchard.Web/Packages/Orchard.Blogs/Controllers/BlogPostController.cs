@@ -9,7 +9,6 @@ using Orchard.Data;
 using Orchard.Localization;
 using Orchard.ContentManagement;
 using Orchard.Mvc.Results;
-using Orchard.Security;
 using Orchard.UI.Notify;
 
 namespace Orchard.Blogs.Controllers {
@@ -45,7 +44,9 @@ namespace Orchard.Blogs.Controllers {
             if (blog == null)
                 return new NotFoundResult();
 
-            BlogPost post = _blogPostService.Get(blog, postSlug);
+            //TODO: (erikpo) Look up the current user and their permissions to this blog post and determine if they should be able to view it or not.
+            VersionOptions versionOptions = VersionOptions.Published;
+            BlogPost post = _blogPostService.Get(blog, postSlug, versionOptions);
 
             if (post == null)
                 return new NotFoundResult();
@@ -108,7 +109,7 @@ namespace Orchard.Blogs.Controllers {
 
             if (blog == null)
                 return new NotFoundResult();
-
+            
             var blogPost = Services.ContentManager.BuildEditorModel(Services.ContentManager.New<BlogPost>("blogpost"));
             blogPost.Item.Blog = blog;
 
@@ -130,11 +131,19 @@ namespace Orchard.Blogs.Controllers {
             if (blog == null)
                 return new NotFoundResult();
 
-            BlogPost blogPost = Services.ContentManager.Create<BlogPost>("blogpost", bp => { bp.Blog = blog; });
+            bool publishNow = false;
+            if (string.Equals(Request.Form["Command"], "PublishNow")) {
+                publishNow = true;
+            }
+
+            BlogPost blogPost = Services.ContentManager.Create<BlogPost>("blogpost", publishNow ? VersionOptions.Published : VersionOptions.Draft, bp => { bp.Blog = blog; });
             model.BlogPost = Services.ContentManager.UpdateEditorModel(blogPost, this);
 
-            if (!ModelState.IsValid)
+            if (!ModelState.IsValid) {
+                Services.TransactionManager.Cancel();
+
                 return View(model);
+            }
 
             //TEMP: (erikpo) ensure information has committed for this record
             var session = _sessionLocator.For(typeof(BlogPostRecord));
@@ -153,7 +162,7 @@ namespace Orchard.Blogs.Controllers {
             if (blog == null)
                 return new NotFoundResult();
 
-            BlogPost post = _blogPostService.Get(blog, postSlug);
+            BlogPost post = _blogPostService.Get(blog, postSlug, VersionOptions.Latest);
 
             if (post == null)
                 return new NotFoundResult();
@@ -176,10 +185,20 @@ namespace Orchard.Blogs.Controllers {
             if (blog == null)
                 return new NotFoundResult();
 
-            BlogPost post = _blogPostService.Get(blog, postSlug);
+            BlogPost post = _blogPostService.Get(blog, postSlug, VersionOptions.Latest);
 
             if (post == null)
                 return new NotFoundResult();
+            
+            bool publishNow = false;
+            if (string.Equals(Request.Form["Command"], "PublishNow")) {
+                publishNow = true;
+            }
+
+            if (publishNow)
+                _blogPostService.Publish(post);
+            else
+                _blogPostService.Unpublish(post);
 
             var model = new BlogPostEditViewModel {
                 BlogPost = Services.ContentManager.UpdateEditorModel(post, this)
@@ -187,12 +206,14 @@ namespace Orchard.Blogs.Controllers {
 
             TryUpdateModel(model);
 
-            if (ModelState.IsValid==false) {
+            if (!ModelState.IsValid) {
                 Services.TransactionManager.Cancel();
+
                 return View(model);
             }
 
             Services.Notifier.Information(T("Blog post information updated."));
+
             return Redirect(Url.BlogPostEdit(blog.Slug, post.Slug));
         }
 

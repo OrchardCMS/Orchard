@@ -112,8 +112,7 @@ namespace Orchard.Mvc.Html {
             return "a moment ago";
         }
 
-        public static string DateTime(this HtmlHelper htmlHelper, DateTime? value, string defaultIfNull)
-        {
+        public static string DateTime(this HtmlHelper htmlHelper, DateTime? value, string defaultIfNull) {
             return value.HasValue ? htmlHelper.DateTime(value.Value) : defaultIfNull;
         }
 

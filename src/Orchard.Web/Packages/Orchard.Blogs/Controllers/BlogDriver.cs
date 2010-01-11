@@ -56,7 +56,7 @@ namespace Orchard.Blogs.Controllers {
 
             IEnumerable<ContentItemViewModel<BlogPost>> blogPosts = null;
             if (displayType.StartsWith("DetailAdmin")) {
-                blogPosts = _blogPostService.Get(blog)
+                blogPosts = _blogPostService.Get(blog, VersionOptions.Latest)
                     .Select(bp => _contentManager.BuildDisplayModel(bp, "SummaryAdmin"));
             }
             else if (displayType.StartsWith("Detail")) {
