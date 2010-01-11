@@ -80,7 +80,6 @@ a:active {color:#006699; text-decoration:none;}
 #innerft a:hover {text-decoration: underline;}
 #innerft a:active {color:#525e50; text-decoration: none;}
 
-
 /* Forms
 ----------------------------------------------------------*/
 
@@ -123,8 +122,6 @@ input[type="submit"], input[type="button"] {
     margin:0 0 0 4px;
     display:inline;
 }
-
-
 
 /* Tables
 ----------------------------------------------------------*/
