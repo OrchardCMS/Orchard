@@ -2,17 +2,14 @@ using System.Collections.Generic;
 using System.Linq;
 using Orchard.Blogs.Models;
 using Orchard.Core.Common.Records;
-using Orchard.Data;
 using Orchard.ContentManagement;
 
 namespace Orchard.Blogs.Services {
     public class BlogService : IBlogService {
         private readonly IContentManager _contentManager;
-        private readonly IRepository<BlogRecord> _blogRepository;
 
-        public BlogService(IContentManager contentManager, IRepository<BlogRecord> blogRepository) {
+        public BlogService(IContentManager contentManager) {
             _contentManager = contentManager;
-            _blogRepository = blogRepository;
         }
 
         public Blog Get(string slug) {
@@ -29,7 +26,7 @@ namespace Orchard.Blogs.Services {
         }
 
         public void Delete(Blog blog) {
-            _blogRepository.Delete(blog.Record);
+            _contentManager.Remove(blog.ContentItem);
         }
     }
 }

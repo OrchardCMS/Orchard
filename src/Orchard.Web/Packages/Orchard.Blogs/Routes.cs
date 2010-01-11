@@ -40,7 +40,7 @@ namespace Orchard.Blogs {
                                                          "Admin/Blogs/Create",
                                                          new RouteValueDictionary {
                                                                                       {"area", "Orchard.Blogs"},
-                                                                                      {"controller", "Blog"},
+                                                                                      {"controller", "BlogAdmin"},
                                                                                       {"action", "Create"}
                                                                                   },
                                                          new RouteValueDictionary(),
@@ -54,7 +54,7 @@ namespace Orchard.Blogs {
                                                          "Admin/Blogs/{blogSlug}/Edit",
                                                          new RouteValueDictionary {
                                                                                       {"area", "Orchard.Blogs"},
-                                                                                      {"controller", "Blog"},
+                                                                                      {"controller", "BlogAdmin"},
                                                                                       {"action", "Edit"}
                                                                                   },
                                                          new RouteValueDictionary {
@@ -70,7 +70,7 @@ namespace Orchard.Blogs {
                                                          "Admin/Blogs/{blogSlug}/Delete",
                                                          new RouteValueDictionary {
                                                                                       {"area", "Orchard.Blogs"},
-                                                                                      {"controller", "Blog"},
+                                                                                      {"controller", "BlogAdmin"},
                                                                                       {"action", "Delete"}
                                                                                   },
                                                          new RouteValueDictionary {
@@ -102,7 +102,7 @@ namespace Orchard.Blogs {
                                                          "Admin/Blogs/{blogSlug}/Posts/Create",
                                                          new RouteValueDictionary {
                                                                                       {"area", "Orchard.Blogs"},
-                                                                                      {"controller", "BlogPost"},
+                                                                                      {"controller", "BlogPostAdmin"},
                                                                                       {"action", "Create"}
                                                                                   },
                                                          new RouteValueDictionary {
@@ -118,7 +118,7 @@ namespace Orchard.Blogs {
                                                          "Admin/Blogs/{blogSlug}/Posts/{postSlug}/Edit",
                                                          new RouteValueDictionary {
                                                                                       {"area", "Orchard.Blogs"},
-                                                                                      {"controller", "BlogPost"},
+                                                                                      {"controller", "BlogPostAdmin"},
                                                                                       {"action", "Edit"}
                                                                                   },
                                                          new RouteValueDictionary {
@@ -134,7 +134,7 @@ namespace Orchard.Blogs {
                                                          "Admin/Blogs/{blogSlug}/Posts/{postSlug}/Delete",
                                                          new RouteValueDictionary {
                                                                                       {"area", "Orchard.Blogs"},
-                                                                                      {"controller", "BlogPost"},
+                                                                                      {"controller", "BlogPostAdmin"},
                                                                                       {"action", "Delete"}
                                                                                   },
                                                          new RouteValueDictionary {
@@ -145,22 +145,6 @@ namespace Orchard.Blogs {
                                                                                   },
                                                          new MvcRouteHandler())
                                                  },
-                             //new RouteDescriptor {
-                             //                        Route = new Route(
-                             //                            "Admin/Blogs/{blogSlug}/Posts",
-                             //                            new RouteValueDictionary {
-                             //                                                         {"area", "Orchard.Blogs"},
-                             //                                                         {"controller", "BlogPostAdmin"},
-                             //                                                         {"action", "List"}
-                             //                                                     },
-                             //                            new RouteValueDictionary {
-                             //                                                         {"blogSlug", new IsBlogConstraint(_blogService)}
-                             //                                                     },
-                             //                            new RouteValueDictionary {
-                             //                                                         {"area", "Orchard.Blogs"}
-                             //                                                     },
-                             //                            new MvcRouteHandler())
-                             //                    },
                              new RouteDescriptor {
                                                      Route = new Route(
                                                          "Admin/Blogs",

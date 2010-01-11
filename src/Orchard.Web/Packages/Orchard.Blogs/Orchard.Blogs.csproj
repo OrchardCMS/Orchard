@@ -76,6 +76,7 @@
     <Compile Include="AdminMenu.cs" />
     <Compile Include="Controllers\BlogAdminController.cs" />
     <Compile Include="Controllers\BlogDriver.cs" />
+    <Compile Include="Controllers\BlogPostAdminController.cs" />
     <Compile Include="Controllers\BlogPostController.cs" />
     <Compile Include="Controllers\BlogPostDriver.cs" />
     <Compile Include="Extensions\HtmlHelperExtensions.cs" />
@@ -110,8 +111,8 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Package.txt" />
-    <Content Include="Views\BlogPost\Create.ascx" />
-    <Content Include="Views\BlogPost\Edit.ascx" />
+    <Content Include="Views\BlogPostAdmin\Create.ascx" />
+    <Content Include="Views\BlogPostAdmin\Edit.ascx" />
     <Content Include="Views\BlogPost\ListByArchive.ascx" />
     <Content Include="Views\DisplayTemplates\Items\Blogs.Blog.DetailAdmin.ascx" />
     <Content Include="Views\BlogAdmin\Item.ascx" />
@@ -125,8 +126,8 @@
     <Content Include="Views\DisplayTemplates\Items\Blogs.Blog.Summary.ascx" />
     <Content Include="Views\EditorTemplates\Parts\Blogs.BlogPost.Publish.ascx" />
     <Content Include="Views\BlogPost\Item.ascx" />
-    <Content Include="Views\Blog\Create.ascx" />
-    <Content Include="Views\Blog\Edit.ascx" />
+    <Content Include="Views\BlogAdmin\Create.ascx" />
+    <Content Include="Views\BlogAdmin\Edit.ascx" />
     <Content Include="Views\Blog\Item.ascx" />
     <Content Include="Views\DisplayTemplates\Items\Blogs.BlogPost.SummaryAdmin.ascx" />
     <Content Include="Views\EditorTemplates\Parts\Blogs.Blog.Fields.ascx" />

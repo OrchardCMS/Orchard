@@ -31,15 +31,15 @@ namespace Orchard.Blogs.Extensions {
         }
 
         public static string BlogCreate(this UrlHelper urlHelper) {
-            return urlHelper.Action("Create", "Blog", new {area = "Orchard.Blogs"});
+            return urlHelper.Action("Create", "BlogAdmin", new {area = "Orchard.Blogs"});
         }
 
         public static string BlogEdit(this UrlHelper urlHelper, string blogSlug) {
-            return urlHelper.Action("Edit", "Blog", new {blogSlug, area = "Orchard.Blogs"});
+            return urlHelper.Action("Edit", "BlogAdmin", new {blogSlug, area = "Orchard.Blogs"});
         }
 
         public static string BlogDelete(this UrlHelper urlHelper, string blogSlug) {
-            return urlHelper.Action("Delete", "Blog", new {blogSlug, area = "Orchard.Blogs"});
+            return urlHelper.Action("Delete", "BlogAdmin", new {blogSlug, area = "Orchard.Blogs"});
         }
 
         public static string BlogPost(this UrlHelper urlHelper, string blogSlug, string postSlug) {
@@ -47,15 +47,15 @@ namespace Orchard.Blogs.Extensions {
         }
 
         public static string BlogPostCreate(this UrlHelper urlHelper, string blogSlug) {
-            return urlHelper.Action("Create", "BlogPost", new {blogSlug, area = "Orchard.Blogs"});
+            return urlHelper.Action("Create", "BlogPostAdmin", new {blogSlug, area = "Orchard.Blogs"});
         }
 
         public static string BlogPostEdit(this UrlHelper urlHelper, string blogSlug, string postSlug) {
-            return urlHelper.Action("Edit", "BlogPost", new {blogSlug, postSlug, area = "Orchard.Blogs"});
+            return urlHelper.Action("Edit", "BlogPostAdmin", new {blogSlug, postSlug, area = "Orchard.Blogs"});
         }
 
         public static string BlogPostDelete(this UrlHelper urlHelper, string blogSlug, string postSlug) {
-            return urlHelper.Action("Delete", "BlogPost", new {blogSlug, postSlug, area = "Orchard.Blogs"});
+            return urlHelper.Action("Delete", "BlogPostAdmin", new {blogSlug, postSlug, area = "Orchard.Blogs"});
         }
     }
 }
