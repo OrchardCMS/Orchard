@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using Orchard.Security.Permissions;
 
 namespace  Orchard.Media {
@@ -26,5 +27,10 @@ namespace  Orchard.Media {
                 RenameMediaFolder
             };
         }
+
+        public IEnumerable<PermissionStereotype> GetDefaultStereotypes() {
+            return Enumerable.Empty<PermissionStereotype>();
+        }
+
     }
 }

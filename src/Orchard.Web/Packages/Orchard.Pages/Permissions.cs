@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using Orchard.Security.Permissions;
 
 namespace Orchard.Pages {
@@ -32,5 +33,10 @@ namespace Orchard.Pages {
                 SchedulePages
             };
         }
+
+        public IEnumerable<PermissionStereotype> GetDefaultStereotypes() {
+            return Enumerable.Empty<PermissionStereotype>();
+        }
+
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using Orchard.Security.Permissions;
 
 namespace Orchard.Comments {
@@ -18,7 +19,7 @@ namespace Orchard.Comments {
         }
 
         public IEnumerable<Permission> GetPermissions() {
-            return new List<Permission> {
+            return new[] {
                 AddComment,
                 AddCommentWithoutValidation,
                 EnableComment,
@@ -28,5 +29,19 @@ namespace Orchard.Comments {
                 ModerateCommentOnOwnItems
             };
         }
+
+        public IEnumerable<PermissionStereotype> GetDefaultStereotypes() {
+            return new[] {
+                new PermissionStereotype {
+                    Name = "Administrators",
+                    Permissions = new[] {ModerateComment}
+                },
+                new PermissionStereotype {
+                    Name = "Anonymous",
+                    Permissions = new[] {AddComment}
+                },
+            };
+        }
+
     }
 }

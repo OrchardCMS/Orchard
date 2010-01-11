@@ -178,6 +178,8 @@
     <Compile Include="ContentManagement\Records\ContentPartVersionRecord.cs" />
     <Compile Include="ContentManagement\Records\ContentTypeRecord.cs" />
     <Compile Include="ContentManagement\Records\Utility.cs" />
+    <Compile Include="Extensions\HackInstallationGenerator.cs" />
+    <Compile Include="Extensions\IExtensionManagerEvents.cs" />
     <Compile Include="Localization\Text.cs" />
     <Compile Include="Mvc\ViewModels\ContentItemViewModel.cs" />
     <Compile Include="ContentManagement\ViewModels\TemplateViewModel.cs" />
@@ -196,6 +198,7 @@
     <Compile Include="Mvc\Html\MvcFormAntiForgeryPost.cs" />
     <Compile Include="Mvc\Html\SiteServiceExtensions.cs" />
     <Compile Include="Permissions.cs" />
+    <Compile Include="Tasks\FiniteContainerProvider.cs" />
     <Compile Include="Themes\ExtensionManagerExtensions.cs" />
     <Compile Include="Extensions\Helpers\PathHelpers.cs" />
     <Compile Include="Extensions\IExtensionManager.cs" />

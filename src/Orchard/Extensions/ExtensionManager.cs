@@ -6,6 +6,8 @@ using ICSharpCode.SharpZipLib.Zip;
 using Orchard.Extensions.Helpers;
 using Orchard.Extensions.Loaders;
 using Orchard.Localization;
+using Orchard.Logging;
+using Orchard.Utility;
 using Yaml.Grammar;
 using System.Web;
 
@@ -16,16 +18,20 @@ namespace Orchard.Extensions {
         private IEnumerable<ExtensionEntry> _activeExtensions;
 
         public Localizer T { get; set; }
+        public ILogger Logger { get; set; }
 
-        public ExtensionManager(IEnumerable<IExtensionFolders> folders, IEnumerable<IExtensionLoader> loaders) {
+        public ExtensionManager(
+            IEnumerable<IExtensionFolders> folders,
+            IEnumerable<IExtensionLoader> loaders) {
             _folders = folders;
             _loaders = loaders.OrderBy(x => x.Order);
             T = NullLocalizer.Instance;
+            Logger = NullLogger.Instance;
         }
 
 
         public IEnumerable<ExtensionDescriptor> AvailableExtensions() {
-            List<ExtensionDescriptor> availableExtensions = new List<ExtensionDescriptor>();
+            var availableExtensions = new List<ExtensionDescriptor>();
             foreach (var folder in _folders) {
                 foreach (var name in folder.ListNames()) {
                     availableExtensions.Add(GetDescriptorForExtension(name, folder));

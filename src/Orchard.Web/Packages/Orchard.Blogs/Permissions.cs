@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using Orchard.Security.Permissions;
 
 namespace Orchard.Blogs {
@@ -35,6 +36,10 @@ namespace Orchard.Blogs {
                 ModifyBlog,
                 DeleteBlog
             };
+        }
+
+        public IEnumerable<PermissionStereotype> GetDefaultStereotypes() {
+            return Enumerable.Empty<PermissionStereotype>();
         }
     }
 }

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Timers;
 using Autofac;
-using Autofac.Integration.Web;
 using Orchard.Environment;
 using Orchard.Logging;
 
@@ -57,13 +56,9 @@ namespace Orchard.Tasks {
 
         public void DoWork() {
             // makes an inner container, similar to the per-request container
-
-            var containerProvider = new ContainerProvider(_container);
+            var containerProvider = new FiniteContainerProvider(_container);
             try {
                 var requestContainer = containerProvider.RequestContainer;
-
-                // also inject this instance in case anyone asks for the container provider
-                requestContainer.Build(builder => builder.Register(containerProvider).As<IContainerProvider>());
 
                 // resolve the manager and invoke it
                 var manager = requestContainer.Resolve<IBackgroundService>();
@@ -75,24 +70,5 @@ namespace Orchard.Tasks {
             }
         }
 
-        class ContainerProvider : IContainerProvider {
-            public ContainerProvider(IContainer applicationContainer) {
-                // explicitly create a request container for the life of this object
-                ApplicationContainer = applicationContainer;
-                RequestContainer = applicationContainer.CreateInnerContainer();
-            }
-
-            public void DisposeRequestContainer() {
-                var disposeContainer = RequestContainer;
-                RequestContainer = null;
-
-                if (disposeContainer != null)
-                    disposeContainer.Dispose();
-            }
-
-            public IContainer ApplicationContainer { get; private set; }
-
-            public IContainer RequestContainer { get; private set; }
-        }
     }
 }

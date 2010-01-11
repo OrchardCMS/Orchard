@@ -7,8 +7,10 @@ using Autofac.Builder;
 using Autofac.Integration.Web;
 using System.Collections.Generic;
 using AutofacContrib.DynamicProxy2;
+using Orchard.Extensions;
 using Orchard.Mvc;
 using Orchard.Mvc.ViewEngines;
+using Orchard.Tasks;
 
 namespace Orchard.Environment {
     public class DefaultOrchardHost : IOrchardHost {
@@ -43,6 +45,22 @@ namespace Orchard.Environment {
             ViewEngines.Engines.Insert(0, LayoutViewEngine.CreateShim());
             _controllerBuilder.SetControllerFactory(new OrchardControllerFactory());
             ServiceLocator.SetLocator(t => _containerProvider.RequestContainer.Resolve(t));
+
+            // fire off one-time install events on an alternate container
+            var tempContainer = CreateShellContainer();
+            var containerProvider = new FiniteContainerProvider(tempContainer);
+            try {
+                var requestContainer = containerProvider.RequestContainer;
+                
+                var hackInstallationGenerator = requestContainer.Resolve<IHackInstallationGenerator>();
+                hackInstallationGenerator.GenerateInstallEvents();
+            }
+            finally {
+                // shut everything down again
+                containerProvider.DisposeRequestContainer();
+                tempContainer.Dispose();
+            }
+
         }
 
         protected virtual void EndRequest() {

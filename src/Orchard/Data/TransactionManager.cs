@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Transactions;
 using System.Web.Mvc;
+using Orchard.Logging;
 using Orchard.Mvc.Filters;
 
 namespace Orchard.Data {
@@ -16,21 +17,33 @@ namespace Orchard.Data {
         private TransactionScope _scope;
         private bool _cancelled;
 
+        public TransactionManager() {
+            Logger = NullLogger.Instance;
+        }
+
+        public ILogger Logger { get; set; }
+
         void ITransactionManager.Demand() {
             if (_scope == null) {
+                Logger.Debug("Creating transaction on Demand");
                 _scope = new TransactionScope(TransactionScopeOption.Required);
             }
         }
 
         void ITransactionManager.Cancel() {
+            Logger.Debug("Transaction cancelled flag set");
             _cancelled = true;
         }
 
         void IDisposable.Dispose() {
             if (_scope != null) {
-                if (!_cancelled)
+                if (!_cancelled){
+                    Logger.Debug("Marking transaction as complete");
                     _scope.Complete();
+                }
+                Logger.Debug("Final work for transaction being performed");
                 _scope.Dispose();
+                Logger.Debug("Transaction disposed");
             }
         }
 

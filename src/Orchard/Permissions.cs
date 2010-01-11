@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using Orchard.Security.Permissions;
 
 namespace Orchard {
@@ -12,5 +13,10 @@ namespace Orchard {
         public IEnumerable<Permission> GetPermissions() {
             return new[] { AccessAdmin };
         }
+
+        public IEnumerable<PermissionStereotype> GetDefaultStereotypes() {
+            return Enumerable.Empty<PermissionStereotype>();
+        }
+
     }
 }

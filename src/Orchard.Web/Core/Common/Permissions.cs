@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Orchard.Security.Permissions;
 
 namespace Orchard.Core.Common {
@@ -11,6 +12,15 @@ namespace Orchard.Core.Common {
 
         public IEnumerable<Permission> GetPermissions() {
             return new[] { ChangeOwner };
+        }
+
+        public IEnumerable<PermissionStereotype> GetDefaultStereotypes() {
+            return new[] {
+                new PermissionStereotype {
+                    Name = "Administrators",
+                    Permissions = new[] {ChangeOwner}
+                }
+            };
         }
     }
 }

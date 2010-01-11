@@ -8,6 +8,7 @@ using System.Web.Routing;
 using Autofac;
 using Autofac.Integration.Web;
 using Autofac.Modules;
+using Moq;
 using NUnit.Framework;
 using Orchard.Environment;
 using Orchard.Mvc;
@@ -44,6 +45,7 @@ namespace Orchard.Tests.Environment {
                     builder.Register(_modelBinderDictionary);
                     builder.Register(new ViewEngineCollection { new WebFormViewEngine() });
                     builder.Register(new StuExtensionManager()).As<IExtensionManager>();
+                    builder.Register(new Mock<IHackInstallationGenerator>().Object);
                 });
         }
 
