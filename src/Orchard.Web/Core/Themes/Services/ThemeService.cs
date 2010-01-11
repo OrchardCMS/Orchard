@@ -83,7 +83,9 @@ namespace Orchard.Core.Themes.Services {
         public IEnumerable<ITheme> GetInstalledThemes() {
             List<ITheme> themes = new List<ITheme>();
             foreach (var descriptor in _extensionManager.AvailableExtensions()) {
-                if (String.Equals(descriptor.ExtensionType, "Theme", StringComparison.OrdinalIgnoreCase)) {
+                //todo: (heskew) filter out Admin themes in a different manner - eventually we'll need a way to select the admin theme so there should be a clear separation
+                if (String.Equals(descriptor.ExtensionType, "Theme", StringComparison.OrdinalIgnoreCase)
+                        && !(descriptor.Name.EndsWith("Admin", StringComparison.OrdinalIgnoreCase))) {
                     Theme theme = new Theme {
                         Author = descriptor.Author ?? String.Empty,
                         Description = descriptor.Description ?? String.Empty,
