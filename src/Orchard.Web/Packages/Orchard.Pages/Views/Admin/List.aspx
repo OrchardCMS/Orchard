@@ -46,7 +46,6 @@
                     <th scope="col">Title</th>
                     <th scope="col">Slug</th>
                     <th scope="col">Author</th>
-                    <th scope="col">Last Updated</th>
                     <th scope="col">Draft</th>
                     <th scope="col">Scheduled</th>
                     <th scope="col"></th>
@@ -75,13 +74,18 @@
                     <% } %>   
                  </td>
                 <td>By <%= pageEntry.Page.Creator.UserName %></td>
-                <td></td>
                 <td>
                     <% if (pageEntry.Page.HasDraft) { %>
                     <img src="<%=ResolveUrl("~/Packages/Orchard.Pages/Content/Admin/images/draft.gif") %>" alt="Draft" title="The page has a draft" />
                     <% } %>
                 </td>
-                <td></td>
+                <td>
+                    <% if (!pageEntry.Page.IsPublished) {%>
+                        <%=pageEntry.Page.Published != null
+                          ? string.Format("{0:d}<br />{0:t}", pageEntry.Page.Published.Value)
+                          : "" %>
+                    <% }%>    
+                </td>
                 <td><%=Html.ActionLink("Edit", "Edit", new { pageSlug = pageEntry.Page.Slug }) %></td>
             </tr>
             <%
