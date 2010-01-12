@@ -142,6 +142,8 @@
     <Content Include="Common\Views\EditorTemplates\Parts\Common.Body.ascx" />
     <Content Include="Common\Views\EditorTemplates\Parts\Common.Owner.ascx" />
     <Content Include="Settings\Views\EditorTemplates\Items\Settings.Site.ascx" />
+    <Content Include="Themes\Theme.gif" />
+    <Content Include="Themes\Theme.txt" />
     <Content Include="Themes\Scripts\jquery-1.3.2-vsdoc.js" />
     <Content Include="Themes\Scripts\jquery-1.3.2.js" />
     <Content Include="Themes\Scripts\jquery-1.3.2.min-vsdoc.js" />

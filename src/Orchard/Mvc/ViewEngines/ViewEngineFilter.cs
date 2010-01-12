@@ -3,6 +3,7 @@ using System.IO;
 using System.Linq;
 using System.Web.Mvc;
 using Orchard.Extensions;
+using Orchard.Logging;
 using Orchard.Mvc.Filters;
 using Orchard.Themes;
 
@@ -25,6 +26,8 @@ namespace Orchard.Mvc.ViewEngines {
             _viewEngineProviders = viewEngineProviders;
         }
 
+        public ILogger Logger { get; set; }
+
         public void OnResultExecuting(ResultExecutingContext filterContext) {
             var viewResultBase = filterContext.Result as ViewResultBase;
             if (viewResultBase == null) {
@@ -44,6 +47,7 @@ namespace Orchard.Mvc.ViewEngines {
 
                 themeViewEngines = _viewEngineProviders
                     .Select(x => x.CreateThemeViewEngine(new CreateThemeViewEngineParams { VirtualPath = themeLocation }));
+                Logger.Debug("Theme location:\r\n\t-{0}", themeLocation);
             }
 
 
@@ -53,6 +57,7 @@ namespace Orchard.Mvc.ViewEngines {
             var packageLocations = packages.Select(x => Path.Combine(x.Descriptor.Location, x.Descriptor.Name));
             var packageViewEngines = _viewEngineProviders
                 .Select(x => x.CreatePackagesViewEngine(new CreatePackagesViewEngineParams { VirtualPaths = packageLocations }));
+            Logger.Debug("Package locations:\r\n\t-{0}", string.Join("\r\n\t-", packageLocations.ToArray()));
 
             var requestViewEngines = new ViewEngineCollection(
                 themeViewEngines

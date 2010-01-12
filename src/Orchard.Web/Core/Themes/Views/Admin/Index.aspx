@@ -1,4 +1,6 @@
 ﻿<%@ Page Language="C#" Inherits="Orchard.Mvc.ViewPage<ThemesIndexViewModel>" %>
+<%@ Import Namespace="Orchard.Themes"%>
+<%@ Import Namespace="Orchard.Extensions"%>
 <%@ Import Namespace="Orchard.Core.Themes.ViewModels"%>
 <h1><%=Html.TitleForPage(T("Manage Themes").ToString()) %></h1>
 <h2><%=_Encoded("Current Theme")%></h2>
@@ -8,7 +10,7 @@
    } else {
     %><h3><%=Html.Encode(Model.CurrentTheme.DisplayName) %></h3>
      <p>
-        <%=Html.Image(ResolveUrl("~/Themes/" + Model.CurrentTheme.ThemeName + "/Theme.gif"), Html.Encode(Model.CurrentTheme.DisplayName), null) %><br />
+        <%=Html.Image(ResolveUrl(Html.Resolve<IExtensionManager>().GetThemeLocation(Model.CurrentTheme) + "/Theme.gif"), Html.Encode(Model.CurrentTheme.DisplayName), null)%><br />
         <%=_Encoded("By") %> <%=Html.Encode(Model.CurrentTheme.Author) %><br />
         <%=Html.Encode(Model.CurrentTheme.Version) %><br />
         <%=Html.Encode(Model.CurrentTheme.Description) %><br />
@@ -23,7 +25,7 @@
         %>    <li>
         <h3><%=Html.Encode(theme.DisplayName) %></h3>
         <p>
-            <%=Html.Image(ResolveUrl("~/Themes/" + theme.ThemeName + "/Theme.gif"), Html.Encode(theme.DisplayName), null) %><br />
+            <%=Html.Image(ResolveUrl(Html.Resolve<IExtensionManager>().GetThemeLocation(theme) + "/Theme.gif"), Html.Encode(theme.DisplayName), null)%><br />
             <%=_Encoded("By") %> <%=Html.Encode(theme.Author) %><br />
             <%=Html.Encode(theme.Version) %><br />
             <%=Html.Encode(theme.Description) %><br />
