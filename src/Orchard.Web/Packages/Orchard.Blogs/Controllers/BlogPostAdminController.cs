@@ -181,7 +181,7 @@ namespace Orchard.Blogs.Controllers {
             if (blog == null)
                 return new NotFoundResult();
 
-            BlogPost post = _blogPostService.Get(blog, postSlug);
+            BlogPost post = _blogPostService.Get(blog, postSlug, VersionOptions.Latest);
 
             if (post == null)
                 return new NotFoundResult();

@@ -211,16 +211,17 @@ namespace Orchard.Mvc.Html {
             return htmlHelper.BeginFormAntiForgeryPost(htmlHelper.ViewContext.HttpContext.Request.RawUrl, FormMethod.Post, new RouteValueDictionary());
         }
 
-        //TODO: (erikpo) Uncomment when needed (not currently needed)
-        //public static MvcForm BeginFormAntiForgeryPost(this HtmlHelper htmlHelper, string formAction) {
-        //    return htmlHelper.BeginFormAntiForgeryPost(formAction, FormMethod.Post, new RouteValueDictionary());
-        //}
-        //public static MvcForm BeginFormAntiForgeryPost(this HtmlHelper htmlHelper, string formAction, FormMethod formMethod) {
-        //    return htmlHelper.BeginFormAntiForgeryPost(formAction, formMethod, new RouteValueDictionary());
-        //}
-        //public static MvcForm BeginFormAntiForgeryPost(this HtmlHelper htmlHelper, string formAction, FormMethod formMethod, object htmlAttributes) {
-        //    return htmlHelper.BeginFormAntiForgeryPost(formAction, formMethod, new RouteValueDictionary(htmlAttributes));
-        //}
+        public static MvcForm BeginFormAntiForgeryPost(this HtmlHelper htmlHelper, string formAction) {
+            return htmlHelper.BeginFormAntiForgeryPost(formAction, FormMethod.Post, new RouteValueDictionary());
+        }
+        
+        public static MvcForm BeginFormAntiForgeryPost(this HtmlHelper htmlHelper, string formAction, FormMethod formMethod) {
+            return htmlHelper.BeginFormAntiForgeryPost(formAction, formMethod, new RouteValueDictionary());
+        }
+
+        public static MvcForm BeginFormAntiForgeryPost(this HtmlHelper htmlHelper, string formAction, FormMethod formMethod, object htmlAttributes) {
+            return htmlHelper.BeginFormAntiForgeryPost(formAction, formMethod, new RouteValueDictionary(htmlAttributes));
+        }
 
         public static MvcForm BeginFormAntiForgeryPost(this HtmlHelper htmlHelper, string formAction, FormMethod formMethod, IDictionary<string, object> htmlAttributes) {
             TagBuilder tagBuilder = new TagBuilder("form");

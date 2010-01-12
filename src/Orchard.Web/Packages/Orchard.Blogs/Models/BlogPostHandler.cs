@@ -16,6 +16,7 @@ namespace Orchard.Blogs.Models {
             Filters.Add(new StorageFilter<CommonVersionRecord>(commonRepository));
 
             OnCreated<BlogPost>((context, bp) => bp.Blog.PostCount++);
+            OnRemoved<BlogPost>((context, bp) => bp.Blog.PostCount--);
         }
     }
 }
