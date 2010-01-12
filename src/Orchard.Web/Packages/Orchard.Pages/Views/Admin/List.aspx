@@ -1,34 +1,32 @@
-﻿<%@ Page Language="C#" Inherits="System.Web.Mvc.ViewPage<PagesViewModel>" %>
+﻿<%@ Page Language="C#" Inherits="Orchard.Mvc.ViewPage<PagesViewModel>" %>
 <%@ Import Namespace="Orchard.Mvc.Html"%>
-<%@ Import Namespace="Orchard.Utility"%>
 <%@ Import Namespace="Orchard.Pages.ViewModels"%>
-<%-- todo: (heskew) localize --%>
-<h2><%=Html.TitleForPage("Manage Pages") %></h2>
-<p>Possible text about setting up a page goes here. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla erat turpis, blandit eget feugiat nec, tempus vel quam. Mauris et neque eget justo suscipit blandit.</p>
+<h1><%=Html.TitleForPage(T("Manage Pages").ToString()) %></h1>
+<p><%=_Encoded("Possible text about setting up a page goes here.")%></p>
 <% using (Html.BeginFormAntiForgeryPost()) { %>
     <%=Html.ValidationSummary() %>
     <fieldset class="actions bulk">
-        <label for="publishActions">Actions: </label>
+        <label for="publishActions"><%=_Encoded("Actions:") %></label>
         <select id="publishActions" name="<%=Html.NameOf(m => m.Options.BulkAction) %>">
-            <%=Html.SelectOption(Model.Options.BulkAction, PagesBulkAction.None, "Choose action...") %>
-            <%=Html.SelectOption(Model.Options.BulkAction, PagesBulkAction.PublishNow, "Publish Now") %>
-            <%=Html.SelectOption(Model.Options.BulkAction, PagesBulkAction.Unpublish, "Unpublish") %>
-            <%=Html.SelectOption(Model.Options.BulkAction, PagesBulkAction.Delete, "Delete") %>
+            <%=Html.SelectOption(Model.Options.BulkAction, PagesBulkAction.None, _Encoded("Choose action...").ToString()) %>
+            <%=Html.SelectOption(Model.Options.BulkAction, PagesBulkAction.PublishNow, _Encoded("Publish Now").ToString()) %>
+            <%=Html.SelectOption(Model.Options.BulkAction, PagesBulkAction.Unpublish, _Encoded("Unpublish").ToString()) %>
+            <%=Html.SelectOption(Model.Options.BulkAction, PagesBulkAction.Delete, _Encoded("Delete").ToString()) %>
         </select>
-        <input class="button" type="submit" name="submit.BulkEdit" value="Apply" />
+        <input class="button" type="submit" name="submit.BulkEdit" value="<%=_Encoded("Apply") %>" />
     </fieldset>
     <fieldset class="actions bulk">
-        <label for="filterResults">Filter: </label>
+        <label for="filterResults"><%=_Encoded("Filter:") %></label>
         <select id="filterResults" name="<%=Html.NameOf(m => m.Options.Filter) %>">
-            <%=Html.SelectOption(Model.Options.Filter, PagesFilter.All, "All Pages") %>
-            <%=Html.SelectOption(Model.Options.Filter, PagesFilter.Published, "Published Pages") %>
-            <%=Html.SelectOption(Model.Options.Filter, PagesFilter.Offline, "Offline Pages") %>
+            <%=Html.SelectOption(Model.Options.Filter, PagesFilter.All, _Encoded("All Pages").ToString()) %>
+            <%=Html.SelectOption(Model.Options.Filter, PagesFilter.Published, _Encoded("Published Pages").ToString()) %>
+            <%=Html.SelectOption(Model.Options.Filter, PagesFilter.Offline, _Encoded("Offline Pages").ToString()) %>
         </select>
-        <input class="button" type="submit" name="submit.Filter" value="Apply"/>
+        <input class="button" type="submit" name="submit.Filter" value="<%=_Encoded("Apply") %>"/>
     </fieldset>
-    <div class="manage"><%=Html.ActionLink("Add a page", "Create", new {}, new { @class = "button" }) %></div>
+    <div class="manage"><%=Html.ActionLink(T("Add a page").ToString(), "Create", new {}, new { @class = "button" }) %></div>
     <fieldset>
-        <table class="items" summary="This is a table of the PageEntries currently available for use in your application.">
+        <table class="items" summary="<%=_Encoded("This is a table of the PageEntries currently available for use in your application.") %>">
             <colgroup>
                 <col id="Actions" />
                 <col id="Status" />
@@ -42,56 +40,57 @@
             <thead>
                 <tr>
                     <th scope="col">&nbsp;&darr;<%-- todo: (heskew) something more appropriate for "this applies to the bulk actions --%></th>
-                    <th scope="col">Status</th>
-                    <th scope="col">Title</th>
-                    <th scope="col">Slug</th>
-                    <th scope="col">Author</th>
-                    <th scope="col">Draft</th>
-                    <th scope="col">Scheduled</th>
+                    <th scope="col"><%=_Encoded("Status") %></th>
+                    <th scope="col"><%=_Encoded("Title") %></th>
+                    <th scope="col"><%=_Encoded("Slug") %></th>
+                    <th scope="col"><%=_Encoded("Author") %></th>
+                    <th scope="col"><%=_Encoded("Draft") %></th>
+                    <th scope="col"><%=_Encoded("Scheduled") %></th>
                     <th scope="col"></th>
                 </tr>
             </thead>
             <%
                 int pageIndex = 0;
-                foreach (var pageEntry in Model.PageEntries) { %>
+                foreach (var pageEntry in Model.PageEntries) {
+                    var pi = pageIndex; %>
             <tr>
                 <td>
-                    <input type="hidden" value="<%=Model.PageEntries[pageIndex].PageId %>" name="<%=Html.NameOf(m => m.PageEntries[pageIndex].PageId) %>"/>
-                    <input type="checkbox" value="true" name="<%=Html.NameOf(m => m.PageEntries[pageIndex].IsChecked) %>"/>
+                    <input type="hidden" value="<%=Model.PageEntries[pageIndex].PageId %>" name="<%=Html.NameOf(m => m.PageEntries[pi].PageId) %>"/>
+                    <input type="checkbox" value="true" name="<%=Html.NameOf(m => m.PageEntries[pi].IsChecked) %>"/>
                 </td>
                 <td>
-                  <% if (pageEntry.Page.HasPublished) {%>
-                  <img src="<%=ResolveUrl("~/Packages/Orchard.Pages/Content/Admin/images/online.gif")%>" alt="Online" title="The page is currently online" />
+                  <% if (pageEntry.Page.HasPublished) { %>
+                  <img src="<%=ResolveUrl("~/Packages/Orchard.Pages/Content/Admin/images/online.gif") %>" alt="<%=_Encoded("Online") %>" title="<%=_Encoded("The page is currently online") %>" />
                   <% } else { %>
-                  <img src="<%=ResolveUrl("~/Packages/Orchard.Pages/Content/Admin/images/offline.gif")%>" alt="Offline" title="The page is currently offline" />
+                  <img src="<%=ResolveUrl("~/Packages/Orchard.Pages/Content/Admin/images/offline.gif") %>" alt="<%=_Encoded("Offline") %>" title="<%=_Encoded("The page is currently offline") %>" />
                   <% } %>
                 </td>
-                <td><%=pageEntry.Page.Title ?? "(no title)" %></td>
-                <td><% if (pageEntry.Page.HasPublished) {%>
-                        <%=Html.ActionLink(pageEntry.Page.Slug ?? "(no slug)", "Item", new {controller = "Page", slug = pageEntry.Page.PublishedSlug})%>
+                <td><%=Html.Encode(pageEntry.Page.Title ?? T("(no title)").ToString()) %></td>
+                <td><% if (pageEntry.Page.HasPublished) { %>
+                        <%=Html.ActionLink(pageEntry.Page.Slug ?? T("(no slug)").ToString(), "Item", new {controller = "Page", slug = pageEntry.Page.PublishedSlug}) %>
                     <% } else {%>
-                        <%= pageEntry.Page.Slug ?? "(no slug)" %>
+                        <%=Html.Encode(pageEntry.Page.Slug ?? T("(no slug)").ToString()) %>
                     <% } %>   
                  </td>
-                <td>By <%= pageEntry.Page.Creator.UserName %></td>
+                <td><%=_Encoded("By {0}", pageEntry.Page.Creator.UserName) %></td>
                 <td>
                     <% if (pageEntry.Page.HasDraft) { %>
-                    <img src="<%=ResolveUrl("~/Packages/Orchard.Pages/Content/Admin/images/draft.gif") %>" alt="Draft" title="The page has a draft" />
+                    <img src="<%=ResolveUrl("~/Packages/Orchard.Pages/Content/Admin/images/draft.gif") %>" alt="<%=_Encoded("Draft") %>" title="<%=_Encoded("The page has a draft") %>" />
                     <% } %>
                 </td>
                 <td>
-                    <% if (!pageEntry.Page.IsPublished) {%>
+                    <% if (!pageEntry.Page.IsPublished) { %>
                         <%=pageEntry.Page.Published != null
                           ? string.Format("{0:d}<br />{0:t}", pageEntry.Page.Published.Value)
                           : "" %>
-                    <% }%>    
+                    <% } %>    
                 </td>
-                <td><%=Html.ActionLink("Edit", "Edit", new { pageSlug = pageEntry.Page.Slug }) %></td>
+                <td><%=Html.ActionLink(T("Edit").ToString(), "Edit", new { pageSlug = pageEntry.Page.Slug }) %></td>
             </tr>
             <%
                 pageIndex++; 
             } %>
         </table>
     </fieldset>
-    <div class="manage"><%=Html.ActionLink("Add a page", "Create", new {}, new { @class = "button"}) %></div>
+    <div class="manage"><%=Html.ActionLink(T("Add a page").ToString(), "Create", new {}, new { @class = "button"}) %></div>
 <% } %>

@@ -20,7 +20,7 @@
             <%=Html.SelectOption(Model.Options.Filter, CommentIndexFilter.Approved, _Encoded("Approved Comments").ToString()) %>
             <%=Html.SelectOption(Model.Options.Filter, CommentIndexFilter.Spam, _Encoded("Spam").ToString())%>
         </select>
-        <input class="button" type="submit" name="submit.Filter" value="<%=_Encoded("Filter") %>"/>
+        <input class="button" type="submit" name="submit.Filter" value="<%=_Encoded("Apply") %>"/>
     </fieldset>
     <fieldset>
 	    <table class="items" summary="<%=_Encoded("This is a table of the comments in your application") %>">

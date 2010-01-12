@@ -20,7 +20,7 @@
             <%=Html.SelectOption(Model.Options.Filter, CommentDetailsFilter.Approved, _Encoded("Approved Comments").ToString())%>
             <%=Html.SelectOption(Model.Options.Filter, CommentDetailsFilter.Spam, _Encoded("Spam").ToString())%>
         </select>
-        <input class="button" type="submit" name="submit.Filter" value="<%=_Encoded("Filter") %>"/>
+        <input class="button" type="submit" name="submit.Filter" value="<%=_Encoded("Apply") %>"/>
     </fieldset>
     <div class="manage">
         <% if (Model.CommentsClosedOnItem) {
