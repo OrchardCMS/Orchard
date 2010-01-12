@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Orchard.Blogs.Models;
 using Orchard.ContentManagement;
@@ -11,6 +12,7 @@ namespace Orchard.Blogs.Services {
         IEnumerable<BlogPost> Get(Blog blog, ArchiveData archiveData);
         void Delete(BlogPost blogPost);
         void Publish(BlogPost blogPost);
+        void Publish(BlogPost blogPost, DateTime publishDate);
         void Unpublish(BlogPost blogPost);
     }
 }

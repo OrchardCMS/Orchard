@@ -61,8 +61,8 @@ namespace Orchard.Pages.Models {
         }
 
         public DateTime? Published {
-            get { return Record.Published; }
-            set { Record.Published = value; }
+            get { return this.As<CommonAspect>().PublishedUtc; }
+            set { this.As<CommonAspect>().PublishedUtc = value; }
         }
 
         //[CascadeAllDeleteOrphan]

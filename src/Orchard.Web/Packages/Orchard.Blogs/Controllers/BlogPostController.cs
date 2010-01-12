@@ -9,7 +9,6 @@ using Orchard.ContentManagement;
 using Orchard.Mvc.Results;
 
 namespace Orchard.Blogs.Controllers {
-    [ValidateInput(false)]
     public class BlogPostController : Controller {
         private readonly IOrchardServices _services;
         private readonly IBlogService _blogService;

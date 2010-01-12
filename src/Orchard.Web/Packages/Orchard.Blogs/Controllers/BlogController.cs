@@ -9,7 +9,6 @@ using Orchard.Security;
 using Orchard.UI.Notify;
 
 namespace Orchard.Blogs.Controllers {
-    [ValidateInput(false)]
     public class BlogController : Controller {
         private readonly IOrchardServices _services;
         private readonly IBlogService _blogService;

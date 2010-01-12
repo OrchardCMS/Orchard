@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Orchard.Pages.Models;
 using Orchard.Core.Common.Records;
@@ -61,8 +62,13 @@ namespace Orchard.Pages.Services {
             return _contentManager.New<Page>("page");
         }
 
-        public Page Create(bool publishNow) {
-            return _contentManager.Create<Page>("page", publishNow ? VersionOptions.Published : VersionOptions.Draft);
+        public Page Create(bool publishNow, DateTime? publishDate) {
+            //TODO: (erikpo) Evaluate if publish options should be moved into create or out of create to keep it clean
+            return _contentManager.Create<Page>("page", publishNow ? VersionOptions.Published : VersionOptions.Draft,
+                bp => {
+                    if (!publishNow && publishDate != null)
+                        bp.Published = publishDate.Value;
+                });
         }
 
         public void Delete(Page page) {
@@ -71,10 +77,21 @@ namespace Orchard.Pages.Services {
 
         public void Publish(Page page) {
             _contentManager.Publish(page.ContentItem);
+            //TODO: (erikpo) Not sure if this is needed or not
+            page.Published = DateTime.UtcNow;
+        }
+
+        public void Publish(Page page, DateTime publishDate) {
+            //TODO: (erikpo) This logic should move out of blogs and pages and into content manager
+            if (page.Published != null && page.Published.Value >= DateTime.UtcNow)
+                _contentManager.Unpublish(page.ContentItem);
+            page.Published = publishDate;
         }
 
         public void Unpublish(Page page) {
-            //_contentManager.Unpublish(page.ContentItem);
+            _contentManager.Unpublish(page.ContentItem);
+            //TODO: (erikpo) Not sure if this is needed or not
+            page.Published = null;
         }
     }
 }

@@ -125,12 +125,19 @@ namespace Orchard.Pages.Controllers {
             if (!Services.Authorizer.Authorize(Permissions.CreatePages, T("Couldn't create page")))
                 return new HttpUnauthorizedResult();
 
+            //TODO: (erikpo) Move this duplicate code somewhere else
+            DateTime? publishDate = null;
             bool publishNow = false;
-            if (String.Equals(Request.Form["Command"], "PublishNow")) {
+            if (string.Equals(Request.Form["Command"], "PublishNow")) {
                 publishNow = true;
+            } else if (string.Equals(Request.Form["Publish"], "Publish")) {
+                DateTime publishDateValue;
+                if (DateTime.TryParse(Request.Form["Publish"], out publishDateValue)) {
+                    publishDate = publishDateValue;
+                }
             }
 
-            Page page = _pageService.Create(publishNow);
+            Page page = _pageService.Create(publishNow, publishDate);
             model.Page = Services.ContentManager.UpdateEditorModel(page, this);
 
             if (!ModelState.IsValid) {
@@ -165,19 +172,30 @@ namespace Orchard.Pages.Controllers {
             if (!Services.Authorizer.Authorize(Permissions.ModifyPages, T("Couldn't edit page")))
                 return new HttpUnauthorizedResult();
 
-            bool publishNow = false;
-            if (String.Equals(Request.Form["Command"], "PublishNow")) {
-                publishNow = true;
-            }
-
             Page page = _pageService.GetPageOrDraft(pageSlug);
 
             if (page == null)
                 return new NotFoundResult();
 
-            if (publishNow) {
-                _pageService.Publish(page);
+            //TODO: (erikpo) Move this duplicate code somewhere else
+            DateTime? publishDate = null;
+            bool publishNow = false;
+            if (string.Equals(Request.Form["Command"], "PublishNow")) {
+                publishNow = true;
+            } else if (string.Equals(Request.Form["Publish"], "Publish")) {
+                DateTime publishDateValue;
+                if (DateTime.TryParse(Request.Form["Publish"], out publishDateValue)) {
+                    publishDate = publishDateValue;
+                }
             }
+
+            //TODO: (erikpo) Move this duplicate code somewhere else
+            if (publishNow)
+                _pageService.Publish(page);
+            else if (publishDate != null)
+                _pageService.Publish(page, publishDate.Value);
+            else
+                _pageService.Unpublish(page);
 
             var model = new PageEditViewModel {
                 Page = Services.ContentManager.UpdateEditorModel(page, this)
@@ -185,12 +203,14 @@ namespace Orchard.Pages.Controllers {
 
             TryUpdateModel(model);
 
-            if (ModelState.IsValid == false) {
+            if (!ModelState.IsValid) {
                 Services.TransactionManager.Cancel();
+
                 return View(model);
             }
 
             Services.Notifier.Information(T("Page information updated."));
+
             return RedirectToAction("List");
         }
 

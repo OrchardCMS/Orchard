@@ -1,3 +1,4 @@
+using System;
 using System.Web.Mvc;
 using Orchard.Blogs.Extensions;
 using Orchard.Blogs.Models;
@@ -11,6 +12,7 @@ using Orchard.Mvc.Results;
 using Orchard.UI.Notify;
 
 namespace Orchard.Blogs.Controllers {
+    [ValidateInput(false)]
     public class BlogPostAdminController : Controller, IUpdateModel {
         private readonly IOrchardServices _services;
         private readonly IBlogService _blogService;
@@ -59,12 +61,25 @@ namespace Orchard.Blogs.Controllers {
             if (blog == null)
                 return new NotFoundResult();
 
+            //TODO: (erikpo) Move this duplicate code somewhere else
+            DateTime? publishDate = null;
             bool publishNow = false;
             if (string.Equals(Request.Form["Command"], "PublishNow")) {
                 publishNow = true;
+            } else if (string.Equals(Request.Form["Publish"], "Publish")) {
+                DateTime publishDateValue;
+                if (DateTime.TryParse(Request.Form["Publish"], out publishDateValue)) {
+                    publishDate = publishDateValue;
+                }
             }
 
-            BlogPost blogPost = _services.ContentManager.Create<BlogPost>("blogpost", publishNow ? VersionOptions.Published : VersionOptions.Draft, bp => { bp.Blog = blog; });
+            //TODO: (erikpo) Evaluate if publish options should be moved into create or out of create to keep it clean
+            BlogPost blogPost = _services.ContentManager.Create<BlogPost>("blogpost", publishNow ? VersionOptions.Published : VersionOptions.Draft,
+                bp => {
+                    bp.Blog = blog;
+                    if (!publishNow && publishDate != null)
+                        bp.Published = publishDate.Value;
+                });
             model.BlogPost = _services.ContentManager.UpdateEditorModel(blogPost, this);
 
             if (!ModelState.IsValid) {
@@ -117,14 +132,24 @@ namespace Orchard.Blogs.Controllers {
 
             if (post == null)
                 return new NotFoundResult();
-            
+
+            //TODO: (erikpo) Move this duplicate code somewhere else
+            DateTime? publishDate = null;
             bool publishNow = false;
             if (string.Equals(Request.Form["Command"], "PublishNow")) {
                 publishNow = true;
+            } else if (string.Equals(Request.Form["Publish"], "Publish")) {
+                DateTime publishDateValue;
+                if (DateTime.TryParse(Request.Form["Publish"], out publishDateValue)) {
+                    publishDate = publishDateValue;
+                }
             }
 
+            //TODO: (erikpo) Move this duplicate code somewhere else
             if (publishNow)
                 _blogPostService.Publish(post);
+            else if (publishDate != null)
+                _blogPostService.Publish(post, publishDate.Value);
             else
                 _blogPostService.Unpublish(post);
 

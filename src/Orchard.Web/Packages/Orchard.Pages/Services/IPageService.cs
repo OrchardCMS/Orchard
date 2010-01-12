@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Orchard.Pages.Models;
 
 namespace Orchard.Pages.Services {
@@ -10,9 +11,10 @@ namespace Orchard.Pages.Services {
         Page GetLatest(string slug);
         Page GetLatest(int id);
         Page New();
-        Page Create(bool publishNow);
+        Page Create(bool publishNow, DateTime? publishDate);
         void Delete(Page page);
         void Publish(Page page);
+        void Publish(Page page, DateTime publishDate);
         void Unpublish(Page page);
     }
 

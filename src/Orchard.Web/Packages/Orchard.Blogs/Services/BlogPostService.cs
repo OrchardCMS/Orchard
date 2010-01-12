@@ -63,11 +63,20 @@ namespace Orchard.Blogs.Services {
 
         public void Publish(BlogPost blogPost) {
             _contentManager.Publish(blogPost.ContentItem);
+            //TODO: (erikpo) Not sure if this is needed or not
             blogPost.Published = DateTime.UtcNow;
+        }
+
+        public void Publish(BlogPost blogPost, DateTime publishDate) {
+            //TODO: (erikpo) This logic should move out of blogs and pages and into content manager
+            if (blogPost.Published != null && blogPost.Published.Value >= DateTime.UtcNow)
+                _contentManager.Unpublish(blogPost.ContentItem);
+            blogPost.Published = publishDate;
         }
 
         public void Unpublish(BlogPost blogPost) {
             _contentManager.Unpublish(blogPost.ContentItem);
+            //TODO: (erikpo) Not sure if this is needed or not
             blogPost.Published = null;
         }
 
