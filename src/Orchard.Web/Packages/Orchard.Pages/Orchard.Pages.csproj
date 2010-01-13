@@ -105,7 +105,6 @@
     <Content Include="Views\DisplayTemplates\Items\Pages.Page.ascx" />
     <Content Include="Views\DisplayTemplates\Items\Pages.Page.Summary.ascx" />
     <Content Include="Views\EditorTemplates\Items\Pages.Page.ascx" />
-    <Content Include="Views\EditorTemplates\Parts\Pages.Page.Fields.ascx" />
     <Content Include="Views\EditorTemplates\Parts\Pages.Page.Publish.ascx" />
     <Content Include="Views\Admin\Create.ascx" />
     <Content Include="Views\Admin\Edit.ascx" />

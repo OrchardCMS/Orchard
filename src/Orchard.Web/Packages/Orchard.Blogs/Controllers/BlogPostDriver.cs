@@ -49,7 +49,6 @@ namespace Orchard.Blogs.Controllers {
         protected override DriverResult Editor(BlogPost post) {
             return Combined(
                 ContentItemTemplate("Items/Blogs.BlogPost"),
-                ContentPartTemplate(post, "Parts/Blogs.BlogPost.Fields").Location("primary", "1"),
                 ContentPartTemplate(post, "Parts/Blogs.BlogPost.Publish").Location("secondary", "1"));
         }
 

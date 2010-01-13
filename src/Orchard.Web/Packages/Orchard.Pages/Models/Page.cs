@@ -1,5 +1,4 @@
 ﻿using System;
-using System.ComponentModel.DataAnnotations;
 using System.Web.Mvc;
 using Orchard.ContentManagement;
 using Orchard.Core.Common.Models;
@@ -10,16 +9,12 @@ namespace Orchard.Pages.Models {
         [HiddenInput(DisplayValue = false)]
         public int Id { get { return ContentItem.Id; } }
 
-        [Required]
         public string Title {
             get { return this.As<RoutableAspect>().Title; }
-            set { this.As<RoutableAspect>().Title = value; }
         }
 
-        [Required]
         public string Slug {
             get { return this.As<RoutableAspect>().Slug; }
-            set { this.As<RoutableAspect>().Slug = value; }
         }
 
         public IUser Creator {

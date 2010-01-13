@@ -1,4 +1,3 @@
-using System.ComponentModel.DataAnnotations;
 using System.Web.Mvc;
 using Orchard.Core.Common.Models;
 using Orchard.ContentManagement;
@@ -8,17 +7,13 @@ namespace Orchard.Blogs.Models {
         [HiddenInput(DisplayValue = false)]
         public int Id { get { return ContentItem.Id; } }
 
-        [Required]
         public string Name {
             get { return this.As<RoutableAspect>().Title; }
-            set { this.As<RoutableAspect>().Record.Title = value; }
         }
 
         //TODO: (erikpo) Need a data type for slug
-        [Required]
         public string Slug {
             get { return this.As<RoutableAspect>().Slug; }
-            set { this.As<RoutableAspect>().Record.Slug = value; }
         }
 
         public string Description {

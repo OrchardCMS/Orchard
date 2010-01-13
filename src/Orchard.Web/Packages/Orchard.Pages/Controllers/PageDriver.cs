@@ -47,7 +47,6 @@ namespace Orchard.Pages.Controllers {
         protected override DriverResult Editor(Page page) {
             return Combined(
                 ContentItemTemplate("Items/Pages.Page"),
-                ContentPartTemplate(page, "Parts/Pages.Page.Fields").Location("primary", "1"),
                 ContentPartTemplate(page, "Parts/Pages.Page.Publish").Location("secondary", "1"));
         }
 

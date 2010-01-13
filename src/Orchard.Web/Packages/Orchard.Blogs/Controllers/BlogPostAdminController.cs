@@ -6,6 +6,7 @@ using Orchard.Blogs.Services;
 using Orchard.Blogs.ViewModels;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Records;
+using Orchard.Core.Common.Models;
 using Orchard.Data;
 using Orchard.Localization;
 using Orchard.Mvc.Results;
@@ -92,7 +93,7 @@ namespace Orchard.Blogs.Controllers {
             var session = _sessionLocator.For(typeof(ContentItemRecord));
             session.Flush();
 
-            return Redirect(Url.BlogPost(blogSlug, model.BlogPost.Item.Slug));
+            return Redirect(Url.BlogPost(blogSlug, model.BlogPost.Item.As<RoutableAspect>().Slug));
         }
 
         public ActionResult Edit(string blogSlug, string postSlug) {
