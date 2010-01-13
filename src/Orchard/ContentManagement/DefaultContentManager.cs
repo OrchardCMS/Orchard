@@ -207,6 +207,12 @@ namespace Orchard.ContentManagement {
 
         public virtual void Remove(ContentItem contentItem) {
             var activeVersions = _contentItemVersionRepository.Fetch(x => x.ContentItemRecord == contentItem.Record && (x.Published || x.Latest));
+            var context = new RemoveContentContext(contentItem);
+
+            foreach (var handler in Handlers) {
+                handler.Removing(context);
+            }
+
             foreach (var version in activeVersions) {
                 if (version.Published) {
                     version.Published = false;
@@ -215,7 +221,10 @@ namespace Orchard.ContentManagement {
                     version.Latest = false;
                 }
             }
-            //TODO: fire content handler events
+
+            foreach (var handler in Handlers) {
+                handler.Removed(context);
+            }
         }
 
         protected virtual ContentItem BuildNewVersion(ContentItem existingContentItem) {
