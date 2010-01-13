@@ -18,29 +18,30 @@ namespace Orchard.Pages.Services {
         }
 
         public IEnumerable<Page> Get(PageStatus status) {
+            IEnumerable<ContentItem> contentItems;
+
             switch (status) {
                 case PageStatus.All:
-                    return _contentManager.Query<Page, PageRecord>(VersionOptions.Latest).List();
+                    contentItems = _contentManager.Query(VersionOptions.Latest, "page").List();
+                    break;
                 case PageStatus.Published:
-                    return _contentManager.Query<Page, PageRecord>(VersionOptions.Published).List();
+                    contentItems = _contentManager.Query(VersionOptions.Published, "page").List();
+                    break;
                 case PageStatus.Offline:
-                    IEnumerable<Page> allPages = _contentManager.Query<Page, PageRecord>(VersionOptions.Latest).List();
-                    List<Page> offlinePages = new List<Page>();
-                    foreach (var page in allPages) {
-                        if (page.ContentItem.VersionRecord.Published == false) {
-                            offlinePages.Add(page);
-                        }
-                    }
-                    return offlinePages;
+                    contentItems = _contentManager.Query(VersionOptions.Latest, "page").List().Where(ci => !ci.VersionRecord.Published);
+                    break;
                 default:
-                    return new List<Page>();
+                    contentItems = new List<Page>().Cast<ContentItem>();
+                    break;
             }
+
+            return contentItems.Select(ci => ci.As<Page>());
         }
 
         public Page Get(string slug) {
-            return _contentManager.Query<Page, PageRecord>()
-                .Join<RoutableRecord>().Where(rr => rr.Slug == slug)
-                .List().FirstOrDefault();
+            return
+                _contentManager.Query("page").Join<RoutableRecord>().Where(rr => rr.Slug == slug).List().FirstOrDefault
+                    ().As<Page>();
         }
 
         public Page GetLatest(int id) {
@@ -48,9 +49,9 @@ namespace Orchard.Pages.Services {
         }
 
         public Page GetLatest(string slug) {
-            return _contentManager.Query<Page, PageRecord>(VersionOptions.Latest)
-                .Join<RoutableRecord>().Where(rr => rr.Slug == slug)
-                .Slice(0, 1).FirstOrDefault();
+            return
+                _contentManager.Query(VersionOptions.Latest, "page").Join<RoutableRecord>().Where(rr => rr.Slug == slug)
+                    .Slice(0, 1).FirstOrDefault().As<Page>();
         }
 
         public Page GetPageOrDraft(string slug) {

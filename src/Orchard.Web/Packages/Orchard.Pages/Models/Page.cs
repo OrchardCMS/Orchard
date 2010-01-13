@@ -5,7 +5,7 @@ using Orchard.Core.Common.Models;
 using Orchard.Security;
 
 namespace Orchard.Pages.Models {
-    public class Page : ContentPart<PageRecord> {
+    public class Page : ContentPart {
         [HiddenInput(DisplayValue = false)]
         public int Id { get { return ContentItem.Id; } }
 

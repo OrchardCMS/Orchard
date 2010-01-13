@@ -80,7 +80,6 @@
     <Compile Include="Extensions\UriExtensions.cs" />
     <Compile Include="Models\Page.cs" />
     <Compile Include="Models\PageHandler.cs" />
-    <Compile Include="Models\PageRecord.cs" />
     <Compile Include="Permissions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Routes.cs" />
