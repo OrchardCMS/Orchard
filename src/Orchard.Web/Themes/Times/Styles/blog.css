@@ -1,22 +1,13 @@
 ﻿/*Blog specific styles
 ----------------------------------------------------------*/
 
-ul.blogs {
-    padding:0px 8px 8px 0px;
+.metadata, .manage {
+    margin: 0 0 24px 0;
+    font:80% Verdana, Geneva, Tahoma, sans-serif;
 }
 
-h3.blogs, h3.blog {
-    display:block;
-    border-bottom:1px solid #f1f1f1;
-}
-
-
-ul.blogs h3 a {
-    color: #670404;
-}
-
-ul.blogs div.metadata {
-    border:1px solid #fff;
+.metadata a, .manage a {
+    float:right;
 }
 
 ul.blogs p {
