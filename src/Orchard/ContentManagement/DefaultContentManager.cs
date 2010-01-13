@@ -101,7 +101,7 @@ namespace Orchard.ContentManagement {
                 }
 
                 //TEMP: this is to transition people with old databases
-                if (versionRecord == null && !record.Versions.Any() && options.IsPublished) {
+                if (versionRecord == null && record != null && !record.Versions.Any() && options.IsPublished) {
                     versionRecord = new ContentItemVersionRecord {
                         ContentItemRecord = record,
                         Latest = true,

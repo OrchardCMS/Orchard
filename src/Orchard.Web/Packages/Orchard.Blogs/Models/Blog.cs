@@ -1,10 +1,11 @@
 using System.ComponentModel.DataAnnotations;
+using System.Web.Mvc;
 using Orchard.Core.Common.Models;
 using Orchard.ContentManagement;
 
 namespace Orchard.Blogs.Models {
     public class Blog : ContentPart<BlogRecord> {
-
+        [HiddenInput(DisplayValue = false)]
         public int Id { get { return ContentItem.Id; } }
 
         [Required]
