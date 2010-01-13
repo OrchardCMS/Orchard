@@ -109,7 +109,7 @@ namespace Orchard.Blogs.Controllers {
             return Redirect(Url.BlogsForAdmin());
         }
 
-        //[HttpPost] <- todo: (heskew) make all add/edit/remove POST only and verify the AntiForgeryToken
+        [HttpPost]
         public ActionResult Delete(string blogSlug) {
             if (!_authorizer.Authorize(Permissions.DeleteBlog, T("Couldn't delete blog")))
                 return new HttpUnauthorizedResult();

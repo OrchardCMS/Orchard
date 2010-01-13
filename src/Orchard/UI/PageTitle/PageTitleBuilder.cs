@@ -11,7 +11,6 @@ namespace Orchard.UI.PageTitle {
         public PageTitleBuilder(ISiteService siteService) {
             _siteService = siteService;
             _titleParts = new List<string>(5);
-            //TODO: (erikpo) Get this from a site setting
             _titleSeparator = _siteService.GetSiteSettings().PageTitleSeparator;
         }
 
