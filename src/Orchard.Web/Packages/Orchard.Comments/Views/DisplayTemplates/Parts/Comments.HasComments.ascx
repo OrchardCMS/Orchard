@@ -9,8 +9,8 @@ if (Model.CommentsActive == false) { %>
     <% using(Html.BeginForm("Create", "Admin", new { area = "Orchard.Comments" }, FormMethod.Post, new { @class = "comment" })) { %>
         <%=Html.ValidationSummary() %>
         <fieldset class="who">
-            <%= Html.Hidden("CommentedOn", Model.ContentItem.Id) %>
-            <%= Html.Hidden("ReturnUrl", Context.Request.Url) %>
+            <%=Html.Hidden("CommentedOn", Model.ContentItem.Id) %>
+            <%=Html.Hidden("ReturnUrl", Context.Request.Url) %>
             <div>
                 <label for="Name"><%=_Encoded("Name") %></label>
                 <input id="Name" class="text" name="Name" type="text" />
