@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using Orchard.ContentManagement.Records;
 
 namespace Orchard.Data {
     public interface IRepository<T> {
@@ -10,6 +9,7 @@ namespace Orchard.Data {
         void Update(T entity);
         void Delete(T entity);
         void Copy(T source, T target);
+        void Flush();
 
         T Get(int id);
         T Get(Expression<Func<T, bool>> predicate);

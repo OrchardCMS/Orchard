@@ -127,6 +127,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ContentManagement\Aspects\ICommonAspect.cs" />
+    <Compile Include="ContentManagement\Aspects\IScheduledAspect.cs" />
     <Compile Include="ContentManagement\ContentExtensions.cs" />
     <Compile Include="ContentManagement\ContentItem.cs" />
     <Compile Include="ContentManagement\ContentItemMetadata.cs" />

@@ -48,6 +48,10 @@ namespace Orchard.Data {
             Copy(source, target);
         }
 
+        void IRepository<T>.Flush() {
+            Flush();
+        }
+
         T IRepository<T>.Get(int id) {
             return Get(id);
         }
@@ -126,6 +130,9 @@ namespace Orchard.Data {
             metadata.SetPropertyValues(target, values, EntityMode.Poco);
         }
 
+        public virtual void Flush() {
+            Session.Flush();
+        }
 
         public virtual int Count(Expression<Func<T, bool>> predicate) {
             return Fetch(predicate).Count();

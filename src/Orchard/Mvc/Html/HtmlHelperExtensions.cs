@@ -7,6 +7,7 @@ using System.Text.RegularExpressions;
 using System.Web.Mvc;
 using System.Web.Mvc.Html;
 using System.Web.Routing;
+using Orchard.Services;
 using Orchard.Settings;
 using Orchard.Utility;
 
@@ -96,7 +97,7 @@ namespace Orchard.Mvc.Html {
 
         //TODO: (erikpo) This method needs localized
         public static string DateTimeRelative(this HtmlHelper htmlHelper, DateTime value) {
-            TimeSpan time = System.DateTime.UtcNow - value;
+            TimeSpan time = htmlHelper.Resolve<IClock>().UtcNow - value;
 
             if (time.TotalDays > 7)
                 return "at " + htmlHelper.DateTime(value);

@@ -5,16 +5,19 @@ Model.Zones.AddRenderPartial("header", "header", Model);
 Model.Zones.AddRenderPartial("header:after", "user", Model);
 Model.Zones.AddRenderPartial("menu", "menu", Model);
 Model.Zones.AddRenderPartial("content:before", "messages", Model.Messages);
+
+Model.Zones.AddAction("content", html=>html.ViewContext.Writer.Write());
+                                                   
 %>
 <div class="page">
-    <div id="header"><%
-        Html.Zone("header");
+    <div id="header"><%Html.Zone("header");%>.ToHtmlString();
+        Html.Zone("header").Render();
         Html.Zone("menu"); %>
     </div>
     <div id="main"><%
-        Html.ZoneBody("content"); %>
+        Html.Zone("content"); %>
         <div id="footer"><%
-            Html.Zone("footer");
+            Html.Zone("footer", ()=>Html.RenderPartial("footer", Model));
         %></div>
     </div>
 </div>
