@@ -10,7 +10,7 @@
    } else {
     %><h3><%=Html.Encode(Model.CurrentTheme.DisplayName) %></h3>
      <p>
-        <%=Html.Image(ResolveUrl(Html.Resolve<IExtensionManager>().GetThemeLocation(Model.CurrentTheme) + "/Theme.gif"), Html.Encode(Model.CurrentTheme.DisplayName), null)%><br />
+        <%=Html.Image(Html.ThemePath("/Theme.gif"), Html.Encode(Model.CurrentTheme.DisplayName), null)%><br />
         <%=_Encoded("By") %> <%=Html.Encode(Model.CurrentTheme.Author) %><br />
         <%=Html.Encode(Model.CurrentTheme.Version) %><br />
         <%=Html.Encode(Model.CurrentTheme.Description) %><br />
@@ -25,7 +25,7 @@
         %>    <li>
         <h3><%=Html.Encode(theme.DisplayName) %></h3>
         <p>
-            <%=Html.Image(ResolveUrl(Html.Resolve<IExtensionManager>().GetThemeLocation(theme) + "/Theme.gif"), Html.Encode(theme.DisplayName), null)%><br />
+            <%=Html.Image(Html.ThemePath(theme, "/Theme.gif"), Html.Encode(theme.DisplayName), null)%><br />
             <%=_Encoded("By") %> <%=Html.Encode(theme.Author) %><br />
             <%=Html.Encode(theme.Version) %><br />
             <%=Html.Encode(theme.Description) %><br />

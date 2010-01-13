@@ -20,7 +20,7 @@
     <li class="destruct">
         <% using (Html.BeginFormAntiForgeryPost(Url.BlogPostDelete(Model.Item.Blog.Slug, Model.Item.Slug))) { %>
             <fieldset>
-                <input type="image" src="<%=ResolveUrl(Html.Resolve<IExtensionManager>().GetThemeLocation(Html.Resolve<IThemeService>().GetRequestTheme(ViewContext.RequestContext)) + "/styles/images/remove.png") %>" alt="<%=_Encoded("Remove Post") %>" title="<%=_Encoded("Remove Post") %>" class="ibutton image remove" />
+                <input type="image" src="<%=Html.ThemePath("/styles/images/remove.png") %>" alt="<%=_Encoded("Remove Post") %>" title="<%=_Encoded("Remove Post") %>" class="ibutton image remove" />
             </fieldset><%
         } %>
     </li>
