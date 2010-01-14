@@ -1,15 +1,15 @@
 ﻿/*Blog specific styles
 ----------------------------------------------------------*/
 
-.metadata, .manage {
-    margin: 0 0 24px 0;
+.meta, .manage, .posted, div.comment {
+    margin: 0 0 8px 0;
     font:80% Verdana, Geneva, Tahoma, sans-serif;
 }
 
-.metadata a, .manage a {
+.meta, .manage {
     float:right;
 }
 
-ul.blogs p {
+.blogdescription, .postsummary {
     clear:both;
-}
+    }

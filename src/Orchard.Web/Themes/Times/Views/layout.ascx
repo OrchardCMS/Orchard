@@ -15,13 +15,13 @@
         <% Html.Include("user"); %>
     </div>
     <div id="main">
-        <div id="contentMain">
+        <div id="content">
 
                     <%--Main Content--%>
                     <%Html.ZoneBody("content");%>
 
         </div>
-        <div id="sideBar1">
+        <div id="sidebar">
             <ul>
                 <li>
                     <h3>
