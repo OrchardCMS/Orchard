@@ -7,12 +7,12 @@
 </h1>
 <ul class="actions">
     <li class="construct">
-        <a href="<%=Url.BlogEdit(Model.Item.Slug) %>" class="ibutton edit"><%=_Encoded("Edit Blog") %></a>
+        <a href="<%=Url.BlogEdit(Model.Item.Slug) %>" class="ibutton edit" title="<%=_Encoded("Edit Blog") %>"></a>
     </li>
     <li class="destruct">
-        <% using (Html.BeginFormAntiForgeryPost(Url.BlogDelete(Model.Item.Slug))) { %>
+        <% using (Html.BeginFormAntiForgeryPost(Url.BlogDelete(Model.Item.Slug), FormMethod.Post, new { @class = "inline" })) { %>
             <fieldset>
-                <input type="image" src="<%=Html.ThemePath("/styles/images/remove.png") %>" alt="<%=_Encoded("Remove Blog") %>" title="<%=_Encoded("Remove Blog") %>" class="ibutton image remove" />
+                <button type="submit" src="<%=Html.ThemePath("/styles/images/remove.png") %>" class="ibutton remove" title="<%=_Encoded("Remove Blog") %>"><%=_Encoded("Remove Blog") %></button>
             </fieldset><%
         } %>
     </li>

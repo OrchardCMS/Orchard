@@ -82,7 +82,7 @@ first child of the left and right table columns */
 
 /* you can specify a greater or lesser percentage for the 
 page width. Or, you can specify an exact pixel width. */
-.page
+#page
 {
     width: 90%;
     margin-left: auto;

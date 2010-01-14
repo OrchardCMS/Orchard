@@ -3,7 +3,7 @@
 <% Html.RegisterFootScript("jquery.slugify.js"); %>
 <fieldset>
     <%=Html.LabelFor(m => m.Title) %>
-    <%=Html.EditorFor(m => m.Title) %>
+    <%=Html.TextBoxFor(m => m.Title, new { @class = "large text" }) %>
 </fieldset>
 <fieldset class="permalink">
     <label class="sub" for="Slug"><%=_Encoded("Permalink")%><br /><span>[todo: (heskew) need path to here]/</span></label>

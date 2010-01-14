@@ -284,6 +284,9 @@ a:hover, a:active, a:focus {
 #main form {
     margin:.345em 0 1.5em;
 }
+#main form.inline {
+    margin:0;
+}
 #main h1 {
     border-bottom:1px dashed #e4e7dc;
 }
@@ -340,6 +343,9 @@ span.message {
 
 /* Forms   
 ----------------------------------------------------------*/
+form.inline fieldset {
+    margin:0;
+}
 fieldset.bulk.actions {
     display:inline;
     height:auto;
@@ -480,6 +486,11 @@ button.remove:focus::-moz-focus-inner, .remove.button:focus::-moz-focus-inner {
     padding:.6em 0 .1em;
     text-align:right;
 }
+.contentItems .actions li {
+    background:inherit;
+    border:0;
+    padding:0;
+}
 .actions .construct {
     float:left;
 }
@@ -497,9 +508,10 @@ button.remove:focus::-moz-focus-inner, .remove.button:focus::-moz-focus-inner {
 
 /* Icon buttons
 ----------------------------------------------------------*/
-a.ibutton, a.ibutton:link, a.ibutton:visited {
+.ibutton, .ibutton:link, .ibutton:visited,
+button.ibutton, button.ibutton:hover, button.ibutton:focus, button.ibutton:active {
     background:url(images/icons.png) 0 -20px;
-    border:none;
+    border:0;
     display:inline;
     float:left;
     height:17px;
@@ -507,31 +519,34 @@ a.ibutton, a.ibutton:link, a.ibutton:visited {
     padding:0 0 0 17px;
     width:0;
 }
-a.ibutton:hover, a.ibutton:active, a.ibutton:focus { background-position:0 0; }
-a.ibutton.remove,
-a.ibutton.remove:link,
-a.ibutton.remove:visited { background-position:-20px -20px; }
-a.ibutton.remove:hover, a.ibutton.remove:active, a.ibutton.remove:focus { background-position:-20px 0; }
-a.ibutton.view,
-a.ibutton.view:link,
-a.ibutton.view:visited { background-position:-40px -20px; }
-a.ibutton.view:hover, a.ibutton.view:active, a.ibutton.view:focus { background-position:-40px 0; }
-a.ibutton.add.page,
-a.ibutton.add.page:link,
-a.ibutton.add.page:visited { background-position:-60px -20px; }
-a.ibutton.add.page:hover, a.ibutton.add.page:active, a.ibutton.add.page:focus { background-position:-60px 0; }
-a.ibutton.edit,
-a.ibutton.edit:link,
-a.ibutton.edit:visited { background-position:-80px -20px; }
-a.ibutton.edit:hover, a.ibutton.edit:active, a.ibutton.edit:focus { background-position:-80px 0; }
-a.ibutton.publish,
-a.ibutton.publish:link,
-a.ibutton.publish:visited { background-position:-100px -20px; }
-a.ibutton.publish:hover, a.ibutton.publish:active, a.ibutton.publish:focus { background-position:-100px 0; }
-a.ibutton.blog,
-a.ibutton.blog:link,
-a.ibutton.blog:visited { background-position:-120px -20px; }
-a.ibutton.blog:hover, a.ibutton.blog:active, a.ibutton.blog:focus { background-position:-120px 0; }
+button.ibutton {
+    text-indent:-9999em;
+}
+.ibutton:hover, .ibutton:active, .ibutton:focus { background-position:0 0; }
+.ibutton.remove,
+.ibutton.remove:link,
+.ibutton.remove:visited { background-position:-20px -20px; }
+.ibutton.remove:hover, .ibutton.remove:active, .ibutton.remove:focus { background-position:-20px 0; }
+.ibutton.view,
+.ibutton.view:link,
+.ibutton.view:visited { background-position:-40px -20px; }
+.ibutton.view:hover, .ibutton.view:active, .ibutton.view:focus { background-position:-40px 0; }
+.ibutton.add.page,
+.ibutton.add.page:link,
+.ibutton.add.page:visited { background-position:-60px -20px; }
+.ibutton.add.page:hover, .ibutton.add.page:active, .ibutton.add.page:focus { background-position:-60px 0; }
+.ibutton.edit,
+.ibutton.edit:link,
+.ibutton.edit:visited { background-position:-80px -20px; }
+.ibutton.edit:hover, .ibutton.edit:active, .ibutton.edit:focus { background-position:-80px 0; }
+.ibutton.publish,
+.ibutton.publish:link,
+.ibutton.publish:visited { background-position:-100px -20px; }
+.ibutton.publish:hover, .ibutton.publish:active, .ibutton.publish:focus { background-position:-100px 0; }
+.ibutton.blog,
+.ibutton.blog:link,
+.ibutton.blog:visited { background-position:-120px -20px; }
+.ibutton.blog:hover, .ibutton.blog:active, .ibutton.blog:focus { background-position:-120px 0; }
 
 
 /* todo: (heskew) needs attention */
@@ -581,13 +596,13 @@ a.ibutton.blog:hover, a.ibutton.blog:active, a.ibutton.blog:focus { background-p
     margin-right:0;
 }
 #main .contentItems li:hover { background:#fafbed; }
-#main .contentItems li:hover a.ibutton { background-position:0 0; }
-#main .contentItems li:hover a.ibutton.remove { background-position:-20px 0; }
-#main .contentItems li:hover a.ibutton.view { background-position:-40px 0; }
-#main .contentItems li:hover a.ibutton.add.page { background-position:-60px 0; }
-#main .contentItems li:hover a.ibutton.edit { background-position:-80px 0; }
-#main .contentItems li:hover a.ibutton.publish { background-position:-100px 0; }
-#main .contentItems li:hover a.ibutton.blog { background-position:-120px 0; }
+#main .contentItems li:hover .ibutton { background-position:0 0; }
+#main .contentItems li:hover .ibutton.remove { background-position:-20px 0; }
+#main .contentItems li:hover .ibutton.view { background-position:-40px 0; }
+#main .contentItems li:hover .ibutton.add.page { background-position:-60px 0; }
+#main .contentItems li:hover .ibutton.edit { background-position:-80px 0; }
+#main .contentItems li:hover .ibutton.publish { background-position:-100px 0; }
+#main .contentItems li:hover .ibutton.blog { background-position:-120px 0; }
 
 
 /* (Items) Tables

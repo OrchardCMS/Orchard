@@ -10,17 +10,17 @@
 <%--<p>[list of authors] [modify blog access]</p>--%>
 <p><%=Html.Encode(Model.Item.Description) %></p>
 <ul class="actions">
-    <%-- todo: (heskew) make into a ul --%>
     <li class="construct">
-        <a href="<%=Url.BlogForAdmin(Model.Item.Slug) %>" class="ibutton blog"><%=_Encoded("Manage Blog") %></a>
-        <a href="<%=Url.BlogEdit(Model.Item.Slug) %>" class="ibutton edit"><%=_Encoded("Edit Blog")%></a>
-        <a href="<%=Url.Blog(Model.Item.Slug) %>" class="ibutton view"><%=_Encoded("View Blog")%></a>
-        <a href="<%=Url.BlogPostCreate(Model.Item.Slug) %>" class="ibutton add page"><%=_Encoded("New Post")%></a>
+        <a href="<%=Url.BlogForAdmin(Model.Item.Slug) %>" class="ibutton blog" title="<%=_Encoded("Manage Blog") %>"><%=_Encoded("Manage Blog") %></a>
+        <a href="<%=Url.BlogEdit(Model.Item.Slug) %>" class="ibutton edit" title="<%=_Encoded("Edit Blog") %>"><%=_Encoded("Edit Blog") %></a>
+        <a href="<%=Url.Blog(Model.Item.Slug) %>" class="ibutton view" title="<%=_Encoded("View Blog") %>"><%=_Encoded("View Blog") %></a>
+        <a href="<%=Url.BlogPostCreate(Model.Item.Slug) %>" class="ibutton add page" title="<%=_Encoded("New Post") %>"><%=_Encoded("New Post") %></a>
     </li>
     <li class="destruct">
-        <% using (Html.BeginFormAntiForgeryPost(Url.BlogDelete(Model.Item.Slug))) { %>
+        <%-- todo: (heskew) this is waaaaa too verbose. need template helpers for all ibuttons --%>
+        <% using (Html.BeginFormAntiForgeryPost(Url.BlogDelete(Model.Item.Slug), FormMethod.Post, new { @class = "inline" })) { %>
             <fieldset>
-                <input type="image" src="<%=Html.ThemePath("/styles/images/remove.png") %>" alt="<%=_Encoded("Remove Blog") %>" title="<%=_Encoded("Remove Blog") %>" class="ibutton image remove" />
+                <button type="submit" src="<%=Html.ThemePath("/styles/images/remove.png") %>" class="ibutton remove" title="<%=_Encoded("Remove Blog") %>"><%=_Encoded("Remove Blog") %></button>
             </fieldset><%
         } %>
     </li>

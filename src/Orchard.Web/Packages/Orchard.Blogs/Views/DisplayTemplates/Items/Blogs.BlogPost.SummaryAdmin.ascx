@@ -11,16 +11,16 @@
 <div class="content"><%=Model.Item.As<BodyAspect>().Text ?? string.Format("<p><em>{0}</em></p>", _Encoded("there's no content for this blog post"))%></div>
 <ul class="actions">
     <li class="construct">
-        <a href="<%=Url.BlogPostEdit(Model.Item.Blog.Slug, Model.Item.Slug) %>" class="ibutton edit"><%=_Encoded("Edit Post")%></a>
-        <a href="<%=Url.BlogPost(Model.Item.Blog.Slug, Model.Item.Slug) %>" class="ibutton view"><%=_Encoded("View Post")%></a><%
+        <a href="<%=Url.BlogPostEdit(Model.Item.Blog.Slug, Model.Item.Slug) %>" class="ibutton edit" title="<%=_Encoded("Edit Post")%>"><%=_Encoded("Edit Post")%></a>
+        <a href="<%=Url.BlogPost(Model.Item.Blog.Slug, Model.Item.Slug) %>" class="ibutton view" title="<%=_Encoded("View Post")%>"><%=_Encoded("View Post")%></a><%
         if (Model.Item.Published == null) { // todo: (heskew) be smart about this and maybe have other contextual actions - including view/preview for view up there ^^ %>
-        <a href="<%=Url.BlogPost(Model.Item.Blog.Slug, Model.Item.Slug) %>" class="ibutton publish"><%=_Encoded("Publish Post Now")%></a>
+        <a href="<%=Url.BlogPost(Model.Item.Blog.Slug, Model.Item.Slug) %>" class="ibutton publish" title="<%=_Encoded("Publish Post Now")%>"><%=_Encoded("Publish Post Now")%></a>
         <% } %>
     </li>
     <li class="destruct">
-        <% using (Html.BeginFormAntiForgeryPost(Url.BlogPostDelete(Model.Item.Blog.Slug, Model.Item.Slug))) { %>
+        <% using (Html.BeginFormAntiForgeryPost(Url.BlogPostDelete(Model.Item.Blog.Slug, Model.Item.Slug), FormMethod.Post, new { @class = "inline" })) { %>
             <fieldset>
-                <input type="image" src="<%=Html.ThemePath("/styles/images/remove.png") %>" alt="<%=_Encoded("Remove Post") %>" title="<%=_Encoded("Remove Post") %>" class="ibutton image remove" />
+                <button type="submit" src="<%=Html.ThemePath("/styles/images/remove.png") %>" class="ibutton remove" title="<%=_Encoded("Remove Post") %>"><%=_Encoded("Remove Post") %></button>
             </fieldset><%
         } %>
     </li>
