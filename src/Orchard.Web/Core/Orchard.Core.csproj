@@ -154,12 +154,10 @@
     <Content Include="Common\Views\EditorTemplates\Parts\Common.Owner.ascx" />
     <Content Include="Scheduling\Package.txt" />
     <Content Include="Settings\Views\EditorTemplates\Items\Settings.Site.ascx" />
+    <Content Include="Themes\Scripts\jquery-1.4.js" />
+    <Content Include="Themes\Scripts\jquery-1.4.min.js" />
     <Content Include="Themes\Theme.gif" />
     <Content Include="Themes\Theme.txt" />
-    <Content Include="Themes\Scripts\jquery-1.3.2-vsdoc.js" />
-    <Content Include="Themes\Scripts\jquery-1.3.2.js" />
-    <Content Include="Themes\Scripts\jquery-1.3.2.min-vsdoc.js" />
-    <Content Include="Themes\Scripts\jquery-1.3.2.min.js" />
     <Content Include="Themes\Styles\site.css" />
     <Content Include="Themes\Views\Admin\Install.aspx" />
     <Content Include="Themes\Views\header.ascx" />
