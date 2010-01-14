@@ -10,7 +10,7 @@
    } else {
     %><h3><%=Html.Encode(Model.CurrentTheme.DisplayName) %></h3>
      <p>
-        <%=Html.Image(Html.ThemePath("/Theme.gif"), Html.Encode(Model.CurrentTheme.DisplayName), null)%><br />
+        <%=Html.Image(Html.ThemePath(Model.CurrentTheme, "/Theme.gif"), Html.Encode(Model.CurrentTheme.DisplayName), null)%><br />
         <%=_Encoded("By") %> <%=Html.Encode(Model.CurrentTheme.Author) %><br />
         <%=Html.Encode(Model.CurrentTheme.Version) %><br />
         <%=Html.Encode(Model.CurrentTheme.Description) %><br />

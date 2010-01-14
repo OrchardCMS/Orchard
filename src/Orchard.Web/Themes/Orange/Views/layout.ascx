@@ -7,14 +7,14 @@ Model.Zones.AddRenderPartial("menu", "menu", Model);
 Model.Zones.AddRenderPartial("content:before", "messages", Model.Messages);
 %>
 <div class="page">
-    <div id="header"><%Html.Zone("header");%>.ToHtmlString();
-        Html.Zone("header").Render();
+    <div id="header"><%
+        Html.Zone("header");
         Html.Zone("menu"); %>
     </div>
     <div id="main"><%
-        Html.Zone("content"); %>
+        Html.ZoneBody("content"); %>
         <div id="footer"><%
-            Html.Zone("footer", ()=>Html.RenderPartial("footer", Model));
+            Html.Zone("footer");
         %></div>
     </div>
 </div>
