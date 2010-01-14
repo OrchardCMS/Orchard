@@ -113,9 +113,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Package.txt" />
+    <Content Include="Views\Archives.ascx" />
     <Content Include="Views\BlogPostAdmin\Create.ascx" />
     <Content Include="Views\BlogPostAdmin\Edit.ascx" />
-    <Content Include="Views\Blog\Archives.ascx" />
     <Content Include="Views\BlogPost\ListByArchive.ascx" />
     <Content Include="Views\DisplayTemplates\Items\Blogs.Blog.DetailAdmin.ascx" />
     <Content Include="Views\BlogAdmin\Item.ascx" />
