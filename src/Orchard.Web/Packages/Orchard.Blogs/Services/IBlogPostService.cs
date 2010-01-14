@@ -10,6 +10,7 @@ namespace Orchard.Blogs.Services {
         IEnumerable<BlogPost> Get(Blog blog);
         IEnumerable<BlogPost> Get(Blog blog, VersionOptions versionOptions);
         IEnumerable<BlogPost> Get(Blog blog, ArchiveData archiveData);
+        IEnumerable<KeyValuePair<ArchiveData, int>> GetArchives(Blog blog);
         void Delete(BlogPost blogPost);
         void Publish(BlogPost blogPost);
         void Publish(BlogPost blogPost, DateTime publishDate);

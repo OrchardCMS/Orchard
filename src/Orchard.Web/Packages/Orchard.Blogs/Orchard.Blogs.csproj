@@ -82,6 +82,7 @@
     <Compile Include="Extensions\HtmlHelperExtensions.cs" />
     <Compile Include="Extensions\UriExtensions.cs" />
     <Compile Include="Extensions\UrlHelperExtensions.cs" />
+    <Compile Include="Filters\ArchivesFilter.cs" />
     <Compile Include="Models\ArchiveData.cs" />
     <Compile Include="Permissions.cs" />
     <Compile Include="Routing\IsArchiveConstraint.cs" />
@@ -99,6 +100,7 @@
     <Compile Include="Services\IBlogPostService.cs" />
     <Compile Include="Services\IBlogService.cs" />
     <Compile Include="ViewModels\AdminBlogsViewModel.cs" />
+    <Compile Include="ViewModels\BlogArchivesViewModel.cs" />
     <Compile Include="ViewModels\BlogPostArchiveViewModel.cs" />
     <Compile Include="ViewModels\BlogViewModel.cs" />
     <Compile Include="ViewModels\BlogPostViewModel.cs" />
@@ -113,6 +115,7 @@
     <Content Include="Package.txt" />
     <Content Include="Views\BlogPostAdmin\Create.ascx" />
     <Content Include="Views\BlogPostAdmin\Edit.ascx" />
+    <Content Include="Views\Blog\Archives.ascx" />
     <Content Include="Views\BlogPost\ListByArchive.ascx" />
     <Content Include="Views\DisplayTemplates\Items\Blogs.Blog.DetailAdmin.ascx" />
     <Content Include="Views\BlogAdmin\Item.ascx" />

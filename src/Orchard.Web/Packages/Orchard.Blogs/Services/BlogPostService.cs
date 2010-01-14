@@ -35,26 +35,50 @@ namespace Orchard.Blogs.Services {
         public IEnumerable<BlogPost> Get(Blog blog, ArchiveData archiveData) {
             var query = GetBlogQuery(blog, VersionOptions.Published);
 
-            if (archiveData.Day > 0)
-                query =
-                    query.Where(
-                        cr =>
-                        cr.CreatedUtc >= new DateTime(archiveData.Year, archiveData.Month, archiveData.Day) &&
-                        cr.CreatedUtc < new DateTime(archiveData.Year, archiveData.Month, archiveData.Day + 1));
+            if (archiveData.Day > 0) {
+                var dayDate = new DateTime(archiveData.Year, archiveData.Month, archiveData.Day);
+
+                query = query.Where(cr => cr.CreatedUtc >= dayDate && cr.CreatedUtc < dayDate.AddDays(1));
+            }
             else if (archiveData.Month > 0)
-                query =
-                    query.Where(
-                        cr =>
-                        cr.CreatedUtc >= new DateTime(archiveData.Year, archiveData.Month, 1) &&
-                        cr.CreatedUtc < new DateTime(archiveData.Year, archiveData.Month + 1, 1));
-            else
-                query =
-                    query.Where(
-                        cr =>
-                        cr.CreatedUtc >= new DateTime(archiveData.Year, 1, 1) &&
-                        cr.CreatedUtc < new DateTime(archiveData.Year + 1, 1, 1));
+            {
+                var monthDate = new DateTime(archiveData.Year, archiveData.Month, 1);
+
+                query = query.Where(cr => cr.CreatedUtc >= monthDate && cr.CreatedUtc < monthDate.AddMonths(1));
+            }
+            else {
+                var yearDate = new DateTime(archiveData.Year, 1, 1);
+
+                query = query.Where(cr => cr.CreatedUtc >= yearDate && cr.CreatedUtc < yearDate.AddYears(1));
+            }
 
             return query.List().Select(ci => ci.As<BlogPost>());
+        }
+
+        public IEnumerable<KeyValuePair<ArchiveData, int>> GetArchives(Blog blog) {
+            return new List<KeyValuePair<ArchiveData, int>> {
+                                                                new KeyValuePair<ArchiveData, int>(new ArchiveData("2010/1"), 5),
+                                                                new KeyValuePair<ArchiveData, int>(new ArchiveData("2009/12"), 23),
+                                                                new KeyValuePair<ArchiveData, int>(new ArchiveData("2009/11"), 4),
+                                                                new KeyValuePair<ArchiveData, int>(new ArchiveData("2009/9"), 1),
+                                                                new KeyValuePair<ArchiveData, int>(new ArchiveData("2009/8"), 1),
+                                                                new KeyValuePair<ArchiveData, int>(new ArchiveData("2009/7"), 1),
+                                                                new KeyValuePair<ArchiveData, int>(new ArchiveData("2009/6"), 1),
+                                                                new KeyValuePair<ArchiveData, int>(new ArchiveData("2009/5"), 1),
+                                                                new KeyValuePair<ArchiveData, int>(new ArchiveData("2009/4"), 1),
+                                                                new KeyValuePair<ArchiveData, int>(new ArchiveData("2009/3"), 1),
+                                                                new KeyValuePair<ArchiveData, int>(new ArchiveData("2009/2"), 1),
+                                                                new KeyValuePair<ArchiveData, int>(new ArchiveData("2009/1"), 1),
+                                                                new KeyValuePair<ArchiveData, int>(new ArchiveData("2008/12"), 1),
+                                                                new KeyValuePair<ArchiveData, int>(new ArchiveData("2008/11"), 1),
+                                                                new KeyValuePair<ArchiveData, int>(new ArchiveData("2008/10"), 1),
+                                                                new KeyValuePair<ArchiveData, int>(new ArchiveData("2008/9"), 1),
+                                                                new KeyValuePair<ArchiveData, int>(new ArchiveData("2008/7"), 1),
+                                                                new KeyValuePair<ArchiveData, int>(new ArchiveData("2008/6"), 1),
+                                                                new KeyValuePair<ArchiveData, int>(new ArchiveData("2008/5"), 1),
+                                                                new KeyValuePair<ArchiveData, int>(new ArchiveData("2008/4"), 1),
+                                                                new KeyValuePair<ArchiveData, int>(new ArchiveData("2008/3"), 1)
+                                                            };
         }
 
         public void Delete(BlogPost blogPost) {
