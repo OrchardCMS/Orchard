@@ -1,4 +1,5 @@
 ﻿using Orchard.Logging;
+using Orchard.Tasks.Scheduling;
 
 namespace Orchard.Core.Scheduling.Services {
     public class PublishingTaskHandler : IScheduledTaskHandler {
@@ -11,21 +12,21 @@ namespace Orchard.Core.Scheduling.Services {
         public ILogger Logger { get; set; }
 
         public void Process(ScheduledTaskContext context) {
-            if (context.ScheduledTaskRecord.Action == "Publish") {
+            if (context.Task.TaskType == "Publish") {
                 Logger.Information("Publishing item #{0} version {1} scheduled at {2} utc",
-                    context.ContentItem.Id,
-                    context.ContentItem.Version,
-                    context.ScheduledTaskRecord.ScheduledUtc);
+                    context.Task.ContentItem.Id,
+                    context.Task.ContentItem.Version,
+                    context.Task.ScheduledUtc);
 
-                Services.ContentManager.Publish(context.ContentItem);
+                Services.ContentManager.Publish(context.Task.ContentItem);
             }
-            else if (context.ScheduledTaskRecord.Action == "Unpublish") {
+            else if (context.Task.TaskType == "Unpublish") {
                 Logger.Information("Unpublishing item #{0} version {1} scheduled at {2} utc",
-                    context.ContentItem.Id,
-                    context.ContentItem.Version,
-                    context.ScheduledTaskRecord.ScheduledUtc);
+                    context.Task.ContentItem.Id,
+                    context.Task.ContentItem.Version,
+                    context.Task.ScheduledUtc);
 
-                Services.ContentManager.Unpublish(context.ContentItem);
+                Services.ContentManager.Unpublish(context.Task.ContentItem);
             }
         }
     }

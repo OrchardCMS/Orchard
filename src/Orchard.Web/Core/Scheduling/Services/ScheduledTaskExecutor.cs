@@ -4,19 +4,21 @@ using System.Linq;
 using JetBrains.Annotations;
 using Orchard.ContentManagement;
 using Orchard.Core.Scheduling.Models;
+using Orchard.Core.Scheduling.Records;
 using Orchard.Data;
 using Orchard.Logging;
 using Orchard.Services;
 using Orchard.Tasks;
+using Orchard.Tasks.Scheduling;
 
 namespace Orchard.Core.Scheduling.Services {
     [UsedImplicitly]
-    public class SchedulingBackgroundTask : IBackgroundTask {
+    public class ScheduledTaskExecutor : IBackgroundTask {
         private readonly IClock _clock;
         private readonly IRepository<ScheduledTaskRecord> _repository;
         private readonly IEnumerable<IScheduledTaskHandler> _handlers;
 
-        public SchedulingBackgroundTask(
+        public ScheduledTaskExecutor(
             IOrchardServices services,
             IClock clock,
             IRepository<ScheduledTaskRecord> repository,
@@ -33,7 +35,7 @@ namespace Orchard.Core.Scheduling.Services {
 
         public void Sweep() {
             var taskEntries = _repository.Fetch(x => x.ScheduledUtc <= _clock.UtcNow)
-                .Select(x => new { x.Id, x.Action })
+                .Select(x => new { x.Id, Action = x.TaskType })
                 .ToArray();
 
             foreach (var taskEntry in taskEntries) {
@@ -41,30 +43,22 @@ namespace Orchard.Core.Scheduling.Services {
 
                 try {
                     // fetch the task
-                    var context = new ScheduledTaskContext {
-                        ScheduledTaskRecord = _repository.Get(taskEntry.Id)
-                    };
+                    var taskRecord = _repository.Get(taskEntry.Id);
 
-                    // another node in the farm has performed this work before us
-                    if (context.ScheduledTaskRecord == null) {
+                    // another server or thread has performed this work before us
+                    if (taskRecord == null) {
                         continue;
                     }
 
                     // removing record first helps avoid concurrent execution
-                    _repository.Delete(context.ScheduledTaskRecord);
+                    _repository.Delete(taskRecord);
 
-                    // if it's associaged with a version of a content item
-                    if (context.ScheduledTaskRecord.ScheduledAspectRecord != null) {
-                        var versionRecord = context.ScheduledTaskRecord.ScheduledAspectRecord.ContentItemVersionRecord;
-
-                        // hydrate that item as part of the task context
-                        context.ContentItem = Services.ContentManager.Get(
-                            versionRecord.ContentItemRecord.Id,
-                            VersionOptions.VersionRecord(versionRecord.Id));
-                    }
+                    var context = new ScheduledTaskContext {
+                        Task = new Task(Services.ContentManager, taskRecord)
+                    };
 
                     // dispatch to standard or custom handlers
-                    foreach(var handler in _handlers) {
+                    foreach (var handler in _handlers) {
                         handler.Process(context);
                     }
 

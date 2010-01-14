@@ -82,11 +82,11 @@
     <Compile Include="Common\ViewModels\RoutableEditorViewModel.cs" />
     <Compile Include="Common\ViewModels\OwnerEditorViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Scheduling\Models\ScheduledAspect.cs" />
-    <Compile Include="Scheduling\IScheduledTaskHandler.cs" />
+    <Compile Include="Scheduling\Records\ScheduledTaskRecord.cs" />
     <Compile Include="Scheduling\Services\PublishingTaskHandler.cs" />
-    <Compile Include="Scheduling\Services\SchedulingBackgroundTask.cs" />
-    <Compile Include="Scheduling\ScheduledTaskContext.cs" />
+    <Compile Include="Scheduling\Services\ScheduledTaskManager.cs" />
+    <Compile Include="Scheduling\Services\ScheduledTaskExecutor.cs" />
+    <Compile Include="Scheduling\Models\Task.cs" />
     <Compile Include="Settings\Controllers\SiteSettingsDriver.cs" />
     <Compile Include="Themes\Services\AdminThemeSelector.cs" />
     <Compile Include="Themes\Services\SafeModeThemeSelector.cs" />

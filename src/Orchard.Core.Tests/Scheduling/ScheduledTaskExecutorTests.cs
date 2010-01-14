@@ -5,14 +5,12 @@ using Moq;
 using NUnit.Framework;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Records;
-using Orchard.Core.Scheduling;
-using Orchard.Core.Scheduling.Models;
+using Orchard.Core.Scheduling.Records;
 using Orchard.Core.Scheduling.Services;
 using Orchard.Data;
-using Orchard.Services;
 using Orchard.Tasks;
+using Orchard.Tasks.Scheduling;
 using Orchard.Tests.Packages;
-using Orchard.Tests.Stubs;
 
 namespace Orchard.Core.Tests.Scheduling {
     [TestFixture]
@@ -24,14 +22,25 @@ namespace Orchard.Core.Tests.Scheduling {
         public override void Init() {
             base.Init();
             _repository = _container.Resolve<IRepository<ScheduledTaskRecord>>();
-            _executor = _container.Resolve<IBackgroundTask>("ScheduledBackgroundTask");
+            _executor = _container.Resolve<IBackgroundTask>("ScheduledTaskExecutor");
         }
         public override void Register(ContainerBuilder builder) {
             _handler = new StubTaskHandler();
             builder.Register(new Mock<IOrchardServices>().Object);
             builder.Register<DefaultContentManager>().As<IContentManager>();
-            builder.Register<SchedulingBackgroundTask>().As<IBackgroundTask>().Named("ScheduledBackgroundTask");
+            builder.Register<ScheduledTaskExecutor>().As<IBackgroundTask>().Named("ScheduledTaskExecutor");
             builder.Register(_handler).As<IScheduledTaskHandler>();
+        }
+
+        protected override IEnumerable<Type> DatabaseTypes {
+            get {
+                return new[] {
+                                 typeof(ContentTypeRecord), 
+                                 typeof(ContentItemRecord), 
+                                 typeof(ContentItemVersionRecord), 
+                                 typeof(ScheduledTaskRecord),
+                             };
+            }
         }
 
         public class StubTaskHandler : IScheduledTaskHandler {
@@ -42,17 +51,6 @@ namespace Orchard.Core.Tests.Scheduling {
             public ScheduledTaskContext TaskContext { get; private set; }
         }
 
-        protected override IEnumerable<Type> DatabaseTypes {
-            get {
-                return new[] {
-                                 typeof(ContentTypeRecord), 
-                                 typeof(ContentItemRecord), 
-                                 typeof(ContentItemVersionRecord), 
-                                 typeof(ScheduledAspectRecord),
-                                 typeof(ScheduledTaskRecord),
-                             };
-            }
-        }
 
         [Test]
         public void SweepShouldBeCallable() {
@@ -71,14 +69,14 @@ namespace Orchard.Core.Tests.Scheduling {
 
         [Test]
         public void RecordsWhenTheyAreExecutedShouldBeDeleted() {
-            var task = new ScheduledTaskRecord { Action = "Ignore", ScheduledUtc = _clock.UtcNow.Add(TimeSpan.FromHours(2)) };
+            var task = new ScheduledTaskRecord { TaskType = "Ignore", ScheduledUtc = _clock.UtcNow.Add(TimeSpan.FromHours(2)) };
             _repository.Create(task);
 
             _repository.Flush();
             _executor.Sweep();
 
             _repository.Flush();
-            Assert.That(_repository.Count(x => x.Action == "Ignore"), Is.EqualTo(1));
+            Assert.That(_repository.Count(x => x.TaskType == "Ignore"), Is.EqualTo(1));
 
             _clock.Advance(TimeSpan.FromHours(3));
 
@@ -86,12 +84,12 @@ namespace Orchard.Core.Tests.Scheduling {
             _executor.Sweep();
 
             _repository.Flush();
-            Assert.That(_repository.Count(x => x.Action == "Ignore"), Is.EqualTo(0));
+            Assert.That(_repository.Count(x => x.TaskType == "Ignore"), Is.EqualTo(0));
         }
 
         [Test]
         public void ScheduledTaskHandlersShouldBeCalledWhenTasksAreExecuted() {
-            var task = new ScheduledTaskRecord { Action = "Ignore", ScheduledUtc = _clock.UtcNow.Add(TimeSpan.FromHours(2)) };
+            var task = new ScheduledTaskRecord { TaskType = "Ignore", ScheduledUtc = _clock.UtcNow.Add(TimeSpan.FromHours(2)) };
             _repository.Create(task);
 
             _repository.Flush();
@@ -101,8 +99,8 @@ namespace Orchard.Core.Tests.Scheduling {
             _executor.Sweep();
             Assert.That(_handler.TaskContext, Is.Not.Null);
             
-            Assert.That(_handler.TaskContext.ScheduledTaskRecord.Action, Is.EqualTo("Ignore"));
-            Assert.That(_handler.TaskContext.ContentItem, Is.Null);
+            Assert.That(_handler.TaskContext.Task.TaskType, Is.EqualTo("Ignore"));
+            Assert.That(_handler.TaskContext.Task.ContentItem, Is.Null);
         }
     }
 }

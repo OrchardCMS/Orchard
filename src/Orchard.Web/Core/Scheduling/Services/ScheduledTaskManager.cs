@@ -2,18 +2,18 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using JetBrains.Annotations;
 using Orchard.ContentManagement;
+using Orchard.ContentManagement.Aspects;
 using Orchard.Core.Scheduling.Models;
+using Orchard.Core.Scheduling.Records;
 using Orchard.Data;
 using Orchard.Logging;
+using Orchard.Tasks.Scheduling;
 using Orchard.Utility;
 
 namespace Orchard.Core.Scheduling.Services {
-    public interface IScheduledTaskManager : IDependency {
-        void CreateTask(string action, DateTime scheduledUtc, ContentItem contentItem);
-        IEnumerable<ScheduledTaskRecord> GetTasks(ContentItem contentItem);
-    }
-
+    [UsedImplicitly]
     public class ScheduledTaskManager : IScheduledTaskManager {
         private readonly IRepository<ScheduledTaskRecord> _repository;
 
@@ -30,21 +30,20 @@ namespace Orchard.Core.Scheduling.Services {
 
         public void CreateTask(string action, DateTime scheduledUtc, ContentItem contentItem) {
             var taskRecord = new ScheduledTaskRecord {
-                Action = action,
+                TaskType = action,
                 ScheduledUtc = scheduledUtc,
             };
             if (contentItem != null) {
-                var part = contentItem.Get<ContentPart<ScheduledAspectRecord>>();
-                if (part != null) {
-                    taskRecord.ScheduledAspectRecord = part.Record;
-                }
+                taskRecord.ContentItemVersionRecord = contentItem.VersionRecord;
             }
             _repository.Create(taskRecord);
         }
 
-        public IEnumerable<ScheduledTaskRecord> GetTasks(ContentItem contentItem) {
+        public IEnumerable<IScheduledTask> GetTasks(ContentItem contentItem) {
             return _repository
-                .Fetch(x => x.ScheduledAspectRecord.ContentItemRecord == contentItem.Record)
+                .Fetch(x => x.ContentItemVersionRecord.ContentItemRecord == contentItem.Record)
+                .Select(x => new Task(Services.ContentManager, x))
+                .Cast<IScheduledTask>()
                 .ToReadOnlyCollection();
         }
     }

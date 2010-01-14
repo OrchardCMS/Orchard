@@ -127,7 +127,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ContentManagement\Aspects\ICommonAspect.cs" />
-    <Compile Include="ContentManagement\Aspects\IScheduledAspect.cs" />
+    <Compile Include="Tasks\Scheduling\IScheduledTask.cs" />
     <Compile Include="ContentManagement\ContentExtensions.cs" />
     <Compile Include="ContentManagement\ContentItem.cs" />
     <Compile Include="ContentManagement\ContentItemMetadata.cs" />
@@ -200,6 +200,9 @@
     <Compile Include="Mvc\Html\SiteServiceExtensions.cs" />
     <Compile Include="Permissions.cs" />
     <Compile Include="Tasks\FiniteContainerProvider.cs" />
+    <Compile Include="Tasks\Scheduling\IScheduledTaskHandler.cs" />
+    <Compile Include="Tasks\Scheduling\IScheduledTaskManager.cs" />
+    <Compile Include="Tasks\Scheduling\ScheduledTaskContext.cs" />
     <Compile Include="Themes\ExtensionManagerExtensions.cs" />
     <Compile Include="Extensions\Helpers\PathHelpers.cs" />
     <Compile Include="Extensions\IExtensionManager.cs" />

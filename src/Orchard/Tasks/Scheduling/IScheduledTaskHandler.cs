@@ -1,4 +1,4 @@
-namespace Orchard.Core.Scheduling {
+namespace Orchard.Tasks.Scheduling {
     public interface IScheduledTaskHandler : IDependency {
         void Process(ScheduledTaskContext context);
     }
