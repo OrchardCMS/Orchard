@@ -55,19 +55,7 @@ License:      http://www.codeproject.com/info/Licenses.aspx
 jQuery
 -----
 Website:      http://jquery.com
-Copyright:    Copyright (c) 2009 John Resig, http://jquery.com
-License:      MIT
- 
-jQuery UI 
------
-Website:      http://jqueryui.com
-Copyright:    Copyright (c) 2009 Paul Bakaus, http://jqueryui.com
-License:      MIT
- 
-jQuery Autocomplete
------
-Website:      http://bassistance.de/jquery-plugins/jquery-plugin-autocomplete/
-Copyright:    Copyright (c) 2007 Dylan Verheul, Dan G. Switzer, Anjesh Tuladhar, Jörn Zaefferer
+Copyright:    Copyright (c) 2010 John Resig, http://jquery.com
 License:      MIT
 
 Log4Net
