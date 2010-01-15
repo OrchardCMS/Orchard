@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations;
 using Orchard.Core.Common.Records;
 using Orchard.ContentManagement;
 
@@ -7,6 +8,8 @@ namespace Orchard.Core.Common.Models {
             get { return Record.Title; }
             set { Record.Title = value; }
         }
+
+        [Required]
         public string Slug {
             get { return Record.Slug; }
             set { Record.Slug = value; }

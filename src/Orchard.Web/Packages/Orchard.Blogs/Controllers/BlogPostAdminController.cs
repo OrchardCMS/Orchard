@@ -75,19 +75,18 @@ namespace Orchard.Blogs.Controllers {
             }
 
             //TODO: (erikpo) Evaluate if publish options should be moved into create or out of create to keep it clean
-            BlogPost blogPost = _services.ContentManager.Create<BlogPost>("blogpost", publishNow ? VersionOptions.Published : VersionOptions.Draft,
-                bp => {
-                    bp.Blog = blog;
-                    if (!publishNow && publishDate != null)
-                        bp.Published = publishDate.Value;
-                });
-            model.BlogPost = _services.ContentManager.UpdateEditorModel(blogPost, this);
+            model.BlogPost = _services.ContentManager.UpdateEditorModel(_services.ContentManager.New<BlogPost>("blogpost"), this);
+            model.BlogPost.Item.Blog = blog;
+            if (!publishNow && publishDate != null)
+                model.BlogPost.Item.Published = publishDate.Value;
 
             if (!ModelState.IsValid) {
                 _services.TransactionManager.Cancel();
 
                 return View(model);
             }
+
+            _services.ContentManager.Create(model.BlogPost.Item.ContentItem, publishNow ? VersionOptions.Published : VersionOptions.Draft);
 
             //TEMP: (erikpo) ensure information has committed for this record
             var session = _sessionLocator.For(typeof(ContentItemRecord));

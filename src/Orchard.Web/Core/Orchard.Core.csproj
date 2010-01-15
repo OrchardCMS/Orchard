@@ -67,6 +67,8 @@
     <Compile Include="Common\Permissions.cs" />
     <Compile Include="Common\Records\CommonVersionRecord.cs" />
     <Compile Include="Common\Routes.cs" />
+    <Compile Include="Common\Services\IRoutableService.cs" />
+    <Compile Include="Common\Services\RoutableService.cs" />
     <Compile Include="Common\Utilities\LazyField.cs" />
     <Compile Include="Common\Providers\CommonAspectHandler.cs" />
     <Compile Include="Common\Models\CommonAspect.cs" />

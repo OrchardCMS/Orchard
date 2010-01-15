@@ -16,6 +16,7 @@ namespace Orchard.Blogs.Models {
 
         public string Slug {
             get { return this.As<RoutableAspect>().Slug; }
+            set { this.As<RoutableAspect>().Slug = value; }
         }
 
         public Blog Blog {

@@ -11,7 +11,6 @@ namespace Orchard.Core.Common.ViewModels {
             set { RoutableAspect.Record.Title = value; }
         }
 
-        [Required]
         public string Slug {
             get { return RoutableAspect.Record.Slug; }
             set { RoutableAspect.Record.Slug = value; }
