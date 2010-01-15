@@ -29,9 +29,20 @@
             <%=_Encoded("By") %> <%=Html.Encode(theme.Author) %><br />
             <%=Html.Encode(theme.Version) %><br />
             <%=Html.Encode(theme.Description) %><br />
-            <%=Html.Encode(theme.HomePage) %><br />
-            <%=Html.ActionLink(T("Activate").ToString(), "Activate", new {themeName = theme.ThemeName}) %> | <%=Html.ActionLink(T("Uninstall").ToString(), "Uninstall", new {themeName = theme.ThemeName}) %>
+            <%=Html.Encode(theme.HomePage) %>
         </p>
+        <div>
+            <% using(Html.BeginFormAntiForgeryPost(Url.Action("Activate"), FormMethod.Post, new { @class = "inline" })) { %>
+                <fieldset>
+                    <button type="submit" title="<%=_Encoded("Activate") %>" name="themeName" value="<%=theme.ThemeName %>"><%=_Encoded("Activate") %></button>
+                </fieldset>
+            <% } %>
+            <% using(Html.BeginFormAntiForgeryPost(Url.Action("Uninstall"), FormMethod.Post, new { @class = "inline" })) { %>
+                <fieldset>
+                    <button type="submit" class="remove" title="<%=_Encoded("Uninstall") %>" name="themeName" value="<%=theme.ThemeName %>"><%=_Encoded("Uninstall")%></button>
+                </fieldset>
+            <% } %>
+        </div>
     </li>
     <% }
 } %>

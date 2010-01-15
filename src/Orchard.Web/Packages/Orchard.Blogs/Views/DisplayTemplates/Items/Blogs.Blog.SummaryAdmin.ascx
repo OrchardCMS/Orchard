@@ -20,7 +20,7 @@
         <%-- todo: (heskew) this is waaaaa too verbose. need template helpers for all ibuttons --%>
         <% using (Html.BeginFormAntiForgeryPost(Url.BlogDelete(Model.Item.Slug), FormMethod.Post, new { @class = "inline" })) { %>
             <fieldset>
-                <button type="submit" src="<%=Html.ThemePath("/styles/images/remove.png") %>" class="ibutton remove" title="<%=_Encoded("Remove Blog") %>"><%=_Encoded("Remove Blog") %></button>
+                <button type="submit" class="ibutton remove" title="<%=_Encoded("Remove Blog") %>"><%=_Encoded("Remove Blog") %></button>
             </fieldset><%
         } %>
     </li>

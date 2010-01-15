@@ -20,7 +20,7 @@
     <li class="destruct">
         <% using (Html.BeginFormAntiForgeryPost(Url.BlogPostDelete(Model.Item.Blog.Slug, Model.Item.Slug), FormMethod.Post, new { @class = "inline" })) { %>
             <fieldset>
-                <button type="submit" src="<%=Html.ThemePath("/styles/images/remove.png") %>" class="ibutton remove" title="<%=_Encoded("Remove Post") %>"><%=_Encoded("Remove Post") %></button>
+                <button type="submit" class="ibutton remove" title="<%=_Encoded("Remove Post") %>"><%=_Encoded("Remove Post") %></button>
             </fieldset><%
         } %>
     </li>

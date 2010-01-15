@@ -37,6 +37,7 @@ namespace Orchard.Core.Themes.Controllers {
             }
         }
 
+        [HttpPost]
         public ActionResult Activate(string themeName) {
             try {
                 if (!_authorizer.Authorize(Permissions.SetSiteTheme, T("Couldn't set the current theme")))
@@ -54,7 +55,7 @@ namespace Orchard.Core.Themes.Controllers {
             return View(new AdminViewModel());
         }
 
-        [AcceptVerbs(HttpVerbs.Post)]
+        [HttpPost]
         public ActionResult Install(FormCollection input) {
             try {
                 if (!_authorizer.Authorize(Permissions.InstallUninstallTheme, T("Couldn't install theme")))
@@ -71,6 +72,7 @@ namespace Orchard.Core.Themes.Controllers {
             }
         }
 
+        [HttpPost]
         public ActionResult Uninstall(string themeName) {
             try {
                 if (!_authorizer.Authorize(Permissions.InstallUninstallTheme, T("Couldn't uninstall theme")))

@@ -343,6 +343,9 @@ span.message {
 
 /* Forms   
 ----------------------------------------------------------*/
+form.inline, form.inline fieldset { /* todo: (heskew) need something other than .inline ... */
+    display:inline;
+}
 form.inline fieldset {
     margin:0;
 }
@@ -658,6 +661,11 @@ todo: (heskew) pull out into relevant modules where appropriate
 
 /* Pages
 ----------------------------------------------------------*/
+.templates li {
+    border-bottom:1px dashed #e4e7dc;
+    margin-bottom:2em;
+    padding-bottom:2em;
+}
 .templates fieldset {
     margin:0 0 .933%;
 }
