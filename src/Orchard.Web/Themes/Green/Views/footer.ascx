@@ -14,7 +14,7 @@
     <div class="yui-g">
         <div class="yui-u first">
 	<h5>Need Help?</h5>
-            <ul class="bullet">
+            <ul  class="square">
                 <li><a href="#">Lorem ipsum</a></li>
                 <li><a href="#">Lorem ipsum</a></li>
                 <li><a href="#">Lorem ipsum</a></li>
@@ -24,7 +24,7 @@
 	        </div>
         <div class="yui-u">
 	<h5>Company Info</h5>
-            <ul class="bullet">
+            <ul  class="square">
                 <li><a href="#">Lorem ipsum</a></li>
                 <li><a href="#">Lorem ipsum</a></li>
                 <li><a href="#">Lorem ipsum</a></li>

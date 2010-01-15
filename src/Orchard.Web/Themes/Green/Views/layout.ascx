@@ -5,6 +5,7 @@
 <%
     Html.RegisterStyle("yui.css");
     Html.RegisterStyle("site.css");
+    Html.RegisterStyle("blog.css");
     %>
 
 <div id="doc4" class="yui-t6">
@@ -32,15 +33,22 @@
   <div id="bd" role="main">
     <div id="yui-main">
       <div id="maincolumn" class="yui-b">
-        <div class="yui-g coreWidget">
+        <div class="yui-g">
           <%--Main Content--%>
           <%Html.ZoneBody("content");%>
         </div>
       </div>
     </div>
-    <div id="subcolumn1" class="yui-b">
-      <%--Start widgets--%>
-      This was our old widget zone
+    <div id="subcolumn" class="yui-b">
+ <h3>Sidebar</h3>
+	<ul>
+		<li><h4>Item 1</h4></li>
+		<li><p class="small">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas adipiscing dolor vel nunc molestie laoreet. Curabitur vitae elit et massa consequat interdum. Curabitur blandit leo nec magna dictum vitae mollis tellus gravida. Morbi non condimentum neque. Suspendisse commodo condimentum feugiat. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos.</p></li>
+		
+				<li><h4>Item 2</h4></li>
+		<li><p class="small">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas adipiscing dolor vel nunc molestie laoreet. Curabitur vitae elit et massa consequat interdum. Curabitur blandit leo nec magna dictum vitae mollis tellus gravida. Morbi non condimentum neque. Suspendisse commodo condimentum feugiat. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos.</p></li>
+	</ul>
+
     </div>
   </div>
   <%-- End Content --%>

@@ -2,39 +2,13 @@
 /* Site CSS
 ----------------------------------------------------------*/
 
-
-/* Common */
-
-.floatLeft {float: left;} /*Use this class to float anything to the left*/
-
-.floatRight {float: right;}  /*Use this class to float anything to the right*/
-
-.floatNone {float: none;}
-
-.centered {margin:0 auto;}  /*Center*/
-
-.textRight {text-align:right;}
-
-.textCentered {text-align:center;}
-
-.textJustified {text-align:justify;}
-
-.displayText {display:none;}
-
-.clearLayout {clear:both;}  /*Use this class clear layout*/
-
-.disabled {color:#CCC;}
-
-.alert {color:#FF0000;}
-
-
-/* Headings and defaults
+/*Defaults
 ----------------------------------------------------------*/
 
 html {height: 100%; background-color: #eaf0e8;}
 
 body {
-	font-family: "Tahoma", "Helvetica Neue", "Lucida Grande", "Segoe UI", Arial, Helvetica, Verdana, sans-serif;
+	font-family: "Segoe UI", Candara, "Bitstream Vera Sans", "DejaVu Sans", "Bitstream Vera Sans", "Trebuchet MS", Verdana, "Verdana Ref", sans-serif;
 	font-style:normal;
 	background:url(../Content/Images/bodyBackground.png) top center no-repeat #eaf0e8;
 	text-align:left;
@@ -43,7 +17,9 @@ body {
 }
 
 
-/* Headings */
+/* ---------- Headings and defaults ---------- */
+
+h1,h2,h3,h4,h5,h6,legend {font-weight:normal; font-style: normal; color:#37440a;}
 
 h1 {font-size: 197%;} /*26px*/
 h2 {font-size: 182%;} /*24px*/
@@ -52,18 +28,16 @@ h4 {font-size: 153.9%;} /*20px*/
 h5 {font-size: 138.5%;} /*18px*/
 h6 {font-size: 123.1%;} /*16px*/
 
-.productWidget h5 {border-bottom:1px solid #d3d4d7; padding:0 0 10px 0;}
-
 
 /* Paragraphs and lists */
 
-p {line-height:20px; padding:2px 8px;}
-.small {font-size: 85%; line-height:16px;}
+p {line-height:20px; padding:12px 0px;}
+.small {font-size: 96%;}
 
 strong {font-weight:700;}
 
-ul {line-height:22px;}
-ul.bullet li {list-style:square inside;}
+ul.square li {list-style:square; list-style-position:inside; line-height:24px; margin:0 0 0 12px;}
+ol.decimal li {list-style:decimal; list-style-position:inside; line-height:24px; margin:0 0 0 12px;}
 
 
 /* Links */
@@ -80,10 +54,11 @@ a:active {color:#006699; text-decoration:none;}
 #innerft a:hover {text-decoration: underline;}
 #innerft a:active {color:#525e50; text-decoration: none;}
 
+
 /* Forms
 ----------------------------------------------------------*/
 
-fieldset, input[type="text"], #CommentText, #password {
+input[type="text"], textarea, #password {
     border:1px solid #DDDEDF;
     display: block;
     -moz-border-radius:6px;
@@ -92,23 +67,34 @@ fieldset, input[type="text"], #CommentText, #password {
 
 fieldset {
     margin: 20px 20px 20px 10px;
+    border:1px solid #eef2ed;
+    -moz-border-radius:6px;
+	-webkit-border-radius:6px;
     }
+    
+fieldset div {margin:12px 0 0 0}
+    
+legend {
+	font-size:123.1%;
+	margin:-10px 0 0 10px;
+	padding:0 6px;
+}
 
 label {
     display: block;
-    margin:20px 0 2px 10px;
-    font-weight:600;
+    margin:8px 0 2px 16px;
+    font-size:105%;
     }
 
-input[type="text"], #CommentText, #password {
+input[type="text"], textarea, #password {
     border-color:#cacec6;
     padding:2px;
-    margin:2px 0 20px 10px;
-    width:80%;
+    margin:2px 0 4px 16px;
+    width:90%;
     }
 
 input[type="checkbox"] {
-    margin:2px 0 20px 10px;
+    margin:2px 0 4px 10px;
 }
 
 input[type="submit"], input[type="button"] {
@@ -122,6 +108,7 @@ input[type="submit"], input[type="button"] {
     margin:0 0 0 4px;
     display:inline;
 }
+
 
 /* Tables
 ----------------------------------------------------------*/
@@ -187,11 +174,16 @@ colgroup
 #bd {
     min-height:500px;
     background:#fff;
+    padding: 20px 16px;
     -webkit-border-top-left-radius: 6px;    /* for Safari */
     -webkit-border-top-right-radius: 6px;
 	-moz-border-radius-topleft: 6px;       /* for Firefox */
 	-moz-border-radius-topright: 6px;
     }
+    
+#hd  h1 {
+	margin: 0px;	
+}
 
 #hd  h1 a {
 	background:url(../Content/Images/logo.png) no-repeat top left;
@@ -215,16 +207,29 @@ colgroup
 	float:right;
 }
 
-#maincolumn {margin:10px 0 0 20px;}
+#maincolumn {
+	padding:0 18px 0 0;
+	}
 
-#subcolumn1 {
-    margin:43px 10px 10px 10px;
+#subcolumn {
     padding:4px 0 12px 0;
-    border:1px solid #e1e7df;
-    background:#fff;
+    }
+    
+#subcolumn h4 {
+    margin:6px 0 0 6px;
+    }
+    
+#subcolumn p {
+    padding:6px;
+    }
+    
+#subcolumn ul {
+     border:1px solid #eef2ed;
     -webkit-border-radius: 6px;
     -moz-border-radius: 6px;
+	padding:8px;
     }
+
 
 /* contentItems is the generic class for all content items - e.g. blogs uses this for the unordered lists to display posts */
     
@@ -242,6 +247,7 @@ colgroup
 
 #innerft {
 	padding:20px 8px 8px 8px;
+	padding:10px 20px 20px 20px;
 }
 
 
@@ -250,7 +256,7 @@ colgroup
 
 #menucontainer {
 	margin:0;
-	padding:0;
+	padding:0 0 0 20px;
 	list-style:none;
 	float:left;
 	font-size:104%;
@@ -264,8 +270,44 @@ colgroup
 
 #menucontainer ul li a {
 	display:block;
-	padding:.4em 1.4em .6em 1.4em;
+	padding: 8px 18px;
 	background:url(../Content/Images/tabLeftOff.gif) no-repeat top left;
 	text-decoration:none;
 	float:left;
+	font-size:115%;
+	color:#35550b;
 }
+
+#menucontainer ul li.tabon {
+	background:url(../Content/Images/tabRightOn.gif) no-repeat top right;
+}
+
+#menucontainer ul li.tabon a {
+	background:url(../Content/Images/tabLeftOn.gif) no-repeat top left;
+	font-weight:600;
+}
+
+
+/* Common */
+
+.floatLeft {float: left;}
+
+.floatRight {float: right;}
+
+.floatNone {float: none;}
+
+.centered {margin:0 auto;}
+
+.textRight {text-align:right;}
+
+.textCentered {text-align:center;}
+
+.textJustified {text-align:justify;}
+
+.displayText {display:none;}
+
+.clearLayout {clear:both;}
+
+.disabled {color:#CCC;}
+
+.alert {color:#FF0000;}
