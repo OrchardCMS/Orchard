@@ -2,11 +2,13 @@
 <%@ Import Namespace="Orchard.Blogs.ViewModels"%>
 <%@ Import Namespace="Orchard.Blogs.Extensions"%>
 <%@ Import Namespace="Orchard.Blogs.Models"%>
-<div class="sub archives">
+<% Html.RegisterStyle("archives.css"); %>
+<% Html.RegisterFootScript("archives.js"); %>
+<div class="archives">
     <h3><%=_Encoded("Archives") %></h3><%
     if (Model.Archives.Count() > 0) {
         if (Model.Archives.Count() > 20) { %>
-    <ul class="yearList"><%
+    <ul class="years"><%
             int lastYear = Model.Archives.First().Key.Year;
             int firstYear = Model.Archives.Last().Key.Year;
 

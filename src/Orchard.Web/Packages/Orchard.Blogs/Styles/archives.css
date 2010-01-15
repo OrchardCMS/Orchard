@@ -1,0 +1,68 @@
+﻿/* todo: (heskew) come up with some real style for this. pretty much a copy/paste from oxite */
+
+/* ARCHIVES
+----------------------------------------------------------*/
+.archives h3 {
+    margin-bottom:0;
+}
+.archives ul {
+    margin:0;
+    padding:0;
+}
+.archives ul 
+.archives li {
+    list-style-type:none;
+}
+.archives ul.years li {
+    list-style-type:none;
+    margin:.6em 0 0;
+    /*background:url(images/bullet_toggle_minus_onoff.png) no-repeat -9999px 0;*/
+}
+.archives ul.archiveMonthList li
+{
+    margin:.2em 0;
+}
+.archives ul.archiveMonthList li.first {
+    margin-top:0;
+}
+.archives ul.archiveMonthList li.last {
+    margin-bottom:0;
+}
+.archives ul.years li.previous h4 span {
+    display:none;
+}
+/* todo: (heskew) style for "html.dyn" by default, target html.static for non-javascript */
+html.dyn .archives ul.years li.previous h4 span {
+    display:inline;
+}
+html.dyn .archives ul.years li h4,
+html.dyn .archives ul.years li ul {
+    margin:.2em .2ex;
+}
+/* todo: (heskew) very, very, very temporary. do something like the commented-out background image past the :before selector */
+html.dyn .archives ul.years li.previous h4:before {
+    content:"⇓ ";
+}
+html.dyn .archives ul.years li.previous {
+    cursor:pointer;
+    padding:.1em .2ex .2em 2ex;
+    /*background:url(images/bullet_toggle_plus_onoff.png) no-repeat 0 -25px;*/
+    margin:0 -2ex;
+}
+html.dyn .archives ul.years li.previous.hover {
+    background-position:0 6px;
+}
+/* todo: (heskew) very, very, very temporary. do something like the commented-out background image past the :before selector */
+html.dyn .archives ul.years li.previous.open h4:before {
+    content:"⇑ ";
+}
+html.dyn .archives ul.years li.previous.open {
+    /*background:url(images/bullet_toggle_minus_onoff.png) no-repeat -689px 6px;*/
+}
+html.dyn .archives ul.years li.previous.open.hover {
+    background-position:0 6px;
+}
+html.dyn .archives ul.years li.previous ul {
+    display:none;
+    margin-left:2ex;
+}

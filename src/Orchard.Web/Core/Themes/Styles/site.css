@@ -114,7 +114,25 @@ page width. Or, you can specify an exact pixel width. */
     padding: 30px 30px 15px 30px;
     background-color: #fff;
     margin-bottom: 30px;
+    overflow:auto;
     _height: 1px; /* only IE6 applies CSS properties starting with an underscrore */
+}
+
+#contentwrapper
+{
+    float:left;
+    width:100%;
+}
+#content
+{
+    margin-right:230px;
+}
+
+#sidebar
+{
+    float:left;
+    margin-left:-200px;
+    width:200px;
 }
 
 #footer

@@ -113,6 +113,8 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Package.txt" />
+    <Content Include="Scripts\archives.js" />
+    <Content Include="Styles\archives.css" />
     <Content Include="Views\Archives.ascx" />
     <Content Include="Views\BlogPostAdmin\Create.ascx" />
     <Content Include="Views\BlogPostAdmin\Edit.ascx" />
