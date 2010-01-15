@@ -1,9 +1,9 @@
 ﻿/*Blog specific styles
 ----------------------------------------------------------*/
 
-.meta, .manage, .posted, div.comment {
+.meta, .manage, .posted {
     margin: 8px 0;
-    font:80% Verdana, Geneva, Tahoma, sans-serif;
+    font-size:105%;
 }
 
 .meta, .manage {
@@ -13,3 +13,16 @@
 .blogdescription, .postsummary {
     clear:both;
     }
+   
+div.comment {
+    margin: 16px 0 8px 0;
+}
+    
+span.who {
+    font-weight:600;
+    font-size:105%;
+ }
+ 
+ .text {
+    border-bottom:1px dotted #e5e5e5;
+ }

@@ -28,7 +28,7 @@ body {
 
 /* ---------- Headings and defaults ---------- */
 
-h1,h2,h3,h4,h5,h6, legend {font-weight:normal; font-style: normal; color:#670404; border-bottom:1px solid #f1f1f1;}
+h1,h2,h3,h4,h5,h6, legend {font-weight:normal; font-style: normal; color:#670404; border-bottom:1px dotted #e5e5e5;}
 
 h1 {font-size: 190%;}
 h2 {font-size: 160%;}
@@ -68,7 +68,6 @@ legend {
 }
 
 label {
-	font:80% Verdana, Geneva, Tahoma, sans-serif;
     display: block;
     margin:0 0 2px 0;
     }
@@ -111,14 +110,14 @@ input[type="submit"], input[type="button"], .button {
 	float:left;
 	font-size:220%;
 	color:#000;
-	padding:16px 0 0 0;
+	/*padding:16px 0 0 0;*/
+	padding:42px 0 0 0;
 	border-bottom:none;
 }
 
 #logindisplay {
-	font:80% Verdana, Geneva, Tahoma, sans-serif;
 	float:right;
-	margin:32px 8px 0 0;
+	margin:58px 8px 0 0;
 }
 
 #wrapper {
@@ -163,17 +162,16 @@ input[type="submit"], input[type="button"], .button {
 }
 
 #footer {
-	font:80% Verdana, Geneva, Tahoma, sans-serif;
 	color:#918e8e;
 	clear:both;
 	border-top:1px solid #d6d6d6;
-	margin:0 12px 0 12px;
+	margin:0 12px;
 	padding:18px 0 18px 8px;
 }
 
 #footer a{
-	text-transform:uppercase;
 	color:#918e8e;
+	margin:0 8px;
 }
 
 /* ---------- Navigation ---------- */
@@ -202,10 +200,9 @@ input[type="submit"], input[type="button"], .button {
 
 #menucontainer ul li a {
 	margin:0 18px 0 18px;
-	font:80% Verdana, Geneva, Tahoma, sans-serif;
+	font-size:110%;
 	display:block;
 	text-decoration:none;
-	text-transform:uppercase;
 	float:left;
 	color:#fff;
 	}
