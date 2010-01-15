@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Web.Mvc;
+using System.Web.Routing;
 using System.Xml.Linq;
 using Autofac.Builder;
 using Autofac.Modules;
@@ -165,6 +166,7 @@ namespace Orchard.Core.Tests.Feeds.Controllers {
             var builder = new ContainerBuilder();
             builder.RegisterModule(new ImplicitCollectionSupportModule());
             builder.Register<FeedController>();
+            builder.Register(new RouteCollection());
             builder.Register(mockContentManager.Object).As<IContentManager>();
             builder.Register<RssFeedFormatProvider>().As<IFeedFormatterProvider>();
             builder.Register<CorePartsFeedItemBuilder>().As<IFeedItemBuilder>();

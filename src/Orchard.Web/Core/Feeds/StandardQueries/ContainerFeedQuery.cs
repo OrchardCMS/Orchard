@@ -1,8 +1,11 @@
-﻿using JetBrains.Annotations;
+﻿using System.Web.Mvc;
+using System.Xml.Linq;
+using JetBrains.Annotations;
 using Orchard.ContentManagement;
 using Orchard.Core.Common.Models;
 using Orchard.Core.Common.Records;
 using Orchard.Core.Feeds.Models;
+using Orchard.Core.Feeds.Services;
 
 namespace Orchard.Core.Feeds.StandardQueries {
     [UsedImplicitly]
@@ -34,17 +37,25 @@ namespace Orchard.Core.Feeds.StandardQueries {
             var containerId = (int)containerIdValue.ConvertTo(typeof(int));
             var container = _contentManager.Get(containerId);
 
-            var containerRoutable = container.As<RoutableAspect>();
-            var containerBody = container.As<BodyAspect>();
-            if (containerRoutable != null) {
-                context.FeedFormatter.AddProperty(context, null, "title", containerRoutable.Title);
-                context.FeedFormatter.AddProperty(context, null, "link", "/" + containerRoutable.Slug);
+            var inspector = new ItemInspector(container, _contentManager.GetItemMetadata(container));
+            if (context.Format == "rss") {
+                var link = new XElement("link");
+                context.Response.Element.SetElementValue("title", inspector.Title);
+                context.Response.Element.Add(link);
+                context.Response.Element.SetElementValue("description", inspector.Description);
+
+                context.Response.Contextualize(requestContext => {
+                    var urlHelper = new UrlHelper(requestContext);
+                    link.Add(urlHelper.RouteUrl(inspector.Link));
+                });
             }
-            if (containerBody != null) {
-                context.FeedFormatter.AddProperty(context, null, "description", containerBody.Text);
-            }
-            else if (containerRoutable != null) {
-                context.FeedFormatter.AddProperty(context, null, "description", containerRoutable.Title);
+            else {
+                context.FeedFormatter.AddProperty(context, null, "title", inspector.Title);
+                context.FeedFormatter.AddProperty(context, null, "description", inspector.Description);
+                context.Response.Contextualize(requestContext => {
+                    var urlHelper = new UrlHelper(requestContext);
+                    context.FeedFormatter.AddProperty(context, null, "link", urlHelper.RouteUrl(inspector.Link));
+                });
             }
 
             var items = _contentManager.Query()

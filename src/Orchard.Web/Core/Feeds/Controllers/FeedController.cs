@@ -51,6 +51,12 @@ namespace Orchard.Core.Feeds.Controllers {
             return context.FeedFormatter.Process(context, () => {
                 bestQueryMatch.FeedQuery.Execute(context);
                 _feedItemBuilders.Invoke(x => x.Populate(context), Logger);
+                foreach (var contextualizer in context.Response.Contextualizers) {
+                    if (ControllerContext != null &&
+                        ControllerContext.RequestContext != null) {
+                        contextualizer(ControllerContext.RequestContext);
+                    }
+                }
             });
         }
     }

@@ -83,6 +83,7 @@
     <Compile Include="Common\ViewModels\OwnerEditorViewModel.cs" />
     <Compile Include="Feeds\Controllers\FeedController.cs" />
     <Compile Include="Feeds\Rss\Routes.cs" />
+    <Compile Include="Feeds\StandardBuilders\ItemInspector.cs" />
     <Compile Include="Feeds\StandardQueries\ContainerFeedQuery.cs" />
     <Compile Include="Feeds\StandardBuilders\CorePartsFeedItemBuilder.cs" />
     <Compile Include="Feeds\IFeedFormatter.cs" />
