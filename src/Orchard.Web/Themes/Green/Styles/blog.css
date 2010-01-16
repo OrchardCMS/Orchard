@@ -1,7 +1,7 @@
 ﻿/*Blog specific styles
 ----------------------------------------------------------*/
 
-.posted, div.comment {
+.posted {
     margin: 0 0 8px 0;
 }
 
@@ -23,12 +23,32 @@
  }
  
  .comments li {
-    margin:20px 20px 20px 10px;
+    margin:0 10px 0 0;
     padding:8px;
-    border-bottom:1px solid #eef2ed;
-
  }
+ 
+ div.comment {
+	padding:8px 8px 8px 16px;
+	color: #000;
+	min-width:200px;
+	background:#fff;
+	border:1px solid #CACEC6;
+	-moz-border-radius:6px;
+	-webkit-border-radius:6px;
+}
+
+.commentauthor {
+	background-position: 20px 0px;
+	padding: 16px 0 0 8px;
+	margin: 0 0 10px 0;
+	background: url(../Content/Images/commentpointer.gif) no-repeat;
+	position:relative;
+	top:-1px;
+	left:10px;
+}
  
  span.who {
     font-weight:700;
  }
+ 
+ 

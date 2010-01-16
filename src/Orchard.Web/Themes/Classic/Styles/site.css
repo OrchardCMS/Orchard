@@ -110,7 +110,6 @@ input[type="submit"], input[type="button"], .button {
 	float:left;
 	font-size:220%;
 	color:#000;
-	/*padding:16px 0 0 0;*/
 	padding:42px 0 0 0;
 	border-bottom:none;
 }
