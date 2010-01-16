@@ -5,8 +5,6 @@ using System.Text.RegularExpressions;
 
 namespace Orchard.Core.Common.Services {
     public class RoutableService : IRoutableService {
-        #region IRoutableService Members
-
         public string Slugify(string title) {
             if (!string.IsNullOrEmpty(title)) {
                 //todo: (heskew) improve - just doing multi-pass regex replaces for now with the simple rules of
@@ -34,7 +32,7 @@ namespace Orchard.Core.Common.Services {
                             int v;
                             string[] slugParts = s.Split(new[] { slugCandidate }, StringSplitOptions.RemoveEmptyEntries);
                             if (slugParts.Length == 0) {
-                                return 0;
+                                return 1;
                             }
 
                             return int.TryParse(slugParts[0].TrimStart('-'), out v)
@@ -48,7 +46,5 @@ namespace Orchard.Core.Common.Services {
                        ? string.Format("{0}-{1}", slugCandidate, version)
                        : slugCandidate;
         }
-
-        #endregion
     }
 }

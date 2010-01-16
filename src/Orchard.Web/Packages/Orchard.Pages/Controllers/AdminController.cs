@@ -111,7 +111,7 @@ namespace Orchard.Pages.Controllers {
             if (!Services.Authorizer.Authorize(Permissions.CreatePages, T("Not allowed to create a page")))
                 return new HttpUnauthorizedResult();
 
-            var page = Services.ContentManager.BuildEditorModel(_pageService.New());
+            var page = Services.ContentManager.BuildEditorModel(Services.ContentManager.New<Page>("page"));
 
             var model = new PageCreateViewModel {
                 Page = page
@@ -137,16 +137,16 @@ namespace Orchard.Pages.Controllers {
                 }
             }
 
-            Page page = _pageService.Create(publishNow, publishDate);
-            model.Page = Services.ContentManager.UpdateEditorModel(page, this);
+            model.Page = Services.ContentManager.UpdateEditorModel(Services.ContentManager.New<Page>("page"), this);
+            if (!publishNow && publishDate != null)
+                model.Page.Item.Published = publishDate.Value;
 
             if (!ModelState.IsValid) {
                 Services.TransactionManager.Cancel();
                 return View(model);
             }
 
-            var session = _sessionLocator.For(typeof(Page));
-            session.Flush();
+            Services.ContentManager.Create(model.Page.Item.ContentItem, publishNow ? VersionOptions.Published : VersionOptions.Draft);
 
             return RedirectToAction("List");
         }

@@ -15,6 +15,7 @@ namespace Orchard.Pages.Models {
 
         public string Slug {
             get { return this.As<RoutableAspect>().Slug; }
+            set { this.As<RoutableAspect>().Slug = value; }
         }
 
         public IUser Creator {

@@ -59,19 +59,6 @@ namespace Orchard.Pages.Services {
             return _contentManager.GetDraftRequired<Page>(page.Id);
         }
 
-        public Page New() {
-            return _contentManager.New<Page>("page");
-        }
-
-        public Page Create(bool publishNow, DateTime? publishDate) {
-            //TODO: (erikpo) Evaluate if publish options should be moved into create or out of create to keep it clean
-            return _contentManager.Create<Page>("page", publishNow ? VersionOptions.Published : VersionOptions.Draft,
-                bp => {
-                    if (!publishNow && publishDate != null)
-                        bp.Published = publishDate.Value;
-                });
-        }
-
         public void Delete(Page page) {
             _contentManager.Remove(page.ContentItem);
         }

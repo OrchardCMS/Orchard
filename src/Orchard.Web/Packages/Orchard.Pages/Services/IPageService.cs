@@ -10,8 +10,6 @@ namespace Orchard.Pages.Services {
         Page GetPageOrDraft(string slug);
         Page GetLatest(string slug);
         Page GetLatest(int id);
-        Page New();
-        Page Create(bool publishNow, DateTime? publishDate);
         void Delete(Page page);
         void Publish(Page page);
         void Publish(Page page, DateTime publishDate);
