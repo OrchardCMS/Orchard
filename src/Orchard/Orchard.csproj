@@ -127,6 +127,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ContentManagement\Aspects\ICommonAspect.cs" />
+    <Compile Include="ContentManagement\Handlers\ContentContextBase.cs" />
+    <Compile Include="ContentManagement\Handlers\PublishContentContext.cs" />
+    <Compile Include="ContentManagement\Handlers\RemoveContentContext.cs" />
+    <Compile Include="ContentManagement\Handlers\VersionContentContext.cs" />
     <Compile Include="Tasks\Scheduling\IScheduledTask.cs" />
     <Compile Include="ContentManagement\ContentExtensions.cs" />
     <Compile Include="ContentManagement\ContentItem.cs" />

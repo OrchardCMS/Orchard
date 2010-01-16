@@ -19,12 +19,7 @@ namespace Orchard.Blogs.Models {
             Filters.Add(new ActivatingFilter<BodyAspect>(BlogPostDriver.ContentType.Name));
             Filters.Add(new StorageFilter<CommonVersionRecord>(commonRepository));
 
-            OnCreated<BlogPost>((context, bp) => bp.Blog.PostCount++);
-            OnRemoved<BlogPost>((context, bp) => bp.Blog.PostCount--);
-
-
-            OnCreating<BlogPost>((context, blogPost) =>
-            {
+            OnCreating<BlogPost>((context, blogPost) => {
                 string slug = !string.IsNullOrEmpty(blogPost.Slug)
                                   ? blogPost.Slug
                                   : routableService.Slugify(blogPost.Title);
@@ -34,6 +29,13 @@ namespace Orchard.Blogs.Models {
                                                            bp => bp.Slug.StartsWith(slug)).Select(
                                                            bp => bp.Slug));
             });
+            OnCreated<BlogPost>((context, bp) => bp.Blog.PostCount++);
+            OnRemoved<BlogPost>((context, bp) => bp.Blog.PostCount--);
+
+            OnRemoved<Blog>(
+                (context, bp) =>
+                blogPostService.Get(context.ContentItem.As<Blog>()).ToList().ForEach(
+                    blogPost => context.ContentManager.Remove(blogPost.ContentItem)));
         }
     }
 }

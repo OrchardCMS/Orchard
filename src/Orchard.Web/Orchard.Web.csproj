@@ -2,7 +2,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>9.0.21022</ProductVersion>
+    <ProductVersion>9.0.30729</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{50B779EA-EC00-4699-84C0-03B395C365D2}</ProjectGuid>
     <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
@@ -187,27 +187,6 @@
     <Content Include="Themes\TheAdmin\Views\menu.ascx" />
     <Content Include="Themes\TheAdmin\Views\user.ascx" />
     <Content Include="Themes\TheAdmin\Views\header.ascx" />
-    <Content Include="Themes\Times\Content\Images\bodyBackground.gif" />
-    <Content Include="Themes\Times\Content\Images\bodyBackgroundgrey.gif" />
-    <Content Include="Themes\Times\Content\Images\footerBackground.gif" />
-    <Content Include="Themes\Times\Content\Images\mainBackground.gif" />
-    <Content Include="Themes\Times\Content\Images\mainBackground.png" />
-    <Content Include="Themes\Times\Content\Images\mainBackgroundgrey.gif" />
-    <Content Include="Themes\Times\Content\Images\mainBackgroundgrey.png" />
-    <Content Include="Themes\Times\Content\Images\navDivider.gif" />
-    <Content Include="Themes\Times\Content\Images\sidebarBackground.gif" />
-    <Content Include="Themes\Times\Styles\blog.css" />
-    <Content Include="Themes\Times\Styles\site.css" />
-    <Content Include="Themes\Times\Theme.gif" />
-    <Content Include="Themes\Times\Theme.txt" />
-    <Content Include="Themes\Times\Views\DisplayTemplates\Items\Blogs.Blog.ascx" />
-    <Content Include="Themes\Times\Views\DisplayTemplates\Items\Blogs.Blog.Summary.ascx" />
-    <Content Include="Themes\Times\Views\DisplayTemplates\Items\Blogs.BlogPost.Summary.ascx" />
-    <Content Include="Themes\Times\Views\DisplayTemplates\Items\Pages.Page.ascx" />
-    <Content Include="Themes\Times\Views\DisplayTemplates\Parts\Blogs.BlogPost.List.ascx" />
-    <Content Include="Themes\Times\Views\footer.ascx" />
-    <Content Include="Themes\Times\Views\layout.ascx" />
-    <Content Include="Themes\Times\Views\menu.ascx" />
     <Content Include="Themes\Web.config" />
   </ItemGroup>
   <ItemGroup>
@@ -249,6 +228,9 @@
           <IISUrl>
           </IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
+          <UseCustomServer>False</UseCustomServer>
+          <CustomServerUrl>
+          </CustomServerUrl>
           <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
         </WebProjectProperties>
       </FlavorProperties>
