@@ -39,13 +39,45 @@ namespace Orchard.Environment {
 
         public ILogger Logger { get; set; }
 
-
-
         public void Activate() {
             _routePublisher.Publish(_routeProviders.SelectMany(provider => provider.GetRoutes()));
             _modelBinderPublisher.Publish(_modelBinderProviders.SelectMany(provider => provider.GetModelBinders()));
 
+            AddOrchardLocationsFormats();
+
             _events.Invoke(x => x.Activated(), Logger);
+        }
+
+        /// <summary>
+        /// Adds view locations formats for non-themed views in custom orchard modules.
+        /// </summary>
+        private void AddOrchardLocationsFormats() {
+
+            IEnumerable<string> orchardMasterLocationFormats = new[] {
+                    "~/Packages/{2}/Views/{1}/{0}.master",
+                    "~/Packages/{2}/Views/Shared/{0}.master",
+                };
+
+            IEnumerable<string> orchardLocationFormats = new[] {
+                    "~/Packages/{2}/Views/{1}/{0}.aspx",
+                    "~/Packages/{2}/Views/{1}/{0}.ascx",
+                    "~/Packages/{2}/Views/Shared/{0}.aspx",
+                    "~/Packages/{2}/Views/Shared/{0}.ascx",
+                };
+
+            var viewEngine = _viewEngines.OfType<VirtualPathProviderViewEngine>().Single();
+            viewEngine.AreaMasterLocationFormats = orchardMasterLocationFormats
+                .Concat(viewEngine.AreaMasterLocationFormats)
+                .Distinct()
+                .ToArray();
+            viewEngine.AreaViewLocationFormats = orchardLocationFormats
+                .Concat(viewEngine.AreaViewLocationFormats)
+                .Distinct()
+                .ToArray();
+            viewEngine.AreaPartialViewLocationFormats = orchardLocationFormats
+                .Concat(viewEngine.AreaPartialViewLocationFormats)
+                .Distinct()
+                .ToArray();
         }
 
 

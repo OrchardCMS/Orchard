@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using System.Web;
@@ -23,19 +22,6 @@ namespace Orchard.Web {
                 "{controller}/{action}/{id}", // URL with parameters
                 new { controller = "Home", action = "Index", id = "" } // Parameter defaults
                 );
-        }
-
-        static IEnumerable<string> OrchardLocationFormats() {
-            return new[] {
-                "~/Packages/{2}/Views/{1}/{0}.aspx",
-                "~/Packages/{2}/Views/{1}/{0}.ascx",
-                "~/Packages/{2}/Views/Shared/{0}.aspx",
-                "~/Packages/{2}/Views/Shared/{0}.ascx",
-                "~/Core/{2}/Views/{1}/{0}.aspx",
-                "~/Core/{2}/Views/{1}/{0}.ascx",
-                "~/Core/{2}/Views/Shared/{0}.aspx",
-                "~/Core/{2}/Views/Shared/{0}.ascx",
-            };
         }
 
         protected void Application_Start() {
