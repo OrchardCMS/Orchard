@@ -13,7 +13,7 @@ namespace Orchard.Mvc.Html {
     public static class LayoutExtensions {
         public static void RenderBody(this HtmlHelper html) {
             LayoutViewContext layoutViewContext = LayoutViewContext.From(html.ViewContext);
-            html.ViewContext.HttpContext.Response.Output.Write(layoutViewContext.BodyContent);
+            html.ViewContext.Writer.Write(layoutViewContext.BodyContent);
         }
 
         public static MvcHtmlString Body(this HtmlHelper html) {

@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Web.Mvc;
-using Orchard.Data;
 using Orchard.Localization;
 using Orchard.ContentManagement;
 using Orchard.Mvc.Results;
@@ -15,23 +14,15 @@ using Orchard.UI.Notify;
 namespace Orchard.Pages.Controllers {
     [ValidateInput(false)]
     public class AdminController : Controller, IUpdateModel {
-        private readonly ISessionLocator _sessionLocator;
+        private readonly IOrchardServices _services;
         private readonly IPageService _pageService;
-        private readonly ISlugConstraint _slugConstraint;
 
-        public AdminController(
-            IOrchardServices services,
-            ISessionLocator sessionLocator,
-            IPageService pageService,
-            ISlugConstraint slugConstraint) {
-            Services = services;
-            _sessionLocator = sessionLocator;
+        public AdminController(IOrchardServices services, IPageService pageService) {
+            _services = services;
             _pageService = pageService;
-            _slugConstraint = slugConstraint;
             T = NullLocalizer.Instance;
         }
 
-        public IOrchardServices Services { get; set; }
         private Localizer T { get; set; }
 
         public ActionResult List(PagesOptions options) {
@@ -67,7 +58,7 @@ namespace Orchard.Pages.Controllers {
                 case PagesBulkAction.None:
                     break;
                 case PagesBulkAction.PublishNow:
-                    if (!Services.Authorizer.Authorize(Permissions.PublishPages, T("Couldn't publish page")))
+                    if (!_services.Authorizer.Authorize(Permissions.PublishPages, T("Couldn't publish page")))
                         return new HttpUnauthorizedResult();
 
                     foreach (PageEntry entry in checkedEntries) {
@@ -76,7 +67,7 @@ namespace Orchard.Pages.Controllers {
                     }
                     break;
                 case PagesBulkAction.Unpublish:
-                    if (!Services.Authorizer.Authorize(Permissions.UnpublishPages, T("Couldn't unpublish page")))
+                    if (!_services.Authorizer.Authorize(Permissions.UnpublishPages, T("Couldn't unpublish page")))
                         return new HttpUnauthorizedResult();
                     foreach (PageEntry entry in checkedEntries) {
                         var page = _pageService.GetLatest(entry.PageId);
@@ -84,7 +75,7 @@ namespace Orchard.Pages.Controllers {
                     }
                     break;
                 case PagesBulkAction.Delete:
-                    if (!Services.Authorizer.Authorize(Permissions.DeletePages, T("Couldn't delete page")))
+                    if (!_services.Authorizer.Authorize(Permissions.DeletePages, T("Couldn't delete page")))
                         return new HttpUnauthorizedResult();
 
                     foreach (PageEntry entry in checkedEntries) {
@@ -108,10 +99,10 @@ namespace Orchard.Pages.Controllers {
         }
 
         public ActionResult Create() {
-            if (!Services.Authorizer.Authorize(Permissions.CreatePages, T("Not allowed to create a page")))
+            if (!_services.Authorizer.Authorize(Permissions.CreatePages, T("Not allowed to create a page")))
                 return new HttpUnauthorizedResult();
 
-            var page = Services.ContentManager.BuildEditorModel(Services.ContentManager.New<Page>("page"));
+            var page = _services.ContentManager.BuildEditorModel(_services.ContentManager.New<Page>("page"));
 
             var model = new PageCreateViewModel {
                 Page = page
@@ -122,7 +113,7 @@ namespace Orchard.Pages.Controllers {
 
         [HttpPost, ActionName("Create")]
         public ActionResult CreatePOST(PageCreateViewModel model) {
-            if (!Services.Authorizer.Authorize(Permissions.CreatePages, T("Couldn't create page")))
+            if (!_services.Authorizer.Authorize(Permissions.CreatePages, T("Couldn't create page")))
                 return new HttpUnauthorizedResult();
 
             //TODO: (erikpo) Move this duplicate code somewhere else
@@ -137,22 +128,22 @@ namespace Orchard.Pages.Controllers {
                 }
             }
 
-            model.Page = Services.ContentManager.UpdateEditorModel(Services.ContentManager.New<Page>("page"), this);
+            model.Page = _services.ContentManager.UpdateEditorModel(_services.ContentManager.New<Page>("page"), this);
             if (!publishNow && publishDate != null)
                 model.Page.Item.Published = publishDate.Value;
 
             if (!ModelState.IsValid) {
-                Services.TransactionManager.Cancel();
+                _services.TransactionManager.Cancel();
                 return View(model);
             }
 
-            Services.ContentManager.Create(model.Page.Item.ContentItem, publishNow ? VersionOptions.Published : VersionOptions.Draft);
+            _services.ContentManager.Create(model.Page.Item.ContentItem, publishNow ? VersionOptions.Published : VersionOptions.Draft);
 
             return RedirectToAction("List");
         }
 
         public ActionResult Edit(string pageSlug) {
-            if (!Services.Authorizer.Authorize(Permissions.ModifyPages, T("Couldn't edit page")))
+            if (!_services.Authorizer.Authorize(Permissions.ModifyPages, T("Couldn't edit page")))
                 return new HttpUnauthorizedResult();
 
             Page page = _pageService.GetLatest(pageSlug);
@@ -161,7 +152,7 @@ namespace Orchard.Pages.Controllers {
                 return new NotFoundResult();
 
             var model = new PageEditViewModel {
-                Page = Services.ContentManager.BuildEditorModel(page)
+                Page = _services.ContentManager.BuildEditorModel(page)
             };
 
             return View(model);
@@ -169,7 +160,7 @@ namespace Orchard.Pages.Controllers {
 
         [HttpPost, ActionName("Edit")]
         public ActionResult EditPOST(string pageSlug) {
-            if (!Services.Authorizer.Authorize(Permissions.ModifyPages, T("Couldn't edit page")))
+            if (!_services.Authorizer.Authorize(Permissions.ModifyPages, T("Couldn't edit page")))
                 return new HttpUnauthorizedResult();
 
             Page page = _pageService.GetPageOrDraft(pageSlug);
@@ -198,25 +189,25 @@ namespace Orchard.Pages.Controllers {
                 _pageService.Unpublish(page);
 
             var model = new PageEditViewModel {
-                Page = Services.ContentManager.UpdateEditorModel(page, this)
+                Page = _services.ContentManager.UpdateEditorModel(page, this)
             };
 
             TryUpdateModel(model);
 
             if (!ModelState.IsValid) {
-                Services.TransactionManager.Cancel();
+                _services.TransactionManager.Cancel();
 
                 return View(model);
             }
 
-            Services.Notifier.Information(T("Page information updated."));
+            _services.Notifier.Information(T("Page information updated."));
 
             return RedirectToAction("List");
         }
 
         [HttpPost]
         public ActionResult Delete(string pageSlug) {
-            if (!Services.Authorizer.Authorize(Permissions.DeletePages, T("Couldn't delete page")))
+            if (!_services.Authorizer.Authorize(Permissions.DeletePages, T("Couldn't delete page")))
                 return new HttpUnauthorizedResult();
 
             Page page = _pageService.Get(pageSlug);
@@ -226,7 +217,7 @@ namespace Orchard.Pages.Controllers {
 
             _pageService.Delete(page);
 
-            Services.Notifier.Information(T("Page was successfully deleted"));
+            _services.Notifier.Information(T("Page was successfully deleted"));
 
             return RedirectToAction("List");
         }

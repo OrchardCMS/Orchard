@@ -10,7 +10,7 @@ namespace Orchard.Mvc.Html {
         }
 
         protected override void Dispose(bool disposing) {
-            _htmlHelper.ViewContext.HttpContext.Response.Output.Write(_htmlHelper.AntiForgeryTokenOrchard());
+            _htmlHelper.ViewContext.Writer.Write(_htmlHelper.AntiForgeryTokenOrchard());
 
             base.Dispose(disposing);
         }

@@ -24,7 +24,7 @@ namespace Orchard.Blogs.Models {
 
                 blog.Slug = routableService.GenerateUniqueSlug(slug,
                                                        blogService.Get().Where(
-                                                           b => b.Slug.StartsWith(slug)).Select(
+                                                           b => b.Slug.StartsWith(slug) && b.Id != blog.Id).Select(
                                                            b => b.Slug));
             });
         }

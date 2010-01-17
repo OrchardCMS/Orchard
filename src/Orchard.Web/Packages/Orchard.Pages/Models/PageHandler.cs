@@ -20,15 +20,15 @@ namespace Orchard.Pages.Models {
             Filters.Add(new ActivatingFilter<BodyAspect>(PageDriver.ContentType.Name));
             Filters.Add(new StorageFilter<CommonVersionRecord>(commonRepository));
 
-            OnCreating<Page>((context, blog) =>
+            OnCreating<Page>((context, page) =>
             {
-                string slug = !string.IsNullOrEmpty(blog.Slug)
-                                  ? blog.Slug
-                                  : routableService.Slugify(blog.Title);
+                string slug = !string.IsNullOrEmpty(page.Slug)
+                                  ? page.Slug
+                                  : routableService.Slugify(page.Title);
 
-                blog.Slug = routableService.GenerateUniqueSlug(slug,
+                page.Slug = routableService.GenerateUniqueSlug(slug,
                                                        pageService.Get(PageStatus.Published).Where(
-                                                           p => p.Slug.StartsWith(slug)).Select(
+                                                           p => p.Slug.StartsWith(slug) && p.Id != page.Id).Select(
                                                            p => p.Slug));
             });
         }

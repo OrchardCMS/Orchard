@@ -23,7 +23,7 @@ namespace Orchard.Core.Settings.Controllers {
         public Localizer T { get; set; }
 
         public ActionResult Index(string tabName) {
-            var model = new Orchard.Core.Settings.ViewModels.SettingsIndexViewModel {
+            var model = new SettingsIndexViewModel {
                 Site = _siteService.GetSiteSettings().As<SiteSettings>()
             };
             model.ViewModel = _modelManager.BuildEditorModel(model.Site);

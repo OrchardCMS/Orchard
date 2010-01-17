@@ -26,9 +26,10 @@ namespace Orchard.Blogs.Models {
 
                 blogPost.Slug = routableService.GenerateUniqueSlug(slug,
                                                        blogPostService.Get(blogPost.Blog, VersionOptions.Published).Where(
-                                                           bp => bp.Slug.StartsWith(slug)).Select(
+                                                           bp => bp.Slug.StartsWith(slug) && bp.Id != blogPost.Id).Select(
                                                            bp => bp.Slug));
             });
+
             OnCreated<BlogPost>((context, bp) => bp.Blog.PostCount++);
             OnRemoved<BlogPost>((context, bp) => bp.Blog.PostCount--);
 

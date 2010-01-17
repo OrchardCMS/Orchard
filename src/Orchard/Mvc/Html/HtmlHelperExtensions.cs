@@ -231,7 +231,7 @@ namespace Orchard.Mvc.Html {
             tagBuilder.MergeAttribute("action", formAction);
             tagBuilder.MergeAttribute("method", HtmlHelper.GetFormMethodString(formMethod), true);
 
-            htmlHelper.ViewContext.HttpContext.Response.Output.Write(tagBuilder.ToString(TagRenderMode.StartTag));
+            htmlHelper.ViewContext.Writer.Write(tagBuilder.ToString(TagRenderMode.StartTag));
 
             return new MvcFormAntiForgeryPost(htmlHelper);
         }

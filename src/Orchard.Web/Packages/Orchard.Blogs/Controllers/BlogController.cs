@@ -13,7 +13,7 @@ namespace Orchard.Blogs.Controllers {
         private readonly IOrchardServices _services;
         private readonly IBlogService _blogService;
 
-        public BlogController(IOrchardServices services, ISessionLocator sessionLocator, IAuthorizer authorizer, INotifier notifier, IBlogService blogService) {
+        public BlogController(IOrchardServices services, IBlogService blogService) {
             _services = services;
             _blogService = blogService;
         }

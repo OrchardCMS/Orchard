@@ -74,7 +74,6 @@ namespace Orchard.Blogs.Controllers {
                 }
             }
 
-            //TODO: (erikpo) Evaluate if publish options should be moved into create or out of create to keep it clean
             model.BlogPost = _services.ContentManager.UpdateEditorModel(_services.ContentManager.New<BlogPost>("blogpost"), this);
             model.BlogPost.Item.Blog = blog;
             if (!publishNow && publishDate != null)
@@ -86,6 +85,7 @@ namespace Orchard.Blogs.Controllers {
                 return View(model);
             }
 
+            //TODO: (erikpo) Evaluate if publish options should be moved into create or out of create to keep it clean
             _services.ContentManager.Create(model.BlogPost.Item.ContentItem, publishNow ? VersionOptions.Published : VersionOptions.Draft);
 
             //TEMP: (erikpo) ensure information has committed for this record
