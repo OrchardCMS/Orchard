@@ -163,6 +163,27 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Themes\TheAdmin\Styles\images\icons.psd" />
+    <Content Include="Themes\Classic\Content\Images\bodyBackground.gif" />
+    <Content Include="Themes\Classic\Content\Images\bodyBackgroundgrey.gif" />
+    <Content Include="Themes\Classic\Content\Images\footerBackground.gif" />
+    <Content Include="Themes\Classic\Content\Images\mainBackground.gif" />
+    <Content Include="Themes\Classic\Content\Images\mainBackground.png" />
+    <Content Include="Themes\Classic\Content\Images\mainBackgroundgrey.gif" />
+    <Content Include="Themes\Classic\Content\Images\mainBackgroundgrey.png" />
+    <Content Include="Themes\Classic\Content\Images\navDivider.gif" />
+    <Content Include="Themes\Classic\Content\Images\sidebarBackground.gif" />
+    <Content Include="Themes\Classic\Styles\blog.css" />
+    <Content Include="Themes\Classic\Styles\site.css" />
+    <Content Include="Themes\Classic\Theme.gif" />
+    <Content Include="Themes\Classic\Theme.txt" />
+    <Content Include="Themes\Classic\Views\DisplayTemplates\Items\Blogs.Blog.ascx" />
+    <Content Include="Themes\Classic\Views\DisplayTemplates\Items\Blogs.Blog.Summary.ascx" />
+    <Content Include="Themes\Classic\Views\DisplayTemplates\Items\Blogs.BlogPost.Summary.ascx" />
+    <Content Include="Themes\Classic\Views\DisplayTemplates\Items\Pages.Page.ascx" />
+    <Content Include="Themes\Classic\Views\DisplayTemplates\Parts\Blogs.BlogPost.List.ascx" />
+    <Content Include="Themes\Classic\Views\footer.ascx" />
+    <Content Include="Themes\Classic\Views\layout.ascx" />
+    <Content Include="Themes\Classic\Views\menu.ascx" />
     <Content Include="Themes\Green\Content\Images\bodyBackground.gif" />
     <Content Include="Themes\Green\Content\Images\bodyBackground.png" />
     <Content Include="Themes\Green\Content\Images\logo.gif" />
@@ -184,6 +205,18 @@
     <Content Include="Themes\Green\Views\layout.ascx" />
     <Content Include="Themes\Green\Views\menu.ascx" />
     <Content Include="Themes\Orange\Views\Orchard.Blogs\BlogPost\Item.ascx" />
+    <Content Include="Themes\Orchard\Content\Images\background_content.jpg" />
+    <Content Include="Themes\Orchard\Content\Images\background_footer.jpg" />
+    <Content Include="Themes\Orchard\Content\Images\background_module.gif" />
+    <Content Include="Themes\Orchard\Content\Images\background_page.jpg" />
+    <Content Include="Themes\Orchard\Content\Images\background_pageTop.gif" />
+    <Content Include="Themes\Orchard\Content\Images\orchardLogo.jpg" />
+    <Content Include="Themes\Orchard\Styles\site.css" />
+    <Content Include="Themes\Orchard\Theme.gif" />
+    <Content Include="Themes\Orchard\Theme.txt" />
+    <Content Include="Themes\Orchard\Views\footer.ascx" />
+    <Content Include="Themes\Orchard\Views\layout.ascx" />
+    <Content Include="Themes\Orchard\Views\menu.ascx" />
     <Content Include="Themes\TheAdmin\Views\menu.ascx" />
     <Content Include="Themes\TheAdmin\Views\user.ascx" />
     <Content Include="Themes\TheAdmin\Views\header.ascx" />
