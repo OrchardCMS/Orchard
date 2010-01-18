@@ -17,12 +17,15 @@ namespace Orchard.Comments.ViewModels {
 
     public enum CommentDetailsBulkAction {
         None,
-        Delete,
+        Pend,
+        Approve,
         MarkAsSpam,
+        Delete,
     }
 
     public enum CommentDetailsFilter {
         All,
+        Pending,
         Approved,
         Spam,
     }

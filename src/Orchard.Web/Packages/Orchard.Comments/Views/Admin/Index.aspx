@@ -8,8 +8,10 @@
         <label for="publishActions"><%=_Encoded("Actions:") %></label>
         <select id="publishActions" name="<%=Html.NameOf(m => m.Options.BulkAction)%>">
             <%=Html.SelectOption(Model.Options.BulkAction, CommentIndexBulkAction.None, _Encoded("Choose action...").ToString()) %>
-            <%=Html.SelectOption(Model.Options.BulkAction, CommentIndexBulkAction.Delete, _Encoded("Delete").ToString())%>
+            <%=Html.SelectOption(Model.Options.BulkAction, CommentIndexBulkAction.Approve, _Encoded("Approve").ToString()) %>
+            <%=Html.SelectOption(Model.Options.BulkAction, CommentIndexBulkAction.Pend, _Encoded("Pend").ToString()) %>
             <%=Html.SelectOption(Model.Options.BulkAction, CommentIndexBulkAction.MarkAsSpam, _Encoded("Mark as Spam").ToString()) %>
+            <%=Html.SelectOption(Model.Options.BulkAction, CommentIndexBulkAction.Delete, _Encoded("Delete").ToString())%>
         </select>
         <input class="button" type="submit" name="submit.BulkEdit" value="<%=_Encoded("Apply") %>" />
     </fieldset>
@@ -18,6 +20,7 @@
         <select id="filterResults" name="<%=Html.NameOf(m => m.Options.Filter)%>">
             <%=Html.SelectOption(Model.Options.Filter, CommentIndexFilter.All, _Encoded("All Comments").ToString()) %>
             <%=Html.SelectOption(Model.Options.Filter, CommentIndexFilter.Approved, _Encoded("Approved Comments").ToString()) %>
+            <%=Html.SelectOption(Model.Options.Filter, CommentIndexFilter.Pending, _Encoded("Pending Comments").ToString()) %>
             <%=Html.SelectOption(Model.Options.Filter, CommentIndexFilter.Spam, _Encoded("Spam").ToString())%>
         </select>
         <input class="button" type="submit" name="submit.Filter" value="<%=_Encoded("Apply") %>"/>
@@ -54,7 +57,9 @@
                     <input type="hidden" value="<%=Model.Comments[commentIndex].Comment.Id %>" name="<%=Html.NameOf(m => m.Comments[ci].Comment.Id) %>"/>
                     <input type="checkbox" value="true" name="<%=Html.NameOf(m => m.Comments[ci].IsChecked) %>"/>
                 </td>
-                <td><% if (commentEntry.Comment.Status == CommentStatus.Spam) { %><%=_Encoded("Spam") %><% } else { %><%=_Encoded("Approved") %><% } %></td>
+                <td><% if (commentEntry.Comment.Status == CommentStatus.Spam) { %><%=_Encoded("Spam") %><% } 
+                       else if (commentEntry.Comment.Status == CommentStatus.Pending) { %><%=_Encoded("Pending") %><% } 
+                       else { %><%=_Encoded("Approved") %><% } %></td>
                 <td><%=Html.Encode(commentEntry.Comment.UserName) %></td>
                 <td>
                 <% if (commentEntry.Comment.CommentText != null) {%>

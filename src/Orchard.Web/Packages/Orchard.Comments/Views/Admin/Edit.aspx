@@ -27,6 +27,10 @@
     </fieldset>
     <fieldset>
         <div>
+            <%=Html.RadioButton("Status", "Pending", (Model.Status == CommentStatus.Pending), new { id = "Status_Pending" }) %> 
+            <label class="forcheckbox" for="Status_Pending"><%=_Encoded("Pending") %></label>
+        </div>
+        <div>
             <%=Html.RadioButton("Status", "Approved", (Model.Status == CommentStatus.Approved), new { id = "Status_Approved" }) %>
             <label class="forcheckbox" for="Status_Approved"><%=_Encoded("Approved") %></label>
         </div>

@@ -50,6 +50,9 @@ namespace Orchard.Comments.Controllers {
                     case CommentIndexFilter.Approved:
                         comments = _commentService.GetComments(CommentStatus.Approved);
                         break;
+                    case CommentIndexFilter.Pending:
+                        comments = _commentService.GetComments(CommentStatus.Pending);
+                        break;
                     case CommentIndexFilter.Spam:
                         comments = _commentService.GetComments(CommentStatus.Spam);
                         break;
@@ -70,7 +73,7 @@ namespace Orchard.Comments.Controllers {
         [FormValueRequired("submit.BulkEdit")]
         public ActionResult Index(FormCollection input) {
             var viewModel = new CommentsIndexViewModel { Comments = new List<CommentEntry>(), Options = new CommentIndexOptions() };
-            UpdateModel(viewModel, input.ToValueProvider());
+            UpdateModel(viewModel);
 
             try {
                 IEnumerable<CommentEntry> checkedEntries = viewModel.Comments.Where(c => c.IsChecked);
@@ -83,6 +86,22 @@ namespace Orchard.Comments.Controllers {
                         //TODO: Transaction
                         foreach (CommentEntry entry in checkedEntries) {
                             _commentService.MarkCommentAsSpam(entry.Comment.Id);
+                        }
+                        break;
+                    case CommentIndexBulkAction.Pend:
+                        if (!_authorizer.Authorize(Permissions.ModerateComment, T("Couldn't moderate comment")))
+                            return new HttpUnauthorizedResult();
+                        //TODO: Transaction
+                        foreach (CommentEntry entry in checkedEntries) {
+                            _commentService.PendComment(entry.Comment.Id);
+                        }
+                        break;
+                    case CommentIndexBulkAction.Approve:
+                        if (!_authorizer.Authorize(Permissions.ModerateComment, T("Couldn't moderate comment")))
+                            return new HttpUnauthorizedResult();
+                        //TODO: Transaction
+                        foreach (CommentEntry entry in checkedEntries) {
+                            _commentService.ApproveComment(entry.Comment.Id);
                         }
                         break;
                     case CommentIndexBulkAction.Delete:
@@ -155,6 +174,9 @@ namespace Orchard.Comments.Controllers {
                     case CommentDetailsFilter.Approved:
                         comments = _commentService.GetCommentsForCommentedContent(id, CommentStatus.Approved);
                         break;
+                    case CommentDetailsFilter.Pending:
+                        comments = _commentService.GetCommentsForCommentedContent(id, CommentStatus.Pending);
+                        break;
                     case CommentDetailsFilter.Spam:
                         comments = _commentService.GetCommentsForCommentedContent(id, CommentStatus.Spam);
                         break;
@@ -181,7 +203,7 @@ namespace Orchard.Comments.Controllers {
         [FormValueRequired("submit.BulkEdit")]
         public ActionResult Details(FormCollection input) {
             var viewModel = new CommentsDetailsViewModel { Comments = new List<CommentEntry>(), Options = new CommentDetailsOptions() };
-            UpdateModel(viewModel, input.ToValueProvider());
+            UpdateModel(viewModel);
 
             try {
                 IEnumerable<CommentEntry> checkedEntries = viewModel.Comments.Where(c => c.IsChecked);
@@ -194,6 +216,22 @@ namespace Orchard.Comments.Controllers {
                         //TODO: Transaction
                         foreach (CommentEntry entry in checkedEntries) {
                             _commentService.MarkCommentAsSpam(entry.Comment.Id);
+                        }
+                        break;
+                    case CommentDetailsBulkAction.Pend:
+                        if (!_authorizer.Authorize(Permissions.ModerateComment, T("Couldn't moderate comment")))
+                            return new HttpUnauthorizedResult();
+
+                        foreach (CommentEntry entry in checkedEntries) {
+                            _commentService.PendComment(entry.Comment.Id);
+                        }
+                        break;
+                    case CommentDetailsBulkAction.Approve:
+                        if (!_authorizer.Authorize(Permissions.ModerateComment, T("Couldn't moderate comment")))
+                            return new HttpUnauthorizedResult();
+
+                        foreach (CommentEntry entry in checkedEntries) {
+                            _commentService.ApproveComment(entry.Comment.Id);
                         }
                         break;
                     case CommentDetailsBulkAction.Delete:
@@ -214,7 +252,7 @@ namespace Orchard.Comments.Controllers {
                 return Details(viewModel.CommentedItemId, viewModel.Options);
             }
 
-            return RedirectToAction("Details", new { viewModel.CommentedItemId, viewModel.Options });
+            return RedirectToAction("Index");
         }
 
         public ActionResult Close(int commentedItemId, string returnUrl) {
@@ -279,7 +317,7 @@ namespace Orchard.Comments.Controllers {
         public ActionResult Edit(FormCollection input) {
             var viewModel = new CommentsEditViewModel();
             try {
-                UpdateModel(viewModel, input.ToValueProvider());
+                UpdateModel(viewModel);
                 if (!_authorizer.Authorize(Permissions.ModerateComment, T("Couldn't edit comment")))
                     return new HttpUnauthorizedResult();
 

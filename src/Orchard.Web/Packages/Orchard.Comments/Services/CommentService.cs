@@ -19,6 +19,8 @@ namespace Orchard.Comments.Services {
         ContentItemMetadata GetDisplayForCommentedContent(int id);
         void CreateComment(Comment comment);
         void UpdateComment(int id, string name, string email, string siteName, string commentText, CommentStatus status);
+        void ApproveComment(int commentId);
+        void PendComment(int commentId);
         void MarkCommentAsSpam(int commentId);
         void DeleteComment(int commentId);
         bool CommentsClosedForCommentedContent(int id);
@@ -86,7 +88,7 @@ namespace Orchard.Comments.Services {
         }
 
         public void CreateComment(Comment comment) {
-            comment.Status = _commentValidator.ValidateComment(comment) ? CommentStatus.Approved : CommentStatus.Spam;
+            comment.Status = _commentValidator.ValidateComment(comment) ? CommentStatus.Pending : CommentStatus.Spam;
             _commentRepository.Create(comment);
         }
 
@@ -97,6 +99,16 @@ namespace Orchard.Comments.Services {
             comment.SiteName = siteName;
             comment.CommentText = commentText;
             comment.Status = status;
+        }
+
+        public void ApproveComment(int commentId) {
+            Comment comment = GetComment(commentId);
+            comment.Status = CommentStatus.Approved;
+        }
+
+        public void PendComment(int commentId) {
+            Comment comment = GetComment(commentId);
+            comment.Status = CommentStatus.Pending;
         }
 
         public void MarkCommentAsSpam(int commentId) {

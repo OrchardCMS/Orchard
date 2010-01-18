@@ -21,12 +21,15 @@ namespace Orchard.Comments.ViewModels {
 
     public enum CommentIndexBulkAction {
         None,
-        Delete,
+        Pend,
+        Approve,
         MarkAsSpam,
+        Delete
     }
 
     public enum CommentIndexFilter {
         All,
+        Pending,
         Approved,
         Spam,
     }
