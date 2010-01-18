@@ -48,7 +48,7 @@ html {
     color:#525e50;
 }
 body {
-	color:#5a5b32;
+	color:#484926;
     font-family:Frutiger, "Frutiger Linotype", Univers, Calibri, "Gill Sans", "Gill Sans MT", "Myriad Pro", Myriad, "DejaVu Sans Condensed", "Liberation Sans", "Nimbus Sans L", Tahoma, Geneva, "Helvetica Neue", Helvetica, Arial, sans-serif;
     font-size:62.5%; /* 10px */
 	line-height:1.6em;
@@ -60,7 +60,7 @@ body#preview {
     min-width:0;
 }
 #content {
-    background:#f9faf5;
+    background:#fff;
 }
 
 
@@ -182,24 +182,35 @@ a:hover, a:active, a:focus {
     padding:.4em 0;
 }
 #header #app a {
-	background:url(images/orchardLogo.jpg) no-repeat;
+	background:url(images/orchardLogo.gif) no-repeat;
 	display:block;
 	height:60px;
 	margin:-11px 0 0 14px;
 	text-indent:-9999px;
 	width:105px;
 }
-#site, #login {
-    font-size:1.5em;
+#header #app a {
+	background:url(images/orchardLogo.gif) no-repeat;
+	display:block;
+	height:60px;
+	margin:-11px 0 0 14px;
+	text-indent:-9999px;
+	width:35px;
+}
+
+#site {
+    font-family:"Palatino Linotype", Palatino, Palladio, "URW Palladio L", "Book Antiqua", Baskerville, "Bookman Old Style", "Bitstream Charter", "Nimbus Roman No9 L", Garamond, "Apple Garamond", "ITC Garamond Narrow", "New Century Schoolbook", "Century Schoolbook", "Century Schoolbook L", Georgia, serif;
+    font-size:2em;
 }
 #site a, #site a:visited, #site a:active {
-	color:#e2e4dd;
+	color:#fff;
 	float:left;
 	line-height:2.2em;
-	padding:14px 0 0 12px;
+	padding:6px 0 0 4px;
 	position:relative;
 }
 #login {
+    font-size:1.5em;
 	color:#1a1505;
 	display:block;
 	float:right;
@@ -207,7 +218,7 @@ a:hover, a:active, a:focus {
 	white-space:nowrap;
 }
 #login a, #login a:link, #login a:visited {
-    color:#e2e4dd;
+    color:#fff;
     padding:0;
 }
 #login a:hover, #login a:active, #login a:focus {
