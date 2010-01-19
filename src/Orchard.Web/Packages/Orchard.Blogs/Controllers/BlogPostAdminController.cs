@@ -167,7 +167,7 @@ namespace Orchard.Blogs.Controllers {
 
             _services.Notifier.Information(T("Blog post information updated."));
 
-            return Redirect(Url.BlogPostEdit(blog.Slug, post.Slug));
+            return Redirect(Url.BlogForAdmin(blogSlug));
         }
 
         [HttpPost]
