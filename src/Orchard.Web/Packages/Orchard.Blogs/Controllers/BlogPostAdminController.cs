@@ -122,6 +122,8 @@ namespace Orchard.Blogs.Controllers {
             if (!_services.Authorizer.Authorize(Permissions.ModifyPost, T("Couldn't edit blog post")))
                 return new HttpUnauthorizedResult();
 
+            bool isDraft = false;
+
             //TODO: (erikpo) Move looking up the current blog up into a modelbinder
             Blog blog = _blogService.Get(blogSlug);
 
@@ -150,8 +152,10 @@ namespace Orchard.Blogs.Controllers {
                 _blogPostService.Publish(post);
             else if (publishDate != null)
                 _blogPostService.Publish(post, publishDate.Value);
-            else
+            else {
+                isDraft = true;
                 _blogPostService.Unpublish(post);
+            }
 
             var model = new BlogPostEditViewModel {
                 BlogPost = _services.ContentManager.UpdateEditorModel(post, this)
@@ -167,7 +171,10 @@ namespace Orchard.Blogs.Controllers {
 
             _services.Notifier.Information(T("Blog post information updated."));
 
-            return Redirect(Url.BlogForAdmin(blogSlug));
+            if (isDraft) {
+                return Redirect(Url.BlogPostEdit(blog.Slug, post.Slug));
+            }
+            return Redirect(Url.BlogForAdmin(blog.Slug));
         }
 
         [HttpPost]
