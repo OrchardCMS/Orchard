@@ -68,6 +68,9 @@
     <Compile Include="AdminMenu.cs" />
     <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Controllers\HasCommentsDriver.cs" />
+    <Compile Include="Feeds\CommentedOnContainerFeedQuery.cs" />
+    <Compile Include="Feeds\CommentedOnFeedQuery.cs" />
+    <Compile Include="Feeds\CommentFeedItemBuilder.cs" />
     <Compile Include="Models\Comment.cs" />
     <Compile Include="Models\CommentSettings.cs" />
     <Compile Include="Models\CommentSettingsHandler.cs" />
@@ -102,6 +105,10 @@
     <ProjectReference Include="..\..\..\Orchard\Orchard.csproj">
       <Project>{2D1D92BB-4555-4CBE-8D0E-63563D6CE4C6}</Project>
       <Name>Orchard</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Core\Orchard.Core.csproj">
+      <Project>{9916839C-39FC-4CEB-A5AF-89CA7E87119F}</Project>
+      <Name>Orchard.Core</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

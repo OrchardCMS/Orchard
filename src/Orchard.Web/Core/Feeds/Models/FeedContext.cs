@@ -7,16 +7,12 @@ namespace Orchard.Core.Feeds.Models {
             ValueProvider = valueProvider;
             Format = format;
             Response = new FeedResponse();
-            FeedData = new Dictionary<string, object>();
         }
 
         public IValueProvider ValueProvider { get; set; }
         public string Format { get; set; }
+        public FeedResponse Response { get; set; }
 
         public IFeedFormatter FeedFormatter { get; set; }
-
-        public IDictionary<string, object> FeedData { get; set; }
-
-        public FeedResponse Response { get; set; }
     }
 }

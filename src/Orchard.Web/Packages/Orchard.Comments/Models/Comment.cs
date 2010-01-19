@@ -11,6 +11,7 @@ namespace Orchard.Comments.Models {
         public virtual DateTime CommentDate { get; set; }
         public virtual string CommentText { get; set; }
         public virtual int CommentedOn { get; set; }
+        public virtual int CommentedOnContainer { get; set; }
     }
 
     public class ClosedComments {

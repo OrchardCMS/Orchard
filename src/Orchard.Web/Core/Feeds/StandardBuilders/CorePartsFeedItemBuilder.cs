@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Web.Mvc;
 using System.Web.Routing;
 using System.Xml.Linq;
@@ -16,11 +17,11 @@ namespace Orchard.Core.Feeds.Services {
         }
 
         public void Populate(FeedContext context) {
-            foreach (var feedItem in context.Response.Items) {
-                // locate parts
+            foreach (var feedItem in context.Response.Items.OfType<FeedItem<ContentItem>>()) {
+
                 var inspector = new ItemInspector(
-                    feedItem.ContentItem,
-                    _contentManager.GetItemMetadata(feedItem.ContentItem));
+                    feedItem.Item,
+                    _contentManager.GetItemMetadata(feedItem.Item));
 
 
                 // TODO: author

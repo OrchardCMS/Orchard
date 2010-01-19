@@ -145,7 +145,7 @@ namespace Orchard.Comments.Controllers {
                     Email = viewModel.Email,
                     SiteName = viewModel.SiteName,
                     UserName = CurrentUser == null ? "Anonymous" : CurrentUser.UserName,
-                    CommentedOn = viewModel.CommentedOn
+                    CommentedOn = viewModel.CommentedOn,
                 };
                 _commentService.CreateComment(comment);
                 if (!String.IsNullOrEmpty(returnUrl)) {

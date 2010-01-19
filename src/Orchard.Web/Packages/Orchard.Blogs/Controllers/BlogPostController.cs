@@ -1,9 +1,11 @@
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Web.Mvc;
+using System.Web.Routing;
 using Orchard.Blogs.Models;
 using Orchard.Blogs.Services;
 using Orchard.Blogs.ViewModels;
+using Orchard.Core.Feeds;
 using Orchard.Localization;
 using Orchard.ContentManagement;
 using Orchard.Mvc.Results;
@@ -13,11 +15,17 @@ namespace Orchard.Blogs.Controllers {
         private readonly IOrchardServices _services;
         private readonly IBlogService _blogService;
         private readonly IBlogPostService _blogPostService;
+        private readonly IFeedManager _feedManager;
 
-        public BlogPostController(IOrchardServices services, IBlogService blogService, IBlogPostService blogPostService) {
+        public BlogPostController(
+            IOrchardServices services, 
+            IBlogService blogService, 
+            IBlogPostService blogPostService,
+            IFeedManager feedManager) {
             _services = services;
             _blogService = blogService;
             _blogPostService = blogPostService;
+            _feedManager = feedManager;
             T = NullLocalizer.Instance;
         }
 
@@ -46,6 +54,8 @@ namespace Orchard.Blogs.Controllers {
                 BlogPost = _services.ContentManager.BuildDisplayModel(post, "Detail")
             };
 
+            _feedManager.Register(blog);
+
             return View(model);
         }
 
@@ -62,6 +72,8 @@ namespace Orchard.Blogs.Controllers {
                 ArchiveData = archive,
                 BlogPosts = _blogPostService.Get(blog, archive).Select(b => _services.ContentManager.BuildDisplayModel(b, "Summary"))
             };
+
+            _feedManager.Register(blog);
 
             return View(model);
         }

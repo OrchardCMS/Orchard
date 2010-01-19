@@ -7,7 +7,7 @@ namespace Orchard.Core.Feeds {
     public interface IFeedFormatter {
         ActionResult Process(FeedContext context, Action populate);
 
-        FeedItem AddItem(FeedContext context, ContentItem contentItem);
+        FeedItem<TItem> AddItem<TItem>(FeedContext context, TItem contentItem);
         void AddProperty(FeedContext context, FeedItem feedItem, string name, string value);
     }
 }

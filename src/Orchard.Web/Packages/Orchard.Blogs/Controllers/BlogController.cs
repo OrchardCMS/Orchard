@@ -1,21 +1,25 @@
 using System.Linq;
 using System.Web.Mvc;
+using System.Web.Routing;
 using Orchard.Blogs.Models;
 using Orchard.Blogs.Services;
 using Orchard.Blogs.ViewModels;
-using Orchard.Data;
+using Orchard.Core.Feeds;
 using Orchard.Mvc.Results;
-using Orchard.Security;
-using Orchard.UI.Notify;
 
 namespace Orchard.Blogs.Controllers {
     public class BlogController : Controller {
         private readonly IOrchardServices _services;
         private readonly IBlogService _blogService;
+        private readonly IFeedManager _feedManager;
 
-        public BlogController(IOrchardServices services, IBlogService blogService) {
+        public BlogController(
+            IOrchardServices services,
+            IBlogService blogService,
+            IFeedManager feedManager) {
             _services = services;
             _blogService = blogService;
+            _feedManager = feedManager;
         }
 
         public ActionResult List() {
@@ -36,6 +40,8 @@ namespace Orchard.Blogs.Controllers {
             var model = new BlogViewModel {
                 Blog = _services.ContentManager.BuildDisplayModel(blog, "Detail")
             };
+
+            _feedManager.Register(blog);
 
             return View(model);
         }

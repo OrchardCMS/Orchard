@@ -32,9 +32,9 @@ namespace Orchard.Core.Feeds.Rss {
             return new RssResult(new XDocument(rss));
         }
 
-        public FeedItem AddItem(FeedContext context, ContentItem contentItem) {
-            var feedItem = new FeedItem {
-                ContentItem = contentItem,
+        public FeedItem<TItem> AddItem<TItem>(FeedContext context, TItem item) {
+            var feedItem = new FeedItem<TItem> {
+                Item = item,
                 Element = new XElement("item"),
             };
             context.Response.Items.Add(feedItem);

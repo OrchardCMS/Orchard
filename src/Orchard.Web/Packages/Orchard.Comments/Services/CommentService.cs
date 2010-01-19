@@ -2,6 +2,7 @@
 using System.Linq;
 using JetBrains.Annotations;
 using Orchard.Comments.Models;
+using Orchard.ContentManagement.Aspects;
 using Orchard.Data;
 using Orchard.Logging;
 using Orchard.ContentManagement;
@@ -89,6 +90,13 @@ namespace Orchard.Comments.Services {
 
         public void CreateComment(Comment comment) {
             comment.Status = _commentValidator.ValidateComment(comment) ? CommentStatus.Pending : CommentStatus.Spam;
+
+            // store id of the next layer for large-grained operations, e.g. rss on blog
+            var commentedOn = _contentManager.Get<ICommonAspect>(comment.CommentedOn);
+            if (commentedOn != null && commentedOn.Container != null) {
+                comment.CommentedOnContainer = commentedOn.Container.ContentItem.Id;
+            }
+
             _commentRepository.Create(comment);
         }
 

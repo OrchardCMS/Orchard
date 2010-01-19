@@ -84,7 +84,10 @@
     <Compile Include="Common\ViewModels\RoutableEditorViewModel.cs" />
     <Compile Include="Common\ViewModels\OwnerEditorViewModel.cs" />
     <Compile Include="Feeds\Controllers\FeedController.cs" />
+    <Compile Include="Feeds\IFeedManager.cs" />
     <Compile Include="Feeds\Rss\Routes.cs" />
+    <Compile Include="Feeds\Services\FeedFilter.cs" />
+    <Compile Include="Feeds\Services\FeedManager.cs" />
     <Compile Include="Feeds\StandardBuilders\ItemInspector.cs" />
     <Compile Include="Feeds\StandardQueries\ContainerFeedQuery.cs" />
     <Compile Include="Feeds\StandardBuilders\CorePartsFeedItemBuilder.cs" />
