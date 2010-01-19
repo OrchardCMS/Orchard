@@ -15,7 +15,7 @@ namespace Orchard.Comments.Feeds {
         }
 
         public FeedQueryMatch Match(FeedContext context) {
-            if (context.ValueProvider.ContainsPrefix("commentedoncontainer")) {
+            if (context.ValueProvider.GetValue("commentedoncontainer") != null) {
                 return new FeedQueryMatch { Priority = -1, FeedQuery = this };
             }
             return null;
@@ -35,7 +35,7 @@ namespace Orchard.Comments.Feeds {
                 0, limit);
 
             foreach (var comment in comments) {
-                context.FeedFormatter.AddItem(context, comment);
+                context.Builder.AddItem(context, comment);
             }
         }
     }

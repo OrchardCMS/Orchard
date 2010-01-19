@@ -13,6 +13,6 @@ namespace Orchard.Core.Feeds.Models {
         public string Format { get; set; }
         public FeedResponse Response { get; set; }
 
-        public IFeedFormatter FeedFormatter { get; set; }
+        public IFeedBuilder Builder { get; set; }
     }
 }

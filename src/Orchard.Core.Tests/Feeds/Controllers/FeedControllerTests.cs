@@ -17,7 +17,7 @@ using Orchard.Core.Feeds;
 using Orchard.Core.Feeds.Controllers;
 using Orchard.Core.Feeds.Models;
 using Orchard.Core.Feeds.Rss;
-using Orchard.Core.Feeds.Services;
+using Orchard.Core.Feeds.StandardBuilders;
 using Orchard.Mvc.Results;
 using Orchard.Tests.Packages;
 using Orchard.Tests.Stubs;
@@ -29,7 +29,7 @@ namespace Orchard.Core.Tests.Feeds.Controllers {
         public void InvalidFormatShpuldReturnNotFoundResult() {
             var controller = new FeedController(
                 Enumerable.Empty<IFeedQueryProvider>(),
-                Enumerable.Empty<IFeedFormatterProvider>(),
+                Enumerable.Empty<IFeedBuilderProvider>(),
                 Enumerable.Empty<IFeedItemBuilder>()) {
                     ValueProvider = Values.From(new { })
                 };
@@ -41,10 +41,10 @@ namespace Orchard.Core.Tests.Feeds.Controllers {
 
         [Test]
         public void ControllerShouldReturnAnActionResult() {
-            var formatProvider = new Mock<IFeedFormatterProvider>();
-            var format = new Mock<IFeedFormatter>();
+            var formatProvider = new Mock<IFeedBuilderProvider>();
+            var format = new Mock<IFeedBuilder>();
             formatProvider.Setup(x => x.Match(It.IsAny<FeedContext>()))
-                .Returns(new FeedFormatterMatch { FeedFormatter = format.Object, Priority = 10 });
+                .Returns(new FeedBuilderMatch { FeedBuilder = format.Object, Priority = 10 });
 
             var queryProvider = new Mock<IFeedQueryProvider>();
             var query = new Mock<IFeedQuery>();
@@ -84,7 +84,7 @@ namespace Orchard.Core.Tests.Feeds.Controllers {
 
             public void Execute(FeedContext context) {
                 foreach (var item in _items) {
-                    context.FeedFormatter.AddItem(context, item);
+                    context.Builder.AddItem(context, item);
                 }
             }
         }
@@ -96,7 +96,7 @@ namespace Orchard.Core.Tests.Feeds.Controllers {
             var builder = new ContainerBuilder();
             builder.RegisterModule(new ImplicitCollectionSupportModule());
             builder.Register<FeedController>();
-            builder.Register<RssFeedFormatProvider>().As<IFeedFormatterProvider>();
+            builder.Register<RssFeedBuilder>().As<IFeedBuilderProvider>();
             builder.Register(query).As<IFeedQueryProvider>();
             var container = builder.Build();
 
@@ -122,7 +122,7 @@ namespace Orchard.Core.Tests.Feeds.Controllers {
             var builder = new ContainerBuilder();
             builder.RegisterModule(new ImplicitCollectionSupportModule());
             builder.Register<FeedController>();
-            builder.Register<RssFeedFormatProvider>().As<IFeedFormatterProvider>();
+            builder.Register<RssFeedBuilder>().As<IFeedBuilderProvider>();
             builder.Register(query).As<IFeedQueryProvider>();
             var container = builder.Build();
 
@@ -168,7 +168,7 @@ namespace Orchard.Core.Tests.Feeds.Controllers {
             builder.Register<FeedController>();
             builder.Register(new RouteCollection());
             builder.Register(mockContentManager.Object).As<IContentManager>();
-            builder.Register<RssFeedFormatProvider>().As<IFeedFormatterProvider>();
+            builder.Register<RssFeedBuilder>().As<IFeedBuilderProvider>();
             builder.Register<CorePartsFeedItemBuilder>().As<IFeedItemBuilder>();
             builder.Register(query).As<IFeedQueryProvider>();
             var container = builder.Build();

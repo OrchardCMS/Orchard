@@ -2,14 +2,16 @@
 using System.Linq;
 using System.Web.Mvc;
 using System.Xml.Linq;
+using JetBrains.Annotations;
 using Orchard.Comments.Models;
 using Orchard.ContentManagement;
 using Orchard.Core.Feeds;
 using Orchard.Core.Feeds.Models;
-using Orchard.Core.Feeds.Services;
+using Orchard.Core.Feeds.StandardBuilders;
 using Orchard.Localization;
 
 namespace Orchard.Comments.Feeds {
+    [UsedImplicitly]
     public class CommentFeedItemBuilder : IFeedItemBuilder {
         private readonly IContentManager _contentManager;
 
@@ -31,10 +33,7 @@ namespace Orchard.Comments.Feeds {
 
                 var title = T("Comment on {0} by {1}", commentedOnInspector.Title, comment.Author);
 
-                //var inspector = new CommentInspector(
-                //    feedItem.Item,
-                //    _contentManager.GetItemMetadata(feedItem.Item));
-
+                
                 // add to known formats
                 if (context.Format == "rss") {
                     var link = new XElement("link");
@@ -55,12 +54,12 @@ namespace Orchard.Comments.Feeds {
                     var feedItem1 = feedItem;
                     context.Response.Contextualize(requestContext => {
                         var urlHelper = new UrlHelper(requestContext);
-                        context.FeedFormatter.AddProperty(context, feedItem1, "published-date", urlHelper.RouteUrl(commentedOnInspector.Link));
+                        context.Builder.AddProperty(context, feedItem1, "link", urlHelper.RouteUrl(commentedOnInspector.Link));
                     });
-                    context.FeedFormatter.AddProperty(context, feedItem, "title", title.ToString());
-                    context.FeedFormatter.AddProperty(context, feedItem, "description", comment.CommentText);
+                    context.Builder.AddProperty(context, feedItem, "title", title.ToString());
+                    context.Builder.AddProperty(context, feedItem, "description", comment.CommentText);
 
-                    context.FeedFormatter.AddProperty(context, feedItem, "published-date", Convert.ToString(comment.CommentDate)); // format? cvt to generic T?
+                    context.Builder.AddProperty(context, feedItem, "published-date", Convert.ToString(comment.CommentDate)); // format? cvt to generic T?
                 }
             }
         }

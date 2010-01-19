@@ -3,10 +3,12 @@ using System.Linq;
 using System.Web.Mvc;
 using System.Web.Routing;
 using System.Xml.Linq;
+using JetBrains.Annotations;
 using Orchard.ContentManagement;
 using Orchard.Core.Feeds.Models;
 
-namespace Orchard.Core.Feeds.Services {
+namespace Orchard.Core.Feeds.StandardBuilders {
+    [UsedImplicitly]
     public class CorePartsFeedItemBuilder : IFeedItemBuilder {
         private readonly IContentManager _contentManager;
         private readonly RouteCollection _routes;
@@ -32,30 +34,30 @@ namespace Orchard.Core.Feeds.Services {
                     var link = new XElement("link");
                     var guid = new XElement("guid", new XAttribute("isPermaLink", "true"));
 
+                    context.Response.Contextualize(requestContext => {
+                                                       var urlHelper = new UrlHelper(requestContext, _routes);
+                                                       link.Add(urlHelper.RouteUrl(inspector.Link));
+                                                       guid.Add(urlHelper.RouteUrl(inspector.Link));
+                                                   });
+
                     feedItem.Element.SetElementValue("title", inspector.Title);
                     feedItem.Element.Add(link);
                     feedItem.Element.SetElementValue("description", inspector.Description);
                     if (inspector.PublishedUtc != null)
                         feedItem.Element.SetElementValue("pubDate", inspector.PublishedUtc);//TODO: format
                     feedItem.Element.Add(guid);
-
-                    context.Response.Contextualize(requestContext => {
-                        var urlHelper = new UrlHelper(requestContext, _routes);
-                        link.Add(urlHelper.RouteUrl(inspector.Link));
-                        guid.Add(urlHelper.RouteUrl(inspector.Link));
-                    });
                 }
                 else {
                     var feedItem1 = feedItem;
                     context.Response.Contextualize(requestContext => {
-                        var urlHelper = new UrlHelper(requestContext, _routes);
-                        context.FeedFormatter.AddProperty(context, feedItem1, "published-date", urlHelper.RouteUrl(inspector.Link));
-                    });
-                    context.FeedFormatter.AddProperty(context, feedItem, "title", inspector.Title);
-                    context.FeedFormatter.AddProperty(context, feedItem, "description", inspector.Description);
+                                                       var urlHelper = new UrlHelper(requestContext, _routes);
+                                                       context.Builder.AddProperty(context, feedItem1, "link", urlHelper.RouteUrl(inspector.Link));
+                                                   });
+                    context.Builder.AddProperty(context, feedItem, "title", inspector.Title);
+                    context.Builder.AddProperty(context, feedItem, "description", inspector.Description);
 
                     if (inspector.PublishedUtc != null)
-                        context.FeedFormatter.AddProperty(context, feedItem, "published-date", Convert.ToString(inspector.PublishedUtc)); // format? cvt to generic T?
+                        context.Builder.AddProperty(context, feedItem, "published-date", Convert.ToString(inspector.PublishedUtc)); // format? cvt to generic T?
                 }
             }
         }

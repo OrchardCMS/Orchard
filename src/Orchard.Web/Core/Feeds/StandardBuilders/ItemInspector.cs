@@ -4,7 +4,7 @@ using Orchard.ContentManagement;
 using Orchard.ContentManagement.Aspects;
 using Orchard.Core.Common.Models;
 
-namespace Orchard.Core.Feeds.Services {
+namespace Orchard.Core.Feeds.StandardBuilders {
     public class ItemInspector {
         private readonly IContent _item;
         private readonly ContentItemMetadata _metadata;

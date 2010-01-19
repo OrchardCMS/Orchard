@@ -9,13 +9,13 @@ using Orchard.Mvc.Results;
 namespace Orchard.Core.Feeds.Controllers {
 
     public class FeedController : Controller {
-        private readonly IEnumerable<IFeedFormatterProvider> _feedFormatProviders;
+        private readonly IEnumerable<IFeedBuilderProvider> _feedFormatProviders;
         private readonly IEnumerable<IFeedQueryProvider> _feedQueryProviders;
         private readonly IEnumerable<IFeedItemBuilder> _feedItemBuilders;
 
         public FeedController(
             IEnumerable<IFeedQueryProvider> feedQueryProviders,
-            IEnumerable<IFeedFormatterProvider> feedFormatProviders,
+            IEnumerable<IFeedBuilderProvider> feedFormatProviders,
             IEnumerable<IFeedItemBuilder> feedItemBuilders) {
             _feedQueryProviders = feedQueryProviders;
             _feedFormatProviders = feedFormatProviders;
@@ -30,14 +30,14 @@ namespace Orchard.Core.Feeds.Controllers {
 
             var bestFormatterMatch = _feedFormatProviders
                 .Select(provider => provider.Match(context))
-                .Where(match => match != null && match.FeedFormatter != null)
+                .Where(match => match != null && match.FeedBuilder != null)
                 .OrderByDescending(match => match.Priority)
                 .FirstOrDefault();
 
-            if (bestFormatterMatch == null || bestFormatterMatch.FeedFormatter == null)
+            if (bestFormatterMatch == null || bestFormatterMatch.FeedBuilder == null)
                 return new NotFoundResult();
 
-            context.FeedFormatter = bestFormatterMatch.FeedFormatter;
+            context.Builder = bestFormatterMatch.FeedBuilder;
 
             var bestQueryMatch = _feedQueryProviders
                 .Select(provider => provider.Match(context))
@@ -48,7 +48,7 @@ namespace Orchard.Core.Feeds.Controllers {
             if (bestQueryMatch == null || bestQueryMatch.FeedQuery == null)
                 return new NotFoundResult();
 
-            return context.FeedFormatter.Process(context, () => {
+            return context.Builder.Process(context, () => {
                 bestQueryMatch.FeedQuery.Execute(context);
                 _feedItemBuilders.Invoke(x => x.Populate(context), Logger);
                 foreach (var contextualizer in context.Response.Contextualizers) {

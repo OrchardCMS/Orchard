@@ -5,7 +5,7 @@ using Orchard.ContentManagement;
 using Orchard.Core.Common.Models;
 using Orchard.Core.Common.Records;
 using Orchard.Core.Feeds.Models;
-using Orchard.Core.Feeds.Services;
+using Orchard.Core.Feeds.StandardBuilders;
 
 namespace Orchard.Core.Feeds.StandardQueries {
     [UsedImplicitly]
@@ -50,11 +50,11 @@ namespace Orchard.Core.Feeds.StandardQueries {
                 });
             }
             else {
-                context.FeedFormatter.AddProperty(context, null, "title", inspector.Title);
-                context.FeedFormatter.AddProperty(context, null, "description", inspector.Description);
+                context.Builder.AddProperty(context, null, "title", inspector.Title);
+                context.Builder.AddProperty(context, null, "description", inspector.Description);
                 context.Response.Contextualize(requestContext => {
                     var urlHelper = new UrlHelper(requestContext);
-                    context.FeedFormatter.AddProperty(context, null, "link", urlHelper.RouteUrl(inspector.Link));
+                    context.Builder.AddProperty(context, null, "link", urlHelper.RouteUrl(inspector.Link));
                 });
             }
 
@@ -64,7 +64,7 @@ namespace Orchard.Core.Feeds.StandardQueries {
                 .Slice(0, limit);
 
             foreach (var item in items) {
-                context.FeedFormatter.AddItem(context, item);
+                context.Builder.AddItem(context, item);
             }
         }
     }

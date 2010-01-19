@@ -1,10 +1,9 @@
 using System;
 using System.Web.Mvc;
-using Orchard.ContentManagement;
 using Orchard.Core.Feeds.Models;
 
 namespace Orchard.Core.Feeds {
-    public interface IFeedFormatter {
+    public interface IFeedBuilder {
         ActionResult Process(FeedContext context, Action populate);
 
         FeedItem<TItem> AddItem<TItem>(FeedContext context, TItem contentItem);

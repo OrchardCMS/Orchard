@@ -1,10 +1,11 @@
-using System;
 using System.Web.Mvc;
+using JetBrains.Annotations;
 using Orchard.Mvc.Filters;
 using Orchard.Mvc.ViewModels;
 
 
 namespace Orchard.Core.Feeds.Services {
+    [UsedImplicitly]
     public class FeedFilter : FilterProvider, IResultFilter {
         private readonly IFeedManager _feedManager;
 
