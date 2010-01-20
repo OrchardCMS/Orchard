@@ -3,14 +3,13 @@
 <%@ Import Namespace="Orchard.Extensions"%>
 <%@ Import Namespace="Orchard.Core.Themes.ViewModels"%>
 <h1><%=Html.TitleForPage(T("Manage Themes").ToString()) %></h1>
-<h2><%=_Encoded("Current Theme")%></h2>
 <% if (Model.CurrentTheme == null) {
     %><p><%=_Encoded("There is no current theme in the application. The built-in theme will be used.")
              %><br /><%=Html.ActionLink(T("Install a new Theme").ToString(), "Install") %></p><%
    } else {
-    %><h3><%=Html.Encode(Model.CurrentTheme.DisplayName) %></h3>
+    %><h3><%=_Encoded("Current Theme")%> - <%=Html.Encode(Model.CurrentTheme.DisplayName) %></h3>
      <p>
-        <%=Html.Image(Html.ThemePath(Model.CurrentTheme, "/Theme.gif"), Html.Encode(Model.CurrentTheme.DisplayName), null)%><br />
+        <%=Html.Image(Html.ThemePath(Model.CurrentTheme, "/Theme.png"), Html.Encode(Model.CurrentTheme.DisplayName), null)%><br />
         <%=_Encoded("By") %> <%=Html.Encode(Model.CurrentTheme.Author) %><br />
         <%=Html.Encode(Model.CurrentTheme.Version) %><br />
         <%=Html.Encode(Model.CurrentTheme.Description) %><br />
@@ -25,7 +24,7 @@
         %>    <li>
         <h3><%=Html.Encode(theme.DisplayName) %></h3>
         <p>
-            <%=Html.Image(Html.ThemePath(theme, "/Theme.gif"), Html.Encode(theme.DisplayName), null)%><br />
+            <%=Html.Image(Html.ThemePath(theme, "/Theme.png"), Html.Encode(theme.DisplayName), null)%><br />
             <%=_Encoded("By") %> <%=Html.Encode(theme.Author) %><br />
             <%=Html.Encode(theme.Version) %><br />
             <%=Html.Encode(theme.Description) %><br />

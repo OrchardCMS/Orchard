@@ -278,7 +278,7 @@ a:hover, a:active, a:focus {
 /* Content
 ----------------------------------------------------------*/
 #main h1 {
-    margin:.23em 0 1em;
+    margin:0 0 1em;
 }
 #main h2, #main h3 {
     margin:.5em 0;
@@ -682,9 +682,8 @@ todo: (heskew) pull out into relevant modules where appropriate
 }
 .templates p img {
     float:left;
-    height:144px;
+    height:200px;
     margin:.27em .93em .93em .54em;
-    width:124px;
 }
 .previewImage {
 	border:1px solid #525e50;

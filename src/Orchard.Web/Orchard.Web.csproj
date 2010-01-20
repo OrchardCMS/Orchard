@@ -148,7 +148,6 @@
   <ItemGroup>
     <Content Include="Config\Diagnostics.config" />
     <Content Include="Themes\Orange\Styles\site.css" />
-    <Content Include="Themes\Orange\Theme.gif" />
     <Content Include="Themes\Orange\Theme.txt" />
     <Content Include="Themes\Orange\Views\layout.ascx" />
     <Content Include="Themes\TheAdmin\Styles\images\background_header.jpg" />
@@ -174,7 +173,7 @@
     <Content Include="Themes\Classic\Content\Images\sidebarBackground.gif" />
     <Content Include="Themes\Classic\Styles\blog.css" />
     <Content Include="Themes\Classic\Styles\site.css" />
-    <Content Include="Themes\Classic\Theme.gif" />
+    <Content Include="Themes\Classic\Theme.png" />
     <Content Include="Themes\Classic\Theme.txt" />
     <Content Include="Themes\Classic\Views\DisplayTemplates\Items\Blogs.Blog.ascx" />
     <Content Include="Themes\Classic\Views\DisplayTemplates\Items\Blogs.Blog.Summary.ascx" />
@@ -186,6 +185,7 @@
     <Content Include="Themes\Classic\Views\menu.ascx" />
     <Content Include="Themes\Green\Content\Images\bodyBackground.gif" />
     <Content Include="Themes\Green\Content\Images\bodyBackground.png" />
+    <Content Include="Themes\Green\Content\Images\commentpointer.gif" />
     <Content Include="Themes\Green\Content\Images\logo.gif" />
     <Content Include="Themes\Green\Content\Images\logo.png" />
     <Content Include="Themes\Green\Content\Images\tabLeftOff.gif" />
@@ -195,17 +195,19 @@
     <Content Include="Themes\Green\Styles\blog.css" />
     <Content Include="Themes\Green\Styles\site.css" />
     <Content Include="Themes\Green\Styles\yui.css" />
-    <Content Include="Themes\Green\Theme.gif" />
+    <Content Include="Themes\Green\Theme.png" />
     <Content Include="Themes\Green\Theme.txt" />
     <Content Include="Themes\Green\Views\DisplayTemplates\Items\Blogs.Blog.ascx" />
     <Content Include="Themes\Green\Views\DisplayTemplates\Items\Blogs.Blog.Summary.ascx" />
     <Content Include="Themes\Green\Views\DisplayTemplates\Items\Blogs.BlogPost.Summary.ascx" />
+    <Content Include="Themes\Green\Views\DisplayTemplates\Items\Pages.Page.ascx" />
     <Content Include="Themes\Green\Views\DisplayTemplates\Parts\Comments.HasComments.ascx" />
     <Content Include="Themes\Green\Views\footer.ascx" />
     <Content Include="Themes\Green\Views\layout.ascx" />
     <Content Include="Themes\Green\Views\ListOfComments.ascx" />
     <Content Include="Themes\Green\Views\menu.ascx" />
     <Content Include="Themes\Green\Views\user.ascx" />
+    <Content Include="Themes\Orange\Theme.png" />
     <Content Include="Themes\Orange\Views\Orchard.Blogs\BlogPost\Item.ascx" />
     <Content Include="Themes\Orchard\Content\Images\background_content.jpg" />
     <Content Include="Themes\Orchard\Content\Images\background_footer.jpg" />
@@ -214,7 +216,7 @@
     <Content Include="Themes\Orchard\Content\Images\background_pageTop.gif" />
     <Content Include="Themes\Orchard\Content\Images\orchardLogo.jpg" />
     <Content Include="Themes\Orchard\Styles\site.css" />
-    <Content Include="Themes\Orchard\Theme.gif" />
+    <Content Include="Themes\Orchard\Theme.png" />
     <Content Include="Themes\Orchard\Theme.txt" />
     <Content Include="Themes\Orchard\Views\footer.ascx" />
     <Content Include="Themes\Orchard\Views\layout.ascx" />
