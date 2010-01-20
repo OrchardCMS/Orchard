@@ -1,29 +1,31 @@
 ﻿using System.Web.Mvc;
 using Orchard.ContentManagement;
+using Orchard.ContentManagement.Aspects;
 using Orchard.Core.Common.Models;
-using Orchard.Core.Common.Services;
 using Orchard.Localization;
 
 namespace Orchard.Core.Common.Controllers {
     public class RoutableController : Controller, IUpdateModel {
-        private readonly IRoutableService _routableService;
         private readonly IContentManager _contentManager;
-        private readonly IOrchardServices _orchardServices;
 
-        public RoutableController(IRoutableService routableService, IContentManager contentManager, IOrchardServices orchardServices) {
-            _routableService = routableService;
+        public RoutableController(IContentManager contentManager) {
             _contentManager = contentManager;
-            _orchardServices = orchardServices;
         }
 
         [HttpPost]
-        public ActionResult Slugify(FormCollection formCollection, string contentType) {
+        public ActionResult Slugify(string contentType, int? containerId) {
             var slug = "";
 
             if (string.IsNullOrEmpty(contentType))
                 return Json(slug);
 
             var contentItem = _contentManager.New(contentType);
+
+            if (containerId != null) {
+                var containerItem = _contentManager.Get((int)containerId);
+                contentItem.As<ICommonAspect>().Container = containerItem;
+            }
+
             _contentManager.UpdateEditorModel(contentItem, this);
 
             return Json(contentItem.As<RoutableAspect>().Slug);

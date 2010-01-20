@@ -11,15 +11,15 @@ namespace Orchard.Core.Common {
             return new[] {
                              new RouteDescriptor {
                                                      Route = new Route(
-                                                         "Admin/Blogs/Slugify",
+                                                         "Admin/Common/Routable/Slugify",
                                                          new RouteValueDictionary {
-                                                                                      {"area", "Orchard.Blogs"},
-                                                                                      {"controller", "BlogPost"},
+                                                                                      {"area", "Common"},
+                                                                                      {"controller", "Routable"},
                                                                                       {"action", "Slugify"}
                                                                                   },
                                                          new RouteValueDictionary(),
                                                          new RouteValueDictionary {
-                                                                                      {"area", "Orchard.Blogs"}
+                                                                                      {"area", "Common"}
                                                                                   },
                                                          new MvcRouteHandler())
                                                  }

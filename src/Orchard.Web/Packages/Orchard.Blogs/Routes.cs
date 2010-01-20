@@ -23,20 +23,6 @@ namespace Orchard.Blogs {
             return new[] {
                              new RouteDescriptor {
                                                      Route = new Route(
-                                                         "Admin/Blogs/Slugify",
-                                                         new RouteValueDictionary {
-                                                                                      {"area", "Orchard.Blogs"},
-                                                                                      {"controller", "BlogPost"},
-                                                                                      {"action", "Slugify"}
-                                                                                  },
-                                                         new RouteValueDictionary(),
-                                                         new RouteValueDictionary {
-                                                                                      {"area", "Orchard.Blogs"}
-                                                                                  },
-                                                         new MvcRouteHandler())
-                                                 },
-                             new RouteDescriptor {
-                                                     Route = new Route(
                                                          "Admin/Blogs/Create",
                                                          new RouteValueDictionary {
                                                                                       {"area", "Orchard.Blogs"},

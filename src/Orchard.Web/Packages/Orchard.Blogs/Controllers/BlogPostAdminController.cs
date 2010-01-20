@@ -202,7 +202,7 @@ namespace Orchard.Blogs.Controllers {
         }
 
         public ActionResult Publish(string blogSlug, string postSlug) {
-            if (!_services.Authorizer.Authorize(Permissions.PublishPost, T("Couldn't publish blog post")))
+            if (!_services.Authorizer.Authorize(Permissions.PublishBlogPost, T("Couldn't publish blog post")))
                 return new HttpUnauthorizedResult();
 
             //TODO: (erikpo) Move looking up the current blog up into a modelbinder

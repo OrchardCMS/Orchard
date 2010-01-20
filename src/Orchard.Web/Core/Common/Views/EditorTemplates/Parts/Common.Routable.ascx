@@ -1,4 +1,7 @@
 ﻿<%@ Control Language="C#" Inherits="Orchard.Mvc.ViewUserControl<RoutableEditorViewModel>" %>
+<%@ Import Namespace="Orchard.ContentManagement.Extenstions"%>
+<%@ Import Namespace="Orchard.ContentManagement"%>
+<%@ Import Namespace="Orchard.ContentManagement.Aspects"%>
 <%@ Import Namespace="Orchard.Extensions"%>
 <%@ Import Namespace="Orchard.Core.Common.ViewModels"%>
 <% Html.RegisterFootScript("jquery.slugify.js"); %>
@@ -16,8 +19,12 @@
         $("<%=String.Format("input#{0}Title", !string.IsNullOrEmpty(Model.Prefix) ? Model.Prefix + "_" : "") %>").blur(function(){
             $(this).slugify({
                 target:$("<%=String.Format("input#{0}Slug", !string.IsNullOrEmpty(Model.Prefix) ? Model.Prefix + "_" : "") %>"),
-                url:"<%=Url.Action("Slugify", "Routable", new {area = "Common"}) %>",
-                contentType:"<%=Model.RoutableAspect.ContentItem.ContentType %>"
+                url:"<%=Url.Slugify() %>",
+                contentType:"<%=Model.RoutableAspect.ContentItem.ContentType %>",<%
+                var container = Model.RoutableAspect.ContentItem.As<ICommonAspect>().Container;
+                if (container != null) { %>
+                containerId:<%=container.ContentItem.Id %><%
+                } %>
             })
         })
     })</script>
