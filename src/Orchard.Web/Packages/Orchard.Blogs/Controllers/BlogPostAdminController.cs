@@ -200,6 +200,28 @@ namespace Orchard.Blogs.Controllers {
             return Redirect(Url.BlogForAdmin(blogSlug));
         }
 
+        public ActionResult Publish(string blogSlug, string postSlug) {
+            if (!_services.Authorizer.Authorize(Permissions.PublishPost, T("Couldn't publish blog post")))
+                return new HttpUnauthorizedResult();
+
+            //TODO: (erikpo) Move looking up the current blog up into a modelbinder
+            Blog blog = _blogService.Get(blogSlug);
+
+            if (blog == null)
+                return new NotFoundResult();
+
+            BlogPost post = _blogPostService.Get(blog, postSlug, VersionOptions.Latest);
+
+            if (post == null)
+                return new NotFoundResult();
+
+            _blogPostService.Publish(post);
+
+            _services.Notifier.Information(T("Blog post information updated."));
+
+            return Redirect(Url.BlogForAdmin(blog.Slug));
+        }
+
         bool IUpdateModel.TryUpdateModel<TModel>(TModel model, string prefix, string[] includeProperties, string[] excludeProperties) {
             return TryUpdateModel(model, prefix, includeProperties, excludeProperties);
         }

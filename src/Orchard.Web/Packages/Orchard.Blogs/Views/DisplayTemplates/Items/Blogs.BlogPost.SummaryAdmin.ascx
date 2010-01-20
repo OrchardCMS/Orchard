@@ -7,14 +7,14 @@
 <%@ Import Namespace="Orchard.Blogs.Extensions"%>
 <%@ Import Namespace="Orchard.Blogs.Models"%>
 <h2><%=Html.Link(Html.Encode(Model.Item.Title), Url.BlogPostEdit(Model.Item.Blog.Slug, Model.Item.Slug)) %></h2>
-<div class="meta"><%=Html.PublishedState(Model.Item) %> | <%=Html.Link(_Encoded("?? comments").ToString(), "") %></div>
+<div class="meta"><%=Model.Item.ContentItem.VersionRecord.Published == false ? "Draft" : Html.PublishedState(Model.Item) %> | <%=Html.Link(_Encoded("?? comments").ToString(), "") %></div>
 <div class="content"><%=Model.Item.As<BodyAspect>().Text ?? string.Format("<p><em>{0}</em></p>", _Encoded("there's no content for this blog post"))%></div>
 <ul class="actions">
     <li class="construct">
         <a href="<%=Url.BlogPostEdit(Model.Item.Blog.Slug, Model.Item.Slug) %>" class="ibutton edit" title="<%=_Encoded("Edit Post")%>"><%=_Encoded("Edit Post")%></a>
         <a href="<%=Url.BlogPost(Model.Item.Blog.Slug, Model.Item.Slug) %>" class="ibutton view" title="<%=_Encoded("View Post")%>"><%=_Encoded("View Post")%></a><%
-        if (Model.Item.Published == null) { // todo: (heskew) be smart about this and maybe have other contextual actions - including view/preview for view up there ^^ %>
-        <a href="<%=Url.BlogPost(Model.Item.Blog.Slug, Model.Item.Slug) %>" class="ibutton publish" title="<%=_Encoded("Publish Post Now")%>"><%=_Encoded("Publish Post Now")%></a>
+        if (Model.Item.ContentItem.VersionRecord.Published == false) { // todo: (heskew) be smart about this and maybe have other contextual actions - including view/preview for view up there ^^ %>
+        <a href="<%=Url.BlogPostPublish(Model.Item.Blog.Slug, Model.Item.Slug) %>" class="ibutton publish" title="<%=_Encoded("Publish Post Now")%>"><%=_Encoded("Publish Post Now")%></a>
         <% } %>
     </li>
     <li class="destruct">
