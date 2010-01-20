@@ -18,6 +18,7 @@ namespace Orchard.ContentManagement {
         void Unpublish(ContentItem contentItem);
         void Remove(ContentItem contentItem);
 
+        void Flush();
         IContentQuery<ContentItem> Query();
 
         ContentItemMetadata GetItemMetadata(IContent contentItem);
