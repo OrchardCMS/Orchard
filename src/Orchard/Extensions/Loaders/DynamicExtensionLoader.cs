@@ -8,7 +8,7 @@ using System.Web.Hosting;
 
 namespace Orchard.Extensions.Loaders {
     public class DynamicExtensionLoader : IExtensionLoader {
-        public int Order { get { return 4; } }
+        public int Order { get { return 10; } }
 
         public ExtensionEntry Load(ExtensionDescriptor descriptor) {
             if (HostingEnvironment.IsHosted == false)

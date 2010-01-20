@@ -30,6 +30,7 @@ namespace Orchard.Environment {
             builder.Register<ContainerProvider>().As<IContainerProvider>().ContainerScoped();
 
             builder.Register<ExtensionManager>().As<IExtensionManager>().SingletonScoped();
+            builder.Register<AreaExtensionLoader>().As<IExtensionLoader>().SingletonScoped();
             builder.Register<CoreExtensionLoader>().As<IExtensionLoader>().SingletonScoped();
             builder.Register<ReferencedExtensionLoader>().As<IExtensionLoader>().SingletonScoped();
             builder.Register<PrecompiledExtensionLoader>().As<IExtensionLoader>().SingletonScoped();
@@ -37,6 +38,9 @@ namespace Orchard.Environment {
 
             builder.Register<PackageFolders>().As<IExtensionFolders>()
                 .WithArguments(new NamedParameter("paths", new[] { "~/Core", "~/Packages" }))
+                .SingletonScoped();
+            builder.Register<AreaFolders>().As<IExtensionFolders>()
+                .WithArguments(new NamedParameter("paths", new[] { "~/Areas" }))
                 .SingletonScoped();
             builder.Register<ThemeFolders>().As<IExtensionFolders>()
                 .WithArguments(new NamedParameter("paths", new[] { "~/Core", "~/Themes" }))
