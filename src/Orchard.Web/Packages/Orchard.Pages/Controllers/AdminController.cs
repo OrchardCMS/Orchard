@@ -142,11 +142,11 @@ namespace Orchard.Pages.Controllers {
             return RedirectToAction("List");
         }
 
-        public ActionResult Edit(string pageSlug) {
+        public ActionResult Edit(int id) {
             if (!_services.Authorizer.Authorize(Permissions.ModifyPages, T("Couldn't edit page")))
                 return new HttpUnauthorizedResult();
 
-            Page page = _pageService.GetLatest(pageSlug);
+            Page page = _pageService.GetLatest(id);
 
             if (page == null)
                 return new NotFoundResult();
@@ -159,11 +159,11 @@ namespace Orchard.Pages.Controllers {
         }
 
         [HttpPost, ActionName("Edit")]
-        public ActionResult EditPOST(string pageSlug) {
+        public ActionResult EditPOST(int id) {
             if (!_services.Authorizer.Authorize(Permissions.ModifyPages, T("Couldn't edit page")))
                 return new HttpUnauthorizedResult();
 
-            Page page = _pageService.GetPageOrDraft(pageSlug);
+            Page page = _pageService.GetPageOrDraft(id);
 
             if (page == null)
                 return new NotFoundResult();
@@ -225,6 +225,7 @@ namespace Orchard.Pages.Controllers {
         bool IUpdateModel.TryUpdateModel<TModel>(TModel model, string prefix, string[] includeProperties, string[] excludeProperties) {
             return TryUpdateModel(model, prefix, includeProperties, excludeProperties);
         }
+
         void IUpdateModel.AddModelError(string key, LocalizedString errorMessage) {
             ModelState.AddModelError(key, errorMessage.ToString());
         }

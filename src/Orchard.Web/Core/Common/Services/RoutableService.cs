@@ -2,29 +2,34 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
+using Orchard.Core.Common.Models;
 
 namespace Orchard.Core.Common.Services {
     public class RoutableService : IRoutableService {
-        public string Slugify(string title) {
-            if (!string.IsNullOrEmpty(title)) {
-                //todo: (heskew) improve - just doing multi-pass regex replaces for now with the simple rules of
-                // (1) can't begin with a '/', (2) can't have adjacent '/'s and (3) can't have these characters
-                var startsoffbad = new Regex(@"^[\s/]+");
-                var slashhappy = new Regex("/{2,}");
-                var dissallowed = new Regex(@"[:?#\[\]@!$&'()*+,;=\s]+");
+        public void FillSlug<TModel>(TModel model) where TModel : RoutableAspect {
+            if (!string.IsNullOrEmpty(model.Slug) || string.IsNullOrEmpty(model.Title))
+                return;
 
-                title = title.Trim();
-                title = startsoffbad.Replace(title, "-");
-                title = slashhappy.Replace(title, "/");
-                title = dissallowed.Replace(title, "-");
+            var slug = model.Title;
+            var dissallowed = new Regex(@"[/:?#\[\]@!$&'()*+,;=\s]+");
 
-                if (title.Length > 1000) {
-                    title = title.Substring(0, 1000);
-                }
-            }
+            slug = dissallowed.Replace(slug, "-");
+            slug = slug.Trim('-');
 
-            return title;
+            if (slug.Length > 1000)
+                slug = slug.Substring(0, 1000);
+
+            model.Slug = slug;
         }
+
+        public void FillSlug<TModel>(TModel model, Func<string, string> generateSlug) where TModel : RoutableAspect {
+            if (!string.IsNullOrEmpty(model.Slug) || string.IsNullOrEmpty(model.Title))
+                return;
+
+            model.Slug = generateSlug(model.Title);
+        }
+
+
 
         public string GenerateUniqueSlug(string slugCandidate, IEnumerable<string> existingSlugs) {
             int? version = existingSlugs
@@ -32,7 +37,7 @@ namespace Orchard.Core.Common.Services {
                             int v;
                             string[] slugParts = s.Split(new[] { slugCandidate }, StringSplitOptions.RemoveEmptyEntries);
                             if (slugParts.Length == 0) {
-                                return 1;
+                                return 2;
                             }
 
                             return int.TryParse(slugParts[0].TrimStart('-'), out v)

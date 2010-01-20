@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
 using System.Web.Mvc;
 using Orchard.ContentManagement;
 using Orchard.Core.Common.Models;

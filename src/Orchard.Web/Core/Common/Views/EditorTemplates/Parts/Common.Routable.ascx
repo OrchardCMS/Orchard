@@ -10,5 +10,14 @@
     <span><%=Html.TextBoxFor(m => m.Slug, new { @class = "text" })%></span>
 </fieldset>
 <% using (this.Capture("end-of-page-scripts")) { %>
-<script type="text/javascript">$(function(){$("input#Routable_Title").blur(function(){$(this).slugify({target:$("input#Routable_Slug"),url:"<%=Url.Action("Slugify", "Routable", new {area = "Common"}) %>"})})})</script>
+<script type="text/javascript">
+    $(function(){
+        $("input#Routable_Title").blur(function(){
+            $(this).slugify({
+                target:$("input#Routable_Slug"),
+                url:"<%=Url.Action("Slugify", "Routable", new {area = "Common"}) %>",
+                contentType:"<%=Model.RoutableAspect.ContentItem.ContentType %>"
+            })
+        })
+    })</script>
 <% } %>

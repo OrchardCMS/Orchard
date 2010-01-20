@@ -85,7 +85,7 @@
                           : "" %>
                     <% } %>    
                 </td>
-                <td><%=Html.ActionLink(T("Edit").ToString(), "Edit", new { pageSlug = pageEntry.Page.Slug }) %></td>
+                <td><%=Html.ActionLink(T("Edit").ToString(), "Edit", new { id = pageEntry.PageId }) %></td>
             </tr>
             <%
                 pageIndex++; 

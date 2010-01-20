@@ -54,6 +54,10 @@ namespace Orchard.Pages.Services {
                     .Slice(0, 1).FirstOrDefault().As<Page>();
         }
 
+        public Page GetPageOrDraft(int id)  {
+            return _contentManager.GetDraftRequired<Page>(id);
+        }
+
         public Page GetPageOrDraft(string slug) {
             Page page = GetLatest(slug);
             return _contentManager.GetDraftRequired<Page>(page.Id);
