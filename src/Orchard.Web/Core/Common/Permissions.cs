@@ -11,7 +11,9 @@ namespace Orchard.Core.Common {
         }
 
         public IEnumerable<Permission> GetPermissions() {
-            return new[] { ChangeOwner };
+            return new Permission[] {
+                ChangeOwner,
+            };
         }
 
         public IEnumerable<PermissionStereotype> GetDefaultStereotypes() {

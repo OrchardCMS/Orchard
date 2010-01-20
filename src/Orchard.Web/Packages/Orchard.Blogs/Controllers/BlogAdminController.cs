@@ -34,7 +34,7 @@ namespace Orchard.Blogs.Controllers {
 
         public ActionResult Create() {
             //TODO: (erikpo) Might think about moving this to an ActionFilter/Attribute
-            if (!_authorizer.Authorize(Permissions.CreateBlog, T("Not allowed to create blogs")))
+            if (!_authorizer.Authorize(Permissions.ManageBlogs, T("Not allowed to create blogs")))
                 return new HttpUnauthorizedResult();
 
             Blog blog = _services.ContentManager.New<Blog>("blog");
@@ -52,7 +52,7 @@ namespace Orchard.Blogs.Controllers {
         [HttpPost]
         public ActionResult Create(CreateBlogViewModel model) {
             //TODO: (erikpo) Might think about moving this to an ActionFilter/Attribute
-            if (!_authorizer.Authorize(Permissions.CreateBlog, T("Couldn't create blog")))
+            if (!_authorizer.Authorize(Permissions.ManageBlogs, T("Couldn't create blog")))
                 return new HttpUnauthorizedResult();
 
             model.Blog = _services.ContentManager.UpdateEditorModel(_services.ContentManager.New<Blog>("blog"), this);
@@ -71,7 +71,7 @@ namespace Orchard.Blogs.Controllers {
 
         public ActionResult Edit(string blogSlug) {
             //TODO: (erikpo) Might think about moving this to an ActionFilter/Attribute
-            if (!_authorizer.Authorize(Permissions.ModifyBlog, T("Not allowed to edit blog")))
+            if (!_authorizer.Authorize(Permissions.ManageBlogs, T("Not allowed to edit blog")))
                 return new HttpUnauthorizedResult();
 
             //TODO: (erikpo) Move looking up the current blog up into a modelbinder
@@ -89,7 +89,7 @@ namespace Orchard.Blogs.Controllers {
 
         [HttpPost]
         public ActionResult Edit(string blogSlug, FormCollection input) {
-            if (!_authorizer.Authorize(Permissions.ModifyBlog, T("Couldn't edit blog")))
+            if (!_authorizer.Authorize(Permissions.ManageBlogs, T("Couldn't edit blog")))
                 return new HttpUnauthorizedResult();
 
             //TODO: (erikpo) Move looking up the current blog up into a modelbinder
@@ -112,7 +112,7 @@ namespace Orchard.Blogs.Controllers {
 
         [HttpPost]
         public ActionResult Delete(string blogSlug) {
-            if (!_authorizer.Authorize(Permissions.DeleteBlog, T("Couldn't delete blog")))
+            if (!_authorizer.Authorize(Permissions.ManageBlogs, T("Couldn't delete blog")))
                 return new HttpUnauthorizedResult();
 
             //TODO: (erikpo) Move looking up the current blog up into a modelbinder

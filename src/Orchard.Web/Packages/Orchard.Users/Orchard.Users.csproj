@@ -67,6 +67,7 @@
     <Compile Include="Models\User.cs" />
     <Compile Include="Models\UserHandler.cs" />
     <Compile Include="Models\UserRecord.cs" />
+    <Compile Include="Permissions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\MembershipService.cs" />
     <Compile Include="AdminMenu.cs" />

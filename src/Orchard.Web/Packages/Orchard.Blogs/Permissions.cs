@@ -4,17 +4,15 @@ using Orchard.Security.Permissions;
 
 namespace Orchard.Blogs {
     public class Permissions : IPermissionProvider {
-        public static readonly Permission ViewPost = new Permission { Description = "Viewing Blog Posts", Name = "ViewPosts" };
-        public static readonly Permission CreatePost = new Permission { Description = "Creating Blog Posts", Name = "CreatePost" };
-        public static readonly Permission CreateDraft = new Permission { Description = "Creating a Draft of a Blog Post", Name = "CreateDraft" };
-        public static readonly Permission ModifyPost = new Permission { Description = "Mofifying a Blog Post", Name = "ModifyPost" };
-        public static readonly Permission DeletePost = new Permission { Description = "Deleting a Blog Post", Name = "DeletePost" };
-        public static readonly Permission PublishPost = new Permission { Description = "Publishing a Blog Post", Name = "PublishPost" };
-        public static readonly Permission UnpublishPost = new Permission { Description = "Unpublishing a Blog Post", Name = "UnpublishPost" };
-        public static readonly Permission SchedulePost = new Permission { Description = "Scheduling a Blog Post", Name = "SchedulePost" };
-        public static readonly Permission CreateBlog = new Permission { Description = "Creating a Blog", Name = "CreateBlog" };
-        public static readonly Permission ModifyBlog = new Permission { Description = "Mofifying a Blog", Name = "ModifyBlog" };
-        public static readonly Permission DeleteBlog = new Permission { Description = "Deleting a Blog", Name = "DeleteBlog" };
+        public static readonly Permission ManageBlogs = new Permission { Description = "Edit blog properties", Name = "ManageBlogs" };//q: Should edit_blog be ManageBlogs?
+
+        public static readonly Permission EditBlogPost = new Permission { Description = "Edit own blog posts", Name = "EditBlogPost" };
+        public static readonly Permission EditOthersBlogPost = new Permission { Description = "Edit any blog posts", Name = "EditOthersBlogPost" };
+        public static readonly Permission PublishBlogPost = new Permission { Description = "Publish or unpublish blog post", Name = "PublishBlogPost" };
+        public static readonly Permission PublishOthersBlogPost = new Permission { Description = "Publish or unpublish blog post for others", Name = "PublishOthersBlogPost" };
+        public static readonly Permission DeleteBlogPost = new Permission { Description = "Delete blog post", Name = "DeleteBlogPost" };
+        public static readonly Permission DeleteOthersBlogPost = new Permission { Description = "Delete blog post for others", Name = "DeleteOthersBlogPost" };
+        
 
         public string PackageName {
             get {
@@ -23,18 +21,14 @@ namespace Orchard.Blogs {
         }
 
         public IEnumerable<Permission> GetPermissions() {
-            return new List<Permission> {
-                ViewPost,
-                CreatePost,
-                CreateDraft,
-                ModifyPost,
-                DeletePost,
-                PublishPost,
-                UnpublishPost,
-                SchedulePost,
-                CreateBlog,
-                ModifyBlog,
-                DeleteBlog
+            return new Permission[] {
+                ManageBlogs,
+                EditBlogPost,
+                EditOthersBlogPost,
+                PublishBlogPost,
+                PublishOthersBlogPost,
+                DeleteBlogPost,
+                DeleteOthersBlogPost,
             };
         }
 

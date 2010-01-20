@@ -4,13 +4,12 @@ using Orchard.Security.Permissions;
 
 namespace Orchard.Comments {
     public class Permissions : IPermissionProvider {
-        public static readonly Permission AddComment = new Permission { Description = "Adding a Comment", Name = "AddComment" };
-        public static readonly Permission AddCommentWithoutValidation = new Permission { Description = "Adding a Comment without validation", Name = "AddCommentWithoutValidation" };
-        public static readonly Permission EnableComment = new Permission { Description = "Enabling Comments on content items", Name = "EnableComment" };
-        public static readonly Permission CloseComment = new Permission { Description = "Closing Comments", Name = "CloseComment" };
-        public static readonly Permission CloseCommentOnOwnItems = new Permission { Description = "Closing Comments on own items", Name = "CloseCommentOnOwnItems" };
-        public static readonly Permission ModerateComment = new Permission { Description = "Moderating Comments", Name = "ModerateComment" };
-        public static readonly Permission ModerateCommentOnOwnItems = new Permission { Description = "Moderating Comments On Own Items", Name = "ModerateCommentOnOwnItems" };
+        public static readonly Permission AddComment = new Permission { Description = "Add comment", Name = "AddComment" };
+        public static readonly Permission EnableComment = new Permission { Description = "Enabling Comments on content items", Name = "EnableComment" };//refactoring
+        public static readonly Permission CloseComment = new Permission { Description = "Closing Comments", Name = "CloseComment" };//refactoring
+        public static readonly Permission CloseCommentOnOwnItems = new Permission { Description = "Closing Comments on own items", Name = "CloseCommentOnOwnItems" };//refactoring
+        public static readonly Permission ManageComments = new Permission { Description = "Manage comments", Name = "ManageComments" };
+        public static readonly Permission ManageOthersComments = new Permission { Description = "Manage comments for others", Name = "ManageOthersComments" };
 
         public string PackageName {
             get {
@@ -19,14 +18,13 @@ namespace Orchard.Comments {
         }
 
         public IEnumerable<Permission> GetPermissions() {
-            return new[] {
+            return new Permission[] {
                 AddComment,
-                AddCommentWithoutValidation,
                 EnableComment,
                 CloseComment,
                 CloseCommentOnOwnItems,
-                ModerateComment,
-                ModerateCommentOnOwnItems
+                ManageComments,
+                ManageOthersComments
             };
         }
 
@@ -34,7 +32,7 @@ namespace Orchard.Comments {
             return new[] {
                 new PermissionStereotype {
                     Name = "Administrators",
-                    Permissions = new[] {ModerateComment}
+                    Permissions = new[] {ManageComments}
                 },
                 new PermissionStereotype {
                     Name = "Anonymous",

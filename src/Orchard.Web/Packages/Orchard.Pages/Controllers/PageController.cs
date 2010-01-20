@@ -4,6 +4,7 @@ using Orchard.Localization;
 using Orchard.ContentManagement;
 using Orchard.Pages.Services;
 using Orchard.Pages.ViewModels;
+using Orchard.Security;
 
 namespace Orchard.Pages.Controllers {
     [ValidateInput(false)]
@@ -25,7 +26,7 @@ namespace Orchard.Pages.Controllers {
         private Localizer T { get; set; }
 
         public ActionResult Item(string slug) {
-            if (!Services.Authorizer.Authorize(Permissions.ViewPages, T("Couldn't view page")))
+            if (!Services.Authorizer.Authorize(StandardPermissions.AccessFrontEnd, T("Couldn't view page")))
                 return new HttpUnauthorizedResult();
 
             if (slug == null) {

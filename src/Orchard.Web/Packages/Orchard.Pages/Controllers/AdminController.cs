@@ -67,7 +67,7 @@ namespace Orchard.Pages.Controllers {
                     }
                     break;
                 case PagesBulkAction.Unpublish:
-                    if (!_services.Authorizer.Authorize(Permissions.UnpublishPages, T("Couldn't unpublish page")))
+                    if (!_services.Authorizer.Authorize(Permissions.PublishPages, T("Couldn't unpublish page")))
                         return new HttpUnauthorizedResult();
                     foreach (PageEntry entry in checkedEntries) {
                         var page = _pageService.GetLatest(entry.PageId);
@@ -99,7 +99,7 @@ namespace Orchard.Pages.Controllers {
         }
 
         public ActionResult Create() {
-            if (!_services.Authorizer.Authorize(Permissions.CreatePages, T("Not allowed to create a page")))
+            if (!_services.Authorizer.Authorize(Permissions.EditPages, T("Not allowed to create a page")))
                 return new HttpUnauthorizedResult();
 
             var page = _services.ContentManager.BuildEditorModel(_services.ContentManager.New<Page>("page"));
@@ -113,7 +113,7 @@ namespace Orchard.Pages.Controllers {
 
         [HttpPost, ActionName("Create")]
         public ActionResult CreatePOST(PageCreateViewModel model) {
-            if (!_services.Authorizer.Authorize(Permissions.CreatePages, T("Couldn't create page")))
+            if (!_services.Authorizer.Authorize(Permissions.EditPages, T("Couldn't create page")))
                 return new HttpUnauthorizedResult();
 
             //TODO: (erikpo) Move this duplicate code somewhere else
@@ -143,7 +143,7 @@ namespace Orchard.Pages.Controllers {
         }
 
         public ActionResult Edit(int id) {
-            if (!_services.Authorizer.Authorize(Permissions.ModifyPages, T("Couldn't edit page")))
+            if (!_services.Authorizer.Authorize(Permissions.EditPages, T("Couldn't edit page")))
                 return new HttpUnauthorizedResult();
 
             Page page = _pageService.GetLatest(id);
@@ -160,7 +160,7 @@ namespace Orchard.Pages.Controllers {
 
         [HttpPost, ActionName("Edit")]
         public ActionResult EditPOST(int id) {
-            if (!_services.Authorizer.Authorize(Permissions.ModifyPages, T("Couldn't edit page")))
+            if (!_services.Authorizer.Authorize(Permissions.EditPages, T("Couldn't edit page")))
                 return new HttpUnauthorizedResult();
 
             Page page = _pageService.GetPageOrDraft(id);

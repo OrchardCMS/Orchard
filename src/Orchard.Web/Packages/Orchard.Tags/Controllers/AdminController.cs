@@ -60,7 +60,7 @@ namespace Orchard.Tags.Controllers {
                     case TagAdminIndexBulkAction.None:
                         break;
                     case TagAdminIndexBulkAction.Delete:
-                        if (!_authorizer.Authorize(Permissions.DeleteTag, T("Couldn't delete tag")))
+                        if (!_authorizer.Authorize(Permissions.ManageTags, T("Couldn't delete tag")))
                             return new HttpUnauthorizedResult();
 
                         foreach (TagEntry entry in checkedEntries) {
@@ -121,7 +121,7 @@ namespace Orchard.Tags.Controllers {
             var viewModel = new TagsAdminEditViewModel();
             try {
                 UpdateModel(viewModel);
-                if (!_authorizer.Authorize(Permissions.RenameTag, T("Couldn't edit tag")))
+                if (!_authorizer.Authorize(Permissions.ManageTags, T("Couldn't edit tag")))
                     return new HttpUnauthorizedResult();
 
                 _tagService.UpdateTag(viewModel.Id, viewModel.TagName);

@@ -81,7 +81,7 @@ namespace Orchard.Comments.Controllers {
                     case CommentIndexBulkAction.None:
                         break;
                     case CommentIndexBulkAction.MarkAsSpam:
-                        if (!_authorizer.Authorize(Permissions.ModerateComment, T("Couldn't moderate comment")))
+                        if (!_authorizer.Authorize(Permissions.ManageComments, T("Couldn't moderate comment")))
                             return new HttpUnauthorizedResult();
                         //TODO: Transaction
                         foreach (CommentEntry entry in checkedEntries) {
@@ -89,7 +89,7 @@ namespace Orchard.Comments.Controllers {
                         }
                         break;
                     case CommentIndexBulkAction.Pend:
-                        if (!_authorizer.Authorize(Permissions.ModerateComment, T("Couldn't moderate comment")))
+                        if (!_authorizer.Authorize(Permissions.ManageComments, T("Couldn't moderate comment")))
                             return new HttpUnauthorizedResult();
                         //TODO: Transaction
                         foreach (CommentEntry entry in checkedEntries) {
@@ -97,7 +97,7 @@ namespace Orchard.Comments.Controllers {
                         }
                         break;
                     case CommentIndexBulkAction.Approve:
-                        if (!_authorizer.Authorize(Permissions.ModerateComment, T("Couldn't moderate comment")))
+                        if (!_authorizer.Authorize(Permissions.ManageComments, T("Couldn't moderate comment")))
                             return new HttpUnauthorizedResult();
                         //TODO: Transaction
                         foreach (CommentEntry entry in checkedEntries) {
@@ -105,7 +105,7 @@ namespace Orchard.Comments.Controllers {
                         }
                         break;
                     case CommentIndexBulkAction.Delete:
-                        if (!_authorizer.Authorize(Permissions.ModerateComment, T("Couldn't delete comment")))
+                        if (!_authorizer.Authorize(Permissions.ManageComments, T("Couldn't delete comment")))
                             return new HttpUnauthorizedResult();
 
                         foreach (CommentEntry entry in checkedEntries) {
@@ -211,7 +211,7 @@ namespace Orchard.Comments.Controllers {
                     case CommentDetailsBulkAction.None:
                         break;
                     case CommentDetailsBulkAction.MarkAsSpam:
-                        if (!_authorizer.Authorize(Permissions.ModerateComment, T("Couldn't moderate comment")))
+                        if (!_authorizer.Authorize(Permissions.ManageComments, T("Couldn't moderate comment")))
                             return new HttpUnauthorizedResult();
                         //TODO: Transaction
                         foreach (CommentEntry entry in checkedEntries) {
@@ -219,7 +219,7 @@ namespace Orchard.Comments.Controllers {
                         }
                         break;
                     case CommentDetailsBulkAction.Pend:
-                        if (!_authorizer.Authorize(Permissions.ModerateComment, T("Couldn't moderate comment")))
+                        if (!_authorizer.Authorize(Permissions.ManageComments, T("Couldn't moderate comment")))
                             return new HttpUnauthorizedResult();
 
                         foreach (CommentEntry entry in checkedEntries) {
@@ -227,7 +227,7 @@ namespace Orchard.Comments.Controllers {
                         }
                         break;
                     case CommentDetailsBulkAction.Approve:
-                        if (!_authorizer.Authorize(Permissions.ModerateComment, T("Couldn't moderate comment")))
+                        if (!_authorizer.Authorize(Permissions.ManageComments, T("Couldn't moderate comment")))
                             return new HttpUnauthorizedResult();
 
                         foreach (CommentEntry entry in checkedEntries) {
@@ -235,7 +235,7 @@ namespace Orchard.Comments.Controllers {
                         }
                         break;
                     case CommentDetailsBulkAction.Delete:
-                        if (!_authorizer.Authorize(Permissions.ModerateComment, T("Couldn't delete comment")))
+                        if (!_authorizer.Authorize(Permissions.ManageComments, T("Couldn't delete comment")))
                             return new HttpUnauthorizedResult();
 
                         foreach (CommentEntry entry in checkedEntries) {
@@ -318,7 +318,7 @@ namespace Orchard.Comments.Controllers {
             var viewModel = new CommentsEditViewModel();
             try {
                 UpdateModel(viewModel);
-                if (!_authorizer.Authorize(Permissions.ModerateComment, T("Couldn't edit comment")))
+                if (!_authorizer.Authorize(Permissions.ManageComments, T("Couldn't edit comment")))
                     return new HttpUnauthorizedResult();
 
                 _commentService.UpdateComment(viewModel.Id, viewModel.Name, viewModel.Email, viewModel.SiteName, viewModel.CommentText, viewModel.Status);
@@ -332,7 +332,7 @@ namespace Orchard.Comments.Controllers {
 
         public ActionResult Delete(int id, string returnUrl) {
             try {
-                if (!_authorizer.Authorize(Permissions.ModerateComment, T("Couldn't delete comment")))
+                if (!_authorizer.Authorize(Permissions.ManageComments, T("Couldn't delete comment")))
                     return new HttpUnauthorizedResult();
                 int commentedOn = _commentService.GetComment(id).CommentedOn;
                 _commentService.DeleteComment(id);

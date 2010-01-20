@@ -40,7 +40,7 @@ namespace Orchard.Core.Themes.Controllers {
         [HttpPost]
         public ActionResult Activate(string themeName) {
             try {
-                if (!_authorizer.Authorize(Permissions.SetSiteTheme, T("Couldn't set the current theme")))
+                if (!_authorizer.Authorize(Permissions.ApplyTheme, T("Couldn't set the current theme")))
                     return new HttpUnauthorizedResult();
                 _themeService.SetSiteTheme(themeName);
                 return RedirectToAction("Index");
@@ -58,7 +58,7 @@ namespace Orchard.Core.Themes.Controllers {
         [HttpPost]
         public ActionResult Install(FormCollection input) {
             try {
-                if (!_authorizer.Authorize(Permissions.InstallUninstallTheme, T("Couldn't install theme")))
+                if (!_authorizer.Authorize(Permissions.ManageThemes, T("Couldn't install theme")))
                     return new HttpUnauthorizedResult();
                 foreach (string fileName in Request.Files) {
                     HttpPostedFileBase file = Request.Files[fileName];
@@ -75,7 +75,7 @@ namespace Orchard.Core.Themes.Controllers {
         [HttpPost]
         public ActionResult Uninstall(string themeName) {
             try {
-                if (!_authorizer.Authorize(Permissions.InstallUninstallTheme, T("Couldn't uninstall theme")))
+                if (!_authorizer.Authorize(Permissions.ManageThemes, T("Couldn't uninstall theme")))
                     return new HttpUnauthorizedResult();
                 _themeService.UninstallTheme(themeName);
                 return RedirectToAction("Index");

@@ -65,6 +65,7 @@
     <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Controllers\UserRolesDriver.cs" />
     <Compile Include="Extension.cs" />
+    <Compile Include="Permissions.cs" />
     <Compile Include="Records\PermissionRecord.cs" />
     <Compile Include="Records\RoleRecord.cs" />
     <Compile Include="Models\UserRoles.cs" />

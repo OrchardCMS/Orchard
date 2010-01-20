@@ -109,6 +109,7 @@
     <Compile Include="Scheduling\Services\ScheduledTaskExecutor.cs" />
     <Compile Include="Scheduling\Models\Task.cs" />
     <Compile Include="Settings\Controllers\SiteSettingsDriver.cs" />
+    <Compile Include="Settings\Permissions.cs" />
     <Compile Include="Themes\Services\AdminThemeSelector.cs" />
     <Compile Include="Themes\Services\SafeModeThemeSelector.cs" />
     <Compile Include="Settings\AdminMenu.cs" />

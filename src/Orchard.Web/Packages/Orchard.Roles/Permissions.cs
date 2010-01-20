@@ -1,24 +1,24 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using JetBrains.Annotations;
 using Orchard.Security.Permissions;
 
-namespace Orchard.Tags {
+namespace Orchard.Roles {
+    [UsedImplicitly]
     public class Permissions : IPermissionProvider {
-        public static readonly Permission ManageTags = new Permission { Description = "Manage tags", Name = "ManageTags" };
-        public static readonly Permission CreateTag = new Permission { Description = "Create tag", Name = "CreateTag" };
-        public static readonly Permission ApplyTag = new Permission { Description = "Applying a Tag", Name = "ApplyTag" };
+        public static readonly Permission ManageRoles = new Permission { Description = "Create and manage roles", Name = "ManageRoles" };
+        public static readonly Permission AssignUsersToRoles = new Permission { Description = "Assign users to roles", Name = "AssignUsersToRoles" };
 
         public string PackageName {
             get {
-                return "Tags";
+                return "Roles";
             }
         }
 
         public IEnumerable<Permission> GetPermissions() {
             return new Permission[] {
-                ManageTags,
-                CreateTag,
-                ApplyTag,
+                ManageRoles,
+                AssignUsersToRoles,
             };
         }
 
@@ -27,4 +27,5 @@ namespace Orchard.Tags {
         }
 
     }
+
 }

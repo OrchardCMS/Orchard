@@ -21,7 +21,7 @@ namespace Orchard.Mvc.Filters {
             var siteUrl = _siteService.GetSiteSettings().SiteUrl;
             //todo: (heskew) get at the admin path in a less hacky way
             if (filterContext.HttpContext.Request.RawUrl.StartsWith(Path.Combine(siteUrl, "admin").Replace("\\", "/"), true, CultureInfo.InvariantCulture)
-                && !_authorizer.Authorize(Permissions.AccessAdmin, "Can't access the admin")) {
+                && !_authorizer.Authorize(StandardPermissions.AccessAdminPanel, "Can't access the admin")) {
                 filterContext.Result = new HttpUnauthorizedResult();
             }
         }

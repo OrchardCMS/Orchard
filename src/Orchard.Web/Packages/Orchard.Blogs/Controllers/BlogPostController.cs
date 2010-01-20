@@ -9,6 +9,7 @@ using Orchard.Core.Feeds;
 using Orchard.Localization;
 using Orchard.ContentManagement;
 using Orchard.Mvc.Results;
+using Orchard.Security;
 
 namespace Orchard.Blogs.Controllers {
     public class BlogPostController : Controller {
@@ -33,7 +34,7 @@ namespace Orchard.Blogs.Controllers {
 
         //TODO: (erikpo) Should think about moving the slug parameters and get calls and null checks up into a model binder or action filter
         public ActionResult Item(string blogSlug, string postSlug) {
-            if (!_services.Authorizer.Authorize(Permissions.ViewPost, T("Couldn't view blog post")))
+            if (!_services.Authorizer.Authorize(StandardPermissions.AccessFrontEnd, T("Couldn't view blog post")))
                 return new HttpUnauthorizedResult();
 
             //TODO: (erikpo) Move looking up the current blog up into a modelbinder

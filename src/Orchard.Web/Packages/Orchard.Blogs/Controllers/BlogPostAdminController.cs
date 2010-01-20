@@ -32,7 +32,7 @@ namespace Orchard.Blogs.Controllers {
 
         public ActionResult Create(string blogSlug) {
             //TODO: (erikpo) Might think about moving this to an ActionFilter/Attribute
-            if (!_services.Authorizer.Authorize(Permissions.CreatePost, T("Not allowed to create blog post")))
+            if (!_services.Authorizer.Authorize(Permissions.EditBlogPost, T("Not allowed to create blog post")))
                 return new HttpUnauthorizedResult();
 
             //TODO: (erikpo) Move looking up the current blog up into a modelbinder
@@ -53,7 +53,7 @@ namespace Orchard.Blogs.Controllers {
 
         [HttpPost]
         public ActionResult Create(string blogSlug, CreateBlogPostViewModel model) {
-            if (!_services.Authorizer.Authorize(Permissions.CreatePost, T("Couldn't create blog post")))
+            if (!_services.Authorizer.Authorize(Permissions.EditBlogPost, T("Couldn't create blog post")))
                 return new HttpUnauthorizedResult();
 
             //TODO: (erikpo) Move looking up the current blog up into a modelbinder
@@ -96,7 +96,7 @@ namespace Orchard.Blogs.Controllers {
         }
 
         public ActionResult Edit(string blogSlug, string postSlug) {
-            if (!_services.Authorizer.Authorize(Permissions.ModifyPost, T("Couldn't edit blog post")))
+            if (!_services.Authorizer.Authorize(Permissions.EditBlogPost, T("Couldn't edit blog post")))
                 return new HttpUnauthorizedResult();
 
             //TODO: (erikpo) Move looking up the current blog up into a modelbinder
@@ -119,7 +119,7 @@ namespace Orchard.Blogs.Controllers {
 
         [HttpPost, ActionName("Edit")]
         public ActionResult EditPOST(string blogSlug, string postSlug) {
-            if (!_services.Authorizer.Authorize(Permissions.ModifyPost, T("Couldn't edit blog post")))
+            if (!_services.Authorizer.Authorize(Permissions.EditBlogPost, T("Couldn't edit blog post")))
                 return new HttpUnauthorizedResult();
 
             bool isDraft = false;
@@ -179,7 +179,8 @@ namespace Orchard.Blogs.Controllers {
 
         [HttpPost]
         public ActionResult Delete(string blogSlug, string postSlug) {
-            if (!_services.Authorizer.Authorize(Permissions.DeletePost, T("Couldn't delete blog post")))
+            //refactoring: test PublishBlogPost/PublishOthersBlogPost in addition if published
+            if (!_services.Authorizer.Authorize(Permissions.DeleteBlogPost, T("Couldn't delete blog post")))
                 return new HttpUnauthorizedResult();
 
             //TODO: (erikpo) Move looking up the current blog up into a modelbinder
