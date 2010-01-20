@@ -21,9 +21,7 @@ namespace Orchard.Blogs.Models {
             get { return Record.Description; }
             set { Record.Description = value; }
         }
-        
-        //public bool Enabled { get { return Record.Enabled; } }
-        
+
         public int PostCount {
             get { return Record.PostCount; }
             set { Record.PostCount = value; }

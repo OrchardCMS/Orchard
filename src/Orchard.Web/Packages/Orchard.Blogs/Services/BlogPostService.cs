@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Orchard.Blogs.Controllers;
 using Orchard.Blogs.Models;
 using Orchard.Core.Common.Records;
 using Orchard.ContentManagement;
@@ -19,7 +20,7 @@ namespace Orchard.Blogs.Services {
 
         public BlogPost Get(Blog blog, string slug, VersionOptions versionOptions) {
             return
-                _contentManager.Query(versionOptions, "blogpost").Join<RoutableRecord>().Where(rr => rr.Slug == slug).
+                _contentManager.Query(versionOptions, BlogPostDriver.ContentType.Name).Join<RoutableRecord>().Where(rr => rr.Slug == slug).
                     Join<CommonRecord>().Where(cr => cr.Container == blog.Record.ContentItemRecord).List().
                     SingleOrDefault().As<BlogPost>();
         }
@@ -106,7 +107,7 @@ namespace Orchard.Blogs.Services {
 
         private IContentQuery<ContentItem, CommonRecord> GetBlogQuery(ContentPart<BlogRecord> blog, VersionOptions versionOptions) {
             return
-                _contentManager.Query(versionOptions, "blogpost").Join<CommonRecord>().Where(
+                _contentManager.Query(versionOptions, BlogPostDriver.ContentType.Name).Join<CommonRecord>().Where(
                     cr => cr.Container == blog.Record.ContentItemRecord).OrderByDescending(cr => cr.CreatedUtc);
         }
     }

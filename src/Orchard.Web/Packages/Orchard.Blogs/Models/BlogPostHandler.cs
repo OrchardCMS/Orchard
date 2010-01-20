@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using JetBrains.Annotations;
 using Orchard.Blogs.Controllers;
@@ -18,8 +19,19 @@ namespace Orchard.Blogs.Models {
             Filters.Add(new ActivatingFilter<BodyAspect>(BlogPostDriver.ContentType.Name));
             Filters.Add(new StorageFilter<CommonVersionRecord>(commonRepository));
 
-            OnCreated<BlogPost>((context, bp) => bp.Blog.PostCount++);
-            OnRemoved<BlogPost>((context, bp) => bp.Blog.PostCount--);
+            Action<Blog> updateBlogPostCount =
+                (blog => {
+                    // Ensure we get the "right" set of published posts for the blog
+                    blog.ContentItem.ContentManager.Flush();
+
+                    var posts = blogPostService.Get(blog, VersionOptions.Published).ToList();
+                    blog.PostCount = posts.Count;
+                });
+
+            OnCreated<BlogPost>((context, bp) => updateBlogPostCount(bp.Blog));
+            OnPublished<BlogPost>((context, bp) => updateBlogPostCount(bp.Blog));
+            OnVersioned<BlogPost>((context, bp1, bp2) => updateBlogPostCount(bp2.Blog));
+            OnRemoved<BlogPost>((context, bp) => updateBlogPostCount(bp.Blog));
 
             OnRemoved<Blog>(
                 (context, b) =>
