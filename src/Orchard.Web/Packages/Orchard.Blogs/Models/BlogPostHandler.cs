@@ -22,7 +22,7 @@ namespace Orchard.Blogs.Models {
             OnRemoved<BlogPost>((context, bp) => bp.Blog.PostCount--);
 
             OnRemoved<Blog>(
-                (context, bp) =>
+                (context, b) =>
                 blogPostService.Get(context.ContentItem.As<Blog>()).ToList().ForEach(
                     blogPost => context.ContentManager.Remove(blogPost.ContentItem)));
         }

@@ -1,4 +1,5 @@
 ﻿<%@ Control Language="C#" Inherits="Orchard.Mvc.ViewUserControl<RoutableEditorViewModel>" %>
+<%@ Import Namespace="Orchard.Extensions"%>
 <%@ Import Namespace="Orchard.Core.Common.ViewModels"%>
 <% Html.RegisterFootScript("jquery.slugify.js"); %>
 <fieldset>
@@ -6,15 +7,15 @@
     <%=Html.TextBoxFor(m => m.Title, new { @class = "large text" }) %>
 </fieldset>
 <fieldset class="permalink">
-    <label class="sub" for="Slug"><%=_Encoded("Permalink")%><br /><span>[todo: (heskew) need path to here]/</span></label>
+    <label class="sub" for="Slug"><%=_Encoded("Permalink")%><br /><span><%=Html.Encode(Request.Url.ToRootString()) %>/<%=Html.Encode(Model.RoutableAspect.ContainerPath) %></span></label>
     <span><%=Html.TextBoxFor(m => m.Slug, new { @class = "text" })%></span>
 </fieldset>
 <% using (this.Capture("end-of-page-scripts")) { %>
 <script type="text/javascript">
     $(function(){
-        $("input#Routable_Title").blur(function(){
+        $("<%=String.Format("input#{0}Title", !string.IsNullOrEmpty(Model.Prefix) ? Model.Prefix + "_" : "") %>").blur(function(){
             $(this).slugify({
-                target:$("input#Routable_Slug"),
+                target:$("<%=String.Format("input#{0}Slug", !string.IsNullOrEmpty(Model.Prefix) ? Model.Prefix + "_" : "") %>"),
                 url:"<%=Url.Action("Slugify", "Routable", new {area = "Common"}) %>",
                 contentType:"<%=Model.RoutableAspect.ContentItem.ContentType %>"
             })

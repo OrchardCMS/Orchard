@@ -64,6 +64,7 @@
     <Compile Include="Common\Controllers\BodyDriver.cs" />
     <Compile Include="Common\Controllers\RoutableDriver.cs" />
     <Compile Include="Common\Controllers\RoutableController.cs" />
+    <Compile Include="Common\Models\RoutableAspectHandler.cs" />
     <Compile Include="Common\Permissions.cs" />
     <Compile Include="Common\Records\CommonVersionRecord.cs" />
     <Compile Include="Common\Routes.cs" />

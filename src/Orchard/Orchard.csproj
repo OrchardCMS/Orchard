@@ -134,6 +134,7 @@
     <Compile Include="Extensions\AreaFolders.cs" />
     <Compile Include="Extensions\ExtensionFolders.cs" />
     <Compile Include="Extensions\Loaders\AreaExtensionLoader.cs" />
+    <Compile Include="Extensions\UriExtensions.cs" />
     <Compile Include="Tasks\Scheduling\IScheduledTask.cs" />
     <Compile Include="ContentManagement\ContentExtensions.cs" />
     <Compile Include="ContentManagement\ContentItem.cs" />

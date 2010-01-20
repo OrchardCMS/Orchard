@@ -3,6 +3,7 @@ using Orchard.Core.Common.Models;
 
 namespace Orchard.Core.Common.ViewModels {
     public class RoutableEditorViewModel {
+        public string Prefix { get; set; }
         public RoutableAspect RoutableAspect { get; set; }
 
         [Required]

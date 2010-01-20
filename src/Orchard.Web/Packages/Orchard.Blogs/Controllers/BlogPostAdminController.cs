@@ -34,19 +34,19 @@ namespace Orchard.Blogs.Controllers {
             //TODO: (erikpo) Might think about moving this to an ActionFilter/Attribute
             if (!_services.Authorizer.Authorize(Permissions.CreatePost, T("Not allowed to create blog post")))
                 return new HttpUnauthorizedResult();
-            
+
             //TODO: (erikpo) Move looking up the current blog up into a modelbinder
             Blog blog = _blogService.Get(blogSlug);
 
             if (blog == null)
                 return new NotFoundResult();
-            
-            var blogPost = _services.ContentManager.BuildEditorModel(_services.ContentManager.New<BlogPost>("blogpost"));
-            blogPost.Item.Blog = blog;
+
+            var blogPost = _services.ContentManager.New<BlogPost>("blogpost");
+            blogPost.Blog = blog;
 
             var model = new CreateBlogPostViewModel {
-                BlogPost = blogPost
-            };
+                BlogPost = _services.ContentManager.BuildEditorModel(blogPost)
+                                                    };
 
             return View(model);
         }

@@ -111,7 +111,7 @@ namespace Orchard.Blogs.Controllers {
                 //todo: (heskew) need better messages
                 _orchardServices.Notifier.Warning(T("A different blog post is already published with this same slug."));
 
-                if (post.ContentItem.VersionRecord.Published) {
+                if (post.ContentItem.VersionRecord == null || post.ContentItem.VersionRecord.Published) {
                     var originalSlug = post.Slug;
                     //todo: (heskew) make auto-uniqueness optional
                     post.Slug = _routableService.GenerateUniqueSlug(post.Slug, slugsLikeThis);
