@@ -8,8 +8,9 @@ if (Model.CommentsActive == false) { %>
     <%-- todo: (heskew) need a comment form for the authenticated user... --%>
     <% using(Html.BeginForm("Create", "Admin", new { area = "Orchard.Comments" }, FormMethod.Post, new { @class = "comment" })) { %>
         <%=Html.ValidationSummary() %>
+        <h2>Add a Comment</h2>
         <fieldset class="who">
-        <legend>Leave your comment</legend>
+
             <%=Html.Hidden("CommentedOn", Model.ContentItem.Id) %>
             <%=Html.Hidden("ReturnUrl", Context.Request.Url) %>
             <div>
@@ -29,6 +30,7 @@ if (Model.CommentsActive == false) { %>
                 <label for="CommentText"><%=_Encoded("Comment") %></label>
                 <textarea id="CommentText" rows="10" cols="30" name="CommentText"></textarea>
             </div>
+       
             <div>
                 <input type="submit" class="button" value="<%=_Encoded("Submit Comment") %>" />
 		        <%=Html.AntiForgeryTokenOrchard() %>

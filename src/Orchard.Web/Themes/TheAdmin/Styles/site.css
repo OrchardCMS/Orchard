@@ -143,7 +143,7 @@ h1, h2, h3, h4, h5, legend {
     font-style: normal;
     font-weight:normal;
 }
-h1 { font-size:2.4em; } /* 24px */
+h1 { font-size:2.6em; } /* 26px */
 h2 { font-size:2.1em; } /* 21px */
 h2 span { font-size:.57em; } /* 12px */
 h3 { font-size:1.8em; } /* 18px */
@@ -298,10 +298,7 @@ a:hover, a:active, a:focus {
 #main form.inline {
     margin:0;
 }
-#main h1 {
-    border-bottom:1px dashed #e4e7dc;
-}
-#main h2 {
+#main h1, #main h2 {
     border-bottom:1px solid #e4e7dc;
 }
 

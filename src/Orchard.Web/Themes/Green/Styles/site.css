@@ -66,8 +66,7 @@ input[type="text"], textarea, #password {
 }
 
 fieldset {
-    margin: 20px 20px 20px 10px;
-    border:1px solid #CACEC6;
+    margin: 4px 20px 20px 10px;
     -moz-border-radius:6px;
 	-webkit-border-radius:6px;
     }
@@ -82,15 +81,15 @@ legend {
 
 label {
     display: block;
-    margin:8px 0 2px 16px;
+    margin:8px 0 2px 0px;
     font-size:105%;
     }
 
 input[type="text"], textarea, #password {
     border-color:#cacec6;
     padding:2px;
-    margin:2px 0 4px 16px;
-    width:90%;
+    margin:2px 0 4px 0px;
+    width:100%;
     }
 
 input[type="checkbox"] {
@@ -100,7 +99,7 @@ input[type="checkbox"] {
 input[type="submit"], input[type="button"] {
     padding:2px 14px;
     display: block;
-    margin:2px 0 20px 10px;
+    margin:2px 0 20px 0px;
     font-weight:600;
     }
   
@@ -174,7 +173,7 @@ colgroup
 #bd {
     min-height:500px;
     background:#fff;
-    padding: 20px 16px;
+    padding: 20px;
     -webkit-border-top-left-radius: 6px;    /* for Safari */
     -webkit-border-top-right-radius: 6px;
 	-moz-border-radius-topleft: 6px;       /* for Firefox */
