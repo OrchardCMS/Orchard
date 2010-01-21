@@ -38,6 +38,10 @@ namespace Orchard.Pages.Services {
             return contentItems.Select(ci => ci.As<Page>());
         }
 
+        public Page Get(int id) {
+            return _contentManager.Get<Page>(id);
+        }
+
         public Page Get(string slug) {
             return
                 _contentManager.Query("page").Join<RoutableRecord>().Where(rr => rr.Slug == slug).List().FirstOrDefault

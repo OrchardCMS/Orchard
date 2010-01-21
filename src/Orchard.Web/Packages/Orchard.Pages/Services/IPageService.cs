@@ -7,6 +7,7 @@ namespace Orchard.Pages.Services {
         IEnumerable<Page> Get();
         IEnumerable<Page> Get(PageStatus status);
         Page Get(string slug);
+        Page Get(int id);
         Page GetPageOrDraft(string slug);
         Page GetPageOrDraft(int id);
         Page GetLatest(string slug);

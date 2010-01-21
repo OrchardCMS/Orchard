@@ -220,11 +220,11 @@ namespace Orchard.Pages.Controllers {
         }
 
         [HttpPost]
-        public ActionResult Delete(string pageSlug) {
+        public ActionResult Delete(int id) {
             if (!_services.Authorizer.Authorize(Permissions.DeletePages, T("Couldn't delete page")))
                 return new HttpUnauthorizedResult();
 
-            Page page = _pageService.Get(pageSlug);
+            Page page = _pageService.Get(id);
 
             if (page == null)
                 return new NotFoundResult();
