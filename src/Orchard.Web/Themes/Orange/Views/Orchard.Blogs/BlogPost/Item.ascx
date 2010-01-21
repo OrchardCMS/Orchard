@@ -10,7 +10,7 @@
     var blogPost = Model.BlogPost.Item;
     var bodyViewModelModel = new BodyDisplayViewModel { BodyAspect = blogPost.ContentItem.As<BodyAspect>() };
     var hasComments = blogPost.ContentItem.As<HasComments>(); %>
-<div class="manage"><a href="<%=Url.BlogPostEdit(blogPost.Blog.Slug, blogPost.Slug) %>" class="ibutton edit"><%=_Encoded("edit") %></a></div>
+<div class="manage"><a href="<%=Url.BlogPostEdit(blogPost.Blog.Slug, blogPost.Id) %>" class="ibutton edit"><%=_Encoded("edit") %></a></div>
 <h1><%=Html.TitleForPage(blogPost.Title)%></h1>
 <div class="metadata">
     <% if (blogPost.Creator != null) { 

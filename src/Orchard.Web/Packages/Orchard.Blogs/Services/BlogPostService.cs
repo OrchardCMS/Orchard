@@ -25,6 +25,14 @@ namespace Orchard.Blogs.Services {
                     SingleOrDefault().As<BlogPost>();
         }
 
+        public BlogPost Get(int id) {
+            return Get(id, VersionOptions.Published);
+        }
+
+        public BlogPost Get(int id, VersionOptions versionOptions) {
+            return _contentManager.Get<BlogPost>(id, versionOptions);
+        }
+
         public IEnumerable<BlogPost> Get(Blog blog) {
             return Get(blog, VersionOptions.Published);
         }

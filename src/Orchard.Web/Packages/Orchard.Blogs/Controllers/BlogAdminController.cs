@@ -39,7 +39,7 @@ namespace Orchard.Blogs.Controllers {
             if (!_authorizer.Authorize(Permissions.ManageBlogs, T("Not allowed to create blogs")))
                 return new HttpUnauthorizedResult();
 
-            Blog blog = _services.ContentManager.New<Blog>("blog");
+            Blog blog = _services.ContentManager.New<Blog>(BlogDriver.ContentType.Name);
 
             if (blog == null)
                 return new NotFoundResult();
@@ -57,7 +57,7 @@ namespace Orchard.Blogs.Controllers {
             if (!_authorizer.Authorize(Permissions.ManageBlogs, T("Couldn't create blog")))
                 return new HttpUnauthorizedResult();
 
-            model.Blog = _services.ContentManager.UpdateEditorModel(_services.ContentManager.New<Blog>("blog"), this);
+            model.Blog = _services.ContentManager.UpdateEditorModel(_services.ContentManager.New<Blog>(BlogDriver.ContentType.Name), this);
 
             if (!ModelState.IsValid)
                 return View(model);

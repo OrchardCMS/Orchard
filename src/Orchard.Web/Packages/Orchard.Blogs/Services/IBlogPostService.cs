@@ -7,6 +7,8 @@ namespace Orchard.Blogs.Services {
     public interface IBlogPostService : IDependency {
         BlogPost Get(Blog blog, string slug);
         BlogPost Get(Blog blog, string slug, VersionOptions versionOptions);
+        BlogPost Get(int id);
+        BlogPost Get(int id, VersionOptions versionOptions);
         IEnumerable<BlogPost> Get(Blog blog);
         IEnumerable<BlogPost> Get(Blog blog, VersionOptions versionOptions);
         IEnumerable<BlogPost> Get(Blog blog, ArchiveData archiveData);

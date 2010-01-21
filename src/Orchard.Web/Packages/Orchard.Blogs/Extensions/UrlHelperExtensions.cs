@@ -50,16 +50,16 @@ namespace Orchard.Blogs.Extensions {
             return urlHelper.Action("Create", "BlogPostAdmin", new {blogSlug, area = "Orchard.Blogs"});
         }
 
-        public static string BlogPostEdit(this UrlHelper urlHelper, string blogSlug, string postSlug) {
-            return urlHelper.Action("Edit", "BlogPostAdmin", new {blogSlug, postSlug, area = "Orchard.Blogs"});
+        public static string BlogPostEdit(this UrlHelper urlHelper, string blogSlug, int postId) {
+            return urlHelper.Action("Edit", "BlogPostAdmin", new {blogSlug, postId, area = "Orchard.Blogs"});
         }
 
-        public static string BlogPostDelete(this UrlHelper urlHelper, string blogSlug, string postSlug) {
-            return urlHelper.Action("Delete", "BlogPostAdmin", new {blogSlug, postSlug, area = "Orchard.Blogs"});
+        public static string BlogPostDelete(this UrlHelper urlHelper, string blogSlug, int postId) {
+            return urlHelper.Action("Delete", "BlogPostAdmin", new {blogSlug, postId, area = "Orchard.Blogs"});
         }
 
-        public static string BlogPostPublish(this UrlHelper urlHelper, string blogSlug, string postSlug) {
-            return urlHelper.Action("Publish", "BlogPostAdmin", new { blogSlug, postSlug, area = "Orchard.Blogs" });
+        public static string BlogPostPublish(this UrlHelper urlHelper, string blogSlug, int postId) {
+            return urlHelper.Action("Publish", "BlogPostAdmin", new { blogSlug, postId, area = "Orchard.Blogs" });
         }
     }
 }
