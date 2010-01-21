@@ -16,6 +16,8 @@
 <% using (this.Capture("end-of-page-scripts")) { %>
 <script type="text/javascript">
     $(function(){
+        //pull slug input from tab order
+        $("<%=String.Format("input#{0}Slug", !string.IsNullOrEmpty(Model.Prefix) ? Model.Prefix + "_" : "") %>").attr("tabindex",-1);
         $("<%=String.Format("input#{0}Title", !string.IsNullOrEmpty(Model.Prefix) ? Model.Prefix + "_" : "") %>").blur(function(){
             $(this).slugify({
                 target:$("<%=String.Format("input#{0}Slug", !string.IsNullOrEmpty(Model.Prefix) ? Model.Prefix + "_" : "") %>"),
