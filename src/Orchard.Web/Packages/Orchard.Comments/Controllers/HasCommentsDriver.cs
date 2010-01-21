@@ -18,6 +18,10 @@ namespace Orchard.Comments.Controllers {
                 return ContentPartTemplate(part, "Parts/Comments.HasComments").Location("primary", "after.5");
             }
 
+            if (displayType.Contains("Summary")) {
+                return ContentPartTemplate(part, "Parts/Comments.Count").Location("meta");
+            }
+
             return ContentPartTemplate(part, "Parts/Comments.Count").Location("primary", "before.5");
         }
 

@@ -7,7 +7,7 @@
 <%@ Import Namespace="Orchard.Blogs.Extensions"%>
 <%@ Import Namespace="Orchard.Blogs.Models"%>
 <h2><%=Html.Link(Html.Encode(Model.Item.Title), Url.BlogPostEdit(Model.Item.Blog.Slug, Model.Item.Slug)) %></h2>
-<div class="meta"><%=Model.Item.ContentItem.VersionRecord.Published == false ? "Draft" : Html.PublishedState(Model.Item) %> | <%=Html.Link(_Encoded("?? comments").ToString(), "") %></div>
+<div class="meta"><%=Html.PublishedState(Model.Item) %> | <%Html.Zone("meta");%></div>
 <div class="content"><%=Model.Item.As<BodyAspect>().Text ?? string.Format("<p><em>{0}</em></p>", _Encoded("there's no content for this blog post"))%></div>
 <ul class="actions">
     <li class="construct">

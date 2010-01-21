@@ -17,13 +17,15 @@ namespace Orchard.Blogs.Controllers {
     public class BlogAdminController : Controller, IUpdateModel {
         private readonly IOrchardServices _services;
         private readonly IBlogService _blogService;
+        private readonly IBlogPostService _blogPostService;
         private readonly ISessionLocator _sessionLocator;
         private readonly IAuthorizer _authorizer;
         private readonly INotifier _notifier;
 
-        public BlogAdminController(IOrchardServices services, IBlogService blogService, ISessionLocator sessionLocator, IAuthorizer authorizer, INotifier notifier) {
+        public BlogAdminController(IOrchardServices services, IBlogService blogService, IBlogPostService blogPostService, ISessionLocator sessionLocator, IAuthorizer authorizer, INotifier notifier) {
             _services = services;
             _blogService = blogService;
+            _blogPostService = blogPostService;
             _sessionLocator = sessionLocator;
             _authorizer = authorizer;
             _notifier = notifier;
@@ -131,7 +133,9 @@ namespace Orchard.Blogs.Controllers {
         public ActionResult List() {
             //TODO: (erikpo) Need to make templatePath be more convention based so if my controller name has "Admin" in it then "Admin/{type}" is assumed
             var model = new AdminBlogsViewModel {
-                Blogs = _blogService.Get().Select(b => _services.ContentManager.BuildDisplayModel(b, "SummaryAdmin"))
+                Entries = _blogService.Get()
+                    .Select(b => _services.ContentManager.BuildDisplayModel(b, "SummaryAdmin"))
+                    .Select(vm => new AdminBlogEntry { ContentItemViewModel = vm, TotalPostCount = _blogPostService.Get(vm.Item, VersionOptions.Latest).Count()})
             };
 
             return View(model);

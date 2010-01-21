@@ -4,7 +4,7 @@
 <%@ Import Namespace="Orchard.Blogs.Models"%>
 <h2><%=Html.Link(Html.Encode(Model.Item.Name), Url.BlogForAdmin(Model.Item.Slug)) %></h2>
 <div class="meta">
-    <%=Html.Link(_Encoded("{0} post{1}", Model.Item.PostCount, Model.Item.PostCount == 1 ? "" : "s").ToString(), Url.BlogForAdmin(Model.Item.Slug))%>
+    <%Html.Zone("meta"); %>
     | <%=Html.Link(_Encoded("?? comments").ToString(), "") %>
 </div>
 <%--<p>[list of authors] [modify blog access]</p>--%>
