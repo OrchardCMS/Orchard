@@ -293,7 +293,7 @@ a:hover, a:active, a:focus {
     margin:-.4em 0 .4em;
 }
 #main form {
-    margin:.345em 0 1.5em;
+    margin:.345em 0 1.38em;
 }
 #main form.inline {
     margin:0;
@@ -360,7 +360,7 @@ form.inline fieldset {
 fieldset.bulk.actions {
     display:inline;
     height:auto;
-    margin:0 1.4em -.7em 0;
+    margin:0 1.4em 0 0;
     padding-top:0;
 }
 
@@ -488,7 +488,7 @@ button.remove:focus::-moz-focus-inner, .remove.button:focus::-moz-focus-inner {
 }
 .manage {
     float:right;
-    margin:4px 0 6px 4px;
+    margin:0 0 10px 8px;
     overflow:hidden;
 }
 .actions {

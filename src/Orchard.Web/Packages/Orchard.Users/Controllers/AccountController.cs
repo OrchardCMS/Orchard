@@ -42,7 +42,7 @@ namespace Orchard.Users.Controllers {
             return View("LogOn", new LogOnViewModel { Title = "Log On", ReturnUrl = returnUrl });
         }
 
-        [AcceptVerbs(HttpVerbs.Post)]
+        [HttpPost]
         [SuppressMessage("Microsoft.Design", "CA1054:UriParametersShouldNotBeStrings",
             Justification = "Needs to take same parameter type as Controller.Redirect()")]
         public ActionResult LogOn(string userName, string password, bool rememberMe, string returnUrl) {
@@ -79,7 +79,7 @@ namespace Orchard.Users.Controllers {
             return View(new BaseViewModel());
         }
 
-        [AcceptVerbs(HttpVerbs.Post)]
+        [HttpPost]
         public ActionResult Register(string userName, string email, string password, string confirmPassword) {
             ViewData["PasswordLength"] = MinPasswordLength;
 
@@ -109,7 +109,7 @@ namespace Orchard.Users.Controllers {
         }
 
         [Authorize]
-        [AcceptVerbs(HttpVerbs.Post)]
+        [HttpPost]
         [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes",
             Justification = "Exceptions result in password not being changed.")]
         public ActionResult ChangePassword(string currentPassword, string newPassword, string confirmPassword) {

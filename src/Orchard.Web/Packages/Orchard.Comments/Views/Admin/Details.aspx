@@ -2,6 +2,21 @@
 <%@ Import Namespace="Orchard.Comments.Models"%>
 <%@ Import Namespace="Orchard.Comments.ViewModels"%>
 <h1><%=Html.TitleForPage(T("Comments for {0}", Model.DisplayNameForCommentedItem).ToString()) %></h1>
+<div class="manage"><%
+    if (Model.CommentsClosedOnItem) {
+        using (Html.BeginFormAntiForgeryPost(Url.Action("Enable", new { commentedItemId = Model.CommentedItemId }), FormMethod.Post, new { @class = "inline" })) { %>
+    <fieldset>
+        <button type="submit" title="<%=_Encoded("Enable Comments") %>"><%=_Encoded("Enable Comments")%></button>
+    </fieldset><%
+        }
+    } else {
+        using (Html.BeginFormAntiForgeryPost(Url.Action("Close", new { commentedItemId = Model.CommentedItemId }), FormMethod.Post, new { @class = "inline" })) { %>
+    <fieldset>
+        <button type="submit" class="remove" title="<%=_Encoded("Close Comments") %>"><%=_Encoded("Close Comments")%></button>
+    </fieldset><%
+        }
+    } %>
+</div>
 <% using(Html.BeginFormAntiForgeryPost()) { %>
 	<%=Html.ValidationSummary() %>
     <fieldset class="actions bulk">
@@ -25,13 +40,6 @@
         </select>
         <input class="button" type="submit" name="submit.Filter" value="<%=_Encoded("Apply") %>"/>
     </fieldset>
-    <div class="manage">
-        <% if (Model.CommentsClosedOnItem) {
-            %><%=Html.ActionLink(T("Enable Comments").ToString(), "Enable", new { commentedItemId = Model.CommentedItemId }, new { @class = "button" })%><%
-           } else {
-            %><%=Html.ActionLink(T("Close Comments").ToString(), "Close", new { commentedItemId = Model.CommentedItemId }, new { @class = "button remove" })%><%
-           } %>
-    </div>
     <fieldset>
 		<table class="items" summary="<%=_Encoded("This is a table of the comments for the content item") %>">
 			<colgroup>
@@ -77,8 +85,18 @@
                 </td>
                 <td><%=commentEntry.Comment.CommentDate.ToLocalTime() %></td>
                 <td>
-                    <%=Html.ActionLink(T("Edit").ToString(), "Edit", new {commentEntry.Comment.Id}) %> |
-                    <%=Html.ActionLink(T("Delete").ToString(), "Delete", new {id = commentEntry.Comment.Id, redirectToAction = "Details"}) %>
+                    <ul class="actions">
+                        <li class="construct">
+                            <a href="<%=Url.Action("Edit", new {commentEntry.Comment.Id}) %>" class="ibutton edit" title="<%=_Encoded("Edit Comment")%>"><%=_Encoded("Edit Comment")%></a>
+                        </li>
+                        <li class="destruct">
+<%-- a form in a form doesn't quite work                            <% using (Html.BeginFormAntiForgeryPost(Url.Action("Delete", new {id = commentEntry.Comment.Id, redirectToAction = "Details"}), FormMethod.Post, new { @class = "inline" })) { %>
+                                <fieldset>
+                                    <button type="submit" class="ibutton remove" title="<%=_Encoded("Remove Comment") %>"><%=_Encoded("Remove Comment") %></button>
+                                </fieldset><%
+                            } %>
+--%>                        </li>
+                    </ul>
                 </td>
             </tr>
             <%
@@ -86,11 +104,19 @@
                 } %>
         </table>
     </fieldset>
-    <div class="manage">
-        <% if (Model.CommentsClosedOnItem) {
-            %><%=Html.ActionLink(T("Enable Comments").ToString(), "Enable", new { commentedItemId = Model.CommentedItemId }, new { @class = "button" })%><%
-           } else {
-            %><%=Html.ActionLink(T("Close Comments").ToString(), "Close", new { commentedItemId = Model.CommentedItemId }, new { @class = "button remove" })%><%
-           } %>
-    </div>
 <% } %>
+<div class="manage"><%
+    if (Model.CommentsClosedOnItem) {
+        using (Html.BeginFormAntiForgeryPost(Url.Action("Enable", new { commentedItemId = Model.CommentedItemId }), FormMethod.Post, new { @class = "inline" })) { %>
+    <fieldset>
+        <button type="submit" title="<%=_Encoded("Enable Comments") %>"><%=_Encoded("Enable Comments")%></button>
+    </fieldset><%
+        }
+    } else {
+        using (Html.BeginFormAntiForgeryPost(Url.Action("Close", new { commentedItemId = Model.CommentedItemId }), FormMethod.Post, new { @class = "inline" })) { %>
+    <fieldset>
+        <button type="submit" class="remove" title="<%=_Encoded("Close Comments") %>"><%=_Encoded("Close Comments")%></button>
+    </fieldset><%
+        }
+    } %>
+</div>

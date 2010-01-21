@@ -116,7 +116,7 @@ namespace Orchard.Tags.Controllers {
             }
         }
 
-        [AcceptVerbs(HttpVerbs.Post)]
+        [HttpPost]
         public ActionResult Edit(FormCollection input) {
             var viewModel = new TagsAdminEditViewModel();
             try {

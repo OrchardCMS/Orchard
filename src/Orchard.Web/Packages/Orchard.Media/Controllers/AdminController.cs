@@ -32,7 +32,7 @@ namespace Orchard.Media.Controllers {
             return View(model);
         }
 
-        [AcceptVerbs(HttpVerbs.Post)]
+        [HttpPost]
         public ActionResult Index(FormCollection input) {
             try {
                 foreach (string key in input.Keys) {
@@ -53,7 +53,7 @@ namespace Orchard.Media.Controllers {
             return View(new MediaFolderCreateViewModel { MediaPath = mediaPath });
         }
 
-        [AcceptVerbs(HttpVerbs.Post)]
+        [HttpPost]
         public ActionResult Create() {
             var viewModel = new MediaFolderCreateViewModel();
             try {
@@ -76,7 +76,7 @@ namespace Orchard.Media.Controllers {
             return View(model);
         }
 
-        [AcceptVerbs(HttpVerbs.Post)]
+        [HttpPost]
         public ActionResult Edit(FormCollection input) {
             try {
                 foreach (string key in input.Keys) {
@@ -108,7 +108,7 @@ namespace Orchard.Media.Controllers {
             return View(model);
         }
 
-        [AcceptVerbs(HttpVerbs.Post)]
+        [HttpPost]
         public ActionResult EditProperties() {
             var viewModel = new MediaFolderEditPropertiesViewModel();
             try {
@@ -140,7 +140,7 @@ namespace Orchard.Media.Controllers {
             return View(model);
         }
 
-        [AcceptVerbs(HttpVerbs.Post)]
+        [HttpPost]
         public ActionResult Add() {
             var viewModel = new MediaItemAddViewModel();
             try {
@@ -172,7 +172,7 @@ namespace Orchard.Media.Controllers {
             return View(model);
         }
 
-        [AcceptVerbs(HttpVerbs.Post)]
+        [HttpPost]
         public ActionResult EditMedia(FormCollection input) {
             var viewModel = new MediaItemEditViewModel();
             try {

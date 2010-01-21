@@ -70,8 +70,18 @@
                 <td><%=commentEntry.Comment.CommentDate.ToLocalTime() %></td>
                 <td><%=Html.ActionLink(commentEntry.CommentedOn, "Details", new { id = commentEntry.Comment.CommentedOn }) %></td>
                 <td>
-                    <%=Html.ActionLink(T("Edit").ToString(), "Edit", new {commentEntry.Comment.Id}) %> |
-                    <%=Html.ActionLink(T("Delete").ToString(), "Delete", new { id = commentEntry.Comment.Id, redirectToAction = "Index" }) %>
+                    <ul class="actions">
+                        <li class="construct">
+                            <a href="<%=Url.Action("Edit", new {commentEntry.Comment.Id}) %>" class="ibutton edit" title="<%=_Encoded("Edit Comment")%>"><%=_Encoded("Edit Comment")%></a>
+                        </li>
+                        <li class="destruct">
+<%-- a form in a form doesn't quite work                            <% using (Html.BeginFormAntiForgeryPost(Url.Action("Delete", new {id = commentEntry.Comment.Id, redirectToAction = "Details"}), FormMethod.Post, new { @class = "inline" })) { %>
+                                <fieldset>
+                                    <button type="submit" class="ibutton remove" title="<%=_Encoded("Remove Comment") %>"><%=_Encoded("Remove Comment") %></button>
+                                </fieldset><%
+                            } %>
+--%>                        </li>
+                    </ul>
                 </td>
             </tr>
             <%

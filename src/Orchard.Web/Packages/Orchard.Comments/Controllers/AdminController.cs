@@ -129,7 +129,7 @@ namespace Orchard.Comments.Controllers {
             return View(new CommentsCreateViewModel());
         }
 
-        [AcceptVerbs(HttpVerbs.Post)]
+        [HttpPost]
         public ActionResult Create(string returnUrl) {
             var viewModel = new CommentsCreateViewModel();
             try {
@@ -255,6 +255,7 @@ namespace Orchard.Comments.Controllers {
             return RedirectToAction("Index");
         }
 
+        [HttpPost]
         public ActionResult Close(int commentedItemId, string returnUrl) {
             try {
                 if (!_authorizer.Authorize(Permissions.CloseComment, T("Couldn't close comments")))
@@ -274,6 +275,7 @@ namespace Orchard.Comments.Controllers {
             }
         }
 
+        [HttpPost]
         public ActionResult Enable(int commentedItemId, string returnUrl) {
             try {
                 if (!_authorizer.Authorize(Permissions.EnableComment, T("Couldn't enable comments")))
@@ -313,7 +315,7 @@ namespace Orchard.Comments.Controllers {
             }
         }
 
-        [AcceptVerbs(HttpVerbs.Post)]
+        [HttpPost]
         public ActionResult Edit(FormCollection input) {
             var viewModel = new CommentsEditViewModel();
             try {
@@ -330,6 +332,7 @@ namespace Orchard.Comments.Controllers {
             }
         }
 
+        [HttpPost]
         public ActionResult Delete(int id, string returnUrl) {
             try {
                 if (!_authorizer.Authorize(Permissions.ManageComments, T("Couldn't delete comment")))
