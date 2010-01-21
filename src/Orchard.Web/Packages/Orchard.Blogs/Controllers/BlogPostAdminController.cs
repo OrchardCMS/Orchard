@@ -18,13 +18,11 @@ namespace Orchard.Blogs.Controllers {
         private readonly IOrchardServices _services;
         private readonly IBlogService _blogService;
         private readonly IBlogPostService _blogPostService;
-        private readonly ISessionLocator _sessionLocator;
 
-        public BlogPostAdminController(IOrchardServices services, IBlogService blogService, IBlogPostService blogPostService, ISessionLocator sessionLocator) {
+        public BlogPostAdminController(IOrchardServices services, IBlogService blogService, IBlogPostService blogPostService) {
             _services = services;
             _blogService = blogService;
             _blogPostService = blogPostService;
-            _sessionLocator = sessionLocator;
             T = NullLocalizer.Instance;
         }
 
@@ -67,9 +65,10 @@ namespace Orchard.Blogs.Controllers {
             bool publishNow = false;
             if (string.Equals(Request.Form["Command"], "PublishNow")) {
                 publishNow = true;
-            } else if (string.Equals(Request.Form["Publish"], "Publish")) {
+            }
+            else if (string.Equals(Request.Form["Command"], "PublishLater")) {
                 DateTime publishDateValue;
-                if (DateTime.TryParse(Request.Form["Publish"], out publishDateValue)) {
+                if (DateTime.TryParse(Request.Form["Published"], out publishDateValue)) {
                     publishDate = publishDateValue;
                 }
             }
@@ -90,11 +89,14 @@ namespace Orchard.Blogs.Controllers {
             if (publishNow)
                 _services.ContentManager.Publish(model.BlogPost.Item.ContentItem);
 
-            //TEMP: (erikpo) ensure information has committed for this record
-            var session = _sessionLocator.For(typeof(ContentItemRecord));
-            session.Flush();
+            if (publishNow)
+                _services.Notifier.Information(T("Blog post has been published"));
+            else if (publishDate != null)
+                _services.Notifier.Information(T("Blog post has been scheduled for publishing"));
+            else
+                _services.Notifier.Information(T("Blog post draft has been saved"));
 
-            return Redirect(Url.BlogPost(blogSlug, model.BlogPost.Item.As<RoutableAspect>().Slug));
+            return Redirect(Url.BlogPostEdit(blogSlug, model.BlogPost.Item.Id));
         }
 
         public ActionResult Edit(string blogSlug, int postId) {
@@ -124,8 +126,6 @@ namespace Orchard.Blogs.Controllers {
             if (!_services.Authorizer.Authorize(Permissions.EditBlogPost, T("Couldn't edit blog post")))
                 return new HttpUnauthorizedResult();
 
-            bool isDraft = false;
-
             //TODO: (erikpo) Move looking up the current blog up into a modelbinder
             Blog blog = _blogService.Get(blogSlug);
 
@@ -142,9 +142,10 @@ namespace Orchard.Blogs.Controllers {
             bool publishNow = false;
             if (string.Equals(Request.Form["Command"], "PublishNow")) {
                 publishNow = true;
-            } else if (string.Equals(Request.Form["Publish"], "Publish")) {
+            }
+            else if (string.Equals(Request.Form["Command"], "PublishLater")) {
                 DateTime publishDateValue;
-                if (DateTime.TryParse(Request.Form["Publish"], out publishDateValue)) {
+                if (DateTime.TryParse(Request.Form["Published"], out publishDateValue)) {
                     publishDate = publishDateValue;
                 }
             }
@@ -155,7 +156,6 @@ namespace Orchard.Blogs.Controllers {
             else if (publishDate != null)
                 _blogPostService.Publish(post, publishDate.Value);
             else {
-                isDraft = true;
                 _blogPostService.Unpublish(post);
             }
 
@@ -171,12 +171,14 @@ namespace Orchard.Blogs.Controllers {
                 return View(model);
             }
 
-            _services.Notifier.Information(T("Blog post information updated."));
+            if (publishNow)
+                _services.Notifier.Information(T("Blog post has been published"));
+            else if (publishDate != null)
+                _services.Notifier.Information(T("Blog post has been scheduled for publishing"));
+            else
+                _services.Notifier.Information(T("Blog post draft has been saved"));
 
-            if (isDraft) {
-                return Redirect(Url.BlogPostEdit(blog.Slug, post.Id));
-            }
-            return Redirect(Url.BlogForAdmin(blog.Slug));
+            return Redirect(Url.BlogPostEdit(blogSlug, model.BlogPost.Item.Id));
         }
 
         [HttpPost]

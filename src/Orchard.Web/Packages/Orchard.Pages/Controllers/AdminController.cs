@@ -121,9 +121,10 @@ namespace Orchard.Pages.Controllers {
             bool publishNow = false;
             if (string.Equals(Request.Form["Command"], "PublishNow")) {
                 publishNow = true;
-            } else if (string.Equals(Request.Form["Publish"], "Publish")) {
+            }
+            else if (string.Equals(Request.Form["Command"], "PublishLater")) {
                 DateTime publishDateValue;
-                if (DateTime.TryParse(Request.Form["Publish"], out publishDateValue)) {
+                if (DateTime.TryParse(Request.Form["Published"], out publishDateValue)) {
                     publishDate = publishDateValue;
                 }
             }
@@ -139,7 +140,14 @@ namespace Orchard.Pages.Controllers {
 
             _services.ContentManager.Create(model.Page.Item.ContentItem, publishNow ? VersionOptions.Published : VersionOptions.Draft);
 
-            return RedirectToAction("List");
+            if (publishNow)
+                _services.Notifier.Information(T("Page has been published"));
+            else if (publishDate != null)
+                _services.Notifier.Information(T("Page has been scheduled for publishing"));
+            else
+                _services.Notifier.Information(T("Page draft has been saved"));
+
+            return RedirectToAction("Edit", "Admin", new { id = model.Page.Item.ContentItem.Id });
         }
 
         public ActionResult Edit(int id) {
@@ -173,9 +181,10 @@ namespace Orchard.Pages.Controllers {
             bool publishNow = false;
             if (string.Equals(Request.Form["Command"], "PublishNow")) {
                 publishNow = true;
-            } else if (string.Equals(Request.Form["Publish"], "Publish")) {
+            }
+            else if (string.Equals(Request.Form["Command"], "PublishLater")) {
                 DateTime publishDateValue;
-                if (DateTime.TryParse(Request.Form["Publish"], out publishDateValue)) {
+                if (DateTime.TryParse(Request.Form["Published"], out publishDateValue)) {
                     publishDate = publishDateValue;
                 }
             }
@@ -200,9 +209,14 @@ namespace Orchard.Pages.Controllers {
                 return View(model);
             }
 
-            _services.Notifier.Information(T("Page information updated."));
+            if (publishNow)
+                _services.Notifier.Information(T("Page has been published"));
+            else if (publishDate != null)
+                _services.Notifier.Information(T("Page has been scheduled for publishing"));
+            else
+                _services.Notifier.Information(T("Page draft has been saved"));
 
-            return RedirectToAction("List");
+            return RedirectToAction("Edit", "Admin", new { id = model.Page.Item.ContentItem.Id });
         }
 
         [HttpPost]
