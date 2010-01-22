@@ -149,7 +149,7 @@
     <Content Include="Config\Diagnostics.config" />
     <Content Include="Themes\Orange\Styles\site.css" />
     <Content Include="Themes\Orange\Theme.txt" />
-    <Content Include="Themes\Orange\Views\Layout.ascx" />
+    <Content Include="Themes\Orange\Views\_Layout.ascx" />
     <Content Include="Themes\TheAdmin\Styles\images\background_header.jpg" />
     <Content Include="Themes\TheAdmin\Styles\images\icons.png" />
     <Content Include="Themes\TheAdmin\Styles\images\orchardLogo.jpg" />
@@ -158,7 +158,7 @@
     <Content Include="Themes\TheAdmin\Styles\site.css" />
     <Content Include="Themes\TheAdmin\Theme.gif" />
     <Content Include="Themes\TheAdmin\Theme.txt" />
-    <Content Include="Themes\TheAdmin\Views\Layout.ascx" />
+    <Content Include="Themes\TheAdmin\Views\_Layout.ascx" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Themes\TheAdmin\Styles\images\icons.psd" />
@@ -221,9 +221,9 @@
     <Content Include="Themes\Orchard\Views\footer.ascx" />
     <Content Include="Themes\Orchard\Views\layout.ascx" />
     <Content Include="Themes\Orchard\Views\menu.ascx" />
-    <Content Include="Themes\TheAdmin\Views\Menu.ascx" />
-    <Content Include="Themes\TheAdmin\Views\User.ascx" />
-    <Content Include="Themes\TheAdmin\Views\Header.ascx" />
+    <Content Include="Themes\TheAdmin\Views\_Menu.ascx" />
+    <Content Include="Themes\TheAdmin\Views\_User.ascx" />
+    <Content Include="Themes\TheAdmin\Views\_Header.ascx" />
     <Content Include="Themes\Web.config" />
   </ItemGroup>
   <ItemGroup>
