@@ -6,6 +6,7 @@ using Orchard.Data;
 using Orchard.Localization;
 using Orchard.Logging;
 using Orchard.ContentManagement;
+using Orchard.Security;
 using Orchard.Settings;
 using Orchard.Tags.Models;
 using Orchard.UI.Notify;
@@ -28,21 +29,25 @@ namespace Orchard.Tags.Services {
         private readonly IRepository<TagsContentItems> _tagsContentItemsRepository;
         private readonly IContentManager _contentManager;
         private readonly INotifier _notifier;
+        private readonly IAuthorizationService _authorizationService;
 
-        public TagService(IRepository<Tag> tagRepository, 
+        public TagService(IRepository<Tag> tagRepository,
                           IRepository<TagsContentItems> tagsContentItemsRepository,
                           IContentManager contentManager,
-                          INotifier notifier) {
+                          INotifier notifier,
+                          IAuthorizationService authorizationService) {
             _tagRepository = tagRepository;
             _tagsContentItemsRepository = tagsContentItemsRepository;
             _contentManager = contentManager;
             _notifier = notifier;
+            _authorizationService = authorizationService;
             Logger = NullLogger.Instance;
             T = NullLocalizer.Instance;
         }
 
         public ILogger Logger { get; set; }
-        protected virtual ISite CurrentSite { get; [UsedImplicitly] private set; }        
+        public virtual ISite CurrentSite { get; set; }
+        public virtual IUser CurrentUser { get; set; }
         public Localizer T { get; set; }
 
         #region ITagService Members
@@ -61,6 +66,9 @@ namespace Orchard.Tags.Services {
 
         public void CreateTag(string tagName) {
             if (_tagRepository.Get(x => x.TagName == tagName) == null) {
+                if (!_authorizationService.CheckAccess(CurrentUser, Permissions.CreateTag))
+                    throw new UnauthorizedException();
+
                 Tag tag = new Tag { TagName = tagName };
                 _tagRepository.Create(tag);
             }
@@ -119,15 +127,23 @@ namespace Orchard.Tags.Services {
         private void ModifyTagsForContentItem(int contentItemId, IEnumerable<int> tagsForContentItem) {
             List<int> newTagsForContentItem = new List<int>(tagsForContentItem);
             IEnumerable<TagsContentItems> currentTagsForContentItem = _tagsContentItemsRepository.Fetch(x => x.ContentItemId == contentItemId);
+
             foreach (var tagContentItem in currentTagsForContentItem) {
                 if (!newTagsForContentItem.Contains(tagContentItem.TagId)) {
+                    if (!_authorizationService.CheckAccess(CurrentUser, Permissions.ApplyTag))
+                        throw new UnauthorizedException();
+
                     _tagsContentItemsRepository.Delete(tagContentItem);
                 }
                 else {
                     newTagsForContentItem.Remove(tagContentItem.TagId);
                 }
             }
+
             foreach (var newTagForContentItem in newTagsForContentItem) {
+                if (!_authorizationService.CheckAccess(CurrentUser, Permissions.ApplyTag))
+                    throw new UnauthorizedException();
+
                 _tagsContentItemsRepository.Create(new TagsContentItems { ContentItemId = contentItemId, TagId = newTagForContentItem });
             }
         }

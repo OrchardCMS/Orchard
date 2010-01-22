@@ -26,6 +26,9 @@ namespace Orchard.Users.Controllers {
 
 
         public ActionResult Index() {
+            if (!Services.Authorizer.Authorize(Permissions.ManageUsers, T("Not authorized to manage settings")))
+                return new HttpUnauthorizedResult();
+
             var users = Services.ContentManager
                 .Query<User, UserRecord>()
                 .Where(x => x.UserName != null)
@@ -41,6 +44,9 @@ namespace Orchard.Users.Controllers {
         }
 
         public ActionResult Create() {
+            if (!Services.Authorizer.Authorize(Permissions.ManageUsers, T("Not authorized to manage settings")))
+                return new HttpUnauthorizedResult();
+
             var user = Services.ContentManager.New<IUser>(UserDriver.ContentType.Name);
             var model = new UserCreateViewModel {
                 User = Services.ContentManager.BuildEditorModel(user)
@@ -49,7 +55,9 @@ namespace Orchard.Users.Controllers {
         }
 
         [HttpPost, ActionName("Create")]
-        public ActionResult _Create() {
+        public ActionResult CreatePOST() {
+            if (!Services.Authorizer.Authorize(Permissions.ManageUsers, T("Not authorized to manage settings")))
+                return new HttpUnauthorizedResult();
 
             var model = new UserCreateViewModel();
             UpdateModel(model);
@@ -75,13 +83,19 @@ namespace Orchard.Users.Controllers {
         }
 
         public ActionResult Edit(int id) {
+            if (!Services.Authorizer.Authorize(Permissions.ManageUsers, T("Not authorized to manage settings")))
+                return new HttpUnauthorizedResult();
+            
             return View(new UserEditViewModel {
                 User = Services.ContentManager.BuildEditorModel<User>(id)
             });
         }
 
         [HttpPost, ActionName("Edit")]
-        public ActionResult _Edit(int id) {
+        public ActionResult EditPOST(int id) {
+            if (!Services.Authorizer.Authorize(Permissions.ManageUsers, T("Not authorized to manage settings")))
+                return new HttpUnauthorizedResult();
+            
             var model = new UserEditViewModel {
                 User = Services.ContentManager.UpdateEditorModel<User>(id, this)
             };

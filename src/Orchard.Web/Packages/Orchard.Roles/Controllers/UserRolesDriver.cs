@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+﻿using System.Linq;
+using JetBrains.Annotations;
 using Orchard.ContentManagement.Drivers;
 using Orchard.Data;
 using Orchard.ContentManagement;
-using Orchard.ContentManagement.Handlers;
-using Orchard.ContentManagement.ViewModels;
 using Orchard.Roles.Models.NoRecord;
 using Orchard.Roles.Records;
 using Orchard.Roles.Services;
@@ -15,18 +11,25 @@ using Orchard.Security;
 using Orchard.UI.Notify;
 
 namespace Orchard.Roles.Controllers {
+    [UsedImplicitly]
     public class UserRolesDriver : ContentPartDriver<UserRoles> {
         private readonly IRepository<UserRolesRecord> _userRolesRepository;
         private readonly IRoleService _roleService;
         private readonly INotifier _notifier;
+        private readonly IAuthenticationService _authenticationService;
+        private readonly IAuthorizationService _authorizationService;
 
         public UserRolesDriver(
             IRepository<UserRolesRecord> userRolesRepository, 
             IRoleService roleService, 
-            INotifier notifier) {
+            INotifier notifier,
+            IAuthenticationService authenticationService,
+            IAuthorizationService authorizationService) {
             _userRolesRepository = userRolesRepository;
             _roleService = roleService;
             _notifier = notifier;
+            _authenticationService = authenticationService;
+            _authorizationService = authorizationService;
         }
 
         protected override string Prefix {
@@ -36,6 +39,10 @@ namespace Orchard.Roles.Controllers {
         }
 
         protected override DriverResult Editor(UserRoles userRoles) {
+            // don't show editor without apply roles permission
+            if (!_authorizationService.CheckAccess(_authenticationService.GetAuthenticatedUser(), Permissions.ApplyRoles))
+                return null;
+
             var roles =
                     _roleService.GetRoles().Select(
                         x => new UserRoleEntry {
@@ -53,6 +60,10 @@ namespace Orchard.Roles.Controllers {
         }
 
         protected override DriverResult Editor(UserRoles userRoles, IUpdateModel updater) {
+            // don't apply editor without apply roles permission
+            if (!_authorizationService.CheckAccess(_authenticationService.GetAuthenticatedUser(), Permissions.ApplyRoles))
+                return null;
+
             var model = new UserRolesViewModel {
                 User = userRoles.As<IUser>(),
                 UserRoles = userRoles,

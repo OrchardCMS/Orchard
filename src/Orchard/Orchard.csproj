@@ -137,6 +137,7 @@
     <Compile Include="Extensions\Loaders\AreaExtensionLoader.cs" />
     <Compile Include="Extensions\UriExtensions.cs" />
     <Compile Include="Security\StandardPermissions.cs" />
+    <Compile Include="Security\UnauthorizedException.cs" />
     <Compile Include="Tasks\Scheduling\IScheduledTask.cs" />
     <Compile Include="ContentManagement\ContentExtensions.cs" />
     <Compile Include="ContentManagement\ContentItem.cs" />

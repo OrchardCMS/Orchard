@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using JetBrains.Annotations;
 using Orchard.Security;
+using Orchard.Security.Permissions;
 
 namespace Orchard.UI.Navigation {
     public interface INavigationManager : IDependency {
@@ -26,9 +27,11 @@ namespace Orchard.UI.Navigation {
         }
 
         private IEnumerable<MenuItem> Reduce(IEnumerable<MenuItem> items) {
-            foreach(var item in items) {
-                if (!item.Permissions.Any() || 
-                    item.Permissions.Any(x=>_authorizationService.CheckAccess(CurrentUser, x))) {
+            var hasDebugShowAllMenuItems = _authorizationService.CheckAccess(CurrentUser, Permission.Named("DebugShowAllMenuItems"));
+            foreach (var item in items) {
+                if (hasDebugShowAllMenuItems ||
+                    !item.Permissions.Any() ||
+                    item.Permissions.Any(x => _authorizationService.CheckAccess(CurrentUser, x))) {
                     yield return new MenuItem {
                         Items = Reduce(item.Items),
                         Permissions = item.Permissions,
@@ -68,7 +71,7 @@ namespace Orchard.UI.Navigation {
                 RouteValues = items.First().RouteValues,
                 Items = Merge(items.Select(x => x.Items)).ToArray(),
                 Position = SelectBestPositionValue(items.Select(x => x.Position)),
-                Permissions = items.SelectMany(x=>x.Permissions),
+                Permissions = items.SelectMany(x => x.Permissions),
             };
             return joined;
         }

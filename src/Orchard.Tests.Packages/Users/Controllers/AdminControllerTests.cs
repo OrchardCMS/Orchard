@@ -13,7 +13,9 @@ using Orchard.Environment;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Handlers;
 using Orchard.ContentManagement.Records;
+using Orchard.Localization;
 using Orchard.Security;
+using Orchard.Security.Permissions;
 using Orchard.UI.Notify;
 using Orchard.Users.Controllers;
 using Orchard.Users.Models;
@@ -24,6 +26,7 @@ namespace Orchard.Tests.Packages.Users.Controllers {
     [TestFixture]
     public class AdminControllerTests : DatabaseEnabledTestsBase {
         private AdminController _controller;
+        private Mock<IAuthorizer> _authorizer;
 
         public override void Register(ContainerBuilder builder) {
             builder.Register<AdminController>();
@@ -34,7 +37,8 @@ namespace Orchard.Tests.Packages.Users.Controllers {
             builder.Register<OrchardServices>().As<IOrchardServices>();
             builder.Register<TransactionManager>().As<ITransactionManager>();
             builder.Register(new Mock<INotifier>().Object);
-            builder.Register(new Mock<IAuthorizer>().Object);
+            _authorizer = new Mock<IAuthorizer>();
+            builder.Register(_authorizer.Object);
         }
 
         protected override IEnumerable<Type> DatabaseTypes {
@@ -73,6 +77,8 @@ namespace Orchard.Tests.Packages.Users.Controllers {
 
         [Test]
         public void IndexShouldReturnRowsForUsers() {
+            _authorizer.Setup(x => x.Authorize(It.IsAny<Permission>(), It.IsAny<LocalizedString>())).Returns(true);
+
             var controller = _container.Resolve<AdminController>();
             var result = (ViewResult)controller.Index();
             var model = (UsersIndexViewModel)result.ViewData.Model;
@@ -83,13 +89,15 @@ namespace Orchard.Tests.Packages.Users.Controllers {
 
         [Test]
         public void CreateShouldAddUserAndRedirect() {
+            _authorizer.Setup(x => x.Authorize(It.IsAny<Permission>(), It.IsAny<LocalizedString>())).Returns(true);
+
             var controller = _container.Resolve<AdminController>();
             controller.ValueProvider = Values.From(new {
                 UserName = "four",
                 Password = "five",
                 ConfirmPassword = "five"
             });
-            var result = controller._Create();
+            var result = controller.CreatePOST();
             Assert.That(result, Is.TypeOf<RedirectToRouteResult>());
 
             var redirect = (RedirectToRouteResult)result;
@@ -101,6 +109,8 @@ namespace Orchard.Tests.Packages.Users.Controllers {
 
         [Test]
         public void EditShouldDisplayUserAndStoreChanges() {
+            _authorizer.Setup(x => x.Authorize(It.IsAny<Permission>(), It.IsAny<LocalizedString>())).Returns(true);
+
             var repository = _container.Resolve<IRepository<UserRecord>>();
             var id = repository.Get(x => x.UserName == "two").Id;
             var result = (ViewResult)_container.Resolve<AdminController>().Edit(id);
@@ -112,7 +122,7 @@ namespace Orchard.Tests.Packages.Users.Controllers {
                 UserName = "bubba",
                 Email = "hotep",
             });
-            var result2 = controller._Edit(id);
+            var result2 = controller.EditPOST(id);
             Assert.That(result2, Is.TypeOf<RedirectToRouteResult>());
         }
     }

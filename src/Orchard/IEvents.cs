@@ -13,12 +13,26 @@ namespace Orchard {
                     dispatch(sink);
                 }
                 catch (Exception ex) {
-                    logger.Error(ex, "{2} thrown from {0} by {1}", 
-                        typeof(TEvents).Name, 
-                        sink.GetType().FullName, 
-                        ex.GetType().Name);
+                    if (IsLogged(ex)) {
+                        logger.Error(ex, "{2} thrown from {0} by {1}",
+                            typeof(TEvents).Name,
+                            sink.GetType().FullName,
+                            ex.GetType().Name);
+                    }
+
+                    if (IsFatal(ex)) {
+                        throw;
+                    }
                 }
             }
+        }
+
+        private static bool IsLogged(Exception exception) {
+            return true;
+        }
+
+        private static bool IsFatal(Exception exception) {
+            return false;
         }
     }
 }

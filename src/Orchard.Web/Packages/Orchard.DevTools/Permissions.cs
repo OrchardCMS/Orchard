@@ -1,22 +1,22 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
-using JetBrains.Annotations;
+using System.Web;
 using Orchard.Security.Permissions;
 
-namespace Orchard.Users {
-    [UsedImplicitly]
+namespace Orchard.DevTools {
     public class Permissions : IPermissionProvider {
-        public static readonly Permission ManageUsers = new Permission { Description = "Manage users", Name = "ManageUsers" };
+        public static readonly Permission DebugShowAllMenuItems = new Permission { Description = "DevTools: Show all menu items", Name = "DebugShowAllMenuItems" };
 
         public string PackageName {
             get {
-                return "Users";
+                return "DevTools";
             }
         }
 
         public IEnumerable<Permission> GetPermissions() {
             return new Permission[] {
-                ManageUsers,
+                DebugShowAllMenuItems,
             };
         }
 

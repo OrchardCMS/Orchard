@@ -7,7 +7,7 @@ namespace Orchard.Comments {
         public void GetNavigation(NavigationBuilder builder) {
             builder.Add("Comments", "3",
                         menu => menu
-                                    .Add("Manage Comments", "1.0", item => item.Action("Index", "Admin", new { area = "Orchard.Comments" }))
+                                    .Add("Manage Comments", "1.0", item => item.Action("Index", "Admin", new { area = "Orchard.Comments" }).Permission(Permissions.ManageComments))
                                     );
         }
     }

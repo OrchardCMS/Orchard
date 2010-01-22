@@ -7,8 +7,8 @@ namespace Orchard.Users {
         public void GetNavigation(NavigationBuilder builder) {
             builder.Add("Users", "5",
                         menu => menu
-                                    .Add("Manage Users", "1.0", item => item.Action("Index", "Admin", new { area = "Orchard.Users" }))
-                                    .Add("Add New User", "1.1", item => item.Action("Create", "Admin", new { area = "Orchard.Users" })));
+                                    .Add("Manage Users", "1.0", item => item.Action("Index", "Admin", new { area = "Orchard.Users" }).Permission(Permissions.ManageUsers))
+                                    .Add("Add New User", "1.1", item => item.Action("Create", "Admin", new { area = "Orchard.Users" }).Permission(Permissions.ManageUsers)));
         }
     }
 }
