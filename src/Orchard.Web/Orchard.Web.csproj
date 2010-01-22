@@ -2,7 +2,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>9.0.21022</ProductVersion>
+    <ProductVersion>9.0.30729</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{50B779EA-EC00-4699-84C0-03B395C365D2}</ProjectGuid>
     <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
@@ -149,7 +149,7 @@
     <Content Include="Config\Diagnostics.config" />
     <Content Include="Themes\Orange\Styles\site.css" />
     <Content Include="Themes\Orange\Theme.txt" />
-    <Content Include="Themes\Orange\Views\layout.ascx" />
+    <Content Include="Themes\Orange\Views\Layout.ascx" />
     <Content Include="Themes\TheAdmin\Styles\images\background_header.jpg" />
     <Content Include="Themes\TheAdmin\Styles\images\icons.png" />
     <Content Include="Themes\TheAdmin\Styles\images\orchardLogo.jpg" />
@@ -158,7 +158,7 @@
     <Content Include="Themes\TheAdmin\Styles\site.css" />
     <Content Include="Themes\TheAdmin\Theme.gif" />
     <Content Include="Themes\TheAdmin\Theme.txt" />
-    <Content Include="Themes\TheAdmin\Views\layout.ascx" />
+    <Content Include="Themes\TheAdmin\Views\Layout.ascx" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Themes\TheAdmin\Styles\images\icons.psd" />
@@ -221,9 +221,9 @@
     <Content Include="Themes\Orchard\Views\footer.ascx" />
     <Content Include="Themes\Orchard\Views\layout.ascx" />
     <Content Include="Themes\Orchard\Views\menu.ascx" />
-    <Content Include="Themes\TheAdmin\Views\menu.ascx" />
-    <Content Include="Themes\TheAdmin\Views\user.ascx" />
-    <Content Include="Themes\TheAdmin\Views\header.ascx" />
+    <Content Include="Themes\TheAdmin\Views\Menu.ascx" />
+    <Content Include="Themes\TheAdmin\Views\User.ascx" />
+    <Content Include="Themes\TheAdmin\Views\Header.ascx" />
     <Content Include="Themes\Web.config" />
   </ItemGroup>
   <ItemGroup>
@@ -265,6 +265,9 @@
           <IISUrl>
           </IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
+          <UseCustomServer>False</UseCustomServer>
+          <CustomServerUrl>
+          </CustomServerUrl>
           <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
         </WebProjectProperties>
       </FlavorProperties>

@@ -2,7 +2,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>9.0.21022</ProductVersion>
+    <ProductVersion>9.0.30729</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{9916839C-39FC-4CEB-A5AF-89CA7E87119F}</ProjectGuid>
     <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
@@ -183,14 +183,14 @@
     <Content Include="Themes\Theme.txt" />
     <Content Include="Themes\Styles\site.css" />
     <Content Include="Themes\Views\Admin\Install.aspx" />
-    <Content Include="Themes\Views\header.ascx" />
-    <Content Include="Themes\Views\document.aspx" />
+    <Content Include="Themes\Views\Header.ascx" />
+    <Content Include="Themes\Views\Document.aspx" />
     <Content Include="Themes\Views\EditorTemplates\Parts\Themes.SiteSettings.ascx" />
     <Content Include="Themes\Views\HeadPreload.ascx" />
-    <Content Include="Themes\Views\layout.ascx" />
-    <Content Include="Themes\Views\messages.ascx" />
-    <Content Include="Themes\Views\user.ascx" />
-    <Content Include="Themes\Views\menu.ascx" />
+    <Content Include="Themes\Views\Layout.ascx" />
+    <Content Include="Themes\Views\Messages.ascx" />
+    <Content Include="Themes\Views\User.ascx" />
+    <Content Include="Themes\Views\Menu.ascx" />
     <Content Include="Themes\Views\Web.config" />
   </ItemGroup>
   <ItemGroup>
@@ -232,6 +232,9 @@
           <IISUrl>
           </IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
+          <UseCustomServer>False</UseCustomServer>
+          <CustomServerUrl>
+          </CustomServerUrl>
           <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
         </WebProjectProperties>
       </FlavorProperties>

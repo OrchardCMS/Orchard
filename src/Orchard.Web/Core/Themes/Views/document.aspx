@@ -9,7 +9,7 @@
      //todo: (heskew) this is an interim solution to inlude jQuery in every page and still allow that to be overriden in some theme by it containing a headScripts partial
      Model.Zones.AddRenderPartial("head:before", "HeadPreload", Model);
      Html.Zone("head", ":metas :styles :scripts"); %>
-    <script type="text/javascript">window.document.documentElement.className="dyn"</script>
+    <script type="text/javascript">document.documentElement.className="dyn";</script>
 </head>
 <body class="<%=Html.ClassForPage() %>"><%
     Html.ZoneBody("body"); %>

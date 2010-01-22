@@ -34,8 +34,8 @@ namespace Orchard.Mvc.ViewEngines {
 
 
             var bodyView = _viewEngines.FindPartialView(controllerContext, viewName);
-            var layoutView = _viewEngines.FindPartialView(controllerContext, "layout");
-            var documentView = _viewEngines.FindPartialView(controllerContext, "document");
+            var layoutView = _viewEngines.FindPartialView(controllerContext, "Layout");
+            var documentView = _viewEngines.FindPartialView(controllerContext, "Document");
 
             if (bodyView.View == null ||
                 layoutView.View == null ||

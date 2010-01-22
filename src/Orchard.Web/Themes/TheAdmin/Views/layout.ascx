@@ -2,9 +2,9 @@
 <%@ Import Namespace="Orchard.Mvc.ViewModels"%>
 <%@ Import Namespace="Orchard.Mvc.Html"%><%
 Html.RegisterStyle("site.css");
-Model.Zones.AddRenderPartial("header", "header", Model);
-Model.Zones.AddRenderPartial("header:after", "user", Model); // todo: (heskew) should be a user display or widget
-Model.Zones.AddRenderPartial("menu", "menu", Model);
+Model.Zones.AddRenderPartial("header", "Header", Model);
+Model.Zones.AddRenderPartial("header:after", "User", Model); // todo: (heskew) should be a user display or widget
+Model.Zones.AddRenderPartial("menu", "Menu", Model);
 %>
 <div id="header" role="banner"><% Html.Zone("header"); %></div>
 <div id="content">
