@@ -26,11 +26,10 @@ namespace Orchard.Comments.Models {
                 comments.PendingComments = commentsRepository.Fetch(x => x.CommentedOn == context.ContentItem.Id && x.Status == CommentStatus.Pending).ToList();
             });
 
-            OnRemoved<HasComments>((context, c) => {
-                //TODO: (erikpo) Once comments are content items, replace the following repository delete call to a content manager remove call
-                var comments = commentService.GetCommentsForCommentedContent(context.ContentItem.Id).ToList();
-                comments.ForEach(commentsRepository.Delete);
-            });
+            OnRemoved<HasComments>(
+                (context, c) =>
+                commentService.GetCommentsForCommentedContent(context.ContentItem.Id).ToList().ForEach(
+                    commentsRepository.Delete));
         }
     }
 #if false
