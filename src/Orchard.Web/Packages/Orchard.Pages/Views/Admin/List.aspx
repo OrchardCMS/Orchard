@@ -3,6 +3,7 @@
 <%@ Import Namespace="Orchard.Pages.ViewModels"%>
 <h1><%=Html.TitleForPage(T("Manage Pages").ToString())%></h1>
 <%-- todo: Add helper text here when ready. <p><%=_Encoded("Possible text about setting up a page goes here.")%></p>--%>
+<div class="manage"><%=Html.ActionLink(T("Add a page").ToString(), "Create", new { }, new { @class = "button" })%></div>
 <% using (Html.BeginFormAntiForgeryPost())
    { %>
     <%=Html.ValidationSummary()%>
@@ -25,7 +26,6 @@
         </select>
         <input class="button" type="submit" name="submit.Filter" value="<%=_Encoded("Apply") %>"/>
     </fieldset>
-    <div class="manage"><%=Html.ActionLink(T("Add a page").ToString(), "Create", new { }, new { @class = "button" })%></div>
     <fieldset>
         <table class="items" summary="<%=_Encoded("This is a table of the PageEntries currently available for use in your application.") %>">
             <colgroup>
@@ -102,5 +102,5 @@ pageIndex++;
 } %>
         </table>
     </fieldset>
-    <div class="manage"><%=Html.ActionLink(T("Add a page").ToString(), "Create", new { }, new { @class = "button" })%></div>
 <% } %>
+<div class="manage"><%=Html.ActionLink(T("Add a page").ToString(), "Create", new { }, new { @class = "button" })%></div>

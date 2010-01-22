@@ -32,24 +32,26 @@ namespace Orchard.Core.Common.Services {
 
 
         public string GenerateUniqueSlug(string slugCandidate, IEnumerable<string> existingSlugs) {
-            int? version = existingSlugs
-                .Select(s => {
-                            int v;
-                            string[] slugParts = s.Split(new[] { slugCandidate }, StringSplitOptions.RemoveEmptyEntries);
-                            if (slugParts.Length == 0) {
-                                return 2;
-                            }
+            if (existingSlugs == null || !existingSlugs.Contains(slugCandidate))
+                return slugCandidate;
 
-                            return int.TryParse(slugParts[0].TrimStart('-'), out v)
-                                       ? (int?) ++v
-                                       : null;
-                        })
-                .OrderBy(i => i)
-                .LastOrDefault();
+            int? version = existingSlugs.Select(s => GetSlugVersion(slugCandidate, s)).OrderBy(i => i).LastOrDefault();
 
             return version != null
                        ? string.Format("{0}-{1}", slugCandidate, version)
                        : slugCandidate;
+        }
+
+        private static int? GetSlugVersion(string slugCandidate, string slug) {
+            int v;
+            string[] slugParts = slug.Split(new []{slugCandidate}, StringSplitOptions.RemoveEmptyEntries);
+            
+            if (slugParts.Length == 0)
+                return 2;
+
+            return int.TryParse(slugParts[0].TrimStart('-'), out v)
+                       ? (int?)++v
+                       : null;
         }
     }
 }

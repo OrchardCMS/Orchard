@@ -68,7 +68,9 @@ namespace Orchard.Blogs.Models {
                 //todo: (heskew) need better messages
                 var originalSlug = post.Slug;
                 post.Slug = _routableService.GenerateUniqueSlug(post.Slug, slugsLikeThis);
-                _orchardServices.Notifier.Warning(T("A different blog post is already published with this same slug ({0}) so a unique slug ({1}) was generated for this post.", originalSlug, post.Slug));
+
+                if (originalSlug != post.Slug)
+                    _orchardServices.Notifier.Warning(T("A different blog post is already published with this same slug ({0}) so a unique slug ({1}) was generated for this post.", originalSlug, post.Slug));
             }
         }
     }

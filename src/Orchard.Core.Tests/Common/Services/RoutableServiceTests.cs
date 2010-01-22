@@ -1,20 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
-using Autofac;
 using Autofac.Builder;
 using JetBrains.Annotations;
-using Moq;
 using NUnit.Framework;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
 using Orchard.ContentManagement.Handlers;
 using Orchard.ContentManagement.Records;
 using Orchard.Core.Common.Models;
-using Orchard.Core.Common.Providers;
 using Orchard.Core.Common.Records;
 using Orchard.Core.Common.Services;
-using Orchard.Data;
-using Orchard.Security;
 using Orchard.Tests.Packages;
 
 namespace Orchard.Core.Tests.Common.Services {
@@ -65,6 +60,42 @@ namespace Orchard.Core.Tests.Common.Services {
 
             Assert.That(veryVeryLongTitle.Length, Is.AtLeast(1001));
             Assert.That(thing.Slug.Length, Is.EqualTo(1000));
+        }
+
+        [Test]
+        public void NoExistingLikeSlugsGeneratesSameSlug() {
+            string slug = _routableService.GenerateUniqueSlug("woohoo", null);
+            Assert.That(slug, Is.EqualTo("woohoo"));
+        }
+
+        [Test]
+        public void ExistingSingleLikeSlugThatsAConflictGeneratesADash2() {
+            string slug = _routableService.GenerateUniqueSlug("woohoo", new List<string> { "woohoo" });
+            Assert.That(slug, Is.EqualTo("woohoo-2"));
+        }
+
+        [Test]
+        public void ExistingSingleLikeSlugThatsNotAConflictGeneratesSameSlug() {
+            string slug = _routableService.GenerateUniqueSlug("woohoo", new List<string> { "woohoo-2" });
+            Assert.That(slug, Is.EqualTo("woohoo"));
+        }
+
+        [Test]
+        public void ExistingLikeSlugsWithAConflictGeneratesADashVNext() {
+            string slug = _routableService.GenerateUniqueSlug("woohoo", new List<string> { "woohoo", "woohoo-2" });
+            Assert.That(slug, Is.EqualTo("woohoo-3"));
+        }
+
+        [Test]
+        public void ExistingSlugsWithVersionGapsAndNoMatchGeneratesSameSlug() {
+            string slug = _routableService.GenerateUniqueSlug("woohoo", new List<string> { "woohoo-2", "woohoo-4", "woohoo-5" });
+            Assert.That(slug, Is.EqualTo("woohoo"));
+        }
+
+        [Test]
+        public void ExistingSlugsWithVersionGapsAndAMatchGeneratesADash2() {
+            string slug = _routableService.GenerateUniqueSlug("woohoo-2", new List<string> { "woohoo-2", "woohoo-4", "woohoo-5" });
+            Assert.That(slug, Is.EqualTo("woohoo-2-2"));
         }
 
         protected override IEnumerable<Type> DatabaseTypes {

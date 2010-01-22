@@ -64,6 +64,7 @@ namespace Orchard.Pages.Controllers {
                     foreach (PageEntry entry in checkedEntries) {
                         var page = _pageService.GetLatest(entry.PageId);
                         _pageService.Publish(page);
+                        Services.ContentManager.Flush();
                     }
                     break;
                 case PagesBulkAction.Unpublish:
@@ -72,6 +73,7 @@ namespace Orchard.Pages.Controllers {
                     foreach (PageEntry entry in checkedEntries) {
                         var page = _pageService.GetLatest(entry.PageId);
                         _pageService.Unpublish(page);
+                        Services.ContentManager.Flush();
                     }
                     break;
                 case PagesBulkAction.Delete:
@@ -81,6 +83,7 @@ namespace Orchard.Pages.Controllers {
                     foreach (PageEntry entry in checkedEntries) {
                         var page = _pageService.GetLatest(entry.PageId);
                         _pageService.Delete(page);
+                        Services.ContentManager.Flush();
                     }
                     break;
                 default:
@@ -138,7 +141,10 @@ namespace Orchard.Pages.Controllers {
                 return View(model);
             }
 
-            Services.ContentManager.Create(model.Page.Item.ContentItem, publishNow ? VersionOptions.Published : VersionOptions.Draft);
+            Services.ContentManager.Create(model.Page.Item.ContentItem, VersionOptions.Draft);
+
+            if (publishNow)
+                Services.ContentManager.Publish(model.Page.Item.ContentItem);
 
             if (publishNow)
                 Services.Notifier.Information(T("Page has been published"));
