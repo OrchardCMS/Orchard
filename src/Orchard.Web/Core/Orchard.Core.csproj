@@ -183,14 +183,14 @@
     <Content Include="Themes\Theme.txt" />
     <Content Include="Themes\Styles\site.css" />
     <Content Include="Themes\Views\Admin\Install.aspx" />
-    <Content Include="Themes\Views\_Header.ascx" />
-    <Content Include="Themes\Views\_Document.aspx" />
+    <Content Include="Themes\Views\Header.ascx" />
+    <Content Include="Themes\Views\Document.aspx" />
     <Content Include="Themes\Views\EditorTemplates\Parts\Themes.SiteSettings.ascx" />
     <Content Include="Themes\Views\HeadPreload.ascx" />
-    <Content Include="Themes\Views\_Layout.ascx" />
-    <Content Include="Themes\Views\_Messages.ascx" />
-    <Content Include="Themes\Views\_User.ascx" />
-    <Content Include="Themes\Views\_Menu.ascx" />
+    <Content Include="Themes\Views\Layout.ascx" />
+    <Content Include="Themes\Views\Messages.ascx" />
+    <Content Include="Themes\Views\User.ascx" />
+    <Content Include="Themes\Views\Menu.ascx" />
     <Content Include="Themes\Views\Web.config" />
   </ItemGroup>
   <ItemGroup>
