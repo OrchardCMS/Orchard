@@ -179,6 +179,7 @@
     <Content Include="Settings\Views\EditorTemplates\Items\Settings.Site.ascx" />
     <Content Include="Themes\Scripts\jquery-1.4.js" />
     <Content Include="Themes\Scripts\jquery-1.4.min.js" />
+    <Content Include="Themes\Styles\images\icons.png" />
     <Content Include="Themes\Theme.png" />
     <Content Include="Themes\Theme.txt" />
     <Content Include="Themes\Styles\site.css" />

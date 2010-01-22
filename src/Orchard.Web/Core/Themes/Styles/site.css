@@ -399,7 +399,7 @@ span.message {
 /* Icon buttons
 ----------------------------------------------------------*/
 a.ibutton, a.ibutton:link, a.ibutton:visited {
-    background:url(Admin/css/images/icons.png) 0 -20px;
+    background:url(images/icons.png) 0 -20px;
     border:none;
     display:inline;
     float:left;
