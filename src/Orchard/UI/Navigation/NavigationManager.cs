@@ -23,7 +23,14 @@ namespace Orchard.UI.Navigation {
         protected virtual IUser CurrentUser { get; [UsedImplicitly] private set; }
 
         public IEnumerable<MenuItem> BuildMenu(string menuName) {
-            return Reduce(Merge(AllSources(menuName))).ToArray();
+            return Crop(Reduce(Merge(AllSources(menuName)))).ToArray();
+        }
+
+        private IEnumerable<MenuItem> Crop(IEnumerable<MenuItem> items) {
+            foreach(var item in items) {
+                if (item.Items.Any() || item.RouteValues != null)
+                    yield return item;
+            }
         }
 
         private IEnumerable<MenuItem> Reduce(IEnumerable<MenuItem> items) {
