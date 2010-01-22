@@ -1,4 +1,7 @@
-﻿using JetBrains.Annotations;
+﻿using System;
+using JetBrains.Annotations;
+using Orchard.ContentManagement;
+using Orchard.ContentManagement.Aspects;
 using Orchard.Localization;
 using Orchard.Security.Permissions;
 using Orchard.UI.Notify;
@@ -6,6 +9,7 @@ using Orchard.UI.Notify;
 namespace Orchard.Security {
     public interface IAuthorizer : IDependency {
         bool Authorize(Permission permission, LocalizedString message);
+        bool Authorize(Permission permission, IContent content, LocalizedString message);
     }
 
     public class Authorizer : IAuthorizer {
@@ -24,7 +28,11 @@ namespace Orchard.Security {
         public Localizer T { get; set; }
 
         public bool Authorize(Permission permission, LocalizedString message) {
-            if (_authorizationService.TryCheckAccess(CurrentUser, permission))
+            return Authorize(permission, null, message);
+        }
+
+        public bool Authorize(Permission permission, IContent content, LocalizedString message) {
+            if (_authorizationService.TryCheckAccess(permission, CurrentUser, content))
                 return true;
 
             if (CurrentUser == null) {
@@ -37,5 +45,6 @@ namespace Orchard.Security {
             }
             return false;
         }
+
     }
 }

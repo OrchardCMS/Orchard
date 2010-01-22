@@ -40,7 +40,7 @@ namespace Orchard.Roles.Controllers {
 
         protected override DriverResult Editor(UserRoles userRoles) {
             // don't show editor without apply roles permission
-            if (!_authorizationService.TryCheckAccess(_authenticationService.GetAuthenticatedUser(), Permissions.ApplyRoles))
+            if (!_authorizationService.TryCheckAccess(Permissions.ApplyRoles, _authenticationService.GetAuthenticatedUser(), userRoles))
                 return null;
 
             var roles =
@@ -61,7 +61,7 @@ namespace Orchard.Roles.Controllers {
 
         protected override DriverResult Editor(UserRoles userRoles, IUpdateModel updater) {
             // don't apply editor without apply roles permission
-            if (!_authorizationService.TryCheckAccess(_authenticationService.GetAuthenticatedUser(), Permissions.ApplyRoles))
+            if (!_authorizationService.TryCheckAccess(Permissions.ApplyRoles, _authenticationService.GetAuthenticatedUser(), userRoles))
                 return null;
 
             var model = new UserRolesViewModel {

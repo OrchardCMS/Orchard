@@ -14,15 +14,15 @@ using Orchard.UI.Notify;
 namespace Orchard.Pages.Controllers {
     [ValidateInput(false)]
     public class AdminController : Controller, IUpdateModel {
-        private readonly IOrchardServices _services;
         private readonly IPageService _pageService;
 
         public AdminController(IOrchardServices services, IPageService pageService) {
-            _services = services;
+            Services = services;
             _pageService = pageService;
             T = NullLocalizer.Instance;
         }
 
+        public IOrchardServices Services { get; private set; }
         private Localizer T { get; set; }
 
         public ActionResult List(PagesOptions options) {
@@ -58,7 +58,7 @@ namespace Orchard.Pages.Controllers {
                 case PagesBulkAction.None:
                     break;
                 case PagesBulkAction.PublishNow:
-                    if (!_services.Authorizer.Authorize(Permissions.PublishPages, T("Couldn't publish page")))
+                    if (!Services.Authorizer.Authorize(Permissions.PublishPages, T("Couldn't publish page")))
                         return new HttpUnauthorizedResult();
 
                     foreach (PageEntry entry in checkedEntries) {
@@ -67,7 +67,7 @@ namespace Orchard.Pages.Controllers {
                     }
                     break;
                 case PagesBulkAction.Unpublish:
-                    if (!_services.Authorizer.Authorize(Permissions.PublishPages, T("Couldn't unpublish page")))
+                    if (!Services.Authorizer.Authorize(Permissions.PublishPages, T("Couldn't unpublish page")))
                         return new HttpUnauthorizedResult();
                     foreach (PageEntry entry in checkedEntries) {
                         var page = _pageService.GetLatest(entry.PageId);
@@ -75,7 +75,7 @@ namespace Orchard.Pages.Controllers {
                     }
                     break;
                 case PagesBulkAction.Delete:
-                    if (!_services.Authorizer.Authorize(Permissions.DeletePages, T("Couldn't delete page")))
+                    if (!Services.Authorizer.Authorize(Permissions.DeletePages, T("Couldn't delete page")))
                         return new HttpUnauthorizedResult();
 
                     foreach (PageEntry entry in checkedEntries) {
@@ -99,10 +99,10 @@ namespace Orchard.Pages.Controllers {
         }
 
         public ActionResult Create() {
-            if (!_services.Authorizer.Authorize(Permissions.EditPages, T("Not allowed to create a page")))
+            if (!Services.Authorizer.Authorize(Permissions.EditPages, T("Not allowed to create a page")))
                 return new HttpUnauthorizedResult();
 
-            var page = _services.ContentManager.BuildEditorModel(_services.ContentManager.New<Page>("page"));
+            var page = Services.ContentManager.BuildEditorModel(Services.ContentManager.New<Page>("page"));
 
             var model = new PageCreateViewModel {
                 Page = page
@@ -113,7 +113,7 @@ namespace Orchard.Pages.Controllers {
 
         [HttpPost, ActionName("Create")]
         public ActionResult CreatePOST(PageCreateViewModel model) {
-            if (!_services.Authorizer.Authorize(Permissions.EditPages, T("Couldn't create page")))
+            if (!Services.Authorizer.Authorize(Permissions.EditPages, T("Couldn't create page")))
                 return new HttpUnauthorizedResult();
 
             //TODO: (erikpo) Move this duplicate code somewhere else
@@ -129,38 +129,37 @@ namespace Orchard.Pages.Controllers {
                 }
             }
 
-            model.Page = _services.ContentManager.UpdateEditorModel(_services.ContentManager.New<Page>("page"), this);
+            model.Page = Services.ContentManager.UpdateEditorModel(Services.ContentManager.New<Page>("page"), this);
             if (!publishNow && publishDate != null)
                 model.Page.Item.Published = publishDate.Value;
 
             if (!ModelState.IsValid) {
-                _services.TransactionManager.Cancel();
+                Services.TransactionManager.Cancel();
                 return View(model);
             }
 
-            _services.ContentManager.Create(model.Page.Item.ContentItem, publishNow ? VersionOptions.Published : VersionOptions.Draft);
+            Services.ContentManager.Create(model.Page.Item.ContentItem, publishNow ? VersionOptions.Published : VersionOptions.Draft);
 
             if (publishNow)
-                _services.Notifier.Information(T("Page has been published"));
+                Services.Notifier.Information(T("Page has been published"));
             else if (publishDate != null)
-                _services.Notifier.Information(T("Page has been scheduled for publishing"));
+                Services.Notifier.Information(T("Page has been scheduled for publishing"));
             else
-                _services.Notifier.Information(T("Page draft has been saved"));
+                Services.Notifier.Information(T("Page draft has been saved"));
 
             return RedirectToAction("Edit", "Admin", new { id = model.Page.Item.ContentItem.Id });
         }
 
         public ActionResult Edit(int id) {
-            if (!_services.Authorizer.Authorize(Permissions.EditPages, T("Couldn't edit page")))
-                return new HttpUnauthorizedResult();
-
             Page page = _pageService.GetLatest(id);
-
             if (page == null)
                 return new NotFoundResult();
 
+            if (!Services.Authorizer.Authorize(Permissions.EditOthersPages, page, T("Couldn't edit page")))
+                return new HttpUnauthorizedResult();
+
             var model = new PageEditViewModel {
-                Page = _services.ContentManager.BuildEditorModel(page)
+                Page = Services.ContentManager.BuildEditorModel(page)
             };
 
             return View(model);
@@ -168,13 +167,13 @@ namespace Orchard.Pages.Controllers {
 
         [HttpPost, ActionName("Edit")]
         public ActionResult EditPOST(int id) {
-            if (!_services.Authorizer.Authorize(Permissions.EditPages, T("Couldn't edit page")))
-                return new HttpUnauthorizedResult();
-
             Page page = _pageService.GetPageOrDraft(id);
-
             if (page == null)
                 return new NotFoundResult();
+
+            if (!Services.Authorizer.Authorize(Permissions.EditOthersPages, page, T("Couldn't edit page")))
+                return new HttpUnauthorizedResult();
+
 
             //TODO: (erikpo) Move this duplicate code somewhere else
             DateTime? publishDate = null;
@@ -198,40 +197,39 @@ namespace Orchard.Pages.Controllers {
                 _pageService.Unpublish(page);
 
             var model = new PageEditViewModel {
-                Page = _services.ContentManager.UpdateEditorModel(page, this)
+                Page = Services.ContentManager.UpdateEditorModel(page, this)
             };
 
             TryUpdateModel(model);
 
             if (!ModelState.IsValid) {
-                _services.TransactionManager.Cancel();
+                Services.TransactionManager.Cancel();
 
                 return View(model);
             }
 
             if (publishNow)
-                _services.Notifier.Information(T("Page has been published"));
+                Services.Notifier.Information(T("Page has been published"));
             else if (publishDate != null)
-                _services.Notifier.Information(T("Page has been scheduled for publishing"));
+                Services.Notifier.Information(T("Page has been scheduled for publishing"));
             else
-                _services.Notifier.Information(T("Page draft has been saved"));
+                Services.Notifier.Information(T("Page draft has been saved"));
 
             return RedirectToAction("Edit", "Admin", new { id = model.Page.Item.ContentItem.Id });
         }
 
         [HttpPost]
         public ActionResult Delete(int id) {
-            if (!_services.Authorizer.Authorize(Permissions.DeletePages, T("Couldn't delete page")))
-                return new HttpUnauthorizedResult();
-
             Page page = _pageService.Get(id);
-
             if (page == null)
                 return new NotFoundResult();
 
+            if (!Services.Authorizer.Authorize(Permissions.DeleteOthersPages, page, T("Couldn't delete page")))
+                return new HttpUnauthorizedResult();
+
             _pageService.Delete(page);
 
-            _services.Notifier.Information(T("Page was successfully deleted"));
+            Services.Notifier.Information(T("Page was successfully deleted"));
 
             return RedirectToAction("List");
         }

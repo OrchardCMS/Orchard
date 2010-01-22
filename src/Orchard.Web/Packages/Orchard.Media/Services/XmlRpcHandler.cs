@@ -46,7 +46,7 @@ namespace Orchard.Media.Services {
             XRpcStruct file) {
 
             var user = _membershipService.ValidateUser(userName, password);
-            if (!_authorizationService.TryCheckAccess(user, Permissions.UploadMediaFiles)) {
+            if (!_authorizationService.TryCheckAccess(Permissions.UploadMediaFiles, user, null)) {
                 //TEMP: return appropriate access-denied response for user
                 throw new ApplicationException("Access denied");
             }

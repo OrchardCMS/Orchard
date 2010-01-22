@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using NUnit.Framework;
+using Orchard.ContentManagement;
 using Orchard.Security;
 using Orchard.Security.Permissions;
 using Orchard.UI.Navigation;
@@ -19,10 +20,10 @@ namespace Orchard.Tests.UI.Navigation {
         }
 
         public class StubAuth : IAuthorizationService {
-            public void CheckAccess(IUser user, Permission permission) {                
+            public void CheckAccess(Permission permission, IUser user, IContent content) {                
             }
 
-            public bool TryCheckAccess(IUser user, Permission permission) {
+            public bool TryCheckAccess(Permission permission, IUser user, IContent content) {
                 return true;
             }
         }

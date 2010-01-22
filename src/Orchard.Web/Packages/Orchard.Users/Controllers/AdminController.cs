@@ -26,7 +26,7 @@ namespace Orchard.Users.Controllers {
 
 
         public ActionResult Index() {
-            if (!Services.Authorizer.Authorize(Permissions.ManageUsers, T("Not authorized to manage settings")))
+            if (!Services.Authorizer.Authorize(Permissions.ManageUsers, T("Not authorized to list users")))
                 return new HttpUnauthorizedResult();
 
             var users = Services.ContentManager
@@ -44,7 +44,7 @@ namespace Orchard.Users.Controllers {
         }
 
         public ActionResult Create() {
-            if (!Services.Authorizer.Authorize(Permissions.ManageUsers, T("Not authorized to manage settings")))
+            if (!Services.Authorizer.Authorize(Permissions.ManageUsers, T("Not authorized to manage users")))
                 return new HttpUnauthorizedResult();
 
             var user = Services.ContentManager.New<IUser>(UserDriver.ContentType.Name);
@@ -56,7 +56,7 @@ namespace Orchard.Users.Controllers {
 
         [HttpPost, ActionName("Create")]
         public ActionResult CreatePOST() {
-            if (!Services.Authorizer.Authorize(Permissions.ManageUsers, T("Not authorized to manage settings")))
+            if (!Services.Authorizer.Authorize(Permissions.ManageUsers, T("Not authorized to manage users")))
                 return new HttpUnauthorizedResult();
 
             var model = new UserCreateViewModel();
@@ -83,7 +83,7 @@ namespace Orchard.Users.Controllers {
         }
 
         public ActionResult Edit(int id) {
-            if (!Services.Authorizer.Authorize(Permissions.ManageUsers, T("Not authorized to manage settings")))
+            if (!Services.Authorizer.Authorize(Permissions.ManageUsers, T("Not authorized to manage users")))
                 return new HttpUnauthorizedResult();
             
             return View(new UserEditViewModel {
@@ -93,7 +93,7 @@ namespace Orchard.Users.Controllers {
 
         [HttpPost, ActionName("Edit")]
         public ActionResult EditPOST(int id) {
-            if (!Services.Authorizer.Authorize(Permissions.ManageUsers, T("Not authorized to manage settings")))
+            if (!Services.Authorizer.Authorize(Permissions.ManageUsers, T("Not authorized to manage users")))
                 return new HttpUnauthorizedResult();
             
             var model = new UserEditViewModel {

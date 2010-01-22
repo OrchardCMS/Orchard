@@ -1,4 +1,5 @@
-﻿using Orchard.Security.Permissions;
+﻿using Orchard.ContentManagement;
+using Orchard.Security.Permissions;
 
 namespace Orchard.Security {
     /// <summary>
@@ -6,7 +7,9 @@ namespace Orchard.Security {
     /// provided by default. 
     /// </summary>
     public interface IAuthorizationService : IDependency {
-        void CheckAccess(IUser user, Permission permission);
-        bool TryCheckAccess(IUser user, Permission permission);
+        void CheckAccess(Permission permission, IUser user, IContent content);
+        bool TryCheckAccess(Permission permission, IUser user, IContent content);
     }
+
+    
 }

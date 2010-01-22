@@ -34,11 +34,11 @@ namespace Orchard.UI.Navigation {
         }
 
         private IEnumerable<MenuItem> Reduce(IEnumerable<MenuItem> items) {
-            var hasDebugShowAllMenuItems = _authorizationService.TryCheckAccess(CurrentUser, Permission.Named("DebugShowAllMenuItems"));
+            var hasDebugShowAllMenuItems = _authorizationService.TryCheckAccess(Permission.Named("DebugShowAllMenuItems"), CurrentUser, null);
             foreach (var item in items) {
                 if (hasDebugShowAllMenuItems ||
                     !item.Permissions.Any() ||
-                    item.Permissions.Any(x => _authorizationService.TryCheckAccess(CurrentUser, x))) {
+                    item.Permissions.Any(x => _authorizationService.TryCheckAccess(x, CurrentUser, null))) {
                     yield return new MenuItem {
                         Items = Reduce(item.Items),
                         Permissions = item.Permissions,
