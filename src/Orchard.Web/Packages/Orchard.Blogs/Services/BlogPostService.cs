@@ -5,13 +5,16 @@ using Orchard.Blogs.Controllers;
 using Orchard.Blogs.Models;
 using Orchard.Core.Common.Records;
 using Orchard.ContentManagement;
+using Orchard.Data;
 
 namespace Orchard.Blogs.Services {
     public class BlogPostService : IBlogPostService {
         private readonly IContentManager _contentManager;
+        private readonly IRepository<BlogArchiveRecord> _blogArchiveRepository;
 
-        public BlogPostService(IContentManager contentManager) {
+        public BlogPostService(IContentManager contentManager, IRepository<BlogArchiveRecord> blogArchiveRepository) {
             _contentManager = contentManager;
+            _blogArchiveRepository = blogArchiveRepository;
         }
 
         public BlogPost Get(Blog blog, string slug) {
@@ -65,29 +68,17 @@ namespace Orchard.Blogs.Services {
         }
 
         public IEnumerable<KeyValuePair<ArchiveData, int>> GetArchives(Blog blog) {
-            return new List<KeyValuePair<ArchiveData, int>> {
-                                                                new KeyValuePair<ArchiveData, int>(new ArchiveData("2010/1"), 5),
-                                                                new KeyValuePair<ArchiveData, int>(new ArchiveData("2009/12"), 23),
-                                                                new KeyValuePair<ArchiveData, int>(new ArchiveData("2009/11"), 4),
-                                                                new KeyValuePair<ArchiveData, int>(new ArchiveData("2009/9"), 1),
-                                                                new KeyValuePair<ArchiveData, int>(new ArchiveData("2009/8"), 1),
-                                                                new KeyValuePair<ArchiveData, int>(new ArchiveData("2009/7"), 1),
-                                                                new KeyValuePair<ArchiveData, int>(new ArchiveData("2009/6"), 1),
-                                                                new KeyValuePair<ArchiveData, int>(new ArchiveData("2009/5"), 1),
-                                                                new KeyValuePair<ArchiveData, int>(new ArchiveData("2009/4"), 1),
-                                                                new KeyValuePair<ArchiveData, int>(new ArchiveData("2009/3"), 1),
-                                                                new KeyValuePair<ArchiveData, int>(new ArchiveData("2009/2"), 1),
-                                                                new KeyValuePair<ArchiveData, int>(new ArchiveData("2009/1"), 1),
-                                                                new KeyValuePair<ArchiveData, int>(new ArchiveData("2008/12"), 1),
-                                                                new KeyValuePair<ArchiveData, int>(new ArchiveData("2008/11"), 1),
-                                                                new KeyValuePair<ArchiveData, int>(new ArchiveData("2008/10"), 1),
-                                                                new KeyValuePair<ArchiveData, int>(new ArchiveData("2008/9"), 1),
-                                                                new KeyValuePair<ArchiveData, int>(new ArchiveData("2008/7"), 1),
-                                                                new KeyValuePair<ArchiveData, int>(new ArchiveData("2008/6"), 1),
-                                                                new KeyValuePair<ArchiveData, int>(new ArchiveData("2008/5"), 1),
-                                                                new KeyValuePair<ArchiveData, int>(new ArchiveData("2008/4"), 1),
-                                                                new KeyValuePair<ArchiveData, int>(new ArchiveData("2008/3"), 1)
-                                                            };
+            var query = 
+                from bar in _blogArchiveRepository.Table
+                where bar.Blog == blog.Record
+                orderby bar.Year descending, bar.Month descending
+                select bar;
+
+            return
+                query.ToList().Select(
+                    bar =>
+                    new KeyValuePair<ArchiveData, int>(new ArchiveData(string.Format("{0}/{1}", bar.Year, bar.Month)),
+                                                       bar.PostCount));
         }
 
         public void Delete(BlogPost blogPost) {

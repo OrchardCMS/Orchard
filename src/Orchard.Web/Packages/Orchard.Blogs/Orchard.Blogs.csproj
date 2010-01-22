@@ -84,6 +84,8 @@
     <Compile Include="Extensions\UrlHelperExtensions.cs" />
     <Compile Include="Filters\ArchivesFilter.cs" />
     <Compile Include="Models\ArchiveData.cs" />
+    <Compile Include="Models\BlogArchiveHandler.cs" />
+    <Compile Include="Models\BlogArchiveRecord.cs" />
     <Compile Include="Permissions.cs" />
     <Compile Include="Routing\IsArchiveConstraint.cs" />
     <Compile Include="Routing\IsBlogConstraint.cs" />
