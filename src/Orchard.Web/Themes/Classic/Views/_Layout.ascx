@@ -12,7 +12,7 @@
     <div id="header">
             <h1><%=Html.Encode(Html.SiteName()) %></h1>
         <%-- todo:(nheskew) this will need to all go in the header zone (user widget) --%>
-        <% Html.Include("user"); %>
+        <% Html.Include("User"); %>
     </div>
     <div id="main">
         <div id="content">
@@ -35,6 +35,6 @@
         </div>
         <%-- End Content --%>
         <%Html.Zone("footer");%>
-        <% Html.Include("footer"); %>
+        <% Html.Include("Footer"); %>
     </div>
 </div>

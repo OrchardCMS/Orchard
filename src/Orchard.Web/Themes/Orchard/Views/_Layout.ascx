@@ -7,11 +7,11 @@
         <h1>
             <a href="/"><span class="displayText">Project Orchard</span></a></h1>
         <%-- todo:(nheskew) this will need to all go in the header zone (user widget) --%>
-        <% Html.Include("user"); %>
+        <% Html.Include("User"); %>
     </div>
     <%--Top Navigation--%>
     <%-- todo:(nheskew) this will need to be a generated menu --%>
-    <% Html.Include("menu"); %>
+    <% Html.Include("Menu"); %>
     <div id="content" class="clearLayout">
         <ol id="contentMain">
             <li class="moduleContentMain">
@@ -49,5 +49,5 @@
     </div>
     <%-- End Content --%>
     <%Html.Zone("footer");%>
-    <% Html.Include("footer"); %>
+    <% Html.Include("Footer"); %>
 </div>

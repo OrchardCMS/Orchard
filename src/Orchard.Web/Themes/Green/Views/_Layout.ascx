@@ -20,13 +20,13 @@
         <div class="yui-u">
             <div id="logIn">
                 <%-- todo:(nheskew) this will need to all go in the header zone (user widget) --%>
-                <% Html.Include("user"); %>
+                <% Html.Include("User"); %>
             </div>
         </div>
     </div>
     <%--Top Navigation--%>
     <%-- todo:(nheskew) this will need to be a generated menu --%>
-    <% Html.Include("menu"); %>
+    <% Html.Include("Menu"); %>
 </div>
 
 <%-- Begin Page Content --%>
@@ -53,5 +53,5 @@
   </div>
   <%-- End Content --%>
   <%Html.Zone("footer");%>
-  <% Html.Include("footer"); %>
+  <% Html.Include("Footer"); %>
 </div>
