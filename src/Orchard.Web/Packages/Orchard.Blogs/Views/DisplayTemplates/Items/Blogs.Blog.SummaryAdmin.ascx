@@ -3,10 +3,7 @@
 <%@ Import Namespace="Orchard.Blogs.Extensions"%>
 <%@ Import Namespace="Orchard.Blogs.Models"%>
 <h2><%=Html.Link(Html.Encode(Model.Item.Name), Url.BlogForAdmin(Model.Item.Slug)) %></h2>
-<div class="meta">
-    <%Html.Zone("meta"); %>
-    | <%=Html.Link(_Encoded("?? comments").ToString(), "") %>
-</div>
+<div class="meta"><%Html.Zone("meta");%></div>
 <%--<p>[list of authors] [modify blog access]</p>--%>
 <p><%=Html.Encode(Model.Item.Description) %></p>
 <ul class="actions">

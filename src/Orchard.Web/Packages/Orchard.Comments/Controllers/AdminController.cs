@@ -119,7 +119,7 @@ namespace Orchard.Comments.Controllers {
             }
             catch (Exception exception) {
                 _notifier.Error(T("Editing comments failed: " + exception.Message));
-                return Index(viewModel.Options);
+                return RedirectToAction("Index", "Admin", new { options = viewModel.Options });
             }
 
             return RedirectToAction("Index");
@@ -187,7 +187,7 @@ namespace Orchard.Comments.Controllers {
                 var model = new CommentsDetailsViewModel {
                     Comments = entries,
                     Options = options,
-                    DisplayNameForCommentedItem = _commentService.GetDisplayForCommentedContent(id).DisplayText,
+                    DisplayNameForCommentedItem = _commentService.GetDisplayForCommentedContent(id) == null ? "" : _commentService.GetDisplayForCommentedContent(id).DisplayText,
                     CommentedItemId = id,
                     CommentsClosedOnItem = _commentService.CommentsClosedForCommentedContent(id),
                 };
@@ -195,7 +195,7 @@ namespace Orchard.Comments.Controllers {
             }
             catch (Exception exception) {
                 _notifier.Error(T("Listing comments failed: " + exception.Message));
-                return Index(new CommentIndexOptions());
+                return RedirectToAction("Index");
             }
         }
 
@@ -311,7 +311,7 @@ namespace Orchard.Comments.Controllers {
             }
             catch (Exception exception) {
                 _notifier.Error(T("Editing comment failed: " + exception.Message));
-                return Index(new CommentIndexOptions());
+                return RedirectToAction("Index");
             }
         }
 
@@ -349,7 +349,7 @@ namespace Orchard.Comments.Controllers {
                 if (!String.IsNullOrEmpty(returnUrl)) {
                     return Redirect(returnUrl);
                 }
-                return Index(new CommentIndexOptions());
+                return RedirectToAction("Index");
             }
         }
 

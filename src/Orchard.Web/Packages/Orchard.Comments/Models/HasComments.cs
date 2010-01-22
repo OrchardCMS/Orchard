@@ -6,10 +6,15 @@ using Orchard.ContentManagement.Records;
 
 namespace Orchard.Comments.Models {
     public class HasComments : ContentPart<HasCommentsRecord> {
+        public HasComments() {
+            Comments = new List<Comment>();
+            PendingComments = new List<Comment>();
+        }
 
-        public int CommentCount { get { return Comments.Count(); } }
+        public int CommentCount { get { return Comments.Count; } }
 
-        public IEnumerable<Comment> Comments { get; set; }
+        public IList<Comment> Comments { get; set; }
+        public IList<Comment> PendingComments { get; set; }
 
         public bool CommentsShown {
             get { return Record.CommentsShown; }

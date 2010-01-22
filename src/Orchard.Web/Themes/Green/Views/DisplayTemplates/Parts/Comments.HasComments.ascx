@@ -1,7 +1,7 @@
 ﻿<%@ Control Language="C#" Inherits="Orchard.Mvc.ViewUserControl<HasComments>" %>
 <%@ Import Namespace="Orchard.Comments.Models"%>
-<h2 id="comments"><%=_Encoded("{0} Comment{1}", Model.CommentCount, Model.CommentCount == 1 ? "" : "s") %></h2><%
-if (Model.CommentCount > 0) { Html.RenderPartial("ListOfComments", Model.Comments); }
+<h2 id="comments"><%=_Encoded("{0} Comment{1}", Model.Comments.Count, Model.Comments.Count == 1 ? "" : "s")%></h2><%
+if (Model.Comments.Count > 0) { Html.RenderPartial("ListOfComments", Model.Comments); }
 if (Model.CommentsActive == false) { %>
     <p><%=_Encoded("Comments have been disabled for this content.") %></p><%
 } else { %>

@@ -9,9 +9,11 @@ if (Model.Entries.Count() > 0) { %>
         // Add blog post count rendering into "meta" zone
         entry.ContentItemViewModel.Zones.AddAction("meta", html => {
             int draftCount = entry.TotalPostCount - entry.ContentItemViewModel.Item.PostCount;
-            int publishedCount = entry.TotalPostCount;
+            int totalPostCount = entry.TotalPostCount;
             var draftText = (draftCount == 0 ? "": string.Format(" ({0} draft{1})", draftCount, draftCount == 1 ? "" : "s"));
-            var linkContent = _Encoded("{0} post{1}{2}", publishedCount, publishedCount == 1 ? "" : "s", draftText);
+            
+            var linkContent = _Encoded("{0} post{1}{2}", totalPostCount, totalPostCount == 1 ? "" : "s", draftText);
+            
             html.ViewContext.Writer.Write(html.Link(linkContent.ToString(), Url.BlogForAdmin(entry.ContentItemViewModel.Item.Slug)));
         });
 

@@ -16,7 +16,7 @@
     <% if (blogPost.Creator != null) { 
        %><div class="posted"><%=_Encoded("Posted by {0} {1}", blogPost.Creator.UserName, Html.PublishedWhen(blogPost))%></div><%
        } %>
-    <%=Html.Link(T(hasComments.CommentCount == 1 ? "{0} comment" : "{0} comments", hasComments.CommentCount).ToString(), "#comments")%>
+    <%=Html.Link(T(hasComments.Comments.Count == 1 ? "{0} comment" : "{0} comments", hasComments.Comments.Count).ToString(), "#comments")%>
 </div>
 <%=Html.DisplayFor(m => bodyViewModelModel, "Parts/Common.Body")%>
 <%=Html.DisplayFor(m => hasComments, "Parts/Comments.HasComments", "") %>
