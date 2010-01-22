@@ -28,6 +28,7 @@
 	border:1px solid #CACEC6;
 	-moz-border-radius:6px;
 	-webkit-border-radius:6px;
+	-moz-box-shadow: 2px 2px 2px #ccc;
 }
 
 .commentauthor {
