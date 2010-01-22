@@ -81,6 +81,7 @@ namespace Orchard.UI.Notify {
             }
 
             baseViewModel.Messages = baseViewModel.Messages == null ? messageEntries : baseViewModel.Messages.Union(messageEntries).ToList();
+            baseViewModel.Zones.AddRenderPartial("content:before", "Messages", baseViewModel.Messages);
         }
 
         public void OnResultExecuted(ResultExecutedContext filterContext) {

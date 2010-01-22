@@ -4,7 +4,6 @@ Html.RegisterStyle("site.css");
 Model.Zones.AddRenderPartial("header", "header", Model);
 Model.Zones.AddRenderPartial("header:after", "user", Model);
 Model.Zones.AddRenderPartial("menu", "menu", Model);
-Model.Zones.AddRenderPartial("content:before", "messages", Model.Messages);
 %>
 <div id="page">
     <div id="header"><%

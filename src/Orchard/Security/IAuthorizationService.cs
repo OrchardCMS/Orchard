@@ -6,6 +6,7 @@ namespace Orchard.Security {
     /// provided by default. 
     /// </summary>
     public interface IAuthorizationService : IDependency {
-        bool CheckAccess(IUser user, Permission permission);
+        void CheckAccess(IUser user, Permission permission);
+        bool TryCheckAccess(IUser user, Permission permission);
     }
 }

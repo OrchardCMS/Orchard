@@ -24,7 +24,13 @@ namespace Orchard.Roles.Services {
 
         #region Implementation of IAuthorizationService
 
-        public bool CheckAccess(IUser user, Permission permission) {
+        public void CheckAccess(IUser user, Permission permission) {
+            if (!TryCheckAccess(user, permission)) {
+                throw new OrchardSecurityException { PermissionName = permission.Name };
+            }
+        }
+
+        public bool TryCheckAccess(IUser user, Permission permission) {
             if (user == null) {
                 return false;
             }

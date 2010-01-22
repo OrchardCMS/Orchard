@@ -5,7 +5,6 @@ Html.RegisterStyle("site.css");
 Model.Zones.AddRenderPartial("header", "header", Model);
 Model.Zones.AddRenderPartial("header:after", "user", Model); // todo: (heskew) should be a user display or widget
 Model.Zones.AddRenderPartial("menu", "menu", Model);
-Model.Zones.AddRenderPartial("content:before", "messages", Model.Messages);
 %>
 <div id="header" role="banner"><% Html.Zone("header"); %></div>
 <div id="content">

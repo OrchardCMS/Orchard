@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Web.Mvc;
 using JetBrains.Annotations;
+using Orchard.Logging;
 using Orchard.Mvc.Filters;
 using Orchard.Mvc.ViewModels;
 
@@ -12,8 +13,11 @@ namespace Orchard.Security {
 
         public SecurityFilter(IAuthenticationService authenticationService) {
             _authenticationService = authenticationService;
+            Logger = NullLogger.Instance;
         }
-       
+
+        public ILogger Logger { get; set; }
+
         public void OnResultExecuting(ResultExecutingContext filterContext) {
             var viewResult = filterContext.Result as ViewResultBase;
             if (viewResult == null)
@@ -32,10 +36,19 @@ namespace Orchard.Security {
         }
 
         public void OnException(ExceptionContext filterContext) {
-            if (filterContext.Exception is UnauthorizedException) {
-                filterContext.Result = new HttpUnauthorizedResult();
-                filterContext.ExceptionHandled = true;
+            if (!(filterContext.Exception is OrchardSecurityException)) {
+                return;
             }
+
+            try {
+                Logger.Information(filterContext.Exception, "Security exception converted to access denied result");
+            }
+            catch {
+                //a logger exception can't be allowed to interrupt this process
+            }
+
+            filterContext.Result = new HttpUnauthorizedResult();
+            filterContext.ExceptionHandled = true;
         }
     }
 }

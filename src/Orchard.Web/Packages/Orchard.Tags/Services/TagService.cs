@@ -66,8 +66,7 @@ namespace Orchard.Tags.Services {
 
         public void CreateTag(string tagName) {
             if (_tagRepository.Get(x => x.TagName == tagName) == null) {
-                if (!_authorizationService.CheckAccess(CurrentUser, Permissions.CreateTag))
-                    throw new UnauthorizedException();
+                _authorizationService.CheckAccess(CurrentUser, Permissions.CreateTag);
 
                 Tag tag = new Tag { TagName = tagName };
                 _tagRepository.Create(tag);
@@ -130,8 +129,7 @@ namespace Orchard.Tags.Services {
 
             foreach (var tagContentItem in currentTagsForContentItem) {
                 if (!newTagsForContentItem.Contains(tagContentItem.TagId)) {
-                    if (!_authorizationService.CheckAccess(CurrentUser, Permissions.ApplyTag))
-                        throw new UnauthorizedException();
+                    _authorizationService.CheckAccess(CurrentUser, Permissions.ApplyTag);
 
                     _tagsContentItemsRepository.Delete(tagContentItem);
                 }
@@ -141,8 +139,7 @@ namespace Orchard.Tags.Services {
             }
 
             foreach (var newTagForContentItem in newTagsForContentItem) {
-                if (!_authorizationService.CheckAccess(CurrentUser, Permissions.ApplyTag))
-                    throw new UnauthorizedException();
+                _authorizationService.CheckAccess(CurrentUser, Permissions.ApplyTag);
 
                 _tagsContentItemsRepository.Create(new TagsContentItems { ContentItemId = contentItemId, TagId = newTagForContentItem });
             }

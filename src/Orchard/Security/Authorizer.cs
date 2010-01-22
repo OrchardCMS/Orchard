@@ -24,7 +24,7 @@ namespace Orchard.Security {
         public Localizer T { get; set; }
 
         public bool Authorize(Permission permission, LocalizedString message) {
-            if (_authorizationService.CheckAccess(CurrentUser, permission))
+            if (_authorizationService.TryCheckAccess(CurrentUser, permission))
                 return true;
 
             if (CurrentUser == null) {

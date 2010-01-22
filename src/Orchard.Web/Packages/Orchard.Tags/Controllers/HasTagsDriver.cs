@@ -28,7 +28,7 @@ namespace Orchard.Tags.Controllers {
         }
 
         protected override DriverResult Editor(HasTags part) {
-            if (!_authorizationService.CheckAccess(CurrentUser, Permissions.ApplyTag))
+            if (!_authorizationService.TryCheckAccess(CurrentUser, Permissions.ApplyTag))
                 return null;
 
             var model = new EditTagsViewModel {
@@ -38,7 +38,7 @@ namespace Orchard.Tags.Controllers {
         }
 
         protected override DriverResult Editor(HasTags part, IUpdateModel updater) {
-            if (!_authorizationService.CheckAccess(CurrentUser, Permissions.ApplyTag))
+            if (!_authorizationService.TryCheckAccess(CurrentUser, Permissions.ApplyTag))
                 return null;
 
             var model = new EditTagsViewModel();

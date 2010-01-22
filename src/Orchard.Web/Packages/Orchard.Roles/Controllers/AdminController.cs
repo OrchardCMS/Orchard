@@ -111,7 +111,7 @@ namespace Orchard.Roles.Controllers {
             var simulation = UserSimulation.Create(role.Name);
             model.EffectivePermissions = model.PackagePermissions
                 .SelectMany(group => group.Value)
-                .Where(permission => _authorizationService.CheckAccess(simulation, permission))
+                .Where(permission => _authorizationService.TryCheckAccess(simulation, permission))
                 .Select(permission=>permission.Name)
                 .Distinct()
                 .ToList();

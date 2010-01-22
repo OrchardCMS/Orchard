@@ -1,6 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
+using System.Security;
+using System.Threading;
 using Orchard.Logging;
+using Orchard.Security;
 
 namespace Orchard {
     public interface IEvents : IDependency {
@@ -27,12 +31,19 @@ namespace Orchard {
             }
         }
 
-        private static bool IsLogged(Exception exception) {
-            return true;
+        private static bool IsLogged(Exception ex) {
+            return ex is OrchardSecurityException || !IsFatal(ex);
         }
 
-        private static bool IsFatal(Exception exception) {
-            return false;
+        private static bool IsFatal(Exception ex) {
+            return ex is OrchardSecurityException ||
+                ex is StackOverflowException ||
+                ex is AccessViolationException ||
+                ex is AppDomainUnloadedException ||
+                ex is ExecutionEngineException ||
+                ex is ThreadAbortException ||
+                ex is SecurityException ||
+                ex is SEHException;
         }
     }
 }

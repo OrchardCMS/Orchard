@@ -134,7 +134,7 @@ namespace Orchard.Core.Common.Providers {
 
         private void GetEditor(BuildEditorModelContext context, CommonAspect instance) {
             var currentUser = _authenticationService.GetAuthenticatedUser();
-            if (!_authorizationService.CheckAccess(currentUser, Permissions.ChangeOwner)) {
+            if (!_authorizationService.TryCheckAccess(currentUser, Permissions.ChangeOwner)) {
                 return;
             }
             var viewModel = new OwnerEditorViewModel();
@@ -152,7 +152,7 @@ namespace Orchard.Core.Common.Providers {
             instance.VersionModifiedUtc = _clock.UtcNow;
 
             var currentUser = _authenticationService.GetAuthenticatedUser();
-            if (!_authorizationService.CheckAccess(currentUser, Permissions.ChangeOwner)) {
+            if (!_authorizationService.TryCheckAccess(currentUser, Permissions.ChangeOwner)) {
                 return;
             }
 
