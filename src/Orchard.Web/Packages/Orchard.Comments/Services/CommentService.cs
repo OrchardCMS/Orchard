@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
-using Castle.Core;
 using JetBrains.Annotations;
 using Orchard.Comments.Models;
 using Orchard.ContentManagement.Aspects;
@@ -8,6 +8,7 @@ using Orchard.Data;
 using Orchard.Logging;
 using Orchard.ContentManagement;
 using Orchard.Security;
+using Orchard.Services;
 using Orchard.Settings;
 using Orchard.UI.Notify;
 
@@ -19,7 +20,7 @@ namespace Orchard.Comments.Services {
         IEnumerable<Comment> GetCommentsForCommentedContent(int id, CommentStatus status);
         Comment GetComment(int id);
         ContentItemMetadata GetDisplayForCommentedContent(int id);
-        Comment CreateComment(CommentRecord commentRecord);
+        Comment CreateComment(CreateCommentContext commentRecord);
         void UpdateComment(int id, string name, string email, string siteName, string commentText, CommentStatus status);
         void ApproveComment(int commentId);
         void PendComment(int commentId);
@@ -30,27 +31,39 @@ namespace Orchard.Comments.Services {
         void EnableCommentsForCommentedContent(int id);
     }
 
+    public class CreateCommentContext {
+        public virtual string Author { get; set; }
+        public virtual string SiteName { get; set; }
+        public virtual string Email { get; set; }
+        public virtual string CommentText { get; set; }
+        public virtual int CommentedOn { get; set; }
+    }
+
     [UsedImplicitly]
     public class CommentService : ICommentService {
         private readonly IRepository<ClosedCommentsRecord> _closedCommentsRepository;
         private readonly ICommentValidator _commentValidator;
         private readonly IContentManager _contentManager;
+        private readonly IClock _clock;
 
         public CommentService(IRepository<CommentRecord> commentRepository,
                               IRepository<ClosedCommentsRecord> closedCommentsRepository,
                               IRepository<HasCommentsRecord> hasCommentsRepository,
                               ICommentValidator commentValidator,
                               IContentManager contentManager,
+                              IClock clock,
                               IAuthorizer authorizer,
                               INotifier notifier) {
             _closedCommentsRepository = closedCommentsRepository;
             _commentValidator = commentValidator;
             _contentManager = contentManager;
+            _clock = clock;
             Logger = NullLogger.Instance;
         }
 
         public ILogger Logger { get; set; }
         protected virtual ISite CurrentSite { get; [UsedImplicitly] private set; }
+        protected virtual IUser CurrentUser { get; [UsedImplicitly] private set; }
 
 
         #region Implementation of ICommentService
@@ -94,19 +107,18 @@ namespace Orchard.Comments.Services {
             return _contentManager.GetItemMetadata(content);
         }
 
-        public Comment CreateComment(CommentRecord commentRecord) {
+        public Comment CreateComment(CreateCommentContext context) {
             var comment = _contentManager.Create<Comment>("comment");
 
-            //TODO:(rpaquay) CommentRecord should never be used as "data object"
-            comment.Record.Author = commentRecord.Author;
-            comment.Record.CommentDateUtc = commentRecord.CommentDateUtc;
-            comment.Record.CommentText = commentRecord.CommentText;
-            comment.Record.Email = commentRecord.Email;
-            comment.Record.SiteName = commentRecord.SiteName;
-            comment.Record.UserName = commentRecord.UserName;
-            comment.Record.CommentedOn = commentRecord.CommentedOn;
+            comment.Record.Author = context.Author;
+            comment.Record.CommentDateUtc = _clock.UtcNow;
+            comment.Record.CommentText = context.CommentText;
+            comment.Record.Email = context.Email;
+            comment.Record.SiteName = context.SiteName;
+            comment.Record.UserName = (CurrentUser == null ? "Anonymous" : CurrentUser.UserName);
+            comment.Record.CommentedOn = context.CommentedOn;
 
-            comment.Record.Status = _commentValidator.ValidateComment(commentRecord) ? CommentStatus.Pending : CommentStatus.Spam;
+            comment.Record.Status = _commentValidator.ValidateComment(comment.Record) ? CommentStatus.Pending : CommentStatus.Spam;
 
             // store id of the next layer for large-grained operations, e.g. rss on blog
             //TODO:(rpaquay) Get rid of this (comment aspect takes care of container)
@@ -158,7 +170,9 @@ namespace Orchard.Comments.Services {
 
         public void EnableCommentsForCommentedContent(int id) {
             var closedComments = _closedCommentsRepository.Fetch(x => x.ContentItemId == id);
-            closedComments.ForEach(c => _closedCommentsRepository.Delete(c));
+            foreach (var c in closedComments) {
+                _closedCommentsRepository.Delete(c);
+            }
         }
 
         #endregion

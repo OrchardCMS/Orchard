@@ -8,6 +8,7 @@ using Orchard.Comments.Models;
 using Orchard.Localization;
 using Orchard.Logging;
 using Orchard.ContentManagement;
+using Orchard.Services;
 using Orchard.Settings;
 using Orchard.UI.Notify;
 using Orchard.Security;
@@ -18,14 +19,14 @@ namespace Orchard.Comments.Controllers {
     [ValidateInput(false)]
     public class AdminController : Controller {
         private readonly ICommentService _commentService;
-        private readonly IContentManager _contentManager;
         private readonly IAuthorizer _authorizer;
+        private readonly IClock _clock;
         private readonly INotifier _notifier;
 
-        public AdminController(ICommentService commentService, IContentManager contentManager, INotifier notifier, IAuthorizer authorizer) {
+        public AdminController(ICommentService commentService, IContentManager contentManager, INotifier notifier, IAuthorizer authorizer, IClock clock) {
             _commentService = commentService;
-            _contentManager = contentManager;
             _authorizer = authorizer;
+            _clock = clock;
             _notifier = notifier;
             Logger = NullLogger.Instance;
             T = NullLocalizer.Instance;
@@ -141,17 +142,15 @@ namespace Orchard.Comments.Controllers {
                         return new HttpUnauthorizedResult();
                 }
 
-                CommentRecord commentRecord = new CommentRecord {
+                var context = new CreateCommentContext {
                     Author = viewModel.Name,
-                    CommentDateUtc = DateTime.UtcNow,
                     CommentText = viewModel.CommentText,
                     Email = viewModel.Email,
                     SiteName = viewModel.SiteName,
-                    UserName = CurrentUser == null ? "Anonymous" : CurrentUser.UserName,
                     CommentedOn = viewModel.CommentedOn,
                 };
 
-                var comment = _commentService.CreateComment(commentRecord);
+                var comment = _commentService.CreateComment(context);
 
                 if (!String.IsNullOrEmpty(returnUrl)) {
                     return Redirect(returnUrl);
