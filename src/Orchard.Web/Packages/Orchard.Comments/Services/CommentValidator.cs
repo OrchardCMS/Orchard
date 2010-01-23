@@ -27,7 +27,7 @@ namespace Orchard.Comments.Services {
 
         #region Implementation of ICommentValidator
 
-        public bool ValidateComment(Comment comment) {
+        public bool ValidateComment(CommentRecord comment) {
             CommentSettingsRecord commentSettingsRecord = CurrentSite.As<CommentSettings>().Record;
             string akismetKey = commentSettingsRecord.AkismetKey;
             string akismetUrl = commentSettingsRecord.AkismetUrl;

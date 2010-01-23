@@ -20,7 +20,6 @@ namespace Orchard.ContentManagement.Handlers {
             _repository = repository;
         }
 
-
         protected override void Activated(ActivatedContentContext context, ContentPart<TRecord> instance) {
             instance.Record = new TRecord();
         }

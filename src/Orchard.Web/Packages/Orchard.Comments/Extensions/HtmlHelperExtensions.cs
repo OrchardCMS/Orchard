@@ -2,7 +2,6 @@ using System.Web.Mvc;
 using System.Web.Mvc.Html;
 using Orchard.ContentManagement;
 using Orchard.Localization;
-using Orchard.Mvc.Html;
 
 namespace Orchard.Comments.Extensions {
     public static class HtmlHelperExtensions {

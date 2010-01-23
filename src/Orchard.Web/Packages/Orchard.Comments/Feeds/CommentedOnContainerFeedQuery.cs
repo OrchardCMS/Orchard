@@ -1,5 +1,6 @@
 using JetBrains.Annotations;
 using Orchard.Comments.Models;
+using Orchard.ContentManagement;
 using Orchard.Core.Feeds;
 using Orchard.Core.Feeds.Models;
 using Orchard.Data;
@@ -7,11 +8,10 @@ using Orchard.Data;
 namespace Orchard.Comments.Feeds {
     [UsedImplicitly]
     public class CommentedOnContainerFeedQuery : IFeedQueryProvider, IFeedQuery {
-        private readonly IRepository<Comment> _commentRepository;
+        private readonly IContentManager _contentManager;
 
-        public CommentedOnContainerFeedQuery(
-            IRepository<Comment> commentRepository) {
-            _commentRepository = commentRepository;
+        public CommentedOnContainerFeedQuery(IContentManager contentManager) {
+            _contentManager = contentManager;
         }
 
         public FeedQueryMatch Match(FeedContext context) {
@@ -29,10 +29,11 @@ namespace Orchard.Comments.Feeds {
             if (limitValue != null)
                 limit = (int)limitValue.ConvertTo(typeof(int));
 
-            var comments = _commentRepository.Fetch(
-                x => x.CommentedOnContainer == commentedOnContainer && x.Status == CommentStatus.Approved,
-                o => o.Desc(x => x.CommentDate),
-                0, limit);
+            var comments = _contentManager
+                .Query<Comment, CommentRecord>()
+                .Where(x => x.CommentedOnContainer == commentedOnContainer && x.Status == CommentStatus.Approved)
+                .OrderByDescending(x => x.CommentDateUtc)
+                .Slice(0, limit);
 
             foreach (var comment in comments) {
                 context.Builder.AddItem(context, comment);

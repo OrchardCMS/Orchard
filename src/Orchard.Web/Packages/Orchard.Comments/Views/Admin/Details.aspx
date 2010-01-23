@@ -83,7 +83,7 @@
                     <%=Html.Encode(commentEntry.Comment.CommentText.Length > 23 ? commentEntry.Comment.CommentText.Substring(0, 24) : commentEntry.Comment.CommentText) %><%=_Encoded(" ...") %>
                 <% } %> 
                 </td>
-                <td><%=commentEntry.Comment.CommentDate.ToLocalTime() %></td>
+                <td><%=commentEntry.Comment.CommentDateUtc.ToLocalTime() %></td>
                 <td>
                     <ul class="actions">
                         <li class="construct">

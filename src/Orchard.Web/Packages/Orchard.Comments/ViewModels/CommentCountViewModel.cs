@@ -3,6 +3,9 @@ using Orchard.ContentManagement;
 
 namespace Orchard.Comments.ViewModels {
     public class CommentCountViewModel {
+        public CommentCountViewModel() {
+        }
+
         public CommentCountViewModel(HasComments part) {
             Item = part.ContentItem;
             CommentCount = part.Comments.Count;

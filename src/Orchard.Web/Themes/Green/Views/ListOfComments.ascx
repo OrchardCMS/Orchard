@@ -5,11 +5,11 @@ foreach (var comment in Model) { %>
     <li>
 
 <div class="comment">
-<p><%=Html.Encode(comment.CommentText) %></p>
+<p><%=Html.Encode(comment.Record.CommentText) %></p>
 </div>
         
 <div class="commentauthor">
-<span class="who"><%=Html.LinkOrDefault(Html.Encode(comment.UserName), Html.Encode(comment.SiteName), new { rel = "nofollow" })%></span>&nbsp;<span>said <%=Html.Link(Html.DateTimeRelative(comment.CommentDate), "#")%></span>
+<span class="who"><%=Html.LinkOrDefault(Html.Encode(comment.Record.UserName), Html.Encode(comment.Record.SiteName), new { rel = "nofollow" })%></span>&nbsp;<span>said <%=Html.Link(Html.DateTimeRelative(comment.Record.CommentDateUtc), "#")%></span>
 </div>       
         
     </li><%

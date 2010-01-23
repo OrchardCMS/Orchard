@@ -18,11 +18,13 @@ namespace Orchard.Comments.Controllers {
     [ValidateInput(false)]
     public class AdminController : Controller {
         private readonly ICommentService _commentService;
+        private readonly IContentManager _contentManager;
         private readonly IAuthorizer _authorizer;
         private readonly INotifier _notifier;
 
-        public AdminController(ICommentService commentService, INotifier notifier, IAuthorizer authorizer) {
+        public AdminController(ICommentService commentService, IContentManager contentManager, INotifier notifier, IAuthorizer authorizer) {
             _commentService = commentService;
+            _contentManager = contentManager;
             _authorizer = authorizer;
             _notifier = notifier;
             Logger = NullLogger.Instance;
@@ -59,7 +61,7 @@ namespace Orchard.Comments.Controllers {
                     default:
                         throw new ArgumentOutOfRangeException();
                 }
-                var entries = comments.Select(comment => CreateCommentEntry(comment)).ToList();
+                var entries = comments.Select(comment => CreateCommentEntry(comment.Record)).ToList();
                 var model = new CommentsIndexViewModel {Comments = entries, Options = options};
                 return View(model);
             }
@@ -138,16 +140,19 @@ namespace Orchard.Comments.Controllers {
                     if (!_authorizer.Authorize(Permissions.AddComment, T("Couldn't add comment")))
                         return new HttpUnauthorizedResult();
                 }
-                Comment comment = new Comment {
+
+                CommentRecord commentRecord = new CommentRecord {
                     Author = viewModel.Name,
-                    CommentDate = DateTime.UtcNow,
+                    CommentDateUtc = DateTime.UtcNow,
                     CommentText = viewModel.CommentText,
                     Email = viewModel.Email,
                     SiteName = viewModel.SiteName,
                     UserName = CurrentUser == null ? "Anonymous" : CurrentUser.UserName,
                     CommentedOn = viewModel.CommentedOn,
                 };
-                _commentService.CreateComment(comment);
+
+                var comment = _commentService.CreateComment(commentRecord);
+
                 if (!String.IsNullOrEmpty(returnUrl)) {
                     return Redirect(returnUrl);
                 }
@@ -183,7 +188,7 @@ namespace Orchard.Comments.Controllers {
                     default:
                         throw new ArgumentOutOfRangeException();
                 }
-                var entries = comments.Select(comment => CreateCommentEntry(comment)).ToList();
+                var entries = comments.Select(comment => CreateCommentEntry(comment.Record)).ToList();
                 var model = new CommentsDetailsViewModel {
                     Comments = entries,
                     Options = options,
@@ -299,12 +304,12 @@ namespace Orchard.Comments.Controllers {
             try {
                 Comment comment = _commentService.GetComment(id);
                 var viewModel = new CommentsEditViewModel {
-                    CommentText = comment.CommentText,
-                    Email = comment.Email,
-                    Id = comment.Id,
-                    Name = comment.Author,
-                    SiteName = comment.SiteName,
-                    Status = comment.Status,
+                    CommentText = comment.Record.CommentText,
+                    Email = comment.Record.Email,
+                    Id = comment.Record.Id,
+                    Name = comment.Record.Author,
+                    SiteName = comment.Record.SiteName,
+                    Status = comment.Record.Status,
                 };
                 return View(viewModel);
 
@@ -337,8 +342,10 @@ namespace Orchard.Comments.Controllers {
             try {
                 if (!_authorizer.Authorize(Permissions.ManageComments, T("Couldn't delete comment")))
                     return new HttpUnauthorizedResult();
-                int commentedOn = _commentService.GetComment(id).CommentedOn;
+
+                int commentedOn = _commentService.GetComment(id).Record.CommentedOn;
                 _commentService.DeleteComment(id);
+
                 if (!String.IsNullOrEmpty(returnUrl)) {
                     return Redirect(returnUrl);
                 }
@@ -353,7 +360,7 @@ namespace Orchard.Comments.Controllers {
             }
         }
 
-        private CommentEntry CreateCommentEntry(Comment comment) {
+        private CommentEntry CreateCommentEntry(CommentRecord comment) {
             return new CommentEntry {
                 Comment = comment,
                 CommentedOn = _commentService.GetDisplayForCommentedContent(comment.CommentedOn).DisplayText,

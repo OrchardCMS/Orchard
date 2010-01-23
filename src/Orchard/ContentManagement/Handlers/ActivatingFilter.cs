@@ -2,6 +2,9 @@ using System;
 using System.Linq;
 
 namespace Orchard.ContentManagement.Handlers {
+    /// <summary>
+    /// Filter reponsible for adding a part to a content item when content items are activated
+    /// </summary>
     public class ActivatingFilter<TPart> : IContentActivatingFilter where TPart : ContentPart, new() {
         private readonly Func<string, bool> _predicate;
 
@@ -18,5 +21,4 @@ namespace Orchard.ContentManagement.Handlers {
                 context.Builder.Weld<TPart>();
         }
     }
-
 }

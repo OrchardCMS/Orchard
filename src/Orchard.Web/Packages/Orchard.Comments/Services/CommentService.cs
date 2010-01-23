@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Castle.Core;
 using JetBrains.Annotations;
 using Orchard.Comments.Models;
 using Orchard.ContentManagement.Aspects;
@@ -18,7 +19,7 @@ namespace Orchard.Comments.Services {
         IEnumerable<Comment> GetCommentsForCommentedContent(int id, CommentStatus status);
         Comment GetComment(int id);
         ContentItemMetadata GetDisplayForCommentedContent(int id);
-        void CreateComment(Comment comment);
+        Comment CreateComment(CommentRecord commentRecord);
         void UpdateComment(int id, string name, string email, string siteName, string commentText, CommentStatus status);
         void ApproveComment(int commentId);
         void PendComment(int commentId);
@@ -29,29 +30,22 @@ namespace Orchard.Comments.Services {
         void EnableCommentsForCommentedContent(int id);
     }
 
+    [UsedImplicitly]
     public class CommentService : ICommentService {
-        private readonly IRepository<Comment> _commentRepository;
-        private readonly IRepository<ClosedComments> _closedCommentsRepository;
-        private readonly IRepository<HasCommentsRecord> _hasCommentsRepository;
+        private readonly IRepository<ClosedCommentsRecord> _closedCommentsRepository;
         private readonly ICommentValidator _commentValidator;
         private readonly IContentManager _contentManager;
-        private readonly IAuthorizer _authorizer;
-        private readonly INotifier _notifier;
 
-        public CommentService(IRepository<Comment> commentRepository,
-                              IRepository<ClosedComments> closedCommentsRepository,
+        public CommentService(IRepository<CommentRecord> commentRepository,
+                              IRepository<ClosedCommentsRecord> closedCommentsRepository,
                               IRepository<HasCommentsRecord> hasCommentsRepository,
                               ICommentValidator commentValidator,
                               IContentManager contentManager,
                               IAuthorizer authorizer,
                               INotifier notifier) {
-            _commentRepository = commentRepository;
             _closedCommentsRepository = closedCommentsRepository;
-            _hasCommentsRepository = hasCommentsRepository;
             _commentValidator = commentValidator;
             _contentManager = contentManager;
-            _authorizer = authorizer;
-            _notifier = notifier;
             Logger = NullLogger.Instance;
         }
 
@@ -62,23 +56,35 @@ namespace Orchard.Comments.Services {
         #region Implementation of ICommentService
 
         public IEnumerable<Comment> GetComments() {
-            return from comment in _commentRepository.Table.ToList() select comment;
+            return _contentManager
+                .Query<Comment, CommentRecord>()
+                .List();
         }
 
         public IEnumerable<Comment> GetComments(CommentStatus status) {
-            return from comment in _commentRepository.Table.ToList() where comment.Status == status select comment;
+            return _contentManager
+                .Query<Comment, CommentRecord>()
+                .Where(c => c.Status == status)
+                .List();
         }
 
         public IEnumerable<Comment> GetCommentsForCommentedContent(int id) {
-            return from comment in _commentRepository.Table.ToList() where comment.CommentedOn == id select comment;
+            return _contentManager
+                .Query<Comment, CommentRecord>()
+                .Where(c => c.CommentedOn == id || c.CommentedOnContainer == id)
+                .List();
         }
 
         public IEnumerable<Comment> GetCommentsForCommentedContent(int id, CommentStatus status) {
-            return from comment in _commentRepository.Table.ToList() where comment.CommentedOn == id && comment.Status == status select comment;
+            return _contentManager
+                .Query<Comment, CommentRecord>()
+                .Where(c => c.CommentedOn == id || c.CommentedOnContainer == id)
+                .Where(ctx => ctx.Status == status)
+                .List();
         }
 
         public Comment GetComment(int id) {
-            return _commentRepository.Get(id);
+            return _contentManager.Get<Comment>(id);
         }
 
         public ContentItemMetadata GetDisplayForCommentedContent(int id) {
@@ -88,59 +94,71 @@ namespace Orchard.Comments.Services {
             return _contentManager.GetItemMetadata(content);
         }
 
-        public void CreateComment(Comment comment) {
-            comment.Status = _commentValidator.ValidateComment(comment) ? CommentStatus.Pending : CommentStatus.Spam;
+        public Comment CreateComment(CommentRecord commentRecord) {
+            var comment = _contentManager.Create<Comment>("comment");
+
+            //TODO:(rpaquay) CommentRecord should never be used as "data object"
+            comment.Record.Author = commentRecord.Author;
+            comment.Record.CommentDateUtc = commentRecord.CommentDateUtc;
+            comment.Record.CommentText = commentRecord.CommentText;
+            comment.Record.Email = commentRecord.Email;
+            comment.Record.SiteName = commentRecord.SiteName;
+            comment.Record.UserName = commentRecord.UserName;
+            comment.Record.CommentedOn = commentRecord.CommentedOn;
+
+            comment.Record.Status = _commentValidator.ValidateComment(commentRecord) ? CommentStatus.Pending : CommentStatus.Spam;
 
             // store id of the next layer for large-grained operations, e.g. rss on blog
-            var commentedOn = _contentManager.Get<ICommonAspect>(comment.CommentedOn);
+            //TODO:(rpaquay) Get rid of this (comment aspect takes care of container)
+            var commentedOn = _contentManager.Get<ICommonAspect>(comment.Record.CommentedOn);
             if (commentedOn != null && commentedOn.Container != null) {
-                comment.CommentedOnContainer = commentedOn.Container.ContentItem.Id;
+                comment.Record.CommentedOnContainer = commentedOn.Container.ContentItem.Id;
             }
 
-            _commentRepository.Create(comment);
+            return comment;
         }
 
         public void UpdateComment(int id, string name, string email, string siteName, string commentText, CommentStatus status) {
             Comment comment = GetComment(id);
-            comment.Author = name;
-            comment.Email = email;
-            comment.SiteName = siteName;
-            comment.CommentText = commentText;
-            comment.Status = status;
+            comment.Record.Author = name;
+            comment.Record.Email = email;
+            comment.Record.SiteName = siteName;
+            comment.Record.CommentText = commentText;
+            comment.Record.Status = status;
         }
 
         public void ApproveComment(int commentId) {
             Comment comment = GetComment(commentId);
-            comment.Status = CommentStatus.Approved;
+            comment.Record.Status = CommentStatus.Approved;
         }
 
         public void PendComment(int commentId) {
             Comment comment = GetComment(commentId);
-            comment.Status = CommentStatus.Pending;
+            comment.Record.Status = CommentStatus.Pending;
         }
 
         public void MarkCommentAsSpam(int commentId) {
             Comment comment = GetComment(commentId);
-            comment.Status = CommentStatus.Spam;
+            comment.Record.Status = CommentStatus.Spam;
         }
 
         public void DeleteComment(int commentId) {
-            _commentRepository.Delete(GetComment(commentId));
+            _contentManager.Remove(_contentManager.Get(commentId));
         }
 
         public bool CommentsClosedForCommentedContent(int id) {
-            return _closedCommentsRepository.Get(x => x.ContentItemId == id) == null ? false : true;
+            return _closedCommentsRepository.Fetch(x => x.ContentItemId == id).Count() >= 1;
         }
 
         public void CloseCommentsForCommentedContent(int id) {
-            _closedCommentsRepository.Create(new ClosedComments { ContentItemId = id });
+            if (CommentsClosedForCommentedContent(id))
+                return;
+            _closedCommentsRepository.Create(new ClosedCommentsRecord { ContentItemId = id });
         }
 
         public void EnableCommentsForCommentedContent(int id) {
-            ClosedComments closedComments = _closedCommentsRepository.Get(x => x.ContentItemId == id);
-            if (closedComments != null) {
-                _closedCommentsRepository.Delete(closedComments);
-            }
+            var closedComments = _closedCommentsRepository.Fetch(x => x.ContentItemId == id);
+            closedComments.ForEach(c => _closedCommentsRepository.Delete(c));
         }
 
         #endregion

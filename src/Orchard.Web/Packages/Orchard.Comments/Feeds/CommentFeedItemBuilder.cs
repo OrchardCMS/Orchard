@@ -24,7 +24,7 @@ namespace Orchard.Comments.Feeds {
         Localizer T { get; set; }
 
         public void Populate(FeedContext context) {
-            foreach (var feedItem in context.Response.Items.OfType<FeedItem<Comment>>()) {
+            foreach (var feedItem in context.Response.Items.OfType<FeedItem<CommentRecord>>()) {
                 var comment = feedItem.Item;
                 var commentedOn = _contentManager.Get(feedItem.Item.CommentedOn);
                 var commentedOnInspector = new ItemInspector(
@@ -47,7 +47,7 @@ namespace Orchard.Comments.Feeds {
                     feedItem.Element.SetElementValue("title", title);
                     feedItem.Element.Add(link);
                     feedItem.Element.SetElementValue("description", comment.CommentText);
-                    feedItem.Element.SetElementValue("pubDate", comment.CommentDate);//TODO: format
+                    feedItem.Element.SetElementValue("pubDate", comment.CommentDateUtc);//TODO: format
                     feedItem.Element.Add(guid);
                 }
                 else {
@@ -59,7 +59,7 @@ namespace Orchard.Comments.Feeds {
                     context.Builder.AddProperty(context, feedItem, "title", title.ToString());
                     context.Builder.AddProperty(context, feedItem, "description", comment.CommentText);
 
-                    context.Builder.AddProperty(context, feedItem, "published-date", Convert.ToString(comment.CommentDate)); // format? cvt to generic T?
+                    context.Builder.AddProperty(context, feedItem, "published-date", Convert.ToString(comment.CommentDateUtc)); // format? cvt to generic T?
                 }
             }
         }
