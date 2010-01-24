@@ -9,7 +9,7 @@ namespace Orchard.Comments.Models {
         public CommentHandler(IRepository<CommentRecord> commentsRepository) {
             Filters.Add(new ActivatingFilter<Comment>(CommentDriver.ContentType.Name));
             Filters.Add(new ActivatingFilter<CommonAspect>(CommentDriver.ContentType.Name));
-            Filters.Add(new StorageFilter<CommentRecord>(commentsRepository));
+            Filters.Add(StorageFilter.For(commentsRepository));
         }
     }
 }

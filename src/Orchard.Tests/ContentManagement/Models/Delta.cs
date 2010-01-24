@@ -19,7 +19,7 @@ namespace Orchard.Tests.ContentManagement.Models {
 
         public DeltaHandler(IRepository<DeltaRecord> repository) {
             Filters.Add(new ActivatingFilter<Delta>(x => x == "delta"));
-            Filters.Add(new StorageFilter<DeltaRecord>(repository));
+            Filters.Add(StorageFilter.For(repository));
         }
     }
 }

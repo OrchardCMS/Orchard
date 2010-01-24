@@ -28,9 +28,10 @@ namespace Orchard.Blogs.Models {
 
             Filters.Add(new ActivatingFilter<BlogPost>(BlogPostDriver.ContentType.Name));
             Filters.Add(new ActivatingFilter<CommonAspect>(BlogPostDriver.ContentType.Name));
+            Filters.Add(new ActivatingFilter<ContentPart<CommonVersionRecord>>(BlogPostDriver.ContentType.Name));
             Filters.Add(new ActivatingFilter<RoutableAspect>(BlogPostDriver.ContentType.Name));
             Filters.Add(new ActivatingFilter<BodyAspect>(BlogPostDriver.ContentType.Name));
-            Filters.Add(new StorageFilter<CommonVersionRecord>(commonRepository));
+            Filters.Add(StorageFilter.For(commonRepository));
 
             Action<Blog> updateBlogPostCount =
                 (blog => {

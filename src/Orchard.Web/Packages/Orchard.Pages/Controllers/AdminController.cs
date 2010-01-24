@@ -180,6 +180,18 @@ namespace Orchard.Pages.Controllers {
             if (!Services.Authorizer.Authorize(Permissions.EditOthersPages, page, T("Couldn't edit page")))
                 return new HttpUnauthorizedResult();
 
+            // Validate form input
+            var model = new PageEditViewModel {
+                Page = Services.ContentManager.UpdateEditorModel(page, this)
+            };
+
+            TryUpdateModel(model);
+
+            if (!ModelState.IsValid) {
+                Services.TransactionManager.Cancel();
+
+                return View(model);
+            }
 
             //TODO: (erikpo) Move this duplicate code somewhere else
             DateTime? publishDate = null;
@@ -201,18 +213,6 @@ namespace Orchard.Pages.Controllers {
                 _pageService.Publish(page, publishDate.Value);
             else
                 _pageService.Unpublish(page);
-
-            var model = new PageEditViewModel {
-                Page = Services.ContentManager.UpdateEditorModel(page, this)
-            };
-
-            TryUpdateModel(model);
-
-            if (!ModelState.IsValid) {
-                Services.TransactionManager.Cancel();
-
-                return View(model);
-            }
 
             if (publishNow)
                 Services.Notifier.Information(T("Page has been published"));

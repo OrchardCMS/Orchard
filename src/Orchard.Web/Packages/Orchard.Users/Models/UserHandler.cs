@@ -6,7 +6,7 @@ namespace Orchard.Users.Models {
     public class UserHandler : ContentHandler {
         public UserHandler(IRepository<UserRecord> repository) {
             Filters.Add(new ActivatingFilter<User>(UserDriver.ContentType.Name));
-            Filters.Add(new StorageFilter<UserRecord>(repository));
+            Filters.Add(StorageFilter.For(repository));
         }
     }
 }

@@ -15,7 +15,7 @@ namespace Orchard.Tests.ContentManagement.Models {
 
         public GammaHandler(IRepository<GammaRecord> repository) {
             Filters.Add(new ActivatingFilter<Gamma>(x => x == "gamma"));
-            Filters.Add(new StorageFilter<GammaRecord>(repository));
+            Filters.Add(StorageFilter.For(repository));
         }
     }
 

@@ -30,7 +30,7 @@ namespace Orchard.Pages.Models {
             Filters.Add(new ActivatingFilter<ContentPart<CommonVersionRecord>>(PageDriver.ContentType.Name));
             Filters.Add(new ActivatingFilter<RoutableAspect>(PageDriver.ContentType.Name));
             Filters.Add(new ActivatingFilter<BodyAspect>(PageDriver.ContentType.Name));
-            Filters.Add(new StorageFilter<CommonVersionRecord>(commonRepository));
+            Filters.Add(StorageFilter.For(commonRepository));
 
             OnPublished<Page>((context, p) => ProcessSlug(p));
         }

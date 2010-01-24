@@ -5,9 +5,6 @@ using Orchard.Blogs.Models;
 using Orchard.Blogs.Services;
 using Orchard.Blogs.ViewModels;
 using Orchard.ContentManagement;
-using Orchard.ContentManagement.Records;
-using Orchard.Core.Common.Models;
-using Orchard.Data;
 using Orchard.Localization;
 using Orchard.Mvc.Results;
 using Orchard.UI.Notify;
@@ -44,7 +41,7 @@ namespace Orchard.Blogs.Controllers {
 
             var model = new CreateBlogPostViewModel {
                 BlogPost = _services.ContentManager.BuildEditorModel(blogPost)
-                                                    };
+            };
 
             return View(model);
         }
@@ -132,10 +129,24 @@ namespace Orchard.Blogs.Controllers {
             if (blog == null)
                 return new NotFoundResult();
 
-            BlogPost post = _blogPostService.Get(postId, VersionOptions.Latest);
+            // Get draft (create a new version if needed)
+            BlogPost post = _blogPostService.Get(postId, VersionOptions.DraftRequired);
 
             if (post == null)
                 return new NotFoundResult();
+
+            // Validate form input
+            var model = new BlogPostEditViewModel {
+                BlogPost = _services.ContentManager.UpdateEditorModel(post, this)
+            };
+
+            TryUpdateModel(model);
+
+            if (!ModelState.IsValid) {
+                _services.TransactionManager.Cancel();
+
+                return View(model);
+            }
 
             //TODO: (erikpo) Move this duplicate code somewhere else
             DateTime? publishDate = null;
@@ -155,21 +166,8 @@ namespace Orchard.Blogs.Controllers {
                 _blogPostService.Publish(post);
             else if (publishDate != null)
                 _blogPostService.Publish(post, publishDate.Value);
-            else {
+            else
                 _blogPostService.Unpublish(post);
-            }
-
-            var model = new BlogPostEditViewModel {
-                BlogPost = _services.ContentManager.UpdateEditorModel(post, this)
-            };
-
-            TryUpdateModel(model);
-
-            if (!ModelState.IsValid) {
-                _services.TransactionManager.Cancel();
-
-                return View(model);
-            }
 
             if (publishNow)
                 _services.Notifier.Information(T("Blog post has been published"));

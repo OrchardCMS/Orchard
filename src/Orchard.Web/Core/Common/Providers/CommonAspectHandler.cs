@@ -1,4 +1,3 @@
-using JetBrains.Annotations;
 using Orchard.Core.Common.Models;
 using Orchard.Core.Common.Records;
 using Orchard.Core.Common.ViewModels;
@@ -11,7 +10,6 @@ using Orchard.Security;
 using Orchard.Services;
 
 namespace Orchard.Core.Common.Providers {
-    [UsedImplicitly]
     public class CommonAspectHandler : ContentHandler {
         private readonly IClock _clock;
         private readonly IAuthenticationService _authenticationService;
@@ -40,12 +38,17 @@ namespace Orchard.Core.Common.Providers {
 
             OnActivated<CommonAspect>(PropertySetHandlers);
             OnActivated<CommonAspect>(AssignCreatingOwner);
-            OnActivated <ContentPart<CommonRecord>>(AssignCreatingDates);
+            OnActivated<ContentPart<CommonRecord>>(AssignCreatingDates);
             OnActivated<ContentPart<CommonVersionRecord>>(AssignCreatingDates);
+
+            OnLoaded<CommonAspect>(LazyLoadHandlers);
+
+            OnVersioning<CommonAspect>(CopyOwnerAndContainer);
+
             OnVersioned<ContentPart<CommonVersionRecord>>(AssignVersioningDates);
+
             OnPublishing<ContentPart<CommonRecord>>(AssignPublishingDates);
             OnPublishing<ContentPart<CommonVersionRecord>>(AssignPublishingDates);
-            OnLoaded<CommonAspect>(LazyLoadHandlers);
 
             //OnGetDisplayViewModel<CommonAspect>();
             OnGetEditorViewModel<CommonAspect>(GetEditor);
@@ -55,7 +58,7 @@ namespace Orchard.Core.Common.Providers {
         public Localizer T { get; set; }
 
 
-        void AssignCreatingOwner(ActivatedContentContext context, CommonAspect part) {     
+        void AssignCreatingOwner(ActivatedContentContext context, CommonAspect part) {
             // and use the current user as Owner
             if (part.Record.OwnerId == 0) {
                 part.Owner = _authenticationService.GetAuthenticatedUser();
@@ -99,6 +102,11 @@ namespace Orchard.Core.Common.Providers {
 
             // assign version-specific publish date
             part.Record.PublishedUtc = _clock.UtcNow;
+        }
+
+        private static void CopyOwnerAndContainer(VersionContentContext c, CommonAspect c1, CommonAspect c2) {
+            c2.Owner = c1.Owner;
+            c2.Container = c1.Container;
         }
 
         void LazyLoadHandlers(LoadContentContext context, CommonAspect aspect) {

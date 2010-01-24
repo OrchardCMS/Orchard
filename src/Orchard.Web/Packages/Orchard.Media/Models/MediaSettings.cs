@@ -15,7 +15,7 @@ namespace Orchard.Media.Models {
     public class MediaSettingsHandler : ContentHandler {
         public MediaSettingsHandler(IRepository<MediaSettingsRecord> repository) {
             Filters.Add(new ActivatingFilter<MediaSettings>("site"));
-            Filters.Add(new StorageFilter<MediaSettingsRecord>(repository) );
+            Filters.Add(StorageFilter.For(repository) );
             OnActivated<MediaSettings>(DefaultSettings);
         }
 

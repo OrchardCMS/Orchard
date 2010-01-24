@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using JetBrains.Annotations;
 using Orchard.Comments.Models;
@@ -10,7 +9,6 @@ using Orchard.ContentManagement;
 using Orchard.Security;
 using Orchard.Services;
 using Orchard.Settings;
-using Orchard.UI.Notify;
 
 namespace Orchard.Comments.Services {
     public interface ICommentService : IDependency {
@@ -39,25 +37,20 @@ namespace Orchard.Comments.Services {
         public virtual int CommentedOn { get; set; }
     }
 
-    [UsedImplicitly]
     public class CommentService : ICommentService {
         private readonly IRepository<ClosedCommentsRecord> _closedCommentsRepository;
+        private readonly IClock _clock;
         private readonly ICommentValidator _commentValidator;
         private readonly IContentManager _contentManager;
-        private readonly IClock _clock;
 
-        public CommentService(IRepository<CommentRecord> commentRepository,
-                              IRepository<ClosedCommentsRecord> closedCommentsRepository,
-                              IRepository<HasCommentsRecord> hasCommentsRepository,
-                              ICommentValidator commentValidator,
-                              IContentManager contentManager,
+        public CommentService(IRepository<ClosedCommentsRecord> closedCommentsRepository,
                               IClock clock,
-                              IAuthorizer authorizer,
-                              INotifier notifier) {
+                              ICommentValidator commentValidator,
+                              IContentManager contentManager) {
             _closedCommentsRepository = closedCommentsRepository;
+            _clock = clock;
             _commentValidator = commentValidator;
             _contentManager = contentManager;
-            _clock = clock;
             Logger = NullLogger.Instance;
         }
 

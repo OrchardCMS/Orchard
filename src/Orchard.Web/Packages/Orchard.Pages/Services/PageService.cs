@@ -4,13 +4,16 @@ using System.Linq;
 using Orchard.Pages.Models;
 using Orchard.Core.Common.Records;
 using Orchard.ContentManagement;
+using Orchard.Services;
 
 namespace Orchard.Pages.Services {
     public class PageService : IPageService {
         private readonly IContentManager _contentManager;
+        private readonly IClock _clock;
 
-        public PageService(IContentManager contentManager) {
+        public PageService(IContentManager contentManager, IClock clock) {
             _contentManager = contentManager;
+            _clock = clock;
         }
 
         public IEnumerable<Page> Get() {
@@ -73,21 +76,16 @@ namespace Orchard.Pages.Services {
 
         public void Publish(Page page) {
             _contentManager.Publish(page.ContentItem);
-            //TODO: (erikpo) Not sure if this is needed or not
-            page.Published = DateTime.UtcNow;
         }
 
         public void Publish(Page page, DateTime publishDate) {
-            //TODO: (erikpo) This logic should move out of blogs and pages and into content manager
-            if (page.Published != null && page.Published.Value >= DateTime.UtcNow)
-                _contentManager.Unpublish(page.ContentItem);
-            page.Published = publishDate;
+            //TODO: Implement task scheduling
+            //if (page.Published != null && page.Published.Value >= _clock.UtcNow)
+            //    _contentManager.Unpublish(page.ContentItem);
         }
 
         public void Unpublish(Page page) {
             _contentManager.Unpublish(page.ContentItem);
-            //TODO: (erikpo) Not sure if this is needed or not
-            page.Published = null;
         }
     }
 }

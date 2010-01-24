@@ -17,6 +17,12 @@ namespace Orchard.ContentManagement.Handlers {
         protected readonly IRepository<TRecord> _repository;
 
         public StorageFilter(IRepository<TRecord> repository) {
+            if (this.GetType() == typeof(StorageFilter<TRecord>) && typeof(TRecord).IsSubclassOf(typeof(ContentPartVersionRecord))) {
+                throw new ArgumentException(
+                    string.Format("Use {0} (or {1}.For<TRecord>()) for versionable record types", typeof (StorageVersionFilter<>).Name, typeof(StorageFilter).Name),
+                    "repository");
+            }
+
             _repository = repository;
         }
 

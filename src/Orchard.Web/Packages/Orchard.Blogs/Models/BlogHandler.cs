@@ -11,7 +11,7 @@ namespace Orchard.Blogs.Models {
             Filters.Add(new ActivatingFilter<Blog>(BlogDriver.ContentType.Name));
             Filters.Add(new ActivatingFilter<CommonAspect>(BlogDriver.ContentType.Name));
             Filters.Add(new ActivatingFilter<RoutableAspect>(BlogDriver.ContentType.Name));
-            Filters.Add(new StorageFilter<BlogRecord>(repository));
+            Filters.Add(StorageFilter.For(repository));
         }
     }
 }

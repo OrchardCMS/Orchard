@@ -9,7 +9,7 @@ namespace Orchard.Core.Settings.Models {
 
         public SiteSettingsHandler(IRepository<SiteSettingsRecord> repository){
             Filters.Add(new ActivatingFilter<SiteSettings>("site"));
-            Filters.Add(new StorageFilter<SiteSettingsRecord>(repository));
+            Filters.Add(StorageFilter.For(repository));
         }
     }
 }
