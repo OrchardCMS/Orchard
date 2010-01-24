@@ -27,7 +27,7 @@ namespace Orchard.Comments.Services {
 
         #region Implementation of ICommentValidator
 
-        public bool ValidateComment(CommentRecord comment) {
+        public bool ValidateComment(Comment comment) {
             CommentSettingsRecord commentSettingsRecord = CurrentSite.As<CommentSettings>().Record;
             string akismetKey = commentSettingsRecord.AkismetKey;
             string akismetUrl = commentSettingsRecord.AkismetUrl;
@@ -44,11 +44,11 @@ namespace Orchard.Comments.Services {
             }
             Akismet akismetApi = new Akismet(akismetKey, akismetUrl, null);
             AkismetComment akismetComment = new AkismetComment {
-                CommentAuthor = comment.Author,
-                CommentAuthorEmail = comment.Email,
-                Blog = comment.SiteName,
-                CommentAuthorUrl = comment.SiteName,
-                CommentContent = comment.CommentText,
+                CommentAuthor = comment.Record.Author,
+                CommentAuthorEmail = comment.Record.Email,
+                Blog = comment.Record.SiteName,
+                CommentAuthorUrl = comment.Record.SiteName,
+                CommentContent = comment.Record.CommentText,
                 UserAgent = HttpContext.Current.Request.UserAgent,
             };
 

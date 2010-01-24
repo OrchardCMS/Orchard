@@ -24,14 +24,14 @@ namespace Orchard.Comments.Feeds {
         Localizer T { get; set; }
 
         public void Populate(FeedContext context) {
-            foreach (var feedItem in context.Response.Items.OfType<FeedItem<CommentRecord>>()) {
+            foreach (var feedItem in context.Response.Items.OfType<FeedItem<Comment>>()) {
                 var comment = feedItem.Item;
-                var commentedOn = _contentManager.Get(feedItem.Item.CommentedOn);
+                var commentedOn = _contentManager.Get(feedItem.Item.Record.CommentedOn);
                 var commentedOnInspector = new ItemInspector(
                     commentedOn,
                     _contentManager.GetItemMetadata(commentedOn));
 
-                var title = T("Comment on {0} by {1}", commentedOnInspector.Title, comment.Author);
+                var title = T("Comment on {0} by {1}", commentedOnInspector.Title, comment.Record.Author);
 
                 
                 // add to known formats
@@ -40,14 +40,14 @@ namespace Orchard.Comments.Feeds {
                     var guid = new XElement("guid", new XAttribute("isPermaLink", "false"));
                     context.Response.Contextualize(requestContext => {
                         var urlHelper = new UrlHelper(requestContext);
-                        link.Add(urlHelper.RouteUrl(commentedOnInspector.Link) + "#comment-" + comment.Id);
-                        guid.Add("urn:comment:" + comment.Id);
+                        link.Add(urlHelper.RouteUrl(commentedOnInspector.Link) + "#comment-" + comment.Record.Id);
+                        guid.Add("urn:comment:" + comment.Record.Id);
                     });
 
                     feedItem.Element.SetElementValue("title", title);
                     feedItem.Element.Add(link);
-                    feedItem.Element.SetElementValue("description", comment.CommentText);
-                    feedItem.Element.SetElementValue("pubDate", comment.CommentDateUtc);//TODO: format
+                    feedItem.Element.SetElementValue("description", comment.Record.CommentText);
+                    feedItem.Element.SetElementValue("pubDate", comment.Record.CommentDateUtc);//TODO: format
                     feedItem.Element.Add(guid);
                 }
                 else {
@@ -57,9 +57,9 @@ namespace Orchard.Comments.Feeds {
                         context.Builder.AddProperty(context, feedItem1, "link", urlHelper.RouteUrl(commentedOnInspector.Link));
                     });
                     context.Builder.AddProperty(context, feedItem, "title", title.ToString());
-                    context.Builder.AddProperty(context, feedItem, "description", comment.CommentText);
+                    context.Builder.AddProperty(context, feedItem, "description", comment.Record.CommentText);
 
-                    context.Builder.AddProperty(context, feedItem, "published-date", Convert.ToString(comment.CommentDateUtc)); // format? cvt to generic T?
+                    context.Builder.AddProperty(context, feedItem, "published-date", Convert.ToString(comment.Record.CommentDateUtc)); // format? cvt to generic T?
                 }
             }
         }
