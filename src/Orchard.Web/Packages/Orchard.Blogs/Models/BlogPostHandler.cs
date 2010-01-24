@@ -1,7 +1,5 @@
 using System;
 using System.Linq;
-using System.Text.RegularExpressions;
-using JetBrains.Annotations;
 using Orchard.Blogs.Controllers;
 using Orchard.Blogs.Services;
 using Orchard.ContentManagement;
@@ -9,18 +7,16 @@ using Orchard.Core.Common.Models;
 using Orchard.ContentManagement.Handlers;
 using Orchard.Core.Common.Records;
 using Orchard.Core.Common.Services;
-using Orchard.Data;
 using Orchard.Localization;
 using Orchard.UI.Notify;
 
 namespace Orchard.Blogs.Models {
-    [UsedImplicitly]
     public class BlogPostHandler : ContentHandler {
         private readonly IBlogPostService _blogPostService;
         private readonly IRoutableService _routableService;
         private readonly IOrchardServices _orchardServices;
 
-        public BlogPostHandler(IRepository<CommonVersionRecord> commonRepository, IBlogPostService blogPostService, IRoutableService routableService, IOrchardServices orchardServices) {
+        public BlogPostHandler(IBlogPostService blogPostService, IRoutableService routableService, IOrchardServices orchardServices) {
             _blogPostService = blogPostService;
             _routableService = routableService;
             _orchardServices = orchardServices;
@@ -31,7 +27,6 @@ namespace Orchard.Blogs.Models {
             Filters.Add(new ActivatingFilter<ContentPart<CommonVersionRecord>>(BlogPostDriver.ContentType.Name));
             Filters.Add(new ActivatingFilter<RoutableAspect>(BlogPostDriver.ContentType.Name));
             Filters.Add(new ActivatingFilter<BodyAspect>(BlogPostDriver.ContentType.Name));
-            Filters.Add(StorageFilter.For(commonRepository));
 
             Action<Blog> updateBlogPostCount =
                 (blog => {

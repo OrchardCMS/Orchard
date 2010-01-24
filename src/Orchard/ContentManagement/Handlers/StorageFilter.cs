@@ -19,7 +19,7 @@ namespace Orchard.ContentManagement.Handlers {
         public StorageFilter(IRepository<TRecord> repository) {
             if (this.GetType() == typeof(StorageFilter<TRecord>) && typeof(TRecord).IsSubclassOf(typeof(ContentPartVersionRecord))) {
                 throw new ArgumentException(
-                    string.Format("Use {0} (or {1}.For<TRecord>()) for versionable record types", typeof (StorageVersionFilter<>).Name, typeof(StorageFilter).Name),
+                    string.Format("Use {0} (or {1}.For<TRecord>()) for versionable record types", typeof(StorageVersionFilter<>).Name, typeof(StorageFilter).Name),
                     "repository");
             }
 
@@ -27,6 +27,11 @@ namespace Orchard.ContentManagement.Handlers {
         }
 
         protected override void Activated(ActivatedContentContext context, ContentPart<TRecord> instance) {
+            if (instance.Record != null) {
+                throw new InvalidOperationException(string.Format(
+                    "Having more than one storage filter for a given part ({0}) is invalid.",
+                    typeof(ContentPart<TRecord>).FullName));
+            }
             instance.Record = new TRecord();
         }
 

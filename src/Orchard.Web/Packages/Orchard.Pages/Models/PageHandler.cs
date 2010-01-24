@@ -1,25 +1,22 @@
 ﻿using System;
 using System.Linq;
-using JetBrains.Annotations;
 using Orchard.ContentManagement;
 using Orchard.Core.Common.Records;
 using Orchard.Core.Common.Services;
 using Orchard.Localization;
 using Orchard.Pages.Controllers;
 using Orchard.Core.Common.Models;
-using Orchard.Data;
 using Orchard.ContentManagement.Handlers;
 using Orchard.Pages.Services;
 using Orchard.UI.Notify;
 
 namespace Orchard.Pages.Models {
-    [UsedImplicitly]
     public class PageHandler : ContentHandler {
         private readonly IPageService _pageService;
         private readonly IRoutableService _routableService;
         private readonly IOrchardServices _orchardServices;
 
-        public PageHandler(IRepository<CommonVersionRecord> commonRepository, IPageService pageService, IRoutableService routableService, IOrchardServices orchardServices) {
+        public PageHandler(IPageService pageService, IRoutableService routableService, IOrchardServices orchardServices) {
             _pageService = pageService;
             _routableService = routableService;
             _orchardServices = orchardServices;
@@ -30,7 +27,6 @@ namespace Orchard.Pages.Models {
             Filters.Add(new ActivatingFilter<ContentPart<CommonVersionRecord>>(PageDriver.ContentType.Name));
             Filters.Add(new ActivatingFilter<RoutableAspect>(PageDriver.ContentType.Name));
             Filters.Add(new ActivatingFilter<BodyAspect>(PageDriver.ContentType.Name));
-            Filters.Add(StorageFilter.For(commonRepository));
 
             OnPublished<Page>((context, p) => ProcessSlug(p));
         }

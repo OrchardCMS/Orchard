@@ -132,7 +132,9 @@ namespace Orchard.Pages.Controllers {
                 }
             }
 
-            model.Page = Services.ContentManager.UpdateEditorModel(Services.ContentManager.New<Page>("page"), this);
+            var page = Services.ContentManager.New<Page>("page");
+            model.Page = Services.ContentManager.UpdateEditorModel(page, this);
+
             if (!publishNow && publishDate != null)
                 model.Page.Item.Published = publishDate.Value;
 
