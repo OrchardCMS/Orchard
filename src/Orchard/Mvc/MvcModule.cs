@@ -28,9 +28,32 @@ namespace Orchard.Mvc {
 
             moduleBuilder.RegisterModule(module);
             moduleBuilder
-                .Register(ctx => HttpContext.Current == null ? null : new HttpContextWrapper(HttpContext.Current))
+                .Register(ctx => HttpContext.Current == null ? (HttpContextBase)new HttpContextPlaceholder() : new HttpContextWrapper(HttpContext.Current))
                 .As<HttpContextBase>()
                 .FactoryScoped();
         }
+
+        /// <summary>
+        /// standin context for background tasks.
+        /// </summary>
+        class HttpContextPlaceholder : HttpContextBase {
+            public override HttpRequestBase Request {
+                get { return new HttpRequestPlaceholder(); }
+            }
+        }
+
+        /// <summary>
+        /// standin context for background tasks. 
+        /// </summary>
+        class HttpRequestPlaceholder : HttpRequestBase {
+            /// <summary>
+            /// anonymous identity provided for background task.
+            /// </summary>
+            public override bool IsAuthenticated {
+                get { return false; }
+            }
+        }
     }
+
+
 }
