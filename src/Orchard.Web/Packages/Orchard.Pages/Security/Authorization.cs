@@ -11,7 +11,7 @@ namespace Orchard.Pages.Security {
         public override void Adjust(CheckAccessContext context) {
             if (context.Granted == false && 
                 context.Content.Is<Page>() && 
-                HasOwnerVariation(context.Permission) &&
+                OwnerVariationExists(context.Permission) &&
                 HasOwnership(context.User, context.Content)) {
 
                 context.Adjusted = true;
@@ -30,7 +30,7 @@ namespace Orchard.Pages.Security {
             return user.Id == common.Owner.Id;
         }
 
-        private static bool HasOwnerVariation(Permission permission) {
+        private static bool OwnerVariationExists(Permission permission) {
             return GetOwnerVariation(permission) != null;
         }
 
