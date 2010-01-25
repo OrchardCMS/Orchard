@@ -90,8 +90,8 @@ foreach (var pageEntry in Model.PageEntries)
                 <td>
                     <% if (!pageEntry.Page.IsPublished)
                        { %>
-                        <%=pageEntry.Page.Published != null
-                          ? string.Format("{0:d}<br />{0:t}", pageEntry.Page.Published.Value)
+                        <%=pageEntry.Page.ScheduledPublishUtc != null
+                          ? string.Format("{0:d}<br />{0:t}", pageEntry.Page.ScheduledPublishUtc.Value)
                           : ""%>
                     <% } %>    
                 </td>

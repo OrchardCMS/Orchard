@@ -1,10 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
-using JetBrains.Annotations;
 using Orchard.ContentManagement;
-using Orchard.ContentManagement.Aspects;
 using Orchard.Core.Scheduling.Models;
 using Orchard.Core.Scheduling.Records;
 using Orchard.Data;
@@ -13,7 +10,6 @@ using Orchard.Tasks.Scheduling;
 using Orchard.Utility;
 
 namespace Orchard.Core.Scheduling.Services {
-    [UsedImplicitly]
     public class ScheduledTaskManager : IScheduledTaskManager {
         private readonly IRepository<ScheduledTaskRecord> _repository;
 
@@ -45,6 +41,18 @@ namespace Orchard.Core.Scheduling.Services {
                 .Select(x => new Task(Services.ContentManager, x))
                 .Cast<IScheduledTask>()
                 .ToReadOnlyCollection();
+        }
+
+        public void DeleteTasks(ContentItem contentItem, Func<IScheduledTask, bool> predicate) {
+            //TEMP: Is this thread safe? Does it matter?
+            var tasks = _repository
+                .Fetch(x => x.ContentItemVersionRecord.ContentItemRecord == contentItem.Record);
+
+            foreach (var task in tasks) {
+                if (predicate(new Task(Services.ContentManager, task))) {
+                    _repository.Delete(task);
+                }
+            }
         }
     }
 }

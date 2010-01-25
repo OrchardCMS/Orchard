@@ -57,12 +57,6 @@ namespace Orchard.Pages.Models {
             }
         }
 
-        public DateTime? Published {
-            get { return this.As<CommonAspect>().PublishedUtc; }
-            set { this.As<CommonAspect>().PublishedUtc = value; }
-        }
-
-        //[CascadeAllDeleteOrphan]
-        //public virtual IList<Scheduled> Scheduled { get; protected set; }
+        public DateTime? ScheduledPublishUtc { get; set;}
     }
 }

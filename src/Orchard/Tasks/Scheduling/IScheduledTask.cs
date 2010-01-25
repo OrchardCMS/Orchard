@@ -1,6 +1,7 @@
 using System;
+using Orchard.ContentManagement;
 
-namespace Orchard.ContentManagement.Aspects {
+namespace Orchard.Tasks.Scheduling {
     public interface IScheduledTask  {
         string TaskType { get; }
         DateTime? ScheduledUtc { get; }

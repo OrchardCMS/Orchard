@@ -140,6 +140,7 @@
     <Compile Include="Security\IAuthorizationServiceEvents.cs" />
     <Compile Include="Security\StandardPermissions.cs" />
     <Compile Include="Security\OrchardSecurityException.cs" />
+    <Compile Include="Tasks\Scheduling\IPublishingTaskManager.cs" />
     <Compile Include="Tasks\Scheduling\IScheduledTask.cs" />
     <Compile Include="ContentManagement\ContentExtensions.cs" />
     <Compile Include="ContentManagement\ContentItem.cs" />

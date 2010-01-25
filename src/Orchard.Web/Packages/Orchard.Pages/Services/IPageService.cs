@@ -14,8 +14,9 @@ namespace Orchard.Pages.Services {
         Page GetLatest(int id);
         void Delete(Page page);
         void Publish(Page page);
-        void Publish(Page page, DateTime publishDate);
+        void Publish(Page page, DateTime scheduledPublishUtc);
         void Unpublish(Page page);
+        DateTime? GetScheduledPublishUtc(Page page);
     }
 
     public enum PageStatus {

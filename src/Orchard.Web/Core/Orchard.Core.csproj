@@ -105,6 +105,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Scheduling\Records\ScheduledTaskRecord.cs" />
     <Compile Include="Scheduling\Services\PublishingTaskHandler.cs" />
+    <Compile Include="Scheduling\Services\PublishingTaskManager.cs" />
     <Compile Include="Scheduling\Services\ScheduledTaskManager.cs" />
     <Compile Include="Scheduling\Services\ScheduledTaskExecutor.cs" />
     <Compile Include="Scheduling\Models\Task.cs" />

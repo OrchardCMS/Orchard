@@ -2,7 +2,6 @@
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Web.Routing;
-using JetBrains.Annotations;
 using Orchard.Core.Common.Models;
 using Orchard.Core.Common.Services;
 using Orchard.Localization;
@@ -13,7 +12,6 @@ using Orchard.Pages.Services;
 using Orchard.UI.Notify;
 
 namespace Orchard.Pages.Controllers {
-    [UsedImplicitly]
     public class PageDriver : ContentItemDriver<Page> {
         private readonly IPageService _pageService;
         private readonly IRoutableService _routableService;

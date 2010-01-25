@@ -1,7 +1,7 @@
 using System;
 using Orchard.ContentManagement;
-using Orchard.ContentManagement.Aspects;
 using Orchard.Core.Scheduling.Records;
+using Orchard.Tasks.Scheduling;
 
 namespace Orchard.Core.Scheduling.Models {
     public class Task : IScheduledTask {

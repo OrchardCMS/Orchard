@@ -5,15 +5,16 @@ using Orchard.Pages.Models;
 using Orchard.Core.Common.Records;
 using Orchard.ContentManagement;
 using Orchard.Services;
+using Orchard.Tasks.Scheduling;
 
 namespace Orchard.Pages.Services {
     public class PageService : IPageService {
         private readonly IContentManager _contentManager;
-        private readonly IClock _clock;
+        private readonly IPublishingTaskManager _publishingTaskManager;
 
-        public PageService(IContentManager contentManager, IClock clock) {
+        public PageService(IContentManager contentManager, IPublishingTaskManager publishingTaskManager) {
             _contentManager = contentManager;
-            _clock = clock;
+            _publishingTaskManager = publishingTaskManager;
         }
 
         public IEnumerable<Page> Get() {
@@ -71,21 +72,26 @@ namespace Orchard.Pages.Services {
         }
 
         public void Delete(Page page) {
+            _publishingTaskManager.DeleteTasks(page.ContentItem);
             _contentManager.Remove(page.ContentItem);
         }
 
         public void Publish(Page page) {
+            _publishingTaskManager.DeleteTasks(page.ContentItem);
             _contentManager.Publish(page.ContentItem);
         }
 
-        public void Publish(Page page, DateTime publishDate) {
-            //TODO: Implement task scheduling
-            //if (page.Published != null && page.Published.Value >= _clock.UtcNow)
-            //    _contentManager.Unpublish(page.ContentItem);
+        public void Publish(Page page, DateTime scheduledPublishUtc) {
+            _publishingTaskManager.Publish(page.ContentItem, scheduledPublishUtc);
         }
 
         public void Unpublish(Page page) {
             _contentManager.Unpublish(page.ContentItem);
+        }
+
+        public DateTime? GetScheduledPublishUtc(Page page) {
+            var task = _publishingTaskManager.GetPublishTask(page.ContentItem);
+            return (task == null ? null : task.ScheduledUtc);
         }
     }
 }

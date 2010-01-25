@@ -119,24 +119,9 @@ namespace Orchard.Pages.Controllers {
             if (!Services.Authorizer.Authorize(Permissions.EditPages, T("Couldn't create page")))
                 return new HttpUnauthorizedResult();
 
-            //TODO: (erikpo) Move this duplicate code somewhere else
-            DateTime? publishDate = null;
-            bool publishNow = false;
-            if (string.Equals(Request.Form["Command"], "PublishNow")) {
-                publishNow = true;
-            }
-            else if (string.Equals(Request.Form["Command"], "PublishLater")) {
-                DateTime publishDateValue;
-                if (DateTime.TryParse(Request.Form["Published"], out publishDateValue)) {
-                    publishDate = publishDateValue;
-                }
-            }
-
+            // Validate form input
             var page = Services.ContentManager.New<Page>("page");
             model.Page = Services.ContentManager.UpdateEditorModel(page, this);
-
-            if (!publishNow && publishDate != null)
-                model.Page.Item.Published = publishDate.Value;
 
             if (!ModelState.IsValid) {
                 Services.TransactionManager.Cancel();
@@ -145,15 +130,20 @@ namespace Orchard.Pages.Controllers {
 
             Services.ContentManager.Create(model.Page.Item.ContentItem, VersionOptions.Draft);
 
-            if (publishNow)
-                Services.ContentManager.Publish(model.Page.Item.ContentItem);
-
-            if (publishNow)
-                Services.Notifier.Information(T("Page has been published"));
-            else if (publishDate != null)
-                Services.Notifier.Information(T("Page has been scheduled for publishing"));
-            else
-                Services.Notifier.Information(T("Page draft has been saved"));
+            // Execute publish command
+            switch (Request.Form["Command"]) {
+                case "PublishNow":
+                    _pageService.Publish(model.Page.Item);
+                    Services.Notifier.Information(T("Page has been published"));
+                    break;
+                case "PublishLater":
+                    _pageService.Publish(model.Page.Item, model.Page.Item.ScheduledPublishUtc.Value);
+                    Services.Notifier.Information(T("Page has been scheduled for publishing"));
+                    break;
+                default:
+                    Services.Notifier.Information(T("Page draft has been saved"));
+                    break;
+            }
 
             return RedirectToAction("Edit", "Admin", new { id = model.Page.Item.ContentItem.Id });
         }
@@ -191,37 +181,24 @@ namespace Orchard.Pages.Controllers {
 
             if (!ModelState.IsValid) {
                 Services.TransactionManager.Cancel();
-
                 return View(model);
             }
 
-            //TODO: (erikpo) Move this duplicate code somewhere else
-            DateTime? publishDate = null;
-            bool publishNow = false;
-            if (string.Equals(Request.Form["Command"], "PublishNow")) {
-                publishNow = true;
+            // Execute publish command
+            switch (Request.Form["Command"]) {
+                case "PublishNow":
+                    _pageService.Publish(model.Page.Item);
+                    Services.Notifier.Information(T("Page has been published"));
+                    break;
+                case "PublishLater":
+                    _pageService.Publish(model.Page.Item, model.Page.Item.ScheduledPublishUtc.Value);
+                    Services.Notifier.Information(T("Page has been scheduled for publishing"));
+                    break;
+                default:
+                    Services.Notifier.Information(T("Page draft has been saved"));
+                    _pageService.Unpublish(page);
+                    break;
             }
-            else if (string.Equals(Request.Form["Command"], "PublishLater")) {
-                DateTime publishDateValue;
-                if (DateTime.TryParse(Request.Form["Published"], out publishDateValue)) {
-                    publishDate = publishDateValue;
-                }
-            }
-
-            //TODO: (erikpo) Move this duplicate code somewhere else
-            if (publishNow)
-                _pageService.Publish(page);
-            else if (publishDate != null)
-                _pageService.Publish(page, publishDate.Value);
-            else
-                _pageService.Unpublish(page);
-
-            if (publishNow)
-                Services.Notifier.Information(T("Page has been published"));
-            else if (publishDate != null)
-                Services.Notifier.Information(T("Page has been scheduled for publishing"));
-            else
-                Services.Notifier.Information(T("Page draft has been saved"));
 
             return RedirectToAction("Edit", "Admin", new { id = model.Page.Item.ContentItem.Id });
         }

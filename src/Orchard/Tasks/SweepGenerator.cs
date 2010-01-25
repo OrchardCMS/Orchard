@@ -14,7 +14,7 @@ namespace Orchard.Tasks {
             _timer = new Timer();
             _timer.Elapsed += Elapsed;
             Logger = NullLogger.Instance;
-            Interval = TimeSpan.FromMinutes(5);
+            Interval = TimeSpan.FromSeconds(30);
         }
 
         public ILogger Logger { get; set; }
