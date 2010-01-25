@@ -15,7 +15,8 @@ namespace Orchard.Blogs.Services {
         IEnumerable<KeyValuePair<ArchiveData, int>> GetArchives(Blog blog);
         void Delete(BlogPost blogPost);
         void Publish(BlogPost blogPost);
-        void Publish(BlogPost blogPost, DateTime publishDate);
+        void Publish(BlogPost blogPost, DateTime scheduledPublishUtc);
         void Unpublish(BlogPost blogPost);
+        DateTime? GetScheduledPublishUtc(BlogPost blogPost);
     }
 }

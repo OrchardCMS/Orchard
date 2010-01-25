@@ -9,7 +9,7 @@ namespace Orchard.Blogs.Extensions {
         }
 
         public static string PublishedState(this HtmlHelper htmlHelper, BlogPost blogPost) {
-            return htmlHelper.DateTime(blogPost.Published, "Draft");
+            return htmlHelper.DateTime(blogPost.PublishedUtc, "Draft");
         }
 
         public static string PublishedWhen(this HtmlHelper<BlogPost> htmlHelper) {
@@ -17,7 +17,7 @@ namespace Orchard.Blogs.Extensions {
         }
 
         public static string PublishedWhen(this HtmlHelper htmlHelper, BlogPost blogPost) {
-            return htmlHelper.DateTimeRelative(blogPost.Published, "as a Draft");
+            return htmlHelper.DateTimeRelative(blogPost.PublishedUtc, "as a Draft");
         }
     }
 }

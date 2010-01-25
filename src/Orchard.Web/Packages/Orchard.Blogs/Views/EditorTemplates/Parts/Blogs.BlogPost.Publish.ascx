@@ -10,8 +10,8 @@
         <label class="forcheckbox" for="Command_PublishNow"><%=_Encoded("Publish Now")%></label>
     </div>
     <div>
-        <%=Html.RadioButton("Command", "PublishLater", Model.Published != null && Model.Published.Value > DateTime.UtcNow, new { id = "Command_PublishLater" }) %>
+        <%=Html.RadioButton("Command", "PublishLater", Model.ScheduledPublishUtc != null, new { id = "Command_PublishLater" })%>
         <label class="forcheckbox" for="Command_PublishLater"><%=_Encoded("Publish Later")%></label>
-        <%=Html.EditorFor(m => m.Published) %>
+        <%=Html.EditorFor(m => m.ScheduledPublishUtc)%>
     </div>
 </fieldset>

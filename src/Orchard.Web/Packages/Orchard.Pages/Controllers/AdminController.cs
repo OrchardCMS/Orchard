@@ -195,8 +195,8 @@ namespace Orchard.Pages.Controllers {
                     Services.Notifier.Information(T("Page has been scheduled for publishing"));
                     break;
                 default:
+                    _pageService.Unpublish(model.Page.Item);
                     Services.Notifier.Information(T("Page draft has been saved"));
-                    _pageService.Unpublish(page);
                     break;
             }
 
@@ -213,7 +213,6 @@ namespace Orchard.Pages.Controllers {
                 return new HttpUnauthorizedResult();
 
             _pageService.Delete(page);
-
             Services.Notifier.Information(T("Page was successfully deleted"));
 
             return RedirectToAction("List");

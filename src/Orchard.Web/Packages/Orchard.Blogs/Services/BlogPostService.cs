@@ -6,15 +6,18 @@ using Orchard.Blogs.Models;
 using Orchard.Core.Common.Records;
 using Orchard.ContentManagement;
 using Orchard.Data;
+using Orchard.Tasks.Scheduling;
 
 namespace Orchard.Blogs.Services {
     public class BlogPostService : IBlogPostService {
         private readonly IContentManager _contentManager;
         private readonly IRepository<BlogArchiveRecord> _blogArchiveRepository;
+        private readonly IPublishingTaskManager _publishingTaskManager;
 
-        public BlogPostService(IContentManager contentManager, IRepository<BlogArchiveRecord> blogArchiveRepository) {
+        public BlogPostService(IContentManager contentManager, IRepository<BlogArchiveRecord> blogArchiveRepository, IPublishingTaskManager publishingTaskManager) {
             _contentManager = contentManager;
             _blogArchiveRepository = blogArchiveRepository;
+            _publishingTaskManager = publishingTaskManager;
         }
 
         public BlogPost Get(Blog blog, string slug) {
@@ -82,23 +85,26 @@ namespace Orchard.Blogs.Services {
         }
 
         public void Delete(BlogPost blogPost) {
+            _publishingTaskManager.DeleteTasks(blogPost.ContentItem);
             _contentManager.Remove(blogPost.ContentItem);
         }
 
         public void Publish(BlogPost blogPost) {
+            _publishingTaskManager.DeleteTasks(blogPost.ContentItem);
             _contentManager.Publish(blogPost.ContentItem);
         }
 
-        public void Publish(BlogPost blogPost, DateTime publishDate) {
-            //TODO: Implement task scheduling
-            //TODO: (erikpo) This logic should move out of blogs and pages and into content manager
-            //if (blogPost.Published != null && blogPost.Published.Value >= DateTime.UtcNow)
-            //    _contentManager.Unpublish(blogPost.ContentItem);
-            //blogPost.Published = publishDate;
+        public void Publish(BlogPost blogPost, DateTime scheduledPublishUtc) {
+            _publishingTaskManager.Publish(blogPost.ContentItem, scheduledPublishUtc);
         }
 
         public void Unpublish(BlogPost blogPost) {
             _contentManager.Unpublish(blogPost.ContentItem);
+        }
+
+        public DateTime? GetScheduledPublishUtc(BlogPost blogPost) {
+            var task = _publishingTaskManager.GetPublishTask(blogPost.ContentItem);
+            return (task == null ? null : task.ScheduledUtc);
         }
 
         private IContentQuery<ContentItem, CommonRecord> GetBlogQuery(ContentPart<BlogRecord> blog, VersionOptions versionOptions) {

@@ -29,10 +29,10 @@ namespace Orchard.Blogs.Models {
             set { this.As<ICommonAspect>().Owner = value; }
         }
 
-        public DateTime? Published
-        {
-            get { return this.As<CommonAspect>().PublishedUtc; }
-            set { this.As<CommonAspect>().PublishedUtc = value; }
+        public DateTime? PublishedUtc {
+            get { return this.As<ICommonAspect>().VersionPublishedUtc; }
         }
+
+        public DateTime? ScheduledPublishUtc { get; set;}
     }
 }
