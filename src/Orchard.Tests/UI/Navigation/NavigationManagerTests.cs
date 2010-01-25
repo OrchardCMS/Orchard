@@ -20,7 +20,7 @@ namespace Orchard.Tests.UI.Navigation {
         }
 
         public class StubAuth : IAuthorizationService {
-            public void CheckAccess(Permission permission, IUser user, IContent content) {                
+            public void CheckAccess(Permission permission, IUser user, IContent content) {
             }
 
             public bool TryCheckAccess(Permission permission, IUser user, IContent content) {
@@ -65,7 +65,6 @@ namespace Orchard.Tests.UI.Navigation {
             Assert.That(subitem1.Position, Is.EqualTo("1.a"));
             Assert.That(subitem2.Text, Is.EqualTo("Frap"));
             Assert.That(subitem2.Position, Is.EqualTo("1.b"));
-
         }
 
         public class StubProvider : INavigationProvider {
@@ -73,7 +72,7 @@ namespace Orchard.Tests.UI.Navigation {
 
             public void GetNavigation(NavigationBuilder builder) {
                 builder
-                    .Add("Foo", "1.0")
+                    .Add("Foo", "1.0", x => x.Action("foo"))
                     .Add("Bar", "2.0", x => x.Add("Frap", "1.b"));
             }
         }
@@ -83,10 +82,9 @@ namespace Orchard.Tests.UI.Navigation {
 
             public void GetNavigation(NavigationBuilder builder) {
                 builder
-                    .Add("Frap", "3.0")
+                    .Add("Frap", "3.0", x => x.Action("foo"))
                     .Add("Bar", "4.0", x => x.Add("Quad", "1.a"));
             }
         }
     }
-
 }
