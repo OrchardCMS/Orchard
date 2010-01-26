@@ -9,13 +9,16 @@ namespace Orchard.Comments.Extensions {
             string commentText = "";
 
             if (item.Id != 0) {
-                if (commentCount == 0) {
+                //
+                int totalCommentCount = commentCount + pendingCount;
+
+                if (totalCommentCount == 0) {
                     commentText += html.Encode(T("no comments"));
                 }
                 else {
                     commentText +=
                         html.ActionLink(
-                            T("{0} comment{1}", commentCount, commentCount == 1 ? "" : "s").ToString(),
+                            T("{0} comment{1}", totalCommentCount, totalCommentCount == 1 ? "" : "s").ToString(),
                             "Details",
                             new {
                                 Area = "Orchard.Comments",
@@ -26,7 +29,7 @@ namespace Orchard.Comments.Extensions {
                 }
 
                 if (pendingCount > 0) {
-                    commentText += " - ";
+                    commentText += " (";
                     commentText += html.ActionLink(T("{0} pending", pendingCount).ToString(),
                                                    "Details",
                                                    new {
@@ -35,6 +38,7 @@ namespace Orchard.Comments.Extensions {
                                                        id = item.Id,
                                                        returnUrl = html.ViewContext.HttpContext.Request.Url
                                                    });
+                    commentText += ") ";
                 }
             }
 

@@ -25,7 +25,7 @@ namespace Orchard.Comments.Models {
                 .Where<CommonRecord>(rec => rec.Container == contentItem.Record).List();
 
             // Count comments and create template
-            int count = parts.Aggregate(0, (seed, item) => seed + (ContentExtensions.Has<HasComments>(item) ? ContentExtensions.As<HasComments>(item).Comments.Count : 0));
+            int count = parts.Aggregate(0, (seed, item) => seed + (item.Has<HasComments>() ? item.As<HasComments>().Comments.Count : 0));
             int pendingCount = parts.Aggregate(0, (seed, item) => seed + (item.Has<HasComments>() ? item.As<HasComments>().PendingComments.Count : 0));
 
             return new CommentCountViewModel { Item = contentItem, CommentCount = count, PendingCount = pendingCount};
