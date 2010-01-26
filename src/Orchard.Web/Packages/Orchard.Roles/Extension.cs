@@ -7,7 +7,7 @@ using Orchard.Security.Permissions;
 
 namespace Orchard.Roles {
     [UsedImplicitly]
-    public class Extension : IExtensionManagerEvents {
+    public class Extension : ExtensionManagerEvents {
         private readonly IRoleService _roleService;
         private readonly IEnumerable<IPermissionProvider> _permissionProviders;
 
@@ -18,10 +18,7 @@ namespace Orchard.Roles {
             _permissionProviders = permissionProviders;
         }
 
-        public void Enabling(ExtensionEventContext context) {
-        }
-
-        public void Enabled(ExtensionEventContext context) {
+        public override void Enabled(ExtensionEventContext context) {
             // when another package is being enabled, locate matching permission providers
             var providersForEnabledPackage =
                 _permissionProviders.Where(x => x.PackageName == context.Extension.Descriptor.Name);
@@ -46,12 +43,6 @@ namespace Orchard.Roles {
                     _roleService.UpdateRole(role.Id, role.Name, distinctPermissionNames);
                 }
             }
-        }
-
-        public void Disabling(ExtensionEventContext context) {
-        }
-
-        public void Disabled(ExtensionEventContext context) {
         }
     }
 }

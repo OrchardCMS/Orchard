@@ -38,7 +38,8 @@ namespace Orchard.Environment {
         }
 
         protected virtual void Initialize() {
-            var shell = CreateShell();
+            var shellContainer = CreateShellContainer();
+            var shell = shellContainer.Resolve<IOrchardShell>();
             shell.Activate();
             _current = shell;
 
@@ -46,12 +47,19 @@ namespace Orchard.Environment {
             _controllerBuilder.SetControllerFactory(new OrchardControllerFactory());
             ServiceLocator.SetLocator(t => _containerProvider.RequestContainer.Resolve(t));
 
-            // fire off one-time install events on an alternate container
+            // Fire off one-time install events on an alternate container
+            HackInstallSimulation();
+
+            // Activate extensions inside shell container
+            HackSimulateExtensionActivation(shellContainer);
+        }
+
+        private void HackInstallSimulation() {
             var tempContainer = CreateShellContainer();
             var containerProvider = new FiniteContainerProvider(tempContainer);
             try {
                 var requestContainer = containerProvider.RequestContainer;
-                
+
                 var hackInstallationGenerator = requestContainer.Resolve<IHackInstallationGenerator>();
                 hackInstallationGenerator.GenerateInstallEvents();
             }
@@ -60,7 +68,19 @@ namespace Orchard.Environment {
                 containerProvider.DisposeRequestContainer();
                 tempContainer.Dispose();
             }
+        }
 
+        private void HackSimulateExtensionActivation(IContainer shellContainer) {
+            var containerProvider = new FiniteContainerProvider(shellContainer);
+            try {
+                var requestContainer = containerProvider.RequestContainer;
+
+                var hackInstallationGenerator = requestContainer.Resolve<IHackInstallationGenerator>();
+                hackInstallationGenerator.GenerateActivateEvents();
+            }
+            finally {
+                containerProvider.DisposeRequestContainer();
+            }
         }
 
         protected virtual void EndRequest() {

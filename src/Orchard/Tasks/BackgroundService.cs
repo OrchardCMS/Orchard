@@ -23,5 +23,4 @@ namespace Orchard.Tasks {
             _tasks.Invoke(task => task.Sweep(), Logger);
         }
     }
-
 }

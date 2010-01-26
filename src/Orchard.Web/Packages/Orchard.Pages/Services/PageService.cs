@@ -1,20 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Orchard.ContentManagement.Records;
 using Orchard.Pages.Models;
 using Orchard.Core.Common.Records;
 using Orchard.ContentManagement;
-using Orchard.Services;
 using Orchard.Tasks.Scheduling;
 
 namespace Orchard.Pages.Services {
     public class PageService : IPageService {
         private readonly IContentManager _contentManager;
         private readonly IPublishingTaskManager _publishingTaskManager;
+        private readonly ISlugConstraint _slugConstraint;
 
-        public PageService(IContentManager contentManager, IPublishingTaskManager publishingTaskManager) {
+        public PageService(IContentManager contentManager, IPublishingTaskManager publishingTaskManager, ISlugConstraint slugConstraint) {
             _contentManager = contentManager;
             _publishingTaskManager = publishingTaskManager;
+            _slugConstraint = slugConstraint;
         }
 
         public IEnumerable<Page> Get() {
@@ -22,24 +24,16 @@ namespace Orchard.Pages.Services {
         }
 
         public IEnumerable<Page> Get(PageStatus status) {
-            IEnumerable<ContentItem> contentItems;
-
             switch (status) {
                 case PageStatus.All:
-                    contentItems = _contentManager.Query(VersionOptions.Latest, "page").List();
-                    break;
+                    return _contentManager.Query<Page>(VersionOptions.Latest).List();
                 case PageStatus.Published:
-                    contentItems = _contentManager.Query(VersionOptions.Published, "page").List();
-                    break;
+                    return _contentManager.Query<Page>(VersionOptions.Published).List();
                 case PageStatus.Offline:
-                    contentItems = _contentManager.Query(VersionOptions.Latest, "page").List().Where(ci => !ci.VersionRecord.Published);
-                    break;
+                    return _contentManager.Query<Page>(VersionOptions.Latest).Where<ContentPartVersionRecord>(ci => !ci.ContentItemVersionRecord.Published).List();
                 default:
-                    contentItems = new List<Page>().Cast<ContentItem>();
-                    break;
+                    return Enumerable.Empty<Page>();
             }
-
-            return contentItems.Select(ci => ci.As<Page>());
         }
 
         public Page Get(int id) {
@@ -79,6 +73,7 @@ namespace Orchard.Pages.Services {
         public void Publish(Page page) {
             _publishingTaskManager.DeleteTasks(page.ContentItem);
             _contentManager.Publish(page.ContentItem);
+            _slugConstraint.AddPublishedSlug(page.Slug);
         }
 
         public void Publish(Page page, DateTime scheduledPublishUtc) {
@@ -87,6 +82,7 @@ namespace Orchard.Pages.Services {
 
         public void Unpublish(Page page) {
             _contentManager.Unpublish(page.ContentItem);
+            _slugConstraint.RemovePublishedSlug(page.Slug);
         }
 
         public DateTime? GetScheduledPublishUtc(Page page) {

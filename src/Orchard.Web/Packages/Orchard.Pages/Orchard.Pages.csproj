@@ -88,6 +88,7 @@
     <Compile Include="Services\SlugConstraint.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Services\SlugConstraintUpdator.cs" />
     <Compile Include="ViewModels\PageCreateViewModel.cs" />
     <Compile Include="ViewModels\PageEditViewModel.cs" />
     <Compile Include="ViewModels\PagesViewModel.cs" />
