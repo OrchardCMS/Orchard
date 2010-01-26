@@ -2,20 +2,18 @@
 using System.Web.Mvc;
 using Orchard.Localization;
 using Orchard.ContentManagement;
+using Orchard.Mvc.Results;
 using Orchard.Pages.Services;
 using Orchard.Pages.ViewModels;
 using Orchard.Security;
 
 namespace Orchard.Pages.Controllers {
     [ValidateInput(false)]
-    public class PageController : Controller, IUpdateModel {
+    public class PageController : Controller {
         private readonly IPageService _pageService;
         private readonly ISlugConstraint _slugConstraint;
 
-        public PageController(
-            IOrchardServices services,
-            IPageService pageService,
-            ISlugConstraint slugConstraint) {
+        public PageController(IOrchardServices services, IPageService pageService, ISlugConstraint slugConstraint) {
             Services = services;
             _pageService = pageService;
             _slugConstraint = slugConstraint;
@@ -29,25 +27,18 @@ namespace Orchard.Pages.Controllers {
             if (!Services.Authorizer.Authorize(StandardPermissions.AccessFrontEnd, T("Couldn't view page")))
                 return new HttpUnauthorizedResult();
 
-            if (slug == null) {
-                throw new ArgumentNullException("slug");
-            }
+            var correctedSlug = _slugConstraint.LookupPublishedSlug(slug);
+            if (correctedSlug == null)
+                return new NotFoundResult();
 
-            //var correctedSlug = _slugConstraint.LookupPublishedSlug(pageSlug);
-
-            var page = _pageService.Get(slug);
+            var page = _pageService.Get(correctedSlug);
+            if (page == null)
+                return new NotFoundResult();
 
             var model = new PageViewModel {
                 Page = Services.ContentManager.BuildDisplayModel(page, "Detail")
             };
             return View(model);
-        }
-
-        bool IUpdateModel.TryUpdateModel<TModel>(TModel model, string prefix, string[] includeProperties, string[] excludeProperties) {
-            return TryUpdateModel(model, prefix, includeProperties, excludeProperties);
-        }
-        void IUpdateModel.AddModelError(string key, LocalizedString errorMessage) {
-            ModelState.AddModelError(key, errorMessage.ToString());
         }
     }
 }
