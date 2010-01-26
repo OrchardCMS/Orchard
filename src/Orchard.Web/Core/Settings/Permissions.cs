@@ -21,7 +21,7 @@ namespace Orchard.Core.Settings {
             return new[] {
                 new PermissionStereotype {
                     Name = "Administrators",
-                    //Permissions = new[] {ChangeOwner}
+                    Permissions = new[] {ManageSettings}
                 }
             };
         }

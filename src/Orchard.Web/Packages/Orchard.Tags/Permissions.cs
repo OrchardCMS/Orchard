@@ -23,7 +23,28 @@ namespace Orchard.Tags {
         }
 
         public IEnumerable<PermissionStereotype> GetDefaultStereotypes() {
-            return Enumerable.Empty<PermissionStereotype>();
+            return new[] {
+                new PermissionStereotype {
+                    Name = "Administrators",
+                    Permissions = new[] {ManageTags}
+                },
+                new PermissionStereotype {
+                    Name = "Editor",
+                    Permissions = new[] {ManageTags}
+                },
+                new PermissionStereotype {
+                    Name = "Moderator",
+                    Permissions = new[] {ManageTags}
+                },
+                new PermissionStereotype {
+                    Name = "Author",
+                    Permissions = new[] {CreateTag, ApplyTag}
+                },
+                new PermissionStereotype {
+                    Name = "Contributor",
+                    Permissions = new[] {ApplyTag}
+                },
+            };
         }
 
     }

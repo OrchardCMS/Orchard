@@ -43,9 +43,5 @@ namespace Orchard.Mvc.Html {
         public static MvcHtmlString ItemEditLink(this HtmlHelper html, IContent content) {
             return ItemEditLink(html, null, content);
         }
-
-        public static MvcHtmlString ItemDisplayTemplate(this HtmlHelper html, IContent content, string template) {
-            return html.Partial(string.Format("{0}/{1}", content.ContentItem.ContentType, template), new ContentItemViewModel(content.ContentItem));
-        }
     }
 }

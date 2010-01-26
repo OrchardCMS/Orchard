@@ -38,8 +38,23 @@ namespace Orchard.Comments {
                     Name = "Anonymous",
                     Permissions = new[] {AddComment}
                 },
+                new PermissionStereotype {
+                    Name = "Editor",
+                    //Permissions = new[] {}
+                },
+                new PermissionStereotype {
+                    Name = "Moderator",
+                    //Permissions = new[] {}
+                },
+                new PermissionStereotype {
+                    Name = "Author",
+                    //Permissions = new[] {}
+                },
+                new PermissionStereotype {
+                    Name = "Contributor",
+                    //Permissions = new[] {}
+                },
             };
         }
-
     }
 }

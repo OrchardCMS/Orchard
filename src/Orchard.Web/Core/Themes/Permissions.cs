@@ -21,7 +21,12 @@ namespace Orchard.Core.Themes {
         }
 
         public IEnumerable<PermissionStereotype> GetDefaultStereotypes() {
-            return Enumerable.Empty<PermissionStereotype>();
+            return new[] {
+                new PermissionStereotype {
+                    Name = "Administrators",
+                    Permissions = new[] {ManageThemes, ApplyTheme}
+                },
+            };
         }
     }
 }

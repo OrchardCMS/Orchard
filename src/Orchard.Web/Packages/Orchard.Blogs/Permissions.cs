@@ -35,8 +35,30 @@ namespace Orchard.Blogs {
         }
 
         public IEnumerable<PermissionStereotype> GetDefaultStereotypes() {
-            return Enumerable.Empty<PermissionStereotype>();
+            return new[] {
+                new PermissionStereotype {
+                    Name = "Administrators",
+                    Permissions = new[] {ManageBlogs}
+                },
+                new PermissionStereotype {
+                    Name = "Editor",
+                    Permissions = new[] {PublishOthersBlogPost,EditOthersBlogPost,DeleteOthersBlogPost}
+                },
+                new PermissionStereotype {
+                    Name = "Moderator",
+                    //Permissions = new[] {}
+                },
+                new PermissionStereotype {
+                    Name = "Author",
+                    Permissions = new[] {PublishBlogPost,EditBlogPost,DeleteBlogPost}
+                },
+                new PermissionStereotype {
+                    Name = "Contributor",
+                    Permissions = new[] {EditBlogPost}
+                },
+            };
         }
+
     }
 }
 

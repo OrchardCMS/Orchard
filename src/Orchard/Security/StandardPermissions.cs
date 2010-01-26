@@ -8,7 +8,10 @@ namespace Orchard.Security {
         public static readonly Permission AccessFrontEnd = new Permission { Name = "AccessFrontEnd", Description = "Access site front-end" };
 
         public string PackageName {
-            get { return "Orchard"; }
+            get {
+                // This is a lie, but it enables the permissions and stereotypes to be created
+                return "Common";
+            }
         }
 
         public IEnumerable<Permission> GetPermissions() {
@@ -19,7 +22,36 @@ namespace Orchard.Security {
         }
 
         public IEnumerable<PermissionStereotype> GetDefaultStereotypes() {
-            return Enumerable.Empty<PermissionStereotype>();
+            return new[] {
+                new PermissionStereotype {
+                    Name = "Administrators",
+                    Permissions = new[] {AccessAdminPanel}
+                },
+                new PermissionStereotype {
+                    Name = "Anonymous",
+                    Permissions = new[] {AccessFrontEnd}
+                },
+                new PermissionStereotype {
+                    Name = "Authenticated",
+                    Permissions = new[] {AccessFrontEnd}
+                },
+                new PermissionStereotype {
+                    Name = "Editor",
+                    Permissions = new[] {AccessAdminPanel}
+                },
+                new PermissionStereotype {
+                    Name = "Moderator",
+                    Permissions = new[] {AccessAdminPanel}
+                },
+                new PermissionStereotype {
+                    Name = "Author",
+                    Permissions = new[] {AccessAdminPanel}
+                },
+                new PermissionStereotype {
+                    Name = "Contributor",
+                    Permissions = new[] {AccessAdminPanel}
+                },
+            };
         }
 
     }

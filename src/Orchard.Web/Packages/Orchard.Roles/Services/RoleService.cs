@@ -57,10 +57,10 @@ namespace Orchard.Roles.Services {
         public void CreatePermissionForRole(string roleName, string permissionName) {
             if (_permissionRepository.Get(x => x.Name == permissionName) == null) {
                 _permissionRepository.Create(new PermissionRecord {
-                                                                      Description = GetPermissionDescription(permissionName),
-                                                                      Name = permissionName,
-                                                                      PackageName = GetPackageName(permissionName)
-                                                                  });
+                    Description = GetPermissionDescription(permissionName),
+                    Name = permissionName,
+                    PackageName = GetPackageName(permissionName)
+                });
             }
             RoleRecord roleRecord = GetRoleByName(roleName);
             PermissionRecord permissionRecord = _permissionRepository.Get(x => x.Name == permissionName);
@@ -75,10 +75,10 @@ namespace Orchard.Roles.Services {
                 string permission = rolePermission;
                 if (_permissionRepository.Get(x => x.Name == permission) == null) {
                     _permissionRepository.Create(new PermissionRecord {
-                                                                          Description = GetPermissionDescription(permission),
-                                                                          Name = permission,
-                                                                          PackageName = GetPackageName(permission)
-                                                                      });
+                        Description = GetPermissionDescription(permission),
+                        Name = permission,
+                        PackageName = GetPackageName(permission)
+                    });
                 }
                 PermissionRecord permissionRecord = _permissionRepository.Get(x => x.Name == permission);
                 roleRecord.RolesPermissions.Add(new RolesPermissions { Permission = permissionRecord, Role = roleRecord });
@@ -115,7 +115,10 @@ namespace Orchard.Roles.Services {
             Dictionary<string, IEnumerable<Permission>> installedPermissions = new Dictionary<string, IEnumerable<Permission>>();
             foreach (var permissionProvider in _permissionProviders) {
                 IEnumerable<Permission> permissions = permissionProvider.GetPermissions();
-                installedPermissions.Add(permissionProvider.PackageName, permissions);
+                if (installedPermissions.ContainsKey(permissionProvider.PackageName))
+                    installedPermissions[permissionProvider.PackageName] = installedPermissions[permissionProvider.PackageName].Concat(permissions);
+                else
+                    installedPermissions.Add(permissionProvider.PackageName, permissions);
             }
 
             return installedPermissions;

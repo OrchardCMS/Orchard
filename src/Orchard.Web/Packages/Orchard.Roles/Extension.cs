@@ -2,6 +2,7 @@
 using System.Linq;
 using JetBrains.Annotations;
 using Orchard.Extensions;
+using Orchard.Logging;
 using Orchard.Roles.Services;
 using Orchard.Security.Permissions;
 
@@ -16,31 +17,58 @@ namespace Orchard.Roles {
             IEnumerable<IPermissionProvider> permissionProviders) {
             _roleService = roleService;
             _permissionProviders = permissionProviders;
+
+            Logger = NullLogger.Instance;
         }
 
+        public ILogger Logger { get; set; }
+
         public override void Enabled(ExtensionEventContext context) {
+            var extensionDisplayName = context.Extension.Descriptor.DisplayName ?? context.Extension.Descriptor.Name;
+
             // when another package is being enabled, locate matching permission providers
             var providersForEnabledPackage =
-                _permissionProviders.Where(x => x.PackageName == context.Extension.Descriptor.Name);
-            
+                _permissionProviders.Where(x => x.PackageName == extensionDisplayName);
+
+            if (providersForEnabledPackage.Any()) {
+                Logger.Debug("Configuring default roles for module {0}", extensionDisplayName);
+            }
+            else {
+                Logger.Debug("No default roles for module {0}", extensionDisplayName);
+            }
+
             foreach (var permissionProvider in providersForEnabledPackage) {
                 // get and iterate stereotypical groups of permissions
                 var stereotypes = permissionProvider.GetDefaultStereotypes();
-                foreach(var stereotype in stereotypes) {
+                foreach (var stereotype in stereotypes) {
 
                     // turn those stereotypes into roles
                     var role = _roleService.GetRoleByName(stereotype.Name);
-                    if (role == null){
+                    if (role == null) {
+                        Logger.Information("Defining new role {0} for permission stereotype", stereotype.Name);
+
                         _roleService.CreateRole(stereotype.Name);
                         role = _roleService.GetRoleByName(stereotype.Name);
                     }
 
-                    // and merge the stereotypical permissions into that role
-                    var distinctPermissionNames = role.RolesPermissions.Select(x => x.Permission.Name)
-                        .Union(stereotype.Permissions.Select(x => x.Name))
+                    // and merge the stereotypical permissions into that role                    
+                    var stereotypePermissionNames = (stereotype.Permissions ?? Enumerable.Empty<Permission>()).Select(x => x.Name);
+                    var currentPermissionNames = role.RolesPermissions.Select(x => x.Permission.Name);
+
+                    var distinctPermissionNames = currentPermissionNames
+                        .Union(stereotypePermissionNames)
                         .Distinct();
 
-                    _roleService.UpdateRole(role.Id, role.Name, distinctPermissionNames);
+
+                    // update role if set of permissions has increased
+                    var additionalPermissionNames = distinctPermissionNames.Except(currentPermissionNames);
+
+                    if (additionalPermissionNames.Any()) {
+                        foreach (var permissionName in additionalPermissionNames) {
+                            Logger.Information("Default role {0} granted permission {1}", stereotype.Name, permissionName);
+                            _roleService.CreatePermissionForRole(role.Name, permissionName);
+                        }                        
+                    }
                 }
             }
         }

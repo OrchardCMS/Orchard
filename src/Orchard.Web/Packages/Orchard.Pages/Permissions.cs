@@ -31,7 +31,28 @@ namespace Orchard.Pages {
         }
 
         public IEnumerable<PermissionStereotype> GetDefaultStereotypes() {
-            return Enumerable.Empty<PermissionStereotype>();
+            return new[] {
+                new PermissionStereotype {
+                    Name = "Administrators",
+                    Permissions = new[] {PublishOthersPages,EditOthersPages,DeleteOthersPages}
+                },
+                new PermissionStereotype {
+                    Name = "Editor",
+                    Permissions = new[] {PublishOthersPages,EditOthersPages,DeleteOthersPages}
+                },
+                new PermissionStereotype {
+                    Name = "Moderator",
+                    //Permissions = new[] {}
+                },
+                new PermissionStereotype {
+                    Name = "Author",
+                    Permissions = new[] {PublishPages,EditPages,DeletePages}
+                },
+                new PermissionStereotype {
+                    Name = "Contributor",
+                    Permissions = new[] {EditPages}
+                },
+            };
         }
 
     }
