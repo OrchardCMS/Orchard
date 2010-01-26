@@ -24,6 +24,12 @@ namespace Orchard.Blogs.Filters {
                 blogPostViewModel.Zones.AddRenderPartial("secondary", "Archives", new BlogArchivesViewModel { Blog = blogPostViewModel.Blog, Archives = _blogPostService.GetArchives(blogPostViewModel.Blog) });
                 return;
             }
+
+            var blogPostArchiveViewModel = filterContext.Controller.ViewData.Model as BlogPostArchiveViewModel;
+            if (blogPostArchiveViewModel != null) {
+                blogPostArchiveViewModel.Zones.AddRenderPartial("secondary", "Archives", new BlogArchivesViewModel { Blog = blogPostArchiveViewModel.Blog, Archives = _blogPostService.GetArchives(blogPostArchiveViewModel.Blog) });
+                return;
+            }
         }
 
         public void OnResultExecuted(ResultExecutedContext filterContext) {
