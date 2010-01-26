@@ -118,3 +118,10 @@ Eric Meyer's Reset CSS
 Website:      http://meyerweb.com/eric/tools/css/reset/
 Copyright:    Copyright (C) 1995-2005 Eric A. and Kathryn S. Meyer
 License:      Public domain
+
+YUI Reset CSS, YUI Grids CSS
+-----
+Website:      http://developer.yahoo.com/yui/
+Copyright:    Copyright (c) 2009, Yahoo! Inc. All rights reserved.
+License:      Code licensed under the BSD License:
+              http://developer.yahoo.net/yui/license.txt
