@@ -3,16 +3,6 @@
 <fieldset>
     <legend><%=_Encoded("Comments")%></legend>
     <div>
-        <%=Html.EditorFor(m => m.EnableCommentsOnPages) %>
-        <label class="forcheckbox" for="CommentSettings_EnableCommentsOnPages"><%=_Encoded("Enable comments on pages")%></label>
-        <%=Html.ValidationMessage("EnableCommentsOnPages", "*")%>
-    </div>
-    <div>
-        <%=Html.EditorFor(m => m.EnableCommentsOnPosts) %>
-        <label class="forcheckbox" for="CommentSettings_EnableCommentsOnPosts"><%=_Encoded("Enable comments on blog posts")%></label>
-        <%=Html.ValidationMessage("EnableCommentsOnPosts", "*")%>
-    </div>
-    <div>
         <%=Html.EditorFor(m => m.RequireLoginToAddComment) %>
         <label class="forcheckbox" for="CommentSettings_RequireLoginToAddComment"><%=_Encoded("Require login to comment")%></label>
         <%=Html.ValidationMessage("RequireLoginToAddComment", "*")%>

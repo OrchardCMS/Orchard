@@ -137,7 +137,7 @@ namespace Orchard.Blogs.Controllers {
                     _services.Notifier.Information(T("Blog post has been scheduled for publishing"));
                     break;
                 default:
-                    _blogPostService.Unpublish(model.BlogPost.Item);
+                    //_blogPostService.Unpublish(model.BlogPost.Item);
                     _services.Notifier.Information(T("Blog post draft has been saved"));
                     break;
             }

@@ -45,7 +45,7 @@ namespace Orchard.Pages.Controllers {
                 default:
                     throw new ArgumentOutOfRangeException();
             }
-            var entries = pages.Select(page => CreatePageEntry(page)).ToList();
+            var entries = pages.Select(page => CreatePageEntry(page)).OrderBy(pageEntry => pageEntry.Page.Title).ToList();
             var model = new PagesViewModel { Options = options, PageEntries = entries };
             return View(model);
         }
@@ -195,7 +195,7 @@ namespace Orchard.Pages.Controllers {
                     Services.Notifier.Information(T("Page has been scheduled for publishing"));
                     break;
                 default:
-                    _pageService.Unpublish(model.Page.Item);
+                    //_pageService.Unpublish(model.Page.Item);
                     Services.Notifier.Information(T("Page draft has been saved"));
                     break;
             }

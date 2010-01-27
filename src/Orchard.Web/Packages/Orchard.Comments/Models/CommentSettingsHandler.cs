@@ -7,15 +7,10 @@ namespace Orchard.Comments.Models {
 
         public CommentSettingsHandler(IRepository<CommentSettingsRecord> repository) {
             _commentSettingsRepository = repository;
+
             Filters.Add(new ActivatingFilter<CommentSettings>("site"));
             Filters.Add(StorageFilter.For(_commentSettingsRepository));
             Filters.Add(new TemplateFilterForRecord<CommentSettingsRecord>("CommentSettings", "Parts/Comments.SiteSettings"));
-            OnActivated<CommentSettings>(DefaultSettings);
-        }
-
-        private static void DefaultSettings(ActivatedContentContext context, CommentSettings settings) {
-            settings.Record.EnableCommentsOnPages = true;
-            settings.Record.EnableCommentsOnPosts = true;
         }
     }
 }

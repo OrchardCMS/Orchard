@@ -51,7 +51,7 @@ namespace Orchard.Pages.Services {
 
         public void AddPublishedSlug(string slug) {
             lock (_syncLock) {
-                _currentlyPublishedSlugs.Add(slug, slug);
+                _currentlyPublishedSlugs[slug] = slug;
             }
         }
 
