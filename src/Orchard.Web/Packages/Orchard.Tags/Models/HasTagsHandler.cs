@@ -11,6 +11,7 @@ namespace Orchard.Tags.Models {
         public HasTagsHandler(IRepository<Tag> tagsRepository, IRepository<TagsContentItems> tagsContentItemsRepository) {
             Filters.Add(new ActivatingFilter<HasTags>("sandboxpage"));
             Filters.Add(new ActivatingFilter<HasTags>("blogpost"));
+            Filters.Add(new ActivatingFilter<HasTags>("page"));
 
             OnLoading<HasTags>((context, ht) => {
                 HasTags tags = context.ContentItem.As<HasTags>();
