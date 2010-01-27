@@ -1,13 +1,12 @@
 using System.Linq;
-using System.Text.RegularExpressions;
 using System.Web.Mvc;
-using System.Web.Routing;
+using Orchard.Blogs.Extensions;
 using Orchard.Blogs.Models;
 using Orchard.Blogs.Services;
 using Orchard.Blogs.ViewModels;
+using Orchard.ContentManagement;
 using Orchard.Core.Feeds;
 using Orchard.Localization;
-using Orchard.ContentManagement;
 using Orchard.Mvc.Results;
 using Orchard.Security;
 

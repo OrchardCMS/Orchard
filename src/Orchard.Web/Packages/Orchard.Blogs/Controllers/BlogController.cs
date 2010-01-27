@@ -1,5 +1,6 @@
 using System.Linq;
 using System.Web.Mvc;
+using Orchard.Blogs.Extensions;
 using Orchard.Blogs.Models;
 using Orchard.Blogs.Services;
 using Orchard.Blogs.ViewModels;

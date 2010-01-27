@@ -79,7 +79,7 @@
     <Compile Include="Controllers\BlogPostAdminController.cs" />
     <Compile Include="Controllers\BlogPostController.cs" />
     <Compile Include="Controllers\BlogPostDriver.cs" />
-    <Compile Include="Controllers\FeedExtensions.cs" />
+    <Compile Include="Extensions\FeedManagerExtensions.cs" />
     <Compile Include="Extensions\HtmlHelperExtensions.cs" />
     <Compile Include="Extensions\UrlHelperExtensions.cs" />
     <Compile Include="Filters\ArchivesFilter.cs" />
