@@ -7,10 +7,9 @@ if (Model.CommentsActive == false) { %>
 } else { %>
     <% using(Html.BeginForm("Create", "Comment", new { area = "Orchard.Comments" }, FormMethod.Post, new { @class = "comment" })) { %>
         <%=Html.ValidationSummary() %>
-        <fieldset class="who"><% 
-    if (Request.IsAuthenticated) { %>
-            <p><%=Html.Encode(Page.User.Identity.Name)%></p><%
-    } else { %>
+        <% 
+    if (!Request.IsAuthenticated) { %>
+        <fieldset class="who">
             <div>
                 <label for="Name"><%=_Encoded("Name") %></label>
                 <input id="Name" class="text" name="Name" type="text" />
@@ -22,12 +21,12 @@ if (Model.CommentsActive == false) { %>
             <div>
                 <label for="SiteName"><%=_Encoded("Url") %></label>
                 <input id="SiteName" class="text" name="SiteName" type="text" />
-            </div><%    
+            </div>
+        </fieldset><%    
     } %>
-        </fieldset>
         <fieldset class="what">
             <div>
-                <label for="CommentText"><%=_Encoded("Leave a comment") %></label>
+                <label for="CommentText"><% if (Request.IsAuthenticated) { %><%=T("Hi, {0}!", Html.Encode(Page.User.Identity.Name)) %><br /><% } %><%=_Encoded("Leave a comment") %></label>
                 <textarea id="CommentText" rows="10" cols="30" name="CommentText"></textarea>
             </div>
             <div>

@@ -49,13 +49,12 @@ h1, h2, h3, h4, h5, h6
 
 .home h1
 {
-    font-size: 2em;
     padding-bottom: 0;
     margin-bottom: 0;
 }
 h1
 {
-    padding: 0 0 10px 0;
+    font-size: 2em;
 }
 h3
 {
@@ -68,13 +67,6 @@ h4
 h5, h6
 {
     font-size: 1em;
-}
-
-/* this rule styles <h2> tags that are the 
-first child of the left and right table columns */
-.rightColumn > h1, .rightColumn > h2, .leftColumn > h1, .leftColumn > h2
-{
-    margin-top: 0;
 }
 
 /* PRIMARY LAYOUT ELEMENTS   
@@ -111,7 +103,7 @@ page width. Or, you can specify an exact pixel width. */
 
 #main
 {
-    padding: 30px 30px 15px 30px;
+    padding: 15px 30px 30px;
     background-color: #fff;
     margin-bottom: 30px;
     overflow:auto;
@@ -341,10 +333,7 @@ div#title
 }
 .metadata {
     color:#999;
-    margin-top:-2em;
-}
-.blog.metadata {
-    margin-top:-1.5em;
+    margin-top:-1em;
 }
 .metadata, p.tags {
     font-size:95%;
@@ -457,9 +446,14 @@ form.comment fieldset.who, form.comment fieldset.what {
     float:left;
     margin-right:15px;
 }
+form.comment  p.who {
+    font-weight:bold;
+    margin:0;
+}
 form.comment label {
     font-weight:bold;
     margin-top:15px;
+    line-height:1.6em;
 }
 form.comment .button {
     margin-top:15px;
@@ -480,18 +474,19 @@ ul.tagCloud li {
 ----------------------------------------------------------*/
 .contentItems {
     background:#FFF;
-    margin:1.4em 0;
-    padding:2px;
+    margin:0;
+    padding:0;
 }
 .contentItems li {
     background:#FFF;
     border-bottom:1px solid #E0E8EF;
     margin:0;
     overflow:hidden;
-    padding:.7em 0;
+    padding:0 0 .7em;
 }
 .contentItems li.last {
     border-bottom:0;
+    padding-bottom:0;
 }
 .contentItems li h3 {
     border-bottom:0;
