@@ -67,6 +67,7 @@
   <ItemGroup>
     <Compile Include="AdminMenu.cs" />
     <Compile Include="Controllers\AdminController.cs" />
+    <Compile Include="Controllers\CommentController.cs" />
     <Compile Include="Extensions\HtmlHelperExtensions.cs" />
     <Compile Include="Models\ClosedCommentsRecord.cs" />
     <Compile Include="Models\Comment.cs" />

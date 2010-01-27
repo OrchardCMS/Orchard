@@ -5,12 +5,12 @@ if (Model.Comments.Count > 0) { Html.RenderPartial("ListOfComments", Model.Comme
 if (Model.CommentsActive == false) { %>
     <p><%=_Encoded("Comments have been disabled for this content.") %></p><%
 } else { %>
-    <%-- todo: (heskew) need a comment form for the authenticated user... --%>
-    <% using(Html.BeginForm("Create", "Admin", new { area = "Orchard.Comments" }, FormMethod.Post, new { @class = "comment" })) { %>
+    <% using(Html.BeginForm("Create", "Comment", new { area = "Orchard.Comments" }, FormMethod.Post, new { @class = "comment" })) { %>
         <%=Html.ValidationSummary() %>
-        <fieldset class="who">
-            <%=Html.Hidden("CommentedOn", Model.ContentItem.Id) %>
-            <%=Html.Hidden("ReturnUrl", Context.Request.Url) %>
+        <fieldset class="who"><% 
+    if (Request.IsAuthenticated) { %>
+            <p><%=Html.Encode(Page.User.Identity.Name)%></p><%
+    } else { %>
             <div>
                 <label for="Name"><%=_Encoded("Name") %></label>
                 <input id="Name" class="text" name="Name" type="text" />
@@ -22,7 +22,8 @@ if (Model.CommentsActive == false) { %>
             <div>
                 <label for="SiteName"><%=_Encoded("Url") %></label>
                 <input id="SiteName" class="text" name="SiteName" type="text" />
-            </div>
+            </div><%    
+    } %>
         </fieldset>
         <fieldset class="what">
             <div>
@@ -31,6 +32,8 @@ if (Model.CommentsActive == false) { %>
             </div>
             <div>
                 <input type="submit" class="button" value="<%=_Encoded("Submit Comment") %>" />
+                <%=Html.Hidden("CommentedOn", Model.ContentItem.Id) %>
+                <%=Html.Hidden("ReturnUrl", Context.Request.Url) %>
 		        <%=Html.AntiForgeryTokenOrchard() %>
             </div>
         </fieldset><%

@@ -128,41 +128,6 @@ namespace Orchard.Comments.Controllers {
             return RedirectToAction("Index");
         }
 
-        public ActionResult Create() {
-            return View(new CommentsCreateViewModel());
-        }
-
-        [HttpPost]
-        public ActionResult Create(string returnUrl) {
-            var viewModel = new CommentsCreateViewModel();
-            try {
-                UpdateModel(viewModel);
-                if (CurrentSite.As<CommentSettings>().Record.RequireLoginToAddComment) {
-                    if (!_authorizer.Authorize(Permissions.AddComment, T("Couldn't add comment")))
-                        return new HttpUnauthorizedResult();
-                }
-
-                var context = new CreateCommentContext {
-                    Author = viewModel.Name,
-                    CommentText = viewModel.CommentText,
-                    Email = viewModel.Email,
-                    SiteName = viewModel.SiteName,
-                    CommentedOn = viewModel.CommentedOn,
-                };
-
-                var comment = _commentService.CreateComment(context);
-
-                if (!String.IsNullOrEmpty(returnUrl)) {
-                    return Redirect(returnUrl);
-                }
-                return RedirectToAction("Index");
-            }
-            catch (Exception exception) {
-                _notifier.Error(T("Creating Comment failed: " + exception.Message));
-                return View(viewModel);
-            }
-        }
-
         public ActionResult Details(int id, CommentDetailsOptions options) {
             // Default options
             if (options == null)

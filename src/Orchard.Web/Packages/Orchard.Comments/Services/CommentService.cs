@@ -108,7 +108,7 @@ namespace Orchard.Comments.Services {
             comment.Record.CommentText = context.CommentText;
             comment.Record.Email = context.Email;
             comment.Record.SiteName = context.SiteName;
-            comment.Record.UserName = (CurrentUser == null ? "Anonymous" : CurrentUser.UserName);
+            comment.Record.UserName = (CurrentUser == null ? context.Author : CurrentUser.UserName);
             comment.Record.CommentedOn = context.CommentedOn;
 
             comment.Record.Status = _commentValidator.ValidateComment(comment) ? CommentStatus.Pending : CommentStatus.Spam;
