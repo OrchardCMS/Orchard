@@ -28,7 +28,8 @@
                     <%=Html.Encode(row.User.Email)%>
                 </td>
                 <td>
-                    <%=Html.ActionLink(T("Edit").ToString(), "Edit", new { row.User.Id })%>
+                    <%=Html.ActionLink(T("Edit").ToString(), "Edit", new { row.User.Id })%> | 
+                    <%=Html.ActionLink(T("Delete").ToString(), "Delete", new { row.User.Id })%> 
                 </td>
             </tr>
             <%}%>

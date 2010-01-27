@@ -112,6 +112,16 @@ namespace Orchard.Users.Controllers {
             return RedirectToAction("Edit", new { id });
         }
 
+        public ActionResult Delete(int id) {
+            if (!Services.Authorizer.Authorize(Permissions.ManageUsers, T("Not authorized to manage users")))
+                return new HttpUnauthorizedResult();
+
+            Services.ContentManager.Remove(Services.ContentManager.Get(id));
+
+            Services.Notifier.Information(T("User deleted"));
+            return RedirectToAction("Index");
+        }
+
         bool IUpdateModel.TryUpdateModel<TModel>(TModel model, string prefix, string[] includeProperties, string[] excludeProperties) {
             return TryUpdateModel(model, prefix, includeProperties, excludeProperties);
         }

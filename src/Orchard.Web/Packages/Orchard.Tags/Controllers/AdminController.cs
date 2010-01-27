@@ -4,35 +4,27 @@ using System.Linq;
 using System.Web.Mvc;
 using JetBrains.Annotations;
 using Orchard.Localization;
-using Orchard.Logging;
 using Orchard.ContentManagement;
 using Orchard.Settings;
 using Orchard.Tags.Models;
 using Orchard.Tags.ViewModels;
-using Orchard.UI.Notify;
-using Orchard.Security;
 using Orchard.Tags.Services;
+using Orchard.UI.Notify;
 
 namespace Orchard.Tags.Controllers {
     [ValidateInput(false)]
     public class AdminController : Controller {
         private readonly ITagService _tagService;
-        private readonly IAuthorizer _authorizer;
-        private readonly INotifier _notifier;
 
-        public AdminController(ITagService tagService, INotifier notifier, IAuthorizer authorizer) {
+        public AdminController(ITagService tagService) {
             _tagService = tagService;
-            _authorizer = authorizer;
-            _notifier = notifier;
-            Logger = NullLogger.Instance;
             T = NullLocalizer.Instance;
         }
 
 
+        public IOrchardServices Services { get; set; }
         protected virtual ISite CurrentSite { get; [UsedImplicitly] private set; }
         
-
-        public ILogger Logger { get; set; }
         public Localizer T { get; set; }
 
         public ActionResult Index() {
@@ -43,7 +35,7 @@ namespace Orchard.Tags.Controllers {
                 return View(model);
             }
             catch (Exception exception) {
-                _notifier.Error(T("Listing tags failed: " + exception.Message));
+                Services.Notifier.Error(T("Listing tags failed: " + exception.Message));
                 return Index();
             }
         }
@@ -60,7 +52,7 @@ namespace Orchard.Tags.Controllers {
                     case TagAdminIndexBulkAction.None:
                         break;
                     case TagAdminIndexBulkAction.Delete:
-                        if (!_authorizer.Authorize(Permissions.ManageTags, T("Couldn't delete tag")))
+                        if (!Services.Authorizer.Authorize(Permissions.ManageTags, T("Couldn't delete tag")))
                             return new HttpUnauthorizedResult();
 
                         foreach (TagEntry entry in checkedEntries) {
@@ -73,7 +65,7 @@ namespace Orchard.Tags.Controllers {
                 }
             }
             catch (Exception exception) {
-                _notifier.Error(T("Editing tags failed: " + exception.Message));
+                Services.Notifier.Error(T("Editing tags failed: " + exception.Message));
                 return Index();
             }
 
@@ -89,13 +81,13 @@ namespace Orchard.Tags.Controllers {
             var viewModel = new TagsAdminCreateViewModel();
             try {
                 UpdateModel(viewModel);
-                if (!_authorizer.Authorize(Permissions.CreateTag, T("Couldn't create tag")))
+                if (!Services.Authorizer.Authorize(Permissions.CreateTag, T("Couldn't create tag")))
                     return new HttpUnauthorizedResult();
                 _tagService.CreateTag(viewModel.TagName);
                 return RedirectToAction("Index");
             }
             catch (Exception exception) {
-                _notifier.Error(T("Creating tag failed: " + exception.Message));
+                Services.Notifier.Error(T("Creating tag failed: " + exception.Message));
                 return View(viewModel);
             }
         }
@@ -111,7 +103,7 @@ namespace Orchard.Tags.Controllers {
 
             }
             catch (Exception exception) {
-                _notifier.Error(T("Retrieving tag information failed: " + exception.Message));
+                Services.Notifier.Error(T("Retrieving tag information failed: " + exception.Message));
                 return Index();
             }
         }
@@ -121,14 +113,14 @@ namespace Orchard.Tags.Controllers {
             var viewModel = new TagsAdminEditViewModel();
             try {
                 UpdateModel(viewModel);
-                if (!_authorizer.Authorize(Permissions.ManageTags, T("Couldn't edit tag")))
+                if (!Services.Authorizer.Authorize(Permissions.ManageTags, T("Couldn't edit tag")))
                     return new HttpUnauthorizedResult();
 
                 _tagService.UpdateTag(viewModel.Id, viewModel.TagName);
                 return RedirectToAction("Index");
             }
             catch (Exception exception) {
-                _notifier.Error(T("Editing tag failed: " + exception.Message));
+                Services.Notifier.Error(T("Editing tag failed: " + exception.Message));
                 return View(viewModel);
             }
         }
@@ -145,7 +137,7 @@ namespace Orchard.Tags.Controllers {
 
             }
             catch (Exception exception) {
-                _notifier.Error(T("Retrieving tagged items failed: " + exception.Message));
+                Services.Notifier.Error(T("Retrieving tagged items failed: " + exception.Message));
                 return Index();
             }
         }

@@ -5,34 +5,23 @@ using System.Web.Mvc;
 using JetBrains.Annotations;
 using Orchard.Localization;
 using Orchard.Logging;
-using Orchard.ContentManagement;
 using Orchard.Settings;
 using Orchard.Tags.Helpers;
-using Orchard.Tags.Models;
 using Orchard.Tags.Services;
 using Orchard.Tags.ViewModels;
 using Orchard.UI.Notify;
-using Orchard.Security;
 
 namespace Orchard.Tags.Controllers {
     [ValidateInput(false)]
     public class HomeController : Controller {
         private readonly ITagService _tagService;
-        private readonly IAuthorizer _authorizer;
-        private readonly IContentManager _contentManager;
-        private readonly INotifier _notifier;
 
-        public HomeController(ITagService tagService, INotifier notifier, IAuthorizer authorizer,
-            IContentManager contentManager) {
+        public HomeController(ITagService tagService) {
             _tagService = tagService;
-            _authorizer = authorizer;
-            _contentManager = contentManager;
-            _notifier = notifier;
-            Logger = NullLogger.Instance;
             T = NullLocalizer.Instance;
         }
 
-
+        public IOrchardServices Services { get; set; }
         protected virtual ISite CurrentSite { get; [UsedImplicitly] private set; }
         
 
@@ -46,7 +35,7 @@ namespace Orchard.Tags.Controllers {
                 return View(model);
             }
             catch (Exception exception) {
-                _notifier.Error(T("Listing tags failed: " + exception.Message));
+                Services.Notifier.Error(T("Listing tags failed: " + exception.Message));
                 return Index();
             }
         }
@@ -54,7 +43,7 @@ namespace Orchard.Tags.Controllers {
         [HttpPost]
         public ActionResult Edit(FormCollection input, int taggedContentId, string returnUrl, string newTagName) {
             try {
-                if (!_authorizer.Authorize(Permissions.CreateTag, T("Couldn't create tag")))
+                if (!Services.Authorizer.Authorize(Permissions.CreateTag, T("Couldn't create tag")))
                     return new HttpUnauthorizedResult();
                 if (!String.IsNullOrEmpty(newTagName)) {
                     foreach (var tagName in TagHelpers.ParseCommaSeparatedTagNames(newTagName)) {
@@ -70,7 +59,7 @@ namespace Orchard.Tags.Controllers {
                 return RedirectToAction("Index");
             }
             catch (Exception exception) {
-                _notifier.Error(T("Editing tags failed: " + exception.Message));
+                Services.Notifier.Error(T("Editing tags failed: " + exception.Message));
                 if (!String.IsNullOrEmpty(returnUrl)) {
                     return Redirect(returnUrl);
                 }
@@ -81,7 +70,7 @@ namespace Orchard.Tags.Controllers {
         [HttpPost]
         public ActionResult Update(string tags, int taggedContentId, string returnUrl) {
             try {
-                if (!_authorizer.Authorize(Permissions.CreateTag, T("Couldn't create tag")))
+                if (!Services.Authorizer.Authorize(Permissions.CreateTag, T("Couldn't create tag")))
                     return new HttpUnauthorizedResult();
                 List<string> tagNames = TagHelpers.ParseCommaSeparatedTagNames(tags);
                 _tagService.UpdateTagsForContentItem(taggedContentId, tagNames);
@@ -91,7 +80,7 @@ namespace Orchard.Tags.Controllers {
                 return RedirectToAction("Index");
             }
             catch (Exception exception) {
-                _notifier.Error(T("Updating tags failed: " + exception.Message));
+                Services.Notifier.Error(T("Updating tags failed: " + exception.Message));
                 if (!String.IsNullOrEmpty(returnUrl)) {
                     return Redirect(returnUrl);
                 }
@@ -104,7 +93,7 @@ namespace Orchard.Tags.Controllers {
                 var tag = _tagService.GetTagByName(tagName);
                 var items =
                     _tagService.GetTaggedContentItems(tag.Id).Select(
-                        ic => _contentManager.BuildDisplayModel(ic, "SummaryForSearch"));
+                        ic => Services.ContentManager.BuildDisplayModel(ic, "SummaryForSearch"));
 
                 var viewModel = new TagsSearchViewModel {
                     TagName = tag.TagName,
@@ -114,7 +103,7 @@ namespace Orchard.Tags.Controllers {
 
             }
             catch (Exception exception) {
-                _notifier.Error(T("Retrieving tagged items failed: " + exception.Message));
+                Services.Notifier.Error(T("Retrieving tagged items failed: " + exception.Message));
                 return RedirectToAction("Index");
             }
         }
