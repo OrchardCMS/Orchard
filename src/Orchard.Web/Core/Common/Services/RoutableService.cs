@@ -19,14 +19,14 @@ namespace Orchard.Core.Common.Services {
             if (slug.Length > 1000)
                 slug = slug.Substring(0, 1000);
 
-            model.Slug = slug;
+            model.Slug = slug.ToLowerInvariant();
         }
 
         public void FillSlug<TModel>(TModel model, Func<string, string> generateSlug) where TModel : RoutableAspect {
             if (!string.IsNullOrEmpty(model.Slug) || string.IsNullOrEmpty(model.Title))
                 return;
 
-            model.Slug = generateSlug(model.Title);
+            model.Slug = generateSlug(model.Title).ToLowerInvariant();
         }
 
 

@@ -40,14 +40,14 @@ namespace Orchard.Core.Tests.Common.Services {
 
             _routableService.FillSlug(thing.As<RoutableAspect>());
 
-            Assert.That(thing.Slug, Is.EqualTo("Please-do-not-use-any-of-the-following-characters-in-your-slugs-\"-\"-\"-\"-\"-\"-\"-\"-\"-\"-\"-\"-\"-\"-\"-\"-\"-\"-\"-\"-\"-\"-\"-\"-\"-\"-\"-\"-\"-\"-\"-\"-\"-\"-\"-\""));
+            Assert.That(thing.Slug, Is.EqualTo("please-do-not-use-any-of-the-following-characters-in-your-slugs-\"-\"-\"-\"-\"-\"-\"-\"-\"-\"-\"-\"-\"-\"-\"-\"-\"-\"-\"-\"-\"-\"-\"-\"-\"-\"-\"-\"-\"-\"-\"-\"-\"-\"-\"-\""));
         }
 
         [Test]
         public void VeryLongStringTruncatedTo1000Chars() {
             var contentManager = _container.Resolve<IContentManager>();
 
-            var veryVeryLongTitle = "this is a very long slug...";
+            var veryVeryLongTitle = "this is a very long title...";
             for (var i = 0; i < 100; i++)
                 veryVeryLongTitle += "aaaaaaaaaa";
 
@@ -96,6 +96,20 @@ namespace Orchard.Core.Tests.Common.Services {
         public void ExistingSlugsWithVersionGapsAndAMatchGeneratesADash2() {
             string slug = _routableService.GenerateUniqueSlug("woohoo-2", new List<string> { "woohoo-2", "woohoo-4", "woohoo-5" });
             Assert.That(slug, Is.EqualTo("woohoo-2-2"));
+        }
+
+        [Test]
+        public void GeneratedSlugIsLowerCased() {
+            var contentManager = _container.Resolve<IContentManager>();
+
+            var thing = contentManager.Create<Thing>(ThingDriver.ContentType.Name, t => {
+                t.As<RoutableAspect>().Record = new RoutableRecord();
+                t.Title = "This Is Some Interesting Title";
+            });
+
+            _routableService.FillSlug(thing.As<RoutableAspect>());
+
+            Assert.That(thing.Slug, Is.EqualTo("this-is-some-interesting-title"));
         }
 
         protected override IEnumerable<Type> DatabaseTypes {
