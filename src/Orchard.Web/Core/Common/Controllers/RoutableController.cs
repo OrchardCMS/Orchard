@@ -13,13 +13,18 @@ namespace Orchard.Core.Common.Controllers {
         }
 
         [HttpPost]
-        public ActionResult Slugify(string contentType, int? containerId) {
+        public ActionResult Slugify(string contentType, int? id, int? containerId) {
             var slug = "";
+            ContentItem contentItem = null;
 
             if (string.IsNullOrEmpty(contentType))
                 return Json(slug);
 
-            var contentItem = _contentManager.New(contentType);
+            if (id != null)
+                contentItem = _contentManager.Get((int) id);
+            
+            if (contentItem == null)
+                contentItem = _contentManager.New(contentType);
 
             if (containerId != null) {
                 var containerItem = _contentManager.Get((int)containerId);

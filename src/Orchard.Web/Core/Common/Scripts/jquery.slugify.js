@@ -6,6 +6,7 @@
 
         var args = {
             "contentType": options.contentType,
+            "id": options.id,
             "containerId": options.containerId,
             __RequestVerificationToken: $("input[name=__RequestVerificationToken]").val()
         };
