@@ -7,6 +7,12 @@ The CodePlex Foundation (http://www.codeplex.org/).
 
 Orchard includes or is derivative of works distributed under the licenses listed below. The full text for most of the licenses listed below can be found in the LICENSE.txt file accompanying each work. The original copyright notices have been preserved within the respective files and or packages. Please refer to the specific files and/or packages for more detailed information about the authors, copyright notices, and licenses.
 
+Akismet.Net
+-----
+Website:      http://www.codeplex.com/wikipage?ProjectName=AkismetApi
+Copyright:    Copyright (c) 2006, Joel Thoms
+License:      New BSD
+
 Antlr
 -----
 Website:      http://www.antlr.org/
@@ -27,11 +33,23 @@ Copyright:    Copyright (c) 2007-2008 Autofac Contributors
               http://code.google.com/p/autofac/wiki/Contributing
 License:      MIT
 
+Autofac Contrib
+-----
+Website:      http://code.google.com/p/autofac/
+Copyright:    Copyright (c) 2007-2008 Autofac Contributors
+License:      http://code.google.com/p/autofac/source/browse/trunk/contrib/AutofacContrib%20License.txt
+
 Castle
 -----
 Website:      http://www.castleproject.org/container/index.html
 Copyright:    Copyright (c) 2004-2009 Castle Project
 License:      Apache Software Foundation License 2.0
+
+Eric Meyer's Reset CSS
+-----
+Website:      http://meyerweb.com/eric/tools/css/reset/
+Copyright:    Copyright (C) 1995-2005 Eric A. and Kathryn S. Meyer
+License:      Public domain
 
 Fam Fam Fam Silk Icons
 -----
@@ -64,6 +82,12 @@ Website:      http://logging.apache.org/log4net/index.html
 Copyright:    Copyright (c) 2007 Apache Software Foundation
 License:      Apache Software Foundation License 2.0
  
+Moq
+-----
+Website:      http://code.google.com/p/moq/
+Copyright:    Copyright (c) 2007. Clarius Consulting, Manas Technology Solutions, InSTEDD
+License:      New BSD
+
 NHibernate, NHibernate Linq
 -----
 Website:      http://nhforge.org 
@@ -75,12 +99,6 @@ NHibernate Lambda Extensions
 Website:      http://code.google.com/p/nhlambdaextensions/
 Copyright:    Unknown http://code.google.com/p/nhlambdaextensions/people/list
 License:      LGPL 2.1
-
-Moq
------
-Website:      http://code.google.com/p/moq/
-Copyright:    Copyright (c) 2007. Clarius Consulting, Manas Technology Solutions, InSTEDD
-License:      New BSD
 
 nUnit
 -----
@@ -113,15 +131,8 @@ Website:      http://code.google.com/p/yamlnet/
 Copyright:    Copyright (c) 2009, apolanski
 License:      Apache Software Foundation License 2.0
 
-Eric Meyer's Reset CSS
------
-Website:      http://meyerweb.com/eric/tools/css/reset/
-Copyright:    Copyright (C) 1995-2005 Eric A. and Kathryn S. Meyer
-License:      Public domain
-
-YUI Reset CSS, YUI Grids CSS
+YUI
 -----
 Website:      http://developer.yahoo.com/yui/
-Copyright:    Copyright (c) 2009, Yahoo! Inc. All rights reserved.
-License:      Code licensed under the BSD License:
-              http://developer.yahoo.net/yui/license.txt
+Copyright:    Copyright (c) 2010, Yahoo! Inc.
+License:      New BSD
