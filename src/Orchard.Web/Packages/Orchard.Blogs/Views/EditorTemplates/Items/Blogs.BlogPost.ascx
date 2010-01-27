@@ -11,6 +11,9 @@
         <% Html.Zone("secondary");%>
         <fieldset>
             <input class="button" type="submit" name="submit.Save" value="<%=_Encoded("Save") %>"/>
+            <% if (Model.IsDraft) { %>
+            <%=Html.ActionLink(T("Discard Draft").ToString(), "DiscardDraft", new { Area = "Orchard.Blogs", Controller = "BlogPostAdmin", id=Model.Item.Id }, new { @class = "button" })%>
+            <% } %>
         </fieldset>
     </div>
 </div>

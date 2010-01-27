@@ -203,6 +203,35 @@ namespace Orchard.Pages.Controllers {
             return RedirectToAction("Edit", "Admin", new { id = model.Page.Item.ContentItem.Id });
         }
 
+
+        public ActionResult DiscardDraft(int id) {
+            // get the current draft version
+            var draft = Services.ContentManager.Get(id, VersionOptions.Draft);
+            if (draft == null) {
+                Services.Notifier.Information(T("There is no draft to discard."));
+                return RedirectToAction("Edit", new { Id = id });
+            }
+
+            // check edit permission
+            if (!Services.Authorizer.Authorize(Permissions.EditOthersPages, draft, T("Couldn't discard page draft")))
+                return new HttpUnauthorizedResult();
+
+            // locate the published revision to revert onto
+            var published = Services.ContentManager.Get(id, VersionOptions.Published);
+            if (published == null) {
+                Services.Notifier.Information(T("Can not discard draft on unpublished page."));
+                return RedirectToAction("Edit", new { draft.Id });
+            }
+
+            // marking the previously published version as the latest
+            // has the effect of discarding the draft but keeping the history
+            draft.VersionRecord.Latest = false;
+            published.VersionRecord.Latest = true;
+
+            Services.Notifier.Information(T("Page draft version discarded"));
+            return RedirectToAction("Edit", new { draft.Id });
+        }
+
         [HttpPost]
         public ActionResult Delete(int id) {
             Page page = _pageService.Get(id);
