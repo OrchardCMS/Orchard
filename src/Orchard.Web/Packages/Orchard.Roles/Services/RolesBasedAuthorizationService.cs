@@ -14,6 +14,8 @@ namespace Orchard.Roles.Services {
     public class RolesBasedAuthorizationService : IAuthorizationService {
         private readonly IRoleService _roleService;
         private readonly IEnumerable<IAuthorizationServiceEvents> _events;
+        private static readonly string[] AnonymousRole = new[] { "Anonymous" };
+        private static readonly string[] AuthenticatedRole = new[] { "Authenticated" };
 
         public RolesBasedAuthorizationService(IRoleService roleService, IEnumerable<IAuthorizationServiceEvents> events) {
             _roleService = roleService;
@@ -24,7 +26,6 @@ namespace Orchard.Roles.Services {
         public ILogger Logger { get; set; }
         protected virtual ISite CurrentSite { get; [UsedImplicitly] private set; }
 
-        #region Implementation of IAuthorizationService
 
         public void CheckAccess(Permission permission, IUser user, IContent content) {
             if (!TryCheckAccess(permission, user, content)) {
@@ -37,6 +38,7 @@ namespace Orchard.Roles.Services {
 
             _events.Invoke(x => x.Checking(context), Logger);
 
+
             for (var adjustmentLimiter = 0; adjustmentLimiter != 3; ++adjustmentLimiter) {
                 if (!context.Granted && context.User != null) {
                     if (String.Equals(context.User.UserName, "Administrator", StringComparison.OrdinalIgnoreCase) ||
@@ -46,11 +48,24 @@ namespace Orchard.Roles.Services {
                     }
                 }
 
-                if (!context.Granted && context.User != null && context.User.Has<IUserRoles>()) {
-                    var grantingNames = PermissionNames(context.Permission, Enumerable.Empty<string>()).ToArray();
-                    IEnumerable<string> rolesForUser = context.User.As<IUserRoles>().Roles;
+                if (!context.Granted) {
 
-                    foreach (var role in rolesForUser) {
+                    // determine which set of permissions would satisfy the access check
+                    var grantingNames = PermissionNames(context.Permission, Enumerable.Empty<string>()).ToArray();
+
+                    // determine what set of roles should be examined by the access check
+                    IEnumerable<string> rolesToExamine;
+                    if (context.User == null) {
+                        rolesToExamine = AnonymousRole;
+                    }
+                    else if (context.User.Has<IUserRoles>()) {
+                        rolesToExamine = context.User.As<IUserRoles>().Roles.Concat(AuthenticatedRole);
+                    }
+                    else {
+                        rolesToExamine = AuthenticatedRole;
+                    }
+
+                    foreach (var role in rolesToExamine) {
                         RoleRecord roleRecord = _roleService.GetRoleByName(role);
                         foreach (var permissionName in _roleService.GetPermissionsForRole(roleRecord.Id)) {
                             string possessedName = permissionName;
@@ -61,7 +76,7 @@ namespace Orchard.Roles.Services {
                             if (context.Granted)
                                 break;
                         }
-                        
+
                         if (context.Granted)
                             break;
                     }
@@ -95,6 +110,5 @@ namespace Orchard.Roles.Services {
             }
         }
 
-        #endregion
     }
 }
