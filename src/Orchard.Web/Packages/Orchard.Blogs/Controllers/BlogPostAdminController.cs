@@ -62,6 +62,7 @@ namespace Orchard.Blogs.Controllers {
             }
 
             Services.ContentManager.Create(model.BlogPost.Item.ContentItem, VersionOptions.Draft);
+            Services.ContentManager.UpdateEditorModel(blogPost, this);
 
             // Execute publish command
             switch (Request.Form["Command"]) {

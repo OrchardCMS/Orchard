@@ -45,7 +45,9 @@ namespace Orchard.Tags.Controllers {
             updater.TryUpdateModel(model, Prefix, null, null);
 
             var tagNames = TagHelpers.ParseCommaSeparatedTagNames(model.Tags);
-            _tagService.UpdateTagsForContentItem(part.ContentItem.Id, tagNames);
+            if (part.ContentItem.Id != 0) {
+                _tagService.UpdateTagsForContentItem(part.ContentItem.Id, tagNames);
+            }
 
             return ContentPartTemplate(model, "Parts/Tags.EditTags").Location("primary", "9");
         }
