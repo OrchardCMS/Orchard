@@ -76,6 +76,18 @@ Website:      http://jquery.com
 Copyright:    Copyright (c) 2010 John Resig, http://jquery.com
 License:      MIT
 
+jQuery UI (Core, Widget, Datepicker)
+-----
+Website:      http://docs.jquery.com/UI
+Copyright:    Copyright (c) 2010 lib/jquery.ui/AUTHORS.txt (http://jqueryui.com/about)
+License:      MIT
+
+jQuery ui.timepickr, jQuery utils
+-----
+Website:      http://code.google.com/p/jquery-utils/
+Copyright:    Copyright (c) Maxime Haineault (http://haineault.com)
+License:      MIT
+
 Log4Net
 -----
 Website:      http://logging.apache.org/log4net/index.html

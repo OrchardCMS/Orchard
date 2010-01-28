@@ -75,6 +75,10 @@ namespace Orchard.Pages.Controllers {
             //todo: (heskew) something better needs to be done with this...still feels shoehorned in here
             ProcessSlug(page, updater);
 
+            DateTime scheduled;
+            if (DateTime.TryParse(string.Format("{0} {1}", page.ScheduledPublishUtcDate, page.ScheduledPublishUtcTime), out scheduled))
+                page.ScheduledPublishUtc = scheduled;
+
             return Editor(page);
         }
 

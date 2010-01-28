@@ -1,5 +1,4 @@
 ﻿using System;
-using System.ComponentModel.DataAnnotations;
 using System.Web.Mvc;
 using Orchard.ContentManagement;
 using Orchard.Core.Common.Models;
@@ -25,27 +24,23 @@ namespace Orchard.Pages.Models {
         }
 
         public bool IsPublished {
-            get { return ContentItem.VersionRecord.Published; }
+            get { return ContentItem.VersionRecord != null && ContentItem.VersionRecord.Published; }
         }
 
         public bool HasDraft {
             get {
                 return (
-                    (ContentItem.VersionRecord.Published == false) ||
-                    (ContentItem.VersionRecord.Published && ContentItem.VersionRecord.Latest == false));
+                           (ContentItem.VersionRecord != null) && (
+                               (ContentItem.VersionRecord.Published == false) ||
+                               (ContentItem.VersionRecord.Published && ContentItem.VersionRecord.Latest == false)));
             }
         }
 
         public bool HasPublished {
-            get { 
-                if (IsPublished) 
-                    return true;
-                if (ContentItem.ContentManager.Get(Id, VersionOptions.Published) != null) 
-                    return true;
-                return false;
+            get {
+                return IsPublished || ContentItem.ContentManager.Get(Id, VersionOptions.Published) != null;
             }
         }
-
         public string PublishedSlug {
             get {
                 if (IsPublished)
@@ -57,6 +52,28 @@ namespace Orchard.Pages.Models {
             }
         }
 
-        public DateTime? ScheduledPublishUtc { get; set;}
+        public DateTime? ScheduledPublishUtc { get; set; }
+
+        private string _scheduledPublishUtcDate;
+
+        public string ScheduledPublishUtcDate {
+            get {
+                return !HasPublished && !string.IsNullOrEmpty(_scheduledPublishUtcDate) || !ScheduledPublishUtc.HasValue
+                           ? _scheduledPublishUtcDate
+                           : ScheduledPublishUtc.Value.ToShortDateString();
+            }
+            set { _scheduledPublishUtcDate = value; }
+        }
+
+        private string _scheduledPublishUtcTime;
+
+        public string ScheduledPublishUtcTime {
+            get {
+                return !HasPublished && !string.IsNullOrEmpty(_scheduledPublishUtcTime) || !ScheduledPublishUtc.HasValue
+                           ? _scheduledPublishUtcTime
+                           : ScheduledPublishUtc.Value.ToShortTimeString();
+            }
+            set { _scheduledPublishUtcTime = value; }
+        }
     }
 }

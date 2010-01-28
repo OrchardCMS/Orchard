@@ -81,6 +81,10 @@ namespace Orchard.Blogs.Controllers {
             //todo: (heskew) something better needs to be done with this...still feels shoehorned in here
             ProcessSlug(post, updater);
 
+            DateTime scheduled;
+            if (DateTime.TryParse(string.Format("{0} {1}", post.ScheduledPublishUtcDate, post.ScheduledPublishUtcTime), out scheduled))
+                post.ScheduledPublishUtc = scheduled;
+
             return Editor(post);
         }
 
