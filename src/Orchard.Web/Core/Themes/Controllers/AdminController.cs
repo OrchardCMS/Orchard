@@ -62,7 +62,7 @@ namespace Orchard.Core.Themes.Controllers {
                     return new HttpUnauthorizedResult();
                 _previewTheme.SetPreviewTheme(null); 
                 _themeService.SetSiteTheme(themeName);
-                return Redirect(returnUrl ?? "~/");
+                return RedirectToAction("Index");
             }
             catch (Exception exception) {
                 _notifier.Error(T("Previewing theme failed: " + exception.Message));

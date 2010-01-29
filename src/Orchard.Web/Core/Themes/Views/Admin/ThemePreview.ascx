@@ -12,7 +12,7 @@
 #themepreview button { font-size: 13px; padding:0 3px; margin-left:10px; }
 #themepreview button.preview { margin-left:0; }
 html.dyn #themepreview button.preview { display:none; }
-#themepreview a { color:#ccc; float:right; line-height:21px; }
+#themepreview button.cancel { float:right; }
 </style>
 <div id="themepreview">
 <% using(Html.BeginFormAntiForgeryPost(Url.Action("Preview", new{Controller="Admin", Area="Themes"}), FormMethod.Post, new { @class = "inline" })) { %>
@@ -21,8 +21,7 @@ html.dyn #themepreview button.preview { display:none; }
         <%=Html.DropDownList("ThemeName", Model.Themes, new {onChange = "this.form.submit();"})%>
         <button type="submit" class="preview" title="<%=_Encoded("Preview")%>" name="submit.Preview" value="<%=_Encoded("Preview")%>"><%=_Encoded("Preview")%></button>
         <button type="submit" title="<%=_Encoded("Apply")%>" name="submit.Apply" value="<%=_Encoded("Apply")%>"><%=_Encoded("Apply this theme") %></button>
-        <%=Html.ActionLink(T("Back to Admin").ToString(), "Index", new { Controller = "Admin", Area = "Themes" })%>
-        <%--<button type="submit" class="cancel" title="<%=_Encoded("Cancel")%>" name="submit.Cancel" value="<%=_Encoded("Cancel")%>"><%=_Encoded("Cancel")%></button>--%>
+        <button type="submit" class="cancel" title="<%=_Encoded("Cancel")%>" name="submit.Cancel" value="<%=_Encoded("Cancel")%>"><%=_Encoded("Cancel")%></button>
         <%=Html.Hidden("ReturnUrl", Context.Request.Url)%>
     </fieldset>
 <% } %>
