@@ -60,7 +60,8 @@ namespace Orchard.Core.Themes.Controllers {
             try {
                 if (!_authorizer.Authorize(Permissions.ApplyTheme, T("Couldn't preview the current theme")))
                     return new HttpUnauthorizedResult();
-                _previewTheme.SetPreviewTheme(null);
+                _previewTheme.SetPreviewTheme(null); 
+                _themeService.SetSiteTheme(themeName);
                 return Redirect(returnUrl ?? "~/");
             }
             catch (Exception exception) {
