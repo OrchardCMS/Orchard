@@ -111,7 +111,10 @@
     <Compile Include="Scheduling\Models\Task.cs" />
     <Compile Include="Settings\Controllers\SiteSettingsDriver.cs" />
     <Compile Include="Settings\Permissions.cs" />
+    <Compile Include="Themes\Preview\IPreviewTheme.cs" />
+    <Compile Include="Themes\Preview\PreviewThemeFilter.cs" />
     <Compile Include="Themes\Services\AdminThemeSelector.cs" />
+    <Compile Include="Themes\Preview\PreviewTheme.cs" />
     <Compile Include="Themes\Services\SafeModeThemeSelector.cs" />
     <Compile Include="Settings\AdminMenu.cs" />
     <Compile Include="Settings\Controllers\AdminController.cs" />
@@ -130,6 +133,7 @@
     <Compile Include="Themes\Records\ThemeSiteSettingsRecord.cs" />
     <Compile Include="Themes\Services\SiteThemeSelector.cs" />
     <Compile Include="Themes\Services\ThemeService.cs" />
+    <Compile Include="Themes\ViewModels\PreviewViewModel.cs" />
     <Compile Include="Themes\ViewModels\ThemesIndexViewModel.cs" />
     <Compile Include="XmlRpc\Controllers\HomeController.cs" />
     <Compile Include="XmlRpc\Controllers\LiveWriterController.cs" />
@@ -184,6 +188,7 @@
     <Content Include="Themes\Theme.png" />
     <Content Include="Themes\Theme.txt" />
     <Content Include="Themes\Styles\site.css" />
+    <Content Include="Themes\Views\Admin\ThemePreview.ascx" />
     <Content Include="Themes\Views\Admin\Install.aspx" />
     <Content Include="Themes\Views\Header.ascx" />
     <Content Include="Themes\Views\Document.aspx" />

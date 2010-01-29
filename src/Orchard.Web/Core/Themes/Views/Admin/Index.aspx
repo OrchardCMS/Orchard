@@ -31,6 +31,11 @@
             <%=Html.Encode(theme.HomePage) %>
         </p>
         <div>
+            <% using(Html.BeginFormAntiForgeryPost(Url.Action("Preview"), FormMethod.Post, new { @class = "inline" })) { %>
+                <fieldset>
+                    <button type="submit" title="<%=_Encoded("Preview") %>" name="themeName" value="<%=theme.ThemeName %>"><%=_Encoded("Preview") %></button>
+                </fieldset>
+            <% } %>
             <% using(Html.BeginFormAntiForgeryPost(Url.Action("Activate"), FormMethod.Post, new { @class = "inline" })) { %>
                 <fieldset>
                     <button type="submit" title="<%=_Encoded("Activate") %>" name="themeName" value="<%=theme.ThemeName %>"><%=_Encoded("Activate") %></button>

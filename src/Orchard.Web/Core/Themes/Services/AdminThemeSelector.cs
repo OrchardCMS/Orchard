@@ -18,7 +18,7 @@ namespace Orchard.Core.Themes.Services {
             if (!context.HttpContext.Request.Path.StartsWith(Path.Combine(siteUrl, "admin").Replace("\\", "/"), true, CultureInfo.InvariantCulture))
                 return null;
 
-            return new ThemeSelectorResult { Priority = 0, ThemeName = "TheAdmin" };
+            return new ThemeSelectorResult { Priority = 100, ThemeName = "TheAdmin" };
         }
     }
 }

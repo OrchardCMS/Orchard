@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Reflection;
 using System.Web;
 using System.Web.Mvc;
+using Orchard.Core.Themes.Preview;
 using Orchard.Core.Themes.ViewModels;
 using Orchard.Localization;
 using Orchard.Security;
@@ -12,11 +14,13 @@ namespace Orchard.Core.Themes.Controllers {
     [ValidateInput(false)]
     public class AdminController : Controller {
         private readonly IThemeService _themeService;
+        private readonly IPreviewTheme _previewTheme;
         private readonly IAuthorizer _authorizer;
         private readonly INotifier _notifier;
 
-        public AdminController(IThemeService themeService, IAuthorizer authorizer, INotifier notifier) {
+        public AdminController(IThemeService themeService, IPreviewTheme previewTheme, IAuthorizer authorizer, INotifier notifier) {
             _themeService = themeService;
+            _previewTheme = previewTheme;
             _authorizer = authorizer;
             _notifier = notifier;
             T = NullLocalizer.Instance;
@@ -34,6 +38,48 @@ namespace Orchard.Core.Themes.Controllers {
             catch (Exception exception) {
                 _notifier.Error(T("Listing themes failed: " + exception.Message));
                 return View(new ThemesIndexViewModel());
+            }
+        }
+
+        [HttpPost, FormValueAbsent("submit.Apply"), FormValueAbsent("submit.Cancel")]
+        public ActionResult Preview(string themeName, string returnUrl) {
+            try {
+                if (!_authorizer.Authorize(Permissions.ApplyTheme, T("Couldn't preview the current theme")))
+                    return new HttpUnauthorizedResult();
+                _previewTheme.SetPreviewTheme(themeName);
+                return Redirect(returnUrl ?? "~/");
+            }
+            catch (Exception exception) {
+                _notifier.Error(T("Previewing theme failed: " + exception.Message));
+                return RedirectToAction("Index");
+            }
+        }
+
+        [HttpPost, ActionName("Preview"), FormValueRequired("submit.Apply")]
+        public ActionResult ApplyPreview(string themeName, string returnUrl) {
+            try {
+                if (!_authorizer.Authorize(Permissions.ApplyTheme, T("Couldn't preview the current theme")))
+                    return new HttpUnauthorizedResult();
+                _previewTheme.SetPreviewTheme(null);
+                return Redirect(returnUrl ?? "~/");
+            }
+            catch (Exception exception) {
+                _notifier.Error(T("Previewing theme failed: " + exception.Message));
+                return RedirectToAction("Index");
+            }
+        }
+
+        [HttpPost, ActionName("Preview"), FormValueRequired("submit.Cancel")]
+        public ActionResult CancelPreview(string returnUrl) {
+            try {
+                if (!_authorizer.Authorize(Permissions.ApplyTheme, T("Couldn't preview the current theme")))
+                    return new HttpUnauthorizedResult();
+                _previewTheme.SetPreviewTheme(null);
+                return RedirectToAction("Index");
+            }
+            catch (Exception exception) {
+                _notifier.Error(T("Previewing theme failed: " + exception.Message));
+                return RedirectToAction("Index");
             }
         }
 
@@ -83,6 +129,33 @@ namespace Orchard.Core.Themes.Controllers {
             catch (Exception exception) {
                 _notifier.Error(T("Uninstalling theme failed: " + exception.Message));
                 return RedirectToAction("Index");
+            }
+        }
+
+        class FormValueRequiredAttribute : ActionMethodSelectorAttribute {
+            private readonly string _submitButtonName;
+
+            public FormValueRequiredAttribute(string submitButtonName) {
+                _submitButtonName = submitButtonName;
+            }
+
+            public override bool IsValidForRequest(ControllerContext controllerContext, MethodInfo methodInfo) {
+                var value = controllerContext.HttpContext.Request.Form[_submitButtonName];
+                return !string.IsNullOrEmpty(value);
+            }
+        }
+
+        [AttributeUsage(AttributeTargets.Method, AllowMultiple = true)]
+        class FormValueAbsentAttribute : ActionMethodSelectorAttribute {
+            private readonly string _submitButtonName;
+
+            public FormValueAbsentAttribute(string submitButtonName) {
+                _submitButtonName = submitButtonName;
+            }
+
+            public override bool IsValidForRequest(ControllerContext controllerContext, MethodInfo methodInfo) {
+                var value = controllerContext.HttpContext.Request.Form[_submitButtonName];
+                return string.IsNullOrEmpty(value);
             }
         }
     }
