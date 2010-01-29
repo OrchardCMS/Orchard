@@ -22,6 +22,8 @@
     <div>
         <%=Html.RadioButton("Command", "PublishLater", Model.ScheduledPublishUtc != null, new { id = "Command_PublishLater" }) %>
         <label class="forcheckbox" for="Command_PublishLater"><%=_Encoded("Publish Later")%></label>
+    </div>
+    <div>
         <label class="forpicker" for="ScheduledPublishUtcDate"><%=_Encoded("Date")%></label>
         <%=Html.EditorFor(m => m.ScheduledPublishUtcDate)%>
         <label class="forpicker" for="ScheduledPublishUtcTime"><%=_Encoded("Time")%></label>
@@ -41,6 +43,6 @@
             .blur(function() { var $this = $(this); setTimeout(function() { if (!$this.val()) { $this.addClass("hinted").val($this.data("hint")) } }, 300) });
         }
     });
-    $("input#ScheduledPublishUtcDate").datepicker().focus(function() { $("#Command_PublishLater").attr("checked", "checked") });
+    $("input#ScheduledPublishUtcDate").datepicker({showAnim:""}).focus(function() { $("#Command_PublishLater").attr("checked", "checked") });
     $("input#ScheduledPublishUtcTime").timepickr().focus(function() { $("#Command_PublishLater").attr("checked", "checked") });
 })</script>

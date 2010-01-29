@@ -1,19 +1,19 @@
 /*
-  jQuery ui.timepickr - @VERSION
-  http://code.google.com/p/jquery-utils/
+jQuery ui.timepickr - @VERSION
+http://code.google.com/p/jquery-utils/
 
-  (c) Maxime Haineault <haineault@gmail.com> 
-  http://haineault.com
+(c) Maxime Haineault <haineault@gmail.com> 
+http://haineault.com
 
-  MIT License (http://www.opensource.org/licenses/mit-license.php
+MIT License (http://www.opensource.org/licenses/mit-license.php
 
-  Note: if you want the original experimental plugin checkout the rev 224 
+Note: if you want the original experimental plugin checkout the rev 224 
 
-  Dependencies
-  ------------
-  - jquery.utils.js
-  - jquery.strings.js
-  - jquery.ui.js
+Dependencies
+------------
+- jquery.utils.js
+- jquery.strings.js
+- jquery.ui.js
   
 */
 
@@ -50,10 +50,10 @@
             handle: false,
             handleEvent: 'click'
         },
-		
+
         plugins: {},
-        
-		_create: function() {
+
+        _create: function() {
             this._dom = {
                 menu: $.tpl('timepickr.menu'),
                 row: $.tpl('timepickr.menu')
@@ -84,7 +84,7 @@
             var ui = this;
             var btn = false;
             var row = $.tpl('timepickr.row').bind('mouseover', function() {
-                $(this).next().slideDown(200);
+                $(this).next().show();
             });
             $.each(range, function(idx, val) {
                 ui._createButton(val, format || false).appendTo(row);
@@ -115,16 +115,16 @@
 
         _getVal: function() {
             var ols = this._dom.menu.find('ol');
-            function get(unit) {
+            function g(unit) {
                 var u = ols.filter('.' + unit).find('.ui-state-hover:first').text();
                 return u || ols.filter('.' + unit + 'li:first span').text();
             }
             return {
-                h: get('hours'),
-                m: get('minutes'),
-                s: get('seconds'),
-                a: get('prefix'),
-                z: get('suffix'),
+                h: g('hours'),
+                m: g('minutes'),
+                s: g('seconds'),
+                a: g('prefix'),
+                z: g('suffix'),
                 f: this.options['format' + this.c],
                 c: this.c
             };
@@ -132,10 +132,10 @@
 
         _formatVal: function(ival) {
             var val = ival || this._getVal();
-			
-			if (!val.h) return;
-			
-			val.c = this.options.convention;
+
+            if (!val.h) return;
+
+            val.c = this.options.convention;
             val.f = val.c === 12 && this.options.format12 || this.options.format24;
             return (new Time(val)).getTime();
         },
@@ -149,11 +149,25 @@
         },
         show: function() {
             this._trigger('show');
-            this._dom.menu.slideDown(200);; //todo: (heskew) make show effect an option
+            var pos = this.element.position();
+            var width = this.element.data('width');
+            var elementWidth = this.element.outerWidth();
+            var windowWidth = $(window).width() + $(window).scrollLeft();
+
+            if (width) {
+                this._dom.menu.css(
+                    'left',
+                    pos.left + elementWidth < windowWidth
+                        ? pos.left - width + elementWidth
+                        : windowWidth - width
+                    );
+            }
+
+            this._dom.menu.show(); //todo: (heskew) make show effect an option
         },
         hide: function() {
             this._trigger('hide');
-            this._dom.menu.slideUp(200);
+            this._dom.menu.hide();
         }
 
     });
@@ -167,7 +181,9 @@
         start: function(e, ui) {
             var menu = ui._dom.menu;
             var pos = ui.element.position();
-            menu.insertAfter(ui.element).css('left', pos.left - 225); //todo: (heskew) right-align better and have alignment an option
+
+            //render off screen, to be repositioned by show()
+            menu.insertAfter(ui.element).css('left', '-9999em');
 
             if (!$.boxModel) { // IE alignement fix
                 menu.css('margin-top', ui.element.height() + 8);
@@ -176,7 +192,7 @@
             ui.element
             .bind(ui.options.trigger, function() {
                 ui._dom.menu.find('ol:first').show();
-                ui._dom.menu.slideDown(200);
+                ui.show();
                 ui._trigger('focus');
                 if (ui.options.trigger != 'focus') {
                     ui.element.focus();
@@ -191,6 +207,23 @@
             menu.find('li').bind('mouseover.timepickr', function() {
                 ui._trigger('refresh');
             });
+        },
+        initialized: function(e, ui) {
+            var menuItems = ui._dom.menu.find('ol');
+            var pos = ui.element.position();
+
+            //load up
+            ui.show();
+            menuItems.show();
+
+            //store width(s)
+            ui.element.data('width', ui._dom.menu.outerWidth());
+            //fix the width
+            ui._dom.menu.width(ui._dom.menu.width());
+
+            //hide
+            menuItems.hide();
+            ui.hide();
         },
         refresh: function(e, ui) {
             // Realign each menu layers
