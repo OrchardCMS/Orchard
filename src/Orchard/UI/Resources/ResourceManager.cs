@@ -78,7 +78,7 @@ namespace Orchard.UI.Resources {
         private static MvcHtmlString GetFiles(IEnumerable<FileRegistrationContext> fileRegistrationContexts, string fileFormat, string containerRelativePath) {
             return
                 MvcHtmlString.Create(string.Join("\r\n",
-                                                 fileRegistrationContexts.Select(c => string.Format(fileFormat, c.GetFilePath(containerRelativePath))).Reverse().ToArray()));
+                                                 fileRegistrationContexts.Select(c => string.Format(fileFormat, c.GetFilePath(containerRelativePath))).ToArray()));
         }
     }
 }

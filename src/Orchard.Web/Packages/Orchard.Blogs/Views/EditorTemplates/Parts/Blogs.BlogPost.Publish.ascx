@@ -3,7 +3,6 @@
 <% Html.RegisterStyle("jquery-ui-1.7.2.custom.css"); %>
 <% Html.RegisterStyle("ui.datepicker.css"); %>
 <% Html.RegisterStyle("ui.timepickr.css"); %>
-<% Html.RegisterFootScript("datetime.js"); %>
 <% Html.RegisterFootScript("jquery.ui.core.js"); %>
 <% Html.RegisterFootScript("jquery.ui.widget.js"); %>
 <% Html.RegisterFootScript("jquery.ui.datepicker.js"); %>
