@@ -61,12 +61,12 @@ namespace Orchard.Tests.ContentManagement {
             _session = _sessionFactory.OpenSession();
             builder.Register(new DefaultContentManagerTests.TestSessionLocator(_session)).As<ISessionLocator>();
 
-            _session.Delete("from GammaRecord");
-            _session.Delete("from DeltaRecord");
-            _session.Delete("from EpsilonRecord");
-            _session.Delete("from ContentItemVersionRecord");
-            _session.Delete("from ContentItemRecord");
-            _session.Delete("from ContentTypeRecord");
+            _session.Delete(string.Format("from {0}", typeof(GammaRecord).FullName));
+            _session.Delete(string.Format("from {0}", typeof(DeltaRecord).FullName));
+            _session.Delete(string.Format("from {0}", typeof(EpsilonRecord).FullName));
+            _session.Delete(string.Format("from {0}", typeof(ContentItemVersionRecord).FullName));
+            _session.Delete(string.Format("from {0}", typeof(ContentItemRecord).FullName));
+            _session.Delete(string.Format("from {0}", typeof(ContentTypeRecord).FullName));
             _session.Flush();
             _session.Clear();
 

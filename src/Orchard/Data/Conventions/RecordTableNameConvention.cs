@@ -15,7 +15,9 @@ namespace Orchard.Data.Conventions {
         public void Apply(IClassInstance instance) {
             var desc = _descriptors.Where(d => d.Type == instance.EntityType).SingleOrDefault();
             if (desc != null) {
-                instance.Table(desc.Prefix + "_" + desc.Type.Name);
+                if (!string.IsNullOrEmpty(desc.Prefix)) {
+                    instance.Table(desc.Prefix + "_" + desc.Type.Name);
+                }
             }
         }
     }
