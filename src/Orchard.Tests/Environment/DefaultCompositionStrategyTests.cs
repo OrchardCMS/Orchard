@@ -16,7 +16,7 @@ namespace Orchard.Tests.Environment {
                                                                             {ExportedTypes = new[] {typeof (GammaRecord), typeof (DeltaRecord), typeof (Delta)}}
                                                                         });
             var strategy = new DefaultCompositionStrategy(extensionManager.Object);
-            var recordTypes = strategy.GetRecordTypes();
+            var recordTypes = strategy.GetRecordDescriptors();
 
             Assert.That(recordTypes.Count(), Is.Not.EqualTo(0));
             Assert.That(recordTypes, Has.Some.EqualTo(typeof(DeltaRecord)));

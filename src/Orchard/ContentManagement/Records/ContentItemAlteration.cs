@@ -8,33 +8,34 @@ using System.Reflection.Emit;
 using FluentNHibernate.Automapping;
 using FluentNHibernate.Automapping.Alterations;
 using JetBrains.Annotations;
+using Orchard.Environment;
 
 namespace Orchard.ContentManagement.Records {
     class ContentItemAlteration : IAutoMappingAlteration {
-        private readonly IEnumerable<Type> _recordTypes;
+        private readonly IEnumerable<RecordDescriptor> _recordDescriptors;
 
         [UsedImplicitly]
         public ContentItemAlteration() {
-            _recordTypes = Enumerable.Empty<Type>();
+            _recordDescriptors = Enumerable.Empty<RecordDescriptor>();
         }
 
-        public ContentItemAlteration(IEnumerable<Type> recordTypes) {
-            _recordTypes = recordTypes;
+        public ContentItemAlteration(IEnumerable<RecordDescriptor> recordDescriptors) {
+            _recordDescriptors = recordDescriptors;
         }
 
         public void Alter(AutoPersistenceModel model) {
 
             model.Override<ContentItemRecord>(mapping => {
-                foreach (var recordType in _recordTypes.Where(Utility.IsPartRecord)) {
-                    var type = typeof(Alteration<,>).MakeGenericType(typeof(ContentItemRecord), recordType);
+                foreach (var descriptor in _recordDescriptors.Where(d => Utility.IsPartRecord(d.Type))) {
+                    var type = typeof(Alteration<,>).MakeGenericType(typeof(ContentItemRecord), descriptor.Type);
                     var alteration = (IAlteration<ContentItemRecord>)Activator.CreateInstance(type);
                     alteration.Override(mapping);
                 }
             });
 
             model.Override<ContentItemVersionRecord>(mapping => {
-                foreach (var recordType in _recordTypes.Where(Utility.IsPartVersionRecord)) {
-                    var type = typeof(Alteration<,>).MakeGenericType(typeof(ContentItemVersionRecord), recordType);
+                foreach (var descriptor in _recordDescriptors.Where(d => Utility.IsPartVersionRecord(d.Type))) {
+                    var type = typeof(Alteration<,>).MakeGenericType(typeof(ContentItemVersionRecord), descriptor.Type);
                     var alteration = (IAlteration<ContentItemVersionRecord>)Activator.CreateInstance(type);
                     alteration.Override(mapping);
                 }

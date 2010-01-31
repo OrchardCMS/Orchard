@@ -65,8 +65,7 @@ namespace Orchard.Blogs.Controllers {
             _services.ContentManager.Create(model.Blog.Item.ContentItem);
 
             //TEMP: (erikpo) ensure information has committed for this record
-            var session = _sessionLocator.For(typeof(BlogRecord));
-            session.Flush();
+            _services.ContentManager.Flush();
 
             return Redirect(Url.BlogForAdmin(model.Blog.Item.As<RoutableAspect>().Slug));
         }

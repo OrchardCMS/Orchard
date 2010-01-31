@@ -7,8 +7,10 @@ using FluentNHibernate.Automapping;
 using FluentNHibernate.Automapping.Alterations;
 using FluentNHibernate.Cfg;
 using FluentNHibernate.Cfg.Db;
+using FluentNHibernate.Conventions.Helpers;
 using NHibernate;
 using NHibernate.Tool.hbm2ddl;
+using Orchard.Data.Conventions;
 using Orchard.Environment;
 using Orchard.ContentManagement.Records;
 
@@ -33,16 +35,16 @@ namespace Orchard.Data {
 
             var database = SQLiteConfiguration.Standard.UsingFile(hackPath);
 
-            var recordTypes = _compositionStrategy.GetRecordTypes();
+            var recordDescriptors = _compositionStrategy.GetRecordDescriptors();
 
             return _sessionFactory ??
                    Interlocked.CompareExchange(
                        ref _sessionFactory,
-                       BuildSessionFactory(database, recordTypes), null) ?? _sessionFactory;
+                       BuildSessionFactory(database, recordDescriptors), null) ?? _sessionFactory;
 
         }
 
-        private static ISessionFactory BuildSessionFactory(IPersistenceConfigurer database, IEnumerable<Type> recordTypes) {
+        private static ISessionFactory BuildSessionFactory(IPersistenceConfigurer database, IEnumerable<RecordDescriptor> recordTypes) {
             return Fluently.Configure()
                 .Database(database)
                 .Mappings(m => m.AutoMappings.Add(CreatePersistenceModel(recordTypes)))
@@ -50,15 +52,20 @@ namespace Orchard.Data {
                 .BuildSessionFactory();
         }
 
-        public static AutoPersistenceModel CreatePersistenceModel(IEnumerable<Type> recordTypes) {
-            return AutoMap.Source(new TypeSource(recordTypes))
+        public static AutoPersistenceModel CreatePersistenceModel(IEnumerable<RecordDescriptor> recordDescriptors) {
+            var types = recordDescriptors.Select(d => d.Type);
+            return AutoMap.Source(new TypeSource(types))
+                // Ensure that namespaces of types are never auto-imported, so that 
+                // identical type names from different namespaces can be mapped without ambiguity
+                .Conventions.Setup(x => x.Add(AutoImport.Never()))
+                .Conventions.Add(new RecordTableNameConvention(recordDescriptors))
                 .Alterations(alt => {
-                                 foreach (var recordAssembly in recordTypes.Select(x => x.Assembly).Distinct()) {
-                                     alt.Add(new AutoMappingOverrideAlteration(recordAssembly));
-                                 }
-                                 alt.AddFromAssemblyOf<DataModule>();
-                                 alt.Add(new ContentItemAlteration(recordTypes));
-                             })
+                    foreach (var recordAssembly in recordDescriptors.Select(x => x.Type.Assembly).Distinct()) {
+                        alt.Add(new AutoMappingOverrideAlteration(recordAssembly));
+                    }
+                    alt.AddFromAssemblyOf<DataModule>();
+                    alt.Add(new ContentItemAlteration(recordDescriptors));
+                })
                 .Conventions.AddFromAssemblyOf<DataModule>();
         }
 

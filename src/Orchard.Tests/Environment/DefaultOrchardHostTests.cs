@@ -89,8 +89,8 @@ namespace Orchard.Tests.Environment {
                              };
             }
 
-            public IEnumerable<Type> GetRecordTypes() {
-                return Enumerable.Empty<Type>();
+            public IEnumerable<RecordDescriptor> GetRecordDescriptors() {
+                return Enumerable.Empty<RecordDescriptor>();
             }
         }
 

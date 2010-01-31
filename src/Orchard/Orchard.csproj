@@ -132,6 +132,7 @@
     <Compile Include="ContentManagement\Handlers\PublishContentContext.cs" />
     <Compile Include="ContentManagement\Handlers\RemoveContentContext.cs" />
     <Compile Include="ContentManagement\Handlers\VersionContentContext.cs" />
+    <Compile Include="Data\Conventions\RecordTableNameConvention.cs" />
     <Compile Include="Extensions\AreaFolders.cs" />
     <Compile Include="Extensions\ExtensionFolders.cs" />
     <Compile Include="Extensions\Loaders\AreaExtensionLoader.cs" />
