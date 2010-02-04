@@ -1,5 +1,6 @@
 ﻿using System.Web.Mvc;
 using Orchard.Core.Setup.Services;
+using Orchard.Core.Setup.ViewModels;
 using Orchard.Localization;
 using Orchard.Logging;
 
@@ -19,7 +20,7 @@ namespace Orchard.Core.Setup.Controllers {
         private Localizer T { get; set; }
 
         public ActionResult Index() {
-            return View();
+            return View(new SetupViewModel());
         }
     }
 }

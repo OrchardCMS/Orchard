@@ -112,8 +112,10 @@
     <Compile Include="Settings\Controllers\SiteSettingsDriver.cs" />
     <Compile Include="Settings\Permissions.cs" />
     <Compile Include="Setup\Controllers\SetupController.cs" />
+    <Compile Include="Setup\Routes.cs" />
     <Compile Include="Setup\Services\ISetupService.cs" />
     <Compile Include="Setup\Services\SetupService.cs" />
+    <Compile Include="Setup\ViewModels\SetupViewModel.cs" />
     <Compile Include="Themes\Preview\IPreviewTheme.cs" />
     <Compile Include="Themes\Preview\PreviewThemeFilter.cs" />
     <Compile Include="Themes\Services\AdminThemeSelector.cs" />
@@ -205,6 +207,7 @@
     <Content Include="Themes\Views\Web.config" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Setup\Views\Setup\Index.ascx" />
     <Content Include="Setup\Views\Web.config" />
   </ItemGroup>
   <ItemGroup>
