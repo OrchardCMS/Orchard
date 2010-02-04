@@ -150,10 +150,7 @@
     <Content Include="Themes\Orange\Styles\site.css" />
     <Content Include="Themes\Orange\Theme.txt" />
     <Content Include="Themes\Orange\Views\Layout.ascx" />
-    <Content Include="Themes\TheAdmin\Styles\images\background_header.jpg" />
     <Content Include="Themes\TheAdmin\Styles\images\icons.png" />
-    <Content Include="Themes\TheAdmin\Styles\images\orchardLogo.jpg" />
-    <Content Include="Themes\TheAdmin\Styles\images\tableHeaderBackground.gif" />
     <Content Include="Themes\TheAdmin\Styles\images\tableHeaderBackgroundRed.gif" />
     <Content Include="Themes\TheAdmin\Styles\site.css" />
     <Content Include="Themes\TheAdmin\Theme.gif" />
@@ -234,6 +231,8 @@
     <Content Include="Themes\TheAdminClassic\Views\Layout.ascx" />
     <Content Include="Themes\TheAdminClassic\Views\Menu.ascx" />
     <Content Include="Themes\TheAdminClassic\Views\User.ascx" />
+    <Content Include="Themes\TheAdmin\Styles\images\backgroundHeader.gif" />
+    <Content Include="Themes\TheAdmin\Styles\images\orchardLogo.gif" />
     <Content Include="Themes\TheAdmin\Views\Menu.ascx" />
     <Content Include="Themes\TheAdmin\Views\User.ascx" />
     <Content Include="Themes\TheAdmin\Views\Header.ascx" />
