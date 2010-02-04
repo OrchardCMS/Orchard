@@ -3,8 +3,6 @@ using Orchard.Core.Settings.Models;
 using Orchard.Core.Settings.ViewModels;
 using Orchard.Localization;
 using Orchard.ContentManagement;
-using Orchard.Security;
-using Orchard.Security.Permissions;
 using Orchard.Settings;
 using Orchard.UI.Notify;
 
