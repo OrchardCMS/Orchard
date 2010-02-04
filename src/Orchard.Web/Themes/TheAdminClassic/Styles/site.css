@@ -44,17 +44,17 @@ table {
 /* Base setup
 ----------------------------------------------------------*/
 html {
-    background:#2d2f25;
-    color:#333;
+    background:#8a8f7a;
+    color:#525e50;
 }
 body {
-	color:#333;
-    font-family:Segoe UI,Trebuchet,Arial,Sans-Serif;
+	color:#484926;
+    font-family:Frutiger, "Frutiger Linotype", Univers, Calibri, "Gill Sans", "Gill Sans MT", "Myriad Pro", Myriad, "DejaVu Sans Condensed", "Liberation Sans", "Nimbus Sans L", Tahoma, Geneva, "Helvetica Neue", Helvetica, Arial, sans-serif;
     font-size:62.5%; /* 10px */
 	line-height:1.6em;
     margin:0 auto 1em;
     min-width:94.6em; /* 946px */
-    padding:0;
+    padding:0 .4em;
 }
 body#preview {
     min-width:0;
@@ -139,6 +139,7 @@ number of columns: 24; actual width: 946; column width: 26; gutter width:14
 ----------------------------------------------------------*/
 h1, h2, h3, h4, h5, legend {
     padding:.4em 0;
+    font-family:"Palatino Linotype", Palatino, Palladio, "URW Palladio L", "Book Antiqua", Baskerville, "Bookman Old Style", "Bitstream Charter", "Nimbus Roman No9 L", Garamond, "Apple Garamond", "ITC Garamond Narrow", "New Century Schoolbook", "Century Schoolbook", "Century Schoolbook L", Georgia, serif;
     font-style: normal;
     font-weight:normal;
 }
@@ -151,7 +152,7 @@ h5 { font-size:1.4em; } /* 14px */
 
 h6, p, legend, label, input, select, .button,
 .message, .validation-summary-errors,
-table.items th, table.items td, table.items caption { font-size:1.4em; line-height:1.4em; } /* 15px */
+table.items th, table.items td, table.items caption { font-size:1.5em; line-height:1.5em; } /* 15px */
 p .button { font-size:inherit; }
 .meta, .hint { font-size:1.2em; } /* 12px */
 
@@ -172,8 +173,8 @@ a:hover, a:active, a:focus {
 /* Header - Branding and Login  
 ----------------------------------------------------------*/
 #header {
-	background:#2d2f25 url(images/backgroundHeader.gif) no-repeat bottom right;
-	height:50px;
+	background:#8a8f7a url(images/background_header.jpg) no-repeat bottom right;
+	height:60px;
 }
 #header #app {
     float:left;
@@ -196,22 +197,24 @@ a:hover, a:active, a:focus {
 	text-indent:-9999px;
 	width:35px;
 }
+
 #site {
+    font-family:"Palatino Linotype", Palatino, Palladio, "URW Palladio L", "Book Antiqua", Baskerville, "Bookman Old Style", "Bitstream Charter", "Nimbus Roman No9 L", Garamond, "Apple Garamond", "ITC Garamond Narrow", "New Century Schoolbook", "Century Schoolbook", "Century Schoolbook L", Georgia, serif;
     font-size:2em;
 }
 #site a, #site a:visited, #site a:active {
 	color:#fff;
 	float:left;
 	line-height:2.2em;
-	padding:0 0 0 6px;
+	padding:6px 0 0 4px;
 	position:relative;
 }
 #login {
     font-size:1.5em;
-	color:#fff;
+	color:#1a1505;
 	display:block;
 	float:right;
-	margin:16px 20px 0 0;
+	margin:20px 20px 0 0;
 	white-space:nowrap;
 }
 #login a, #login a:link, #login a:visited {
@@ -233,7 +236,8 @@ a:hover, a:active, a:focus {
 
 #navigation li {
 	background:#fff;
-	margin:7px 0 20px 0;
+	border:1px solid #d2d6c6;
+	margin:10px 0 15px 0;
 }
 #navigation ul li {
     border:0;
@@ -243,7 +247,7 @@ a:hover, a:active, a:focus {
     padding:0;
 }
 #navigation li h3 a, #navigation li h3 span {
-	border-bottom:1px solid #bdbcbc;
+	background:#dddfcb url(images/tableHeaderBackground.gif) repeat-x top left;
     display:block;
 	padding:6px 4px 8px 8px;
 }
@@ -251,20 +255,22 @@ a:hover, a:active, a:focus {
     color:inherit;
 }
 #navigation li h3 a:hover, #navigation li h3 a:active, #navigation li h3 a:focus {
+    background:#8a8f7a;
+    color:#f6faea;
     text-decoration:none;
 }
 #navigation ul a, #navigation ul a:link, #navigation ul a:visited {
-	color:#2d2f25;
+	color:#5a5b32;
 	display:block;
-	font-size:1.4em;
+	font-size:1.5em;
 	height:28px;
 	line-height:28px;
 	padding:0 0 0 12px;
 	text-decoration:none;
 }
 #navigation ul a:hover, #navigation ul a:active, #navigation ul a:focus {
-	background:#f5f5f5;
-	color: #000;
+	background:#f0ecd2;
+	color: #3e4301;
 	text-decoration:underline;
 }
 
@@ -293,7 +299,7 @@ a:hover, a:active, a:focus {
     margin:0;
 }
 #main h1, #main h2 {
-    border-bottom:1px solid #bdbcbc;
+    border-bottom:1px solid #e4e7dc;
 }
 
 
@@ -360,7 +366,7 @@ fieldset.bulk.actions {
 
 label {
 	display: block;
-	font-weight:600;
+	font-weight:700;
 }
 label.forcheckbox {
     display:inline;
@@ -383,8 +389,8 @@ label input {
 /* todo: (heskew) try to get .text on stuff like .text-box */
 select, textarea, input.text, input.text-box {
 	padding:2px;
-	border:1px solid #ddd;
-	color:#000;
+	border:1px solid #d2d6c6;
+	color:#5a5b32;
 }
 input.text, input.text-box {
     line-height:1.2em;
@@ -435,12 +441,13 @@ textarea {
 }
 
 button, .button, .button:link, .button:visited {
-	background:#f5f5f5;
-	border:1px solid #999;
-	color:#2d2f25;
+	background:#dddfcb url(images/tableHeaderBackground.gif) repeat-x top left;
+	border:1px solid #d2d6c6;
+	color:#5a5b32;
 	cursor:pointer;
+	height:26px;
+	padding:0 8px 3px;
 	text-align:center;
-	padding:0 .8em .1em .8em;
 }
 button.remove, .remove.button, .remove.button:link, .remove.button:visited {
     background-color:#DECCCA;
@@ -455,9 +462,9 @@ a.button, a.button:link, a.button:visited {
 button:hover, .button:hover,
 button:active, .button:active,
 button:focus, .button:focus {
-    background:#ffac40;
-    border-color:#bb8b2d;
-    color:#fff;
+    background:#8a8f7a;
+    border-color:#666d51;
+    color:#f6faea;
     text-decoration:none;
 }
 button:focus::-moz-focus-inner, .button:focus::-moz-focus-inner {
@@ -506,6 +513,7 @@ button.remove:focus::-moz-focus-inner, .remove.button:focus::-moz-focus-inner {
     height:inherit;
     margin-left:.3em;
     padding-bottom:.3em;
+    padding-top:.3em;
 }
 
 
@@ -612,7 +620,7 @@ button.ibutton {
 ----------------------------------------------------------*/
 table.items {
 	background:#fff;
-	border:1px solid #999;
+	border:1px solid #B0B083;
 	border-collapse:separate;
 	border-spacing:0;
 	width:100%;
@@ -635,7 +643,7 @@ table.items tbody {
 	vertical-align:middle;
 }
 table.items thead, table.items th {
-	background:#f5f5f5;
+	background:url(images/tableHeaderBackground.gif) repeat-x top left #dddfcb;
 	font-weight:700;
 	overflow:hidden;
 	text-align:left;
@@ -647,7 +655,7 @@ table.items tr.hover {
 table.items tr.critical {background:#e68585; border:inherit;}
 table.items tr.warning {background:#fdf5bc; border:inherit;}
 table.items th, table.items td {
-	border-bottom:1px solid #ccc;
+	border-bottom:1px solid #EAE9D9;
 	border-spacing:0px;
 	display:table-cell;
 	padding:8px 12px;
@@ -684,7 +692,7 @@ todo: (heskew) pull out into relevant modules where appropriate
 }
 
 /* Rounded borders and other "works in some browsers" additions
-----------------------------------------------------------
+----------------------------------------------------------*/
 #content, #navigation li, button, .button,
 table.items, textarea, input.text, input.text-box,
 .contentItems, .message, .validation-summary-errors {
@@ -696,4 +704,4 @@ table.items, textarea, input.text, input.text-box,
 	-moz-border-radius:3px 3px 0 0;
 	-webkit-border-radius:3px 3px 0 0;
 	border-radius:3px 3px 0 0;
-}*/
+}
