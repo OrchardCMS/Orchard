@@ -111,6 +111,8 @@
     <Compile Include="Scheduling\Models\Task.cs" />
     <Compile Include="Settings\Controllers\SiteSettingsDriver.cs" />
     <Compile Include="Settings\Permissions.cs" />
+    <Compile Include="Setup\Annotations\SqlDatabaseConnectionStringAttribute.cs" />
+    <Compile Include="Setup\Annotations\StringLengthMin.cs" />
     <Compile Include="Setup\Controllers\SetupController.cs" />
     <Compile Include="Setup\Routes.cs" />
     <Compile Include="Setup\Services\ISetupService.cs" />
