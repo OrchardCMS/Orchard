@@ -139,10 +139,6 @@ namespace Orchard.Extensions {
             foreach (var descriptor in AvailableExtensions()) {
                 // Extensions that are Themes don't have buildable components.
                 if (String.Equals(descriptor.ExtensionType, "Package", StringComparison.OrdinalIgnoreCase)) {
-                    
-                    //TEMP!!!!
-                    if (descriptor.DisplayName!="Setup") continue;
-
                     yield return BuildEntry(descriptor);
                 }
             }

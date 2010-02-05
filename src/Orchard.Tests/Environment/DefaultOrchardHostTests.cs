@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
@@ -11,6 +10,7 @@ using Autofac.Modules;
 using Moq;
 using NUnit.Framework;
 using Orchard.Environment;
+using Orchard.Environment.Configuration;
 using Orchard.Mvc;
 using Orchard.Mvc.ModelBinders;
 using Orchard.Mvc.Routes;
@@ -46,7 +46,14 @@ namespace Orchard.Tests.Environment {
                     builder.Register(new ViewEngineCollection { new WebFormViewEngine() });
                     builder.Register(new StuExtensionManager()).As<IExtensionManager>();
                     builder.Register(new Mock<IHackInstallationGenerator>().Object);
+                    builder.Register(new StubShellSettingsLoader()).As<IShellSettingsLoader>();
                 });
+        }
+
+        public class StubShellSettingsLoader : IShellSettingsLoader {
+            public IEnumerable<IShellSettings> LoadSettings() {
+                return new[] { new ShellSettings { Name = "testing" } };
+            }
         }
 
         public class StuExtensionManager : IExtensionManager {

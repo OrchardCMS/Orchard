@@ -3,6 +3,7 @@ using System.Linq;
 using Autofac;
 using Autofac.Builder;
 using AutofacContrib.DynamicProxy2;
+using Orchard.Environment.Configuration;
 
 namespace Orchard.Environment.ShellBuilders {
     public class DefaultShellContainerFactory : IShellContainerFactory {

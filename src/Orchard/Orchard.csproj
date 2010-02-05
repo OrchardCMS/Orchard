@@ -133,11 +133,12 @@
     <Compile Include="ContentManagement\Handlers\RemoveContentContext.cs" />
     <Compile Include="ContentManagement\Handlers\VersionContentContext.cs" />
     <Compile Include="Data\Conventions\RecordTableNameConvention.cs" />
+    <Compile Include="Environment\Configuration\ShellSettingsLoader.cs" />
     <Compile Include="Environment\ExtensibleInterceptionModule.cs" />
     <Compile Include="Environment\ShellBuilders\DefaultShellContainerFactory.cs" />
     <Compile Include="Environment\ShellBuilders\IShellContainerFactory.cs" />
     <Compile Include="Environment\ShellBuilders\SetupShellContainerFactory.cs" />
-    <Compile Include="Environment\ShellBuilders\ShellSettings.cs" />
+    <Compile Include="Environment\Configuration\ShellSettings.cs" />
     <Compile Include="Extensions\AreaFolders.cs" />
     <Compile Include="Extensions\ExtensionFolders.cs" />
     <Compile Include="Extensions\Loaders\AreaExtensionLoader.cs" />

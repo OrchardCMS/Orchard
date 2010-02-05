@@ -1,12 +1,9 @@
-using System;
-using System.Diagnostics;
 using System.Linq;
 using System.Web.Mvc;
 using Autofac;
-using Autofac.Builder;
 using Autofac.Integration.Web;
 using System.Collections.Generic;
-using AutofacContrib.DynamicProxy2;
+using Orchard.Environment.Configuration;
 using Orchard.Environment.ShellBuilders;
 using Orchard.Extensions;
 using Orchard.Mvc;
@@ -19,14 +16,17 @@ namespace Orchard.Environment {
         private readonly ControllerBuilder _controllerBuilder;
         private readonly IEnumerable<IShellContainerFactory> _shellContainerFactories;
 
+        private readonly IShellSettingsLoader _shellSettingsLoader;
         private IOrchardShell _current;
 
 
         public DefaultOrchardHost(
             IContainerProvider containerProvider,
+            IShellSettingsLoader shellSettingsLoader,
             ControllerBuilder controllerBuilder,
             IEnumerable<IShellContainerFactory> shellContainerFactories) {
             _containerProvider = containerProvider;
+            _shellSettingsLoader = shellSettingsLoader;
             _controllerBuilder = controllerBuilder;
             _shellContainerFactories = shellContainerFactories;
         }
@@ -71,10 +71,21 @@ namespace Orchard.Environment {
         }
 
         public virtual IContainer CreateShellContainer() {
-            foreach(var factory in _shellContainerFactories) {
-                var container = factory.CreateContainer(null);
-                if (container != null)
-                    return container;
+            var settings = _shellSettingsLoader.LoadSettings();
+            if (settings.Any()) {
+                //TEMP: multi-tenancy not implemented yet
+                foreach (var factory in _shellContainerFactories) {
+                    var container = factory.CreateContainer(settings.Single());
+                    if (container != null)
+                        return container;
+                }
+            }
+            else {
+                foreach (var factory in _shellContainerFactories) {
+                    var container = factory.CreateContainer(null);
+                    if (container != null)
+                        return container;
+                }
             }
             return null;
         }

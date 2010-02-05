@@ -5,6 +5,7 @@ using Autofac.Builder;
 using Autofac.Integration.Web;
 using Autofac.Modules;
 using AutofacContrib.DynamicProxy2;
+using Orchard.Environment.Configuration;
 using Orchard.Environment.ShellBuilders;
 using Orchard.Extensions;
 using Orchard.Extensions.Loaders;
@@ -21,6 +22,7 @@ namespace Orchard.Environment {
             builder.Register<DefaultOrchardHost>().As<IOrchardHost>().SingletonScoped();
             builder.Register<DefaultCompositionStrategy>().As<ICompositionStrategy>().SingletonScoped();
             builder.Register<DefaultShellContainerFactory>().As<IShellContainerFactory>().SingletonScoped();
+            builder.Register<ShellSettingsLoader>().As<IShellSettingsLoader>().SingletonScoped();
             builder.Register<SetupShellContainerFactory>().As<IShellContainerFactory>().SingletonScoped();
 
             // The container provider gives you access to the lowest container at the time, 

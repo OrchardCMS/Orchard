@@ -6,6 +6,7 @@ using System.Web.Routing;
 using Autofac;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Handlers;
+using Orchard.Environment.Configuration;
 using Orchard.Extensions;
 using Orchard.Localization;
 using Orchard.Mvc;
