@@ -4,3 +4,5 @@ glob:App_Data
 glob:_ReSharper*
 glob:src/Orchard.suo
 glob:*.user
+glob:*.patch
+glob:*.hg
