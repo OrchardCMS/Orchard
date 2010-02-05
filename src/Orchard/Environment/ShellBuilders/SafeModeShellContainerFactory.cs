@@ -38,22 +38,27 @@ namespace Orchard.Environment.ShellBuilders {
 
             shellContainer.Build(builder => {
                 //review: group by default vs safemode service replacements
-                builder.Register<DefaultOrchardShell>().As<IOrchardShell>().SingletonScoped();
-                builder.Register<RoutePublisher>().As<IRoutePublisher>().SingletonScoped();
-                builder.Register<ModelBinderPublisher>().As<IModelBinderPublisher>().SingletonScoped();
-                builder.Register(new NullHackInstallationGenerator()).As<IHackInstallationGenerator>().SingletonScoped();
-                builder.Register(new SetupRouteProvider()).As<IRouteProvider>().SingletonScoped();
-                builder.Register<MvcModule>().As<IModule>().SingletonScoped();
-
+                // standard services needed in safe mode
+                builder.Register<DefaultOrchardShell>().As<IOrchardShell>().ContainerScoped();
+                builder.Register<RoutePublisher>().As<IRoutePublisher>().ContainerScoped();
+                builder.Register<ModelBinderPublisher>().As<IModelBinderPublisher>().ContainerScoped();
+                builder.Register<MvcModule>().As<IModule>().ContainerScoped();
                 builder.Register<WebFormsViewEngineProvider>().As<IViewEngineProvider>().ContainerScoped();
                 builder.Register<ViewEngineFilter>().As<IFilterProvider>().ContainerScoped();
-                builder.Register<SafeModeThemeService>().As<IThemeService>().SingletonScoped();
-                builder.Register<SafeModeText>().As<IText>().SingletonScoped();
-                builder.Register<PageTitleBuilder>().As<IPageTitleBuilder>().SingletonScoped();
-                builder.Register<ZoneManager>().As<IZoneManager>().SingletonScoped();
-                builder.Register<PageClassBuilder>().As<IPageClassBuilder>().SingletonScoped();
+                builder.Register<PageTitleBuilder>().As<IPageTitleBuilder>().ContainerScoped();
+                builder.Register<ZoneManager>().As<IZoneManager>().ContainerScoped();
+                builder.Register<PageClassBuilder>().As<IPageClassBuilder>().ContainerScoped();
 
-                builder.Register<SafeModeSiteService>().As<ISiteService>().SingletonScoped();
+                // safe mode specific implementations of needed service interfaces
+                builder.Register<NullHackInstallationGenerator>().As<IHackInstallationGenerator>().ContainerScoped();
+                builder.Register<SafeModeThemeService>().As<IThemeService>().ContainerScoped();
+                builder.Register<SafeModeText>().As<IText>().ContainerScoped();
+                builder.Register<SafeModeSiteService>().As<ISiteService>().ContainerScoped();
+
+
+                //review: discovery an registration from limited number of modules (e.g. setup) should also be done here
+                //review: this should come from the limited number of added modules
+                builder.Register<SetupRouteProvider>().As<IRouteProvider>().ContainerScoped();
             });
 
             shellContainer.Build(builder => {
