@@ -1,8 +1,8 @@
 using System.ComponentModel.DataAnnotations;
-using Orchard.Core.Setup.Annotations;
+using Orchard.Setup.Annotations;
 using Orchard.Mvc.ViewModels;
 
-namespace Orchard.Core.Setup.ViewModels {
+namespace Orchard.Setup.ViewModels {
     public class SetupViewModel : BaseViewModel {
         [Required, StringLength(70)]
         public string SiteName { get; set; }

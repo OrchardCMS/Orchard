@@ -84,9 +84,9 @@ namespace Orchard.Environment.ShellBuilders {
                 routes.Add(new RouteDescriptor {
                     Priority = 100,
                     Route = new Route("{controller}/{action}",
-                        new RouteValueDictionary { { "Area", "Setup" }, { "Controller", "Setup" }, { "Action", "Index" } },
-                        new RouteValueDictionary { { "Area", "Setup" }, { "Controller", "Setup" }, { "Action", "Index" } },
-                        new RouteValueDictionary { { "Area", "Setup" } },
+                        new RouteValueDictionary { { "Area", "Orchard.Setup" }, { "Controller", "Setup" }, { "Action", "Index" } },
+                        new RouteValueDictionary { { "Area", "Orchard.Setup" }, { "Controller", "Setup" }, { "Action", "Index" } },
+                        new RouteValueDictionary { { "Area", "Orchard.Setup" } },
                         new MvcRouteHandler())
                 });
             }

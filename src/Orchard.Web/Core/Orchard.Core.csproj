@@ -111,13 +111,6 @@
     <Compile Include="Scheduling\Models\Task.cs" />
     <Compile Include="Settings\Controllers\SiteSettingsDriver.cs" />
     <Compile Include="Settings\Permissions.cs" />
-    <Compile Include="Setup\Annotations\SqlDatabaseConnectionStringAttribute.cs" />
-    <Compile Include="Setup\Annotations\StringLengthMin.cs" />
-    <Compile Include="Setup\Controllers\SetupController.cs" />
-    <Compile Include="Setup\Routes.cs" />
-    <Compile Include="Setup\Services\ISetupService.cs" />
-    <Compile Include="Setup\Services\SetupService.cs" />
-    <Compile Include="Setup\ViewModels\SetupViewModel.cs" />
     <Compile Include="Themes\Preview\IPreviewTheme.cs" />
     <Compile Include="Themes\Preview\PreviewThemeFilter.cs" />
     <Compile Include="Themes\Services\AdminThemeSelector.cs" />
@@ -189,7 +182,6 @@
     <Content Include="Feeds\Package.txt" />
     <Content Include="Scheduling\Package.txt" />
     <Content Include="Settings\Views\EditorTemplates\Items\Settings.Site.ascx" />
-    <Content Include="Setup\Package.txt" />
     <Content Include="Themes\Scripts\jquery-1.4.1.js" />
     <Content Include="Themes\Scripts\jquery-1.4.1.min.js" />
     <Content Include="Themes\Styles\images\icons.png" />
@@ -207,10 +199,6 @@
     <Content Include="Themes\Views\User.ascx" />
     <Content Include="Themes\Views\Menu.ascx" />
     <Content Include="Themes\Views\Web.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Setup\Views\Setup\Index.ascx" />
-    <Content Include="Setup\Views\Web.config" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Scheduling\Controllers\" />

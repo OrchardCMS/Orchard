@@ -1,7 +1,7 @@
 ﻿using Orchard.Localization;
 using Orchard.Logging;
 
-namespace Orchard.Core.Setup.Services {
+namespace Orchard.Setup.Services {
     public class SetupService : ISetupService {
         public SetupService(IOrchardServices services) {
             Services = services;
