@@ -1,7 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.Data.SqlClient;
 
-namespace Orchard.Core.Setup.Annotations {
+namespace Orchard.Setup.Annotations {
     public class SqlDatabaseConnectionStringAttribute : ValidationAttribute {
         public override bool IsValid(object value) {
             if (value is string && ((string)value).Length > 0) {

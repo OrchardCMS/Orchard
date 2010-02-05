@@ -1,4 +1,4 @@
-﻿namespace Orchard.Core.Setup.Services {
+﻿namespace Orchard.Setup.Services {
     public interface ISetupService : IDependency {
     }
 }

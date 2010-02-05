@@ -1,9 +1,9 @@
 ﻿using System.Web.Mvc;
-using Orchard.Core.Setup.ViewModels;
+using Orchard.Setup.ViewModels;
 using Orchard.Localization;
 using Orchard.UI.Notify;
 
-namespace Orchard.Core.Setup.Controllers {
+namespace Orchard.Setup.Controllers {
     public class SetupController : Controller {
         private readonly INotifier _notifier;
 

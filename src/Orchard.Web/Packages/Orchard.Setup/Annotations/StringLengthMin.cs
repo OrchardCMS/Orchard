@@ -1,7 +1,7 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace Orchard.Core.Setup.Annotations {
+namespace Orchard.Setup.Annotations {
     public class StringLengthMin : ValidationAttribute {
         private readonly int _minimumLength;
 

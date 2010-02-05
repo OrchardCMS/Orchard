@@ -3,7 +3,7 @@ using System.Web.Mvc;
 using System.Web.Routing;
 using Orchard.Mvc.Routes;
 
-namespace Orchard.Core.Setup {
+namespace Orchard.Setup {
     public class Routes : IRouteProvider
     {
         public void GetRoutes(ICollection<RouteDescriptor> routes) {
@@ -17,13 +17,13 @@ namespace Orchard.Core.Setup {
                                                      Route = new Route(
                                                          "Setup",
                                                          new RouteValueDictionary {
-                                                                                      {"area", "Setup"},
-                                                                                      {"controller", "Setup"},
+                                                                                      {"area", "Orchard.Setup"},
+                                                                                      {"controller", "Orchard.Setup"},
                                                                                       {"action", "Index"}
                                                                                   },
                                                          new RouteValueDictionary(),
                                                          new RouteValueDictionary {
-                                                                                      {"area", "Setup"}
+                                                                                      {"area", "Orchard.Setup"}
                                                                                   },
                                                          new MvcRouteHandler())
                                                  }
