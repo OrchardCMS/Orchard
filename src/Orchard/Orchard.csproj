@@ -133,6 +133,12 @@
     <Compile Include="ContentManagement\Handlers\RemoveContentContext.cs" />
     <Compile Include="ContentManagement\Handlers\VersionContentContext.cs" />
     <Compile Include="Data\Conventions\RecordTableNameConvention.cs" />
+    <Compile Include="Data\Migrations\DatabaseCoordinatorBase.cs" />
+    <Compile Include="Data\Migrations\DatabaseMigrationManager.cs" />
+    <Compile Include="Data\Migrations\IDatabaseCoordinator.cs" />
+    <Compile Include="Data\Migrations\IDatabaseMigrationManager.cs" />
+    <Compile Include="Data\Migrations\SQLiteDatabaseCoordinator.cs" />
+    <Compile Include="Data\Migrations\SqlServerDatabaseCoordinator.cs" />
     <Compile Include="Environment\Configuration\ShellSettingsLoader.cs" />
     <Compile Include="Environment\ExtensibleInterceptionModule.cs" />
     <Compile Include="Environment\ShellBuilders\DefaultShellContainerFactory.cs" />
