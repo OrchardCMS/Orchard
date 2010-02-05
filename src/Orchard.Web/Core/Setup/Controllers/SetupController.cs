@@ -1,23 +1,38 @@
 ﻿using System.Web.Mvc;
-using Orchard.Core.Setup.Services;
 using Orchard.Core.Setup.ViewModels;
 using Orchard.Localization;
-using Orchard.Logging;
+using Orchard.UI.Notify;
 
 namespace Orchard.Core.Setup.Controllers {
     public class SetupController : Controller {
+        private readonly INotifier _notifier;
 
-        public SetupController() {
-            Logger = NullLogger.Instance;
+        public SetupController(INotifier notifier) {
+            _notifier = notifier;
             T = NullLocalizer.Instance;
         }
 
-        public IOrchardServices Services { get; set; }
-        public ILogger Logger { get; set; }
         private Localizer T { get; set; }
 
         public ActionResult Index() {
-            return View(new SetupViewModel());
+            return View(new SetupViewModel { AdminUsername = "admin" });
+        }
+
+        [HttpPost]
+        public ActionResult Index(SetupViewModel model) {
+            TryUpdateModel(model);
+
+            if (!ModelState.IsValid) {
+                return View(model);
+            }
+            
+            // create superuser
+            // set site name
+            // database
+            // redirect to the welcome page
+
+            _notifier.Information(T("Setup succeeded"));
+            return RedirectToAction("Index");
         }
     }
 }

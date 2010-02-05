@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
@@ -16,6 +15,7 @@ using Orchard.Mvc.Routes;
 using Orchard.Mvc.ViewEngines;
 using Orchard.Settings;
 using Orchard.Themes;
+using Orchard.UI.Notify;
 using Orchard.UI.PageClass;
 using Orchard.UI.PageTitle;
 using Orchard.UI.Zones;
@@ -48,6 +48,8 @@ namespace Orchard.Environment.ShellBuilders {
                 builder.Register<PageTitleBuilder>().As<IPageTitleBuilder>().ContainerScoped();
                 builder.Register<ZoneManager>().As<IZoneManager>().ContainerScoped();
                 builder.Register<PageClassBuilder>().As<IPageClassBuilder>().ContainerScoped();
+                builder.Register<Notifier>().As<INotifier>().ContainerScoped();
+                builder.Register<NotifyFilter>().As<IFilterProvider>().ContainerScoped();
 
                 // safe mode specific implementations of needed service interfaces
                 builder.Register<NullHackInstallationGenerator>().As<IHackInstallationGenerator>().ContainerScoped();
