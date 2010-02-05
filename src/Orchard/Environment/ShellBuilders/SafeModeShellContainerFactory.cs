@@ -21,10 +21,10 @@ using Orchard.UI.PageTitle;
 using Orchard.UI.Zones;
 
 namespace Orchard.Environment.ShellBuilders {
-    public class SetupShellContainerFactory : IShellContainerFactory {
+    public class SafeModeShellContainerFactory : IShellContainerFactory {
         private readonly IContainer _container;
 
-        public SetupShellContainerFactory(IContainer container) {
+        public SafeModeShellContainerFactory(IContainer container) {
             _container = container;
         }
 
@@ -37,6 +37,7 @@ namespace Orchard.Environment.ShellBuilders {
             var shellContainer = _container.CreateInnerContainer();
 
             shellContainer.Build(builder => {
+                //review: group by default vs safemode service replacements
                 builder.Register<DefaultOrchardShell>().As<IOrchardShell>().SingletonScoped();
                 builder.Register<RoutePublisher>().As<IRoutePublisher>().SingletonScoped();
                 builder.Register<ModelBinderPublisher>().As<IModelBinderPublisher>().SingletonScoped();
@@ -47,11 +48,12 @@ namespace Orchard.Environment.ShellBuilders {
                 builder.Register<WebFormsViewEngineProvider>().As<IViewEngineProvider>().ContainerScoped();
                 builder.Register<ViewEngineFilter>().As<IFilterProvider>().ContainerScoped();
                 builder.Register<SafeModeThemeService>().As<IThemeService>().SingletonScoped();
-                builder.Register<SetupText>().As<IText>().SingletonScoped();
+                builder.Register<SafeModeText>().As<IText>().SingletonScoped();
                 builder.Register<PageTitleBuilder>().As<IPageTitleBuilder>().SingletonScoped();
-                builder.Register<SetupSiteService>().As<ISiteService>().SingletonScoped();
                 builder.Register<ZoneManager>().As<IZoneManager>().SingletonScoped();
                 builder.Register<PageClassBuilder>().As<IPageClassBuilder>().SingletonScoped();
+
+                builder.Register<SafeModeSiteService>().As<ISiteService>().SingletonScoped();
             });
 
             shellContainer.Build(builder => {
@@ -63,7 +65,7 @@ namespace Orchard.Environment.ShellBuilders {
             return shellContainer;
         }
 
-
+        //review: this should come from the subset of modules, not this factory
         class SetupRouteProvider : IRouteProvider {
             public IEnumerable<RouteDescriptor> GetRoutes() {
                 var routes = new List<RouteDescriptor>();
@@ -83,7 +85,7 @@ namespace Orchard.Environment.ShellBuilders {
             }
         }
 
-        class SetupText : IText {
+        class SafeModeText : IText {
             public LocalizedString Get(string textHint, params object[] args) {
                 if (args == null || args.Length == 0) {
                     return new LocalizedString(textHint);
@@ -122,17 +124,17 @@ namespace Orchard.Environment.ShellBuilders {
             public void GenerateActivateEvents() { }
         }
 
-        class SetupSiteService : ISiteService {
+        class SafeModeSiteService : ISiteService {
             public ISite GetSiteSettings() {
                 var site = new ContentItemBuilder("site")
-                    .Weld<SetupSite>()
+                    .Weld<SafeModeSite>()
                     .Build();
 
                 return site.As<ISite>();
             }
         }
 
-        class SetupSite : ContentPart, ISite {
+        class SafeModeSite : ContentPart, ISite {
             public string PageTitleSeparator {
                 get { return "*"; }
             }

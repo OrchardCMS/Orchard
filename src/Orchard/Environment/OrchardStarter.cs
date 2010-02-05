@@ -23,7 +23,7 @@ namespace Orchard.Environment {
             builder.Register<DefaultCompositionStrategy>().As<ICompositionStrategy>().SingletonScoped();
             builder.Register<DefaultShellContainerFactory>().As<IShellContainerFactory>().SingletonScoped();
             builder.Register<ShellSettingsLoader>().As<IShellSettingsLoader>().SingletonScoped();
-            builder.Register<SetupShellContainerFactory>().As<IShellContainerFactory>().SingletonScoped();
+            builder.Register<SafeModeShellContainerFactory>().As<IShellContainerFactory>().SingletonScoped();
 
             // The container provider gives you access to the lowest container at the time, 
             // and dynamically creates a per-request container. The DisposeRequestContainer method

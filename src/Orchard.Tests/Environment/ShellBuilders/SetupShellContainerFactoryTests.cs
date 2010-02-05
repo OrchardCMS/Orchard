@@ -26,7 +26,7 @@ namespace Orchard.Tests.Environment.ShellBuilders {
         [Test]
         public void FactoryShouldCreateContainerThatProvidesShell() {
 
-            var factory = new SetupShellContainerFactory(_hostContainer);
+            var factory = new SafeModeShellContainerFactory(_hostContainer);
             var shellContainer = factory.CreateContainer(null);
             Assert.That(shellContainer, Is.Not.Null);
             var shell = shellContainer.Resolve<IOrchardShell>();
@@ -35,7 +35,7 @@ namespace Orchard.Tests.Environment.ShellBuilders {
 
         [Test]
         public void ShellContainerShouldProvideLayoutViewEngine() {
-            var factory = new SetupShellContainerFactory(_hostContainer);
+            var factory = new SafeModeShellContainerFactory(_hostContainer);
             var shellContainer = factory.CreateContainer(null);
             var viewEngineFilter = shellContainer.Resolve<IEnumerable<IFilterProvider>>()
                 .Single(f=>f is ViewEngineFilter);
