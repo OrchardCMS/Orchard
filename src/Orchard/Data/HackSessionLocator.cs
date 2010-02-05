@@ -44,10 +44,10 @@ namespace Orchard.Data {
 
         }
 
-        private static ISessionFactory BuildSessionFactory(IPersistenceConfigurer database, IEnumerable<RecordDescriptor> recordTypes) {
+        private static ISessionFactory BuildSessionFactory(IPersistenceConfigurer database, IEnumerable<RecordDescriptor> recordDescriptors) {
             return Fluently.Configure()
                 .Database(database)
-                .Mappings(m => m.AutoMappings.Add(CreatePersistenceModel(recordTypes)))
+                .Mappings(m => m.AutoMappings.Add(CreatePersistenceModel(recordDescriptors)))
                 .ExposeConfiguration(c => new SchemaUpdate(c).Execute(false /*script*/, true /*doUpdate*/))
                 .BuildSessionFactory();
         }
