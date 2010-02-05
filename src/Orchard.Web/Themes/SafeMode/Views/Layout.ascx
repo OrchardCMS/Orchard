@@ -10,11 +10,8 @@
     <div id="branding">
         <h1>
             <a href="/"><span class="displayText">Project Orchard</span></a></h1>
-        <%-- todo:(nheskew) this will need to all go in the header zone (user widget) --%>
         
     </div>
-    <%--Top Navigation--%>
-    <%-- todo:(nheskew) this will need to be a generated menu --%>
     
     <div id="content" class="clearLayout">
         <ol id="contentMain">
