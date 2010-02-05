@@ -1,0 +1,279 @@
+﻿/* CSS Document */
+
+/*Yahoo browser reset
+----------------------------------------------------------*/
+body,div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pre,form,fieldset,input,textarea,p,
+blockquote,th,td {margin:0; padding:0; }
+table { border-collapse:collapse; border-spacing:0; }
+fieldset,img { border:0; }
+address,caption,cite,code,dfn,em,strong,th,var { font-style:normal; font-weight:normal; }
+ol,ul { list-style:none; }
+caption,th { text-align:left; }
+h1,h2,h3,h4,h5,h6 { font-size:100%; font-weight:normal; }
+/*q:before,q:after { content:”; }*/
+abbr,acronym { border:0; }
+
+/*Defaults
+----------------------------------------------------------*/
+html {height: 100%;}
+
+body {font: normal 100% Frutiger, "Frutiger Linotype", Univers, Calibri, "Gill Sans", "Gill Sans MT", "Myriad Pro", Myriad, "DejaVu Sans Condensed", "Liberation Sans", "Nimbus Sans L", Tahoma, Geneva, "Helvetica Neue", Helvetica, Arial, sans-serif;
+	background:url(../Content/Images/background_pageTop.gif) top left repeat-x #f6faea;
+	height: 100%;
+	text-align:left;
+	color:#525e50;
+}
+
+/* ---------- Headings and defaults ---------- */
+h1,h2,h3,h4,h5,h6,legend {padding:4px 0; font-family:"Palatino Linotype", Palatino, Palladio, "URW Palladio L", "Book Antiqua", Baskerville, "Bookman Old Style", "Bitstream Charter", "Nimbus Roman No9 L", Garamond, "Apple Garamond", "ITC Garamond Narrow", "New Century Schoolbook", "Century Schoolbook", "Century Schoolbook L", Georgia, serif; font-weight:normal; font-style: normal;}
+
+h1 {font-size: 200%;}
+h2 {font-size: 170%;}
+h3 {font-size: 150%;}
+h4 {font-size: 130%;}
+h5 {font-size: 120%;}
+h6 {font-size: 110%;}
+
+p {line-height:20px; padding:2px 8px;}
+
+ul {list-style:circle; list-style-position:inside; line-height:22px;}
+
+/* ---------- links  ---------- */
+a, a:visited {color:#006699;}
+a:hover {text-decoration: underline;}
+a:active {color:#006699;}
+
+#siteInfoContent a, #siteInfoContent a:visited {text-decoration: none;}
+#siteInfoContent a:hover {text-decoration: underline;}
+#siteInfoContent a:active {text-decoration: none;}
+
+
+/* Forms   
+----------------------------------------------------------*/
+
+fieldset {margin:10px; padding:10px; border:1px solid #d2d6c6;}
+
+fieldset label {display: block;}
+
+legend {font-size:104%; color:#525e50; padding: 2px 4px 8px 4px;}
+
+.inputText {font-size:102%; margin:4px; padding:2px; border:1px solid #d2d6c6; color:#555; width:200px;}
+
+select {font-size:102%; margin:4px; padding:2px; border:1px solid #d2d6c6; color:#555; width:200px;}
+
+.button {text-align:center; padding:2px 6px; color:#27320a;}
+
+/* Table
+----------------------------------------------------------*/
+
+table 
+{
+  border: solid 1px #e8eef4;
+  border-collapse: collapse;
+}
+
+table td 
+{
+  padding: 5px;   
+  border: solid 1px #e8eef4;
+}
+
+table th
+{
+  padding: 6px 5px;
+  text-align: left;
+  background-color: #e8eef4; 
+  border: solid 1px #e8eef4;   
+}
+
+
+/*Outer layout
+----------------------------------------------------------*/
+
+/* -- Wraps the whole page so footer can be pushed down to the bottom. html and body both need to have height set to 100% for this to work -- */
+
+#wrapper {
+background:transparent url(../Content/Images/background_page.jpg) no-repeat center top;
+height:auto;
+min-height:100%;
+position:relative;
+voice-family:inherit;
+}
+		
+html>body #wrapper {height: auto;}
+
+
+#branding {
+	width:960px;
+	display:block;
+	height:90px;
+	margin:0em auto;
+}
+
+#branding h1 a {
+	background:url(../Content/Images/orchardLogo.jpg) no-repeat scroll 0 0;
+	float:left;
+	display:block;
+	width:216px;
+	height:90px;
+	position:relative;
+	top:-4px;
+	margin-bottom:-4px;
+	z-index:0;
+}
+
+#logindisplay {
+	float:right;
+	margin:28px 8px 0 0;
+	color: #c6ccb4;
+	color: #e7ebdb;
+}
+
+#logindisplay a {
+	color: #e7ebdb;
+
+}
+
+#menucontainer{
+	width:960px;
+	display:block;
+	height:44px;
+	margin:0em auto;
+	clear:both;
+}
+
+#content {
+    background:url(../Content/Images/background_content.jpg) no-repeat center top #FFF;
+    height:100%;
+    margin:0px auto;
+    padding:0px;
+    width:960px;
+}
+
+#contentMain {
+	float:left;
+	padding:14px 10px 10px 16px;
+	width:560px;
+}
+
+#contentFull {
+	padding:14px 10px 10px 16px;
+}
+
+#contentSub {
+	float:right;
+	padding:24px 10px 10px 10px;
+	width:345px;
+	background:url(../Content/Images/background_module.gif) no-repeat bottom right;
+}
+
+#siteInfo {
+      bottom: 0;
+      width:100%;
+}
+
+#siteInfoContent {
+      margin:0 auto;
+      background:url(../Content/Images/background_footer.jpg) no-repeat center top;
+      height:120px;
+      width:960px;
+      vertical-align:bottom;
+      text-align:center;
+}
+
+
+#siteInfoContent ul{
+	padding:80px 0 0 0;
+	list-style:none;
+}
+
+#siteInfoContent ul li {
+	display:inline;
+	margin:0px;
+    padding: 0 8px;
+}
+
+/* left column containers
+----------------------------------------------------------*/
+#contentMain h2 {padding:4px 0 12px 0;}
+
+#contentFull h2 {padding:4px 0 12px 0;}
+
+#contentFull h4 {border-bottom:1px dashed #e4e7dc; padding:4px 0 12px 0;margin-bottom:5px;}
+
+.moduleContentMain {margin:0 0 22px 0; overflow:auto;}
+
+.moduleContentFull {margin:0 0 5px 0; overflow:auto;}
+
+.moduleContentMain img.left {padding:0 6px 0 0; float:left;}
+
+/* right column containers
+----------------------------------------------------------*/
+
+#contentSub h6 {border-bottom:1px dashed #e4e7dc;}
+
+#contentFull h6 {font-style:italic;}
+
+.navSub, .moduleSub {margin:0 0 12px 0; padding:8px 0 6px 0;}
+
+
+/* Top navigation pane
+----------------------------------------------------------*/
+
+#menucontainer ul{
+	margin:0;
+	padding:0;
+	list-style:none;
+	float:left;
+}
+
+#menucontainer ul li {
+	float:left;
+	margin:0 8px;
+}
+
+#menucontainer ul li a, #menucontainer ul li a:visited, #menucontainer ul li a:active {
+	display:block;
+	padding:12px 12px 10px 12px;
+	color: #e2e4dd;
+	font-size:104%;
+	text-decoration: none;
+}
+
+
+#menucontainer ul li a:hover {
+	color:#ffea9b;
+}
+
+#menucontainer ul li.On {background:url(../Content/Images/tabOn.gif) no-repeat bottom center;}
+
+/* BlogStyles
+----------------------------------------------------------*/
+
+ul.blogs, ul.blogPosts {list-style:none;}
+
+
+/* Miscellaneous
+----------------------------------------------------------*/
+
+.floatLeft {float: left;} /*Use this class to float anything to the left*/
+
+.floatRight {float: right;}  /*Use this class to float anything to the right*/
+
+.alignRight {text-align: right;}
+
+.Inline {display: inline;}
+
+.center {margin:0 auto;}  /*Center*/
+
+.clearLayout {clear:both;}  /*Use this class clear layout*/
+
+.disabled {color:#CCC;}
+
+.topSpacer {margin-top: 30px;}
+
+.bottomSpacer {margin-bottom: 20px;}
+
+.displayText {display:none;}
+
+strong { font-weight:bold; }

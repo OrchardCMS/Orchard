@@ -2,7 +2,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>9.0.21022</ProductVersion>
+    <ProductVersion>9.0.30729</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{50B779EA-EC00-4699-84C0-03B395C365D2}</ProjectGuid>
     <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
@@ -219,6 +219,19 @@
     <Content Include="Themes\Orchard\Views\Footer.ascx" />
     <Content Include="Themes\Orchard\Views\Layout.ascx" />
     <Content Include="Themes\Orchard\Views\Menu.ascx" />
+    <Content Include="Themes\SafeMode\Content\Images\background_content.jpg" />
+    <Content Include="Themes\SafeMode\Content\Images\background_footer.jpg" />
+    <Content Include="Themes\SafeMode\Content\Images\background_module.gif" />
+    <Content Include="Themes\SafeMode\Content\Images\background_page.jpg" />
+    <Content Include="Themes\SafeMode\Content\Images\background_pageTop.gif" />
+    <Content Include="Themes\SafeMode\Content\Images\orchardLogo.jpg" />
+    <Content Include="Themes\SafeMode\Styles\site.css" />
+    <Content Include="Themes\SafeMode\Theme.png" />
+    <Content Include="Themes\SafeMode\Theme.txt" />
+    <Content Include="Themes\SafeMode\Views\Document.aspx" />
+    <Content Include="Themes\SafeMode\Views\Footer.ascx" />
+    <Content Include="Themes\SafeMode\Views\Layout.ascx" />
+    <Content Include="Themes\SafeMode\Views\Menu.ascx" />
     <Content Include="Themes\TheAdminClassic\Styles\images\background_header.jpg" />
     <Content Include="Themes\TheAdminClassic\Styles\images\icons.png" />
     <Content Include="Themes\TheAdminClassic\Styles\images\orchardLogo.jpg" />
@@ -277,6 +290,9 @@
           <IISUrl>
           </IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
+          <UseCustomServer>False</UseCustomServer>
+          <CustomServerUrl>
+          </CustomServerUrl>
           <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
         </WebProjectProperties>
       </FlavorProperties>
