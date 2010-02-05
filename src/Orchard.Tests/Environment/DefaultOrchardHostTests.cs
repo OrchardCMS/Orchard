@@ -96,7 +96,7 @@ namespace Orchard.Tests.Environment {
 
         [Test]
         public void DifferentShellInstanceShouldBeReturnedAfterEachCreate() {
-            var host = _container.Resolve<IOrchardHost>();
+            var host = (DefaultOrchardHost)_container.Resolve<IOrchardHost>();
             var runtime1 = host.CreateShell();
             var runtime2 = host.CreateShell();
             Assert.That(runtime1, Is.Not.SameAs(runtime2));

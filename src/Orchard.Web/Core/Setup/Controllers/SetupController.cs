@@ -6,11 +6,8 @@ using Orchard.Logging;
 
 namespace Orchard.Core.Setup.Controllers {
     public class SetupController : Controller {
-        private readonly ISetupService _setupService;
 
-        public SetupController(IOrchardServices services, ISetupService setupService) {
-            _setupService = setupService;
-            Services = services;
+        public SetupController() {
             Logger = NullLogger.Instance;
             T = NullLocalizer.Instance;
         }

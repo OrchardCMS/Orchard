@@ -4,7 +4,9 @@ using Orchard.Logging;
 
 namespace Orchard.Mvc.ViewEngines {
     public class WebFormsViewEngineProvider : IViewEngineProvider {
-
+        public WebFormsViewEngineProvider() {
+            Logger = NullLogger.Instance;
+        }
         static string[] DisabledFormats = new[] { "~/Disabled" };
 
         public ILogger Logger { get; set; }
@@ -26,7 +28,7 @@ namespace Orchard.Mvc.ViewEngines {
                 ViewLocationFormats = DisabledFormats,
                 AreaMasterLocationFormats = DisabledFormats,
                 AreaViewLocationFormats = DisabledFormats,
-                AreaPartialViewLocationFormats=DisabledFormats,
+                AreaPartialViewLocationFormats = DisabledFormats,
             };
 
             // enable /Views/{partialName}

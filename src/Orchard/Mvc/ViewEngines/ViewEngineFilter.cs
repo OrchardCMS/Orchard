@@ -24,6 +24,7 @@ namespace Orchard.Mvc.ViewEngines {
             _themeService = themeService;
             _extensionManager = extensionManager;
             _viewEngineProviders = viewEngineProviders;
+            Logger = NullLogger.Instance;
         }
 
         public ILogger Logger { get; set; }

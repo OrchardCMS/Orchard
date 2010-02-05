@@ -15,7 +15,6 @@ namespace Orchard.Environment {
         private readonly IEnumerable<IModelBinderProvider> _modelBinderProviders;
         private readonly IModelBinderPublisher _modelBinderPublisher;
         private readonly ViewEngineCollection _viewEngines;
-        private readonly IExtensionManager _extensionManager;
         private readonly IEnumerable<IOrchardShellEvents> _events;
 
         public DefaultOrchardShell(
@@ -24,14 +23,12 @@ namespace Orchard.Environment {
             IEnumerable<IModelBinderProvider> modelBinderProviders,
             IModelBinderPublisher modelBinderPublisher,
             ViewEngineCollection viewEngines,
-            IExtensionManager extensionManager,
             IEnumerable<IOrchardShellEvents> events) {
             _routeProviders = routeProviders;
             _routePublisher = routePublisher;
             _modelBinderProviders = modelBinderProviders;
             _modelBinderPublisher = modelBinderPublisher;
             _viewEngines = viewEngines;
-            _extensionManager = extensionManager;
             _events = events;
 
             Logger = NullLogger.Instance;

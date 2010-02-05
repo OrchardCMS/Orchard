@@ -5,6 +5,7 @@ using Autofac.Builder;
 using Autofac.Integration.Web;
 using Autofac.Modules;
 using AutofacContrib.DynamicProxy2;
+using Orchard.Environment.ShellBuilders;
 using Orchard.Extensions;
 using Orchard.Extensions.Loaders;
 
@@ -17,12 +18,10 @@ namespace Orchard.Environment {
             builder.RegisterModule(new ImplicitCollectionSupportModule());
 
             // a single default host implementation is needed for bootstrapping a web app domain
-            builder.Register<DefaultOrchardHost>().As<IOrchardHost>()
-                .SingletonScoped();
-            builder.Register<DefaultCompositionStrategy>().As<ICompositionStrategy>()
-                .SingletonScoped();
-            builder.Register<DefaultOrchardShell>().As<IOrchardShell>()
-                .ContainerScoped().InContext("shell");
+            builder.Register<DefaultOrchardHost>().As<IOrchardHost>().SingletonScoped();
+            builder.Register<DefaultCompositionStrategy>().As<ICompositionStrategy>().SingletonScoped();
+            builder.Register<DefaultShellContainerFactory>().As<IShellContainerFactory>().SingletonScoped();
+            builder.Register<SetupShellContainerFactory>().As<IShellContainerFactory>().SingletonScoped();
 
             // The container provider gives you access to the lowest container at the time, 
             // and dynamically creates a per-request container. The DisposeRequestContainer method
