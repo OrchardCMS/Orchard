@@ -60,7 +60,7 @@ namespace Orchard.Environment.ShellBuilders {
                 builder.Register<SafeModeText>().As<IText>().ContainerScoped();
                 builder.Register<SafeModeSiteService>().As<ISiteService>().ContainerScoped();
 
-                // yes, this is brutal, and if you are reading this, I sincerely appologize.
+                // yes, this is brutal, and if you are reading this, I sincerely apologize.
                 var dependencies = Assembly.Load("Orchard.Setup")
                     .GetExportedTypes()
                     .Where(type => type.IsClass && !type.IsAbstract && typeof(IDependency).IsAssignableFrom(type));
