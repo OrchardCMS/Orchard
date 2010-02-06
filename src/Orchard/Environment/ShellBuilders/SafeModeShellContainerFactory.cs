@@ -5,6 +5,7 @@ using System.Web.Routing;
 using Autofac;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Handlers;
+using Orchard.Data.Migrations;
 using Orchard.Environment.Configuration;
 using Orchard.Extensions;
 using Orchard.Localization;
@@ -37,7 +38,6 @@ namespace Orchard.Environment.ShellBuilders {
             var shellContainer = _container.CreateInnerContainer();
 
             shellContainer.Build(builder => {
-                //review: group by default vs safemode service replacements
                 // standard services needed in safe mode
                 builder.Register<DefaultOrchardShell>().As<IOrchardShell>().ContainerScoped();
                 builder.Register<RoutePublisher>().As<IRoutePublisher>().ContainerScoped();
@@ -50,6 +50,7 @@ namespace Orchard.Environment.ShellBuilders {
                 builder.Register<PageClassBuilder>().As<IPageClassBuilder>().ContainerScoped();
                 builder.Register<Notifier>().As<INotifier>().ContainerScoped();
                 builder.Register<NotifyFilter>().As<IFilterProvider>().ContainerScoped();
+                builder.Register<DatabaseMigrationManager>().As<IDatabaseMigrationManager>().ContainerScoped();
 
                 // safe mode specific implementations of needed service interfaces
                 builder.Register<NullHackInstallationGenerator>().As<IHackInstallationGenerator>().ContainerScoped();

@@ -2,6 +2,7 @@ using Autofac;
 using Autofac.Integration.Web;
 
 namespace Orchard.Environment {
+
     class FiniteContainerProvider : IContainerProvider {
         public FiniteContainerProvider(IContainer applicationContainer) {
             // explicitly create a request container for the life of this object

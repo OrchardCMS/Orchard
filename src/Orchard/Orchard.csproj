@@ -145,6 +145,7 @@
     <Compile Include="Environment\ShellBuilders\IShellContainerFactory.cs" />
     <Compile Include="Environment\ShellBuilders\SafeModeShellContainerFactory.cs" />
     <Compile Include="Environment\Configuration\ShellSettings.cs" />
+    <Compile Include="Environment\StandaloneEnvironment.cs" />
     <Compile Include="Extensions\AreaFolders.cs" />
     <Compile Include="Extensions\ExtensionFolders.cs" />
     <Compile Include="Extensions\Loaders\AreaExtensionLoader.cs" />

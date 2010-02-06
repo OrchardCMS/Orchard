@@ -38,8 +38,14 @@ namespace Orchard.Environment {
         void IOrchardHost.Initialize() {
             Initialize();
         }
+
         void IOrchardHost.EndRequest() {
             EndRequest();
+        }
+
+        IStandaloneEnvironment IOrchardHost.CreateStandaloneEnvironment(IShellSettings shellSettings) {
+            var shellContainer = CreateShellContainer(shellSettings);
+            return new StandaloneEnvironment(shellContainer);
         }
 
         protected virtual void Initialize() {
@@ -73,18 +79,18 @@ namespace Orchard.Environment {
             var settings = _shellSettingsLoader.LoadSettings();
             if (settings.Any()) {
                 //TEMP: multi-tenancy not implemented yet
-                foreach (var factory in _shellContainerFactories) {
-                    var container = factory.CreateContainer(settings.Single());
-                    if (container != null)
-                        return container;
-                }
+                var shellContainer = CreateShellContainer(settings.Single());
+                if (shellContainer != null)
+                    return shellContainer;
             }
-            else {
-                foreach (var factory in _shellContainerFactories) {
-                    var container = factory.CreateContainer(null);
-                    if (container != null)
-                        return container;
-                }
+            return CreateShellContainer(null);
+        }
+
+        private IContainer CreateShellContainer(IShellSettings shellSettings) {
+            foreach (var factory in _shellContainerFactories) {
+                var container = factory.CreateContainer(shellSettings);
+                if (container != null)
+                    return container;
             }
             return null;
         }
@@ -117,6 +123,7 @@ namespace Orchard.Environment {
                 containerProvider.DisposeRequestContainer();
             }
         }
+
 
     }
 }
