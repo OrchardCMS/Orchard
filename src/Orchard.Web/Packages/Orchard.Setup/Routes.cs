@@ -15,13 +15,16 @@ namespace Orchard.Setup {
             return new[] {
                              new RouteDescriptor {
                                                      Route = new Route(
-                                                         "Setup",
+                                                         "{controller}/{action}",
                                                          new RouteValueDictionary {
                                                                                       {"area", "Orchard.Setup"},
-                                                                                      {"controller", "Orchard.Setup"},
+                                                                                      {"controller", "Setup"},
                                                                                       {"action", "Index"}
                                                                                   },
-                                                         new RouteValueDictionary(),
+                                                         new RouteValueDictionary {
+                                                                                      {"area", "Orchard.Setup"},
+                                                                                      {"controller", "Setup"},
+                                                                                  },
                                                          new RouteValueDictionary {
                                                                                       {"area", "Orchard.Setup"}
                                                                                   },

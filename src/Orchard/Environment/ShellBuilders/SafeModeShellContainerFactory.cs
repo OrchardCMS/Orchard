@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
@@ -58,10 +60,27 @@ namespace Orchard.Environment.ShellBuilders {
                 builder.Register<SafeModeText>().As<IText>().ContainerScoped();
                 builder.Register<SafeModeSiteService>().As<ISiteService>().ContainerScoped();
 
+                // yes, this is brutal, and if you are reading this, I sincerely appologize.
+                var dependencies = Assembly.Load("Orchard.Setup")
+                    .GetExportedTypes()
+                    .Where(type => type.IsClass && !type.IsAbstract && typeof(IDependency).IsAssignableFrom(type));
 
-                //review: discovery an registration from limited number of modules (e.g. setup) should also be done here
-                //review: this should come from the limited number of added modules
-                builder.Register<SetupRouteProvider>().As<IRouteProvider>().ContainerScoped();
+                foreach (var serviceType in dependencies) {
+                    foreach (var interfaceType in serviceType.GetInterfaces()) {
+                        if (typeof(IDependency).IsAssignableFrom(interfaceType)) {
+                            var registrar = builder.Register(serviceType).As(interfaceType);
+                            if (typeof(ISingletonDependency).IsAssignableFrom(interfaceType)) {
+                                registrar.SingletonScoped();
+                            }
+                            else if (typeof(ITransientDependency).IsAssignableFrom(interfaceType)) {
+                                registrar.FactoryScoped();
+                            }
+                            else {
+                                registrar.ContainerScoped();
+                            }
+                        }
+                    }
+                }
             });
 
             shellContainer.Build(builder => {
@@ -71,26 +90,6 @@ namespace Orchard.Environment.ShellBuilders {
             });
 
             return shellContainer;
-        }
-
-        //review: this should come from the subset of modules, not this factory
-        class SetupRouteProvider : IRouteProvider {
-            public IEnumerable<RouteDescriptor> GetRoutes() {
-                var routes = new List<RouteDescriptor>();
-                GetRoutes(routes);
-                return routes;
-            }
-
-            public void GetRoutes(ICollection<RouteDescriptor> routes) {
-                routes.Add(new RouteDescriptor {
-                    Priority = 100,
-                    Route = new Route("{controller}/{action}",
-                        new RouteValueDictionary { { "Area", "Orchard.Setup" }, { "Controller", "Setup" }, { "Action", "Index" } },
-                        new RouteValueDictionary { { "Area", "Orchard.Setup" }, { "Controller", "Setup" }, { "Action", "Index" } },
-                        new RouteValueDictionary { { "Area", "Orchard.Setup" } },
-                        new MvcRouteHandler())
-                });
-            }
         }
 
         class SafeModeText : IText {
