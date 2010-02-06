@@ -11,7 +11,7 @@ using Orchard.Core.Scheduling.Services;
 using Orchard.Data;
 using Orchard.Tasks;
 using Orchard.Tasks.Scheduling;
-using Orchard.Tests.Packages;
+using Orchard.Tests.Modules;
 
 namespace Orchard.Core.Tests.Scheduling {
     [TestFixture]

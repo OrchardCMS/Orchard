@@ -85,9 +85,9 @@
     <Compile Include="Scheduling\ScheduledTaskExecutorTests.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Orchard.Tests.Packages\Orchard.Tests.Packages.csproj">
+    <ProjectReference Include="..\Orchard.Tests.Modules\Orchard.Tests.Modules.csproj">
       <Project>{6CB3EB30-F725-45C0-9742-42599BA8E8D2}</Project>
-      <Name>Orchard.Tests.Packages</Name>
+      <Name>Orchard.Tests.Modules</Name>
     </ProjectReference>
     <ProjectReference Include="..\Orchard.Tests\Orchard.Tests.csproj">
       <Project>{ABC826D4-2FA1-4F2F-87DE-E6095F653810}</Project>

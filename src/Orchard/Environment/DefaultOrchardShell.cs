@@ -51,15 +51,15 @@ namespace Orchard.Environment {
         private void AddOrchardLocationsFormats() {
 
             IEnumerable<string> orchardMasterLocationFormats = new[] {
-                    "~/Packages/{2}/Views/{1}/{0}.master",
-                    "~/Packages/{2}/Views/Shared/{0}.master",
+                    "~/Modules/{2}/Views/{1}/{0}.master",
+                    "~/Modules/{2}/Views/Shared/{0}.master",
                 };
 
             IEnumerable<string> orchardLocationFormats = new[] {
-                    "~/Packages/{2}/Views/{1}/{0}.aspx",
-                    "~/Packages/{2}/Views/{1}/{0}.ascx",
-                    "~/Packages/{2}/Views/Shared/{0}.aspx",
-                    "~/Packages/{2}/Views/Shared/{0}.ascx",
+                    "~/Modules/{2}/Views/{1}/{0}.aspx",
+                    "~/Modules/{2}/Views/{1}/{0}.ascx",
+                    "~/Modules/{2}/Views/Shared/{0}.aspx",
+                    "~/Modules/{2}/Views/Shared/{0}.ascx",
                 };
 
             var viewEngine = _viewEngines.OfType<VirtualPathProviderViewEngine>().Single();

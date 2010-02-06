@@ -104,47 +104,47 @@
       <Project>{9916839C-39FC-4CEB-A5AF-89CA7E87119F}</Project>
       <Name>Orchard.Core</Name>
     </ProjectReference>
-    <ProjectReference Include="Packages\Orchard.Blogs\Orchard.Blogs.csproj">
+    <ProjectReference Include="Modules\Orchard.Blogs\Orchard.Blogs.csproj">
       <Project>{63FBD4D9-E1DA-4A7B-AA6A-D6074FE50867}</Project>
       <Name>Orchard.Blogs</Name>
     </ProjectReference>
-    <ProjectReference Include="Packages\Orchard.Comments\Orchard.Comments.csproj">
+    <ProjectReference Include="Modules\Orchard.Comments\Orchard.Comments.csproj">
       <Project>{14C049FD-B35B-415A-A824-87F26B26E7FD}</Project>
       <Name>Orchard.Comments</Name>
     </ProjectReference>
-    <ProjectReference Include="Packages\Orchard.DevTools\Orchard.DevTools.csproj">
+    <ProjectReference Include="Modules\Orchard.DevTools\Orchard.DevTools.csproj">
       <Project>{67C1D3AF-A0EC-46B2-BAE1-DF1DA8E0B890}</Project>
       <Name>Orchard.DevTools</Name>
     </ProjectReference>
-    <ProjectReference Include="Packages\Orchard.Media\Orchard.Media.csproj">
+    <ProjectReference Include="Modules\Orchard.Media\Orchard.Media.csproj">
       <Project>{D9A7B330-CD22-4DA1-A95A-8DE1982AD8EB}</Project>
       <Name>Orchard.Media</Name>
     </ProjectReference>
-    <ProjectReference Include="Packages\Orchard.Pages\Orchard.Pages.csproj">
+    <ProjectReference Include="Modules\Orchard.Pages\Orchard.Pages.csproj">
       <Project>{4A9C04A6-0986-4A92-A610-5F59FF273FB9}</Project>
       <Name>Orchard.Pages</Name>
     </ProjectReference>
-    <ProjectReference Include="Packages\Orchard.Roles\Orchard.Roles.csproj">
+    <ProjectReference Include="Modules\Orchard.Roles\Orchard.Roles.csproj">
       <Project>{D10AD48F-407D-4DB5-A328-173EC7CB010F}</Project>
       <Name>Orchard.Roles</Name>
     </ProjectReference>
-    <ProjectReference Include="Packages\Orchard.Setup\Orchard.Setup.csproj">
+    <ProjectReference Include="Modules\Orchard.Setup\Orchard.Setup.csproj">
       <Project>{8C7FCBC2-E6E1-405E-BFB5-D8D9E67A09C4}</Project>
       <Name>Orchard.Setup</Name>
     </ProjectReference>
-    <ProjectReference Include="Packages\Orchard.Tags\Orchard.Tags.csproj">
+    <ProjectReference Include="Modules\Orchard.Tags\Orchard.Tags.csproj">
       <Project>{5D0F00F0-26C9-4785-AD61-B85710C60EB0}</Project>
       <Name>Orchard.Tags</Name>
     </ProjectReference>
-    <ProjectReference Include="Packages\Orchard.Users\Orchard.Users.csproj">
+    <ProjectReference Include="Modules\Orchard.Users\Orchard.Users.csproj">
       <Project>{79AED36E-ABD0-4747-93D3-8722B042454B}</Project>
       <Name>Orchard.Users</Name>
     </ProjectReference>
-    <ProjectReference Include="Packages\Orchard.Sandbox\Orchard.Sandbox.csproj">
+    <ProjectReference Include="Modules\Orchard.Sandbox\Orchard.Sandbox.csproj">
       <Project>{17C44253-65A2-4597-98C7-16EE576824B6}</Project>
       <Name>Orchard.Sandbox</Name>
     </ProjectReference>
-    <ProjectReference Include="Packages\TinyMce\TinyMce.csproj">
+    <ProjectReference Include="Modules\TinyMce\TinyMce.csproj">
       <Project>{954CA994-D204-468B-9D69-51F6AD3E1C29}</Project>
       <Name>TinyMce</Name>
     </ProjectReference>

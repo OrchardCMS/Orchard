@@ -9,17 +9,17 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orchard.Tests", "Orchard.Te
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orchard.Web.Tests", "Orchard.Web.Tests\Orchard.Web.Tests.csproj", "{F112851D-B023-4746-B6B1-8D2E5AD8F7AA}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Packages", "Packages", "{E9C9F120-07BA-4DFB-B9C3-3AFB9D44C9D5}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Modules", "Modules", "{E9C9F120-07BA-4DFB-B9C3-3AFB9D44C9D5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TinyMce", "Orchard.Web\Packages\TinyMce\TinyMce.csproj", "{954CA994-D204-468B-9D69-51F6AD3E1C29}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TinyMce", "Orchard.Web\Modules\TinyMce\TinyMce.csproj", "{954CA994-D204-468B-9D69-51F6AD3E1C29}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orchard.Media", "Orchard.Web\Packages\Orchard.Media\Orchard.Media.csproj", "{D9A7B330-CD22-4DA1-A95A-8DE1982AD8EB}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orchard.Media", "Orchard.Web\Modules\Orchard.Media\Orchard.Media.csproj", "{D9A7B330-CD22-4DA1-A95A-8DE1982AD8EB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orchard.Users", "Orchard.Web\Packages\Orchard.Users\Orchard.Users.csproj", "{79AED36E-ABD0-4747-93D3-8722B042454B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orchard.Users", "Orchard.Web\Modules\Orchard.Users\Orchard.Users.csproj", "{79AED36E-ABD0-4747-93D3-8722B042454B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orchard.Tests.Packages", "Orchard.Tests.Packages\Orchard.Tests.Packages.csproj", "{6CB3EB30-F725-45C0-9742-42599BA8E8D2}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orchard.Tests.Modules", "Orchard.Tests.Modules\Orchard.Tests.Modules.csproj", "{6CB3EB30-F725-45C0-9742-42599BA8E8D2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orchard.Roles", "Orchard.Web\Packages\Orchard.Roles\Orchard.Roles.csproj", "{D10AD48F-407D-4DB5-A328-173EC7CB010F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orchard.Roles", "Orchard.Web\Modules\Orchard.Roles\Orchard.Roles.csproj", "{D10AD48F-407D-4DB5-A328-173EC7CB010F}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orchard.Core", "Orchard.Web\Core\Orchard.Core.csproj", "{9916839C-39FC-4CEB-A5AF-89CA7E87119F}"
 EndProject
@@ -27,19 +27,19 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orchard.Core.Tests", "Orcha
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{74E681ED-FECC-4034-B9BD-01B0BB1BDECA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orchard.Sandbox", "Orchard.Web\Packages\Orchard.Sandbox\Orchard.Sandbox.csproj", "{17C44253-65A2-4597-98C7-16EE576824B6}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orchard.Sandbox", "Orchard.Web\Modules\Orchard.Sandbox\Orchard.Sandbox.csproj", "{17C44253-65A2-4597-98C7-16EE576824B6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orchard.Blogs", "Orchard.Web\Packages\Orchard.Blogs\Orchard.Blogs.csproj", "{63FBD4D9-E1DA-4A7B-AA6A-D6074FE50867}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orchard.Blogs", "Orchard.Web\Modules\Orchard.Blogs\Orchard.Blogs.csproj", "{63FBD4D9-E1DA-4A7B-AA6A-D6074FE50867}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orchard.Comments", "Orchard.Web\Packages\Orchard.Comments\Orchard.Comments.csproj", "{14C049FD-B35B-415A-A824-87F26B26E7FD}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orchard.Comments", "Orchard.Web\Modules\Orchard.Comments\Orchard.Comments.csproj", "{14C049FD-B35B-415A-A824-87F26B26E7FD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orchard.DevTools", "Orchard.Web\Packages\Orchard.DevTools\Orchard.DevTools.csproj", "{67C1D3AF-A0EC-46B2-BAE1-DF1DA8E0B890}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orchard.DevTools", "Orchard.Web\Modules\Orchard.DevTools\Orchard.DevTools.csproj", "{67C1D3AF-A0EC-46B2-BAE1-DF1DA8E0B890}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orchard.Tags", "Orchard.Web\Packages\Orchard.Tags\Orchard.Tags.csproj", "{5D0F00F0-26C9-4785-AD61-B85710C60EB0}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orchard.Tags", "Orchard.Web\Modules\Orchard.Tags\Orchard.Tags.csproj", "{5D0F00F0-26C9-4785-AD61-B85710C60EB0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orchard.Pages", "Orchard.Web\Packages\Orchard.Pages\Orchard.Pages.csproj", "{4A9C04A6-0986-4A92-A610-5F59FF273FB9}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orchard.Pages", "Orchard.Web\Modules\Orchard.Pages\Orchard.Pages.csproj", "{4A9C04A6-0986-4A92-A610-5F59FF273FB9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orchard.Setup", "Orchard.Web\Packages\Orchard.Setup\Orchard.Setup.csproj", "{8C7FCBC2-E6E1-405E-BFB5-D8D9E67A09C4}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orchard.Setup", "Orchard.Web\Modules\Orchard.Setup\Orchard.Setup.csproj", "{8C7FCBC2-E6E1-405E-BFB5-D8D9E67A09C4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

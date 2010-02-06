@@ -19,7 +19,7 @@ using Orchard.Core.Feeds.Models;
 using Orchard.Core.Feeds.Rss;
 using Orchard.Core.Feeds.StandardBuilders;
 using Orchard.Mvc.Results;
-using Orchard.Tests.Packages;
+using Orchard.Tests.Modules;
 using Orchard.Tests.Stubs;
 
 namespace Orchard.Core.Tests.Feeds.Controllers {

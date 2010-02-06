@@ -149,11 +149,11 @@
     <Compile Include="XmlRpc\XmlRpcContext.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Common\Package.txt" />
-    <Content Include="Settings\Package.txt" />
+    <Content Include="Common\Module.txt" />
+    <Content Include="Settings\Module.txt" />
     <Content Include="Settings\Views\Admin\Index.ascx" />
     <Content Include="Web.config" />
-    <Content Include="XmlRpc\Package.txt" />
+    <Content Include="XmlRpc\Module.txt" />
     <Content Include="XmlRpc\Views\Home\Index.aspx" />
   </ItemGroup>
   <ItemGroup>
@@ -170,7 +170,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Common\Views\Web.config" />
-    <Content Include="Themes\Package.txt" />
+    <Content Include="Themes\Module.txt" />
     <Content Include="Themes\Views\Admin\Index.aspx" />
   </ItemGroup>
   <ItemGroup>
@@ -179,8 +179,8 @@
     <Content Include="Common\Views\EditorTemplates\Parts\Common.Routable.ascx" />
     <Content Include="Common\Views\EditorTemplates\Parts\Common.Body.ascx" />
     <Content Include="Common\Views\EditorTemplates\Parts\Common.Owner.ascx" />
-    <Content Include="Feeds\Package.txt" />
-    <Content Include="Scheduling\Package.txt" />
+    <Content Include="Feeds\Module.txt" />
+    <Content Include="Scheduling\Module.txt" />
     <Content Include="Settings\Views\EditorTemplates\Items\Settings.Site.ascx" />
     <Content Include="Themes\Scripts\jquery-1.4.1.js" />
     <Content Include="Themes\Scripts\jquery-1.4.1.min.js" />

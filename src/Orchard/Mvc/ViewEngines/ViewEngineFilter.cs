@@ -52,17 +52,17 @@ namespace Orchard.Mvc.ViewEngines {
             }
 
 
-            var packages = _extensionManager.ActiveExtensions()
-                .Where(x => x.Descriptor.ExtensionType == "Package");
+            var modules = _extensionManager.ActiveExtensions()
+                .Where(x => x.Descriptor.ExtensionType == "Module");
 
-            var packageLocations = packages.Select(x => Path.Combine(x.Descriptor.Location, x.Descriptor.Name));
-            var packageViewEngines = _viewEngineProviders
-                .Select(x => x.CreatePackagesViewEngine(new CreatePackagesViewEngineParams { VirtualPaths = packageLocations }));
-            Logger.Debug("Package locations:\r\n\t-{0}", string.Join("\r\n\t-", packageLocations.ToArray()));
+            var moduleLocations = modules.Select(x => Path.Combine(x.Descriptor.Location, x.Descriptor.Name));
+            var moduleViewEngines = _viewEngineProviders
+                .Select(x => x.CreateModulesViewEngine(new CreateModulesViewEngineParams { VirtualPaths = moduleLocations }));
+            Logger.Debug("Module locations:\r\n\t-{0}", string.Join("\r\n\t-", moduleLocations.ToArray()));
 
             var requestViewEngines = new ViewEngineCollection(
                 themeViewEngines
-                    .Concat(packageViewEngines)
+                    .Concat(moduleViewEngines)
                     .Concat(_viewEngines.Where(x => x.GetType().Assembly != typeof(LayoutViewEngine).Assembly))
                     .ToArray());
 
