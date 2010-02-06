@@ -8,7 +8,6 @@ using Orchard.Environment.ShellBuilders;
 using Orchard.Extensions;
 using Orchard.Mvc;
 using Orchard.Mvc.ViewEngines;
-using Orchard.Tasks;
 
 namespace Orchard.Environment {
     public class DefaultOrchardHost : IOrchardHost {

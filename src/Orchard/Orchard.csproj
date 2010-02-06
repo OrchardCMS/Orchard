@@ -225,7 +225,7 @@
     <Compile Include="Mvc\Html\FileRegistrationContext.cs" />
     <Compile Include="Mvc\Html\MvcFormAntiForgeryPost.cs" />
     <Compile Include="Mvc\Html\SiteServiceExtensions.cs" />
-    <Compile Include="Tasks\FiniteContainerProvider.cs" />
+    <Compile Include="Environment\FiniteContainerProvider.cs" />
     <Compile Include="Tasks\Scheduling\IScheduledTaskHandler.cs" />
     <Compile Include="Tasks\Scheduling\IScheduledTaskManager.cs" />
     <Compile Include="Tasks\Scheduling\ScheduledTaskContext.cs" />
