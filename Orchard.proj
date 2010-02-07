@@ -20,6 +20,7 @@
   <Target Name ="Build">
     <CallTarget Targets="Clean"/>
     <CallTarget Targets="Compile"/>
+    <CallTarget Targets="Test"/>
     <CallTarget Targets="Package"/>
   </Target>
 
@@ -44,6 +45,13 @@
   </Target>
 
 
+<!-- Testing -->
+
+  <Target Name ="Test">
+		<Exec Command="$(LibFolder)\nunit\nunit-console-x86.exe /xml=$(BuildFolder)\Orchard.Tests.xml $(CompileFolder)\Orchard.Core.Tests.dll $(CompileFolder)\Orchard.Tests.dll $(CompileFolder)\Orchard.Tests.Packages.dll $(CompileFolder)\Orchard.Web.Tests.dll" />
+  </Target>
+
+
 <!-- Packaging -->
   
   <Target Name="Package-Stage">
@@ -53,20 +61,40 @@
       <Stage-Web Include="$(WebSitesFolder)\Orchard.Web\**\*" />
       <Stage-Core Include="$(WebSitesFolder)\Orchard.Core\**\*" Exclude="@(Stage-Bin-Exclude)" />
       <Stage-Packages Include="$(WebSitesFolder)\**\*" Exclude="@(Stage-Web);@(Stage-Core);@(Stage-Bin-Exclude)" />
+      <Stage-License Include="$(MSBuildProjectDirectory)\*.txt" />
     </ItemGroup>
 
-    <Copy SourceFiles="@(Stage-Web)" DestinationFolder="$(StageFolder)\%(RecursiveDir)" />
+    <Copy SourceFiles="@(Stage-Web);@(Stage-License)" DestinationFolder="$(StageFolder)\%(RecursiveDir)" />
     <Copy SourceFiles="@(Stage-Core)" DestinationFolder="$(StageFolder)\Core\%(RecursiveDir)" />
     <Copy SourceFiles="@(Stage-Packages)" DestinationFolder="$(StageFolder)\Packages\%(RecursiveDir)" />
   </Target>
 
-    
   <Target Name="Package-Zip">
     <ItemGroup>
+      <Zip-Exclude Include="
+        $(MSBuildProjectDirectory)\src\**\bin\**\*;
+        $(MSBuildProjectDirectory)\src\**\obj\**\*;
+        $(MSBuildProjectDirectory)\**\App_Data\**\*;
+        $(MSBuildProjectDirectory)\**\_ReSharper*\**\*;
+        $(MSBuildProjectDirectory)\**\*.sln.cache;
+        $(MSBuildProjectDirectory)\**\*.suo;
+        $(MSBuildProjectDirectory)\**\*.user;
+        $(MSBuildProjectDirectory)\**\*.patch;
+        $(MSBuildProjectDirectory)\**\*.hg;
+        " />
+      
       <Zip-Stage Include="$(StageFolder)\**\*" />
+      
+      <Zip-Source Include="
+        $(MSBuildProjectDirectory)\lib\**\*;
+        $(MSBuildProjectDirectory)\src\**\*;
+        $(MSBuildProjectDirectory)\*.txt;
+        " Exclude="@(Zip-Exclude)" />
+        
     </ItemGroup>
 
 		<Zip Files="@(Zip-Stage)" WorkingDirectory="$(StageFolder)" ZipFileName="$(BuildFolder)\Orchard.Web.zip" />
+		<Zip Files="@(Zip-Source)" WorkingDirectory="$(MSBuildProjectDirectory)" ZipFileName="$(BuildFolder)\Orchard.Source.zip" />
   </Target>
 
 </Project>
