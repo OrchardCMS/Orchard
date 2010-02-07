@@ -6,12 +6,12 @@ namespace Orchard.Mvc.ViewEngines {
         public string VirtualPath { get; set; }
     }
 
-    public class CreatePackagesViewEngineParams {
+    public class CreateModulesViewEngineParams {
         public IEnumerable<string> VirtualPaths { get; set; }
     }
 
     public interface IViewEngineProvider : IDependency {
         IViewEngine CreateThemeViewEngine(CreateThemeViewEngineParams parameters);
-        IViewEngine CreatePackagesViewEngine(CreatePackagesViewEngineParams parameters);
+        IViewEngine CreateModulesViewEngine(CreateModulesViewEngineParams parameters);
     }
 }

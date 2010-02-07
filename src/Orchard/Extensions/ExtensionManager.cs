@@ -41,7 +41,7 @@ namespace Orchard.Extensions {
         }
 
         private static ExtensionDescriptor GetDescriptorForExtension(string name, IExtensionFolders folder) {
-            string extensionType = folder is ThemeFolders ? "Theme" : "Package";
+            string extensionType = folder is ThemeFolders ? "Theme" : "Module";
             var parseResult = folder.ParseManifest(name);
             var mapping = (Mapping)parseResult.YamlDocument.Root;
             var fields = mapping.Entities
@@ -83,8 +83,8 @@ namespace Orchard.Extensions {
             if (String.Equals(extensionType, "Theme", StringComparison.OrdinalIgnoreCase)) {
                 targetFolder = PathHelpers.GetPhysicalPath("~/Themes");
             }
-            else if (String.Equals(extensionType, "Package", StringComparison.OrdinalIgnoreCase)) {
-                targetFolder = PathHelpers.GetPhysicalPath("~/Packages");
+            else if (String.Equals(extensionType, "Module", StringComparison.OrdinalIgnoreCase)) {
+                targetFolder = PathHelpers.GetPhysicalPath("~/Modules");
             }
             else {
                 throw new ArgumentException(T("extensionType was not recognized").ToString());
@@ -121,8 +121,8 @@ namespace Orchard.Extensions {
             if (String.Equals(extensionType, "Theme", StringComparison.OrdinalIgnoreCase)) {
                 targetFolder = PathHelpers.GetPhysicalPath("~/Themes");
             }
-            else if (String.Equals(extensionType, "Package", StringComparison.OrdinalIgnoreCase)) {
-                targetFolder = PathHelpers.GetPhysicalPath("~/Packages");
+            else if (String.Equals(extensionType, "Module", StringComparison.OrdinalIgnoreCase)) {
+                targetFolder = PathHelpers.GetPhysicalPath("~/Modules");
             }
             else {
                 throw new ArgumentException(T("extensionType was not recognized").ToString());
@@ -138,7 +138,7 @@ namespace Orchard.Extensions {
             //TODO: this component needs access to some "current settings" to know which are active
             foreach (var descriptor in AvailableExtensions()) {
                 // Extensions that are Themes don't have buildable components.
-                if (String.Equals(descriptor.ExtensionType, "Package", StringComparison.OrdinalIgnoreCase)) {
+                if (String.Equals(descriptor.ExtensionType, "Module", StringComparison.OrdinalIgnoreCase)) {
                     yield return BuildEntry(descriptor);
                 }
             }

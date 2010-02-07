@@ -37,8 +37,8 @@ namespace Orchard.Environment {
             builder.Register<PrecompiledExtensionLoader>().As<IExtensionLoader>().SingletonScoped();
             builder.Register<DynamicExtensionLoader>().As<IExtensionLoader>().SingletonScoped();
 
-            builder.Register<PackageFolders>().As<IExtensionFolders>()
-                .WithArguments(new NamedParameter("paths", new[] { "~/Core", "~/Packages" }))
+            builder.Register<ModuleFolders>().As<IExtensionFolders>()
+                .WithArguments(new NamedParameter("paths", new[] { "~/Core", "~/Modules" }))
                 .SingletonScoped();
             builder.Register<AreaFolders>().As<IExtensionFolders>()
                 .WithArguments(new NamedParameter("paths", new[] { "~/Areas" }))

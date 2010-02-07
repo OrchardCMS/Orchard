@@ -6,7 +6,7 @@ namespace Orchard.Core.Common {
     public class Permissions : IPermissionProvider {
         public static readonly Permission ChangeOwner = new Permission { Name = "ChangeOwner", Description = "Change the owner of content items" };
 
-        public string PackageName {
+        public string ModuleName {
             get { return "Common"; }
         }
 

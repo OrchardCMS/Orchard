@@ -7,7 +7,7 @@ namespace Orchard.Core.Themes {
         public static readonly Permission ManageThemes = new Permission { Description = "Manage Themes", Name = "ManageThemes" };
         public static readonly Permission ApplyTheme = new Permission { Description = "Apply a Theme", Name = "ApplyTheme" };
 
-        public string PackageName {
+        public string ModuleName {
             get {
                 return "Themes";
             }

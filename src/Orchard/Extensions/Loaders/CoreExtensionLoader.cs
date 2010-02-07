@@ -13,13 +13,13 @@ namespace Orchard.Extensions.Loaders {
                 return new ExtensionEntry {
                     Descriptor = descriptor,
                     Assembly = assembly,
-                    ExportedTypes = assembly.GetExportedTypes().Where(x => IsTypeFromPackage(x, descriptor))
+                    ExportedTypes = assembly.GetExportedTypes().Where(x => IsTypeFromModule(x, descriptor))
                 };
             }
             return null;
         }
 
-        private static bool IsTypeFromPackage(Type type, ExtensionDescriptor descriptor) {
+        private static bool IsTypeFromModule(Type type, ExtensionDescriptor descriptor) {
             return (type.Namespace + ".").StartsWith("Orchard.Core." + descriptor.Name + ".");
         }
     }

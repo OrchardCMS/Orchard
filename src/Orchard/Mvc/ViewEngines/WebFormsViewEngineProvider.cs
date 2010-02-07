@@ -12,10 +12,10 @@ namespace Orchard.Mvc.ViewEngines {
         public ILogger Logger { get; set; }
 
         public IViewEngine CreateThemeViewEngine(CreateThemeViewEngineParams parameters) {
-            // Area: if "area" in RouteData. Url hit for package...
+            // Area: if "area" in RouteData. Url hit for module...
             // Area-Layout Paths - no-op because LayoutViewEngine uses multi-pass instead of layout paths
             // Area-View Paths - no-op because LayoutViewEngine relies entirely on Partial view resolution
-            // Area-Partial Paths - enable theming views associated with a package based on the route
+            // Area-Partial Paths - enable theming views associated with a module based on the route
 
             // Layout Paths - no-op because LayoutViewEngine uses multi-pass instead of layout paths
             // View Paths - no-op because LayoutViewEngine relies entirely on Partial view resolution
@@ -53,15 +53,15 @@ namespace Orchard.Mvc.ViewEngines {
             return viewEngine;
         }
 
-        public IViewEngine CreatePackagesViewEngine(CreatePackagesViewEngineParams parameters) {
+        public IViewEngine CreateModulesViewEngine(CreateModulesViewEngineParams parameters) {
             var areaFormats = new[] {
                                         "~/Core/{2}/Views/{1}/{0}.ascx",
                                         "~/Core/{2}/Views/{1}/{0}.aspx",
-                                        "~/Packages/{2}/Views/{1}/{0}.ascx",
-                                        "~/Packages/{2}/Views/{1}/{0}.aspx",
+                                        "~/Modules/{2}/Views/{1}/{0}.ascx",
+                                        "~/Modules/{2}/Views/{1}/{0}.aspx",
                                     };
 
-            Logger.Debug("AreaFormats (package): \r\n\t-{0}", string.Join("\r\n\t-", areaFormats));
+            Logger.Debug("AreaFormats (module): \r\n\t-{0}", string.Join("\r\n\t-", areaFormats));
 
             var universalFormats = parameters.VirtualPaths
                 .SelectMany(x => new[] {
@@ -70,7 +70,7 @@ namespace Orchard.Mvc.ViewEngines {
                                        })
                 .ToArray();
 
-            Logger.Debug("UniversalFormats (package): \r\n\t-{0}", string.Join("\r\n\t-", universalFormats));
+            Logger.Debug("UniversalFormats (module): \r\n\t-{0}", string.Join("\r\n\t-", universalFormats));
 
             var viewEngine = new WebFormViewEngine {
                 MasterLocationFormats = DisabledFormats,

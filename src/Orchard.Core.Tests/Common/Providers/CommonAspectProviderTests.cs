@@ -14,7 +14,7 @@ using Orchard.ContentManagement;
 using Orchard.ContentManagement.Handlers;
 using Orchard.ContentManagement.Records;
 using Orchard.Security;
-using Orchard.Tests.Packages;
+using Orchard.Tests.Modules;
 
 namespace Orchard.Core.Tests.Common.Providers {
     [TestFixture]

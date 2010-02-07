@@ -6,7 +6,7 @@ namespace Orchard.Core.Settings {
         public static readonly Permission ManageSettings = new Permission { Name = "ManageSettings", Description = "Manage site settings" };
         public static readonly Permission ChangeSuperuser = new Permission { Name = "ChangeSuperuser", Description = "Change the superuser for the site" };
 
-        public string PackageName {
+        public string ModuleName {
             get { return "Settings"; }
         }
 

@@ -7,7 +7,7 @@ namespace Orchard.Security {
         public static readonly Permission AccessAdminPanel = new Permission { Name = "AccessAdminPanel", Description = "Access admin panel" };
         public static readonly Permission AccessFrontEnd = new Permission { Name = "AccessFrontEnd", Description = "Access site front-end" };
 
-        public string PackageName {
+        public string ModuleName {
             get {
                 // This is a lie, but it enables the permissions and stereotypes to be created
                 return "Common";
