@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 
+<!-- Initialization -->
+
 	<PropertyGroup>
 		<LibFolder>$(MSBuildProjectDirectory)\lib</LibFolder>
 		<SrcFolder>$(MSBuildProjectDirectory)\src</SrcFolder>
@@ -11,13 +13,23 @@
 		<StageFolder>$(BuildFolder)\Stage</StageFolder>
 	</PropertyGroup>
 
+  <Import Project="$(LibFolder)\msbuild\MSBuild.Community.Tasks.Targets"/>
+
+<!-- Coordinating Targets -->
 
   <Target Name ="Build">
     <CallTarget Targets="Clean"/>
     <CallTarget Targets="Compile"/>
-    <CallTarget Targets="Stage"/>
+    <CallTarget Targets="Package"/>
   </Target>
 
+  <Target Name="Package">
+    <CallTarget Targets="Package-Stage"/>
+    <CallTarget Targets="Package-Zip"/>
+  </Target>
+
+
+<!-- Building -->
 
 	<Target Name="Clean">
 		<MSBuild Projects="$(SrcFolder)\Orchard.sln" Targets="Clean" />
@@ -31,8 +43,10 @@
       Properties="Configuration=Release;OutputPath=$(CompileFolder)" />      
   </Target>
 
+
+<!-- Packaging -->
   
-  <Target Name="Stage">
+  <Target Name="Package-Stage">
     <ItemGroup>
       <Stage-Bin-Exclude Include="$(WebSitesFolder)\**\bin\**\*" />
       
@@ -44,6 +58,15 @@
     <Copy SourceFiles="@(Stage-Web)" DestinationFolder="$(StageFolder)\%(RecursiveDir)" />
     <Copy SourceFiles="@(Stage-Core)" DestinationFolder="$(StageFolder)\Core\%(RecursiveDir)" />
     <Copy SourceFiles="@(Stage-Packages)" DestinationFolder="$(StageFolder)\Packages\%(RecursiveDir)" />
+  </Target>
+
+    
+  <Target Name="Package-Zip">
+    <ItemGroup>
+      <Zip-Stage Include="$(StageFolder)\**\*" />
+    </ItemGroup>
+
+		<Zip Files="@(Zip-Stage)" WorkingDirectory="$(StageFolder)" ZipFileName="$(BuildFolder)\Orchard.Web.zip" />
   </Target>
 
 </Project>
