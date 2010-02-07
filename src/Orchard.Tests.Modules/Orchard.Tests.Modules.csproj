@@ -8,8 +8,8 @@
     <ProjectGuid>{6CB3EB30-F725-45C0-9742-42599BA8E8D2}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Orchard.Tests.Packages</RootNamespace>
-    <AssemblyName>Orchard.Tests.Packages</AssemblyName>
+    <RootNamespace>Orchard.Tests.Modules</RootNamespace>
+    <AssemblyName>Orchard.Tests.Modules</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
