@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+	<PropertyGroup>
+		<LibFolder>$(MSBuildProjectDirectory)\lib</LibFolder>
+		<SrcFolder>$(MSBuildProjectDirectory)\src</SrcFolder>
+		<BuildFolder>$(MSBuildProjectDirectory)\build</BuildFolder>
+		
+		<CompileFolder>$(BuildFolder)\Compile</CompileFolder>
+		<WebSitesFolder>$(CompileFolder)\_PublishedWebsites</WebSitesFolder>
+		<StageFolder>$(BuildFolder)\Stage</StageFolder>
+	</PropertyGroup>
+
+
+  <Target Name ="Build">
+    <CallTarget Targets="Clean"/>
+    <CallTarget Targets="Compile"/>
+    <CallTarget Targets="Stage"/>
+  </Target>
+
+
+	<Target Name="Clean">
+		<MSBuild Projects="$(SrcFolder)\Orchard.sln" Targets="Clean" />
+		<RemoveDir Directories="$(BuildFolder)" />
+	</Target>
+
+  <Target Name ="Compile">
+    <MSBuild
+      Projects="$(SrcFolder)\Orchard.sln"
+      Targets="Build"
+      Properties="Configuration=Release;OutputPath=$(CompileFolder)" />      
+  </Target>
+
+  
+  <Target Name="Stage">
+    <ItemGroup>
+      <Stage-Bin-Exclude Include="$(WebSitesFolder)\**\bin\**\*" />
+      
+      <Stage-Web Include="$(WebSitesFolder)\Orchard.Web\**\*" />
+      <Stage-Core Include="$(WebSitesFolder)\Orchard.Core\**\*" Exclude="@(Stage-Bin-Exclude)" />
+      <Stage-Packages Include="$(WebSitesFolder)\**\*" Exclude="@(Stage-Web);@(Stage-Core);@(Stage-Bin-Exclude)" />
+    </ItemGroup>
+
+    <Copy SourceFiles="@(Stage-Web)" DestinationFolder="$(StageFolder)\%(RecursiveDir)" />
+    <Copy SourceFiles="@(Stage-Core)" DestinationFolder="$(StageFolder)\Core\%(RecursiveDir)" />
+    <Copy SourceFiles="@(Stage-Packages)" DestinationFolder="$(StageFolder)\Packages\%(RecursiveDir)" />
+  </Target>
+
+</Project>

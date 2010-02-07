@@ -6,3 +6,5 @@ glob:src/Orchard.suo
 glob:*.user
 glob:*.patch
 glob:*.hg
+glob:build
+glob:*.sln.cache
