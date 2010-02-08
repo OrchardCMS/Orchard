@@ -1,8 +1,12 @@
-﻿using System.Web.Mvc;
+﻿using System;
+using System.Web.Mvc;
 using Orchard.ContentManagement;
+using Orchard.Core.Common.Models;
+using Orchard.Core.Settings.Models;
 using Orchard.Data.Migrations;
 using Orchard.Environment;
 using Orchard.Environment.Configuration;
+using Orchard.Security;
 using Orchard.Setup.ViewModels;
 using Orchard.Localization;
 using Orchard.UI.Notify;
@@ -31,36 +35,55 @@ namespace Orchard.Setup.Controllers {
 
         [HttpPost]
         public ActionResult Index(SetupViewModel model) {
-            TryUpdateModel(model);
+            try {
+                if (!ModelState.IsValid) {
+                    return View(model);
+                }
 
-            if (!ModelState.IsValid) {
-                return View(model);
+                // initialize the database:
+                // provider: SqlServer or SQLite 
+                // dataFolder: physical path (map before calling). Builtin database will be created in this location
+                // connectionString: optional - if provided the dataFolder is essentially ignored, but should still be passed in
+                _databaseMigrationManager.CreateCoordinator(model.DatabaseOptions ? "SQLite" : "SqlServer", Server.MapPath("~/App_Data"), model.DatabaseConnectionString);
+
+                // creating a standalone environment. 
+                // in theory this environment can be used to resolve any normal components by interface, and those
+                // components will exist entirely in isolation - no crossover between the safemode container currently in effect
+                var shellSettings = new ShellSettings { Name = "temp" };
+                using (var finiteEnvironment = _orchardHost.CreateStandaloneEnvironment(shellSettings)) {
+                    var contentManager = finiteEnvironment.Resolve<IContentManager>();
+                    // create superuser
+                    var membershipService = finiteEnvironment.Resolve<IMembershipService>();
+                    var user = membershipService.CreateUser(new CreateUserParams(model.AdminUsername, model.AdminPassword, String.Empty, String.Empty, String.Empty, true));
+
+                    // set site name and settings
+                    contentManager.Create<SiteSettings>("site", item => {
+                        item.Record.SiteSalt = Guid.NewGuid().ToString("N");
+                        item.Record.SiteName = model.SiteName;
+                        item.Record.SuperUser = model.AdminUsername;
+                        item.Record.PageTitleSeparator = " - ";
+                    });
+
+                    // create home page as a CMS page
+                    var page = contentManager.Create("page");
+                    page.As<BodyAspect>().Text = "Welcome to Orchard";
+                    page.As<RoutableAspect>().Slug = "home";
+                    page.As<RoutableAspect>().Title = model.SiteName;
+                    contentManager.Publish(page);
+
+                    var authenticationService = finiteEnvironment.Resolve<IAuthenticationService>();
+                    authenticationService.SignIn(user, true);
+                }
+
+                _notifier.Information(T("Setup succeeded"));
+
+                // redirect to the welcome page.
+                return Redirect("~/home");
             }
-
-            //notes: service call to initialize database:
-            //_databaseMigrationManager.CreateCoordinator(provider, dataFolder, connectionString);
-            // provider: SqlServer or SQLite 
-            // dataFolder: physical path (map before calling). Builtin database will be created in this location
-            // connectionString: optional - if provided the dataFolder is essentially ignored, but should still be passed in
-
-            
-            //notes: the other tool needed will be creating a standalone environment. 
-            // in theory this environment can be used to resolve any normal components by interface, and those
-            // components will exist entirely in isolation - no crossover between the safemode container currently in effect
-            var shellSettings = new ShellSettings { Name = "temp" };
-            using (var finiteEnvironment = _orchardHost.CreateStandaloneEnvironment(shellSettings)) {
-                var contentManager = finiteEnvironment.Resolve<IContentManager>();
-                var yadda = contentManager.Create("yadda");
-
-                // create superuser
-                // set site name
-                // database
-                // redirect to the welcome page
+            catch (Exception exception) {
+                _notifier.Error(T("Setup failed: " + exception.Message));
+                return RedirectToAction("Index");
             }
-
-
-            _notifier.Information(T("Setup succeeded"));
-            return RedirectToAction("Index");
         }
     }
 }

@@ -22,11 +22,11 @@ using (Html.BeginFormAntiForgeryPost()) { %>
 <fieldset>
     <%=Html.ValidationMessage("DatabaseOptions", "Unable to setup data storage") %>
     <div>
-        <input type="radio" name="databaseOption" id="builtin" value="true" checked="checked" />
+        <input type="radio" name="databaseOptions" id="builtin" value="true" checked="checked" />
         <label for="builtin"><%=_Encoded("Use built-in data storage (SQL Lite)") %></label>
     </div>
     <div>
-        <input type="radio" name="databaseOption" id="sql" value="false" />
+        <input type="radio" name="databaseOptions" id="sql" value="false" />
         <label for="sql"><%=_Encoded("Use an existing SQL Server (or SQL Express) database") %></label>
         <!-- Should add some javascript to hide the connection string field if that option isn't selected -->
         <label for="connection"><%=_Encoded("Connection string") %></label>

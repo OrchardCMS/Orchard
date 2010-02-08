@@ -8,9 +8,10 @@ namespace Orchard.Setup.ViewModels {
         public string SiteName { get; set; }
         [StringLengthMin(3), StringLength(25)]
         public string AdminUsername { get; set; }
-        [StringLengthMin(6), StringLength(20)]
+        [Required, StringLengthMin(6), StringLength(20)]
         public string AdminPassword { get; set; }
         [SqlDatabaseConnectionString]
         public string DatabaseConnectionString { get; set; }
+        public bool DatabaseOptions { get; set; }
     }
 }
