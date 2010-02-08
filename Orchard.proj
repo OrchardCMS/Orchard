@@ -48,17 +48,19 @@
 <!-- Testing -->
 
   <Target Name ="Test">
-		<Exec Command="$(LibFolder)\nunit\nunit-console-x86.exe /xml=$(BuildFolder)\Orchard.Tests.xml $(CompileFolder)\Orchard.Core.Tests.dll $(CompileFolder)\Orchard.Tests.dll $(CompileFolder)\Orchard.Tests.Modules.dll $(CompileFolder)\Orchard.Web.Tests.dll" />
+		<Exec Command="$(LibFolder)\nunit\nunit-console-x86.exe /xml=$(BuildFolder)\Orchard.Tests.xml $(CompileFolder)\Orchard.Core.Tests.dll $(CompileFolder)\Orchard.Tests.dll $(CompileFolder)\Orchard.Tests.Modules.dll $(CompileFolder)\Orchard.Web.Tests.dll $(CompileFolder)\MSBuild.Orchard.Tasks.Tests.dll" />
   </Target>
 
 
 <!-- Packaging -->
-  
+
+	<UsingTask AssemblyFile="$(CompileFolder)\MSBuild.Orchard.Tasks.dll" TaskName="MSBuild.Orchard.Tasks.StageProjectAlteration" />
+
   <Target Name="Package-Stage">
     <ItemGroup>
       <Stage-Bin-Exclude Include="$(WebSitesFolder)\**\bin\**\*" />
       
-      <Stage-Web Include="$(WebSitesFolder)\Orchard.Web\**\*" />
+      <Stage-Web Include="$(WebSitesFolder)\Orchard.Web\**\*;$(SrcFolder)\Orchard.Web\*.csproj" />
       <Stage-Core Include="$(WebSitesFolder)\Orchard.Core\**\*" Exclude="@(Stage-Bin-Exclude)" />
       <Stage-Modules Include="$(WebSitesFolder)\**\*" Exclude="@(Stage-Web);@(Stage-Core);@(Stage-Bin-Exclude)" />
       <Stage-License Include="$(MSBuildProjectDirectory)\*.txt" />
@@ -67,6 +69,19 @@
     <Copy SourceFiles="@(Stage-Web);@(Stage-License)" DestinationFolder="$(StageFolder)\%(RecursiveDir)" />
     <Copy SourceFiles="@(Stage-Core)" DestinationFolder="$(StageFolder)\Core\%(RecursiveDir)" />
     <Copy SourceFiles="@(Stage-Modules)" DestinationFolder="$(StageFolder)\Modules\%(RecursiveDir)" />
+
+
+    <!-- extra processing of the staged csproj file -->
+    <StageProjectAlteration ProjectFileName="$(StageFolder)\Orchard.Web.csproj" AddContentFiles="
+        @(Stage-Modules->'Modules\%(RecursiveDir)%(Filename)%(Extension)');
+        @(Stage-Core->'Core\%(RecursiveDir)%(Filename)%(Extension)')">
+      <Output TaskParameter="ExtraFiles" ItemName="StageProjectAlteration-ExtraFiles"/>
+    </StageProjectAlteration>
+
+    <!-- move over extra non-content files the csproj referenced -->
+    <Copy SourceFiles="@(StageProjectAlteration-ExtraFiles->'$(SrcFolder)\Orchard.Web\%(Identity)')" 
+        DestinationFolder="$(StageFolder)\%(RecursiveDir)"/>
+
   </Target>
 
   <Target Name="Package-Zip">
