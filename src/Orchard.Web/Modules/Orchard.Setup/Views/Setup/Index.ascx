@@ -1,7 +1,13 @@
 ﻿<%@ Control Language="C#" Inherits="Orchard.Mvc.ViewUserControl<SetupViewModel>" %>
 <%@ Import Namespace="Orchard.Mvc.Html"%>
 <%@ Import Namespace="Orchard.Setup.ViewModels"%>
-<h1><%=Html.TitleForPage("Orchard " + _Encoded("Setup"))%></h1><%
+<h1><%=Html.TitleForPage("Orchard " + _Encoded("Setup"))%></h1>
+<div class="">
+
+</div>
+
+
+<%
 using (Html.BeginFormAntiForgeryPost()) { %>
 <%=Html.ValidationSummary() %>
 <fieldset>

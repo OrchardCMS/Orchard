@@ -54,6 +54,10 @@ namespace Orchard.Tests.Environment {
             public IEnumerable<IShellSettings> LoadSettings() {
                 return new[] { new ShellSettings { Name = "testing" } };
             }
+
+            public void SaveSettings(IShellSettings settings) {
+
+            }
         }
 
         public class StuExtensionManager : IExtensionManager {

@@ -8,12 +8,17 @@ using Yaml.Grammar;
 namespace Orchard.Environment.Configuration {
     public interface IShellSettingsLoader {
         IEnumerable<IShellSettings> LoadSettings();
+        void SaveSettings(IShellSettings settings);
     }
 
     public class ShellSettingsLoader : IShellSettingsLoader {
 
         IEnumerable<IShellSettings> IShellSettingsLoader.LoadSettings() {
             return LoadSettings().ToArray();
+        }
+
+        public void SaveSettings(IShellSettings settings) {
+            
         }
 
         static IEnumerable<IShellSettings> LoadSettings() {
