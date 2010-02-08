@@ -42,6 +42,9 @@ namespace Orchard.Pages.Services {
 
         public string LookupPublishedSlug(string slug) {
             lock (_syncLock) {
+                if (slug == null)
+                    return "";
+
                 string actual;
                 if (_currentlyPublishedSlugs.TryGetValue(slug, out actual))
                     return actual;

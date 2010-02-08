@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Web.Mvc;
+using Orchard.Comments.Models;
 using Orchard.ContentManagement;
 using Orchard.Core.Common.Models;
 using Orchard.Core.Settings.Models;
@@ -29,15 +30,15 @@ namespace Orchard.Setup.Controllers {
 
         private Localizer T { get; set; }
 
-        public ActionResult Index() {
-            return View(new SetupViewModel { AdminUsername = "admin" });
+        public ActionResult Index(SetupViewModel model) {
+            return View(model ?? new SetupViewModel { AdminUsername = "admin" });
         }
 
-        [HttpPost]
-        public ActionResult Index(SetupViewModel model) {
+        [HttpPost, ActionName("Index")]
+        public ActionResult IndexPOST(SetupViewModel model) {
             try {
                 if (!ModelState.IsValid) {
-                    return View(model);
+                    return Index(model);
                 }
 
                 // initialize the database:
@@ -67,8 +68,9 @@ namespace Orchard.Setup.Controllers {
                     // create home page as a CMS page
                     var page = contentManager.Create("page");
                     page.As<BodyAspect>().Text = "Welcome to Orchard";
-                    page.As<RoutableAspect>().Slug = "home";
+                    page.As<RoutableAspect>().Slug = "";
                     page.As<RoutableAspect>().Title = model.SiteName;
+                    page.As<HasComments>().CommentsShown = false;
                     contentManager.Publish(page);
 
                     var authenticationService = finiteEnvironment.Resolve<IAuthenticationService>();
@@ -78,11 +80,11 @@ namespace Orchard.Setup.Controllers {
                 _notifier.Information(T("Setup succeeded"));
 
                 // redirect to the welcome page.
-                return Redirect("~/home");
+                return Redirect("~/");
             }
             catch (Exception exception) {
                 _notifier.Error(T("Setup failed: " + exception.Message));
-                return RedirectToAction("Index");
+                return Index(model);
             }
         }
     }
