@@ -20,6 +20,9 @@ namespace Orchard.Environment.Configuration {
             if (settings != null && !string.IsNullOrEmpty(settings.Name)) {
                 var sitesPath = HostingEnvironment.MapPath("~/App_Data/Sites");
                 if (sitesPath != null) {
+                    if (!Directory.Exists(sitesPath))
+                        Directory.CreateDirectory(sitesPath);
+
                     var filePath = Path.Combine(sitesPath, string.Format("{0}.txt", settings.Name));
                     File.WriteAllText(filePath, ComposeSettings(settings));
                     return true;

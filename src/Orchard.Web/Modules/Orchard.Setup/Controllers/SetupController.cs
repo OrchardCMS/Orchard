@@ -8,6 +8,7 @@ using Orchard.Data.Migrations;
 using Orchard.Environment;
 using Orchard.Environment.Configuration;
 using Orchard.Security;
+using Orchard.Settings;
 using Orchard.Setup.ViewModels;
 using Orchard.Localization;
 using Orchard.UI.Notify;
@@ -55,24 +56,21 @@ namespace Orchard.Setup.Controllers {
                 // components will exist entirely in isolation - no crossover between the safemode container currently in effect
                 var shellSettings = new ShellSettings { Name = "temp" };
 
-                if (!_shellSettingsLoader.SaveSettings(shellSettings)) {
-                    _notifier.Error(T("Site settings could not be saved. (Name = \"{0}\")", shellSettings.Name));
-                    return Index(model);
-                }
 
                 using (var finiteEnvironment = _orchardHost.CreateStandaloneEnvironment(shellSettings)) {
                     var contentManager = finiteEnvironment.Resolve<IContentManager>();
+
                     // create superuser
                     var membershipService = finiteEnvironment.Resolve<IMembershipService>();
                     var user = membershipService.CreateUser(new CreateUserParams(model.AdminUsername, model.AdminPassword, String.Empty, String.Empty, String.Empty, true));
 
                     // set site name and settings
-                    contentManager.Create<SiteSettings>("site", item => {
-                        item.Record.SiteSalt = Guid.NewGuid().ToString("N");
-                        item.Record.SiteName = model.SiteName;
-                        item.Record.SuperUser = model.AdminUsername;
-                        item.Record.PageTitleSeparator = " - ";
-                    });
+                    var siteService = finiteEnvironment.Resolve<ISiteService>();
+                    var siteSettings = siteService.GetSiteSettings().As<SiteSettings>();
+                    siteSettings.Record.SiteSalt = Guid.NewGuid().ToString("N");
+                    siteSettings.Record.SiteName = model.SiteName;
+                    siteSettings.Record.SuperUser = model.AdminUsername;
+                    siteSettings.Record.PageTitleSeparator = " - ";
 
                     // create home page as a CMS page
                     var page = contentManager.Create("page");
@@ -86,8 +84,14 @@ namespace Orchard.Setup.Controllers {
                     var authenticationService = finiteEnvironment.Resolve<IAuthenticationService>();
                     authenticationService.SignIn(user, true);
 
-                    //_orchardHost.Reinitialize();
                 }
+
+                if (!_shellSettingsLoader.SaveSettings(shellSettings)) {
+                    _notifier.Error(T("Site settings could not be saved. (Name = \"{0}\")", shellSettings.Name));
+                    return Index(model);
+                }
+
+                _orchardHost.Reinitialize();
 
                 _notifier.Information(T("Setup succeeded"));
 

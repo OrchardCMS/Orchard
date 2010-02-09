@@ -33,6 +33,8 @@ namespace Orchard.Core.Settings.Services {
                     item.Record.SiteName = "My Orchard Project Application";
                     item.Record.PageTitleSeparator = " - ";
                 });
+                // ensure subsequent calls will locate this object
+                _contentManager.Flush();
                 return site;
             }
             return _contentManager.Get<ISite>(record.Id);
