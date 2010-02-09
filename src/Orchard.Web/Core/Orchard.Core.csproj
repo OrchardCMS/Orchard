@@ -180,6 +180,7 @@
     <Content Include="Common\Views\EditorTemplates\Parts\Common.Body.ascx" />
     <Content Include="Common\Views\EditorTemplates\Parts\Common.Owner.ascx" />
     <Content Include="Feeds\Module.txt" />
+    <Content Include="Navigation\Module.txt" />
     <Content Include="Scheduling\Module.txt" />
     <Content Include="Settings\Views\EditorTemplates\Items\Settings.Site.ascx" />
     <Content Include="Themes\Scripts\jquery-1.4.1.js" />
@@ -201,6 +202,8 @@
     <Content Include="Themes\Views\Web.config" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Navigation\Controllers\" />
+    <Folder Include="Navigation\Models\" />
     <Folder Include="Scheduling\Controllers\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
