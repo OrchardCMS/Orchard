@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using System.Web.Mvc;
 using Autofac;
@@ -36,6 +37,14 @@ namespace Orchard.Environment {
         }
 
         void IOrchardHost.Initialize() {
+            ViewEngines.Engines.Insert(0, LayoutViewEngine.CreateShim());
+            _controllerBuilder.SetControllerFactory(new OrchardControllerFactory());
+            ServiceLocator.SetLocator(t => _containerProvider.RequestContainer.Resolve(t));
+
+            Initialize();
+        }
+
+        void IOrchardHost.Reinitialize() {
             Initialize();
         }
 
@@ -53,10 +62,6 @@ namespace Orchard.Environment {
             var shell = shellContainer.Resolve<IOrchardShell>();
             shell.Activate();
             _current = shell;
-
-            ViewEngines.Engines.Insert(0, LayoutViewEngine.CreateShim());
-            _controllerBuilder.SetControllerFactory(new OrchardControllerFactory());
-            ServiceLocator.SetLocator(t => _containerProvider.RequestContainer.Resolve(t));
 
             // Fire off one-time install events on an alternate container
             HackInstallSimulation();
@@ -123,7 +128,5 @@ namespace Orchard.Environment {
                 containerProvider.DisposeRequestContainer();
             }
         }
-
-
     }
 }
