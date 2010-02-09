@@ -22,7 +22,7 @@ using (Html.BeginFormAntiForgeryPost()) { %>
 </fieldset>
 <fieldset>
     <%=Html.LabelFor(svm => svm.AdminPassword) %>
-    <%=Html.EditorFor(svm => svm.AdminPassword) %>
+    <%=Html.PasswordFor(svm => svm.AdminPassword) %>
     <%=Html.ValidationMessage("AdminPassword", "*") %>
 </fieldset>
 <fieldset>

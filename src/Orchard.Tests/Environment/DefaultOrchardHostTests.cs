@@ -58,9 +58,8 @@ namespace Orchard.Tests.Environment {
                 return _shellSettings.AsEnumerable();
             }
 
-            public bool SaveSettings(IShellSettings settings) {
+            public void SaveSettings(IShellSettings settings) {
                 _shellSettings.Add(settings);
-                return true;
             }
         }
 

@@ -45,18 +45,22 @@ namespace Orchard.Setup.Controllers {
                     return Index(model);
                 }
 
+                var shellSettings = new ShellSettings {
+                                                          Name = "default",
+                                                          DataProvider = model.DatabaseOptions ? "SQLite" : "SqlServer",
+                                                          DataFolder = Server.MapPath("~/App_Data"),
+                                                          DataConnectionString = model.DatabaseConnectionString
+                                                      };
+
                 // initialize the database:
                 // provider: SqlServer or SQLite 
                 // dataFolder: physical path (map before calling). Builtin database will be created in this location
                 // connectionString: optional - if provided the dataFolder is essentially ignored, but should still be passed in
-                _databaseMigrationManager.CreateCoordinator(model.DatabaseOptions ? "SQLite" : "SqlServer", Server.MapPath("~/App_Data"), model.DatabaseConnectionString);
+                _databaseMigrationManager.CreateCoordinator(shellSettings.DataProvider, shellSettings.DataFolder, shellSettings.DataConnectionString);
 
                 // creating a standalone environment. 
                 // in theory this environment can be used to resolve any normal components by interface, and those
                 // components will exist entirely in isolation - no crossover between the safemode container currently in effect
-                var shellSettings = new ShellSettings { Name = "temp" };
-
-
                 using (var finiteEnvironment = _orchardHost.CreateStandaloneEnvironment(shellSettings)) {
                     var contentManager = finiteEnvironment.Resolve<IContentManager>();
 
@@ -83,13 +87,9 @@ namespace Orchard.Setup.Controllers {
 
                     var authenticationService = finiteEnvironment.Resolve<IAuthenticationService>();
                     authenticationService.SignIn(user, true);
-
                 }
 
-                if (!_shellSettingsLoader.SaveSettings(shellSettings)) {
-                    _notifier.Error(T("Site settings could not be saved. (Name = \"{0}\")", shellSettings.Name));
-                    return Index(model);
-                }
+                _shellSettingsLoader.SaveSettings(shellSettings);
 
                 _orchardHost.Reinitialize();
 
