@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Web.Hosting;
@@ -8,7 +7,7 @@ using Yaml.Grammar;
 namespace Orchard.Environment.Configuration {
     public interface IShellSettingsLoader {
         IEnumerable<IShellSettings> LoadSettings();
-        void SaveSettings(IShellSettings settings);
+        bool SaveSettings(IShellSettings settings);
     }
 
     public class ShellSettingsLoader : IShellSettingsLoader {
@@ -17,8 +16,17 @@ namespace Orchard.Environment.Configuration {
             return LoadSettings().ToArray();
         }
 
-        public void SaveSettings(IShellSettings settings) {
-            
+        public bool SaveSettings(IShellSettings settings) {
+            if (settings != null && !string.IsNullOrEmpty(settings.Name)) {
+                var sitesPath = HostingEnvironment.MapPath("~/App_Data/Sites");
+                if (sitesPath != null) {
+                    var filePath = Path.Combine(sitesPath, string.Format("{0}.txt", settings.Name));
+                    File.WriteAllText(filePath, ComposeSettings(settings));
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         static IEnumerable<IShellSettings> LoadSettings() {
@@ -52,6 +60,10 @@ namespace Orchard.Environment.Configuration {
 
             DataItem value;
             return fields.TryGetValue(key, out value) ? value.ToString() : null;
+        }
+
+        static string ComposeSettings(IShellSettings shellSettings) {
+            return shellSettings == null ? "" : string.Format("Name: {0}", shellSettings.Name);
         }
     }
 }

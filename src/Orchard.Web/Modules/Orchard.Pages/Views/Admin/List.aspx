@@ -73,7 +73,7 @@ foreach (var pageEntry in Model.PageEntries)
                 <td><%=Html.Encode(pageEntry.Page.Title ?? T("(no title)").ToString())%></td>
                 <td><% if (pageEntry.Page.HasPublished)
                        { %>
-                        <%=Html.ActionLink(pageEntry.Page.Slug ?? T("(no slug)").ToString(), "Item", new { controller = "Page", slug = pageEntry.Page.PublishedSlug })%>
+                        <%=Html.ActionLink(!string.IsNullOrEmpty(pageEntry.Page.Slug) ? pageEntry.Page.Slug : T("(no slug)").ToString(), "Item", new { controller = "Page", slug = pageEntry.Page.PublishedSlug })%>
                     <% }
                        else
                        {%>

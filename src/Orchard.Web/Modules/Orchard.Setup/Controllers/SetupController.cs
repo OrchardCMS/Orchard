@@ -17,14 +17,17 @@ namespace Orchard.Setup.Controllers {
         private readonly INotifier _notifier;
         private readonly IDatabaseMigrationManager _databaseMigrationManager;
         private readonly IOrchardHost _orchardHost;
+        private readonly IShellSettingsLoader _shellSettingsLoader;
 
         public SetupController(
             INotifier notifier,
             IDatabaseMigrationManager databaseMigrationManager,
-            IOrchardHost orchardHost) {
+            IOrchardHost orchardHost,
+            IShellSettingsLoader shellSettingsLoader) {
             _notifier = notifier;
             _databaseMigrationManager = databaseMigrationManager;
             _orchardHost = orchardHost;
+            _shellSettingsLoader = shellSettingsLoader;
             T = NullLocalizer.Instance;
         }
 
@@ -51,6 +54,12 @@ namespace Orchard.Setup.Controllers {
                 // in theory this environment can be used to resolve any normal components by interface, and those
                 // components will exist entirely in isolation - no crossover between the safemode container currently in effect
                 var shellSettings = new ShellSettings { Name = "temp" };
+
+                if (!_shellSettingsLoader.SaveSettings(shellSettings)) {
+                    _notifier.Error(T("Site settings could not be saved. (Name = \"{0}\")", shellSettings.Name));
+                    return Index(model);
+                }
+
                 using (var finiteEnvironment = _orchardHost.CreateStandaloneEnvironment(shellSettings)) {
                     var contentManager = finiteEnvironment.Resolve<IContentManager>();
                     // create superuser
@@ -71,10 +80,13 @@ namespace Orchard.Setup.Controllers {
                     page.As<RoutableAspect>().Slug = "";
                     page.As<RoutableAspect>().Title = model.SiteName;
                     page.As<HasComments>().CommentsShown = false;
+                    page.As<CommonAspect>().Owner = user;
                     contentManager.Publish(page);
 
                     var authenticationService = finiteEnvironment.Resolve<IAuthenticationService>();
                     authenticationService.SignIn(user, true);
+
+                    //_orchardHost.Reinitialize();
                 }
 
                 _notifier.Information(T("Setup succeeded"));

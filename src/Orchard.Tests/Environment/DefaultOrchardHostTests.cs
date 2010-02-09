@@ -51,12 +51,16 @@ namespace Orchard.Tests.Environment {
         }
 
         public class StubShellSettingsLoader : IShellSettingsLoader {
+            private readonly List<IShellSettings> _shellSettings = new List<IShellSettings>
+                                                                   {new ShellSettings {Name = "testing"}};
+
             public IEnumerable<IShellSettings> LoadSettings() {
-                return new[] { new ShellSettings { Name = "testing" } };
+                return _shellSettings.AsEnumerable();
             }
 
-            public void SaveSettings(IShellSettings settings) {
-
+            public bool SaveSettings(IShellSettings settings) {
+                _shellSettings.Add(settings);
+                return true;
             }
         }
 
