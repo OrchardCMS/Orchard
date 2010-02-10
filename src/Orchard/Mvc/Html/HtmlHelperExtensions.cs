@@ -209,7 +209,7 @@ namespace Orchard.Mvc.Html {
         #region BeginFormAntiForgeryPost
 
         public static MvcForm BeginFormAntiForgeryPost(this HtmlHelper htmlHelper) {
-            return htmlHelper.BeginFormAntiForgeryPost(htmlHelper.ViewContext.HttpContext.Request.RawUrl, FormMethod.Post, new RouteValueDictionary());
+            return htmlHelper.BeginFormAntiForgeryPost(htmlHelper.ViewContext.HttpContext.Request.Url.AbsolutePath, FormMethod.Post, new RouteValueDictionary());
         }
 
         public static MvcForm BeginFormAntiForgeryPost(this HtmlHelper htmlHelper, string formAction) {
