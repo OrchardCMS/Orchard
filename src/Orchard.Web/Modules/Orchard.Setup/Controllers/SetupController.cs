@@ -48,7 +48,6 @@ namespace Orchard.Setup.Controllers {
                 var shellSettings = new ShellSettings {
                                                           Name = "default",
                                                           DataProvider = model.DatabaseOptions ? "SQLite" : "SqlServer",
-                                                          DataFolder = Server.MapPath("~/App_Data"),
                                                           DataConnectionString = model.DatabaseConnectionString
                                                       };
 
@@ -56,7 +55,7 @@ namespace Orchard.Setup.Controllers {
                 // provider: SqlServer or SQLite 
                 // dataFolder: physical path (map before calling). Builtin database will be created in this location
                 // connectionString: optional - if provided the dataFolder is essentially ignored, but should still be passed in
-                _databaseMigrationManager.CreateCoordinator(shellSettings.DataProvider, shellSettings.DataFolder, shellSettings.DataConnectionString);
+                _databaseMigrationManager.CreateCoordinator(shellSettings.DataProvider, Server.MapPath("~/App_Data"), shellSettings.DataConnectionString);
 
                 // creating a standalone environment. 
                 // in theory this environment can be used to resolve any normal components by interface, and those

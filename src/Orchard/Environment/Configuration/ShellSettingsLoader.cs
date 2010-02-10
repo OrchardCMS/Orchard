@@ -67,7 +67,6 @@ namespace Orchard.Environment.Configuration {
             return new ShellSettings {
                                          Name = GetValue(fields, "Name"),
                                          DataProvider = GetValue(fields, "DataProvider"),
-                                         DataFolder = GetValue(fields, "DataFolder"),
                                          DataConnectionString = GetValue(fields, "DataConnectionString")
                                      };
         }
@@ -88,8 +87,9 @@ namespace Orchard.Environment.Configuration {
 
             settingsBuilder.AppendLine(string.Format("Name: {0}", shellSettings.Name));
             settingsBuilder.AppendLine(string.Format("DataProvider: {0}", shellSettings.DataProvider));
-            settingsBuilder.AppendLine(string.Format("DataFolder: {0}", shellSettings.DataFolder));
-            settingsBuilder.AppendLine(string.Format("DataConnectionString: {0}", shellSettings.DataConnectionString));
+
+            if (!string.IsNullOrEmpty(shellSettings.DataConnectionString))
+                settingsBuilder.AppendLine(string.Format("DataConnectionString: {0}", shellSettings.DataConnectionString));
 
             return settingsBuilder.ToString();
         }
