@@ -29,12 +29,11 @@ body {
 
 h1,h2,h3,h4,h5,h6,legend {font-weight:normal; font-style: normal;}
 
-h1 {font-size: 180%;}
-h2 {font-size: 160%;}
-h3 {font-size: 145%;}
-h4 {font-size: 130%;}
-h5 {font-size: 120%;}
-h6 {font-size: 105%;}
+h1 {font-size: 160%;}
+h2 {font-size: 145%;}
+h3 {font-size: 130%;}
+h4 {font-size: 120%;}
+h5 {font-size: 105%;}
 
 
 
@@ -61,15 +60,16 @@ h6 {font-size: 105%;}
 
 
 #main {
-margin:0 auto;
-width:600px;
+    margin:0 auto;
+    width:600px;
 }
 
 
 /* Forms
 ----------------------------------------------------------*/
 
-input[type="text"], #password {
+input[type="text"], 
+input[type="password"] {
     border:1px solid #DDDEDF;
     display: block;
 }
@@ -80,30 +80,50 @@ form {
 	background:transparent url(images/backgroundVines.gif) no-repeat right bottom;
 }
 
+form h2 {
+    font-size: 105%;
+	margin:20px 20px 0;
+}
+
+fieldset.data {
+    margin-bottom:16px;
+}
+
 fieldset div {
 	margin:20px 20px 32px 20px;
 }
+fieldset.data div {
+	margin:10px 20px 16px 20px;
+}
     
 legend {
-	font-size: 110%;
+	font-size: 105%;
 	font-weight:500;
 	border:none;
-	margin:0 20px;
-	}
+	padding:10px 20px 0;
+}
+fieldset.data legend {
+    padding-bottom:10px;
+}
 
 label {
     display:block;
-    }
+}
 
 label.forcheckbox {
     display:inline;
-    }
+}
 
-input[type="text"], #password {
+fieldset.data span label {
+    margin-top:8px;
+}
+
+input[type="text"],
+input[type="password"] {
     border-color:#ccc;
     padding:4px;
     width:98%;
-    }
+}
     
 button, .button, .button:visited {
 	font-size: 102%;
@@ -124,4 +144,8 @@ button:focus, .button:focus {
     border-color:#bb8b2d;
     color:#fff;
     text-decoration:none;
+}
+
+html.dyn fieldset.data div span {
+    display:none;
 }

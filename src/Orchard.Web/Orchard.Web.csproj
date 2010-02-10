@@ -231,9 +231,7 @@
     <Content Include="Themes\SafeMode\Theme.png" />
     <Content Include="Themes\SafeMode\Theme.txt" />
     <Content Include="Themes\SafeMode\Views\Document.aspx" />
-    <Content Include="Themes\SafeMode\Views\Footer.ascx" />
     <Content Include="Themes\SafeMode\Views\Layout.ascx" />
-    <Content Include="Themes\SafeMode\Views\Menu.ascx" />
     <Content Include="Themes\TheAdminClassic\Styles\images\background_header.jpg" />
     <Content Include="Themes\TheAdminClassic\Styles\images\icons.png" />
     <Content Include="Themes\TheAdminClassic\Styles\images\orchardLogo.jpg" />
