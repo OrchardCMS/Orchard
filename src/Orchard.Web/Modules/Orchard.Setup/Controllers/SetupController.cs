@@ -4,6 +4,7 @@ using Orchard.Comments.Models;
 using Orchard.ContentManagement;
 using Orchard.Core.Common.Models;
 using Orchard.Core.Settings.Models;
+using Orchard.Data;
 using Orchard.Data.Migrations;
 using Orchard.Environment;
 using Orchard.Environment.Configuration;
@@ -61,31 +62,40 @@ namespace Orchard.Setup.Controllers {
                 // in theory this environment can be used to resolve any normal components by interface, and those
                 // components will exist entirely in isolation - no crossover between the safemode container currently in effect
                 using (var finiteEnvironment = _orchardHost.CreateStandaloneEnvironment(shellSettings)) {
-                    var contentManager = finiteEnvironment.Resolve<IContentManager>();
+                    try {
+                        var contentManager = finiteEnvironment.Resolve<IContentManager>();
 
-                    // create superuser
-                    var membershipService = finiteEnvironment.Resolve<IMembershipService>();
-                    var user = membershipService.CreateUser(new CreateUserParams(model.AdminUsername, model.AdminPassword, String.Empty, String.Empty, String.Empty, true));
+                        // create superuser
+                        var membershipService = finiteEnvironment.Resolve<IMembershipService>();
+                        var user =
+                            membershipService.CreateUser(new CreateUserParams(model.AdminUsername, model.AdminPassword,
+                                                                              String.Empty, String.Empty, String.Empty,
+                                                                              true));
 
-                    // set site name and settings
-                    var siteService = finiteEnvironment.Resolve<ISiteService>();
-                    var siteSettings = siteService.GetSiteSettings().As<SiteSettings>();
-                    siteSettings.Record.SiteSalt = Guid.NewGuid().ToString("N");
-                    siteSettings.Record.SiteName = model.SiteName;
-                    siteSettings.Record.SuperUser = model.AdminUsername;
-                    siteSettings.Record.PageTitleSeparator = " - ";
+                        // set site name and settings
+                        var siteService = finiteEnvironment.Resolve<ISiteService>();
+                        var siteSettings = siteService.GetSiteSettings().As<SiteSettings>();
+                        siteSettings.Record.SiteSalt = Guid.NewGuid().ToString("N");
+                        siteSettings.Record.SiteName = model.SiteName;
+                        siteSettings.Record.SuperUser = model.AdminUsername;
+                        siteSettings.Record.PageTitleSeparator = " - ";
 
-                    // create home page as a CMS page
-                    var page = contentManager.Create("page");
-                    page.As<BodyAspect>().Text = "Welcome to Orchard";
-                    page.As<RoutableAspect>().Slug = "";
-                    page.As<RoutableAspect>().Title = model.SiteName;
-                    page.As<HasComments>().CommentsShown = false;
-                    page.As<CommonAspect>().Owner = user;
-                    contentManager.Publish(page);
+                        // create home page as a CMS page
+                        var page = contentManager.Create("page");
+                        page.As<BodyAspect>().Text = "Welcome to Orchard";
+                        page.As<RoutableAspect>().Slug = "";
+                        page.As<RoutableAspect>().Title = model.SiteName;
+                        page.As<HasComments>().CommentsShown = false;
+                        page.As<CommonAspect>().Owner = user;
+                        contentManager.Publish(page);
 
-                    var authenticationService = finiteEnvironment.Resolve<IAuthenticationService>();
-                    authenticationService.SignIn(user, true);
+                        var authenticationService = finiteEnvironment.Resolve<IAuthenticationService>();
+                        authenticationService.SignIn(user, true);
+                    }
+                    catch {
+                        finiteEnvironment.Resolve<ITransactionManager>().Cancel();
+                        throw;
+                    }
                 }
 
                 _shellSettingsLoader.SaveSettings(shellSettings);
