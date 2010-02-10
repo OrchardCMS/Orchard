@@ -146,7 +146,7 @@ button:focus, .button:focus {
     text-decoration:none;
 }
 
-html.dyn fieldset.data div span {
+html.dyn fieldset.data.builtin div span {
     display:none;
 }
 
@@ -157,6 +157,10 @@ html.dyn fieldset.data div span {
 	margin:10px 0 4px 0;
     padding:4px;
 	white-space:pre-wrap;
+}
+form .message, form .validation-summary-errors {
+    margin:0 10px;
+    white-space:inherit;
 }
 span.message {
     display:block;
@@ -176,7 +180,8 @@ span.message {
 }
 /* todo: (heskew) what else (other inputs) needs this? */
 .critical.message, .validation-summary-errors,
-.input-validation-error.text-box, .input-validation-error.text {
+.input-validation-error.text-box, .input-validation-error.text,
+input[type="password"].input-validation-error {
 	border:1px solid #990808;
 }
 .critical.message, .validation-summary-errors {

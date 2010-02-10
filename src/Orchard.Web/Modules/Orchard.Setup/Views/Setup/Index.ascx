@@ -10,28 +10,25 @@ using (Html.BeginFormAntiForgeryPost()) { %>
     <div>
         <label for="SiteName"><%=_Encoded("What is the name of your site?") %></label>
         <%=Html.EditorFor(svm => svm.SiteName) %>
-        <%=Html.ValidationMessage("SiteName", "*") %>
     </div>
     <div>
         <label for="AdminUsername"><%=_Encoded("Choose a user name:") %></label>
         <%=Html.EditorFor(svm => svm.AdminUsername)%>
-        <%=Html.ValidationMessage("AdminUsername", "*")%>
     </div>
     <div>
         <label for="AdminPassword"><%=_Encoded("Choose a password:") %></label>
         <%=Html.PasswordFor(svm => svm.AdminPassword) %>
-        <%=Html.ValidationMessage("AdminPassword", "*") %>
     </div>
 </fieldset>
-<fieldset class="data">
+<fieldset class="data<%=Model.DatabaseOptions ? " builtin" : " sql" %>">
     <legend><%=_Encoded("How would you like to store your data?") %></legend>
     <%=Html.ValidationMessage("DatabaseOptions", "Unable to setup data storage") %>
     <div>
-        <input type="radio" name="databaseOptions" id="builtin" value="true" checked="checked" />
+        <%=Html.RadioButtonFor(svm => svm.DatabaseOptions, true, new { id = "builtin" })%>
         <label for="builtin" class="forcheckbox"><%=_Encoded("Use built-in data storage (SQL Lite)") %></label>
     </div>
     <div>
-        <input type="radio" name="databaseOptions" id="sql" value="false" />
+        <%=Html.RadioButtonFor(svm => svm.DatabaseOptions, false, new { id = "sql" })%>
         <label for="sql" class="forcheckbox"><%=_Encoded("Use an existing SQL Server (or SQL Express) database") %></label>
         <span>
             <label for="DatabaseConnectionString"><%=_Encoded("Connection string") %></label>
