@@ -37,8 +37,12 @@ namespace Orchard.Setup.Controllers {
         private Localizer T { get; set; }
 
         public ActionResult Index(SetupViewModel model) {
-            if(!CanWriteTo(Server.MapPath("~/App_Data"))) {
-                _notifier.Error(T("Hey, it looks like I can't write to the App_Data folder in the root of this application and that's where I need to save some of the information you're about to enter.\r\n\r\nPlease give me (the machine account this application is running under) write access to App_Data so I can get this app all set up for you.\r\n\r\nThanks!"));
+            string message = "";
+            if(!CanWriteTo(Server.MapPath("~/App_Data"), out message)) {
+                _notifier.Error(
+                    T(
+                        "Hey, it looks like I can't write to the App_Data folder in the root of this application and that's where I need to save some of the information you're about to enter.\r\n\r\nPlease give me (the machine account this application is running under) write access to App_Data so I can get this app all set up for you.\r\n\r\nThanks!\r\n\r\n----\r\n{0}",
+                        message));
             }
 
             return View(model ?? new SetupViewModel { AdminUsername = "admin" });
@@ -118,14 +122,18 @@ namespace Orchard.Setup.Controllers {
             }
         }
 
-        static bool CanWriteTo(string path) {
+        static bool CanWriteTo(string path, out string message) {
             try {
                 var systemCheckPath = Path.Combine(path, "_systemcheck.txt");
+
                 System.IO.File.WriteAllText(systemCheckPath, "Communicator check one two one two");
                 System.IO.File.AppendAllText(systemCheckPath, "\r\nThis is Bones McCoy on a line to Sulu");
                 System.IO.File.Delete(systemCheckPath);
+
+                message = "";
                 return true;
-            } catch {
+            } catch (Exception ex) {
+                message = ex.Message.Replace("_systemcheck.txt", "");
                 return false;
             }
         }
