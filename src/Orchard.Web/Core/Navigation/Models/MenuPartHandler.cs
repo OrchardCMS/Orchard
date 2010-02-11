@@ -10,6 +10,7 @@ namespace Orchard.Core.Navigation.Models {
         public MenuPartHandler(IRepository<MenuPartRecord> menuPartRepository) {
             Filters.Add(new ActivatingFilter<MenuPart>("blog"));
             Filters.Add(new ActivatingFilter<MenuPart>("page"));
+            Filters.Add(new ActivatingFilter<MenuPart>("menuitem"));
             Filters.Add(StorageFilter.For(menuPartRepository));
 
             OnActivated<MenuPart>((ctx, x) => {

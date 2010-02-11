@@ -19,6 +19,7 @@ namespace Orchard.Core.Navigation.Services {
             foreach (var menuPart in menuParts) {
                 if (menuPart != null ) {
                     MenuPart part = menuPart;
+                    // Add item url.
                     builder.Add(menu => menu
                                             .Add(part.MenuText, part.MenuPosition));
                 }

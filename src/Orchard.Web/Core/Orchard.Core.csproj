@@ -104,10 +104,14 @@
     <Compile Include="Feeds\Rss\RssResult.cs" />
     <Compile Include="Navigation\AdminMenu.cs" />
     <Compile Include="Navigation\Controllers\AdminController.cs" />
+    <Compile Include="Navigation\Models\MenuItem.cs" />
+    <Compile Include="Navigation\Models\MenuItemDriver.cs" />
+    <Compile Include="Navigation\Models\MenuItemHandler.cs" />
     <Compile Include="Navigation\Models\MenuPart.cs" />
     <Compile Include="Navigation\Models\MenuPartDriver.cs" />
     <Compile Include="Navigation\Models\MenuPartHandler.cs" />
     <Compile Include="Navigation\Permissions.cs" />
+    <Compile Include="Navigation\Records\MenuItemRecord.cs" />
     <Compile Include="Navigation\Records\MenuPartRecord.cs" />
     <Compile Include="Navigation\Services\MainMenu.cs" />
     <Compile Include="Navigation\Services\MainMenuFilter.cs" />
