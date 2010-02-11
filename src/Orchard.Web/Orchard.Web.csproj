@@ -231,6 +231,7 @@
     <Content Include="Themes\TheAdminClassic\Views\Layout.ascx" />
     <Content Include="Themes\TheAdminClassic\Views\Menu.ascx" />
     <Content Include="Themes\TheAdminClassic\Views\User.ascx" />
+    <Content Include="Themes\TheAdmin\Styles\images\backgroundGradient.gif" />
     <Content Include="Themes\TheAdmin\Styles\images\backgroundHeader.gif" />
     <Content Include="Themes\TheAdmin\Styles\images\orchardLogo.gif" />
     <Content Include="Themes\TheAdmin\Views\Menu.ascx" />

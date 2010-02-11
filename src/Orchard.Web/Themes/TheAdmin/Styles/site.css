@@ -567,19 +567,18 @@ button.ibutton {
 ----------------------------------------------------------*/
 .contentItems {
     background:#FFF;
-    border:1px solid #B0B083;
     margin:1.4em 0;
     padding:2px;
 }
 .contentItems li {
     background:#FFF;
-    border-bottom:1px solid #EAE9D9;
+    border-bottom:1px solid #eaeaea;
     margin:0;
     overflow:hidden;
-    padding:.7em 1.4em;
+    padding:.4em 1.4em;
 }
-.contentItems li.last {
-    border-bottom:0;
+.contentItems li.first {
+	background:#fff url(images/backgroundGradient.gif) repeat-x top left;
 }
 #main .contentItems li h3 {
     border-bottom:0;
@@ -598,7 +597,7 @@ button.ibutton {
     margin-left:8px;
     margin-right:0;
 }
-#main .contentItems li:hover { background:#fafbed; }
+#main .contentItems li:hover { background:#f8f8f8; }
 #main .contentItems li:hover .ibutton { background-position:0 0; }
 #main .contentItems li:hover .ibutton.remove { background-position:-20px 0; }
 #main .contentItems li:hover .ibutton.view { background-position:-40px 0; }
@@ -697,3 +696,60 @@ table.items, textarea, input.text, input.text-box,
 	-webkit-border-radius:3px 3px 0 0;
 	border-radius:3px 3px 0 0;
 }*/
+
+
+
+/* Added classes for new blog list layout
+---------------------------------------------------------- */
+.actions {
+    height:auto;
+    overflow:visible;
+    padding:0;
+    text-align:right;
+}
+.contentItems {
+    padding:0;
+}
+.contentItems li ul li {
+    border:0;
+    background:inherit;
+}
+li.properties {
+    float:left;
+}
+#main .contentItems li.properties h3 {
+    border-bottom:none;
+    margin:0;
+    padding:0;
+}
+li.related{
+     font-size:1.4em;
+     float:right;
+     padding:.4em 0;
+     text-align:right;
+}
+li.related .commentcount{
+     line-height:2em;
+}
+li.properties ul li{
+    border:0;
+    float:left;
+    padding:.8em 0;
+    font-size:1.4em;
+    background:inherit;
+}
+.icon {
+    margin:0 0 -2px 4px;
+    margin:0 .2em -.2em .2em;
+}
+.linkButton {
+    border:none;
+    padding:0;
+    background:none;
+    color:#1E5D7D; 
+    }   
+.linkButton:hover {
+    background-color:Transparent;
+    text-decoration:underline;
+    color:#1E5D7D;
+    }

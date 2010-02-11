@@ -5,19 +5,19 @@
 <h1 class="withActions">
     <a href="<%=Url.BlogForAdmin(Model.Item.Slug) %>"><%=Html.TitleForPage(Model.Item.Name) %></a>
 </h1>
-<ul class="actions">
-    <li class="construct">
-        <a href="<%=Url.BlogEdit(Model.Item.Slug) %>" class="ibutton edit" title="<%=_Encoded("Edit Blog") %>"></a>
-    </li>
-    <li class="destruct">
-        <% using (Html.BeginFormAntiForgeryPost(Url.BlogDelete(Model.Item.Slug), FormMethod.Post, new { @class = "inline" })) { %>
-            <fieldset>
-                <button type="submit" class="ibutton remove" title="<%=_Encoded("Remove Blog") %>"><%=_Encoded("Remove Blog") %></button>
-            </fieldset><%
-        } %>
-    </li>
-</ul>
-<p><%=Html.Encode(Model.Item.Description) %></p>
+
+<%--<form>
+<fieldset class="actions bulk">
+    <label for="filterResults"><%=_Encoded("Filter:")%></label>
+        <select id="filterResults" name="">
+            <option value="">All Posts</option>
+            <option value="">Published Posts</option>
+        </select>
+    <input class="button" type="submit" name="submit.Filter" value="<%=_Encoded("Apply") %>"/>
+</fieldset>
+</form>--%>
+
+
 <div class="actions"><a href="<%=Url.BlogPostCreate(Model.Item.Slug) %>" class="add button"><%=_Encoded("New Post")%></a></div>
 <% Html.Zone("primary");
    Html.ZonesAny(); %>
