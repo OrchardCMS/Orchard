@@ -50,11 +50,15 @@ namespace Orchard.Setup.Controllers {
 
         [HttpPost, ActionName("Index")]
         public ActionResult IndexPOST(SetupViewModel model) {
-            try {
-                if (!ModelState.IsValid) {
-                    return Index(model);
-                }
+            //HACK: (erikpo) Couldn't get a custom ValidationAttribute to validate two properties
+            if (!model.DatabaseOptions && string.IsNullOrEmpty(model.DatabaseConnectionString))
+                ModelState.AddModelError("DatabaseConnectionString", "A SQL connection string is required");
 
+            if (!ModelState.IsValid) {
+                return Index(model);
+            }
+
+            try {
                 var shellSettings = new ShellSettings {
                                                           Name = "default",
                                                           DataProvider = model.DatabaseOptions ? "SQLite" : "SqlServer",
