@@ -14,7 +14,6 @@ using Orchard.Security;
 using Orchard.Settings;
 using Orchard.Setup.ViewModels;
 using Orchard.Localization;
-using Orchard.UI.Navigation;
 using Orchard.UI.Notify;
 using MenuItem=Orchard.Core.Navigation.Models.MenuItem;
 
@@ -104,6 +103,7 @@ namespace Orchard.Setup.Controllers {
                         page.As<HasComments>().CommentsShown = false;
                         page.As<CommonAspect>().Owner = user;
                         contentManager.Publish(page);
+                        siteSettings.Record.HomePage = "PagesHomePageProvider;" + page.Id;
 
                         // add a menu item for the shiny new home page
                         var menuItem = contentManager.Create("menuitem");

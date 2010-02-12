@@ -3,12 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Web.Mvc;
+using JetBrains.Annotations;
 using Orchard.Localization;
 using Orchard.ContentManagement;
 using Orchard.Mvc.Results;
 using Orchard.Pages.Models;
 using Orchard.Pages.Services;
 using Orchard.Pages.ViewModels;
+using Orchard.Settings;
 using Orchard.UI.Notify;
 
 namespace Orchard.Pages.Controllers {
@@ -22,6 +24,7 @@ namespace Orchard.Pages.Controllers {
             T = NullLocalizer.Instance;
         }
 
+        protected virtual ISite CurrentSite { get; [UsedImplicitly] private set; }
         public IOrchardServices Services { get; private set; }
         private Localizer T { get; set; }
 
@@ -189,6 +192,9 @@ namespace Orchard.Pages.Controllers {
                 case "PublishNow":
                     _pageService.Publish(model.Page.Item);
                     Services.Notifier.Information(T("Page has been published"));
+                    if (model.PromoteToHomePage) {
+                        CurrentSite.HomePage = "PagesHomePageProvider;" + model.Page.Item.Id;
+                    }
                     break;
                 case "PublishLater":
                     _pageService.Publish(model.Page.Item, model.Page.Item.ScheduledPublishUtc.Value);

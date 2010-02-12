@@ -4,5 +4,8 @@
 <h1><%=Html.TitleForPage(T("Edit Page").ToString()) %></h1>
 <% using (Html.BeginFormAntiForgeryPost()) { %>
     <%=Html.ValidationSummary() %>
-    <%=Html.EditorForItem(m => m.Page) %><%
+    <%=Html.EditorForItem(m => m.Page) %>
+    <%=Html.EditorFor(m => m.PromoteToHomePage) %>
+    <label for="PromoteToHomePage" class="forcheckbox"><%=_Encoded("Set as home page") %></label>
+    <%
    } %>

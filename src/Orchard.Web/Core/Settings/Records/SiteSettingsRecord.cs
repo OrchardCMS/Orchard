@@ -7,5 +7,6 @@ namespace Orchard.Core.Settings.Records {
         public virtual string SiteName { get; set; }
         public virtual string SuperUser { get; set; }
         public virtual string PageTitleSeparator { get; set; }
+        public virtual string HomePage { get; set; }
     }
 }

@@ -102,6 +102,8 @@
     <Compile Include="Feeds\Models\FeedResponse.cs" />
     <Compile Include="Feeds\Rss\RssFeedBuilder.cs" />
     <Compile Include="Feeds\Rss\RssResult.cs" />
+    <Compile Include="HomePage\Controllers\HomeController.cs" />
+    <Compile Include="HomePage\Routes.cs" />
     <Compile Include="Navigation\AdminMenu.cs" />
     <Compile Include="Navigation\Controllers\AdminController.cs" />
     <Compile Include="Navigation\Models\MenuItem.cs" />
@@ -216,6 +218,7 @@
     <Content Include="Themes\Views\Web.config" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="HomePage\Module.txt" />
     <Content Include="Navigation\Views\Admin\Index.ascx" />
     <Content Include="Navigation\Views\EditorTemplates\Parts\Navigation.EditMenuPart.ascx" />
     <Content Include="Navigation\Views\Web.config" />
