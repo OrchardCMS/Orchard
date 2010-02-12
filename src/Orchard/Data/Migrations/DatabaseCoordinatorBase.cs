@@ -61,7 +61,7 @@ namespace Orchard.Data.Migrations {
                 .BuildSessionFactory();
         }
 
-        static AutoPersistenceModel CreatePersistenceModel(IEnumerable<RecordDescriptor> recordDescriptors) {
+        public static AutoPersistenceModel CreatePersistenceModel(IEnumerable<RecordDescriptor> recordDescriptors) {
             return AutoMap.Source(new TypeSource(recordDescriptors))
                 // Ensure that namespaces of types are never auto-imported, so that 
                 // identical type names from different namespaces can be mapped without ambiguity

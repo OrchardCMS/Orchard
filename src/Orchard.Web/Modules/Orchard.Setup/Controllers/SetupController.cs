@@ -64,18 +64,16 @@ namespace Orchard.Setup.Controllers {
                                                           DataProvider = model.DatabaseOptions ? "SQLite" : "SqlServer",
                                                           DataConnectionString = model.DatabaseConnectionString
                                                       };
-
-                // initialize the database:
-                // provider: SqlServer or SQLite 
-                // dataFolder: physical path (map before calling). Builtin database will be created in this location
-                // connectionString: optional - if provided the dataFolder is essentially ignored, but should still be passed in
-                _databaseMigrationManager.CreateCoordinator(shellSettings.DataProvider, Server.MapPath("~/App_Data"), shellSettings.DataConnectionString);
-
+                
                 // creating a standalone environment. 
                 // in theory this environment can be used to resolve any normal components by interface, and those
                 // components will exist entirely in isolation - no crossover between the safemode container currently in effect
                 using (var finiteEnvironment = _orchardHost.CreateStandaloneEnvironment(shellSettings)) {
                     try {
+                        // initialize database before the transaction is created
+                        var sessionFactoryHolder = finiteEnvironment.Resolve<ISessionFactoryHolder>();
+                        sessionFactoryHolder.UpdateSchema();
+
                         var contentManager = finiteEnvironment.Resolve<IContentManager>();
 
                         // create superuser

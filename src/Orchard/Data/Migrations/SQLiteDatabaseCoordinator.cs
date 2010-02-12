@@ -14,6 +14,10 @@ namespace Orchard.Data.Migrations {
         protected override IPersistenceConfigurer GetPersistenceConfigurer() {
             var persistence = SQLiteConfiguration.Standard;
             if (string.IsNullOrEmpty(_connectionString)) {
+                
+                if (!Directory.Exists(_dataFolder))
+                    Directory.CreateDirectory(_dataFolder);
+
                 persistence = persistence.UsingFile(Path.Combine(_dataFolder, "Orchard.db"));
             }
             else {

@@ -94,26 +94,27 @@ namespace Orchard.Environment {
         private IContainer CreateShellContainer(IShellSettings shellSettings) {
             foreach (var factory in _shellContainerFactories) {
                 var container = factory.CreateContainer(shellSettings);
-                if (container != null)
+                if (container != null) {
                     return container;
+                }
             }
             return null;
         }
 
         private void HackInstallSimulation() {
-            var tempContainer = CreateShellContainer();
-            var containerProvider = new FiniteContainerProvider(tempContainer);
-            try {
-                var requestContainer = containerProvider.RequestContainer;
+            //var tempContainer = CreateShellContainer();
+            //var containerProvider = new FiniteContainerProvider(tempContainer);
+            //try {
+            //    var requestContainer = containerProvider.RequestContainer;
 
-                var hackInstallationGenerator = requestContainer.Resolve<IHackInstallationGenerator>();
-                hackInstallationGenerator.GenerateInstallEvents();
-            }
-            finally {
-                // shut everything down again
-                containerProvider.DisposeRequestContainer();
-                tempContainer.Dispose();
-            }
+            //    var hackInstallationGenerator = requestContainer.Resolve<IHackInstallationGenerator>();
+            //    hackInstallationGenerator.GenerateInstallEvents();
+            //}
+            //finally {
+            //    // shut everything down again
+            //    containerProvider.DisposeRequestContainer();
+            //    tempContainer.Dispose();
+            //}
         }
 
         private void HackSimulateExtensionActivation(IContainer shellContainer) {

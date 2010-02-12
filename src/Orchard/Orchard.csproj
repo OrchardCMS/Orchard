@@ -99,7 +99,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Data\HackSessionLocator.cs" />
+    <Compile Include="Data\SessionLocator.cs" />
     <Compile Include="Data\IRepository.cs" />
     <Compile Include="Data\ISessionLocator.cs" />
     <Compile Include="Data\DataModule.cs" />
@@ -139,6 +139,7 @@
     <Compile Include="Data\Migrations\IDatabaseMigrationManager.cs" />
     <Compile Include="Data\Migrations\SQLiteDatabaseCoordinator.cs" />
     <Compile Include="Data\Migrations\SqlServerDatabaseCoordinator.cs" />
+    <Compile Include="Data\SessionFactoryHolder.cs" />
     <Compile Include="Environment\Configuration\ShellSettingsLoader.cs" />
     <Compile Include="Environment\ExtensibleInterceptionModule.cs" />
     <Compile Include="Environment\ShellBuilders\DefaultShellContainerFactory.cs" />
