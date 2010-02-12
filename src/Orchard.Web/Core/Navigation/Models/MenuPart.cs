@@ -7,9 +7,9 @@ namespace Orchard.Core.Navigation.Models {
         [HiddenInput(DisplayValue = false)]
         public int Id { get { return ContentItem.Id; } }
 
-        public bool AddToMainMenu {
-            get { return Record.AddToMainMenu; }
-            set { Record.AddToMainMenu = value; }
+        public bool OnMainMenu {
+            get { return Record.OnMainMenu; }
+            set { Record.OnMainMenu = value; }
         }
 
         public string MenuText {
