@@ -15,7 +15,6 @@ namespace Orchard.Environment {
         private readonly IEnumerable<IModelBinderProvider> _modelBinderProviders;
         private readonly IModelBinderPublisher _modelBinderPublisher;
         private readonly ViewEngineCollection _viewEngines;
-        private readonly IExtensionManager _extensionManager;
         private readonly IEnumerable<IOrchardShellEvents> _events;
 
         public DefaultOrchardShell(
@@ -24,14 +23,12 @@ namespace Orchard.Environment {
             IEnumerable<IModelBinderProvider> modelBinderProviders,
             IModelBinderPublisher modelBinderPublisher,
             ViewEngineCollection viewEngines,
-            IExtensionManager extensionManager,
             IEnumerable<IOrchardShellEvents> events) {
             _routeProviders = routeProviders;
             _routePublisher = routePublisher;
             _modelBinderProviders = modelBinderProviders;
             _modelBinderPublisher = modelBinderPublisher;
             _viewEngines = viewEngines;
-            _extensionManager = extensionManager;
             _events = events;
 
             Logger = NullLogger.Instance;
@@ -54,15 +51,15 @@ namespace Orchard.Environment {
         private void AddOrchardLocationsFormats() {
 
             IEnumerable<string> orchardMasterLocationFormats = new[] {
-                    "~/Packages/{2}/Views/{1}/{0}.master",
-                    "~/Packages/{2}/Views/Shared/{0}.master",
+                    "~/Modules/{2}/Views/{1}/{0}.master",
+                    "~/Modules/{2}/Views/Shared/{0}.master",
                 };
 
             IEnumerable<string> orchardLocationFormats = new[] {
-                    "~/Packages/{2}/Views/{1}/{0}.aspx",
-                    "~/Packages/{2}/Views/{1}/{0}.ascx",
-                    "~/Packages/{2}/Views/Shared/{0}.aspx",
-                    "~/Packages/{2}/Views/Shared/{0}.ascx",
+                    "~/Modules/{2}/Views/{1}/{0}.aspx",
+                    "~/Modules/{2}/Views/{1}/{0}.ascx",
+                    "~/Modules/{2}/Views/Shared/{0}.aspx",
+                    "~/Modules/{2}/Views/Shared/{0}.ascx",
                 };
 
             var viewEngine = _viewEngines.OfType<VirtualPathProviderViewEngine>().Single();

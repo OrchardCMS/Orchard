@@ -84,6 +84,7 @@
       <PredefinedRule Inspect="False" Prefix="" Suffix="" Style="AaBb" ElementKind="PrivateStaticReadonly" />
       <PredefinedRule Inspect="True" Prefix="" Suffix="" Style="AaBb" ElementKind="EnumMember" />
       <PredefinedRule Inspect="True" Prefix="" Suffix="" Style="AaBb" ElementKind="Other" />
+      <Abbreviation Text="SQ" />
     </Naming2>
   </CodeStyleSettings>
 </Configuration>

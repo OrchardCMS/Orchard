@@ -1,0 +1,203 @@
+﻿/*Yahoo browser reset
+----------------------------------------------------------*/
+
+body,div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pre,form,fieldset,input,textarea,p,
+blockquote,th,td {margin:0; padding:0; }
+table { border-collapse:collapse; border-spacing:0; }
+fieldset,img { border:0; }
+address,caption,cite,code,dfn,em,strong,th,var { font-style:normal; font-weight:normal; }
+ol,ul { list-style:none; }
+caption,th { text-align:left; }
+h1,h2,h3,h4,h5,h6 { font-size:100%; font-weight:normal; }
+abbr,acronym { border:0; }
+q:before,q:after {content:'';}
+abbr,acronym { border:0;}
+
+/*Defaults
+----------------------------------------------------------*/
+
+html {height: 100%;}
+
+body {
+	font: normal 100% Segoe UI,Trebuchet,Arial,Sans-Serif;
+	height: 100%;
+	text-align:left;
+	color:#333;
+}
+
+/* ---------- Headings and defaults ---------- */
+
+h1,h2,h3,h4,h5,h6,legend {font-weight:normal; font-style: normal;}
+
+h1 {font-size: 160%;}
+h2 {font-size: 145%;}
+h3 {font-size: 130%;}
+h4 {font-size: 120%;}
+h5 {font-size: 105%;}
+
+
+
+#header {
+	background:#2d2f25 url(images/backgroundHeader.gif) no-repeat bottom right;
+	width:100%;
+	height:50px;
+	margin-bottom:40px;
+}
+
+#branding{
+	background:url(images/orchardLogo.gif) no-repeat;
+	display:block;
+	height:60px;
+	margin:0 0 0 20px;;
+}
+
+
+#branding h1{
+	font-size: 140%;
+	color:#fff;
+	padding:8px 0 0 40px;
+}
+
+
+#main {
+    margin:0 auto 40px;
+    width:600px;
+}
+
+
+/* Forms
+----------------------------------------------------------*/
+
+input[type="text"], 
+input[type="password"] {
+    border:1px solid #DDDEDF;
+    display: block;
+}
+
+form {
+	border:1px solid #DDDEDF;
+	padding:10px 0;
+	background:transparent url(images/backgroundVines.gif) no-repeat right bottom;
+}
+
+form h2 {
+    font-size: 105%;
+	margin:20px 20px 0;
+}
+
+fieldset.data {
+    margin-bottom:16px;
+}
+
+fieldset div {
+	margin:20px 20px 32px 20px;
+}
+fieldset.data div {
+	margin:10px 20px 16px 20px;
+}
+    
+legend {
+	font-size: 105%;
+	font-weight:500;
+	border:none;
+	padding:10px 20px 0;
+}
+fieldset.data legend {
+    padding-bottom:10px;
+}
+
+label {
+    display:block;
+}
+
+label.forcheckbox {
+    display:inline;
+}
+
+fieldset.data span label {
+    margin-top:8px;
+}
+
+input[type="text"],
+input[type="password"] {
+    border-color:#ccc;
+    padding:4px;
+    width:98%;
+}
+    
+button, .button, .button:visited {
+	font-size: 102%;
+	background:#4687ad;
+	border:1px solid #8f8f8f;
+	color:#fff;
+	font-weight:600;
+	cursor:pointer;
+	text-align:center;
+	margin:0 0 20px 20px;
+	padding:4px 14px;
+}
+	
+button:hover, .button:hover,
+button:active, .button:active,
+button:focus, .button:focus {
+    background:#ffac40;
+    border-color:#bb8b2d;
+    color:#fff;
+    text-decoration:none;
+}
+
+html.dyn fieldset.data.builtin div span {
+    display:none;
+}
+
+
+/* Confirmations, Messages and the like
+----------------------------------------------------------*/
+.message, .validation-summary-errors {
+	margin:10px 0 4px 0;
+    padding:4px;
+	white-space:pre-wrap;
+}
+form .message, form .validation-summary-errors {
+    margin:0 10px;
+    white-space:inherit;
+}
+span.message {
+    display:block;
+	margin:4px 0 4px 4px;
+}
+.message a {
+    font-weight:bold;
+}
+
+.confirmation.message {
+	background:#e6f1c9; /* green */
+	border:1px solid #cfe493;
+}
+.warning.message {
+	background:#fdf5bc; /* yellow */
+	border:1px solid #ffea9b;
+}
+/* todo: (heskew) what else (other inputs) needs this? */
+.critical.message, .validation-summary-errors,
+.input-validation-error.text-box, .input-validation-error.text,
+input[type="password"].input-validation-error {
+	border:1px solid #990808;
+}
+.critical.message, .validation-summary-errors {
+	background:#e68585; /* red */
+	color:#fff;
+}
+.info.message {
+    background:#fff; /* orange :P */
+	border:1px dashed #D2D6C6;
+}
+.debug.message {
+    background:#eee;
+	border:1px dashed #D2D6C6;
+	color:#7a7a7a;
+	margin:20px 0 14px 0;
+}
+.debug.message:before {
+    content:"DEBUG » ";
+}

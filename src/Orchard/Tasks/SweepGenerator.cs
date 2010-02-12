@@ -56,17 +56,10 @@ namespace Orchard.Tasks {
 
         public void DoWork() {
             // makes an inner container, similar to the per-request container
-            var containerProvider = new FiniteContainerProvider(_container);
-            try {
-                var requestContainer = containerProvider.RequestContainer;
-
+            using (var standaloneEnvironment = new StandaloneEnvironment(_container)) {
                 // resolve the manager and invoke it
-                var manager = requestContainer.Resolve<IBackgroundService>();
+                var manager = standaloneEnvironment.Resolve<IBackgroundService>();
                 manager.Sweep();
-            }
-            finally{
-                // shut everything down again
-                containerProvider.DisposeRequestContainer();
             }
         }
 

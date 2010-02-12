@@ -135,12 +135,14 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="DataUtility.cs" />
+    <Compile Include="Data\Migrations\DatabaseMigrationManagerTests.cs" />
     <Compile Include="Data\RepositoryTests.cs" />
     <Compile Include="Data\StubLocator.cs" />
     <Compile Include="Environment\DefaultCompositionStrategyTests.cs" />
     <Compile Include="Environment\DefaultOrchardHostTests.cs" />
     <Compile Include="Environment\DefaultOrchardShellTests.cs" />
     <Compile Include="Environment\OrchardStarterTests.cs" />
+    <Compile Include="Environment\ShellBuilders\SetupShellContainerFactoryTests.cs" />
     <Compile Include="Environment\TestDependencies\TestDependency.cs" />
     <Compile Include="EventsTests.cs" />
     <Compile Include="Extensions\ExtensionFoldersTests.cs" />
@@ -182,9 +184,9 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Extensions\FoldersData\Sample1\Package.txt" />
+    <EmbeddedResource Include="Extensions\FoldersData\Sample1\Module.txt" />
     <EmbeddedResource Include="Extensions\FoldersData\Sample2\Two.txt" />
-    <EmbeddedResource Include="Extensions\FoldersData\Sample3\Package.txt" />
+    <EmbeddedResource Include="Extensions\FoldersData\Sample3\Module.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -92,8 +92,6 @@
     <Content Include="Default.aspx" />
     <Content Include="Global.asax" />
     <Content Include="Web.config" />
-    <Content Include="Views\Home\Index.ascx" />
-    <Content Include="Views\Web.config" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Orchard\Orchard.csproj">
@@ -104,43 +102,47 @@
       <Project>{9916839C-39FC-4CEB-A5AF-89CA7E87119F}</Project>
       <Name>Orchard.Core</Name>
     </ProjectReference>
-    <ProjectReference Include="Packages\Orchard.Blogs\Orchard.Blogs.csproj">
+    <ProjectReference Include="Modules\Orchard.Blogs\Orchard.Blogs.csproj">
       <Project>{63FBD4D9-E1DA-4A7B-AA6A-D6074FE50867}</Project>
       <Name>Orchard.Blogs</Name>
     </ProjectReference>
-    <ProjectReference Include="Packages\Orchard.Comments\Orchard.Comments.csproj">
+    <ProjectReference Include="Modules\Orchard.Comments\Orchard.Comments.csproj">
       <Project>{14C049FD-B35B-415A-A824-87F26B26E7FD}</Project>
       <Name>Orchard.Comments</Name>
     </ProjectReference>
-    <ProjectReference Include="Packages\Orchard.DevTools\Orchard.DevTools.csproj">
+    <ProjectReference Include="Modules\Orchard.DevTools\Orchard.DevTools.csproj">
       <Project>{67C1D3AF-A0EC-46B2-BAE1-DF1DA8E0B890}</Project>
       <Name>Orchard.DevTools</Name>
     </ProjectReference>
-    <ProjectReference Include="Packages\Orchard.Media\Orchard.Media.csproj">
+    <ProjectReference Include="Modules\Orchard.Media\Orchard.Media.csproj">
       <Project>{D9A7B330-CD22-4DA1-A95A-8DE1982AD8EB}</Project>
       <Name>Orchard.Media</Name>
     </ProjectReference>
-    <ProjectReference Include="Packages\Orchard.Pages\Orchard.Pages.csproj">
+    <ProjectReference Include="Modules\Orchard.Pages\Orchard.Pages.csproj">
       <Project>{4A9C04A6-0986-4A92-A610-5F59FF273FB9}</Project>
       <Name>Orchard.Pages</Name>
     </ProjectReference>
-    <ProjectReference Include="Packages\Orchard.Roles\Orchard.Roles.csproj">
+    <ProjectReference Include="Modules\Orchard.Roles\Orchard.Roles.csproj">
       <Project>{D10AD48F-407D-4DB5-A328-173EC7CB010F}</Project>
       <Name>Orchard.Roles</Name>
     </ProjectReference>
-    <ProjectReference Include="Packages\Orchard.Tags\Orchard.Tags.csproj">
+    <ProjectReference Include="Modules\Orchard.Setup\Orchard.Setup.csproj">
+      <Project>{8C7FCBC2-E6E1-405E-BFB5-D8D9E67A09C4}</Project>
+      <Name>Orchard.Setup</Name>
+    </ProjectReference>
+    <ProjectReference Include="Modules\Orchard.Tags\Orchard.Tags.csproj">
       <Project>{5D0F00F0-26C9-4785-AD61-B85710C60EB0}</Project>
       <Name>Orchard.Tags</Name>
     </ProjectReference>
-    <ProjectReference Include="Packages\Orchard.Users\Orchard.Users.csproj">
+    <ProjectReference Include="Modules\Orchard.Users\Orchard.Users.csproj">
       <Project>{79AED36E-ABD0-4747-93D3-8722B042454B}</Project>
       <Name>Orchard.Users</Name>
     </ProjectReference>
-    <ProjectReference Include="Packages\Orchard.Sandbox\Orchard.Sandbox.csproj">
+    <ProjectReference Include="Modules\Orchard.Sandbox\Orchard.Sandbox.csproj">
       <Project>{17C44253-65A2-4597-98C7-16EE576824B6}</Project>
       <Name>Orchard.Sandbox</Name>
     </ProjectReference>
-    <ProjectReference Include="Packages\TinyMce\TinyMce.csproj">
+    <ProjectReference Include="Modules\TinyMce\TinyMce.csproj">
       <Project>{954CA994-D204-468B-9D69-51F6AD3E1C29}</Project>
       <Name>TinyMce</Name>
     </ProjectReference>
@@ -150,10 +152,7 @@
     <Content Include="Themes\Orange\Styles\site.css" />
     <Content Include="Themes\Orange\Theme.txt" />
     <Content Include="Themes\Orange\Views\Layout.ascx" />
-    <Content Include="Themes\TheAdmin\Styles\images\background_header.jpg" />
     <Content Include="Themes\TheAdmin\Styles\images\icons.png" />
-    <Content Include="Themes\TheAdmin\Styles\images\orchardLogo.jpg" />
-    <Content Include="Themes\TheAdmin\Styles\images\tableHeaderBackground.gif" />
     <Content Include="Themes\TheAdmin\Styles\images\tableHeaderBackgroundRed.gif" />
     <Content Include="Themes\TheAdmin\Styles\site.css" />
     <Content Include="Themes\TheAdmin\Theme.gif" />
@@ -161,6 +160,7 @@
     <Content Include="Themes\TheAdmin\Views\Layout.ascx" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Themes\TheAdminClassic\Styles\images\icons.psd" />
     <None Include="Themes\TheAdmin\Styles\images\icons.psd" />
     <Content Include="Themes\Classic\Content\Images\bodyBackground.gif" />
     <Content Include="Themes\Classic\Content\Images\bodyBackgroundgrey.gif" />
@@ -221,6 +221,31 @@
     <Content Include="Themes\Orchard\Views\Footer.ascx" />
     <Content Include="Themes\Orchard\Views\Layout.ascx" />
     <Content Include="Themes\Orchard\Views\Menu.ascx" />
+    <Content Include="Themes\SafeMode\Content\Images\background_content.jpg" />
+    <Content Include="Themes\SafeMode\Content\Images\background_footer.jpg" />
+    <Content Include="Themes\SafeMode\Content\Images\background_module.gif" />
+    <Content Include="Themes\SafeMode\Content\Images\background_page.jpg" />
+    <Content Include="Themes\SafeMode\Content\Images\background_pageTop.gif" />
+    <Content Include="Themes\SafeMode\Content\Images\orchardLogo.jpg" />
+    <Content Include="Themes\SafeMode\Styles\site.css" />
+    <Content Include="Themes\SafeMode\Theme.png" />
+    <Content Include="Themes\SafeMode\Theme.txt" />
+    <Content Include="Themes\SafeMode\Views\Document.aspx" />
+    <Content Include="Themes\SafeMode\Views\Layout.ascx" />
+    <Content Include="Themes\TheAdminClassic\Styles\images\background_header.jpg" />
+    <Content Include="Themes\TheAdminClassic\Styles\images\icons.png" />
+    <Content Include="Themes\TheAdminClassic\Styles\images\orchardLogo.jpg" />
+    <Content Include="Themes\TheAdminClassic\Styles\images\tableHeaderBackground.gif" />
+    <Content Include="Themes\TheAdminClassic\Styles\images\tableHeaderBackgroundRed.gif" />
+    <Content Include="Themes\TheAdminClassic\Styles\site.css" />
+    <Content Include="Themes\TheAdminClassic\Theme.gif" />
+    <Content Include="Themes\TheAdminClassic\Theme.txt" />
+    <Content Include="Themes\TheAdminClassic\Views\Header.ascx" />
+    <Content Include="Themes\TheAdminClassic\Views\Layout.ascx" />
+    <Content Include="Themes\TheAdminClassic\Views\Menu.ascx" />
+    <Content Include="Themes\TheAdminClassic\Views\User.ascx" />
+    <Content Include="Themes\TheAdmin\Styles\images\backgroundHeader.gif" />
+    <Content Include="Themes\TheAdmin\Styles\images\orchardLogo.gif" />
     <Content Include="Themes\TheAdmin\Views\Menu.ascx" />
     <Content Include="Themes\TheAdmin\Views\User.ascx" />
     <Content Include="Themes\TheAdmin\Views\Header.ascx" />

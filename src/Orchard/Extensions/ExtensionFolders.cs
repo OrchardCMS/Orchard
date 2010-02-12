@@ -43,10 +43,10 @@ namespace Orchard.Extensions {
                 if (File.Exists(extensionManifestPath)) {
                     var yamlStream = YamlParser.Load(extensionManifestPath);
                     return new ParseResult {
-                                               Location = path,
-                                               Name = name,
-                                               YamlDocument = yamlStream.Documents.Single()
-                                           };
+                        Location = path,
+                        Name = name,
+                        YamlDocument = yamlStream.Documents.Single()
+                    };
                 }
 
                 if (_manifestIsOptional) {
@@ -55,10 +55,10 @@ namespace Orchard.Extensions {
                     bool success;
                     var yamlStream = parser.ParseYamlStream(yamlInput, out success);
                     return new ParseResult {
-                                               Location = path,
-                                               Name = name,
-                                               YamlDocument = yamlStream.Documents.Single()
-                                           };
+                        Location = path,
+                        Name = name,
+                        YamlDocument = yamlStream.Documents.Single()
+                    };
                 }
             }
             return null;

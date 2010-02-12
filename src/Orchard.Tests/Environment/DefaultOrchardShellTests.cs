@@ -37,7 +37,6 @@ namespace Orchard.Tests.Environment {
                 new[] { modelBinderProvider1, modelBinderProvider2 },
                 modelBinderPublisher,
                 new ViewEngineCollection { new WebFormViewEngine() },
-                new Moq.Mock<IExtensionManager>().Object,
                 Enumerable.Empty<IOrchardShellEvents>());
 
             runtime.Activate();

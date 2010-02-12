@@ -4,7 +4,7 @@
 
         public ExtensionEntry Load(ExtensionDescriptor descriptor) {
             //var assembly = Assembly.Load(descriptor.Name);
-            //return new PackageEntry {
+            //return new ModuleEntry {
             //    Descriptor = descriptor,
             //    Assembly = assembly,
             //    ExportedTypes = assembly.GetExportedTypes()

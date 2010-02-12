@@ -29,7 +29,7 @@ namespace Orchard.Data {
         private ISessionFactory BindSessionFactory() {
             // TEMP: a real scenario would call for a session factory locator 
             // that would eventually imply the need for configuration against one or more actual sources
-            // and a means to enlist record types from active packages into correct session factory
+            // and a means to enlist record types from active modules into correct session factory
 
             var hackPath = HostingEnvironment.MapPath("~/App_Data/hack.db");
 
@@ -44,10 +44,10 @@ namespace Orchard.Data {
 
         }
 
-        private static ISessionFactory BuildSessionFactory(IPersistenceConfigurer database, IEnumerable<RecordDescriptor> recordTypes) {
+        private static ISessionFactory BuildSessionFactory(IPersistenceConfigurer database, IEnumerable<RecordDescriptor> recordDescriptors) {
             return Fluently.Configure()
                 .Database(database)
-                .Mappings(m => m.AutoMappings.Add(CreatePersistenceModel(recordTypes)))
+                .Mappings(m => m.AutoMappings.Add(CreatePersistenceModel(recordDescriptors)))
                 .ExposeConfiguration(c => new SchemaUpdate(c).Execute(false /*script*/, true /*doUpdate*/))
                 .BuildSessionFactory();
         }

@@ -1,8 +1,24 @@
-﻿<%@ Control Language="C#" Inherits="Orchard.Mvc.ViewUserControl<object>" %>
+﻿<%@ Control Language="C#" Inherits="Orchard.Mvc.ViewUserControl<BaseViewModel>" %>
+<%@ Import Namespace="Orchard.Mvc.ViewModels"%>
+<%  var menu = Model.Menu.FirstOrDefault(); 
+    if (menu != null && menu.Items.Count() > 0) { %>
 <div id="menucontainer">
+    <%-- todo: (heskew) *really* need a better way of doing this. ...and this is really, really ugly :) --%>
     <ul id="menu">
-        <li><%= Html.ActionLink(T("Home").ToString(), "Index", "Home", new {Area = ""}, new {})%></li>
-        <li><%= Html.ActionLink(T("Blogs").ToString(), "List", "Blog", new { Area = "Orchard.Blogs" }, new { })%></li>
-        <li><%= Html.ActionLink(T("Admin").ToString(), "List", new { Area = "Orchard.Blogs", Controller = "BlogAdmin" })%></li>
+        <%
+        int counter = 0, count = menu.Items.Count() - 1;
+        foreach (var menuItem in menu.Items) {
+            var sbClass = new StringBuilder(10);
+            if (counter == 0)
+                sbClass.Append("first ");
+            if (counter == count)
+                sbClass.Append("last ");%>
+        <li class="<%=sbClass.ToString().TrimEnd() %>"><%=!string.IsNullOrEmpty(menuItem.Url)
+                ? Html.Link(menuItem.Text, ResolveUrl(menuItem.Url))
+                : Html.ActionLink(menuItem.Text, (string)menuItem.RouteValues["action"], menuItem.RouteValues).ToHtmlString() %></li>
+        <%
+            ++counter;
+        } %>
     </ul>
 </div>
+<% } %>

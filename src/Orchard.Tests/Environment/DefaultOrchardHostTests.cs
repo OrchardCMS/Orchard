@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
@@ -11,6 +10,7 @@ using Autofac.Modules;
 using Moq;
 using NUnit.Framework;
 using Orchard.Environment;
+using Orchard.Environment.Configuration;
 using Orchard.Mvc;
 using Orchard.Mvc.ModelBinders;
 using Orchard.Mvc.Routes;
@@ -46,7 +46,21 @@ namespace Orchard.Tests.Environment {
                     builder.Register(new ViewEngineCollection { new WebFormViewEngine() });
                     builder.Register(new StuExtensionManager()).As<IExtensionManager>();
                     builder.Register(new Mock<IHackInstallationGenerator>().Object);
+                    builder.Register(new StubShellSettingsLoader()).As<IShellSettingsLoader>();
                 });
+        }
+
+        public class StubShellSettingsLoader : IShellSettingsLoader {
+            private readonly List<IShellSettings> _shellSettings = new List<IShellSettings>
+                                                                   {new ShellSettings {Name = "testing"}};
+
+            public IEnumerable<IShellSettings> LoadSettings() {
+                return _shellSettings.AsEnumerable();
+            }
+
+            public void SaveSettings(IShellSettings settings) {
+                _shellSettings.Add(settings);
+            }
         }
 
         public class StuExtensionManager : IExtensionManager {
@@ -96,7 +110,7 @@ namespace Orchard.Tests.Environment {
 
         [Test]
         public void DifferentShellInstanceShouldBeReturnedAfterEachCreate() {
-            var host = _container.Resolve<IOrchardHost>();
+            var host = (DefaultOrchardHost)_container.Resolve<IOrchardHost>();
             var runtime1 = host.CreateShell();
             var runtime2 = host.CreateShell();
             Assert.That(runtime1, Is.Not.SameAs(runtime2));

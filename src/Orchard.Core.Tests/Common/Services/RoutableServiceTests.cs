@@ -10,7 +10,7 @@ using Orchard.ContentManagement.Records;
 using Orchard.Core.Common.Models;
 using Orchard.Core.Common.Records;
 using Orchard.Core.Common.Services;
-using Orchard.Tests.Packages;
+using Orchard.Tests.Modules;
 
 namespace Orchard.Core.Tests.Common.Services {
     [TestFixture]

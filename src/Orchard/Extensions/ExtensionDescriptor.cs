@@ -1,7 +1,7 @@
 ﻿namespace Orchard.Extensions {
     public class ExtensionDescriptor {
         /// <summary>
-        /// Virtual path base, "~/Themes", "~/Packages", or "~/Core"
+        /// Virtual path base, "~/Themes", "~/Modules", or "~/Core"
         /// </summary>
         public string Location { get; set; }
 
@@ -11,7 +11,7 @@
         public string Name { get; set; }
 
         /// <summary>
-        /// "Theme" or "Package"
+        /// "Theme" or "Module"
         /// </summary>
         public string ExtensionType { get; set; }
         

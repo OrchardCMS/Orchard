@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+<!-- Initialization -->
+
+	<PropertyGroup>
+		<LibFolder>$(MSBuildProjectDirectory)\lib</LibFolder>
+		<SrcFolder>$(MSBuildProjectDirectory)\src</SrcFolder>
+		<BuildFolder>$(MSBuildProjectDirectory)\build</BuildFolder>
+		
+		<CompileFolder>$(BuildFolder)\Compile</CompileFolder>
+		<WebSitesFolder>$(CompileFolder)\_PublishedWebsites</WebSitesFolder>
+		<StageFolder>$(BuildFolder)\Stage</StageFolder>
+	</PropertyGroup>
+
+  <Import Project="$(LibFolder)\msbuild\MSBuild.Community.Tasks.Targets"/>
+
+<!-- Coordinating Targets -->
+
+  <Target Name ="Build">
+    <CallTarget Targets="Clean"/>
+    <CallTarget Targets="Compile"/>
+    <CallTarget Targets="Test"/>
+    <CallTarget Targets="Package"/>
+  </Target>
+
+  <Target Name="Package">
+    <CallTarget Targets="Package-Stage"/>
+    <CallTarget Targets="Package-Zip"/>
+  </Target>
+
+
+<!-- Building -->
+
+	<Target Name="Clean">
+		<MSBuild Projects="$(SrcFolder)\Orchard.sln" Targets="Clean" />
+		<RemoveDir Directories="$(BuildFolder)" />
+	</Target>
+
+  <Target Name ="Compile">
+    <MSBuild
+      Projects="$(SrcFolder)\Orchard.sln"
+      Targets="Build"
+      Properties="Configuration=Release;OutputPath=$(CompileFolder)" />      
+  </Target>
+
+
+<!-- Testing -->
+
+  <Target Name ="Test">
+		<Exec Command="$(LibFolder)\nunit\nunit-console-x86.exe /xml=$(BuildFolder)\Orchard.Tests.xml $(CompileFolder)\Orchard.Core.Tests.dll $(CompileFolder)\Orchard.Tests.dll $(CompileFolder)\Orchard.Tests.Modules.dll $(CompileFolder)\Orchard.Web.Tests.dll $(CompileFolder)\MSBuild.Orchard.Tasks.Tests.dll" />
+  </Target>
+
+
+<!-- Packaging -->
+
+	<UsingTask AssemblyFile="$(CompileFolder)\MSBuild.Orchard.Tasks.dll" TaskName="MSBuild.Orchard.Tasks.StageProjectAlteration" />
+
+  <Target Name="Package-Stage">
+    <ItemGroup>
+      <Stage-Bin-Exclude Include="$(WebSitesFolder)\**\bin\**\*" />
+      
+      <Stage-Web Include="$(WebSitesFolder)\Orchard.Web\**\*;$(SrcFolder)\Orchard.Web\*.csproj" />
+      <Stage-Core Include="$(WebSitesFolder)\Orchard.Core\**\*" Exclude="@(Stage-Bin-Exclude)" />
+      <Stage-Modules Include="$(WebSitesFolder)\**\*" Exclude="@(Stage-Web);@(Stage-Core);@(Stage-Bin-Exclude)" />
+      <Stage-License Include="$(MSBuildProjectDirectory)\*.txt" />
+    </ItemGroup>
+
+    <Copy SourceFiles="@(Stage-Web);@(Stage-License)" DestinationFolder="$(StageFolder)\%(RecursiveDir)" />
+    <Copy SourceFiles="@(Stage-Core)" DestinationFolder="$(StageFolder)\Core\%(RecursiveDir)" />
+    <Copy SourceFiles="@(Stage-Modules)" DestinationFolder="$(StageFolder)\Modules\%(RecursiveDir)" />
+
+
+    <!-- extra processing of the staged csproj file -->
+    <StageProjectAlteration ProjectFileName="$(StageFolder)\Orchard.Web.csproj" AddContentFiles="
+        @(Stage-Modules->'Modules\%(RecursiveDir)%(Filename)%(Extension)');
+        @(Stage-Core->'Core\%(RecursiveDir)%(Filename)%(Extension)')">
+      <Output TaskParameter="ExtraFiles" ItemName="StageProjectAlteration-ExtraFiles"/>
+    </StageProjectAlteration>
+
+    <!-- move over extra non-content files the csproj referenced -->
+    <Copy SourceFiles="@(StageProjectAlteration-ExtraFiles->'$(SrcFolder)\Orchard.Web\%(Identity)')" 
+        DestinationFolder="$(StageFolder)\%(RecursiveDir)"/>
+
+  </Target>
+
+  <Target Name="Package-Zip">
+    <ItemGroup>
+      <Zip-Exclude Include="
+        $(MSBuildProjectDirectory)\src\**\bin\**\*;
+        $(MSBuildProjectDirectory)\src\**\obj\**\*;
+        $(MSBuildProjectDirectory)\**\App_Data\**\*;
+        $(MSBuildProjectDirectory)\**\_ReSharper*\**\*;
+        $(MSBuildProjectDirectory)\**\*.sln.cache;
+        $(MSBuildProjectDirectory)\**\*.suo;
+        $(MSBuildProjectDirectory)\**\*.user;
+        $(MSBuildProjectDirectory)\**\*.patch;
+        $(MSBuildProjectDirectory)\**\*.hg;
+        " />
+      
+      <Zip-Stage Include="$(StageFolder)\**\*" />
+      
+      <Zip-Source Include="
+        $(MSBuildProjectDirectory)\lib\**\*;
+        $(MSBuildProjectDirectory)\src\**\*;
+        $(MSBuildProjectDirectory)\*.txt;
+        " Exclude="@(Zip-Exclude)" />
+        
+    </ItemGroup>
+
+		<Zip Files="@(Zip-Stage)" WorkingDirectory="$(StageFolder)" ZipFileName="$(BuildFolder)\Orchard.Web.zip" />
+		<Zip Files="@(Zip-Source)" WorkingDirectory="$(MSBuildProjectDirectory)" ZipFileName="$(BuildFolder)\Orchard.Source.zip" />
+  </Target>
+
+</Project>
