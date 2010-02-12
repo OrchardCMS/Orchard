@@ -4,6 +4,7 @@ using System.Web.Mvc;
 using Orchard.Comments.Models;
 using Orchard.ContentManagement;
 using Orchard.Core.Common.Models;
+using Orchard.Core.Navigation.Models;
 using Orchard.Core.Settings.Models;
 using Orchard.Data;
 using Orchard.Data.Migrations;
@@ -13,7 +14,9 @@ using Orchard.Security;
 using Orchard.Settings;
 using Orchard.Setup.ViewModels;
 using Orchard.Localization;
+using Orchard.UI.Navigation;
 using Orchard.UI.Notify;
+using MenuItem=Orchard.Core.Navigation.Models.MenuItem;
 
 namespace Orchard.Setup.Controllers {
     public class SetupController : Controller {
@@ -101,6 +104,15 @@ namespace Orchard.Setup.Controllers {
                         page.As<HasComments>().CommentsShown = false;
                         page.As<CommonAspect>().Owner = user;
                         contentManager.Publish(page);
+
+                        // add a menu item for the shiny new home page
+                        var menuItem = contentManager.Create("menuitem");
+                        menuItem.As<MenuPart>().MenuPosition = "1";
+                        menuItem.As<MenuPart>().MenuText = "Home";
+                        menuItem.As<MenuPart>().OnMainMenu = true;
+                        menuItem.As<MenuItem>().Url = "~/";
+                        
+
 
                         var authenticationService = finiteEnvironment.Resolve<IAuthenticationService>();
                         authenticationService.SignIn(user, true);
