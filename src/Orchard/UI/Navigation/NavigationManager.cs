@@ -45,6 +45,7 @@ namespace Orchard.UI.Navigation {
                         Position = item.Position,
                         RouteValues = item.RouteValues,
                         Text = item.Text,
+                        Url = item.Url
                     };
                 }
             }
@@ -75,6 +76,7 @@ namespace Orchard.UI.Navigation {
 
             var joined = new MenuItem {
                 Text = items.First().Text,
+                Url = items.First().Url,
                 RouteValues = items.First().RouteValues,
                 Items = Merge(items.Select(x => x.Items)).ToArray(),
                 Position = SelectBestPositionValue(items.Select(x => x.Position)),
