@@ -13,7 +13,7 @@ namespace Orchard.Core.Navigation.Services {
             _contentManager = contentManager;
         }
 
-        public string MenuName { get { return "mainmenu"; } }
+        public string MenuName { get { return "main"; } }
 
         public void GetNavigation(NavigationBuilder builder) {
             IEnumerable<MenuPart> menuParts = _contentManager.Query<MenuPart, MenuPartRecord>().Where(x => x.OnMainMenu).List();

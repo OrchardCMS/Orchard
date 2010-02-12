@@ -1,4 +1,4 @@
-﻿<%@ Control Language="C#" Inherits="Orchard.Mvc.ViewUserControl<NavigationIndexViewModel>" %>
+﻿<%@ Control Language="C#" Inherits="Orchard.Mvc.ViewUserControl<NavigationManagementViewModel>" %>
 <%@ Import Namespace="Orchard.Core.Navigation.ViewModels"%>
 <h1><%=Html.TitleForPage(T("Edit Main Menu").ToString())%></h1><%
 using (Html.BeginFormAntiForgeryPost()) { %>
@@ -11,15 +11,15 @@ using (Html.BeginFormAntiForgeryPost()) { %>
             <td></td>
         </tr>
     </thead>
-    <tbody>
-        <%-- loop over menu items --%>
+    <tbody><%
+    foreach (var menuItem in Model.Menu) { %>
         <tr>
-            <td><input type="text" name="text" /></td>
-            <td><input type="text" name="position" /></td>
-            <td><input type="text" name="url" /></td>
+            <td><%=Html.TextBox("text", menuItem.Text) %></td>
+            <td><%=Html.TextBox("position", menuItem.Position) %></td>
+            <td><%=Html.TextBox("url", menuItem.Url) %></td>
             <td>Delete Button</td>
-        </tr>
-        <%-- end loop --%>
+        </tr><%
+    } %>
         <tr>
             <td></td>
             <td></td>
