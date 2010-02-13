@@ -114,7 +114,7 @@ namespace Orchard.Setup.Controllers {
 
                         // add a menu item for the admin
                         var adminMenuItem = contentManager.Create("menuitem");
-                        adminMenuItem.As<MenuPart>().MenuPosition = null; //"2";
+                        adminMenuItem.As<MenuPart>().MenuPosition = "2";
                         adminMenuItem.As<MenuPart>().MenuText = T("Admin").ToString();
                         adminMenuItem.As<MenuPart>().OnMainMenu = true;
                         //adminMenuItem.As<MenuItem>().Permissions = new [] {StandardPermissions.AccessAdminPanel};

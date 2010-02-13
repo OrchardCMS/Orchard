@@ -3,13 +3,19 @@
 var menu = Model.Menu.FirstOrDefault(); %>
 <h1><%=Html.TitleForPage(T("Edit Main Menu").ToString())%></h1><%
 using (Html.BeginFormAntiForgeryPost()) { %>
-<table>
+<table class="items">
+    <colgroup>
+        <col id="Text" />
+        <col id="Position" />
+        <col id="Url" />
+        <col id="Actions" />
+    </colgroup>
     <thead>
         <tr>
-            <td>Text</td>
-            <td>Position</td>
-            <td>Url</td>
-            <td></td>
+            <td scope="col"><%=_Encoded("Text") %></td>
+            <td scope="col"><%=_Encoded("Position") %></td>
+            <td scope="col"><%=_Encoded("Url") %></td>
+            <td scope="col"></td>
         </tr>
     </thead>
     <tbody><%
@@ -18,27 +24,22 @@ using (Html.BeginFormAntiForgeryPost()) { %>
             <td><%=Html.TextBox("text", menuItem.Text) %></td>
             <td><%=Html.TextBox("position", menuItem.Position) %></td>
             <td><%=Html.TextBox("url", menuItem.Url) %></td>
-            <td>Delete Button</td>
+            <td><a href="#" class="remove button">delete</a></td>
         </tr><%
     } %>
-        <tr>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td>Update All Button</td>
-        </tr>
     </tbody>
-</table><%     
+</table>
+<fieldset class="actions"><button type="submit"><%=_Encoded("Update All") %></button></fieldset><%     
 }
 
 using (Html.BeginFormAntiForgeryPost()) { %>
-<table>
+<table class="items">
     <tbody>
         <tr>
-            <td><input type="text" name="addtext" /></td>
-            <td><input type="text" name="addposition" /></td>
-            <td><input type="text" name="addurl" /></td>
-            <td>Add Button</td>
+            <td><input type="text" name="addtext" id="addtext" /></td>
+            <td><input type="text" name="addposition" id="addposition" /></td>
+            <td><input type="text" name="addurl" id="addurl" /></td>
+            <td><button class="add" type="submit"><%=_Encoded("Add") %></button></td>
         </tr>
     </tbody>
 </table><%
