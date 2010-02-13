@@ -110,9 +110,7 @@ namespace Orchard.Setup.Controllers {
                         menuItem.As<MenuPart>().MenuPosition = "1";
                         menuItem.As<MenuPart>().MenuText = "Home";
                         menuItem.As<MenuPart>().OnMainMenu = true;
-                        menuItem.As<MenuItem>().Url = "~/";
-                        
-
+                        menuItem.As<MenuItem>().Url = Request.Url.AbsolutePath;
 
                         var authenticationService = finiteEnvironment.Resolve<IAuthenticationService>();
                         authenticationService.SignIn(user, true);
