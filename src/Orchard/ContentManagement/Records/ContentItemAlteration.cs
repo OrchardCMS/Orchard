@@ -64,6 +64,7 @@ namespace Orchard.ContentManagement.Records {
                 mapping.References(syntheticExpression)
                     .Access.NoOp()
                     .Column("Id")
+                    .ForeignKey("none") // prevent foreign key constraint from ContentItem(Version)Record to TPartRecord
                     .Unique()
                     .Not.Insert()
                     .Not.Update()
@@ -71,55 +72,6 @@ namespace Orchard.ContentManagement.Records {
             }
         }
 
-        class ContentPartAlterationInternal<TPartRecord> : IAlteration<ContentItemRecord> where TPartRecord : ContentPartRecord {
-            public void Override(AutoMapping<ContentItemRecord> mapping) {
-
-                // public TPartRecord TPartRecord {get;set;}
-                var name = typeof(TPartRecord).Name;
-                var syntheticMethod = new DynamicMethod(name, typeof(TPartRecord), null, typeof(ContentItemRecord));
-                var syntheticProperty = new SyntheticPropertyInfo(syntheticMethod);
-
-                // record => record.TPartRecord
-                var parameter = Expression.Parameter(typeof(ContentItemRecord), "record");
-                var syntheticExpression = (Expression<Func<ContentItemRecord, TPartRecord>>)Expression.Lambda(
-                    typeof(Func<ContentItemRecord, TPartRecord>),
-                    Expression.Property(parameter, syntheticProperty),
-                    parameter);
-
-                mapping.References(syntheticExpression)
-                    .Access.NoOp()
-                    .Column("Id")
-                    .Unique()
-                    .Not.Insert()
-                    .Not.Update()
-                    .Cascade.All();
-            }
-        }
-
-        class ContentPartVersionAlterationInternal<TPartRecord> : IAlteration<ContentItemVersionRecord> where TPartRecord : ContentPartVersionRecord {
-            public void Override(AutoMapping<ContentItemVersionRecord> mapping) {
-
-                // public TPartRecord TPartRecord {get;set;}
-                var name = typeof(TPartRecord).Name;
-                var syntheticMethod = new DynamicMethod(name, typeof(TPartRecord), null, typeof(ContentItemVersionRecord));
-                var syntheticProperty = new SyntheticPropertyInfo(syntheticMethod);
-
-                // record => record.TPartRecord
-                var parameter = Expression.Parameter(typeof(ContentItemVersionRecord), "record");
-                var syntheticExpression = (Expression<Func<ContentItemVersionRecord, TPartRecord>>)Expression.Lambda(
-                    typeof(Func<ContentItemVersionRecord, TPartRecord>),
-                    Expression.Property(parameter, syntheticProperty),
-                    parameter);
-
-                mapping.References(syntheticExpression)
-                    .Access.NoOp()
-                    .Column("Id")
-                    .Unique()
-                    .Not.Insert()
-                    .Not.Update()
-                    .Cascade.All();
-            }
-        }
         private class SyntheticPropertyInfo : PropertyInfo {
             private readonly DynamicMethod _getMethod;
 
