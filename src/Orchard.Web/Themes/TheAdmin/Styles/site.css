@@ -60,7 +60,7 @@ body#preview {
     min-width:0;
 }
 #content {
-    background:#fff;
+    background:#fcfcfc;
 }
 
 
@@ -134,7 +134,6 @@ number of columns: 24; actual width: 946; column width: 26; gutter width:14
     width:23.629%;
 }
 
-
 /* Headings and defaults
 ----------------------------------------------------------*/
 h1, h2, h3, h4, h5, legend {
@@ -149,9 +148,9 @@ h3 { font-size:1.8em; } /* 18px */
 h4 { font-size:1.6em; } /* 16px */
 h5 { font-size:1.4em; } /* 14px */
 
-h6, p, legend, label, input, select, .button,
+h6, p, label, input, select, .button,
 .message, .validation-summary-errors,
-table.items th, table.items td, table.items caption { font-size:1.4em; line-height:1.4em; } /* 15px */
+table.items th, table.items td, table.items caption { font-size:1.4em; line-height:1.4em; } /* 14px */
 p .button { font-size:inherit; }
 .meta, .hint { font-size:1.2em; } /* 12px */
 
@@ -232,7 +231,6 @@ a:hover, a:active, a:focus {
 }
 
 #navigation li {
-	background:#fff;
 	margin:7px 0 20px 0;
 }
 #navigation ul li {
@@ -329,8 +327,14 @@ span.message {
 	color:#fff;
 }
 .info.message {
-    background:#fff; /* orange :P */
-	border:1px dashed #D2D6C6;
+    background:#e4ebef; /* blue */
+	border:1px solid #4687AD;
+	color:#062232;
+}
+.info.message {
+    background:#e6e7ef; /* blue */
+	border:1px solid #b5b9c4;
+	color:#062232;
 }
 .debug.message {
     background:#eee;
@@ -357,13 +361,18 @@ fieldset.bulk.actions {
     margin:0 1.4em 0 0;
     padding-top:0;
 }
-
+legend {
+    font-size:1.6em;
+    font-weight:600;
+    font-weight:bold;
+}
 label {
 	display: block;
-	font-weight:600;
+	color:#1d1b1b;
 }
 label.forcheckbox {
     display:inline;
+    line-height:1.8em;
 }
 fieldset.bulk.actions label, label.sub {
     display:inline;
@@ -383,8 +392,7 @@ label input {
 /* todo: (heskew) try to get .text on stuff like .text-box */
 select, textarea, input.text, input.text-box {
 	padding:2px;
-	border:1px solid #ddd;
-	color:#000;
+	border:1px solid #bdbcbc;
 }
 input.text, input.text-box {
     line-height:1.2em;
@@ -412,7 +420,22 @@ input.large.text, textarea, fieldset {
     clear:both;
 }
 fieldset {
-    margin:.7em 0 .4em;
+    margin:1.8em 0 .4em 0;
+}
+/* Settings page styles */
+.settings fieldset {
+    margin:.5em 0;
+    border-bottom:1px solid #eaeaea;
+    padding:1em;
+}
+.settings fieldset div, .settings .button {
+    margin:1em 0 .5em 1em;
+}
+.settings legend {
+    margin:0 0 -.4em 0;
+}
+.settings input.text, .settings input.text-box {
+    width:26em;
 }
 textarea {
     min-height:8em;
@@ -422,7 +445,6 @@ textarea {
     padding:4px;
     width:98%;
 }
-
 /* todo: (heskew) move editor specific style elsewhere */
 .primary .mceEditor {
     display:block;
@@ -442,15 +464,16 @@ button, .button, .button:link, .button:visited {
 	text-align:center;
 	padding:0 .8em .1em .8em;
 }
+.primaryAction{
+	background:#4687ad;
+	border:1px solid #8f8f8f;
+	color:#fff;
+}
 button.remove, .remove.button, .remove.button:link, .remove.button:visited {
     background-color:#DECCCA;
     background-image:url(images/tableHeaderBackgroundRed.gif);
     border-color:#d6c9c7;
     color:#5c3732;
-}
-a.button, a.button:link, a.button:visited {
-    line-height:1em;
-    padding:.2em .6em;
 }
 button:hover, .button:hover,
 button:active, .button:active,
@@ -505,7 +528,6 @@ button.remove:focus::-moz-focus-inner, .remove.button:focus::-moz-focus-inner {
     float:right;
     height:inherit;
     margin-left:.3em;
-    padding-bottom:.3em;
 }
 
 

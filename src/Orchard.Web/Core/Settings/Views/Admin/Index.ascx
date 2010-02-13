@@ -24,6 +24,6 @@
 <%= Html.EditorForItem(Model.ViewModel) %>
 <fieldset>
     <%=Html.EditorFor(s => s.Id) %>
-    <input class="button" type="submit" value="<%=_Encoded("Save") %>" />
+    <input class="button primaryAction" type="submit" value="<%=_Encoded("Save") %>" />
 </fieldset>
 <% } %>
