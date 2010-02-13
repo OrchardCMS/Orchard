@@ -106,11 +106,20 @@ namespace Orchard.Setup.Controllers {
                         siteSettings.Record.HomePage = "PagesHomePageProvider;" + page.Id;
 
                         // add a menu item for the shiny new home page
-                        var menuItem = contentManager.Create("menuitem");
-                        menuItem.As<MenuPart>().MenuPosition = "1";
-                        menuItem.As<MenuPart>().MenuText = "Home";
-                        menuItem.As<MenuPart>().OnMainMenu = true;
-                        menuItem.As<MenuItem>().Url = Request.Url.AbsolutePath;
+                        var homeMenuItem = contentManager.Create("menuitem");
+                        homeMenuItem.As<MenuPart>().MenuPosition = "1";
+                        homeMenuItem.As<MenuPart>().MenuText = T("Home").ToString();
+                        homeMenuItem.As<MenuPart>().OnMainMenu = true;
+                        homeMenuItem.As<MenuItem>().Url = Request.Url.AbsolutePath;
+
+                        // add a menu item for the admin
+                        var adminMenuItem = contentManager.Create("menuitem");
+                        adminMenuItem.As<MenuPart>().MenuPosition = null; //"2";
+                        adminMenuItem.As<MenuPart>().MenuText = T("Admin").ToString();
+                        adminMenuItem.As<MenuPart>().OnMainMenu = true;
+                        //adminMenuItem.As<MenuItem>().Permissions = new [] {StandardPermissions.AccessAdminPanel};
+                        //todo: (heskew) pull "/blogs" once the is a ~/admin
+                        adminMenuItem.As<MenuItem>().Url = string.Format("{0}admin/blogs", Request.Url.AbsolutePath);
 
                         var authenticationService = finiteEnvironment.Resolve<IAuthenticationService>();
                         authenticationService.SignIn(user, true);
