@@ -39,7 +39,8 @@ namespace Orchard.Core.HomePage.Controllers {
                         ActionResult result = provider.GetHomePage(item);
                         if (result is ViewResultBase) {
                             ViewResultBase resultBase = result as ViewResultBase;
-                            ViewData = resultBase.ViewData;
+                            ViewData.Model = resultBase.ViewData.Model;
+                            resultBase.ViewData = ViewData;
                         }
                         return result;
                     }
