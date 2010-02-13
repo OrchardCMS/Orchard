@@ -22,19 +22,14 @@ namespace Orchard.Core.Navigation.Services {
                     MenuPart part = menuPart;
 
                     if (part.Is<MenuItem>())
-                        builder.Add(menu => menu.Add(part.MenuText, part.MenuPosition, part.As<MenuItem>().Url));
+                        builder.Add(
+                            menu => menu.Add(part.MenuText, part.MenuPosition, nib => nib.Url(part.As<MenuItem>().Url)));
                     else
                         builder.Add(
                             menu =>
                             menu.Add(part.MenuText, part.MenuPosition,
                                      nib =>
-                                     nib.Action(
-                                         part.ContentItem.ContentManager.GetItemMetadata(part.ContentItem).
-                                             DisplayRouteValues["action"] as string,
-                                         part.ContentItem.ContentManager.GetItemMetadata(part.ContentItem).
-                                             DisplayRouteValues["controller"] as string,
-                                         part.ContentItem.ContentManager.GetItemMetadata(part.ContentItem).
-                                             DisplayRouteValues)));
+                                     nib.Action(_contentManager.GetItemMetadata(part.ContentItem).DisplayRouteValues)));
                 }
             }
         }

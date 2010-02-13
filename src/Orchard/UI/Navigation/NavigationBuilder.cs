@@ -8,7 +8,7 @@ namespace Orchard.UI.Navigation {
     public class NavigationBuilder {
         IEnumerable<MenuItem> Contained { get; set; }
 
-        public NavigationBuilder Add(string caption, string position, string url, Action<NavigationItemBuilder> itemBuilder) {
+        public NavigationBuilder Add(string caption, string position, Action<NavigationItemBuilder> itemBuilder) {
             var childBuilder = new NavigationItemBuilder();
 
             if (!string.IsNullOrEmpty(caption))
@@ -17,31 +17,22 @@ namespace Orchard.UI.Navigation {
             if (!string.IsNullOrEmpty(position))
                 childBuilder.Position(position);
 
-            if (!string.IsNullOrEmpty(url))
-                childBuilder.Url(url);
-
             itemBuilder(childBuilder);
             Contained = (Contained ?? Enumerable.Empty<MenuItem>()).Concat(childBuilder.Build());
             return this;
         }
 
-        public NavigationBuilder Add(string caption, string position, Action<NavigationItemBuilder> itemBuilder) {
-            return Add(caption, position, null, itemBuilder);
-        }
         public NavigationBuilder Add(string caption, Action<NavigationItemBuilder> itemBuilder) {
-            return Add(caption, null, null, itemBuilder);
+            return Add(caption, null, itemBuilder);
         }
         public NavigationBuilder Add(Action<NavigationItemBuilder> itemBuilder) {
-            return Add(null, null, null, itemBuilder);
-        }
-        public NavigationBuilder Add(string caption, string position, string url) {
-            return Add(caption, position, url, x=> { });
+            return Add(null, null, itemBuilder);
         }
         public NavigationBuilder Add(string caption, string position) {
-            return Add(caption, position, null, x=> { });
+            return Add(caption, position, x=> { });
         }
         public NavigationBuilder Add(string caption) {
-            return Add(caption, null, null, x => { });
+            return Add(caption, null, x => { });
         }
 
         public IEnumerable<MenuItem> Build() {
@@ -79,6 +70,12 @@ namespace Orchard.UI.Navigation {
         public new IEnumerable<MenuItem> Build() {
             _item.Items = base.Build();
             return new[] { _item };
+        }
+
+        public NavigationItemBuilder Action(RouteValueDictionary values) {
+            return values != null
+                ? Action(values["action"] as string, values["controller"] as string, values)
+                : Action(null, null, new RouteValueDictionary());
         }
 
         public NavigationItemBuilder Action(string actionName) {
