@@ -12,10 +12,17 @@
             if (counter == 0)
                 sbClass.Append("first ");
             if (counter == count)
-                sbClass.Append("last ");%>
-        <li class="<%=sbClass.ToString().TrimEnd() %>"><%=!string.IsNullOrEmpty(menuItem.Url)
-                ? Html.Link(menuItem.Text, ResolveUrl(menuItem.Url))
-                : Html.ActionLink(menuItem.Text, (string)menuItem.RouteValues["action"], menuItem.RouteValues).ToHtmlString() %></li><%
+                sbClass.Append("last ");
+
+            var url = !string.IsNullOrEmpty(menuItem.Url)
+                          ? menuItem.Url
+                          : Url.RouteUrl(menuItem.RouteValues);
+
+            if (string.Equals(url, Request.Url.AbsolutePath, StringComparison.InvariantCultureIgnoreCase))
+                sbClass.Append("current ");
+            
+            %>
+        <li class="<%=sbClass.ToString().TrimEnd() %>"><%=Html.Link(menuItem.Text, url) %></li><%
             ++counter;
         } %>
     </ul>
