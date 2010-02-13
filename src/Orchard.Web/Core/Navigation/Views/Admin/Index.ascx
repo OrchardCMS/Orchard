@@ -1,5 +1,6 @@
 ﻿<%@ Control Language="C#" Inherits="Orchard.Mvc.ViewUserControl<NavigationManagementViewModel>" %>
-<%@ Import Namespace="Orchard.Core.Navigation.ViewModels"%>
+<%@ Import Namespace="Orchard.Core.Navigation.ViewModels"%><%
+var menu = Model.Menu.FirstOrDefault(); %>
 <h1><%=Html.TitleForPage(T("Edit Main Menu").ToString())%></h1><%
 using (Html.BeginFormAntiForgeryPost()) { %>
 <table>
@@ -12,7 +13,7 @@ using (Html.BeginFormAntiForgeryPost()) { %>
         </tr>
     </thead>
     <tbody><%
-    foreach (var menuItem in Model.Menu) { %>
+    foreach (var menuItem in menu.Items) { %>
         <tr>
             <td><%=Html.TextBox("text", menuItem.Text) %></td>
             <td><%=Html.TextBox("position", menuItem.Position) %></td>
