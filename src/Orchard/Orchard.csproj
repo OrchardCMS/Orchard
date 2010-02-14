@@ -140,6 +140,7 @@
     <Compile Include="Data\Migrations\SQLiteDatabaseCoordinator.cs" />
     <Compile Include="Data\Migrations\SqlServerDatabaseCoordinator.cs" />
     <Compile Include="Data\SessionFactoryHolder.cs" />
+    <Compile Include="Environment\Configuration\AppDataFolder.cs" />
     <Compile Include="Environment\Configuration\ShellSettingsLoader.cs" />
     <Compile Include="Environment\ExtensibleInterceptionModule.cs" />
     <Compile Include="Environment\ShellBuilders\DefaultShellContainerFactory.cs" />

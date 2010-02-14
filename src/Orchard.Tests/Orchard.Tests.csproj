@@ -138,6 +138,7 @@
     <Compile Include="Data\Migrations\DatabaseMigrationManagerTests.cs" />
     <Compile Include="Data\RepositoryTests.cs" />
     <Compile Include="Data\StubLocator.cs" />
+    <Compile Include="Environment\Configuration\AppDataFolderTests.cs" />
     <Compile Include="Environment\DefaultCompositionStrategyTests.cs" />
     <Compile Include="Environment\DefaultOrchardHostTests.cs" />
     <Compile Include="Environment\DefaultOrchardShellTests.cs" />

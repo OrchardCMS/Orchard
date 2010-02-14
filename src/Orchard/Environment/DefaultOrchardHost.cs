@@ -36,6 +36,7 @@ namespace Orchard.Environment {
             get { return _current; }
         }
 
+
         void IOrchardHost.Initialize() {
             ViewEngines.Engines.Insert(0, LayoutViewEngine.CreateShim());
             _controllerBuilder.SetControllerFactory(new OrchardControllerFactory());

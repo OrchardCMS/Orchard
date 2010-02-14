@@ -22,6 +22,7 @@ namespace Orchard.Environment {
             builder.Register<DefaultOrchardHost>().As<IOrchardHost>().SingletonScoped();
             builder.Register<DefaultCompositionStrategy>().As<ICompositionStrategy>().SingletonScoped();
             builder.Register<DefaultShellContainerFactory>().As<IShellContainerFactory>().SingletonScoped();
+            builder.Register<AppDataFolder>().As<IAppDataFolder>().SingletonScoped();
             builder.Register<ShellSettingsLoader>().As<IShellSettingsLoader>().SingletonScoped();
             builder.Register<SafeModeShellContainerFactory>().As<IShellContainerFactory>().SingletonScoped();
 
