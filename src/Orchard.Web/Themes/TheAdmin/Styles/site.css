@@ -641,10 +641,6 @@ table.items thead, table.items th {
 	overflow:hidden;
 	text-align:left;
 }
-/* todo: (heskew) hook back up */
-table.items tr.hover {
-    background-color:#f0f3d6;
-}
 table.items tr.critical {background:#e68585; border:inherit;}
 table.items tr.warning {background:#fdf5bc; border:inherit;}
 table.items th, table.items td {

@@ -1,7 +1,7 @@
 ﻿<%@ Control Language="C#" Inherits="Orchard.Mvc.ViewUserControl<NavigationManagementViewModel>" %>
 <%@ Import Namespace="Orchard.Core.Navigation.ViewModels"%><%
 var menu = Model.Menu.FirstOrDefault(); %>
-<h1><%=Html.TitleForPage(T("Edit Main Menu").ToString())%></h1><%
+<h1><%=Html.TitleForPage(T("Manage Main Menu").ToString())%></h1><%
 using (Html.BeginFormAntiForgeryPost()) { %>
 <table class="items">
     <colgroup>
@@ -31,14 +31,29 @@ using (Html.BeginFormAntiForgeryPost()) { %>
 </table>
 <fieldset class="actions"><button type="submit"><%=_Encoded("Update All") %></button></fieldset><%     
 }
-
-using (Html.BeginFormAntiForgeryPost()) { %>
-<table class="items">
+%><h2><%=_Encoded("Add New Item") %></h2><%
+using (Html.BeginFormAntiForgeryPost("/admin/navigation/create", FormMethod.Post)) { %>
+<table class="menu items">
+    <colgroup>
+        <col id="AddText" />
+        <col id="AddPosition" />
+        <col id="AddUrl" />
+        <col id="AddActions" />
+    </colgroup>
     <tbody>
         <tr>
-            <td><input type="text" name="addtext" id="addtext" /></td>
-            <td><input type="text" name="addposition" id="addposition" /></td>
-            <td><input type="text" name="addurl" id="addurl" /></td>
+            <td>
+                <label for="addtext"><%=_Encoded("Text") %></label>
+                <input type="text" name="MenuText" id="addtext" />
+            </td>
+            <td>
+                <label for="addposition"><%=_Encoded("Position")%></label>
+                <input type="text" name="MenuPosition" id="addposition" />
+            </td>
+            <td>
+                <label for="addurl"><%=_Encoded("Url")%></label>
+                <input type="text" name="Url" id="addurl" />
+            </td>
             <td><button class="add" type="submit"><%=_Encoded("Add") %></button></td>
         </tr>
     </tbody>
