@@ -1,7 +1,5 @@
-﻿using System;
-using System.Data.SqlClient;
+﻿using System.Data.SqlClient;
 using System.IO;
-using System.Threading;
 using NUnit.Framework;
 using Orchard.Data.Migrations;
 using Orchard.Environment;
@@ -9,7 +7,7 @@ using Orchard.Tests.Records;
 
 namespace Orchard.Tests.Data.Migrations {
     [TestFixture]
-    public class DatabaseMigrationManagerTests {
+    public class DatabaseManagerTests {
         private string _tempDataFolder;
 
         [SetUp]
@@ -45,41 +43,28 @@ namespace Orchard.Tests.Data.Migrations {
             }
         }
 
-        [Test]
-        public void MigrationManagerShouldCreateEmptySQLiteDatabaseAtGivenLocation() {
-            var manager = (IDatabaseMigrationManager)new DatabaseMigrationManager();
-            var coordinator = manager.CreateCoordinator("SQLite", _tempDataFolder, "");
-
-            coordinator.CreateDatabase();
-
-            Assert.That(File.Exists(Path.Combine(_tempDataFolder, "Orchard.db")), Is.True);
-        }
-
-        [Test, ExpectedException(typeof(NotImplementedException))]
-        public void MigrationManagerShouldNotImplementTheCreationOfSqlServer() {
-            var manager = (IDatabaseMigrationManager)new DatabaseMigrationManager();
-            var coordinator = manager.CreateCoordinator("SqlServer", _tempDataFolder, "");
-
-            coordinator.CreateDatabase();
-
-        }
 
 
         [Test]
         public void SQLiteSchemaShouldBeGeneratedAndUsable() {
-            var manager = (IDatabaseMigrationManager) new DatabaseMigrationManager();
-            var coordinator = manager.CreateCoordinator("SQLite", _tempDataFolder, "");
+            var manager = (IDatabaseManager)new DatabaseManager();
+            var coordinator = manager.CreateCoordinator(new DatabaseParameters {
+                Provider = "SQLite",
+                DataFolder = _tempDataFolder
+            });
 
             var recordDescriptors = new[] {
                 new RecordDescriptor {Prefix = "Hello", Type = typeof (Foo)}
             };
 
-            coordinator.UpdateSchema(recordDescriptors);
+            var sessionFactory = coordinator.BuildSessionFactory(new SessionFactoryBuilderParameters {
+                UpdateSchema = true,
+                RecordDescriptors = recordDescriptors
+            });
 
-            var sessionFactory = coordinator.BuildSessionFactory(recordDescriptors);
 
             var session = sessionFactory.OpenSession();
-            var foo = new Foo {Name = "hi there"};
+            var foo = new Foo { Name = "hi there" };
             session.Save(foo);
             session.Flush();
             session.Close();
@@ -95,16 +80,22 @@ namespace Orchard.Tests.Data.Migrations {
             var databasePath = Path.Combine(_tempDataFolder, "Orchard.mdf");
             CreateSqlServerDatabase(databasePath);
 
-            var manager = (IDatabaseMigrationManager)new DatabaseMigrationManager();
-            var coordinator = manager.CreateCoordinator("SqlServer", _tempDataFolder, "Data Source=.\\SQLEXPRESS;AttachDbFileName=" + databasePath + ";Integrated Security=True;User Instance=True;");
+            var manager = (IDatabaseManager)new DatabaseManager();
+            var coordinator = manager.CreateCoordinator(new DatabaseParameters {
+                Provider = "SQLite",
+                DataFolder = _tempDataFolder,
+                ConnectionString = "Data Source=.\\SQLEXPRESS;AttachDbFileName=" + databasePath + ";Integrated Security=True;User Instance=True;",
+            });
 
             var recordDescriptors = new[] {
                 new RecordDescriptor {Prefix = "Hello", Type = typeof (Foo)}
             };
 
-            coordinator.UpdateSchema(recordDescriptors);
 
-            var sessionFactory = coordinator.BuildSessionFactory(recordDescriptors);
+            var sessionFactory = coordinator.BuildSessionFactory(new SessionFactoryBuilderParameters {
+                UpdateSchema = true,
+                RecordDescriptors = recordDescriptors
+            });
 
             var session = sessionFactory.OpenSession();
             var foo = new Foo { Name = "hi there" };

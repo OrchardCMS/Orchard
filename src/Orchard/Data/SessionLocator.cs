@@ -1,5 +1,6 @@
 ﻿using System;
 using NHibernate;
+using Orchard.Logging;
 
 namespace Orchard.Data {
     public class SessionLocator : ISessionLocator {
@@ -12,13 +13,22 @@ namespace Orchard.Data {
             ITransactionManager transactionManager) {
             _sessionFactoryHolder = sessionFactoryHolder;
             _transactionManager = transactionManager;
+            Logger = NullLogger.Instance;
         }
+
+        public ILogger Logger { get; set; }
 
 
         public ISession For(Type entityType) {
-            if (_session==null) {
-                _transactionManager.Demand();
+            Logger.Debug("Acquiring session for {0}", entityType);
+
+            if (_session == null) {
+
                 var sessionFactory = _sessionFactoryHolder.GetSessionFactory();
+
+                _transactionManager.Demand();
+
+                Logger.Information("Openning database session");
                 _session = sessionFactory.OpenSession();
             }
             return _session;

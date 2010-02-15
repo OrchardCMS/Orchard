@@ -2,11 +2,11 @@ using System;
 using FluentNHibernate.Cfg.Db;
 
 namespace Orchard.Data.Migrations {
-    public class SqlServerDatabaseCoordinator : DatabaseCoordinatorBase {
+    public class SqlServerSessionFactoryBuilder : AbstractSessionFactoryBuilder {
         private readonly string _dataFolder;
         private readonly string _connectionString;
 
-        public SqlServerDatabaseCoordinator(string dataFolder, string connectionString) {
+        public SqlServerSessionFactoryBuilder(string dataFolder, string connectionString) {
             _dataFolder = dataFolder;
             _connectionString = connectionString;
         }

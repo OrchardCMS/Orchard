@@ -135,7 +135,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="DataUtility.cs" />
-    <Compile Include="Data\Migrations\DatabaseMigrationManagerTests.cs" />
+    <Compile Include="Data\Migrations\DatabaseManagerTests.cs" />
     <Compile Include="Data\RepositoryTests.cs" />
     <Compile Include="Data\StubLocator.cs" />
     <Compile Include="Environment\Configuration\AppDataFolderTests.cs" />

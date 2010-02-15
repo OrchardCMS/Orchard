@@ -82,7 +82,7 @@ namespace Orchard.Setup.Controllers {
                                                                               String.Empty, String.Empty, String.Empty,
                                                                               true));
 
-                        /*
+                        
                         // set site name and settings
                         var siteService = finiteEnvironment.Resolve<ISiteService>();
                         var siteSettings = siteService.GetSiteSettings().As<SiteSettings>();
@@ -105,7 +105,7 @@ namespace Orchard.Setup.Controllers {
 
                         var authenticationService = finiteEnvironment.Resolve<IAuthenticationService>();
                         authenticationService.SignIn(user, true);
-                         */
+                         
                     }
                     catch {
                         finiteEnvironment.Resolve<ITransactionManager>().Cancel();

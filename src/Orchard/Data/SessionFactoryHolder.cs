@@ -4,6 +4,7 @@ using NHibernate;
 using Orchard.Data.Migrations;
 using Orchard.Environment;
 using Orchard.Environment.Configuration;
+using Orchard.Logging;
 
 namespace Orchard.Data {
     public interface ISessionFactoryHolder : ISingletonDependency {
@@ -28,14 +29,19 @@ namespace Orchard.Data {
             _compositionStrategy = compositionStrategy;
             _databaseManager = databaseManager;
             _appDataFolder = appDataFolder;
+            Logger = NullLogger.Instance;
         }
 
+        public ILogger Logger { get; set; }
 
         public void UpdateSchema() {
             lock (this) {
-                if (_sessionFactory == null) {
-                    _sessionFactory = BuildSessionFactory(true);
+                if (_sessionFactory != null) {
+                    Logger.Error("UpdateSchema can not be called after a session factory was created");
+                    throw new OrchardException("UpdateSchema can not be called after a session factory was created");
                 }
+
+                _sessionFactory = BuildSessionFactory(true);                
             }
         }
 
@@ -49,8 +55,9 @@ namespace Orchard.Data {
         }
 
         private ISessionFactory BuildSessionFactory(bool updateSchema) {
-            var shellPath = _appDataFolder.CreateDirectory(Path.Combine("Sites", _shellSettings.Name));
+            Logger.Debug("Building session factory");
 
+            var shellPath = _appDataFolder.CreateDirectory(Path.Combine("Sites", _shellSettings.Name));
 
             var coordinator = _databaseManager.CreateCoordinator(new DatabaseParameters {
                 Provider = _shellSettings.DataProvider,

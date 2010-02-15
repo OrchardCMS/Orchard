@@ -36,6 +36,14 @@ namespace Orchard.Web {
             //TODO: what's the failed initialization story - IoC failure in app start can leave you with a zombie appdomain
         }
 
+        protected void Application_BeginRequest() {
+            _host.BeginRequest();
+        }
+        
+        protected void Application_EndRequest() {
+            _host.EndRequest();
+        }
+
         private void CheckMvcVersion(Version requiredVersion) {
             Assembly loadedMvcAssembly = typeof(System.Web.Mvc.Controller).Assembly;
             Version loadedMvcVersion = ReadAssemblyFileVersion(loadedMvcAssembly);
@@ -81,9 +89,6 @@ namespace Orchard.Web {
             return new Version(attribute.Version);
         }
 
-        protected void Application_EndRequest() {
-            _host.EndRequest();
-        }
 
         protected void MvcSingletons(ContainerBuilder builder) {
             builder.Register(ControllerBuilder.Current);

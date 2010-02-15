@@ -52,7 +52,7 @@ namespace Orchard.Environment.ShellBuilders {
                 builder.Register<PageClassBuilder>().As<IPageClassBuilder>().ContainerScoped();
                 builder.Register<Notifier>().As<INotifier>().ContainerScoped();
                 builder.Register<NotifyFilter>().As<IFilterProvider>().ContainerScoped();
-                builder.Register<DatabaseMigrationManager>().As<IDatabaseMigrationManager>().ContainerScoped();
+                builder.Register<DatabaseManager>().As<IDatabaseManager>().ContainerScoped();
 
                 // safe mode specific implementations of needed service interfaces
                 builder.Register<NullHackInstallationGenerator>().As<IHackInstallationGenerator>().ContainerScoped();

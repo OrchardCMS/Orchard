@@ -42,11 +42,17 @@ namespace Orchard.Environment {
             _controllerBuilder.SetControllerFactory(new OrchardControllerFactory());
             ServiceLocator.SetLocator(t => _containerProvider.RequestContainer.Resolve(t));
 
-            Initialize();
+            CreateAndActivateShell();
         }
 
         void IOrchardHost.Reinitialize() {
-            Initialize();
+            _current = null;
+            //CreateAndActivateShell();
+        }
+
+
+        void IOrchardHost.BeginRequest() {
+            BeginRequest();
         }
 
         void IOrchardHost.EndRequest() {
@@ -58,19 +64,30 @@ namespace Orchard.Environment {
             return new StandaloneEnvironment(shellContainer);
         }
 
-        protected virtual void Initialize() {
-            var shellContainer = CreateShellContainer();
-            var shell = shellContainer.Resolve<IOrchardShell>();
-            shell.Activate();
-            _current = shell;
+        protected virtual void CreateAndActivateShell() {
+            lock (this) {
+                if (_current != null) {
+                    return;
+                }
 
-            // Fire off one-time install events on an alternate container
-            HackInstallSimulation();
+                var shellContainer = CreateShellContainer();
+                var shell = shellContainer.Resolve<IOrchardShell>();
+                shell.Activate();
+                _current = shell;
 
-            // Activate extensions inside shell container
-            HackSimulateExtensionActivation(shellContainer);
+                // Fire off one-time install events on an alternate container
+                HackInstallSimulation();
+
+                // Activate extensions inside shell container
+                HackSimulateExtensionActivation(shellContainer);
+            }
         }
 
+        protected virtual void BeginRequest() {
+            if (_current == null) {
+                CreateAndActivateShell();
+            }
+        }
 
         protected virtual void EndRequest() {
             _containerProvider.DisposeRequestContainer();
@@ -103,19 +120,19 @@ namespace Orchard.Environment {
         }
 
         private void HackInstallSimulation() {
-            //var tempContainer = CreateShellContainer();
-            //var containerProvider = new FiniteContainerProvider(tempContainer);
-            //try {
-            //    var requestContainer = containerProvider.RequestContainer;
+            var tempContainer = CreateShellContainer();
+            var containerProvider = new FiniteContainerProvider(tempContainer);
+            try {
+                var requestContainer = containerProvider.RequestContainer;
 
-            //    var hackInstallationGenerator = requestContainer.Resolve<IHackInstallationGenerator>();
-            //    hackInstallationGenerator.GenerateInstallEvents();
-            //}
-            //finally {
-            //    // shut everything down again
-            //    containerProvider.DisposeRequestContainer();
-            //    tempContainer.Dispose();
-            //}
+                var hackInstallationGenerator = requestContainer.Resolve<IHackInstallationGenerator>();
+                hackInstallationGenerator.GenerateInstallEvents();
+            }
+            finally {
+                // shut everything down again
+                containerProvider.DisposeRequestContainer();
+                tempContainer.Dispose();
+            }
         }
 
         private void HackSimulateExtensionActivation(IContainer shellContainer) {
