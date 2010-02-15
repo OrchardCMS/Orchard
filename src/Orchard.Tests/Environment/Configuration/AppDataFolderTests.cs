@@ -19,6 +19,7 @@ namespace Orchard.Tests.Environment.Configuration {
             Directory.CreateDirectory(Path.Combine(_tempFolder, "alpha"));
             File.WriteAllText(Path.Combine(_tempFolder, "alpha\\beta.txt"), "beta-content");
             File.WriteAllText(Path.Combine(_tempFolder, "alpha\\gamma.txt"), "gamma-content");
+            Directory.CreateDirectory(Path.Combine(_tempFolder, "alpha\\omega"));
 
             _appDataFolder = new AppDataFolder();
             _appDataFolder.SetBasePath(_tempFolder);
@@ -49,5 +50,32 @@ namespace Orchard.Tests.Environment.Configuration {
             Assert.That(physicalPath, Is.EqualTo(Path.Combine(_tempFolder, "delta\\epsilon.txt")));
         }
 
+        [Test]
+        public void ListSubdirectoriesShouldContainFullSubpath() {
+            var files = _appDataFolder.ListDirectories("alpha");
+            Assert.That(files.Count(), Is.EqualTo(1));
+            Assert.That(files, Has.Some.EqualTo("alpha\\omega"));
+        }
+
+        [Test]
+        public void ListSubdirectoriesShouldWorkInRoot() {
+            var files = _appDataFolder.ListDirectories("");
+            Assert.That(files.Count(), Is.EqualTo(1));
+            Assert.That(files, Has.Some.EqualTo("alpha"));
+        }
+
+
+        [Test]
+        public void NonExistantFolderShouldListDirectoriesAsEmptyCollection() {
+            var files = _appDataFolder.ListDirectories("delta");
+            Assert.That(files.Count(), Is.EqualTo(0));
+        }
+
+        [Test]
+        public void CreateFileWillCauseDirectoryToBeCreated() {
+            Assert.That(Directory.Exists(Path.Combine(_tempFolder, "alpha\\omega\\foo")), Is.False);
+            _appDataFolder.CreateFile("alpha\\omega\\foo\\bar.txt", "quux");
+            Assert.That(Directory.Exists(Path.Combine(_tempFolder, "alpha\\omega\\foo")), Is.True);
+        }
     }
 }

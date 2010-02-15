@@ -32,9 +32,8 @@ namespace Orchard.Environment.Configuration {
             if (string.IsNullOrEmpty(settings.Name))
                 throw new ArgumentException(T("Settings \"Name\" is not set.").ToString());
 
-
-            var filePath = Path.Combine("Sites", settings.Name + ".txt");
-            _appDataFolder.CreateFile(filePath, ComposeSettings(settings));
+            var settingsFile = Path.Combine(Path.Combine("Sites", settings.Name), "Settings.txt");
+            _appDataFolder.CreateFile(settingsFile, ComposeSettings(settings));
         }
 
         IEnumerable<IShellSettings> LoadSettings() {
@@ -44,11 +43,10 @@ namespace Orchard.Environment.Configuration {
         }
 
         IEnumerable<YamlDocument> LoadFiles() {
-            var filePaths = _appDataFolder.ListFiles("Sites")
-                .Where(path => path.EndsWith(".txt", StringComparison.InvariantCultureIgnoreCase));
+            var sitePaths = _appDataFolder.ListDirectories("Sites");
 
-            foreach (var filePath in filePaths) {
-                var yamlStream = YamlParser.Load(_appDataFolder.MapPath(filePath));
+            foreach (var sitePath in sitePaths) {
+                var yamlStream = YamlParser.Load(_appDataFolder.MapPath(Path.Combine(sitePath, "Settings.txt")));
                 yield return yamlStream.Documents.Single();
             }
         }

@@ -62,7 +62,7 @@ namespace Orchard.Setup.Controllers {
 
             try {
                 var shellSettings = new ShellSettings {
-                    Name = "default",
+                    Name = "Default",
                     DataProvider = model.DatabaseOptions ? "SQLite" : "SqlServer",
                     DataConnectionString = model.DatabaseConnectionString
                 };

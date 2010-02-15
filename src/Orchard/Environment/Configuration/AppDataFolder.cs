@@ -12,6 +12,7 @@ namespace Orchard.Environment.Configuration {
     /// </summary>
     public interface IAppDataFolder {
         IEnumerable<string> ListFiles(string path);
+        IEnumerable<string> ListDirectories(string path);
 
         void CreateFile(string path, string content);
         void DeleteFile(string path);
@@ -36,7 +37,11 @@ namespace Orchard.Environment.Configuration {
         }
 
         public void CreateFile(string path, string content) {
-            File.WriteAllText(Path.Combine(_basePath, path), content);
+            var filePath = Path.Combine(_basePath, path);
+            var folderPath = Path.GetDirectoryName(filePath);
+            if (!Directory.Exists(folderPath))
+                Directory.CreateDirectory(folderPath);
+            File.WriteAllText(filePath, content);
         }
 
         public void DeleteFile(string path) {
@@ -49,6 +54,19 @@ namespace Orchard.Environment.Configuration {
                 return Enumerable.Empty<string>();
 
             var files = Directory.GetFiles(directoryPath);
+
+            return files.Select(file => {
+                var fileName = Path.GetFileName(file);
+                return Path.Combine(path, fileName);
+            });
+        }
+
+        public IEnumerable<string> ListDirectories(string path) {
+            var directoryPath = Path.Combine(_basePath, path);
+            if (!Directory.Exists(directoryPath))
+                return Enumerable.Empty<string>();
+
+            var files = Directory.GetDirectories(directoryPath);
 
             return files.Select(file => {
                 var fileName = Path.GetFileName(file);
