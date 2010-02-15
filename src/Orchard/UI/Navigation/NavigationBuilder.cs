@@ -57,6 +57,11 @@ namespace Orchard.UI.Navigation {
             return this;
         }
 
+        public NavigationItemBuilder Url(string url) {
+            _item.Url = url;
+            return this;
+        }
+
         public NavigationItemBuilder Permission(Permission permission) {
             _item.Permissions = _item.Permissions.Concat(new[]{permission});
             return this;
@@ -65,6 +70,12 @@ namespace Orchard.UI.Navigation {
         public new IEnumerable<MenuItem> Build() {
             _item.Items = base.Build();
             return new[] { _item };
+        }
+
+        public NavigationItemBuilder Action(RouteValueDictionary values) {
+            return values != null
+                ? Action(values["action"] as string, values["controller"] as string, values)
+                : Action(null, null, new RouteValueDictionary());
         }
 
         public NavigationItemBuilder Action(string actionName) {

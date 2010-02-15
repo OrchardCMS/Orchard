@@ -1,43 +1,60 @@
-﻿<%@ Control Language="C#" Inherits="Orchard.Mvc.ViewUserControl<NavigationIndexViewModel>" %>
-<%@ Import Namespace="Orchard.Core.Navigation.ViewModels"%>
-<h1><%=Html.TitleForPage(T("Edit Main Menu").ToString())%></h1><%
+﻿<%@ Control Language="C#" Inherits="Orchard.Mvc.ViewUserControl<NavigationManagementViewModel>" %>
+<%@ Import Namespace="Orchard.Core.Navigation.ViewModels"%><%
+var menu = Model.Menu.FirstOrDefault(); %>
+<h1><%=Html.TitleForPage(T("Manage Main Menu").ToString())%></h1><%
 using (Html.BeginFormAntiForgeryPost()) { %>
-<table>
+<table class="items">
+    <colgroup>
+        <col id="Text" />
+        <col id="Position" />
+        <col id="Url" />
+        <col id="Actions" />
+    </colgroup>
     <thead>
         <tr>
-            <td>Text</td>
-            <td>Position</td>
-            <td>Url</td>
-            <td></td>
+            <td scope="col"><%=_Encoded("Text") %></td>
+            <td scope="col"><%=_Encoded("Position") %></td>
+            <td scope="col"><%=_Encoded("Url") %></td>
+            <td scope="col"></td>
         </tr>
     </thead>
-    <tbody>
-        <%-- loop over menu items --%>
+    <tbody><%
+    foreach (var menuItem in menu.Items) { %>
         <tr>
-            <td><input type="text" name="text" /></td>
-            <td><input type="text" name="position" /></td>
-            <td><input type="text" name="url" /></td>
-            <td>Delete Button</td>
-        </tr>
-        <%-- end loop --%>
-        <tr>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td>Update All Button</td>
-        </tr>
+            <td><%=Html.TextBox("text", menuItem.Text) %></td>
+            <td><%=Html.TextBox("position", menuItem.Position) %></td>
+            <td><%=Html.TextBox("url", menuItem.Url) %></td>
+            <td><a href="#" class="remove button">delete</a></td>
+        </tr><%
+    } %>
     </tbody>
-</table><%     
+</table>
+<fieldset class="actions"><button type="submit"><%=_Encoded("Update All") %></button></fieldset><%     
 }
-
-using (Html.BeginFormAntiForgeryPost()) { %>
-<table>
+%><h2><%=_Encoded("Add New Item") %></h2><%
+using (Html.BeginFormAntiForgeryPost("/admin/navigation/create", FormMethod.Post)) { %>
+<table class="menu items">
+    <colgroup>
+        <col id="AddText" />
+        <col id="AddPosition" />
+        <col id="AddUrl" />
+        <col id="AddActions" />
+    </colgroup>
     <tbody>
         <tr>
-            <td><input type="text" name="addtext" /></td>
-            <td><input type="text" name="addposition" /></td>
-            <td><input type="text" name="addurl" /></td>
-            <td>Add Button</td>
+            <td>
+                <label for="addtext"><%=_Encoded("Text") %></label>
+                <input type="text" name="MenuText" id="addtext" />
+            </td>
+            <td>
+                <label for="addposition"><%=_Encoded("Position")%></label>
+                <input type="text" name="MenuPosition" id="addposition" />
+            </td>
+            <td>
+                <label for="addurl"><%=_Encoded("Url")%></label>
+                <input type="text" name="Url" id="addurl" />
+            </td>
+            <td><button class="add" type="submit"><%=_Encoded("Add") %></button></td>
         </tr>
     </tbody>
 </table><%

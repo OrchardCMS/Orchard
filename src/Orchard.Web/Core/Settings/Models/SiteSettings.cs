@@ -24,5 +24,9 @@ namespace Orchard.Core.Settings.Models {
             get { return Record.SuperUser; }
             set { Record.SuperUser = value; }
         }
+        public string HomePage {
+            get { return Record.HomePage; }
+            set { Record.HomePage = value; }
+        }
     }
 }

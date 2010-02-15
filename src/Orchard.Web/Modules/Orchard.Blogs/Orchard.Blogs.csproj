@@ -85,6 +85,7 @@
     <Compile Include="Permissions.cs" />
     <Compile Include="Routing\IsArchiveConstraint.cs" />
     <Compile Include="Routing\IsBlogConstraint.cs" />
+    <Compile Include="Services\BlogHomePageProvider.cs" />
     <Compile Include="Services\BlogService.cs" />
     <Compile Include="Controllers\BlogController.cs" />
     <Compile Include="Models\Blog.cs" />

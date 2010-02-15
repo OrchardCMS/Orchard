@@ -14,7 +14,7 @@ namespace Orchard.Core.Navigation.Models {
             Filters.Add(StorageFilter.For(menuPartRepository));
 
             OnActivated<MenuPart>((ctx, x) => {
-                x.AddToMainMenu = false;
+                x.OnMainMenu = false;
                 x.MenuText = String.Empty;
             });
         }

@@ -182,7 +182,6 @@
     <Content Include="Themes\Classic\Views\DisplayTemplates\Parts\Blogs.BlogPost.List.ascx" />
     <Content Include="Themes\Classic\Views\Footer.ascx" />
     <Content Include="Themes\Classic\Views\Layout.ascx" />
-    <Content Include="Themes\Classic\Views\Menu.ascx" />
     <Content Include="Themes\Green\Content\Images\bodyBackground.gif" />
     <Content Include="Themes\Green\Content\Images\bodyBackground.png" />
     <Content Include="Themes\Green\Content\Images\commentpointer.gif" />
@@ -205,7 +204,6 @@
     <Content Include="Themes\Green\Views\Footer.ascx" />
     <Content Include="Themes\Green\Views\Layout.ascx" />
     <Content Include="Themes\Green\Views\ListOfComments.ascx" />
-    <Content Include="Themes\Green\Views\Menu.ascx" />
     <Content Include="Themes\Green\Views\User.ascx" />
     <Content Include="Themes\Orange\Theme.png" />
     <Content Include="Themes\Orange\Views\Orchard.Blogs\BlogPost\Item.ascx" />
@@ -220,7 +218,6 @@
     <Content Include="Themes\Orchard\Theme.txt" />
     <Content Include="Themes\Orchard\Views\Footer.ascx" />
     <Content Include="Themes\Orchard\Views\Layout.ascx" />
-    <Content Include="Themes\Orchard\Views\Menu.ascx" />
     <Content Include="Themes\SafeMode\Content\Images\background_content.jpg" />
     <Content Include="Themes\SafeMode\Content\Images\background_footer.jpg" />
     <Content Include="Themes\SafeMode\Content\Images\background_module.gif" />

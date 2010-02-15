@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Web;
@@ -160,6 +161,11 @@ namespace Orchard.Environment.ShellBuilders {
 
             public string SuperUser {
                 get { return ""; }
+            }
+
+            public string HomePage {
+                get { return ""; }
+                set { throw new NotImplementedException(); }
             }
         }
     }

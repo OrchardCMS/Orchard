@@ -1,16 +1,10 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using JetBrains.Annotations;
 using Orchard.Security;
 using Orchard.Security.Permissions;
 
 namespace Orchard.UI.Navigation {
-    public interface INavigationManager : IDependency {
-        IEnumerable<MenuItem> BuildMenu(string menuName);
-    }
-
     public class NavigationManager : INavigationManager {
         private readonly IEnumerable<INavigationProvider> _providers;
         private readonly IAuthorizationService _authorizationService;
@@ -45,6 +39,7 @@ namespace Orchard.UI.Navigation {
                         Position = item.Position,
                         RouteValues = item.RouteValues,
                         Text = item.Text,
+                        Url = item.Url
                     };
                 }
             }
@@ -75,6 +70,7 @@ namespace Orchard.UI.Navigation {
 
             var joined = new MenuItem {
                 Text = items.First().Text,
+                Url = items.First().Url,
                 RouteValues = items.First().RouteValues,
                 Items = Merge(items.Select(x => x.Items)).ToArray(),
                 Position = SelectBestPositionValue(items.Select(x => x.Position)),

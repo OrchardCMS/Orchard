@@ -1,5 +1,7 @@
+using System;
 using System.Linq;
 using System.Web.Mvc;
+using JetBrains.Annotations;
 using Orchard.Blogs.Extensions;
 using Orchard.Blogs.Models;
 using Orchard.Blogs.Services;
@@ -10,6 +12,7 @@ using Orchard.Data;
 using Orchard.Localization;
 using Orchard.Mvc.Results;
 using Orchard.Security;
+using Orchard.Settings;
 using Orchard.UI.Notify;
 
 namespace Orchard.Blogs.Controllers {
@@ -33,6 +36,7 @@ namespace Orchard.Blogs.Controllers {
         }
 
         private Localizer T { get; set; }
+        protected virtual ISite CurrentSite { get; [UsedImplicitly] private set; }
 
         public ActionResult Create() {
             //TODO: (erikpo) Might think about moving this to an ActionFilter/Attribute
@@ -100,11 +104,16 @@ namespace Orchard.Blogs.Controllers {
                 return new NotFoundResult();
 
             var model = new BlogEditViewModel {
-                Blog = _services.ContentManager.UpdateEditorModel(blog, this)
+                Blog = _services.ContentManager.UpdateEditorModel(blog, this),
             };
 
             if (!ModelState.IsValid)
                 return View(model);
+
+            string setAsHomePage = input["PromoteToHomePage"];
+            if (!String.IsNullOrEmpty(setAsHomePage) && !setAsHomePage.Equals("false")) {
+                CurrentSite.HomePage = "BlogHomePageProvider;" + model.Blog.Item.Id;
+            }
 
             _notifier.Information(T("Blog information updated"));
 

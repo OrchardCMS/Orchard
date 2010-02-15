@@ -151,7 +151,8 @@ h5 { font-size:1.4em; } /* 14px */
 
 h6, p, legend, label, input, select, .button,
 .message, .validation-summary-errors,
-table.items th, table.items td, table.items caption { font-size:1.4em; line-height:1.4em; } /* 15px */
+table.items th, table.items td, table.items caption { font-size:1.4em; line-height:1.4em; } /* 14px */
+table.items p, table.items label, table.items input, table.items .button { font-size:1em; line-height:1em; }
 p .button { font-size:inherit; }
 .meta, .hint { font-size:1.2em; } /* 12px */
 
@@ -639,10 +640,6 @@ table.items thead, table.items th {
 	font-weight:700;
 	overflow:hidden;
 	text-align:left;
-}
-/* todo: (heskew) hook back up */
-table.items tr.hover {
-    background-color:#f0f3d6;
 }
 table.items tr.critical {background:#e68585; border:inherit;}
 table.items tr.warning {background:#fdf5bc; border:inherit;}

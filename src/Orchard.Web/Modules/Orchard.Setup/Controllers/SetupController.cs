@@ -4,6 +4,7 @@ using System.Web.Mvc;
 using Orchard.Comments.Models;
 using Orchard.ContentManagement;
 using Orchard.Core.Common.Models;
+using Orchard.Core.Navigation.Models;
 using Orchard.Core.Settings.Models;
 using Orchard.Data;
 using Orchard.Data.Migrations;
@@ -14,6 +15,7 @@ using Orchard.Settings;
 using Orchard.Setup.ViewModels;
 using Orchard.Localization;
 using Orchard.UI.Notify;
+using MenuItem=Orchard.Core.Navigation.Models.MenuItem;
 
 namespace Orchard.Setup.Controllers {
     public class SetupController : Controller {
@@ -102,6 +104,23 @@ namespace Orchard.Setup.Controllers {
                         page.As<HasComments>().CommentsShown = false;
                         page.As<CommonAspect>().Owner = user;
                         contentManager.Publish(page);
+                        siteSettings.Record.HomePage = "PagesHomePageProvider;" + page.Id;
+
+                        // add a menu item for the shiny new home page
+                        var homeMenuItem = contentManager.Create("menuitem");
+                        homeMenuItem.As<MenuPart>().MenuPosition = "1";
+                        homeMenuItem.As<MenuPart>().MenuText = T("Home").ToString();
+                        homeMenuItem.As<MenuPart>().OnMainMenu = true;
+                        homeMenuItem.As<MenuItem>().Url = Request.Url.AbsolutePath;
+
+                        // add a menu item for the admin
+                        var adminMenuItem = contentManager.Create("menuitem");
+                        adminMenuItem.As<MenuPart>().MenuPosition = "2";
+                        adminMenuItem.As<MenuPart>().MenuText = T("Admin").ToString();
+                        adminMenuItem.As<MenuPart>().OnMainMenu = true;
+                        //adminMenuItem.As<MenuItem>().Permissions = new [] {StandardPermissions.AccessAdminPanel};
+                        //todo: (heskew) pull "/blogs" once the is a ~/admin
+                        adminMenuItem.As<MenuItem>().Url = string.Format("{0}admin/blogs", Request.Url.AbsolutePath);
 
                         var authenticationService = finiteEnvironment.Resolve<IAuthenticationService>();
                         authenticationService.SignIn(user, true);

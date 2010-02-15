@@ -3,7 +3,7 @@ using Orchard.Mvc.Filters;
 using Orchard.Mvc.ViewModels;
 using Orchard.UI.Navigation;
 
-namespace Orchard.Core.Navigation.Services {
+namespace Orchard.Core.Navigation.Filters {
     public class MainMenuFilter : FilterProvider, IResultFilter {
         private readonly INavigationManager _navigationManager;
 
@@ -20,11 +20,10 @@ namespace Orchard.Core.Navigation.Services {
             if (baseViewModel == null)
                 return;
 
-            baseViewModel.Menu = _navigationManager.BuildMenu("mainmenu");
+            baseViewModel.Menu = _navigationManager.BuildMenu("main");
         }
 
         public void OnResultExecuted(ResultExecutedContext filterContext) {
-
         }
     }
 }
