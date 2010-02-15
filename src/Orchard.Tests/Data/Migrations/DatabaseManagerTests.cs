@@ -47,17 +47,13 @@ namespace Orchard.Tests.Data.Migrations {
 
         [Test]
         public void SQLiteSchemaShouldBeGeneratedAndUsable() {
-            var manager = (IDatabaseManager)new DatabaseManager();
-            var coordinator = manager.CreateCoordinator(new DatabaseParameters {
-                Provider = "SQLite",
-                DataFolder = _tempDataFolder
-            });
-
-            var recordDescriptors = new[] {
+ var recordDescriptors = new[] {
                 new RecordDescriptor {Prefix = "Hello", Type = typeof (Foo)}
             };
-
-            var sessionFactory = coordinator.BuildSessionFactory(new SessionFactoryBuilderParameters {
+            var manager = (ISessionFactoryBuilder)new SessionFactoryBuilder();
+            var sessionFactory = manager.BuildSessionFactory(new SessionFactoryParameters {
+                Provider = "SQLite",
+                DataFolder = _tempDataFolder,
                 UpdateSchema = true,
                 RecordDescriptors = recordDescriptors
             });
@@ -80,22 +76,20 @@ namespace Orchard.Tests.Data.Migrations {
             var databasePath = Path.Combine(_tempDataFolder, "Orchard.mdf");
             CreateSqlServerDatabase(databasePath);
 
-            var manager = (IDatabaseManager)new DatabaseManager();
-            var coordinator = manager.CreateCoordinator(new DatabaseParameters {
-                Provider = "SQLite",
-                DataFolder = _tempDataFolder,
-                ConnectionString = "Data Source=.\\SQLEXPRESS;AttachDbFileName=" + databasePath + ";Integrated Security=True;User Instance=True;",
-            });
-
             var recordDescriptors = new[] {
                 new RecordDescriptor {Prefix = "Hello", Type = typeof (Foo)}
             };
 
-
-            var sessionFactory = coordinator.BuildSessionFactory(new SessionFactoryBuilderParameters {
+            var manager = (ISessionFactoryBuilder)new SessionFactoryBuilder();
+            var sessionFactory = manager.BuildSessionFactory(new SessionFactoryParameters {
+                Provider = "SQLite",
+                DataFolder = _tempDataFolder,
+                ConnectionString = "Data Source=.\\SQLEXPRESS;AttachDbFileName=" + databasePath + ";Integrated Security=True;User Instance=True;",
                 UpdateSchema = true,
-                RecordDescriptors = recordDescriptors
+                RecordDescriptors = recordDescriptors,
             });
+
+
 
             var session = sessionFactory.OpenSession();
             var foo = new Foo { Name = "hi there" };

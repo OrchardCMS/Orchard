@@ -14,10 +14,10 @@ using Orchard.Data.Conventions;
 using Orchard.Environment;
 
 namespace Orchard.Data.Migrations {
-    public abstract class AbstractSessionFactoryBuilder : ISessionFactoryBuilder {
+    public abstract class AbstractBuilder {
         protected abstract IPersistenceConfigurer GetPersistenceConfigurer();
 
-        public ISessionFactory BuildSessionFactory(SessionFactoryBuilderParameters parameters) {
+        public ISessionFactory BuildSessionFactory(SessionFactoryParameters parameters) {
             var database = GetPersistenceConfigurer();
             var persistenceModel = CreatePersistenceModel(parameters.RecordDescriptors);
 
@@ -30,7 +30,7 @@ namespace Orchard.Data.Migrations {
             return sessionFactory;
         }
 
-        private static void Initialization(SessionFactoryBuilderParameters parameters, Configuration configuration) {
+        private static void Initialization(SessionFactoryParameters parameters, Configuration configuration) {
             if (parameters.UpdateSchema) {
                 var update = new SchemaUpdate(configuration);
                 update.Execute(false/*script*/, true /*doUpdate*/);

@@ -1,5 +1,4 @@
 ﻿using System.IO;
-using System.Web.Hosting;
 using NHibernate;
 using Orchard.Data.Migrations;
 using Orchard.Environment;
@@ -15,7 +14,7 @@ namespace Orchard.Data {
     public class SessionFactoryHolder : ISessionFactoryHolder {
         private readonly IShellSettings _shellSettings;
         private readonly ICompositionStrategy _compositionStrategy;
-        private readonly IDatabaseManager _databaseManager;
+        private readonly ISessionFactoryBuilder _sessionFactoryBuilder;
         private readonly IAppDataFolder _appDataFolder;
 
         private ISessionFactory _sessionFactory;
@@ -23,11 +22,11 @@ namespace Orchard.Data {
         public SessionFactoryHolder(
             IShellSettings shellSettings,
             ICompositionStrategy compositionStrategy,
-            IDatabaseManager databaseManager,
+            ISessionFactoryBuilder sessionFactoryBuilder,
             IAppDataFolder appDataFolder) {
             _shellSettings = shellSettings;
             _compositionStrategy = compositionStrategy;
-            _databaseManager = databaseManager;
+            _sessionFactoryBuilder = sessionFactoryBuilder;
             _appDataFolder = appDataFolder;
             Logger = NullLogger.Instance;
         }
@@ -41,7 +40,7 @@ namespace Orchard.Data {
                     throw new OrchardException("UpdateSchema can not be called after a session factory was created");
                 }
 
-                _sessionFactory = BuildSessionFactory(true);                
+                _sessionFactory = BuildSessionFactory(true);
             }
         }
 
@@ -59,16 +58,12 @@ namespace Orchard.Data {
 
             var shellPath = _appDataFolder.CreateDirectory(Path.Combine("Sites", _shellSettings.Name));
 
-            var coordinator = _databaseManager.CreateCoordinator(new DatabaseParameters {
+            var sessionFactory = _sessionFactoryBuilder.BuildSessionFactory(new SessionFactoryParameters {
                 Provider = _shellSettings.DataProvider,
                 DataFolder = shellPath,
-                ConnectionString = _shellSettings.DataConnectionString
-            });
-
-            var sessionFactory = coordinator.BuildSessionFactory(new SessionFactoryBuilderParameters {
-                CreateDatabase = false,
+                ConnectionString = _shellSettings.DataConnectionString,
                 UpdateSchema = updateSchema,
-                RecordDescriptors = _compositionStrategy.GetRecordDescriptors()
+                RecordDescriptors = _compositionStrategy.GetRecordDescriptors(),
             });
 
             return sessionFactory;
