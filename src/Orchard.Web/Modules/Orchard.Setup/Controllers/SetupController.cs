@@ -7,7 +7,7 @@ using Orchard.Core.Common.Models;
 using Orchard.Core.Navigation.Models;
 using Orchard.Core.Settings.Models;
 using Orchard.Data;
-using Orchard.Data.Migrations;
+using Orchard.Data.Builders;
 using Orchard.Environment;
 using Orchard.Environment.Configuration;
 using Orchard.Security;
@@ -20,19 +20,19 @@ using MenuItem=Orchard.Core.Navigation.Models.MenuItem;
 namespace Orchard.Setup.Controllers {
     public class SetupController : Controller {
         private readonly INotifier _notifier;
-        private readonly IDatabaseMigrationManager _databaseMigrationManager;
         private readonly IOrchardHost _orchardHost;
         private readonly IShellSettingsLoader _shellSettingsLoader;
+        private readonly IAppDataFolder _appDataFolder;
 
         public SetupController(
             INotifier notifier,
-            IDatabaseMigrationManager databaseMigrationManager,
-            IOrchardHost orchardHost,
-            IShellSettingsLoader shellSettingsLoader) {
+            IOrchardHost orchardHost, 
+            IShellSettingsLoader shellSettingsLoader,
+            IAppDataFolder appDataFolder) {
             _notifier = notifier;
-            _databaseMigrationManager = databaseMigrationManager;
             _orchardHost = orchardHost;
             _shellSettingsLoader = shellSettingsLoader;
+            _appDataFolder = appDataFolder;
             T = NullLocalizer.Instance;
         }
 
@@ -40,7 +40,7 @@ namespace Orchard.Setup.Controllers {
 
         public ActionResult Index(SetupViewModel model) {
             string message = "";
-            if(!CanWriteTo(Server.MapPath("~/App_Data"), out message)) {
+            if (!CanWriteTo(out message)) {
                 _notifier.Error(
                     T(
                         "Hey, it looks like I can't write to the App_Data folder in the root of this application and that's where I need to save some of the information you're about to enter.\r\n\r\nPlease give me (the machine account this application is running under) write access to App_Data so I can get this app all set up for you.\r\n\r\nThanks!\r\n\r\n----\r\n{0}",
@@ -62,23 +62,20 @@ namespace Orchard.Setup.Controllers {
 
             try {
                 var shellSettings = new ShellSettings {
-                                                          Name = "default",
-                                                          DataProvider = model.DatabaseOptions ? "SQLite" : "SqlServer",
-                                                          DataConnectionString = model.DatabaseConnectionString
-                                                      };
-
-                // initialize the database:
-                // provider: SqlServer or SQLite 
-                // dataFolder: physical path (map before calling). Builtin database will be created in this location
-                // connectionString: optional - if provided the dataFolder is essentially ignored, but should still be passed in
-                _databaseMigrationManager.CreateCoordinator(shellSettings.DataProvider, Server.MapPath("~/App_Data"), shellSettings.DataConnectionString);
+                    Name = "default",
+                    DataProvider = model.DatabaseOptions ? "SQLite" : "SqlServer",
+                    DataConnectionString = model.DatabaseConnectionString
+                };
 
                 // creating a standalone environment. 
                 // in theory this environment can be used to resolve any normal components by interface, and those
                 // components will exist entirely in isolation - no crossover between the safemode container currently in effect
                 using (var finiteEnvironment = _orchardHost.CreateStandaloneEnvironment(shellSettings)) {
                     try {
-                        var contentManager = finiteEnvironment.Resolve<IContentManager>();
+                        // initialize database before the transaction is created
+                        var sessionFactoryHolder = finiteEnvironment.Resolve<ISessionFactoryHolder>();
+                        sessionFactoryHolder.UpdateSchema();
+
 
                         // create superuser
                         var membershipService = finiteEnvironment.Resolve<IMembershipService>();
@@ -87,6 +84,7 @@ namespace Orchard.Setup.Controllers {
                                                                               String.Empty, String.Empty, String.Empty,
                                                                               true));
 
+                        
                         // set site name and settings
                         var siteService = finiteEnvironment.Resolve<ISiteService>();
                         var siteSettings = siteService.GetSiteSettings().As<SiteSettings>();
@@ -95,6 +93,9 @@ namespace Orchard.Setup.Controllers {
                         siteSettings.Record.SuperUser = model.AdminUsername;
                         siteSettings.Record.PageTitleSeparator = " - ";
 
+
+                        var contentManager = finiteEnvironment.Resolve<IContentManager>();
+                         
                         // create home page as a CMS page
                         var page = contentManager.Create("page");
                         page.As<BodyAspect>().Text = "Welcome to Orchard";
@@ -106,11 +107,9 @@ namespace Orchard.Setup.Controllers {
                         siteSettings.Record.HomePage = "PagesHomePageProvider;" + page.Id;
 
                         // add a menu item for the shiny new home page
-                        var homeMenuItem = contentManager.Create("menuitem");
-                        homeMenuItem.As<MenuPart>().MenuPosition = "1";
-                        homeMenuItem.As<MenuPart>().MenuText = T("Home").ToString();
-                        homeMenuItem.As<MenuPart>().OnMainMenu = true;
-                        homeMenuItem.As<MenuItem>().Url = Request.Url.AbsolutePath;
+                        page.As<MenuPart>().MenuPosition = "1";
+                        page.As<MenuPart>().MenuText = T("Home").ToString();
+                        page.As<MenuPart>().OnMainMenu = true;
 
                         // add a menu item for the admin
                         var adminMenuItem = contentManager.Create("menuitem");
@@ -123,6 +122,7 @@ namespace Orchard.Setup.Controllers {
 
                         var authenticationService = finiteEnvironment.Resolve<IAuthenticationService>();
                         authenticationService.SignIn(user, true);
+                         
                     }
                     catch {
                         finiteEnvironment.Resolve<ITransactionManager>().Cancel();
@@ -145,17 +145,15 @@ namespace Orchard.Setup.Controllers {
             }
         }
 
-        static bool CanWriteTo(string path, out string message) {
+        bool CanWriteTo(out string message) {
             try {
-                var systemCheckPath = Path.Combine(path, "_systemcheck.txt");
-
-                System.IO.File.WriteAllText(systemCheckPath, "Communicator check one two one two");
-                System.IO.File.AppendAllText(systemCheckPath, "\r\nThis is Bones McCoy on a line to Sulu");
-                System.IO.File.Delete(systemCheckPath);
+                _appDataFolder.CreateFile("_systemcheck.txt", "Communicator check one two one two");
+                _appDataFolder.DeleteFile("_systemcheck.txt");
 
                 message = "";
                 return true;
-            } catch (Exception ex) {
+            }
+            catch (Exception ex) {
                 message = ex.Message.Replace("_systemcheck.txt", "");
                 return false;
             }

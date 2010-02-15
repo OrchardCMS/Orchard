@@ -99,7 +99,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Data\HackSessionLocator.cs" />
+    <Compile Include="Data\SessionLocator.cs" />
     <Compile Include="Data\IRepository.cs" />
     <Compile Include="Data\ISessionLocator.cs" />
     <Compile Include="Data\DataModule.cs" />
@@ -133,12 +133,13 @@
     <Compile Include="ContentManagement\Handlers\RemoveContentContext.cs" />
     <Compile Include="ContentManagement\Handlers\VersionContentContext.cs" />
     <Compile Include="Data\Conventions\RecordTableNameConvention.cs" />
-    <Compile Include="Data\Migrations\DatabaseCoordinatorBase.cs" />
-    <Compile Include="Data\Migrations\DatabaseMigrationManager.cs" />
-    <Compile Include="Data\Migrations\IDatabaseCoordinator.cs" />
-    <Compile Include="Data\Migrations\IDatabaseMigrationManager.cs" />
-    <Compile Include="Data\Migrations\SQLiteDatabaseCoordinator.cs" />
-    <Compile Include="Data\Migrations\SqlServerDatabaseCoordinator.cs" />
+    <Compile Include="Data\Builders\AbstractBuilder.cs" />
+    <Compile Include="Data\Builders\SessionFactoryBuilder.cs" />
+    <Compile Include="Data\Builders\ISessionFactoryBuilder.cs" />
+    <Compile Include="Data\Builders\SQLiteBuilder.cs" />
+    <Compile Include="Data\Builders\SqlServerBuilder.cs" />
+    <Compile Include="Data\SessionFactoryHolder.cs" />
+    <Compile Include="Environment\Configuration\AppDataFolder.cs" />
     <Compile Include="Environment\Configuration\ShellSettingsLoader.cs" />
     <Compile Include="Environment\ExtensibleInterceptionModule.cs" />
     <Compile Include="Environment\ShellBuilders\DefaultShellContainerFactory.cs" />

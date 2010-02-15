@@ -1,26 +1,26 @@
-using System.IO;
+using System;
 using FluentNHibernate.Cfg.Db;
 
-namespace Orchard.Data.Migrations {
-    public class SQLiteDatabaseCoordinator : DatabaseCoordinatorBase {
+namespace Orchard.Data.Builders {
+    public class SqlServerBuilder : AbstractBuilder {
         private readonly string _dataFolder;
         private readonly string _connectionString;
 
-        public SQLiteDatabaseCoordinator(string dataFolder, string connectionString) {
+        public SqlServerBuilder(string dataFolder, string connectionString) {
             _dataFolder = dataFolder;
             _connectionString = connectionString;
         }
 
+
         protected override IPersistenceConfigurer GetPersistenceConfigurer() {
-            var persistence = SQLiteConfiguration.Standard;
+            var persistence = MsSqlConfiguration.MsSql2008;
             if (string.IsNullOrEmpty(_connectionString)) {
-                persistence = persistence.UsingFile(Path.Combine(_dataFolder, "Orchard.db"));
+                throw new NotImplementedException();
             }
             else {
                 persistence = persistence.ConnectionString(_connectionString);
             }
             return persistence;
         }
-
     }
 }
