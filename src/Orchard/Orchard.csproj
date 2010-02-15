@@ -286,6 +286,7 @@
     <Compile Include="Mvc\ViewModels\AdminViewModel.cs" />
     <Compile Include="Mvc\ViewModels\BaseViewModel.cs" />
     <Compile Include="UI\Navigation\INavigationManager.cs" />
+    <Compile Include="UI\Navigation\NavigationItemBuilder.cs" />
     <Compile Include="UI\PageClass\IPageClassBuilder.cs" />
     <Compile Include="UI\PageClass\PageClassBuilder.cs" />
     <Compile Include="UI\PageTitle\IPageTitleBuilder.cs" />

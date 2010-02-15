@@ -95,27 +95,20 @@ namespace Orchard.Setup.Controllers {
                          
                         // create home page as a CMS page
                         var page = contentManager.Create("page");
-                        page.As<BodyAspect>().Text = "Welcome to Orchard";
+                        page.As<BodyAspect>().Text = "<p>Welcome to Orchard!</p><p>Congratulations, you've successfully set-up your Orchard site.</p><p>This is the home page of your new site. We've taken the liberty to write here about a few things you could look at next in order to get familiar with the application. Once you feel confident you don't need this anymore, just click [Edit] to go into edit mode and replace this with whatever you want on your home page to make it your own.</p><p>One thing you could do (but you don't have to) is go into [Manage Settings] (follow the [Admin] link and then look for it under \"Settings\" in the menu on the left) and check that everything is configured the way you want.</p><p>You probably want to make the site your own. One of the ways you can do that is by clicking [Manage Themes] in the admin menu. A theme is a packaged look and feel that affects the whole site. We have installed a few themes already, but you'll also be able to browse through an online gallery of themes created by other users of Orchard.</p><p>Next, you can start playing with the content types that we installed. For example, go ahead and click [Add New Page] in the admin menu and create an \"about\" page. Then, add it to the navigation menu by going to [Manage Navigation]. You can also click [Add New Blog] and start posting by clicking [Add New Post].</p><p>Finally, Orchard has been designed to be extended. It comes with a few built-in modules such as pages and blogs but you can install new ones by going to [Manage Themes] and clicking [Install a new Theme]. Like for themes, modules are created by other users of Orchard just like you so if you feel up to it, please [consider participating].</p><p>--The Orchard Crew</p>";
                         page.As<RoutableAspect>().Slug = "";
-                        page.As<RoutableAspect>().Title = model.SiteName;
+                        page.As<RoutableAspect>().Title = T("Home").ToString();
                         page.As<HasComments>().CommentsShown = false;
                         page.As<CommonAspect>().Owner = user;
                         contentManager.Publish(page);
                         siteSettings.Record.HomePage = "PagesHomePageProvider;" + page.Id;
 
                         // add a menu item for the shiny new home page
-                        page.As<MenuPart>().MenuPosition = "1";
-                        page.As<MenuPart>().MenuText = T("Home").ToString();
-                        page.As<MenuPart>().OnMainMenu = true;
-
-                        // add a menu item for the admin
-                        var adminMenuItem = contentManager.Create("menuitem");
-                        adminMenuItem.As<MenuPart>().MenuPosition = "2";
-                        adminMenuItem.As<MenuPart>().MenuText = T("Admin").ToString();
-                        adminMenuItem.As<MenuPart>().OnMainMenu = true;
-                        //adminMenuItem.As<MenuItem>().Permissions = new [] {StandardPermissions.AccessAdminPanel};
-                        //todo: (heskew) pull "/blogs" once the is a ~/admin
-                        adminMenuItem.As<MenuItem>().Url = string.Format("{0}admin/blogs", Request.Url.AbsolutePath);
+                        var menuItem = contentManager.Create("menuitem");
+                        menuItem.As<MenuPart>().MenuPosition = "1";
+                        menuItem.As<MenuPart>().MenuText = T("Home").ToString();
+                        menuItem.As<MenuPart>().OnMainMenu = true;
+                        menuItem.As<MenuItem>().Url = "";
 
                         var authenticationService = finiteEnvironment.Resolve<IAuthenticationService>();
                         authenticationService.SignIn(user, true);
@@ -130,8 +123,6 @@ namespace Orchard.Setup.Controllers {
                 _shellSettingsLoader.SaveSettings(shellSettings);
 
                 _orchardHost.Reinitialize();
-
-                _notifier.Information(T("Setup succeeded"));
 
                 // redirect to the welcome page.
                 return Redirect("~/");

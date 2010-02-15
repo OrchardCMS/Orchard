@@ -6,10 +6,10 @@ using Orchard.UI.Navigation;
 namespace Orchard.Utility {
     public static class Position {
         public static string GetNext(IEnumerable<MenuItem> menuItems) {
-            //TODO: (erikpo) Clean up query to not hardcode to exclude 99, which is the admin menu item as of right now
-            var maxMenuItem = menuItems.FirstOrDefault().Items.Where(mi => mi.Position != "99").OrderByDescending(mi => mi.Position, new PositionComparer()).FirstOrDefault();
+            var topMenuItem = menuItems.FirstOrDefault();
 
-            if (maxMenuItem != null) {
+            if (topMenuItem != null) {
+                var maxMenuItem = topMenuItem.Items.OrderByDescending(mi => mi.Position, new PositionComparer()).FirstOrDefault();
                 var positionParts = maxMenuItem.Position.Split(new[] {'.'}, StringSplitOptions.RemoveEmptyEntries).Where(s => s.Trim() != "");
                 if (positionParts.Count() > 0) {
                     int result;

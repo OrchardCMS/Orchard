@@ -17,10 +17,11 @@ namespace Orchard.Core.Navigation.Models {
             set { Record.MenuText = value; }
         }
 
-        [HiddenInput(DisplayValue = false)]
         public string MenuPosition {
             get { return Record.MenuPosition; }
             set { Record.MenuPosition = value; }
         }
+
+
     }
 }
