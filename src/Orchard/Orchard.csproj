@@ -345,6 +345,7 @@
     <Compile Include="Storage\IStorageFolder.cs" />
     <Compile Include="Storage\IStorageProvider.cs" />
     <Compile Include="UI\Zones\ZoneManager.cs" />
+    <Compile Include="Utility\Position.cs" />
     <Compile Include="Utility\Reflect.cs" />
     <Compile Include="Utility\ReflectOn.cs" />
     <Compile Include="Validation\JetBrains.Annotations.cs" />
