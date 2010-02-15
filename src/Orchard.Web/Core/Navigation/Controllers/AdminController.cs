@@ -1,9 +1,12 @@
-﻿using System.Web.Mvc;
+﻿using System.Linq;
+using System.Web.Mvc;
 using Orchard.ContentManagement;
+using Orchard.Core.Navigation.Drivers;
 using Orchard.Core.Navigation.Models;
 using Orchard.Core.Navigation.ViewModels;
 using Orchard.Localization;
 using Orchard.UI.Navigation;
+using Orchard.Utility;
 using MenuItem=Orchard.Core.Navigation.Models.MenuItem;
 
 namespace Orchard.Core.Navigation.Controllers {
@@ -24,7 +27,7 @@ namespace Orchard.Core.Navigation.Controllers {
             if (!_services.Authorizer.Authorize(Permissions.ManageMainMenu, T("Not allowed to manage the main menu")))
                 return new HttpUnauthorizedResult();
 
-            var model = new ViewModels.NavigationManagementViewModel { Menu = _navigationManager.BuildMenu("main") };
+            var model = new NavigationManagementViewModel { Menu = _navigationManager.BuildMenu("main") };
 
             return View(model);
         }
@@ -50,7 +53,10 @@ namespace Orchard.Core.Navigation.Controllers {
                 return Index();
             }
 
+            if (string.IsNullOrEmpty(menuItem.As<MenuPart>().MenuPosition))
+                menuItem.As<MenuPart>().MenuPosition = Position.GetNext(_navigationManager.BuildMenu("main"));
             menuItem.As<MenuPart>().OnMainMenu = true;
+
             _services.ContentManager.Create(model.MenuItem.Item.ContentItem);
 
             return RedirectToAction("Index");
