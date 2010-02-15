@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using NHibernate;
 using Orchard.Environment;
 
-namespace Orchard.Data.Migrations {
+namespace Orchard.Data.Builders {
 
     public interface ISessionFactoryBuilder : IDependency {
         ISessionFactory BuildSessionFactory(SessionFactoryParameters sessionFactoryParameters);

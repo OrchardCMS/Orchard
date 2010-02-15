@@ -7,7 +7,7 @@ using Orchard.Core.Common.Models;
 using Orchard.Core.Navigation.Models;
 using Orchard.Core.Settings.Models;
 using Orchard.Data;
-using Orchard.Data.Migrations;
+using Orchard.Data.Builders;
 using Orchard.Environment;
 using Orchard.Environment.Configuration;
 using Orchard.Security;

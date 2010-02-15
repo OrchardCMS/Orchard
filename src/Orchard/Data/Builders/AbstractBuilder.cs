@@ -13,7 +13,7 @@ using Orchard.ContentManagement.Records;
 using Orchard.Data.Conventions;
 using Orchard.Environment;
 
-namespace Orchard.Data.Migrations {
+namespace Orchard.Data.Builders {
     public abstract class AbstractBuilder {
         protected abstract IPersistenceConfigurer GetPersistenceConfigurer();
 

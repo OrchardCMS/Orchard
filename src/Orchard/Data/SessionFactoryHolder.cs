@@ -1,6 +1,6 @@
 ﻿using System.IO;
 using NHibernate;
-using Orchard.Data.Migrations;
+using Orchard.Data.Builders;
 using Orchard.Environment;
 using Orchard.Environment.Configuration;
 using Orchard.Logging;

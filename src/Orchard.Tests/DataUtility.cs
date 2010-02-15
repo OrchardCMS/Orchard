@@ -9,7 +9,7 @@ using FluentNHibernate.Cfg.Db;
 using NHibernate;
 using NHibernate.Tool.hbm2ddl;
 using Orchard.Data;
-using Orchard.Data.Migrations;
+using Orchard.Data.Builders;
 using Orchard.Environment;
 
 namespace Orchard.Tests {

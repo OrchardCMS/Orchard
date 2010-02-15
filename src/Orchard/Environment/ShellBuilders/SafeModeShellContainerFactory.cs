@@ -8,7 +8,7 @@ using System.Web.Routing;
 using Autofac;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Handlers;
-using Orchard.Data.Migrations;
+using Orchard.Data.Builders;
 using Orchard.Environment.Configuration;
 using Orchard.Extensions;
 using Orchard.Localization;

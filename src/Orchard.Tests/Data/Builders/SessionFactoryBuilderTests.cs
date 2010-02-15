@@ -1,13 +1,13 @@
 ﻿using System.Data.SqlClient;
 using System.IO;
 using NUnit.Framework;
-using Orchard.Data.Migrations;
+using Orchard.Data.Builders;
 using Orchard.Environment;
 using Orchard.Tests.Records;
 
-namespace Orchard.Tests.Data.Migrations {
+namespace Orchard.Tests.Data.Builders {
     [TestFixture]
-    public class DatabaseManagerTests {
+    public class SessionFactoryBuilderTests {
         private string _tempDataFolder;
 
         [SetUp]
@@ -47,16 +47,16 @@ namespace Orchard.Tests.Data.Migrations {
 
         [Test]
         public void SQLiteSchemaShouldBeGeneratedAndUsable() {
- var recordDescriptors = new[] {
-                new RecordDescriptor {Prefix = "Hello", Type = typeof (Foo)}
-            };
+            var recordDescriptors = new[] {
+                                              new RecordDescriptor {Prefix = "Hello", Type = typeof (Foo)}
+                                          };
             var manager = (ISessionFactoryBuilder)new SessionFactoryBuilder();
             var sessionFactory = manager.BuildSessionFactory(new SessionFactoryParameters {
-                Provider = "SQLite",
-                DataFolder = _tempDataFolder,
-                UpdateSchema = true,
-                RecordDescriptors = recordDescriptors
-            });
+                                                                                              Provider = "SQLite",
+                                                                                              DataFolder = _tempDataFolder,
+                                                                                              UpdateSchema = true,
+                                                                                              RecordDescriptors = recordDescriptors
+                                                                                          });
 
 
             var session = sessionFactory.OpenSession();
@@ -77,17 +77,17 @@ namespace Orchard.Tests.Data.Migrations {
             CreateSqlServerDatabase(databasePath);
 
             var recordDescriptors = new[] {
-                new RecordDescriptor {Prefix = "Hello", Type = typeof (Foo)}
-            };
+                                              new RecordDescriptor {Prefix = "Hello", Type = typeof (Foo)}
+                                          };
 
             var manager = (ISessionFactoryBuilder)new SessionFactoryBuilder();
             var sessionFactory = manager.BuildSessionFactory(new SessionFactoryParameters {
-                Provider = "SQLite",
-                DataFolder = _tempDataFolder,
-                ConnectionString = "Data Source=.\\SQLEXPRESS;AttachDbFileName=" + databasePath + ";Integrated Security=True;User Instance=True;",
-                UpdateSchema = true,
-                RecordDescriptors = recordDescriptors,
-            });
+                                                                                              Provider = "SQLite",
+                                                                                              DataFolder = _tempDataFolder,
+                                                                                              ConnectionString = "Data Source=.\\SQLEXPRESS;AttachDbFileName=" + databasePath + ";Integrated Security=True;User Instance=True;",
+                                                                                              UpdateSchema = true,
+                                                                                              RecordDescriptors = recordDescriptors,
+                                                                                          });
 
 
 

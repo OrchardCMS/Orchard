@@ -7,7 +7,7 @@ using Autofac.Builder;
 using JetBrains.Annotations;
 using Moq;
 using NUnit.Framework;
-using Orchard.Data.Migrations;
+using Orchard.Data.Builders;
 using Orchard.Environment;
 using Orchard.Environment.Configuration;
 using Orchard.Setup.Controllers;

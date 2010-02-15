@@ -1,7 +1,7 @@
 ﻿using System;
 using NHibernate;
 
-namespace Orchard.Data.Migrations {
+namespace Orchard.Data.Builders {
     public class SessionFactoryBuilder : ISessionFactoryBuilder {
         public ISessionFactory BuildSessionFactory(SessionFactoryParameters sessionFactoryParameters) {
             AbstractBuilder builder;
