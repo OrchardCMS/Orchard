@@ -15,16 +15,19 @@ namespace Orchard.Data {
         private readonly IShellSettings _shellSettings;
         private readonly ICompositionStrategy _compositionStrategy;
         private readonly IDatabaseManager _databaseManager;
+        private readonly IAppDataFolder _appDataFolder;
 
         private ISessionFactory _sessionFactory;
 
         public SessionFactoryHolder(
             IShellSettings shellSettings,
             ICompositionStrategy compositionStrategy,
-            IDatabaseManager databaseManager) {
+            IDatabaseManager databaseManager,
+            IAppDataFolder appDataFolder) {
             _shellSettings = shellSettings;
             _compositionStrategy = compositionStrategy;
             _databaseManager = databaseManager;
+            _appDataFolder = appDataFolder;
         }
 
 
@@ -46,8 +49,8 @@ namespace Orchard.Data {
         }
 
         private ISessionFactory BuildSessionFactory(bool updateSchema) {
-            var sitesPath = HostingEnvironment.MapPath("~/App_Data/Sites");
-            var shellPath = Path.Combine(sitesPath, _shellSettings.Name);
+            var shellPath = _appDataFolder.CreateDirectory(Path.Combine("Sites", _shellSettings.Name));
+
 
             var coordinator = _databaseManager.CreateCoordinator(new DatabaseParameters {
                 Provider = _shellSettings.DataProvider,
