@@ -107,11 +107,9 @@ namespace Orchard.Setup.Controllers {
                         siteSettings.Record.HomePage = "PagesHomePageProvider;" + page.Id;
 
                         // add a menu item for the shiny new home page
-                        var homeMenuItem = contentManager.Create("menuitem");
-                        homeMenuItem.As<MenuPart>().MenuPosition = "1";
-                        homeMenuItem.As<MenuPart>().MenuText = T("Home").ToString();
-                        homeMenuItem.As<MenuPart>().OnMainMenu = true;
-                        homeMenuItem.As<MenuItem>().Url = Request.Url.AbsolutePath;
+                        page.As<MenuPart>().MenuPosition = "1";
+                        page.As<MenuPart>().MenuText = T("Home").ToString();
+                        page.As<MenuPart>().OnMainMenu = true;
 
                         // add a menu item for the admin
                         var adminMenuItem = contentManager.Create("menuitem");
