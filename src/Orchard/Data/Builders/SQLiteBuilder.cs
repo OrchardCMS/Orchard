@@ -11,20 +11,25 @@ namespace Orchard.Data.Builders {
             _connectionString = connectionString;
         }
 
-        protected override IPersistenceConfigurer GetPersistenceConfigurer() {
+        protected override IPersistenceConfigurer GetPersistenceConfigurer(bool createDatabase) {
             var persistence = SQLiteConfiguration.Standard;
             if (string.IsNullOrEmpty(_connectionString)) {
-                
-                if (!Directory.Exists(_dataFolder))
-                    Directory.CreateDirectory(_dataFolder);
+                var dataFile = Path.Combine(_dataFolder, "Orchard.db");
 
-                persistence = persistence.UsingFile(Path.Combine(_dataFolder, "Orchard.db"));
+                if (!Directory.Exists(_dataFolder)) {
+                    Directory.CreateDirectory(_dataFolder);
+                }
+                
+                if (createDatabase && File.Exists(dataFile)) {
+                    File.Delete(dataFile);
+                }
+
+                persistence = persistence.UsingFile(dataFile);
             }
             else {
                 persistence = persistence.ConnectionString(_connectionString);
             }
             return persistence;
         }
-
     }
 }

@@ -3,15 +3,15 @@ using NHibernate;
 
 namespace Orchard.Data.Builders {
     public class SessionFactoryBuilder : ISessionFactoryBuilder {
-        public ISessionFactory BuildSessionFactory(SessionFactoryParameters sessionFactoryParameters) {
+        public ISessionFactory BuildSessionFactory(SessionFactoryParameters parameters) {
             AbstractBuilder builder;
-            if (string.Equals(sessionFactoryParameters.Provider, "SQLite", StringComparison.InvariantCultureIgnoreCase)) {
-                builder = new SQLiteBuilder(sessionFactoryParameters.DataFolder, sessionFactoryParameters.ConnectionString);
+            if (string.Equals(parameters.Provider, "SQLite", StringComparison.InvariantCultureIgnoreCase)) {
+                builder = new SQLiteBuilder(parameters.DataFolder, parameters.ConnectionString);
             }
             else {
-                builder = new SqlServerBuilder(sessionFactoryParameters.DataFolder, sessionFactoryParameters.ConnectionString);
+                builder = new SqlServerBuilder(parameters.DataFolder, parameters.ConnectionString);
             }
-            return builder.BuildSessionFactory(sessionFactoryParameters);
+            return builder.BuildSessionFactory(parameters);
         }
     }
 }

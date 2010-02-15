@@ -1,5 +1,4 @@
 ﻿using System;
-using System.IO;
 using System.Web.Mvc;
 using Orchard.Comments.Models;
 using Orchard.ContentManagement;
@@ -7,7 +6,6 @@ using Orchard.Core.Common.Models;
 using Orchard.Core.Navigation.Models;
 using Orchard.Core.Settings.Models;
 using Orchard.Data;
-using Orchard.Data.Builders;
 using Orchard.Environment;
 using Orchard.Environment.Configuration;
 using Orchard.Security;
@@ -15,7 +13,6 @@ using Orchard.Settings;
 using Orchard.Setup.ViewModels;
 using Orchard.Localization;
 using Orchard.UI.Notify;
-using MenuItem=Orchard.Core.Navigation.Models.MenuItem;
 
 namespace Orchard.Setup.Controllers {
     public class SetupController : Controller {
@@ -74,7 +71,7 @@ namespace Orchard.Setup.Controllers {
                     try {
                         // initialize database before the transaction is created
                         var sessionFactoryHolder = finiteEnvironment.Resolve<ISessionFactoryHolder>();
-                        sessionFactoryHolder.UpdateSchema();
+                        sessionFactoryHolder.CreateDatabase();
 
 
                         // create superuser

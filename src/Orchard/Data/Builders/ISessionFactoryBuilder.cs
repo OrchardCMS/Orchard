@@ -9,11 +9,13 @@ namespace Orchard.Data.Builders {
     }
 
     public class SessionFactoryParameters {
-        public IEnumerable<RecordDescriptor> RecordDescriptors { get; set; }
-        public bool UpdateSchema { get; set; }
-
         public string Provider { get; set; }
         public string DataFolder { get; set; }
         public string ConnectionString { get; set; }
+
+        public bool CreateDatabase { get; set; }
+        public bool UpdateSchema { get; set; }
+
+        public IEnumerable<RecordDescriptor> RecordDescriptors { get; set; }
     }
 }

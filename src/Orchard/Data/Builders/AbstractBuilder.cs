@@ -15,10 +15,10 @@ using Orchard.Environment;
 
 namespace Orchard.Data.Builders {
     public abstract class AbstractBuilder {
-        protected abstract IPersistenceConfigurer GetPersistenceConfigurer();
+        protected abstract IPersistenceConfigurer GetPersistenceConfigurer(bool createDatabase);
 
         public ISessionFactory BuildSessionFactory(SessionFactoryParameters parameters) {
-            var database = GetPersistenceConfigurer();
+            var database = GetPersistenceConfigurer(parameters.CreateDatabase);
             var persistenceModel = CreatePersistenceModel(parameters.RecordDescriptors);
 
             var sessionFactory = Fluently.Configure()
@@ -31,7 +31,11 @@ namespace Orchard.Data.Builders {
         }
 
         private static void Initialization(SessionFactoryParameters parameters, Configuration configuration) {
-            if (parameters.UpdateSchema) {
+            if (parameters.CreateDatabase) {
+                var export = new SchemaExport(configuration);
+                export.Execute(false/*script*/, true/*export*/, false/*justDrop*/);
+            }
+            else if (parameters.UpdateSchema) {
                 var update = new SchemaUpdate(configuration);
                 update.Execute(false/*script*/, true /*doUpdate*/);
             }

@@ -12,7 +12,7 @@ namespace Orchard.Data.Builders {
         }
 
 
-        protected override IPersistenceConfigurer GetPersistenceConfigurer() {
+        protected override IPersistenceConfigurer GetPersistenceConfigurer(bool createDatabase) {
             var persistence = MsSqlConfiguration.MsSql2008;
             if (string.IsNullOrEmpty(_connectionString)) {
                 throw new NotImplementedException();

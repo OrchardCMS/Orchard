@@ -43,10 +43,13 @@ namespace Orchard.Environment.Configuration {
         }
 
         IEnumerable<YamlDocument> LoadFiles() {
-            var sitePaths = _appDataFolder.ListDirectories("Sites");
+            var sitePaths = _appDataFolder
+                .ListDirectories("Sites")
+                .SelectMany(path => _appDataFolder.ListFiles(path))
+                .Where(path => string.Equals(Path.GetFileName(path), "Settings.txt", StringComparison.OrdinalIgnoreCase));
 
             foreach (var sitePath in sitePaths) {
-                var yamlStream = YamlParser.Load(_appDataFolder.MapPath(Path.Combine(sitePath, "Settings.txt")));
+                var yamlStream = YamlParser.Load(_appDataFolder.MapPath(sitePath));
                 yield return yamlStream.Documents.Single();
             }
         }
