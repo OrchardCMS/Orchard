@@ -64,22 +64,6 @@ namespace Orchard.Tests.Data.Migrations {
 
         }
 
-        [Test]
-        public void CanConnectShouldBeFalseWhenSqlServerIsInvalid() {
-            var manager = (IDatabaseMigrationManager)new DatabaseMigrationManager();
-            var coordinator = manager.CreateCoordinator("SqlServer", _tempDataFolder, "Data Source=.\\SQLEXPRESS;Initial Catalog=Hello");
-            Assert.That(coordinator.CanConnect(), Is.False);
-        }
-
-        [Test]
-        public void CanConnectShouldBeTrueWhenValidSqlServerMdfIsTargetted() {
-            var databasePath = Path.Combine(_tempDataFolder, "Orchard.mdf");
-            CreateSqlServerDatabase(databasePath);
-
-            var manager = (IDatabaseMigrationManager)new DatabaseMigrationManager();
-            var coordinator = manager.CreateCoordinator("SqlServer", _tempDataFolder, "Data Source=.\\SQLEXPRESS;AttachDbFileName=" + databasePath + ";Integrated Security=True;User Instance=True;");
-            Assert.That(coordinator.CanConnect(), Is.True);
-        }
 
         [Test]
         public void SQLiteSchemaShouldBeGeneratedAndUsable() {

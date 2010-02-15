@@ -7,58 +7,34 @@ using FluentNHibernate.Cfg;
 using FluentNHibernate.Cfg.Db;
 using FluentNHibernate.Conventions.Helpers;
 using NHibernate;
+using NHibernate.Cfg;
 using NHibernate.Tool.hbm2ddl;
 using Orchard.ContentManagement.Records;
 using Orchard.Data.Conventions;
 using Orchard.Environment;
 
 namespace Orchard.Data.Migrations {
-    public abstract class DatabaseCoordinatorBase : IDatabaseCoordinator {
+    public abstract class AbstractSessionFactoryBuilder : ISessionFactoryBuilder {
         protected abstract IPersistenceConfigurer GetPersistenceConfigurer();
 
-        public virtual bool CanConnect() {
-            try {
-                var sessionFactory = Fluently.Configure()
-                    .Database(GetPersistenceConfigurer())
-                    .BuildSessionFactory();
-                try {
-                    // attempting to open a session validates a connection can be made
-                    var session = sessionFactory.OpenSession();
-                    session.Close();
-                }
-                finally {
-                    sessionFactory.Close();
-                }
-                return true;
-            }
-            catch {
-                return false;
-            }
-        }
+        public ISessionFactory BuildSessionFactory(SessionFactoryBuilderParameters parameters) {
+            var database = GetPersistenceConfigurer();
+            var persistenceModel = CreatePersistenceModel(parameters.RecordDescriptors);
 
-        public virtual void CreateDatabase() {
-            // creating a session factory appears to be sufficient for causing a database file to be created for inplace providers
             var sessionFactory = Fluently.Configure()
-                .Database(GetPersistenceConfigurer())
+                .Database(database)
+                .Mappings(m => m.AutoMappings.Add(persistenceModel))
+                .ExposeConfiguration(config => Initialization(parameters, config))
                 .BuildSessionFactory();
-            sessionFactory.Close();
+
+            return sessionFactory;
         }
 
-        public void UpdateSchema(IEnumerable<RecordDescriptor> recordDescriptors) {
-            var configuration = Fluently.Configure()
-                .Database(GetPersistenceConfigurer())
-                .Mappings(m => m.AutoMappings.Add(CreatePersistenceModel(recordDescriptors)))
-                .BuildConfiguration();
-
-            var updater = new SchemaUpdate(configuration);
-            updater.Execute(true /*script*/, true /*doUpdate*/);
-        }
-
-        public ISessionFactory BuildSessionFactory(IEnumerable<RecordDescriptor> recordDescriptors) {
-            return Fluently.Configure()
-                .Database(GetPersistenceConfigurer())
-                .Mappings(m => m.AutoMappings.Add(CreatePersistenceModel(recordDescriptors)))
-                .BuildSessionFactory();
+        private static void Initialization(SessionFactoryBuilderParameters parameters, Configuration configuration) {
+            if (parameters.UpdateSchema) {
+                var update = new SchemaUpdate(configuration);
+                update.Execute(false/*script*/, true /*doUpdate*/);
+            }
         }
 
         public static AutoPersistenceModel CreatePersistenceModel(IEnumerable<RecordDescriptor> recordDescriptors) {
@@ -84,5 +60,6 @@ namespace Orchard.Data.Migrations {
 
             public IEnumerable<Type> GetTypes() { return _recordDescriptors.Select(descriptor => descriptor.Type); }
         }
+
     }
 }

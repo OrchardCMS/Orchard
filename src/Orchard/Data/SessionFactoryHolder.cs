@@ -14,45 +14,56 @@ namespace Orchard.Data {
     public class SessionFactoryHolder : ISessionFactoryHolder {
         private readonly IShellSettings _shellSettings;
         private readonly ICompositionStrategy _compositionStrategy;
-        private readonly IDatabaseMigrationManager _databaseMigrationManager;
+        private readonly IDatabaseManager _databaseManager;
 
         private ISessionFactory _sessionFactory;
 
         public SessionFactoryHolder(
             IShellSettings shellSettings,
             ICompositionStrategy compositionStrategy,
-            IDatabaseMigrationManager databaseMigrationManager) {
+            IDatabaseManager databaseManager) {
             _shellSettings = shellSettings;
             _compositionStrategy = compositionStrategy;
-            _databaseMigrationManager = databaseMigrationManager;
+            _databaseManager = databaseManager;
         }
 
 
         public void UpdateSchema() {
-            var coordinator = GetDatabaseCoordinator();
-            coordinator.UpdateSchema(_compositionStrategy.GetRecordDescriptors());
+            lock (this) {
+                if (_sessionFactory == null) {
+                    _sessionFactory = BuildSessionFactory(true);
+                }
+            }
         }
 
         public ISessionFactory GetSessionFactory() {
-            lock(this) {
+            lock (this) {
                 if (_sessionFactory == null) {
-                    _sessionFactory = BuildSessionFactory();
+                    _sessionFactory = BuildSessionFactory(false);
                 }
             }
             return _sessionFactory;
         }
 
-        private ISessionFactory BuildSessionFactory() {
-            var coordinator = GetDatabaseCoordinator();
-            return coordinator.BuildSessionFactory(_compositionStrategy.GetRecordDescriptors());
-        }
-
-
-        private IDatabaseCoordinator GetDatabaseCoordinator() {
+        private ISessionFactory BuildSessionFactory(bool updateSchema) {
             var sitesPath = HostingEnvironment.MapPath("~/App_Data/Sites");
             var shellPath = Path.Combine(sitesPath, _shellSettings.Name);
-            return _databaseMigrationManager.CreateCoordinator(_shellSettings.DataProvider, shellPath, _shellSettings.DataConnectionString);
+
+            var coordinator = _databaseManager.CreateCoordinator(new DatabaseParameters {
+                Provider = _shellSettings.DataProvider,
+                DataFolder = shellPath,
+                ConnectionString = _shellSettings.DataConnectionString
+            });
+
+            var sessionFactory = coordinator.BuildSessionFactory(new SessionFactoryBuilderParameters {
+                CreateDatabase = false,
+                UpdateSchema = updateSchema,
+                RecordDescriptors = _compositionStrategy.GetRecordDescriptors()
+            });
+
+            return sessionFactory;
         }
+
     }
 
 
