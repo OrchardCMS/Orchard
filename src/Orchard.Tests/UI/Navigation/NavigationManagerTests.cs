@@ -1,11 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Linq;
+using System.Web.Mvc;
+using System.Web.Routing;
 using NUnit.Framework;
 using Orchard.ContentManagement;
 using Orchard.Security;
 using Orchard.Security.Permissions;
+using Orchard.Tests.Stubs;
 using Orchard.UI.Navigation;
 
 namespace Orchard.Tests.UI.Navigation {
@@ -13,7 +13,7 @@ namespace Orchard.Tests.UI.Navigation {
     public class NavigationManagerTests {
         [Test]
         public void EmptyMenuIfNameDoesntMatch() {
-            var manager = new NavigationManager(new[] { new StubProvider() }, new StubAuth());
+            var manager = new NavigationManager(new[] { new StubProvider() }, new StubAuth(), new UrlHelper(new RequestContext(new StubHttpContext("~/"), new RouteData())));
 
             var menuItems = manager.BuildMenu("primary");
             Assert.That(menuItems.Count(), Is.EqualTo(0));
@@ -30,7 +30,7 @@ namespace Orchard.Tests.UI.Navigation {
 
         [Test]
         public void NavigationManagerShouldUseProvidersToBuildNamedMenu() {
-            var manager = new NavigationManager(new[] { new StubProvider() }, new StubAuth());
+            var manager = new NavigationManager(new[] { new StubProvider() }, new StubAuth(), new UrlHelper(new RequestContext(new StubHttpContext("~/"), new RouteData())));
 
             var menuItems = manager.BuildMenu("admin");
             Assert.That(menuItems.Count(), Is.EqualTo(2));
@@ -42,7 +42,7 @@ namespace Orchard.Tests.UI.Navigation {
 
         [Test]
         public void NavigationManagerShouldMergeAndOrderNavigation() {
-            var manager = new NavigationManager(new INavigationProvider[] { new StubProvider(), new Stub2Provider() }, new StubAuth());
+            var manager = new NavigationManager(new INavigationProvider[] { new StubProvider(), new Stub2Provider() }, new StubAuth(), new UrlHelper(new RequestContext(new StubHttpContext("~/"), new RouteData())));
 
             var menuItems = manager.BuildMenu("admin");
             Assert.That(menuItems.Count(), Is.EqualTo(3));

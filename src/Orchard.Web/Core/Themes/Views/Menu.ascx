@@ -14,15 +14,10 @@
             if (counter == count)
                 sbClass.Append("last ");
 
-            var url = !string.IsNullOrEmpty(menuItem.Url)
-                          ? menuItem.Url
-                          : Url.RouteUrl(menuItem.RouteValues);
-
-            if (string.Equals(url, Request.Url.AbsolutePath, StringComparison.InvariantCultureIgnoreCase))
+            if (string.Equals(menuItem.Href, Request.Url.AbsolutePath, StringComparison.InvariantCultureIgnoreCase))
                 sbClass.Append("current ");
-            
             %>
-        <li class="<%=sbClass.ToString().TrimEnd() %>"><%=Html.Link(menuItem.Text, url) %></li><%
+        <li class="<%=sbClass.ToString().TrimEnd() %>"><%=Html.Link(menuItem.Text, menuItem.Href) %></li><%
             ++counter;
         } %>
     </ul>

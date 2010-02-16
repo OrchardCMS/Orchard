@@ -12,6 +12,8 @@ namespace Orchard.Mvc {
             // Locate the container this route is bound against
             var container = GetRequestContainer(routeData);
 
+            container.Build(cb => cb.Register(new UrlHelper(requestContext)));
+
             // Determine the area name for the request, and fall back to stock orchard controllers
             var areaName = GetAreaName(routeData) ?? "Orchard";
 
@@ -35,7 +37,7 @@ namespace Orchard.Mvc {
             return null;
         }
 
-        public static IContext GetRequestContainer(RouteData routeData) {
+        public static IContainer GetRequestContainer(RouteData routeData) {
             object dataTokenValue;
             if (routeData != null &&
                 routeData.DataTokens != null &&
