@@ -37,6 +37,8 @@ namespace Orchard.Web {
         }
 
         protected void Application_BeginRequest() {
+            Context.Items["originalHttpContext"] = Context;
+
             _host.BeginRequest();
         }
         

@@ -8,6 +8,7 @@ using Orchard.Core.Navigation.Models;
 using Orchard.Core.Navigation.Services;
 using Orchard.Core.Navigation.ViewModels;
 using Orchard.Localization;
+using Orchard.Mvc.Attributes;
 using Orchard.UI.Navigation;
 using Orchard.Utility;
 using MenuItem=Orchard.Core.Navigation.Models.MenuItem;
@@ -100,7 +101,7 @@ namespace Orchard.Core.Navigation.Controllers {
             return RedirectToAction("Index");
         }
 
-        //[ValidateAntiForgeryTokenOrchard]
+        [ValidateAntiForgeryTokenOrchard]
         public ActionResult Delete(int id) {
             if (!_services.Authorizer.Authorize(Permissions.ManageMainMenu, T("Couldn't manage the main menu")))
                 return new HttpUnauthorizedResult();

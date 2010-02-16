@@ -151,6 +151,7 @@
     <Compile Include="Extensions\ExtensionFolders.cs" />
     <Compile Include="Extensions\Loaders\AreaExtensionLoader.cs" />
     <Compile Include="Extensions\UriExtensions.cs" />
+    <Compile Include="Mvc\Attributes\ValidateAntiForgeryTokenOrchardAttribute.cs" />
     <Compile Include="OrchardException.cs" />
     <Compile Include="Security\IAuthorizationServiceEvents.cs" />
     <Compile Include="Security\StandardPermissions.cs" />
