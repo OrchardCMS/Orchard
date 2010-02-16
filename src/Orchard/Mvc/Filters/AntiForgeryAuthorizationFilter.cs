@@ -45,9 +45,9 @@ namespace Orchard.Mvc.Filters {
                 if (!string.IsNullOrEmpty(request.QueryString[tokenFieldName])) {
                     context.HttpContext = new HackHttpContext(context.HttpContext, (HttpContext)context.HttpContext.Items["originalHttpContext"]);
                     ((HackHttpRequest)context.HttpContext.Request).AddFormValue(tokenFieldName, context.HttpContext.Request.QueryString[tokenFieldName]);
-
-                    return true;
                 }
+
+                return true;
             }
 
             return false;
