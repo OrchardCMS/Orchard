@@ -97,14 +97,15 @@ namespace Orchard.Core.Navigation.Controllers {
             return RedirectToAction("Index");
         }
 
-        //[ValidateAntiForgeryTokenOrchard, ActionName("Delete")]
-        [HttpPost]
-        public ActionResult Delete(int menuItemId)
-        {
+        //[ValidateAntiForgeryTokenOrchard]
+        public ActionResult Delete(int id) {
             if (!_services.Authorizer.Authorize(Permissions.ManageMainMenu, T("Couldn't manage the main menu")))
                 return new HttpUnauthorizedResult();
 
-            //todo -> delete
+            MenuPart menuPart = _menuService.Get(id);
+
+            if (menuPart != null)
+                _menuService.Delete(menuPart);
 
             return RedirectToAction("Index");
         }

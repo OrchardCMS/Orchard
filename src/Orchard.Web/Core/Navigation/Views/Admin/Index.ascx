@@ -27,7 +27,7 @@ using (Html.BeginFormAntiForgeryPost()) { %>
             <td><input type="text" name="<%=Html.NameOf(m => m.MenuItemEntries[i].MenuItem.Text) %>" value="<%=menuPartEntry.MenuItem.Text %>" /></td>
             <td><input type="text" name="<%=Html.NameOf(m => m.MenuItemEntries[i].MenuItem.Position) %>" value="<%=menuPartEntry.MenuItem.Position %>" /></td>
             <td><input type="text" name="<%=Html.NameOf(m => m.MenuItemEntries[i].MenuItem.Url) %>" value="<%=menuPartEntry.MenuItem.Url %>" /></td>
-            <td><input type="hidden" name="<%=Html.NameOf(m => m.MenuItemEntries[i].MenuItemId) %>" value="<%=menuPartEntry.MenuItemId %>" /><a href="#" class="remove button">delete</a></td>
+            <td><input type="hidden" name="<%=Html.NameOf(m => m.MenuItemEntries[i].MenuItemId) %>" value="<%=menuPartEntry.MenuItemId %>" /><a href="<%=Url.Action("Delete", new {id = menuPartEntry.MenuItemId, __RequestVerificationToken = Html.AntiForgeryTokenValueOrchard()}) %>" class="remove button">delete</a></td>
         </tr><%
         ++menuPartEntryIndex;
     } %>

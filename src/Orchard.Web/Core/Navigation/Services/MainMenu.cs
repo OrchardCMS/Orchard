@@ -24,6 +24,10 @@ namespace Orchard.Core.Navigation.Services {
             return _contentManager.Get<MenuPart>(menuPartId);
         }
 
+        public void Delete(MenuPart menuPart) {
+            _contentManager.Remove(menuPart.ContentItem);
+        }
+
         public void GetNavigation(NavigationBuilder builder) {
             IEnumerable<MenuPart> menuParts = _contentManager.Query<MenuPart, MenuPartRecord>().Where(x => x.OnMainMenu).List();
             foreach (var menuPart in menuParts) {
@@ -47,5 +51,6 @@ namespace Orchard.Core.Navigation.Services {
     public interface IMenuService : IDependency {
         IEnumerable<MenuPart> Get();
         MenuPart Get(int menuPartId);
+        void Delete(MenuPart menuPart);
     }
 }
