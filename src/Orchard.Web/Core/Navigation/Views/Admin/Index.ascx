@@ -1,8 +1,7 @@
 ﻿<%@ Control Language="C#" Inherits="Orchard.Mvc.ViewUserControl<NavigationManagementViewModel>" %>
 <%@ Import Namespace="Orchard.ContentManagement"%>
 <%@ Import Namespace="Orchard.Core.Navigation.Models"%>
-<%@ Import Namespace="Orchard.Core.Navigation.ViewModels"%><%
-var menu = Model.Menu.FirstOrDefault(); %>
+<%@ Import Namespace="Orchard.Core.Navigation.ViewModels"%>
 <h1><%=Html.TitleForPage(T("Manage Main Menu").ToString())%></h1><%
 using (Html.BeginFormAntiForgeryPost()) { %>
 <table class="items">
@@ -21,13 +20,16 @@ using (Html.BeginFormAntiForgeryPost()) { %>
         </tr>
     </thead>
     <tbody><%
-    foreach (var menuItem in menu.Items) { %>
+    var menuPartEntryIndex = 0;
+    foreach (var menuPartEntry in Model.MenuItemEntries) {
+        var i = menuPartEntryIndex; %>
         <tr>
-            <td><%=Html.TextBox("text", menuItem.Text) %></td>
-            <td><%=Html.TextBox("position", menuItem.Position) %></td>
-            <td><%=Html.TextBox("url", menuItem.Url) %></td>
-            <td><a href="#" class="remove button">delete</a></td>
+            <td><input type="text" name="<%=Html.NameOf(m => m.MenuItemEntries[i].MenuItem.Text) %>" value="<%=menuPartEntry.MenuItem.Text %>" /></td>
+            <td><input type="text" name="<%=Html.NameOf(m => m.MenuItemEntries[i].MenuItem.Position) %>" value="<%=menuPartEntry.MenuItem.Position %>" /></td>
+            <td><input type="text" name="<%=Html.NameOf(m => m.MenuItemEntries[i].MenuItem.Url) %>" value="<%=menuPartEntry.MenuItem.Url %>" /></td>
+            <td><input type="hidden" name="<%=Html.NameOf(m => m.MenuItemEntries[i].MenuItemId) %>" value="<%=menuPartEntry.MenuItemId %>" /><a href="#" class="remove button">delete</a></td>
         </tr><%
+        ++menuPartEntryIndex;
     } %>
     </tbody>
 </table>

@@ -9,7 +9,7 @@ namespace Orchard.Utility {
             var topMenuItem = menuItems.FirstOrDefault();
 
             if (topMenuItem != null) {
-                var maxMenuItem = topMenuItem.Items.OrderByDescending(mi => mi.Position, new PositionComparer()).FirstOrDefault();
+                var maxMenuItem = topMenuItem.Items.Where(PositionHasMojorNumber).OrderByDescending(mi => mi.Position, new PositionComparer()).FirstOrDefault();
                 var positionParts = maxMenuItem.Position.Split(new[] {'.'}, StringSplitOptions.RemoveEmptyEntries).Where(s => s.Trim() != "");
                 if (positionParts.Count() > 0) {
                     int result;
@@ -20,6 +20,12 @@ namespace Orchard.Utility {
             }
 
             return "1";
+        }
+
+        private static bool PositionHasMojorNumber(MenuItem mi) {
+            int foo;
+            var major = mi.Position.Split('.')[0];
+            return !string.IsNullOrEmpty(major) && int.TryParse(major, out foo);
         }
     }
 }

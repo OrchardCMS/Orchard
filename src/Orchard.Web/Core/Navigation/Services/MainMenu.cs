@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Orchard.ContentManagement;
 using Orchard.Core.Navigation.Models;
 using Orchard.Core.Navigation.Records;
@@ -6,7 +7,7 @@ using Orchard.UI.Navigation;
 using MenuItem=Orchard.Core.Navigation.Models.MenuItem;
 
 namespace Orchard.Core.Navigation.Services {
-    public class MainMenu : INavigationProvider {
+    public class MainMenu : INavigationProvider, IMenuService {
         private readonly IContentManager _contentManager;
 
         public MainMenu(IContentManager contentManager) {
@@ -14,6 +15,14 @@ namespace Orchard.Core.Navigation.Services {
         }
 
         public string MenuName { get { return "main"; } }
+
+        public IEnumerable<MenuPart> Get() {
+            return _contentManager.Query<MenuPart, MenuPartRecord>().Where(x => x.OnMainMenu).List();
+        }
+
+        public MenuPart Get(int menuPartId) {
+            return _contentManager.Get<MenuPart>(menuPartId);
+        }
 
         public void GetNavigation(NavigationBuilder builder) {
             IEnumerable<MenuPart> menuParts = _contentManager.Query<MenuPart, MenuPartRecord>().Where(x => x.OnMainMenu).List();
@@ -33,5 +42,10 @@ namespace Orchard.Core.Navigation.Services {
                 }
             }
         }
+    }
+
+    public interface IMenuService : IDependency {
+        IEnumerable<MenuPart> Get();
+        MenuPart Get(int menuPartId);
     }
 }

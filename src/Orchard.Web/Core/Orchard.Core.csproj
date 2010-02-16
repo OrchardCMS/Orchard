@@ -118,6 +118,7 @@
     <Compile Include="Navigation\Services\MainMenu.cs" />
     <Compile Include="Navigation\Filters\MainMenuFilter.cs" />
     <Compile Include="Navigation\ViewModels\CreateMenuItemViewModel.cs" />
+    <Compile Include="Navigation\ViewModels\MenuItemEntry.cs" />
     <Compile Include="Navigation\ViewModels\NavigationManagementViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Scheduling\Records\ScheduledTaskRecord.cs" />
