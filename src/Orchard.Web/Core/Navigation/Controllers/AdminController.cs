@@ -60,12 +60,14 @@ namespace Orchard.Core.Navigation.Controllers {
             return RedirectToAction("Index");
         }
 
-        private static MenuItemEntry CreateMenuItemEntries(MenuPart menuPart) {
+        private MenuItemEntry CreateMenuItemEntries(MenuPart menuPart) {
             return new MenuItemEntry {
                                          MenuItem = new UI.Navigation.MenuItem {
                                                                                    Text = menuPart.MenuText,
                                                                                    Position = menuPart.MenuPosition,
-                                                                                   Url = menuPart.Is<MenuItem>() ? menuPart.As<MenuItem>().Url : "menu part url"
+                                                                                   Url = menuPart.Is<MenuItem>()
+                                                                                             ? menuPart.As<MenuItem>().Url
+                                                                                             : _navigationManager.GetUrl(null, _services.ContentManager.GetItemMetadata(menuPart).DisplayRouteValues)
                                                                                },
                                          MenuItemId = menuPart.Id,
                                          IsMenuItem = menuPart.Is<MenuItem>()

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Orchard.ContentManagement;
 using Orchard.Core.Navigation.Models;
 using Orchard.Core.Navigation.Records;

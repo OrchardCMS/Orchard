@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
+using System.Web.Routing;
 using JetBrains.Annotations;
 using Orchard.Security;
 using Orchard.Security.Permissions;
@@ -26,28 +26,31 @@ namespace Orchard.UI.Navigation {
 
         private IEnumerable<MenuItem> FinishMenu(IEnumerable<MenuItem> menuItems) {
             foreach (var menuItem in menuItems) {
-                var url = string.IsNullOrEmpty(menuItem.Url) && (menuItem.RouteValues == null || menuItem.RouteValues.Count == 0)
-                                 ? null
-                                 : !string.IsNullOrEmpty(menuItem.Url)
-                                       ? menuItem.Url
-                                       : _urlHelper.RouteUrl(menuItem.RouteValues);
-
-                if (!string.IsNullOrEmpty(url) && _urlHelper.RequestContext.HttpContext != null &&
-                    !(url.StartsWith("http://") || url.StartsWith("https://") || url.StartsWith("/"))) {
-                    if (url.StartsWith("~/")) {
-                        url = url.Substring(2);
-                    }
-                    var appPath = _urlHelper.RequestContext.HttpContext.Request.ApplicationPath;
-                    if (appPath == "/")
-                        appPath = "";
-                    url = string.Format("{0}/{1}", appPath, url);
-                }
-
-                menuItem.Href = url;
+                menuItem.Href = GetUrl(menuItem.Url, menuItem.RouteValues);
                 menuItem.Items = FinishMenu(menuItem.Items.ToArray());
             }
 
             return menuItems;
+        }
+
+        public string GetUrl(string menuItemUrl, RouteValueDictionary routeValueDictionary) {
+            var url = string.IsNullOrEmpty(menuItemUrl) && (routeValueDictionary == null || routeValueDictionary.Count == 0)
+                          ? null
+                          : !string.IsNullOrEmpty(menuItemUrl)
+                                ? menuItemUrl
+                                : _urlHelper.RouteUrl(routeValueDictionary);
+
+            if (!string.IsNullOrEmpty(url) && _urlHelper.RequestContext.HttpContext != null &&
+                !(url.StartsWith("http://") || url.StartsWith("https://") || url.StartsWith("/"))) {
+                if (url.StartsWith("~/")) {
+                    url = url.Substring(2);
+                }
+                var appPath = _urlHelper.RequestContext.HttpContext.Request.ApplicationPath;
+                if (appPath == "/")
+                    appPath = "";
+                url = string.Format("{0}/{1}", appPath, url);
+            }
+            return url;
         }
 
         private IEnumerable<MenuItem> Crop(IEnumerable<MenuItem> items) {
