@@ -1,4 +1,6 @@
 ﻿<%@ Control Language="C#" Inherits="Orchard.Mvc.ViewUserControl<NavigationManagementViewModel>" %>
+<%@ Import Namespace="Orchard.ContentManagement"%>
+<%@ Import Namespace="Orchard.Core.Navigation.Models"%>
 <%@ Import Namespace="Orchard.Core.Navigation.ViewModels"%><%
 var menu = Model.Menu.FirstOrDefault(); %>
 <h1><%=Html.TitleForPage(T("Manage Main Menu").ToString())%></h1><%
@@ -31,7 +33,9 @@ using (Html.BeginFormAntiForgeryPost()) { %>
 </table>
 <fieldset class="actions"><button type="submit"><%=_Encoded("Update All") %></button></fieldset><%     
 }
-%><h2><%=_Encoded("Add New Item") %></h2><%
+%>
+
+<h2><%=_Encoded("Add New Item") %></h2><%
 using (Html.BeginFormAntiForgeryPost("/admin/navigation/create", FormMethod.Post)) { %>
 <table class="menu items">
     <colgroup>
@@ -43,16 +47,16 @@ using (Html.BeginFormAntiForgeryPost("/admin/navigation/create", FormMethod.Post
     <tbody>
         <tr>
             <td>
-                <label for="addtext"><%=_Encoded("Text") %></label>
-                <input type="text" name="MenuText" id="addtext" />
+                <label for="MenuText"><%=_Encoded("Text") %></label>
+                <%=Html.EditorFor(nmvm => nmvm.NewMenuItem.MenuItem.Item.As<MenuPart>().MenuText) %>
             </td>
             <td>
-                <label for="addposition"><%=_Encoded("Position")%></label>
-                <input type="text" name="MenuPosition" id="addposition" />
+                <label for="MenuPosition"><%=_Encoded("Position")%></label>
+                <%=Html.EditorFor(nmvm => nmvm.NewMenuItem.MenuItem.Item.As<MenuPart>().MenuPosition) %>
             </td>
             <td>
-                <label for="addurl"><%=_Encoded("Url")%></label>
-                <input type="text" name="Url" id="addurl" />
+                <label for="Url"><%=_Encoded("Url")%></label>
+                <%=Html.EditorFor(nmvm => nmvm.NewMenuItem.MenuItem.Item.As<Orchard.Core.Navigation.Models.MenuItem>().Url)%>
             </td>
             <td><button class="add" type="submit"><%=_Encoded("Add") %></button></td>
         </tr>

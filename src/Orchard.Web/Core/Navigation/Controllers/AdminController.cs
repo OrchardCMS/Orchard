@@ -23,13 +23,17 @@ namespace Orchard.Core.Navigation.Controllers {
 
         private Localizer T { get; set; }
 
-        public ActionResult Index() {
+        public ActionResult Index(NavigationManagementViewModel model) {
             if (!_services.Authorizer.Authorize(Permissions.ManageMainMenu, T("Not allowed to manage the main menu")))
                 return new HttpUnauthorizedResult();
 
-            var model = new NavigationManagementViewModel { Menu = _navigationManager.BuildMenu("main") };
+            if (model == null)
+                model = new NavigationManagementViewModel();
 
-            return View(model);
+            if (model.Menu == null || model.Menu.Count() < 1)
+                model.Menu = _navigationManager.BuildMenu("main");
+
+            return View("Index", model);
         }
 
         [HttpPost, ActionName("Index")]
@@ -50,7 +54,7 @@ namespace Orchard.Core.Navigation.Controllers {
 
             if (!ModelState.IsValid) {
                 _services.TransactionManager.Cancel();
-                return Index();
+                return Index(new NavigationManagementViewModel {NewMenuItem = model});
             }
 
             if (string.IsNullOrEmpty(menuItem.As<MenuPart>().MenuPosition))
