@@ -4,5 +4,6 @@ namespace Orchard.Core.Navigation.ViewModels {
     public class MenuItemEntry {
         public MenuItem MenuItem { get; set; }
         public int MenuItemId { get; set; }
+        public bool IsMenuItem { get; set; }
     }
 }

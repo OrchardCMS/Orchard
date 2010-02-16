@@ -65,9 +65,10 @@ namespace Orchard.Core.Navigation.Controllers {
                                          MenuItem = new UI.Navigation.MenuItem {
                                                                                    Text = menuPart.MenuText,
                                                                                    Position = menuPart.MenuPosition,
-                                                                                   Url = menuPart.As<MenuItem>().Url
+                                                                                   Url = menuPart.Is<MenuItem>() ? menuPart.As<MenuItem>().Url : "menu part url"
                                                                                },
-                                         MenuItemId = menuPart.Id
+                                         MenuItemId = menuPart.Id,
+                                         IsMenuItem = menuPart.Is<MenuItem>()
                                      };
         }
 
