@@ -111,6 +111,11 @@
     <Compile Include="ViewModels\BlogEditViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\Admin\images\draft.gif" />
+    <Content Include="Content\Admin\images\offline.gif" />
+    <Content Include="Content\Admin\images\online.gif" />
+    <Content Include="Content\Admin\images\published.gif" />
+    <Content Include="Content\Admin\images\scheduled.gif" />
     <Content Include="Module.txt" />
     <Content Include="Scripts\archives.js" />
     <Content Include="Scripts\jquery.ui.core.js" />
