@@ -45,17 +45,17 @@ foreach (var pageEntry in Model.PageEntries)
 <%--Published or not--%>
                   <% if (pageEntry.Page.HasPublished)
                      { %>
-                  <img src="<%=ResolveUrl("~/Packages/Orchard.Pages/Content/Admin/images/online.gif") %>" alt="<%=_Encoded("Online") %>" title="<%=_Encoded("The page is currently online") %>" style="<%=_Encoded("margin:0 0 -2px 0;") %>" /><%=_Encoded(" Published |") %>
+                  <img src="<%=ResolveUrl("~/Modules/Orchard.Pages/Content/Admin/images/online.gif") %>" alt="<%=_Encoded("Online") %>" title="<%=_Encoded("The page is currently online") %>" style="<%=_Encoded("margin:0 0 -2px 0;") %>" /><%=_Encoded(" Published |") %>
                   <% }
                      else
                      { %>
-                  <img src="<%=ResolveUrl("~/Packages/Orchard.Pages/Content/Admin/images/offline.gif") %>" alt="<%=_Encoded("Offline") %>" title="<%=_Encoded("The page is currently offline") %>" style="margin:0 0 -2px 0;" /><%=_Encoded(" Not Published |")%>
+                  <img src="<%=ResolveUrl("~/Modules/Orchard.Pages/Content/Admin/images/offline.gif") %>" alt="<%=_Encoded("Offline") %>" title="<%=_Encoded("The page is currently offline") %>" style="margin:0 0 -2px 0;" /><%=_Encoded(" Not Published |")%>
                   <% } %>
 
 <%--Does the page have a draft--%>
 <% if (pageEntry.Page.HasDraft)
    { %>
-                    <img src="<%=ResolveUrl("~/Packages/Orchard.Pages/Content/Admin/images/draft.gif") %>" alt="<%=_Encoded("Draft") %>" title="<%=_Encoded("The page has a draft") %>" style="margin:0 0 -2px 0;" /><%=_Encoded(" Draft")%>
+                    <img src="<%=ResolveUrl("~/Modules/Orchard.Pages/Content/Admin/images/draft.gif") %>" alt="<%=_Encoded("Draft") %>" title="<%=_Encoded("The page has a draft") %>" style="margin:0 0 -2px 0;" /><%=_Encoded(" Draft")%>
                     <% }
    else
    { %>
@@ -66,7 +66,7 @@ foreach (var pageEntry in Model.PageEntries)
                        { %>
                         <%if (pageEntry.Page.ScheduledPublishUtc != null) { %>
                             <%=" | " %>
-                            <img src="<%=ResolveUrl("~/Packages/Orchard.Pages/Content/Admin/images/scheduled.gif") %>" alt="<%=_Encoded("Scheduled") %>" title="<%=_Encoded("The page is scheduled for publishing") %>" style="margin:0 0 -2px 0;" />                            
+                            <img src="<%=ResolveUrl("~/Modules/Orchard.Pages/Content/Admin/images/scheduled.gif") %>" alt="<%=_Encoded("Scheduled") %>" title="<%=_Encoded("The page is scheduled for publishing") %>" style="margin:0 0 -2px 0;" />                            
                             <%=string.Format("Scheduled: {0:d}", pageEntry.Page.ScheduledPublishUtc.Value) %>
                        <% }%>
                     <% } %>   
