@@ -151,6 +151,7 @@ h5 { font-size:1.4em; } /* 14px */
 h6, p, label, input, select, .button,
 .message, .validation-summary-errors,
 table.items th, table.items td, table.items caption { font-size:1.4em; line-height:1.4em; } /* 14px */
+table.items p, table.items label, table.items input, table.items .button { font-size:1em; line-height:1em; }
 p .button { font-size:inherit; }
 .meta, .hint { font-size:1.2em; } /* 12px */
 
