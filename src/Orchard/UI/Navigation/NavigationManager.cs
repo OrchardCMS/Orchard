@@ -1,29 +1,56 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
+using System.Web.Mvc;
+using System.Web.Routing;
 using JetBrains.Annotations;
 using Orchard.Security;
 using Orchard.Security.Permissions;
 
 namespace Orchard.UI.Navigation {
-    public interface INavigationManager : IDependency {
-        IEnumerable<MenuItem> BuildMenu(string menuName);
-    }
-
     public class NavigationManager : INavigationManager {
         private readonly IEnumerable<INavigationProvider> _providers;
         private readonly IAuthorizationService _authorizationService;
+        private readonly UrlHelper _urlHelper;
 
-        public NavigationManager(IEnumerable<INavigationProvider> providers, IAuthorizationService authorizationService) {
+        public NavigationManager(IEnumerable<INavigationProvider> providers, IAuthorizationService authorizationService, UrlHelper urlHelper) {
             _providers = providers;
             _authorizationService = authorizationService;
+            _urlHelper = urlHelper;
         }
 
         protected virtual IUser CurrentUser { get; [UsedImplicitly] private set; }
 
         public IEnumerable<MenuItem> BuildMenu(string menuName) {
-            return Crop(Reduce(Merge(AllSources(menuName)))).ToArray();
+            return FinishMenu(Crop(Reduce(Merge(AllSources(menuName)))).ToArray());
+        }
+
+        private IEnumerable<MenuItem> FinishMenu(IEnumerable<MenuItem> menuItems) {
+            foreach (var menuItem in menuItems) {
+                menuItem.Href = GetUrl(menuItem.Url, menuItem.RouteValues);
+                menuItem.Items = FinishMenu(menuItem.Items.ToArray());
+            }
+
+            return menuItems;
+        }
+
+        public string GetUrl(string menuItemUrl, RouteValueDictionary routeValueDictionary) {
+            var url = string.IsNullOrEmpty(menuItemUrl) && (routeValueDictionary == null || routeValueDictionary.Count == 0)
+                          ? null
+                          : !string.IsNullOrEmpty(menuItemUrl)
+                                ? menuItemUrl
+                                : _urlHelper.RouteUrl(routeValueDictionary);
+
+            if (!string.IsNullOrEmpty(url) && _urlHelper.RequestContext.HttpContext != null &&
+                !(url.StartsWith("http://") || url.StartsWith("https://") || url.StartsWith("/"))) {
+                if (url.StartsWith("~/")) {
+                    url = url.Substring(2);
+                }
+                var appPath = _urlHelper.RequestContext.HttpContext.Request.ApplicationPath;
+                if (appPath == "/")
+                    appPath = "";
+                url = string.Format("{0}/{1}", appPath, url);
+            }
+            return url;
         }
 
         private IEnumerable<MenuItem> Crop(IEnumerable<MenuItem> items) {
@@ -45,7 +72,8 @@ namespace Orchard.UI.Navigation {
                         Position = item.Position,
                         RouteValues = item.RouteValues,
                         Text = item.Text,
-                        Url = item.Url
+                        Url = item.Url,
+                        Href = item.Href
                     };
                 }
             }
@@ -77,10 +105,11 @@ namespace Orchard.UI.Navigation {
             var joined = new MenuItem {
                 Text = items.First().Text,
                 Url = items.First().Url,
+                Href = items.First().Href,
                 RouteValues = items.First().RouteValues,
                 Items = Merge(items.Select(x => x.Items)).ToArray(),
                 Position = SelectBestPositionValue(items.Select(x => x.Position)),
-                Permissions = items.SelectMany(x => x.Permissions),
+                Permissions = items.SelectMany(x => x.Permissions)
             };
             return joined;
         }

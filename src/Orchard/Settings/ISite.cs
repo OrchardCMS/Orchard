@@ -10,5 +10,6 @@ namespace Orchard.Settings {
         string SiteSalt { get; }
         string SiteUrl { get; }
         string SuperUser { get; }
+        string HomePage { get; set; }
     }
 }

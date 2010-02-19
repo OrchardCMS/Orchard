@@ -36,16 +36,23 @@ namespace Orchard.Environment {
             get { return _current; }
         }
 
+
         void IOrchardHost.Initialize() {
             ViewEngines.Engines.Insert(0, LayoutViewEngine.CreateShim());
             _controllerBuilder.SetControllerFactory(new OrchardControllerFactory());
             ServiceLocator.SetLocator(t => _containerProvider.RequestContainer.Resolve(t));
 
-            Initialize();
+            CreateAndActivateShell();
         }
 
         void IOrchardHost.Reinitialize() {
-            Initialize();
+            _current = null;
+            //CreateAndActivateShell();
+        }
+
+
+        void IOrchardHost.BeginRequest() {
+            BeginRequest();
         }
 
         void IOrchardHost.EndRequest() {
@@ -57,19 +64,30 @@ namespace Orchard.Environment {
             return new StandaloneEnvironment(shellContainer);
         }
 
-        protected virtual void Initialize() {
-            var shellContainer = CreateShellContainer();
-            var shell = shellContainer.Resolve<IOrchardShell>();
-            shell.Activate();
-            _current = shell;
+        protected virtual void CreateAndActivateShell() {
+            lock (this) {
+                if (_current != null) {
+                    return;
+                }
 
-            // Fire off one-time install events on an alternate container
-            HackInstallSimulation();
+                var shellContainer = CreateShellContainer();
+                var shell = shellContainer.Resolve<IOrchardShell>();
+                shell.Activate();
+                _current = shell;
 
-            // Activate extensions inside shell container
-            HackSimulateExtensionActivation(shellContainer);
+                // Fire off one-time install events on an alternate container
+                HackInstallSimulation();
+
+                // Activate extensions inside shell container
+                HackSimulateExtensionActivation(shellContainer);
+            }
         }
 
+        protected virtual void BeginRequest() {
+            if (_current == null) {
+                CreateAndActivateShell();
+            }
+        }
 
         protected virtual void EndRequest() {
             _containerProvider.DisposeRequestContainer();
@@ -94,8 +112,9 @@ namespace Orchard.Environment {
         private IContainer CreateShellContainer(IShellSettings shellSettings) {
             foreach (var factory in _shellContainerFactories) {
                 var container = factory.CreateContainer(shellSettings);
-                if (container != null)
+                if (container != null) {
                     return container;
+                }
             }
             return null;
         }

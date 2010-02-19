@@ -1,5 +1,8 @@
 ﻿using System.Linq;
 using System.Web;
+using System.Web.Mvc;
+using System.Web.Routing;
+using Autofac;
 using Autofac.Builder;
 using Autofac.Integration.Web.Mvc;
 using Orchard.Controllers;
@@ -9,11 +12,9 @@ using Orchard.Extensions;
 
 namespace Orchard.Mvc {
     public class MvcModule : Module {
-        private readonly ICompositionStrategy _compositionStrategy;
         private readonly IExtensionManager _extensionManager;
 
-        public MvcModule(ICompositionStrategy compositionStrategy, IExtensionManager extensionManager) {
-            _compositionStrategy = compositionStrategy;
+        public MvcModule(IExtensionManager extensionManager) {
             _extensionManager = extensionManager;
         }
 
@@ -27,10 +28,31 @@ namespace Orchard.Mvc {
             };
 
             moduleBuilder.RegisterModule(module);
-            moduleBuilder
-                .Register(ctx => HttpContext.Current == null ? (HttpContextBase)new HttpContextPlaceholder() : new HttpContextWrapper(HttpContext.Current))
-                .As<HttpContextBase>()
-                .FactoryScoped();
+            moduleBuilder.Register(ctx => HttpContextBaseFactory(ctx)).As<HttpContextBase>().FactoryScoped();
+            moduleBuilder.Register(ctx => RequestContextFactory(ctx)).As<RequestContext>().FactoryScoped();
+            moduleBuilder.Register(ctx => UrlHelperFactory(ctx)).As<UrlHelper>().FactoryScoped();
+        }
+
+        static HttpContextBase HttpContextBaseFactory(IContext context) {
+            if (HttpContext.Current != null) {
+                return new HttpContextWrapper(HttpContext.Current);
+            }
+
+            return new HttpContextPlaceholder();
+        }
+
+        static RequestContext RequestContextFactory(IContext context) {
+            var httpContext = context.Resolve<HttpContextBase>();
+            var mvcHandler = httpContext.Handler as MvcHandler;
+            if (mvcHandler != null) {
+                return mvcHandler.RequestContext;
+            }
+
+            return new RequestContext(httpContext, new RouteData());
+        }
+
+        static UrlHelper UrlHelperFactory(IContext context) {
+            return new UrlHelper(context.Resolve<RequestContext>(), context.Resolve<RouteCollection>());
         }
 
         /// <summary>

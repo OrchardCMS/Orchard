@@ -135,9 +135,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="DataUtility.cs" />
-    <Compile Include="Data\Migrations\DatabaseMigrationManagerTests.cs" />
+    <Compile Include="Data\Builders\SessionFactoryBuilderTests.cs" />
     <Compile Include="Data\RepositoryTests.cs" />
     <Compile Include="Data\StubLocator.cs" />
+    <Compile Include="Environment\Configuration\AppDataFolderTests.cs" />
     <Compile Include="Environment\DefaultCompositionStrategyTests.cs" />
     <Compile Include="Environment\DefaultOrchardHostTests.cs" />
     <Compile Include="Environment\DefaultOrchardShellTests.cs" />

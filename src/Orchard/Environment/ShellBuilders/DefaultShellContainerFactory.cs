@@ -23,6 +23,7 @@ namespace Orchard.Environment.ShellBuilders {
 
             // add module types to container being built
             var addingModulesAndServices = new ContainerBuilder();
+            addingModulesAndServices.Register(settings).As<IShellSettings>();
             addingModulesAndServices.Register<DefaultOrchardShell>().As<IOrchardShell>().SingletonScoped();
 
             foreach (var moduleType in _compositionStrategy.GetModuleTypes()) {

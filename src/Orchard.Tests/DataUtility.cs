@@ -9,6 +9,7 @@ using FluentNHibernate.Cfg.Db;
 using NHibernate;
 using NHibernate.Tool.hbm2ddl;
 using Orchard.Data;
+using Orchard.Data.Builders;
 using Orchard.Environment;
 
 namespace Orchard.Tests {
@@ -18,7 +19,7 @@ namespace Orchard.Tests {
             //var persistenceModel = AutoMap.Source(new Types(types))
             //    .Alterations(alt => AddAlterations(alt, types))
             //    .Conventions.AddFromAssemblyOf<DataModule>();
-            var persistenceModel = HackSessionLocator.CreatePersistenceModel(types.Select(t => new RecordDescriptor { Prefix = "Test", Type = t }));
+            var persistenceModel = AbstractBuilder.CreatePersistenceModel(types.Select(t => new RecordDescriptor { Prefix = "Test", Type = t }));
 
             return Fluently.Configure()
                 .Database(SQLiteConfiguration.Standard.UsingFile(fileName).ShowSql())

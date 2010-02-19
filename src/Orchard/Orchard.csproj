@@ -99,7 +99,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Data\HackSessionLocator.cs" />
+    <Compile Include="Data\SessionLocator.cs" />
     <Compile Include="Data\IRepository.cs" />
     <Compile Include="Data\ISessionLocator.cs" />
     <Compile Include="Data\DataModule.cs" />
@@ -133,12 +133,13 @@
     <Compile Include="ContentManagement\Handlers\RemoveContentContext.cs" />
     <Compile Include="ContentManagement\Handlers\VersionContentContext.cs" />
     <Compile Include="Data\Conventions\RecordTableNameConvention.cs" />
-    <Compile Include="Data\Migrations\DatabaseCoordinatorBase.cs" />
-    <Compile Include="Data\Migrations\DatabaseMigrationManager.cs" />
-    <Compile Include="Data\Migrations\IDatabaseCoordinator.cs" />
-    <Compile Include="Data\Migrations\IDatabaseMigrationManager.cs" />
-    <Compile Include="Data\Migrations\SQLiteDatabaseCoordinator.cs" />
-    <Compile Include="Data\Migrations\SqlServerDatabaseCoordinator.cs" />
+    <Compile Include="Data\Builders\AbstractBuilder.cs" />
+    <Compile Include="Data\Builders\SessionFactoryBuilder.cs" />
+    <Compile Include="Data\Builders\ISessionFactoryBuilder.cs" />
+    <Compile Include="Data\Builders\SQLiteBuilder.cs" />
+    <Compile Include="Data\Builders\SqlServerBuilder.cs" />
+    <Compile Include="Data\SessionFactoryHolder.cs" />
+    <Compile Include="Environment\Configuration\AppDataFolder.cs" />
     <Compile Include="Environment\Configuration\ShellSettingsLoader.cs" />
     <Compile Include="Environment\ExtensibleInterceptionModule.cs" />
     <Compile Include="Environment\ShellBuilders\DefaultShellContainerFactory.cs" />
@@ -150,10 +151,12 @@
     <Compile Include="Extensions\ExtensionFolders.cs" />
     <Compile Include="Extensions\Loaders\AreaExtensionLoader.cs" />
     <Compile Include="Extensions\UriExtensions.cs" />
+    <Compile Include="Mvc\Attributes\ValidateAntiForgeryTokenOrchardAttribute.cs" />
     <Compile Include="OrchardException.cs" />
     <Compile Include="Security\IAuthorizationServiceEvents.cs" />
     <Compile Include="Security\StandardPermissions.cs" />
     <Compile Include="Security\OrchardSecurityException.cs" />
+    <Compile Include="Services\IHomePageProvider.cs" />
     <Compile Include="Tasks\Scheduling\IPublishingTaskManager.cs" />
     <Compile Include="Tasks\Scheduling\IScheduledTask.cs" />
     <Compile Include="ContentManagement\ContentExtensions.cs" />
@@ -283,6 +286,8 @@
     <Compile Include="Mvc\ViewEngines\WebFormsViewEngineProvider.cs" />
     <Compile Include="Mvc\ViewModels\AdminViewModel.cs" />
     <Compile Include="Mvc\ViewModels\BaseViewModel.cs" />
+    <Compile Include="UI\Navigation\INavigationManager.cs" />
+    <Compile Include="UI\Navigation\NavigationItemBuilder.cs" />
     <Compile Include="UI\PageClass\IPageClassBuilder.cs" />
     <Compile Include="UI\PageClass\PageClassBuilder.cs" />
     <Compile Include="UI\PageTitle\IPageTitleBuilder.cs" />
@@ -342,6 +347,7 @@
     <Compile Include="Storage\IStorageFolder.cs" />
     <Compile Include="Storage\IStorageProvider.cs" />
     <Compile Include="UI\Zones\ZoneManager.cs" />
+    <Compile Include="Utility\Position.cs" />
     <Compile Include="Utility\Reflect.cs" />
     <Compile Include="Utility\ReflectOn.cs" />
     <Compile Include="Validation\JetBrains.Annotations.cs" />

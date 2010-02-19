@@ -275,11 +275,11 @@ colgroup
 	color:#35550b;
 }
 
-#menucontainer ul li.tabon {
+#menucontainer ul li.current {
 	background:url(../Content/Images/tabRightOn.gif) no-repeat top right;
 }
 
-#menucontainer ul li.tabon a {
+#menucontainer ul li.current a {
 	background:url(../Content/Images/tabLeftOn.gif) no-repeat top left;
 	font-weight:600;
 }

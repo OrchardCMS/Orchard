@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Web;
@@ -7,7 +8,7 @@ using System.Web.Routing;
 using Autofac;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Handlers;
-using Orchard.Data.Migrations;
+using Orchard.Data.Builders;
 using Orchard.Environment.Configuration;
 using Orchard.Extensions;
 using Orchard.Localization;
@@ -52,7 +53,7 @@ namespace Orchard.Environment.ShellBuilders {
                 builder.Register<PageClassBuilder>().As<IPageClassBuilder>().ContainerScoped();
                 builder.Register<Notifier>().As<INotifier>().ContainerScoped();
                 builder.Register<NotifyFilter>().As<IFilterProvider>().ContainerScoped();
-                builder.Register<DatabaseMigrationManager>().As<IDatabaseMigrationManager>().ContainerScoped();
+                builder.Register<SessionFactoryBuilder>().As<ISessionFactoryBuilder>().ContainerScoped();
 
                 // safe mode specific implementations of needed service interfaces
                 builder.Register<NullHackInstallationGenerator>().As<IHackInstallationGenerator>().ContainerScoped();
@@ -160,6 +161,11 @@ namespace Orchard.Environment.ShellBuilders {
 
             public string SuperUser {
                 get { return ""; }
+            }
+
+            public string HomePage {
+                get { return ""; }
+                set { throw new NotImplementedException(); }
             }
         }
     }

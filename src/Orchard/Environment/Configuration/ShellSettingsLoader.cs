@@ -14,9 +14,11 @@ namespace Orchard.Environment.Configuration {
     }
 
     public class ShellSettingsLoader : IShellSettingsLoader {
+        private readonly IAppDataFolder _appDataFolder;
         Localizer T { get; set; }
 
-        public ShellSettingsLoader() {
+        public ShellSettingsLoader(IAppDataFolder appDataFolder) {
+            _appDataFolder = appDataFolder;
             T = NullLocalizer.Instance;
         }
 
@@ -30,31 +32,25 @@ namespace Orchard.Environment.Configuration {
             if (string.IsNullOrEmpty(settings.Name))
                 throw new ArgumentException(T("Settings \"Name\" is not set.").ToString());
 
-            var sitesPath = HostingEnvironment.MapPath("~/App_Data/Sites");
-
-            if (string.IsNullOrEmpty(sitesPath))
-                throw new ArgumentException(T("Can't determine the path on the server to save settings. Looking for something like \"~/App_Data/Sites\".").ToString());
-            
-            if (!Directory.Exists(sitesPath))
-                Directory.CreateDirectory(sitesPath);
-
-            var filePath = Path.Combine(sitesPath, string.Format("{0}.txt", settings.Name));
-            File.WriteAllText(filePath, ComposeSettings(settings));
+            var settingsFile = Path.Combine(Path.Combine("Sites", settings.Name), "Settings.txt");
+            _appDataFolder.CreateFile(settingsFile, ComposeSettings(settings));
         }
 
-        static IEnumerable<IShellSettings> LoadSettings() {
+        IEnumerable<IShellSettings> LoadSettings() {
             foreach (var yamlDocument in LoadFiles()) {
                 yield return ParseSettings(yamlDocument);
             }
         }
 
-        static IEnumerable<YamlDocument> LoadFiles() {
-            var sitesPath = HostingEnvironment.MapPath("~/App_Data/Sites");
-            if (sitesPath != null && Directory.Exists(sitesPath)) {
-                foreach (var settingsFilePath in Directory.GetFiles(sitesPath, "*.txt")) {
-                    var yamlStream = YamlParser.Load(settingsFilePath);
-                    yield return yamlStream.Documents.Single();
-                }
+        IEnumerable<YamlDocument> LoadFiles() {
+            var sitePaths = _appDataFolder
+                .ListDirectories("Sites")
+                .SelectMany(path => _appDataFolder.ListFiles(path))
+                .Where(path => string.Equals(Path.GetFileName(path), "Settings.txt", StringComparison.OrdinalIgnoreCase));
+
+            foreach (var sitePath in sitePaths) {
+                var yamlStream = YamlParser.Load(_appDataFolder.MapPath(sitePath));
+                yield return yamlStream.Documents.Single();
             }
         }
 
@@ -65,10 +61,10 @@ namespace Orchard.Environment.Configuration {
                 .ToDictionary(x => ((Scalar)x.Key).Text, x => x.Value);
 
             return new ShellSettings {
-                                         Name = GetValue(fields, "Name"),
-                                         DataProvider = GetValue(fields, "DataProvider"),
-                                         DataConnectionString = GetValue(fields, "DataConnectionString")
-                                     };
+                Name = GetValue(fields, "Name"),
+                DataProvider = GetValue(fields, "DataProvider"),
+                DataConnectionString = GetValue(fields, "DataConnectionString")
+            };
         }
 
         static string GetValue(

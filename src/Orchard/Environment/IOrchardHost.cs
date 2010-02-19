@@ -8,14 +8,19 @@ namespace Orchard.Environment {
         void Initialize();
 
         /// <summary>
-        /// Called each time a request ends to deterministically commit and dispose outstanding activity
-        /// </summary>
-        void EndRequest();
-
-        /// <summary>
         /// Called when configuration changes requires the shell topology to be reloaded and applied
         /// </summary>
         void Reinitialize();
+
+        /// <summary>
+        /// Called each time a request begins to offer a just-in-time reinitialization point
+        /// </summary>
+        void BeginRequest();
+
+        /// <summary>
+        /// Called each time a request ends to deterministically commit and dispose outstanding activity
+        /// </summary>
+        void EndRequest();
 
         /// <summary>
         /// Can be used to build an temporary self-contained instance of a shell's configured code.

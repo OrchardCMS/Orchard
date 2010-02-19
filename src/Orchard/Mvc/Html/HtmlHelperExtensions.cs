@@ -240,10 +240,23 @@ namespace Orchard.Mvc.Html {
 
         #region AntiForgeryTokenOrchard
 
-        public static MvcHtmlString AntiForgeryTokenOrchard(this HtmlHelper htmlHelper)
-        {
+        public static MvcHtmlString AntiForgeryTokenOrchard(this HtmlHelper htmlHelper) {
             var siteSalt = htmlHelper.Resolve<ISiteService>().GetSiteSettings().SiteSalt;
+
             return htmlHelper.AntiForgeryToken(siteSalt);
+        }
+
+        #endregion
+
+        #region AntiForgeryTokenValueOrchard
+
+        public static string AntiForgeryTokenValueOrchard(this HtmlHelper htmlHelper) {
+            //HAACK: (erikpo) Since MVC doesn't expose any of its methods for generating the antiforgery token and setting the cookie, we'll just let it do its thing and parse out what we need
+            var field = htmlHelper.AntiForgeryTokenOrchard().ToHtmlString();
+            var beginIndex = field.IndexOf("value=\"") + 7;
+            var endIndex = field.IndexOf("\"", beginIndex);
+
+            return field.Substring(beginIndex, endIndex - beginIndex);
         }
 
         #endregion

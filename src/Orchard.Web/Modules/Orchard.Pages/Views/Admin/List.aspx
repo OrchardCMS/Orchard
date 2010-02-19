@@ -26,81 +26,82 @@
         </select>
         <input class="button" type="submit" name="submit.Filter" value="<%=_Encoded("Apply") %>"/>
     </fieldset>
-    <fieldset>
-        <table class="items" summary="<%=_Encoded("This is a table of the PageEntries currently available for use in your application.") %>">
-            <colgroup>
-                <col id="Actions" />
-                <col id="Status" />
-                <col id="Title" />
-                <col id="Author" />
-                <col id="LastUpdated" />
-                <col id="Draft" />
-                <col id="Timer" />
-                <col id="Edit" />
-            </colgroup>
-            <thead>
-                <tr>
-                    <th scope="col">&nbsp;&darr;<%-- todo: (heskew) something more appropriate for "this applies to the bulk actions --%></th>
-                    <th scope="col"><%=_Encoded("Status")%></th>
-                    <th scope="col"><%=_Encoded("Title")%></th>
-                    <th scope="col"><%=_Encoded("Slug")%></th>
-                    <th scope="col"><%=_Encoded("Author")%></th>
-                    <th scope="col"><%=_Encoded("Draft")%></th>
-                    <th scope="col"><%=_Encoded("Scheduled")%></th>
-                    <th scope="col"></th>
-                </tr>
-            </thead>
+    <fieldset>       
+         <ul class="contentItems" style="margin-top:0;"> 
             <%
 int pageIndex = 0;
 foreach (var pageEntry in Model.PageEntries)
 {
     var pi = pageIndex; %>
-            <tr>
-                <td>
+<li style="padding:1em .5em;">
+<div style="float:left;">
                     <input type="hidden" value="<%=Model.PageEntries[pageIndex].PageId %>" name="<%=Html.NameOf(m => m.PageEntries[pi].PageId) %>"/>
                     <input type="checkbox" value="true" name="<%=Html.NameOf(m => m.PageEntries[pi].IsChecked) %>"/>
-                </td>
-                <td>
+                    
+                    <h3 style="border-bottom:none; margin:0; padding:0; display:inline;"><%=Html.Encode(pageEntry.Page.Title ?? T("(no title)").ToString())%></h3>
+                    
+<p style="margin:.5em 0;">
+
+<%--Published or not--%>
                   <% if (pageEntry.Page.HasPublished)
                      { %>
-                  <img src="<%=ResolveUrl("~/Modules/Orchard.Pages/Content/Admin/images/online.gif") %>" alt="<%=_Encoded("Online") %>" title="<%=_Encoded("The page is currently online") %>" />
+                  <img src="<%=ResolveUrl("~/Modules/Orchard.Pages/Content/Admin/images/online.gif") %>" alt="<%=_Encoded("Online") %>" title="<%=_Encoded("The page is currently online") %>" style="<%=_Encoded("margin:0 0 -2px 0;") %>" /><%=_Encoded(" Published |") %>
                   <% }
                      else
                      { %>
-                  <img src="<%=ResolveUrl("~/Modules/Orchard.Pages/Content/Admin/images/offline.gif") %>" alt="<%=_Encoded("Offline") %>" title="<%=_Encoded("The page is currently offline") %>" />
+                  <img src="<%=ResolveUrl("~/Modules/Orchard.Pages/Content/Admin/images/offline.gif") %>" alt="<%=_Encoded("Offline") %>" title="<%=_Encoded("The page is currently offline") %>" style="margin:0 0 -2px 0;" /><%=_Encoded(" Not Published |")%>
                   <% } %>
-                </td>
-                <td><%=Html.Encode(pageEntry.Page.Title ?? T("(no title)").ToString())%></td>
-                <td><% if (pageEntry.Page.HasPublished)
-                       { %>
-                        <%=Html.ActionLink(!string.IsNullOrEmpty(pageEntry.Page.Slug) ? pageEntry.Page.Slug : T("(no slug)").ToString(), "Item", new { controller = "Page", slug = pageEntry.Page.PublishedSlug })%>
+
+<%--Does the page have a draft--%>
+<% if (pageEntry.Page.HasDraft)
+   { %>
+                    <img src="<%=ResolveUrl("~/Modules/Orchard.Pages/Content/Admin/images/draft.gif") %>" alt="<%=_Encoded("Draft") %>" title="<%=_Encoded("The page has a draft") %>" style="margin:0 0 -2px 0;" /><%=_Encoded(" Draft")%>
                     <% }
-                       else
-                       {%>
-                        <%=Html.Encode(pageEntry.Page.Slug ?? T("(no slug)").ToString())%>
-                    <% } %>   
-                 </td>
-                <td><%=_Encoded("By {0}", pageEntry.Page.Creator.UserName)%></td>
-                <td>
-                    <% if (pageEntry.Page.HasDraft)
-                       { %>
-                    <img src="<%=ResolveUrl("~/Modules/Orchard.Pages/Content/Admin/images/draft.gif") %>" alt="<%=_Encoded("Draft") %>" title="<%=_Encoded("The page has a draft") %>" />
+   else
+   { %>
+                    <%=_Encoded("No Draft")%>               
                     <% } %>
-                </td>
-                <td>
+<%--Scheduled--%> 
                     <% if (!pageEntry.Page.IsPublished)
                        { %>
-                        <%=pageEntry.Page.ScheduledPublishUtc != null
-                          ? string.Format("{0:d}<br />{0:t}", pageEntry.Page.ScheduledPublishUtc.Value)
-                          : ""%>
-                    <% } %>    
-                </td>
-                <td><%=Html.ActionLink(T("Edit").ToString(), "Edit", new { id = pageEntry.PageId })%></td>
-            </tr>
+                        <%if (pageEntry.Page.ScheduledPublishUtc != null) { %>
+                            <%=" | " %>
+                            <img src="<%=ResolveUrl("~/Modules/Orchard.Pages/Content/Admin/images/scheduled.gif") %>" alt="<%=_Encoded("Scheduled") %>" title="<%=_Encoded("The page is scheduled for publishing") %>" style="margin:0 0 -2px 0;" />                            
+                            <%=string.Format("Scheduled: {0:d}", pageEntry.Page.ScheduledPublishUtc.Value) %>
+                       <% }%>
+                    <% } %>   
+                    
+<%--Author--%>                
+<%=_Encoded(" | By {0}", pageEntry.Page.Creator.UserName)%>
+</p>
+</div>
+              
+<div style="float:right;">
+<span style="margin:0; text-align:right; font-size:1.4em;">
+                <% if (pageEntry.Page.HasPublished)
+                   { %>
+                        <%=Html.ActionLink("View", "Item", new { controller = "Page", slug = pageEntry.Page.PublishedSlug })%>
+                        <%=_Encoded("|")%>    
+                    <% }
+                   else
+                   {%>
+                        <%=""%>
+                    <% } %>   
+
+
+<%=Html.ActionLink(T("Edit").ToString(), "Edit", new { id = pageEntry.PageId })%>
+
+
+</span>
+</div>
+<div style="clear:both;"></div>
+</li>
             <%
 pageIndex++;
 } %>
-        </table>
+</ul>
     </fieldset>
 <% } %>
+
+
 <div class="manage"><%=Html.ActionLink(T("Add a page").ToString(), "Create", new { }, new { @class = "button" })%></div>

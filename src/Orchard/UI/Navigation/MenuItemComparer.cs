@@ -7,6 +7,9 @@ namespace Orchard.UI.Navigation {
             if (!string.Equals(x.Text, y.Text)) {
                 return false;
             }
+            if (!string.Equals(x.Url, y.Url)) {
+                return false;
+            }
             if (x.RouteValues != null || y.RouteValues != null) {
                 if (x.RouteValues == null || y.RouteValues == null) {
                     return false;
@@ -31,6 +34,9 @@ namespace Orchard.UI.Navigation {
             var hash = 0;
             if (obj.Text != null) {
                 hash ^= obj.Text.GetHashCode();
+            }
+            if (obj.Url != null) {
+                hash ^= obj.Url.GetHashCode();
             }
             if (obj.RouteValues != null) {
                 foreach (var item in obj.RouteValues) {
