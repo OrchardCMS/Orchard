@@ -682,10 +682,17 @@ todo: (heskew) pull out into relevant modules where appropriate
 
 /* Pages
 ----------------------------------------------------------*/
+#main .templates p {
+    margin:0 0 .3em 0;
+}
 .templates li {
-    border-bottom:1px dashed #e4e7dc;
-    margin-bottom:2em;
-    padding-bottom:2em;
+    margin:.8em;
+    width:30%;
+    display: -moz-inline-stack;
+    display:inline-block;
+    vertical-align:top;
+    zoom:1;
+    *display: inline;
 }
 .templates fieldset {
     margin:0 0 .933%;
@@ -693,10 +700,11 @@ todo: (heskew) pull out into relevant modules where appropriate
 .templates p {
     overflow:hidden;
 }
-.templates p img {
-    float:left;
+.templates img {
+	border:1px solid #e8e8e8;
     height:200px;
-    margin:.27em .93em .93em .54em;
+    margin:.27em 0 .93em 0;
+    display:block;
 }
 .previewImage {
 	border:1px solid #525e50;

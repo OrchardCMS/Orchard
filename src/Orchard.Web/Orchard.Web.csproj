@@ -155,7 +155,6 @@
     <Content Include="Themes\TheAdmin\Styles\images\icons.png" />
     <Content Include="Themes\TheAdmin\Styles\images\tableHeaderBackgroundRed.gif" />
     <Content Include="Themes\TheAdmin\Styles\site.css" />
-    <Content Include="Themes\TheAdmin\Theme.gif" />
     <Content Include="Themes\TheAdmin\Theme.txt" />
     <Content Include="Themes\TheAdmin\Views\Layout.ascx" />
   </ItemGroup>
@@ -244,6 +243,7 @@
     <Content Include="Themes\TheAdmin\Styles\images\backgroundGradient.gif" />
     <Content Include="Themes\TheAdmin\Styles\images\backgroundHeader.gif" />
     <Content Include="Themes\TheAdmin\Styles\images\orchardLogo.gif" />
+    <Content Include="Themes\TheAdmin\Theme.png" />
     <Content Include="Themes\TheAdmin\Views\Menu.ascx" />
     <Content Include="Themes\TheAdmin\Views\User.ascx" />
     <Content Include="Themes\TheAdmin\Views\Header.ascx" />
