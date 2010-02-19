@@ -464,7 +464,7 @@ button, .button, .button:link, .button:visited {
 	text-align:center;
 	padding:0 .8em .1em .8em;
 }
-.primaryAction{
+.primaryAction, .primaryAction:link, .primaryAction:visited {
 	background:#4687ad;
 	border:1px solid #8f8f8f;
 	color:#fff;
@@ -619,7 +619,6 @@ button.ibutton {
     margin-left:8px;
     margin-right:0;
 }
-#main .contentItems li:hover { background:#f8f8f8; }
 #main .contentItems li:hover .ibutton { background-position:0 0; }
 #main .contentItems li:hover .ibutton.remove { background-position:-20px 0; }
 #main .contentItems li:hover .ibutton.view { background-position:-40px 0; }
@@ -731,6 +730,10 @@ table.items, textarea, input.text, input.text-box,
 
 /* Added classes for new blog list layout
 ---------------------------------------------------------- */
+
+.blogPost.summary {
+    padding:.6em .4em;
+}
 .actions {
     height:auto;
     overflow:visible;
@@ -740,28 +743,24 @@ table.items, textarea, input.text, input.text-box,
 .contentItems {
     padding:0;
 }
-.contentItems li ul li {
-    border:0;
-    background:inherit;
-}
-li.properties {
+.properties {
     float:left;
 }
-#main .contentItems li.properties h3 {
+#main .contentItems .properties h3 {
     border-bottom:none;
     margin:0;
+    margin:0 0 0 .2em;
     padding:0;
 }
-li.related{
+.related{
      font-size:1.4em;
      float:right;
-     padding:.4em 0;
      text-align:right;
 }
-li.related .commentcount{
+.related .commentcount{
      line-height:2em;
 }
-li.properties ul li{
+.contentItems .properties ul li{
     border:0;
     float:left;
     padding:.8em 0;
@@ -769,7 +768,6 @@ li.properties ul li{
     background:inherit;
 }
 .icon {
-    margin:0 0 -2px 4px;
     margin:0 .2em -.2em .2em;
 }
 .linkButton {

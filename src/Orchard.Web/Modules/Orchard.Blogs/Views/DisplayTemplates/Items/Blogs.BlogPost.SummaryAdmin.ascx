@@ -7,8 +7,8 @@
 <%@ Import Namespace="Orchard.Blogs.Extensions"%>
 <%@ Import Namespace="Orchard.Blogs.Models"%>
 
-<ul>
-    <li class="properties">
+<div class="blogPost summary">
+<div class="properties">
     <h3><%=Html.Link(Html.Encode(Model.Item.Title), Url.BlogPostEdit(Model.Item.Blog.Slug, Model.Item.Id))%></h3>
 
         <ul>
@@ -45,9 +45,9 @@
             <%=_Encoded("By {0}", Model.Item.Creator.UserName)%>
              </li>                   
         </ul>               
-    </li>
+    </div>
 
-    <li class="related">
+    <div class="related">
     
             <%if (Model.IsPublished){ %>
         <a href="<%=Url.BlogPost(Model.Item.Blog.Slug, Model.Item.Slug) %>" title="<%=_Encoded("View Post")%>"><%=_Encoded("View")%></a><%=_Encoded(" | ")%>
@@ -68,7 +68,7 @@
                 } %>
                 
         <br /><%Html.Zone("meta");%>
-    </li>
+    </div>
 
-    <li style="clear:both;"></li>
-</ul>
+    <div style="clear:both;"></div>
+</div>
