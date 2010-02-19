@@ -27,7 +27,9 @@ namespace Orchard.Web {
         protected void Application_Start() {
             // This is temporary until MVC2 is officially released.
             // We want to avoid running against an outdated preview installed in the GAC
-            CheckMvcVersion(new Version("2.0.41211.0")/*MVC2 RC file version #*/);
+            CheckMvcVersion(
+                new Version("2.0.50129.0")/*MVC2 RC2 file version #*/,
+                new Version("2.0.41211.0")/*MVC2 RC file version #*/);
             RegisterRoutes(RouteTable.Routes);
 
             _host = OrchardStarter.CreateHost(MvcSingletons);
@@ -41,16 +43,16 @@ namespace Orchard.Web {
 
             _host.BeginRequest();
         }
-        
+
         protected void Application_EndRequest() {
             _host.EndRequest();
         }
 
-        private void CheckMvcVersion(Version requiredVersion) {
+        private void CheckMvcVersion(Version requiredVersion, Version requiredVersion2) {
             Assembly loadedMvcAssembly = typeof(System.Web.Mvc.Controller).Assembly;
             Version loadedMvcVersion = ReadAssemblyFileVersion(loadedMvcAssembly);
 
-            if (loadedMvcVersion != requiredVersion) {
+            if (loadedMvcVersion != requiredVersion && loadedMvcVersion != requiredVersion2) {
                 string message;
                 if (loadedMvcAssembly.GlobalAssemblyCache) {
                     message = string.Format(
@@ -59,8 +61,8 @@ namespace Orchard.Web {
                         "This implies that Orchard will not be able to run properly in this machine configuration.\r\n" +
                         "Please un-install MVC from the GAC or install a more recent version.",
                         loadedMvcAssembly.GetName().Name,
-                        loadedMvcVersion,
-                        requiredVersion);
+                        requiredVersion,
+                        loadedMvcVersion);
                 }
                 else {
                     message = string.Format(
@@ -68,11 +70,11 @@ namespace Orchard.Web {
                         "but the version deployed with the application is {2}.\r\n" +
                         "This probably implies that Orchard is deployed with a newer version " +
                         "and the source code hasn't been updated accordingly.\r\n" +
-                        "Update the Orchard.Web application source code (look for \"CheckMvcVersion\") to " + 
+                        "Update the Orchard.Web application source code (look for \"CheckMvcVersion\") to " +
                         "specify the correct file version number.\r\n",
                         loadedMvcAssembly.GetName().Name,
-                        loadedMvcVersion,
-                        requiredVersion);
+                        requiredVersion,
+                        loadedMvcVersion);
                 }
 
                 throw new HttpException(500, message);
