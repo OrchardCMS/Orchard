@@ -35,7 +35,7 @@ namespace Orchard.Setup.Controllers {
 
         private Localizer T { get; set; }
 
-        public ActionResult Index(SetupViewModel model) {
+        private ActionResult IndexViewResult(SetupViewModel model) {
             string message = "";
             if (!CanWriteToAppDataFolder(out message)) {
                 _notifier.Error(
@@ -44,7 +44,11 @@ namespace Orchard.Setup.Controllers {
                         message));
             }
 
-            return View(model ?? new SetupViewModel { AdminUsername = "admin" });
+            return View(model);
+        }
+
+        public ActionResult Index() {
+            return IndexViewResult(new SetupViewModel { AdminUsername = "admin" });
         }
 
         [HttpPost, ActionName("Index")]
@@ -54,7 +58,7 @@ namespace Orchard.Setup.Controllers {
                 ModelState.AddModelError("DatabaseConnectionString", "A SQL connection string is required");
 
             if (!ModelState.IsValid) {
-                return Index(model);
+                return IndexViewResult(model);
             }
 
             try {
@@ -129,7 +133,7 @@ namespace Orchard.Setup.Controllers {
             }
             catch (Exception exception) {
                 _notifier.Error(T("Setup failed: " + exception.Message));
-                return Index(model);
+                return IndexViewResult(model);
             }
         }
 
