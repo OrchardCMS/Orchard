@@ -148,13 +148,11 @@ h3 { font-size:1.8em; } /* 18px */
 h4 { font-size:1.6em; } /* 16px */
 h5 { font-size:1.4em; } /* 14px */
 
-h6, p, label, input, select, .button,
+h6, p, label, /*input, select,*/ .button,
 .message, .validation-summary-errors,
 table.items th, table.items td, table.items caption { font-size:1.4em; line-height:1.4em; } /* 14px */
 p .button { font-size:inherit; }
 .meta, .hint { font-size:1.2em; } /* 12px */
-
-
 
 /* Links
 ----------------------------------------------------------*/
@@ -327,13 +325,8 @@ span.message {
 	color:#fff;
 }
 .info.message {
-    background:#e4ebef; /* blue */
-	border:1px solid #4687AD;
-	color:#062232;
-}
-.info.message {
-    background:#e6e7ef; /* blue */
-	border:1px solid #b5b9c4;
+    background:#e6f1c9; /* green*/
+	border:1px solid #d4deb9;
 	color:#062232;
 }
 .debug.message {
@@ -464,7 +457,7 @@ button, .button, .button:link, .button:visited {
 	text-align:center;
 	padding:0 .8em .1em .8em;
 }
-.primaryAction{
+.primaryAction, .primaryAction:link, .primaryAction:visited {
 	background:#4687ad;
 	border:1px solid #8f8f8f;
 	color:#fff;
@@ -619,7 +612,6 @@ button.ibutton {
     margin-left:8px;
     margin-right:0;
 }
-#main .contentItems li:hover { background:#f8f8f8; }
 #main .contentItems li:hover .ibutton { background-position:0 0; }
 #main .contentItems li:hover .ibutton.remove { background-position:-20px 0; }
 #main .contentItems li:hover .ibutton.view { background-position:-40px 0; }
@@ -633,7 +625,8 @@ button.ibutton {
 ----------------------------------------------------------*/
 table.items {
 	background:#fff;
-	border:1px solid #999;
+	border:1px solid #eaeaea;
+	border-bottom:none;
 	border-collapse:separate;
 	border-spacing:0;
 	width:100%;
@@ -668,11 +661,18 @@ table.items tr.hover {
 table.items tr.critical {background:#e68585; border:inherit;}
 table.items tr.warning {background:#fdf5bc; border:inherit;}
 table.items th, table.items td {
-	border-bottom:1px solid #ccc;
+	border-bottom:1px solid #eaeaea;
 	border-spacing:0px;
 	display:table-cell;
 	padding:8px 12px;
 	vertical-align:middle;
+}
+/* todo: Find a better way to do this. These are a fix for buttons and label fonts becomming too large in a table.*/
+table label {
+    font-size:1em;
+}
+table .button {
+    font-size:1em;
 }
 
 
@@ -731,6 +731,10 @@ table.items, textarea, input.text, input.text-box,
 
 /* Added classes for new blog list layout
 ---------------------------------------------------------- */
+
+.blogPost.summary {
+    padding:.6em .4em;
+}
 .actions {
     height:auto;
     overflow:visible;
@@ -740,28 +744,24 @@ table.items, textarea, input.text, input.text-box,
 .contentItems {
     padding:0;
 }
-.contentItems li ul li {
-    border:0;
-    background:inherit;
-}
-li.properties {
+.properties {
     float:left;
 }
-#main .contentItems li.properties h3 {
+#main .contentItems .properties h3 {
     border-bottom:none;
     margin:0;
+    margin:0 0 0 .2em;
     padding:0;
 }
-li.related{
+.related{
      font-size:1.4em;
      float:right;
-     padding:.4em 0;
      text-align:right;
 }
-li.related .commentcount{
+.related .commentcount{
      line-height:2em;
 }
-li.properties ul li{
+.contentItems .properties ul li{
     border:0;
     float:left;
     padding:.8em 0;
@@ -769,7 +769,6 @@ li.properties ul li{
     background:inherit;
 }
 .icon {
-    margin:0 0 -2px 4px;
     margin:0 .2em -.2em .2em;
 }
 .linkButton {
