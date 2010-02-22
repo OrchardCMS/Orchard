@@ -25,7 +25,7 @@ using (Html.BeginFormAntiForgeryPost()) { %>
     <%=Html.ValidationMessage("DatabaseOptions", "Unable to setup data storage") %>
     <div>
         <%=Html.RadioButtonFor(svm => svm.DatabaseOptions, true, new { id = "builtin" })%>
-        <label for="builtin" class="forcheckbox"><%=_Encoded("Use built-in data storage (SQL Lite)") %></label>
+        <label for="builtin" class="forcheckbox"><%=_Encoded("Use built-in data storage (SQLite)") %></label>
     </div>
     <div>
         <%=Html.RadioButtonFor(svm => svm.DatabaseOptions, false, new { id = "sql" })%>
