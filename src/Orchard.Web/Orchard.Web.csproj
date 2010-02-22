@@ -217,12 +217,9 @@
     <Content Include="Themes\Orchard\Theme.txt" />
     <Content Include="Themes\Orchard\Views\Footer.ascx" />
     <Content Include="Themes\Orchard\Views\Layout.ascx" />
-    <Content Include="Themes\SafeMode\Content\Images\background_content.jpg" />
-    <Content Include="Themes\SafeMode\Content\Images\background_footer.jpg" />
-    <Content Include="Themes\SafeMode\Content\Images\background_module.gif" />
-    <Content Include="Themes\SafeMode\Content\Images\background_page.jpg" />
-    <Content Include="Themes\SafeMode\Content\Images\background_pageTop.gif" />
-    <Content Include="Themes\SafeMode\Content\Images\orchardLogo.jpg" />
+    <Content Include="Themes\SafeMode\Styles\images\backgroundHeader.gif" />
+    <Content Include="Themes\SafeMode\Styles\images\backgroundVines.gif" />
+    <Content Include="Themes\SafeMode\Styles\images\orchardLogo.gif" />
     <Content Include="Themes\SafeMode\Styles\site.css" />
     <Content Include="Themes\SafeMode\Theme.png" />
     <Content Include="Themes\SafeMode\Theme.txt" />
