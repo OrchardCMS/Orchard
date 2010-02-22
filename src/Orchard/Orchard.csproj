@@ -138,6 +138,7 @@
     <Compile Include="Data\Builders\ISessionFactoryBuilder.cs" />
     <Compile Include="Data\Builders\SQLiteBuilder.cs" />
     <Compile Include="Data\Builders\SqlServerBuilder.cs" />
+    <Compile Include="Data\Conventions\StringLengthConvention.cs" />
     <Compile Include="Data\SessionFactoryHolder.cs" />
     <Compile Include="Environment\Configuration\AppDataFolder.cs" />
     <Compile Include="Environment\Configuration\ShellSettingsLoader.cs" />

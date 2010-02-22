@@ -112,7 +112,7 @@ namespace Orchard.Setup.Controllers {
                         menuItem.As<MenuPart>().MenuPosition = "1";
                         menuItem.As<MenuPart>().MenuText = T("Home").ToString();
                         menuItem.As<MenuPart>().OnMainMenu = true;
-                        menuItem.As<MenuItem>().Url = "";
+                        menuItem.As<MenuItem>().Url = "~";
 
                         var authenticationService = finiteEnvironment.Resolve<IAuthenticationService>();
                         authenticationService.SignIn(user, true);
@@ -132,7 +132,10 @@ namespace Orchard.Setup.Controllers {
                 return Redirect("~/");
             }
             catch (Exception exception) {
-                _notifier.Error(T("Setup failed: " + exception.Message));
+                _notifier.Error(T("Setup failed:"));
+                for(var scan = exception; scan !=null; scan = scan.InnerException){
+                    _notifier.Error(scan.Message);
+                }
                 return IndexViewResult(model);
             }
         }

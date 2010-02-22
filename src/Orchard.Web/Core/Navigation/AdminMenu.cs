@@ -7,7 +7,7 @@ namespace Orchard.Core.Navigation {
         public void GetNavigation(NavigationBuilder builder) {
             builder.Add("Site", "12",
                         menu => menu
-                                    .Add("Manage Main Menu", "6.0", item => item.Action("Index", "Admin", new { area = "Navigation" }).Permission(Permissions.ManageMainMenu)));
+                                    .Add("Manage Menu", "6.0", item => item.Action("Index", "Admin", new { area = "Navigation" }).Permission(Permissions.ManageMainMenu)));
         }
     }
 }

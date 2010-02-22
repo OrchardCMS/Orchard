@@ -69,7 +69,7 @@ namespace Orchard.Tests.Modules.Setup {
         [Test]
         public void IndexNormallyReturnsWithDefaultAdminUsername() {
             var controller = _container.Resolve<SetupController>();
-            var result = controller.Index(null);
+            var result = controller.Index();
 
             Assert.That(result, Is.Not.Null);
             Assert.That(result, Is.TypeOf<ViewResult>());

@@ -7,7 +7,7 @@ namespace Orchard.Media {
         public void GetNavigation(NavigationBuilder builder) {
             builder.Add("Media", "4",
                         menu => menu
-                                    .Add("Manage Folders", "1.0", item => item.Action("Index", "Admin", new { area = "Orchard.Media" }).Permission(Permissions.ManageMediaFiles))
+                                    .Add("Manage Media", "1.0", item => item.Action("Index", "Admin", new { area = "Orchard.Media" }).Permission(Permissions.ManageMediaFiles))
                                     );
         }
     }
