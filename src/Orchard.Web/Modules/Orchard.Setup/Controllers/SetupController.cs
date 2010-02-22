@@ -132,7 +132,10 @@ namespace Orchard.Setup.Controllers {
                 return Redirect("~/");
             }
             catch (Exception exception) {
-                _notifier.Error(T("Setup failed: " + exception.Message));
+                _notifier.Error(T("Setup failed:"));
+                for(var scan = exception; scan !=null; scan = scan.InnerException){
+                    _notifier.Error(scan.Message);
+                }
                 return IndexViewResult(model);
             }
         }
