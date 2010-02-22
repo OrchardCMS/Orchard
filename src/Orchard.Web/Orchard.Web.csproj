@@ -228,7 +228,6 @@
     <Content Include="Themes\TheAdminClassic\Styles\images\tableHeaderBackground.gif" />
     <Content Include="Themes\TheAdminClassic\Styles\images\tableHeaderBackgroundRed.gif" />
     <Content Include="Themes\TheAdminClassic\Styles\site.css" />
-    <Content Include="Themes\TheAdminClassic\Theme.gif" />
     <Content Include="Themes\TheAdminClassic\Theme.txt" />
     <Content Include="Themes\TheAdminClassic\Views\Header.ascx" />
     <Content Include="Themes\TheAdminClassic\Views\Layout.ascx" />
