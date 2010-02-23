@@ -108,7 +108,7 @@ namespace Orchard.Pages.Controllers {
             if (!Services.Authorizer.Authorize(Permissions.EditPages, T("Not allowed to create a page")))
                 return new HttpUnauthorizedResult();
 
-            var page = Services.ContentManager.BuildEditorModel(Services.ContentManager.New<Page>("page"));
+            var page = Services.ContentManager.BuildEditorModel(Services.ContentManager.New<Page>(PageDriver.ContentType.Name));
 
             var model = new PageCreateViewModel {
                 Page = page
@@ -123,7 +123,7 @@ namespace Orchard.Pages.Controllers {
                 return new HttpUnauthorizedResult();
 
             // Validate form input
-            var page = Services.ContentManager.New<Page>("page");
+            var page = Services.ContentManager.New<Page>(PageDriver.ContentType.Name);
             model.Page = Services.ContentManager.UpdateEditorModel(page, this);
 
             if (!ModelState.IsValid) {

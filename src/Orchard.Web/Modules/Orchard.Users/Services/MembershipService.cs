@@ -7,6 +7,7 @@ using Orchard.Data;
 using Orchard.Logging;
 using Orchard.ContentManagement;
 using Orchard.Security;
+using Orchard.Users.Controllers;
 using Orchard.Users.Models;
 
 namespace Orchard.Users.Services {
@@ -30,8 +31,9 @@ namespace Orchard.Users.Services {
 
         public IUser CreateUser(CreateUserParams createUserParams) {
             Logger.Information("CreateUser {0} {1}", createUserParams.Username, createUserParams.Email);
-            
-            return _contentManager.Create<User>("user", init => {
+
+            return _contentManager.Create<User>(UserDriver.ContentType.Name, init =>
+            {
                 init.Record.UserName = createUserParams.Username;
                 init.Record.Email = createUserParams.Email;
                 SetPassword(init.Record, createUserParams.Password);

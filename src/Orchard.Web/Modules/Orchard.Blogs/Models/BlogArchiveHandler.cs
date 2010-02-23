@@ -5,6 +5,7 @@ using JetBrains.Annotations;
 using Orchard.ContentManagement.Handlers;
 using Orchard.Core.Common.Records;
 using Orchard.Data;
+using Orchard.Blogs.Controllers;
 
 namespace Orchard.Blogs.Models {
     [UsedImplicitly]
@@ -27,7 +28,7 @@ namespace Orchard.Blogs.Models {
             //INFO: (erikpo) Get all blog posts for the current blog
             var postsQuery =
                 from bpr in commonRepository.Table
-                where bpr.ContentItemRecord.ContentType.Name == "blogpost" && bpr.Container.Id == blogPost.Blog.Record.Id
+                where bpr.ContentItemRecord.ContentType.Name == BlogPostDriver.ContentType.Name && bpr.Container.Id == blogPost.Blog.Record.Id
                 orderby bpr.PublishedUtc
                 select bpr;
 

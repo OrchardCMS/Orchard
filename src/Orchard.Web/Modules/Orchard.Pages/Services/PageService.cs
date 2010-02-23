@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Orchard.ContentManagement.Records;
+using Orchard.Pages.Controllers;
 using Orchard.Pages.Models;
 using Orchard.Core.Common.Records;
 using Orchard.ContentManagement;
@@ -42,7 +43,7 @@ namespace Orchard.Pages.Services {
 
         public Page Get(string slug) {
             return
-                _contentManager.Query("page").Join<RoutableRecord>().Where(rr => rr.Slug == slug).List().FirstOrDefault
+                _contentManager.Query(PageDriver.ContentType.Name).Join<RoutableRecord>().Where(rr => rr.Slug == slug).List().FirstOrDefault
                     ().As<Page>();
         }
 
@@ -52,7 +53,7 @@ namespace Orchard.Pages.Services {
 
         public Page GetLatest(string slug) {
             return
-                _contentManager.Query(VersionOptions.Latest, "page").Join<RoutableRecord>().Where(rr => rr.Slug == slug)
+                _contentManager.Query(VersionOptions.Latest, PageDriver.ContentType.Name).Join<RoutableRecord>().Where(rr => rr.Slug == slug)
                     .Slice(0, 1).FirstOrDefault().As<Page>();
         }
 
