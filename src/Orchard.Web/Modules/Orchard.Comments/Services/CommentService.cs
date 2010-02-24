@@ -2,6 +2,7 @@
 using System.Linq;
 using JetBrains.Annotations;
 using Orchard.Comments.Models;
+using Orchard.Comments.Controlers;
 using Orchard.ContentManagement.Aspects;
 using Orchard.Data;
 using Orchard.Logging;
