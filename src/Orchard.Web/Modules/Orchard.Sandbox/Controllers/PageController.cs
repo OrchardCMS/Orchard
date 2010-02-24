@@ -56,7 +56,7 @@ namespace Orchard.Sandbox.Controllers {
                 return RedirectToAction("index");
             }
 
-            var page = Services.ContentManager.Create<SandboxPage>("sandboxpage", item => {
+            var page = Services.ContentManager.Create<SandboxPage>(SandboxPageDriver.ContentType.Name, item => {
                 item.Record.Name = model.Name;
             });
             return RedirectToAction("show", new { page.ContentItem.Id });

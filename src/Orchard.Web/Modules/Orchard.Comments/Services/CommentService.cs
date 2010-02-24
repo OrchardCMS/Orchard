@@ -101,7 +101,7 @@ namespace Orchard.Comments.Services {
         }
 
         public Comment CreateComment(CreateCommentContext context) {
-            var comment = _contentManager.Create<Comment>("comment");
+            var comment = _contentManager.Create<Comment>(CommentDriver.ContentType.Name);
 
             comment.Record.Author = context.Author;
             comment.Record.CommentDateUtc = _clock.UtcNow;

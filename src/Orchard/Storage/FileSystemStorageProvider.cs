@@ -28,7 +28,12 @@ namespace Orchard.Storage {
 
         public IEnumerable<IStorageFolder> ListFolders(string path) {
             if (!Directory.Exists(path)) {
-                throw new ArgumentException("Directory " + path + " does not exist");
+                try {
+                    Directory.CreateDirectory(path);
+                } 
+                catch (Exception ex) {
+                    throw new ArgumentException(string.Format("The folder could not be created at path: {0}. {1}",path,ex));
+                }
             }
 
             return new DirectoryInfo(path)
