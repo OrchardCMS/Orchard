@@ -1,6 +1,0 @@
-﻿name: Blue (default)
-author: Jonathan Wall
-description: This is the default theme that has a resemblance to the default ASP.NET MVC web project style for some reason.
-version: 1.0
-tags: blue, default
-homepage: http://www.orchardproject.net

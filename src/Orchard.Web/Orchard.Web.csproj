@@ -149,9 +149,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Config\Diagnostics.config" />
-    <Content Include="Themes\Orange\Styles\site.css" />
-    <Content Include="Themes\Orange\Theme.txt" />
-    <Content Include="Themes\Orange\Views\Layout.ascx" />
     <Content Include="Themes\TheAdmin\Styles\images\icons.png" />
     <Content Include="Themes\TheAdmin\Styles\images\tableHeaderBackgroundRed.gif" />
     <Content Include="Themes\TheAdmin\Styles\site.css" />
@@ -159,7 +156,6 @@
     <Content Include="Themes\TheAdmin\Views\Layout.ascx" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Themes\TheAdminClassic\Styles\images\icons.psd" />
     <None Include="Themes\TheAdmin\Styles\images\icons.psd" />
     <Content Include="Themes\Classic\Content\Images\bodyBackground.gif" />
     <Content Include="Themes\Classic\Content\Images\bodyBackgroundgrey.gif" />
@@ -204,19 +200,6 @@
     <Content Include="Themes\Green\Views\Layout.ascx" />
     <Content Include="Themes\Green\Views\ListOfComments.ascx" />
     <Content Include="Themes\Green\Views\User.ascx" />
-    <Content Include="Themes\Orange\Theme.png" />
-    <Content Include="Themes\Orange\Views\Orchard.Blogs\BlogPost\Item.ascx" />
-    <Content Include="Themes\Orchard\Content\Images\background_content.jpg" />
-    <Content Include="Themes\Orchard\Content\Images\background_footer.jpg" />
-    <Content Include="Themes\Orchard\Content\Images\background_module.gif" />
-    <Content Include="Themes\Orchard\Content\Images\background_page.jpg" />
-    <Content Include="Themes\Orchard\Content\Images\background_pageTop.gif" />
-    <Content Include="Themes\Orchard\Content\Images\orchardLogo.jpg" />
-    <Content Include="Themes\Orchard\Styles\site.css" />
-    <Content Include="Themes\Orchard\Theme.png" />
-    <Content Include="Themes\Orchard\Theme.txt" />
-    <Content Include="Themes\Orchard\Views\Footer.ascx" />
-    <Content Include="Themes\Orchard\Views\Layout.ascx" />
     <Content Include="Themes\SafeMode\Styles\images\backgroundHeader.gif" />
     <Content Include="Themes\SafeMode\Styles\images\backgroundVines.gif" />
     <Content Include="Themes\SafeMode\Styles\images\orchardLogo.gif" />
@@ -225,17 +208,6 @@
     <Content Include="Themes\SafeMode\Theme.txt" />
     <Content Include="Themes\SafeMode\Views\Document.aspx" />
     <Content Include="Themes\SafeMode\Views\Layout.ascx" />
-    <Content Include="Themes\TheAdminClassic\Styles\images\background_header.jpg" />
-    <Content Include="Themes\TheAdminClassic\Styles\images\icons.png" />
-    <Content Include="Themes\TheAdminClassic\Styles\images\orchardLogo.jpg" />
-    <Content Include="Themes\TheAdminClassic\Styles\images\tableHeaderBackground.gif" />
-    <Content Include="Themes\TheAdminClassic\Styles\images\tableHeaderBackgroundRed.gif" />
-    <Content Include="Themes\TheAdminClassic\Styles\site.css" />
-    <Content Include="Themes\TheAdminClassic\Theme.txt" />
-    <Content Include="Themes\TheAdminClassic\Views\Header.ascx" />
-    <Content Include="Themes\TheAdminClassic\Views\Layout.ascx" />
-    <Content Include="Themes\TheAdminClassic\Views\Menu.ascx" />
-    <Content Include="Themes\TheAdminClassic\Views\User.ascx" />
     <Content Include="Themes\TheAdmin\Styles\images\backgroundGradient.gif" />
     <Content Include="Themes\TheAdmin\Styles\images\backgroundHeader.gif" />
     <Content Include="Themes\TheAdmin\Styles\images\orchardLogo.gif" />
