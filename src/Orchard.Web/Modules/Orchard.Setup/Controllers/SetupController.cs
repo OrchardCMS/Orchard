@@ -12,6 +12,7 @@ using Orchard.Security;
 using Orchard.Settings;
 using Orchard.Setup.ViewModels;
 using Orchard.Localization;
+using Orchard.Themes;
 using Orchard.UI.Notify;
 
 namespace Orchard.Setup.Controllers {
@@ -36,7 +37,7 @@ namespace Orchard.Setup.Controllers {
         private Localizer T { get; set; }
 
         private ActionResult IndexViewResult(SetupViewModel model) {
-            string message = "";
+            string message;
             if (!CanWriteToAppDataFolder(out message)) {
                 _notifier.Error(
                     T(
@@ -94,6 +95,9 @@ namespace Orchard.Setup.Controllers {
                         siteSettings.Record.SuperUser = model.AdminUsername;
                         siteSettings.Record.PageTitleSeparator = " - ";
 
+                        // set site theme
+                        var themeService = finiteEnvironment.Resolve<IThemeService>();
+                        themeService.SetSiteTheme("Green");
 
                         var contentManager = finiteEnvironment.Resolve<IContentManager>();
                          
