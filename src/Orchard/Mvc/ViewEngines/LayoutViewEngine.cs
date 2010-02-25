@@ -33,7 +33,13 @@ namespace Orchard.Mvc.ViewEngines {
 
 
             var bodyView = _viewEngines.FindPartialView(controllerContext, viewName);
-            var layoutView = _viewEngines.FindPartialView(controllerContext, "Layout");
+
+            ViewEngineResult layoutView = null;
+            if (!string.IsNullOrEmpty(controllerContext.RouteData.Values["area"] as string))
+                layoutView = _viewEngines.FindPartialView(controllerContext, string.Format("Layout.{0}", controllerContext.RouteData.Values["area"]));
+            if (layoutView == null || layoutView.View == null)
+                layoutView = _viewEngines.FindPartialView(controllerContext, "Layout");
+
             var documentView = _viewEngines.FindPartialView(controllerContext, "Document");
 
             if (bodyView.View == null ||
