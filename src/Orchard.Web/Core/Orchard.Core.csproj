@@ -201,12 +201,6 @@
     <Content Include="Navigation\Module.txt" />
     <Content Include="Scheduling\Module.txt" />
     <Content Include="Settings\Views\EditorTemplates\Items\Settings.Site.ascx" />
-    <Content Include="Themes\Scripts\jquery-1.4.1.js" />
-    <Content Include="Themes\Scripts\jquery-1.4.1.min.js" />
-    <Content Include="Themes\Styles\images\icons.png" />
-    <Content Include="Themes\Theme.png" />
-    <Content Include="Themes\Theme.txt" />
-    <Content Include="Themes\Styles\site.css" />
     <Content Include="Themes\Views\Admin\ThemePreview.ascx" />
     <Content Include="Themes\Views\Admin\Install.aspx" />
     <Content Include="Themes\Views\Header.ascx" />
