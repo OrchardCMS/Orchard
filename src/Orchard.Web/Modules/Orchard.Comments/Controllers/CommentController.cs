@@ -47,10 +47,10 @@ namespace Orchard.Comments.Controllers {
                                                            CommentText = viewModel.CommentText,
                                                            Email = viewModel.Email,
                                                            SiteName = viewModel.SiteName,
-                                                           CommentedOn = viewModel.CommentedOn,
+                                                           CommentedOn = viewModel.CommentedOn
                                                        };
 
-                Comment comment = _commentService.CreateComment(context);
+                Comment comment = _commentService.CreateComment(context, CurrentSite.As<CommentSettings>().Record.ModerateComments);
 
                 if (!String.IsNullOrEmpty(returnUrl)) {
                     return Redirect(returnUrl);

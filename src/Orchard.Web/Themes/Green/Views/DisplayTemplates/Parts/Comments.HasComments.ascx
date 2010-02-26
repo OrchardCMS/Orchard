@@ -6,7 +6,7 @@ if (Model.CommentsActive == false) { %>
     <p><%=_Encoded("Comments have been disabled for this content.") %></p><%
 } else { %>
     <%-- todo: (heskew) need a comment form for the authenticated user... --%>
-    <% using(Html.BeginForm("Create", "Admin", new { area = "Orchard.Comments" }, FormMethod.Post, new { @class = "comment" })) { %>
+    <% using(Html.BeginForm("Create", "Comment", new { area = "Orchard.Comments" }, FormMethod.Post, new { @class = "comment" })) { %>
         <%=Html.ValidationSummary() %>
         <h2>Add a Comment</h2>
         <fieldset class="who">
@@ -38,5 +38,3 @@ if (Model.CommentsActive == false) { %>
         </fieldset><%
    }
 } %>
-
-    
