@@ -2,15 +2,16 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
+using System.Web.Routing;
 using Orchard.Localization;
 using Orchard.Mvc.Filters;
 using Orchard.Security;
 
 namespace Orchard.UI.Admin {
-    public class AdminAuthorizationFilter : FilterProvider, IAuthorizationFilter {
+    public class AdminFilter : FilterProvider, IAuthorizationFilter {
         private readonly IAuthorizer _authorizer;
 
-        public AdminAuthorizationFilter(IAuthorizer authorizer) {
+        public AdminFilter(IAuthorizer authorizer) {
             _authorizer = authorizer;
             T = NullLocalizer.Instance;
         }
@@ -23,8 +24,17 @@ namespace Orchard.UI.Admin {
                     filterContext.Result = new HttpUnauthorizedResult();
                 }
 
-                AdminThemeSelector.Apply(filterContext.RequestContext);
+                Apply(filterContext.RequestContext);
             }
+        }
+
+        public static void Apply(RequestContext context) {
+            // the value isn't important
+            context.HttpContext.Items[typeof(AdminThemeSelector)] = null;
+        }
+
+        public static bool IsApplied(RequestContext context) {
+            return context.HttpContext.Items.Contains(typeof(AdminThemeSelector));
         }
 
         private static bool IsAdmin(AuthorizationContext filterContext) {

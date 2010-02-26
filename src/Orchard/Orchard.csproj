@@ -226,7 +226,7 @@
     <Compile Include="Extensions\ExtensionEntry.cs" />
     <Compile Include="IOrchardServices.cs" />
     <Compile Include="UI\Admin\AdminAttribute.cs" />
-    <Compile Include="UI\Admin\AdminAuthorizationFilter.cs" />
+    <Compile Include="UI\Admin\AdminFilter.cs" />
     <Compile Include="Mvc\AntiForgery\AntiForgeryAuthorizationFilter.cs" />
     <Compile Include="Mvc\Html\FileRegistrationContext.cs" />
     <Compile Include="Mvc\Html\MvcFormAntiForgeryPost.cs" />
@@ -286,7 +286,6 @@
     <Compile Include="Mvc\ViewEngines\LayoutViewContext.cs" />
     <Compile Include="Mvc\ViewEngines\ViewEngineFilter.cs" />
     <Compile Include="Mvc\ViewEngines\WebFormsViewEngineProvider.cs" />
-    <Compile Include="Mvc\ViewModels\AdminViewModel.cs" />
     <Compile Include="Mvc\ViewModels\BaseViewModel.cs" />
     <Compile Include="UI\Admin\AdminThemeSelector.cs" />
     <Compile Include="UI\Navigation\INavigationManager.cs" />
@@ -325,7 +324,7 @@
     <Compile Include="Themes\IThemeSelector.cs" />
     <Compile Include="Themes\IThemeService.cs" />
     <Compile Include="Themes\ThemesModule.cs" />
-    <Compile Include="UI\Menus\AdminMenuFilter.cs" />
+    <Compile Include="UI\Navigation\MenuFilter.cs" />
     <Compile Include="UI\Navigation\NavigationBuilder.cs" />
     <Compile Include="UI\Navigation\INavigationProvider.cs" />
     <Compile Include="UI\Navigation\MenuItem.cs" />

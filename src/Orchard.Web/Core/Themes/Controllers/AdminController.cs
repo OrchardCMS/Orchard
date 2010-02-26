@@ -97,7 +97,7 @@ namespace Orchard.Core.Themes.Controllers {
         }
 
         public ActionResult Install() {
-            return View(new AdminViewModel());
+            return View(new BaseViewModel());
         }
 
         [HttpPost]

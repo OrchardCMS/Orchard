@@ -1,13 +1,13 @@
 ﻿using System.Web.Mvc;
 using Orchard.Mvc.Filters;
 using Orchard.Mvc.ViewModels;
-using Orchard.UI.Navigation;
+using Orchard.UI.Admin;
 
-namespace Orchard.UI.Menus {
-    public class AdminMenuFilter : FilterProvider, IResultFilter {
+namespace Orchard.UI.Navigation {
+    public class MenuFilter : FilterProvider, IResultFilter {
         private readonly INavigationManager _navigationManager;
 
-        public AdminMenuFilter(INavigationManager navigationManager ) {
+        public MenuFilter(INavigationManager navigationManager) {
             _navigationManager = navigationManager;
         }
 
@@ -16,15 +16,19 @@ namespace Orchard.UI.Menus {
             if (viewResult == null)
                 return;
 
-            var adminViewModel = viewResult.ViewData.Model as AdminViewModel;
-            if (adminViewModel == null)
+            var baseViewModel = viewResult.ViewData.Model as BaseViewModel;
+            if (baseViewModel == null)
                 return;
 
-            adminViewModel.AdminMenu = _navigationManager.BuildMenu("admin");
+            var menuName = "main";
+            if (AdminFilter.IsApplied(filterContext.RequestContext))
+                menuName = "admin";
+
+            baseViewModel.Menu = _navigationManager.BuildMenu(menuName);
         }
 
         public void OnResultExecuted(ResultExecutedContext filterContext) {
-            
+
         }
     }
 }

@@ -5,7 +5,7 @@ using Orchard.Mvc.ViewModels;
 using Orchard.Users.Models;
 
 namespace Orchard.Users.ViewModels {
-    public class UserEditViewModel : AdminViewModel {
+    public class UserEditViewModel : BaseViewModel {
         [HiddenInput(DisplayValue = false)]
         public int Id {
             get { return User.Item.Id; }

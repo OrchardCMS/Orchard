@@ -6,7 +6,7 @@ using Orchard.Security;
 using Orchard.Users.Models;
 
 namespace Orchard.Users.ViewModels {
-    public class UserCreateViewModel : AdminViewModel {
+    public class UserCreateViewModel : BaseViewModel {
         [Required]
         public string UserName { get; set; }
 

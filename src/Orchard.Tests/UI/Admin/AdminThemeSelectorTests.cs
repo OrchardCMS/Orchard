@@ -9,27 +9,27 @@ namespace Orchard.Tests.UI.Admin {
         [Test]
         public void IsAppliedShouldBeFalseByDefault() {
             var context = new RequestContext(new StubHttpContext(), new RouteData());
-            var isApplied = AdminThemeSelector.IsApplied(context);
+            var isApplied = AdminFilter.IsApplied(context);
             Assert.That(isApplied, Is.False);
         }
 
         [Test]
         public void IsAppliedShouldBeTrueAfterBeingApplied() {
             var context = new RequestContext(new StubHttpContext(), new RouteData());
-            Assert.That(AdminThemeSelector.IsApplied(context), Is.False);
-            AdminThemeSelector.Apply(context);
-            Assert.That(AdminThemeSelector.IsApplied(context), Is.True);
+            Assert.That(AdminFilter.IsApplied(context), Is.False);
+            AdminFilter.Apply(context);
+            Assert.That(AdminFilter.IsApplied(context), Is.True);
         }
 
 
         [Test]
         public void IsAppliedIsFalseOnNewContext() {
             var context = new RequestContext(new StubHttpContext(), new RouteData());
-            Assert.That(AdminThemeSelector.IsApplied(context), Is.False);
-            AdminThemeSelector.Apply(context);
-            Assert.That(AdminThemeSelector.IsApplied(context), Is.True);
+            Assert.That(AdminFilter.IsApplied(context), Is.False);
+            AdminFilter.Apply(context);
+            Assert.That(AdminFilter.IsApplied(context), Is.True);
             context = new RequestContext(new StubHttpContext(), new RouteData());
-            Assert.That(AdminThemeSelector.IsApplied(context), Is.False);
+            Assert.That(AdminFilter.IsApplied(context), Is.False);
         }
 
         [Test]
@@ -45,8 +45,8 @@ namespace Orchard.Tests.UI.Admin {
         [Test]
         public void ThemeResultShouldBeTheAdminAt100AfterBeingSet() {
             var context = new RequestContext(new StubHttpContext(), new RouteData());
-            
-            AdminThemeSelector.Apply(context);
+
+            AdminFilter.Apply(context);
 
             var selector = new AdminThemeSelector();
             var result = selector.GetTheme(context);

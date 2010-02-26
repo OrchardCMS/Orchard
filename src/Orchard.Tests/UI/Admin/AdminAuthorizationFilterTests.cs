@@ -31,7 +31,7 @@ namespace Orchard.Tests.UI.Admin {
         public void NormalRequestShouldNotBeAffected() {
             var authorizationContext = GetAuthorizationContext<NormalController>();
 
-            var filter = new AdminAuthorizationFilter(GetAuthorizer(false));
+            var filter = new AdminFilter(GetAuthorizer(false));
             filter.OnAuthorization(authorizationContext);
 
             Assert.That(authorizationContext.Result, Is.Null);
@@ -39,16 +39,16 @@ namespace Orchard.Tests.UI.Admin {
 
         private static void TestActionThatShouldRequirePermission<TController>() where TController : ControllerBase, new() {
             var authorizationContext = GetAuthorizationContext<TController>();
-            var filter = new AdminAuthorizationFilter(GetAuthorizer(false));
+            var filter = new AdminFilter(GetAuthorizer(false));
             filter.OnAuthorization(authorizationContext);
             Assert.That(authorizationContext.Result, Is.InstanceOf<HttpUnauthorizedResult>());
-            Assert.That(AdminThemeSelector.IsApplied(authorizationContext.RequestContext), Is.True);
+            Assert.That(AdminFilter.IsApplied(authorizationContext.RequestContext), Is.True);
 
             var authorizationContext2 = GetAuthorizationContext<TController>();
-            var filter2 = new AdminAuthorizationFilter(GetAuthorizer(true));
+            var filter2 = new AdminFilter(GetAuthorizer(true));
             filter2.OnAuthorization(authorizationContext2);
             Assert.That(authorizationContext2.Result, Is.Null);
-            Assert.That(AdminThemeSelector.IsApplied(authorizationContext2.RequestContext), Is.True);
+            Assert.That(AdminFilter.IsApplied(authorizationContext2.RequestContext), Is.True);
         }
 
 

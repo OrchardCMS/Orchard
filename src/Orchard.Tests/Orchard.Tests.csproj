@@ -158,6 +158,7 @@
     <Compile Include="Tasks\SweepGeneratorTests.cs" />
     <Compile Include="UI\Admin\AdminAuthorizationFilterTests.cs" />
     <Compile Include="UI\Admin\AdminThemeSelectorTests.cs" />
+    <Compile Include="UI\Navigation\MenuFilterTests.cs" />
     <Compile Include="UI\Notify\NotifierTests.cs" />
     <Compile Include="UI\Notify\NotifyFilterTests.cs" />
     <Compile Include="Services\ClockTests.cs" />

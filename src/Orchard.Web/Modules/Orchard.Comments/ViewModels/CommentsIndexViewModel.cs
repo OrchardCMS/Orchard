@@ -3,7 +3,7 @@ using Orchard.Comments.Models;
 using Orchard.Mvc.ViewModels;
 
 namespace Orchard.Comments.ViewModels {
-    public class CommentsIndexViewModel : AdminViewModel {
+    public class CommentsIndexViewModel : BaseViewModel {
         public IList<CommentEntry> Comments { get; set; }
         public CommentIndexOptions Options { get; set; }
     }

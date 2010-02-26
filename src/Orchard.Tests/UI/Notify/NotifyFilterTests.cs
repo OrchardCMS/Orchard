@@ -62,12 +62,12 @@ namespace Orchard.Tests.UI.Notify {
             var filter = new NotifyFilter(sink);
             sink.Information("Working");
 
-            var model = new AdminViewModel();
+            var model = new BaseViewModel();
 
             var context = BuildContext();
             context.Controller.TempData.Add("messages", "dont-destroy" + System.Environment.NewLine + "-" + System.Environment.NewLine);
             context.Result = new ViewResult {
-                ViewData = new ViewDataDictionary<AdminViewModel>(model),
+                ViewData = new ViewDataDictionary<BaseViewModel>(model),
                 TempData = context.Controller.TempData
             };
 

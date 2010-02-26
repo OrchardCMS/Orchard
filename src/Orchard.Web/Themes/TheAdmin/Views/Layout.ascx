@@ -1,4 +1,4 @@
-﻿<%@ Control Language="C#" Inherits="Orchard.Mvc.ViewUserControl<AdminViewModel>" %>
+﻿<%@ Control Language="C#" Inherits="Orchard.Mvc.ViewUserControl<BaseViewModel>" %>
 <%@ Import Namespace="Orchard.Mvc.ViewModels"%>
 <%@ Import Namespace="Orchard.Mvc.Html"%><%
 Html.RegisterStyle("site.css");

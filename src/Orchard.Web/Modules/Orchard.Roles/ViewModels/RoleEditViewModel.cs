@@ -5,7 +5,7 @@ using Orchard.Mvc.ViewModels;
 using Orchard.Security.Permissions;
 
 namespace Orchard.Roles.ViewModels {
-    public class RoleEditViewModel : AdminViewModel {
+    public class RoleEditViewModel : BaseViewModel {
         public int Id { get; set; }
         [Required]
         public string Name { get; set; }

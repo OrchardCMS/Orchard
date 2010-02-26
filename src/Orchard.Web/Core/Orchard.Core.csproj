@@ -116,7 +116,6 @@
     <Compile Include="Navigation\Records\MenuItemRecord.cs" />
     <Compile Include="Navigation\Records\MenuPartRecord.cs" />
     <Compile Include="Navigation\Services\MainMenu.cs" />
-    <Compile Include="Navigation\Filters\MainMenuFilter.cs" />
     <Compile Include="Navigation\ViewModels\CreateMenuItemViewModel.cs" />
     <Compile Include="Navigation\ViewModels\MenuItemEntry.cs" />
     <Compile Include="Navigation\ViewModels\NavigationManagementViewModel.cs" />

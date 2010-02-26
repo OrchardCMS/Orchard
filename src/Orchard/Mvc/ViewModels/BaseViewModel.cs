@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Orchard.Security;
 using Orchard.UI.Navigation;
 using Orchard.UI.Notify;
@@ -6,15 +7,23 @@ using Orchard.UI.Zones;
 
 namespace Orchard.Mvc.ViewModels {
     public class BaseViewModel : IZoneContainer {
-        public BaseViewModel() {
-            Messages = new List<NotifyEntry>();
-            Zones = new ZoneCollection();
+        private ZoneCollection _zones = new ZoneCollection();
+        private IList<NotifyEntry> _messages = new List<NotifyEntry>();
+
+        public virtual ZoneCollection Zones {
+            get { return _zones; }
+            set { _zones = value; }
         }
 
-        public IList<NotifyEntry> Messages { get; set; }
-        public IUser CurrentUser { get; set; }
-        public ZoneCollection Zones { get; set; }
+        public virtual IList<NotifyEntry> Messages {
+            get { return _messages; }
+            set { _messages = value; }
+        }
 
-        public IEnumerable<MenuItem> Menu { get; set; }
+        public virtual IUser CurrentUser { get; set; }
+        public virtual IEnumerable<MenuItem> Menu { get; set; }
     }
+
+    [Obsolete("Please change your code to use BaseViewModel, as AdminViewModel will likely be removed in the near future.")]
+    public class AdminViewModel : BaseViewModel { }
 }
