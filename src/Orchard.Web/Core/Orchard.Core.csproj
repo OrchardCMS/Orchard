@@ -217,6 +217,8 @@
     <Content Include="Navigation\Views\Admin\Index.ascx" />
     <Content Include="Navigation\Views\EditorTemplates\Parts\Navigation.EditMenuPart.ascx" />
     <Content Include="Navigation\Views\Web.config" />
+    <Content Include="Themes\Scripts\jquery-1.4.1.js" />
+    <Content Include="Themes\Scripts\jquery-1.4.1.min.js" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Scheduling\Controllers\" />

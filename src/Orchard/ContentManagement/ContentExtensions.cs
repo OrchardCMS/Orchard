@@ -21,6 +21,14 @@ namespace Orchard.ContentManagement {
             return part;
         }
 
+        public static void Create(this IContentManager manager, IContent content) {
+            manager.Create(content.ContentItem, VersionOptions.Draft);
+            manager.Publish(content.ContentItem);
+        }
+
+        public static void Create(this IContentManager manager, IContent content, VersionOptions options) {
+            manager.Create(content.ContentItem, options);
+        }
 
         public static ContentItem Create(this IContentManager manager, string contentType) {
             return manager.Create<ContentItem>(contentType, init => { });
