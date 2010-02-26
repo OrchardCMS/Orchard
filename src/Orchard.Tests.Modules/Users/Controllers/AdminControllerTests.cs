@@ -94,8 +94,9 @@ namespace Orchard.Tests.Modules.Users.Controllers {
             var controller = _container.Resolve<AdminController>();
             controller.ValueProvider = Values.From(new {
                 UserName = "four",
+                Email = "six@example.org",
                 Password = "five",
-                ConfirmPassword = "five"
+                ConfirmPassword = "five",
             });
             var result = controller.CreatePOST();
             Assert.That(result, Is.TypeOf<RedirectToRouteResult>());
