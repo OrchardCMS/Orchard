@@ -18,17 +18,17 @@ namespace Orchard.UI.Admin {
         public Localizer T { get; set; }
 
         public void OnAuthorization(AuthorizationContext filterContext) {
-            if (!IsAdmin(filterContext))
-                return;
+            if (IsAdmin(filterContext)) {
+                if (!_authorizer.Authorize(StandardPermissions.AccessAdminPanel, T("Can't access the admin"))) {
+                    filterContext.Result = new HttpUnauthorizedResult();
+                }
 
-            if (!_authorizer.Authorize(StandardPermissions.AccessAdminPanel, T("Can't access the admin"))) {
-                filterContext.Result = new HttpUnauthorizedResult();
+                AdminThemeSelector.Apply(filterContext.RequestContext);
             }
         }
 
         private static bool IsAdmin(AuthorizationContext filterContext) {
-            if (string.Equals(filterContext.ActionDescriptor.ControllerDescriptor.ControllerName, "Admin",
-                              StringComparison.InvariantCultureIgnoreCase)) {
+            if (IsNameAdmin(filterContext) || IsNameAdminProxy(filterContext)) {
                 return true;
             }
 
@@ -37,6 +37,17 @@ namespace Orchard.UI.Admin {
                 return true;
             }
             return false;
+        }
+
+        private static bool IsNameAdmin(AuthorizationContext filterContext) {
+            return string.Equals(filterContext.ActionDescriptor.ControllerDescriptor.ControllerName, "Admin",
+                                 StringComparison.InvariantCultureIgnoreCase);
+        }
+
+        private static bool IsNameAdminProxy(AuthorizationContext filterContext) {
+            return filterContext.ActionDescriptor.ControllerDescriptor.ControllerName.StartsWith(
+                "AdminControllerProxy", StringComparison.InvariantCultureIgnoreCase) &&
+                filterContext.ActionDescriptor.ControllerDescriptor.ControllerName.Length == "AdminControllerProxy".Length + 32;
         }
 
         private static IEnumerable<AdminAttribute> GetAdminAttributes(ActionDescriptor descriptor) {

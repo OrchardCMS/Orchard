@@ -1,22 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Web.Mvc;
+﻿using System.Web.Mvc;
+using System.Web.Routing;
 using Moq;
 using NUnit.Framework;
 using Orchard.Localization;
 using Orchard.Security;
-using Orchard.Security.Permissions;
+using Orchard.Tests.Stubs;
 using Orchard.UI.Admin;
 
 namespace Orchard.Tests.UI.Admin {
     [TestFixture]
-    public class AdminAttributeTests {
+    public class AdminAuthorizationFilterTests {
 
-        private static AuthorizationContext GetAuthorizationContext<TController>() {
+        private static AuthorizationContext GetAuthorizationContext<TController>() where TController : ControllerBase, new() {
             var controllerDescriptor = new ReflectedControllerDescriptor(typeof(TController));
-            var controllerContext = new ControllerContext();
+            var controllerContext = new ControllerContext(new StubHttpContext(), new RouteData(), new TController());
             return new AuthorizationContext(
                 controllerContext,
                 controllerDescriptor.FindAction(controllerContext, "Index"));
@@ -40,56 +37,39 @@ namespace Orchard.Tests.UI.Admin {
             Assert.That(authorizationContext.Result, Is.Null);
         }
 
-        [Test]
-        public void AdminRequestShouldRequirePermission() {
-            var authorizationContext = GetAuthorizationContext<AdminController>();
+        private static void TestActionThatShouldRequirePermission<TController>() where TController : ControllerBase, new() {
+            var authorizationContext = GetAuthorizationContext<TController>();
             var filter = new AdminAuthorizationFilter(GetAuthorizer(false));
             filter.OnAuthorization(authorizationContext);
             Assert.That(authorizationContext.Result, Is.InstanceOf<HttpUnauthorizedResult>());
+            Assert.That(AdminThemeSelector.IsApplied(authorizationContext.RequestContext), Is.True);
 
-            var authorizationContext2 = GetAuthorizationContext<AdminController>();
+            var authorizationContext2 = GetAuthorizationContext<TController>();
             var filter2 = new AdminAuthorizationFilter(GetAuthorizer(true));
             filter2.OnAuthorization(authorizationContext2);
             Assert.That(authorizationContext2.Result, Is.Null);
+            Assert.That(AdminThemeSelector.IsApplied(authorizationContext2.RequestContext), Is.True);
+        }
+
+
+        [Test]
+        public void AdminRequestShouldRequirePermission() {
+            TestActionThatShouldRequirePermission<AdminController>();
         }
 
         [Test]
         public void NormalWithAttribRequestShouldRequirePermission() {
-            var authorizationContext = GetAuthorizationContext<NormalWithAttribController>();
-            var filter = new AdminAuthorizationFilter(GetAuthorizer(false));
-            filter.OnAuthorization(authorizationContext);
-            Assert.That(authorizationContext.Result, Is.InstanceOf<HttpUnauthorizedResult>());
-
-            var authorizationContext2 = GetAuthorizationContext<NormalWithAttribController>();
-            var filter2 = new AdminAuthorizationFilter(GetAuthorizer(true));
-            filter2.OnAuthorization(authorizationContext2);
-            Assert.That(authorizationContext2.Result, Is.Null);
+            TestActionThatShouldRequirePermission<NormalWithAttribController>();
         }
-        
+
         [Test]
         public void NormalWithActionAttribRequestShouldRequirePermission() {
-            var authorizationContext = GetAuthorizationContext<NormalWithActionAttribController>();
-            var filter = new AdminAuthorizationFilter(GetAuthorizer(false));
-            filter.OnAuthorization(authorizationContext);
-            Assert.That(authorizationContext.Result, Is.InstanceOf<HttpUnauthorizedResult>());
-
-            var authorizationContext2 = GetAuthorizationContext<NormalWithActionAttribController>();
-            var filter2 = new AdminAuthorizationFilter(GetAuthorizer(true));
-            filter2.OnAuthorization(authorizationContext2);
-            Assert.That(authorizationContext2.Result, Is.Null);
+            TestActionThatShouldRequirePermission<NormalWithActionAttribController>();
         }
 
         [Test]
         public void InheritedAttribRequestShouldRequirePermission() {
-            var authorizationContext = GetAuthorizationContext<InheritedAttribController>();
-            var filter = new AdminAuthorizationFilter(GetAuthorizer(false));
-            filter.OnAuthorization(authorizationContext);
-            Assert.That(authorizationContext.Result, Is.InstanceOf<HttpUnauthorizedResult>());
-
-            var authorizationContext2 = GetAuthorizationContext<InheritedAttribController>();
-            var filter2 = new AdminAuthorizationFilter(GetAuthorizer(true));
-            filter2.OnAuthorization(authorizationContext2);
-            Assert.That(authorizationContext2.Result, Is.Null);
+            TestActionThatShouldRequirePermission<InheritedAttribController>();
         }
     }
 
@@ -118,7 +98,7 @@ namespace Orchard.Tests.UI.Admin {
             return View();
         }
     }
-    
+
     [Admin]
     public class BaseWithAttribController : Controller {
         public ActionResult Something() {

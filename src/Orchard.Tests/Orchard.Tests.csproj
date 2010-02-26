@@ -156,7 +156,8 @@
     <Compile Include="Mvc\RouteCollectionPublisherTests.cs" />
     <Compile Include="Mvc\Routes\StandardExtensionRouteProviderTests.cs" />
     <Compile Include="Tasks\SweepGeneratorTests.cs" />
-    <Compile Include="UI\Admin\AdminAttributeTests.cs" />
+    <Compile Include="UI\Admin\AdminAuthorizationFilterTests.cs" />
+    <Compile Include="UI\Admin\AdminThemeSelectorTests.cs" />
     <Compile Include="UI\Notify\NotifierTests.cs" />
     <Compile Include="UI\Notify\NotifyFilterTests.cs" />
     <Compile Include="Services\ClockTests.cs" />

@@ -1,8 +1,11 @@
+using System.Collections;
+using System.Collections.Generic;
 using System.Web;
 
 namespace Orchard.Tests.Stubs {
     public class StubHttpContext : HttpContextBase {
         private readonly string _appRelativeCurrentExecutionFilePath;
+        private readonly IDictionary _items = new Dictionary<object, object>();
 
         public StubHttpContext() {
             _appRelativeCurrentExecutionFilePath = "~/yadda";
@@ -14,6 +17,10 @@ namespace Orchard.Tests.Stubs {
 
         public override HttpRequestBase Request {
             get { return new StupHttpRequest(_appRelativeCurrentExecutionFilePath); }
+        }
+
+        public override IDictionary Items {
+            get { return _items; }
         }
 
         public class StupHttpRequest : HttpRequestBase {

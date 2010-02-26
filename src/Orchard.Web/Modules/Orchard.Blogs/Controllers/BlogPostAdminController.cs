@@ -6,10 +6,11 @@ using Orchard.Blogs.ViewModels;
 using Orchard.ContentManagement;
 using Orchard.Localization;
 using Orchard.Mvc.Results;
+using Orchard.UI.Admin;
 using Orchard.UI.Notify;
 
 namespace Orchard.Blogs.Controllers {
-    [ValidateInput(false)]
+    [ValidateInput(false), Admin]
     public class BlogPostAdminController : Controller, IUpdateModel {
         private readonly IBlogService _blogService;
         private readonly IBlogPostService _blogPostService;
