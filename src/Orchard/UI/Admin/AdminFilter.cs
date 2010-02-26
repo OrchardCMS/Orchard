@@ -1,10 +1,11 @@
 using System.Globalization;
 using System.IO;
 using System.Web.Mvc;
+using Orchard.Mvc.Filters;
 using Orchard.Security;
 using Orchard.Settings;
 
-namespace Orchard.Mvc.Filters {
+namespace Orchard.UI.Admin {
     public class AdminFilter : FilterProvider, IActionFilter
     {
         private readonly IAuthorizer _authorizer;

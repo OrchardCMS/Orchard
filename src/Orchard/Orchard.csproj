@@ -152,7 +152,7 @@
     <Compile Include="Extensions\ExtensionFolders.cs" />
     <Compile Include="Extensions\Loaders\AreaExtensionLoader.cs" />
     <Compile Include="Extensions\UriExtensions.cs" />
-    <Compile Include="Mvc\Attributes\ValidateAntiForgeryTokenOrchardAttribute.cs" />
+    <Compile Include="Mvc\AntiForgery\ValidateAntiForgeryTokenOrchardAttribute.cs" />
     <Compile Include="OrchardException.cs" />
     <Compile Include="Security\IAuthorizationServiceEvents.cs" />
     <Compile Include="Security\StandardPermissions.cs" />
@@ -225,8 +225,8 @@
     <Compile Include="Extensions\ExtensionDescriptor.cs" />
     <Compile Include="Extensions\ExtensionEntry.cs" />
     <Compile Include="IOrchardServices.cs" />
-    <Compile Include="Mvc\Filters\AdminFilter.cs" />
-    <Compile Include="Mvc\Filters\AntiForgeryAuthorizationFilter.cs" />
+    <Compile Include="UI\Admin\AdminFilter.cs" />
+    <Compile Include="Mvc\AntiForgery\AntiForgeryAuthorizationFilter.cs" />
     <Compile Include="Mvc\Html\FileRegistrationContext.cs" />
     <Compile Include="Mvc\Html\MvcFormAntiForgeryPost.cs" />
     <Compile Include="Mvc\Html\SiteServiceExtensions.cs" />

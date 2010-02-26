@@ -2,11 +2,11 @@ using System.Collections.Specialized;
 using System.Web;
 using System.Web.Mvc;
 using JetBrains.Annotations;
-using Orchard.Mvc.Attributes;
+using Orchard.Mvc.Filters;
 using Orchard.Security;
 using Orchard.Settings;
 
-namespace Orchard.Mvc.Filters {
+namespace Orchard.Mvc.AntiForgery {
     [UsedImplicitly]
     public class AntiForgeryAuthorizationFilter : FilterProvider, IAuthorizationFilter {
         private readonly ISiteService _siteService;

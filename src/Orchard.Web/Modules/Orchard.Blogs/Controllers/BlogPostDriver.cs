@@ -15,7 +15,6 @@ using Orchard.UI.Notify;
 namespace Orchard.Blogs.Controllers {
     [UsedImplicitly]
     public class BlogPostDriver : ContentItemDriver<BlogPost> {
-        private readonly IBlogService _blogService;
         private readonly IBlogPostService _blogPostService;
         private readonly IRoutableService _routableService;
         private readonly IOrchardServices _orchardServices;
@@ -26,7 +25,6 @@ namespace Orchard.Blogs.Controllers {
         };
 
         public BlogPostDriver(IBlogService blogService, IBlogPostService blogPostService, IRoutableService routableService, IOrchardServices orchardServices) {
-            _blogService = blogService;
             _blogPostService = blogPostService;
             _routableService = routableService;
             _orchardServices = orchardServices;
