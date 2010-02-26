@@ -225,7 +225,8 @@
     <Compile Include="Extensions\ExtensionDescriptor.cs" />
     <Compile Include="Extensions\ExtensionEntry.cs" />
     <Compile Include="IOrchardServices.cs" />
-    <Compile Include="UI\Admin\AdminFilter.cs" />
+    <Compile Include="UI\Admin\AdminAttribute.cs" />
+    <Compile Include="UI\Admin\AdminAuthorizationFilter.cs" />
     <Compile Include="Mvc\AntiForgery\AntiForgeryAuthorizationFilter.cs" />
     <Compile Include="Mvc\Html\FileRegistrationContext.cs" />
     <Compile Include="Mvc\Html\MvcFormAntiForgeryPost.cs" />
