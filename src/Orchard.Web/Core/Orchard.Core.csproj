@@ -131,7 +131,6 @@
     <Compile Include="Settings\Permissions.cs" />
     <Compile Include="Themes\Preview\IPreviewTheme.cs" />
     <Compile Include="Themes\Preview\PreviewThemeFilter.cs" />
-    <Compile Include="Themes\Services\AdminThemeSelector.cs" />
     <Compile Include="Themes\Preview\PreviewTheme.cs" />
     <Compile Include="Themes\Services\SafeModeThemeSelector.cs" />
     <Compile Include="Settings\AdminMenu.cs" />

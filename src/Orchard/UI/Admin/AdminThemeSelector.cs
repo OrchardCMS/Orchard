@@ -4,7 +4,7 @@ using System.Web.Routing;
 using Orchard.Settings;
 using Orchard.Themes;
 
-namespace Orchard.Core.Themes.Services {
+namespace Orchard.UI.Admin {
     public class AdminThemeSelector : IThemeSelector {
         private readonly ISiteService _siteService;
 

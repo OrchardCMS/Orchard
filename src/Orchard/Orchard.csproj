@@ -287,6 +287,7 @@
     <Compile Include="Mvc\ViewEngines\WebFormsViewEngineProvider.cs" />
     <Compile Include="Mvc\ViewModels\AdminViewModel.cs" />
     <Compile Include="Mvc\ViewModels\BaseViewModel.cs" />
+    <Compile Include="UI\Admin\AdminThemeSelector.cs" />
     <Compile Include="UI\Navigation\INavigationManager.cs" />
     <Compile Include="UI\Navigation\NavigationItemBuilder.cs" />
     <Compile Include="UI\PageClass\IPageClassBuilder.cs" />
