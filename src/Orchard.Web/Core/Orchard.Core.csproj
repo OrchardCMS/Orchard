@@ -204,7 +204,6 @@
     <Content Include="Themes\Views\Admin\Install.aspx" />
     <Content Include="Themes\Views\Header.ascx" />
     <Content Include="Themes\Views\Document.aspx" />
-    <Content Include="Themes\Views\EditorTemplates\Parts\Themes.SiteSettings.ascx" />
     <Content Include="Themes\Views\HeadPreload.ascx" />
     <Content Include="Themes\Views\Layout.ascx" />
     <Content Include="Themes\Views\Messages.ascx" />
