@@ -7,7 +7,6 @@ using JetBrains.Annotations;
 using Orchard.Comments.Models;
 using Orchard.Localization;
 using Orchard.Logging;
-using Orchard.ContentManagement;
 using Orchard.Services;
 using Orchard.Settings;
 using Orchard.UI.Notify;
@@ -19,15 +18,10 @@ namespace Orchard.Comments.Controllers {
     [ValidateInput(false)]
     public class AdminController : Controller {
         private readonly ICommentService _commentService;
-        private readonly IAuthorizer _authorizer;
-        private readonly IClock _clock;
-        private readonly INotifier _notifier;
 
-        public AdminController(ICommentService commentService, IContentManager contentManager, INotifier notifier, IAuthorizer authorizer, IClock clock) {
+        public AdminController(IOrchardServices services, ICommentService commentService) {
             _commentService = commentService;
-            _authorizer = authorizer;
-            _clock = clock;
-            _notifier = notifier;
+            Services = services;
             Logger = NullLogger.Instance;
             T = NullLocalizer.Instance;
         }
@@ -35,6 +29,7 @@ namespace Orchard.Comments.Controllers {
         protected virtual IUser CurrentUser { get; [UsedImplicitly] private set; }
         protected virtual ISite CurrentSite { get; [UsedImplicitly] private set; }
 
+        public IOrchardServices Services { get; set; }
         public ILogger Logger { get; set; }
         public Localizer T { get; set; }
 
@@ -67,7 +62,7 @@ namespace Orchard.Comments.Controllers {
                 return View(model);
             }
             catch (Exception exception) {
-                _notifier.Error(T("Listing comments failed: " + exception.Message));
+                Services.Notifier.Error(T("Listing comments failed: " + exception.Message));
                 return View(new CommentsIndexViewModel());
             }
         }
@@ -84,7 +79,7 @@ namespace Orchard.Comments.Controllers {
                     case CommentIndexBulkAction.None:
                         break;
                     case CommentIndexBulkAction.MarkAsSpam:
-                        if (!_authorizer.Authorize(Permissions.ManageComments, T("Couldn't moderate comment")))
+                        if (!Services.Authorizer.Authorize(Permissions.ManageComments, T("Couldn't moderate comment")))
                             return new HttpUnauthorizedResult();
                         //TODO: Transaction
                         foreach (CommentEntry entry in checkedEntries) {
@@ -92,7 +87,7 @@ namespace Orchard.Comments.Controllers {
                         }
                         break;
                     case CommentIndexBulkAction.Pend:
-                        if (!_authorizer.Authorize(Permissions.ManageComments, T("Couldn't moderate comment")))
+                        if (!Services.Authorizer.Authorize(Permissions.ManageComments, T("Couldn't moderate comment")))
                             return new HttpUnauthorizedResult();
                         //TODO: Transaction
                         foreach (CommentEntry entry in checkedEntries) {
@@ -100,7 +95,7 @@ namespace Orchard.Comments.Controllers {
                         }
                         break;
                     case CommentIndexBulkAction.Approve:
-                        if (!_authorizer.Authorize(Permissions.ManageComments, T("Couldn't moderate comment")))
+                        if (!Services.Authorizer.Authorize(Permissions.ManageComments, T("Couldn't moderate comment")))
                             return new HttpUnauthorizedResult();
                         //TODO: Transaction
                         foreach (CommentEntry entry in checkedEntries) {
@@ -108,7 +103,7 @@ namespace Orchard.Comments.Controllers {
                         }
                         break;
                     case CommentIndexBulkAction.Delete:
-                        if (!_authorizer.Authorize(Permissions.ManageComments, T("Couldn't delete comment")))
+                        if (!Services.Authorizer.Authorize(Permissions.ManageComments, T("Couldn't delete comment")))
                             return new HttpUnauthorizedResult();
 
                         foreach (CommentEntry entry in checkedEntries) {
@@ -121,7 +116,7 @@ namespace Orchard.Comments.Controllers {
                 }
             }
             catch (Exception exception) {
-                _notifier.Error(T("Editing comments failed: " + exception.Message));
+                Services.Notifier.Error(T("Editing comments failed: " + exception.Message));
                 return RedirectToAction("Index", "Admin", new { options = viewModel.Options });
             }
 
@@ -163,7 +158,7 @@ namespace Orchard.Comments.Controllers {
                 return View(model);
             }
             catch (Exception exception) {
-                _notifier.Error(T("Listing comments failed: " + exception.Message));
+                Services.Notifier.Error(T("Listing comments failed: " + exception.Message));
                 return RedirectToAction("Index");
             }
         }
@@ -180,7 +175,7 @@ namespace Orchard.Comments.Controllers {
                     case CommentDetailsBulkAction.None:
                         break;
                     case CommentDetailsBulkAction.MarkAsSpam:
-                        if (!_authorizer.Authorize(Permissions.ManageComments, T("Couldn't moderate comment")))
+                        if (!Services.Authorizer.Authorize(Permissions.ManageComments, T("Couldn't moderate comment")))
                             return new HttpUnauthorizedResult();
                         //TODO: Transaction
                         foreach (CommentEntry entry in checkedEntries) {
@@ -188,7 +183,7 @@ namespace Orchard.Comments.Controllers {
                         }
                         break;
                     case CommentDetailsBulkAction.Pend:
-                        if (!_authorizer.Authorize(Permissions.ManageComments, T("Couldn't moderate comment")))
+                        if (!Services.Authorizer.Authorize(Permissions.ManageComments, T("Couldn't moderate comment")))
                             return new HttpUnauthorizedResult();
 
                         foreach (CommentEntry entry in checkedEntries) {
@@ -196,7 +191,7 @@ namespace Orchard.Comments.Controllers {
                         }
                         break;
                     case CommentDetailsBulkAction.Approve:
-                        if (!_authorizer.Authorize(Permissions.ManageComments, T("Couldn't moderate comment")))
+                        if (!Services.Authorizer.Authorize(Permissions.ManageComments, T("Couldn't moderate comment")))
                             return new HttpUnauthorizedResult();
 
                         foreach (CommentEntry entry in checkedEntries) {
@@ -204,7 +199,7 @@ namespace Orchard.Comments.Controllers {
                         }
                         break;
                     case CommentDetailsBulkAction.Delete:
-                        if (!_authorizer.Authorize(Permissions.ManageComments, T("Couldn't delete comment")))
+                        if (!Services.Authorizer.Authorize(Permissions.ManageComments, T("Couldn't delete comment")))
                             return new HttpUnauthorizedResult();
 
                         foreach (CommentEntry entry in checkedEntries) {
@@ -217,7 +212,7 @@ namespace Orchard.Comments.Controllers {
                 }
             }
             catch (Exception exception) {
-                _notifier.Error(T("Editing comments failed: " + exception.Message));
+                Services.Notifier.Error(T("Editing comments failed: " + exception.Message));
                 return Details(viewModel.CommentedItemId, viewModel.Options);
             }
 
@@ -227,7 +222,7 @@ namespace Orchard.Comments.Controllers {
         [HttpPost]
         public ActionResult Close(int commentedItemId, string returnUrl) {
             try {
-                if (!_authorizer.Authorize(Permissions.CloseComment, T("Couldn't close comments")))
+                if (!Services.Authorizer.Authorize(Permissions.CloseComment, T("Couldn't close comments")))
                     return new HttpUnauthorizedResult();
                 _commentService.CloseCommentsForCommentedContent(commentedItemId);
                 if (!String.IsNullOrEmpty(returnUrl)) {
@@ -236,7 +231,7 @@ namespace Orchard.Comments.Controllers {
                 return RedirectToAction("Index");
             }
             catch (Exception exception) {
-                _notifier.Error(T("Closing Comments failed: " + exception.Message));
+                Services.Notifier.Error(T("Closing Comments failed: " + exception.Message));
                 if (!String.IsNullOrEmpty(returnUrl)) {
                     return Redirect(returnUrl);
                 }
@@ -247,7 +242,7 @@ namespace Orchard.Comments.Controllers {
         [HttpPost]
         public ActionResult Enable(int commentedItemId, string returnUrl) {
             try {
-                if (!_authorizer.Authorize(Permissions.EnableComment, T("Couldn't enable comments")))
+                if (!Services.Authorizer.Authorize(Permissions.EnableComment, T("Couldn't enable comments")))
                     return new HttpUnauthorizedResult();
                 _commentService.EnableCommentsForCommentedContent(commentedItemId);
                 if (!String.IsNullOrEmpty(returnUrl)) {
@@ -256,7 +251,7 @@ namespace Orchard.Comments.Controllers {
                 return RedirectToAction("Index");
             }
             catch (Exception exception) {
-                _notifier.Error(T("Enabling Comments failed: " + exception.Message));
+                Services.Notifier.Error(T("Enabling Comments failed: " + exception.Message));
                 if (!String.IsNullOrEmpty(returnUrl)) {
                     return Redirect(returnUrl);
                 }
@@ -279,7 +274,7 @@ namespace Orchard.Comments.Controllers {
 
             }
             catch (Exception exception) {
-                _notifier.Error(T("Editing comment failed: " + exception.Message));
+                Services.Notifier.Error(T("Editing comment failed: " + exception.Message));
                 return RedirectToAction("Index");
             }
         }
@@ -289,14 +284,14 @@ namespace Orchard.Comments.Controllers {
             var viewModel = new CommentsEditViewModel();
             try {
                 UpdateModel(viewModel);
-                if (!_authorizer.Authorize(Permissions.ManageComments, T("Couldn't edit comment")))
+                if (!Services.Authorizer.Authorize(Permissions.ManageComments, T("Couldn't edit comment")))
                     return new HttpUnauthorizedResult();
 
                 _commentService.UpdateComment(viewModel.Id, viewModel.Name, viewModel.Email, viewModel.SiteName, viewModel.CommentText, viewModel.Status);
                 return RedirectToAction("Index");
             }
             catch (Exception exception) {
-                _notifier.Error(T("Editing Comment failed: " + exception.Message));
+                Services.Notifier.Error(T("Editing Comment failed: " + exception.Message));
                 return View(viewModel);
             }
         }
@@ -304,7 +299,7 @@ namespace Orchard.Comments.Controllers {
         [HttpPost]
         public ActionResult Delete(int id, string returnUrl) {
             try {
-                if (!_authorizer.Authorize(Permissions.ManageComments, T("Couldn't delete comment")))
+                if (!Services.Authorizer.Authorize(Permissions.ManageComments, T("Couldn't delete comment")))
                     return new HttpUnauthorizedResult();
 
                 int commentedOn = _commentService.GetComment(id).Record.CommentedOn;
@@ -316,7 +311,7 @@ namespace Orchard.Comments.Controllers {
                 return RedirectToAction("Details", new { id = commentedOn });
             }
             catch (Exception exception) {
-                _notifier.Error(T("Deleting comment failed: " + exception.Message));
+                Services.Notifier.Error(T("Deleting comment failed: " + exception.Message));
                 if (!String.IsNullOrEmpty(returnUrl)) {
                     return Redirect(returnUrl);
                 }

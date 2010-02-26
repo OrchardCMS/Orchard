@@ -10,7 +10,6 @@ using Orchard.Users.ViewModels;
 namespace Orchard.Users.Controllers {
 
     public class AdminController : Controller, IUpdateModel {
-
         private readonly IMembershipService _membershipService;
 
         public AdminController(
