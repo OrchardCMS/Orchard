@@ -12,11 +12,13 @@ using Orchard.UI.Notify;
 
 namespace Orchard.Comments.Controllers {
     public class CommentController : Controller {
+        public IOrchardServices Services { get; set; }
         private readonly IAuthorizer _authorizer;
         private readonly ICommentService _commentService;
         private readonly INotifier _notifier;
 
-        public CommentController(ICommentService commentService, INotifier notifier, IAuthorizer authorizer) {
+        public CommentController(IOrchardServices services, ICommentService commentService, INotifier notifier, IAuthorizer authorizer) {
+            Services = services;
             _commentService = commentService;
             _notifier = notifier;
             _authorizer = authorizer;
@@ -53,6 +55,9 @@ namespace Orchard.Comments.Controllers {
                 Comment comment = _commentService.CreateComment(context);
 
                 if (!String.IsNullOrEmpty(returnUrl)) {
+                    if (comment.Record.Status == CommentStatus.Pending)
+                        Services.Notifier.Information(T("Your comment will appear after the site administrator approves it."));
+
                     return Redirect(returnUrl);
                 }
                 return RedirectToAction("Index");
