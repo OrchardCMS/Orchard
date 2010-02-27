@@ -70,7 +70,11 @@ fieldset {
     -moz-border-radius:6px;
 	-webkit-border-radius:6px;
     }
-    
+/* todo: (heskew) tmp. leaving it up to Jon on what he wants to do with this :P */
+form.comment fieldset {
+    margin-bottom:0;
+}
+
 fieldset div {margin:12px 0 0 0}
     
 legend {

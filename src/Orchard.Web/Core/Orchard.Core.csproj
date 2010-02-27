@@ -204,7 +204,6 @@
     <Content Include="Themes\Views\Admin\Install.aspx" />
     <Content Include="Themes\Views\Header.ascx" />
     <Content Include="Themes\Views\Document.aspx" />
-    <Content Include="Themes\Views\EditorTemplates\Parts\Themes.SiteSettings.ascx" />
     <Content Include="Themes\Views\HeadPreload.ascx" />
     <Content Include="Themes\Views\Layout.ascx" />
     <Content Include="Themes\Views\Messages.ascx" />
@@ -219,6 +218,8 @@
     <Content Include="Navigation\Views\Web.config" />
     <Content Include="Themes\Scripts\jquery-1.4.1.js" />
     <Content Include="Themes\Scripts\jquery-1.4.1.min.js" />
+    <Content Include="Themes\Views\EditorTemplates\Items\ContentItem.ascx" />
+    <Content Include="Themes\Views\DisplayTemplates\Items\ContentItem.ascx" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Scheduling\Controllers\" />
