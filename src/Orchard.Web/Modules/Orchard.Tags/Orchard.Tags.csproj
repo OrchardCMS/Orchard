@@ -70,7 +70,6 @@
     <Compile Include="Helpers\TagHelpers.cs" />
     <Compile Include="Models\HasTags.cs" />
     <Compile Include="Models\Tag.cs" />
-    <Compile Include="Models\TagSettings.cs" />
     <Compile Include="Models\HasTagsHandler.cs" />
     <Compile Include="Permissions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -93,7 +92,6 @@
     <Content Include="Views\Home\Search.ascx" />
     <Content Include="Views\DisplayTemplates\Parts\Tags.ShowTags.ascx" />
     <Content Include="Views\EditorTemplates\Parts\Tags.EditTags.ascx" />
-    <Content Include="Views\EditorTemplates\Parts\Tags.SiteSettings.ascx" />
     <Content Include="Web.config" />
     <Content Include="Views\Web.config" />
   </ItemGroup>
