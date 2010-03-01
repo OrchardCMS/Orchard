@@ -110,6 +110,7 @@ namespace Orchard.Environment.ShellBuilders {
                 public string Version { get; set; }
                 public string Author { get; set; }
                 public string HomePage { get; set; }
+                public string Tags { get; set; }
             }
 
             private readonly SafeModeTheme _theme = new SafeModeTheme {
