@@ -53,6 +53,10 @@ namespace Orchard.Environment {
             IEnumerable<string> orchardMasterLocationFormats = new[] {
                     "~/Modules/{2}/Views/{1}/{0}.master",
                     "~/Modules/{2}/Views/Shared/{0}.master",
+                    "~/Core/{2}/Views/{1}/{0}.master",
+                    "~/Core/{2}/Views/Shared/{0}.master",
+                    "~/Areas/{2}/Views/{1}/{0}.master",
+                    "~/Areas/{2}/Views/Shared/{0}.master",
                 };
 
             IEnumerable<string> orchardLocationFormats = new[] {
@@ -60,6 +64,14 @@ namespace Orchard.Environment {
                     "~/Modules/{2}/Views/{1}/{0}.ascx",
                     "~/Modules/{2}/Views/Shared/{0}.aspx",
                     "~/Modules/{2}/Views/Shared/{0}.ascx",
+                    "~/Core/{2}/Views/{1}/{0}.aspx",
+                    "~/Core/{2}/Views/{1}/{0}.ascx",
+                    "~/Core/{2}/Views/Shared/{0}.aspx",
+                    "~/Core/{2}/Views/Shared/{0}.ascx",
+                    "~/Areas/{2}/Views/{1}/{0}.aspx",
+                    "~/Areas/{2}/Views/{1}/{0}.ascx",
+                    "~/Areas/{2}/Views/Shared/{0}.aspx",
+                    "~/Areas/{2}/Views/Shared/{0}.ascx",
                 };
 
             var viewEngine = _viewEngines.OfType<VirtualPathProviderViewEngine>().Single();

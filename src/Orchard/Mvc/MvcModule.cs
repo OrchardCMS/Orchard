@@ -5,8 +5,6 @@ using System.Web.Routing;
 using Autofac;
 using Autofac.Builder;
 using Autofac.Integration.Web.Mvc;
-using Orchard.Controllers;
-using Orchard.Environment;
 using Orchard.Mvc.Filters;
 using Orchard.Extensions;
 
@@ -20,7 +18,7 @@ namespace Orchard.Mvc {
 
         protected override void Load(ContainerBuilder moduleBuilder) {
             var extensions = _extensionManager.ActiveExtensions();
-            var assemblies = extensions.Select(x => x.Assembly).Concat(new[] { typeof(HomeController).Assembly });
+            var assemblies = extensions.Select(x => x.Assembly);
 
             var module = new AutofacControllerModule(assemblies.ToArray()) {
                 ActionInvokerType = typeof(FilterResolvingActionInvoker),

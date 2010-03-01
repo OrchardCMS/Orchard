@@ -84,6 +84,9 @@
     <Compile Include="Common\ViewModels\BodyEditorViewModel.cs" />
     <Compile Include="Common\ViewModels\RoutableEditorViewModel.cs" />
     <Compile Include="Common\ViewModels\OwnerEditorViewModel.cs" />
+    <Compile Include="Dashboard\AdminMenu.cs" />
+    <Compile Include="Dashboard\Controllers\AdminController.cs" />
+    <Compile Include="Dashboard\Routes.cs" />
     <Compile Include="Feeds\Controllers\FeedController.cs" />
     <Compile Include="Feeds\IFeedManager.cs" />
     <Compile Include="Feeds\Rss\Routes.cs" />
@@ -203,7 +206,6 @@
     <Content Include="Themes\Views\Admin\Install.aspx" />
     <Content Include="Themes\Views\Header.ascx" />
     <Content Include="Themes\Views\Document.aspx" />
-    <Content Include="Themes\Views\EditorTemplates\Parts\Themes.SiteSettings.ascx" />
     <Content Include="Themes\Views\HeadPreload.ascx" />
     <Content Include="Themes\Views\Layout.ascx" />
     <Content Include="Themes\Views\Messages.ascx" />
@@ -212,12 +214,19 @@
     <Content Include="Themes\Views\Web.config" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Dashboard\Module.txt" />
+    <Content Include="Dashboard\Views\Admin\Index.ascx" />
     <Content Include="HomePage\Module.txt" />
     <Content Include="Navigation\Views\Admin\Index.ascx" />
     <Content Include="Navigation\Views\EditorTemplates\Parts\Navigation.EditMenuPart.ascx" />
     <Content Include="Navigation\Views\Web.config" />
     <Content Include="Themes\Scripts\jquery-1.4.1.js" />
     <Content Include="Themes\Scripts\jquery-1.4.1.min.js" />
+    <Content Include="Themes\Views\EditorTemplates\Items\ContentItem.ascx" />
+    <Content Include="Themes\Views\DisplayTemplates\Items\ContentItem.ascx" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Dashboard\Views\Web.config" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Scheduling\Controllers\" />

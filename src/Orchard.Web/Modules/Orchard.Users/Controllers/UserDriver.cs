@@ -12,6 +12,8 @@ namespace Orchard.Users.Controllers {
             DisplayName = "User Profile"
         };
 
+        protected override bool UseDefaultTemplate { get { return true; } }
+
         protected override ContentType GetContentType() {
             return ContentType;
         }
@@ -28,14 +30,6 @@ namespace Orchard.Users.Controllers {
                                                 {"Action", "Edit"},
                                                 {"Id", item.ContentItem.Id},
                                             };
-        }
-
-        protected override DriverResult Editor(User part) {
-            return ContentItemTemplate("Items/Users.User");
-        }
-
-        protected override DriverResult Editor(User part, IUpdateModel updater) {
-            return ContentItemTemplate("Items/Users.User");
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿name: The Admin
 version: 1.0
 author: Jon Wall
+tags: hidden, admin
 description: An admin theme not to be used for the site so don't click "Activate" (or "Uninstall"). In the near future admin themes won't be mixed in with site themes.
 homepage: http://www.orchardproject.net

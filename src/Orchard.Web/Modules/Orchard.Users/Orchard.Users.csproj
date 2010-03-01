@@ -88,7 +88,6 @@
     <Content Include="Views\Admin\EditorTemplates\inputPasswordLarge.ascx" />
     <Content Include="Views\Admin\EditorTemplates\inputTextLarge.ascx" />
     <Content Include="Views\Admin\Index.aspx" />
-    <Content Include="Views\EditorTemplates\Items\Users.User.ascx" />
     <Content Include="Web.config" />
     <Content Include="Views\Web.config" />
   </ItemGroup>

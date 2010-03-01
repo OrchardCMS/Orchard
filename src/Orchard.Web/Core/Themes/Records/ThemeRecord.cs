@@ -8,5 +8,6 @@ namespace Orchard.Core.Themes.Records {
         public virtual string Version { get; set; }
         public virtual string Author { get; set; }
         public virtual string HomePage { get; set; }
+        public virtual string Tags { get; set; }
     }
 }

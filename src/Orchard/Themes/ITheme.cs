@@ -11,5 +11,6 @@ namespace Orchard.Themes {
         string Version { get; set; }
         string Author { get; set; }
         string HomePage { get; set; }
+        string Tags { get; set; }
     }
 }

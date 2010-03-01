@@ -1,11 +1,12 @@
 using System.Linq;
 using JetBrains.Annotations;
+using Orchard.Comments.Models;
 using Orchard.Comments.ViewModels;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
 using Orchard.Core.Common.Records;
 
-namespace Orchard.Comments.Models {
+namespace Orchard.Comments.Controllers {
     [UsedImplicitly]
     public class HasCommentsContainerDriver : ContentPartDriver<HasCommentsContainer> {
         protected override DriverResult Display(HasCommentsContainer part, string displayType) {

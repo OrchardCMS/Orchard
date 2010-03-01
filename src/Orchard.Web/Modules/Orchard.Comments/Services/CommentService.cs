@@ -2,6 +2,7 @@
 using System.Linq;
 using JetBrains.Annotations;
 using Orchard.Comments.Models;
+using Orchard.Comments.Controllers;
 using Orchard.ContentManagement.Aspects;
 using Orchard.Data;
 using Orchard.Logging;
@@ -18,7 +19,7 @@ namespace Orchard.Comments.Services {
         IEnumerable<Comment> GetCommentsForCommentedContent(int id, CommentStatus status);
         Comment GetComment(int id);
         ContentItemMetadata GetDisplayForCommentedContent(int id);
-        Comment CreateComment(CreateCommentContext commentRecord);
+        Comment CreateComment(CreateCommentContext commentRecord, bool moderateComments);
         void UpdateComment(int id, string name, string email, string siteName, string commentText, CommentStatus status);
         void ApproveComment(int commentId);
         void PendComment(int commentId);
@@ -100,7 +101,7 @@ namespace Orchard.Comments.Services {
             return _contentManager.GetItemMetadata(content);
         }
 
-        public Comment CreateComment(CreateCommentContext context) {
+        public Comment CreateComment(CreateCommentContext context, bool moderateComments) {
             var comment = _contentManager.Create<Comment>(CommentDriver.ContentType.Name);
 
             comment.Record.Author = context.Author;
@@ -111,7 +112,7 @@ namespace Orchard.Comments.Services {
             comment.Record.UserName = (CurrentUser == null ? context.Author : CurrentUser.UserName);
             comment.Record.CommentedOn = context.CommentedOn;
 
-            comment.Record.Status = _commentValidator.ValidateComment(comment) ? CommentStatus.Pending : CommentStatus.Spam;
+            comment.Record.Status = _commentValidator.ValidateComment(comment) ? moderateComments ? CommentStatus.Pending : CommentStatus.Approved : CommentStatus.Spam;
 
             // store id of the next layer for large-grained operations, e.g. rss on blog
             //TODO:(rpaquay) Get rid of this (comment aspect takes care of container)
