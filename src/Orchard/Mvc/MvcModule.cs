@@ -18,7 +18,7 @@ namespace Orchard.Mvc {
 
         protected override void Load(ContainerBuilder moduleBuilder) {
             var extensions = _extensionManager.ActiveExtensions();
-            var assemblies = extensions.Select(x => x.Assembly).Concat(new[] { typeof(MvcModule).Assembly });
+            var assemblies = extensions.Select(x => x.Assembly);
 
             var module = new AutofacControllerModule(assemblies.ToArray()) {
                 ActionInvokerType = typeof(FilterResolvingActionInvoker),
