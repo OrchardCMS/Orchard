@@ -9,7 +9,7 @@
     </div>
     <div>
         <%=Html.EditorFor(m => m.ModerateComments) %>
-        <label class="forcheckbox" for="CommentSettings_ModerateComments"><%=_Encoded("Enable comment moderation")%></label>
+        <label class="forcheckbox" for="CommentSettings_ModerateComments"><%=_Encoded("Comments must be approved before they appear")%></label>
         <%=Html.ValidationMessage("ModerateComments", "*")%>
     </div>
     <div>
