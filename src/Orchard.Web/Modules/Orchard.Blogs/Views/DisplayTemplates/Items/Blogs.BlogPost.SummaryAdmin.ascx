@@ -7,7 +7,7 @@
 <%@ Import Namespace="Orchard.Blogs.Extensions"%>
 <%@ Import Namespace="Orchard.Blogs.Models"%>
 
-<div class="blogPost summary">
+<div class="summary">
 <div class="properties">
     <h3><%=Html.Link(Html.Encode(Model.Item.Title), Url.BlogPostEdit(Model.Item.Blog.Slug, Model.Item.Id))%></h3>
 

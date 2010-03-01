@@ -733,7 +733,7 @@ table.items, textarea, input.text, input.text-box,
 /* Added classes for new blog list layout
 ---------------------------------------------------------- */
 
-.blogPost.summary {
+.summary {
     padding:.6em .4em;
 }
 .actions {
@@ -750,7 +750,6 @@ table.items, textarea, input.text, input.text-box,
 }
 #main .contentItems .properties h3 {
     border-bottom:none;
-    margin:0;
     margin:0 0 0 .2em;
     padding:0;
 }
@@ -759,8 +758,9 @@ table.items, textarea, input.text, input.text-box,
      float:right;
      text-align:right;
 }
-.related .commentcount{
-     line-height:2em;
+.commentcount {
+    margin:0 0 0 .2em;
+    line-height:2em;
 }
 .contentItems .properties ul li{
     border:0;
