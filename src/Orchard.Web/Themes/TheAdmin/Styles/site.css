@@ -701,7 +701,7 @@ todo: (heskew) pull out into relevant modules where appropriate
 .templates p {
     overflow:hidden;
 }
-.templates img {
+.templates img, .themePreviewImage {
 	border:1px solid #e8e8e8;
     height:200px;
     margin:.27em 0 .93em 0;
@@ -711,6 +711,12 @@ todo: (heskew) pull out into relevant modules where appropriate
 	border:1px solid #525e50;
 	height:70%;
 	width:70%;
+}
+.themes #main h2 {
+    margin:1em 0 0 0;
+}
+.themePreviewImage {
+	height:300px;
 }
 
 /* Rounded borders and other "works in some browsers" additions

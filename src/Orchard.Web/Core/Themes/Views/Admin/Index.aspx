@@ -9,15 +9,16 @@
    } else {
     %><h3><%=_Encoded("Current Theme")%> - <%=Html.Encode(Model.CurrentTheme.DisplayName) %></h3>
 
-        <%=Html.Image(Html.ThemePath(Model.CurrentTheme, "/Theme.png"), Html.Encode(Model.CurrentTheme.DisplayName), null)%>
+        <%=Html.Image(Html.ThemePath(Model.CurrentTheme, "/Theme.png"), Html.Encode(Model.CurrentTheme.DisplayName), new { @class = "themePreviewImage" })%>
         <h5><%=_Encoded("By") %> <%=Html.Encode(Model.CurrentTheme.Author) %></h5>
         
         <p>
         <%=_Encoded("Version:") %> <%=Html.Encode(Model.CurrentTheme.Version) %><br />
         <%=Html.Encode(Model.CurrentTheme.Description) %><br />
-        <%=Html.Encode(Model.CurrentTheme.HomePage) %><br />
-        <%=Html.ActionLink(T("Install a new Theme").ToString(), "Install") %>
-     </p>
+        <%=Html.Encode(Model.CurrentTheme.HomePage) %>
+        </p>
+        <%=Html.ActionLink(T("Install a new Theme").ToString(), "Install", null, new { @class = "button primaryAction" })%>
+     
 <% } %>
 <h2><%=_Encoded("Available Themes")%></h2>
 <ul class="templates">
