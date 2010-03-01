@@ -6,28 +6,28 @@
 <% using (Html.BeginFormAntiForgeryPost()) { %>
     <fieldset>
         <legend><%=_Encoded("Account Information")%></legend>
-        <fieldset>
+        <div>
             <label for="username"><%=_Encoded("Username:")%></label>
             <%= Html.TextBox("username") %>
             <%= Html.ValidationMessage("username") %>
-        </fieldset>
-        <fieldset>
+        </div>
+        <div>
             <label for="email"><%=_Encoded("Email:")%></label>
             <%= Html.TextBox("email") %>
             <%= Html.ValidationMessage("email") %>
-        </fieldset>
-        <fieldset>
+        </div>
+        <div>
             <label for="password"><%=_Encoded("Password:")%></label>
             <%= Html.Password("password") %>
             <%= Html.ValidationMessage("password") %>
-        </fieldset>
-        <fieldset>
+        </div>
+        <div>
             <label for="confirmPassword"><%=_Encoded("Confirm password:")%></label>
             <%= Html.Password("confirmPassword") %>
             <%= Html.ValidationMessage("confirmPassword") %>
-        </fieldset>
-        <fieldset>
+        </div>
+        <div>
             <input type="submit" value="<%=_Encoded("Register") %>" />
-        </fieldset>
+        </div>
     </fieldset>
 <% } %>
