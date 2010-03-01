@@ -216,7 +216,6 @@
     <Compile Include="Localization\Text.cs" />
     <Compile Include="Mvc\ViewModels\ContentItemViewModel.cs" />
     <Compile Include="ContentManagement\ViewModels\TemplateViewModel.cs" />
-    <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Data\Conventions\AttributeCollectionConvention.cs" />
     <Compile Include="Data\Conventions\CascadeAllDeleteOrphanAttribute.cs" />
     <Compile Include="Data\TransactionManager.cs" />
