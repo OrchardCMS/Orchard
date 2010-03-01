@@ -3,7 +3,7 @@ using Orchard.Comments.Models;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
 
-namespace Orchard.Comments.Controlers {
+namespace Orchard.Comments.Controllers {
     [UsedImplicitly]
     public class CommentDriver : ContentItemDriver<Comment> {
         public readonly static ContentType ContentType = new ContentType {

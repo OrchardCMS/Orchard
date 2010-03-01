@@ -1,5 +1,5 @@
 using JetBrains.Annotations;
-using Orchard.Comments.Controlers;
+using Orchard.Comments.Controllers;
 using Orchard.ContentManagement.Handlers;
 using Orchard.Core.Common.Models;
 using Orchard.Data;
