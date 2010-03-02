@@ -13,19 +13,19 @@ using Orchard.UI.Notify;
 
 namespace Orchard.Pages.Controllers {
     public class PageDriver : ContentItemDriver<Page> {
+        public IOrchardServices Services { get; set; }
         private readonly IPageService _pageService;
         private readonly IRoutableService _routableService;
-        private readonly IOrchardServices _orchardServices;
 
         public readonly static ContentType ContentType = new ContentType {
             Name = "page",
             DisplayName = "Page"
         };
 
-        public PageDriver(IPageService pageService, IRoutableService routableService, IOrchardServices orchardServices) {
+        public PageDriver(IOrchardServices services, IPageService pageService, IRoutableService routableService) {
+            Services = services;
             _pageService = pageService;
             _routableService = routableService;
-            _orchardServices = orchardServices;
             T = NullLocalizer.Instance;
         }
 
@@ -62,7 +62,7 @@ namespace Orchard.Pages.Controllers {
         protected override DriverResult Display(Page page, string displayType) {
             return Combined(
                 ContentItemTemplate("Items/Pages.Page").LongestMatch(displayType, "Summary", "SummaryAdmin"),
-                ContentPartTemplate(page, "Parts/Pages.Page.Manage").Location("primary:manage"),
+                Services.Authorizer.Authorize(Permissions.EditOthersPages) ? ContentPartTemplate(page, "Parts/Pages.Page.Manage").Location("primary:manage") : null,
                 ContentPartTemplate(page, "Parts/Pages.Page.Metadata").Location("primary:metadata"));
         }
 
@@ -108,7 +108,7 @@ namespace Orchard.Pages.Controllers {
 
             if (slugsLikeThis.Count() > 0) {
                 //todo: (heskew) need better messages
-                _orchardServices.Notifier.Warning(T("A different page is already published with this same slug."));
+                Services.Notifier.Warning(T("A different page is already published with this same slug."));
 
                 if (page.ContentItem.VersionRecord == null || page.ContentItem.VersionRecord.Published) {
                     var originalSlug = page.Slug;
@@ -117,7 +117,7 @@ namespace Orchard.Pages.Controllers {
 
                     //todo: (heskew) need better messages
                     if (originalSlug != page.Slug)
-                        _orchardServices.Notifier.Warning(T("Slugs in conflict. \"{0}\" is already set for a previously published page so this page now has the slug \"{1}\"",
+                        Services.Notifier.Warning(T("Slugs in conflict. \"{0}\" is already set for a previously published page so this page now has the slug \"{1}\"",
                                                      originalSlug, page.Slug));
                 }
             }

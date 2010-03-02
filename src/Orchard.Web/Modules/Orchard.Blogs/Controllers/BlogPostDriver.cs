@@ -15,19 +15,19 @@ using Orchard.UI.Notify;
 namespace Orchard.Blogs.Controllers {
     [UsedImplicitly]
     public class BlogPostDriver : ContentItemDriver<BlogPost> {
+        public IOrchardServices Services { get; set; }
         private readonly IBlogPostService _blogPostService;
         private readonly IRoutableService _routableService;
-        private readonly IOrchardServices _orchardServices;
 
         public readonly static ContentType ContentType = new ContentType {
             Name = "blogpost",
             DisplayName = "Blog Post"
         };
 
-        public BlogPostDriver(IBlogService blogService, IBlogPostService blogPostService, IRoutableService routableService, IOrchardServices orchardServices) {
+        public BlogPostDriver(IOrchardServices services, IBlogService blogService, IBlogPostService blogPostService, IRoutableService routableService) {
+            Services = services;
             _blogPostService = blogPostService;
             _routableService = routableService;
-            _orchardServices = orchardServices;
             T = NullLocalizer.Instance;
         }
 
@@ -66,7 +66,7 @@ namespace Orchard.Blogs.Controllers {
         protected override DriverResult Display(BlogPost post, string displayType) {
             return Combined(
                 ContentItemTemplate("Items/Blogs.BlogPost").LongestMatch(displayType, "Summary", "SummaryAdmin"),
-                ContentPartTemplate(post, "Parts/Blogs.BlogPost.Manage").Location("primary:manage"),
+                Services.Authorizer.Authorize(Permissions.EditOthersBlogPost) ? ContentPartTemplate(post, "Parts/Blogs.BlogPost.Manage").Location("primary:manage") : null,
                 ContentPartTemplate(post, "Parts/Blogs.BlogPost.Metadata").Location("primary:metadata"));
         }
 
@@ -114,7 +114,7 @@ namespace Orchard.Blogs.Controllers {
             //todo: (heskew) need better messages
             if (slugsLikeThis.Count() > 0) {
                 //todo: (heskew) need better messages
-                _orchardServices.Notifier.Warning(T("A different blog post is already published with this same slug."));
+                Services.Notifier.Warning(T("A different blog post is already published with this same slug."));
 
                 if (post.ContentItem.VersionRecord == null || post.ContentItem.VersionRecord.Published)
                 {
@@ -123,7 +123,7 @@ namespace Orchard.Blogs.Controllers {
                     post.Slug = _routableService.GenerateUniqueSlug(post.Slug, slugsLikeThis);
 
                     if (originalSlug != post.Slug)
-                        _orchardServices.Notifier.Warning(T("Slugs in conflict. \"{0}\" is already set for a previously created blog post so this post now has the slug \"{1}\"",
+                        Services.Notifier.Warning(T("Slugs in conflict. \"{0}\" is already set for a previously created blog post so this post now has the slug \"{1}\"",
                                                      originalSlug, post.Slug));
                 }
             }

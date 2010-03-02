@@ -228,6 +228,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Dashboard\Views\Web.config" />
+    <Content Include="Themes\Styles\special.css" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Scheduling\Controllers\" />
