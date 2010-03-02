@@ -10,15 +10,20 @@
     position:relative;
 }
 .managewrapper .manage {
+    border-style:solid;
     border-top:0;
     border-right:0;
+    display:none;
     overflow:hidden;
     position:absolute;
     right:0;
 }
+.managewrapper:hover .manage {
+    display:block;
+}
 .managewrapper .manage a {
-    background-color:#fff;
-    color:#4687ad;
+    background-color:#4687ad;
+    color:#fff;
     font:14px/14px Segoe UI,Trebuchet,Arial,Sans-Serif;
     padding:1px 3px;
 }
