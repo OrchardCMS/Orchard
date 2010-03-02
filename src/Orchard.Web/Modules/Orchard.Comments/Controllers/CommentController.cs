@@ -35,14 +35,14 @@ namespace Orchard.Comments.Controllers {
 
         [HttpPost]
         public ActionResult Create(string returnUrl) {
+            if (!Services.Authorizer.Authorize(Permissions.AddComment, T("Couldn't add comment")))
+                return !String.IsNullOrEmpty(returnUrl)
+                    ? Redirect(returnUrl)
+                    : Redirect("~/");
+            
             var viewModel = new CommentsCreateViewModel();
             try {
                 UpdateModel(viewModel);
-                if (CurrentSite.As<CommentSettings>().Record.RequireLoginToAddComment) {
-                    if (!_authorizer.Authorize(Permissions.AddComment, T("Couldn't add comment"))) {
-                        return new HttpUnauthorizedResult();
-                    }
-                }
 
                 var context = new CreateCommentContext {
                                                            Author = viewModel.Name,
@@ -54,13 +54,12 @@ namespace Orchard.Comments.Controllers {
 
                 Comment comment = _commentService.CreateComment(context, CurrentSite.As<CommentSettings>().Record.ModerateComments);
 
-                if (!String.IsNullOrEmpty(returnUrl)) {
-                    if (comment.Record.Status == CommentStatus.Pending)
-                        Services.Notifier.Information(T("Your comment will appear after the site administrator approves it."));
+                if (comment.Record.Status == CommentStatus.Pending)
+                    Services.Notifier.Information(T("Your comment will appear after the site administrator approves it."));
 
-                    return Redirect(returnUrl);
-                }
-                return RedirectToAction("Index");
+                return !String.IsNullOrEmpty(returnUrl)
+                    ? Redirect(returnUrl)
+                    : Redirect("~/");
             }
             catch (Exception exception) {
                 _notifier.Error(T("Creating Comment failed: " + exception.Message));

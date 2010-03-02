@@ -3,11 +3,6 @@
 <fieldset>
     <legend><%=_Encoded("Comments")%></legend>
     <div>
-        <%=Html.EditorFor(m => m.RequireLoginToAddComment) %>
-        <label class="forcheckbox" for="CommentSettings_RequireLoginToAddComment"><%=_Encoded("Require login to comment")%></label>
-        <%=Html.ValidationMessage("RequireLoginToAddComment", "*")%>
-    </div>
-    <div>
         <%=Html.EditorFor(m => m.ModerateComments) %>
         <label class="forcheckbox" for="CommentSettings_ModerateComments"><%=_Encoded("Comments must be approved before they appear")%></label>
         <%=Html.ValidationMessage("ModerateComments", "*")%>
