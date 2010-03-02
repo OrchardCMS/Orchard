@@ -55,14 +55,13 @@ namespace Orchard.Pages.Controllers {
                                                 {"Area", "Orchard.Pages"},
                                                 {"Controller", "Admin"},
                                                 {"Action", "Edit"},
-                                                {"pageSlug", page.Slug},
+                                                {"id", page.Id},
                                             };
         }
 
         protected override DriverResult Display(Page page, string displayType) {
             return Combined(
                 ContentItemTemplate("Items/Pages.Page").LongestMatch(displayType, "Summary", "SummaryAdmin"),
-                ContentPartTemplate(page, "Parts/Pages.Page.Manage").Location("primary:manage"),
                 ContentPartTemplate(page, "Parts/Pages.Page.Metadata").Location("primary:metadata"));
         }
 

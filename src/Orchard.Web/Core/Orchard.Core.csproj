@@ -226,6 +226,9 @@
     <Content Include="Themes\Views\DisplayTemplates\Items\ContentItem.ascx" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Common\Views\DisplayTemplates\Parts\ManageWrapperPost.ascx" />
+    <Content Include="Common\Views\DisplayTemplates\Parts\ManageWrapperPre.ascx" />
+    <Content Include="Common\Views\DisplayTemplates\Parts\Manage.ascx" />
     <Content Include="Dashboard\Views\Web.config" />
     <Content Include="Themes\Styles\special.css" />
   </ItemGroup>

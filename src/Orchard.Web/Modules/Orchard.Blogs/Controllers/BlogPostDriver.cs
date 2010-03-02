@@ -56,17 +56,16 @@ namespace Orchard.Blogs.Controllers {
         protected override RouteValueDictionary GetEditorRouteValues(BlogPost post) {
             return new RouteValueDictionary {
                                                 {"Area", "Orchard.Blogs"},
-                                                {"Controller", "BlogPost"},
+                                                {"Controller", "BlogPostAdmin"},
                                                 {"Action", "Edit"},
                                                 {"blogSlug", post.Blog.Slug},
-                                                {"postSlug", post.Slug},
+                                                {"postId", post.Id},
                                             };
         }
 
         protected override DriverResult Display(BlogPost post, string displayType) {
             return Combined(
                 ContentItemTemplate("Items/Blogs.BlogPost").LongestMatch(displayType, "Summary", "SummaryAdmin"),
-                ContentPartTemplate(post, "Parts/Blogs.BlogPost.Manage").Location("primary:manage"),
                 ContentPartTemplate(post, "Parts/Blogs.BlogPost.Metadata").Location("primary:metadata"));
         }
 

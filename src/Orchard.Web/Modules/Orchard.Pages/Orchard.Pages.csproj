@@ -120,7 +120,6 @@
     <Content Include="Views\DisplayTemplates\Items\Pages.Page.ascx" />
     <Content Include="Views\DisplayTemplates\Items\Pages.Page.Summary.ascx" />
     <Content Include="Views\DisplayTemplates\Parts\Pages.Page.Metadata.ascx" />
-    <Content Include="Views\DisplayTemplates\Parts\Pages.Page.Manage.ascx" />
     <Content Include="Views\EditorTemplates\Items\Pages.Page.ascx" />
     <Content Include="Views\EditorTemplates\Parts\Pages.Page.Publish.ascx" />
     <Content Include="Views\Admin\Create.ascx" />
