@@ -1,17 +1,26 @@
 ﻿<%@ Control Language="C#" Inherits="Orchard.Mvc.ViewUserControl<HasComments>" %>
+<%@ Import Namespace="Orchard.Comments"%>
 <%@ Import Namespace="Orchard.Security" %>
-<%@ Import Namespace="Orchard.Comments.Models" %><%
+<%@ Import Namespace="Orchard.Comments.Models" %>
+<%-- todo: clean up this template - waaay too much going on in here :/ --%><%
 if (Model.Comments.Count > 0) { %>
-<h2 id="comments"><%=_Encoded("{0} Comment{1}", Model.Comments.Count, Model.Comments.Count == 1 ? "" : "s")%></h2><% Html.RenderPartial("ListOfComments", Model.Comments); }
+<h2 id="comments"><%=_Encoded("{0} Comment{1}", Model.Comments.Count, Model.Comments.Count == 1 ? "" : "s")%></h2>
+<% Html.RenderPartial("ListOfComments", Model.Comments);
+}
+
 if (Model.CommentsActive == false) {
     if (Model.Comments.Count > 0) { %>
 <p><%=_Encoded("Comments have been disabled for this content.") %></p><%
     }
 }
+else if(!Request.IsAuthenticated && !AuthorizedFor(Permissions.AddComment)) { %>
+<h2 id="addacomment"><%=_Encoded("Add a Comment") %></h2>
+<p class="info message"><%=T("You must {0} to comment.", Html.ActionLink(T("log on").ToString(), "LogOn", new { Controller = "Account", Area = "Orchard.Users", ReturnUrl = string.Format("{0}#addacomment", Context.Request.RawUrl) }))%></p><%
+}
 else { %>
 <% using (Html.BeginForm("Create", "Comment", new { area = "Orchard.Comments" }, FormMethod.Post, new { @class = "comment" })) { %>
     <%=Html.ValidationSummary() %>
-    <h2><%=_Encoded("Add a Comment") %></h2><% 
+    <h2 id="addacomment"><%=_Encoded("Add a Comment") %></h2><% 
     if (!Request.IsAuthenticated) { %>
     <fieldset class="who">
         <div>
