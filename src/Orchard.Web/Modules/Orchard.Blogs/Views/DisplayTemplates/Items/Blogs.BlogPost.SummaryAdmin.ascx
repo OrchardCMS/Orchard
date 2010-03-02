@@ -1,4 +1,6 @@
 ﻿<%@ Control Language="C#" Inherits="Orchard.Mvc.ViewUserControl<ContentItemViewModel<BlogPost>>" %>
+<%@ Import Namespace="Orchard.ContentManagement"%>
+<%@ Import Namespace="Orchard.Core.Common.Models"%>
 <%@ Import Namespace="Orchard.Mvc.ViewModels"%>
 <%@ Import Namespace="Orchard.Blogs.Extensions"%>
 <%@ Import Namespace="Orchard.Blogs.Models"%>
@@ -31,7 +33,7 @@
                 <%=_Encoded("Published: ") + Html.PublishedWhen(Model.Item) %><%
             }
             else { %>
-                <%=_Encoded("Last modified: {todo}") %><%
+                <%=_Encoded("Last modified: ") + Html.DateTimeRelative(Model.Item.As<CommonAspect>().ModifiedUtc.Value) %><%
             } %>&nbsp;&#124;&nbsp;
             </li>
             <li><%=_Encoded("By {0}", Model.Item.Creator.UserName)%></li>                   
