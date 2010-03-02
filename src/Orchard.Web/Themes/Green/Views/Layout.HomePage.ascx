@@ -15,7 +15,7 @@
 <div id="hd" role="banner">
     <div class="yui-g" id="branding">
         <div class="yui-u first">
-            <h1><a href="/" title="Go to Home"><span class="displayText">AdventureWorks</span></a></h1>
+            <h1><a href="/" title="Go to Home"><%=Html.Encode(Html.SiteName()) %></a></h1>
         </div>
         <div class="yui-u">
             <div id="logIn">

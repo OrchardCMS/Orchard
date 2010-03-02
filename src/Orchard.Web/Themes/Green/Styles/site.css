@@ -183,19 +183,14 @@ colgroup
     }
     
 #hd  h1 {
-	margin: 0px;	
+	margin: 18px 0 0 20px;
+	font-size: 240%;
+	font-weight:700;
 }
 
 #hd  h1 a {
-	background:url(../Content/Images/logo.png) no-repeat top left;
-	display: block;
-	float:left;
-	width:270px;
-	height:80px;
-	top:0px;
-	margin: 0px;
-	position:relative;
-	z-index:0;
+    color:#547753;
+    text-decoration:none;
 }
 
 #branding {

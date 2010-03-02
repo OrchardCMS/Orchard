@@ -814,3 +814,6 @@ table.items, textarea, input.text, input.text-box,
     margin:0;
     padding:0 0 .1em 0;
 }
+.properties h3 {
+    display:inline;
+}

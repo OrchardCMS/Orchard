@@ -42,7 +42,7 @@ foreach (var pageEntry in Model.PageEntries)
         <input type="hidden" value="<%=Model.PageEntries[pageIndex].PageId %>" name="<%=Html.NameOf(m => m.PageEntries[pi].PageId) %>"/>
                     <input type="checkbox" value="true" name="<%=Html.NameOf(m => m.PageEntries[pi].IsChecked) %>"/>
                     
-                    <h3 style="display:inline;"><%=Html.Encode(pageEntry.Page.Title ?? T("(no title)").ToString())%></h3>
+                    <h3><%=Html.ActionLink(pageEntry.Page.Title, "Edit", new { id = pageEntry.PageId })%></h3>
      
         <ul class="pageStatus">
             <li><%--Published or not--%>
