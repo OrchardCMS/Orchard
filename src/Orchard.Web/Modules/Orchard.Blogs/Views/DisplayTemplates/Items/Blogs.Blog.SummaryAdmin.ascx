@@ -13,10 +13,12 @@
 
     <div class="related">
     
-     <%--<a href="<%=Url.BlogForAdmin(Model.Item.Slug) %>" title="<%=_Encoded("Manage Blog") %>"><%=_Encoded("Manage Blog") %></a><%=_Encoded(" | ")%>--%>
+
     <a href="<%=Url.Blog(Model.Item.Slug) %>" title="<%=_Encoded("View") %>"><%=_Encoded("View") %></a><%=_Encoded(" | ")%>
-    <a href="<%=Url.BlogEdit(Model.Item.Slug) %>" title="<%=_Encoded("Edit") %>"><%=_Encoded("Edit") %></a><%=_Encoded(" | ")%>
-    <a href="<%=Url.BlogPostCreate(Model.Item.Slug) %>" title="<%=_Encoded("New Post") %>"><%=_Encoded("New Post") %></a><%=_Encoded(" | ")%>
+       <a href="<%=Url.BlogForAdmin(Model.Item.Slug) %>" title="<%=_Encoded("Edit Posts") %>"><%=_Encoded("Edit Posts")%></a><%=_Encoded(" | ")%>
+           <a href="<%=Url.BlogPostCreate(Model.Item.Slug) %>" title="<%=_Encoded("New Post") %>"><%=_Encoded("New Post") %></a><%=_Encoded(" | ")%>
+    <a href="<%=Url.BlogEdit(Model.Item.Slug) %>" title="<%=_Encoded("Settings") %>"><%=_Encoded("Settings") %></a><%=_Encoded(" | ")%>
+
                 
         <%-- todo: (heskew) this is waaaaa too verbose. need template helpers for all ibuttons --%>
         <% using (Html.BeginFormAntiForgeryPost(Url.BlogDelete(Model.Item.Slug), FormMethod.Post, new { @class = "inline" })) { %>
