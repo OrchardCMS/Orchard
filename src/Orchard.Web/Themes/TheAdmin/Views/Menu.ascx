@@ -9,9 +9,9 @@
                   ? Html.ActionLink(menuSection.Text, (string)firstSectionItem.RouteValues["action"], firstSectionItem.RouteValues).ToHtmlString()
                   : string.Format("<span>{0}</span>", Html.Encode(menuSection.Text));
               var classification = "";
-              if (menuSection == Model.AdminMenu.First())
+              if (menuSection == Model.Menu.First())
                   classification = "first ";
-              if (menuSection == Model.AdminMenu.Last())
+              if (menuSection == Model.Menu.Last())
                   classification += "last ";
               
               %>

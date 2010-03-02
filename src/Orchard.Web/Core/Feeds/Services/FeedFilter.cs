@@ -14,7 +14,7 @@ namespace Orchard.Core.Feeds.Services {
         }
 
         public void OnResultExecuting(ResultExecutingContext filterContext) {
-            var model = filterContext.Controller.ViewData.Model as BaseViewModel;
+            var model = BaseViewModel.From(filterContext.Result);
             if (model == null) {
                 return;
             }
