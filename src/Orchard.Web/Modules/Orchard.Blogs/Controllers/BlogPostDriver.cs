@@ -66,7 +66,7 @@ namespace Orchard.Blogs.Controllers {
         protected override DriverResult Display(BlogPost post, string displayType) {
             return Combined(
                 ContentItemTemplate("Items/Blogs.BlogPost").LongestMatch(displayType, "Summary", "SummaryAdmin"),
-                Services.Authorizer.Authorize(Permissions.EditOthersBlogPost) ? ContentPartTemplate(post, "Parts/Blogs.BlogPost.Manage").Location("primary:manage") : null,
+                ContentPartTemplate(post, "Parts/Blogs.BlogPost.Manage").Location("primary:manage"),
                 ContentPartTemplate(post, "Parts/Blogs.BlogPost.Metadata").Location("primary:metadata"));
         }
 

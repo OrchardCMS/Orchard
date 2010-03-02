@@ -62,7 +62,7 @@ namespace Orchard.Pages.Controllers {
         protected override DriverResult Display(Page page, string displayType) {
             return Combined(
                 ContentItemTemplate("Items/Pages.Page").LongestMatch(displayType, "Summary", "SummaryAdmin"),
-                Services.Authorizer.Authorize(Permissions.EditOthersPages) ? ContentPartTemplate(page, "Parts/Pages.Page.Manage").Location("primary:manage") : null,
+                ContentPartTemplate(page, "Parts/Pages.Page.Manage").Location("primary:manage"),
                 ContentPartTemplate(page, "Parts/Pages.Page.Metadata").Location("primary:metadata"));
         }
 

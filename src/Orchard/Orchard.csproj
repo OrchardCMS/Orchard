@@ -154,6 +154,9 @@
     <Compile Include="Extensions\UriExtensions.cs" />
     <Compile Include="Mvc\AntiForgery\ValidateAntiForgeryTokenOrchardAttribute.cs" />
     <Compile Include="Mvc\ViewModels\AdaptedViewModel.cs" />
+    <Compile Include="Mvc\ViewUserControl.cs">
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
     <Compile Include="OrchardException.cs" />
     <Compile Include="Security\IAuthorizationServiceEvents.cs" />
     <Compile Include="Security\StandardPermissions.cs" />

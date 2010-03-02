@@ -1,12 +1,12 @@
-﻿using System.Web.Mvc;
+using System.Web.Mvc;
 using Orchard.Localization;
 using Orchard.Mvc.Html;
 using Orchard.Security;
 using Orchard.Security.Permissions;
 
 namespace Orchard.Mvc {
-    public class ViewPage<TModel> : System.Web.Mvc.ViewPage<TModel> {
-        public ViewPage() {
+    public class ViewUserControl<TModel> : System.Web.Mvc.ViewUserControl<TModel> {
+        public ViewUserControl() {
             T = NullLocalizer.Instance;
         }
 
