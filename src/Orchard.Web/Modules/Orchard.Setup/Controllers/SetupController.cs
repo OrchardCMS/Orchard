@@ -16,6 +16,7 @@ using Orchard.Themes;
 using Orchard.UI.Notify;
 
 namespace Orchard.Setup.Controllers {
+    [ValidateInput(false)]
     public class SetupController : Controller {
         private readonly INotifier _notifier;
         private readonly IOrchardHost _orchardHost;
