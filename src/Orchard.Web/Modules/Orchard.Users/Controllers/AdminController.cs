@@ -63,14 +63,6 @@ namespace Orchard.Users.Controllers {
             var model = new UserCreateViewModel();
             UpdateModel(model);
 
-            var user = _membershipService.CreateUser(new CreateUserParams(
-                                                         model.UserName,
-                                                         model.Password,
-                                                         model.Email,
-                                                         null, null, true));
-
-            model.User = Services.ContentManager.UpdateEditorModel(user, this);
-
             string userExistsMessage = VerifyUserUnicity(model.UserName, model.Email);
             if (userExistsMessage != null) {
                 AddModelError("NotUniqueUserName", T(userExistsMessage));
@@ -79,6 +71,14 @@ namespace Orchard.Users.Controllers {
             if (model.Password != model.ConfirmPassword) {
                 AddModelError("ConfirmPassword", T("Password confirmation must match"));
             }
+
+            var user = _membershipService.CreateUser(new CreateUserParams(
+                                                         model.UserName,
+                                                         model.Password,
+                                                         model.Email,
+                                                         null, null, true));
+
+            model.User = Services.ContentManager.UpdateEditorModel(user, this);
 
             if (ModelState.IsValid == false) {
                 Services.TransactionManager.Cancel();

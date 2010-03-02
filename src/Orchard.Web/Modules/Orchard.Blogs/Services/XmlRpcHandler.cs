@@ -160,6 +160,7 @@ namespace Orchard.Blogs.Services {
             blogPost.Title = title;
             blogPost.Slug = slug;
             blogPost.Text = description;
+            blogPost.Creator = user;
 
             _contentManager.Create(blogPost.ContentItem, VersionOptions.Draft);
 
