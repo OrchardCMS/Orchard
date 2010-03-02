@@ -30,11 +30,11 @@ namespace Orchard.UI.Admin {
 
         public static void Apply(RequestContext context) {
             // the value isn't important
-            context.HttpContext.Items[typeof(AdminThemeSelector)] = null;
+            context.HttpContext.Items[typeof(AdminFilter)] = null;
         }
 
         public static bool IsApplied(RequestContext context) {
-            return context.HttpContext.Items.Contains(typeof(AdminThemeSelector));
+            return context.HttpContext.Items.Contains(typeof(AdminFilter));
         }
 
         private static bool IsAdmin(AuthorizationContext filterContext) {

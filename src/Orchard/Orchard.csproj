@@ -225,6 +225,7 @@
     <Compile Include="Extensions\ExtensionDescriptor.cs" />
     <Compile Include="Extensions\ExtensionEntry.cs" />
     <Compile Include="IOrchardServices.cs" />
+    <Compile Include="Themes\ThemeFilter.cs" />
     <Compile Include="Themes\ThemedAttribute.cs" />
     <Compile Include="UI\Admin\AdminAttribute.cs" />
     <Compile Include="UI\Admin\AdminFilter.cs" />

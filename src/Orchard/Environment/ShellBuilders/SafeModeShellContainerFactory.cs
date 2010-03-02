@@ -47,6 +47,7 @@ namespace Orchard.Environment.ShellBuilders {
                 builder.Register<MvcModule>().As<IModule>().ContainerScoped();
                 builder.Register<WebFormsViewEngineProvider>().As<IViewEngineProvider>().ContainerScoped();
                 builder.Register<ViewEngineFilter>().As<IFilterProvider>().ContainerScoped();
+                builder.Register<ThemeFilter>().As<IFilterProvider>().ContainerScoped();
                 builder.Register<PageTitleBuilder>().As<IPageTitleBuilder>().ContainerScoped();
                 builder.Register<ZoneManager>().As<IZoneManager>().ContainerScoped();
                 builder.Register<PageClassBuilder>().As<IPageClassBuilder>().ContainerScoped();
