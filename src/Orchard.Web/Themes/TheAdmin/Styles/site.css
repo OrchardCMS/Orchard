@@ -795,3 +795,22 @@ table.items, textarea, input.text, input.text-box,
     text-decoration:underline;
     color:#1E5D7D;
     }
+   
+ /* Added classes for new page list layout
+---------------------------------------------------------- */  
+.pageList {
+     margin:0;
+     padding:0;
+     background:#FFFFFF url(images/backgroundGradient.gif) repeat-x scroll left top;
+     }
+.orchard-pages .contentItems {
+     margin:1em 0 0 0;
+     padding:0;
+ }
+.contentItems .properties ul.pageStatus {
+    margin:0.8em 0 0 2em;
+}    
+.contentItems .properties ul.pageStatus li {
+    margin:0;
+    padding:0 0 .1em 0;
+}
