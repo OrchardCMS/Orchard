@@ -274,9 +274,9 @@ a:hover, a:active, a:focus {
 #main h2, #main h3 {
     margin:.5em 0;
 }
-/*#main p {
+#main p {
     margin:0 0 1.5em;
-}*/
+}
 #main .main.actions {
     margin:0 0 1.4em;
 }
@@ -753,6 +753,9 @@ table.items, textarea, input.text, input.text-box,
 }
 .properties {
     float:left;
+}
+.orchard-blogs #main p {
+    margin:0;
 }
 #main .contentItems .properties h3 {
     border-bottom:none;
