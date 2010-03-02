@@ -17,6 +17,8 @@ using Orchard.UI.Notify;
 namespace Orchard.Blogs.Controllers {
     [UsedImplicitly]
     public class BlogDriver : ContentItemDriver<Blog> {
+        public IOrchardServices Services { get; set; }
+
         public readonly static ContentType ContentType = new ContentType {
             Name = "blog",
             DisplayName = "Blog"
@@ -26,14 +28,13 @@ namespace Orchard.Blogs.Controllers {
         private readonly IBlogService _blogService;
         private readonly IBlogPostService _blogPostService;
         private readonly IRoutableService _routableService;
-        private readonly IOrchardServices _orchardServices;
 
-        public BlogDriver(IContentManager contentManager, IBlogService blogService, IBlogPostService blogPostService, IRoutableService routableService, IOrchardServices orchardServices) {
+        public BlogDriver(IOrchardServices services, IContentManager contentManager, IBlogService blogService, IBlogPostService blogPostService, IRoutableService routableService) {
+            Services = services;
             _contentManager = contentManager;
             _blogService = blogService;
             _blogPostService = blogPostService;
             _routableService = routableService;
-            _orchardServices = orchardServices;
             T = NullLocalizer.Instance;
         }
 
@@ -81,7 +82,7 @@ namespace Orchard.Blogs.Controllers {
 
             return Combined(
                 ContentItemTemplate("Items/Blogs.Blog").LongestMatch(displayType, "Summary", "DetailAdmin", "SummaryAdmin"),
-                ContentPartTemplate(blog, "Parts/Blogs.Blog.Manage").Location("primary:manage"),
+                Services.Authorizer.Authorize(Permissions.ManageBlogs) ? ContentPartTemplate(blog, "Parts/Blogs.Blog.Manage").Location("primary:manage") : null,
                 ContentPartTemplate(blog, "Parts/Blogs.Blog.Metadata").Location("primary:metadata"),
                 ContentPartTemplate(blog, "Parts/Blogs.Blog.Description").Location("primary"),
                 blogPosts == null ? null : ContentPartTemplate(blogPosts, "Parts/Blogs.BlogPost.List", "").Location("primary"));
@@ -134,7 +135,7 @@ namespace Orchard.Blogs.Controllers {
                 blog.Slug = _routableService.GenerateUniqueSlug(blog.Slug, slugsLikeThis);
 
                 if (originalSlug != blog.Slug)
-                    _orchardServices.Notifier.Warning(T("Slugs in conflict. \"{0}\" is already set for a previously created blog so this blog now has the slug \"{1}\"",
+                    Services.Notifier.Warning(T("Slugs in conflict. \"{0}\" is already set for a previously created blog so this blog now has the slug \"{1}\"",
                                                  originalSlug, blog.Slug));
             }
         }

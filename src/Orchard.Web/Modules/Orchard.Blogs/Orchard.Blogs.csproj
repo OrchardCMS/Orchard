@@ -98,6 +98,7 @@
     <Compile Include="Services\BlogPostService.cs" />
     <Compile Include="Services\IBlogPostService.cs" />
     <Compile Include="Services\IBlogService.cs" />
+    <Compile Include="Services\XmlRpcHandler.cs" />
     <Compile Include="ViewModels\AdminBlogsViewModel.cs" />
     <Compile Include="ViewModels\BlogArchivesViewModel.cs" />
     <Compile Include="ViewModels\BlogPostArchiveViewModel.cs" />
