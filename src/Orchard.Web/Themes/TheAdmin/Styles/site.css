@@ -274,9 +274,9 @@ a:hover, a:active, a:focus {
 #main h2, #main h3 {
     margin:.5em 0;
 }
-#main p {
+/*#main p {
     margin:0 0 1.5em;
-}
+}*/
 #main .main.actions {
     margin:0 0 1.4em;
 }
@@ -740,7 +740,7 @@ table.items, textarea, input.text, input.text-box,
 ---------------------------------------------------------- */
 
 .summary {
-    padding:.6em .4em;
+    padding:1.2em .4em;
 }
 .actions {
     height:auto;
@@ -756,7 +756,7 @@ table.items, textarea, input.text, input.text-box,
 }
 #main .contentItems .properties h3 {
     border-bottom:none;
-    margin:0 0 0 .2em;
+    margin:0;
     padding:0;
 }
 .related{
@@ -765,7 +765,6 @@ table.items, textarea, input.text, input.text-box,
      text-align:right;
 }
 .commentcount {
-    margin:0 0 0 .2em;
     line-height:2em;
 }
 .contentItems .properties ul li{
