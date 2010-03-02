@@ -98,7 +98,7 @@ namespace Orchard.Setup.Controllers {
 
                         // set site theme
                         var themeService = finiteEnvironment.Resolve<IThemeService>();
-                        themeService.SetSiteTheme("Green");
+                        themeService.SetSiteTheme("Classic");
 
                         var contentManager = finiteEnvironment.Resolve<IContentManager>();
                          
