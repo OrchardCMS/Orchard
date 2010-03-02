@@ -60,7 +60,10 @@ namespace Orchard.Pages.Controllers {
         }
 
         protected override DriverResult Display(Page page, string displayType) {
-            return ContentItemTemplate("Items/Pages.Page").LongestMatch(displayType, "Summary", "SummaryAdmin");
+            return Combined(
+                ContentItemTemplate("Items/Pages.Page").LongestMatch(displayType, "Summary", "SummaryAdmin"),
+                ContentPartTemplate(page, "Parts/Pages.Page.Manage").Location("primary:manage"),
+                ContentPartTemplate(page, "Parts/Pages.Page.Metadata").Location("primary:metadata"));
         }
 
         protected override DriverResult Editor(Page page) {

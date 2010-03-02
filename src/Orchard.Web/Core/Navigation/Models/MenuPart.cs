@@ -13,7 +13,6 @@ namespace Orchard.Core.Navigation.Models {
             set { Record.OnMainMenu = value; }
         }
 
-        [Required]
         public string MenuText {
             get { return Record.MenuText; }
             set { Record.MenuText = value; }

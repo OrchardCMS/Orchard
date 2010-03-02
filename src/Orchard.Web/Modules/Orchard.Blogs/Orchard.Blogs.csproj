@@ -2,7 +2,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>9.0.21022</ProductVersion>
+    <ProductVersion>9.0.30729</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{63FBD4D9-E1DA-4A7B-AA6A-D6074FE50867}</ProjectGuid>
     <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
@@ -155,6 +155,11 @@
     <Content Include="Views\DisplayTemplates\Items\Blogs.Blog.ascx" />
     <Content Include="Views\DisplayTemplates\Parts\Blogs.BlogPost.List.ascx" />
     <Content Include="Views\DisplayTemplates\Items\Blogs.Blog.Summary.ascx" />
+    <Content Include="Views\DisplayTemplates\Parts\Blogs.BlogPost.Manage.ascx" />
+    <Content Include="Views\DisplayTemplates\Parts\Blogs.BlogPost.Metadata.ascx" />
+    <Content Include="Views\DisplayTemplates\Parts\Blogs.Blog.Manage.ascx" />
+    <Content Include="Views\DisplayTemplates\Parts\Blogs.Blog.Description.ascx" />
+    <Content Include="Views\DisplayTemplates\Parts\Blogs.Blog.Metadata.ascx" />
     <Content Include="Views\EditorTemplates\Parts\Blogs.BlogPost.Publish.ascx" />
     <Content Include="Views\BlogPost\Item.ascx" />
     <Content Include="Views\BlogAdmin\Create.ascx" />
@@ -201,6 +206,9 @@
           <IISUrl>
           </IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
+          <UseCustomServer>False</UseCustomServer>
+          <CustomServerUrl>
+          </CustomServerUrl>
           <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
         </WebProjectProperties>
       </FlavorProperties>

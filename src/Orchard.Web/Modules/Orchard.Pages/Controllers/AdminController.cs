@@ -132,6 +132,7 @@ namespace Orchard.Pages.Controllers {
             }
 
             Services.ContentManager.Create(model.Page.Item.ContentItem, VersionOptions.Draft);
+            Services.ContentManager.UpdateEditorModel(page, this);
 
             // Execute publish command
             switch (Request.Form["Command"]) {
