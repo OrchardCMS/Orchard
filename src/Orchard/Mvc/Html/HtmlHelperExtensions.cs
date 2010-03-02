@@ -116,9 +116,18 @@ namespace Orchard.Mvc.Html {
             return value.HasValue ? htmlHelper.DateTime(value.Value) : defaultIfNull;
         }
 
-        //TODO: (erikpo) This format should come from a site setting
+        public static string DateTime(this HtmlHelper htmlHelper, DateTime? value, string defaultIfNull, string customFormat) {
+            return value.HasValue ? htmlHelper.DateTime(value.Value, customFormat) : defaultIfNull;
+        }
+
         public static string DateTime(this HtmlHelper htmlHelper, DateTime value) {
-            return value.ToString("MMM d yyyy h:mm tt");
+            //TODO: (erikpo) This default format should come from a site setting
+            return htmlHelper.DateTime(value, "MMM d yyyy h:mm tt");
+        }
+
+        public static string DateTime(this HtmlHelper htmlHelper, DateTime value, string customFormat) {
+            //TODO: (erikpo) In the future, convert this to "local" time before calling ToString
+            return value.ToString(customFormat);
         }
 
         #endregion
