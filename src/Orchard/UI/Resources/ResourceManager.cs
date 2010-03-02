@@ -94,6 +94,13 @@ namespace Orchard.UI.Resources {
                         .Append(@"""");
                 }
 
+                if (!string.IsNullOrEmpty(link.Title)) {
+                    sb
+                        .Append(@" title=""")
+                        .Append(html.AttributeEncode(link.Title))
+                        .Append(@"""");
+                }
+
                 if (!string.IsNullOrEmpty(link.Href)) {
                     sb
                         .Append(@" href=""")

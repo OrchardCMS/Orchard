@@ -14,11 +14,17 @@ namespace Orchard.Blogs.Models {
 
         public string Title {
             get { return this.As<RoutableAspect>().Title; }
+            set { this.As<RoutableAspect>().Title = value; }
         }
 
         public string Slug {
             get { return this.As<RoutableAspect>().Slug; }
             set { this.As<RoutableAspect>().Slug = value; }
+        }
+
+        public string Text {
+            get { return this.As<BodyAspect>().Text; }
+            set { this.As<BodyAspect>().Text = value; }
         }
 
         public Blog Blog {
@@ -48,6 +54,10 @@ namespace Orchard.Blogs.Models {
             get {
                 return IsPublished || ContentItem.ContentManager.Get(Id, VersionOptions.Published) != null;
             }
+        }
+
+        public DateTime? CreatedUtc {
+            get { return this.As<ICommonAspect>().CreatedUtc; }
         }
 
         public DateTime? PublishedUtc {

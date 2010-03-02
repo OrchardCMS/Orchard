@@ -36,7 +36,7 @@
                 <%=_Encoded("Last modified: ") + Html.DateTimeRelative(Model.Item.As<CommonAspect>().ModifiedUtc.Value) %><%
             } %>&nbsp;&#124;&nbsp;
             </li>
-            <li><%=_Encoded("By {0}", Model.Item.Creator.UserName)%></li>                   
+            <li><%=_Encoded("By {0}", Model.Item.Creator == null ? String.Empty : Model.Item.Creator.UserName)%></li>                   
         </ul>
     </div>
     <div class="related"><%

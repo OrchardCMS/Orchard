@@ -9,4 +9,4 @@
 
 <div class="meta"><%=Html.PublishedState(Model.Item) %> | <%Html.Zone("meta");%></div>
 
-<div class="postsummary"><%=Model.Item.As<BodyAspect>().Text ?? string.Format("<p><em>{0}</em></p>", _Encoded("there's no content for this blog post"))%></div>
+<div class="postsummary"><%=Model.Item.Text ?? string.Format("<p><em>{0}</em></p>", _Encoded("there's no content for this blog post"))%></div>
