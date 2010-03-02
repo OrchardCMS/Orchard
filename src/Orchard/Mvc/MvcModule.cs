@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
@@ -31,8 +32,23 @@ namespace Orchard.Mvc {
             moduleBuilder.Register(ctx => UrlHelperFactory(ctx)).As<UrlHelper>().FactoryScoped();
         }
 
+        private static bool IsRequestValid() {
+            if (HttpContext.Current == null)
+                return false;
+
+            try {
+                // The "Request" property throws at application startup on IIS integrated pipeline mode
+                var req = HttpContext.Current.Request;
+            }
+            catch (Exception) {
+                return false;
+            }
+
+            return true;
+        }
+
         static HttpContextBase HttpContextBaseFactory(IContext context) {
-            if (HttpContext.Current != null) {
+            if (IsRequestValid()) {
                 return new HttpContextWrapper(HttpContext.Current);
             }
 
