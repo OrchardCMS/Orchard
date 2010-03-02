@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
 using Orchard.Localization;
@@ -62,12 +64,17 @@ namespace Orchard.Users.Controllers {
             UpdateModel(model);
 
             var user = _membershipService.CreateUser(new CreateUserParams(
-                                              model.UserName,
-                                              model.Password,
-                                              model.Email,
-                                              null, null, true));
+                                                         model.UserName,
+                                                         model.Password,
+                                                         model.Email,
+                                                         null, null, true));
 
             model.User = Services.ContentManager.UpdateEditorModel(user, this);
+
+            string userExistsMessage = VerifyUserUnicity(model.UserName, model.Email);
+            if (userExistsMessage != null) {
+                AddModelError("NotUniqueUserName", T(userExistsMessage));
+            }
 
             if (model.Password != model.ConfirmPassword) {
                 AddModelError("ConfirmPassword", T("Password confirmation must match"));
@@ -78,7 +85,7 @@ namespace Orchard.Users.Controllers {
                 return View(model);
             }
 
-            return RedirectToAction("edit", new { user.Id });
+            return RedirectToAction("edit", new {user.Id});
         }
 
         public ActionResult Edit(int id) {
@@ -102,6 +109,11 @@ namespace Orchard.Users.Controllers {
             // apply additional model properties that were posted on form
             UpdateModel(model);
 
+            string userExistsMessage = VerifyUserUnicity(id, model.UserName, model.Email);
+            if (userExistsMessage != null) {
+                AddModelError("NotUniqueUserName", T(userExistsMessage));
+            }
+
             if (!ModelState.IsValid) {
                 Services.TransactionManager.Cancel();
                 return View(model);
@@ -120,6 +132,40 @@ namespace Orchard.Users.Controllers {
             Services.Notifier.Information(T("User deleted"));
             return RedirectToAction("Index");
         }
+
+        #region private 
+
+        private string VerifyUserUnicity(string userName, string email) {
+            IEnumerable<User> allUsers = Services.ContentManager.Query<User, UserRecord>().List();
+
+            foreach (var user in allUsers) {
+                if (String.Equals(userName, user.UserName, StringComparison.OrdinalIgnoreCase)) {
+                    return "A user with that name already exists";
+                }
+                if (String.Equals(email, user.Email, StringComparison.OrdinalIgnoreCase)) {
+                    return "A user with that email already exists";
+                }
+            }
+
+            return null;
+        }
+
+        private string VerifyUserUnicity(int id, string userName, string email) {
+            IEnumerable<User> allUsers = Services.ContentManager.Query<User, UserRecord>().List();
+            foreach (var user in allUsers) {
+                if (user.Id == id) 
+                    continue;
+                if (String.Equals(userName, user.UserName, StringComparison.OrdinalIgnoreCase)) {
+                    return "A user with that name already exists";
+                }
+                if (String.Equals(email, user.Email, StringComparison.OrdinalIgnoreCase)) {
+                    return "A user with that email already exists";
+                }
+            }
+            return null;
+        }
+
+        #endregion
 
         bool IUpdateModel.TryUpdateModel<TModel>(TModel model, string prefix, string[] includeProperties, string[] excludeProperties) {
             return TryUpdateModel(model, prefix, includeProperties, excludeProperties);
