@@ -26,8 +26,8 @@ using (Html.BeginFormAntiForgeryPost()) { %>
         <tr>
             <td><input type="text" class="text-box" name="<%=Html.NameOf(m => m.MenuItemEntries[i].MenuItem.Text) %>" value="<%=menuPartEntry.MenuItem.Text %>" /></td>
             <td><input type="text" class="text-box" name="<%=Html.NameOf(m => m.MenuItemEntries[i].MenuItem.Position) %>" value="<%=menuPartEntry.MenuItem.Position %>" /></td>
-            <td><% if (!menuPartEntry.IsMenuItem) { %><input type="text" class="text-box" disabled="disabled" value="<%=menuPartEntry.MenuItem.Url %>" /><% } else { %><input type="text" class="text-box" name="<%=Html.NameOf(m => m.MenuItemEntries[i].MenuItem.Url) %>" value="<%=menuPartEntry.MenuItem.Url %>" /><% } %></td>
-            <td><input type="hidden" name="<%=Html.NameOf(m => m.MenuItemEntries[i].MenuItemId) %>" value="<%=menuPartEntry.MenuItemId %>" /><a href="<%=Url.Action("Delete", new {id = menuPartEntry.MenuItemId, __RequestVerificationToken = Html.AntiForgeryTokenValueOrchard()}) %>" class="remove button">delete</a></td>
+            <td><% if (!menuPartEntry.IsMenuItem) { %><input type="text" class="text-box disabled" disabled="disabled" value="<%=menuPartEntry.MenuItem.Url %>" /><% } else { %><input type="text" class="text-box" name="<%=Html.NameOf(m => m.MenuItemEntries[i].MenuItem.Url) %>" value="<%=menuPartEntry.MenuItem.Url %>" /><% } %></td>
+            <td><input type="hidden" name="<%=Html.NameOf(m => m.MenuItemEntries[i].MenuItemId) %>" value="<%=menuPartEntry.MenuItemId %>" /><a href="<%=Url.Action("Delete", new {id = menuPartEntry.MenuItemId, __RequestVerificationToken = Html.AntiForgeryTokenValueOrchard()}) %>" class="remove"><%=_Encoded(menuPartEntry.IsMenuItem ? "Delete" : "Remove") %></a></td>
         </tr><%
         ++menuPartEntryIndex;
     } %>

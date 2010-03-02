@@ -5,21 +5,28 @@
   Html.RegisterStyle("site.css");
   Html.RegisterStyle("blog.css");
 %>
-<%--Top Navigation--%>
+
 <%-- todo:(nheskew) this will need to be a generated menu --%>
-<% Html.Include("menu"); %>
+
 <div id="wrapper">
+<%--HTML.Include will render a div with an id="logindisplay" --%>
+    <% Html.Include("User"); %>
+
+<%--Top Navigation and branding--%>
+<div id="headercontainer">
     <div id="header">
-            <h1><%=Html.Encode(Html.SiteName()) %></h1>
-        <%-- todo:(nheskew) this will need to all go in the header zone (user widget) --%>
-        <% Html.Include("User"); %>
+        <h1><%=Html.Encode(Html.SiteName()) %></h1>
+        <div class="menucontainer">
+            <% Html.Include("menu"); %>
+        </div>
+        <div class="clearBoth"></div>
     </div>
-    <div id="main">
+</div>
+
+<div id="main">
         <div id="content">
-
-                    <%--Main Content--%>
-                    <%Html.ZoneBody("content");%>
-
+        <%--Main Content--%>
+        <%Html.ZoneBody("content");%>
         </div>
         <div id="sidebar">
             <ul>

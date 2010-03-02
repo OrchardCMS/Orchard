@@ -1,4 +1,3 @@
-using System;
 using System.Web.Mvc;
 using System.Web.Routing;
 using Autofac;
@@ -27,12 +26,27 @@ namespace Orchard.Mvc {
             return base.CreateController(requestContext, controllerName);
         }
 
-        private string GetAreaName(RouteData context) {
-            object area;
-            if (context.Values.TryGetValue("area", out area)) {
-                return Convert.ToString(area);
+        public static string GetAreaName(RouteBase route) {
+            var routeWithArea = route as IRouteWithArea;
+            if (routeWithArea != null) {
+                return routeWithArea.Area;
             }
+
+            var castRoute = route as Route;
+            if (castRoute != null && castRoute.DataTokens != null) {
+                return castRoute.DataTokens["area"] as string;
+            }
+
             return null;
+        }
+
+        public static string GetAreaName(RouteData routeData) {
+            object area;
+            if (routeData.DataTokens.TryGetValue("area", out area)) {
+                return area as string;
+            }
+
+            return GetAreaName(routeData.Route);
         }
 
         public static IContainer GetRequestContainer(RouteData routeData) {

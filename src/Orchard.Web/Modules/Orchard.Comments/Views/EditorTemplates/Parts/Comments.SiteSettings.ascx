@@ -8,6 +8,11 @@
         <%=Html.ValidationMessage("RequireLoginToAddComment", "*")%>
     </div>
     <div>
+        <%=Html.EditorFor(m => m.ModerateComments) %>
+        <label class="forcheckbox" for="CommentSettings_ModerateComments"><%=_Encoded("Comments must be approved before they appear")%></label>
+        <%=Html.ValidationMessage("ModerateComments", "*")%>
+    </div>
+    <div>
         <%=Html.EditorFor(m => m.EnableSpamProtection) %>
         <label class="forcheckbox" for="CommentSettings_EnableSpamProtection"><%=_Encoded("Enable spam protection") %></label>
         <%=Html.ValidationMessage("EnableSpamProtection", "*")%>

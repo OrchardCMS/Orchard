@@ -701,7 +701,7 @@ todo: (heskew) pull out into relevant modules where appropriate
 .templates p {
     overflow:hidden;
 }
-.templates img {
+.templates img, .themePreviewImage {
 	border:1px solid #e8e8e8;
     height:200px;
     margin:.27em 0 .93em 0;
@@ -711,6 +711,12 @@ todo: (heskew) pull out into relevant modules where appropriate
 	border:1px solid #525e50;
 	height:70%;
 	width:70%;
+}
+.themes #main h2 {
+    margin:1em 0 0 0;
+}
+.themePreviewImage {
+	height:300px;
 }
 
 /* Rounded borders and other "works in some browsers" additions
@@ -733,7 +739,7 @@ table.items, textarea, input.text, input.text-box,
 /* Added classes for new blog list layout
 ---------------------------------------------------------- */
 
-.blogPost.summary {
+.summary {
     padding:.6em .4em;
 }
 .actions {
@@ -750,7 +756,6 @@ table.items, textarea, input.text, input.text-box,
 }
 #main .contentItems .properties h3 {
     border-bottom:none;
-    margin:0;
     margin:0 0 0 .2em;
     padding:0;
 }
@@ -759,8 +764,9 @@ table.items, textarea, input.text, input.text-box,
      float:right;
      text-align:right;
 }
-.related .commentcount{
-     line-height:2em;
+.commentcount {
+    margin:0 0 0 .2em;
+    line-height:2em;
 }
 .contentItems .properties ul li{
     border:0;

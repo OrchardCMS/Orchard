@@ -48,7 +48,7 @@
             <tr>
                 <td>
                     <input type="checkbox" value="true" name="<%=_Encoded("Checkbox.File.{0}", mediaFile.Name)  %>"/>
-                    <input type="hidden" value="<%=_Encoded("Model.MediaPath") %>" name="<%=_Encoded("mediaFile.Name") %>" />
+                    <input type="hidden" value="<%=_Encoded(Model.MediaPath) %>" name="<%=_Encoded(mediaFile.Name) %>" />
                 </td>
                 <td>
                     <%=Html.ActionLink(mediaFile.Name, "EditMedia", new { name = mediaFile.Name, 
