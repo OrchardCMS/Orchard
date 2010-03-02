@@ -7,7 +7,7 @@
     <legend><%=_Encoded("Global Settings")%></legend>
     <div>
         <label for="SiteName"><%=_Encoded("Site name") %></label>
-        <%=Html.EditorFor(m => m.SiteName) %>
+        <%=Html.EditorFor(m => m.SiteName)%>
         <%=Html.ValidationMessage("SiteName", "*") %>
     </div>
     <div>

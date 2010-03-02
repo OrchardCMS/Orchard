@@ -7,8 +7,10 @@
            foreach (var entry in Model.Roles) {%>
     <%=Html.Hidden("Roles[" + index + "].RoleId", entry.RoleId)%>
     <%=Html.Hidden("Roles[" + index + "].Name", entry.Name)%>
+    <div>
     <%=Html.CheckBox("Roles[" + index + "].Granted", entry.Granted)%>
     <label class="forcheckbox" for="<%="Roles[" + index + "]_Granted"%>"><%=Html.Encode(entry.Name) %></label>
+    </div>
     <%++index;
         }
        }
