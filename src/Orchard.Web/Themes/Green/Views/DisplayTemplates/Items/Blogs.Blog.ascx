@@ -1,6 +1,10 @@
 ﻿<%@ Control Language="C#" Inherits="Orchard.Mvc.ViewUserControl<ContentItemViewModel<Blog>>" %>
+<%@ Import Namespace="Orchard.Blogs.Extensions"%>
+<%@ Import Namespace="Orchard.UI.Resources"%>
 <%@ Import Namespace="Orchard.Mvc.ViewModels"%>
 <%@ Import Namespace="Orchard.Blogs.Models"%>
+
+<% Html.RegisterLink(new LinkEntry { Rel = "wlwmanifest", Type = "application/wlwmanifest+xml", Href = Url.BlogLiveWriterManifest(Model.Item.Slug) });%>
 <div class="bloginfo">
     <h1><%=Html.TitleForPage(Model.Item.Name) %></h1>
 </div>

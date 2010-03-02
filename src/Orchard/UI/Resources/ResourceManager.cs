@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Web.Mvc;
 using JetBrains.Annotations;
 using Orchard.Mvc.Html;
@@ -12,12 +13,14 @@ namespace Orchard.UI.Resources {
         private const string ScriptFormat = "\r\n<script type=\"text/javascript\" src=\"{0}\"></script>";
         private readonly Dictionary<string, string> _metas;
         private readonly List<FileRegistrationContext> _styles;
+        private readonly List<LinkEntry> _links;
         private readonly List<FileRegistrationContext> _headScripts;
         private readonly List<FileRegistrationContext> _footScripts;
 
         public ResourceManager() {
             _metas = new Dictionary<string, string>(20) {{"generator", "Orchard"}};
             _styles = new List<FileRegistrationContext>(10);
+            _links = new List<LinkEntry>();
             _headScripts = new List<FileRegistrationContext>(10);
             _footScripts = new List<FileRegistrationContext>(5);
         }
@@ -35,6 +38,10 @@ namespace Orchard.UI.Resources {
 
             if (!_styles.Contains(context))
                 _styles.Add(context);
+        }
+
+        public void RegisterLink(LinkEntry entry, HtmlHelper html) {
+            _links.Add(entry);
         }
 
         public void RegisterHeadScript(string fileName, HtmlHelper html) {
@@ -65,6 +72,40 @@ namespace Orchard.UI.Resources {
 
         public MvcHtmlString GetStyles() {
             return GetFiles(_styles, StyleFormat, "/styles/");
+        }
+
+        public MvcHtmlString GetLinks(HtmlHelper html) {
+            var sb = new StringBuilder();
+            foreach (var link in _links) {
+                sb.Append("\r\n");
+                sb.Append(@"<link");
+
+                if (!string.IsNullOrEmpty(link.Rel)) {
+                    sb
+                        .Append(@" rel=""")
+                        .Append(html.AttributeEncode(link.Rel))
+                        .Append(@"""");
+                }
+
+                if (!string.IsNullOrEmpty(link.Type)) {
+                    sb
+                        .Append(@" type=""")
+                        .Append(html.AttributeEncode(link.Type))
+                        .Append(@"""");
+                }
+
+                if (!string.IsNullOrEmpty(link.Href)) {
+                    sb
+                        .Append(@" href=""")
+                        .Append(@"http://localhost:30320")
+                        .Append(html.AttributeEncode(link.Href))
+                        .Append(@"""");
+                }
+
+                sb.Append(@" />");
+            }
+
+            return MvcHtmlString.Create(sb.ToString());
         }
 
         public MvcHtmlString GetHeadScripts() {

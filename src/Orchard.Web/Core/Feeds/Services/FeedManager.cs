@@ -36,6 +36,7 @@ namespace Orchard.Core.Feeds.Services {
             var sb = new StringBuilder();
             foreach (var link in _links) {
                 var linkUrl = urlHelper.RouteUrl(link.RouteValues);
+                sb.Append("\r\n");
                 sb.Append(@"<link rel=""alternate"" type=""application/rss+xml""");
                 if (!string.IsNullOrEmpty(link.Title)) {
                     sb

@@ -194,6 +194,22 @@ namespace Orchard.Blogs {
                                                  },
                              new RouteDescriptor {
                                                      Route = new Route(
+                                                         "{blogSlug}/wlwmanifest.xml",
+                                                         new RouteValueDictionary {
+                                                                                      {"area", "Orchard.Blogs"},
+                                                                                      {"controller", "Blog"},
+                                                                                      {"action", "LiveWriterManifest"}
+                                                                                  },
+                                                         new RouteValueDictionary {
+                                                                                      {"blogSlug", new IsBlogConstraint(_containerProvider)}
+                                                                                  },
+                                                         new RouteValueDictionary {
+                                                                                      {"area", "Orchard.Blogs"}
+                                                                                  },
+                                                         new MvcRouteHandler())
+                                                 },
+                             new RouteDescriptor {
+                                                     Route = new Route(
                                                          "{blogSlug}/{postSlug}",
                                                          new RouteValueDictionary {
                                                                                       {"area", "Orchard.Blogs"},

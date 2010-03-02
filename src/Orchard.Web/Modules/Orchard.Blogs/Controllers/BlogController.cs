@@ -1,10 +1,13 @@
 using System.Linq;
+using System.Web;
 using System.Web.Mvc;
+using System.Xml.Linq;
 using Orchard.Blogs.Extensions;
 using Orchard.Blogs.Models;
 using Orchard.Blogs.Services;
 using Orchard.Blogs.ViewModels;
 using Orchard.Core.Feeds;
+using Orchard.Logging;
 using Orchard.Mvc.Results;
 
 namespace Orchard.Blogs.Controllers {
@@ -20,7 +23,10 @@ namespace Orchard.Blogs.Controllers {
             _services = services;
             _blogService = blogService;
             _feedManager = feedManager;
+            Logger = NullLogger.Instance;
         }
+
+        protected ILogger Logger { get; set; }
 
         public ActionResult List() {
             var model = new BlogsViewModel {
@@ -44,6 +50,24 @@ namespace Orchard.Blogs.Controllers {
             _feedManager.Register(blog);
 
             return View(model);
+        }
+
+        public ActionResult LiveWriterManifest() {
+            Logger.Debug("Live Writer Manifest requested");
+
+            const string manifestUri = "http://schemas.microsoft.com/wlw/manifest/weblog";
+
+            var options = new XElement(
+                XName.Get("options", manifestUri),
+                new XElement(XName.Get("clientType", manifestUri), "Metaweblog"),
+                new XElement(XName.Get("supportsSlug", manifestUri), "Yes"));
+
+            var doc = new XDocument(new XElement(
+                                        XName.Get("manifest", manifestUri),
+                                        options));
+
+            Response.Cache.SetCacheability(HttpCacheability.NoCache);
+            return Content(doc.ToString(), "text/xml");
         }
     }
 }
