@@ -64,7 +64,10 @@ namespace Orchard.Blogs.Controllers {
         }
 
         protected override DriverResult Display(BlogPost post, string displayType) {
-            return ContentItemTemplate("Items/Blogs.BlogPost").LongestMatch(displayType, "Summary", "SummaryAdmin");
+            return Combined(
+                ContentItemTemplate("Items/Blogs.BlogPost").LongestMatch(displayType, "Summary", "SummaryAdmin"),
+                ContentPartTemplate(post, "Parts/Blogs.BlogPost.Manage").Location("primary:manage"),
+                ContentPartTemplate(post, "Parts/Blogs.BlogPost.Metadata").Location("primary:metadata"));
         }
 
         protected override DriverResult Editor(BlogPost post) {
