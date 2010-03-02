@@ -384,12 +384,15 @@ label input {
     text-indent:3ex; /* todo: (heskew) this might look out of place */
 }
 /* todo: (heskew) try to get .text on stuff like .text-box */
-select, textarea, input.text, input.text-box {
+select, textarea, input.text, input.textMedium, input.text-box {
 	padding:2px;
 	border:1px solid #bdbcbc;
 }
-input.text, input.text-box {
+input.text, input.textMedium, input.text-box {
     line-height:1.2em;
+}
+input.textMedium {
+    width:26em;
 }
 select:focus, textarea:focus, input.text:focus, input.text-box:focus {
 	border-color:#666d51;
@@ -428,6 +431,7 @@ fieldset {
 .settings legend {
     margin:0 0 -.4em 0;
 }
+/* todo: This style is the same as textMedium. Consolidate if possible */
 .settings input.text, .settings input.text-box {
     width:26em;
 }
