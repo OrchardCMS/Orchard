@@ -81,6 +81,9 @@ namespace Orchard.Blogs.Controllers {
 
             return Combined(
                 ContentItemTemplate("Items/Blogs.Blog").LongestMatch(displayType, "Summary", "DetailAdmin", "SummaryAdmin"),
+                ContentPartTemplate(blog, "Parts/Blogs.Blog.Manage").Location("primary:manage"),
+                ContentPartTemplate(blog, "Parts/Blogs.Blog.Metadata").Location("primary:metadata"),
+                ContentPartTemplate(blog, "Parts/Blogs.Blog.Description").Location("primary"),
                 blogPosts == null ? null : ContentPartTemplate(blogPosts, "Parts/Blogs.BlogPost.List", "").Location("primary"));
         }
 
