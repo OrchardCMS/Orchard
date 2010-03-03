@@ -1,16 +1,15 @@
 ﻿using System.Web.Mvc;
 using Orchard.Localization;
 using Orchard.Mvc.Results;
-using Orchard.Pages.Models;
 using Orchard.Pages.ViewModels;
 using Orchard.Services;
 
 namespace Orchard.Pages.Services {
-    public class PagesHomePageProvider : IHomePageProvider {
+    public class PageHomePageProvider : IHomePageProvider {
         private readonly IPageService _pageService;
         private readonly ISlugConstraint _slugConstraint;
 
-        public PagesHomePageProvider(IOrchardServices services, IPageService pageService, ISlugConstraint slugConstraint) {
+        public PageHomePageProvider(IOrchardServices services, IPageService pageService, ISlugConstraint slugConstraint) {
             Services = services;
             _slugConstraint = slugConstraint;
             _pageService = pageService;
@@ -23,11 +22,14 @@ namespace Orchard.Pages.Services {
         #region Implementation of IHomePageProvider
 
         public string GetProviderName() {
-            return "PagesHomePageProvider";
+            return "PageHomePageProvider";
         }
 
         public ActionResult GetHomePage(int itemId) {
-            Page page = _pageService.Get(itemId);
+            var page = _pageService.Get(itemId);
+            if (page == null)
+                return new NotFoundResult();
+
             var correctedSlug = _slugConstraint.LookupPublishedSlug(page.Slug);
             if (correctedSlug == null)
                 return new NotFoundResult();

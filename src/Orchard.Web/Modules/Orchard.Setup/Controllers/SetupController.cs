@@ -109,8 +109,10 @@ namespace Orchard.Setup.Controllers {
                         page.As<RoutableAspect>().Title = T("Home").ToString();
                         page.As<HasComments>().CommentsShown = false;
                         page.As<CommonAspect>().Owner = user;
+                        //HACK: (erikpo) Since content items are published by default they don't get a chance for handlers to fire to setup default values which blog up other pages in the system. Figure out what they are published by default and change
+                        page.VersionRecord.Published = false;
                         contentManager.Publish(page);
-                        siteSettings.Record.HomePage = "PagesHomePageProvider;" + page.Id;
+                        siteSettings.Record.HomePage = "PageHomePageProvider;" + page.Id;
 
                         // add a menu item for the shiny new home page
                         var menuItem = contentManager.Create("menuitem");

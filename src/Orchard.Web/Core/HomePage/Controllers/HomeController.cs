@@ -22,28 +22,30 @@ namespace Orchard.Core.HomePage.Controllers {
 
         public ActionResult Index() {
             try {
-                string homepage = CurrentSite.HomePage;
+                var homepage = CurrentSite.HomePage;
                 if (String.IsNullOrEmpty(homepage)) {
                     return View(new BaseViewModel());
                 }
 
-                string[] homePageParameters = homepage.Split(';');
+                var homePageParameters = homepage.Split(';');
                 if (homePageParameters.Length != 2) {
                     return View(new BaseViewModel());
                 }
-                string providerName = homePageParameters[0];
-                int item = Int32.Parse(homePageParameters[1]);
+                var providerName = homePageParameters[0];
+                var item = Int32.Parse(homePageParameters[1]);
 
                 foreach (var provider in _homePageProviders) {
-                    if (String.Equals(provider.GetProviderName(), providerName)) {
-                        ActionResult result = provider.GetHomePage(item);
-                        if (result is ViewResultBase) {
-                            ViewResultBase resultBase = result as ViewResultBase;
-                            ViewData.Model = resultBase.ViewData.Model;
-                            resultBase.ViewData = ViewData;
-                        }
-                        return result;
+                    if (!string.Equals(provider.GetProviderName(), providerName))
+                        continue;
+
+                    var result = provider.GetHomePage(item);
+                    if (result is ViewResultBase) {
+                        var resultBase = result as ViewResultBase;
+                        ViewData.Model = resultBase.ViewData.Model;
+                        resultBase.ViewData = ViewData;
                     }
+
+                    return result;
                 }
 
                 return View(new BaseViewModel());

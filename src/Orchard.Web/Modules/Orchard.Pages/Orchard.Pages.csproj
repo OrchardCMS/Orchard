@@ -77,7 +77,7 @@
     <Compile Include="Security\Authorization.cs" />
     <Compile Include="Services\IPageService.cs" />
     <Compile Include="Services\PageService.cs" />
-    <Compile Include="Services\PagesHomePageProvider.cs" />
+    <Compile Include="Services\PageHomePageProvider.cs" />
     <Compile Include="Services\SlugConstraint.cs">
       <SubType>Code</SubType>
     </Compile>
