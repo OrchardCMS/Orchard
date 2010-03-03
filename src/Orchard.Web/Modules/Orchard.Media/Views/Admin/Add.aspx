@@ -3,6 +3,7 @@
 <%@ Import Namespace="Orchard.Media.Models"%>
 <%@ Import Namespace="Orchard.Media.ViewModels"%>
 <h1><%=Html.TitleForPage(T("Add Media").ToString()) %></h1>
+<div class="breadCrumbs">
 <p><%=Html.ActionLink(T("Media Folders").ToString(), "Index") %> &#62; 
     <%foreach (FolderNavigation navigation in MediaHelpers.GetFolderNavigationHierarchy(Model.MediaPath)) { %>
         <%=Html.ActionLink(navigation.FolderName, "Edit",
@@ -10,6 +11,8 @@
 	    
     <% } %>
     <%=_Encoded("Add Media") %></p>
+</div>
+
 <% using (Html.BeginForm("Add", "Admin", FormMethod.Post, new { enctype = "multipart/form-data" })) { %>
     <%= Html.ValidationSummary() %>
     <fieldset>
@@ -20,7 +23,7 @@
         <input type="hidden" id="MediaPath" name="MediaPath" value="<%=Html.Encode(Model.MediaPath) %>" />
     </fieldset>
     <fieldset>
-		<input type="submit" class="button" value="<%=_Encoded("Upload") %>" />
+		<input type="submit" class="button primaryAction" value="<%=_Encoded("Upload") %>" />
 		<%=Html.AntiForgeryTokenOrchard() %>
 	</fieldset>
 <% } %>

@@ -3,7 +3,11 @@
 <%@ Import Namespace="Orchard.Media.Helpers"%>
 <%@ Import Namespace="Orchard.Media.ViewModels"%>
 <h1><%=Html.TitleForPage(T("Manage Folder").ToString())%></h1>
-<div class="manage"><%=Html.ActionLink(T("Folder Properties").ToString(), "EditProperties", new { folderName = Model.FolderName, mediaPath = Model.MediaPath }, new { @class = "button"})%></div>
+
+
+<%--<div class="manage"><%=Html.ActionLink(T("Folder Properties").ToString(), "EditProperties", new { folderName = Model.FolderName, mediaPath = Model.MediaPath }, new { @class = "button"})%></div>--%>
+
+<div class="breadCrumbs">
 <p><%=Html.ActionLink(T("Media Folders").ToString(), "Index")%> &#62; 
     <%foreach (FolderNavigation navigation in MediaHelpers.GetFolderNavigationHierarchy(Model.MediaPath)) {%>
         <%=Html.ActionLink(navigation.FolderName, "Edit",
@@ -11,16 +15,23 @@
 	    
     <% } %>
     <%=_Encoded("Manage Folder")%></p>
+</div> 
+<div class="folderProperties">
+<p><%=Html.ActionLink(T("Folder Properties").ToString(), "EditProperties", new { folderName = Model.FolderName, mediaPath = Model.MediaPath })%></p>
+</div> 
+<div class="clearBoth"></div>   
+    
+    
 <% using(Html.BeginFormAntiForgeryPost()) { %>
     <fieldset class="actions bulk">
         <label for="publishActions"><%=_Encoded("Actions:")%></label>
 		<select id="Select1" name="publishActions">
 		    <option value="1"><%=_Encoded("Delete")%></option>
 		</select>
-		<input class="button roundCorners" type="submit" value="<%=_Encoded("Apply") %>" />
+		<input class="button" type="submit" value="<%=_Encoded("Apply") %>" />
 	</fieldset>
 	<div class="manage">
-	    <%=Html.ActionLink(T("Add media").ToString(), "Add", new { folderName = Model.FolderName, mediaPath = Model.MediaPath }, new { @class = "button" })%>
+	    <%=Html.ActionLink(T("Add media").ToString(), "Add", new { folderName = Model.FolderName, mediaPath = Model.MediaPath }, new { @class = "button primaryAction" })%>
 		<%=Html.ActionLink(T("Add a folder").ToString(), "Create", new { Model.MediaPath }, new { @class = "button" })%>
     </div>
     <fieldset>
@@ -83,7 +94,7 @@
         </table>
     </fieldset>
 	<div class="manage">
-	    <%=Html.ActionLink(T("Add media").ToString(), "Add", new { folderName = Model.FolderName, mediaPath = Model.MediaPath }, new { @class = "button" })%>
+	    <%=Html.ActionLink(T("Add media").ToString(), "Add", new { folderName = Model.FolderName, mediaPath = Model.MediaPath }, new { @class = "button primaryAction" })%>
 		<%=Html.ActionLink(T("Add a folder").ToString(), "Create", new { Model.MediaPath }, new { @class = "button" })%>
     </div>
 <% } %>

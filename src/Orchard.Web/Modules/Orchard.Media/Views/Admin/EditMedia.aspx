@@ -3,13 +3,17 @@
 <%@ Import Namespace="Orchard.Media.Helpers"%>
 <%@ Import Namespace="Orchard.Media.ViewModels"%>
 <h1><%=Html.TitleForPage(T("Edit Media - {0}", Model.Name).ToString())%></h1>
+
+<div class="breadCrumbs">
 <p><%=Html.ActionLink(T("Media Folders").ToString(), "Index")%> &#62; 
     <%foreach (FolderNavigation navigation in MediaHelpers.GetFolderNavigationHierarchy(Model.MediaPath)) {%>
         <%=Html.ActionLink(navigation.FolderName, "Edit",
                   new {name = navigation.FolderName, mediaPath = navigation.FolderPath})%> &#62;
     <% } %>
     <%=_Encoded("Edit Media")%></p>
-<div class="sections">
+ </div>   
+    
+<div class="sections clearBoth">
 	<%using (Html.BeginFormAntiForgeryPost()) { %>
         <%= Html.ValidationSummary() %>
         <div class="primary">
@@ -31,7 +35,7 @@
 			    </div>
 		    </fieldset>
 		    <fieldset>
-			    <input type="submit" class="button" name="submit.Save" value="<%=_Encoded("Save") %>" />
+			    <input type="submit" class="button primaryAction" name="submit.Save" value="<%=_Encoded("Save") %>" />
 			    <%--<input type="submit" class="button" name="submit.Delete" value="<%=_Encoded("Delete") %>" />--%>
             </fieldset>
 	    </div>

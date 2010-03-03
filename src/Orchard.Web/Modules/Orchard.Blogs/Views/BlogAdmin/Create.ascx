@@ -4,5 +4,5 @@
 <% using (Html.BeginFormAntiForgeryPost()) { %>
     <%=Html.ValidationSummary() %>
     <%=Html.EditorForItem(vm => vm.Blog) %>
-    <fieldset><input class="button" type="submit" value="<%=_Encoded("Create") %>" /></fieldset><%
+    <fieldset><input class="button primaryAction" type="submit" value="<%=_Encoded("Create") %>" /></fieldset><%
    } %>

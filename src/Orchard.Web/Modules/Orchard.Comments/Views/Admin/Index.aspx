@@ -72,7 +72,7 @@
                 <td>
                     <ul class="actions">
                         <li class="construct">
-                            <a href="<%=Url.Action("Edit", new {commentEntry.Comment.Id}) %>" class="ibutton edit" title="<%=_Encoded("Edit Comment")%>"><%=_Encoded("Edit Comment")%></a>
+                            <a href="<%=Url.Action("Edit", new {commentEntry.Comment.Id}) %>" title="<%=_Encoded("Edit")%>"><%=_Encoded("Edit")%></a>
                         </li>
                         <li class="destruct">
 <%-- a form in a form doesn't quite work                            <% using (Html.BeginFormAntiForgeryPost(Url.Action("Delete", new {id = commentEntry.Comment.Id, redirectToAction = "Details"}), FormMethod.Post, new { @class = "inline" })) { %>
