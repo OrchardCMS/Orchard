@@ -43,6 +43,8 @@ namespace Orchard.Users.Controllers {
         }
 
         public ActionResult LogOn(string returnUrl) {
+            if(_authenticationService.GetAuthenticatedUser() != null)
+                return Redirect("~/");
             return View("LogOn", new LogOnViewModel { Title = "Log On", ReturnUrl = returnUrl });
         }
 
