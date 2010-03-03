@@ -226,9 +226,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Common\Views\DisplayTemplates\Parts\Common.Body.Summary.ascx" />
-    <Content Include="Common\Views\DisplayTemplates\Parts\ManageWrapperPost.ascx" />
-    <Content Include="Common\Views\DisplayTemplates\Parts\ManageWrapperPre.ascx" />
-    <Content Include="Common\Views\DisplayTemplates\Parts\Manage.ascx" />
+    <Content Include="Common\Views\DisplayTemplates\Parts\Common.Body.ManageWrapperPost.ascx" />
+    <Content Include="Common\Views\DisplayTemplates\Parts\Common.Body.ManageWrapperPre.ascx" />
+    <Content Include="Common\Views\DisplayTemplates\Parts\Common.Body.Manage.ascx" />
     <Content Include="Dashboard\Views\Web.config" />
     <Content Include="Themes\Styles\special.css" />
     <Content Include="Themes\Views\NotFound.ascx" />
