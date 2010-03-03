@@ -2,7 +2,7 @@ using Orchard.Core.Common.Records;
 using Orchard.Data;
 using Orchard.ContentManagement.Handlers;
 
-namespace Orchard.Core.Common.Providers {
+namespace Orchard.Core.Common.Models {
     public class BodyAspectHandler : ContentHandler {       
         public BodyAspectHandler(IRepository<BodyRecord> bodyRepository) {
             Filters.Add(StorageFilter.For(bodyRepository));

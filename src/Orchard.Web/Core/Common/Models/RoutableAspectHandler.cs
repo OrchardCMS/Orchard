@@ -3,12 +3,15 @@ using JetBrains.Annotations;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Aspects;
 using Orchard.ContentManagement.Handlers;
+using Orchard.Core.Common.Records;
+using Orchard.Data;
 
 namespace Orchard.Core.Common.Models {
     [UsedImplicitly]
-    public class RoutableAspectHandler : ContentHandler
-    {
-        public RoutableAspectHandler() {
+    public class RoutableAspectHandler : ContentHandler {
+        public RoutableAspectHandler(IRepository<RoutableRecord> repository) {
+            Filters.Add(StorageFilter.For(repository));
+
             OnGetEditorViewModel<RoutableAspect>((context, routable) => {
                 var containerPathBuilder = new StringBuilder();
                 var container = context.ContentItem.As<ICommonAspect>().Container;

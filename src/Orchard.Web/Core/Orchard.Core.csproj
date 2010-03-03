@@ -71,12 +71,11 @@
     <Compile Include="Common\Services\IRoutableService.cs" />
     <Compile Include="Common\Services\RoutableService.cs" />
     <Compile Include="Common\Utilities\LazyField.cs" />
-    <Compile Include="Common\Providers\CommonAspectHandler.cs" />
+    <Compile Include="Common\Models\CommonAspectHandler.cs" />
     <Compile Include="Common\Models\CommonAspect.cs" />
-    <Compile Include="Common\Providers\BodyAspectHandler.cs" />
+    <Compile Include="Common\Models\BodyAspectHandler.cs" />
     <Compile Include="Common\Models\BodyAspect.cs" />
     <Compile Include="Common\Models\RoutableAspect.cs" />
-    <Compile Include="Common\Providers\RoutableAspectHandler.cs" />
     <Compile Include="Common\Records\BodyRecord.cs" />
     <Compile Include="Common\Records\CommonRecord.cs" />
     <Compile Include="Common\Records\RoutableRecord.cs" />

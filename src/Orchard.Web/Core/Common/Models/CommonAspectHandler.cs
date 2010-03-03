@@ -1,4 +1,3 @@
-using Orchard.Core.Common.Models;
 using Orchard.Core.Common.Records;
 using Orchard.Core.Common.ViewModels;
 using Orchard.Data;
@@ -9,7 +8,7 @@ using Orchard.ContentManagement.ViewModels;
 using Orchard.Security;
 using Orchard.Services;
 
-namespace Orchard.Core.Common.Providers {
+namespace Orchard.Core.Common.Models {
     public class CommonAspectHandler : ContentHandler {
         private readonly IClock _clock;
         private readonly IAuthenticationService _authenticationService;
@@ -119,24 +118,24 @@ namespace Orchard.Core.Common.Providers {
             // add handlers that will update records when aspect properties are set
 
             aspect.OwnerField.Setter(user => {
-                if (user == null) {
-                    aspect.Record.OwnerId = 0;
-                }
-                else {
-                    aspect.Record.OwnerId = user.ContentItem.Id;
-                }
-                return user;
-            });
+                                         if (user == null) {
+                                             aspect.Record.OwnerId = 0;
+                                         }
+                                         else {
+                                             aspect.Record.OwnerId = user.ContentItem.Id;
+                                         }
+                                         return user;
+                                     });
 
             aspect.ContainerField.Setter(container => {
-                if (container == null) {
-                    aspect.Record.Container = null;
-                }
-                else {
-                    aspect.Record.Container = container.ContentItem.Record;
-                }
-                return container;
-            });
+                                             if (container == null) {
+                                                 aspect.Record.Container = null;
+                                             }
+                                             else {
+                                                 aspect.Record.Container = container.ContentItem.Record;
+                                             }
+                                             return container;
+                                         });
         }
 
 
