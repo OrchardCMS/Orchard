@@ -16,7 +16,9 @@ namespace Orchard.Tags.Controllers {
     public class AdminController : Controller {
         private readonly ITagService _tagService;
 
-        public AdminController(ITagService tagService) {
+        public AdminController(IOrchardServices services, ITagService tagService)
+        {
+            Services = services;
             _tagService = tagService;
             T = NullLocalizer.Instance;
         }
