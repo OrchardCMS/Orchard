@@ -33,6 +33,7 @@ namespace Orchard.Tests.Modules.Users.Controllers {
             builder.Register<DefaultContentManager>().As<IContentManager>();
             builder.Register<DefaultContentQuery>().As<IContentQuery>().FactoryScoped();
             builder.Register<MembershipService>().As<IMembershipService>();
+            builder.Register<UserService>().As<IUserService>();
             builder.Register<UserHandler>().As<IContentHandler>();
             builder.Register<OrchardServices>().As<IOrchardServices>();
             builder.Register<TransactionManager>().As<ITransactionManager>();

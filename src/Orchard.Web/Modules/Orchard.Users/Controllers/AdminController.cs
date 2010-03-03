@@ -1,5 +1,3 @@
-using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
 using Orchard.Localization;
@@ -7,18 +5,22 @@ using Orchard.ContentManagement;
 using Orchard.Security;
 using Orchard.UI.Notify;
 using Orchard.Users.Models;
+using Orchard.Users.Services;
 using Orchard.Users.ViewModels;
 
 namespace Orchard.Users.Controllers {
 
     public class AdminController : Controller, IUpdateModel {
         private readonly IMembershipService _membershipService;
+        private readonly IUserService _userService;
 
         public AdminController(
             IOrchardServices services,
-            IMembershipService membershipService) {
+            IMembershipService membershipService,
+            IUserService userService) {
             Services = services;
             _membershipService = membershipService;
+            _userService = userService;
             T = NullLocalizer.Instance;
         }
 
@@ -63,7 +65,7 @@ namespace Orchard.Users.Controllers {
             var model = new UserCreateViewModel();
             UpdateModel(model);
 
-            string userExistsMessage = VerifyUserUnicity(model.UserName, model.Email);
+            string userExistsMessage = _userService.VerifyUserUnicity(model.UserName, model.Email);
             if (userExistsMessage != null) {
                 AddModelError("NotUniqueUserName", T(userExistsMessage));
             }
@@ -109,7 +111,9 @@ namespace Orchard.Users.Controllers {
             // apply additional model properties that were posted on form
             UpdateModel(model);
 
-            string userExistsMessage = VerifyUserUnicity(id, model.UserName, model.Email);
+            model.User.Item.NormalizedUserName = model.UserName.ToLower();
+
+            string userExistsMessage = _userService.VerifyUserUnicity(id, model.UserName, model.Email);
             if (userExistsMessage != null) {
                 AddModelError("NotUniqueUserName", T(userExistsMessage));
             }
@@ -132,40 +136,6 @@ namespace Orchard.Users.Controllers {
             Services.Notifier.Information(T("User deleted"));
             return RedirectToAction("Index");
         }
-
-        #region private 
-
-        private string VerifyUserUnicity(string userName, string email) {
-            IEnumerable<User> allUsers = Services.ContentManager.Query<User, UserRecord>().List();
-
-            foreach (var user in allUsers) {
-                if (String.Equals(userName, user.UserName, StringComparison.OrdinalIgnoreCase)) {
-                    return "A user with that name already exists";
-                }
-                if (String.Equals(email, user.Email, StringComparison.OrdinalIgnoreCase)) {
-                    return "A user with that email already exists";
-                }
-            }
-
-            return null;
-        }
-
-        private string VerifyUserUnicity(int id, string userName, string email) {
-            IEnumerable<User> allUsers = Services.ContentManager.Query<User, UserRecord>().List();
-            foreach (var user in allUsers) {
-                if (user.Id == id) 
-                    continue;
-                if (String.Equals(userName, user.UserName, StringComparison.OrdinalIgnoreCase)) {
-                    return "A user with that name already exists";
-                }
-                if (String.Equals(email, user.Email, StringComparison.OrdinalIgnoreCase)) {
-                    return "A user with that email already exists";
-                }
-            }
-            return null;
-        }
-
-        #endregion
 
         bool IUpdateModel.TryUpdateModel<TModel>(TModel model, string prefix, string[] includeProperties, string[] excludeProperties) {
             return TryUpdateModel(model, prefix, includeProperties, excludeProperties);

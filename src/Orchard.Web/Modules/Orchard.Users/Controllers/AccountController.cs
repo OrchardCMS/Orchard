@@ -7,6 +7,7 @@ using System.Web.Security;
 using Orchard.Logging;
 using Orchard.Mvc.ViewModels;
 using Orchard.Security;
+using Orchard.Users.Services;
 using Orchard.Users.ViewModels;
 
 namespace Orchard.Users.Controllers {
@@ -14,13 +15,16 @@ namespace Orchard.Users.Controllers {
     public class AccountController : Controller {
         private readonly IAuthenticationService _authenticationService;
         private readonly IMembershipService _membershipService;
+        private readonly IUserService _userService;
 
 
         public AccountController(
             IAuthenticationService authenticationService, 
-            IMembershipService membershipService) {
+            IMembershipService membershipService,
+            IUserService userService) {
             _authenticationService = authenticationService;
             _membershipService = membershipService;
+            _userService = userService;
             Logger = NullLogger.Instance;
         }
 
@@ -188,6 +192,10 @@ namespace Orchard.Users.Controllers {
             }
             if (String.IsNullOrEmpty(email)) {
                 ModelState.AddModelError("email", "You must specify an email address.");
+            }
+            string userUnicityMessage = _userService.VerifyUserUnicity(userName, email);
+            if (userUnicityMessage != null) {
+                ModelState.AddModelError("userExists", userUnicityMessage);
             }
             if (password == null || password.Length < MinPasswordLength) {
                 ModelState.AddModelError("password",
