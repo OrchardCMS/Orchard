@@ -20,11 +20,12 @@ namespace Orchard.Core.Common.Controllers {
 
         // \/\/ Haackalicious on many accounts - don't copy what has been done here for the wrapper \/\/
         protected override DriverResult Display(BodyAspect part, string displayType) {
-            var model = new BodyDisplayViewModel { BodyAspect = part, Text = BbcodeReplace(part.Text)};
+            var model = new BodyDisplayViewModel { BodyAspect = part, Text = BbcodeReplace(part.Text) };
+
             return Combined(
                 Services.Authorizer.Authorize(Permissions.ChangeOwner) ? ContentPartTemplate(model, "Parts/ManageWrapperPre").Location("primary", "5") : null,
                 Services.Authorizer.Authorize(Permissions.ChangeOwner) ? ContentPartTemplate(model, "Parts/Manage").Location("primary", "5") : null,
-                ContentPartTemplate(model, TemplateName, Prefix).Location("primary", "5"),
+                ContentPartTemplate(model, TemplateName, Prefix).LongestMatch(displayType, "Summary", "SummaryAdmin").Location("primary", "5"),
                 Services.Authorizer.Authorize(Permissions.ChangeOwner) ? ContentPartTemplate(model, "Parts/ManageWrapperPost").Location("primary", "5") : null);
         }
 

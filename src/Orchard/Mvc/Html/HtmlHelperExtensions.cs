@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Web.Mvc;
 using System.Web.Mvc.Html;
 using System.Web.Routing;
+using Orchard.Extensions;
 using Orchard.Services;
 using Orchard.Settings;
 using Orchard.Utility;
@@ -84,6 +86,17 @@ namespace Orchard.Mvc.Html {
             sb.Append("</ul>");
 
             return sb.ToString();
+        }
+
+        #endregion
+
+        #region Excerpt
+
+        public static MvcHtmlString Excerpt(this HtmlHelper html, string markup, int length) {
+            var tagRegex = new Regex("<[^<>]*>", RegexOptions.Singleline);
+            var text = html.Encode(tagRegex.Replace(markup, ""));
+
+            return MvcHtmlString.Create(text.Ellipsize(length));
         }
 
         #endregion

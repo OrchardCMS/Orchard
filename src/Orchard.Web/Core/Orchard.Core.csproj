@@ -225,6 +225,7 @@
     <Content Include="Themes\Views\DisplayTemplates\Items\ContentItem.ascx" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Common\Views\DisplayTemplates\Parts\Common.Body.Summary.ascx" />
     <Content Include="Common\Views\DisplayTemplates\Parts\ManageWrapperPost.ascx" />
     <Content Include="Common\Views\DisplayTemplates\Parts\ManageWrapperPre.ascx" />
     <Content Include="Common\Views\DisplayTemplates\Parts\Manage.ascx" />

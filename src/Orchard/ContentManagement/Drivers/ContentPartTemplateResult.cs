@@ -1,3 +1,4 @@
+using System.Linq;
 using Orchard.ContentManagement.Handlers;
 
 namespace Orchard.ContentManagement.Drivers {
@@ -32,6 +33,23 @@ namespace Orchard.ContentManagement.Drivers {
         public ContentPartTemplateResult Location(string zone, string position) {
             Zone = zone;
             Position = position;
+            return this;
+        }
+
+        public ContentPartTemplateResult LongestMatch(string displayType, params string[] knownDisplayTypes) {
+
+            if (string.IsNullOrEmpty(displayType))
+                return this;
+
+            var longest = knownDisplayTypes.Aggregate("", (best, x) => {
+                if (displayType.StartsWith(x) && x.Length > best.Length) return x;
+                return best;
+            });
+
+            if (string.IsNullOrEmpty(longest))
+                return this;
+
+            TemplateName += "." + longest;
             return this;
         }
     }
