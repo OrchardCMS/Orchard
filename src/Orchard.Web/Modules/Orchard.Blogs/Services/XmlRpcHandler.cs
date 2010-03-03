@@ -234,7 +234,7 @@ namespace Orchard.Blogs.Services {
         }
 
         private static XRpcStruct CreateBlogStruct(BlogPost blogPost, UrlHelper urlHelper) {
-            var url = urlHelper.AbsoluteAction(() => urlHelper.BlogPost(blogPost.Blog.Slug, blogPost.Slug));
+            var url = urlHelper.AbsoluteAction(() => urlHelper.BlogPost(blogPost));
             return new XRpcStruct()
                 .Set("postid", blogPost.Id)
                 .Set("dateCreated", blogPost.CreatedUtc)

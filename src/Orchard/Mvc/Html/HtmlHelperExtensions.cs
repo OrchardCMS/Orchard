@@ -256,6 +256,22 @@ namespace Orchard.Mvc.Html {
 
         #endregion
 
+        #region AntiForgeryTokenValueOrchardLink
+
+        public static string AntiForgeryTokenValueOrchardLink(this HtmlHelper htmlHelper, string linkContents, string href)  {
+            return htmlHelper.Link(linkContents, htmlHelper.AntiForgeryTokenGetUrl(href));
+        }
+
+        #endregion
+
+        #region AntiForgeryTokenGetUrl
+
+        public static string AntiForgeryTokenGetUrl(this HtmlHelper htmlHelper, string baseUrl)  {
+            return string.Format("{0}{1}__RequestVerificationToken={2}", baseUrl, baseUrl.IndexOf('?') > -1 ? "&" : "?", htmlHelper.ViewContext.HttpContext.Server.UrlEncode(htmlHelper.AntiForgeryTokenValueOrchard()));
+        }
+
+        #endregion
+
         #region AntiForgeryTokenValueOrchard
 
         public static string AntiForgeryTokenValueOrchard(this HtmlHelper htmlHelper) {

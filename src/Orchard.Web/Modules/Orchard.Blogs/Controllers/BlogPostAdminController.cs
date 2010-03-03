@@ -5,6 +5,7 @@ using Orchard.Blogs.Services;
 using Orchard.Blogs.ViewModels;
 using Orchard.ContentManagement;
 using Orchard.Localization;
+using Orchard.Mvc.AntiForgery;
 using Orchard.Mvc.Results;
 using Orchard.UI.Admin;
 using Orchard.UI.Notify;
@@ -80,7 +81,7 @@ namespace Orchard.Blogs.Controllers {
                     break;
             }
 
-            return Redirect(Url.BlogPostEdit(blogSlug, model.BlogPost.Item.Id));
+            return Redirect(Url.BlogPostEdit(model.BlogPost.Item));
         }
 
         public ActionResult Edit(string blogSlug, int postId) {
@@ -144,7 +145,7 @@ namespace Orchard.Blogs.Controllers {
                     break;
             }
 
-            return Redirect(Url.BlogPostEdit(blogSlug, model.BlogPost.Item.Id));
+            return Redirect(Url.BlogPostEdit(model.BlogPost.Item));
         }
 
         public ActionResult DiscardDraft(int id) {
@@ -185,17 +186,17 @@ namespace Orchard.Blogs.Controllers {
             return RedirectToAction("Edit", new { BlogSlug = item.As<BlogPost>().Blog.Slug, PostId = item.ContentItem.Id });
         }
 
-        [HttpPost]
+        [ValidateAntiForgeryTokenOrchard]
         public ActionResult Delete(string blogSlug, int postId) {
             //refactoring: test PublishBlogPost/PublishOthersBlogPost in addition if published
             if (!Services.Authorizer.Authorize(Permissions.DeleteBlogPost, T("Couldn't delete blog post")))
                 return new HttpUnauthorizedResult();
 
-            Blog blog = _blogService.Get(blogSlug);
+            var blog = _blogService.Get(blogSlug);
             if (blog == null)
                 return new NotFoundResult();
 
-            BlogPost post = _blogPostService.Get(postId, VersionOptions.Latest);
+            var post = _blogPostService.Get(postId, VersionOptions.Latest);
             if (post == null)
                 return new NotFoundResult();
 
@@ -205,21 +206,40 @@ namespace Orchard.Blogs.Controllers {
             return Redirect(Url.BlogForAdmin(blogSlug));
         }
 
-        [HttpPost]
+        [ValidateAntiForgeryTokenOrchard]
         public ActionResult Publish(string blogSlug, int postId) {
             if (!Services.Authorizer.Authorize(Permissions.PublishBlogPost, T("Couldn't publish blog post")))
                 return new HttpUnauthorizedResult();
 
-            Blog blog = _blogService.Get(blogSlug);
+            var blog = _blogService.Get(blogSlug);
             if (blog == null)
                 return new NotFoundResult();
 
-            BlogPost post = _blogPostService.Get(postId, VersionOptions.Latest);
+            var post = _blogPostService.Get(postId, VersionOptions.Latest);
             if (post == null)
                 return new NotFoundResult();
 
             _blogPostService.Publish(post);
-            Services.Notifier.Information(T("Blog post information updated."));
+            Services.Notifier.Information(T("Blog post successfully published."));
+
+            return Redirect(Url.BlogForAdmin(blog.Slug));
+        }
+
+        [ValidateAntiForgeryTokenOrchard]
+        public ActionResult Unpublish(string blogSlug, int postId) {
+            if (!Services.Authorizer.Authorize(Permissions.PublishBlogPost, T("Couldn't unpublish blog post")))
+                return new HttpUnauthorizedResult();
+
+            var blog = _blogService.Get(blogSlug);
+            if (blog == null)
+                return new NotFoundResult();
+
+            var post = _blogPostService.Get(postId, VersionOptions.Latest);
+            if (post == null)
+                return new NotFoundResult();
+
+            _blogPostService.Unpublish(post);
+            Services.Notifier.Information(T("Blog post successfully unpublished."));
 
             return Redirect(Url.BlogForAdmin(blog.Slug));
         }

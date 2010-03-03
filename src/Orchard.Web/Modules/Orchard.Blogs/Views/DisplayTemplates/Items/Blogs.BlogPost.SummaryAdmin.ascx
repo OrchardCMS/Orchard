@@ -6,7 +6,7 @@
 <%@ Import Namespace="Orchard.Blogs.Models"%>
 <div class="summary">
     <div class="properties">
-        <h3><%=Html.Link(Html.Encode(Model.Item.Title), Url.BlogPostEdit(Model.Item.Blog.Slug, Model.Item.Id))%></h3>
+        <h3><%=Html.Link(Html.Encode(Model.Item.Title), Url.BlogPostEdit(Model.Item))%></h3>
         <ul>
             <li><%
             if (Model.Item.HasPublished) { %>
@@ -41,24 +41,17 @@
     </div>
     <div class="related"><%
         if (Model.Item.HasPublished){ %>
-        <a href="<%=Url.BlogPost(Model.Item.Blog.Slug, Model.Item.Slug) %>" title="<%=_Encoded("View Post")%>"><%=_Encoded("View")%></a><%=_Encoded(" | ")%><%
+        <a href="<%=Url.BlogPost(Model.Item) %>" title="<%=_Encoded("View Post")%>"><%=_Encoded("View")%></a><%=_Encoded(" | ")%><%
             if (Model.Item.HasDraft) { %>
-            <a href="#" title="<%=_Encoded("Publish Draft")%>"><%=_Encoded("Publish Draft")%></a><%=_Encoded(" | ")%><%
+            <a href="<%=Html.AntiForgeryTokenGetUrl(Url.BlogPostPublish(Model.Item)) %>" title="<%=_Encoded("Publish Draft")%>"><%=_Encoded("Publish Draft")%></a><%=_Encoded(" | ")%><%
             } %>
-        <a href="#" title="<%=_Encoded("Unpublish Post")%>"><%=_Encoded("Unpublish")%></a><%=_Encoded(" | ")%><%
+        <a href="<%=Html.AntiForgeryTokenGetUrl(Url.BlogPostUnpublish(Model.Item)) %>" title="<%=_Encoded("Unpublish Post")%>"><%=_Encoded("Unpublish")%></a><%=_Encoded(" | ")%><%
         }
         else { %>
-        <a href="#" title="<%=_Encoded("Publish Post")%>"><%=_Encoded("Publish")%></a><%=_Encoded(" | ")%><%
+        <a href="<%=Html.AntiForgeryTokenGetUrl(Url.BlogPostPublish(Model.Item)) %>" title="<%=_Encoded("Publish Post")%>"><%=_Encoded("Publish")%></a><%=_Encoded(" | ")%><%
         } %>
-        <a href="<%=Url.BlogPostEdit(Model.Item.Blog.Slug, Model.Item.Id) %>" title="<%=_Encoded("Edit Post")%>"><%=_Encoded("Edit")%></a><%=_Encoded(" | ")%><%--
-        if (Model.Item.ContentItem.VersionRecord.Published == false) { // todo: (heskew) be smart about this and maybe have other contextual actions - including view/preview for view up there ^^
-            using (Html.BeginFormAntiForgeryPost(Url.BlogPostPublish(Model.Item.Blog.Slug, Model.Item.Id), FormMethod.Post, new { @class = "inline" })) { %>
-        <button type="submit" class="linkButton" title="<%=_Encoded("Publish") %>"><%=_Encoded("Publish")%></button><%=_Encoded(" | ")%><%
-            }
-        }--%><%
-        using (Html.BeginFormAntiForgeryPost(Url.BlogPostDelete(Model.Item.Blog.Slug, Model.Item.Id), FormMethod.Post, new { @class = "inline" })) { %>
-        <button type="submit" class="linkButton" title="<%=_Encoded("Delete") %>"><%=_Encoded("Delete") %></button><%
-        } %>
+        <a href="<%=Url.BlogPostEdit(Model.Item) %>" title="<%=_Encoded("Edit Post")%>"><%=_Encoded("Edit")%></a><%=_Encoded(" | ")%>
+        <a href="<%=Html.AntiForgeryTokenGetUrl(Url.BlogPostDelete(Model.Item)) %>" title="<%=_Encoded("Delete")%>"><%=_Encoded("Delete")%></a>
         <br /><%Html.Zone("meta");%>
     </div>
     <div style="clear:both;"></div>

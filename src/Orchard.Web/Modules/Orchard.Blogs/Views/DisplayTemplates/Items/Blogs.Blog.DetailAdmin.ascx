@@ -20,6 +20,6 @@
 </form>--%>
 
 
-<div class="actions"><a href="<%=Url.BlogPostCreate(Model.Item.Slug) %>" class="add button primaryAction"><%=_Encoded("New Post")%></a></div>
+<div class="actions"><a href="<%=Url.BlogPostCreate(Model.Item) %>" class="add button primaryAction"><%=_Encoded("New Post")%></a></div>
 <% Html.Zone("primary");
    Html.ZonesAny(); %>
