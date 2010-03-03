@@ -6,6 +6,7 @@ using Orchard.Logging;
 using Orchard.Mvc.ViewModels;
 using Orchard.Services;
 using Orchard.Settings;
+using Orchard.Themes;
 
 namespace Orchard.Core.HomePage.Controllers {
     [HandleError]
@@ -20,6 +21,7 @@ namespace Orchard.Core.HomePage.Controllers {
         public ILogger Logger { get; set; }
         protected virtual ISite CurrentSite { get; [UsedImplicitly] private set; }
 
+        [Themed]
         public ActionResult Index() {
             try {
                 var homepage = CurrentSite.HomePage;
