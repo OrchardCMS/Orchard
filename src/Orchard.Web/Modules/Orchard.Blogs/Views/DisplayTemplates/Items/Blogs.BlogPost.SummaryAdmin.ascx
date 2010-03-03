@@ -1,4 +1,5 @@
 ﻿<%@ Control Language="C#" Inherits="Orchard.Mvc.ViewUserControl<ContentItemViewModel<BlogPost>>" %>
+<%@ Import Namespace="Orchard.ContentManagement.Aspects"%>
 <%@ Import Namespace="Orchard.ContentManagement"%>
 <%@ Import Namespace="Orchard.Core.Common.Models"%>
 <%@ Import Namespace="Orchard.Mvc.ViewModels"%>
@@ -30,20 +31,20 @@
                 <%=Html.DateTime(Model.Item.ScheduledPublishUtc.Value, "M/d/yyyy h:mm tt")%><%
             }
             else if (Model.Item.IsPublished) { %>
-                <%=_Encoded("Published: ") + Html.PublishedWhen(Model.Item) %><%
+                <%=_Encoded("Published: ") + Html.DateTimeRelative(Model.Item.As<ICommonAspect>().VersionPublishedUtc.Value)%><%
             }
             else { %>
-                <%=_Encoded("Last modified: ") + Html.DateTimeRelative(Model.Item.As<CommonAspect>().ModifiedUtc.Value) %><%
+                <%=_Encoded("Last modified: ") + Html.DateTimeRelative(Model.Item.As<ICommonAspect>().ModifiedUtc.Value) %><%
             } %>&nbsp;&#124;&nbsp;
             </li>
-            <li><%=_Encoded("By {0}", Model.Item.Creator == null ? String.Empty : Model.Item.Creator.UserName)%></li>                   
+            <li><%=_Encoded("By {0}", Model.Item.Creator.UserName)%></li>                   
         </ul>
     </div>
     <div class="related"><%
         if (Model.Item.HasPublished){ %>
         <a href="<%=Url.BlogPost(Model.Item) %>" title="<%=_Encoded("View Post")%>"><%=_Encoded("View")%></a><%=_Encoded(" | ")%><%
             if (Model.Item.HasDraft) { %>
-            <a href="<%=Html.AntiForgeryTokenGetUrl(Url.BlogPostPublish(Model.Item)) %>" title="<%=_Encoded("Publish Draft")%>"><%=_Encoded("Publish Draft")%></a><%=_Encoded(" | ")%><%
+        <a href="<%=Html.AntiForgeryTokenGetUrl(Url.BlogPostPublish(Model.Item)) %>" title="<%=_Encoded("Publish Draft")%>"><%=_Encoded("Publish Draft")%></a><%=_Encoded(" | ")%><%
             } %>
         <a href="<%=Html.AntiForgeryTokenGetUrl(Url.BlogPostUnpublish(Model.Item)) %>" title="<%=_Encoded("Unpublish Post")%>"><%=_Encoded("Unpublish")%></a><%=_Encoded(" | ")%><%
         }
@@ -51,7 +52,7 @@
         <a href="<%=Html.AntiForgeryTokenGetUrl(Url.BlogPostPublish(Model.Item)) %>" title="<%=_Encoded("Publish Post")%>"><%=_Encoded("Publish")%></a><%=_Encoded(" | ")%><%
         } %>
         <a href="<%=Url.BlogPostEdit(Model.Item) %>" title="<%=_Encoded("Edit Post")%>"><%=_Encoded("Edit")%></a><%=_Encoded(" | ")%>
-        <a href="<%=Html.AntiForgeryTokenGetUrl(Url.BlogPostDelete(Model.Item)) %>" title="<%=_Encoded("Delete")%>"><%=_Encoded("Delete")%></a>
+        <a href="<%=Html.AntiForgeryTokenGetUrl(Url.BlogPostDelete(Model.Item)) %>" title="<%=_Encoded("Delete Post")%>"><%=_Encoded("Delete")%></a>
         <br /><%Html.Zone("meta");%>
     </div>
     <div style="clear:both;"></div>

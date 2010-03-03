@@ -1,5 +1,7 @@
 using System.Web.Mvc;
 using Orchard.Blogs.Models;
+using Orchard.ContentManagement;
+using Orchard.ContentManagement.Aspects;
 using Orchard.Mvc.Html;
 
 namespace Orchard.Blogs.Extensions {
@@ -9,7 +11,7 @@ namespace Orchard.Blogs.Extensions {
         }
 
         public static string PublishedState(this HtmlHelper htmlHelper, BlogPost blogPost) {
-            return htmlHelper.DateTime(blogPost.PublishedUtc, "Draft");
+            return htmlHelper.DateTime(blogPost.As<ICommonAspect>().VersionPublishedUtc, "Draft");
         }
 
         public static string PublishedWhen(this HtmlHelper<BlogPost> htmlHelper) {
@@ -17,7 +19,7 @@ namespace Orchard.Blogs.Extensions {
         }
 
         public static string PublishedWhen(this HtmlHelper htmlHelper, BlogPost blogPost) {
-            return htmlHelper.DateTimeRelative(blogPost.PublishedUtc, "as a Draft");
+            return htmlHelper.DateTimeRelative(blogPost.As<ICommonAspect>().VersionPublishedUtc, "as a Draft");
         }
     }
 }

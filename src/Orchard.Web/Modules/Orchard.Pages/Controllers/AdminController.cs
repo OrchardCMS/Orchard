@@ -6,6 +6,7 @@ using System.Web.Mvc;
 using JetBrains.Annotations;
 using Orchard.Localization;
 using Orchard.ContentManagement;
+using Orchard.Mvc.AntiForgery;
 using Orchard.Mvc.Results;
 using Orchard.Pages.Models;
 using Orchard.Pages.Services;
@@ -210,7 +211,6 @@ namespace Orchard.Pages.Controllers {
             return RedirectToAction("Edit", "Admin", new { id = model.Page.Item.ContentItem.Id });
         }
 
-
         public ActionResult DiscardDraft(int id) {
             // get the current draft version
             var draft = Services.ContentManager.Get(id, VersionOptions.Draft);
@@ -239,9 +239,41 @@ namespace Orchard.Pages.Controllers {
             return RedirectToAction("Edit", new { draft.Id });
         }
 
-        [HttpPost]
+        [ValidateAntiForgeryTokenOrchard]
+        public ActionResult Publish(int id) {
+            if (!Services.Authorizer.Authorize(Permissions.PublishPages, T("Couldn't publish page")))
+                return new HttpUnauthorizedResult();
+
+            var page = _pageService.GetLatest(id);
+            if (page == null)
+                return new NotFoundResult();
+
+            _pageService.Publish(page);
+            Services.ContentManager.Flush();
+            Services.Notifier.Information(T("Page successfully published."));
+
+            return RedirectToAction("List");
+        }
+
+        [ValidateAntiForgeryTokenOrchard]
+        public ActionResult Unpublish(int id) {
+            if (!Services.Authorizer.Authorize(Permissions.PublishPages, T("Couldn't unpublish page")))
+                return new HttpUnauthorizedResult();
+
+            var page = _pageService.GetLatest(id);
+            if (page == null)
+                return new NotFoundResult();
+
+            _pageService.Unpublish(page);
+            Services.ContentManager.Flush();
+            Services.Notifier.Information(T("Page successfully unpublished."));
+
+            return RedirectToAction("List");
+        }
+
+        [ValidateAntiForgeryTokenOrchard]
         public ActionResult Delete(int id) {
-            Page page = _pageService.Get(id);
+            var page = _pageService.GetLatest(id);
             if (page == null)
                 return new NotFoundResult();
 
@@ -249,7 +281,7 @@ namespace Orchard.Pages.Controllers {
                 return new HttpUnauthorizedResult();
 
             _pageService.Delete(page);
-            Services.Notifier.Information(T("Page was successfully deleted"));
+            Services.Notifier.Information(T("Page successfully deleted"));
 
             return RedirectToAction("List");
         }
