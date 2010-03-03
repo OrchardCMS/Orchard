@@ -60,10 +60,6 @@ namespace Orchard.Blogs.Models {
             get { return this.As<ICommonAspect>().CreatedUtc; }
         }
 
-        public DateTime? PublishedUtc {
-            get { return this.As<ICommonAspect>().VersionPublishedUtc; }
-        }
-
         public DateTime? ScheduledPublishUtc { get; set; }
 
         private string _scheduledPublishUtcDate;
