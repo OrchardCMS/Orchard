@@ -102,6 +102,10 @@
       <Project>{9916839C-39FC-4CEB-A5AF-89CA7E87119F}</Project>
       <Name>Orchard.Core</Name>
     </ProjectReference>
+    <ProjectReference Include="Modules\Futures.Widgets\Futures.Widgets.csproj">
+      <Project>{E65E5633-C0FF-453C-A906-481C14F969D6}</Project>
+      <Name>Futures.Widgets</Name>
+    </ProjectReference>
     <ProjectReference Include="Modules\Orchard.Blogs\Orchard.Blogs.csproj">
       <Project>{63FBD4D9-E1DA-4A7B-AA6A-D6074FE50867}</Project>
       <Name>Orchard.Blogs</Name>
