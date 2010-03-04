@@ -67,7 +67,7 @@
                     <%=Html.Encode(commentEntry.Comment.CommentText.Length > 23 ? commentEntry.Comment.CommentText.Substring(0, 24) : commentEntry.Comment.CommentText) %><%=_Encoded(" ...") %>
                 <% } %> 
                 </td>
-                <td><%=commentEntry.Comment.CommentDateUtc.ToLocalTime() %></td>
+                <td><%=commentEntry.Comment.CommentDateUtc.GetValueOrDefault().ToLocalTime()) %></td>
                 <td><%=Html.ActionLink(commentEntry.CommentedOn, "Details", new { id = commentEntry.Comment.CommentedOn }) %></td>
                 <td>
                     <ul class="actions">
