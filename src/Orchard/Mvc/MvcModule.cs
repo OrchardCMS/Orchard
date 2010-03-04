@@ -76,6 +76,8 @@ namespace Orchard.Mvc {
             public override HttpRequestBase Request {
                 get { return new HttpRequestPlaceholder(); }
             }
+
+            public override IHttpHandler Handler { get; set; }
         }
 
         /// <summary>
@@ -90,6 +92,4 @@ namespace Orchard.Mvc {
             }
         }
     }
-
-
 }
