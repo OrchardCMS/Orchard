@@ -23,6 +23,11 @@ namespace Orchard.Pages.Services {
             _slugConstraint = slugConstraint;
         }
 
+        public int GetCount() {
+            //TODO: (erikpo) Need to add a count method to IContentQuery so it doesn't need to pull out all pages to get a count
+            return _contentManager.Query<Page>(VersionOptions.Latest).List().Count();
+        }
+
         public IEnumerable<Page> Get() {
             return Get(PageStatus.All);
         }

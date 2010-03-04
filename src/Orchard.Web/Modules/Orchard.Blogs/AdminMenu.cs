@@ -18,13 +18,14 @@ namespace Orchard.Blogs {
 
         private void BuildMenu(NavigationItemBuilder menu) {
             var blogs = _blogService.Get();
-            var singleBlog = blogs.Count() == 1 ? blogs.ElementAt(0) : null;
+            var blogCount = blogs.Count();
+            var singleBlog = blogCount == 1 ? blogs.ElementAt(0) : null;
 
-            if (singleBlog == null)
+            if (blogCount > 0 && singleBlog == null)
                 menu.Add("Manage Blogs", "1.0",
                          item =>
                          item.Action("List", "BlogAdmin", new {area = "Orchard.Blogs"}).Permission(Permissions.MetaListBlogs));
-            else
+            else if (singleBlog != null)
                 menu.Add("Manage Blog", "1.0",
                     item =>
                     item.Action("Item", "BlogAdmin", new {area = "Orchard.Blogs", blogSlug = singleBlog.Slug}).Permission(Permissions.MetaListBlogs));

@@ -4,6 +4,7 @@ using Orchard.Pages.Models;
 
 namespace Orchard.Pages.Services {
     public interface IPageService : IDependency {
+        int GetCount();
         IEnumerable<Page> Get();
         IEnumerable<Page> Get(PageStatus status);
         Page Get(string slug);
