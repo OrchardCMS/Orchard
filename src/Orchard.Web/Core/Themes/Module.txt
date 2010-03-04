@@ -1,1 +1,2 @@
 ﻿name: Themes
+antiforgery: enabled

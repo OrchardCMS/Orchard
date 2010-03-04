@@ -1,1 +1,2 @@
 ﻿Name: Common
+antiforgery: enabled

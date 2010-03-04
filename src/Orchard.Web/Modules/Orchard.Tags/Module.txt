@@ -1,1 +1,2 @@
 ﻿name: Tags
+antiforgery: enabled

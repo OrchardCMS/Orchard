@@ -1,1 +1,2 @@
 ﻿name: Feeds
+antiforgery: enabled
