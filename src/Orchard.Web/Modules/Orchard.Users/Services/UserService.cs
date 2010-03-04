@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using JetBrains.Annotations;
 using Orchard.Logging;
 using Orchard.ContentManagement;
 using Orchard.Users.Models;
 
 namespace Orchard.Users.Services {
+    [UsedImplicitly]
     public class UserService : IUserService {
         private readonly IContentManager _contentManager;
 
@@ -44,10 +46,5 @@ namespace Orchard.Users.Services {
             }
             return null;
         }
-    }
-
-    public interface IUserService : IDependency {
-        string VerifyUserUnicity(string userName, string email);
-        string VerifyUserUnicity(int id, string userName, string email);
     }
 }

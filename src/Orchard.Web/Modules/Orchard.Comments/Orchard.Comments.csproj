@@ -68,26 +68,28 @@
     <Compile Include="AdminMenu.cs" />
     <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Controllers\CommentController.cs" />
-    <Compile Include="Controllers\CommentDriver.cs" />
-    <Compile Include="Controllers\HasCommentsContainerDriver.cs" />
-    <Compile Include="Controllers\HasCommentsDriver.cs" />
+    <Compile Include="Drivers\CommentDriver.cs" />
+    <Compile Include="Drivers\HasCommentsContainerDriver.cs" />
+    <Compile Include="Drivers\HasCommentsDriver.cs" />
     <Compile Include="Extensions\HtmlHelperExtensions.cs" />
     <Compile Include="Models\ClosedCommentsRecord.cs" />
     <Compile Include="Models\Comment.cs" />
-    <Compile Include="Models\CommentHandler.cs" />
+    <Compile Include="Handlers\CommentHandler.cs" />
     <Compile Include="Models\CommentStatus.cs" />
     <Compile Include="Models\HasCommentsContainer.cs" />
-    <Compile Include="Models\HasCommentsContainerHandler.cs" />
+    <Compile Include="Handlers\HasCommentsContainerHandler.cs" />
     <Compile Include="Feeds\CommentedOnContainerFeedQuery.cs" />
     <Compile Include="Feeds\CommentedOnFeedQuery.cs" />
     <Compile Include="Feeds\CommentFeedItemBuilder.cs" />
     <Compile Include="Models\CommentRecord.cs" />
     <Compile Include="Models\HasCommentsRecord.cs" />
+    <Compile Include="Services\CreateCommentContext.cs" />
+    <Compile Include="Services\ICommentService.cs" />
     <Compile Include="ViewModels\CommentCountViewModel.cs" />
     <Compile Include="Models\CommentSettings.cs" />
-    <Compile Include="Models\CommentSettingsHandler.cs" />
+    <Compile Include="Handlers\CommentSettingsHandler.cs" />
     <Compile Include="Models\CommentSettingsRecord.cs" />
-    <Compile Include="Models\HasCommentsHandler.cs" />
+    <Compile Include="Handlers\HasCommentsHandler.cs" />
     <Compile Include="Models\HasComments.cs" />
     <Compile Include="Permissions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -123,10 +125,6 @@
       <Project>{9916839C-39FC-4CEB-A5AF-89CA7E87119F}</Project>
       <Name>Orchard.Core</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="App_Data\" />
-    <Folder Include="Content\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v9.0\WebApplications\Microsoft.WebApplication.targets" />

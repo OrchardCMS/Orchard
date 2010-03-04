@@ -1,9 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
-using System.Web.Mvc.Ajax;
 using Orchard.Data;
 using Orchard.DevTools.ViewModels;
 using Orchard.ContentManagement;
@@ -41,8 +39,6 @@ namespace Orchard.DevTools.Controllers {
 
             return View(model);
         }
-
-
 
         static IEnumerable<Type> AllTypes(Type type) {
             var scan = type;

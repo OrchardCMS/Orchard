@@ -1,10 +1,10 @@
 ﻿using System;
 using JetBrains.Annotations;
 using Orchard.ContentManagement.Handlers;
-using Orchard.Core.Navigation.Records;
+using Orchard.Core.Navigation.Models;
 using Orchard.Data;
 
-namespace Orchard.Core.Navigation.Models {
+namespace Orchard.Core.Navigation.Handlers {
     [UsedImplicitly]
     public class MenuPartHandler : ContentHandler {
         public MenuPartHandler(IRepository<MenuPartRecord> menuPartRepository) {
@@ -14,9 +14,9 @@ namespace Orchard.Core.Navigation.Models {
             Filters.Add(StorageFilter.For(menuPartRepository));
 
             OnActivated<MenuPart>((ctx, x) => {
-                x.OnMainMenu = false;
-                x.MenuText = String.Empty;
-            });
+                                      x.OnMainMenu = false;
+                                      x.MenuText = String.Empty;
+                                  });
         }
     }
 }

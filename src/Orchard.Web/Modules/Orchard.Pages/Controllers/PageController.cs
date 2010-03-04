@@ -1,6 +1,7 @@
 ﻿using System.Web.Mvc;
 using Orchard.Localization;
 using Orchard.Mvc.Results;
+using Orchard.Pages.Routing;
 using Orchard.Pages.Services;
 using Orchard.Pages.ViewModels;
 using Orchard.Security;

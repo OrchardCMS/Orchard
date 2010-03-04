@@ -43,6 +43,5 @@ namespace Orchard.Pages.Security {
                 return Permissions.DeletePages;
             return null;
         }
-
     }
 }

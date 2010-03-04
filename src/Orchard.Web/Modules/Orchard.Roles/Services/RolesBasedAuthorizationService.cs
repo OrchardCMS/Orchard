@@ -4,13 +4,13 @@ using System.Linq;
 using JetBrains.Annotations;
 using Orchard.Logging;
 using Orchard.ContentManagement;
-using Orchard.Roles.Models.NoRecord;
-using Orchard.Roles.Records;
+using Orchard.Roles.Models;
 using Orchard.Security;
 using Orchard.Security.Permissions;
 using Orchard.Settings;
 
 namespace Orchard.Roles.Services {
+    [UsedImplicitly]
     public class RolesBasedAuthorizationService : IAuthorizationService {
         private readonly IRoleService _roleService;
         private readonly IEnumerable<IAuthorizationServiceEvents> _events;

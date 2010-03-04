@@ -1,10 +1,12 @@
 using System.Collections.Generic;
 using System.Linq;
+using JetBrains.Annotations;
 using Orchard.Blogs.Models;
-using Orchard.Core.Common.Records;
+using Orchard.Core.Common.Models;
 using Orchard.ContentManagement;
 
 namespace Orchard.Blogs.Services {
+    [UsedImplicitly]
     public class BlogService : IBlogService {
         private readonly IContentManager _contentManager;
 

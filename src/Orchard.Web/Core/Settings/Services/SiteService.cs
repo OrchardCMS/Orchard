@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
+using JetBrains.Annotations;
 using Orchard.Core.Settings.Models;
-using Orchard.Core.Settings.Records;
 using Orchard.Data;
 using Orchard.Logging;
 using Orchard.ContentManagement;
@@ -9,6 +9,7 @@ using Orchard.Settings;
 using System.Web;
 
 namespace Orchard.Core.Settings.Services {
+    [UsedImplicitly]
     public class SiteService : ISiteService {
         private readonly IRepository<SiteSettingsRecord> _siteSettingsRepository;
         private readonly IContentManager _contentManager;
@@ -20,8 +21,6 @@ namespace Orchard.Core.Settings.Services {
         }
 
         public ILogger Logger { get; set; }
-
-        #region Implementation of ISiteService
 
         public ISite GetSiteSettings() {
             string applicationPath = HttpContext.Current.Request.ApplicationPath;
@@ -39,7 +38,5 @@ namespace Orchard.Core.Settings.Services {
             }
             return _contentManager.Get<ISite>(record.Id);
         }
-
-        #endregion
     }
 }

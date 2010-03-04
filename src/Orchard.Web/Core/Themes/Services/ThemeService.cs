@@ -12,6 +12,7 @@ using Orchard.Themes;
 using Orchard.Core.Themes.Models;
 
 namespace Orchard.Core.Themes.Services {
+    [UsedImplicitly]
     public class ThemeService : IThemeService {
         private readonly IExtensionManager _extensionManager;
         private readonly IEnumerable<IThemeSelector> _themeSelectors;
@@ -26,8 +27,6 @@ namespace Orchard.Core.Themes.Services {
 
         public ILogger Logger { get; set; }
         protected virtual ISite CurrentSite { get; [UsedImplicitly] private set; }
-
-        #region Implementation of IThemeService
 
         public ITheme GetSiteTheme() {
             string currentThemeName = CurrentSite.As<ThemeSiteSettings>().Record.CurrentThemeName;
@@ -109,7 +108,5 @@ namespace Orchard.Core.Themes.Services {
         public void UninstallTheme(string themeName) {
             _extensionManager.UninstallExtension("Theme", themeName);
         }
-
-        #endregion
     }
 }

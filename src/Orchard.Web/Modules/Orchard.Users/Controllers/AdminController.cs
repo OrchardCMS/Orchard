@@ -4,12 +4,12 @@ using Orchard.Localization;
 using Orchard.ContentManagement;
 using Orchard.Security;
 using Orchard.UI.Notify;
+using Orchard.Users.Drivers;
 using Orchard.Users.Models;
 using Orchard.Users.Services;
 using Orchard.Users.ViewModels;
 
 namespace Orchard.Users.Controllers {
-
     public class AdminController : Controller, IUpdateModel {
         private readonly IMembershipService _membershipService;
         private readonly IUserService _userService;
@@ -26,7 +26,6 @@ namespace Orchard.Users.Controllers {
 
         public IOrchardServices Services { get; set; }
         public Localizer T { get; set; }
-
 
         public ActionResult Index() {
             if (!Services.Authorizer.Authorize(Permissions.ManageUsers, T("Not authorized to list users")))

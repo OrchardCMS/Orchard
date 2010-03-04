@@ -2,7 +2,8 @@
 using System.Linq;
 using System.Web.Mvc;
 using System.Web.Routing;
-using Orchard.Blogs.Controllers;
+using JetBrains.Annotations;
+using Orchard.Blogs.Drivers;
 using Orchard.Blogs.Models;
 using Orchard.ContentManagement;
 using Orchard.Core.XmlRpc;
@@ -13,6 +14,7 @@ using Orchard.Security;
 using Orchard.Blogs.Extensions;
 
 namespace Orchard.Blogs.Services {
+    [UsedImplicitly]
     public class XmlRpcHandler : IXmlRpcHandler {
         private readonly IBlogService _blogService;
         private readonly IBlogPostService _blogPostService;

@@ -1,43 +1,17 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using JetBrains.Annotations;
+using Orchard.Comments.Drivers;
 using Orchard.Comments.Models;
-using Orchard.Comments.Controllers;
 using Orchard.ContentManagement.Aspects;
 using Orchard.Data;
 using Orchard.Logging;
 using Orchard.ContentManagement;
 using Orchard.Security;
 using Orchard.Services;
-using Orchard.Settings;
 
 namespace Orchard.Comments.Services {
-    public interface ICommentService : IDependency {
-        IEnumerable<Comment> GetComments();
-        IEnumerable<Comment> GetComments(CommentStatus status);
-        IEnumerable<Comment> GetCommentsForCommentedContent(int id);
-        IEnumerable<Comment> GetCommentsForCommentedContent(int id, CommentStatus status);
-        Comment GetComment(int id);
-        ContentItemMetadata GetDisplayForCommentedContent(int id);
-        Comment CreateComment(CreateCommentContext commentRecord, bool moderateComments);
-        void UpdateComment(int id, string name, string email, string siteName, string commentText, CommentStatus status);
-        void ApproveComment(int commentId);
-        void PendComment(int commentId);
-        void MarkCommentAsSpam(int commentId);
-        void DeleteComment(int commentId);
-        bool CommentsClosedForCommentedContent(int id);
-        void CloseCommentsForCommentedContent(int id);
-        void EnableCommentsForCommentedContent(int id);
-    }
-
-    public class CreateCommentContext {
-        public virtual string Author { get; set; }
-        public virtual string SiteName { get; set; }
-        public virtual string Email { get; set; }
-        public virtual string CommentText { get; set; }
-        public virtual int CommentedOn { get; set; }
-    }
-
+    [UsedImplicitly]
     public class CommentService : ICommentService {
         private readonly IRepository<ClosedCommentsRecord> _closedCommentsRepository;
         private readonly IClock _clock;
@@ -56,11 +30,7 @@ namespace Orchard.Comments.Services {
         }
 
         public ILogger Logger { get; set; }
-        protected virtual ISite CurrentSite { get; [UsedImplicitly] private set; }
         protected virtual IUser CurrentUser { get; [UsedImplicitly] private set; }
-
-
-        #region Implementation of ICommentService
 
         public IEnumerable<Comment> GetComments() {
             return _contentManager
@@ -168,7 +138,5 @@ namespace Orchard.Comments.Services {
                 _closedCommentsRepository.Delete(c);
             }
         }
-
-        #endregion
     }
 }

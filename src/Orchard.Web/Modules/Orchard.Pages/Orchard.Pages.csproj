@@ -68,20 +68,21 @@
     <Compile Include="AdminMenu.cs" />
     <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Controllers\PageController.cs" />
-    <Compile Include="Controllers\PageDriver.cs" />
+    <Compile Include="Drivers\PageDriver.cs" />
     <Compile Include="Models\Page.cs" />
-    <Compile Include="Models\PageHandler.cs" />
+    <Compile Include="Handlers\PageHandler.cs" />
     <Compile Include="Permissions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Routes.cs" />
     <Compile Include="Security\Authorization.cs" />
     <Compile Include="Services\IPageService.cs" />
+    <Compile Include="Routing\ISlugConstraint.cs" />
     <Compile Include="Services\PageService.cs" />
     <Compile Include="Services\PageHomePageProvider.cs" />
-    <Compile Include="Services\SlugConstraint.cs">
+    <Compile Include="Routing\SlugConstraint.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Services\SlugConstraintUpdator.cs" />
+    <Compile Include="Routing\SlugConstraintUpdator.cs" />
     <Compile Include="ViewModels\PageCreateViewModel.cs" />
     <Compile Include="ViewModels\PageEditViewModel.cs" />
     <Compile Include="ViewModels\PagesViewModel.cs" />

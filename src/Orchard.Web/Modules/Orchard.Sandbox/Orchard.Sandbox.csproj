@@ -63,9 +63,9 @@
   <ItemGroup>
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\PageController.cs" />
-    <Compile Include="Controllers\SandboxPageDriver.cs" />
+    <Compile Include="Drivers\SandboxPageDriver.cs" />
     <Compile Include="Models\SandboxPage.cs" />
-    <Compile Include="Models\SandboxContentHandler.cs" />
+    <Compile Include="Handlers\SandboxContentHandler.cs" />
     <Compile Include="Models\SandboxPageRecord.cs" />
     <Compile Include="Models\SandboxSettingsRecord.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -97,11 +97,6 @@
       <Project>{9916839C-39FC-4CEB-A5AF-89CA7E87119F}</Project>
       <Name>Orchard.Core</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="App_Data\" />
-    <Folder Include="Content\" />
-    <Folder Include="Scripts\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v9.0\WebApplications\Microsoft.WebApplication.targets" />

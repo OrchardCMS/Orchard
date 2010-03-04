@@ -3,14 +3,16 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using System.Web.Security;
+using JetBrains.Annotations;
 using Orchard.Data;
 using Orchard.Logging;
 using Orchard.ContentManagement;
 using Orchard.Security;
-using Orchard.Users.Controllers;
+using Orchard.Users.Drivers;
 using Orchard.Users.Models;
 
 namespace Orchard.Users.Services {
+    [UsedImplicitly]
     public class MembershipService : IMembershipService {
         private readonly IContentManager _contentManager;
         private readonly IRepository<UserRecord> _userRepository;

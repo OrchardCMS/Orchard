@@ -1,14 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using JetBrains.Annotations;
 using Orchard.ContentManagement.Records;
-using Orchard.Pages.Controllers;
+using Orchard.Core.Common.Models;
+using Orchard.Pages.Drivers;
 using Orchard.Pages.Models;
-using Orchard.Core.Common.Records;
 using Orchard.ContentManagement;
+using Orchard.Pages.Routing;
 using Orchard.Tasks.Scheduling;
 
 namespace Orchard.Pages.Services {
+    [UsedImplicitly]
     public class PageService : IPageService {
         private readonly IContentManager _contentManager;
         private readonly IPublishingTaskManager _publishingTaskManager;

@@ -12,7 +12,6 @@ using NUnit.Framework;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Handlers;
 using Orchard.Core.Common.Models;
-using Orchard.Core.Common.Records;
 using Orchard.Core.Feeds;
 using Orchard.Core.Feeds.Controllers;
 using Orchard.Core.Feeds.Models;

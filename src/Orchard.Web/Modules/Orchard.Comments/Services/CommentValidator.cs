@@ -12,6 +12,7 @@ using Joel.Net;
 namespace Orchard.Comments.Services {
     //This uses an akismet api implementation from http://akismetapi.codeplex.com/ 
     //Since the implementation is trivial, it may make sense to implement it to reduce dependencies.
+    [UsedImplicitly]
     public class AkismetCommentValidator : ICommentValidator {
         private readonly INotifier _notifer;
         public AkismetCommentValidator(INotifier notifier) {
@@ -23,9 +24,6 @@ namespace Orchard.Comments.Services {
         public ILogger Logger { get; set; }
         public Localizer T { get; set; }
         protected virtual ISite CurrentSite { get; [UsedImplicitly] private set; }
-        
-
-        #region Implementation of ICommentValidator
 
         public bool ValidateComment(Comment comment) {
             CommentSettingsRecord commentSettingsRecord = CurrentSite.As<CommentSettings>().Record;
@@ -58,7 +56,5 @@ namespace Orchard.Comments.Services {
 
             return false;
         }
-
-        #endregion
     }
 }

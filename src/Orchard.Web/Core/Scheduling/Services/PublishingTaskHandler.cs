@@ -1,7 +1,9 @@
-﻿using Orchard.Logging;
+﻿using JetBrains.Annotations;
+using Orchard.Logging;
 using Orchard.Tasks.Scheduling;
 
 namespace Orchard.Core.Scheduling.Services {
+    [UsedImplicitly]
     public class PublishingTaskHandler : IScheduledTaskHandler {
         public PublishingTaskHandler(IOrchardServices services) {
             Services = services;

@@ -2,7 +2,7 @@
 using System.Web.Mvc;
 using System.Web.Routing;
 using Orchard.Mvc.Routes;
-using Orchard.Pages.Services;
+using Orchard.Pages.Routing;
 
 namespace Orchard.Pages {
     public class Routes : IRouteProvider {

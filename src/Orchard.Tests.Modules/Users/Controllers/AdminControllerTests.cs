@@ -18,6 +18,7 @@ using Orchard.Security;
 using Orchard.Security.Permissions;
 using Orchard.UI.Notify;
 using Orchard.Users.Controllers;
+using Orchard.Users.Handlers;
 using Orchard.Users.Models;
 using Orchard.Users.Services;
 using Orchard.Users.ViewModels;

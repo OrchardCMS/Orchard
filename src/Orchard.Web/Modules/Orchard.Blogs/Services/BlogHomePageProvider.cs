@@ -1,13 +1,14 @@
 ﻿using System.Linq;
 using System.Web.Mvc;
+using JetBrains.Annotations;
 using Orchard.Blogs.Extensions;
-using Orchard.Blogs.Models;
 using Orchard.Blogs.ViewModels;
 using Orchard.Mvc.Results;
 using Orchard.Services;
 using Orchard.Core.Feeds;
 
 namespace Orchard.Blogs.Services {
+    [UsedImplicitly]
     public class BlogHomePageProvider : IHomePageProvider {
         private readonly IBlogService _blogService;
         private readonly IFeedManager _feedManager;
@@ -20,15 +21,12 @@ namespace Orchard.Blogs.Services {
 
         public IOrchardServices Services { get; private set; }
 
-        #region Implementation of IHomePageProvider
-
         public string GetProviderName() {
             return "BlogHomePageProvider";
         }
 
         public ActionResult GetHomePage(int itemId) {
-            Blog blog = _blogService.Get().Where(x => x.Id == itemId).FirstOrDefault();
-
+            var blog = _blogService.Get().Where(x => x.Id == itemId).FirstOrDefault();
             if (blog == null)
                 return new NotFoundResult();
 
@@ -43,7 +41,5 @@ namespace Orchard.Blogs.Services {
                 ViewData = new ViewDataDictionary<BlogViewModel>(model)
             };
         }
-
-        #endregion
     }
 }

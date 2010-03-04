@@ -5,7 +5,6 @@ using System.Web;
 using System.Web.Mvc;
 using Orchard.Localization;
 using Orchard.Roles.Models;
-using Orchard.Roles.Records;
 using Orchard.Roles.Services;
 using Orchard.Roles.ViewModels;
 using Orchard.Security;

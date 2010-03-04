@@ -1,26 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.IO;
 using System.Text;
 using System.Web;
 using ICSharpCode.SharpZipLib.Zip;
+using JetBrains.Annotations;
 using Orchard.Logging;
 using Orchard.Storage;
 using Orchard.Media.Models;
 
 namespace Orchard.Media.Services {
-    public interface IMediaService : IDependency {
-        IEnumerable<MediaFolder> GetMediaFolders(string path);
-        IEnumerable<MediaFile> GetMediaFiles(string path);
-        void CreateFolder(string path, string name);
-        void DeleteFolder(string name);
-        void RenameFolder(string path, string newName);
-        void DeleteFile(string name, string folderName);
-        void RenameFile(string name, string newName, string folderName);
-        void UploadMediaFile(string folderName, HttpPostedFileBase postedFile);
-    }
-
+    [UsedImplicitly]
     public class MediaService : IMediaService {
         private readonly IStorageProvider _storageProvider;
         private readonly string _rootPath;
@@ -34,41 +24,39 @@ namespace Orchard.Media.Services {
 
         public ILogger Logger { get; set; }
 
-        #region Implementation of IMediaService
-
         public IEnumerable<MediaFolder> GetMediaFolders(string path) {
-            List<MediaFolder> mediaFolders = new List<MediaFolder>();
-            IEnumerable<IStorageFolder> folders = (
+            var mediaFolders = new List<MediaFolder>();
+            var folders = (
                 path == null ? 
                 _storageProvider.ListFolders(_rootPath) :
                 _storageProvider.ListFolders(_rootPath + "\\" + path));
 
-            foreach (IStorageFolder folder in folders) {
-                List<string> parentHierarchy = GetParentHierarchy(folder);
-                string mediaPath = GetMediaPath(parentHierarchy, folder.GetName());
-                MediaFolder mediaFolder = new MediaFolder {
-                                                              Name = folder.GetName(),
-                                                              Size = folder.GetSize(),
-                                                              LastUpdated = folder.GetLastUpdated(),
-                                                              MediaPath = mediaPath
-                                                          };
+            foreach (var folder in folders) {
+                var parentHierarchy = GetParentHierarchy(folder);
+                var mediaPath = GetMediaPath(parentHierarchy, folder.GetName());
+                var mediaFolder = new MediaFolder {
+                    Name = folder.GetName(),
+                    Size = folder.GetSize(),
+                    LastUpdated = folder.GetLastUpdated(),
+                    MediaPath = mediaPath
+                };
                 mediaFolders.Add(mediaFolder);
             }
             return mediaFolders;
         }
 
         public IEnumerable<MediaFile> GetMediaFiles(string path) {
-            List<MediaFile> mediaFiles = new List<MediaFile>();
+            var mediaFiles = new List<MediaFile>();
 
-            IEnumerable<IStorageFile> files = _storageProvider.ListFiles(_rootPath + "\\" + path);
-            foreach (IStorageFile file in files) {
-                MediaFile mediaFile = new MediaFile {
-                                                            Name = file.GetName(),
-                                                            Size = file.GetSize(),
-                                                            LastUpdated = file.GetLastUpdated(),
-                                                            Type = file.GetFileType(), 
-                                                            FolderName = path
-                                                    };
+            var files = _storageProvider.ListFiles(_rootPath + "\\" + path);
+            foreach (var file in files) {
+                var mediaFile = new MediaFile {
+                    Name = file.GetName(),
+                    Size = file.GetSize(),
+                    LastUpdated = file.GetLastUpdated(),
+                    Type = file.GetFileType(), 
+                    FolderName = path
+                };
                 mediaFiles.Add(mediaFile);
             }
             return mediaFiles;
@@ -88,7 +76,7 @@ namespace Orchard.Media.Services {
         }
 
         public void RenameFolder(string path, string newName) {
-            string newPath = RenameFolderPath(path, newName);
+            var newPath = RenameFolderPath(path, newName);
             _storageProvider.RenameFolder(_rootPath + "\\" + path, _rootPath + "\\" + newPath);
         }
 
@@ -101,7 +89,7 @@ namespace Orchard.Media.Services {
         }
 
         public void UploadMediaFile(string folderName, HttpPostedFileBase postedFile) {
-            string targetFolder = HttpContext.Current.Server.MapPath("~/Media/" + folderName);
+            var targetFolder = HttpContext.Current.Server.MapPath("~/Media/" + folderName);
             if (postedFile.FileName.EndsWith(".zip")) {
                 UnzipMediaFileArchive(targetFolder, postedFile);
                 // Don't save the zip file.
@@ -114,12 +102,10 @@ namespace Orchard.Media.Services {
             }
         }
 
-        #endregion
-
         private static void UnzipMediaFileArchive(string targetFolder, HttpPostedFileBase postedFile) {
-            int postedFileLength = postedFile.ContentLength;
-            Stream postedFileStream = postedFile.InputStream;
-            byte[] postedFileData = new byte[postedFileLength];
+            var postedFileLength = postedFile.ContentLength;
+            var postedFileStream = postedFile.InputStream;
+            var postedFileData = new byte[postedFileLength];
             postedFileStream.Read(postedFileData, 0, postedFileLength);
 
             using (var memoryStream = new MemoryStream(postedFileData)) {
@@ -132,7 +118,7 @@ namespace Orchard.Media.Services {
                 // before the directories that contain them, so we create directories as soon as first
                 // file below their path is encountered.
                 while ((entry = fileInflater.GetNextEntry()) != null) {
-                    string directoryName = Path.GetDirectoryName(entry.Name);
+                    var directoryName = Path.GetDirectoryName(entry.Name);
                     if (!Directory.Exists(Path.Combine(targetFolder, directoryName))) {
                         Directory.CreateDirectory(Path.Combine(targetFolder, directoryName));
                     }
@@ -148,7 +134,7 @@ namespace Orchard.Media.Services {
         }
 
         private static List<string> GetParentHierarchy(IStorageFolder folder) {
-            List<string> parentHierarchy = new List<string>();
+            var parentHierarchy = new List<string>();
             do {
                 IStorageFolder parentFolder = folder.GetParent();
                 string parentName = parentFolder.GetName();
@@ -163,7 +149,7 @@ namespace Orchard.Media.Services {
         }
 
         private static string GetMediaPath(IEnumerable<string> parentHierarchy, string folderName) {
-            StringBuilder mediaPath = new StringBuilder();
+            var mediaPath = new StringBuilder();
             foreach (string parent in parentHierarchy) {
                 mediaPath.Append(parent);
                 mediaPath.Append("\\");
@@ -173,13 +159,13 @@ namespace Orchard.Media.Services {
         }
 
         private static string RenameFolderPath(string path, string newName) {
-            int lastIndex = path.LastIndexOf("\\");
+            var lastIndex = path.LastIndexOf("\\");
 
             if (lastIndex == -1) {
                 return newName;
             }
-            string parentPath = path.Substring(0, lastIndex);
-            return parentPath + "\\" + newName;
+
+            return path.Substring(0, lastIndex) + "\\" + newName;
         }
     }
 }

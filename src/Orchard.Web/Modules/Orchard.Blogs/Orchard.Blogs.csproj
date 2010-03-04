@@ -71,16 +71,16 @@
   <ItemGroup>
     <Compile Include="AdminMenu.cs" />
     <Compile Include="Controllers\BlogAdminController.cs" />
-    <Compile Include="Controllers\BlogDriver.cs" />
+    <Compile Include="Drivers\BlogDriver.cs" />
     <Compile Include="Controllers\BlogPostAdminController.cs" />
     <Compile Include="Controllers\BlogPostController.cs" />
-    <Compile Include="Controllers\BlogPostDriver.cs" />
+    <Compile Include="Drivers\BlogPostDriver.cs" />
     <Compile Include="Extensions\FeedManagerExtensions.cs" />
     <Compile Include="Extensions\HtmlHelperExtensions.cs" />
     <Compile Include="Extensions\UrlHelperExtensions.cs" />
     <Compile Include="Filters\ArchivesFilter.cs" />
     <Compile Include="Models\ArchiveData.cs" />
-    <Compile Include="Models\BlogArchiveHandler.cs" />
+    <Compile Include="Handlers\BlogArchiveHandler.cs" />
     <Compile Include="Models\BlogArchiveRecord.cs" />
     <Compile Include="Permissions.cs" />
     <Compile Include="Routing\IsArchiveConstraint.cs" />
@@ -89,9 +89,9 @@
     <Compile Include="Services\BlogService.cs" />
     <Compile Include="Controllers\BlogController.cs" />
     <Compile Include="Models\Blog.cs" />
-    <Compile Include="Models\BlogHandler.cs" />
+    <Compile Include="Handlers\BlogHandler.cs" />
     <Compile Include="Models\BlogPost.cs" />
-    <Compile Include="Models\BlogPostHandler.cs" />
+    <Compile Include="Handlers\BlogPostHandler.cs" />
     <Compile Include="Models\BlogRecord.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Routes.cs" />

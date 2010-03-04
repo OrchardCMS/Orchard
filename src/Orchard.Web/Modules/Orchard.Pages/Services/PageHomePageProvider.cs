@@ -1,10 +1,13 @@
 ﻿using System.Web.Mvc;
+using JetBrains.Annotations;
 using Orchard.Localization;
 using Orchard.Mvc.Results;
+using Orchard.Pages.Routing;
 using Orchard.Pages.ViewModels;
 using Orchard.Services;
 
 namespace Orchard.Pages.Services {
+    [UsedImplicitly]
     public class PageHomePageProvider : IHomePageProvider {
         private readonly IPageService _pageService;
         private readonly ISlugConstraint _slugConstraint;
@@ -18,8 +21,6 @@ namespace Orchard.Pages.Services {
 
         public IOrchardServices Services { get; private set; }
         private Localizer T { get; set; }
-
-        #region Implementation of IHomePageProvider
 
         public string GetProviderName() {
             return "PageHomePageProvider";
@@ -47,7 +48,5 @@ namespace Orchard.Pages.Services {
                 ViewData = new ViewDataDictionary<PageViewModel>(model)
             };
         }
-
-        #endregion
     }
 }

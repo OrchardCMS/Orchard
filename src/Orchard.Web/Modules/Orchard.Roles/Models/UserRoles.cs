@@ -1,11 +1,7 @@
 using System.Collections.Generic;
 using Orchard.ContentManagement;
 
-namespace Orchard.Roles.Models.NoRecord {
-    public interface IUserRoles : IContent {
-        IList<string> Roles { get; }
-    }
-
+namespace Orchard.Roles.Models {
     public class UserRoles : ContentPart, IUserRoles {
         public UserRoles() {
             Roles = new List<string>();
