@@ -157,6 +157,26 @@ namespace Orchard.Media.Controllers {
             }
         }
 
+        [HttpPost]
+        public JsonResult AddFromClient() {
+            var viewModel = new MediaItemAddViewModel();
+            try {
+                UpdateModel(viewModel);
+                if (!Services.Authorizer.Authorize(Permissions.UploadMediaFiles, T("Couldn't upload media file")))
+                    return Json(T("ERROR: You don't have permission to upload media files"));
+
+                foreach (string fileName in Request.Files) {
+                    HttpPostedFileBase file = Request.Files[fileName];
+                    _mediaService.UploadMediaFile(viewModel.MediaPath, file);
+                }
+
+                return Json(viewModel.MediaPath);
+            }
+            catch (Exception exception) {
+                return Json("ERROR: Uploading media file failed: " + exception.Message);
+            }
+        }
+
         public ActionResult EditMedia(string name, string caption, DateTime lastUpdated, long size, string folderName, string mediaPath) {
             var model = new MediaItemEditViewModel();
             model.Name = name;
