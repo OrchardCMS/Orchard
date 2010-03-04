@@ -94,13 +94,12 @@ namespace Orchard.Tests.Modules.Users.Controllers {
             _authorizer.Setup(x => x.Authorize(It.IsAny<Permission>(), It.IsAny<LocalizedString>())).Returns(true);
 
             var controller = _container.Resolve<AdminController>();
-            controller.ValueProvider = Values.From(new {
+            var result = controller.CreatePOST(new UserCreateViewModel {
                 UserName = "four",
                 Email = "six@example.org",
                 Password = "five",
-                ConfirmPassword = "five",
+                ConfirmPassword = "five"
             });
-            var result = controller.CreatePOST();
             Assert.That(result, Is.TypeOf<RedirectToRouteResult>());
 
             var redirect = (RedirectToRouteResult)result;

@@ -1,5 +1,3 @@
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using Orchard.Mvc.ViewModels;
 using Orchard.Security;

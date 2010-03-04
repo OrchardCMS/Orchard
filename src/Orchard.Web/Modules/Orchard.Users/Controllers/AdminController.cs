@@ -57,12 +57,16 @@ namespace Orchard.Users.Controllers {
         }
 
         [HttpPost, ActionName("Create")]
-        public ActionResult CreatePOST() {
+        public ActionResult CreatePOST(UserCreateViewModel model) {
             if (!Services.Authorizer.Authorize(Permissions.ManageUsers, T("Not authorized to manage users")))
                 return new HttpUnauthorizedResult();
 
-            var model = new UserCreateViewModel();
-            UpdateModel(model);
+            var user = Services.ContentManager.New<IUser>(UserDriver.ContentType.Name);
+            model.User = Services.ContentManager.UpdateEditorModel(user, this);
+            if (!ModelState.IsValid) {
+                Services.TransactionManager.Cancel();
+                return View(model);
+            }
 
             string userExistsMessage = _userService.VerifyUserUnicity(model.UserName, model.Email);
             if (userExistsMessage != null) {
@@ -73,7 +77,7 @@ namespace Orchard.Users.Controllers {
                 AddModelError("ConfirmPassword", T("Password confirmation must match"));
             }
 
-            var user = _membershipService.CreateUser(new CreateUserParams(
+            user = _membershipService.CreateUser(new CreateUserParams(
                                                          model.UserName,
                                                          model.Password,
                                                          model.Email,
