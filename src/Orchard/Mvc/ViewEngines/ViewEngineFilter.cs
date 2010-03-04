@@ -53,7 +53,7 @@ namespace Orchard.Mvc.ViewEngines {
 
 
             var modules = _extensionManager.ActiveExtensions()
-                .Where(x => x.Descriptor.ExtensionType == "Module" || x.Descriptor.ExtensionType == "Area");
+                .Where(x => x.Descriptor.ExtensionType == "Module");
 
             var moduleLocations = modules.Select(x => Path.Combine(x.Descriptor.Location, x.Descriptor.Name));
             var moduleViewEngines = _viewEngineProviders

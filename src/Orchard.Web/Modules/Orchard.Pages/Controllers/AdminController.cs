@@ -195,7 +195,7 @@ namespace Orchard.Pages.Controllers {
                     _pageService.Publish(model.Page.Item);
                     Services.Notifier.Information(T("Page has been published"));
                     if (model.PromoteToHomePage) {
-                        CurrentSite.HomePage = "PagesHomePageProvider;" + model.Page.Item.Id;
+                        CurrentSite.HomePage = "PageHomePageProvider;" + model.Page.Item.Id;
                     }
                     break;
                 case "PublishLater":
