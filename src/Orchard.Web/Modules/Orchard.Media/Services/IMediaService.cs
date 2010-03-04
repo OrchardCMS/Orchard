@@ -4,6 +4,7 @@ using Orchard.Media.Models;
 
 namespace Orchard.Media.Services {
     public interface IMediaService : IDependency {
+        string GetRootUrl();
         IEnumerable<MediaFolder> GetMediaFolders(string path);
         IEnumerable<MediaFile> GetMediaFiles(string path);
         void CreateFolder(string path, string name);

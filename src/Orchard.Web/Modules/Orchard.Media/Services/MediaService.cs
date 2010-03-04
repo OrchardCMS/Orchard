@@ -14,15 +14,21 @@ namespace Orchard.Media.Services {
     public class MediaService : IMediaService {
         private readonly IStorageProvider _storageProvider;
         private readonly string _rootPath;
+        private readonly string _rootUrl;
 
         public MediaService (
             IStorageProvider storageProvider) {
             _storageProvider = storageProvider;
             _rootPath = HttpContext.Current.Server.MapPath("~/Media");
+            _rootUrl = Path.Combine(HttpContext.Current.Request.ApplicationPath, "Media").Replace("\\", "/");
             Logger = NullLogger.Instance;
         }
 
         public ILogger Logger { get; set; }
+
+        public string GetRootUrl() {
+            return _rootUrl;
+        }
 
         public IEnumerable<MediaFolder> GetMediaFolders(string path) {
             var mediaFolders = new List<MediaFolder>();

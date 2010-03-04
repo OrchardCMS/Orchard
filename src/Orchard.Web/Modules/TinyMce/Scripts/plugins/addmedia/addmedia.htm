@@ -6,7 +6,7 @@
     <script type="text/javascript" src="js/addmedia.js"></script>
 </head>
 <body>
-<form action="/Admin/Media/Add" enctype="multipart/form-data" method="post">
+<form enctype="multipart/form-data" method="post">
     <div class="tabs">
 		<ul>
 			<li id="general_tab" class="current"><span><a href="#general_tab">{#addmedia_dlg.title}</a></span></li>
@@ -16,15 +16,14 @@
         <table border="0" cellpadding="4" cellspacing="0">
             <tr>
                 <td class="nowrap"><label for="pageTitle">{#addmedia_dlg.path_label}</label></td>
-                <td><input id="MediaItemPath" name="MediaItemPath" type="file" class="text" value="Browse" size="64"/></td>
+                <td><input id="MediaItemPath" name="MediaItemPath" type="file" class="text" size="64" /></td>
             </tr>
         </table>
-        <input type="hidden" id="FolderName" name="FolderName" value="foo" />
-        <input type="hidden" id="MediaPath" name="MediaPath" value="foo" />
+        <input type="hidden" id="MediaPath" name="MediaPath"  />
     </div>
 	<div class="mceActionPanel">
 		<div style="float:left">
-            <input name="__RequestVerificationToken" type="hidden" value="7lDAM51YOmke7sRNx/GFjVMKaPf8QZNh7qZiEdQyNQXKKbw1DYehU/g6jNcAx6I3OGD/KDuaNlmyNIeQ/69CFpDizom9bROgo5keYyj+HcAKHtjQTRV5kNJm6SztNLwO" />
+            <input name="__RequestVerificationToken" type="hidden" />
 			<input type="submit" name="insert" value="{#insert}" id="insert" />
 		</div>
 		<div style="float:right">

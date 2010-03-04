@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Web;
 using System.Web.Mvc;
 using Orchard.Localization;
@@ -162,18 +163,27 @@ namespace Orchard.Media.Controllers {
             var viewModel = new MediaItemAddViewModel();
             try {
                 UpdateModel(viewModel);
-                if (!Services.Authorizer.Authorize(Permissions.UploadMediaFiles, T("Couldn't upload media file")))
-                    return Json(T("ERROR: You don't have permission to upload media files"));
+                if (!Services.Authorizer.Authorize(Permissions.UploadMediaFiles))
+                    return Json(new { error = T("ERROR: You don't have permission to upload media files").ToString() });
 
-                foreach (string fileName in Request.Files) {
-                    HttpPostedFileBase file = Request.Files[fileName];
-                    _mediaService.UploadMediaFile(viewModel.MediaPath, file);
+                if (Request.Files.Count < 1 || Request.Files[0].ContentLength == 0)
+                    return Json(new { error = T("HEY: You didn't give me a file to upload").ToString() });
+
+                try {
+                    _mediaService.GetMediaFiles(viewModel.MediaPath);
+                }
+                catch //media api needs a little work, like everything else of course ;)
+                {
+                    _mediaService.CreateFolder(viewModel.MediaPath, "");
                 }
 
-                return Json(viewModel.MediaPath);
+                var file = Request.Files[0];
+                _mediaService.UploadMediaFile(viewModel.MediaPath, file);
+
+                return Json(new { url = Path.Combine(_mediaService.GetRootUrl(), string.Format("{0}/{1}", viewModel.MediaPath, file.FileName)).Replace("\\", "/") });
             }
             catch (Exception exception) {
-                return Json("ERROR: Uploading media file failed: " + exception.Message);
+                return Json(new { error = T("ERROR: Uploading media file failed: {0}", exception.Message).ToString() });
             }
         }
 

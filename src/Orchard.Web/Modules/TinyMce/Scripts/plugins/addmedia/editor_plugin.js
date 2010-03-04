@@ -1,6 +1,6 @@
 ﻿(function() {
     // Load plugin specific language pack
-    tinymce.PluginManager.requireLangPack('dlg');
+    tinymce.PluginManager.requireLangPack("addmedia");
 
     tinymce.create('tinymce.plugins.Orchard.AddMedia', {
         /**
@@ -16,7 +16,7 @@
             ed.addCommand('mceAddMedia', function() {
                 ed.windowManager.open({
                     file: url + '/addmedia.htm',
-                    width: 480 + parseInt(ed.getLang('addmedia.delta_width', 0)),
+                    width: 550 + parseInt(ed.getLang('addmedia.delta_width', 0)),
                     height: 110 + parseInt(ed.getLang('addmedia.delta_height', 0)),
                     inline: 1
                 }, {
@@ -26,7 +26,7 @@
 
             // Register example button
             ed.addButton('addmedia', {
-                title: 'addmedia_desc',
+                title: ed.getLang('addmedia.title'),
                 cmd: 'mceAddMedia',
                 image: url + '/img/picture_add.png'
             });
