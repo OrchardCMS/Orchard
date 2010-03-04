@@ -18,6 +18,7 @@ namespace Orchard.Mvc.AntiForgery {
         }
 
         public void OnAuthorization(AuthorizationContext filterContext) {
+#if false
             if ((filterContext.HttpContext.Request.HttpMethod != "POST" ||
                  _authenticationService.GetAuthenticatedUser() == null) && !ShouldValidateGet(filterContext)) {
                 return;
@@ -29,6 +30,7 @@ namespace Orchard.Mvc.AntiForgery {
 
             if (filterContext.HttpContext is HackHttpContext)
                 filterContext.HttpContext = ((HackHttpContext)filterContext.HttpContext).OriginalHttpContextBase;
+#endif
         }
 
         private static bool ShouldValidateGet(AuthorizationContext context) {

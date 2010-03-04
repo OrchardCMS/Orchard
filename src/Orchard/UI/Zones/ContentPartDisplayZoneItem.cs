@@ -8,8 +8,8 @@ namespace Orchard.UI.Zones {
         public string Prefix { get; set; }
 
         public override void Execute<TModel>(HtmlHelper<TModel> html) {
-            html.ViewContext.Writer.Write(
-                html.DisplayFor(m => Model, TemplateName, Prefix));
+            var htmlString = html.DisplayFor(m => Model, TemplateName, Prefix);
+            html.ViewContext.Writer.Write(htmlString);
         }
     }
 }

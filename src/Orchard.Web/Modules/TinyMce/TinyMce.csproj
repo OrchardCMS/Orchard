@@ -135,6 +135,17 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Scripts\plugins\addmedia\addmedia.htm" />
+    <Content Include="Scripts\plugins\addmedia\editor_plugin.js" />
+    <Content Include="Scripts\plugins\addmedia\img\picture_add.png" />
+    <Content Include="Scripts\plugins\addmedia\js\addmedia.js" />
+    <Content Include="Scripts\plugins\addmedia\langs\en_dlg.js" />
+    <Content Include="Scripts\plugins\searchreplace\css\searchreplace.css" />
+    <Content Include="Scripts\plugins\searchreplace\editor_plugin.js" />
+    <Content Include="Scripts\plugins\searchreplace\editor_plugin_src.js" />
+    <Content Include="Scripts\plugins\searchreplace\js\searchreplace.js" />
+    <Content Include="Scripts\plugins\searchreplace\langs\en_dlg.js" />
+    <Content Include="Scripts\plugins\searchreplace\searchreplace.htm" />
     <Content Include="Web.config" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
