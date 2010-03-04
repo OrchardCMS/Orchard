@@ -8,6 +8,7 @@ using System.Web.Mvc;
 using System.Web.Mvc.Html;
 using System.Web.Routing;
 using Orchard.Extensions;
+using Orchard.Mvc.ViewModels;
 using Orchard.Services;
 using Orchard.Settings;
 using Orchard.Utility;
@@ -297,5 +298,38 @@ namespace Orchard.Mvc.Html {
         }
 
         #endregion
+
+        #region AddRenderAction
+
+        public static void AddRenderAction(this HtmlHelper html, string location, string actionName) {
+            AddRenderActionHelper(html, location, actionName, null/*controllerName*/, null);
+        }
+        public static void AddRenderAction(this HtmlHelper html, string location, string actionName, object routeValues) {
+            AddRenderActionHelper(html, location, actionName, null/*controllerName*/, new RouteValueDictionary(routeValues));
+        }
+        public static void AddRenderAction(this HtmlHelper html, string location, string actionName, RouteValueDictionary routeValues) {
+            AddRenderActionHelper(html, location, actionName, null/*controllerName*/, routeValues);
+        }
+        public static void AddRenderAction(this HtmlHelper html, string location, string actionName, string controllerName) {
+            AddRenderActionHelper(html, location, actionName, controllerName, null/*RouteValueDictionary*/);
+        }
+        public static void AddRenderAction(this HtmlHelper html, string location, string actionName, string controllerName, object routeValues) {
+            AddRenderActionHelper(html, location, actionName, controllerName, new RouteValueDictionary(routeValues));
+        }
+        public static void AddRenderAction(this HtmlHelper html, string location, string actionName, string controllerName, RouteValueDictionary routeValues) {
+            AddRenderActionHelper(html, location, actionName, controllerName, routeValues);
+        }
+
+        private static void AddRenderActionHelper(this HtmlHelper html, string location, string actionName, string controllerName, RouteValueDictionary routeValues) {
+            // Retrieve the "BaseViewModel" for zones if we have one
+            var baseViewModel = BaseViewModel.From(html.ViewData);
+            if (baseViewModel == null)
+                return;
+
+            baseViewModel.Zones.AddRenderAction(location, actionName, controllerName, routeValues);
+        }
+
+        #endregion
+
     }
 }
