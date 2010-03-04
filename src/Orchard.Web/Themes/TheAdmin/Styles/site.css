@@ -357,12 +357,12 @@ fieldset.bulk.actions {
 }
 legend {
     font-size:1.6em;
-    font-weight:600;
     font-weight:bold;
 }
 label {
 	display: block;
-	color:#1d1b1b;
+	color:#4c4c4c;
+	font-weight:bold;
 }
 label.forcheckbox {
     display:inline;
@@ -425,7 +425,7 @@ fieldset {
     border-bottom:1px solid #eaeaea;
     padding:1em;
 }
-.settings fieldset div, .settings .button {
+.orchard-media fieldset div, .settings fieldset div, .orchard-media .button, .settings .button {
     margin:1em 0 .5em 1em;
 }
 .settings legend {
@@ -713,8 +713,8 @@ todo: (heskew) pull out into relevant modules where appropriate
 }
 .previewImage {
 	border:1px solid #525e50;
-	height:70%;
-	width:70%;
+	height:50%;
+	width:50%;
 }
 .themes #main h2 {
     margin:1em 0 0 0;

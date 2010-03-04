@@ -41,6 +41,5 @@
     </div>
   </div>
   <%-- End Content --%>
-  <%Html.Zone("footer");%>
   <% Html.Include("Footer"); %>
 </div>
