@@ -1,7 +1,11 @@
-﻿<%@ Control Language="C#" Inherits="System.Web.Mvc.ViewUserControl<string>" %>
+﻿<%@ Control Language="C#" Inherits="Orchard.Mvc.ViewUserControl<string>" %>
+<%@ Import Namespace="TinyMce.Extensions"%>
+<%@ Import Namespace="Orchard.Core.Common.ViewModels"%>
 <% Html.RegisterScript("tiny_mce.js"); %>
 <%=Html.TextArea("", Model, 25, 80, new { @class = "html" }) %>
-<%using (this.Capture("end-of-page-scripts")) {%>
+
+<%
+using (this.Capture("end-of-page-scripts")) {%>
 <script type="text/javascript">
     tinyMCE.init({
         theme: "advanced",
@@ -14,8 +18,8 @@
         theme_advanced_buttons2: "",
         theme_advanced_buttons3: "",
         addmedia_action: "<%=Url.Action("AddFromClient", "Admin", new {area = "Orchard.Media"}) %>",
-        addmedia_path: "some/folder",
+        addmedia_path: "somepath",
         request_verification_token: "<%=Html.AntiForgeryTokenValueOrchard() %>"
     });
-</script>
-<%}%>
+</script><%
+}%>
