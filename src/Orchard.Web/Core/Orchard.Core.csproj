@@ -231,6 +231,7 @@
     <Content Include="Common\Views\DisplayTemplates\Parts\Common.Body.ManageWrapperPre.ascx" />
     <Content Include="Common\Views\DisplayTemplates\Parts\Common.Body.Manage.ascx" />
     <Content Include="Dashboard\Views\Web.config" />
+    <Content Include="Themes\Content\orchard.ico" />
     <Content Include="Themes\Styles\special.css" />
     <Content Include="Themes\Views\NotFound.ascx" />
   </ItemGroup>
