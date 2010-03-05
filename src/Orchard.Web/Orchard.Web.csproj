@@ -182,6 +182,7 @@
     <Content Include="Themes\Classic\Views\DisplayTemplates\Parts\Pages.Page.Metadata.ascx" />
     <Content Include="Themes\Classic\Views\Footer.ascx" />
     <Content Include="Themes\Classic\Views\Layout.ascx" />
+    <Content Include="Themes\Classic\Views\ZoneTest.ascx" />
     <Content Include="Themes\Green\Content\Images\bodyBackground.gif" />
     <Content Include="Themes\Green\Content\Images\bodyBackground.png" />
     <Content Include="Themes\Green\Content\Images\commentpointer.gif" />

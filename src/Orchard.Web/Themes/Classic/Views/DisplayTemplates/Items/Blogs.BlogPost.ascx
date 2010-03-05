@@ -11,5 +11,4 @@
        } %>
 </div>
 --%>
-<% Html.Zone("primary", ":metadata :manage"); // <- flipping metadata and manage to get closer to the desired markup
-   Html.ZonesAny(); %>
+<% Html.Zone("primary"); %>
