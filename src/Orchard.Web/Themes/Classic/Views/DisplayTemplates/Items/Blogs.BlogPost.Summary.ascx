@@ -6,7 +6,7 @@
 <%@ Import Namespace="Orchard.Blogs.Models"%>
 <%Model.Zones.AddRenderPartial("zonetest", "ZoneTest", Model); %>
 <h2><%=Html.Link(Html.Encode(Model.Item.Title), Url.BlogPost(Model.Item)) %></h2>
-<div class="meta"><%=Html.PublishedState(Model.Item) %> | <%Html.Zone("meta");%> <% Html.Zone("zonetest");%></div>
+<div class="meta"><%=Html.PublishedState(Model.Item) %> | <%Html.Zone("meta");%></div>
 <div class="postsummary">
 <% Html.Zone("primary"); %>
 </div>
