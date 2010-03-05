@@ -10,44 +10,53 @@ var AddMediaDialog = {
     },
 
     addMedia: function(form) {
-        var callback = AddMediaDialog.insertMediaAndClose;
         var iframeName = "addmedia__" + (new Date()).getTime()
         var iframe = document.createElement("iframe");
         iframe.name = iframeName;
         iframe.src = "about:blank";
 
         tinymce.DOM.setStyles(iframe, { display: "none" });
-        tinymce.dom.Event.add(iframe, 'load', function(ev) {
-            var result = window.frames[iframeName].result;
+        var iframeLoadHandler = tinymce.dom.Event.add(iframe, 'load', function(ev) {
+            var result = window.frames[iframeName].result, close = 0;
             if (result && result.url) {
-                return callback(result.url);
-            } else if (false && result && result.error) {
-                alert("Wait, there was an error:\n\r\n\r" + result.error);
+                window.parent.AddMediaDialog.insertMedia(result.url);
+                close = 1;
+            } else if (result && result.error) {
+                alert(tinyMCEPopup.getLang("addmedia_dlg.msg_error") + "\n\r\n\r" + result.error);
             } else {
-                var somethingPotentiallyHorrible = window.frames[iframeName].document.getElementsByTagName("body")[0].innerHTML;
+                var somethingPotentiallyHorrible = "";
+                try {
+                    somethingPotentiallyHorrible = window.frames[iframeName].document.getElementsByTagName("body")[0].innerHTML;
+                } catch (ex) { // some browsers flip out trying to access anything in the iframe when there's an error. best we can do is guess at this point
+                    somethingPotentiallyHorrible = tinyMCEPopup.getLang("addmedia_dlg.msg_error_unknown");
+                }
                 if (somethingPotentiallyHorrible) {
-                    alert("Something unexpected happened:\n\r\n\r" + somethingPotentiallyHorrible);
+                    alert(tinyMCEPopup.getLang("addmedia_dlg.msg_error_unexpected") + "\n\r\n\r" + somethingPotentiallyHorrible);
                 }
             }
 
             //cleanup
-            setTimeout(function() { callback = null; tinymce.DOM.remove(iframe); }, 123);
+            setTimeout(function() {
+                tinymce.dom.Event.remove(iframe, 'load', iframeLoadHandler);
+                tinymce.DOM.remove(iframe);
+                iframe = null;
+                if (close) window.parent.tinyMCEPopup.close();
+            },
+                123);
         });
 
         form.target = iframeName;
         tinymce.DOM.add(document.body, iframe);
     },
 
-    insertMediaAndClose: function(url) {
+    insertMedia: function(url) {
         if (!url) return;
 
-        //todo: (heskew) needs more awesome
         var markup = /\.(jpe?g|png|gif)$/i.test(url)
             ? "<img src=\"" + url + "\" />"
             : "<a href=\"" + url + "\">" + url + "</a>";
-        
+
         tinyMCE.activeEditor.execCommand("mceInsertContent", false, markup);
-        tinyMCEPopup.close();
     }
 };
 

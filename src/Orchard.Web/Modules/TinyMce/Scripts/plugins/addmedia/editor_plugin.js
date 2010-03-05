@@ -12,7 +12,7 @@
         * @param {string} url Absolute URL to where the plugin is located.
         */
         init: function(ed, url) {
-            // Register the command so that it can be invoked by using tinyMCE.activeEditor.execCommand('mceExample');
+            // Register the command so that it can be invoked by using tinyMCE.activeEditor.execCommand('mceAddMedia');
             ed.addCommand('mceAddMedia', function() {
                 ed.windowManager.open({
                     file: url + '/addmedia.htm',
@@ -24,7 +24,7 @@
                 });
             });
 
-            // Register example button
+            // Register addmedia button
             ed.addButton('addmedia', {
                 title: ed.getLang('addmedia.title'),
                 cmd: 'mceAddMedia',

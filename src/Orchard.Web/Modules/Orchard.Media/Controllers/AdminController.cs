@@ -168,7 +168,7 @@ namespace Orchard.Media.Controllers {
                     return Content(string.Format("<script type=\"text/javascript\">var result = {{ error: \"{0}\" }};</script>", T("ERROR: You don't have permission to upload media files")));
 
                 if (Request.Files.Count < 1 || Request.Files[0].ContentLength == 0)
-                    return Content(string.Format("<scipt type=\"text/javascript\">var result = {{ error: \"{0}\" }};</script>", T("HEY: You didn't give me a file to upload")));
+                    return Content(string.Format("<script type=\"text/javascript\">var result = {{ error: \"{0}\" }};</script>", T("HEY: You didn't give me a file to upload")));
 
                 try {
                     _mediaService.GetMediaFiles(viewModel.MediaPath);
@@ -181,7 +181,7 @@ namespace Orchard.Media.Controllers {
                 var file = Request.Files[0];
                 _mediaService.UploadMediaFile(viewModel.MediaPath, file);
 
-                return Content(string.Format("<script type=\"text/javascript\">var result = {{ url: \"{0}\" }};</script>", Path.Combine(_mediaService.GetRootUrl(), string.Format("{0}/{1}", viewModel.MediaPath, Path.GetFileName(file.FileName))).Replace("\\", "/")));
+                return Content(string.Format("<script type=\"text/javascript\">var result = {{ url: \"{0}\" }};</script>", Path.Combine(_mediaService.GetRootUrl(), string.Format("{0}/{1}", viewModel.MediaPath, Path.GetFileName(file.FileName)).Replace("//", "/")).Replace("\\", "/")));
             }
             catch (Exception exception) {
                 return Content(string.Format("<script type=\"text/javascript\">var result = {{ error: \"{0}\" }};</script>", T("ERROR: Uploading media file failed: {0}", exception.Message)));
