@@ -15,12 +15,12 @@ namespace Orchard.Pages.Services {
     public class PageService : IPageService {
         private readonly IContentManager _contentManager;
         private readonly IPublishingTaskManager _publishingTaskManager;
-        private readonly ISlugConstraint _slugConstraint;
+        private readonly IPageSlugConstraint _pageSlugConstraint;
 
-        public PageService(IContentManager contentManager, IPublishingTaskManager publishingTaskManager, ISlugConstraint slugConstraint) {
+        public PageService(IContentManager contentManager, IPublishingTaskManager publishingTaskManager, IPageSlugConstraint pageSlugConstraint) {
             _contentManager = contentManager;
             _publishingTaskManager = publishingTaskManager;
-            _slugConstraint = slugConstraint;
+            _pageSlugConstraint = pageSlugConstraint;
         }
 
         public int GetCount() {
@@ -82,7 +82,7 @@ namespace Orchard.Pages.Services {
         public void Publish(Page page) {
             _publishingTaskManager.DeleteTasks(page.ContentItem);
             _contentManager.Publish(page.ContentItem);
-            _slugConstraint.AddPublishedSlug(page.Slug);
+            _pageSlugConstraint.AddSlug(page.Slug);
         }
 
         public void Publish(Page page, DateTime scheduledPublishUtc) {
@@ -91,7 +91,7 @@ namespace Orchard.Pages.Services {
 
         public void Unpublish(Page page) {
             _contentManager.Unpublish(page.ContentItem);
-            _slugConstraint.RemovePublishedSlug(page.Slug);
+            _pageSlugConstraint.RemoveSlug(page.Slug);
         }
 
         public DateTime? GetScheduledPublishUtc(Page page) {

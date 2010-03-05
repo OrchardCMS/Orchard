@@ -10,11 +10,11 @@ namespace Orchard.Pages.Services {
     [UsedImplicitly]
     public class PageHomePageProvider : IHomePageProvider {
         private readonly IPageService _pageService;
-        private readonly ISlugConstraint _slugConstraint;
+        private readonly IPageSlugConstraint _pageSlugConstraint;
 
-        public PageHomePageProvider(IOrchardServices services, IPageService pageService, ISlugConstraint slugConstraint) {
+        public PageHomePageProvider(IOrchardServices services, IPageService pageService, IPageSlugConstraint pageSlugConstraint) {
             Services = services;
-            _slugConstraint = slugConstraint;
+            _pageSlugConstraint = pageSlugConstraint;
             _pageService = pageService;
             T = NullLocalizer.Instance;
         }
@@ -31,7 +31,7 @@ namespace Orchard.Pages.Services {
             if (page == null)
                 return new NotFoundResult();
 
-            var correctedSlug = _slugConstraint.LookupPublishedSlug(page.Slug);
+            var correctedSlug = _pageSlugConstraint.FindSlug(page.Slug);
             if (correctedSlug == null)
                 return new NotFoundResult();
 

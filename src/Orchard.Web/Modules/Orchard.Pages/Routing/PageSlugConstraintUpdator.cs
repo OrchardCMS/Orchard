@@ -6,12 +6,12 @@ using Orchard.Tasks;
 
 namespace Orchard.Pages.Routing {
     [UsedImplicitly]
-    public class SlugConstraintUpdator : ExtensionManagerEvents, IBackgroundTask {
-        private readonly ISlugConstraint _slugConstraint;
+    public class PageSlugConstraintUpdator : ExtensionManagerEvents, IBackgroundTask {
+        private readonly IPageSlugConstraint _pageSlugConstraint;
         private readonly IPageService _pageService;
 
-        public SlugConstraintUpdator(ISlugConstraint slugConstraint, IPageService pageService) {
-            _slugConstraint = slugConstraint;
+        public PageSlugConstraintUpdator(IPageSlugConstraint pageSlugConstraint, IPageService pageService) {
+            _pageSlugConstraint = pageSlugConstraint;
             _pageService = pageService;
         }
 
@@ -26,7 +26,7 @@ namespace Orchard.Pages.Routing {
         }
 
         private void Refresh() {
-            _slugConstraint.SetCurrentlyPublishedSlugs(_pageService.Get(PageStatus.Published).Select(page => page.Slug));
+            _pageSlugConstraint.SetSlugs(_pageService.Get(PageStatus.Published).Select(p => p.Slug));
         }
     }
 }

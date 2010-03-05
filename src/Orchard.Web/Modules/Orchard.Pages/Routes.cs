@@ -6,10 +6,10 @@ using Orchard.Pages.Routing;
 
 namespace Orchard.Pages {
     public class Routes : IRouteProvider {
-        private readonly ISlugConstraint _slugConstraint;
+        private readonly IPageSlugConstraint _pageSlugConstraint;
 
-        public Routes(ISlugConstraint slugConstraint) {
-            _slugConstraint = slugConstraint;
+        public Routes(IPageSlugConstraint pageSlugConstraint) {
+            _pageSlugConstraint = pageSlugConstraint;
         }
 
         public void GetRoutes(ICollection<RouteDescriptor> routes) {
@@ -29,7 +29,7 @@ namespace Orchard.Pages {
                                                                                       {"action", "item"}
                                                                                   },
                                                          new RouteValueDictionary {
-                                                                                      {"slug", _slugConstraint}
+                                                                                      {"slug", _pageSlugConstraint}
                                                                                   },
                                                          new RouteValueDictionary {
                                                                                       {"area", "Orchard.Pages"}
@@ -38,6 +38,5 @@ namespace Orchard.Pages {
                                                  }
                          };
         }
-
     }
 }

@@ -110,10 +110,10 @@ namespace Orchard.Pages.Controllers {
             if (!Services.Authorizer.Authorize(Permissions.EditPages, T("Not allowed to create a page")))
                 return new HttpUnauthorizedResult();
 
-            var page = Services.ContentManager.BuildEditorModel(Services.ContentManager.New<Page>(PageDriver.ContentType.Name));
+            var page = Services.ContentManager.New<Page>(PageDriver.ContentType.Name);
 
             var model = new PageCreateViewModel {
-                Page = page
+                Page = Services.ContentManager.BuildEditorModel(page)
             };
 
             return View(model);

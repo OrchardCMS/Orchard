@@ -10,12 +10,12 @@ namespace Orchard.Pages.Controllers {
     [ValidateInput(false)]
     public class PageController : Controller {
         private readonly IPageService _pageService;
-        private readonly ISlugConstraint _slugConstraint;
+        private readonly IPageSlugConstraint _pageSlugConstraint;
 
-        public PageController(IOrchardServices services, IPageService pageService, ISlugConstraint slugConstraint) {
+        public PageController(IOrchardServices services, IPageService pageService, IPageSlugConstraint pageSlugConstraint) {
             Services = services;
             _pageService = pageService;
-            _slugConstraint = slugConstraint;
+            _pageSlugConstraint = pageSlugConstraint;
             T = NullLocalizer.Instance;
         }
 
@@ -26,7 +26,7 @@ namespace Orchard.Pages.Controllers {
             if (!Services.Authorizer.Authorize(StandardPermissions.AccessFrontEnd, T("Couldn't view page")))
                 return new HttpUnauthorizedResult();
 
-            var correctedSlug = _slugConstraint.LookupPublishedSlug(slug);
+            var correctedSlug = _pageSlugConstraint.FindSlug(slug);
             if (correctedSlug == null)
                 return new NotFoundResult();
 

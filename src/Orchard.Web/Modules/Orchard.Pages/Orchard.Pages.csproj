@@ -76,13 +76,13 @@
     <Compile Include="Routes.cs" />
     <Compile Include="Security\Authorization.cs" />
     <Compile Include="Services\IPageService.cs" />
-    <Compile Include="Routing\ISlugConstraint.cs" />
+    <Compile Include="Routing\IPageSlugConstraint.cs" />
     <Compile Include="Services\PageService.cs" />
     <Compile Include="Services\PageHomePageProvider.cs" />
-    <Compile Include="Routing\SlugConstraint.cs">
+    <Compile Include="Routing\PageSlugConstraint.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Routing\SlugConstraintUpdator.cs" />
+    <Compile Include="Routing\PageSlugConstraintUpdator.cs" />
     <Compile Include="ViewModels\PageCreateViewModel.cs" />
     <Compile Include="ViewModels\PageEditViewModel.cs" />
     <Compile Include="ViewModels\PagesViewModel.cs" />

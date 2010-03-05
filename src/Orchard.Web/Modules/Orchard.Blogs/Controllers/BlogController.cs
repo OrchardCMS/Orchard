@@ -5,6 +5,7 @@ using System.Web.Routing;
 using System.Xml.Linq;
 using Orchard.Blogs.Extensions;
 using Orchard.Blogs.Models;
+using Orchard.Blogs.Routing;
 using Orchard.Blogs.Services;
 using Orchard.Blogs.ViewModels;
 using Orchard.Core.Feeds;
@@ -15,16 +16,14 @@ namespace Orchard.Blogs.Controllers {
     public class BlogController : Controller {
         private readonly IOrchardServices _services;
         private readonly IBlogService _blogService;
+        private readonly IBlogSlugConstraint _blogSlugConstraint;
         private readonly IFeedManager _feedManager;
         private readonly RouteCollection _routeCollection;
 
-        public BlogController(
-            IOrchardServices services,
-            IBlogService blogService,
-            IFeedManager feedManager,
-            RouteCollection routeCollection) {
+        public BlogController(IOrchardServices services, IBlogService blogService, IBlogSlugConstraint blogSlugConstraint, IFeedManager feedManager, RouteCollection routeCollection) {
             _services = services;
             _blogService = blogService;
+            _blogSlugConstraint = blogSlugConstraint;
             _feedManager = feedManager;
             _routeCollection = routeCollection;
             Logger = NullLogger.Instance;
@@ -42,8 +41,11 @@ namespace Orchard.Blogs.Controllers {
 
         //TODO: (erikpo) Should move the slug parameter and get call and null check up into a model binder
         public ActionResult Item(string blogSlug) {
-            Blog blog = _blogService.Get(blogSlug);
+            var correctedSlug = _blogSlugConstraint.FindSlug(blogSlug);
+            if (correctedSlug == null)
+                return new NotFoundResult();
 
+            var blog = _blogService.Get(correctedSlug);
             if (blog == null)
                 return new NotFoundResult();
 

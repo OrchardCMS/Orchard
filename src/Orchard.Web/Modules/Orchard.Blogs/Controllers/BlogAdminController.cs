@@ -37,8 +37,7 @@ namespace Orchard.Blogs.Controllers {
             if (!Services.Authorizer.Authorize(Permissions.ManageBlogs, T("Not allowed to create blogs")))
                 return new HttpUnauthorizedResult();
 
-            Blog blog = Services.ContentManager.New<Blog>(BlogDriver.ContentType.Name);
-
+            var blog = Services.ContentManager.New<Blog>(BlogDriver.ContentType.Name);
             if (blog == null)
                 return new NotFoundResult();
 
@@ -59,13 +58,10 @@ namespace Orchard.Blogs.Controllers {
 
             if (!ModelState.IsValid)
                 return View(model);
-            
-            Services.ContentManager.Create(model.Blog.Item.ContentItem);
 
-            //TEMP: (erikpo) ensure information has committed for this record
-            Services.ContentManager.Flush();
+            _blogService.Create(model.Blog.Item);
 
-            return Redirect(Url.BlogForAdmin(model.Blog.Item.As<RoutableAspect>().Slug));
+            return Redirect(Url.BlogForAdmin(model.Blog.Item.Slug));
         }
 
         public ActionResult Edit(string blogSlug) {
@@ -74,8 +70,7 @@ namespace Orchard.Blogs.Controllers {
                 return new HttpUnauthorizedResult();
 
             //TODO: (erikpo) Move looking up the current blog up into a modelbinder
-            Blog blog = _blogService.Get(blogSlug);
-
+            var blog = _blogService.Get(blogSlug);
             if (blog == null)
                 return new NotFoundResult();
 
@@ -92,8 +87,7 @@ namespace Orchard.Blogs.Controllers {
                 return new HttpUnauthorizedResult();
 
             //TODO: (erikpo) Move looking up the current blog up into a modelbinder
-            Blog blog = _blogService.Get(blogSlug);
-
+            var blog = _blogService.Get(blogSlug);
             if (blog == null)
                 return new NotFoundResult();
 
@@ -108,6 +102,8 @@ namespace Orchard.Blogs.Controllers {
             if (!String.IsNullOrEmpty(setAsHomePage) && !setAsHomePage.Equals("false")) {
                 CurrentSite.HomePage = "BlogHomePageProvider;" + model.Blog.Item.Id;
             }
+
+            _blogService.Edit(model.Blog.Item);
 
             Services.Notifier.Information(T("Blog information updated"));
 
