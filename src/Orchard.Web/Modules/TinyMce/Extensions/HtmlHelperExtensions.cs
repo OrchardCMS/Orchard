@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
+using System.Web.UI;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
 using Orchard.Core.Common.Models;
@@ -16,7 +17,8 @@ namespace TinyMce.Extensions {
             var currentModule = htmlHelper.Resolve<IExtensionManager>().ActiveExtensions().FirstOrDefault(ee => ee.Descriptor.ExtensionType == "Module" && ee.Assembly == currentDriver.GetType().Assembly);
             var routable = body.ContentItem.Has<RoutableAspect>() ? body.ContentItem.As<RoutableAspect>() : null;
 
-            return string.Format("{0}/{1}{2}", "~/Media", currentModule.Descriptor.Name, routable != null && !string.IsNullOrEmpty(routable.ContainerPath) ? "/" + routable.ContainerPath : "");
+            //TODO: (erikpo) Get the value for the media folder from settings instead of hardcoding it
+            return ((Control)htmlHelper.ViewDataContainer).ResolveUrl(string.Format("{0}/{1}{2}", "~/Media", currentModule.Descriptor.Name, routable != null && !string.IsNullOrEmpty(routable.ContainerPath) ? "/" + routable.ContainerPath : ""));
         }
     }
 }

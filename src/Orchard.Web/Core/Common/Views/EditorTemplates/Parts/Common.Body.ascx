@@ -2,6 +2,6 @@
 <%@ Import Namespace="Orchard.Core.Common.ViewModels" %>
 <fieldset>
     <label><%=_Encoded("Body")%></label>
-    <%=Html.EditorFor(m => m.Text, Model.TextEditorTemplate) %>
+    <%=Html.Partial("EditorTemplates/" + Model.TextEditorTemplate, Model) %>
     <%=Html.ValidationMessageFor(m => m.Text) %>
 </fieldset>
