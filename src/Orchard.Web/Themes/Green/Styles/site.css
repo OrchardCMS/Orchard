@@ -283,8 +283,14 @@ colgroup
 	font-weight:600;
 }
 
+/* Edit mode
+----------------------------------------------------------*/
+#yui-main div.managewrapper:hover, div.managewrapper:hover .manage {
+border:1px dashed #46878D;
+}
 
-/* Common */
+/* Common
+----------------------------------------------------------*/
 
 .floatLeft {float: left;}
 
