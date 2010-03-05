@@ -111,8 +111,12 @@ namespace Orchard.Users.Controllers {
                 User = Services.ContentManager.UpdateEditorModel<User>(id, this)
             };
 
-            // apply additional model properties that were posted on form
-            UpdateModel(model);
+            TryUpdateModel(model);
+
+            if (!ModelState.IsValid) {
+                Services.TransactionManager.Cancel();
+                return View(model);
+            }
 
             model.User.Item.NormalizedUserName = model.UserName.ToLower();
 
