@@ -6,7 +6,7 @@
     <script type="text/javascript" src="js/addmedia.js"></script>
 </head>
 <body>
-<form enctype="multipart/form-data" method="post">
+<form enctype="multipart/form-data" method="post" onsubmit="return AddMediaDialog.addMedia(this);">
     <div class="tabs">
 		<ul>
 			<li id="general_tab" class="current"><span><a href="#general_tab">{#addmedia_dlg.title}</a></span></li>

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Text;
 using System.Web;
 using System.Web.Mvc;
 using Orchard.Localization;
@@ -159,20 +160,20 @@ namespace Orchard.Media.Controllers {
         }
 
         [HttpPost]
-        public JsonResult AddFromClient() {
+        public ContentResult AddFromClient() {
             var viewModel = new MediaItemAddViewModel();
             try {
                 UpdateModel(viewModel);
                 if (!Services.Authorizer.Authorize(Permissions.UploadMediaFiles))
-                    return Json(new { error = T("ERROR: You don't have permission to upload media files").ToString() });
+                    return Content(string.Format("<script type=\"text/javascript\">var result = {{ error: \"{0}\" }};</script>", T("ERROR: You don't have permission to upload media files")));
 
                 if (Request.Files.Count < 1 || Request.Files[0].ContentLength == 0)
-                    return Json(new { error = T("HEY: You didn't give me a file to upload").ToString() });
+                    return Content(string.Format("<scipt type=\"text/javascript\">var result = {{ error: \"{0}\" }};</script>", T("HEY: You didn't give me a file to upload")));
 
                 try {
                     _mediaService.GetMediaFiles(viewModel.MediaPath);
                 }
-                catch //media api needs a little work, like everything else of course ;)
+                catch //media api needs a little work, like everything else of course ;) <- ;) == my stuff included. to clarify I need a way to know if the path exists or have UploadMediaFile create paths as necessary but there isn't the time to hook that up in the near future
                 {
                     _mediaService.CreateFolder(viewModel.MediaPath, "");
                 }
@@ -180,10 +181,10 @@ namespace Orchard.Media.Controllers {
                 var file = Request.Files[0];
                 _mediaService.UploadMediaFile(viewModel.MediaPath, file);
 
-                return Json(new { url = Path.Combine(_mediaService.GetRootUrl(), string.Format("{0}/{1}", viewModel.MediaPath, file.FileName)).Replace("\\", "/") });
+                return Content(string.Format("<script type=\"text/javascript\">var result = {{ url: \"{0}\" }};</script>", Path.Combine(_mediaService.GetRootUrl(), string.Format("{0}/{1}", viewModel.MediaPath, Path.GetFileName(file.FileName))).Replace("\\", "/")));
             }
             catch (Exception exception) {
-                return Json(new { error = T("ERROR: Uploading media file failed: {0}", exception.Message).ToString() });
+                return Content(string.Format("<script type=\"text/javascript\">var result = {{ error: \"{0}\" }};</script>", T("ERROR: Uploading media file failed: {0}", exception.Message)));
             }
         }
 
