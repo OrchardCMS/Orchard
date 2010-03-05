@@ -202,7 +202,7 @@ td.even {
 }
 
 #sidebar h3 {
-	border-bottom:1px solid #f1f1f1;
+	border-bottom:1px dotted #f1f1f1;
 	font-size: 130%;
 }
 
@@ -268,7 +268,11 @@ td.even {
 
 
 /* ---------- Generic ---------- */
-
 .clearBoth {
 	clear:both;
+}
+
+/* ---------- Hide the edit link for blogs hack ---------- */
+.manage {
+    display:none;
 }
