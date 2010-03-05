@@ -36,6 +36,15 @@ namespace Orchard.Mvc.ViewModels {
         public string TemplateName { get; set; }
         public string Prefix { get; set; }
         public ZoneCollection Zones { get; private set; }
+        public bool IsPublished {
+            get { return Item != null && Item.VersionRecord != null && Item.VersionRecord.Published; }
+        }
+        public bool IsLatest {
+            get { return Item != null && Item.VersionRecord != null && Item.VersionRecord.Latest; }
+        }
+        public bool IsDraft {
+            get { return IsLatest && !IsPublished; }
+        }
     }
 
     public class ContentItemViewModel<TPart> : ContentItemViewModel where TPart : IContent {
