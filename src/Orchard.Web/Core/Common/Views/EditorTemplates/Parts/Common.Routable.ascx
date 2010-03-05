@@ -23,9 +23,9 @@
                 target:$("<%=String.Format("input#{0}Slug", !string.IsNullOrEmpty(Model.Prefix) ? Model.Prefix + "_" : "") %>"),
                 url:"<%=Url.Slugify() %>",
                 contentType:"<%=Model.RoutableAspect.ContentItem.ContentType %>",
-                id:"<%=Model.RoutableAspect.ContentItem.Id %>",<%
+                id:"<%=Model.RoutableAspect.ContentItem.Id %>"<%
                 var container = Model.RoutableAspect.ContentItem.As<ICommonAspect>().Container;
-                if (container != null) { %>
+                if (container != null) { %>,
                 containerId:<%=container.ContentItem.Id %><%
                 } %>
             })

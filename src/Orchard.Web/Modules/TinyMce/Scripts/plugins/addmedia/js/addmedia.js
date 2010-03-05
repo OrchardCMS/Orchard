@@ -10,43 +10,54 @@ var AddMediaDialog = {
     },
 
     addMedia: function(form) {
-        var iframeName = "addmedia__" + (new Date()).getTime()
-        var iframe = document.createElement("iframe");
-        iframe.name = iframeName;
+        var iframeName = "addmedia__" + (new Date()).getTime();
+
+        var iframe;
+        try {
+            iframe = document.createElement("<iframe name=\"" + iframeName + "\" />"); // <- for some vowel browser
+        } catch (ex) {
+            iframe = document.createElement("iframe");
+            iframe.name = iframeName;
+        }
         iframe.src = "about:blank";
-
         tinymce.DOM.setStyles(iframe, { display: "none" });
-        var iframeLoadHandler = tinymce.dom.Event.add(iframe, 'load', function(ev) {
-            var result = window.frames[iframeName].result, close = 0;
-            if (result && result.url) {
-                window.parent.AddMediaDialog.insertMedia(result.url);
-                close = 1;
-            } else if (result && result.error) {
-                alert(tinyMCEPopup.getLang("addmedia_dlg.msg_error") + "\n\r\n\r" + result.error);
-            } else {
-                var somethingPotentiallyHorrible = "";
-                try {
-                    somethingPotentiallyHorrible = window.frames[iframeName].document.getElementsByTagName("body")[0].innerHTML;
-                } catch (ex) { // some browsers flip out trying to access anything in the iframe when there's an error. best we can do is guess at this point
-                    somethingPotentiallyHorrible = tinyMCEPopup.getLang("addmedia_dlg.msg_error_unknown");
-                }
-                if (somethingPotentiallyHorrible) {
-                    alert(tinyMCEPopup.getLang("addmedia_dlg.msg_error_unexpected") + "\n\r\n\r" + somethingPotentiallyHorrible);
-                }
-            }
 
-            //cleanup
-            setTimeout(function() {
-                tinymce.dom.Event.remove(iframe, 'load', iframeLoadHandler);
-                tinymce.DOM.remove(iframe);
-                iframe = null;
-                if (close) window.parent.tinyMCEPopup.close();
-            },
+        var iframeLoadHandler = tinymce.dom.Event.add(iframe, 'load', function(ev) {
+            try {
+                var result = window.frames[iframeName].result, close = 0;
+
+                if (result && result.url) {
+                    window.parent.AddMediaDialog.insertMedia(result.url);
+                    close = 1;
+                } else if (result && result.error) {
+                    alert(tinyMCEPopup.getLang("addmedia_dlg.msg_error") + "\n\r\n\r" + result.error);
+                } else {
+                    var somethingPotentiallyHorrible = "";
+                    try {
+                        somethingPotentiallyHorrible = window.frames[iframeName].document.getElementsByTagName("body")[0].innerHTML;
+                    } catch (ex) { // some browsers flip out trying to access anything in the iframe when there's an error. best we can do is guess at this point
+                        somethingPotentiallyHorrible = tinyMCEPopup.getLang("addmedia_dlg.msg_error_unknown");
+                    }
+                    if (somethingPotentiallyHorrible) {
+                        alert(tinyMCEPopup.getLang("addmedia_dlg.msg_error_unexpected") + "\n\r\n\r" + somethingPotentiallyHorrible);
+                    }
+                }
+
+                //cleanup
+                setTimeout(function() {
+                    tinymce.dom.Event.remove(iframe, 'load', iframeLoadHandler);
+                    tinymce.DOM.remove(iframe);
+                    iframe = null;
+                    if (close) window.parent.tinyMCEPopup.close();
+                },
                 123);
+            } catch (ex) {
+                alert(ex.message);
+            }
         });
 
-        form.target = iframeName;
         tinymce.DOM.add(document.body, iframe);
+        form.target = iframe.name;
     },
 
     insertMedia: function(url) {
