@@ -141,6 +141,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Scripts\plugins\addmedia\addmedia.htm" />
+    <Content Include="Scripts\plugins\addmedia\editor_plugin_src.js" />
     <Content Include="Scripts\plugins\addmedia\editor_plugin.js" />
     <Content Include="Scripts\plugins\addmedia\img\picture_add.png" />
     <Content Include="Scripts\plugins\addmedia\js\addmedia.js" />
