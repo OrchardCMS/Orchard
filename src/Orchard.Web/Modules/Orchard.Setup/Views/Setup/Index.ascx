@@ -20,7 +20,7 @@ using (Html.BeginFormAntiForgeryPost()) { %>
         <%=Html.PasswordFor(svm => svm.AdminPassword) %>
     </div>
 </fieldset>
-<fieldset class="data<%=Model.DatabaseOptions ? " builtin" : " sql" %>">
+<fieldset class="data">
     <legend><%=_Encoded("How would you like to store your data?") %></legend>
     <%=Html.ValidationMessage("DatabaseOptions", "Unable to setup data storage") %>
     <div>
@@ -30,10 +30,10 @@ using (Html.BeginFormAntiForgeryPost()) { %>
     <div>
         <%=Html.RadioButtonFor(svm => svm.DatabaseOptions, false, new { id = "sql" })%>
         <label for="sql" class="forcheckbox"><%=_Encoded("Use an existing SQL Server (or SQL Express) database") %></label>
-        <span>
+        <span data-controllerid="sql">
             <label for="DatabaseConnectionString"><%=_Encoded("Connection string") %></label>
             <%=Html.EditorFor(svm => svm.DatabaseConnectionString)%>
-            <i class="hint"><%=_Encoded("Example: Data Source=sqlServerName;Initial Catalog=dbName;Persist Security Info=True;User ID=userName;Password=password") %></i>
+            <span class="hint"><%=_Encoded("Example:") %><br /><%=_Encoded("Data Source=sqlServerName;Initial Catalog=dbName;Persist Security Info=True;User ID=userName;Password=password") %></span>
         </span>
     </div>
 </fieldset>
@@ -41,9 +41,3 @@ using (Html.BeginFormAntiForgeryPost()) { %>
     <input class="button" type="submit" value="<%=_Encoded("Finish Setup") %>" />
 </fieldset><%
 } %>
-<script type="text/javascript">
-    $(function() {
-        $("#sql").change(function() { $(this).siblings("span").slideDown(200).find("input").focus(); });
-        $("#builtin").change(function() { $("#sql").siblings("span").slideUp(200); });
-    });
-</script>

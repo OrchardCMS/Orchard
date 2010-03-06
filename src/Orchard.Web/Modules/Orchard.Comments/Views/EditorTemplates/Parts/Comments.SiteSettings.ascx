@@ -12,12 +12,12 @@
         <label class="forcheckbox" for="CommentSettings_EnableSpamProtection"><%=_Encoded("Enable spam protection") %></label>
         <%=Html.ValidationMessage("EnableSpamProtection", "*")%>
     </div>
-    <div>
+    <div data-controllerid="CommentSettings_EnableSpamProtection">
         <label for="CommentSettings_AkismetKey"><%=_Encoded("Akismet key") %></label>
         <%=Html.EditorFor(m => m.AkismetKey) %>
         <%=Html.ValidationMessage("AkismetKey", "*")%>
     </div>
-    <div>
+    <div data-controllerid="CommentSettings_EnableSpamProtection">
         <label for="CommentSettings_AkismetUrl"><%=_Encoded("Akismet endpoint URL") %></label>
         <%=Html.EditorFor(m => m.AkismetUrl) %>
         <%=Html.ValidationMessage("AkismetUrl", "*")%>

@@ -35,7 +35,10 @@ h3 {font-size: 130%;}
 h4 {font-size: 120%;}
 h5 {font-size: 105%;}
 
-
+.hint {
+    font-size:60%;
+    font-style:italic;
+}
 
 #header {
 	background:#2d2f25 url(images/backgroundHeader.gif) no-repeat bottom right;
@@ -48,7 +51,7 @@ h5 {font-size: 105%;}
 	background:url(images/orchardLogo.gif) no-repeat;
 	display:block;
 	height:60px;
-	margin:0 0 0 20px;;
+	margin:0 0 0 20px;
 }
 
 
@@ -144,10 +147,6 @@ button:focus, .button:focus {
     border-color:#bb8b2d;
     color:#fff;
     text-decoration:none;
-}
-
-html.dyn fieldset.data.builtin div span {
-    display:none;
 }
 
 
