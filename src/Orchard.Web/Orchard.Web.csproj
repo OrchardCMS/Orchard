@@ -170,6 +170,7 @@
     <Content Include="Themes\Classic\Content\Images\mainBackgroundgrey.png" />
     <Content Include="Themes\Classic\Content\Images\navDivider.gif" />
     <Content Include="Themes\Classic\Content\Images\sidebarBackground.gif" />
+    <Content Include="Themes\Classic\DesignerNotes\Sidebar.html" />
     <Content Include="Themes\Classic\Styles\blog.css" />
     <Content Include="Themes\Classic\Styles\site.css" />
     <Content Include="Themes\Classic\Theme.png" />
@@ -192,6 +193,10 @@
     <Content Include="Themes\Green\Content\Images\tabLeftOn.gif" />
     <Content Include="Themes\Green\Content\Images\tabRightOff.gif" />
     <Content Include="Themes\Green\Content\Images\tabRightOn.gif" />
+    <Content Include="Themes\Green\DesignerNotes\Sidebar.html" />
+    <Content Include="Themes\Green\DesignerNotes\User2.html" />
+    <Content Include="Themes\Green\DesignerNotes\User3.html" />
+    <Content Include="Themes\Green\DesignerNotes\User1.html" />
     <Content Include="Themes\Green\Styles\blog.css" />
     <Content Include="Themes\Green\Styles\site.css" />
     <Content Include="Themes\Green\Styles\yui.css" />

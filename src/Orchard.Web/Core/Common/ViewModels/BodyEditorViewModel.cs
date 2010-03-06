@@ -15,5 +15,6 @@ namespace Orchard.Core.Common.ViewModels {
         }
 
         public string TextEditorTemplate { get; set; }
+        public string AddMediaPath { get; set; }
     }
 }

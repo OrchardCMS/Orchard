@@ -33,16 +33,7 @@
         <%Html.ZoneBody("content");%>
         </div>
         <div id="sidebar">
-            <ul>
-                <li>
-                    <h3>
-                        Heading</h3>
-                </li>
-                <li>
-                    <p class="small">
-                        Paragraph - Small</p>
-                </li>
-            </ul>
+            <%Html.Zone("sidebar");%>
         </div>
         <%-- End Content --%>
         <% Html.Include("Footer"); %>

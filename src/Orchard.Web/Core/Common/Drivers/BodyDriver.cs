@@ -1,6 +1,8 @@
-﻿using System.Text.RegularExpressions;
+﻿using System;
+using System.Text.RegularExpressions;
 using JetBrains.Annotations;
 using Orchard.ContentManagement;
+using Orchard.ContentManagement.Aspects;
 using Orchard.ContentManagement.Drivers;
 using Orchard.Core.Common.Models;
 using Orchard.Core.Common.ViewModels;
@@ -17,7 +19,7 @@ namespace Orchard.Core.Common.Drivers {
         }
 
         protected override string Prefix {
-            get {return "Body";}
+            get { return "Body"; }
         }
 
         // \/\/ Haackalicious on many accounts - don't copy what has been done here for the wrapper \/\/
@@ -30,17 +32,76 @@ namespace Orchard.Core.Common.Drivers {
                 ContentPartTemplate(model, TemplateName, Prefix).LongestMatch(displayType, "Summary", "SummaryAdmin").Location("primary", "5"),
                 Services.Authorizer.Authorize(Permissions.ChangeOwner) ? ContentPartTemplate(model, "Parts/Common.Body.ManageWrapperPost").Location("primary", "5") : null);
         }
-
+        
         protected override DriverResult Editor(BodyAspect part) {
-            var model = new BodyEditorViewModel { BodyAspect = part, TextEditorTemplate = DefaultTextEditorTemplate };
+            var model = BuildEditorViewModel(part);
             return ContentPartTemplate(model, TemplateName, Prefix).Location("primary", "5");
         }
 
         protected override DriverResult Editor(BodyAspect part, IUpdateModel updater) {
-            var model = new BodyEditorViewModel { BodyAspect = part, TextEditorTemplate = DefaultTextEditorTemplate };
+            var model = BuildEditorViewModel(part);
             updater.TryUpdateModel(model, Prefix, null, null);
             return ContentPartTemplate(model, TemplateName, Prefix).Location("primary", "5");
         }
+
+        private static BodyEditorViewModel BuildEditorViewModel(BodyAspect part) {
+            return new BodyEditorViewModel {
+                BodyAspect = part,
+                TextEditorTemplate = DefaultTextEditorTemplate,
+                AddMediaPath= new PathBuilder(part).AddContentType().AddContainerSlug().AddSlug().ToString()
+            };
+        }
+        class PathBuilder {
+            private readonly IContent _content;
+            private string _path;
+
+            public PathBuilder(IContent content) {
+                _content = content;
+                _path = "";
+            }
+
+            public override string ToString() {
+                return _path;
+            }
+
+            public PathBuilder AddContentType() {
+                Add(_content.ContentItem.ContentType);
+                return this;
+            }
+
+            public PathBuilder AddContainerSlug() {
+                var common = _content.As<ICommonAspect>();
+                if (common == null)
+                    return this;
+
+                var routable = common.Container.As<RoutableAspect>();
+                if (routable == null)
+                    return this;
+
+                Add(routable.Slug);
+                return this;
+            }
+
+            public PathBuilder AddSlug() {
+                var routable = _content.As<RoutableAspect>();
+                if (routable == null)
+                    return this;
+
+                Add(routable.Slug);
+                return this;
+            }
+
+            private void Add(string segment) {
+                if (string.IsNullOrEmpty(segment))
+                    return;
+                if (string.IsNullOrEmpty(_path))
+                    _path = segment;
+                else
+                    _path = _path + "/" + segment;
+            }
+
+        }
+
 
         // Can be moved somewhere else once we have IoC enabled body text filters.
         private static string BbcodeReplace(string bodyText) {

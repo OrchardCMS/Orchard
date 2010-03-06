@@ -311,6 +311,7 @@
     <Compile Include="UI\Zones\IZoneManager.cs" />
     <Compile Include="UI\Zones\ContentPartDisplayZoneItem.cs" />
     <Compile Include="UI\Zones\ContentPartEditorZoneItem.cs" />
+    <Compile Include="UI\Zones\IZoneManagerEvents.cs" />
     <Compile Include="UI\Zones\RenderActionZoneItem.cs" />
     <Compile Include="UI\Zones\RenderPartialZoneItem.cs" />
     <Compile Include="UI\Zones\RenderStaticZoneItem.cs" />

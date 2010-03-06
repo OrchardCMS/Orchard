@@ -122,7 +122,6 @@
     <Content Include="Scripts\utils\validate.js" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Extensions\HtmlHelperExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

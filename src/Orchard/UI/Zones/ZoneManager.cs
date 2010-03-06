@@ -2,10 +2,19 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
+using Orchard.Logging;
 using Orchard.UI.Navigation;
 
 namespace Orchard.UI.Zones {
+
     public class ZoneManager : IZoneManager {
+        private readonly IEnumerable<IZoneManagerEvents> _events;
+
+        public ZoneManager(IEnumerable<IZoneManagerEvents> events) {
+            _events = events;
+            Logger = NullLogger.Instance;
+        }
+
         public void Render<TModel>(HtmlHelper<TModel> html, ZoneCollection zones, string zoneName, string partitions, string[] exclude) {
             IEnumerable<Group> groups;
             if (string.IsNullOrEmpty(zoneName)) {
@@ -14,17 +23,34 @@ namespace Orchard.UI.Zones {
             }
             else {
                 ZoneEntry entry;
-                if (!zones.TryGetValue(zoneName, out entry))
-                    return;
-                groups = BuildGroups(partitions, new[] { entry });
+                if (zones.TryGetValue(zoneName, out entry)) {
+                    groups = BuildGroups(partitions, new[] { entry });
+                }
+                else {
+                    groups = Enumerable.Empty<Group>();
+                }
             }
 
-            foreach (var item in groups.SelectMany(x => x.Items)) {
-                item.WasExecuted = true;
-                item.Execute(html);
+            var context = new ZoneRenderContext {
+                Html = html,
+                Zones = zones,
+                ZoneName = zoneName,
+                RenderingItems = groups.SelectMany(x => x.Items).ToList()
+            };
+
+            _events.Invoke(x => x.ZoneRendering(context), Logger);
+            foreach (var item in context.RenderingItems) {
+                var zoneItem = item;
+                _events.Invoke(x => x.ZoneItemRendering(context, zoneItem), Logger);
+                zoneItem.WasExecuted = true;
+                zoneItem.Execute(html);
+                _events.Invoke(x => x.ZoneItemRendered(context, zoneItem), Logger);
             }
+            _events.Invoke(x => x.ZoneRendered(context), Logger);
 
         }
+
+        protected ILogger Logger { get; set; }
 
         private IEnumerable<Group> BuildGroups(string partitions, IEnumerable<ZoneEntry> zones) {
 

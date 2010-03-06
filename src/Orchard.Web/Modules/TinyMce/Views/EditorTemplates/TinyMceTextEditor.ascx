@@ -19,7 +19,7 @@ using (this.Capture("end-of-page-scripts")) {%>
         theme_advanced_buttons3: "",
         convert_urls: false,
         addmedia_action: "<%=Url.Action("AddFromClient", "Admin", new {area = "Orchard.Media"}) %>",
-        addmedia_path: "<%=Html.GetCurrentMediaPath() %>",
+        addmedia_path: "<%= Model.AddMediaPath %>",
         request_verification_token: "<%=Html.AntiForgeryTokenValueOrchard() %>"
     });
 </script><%
