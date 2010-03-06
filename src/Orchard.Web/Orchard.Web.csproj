@@ -205,6 +205,7 @@
     <Content Include="Themes\Green\Views\Footer.ascx" />
     <Content Include="Themes\Green\Views\Layout.ascx" />
     <Content Include="Themes\Green\Views\ListOfComments.ascx" />
+    <Content Include="Themes\SafeMode\Content\orchard.ico" />
     <Content Include="Themes\SafeMode\Styles\images\backgroundHeader.gif" />
     <Content Include="Themes\SafeMode\Styles\images\backgroundVines.gif" />
     <Content Include="Themes\SafeMode\Styles\images\orchardLogo.gif" />
