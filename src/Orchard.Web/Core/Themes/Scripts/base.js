@@ -16,15 +16,9 @@
             $("[data-controllerid=" + controller.attr("id") + "]").hide();
         }
         if (controller.is(":checkbox")) {
-            controller.change(function() {
-                $(this).toggleWhatYouControl();
-            });
+            controller.click($(this).toggleWhatYouControl);
         } else if (controller.is(":radio")) {
-            $("[name=" + controller.attr("name") + "]").change(function() {
-                $("[name=" + $(this).attr("name") + "]").each(function() {
-                    $(this).toggleWhatYouControl();
-                });
-            });
+            $("[name=" + controller.attr("name") + "]").click(function() { $("[name=" + $(this).attr("name") + "]").each($(this).toggleWhatYouControl); });
         }
     });
 })();
