@@ -50,9 +50,23 @@ namespace Orchard.Core.Themes.DesignerNotes {
         }
 
         public void ZoneItemRendering(ZoneRenderContext context, ZoneItem item) {
+#if DEBUG
+            var writer = context.Html.ViewContext.Writer;
+            if (item is RenderPartialZoneItem)
+                writer.Write(string.Format("<!-- begin: {0} -->", (item as RenderPartialZoneItem).TemplateName));
+            else if (item is ContentPartDisplayZoneItem)
+                writer.Write(string.Format("<!-- begin: {0} -->", (item as ContentPartDisplayZoneItem).TemplateName));
+#endif
         }
 
         public void ZoneItemRendered(ZoneRenderContext context, ZoneItem item) {
+#if DEBUG
+            var writer = context.Html.ViewContext.Writer;
+            if (item is RenderPartialZoneItem)
+                writer.Write(string.Format("<!-- end: {0} -->", (item as RenderPartialZoneItem).TemplateName));
+            else if (item is ContentPartDisplayZoneItem)
+                writer.Write(string.Format("<!-- end: {0} -->", (item as ContentPartDisplayZoneItem).TemplateName));
+#endif
         }
 
         public void ZoneRendered(ZoneRenderContext context) {
