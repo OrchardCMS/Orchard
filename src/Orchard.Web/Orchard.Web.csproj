@@ -211,6 +211,7 @@
     <Content Include="Themes\Green\Views\Layout.ascx" />
     <Content Include="Themes\Green\Views\ListOfComments.ascx" />
     <Content Include="Themes\SafeMode\Content\orchard.ico" />
+    <Content Include="Themes\SafeMode\Styles\ie6.css" />
     <Content Include="Themes\SafeMode\Styles\images\backgroundHeader.gif" />
     <Content Include="Themes\SafeMode\Styles\images\backgroundVines.gif" />
     <Content Include="Themes\SafeMode\Styles\images\orchardLogo.gif" />
@@ -219,6 +220,7 @@
     <Content Include="Themes\SafeMode\Theme.txt" />
     <Content Include="Themes\SafeMode\Views\Document.aspx" />
     <Content Include="Themes\SafeMode\Views\Layout.ascx" />
+    <Content Include="Themes\TheAdmin\Styles\ie6.css" />
     <Content Include="Themes\TheAdmin\Styles\images\backgroundGradient.gif" />
     <Content Include="Themes\TheAdmin\Styles\images\backgroundHeader.gif" />
     <Content Include="Themes\TheAdmin\Styles\images\orchardLogo.gif" />
