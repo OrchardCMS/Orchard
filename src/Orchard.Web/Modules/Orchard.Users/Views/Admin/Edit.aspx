@@ -8,6 +8,6 @@
     <%=Html.EditorFor(m=>m.Email, "inputTextLarge") %>
     <%=Html.EditorForItem(Model.User) %>
     <fieldset>
-        <input class="button" type="submit" value="<%=_Encoded("Save") %>" />
+        <input class="button primaryAction" type="submit" value="<%=_Encoded("Save") %>" />
     </fieldset>
 <% } %>

@@ -35,6 +35,6 @@
         <% } %>
     </fieldset>
     <fieldset>
-       <input type="submit" class="button" value="<%=_Encoded("Save") %>" />
+       <input type="submit" class="button primaryAction" value="<%=_Encoded("Save") %>" />
     </fieldset>
 <% } %>
