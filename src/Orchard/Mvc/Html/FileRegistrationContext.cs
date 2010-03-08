@@ -37,7 +37,6 @@ namespace Orchard.Mvc.Html {
         public string FileName { get; set; }
         public string Condition { get; set; }
         public string FilePathAttributeName { get; set; }
-        public IDictionary<string, string> Attributes { get { return _tagBuilder.Attributes; } }
 
         public void AddAttribute(string name, string value) {
             _tagBuilder.MergeAttribute(name, value);
@@ -68,7 +67,7 @@ namespace Orchard.Mvc.Html {
             return obj.GetType() == typeof (FileRegistrationContext) && Equals((FileRegistrationContext) obj);
         }
 
-        public bool Equals(FileRegistrationContext other) {
+        private bool Equals(FileRegistrationContext other) {
             if (ReferenceEquals(null, other)) {
                 return false;
             }
