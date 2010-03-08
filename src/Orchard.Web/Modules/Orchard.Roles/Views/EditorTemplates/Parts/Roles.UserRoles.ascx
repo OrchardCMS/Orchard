@@ -4,7 +4,10 @@
     <legend><%=_Encoded("Roles")%></legend>
     <% if (Model.Roles.Count > 0) {
            var index = 0;
-           foreach (var entry in Model.Roles) {%>
+           foreach (var entry in Model.Roles) {
+               if (string.Equals(entry.Name, "Authenticated", StringComparison.OrdinalIgnoreCase) || string.Equals(entry.Name, "Anonymous", StringComparison.OrdinalIgnoreCase)) {
+                   continue;
+               }%>
     <%=Html.Hidden("Roles[" + index + "].RoleId", entry.RoleId)%>
     <%=Html.Hidden("Roles[" + index + "].Name", entry.Name)%>
     <div>
