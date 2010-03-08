@@ -43,7 +43,7 @@ namespace Orchard.Blogs.Drivers {
             return post.Title;
         }
 
-        protected override RouteValueDictionary GetDisplayRouteValues(BlogPost post) {
+        public override RouteValueDictionary GetDisplayRouteValues(BlogPost post) {
             return new RouteValueDictionary {
                                                 {"Area", "Orchard.Blogs"},
                                                 {"Controller", "BlogPost"},
@@ -53,7 +53,7 @@ namespace Orchard.Blogs.Drivers {
                                             };
         }
 
-        protected override RouteValueDictionary GetEditorRouteValues(BlogPost post) {
+        public override RouteValueDictionary GetEditorRouteValues(BlogPost post) {
             return new RouteValueDictionary {
                                                 {"Area", "Orchard.Blogs"},
                                                 {"Controller", "BlogPostAdmin"},

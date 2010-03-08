@@ -23,7 +23,7 @@ namespace Orchard.Users.Drivers {
             return item.UserName;
         }
 
-        protected override RouteValueDictionary GetEditorRouteValues(User item) {
+        public override RouteValueDictionary GetEditorRouteValues(User item) {
             return new RouteValueDictionary {
                                                 {"Area", "Orchard.Users"},
                                                 {"Controller", "Admin"},

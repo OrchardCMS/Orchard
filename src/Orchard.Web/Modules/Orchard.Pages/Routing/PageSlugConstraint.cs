@@ -52,6 +52,9 @@ namespace Orchard.Pages.Routing {
         }
 
         public bool Match(HttpContextBase httpContext, Route route, string parameterName, RouteValueDictionary values, RouteDirection routeDirection) {
+            if (routeDirection == RouteDirection.UrlGeneration)
+                return true;
+
             object value;
             if (values.TryGetValue(parameterName, out value)) {
                 var parameterValue = Convert.ToString(value);

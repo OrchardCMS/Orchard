@@ -43,7 +43,7 @@ namespace Orchard.Pages.Drivers {
             return page.Title;
         }
 
-        protected override RouteValueDictionary GetDisplayRouteValues(Page page) {
+        public override RouteValueDictionary GetDisplayRouteValues(Page page) {
             return new RouteValueDictionary {
                                                 {"Area", "Orchard.Pages"},
                                                 {"Controller", "Page"},
@@ -52,7 +52,7 @@ namespace Orchard.Pages.Drivers {
                                             };
         }
 
-        protected override RouteValueDictionary GetEditorRouteValues(Page page) {
+        public override RouteValueDictionary GetEditorRouteValues(Page page) {
             return new RouteValueDictionary {
                                                 {"Area", "Orchard.Pages"},
                                                 {"Controller", "Admin"},

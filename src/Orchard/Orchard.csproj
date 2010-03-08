@@ -127,6 +127,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ContentManagement\Aspects\ICommonAspect.cs" />
+    <Compile Include="ContentManagement\Drivers\IContentItemDriver.cs" />
     <Compile Include="ContentManagement\Extenstions\UrlHelperExtensions.cs" />
     <Compile Include="ContentManagement\Handlers\ContentContextBase.cs" />
     <Compile Include="ContentManagement\Handlers\PublishContentContext.cs" />

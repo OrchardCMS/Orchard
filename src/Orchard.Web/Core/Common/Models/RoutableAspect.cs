@@ -2,7 +2,7 @@ using Orchard.ContentManagement;
 
 namespace Orchard.Core.Common.Models {
     public class RoutableAspect : ContentPart<RoutableRecord> {
-        public string ContainerPath { get; set; }
+        public string ContentItemBasePath { get; set; }
 
         public string Title {
             get { return Record.Title; }

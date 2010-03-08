@@ -21,7 +21,7 @@ namespace Orchard.Sandbox.Drivers {
             return item.Record.Name;
         }
 
-        protected override RouteValueDictionary GetDisplayRouteValues(SandboxPage item) {
+        public override RouteValueDictionary GetDisplayRouteValues(SandboxPage item) {
             return new RouteValueDictionary(
                 new {
                         area = "Orchard.Sandbox",
@@ -31,7 +31,7 @@ namespace Orchard.Sandbox.Drivers {
                     });
         }
 
-        protected override RouteValueDictionary GetEditorRouteValues(SandboxPage item) {
+        public override RouteValueDictionary GetEditorRouteValues(SandboxPage item) {
             return new RouteValueDictionary(
                 new {
                         area = "Orchard.Sandbox",

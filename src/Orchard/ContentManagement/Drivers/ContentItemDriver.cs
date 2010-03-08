@@ -5,15 +5,6 @@ using Orchard.ContentManagement.Handlers;
 using Orchard.Mvc.ViewModels;
 
 namespace Orchard.ContentManagement.Drivers {
-    public interface IContentItemDriver : IEvents {
-        IEnumerable<ContentType> GetContentTypes();
-        void GetContentItemMetadata(GetContentItemMetadataContext context);
-
-        DriverResult BuildDisplayModel(BuildDisplayModelContext context);
-        DriverResult BuildEditorModel(BuildEditorModelContext context);
-        DriverResult UpdateEditorModel(UpdateEditorModelContext context);
-    }
-
     public abstract class ContentItemDriver<TContent> : ContentPartDriver<TContent>, IContentItemDriver where TContent : class, IContent {
         private readonly ContentType _contentType;
         protected virtual bool UseDefaultTemplate { get { return false; } }
@@ -74,8 +65,8 @@ namespace Orchard.ContentManagement.Drivers {
 
         protected virtual ContentType GetContentType() { return _contentType; }
         protected virtual string GetDisplayText(TContent item) { return null; }
-        protected virtual RouteValueDictionary GetDisplayRouteValues(TContent item) { return null; }
-        protected virtual RouteValueDictionary GetEditorRouteValues(TContent item) { return null; }
+        public virtual RouteValueDictionary GetDisplayRouteValues(TContent item) { return null; }
+        public virtual RouteValueDictionary GetEditorRouteValues(TContent item) { return null; }
 
         protected virtual DriverResult Display(ContentItemViewModel<TContent> viewModel, string displayType) { return GetDefaultItemTemplate(); }
         protected virtual DriverResult Editor(ContentItemViewModel<TContent> viewModel) { return GetDefaultItemTemplate(); }
