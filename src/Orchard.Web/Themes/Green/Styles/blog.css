@@ -12,7 +12,7 @@
 
 .blogdescription, .postsummary {
     clear:both;
-    border-bottom:1px solid #cacec6;
+    /*border-bottom:1px solid #cacec6;*/
  }
  
  .comments li {

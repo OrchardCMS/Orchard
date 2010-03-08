@@ -8,6 +8,16 @@
     Html.RegisterStyle("blog.css");
     %>
 
+<script type="text/javascript"> 
+$(document).ready(function(){
+$(".collapsible").click(function() {
+$(this).next().slideToggle(600);
+return false;
+ });
+});
+     
+</script>
+
 <div id="doc4" class="yui-t6">
 
 <% Html.Zone("header"); Html.Zone("menu"); %>
@@ -40,7 +50,15 @@
       </div>
     </div>
     <div id="subcolumn" class="yui-b">
-    <%Html.Zone("sidebar"); %>
+    
+<div>
+<h3>Sidebar</h3>
+<ul>
+    <%Html.Zone("Sidebar"); %>
+    <%Html.Zone("Sidebar1"); %>
+</ul>
+</div>
+
     </div>
   </div>
   <%-- End Content --%>

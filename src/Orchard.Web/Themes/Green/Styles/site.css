@@ -212,18 +212,21 @@ colgroup
     }
     
 #subcolumn h4 {
-    margin:6px 0 0 6px;
+    /*margin:6px 0 0 6px;*/
+    padding:6px 0 8px 6px;
+    background:#CED5CE;
     }
     
 #subcolumn p {
-    padding:6px;
+    padding:8px;
     }
     
-#subcolumn ul {
+#subcolumn ul li {
      border:1px solid #CACEC6;
     -webkit-border-radius: 6px;
     -moz-border-radius: 6px;
-	padding:8px;
+	/*padding:8px;*/
+	margin: 0 0 12px 0;
     }
 
 
@@ -231,6 +234,8 @@ colgroup
     
 .contentItems li {
     margin:12px 0 12px 0;
+    padding:6px 0;
+    border-top:1px solid #cacec6;
 }
 
 #ft {
