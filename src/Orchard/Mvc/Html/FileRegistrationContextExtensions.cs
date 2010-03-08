@@ -8,12 +8,12 @@
             return fileRegistrationContext;
         }
 
-        public static T ForMedia<T>(this T styleFileRegistrationContext, string media) where T : StyleFileRegistrationContext {
-            if (styleFileRegistrationContext == null)
+        public static T ForMedia<T>(this T fileRegistrationContext, string media) where T : FileRegistrationContext {
+            if (fileRegistrationContext == null)
                 return null;
 
-            styleFileRegistrationContext.Media = media;
-            return styleFileRegistrationContext;
+            fileRegistrationContext.SetAttribute("media", media);
+            return fileRegistrationContext;
         }
     }
 }

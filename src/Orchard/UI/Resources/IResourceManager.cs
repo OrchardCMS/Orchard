@@ -4,7 +4,7 @@ using Orchard.Mvc.Html;
 namespace Orchard.UI.Resources {
     public interface IResourceManager : IDependency {
         void RegisterMeta(string name, string content);
-        StyleFileRegistrationContext RegisterStyle(string fileName, HtmlHelper html);
+        FileRegistrationContext RegisterStyle(string fileName, HtmlHelper html);
         void RegisterLink(LinkEntry entry, HtmlHelper html);
         FileRegistrationContext RegisterHeadScript(string fileName, HtmlHelper html);
         FileRegistrationContext RegisterFootScript(string fileName, HtmlHelper html);
