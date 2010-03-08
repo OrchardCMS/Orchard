@@ -31,7 +31,7 @@ namespace Orchard.Comments {
         public IEnumerable<PermissionStereotype> GetDefaultStereotypes() {
             return new[] {
                 new PermissionStereotype {
-                    Name = "Administrators",
+                    Name = "Administrator",
                     Permissions = new[] {ManageComments}
                 },
                 new PermissionStereotype {

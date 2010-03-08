@@ -37,7 +37,7 @@ namespace Orchard.Blogs {
         public IEnumerable<PermissionStereotype> GetDefaultStereotypes() {
             return new[] {
                 new PermissionStereotype {
-                    Name = "Administrators",
+                    Name = "Administrator",
                     Permissions = new[] {ManageBlogs}
                 },
                 new PermissionStereotype {

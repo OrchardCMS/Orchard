@@ -18,7 +18,7 @@ namespace Orchard.Core.Navigation {
         public IEnumerable<PermissionStereotype> GetDefaultStereotypes() {
             return new[] {
                 new PermissionStereotype {
-                    Name = "Administrators",
+                    Name = "Administrator",
                     Permissions = new[] {ManageMainMenu}
                 }
             };

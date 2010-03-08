@@ -25,7 +25,7 @@ namespace Orchard.Roles {
         public IEnumerable<PermissionStereotype> GetDefaultStereotypes() {
             return new[] {
                 new PermissionStereotype {
-                    Name = "Administrators",
+                    Name = "Administrator",
                     Permissions = new[] {ManageRoles, ApplyRoles}
                 }
             };
