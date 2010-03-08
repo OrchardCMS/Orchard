@@ -98,16 +98,16 @@ namespace Orchard.Mvc.Html {
             html.Resolve<IResourceManager>().RegisterLink(entry, html);
         }
 
-        public static void RegisterStyle(this HtmlHelper html, string fileName) {
-            html.Resolve<IResourceManager>().RegisterStyle(fileName, html);
+        public static StyleFileRegistrationContext RegisterStyle(this HtmlHelper html, string fileName) {
+            return html.Resolve<IResourceManager>().RegisterStyle(fileName, html);
         }
 
-        public static void RegisterScript(this HtmlHelper html, string fileName) {
-            html.Resolve<IResourceManager>().RegisterHeadScript(fileName, html);
+        public static FileRegistrationContext RegisterScript(this HtmlHelper html, string fileName) {
+            return html.Resolve<IResourceManager>().RegisterHeadScript(fileName, html);
         }
 
-        public static void RegisterFootScript(this HtmlHelper html, string fileName) {
-            html.Resolve<IResourceManager>().RegisterFootScript(fileName, html);
+        public static FileRegistrationContext RegisterFootScript(this HtmlHelper html, string fileName) {
+            return html.Resolve<IResourceManager>().RegisterFootScript(fileName, html);
         }
 
 
