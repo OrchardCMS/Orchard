@@ -40,7 +40,13 @@ namespace Orchard.Core.Common.Handlers {
             var method = driverType.GetMethod("GetDisplayRouteValues");
 
             if (method != null) {
-                return (RouteValueDictionary)method.Invoke(driver, new object[] {contentItem.Get(driverType.BaseType.GetGenericArguments()[0])});
+                try {
+                    return
+                        (RouteValueDictionary)
+                        method.Invoke(driver,
+                                      new object[] {contentItem.Get(driverType.BaseType.GetGenericArguments()[0])});
+                }
+                catch {}
             }
 
             return null;
