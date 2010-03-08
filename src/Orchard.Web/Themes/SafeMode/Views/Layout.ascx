@@ -11,6 +11,10 @@
     var siteCss = ResolveUrl("../Styles/site.css");
     Model.Zones.AddAction("head:styles", html =>
       html.ViewContext.Writer.Write(@"<link rel=""stylesheet"" type=""text/css"" href=""" + siteCss + @"""/>")); %>
+      
+<!--[if lte IE 6]>
+    <link rel="stylesheet" type="text/css" media="screen, projection" href="/Themes/SafeMode/Styles/ie6.css" />
+<![endif]-->
 <div id="header">
 	<div id="branding"><h1>Welcome to Orchard</h1></div>
 </div>
