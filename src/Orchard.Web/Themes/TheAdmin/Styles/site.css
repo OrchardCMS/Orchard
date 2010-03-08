@@ -108,6 +108,7 @@ number of columns: 24; actual width: 946; column width: 26; gutter width:14
 #content {
     overflow:auto;
     padding:1.4em;
+    background:#fcfcfc;
 }
 #main {
     display:inline;
@@ -228,7 +229,6 @@ a:hover, a:active, a:focus {
     overflow:hidden;
     width:0;
 }
-
 #navigation li {
 	margin:7px 0 20px 0;
 }
