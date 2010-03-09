@@ -359,6 +359,9 @@ legend {
     font-size:1.6em;
     font-weight:bold;
 }
+legend span {
+    font-weight:normal;
+}
 label {
 	display: block;
 	color:#4c4c4c;
