@@ -1,11 +1,19 @@
 using System;
+using System.Collections.Generic;
 using System.Web.Mvc;
 using System.Web.Routing;
 using System.Web.UI;
 
 namespace Orchard.Mvc.Html {
     public class FileRegistrationContext : RequestContext {
-        public FileRegistrationContext(ControllerContext viewContext, IViewDataContainer viewDataContainer, string fileName)
+        private readonly TagBuilder _tagBuilder;
+        private static readonly Dictionary<string, string> _filePathAttributes = new Dictionary<string, string> {{"script", "src"}, {"link", "href"}};
+
+        public FileRegistrationContext(ControllerContext viewContext, IViewDataContainer viewDataContainer, string tagName, string fileName)
+            : this(viewContext, viewDataContainer, tagName, _filePathAttributes[tagName], fileName) {
+        }
+
+        public FileRegistrationContext(ControllerContext viewContext, IViewDataContainer viewDataContainer, string tagName, string filePathAttributeName, string fileName)
             : base(viewContext.HttpContext, viewContext.RouteData) {
             Container = viewDataContainer as TemplateControl;
 
@@ -20,24 +28,22 @@ namespace Orchard.Mvc.Html {
             }
 
             FileName = fileName;
+            FilePathAttributeName = filePathAttributeName;
+            _tagBuilder = new TagBuilder(tagName);
         }
 
         public TemplateControl Container { get; set; }
         public string ContainerVirtualPath { get; set; }
         public string FileName { get; set; }
         public string Condition { get; set; }
+        public string FilePathAttributeName { get; set; }
 
-        public override bool Equals(object obj) {
-            if (ReferenceEquals(null, obj)) {
-                return false;
-            }
-            if (ReferenceEquals(this, obj)) {
-                return true;
-            }
-            if (obj.GetType() != typeof (FileRegistrationContext)) {
-                return false;
-            }
-            return Equals((FileRegistrationContext) obj);
+        public void AddAttribute(string name, string value) {
+            _tagBuilder.MergeAttribute(name, value);
+        }
+
+        public void SetAttribute(string name, string value) {
+            _tagBuilder.MergeAttribute(name, value, true);
         }
 
         internal string GetFilePath(string containerRelativePath) {
@@ -47,7 +53,21 @@ namespace Orchard.Mvc.Html {
                        : (ContainerVirtualPath + containerRelativePath + FileName);
         }
 
-        public bool Equals(FileRegistrationContext other) {
+        internal string GetTag() {
+            return _tagBuilder.ToString();
+        }
+
+        public override bool Equals(object obj) {
+            if (ReferenceEquals(null, obj)) {
+                return false;
+            }
+            if (ReferenceEquals(this, obj)) {
+                return true;
+            }
+            return obj.GetType() == typeof (FileRegistrationContext) && Equals((FileRegistrationContext) obj);
+        }
+
+        private bool Equals(FileRegistrationContext other) {
             if (ReferenceEquals(null, other)) {
                 return false;
             }

@@ -10,19 +10,17 @@ using Orchard.Mvc.Html;
 namespace Orchard.UI.Resources {
     [UsedImplicitly]
     public class ResourceManager : IResourceManager {
-        private const string ConditionFormat = "\r\n<!--[{0}]>{{0}}\r\n<![endif]-->";
+        private const string ConditionFormat = "\r\n<!--[{0}]>{{0}}<![endif]-->";
         private const string MetaFormat = "\r\n<meta name=\"{0}\" content=\"{1}\" />";
-        private const string StyleFormat = "\r\n<link rel=\"stylesheet\" type=\"text/css\" href=\"{0}\" {1} />";
-        private const string ScriptFormat = "\r\n<script type=\"text/javascript\" src=\"{0}\"></script>";
         private readonly Dictionary<string, string> _metas;
-        private readonly List<StyleFileRegistrationContext> _styles;
+        private readonly List<FileRegistrationContext> _styles;
         private readonly List<LinkEntry> _links;
         private readonly List<FileRegistrationContext> _headScripts;
         private readonly List<FileRegistrationContext> _footScripts;
 
         public ResourceManager() {
             _metas = new Dictionary<string, string>(20) {{"generator", "Orchard"}};
-            _styles = new List<StyleFileRegistrationContext>(10);
+            _styles = new List<FileRegistrationContext>(10);
             _links = new List<LinkEntry>();
             _headScripts = new List<FileRegistrationContext>(10);
             _footScripts = new List<FileRegistrationContext>(5);
@@ -36,11 +34,13 @@ namespace Orchard.UI.Resources {
                 _metas.Add(name, content);
         }
 
-        public StyleFileRegistrationContext RegisterStyle(string fileName, HtmlHelper html) {
+        public FileRegistrationContext RegisterStyle(string fileName, HtmlHelper html) {
             if (string.IsNullOrEmpty(fileName))
                 throw new ArgumentException(T("Style fileName was not given.").ToString());
 
-            var context = new StyleFileRegistrationContext(html.ViewContext, html.ViewDataContainer, fileName);
+            var context = new FileRegistrationContext(html.ViewContext, html.ViewDataContainer, "link", fileName);
+            context.SetAttribute("type", "text/css");
+            context.SetAttribute("rel", "stylesheet");
 
             if (!_styles.Contains(context))
                 _styles.Add(context);
@@ -56,7 +56,8 @@ namespace Orchard.UI.Resources {
             if (string.IsNullOrEmpty(fileName))
                 throw new ArgumentException(T("Head script fileName was not given.").ToString());
 
-            var context = new FileRegistrationContext(html.ViewContext, html.ViewDataContainer, fileName);
+            var context = new FileRegistrationContext(html.ViewContext, html.ViewDataContainer, "script", fileName);
+            context.SetAttribute("type", "text/javascript");
 
             if (!_headScripts.Contains(context))
                 _headScripts.Add(context);
@@ -64,11 +65,12 @@ namespace Orchard.UI.Resources {
             return context;
         }
 
-        public FileRegistrationContext RegisterFootScript(string fileName, HtmlHelper html) {
+        public FileRegistrationContext RegisterFootScript(string fileName, HtmlHelper html) { // type=\"text/javascript\" src=\"{0}\"
             if (string.IsNullOrEmpty(fileName))
                 throw new ArgumentException(T("Foot script fileName was not given.").ToString());
 
-            var context = new FileRegistrationContext(html.ViewContext, html.ViewDataContainer, fileName);
+            var context = new FileRegistrationContext(html.ViewContext, html.ViewDataContainer, "script", fileName);
+            context.SetAttribute("type", "text/javascript");
 
             if (!_footScripts.Contains(context))
                 _footScripts.Add(context);
@@ -83,7 +85,7 @@ namespace Orchard.UI.Resources {
         }
 
         public MvcHtmlString GetStyles() {
-            return GetStyleFiles(_styles, StyleFormat, "/styles/");
+            return GetFiles(_styles, "/styles/");
         }
 
         public MvcHtmlString GetLinks(HtmlHelper html) {
@@ -128,36 +130,29 @@ namespace Orchard.UI.Resources {
         }
 
         public MvcHtmlString GetHeadScripts() {
-            return GetFiles(_headScripts, ScriptFormat, "/scripts/");
+            return GetFiles(_headScripts, "/scripts/");
         }
 
         public MvcHtmlString GetFootScripts() {
-            return GetFiles(_footScripts, ScriptFormat, "/scripts/");
+            return GetFiles(_footScripts, "/scripts/");
         }
 
-        private static MvcHtmlString GetFiles(IEnumerable<FileRegistrationContext> fileRegistrationContexts, string fileFormat, string containerRelativePath) {
+        private static MvcHtmlString GetFiles(IEnumerable<FileRegistrationContext> fileRegistrationContexts, string containerRelativePath) {
             return
                 MvcHtmlString.Create(string.Join("",
                                                  fileRegistrationContexts.Select(
                                                      c =>
-                                                     string.Format(fileFormat, c.GetFilePath(containerRelativePath))).
+                                                     string.Format(
+                                                         !string.IsNullOrEmpty(c.Condition)
+                                                             ? string.Format(ConditionFormat, c.Condition)
+                                                             : "{0}",
+                                                         GetTag(c, c.GetFilePath(containerRelativePath)))).
                                                      ToArray()));
         }
 
-        private static MvcHtmlString GetStyleFiles(IEnumerable<StyleFileRegistrationContext> styleFileRegistrationContexts, string fileFormat, string containerRelativePath) {
-            return MvcHtmlString.Create(string.Join("",
-                                                    styleFileRegistrationContexts.Select(
-                                                        c =>
-                                                        string.Format(
-                                                            !string.IsNullOrEmpty(c.Condition)
-                                                                ? string.Format(ConditionFormat, c.Condition)
-                                                                : "{0}",
-                                                            string.Format(fileFormat,
-                                                                          c.GetFilePath(containerRelativePath),
-                                                                          !string.IsNullOrEmpty(c.Media)
-                                                                              ? string.Format("media=\"{0}\"", c.Media)
-                                                                              : "")))
-                                                        .ToArray()));
+        private static string GetTag(FileRegistrationContext fileRegistrationContext, string filePath) {
+            fileRegistrationContext.SetAttribute(fileRegistrationContext.FilePathAttributeName, filePath);
+            return fileRegistrationContext.GetTag();
         }
     }
 }

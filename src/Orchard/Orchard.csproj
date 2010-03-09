@@ -157,7 +157,6 @@
     <Compile Include="Mvc\AntiForgery\ValidateAntiForgeryTokenOrchardAttribute.cs" />
     <Compile Include="Mvc\Html\FileRegistrationContextExtensions.cs" />
     <Compile Include="Mvc\Extensions\UrlHelperExtensions.cs" />
-    <Compile Include="Mvc\Html\StyleFileRegistrationContext.cs" />
     <Compile Include="Mvc\ViewModels\AdaptedViewModel.cs" />
     <Compile Include="Mvc\ViewUserControl.cs">
       <SubType>ASPXCodeBehind</SubType>

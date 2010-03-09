@@ -98,7 +98,7 @@ namespace Orchard.Mvc.Html {
             html.Resolve<IResourceManager>().RegisterLink(entry, html);
         }
 
-        public static StyleFileRegistrationContext RegisterStyle(this HtmlHelper html, string fileName) {
+        public static FileRegistrationContext RegisterStyle(this HtmlHelper html, string fileName) {
             return html.Resolve<IResourceManager>().RegisterStyle(fileName, html);
         }
 
