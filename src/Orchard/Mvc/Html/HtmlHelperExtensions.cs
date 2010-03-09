@@ -231,7 +231,7 @@ namespace Orchard.Mvc.Html {
         #region BeginFormAntiForgeryPost
 
         public static MvcForm BeginFormAntiForgeryPost(this HtmlHelper htmlHelper) {
-            return htmlHelper.BeginFormAntiForgeryPost(htmlHelper.ViewContext.HttpContext.Request.Url.AbsolutePath, FormMethod.Post, new RouteValueDictionary());
+            return htmlHelper.BeginFormAntiForgeryPost(htmlHelper.ViewContext.HttpContext.Request.Url.PathAndQuery, FormMethod.Post, new RouteValueDictionary());
         }
 
         public static MvcForm BeginFormAntiForgeryPost(this HtmlHelper htmlHelper, string formAction) {
@@ -247,7 +247,7 @@ namespace Orchard.Mvc.Html {
         }
 
         public static MvcForm BeginFormAntiForgeryPost(this HtmlHelper htmlHelper, string formAction, FormMethod formMethod, IDictionary<string, object> htmlAttributes) {
-            TagBuilder tagBuilder = new TagBuilder("form");
+            var tagBuilder = new TagBuilder("form");
 
             tagBuilder.MergeAttributes(htmlAttributes);
             tagBuilder.MergeAttribute("action", formAction);

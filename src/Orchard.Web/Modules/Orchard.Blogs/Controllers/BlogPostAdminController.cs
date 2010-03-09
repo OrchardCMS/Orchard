@@ -7,6 +7,7 @@ using Orchard.Blogs.ViewModels;
 using Orchard.ContentManagement;
 using Orchard.Localization;
 using Orchard.Mvc.AntiForgery;
+using Orchard.Mvc.FollowReturnUrl;
 using Orchard.Mvc.Results;
 using Orchard.UI.Admin;
 using Orchard.UI.Notify;
@@ -100,17 +101,17 @@ namespace Orchard.Blogs.Controllers {
             return View(model);
         }
 
-        [HttpPost, ActionName("Edit")]
+        [HttpPost, ActionName("Edit"), FollowReturnUrl]
         public ActionResult EditPOST(string blogSlug, int postId) {
             if (!Services.Authorizer.Authorize(Permissions.EditBlogPost, T("Couldn't edit blog post")))
                 return new HttpUnauthorizedResult();
 
-            Blog blog = _blogService.Get(blogSlug);
+            var blog = _blogService.Get(blogSlug);
             if (blog == null)
                 return new NotFoundResult();
 
             // Get draft (create a new version if needed)
-            BlogPost post = _blogPostService.Get(postId, VersionOptions.DraftRequired);
+            var post = _blogPostService.Get(postId, VersionOptions.DraftRequired);
             if (post == null)
                 return new NotFoundResult();
 
