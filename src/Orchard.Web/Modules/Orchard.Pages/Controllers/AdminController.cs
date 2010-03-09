@@ -7,6 +7,7 @@ using JetBrains.Annotations;
 using Orchard.Localization;
 using Orchard.ContentManagement;
 using Orchard.Mvc.AntiForgery;
+using Orchard.Mvc.FollowReturnUrl;
 using Orchard.Mvc.Results;
 using Orchard.Pages.Drivers;
 using Orchard.Pages.Models;
@@ -169,9 +170,9 @@ namespace Orchard.Pages.Controllers {
             return View(model);
         }
 
-        [HttpPost, ActionName("Edit")]
+        [HttpPost, ActionName("Edit"), FollowReturnUrl]
         public ActionResult EditPOST(int id) {
-            Page page = _pageService.GetPageOrDraft(id);
+            var page = _pageService.GetPageOrDraft(id);
             if (page == null)
                 return new NotFoundResult();
 
@@ -209,7 +210,7 @@ namespace Orchard.Pages.Controllers {
                     break;
             }
 
-            return RedirectToAction("Edit", "Admin", new { id = model.Page.Item.ContentItem.Id });
+            return RedirectToAction("Edit", "Admin", new {id = model.Page.Item.ContentItem.Id});
         }
 
         public ActionResult DiscardDraft(int id) {
