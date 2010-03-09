@@ -186,6 +186,7 @@
     <Content Include="Themes\Classic\Content\Images\mainBackgroundgrey.png" />
     <Content Include="Themes\Classic\Content\Images\navDivider.gif" />
     <Content Include="Themes\Classic\Content\Images\sidebarBackground.gif" />
+    <Content Include="Themes\Classic\DesignerNotes\Sidebar.html" />
     <Content Include="Themes\Classic\Styles\blog.css" />
     <Content Include="Themes\Classic\Styles\site.css" />
     <Content Include="Themes\Classic\Theme.png" />

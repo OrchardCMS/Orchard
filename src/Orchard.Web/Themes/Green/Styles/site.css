@@ -263,7 +263,7 @@ div.homeWidget {
 /* Top navigation pane
 ----------------------------------------------------------*/
 
-#menucontainer {
+.menucontainer {
 	margin:0;
 	padding:0 0 0 20px;
 	list-style:none;
@@ -271,13 +271,13 @@ div.homeWidget {
 	font-size:104%;
 }
 
-#menucontainer ul li {
+.menucontainer ul.menu li {
 	float:left;
 	margin:0 2px;
 	background:url(../Content/Images/tabRightOff.gif) no-repeat top right;
 }
 
-#menucontainer ul li a {
+.menucontainer ul.menu li a {
 	display:block;
 	padding: 8px 18px;
 	background:url(../Content/Images/tabLeftOff.gif) no-repeat top left;
@@ -287,11 +287,11 @@ div.homeWidget {
 	color:#35550b;
 }
 
-#menucontainer ul li.current {
+.menucontainer ul.menu li.current {
 	background:url(../Content/Images/tabRightOn.gif) no-repeat top right;
 }
 
-#menucontainer ul li.current a {
+.menucontainer ul.menu li.current a {
 	background:url(../Content/Images/tabLeftOn.gif) no-repeat top left;
 	font-weight:600;
 }

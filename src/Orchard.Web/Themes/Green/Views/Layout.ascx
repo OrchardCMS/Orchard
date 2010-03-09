@@ -19,8 +19,6 @@ return false;
 
 <div id="doc4" class="yui-t6">
 
-<% Html.Zone("header"); Html.Zone("menu"); %>
-
 <div id="hd" role="banner">
     <div class="yui-g" id="branding">
         <div class="yui-u first">
@@ -35,7 +33,9 @@ return false;
     </div>
     <%--Top Navigation--%>
     <%-- todo:(nheskew) this will need to be a generated menu --%>
-    <% Html.Include("Menu"); %>
+    <div class="menucontainer">
+            <% Html.Include("menu"); %>
+        </div>
 </div>
 
 <%-- Begin Page Content --%>
