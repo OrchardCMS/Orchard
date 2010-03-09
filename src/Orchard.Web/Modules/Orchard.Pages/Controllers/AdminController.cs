@@ -213,6 +213,7 @@ namespace Orchard.Pages.Controllers {
             return RedirectToAction("Edit", "Admin", new {id = model.Page.Item.ContentItem.Id});
         }
 
+        [ValidateAntiForgeryTokenOrchard]
         public ActionResult DiscardDraft(int id) {
             // get the current draft version
             var draft = Services.ContentManager.Get(id, VersionOptions.Draft);

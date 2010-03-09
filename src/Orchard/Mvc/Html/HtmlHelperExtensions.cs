@@ -273,7 +273,15 @@ namespace Orchard.Mvc.Html {
         #region AntiForgeryTokenValueOrchardLink
 
         public static string AntiForgeryTokenValueOrchardLink(this HtmlHelper htmlHelper, string linkContents, string href)  {
-            return htmlHelper.Link(linkContents, htmlHelper.AntiForgeryTokenGetUrl(href));
+            return htmlHelper.AntiForgeryTokenValueOrchardLink(linkContents, href, (object)null);
+        }
+
+        public static string AntiForgeryTokenValueOrchardLink(this HtmlHelper htmlHelper, string linkContents, string href, object htmlAttributes)  {
+            return htmlHelper.AntiForgeryTokenValueOrchardLink(linkContents, href, new RouteValueDictionary(htmlAttributes));
+        }
+
+        public static string AntiForgeryTokenValueOrchardLink(this HtmlHelper htmlHelper, string linkContents, string href, IDictionary<string, object> htmlAttributes)  {
+            return htmlHelper.Link(linkContents, htmlHelper.AntiForgeryTokenGetUrl(href), htmlAttributes);
         }
 
         #endregion

@@ -146,6 +146,7 @@ namespace Orchard.Blogs.Controllers {
             return Redirect(Url.BlogPostEdit(model.BlogPost.Item));
         }
 
+        [ValidateAntiForgeryTokenOrchard]
         public ActionResult DiscardDraft(int id) {
             // get the current draft version
             var draft = Services.ContentManager.Get(id, VersionOptions.Draft);
