@@ -161,6 +161,22 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Themes\TheAdmin\Styles\images\icons.psd" />
+    <Content Include="Themes\ClassicDark\Content\Images\bodyBackgroundgrey.gif" />
+    <Content Include="Themes\ClassicDark\Content\Images\sidebarBackground.gif" />
+    <Content Include="Themes\ClassicDark\Styles\blog.css" />
+    <Content Include="Themes\ClassicDark\Styles\site.css" />
+    <Content Include="Themes\ClassicDark\Theme.png" />
+    <Content Include="Themes\ClassicDark\Theme.txt" />
+    <Content Include="Themes\ClassicDark\Views\DisplayTemplates\Items\Blogs.Blog.ascx" />
+    <Content Include="Themes\ClassicDark\Views\DisplayTemplates\Items\Blogs.Blog.Summary.ascx" />
+    <Content Include="Themes\ClassicDark\Views\DisplayTemplates\Items\Blogs.BlogPost.ascx" />
+    <Content Include="Themes\ClassicDark\Views\DisplayTemplates\Items\Blogs.BlogPost.Summary.ascx" />
+    <Content Include="Themes\ClassicDark\Views\DisplayTemplates\Parts\Blogs.BlogPost.List.ascx" />
+    <Content Include="Themes\ClassicDark\Views\DisplayTemplates\Parts\Blogs.BlogPost.Metadata.ascx" />
+    <Content Include="Themes\ClassicDark\Views\DisplayTemplates\Parts\Pages.Page.Metadata.ascx" />
+    <Content Include="Themes\ClassicDark\Views\Footer.ascx" />
+    <Content Include="Themes\ClassicDark\Views\Layout.ascx" />
+    <Content Include="Themes\ClassicDark\Views\ZoneTest.ascx" />
     <Content Include="Themes\Classic\Content\Images\bodyBackground.gif" />
     <Content Include="Themes\Classic\Content\Images\bodyBackgroundgrey.gif" />
     <Content Include="Themes\Classic\Content\Images\footerBackground.gif" />
@@ -233,6 +249,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Themes\ClassicDark\DesignerNotes\" />
     <Folder Include="Themes\SafeMode\Content\Images\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
