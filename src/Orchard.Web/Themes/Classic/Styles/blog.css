@@ -23,3 +23,14 @@ ul.blogs p {
 	color:#666666;
 }
 
+.tagCloud {
+    font-style:italic;
+    font-size:120%;
+}
+
+.tagCloud li {
+    display: block;
+    float:left;
+    padding:20px 10px 0 0;
+}
+
