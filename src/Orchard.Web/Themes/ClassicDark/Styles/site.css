@@ -45,6 +45,7 @@ p.small {line-height:24px; font-size:85%;}
 
 a {
 	color:#fff;
+	color:#e4fcdd;
 	text-decoration:underline;
 }
 a:hover {
@@ -182,7 +183,7 @@ td.even {
 	display:block;
 	margin:0em auto;
 	background:#1d2025;
-	border:1px solid #474747;
+	border:1px solid #333;
 }
 
 #main {
