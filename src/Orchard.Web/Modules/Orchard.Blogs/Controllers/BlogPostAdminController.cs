@@ -27,16 +27,14 @@ namespace Orchard.Blogs.Controllers {
         public IOrchardServices Services { get; set; }
         private Localizer T { get; set; }
 
-        public ActionResult Create(string blogSlug) {
+        public ActionResult Create() {
             if (!Services.Authorizer.Authorize(Permissions.EditBlogPost, T("Not allowed to create blog post")))
                 return new HttpUnauthorizedResult();
 
-            Blog blog = _blogService.Get(blogSlug);
-            if (blog == null)
-                return new NotFoundResult();
-
             var blogPost = Services.ContentManager.New<BlogPost>(BlogPostDriver.ContentType.Name);
-            blogPost.Blog = blog;
+
+            if (blogPost.Blog == null)
+                return new NotFoundResult();
 
             var model = new CreateBlogPostViewModel {
                 BlogPost = Services.ContentManager.BuildEditorModel(blogPost)
@@ -46,17 +44,15 @@ namespace Orchard.Blogs.Controllers {
         }
 
         [HttpPost]
-        public ActionResult Create(string blogSlug, CreateBlogPostViewModel model) {
+        public ActionResult Create(CreateBlogPostViewModel model) {
             if (!Services.Authorizer.Authorize(Permissions.EditBlogPost, T("Couldn't create blog post")))
                 return new HttpUnauthorizedResult();
 
-            Blog blog = _blogService.Get(blogSlug);
-            if (blog == null)
+            var blogPost = Services.ContentManager.New<BlogPost>(BlogPostDriver.ContentType.Name);
+            
+            if (blogPost.Blog == null)
                 return new NotFoundResult();
 
-            // Validate form input
-            var blogPost = Services.ContentManager.New<BlogPost>(BlogPostDriver.ContentType.Name);
-            blogPost.Blog = blog;
             model.BlogPost = Services.ContentManager.UpdateEditorModel(blogPost, this);
 
             if (!ModelState.IsValid) {
@@ -89,11 +85,11 @@ namespace Orchard.Blogs.Controllers {
             if (!Services.Authorizer.Authorize(Permissions.EditBlogPost, T("Couldn't edit blog post")))
                 return new HttpUnauthorizedResult();
 
-            Blog blog = _blogService.Get(blogSlug);
+            var blog = _blogService.Get(blogSlug);
             if (blog == null)
                 return new NotFoundResult();
 
-            BlogPost post = _blogPostService.Get(postId, VersionOptions.Latest);
+            var post = _blogPostService.Get(postId, VersionOptions.Latest);
             if (post == null)
                 return new NotFoundResult();
 

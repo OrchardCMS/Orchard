@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using System.Web.Routing;
 using JetBrains.Annotations;
 using Orchard.Blogs.Drivers;
 using Orchard.Blogs.Models;
@@ -18,7 +19,7 @@ namespace Orchard.Blogs.Handlers {
         private readonly IRoutableService _routableService;
         private readonly IOrchardServices _orchardServices;
 
-        public BlogPostHandler(IBlogPostService blogPostService, IRoutableService routableService, IOrchardServices orchardServices) {
+        public BlogPostHandler(IBlogService blogService, IBlogPostService blogPostService, IRoutableService routableService, IOrchardServices orchardServices, RequestContext requestContext) {
             _blogPostService = blogPostService;
             _routableService = routableService;
             _orchardServices = orchardServices;
@@ -41,6 +42,22 @@ namespace Orchard.Blogs.Handlers {
                      blog.PostCount = posts.Count;
                  });
 
+            OnActivated<BlogPost>((context, bp) => {
+                var blogSlug = requestContext.RouteData.Values.ContainsKey("blogSlug") ? requestContext.RouteData.Values["blogSlug"] as string : null;
+                if (!string.IsNullOrEmpty(blogSlug)) {
+                    bp.Blog = blogService.Get(blogSlug);
+                    return;
+                }
+
+                var containerId = requestContext.HttpContext.Request.Form["containerId"];
+                if (!string.IsNullOrEmpty(containerId)) {
+                    int cId;
+                    if (int.TryParse(containerId, out cId)) {
+                        bp.Blog = context.ContentItem.ContentManager.Get(cId).As<Blog>();
+                        return;
+                    }
+                }
+            });
             OnCreated<BlogPost>((context, bp) => updateBlogPostCount(bp.Blog));
             OnPublished<BlogPost>((context, bp) => updateBlogPostCount(bp.Blog));
             OnVersioned<BlogPost>((context, bp1, bp2) => updateBlogPostCount(bp2.Blog));
