@@ -438,7 +438,10 @@ fieldset {
 textarea {
     min-height:8em;
 }
-.primary input.large.text, .primary textarea {
+#main input.large.text, #main textarea {
+    width:99.5%;
+}
+#main .primary input.large.text, #main .primary textarea {
     margin:0;
     padding:4px;
     width:98%;
