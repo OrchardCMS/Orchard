@@ -4,7 +4,7 @@
 <%@ Import Namespace="Orchard.Comments.Models" %>
 <fieldset>
     <%-- todo: (heskew) pull the legend and put the link to the comments elsewhere? --%>
-    <legend><%=_Encoded("Comments")%> <%=Html.CommentSummaryLinks(T, Model.ContentItem, Model.Comments.Count, Model.PendingComments.Count)%></legend>
+    <legend><%=_Encoded("Comments")%><% if (Model.Comments.Count > 0) { %> <span>&#150; <%=Html.CommentSummaryLinks(T, Model.ContentItem, Model.Comments.Count, Model.PendingComments.Count)%></span><% } %></legend>
     <%--
     todo: (heskew) can get into a weird state if this is disabled but comments are active so, yeah, comment settings on a content item need to be hashed out
     <%=Html.EditorFor(m => m.CommentsShown) %>
