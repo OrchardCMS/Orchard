@@ -420,11 +420,13 @@ input.large.text, textarea, fieldset {
     clear:both;
 }
 fieldset {
-    margin:1.8em 0 .4em 0;
+    margin:0 0 1.3em 0;
+    padding:6px 0 0;
 }
 /* Settings page styles */
 .settings fieldset {
     margin:.5em 0;
+    border-bottom:1px solid #eaeaea;
     padding:1em;
 }
 .orchard-media fieldset div, .settings fieldset div, .orchard-media .button, .settings .button {
@@ -441,12 +443,13 @@ textarea {
     min-height:8em;
 }
 #main input.large.text, #main textarea {
-    width:99.5%;
+    padding:4px;
+    width:99%;
 }
 #main .primary input.large.text, #main .primary textarea {
     margin:0;
     padding:4px;
-    width:98%;
+    width:98.8%;
 }
 /* todo: (heskew) move editor specific style elsewhere */
 .primary .mceEditor {
