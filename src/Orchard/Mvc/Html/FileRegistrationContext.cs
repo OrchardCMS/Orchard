@@ -6,15 +6,18 @@ using System.Web.UI;
 
 namespace Orchard.Mvc.Html {
     public class FileRegistrationContext : RequestContext {
+        private readonly TagRenderMode _fileTagRenderMode;
         private readonly TagBuilder _tagBuilder;
         private static readonly Dictionary<string, string> _filePathAttributes = new Dictionary<string, string> {{"script", "src"}, {"link", "href"}};
+        private static readonly Dictionary<string, TagRenderMode> _fileTagRenderModes = new Dictionary<string, TagRenderMode> {{"script", TagRenderMode.Normal}, {"link", TagRenderMode.SelfClosing}};
 
         public FileRegistrationContext(ControllerContext viewContext, IViewDataContainer viewDataContainer, string tagName, string fileName)
-            : this(viewContext, viewDataContainer, tagName, _filePathAttributes[tagName], fileName) {
+            : this(viewContext, viewDataContainer, tagName, fileName, _filePathAttributes[tagName], _fileTagRenderModes[tagName]) {
         }
 
-        public FileRegistrationContext(ControllerContext viewContext, IViewDataContainer viewDataContainer, string tagName, string filePathAttributeName, string fileName)
+        public FileRegistrationContext(ControllerContext viewContext, IViewDataContainer viewDataContainer, string tagName, string fileName, string filePathAttributeName, TagRenderMode fileTagRenderMode)
             : base(viewContext.HttpContext, viewContext.RouteData) {
+            _fileTagRenderMode = fileTagRenderMode;
             Container = viewDataContainer as TemplateControl;
 
             if (Container != null) {
@@ -35,8 +38,8 @@ namespace Orchard.Mvc.Html {
         public TemplateControl Container { get; set; }
         public string ContainerVirtualPath { get; set; }
         public string FileName { get; set; }
+        public string FilePathAttributeName { get; private set; }
         public string Condition { get; set; }
-        public string FilePathAttributeName { get; set; }
 
         public void AddAttribute(string name, string value) {
             _tagBuilder.MergeAttribute(name, value);
@@ -54,7 +57,7 @@ namespace Orchard.Mvc.Html {
         }
 
         internal string GetTag() {
-            return _tagBuilder.ToString();
+            return _tagBuilder.ToString(_fileTagRenderMode);
         }
 
         public override bool Equals(object obj) {
