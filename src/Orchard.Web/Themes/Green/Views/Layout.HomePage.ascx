@@ -7,6 +7,15 @@
     Html.RegisterStyle("site.css");
     Html.RegisterStyle("blog.css");
     %>
+    
+<script type="text/javascript"> 
+$(document).ready(function(){
+$(".collapsible").click(function() {
+$(this).next().slideToggle(600);
+return false;
+ });
+}); 
+</script>
 
 <div id="doc4" class="yui-t6">
 
@@ -36,6 +45,13 @@
         <div class="yui-g">
           <%--Main Content--%>
           <%Html.ZoneBody("content");%>
+           <div class="yui-u first homeWidget">
+               <%Html.Zone("Widget"); %>
+	    </div>
+        <div class="yui-u homeWidget">
+                <%Html.Zone("Widget1"); %>
+	    </div>
+
         </div>
       </div>
     </div>
