@@ -142,6 +142,9 @@ namespace Orchard.Pages.Controllers {
                 case "PublishNow":
                     _pageService.Publish(model.Page.Item);
                     Services.Notifier.Information(T("Page has been published"));
+                    if (model.PromoteToHomePage) {
+                        CurrentSite.HomePage = "PageHomePageProvider;" + model.Page.Item.Id;
+                    }
                     break;
                 case "PublishLater":
                     _pageService.Publish(model.Page.Item, model.Page.Item.ScheduledPublishUtc.Value);
@@ -164,7 +167,8 @@ namespace Orchard.Pages.Controllers {
                 return new HttpUnauthorizedResult();
 
             var model = new PageEditViewModel {
-                Page = Services.ContentManager.BuildEditorModel(page)
+                Page = Services.ContentManager.BuildEditorModel(page),
+                PromoteToHomePage = CurrentSite.HomePage == "PageHomePageProvider;" + page.Id
             };
 
             return View(model);
