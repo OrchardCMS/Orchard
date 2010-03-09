@@ -49,7 +49,7 @@ namespace Orchard.Blogs.Controllers {
         }
 
         [HttpPost]
-        public ActionResult Create(CreateBlogViewModel model) {
+        public ActionResult Create(CreateBlogViewModel model, bool PromoteToHomePage) {
             //TODO: (erikpo) Might think about moving this to an ActionFilter/Attribute
             if (!Services.Authorizer.Authorize(Permissions.ManageBlogs, T("Couldn't create blog")))
                 return new HttpUnauthorizedResult();
@@ -60,6 +60,9 @@ namespace Orchard.Blogs.Controllers {
                 return View(model);
 
             _blogService.Create(model.Blog.Item);
+
+            if (PromoteToHomePage)
+                CurrentSite.HomePage = "BlogHomePageProvider;" + model.Blog.Item.Id;
 
             return Redirect(Url.BlogForAdmin(model.Blog.Item.Slug));
         }
@@ -75,14 +78,15 @@ namespace Orchard.Blogs.Controllers {
                 return new NotFoundResult();
 
             var model = new BlogEditViewModel {
-                Blog = Services.ContentManager.BuildEditorModel(blog)
+                Blog = Services.ContentManager.BuildEditorModel(blog),
+                PromoteToHomePage = CurrentSite.HomePage == "BlogHomePageProvider;" + blog.Id
             };
 
             return View(model);
         }
 
         [HttpPost]
-        public ActionResult Edit(string blogSlug, FormCollection input) {
+        public ActionResult Edit(string blogSlug, bool PromoteToHomePage) {
             if (!Services.Authorizer.Authorize(Permissions.ManageBlogs, T("Couldn't edit blog")))
                 return new HttpUnauthorizedResult();
 
@@ -98,10 +102,8 @@ namespace Orchard.Blogs.Controllers {
             if (!ModelState.IsValid)
                 return View(model);
 
-            string setAsHomePage = input["PromoteToHomePage"];
-            if (!String.IsNullOrEmpty(setAsHomePage) && !setAsHomePage.Equals("false")) {
+            if (PromoteToHomePage)
                 CurrentSite.HomePage = "BlogHomePageProvider;" + model.Blog.Item.Id;
-            }
 
             _blogService.Edit(model.Blog.Item);
 
