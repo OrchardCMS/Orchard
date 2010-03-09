@@ -16,8 +16,9 @@
 
             if (string.Equals(menuItem.Href, Request.Url.AbsolutePath, StringComparison.InvariantCultureIgnoreCase))
                 sbClass.Append("current ");
-            %>
-        <li class="<%=sbClass.ToString().TrimEnd() %>"><%=Html.Link(menuItem.Text, menuItem.Href) %></li><%
+
+            var classValue = sbClass.ToString().TrimEnd(); %>
+        <li<%=!string.IsNullOrEmpty(classValue) ? string.Format(" class=\"{0}\"", classValue) : "" %>><%=Html.Link(menuItem.Text, menuItem.Href) %></li><%
             ++counter;
         } %>
     </ul>
