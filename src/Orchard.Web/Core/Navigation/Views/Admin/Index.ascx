@@ -33,7 +33,7 @@ using (Html.BeginFormAntiForgeryPost()) { %>
     } %>
     </tbody>
 </table>
-<fieldset class="actions"><button type="submit"><%=_Encoded("Update All") %></button></fieldset><%     
+<fieldset class="actions"><button type="submit" class="button primaryAction"><%=_Encoded("Update All") %></button></fieldset><%     
 }
 %>
 
