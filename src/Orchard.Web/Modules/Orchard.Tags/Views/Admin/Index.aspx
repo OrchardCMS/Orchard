@@ -7,7 +7,7 @@
         <label for="publishActions"><%=_Encoded("Actions:") %></label>
         <select id="publishActions" name="<%=Html.NameOf(m => m.BulkAction)%>">
             <%=Html.SelectOption(Model.BulkAction, TagAdminIndexBulkAction.None, _Encoded("Choose action...").ToString())%>
-            <%=Html.SelectOption(Model.BulkAction, TagAdminIndexBulkAction.Delete, _Encoded("Delete").ToString())%>
+            <%=Html.SelectOption(Model.BulkAction, TagAdminIndexBulkAction.Delete, _Encoded("Remove").ToString())%>
         </select>
         <input class="button" type="submit" name="submit.BulkEdit" value="<%=_Encoded("Apply") %>" />
     </fieldset>

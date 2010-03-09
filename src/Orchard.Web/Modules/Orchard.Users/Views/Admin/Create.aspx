@@ -9,6 +9,6 @@
     <%=Html.EditorFor(m=>m.ConfirmPassword, "inputPasswordLarge") %>
     <%=Html.EditorForItem(Model.User) %>
     <fieldset>
-        <input class="button primaryAction" type="submit" value="<%=_Encoded("Create") %>" />
+        <input class="button primaryAction" type="submit" value="<%=_Encoded("Add") %>" />
     </fieldset>
 <% } %>

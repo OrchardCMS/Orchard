@@ -6,7 +6,7 @@
     <fieldset class="actions bulk">
         <label for="publishActions"><%=_Encoded("Actions:") %></label>
         <select id="Select1" name="roleActions">
-            <option value="1"><%=_Encoded("Delete") %></option>
+            <option value="1"><%=_Encoded("Remove") %></option>
         </select>
 		<input class="button" type="submit" value="<%=_Encoded("Apply") %>" />
 	</fieldset>

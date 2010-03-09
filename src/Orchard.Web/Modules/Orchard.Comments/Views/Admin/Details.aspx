@@ -26,7 +26,7 @@
             <%=Html.SelectOption(Model.Options.BulkAction, CommentDetailsBulkAction.Approve, _Encoded("Approve").ToString())%>
             <%=Html.SelectOption(Model.Options.BulkAction, CommentDetailsBulkAction.Pend, _Encoded("Pend").ToString())%>
             <%=Html.SelectOption(Model.Options.BulkAction, CommentDetailsBulkAction.MarkAsSpam, _Encoded("Mark as Spam").ToString())%>
-            <%=Html.SelectOption(Model.Options.BulkAction, CommentDetailsBulkAction.Delete, _Encoded("Delete").ToString())%>
+            <%=Html.SelectOption(Model.Options.BulkAction, CommentDetailsBulkAction.Delete, _Encoded("Remove").ToString())%>
         </select>
         <input class="button" type="submit" name="submit.BulkEdit" value="<%=_Encoded("Apply") %>" />
     </fieldset>

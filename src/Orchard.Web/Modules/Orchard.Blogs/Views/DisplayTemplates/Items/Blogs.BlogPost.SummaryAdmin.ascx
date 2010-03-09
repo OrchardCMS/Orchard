@@ -52,7 +52,7 @@
         <a href="<%=Html.AntiForgeryTokenGetUrl(Url.BlogPostPublish(Model.Item)) %>" title="<%=_Encoded("Publish Post")%>"><%=_Encoded("Publish")%></a><%=_Encoded(" | ")%><%
         } %>
         <a href="<%=Url.BlogPostEdit(Model.Item) %>" title="<%=_Encoded("Edit Post")%>"><%=_Encoded("Edit")%></a><%=_Encoded(" | ")%>
-        <a href="<%=Html.AntiForgeryTokenGetUrl(Url.BlogPostDelete(Model.Item)) %>" title="<%=_Encoded("Delete Post")%>"><%=_Encoded("Delete")%></a>
+        <a href="<%=Html.AntiForgeryTokenGetUrl(Url.BlogPostDelete(Model.Item)) %>" title="<%=_Encoded("Remove Post")%>"><%=_Encoded("Remove")%></a>
         <br /><%Html.Zone("meta");%>
     </div>
     <div style="clear:both;"></div>

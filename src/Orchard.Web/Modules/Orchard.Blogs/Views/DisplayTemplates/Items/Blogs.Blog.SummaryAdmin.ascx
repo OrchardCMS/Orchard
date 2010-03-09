@@ -16,7 +16,7 @@
         <a href="<%=Url.BlogEdit(Model.Item.Slug) %>" title="<%=_Encoded("Settings") %>"><%=_Encoded("Settings") %></a><%=_Encoded(" | ")%>
         <%-- todo: (heskew) this is waaaaa too verbose. need template helpers for all ibuttons --%>
         <% using (Html.BeginFormAntiForgeryPost(Url.BlogDelete(Model.Item.Slug), FormMethod.Post, new { @class = "inline" })) { %>
-        <button type="submit" class="linkButton" title="<%=_Encoded("Delete") %>"><%=_Encoded("Delete") %></button><%
+        <button type="submit" class="linkButton" title="<%=_Encoded("Remove") %>"><%=_Encoded("Remove") %></button><%
         } %>
     </div>
     <div style="clear:both;"></div>

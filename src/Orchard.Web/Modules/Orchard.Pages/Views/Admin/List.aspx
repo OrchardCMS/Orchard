@@ -15,7 +15,7 @@ using (Html.BeginFormAntiForgeryPost()) { %>
             <%=Html.SelectOption(Model.Options.BulkAction, PagesBulkAction.None, _Encoded("Choose action...").ToString())%>
             <%=Html.SelectOption(Model.Options.BulkAction, PagesBulkAction.PublishNow, _Encoded("Publish Now").ToString())%>
             <%=Html.SelectOption(Model.Options.BulkAction, PagesBulkAction.Unpublish, _Encoded("Unpublish").ToString())%>
-            <%=Html.SelectOption(Model.Options.BulkAction, PagesBulkAction.Delete, _Encoded("Delete").ToString())%>
+            <%=Html.SelectOption(Model.Options.BulkAction, PagesBulkAction.Delete, _Encoded("Remove").ToString())%>
         </select>
         <input class="button" type="submit" name="submit.BulkEdit" value="<%=_Encoded("Apply") %>" />
     </fieldset>
@@ -85,7 +85,7 @@ using (Html.BeginFormAntiForgeryPost()) { %>
                         <a href="<%=Html.AntiForgeryTokenGetUrl(Url.Action("Publish", new {id = pageEntry.Page.Id})) %>" title="<%=_Encoded("Publish Page")%>"><%=_Encoded("Publish")%></a><%=_Encoded(" | ")%><%
                         } %>
                         <%=Html.ActionLink(_Encoded("Edit").ToString(), "Edit", new {id = pageEntry.Page.Id}, new {title = _Encoded("Edit Page")})%><%=_Encoded(" | ")%>
-                        <a href="<%=Html.AntiForgeryTokenGetUrl(Url.Action("Delete", new {id = pageEntry.Page.Id})) %>" title="<%=_Encoded("Delete Page")%>"><%=_Encoded("Delete")%></a>
+                        <a href="<%=Html.AntiForgeryTokenGetUrl(Url.Action("Delete", new {id = pageEntry.Page.Id})) %>" title="<%=_Encoded("Remove Page")%>"><%=_Encoded("Remove")%></a>
                     </div>
                     <div style="clear:both;"></div>
                 </div>

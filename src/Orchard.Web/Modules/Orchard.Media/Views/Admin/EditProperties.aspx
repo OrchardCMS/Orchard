@@ -22,6 +22,6 @@
     </fieldset>
     <fieldset>		
 		<input type="submit" class="button primaryAction" name="submit.Save" value="<%=_Encoded("Save") %>" />
-		<%--<input type="submit" class="button buttonFocus roundCorners" name="submit.Delete" value="<%=_Encoded("Delete") %>" />--%>
+		<%--<input type="submit" class="button buttonFocus roundCorners" name="submit.Delete" value="<%=_Encoded("Remove") %>" />--%>
     </fieldset>
 <% } %>

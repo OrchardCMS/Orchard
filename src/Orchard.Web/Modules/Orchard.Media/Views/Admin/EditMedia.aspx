@@ -52,7 +52,7 @@
 		    </fieldset>
 		    <fieldset>
 			    <input type="submit" class="button primaryAction" name="submit.Save" value="<%=_Encoded("Save") %>" />
-			    <%--<input type="submit" class="button" name="submit.Delete" value="<%=_Encoded("Delete") %>" />--%>
+			    <%--<input type="submit" class="button" name="submit.Delete" value="<%=_Encoded("Remove") %>" />--%>
             </fieldset>
 	    </div>
 	    <%--<div class="secondary" style="border:1px solid #ff0000;">
