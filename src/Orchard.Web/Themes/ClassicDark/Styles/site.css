@@ -44,12 +44,19 @@ p {line-height:24px; margin:12px 0 32px 0;}
 p.small {line-height:24px; font-size:85%;}
 
 a {
+	color:#A8B934;
 	color:#fff;
 	color:#e4fcdd;
+	color:#ccdcce;
 	text-decoration:underline;
 }
 a:hover {
 	color:#99ff66;
+}
+
+h1 a,h2 a,h3 a,h4 a,h5 a,h6 a,legend a {
+    text-decoration:none;
+    color:#f2f8ef;
 }
 
 ul.square {list-style:square; list-style-position:inside; line-height:24px; margin:0 0 0 12px;}
@@ -214,14 +221,17 @@ td.even {
 #footercontainer {
 	clear:both;
 	border:2px solid #474747;
+	border-left:0;
+	border-right:0;
 	width:930px;
-	background:#0c0c0c;
 	margin:18px 0;
 }
 
 #footer {
-	border:1px solid #474747;
-	margin:3px;
+	border:1px dotted #474747;
+	border-left:0;
+	border-right:0;
+	margin:3px 0;
 }
 
 #footer a{

@@ -15,11 +15,11 @@ ul.blogs p {
 }
 
 .postsummary {
-	border-bottom:1px dotted #f1f1f1;
+	border-bottom:1px dotted #474747;
 }
 
 .meta {
 	font-style:italic;
-	color:#666666;
+	color:#999;
 }
 
