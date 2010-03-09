@@ -1,9 +1,7 @@
 ﻿<%@ Control Language="C#" Inherits="Orchard.Mvc.ViewUserControl<BodyEditorViewModel>" %>
 <%@ Import Namespace="Orchard.Core.Common.ViewModels"%>
 <% Html.RegisterScript("tiny_mce.js"); %>
-<%=Html.TextArea("Text", Model.Text, 25, 80, new { @class = "html" }) %>
-
-<%
+<%=Html.TextArea("Text", Model.Text, 25, 80, new { @class = "html" }) %><%
 using (this.Capture("end-of-page-scripts")) {%>
 <script type="text/javascript">
     tinyMCE.init({

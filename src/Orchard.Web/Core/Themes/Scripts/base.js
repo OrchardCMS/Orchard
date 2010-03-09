@@ -1,8 +1,15 @@
 ﻿jQuery.fn.extend({
+    helpfullyFocus: function() {
+        var _this = $(this);
+        var firstError = _this.find(".input-validation-error").first();
+        return firstError.size() === 1
+            ? firstError.focus()
+            : _this.find("input:text").first().focus();
+    },
     toggleWhatYouControl: function() {
-        var _controller = $(this);
-        var _controllees = $("[data-controllerid=" + _controller.attr("id") + "]");
-        if (_controller.is(":checked")) {
+        var _this = $(this);
+        var _controllees = $("[data-controllerid=" + _this.attr("id") + "]");
+        if (_this.is(":checked")) {
             $(_controllees.slideDown(200)[0]).find("input").focus();
         } else {
             _controllees.slideUp(200);
