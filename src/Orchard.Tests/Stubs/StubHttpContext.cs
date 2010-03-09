@@ -34,6 +34,10 @@ namespace Orchard.Tests.Stubs {
                 get { return _appRelativeCurrentExecutionFilePath; }
             }
 
+            public override string ApplicationPath {
+	            get { return "/"; }
+            }
+
             public override string PathInfo {
                 get { return ""; }
             }

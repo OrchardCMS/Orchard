@@ -35,7 +35,7 @@ namespace Orchard.UI.Navigation {
 
         public string GetUrl(string menuItemUrl, RouteValueDictionary routeValueDictionary) {
             var url = string.IsNullOrEmpty(menuItemUrl) && (routeValueDictionary == null || routeValueDictionary.Count == 0)
-                          ? null
+                          ? "~/"
                           : !string.IsNullOrEmpty(menuItemUrl)
                                 ? menuItemUrl
                                 : _urlHelper.RouteUrl(routeValueDictionary);
