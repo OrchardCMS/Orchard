@@ -5,6 +5,7 @@ using System.Security.Principal;
 using System.Web.Mvc;
 using System.Web.Security;
 using Orchard.Logging;
+using Orchard.Mvc.FollowReturnUrl;
 using Orchard.Mvc.ViewModels;
 using Orchard.Security;
 using Orchard.Users.Services;
@@ -16,7 +17,6 @@ namespace Orchard.Users.Controllers {
         private readonly IAuthenticationService _authenticationService;
         private readonly IMembershipService _membershipService;
         private readonly IUserService _userService;
-
 
         public AccountController(
             IAuthenticationService authenticationService, 
@@ -30,46 +30,47 @@ namespace Orchard.Users.Controllers {
 
         public ILogger Logger { get; set; }
 
-        public ActionResult AccessDenied(string returnUrl) {
+        public ActionResult AccessDenied() {
+            var returnUrl = Request.QueryString["ReturnUrl"];
             var currentUser = _authenticationService.GetAuthenticatedUser();
 
             if (currentUser == null) {
                 Logger.Information("Access denied to anonymous request on {0}", returnUrl);
-                return View("LogOn", new LogOnViewModel { Title = "Access Denied", ReturnUrl = returnUrl });
+                return View("LogOn", new LogOnViewModel {Title = "Access Denied"});
             }
 
+            //TODO: (erikpo) Add a setting for whether or not to log access denieds since these can fill up a database pretty fast from bots on a high traffic site
             Logger.Information("Access denied to user #{0} '{1}' on {2}", currentUser.Id, currentUser.UserName, returnUrl);
+
             return View(new BaseViewModel());
         }
 
-        public ActionResult LogOn(string returnUrl) {
-            if(_authenticationService.GetAuthenticatedUser() != null)
+        public ActionResult LogOn() {
+            if (_authenticationService.GetAuthenticatedUser() != null)
                 return Redirect("~/");
-            return View("LogOn", new LogOnViewModel { Title = "Log On", ReturnUrl = returnUrl });
+
+            return View("LogOn", new LogOnViewModel {Title = "Log On"});
         }
 
-        [HttpPost]
+        [HttpPost, FollowReturnUrl]
         [SuppressMessage("Microsoft.Design", "CA1054:UriParametersShouldNotBeStrings",
             Justification = "Needs to take same parameter type as Controller.Redirect()")]
-        public ActionResult LogOn(string userName, string password, bool rememberMe, string returnUrl) {
+        public ActionResult LogOn(string userName, string password, bool rememberMe) {
             var user = ValidateLogOn(userName, password);
             if (!ModelState.IsValid) {
-                return View("LogOn", new LogOnViewModel { Title = "Log On", ReturnUrl = returnUrl });
+                return View("LogOn", new LogOnViewModel {Title = "Log On"});
             }
 
             _authenticationService.SignIn(user, rememberMe);
 
-            return !String.IsNullOrEmpty(returnUrl)
-                ? Redirect(returnUrl)
-                : Redirect("~/");
+            return Redirect("~/");
         }
 
-        public ActionResult LogOff(string returnUrl) {
+        [FollowReturnUrl]
+        public ActionResult LogOff() {
             _authenticationService.SignOut();
 
-            return !String.IsNullOrEmpty(returnUrl)
-                ? Redirect(returnUrl)
-                : Redirect("~/");
+            return Redirect("~/");
         }
 
         int MinPasswordLength {
