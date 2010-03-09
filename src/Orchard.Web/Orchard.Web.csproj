@@ -193,6 +193,11 @@
     <Content Include="Themes\Green\Content\Images\tabLeftOn.gif" />
     <Content Include="Themes\Green\Content\Images\tabRightOff.gif" />
     <Content Include="Themes\Green\Content\Images\tabRightOn.gif" />
+    <Content Include="Themes\Green\DesignerNotes\User1.html" />
+    <Content Include="Themes\Green\DesignerNotes\User2.html" />
+    <Content Include="Themes\Green\DesignerNotes\User3.html" />
+    <Content Include="Themes\Green\DesignerNotes\Widget.html" />
+    <Content Include="Themes\Green\DesignerNotes\Widget1.html" />
     <Content Include="Themes\Green\Styles\blog.css" />
     <Content Include="Themes\Green\Styles\site.css" />
     <Content Include="Themes\Green\Styles\yui.css" />

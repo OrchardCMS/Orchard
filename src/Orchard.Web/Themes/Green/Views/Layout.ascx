@@ -14,8 +14,7 @@ $(".collapsible").click(function() {
 $(this).next().slideToggle(600);
 return false;
  });
-});
-     
+}); 
 </script>
 
 <div id="doc4" class="yui-t6">
@@ -52,10 +51,13 @@ return false;
     <div id="subcolumn" class="yui-b">
     
 <div>
-<h3>Sidebar</h3>
 <ul>
-    <%Html.Zone("Sidebar"); %>
-    <%Html.Zone("Sidebar1"); %>
+<li>
+    <%Html.Zone("Widget"); %>
+</li>
+<li>
+    <%Html.Zone("Widget1"); %>
+</li>
 </ul>
 </div>
 
