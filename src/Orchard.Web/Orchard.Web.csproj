@@ -256,8 +256,10 @@
     <Content Include="Themes\Green\Content\Images\tabRightOff.gif" />
     <Content Include="Themes\Green\Content\Images\tabRightOn.gif" />
     <Content Include="Themes\Green\Views\Archives.ascx" />
+    <Content Include="Themes\Green\Views\DisplayTemplates\Items\Blogs.BlogPost.ascx" />
     <Content Include="Themes\Green\Views\DisplayTemplates\Parts\Blogs.BlogPost.Metadata.ascx" />
-    <Content Include="Themes\Green\Zones\Sidebar.html" />
+    <Content Include="Themes\Green\Zones\sideBarZone1.html" />
+    <Content Include="Themes\Green\Zones\sideBarZone2.html" />
     <Content Include="Themes\Green\Zones\User2.html" />
     <Content Include="Themes\Green\Zones\User3.html" />
     <Content Include="Themes\Green\Zones\User1.html" />
