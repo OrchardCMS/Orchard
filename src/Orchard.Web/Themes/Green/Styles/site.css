@@ -211,12 +211,12 @@ colgroup
     padding:4px 20px 12px 0;
     }
     
-#subcolumn h4, .homeWidget h4 {
+#subcolumn h4, .subZone h4 {
     padding:6px 0 8px 6px;
     background:#CED5CE;
 }
 
-#subcolumn h4:hover, .homeWidget h4:hover {
+#subcolumn h4:hover, .subZone h4:hover {
     padding:6px 0 8px 6px;
     background:#CED5CE;
     cursor:pointer;
@@ -226,7 +226,7 @@ colgroup
     padding:8px;
     }
     
-#subcolumn ul li, .homeWidget {
+#subcolumn ul li, .subZone, .archives {
      border:1px solid #CACEC6;
      background:#EAF0E8;
     -webkit-border-radius: 6px;
@@ -234,7 +234,7 @@ colgroup
 	margin: 0 0 18px 0;
     }
     
-div.homeWidget {
+div.subZone {
 	margin:24px 0;
 }
 

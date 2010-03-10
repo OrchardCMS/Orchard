@@ -9,5 +9,4 @@
 <div class="bloginfo">
     <h1><%=Html.TitleForPage(Model.Item.Name) %></h1>
 </div>
-<% Html.Zone("primary", ":manage :metadata");
-   Html.ZonesAny(); %>
+<% Html.Zone("primary"); %>

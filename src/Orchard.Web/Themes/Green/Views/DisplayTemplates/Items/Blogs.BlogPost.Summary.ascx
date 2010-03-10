@@ -10,5 +10,5 @@
 <div class="meta"><%=Html.PublishedState(Model.Item) %> | <%Html.Zone("meta");%></div>
 
 <div class="postsummary">
-<% Html.Zone("primary", ":manage :metadata"); %>
+<% Html.Zone("primary"); %>
 </div>
