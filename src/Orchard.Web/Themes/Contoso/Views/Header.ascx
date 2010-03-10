@@ -2,7 +2,7 @@
 
 <div class="header">
     <div class="brand group">
-        <div class="title"><%=Html.TitleForPage(Html.SiteName()) %></div>
+        <div class="title"><%=Html.Encode(Html.SiteName()) %></div>
         <% Html.Include("User"); %>
     </div>
 </div>

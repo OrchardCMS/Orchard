@@ -10,5 +10,4 @@
 <% Html.RegisterLink(new LinkEntry { Rel = "wlwmanifest", Type = "application/wlwmanifest+xml", Href = Url.BlogLiveWriterManifest(Model.Item.Slug) });%>
 <% Html.RegisterLink(new LinkEntry { Rel = "EditURI", Type = "application/rsd+xml", Title = "RSD", Href = Url.BlogRsd(Model.Item.Slug) });%>
 
-<% Html.Zone("primary", ":manage :metadata");
-   Html.ZonesAny(); %>
+<% Html.Zone("primary"); %>

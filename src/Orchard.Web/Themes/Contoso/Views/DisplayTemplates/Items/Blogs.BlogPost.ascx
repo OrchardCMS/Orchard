@@ -3,5 +3,4 @@
 <%@ Import Namespace="Orchard.Blogs.Extensions"%>
 <%@ Import Namespace="Orchard.Blogs.Models"%>
 <h1 class="page-title"><%=Html.TitleForPage(Model.Item.Title)%></h1>
-<% Html.Zone("primary", ":manage :metadata");
-   Html.ZonesAny(); %>>
+<% Html.Zone("primary"); %>
