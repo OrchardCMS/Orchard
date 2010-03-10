@@ -180,6 +180,7 @@ legend      { font-weight: bold; font-size:1.2em; }
 /* Form fields
 -------------------------------------------------------------- */
 
+
 input[type=text],
 input.text, input.title, 
 textarea, select { 
@@ -209,8 +210,10 @@ input.checkbox, input.radio {
   position:relative; top:.25em; 
 }
 
-form.inline { line-height:3; }
+/* TODO: Causes form rendering issues with theme preview, had to add line-height: normal */
+form.inline { line-height: normal; }
 form.inline p { margin-bottom:0; }
+
 
 /*- Login Control -*/
 
