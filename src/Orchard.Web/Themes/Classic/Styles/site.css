@@ -24,6 +24,7 @@ body {
 	text-align:left;
 	color:#373737;
 	background:#fdfdfd;
+	background:#f7f7f7;
 	/*background:#E5E5E5 url(../Content/Images/bodyBackgroundgrey.gif) repeat-x scroll left top;*/
 }
 
@@ -43,10 +44,12 @@ h1.sitename {border-bottom:none;}
 p {line-height:24px; margin:12px 0 32px 0;}
 p.small {line-height:24px; font-size:85%;}
 
-a {
-	color:#004386;
-	text-decoration:none;
-}
+a {color:#004386; text-decoration:none;}     /* unvisited link */
+a:active {color: #004386;}   /* selected link */
+a:visited {color: #004386;}  /* visited link */
+a:hover {color: #087df3;}   /* mouse over link */
+
+#content a:hover, #sidebar a:hover {text-decoration:underline;}
 
 ul.square {list-style:square; list-style-position:inside; line-height:24px; margin:0 0 0 12px;}
 ol.decimal {list-style:decimal; list-style-position:inside; line-height:24px; margin:0 0 0 12px;}
@@ -176,7 +179,7 @@ td.even {
 #wrapper {
 	width:985px;
 	display:block;
-	margin:0em auto;
+	margin:0px auto 10px auto;
 	background:#fff;
 	border:1px solid #f1f1f1;
 }
@@ -208,20 +211,18 @@ td.even {
 
 #footercontainer {
 	clear:both;
-	border:2px solid #69625e;
+	border-top:2px solid #69625e;
 	width:930px;
-	background:#69625e;
-	margin:18px 0;
+	margin:18px 0 0 0;
 }
 
 #footer {
-	border:1px solid #fff;
-	margin:3px;
+	border-top:1px solid #69625e;
+	margin-top:3px;
 }
 
 #footer a{
 	text-transform:uppercase;
-	color:#fff;
 }
 
 
@@ -252,7 +253,6 @@ td.even {
 
 #footer .menucontainer {
 	font-size:80%;
-	float:left;
 	margin:0px;
 }
 
