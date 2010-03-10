@@ -3,13 +3,11 @@
 <%@ Import Namespace="Orchard.Mvc.Html" %>
 
 <%
-    Html.RegisterScript("easySlider.js");
     Html.RegisterStyle("site.css");
    
     Model.Zones.AddRenderPartial("header", "Header", Model);
     Model.Zones.AddRenderPartial("menu", "Menu", Model);
     Model.Zones.AddRenderPartial("footer", "Footer", Model);
-    
 %>
 
 <div id="container">
@@ -31,7 +29,7 @@
                     $("#slider").easySlider({
                         prevText: '',
 		                nextText: '',
-		                speed: '1600',
+		                speed: '1600'
                     });
             });
             </script>

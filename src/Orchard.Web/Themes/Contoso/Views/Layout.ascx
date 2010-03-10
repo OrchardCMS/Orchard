@@ -28,6 +28,11 @@
 			        <% Html.ZoneBody("content"); %>
 		        </div>
 		        <div class="sidebar">
+                    
+                    <!-- START Blog Sidebars -->
+		            <%Html.Zone("sidebar");%>
+		            <!-- END Blog Sidebars -->
+
                     <div class="side-block">
                         <% Html.Zone("sidebar-w1"); %>
                     </div>
