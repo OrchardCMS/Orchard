@@ -23,7 +23,7 @@ namespace Futures.Widgets.Controllers {
         public ActionResult AddWidget(string zoneName, string themeName, string returnUrl) {
             var hasWidgetsRecord = CurrentSite.As<HasWidgets>().Record;
 
-            var virtualPath = "~/Themes/" + themeName + "/DesignerNotes/" + zoneName + ".html";
+            var virtualPath = "~/Themes/" + themeName + "/Zones/" + zoneName + ".html";
             var physicalPath = Server.MapPath(virtualPath);
 
             if (!System.IO.File.Exists(physicalPath)) {

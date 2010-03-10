@@ -5,8 +5,8 @@
 <h1 class="withActions">
     <a href="<%=Url.BlogForAdmin(Model.Item.Slug) %>"><%=Html.TitleForPage(Model.Item.Name) %></a>
 </h1>
-
-<%--<form>
+<% Html.Zone("manage"); %><%--
+<form>
 <div class="actions bulk">
 <fieldset>
     <label for="filterResults"><%=_Encoded("Filter:")%></label>
@@ -18,9 +18,6 @@
 </fieldset>
 </div>
 </form>--%>
-
 <div class="actions"><a href="<%=Url.BlogPostCreate(Model.Item) %>" class="add button primaryAction"><%=_Encoded("New Post")%></a></div>
-
-
 <% Html.Zone("primary");
    Html.ZonesAny(); %>

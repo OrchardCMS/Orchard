@@ -3,12 +3,6 @@
 <%@ Import Namespace="Orchard.Blogs.Extensions"%>
 <%@ Import Namespace="Orchard.Blogs.Models"%>
 <div class="summary">
-    <div class="properties">
-        <h3><%=Html.Link(Html.Encode(Model.Item.Name), Url.BlogForAdmin(Model.Item.Slug)) %></h3>
-        <p><% Html.Zone("meta");%></p>
-        <%--<p>[list of authors] [modify blog access]</p>--%>
-        <p><%=Html.Encode(Model.Item.Description) %></p>              
-    </div>
     <div class="related">
         <a href="<%=Url.Blog(Model.Item.Slug) %>" title="<%=_Encoded("View") %>"><%=_Encoded("View") %></a><%=_Encoded(" | ")%>
         <a href="<%=Url.BlogForAdmin(Model.Item.Slug) %>" title="<%=_Encoded("Edit Posts") %>"><%=_Encoded("Edit Posts")%></a><%=_Encoded(" | ")%>
@@ -18,6 +12,12 @@
         <% using (Html.BeginFormAntiForgeryPost(Url.BlogDelete(Model.Item.Slug), FormMethod.Post, new { @class = "inline" })) { %>
         <button type="submit" class="linkButton" title="<%=_Encoded("Remove") %>"><%=_Encoded("Remove") %></button><%
         } %>
+    </div>
+    <div class="properties">
+        <h3><%=Html.Link(Html.Encode(Model.Item.Name), Url.BlogForAdmin(Model.Item.Slug)) %></h3>
+        <p><% Html.Zone("meta");%></p>
+        <%--<p>[list of authors] [modify blog access]</p>--%>
+        <p><%=Html.Encode(Model.Item.Description) %></p>              
     </div>
     <div style="clear:both;"></div>
 </div>

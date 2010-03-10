@@ -23,7 +23,7 @@ namespace Orchard.Core.Themes.DesignerNotes {
 
             var requestContext = context.Html.ViewContext.RequestContext;
             var theme = _themeService.GetRequestTheme(requestContext);
-            var virtualPath = "~/Themes/" + theme.ThemeName + "/DesignerNotes/" + context.ZoneName + ".html";
+            var virtualPath = "~/Themes/" + theme.ThemeName + "/Zones/" + context.ZoneName + ".html";
             var physicalPath = requestContext.HttpContext.Server.MapPath(virtualPath);
             if (!File.Exists(physicalPath))
                 return;
