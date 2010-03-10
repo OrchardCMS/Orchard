@@ -43,17 +43,11 @@ h1.sitename {border-bottom:none;}
 p {line-height:24px; margin:12px 0 32px 0;}
 p.small {line-height:24px; font-size:85%;}
 
-a {
-	color:#A8B934;
-	color:#fff;
-	color:#e4fcdd;
-	color:#ccdcce;
-	/*color:#72aeb2;*/
-	text-decoration:underline;
-}
-a:hover {
-	color:#99ff66;
-}
+a {color:#ccdcce; text-decoration:underline;}     /* unvisited link */
+a:active {color: #ccdcce;}   /* selected link */
+a:visited {color: #ccdcce;}  /* visited link */
+a:hover {color: #99ff66;}   /* mouse over link */
+
 
 h1 a,h2 a,h3 a,h4 a,h5 a,h6 a,legend a {
     text-decoration:none;
@@ -221,15 +215,15 @@ td.even {
 
 #footercontainer {
 	clear:both;
-	border:2px solid #474747;
+	border-top:2px solid #474747;
 	border-left:0;
 	border-right:0;
 	width:930px;
-	margin:18px 0;
+	margin:18px 0 6px 0;
 }
 
 #footer {
-	border:1px dotted #474747;
+	border-top:1px dotted #474747;
 	border-left:0;
 	border-right:0;
 	margin:3px 0;
@@ -237,7 +231,6 @@ td.even {
 
 #footer a{
 	text-transform:uppercase;
-	color:#fff;
 }
 
 
@@ -274,7 +267,6 @@ td.even {
 
 #footer .menucontainer {
 	font-size:80%;
-	float:left;
 	margin:0px;
 }
 

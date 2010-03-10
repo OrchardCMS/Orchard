@@ -37,3 +37,7 @@ ul.blogs p {
 .archives {
     margin: 0 0 24px 0;
 }
+
+ul.archiveMonthList li {
+    padding:8px;
+}
