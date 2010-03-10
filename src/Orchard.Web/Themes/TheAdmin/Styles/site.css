@@ -750,11 +750,14 @@ table.items, textarea, input.text, input.text-box,
 
 /* Added classes for new blog list layout
 ---------------------------------------------------------- */
-
+.blogdescription {
+    margin-top:1em;
+}
 .summary {
     padding:1.2em .4em;
 }
 .actions {
+    clear:right;
     height:auto;
     overflow:visible;
     padding:0;
@@ -766,8 +769,8 @@ table.items, textarea, input.text, input.text-box,
 .properties {
     float:left;
 }
-.orchard-blogs #main p {
-    margin:0;
+.blogs.contentItems .properties {
+    float:none;
 }
 #main .contentItems .properties h3 {
     border-bottom:none;

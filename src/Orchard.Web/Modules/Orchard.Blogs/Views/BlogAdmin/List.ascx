@@ -19,8 +19,7 @@ if (Model.Entries.Count() > 0) { %>
 
         // Display the summary for the blog post
         return Html.DisplayForItem(entry.ContentItemViewModel).ToHtmlString();
-    }, "blogs contentItems")%>
-<div class="actions"><a class="add button primaryAction" href="<%=Url.BlogCreate() %>"><%=_Encoded("New Blog") %></a></div><%
+    }, "blogs contentItems")%><%
 } else { %>
 <div class="info message"><%=T("There are no blogs for you to see. Want to <a href=\"{0}\">add one</a>?", Url.BlogCreate()).ToString()%></div><%
 } %>

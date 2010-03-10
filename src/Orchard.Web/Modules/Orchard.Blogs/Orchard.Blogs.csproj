@@ -154,6 +154,8 @@
     <Content Include="Views\DisplayTemplates\Parts\Blogs.BlogPost.Metadata.ascx" />
     <Content Include="Views\DisplayTemplates\Parts\Blogs.Blog.Description.ascx" />
     <Content Include="Views\DisplayTemplates\Parts\Blogs.Blog.Metadata.ascx" />
+    <Content Include="Views\DisplayTemplates\Parts\Blogs.BlogPost.Metadata.SummaryAdmin.ascx" />
+    <Content Include="Views\DisplayTemplates\Parts\Blogs.BlogPost.Metadata.Summary.ascx" />
     <Content Include="Views\EditorTemplates\Parts\Blogs.BlogPost.Publish.ascx" />
     <Content Include="Views\BlogPost\Item.ascx" />
     <Content Include="Views\BlogAdmin\Create.ascx" />
