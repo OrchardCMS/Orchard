@@ -1,6 +1,7 @@
 ﻿.managewrapper,
 .managewrapper .manage {
     border:1px dashed #ccc;
+    z-index:9999;
 }
 .managewrapper:hover,
 .managewrapper:hover .manage {
@@ -25,7 +26,9 @@
 .managewrapper .manage a {
     background-color:#4687ad;
     color:#fff;
+    display:block;
     font:14px/14px Segoe UI,Trebuchet,Arial,Sans-Serif;
+    height:16px;
     padding:1px 3px;
 }
 .managewrapper .manage a:hover {
