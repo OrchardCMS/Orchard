@@ -177,14 +177,7 @@
     <Content Include="Themes\ClassicDark\Views\Footer.ascx" />
     <Content Include="Themes\ClassicDark\Views\Layout.ascx" />
     <Content Include="Themes\ClassicDark\Views\ZoneTest.ascx" />
-    <Content Include="Themes\Classic\Content\Images\bodyBackground.gif" />
-    <Content Include="Themes\Classic\Content\Images\bodyBackgroundgrey.gif" />
-    <Content Include="Themes\Classic\Content\Images\footerBackground.gif" />
-    <Content Include="Themes\Classic\Content\Images\mainBackground.gif" />
-    <Content Include="Themes\Classic\Content\Images\mainBackground.png" />
-    <Content Include="Themes\Classic\Content\Images\mainBackgroundgrey.gif" />
-    <Content Include="Themes\Classic\Content\Images\mainBackgroundgrey.png" />
-    <Content Include="Themes\Classic\Content\Images\navDivider.gif" />
+    <Content Include="Themes\ClassicDark\Zones\Sidebar.html" />
     <Content Include="Themes\Classic\Content\Images\sidebarBackground.gif" />
     <Content Include="Themes\Classic\Views\DisplayTemplates\Parts\Blogs.BlogPost.Metadata.ascx" />
     <Content Include="Themes\Classic\Zones\Sidebar.html" />

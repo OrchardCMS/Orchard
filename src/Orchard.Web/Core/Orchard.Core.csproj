@@ -233,6 +233,9 @@
     <Content Include="Common\Views\DisplayTemplates\Parts\Common.Body.ManageWrapperPre.ascx" />
     <Content Include="Common\Views\DisplayTemplates\Parts\Common.Body.Manage.ascx" />
     <Content Include="Dashboard\Views\Web.config" />
+    <Content Include="Themes\Styles\Images\toolBarActiveButtonBackground.gif" />
+    <Content Include="Themes\Styles\Images\toolBarBackground.gif" />
+    <Content Include="Themes\Styles\Images\toolBarHoverButtonBackground.gif" />
     <Content Include="Themes\Content\orchard.ico" />
     <Content Include="Themes\Scripts\base.js" />
     <Content Include="Themes\Styles\special.css" />
