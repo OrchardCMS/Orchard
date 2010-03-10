@@ -274,6 +274,51 @@ td.even {
 	margin:12px 0;
 }
 
+/* Confirmations, Messages and the like
+----------------------------------------------------------*/
+.message, .validation-summary-errors {
+	margin:10px 0 4px 0;
+    padding:4px;
+}
+span.message {
+    display:block;
+	margin:4px 0 4px 4px;
+}
+.message a {
+    font-weight:bold;
+}
+
+.confirmation.message {
+	background:#e6f1c9; /* green */
+	border:1px solid #cfe493;
+}
+.warning.message {
+	background:#fdf5bc; /* yellow */
+	border:1px solid #ffea9b;
+}
+.critical.message, .validation-summary-errors,
+.input-validation-error.text-box, .input-validation-error.text {
+	border:1px solid #990808;
+}
+.critical.message, .validation-summary-errors {
+	background:#e68585; /* red */
+	color:#fff;
+}
+.info.message {
+    background:#e6f1c9; /* green*/
+	border:1px solid #d4deb9;
+	color:#062232;
+}
+.debug.message {
+    background:#eee;
+	border:1px dashed #D2D6C6;
+	color:#7a7a7a;
+	margin:20px 0 14px 0;
+}
+.debug.message:before {
+    content:"DEBUG » ";
+}
+
 /* ---------- Tags and Comments ---------- */
 .tags, .comment {
 	font-style:italic;

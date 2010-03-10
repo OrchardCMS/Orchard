@@ -426,7 +426,6 @@ fieldset {
 /* Settings page styles */
 .settings fieldset {
     margin:.5em 0;
-    border-bottom:1px solid #eaeaea;
     padding:1em;
 }
 .orchard-media fieldset div, .settings fieldset div, .orchard-media .button, .settings .button {
