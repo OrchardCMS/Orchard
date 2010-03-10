@@ -213,9 +213,10 @@
     <Content Include="Themes\Contoso\Views\DisplayTemplates\Items\Blogs.Blog.ascx" />
     <Content Include="Themes\Contoso\Views\DisplayTemplates\Items\Blogs.BlogPost.ascx" />
     <Content Include="Themes\Contoso\Views\DisplayTemplates\Items\Pages.Page.ascx" />
-    <Content Include="Themes\Contoso\Views\DisplayTemplates\ListOfComments.ascx" />
+    <Content Include="Themes\Contoso\Views\DisplayTemplates\Items\Blogs.BlogPost.ListByArchive.ascx" />
     <Content Include="Themes\Contoso\Views\DisplayTemplates\Parts\Blogs.BlogPost.List.ascx" />
     <Content Include="Themes\Contoso\Views\DisplayTemplates\Parts\Comments.HasComments.ascx" />
+    <Content Include="Themes\Contoso\Views\DisplayTemplates\Parts\Pages.Page.Metadata.ascx" />
     <Content Include="Themes\Contoso\Views\DisplayTemplates\Parts\Tags.ShowTags.ascx" />
     <Content Include="Themes\Contoso\Views\Header.ascx" />
     <Content Include="Themes\Contoso\Scripts\easySlider.js" />
@@ -226,6 +227,7 @@
     <Content Include="Themes\Contoso\Views\Layout.ascx" />
     <Content Include="Themes\Contoso\Views\Layout.HomePage.ascx" />
     <Content Include="Themes\Contoso\Views\ListOfComments.ascx" />
+    <Content Include="Themes\Contoso\Views\LogOn.ascx" />
     <Content Include="Themes\Contoso\Views\User.ascx" />
     <Content Include="Themes\Green\Content\Images\bodyBackground.gif" />
     <Content Include="Themes\Green\Content\Images\bodyBackground.png" />
