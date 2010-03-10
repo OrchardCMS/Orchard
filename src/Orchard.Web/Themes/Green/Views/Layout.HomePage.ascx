@@ -47,11 +47,11 @@ return false;
         <div class="yui-g">
           <%--Main Content--%>
           <%Html.ZoneBody("content");%>
-           <div class="yui-u first homeWidget">
-               <%Html.Zone("Widget"); %>
+           <div class="yui-u first subZone">
+               <%Html.Zone("sideBarZone1"); %>
 	    </div>
-        <div class="yui-u homeWidget">
-                <%Html.Zone("Widget1"); %>
+        <div class="yui-u subZone">
+                <%Html.Zone("sideBarZone2"); %>
 	    </div>
 
         </div>

@@ -54,4 +54,13 @@
     float:left;
     padding:20px 10px 0 0;
 }
- 
+
+.archives {
+    margin: 0 0 18px 0;
+}
+
+#subcolumn ul.archiveMonthList li {
+    background:0;
+    border:0;
+    padding:8px;
+}

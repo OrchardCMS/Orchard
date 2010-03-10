@@ -51,12 +51,13 @@ return false;
     <div id="subcolumn" class="yui-b">
     
 <div>
+<%Html.Zone("sidebar");%>
 <ul>
 <li>
-    <%Html.Zone("Widget"); %>
+    <%Html.Zone("sideBarZone1"); %>
 </li>
 <li>
-    <%Html.Zone("Widget1"); %>
+    <%Html.Zone("sideBarZone2"); %>
 </li>
 </ul>
 </div>
