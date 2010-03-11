@@ -24,7 +24,8 @@ namespace Orchard.Web {
             // We want to avoid running against an outdated preview installed in the GAC
             CheckMvcVersion(
                 new Version("2.0.50217.0")/*MVC2 RTM file version #*/,
-                new Version("2.0.50129.0")/*MVC2 RC2 file version #*/);
+                new Version("2.0.50129.0")/*MVC2 RC2 file version #*/,
+                new Version("2.0.41211.0")/*MVC2 RC file version #*/);
             RegisterRoutes(RouteTable.Routes);
 
             _host = OrchardStarter.CreateHost(MvcSingletons);
