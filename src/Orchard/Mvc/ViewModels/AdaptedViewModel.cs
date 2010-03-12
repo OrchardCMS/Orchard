@@ -42,11 +42,15 @@ namespace Orchard.Mvc.ViewModels {
             public TProperty Value {
                 get {
                     if (_value == null && _builder != null) {
-                        _value = _original.Eval(_expression) as TProperty;
-                        if (_value == null)
+                        object temp;
+                        if (_original.TryGetValue(_expression, out temp) &&
+                            temp is TProperty) {
+                            SetValue(temp as TProperty);
+                        }
+                        else {
                             SetValue(_builder());
+                        }
                     }
-
                     return _value;
                 }
                 set { SetValue(value); }

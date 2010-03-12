@@ -118,7 +118,6 @@ namespace Orchard.UI.Resources {
                 if (!string.IsNullOrEmpty(link.Href)) {
                     sb
                         .Append(@" href=""")
-                        .Append(@"http://localhost:30320")
                         .Append(html.AttributeEncode(link.Href))
                         .Append(@"""");
                 }
