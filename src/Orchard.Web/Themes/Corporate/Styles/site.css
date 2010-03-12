@@ -244,72 +244,91 @@ form.inline p { margin-bottom:0; }
 /*========= GENERAL =========*/
 
 /* html, body {background-color: #434343; } */
-html, body {background-color: #FFFFFF; }
-#shell { /* background-image: url(../Content/Images/bkg.jpg); background-repeat: repeat-x; color: #555549; width: 100%; */}
+html, body {background-color: #FFFFFF; background-image: url(../Content/Images/bkg.jpg); background-repeat: repeat-x; height: 100%; }
+#shell {  color: #4b4b4b; width: 100%; }
 #container { width: 953px; margin: 0px auto 0px auto; }
 
 /*========= HEADER =========*/
-#header {width: 100%; background-color: #434343; height:50px;}
-.header {width: 100%; }
+#header {width: 100%; background-color: #434343; height:20px;}
+.header {width: 953px; margin: 0px auto 0px auto; }
 
-/*- Brand 
-?*
-.brand { width: 962px; }
-.brand .title { padding: 20px 0px 15px 0px; font-size: 1.6em; font-family: Segoe UI, Segoe, Arial, Sans-Serif; color:#4c5c64; float: left;  }-*/
+/*- Brand -*/
+
+.brand { width: 400px; }
+.brand .title { padding: 45px 0px 15px 20px; font-size: 2.0em; font-family: Segoe UI, Segoe, Arial, Sans-Serif; color:#FFFFFF; float: left;  }
 
 /*- Page Navigation -*/
 
-#nav { position: relative; width: 953px; height: 152px; background: url(../Content/Images/menu_bkg.jpg) repeat-x; }
-#nav .menu { position: absolute; bottom: 0px; right: 0px; list-style:none; padding: 0px; margin: 0px; }
-#nav .menu li { float: left; height: 37px; margin: 0px 0px 0px 2px; background: url(../Content/Images/menu-left.png) no-repeat; }
+#nav { position: relative; width: 953px; height: 122px; background: url(../Content/Images/menu_bkg.jpg) repeat-x; }
+#nav .menu { position: absolute; bottom: 0px; right: 20px; list-style:none; padding: 0px; margin: 0px; }
+#nav .menu li { float: left; height: 33px; margin: 0px 0px 0px 2px; background: url(../Content/Images/menu-left.png) no-repeat; }
 #nav .menu li:hover {background: url(../Content/Images/menu-left-over.png) no-repeat;}
-#nav .menu li a {display: block; height: 28px; color: #FFFFFF; background: url(../Content/Images/menu-right.png) no-repeat right top; font-size: 108%; padding: 9px 20px 0px 20px; text-decoration: none; }
+#nav .menu li a {display: block; height: 24px; color: #FFFFFF; background: url(../Content/Images/menu-right.png) no-repeat right top; font-size: 108%; padding: 9px 20px 0px 20px; text-decoration: none; }
 #nav .menu li a:hover {background: url(../Content/Images/menu-right-over.png) no-repeat right top; color: #000000;}
 
 /*- Admin Navigation - */
-.admin-bar { width: 100%; background-color: #434343; height:50px; }
-.admin { float: right; margin: 0px; padding: 25px 0px 0px 0px; }
-.admin li { float:left; list-style: none; padding: 0px 0px 5px 20px; }
-.admin li a {}
+.admin-bar { width: 953px; background-color: #434343; height:30px; margin: 0px auto 0px auto; }
+.admin { float: right; margin: 0px; padding: 7px 20px 0px 0px; }
+.admin li { float:left; list-style: none; padding: 0px 0px 0px 20px; }
+.admin li a { color: #FFFFFF; }
+.admin li a:hover { color: #666666; }
 
 /*========= Footer =========*/
 
-#footer { width: 100%; background-color: #434343; background-image: url(../Content/Images/footer-bkg.jpg); background-repeat: repeat-x; color:#6a6a6a; font-size: 77%; }
+#footer { width: 100%; height: auto; background-color: #434343; background-image: url(../Content/Images/footer-bkg.jpg); background-repeat: repeat-x; color:#6a6a6a; font-size: 95%; padding-top: 10px; line-height: 150%; }
 #footer #footer-content { width: 953px; margin: 0px auto 0px auto; height: 100px;}
-
+#footer #disclaimer { float: right; width: 700px;}
+#footer #footernav { float: left; width: 200px;}
 
 /*========= Home =========*/
 
-#hm-image { float: left; width: 251px; margin: 27px 0px 0px 45px; }
+#hm-image { float: left; width: 251px; margin: 5px 0px 0px 45px; }
 #hm-content {position: relative; float: left; width: 546px; height: 310px; padding: 0px 20px 0px 30px; margin: 40px 0px 0px 10px; background: url(../Content/Images/hm-divider.png) no-repeat -25px 150px; }
 #hm-content #hm-header { }
-#hm-content #hm-message { line-height: 150%; margin: 15px 0px 0px 0px; }
+#hm-content #hm-message { line-height: 150%; margin: 15px 0px 0px 0px; line-height: 150%; }
 #hm-content ul { margin: 50px 0px 0px 0px; position: absolute; bottom: 15px; left: 30px; list-style: none; padding: none; }
-#hm-content ul li { float: left; margin: 0px 28px 0px 0px;}
-#hm-content ul li a { display: block;}
+#hm-content ul li { float: left; margin: 0px 12px 0px 0px; text-align: center; width: 100px;}
+#hm-content ul li a { text-align: center; }
+#hm-content ul li img {clear: both; margin: 0px 0px 5px 0px;}
 
 .main-box { }
 .main-box .top { }
-.main-box .content { background: url(../Content/Images/content-bkg.png) repeat-y; }
+.main-box .content { background: url(../Content/Images/content-bkg.png) repeat-y; margin-top: -1px; }
 .main-box .bottom { }
 
 /*========= Page =========*/
 
-.content-container { background: transparent url('../Content/Images/content-bottom.png') no-repeat left bottom; padding: 0px 0px 0px 0px; }
-.content { position: relative; background: transparent url('../Content/Images/content-top.png') no-repeat left top; padding: 20px 0px 20px 0px; }
-.content-items { width: 882px; padding: 20px 40px 0px 40px; background: transparent url('../Content/Images/content-bkg.png') repeat-y left top; }
-.content-items .item { width: 421px; float: left; }
+#content {margin: 20px 0px 20px 0px;}
+.content-container { padding: 0px 0px 0px 0px; }
+.content { position: relative; padding: 0px 0px 0px 0px; }
+.content-items { width: 882px; padding: 20px 40px 0px 40px; }
+.content-items .item { width: 305px; float: left; }
+.content-items .note { width: 455px; min-height:289px; padding: 40px; float: left; background: transparent url('../Content/Images/notepad.png') no-repeat left top; }
 .content-items .item:first-child {margin: 0px 40px 0px 0px; }
 .content-items h1 { font-size: 1.3em; margin-bottom: 0.75em; color: #444d51; }
 
 /*- Content Pages -*/
-.content .page-title { display: none; }
+.page-title {font-size: 1.4em; color: #333333;}
 .sub .page-title { display: block; background: transparent url('../Content/Images/sub-header.png') no-repeat left top; width: 962px; height: 48px; position: absolute; top: 1px; left: 1px; color: #ffffff; font-size: 2em; text-shadow: 0px -1px 0px #5f8b9e; padding: 15px 0px 15px 40px; }
-.content-items .main { float: left; width: 574px; margin: 0px 60px 20px 0px; padding: 50px 0px 0px 0px; }
-.content-items .sidebar { float: left; width: 232px; padding: 45px 0px 0px 0px; }
-.content-items .side-block { float: left; width: 232px; border-bottom: solid 1px #e2e2e2; padding: 20px 0px 0px 0px; }
-.content-items .archives { float: left; width: 232px; border-bottom: solid 1px #e2e2e2; padding: 20px 0px 0px 0px; }
-.content-items .archives .archiveMonthList { padding: 20px 0px 20px 0px; list-style: none; }
+.main { float: left; width: 574px; margin: 0px 60px 20px 0px; padding: 50px 0px 0px 0px; }
+.sidebar { float: left; width: 162px; padding: 0px 0px 0px 40px; }
+.side-block { float: left; width: 162px; border-bottom: solid 1px #e2e2e2; padding: 20px 0px 0px 0px; }
+.side-block:first-child { float: left; width: 162px; border-bottom: solid 1px #e2e2e2; padding: 0px 0px 0px 0px; }
+.archives { float: left; width: 162px; border-bottom: solid 1px #e2e2e2; padding: 0px 0px 0px 0px; }
+.archives .archiveMonthList { padding: 20px 0px 20px 0px; list-style: none; }
+
+.subpage 
+{
+    width: 953px;
+    font-size: normal;
+}
+
+.sub-content 
+{
+    float: right;
+    width: 674px;
+    padding: 0px 40px 0px 0px;
+}
 
 
 /*- Highlight Area -*/
@@ -325,14 +344,16 @@ html, body {background-color: #FFFFFF; }
 
 .blogPosts, .taggedPosts { margin: 0px; padding: 0px; }
 .blogPosts li, .taggedPosts li { padding: 30px 0px 0px 0px; list-style: none; border-top: solid 1px #e2e2e2; } 
-.blogdescription { font-size: 1.3em; line-height: 150%; color: #6da8c0; }
+.blogdescription { font-size: 1.3em; line-height: 150%; color: #666666; }
+.blogPosts .content { background: none; }
+.taggedPosts .content { background: none; }
 
 #comments { padding-top: 20px; border-top: dashed 1px #d8d8d8; padding-bottom: 10px; margin-top: 30px; }
 .comments { position: relative;  padding: 0px 0px 20px 0px; margin: 0px; clear: both; }
-.comments li { display: block; position: relative; list-style: none; background-color: #fbfff7; border: solid 1px #ebf4e3; border-bottom-color: #d5ebbd; border-right-color: #d5ebbd; padding: 20px 20px 0px 20px; margin: 0px 0px 50px 0px; }
-.comments .commentauthor {position: absolute; bottom: -27px; left: 20px; color: #a5cc7a; background: transparent url('../Content/Images/comment-arrow.png') no-repeat 20px 0px; padding: 15px 0px 0px 0px; }
+.comments li { display: block; position: relative; list-style: none; border: solid 1px #e3e9ef; padding: 20px 20px 0px 20px; margin: 0px 0px 50px 0px; }
+.comments .commentauthor {position: absolute; bottom: -27px; left: 20px; color: #999999; background: transparent url('../Content/Images/comment-arrow.png') no-repeat 20px 0px; padding: 15px 0px 0px 0px; }
 
-.comment-form { border: solid 1px #d8d8d8; padding: 20px; }
+.comment-form { }
 .comment-form h2 { border-bottom: dashed 1px #d8d8d8; padding-bottom: 10px; }
 .comment-form .who {}
 .comment-form .who label { float: left; text-align: right; width: 50px; padding: 12px 10px 0px 0px; }
@@ -356,9 +377,9 @@ html, body {background-color: #FFFFFF; }
 
 .tagCloud { list-style: none; margin: 20px 0px 0px 0px; }
 .tagCloud li { display: block; float: left; padding: 3px 10px 5px 0px; }
-.tagCloud a { display: block; float: left; padding: 3px 5px 5px 5px; background-color: #d7e6ed; color: #95a5ac; text-shadow: 1px 1px 0px #FFF; -moz-border-radius: 5px;
+.tagCloud a { display: block; float: left; padding: 3px 5px 5px 5px; background-color: #ebebeb; color: #95a5ac; text-shadow: 1px 1px 0px #FFF; -moz-border-radius: 5px;
 -webkit-border-radius: 5px; margin: 0px 10px 0px 0px; }
-.tagCloud a:hover { display: block; float: left; padding: 3px 5px 5px 5px; background-color: #a5cc7a; color: #668b3e; text-shadow: 1px 1px 0px #c8e6a6; -moz-border-radius: 5px;
+.tagCloud a:hover { display: block; float: left; padding: 3px 5px 5px 5px; background-color: #b7b7b7; color: #668b3e; text-shadow: 1px 1px 0px #c8e6a6; -moz-border-radius: 5px;
 -webkit-border-radius: 5px; margin: 0px 10px 0px 0px; }
 
 /*========= PLUGINS =========*/

@@ -51,7 +51,7 @@
 		                <div class="item">
 			                <% Html.ZoneBody("content"); %>
 		                </div>
-		                <div class="item">
+		                <div class="item note">
 			                <% Html.Zone("home-headline"); %>
 		                </div>
 		            </div>
@@ -61,9 +61,6 @@
         </div>
     </div>
 </div>
-
-    <!-- (Optional) Highlights Area -->
-    <% Html.Zone("highlights"); %>    
 	
 	<!-- Footer -->
 	<% Html.Zone("footer"); %>
