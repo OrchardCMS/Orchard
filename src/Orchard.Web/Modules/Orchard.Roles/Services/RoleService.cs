@@ -1,24 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using JetBrains.Annotations;
 using Orchard.Data;
 using Orchard.Logging;
-using Orchard.Roles.Records;
+using Orchard.Roles.Models;
 using Orchard.Security.Permissions;
 
 namespace Orchard.Roles.Services {
-    public interface IRoleService : IDependency {
-        IEnumerable<RoleRecord> GetRoles();
-        RoleRecord GetRole(int id);
-        RoleRecord GetRoleByName(string name);
-        void CreateRole(string roleName);
-        void CreatePermissionForRole(string roleName, string permissionName);
-        void UpdateRole(int id, string roleName, IEnumerable<string> rolePermissions);
-        void DeleteRole(int id);
-        IDictionary<string, IEnumerable<Permission>> GetInstalledPermissions();
-        IEnumerable<string> GetPermissionsForRole(int id);
-    }
-
+    [UsedImplicitly]
     public class RoleService : IRoleService {
         private readonly IRepository<RoleRecord> _roleRepository;
         private readonly IRepository<PermissionRecord> _permissionRepository;
@@ -34,8 +24,6 @@ namespace Orchard.Roles.Services {
         }
 
         public ILogger Logger { get; set; }
-
-        #region Implementation of IRoleService
 
         public IEnumerable<RoleRecord> GetRoles() {
             var roles = from role in _roleRepository.Table select role;
@@ -64,7 +52,7 @@ namespace Orchard.Roles.Services {
             }
             RoleRecord roleRecord = GetRoleByName(roleName);
             PermissionRecord permissionRecord = _permissionRepository.Get(x => x.Name == permissionName);
-            roleRecord.RolesPermissions.Add(new RolesPermissions { Permission = permissionRecord, Role = roleRecord });
+            roleRecord.RolesPermissions.Add(new RolesPermissionsRecord { Permission = permissionRecord, Role = roleRecord });
         }
 
         public void UpdateRole(int id, string roleName, IEnumerable<string> rolePermissions) {
@@ -81,7 +69,7 @@ namespace Orchard.Roles.Services {
                     });
                 }
                 PermissionRecord permissionRecord = _permissionRepository.Get(x => x.Name == permission);
-                roleRecord.RolesPermissions.Add(new RolesPermissions { Permission = permissionRecord, Role = roleRecord });
+                roleRecord.RolesPermissions.Add(new RolesPermissionsRecord { Permission = permissionRecord, Role = roleRecord });
             }
         }
 
@@ -127,12 +115,10 @@ namespace Orchard.Roles.Services {
         public IEnumerable<string> GetPermissionsForRole(int id) {
             List<string> permissions = new List<string>();
             RoleRecord roleRecord = GetRole(id);
-            foreach (RolesPermissions rolesPermission in roleRecord.RolesPermissions) {
+            foreach (RolesPermissionsRecord rolesPermission in roleRecord.RolesPermissions) {
                 permissions.Add(rolesPermission.Permission.Name);
             }
             return permissions;
         }
-
-        #endregion
     }
 }

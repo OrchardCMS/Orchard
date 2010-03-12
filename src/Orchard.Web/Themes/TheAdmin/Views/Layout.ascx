@@ -1,7 +1,8 @@
-﻿<%@ Control Language="C#" Inherits="Orchard.Mvc.ViewUserControl<AdminViewModel>" %>
+﻿<%@ Control Language="C#" Inherits="Orchard.Mvc.ViewUserControl<BaseViewModel>" %>
 <%@ Import Namespace="Orchard.Mvc.ViewModels"%>
 <%@ Import Namespace="Orchard.Mvc.Html"%><%
 Html.RegisterStyle("site.css");
+Html.RegisterStyle("ie6.css").WithCondition("if lte IE 6").ForMedia("screen, projection");
 Model.Zones.AddRenderPartial("header", "Header", Model);
 Model.Zones.AddRenderPartial("header:after", "User", Model); // todo: (heskew) should be a user display or widget
 Model.Zones.AddRenderPartial("menu", "Menu", Model);

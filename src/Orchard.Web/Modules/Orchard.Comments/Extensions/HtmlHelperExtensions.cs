@@ -6,14 +6,13 @@ using Orchard.Localization;
 namespace Orchard.Comments.Extensions {
     public static class HtmlHelperExtensions {
         public static MvcHtmlString CommentSummaryLinks(this HtmlHelper html, Localizer T, ContentItem item, int commentCount, int pendingCount) {
-            string commentText = "";
+            var commentText = "";
 
             if (item.Id != 0) {
-                //
-                int totalCommentCount = commentCount + pendingCount;
+                var totalCommentCount = commentCount + pendingCount;
 
                 if (totalCommentCount == 0) {
-                    commentText += html.Encode(T("no comments"));
+                    commentText += html.Encode(T("0 comments"));
                 }
                 else {
                     commentText +=
@@ -29,8 +28,7 @@ namespace Orchard.Comments.Extensions {
                 }
 
                 if (pendingCount > 0) {
-                    commentText += " (";
-                    commentText += html.ActionLink(T("{0} pending", pendingCount).ToString(),
+                    commentText += " " + html.ActionLink(T("({0} pending)", pendingCount).ToString(),
                                                    "Details",
                                                    new {
                                                        Area = "Orchard.Comments",
@@ -38,7 +36,6 @@ namespace Orchard.Comments.Extensions {
                                                        id = item.Id,
                                                        returnUrl = html.ViewContext.HttpContext.Request.Url
                                                    });
-                    commentText += ") ";
                 }
             }
 

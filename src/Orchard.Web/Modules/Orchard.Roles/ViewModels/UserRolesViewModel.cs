@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using Orchard.Roles.Models.NoRecord;
+using Orchard.Roles.Models;
 using Orchard.Security;
 
 namespace Orchard.Roles.ViewModels {

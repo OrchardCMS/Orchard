@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
+using JetBrains.Annotations;
 using Orchard.Core.Common.Models;
 
 namespace Orchard.Core.Common.Services {
+    [UsedImplicitly]
     public class RoutableService : IRoutableService {
         public void FillSlug<TModel>(TModel model) where TModel : RoutableAspect {
             if (!string.IsNullOrEmpty(model.Slug) || string.IsNullOrEmpty(model.Title))

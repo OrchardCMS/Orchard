@@ -1,0 +1,6 @@
+name: Corporate
+author: Michael Dorian Bach
+description: A simple and neutral business theme for a variety of industries.
+version: 1.0
+tags: business, cms, simple, classic, medical, finance, legal, corporate
+homepage: http://www.orchardproject.net

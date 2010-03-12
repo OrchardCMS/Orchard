@@ -3,7 +3,7 @@ using Orchard.Mvc.ViewModels;
 using Orchard.Pages.Models;
 
 namespace Orchard.Pages.ViewModels {
-    public class PagesViewModel : AdminViewModel {
+    public class PagesViewModel : BaseViewModel {
         public IList<PageEntry> PageEntries { get; set; }
         public PagesOptions Options { get; set; }
     }

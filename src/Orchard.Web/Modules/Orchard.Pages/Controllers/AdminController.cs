@@ -6,7 +6,10 @@ using System.Web.Mvc;
 using JetBrains.Annotations;
 using Orchard.Localization;
 using Orchard.ContentManagement;
+using Orchard.Mvc.AntiForgery;
+using Orchard.Mvc.FollowReturnUrl;
 using Orchard.Mvc.Results;
+using Orchard.Pages.Drivers;
 using Orchard.Pages.Models;
 using Orchard.Pages.Services;
 using Orchard.Pages.ViewModels;
@@ -108,10 +111,10 @@ namespace Orchard.Pages.Controllers {
             if (!Services.Authorizer.Authorize(Permissions.EditPages, T("Not allowed to create a page")))
                 return new HttpUnauthorizedResult();
 
-            var page = Services.ContentManager.BuildEditorModel(Services.ContentManager.New<Page>(PageDriver.ContentType.Name));
+            var page = Services.ContentManager.New<Page>(PageDriver.ContentType.Name);
 
             var model = new PageCreateViewModel {
-                Page = page
+                Page = Services.ContentManager.BuildEditorModel(page)
             };
 
             return View(model);
@@ -132,12 +135,16 @@ namespace Orchard.Pages.Controllers {
             }
 
             Services.ContentManager.Create(model.Page.Item.ContentItem, VersionOptions.Draft);
+            Services.ContentManager.UpdateEditorModel(page, this);
 
             // Execute publish command
             switch (Request.Form["Command"]) {
                 case "PublishNow":
                     _pageService.Publish(model.Page.Item);
                     Services.Notifier.Information(T("Page has been published"));
+                    if (model.PromoteToHomePage) {
+                        CurrentSite.HomePage = "PageHomePageProvider;" + model.Page.Item.Id;
+                    }
                     break;
                 case "PublishLater":
                     _pageService.Publish(model.Page.Item, model.Page.Item.ScheduledPublishUtc.Value);
@@ -160,15 +167,16 @@ namespace Orchard.Pages.Controllers {
                 return new HttpUnauthorizedResult();
 
             var model = new PageEditViewModel {
-                Page = Services.ContentManager.BuildEditorModel(page)
+                Page = Services.ContentManager.BuildEditorModel(page),
+                PromoteToHomePage = CurrentSite.HomePage == "PageHomePageProvider;" + page.Id
             };
 
             return View(model);
         }
 
-        [HttpPost, ActionName("Edit")]
+        [HttpPost, ActionName("Edit"), FollowReturnUrl]
         public ActionResult EditPOST(int id) {
-            Page page = _pageService.GetPageOrDraft(id);
+            var page = _pageService.GetPageOrDraft(id);
             if (page == null)
                 return new NotFoundResult();
 
@@ -193,7 +201,7 @@ namespace Orchard.Pages.Controllers {
                     _pageService.Publish(model.Page.Item);
                     Services.Notifier.Information(T("Page has been published"));
                     if (model.PromoteToHomePage) {
-                        CurrentSite.HomePage = "PagesHomePageProvider;" + model.Page.Item.Id;
+                        CurrentSite.HomePage = "PageHomePageProvider;" + model.Page.Item.Id;
                     }
                     break;
                 case "PublishLater":
@@ -206,10 +214,10 @@ namespace Orchard.Pages.Controllers {
                     break;
             }
 
-            return RedirectToAction("Edit", "Admin", new { id = model.Page.Item.ContentItem.Id });
+            return RedirectToAction("Edit", "Admin", new {id = model.Page.Item.ContentItem.Id});
         }
 
-
+        [ValidateAntiForgeryTokenOrchard]
         public ActionResult DiscardDraft(int id) {
             // get the current draft version
             var draft = Services.ContentManager.Get(id, VersionOptions.Draft);
@@ -238,9 +246,41 @@ namespace Orchard.Pages.Controllers {
             return RedirectToAction("Edit", new { draft.Id });
         }
 
-        [HttpPost]
+        [ValidateAntiForgeryTokenOrchard]
+        public ActionResult Publish(int id) {
+            if (!Services.Authorizer.Authorize(Permissions.PublishPages, T("Couldn't publish page")))
+                return new HttpUnauthorizedResult();
+
+            var page = _pageService.GetLatest(id);
+            if (page == null)
+                return new NotFoundResult();
+
+            _pageService.Publish(page);
+            Services.ContentManager.Flush();
+            Services.Notifier.Information(T("Page successfully published."));
+
+            return RedirectToAction("List");
+        }
+
+        [ValidateAntiForgeryTokenOrchard]
+        public ActionResult Unpublish(int id) {
+            if (!Services.Authorizer.Authorize(Permissions.PublishPages, T("Couldn't unpublish page")))
+                return new HttpUnauthorizedResult();
+
+            var page = _pageService.GetLatest(id);
+            if (page == null)
+                return new NotFoundResult();
+
+            _pageService.Unpublish(page);
+            Services.ContentManager.Flush();
+            Services.Notifier.Information(T("Page successfully unpublished."));
+
+            return RedirectToAction("List");
+        }
+
+        [ValidateAntiForgeryTokenOrchard]
         public ActionResult Delete(int id) {
-            Page page = _pageService.Get(id);
+            var page = _pageService.GetLatest(id);
             if (page == null)
                 return new NotFoundResult();
 
@@ -248,7 +288,7 @@ namespace Orchard.Pages.Controllers {
                 return new HttpUnauthorizedResult();
 
             _pageService.Delete(page);
-            Services.Notifier.Information(T("Page was successfully deleted"));
+            Services.Notifier.Information(T("Page successfully deleted"));
 
             return RedirectToAction("List");
         }

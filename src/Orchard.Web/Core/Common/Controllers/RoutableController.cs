@@ -14,7 +14,7 @@ namespace Orchard.Core.Common.Controllers {
 
         [HttpPost]
         public ActionResult Slugify(string contentType, int? id, int? containerId) {
-            var slug = "";
+            const string slug = "";
             ContentItem contentItem = null;
 
             if (string.IsNullOrEmpty(contentType))
@@ -33,7 +33,7 @@ namespace Orchard.Core.Common.Controllers {
 
             _contentManager.UpdateEditorModel(contentItem, this);
 
-            return Json(contentItem.As<RoutableAspect>().Slug);
+            return Json(contentItem.As<RoutableAspect>().Slug ?? slug);
         }
 
         bool IUpdateModel.TryUpdateModel<TModel>(TModel model, string prefix, string[] includeProperties, string[] excludeProperties) {

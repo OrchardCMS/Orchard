@@ -4,26 +4,28 @@ using Orchard.Localization;
 using Orchard.ContentManagement;
 using Orchard.Security;
 using Orchard.UI.Notify;
+using Orchard.Users.Drivers;
 using Orchard.Users.Models;
+using Orchard.Users.Services;
 using Orchard.Users.ViewModels;
 
 namespace Orchard.Users.Controllers {
-
     public class AdminController : Controller, IUpdateModel {
-
         private readonly IMembershipService _membershipService;
+        private readonly IUserService _userService;
 
         public AdminController(
             IOrchardServices services,
-            IMembershipService membershipService) {
+            IMembershipService membershipService,
+            IUserService userService) {
             Services = services;
             _membershipService = membershipService;
+            _userService = userService;
             T = NullLocalizer.Instance;
         }
 
         public IOrchardServices Services { get; set; }
         public Localizer T { get; set; }
-
 
         public ActionResult Index() {
             if (!Services.Authorizer.Authorize(Permissions.ManageUsers, T("Not authorized to list users")))
@@ -55,31 +57,40 @@ namespace Orchard.Users.Controllers {
         }
 
         [HttpPost, ActionName("Create")]
-        public ActionResult CreatePOST() {
+        public ActionResult CreatePOST(UserCreateViewModel model) {
             if (!Services.Authorizer.Authorize(Permissions.ManageUsers, T("Not authorized to manage users")))
                 return new HttpUnauthorizedResult();
 
-            var model = new UserCreateViewModel();
-            UpdateModel(model);
-
-            var user = _membershipService.CreateUser(new CreateUserParams(
-                                              model.UserName,
-                                              model.Password,
-                                              model.Email,
-                                              null, null, true));
-
+            var user = Services.ContentManager.New<IUser>(UserDriver.ContentType.Name);
             model.User = Services.ContentManager.UpdateEditorModel(user, this);
+            if (!ModelState.IsValid) {
+                Services.TransactionManager.Cancel();
+                return View(model);
+            }
+
+            string userExistsMessage = _userService.VerifyUserUnicity(model.UserName, model.Email);
+            if (userExistsMessage != null) {
+                AddModelError("NotUniqueUserName", T(userExistsMessage));
+            }
 
             if (model.Password != model.ConfirmPassword) {
                 AddModelError("ConfirmPassword", T("Password confirmation must match"));
             }
+
+            user = _membershipService.CreateUser(new CreateUserParams(
+                                                         model.UserName,
+                                                         model.Password,
+                                                         model.Email,
+                                                         null, null, true));
+
+            model.User = Services.ContentManager.UpdateEditorModel(user, this);
 
             if (ModelState.IsValid == false) {
                 Services.TransactionManager.Cancel();
                 return View(model);
             }
 
-            return RedirectToAction("edit", new { user.Id });
+            return RedirectToAction("edit", new {user.Id});
         }
 
         public ActionResult Edit(int id) {
@@ -100,8 +111,19 @@ namespace Orchard.Users.Controllers {
                 User = Services.ContentManager.UpdateEditorModel<User>(id, this)
             };
 
-            // apply additional model properties that were posted on form
-            UpdateModel(model);
+            TryUpdateModel(model);
+
+            if (!ModelState.IsValid) {
+                Services.TransactionManager.Cancel();
+                return View(model);
+            }
+
+            model.User.Item.NormalizedUserName = model.UserName.ToLower();
+
+            string userExistsMessage = _userService.VerifyUserUnicity(id, model.UserName, model.Email);
+            if (userExistsMessage != null) {
+                AddModelError("NotUniqueUserName", T(userExistsMessage));
+            }
 
             if (!ModelState.IsValid) {
                 Services.TransactionManager.Cancel();

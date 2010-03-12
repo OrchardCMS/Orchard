@@ -127,6 +127,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ContentManagement\Aspects\ICommonAspect.cs" />
+    <Compile Include="ContentManagement\Drivers\IContentItemDriver.cs" />
     <Compile Include="ContentManagement\Extenstions\UrlHelperExtensions.cs" />
     <Compile Include="ContentManagement\Handlers\ContentContextBase.cs" />
     <Compile Include="ContentManagement\Handlers\PublishContentContext.cs" />
@@ -150,11 +151,22 @@
     <Compile Include="Environment\StandaloneEnvironment.cs" />
     <Compile Include="Extensions\AreaFolders.cs" />
     <Compile Include="Extensions\ExtensionFolders.cs" />
+    <Compile Include="Extensions\RouteValueDictionaryExtensions.cs" />
     <Compile Include="Extensions\Loaders\AreaExtensionLoader.cs" />
+    <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="Extensions\UriExtensions.cs" />
-    <Compile Include="Mvc\Attributes\ValidateAntiForgeryTokenOrchardAttribute.cs" />
+    <Compile Include="Mvc\AntiForgery\ValidateAntiForgeryTokenOrchardAttribute.cs" />
+    <Compile Include="Mvc\FollowReturnUrl\FollowReturnUrlFilter.cs" />
+    <Compile Include="Mvc\Html\FileRegistrationContextExtensions.cs" />
+    <Compile Include="Mvc\Extensions\UrlHelperExtensions.cs" />
+    <Compile Include="Mvc\FollowReturnUrl\FollowReturnUrlAttribute.cs" />
+    <Compile Include="Mvc\ViewModels\AdaptedViewModel.cs" />
+    <Compile Include="Mvc\ViewUserControl.cs">
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
     <Compile Include="OrchardException.cs" />
     <Compile Include="Security\IAuthorizationServiceEvents.cs" />
+    <Compile Include="Security\MembershipSettings.cs" />
     <Compile Include="Security\StandardPermissions.cs" />
     <Compile Include="Security\OrchardSecurityException.cs" />
     <Compile Include="Services\IHomePageProvider.cs" />
@@ -216,7 +228,6 @@
     <Compile Include="Localization\Text.cs" />
     <Compile Include="Mvc\ViewModels\ContentItemViewModel.cs" />
     <Compile Include="ContentManagement\ViewModels\TemplateViewModel.cs" />
-    <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Data\Conventions\AttributeCollectionConvention.cs" />
     <Compile Include="Data\Conventions\CascadeAllDeleteOrphanAttribute.cs" />
     <Compile Include="Data\TransactionManager.cs" />
@@ -225,8 +236,11 @@
     <Compile Include="Extensions\ExtensionDescriptor.cs" />
     <Compile Include="Extensions\ExtensionEntry.cs" />
     <Compile Include="IOrchardServices.cs" />
-    <Compile Include="Mvc\Filters\AdminFilter.cs" />
-    <Compile Include="Mvc\Filters\AntiForgeryAuthorizationFilter.cs" />
+    <Compile Include="Themes\ThemeFilter.cs" />
+    <Compile Include="Themes\ThemedAttribute.cs" />
+    <Compile Include="UI\Admin\AdminAttribute.cs" />
+    <Compile Include="UI\Admin\AdminFilter.cs" />
+    <Compile Include="Mvc\AntiForgery\AntiForgeryAuthorizationFilter.cs" />
     <Compile Include="Mvc\Html\FileRegistrationContext.cs" />
     <Compile Include="Mvc\Html\MvcFormAntiForgeryPost.cs" />
     <Compile Include="Mvc\Html\SiteServiceExtensions.cs" />
@@ -285,8 +299,8 @@
     <Compile Include="Mvc\ViewEngines\LayoutViewContext.cs" />
     <Compile Include="Mvc\ViewEngines\ViewEngineFilter.cs" />
     <Compile Include="Mvc\ViewEngines\WebFormsViewEngineProvider.cs" />
-    <Compile Include="Mvc\ViewModels\AdminViewModel.cs" />
     <Compile Include="Mvc\ViewModels\BaseViewModel.cs" />
+    <Compile Include="UI\Admin\AdminThemeSelector.cs" />
     <Compile Include="UI\Navigation\INavigationManager.cs" />
     <Compile Include="UI\Navigation\NavigationItemBuilder.cs" />
     <Compile Include="UI\PageClass\IPageClassBuilder.cs" />
@@ -294,6 +308,7 @@
     <Compile Include="UI\PageTitle\IPageTitleBuilder.cs" />
     <Compile Include="UI\PageTitle\PageTitleBuilder.cs" />
     <Compile Include="UI\Resources\IResourceManager.cs" />
+    <Compile Include="UI\Resources\LinkEntry.cs" />
     <Compile Include="UI\Resources\ResourceFilter.cs" />
     <Compile Include="UI\Resources\ResourceManager.cs" />
     <Compile Include="UI\Zones\DelegateZoneItem.cs" />
@@ -301,7 +316,10 @@
     <Compile Include="UI\Zones\IZoneManager.cs" />
     <Compile Include="UI\Zones\ContentPartDisplayZoneItem.cs" />
     <Compile Include="UI\Zones\ContentPartEditorZoneItem.cs" />
+    <Compile Include="UI\Zones\IZoneManagerEvents.cs" />
+    <Compile Include="UI\Zones\RenderActionZoneItem.cs" />
     <Compile Include="UI\Zones\RenderPartialZoneItem.cs" />
+    <Compile Include="UI\Zones\RenderStaticZoneItem.cs" />
     <Compile Include="UI\Zones\ZoneCollection.cs" />
     <Compile Include="UI\Zones\ZoneEntry.cs" />
     <Compile Include="UI\Zones\ZoneItem.cs" />
@@ -323,7 +341,7 @@
     <Compile Include="Themes\IThemeSelector.cs" />
     <Compile Include="Themes\IThemeService.cs" />
     <Compile Include="Themes\ThemesModule.cs" />
-    <Compile Include="UI\Menus\AdminMenuFilter.cs" />
+    <Compile Include="UI\Navigation\MenuFilter.cs" />
     <Compile Include="UI\Navigation\NavigationBuilder.cs" />
     <Compile Include="UI\Navigation\INavigationProvider.cs" />
     <Compile Include="UI\Navigation\MenuItem.cs" />

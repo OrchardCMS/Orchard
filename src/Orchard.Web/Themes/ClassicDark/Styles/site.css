@@ -1,0 +1,336 @@
+﻿/*Yahoo browser reset
+----------------------------------------------------------*/
+
+body,div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pre,form,fieldset,input,textarea,p,
+blockquote,th,td {margin:0; padding:0; }
+table { border-collapse:collapse; border-spacing:0; }
+fieldset,img { border:0; }
+address,caption,cite,code,dfn,em,strong,th,var { font-style:normal; font-weight:normal; }
+ol,ul { list-style:none; }
+caption,th { text-align:left; }
+h1,h2,h3,h4,h5,h6 { font-size:100%; font-weight:normal; }
+abbr,acronym { border:0; }
+q:before,q:after {content:'';}
+abbr,acronym { border:0;}
+
+/*Defaults
+----------------------------------------------------------*/
+
+html {height: 100%;}
+
+body {
+	font: normal 90% "Georgia", Times New Roman, Times, serif;
+	height: 100%;
+	text-align:left;
+	color:#dedede;
+	/*background:#515457 url(../Content/Images/bodyBackgroundgrey.gif) repeat-x scroll left top;*/
+	background:#0c0c0c;
+}
+
+/* ---------- Headings and defaults ---------- */
+
+h1,h2,h3,h4,h5,h6,legend {font-weight:normal; font-style: normal; margin:12px 0 4px 0; color:#f2f8ef;}
+
+h1 {font-size: 180%;}
+h2 {font-size: 160%;}
+h3 {font-size: 145%;}
+h4 {font-size: 130%;}
+h5 {font-size: 120%;}
+h6 {font-size: 105%;}
+
+h1.sitename {border-bottom:none;}
+
+p {line-height:24px; margin:12px 0 32px 0;}
+p.small {line-height:24px; font-size:85%;}
+
+a {color:#ccdcce; text-decoration:underline;}     /* unvisited link */
+a:active {color: #ccdcce;}   /* selected link */
+a:visited {color: #ccdcce;}  /* visited link */
+a:hover {color: #99ff66;}   /* mouse over link */
+
+
+h1 a,h2 a,h3 a,h4 a,h5 a,h6 a,legend a {
+    text-decoration:none;
+    color:#f2f8ef;
+}
+
+ul.square {list-style:square; list-style-position:inside; line-height:24px; margin:0 0 0 12px;}
+ol.decimal {list-style:decimal; list-style-position:inside; line-height:24px; margin:0 0 0 12px;}
+
+
+/* Forms
+----------------------------------------------------------*/
+
+input[type="text"], #CommentText, #password, #confirmPassword {
+    border:1px solid #cacec6;
+    background:#DEDEDE;
+    display: block;
+    padding:2px;
+    width:90%;
+    }
+
+fieldset div {margin:16px 0 0 0}
+    
+legend {
+	font-size: 110%;
+	border:none;
+}
+
+label {
+    display: block;
+    margin:0 0 2px 0;
+    font-style:normal;
+    }
+
+input[type="checkbox"] {
+    margin:2px 0 20px 10px;
+}
+
+input[type="submit"], input[type="button"], .button {
+	font: normal 90% "Georgia", Times New Roman, Times, serif;
+	color:#474747;
+    padding:2px 14px;
+    display: block;
+    margin:2px 0 20px 0;
+    font-weight:600;
+    }
+  
+.forcheckbox {
+    margin:0 0 0 4px;
+    display:inline;
+}
+
+
+/* Tables
+----------------------------------------------------------*/
+table {
+	background:#fff;
+	border:1px solid #f1f1f1;
+	border-collapse:collapse;
+	width:100%;
+}
+
+table thead, table th {
+	overflow:hidden;
+	text-align:left;
+}
+
+table th {
+	font:70% Verdana, Geneva, Tahoma, sans-serif;
+	background-color:#69625e;
+	color:#f1f1f1;
+	}
+	
+table caption {
+	padding:8px 0;
+	text-indent:0;
+}
+
+table col {
+	display:table-column;
+}
+
+table colgroup {
+	display:table-column-group;
+	}
+
+table tbody {
+	vertical-align:middle;
+	}
+
+
+th, td {
+	font:70% Verdana, Geneva, Tahoma, sans-serif;
+	padding:6px
+	}
+
+td.even {
+	background-color:#f1f1f1;
+}
+
+/* ---------- Layout ---------- */
+
+#headercontainer {
+	border:2px solid #474747;
+	border-left:0;
+	border-right:0;
+	margin:0 auto;
+	width:930px;
+}
+
+#header {
+	border:1px dotted #474747;
+	border-left:0;
+	border-right:0;
+	margin:3px 0 3px 0;
+	}
+
+#header h1 {
+	font-size:240%;
+	border:0;
+	margin:12px 18px;
+	float:left;
+}
+
+
+#logindisplay {
+	font:80%;
+	margin:12px auto;
+	text-align:right;
+	width: 930px;
+}
+
+#wrapper {
+	width:985px;
+	display:block;
+	margin:0em auto;
+	background:#1d2025;
+	border:1px solid #333;
+}
+
+#main {
+	margin:0 0 0 27px;
+	width:930px;
+	background:url(../Content/Images/sidebarBackground.gif) no-repeat right top #1d2025;
+}
+
+
+#content {
+	float:left;
+	margin:26px 0 0 27px;
+	width:520px;
+	min-height:555px;
+}
+
+#sidebar {
+	float:right;
+	margin:28px 0 0 0;
+	width:325px;
+}
+
+#sidebar h3 {
+	border-bottom:1px dotted #474747;
+	font-size: 130%;
+}
+
+#footercontainer {
+	clear:both;
+	border-top:2px solid #474747;
+	border-left:0;
+	border-right:0;
+	width:930px;
+	margin:18px 0 6px 0;
+}
+
+#footer {
+	border-top:1px dotted #474747;
+	border-left:0;
+	border-right:0;
+	margin:3px 0;
+}
+
+#footer a{
+	text-transform:uppercase;
+}
+
+
+/* ---------- Navigation ---------- */
+
+.menucontainer {
+	display:block;
+	float:right;
+	margin:18px 0;
+}
+
+.menucontainer ul, #footer ul {
+	list-style:none
+}
+
+.menucontainer ul li {
+	margin:8px 0 0 0;
+	float:left;
+	}
+
+.menucontainer ul li a 
+{
+	color:#A8B934;
+	margin:0 18px 0 18px;
+	display:block;
+	text-decoration:none;
+	text-transform:uppercase;
+	float:left;
+}
+
+.menucontainer ul li a:hover {
+	color:#99ff66;
+}
+
+#footer .menucontainer {
+	font-size:80%;
+	margin:0px;
+}
+
+#footer .menucontainer ul li {
+	margin:12px 0;
+}
+
+/* Confirmations, Messages and the like
+----------------------------------------------------------*/
+.message, .validation-summary-errors {
+	margin:10px 0 4px 0;
+    padding:4px;
+}
+span.message {
+    display:block;
+	margin:4px 0 4px 4px;
+}
+.message a {
+    font-weight:bold;
+}
+
+.confirmation.message {
+	background:#e6f1c9; /* green */
+	border:1px solid #cfe493;
+}
+.warning.message {
+	background:#fdf5bc; /* yellow */
+	border:1px solid #ffea9b;
+}
+.critical.message, .validation-summary-errors,
+.input-validation-error.text-box, .input-validation-error.text {
+	border:1px solid #990808;
+}
+.critical.message, .validation-summary-errors {
+	background:#e68585; /* red */
+	color:#fff;
+}
+.info.message {
+    background:#e6f1c9; /* green*/
+	border:1px solid #d4deb9;
+	color:#062232;
+}
+.debug.message {
+    background:#eee;
+	border:1px dashed #D2D6C6;
+	color:#7a7a7a;
+	margin:20px 0 14px 0;
+}
+.debug.message:before {
+    content:"DEBUG » ";
+}
+
+/* ---------- Tags and Comments ---------- */
+.tags, .comment {
+	font-style:italic;
+}
+
+
+/* ---------- Generic ---------- */
+.clearBoth {
+	clear:both;
+}
+
+/* ---------- Hide the edit link for blogs hack ---------- */
+.manage {
+    display:none;
+}

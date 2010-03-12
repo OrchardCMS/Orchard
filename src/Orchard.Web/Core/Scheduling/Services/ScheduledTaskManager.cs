@@ -1,15 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using JetBrains.Annotations;
 using Orchard.ContentManagement;
 using Orchard.Core.Scheduling.Models;
-using Orchard.Core.Scheduling.Records;
 using Orchard.Data;
 using Orchard.Logging;
 using Orchard.Tasks.Scheduling;
 using Orchard.Utility;
 
 namespace Orchard.Core.Scheduling.Services {
+    [UsedImplicitly]
     public class ScheduledTaskManager : IScheduledTaskManager {
         private readonly IRepository<ScheduledTaskRecord> _repository;
 

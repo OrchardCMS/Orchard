@@ -18,6 +18,7 @@ using Orchard.Security;
 using Orchard.Security.Permissions;
 using Orchard.UI.Notify;
 using Orchard.Users.Controllers;
+using Orchard.Users.Handlers;
 using Orchard.Users.Models;
 using Orchard.Users.Services;
 using Orchard.Users.ViewModels;
@@ -33,6 +34,7 @@ namespace Orchard.Tests.Modules.Users.Controllers {
             builder.Register<DefaultContentManager>().As<IContentManager>();
             builder.Register<DefaultContentQuery>().As<IContentQuery>().FactoryScoped();
             builder.Register<MembershipService>().As<IMembershipService>();
+            builder.Register<UserService>().As<IUserService>();
             builder.Register<UserHandler>().As<IContentHandler>();
             builder.Register<OrchardServices>().As<IOrchardServices>();
             builder.Register<TransactionManager>().As<ITransactionManager>();
@@ -92,12 +94,12 @@ namespace Orchard.Tests.Modules.Users.Controllers {
             _authorizer.Setup(x => x.Authorize(It.IsAny<Permission>(), It.IsAny<LocalizedString>())).Returns(true);
 
             var controller = _container.Resolve<AdminController>();
-            controller.ValueProvider = Values.From(new {
+            var result = controller.CreatePOST(new UserCreateViewModel {
                 UserName = "four",
+                Email = "six@example.org",
                 Password = "five",
                 ConfirmPassword = "five"
             });
-            var result = controller.CreatePOST();
             Assert.That(result, Is.TypeOf<RedirectToRouteResult>());
 
             var redirect = (RedirectToRouteResult)result;

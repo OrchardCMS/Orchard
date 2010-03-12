@@ -1,5 +1,4 @@
 using System.Xml.Linq;
-using Orchard.ContentManagement;
 
 namespace Orchard.Core.Feeds.Models {
     public class FeedItem {

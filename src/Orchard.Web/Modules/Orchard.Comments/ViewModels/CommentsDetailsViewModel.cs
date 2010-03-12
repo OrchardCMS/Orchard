@@ -2,7 +2,7 @@
 using Orchard.Mvc.ViewModels;
 
 namespace Orchard.Comments.ViewModels {
-    public class CommentsDetailsViewModel : AdminViewModel {
+    public class CommentsDetailsViewModel : BaseViewModel {
         public IList<CommentEntry> Comments { get; set; }
         public CommentDetailsOptions Options { get; set; }
         public string DisplayNameForCommentedItem { get; set; }

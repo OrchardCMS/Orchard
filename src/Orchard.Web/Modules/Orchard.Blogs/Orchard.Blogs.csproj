@@ -2,7 +2,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>9.0.21022</ProductVersion>
+    <ProductVersion>9.0.30729</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{63FBD4D9-E1DA-4A7B-AA6A-D6074FE50867}</ProjectGuid>
     <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
@@ -31,14 +31,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Autofac, Version=1.4.4.561, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\lib\autofac\Autofac.dll</HintPath>
-    </Reference>
-    <Reference Include="Autofac.Integration.Web, Version=1.4.4.561, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\lib\autofac\Autofac.Integration.Web.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.ComponentModel.DataAnnotations">
@@ -71,33 +63,36 @@
   <ItemGroup>
     <Compile Include="AdminMenu.cs" />
     <Compile Include="Controllers\BlogAdminController.cs" />
-    <Compile Include="Controllers\BlogDriver.cs" />
+    <Compile Include="Drivers\BlogDriver.cs" />
     <Compile Include="Controllers\BlogPostAdminController.cs" />
     <Compile Include="Controllers\BlogPostController.cs" />
-    <Compile Include="Controllers\BlogPostDriver.cs" />
+    <Compile Include="Drivers\BlogPostDriver.cs" />
     <Compile Include="Extensions\FeedManagerExtensions.cs" />
     <Compile Include="Extensions\HtmlHelperExtensions.cs" />
     <Compile Include="Extensions\UrlHelperExtensions.cs" />
     <Compile Include="Filters\ArchivesFilter.cs" />
     <Compile Include="Models\ArchiveData.cs" />
-    <Compile Include="Models\BlogArchiveHandler.cs" />
+    <Compile Include="Handlers\BlogArchiveHandler.cs" />
     <Compile Include="Models\BlogArchiveRecord.cs" />
     <Compile Include="Permissions.cs" />
+    <Compile Include="Routing\IBlogSlugConstraint.cs" />
     <Compile Include="Routing\IsArchiveConstraint.cs" />
-    <Compile Include="Routing\IsBlogConstraint.cs" />
+    <Compile Include="Routing\BlogSlugConstraint.cs" />
+    <Compile Include="Routing\BlogSlugConstraintUpdator.cs" />
     <Compile Include="Services\BlogHomePageProvider.cs" />
     <Compile Include="Services\BlogService.cs" />
     <Compile Include="Controllers\BlogController.cs" />
     <Compile Include="Models\Blog.cs" />
-    <Compile Include="Models\BlogHandler.cs" />
+    <Compile Include="Handlers\BlogHandler.cs" />
     <Compile Include="Models\BlogPost.cs" />
-    <Compile Include="Models\BlogPostHandler.cs" />
+    <Compile Include="Handlers\BlogPostHandler.cs" />
     <Compile Include="Models\BlogRecord.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Routes.cs" />
     <Compile Include="Services\BlogPostService.cs" />
     <Compile Include="Services\IBlogPostService.cs" />
     <Compile Include="Services\IBlogService.cs" />
+    <Compile Include="Services\XmlRpcHandler.cs" />
     <Compile Include="ViewModels\AdminBlogsViewModel.cs" />
     <Compile Include="ViewModels\BlogArchivesViewModel.cs" />
     <Compile Include="ViewModels\BlogPostArchiveViewModel.cs" />
@@ -153,8 +148,14 @@
     <Content Include="Views\DisplayTemplates\Items\Blogs.BlogPost.ascx" />
     <Content Include="Views\DisplayTemplates\Items\Blogs.BlogPost.Summary.ascx" />
     <Content Include="Views\DisplayTemplates\Items\Blogs.Blog.ascx" />
+    <Content Include="Views\DisplayTemplates\Parts\Blogs.Blog.Manage.ascx" />
     <Content Include="Views\DisplayTemplates\Parts\Blogs.BlogPost.List.ascx" />
     <Content Include="Views\DisplayTemplates\Items\Blogs.Blog.Summary.ascx" />
+    <Content Include="Views\DisplayTemplates\Parts\Blogs.BlogPost.Metadata.ascx" />
+    <Content Include="Views\DisplayTemplates\Parts\Blogs.Blog.Description.ascx" />
+    <Content Include="Views\DisplayTemplates\Parts\Blogs.Blog.Metadata.ascx" />
+    <Content Include="Views\DisplayTemplates\Parts\Blogs.BlogPost.Metadata.SummaryAdmin.ascx" />
+    <Content Include="Views\DisplayTemplates\Parts\Blogs.BlogPost.Metadata.Summary.ascx" />
     <Content Include="Views\EditorTemplates\Parts\Blogs.BlogPost.Publish.ascx" />
     <Content Include="Views\BlogPost\Item.ascx" />
     <Content Include="Views\BlogAdmin\Create.ascx" />
@@ -175,10 +176,6 @@
     <ProjectReference Include="..\..\Core\Orchard.Core.csproj">
       <Project>{9916839C-39FC-4CEB-A5AF-89CA7E87119F}</Project>
       <Name>Orchard.Core</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Orchard.Users\Orchard.Users.csproj">
-      <Project>{79AED36E-ABD0-4747-93D3-8722B042454B}</Project>
-      <Name>Orchard.Users</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
@@ -201,6 +198,9 @@
           <IISUrl>
           </IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
+          <UseCustomServer>False</UseCustomServer>
+          <CustomServerUrl>
+          </CustomServerUrl>
           <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
         </WebProjectProperties>
       </FlavorProperties>

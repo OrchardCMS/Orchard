@@ -6,7 +6,7 @@ using Moq;
 using NUnit.Framework;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Records;
-using Orchard.Core.Scheduling.Records;
+using Orchard.Core.Scheduling.Models;
 using Orchard.Core.Scheduling.Services;
 using Orchard.Data;
 using Orchard.Tasks;

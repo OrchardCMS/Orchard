@@ -1,13 +1,12 @@
-﻿using System;
-using JetBrains.Annotations;
+﻿using JetBrains.Annotations;
 using Orchard.ContentManagement;
-using Orchard.ContentManagement.Aspects;
 using Orchard.Localization;
 using Orchard.Security.Permissions;
 using Orchard.UI.Notify;
 
 namespace Orchard.Security {
     public interface IAuthorizer : IDependency {
+        bool Authorize(Permission permission);
         bool Authorize(Permission permission, LocalizedString message);
         bool Authorize(Permission permission, IContent content, LocalizedString message);
     }
@@ -27,6 +26,10 @@ namespace Orchard.Security {
         protected virtual IUser CurrentUser { get; [UsedImplicitly] private set; }
         public Localizer T { get; set; }
 
+        public bool Authorize(Permission permission) {
+            return Authorize(permission, null, null);
+        }
+
         public bool Authorize(Permission permission, LocalizedString message) {
             return Authorize(permission, null, message);
         }
@@ -35,14 +38,17 @@ namespace Orchard.Security {
             if (_authorizationService.TryCheckAccess(permission, CurrentUser, content))
                 return true;
 
-            if (CurrentUser == null) {
-                _notifier.Error(T("{0}. Anonymous users do not have {1} permission.",
-                                  message, permission.Name));
+            if (message != null) {
+                if (CurrentUser == null) {
+                    _notifier.Error(T("{0}. Anonymous users do not have {1} permission.",
+                                      message, permission.Name));
+                }
+                else {
+                    _notifier.Error(T("{0}. Current user, {2}, does not have {1} permission.",
+                                      message, permission.Name, CurrentUser.UserName));
+                }
             }
-            else {
-                _notifier.Error(T("{0}. Current user, {2}, does not have {1} permission.",
-                                  message, permission.Name, CurrentUser.UserName));
-            }
+
             return false;
         }
 

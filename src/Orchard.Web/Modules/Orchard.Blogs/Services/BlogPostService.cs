@@ -1,14 +1,16 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Orchard.Blogs.Controllers;
+using JetBrains.Annotations;
+using Orchard.Blogs.Drivers;
 using Orchard.Blogs.Models;
-using Orchard.Core.Common.Records;
+using Orchard.Core.Common.Models;
 using Orchard.ContentManagement;
 using Orchard.Data;
 using Orchard.Tasks.Scheduling;
 
 namespace Orchard.Blogs.Services {
+    [UsedImplicitly]
     public class BlogPostService : IBlogPostService {
         private readonly IContentManager _contentManager;
         private readonly IRepository<BlogArchiveRecord> _blogArchiveRepository;

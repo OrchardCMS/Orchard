@@ -1,1 +1,2 @@
 ﻿name: Pages
+antiforgery: enabled

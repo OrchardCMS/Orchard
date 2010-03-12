@@ -56,7 +56,9 @@ namespace Orchard.Extensions {
                 Description = GetValue(fields, "description"),
                 Version = GetValue(fields, "version"),
                 Author = GetValue(fields, "author"),
-                HomePage = GetValue(fields, "homepage")
+                HomePage = GetValue(fields, "homepage"),
+                Tags = GetValue(fields, "tags"),
+                AntiForgery = GetValue(fields, "antiforgery")
             };
         }
 

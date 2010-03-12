@@ -1,1 +1,2 @@
 ﻿Name: XmlRpc
+antiforgery: enabled

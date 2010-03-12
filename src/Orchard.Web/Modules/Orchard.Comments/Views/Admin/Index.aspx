@@ -11,7 +11,7 @@
             <%=Html.SelectOption(Model.Options.BulkAction, CommentIndexBulkAction.Approve, _Encoded("Approve").ToString()) %>
             <%=Html.SelectOption(Model.Options.BulkAction, CommentIndexBulkAction.Pend, _Encoded("Pend").ToString()) %>
             <%=Html.SelectOption(Model.Options.BulkAction, CommentIndexBulkAction.MarkAsSpam, _Encoded("Mark as Spam").ToString()) %>
-            <%=Html.SelectOption(Model.Options.BulkAction, CommentIndexBulkAction.Delete, _Encoded("Delete").ToString())%>
+            <%=Html.SelectOption(Model.Options.BulkAction, CommentIndexBulkAction.Delete, _Encoded("Remove").ToString())%>
         </select>
         <input class="button" type="submit" name="submit.BulkEdit" value="<%=_Encoded("Apply") %>" />
     </fieldset>
@@ -67,12 +67,12 @@
                     <%=Html.Encode(commentEntry.Comment.CommentText.Length > 23 ? commentEntry.Comment.CommentText.Substring(0, 24) : commentEntry.Comment.CommentText) %><%=_Encoded(" ...") %>
                 <% } %> 
                 </td>
-                <td><%=commentEntry.Comment.CommentDateUtc.ToLocalTime() %></td>
+                <td><%=Html.DateTime(commentEntry.Comment.CommentDateUtc.GetValueOrDefault()) %></td>
                 <td><%=Html.ActionLink(commentEntry.CommentedOn, "Details", new { id = commentEntry.Comment.CommentedOn }) %></td>
                 <td>
                     <ul class="actions">
                         <li class="construct">
-                            <a href="<%=Url.Action("Edit", new {commentEntry.Comment.Id}) %>" class="ibutton edit" title="<%=_Encoded("Edit Comment")%>"><%=_Encoded("Edit Comment")%></a>
+                            <a href="<%=Url.Action("Edit", new {commentEntry.Comment.Id}) %>" title="<%=_Encoded("Edit")%>"><%=_Encoded("Edit")%></a>
                         </li>
                         <li class="destruct">
 <%-- a form in a form doesn't quite work                            <% using (Html.BeginFormAntiForgeryPost(Url.Action("Delete", new {id = commentEntry.Comment.Id, redirectToAction = "Details"}), FormMethod.Post, new { @class = "inline" })) { %>

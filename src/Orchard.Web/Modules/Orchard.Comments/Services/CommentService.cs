@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using JetBrains.Annotations;
+using Orchard.Comments.Drivers;
 using Orchard.Comments.Models;
 using Orchard.ContentManagement.Aspects;
 using Orchard.Data;
@@ -8,35 +9,9 @@ using Orchard.Logging;
 using Orchard.ContentManagement;
 using Orchard.Security;
 using Orchard.Services;
-using Orchard.Settings;
 
 namespace Orchard.Comments.Services {
-    public interface ICommentService : IDependency {
-        IEnumerable<Comment> GetComments();
-        IEnumerable<Comment> GetComments(CommentStatus status);
-        IEnumerable<Comment> GetCommentsForCommentedContent(int id);
-        IEnumerable<Comment> GetCommentsForCommentedContent(int id, CommentStatus status);
-        Comment GetComment(int id);
-        ContentItemMetadata GetDisplayForCommentedContent(int id);
-        Comment CreateComment(CreateCommentContext commentRecord);
-        void UpdateComment(int id, string name, string email, string siteName, string commentText, CommentStatus status);
-        void ApproveComment(int commentId);
-        void PendComment(int commentId);
-        void MarkCommentAsSpam(int commentId);
-        void DeleteComment(int commentId);
-        bool CommentsClosedForCommentedContent(int id);
-        void CloseCommentsForCommentedContent(int id);
-        void EnableCommentsForCommentedContent(int id);
-    }
-
-    public class CreateCommentContext {
-        public virtual string Author { get; set; }
-        public virtual string SiteName { get; set; }
-        public virtual string Email { get; set; }
-        public virtual string CommentText { get; set; }
-        public virtual int CommentedOn { get; set; }
-    }
-
+    [UsedImplicitly]
     public class CommentService : ICommentService {
         private readonly IRepository<ClosedCommentsRecord> _closedCommentsRepository;
         private readonly IClock _clock;
@@ -55,11 +30,7 @@ namespace Orchard.Comments.Services {
         }
 
         public ILogger Logger { get; set; }
-        protected virtual ISite CurrentSite { get; [UsedImplicitly] private set; }
         protected virtual IUser CurrentUser { get; [UsedImplicitly] private set; }
-
-
-        #region Implementation of ICommentService
 
         public IEnumerable<Comment> GetComments() {
             return _contentManager
@@ -100,7 +71,7 @@ namespace Orchard.Comments.Services {
             return _contentManager.GetItemMetadata(content);
         }
 
-        public Comment CreateComment(CreateCommentContext context) {
+        public Comment CreateComment(CreateCommentContext context, bool moderateComments) {
             var comment = _contentManager.Create<Comment>(CommentDriver.ContentType.Name);
 
             comment.Record.Author = context.Author;
@@ -111,7 +82,7 @@ namespace Orchard.Comments.Services {
             comment.Record.UserName = (CurrentUser == null ? context.Author : CurrentUser.UserName);
             comment.Record.CommentedOn = context.CommentedOn;
 
-            comment.Record.Status = _commentValidator.ValidateComment(comment) ? CommentStatus.Pending : CommentStatus.Spam;
+            comment.Record.Status = _commentValidator.ValidateComment(comment) ? moderateComments ? CommentStatus.Pending : CommentStatus.Approved : CommentStatus.Spam;
 
             // store id of the next layer for large-grained operations, e.g. rss on blog
             //TODO:(rpaquay) Get rid of this (comment aspect takes care of container)
@@ -167,7 +138,5 @@ namespace Orchard.Comments.Services {
                 _closedCommentsRepository.Delete(c);
             }
         }
-
-        #endregion
     }
 }

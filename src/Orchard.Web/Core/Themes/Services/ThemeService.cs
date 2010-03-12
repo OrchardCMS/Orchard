@@ -12,6 +12,7 @@ using Orchard.Themes;
 using Orchard.Core.Themes.Models;
 
 namespace Orchard.Core.Themes.Services {
+    [UsedImplicitly]
     public class ThemeService : IThemeService {
         private readonly IExtensionManager _extensionManager;
         private readonly IEnumerable<IThemeSelector> _themeSelectors;
@@ -26,8 +27,6 @@ namespace Orchard.Core.Themes.Services {
 
         public ILogger Logger { get; set; }
         protected virtual ISite CurrentSite { get; [UsedImplicitly] private set; }
-
-        #region Implementation of IThemeService
 
         public ITheme GetSiteTheme() {
             string currentThemeName = CurrentSite.As<ThemeSiteSettings>().Record.CurrentThemeName;
@@ -74,6 +73,7 @@ namespace Orchard.Core.Themes.Services {
                         HomePage = descriptor.HomePage ?? String.Empty,
                         ThemeName = descriptor.Name,
                         Version = descriptor.Version ?? String.Empty,
+                        Tags = descriptor.Tags ?? String.Empty
                     };
                 }
             }
@@ -83,9 +83,7 @@ namespace Orchard.Core.Themes.Services {
         public IEnumerable<ITheme> GetInstalledThemes() {
             List<ITheme> themes = new List<ITheme>();
             foreach (var descriptor in _extensionManager.AvailableExtensions()) {
-                //todo: (heskew) filter out Admin themes in a different manner - eventually we'll need a way to select the admin theme so there should be a clear separation
-                if (String.Equals(descriptor.ExtensionType, "Theme", StringComparison.OrdinalIgnoreCase)
-                        && !(descriptor.Name.EndsWith("Admin", StringComparison.OrdinalIgnoreCase))) {
+                if (String.Equals(descriptor.ExtensionType, "Theme", StringComparison.OrdinalIgnoreCase)) {
                     Theme theme = new Theme {
                         Author = descriptor.Author ?? String.Empty,
                         Description = descriptor.Description ?? String.Empty,
@@ -93,13 +91,15 @@ namespace Orchard.Core.Themes.Services {
                         HomePage = descriptor.HomePage ?? String.Empty,
                         ThemeName = descriptor.Name,
                         Version = descriptor.Version ?? String.Empty,
+                        Tags = descriptor.Tags ?? String.Empty
                     };
-                    themes.Add(theme);
+                    if (!theme.Tags.Contains("hidden")) {
+                        themes.Add(theme);
+                    }
                 }
             }
             return themes;
         }
-
 
         public void InstallTheme(HttpPostedFileBase file) {
             _extensionManager.InstallExtension("Theme", file);
@@ -108,7 +108,5 @@ namespace Orchard.Core.Themes.Services {
         public void UninstallTheme(string themeName) {
             _extensionManager.UninstallExtension("Theme", themeName);
         }
-
-        #endregion
     }
 }

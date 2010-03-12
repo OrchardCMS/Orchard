@@ -3,7 +3,7 @@
 <h1><%=Html.TitleForPage(T("Manage Users").ToString()) %></h1>
 <% using (Html.BeginFormAntiForgeryPost()) { %>
     <%=Html.ValidationSummary()%>
-    <div class="manage"><%=Html.ActionLink(T("Add a new user").ToString(), "Create", new { }, new { @class = "button" })%></div>
+    <div class="manage"><%=Html.ActionLink(T("Add a new user").ToString(), "Create", new { }, new { @class = "button primaryAction" })%></div>
     <fieldset>
         <table class="items">
             <colgroup>
@@ -29,7 +29,7 @@
                 </td>
                 <td>
                     <%=Html.ActionLink(T("Edit").ToString(), "Edit", new { row.User.Id })%> | 
-                    <%=Html.ActionLink(T("Delete").ToString(), "Delete", new { row.User.Id })%> 
+                    <%=Html.ActionLink(T("Remove").ToString(), "Delete", new { row.User.Id })%> 
                 </td>
             </tr>
             <%}%>

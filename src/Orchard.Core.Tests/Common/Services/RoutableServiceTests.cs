@@ -8,7 +8,6 @@ using Orchard.ContentManagement.Drivers;
 using Orchard.ContentManagement.Handlers;
 using Orchard.ContentManagement.Records;
 using Orchard.Core.Common.Models;
-using Orchard.Core.Common.Records;
 using Orchard.Core.Common.Services;
 using Orchard.Tests.Modules;
 

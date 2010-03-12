@@ -19,11 +19,7 @@ namespace Orchard.Security {
         public ILogger Logger { get; set; }
 
         public void OnResultExecuting(ResultExecutingContext filterContext) {
-            var viewResult = filterContext.Result as ViewResultBase;
-            if (viewResult == null)
-                return;
-
-            var baseViewModel = viewResult.ViewData.Model as BaseViewModel;
+            var baseViewModel = BaseViewModel.From(filterContext.Result);
             if (baseViewModel == null)
                 return;
 

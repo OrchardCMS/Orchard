@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Web.Mvc;
+using System.Web.Routing;
 using Orchard.Mvc.ViewModels;
 
 namespace Orchard.UI.Zones {
@@ -15,6 +16,11 @@ namespace Orchard.UI.Zones {
         public void AddRenderPartial(string location, string templateName, object model) {
             AddZoneItem(location, new RenderPartialZoneItem { Model = model, TemplateName = templateName });
         }
+
+        public void AddRenderStatic(string location, string templateName, object model) {
+            AddZoneItem(location, new RenderStaticZoneItem { Model = model, TemplateName = templateName });
+        }
+
         public void AddDisplayItem(string location, ContentItemViewModel viewModel) {
             AddZoneItem(location, new ContentItemDisplayZoneItem { ViewModel = viewModel });
         }
@@ -23,6 +29,25 @@ namespace Orchard.UI.Zones {
         }
         public void AddEditorPart(string location, object model, string templateName, string prefix) {
             AddZoneItem(location, new ContentPartEditorZoneItem { Model = model, TemplateName = templateName, Prefix = prefix });
+        }
+
+        public void AddRenderAction(string location, string actionName) {
+            AddZoneItem(location, new RenderActionZoneItem { ActionName = actionName });
+        }
+        public void AddRenderAction(string location, string actionName, object routeValues) {
+            AddZoneItem(location, new RenderActionZoneItem { ActionName = actionName, RouteValues = new RouteValueDictionary(routeValues) });
+        }
+        public void AddRenderAction(string location, string actionName, RouteValueDictionary routeValues) {
+            AddZoneItem(location, new RenderActionZoneItem { ActionName = actionName, RouteValues = routeValues });
+        }
+        public void AddRenderAction(string location, string actionName, string controllerName) {
+            AddZoneItem(location, new RenderActionZoneItem { ActionName = actionName, ControllerName = controllerName });
+        }
+        public void AddRenderAction(string location, string actionName, string controllerName, object routeValues) {
+            AddZoneItem(location, new RenderActionZoneItem { ActionName = actionName, ControllerName = controllerName, RouteValues = new RouteValueDictionary(routeValues) });
+        }
+        public void AddRenderAction(string location, string actionName, string controllerName, RouteValueDictionary routeValues) {
+            AddZoneItem(location, new RenderActionZoneItem { ActionName = actionName, ControllerName = controllerName, RouteValues = routeValues });
         }
 
         private void AddZoneItem(string location, ZoneItem item) {

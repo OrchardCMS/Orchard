@@ -1,12 +1,11 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
 using Autofac;
 using Autofac.Builder;
 using Autofac.Integration.Web.Mvc;
-using Orchard.Controllers;
-using Orchard.Environment;
 using Orchard.Mvc.Filters;
 using Orchard.Extensions;
 
@@ -20,7 +19,7 @@ namespace Orchard.Mvc {
 
         protected override void Load(ContainerBuilder moduleBuilder) {
             var extensions = _extensionManager.ActiveExtensions();
-            var assemblies = extensions.Select(x => x.Assembly).Concat(new[] { typeof(HomeController).Assembly });
+            var assemblies = extensions.Select(x => x.Assembly);
 
             var module = new AutofacControllerModule(assemblies.ToArray()) {
                 ActionInvokerType = typeof(FilterResolvingActionInvoker),
@@ -33,8 +32,23 @@ namespace Orchard.Mvc {
             moduleBuilder.Register(ctx => UrlHelperFactory(ctx)).As<UrlHelper>().FactoryScoped();
         }
 
+        private static bool IsRequestValid() {
+            if (HttpContext.Current == null)
+                return false;
+
+            try {
+                // The "Request" property throws at application startup on IIS integrated pipeline mode
+                var req = HttpContext.Current.Request;
+            }
+            catch (Exception) {
+                return false;
+            }
+
+            return true;
+        }
+
         static HttpContextBase HttpContextBaseFactory(IContext context) {
-            if (HttpContext.Current != null) {
+            if (IsRequestValid()) {
                 return new HttpContextWrapper(HttpContext.Current);
             }
 
@@ -62,6 +76,8 @@ namespace Orchard.Mvc {
             public override HttpRequestBase Request {
                 get { return new HttpRequestPlaceholder(); }
             }
+
+            public override IHttpHandler Handler { get; set; }
         }
 
         /// <summary>
@@ -76,6 +92,4 @@ namespace Orchard.Mvc {
             }
         }
     }
-
-
 }

@@ -1,4 +1,3 @@
-using Orchard.Core.Common.Records;
 using Orchard.ContentManagement;
 
 namespace Orchard.Core.Common.Models {

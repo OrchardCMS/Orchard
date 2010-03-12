@@ -1,23 +1,31 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using JetBrains.Annotations;
 using Orchard.ContentManagement.Records;
-using Orchard.Pages.Controllers;
+using Orchard.Core.Common.Models;
+using Orchard.Pages.Drivers;
 using Orchard.Pages.Models;
-using Orchard.Core.Common.Records;
 using Orchard.ContentManagement;
+using Orchard.Pages.Routing;
 using Orchard.Tasks.Scheduling;
 
 namespace Orchard.Pages.Services {
+    [UsedImplicitly]
     public class PageService : IPageService {
         private readonly IContentManager _contentManager;
         private readonly IPublishingTaskManager _publishingTaskManager;
-        private readonly ISlugConstraint _slugConstraint;
+        private readonly IPageSlugConstraint _pageSlugConstraint;
 
-        public PageService(IContentManager contentManager, IPublishingTaskManager publishingTaskManager, ISlugConstraint slugConstraint) {
+        public PageService(IContentManager contentManager, IPublishingTaskManager publishingTaskManager, IPageSlugConstraint pageSlugConstraint) {
             _contentManager = contentManager;
             _publishingTaskManager = publishingTaskManager;
-            _slugConstraint = slugConstraint;
+            _pageSlugConstraint = pageSlugConstraint;
+        }
+
+        public int GetCount() {
+            //TODO: (erikpo) Need to add a count method to IContentQuery so it doesn't need to pull out all pages to get a count
+            return _contentManager.Query<Page>(VersionOptions.Latest).List().Count();
         }
 
         public IEnumerable<Page> Get() {
@@ -74,7 +82,7 @@ namespace Orchard.Pages.Services {
         public void Publish(Page page) {
             _publishingTaskManager.DeleteTasks(page.ContentItem);
             _contentManager.Publish(page.ContentItem);
-            _slugConstraint.AddPublishedSlug(page.Slug);
+            _pageSlugConstraint.AddSlug(page.Slug);
         }
 
         public void Publish(Page page, DateTime scheduledPublishUtc) {
@@ -83,7 +91,7 @@ namespace Orchard.Pages.Services {
 
         public void Unpublish(Page page) {
             _contentManager.Unpublish(page.ContentItem);
-            _slugConstraint.RemovePublishedSlug(page.Slug);
+            _pageSlugConstraint.RemoveSlug(page.Slug);
         }
 
         public DateTime? GetScheduledPublishUtc(Page page) {

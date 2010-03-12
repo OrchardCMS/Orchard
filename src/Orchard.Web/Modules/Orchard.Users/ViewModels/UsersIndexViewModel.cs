@@ -4,7 +4,7 @@ using Orchard.Users.Models;
 
 namespace Orchard.Users.ViewModels {
 
-    public class UsersIndexViewModel : AdminViewModel {
+    public class UsersIndexViewModel : BaseViewModel {
         public class Row {
             public User User { get; set; }
         }

@@ -68,20 +68,21 @@
     <Compile Include="AdminMenu.cs" />
     <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Controllers\PageController.cs" />
-    <Compile Include="Controllers\PageDriver.cs" />
+    <Compile Include="Drivers\PageDriver.cs" />
     <Compile Include="Models\Page.cs" />
-    <Compile Include="Models\PageHandler.cs" />
+    <Compile Include="Handlers\PageHandler.cs" />
     <Compile Include="Permissions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Routes.cs" />
     <Compile Include="Security\Authorization.cs" />
     <Compile Include="Services\IPageService.cs" />
+    <Compile Include="Routing\IPageSlugConstraint.cs" />
     <Compile Include="Services\PageService.cs" />
-    <Compile Include="Services\PagesHomePageProvider.cs" />
-    <Compile Include="Services\SlugConstraint.cs">
+    <Compile Include="Services\PageHomePageProvider.cs" />
+    <Compile Include="Routing\PageSlugConstraint.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Services\SlugConstraintUpdator.cs" />
+    <Compile Include="Routing\PageSlugConstraintUpdator.cs" />
     <Compile Include="ViewModels\PageCreateViewModel.cs" />
     <Compile Include="ViewModels\PageEditViewModel.cs" />
     <Compile Include="ViewModels\PagesViewModel.cs" />
@@ -119,6 +120,7 @@
     <Content Include="Styles\ui.timepickr.css" />
     <Content Include="Views\DisplayTemplates\Items\Pages.Page.ascx" />
     <Content Include="Views\DisplayTemplates\Items\Pages.Page.Summary.ascx" />
+    <Content Include="Views\DisplayTemplates\Parts\Pages.Page.Metadata.ascx" />
     <Content Include="Views\EditorTemplates\Items\Pages.Page.ascx" />
     <Content Include="Views\EditorTemplates\Parts\Pages.Page.Publish.ascx" />
     <Content Include="Views\Admin\Create.ascx" />

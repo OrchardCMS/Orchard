@@ -3,12 +3,12 @@
 <h1><%=Html.TitleForPage(T("Add User").ToString()) %></h1>
 <%using (Html.BeginFormAntiForgeryPost()) { %>
     <%=Html.ValidationSummary() %>
-    <%=Html.EditorFor(m=>m.UserName, "inputTextLarge") %>
+    <%=Html.EditorFor(m=>m.UserName, "inputTextLarge")%>
     <%=Html.EditorFor(m=>m.Email, "inputTextLarge") %>
     <%=Html.EditorFor(m=>m.Password, "inputPasswordLarge") %>
     <%=Html.EditorFor(m=>m.ConfirmPassword, "inputPasswordLarge") %>
     <%=Html.EditorForItem(Model.User) %>
     <fieldset>
-        <input class="button" type="submit" value="<%=_Encoded("Create") %>" />
+        <input class="button primaryAction" type="submit" value="<%=_Encoded("Add") %>" />
     </fieldset>
 <% } %>

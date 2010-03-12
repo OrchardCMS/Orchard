@@ -23,7 +23,7 @@ namespace Orchard.Media {
         public IEnumerable<PermissionStereotype> GetDefaultStereotypes() {
             return new[] {
                 new PermissionStereotype {
-                    Name = "Administrators",
+                    Name = "Administrator",
                     Permissions = new[] {ManageMediaFiles}
                 },
                 new PermissionStereotype {

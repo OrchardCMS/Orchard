@@ -1,14 +1,13 @@
-﻿using Orchard.Core.Navigation.Drivers;
-using Orchard.Core.Navigation.Records;
+﻿using JetBrains.Annotations;
+using Orchard.Core.Navigation.Drivers;
+using Orchard.Core.Navigation.Models;
 using Orchard.Data;
 using Orchard.ContentManagement.Handlers;
 
-namespace Orchard.Core.Navigation.Models {
+namespace Orchard.Core.Navigation.Handlers {
+    [UsedImplicitly]
     public class MenuItemHandler : ContentHandler {
-        private readonly IOrchardServices _orchardServices;
-
-        public MenuItemHandler(IRepository<MenuItemRecord> repository, IOrchardServices orchardServices) {
-            _orchardServices = orchardServices;
+        public MenuItemHandler(IRepository<MenuItemRecord> repository) {
             Filters.Add(new ActivatingFilter<MenuItem>(MenuItemDriver.ContentType.Name));
             Filters.Add(StorageFilter.For(repository));
         }

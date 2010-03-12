@@ -5,7 +5,6 @@ using System.Web;
 using System.Web.Mvc;
 using Orchard.Localization;
 using Orchard.Roles.Models;
-using Orchard.Roles.Records;
 using Orchard.Roles.Services;
 using Orchard.Roles.ViewModels;
 using Orchard.Security;
@@ -16,7 +15,6 @@ namespace Orchard.Roles.Controllers {
     [ValidateInput(false)]
     public class AdminController : Controller {
         private readonly IRoleService _roleService;
-        private readonly INotifier _notifier;
         private readonly IAuthorizationService _authorizationService;
 
         public AdminController(
@@ -26,7 +24,6 @@ namespace Orchard.Roles.Controllers {
             IAuthorizationService authorizationService) {
             Services = services;
             _roleService = roleService;
-            _notifier = notifier;
             _authorizationService = authorizationService;
         }
 
@@ -58,7 +55,7 @@ namespace Orchard.Roles.Controllers {
                 return RedirectToAction("Index");
             }
             catch (Exception exception) {
-                _notifier.Error("Deleting Role failed: " + exception.Message);
+                Services.Notifier.Error("Deleting Role failed: " + exception.Message);
                 return View();
             }
         }
@@ -90,7 +87,7 @@ namespace Orchard.Roles.Controllers {
                 return RedirectToAction("Index");
             }
             catch (Exception exception) {
-                _notifier.Error("Creating Role failed: " + exception.Message);
+                Services.Notifier.Error("Creating Role failed: " + exception.Message);
                 return RedirectToAction("Create");
             }
         }
@@ -144,7 +141,7 @@ namespace Orchard.Roles.Controllers {
                 return RedirectToAction("Edit", new { viewModel.Id });
             }
             catch (Exception exception) {
-                _notifier.Error("Editing Role failed: " + exception.Message);
+                Services.Notifier.Error("Editing Role failed: " + exception.Message);
                 return RedirectToAction("Edit", viewModel.Id);
             }
         }

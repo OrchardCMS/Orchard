@@ -1,23 +1,20 @@
 using System;
 using System.IO;
 using System.Web;
+using JetBrains.Annotations;
 using Orchard.Core.XmlRpc;
 using Orchard.Core.XmlRpc.Models;
 using Orchard.Security;
 
 namespace Orchard.Media.Services {
+    [UsedImplicitly]
     public class XmlRpcHandler : IXmlRpcHandler {
         private readonly IMembershipService _membershipService;
         private readonly IAuthorizationService _authorizationService;
-        private readonly HttpContextBase _httpContext;
 
-        public XmlRpcHandler(
-            IMembershipService membershipService, 
-            IAuthorizationService authorizationService,
-            HttpContextBase httpContext) {
+        public XmlRpcHandler(IMembershipService membershipService, IAuthorizationService authorizationService) {
             _membershipService = membershipService;
             _authorizationService = authorizationService;
-            _httpContext = httpContext;
         }
 
         public void Process(XmlRpcContext context) {
@@ -25,7 +22,6 @@ namespace Orchard.Media.Services {
                 Path = context.HttpContext.Request.ApplicationPath,
                 Query = string.Empty
             };
-
 
             if (context.Request.MethodName == "metaWeblog.newMediaObject") {
                 var result = MetaWeblogNewMediaObject(
@@ -51,7 +47,6 @@ namespace Orchard.Media.Services {
                 throw new ApplicationException("Access denied");
             }
 
-
             var name = file.Optional<string>("name");
             var bits = file.Optional<byte[]>("bits");
 
@@ -64,6 +59,5 @@ namespace Orchard.Media.Services {
             uriBuilder.Path = uriBuilder.Path.TrimEnd('/') + "/Media/" + name.TrimStart('/');
             return new XRpcStruct().Set("url", uriBuilder.Uri.AbsoluteUri);
         }
-
     }
 }

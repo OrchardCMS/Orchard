@@ -1,6 +1,5 @@
 using System;
 using Orchard.ContentManagement;
-using Orchard.Core.Scheduling.Records;
 using Orchard.Tasks.Scheduling;
 
 namespace Orchard.Core.Scheduling.Models {

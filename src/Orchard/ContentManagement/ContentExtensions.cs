@@ -21,6 +21,14 @@ namespace Orchard.ContentManagement {
             return part;
         }
 
+        public static void Create(this IContentManager manager, IContent content) {
+            manager.Create(content.ContentItem, VersionOptions.Draft);
+            manager.Publish(content.ContentItem);
+        }
+
+        public static void Create(this IContentManager manager, IContent content, VersionOptions options) {
+            manager.Create(content.ContentItem, options);
+        }
 
         public static ContentItem Create(this IContentManager manager, string contentType) {
             return manager.Create<ContentItem>(contentType, init => { });
@@ -158,15 +166,25 @@ namespace Orchard.ContentManagement {
         /* Display and editor convenience extension methods */
 
         public static ContentItemViewModel<T> BuildDisplayModel<T>(this IContentManager manager, int id, string displayType) where T : class, IContent {
-            return manager.BuildDisplayModel(manager.Get<T>(id), displayType);
+            var content = manager.Get<T>(id);
+            if (content == null)
+                return null;
+            return manager.BuildDisplayModel(content, displayType);
         }
 
         public static ContentItemViewModel<T> BuildEditorModel<T>(this IContentManager manager, int id) where T : class, IContent {
-            return manager.BuildEditorModel(manager.Get<T>(id));
+            var content = manager.Get<T>(id);
+            if (content == null)
+                return null;
+            return manager.BuildEditorModel(content);
+
         }
 
         public static ContentItemViewModel<T> UpdateEditorModel<T>(this IContentManager manager, int id, IUpdateModel updater) where T : class, IContent {
-            return manager.UpdateEditorModel(manager.Get<T>(id), updater);
+            var content = manager.Get<T>(id);
+            if (content == null)
+                return null;
+            return manager.UpdateEditorModel(content, updater);
         }
 
 

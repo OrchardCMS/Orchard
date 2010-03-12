@@ -12,18 +12,7 @@ using Orchard.Tags.Models;
 using Orchard.UI.Notify;
 
 namespace Orchard.Tags.Services {
-    public interface ITagService : IDependency {
-        IEnumerable<Tag> GetTags();
-        Tag GetTag(int id);
-        Tag GetTagByName(string tagName);
-        void CreateTag(string tagName);
-        void DeleteTag(int id);
-        void UpdateTag(int id, string tagName);
-        IEnumerable<IContent> GetTaggedContentItems(int id);
-        void TagContentItem(int contentItemId, string tagName);
-        void UpdateTagsForContentItem(int contentItemId, IEnumerable<string> tagNamesForContentItem);
-    }
-
+    [UsedImplicitly]
     public class TagService : ITagService {
         private readonly IRepository<Tag> _tagRepository;
         private readonly IRepository<TagsContentItems> _tagsContentItemsRepository;
@@ -49,8 +38,6 @@ namespace Orchard.Tags.Services {
         public virtual ISite CurrentSite { get; set; }
         public virtual IUser CurrentUser { get; set; }
         public Localizer T { get; set; }
-
-        #region ITagService Members
 
         public IEnumerable<Tag> GetTags() {
             return from tags in _tagRepository.Table.ToList() select tags;
@@ -120,8 +107,6 @@ namespace Orchard.Tags.Services {
             }
             ModifyTagsForContentItem(contentItemId, tags);
         }
-
-        #endregion
 
         private void ModifyTagsForContentItem(int contentItemId, IEnumerable<int> tagsForContentItem) {
             List<int> newTagsForContentItem = new List<int>(tagsForContentItem);

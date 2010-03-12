@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Web.Mvc;
 using Orchard.Mvc.ViewModels;
+using Orchard.Themes;
 
 namespace Orchard.Mvc.ViewEngines {
     public class LayoutViewEngine : IViewEngine {
@@ -24,7 +25,7 @@ namespace Orchard.Mvc.ViewEngines {
             var skipLayoutViewEngine = false;
             if (string.IsNullOrEmpty(masterName) == false)
                 skipLayoutViewEngine = true;
-            if (!(controllerContext.Controller.ViewData.Model is BaseViewModel))
+            if (!ThemeFilter.IsApplied(controllerContext.RequestContext))
                 skipLayoutViewEngine = true;
             if (_viewEngines == null || _viewEngines.Count == 0)
                 skipLayoutViewEngine = true;
@@ -33,7 +34,13 @@ namespace Orchard.Mvc.ViewEngines {
 
 
             var bodyView = _viewEngines.FindPartialView(controllerContext, viewName);
-            var layoutView = _viewEngines.FindPartialView(controllerContext, "Layout");
+
+            ViewEngineResult layoutView = null;
+            if (!string.IsNullOrEmpty(controllerContext.RouteData.Values["area"] as string))
+                layoutView = _viewEngines.FindPartialView(controllerContext, string.Format("Layout.{0}", controllerContext.RouteData.Values["area"]));
+            if (layoutView == null || layoutView.View == null)
+                layoutView = _viewEngines.FindPartialView(controllerContext, "Layout");
+
             var documentView = _viewEngines.FindPartialView(controllerContext, "Document");
 
             if (bodyView.View == null ||

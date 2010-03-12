@@ -2,7 +2,7 @@
 using Orchard.Comments.Models;
 
 namespace Orchard.Comments.ViewModels {
-    public class CommentsEditViewModel : AdminViewModel {
+    public class CommentsEditViewModel : BaseViewModel {
         public int Id { get; set; }
         public string Name { get; set; }
         public string Email { get; set; }

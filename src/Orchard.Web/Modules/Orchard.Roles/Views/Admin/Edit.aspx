@@ -51,6 +51,6 @@
     </fieldset>
     <fieldset>
 	    <input type="submit" class="button" name="submit.Save" value="<%=_Encoded("Save") %>" />
-	    <input type="submit" class="button remove" name="submit.Delete" value="<%=_Encoded("Delete") %>" />
+	    <input type="submit" class="button remove" name="submit.Delete" value="<%=_Encoded("Remove") %>" />
 	</fieldset>
 <% } %>

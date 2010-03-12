@@ -108,6 +108,7 @@ number of columns: 24; actual width: 946; column width: 26; gutter width:14
 #content {
     overflow:auto;
     padding:1.4em;
+    background:#fcfcfc;
 }
 #main {
     display:inline;
@@ -228,7 +229,6 @@ a:hover, a:active, a:focus {
     overflow:hidden;
     width:0;
 }
-
 #navigation li {
 	margin:7px 0 20px 0;
 }
@@ -357,12 +357,15 @@ fieldset.bulk.actions {
 }
 legend {
     font-size:1.6em;
-    font-weight:600;
     font-weight:bold;
+}
+legend span {
+    font-weight:normal;
 }
 label {
 	display: block;
-	color:#1d1b1b;
+	color:#4c4c4c;
+	font-weight:bold;
 }
 label.forcheckbox {
     display:inline;
@@ -384,12 +387,15 @@ label input {
     text-indent:3ex; /* todo: (heskew) this might look out of place */
 }
 /* todo: (heskew) try to get .text on stuff like .text-box */
-select, textarea, input.text, input.text-box {
+select, textarea, input.text, input.textMedium, input.text-box {
 	padding:2px;
 	border:1px solid #bdbcbc;
 }
-input.text, input.text-box {
+input.text, input.textMedium, input.text-box {
     line-height:1.2em;
+}
+input.textMedium {
+    width:26em;
 }
 select:focus, textarea:focus, input.text:focus, input.text-box:focus {
 	border-color:#666d51;
@@ -414,30 +420,35 @@ input.large.text, textarea, fieldset {
     clear:both;
 }
 fieldset {
-    margin:1.8em 0 .4em 0;
+    margin:0 0 1.3em 0;
+    padding:6px 0 0;
 }
 /* Settings page styles */
 .settings fieldset {
     margin:.5em 0;
-    border-bottom:1px solid #eaeaea;
     padding:1em;
 }
-.settings fieldset div, .settings .button {
+.orchard-media fieldset div, .settings fieldset div, .orchard-media .button, .settings .button {
     margin:1em 0 .5em 1em;
 }
 .settings legend {
     margin:0 0 -.4em 0;
 }
+/* todo: This style is the same as textMedium. Consolidate if possible */
 .settings input.text, .settings input.text-box {
     width:26em;
 }
 textarea {
     min-height:8em;
 }
-.primary input.large.text, .primary textarea {
+#main input.large.text, #main textarea {
+    padding:4px;
+    width:99%;
+}
+#main .primary input.large.text, #main .primary textarea {
     margin:0;
     padding:4px;
-    width:98%;
+    width:98.8%;
 }
 /* todo: (heskew) move editor specific style elsewhere */
 .primary .mceEditor {
@@ -701,7 +712,7 @@ todo: (heskew) pull out into relevant modules where appropriate
 .templates p {
     overflow:hidden;
 }
-.templates img {
+.templates img, .themePreviewImage {
 	border:1px solid #e8e8e8;
     height:200px;
     margin:.27em 0 .93em 0;
@@ -709,8 +720,14 @@ todo: (heskew) pull out into relevant modules where appropriate
 }
 .previewImage {
 	border:1px solid #525e50;
-	height:70%;
-	width:70%;
+	height:50%;
+	width:50%;
+}
+.themes #main h2 {
+    margin:1em 0 0 0;
+}
+.themePreviewImage {
+	height:300px;
 }
 
 /* Rounded borders and other "works in some browsers" additions
@@ -732,11 +749,14 @@ table.items, textarea, input.text, input.text-box,
 
 /* Added classes for new blog list layout
 ---------------------------------------------------------- */
-
-.blogPost.summary {
-    padding:.6em .4em;
+.blogdescription {
+    margin-top:1em;
+}
+.summary {
+    padding:1.2em .4em;
 }
 .actions {
+    clear:right;
     height:auto;
     overflow:visible;
     padding:0;
@@ -748,10 +768,12 @@ table.items, textarea, input.text, input.text-box,
 .properties {
     float:left;
 }
+.blogs.contentItems .properties {
+    float:none;
+}
 #main .contentItems .properties h3 {
     border-bottom:none;
     margin:0;
-    margin:0 0 0 .2em;
     padding:0;
 }
 .related{
@@ -759,8 +781,8 @@ table.items, textarea, input.text, input.text-box,
      float:right;
      text-align:right;
 }
-.related .commentcount{
-     line-height:2em;
+.commentcount {
+    line-height:2em;
 }
 .contentItems .properties ul li{
     border:0;
@@ -783,3 +805,40 @@ table.items, textarea, input.text, input.text-box,
     text-decoration:underline;
     color:#1E5D7D;
     }
+   
+ /* Added classes for new page list layout
+---------------------------------------------------------- */  
+.pageList {
+     margin:0;
+     padding:0;
+     background:#FFFFFF url(images/backgroundGradient.gif) repeat-x scroll left top;
+     }
+.orchard-pages .contentItems {
+     margin:1em 0 0 0;
+     padding:0;
+ }
+.contentItems .properties ul.pageStatus {
+    margin:0.8em 0 0 2em;
+}    
+.contentItems .properties ul.pageStatus li {
+    margin:0;
+    padding:0 0 .1em 0;
+}
+.properties h3 {
+    display:inline;
+}
+
+/* Added classes for media
+---------------------------------------------------------- */  
+.breadCrumbs, .folderProperties {
+    float:left;
+    margin:-2em 0 0 0;
+}
+.folderProperties {
+    float:right;
+}
+/* ---------- Generic ---------- */
+
+.clearBoth {
+	clear:both;
+}

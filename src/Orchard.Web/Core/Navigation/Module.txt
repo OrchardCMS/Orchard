@@ -1,1 +1,2 @@
 ﻿name: Navigation
+antiforgery: enabled

@@ -6,11 +6,11 @@
     <fieldset class="actions bulk">
         <label for="publishActions"><%=_Encoded("Actions:") %></label>
 		<select id="Select1" name="publishActions">
-		    <option value="1"><%=_Encoded("Delete")%></option>
+		    <option value="1"><%=_Encoded("Remove")%></option>
 		</select>
 		<input class="button roundCorners" type="submit" value="<%=_Encoded("Apply") %>" />
     </fieldset>
-    <div class="manage"><%=Html.ActionLink(T("Add a folder").ToString(), "Create", new {}, new { @class = "button"}) %></div>
+    <div class="manage"><%=Html.ActionLink(T("Add a folder").ToString(), "Create", new { }, new { @class = "button primaryAction" })%></div>
     <fieldset>
 	    <table class="items" summary="<%=_Encoded("This is a table of the media folders currently available for use in your application.") %>">
 		    <colgroup>
@@ -48,5 +48,5 @@
             <%}%>
         </table>
     </fieldset>
-    <div class="manage"><%=Html.ActionLink(T("Add a folder").ToString(), "Create", new {}, new { @class = "button"}) %></div>
+    <div class="manage"><%=Html.ActionLink(T("Add a folder").ToString(), "Create", new { }, new { @class = "button primaryAction" })%></div>
 <% } %>

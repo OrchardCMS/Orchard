@@ -13,13 +13,14 @@ namespace Orchard.UI.Resources {
         }
 
         public void OnResultExecuting(ResultExecutingContext filterContext) {
-            var model = filterContext.Controller.ViewData.Model as BaseViewModel;
+            var model = BaseViewModel.From(filterContext.Result);
             if (model == null) {
                 return;
             }
 
             model.Zones.AddAction("head:metas", html => html.ViewContext.Writer.Write(_resourceManager.GetMetas()));
             model.Zones.AddAction("head:styles", html => html.ViewContext.Writer.Write(_resourceManager.GetStyles()));
+            model.Zones.AddAction("head:links", html => html.ViewContext.Writer.Write(_resourceManager.GetLinks(html)));
             model.Zones.AddAction("head:scripts", html => html.ViewContext.Writer.Write(_resourceManager.GetHeadScripts()));
             model.Zones.AddAction("body:after", html => {
                 html.ViewContext.Writer.Write(_resourceManager.GetFootScripts());

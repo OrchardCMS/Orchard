@@ -3,7 +3,6 @@ using JetBrains.Annotations;
 using Orchard.Mvc.Filters;
 using Orchard.Mvc.ViewModels;
 
-
 namespace Orchard.Core.Feeds.Services {
     [UsedImplicitly]
     public class FeedFilter : FilterProvider, IResultFilter {
@@ -14,7 +13,7 @@ namespace Orchard.Core.Feeds.Services {
         }
 
         public void OnResultExecuting(ResultExecutingContext filterContext) {
-            var model = filterContext.Controller.ViewData.Model as BaseViewModel;
+            var model = BaseViewModel.From(filterContext.Result);
             if (model == null) {
                 return;
             }

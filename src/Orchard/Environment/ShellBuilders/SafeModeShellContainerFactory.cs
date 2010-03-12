@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Web;
-using System.Web.Mvc;
 using System.Web.Routing;
 using Autofac;
 using Orchard.ContentManagement;
@@ -48,6 +47,7 @@ namespace Orchard.Environment.ShellBuilders {
                 builder.Register<MvcModule>().As<IModule>().ContainerScoped();
                 builder.Register<WebFormsViewEngineProvider>().As<IViewEngineProvider>().ContainerScoped();
                 builder.Register<ViewEngineFilter>().As<IFilterProvider>().ContainerScoped();
+                builder.Register<ThemeFilter>().As<IFilterProvider>().ContainerScoped();
                 builder.Register<PageTitleBuilder>().As<IPageTitleBuilder>().ContainerScoped();
                 builder.Register<ZoneManager>().As<IZoneManager>().ContainerScoped();
                 builder.Register<PageClassBuilder>().As<IPageClassBuilder>().ContainerScoped();
@@ -111,6 +111,7 @@ namespace Orchard.Environment.ShellBuilders {
                 public string Version { get; set; }
                 public string Author { get; set; }
                 public string HomePage { get; set; }
+                public string Tags { get; set; }
             }
 
             private readonly SafeModeTheme _theme = new SafeModeTheme {

@@ -10,6 +10,4 @@ namespace Orchard.Security {
         void CheckAccess(Permission permission, IUser user, IContent content);
         bool TryCheckAccess(Permission permission, IUser user, IContent content);
     }
-
-    
 }

@@ -4,7 +4,9 @@
 <% using (Html.BeginFormAntiForgeryPost()) { %>
     <%=Html.ValidationSummary() %>
     <%=Html.EditorForItem(m => m.Blog) %>
-    <%=Html.EditorFor(m => m.PromoteToHomePage) %>
-    <label for="PromoteToHomePage" class="forcheckbox"><%=_Encoded("Set as home page") %></label>
-    <fieldset><input class="button" type="submit" value="<%=_Encoded("Save") %>" /></fieldset><%
+    <fieldset>
+        <%=Html.EditorFor(m => m.PromoteToHomePage) %>
+        <label for="PromoteToHomePage" class="forcheckbox"><%=_Encoded("Set as home page") %></label>
+    </fieldset>
+    <fieldset><input class="button primaryAction" type="submit" value="<%=_Encoded("Save") %>" /></fieldset><%
    } %>

@@ -3,14 +3,16 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using System.Web.Security;
+using JetBrains.Annotations;
 using Orchard.Data;
 using Orchard.Logging;
 using Orchard.ContentManagement;
 using Orchard.Security;
-using Orchard.Users.Controllers;
+using Orchard.Users.Drivers;
 using Orchard.Users.Models;
 
 namespace Orchard.Users.Services {
+    [UsedImplicitly]
     public class MembershipService : IMembershipService {
         private readonly IContentManager _contentManager;
         private readonly IRepository<UserRecord> _userRepository;
@@ -36,12 +38,13 @@ namespace Orchard.Users.Services {
             {
                 init.Record.UserName = createUserParams.Username;
                 init.Record.Email = createUserParams.Email;
+                init.Record.NormalizedUserName = createUserParams.Username.ToLower();
                 SetPassword(init.Record, createUserParams.Password);
             });
         }
 
         public IUser GetUser(string username) {
-            var userRecord = _userRepository.Get(x => x.UserName == username);
+            var userRecord = _userRepository.Get(x => x.NormalizedUserName == username.ToLower());
             if (userRecord == null) {
                 return null;
             }
@@ -49,7 +52,7 @@ namespace Orchard.Users.Services {
         }
 
         public IUser ValidateUser(string username, string password) {
-            var userRecord = _userRepository.Get(x => x.UserName == username);
+            var userRecord = _userRepository.Get(x => x.NormalizedUserName == username.ToLower());
             if (userRecord == null || ValidatePassword(userRecord, password) == false)
                 return null;
 

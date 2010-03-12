@@ -1,1 +1,2 @@
 ﻿name: Setup
+antiforgery: enabled

@@ -2,9 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using JetBrains.Annotations;
-using Orchard.ContentManagement;
 using Orchard.Core.Scheduling.Models;
-using Orchard.Core.Scheduling.Records;
 using Orchard.Data;
 using Orchard.Logging;
 using Orchard.Services;

@@ -1,1 +1,2 @@
 ﻿name: HomePage
+antiforgery: enabled

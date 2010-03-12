@@ -2,8 +2,12 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Web.Mvc;
+using Orchard.Mvc.ViewModels;
+using Orchard.Security;
+using Orchard.UI.Navigation;
+using Orchard.UI.Notify;
+using Orchard.UI.Zones;
 
 namespace Orchard.Mvc.ViewEngines {
     public class LayoutView : IView {
@@ -20,24 +24,36 @@ namespace Orchard.Mvc.ViewEngines {
                 var layoutViewContext = LayoutViewContext.From(viewContext);
 
                 for (var index = 0; index != _viewEngineResults.Length; ++index) {
+                    bool isFirst = index == 0;
+                    bool isLast = index == _viewEngineResults.Length - 1;
+
+                    var effectiveWriter = isLast ? viewContext.Writer : new StringWriter();
+                    var effectiveViewData = isFirst ? viewContext.ViewData : CoerceViewData(viewContext.ViewData);
                     var viewEngineResult = _viewEngineResults[index];
-                    if (index == _viewEngineResults.Length - 1) {
-                        viewEngineResult.View.Render(viewContext, writer);
-                    }
-                    else {
-                        //TEMP: to be replaced with an efficient spooling writer
-                        var childContext = new ViewContext(
+
+                    var effectiveContext = new ViewContext(
                             viewContext,
                             viewEngineResult.View,
-                            viewContext.ViewData,
+                            effectiveViewData,
                             viewContext.TempData,
-                            new StringWriter());
-                        viewEngineResult.View.Render(childContext, childContext.Writer);
-                        layoutViewContext.BodyContent = childContext.Writer.ToString();
-                    }
+                            effectiveWriter);
+
+                    viewEngineResult.View.Render(effectiveContext, effectiveWriter);
+
+                    if (!isLast)
+                        layoutViewContext.BodyContent = effectiveWriter.ToString();
                 }
             }
         }
+
+        private static ViewDataDictionary CoerceViewData(ViewDataDictionary dictionary) {
+            if (dictionary.Model is BaseViewModel)
+                return dictionary;
+
+            return new ViewDataDictionary<BaseViewModel>(BaseViewModel.From(dictionary));
+        }
+
+
 
         public void ReleaseViews(ControllerContext context) {
             foreach (var viewEngineResult in _viewEngineResults) {

@@ -5,8 +5,10 @@
 <%@ Import Namespace="Orchard.Blogs.Extensions"%>
 <%@ Import Namespace="Orchard.Blogs.Models"%>
 
-<h3><%=Html.Link(Html.Encode(Model.Item.Title), Url.BlogPost(Model.Item.Blog.Slug, Model.Item.Slug)) %></h3>
+<h3><%=Html.Link(Html.Encode(Model.Item.Title), Url.BlogPost(Model.Item)) %></h3>
 
 <div class="meta"><%=Html.PublishedState(Model.Item) %> | <%Html.Zone("meta");%></div>
 
-<div class="postsummary"><%=Model.Item.As<BodyAspect>().Text ?? string.Format("<p><em>{0}</em></p>", _Encoded("there's no content for this blog post"))%></div>
+<div class="postsummary">
+<% Html.Zone("primary"); %>
+</div>

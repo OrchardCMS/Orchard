@@ -70,7 +70,11 @@ fieldset {
     -moz-border-radius:6px;
 	-webkit-border-radius:6px;
     }
-    
+/* todo: (heskew) tmp. leaving it up to Jon on what he wants to do with this :P */
+form.comment fieldset {
+    margin-bottom:0;
+}
+
 fieldset div {margin:12px 0 0 0}
     
 legend {
@@ -171,7 +175,7 @@ colgroup
 #bd {
     min-height:500px;
     background:#fff;
-    padding: 20px;
+    padding: 20px 0 20px 20px;
     -webkit-border-top-left-radius: 6px;    /* for Safari */
     -webkit-border-top-right-radius: 6px;
 	-moz-border-radius-topleft: 6px;       /* for Firefox */
@@ -179,19 +183,14 @@ colgroup
     }
     
 #hd  h1 {
-	margin: 0px;	
+	margin: 18px 0 0 20px;
+	font-size: 240%;
+	font-weight:700;
 }
 
 #hd  h1 a {
-	background:url(../Content/Images/logo.png) no-repeat top left;
-	display: block;
-	float:left;
-	width:270px;
-	height:80px;
-	top:0px;
-	margin: 0px;
-	position:relative;
-	z-index:0;
+    color:#547753;
+    text-decoration:none;
 }
 
 #branding {
@@ -209,29 +208,42 @@ colgroup
 	}
 
 #subcolumn {
-    padding:4px 0 12px 0;
+    padding:4px 20px 12px 0;
     }
     
-#subcolumn h4 {
-    margin:6px 0 0 6px;
-    }
+#subcolumn h4, .subZone h4 {
+    padding:6px 0 8px 6px;
+    background:#CED5CE;
+}
+
+#subcolumn h4:hover, .subZone h4:hover {
+    padding:6px 0 8px 6px;
+    background:#CED5CE;
+    cursor:pointer;
+    }  
     
 #subcolumn p {
-    padding:6px;
+    padding:8px;
     }
     
-#subcolumn ul {
+#subcolumn ul li, .subZone, .archives {
      border:1px solid #CACEC6;
+     background:#EAF0E8;
     -webkit-border-radius: 6px;
     -moz-border-radius: 6px;
-	padding:8px;
+	margin: 0 0 18px 0;
     }
-
+    
+div.subZone {
+	margin:24px 0;
+}
 
 /* contentItems is the generic class for all content items - e.g. blogs uses this for the unordered lists to display posts */
     
 .contentItems li {
     margin:12px 0 12px 0;
+    padding:6px 0;
+    border-top:1px solid #cacec6;
 }
 
 #ft {
@@ -251,7 +263,7 @@ colgroup
 /* Top navigation pane
 ----------------------------------------------------------*/
 
-#menucontainer {
+.menucontainer {
 	margin:0;
 	padding:0 0 0 20px;
 	list-style:none;
@@ -259,13 +271,13 @@ colgroup
 	font-size:104%;
 }
 
-#menucontainer ul li {
+.menucontainer ul.menu li {
 	float:left;
 	margin:0 2px;
 	background:url(../Content/Images/tabRightOff.gif) no-repeat top right;
 }
 
-#menucontainer ul li a {
+.menucontainer ul.menu li a {
 	display:block;
 	padding: 8px 18px;
 	background:url(../Content/Images/tabLeftOff.gif) no-repeat top left;
@@ -275,17 +287,70 @@ colgroup
 	color:#35550b;
 }
 
-#menucontainer ul li.current {
+.menucontainer ul.menu li.current {
 	background:url(../Content/Images/tabRightOn.gif) no-repeat top right;
 }
 
-#menucontainer ul li.current a {
+.menucontainer ul.menu li.current a {
 	background:url(../Content/Images/tabLeftOn.gif) no-repeat top left;
 	font-weight:600;
 }
 
+/* Confirmations, Messages and the like
+----------------------------------------------------------*/
+.message, .validation-summary-errors {
+	margin:10px 0 4px 0;
+    padding:6px 4px;
+    -webkit-border-radius: 6px;
+    -moz-border-radius: 6px;
+}
+span.message {
+    display:block;
+	margin:4px 0 4px 4px;
+}
+.message a {
+    font-weight:bold;
+}
 
-/* Common */
+.confirmation.message {
+	background:#e6f1c9; /* green */
+	border:1px solid #cfe493;
+}
+.warning.message {
+	background:#fdf5bc; /* yellow */
+	border:1px solid #ffea9b;
+}
+.critical.message, .validation-summary-errors,
+.input-validation-error.text-box, .input-validation-error.text {
+	border:1px solid #990808;
+}
+.critical.message, .validation-summary-errors {
+	background:#e68585; /* red */
+	color:#fff;
+}
+.info.message {
+    background:#e6f1c9; /* green*/
+	border:1px solid #d4deb9;
+	color:#062232;
+}
+.debug.message {
+    background:#eee;
+	border:1px dashed #D2D6C6;
+	color:#7a7a7a;
+	margin:20px 0 14px 0;
+}
+.debug.message:before {
+    content:"DEBUG » ";
+}
+
+/* Edit mode
+----------------------------------------------------------*/
+#yui-main div.managewrapper:hover, div.managewrapper:hover .manage {
+border:1px dashed #46878D;
+}
+
+/* Common
+----------------------------------------------------------*/
 
 .floatLeft {float: left;}
 

@@ -24,7 +24,7 @@ namespace Orchard.Security {
         public IEnumerable<PermissionStereotype> GetDefaultStereotypes() {
             return new[] {
                 new PermissionStereotype {
-                    Name = "Administrators",
+                    Name = "Administrator",
                     Permissions = new[] {AccessAdminPanel}
                 },
                 new PermissionStereotype {

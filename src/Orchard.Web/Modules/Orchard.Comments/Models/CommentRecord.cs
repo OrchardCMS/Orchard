@@ -8,7 +8,7 @@ namespace Orchard.Comments.Models {
         public virtual string UserName { get; set; }
         public virtual string Email { get; set; }
         public virtual CommentStatus Status { get; set; }
-        public virtual DateTime CommentDateUtc { get; set; }
+        public virtual DateTime? CommentDateUtc { get; set; }
         public virtual string CommentText { get; set; }
         public virtual int CommentedOn { get; set; }
         public virtual int CommentedOnContainer { get; set; }

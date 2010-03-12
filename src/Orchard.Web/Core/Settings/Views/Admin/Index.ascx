@@ -1,22 +1,22 @@
 ﻿<%@ Control Language="C#" Inherits="Orchard.Mvc.ViewUserControl<SettingsIndexViewModel>" %>
 <%@ Import Namespace="Orchard.Core.Settings.ViewModels"%>
-<h1><%=Html.TitleForPage(T("Edit Settings").ToString())%></h1>
+<h1><%=Html.TitleForPage(T("Manage Settings").ToString())%></h1>
 <%using (Html.BeginFormAntiForgeryPost()) { %>
 <%= Html.ValidationSummary() %>
 <fieldset>
     <legend><%=_Encoded("Global Settings")%></legend>
     <div>
-        <%=Html.LabelFor(x=>x.SiteName) %>
-        <%=Html.EditorFor(x=>x.SiteName) %>
+        <label for="SiteName"><%=_Encoded("Site name") %></label>
+        <%=Html.EditorFor(m => m.SiteName)%>
         <%=Html.ValidationMessage("SiteName", "*") %>
     </div>
     <div>
-        <%=Html.LabelFor(x => x.PageTitleSeparator) %>
+        <label for="PageTitleSeparator"><%=_Encoded("Page title separator") %></label>
         <%=Html.EditorFor(x => x.PageTitleSeparator)%>
         <%=Html.ValidationMessage("PageTitleSeparator", "*")%>
     </div>
     <div>
-        <%=Html.LabelFor(x => x.SuperUser) %>
+        <label for="SuperUser"><%=_Encoded("Super user") %></label>
         <%=Html.EditorFor(x=>x.SuperUser) %>
         <%=Html.ValidationMessage("SuperUser", "*") %>
     </div>

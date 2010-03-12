@@ -75,9 +75,6 @@ namespace Orchard.Environment {
                 shell.Activate();
                 _current = shell;
 
-                // Fire off one-time install events on an alternate container
-                HackInstallSimulation();
-
                 // Activate extensions inside shell container
                 HackSimulateExtensionActivation(shellContainer);
             }
@@ -117,22 +114,6 @@ namespace Orchard.Environment {
                 }
             }
             return null;
-        }
-
-        private void HackInstallSimulation() {
-            var tempContainer = CreateShellContainer();
-            var containerProvider = new FiniteContainerProvider(tempContainer);
-            try {
-                var requestContainer = containerProvider.RequestContainer;
-
-                var hackInstallationGenerator = requestContainer.Resolve<IHackInstallationGenerator>();
-                hackInstallationGenerator.GenerateInstallEvents();
-            }
-            finally {
-                // shut everything down again
-                containerProvider.DisposeRequestContainer();
-                tempContainer.Dispose();
-            }
         }
 
         private void HackSimulateExtensionActivation(IContainer shellContainer) {

@@ -1,15 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using Autofac.Builder;
 using JetBrains.Annotations;
 using Moq;
 using NUnit.Framework;
 using Orchard.ContentManagement.Aspects;
+using Orchard.Core.Common.Handlers;
 using Orchard.Core.Common.Models;
-using Orchard.Core.Common.Providers;
-using Orchard.Core.Common.Records;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Handlers;
 using Orchard.ContentManagement.Records;

@@ -7,6 +7,8 @@ using System.Text.RegularExpressions;
 using System.Web.Mvc;
 using System.Web.Mvc.Html;
 using System.Web.Routing;
+using Orchard.Extensions;
+using Orchard.Mvc.ViewModels;
 using Orchard.Services;
 using Orchard.Settings;
 using Orchard.Utility;
@@ -89,6 +91,17 @@ namespace Orchard.Mvc.Html {
 
         #endregion
 
+        #region Excerpt
+
+        public static MvcHtmlString Excerpt(this HtmlHelper html, string markup, int length) {
+            var tagRegex = new Regex("<[^<>]*>", RegexOptions.Singleline);
+            var text = html.Encode(tagRegex.Replace(markup, ""));
+
+            return MvcHtmlString.Create(text.Ellipsize(length));
+        }
+
+        #endregion
+
         #region Format Date/Time
 
         public static string DateTimeRelative(this HtmlHelper htmlHelper, DateTime? value, string defaultIfNull) {
@@ -117,9 +130,18 @@ namespace Orchard.Mvc.Html {
             return value.HasValue ? htmlHelper.DateTime(value.Value) : defaultIfNull;
         }
 
-        //TODO: (erikpo) This format should come from a site setting
+        public static string DateTime(this HtmlHelper htmlHelper, DateTime? value, string defaultIfNull, string customFormat) {
+            return value.HasValue ? htmlHelper.DateTime(value.Value, customFormat) : defaultIfNull;
+        }
+
         public static string DateTime(this HtmlHelper htmlHelper, DateTime value) {
-            return value.ToString("MMM d yyyy h:mm tt");
+            //TODO: (erikpo) This default format should come from a site setting
+            return htmlHelper.DateTime(value, "MMM d yyyy h:mm tt");
+        }
+
+        public static string DateTime(this HtmlHelper htmlHelper, DateTime value, string customFormat) {
+            //TODO: (erikpo) In the future, convert this to "local" time before calling ToString
+            return value.ToString(customFormat);
         }
 
         #endregion
@@ -209,7 +231,7 @@ namespace Orchard.Mvc.Html {
         #region BeginFormAntiForgeryPost
 
         public static MvcForm BeginFormAntiForgeryPost(this HtmlHelper htmlHelper) {
-            return htmlHelper.BeginFormAntiForgeryPost(htmlHelper.ViewContext.HttpContext.Request.Url.AbsolutePath, FormMethod.Post, new RouteValueDictionary());
+            return htmlHelper.BeginFormAntiForgeryPost(htmlHelper.ViewContext.HttpContext.Request.Url.PathAndQuery, FormMethod.Post, new RouteValueDictionary());
         }
 
         public static MvcForm BeginFormAntiForgeryPost(this HtmlHelper htmlHelper, string formAction) {
@@ -225,7 +247,7 @@ namespace Orchard.Mvc.Html {
         }
 
         public static MvcForm BeginFormAntiForgeryPost(this HtmlHelper htmlHelper, string formAction, FormMethod formMethod, IDictionary<string, object> htmlAttributes) {
-            TagBuilder tagBuilder = new TagBuilder("form");
+            var tagBuilder = new TagBuilder("form");
 
             tagBuilder.MergeAttributes(htmlAttributes);
             tagBuilder.MergeAttribute("action", formAction);
@@ -248,6 +270,30 @@ namespace Orchard.Mvc.Html {
 
         #endregion
 
+        #region AntiForgeryTokenValueOrchardLink
+
+        public static string AntiForgeryTokenValueOrchardLink(this HtmlHelper htmlHelper, string linkContents, string href)  {
+            return htmlHelper.AntiForgeryTokenValueOrchardLink(linkContents, href, (object)null);
+        }
+
+        public static string AntiForgeryTokenValueOrchardLink(this HtmlHelper htmlHelper, string linkContents, string href, object htmlAttributes)  {
+            return htmlHelper.AntiForgeryTokenValueOrchardLink(linkContents, href, new RouteValueDictionary(htmlAttributes));
+        }
+
+        public static string AntiForgeryTokenValueOrchardLink(this HtmlHelper htmlHelper, string linkContents, string href, IDictionary<string, object> htmlAttributes)  {
+            return htmlHelper.Link(linkContents, htmlHelper.AntiForgeryTokenGetUrl(href), htmlAttributes);
+        }
+
+        #endregion
+
+        #region AntiForgeryTokenGetUrl
+
+        public static string AntiForgeryTokenGetUrl(this HtmlHelper htmlHelper, string baseUrl)  {
+            return string.Format("{0}{1}__RequestVerificationToken={2}", baseUrl, baseUrl.IndexOf('?') > -1 ? "&" : "?", htmlHelper.ViewContext.HttpContext.Server.UrlEncode(htmlHelper.AntiForgeryTokenValueOrchard()));
+        }
+
+        #endregion
+
         #region AntiForgeryTokenValueOrchard
 
         public static string AntiForgeryTokenValueOrchard(this HtmlHelper htmlHelper) {
@@ -260,5 +306,38 @@ namespace Orchard.Mvc.Html {
         }
 
         #endregion
+
+        #region AddRenderAction
+
+        public static void AddRenderAction(this HtmlHelper html, string location, string actionName) {
+            AddRenderActionHelper(html, location, actionName, null/*controllerName*/, null);
+        }
+        public static void AddRenderAction(this HtmlHelper html, string location, string actionName, object routeValues) {
+            AddRenderActionHelper(html, location, actionName, null/*controllerName*/, new RouteValueDictionary(routeValues));
+        }
+        public static void AddRenderAction(this HtmlHelper html, string location, string actionName, RouteValueDictionary routeValues) {
+            AddRenderActionHelper(html, location, actionName, null/*controllerName*/, routeValues);
+        }
+        public static void AddRenderAction(this HtmlHelper html, string location, string actionName, string controllerName) {
+            AddRenderActionHelper(html, location, actionName, controllerName, null/*RouteValueDictionary*/);
+        }
+        public static void AddRenderAction(this HtmlHelper html, string location, string actionName, string controllerName, object routeValues) {
+            AddRenderActionHelper(html, location, actionName, controllerName, new RouteValueDictionary(routeValues));
+        }
+        public static void AddRenderAction(this HtmlHelper html, string location, string actionName, string controllerName, RouteValueDictionary routeValues) {
+            AddRenderActionHelper(html, location, actionName, controllerName, routeValues);
+        }
+
+        private static void AddRenderActionHelper(this HtmlHelper html, string location, string actionName, string controllerName, RouteValueDictionary routeValues) {
+            // Retrieve the "BaseViewModel" for zones if we have one
+            var baseViewModel = BaseViewModel.From(html.ViewData);
+            if (baseViewModel == null)
+                return;
+
+            baseViewModel.Zones.AddRenderAction(location, actionName, controllerName, routeValues);
+        }
+
+        #endregion
+
     }
 }

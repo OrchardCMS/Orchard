@@ -5,6 +5,6 @@
     <fieldset>
         <%=Html.LabelFor(x => x.Name) %>
         <%=Html.EditorFor(x => x.Name) %>
-        <input type="submit" name="submit" value="<%=_Encoded("Create") %>" />
+        <input type="submit" name="submit" value="<%=_Encoded("Add") %>" />
     </fieldset>
 <% } %>

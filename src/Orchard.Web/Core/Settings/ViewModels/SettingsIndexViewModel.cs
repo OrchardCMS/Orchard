@@ -4,7 +4,7 @@ using Orchard.Mvc.ViewModels;
 using Orchard.Core.Settings.Models;
 
 namespace Orchard.Core.Settings.ViewModels {
-    public class SettingsIndexViewModel : AdminViewModel {
+    public class SettingsIndexViewModel : BaseViewModel {
         public SiteSettings Site { get; set; }
         public ContentItemViewModel ViewModel { get; set; }
         

@@ -10,7 +10,7 @@
     <%=Html.TextBoxFor(m => m.Title, new { @class = "large text" }) %>
 </fieldset>
 <fieldset class="permalink">
-    <label class="sub" for="Slug"><%=_Encoded("Permalink")%><br /><span><%=Html.Encode(Request.Url.ToRootString()) %>/<%=Html.Encode(Model.RoutableAspect.ContainerPath) %></span></label>
+    <label class="sub" for="Slug"><%=_Encoded("Permalink")%><br /><span><%=Html.Encode(Request.Url.ToRootString()) %>/<%=Html.Encode(Model.RoutableAspect.ContentItemBasePath) %></span></label>
     <span><%=Html.TextBoxFor(m => m.Slug, new { @class = "text" })%></span>
 </fieldset>
 <% using (this.Capture("end-of-page-scripts")) { %>
@@ -23,9 +23,9 @@
                 target:$("<%=String.Format("input#{0}Slug", !string.IsNullOrEmpty(Model.Prefix) ? Model.Prefix + "_" : "") %>"),
                 url:"<%=Url.Slugify() %>",
                 contentType:"<%=Model.RoutableAspect.ContentItem.ContentType %>",
-                id:"<%=Model.RoutableAspect.ContentItem.Id %>",<%
+                id:"<%=Model.RoutableAspect.ContentItem.Id %>"<%
                 var container = Model.RoutableAspect.ContentItem.As<ICommonAspect>().Container;
-                if (container != null) { %>
+                if (container != null) { %>,
                 containerId:<%=container.ContentItem.Id %><%
                 } %>
             })

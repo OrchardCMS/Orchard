@@ -8,7 +8,7 @@ using Orchard.Core.Navigation.Models;
 using Orchard.Core.Navigation.Services;
 using Orchard.Core.Navigation.ViewModels;
 using Orchard.Localization;
-using Orchard.Mvc.Attributes;
+using Orchard.Mvc.AntiForgery;
 using Orchard.UI.Navigation;
 using Orchard.Utility;
 using MenuItem=Orchard.Core.Navigation.Models.MenuItem;
@@ -108,8 +108,12 @@ namespace Orchard.Core.Navigation.Controllers {
 
             MenuPart menuPart = _menuService.Get(id);
 
-            if (menuPart != null)
-                _menuService.Delete(menuPart);
+            if (menuPart != null) {
+                if (menuPart.Is<MenuItem>())
+                    _menuService.Delete(menuPart);
+                else
+                    menuPart.OnMainMenu = false;
+            }
 
             return RedirectToAction("Index");
         }

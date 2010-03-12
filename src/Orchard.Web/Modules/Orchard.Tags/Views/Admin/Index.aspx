@@ -7,11 +7,11 @@
         <label for="publishActions"><%=_Encoded("Actions:") %></label>
         <select id="publishActions" name="<%=Html.NameOf(m => m.BulkAction)%>">
             <%=Html.SelectOption(Model.BulkAction, TagAdminIndexBulkAction.None, _Encoded("Choose action...").ToString())%>
-            <%=Html.SelectOption(Model.BulkAction, TagAdminIndexBulkAction.Delete, _Encoded("Delete").ToString())%>
+            <%=Html.SelectOption(Model.BulkAction, TagAdminIndexBulkAction.Delete, _Encoded("Remove").ToString())%>
         </select>
         <input class="button" type="submit" name="submit.BulkEdit" value="<%=_Encoded("Apply") %>" />
     </fieldset>
-    <div class="manage"><%=Html.ActionLink(T("Add a tag").ToString(), "Create", new { }, new { @class = "button" })%></div>
+    <div class="manage"><%=Html.ActionLink(T("Add a tag").ToString(), "Create", new { }, new { @class = "button primaryAction" })%></div>
 	<fieldset>
 	    <table class="items" summary="<%=_Encoded("This is a table of the tags in your application") %>">
 		    <colgroup>
@@ -46,5 +46,5 @@
             <% tagIndex++; } %>
         </table>
     </fieldset>
-    <div class="manage"><%=Html.ActionLink(T("Add a tag").ToString(), "Create", new { }, new { @class = "button" })%></div>
+    <div class="manage"><%=Html.ActionLink(T("Add a tag").ToString(), "Create", new { }, new { @class = "button primaryAction" })%></div>
 <% } %>

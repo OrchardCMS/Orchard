@@ -29,6 +29,11 @@ namespace Orchard.Mvc {
 
                 areaName = controllerNamespace.Split('.').Skip(2).FirstOrDefault();
             }
+            else if (assemblySimpleName == "Orchard.Web" &&
+                controllerNamespace.StartsWith("Orchard.Web.Areas.")) {
+
+                areaName = controllerNamespace.Split('.').Skip(3).FirstOrDefault();
+            }
             else if (extension != null) {
                 areaName = extension.Descriptor.Name;
             }

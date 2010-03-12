@@ -20,7 +20,7 @@ namespace Orchard.Core.Settings {
         public IEnumerable<PermissionStereotype> GetDefaultStereotypes() {
             return new[] {
                 new PermissionStereotype {
-                    Name = "Administrators",
+                    Name = "Administrator",
                     Permissions = new[] {ManageSettings}
                 }
             };

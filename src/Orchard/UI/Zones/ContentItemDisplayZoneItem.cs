@@ -7,7 +7,8 @@ namespace Orchard.UI.Zones {
         public ContentItemViewModel ViewModel { get; set; }
 
         public override void Execute<TModel>(HtmlHelper<TModel> html) {
-            html.DisplayForItem(ViewModel);
+            var htmlString = html.DisplayForItem(ViewModel);
+            html.ViewContext.Writer.Write(htmlString);
         }
     }
 }

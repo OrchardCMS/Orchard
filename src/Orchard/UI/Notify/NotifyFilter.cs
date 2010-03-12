@@ -53,7 +53,7 @@ namespace Orchard.UI.Notify {
             if (viewResult == null)
                 return;
 
-            var baseViewModel = viewResult.ViewData.Model as BaseViewModel;
+            var baseViewModel = BaseViewModel.From(viewResult);
             // if it's not a view model that holds messages, don't touch temp data either
             if (baseViewModel == null)
                 return;

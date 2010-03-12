@@ -1,17 +1,15 @@
 ﻿using System.Collections.Generic;
 using System.Web.Mvc;
 using System.Web.Routing;
-using Autofac.Integration.Web;
 using Orchard.Blogs.Routing;
 using Orchard.Mvc.Routes;
 
 namespace Orchard.Blogs {
-    public class Routes : IRouteProvider
-    {
-        private readonly IContainerProvider _containerProvider;
+    public class Routes : IRouteProvider {
+        private readonly IBlogSlugConstraint _blogSlugConstraint;
 
-        public Routes(IContainerProvider containerProvider) {
-            _containerProvider = containerProvider;
+        public Routes(IBlogSlugConstraint blogSlugConstraint) {
+            _blogSlugConstraint = blogSlugConstraint;
         }
 
         public void GetRoutes(ICollection<RouteDescriptor> routes) {
@@ -44,7 +42,7 @@ namespace Orchard.Blogs {
                                                                                       {"action", "Edit"}
                                                                                   },
                                                          new RouteValueDictionary {
-                                                                                      {"blogSlug", new IsBlogConstraint(_containerProvider)}
+                                                                                      {"blogSlug", _blogSlugConstraint}
                                                                                   },
                                                          new RouteValueDictionary {
                                                                                       {"area", "Orchard.Blogs"}
@@ -60,7 +58,7 @@ namespace Orchard.Blogs {
                                                                                       {"action", "Delete"}
                                                                                   },
                                                          new RouteValueDictionary {
-                                                                                      {"blogSlug", new IsBlogConstraint(_containerProvider)}
+                                                                                      {"blogSlug", _blogSlugConstraint}
                                                                                   },
                                                          new RouteValueDictionary {
                                                                                       {"area", "Orchard.Blogs"}
@@ -76,7 +74,7 @@ namespace Orchard.Blogs {
                                                                                       {"action", "Item"}
                                                                                   },
                                                          new RouteValueDictionary {
-                                                                                      {"blogSlug", new IsBlogConstraint(_containerProvider)}
+                                                                                      {"blogSlug", _blogSlugConstraint}
                                                                                   },
                                                          new RouteValueDictionary {
                                                                                       {"area", "Orchard.Blogs"}
@@ -92,7 +90,7 @@ namespace Orchard.Blogs {
                                                                                       {"action", "Create"}
                                                                                   },
                                                          new RouteValueDictionary {
-                                                                                      {"blogSlug", new IsBlogConstraint(_containerProvider)}
+                                                                                      {"blogSlug", _blogSlugConstraint}
                                                                                   },
                                                          new RouteValueDictionary {
                                                                                       {"area", "Orchard.Blogs"}
@@ -108,7 +106,7 @@ namespace Orchard.Blogs {
                                                                                       {"action", "Edit"}
                                                                                   },
                                                          new RouteValueDictionary {
-                                                                                      {"blogSlug", new IsBlogConstraint(_containerProvider)}
+                                                                                      {"blogSlug", _blogSlugConstraint}
                                                                                   },
                                                          new RouteValueDictionary {
                                                                                       {"area", "Orchard.Blogs"}
@@ -124,7 +122,7 @@ namespace Orchard.Blogs {
                                                                                       {"action", "Delete"}
                                                                                   },
                                                          new RouteValueDictionary {
-                                                                                      {"blogSlug", new IsBlogConstraint(_containerProvider)}
+                                                                                      {"blogSlug", _blogSlugConstraint}
                                                                                   },
                                                          new RouteValueDictionary {
                                                                                       {"area", "Orchard.Blogs"}
@@ -140,7 +138,23 @@ namespace Orchard.Blogs {
                                                                                       {"action", "Publish"}
                                                                                   },
                                                          new RouteValueDictionary {
-                                                                                      {"blogSlug", new IsBlogConstraint(_containerProvider)}
+                                                                                      {"blogSlug", _blogSlugConstraint}
+                                                                                  },
+                                                         new RouteValueDictionary {
+                                                                                      {"area", "Orchard.Blogs"}
+                                                                                  },
+                                                         new MvcRouteHandler())
+                                                 },
+                             new RouteDescriptor {
+                                                     Route = new Route(
+                                                         "Admin/Blogs/{blogSlug}/Posts/{postId}/Unpublish",
+                                                         new RouteValueDictionary {
+                                                                                      {"area", "Orchard.Blogs"},
+                                                                                      {"controller", "BlogPostAdmin"},
+                                                                                      {"action", "Unpublish"}
+                                                                                  },
+                                                         new RouteValueDictionary {
+                                                                                      {"blogSlug", _blogSlugConstraint}
                                                                                   },
                                                          new RouteValueDictionary {
                                                                                       {"area", "Orchard.Blogs"}
@@ -184,8 +198,40 @@ namespace Orchard.Blogs {
                                                                                       {"action", "ListByArchive"}
                                                                                   },
                                                          new RouteValueDictionary {
-                                                                                      {"blogSlug", new IsBlogConstraint(_containerProvider)},
+                                                                                      {"blogSlug", _blogSlugConstraint},
                                                                                       {"archiveData", new IsArchiveConstraint()}
+                                                                                  },
+                                                         new RouteValueDictionary {
+                                                                                      {"area", "Orchard.Blogs"}
+                                                                                  },
+                                                         new MvcRouteHandler())
+                                                 },
+                             new RouteDescriptor {
+                                                     Route = new Route(
+                                                         "{blogSlug}/wlwmanifest.xml",
+                                                         new RouteValueDictionary {
+                                                                                      {"area", "Orchard.Blogs"},
+                                                                                      {"controller", "Blog"},
+                                                                                      {"action", "LiveWriterManifest"}
+                                                                                  },
+                                                         new RouteValueDictionary {
+                                                                                      {"blogSlug", _blogSlugConstraint}
+                                                                                  },
+                                                         new RouteValueDictionary {
+                                                                                      {"area", "Orchard.Blogs"}
+                                                                                  },
+                                                         new MvcRouteHandler())
+                                                 },
+                             new RouteDescriptor {
+                                                     Route = new Route(
+                                                         "{blogSlug}/rsd",
+                                                         new RouteValueDictionary {
+                                                                                      {"area", "Orchard.Blogs"},
+                                                                                      {"controller", "Blog"},
+                                                                                      {"action", "Rsd"}
+                                                                                  },
+                                                         new RouteValueDictionary {
+                                                                                      {"blogSlug", _blogSlugConstraint}
                                                                                   },
                                                          new RouteValueDictionary {
                                                                                       {"area", "Orchard.Blogs"}
@@ -201,7 +247,7 @@ namespace Orchard.Blogs {
                                                                                       {"action", "Item"}
                                                                                   },
                                                          new RouteValueDictionary {
-                                                                                      {"blogSlug", new IsBlogConstraint(_containerProvider)}
+                                                                                      {"blogSlug", _blogSlugConstraint}
                                                                                   },
                                                          new RouteValueDictionary {
                                                                                       {"area", "Orchard.Blogs"}
@@ -217,7 +263,7 @@ namespace Orchard.Blogs {
                                                                                       {"action", "Item"}
                                                                                   },
                                                          new RouteValueDictionary {
-                                                                                      {"blogSlug", new IsBlogConstraint(_containerProvider)}
+                                                                                      {"blogSlug", _blogSlugConstraint}
                                                                                   },
                                                          new RouteValueDictionary {
                                                                                       {"area", "Orchard.Blogs"}
