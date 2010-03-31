@@ -6,7 +6,7 @@ using Autofac;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Records;
 using Orchard.Extensions;
-using Orchard.Utility;
+using Orchard.Utility.Extensions;
 
 namespace Orchard.Environment {
     //TEMP: This will be replaced by packaging system

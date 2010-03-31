@@ -115,7 +115,6 @@
     <Compile Include="Mvc\Routes\StandardExtensionRouteProvider.cs" />
     <Compile Include="Mvc\Routes\RoutePublisher.cs" />
     <Compile Include="Mvc\Routes\RouteDescriptor.cs" />
-    <Compile Include="Utility\ReadOnlyCollectionExtensions.cs" />
     <Compile Include="Data\Repository.cs" />
     <Compile Include="Environment\DefaultCompositionStrategy.cs" />
     <Compile Include="Environment\DefaultOrchardHost.cs" />
@@ -151,10 +150,7 @@
     <Compile Include="Environment\StandaloneEnvironment.cs" />
     <Compile Include="Extensions\AreaFolders.cs" />
     <Compile Include="Extensions\ExtensionFolders.cs" />
-    <Compile Include="Extensions\RouteValueDictionaryExtensions.cs" />
     <Compile Include="Extensions\Loaders\AreaExtensionLoader.cs" />
-    <Compile Include="Extensions\StringExtensions.cs" />
-    <Compile Include="Extensions\UriExtensions.cs" />
     <Compile Include="Mvc\AntiForgery\ValidateAntiForgeryTokenOrchardAttribute.cs" />
     <Compile Include="Mvc\FollowReturnUrl\FollowReturnUrlFilter.cs" />
     <Compile Include="Mvc\Html\FileRegistrationContextExtensions.cs" />
@@ -366,6 +362,10 @@
     <Compile Include="Storage\IStorageFolder.cs" />
     <Compile Include="Storage\IStorageProvider.cs" />
     <Compile Include="UI\Zones\ZoneManager.cs" />
+    <Compile Include="Utility\Extensions\ReadOnlyCollectionExtensions.cs" />
+    <Compile Include="Utility\Extensions\RouteValueDictionaryExtensions.cs" />
+    <Compile Include="Utility\Extensions\StringExtensions.cs" />
+    <Compile Include="Utility\Extensions\UriExtensions.cs" />
     <Compile Include="Utility\Position.cs" />
     <Compile Include="Utility\Reflect.cs" />
     <Compile Include="Utility\ReflectOn.cs" />

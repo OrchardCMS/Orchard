@@ -1,7 +1,6 @@
-﻿using System.Linq;
-using System.Text.RegularExpressions;
+﻿using System.Text.RegularExpressions;
 
-namespace Orchard.Extensions {
+namespace Orchard.Utility.Extensions {
     public static class StringExtensions {
         public static string Ellipsize(this string text, int characterCount) {
             return text.Ellipsize(characterCount, "&#160;&#8230;");

@@ -8,7 +8,7 @@ using NHibernate.Impl;
 using NHibernate.Linq;
 using Orchard.ContentManagement.Records;
 using Orchard.Data;
-using Orchard.Utility;
+using Orchard.Utility.Extensions;
 
 namespace Orchard.ContentManagement {
     public class DefaultContentQuery : IContentQuery {
