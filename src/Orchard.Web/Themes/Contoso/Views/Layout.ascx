@@ -11,15 +11,15 @@
 %>
 
 <div id="container">
-    <!-- Header -->
+    <%-- Header --%>
     <% Html.Zone("header"); %>
 	
-	<!-- Main Menu -->
+	<%-- Main Menu --%>
 	<div id="nav">
         <% Html.Zone("menu"); %>
     </div>
 	
-	<!-- Main Content Area -->
+	<%-- Main Content Area --%>
 	
 	<div class="content-container">
 	    <div class="content sub">
@@ -29,9 +29,9 @@
 		        </div>
 		        <div class="sidebar">
                     
-                    <!-- START Blog Sidebars -->
+                    <%-- START Blog Sidebars --%>
 		            <%Html.Zone("sidebar");%>
-		            <!-- END Blog Sidebars -->
+		            <%-- END Blog Sidebars --%>
 
                     <div class="side-block">
                         <% Html.Zone("sidebar-w1"); %>
@@ -47,5 +47,5 @@
 	    </div>
 	</div>
 	
-	<!-- Footer -->
+	<%-- Footer --%>
 	<% Html.Zone("footer"); %>
