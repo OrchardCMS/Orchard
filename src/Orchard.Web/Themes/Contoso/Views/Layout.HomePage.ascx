@@ -11,18 +11,18 @@
 %>
 
 <div id="container">
-    <!-- Header -->
+    <%-- Header --%>
     <% Html.Zone("header"); %>
 	
-	<!-- Main Menu -->
+	<%-- Main Menu --%>
 	<div id="nav">
         <% Html.Zone("menu"); %>
     </div>
     
-    <!-- Home Hero -->
+    <%-- Home Hero --%>
 	<div class="home-hero-container">
 	    <div class="home-hero">
-	        <!-- Init jQuery Slider -->
+	        <%-- Init jQuery Slider --%>
 	        <script src="/Themes/Contoso/Scripts/easySlider.js" type="text/javascript"></script>
             <script type="text/javascript">
                 $(document).ready(function() {
@@ -44,7 +44,7 @@
 		</div>
 	</div>
 	
-	<!-- Main Content Area -->
+	<%-- Main Content Area --%>
 	<div class="content-container">
 	    <div class="content">
 	        <div class="content-items group">
@@ -58,9 +58,9 @@
 	    </div>
 	</div>
 	
-	<!-- (Optional) Highlights Area -->
+	<%-- (Optional) Highlights Area --%>
     <% Html.Zone("highlights"); %>    
 	
-	<!-- Footer -->
+	<%-- Footer --%>
 	<% Html.Zone("footer"); %>
 </div>
