@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Autofac;
+using Autofac.Core;
 using Autofac.Integration.Web.Mvc;
 using Orchard.Extensions;
 
@@ -41,7 +41,7 @@ namespace Orchard.Mvc {
                 areaName = assemblySimpleName;
             }
             var controllerName = controllerType.Name.Replace("Controller", "");
-            return new NamedService(("controller." + areaName + "." + controllerName).ToLowerInvariant());
+            return new NamedService(("controller." + areaName + "." + controllerName).ToLowerInvariant(), controllerType);
         }
     }
 }

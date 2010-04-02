@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Autofac;
-using Autofac.Builder;
-using Autofac.Modules;
 using NHibernate;
 using NUnit.Framework;
 using Orchard.Data;
@@ -40,9 +38,9 @@ namespace Orchard.Tests.Modules {
             _clock = new StubClock();
 
             var builder = new ContainerBuilder();
-            builder.RegisterModule(new ImplicitCollectionSupportModule());
-            builder.Register(new StubLocator(_session)).As<ISessionLocator>();
-            builder.Register(_clock).As<IClock>();
+            //builder.RegisterModule(new ImplicitCollectionSupportModule());
+            builder.RegisterInstance(new StubLocator(_session)).As<ISessionLocator>();
+            builder.RegisterInstance(_clock).As<IClock>();
             builder.RegisterGeneric(typeof(Repository<>)).As(typeof(IRepository<>));
             Register(builder);
             _container = builder.Build();

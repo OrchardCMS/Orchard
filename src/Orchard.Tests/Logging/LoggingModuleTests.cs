@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using Autofac.Builder;
+using Autofac;
 using NUnit.Framework;
 using Orchard.Logging;
 
@@ -14,7 +12,7 @@ namespace Orchard.Tests.Logging {
         public void LoggingModuleWillSetLoggerProperty() {
             var builder = new ContainerBuilder();
             builder.RegisterModule(new LoggingModule());
-            builder.Register<Thing>();
+            builder.RegisterType<Thing>();
             var container = builder.Build();
             var thing = container.Resolve<Thing>();
             Assert.That(thing.Logger, Is.Not.Null);
@@ -24,9 +22,9 @@ namespace Orchard.Tests.Logging {
         public void LoggerFactoryIsPassedTheTypeOfTheContainingInstance() {
             var builder = new ContainerBuilder();
             builder.RegisterModule(new LoggingModule());
-            builder.Register<Thing>();
+            builder.RegisterType<Thing>();
             var stubFactory = new StubFactory();
-            builder.Register(stubFactory).As<ILoggerFactory>();
+            builder.RegisterInstance(stubFactory).As<ILoggerFactory>();
 
             var container = builder.Build();
             var thing = container.Resolve<Thing>();
@@ -47,7 +45,7 @@ namespace Orchard.Tests.Logging {
         public void DefaultLoggerConfigurationUsesCastleLoggerFactoryOverTraceSource() {
             var builder = new ContainerBuilder();
             builder.RegisterModule(new LoggingModule());
-            builder.Register<Thing>();
+            builder.RegisterType<Thing>();
             var container = builder.Build();
             var thing = container.Resolve<Thing>();
             Assert.That(thing.Logger, Is.Not.Null);

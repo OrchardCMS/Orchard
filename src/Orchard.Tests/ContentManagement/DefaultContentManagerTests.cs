@@ -2,8 +2,6 @@
 using System.Diagnostics;
 using System.Linq;
 using Autofac;
-using Autofac.Builder;
-using Autofac.Modules;
 using NHibernate;
 using NUnit.Framework;
 using Orchard.Data;
@@ -42,20 +40,20 @@ namespace Orchard.Tests.ContentManagement {
         [SetUp]
         public void Init() {
             var builder = new ContainerBuilder();
-            builder.RegisterModule(new ImplicitCollectionSupportModule());
-            builder.Register<DefaultContentManager>().As<IContentManager>();
-            builder.Register<AlphaHandler>().As<IContentHandler>();
-            builder.Register<BetaHandler>().As<IContentHandler>();
-            builder.Register<GammaHandler>().As<IContentHandler>();
-            builder.Register<DeltaHandler>().As<IContentHandler>();
-            builder.Register<EpsilonHandler>().As<IContentHandler>();
-            builder.Register<FlavoredHandler>().As<IContentHandler>();
-            builder.Register<StyledHandler>().As<IContentHandler>();
+            //builder.RegisterModule(new ImplicitCollectionSupportModule());
+            builder.RegisterType<DefaultContentManager>().As<IContentManager>();
+            builder.RegisterType<AlphaHandler>().As<IContentHandler>();
+            builder.RegisterType<BetaHandler>().As<IContentHandler>();
+            builder.RegisterType<GammaHandler>().As<IContentHandler>();
+            builder.RegisterType<DeltaHandler>().As<IContentHandler>();
+            builder.RegisterType<EpsilonHandler>().As<IContentHandler>();
+            builder.RegisterType<FlavoredHandler>().As<IContentHandler>();
+            builder.RegisterType<StyledHandler>().As<IContentHandler>();
 
             builder.RegisterGeneric(typeof(Repository<>)).As(typeof(IRepository<>));
 
             _session = _sessionFactory.OpenSession();
-            builder.Register(new TestSessionLocator(_session)).As<ISessionLocator>();
+            builder.RegisterInstance(new TestSessionLocator(_session)).As<ISessionLocator>();
 
             _container = builder.Build();
             _manager = _container.Resolve<IContentManager>();

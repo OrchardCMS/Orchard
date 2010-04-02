@@ -1,8 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Autofac;
-using Autofac.Builder;
-using Autofac.Modules;
 using NUnit.Framework;
 using Orchard.Extensions;
 using Yaml.Grammar;
@@ -18,9 +16,9 @@ namespace Orchard.Tests.Extensions {
         public void Init() {
             var builder = new ContainerBuilder();
             _folders = new StubFolders();
-            builder.RegisterModule(new ImplicitCollectionSupportModule());
-            builder.Register(_folders).As<IExtensionFolders>();
-            builder.Register<ExtensionManager>().As<IExtensionManager>();
+            //builder.RegisterModule(new ImplicitCollectionSupportModule());
+            builder.RegisterInstance(_folders).As<IExtensionFolders>();
+            builder.RegisterType<ExtensionManager>().As<IExtensionManager>();
             _container = builder.Build();
             _manager = _container.Resolve<IExtensionManager>();
         }

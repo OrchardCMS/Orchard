@@ -1,13 +1,12 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using Autofac;
-using Autofac.Builder;
-using Autofac.Modules;
 using Moq;
 using NUnit.Framework;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
 using Orchard.ContentManagement.Handlers;
+using Orchard.Environment.ShellBuilders;
 using Orchard.Mvc.ViewModels;
 using Orchard.UI.Zones;
 
@@ -19,8 +18,8 @@ namespace Orchard.Tests.ContentManagement {
         [SetUp]
         public void Init() {
             var builder = new ContainerBuilder();
-            builder.RegisterModule(new ImplicitCollectionSupportModule());
-            builder.Register<ContentPartDriverHandler>().As<IContentHandler>();
+            //builder.RegisterModule(new ImplicitCollectionSupportModule());
+            builder.RegisterType<ContentPartDriverHandler>().As<IContentHandler>();
             _container = builder.Build();
         }
 
@@ -34,10 +33,10 @@ namespace Orchard.Tests.ContentManagement {
         public void AllDriversShouldBeCalled() {
             var driver1 = new Mock<IContentPartDriver>();
             var driver2 = new Mock<IContentPartDriver>();
-            _container.Build(x => {
-                x.Register(driver1.Object);
-                x.Register(driver2.Object);
-            });
+            var builder = new ContainerUpdater();
+            builder.RegisterInstance(driver1.Object);
+            builder.RegisterInstance(driver2.Object);
+            builder.Update(_container);
             var contentHandler = _container.Resolve<IContentHandler>();
 
             var ctx = new BuildDisplayModelContext(new ContentItemViewModel(new ContentItem()), null);
@@ -50,7 +49,9 @@ namespace Orchard.Tests.ContentManagement {
         [Test]
         public void TestDriverCanAddDisplay() {
             var driver = new StubPartDriver();
-            _container.Build(x => x.Register(driver).As<IContentPartDriver>());
+            var builder = new ContainerUpdater();
+            builder.RegisterInstance(driver).As<IContentPartDriver>();
+            builder.Update(_container);
 
             var contentHandler = _container.Resolve<IContentHandler>();
 

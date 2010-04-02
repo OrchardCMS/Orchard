@@ -3,26 +3,26 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using Autofac;
-using Autofac.Builder;
+using Autofac.Core;
 using Castle.Core.Logging;
-using Module = Autofac.Builder.Module;
+using Module = Autofac.Module;
 
 namespace Orchard.Logging {
 
     public class LoggingModule : Module {
         protected override void Load(ContainerBuilder moduleBuilder) {
             // by default, use Orchard's logger that delegates to Castle's logger factory
-            moduleBuilder.Register<CastleLoggerFactory>().As<ILoggerFactory>().ContainerScoped();
+            moduleBuilder.RegisterType<CastleLoggerFactory>().As<ILoggerFactory>().InstancePerLifetimeScope();
 
             // by default, use Castle's TraceSource based logger factory
-            moduleBuilder.Register<TraceLoggerFactory>().As<Castle.Core.Logging.ILoggerFactory>().ContainerScoped();
+            moduleBuilder.RegisterType<TraceLoggerFactory>().As<Castle.Core.Logging.ILoggerFactory>().InstancePerLifetimeScope();
 
             // call CreateLogger in response to the request for an ILogger implementation
-            moduleBuilder.Register((ctx, ps) => CreateLogger(ctx, ps)).As<ILogger>().FactoryScoped();
+            moduleBuilder.Register((ctx, ps) => CreateLogger(ctx, ps)).As<ILogger>().InstancePerDependency();
         }
 
-        protected override void AttachToComponentRegistration(IContainer container, IComponentRegistration registration) {
-            var implementationType = registration.Descriptor.BestKnownImplementationType;
+        protected override void AttachToComponentRegistration(IComponentRegistry componentRegistry, IComponentRegistration registration) {
+            var implementationType = registration.Activator.LimitType;
 
             // build an array of actions on this type to assign loggers to member properties
             var injectors = BuildLoggerInjectors(implementationType).ToArray();
@@ -38,7 +38,7 @@ namespace Orchard.Logging {
             };
         }
 
-        private IEnumerable<Action<IContext, object>> BuildLoggerInjectors(Type componentType) {
+        private IEnumerable<Action<IComponentContext, object>> BuildLoggerInjectors(Type componentType) {
             // Look for settable properties of type "ILogger" 
             var loggerProperties = componentType
                 .GetProperties(BindingFlags.SetProperty | BindingFlags.Public | BindingFlags.Instance)
@@ -63,7 +63,7 @@ namespace Orchard.Logging {
             }
         }
 
-        private static ILogger CreateLogger(IContext context, IEnumerable<Parameter> parameters) {
+        private static ILogger CreateLogger(IComponentContext context, IEnumerable<Parameter> parameters) {
             // return an ILogger in response to Resolve<ILogger>(componentTypeParameter)
             var loggerFactory = context.Resolve<ILoggerFactory>();
             var containingType = parameters.TypedAs<Type>();

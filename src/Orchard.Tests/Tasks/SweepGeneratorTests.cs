@@ -1,4 +1,5 @@
 ﻿using System;
+using Autofac;
 using Autofac.Builder;
 using Moq;
 using NUnit.Framework;
@@ -13,7 +14,7 @@ namespace Orchard.Tests.Tasks {
             var taskManager = new Mock<IBackgroundService>();
 
             var builder = new ContainerBuilder();
-            builder.Register(taskManager.Object);
+            builder.RegisterInstance(taskManager.Object);
             var container = builder.Build();
 
             var heartbeatSource = new SweepGenerator(container);
@@ -26,7 +27,7 @@ namespace Orchard.Tests.Tasks {
             var taskManager = new Mock<IBackgroundService>();
 
             var builder = new ContainerBuilder();
-            builder.Register(taskManager.Object);
+            builder.RegisterInstance(taskManager.Object);
             var container = builder.Build();
 
             var heartbeatSource = new SweepGenerator(container) {

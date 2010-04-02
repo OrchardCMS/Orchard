@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Web.Security;
 using Autofac;
-using Autofac.Builder;
-using Autofac.Modules;
 using NHibernate;
 using NUnit.Framework;
 using Orchard.Data;
@@ -54,13 +52,13 @@ namespace Orchard.Tests.Modules.Users.Services {
         [SetUp]
         public void Init() {
             var builder = new ContainerBuilder();
-            builder.RegisterModule(new ImplicitCollectionSupportModule());
-            builder.Register<MembershipService>().As<IMembershipService>();
-            builder.Register<DefaultContentManager>().As<IContentManager>();
-            builder.Register<UserHandler>().As<IContentHandler>();
+            //builder.RegisterModule(new ImplicitCollectionSupportModule());
+            builder.RegisterType<MembershipService>().As<IMembershipService>();
+            builder.RegisterType<DefaultContentManager>().As<IContentManager>();
+            builder.RegisterType<UserHandler>().As<IContentHandler>();
             builder.RegisterGeneric(typeof(Repository<>)).As(typeof(IRepository<>));
             _session = _sessionFactory.OpenSession();
-            builder.Register(new TestSessionLocator(_session)).As<ISessionLocator>();
+            builder.RegisterInstance(new TestSessionLocator(_session)).As<ISessionLocator>();
             _container = builder.Build();
             _membershipService = _container.Resolve<IMembershipService>();
         }

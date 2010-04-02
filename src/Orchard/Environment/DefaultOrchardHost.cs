@@ -1,4 +1,3 @@
-using System;
 using System.Linq;
 using System.Web.Mvc;
 using Autofac;
@@ -40,7 +39,7 @@ namespace Orchard.Environment {
         void IOrchardHost.Initialize() {
             ViewEngines.Engines.Insert(0, LayoutViewEngine.CreateShim());
             _controllerBuilder.SetControllerFactory(new OrchardControllerFactory());
-            ServiceLocator.SetLocator(t => _containerProvider.RequestContainer.Resolve(t));
+            ServiceLocator.SetLocator(t => _containerProvider.RequestLifetime.Resolve(t));
 
             CreateAndActivateShell();
         }
@@ -87,7 +86,7 @@ namespace Orchard.Environment {
         }
 
         protected virtual void EndRequest() {
-            _containerProvider.DisposeRequestContainer();
+            _containerProvider.EndRequestLifetime();
         }
 
 
@@ -95,7 +94,7 @@ namespace Orchard.Environment {
             return CreateShellContainer().Resolve<IOrchardShell>();
         }
 
-        public virtual IContainer CreateShellContainer() {
+        public virtual ILifetimeScope CreateShellContainer() {
             var settings = _shellSettingsLoader.LoadSettings();
             if (settings.Any()) {
                 //TEMP: multi-tenancy not implemented yet
@@ -106,7 +105,7 @@ namespace Orchard.Environment {
             return CreateShellContainer(null);
         }
 
-        private IContainer CreateShellContainer(IShellSettings shellSettings) {
+        private ILifetimeScope CreateShellContainer(IShellSettings shellSettings) {
             foreach (var factory in _shellContainerFactories) {
                 var container = factory.CreateContainer(shellSettings);
                 if (container != null) {
@@ -116,16 +115,16 @@ namespace Orchard.Environment {
             return null;
         }
 
-        private void HackSimulateExtensionActivation(IContainer shellContainer) {
+        private void HackSimulateExtensionActivation(ILifetimeScope shellContainer) {
             var containerProvider = new FiniteContainerProvider(shellContainer);
             try {
-                var requestContainer = containerProvider.RequestContainer;
+                var requestContainer = containerProvider.RequestLifetime;
 
                 var hackInstallationGenerator = requestContainer.Resolve<IHackInstallationGenerator>();
                 hackInstallationGenerator.GenerateActivateEvents();
             }
             finally {
-                containerProvider.DisposeRequestContainer();
+                containerProvider.EndRequestLifetime();
             }
         }
     }

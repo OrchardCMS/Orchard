@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using Autofac;
+using Autofac.Core;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Records;
 using Orchard.Extensions;

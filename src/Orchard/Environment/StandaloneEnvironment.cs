@@ -10,16 +10,16 @@ namespace Orchard.Environment {
     public class StandaloneEnvironment : IStandaloneEnvironment {
         private readonly IContainerProvider _containerProvider;
 
-        public StandaloneEnvironment(IContainer applicationContainer) {
+        public StandaloneEnvironment(ILifetimeScope applicationContainer) {
             _containerProvider = new FiniteContainerProvider(applicationContainer);
         }
 
         public TService Resolve<TService>() {
-            return _containerProvider.RequestContainer.Resolve<TService>();
+            return _containerProvider.RequestLifetime.Resolve<TService>();
         }
 
         public void Dispose() {
-            _containerProvider.DisposeRequestContainer();
+            _containerProvider.EndRequestLifetime();
         }
     }
 }

@@ -1,13 +1,15 @@
 ﻿using System;
 using System.Reflection;
-using Module = Autofac.Builder.Module;
+using Autofac;
+using Autofac.Core;
+using Module = Autofac.Module;
 
 namespace Orchard.Themes {
     public class ThemesModule : Module {
-        protected override void AttachToComponentRegistration(Autofac.IContainer container, Autofac.IComponentRegistration registration) {
+        protected override void AttachToComponentRegistration(IComponentRegistry componentRegistry, IComponentRegistration registration) {
 
-            var themeProperty = FindThemeProperty(registration.Descriptor.BestKnownImplementationType);
-
+            var themeProperty = FindThemeProperty(registration.Activator.LimitType);
+            
             if (themeProperty != null) {
                 registration.Activated += (sender, e) => {
                     var themeService = e.Context.Resolve<IThemeService>();

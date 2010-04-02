@@ -1,6 +1,5 @@
 ﻿using System.Xml.Linq;
-using Autofac.Builder;
-using Autofac.Modules;
+using Autofac;
 using NUnit.Framework;
 using Orchard.Core.XmlRpc;
 using Orchard.Core.XmlRpc.Controllers;
@@ -16,12 +15,12 @@ namespace Orchard.Tests.Modules.XmlRpc.Controllers {
             var thing2 = new StubHandler();
             
             var builder = new ContainerBuilder();
-            builder.RegisterModule(new ImplicitCollectionSupportModule()); ;
-            builder.Register<HomeController>();
-            builder.Register<XmlRpcReader>().As<IMapper<XElement, XRpcMethodCall>>();
-            builder.Register<XmlRpcWriter>().As<IMapper<XRpcMethodResponse, XElement>>();
-            builder.Register(thing1).As<IXmlRpcHandler>();
-            builder.Register(thing2).As<IXmlRpcHandler>();
+            //builder.RegisterModule(new ImplicitCollectionSupportModule()); ;
+            builder.RegisterType<HomeController>();
+            builder.RegisterType<XmlRpcReader>().As<IMapper<XElement, XRpcMethodCall>>();
+            builder.RegisterType<XmlRpcWriter>().As<IMapper<XRpcMethodResponse, XElement>>();
+            builder.RegisterInstance(thing1).As<IXmlRpcHandler>();
+            builder.RegisterInstance(thing2).As<IXmlRpcHandler>();
 
             var container = builder.Build();
 

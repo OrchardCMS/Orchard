@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Autofac.Builder;
+using Autofac;
 using JetBrains.Annotations;
 using Moq;
 using NUnit.Framework;
@@ -22,16 +22,16 @@ namespace Orchard.Core.Tests.Common.Providers {
         private Mock<IMembershipService> _membership;
 
         public override void Register(ContainerBuilder builder) {
-            builder.Register<DefaultContentManager>().As<IContentManager>();
-            builder.Register<TestHandler>().As<IContentHandler>();
-            builder.Register<CommonAspectHandler>().As<IContentHandler>();
+            builder.RegisterType<DefaultContentManager>().As<IContentManager>();
+            builder.RegisterType<TestHandler>().As<IContentHandler>();
+            builder.RegisterType<CommonAspectHandler>().As<IContentHandler>();
 
             _authn = new Mock<IAuthenticationService>();
             _authz = new Mock<IAuthorizationService>();
             _membership = new Mock<IMembershipService>();
-            builder.Register(_authn.Object);
-            builder.Register(_authz.Object);
-            builder.Register(_membership.Object);
+            builder.RegisterInstance(_authn.Object);
+            builder.RegisterInstance(_authz.Object);
+            builder.RegisterInstance(_membership.Object);
 
         }
 

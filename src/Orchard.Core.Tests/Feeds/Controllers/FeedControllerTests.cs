@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Web.Mvc;
 using System.Web.Routing;
 using System.Xml.Linq;
-using Autofac.Builder;
-using Autofac.Modules;
+using Autofac;
 using Moq;
 using NUnit.Framework;
 using Orchard.ContentManagement;
@@ -93,10 +91,10 @@ namespace Orchard.Core.Tests.Feeds.Controllers {
             var query = new StubQuery(Enumerable.Empty<ContentItem>());
 
             var builder = new ContainerBuilder();
-            builder.RegisterModule(new ImplicitCollectionSupportModule());
-            builder.Register<FeedController>();
-            builder.Register<RssFeedBuilder>().As<IFeedBuilderProvider>();
-            builder.Register(query).As<IFeedQueryProvider>();
+            //builder.RegisterModule(new ImplicitCollectionSupportModule());
+            builder.RegisterType<FeedController>();
+            builder.RegisterType<RssFeedBuilder>().As<IFeedBuilderProvider>();
+            builder.RegisterInstance(query).As<IFeedQueryProvider>();
             var container = builder.Build();
 
             var controller = container.Resolve<FeedController>();
@@ -119,10 +117,10 @@ namespace Orchard.Core.Tests.Feeds.Controllers {
             });
 
             var builder = new ContainerBuilder();
-            builder.RegisterModule(new ImplicitCollectionSupportModule());
-            builder.Register<FeedController>();
-            builder.Register<RssFeedBuilder>().As<IFeedBuilderProvider>();
-            builder.Register(query).As<IFeedQueryProvider>();
+            //builder.RegisterModule(new ImplicitCollectionSupportModule());
+            builder.RegisterType<FeedController>();
+            builder.RegisterType<RssFeedBuilder>().As<IFeedBuilderProvider>();
+            builder.RegisterInstance(query).As<IFeedQueryProvider>();
             var container = builder.Build();
 
             var controller = container.Resolve<FeedController>();
@@ -163,13 +161,13 @@ namespace Orchard.Core.Tests.Feeds.Controllers {
                 .Returns(new ContentItemMetadata { DisplayText = "foo" });
 
             var builder = new ContainerBuilder();
-            builder.RegisterModule(new ImplicitCollectionSupportModule());
-            builder.Register<FeedController>();
-            builder.Register(new RouteCollection());
-            builder.Register(mockContentManager.Object).As<IContentManager>();
-            builder.Register<RssFeedBuilder>().As<IFeedBuilderProvider>();
-            builder.Register<CorePartsFeedItemBuilder>().As<IFeedItemBuilder>();
-            builder.Register(query).As<IFeedQueryProvider>();
+            //builder.RegisterModule(new ImplicitCollectionSupportModule());
+            builder.RegisterType<FeedController>();
+            builder.RegisterInstance(new RouteCollection());
+            builder.RegisterInstance(mockContentManager.Object).As<IContentManager>();
+            builder.RegisterType<RssFeedBuilder>().As<IFeedBuilderProvider>();
+            builder.RegisterType<CorePartsFeedItemBuilder>().As<IFeedItemBuilder>();
+            builder.RegisterInstance(query).As<IFeedQueryProvider>();
             var container = builder.Build();
 
             var controller = container.Resolve<FeedController>();

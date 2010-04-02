@@ -17,9 +17,9 @@ namespace Orchard.Tests.Environment.ShellBuilders {
         [SetUp]
         public void Init() {
             _hostContainer = OrchardStarter.CreateHostContainer(builder => {
-                builder.Register(new ViewEngineCollection());
-                builder.Register(new RouteCollection());
-                builder.Register(new ModelBinderDictionary());
+                builder.RegisterInstance(new ViewEngineCollection());
+                builder.RegisterInstance(new RouteCollection());
+                builder.RegisterInstance(new ModelBinderDictionary());
             });
         }
 

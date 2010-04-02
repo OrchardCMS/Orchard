@@ -1,5 +1,6 @@
 using System;
 using System.Web.Mvc;
+using Autofac;
 using Autofac.Integration.Web;
 
 namespace Orchard.Mvc.Html {
@@ -14,7 +15,7 @@ namespace Orchard.Mvc.Html {
             if (containerProvider == null)
                 throw new ApplicationException("Unable to resolve");
 
-            return containerProvider.RequestContainer.Resolve<TService>();
+            return (containerProvider.RequestLifetime).Resolve<TService>();
         }
     }
 }

@@ -4,10 +4,11 @@ using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
 using Autofac;
-using Autofac.Builder;
+using Autofac.Integration.Web;
 using Autofac.Integration.Web.Mvc;
 using Orchard.Mvc.Filters;
 using Orchard.Extensions;
+using Autofac.Core;
 
 namespace Orchard.Mvc {
     public class MvcModule : Module {
@@ -20,16 +21,18 @@ namespace Orchard.Mvc {
         protected override void Load(ContainerBuilder moduleBuilder) {
             var extensions = _extensionManager.ActiveExtensions();
             var assemblies = extensions.Select(x => x.Assembly);
+            var actionInvokerService = new UniqueService();
+            moduleBuilder.RegisterType<FilterResolvingActionInvoker>().As(actionInvokerService).InstancePerDependency();
 
-            var module = new AutofacControllerModule(assemblies.ToArray()) {
-                ActionInvokerType = typeof(FilterResolvingActionInvoker),
-                IdentificationStrategy = new OrchardControllerIdentificationStrategy(extensions)
-            };
+            moduleBuilder.RegisterControllers(new OrchardControllerIdentificationStrategy(extensions), assemblies.ToArray())
+                .InjectActionInvoker(actionInvokerService);
 
-            moduleBuilder.RegisterModule(module);
-            moduleBuilder.Register(ctx => HttpContextBaseFactory(ctx)).As<HttpContextBase>().FactoryScoped();
-            moduleBuilder.Register(ctx => RequestContextFactory(ctx)).As<RequestContext>().FactoryScoped();
-            moduleBuilder.Register(ctx => UrlHelperFactory(ctx)).As<UrlHelper>().FactoryScoped();
+            moduleBuilder.Register(ctx => HttpContextBaseFactory(ctx)).As<HttpContextBase>().InstancePerDependency();
+            moduleBuilder.Register(ctx => RequestContextFactory(ctx)).As<RequestContext>().InstancePerDependency();
+            moduleBuilder.Register(ctx => UrlHelperFactory(ctx)).As<UrlHelper>().InstancePerDependency();
+
+            ControllerBuilder.Current.SetControllerFactory(
+                new AutofacControllerFactory(new ContainerProvider(moduleBuilder.Build())));
         }
 
         private static bool IsRequestValid() {
@@ -47,7 +50,7 @@ namespace Orchard.Mvc {
             return true;
         }
 
-        static HttpContextBase HttpContextBaseFactory(IContext context) {
+        static HttpContextBase HttpContextBaseFactory(IComponentContext context) {
             if (IsRequestValid()) {
                 return new HttpContextWrapper(HttpContext.Current);
             }
@@ -55,7 +58,7 @@ namespace Orchard.Mvc {
             return new HttpContextPlaceholder();
         }
 
-        static RequestContext RequestContextFactory(IContext context) {
+        static RequestContext RequestContextFactory(IComponentContext context) {
             var httpContext = context.Resolve<HttpContextBase>();
             var mvcHandler = httpContext.Handler as MvcHandler;
             if (mvcHandler != null) {
@@ -65,7 +68,7 @@ namespace Orchard.Mvc {
             return new RequestContext(httpContext, new RouteData());
         }
 
-        static UrlHelper UrlHelperFactory(IContext context) {
+        static UrlHelper UrlHelperFactory(IComponentContext context) {
             return new UrlHelper(context.Resolve<RequestContext>(), context.Resolve<RouteCollection>());
         }
 

@@ -8,13 +8,13 @@ using Orchard.Mvc.ViewModels;
 
 namespace Orchard.ContentManagement {
     public class DefaultContentManager : IContentManager {
-        private readonly IContext _context;
+        private readonly IComponentContext _context;
         private readonly IRepository<ContentTypeRecord> _contentTypeRepository;
         private readonly IRepository<ContentItemRecord> _contentItemRepository;
         private readonly IRepository<ContentItemVersionRecord> _contentItemVersionRepository;
 
         public DefaultContentManager(
-            IContext context,
+            IComponentContext context,
             IRepository<ContentTypeRecord> contentTypeRepository,
             IRepository<ContentItemRecord> contentItemRepository,
             IRepository<ContentItemVersionRecord> contentItemVersionRepository) {

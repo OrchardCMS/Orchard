@@ -1,23 +1,22 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
-using System.Text;
-using Module = Autofac.Builder.Module;
+using Autofac;
+using Autofac.Core;
+using Module = Autofac.Module;
 
 namespace Orchard.Localization {
     public class LocalizationModule : Module {
 
-        protected override void Load(Autofac.Builder.ContainerBuilder builder) {
-            builder.Register<Text>().As<IText>().FactoryScoped();
+        protected override void Load(ContainerBuilder builder) {
+            builder.RegisterType<Text>().As<IText>().InstancePerDependency();
         }
 
-        protected override void AttachToComponentRegistration(Autofac.IContainer container, Autofac.IComponentRegistration registration) {
+        protected override void AttachToComponentRegistration(IComponentRegistry componentRegistry, IComponentRegistration registration) {
 
-            var userProperty = FindUserProperty(registration.Descriptor.BestKnownImplementationType);
+            var userProperty = FindUserProperty(registration.Activator.LimitType);
 
             if (userProperty != null) {
-                var scope = registration.Descriptor.BestKnownImplementationType.FullName;
+                var scope = registration.Activator.LimitType.FullName;
 
                 registration.Activated += (sender, e) => {
                     //var authenticationService = e.Context.Resolve<IAuthenticationService>();

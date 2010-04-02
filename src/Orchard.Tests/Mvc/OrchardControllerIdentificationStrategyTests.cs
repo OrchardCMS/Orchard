@@ -1,9 +1,9 @@
 ﻿using System.Linq;
 using System.Web.Mvc;
-using Autofac;
 using NUnit.Framework;
 using Orchard.Mvc;
 using Orchard.Extensions;
+using Autofac.Core;
 
 namespace Orchard.Tests.Mvc {
    [TestFixture] public class OrchardControllerIdentificationStrategyTests {

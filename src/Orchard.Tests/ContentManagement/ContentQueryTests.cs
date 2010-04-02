@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Linq;
 using Autofac;
-using Autofac.Builder;
-using Autofac.Modules;
 using NHibernate;
 using NUnit.Framework;
 using Orchard.Data;
@@ -45,21 +40,21 @@ namespace Orchard.Tests.ContentManagement {
         [SetUp]
         public void Init() {
             var builder = new ContainerBuilder();
-            builder.RegisterModule(new ImplicitCollectionSupportModule());
+            // builder.RegisterModule(new ImplicitCollectionSupportModule());
             builder.RegisterModule(new ContentModule());
-            builder.Register<DefaultContentManager>().As<IContentManager>();
-            builder.Register<AlphaHandler>().As<IContentHandler>();
-            builder.Register<BetaHandler>().As<IContentHandler>();
-            builder.Register<GammaHandler>().As<IContentHandler>();
-            builder.Register<DeltaHandler>().As<IContentHandler>();
-            builder.Register<EpsilonHandler>().As<IContentHandler>();
-            builder.Register<FlavoredHandler>().As<IContentHandler>();
-            builder.Register<StyledHandler>().As<IContentHandler>();
+            builder.RegisterType<DefaultContentManager>().As<IContentManager>().SingleInstance();
+            builder.RegisterType<AlphaHandler>().As<IContentHandler>();
+            builder.RegisterType<BetaHandler>().As<IContentHandler>();
+            builder.RegisterType<GammaHandler>().As<IContentHandler>();
+            builder.RegisterType<DeltaHandler>().As<IContentHandler>();
+            builder.RegisterType<EpsilonHandler>().As<IContentHandler>();
+            builder.RegisterType<FlavoredHandler>().As<IContentHandler>();
+            builder.RegisterType<StyledHandler>().As<IContentHandler>();
 
             builder.RegisterGeneric(typeof(Repository<>)).As(typeof(IRepository<>));
 
             _session = _sessionFactory.OpenSession();
-            builder.Register(new DefaultContentManagerTests.TestSessionLocator(_session)).As<ISessionLocator>();
+            builder.RegisterInstance(new DefaultContentManagerTests.TestSessionLocator(_session)).As<ISessionLocator>();
 
             _session.Delete(string.Format("from {0}", typeof(GammaRecord).FullName));
             _session.Delete(string.Format("from {0}", typeof(DeltaRecord).FullName));
