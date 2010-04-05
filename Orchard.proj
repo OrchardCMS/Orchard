@@ -51,19 +51,25 @@
 <!-- Testing -->
 
   <Target Name ="Test">
+  	<PropertyGroup>
+      <UseSqlite64 Condition="'$(teamcity_version)'=='' And '$(BuildPlatform)' == 'x64'">True</UseSqlite64>
+    </PropertyGroup>
+    
+    <Message Condition="'$(UseSqlite64)' == 'True'"  Text="Testing with x64 version of Sqlite"/>
+    
 		<CreateItem Include="$(CompileFolder)\*.Tests.*dll">
 			<Output TaskParameter="Include" ItemName="TestAssemblies" />
 		</CreateItem>
 
     <!-- use x64 sqlite for tests depending on build platform -->
-    <Copy Condition="$(BuildPlatform) == 'x64'" 
+    <Copy Condition="'$(UseSqlite64)' == 'True'" 
       SourceFiles="$(LibFolder)\sqlite\x64\System.Data.SQLite.dll" 
       DestinationFiles="$(CompileFolder)\System.Data.SQLite.dll" />
 		
 		<NUnit Assemblies="@(TestAssemblies)" ToolPath="$(LibFolder)\nunit" WorkingDirectory="$(CompileFolder)" OutputXmlFile="$(BuildFolder)\Orchard.Tests.xml" />
 
     <!-- restore sqlite version if needed -->
-    <Copy Condition="$(BuildPlatform) == 'x64'" 
+    <Copy Condition="'$(UseSqlite64)' == 'True'" 
       SourceFiles="$(LibFolder)\sqlite\System.Data.SQLite.dll" 
       DestinationFiles="$(CompileFolder)\System.Data.SQLite.dll" />
   </Target>
