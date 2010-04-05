@@ -25,14 +25,11 @@ namespace Orchard.Mvc {
             moduleBuilder.RegisterType<FilterResolvingActionInvoker>().As(actionInvokerService).InstancePerDependency();
 
             moduleBuilder.RegisterControllers(new OrchardControllerIdentificationStrategy(extensions), assemblies.ToArray())
-                .InjectActionInvoker(actionInvokerService);
+                .InjectActionInvoker(actionInvokerService).InstancePerDependency();
 
             moduleBuilder.Register(ctx => HttpContextBaseFactory(ctx)).As<HttpContextBase>().InstancePerDependency();
             moduleBuilder.Register(ctx => RequestContextFactory(ctx)).As<RequestContext>().InstancePerDependency();
             moduleBuilder.Register(ctx => UrlHelperFactory(ctx)).As<UrlHelper>().InstancePerDependency();
-
-            ControllerBuilder.Current.SetControllerFactory(
-                new AutofacControllerFactory(new ContainerProvider(moduleBuilder.Build())));
         }
 
         private static bool IsRequestValid() {

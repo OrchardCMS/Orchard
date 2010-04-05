@@ -85,7 +85,7 @@ namespace Orchard.Environment.ShellBuilders {
             foreach (var module in _container.Resolve<IEnumerable<IModule>>()) {
                 modulesUpdater.RegisterModule(module);
             }
-            //modulesUpdater.Update(shellScope);
+            modulesUpdater.Update(shellScope);
 
             return shellScope;
         }
