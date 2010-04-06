@@ -5,7 +5,7 @@ using System.Security.Principal;
 using System.Web.Mvc;
 using System.Web.Security;
 using Orchard.Logging;
-using Orchard.Mvc.FollowReturnUrl;
+using Orchard.Mvc.Extensions;
 using Orchard.Mvc.ViewModels;
 using Orchard.Security;
 using Orchard.Users.Services;
@@ -52,7 +52,7 @@ namespace Orchard.Users.Controllers {
             return View("LogOn", new LogOnViewModel {Title = "Log On"});
         }
 
-        [HttpPost, FollowReturnUrl]
+        [HttpPost]
         [SuppressMessage("Microsoft.Design", "CA1054:UriParametersShouldNotBeStrings",
             Justification = "Needs to take same parameter type as Controller.Redirect()")]
         public ActionResult LogOn(string userName, string password, bool rememberMe) {
@@ -63,14 +63,13 @@ namespace Orchard.Users.Controllers {
 
             _authenticationService.SignIn(user, rememberMe);
 
-            return Redirect("~/");
+            return this.ReturnUrlRedirect();
         }
 
-        [FollowReturnUrl]
         public ActionResult LogOff() {
             _authenticationService.SignOut();
 
-            return Redirect("~/");
+            return this.ReturnUrlRedirect();
         }
 
         int MinPasswordLength {
