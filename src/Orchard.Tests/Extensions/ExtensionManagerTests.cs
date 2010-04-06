@@ -64,19 +64,39 @@ namespace Orchard.Tests.Extensions {
         }
 
         [Test]
-        public void ExtensionDescriptorsShouldHaveNameAndDescription() {
+        public void ExtensionDescriptorsShouldHaveNameAndVersion() {
 
             _folders.Manifests.Add("Sample", @"
 name: Sample Extension
-description: This is the description
 version: 2.x
 ");
 
             var descriptor = _manager.AvailableExtensions().Single();
             Assert.That(descriptor.Name, Is.EqualTo("Sample"));
             Assert.That(descriptor.DisplayName, Is.EqualTo("Sample Extension"));
-            Assert.That(descriptor.Description, Is.EqualTo("This is the description"));
             Assert.That(descriptor.Version, Is.EqualTo("2.x"));
+        }
+
+        [Test]
+        public void ExtensionDescriptorsShouldBeParsedForMinimalModuleTxt() {
+
+            _folders.Manifests.Add("SuperWiki", @"
+name: SuperWiki
+version: 1.0.3
+orchardversion: 1
+features:
+  SuperWiki: 
+    Description: My super wiki module for Orchard.
+");
+
+            var descriptor = _manager.AvailableExtensions().Single();
+            Assert.That(descriptor.Name, Is.EqualTo("SuperWiki"));
+            Assert.That(descriptor.Version, Is.EqualTo("1.0.3"));
+            Assert.That(descriptor.OrchardVersion, Is.EqualTo("1"));
+            Assert.That(descriptor.Features.Count(), Is.EqualTo(1));
+            Assert.That(descriptor.Features.First().Name, Is.EqualTo("SuperWiki"));
+            Assert.That(descriptor.Features.First().ExtensionName, Is.EqualTo("SuperWiki"));
+            Assert.That(descriptor.Features.First().Description, Is.EqualTo("My super wiki module for Orchard."));
         }
 
     }

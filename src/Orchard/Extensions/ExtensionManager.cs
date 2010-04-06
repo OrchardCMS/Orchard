@@ -55,11 +55,41 @@ namespace Orchard.Extensions {
                 DisplayName = GetValue(fields, "name"),
                 Description = GetValue(fields, "description"),
                 Version = GetValue(fields, "version"),
+                OrchardVersion = GetValue(fields, "orchardversion"),
                 Author = GetValue(fields, "author"),
                 HomePage = GetValue(fields, "homepage"),
                 Tags = GetValue(fields, "tags"),
-                AntiForgery = GetValue(fields, "antiforgery")
+                AntiForgery = GetValue(fields, "antiforgery"),
+                Features = GetFeaturesForExtension(GetMapping(fields, "features"), name),
             };
+        }
+
+        private static IEnumerable<FeatureDescriptor> GetFeaturesForExtension(Mapping features, string name) {
+            List<FeatureDescriptor> featureDescriptors = new List<FeatureDescriptor>();
+            if (features == null) return featureDescriptors;
+            foreach (var entity in features.Entities) {
+                FeatureDescriptor featureDescriptor = new FeatureDescriptor {
+                    ExtensionName = name,
+                    Name = entity.Key.ToString(),
+                };
+                Mapping featureMapping = (Mapping) entity.Value;
+                foreach (var featureEntity in featureMapping.Entities) {
+                    if (String.Equals(featureEntity.Key.ToString(), "description", StringComparison.OrdinalIgnoreCase)) {
+                        featureDescriptor.Description = featureEntity.Value.ToString();
+                    }
+                }
+                featureDescriptors.Add(featureDescriptor);
+         
+            }
+            return featureDescriptors;
+        }
+
+        private static Mapping GetMapping(
+            IDictionary<string, DataItem> fields, 
+            string key) {
+            
+            DataItem value;
+            return fields.TryGetValue(key, out value) ? (Mapping)value : null; 
         }
 
         private static string GetValue(
