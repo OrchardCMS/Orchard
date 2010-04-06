@@ -7,7 +7,6 @@ using JetBrains.Annotations;
 using Orchard.Localization;
 using Orchard.ContentManagement;
 using Orchard.Mvc.AntiForgery;
-using Orchard.Mvc.FollowReturnUrl;
 using Orchard.Mvc.Results;
 using Orchard.Pages.Drivers;
 using Orchard.Pages.Models;
@@ -174,7 +173,7 @@ namespace Orchard.Pages.Controllers {
             return View(model);
         }
 
-        [HttpPost, ActionName("Edit"), FollowReturnUrl]
+        [HttpPost, ActionName("Edit")]
         public ActionResult EditPOST(int id) {
             var page = _pageService.GetPageOrDraft(id);
             if (page == null)
