@@ -3,4 +3,4 @@ author: Jonathan Wall
 description: The Orchard Theme for setup and failure conditions.
 version: 1.0
 tags: hidden
-homepage: http://www.orchardproject.net
+website: http://www.orchardproject.net

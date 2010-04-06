@@ -3,4 +3,4 @@ author: Michael Dorian Bach
 description: A simple CMS theme perfect for any modern product or service business website. 
 version: 1.0
 tags: business, cms, modern
-homepage: http://www.orchardproject.net
+website: http://www.orchardproject.net

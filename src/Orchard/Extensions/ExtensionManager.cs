@@ -7,7 +7,6 @@ using Orchard.Extensions.Helpers;
 using Orchard.Extensions.Loaders;
 using Orchard.Localization;
 using Orchard.Logging;
-using Orchard.Utility;
 using Yaml.Grammar;
 using System.Web;
 
@@ -57,7 +56,7 @@ namespace Orchard.Extensions {
                 Version = GetValue(fields, "version"),
                 OrchardVersion = GetValue(fields, "orchardversion"),
                 Author = GetValue(fields, "author"),
-                HomePage = GetValue(fields, "homepage"),
+                WebSite = GetValue(fields, "website"),
                 Tags = GetValue(fields, "tags"),
                 AntiForgery = GetValue(fields, "antiforgery"),
                 Features = GetFeaturesForExtension(GetMapping(fields, "features"), name),
@@ -77,27 +76,17 @@ namespace Orchard.Extensions {
                     if (String.Equals(featureEntity.Key.ToString(), "description", StringComparison.OrdinalIgnoreCase)) {
                         featureDescriptor.Description = featureEntity.Value.ToString();
                     }
+                    else if (String.Equals(featureEntity.Key.ToString(), "category", StringComparison.OrdinalIgnoreCase)) {
+                        featureDescriptor.Category = featureEntity.Value.ToString();
+                    }
+                    else if (String.Equals(featureEntity.Key.ToString(), "dependencies", StringComparison.OrdinalIgnoreCase)) {
+                        featureDescriptor.Dependencies = ParseFeatureDependenciesEntry(featureEntity.Value.ToString());
+                    }
                 }
                 featureDescriptors.Add(featureDescriptor);
          
             }
             return featureDescriptors;
-        }
-
-        private static Mapping GetMapping(
-            IDictionary<string, DataItem> fields, 
-            string key) {
-            
-            DataItem value;
-            return fields.TryGetValue(key, out value) ? (Mapping)value : null; 
-        }
-
-        private static string GetValue(
-            IDictionary<string, DataItem> fields,
-            string key) {
-
-            DataItem value;
-            return fields.TryGetValue(key, out value) ? value.ToString() : null;
         }
 
         public IEnumerable<ExtensionEntry> ActiveExtensions() {
@@ -185,6 +174,28 @@ namespace Orchard.Extensions {
             return null;
         }
 
-    }
+        private static string[] ParseFeatureDependenciesEntry(string dependenciesEntry) {
+            List<string> dependencies = new List<string>();
+            foreach (var s in dependenciesEntry.Split(',')) {
+                dependencies.Add(s.Trim());
+            }
+            return dependencies.ToArray();
+        }
 
+        private static Mapping GetMapping(
+            IDictionary<string, DataItem> fields,
+            string key) {
+
+            DataItem value;
+            return fields.TryGetValue(key, out value) ? (Mapping)value : null;
+        }
+
+        private static string GetValue(
+            IDictionary<string, DataItem> fields,
+            string key) {
+
+            DataItem value;
+            return fields.TryGetValue(key, out value) ? value.ToString() : null;
+        }
+    }
 }

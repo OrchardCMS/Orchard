@@ -23,7 +23,7 @@ namespace Orchard.Extensions {
         public string Version { get; set; }
         public string OrchardVersion { get; set; }
         public string Author { get; set; }
-        public string HomePage { get; set; }
+        public string WebSite { get; set; }
         public string Tags { get; set; }
         public string AntiForgery { get; set; }
 
