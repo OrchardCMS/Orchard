@@ -24,11 +24,23 @@ namespace Orchard.Tests.Commands {
             CommandContext commandContext = new CommandContext { Command = "NoSuchCommand" };
             Assert.Throws<InvalidOperationException>(() => _handler.Execute(commandContext));
         }
+
+        [Test]
+        public void TestCommandWithCustomAlias() {
+            CommandContext commandContext = new CommandContext { Command = "bar" };
+            _handler.Execute(commandContext);
+            Assert.That(commandContext.Output, Is.EqualTo("Hello World!"));
+        }
     }
 
     public class StubCommandHandler : DefaultOrchardCommandHandler {
         public string Foo() {
             return "Command Foo Executed";
+        }
+
+        [OrchardCommand("bar")]
+        public string Hello() {
+            return "Hello World!";
         }
     }
 }
