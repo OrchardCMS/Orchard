@@ -47,27 +47,27 @@ namespace Orchard.Commands {
 
             foreach (MethodInfo methodInfo in GetType().GetMethods()) {
                 if (String.Equals(methodInfo.Name, context.Command, StringComparison.OrdinalIgnoreCase)) {
-                    CheckMethodForSwitches(methodInfo, context.Switches);
-                    object[] invokeParameters = GetInvokeParametersForMethod(methodInfo, context.Arguments ?? new string[]{});
-                    if (invokeParameters != null) {
-                        context.Output = (string) methodInfo.Invoke(this, invokeParameters);
-                        return;
-                    }
+                    if (TryInvokeCommand(methodInfo, context)) return;
                 }
 
                 foreach (OrchardCommandAttribute commandAttribute in methodInfo.GetCustomAttributes(typeof(OrchardCommandAttribute), false)) {
                     if (String.Equals(commandAttribute.Command, context.Command, StringComparison.OrdinalIgnoreCase)) {
-                        CheckMethodForSwitches(methodInfo, context.Switches);
-                        object[] invokeParameters = GetInvokeParametersForMethod(methodInfo, context.Arguments ?? new string[]{});
-                        if (invokeParameters != null) {
-                            context.Output = (string) methodInfo.Invoke(this, invokeParameters);
-                            return;
-                        }
+                        if (TryInvokeCommand(methodInfo, context)) return;
                     }
                 }
             }
 
             throw new InvalidOperationException(T("Command : ") + context.Command + T(" was not found "));
+        }
+
+        private bool TryInvokeCommand(MethodInfo methodInfo, CommandContext context) {
+            CheckMethodForSwitches(methodInfo, context.Switches);
+            object[] invokeParameters = GetInvokeParametersForMethod(methodInfo, context.Arguments ?? new string[] { });
+            if (invokeParameters != null) {
+                context.Output = (string)methodInfo.Invoke(this, invokeParameters);
+                return true;
+            }
+            return false;
         }
 
         private static object[] GetInvokeParametersForMethod(MethodInfo methodInfo, string[] arguments) {
