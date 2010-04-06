@@ -48,20 +48,58 @@ namespace Orchard.Commands {
             foreach (MethodInfo methodInfo in GetType().GetMethods()) {
                 if (String.Equals(methodInfo.Name, context.Command, StringComparison.OrdinalIgnoreCase)) {
                     CheckMethodForSwitches(methodInfo, context.Switches);
-                    context.Output = (string)methodInfo.Invoke(this, null);
-                    return;
+                    object[] invokeParameters = GetInvokeParametersForMethod(methodInfo, context.Arguments ?? new string[]{});
+                    if (invokeParameters != null) {
+                        context.Output = (string) methodInfo.Invoke(this, invokeParameters);
+                        return;
+                    }
                 }
 
                 foreach (OrchardCommandAttribute commandAttribute in methodInfo.GetCustomAttributes(typeof(OrchardCommandAttribute), false)) {
                     if (String.Equals(commandAttribute.Command, context.Command, StringComparison.OrdinalIgnoreCase)) {
                         CheckMethodForSwitches(methodInfo, context.Switches);
-                        context.Output = (string)methodInfo.Invoke(this, null);
-                        return;
+                        object[] invokeParameters = GetInvokeParametersForMethod(methodInfo, context.Arguments ?? new string[]{});
+                        if (invokeParameters != null) {
+                            context.Output = (string) methodInfo.Invoke(this, invokeParameters);
+                            return;
+                        }
                     }
                 }
             }
 
-            throw new InvalidOperationException(T("Command : ") + context.Command + T(" was not found"));
+            throw new InvalidOperationException(T("Command : ") + context.Command + T(" was not found "));
+        }
+
+        private static object[] GetInvokeParametersForMethod(MethodInfo methodInfo, string[] arguments) {
+            List<object> invokeParameters = new List<object>();
+            
+            List<string> args = new List<string>(arguments);
+            ParameterInfo[] methodParameters = methodInfo.GetParameters();
+            bool methodHasParams = false;
+
+            if (methodParameters.Length == 0) {
+                if (args.Count == 0) return invokeParameters.ToArray();
+                return null;
+            }
+
+            if (methodParameters[methodParameters.Length - 1].ParameterType.IsAssignableFrom(typeof(string[]))) {
+                methodHasParams = true;
+            }
+
+            if (!methodHasParams && args.Count != methodParameters.Length) return null;
+            if (methodHasParams && (methodParameters.Length - args.Count >= 2)) return null;
+
+            for (int i = 0; i < args.Count; i++) {
+                if (methodParameters[i].ParameterType.IsAssignableFrom(typeof(string[]))) {
+                    invokeParameters.Add(args.GetRange(i, args.Count - i).ToArray());
+                    break;
+                }
+                invokeParameters.Add(arguments[i]);
+            }
+
+            if (methodHasParams && (methodParameters.Length - args.Count == 1)) invokeParameters.Add(new string[] { });
+
+            return invokeParameters.ToArray();
         }
 
         private void CheckMethodForSwitches(MethodInfo methodInfo, NameValueCollection switches) {

@@ -65,9 +65,89 @@ namespace Orchard.Tests.Commands {
         }
 
         [Test]
+        public void TestCommandThatDoesNotReturnAValue() {
+            CommandContext commandContext = new CommandContext { Command = "Log" };
+            _handler.Execute(commandContext);
+            Assert.That(commandContext.Output, Is.Null);
+        }
+
+        [Test]
         public void TestNotExistingSwitch() {
             CommandContext commandContext = new CommandContext { Command = "Foo", Switches = new NameValueCollection() };
             commandContext.Switches.Add("ThisSwitchDoesNotExist", "Insignificant");
+            Assert.Throws<InvalidOperationException>(() => _handler.Execute(commandContext));
+        }
+
+        [Test]
+        public void TestCommandArgumentsArePassedCorrectly() {
+            CommandContext commandContext = new CommandContext {
+                                                                   Command = "Concat",
+                                                                   Switches = new NameValueCollection(),
+                                                                   Arguments = new[] {"left to ", "right"}
+                                                               };
+            _handler.Execute(commandContext);
+            Assert.That(commandContext.Output, Is.EqualTo("left to right"));
+        }
+
+        [Test]
+        public void TestCommandArgumentsArePassedCorrectlyWithAParamsParameters() {
+            CommandContext commandContext = new CommandContext {
+                                                                   Command = "ConcatParams",
+                                                                   Switches = new NameValueCollection(),
+                                                                   Arguments = new[] {"left to ", "right"}
+                                                               };
+            _handler.Execute(commandContext);
+            Assert.That(commandContext.Output, Is.EqualTo("left to right"));
+        }
+
+        [Test]
+        public void TestCommandArgumentsArePassedCorrectlyWithAParamsParameterAndNoArguments() {
+            CommandContext commandContext = new CommandContext {
+                Command = "ConcatParams",
+                Switches = new NameValueCollection()
+            };
+            _handler.Execute(commandContext);
+            Assert.That(commandContext.Output, Is.EqualTo(""));
+        }
+
+
+        [Test]
+        public void TestCommandArgumentsArePassedCorrectlyWithNormalParametersAndAParamsParameters() {
+            CommandContext commandContext = new CommandContext {
+                Command = "ConcatAllParams",
+                Switches = new NameValueCollection(),
+                Arguments = new[] { "left-", "center-", "right" }
+            };
+            _handler.Execute(commandContext);
+            Assert.That(commandContext.Output, Is.EqualTo("left-center-right"));
+        }
+
+        [Test]
+        public void TestCommandParamsMismatchWithoutParamsNotEnoughArguments() {
+            CommandContext commandContext = new CommandContext {
+                Command = "Concat",
+                Switches = new NameValueCollection(),
+                Arguments = new[] { "left to "}
+            };
+            Assert.Throws<InvalidOperationException>(() => _handler.Execute(commandContext));
+        }
+
+        [Test]
+        public void TestCommandParamsMismatchWithoutParamsTooManyArguments() {
+            CommandContext commandContext = new CommandContext {
+                Command = "Foo",
+                Switches = new NameValueCollection(),
+                Arguments = new[] { "left to " }
+            };
+            Assert.Throws<InvalidOperationException>(() => _handler.Execute(commandContext));
+        }
+
+        [Test]
+        public void TestCommandParamsMismatchWithParamsButNotEnoughArguments() {
+            CommandContext commandContext = new CommandContext {
+                Command = "ConcatAllParams",
+                Switches = new NameValueCollection(),
+            };
             Assert.Throws<InvalidOperationException>(() => _handler.Execute(commandContext));
         }
     }
@@ -108,6 +188,30 @@ namespace Orchard.Tests.Commands {
             }
 
             return trace;
+        }
+
+        public string Concat(string left, string right) {
+            return left + right;
+        }
+
+        public string ConcatParams(params string[] parameters) {
+            string concatenated = "";
+            foreach (var s in parameters) {
+                concatenated += s;
+            }
+            return concatenated;
+        }
+
+        public string ConcatAllParams(string leftmost, params string[] rest) {
+            string concatenated = leftmost;
+            foreach (var s in rest) {
+                concatenated += s;
+            }
+            return concatenated;
+        }
+
+        public void Log() {
+            return;
         }
     }
 }
