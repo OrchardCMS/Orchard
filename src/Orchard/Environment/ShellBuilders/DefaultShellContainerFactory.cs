@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using Autofac;
 using Autofac.Core;
+using Orchard.Environment.AutofacUtil;
+using Orchard.Environment.AutofacUtil.DynamicProxy2;
 using Orchard.Environment.Configuration;
 
 namespace Orchard.Environment.ShellBuilders {
@@ -19,9 +21,12 @@ namespace Orchard.Environment.ShellBuilders {
                 return null;
             }
 
+            var dynamicProxyContext = new DynamicProxyContext();
+
             // add module types to container being built
             var addingModulesAndServices = new ContainerUpdater();
             addingModulesAndServices.RegisterInstance(settings).As<IShellSettings>();
+            addingModulesAndServices.RegisterInstance(dynamicProxyContext);
             addingModulesAndServices.RegisterType<DefaultOrchardShell>().As<IOrchardShell>().SingleInstance();
 
             foreach (var moduleType in _compositionStrategy.GetModuleTypes()) {
@@ -32,7 +37,7 @@ namespace Orchard.Environment.ShellBuilders {
             foreach (var serviceType in _compositionStrategy.GetDependencyTypes()) {
                 foreach (var interfaceType in serviceType.GetInterfaces()) {
                     if (typeof(IDependency).IsAssignableFrom(interfaceType)) {
-                        var registrar = addingModulesAndServices.RegisterType(serviceType).As(interfaceType);
+                        var registrar = addingModulesAndServices.RegisterType(serviceType).As(interfaceType).EnableDynamicProxy(dynamicProxyContext);
                         if (typeof(ISingletonDependency).IsAssignableFrom(interfaceType)) {
                             registrar.SingleInstance();
                         }

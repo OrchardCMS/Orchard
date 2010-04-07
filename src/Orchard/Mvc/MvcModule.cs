@@ -6,6 +6,7 @@ using System.Web.Routing;
 using Autofac;
 using Autofac.Integration.Web;
 using Autofac.Integration.Web.Mvc;
+using Orchard.Environment.AutofacUtil.DynamicProxy2;
 using Orchard.Mvc.Filters;
 using Orchard.Extensions;
 using Autofac.Core;
@@ -13,9 +14,11 @@ using Autofac.Core;
 namespace Orchard.Mvc {
     public class MvcModule : Module {
         private readonly IExtensionManager _extensionManager;
+        private readonly DynamicProxyContext _dynamicProxyContext;
 
-        public MvcModule(IExtensionManager extensionManager) {
+        public MvcModule(IExtensionManager extensionManager, DynamicProxyContext dynamicProxyContext) {
             _extensionManager = extensionManager;
+            _dynamicProxyContext = dynamicProxyContext;
         }
 
         protected override void Load(ContainerBuilder moduleBuilder) {
@@ -25,6 +28,7 @@ namespace Orchard.Mvc {
             moduleBuilder.RegisterType<FilterResolvingActionInvoker>().As(actionInvokerService).InstancePerDependency();
 
             moduleBuilder.RegisterControllers(new OrchardControllerIdentificationStrategy(extensions), assemblies.ToArray())
+                .EnableDynamicProxy(_dynamicProxyContext)
                 .InjectActionInvoker(actionInvokerService).InstancePerDependency();
 
             moduleBuilder.Register(ctx => HttpContextBaseFactory(ctx)).As<HttpContextBase>().InstancePerDependency();

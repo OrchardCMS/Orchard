@@ -43,6 +43,14 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\autofac\Autofac.Integration.Web.Mvc.dll</HintPath>
     </Reference>
+    <Reference Include="Castle.Core, Version=1.2.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\Castle Windsor 2.0\bin\Castle.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Castle.DynamicProxy2, Version=2.1.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\Castle Windsor 2.0\bin\Castle.DynamicProxy2.dll</HintPath>
+    </Reference>
     <Reference Include="FluentNHibernate, Version=1.0.0.593, Culture=neutral, PublicKeyToken=8aa435e3cb308880, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\fluentnhibernate\FluentNHibernate.dll</HintPath>
@@ -143,6 +151,7 @@
     <Compile Include="Data\Builders\SessionFactoryBuilderTests.cs" />
     <Compile Include="Data\RepositoryTests.cs" />
     <Compile Include="Data\StubLocator.cs" />
+    <Compile Include="Environment\AutofacUtil\DynamicProxy2\DynamicProxyTests.cs" />
     <Compile Include="Environment\Configuration\AppDataFolderTests.cs" />
     <Compile Include="Environment\DefaultCompositionStrategyTests.cs" />
     <Compile Include="Environment\DefaultOrchardHostTests.cs" />

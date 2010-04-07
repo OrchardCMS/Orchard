@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using Autofac;
 using Autofac.Core;
 
-namespace Orchard.Environment.ShellBuilders {
+namespace Orchard.Environment.AutofacUtil {
     public class ContainerUpdater : ContainerBuilder {
-        ICollection<Action<IComponentRegistry>> _configurationActions = new List<Action<IComponentRegistry>>();
+        readonly ICollection<Action<IComponentRegistry>> _configurationActions = new List<Action<IComponentRegistry>>();
 
         public override void RegisterCallback(Action<IComponentRegistry> configurationAction) {
             _configurationActions.Add(configurationAction);

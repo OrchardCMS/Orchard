@@ -6,7 +6,7 @@ using NUnit.Framework;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
 using Orchard.ContentManagement.Handlers;
-using Orchard.Environment.ShellBuilders;
+using Orchard.Environment.AutofacUtil;
 using Orchard.Mvc.ViewModels;
 using Orchard.UI.Zones;
 

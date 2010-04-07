@@ -3,6 +3,7 @@ using Autofac;
 using Autofac.Builder;
 using Autofac.Core;
 using Autofac.Integration.Web;
+using Orchard.Environment.AutofacUtil;
 using Orchard.Environment.Configuration;
 using Orchard.Environment.ShellBuilders;
 using Orchard.Extensions;

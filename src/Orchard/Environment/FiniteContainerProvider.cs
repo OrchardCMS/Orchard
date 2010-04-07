@@ -1,6 +1,6 @@
 using Autofac;
 using Autofac.Integration.Web;
-using Orchard.Environment.ShellBuilders;
+using Orchard.Environment.AutofacUtil;
 
 namespace Orchard.Environment {
 
