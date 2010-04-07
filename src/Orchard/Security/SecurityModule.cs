@@ -1,43 +1,30 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
-using Autofac;
 using Autofac.Core;
-using AutofacContrib.DynamicProxy2;
 using Castle.Core.Interceptor;
+using Orchard.Environment.AutofacUtil.DynamicProxy2;
 using Module = Autofac.Module;
 
 namespace Orchard.Security {
-    //public class SecurityModule : Module {
-    //    protected override void AttachToComponentRegistration(IComponentRegistry componentRegistry, IComponentRegistration registration) {
-    //        var implementationType = registration.Activator.LimitType;
-    //        var property = FindProperty(implementationType);
+    public class SecurityModule : Module {
+        protected override void AttachToComponentRegistration(IComponentRegistry componentRegistry, IComponentRegistration registration) {
+            var implementationType = registration.Activator.LimitType;
+            var property = FindProperty(implementationType);
 
-    //        if (property != null) {
-                
-    //        }
-    //    }
+            if (property != null) {
+                registration.InterceptedBy<ISecurityModuleInterceptor>();
+            }
+        }
 
-    //    public IEnumerable<Service> GetInterceptorServices(IComponentDescriptor descriptor) {
-    //        var property = FindProperty(descriptor.BestKnownImplementationType);
-    //        if (property != null) {
-    //            if (property.GetGetMethod(true).IsVirtual == false) {
-    //                throw new ApplicationException(string.Format("CurrentUser property must be virtual on class {0}", descriptor.BestKnownImplementationType.FullName));
-    //            }
-    //            yield return new TypedService(typeof(ISecurityModuleInterceptor));
-    //        }
-    //    }
-
-    //    private static PropertyInfo FindProperty(Type type) {
-    //        return type.GetProperty("CurrentUser",
-    //            BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance,
-    //            null,
-    //            typeof(IUser),
-    //            new Type[0],
-    //            null);
-    //    }
-    //}
+        private static PropertyInfo FindProperty(Type type) {
+            return type.GetProperty("CurrentUser",
+                BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance,
+                null,
+                typeof(IUser),
+                new Type[0],
+                null);
+        }
+    }
 
     public interface ISecurityModuleInterceptor : IInterceptor, IDependency {
 

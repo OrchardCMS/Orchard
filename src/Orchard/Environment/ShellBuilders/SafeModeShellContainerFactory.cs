@@ -10,6 +10,8 @@ using Autofac.Core;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Handlers;
 using Orchard.Data.Builders;
+using Orchard.Environment.AutofacUtil;
+using Orchard.Environment.AutofacUtil.DynamicProxy2;
 using Orchard.Environment.Configuration;
 using Orchard.Extensions;
 using Orchard.Localization;
@@ -39,9 +41,12 @@ namespace Orchard.Environment.ShellBuilders {
                 return null;
             }
 
+            var dynamicProxyContext = new DynamicProxyContext();
+
             var shellScope = _container.BeginLifetimeScope();
             var builder = new ContainerUpdater();
             // standard services needed in safe mode
+            builder.RegisterInstance(dynamicProxyContext);
             builder.RegisterType<DefaultOrchardShell>().As<IOrchardShell>().InstancePerLifetimeScope();
             builder.RegisterType<RoutePublisher>().As<IRoutePublisher>().InstancePerLifetimeScope();
             builder.RegisterType<ModelBinderPublisher>().As<IModelBinderPublisher>().InstancePerLifetimeScope();
@@ -67,7 +72,7 @@ namespace Orchard.Environment.ShellBuilders {
             foreach (var serviceType in dependencies) {
                 foreach (var interfaceType in serviceType.GetInterfaces()) {
                     if (typeof(IDependency).IsAssignableFrom(interfaceType)) {
-                        var registrar = builder.RegisterType(serviceType).As(interfaceType);
+                        var registrar = builder.RegisterType(serviceType).As(interfaceType).EnableDynamicProxy(dynamicProxyContext);
                         if (typeof(ISingletonDependency).IsAssignableFrom(interfaceType)) {
                             registrar.SingleInstance();
                         }

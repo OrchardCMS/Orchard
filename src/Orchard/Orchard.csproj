@@ -43,13 +43,13 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\autofac\Autofac.Integration.Web.Mvc.dll</HintPath>
     </Reference>
-    <Reference Include="AutofacContrib.DynamicProxy2, Version=2.1.13.813, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\lib\autofac-contrib\AutofacContrib.DynamicProxy2.dll</HintPath>
-    </Reference>
     <Reference Include="Castle.Core, Version=1.1.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\Castle Windsor 2.0\bin\Castle.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Castle.DynamicProxy2, Version=2.1.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\Castle Windsor 2.0\bin\Castle.DynamicProxy2.dll</HintPath>
     </Reference>
     <Reference Include="FluentNHibernate, Version=1.0.0.593, Culture=neutral, PublicKeyToken=8aa435e3cb308880, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -150,10 +150,12 @@
     <Compile Include="Data\Builders\SqlServerBuilder.cs" />
     <Compile Include="Data\Conventions\StringLengthConvention.cs" />
     <Compile Include="Data\SessionFactoryHolder.cs" />
+    <Compile Include="Environment\AutofacUtil\DynamicProxy2\DynamicProxyContext.cs" />
+    <Compile Include="Environment\AutofacUtil\DynamicProxy2\DynamicProxyExtensions.cs" />
+    <Compile Include="Environment\AutofacUtil\DynamicProxy2\ConstructorFinderWrapper.cs" />
     <Compile Include="Environment\Configuration\AppDataFolder.cs" />
     <Compile Include="Environment\Configuration\ShellSettingsLoader.cs" />
-    <Compile Include="Environment\ExtensibleInterceptionModule.cs" />
-    <Compile Include="Environment\ShellBuilders\ContainerUpdater.cs" />
+    <Compile Include="Environment\AutofacUtil\ContainerUpdater.cs" />
     <Compile Include="Environment\ShellBuilders\DefaultShellContainerFactory.cs" />
     <Compile Include="Environment\ShellBuilders\IShellContainerFactory.cs" />
     <Compile Include="Environment\ShellBuilders\SafeModeShellContainerFactory.cs" />
