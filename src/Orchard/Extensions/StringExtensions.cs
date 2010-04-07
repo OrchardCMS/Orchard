@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using System.Text.RegularExpressions;
+﻿using System.Text.RegularExpressions;
 
 namespace Orchard.Extensions {
     public static class StringExtensions {
@@ -16,8 +15,7 @@ namespace Orchard.Extensions {
             return cleanTailRegex.Replace(text.Substring(0, characterCount + 1), "") + ellipsis;
         }
 
-        public static bool IsNullOrEmptyTrimmed(this string text)
-        {
+        public static bool IsNullOrEmptyTrimmed(this string text) {
             if(text == null) return true;
             return string.IsNullOrEmpty(text.Trim());
         }

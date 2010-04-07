@@ -148,7 +148,6 @@
     <Compile Include="EventsTests.cs" />
     <Compile Include="Extensions\ExtensionFoldersTests.cs" />
     <Compile Include="Extensions\ExtensionManagerTests.cs" />
-    <Compile Include="Extensions\NullOrEmptyTrimmedStringExtensionsTests.cs" />
     <Compile Include="Localization\NullLocalizerTests.cs" />
     <Compile Include="Logging\LoggingModuleTests.cs" />
     <Compile Include="Mvc\ModelBinders\KeyedListModelBinderTests.cs" />
@@ -176,6 +175,7 @@
     <Compile Include="UI\Navigation\MenuItemComparerTests.cs" />
     <Compile Include="UI\Navigation\NavigationManagerTests.cs" />
     <Compile Include="UI\Navigation\PositionComparerTests.cs" />
+    <Compile Include="Utility\Extensions\StringExtensionsTests.cs" />
     <Compile Include="Utility\ReflectOnTests.cs" />
     <Compile Include="Utility\ReflectTests.cs" />
   </ItemGroup>

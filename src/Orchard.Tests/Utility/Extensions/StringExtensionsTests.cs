@@ -1,31 +1,29 @@
 ﻿using NUnit.Framework;
 using Orchard.Extensions;
 
-namespace Orchard.Tests.Extensions
-{
+namespace Orchard.Tests.Utility.Extensions {
     [TestFixture]
-    public class NullOrEmptyTrimmedStringExtensionsTests
-    {
+    public class StringExtensionsTests {
         [Test]
-        public void Trimmed_EmptyStringReturnsTrue() {
+        public void IsNullOrEmptyTrimmed_EmptyStringReturnsTrue() {
             const string testString = "";
             Assert.AreEqual(true, testString.IsNullOrEmptyTrimmed());
         }
 
         [Test]
-        public void NullStringReturnsTrue() {
+        public void IsNullOrEmptyTrimmed_NullStringReturnsTrue() {
             const string testString = null;
             Assert.AreEqual(true, testString.IsNullOrEmptyTrimmed());
         }
 
         [Test]
-        public void SpacedStringReturnsTrue() {
+        public void IsNullOrEmptyTrimmed_SpacedStringReturnsTrue() {
             const string testString = "    ";
             Assert.AreEqual(true, testString.IsNullOrEmptyTrimmed());
         }
 
         [Test]
-        public void ActualStringReturnsFalse() {
+        public void IsNullOrEmptyTrimmed_ActualStringReturnsFalse() {
             const string testString = "testString";
             Assert.AreEqual(false, testString.IsNullOrEmptyTrimmed());
         }
