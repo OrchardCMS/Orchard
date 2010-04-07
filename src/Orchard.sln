@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 10.00
 # Visual Studio 2008
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orchard.Web", "Orchard.Web\Orchard.Web.csproj", "{50B779EA-EC00-4699-84C0-03B395C365D2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orchard", "Orchard\Orchard.csproj", "{2D1D92BB-4555-4CBE-8D0E-63563D6CE4C6}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orchard.Framework", "Orchard\Orchard.Framework.csproj", "{2D1D92BB-4555-4CBE-8D0E-63563D6CE4C6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orchard.Tests", "Orchard.Tests\Orchard.Tests.csproj", "{ABC826D4-2FA1-4F2F-87DE-E6095F653810}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orchard.Framework.Tests", "Orchard.Tests\Orchard.Framework.Tests.csproj", "{ABC826D4-2FA1-4F2F-87DE-E6095F653810}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orchard.Web.Tests", "Orchard.Web.Tests\Orchard.Web.Tests.csproj", "{F112851D-B023-4746-B6B1-8D2E5AD8F7AA}"
 EndProject

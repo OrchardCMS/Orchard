@@ -77,6 +77,10 @@ namespace Orchard.Tests.Environment {
                 return Enumerable.Empty<ExtensionEntry>();
             }
 
+            public IEnumerable<Type> GetExtensionsTopology() {
+                throw new NotImplementedException();
+            }
+
             public void InstallExtension(string extensionType, HttpPostedFileBase extensionBundle) {
                 throw new NotImplementedException();
             }

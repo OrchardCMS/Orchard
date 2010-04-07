@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using ICSharpCode.SharpZipLib.Zip;
+using Orchard.Environment;
 using Orchard.Extensions.Helpers;
 using Orchard.Extensions.Loaders;
 using Orchard.Localization;
@@ -94,6 +95,12 @@ namespace Orchard.Extensions {
                 _activeExtensions = BuildActiveExtensions().ToList();
             }
             return _activeExtensions;
+        }
+
+        public IEnumerable<Type> GetExtensionsTopology() {
+            var types = ActiveExtensions().SelectMany(x => x.ExportedTypes);
+            types = types.Concat(typeof(IOrchardHost).Assembly.GetExportedTypes());
+            return types.Where(t => t.IsClass && !t.IsAbstract);
         }
 
         public void InstallExtension(string extensionType, HttpPostedFileBase extensionBundle) {

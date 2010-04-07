@@ -30,19 +30,11 @@ namespace Orchard.Environment {
         }
 
         public IEnumerable<Type> GetModuleTypes() {
-            var types = _extensionManager.ActiveExtensions().SelectMany(x => x.ExportedTypes);
-            types = types.Concat(typeof(IOrchardHost).Assembly.GetExportedTypes());
-            var nonAbstractClasses = types.Where(t => t.IsClass && !t.IsAbstract);
-            var modules = nonAbstractClasses.Where(t => typeof(IModule).IsAssignableFrom(t));
-            return modules;
+            return _extensionManager.GetExtensionsTopology().Where(t => typeof(IModule).IsAssignableFrom(t));
         }
 
         public IEnumerable<Type> GetDependencyTypes() {
-            var types = _extensionManager.ActiveExtensions().SelectMany(x => x.ExportedTypes);
-            types = types.Concat(typeof(IOrchardHost).Assembly.GetExportedTypes());
-            var nonAbstractClasses = types.Where(t => t.IsClass && !t.IsAbstract);
-            var modules = nonAbstractClasses.Where(t => typeof(IDependency).IsAssignableFrom(t));
-            return modules;
+            return _extensionManager.GetExtensionsTopology().Where(t => typeof(IDependency).IsAssignableFrom(t));
         }
 
         public IEnumerable<RecordDescriptor> GetRecordDescriptors() {
