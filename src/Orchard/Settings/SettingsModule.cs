@@ -4,7 +4,6 @@ using System.Reflection;
 using Autofac;
 using AutofacContrib.DynamicProxy2;
 using Castle.Core.Interceptor;
-using Orchard.Security;
 using Module = Autofac.Builder.Module;
 
 namespace Orchard.Settings {

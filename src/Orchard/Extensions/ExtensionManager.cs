@@ -7,7 +7,6 @@ using Orchard.Extensions.Helpers;
 using Orchard.Extensions.Loaders;
 using Orchard.Localization;
 using Orchard.Logging;
-using Orchard.Utility;
 using Yaml.Grammar;
 using System.Web;
 

@@ -1,10 +1,8 @@
 ﻿using System;
-using System.Diagnostics;
 using Autofac;
 using Autofac.Builder;
 using Autofac.Integration.Web;
 using Autofac.Modules;
-using AutofacContrib.DynamicProxy2;
 using Orchard.Environment.Configuration;
 using Orchard.Environment.ShellBuilders;
 using Orchard.Extensions;

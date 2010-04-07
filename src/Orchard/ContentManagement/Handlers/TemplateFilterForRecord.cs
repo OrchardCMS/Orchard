@@ -1,5 +1,4 @@
 ﻿using Orchard.ContentManagement.Records;
-using Orchard.ContentManagement.ViewModels;
 
 namespace Orchard.ContentManagement.Handlers {
     public class TemplateFilterForRecord<TRecord> : TemplateFilterBase<ContentPart<TRecord>> where TRecord : ContentPartRecord, new() {

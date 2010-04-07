@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Linq;
 using System.Web.Mvc;
-using Orchard.Mvc.ViewModels;
 using Orchard.Themes;
 
 namespace Orchard.Mvc.ViewEngines {

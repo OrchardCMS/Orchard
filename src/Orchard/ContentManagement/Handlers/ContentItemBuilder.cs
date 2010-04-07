@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Orchard.ContentManagement.Handlers {
+﻿namespace Orchard.ContentManagement.Handlers {
     public class ContentItemBuilder {
         private readonly ContentItem _item;
 
