@@ -187,15 +187,12 @@ namespace Orchard.Mvc.Html {
 
         public static string Link(this HtmlHelper htmlHelper, string linkContents, string href, IDictionary<string, object> htmlAttributes)
         {
-			TagBuilder tagBuilder = new TagBuilder("a")
-			{
-					InnerHtml = htmlHelper.Encode(linkContents)
-			};
-
-			tagBuilder.MergeAttributes(htmlAttributes);
-			tagBuilder.MergeAttribute("href", href);
-			return tagBuilder.ToString(TagRenderMode.Normal);
-		}
+            TagBuilder tagBuilder = new TagBuilder("a") 
+                { InnerHtml = htmlHelper.Encode(linkContents) };
+            tagBuilder.MergeAttributes(htmlAttributes);
+            tagBuilder.MergeAttribute("href", href);
+            return tagBuilder.ToString(TagRenderMode.Normal);
+        }
 
         #endregion
 
