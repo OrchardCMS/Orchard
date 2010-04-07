@@ -35,6 +35,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\autofac\Autofac.dll</HintPath>
     </Reference>
+    <Reference Include="Autofac.Configuration, Version=2.1.13.813, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\autofac\Autofac.Configuration.dll</HintPath>
+    </Reference>
     <Reference Include="Autofac.Integration.Web, Version=2.1.13.813, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\autofac\Autofac.Integration.Web.dll</HintPath>
@@ -158,6 +162,7 @@
     <Compile Include="Environment\AutofacUtil\DynamicProxy2\DynamicProxyExtensions.cs" />
     <Compile Include="Environment\AutofacUtil\DynamicProxy2\ConstructorFinderWrapper.cs" />
     <Compile Include="Environment\Configuration\AppDataFolder.cs" />
+    <Compile Include="Environment\Configuration\AzureBlobTenantManager.cs" />
     <Compile Include="Environment\Configuration\DefaultTenantManager.cs" />
     <Compile Include="Environment\Configuration\ITenantManager.cs" />
     <Compile Include="Environment\AutofacUtil\ContainerUpdater.cs" />

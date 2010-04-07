@@ -1,5 +1,9 @@
 ﻿using System;
+using System.Configuration;
+using System.IO;
+using System.Web.Hosting;
 using Autofac;
+using Autofac.Configuration;
 using Autofac.Integration.Web;
 using Orchard.Environment.AutofacUtil;
 using Orchard.Environment.Configuration;
@@ -43,6 +47,15 @@ namespace Orchard.Environment {
                 .SingleInstance();
 
             registrations(builder);
+
+            
+            var autofacSection = ConfigurationManager.GetSection(ConfigurationSettingsReader.DefaultSectionName);
+            if (autofacSection != null)
+                builder.RegisterModule(new ConfigurationSettingsReader());
+
+            var optionalHostConfig = HostingEnvironment.MapPath("~/App_Data/Host.config");
+            if (File.Exists(optionalHostConfig))
+                builder.RegisterModule(new ConfigurationSettingsReader(ConfigurationSettingsReader.DefaultSectionName, optionalHostConfig));
 
             return builder.Build();
         }
