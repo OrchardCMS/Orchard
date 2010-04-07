@@ -4,6 +4,7 @@ using System.IO;
 using System.Text;
 using System.Web;
 using System.Web.Mvc;
+using Orchard.Extensions;
 using Orchard.Localization;
 using Orchard.Media.Models;
 using Orchard.Media.Services;
@@ -139,21 +140,32 @@ namespace Orchard.Media.Controllers {
         }
 
         [HttpPost]
-        public ActionResult Add() {
+        public ActionResult Add()
+        {
             var viewModel = new MediaItemAddViewModel();
-            try {
+            try
+            {
                 UpdateModel(viewModel);
                 if (!Services.Authorizer.Authorize(Permissions.UploadMediaFiles, T("Couldn't upload media file")))
                     return new HttpUnauthorizedResult();
 
-                foreach (string fileName in Request.Files) {
+                if(Request.Files[0].FileName.IsNullOrEmptyTrimmed()) {
+                    ModelState.AddModelError("File", "Select a file to upload");
+                }
+
+                if (!ModelState.IsValid)
+                    return View(viewModel);
+
+                foreach (string fileName in Request.Files)
+                {
                     HttpPostedFileBase file = Request.Files[fileName];
                     _mediaService.UploadMediaFile(viewModel.MediaPath, file);
                 }
 
                 return RedirectToAction("Edit", new { name = viewModel.FolderName, mediaPath = viewModel.MediaPath });
             }
-            catch (Exception exception) {
+            catch (Exception exception)
+            {
                 Services.Notifier.Error("Uploading media file failed: " + exception.Message);
                 return View(viewModel);
             }

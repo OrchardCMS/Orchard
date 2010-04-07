@@ -148,6 +148,7 @@
     <Compile Include="EventsTests.cs" />
     <Compile Include="Extensions\ExtensionFoldersTests.cs" />
     <Compile Include="Extensions\ExtensionManagerTests.cs" />
+    <Compile Include="Extensions\NullOrEmptyTrimmedStringExtensionsTests.cs" />
     <Compile Include="Localization\NullLocalizerTests.cs" />
     <Compile Include="Logging\LoggingModuleTests.cs" />
     <Compile Include="Mvc\ModelBinders\KeyedListModelBinderTests.cs" />
