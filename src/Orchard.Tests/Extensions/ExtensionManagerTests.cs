@@ -16,7 +16,6 @@ namespace Orchard.Tests.Extensions {
         public void Init() {
             var builder = new ContainerBuilder();
             _folders = new StubFolders();
-            //builder.RegisterModule(new ImplicitCollectionSupportModule());
             builder.RegisterInstance(_folders).As<IExtensionFolders>();
             builder.RegisterType<ExtensionManager>().As<IExtensionManager>();
             _container = builder.Build();
@@ -175,5 +174,21 @@ features:
             }
         }
 
+        [Test]
+        public void ExtensionManagerShouldReturnTopology() {
+            var topology = _manager.GetExtensionsTopology();
+
+            Assert.That(topology.Count(), Is.Not.EqualTo(0));
+        }
+
+        [Test]
+        public void ExtensionManagerTopologyShouldContainNonAbstractClasses() {
+            var topology = _manager.GetExtensionsTopology();
+
+            foreach (var type in topology) {
+                Assert.That(type.IsClass);
+                Assert.That(!type.IsAbstract);
+            }
+        }
     }
 }
