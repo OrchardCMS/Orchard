@@ -165,6 +165,7 @@
     <Compile Include="Extensions\ExtensionFolders.cs" />
     <Compile Include="Extensions\FeatureDescriptor.cs" />
     <Compile Include="Extensions\Loaders\AreaExtensionLoader.cs" />
+    <Compile Include="Extensions\Records\ExtensionRecord.cs" />
     <Compile Include="Mvc\AntiForgery\ValidateAntiForgeryTokenOrchardAttribute.cs" />
     <Compile Include="Mvc\FollowReturnUrl\FollowReturnUrlFilter.cs" />
     <Compile Include="Mvc\Html\FileRegistrationContextExtensions.cs" />

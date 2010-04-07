@@ -7,6 +7,7 @@ using Orchard.ContentManagement;
 using Orchard.ContentManagement.Records;
 using Orchard.Extensions;
 using Orchard.Utility.Extensions;
+using Orchard.Extensions.Records;
 
 namespace Orchard.Environment {
     //TEMP: This will be replaced by packaging system
@@ -42,6 +43,7 @@ namespace Orchard.Environment {
                 new RecordDescriptor { Prefix = "Core", Type = typeof (ContentTypeRecord)},
                 new RecordDescriptor { Prefix = "Core", Type = typeof (ContentItemRecord)},
                 new RecordDescriptor { Prefix = "Core", Type = typeof (ContentItemVersionRecord)},
+                new RecordDescriptor { Prefix = "Core", Type = typeof (ExtensionRecord)},
             };
 
             foreach (var extension in _extensionManager.ActiveExtensions()) {
