@@ -15,6 +15,7 @@ namespace Orchard.Environment.Configuration {
         IEnumerable<string> ListDirectories(string path);
 
         void CreateFile(string path, string content);
+        string ReadFile(string path);
         void DeleteFile(string path);
 
         string CreateDirectory(string path);
@@ -26,7 +27,6 @@ namespace Orchard.Environment.Configuration {
         /// </summary>
         void SetBasePath(string basePath);
         string MapPath(string path);
-
     }
 
     public class AppDataFolder : IAppDataFolder {
@@ -42,6 +42,10 @@ namespace Orchard.Environment.Configuration {
             if (!Directory.Exists(folderPath))
                 Directory.CreateDirectory(folderPath);
             File.WriteAllText(filePath, content);
+        }
+
+        public string ReadFile(string path) {
+            return File.ReadAllText(Path.Combine(_basePath, path));
         }
 
         public void DeleteFile(string path) {
