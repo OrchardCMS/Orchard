@@ -1,14 +1,11 @@
 ﻿using System;
 using Autofac;
-using Autofac.Builder;
-using Autofac.Core;
 using Autofac.Integration.Web;
 using Orchard.Environment.AutofacUtil;
 using Orchard.Environment.Configuration;
 using Orchard.Environment.ShellBuilders;
 using Orchard.Extensions;
 using Orchard.Extensions.Loaders;
-using Orchard.Mvc;
 
 namespace Orchard.Environment {
     public static class OrchardStarter {
@@ -20,7 +17,7 @@ namespace Orchard.Environment {
             builder.RegisterType<DefaultCompositionStrategy>().As<ICompositionStrategy>().SingleInstance();
             builder.RegisterType<DefaultShellContainerFactory>().As<IShellContainerFactory>().SingleInstance();
             builder.RegisterType<AppDataFolder>().As<IAppDataFolder>().SingleInstance();
-            builder.RegisterType<ShellSettingsLoader>().As<IShellSettingsLoader>().SingleInstance();
+            builder.RegisterType<DefaultTenantManager>().As<ITenantManager>().SingleInstance();
             builder.RegisterType<SafeModeShellContainerFactory>().As<IShellContainerFactory>().SingleInstance();
 
             // The container provider gives you access to the lowest container at the time, 

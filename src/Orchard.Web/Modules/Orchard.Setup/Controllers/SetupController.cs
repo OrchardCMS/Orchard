@@ -21,17 +21,17 @@ namespace Orchard.Setup.Controllers {
     public class SetupController : Controller {
         private readonly INotifier _notifier;
         private readonly IOrchardHost _orchardHost;
-        private readonly IShellSettingsLoader _shellSettingsLoader;
+        private readonly ITenantManager _tenantManager;
         private readonly IAppDataFolder _appDataFolder;
 
         public SetupController(
             INotifier notifier,
             IOrchardHost orchardHost, 
-            IShellSettingsLoader shellSettingsLoader,
+            ITenantManager tenantManager,
             IAppDataFolder appDataFolder) {
             _notifier = notifier;
             _orchardHost = orchardHost;
-            _shellSettingsLoader = shellSettingsLoader;
+            _tenantManager = tenantManager;
             _appDataFolder = appDataFolder;
             T = NullLocalizer.Instance;
         }
@@ -134,7 +134,7 @@ namespace Orchard.Setup.Controllers {
                     }
                 }
 
-                _shellSettingsLoader.SaveSettings(shellSettings);
+                _tenantManager.SaveSettings(shellSettings);
 
                 _orchardHost.Reinitialize();
 

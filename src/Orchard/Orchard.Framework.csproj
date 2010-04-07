@@ -158,7 +158,8 @@
     <Compile Include="Environment\AutofacUtil\DynamicProxy2\DynamicProxyExtensions.cs" />
     <Compile Include="Environment\AutofacUtil\DynamicProxy2\ConstructorFinderWrapper.cs" />
     <Compile Include="Environment\Configuration\AppDataFolder.cs" />
-    <Compile Include="Environment\Configuration\ShellSettingsLoader.cs" />
+    <Compile Include="Environment\Configuration\DefaultTenantManager.cs" />
+    <Compile Include="Environment\Configuration\ITenantManager.cs" />
     <Compile Include="Environment\AutofacUtil\ContainerUpdater.cs" />
     <Compile Include="Environment\ShellBuilders\DefaultShellContainerFactory.cs" />
     <Compile Include="Environment\ShellBuilders\IShellContainerFactory.cs" />

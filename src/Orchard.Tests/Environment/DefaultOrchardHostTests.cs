@@ -47,7 +47,7 @@ namespace Orchard.Tests.Environment {
                     builder.RegisterInstance(new ViewEngineCollection { new WebFormViewEngine() });
                     builder.RegisterInstance(new StuExtensionManager()).As<IExtensionManager>();
                     builder.RegisterInstance(new Mock<IHackInstallationGenerator>().Object);
-                    builder.RegisterInstance(new StubShellSettingsLoader()).As<IShellSettingsLoader>();
+                    builder.RegisterInstance(new StubShellSettingsLoader()).As<ITenantManager>();
                 });
             _lifetime = _container.BeginLifetimeScope();
             var updater = new ContainerUpdater();
@@ -55,7 +55,7 @@ namespace Orchard.Tests.Environment {
             updater.Update(_lifetime);
         }
 
-        public class StubShellSettingsLoader : IShellSettingsLoader {
+        public class StubShellSettingsLoader : ITenantManager {
             private readonly List<IShellSettings> _shellSettings = new List<IShellSettings>
                                                                    {new ShellSettings {Name = "testing"}};
 

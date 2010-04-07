@@ -44,6 +44,7 @@ namespace Orchard.Environment.Configuration {
             public string Name { get; set; }
             public string DataProvider { get; set; }
             public string DataConnectionString { get; set; }
+            public string DataPrefix { get; set; }
         }
 
         static IShellSettings ParseSettings(string text) {
@@ -57,15 +58,16 @@ namespace Orchard.Environment.Configuration {
             };
         }
 
-        static string ComposeSettings(IShellSettings shellSettings) {
-            if (shellSettings == null)
+        static string ComposeSettings(IShellSettings settings) {
+            if (settings == null)
                 return "";
 
             var ser = new YamlSerializer();
             return ser.Serialize(new Content {
-                Name = shellSettings.Name,
-                DataProvider = shellSettings.DataProvider,
-                DataConnectionString = shellSettings.DataConnectionString
+                Name = settings.Name,
+                DataProvider = settings.DataProvider,
+                DataConnectionString = settings.DataConnectionString,
+                DataPrefix = settings.DataPrefix,
             });
         }
     }

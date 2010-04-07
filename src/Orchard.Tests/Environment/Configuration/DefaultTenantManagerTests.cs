@@ -5,7 +5,7 @@ using Orchard.Environment.Configuration;
 
 namespace Orchard.Tests.Environment.Configuration {
     [TestFixture]
-    public class ShellSettingsLoaderTests {
+    public class DefaultTenantManagerTests {
         private string _tempFolder;
         private AppDataFolder _appData;
 
@@ -26,7 +26,7 @@ namespace Orchard.Tests.Environment.Configuration {
             
             _appData.CreateFile("Sites\\Default\\Settings.txt", "Name: Default\r\nDataProvider: SQLite\r\nDataConnectionString: something else");
 
-            IShellSettingsLoader loader = new ShellSettingsLoader(_appData);
+            ITenantManager loader = new DefaultTenantManager(_appData);
             var settings = loader.LoadSettings().Single();
             Assert.That(settings, Is.Not.Null);
             Assert.That(settings.Name, Is.EqualTo("Default"));
@@ -41,7 +41,7 @@ namespace Orchard.Tests.Environment.Configuration {
             _appData.CreateFile("Sites\\Default\\Settings.txt", "Name: Default\r\nDataProvider: SQLite\r\nDataConnectionString: something else");
             _appData.CreateFile("Sites\\Another\\Settings.txt", "Name: Another\r\nDataProvider: SQLite2\r\nDataConnectionString: something else2");
 
-            IShellSettingsLoader loader = new ShellSettingsLoader(_appData);
+            ITenantManager loader = new DefaultTenantManager(_appData);
             var settings = loader.LoadSettings();
             Assert.That(settings.Count(), Is.EqualTo(2));
 
@@ -60,7 +60,7 @@ namespace Orchard.Tests.Environment.Configuration {
         public void NewSettingsCanBeStored() {
             _appData.CreateFile("Sites\\Default\\Settings.txt", "Name: Default\r\nDataProvider: SQLite\r\nDataConnectionString: something else");
             
-            IShellSettingsLoader loader = new ShellSettingsLoader(_appData);
+            ITenantManager loader = new DefaultTenantManager(_appData);
             var foo = new ShellSettings {Name = "Foo", DataProvider = "Bar", DataConnectionString = "Quux"};
 
             Assert.That(loader.LoadSettings().Count(), Is.EqualTo(1));
