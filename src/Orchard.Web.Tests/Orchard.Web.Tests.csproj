@@ -70,9 +70,9 @@
       <Project>{50B779EA-EC00-4699-84C0-03B395C365D2}</Project>
       <Name>Orchard.Web</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Orchard\Orchard.csproj">
+    <ProjectReference Include="..\Orchard\Orchard.Framework.csproj">
       <Project>{2D1D92BB-4555-4CBE-8D0E-63563D6CE4C6}</Project>
-      <Name>Orchard</Name>
+      <Name>Orchard.Framework</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
