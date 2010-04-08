@@ -164,7 +164,7 @@
     <Content Include="Themes\TheAdmin\Views\Layout.ascx" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="App_Data\Sample.Host.config" />
+    <Content Include="Config\Sample.Host.config" />
     <None Include="Themes\TheAdmin\Styles\images\icons.psd" />
     <Content Include="Themes\ClassicDark\Content\Images\bodyBackgroundgrey.gif" />
     <Content Include="Themes\ClassicDark\Content\Images\sidebarBackground.gif" />
@@ -342,6 +342,7 @@
     <Content Include="Themes\Web.config" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="App_Data\" />
     <Folder Include="Themes\ClassicDark\DesignerNotes\" />
     <Folder Include="Themes\SafeMode\Content\Images\" />
   </ItemGroup>

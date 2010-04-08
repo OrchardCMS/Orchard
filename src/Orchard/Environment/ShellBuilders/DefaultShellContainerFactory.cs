@@ -35,17 +35,18 @@ namespace Orchard.Environment.ShellBuilders {
 
             // add components by the IDependency interfaces they expose
             foreach (var serviceType in _compositionStrategy.GetDependencyTypes()) {
+                var registrar = addingModulesAndServices.RegisterType(serviceType)
+                    .EnableDynamicProxy(dynamicProxyContext)
+                    .InstancePerLifetimeScope();
+
                 foreach (var interfaceType in serviceType.GetInterfaces()) {
                     if (typeof(IDependency).IsAssignableFrom(interfaceType)) {
-                        var registrar = addingModulesAndServices.RegisterType(serviceType).As(interfaceType).EnableDynamicProxy(dynamicProxyContext);
+                        registrar = registrar.As(interfaceType);
                         if (typeof(ISingletonDependency).IsAssignableFrom(interfaceType)) {
-                            registrar.SingleInstance();
+                            registrar = registrar.SingleInstance();
                         }
                         else if (typeof(ITransientDependency).IsAssignableFrom(interfaceType)) {
-                            registrar.InstancePerDependency();
-                        }
-                        else {
-                            registrar.InstancePerLifetimeScope();
+                            registrar = registrar.InstancePerDependency();
                         }
                     }
                 }

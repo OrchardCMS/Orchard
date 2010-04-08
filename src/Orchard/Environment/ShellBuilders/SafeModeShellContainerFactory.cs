@@ -70,17 +70,15 @@ namespace Orchard.Environment.ShellBuilders {
                 .GetExportedTypes()
                 .Where(type => type.IsClass && !type.IsAbstract && typeof(IDependency).IsAssignableFrom(type));
             foreach (var serviceType in dependencies) {
+                var registrar = builder.RegisterType(serviceType).EnableDynamicProxy(dynamicProxyContext).InstancePerLifetimeScope();
                 foreach (var interfaceType in serviceType.GetInterfaces()) {
                     if (typeof(IDependency).IsAssignableFrom(interfaceType)) {
-                        var registrar = builder.RegisterType(serviceType).As(interfaceType).EnableDynamicProxy(dynamicProxyContext);
+                        registrar = registrar.As(interfaceType);
                         if (typeof(ISingletonDependency).IsAssignableFrom(interfaceType)) {
-                            registrar.SingleInstance();
+                            registrar = registrar.SingleInstance();
                         }
                         else if (typeof(ITransientDependency).IsAssignableFrom(interfaceType)) {
-                            registrar.InstancePerDependency();
-                        }
-                        else {
-                            registrar.InstancePerLifetimeScope();
+                            registrar = registrar.InstancePerDependency();
                         }
                     }
                 }
