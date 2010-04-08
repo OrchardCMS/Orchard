@@ -62,9 +62,6 @@ namespace Orchard.Environment.ShellBuilders {
                 addingModules.RegisterModule(module);
             }
 
-            // DynamicProxy2.
-            // addingModules.RegisterModule(new ExtensibleInterceptionModule(modules.OfType<IComponentInterceptorProvider>()));
-
             addingModules.Update(shellScope);
 
             return shellScope;
