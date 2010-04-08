@@ -77,7 +77,7 @@ namespace Orchard.Tests.Environment {
                 return Enumerable.Empty<ExtensionEntry>();
             }
 
-            public IEnumerable<Type> GetExtensionsTopology() {
+            public ShellTopology GetExtensionsTopology() {
                 throw new NotImplementedException();
             }
 

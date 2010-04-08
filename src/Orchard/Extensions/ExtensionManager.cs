@@ -101,10 +101,10 @@ namespace Orchard.Extensions {
             return _activeExtensions;
         }
 
-        public IEnumerable<Type> GetExtensionsTopology() {
+        public ShellTopology GetExtensionsTopology() {
             var types = ActiveExtensions().SelectMany(x => x.ExportedTypes);
             types = types.Concat(typeof(IOrchardHost).Assembly.GetExportedTypes());
-            return types.Where(t => t.IsClass && !t.IsAbstract);
+            return new ShellTopology { Types = types.Where(t => t.IsClass && !t.IsAbstract) };
         }
 
         public void InstallExtension(string extensionType, HttpPostedFileBase extensionBundle) {

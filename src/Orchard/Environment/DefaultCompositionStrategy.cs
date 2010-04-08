@@ -31,11 +31,11 @@ namespace Orchard.Environment {
         }
 
         public IEnumerable<Type> GetModuleTypes() {
-            return _extensionManager.GetExtensionsTopology().Where(t => typeof(IModule).IsAssignableFrom(t));
+            return _extensionManager.GetExtensionsTopology().Types.Where(t => typeof(IModule).IsAssignableFrom(t));
         }
 
         public IEnumerable<Type> GetDependencyTypes() {
-            return _extensionManager.GetExtensionsTopology().Where(t => typeof(IDependency).IsAssignableFrom(t));
+            return _extensionManager.GetExtensionsTopology().Types.Where(t => typeof(IDependency).IsAssignableFrom(t));
         }
 
         public IEnumerable<RecordDescriptor> GetRecordDescriptors() {
