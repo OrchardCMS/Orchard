@@ -137,7 +137,8 @@
     <Compile Include="Validation\Argument.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Commands\CommandAgent.cs" />
+    <Compile Include="Commands\CommandHostAgent.cs" />
+    <Compile Include="Commands\CommandManager.cs" />
     <Compile Include="Commands\OrchardCommandAttribute.cs" />
     <Compile Include="Commands\CommandContext.cs" />
     <Compile Include="Commands\DefaultOrchardCommandHandler.cs" />

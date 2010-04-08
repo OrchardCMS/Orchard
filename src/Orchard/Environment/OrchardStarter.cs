@@ -57,17 +57,18 @@ namespace Orchard.Environment {
             if (File.Exists(optionalHostConfig))
                 builder.RegisterModule(new ConfigurationSettingsReader(ConfigurationSettingsReader.DefaultSectionName, optionalHostConfig));
 
-            return builder.Build();
+            var container = builder.Build();
+
+            var updater = new ContainerUpdater();
+            updater.RegisterInstance(container);
+            updater.Update(container);
+
+            return container;
         }
 
         public static IOrchardHost CreateHost(Action<ContainerBuilder> registrations) {
             var container = CreateHostContainer(registrations);
-            var updater = new ContainerUpdater();
-            updater.RegisterInstance(container);
-            updater.Update(container);
-            var orchardHost = container.Resolve<IOrchardHost>();
-
-            return orchardHost;
+            return container.Resolve<IOrchardHost>();
         }
     }
 }
