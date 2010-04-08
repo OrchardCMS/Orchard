@@ -16,15 +16,19 @@ namespace Orchard.Extensions {
         private readonly IEnumerable<IExtensionFolders> _folders;
         private readonly IEnumerable<IExtensionLoader> _loaders;
         private IEnumerable<ExtensionEntry> _activeExtensions;
+        //private readonly IRepository<ExtensionRecord> _extensionRepository;
 
         public Localizer T { get; set; }
         public ILogger Logger { get; set; }
 
         public ExtensionManager(
             IEnumerable<IExtensionFolders> folders,
-            IEnumerable<IExtensionLoader> loaders) {
+            IEnumerable<IExtensionLoader> loaders
+            //IRepository<ExtensionRecord> extensionRepository
+            ) {
             _folders = folders;
             _loaders = loaders.OrderBy(x => x.Order);
+            //_extensionRepository = extensionRepository;
             T = NullLocalizer.Instance;
             Logger = NullLogger.Instance;
         }
@@ -97,10 +101,10 @@ namespace Orchard.Extensions {
             return _activeExtensions;
         }
 
-        public IEnumerable<Type> GetExtensionsTopology() {
+        public ShellTopology GetExtensionsTopology() {
             var types = ActiveExtensions().SelectMany(x => x.ExportedTypes);
             types = types.Concat(typeof(IOrchardHost).Assembly.GetExportedTypes());
-            return types.Where(t => t.IsClass && !t.IsAbstract);
+            return new ShellTopology { Types = types.Where(t => t.IsClass && !t.IsAbstract) };
         }
 
         public void InstallExtension(string extensionType, HttpPostedFileBase extensionBundle) {
@@ -163,8 +167,8 @@ namespace Orchard.Extensions {
         }
 
         private IEnumerable<ExtensionEntry> BuildActiveExtensions() {
-            //TODO: this component needs access to some "current settings" to know which are active
             foreach (var descriptor in AvailableExtensions()) {
+                //_extensionRepository.Create(new ExtensionRecord { Name = descriptor.Name });
                 // Extensions that are Themes don't have buildable components.
                 if (String.Equals(descriptor.ExtensionType, "Module", StringComparison.OrdinalIgnoreCase)) {
                     yield return BuildEntry(descriptor);
@@ -172,7 +176,15 @@ namespace Orchard.Extensions {
             }
         }
 
+        private bool IsExtensionEnabled(string name) {
+            //ExtensionRecord extensionRecord = _extensionRepository.Get(x => x.Name == name);
+            //if (extensionRecord.Enabled) return true;
+            //return false;
+            return true;
+        }
+
         private ExtensionEntry BuildEntry(ExtensionDescriptor descriptor) {
+            if (!IsExtensionEnabled(descriptor.Name)) return null; 
             foreach (var loader in _loaders) {
                 var entry = loader.Load(descriptor);
                 if (entry != null)

@@ -15,17 +15,17 @@ namespace Orchard.Environment {
         private readonly ControllerBuilder _controllerBuilder;
         private readonly IEnumerable<IShellContainerFactory> _shellContainerFactories;
 
-        private readonly IShellSettingsLoader _shellSettingsLoader;
+        private readonly ITenantManager _tenantManager;
         private IOrchardShell _current;
 
 
         public DefaultOrchardHost(
             IContainerProvider containerProvider,
-            IShellSettingsLoader shellSettingsLoader,
+            ITenantManager tenantManager,
             ControllerBuilder controllerBuilder,
             IEnumerable<IShellContainerFactory> shellContainerFactories) {
             _containerProvider = containerProvider;
-            _shellSettingsLoader = shellSettingsLoader;
+            _tenantManager = tenantManager;
             _controllerBuilder = controllerBuilder;
             _shellContainerFactories = shellContainerFactories;
         }
@@ -95,7 +95,7 @@ namespace Orchard.Environment {
         }
 
         public virtual ILifetimeScope CreateShellContainer() {
-            var settings = _shellSettingsLoader.LoadSettings();
+            var settings = _tenantManager.LoadSettings();
             if (settings.Any()) {
                 //TEMP: multi-tenancy not implemented yet
                 var shellContainer = CreateShellContainer(settings.Single());

@@ -54,7 +54,7 @@ namespace Orchard.Tests.Mvc.Routes {
                 };
             }
 
-            public IEnumerable<Type> GetExtensionsTopology() {
+            public ShellTopology GetExtensionsTopology() {
                 throw new NotImplementedException();
             }
 

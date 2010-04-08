@@ -178,14 +178,14 @@ features:
         public void ExtensionManagerShouldReturnTopology() {
             var topology = _manager.GetExtensionsTopology();
 
-            Assert.That(topology.Count(), Is.Not.EqualTo(0));
+            Assert.That(topology.Types.Count(), Is.Not.EqualTo(0));
         }
 
         [Test]
         public void ExtensionManagerTopologyShouldContainNonAbstractClasses() {
             var topology = _manager.GetExtensionsTopology();
 
-            foreach (var type in topology) {
+            foreach (var type in topology.Types) {
                 Assert.That(type.IsClass);
                 Assert.That(!type.IsAbstract);
             }

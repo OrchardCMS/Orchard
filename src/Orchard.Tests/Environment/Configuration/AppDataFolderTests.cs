@@ -77,5 +77,19 @@ namespace Orchard.Tests.Environment.Configuration {
             _appDataFolder.CreateFile("alpha\\omega\\foo\\bar.txt", "quux");
             Assert.That(Directory.Exists(Path.Combine(_tempFolder, "alpha\\omega\\foo")), Is.True);
         }
+
+
+        [Test]
+        public void FilesCanBeReadBack() {            
+            _appDataFolder.CreateFile("alpha\\gamma\\foo\\bar.txt", @"
+this is
+a
+test");
+            var text = _appDataFolder.ReadFile("alpha\\gamma\\foo\\bar.txt");
+            Assert.That(text, Is.EqualTo(@"
+this is
+a
+test"));
+        }
     }
 }

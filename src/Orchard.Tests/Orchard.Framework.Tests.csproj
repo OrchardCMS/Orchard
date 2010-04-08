@@ -153,6 +153,7 @@
     <Compile Include="Data\StubLocator.cs" />
     <Compile Include="Environment\AutofacUtil\DynamicProxy2\DynamicProxyTests.cs" />
     <Compile Include="Environment\Configuration\AppDataFolderTests.cs" />
+    <Compile Include="Environment\Configuration\DefaultTenantManagerTests.cs" />
     <Compile Include="Environment\DefaultCompositionStrategyTests.cs" />
     <Compile Include="Environment\DefaultOrchardHostTests.cs" />
     <Compile Include="Environment\DefaultOrchardShellTests.cs" />
