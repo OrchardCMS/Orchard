@@ -8,5 +8,6 @@ namespace Orchard {
         public bool Verbose { get; set; }
         public string VirtualPath { get; set; }
         public string WorkingDirectory { get; set; }
+        public string Tenant { get; set; }
     }
 }

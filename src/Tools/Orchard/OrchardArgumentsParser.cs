@@ -10,8 +10,9 @@ namespace Orchard {
     }
 
     public class OrchardArgumentsParser  : IOrchardArgumentsParser {
+
         public OrchardArguments Parse(ParserResult arguments) {
-            OrchardArguments result = new OrchardArguments();
+            var result = new OrchardArguments();
 
             foreach (var sw in arguments.Switches) {
                 switch (sw.Name.ToLowerInvariant()) {
@@ -28,6 +29,11 @@ namespace Orchard {
                     case "vp":
                     case "virtualpath":
                         result.VirtualPath = sw.Value;
+                        break;
+
+                    case "t":
+                    case "tenant":
+                        result.Tenant = sw.Value;
                         break;
                 }
             }

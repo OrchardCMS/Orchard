@@ -41,8 +41,16 @@ namespace Orchard {
                 Console.WriteLine("Detected and using orchard directory \"{0}\"", orchardDirectory.FullName);
             }
 
-            object host = CreateWorkerAppDomainWithHost(arguments.VirtualPath, orchardDirectory.FullName, typeof(CommandHost));
+            if (arguments.Verbose) {
+                Console.WriteLine("Creating ASP.NET AppDomain for command agent");
+            }
+            var host = (CommandHost)CreateWorkerAppDomainWithHost(arguments.VirtualPath, orchardDirectory.FullName, typeof(CommandHost));
 
+
+            if (arguments.Verbose) {
+                Console.WriteLine("Executing command in ASP.NET AppDomain");
+            }
+            host.RunCommand(_args);
         }
 
         private DirectoryInfo GetOrchardDirectory(string directory) {
