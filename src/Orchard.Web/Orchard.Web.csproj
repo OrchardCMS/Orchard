@@ -164,7 +164,7 @@
     <Content Include="Themes\TheAdmin\Views\Layout.ascx" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="App_Data\Host.config" />
+    <Content Include="App_Data\Sample.Host.config" />
     <None Include="Themes\TheAdmin\Styles\images\icons.psd" />
     <Content Include="Themes\ClassicDark\Content\Images\bodyBackgroundgrey.gif" />
     <Content Include="Themes\ClassicDark\Content\Images\sidebarBackground.gif" />
