@@ -8,6 +8,7 @@ using System.Text;
 using System.Web;
 using System.Web.Hosting;
 using Orchard.Host;
+using Orchard.Parameters;
 
 namespace Orchard {
     class Program {
@@ -23,7 +24,7 @@ namespace Orchard {
 
         public void Run() {
             // Parse command line arguments
-            var arguments = new OrchardArgumentsParser().Parse(new Orchard.Arguments.Parser().Parse(_args));
+            var arguments = new OrchardParametersParser().Parse(new CommandParametersParser().Parse(_args));
 
             if (string.IsNullOrEmpty(arguments.VirtualPath))
                 arguments.VirtualPath = "/";
@@ -50,7 +51,7 @@ namespace Orchard {
             if (arguments.Verbose) {
                 Console.WriteLine("Executing command in ASP.NET AppDomain");
             }
-            host.RunCommand(_args);
+            host.RunCommand(arguments);
         }
 
         private DirectoryInfo GetOrchardDirectory(string directory) {
@@ -74,7 +75,8 @@ namespace Orchard {
                 return directoryInfo;
             }
 
-            throw new ApplicationException("Directory \"{0}\" doesn't seem to contain an Orchard installation");
+            throw new ApplicationException(
+                string.Format("Directory \"{0}\" doesn't seem to contain an Orchard installation", directory));
         }
 
         public object CreateWorkerAppDomainWithHost(string virtualPath, string physicalPath, Type hostType) {

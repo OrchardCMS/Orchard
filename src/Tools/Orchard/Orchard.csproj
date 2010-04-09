@@ -48,15 +48,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Arguments\IParser.cs" />
-    <Compile Include="OrchardArguments.cs" />
-    <Compile Include="Arguments\Parser.cs" />
-    <Compile Include="Arguments\ParserResult.cs" />
+    <Compile Include="Parameters\ICommandParametersParser.cs" />
+    <Compile Include="IOrchardParametersParser.cs" />
+    <Compile Include="OrchardParameters.cs" />
+    <Compile Include="Parameters\CommandParametersParser.cs" />
+    <Compile Include="Parameters\CommandParameters.cs" />
     <Compile Include="Host\CommandHost.cs" />
-    <Compile Include="OrchardArgumentsParser.cs" />
+    <Compile Include="OrchardParametersParser.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Arguments\Switch.cs" />
+    <Compile Include="Parameters\CommandSwitch.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

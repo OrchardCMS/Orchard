@@ -19,13 +19,14 @@ namespace Orchard.Commands {
             try {
                 var hostContainer = OrchardStarter.CreateHostContainer(MvcSingletons);
                 var host = hostContainer.Resolve<IOrchardHost>();
-                var tenantManager = hostContainer.Resolve<ITenantManager>();
-
                 host.Initialize();
 
+                // Find tenant (or default)
                 tenant = tenant ?? "default";
-
+                var tenantManager = hostContainer.Resolve<ITenantManager>();
                 var tenantSettings = tenantManager.LoadSettings().Single(s => String.Equals(s.Name, tenant, StringComparison.OrdinalIgnoreCase));
+
+                // Disptach command execution to ICommandManager
                 using (var env = host.CreateStandaloneEnvironment(tenantSettings)) {
                     env.Resolve<ICommandManager>().Execute(new CommandParameters {Arguments = args, Switches = switches});
                 }

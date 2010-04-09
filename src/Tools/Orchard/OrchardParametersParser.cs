@@ -1,21 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Orchard.Arguments;
+﻿using System.Collections.Generic;
+using Orchard.Parameters;
 
 namespace Orchard {
-    public interface IOrchardArgumentsParser {
-        OrchardArguments Parse(ParserResult arguments);
-    }
+    public class OrchardParametersParser : IOrchardParametersParser {
 
-    public class OrchardArgumentsParser  : IOrchardArgumentsParser {
+        public OrchardParameters Parse(CommandParameters parameters) {
 
-        public OrchardArguments Parse(ParserResult arguments) {
-            var result = new OrchardArguments();
+            var result = new OrchardParameters {
+                Arguments = parameters.Arguments,
+                Switches = new Dictionary<string, string>()
+            };
 
-            foreach (var sw in arguments.Switches) {
-                switch (sw.Name.ToLowerInvariant()) {
+            foreach (var sw in parameters.Switches) {
+                switch (sw.Key.ToLowerInvariant()) {
                     case "wd":
                     case "workingdirectory":
                         result.WorkingDirectory = sw.Value;
@@ -34,6 +31,10 @@ namespace Orchard {
                     case "t":
                     case "tenant":
                         result.Tenant = sw.Value;
+                        break;
+
+                    default:
+                        result.Switches.Add(sw.Key, sw.Value);
                         break;
                 }
             }

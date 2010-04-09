@@ -19,9 +19,12 @@ namespace Orchard.Host {
             //TODO
         }
 
-        public void RunCommand(string[] args) {
+        public void RunCommand(OrchardParameters args) {
             var agent = Activator.CreateInstance("Orchard.Framework", "Orchard.Commands.CommandHostAgent").Unwrap();
-            agent.GetType().GetMethod("RunSingleCommand").Invoke(agent, new object[] { args });
+            agent.GetType().GetMethod("RunSingleCommand").Invoke(agent, new object[] { 
+                args.Tenant,
+                args.Arguments.ToArray(),
+                args.Switches});
         }
     }
 }
