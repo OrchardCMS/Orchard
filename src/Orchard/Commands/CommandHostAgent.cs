@@ -15,50 +15,26 @@ namespace Orchard.Commands {
     /// executing a single command.
     /// </summary>
     public class CommandHostAgent {
-        public void RunSingleCommand(string[] args) {
+        public void RunSingleCommand(string tenant, string[] args, Dictionary<string,string> switches) {
             try {
-                var context = ParseArguments(args);
-
                 var hostContainer = OrchardStarter.CreateHostContainer(MvcSingletons);
                 var host = hostContainer.Resolve<IOrchardHost>();
                 var tenantManager = hostContainer.Resolve<ITenantManager>();
 
                 host.Initialize();
 
-                // Find the shell settings for the tenant...
+                tenant = tenant ?? "default";
 
-                // cretae the stand-alone env
-
-                // resolve a command
+                var tenantSettings = tenantManager.LoadSettings().Single(s => String.Equals(s.Name, tenant, StringComparison.OrdinalIgnoreCase));
+                using (var env = host.CreateStandaloneEnvironment(tenantSettings)) {
+                    env.Resolve<ICommandManager>().Execute(new CommandParameters {Arguments = args, Switches = switches});
+                }
             }
             catch (Exception e) {
                 for(; e != null; e = e.InnerException) {
                     Console.WriteLine("Error: {0}", e.Message);
                 }
             }
-        }
-
-        private static CommandContext ParseArguments(IEnumerable<string> args) {
-            var arguments = new List<string>();
-            var switches = new NameValueCollection();
-
-            foreach (string arg in args) {
-                if (arg[0] == '/') {
-                    string[] split = arg.Substring(1).Split(':');
-                    switches.Add(split[0], split.Length >= 2 ? split[1] : string.Empty);
-                }
-                else {
-                    arguments.Add(arg);
-                }
-            }
-
-            return new CommandContext {
-                Input = "",
-                Output = "",
-                Command = arguments[0],
-                Arguments = arguments.Skip(1).ToArray(),
-                Switches = switches
-            };
         }
 
         protected void MvcSingletons(ContainerBuilder builder) {

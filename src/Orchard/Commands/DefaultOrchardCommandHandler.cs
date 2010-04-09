@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.Linq;
 using System.Reflection;
 using Orchard.Localization;
 
@@ -16,7 +17,7 @@ namespace Orchard.Commands {
 
         public void Execute(CommandContext context) {
             if (context.Switches != null && context.Switches.Count > 0) {
-                foreach (var commandSwitch in context.Switches.AllKeys) {
+                foreach (var commandSwitch in context.Switches.Keys) {
                     PropertyInfo propertyInfo = GetType().GetProperty(commandSwitch);
                     if (propertyInfo == null) {
                         throw new InvalidOperationException(T("Switch : ") + commandSwitch + T(" was not found"));
@@ -45,32 +46,19 @@ namespace Orchard.Commands {
                 }
             }
 
-            foreach (MethodInfo methodInfo in GetType().GetMethods()) {
-                if (String.Equals(methodInfo.Name, context.Command, StringComparison.OrdinalIgnoreCase)) {
-                    if (TryInvokeCommand(methodInfo, context)) return;
-                }
-
-                foreach (OrchardCommandAttribute commandAttribute in methodInfo.GetCustomAttributes(typeof(OrchardCommandAttribute), false)) {
-                    if (String.Equals(commandAttribute.Command, context.Command, StringComparison.OrdinalIgnoreCase)) {
-                        if (TryInvokeCommand(methodInfo, context)) return;
-                    }
-                }
-            }
-
-            throw new InvalidOperationException(T("Command : ") + context.Command + T(" was not found "));
+            InvokeCommand(context);
         }
 
-        private bool TryInvokeCommand(MethodInfo methodInfo, CommandContext context) {
-            CheckMethodForSwitches(methodInfo, context.Switches);
-            object[] invokeParameters = GetInvokeParametersForMethod(methodInfo, context.Arguments ?? new string[] { });
-            if (invokeParameters != null) {
-                context.Output = (string)methodInfo.Invoke(this, invokeParameters);
-                return true;
+        private void InvokeCommand(CommandContext context) {
+            CheckMethodForSwitches(context.CommandDescriptor.MethodInfo, context.Switches);
+            object[] invokeParameters = GetInvokeParametersForMethod(context.CommandDescriptor.MethodInfo, context.Arguments.ToArray() ?? new string[] { });
+            if (invokeParameters == null) {
+                throw new ArgumentException(T("Command arguments don't match").ToString());
             }
-            return false;
+            context.Output = (string)context.CommandDescriptor.MethodInfo.Invoke(this, invokeParameters);
         }
 
-        private static object[] GetInvokeParametersForMethod(MethodInfo methodInfo, string[] arguments) {
+        private static object[] GetInvokeParametersForMethod(MethodInfo methodInfo, IList<string> arguments) {
             List<object> invokeParameters = new List<object>();
             
             List<string> args = new List<string>(arguments);
@@ -102,14 +90,14 @@ namespace Orchard.Commands {
             return invokeParameters.ToArray();
         }
 
-        private void CheckMethodForSwitches(MethodInfo methodInfo, NameValueCollection switches) {
-            if (switches == null || switches.AllKeys.Length == 0) 
+        private void CheckMethodForSwitches(MethodInfo methodInfo, IDictionary<string,string> switches) {
+            if (switches == null || switches.Count == 0) 
                 return;
-            List<string> supportedSwitches = new List<string>();
+            var supportedSwitches = new List<string>();
             foreach (OrchardSwitchesAttribute switchesAttribute in methodInfo.GetCustomAttributes(typeof(OrchardSwitchesAttribute), false)) {
                 supportedSwitches.AddRange(switchesAttribute.SwitchName);
             }
-            foreach (var commandSwitch in switches.AllKeys) {
+            foreach (var commandSwitch in switches.Keys) {
                 if (!supportedSwitches.Contains(commandSwitch)) {
                     throw new InvalidOperationException(T("Method ") + methodInfo.Name +
                                     T(" does not support switch ") + commandSwitch);

@@ -137,8 +137,13 @@
     <Compile Include="Validation\Argument.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Commands\CommandParameters.cs" />
+    <Compile Include="Commands\CommandDescriptor.cs" />
+    <Compile Include="Commands\CommandHandlerDescriptor.cs" />
+    <Compile Include="Commands\CommandHandlerDescriptorBuilder.cs" />
     <Compile Include="Commands\CommandHostAgent.cs" />
     <Compile Include="Commands\CommandManager.cs" />
+    <Compile Include="Commands\CommandModule.cs" />
     <Compile Include="Commands\OrchardCommandAttribute.cs" />
     <Compile Include="Commands\CommandContext.cs" />
     <Compile Include="Commands\DefaultOrchardCommandHandler.cs" />

@@ -1,4 +1,5 @@
-﻿using System.Collections.Specialized;
+﻿using System.Collections.Generic;
+using System.Collections.Specialized;
 using NUnit.Framework;
 using Orchard.Commands;
 using System;
@@ -35,7 +36,7 @@ namespace Orchard.Tests.Commands {
 
         [Test]
         public void TestBooleanSwitchForCommand() {
-            CommandContext commandContext = new CommandContext { Command = "Baz", Switches = new NameValueCollection() };
+            CommandContext commandContext = new CommandContext { Command = "Baz", Switches = new Dictionary<string, string>() };
             commandContext.Switches.Add("Verbose", "true");
             _handler.Execute(commandContext);
             Assert.That(commandContext.Output, Is.EqualTo("Command Baz Called : This was a test"));
@@ -43,7 +44,7 @@ namespace Orchard.Tests.Commands {
 
         [Test]
         public void TestIntSwitchForCommand() {
-            CommandContext commandContext = new CommandContext { Command = "Baz", Switches = new NameValueCollection() };
+            CommandContext commandContext = new CommandContext { Command = "Baz", Switches = new Dictionary<string, string>() };
             commandContext.Switches.Add("Level", "2");
             _handler.Execute(commandContext);
             Assert.That(commandContext.Output, Is.EqualTo("Command Baz Called : Entering Level 2"));
@@ -51,7 +52,7 @@ namespace Orchard.Tests.Commands {
 
         [Test]
         public void TestStringSwitchForCommand() {
-            CommandContext commandContext = new CommandContext { Command = "Baz", Switches = new NameValueCollection() };
+            CommandContext commandContext = new CommandContext { Command = "Baz", Switches = new Dictionary<string, string>() };
             commandContext.Switches.Add("User", "OrchardUser");
             _handler.Execute(commandContext);
             Assert.That(commandContext.Output, Is.EqualTo("Command Baz Called : current user is OrchardUser"));
@@ -59,7 +60,7 @@ namespace Orchard.Tests.Commands {
 
         [Test]
         public void TestSwitchForCommandWithoutSupportForIt() {
-            CommandContext commandContext = new CommandContext { Command = "Foo", Switches = new NameValueCollection() };
+            CommandContext commandContext = new CommandContext { Command = "Foo", Switches = new Dictionary<string, string>() };
             commandContext.Switches.Add("User", "OrchardUser");
             Assert.Throws<InvalidOperationException>(() => _handler.Execute(commandContext));
         }
@@ -73,7 +74,7 @@ namespace Orchard.Tests.Commands {
 
         [Test]
         public void TestNotExistingSwitch() {
-            CommandContext commandContext = new CommandContext { Command = "Foo", Switches = new NameValueCollection() };
+            CommandContext commandContext = new CommandContext { Command = "Foo", Switches = new Dictionary<string, string>() };
             commandContext.Switches.Add("ThisSwitchDoesNotExist", "Insignificant");
             Assert.Throws<InvalidOperationException>(() => _handler.Execute(commandContext));
         }
@@ -82,7 +83,7 @@ namespace Orchard.Tests.Commands {
         public void TestCommandArgumentsArePassedCorrectly() {
             CommandContext commandContext = new CommandContext {
                                                                    Command = "Concat",
-                                                                   Switches = new NameValueCollection(),
+                                                                   Switches = new Dictionary<string, string>(),
                                                                    Arguments = new[] {"left to ", "right"}
                                                                };
             _handler.Execute(commandContext);
@@ -93,7 +94,7 @@ namespace Orchard.Tests.Commands {
         public void TestCommandArgumentsArePassedCorrectlyWithAParamsParameters() {
             CommandContext commandContext = new CommandContext {
                                                                    Command = "ConcatParams",
-                                                                   Switches = new NameValueCollection(),
+                                                                   Switches = new Dictionary<string, string>(),
                                                                    Arguments = new[] {"left to ", "right"}
                                                                };
             _handler.Execute(commandContext);
@@ -104,7 +105,7 @@ namespace Orchard.Tests.Commands {
         public void TestCommandArgumentsArePassedCorrectlyWithAParamsParameterAndNoArguments() {
             CommandContext commandContext = new CommandContext {
                 Command = "ConcatParams",
-                Switches = new NameValueCollection()
+                Switches = new Dictionary<string, string>()
             };
             _handler.Execute(commandContext);
             Assert.That(commandContext.Output, Is.EqualTo(""));
@@ -115,7 +116,7 @@ namespace Orchard.Tests.Commands {
         public void TestCommandArgumentsArePassedCorrectlyWithNormalParametersAndAParamsParameters() {
             CommandContext commandContext = new CommandContext {
                 Command = "ConcatAllParams",
-                Switches = new NameValueCollection(),
+                Switches = new Dictionary<string, string>(),
                 Arguments = new[] { "left-", "center-", "right" }
             };
             _handler.Execute(commandContext);
@@ -126,7 +127,7 @@ namespace Orchard.Tests.Commands {
         public void TestCommandParamsMismatchWithoutParamsNotEnoughArguments() {
             CommandContext commandContext = new CommandContext {
                 Command = "Concat",
-                Switches = new NameValueCollection(),
+                Switches = new Dictionary<string, string>(),
                 Arguments = new[] { "left to "}
             };
             Assert.Throws<InvalidOperationException>(() => _handler.Execute(commandContext));
@@ -136,7 +137,7 @@ namespace Orchard.Tests.Commands {
         public void TestCommandParamsMismatchWithoutParamsTooManyArguments() {
             CommandContext commandContext = new CommandContext {
                 Command = "Foo",
-                Switches = new NameValueCollection(),
+                Switches = new Dictionary<string, string>(),
                 Arguments = new[] { "left to " }
             };
             Assert.Throws<InvalidOperationException>(() => _handler.Execute(commandContext));
@@ -146,7 +147,7 @@ namespace Orchard.Tests.Commands {
         public void TestCommandParamsMismatchWithParamsButNotEnoughArguments() {
             CommandContext commandContext = new CommandContext {
                 Command = "ConcatAllParams",
-                Switches = new NameValueCollection(),
+                Switches = new Dictionary<string, string>(),
             };
             Assert.Throws<InvalidOperationException>(() => _handler.Execute(commandContext));
         }
