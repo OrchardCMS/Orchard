@@ -15,10 +15,13 @@ namespace Orchard.Commands {
         public void Execute(CommandParameters parameters) {
             var matches = _handlers.SelectMany(h => MatchCommands(parameters, GetDescriptor(h.Metadata), h.Value));
 
-            if (matches.Count() == 1) {
-                var match = matches.Single();
+
+            // Workaround autofac integration: module registration is currently run twice...
+            //if (matches.Count() == 1) {
+            //  var match = matches.Single();
+            if (matches.Count() == 2) {
+                var match = matches.First();
                 match.CommandHandlerFactory().Execute(match.Context);
-                parameters.Output = match.Context.Output;
             }
             else if (matches.Any()) {
                 // too many
@@ -56,7 +59,6 @@ namespace Orchard.Commands {
                     },
                     CommandHandlerFactory = handlerFactory
                 };
-
             }
         }
 
