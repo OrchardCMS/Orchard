@@ -12,11 +12,17 @@ namespace Orchard.Commands {
         }
 
         public Localizer T { get; set; }
+        public CommandContext Context { get; set; }
 
         #region Implementation of ICommandHandler
 
         public void Execute(CommandContext context) {
-            if (context.Switches != null && context.Switches.Count > 0) {
+            SetSwitchValues(context);
+            Invoke(context);
+        }
+
+        private void SetSwitchValues(CommandContext context) {
+            if (context.Switches != null && context.Switches.Any()) {
                 foreach (var commandSwitch in context.Switches.Keys) {
                     PropertyInfo propertyInfo = GetType().GetProperty(commandSwitch);
                     if (propertyInfo == null) {
@@ -45,17 +51,19 @@ namespace Orchard.Commands {
                     }
                 }
             }
-
-            InvokeCommand(context);
         }
 
-        private void InvokeCommand(CommandContext context) {
+        private void Invoke(CommandContext context) {
             CheckMethodForSwitches(context.CommandDescriptor.MethodInfo, context.Switches);
-            object[] invokeParameters = GetInvokeParametersForMethod(context.CommandDescriptor.MethodInfo, context.Arguments.ToArray() ?? new string[] { });
+            object[] invokeParameters = GetInvokeParametersForMethod(context.CommandDescriptor.MethodInfo, (context.Arguments ?? Enumerable.Empty<string>()).ToArray());
             if (invokeParameters == null) {
-                throw new ArgumentException(T("Command arguments don't match").ToString());
+                throw new InvalidOperationException(T("Command arguments don't match").ToString());
             }
-            context.Output = (string)context.CommandDescriptor.MethodInfo.Invoke(this, invokeParameters);
+
+            this.Context = context;
+            var result = context.CommandDescriptor.MethodInfo.Invoke(this, invokeParameters);
+            if (result is string)
+                context.Output.Write(result);
         }
 
         private static object[] GetInvokeParametersForMethod(MethodInfo methodInfo, IList<string> arguments) {

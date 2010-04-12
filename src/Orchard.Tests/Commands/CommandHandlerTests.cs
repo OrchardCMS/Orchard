@@ -1,8 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.IO;
 using NUnit.Framework;
 using Orchard.Commands;
 using System;
+using System.Linq;
 
 namespace Orchard.Tests.Commands {
     [TestFixture]
@@ -14,141 +16,152 @@ namespace Orchard.Tests.Commands {
             _handler = new StubCommandHandler();
         }
 
+        private CommandContext CreateCommandContext(string commandName) {
+            return CreateCommandContext(commandName, new Dictionary<string, string>(), new string[]{});
+        }
+
+        private CommandContext CreateCommandContext(string commandName, IDictionary<string, string> switches) {
+            return CreateCommandContext(commandName, switches, new string[]{});
+        }
+
+        private CommandContext CreateCommandContext(string commandName, IDictionary<string, string> switches, string[] args) {
+            var builder = new CommandHandlerDescriptorBuilder();
+
+            var descriptor = builder.Build(typeof(StubCommandHandler));
+
+            var commandDescriptor = descriptor.Commands.Single(d => string.Equals(d.Name, commandName, StringComparison.OrdinalIgnoreCase));
+
+            return new CommandContext { 
+                Command = commandName, 
+                Switches = switches, 
+                CommandDescriptor = commandDescriptor,
+                Arguments = args,
+                Input = new StringReader(string.Empty),
+                Output = new StringWriter()
+            };
+        }
+
         [Test]
         public void TestFooCommand() {
-            CommandContext commandContext = new CommandContext { Command = "Foo" };
+            var commandContext = CreateCommandContext("Foo");
             _handler.Execute(commandContext);
-            Assert.That(commandContext.Output, Is.EqualTo("Command Foo Executed"));
+            Assert.That(commandContext.Output.ToString(), Is.EqualTo("Command Foo Executed"));
         }
 
         [Test]
         public void TestNotExistingCommand() {
-            CommandContext commandContext = new CommandContext { Command = "NoSuchCommand" };
-            Assert.Throws<InvalidOperationException>(() => _handler.Execute(commandContext));
+            Assert.Throws<InvalidOperationException>(() => {
+                var commandContext = CreateCommandContext("NoSuchCommand");
+                _handler.Execute(commandContext);
+            });
         }
 
         [Test]
         public void TestCommandWithCustomAlias() {
-            CommandContext commandContext = new CommandContext { Command = "Bar" };
+            var commandContext = CreateCommandContext("Bar");
             _handler.Execute(commandContext);
-            Assert.That(commandContext.Output, Is.EqualTo("Hello World!"));
+            Assert.That(commandContext.Output.ToString(), Is.EqualTo("Hello World!"));
+        }
+
+        [Test]
+        public void TestHelpText() {
+            var commandContext = CreateCommandContext("Baz");
+            Assert.That(commandContext.CommandDescriptor.HelpText, Is.EqualTo("Baz help"));
+        }
+
+        [Test]
+        public void TestEmptyHelpText() {
+            var commandContext = CreateCommandContext("Foo");
+            Assert.That(commandContext.CommandDescriptor.HelpText, Is.EqualTo(string.Empty));
         }
 
         [Test]
         public void TestBooleanSwitchForCommand() {
-            CommandContext commandContext = new CommandContext { Command = "Baz", Switches = new Dictionary<string, string>() };
-            commandContext.Switches.Add("Verbose", "true");
+            var commandContext = CreateCommandContext("Baz", new Dictionary<string, string> {{"Verbose", "true"}});
             _handler.Execute(commandContext);
-            Assert.That(commandContext.Output, Is.EqualTo("Command Baz Called : This was a test"));
+            Assert.That(commandContext.Output.ToString(), Is.EqualTo("Command Baz Called : This was a test"));
         }
 
         [Test]
         public void TestIntSwitchForCommand() {
-            CommandContext commandContext = new CommandContext { Command = "Baz", Switches = new Dictionary<string, string>() };
-            commandContext.Switches.Add("Level", "2");
+            var commandContext = CreateCommandContext("Baz", new Dictionary<string, string> {{"Level", "2"}});
             _handler.Execute(commandContext);
-            Assert.That(commandContext.Output, Is.EqualTo("Command Baz Called : Entering Level 2"));
+            Assert.That(commandContext.Output.ToString(), Is.EqualTo("Command Baz Called : Entering Level 2"));
         }
 
         [Test]
         public void TestStringSwitchForCommand() {
-            CommandContext commandContext = new CommandContext { Command = "Baz", Switches = new Dictionary<string, string>() };
-            commandContext.Switches.Add("User", "OrchardUser");
+            var commandContext = CreateCommandContext("Baz", new Dictionary<string, string> {{"User", "OrchardUser"}});
             _handler.Execute(commandContext);
-            Assert.That(commandContext.Output, Is.EqualTo("Command Baz Called : current user is OrchardUser"));
+            Assert.That(commandContext.Output.ToString(), Is.EqualTo("Command Baz Called : current user is OrchardUser"));
         }
 
         [Test]
         public void TestSwitchForCommandWithoutSupportForIt() {
-            CommandContext commandContext = new CommandContext { Command = "Foo", Switches = new Dictionary<string, string>() };
-            commandContext.Switches.Add("User", "OrchardUser");
+            var switches = new Dictionary<string, string> {{"User", "OrchardUser"}};
+            var commandContext = CreateCommandContext("Foo", switches);
             Assert.Throws<InvalidOperationException>(() => _handler.Execute(commandContext));
         }
 
         [Test]
         public void TestCommandThatDoesNotReturnAValue() {
-            CommandContext commandContext = new CommandContext { Command = "Log" };
+            var commandContext = CreateCommandContext("Log");
             _handler.Execute(commandContext);
-            Assert.That(commandContext.Output, Is.Null);
+            Assert.That(commandContext.Output.ToString(), Is.EqualTo(""));
         }
 
         [Test]
         public void TestNotExistingSwitch() {
-            CommandContext commandContext = new CommandContext { Command = "Foo", Switches = new Dictionary<string, string>() };
-            commandContext.Switches.Add("ThisSwitchDoesNotExist", "Insignificant");
+            var switches = new Dictionary<string, string> {{"ThisSwitchDoesNotExist", "Insignificant"}};
+            var commandContext = CreateCommandContext("Foo", switches);
             Assert.Throws<InvalidOperationException>(() => _handler.Execute(commandContext));
         }
 
         [Test]
         public void TestCommandArgumentsArePassedCorrectly() {
-            CommandContext commandContext = new CommandContext {
-                                                                   Command = "Concat",
-                                                                   Switches = new Dictionary<string, string>(),
-                                                                   Arguments = new[] {"left to ", "right"}
-                                                               };
+            var commandContext = CreateCommandContext("Concat", new Dictionary<string, string>(), new[] {"left to ", "right"});
             _handler.Execute(commandContext);
-            Assert.That(commandContext.Output, Is.EqualTo("left to right"));
+            Assert.That(commandContext.Output.ToString(), Is.EqualTo("left to right"));
         }
 
         [Test]
         public void TestCommandArgumentsArePassedCorrectlyWithAParamsParameters() {
-            CommandContext commandContext = new CommandContext {
-                                                                   Command = "ConcatParams",
-                                                                   Switches = new Dictionary<string, string>(),
-                                                                   Arguments = new[] {"left to ", "right"}
-                                                               };
+            var commandContext = CreateCommandContext("ConcatParams", new Dictionary<string, string>(), new[] {"left to ", "right"});
             _handler.Execute(commandContext);
-            Assert.That(commandContext.Output, Is.EqualTo("left to right"));
+            Assert.That(commandContext.Output.ToString(), Is.EqualTo("left to right"));
         }
 
         [Test]
         public void TestCommandArgumentsArePassedCorrectlyWithAParamsParameterAndNoArguments() {
-            CommandContext commandContext = new CommandContext {
-                Command = "ConcatParams",
-                Switches = new Dictionary<string, string>()
-            };
+            var commandContext = CreateCommandContext("ConcatParams", new Dictionary<string, string>());
             _handler.Execute(commandContext);
-            Assert.That(commandContext.Output, Is.EqualTo(""));
+            Assert.That(commandContext.Output.ToString(), Is.EqualTo(""));
         }
-
 
         [Test]
         public void TestCommandArgumentsArePassedCorrectlyWithNormalParametersAndAParamsParameters() {
-            CommandContext commandContext = new CommandContext {
-                Command = "ConcatAllParams",
-                Switches = new Dictionary<string, string>(),
-                Arguments = new[] { "left-", "center-", "right" }
-            };
+            var commandContext = CreateCommandContext("ConcatAllParams",
+                new Dictionary<string, string>(),
+                new[] { "left-", "center-", "right"});
             _handler.Execute(commandContext);
-            Assert.That(commandContext.Output, Is.EqualTo("left-center-right"));
+            Assert.That(commandContext.Output.ToString(), Is.EqualTo("left-center-right"));
         }
 
         [Test]
         public void TestCommandParamsMismatchWithoutParamsNotEnoughArguments() {
-            CommandContext commandContext = new CommandContext {
-                Command = "Concat",
-                Switches = new Dictionary<string, string>(),
-                Arguments = new[] { "left to "}
-            };
+            var commandContext = CreateCommandContext("Concat", new Dictionary<string, string>(), new[] { "left to " });
             Assert.Throws<InvalidOperationException>(() => _handler.Execute(commandContext));
         }
 
         [Test]
         public void TestCommandParamsMismatchWithoutParamsTooManyArguments() {
-            CommandContext commandContext = new CommandContext {
-                Command = "Foo",
-                Switches = new Dictionary<string, string>(),
-                Arguments = new[] { "left to " }
-            };
+            var commandContext = CreateCommandContext("Foo", new Dictionary<string, string>(), new[] { "left to " });
             Assert.Throws<InvalidOperationException>(() => _handler.Execute(commandContext));
         }
 
         [Test]
         public void TestCommandParamsMismatchWithParamsButNotEnoughArguments() {
-            CommandContext commandContext = new CommandContext {
-                Command = "ConcatAllParams",
-                Switches = new Dictionary<string, string>(),
-            };
+            var commandContext = CreateCommandContext("ConcatAllParams", new Dictionary<string, string>());
             Assert.Throws<InvalidOperationException>(() => _handler.Execute(commandContext));
         }
     }
@@ -173,6 +186,7 @@ namespace Orchard.Tests.Commands {
         }
 
         [OrchardSwitches("Verbose, Level, User")]
+        [CommandHelp("Baz help")]
         public string Baz() {
             string trace = "Command Baz Called";
 

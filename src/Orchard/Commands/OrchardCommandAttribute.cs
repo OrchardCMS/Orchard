@@ -12,6 +12,14 @@ namespace Orchard.Commands {
         public string Command {
             get { return _commandAlias; }
         }
+    }
 
+    [AttributeUsage(AttributeTargets.Method)]
+    public class CommandHelpAttribute : Attribute {
+        public CommandHelpAttribute(string text) {
+            this.HelpText = text;
+        }
+
+        public string HelpText { get; set; }
     }
 }

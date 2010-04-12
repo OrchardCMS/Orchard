@@ -20,7 +20,10 @@ namespace Orchard {
 
                     case "v":
                     case "verbose":
-                        result.Verbose = bool.Parse(sw.Value);
+                        bool verbose;
+                        if (!bool.TryParse(sw.Value, out verbose))
+                            verbose = true;
+                        result.Verbose = verbose;
                         break;
 
                     case "vp":

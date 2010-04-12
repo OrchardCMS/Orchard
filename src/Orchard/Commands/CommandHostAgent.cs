@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Web.Mvc;
@@ -15,7 +16,7 @@ namespace Orchard.Commands {
     /// executing a single command.
     /// </summary>
     public class CommandHostAgent {
-        public void RunSingleCommand(string tenant, string[] args, Dictionary<string,string> switches) {
+        public void RunSingleCommand(TextReader input, TextWriter output, string tenant, string[] args, Dictionary<string,string> switches) {
             try {
                 var hostContainer = OrchardStarter.CreateHostContainer(MvcSingletons);
                 var host = hostContainer.Resolve<IOrchardHost>();
@@ -28,7 +29,13 @@ namespace Orchard.Commands {
 
                 // Disptach command execution to ICommandManager
                 using (var env = host.CreateStandaloneEnvironment(tenantSettings)) {
-                    env.Resolve<ICommandManager>().Execute(new CommandParameters {Arguments = args, Switches = switches});
+                    var parameters = new CommandParameters {
+                        Arguments = args, 
+                        Switches = switches,
+                        Input = input,
+                        Output = output
+                    };
+                    env.Resolve<ICommandManager>().Execute(parameters);
                 }
             }
             catch (Exception e) {

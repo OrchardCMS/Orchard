@@ -142,8 +142,10 @@
     <Compile Include="Commands\CommandHandlerDescriptor.cs" />
     <Compile Include="Commands\CommandHandlerDescriptorBuilder.cs" />
     <Compile Include="Commands\CommandHostAgent.cs" />
-    <Compile Include="Commands\CommandManager.cs" />
+    <Compile Include="Commands\DefaultCommandManager.cs" />
     <Compile Include="Commands\CommandModule.cs" />
+    <Compile Include="Commands\Builtin\HelpCommand.cs" />
+    <Compile Include="Commands\ICommandManager.cs" />
     <Compile Include="Commands\OrchardCommandAttribute.cs" />
     <Compile Include="Commands\CommandContext.cs" />
     <Compile Include="Commands\DefaultOrchardCommandHandler.cs" />

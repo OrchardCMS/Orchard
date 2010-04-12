@@ -5,14 +5,10 @@ using System.Text;
 using Autofac.Features.Metadata;
 
 namespace Orchard.Commands {
-    public interface ICommandManager : IDependency {
-        void Execute(CommandParameters parameters);
-    }
-
-    public class CommandManager : ICommandManager {
+    public class DefaultCommandManager : ICommandManager {
         private readonly IEnumerable<Meta<Func<ICommandHandler>>> _handlers;
 
-        public CommandManager(IEnumerable<Meta<Func<ICommandHandler>>> handlers) {
+        public DefaultCommandManager(IEnumerable<Meta<Func<ICommandHandler>>> handlers) {
             _handlers = handlers;
         }
 
@@ -32,6 +28,9 @@ namespace Orchard.Commands {
             }
         }
 
+        public IEnumerable<CommandDescriptor> GetCommandDescriptors() {
+            return _handlers.SelectMany(h => GetDescriptor(h.Metadata).Commands);
+        }
 
         private class Match {
             public CommandContext Context { get; set; }

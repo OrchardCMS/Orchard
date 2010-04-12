@@ -12,9 +12,12 @@ namespace Orchard.Commands {
             if (!registration.Services.Contains(new TypedService(typeof(ICommandHandler))))
                 return;
 
-            var builder = new CommandHandlerDescriptorBuilder();
-            var descriptor = builder.Build(registration.Activator.LimitType);
-            registration.Metadata.Add(typeof(CommandHandlerDescriptor).FullName, descriptor);
+            // Workaround autofac integration: module registration is currently run twice...
+            if (!registration.Metadata.ContainsKey(typeof(CommandHandlerDescriptor).FullName)) {
+                var builder = new CommandHandlerDescriptorBuilder();
+                var descriptor = builder.Build(registration.Activator.LimitType);
+                registration.Metadata.Add(typeof (CommandHandlerDescriptor).FullName, descriptor);
+            }
         }
     }
 }

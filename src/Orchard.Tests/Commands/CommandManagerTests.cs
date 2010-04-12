@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using Autofac;
@@ -14,7 +15,7 @@ namespace Orchard.Tests.Commands {
         [SetUp]
         public void Init() {
             var builder = new ContainerBuilder();
-            builder.RegisterType<CommandManager>().As<ICommandManager>();
+            builder.RegisterType<DefaultCommandManager>().As<ICommandManager>();
             builder.RegisterType<MyCommand>().As<ICommandHandler>();
             builder.RegisterModule(new CommandModule());
             var container = builder.Build();
@@ -24,16 +25,16 @@ namespace Orchard.Tests.Commands {
 
         [Test]
         public void ManagerCanRunACommand() {
-            var context = new CommandParameters { Arguments = new string[] { "FooBar" } };
+            var context = new CommandParameters { Arguments = new string[] { "FooBar" }, Output = new StringWriter()};
             _manager.Execute(context);
-            Assert.That(context.Output, Is.EqualTo("success!"));
+            Assert.That(context.Output.ToString(), Is.EqualTo("success!"));
         }
 
         [Test]
         public void ManagerCanRunACompositeCommand() {
-            var context = new CommandParameters { Arguments = ("Foo Bar Bleah").Split(' ') };
+            var context = new CommandParameters { Arguments = ("Foo Bar Bleah").Split(' '), Output = new StringWriter() };
             _manager.Execute(context);
-            Assert.That(context.Output, Is.EqualTo("Bleah"));
+            Assert.That(context.Output.ToString(), Is.EqualTo("Bleah"));
         }
 
         public class MyCommand : DefaultOrchardCommandHandler {

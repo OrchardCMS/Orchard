@@ -2,20 +2,33 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Text;
 
 namespace Orchard.Commands {
     public class CommandHandlerDescriptorBuilder {
         public CommandHandlerDescriptor Build(Type type) {
-            var methods = CollectMethods(type);
-            return new CommandHandlerDescriptor { Commands = methods };
+            return new CommandHandlerDescriptor { Commands = CollectMethods(type) };
         }
 
         private IEnumerable<CommandDescriptor> CollectMethods(Type type) {
             foreach (var methodInfo in type.GetMethods(BindingFlags.Instance | BindingFlags.Public | BindingFlags.DeclaredOnly)) {
-                var name = GetCommandName(methodInfo);
-                yield return new CommandDescriptor { Name = name, MethodInfo = methodInfo };
+                yield return BuildMethod(methodInfo);
             }
+        }
+
+        private CommandDescriptor BuildMethod(MethodInfo methodInfo) {
+            return new CommandDescriptor {
+                                             Name = GetCommandName(methodInfo),
+                                             MethodInfo = methodInfo,
+                                             HelpText = GetCommandHelpText(methodInfo)
+                                         };
+        }
+
+        private string GetCommandHelpText(MethodInfo methodInfo) {
+            var attributes = methodInfo.GetCustomAttributes(typeof(CommandHelpAttribute), false/*inherit*/);
+            if (attributes != null && attributes.Any()) {
+                return attributes.Cast<CommandHelpAttribute>().Single().HelpText;
+            }
+            return string.Empty;
         }
 
         private string GetCommandName(MethodInfo methodInfo) {
