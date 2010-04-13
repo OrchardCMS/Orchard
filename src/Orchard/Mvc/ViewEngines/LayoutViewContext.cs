@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
-using System.Text;
 using System.Web;
 using System.Web.Mvc;
-using System.Web.UI;
 
 namespace Orchard.Mvc.ViewEngines {
     public class LayoutViewContext {

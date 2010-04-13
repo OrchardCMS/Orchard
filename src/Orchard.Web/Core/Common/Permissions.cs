@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Orchard.Security.Permissions;
 
 namespace Orchard.Core.Common {

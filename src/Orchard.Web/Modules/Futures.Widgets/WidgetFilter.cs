@@ -1,6 +1,4 @@
-﻿using System;
-using System.Linq;
-using System.Web.Mvc;
+﻿using System.Web.Mvc;
 using Futures.Widgets.Models;
 using Orchard.ContentManagement;
 using Orchard.Mvc.Filters;

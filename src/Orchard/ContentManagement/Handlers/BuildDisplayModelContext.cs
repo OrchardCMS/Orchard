@@ -1,4 +1,3 @@
-using System.Linq;
 using Orchard.ContentManagement.ViewModels;
 using Orchard.Mvc.ViewModels;
 

@@ -1,6 +1,4 @@
-using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 
 namespace Orchard.ContentManagement.Records {
     public class ContentItemRecord {

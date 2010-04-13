@@ -1,22 +1,10 @@
-using System;
+﻿using System;
 using System.Web.Mvc;
-using Orchard.Mvc.Filters;
 
-namespace Orchard.Mvc.FollowReturnUrl {
-    public class FollowReturnUrlFilter : FilterProvider, IActionFilter {
-        public void OnActionExecuting(ActionExecutingContext filterContext) {
-        }
-
-        public void OnActionExecuted(ActionExecutedContext filterContext) {
-            var attributes =
-                (FollowReturnUrlAttribute[])
-                filterContext.ActionDescriptor.GetCustomAttributes(typeof (FollowReturnUrlAttribute), false);
-
-            if (attributes.Length <= 0) {
-                return;
-            }
-
-            var request = filterContext.HttpContext.Request;
+namespace Orchard.Mvc.Extensions {
+    public static class ControllerExtensions {
+        public static RedirectResult ReturnUrlRedirect(this Controller controller) {
+            var request = controller.HttpContext.Request;
             Uri returnUrl = null;
             try {
                 returnUrl = new Uri(request.QueryString["ReturnUrl"]);
@@ -28,15 +16,16 @@ namespace Orchard.Mvc.FollowReturnUrl {
                                               request.Url.Port != 80 ? ":" + request.Url.Port : "",
                                               request.QueryString["ReturnUrl"]));
                 }
-                catch {}
+                catch { }
             }
 
             if (returnUrl != null &&
                 returnUrl.Scheme == request.Url.Scheme &&
                 returnUrl.Port == request.Url.Port &&
                 returnUrl.Host == request.Url.Host) {
-                filterContext.Result = new RedirectResult(returnUrl.ToString());
+                return new RedirectResult(returnUrl.ToString());
             }
+            return new RedirectResult("~/");
         }
     }
 }

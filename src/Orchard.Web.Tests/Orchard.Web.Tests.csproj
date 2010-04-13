@@ -43,7 +43,6 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\nunit\nunit.framework.dll</HintPath>
     </Reference>
-    <Reference Include="System.Data" />
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core">

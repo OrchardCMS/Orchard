@@ -1,13 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
+﻿using System.IO;
 using System.Web.Mvc;
 using Orchard.Mvc.ViewModels;
-using Orchard.Security;
-using Orchard.UI.Navigation;
-using Orchard.UI.Notify;
-using Orchard.UI.Zones;
 
 namespace Orchard.Mvc.ViewEngines {
     public class LayoutView : IView {
