@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using Autofac.Builder;
+using Autofac;
 using JetBrains.Annotations;
 using NUnit.Framework;
 using Orchard.ContentManagement;
@@ -21,9 +21,9 @@ namespace Orchard.Core.Tests.Common.Services {
         }
 
         public override void Register(ContainerBuilder builder) {
-            builder.Register<DefaultContentManager>().As<IContentManager>();
-            builder.Register<ThingHandler>().As<IContentHandler>();
-            builder.Register<RoutableService>().As<IRoutableService>();
+            builder.RegisterType<DefaultContentManager>().As<IContentManager>();
+            builder.RegisterType<ThingHandler>().As<IContentHandler>();
+            builder.RegisterType<RoutableService>().As<IRoutableService>();
         }
 
         private IRoutableService _routableService;

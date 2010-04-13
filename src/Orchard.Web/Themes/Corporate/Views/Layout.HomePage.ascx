@@ -15,7 +15,7 @@
 </div>
 
 <div class="header group">
-    <!-- Main Menu -->
+    <%-- Main Menu --%>
     <div id="nav">
         <div class="brand group">
             <div class="title">
@@ -29,7 +29,7 @@
     <div id="container">
         <div id="content">
 
-            <!-- Home Hero -->
+            <%-- Home Hero --%>
 	        <div class="main-box">
                 <div class="top">
                      <img src="/Themes/Corporate/Content/Images/content-top.png" /></div>
@@ -44,7 +44,7 @@
                     <img src="/Themes/Corporate/Content/Images/content-bottom.png" /></div>
 	        </div>
 
-	        <!-- Main Content Area -->
+	        <%-- Main Content Area --%>
 	        <div class="content-container">
 	            <div class="content">
 	                <div class="content-items group">
@@ -62,5 +62,5 @@
     </div>
 </div>
 	
-	<!-- Footer -->
+	<%-- Footer --%>
 	<% Html.Zone("footer"); %>

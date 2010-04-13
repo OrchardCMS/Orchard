@@ -1,8 +1,11 @@
 ﻿using System;
+using System.Configuration;
+using System.IO;
+using System.Web.Hosting;
 using Autofac;
-using Autofac.Builder;
+using Autofac.Configuration;
 using Autofac.Integration.Web;
-using Autofac.Modules;
+using Orchard.Environment.AutofacUtil;
 using Orchard.Environment.Configuration;
 using Orchard.Environment.ShellBuilders;
 using Orchard.Extensions;
@@ -13,48 +16,59 @@ namespace Orchard.Environment {
         public static IContainer CreateHostContainer(Action<ContainerBuilder> registrations) {
             var builder = new ContainerBuilder();
 
-            // Modifies the container to automatically return IEnumerable<T> of service type T
-            builder.RegisterModule(new ImplicitCollectionSupportModule());
-
             // a single default host implementation is needed for bootstrapping a web app domain
-            builder.Register<DefaultOrchardHost>().As<IOrchardHost>().SingletonScoped();
-            builder.Register<DefaultCompositionStrategy>().As<ICompositionStrategy>().SingletonScoped();
-            builder.Register<DefaultShellContainerFactory>().As<IShellContainerFactory>().SingletonScoped();
-            builder.Register<AppDataFolder>().As<IAppDataFolder>().SingletonScoped();
-            builder.Register<ShellSettingsLoader>().As<IShellSettingsLoader>().SingletonScoped();
-            builder.Register<SafeModeShellContainerFactory>().As<IShellContainerFactory>().SingletonScoped();
+            builder.RegisterType<DefaultOrchardHost>().As<IOrchardHost>().SingleInstance();
+            builder.RegisterType<DefaultCompositionStrategy>().As<ICompositionStrategy>().SingleInstance();
+            builder.RegisterType<DefaultShellContainerFactory>().As<IShellContainerFactory>().SingleInstance();
+            builder.RegisterType<AppDataFolder>().As<IAppDataFolder>().SingleInstance();
+            builder.RegisterType<DefaultTenantManager>().As<ITenantManager>().SingleInstance();
+            builder.RegisterType<SafeModeShellContainerFactory>().As<IShellContainerFactory>().SingleInstance();
 
             // The container provider gives you access to the lowest container at the time, 
-            // and dynamically creates a per-request container. The DisposeRequestContainer method
-            // still needs to be called on end request, but that's the host component's job to worry about.
-            builder.Register<ContainerProvider>().As<IContainerProvider>().ContainerScoped();
+            // and dynamically creates a per-request container. The EndRequestLifetime method
+            // still needs to be called on end request, but that's the host component's job to worry about
+            builder.RegisterType<ContainerProvider>().As<IContainerProvider>().InstancePerLifetimeScope();
 
-            builder.Register<ExtensionManager>().As<IExtensionManager>().SingletonScoped();
-            builder.Register<AreaExtensionLoader>().As<IExtensionLoader>().SingletonScoped();
-            builder.Register<CoreExtensionLoader>().As<IExtensionLoader>().SingletonScoped();
-            builder.Register<ReferencedExtensionLoader>().As<IExtensionLoader>().SingletonScoped();
-            builder.Register<PrecompiledExtensionLoader>().As<IExtensionLoader>().SingletonScoped();
-            builder.Register<DynamicExtensionLoader>().As<IExtensionLoader>().SingletonScoped();
+            builder.RegisterType<ExtensionManager>().As<IExtensionManager>().SingleInstance();
+            builder.RegisterType<AreaExtensionLoader>().As<IExtensionLoader>().SingleInstance();
+            builder.RegisterType<CoreExtensionLoader>().As<IExtensionLoader>().SingleInstance();
+            builder.RegisterType<ReferencedExtensionLoader>().As<IExtensionLoader>().SingleInstance();
+            builder.RegisterType<PrecompiledExtensionLoader>().As<IExtensionLoader>().SingleInstance();
+            builder.RegisterType<DynamicExtensionLoader>().As<IExtensionLoader>().SingleInstance();
 
-            builder.Register<ModuleFolders>().As<IExtensionFolders>()
-                .WithArguments(new NamedParameter("paths", new[] { "~/Core", "~/Modules" }))
-                .SingletonScoped();
-            builder.Register<AreaFolders>().As<IExtensionFolders>()
-                .WithArguments(new NamedParameter("paths", new[] { "~/Areas" }))
-                .SingletonScoped();
-            builder.Register<ThemeFolders>().As<IExtensionFolders>()
-                .WithArguments(new NamedParameter("paths", new[] { "~/Core", "~/Themes" }))
-                .SingletonScoped();
+            builder.RegisterType<ModuleFolders>().As<IExtensionFolders>()
+                .WithParameter(new NamedParameter("paths", new[] { "~/Core", "~/Modules" }))
+                .SingleInstance();
+            builder.RegisterType<AreaFolders>().As<IExtensionFolders>()
+                .WithParameter(new NamedParameter("paths", new[] { "~/Areas" }))
+                .SingleInstance();
+            builder.RegisterType<ThemeFolders>().As<IExtensionFolders>()
+                .WithParameter(new NamedParameter("paths", new[] { "~/Core", "~/Themes" }))
+                .SingleInstance();
 
             registrations(builder);
 
-            return builder.Build();
+            
+            var autofacSection = ConfigurationManager.GetSection(ConfigurationSettingsReader.DefaultSectionName);
+            if (autofacSection != null)
+                builder.RegisterModule(new ConfigurationSettingsReader());
+            
+            var optionalHostConfig = HostingEnvironment.MapPath("~/Config/Host.config");
+            if (File.Exists(optionalHostConfig))
+                builder.RegisterModule(new ConfigurationSettingsReader(ConfigurationSettingsReader.DefaultSectionName, optionalHostConfig));
+
+            var container = builder.Build();
+
+            var updater = new ContainerUpdater();
+            updater.RegisterInstance(container);
+            updater.Update(container);
+
+            return container;
         }
 
         public static IOrchardHost CreateHost(Action<ContainerBuilder> registrations) {
             var container = CreateHostContainer(registrations);
-            var orchardHost = container.Resolve<IOrchardHost>();
-            return orchardHost;
+            return container.Resolve<IOrchardHost>();
         }
     }
 }

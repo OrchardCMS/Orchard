@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
-using Autofac.Builder;
+using Autofac;
 using Moq;
 using NUnit.Framework;
 using Orchard.Data;
@@ -30,17 +28,17 @@ namespace Orchard.Tests.Modules.Users.Controllers {
         private Mock<IAuthorizer> _authorizer;
 
         public override void Register(ContainerBuilder builder) {
-            builder.Register<AdminController>();
-            builder.Register<DefaultContentManager>().As<IContentManager>();
-            builder.Register<DefaultContentQuery>().As<IContentQuery>().FactoryScoped();
-            builder.Register<MembershipService>().As<IMembershipService>();
-            builder.Register<UserService>().As<IUserService>();
-            builder.Register<UserHandler>().As<IContentHandler>();
-            builder.Register<OrchardServices>().As<IOrchardServices>();
-            builder.Register<TransactionManager>().As<ITransactionManager>();
-            builder.Register(new Mock<INotifier>().Object);
+            builder.RegisterType<AdminController>().SingleInstance();
+            builder.RegisterType<DefaultContentManager>().As<IContentManager>();
+            builder.RegisterType<DefaultContentQuery>().As<IContentQuery>().InstancePerDependency();
+            builder.RegisterType<MembershipService>().As<IMembershipService>();
+            builder.RegisterType<UserService>().As<IUserService>();
+            builder.RegisterType<UserHandler>().As<IContentHandler>();
+            builder.RegisterType<OrchardServices>().As<IOrchardServices>();
+            builder.RegisterType<TransactionManager>().As<ITransactionManager>();
+            builder.RegisterInstance(new Mock<INotifier>().Object);
             _authorizer = new Mock<IAuthorizer>();
-            builder.Register(_authorizer.Object);
+            builder.RegisterInstance(_authorizer.Object);
         }
 
         protected override IEnumerable<Type> DatabaseTypes {

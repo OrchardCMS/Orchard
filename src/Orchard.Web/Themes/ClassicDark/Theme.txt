@@ -3,4 +3,4 @@ author: Jonathan Wall
 description: Dark version of the Classic theme.
 version: 1.0
 tags: Classic, Dark, Serif 
-homepage: http://www.orchardproject.net
+website: http://www.orchardproject.net

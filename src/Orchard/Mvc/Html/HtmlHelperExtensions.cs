@@ -7,11 +7,11 @@ using System.Text.RegularExpressions;
 using System.Web.Mvc;
 using System.Web.Mvc.Html;
 using System.Web.Routing;
-using Orchard.Extensions;
 using Orchard.Mvc.ViewModels;
 using Orchard.Services;
 using Orchard.Settings;
 using Orchard.Utility;
+using Orchard.Utility.Extensions;
 
 namespace Orchard.Mvc.Html {
     public static class HtmlHelperExtensions {

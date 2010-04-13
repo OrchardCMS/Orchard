@@ -3,17 +3,17 @@ using Autofac.Integration.Web;
 
 namespace Orchard.Tests.Stubs {
     public class StubContainerProvider : IContainerProvider {
-        public StubContainerProvider(IContainer applicationContainer, IContainer requestContainer) {
+        public StubContainerProvider(IContainer applicationContainer, ILifetimeScope requestContainer) {
             ApplicationContainer = applicationContainer;
-            RequestContainer = requestContainer;
+            RequestLifetime = requestContainer;
         }
 
-        public void DisposeRequestContainer() {
-            RequestContainer.Dispose();
+        public void EndRequestLifetime() {
+            RequestLifetime.Dispose();
         }
 
         public IContainer ApplicationContainer { get; set; }
 
-        public IContainer RequestContainer { get; set; }
+        public ILifetimeScope RequestLifetime { get; set; }
     }
 }

@@ -3,12 +3,9 @@ using System.Linq;
 using System.Web.Mvc;
 using System.Web.Routing;
 using Autofac;
-using Autofac.Builder;
-using JetBrains.Annotations;
-using Moq;
 using NUnit.Framework;
-using Orchard.Data.Builders;
 using Orchard.Environment;
+using Orchard.Environment.AutofacUtil;
 using Orchard.Environment.Configuration;
 using Orchard.Setup.Controllers;
 using Orchard.Setup.ViewModels;
@@ -18,7 +15,7 @@ namespace Orchard.Tests.Modules.Setup {
     [TestFixture, Ignore("this can't be made to work")]
     public class SetupControllerTests {
         private string _tempFolder;
-        private IContainer _container;
+        private ILifetimeScope _container;
 
         [SetUp]
         public void Init() {
@@ -27,27 +24,26 @@ namespace Orchard.Tests.Modules.Setup {
             Directory.CreateDirectory(_tempFolder);
 
             var hostContainer = OrchardStarter.CreateHostContainer(builder => {
-                builder.Register(new ControllerBuilder());
-                builder.Register(new ViewEngineCollection { new WebFormViewEngine() });
-                builder.Register(new RouteCollection());
-                builder.Register(new ModelBinderDictionary());
+                builder.RegisterInstance(new ControllerBuilder());
+                builder.RegisterInstance(new ViewEngineCollection { new WebFormViewEngine() });
+                builder.RegisterInstance(new RouteCollection());
+                builder.RegisterInstance(new ModelBinderDictionary());
             });
 
             hostContainer.Resolve<IAppDataFolder>().SetBasePath(_tempFolder);
 
             var host = (DefaultOrchardHost)hostContainer.Resolve<IOrchardHost>();
-            _container = host.CreateShellContainer();
-            _container.Build(builder => {
-                builder.Register<SetupController>();
-            });
-
+            _container = host.CreateShellContainer().BeginLifetimeScope();
+            var updater = new ContainerUpdater();
+            updater.RegisterType<SetupController>();
+            updater.Update(_container);
 
             //var builder = new ContainerBuilder();
             //builder.Register<SetupController>();
             //builder.Register<Notifier>().As<INotifier>();
             //builder.Register<DefaultOrchardHost>().As<IOrchardHost>();
             //builder.Register<DatabaseMigrationManager>().As<IDatabaseMigrationManager>();
-            //builder.Register<ShellSettingsLoader>().As<IShellSettingsLoader>();
+            //builder.Register<DefaultTenantManager>().As<ITenantManager>();
             //builder.Register<TestAppDataFolder>().As<IAppDataFolder>();
             //_container = builder.Build();
         }

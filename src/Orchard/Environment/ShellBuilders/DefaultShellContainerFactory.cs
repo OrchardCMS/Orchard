@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using Autofac;
-using Autofac.Builder;
-using AutofacContrib.DynamicProxy2;
+using Autofac.Core;
+using Orchard.Environment.AutofacUtil;
+using Orchard.Environment.AutofacUtil.DynamicProxy2;
 using Orchard.Environment.Configuration;
 
 namespace Orchard.Environment.ShellBuilders {
@@ -15,53 +15,56 @@ namespace Orchard.Environment.ShellBuilders {
             _compositionStrategy = compositionStrategy;
         }
 
-        public virtual IContainer CreateContainer(IShellSettings settings) {
+        public virtual ILifetimeScope CreateContainer(IShellSettings settings) {
             // null settings means we need to defer to the setup container factory
             if (settings == null) {
                 return null;
             }
 
+            var dynamicProxyContext = new DynamicProxyContext();
+
             // add module types to container being built
-            var addingModulesAndServices = new ContainerBuilder();
-            addingModulesAndServices.Register(settings).As<IShellSettings>();
-            addingModulesAndServices.Register<DefaultOrchardShell>().As<IOrchardShell>().SingletonScoped();
+            var addingModulesAndServices = new ContainerUpdater();
+            addingModulesAndServices.RegisterInstance(settings).As<IShellSettings>();
+            addingModulesAndServices.RegisterInstance(dynamicProxyContext);
+            addingModulesAndServices.RegisterType<DefaultOrchardShell>().As<IOrchardShell>().SingleInstance();
 
             foreach (var moduleType in _compositionStrategy.GetModuleTypes()) {
-                addingModulesAndServices.Register(moduleType).As<IModule>().ContainerScoped();
+                addingModulesAndServices.RegisterType(moduleType).As<IModule>().InstancePerLifetimeScope();
             }
 
             // add components by the IDependency interfaces they expose
             foreach (var serviceType in _compositionStrategy.GetDependencyTypes()) {
+                var registrar = addingModulesAndServices.RegisterType(serviceType)
+                    .EnableDynamicProxy(dynamicProxyContext)
+                    .InstancePerLifetimeScope();
+
                 foreach (var interfaceType in serviceType.GetInterfaces()) {
                     if (typeof(IDependency).IsAssignableFrom(interfaceType)) {
-                        var registrar = addingModulesAndServices.Register(serviceType).As(interfaceType);
+                        registrar = registrar.As(interfaceType);
                         if (typeof(ISingletonDependency).IsAssignableFrom(interfaceType)) {
-                            registrar.SingletonScoped();
+                            registrar = registrar.SingleInstance();
                         }
                         else if (typeof(ITransientDependency).IsAssignableFrom(interfaceType)) {
-                            registrar.FactoryScoped();
-                        }
-                        else {
-                            registrar.ContainerScoped();
+                            registrar = registrar.InstancePerDependency();
                         }
                     }
                 }
             }
 
-            var shellContainer = _container.CreateInnerContainer();
-            shellContainer.TagWith("shell");
-            addingModulesAndServices.Build(shellContainer);
+            var shellScope = _container.BeginLifetimeScope("shell");
+            addingModulesAndServices.Update(shellScope);
 
             // instantiate and register modules on container being built
-            var modules = shellContainer.Resolve<IEnumerable<IModule>>();
-            var addingModules = new ContainerBuilder();
+            var modules = shellScope.Resolve<IEnumerable<IModule>>();
+            var addingModules = new ContainerUpdater();
             foreach (var module in modules) {
                 addingModules.RegisterModule(module);
             }
-            addingModules.RegisterModule(new ExtensibleInterceptionModule(modules.OfType<IComponentInterceptorProvider>()));
-            addingModules.Build(shellContainer);
 
-            return shellContainer;
+            addingModules.Update(shellScope);
+
+            return shellScope;
         }
     }
 }

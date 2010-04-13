@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using ICSharpCode.SharpZipLib.Zip;
+using Orchard.Environment;
 using Orchard.Extensions.Helpers;
 using Orchard.Extensions.Loaders;
 using Orchard.Localization;
@@ -15,15 +16,19 @@ namespace Orchard.Extensions {
         private readonly IEnumerable<IExtensionFolders> _folders;
         private readonly IEnumerable<IExtensionLoader> _loaders;
         private IEnumerable<ExtensionEntry> _activeExtensions;
+        //private readonly IRepository<ExtensionRecord> _extensionRepository;
 
         public Localizer T { get; set; }
         public ILogger Logger { get; set; }
 
         public ExtensionManager(
             IEnumerable<IExtensionFolders> folders,
-            IEnumerable<IExtensionLoader> loaders) {
+            IEnumerable<IExtensionLoader> loaders
+            //IRepository<ExtensionRecord> extensionRepository
+            ) {
             _folders = folders;
             _loaders = loaders.OrderBy(x => x.Order);
+            //_extensionRepository = extensionRepository;
             T = NullLocalizer.Instance;
             Logger = NullLogger.Instance;
         }
@@ -54,19 +59,39 @@ namespace Orchard.Extensions {
                 DisplayName = GetValue(fields, "name"),
                 Description = GetValue(fields, "description"),
                 Version = GetValue(fields, "version"),
+                OrchardVersion = GetValue(fields, "orchardversion"),
                 Author = GetValue(fields, "author"),
-                HomePage = GetValue(fields, "homepage"),
+                WebSite = GetValue(fields, "website"),
                 Tags = GetValue(fields, "tags"),
-                AntiForgery = GetValue(fields, "antiforgery")
+                AntiForgery = GetValue(fields, "antiforgery"),
+                Features = GetFeaturesForExtension(GetMapping(fields, "features"), name),
             };
         }
 
-        private static string GetValue(
-            IDictionary<string, DataItem> fields,
-            string key) {
-
-            DataItem value;
-            return fields.TryGetValue(key, out value) ? value.ToString() : null;
+        private static IEnumerable<FeatureDescriptor> GetFeaturesForExtension(Mapping features, string name) {
+            List<FeatureDescriptor> featureDescriptors = new List<FeatureDescriptor>();
+            if (features == null) return featureDescriptors;
+            foreach (var entity in features.Entities) {
+                FeatureDescriptor featureDescriptor = new FeatureDescriptor {
+                    ExtensionName = name,
+                    Name = entity.Key.ToString(),
+                };
+                Mapping featureMapping = (Mapping) entity.Value;
+                foreach (var featureEntity in featureMapping.Entities) {
+                    if (String.Equals(featureEntity.Key.ToString(), "description", StringComparison.OrdinalIgnoreCase)) {
+                        featureDescriptor.Description = featureEntity.Value.ToString();
+                    }
+                    else if (String.Equals(featureEntity.Key.ToString(), "category", StringComparison.OrdinalIgnoreCase)) {
+                        featureDescriptor.Category = featureEntity.Value.ToString();
+                    }
+                    else if (String.Equals(featureEntity.Key.ToString(), "dependencies", StringComparison.OrdinalIgnoreCase)) {
+                        featureDescriptor.Dependencies = ParseFeatureDependenciesEntry(featureEntity.Value.ToString());
+                    }
+                }
+                featureDescriptors.Add(featureDescriptor);
+         
+            }
+            return featureDescriptors;
         }
 
         public IEnumerable<ExtensionEntry> ActiveExtensions() {
@@ -74,6 +99,12 @@ namespace Orchard.Extensions {
                 _activeExtensions = BuildActiveExtensions().ToList();
             }
             return _activeExtensions;
+        }
+
+        public ShellTopology GetExtensionsTopology() {
+            var types = ActiveExtensions().SelectMany(x => x.ExportedTypes);
+            types = types.Concat(typeof(IOrchardHost).Assembly.GetExportedTypes());
+            return new ShellTopology { Types = types.Where(t => t.IsClass && !t.IsAbstract) };
         }
 
         public void InstallExtension(string extensionType, HttpPostedFileBase extensionBundle) {
@@ -136,8 +167,8 @@ namespace Orchard.Extensions {
         }
 
         private IEnumerable<ExtensionEntry> BuildActiveExtensions() {
-            //TODO: this component needs access to some "current settings" to know which are active
             foreach (var descriptor in AvailableExtensions()) {
+                //_extensionRepository.Create(new ExtensionRecord { Name = descriptor.Name });
                 // Extensions that are Themes don't have buildable components.
                 if (String.Equals(descriptor.ExtensionType, "Module", StringComparison.OrdinalIgnoreCase)) {
                     yield return BuildEntry(descriptor);
@@ -145,7 +176,15 @@ namespace Orchard.Extensions {
             }
         }
 
+        private bool IsExtensionEnabled(string name) {
+            //ExtensionRecord extensionRecord = _extensionRepository.Get(x => x.Name == name);
+            //if (extensionRecord.Enabled) return true;
+            //return false;
+            return true;
+        }
+
         private ExtensionEntry BuildEntry(ExtensionDescriptor descriptor) {
+            if (!IsExtensionEnabled(descriptor.Name)) return null; 
             foreach (var loader in _loaders) {
                 var entry = loader.Load(descriptor);
                 if (entry != null)
@@ -154,6 +193,28 @@ namespace Orchard.Extensions {
             return null;
         }
 
-    }
+        private static string[] ParseFeatureDependenciesEntry(string dependenciesEntry) {
+            List<string> dependencies = new List<string>();
+            foreach (var s in dependenciesEntry.Split(',')) {
+                dependencies.Add(s.Trim());
+            }
+            return dependencies.ToArray();
+        }
 
+        private static Mapping GetMapping(
+            IDictionary<string, DataItem> fields,
+            string key) {
+
+            DataItem value;
+            return fields.TryGetValue(key, out value) ? (Mapping)value : null;
+        }
+
+        private static string GetValue(
+            IDictionary<string, DataItem> fields,
+            string key) {
+
+            DataItem value;
+            return fields.TryGetValue(key, out value) ? value.ToString() : null;
+        }
+    }
 }

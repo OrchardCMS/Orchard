@@ -7,7 +7,7 @@ using Orchard.Core.Scheduling.Models;
 using Orchard.Data;
 using Orchard.Logging;
 using Orchard.Tasks.Scheduling;
-using Orchard.Utility;
+using Orchard.Utility.Extensions;
 
 namespace Orchard.Core.Scheduling.Services {
     [UsedImplicitly]

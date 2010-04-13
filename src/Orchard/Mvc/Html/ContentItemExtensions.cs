@@ -2,7 +2,7 @@
 using System.Web.Mvc;
 using System.Web.Mvc.Html;
 using Orchard.ContentManagement;
-using Orchard.Extensions;
+using Orchard.Utility.Extensions;
 
 namespace Orchard.Mvc.Html {
     public static class ContentItemExtensions {

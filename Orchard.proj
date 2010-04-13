@@ -11,6 +11,9 @@
 		<CompileFolder>$(BuildFolder)\Compile</CompileFolder>
 		<WebSitesFolder>$(CompileFolder)\_PublishedWebsites</WebSitesFolder>
 		<StageFolder>$(BuildFolder)\Stage</StageFolder>
+		
+		<BuildPlatform Condition="$(ProgramW6432) != ''">x64</BuildPlatform>
+		<BuildPlatform Condition="$(BuildPlatform) == ''">x86</BuildPlatform>
 	</PropertyGroup>
 
   <Import Project="$(LibFolder)\msbuild\MSBuild.Community.Tasks.Targets"/>
@@ -48,9 +51,35 @@
 <!-- Testing -->
 
   <Target Name ="Test">
-		<Exec Command="$(LibFolder)\nunit\nunit-console-x86.exe /xml=$(BuildFolder)\Orchard.Tests.xml $(CompileFolder)\Orchard.Core.Tests.dll $(CompileFolder)\Orchard.Tests.dll $(CompileFolder)\Orchard.Tests.Modules.dll $(CompileFolder)\Orchard.Web.Tests.dll $(CompileFolder)\MSBuild.Orchard.Tasks.Tests.dll" />
+  	<PropertyGroup>
+      <UseSqlite64 Condition="'$(teamcity_version)'=='' And '$(BuildPlatform)' == 'x64'">True</UseSqlite64>
+    </PropertyGroup>
+    
+    <Message Condition="'$(UseSqlite64)' == 'True'"  Text="Testing with x64 version of Sqlite"/>
+    
+		<CreateItem Include="$(CompileFolder)\*.Tests.*dll">
+			<Output TaskParameter="Include" ItemName="TestAssemblies" />
+		</CreateItem>
+
+    <!-- use x64 sqlite for tests depending on build platform -->
+    <Copy Condition="'$(UseSqlite64)' == 'True'" 
+      SourceFiles="$(LibFolder)\sqlite\x64\System.Data.SQLite.dll" 
+      DestinationFiles="$(CompileFolder)\System.Data.SQLite.dll" />
+		
+		<NUnit Assemblies="@(TestAssemblies)" ToolPath="$(LibFolder)\nunit" WorkingDirectory="$(CompileFolder)" OutputXmlFile="$(BuildFolder)\Orchard.Tests.xml" />
+
+    <!-- restore sqlite version if needed -->
+    <Copy Condition="'$(UseSqlite64)' == 'True'" 
+      SourceFiles="$(LibFolder)\sqlite\System.Data.SQLite.dll" 
+      DestinationFiles="$(CompileFolder)\System.Data.SQLite.dll" />
   </Target>
 
+  <Target Name ="Spec">
+		<CreateItem Include="$(CompileFolder)\*.Specs.dll">
+			<Output TaskParameter="Include" ItemName="SpecAssemblies" />
+		</CreateItem>
+		<NUnit Assemblies="@(SpecAssemblies)" ToolPath="$(LibFolder)\nunit" />
+  </Target>
 
 <!-- Packaging -->
 

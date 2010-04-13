@@ -1,20 +1,18 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Reflection;
-using Autofac;
-using AutofacContrib.DynamicProxy2;
+using Autofac.Core;
 using Castle.Core.Interceptor;
-using Module = Autofac.Builder.Module;
+using Orchard.Environment.AutofacUtil.DynamicProxy2;
+using Module = Autofac.Module;
 
 namespace Orchard.Security {
-    public class SecurityModule : Module, IComponentInterceptorProvider {
-        public IEnumerable<Service> GetInterceptorServices(IComponentDescriptor descriptor) {
-            var property = FindProperty(descriptor.BestKnownImplementationType);
+    public class SecurityModule : Module {
+        protected override void AttachToComponentRegistration(IComponentRegistry componentRegistry, IComponentRegistration registration) {
+            var implementationType = registration.Activator.LimitType;
+            var property = FindProperty(implementationType);
+
             if (property != null) {
-                if (property.GetGetMethod(true).IsVirtual == false) {
-                    throw new ApplicationException(string.Format("CurrentUser property must be virtual on class {0}", descriptor.BestKnownImplementationType.FullName));
-                }
-                yield return new TypedService(typeof(ISecurityModuleInterceptor));
+                registration.InterceptedBy<ISecurityModuleInterceptor>();
             }
         }
 

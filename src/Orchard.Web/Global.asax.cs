@@ -5,15 +5,19 @@ using System.Reflection;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
+using Autofac;
 using Autofac.Builder;
+using Autofac.Integration.Web;
+using Autofac.Integration.Web.Mvc;
 using Orchard.Environment;
 
 namespace Orchard.Web {
     // Note: For instructions on enabling IIS6 or IIS7 classic mode, 
     // visit http://go.microsoft.com/?LinkId=9394801
 
-    public class MvcApplication : HttpApplication {
+    public class MvcApplication : HttpApplication, IContainerProviderAccessor {
         private static IOrchardHost _host;
+        private static IContainerProvider _containerProvider;
 
         public static void RegisterRoutes(RouteCollection routes) {
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
@@ -26,6 +30,12 @@ namespace Orchard.Web {
                 new Version("2.0.50217.0")/*MVC2 RTM file version #*/,
                 new Version("2.0.50129.0")/*MVC2 RC2 file version #*/,
                 new Version("2.0.41211.0")/*MVC2 RC file version #*/);
+
+            var builder = new ContainerBuilder();
+            builder.RegisterControllers(Assembly.GetExecutingAssembly());
+            _containerProvider = new ContainerProvider(builder.Build());
+            ControllerBuilder.Current.SetControllerFactory(new AutofacControllerFactory(ContainerProvider));
+
             RegisterRoutes(RouteTable.Routes);
 
             _host = OrchardStarter.CreateHost(MvcSingletons);
@@ -91,11 +101,21 @@ namespace Orchard.Web {
 
 
         protected void MvcSingletons(ContainerBuilder builder) {
-            builder.Register(ControllerBuilder.Current);
-            builder.Register(RouteTable.Routes);
-            builder.Register(ModelBinders.Binders);
-            builder.Register(ModelMetadataProviders.Current);
-            builder.Register(ViewEngines.Engines);
+            builder.RegisterInstance(ControllerBuilder.Current);
+            builder.RegisterInstance(RouteTable.Routes);
+            builder.RegisterInstance(ModelBinders.Binders);
+            builder.RegisterInstance(ModelMetadataProviders.Current);
+            builder.RegisterInstance(ViewEngines.Engines);
         }
+
+        #region Implementation of IContainerProviderAccessor
+
+        public IContainerProvider ContainerProvider {
+            get {
+                return _containerProvider;
+            }
+        }
+
+        #endregion
     }
 }

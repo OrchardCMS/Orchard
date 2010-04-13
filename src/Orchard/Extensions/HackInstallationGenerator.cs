@@ -1,7 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Orchard.Logging;
-using Orchard.Utility;
+using Orchard.Utility.Extensions;
 
 namespace Orchard.Extensions {
     public interface IHackInstallationGenerator  : IDependency {

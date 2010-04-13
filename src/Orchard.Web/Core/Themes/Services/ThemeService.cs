@@ -70,7 +70,7 @@ namespace Orchard.Core.Themes.Services {
                         Author = descriptor.Author ?? String.Empty,
                         Description = descriptor.Description ?? String.Empty,
                         DisplayName = descriptor.DisplayName ?? String.Empty,
-                        HomePage = descriptor.HomePage ?? String.Empty,
+                        HomePage = descriptor.WebSite ?? String.Empty,
                         ThemeName = descriptor.Name,
                         Version = descriptor.Version ?? String.Empty,
                         Tags = descriptor.Tags ?? String.Empty
@@ -88,7 +88,7 @@ namespace Orchard.Core.Themes.Services {
                         Author = descriptor.Author ?? String.Empty,
                         Description = descriptor.Description ?? String.Empty,
                         DisplayName = descriptor.DisplayName ?? String.Empty,
-                        HomePage = descriptor.HomePage ?? String.Empty,
+                        HomePage = descriptor.WebSite ?? String.Empty,
                         ThemeName = descriptor.Name,
                         Version = descriptor.Version ?? String.Empty,
                         Tags = descriptor.Tags ?? String.Empty

@@ -9,7 +9,7 @@ namespace Orchard.Localization {
             return context == null ? NullLocalizer.Instance : Resolve(context, scope);
         }
 
-        public static Localizer Resolve(IContext context, string scope) {
+        public static Localizer Resolve(IComponentContext context, string scope) {
             var text = context.Resolve<IText>(new NamedParameter("scope", scope));
             return text.Get;
         }

@@ -5,7 +5,7 @@ using System.Linq.Expressions;
 using NHibernate;
 using NHibernate.Linq;
 using Orchard.Logging;
-using Orchard.Utility;
+using Orchard.Utility.Extensions;
 
 namespace Orchard.Data {
     public class Repository<T> : IRepository<T> {

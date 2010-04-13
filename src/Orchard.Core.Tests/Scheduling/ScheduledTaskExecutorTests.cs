@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using Autofac.Builder;
+using Autofac;
 using Moq;
 using NUnit.Framework;
 using Orchard.ContentManagement;
@@ -26,10 +26,10 @@ namespace Orchard.Core.Tests.Scheduling {
         }
         public override void Register(ContainerBuilder builder) {
             _handler = new StubTaskHandler();
-            builder.Register(new Mock<IOrchardServices>().Object);
-            builder.Register<DefaultContentManager>().As<IContentManager>();
-            builder.Register<ScheduledTaskExecutor>().As<IBackgroundTask>().Named("ScheduledTaskExecutor");
-            builder.Register(_handler).As<IScheduledTaskHandler>();
+            builder.RegisterInstance(new Mock<IOrchardServices>().Object);
+            builder.RegisterType<DefaultContentManager>().As<IContentManager>();
+            builder.RegisterType<ScheduledTaskExecutor>().As<IBackgroundTask>().Named("ScheduledTaskExecutor", typeof (IBackgroundTask));
+            builder.RegisterInstance(_handler).As<IScheduledTaskHandler>();
         }
 
         protected override IEnumerable<Type> DatabaseTypes {

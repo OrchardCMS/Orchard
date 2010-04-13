@@ -15,7 +15,7 @@
 </div>
 
 <div class="header group">
-    <!-- Main Menu -->
+    <%-- Main Menu --%>
     <div id="nav">
         <div class="brand group">
             <div class="title">
@@ -29,7 +29,7 @@
     <div id="container">
         <div id="content">
 
-            <!-- Content Hero -->
+            <%-- Content Hero --%>
 	        <div class="main-box">
                 <div class="top">
                      <img src="/Themes/Corporate/Content/Images/content-top.png" /></div>
@@ -39,9 +39,9 @@
                                 <% Html.ZoneBody("content"); %>
                             </div>
                             <div class="sidebar">
-                                <!-- START Blog Sidebars -->
+                                <%-- START Blog Sidebars --%>
 		                        <%Html.Zone("sidebar");%>
-		                        <!-- END Blog Sidebars -->
+		                        <%-- END Blog Sidebars --%>
 
                                 <div class="side-block">
                                     <% Html.Zone("sidebar-w1"); %>
@@ -64,5 +64,5 @@
     </div>
 </div>
 	
-	<!-- Footer -->
+	<%-- Footer --%>
 	<% Html.Zone("footer"); %>

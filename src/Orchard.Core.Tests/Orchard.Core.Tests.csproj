@@ -31,7 +31,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Autofac, Version=1.4.4.561, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
+    <Reference Include="Autofac, Version=2.1.13.813, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\autofac\Autofac.dll</HintPath>
     </Reference>
@@ -85,17 +85,17 @@
       <Project>{6CB3EB30-F725-45C0-9742-42599BA8E8D2}</Project>
       <Name>Orchard.Tests.Modules</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Orchard.Tests\Orchard.Tests.csproj">
+    <ProjectReference Include="..\Orchard.Tests\Orchard.Framework.Tests.csproj">
       <Project>{ABC826D4-2FA1-4F2F-87DE-E6095F653810}</Project>
-      <Name>Orchard.Tests</Name>
+      <Name>Orchard.Framework.Tests</Name>
     </ProjectReference>
     <ProjectReference Include="..\Orchard.Web\Core\Orchard.Core.csproj">
       <Project>{9916839C-39FC-4CEB-A5AF-89CA7E87119F}</Project>
       <Name>Orchard.Core</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Orchard\Orchard.csproj">
+    <ProjectReference Include="..\Orchard\Orchard.Framework.csproj">
       <Project>{2D1D92BB-4555-4CBE-8D0E-63563D6CE4C6}</Project>
-      <Name>Orchard</Name>
+      <Name>Orchard.Framework</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

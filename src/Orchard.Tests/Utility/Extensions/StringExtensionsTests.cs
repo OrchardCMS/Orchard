@@ -1,5 +1,5 @@
 ﻿using NUnit.Framework;
-using Orchard.Extensions;
+using Orchard.Utility.Extensions;
 
 namespace Orchard.Tests.Utility.Extensions {
     [TestFixture]

@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Web.Mvc;
+﻿using System.Web.Mvc;
+using Autofac;
 using NUnit.Framework;
 using Orchard.Environment;
 
@@ -11,7 +8,7 @@ namespace Orchard.Tests.Environment {
     public class OrchardStarterTests {
         [Test]
         public void DefaultOrchardHostInstanceReturnedByCreateHost() {
-            var host = OrchardStarter.CreateHost(b => b.Register(new ControllerBuilder()));
+            var host = OrchardStarter.CreateHost(b => b.RegisterInstance(new ControllerBuilder()));
             Assert.That(host, Is.TypeOf<DefaultOrchardHost>());
         }
     }

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Autofac.Builder;
+using Autofac;
 using NUnit.Framework;
 using Orchard.Roles.Models;
 using Orchard.Roles.Services;
@@ -10,7 +10,7 @@ namespace Orchard.Tests.Modules.Roles.Services {
     [TestFixture]
     public class RoleServiceTests : DatabaseEnabledTestsBase{
         public override void Register(ContainerBuilder builder) {
-            builder.Register<RoleService>().As<IRoleService>();
+            builder.RegisterType<RoleService>().As<IRoleService>();
         }
 
         protected override IEnumerable<Type> DatabaseTypes {

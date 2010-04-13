@@ -1,9 +1,9 @@
-﻿using Autofac.Builder;
+﻿using Autofac;
 
 namespace Orchard.ContentManagement {
     public class ContentModule : Module {
         protected override void Load(ContainerBuilder builder) {
-            builder.Register<DefaultContentQuery>().As<IContentQuery>().FactoryScoped();
+            builder.RegisterType<DefaultContentQuery>().As<IContentQuery>().InstancePerDependency();
         }
     }
 }

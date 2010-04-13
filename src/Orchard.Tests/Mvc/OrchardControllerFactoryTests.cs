@@ -1,15 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
-using Autofac.Builder;
 using NUnit.Framework;
 using Orchard.Mvc;
 using Orchard.Tests.Stubs;
+using Autofac;
 
 namespace Orchard.Tests.Mvc {
     [TestFixture]
@@ -20,12 +17,12 @@ namespace Orchard.Tests.Mvc {
         [SetUp]
         public void Init() {
             var builder = new ContainerBuilder();
-            builder.Register<ReplacementFooController>().As<IController>()
-                .Named("controller.orchard.foo")
-                .FactoryScoped();
+            builder.RegisterType<ReplacementFooController>()
+                .Named<IController>("controller.orchard.foo")
+                .InstancePerDependency();
 
             var container = builder.Build();
-            _containerProvider = new StubContainerProvider(container, container.CreateInnerContainer());
+            _containerProvider = new StubContainerProvider(container, container.BeginLifetimeScope());
 
 
             _controllerFactory = new OrchardControllerFactory();
@@ -66,7 +63,7 @@ namespace Orchard.Tests.Mvc {
             Assert.That(controller, Is.TypeOf<ReplacementFooController>());
 
             _controllerFactory.ReleaseController(controller);
-            _containerProvider.DisposeRequestContainer();
+            _containerProvider.EndRequestLifetime();
 
             // explicitly dispose a few more, just to make sure it's getting hit from all different directions
             ((IDisposable) controller).Dispose();

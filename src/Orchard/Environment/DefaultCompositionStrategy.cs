@@ -2,11 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using Autofac;
+using Autofac.Core;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Records;
 using Orchard.Extensions;
-using Orchard.Utility;
+using Orchard.Utility.Extensions;
+using Orchard.Extensions.Records;
 
 namespace Orchard.Environment {
     //TEMP: This will be replaced by packaging system
@@ -30,19 +31,11 @@ namespace Orchard.Environment {
         }
 
         public IEnumerable<Type> GetModuleTypes() {
-            var types = _extensionManager.ActiveExtensions().SelectMany(x => x.ExportedTypes);
-            types = types.Concat(typeof(IOrchardHost).Assembly.GetExportedTypes());
-            var nonAbstractClasses = types.Where(t => t.IsClass && !t.IsAbstract);
-            var modules = nonAbstractClasses.Where(t => typeof(IModule).IsAssignableFrom(t));
-            return modules;
+            return _extensionManager.GetExtensionsTopology().Types.Where(t => typeof(IModule).IsAssignableFrom(t));
         }
 
         public IEnumerable<Type> GetDependencyTypes() {
-            var types = _extensionManager.ActiveExtensions().SelectMany(x => x.ExportedTypes);
-            types = types.Concat(typeof(IOrchardHost).Assembly.GetExportedTypes());
-            var nonAbstractClasses = types.Where(t => t.IsClass && !t.IsAbstract);
-            var modules = nonAbstractClasses.Where(t => typeof(IDependency).IsAssignableFrom(t));
-            return modules;
+            return _extensionManager.GetExtensionsTopology().Types.Where(t => typeof(IDependency).IsAssignableFrom(t));
         }
 
         public IEnumerable<RecordDescriptor> GetRecordDescriptors() {
@@ -50,6 +43,7 @@ namespace Orchard.Environment {
                 new RecordDescriptor { Prefix = "Core", Type = typeof (ContentTypeRecord)},
                 new RecordDescriptor { Prefix = "Core", Type = typeof (ContentItemRecord)},
                 new RecordDescriptor { Prefix = "Core", Type = typeof (ContentItemVersionRecord)},
+                new RecordDescriptor { Prefix = "Core", Type = typeof (ExtensionRecord)},
             };
 
             foreach (var extension in _extensionManager.ActiveExtensions()) {

@@ -1,0 +1,3770 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>YamlSerializer</name>
+    </assembly>
+    <members>
+        <member name="T:System.Yaml.Serialization.EasyTypeConverter">
+            <summary>
+            Converts various types to / from string.<br/>
+            I don't remember why this class was needed....
+            </summary>
+            <example>
+            <code>
+            object obj = GetObjectToConvert();
+            
+            // Check if the type has [TypeConverter] attribute.
+            if( EasyTypeConverter.IsTypeConverterSpecified(type) ) {
+            
+              // Convert the object to string.
+              string s = EasyTypeConverter.ConvertToString(obj);
+            
+              // Convert the string to an object of the spific type.
+              object restored = EasyTypeConverter.ConvertFromString(s, type);
+              
+              Assert.AreEqual(obj, restored);
+            
+            }
+            </code>
+            </example>
+        </member>
+        <member name="T:System.Yaml.Serialization.YamlRepresenter">
+            <summary>
+            Converts C# object to YamlNode
+            </summary>
+            <example>
+            <code>
+            object obj;
+            YamlNode node = YamlRepresenter.ObjectToNode(obj);
+            </code>
+            </example>
+        </member>
+        <member name="T:System.Yaml.YamlNodeManipulator">
+            <summary>
+            Implements utility functions to instantiating YamlNode's
+            </summary>
+            <example>
+            <code>
+            var node_tree = seq(
+                str("abc"),
+                str("def"),
+                map(
+                    str("key"), str("value"),
+                    str("key2"), seq( str("value2a"), str("value2b") )
+                ),
+                str("2"), // !!str
+                str("!!int", "2")
+            );
+            
+            string yaml = node_tree.ToYaml();
+            
+            // %YAML 1.2
+            // ---
+            // - abc
+            // - def
+            // - key: value
+            //   key2: [ value2a, value2b ]
+            // - "2"         # !!str
+            // - 2           # !!int
+            // ...
+            </code>                                                   
+            </example>
+        </member>
+        <member name="M:System.Yaml.YamlNodeManipulator.str(System.String)">
+            <summary>
+            Create a scalar node. Tag is set to be "!!str".
+            </summary>
+            <example>
+            <code>
+            var node_tree = seq(
+                str("abc"),
+                str("def"),
+                map(
+                    str("key"), str("value"),
+                    str("key2"), seq( str("value2a"), str("value2b") )
+                ),
+                str("2"), // !!str
+                str("!!int", "2")
+            );
+            
+            string yaml = node_tree.ToYaml();
+            
+            // %YAML 1.2
+            // ---
+            // - abc
+            // - def
+            // - key: value
+            //   key2: [ value2a, value2b ]
+            // - "2"         # !!str
+            // - 2           # !!int
+            // ...
+            </code>                                                   
+            </example>
+            <param name="value">Value for the scalar node.</param>
+            <returns>Created scalar node.</returns>
+        </member>
+        <member name="M:System.Yaml.YamlNodeManipulator.str(System.String,System.String)">
+            <summary>
+            Create a scalar node.
+            </summary>
+            <param name="tag">Tag for the scalar node.</param>
+            <param name="value">Value for the scalar node.</param>
+            <returns>Created scalar node.</returns>
+        </member>
+        <member name="M:System.Yaml.YamlNodeManipulator.seq(System.Yaml.YamlNode[])">
+            <summary>
+            Create a sequence node. Tag is set to be "!!seq".
+            </summary>
+            <param name="nodes">Child nodes.</param>
+            <returns>Created sequence node.</returns>
+        </member>
+        <member name="M:System.Yaml.YamlNodeManipulator.seq_tag(System.String,System.Yaml.YamlNode[])">
+            <summary>
+            Create a sequence node. 
+            </summary>
+            <param name="nodes">Child nodes.</param>
+            <param name="tag">Tag for the seuqnce.</param>
+            <returns>Created sequence node.</returns>
+        </member>
+        <member name="M:System.Yaml.YamlNodeManipulator.map(System.Yaml.YamlNode[])">
+            <summary>
+            Create a mapping node. Tag is set to be "!!map".
+            </summary>
+            <param name="nodes">Sequential list of key/value pairs.</param>
+            <returns>Created mapping node.</returns>
+        </member>
+        <member name="M:System.Yaml.YamlNodeManipulator.map_tag(System.String,System.Yaml.YamlNode[])">
+            <summary>
+            Create a mapping node. 
+            </summary>
+            <param name="nodes">Sequential list of key/value pairs.</param>
+            <param name="tag">Tag for the mapping.</param>
+            <returns>Created mapping node.</returns>
+        </member>
+        <member name="T:System.Yaml.ParseErrorException">
+            <summary>
+            <para>When <see cref="T:System.Yaml.Parser`1"/> reports syntax error by exception, this class is thrown.</para>
+            
+            <para>Sytax errors can also be reported by simply returing false with giving some warnings.</para>
+            </summary>
+        </member>
+        <member name="M:System.Yaml.ParseErrorException.#ctor(System.String)">
+            <summary>
+            Initialize an instance of <see cref="T:System.Yaml.ParseErrorException"/>
+            </summary>
+            <param name="message">Error message.</param>
+        </member>
+        <member name="T:System.Yaml.Parser`1">
+            <summary>
+            <para>Base class to implement a parser class.</para>
+            
+            <para>It allows not very efficient but easy implementation of a text parser along 
+            with a parameterized BNF productions.</para>
+            </summary>
+            <typeparam name="State">Parser specific state structure.</typeparam>
+        </member>
+        <member name="M:System.Yaml.Parser`1.Parse(System.Func{System.Boolean},System.String)">
+            <summary>
+            Parse the <paramref name="text"/> using the <paramref name="start_rule"/> 
+            as the starting rule.
+            </summary>
+            <param name="start_rule">Starting rule.</param>
+            <param name="text">Text to be parsed.</param>
+            <returns></returns>
+        </member>
+        <member name="F:System.Yaml.Parser`1.text">
+            <summary>
+            <para>Gets / sets source text to be parsed.</para>
+            <para>While parsing, this variable will not be changed.</para>
+            <para>The current position to be read by parser is represented by the field <see cref="F:System.Yaml.Parser`1.p"/>.</para>
+            <para>Namely, the next character to be read is <c>text[p]</c>.</para>
+            </summary>
+        </member>
+        <member name="F:System.Yaml.Parser`1.p">
+            <summary>
+            <para>The current reading position.</para>
+            
+            <para>The next character to be read by the parser is <c>text[p]</c>.</para>
+            
+            <para>Increase <see cref="F:System.Yaml.Parser`1.p"/> to reduce some part of source text <see cref="F:System.Yaml.Parser`1.text"/>.</para>
+            
+            <para>The current position <see cref="F:System.Yaml.Parser`1.p"/> is automatically reverted at rewinding.</para>
+            </summary>
+            <example>
+            Example to show how to reduce BNF reduction rule of ( "t" "e" "x" "t" ).
+            <code>
+              return RewindUnless(()=&gt;
+                  text[p++] == 't' &amp;&amp;
+                  text[p++] == 'e' &amp;&amp;
+                  text[p++] == 'x' &amp;&amp;
+                  text[p++] == 't'
+              );
+            </code>
+            </example>
+        </member>
+        <member name="F:System.Yaml.Parser`1.stringValue">
+            <summary>
+            <para>Use this variable to build some string data from source text.</para>
+            
+            <para>It will be automatically reverted at rewinding.</para>
+            </summary>
+        </member>
+        <member name="F:System.Yaml.Parser`1.state">
+            <summary>
+            <para>Individual-parser-specific state object.</para>
+            
+            <para>It will be automatically reverted at rewinding.</para>
+            
+            <para>If some action, in addition to simply restore the value of the state object,
+            is needed to recover the previous state, override <see cref="M:System.Yaml.Parser`1.Rewind"/>
+            method.</para>
+            </summary>
+        </member>
+        <member name="M:System.Yaml.Parser`1.InitializeLines">
+            <summary>
+            Initialize <see cref="F:System.Yaml.Parser`1.Lines"/>, which represents line number to 
+            start position of each line list.
+            </summary>
+        </member>
+        <member name="F:System.Yaml.Parser`1.Lines">
+            <summary>
+            Line number to start position list.
+            </summary>
+        </member>
+        <member name="M:System.Yaml.Parser`1.Error(System.String,System.Object[])">
+            <summary>
+            Reporting syntax error by throwing <see cref="T:System.Yaml.ParseErrorException"/>.
+            </summary>
+            <param name="message"><see cref="M:System.String.Format(System.String,System.Object[])"/> template for the error message.</param>
+            <param name="args"><see cref="M:System.String.Format(System.String,System.Object[])"/> parameters if required</param>
+            <returns>Because it throw exception, nothing will be returned in reality.</returns>
+        </member>
+        <member name="M:System.Yaml.Parser`1.WarningIf(System.Boolean,System.String,System.Object[])">
+            <summary>
+            <para>Give warning if <paramref name="condition"/> is true.</para>
+            
+            <para>By default, the warning will not be shown / stored to anywhere.
+            To show or log the warning, override <see cref="M:System.Yaml.Parser`1.StoreWarning(System.String)"/>.</para>
+            </summary>
+            <example>
+            <code>
+              return 
+                  SomeObsoleteReductionRule() &amp;&amp;
+                  WarningIf(
+                      context != Context.IndeedObsolete,
+                      "Obsolete");
+            </code>
+            </example>
+            <param name="condition">If true, warning is given; otherwize do nothing.</param>
+            <param name="message"><see cref="M:System.String.Format(System.String,System.Object[])"/> template for the warning message.</param>
+            <param name="args"><see cref="M:System.String.Format(System.String,System.Object[])"/> parameters if required</param>
+            <returns>Always true.</returns>
+        </member>
+        <member name="M:System.Yaml.Parser`1.WarningUnless(System.Boolean,System.String,System.Object[])">
+            <summary>
+            <para>Give warning if <paramref name="condition"/> is false.</para>
+            
+            <para>By default, the warning will not be shown / stored to anywhere.
+            To show or log the warning, override <see cref="M:System.Yaml.Parser`1.StoreWarning(System.String)"/>.</para>
+            </summary>
+            <example>
+            <code>
+              return 
+                  SomeObsoleteReductionRule() &amp;&amp;
+                  WarningUnless(
+                      context != Context.NotObsolete,
+                      "Obsolete");
+            </code>
+            </example>
+            <param name="condition">If false, warning is given; otherwize do nothing.</param>
+            <param name="message"><see cref="M:System.String.Format(System.String,System.Object[])"/> template for the warning message.</param>
+            <param name="args"><see cref="M:System.String.Format(System.String,System.Object[])"/> parameters if required</param>
+            <returns>Always true.</returns>
+        </member>
+        <member name="M:System.Yaml.Parser`1.Warning(System.String,System.Object[])">
+            <summary>
+            <para>Give warning.</para>
+            
+            <para>By default, the warning will not be shown / stored to anywhere.
+            To show or log the warning, override <see cref="M:System.Yaml.Parser`1.StoreWarning(System.String)"/>.</para>
+            </summary>
+            <example>
+            <code>
+              return 
+                  SomeObsoleteReductionRule() &amp;&amp;
+                  Warning("Obsolete");
+            </code>
+            </example>
+            <param name="message"><see cref="M:System.String.Format(System.String,System.Object[])"/> template for the warning message.</param>
+            <param name="args"><see cref="M:System.String.Format(System.String,System.Object[])"/> parameters if required</param>
+            <returns>Always true.</returns>
+        </member>
+        <member name="M:System.Yaml.Parser`1.StoreWarning(System.String)">
+            <summary>
+            <para>Invoked when warning was given while parsing.</para>
+            
+            <para>Override this method to display / store the warning.</para>
+            </summary>
+            <param name="message">Warning message.</param>
+        </member>
+        <member name="M:System.Yaml.Parser`1.RewindUnless(System.Func{System.Boolean})">
+            <summary>
+            <para>Represents EBNF operator of "join", i.e. serial appearence of several rules.</para>
+            </summary>
+            <remarks>
+            <para>This recoveres <see cref="F:System.Yaml.Parser`1.p"/>, <see cref="F:System.Yaml.Parser`1.stringValue"/>, <see cref="F:System.Yaml.Parser`1.state"/>
+            when <paramref name="condition"/> does not return <code>true</code>.</para>
+            
+            <para>If any specific operation is needed for rewinding, in addition to simply
+            recover the value of <see cref="F:System.Yaml.Parser`1.state"/>, override <see cref="M:System.Yaml.Parser`1.Rewind"/>.</para>
+            </remarks>
+            <param name="rule">If false is returned, the parser status is rewound.</param>
+            <returns>true if <paramref name="rule"/> returned true; otherwise false.</returns>
+            <example>
+            name ::= first-name middle-name? last-name
+            <code>
+            bool Name()
+            {
+                return RewindUnless(()=&gt;
+                    FirstName() &amp;&amp;
+                    Optional(MiddleName) &amp;&amp;
+                    LastName()
+                );
+            }
+            </code>
+            </example>
+        </member>
+        <member name="M:System.Yaml.Parser`1.Rewind">
+            <summary>
+            This method is called just after <see cref="M:System.Yaml.Parser`1.RewindUnless(System.Func{System.Boolean})"/> recovers <see cref="F:System.Yaml.Parser`1.state"/>.
+            Override it to do any additional operation for rewinding.
+            </summary>
+        </member>
+        <member name="M:System.Yaml.Parser`1.Repeat(System.Func{System.Boolean})">
+             <summary>
+             Represents EBNF operator of "*".
+             </summary>
+             <param name="rule">Reduction rule to be repeated.</param>
+             <returns>Always true.</returns>
+             <example>
+             lines-or-empty ::= line*
+             <code>
+             bool LinesOrEmpty()
+             {
+                 return
+                     Repeat(Line);
+             }
+             </code>
+            
+             <para>lines-or-empty ::= (text line-break)*</para>
+             <para>Note: Do not forget <see cref="M:System.Yaml.Parser`1.RewindUnless(System.Func{System.Boolean})"/> if several
+             rules are sequentially appears in <see cref="M:System.Yaml.Parser`1.Repeat(System.Func{System.Boolean})"/> operator.</para>
+             <code>
+             bool LinesOrEmpty()
+             {
+                 return
+                     Repeat(()=&gt;
+                         RewindUnless(()=&gt;
+                             Text() &amp;&amp;
+                             LineBreak()
+                         )
+                     );
+             }
+             </code>
+             </example>
+        </member>
+        <member name="M:System.Yaml.Parser`1.OneAndRepeat(System.Func{System.Boolean})">
+            <summary>
+            Represents EBNF operator of "+".
+            </summary>
+            <param name="rule">Reduction rule to be repeated.</param>
+            <returns>true if the rule matches; otherwise false.</returns>
+            <example>
+            lines ::= line+
+            <code>
+            bool Lines()
+            {
+                return
+                    Repeat(Line);
+            }
+            </code>
+            </example>
+            <example>
+            lines ::= (text line-break)+
+            
+            Note: Do not forget RewindUnless in Repeat operator.
+            <code>
+            bool Lines()
+            {
+                return
+                    Repeat(()=>
+                        RewindUnless(()=>
+                            Text() &amp;&amp;
+                            LineBreak()
+                        )
+                    );
+            }
+            </code>
+            </example>
+        </member>
+        <member name="M:System.Yaml.Parser`1.Repeat(System.Int32,System.Func{System.Boolean})">
+             <summary>
+             Represents <code>n</code> times repeatition.
+             </summary>
+             <example>
+             <para>four-lines ::= (text line-break){4}</para>
+            
+             <para>Note: Do not forget <see cref="M:System.Yaml.Parser`1.RewindUnless(System.Func{System.Boolean})"/> if several
+             rules are sequentially appears in <see cref="M:System.Yaml.Parser`1.Repeat(System.Int32,System.Func{System.Boolean})"/> operator.</para>
+             <code>
+             bool FourLines()
+             {
+                 return
+                     Repeat(4, ()=&gt;
+                         RewindUnless(()=&gt;
+                             Text() &amp;&amp;
+                             LineBreak()
+                         )
+                     );
+             }
+             </code>
+             </example>
+             <param name="n">Repetition count.</param>
+             <param name="rule">Reduction rule to be repeated.</param>
+             <returns>true if the rule matches; otherwise false.</returns>
+        </member>
+        <member name="M:System.Yaml.Parser`1.Repeat(System.Int32,System.Int32,System.Func{System.Boolean})">
+            <summary>
+            Represents at least <paramref name="min"/>, at most <paramref name="max"/> times repeatition.
+            </summary>
+            <example>
+            <para>google ::= "g" "o"{2,100} "g" "l" "e"</para>
+            <para>Note: Do not forget <see cref="M:System.Yaml.Parser`1.RewindUnless(System.Func{System.Boolean})"/> if several
+            rules are sequentially appears in <see cref="M:System.Yaml.Parser`1.Repeat(System.Int32,System.Int32,System.Func{System.Boolean})"/> operator.</para>
+            <code>
+            bool Google()
+            {
+                return
+                    RewindUnless(()=&gt;
+                        text[p++] == 'g' &amp;&amp;
+                            Repeat(2, 100,
+                                RewindUnless(()=&gt;
+                                    text[p++] == 'o'
+                                )
+                            )
+                        text[p++] == 'g' &amp;&amp;
+                        text[p++] == 'l' &amp;&amp;
+                        text[p++] == 'e'
+                    );
+            }
+            </code>
+            </example>
+            <param name="min">Minimum repetition count. Negative value is treated as 0.</param>
+            <param name="max">Maximum repetition count. Negative value is treated as positive infinity.</param>
+            <param name="rule">Reduction rule to be repeated.</param>
+            <returns>true if the rule matches; otherwise false.</returns>
+        </member>
+        <member name="M:System.Yaml.Parser`1.Optional(System.Boolean)">
+            <summary>
+            Represents BNF operator "?".
+            </summary>
+            <example>
+            <para>file ::= header? body footer?</para>
+            
+            <para>Note: Do not forget <see cref="M:System.Yaml.Parser`1.RewindUnless(System.Func{System.Boolean})"/> if several
+            rules are sequentially appears in <see cref="M:System.Yaml.Parser`1.Optional(System.Boolean)"/> operator.</para>
+            <code>
+            bool File()
+            {
+                return
+                    Optional(Header()) &amp;&amp;
+                    Body() &amp;&amp;
+                    Optional(Footer());
+            }
+            </code>
+            </example>
+            <param name="rule">Reduction rule that is optional.</param>
+            <returns>Always true.</returns>
+        </member>
+        <member name="M:System.Yaml.Parser`1.Optional(System.Func{System.Boolean})">
+            <summary>
+            Represents BNF operator "?" (WITH rewinding wrap).
+            </summary>
+            <example>
+            file = header? body footer?
+            
+            <para>Note: Do not forget <see cref="M:System.Yaml.Parser`1.RewindUnless(System.Func{System.Boolean})"/> if several
+            rules are sequentially appears in <see cref="M:System.Yaml.Parser`1.Optional(System.Func{System.Boolean})"/> operator.</para>
+            <code>
+            bool File()
+            {
+                return
+                    Optional(Header) &amp;&amp;
+                    Body() &amp;&amp;
+                    Optional(Footer);
+            }
+            </code>
+            </example>
+            <param name="rule">Reduction rule that is optional.</param>
+            <returns>Always true.</returns>
+        </member>
+        <member name="M:System.Yaml.Parser`1.Accept(System.Func{System.Char,System.Boolean})">
+            <summary>
+            Reduce one character if it is a member of the specified character set.
+            </summary>
+            <param name="charset">Acceptable character set.</param>
+            <returns>true if the rule matches; otherwise false.</returns>
+            <example>
+            alpha ::= [A-Z][a-z]<br/>
+            num ::= [0-9]<br/>
+            alpha-num :: alpha | num<br/>
+            word ::= alpha ( alpha-num )*<br/>
+            <code>
+            Func&lt;char,bool&gt; Alpha = Charset( c =>
+                ( 'A' &lt;= c &amp;&amp; c &lt;= 'Z' ) ||
+                ( 'a' &lt;= c &amp;&amp; c &lt;= 'z' ) 
+            );
+            Func&lt;char,bool&gt; Num = Charset( c =>
+                  '0' &lt;= c &amp;&amp; c &lt;= '9' 
+            );
+            Func&lt;char,bool&gt; AlphaNum = Charset( c =>
+                Alpha(c) || Num(c)
+            );
+            bool Word()
+            {
+                return 
+                    Accept(Alpha) &amp;&amp;
+                    Repeat(AlphaNum);
+                    // No need for RewindUnless
+            }
+            </code>
+            </example>
+        </member>
+        <member name="M:System.Yaml.Parser`1.Accept(System.Char)">
+            <summary>
+            <para>Accepts a character 'c'.</para>
+            
+            <para>It can be also represented by <c>text[p++] == c</c> wrapped by <see cref="M:System.Yaml.Parser`1.RewindUnless(System.Func{System.Boolean})"/>.</para>
+            </summary>
+            <param name="c">The character to be accepted.</param>
+            <returns>true if the rule matches; otherwise false.</returns>
+            <example>
+            YMCA ::= "Y" "M" "C" "A"
+            <code>
+            bool YMCA()
+            {
+                return
+                    RewindUnless(()=&gt;
+                        Accept('Y') &amp;&amp;
+                        Accept('M') &amp;&amp;
+                        Accept('C') &amp;&amp;
+                        Accept('A') 
+                    );
+            }
+            </code>
+            -or-
+            <code>
+            bool YMCA()
+            {
+                return
+                    RewindUnless(()=&gt;
+                        text[p++] == 'Y' &amp;&amp;
+                        text[p++] == 'M' &amp;&amp;
+                        text[p++] == 'C' &amp;&amp;
+                        text[p++] == 'A' 
+                    );
+            }
+            </code>
+            </example>
+        </member>
+        <member name="M:System.Yaml.Parser`1.Accept(System.String)">
+            <summary>
+            Accepts a sequence of characters.
+            </summary>
+            <param name="s">Sequence of characters to be accepted.</param>
+            <returns>true if the rule matches; otherwise false.</returns>
+            <example>
+            YMCA ::= "Y" "M" "C" "A"
+            <code>
+            bool YMCA()
+            {
+                return
+                    Accept("YMCA");
+            }
+            </code>
+            </example>
+        </member>
+        <member name="M:System.Yaml.Parser`1.Accept(System.Text.RegularExpressions.Regex)">
+            <summary>
+            Represents sequence of characters.
+            </summary>
+            <param name="r">Sequence of characters to be accepted.</param>
+            <returns>true if the rule matches; otherwise false.</returns>
+        </member>
+        <member name="M:System.Yaml.Parser`1.Repeat(System.Func{System.Char,System.Boolean})">
+            <summary>
+            Represents BNF operator of "*".
+            </summary>
+            <param name="charset">Character set to be accepted.</param>
+            <returns>Always true.</returns>
+        </member>
+        <member name="M:System.Yaml.Parser`1.OneAndRepeat(System.Func{System.Char,System.Boolean})">
+            <summary>
+            Represents BNF operator of "+".
+            </summary>
+            <param name="charset">Character set to be accepted.</param>
+            <returns>true if the rule matches; otherwise false.</returns>
+        </member>
+        <member name="M:System.Yaml.Parser`1.Repeat(System.Func{System.Char,System.Boolean},System.Int32)">
+            <summary>
+            Represents <code>n</code> times repetition of characters.
+            </summary>
+            <param name="charset">Character set to be accepted.</param>
+            <param name="n">Repetition count.</param>
+            <returns>true if the rule matches; otherwise false.</returns>
+        </member>
+        <member name="M:System.Yaml.Parser`1.Repeat(System.Func{System.Char,System.Boolean},System.Int32,System.Int32)">
+            <summary>
+            Represents at least <code>min</code> times, at most <code>max</code> times 
+            repetition of characters.
+            </summary>
+            <param name="charset">Character set to be accepted.</param>
+            <param name="min">Minimum repetition count. Negative value is treated as 0.</param>
+            <param name="max">Maximum repetition count. Negative value is treated as positive infinity.</param>
+            <returns>true if the rule matches; otherwise false.</returns>
+        </member>
+        <member name="M:System.Yaml.Parser`1.Optional(System.Func{System.Char,System.Boolean})">
+            <summary>
+            Represents BNF operator "?".
+            </summary>
+            <param name="charset">Character set to be accepted.</param>
+            <returns>Always true.</returns>
+        </member>
+        <member name="M:System.Yaml.Parser`1.Charset(System.Func{System.Char,System.Boolean})">
+            <summary>
+            <para>Builds a performance-optimized table-based character set definition from a simple 
+            but slow comparison-based definition.</para>
+            
+            <para>By default, the character table size is 0x100, namely only the characters of [\0-\xff] are
+            judged by using a character table and others are by the as-given slow comparisn-based definitions.</para>
+            
+            <para>To have maximized performance, locate the comparison for non-table based judgement first
+            in the definition as the example below.</para>
+            
+            <para>Use <see cref="M:System.Yaml.Parser`1.Charset(System.Int32,System.Func{System.Char,System.Boolean})"/> form to explicitly 
+            specify the table size.</para>
+            </summary>
+            <example>This sample shows how to build a character set delegate.
+            <code>
+            static class YamlCharsets: Charsets
+            {
+                Func&lt;char, bool&gt; cPrintable;
+                Func&lt;char, bool&gt; sWhite;
+            
+                static YamlCharsets()
+                {
+                    cPrintable = CacheResult(c =&gt;
+                    /*  ( 0x10000 &lt; c &amp;&amp; c &lt; 0x110000 ) || */
+                        ( 0xe000 &lt;= c &amp;&amp; c &lt;= 0xfffd ) ||
+                        ( 0xa0 &lt;= c &amp;&amp; c &lt;= 0xd7ff ) ||
+                        ( c &lt; 0x100 &amp;&amp; ( // to improve performance
+                            c == 0x85 ||
+                            ( 0x20 &lt;= c &amp;&amp; c &lt;= 0x7e ) ||
+                            c == 0x0d ||
+                            c == 0x0a ||
+                            c == 0x09
+                        ) )
+                    );
+                    sWhite = CacheResult(c =&gt;
+                        c &lt; 0x100 &amp;&amp; ( // to improve performance
+                            c == '\t' ||
+                            c == ' '
+                        )
+                    );
+                }
+            }
+            </code></example>
+            <param name="definition">A simple but slow comparison-based definition of the charsert.</param>
+            <returns>A performance-optimized table-based delegate built from the given <paramref name="definition"/>.</returns>
+        </member>
+        <member name="M:System.Yaml.Parser`1.Charset(System.Int32,System.Func{System.Char,System.Boolean})">
+            <summary>
+            <para>Builds a performance-optimized table-based character set definition from a simple 
+            but slow comparison-based definition.</para>
+            
+            <para>Characters out of the table are judged by the as-given slow comparisn-based 
+            definitions.</para>
+            
+            <para>So, to have maximized performance, locate the comparison for non-table based 
+            judgement first in the definition as the example below.</para>
+            </summary>
+            <example>This sample shows how to build a character set delegate.
+            <code>
+            static class YamlCharsets: Charsets
+            {
+                Func&lt;char, bool&gt; cPrintable;
+                Func&lt;char, bool&gt; sWhite;
+            
+                static YamlCharsets()
+                {
+                    cPrintable = CacheResult(c =&gt;
+                    /*  ( 0x10000 &lt; c &amp;&amp; c &lt; 0x110000 ) || */
+                        ( 0xe000 &lt;= c &amp;&amp; c &lt;= 0xfffd ) ||
+                        ( 0xa0 &lt;= c &amp;&amp; c &lt;= 0xd7ff ) ||
+                        ( c &lt; 0x100 &amp;&amp; ( // to improve performance
+                            c == 0x85 ||
+                            ( 0x20 &lt;= c &amp;&amp; c &lt;= 0x7e ) ||
+                            c == 0x0d ||
+                            c == 0x0a ||
+                            c == 0x09
+                        ) )
+                    );
+                    sWhite = CacheResult(c =&gt;
+                        c &lt; 0x100 &amp;&amp; ( // to improve performance
+                            c == '\t' ||
+                            c == ' '
+                        )
+                    );
+                }
+            }
+            </code></example>
+            <param name="table_size">Character table size.</param>
+            <param name="definition">A simple but slow comparison-based definition of the charsert.</param>
+            <returns>A performance-optimized table-based delegate built from the given <paramref name="definition"/>.</returns>
+        </member>
+        <member name="M:System.Yaml.Parser`1.Save(System.Func{System.Boolean},System.String@)">
+            <summary>
+            <para>Saves a part of the source text that is reduced in the <paramref name="rule"/>.</para>
+            <para>If the rule does not match, nothing happends.</para>
+            </summary>
+            <param name="rule">Reduction rule to match.</param>
+            <param name="value">If the <paramref name="rule"/> matches, 
+            the part of the source text reduced in the <paramref name="rule"/> is set; 
+            otherwise String.Empty is set.</param>
+            <returns>true if <paramref name="rule"/> matches; otherwise false.</returns>
+        </member>
+        <member name="M:System.Yaml.Parser`1.Save(System.Func{System.Boolean})">
+            <summary>
+            <para>Saves a part of the source text that is reduced in the <paramref name="rule"/>
+            and append it to <see cref="F:System.Yaml.Parser`1.stringValue"/>.</para>
+            <para>If the rule does not match, nothing happends.</para>
+            </summary>
+            <param name="rule">Reduction rule to match.</param>
+            <returns>true if <paramref name="rule"/> matches; otherwise false.</returns>
+        </member>
+        <member name="M:System.Yaml.Parser`1.Save(System.Func{System.Boolean},System.Action{System.String})">
+            <summary>
+            <para>Saves a part of the source text that is reduced in the <paramref name="rule"/>.</para>
+            <para>If the rule does not match, nothing happends.</para>
+            </summary>
+            <param name="rule">Reduction rule to match.</param>
+            <param name="save">If <paramref name="rule"/> matches, this delegate is invoked
+            with the part of the source text that is reduced in the <paramref name="rule"/>
+            as the parameter. Do any action in the delegate.</param>
+            <returns>true if <paramref name="rule"/> matches; otherwise false.</returns>
+            <example>
+            <code>
+            bool SomeRule()
+            {
+                return 
+                    Save(()=> SubRule(), s => MessageBox.Show(s));
+            }
+            </code></example>
+        </member>
+        <member name="M:System.Yaml.Parser`1.Action(System.Action)">
+            <summary>
+            Execute some action.
+            </summary>
+            <param name="action">Action to be done.</param>
+            <returns>Always true.</returns>
+            <example>
+            <code>
+            bool SomeRule()
+            {
+                return 
+                    SubRule() &amp;&amp;
+                    Action(()=> do_some_action());
+            }
+            </code></example>
+        </member>
+        <member name="M:System.Yaml.Parser`1.ErrorUnless(System.Boolean,System.String,System.Object[])">
+            <summary>
+            Report error by throwing <see cref="T:System.Yaml.ParseErrorException"/> when the <paramref name="rule"/> does not match.
+            </summary>
+            <param name="rule">Some reduction rule that must match.</param>
+            <param name="message">Error message as <see cref="M:System.String.Format(System.String,System.Object[])"/> template</param>
+            <param name="args">Parameters for <see cref="M:System.String.Format(System.String,System.Object[])"/> template</param>
+            <returns>Always true; otherwise an exception thrown.</returns>
+        </member>
+        <member name="M:System.Yaml.Parser`1.ErrorUnless(System.Func{System.Boolean},System.String,System.Object[])">
+            <summary>
+            Report error by throwing <see cref="T:System.Yaml.ParseErrorException"/> when the <paramref name="rule"/> does not match.
+            </summary>
+            <param name="rule">Some reduction rule that must match.</param>
+            <param name="message">Error message as <see cref="M:System.String.Format(System.String,System.Object[])"/> template</param>
+            <param name="args">Parameters for <see cref="M:System.String.Format(System.String,System.Object[])"/> template</param>
+            <returns>Always true; otherwise an exception is thrown.</returns>
+        </member>
+        <member name="M:System.Yaml.Parser`1.ErrorUnlessWithAdditionalCondition(System.Func{System.Boolean},System.Boolean,System.String,System.Object[])">
+            <summary>
+            Report error by throwing <see cref="T:System.Yaml.ParseErrorException"/> when the <paramref name="rule"/> does not match
+            and an additional condition <paramref name="to_be_error"/> is true.
+            </summary>
+            <param name="rule">Some reduction rule that must match.</param>
+            <param name="to_be_error">Additional condition: if this parameter is false, 
+            rewinding occurs, instead of throwing exception.</param>
+            <param name="message">Error message as <see cref="M:System.String.Format(System.String,System.Object[])"/> template</param>
+            <param name="args">Parameters for <see cref="M:System.String.Format(System.String,System.Object[])"/> template</param>
+            <returns>true if the reduction rule matches; otherwise false.</returns>
+        </member>
+        <member name="M:System.Yaml.Parser`1.ErrorIf(System.Boolean,System.String,System.Object[])">
+            <summary>
+            Report error by throwing <see cref="T:System.Yaml.ParseErrorException"/> when <paramref name="condition"/> is true.
+            </summary>
+            <param name="condition">True to throw exception.</param>
+            <param name="message">Error message as <see cref="M:System.String.Format(System.String,System.Object[])"/> template</param>
+            <param name="args">Parameters for <see cref="M:System.String.Format(System.String,System.Object[])"/> template</param>
+            <returns>Always true.</returns>
+        </member>
+        <member name="M:System.Yaml.Parser`1.Assign``1(``0@,``0)">
+            <summary>
+            Assign <c>var = value</c> and return true;
+            </summary>
+            <typeparam name="T">Type of the variable and value.</typeparam>
+            <param name="var">Variable to be assigned.</param>
+            <param name="value">Value to be assigned.</param>
+            <returns>Always true.</returns>
+        </member>
+        <member name="P:System.Yaml.Parser`1.CurrentPosition">
+            <summary>
+            Get current position represented by raw and column.
+            </summary>
+        </member>
+        <member name="T:System.Yaml.Parser`1.Position">
+            <summary>
+            Represents a position in a multiline text.
+            </summary>
+        </member>
+        <member name="F:System.Yaml.Parser`1.Position.Raw">
+            <summary>
+            Raw in a text.
+            </summary>
+        </member>
+        <member name="F:System.Yaml.Parser`1.Position.Column">
+            <summary>
+            Column in a text.
+            </summary>
+        </member>
+        <member name="T:System.Yaml.YamlTagValidator">
+            <summary>
+            Validates a text as a global tag in YAML.
+            
+            <a href="http://www.faqs.org/rfcs/rfc4151.html">RFC4151 - The 'tag' URI Scheme</a>>
+            </summary>
+        </member>
+        <member name="M:System.Yaml.YamlTagValidator.IsValid(System.String)">
+            <summary>
+            Validates a text as a global tag in YAML.
+            </summary>
+            <param name="tag">A candidate for a global tag in YAML.</param>
+            <returns>True if <paramref name="tag"/> is  a valid global tag.</returns>
+        </member>
+        <member name="T:System.Yaml.YamlTagValidator.Status">
+            <summary>
+            Not used in this parser
+            </summary>
+        </member>
+        <member name="T:System.Yaml.RehashableDictionary`2">
+            <summary>
+            <para>Dictionary that automatically rehash when the content of a key is changed.
+            Keys of this dictionary must implement <see cref="T:System.Yaml.IRehashableKey"/>.</para>
+            <para>It also call back item addition and removal by <see cref="E:System.Yaml.RehashableDictionary`2.Added"/> and
+            <see cref="E:System.Yaml.RehashableDictionary`2.Removed"/> events.</para>
+            </summary>
+            <typeparam name="K">Type of key. Must implements <see cref="T:System.Yaml.IRehashableKey"/>.</typeparam>
+            <typeparam name="V">Type of value.</typeparam>
+        </member>
+        <member name="F:System.Yaml.RehashableDictionary`2.items">
+            <summary>
+            <para>A dictionary that returns <see cref="T:System.Yaml.RehashableDictionary`2.KeyValue"/> or <see cref="T:System.Collections.Generic.List`1"/> 
+            from hash code. This is the main repository that stores the <see cref="T:System.Yaml.RehashableDictionary`2.KeyValue"/> pairs.</para>
+            <para>If there are several entries that have same hash code for thir keys, 
+            a <see cref="T:System.Collections.Generic.List`1"/> is stored to hold all those entries.
+            Otherwise, a <see cref="T:System.Yaml.RehashableDictionary`2.KeyValue"/> is stored.</para>
+            </summary>
+        </member>
+        <member name="F:System.Yaml.RehashableDictionary`2.hashes">
+            <summary>
+            <para>A dictionary that returns hash code from the key reference.
+            The key must be the instance that <see cref="M:System.Object.ReferenceEquals(System.Object,System.Object)"/>
+            to one exsisting in the dictionary.</para>
+            </summary>
+            <remarks>
+            <para>We store the hashes correspoinding to each key. So that when rehash,
+            we can find old hash code to quickly find the entry for the key.</para>
+            <para>It is also used to remember the number of keys exists in the dictionary.</para>
+            </remarks>
+        </member>
+        <member name="M:System.Yaml.RehashableDictionary`2.Rehash(`0)">
+            <summary>
+            Recalc hash key of the <paramref name="key"/>.
+            </summary>
+            <param name="key">The key to be rehash. The key must be the instance that 
+            <see cref="M:System.Object.ReferenceEquals(System.Object,System.Object)"/> to one exsisting in the dictionary.</param>
+        </member>
+        <member name="M:System.Yaml.RehashableDictionary`2.FindItem(`0,System.Boolean,`1,System.Action{System.Int32},System.Action{System.Int32,System.Yaml.RehashableDictionary{`0,`1}.KeyValue},System.Action{System.Int32,System.Yaml.RehashableDictionary{`0,`1}.KeyValue,System.Collections.Generic.List{System.Yaml.RehashableDictionary{`0,`1}.KeyValue},System.Int32})">
+            <summary>
+            Try to find entry for key (and value).
+            </summary>
+            <param name="key">key to find</param>
+            <param name="compareValue">if true, value matters</param>
+            <param name="value">value to find</param>
+            <param name="NotFound">key not found</param>
+            <param name="FoundOne">hash hit one entry and key found</param>
+            <param name="FoundList">hash hit several entries and key found</param>
+        </member>
+        <member name="M:System.Yaml.RehashableDictionary`2.FindItem(`0,System.Boolean,`1,System.Action{System.Int32},System.Action{System.Int32,System.Yaml.RehashableDictionary{`0,`1}.KeyValue},System.Action{System.Int32,System.Yaml.RehashableDictionary{`0,`1}.KeyValue},System.Action{System.Int32,System.Collections.Generic.List{System.Yaml.RehashableDictionary{`0,`1}.KeyValue}},System.Action{System.Int32,System.Yaml.RehashableDictionary{`0,`1}.KeyValue,System.Collections.Generic.List{System.Yaml.RehashableDictionary{`0,`1}.KeyValue},System.Int32})">
+            <summary>
+            Try to find entry for key (and value).
+            </summary>
+            <param name="key">key to find</param>
+            <param name="compareValue">if true, value matters</param>
+            <param name="value">value to find</param>
+            <param name="NotFoundHash">hash not found</param>
+            <param name="NotFoundKeyOne">hash hit one entry but key not found</param>
+            <param name="FoundOne">hash hit one entry and key found</param>
+            <param name="NotFoundKeyList">hash hit several entries but key not found</param>
+            <param name="FoundList">hash hit several entries and key found</param>
+        </member>
+        <member name="T:System.Yaml.RehashableDictionary`2.KeysValuesBase`1">
+            <summary>
+            Collection that is readonly and invalidated when an item is 
+            added to or removed from the dictionary.
+            </summary>
+        </member>
+        <member name="T:System.Yaml.YamlParser">
+            <summary>
+            <para>A text parser for<br/>
+            YAML Ain’t Markup Language (YAML™) Version 1.2<br/>
+            3rd Edition (2009-07-21)<br/>
+            http://yaml.org/spec/1.2/spec.html </para>
+            
+            <para>This class parse a YAML document and compose representing <see cref="T:System.Yaml.YamlNode"/> graph.</para>
+            </summary>
+            <example>
+            <code>
+            string yaml = LoadYamlSource();
+            YamlParser parser = new YamlParser();
+            Node[] result = null;
+            try {
+                result = parser.Parse(yaml);
+                ...
+                // you can reuse parser as many times you want
+                ...
+                
+            } catch( ParseErrorException e ) {
+                MessageBox.Show(e.Message);
+            }
+            if(result != null) {
+                ...
+            
+            }
+            </code>
+            </example>
+            <remarks>
+            <para>Currently, this parser violates the YAML 1.2 specification in the following points.</para>
+            <para>- line breaks are not normalized.</para>
+            <para>- omission of the final line break is allowed in plain / literal / folded text.</para>
+            <para>- ':' followed by ns-indicator is excluded from ns-plain-char.</para>
+            </remarks>
+        </member>
+        <member name="M:System.Yaml.YamlParser.#ctor">
+            <summary>
+            Initialize a YAML parser.
+            </summary>
+        </member>
+        <member name="M:System.Yaml.YamlParser.Parse(System.String)">
+            <summary>
+            Parse YAML text and returns a list of <see cref="T:System.Yaml.YamlNode"/>.
+            </summary>
+            <param name="yaml">YAML text to be parsed.</param>
+            <returns>A list of <see cref="T:System.Yaml.YamlNode"/> parsed from the given text</returns>
+        </member>
+        <member name="M:System.Yaml.YamlParser.Parse(System.String,System.Yaml.YamlConfig)">
+            <summary>
+            Parse YAML text and returns a list of <see cref="T:System.Yaml.YamlNode"/>.
+            </summary>
+            <param name="yaml">YAML text to be parsed.</param>
+            <param name="config"><see cref="T:System.Yaml.YamlConfig">YAML Configuration</see> to be used in parsing.</param>
+            <returns>A list of <see cref="T:System.Yaml.YamlNode"/> parsed from the given text</returns>
+        </member>
+        <member name="M:System.Yaml.YamlParser.StoreWarning(System.String)">
+            <summary>
+            Add message in <see cref="P:System.Yaml.YamlParser.Warnings"/> property.
+            </summary>
+            <param name="message"></param>
+        </member>
+        <member name="M:System.Yaml.YamlParser.ReservedDirective(System.String,System.String[])">
+            <summary>
+            Invoked when unknown directive is found in YAML document.
+            </summary>
+            <param name="name">Name of the directive</param>
+            <param name="args">Parameters for the directive</param>
+        </member>
+        <member name="M:System.Yaml.YamlParser.YamlDirective(System.String)">
+            <summary>
+            Invoked when YAML directive is found in YAML document.
+            </summary>
+            <param name="version">Given version</param>
+        </member>
+        <member name="M:System.Yaml.YamlParser.Rewind">
+            <summary>
+            rewinding action
+            </summary>
+        </member>
+        <member name="M:System.Yaml.YamlParser.SetTag(System.String,System.String)">
+            <summary>
+            set status.tag with tag resolution
+            </summary>
+            <param name="tag_handle"></param>
+            <param name="tag_suffix"></param>
+            <returns></returns>
+        </member>
+        <member name="M:System.Yaml.YamlParser.SetTag(System.String)">
+            <summary>
+            set status.tag with verbatim tag value
+            </summary>
+            <param name="verbatim_tag">verbatim tag</param>
+            <returns></returns>
+        </member>
+        <member name="M:System.Yaml.YamlParser.AutoDetectTag(System.String)">
+            <summary>
+            Used when the parser resolves a tag for a scalar node from its value.
+            
+            New resolution rules can be add before calling <see cref="M:System.Yaml.YamlParser.Parse(System.String)"/> method.
+            </summary>
+        </member>
+        <member name="M:System.Yaml.YamlParser.eScalar">
+            <summary>
+            [105]
+            </summary>
+        </member>
+        <member name="M:System.Yaml.YamlParser.eNode">
+            <summary>
+            [106]
+            </summary>
+        </member>
+        <member name="P:System.Yaml.YamlParser.Warnings">
+            <summary>
+            Warnings that are made while parsing a YAML text.
+            This property is cleared by new call for <see cref="M:System.Yaml.YamlParser.Parse(System.String)"/> method.
+            </summary>
+        </member>
+        <member name="T:System.Yaml.YamlParser.State">
+            <summary>
+            additional fields to be rewound
+            </summary>
+        </member>
+        <member name="F:System.Yaml.YamlParser.State.tag">
+            <summary>
+            tag for the next value (will be cleared when the next value is created)
+            </summary>
+        </member>
+        <member name="F:System.Yaml.YamlParser.State.anchor">
+            <summary>
+            anchor for the next value (will be cleared when the next value is created)
+            </summary>
+        </member>
+        <member name="F:System.Yaml.YamlParser.State.value">
+            <summary>
+            current value
+            </summary>
+        </member>
+        <member name="F:System.Yaml.YamlParser.State.anchor_depth">
+            <summary>
+            anchor rewinding position
+            </summary>
+        </member>
+        <member name="F:System.Yaml.YamlParser.Charsets.cIndicator">
+            <summary>
+            [22]
+            </summary>
+        </member>
+        <member name="F:System.Yaml.YamlParser.Charsets.cFlowIndicator">
+            <summary>
+            [23]
+            </summary>
+        </member>
+        <member name="T:System.Yaml.Serialization.YamlConstructor">
+            <summary>
+            Construct YAML node tree that represents a given C# object.
+            </summary>
+        </member>
+        <member name="M:System.Yaml.Serialization.YamlConstructor.NodeToObject(System.Yaml.YamlNode,System.Yaml.YamlConfig)">
+            <summary>
+            Construct YAML node tree that represents a given C# object.
+            </summary>
+            <param name="node"><see cref="T:System.Yaml.YamlNode"/> to be converted to C# object.</param>
+            <param name="config"><see cref="T:System.Yaml.YamlConfig"/> to customize serialization.</param>
+            <returns></returns>
+        </member>
+        <member name="M:System.Yaml.Serialization.YamlConstructor.NodeToObject(System.Yaml.YamlNode,System.Type,System.Yaml.YamlConfig)">
+            <summary>
+            Construct YAML node tree that represents a given C# object.
+            </summary>
+            <param name="node"><see cref="T:System.Yaml.YamlNode"/> to be converted to C# object.</param>
+            <param name="expected">Expected type for the root object.</param>
+            <param name="config"><see cref="T:System.Yaml.YamlConfig"/> to customize serialization.</param>
+            <returns></returns>
+        </member>
+        <member name="T:System.Yaml.StringUriEncodingExtention">
+            <summary>
+            Add string class two methods: .UriEscape(), .UriUnescape()
+            
+            Charset that is not escaped is represented NonUriChar member.
+            
+            NonUriChar = new Regex(@"[^0-9A-Za-z\-_.!~*'()\\;/?:@&amp;=$,\[\]]");
+            </summary>
+        </member>
+        <member name="M:System.Yaml.StringUriEncodingExtention.UriEscape(System.String)">
+            <summary>
+            Escape the string in URI encoding format.
+            </summary>
+            <param name="s">String to be escaped.</param>
+            <returns>Escaped string.</returns>
+        </member>
+        <member name="M:System.Yaml.StringUriEncodingExtention.UriEscapeForTag(System.String)">
+            <summary>
+            Escape the string in URI encoding format.
+            </summary>
+            <param name="s">String to be escaped.</param>
+            <returns>Escaped string.</returns>
+        </member>
+        <member name="M:System.Yaml.StringUriEncodingExtention.UriUnescape(System.String)">
+            <summary>
+            Unescape the string escaped in URI encoding format.
+            </summary>
+            <param name="s">String to be unescape.</param>
+            <returns>Unescaped string.</returns>
+        </member>
+        <member name="T:System.Yaml.UriEncoding">
+            <summary>
+            Escape / Unescape string in URI encoding format
+            
+            Charset that is not escaped is represented NonUriChar member.
+            
+            NonUriChar = new Regex(@"[^0-9A-Za-z\-_.!~*'()\\;/?:@&amp;=$,\[\]]");
+            </summary>
+        </member>
+        <member name="T:System.Yaml.YamlTagPrefixes">
+            <summary>
+            Reset();
+            SetupDefaultTagPrefixes();
+            Add(tag_handle, tag_prefix);
+            verbatim_tag = Resolve(tag_handle, tag_name);
+            </summary>
+        </member>
+        <member name="T:System.Yaml.YamlPresenter">
+            <summary>
+            Converts YamlNode tree into yaml text.
+            </summary>
+            <example>
+            <code>
+            YamlNode node;
+            YamlPresenter.ToYaml(node);
+            
+            YamlNode node1;
+            YamlNode node2;
+            YamlNode node3;
+            YamlPresenter.ToYaml(node1, node2, node3);
+            </code>
+            </example>
+        </member>
+        <member name="T:System.Yaml.Serialization.ObjectMemberAccessor">
+            <summary>
+            
+            object に代入されたクラスや構造体のメンバーに、リフレクションを
+            解して簡単にアクセスできるようにしたクラス
+            
+            アクセス方法をキャッシュするので、繰り返し使用する場合に高速化が
+            期待できる
+            </summary>
+        </member>
+        <member name="F:System.Yaml.Serialization.ObjectMemberAccessor.MemberAccessors">
+            <summary>
+            Caches ObjectMemberAccessor instances for reuse.
+            </summary>
+        </member>
+        <member name="M:System.Yaml.Serialization.ObjectMemberAccessor.FindFor(System.Type)">
+            <summary>
+            
+            指定した型へのアクセス方法を表すインスタンスを返す
+            キャッシュに存在すればそれを返す
+            キャッシュに存在しなければ新しく作って返す
+            作った物はキャッシュされる
+            </summary>
+            <param name="type">クラスまたは構造体を表す型情報</param>
+            <returns></returns>
+        </member>
+        <member name="M:System.Yaml.Serialization.ObjectMemberAccessor.GetEnumerator">
+            <summary>
+            メンバ名と Accessor のペアを巡回する
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="P:System.Yaml.Serialization.ObjectMemberAccessor.Item(System.Object,System.String)">
+            <summary>
+            メンバへの読み書きを行うことができる
+            </summary>
+            <param name="obj">オブジェクト</param>
+            <param name="name">メンバの名前</param>
+            <returns></returns>
+        </member>
+        <member name="T:System.Yaml.YamlConfig">
+            <summary>
+            <para>Configuration to customize YAML serialization.</para>
+            <para>An instance of this class can be passed to the serialization
+            methods, such as <see cref="M:System.Yaml.YamlNode.ToYaml(System.Yaml.YamlConfig)">YamlNode.ToYaml(YamlConfig)</see> and
+            <see cref="M:System.Yaml.YamlNode.FromYaml(System.IO.Stream,System.Yaml.YamlConfig)">YamlNode.FromYaml(Stream,YamlConfig)</see> or
+            it can be assigned to <see cref="P:System.Yaml.YamlNode.DefaultConfig">YamlNode.DefaultConfig</see>.
+            </para>
+            </summary>
+        </member>
+        <member name="F:System.Yaml.YamlConfig.NormalizeLineBreaks">
+            <summary>
+            If true, all line breaks in the node value are normalized into "\r\n" 
+            (= <see cref="F:System.Yaml.YamlConfig.LineBreakForOutput"/>) when serialize and line breaks 
+            that are not escaped in YAML stream are normalized into "\n"
+            (= <see cref="F:System.Yaml.YamlConfig.LineBreakForInput"/>.
+            If false, the line breaks are preserved. Setting this option false violates 
+            the YAML specification but sometimes useful. The default is true.
+            </summary>
+            <remarks>
+            <para>The YAML sepcification requires a YAML parser to normalize every line break that 
+            is not escaped in a YAML stream, into a single line feed "\n" when it parse a YAML stream. 
+            But this is not convenient in some cases, especially under Windows environment, where 
+            the system default line break 
+            is "\r\n" instead of "\n".</para>
+            
+            <para>This library provides two workarounds for this problem.</para>
+            <para>One is setting <see cref="F:System.Yaml.YamlConfig.NormalizeLineBreaks"/> false. It disables the line break
+            normalization. The line breaks are serialized into a YAML stream as is and 
+            those in the YAML stream are deserialized as is.</para>
+            <para>Another is setting <see cref="F:System.Yaml.YamlConfig.LineBreakForInput"/> "\r\n". Then, the YAML parser
+            normalizes all line breaks into "\r\n" instead of "\n".</para>
+            <para>Note that although these two options are useful in some cases,
+            they makes the YAML parser violate the YAML specification. </para>
+            </remarks>
+            <example>
+            <code>
+            // A string containing line breaks "\n\r" and "\r".
+            YamlNode node = "a\r\n  b\rcde";
+            
+            // By default conversion, line breaks are escaped in a double quoted string.
+            var yaml = node.ToYaml();
+            // %YAML 1.2
+            // ---
+            // "a\r\n\
+            // \  b\r\
+            // cde"
+            // ...
+            
+            // "%YAML 1.2\r\n---\r\n\"a\\r\\n\\\r\n\  b\\r\\\r\ncde\"\r\n...\r\n"
+            
+            // Such a YAML stream is not pretty but is capable to preserve 
+            // original line breaks even when the line breaks of the YAML stream
+            // are changed (for instance, by some editor) between serialization 
+            // and deserialization.
+            var restored = YamlNode.FromYaml(yaml)[0];
+            // "a\r\n  b\rcde"      // equivalent to the original
+            
+            yaml = yaml.Replace("\r\n", "\n").Replace("\r", "\n");
+            var restored = YamlNode.FromYaml(yaml)[0];
+            // "a\r\n  b\rcde"      // still equivalent to the original
+            
+            // By setting ExplicitlyPreserveLineBreaks false, the output becomes
+            // much prettier.
+            YamlNode.DefaultConfig.ExplicitlyPreserveLineBreaks = false;
+            yaml = node.ToYaml();
+            // %YAML 1.2
+            // ---
+            // |-2
+            //   a
+            //     b
+            //   cde
+            // ...
+            
+            // line breaks are nomalized to "\r\n" (= YamlNode.DefaultConfig.LineBreakForOutput)
+            // "%YAML 1.2\r\n---\r\n|-2\r\n  a\r\n    b\r\ncde\r\n...\r\n"
+            
+            // line breaks are nomalized to "\n" (= YamlNode.DefaultConfig.LineBreakForInput)
+            var restored = YamlNode.FromYaml(yaml)[0];
+            // "a\n  b\ncde"
+            
+            
+            // Disable line break normalization.
+            YamlNode.DefaultConfig.NormalizeLineBreaks = false;
+            yaml = node.ToYaml();
+            
+            // line breaks are not nomalized
+            // "%YAML 1.2\r\n---\r\n|-2\r\n  a\r\n    b\rcde\r\n...\r\n"
+            
+            // Unless line breaks in YAML stream is preserved, original line
+            // breaks can be restored.
+            restored = YamlNode.FromYaml(yaml)[0];
+            // "a\r\n  b\rcde"      // equivalent to the original
+                                
+            yaml = yaml.Replace("\r\n", "\n").Replace("\r", "\n");
+            restored = YamlNode.FromYaml(yaml)[0];
+            // "a\n  b\ncde"        // original line breaks are lost
+            </code>
+            </example>
+        </member>
+        <member name="F:System.Yaml.YamlConfig.ExplicitlyPreserveLineBreaks">
+            <summary>
+            If true, all <see cref="T:System.Yaml.YamlScalar"/>s whose text expression contains line breaks 
+            will be presented as double quoted texts, where the line break characters are escaped 
+            by back slash as "\\n" and "\\r". The default is true.
+            </summary>
+            <remarks>
+            <para>The escaped line breaks makes the YAML stream hard to read, but is required to 
+            prevent the line break characters be normalized by the YAML parser; the YAML 
+            sepcification requires a YAML parser to normalize all line breaks that are not escaped
+            into a single line feed "\n" when it parse a YAML source.</para>
+            
+            <para>
+            If the preservation of line breaks are not required, set this value false.
+            </para>
+            
+            <para>Then, whenever it is possible, the <see cref="T:System.Yaml.YamlNode"/>s are presented
+            as literal style text, where the line breaks are not escaped. This results in
+            a much prettier output in the YAML stream.</para>
+            </remarks>
+            <example>
+            <code>
+            // A string containing line breaks "\n\r" and "\r".
+            YamlNode node = "a\r\n  b\rcde";
+            
+            // By default conversion, line breaks are escaped in a double quoted string.
+            var yaml = node.ToYaml();
+            // %YAML 1.2
+            // ---
+            // "a\r\n\
+            // \  b\r\
+            // cde"
+            // ...
+            
+            // "%YAML 1.2\r\n---\r\n\"a\\r\\n\\\r\n\  b\\r\\\r\ncde\"\r\n...\r\n"
+            
+            // Such a YAML stream is not pretty but is capable to preserve 
+            // original line breaks even when the line breaks of the YAML stream
+            // are changed (for instance, by some editor) between serialization 
+            // and deserialization.
+            var restored = YamlNode.FromYaml(yaml)[0];
+            // "a\r\n  b\rcde"      // equivalent to the original
+            
+            yaml = yaml.Replace("\r\n", "\n").Replace("\r", "\n");
+            var restored = YamlNode.FromYaml(yaml)[0];
+            // "a\r\n  b\rcde"      // still equivalent to the original
+            
+            // By setting ExplicitlyPreserveLineBreaks false, the output becomes
+            // much prettier.
+            YamlNode.DefaultConfig.ExplicitlyPreserveLineBreaks = false;
+            yaml = node.ToYaml();
+            // %YAML 1.2
+            // ---
+            // |-2
+            //   a
+            //     b
+            //   cde
+            // ...
+            
+            // line breaks are nomalized to "\r\n" (= YamlNode.DefaultConfig.LineBreakForOutput)
+            // "%YAML 1.2\r\n---\r\n|-2\r\n  a\r\n    b\r\ncde\r\n...\r\n"
+            
+            // line breaks are nomalized to "\n" (= YamlNode.DefaultConfig.LineBreakForInput)
+            var restored = YamlNode.FromYaml(yaml)[0];
+            // "a\n  b\ncde"
+            
+            
+            // Disable line break normalization.
+            YamlNode.DefaultConfig.NormalizeLineBreaks = false;
+            yaml = node.ToYaml();
+            
+            // line breaks are not nomalized
+            // "%YAML 1.2\r\n---\r\n|-2\r\n  a\r\n    b\rcde\r\n...\r\n"
+            
+            // Unless line breaks in YAML stream is preserved, original line
+            // breaks can be restored.
+            restored = YamlNode.FromYaml(yaml)[0];
+            // "a\r\n  b\rcde"      // equivalent to the original
+                                
+            yaml = yaml.Replace("\r\n", "\n").Replace("\r", "\n");
+            restored = YamlNode.FromYaml(yaml)[0];
+            // "a\n  b\ncde"        // original line breaks are lost
+            </code>
+            </example>
+        </member>
+        <member name="F:System.Yaml.YamlConfig.LineBreakForOutput">
+            <summary>
+            Line break to be used when <see cref="T:System.Yaml.YamlNode"/> is presented in YAML stream. 
+            "\r", "\r\n", "\n" are allowed. "\r\n" is defalut.
+            </summary>
+            <example>
+            <code>
+            // A string containing line breaks "\n\r" and "\r".
+            YamlNode node = "a\r\n  b\rcde";
+            
+            // By default conversion, line breaks are escaped in a double quoted string.
+            var yaml = node.ToYaml();
+            // %YAML 1.2
+            // ---
+            // "a\r\n\
+            // \  b\r\
+            // cde"
+            // ...
+            
+            // "%YAML 1.2\r\n---\r\n\"a\\r\\n\\\r\n\  b\\r\\\r\ncde\"\r\n...\r\n"
+            
+            // Such a YAML stream is not pretty but is capable to preserve 
+            // original line breaks even when the line breaks of the YAML stream
+            // are changed (for instance, by some editor) between serialization 
+            // and deserialization.
+            var restored = YamlNode.FromYaml(yaml)[0];
+            // "a\r\n  b\rcde"      // equivalent to the original
+            
+            yaml = yaml.Replace("\r\n", "\n").Replace("\r", "\n");
+            var restored = YamlNode.FromYaml(yaml)[0];
+            // "a\r\n  b\rcde"      // still equivalent to the original
+            
+            // By setting ExplicitlyPreserveLineBreaks false, the output becomes
+            // much prettier.
+            YamlNode.DefaultConfig.ExplicitlyPreserveLineBreaks = false;
+            yaml = node.ToYaml();
+            // %YAML 1.2
+            // ---
+            // |-2
+            //   a
+            //     b
+            //   cde
+            // ...
+            
+            // line breaks are nomalized to "\r\n" (= YamlNode.DefaultConfig.LineBreakForOutput)
+            // "%YAML 1.2\r\n---\r\n|-2\r\n  a\r\n    b\r\ncde\r\n...\r\n"
+            
+            // line breaks are nomalized to "\n" (= YamlNode.DefaultConfig.LineBreakForInput)
+            var restored = YamlNode.FromYaml(yaml)[0];
+            // "a\n  b\ncde"
+            
+            
+            // Disable line break normalization.
+            YamlNode.DefaultConfig.NormalizeLineBreaks = false;
+            yaml = node.ToYaml();
+            
+            // line breaks are not nomalized
+            // "%YAML 1.2\r\n---\r\n|-2\r\n  a\r\n    b\rcde\r\n...\r\n"
+            
+            // Unless line breaks in YAML stream is preserved, original line
+            // breaks can be restored.
+            restored = YamlNode.FromYaml(yaml)[0];
+            // "a\r\n  b\rcde"      // equivalent to the original
+                                
+            yaml = yaml.Replace("\r\n", "\n").Replace("\r", "\n");
+            restored = YamlNode.FromYaml(yaml)[0];
+            // "a\n  b\ncde"        // original line breaks are lost
+            </code>
+            </example>
+        </member>
+        <member name="F:System.Yaml.YamlConfig.LineBreakForInput">
+            <summary>
+            <para>The YAML parser normalizes line breaks in a YAML stream to this value.</para>
+            
+            <para>"\n" is default, and is the only valid value in the YAML specification. "\r" and "\r\n" are
+            allowed in this library for convenience.</para>
+            
+            <para>To suppress normalization of line breaks by YAML parser, set <see cref="F:System.Yaml.YamlConfig.NormalizeLineBreaks"/> 
+            false, though it is also violate the YAML specification.</para>
+            </summary>
+            <remarks>
+            <para>The YAML sepcification requires a YAML parser to normalize every line break that 
+            is not escaped in a YAML stream, into a single line feed "\n" when it parse a YAML stream. 
+            But this is not convenient in some cases, especially under Windows environment, where 
+            the system default line break 
+            is "\r\n" instead of "\n".</para>
+            
+            <para>This library provides two workarounds for this problem.</para>
+            <para>One is setting <see cref="F:System.Yaml.YamlConfig.NormalizeLineBreaks"/> false. It disables the line break
+            normalization. The line breaks are serialized into a YAML stream as is and 
+            those in the YAML stream are deserialized as is.</para>
+            <para>Another is setting <see cref="F:System.Yaml.YamlConfig.LineBreakForInput"/> "\r\n". Then, the YAML parser
+            normalizes all line breaks into "\r\n" instead of "\n".</para>
+            <para>Note that although these two options are useful in some cases,
+            they makes the YAML parser violate the YAML specification. </para>
+            </remarks>
+            <example>
+            <code>
+            // A string containing line breaks "\n\r" and "\r".
+            YamlNode node = "a\r\n  b\rcde";
+            
+            // By default conversion, line breaks are escaped in a double quoted string.
+            var yaml = node.ToYaml();
+            // %YAML 1.2
+            // ---
+            // "a\r\n\
+            // \  b\r\
+            // cde"
+            // ...
+            
+            // "%YAML 1.2\r\n---\r\n\"a\\r\\n\\\r\n\  b\\r\\\r\ncde\"\r\n...\r\n"
+            
+            // Such a YAML stream is not pretty but is capable to preserve 
+            // original line breaks even when the line breaks of the YAML stream
+            // are changed (for instance, by some editor) between serialization 
+            // and deserialization.
+            var restored = YamlNode.FromYaml(yaml)[0];
+            // "a\r\n  b\rcde"      // equivalent to the original
+            
+            yaml = yaml.Replace("\r\n", "\n").Replace("\r", "\n");
+            var restored = YamlNode.FromYaml(yaml)[0];
+            // "a\r\n  b\rcde"      // still equivalent to the original
+            
+            // By setting ExplicitlyPreserveLineBreaks false, the output becomes
+            // much prettier.
+            YamlNode.DefaultConfig.ExplicitlyPreserveLineBreaks = false;
+            yaml = node.ToYaml();
+            // %YAML 1.2
+            // ---
+            // |-2
+            //   a
+            //     b
+            //   cde
+            // ...
+            
+            // line breaks are nomalized to "\r\n" (= YamlNode.DefaultConfig.LineBreakForOutput)
+            // "%YAML 1.2\r\n---\r\n|-2\r\n  a\r\n    b\r\ncde\r\n...\r\n"
+            
+            // line breaks are nomalized to "\n" (= YamlNode.DefaultConfig.LineBreakForInput)
+            var restored = YamlNode.FromYaml(yaml)[0];
+            // "a\n  b\ncde"
+            
+            
+            // Disable line break normalization.
+            YamlNode.DefaultConfig.NormalizeLineBreaks = false;
+            yaml = node.ToYaml();
+            
+            // line breaks are not nomalized
+            // "%YAML 1.2\r\n---\r\n|-2\r\n  a\r\n    b\rcde\r\n...\r\n"
+            
+            // Unless line breaks in YAML stream is preserved, original line
+            // breaks can be restored.
+            restored = YamlNode.FromYaml(yaml)[0];
+            // "a\r\n  b\rcde"      // equivalent to the original
+                                
+            yaml = yaml.Replace("\r\n", "\n").Replace("\r", "\n");
+            restored = YamlNode.FromYaml(yaml)[0];
+            // "a\n  b\ncde"        // original line breaks are lost
+            </code>
+            </example>
+        </member>
+        <member name="F:System.Yaml.YamlConfig.OmitTagForRootNode">
+            <summary>
+            If true, tag for the root node is omitted by <see cref="T:System.Yaml.Serialization.YamlSerializer"/>.
+            </summary>
+        </member>
+        <member name="F:System.Yaml.YamlConfig.DontUseVerbatimTag">
+            <summary>
+            If true, the verbatim style of a tag, i.e. !&lt; &gt; is avoided as far as possible.
+            </summary>
+        </member>
+        <member name="M:System.Yaml.YamlConfig.AddRule``1(System.String,System.String,System.Func{System.Text.RegularExpressions.Match,``0},System.Func{``0,System.String})">
+            <summary>
+            Add a custom tag resolution rule.
+            </summary>
+            <example>
+            <code>
+            
+            </code>
+            </example>
+            <typeparam name="T">Type of value.</typeparam>
+            <param name="tag">Tag for the value.</param>
+            <param name="regex">Pattern to match the value.</param>
+            <param name="decode">Method that decode value from <see cref="T:System.Text.RegularExpressions.Match"/> 
+                data after matching by <paramref name="regex"/>.</param>
+            <param name="encode">Method that encode value to <see cref="T:System.String"/>.</param>
+        </member>
+        <member name="M:System.Yaml.YamlConfig.AddActivator``1(System.Func{System.Object})">
+            <summary>
+            Add an ability of instantiating an instance of a class that has no default constructer.
+            </summary>
+            <typeparam name="T">Type of the object that is activated by this <paramref name="activator"/>.</typeparam>
+            <param name="activator">A delegate that creates an instance of <typeparamref name="T"/>.</param>
+            <example>
+            <code>
+            var serializer= new YamlSerializer();
+            
+            var yaml =
+              @"%YAML 1.2
+              ---
+              !System.Drawing.SolidBrush
+              Color: Red
+              ...
+              ";
+            
+            SolidBrush b = null;
+            try {
+              b = (SolidBrush)serializer.Deserialize(yaml)[0];
+            } catch(MissingMethodException) {
+              // SolidBrush has no default constructor!
+            }
+            
+            YamlNode.DefaultConfig.AddActivator&lt;SolidBrush&gt;(() => new SolidBrush(Color.Black));
+            
+            // Now the serializer knows how to activate an instance of SolidBrush.
+            b = (SolidBrush)serializer.Deserialize(yaml)[0];
+            
+            Assert.AreEqual(b.Color, Color.Red);
+            </code>
+            </example>
+        </member>
+        <member name="P:System.Yaml.YamlConfig.Culture">
+            <summary>
+            Gets or sets CultureInfo with which the .NET native values are converted
+            to / from string. Currently, this is not to be changed from CultureInfo.InvariantCulture.
+            </summary>
+        </member>
+        <member name="T:System.Yaml.YamlNode">
+            <summary>
+            <para>Abstract base class of YAML data nodes.</para>
+            
+            <para>See <see cref="T:System.Yaml.YamlScalar"/>, <see cref="T:System.Yaml.YamlSequence"/> and <see cref="T:System.Yaml.YamlMapping"/> 
+            for actual data classes.</para>
+            </summary>
+            <remarks>
+            <h3>YAML data model</h3>
+            <para>See <a href="http://yaml.org/">http://yaml.org/</a> for the official definition of 
+            Information Models of YAML.</para>
+            
+            <para>YAML data structure is defined as follows. 
+            Note that this does not represents the text syntax of YAML text 
+            but does logical data structure.</para>
+            
+            <para>
+            yaml-stream     ::= yaml-document*<br/>
+            yaml-document   ::= yaml-directive* yaml-node<br/>
+            yaml-directive  ::= YAML-directive | TAG-directive | user-defined-directive<br/>
+            yaml-node       ::= yaml-scalar | yaml-sequence | yaml-mapping<br/>
+            yaml-scalar     ::= yaml-tag yaml-value<br/>
+            yaml-sequence   ::= yaml-tag yaml-node*<br/>
+            yaml-mapping    ::= yaml-tag ( yaml-node yaml-node )*<br/>
+            yaml-tag        ::= yaml-global-tag yaml-local-tag<br/>
+            yaml-global-tag ::= "tag:" taggingEntity ":" specific [ "#" fragment ]<br/>
+            yaml-local-tag  ::= "!" yaml-local-tag-name<br/>
+            </para>
+            
+            <para>Namely,</para>
+            
+            <para>
+            A YAML stream consists of zero or more YAML documents.<br/>
+            A YAML documents have zero or more YAML directives and a root YAML node.<br/>
+            A YAML directive is either YAML-directive, TAG-directive or user-defined-directive.<br/>
+            A YAML node is either YAML scalar, YAML sequence or YAML mapping.<br/>
+            A YAML scalar consists of a YAML tag and a scalar value.<br/>
+            A YAML sequence consists of a YAML tag and zero or more child YAML nodes.<br/>
+            A YAML mapping cosists of a YAML tag and zero or more key/value pairs of YAML nodes.<br/>
+            A YAML tag is either a YAML global tag or a YAML local tag.<br/>
+            A YAML global tag starts with "tag:" and described in the "tag:" URI scheme defined in RFC4151.<br/>
+            A YAML local tag starts with "!" with a YAML local tag name<br/>
+            </para>
+            
+            <code>
+            // Construct YAML node tree
+            YamlNode node = 
+                new YamlSequence(                           // !!seq node
+                    new YamlScalar("abc"),                  // !!str node
+                    new YamlScalar("!!int", "123"),         // !!int node
+                    new YamlScalar("!!float", "1.23"),      // !!float node
+                    new YamlSequence(                       // nesting !!seq node
+                        new YamlScalar("def"),
+                        new YamlScalar("ghi")
+                    ),
+                    new YamlMapping(                        // !!map node
+                        new YamlScalar("key1"), new YamlScalar("value1"),
+                        new YamlScalar("key2"), new YamlScalar("value2"),
+                        new YamlScalar("key3"), new YamlMapping(    // nesting !!map node
+                            new YamlScalar("value3key1"), new YamlScalar("value3value1")
+                        ),
+                        new YamlScalar("key4"), new YamlScalar("value4")
+                    )
+                );
+                
+            // Convert it to YAML stream
+            string yaml = node.ToYaml();
+            
+            // %YAML 1.2
+            // ---
+            // - abc
+            // - 123
+            // - 1.23
+            // - - def
+            //   - ghi
+            // - key1: value1
+            //   key2: value2
+            //   key3:
+            //     value3key1: value3value1
+            //   key4: value4
+            // ...
+            
+            // Load the YAML node from the YAML stream.
+            // Note that a YAML stream can contain several YAML documents each of which
+            // contains a root YAML node.
+            YamlNode[] nodes = YamlNode.FromYaml(yaml);
+            
+            // The only one node in the stream is the one we have presented above.
+            Assert.AreEqual(1, nodes.Length);
+            YamlNode resotred = nodes[0];
+            
+            // Check if they are equal to each other.
+            Assert.AreEquel(node, restored);
+            
+            // Extract sub nodes.
+            var seq = (YamlSequence)restored;
+            var map = (YamlMapping)seq[4];
+            var map2 = (YamlMapping)map[new YamlScalar("key3")];
+            
+            // Modify the restored node tree
+            map2[new YamlScalar("value3key1")] = new YamlScalar("value3value1 modified");
+            
+            // Now they are not equal to each other.
+            Assert.AreNotEquel(node, restored);
+            </code>
+            
+            <h3>YamlNode class</h3>
+            
+            <para><see cref="T:System.Yaml.YamlNode"/> is an abstract class that represents a YAML node.</para>
+            
+            <para>In reality, a <see cref="T:System.Yaml.YamlNode"/> is either <see cref="T:System.Yaml.YamlScalar"/>, <see cref="T:System.Yaml.YamlSequence"/> or 
+            <see cref="T:System.Yaml.YamlMapping"/>.</para>
+            
+            <para>All <see cref="T:System.Yaml.YamlNode"/> has <see cref="P:System.Yaml.YamlNode.Tag"/> property that denotes
+            the actual data type represented in the YAML node.</para>
+            
+            <para>Default Tag value for <see cref="T:System.Yaml.YamlScalar"/>, <see cref="T:System.Yaml.YamlSequence"/> or <see cref="T:System.Yaml.YamlMapping"/> are
+            <c>"tag:yaml.org,2002:str"</c>, <c>"tag:yaml.org,2002:seq"</c>, <c>"tag:yaml.org,2002:map"</c>.</para>
+            
+            <para>Global tags that starts with <c>"tag:yaml.org,2002:"</c> ( = <see cref="P:System.Yaml.YamlNode.DefaultTagPrefix">
+            YamlNode.DefaultTagPrefix</see>) are defined in the YAML tag repository at 
+            <a href="http://yaml.org/type/">http://yaml.org/type/</a>. In this library, such a tags can be also 
+            represented in a short form that starts with <c>"!!"</c>, like <c>"!!str"</c>, <c>"!!seq"</c> and <c>"!!map"</c>. 
+            Tags in the formal style and the shorthand form can be converted to each other by the static methods of 
+            <see cref="M:System.Yaml.YamlNode.ExpandTag(System.String)"/> and <see cref="M:System.Yaml.YamlNode.ShorthandTag(System.String)"/>. 
+            In addition to these three basic tags, this library uses <c>"!!null"</c>, <c>"!!bool"</c>, <c>"!!int"</c>, 
+            <c>"!!float"</c> and <c>"!!timestamp"</c> tags, by default.</para>
+            
+            <para><see cref="T:System.Yaml.YamlNode"/>s can be read from a YAML stream with <see cref="M:System.Yaml.YamlNode.FromYaml(System.String)"/>,
+            <see cref="M:System.Yaml.YamlNode.FromYaml(System.IO.Stream)"/>, <see cref="M:System.Yaml.YamlNode.FromYaml(System.IO.TextReader)"/> and
+            <see cref="M:System.Yaml.YamlNode.FromYamlFile(System.String)"/> static methods. Since a YAML stream generally consist of multiple
+            YAML documents, each of which has a root YAML node, these methods return an array of <see cref="T:System.Yaml.YamlNode"/>
+            that is contained in the stream.</para>
+            
+            <para><see cref="T:System.Yaml.YamlNode"/>s can be written to a YAML stream with <see cref="M:System.Yaml.YamlNode.ToYaml"/>,
+            <see cref="M:System.Yaml.YamlNode.ToYaml(System.IO.Stream)"/>, <see cref="M:System.Yaml.YamlNode.ToYaml(System.IO.TextWriter)"/> and
+            <see cref="M:System.Yaml.YamlNode.ToYamlFile(System.String)"/>.</para>
+            
+            <para>The way of serialization can be configured in some aspects. The custom settings are specified
+            by an instance of <see cref="T:System.Yaml.YamlConfig"/> class. The serialization methods introduced above has
+            overloaded styles that accepts <see cref="T:System.Yaml.YamlConfig"/> instance to customize serialization.
+            It is also possible to change the default serialization method by modifying <see cref="P:System.Yaml.YamlNode.DefaultConfig">
+            YamlNode.DefaultConfig</see> static property.</para>
+            
+            <para>A <see cref="T:System.Yaml.YamlScalar"/> has <see cref="P:System.Yaml.YamlScalar.Value"/> property, which holds the string expression
+            of the node value.</para>
+            
+            <para>A <see cref="T:System.Yaml.YamlSequence"/> implements <see cref="T:System.Collections.Generic.IList`1">IList&lt;YamlNode&gt;</see> 
+            interface to access the child nodes.</para>
+            
+            <para><see cref="T:System.Yaml.YamlMapping"/> implements 
+            <see cref="T:System.Collections.Generic.IDictionary`2">IDictionary&lt;YamlNode,YamlNode&gt;</see> interface
+            to access the key/value pairs under the node.</para>
+            
+            <h3>Implicit conversion from C# native object to YamlScalar</h3>
+            
+            <para>Implicit cast operators from <see cref="T:System.String"/>, <see cref="T:System.Boolean"/>, <see cref="T:System.Int32"/>, 
+            <see cref="T:System.Double"/> and <see cref="T:System.DateTime"/> to <see cref="T:System.Yaml.YamlNode"/> is defined. Thus, anytime 
+            <see cref="T:System.Yaml.YamlNode"/> is required in C# source, naked scalar value can be written. Namely,
+            methods of <see cref="T:System.Yaml.YamlSequence"/> and <see cref="T:System.Yaml.YamlMapping"/> accept such C# native types 
+            as arguments in addition to <see cref="T:System.Yaml.YamlNode"/> types. </para>
+            
+            <code>
+            var map = new YamlMapping();
+            map["Time"] = DateTime.Now;                 // implicitly converted to YamlScalar
+            Assert.IsTrue(map.ContainsKey(new YamlScalar("Time")));
+            Assert.IsTrue(map.ContainsKey("Time"));     // implicitly converted to YamlScalar
+            </code>
+            
+            <h3>Equality of YamlNodes</h3>
+            
+            <para>Equality of <see cref="T:System.Yaml.YamlNode"/>s are evaluated on the content base. Different <see cref="T:System.Yaml.YamlNode"/> 
+            objects that have the same content are evaluated to be equal. Use <see cref="M:System.Yaml.YamlNode.Equals(System.Object)"/> method for 
+            equality evaluation.</para>
+            
+            <para>In detail, two <see cref="T:System.Yaml.YamlNode"/>s are logically equal to each other when the <see cref="T:System.Yaml.YamlNode"/> 
+            and its child nodes have the same contents (<see cref="P:System.Yaml.YamlNode.Tag"/> and <see cref="P:System.Yaml.YamlScalar.Value"/>) 
+            and their node graph topology is exactly same.
+            </para>
+            
+            <code>
+            YamlNode a1 = "a";  // implicit conversion
+            YamlNode a2 = "a";  // implicit conversion
+            YamlNode a3 = new YamlNode("!char", "a");
+            YamlNode b  = "b";  // implicit conversion
+            
+            Assert.IsTrue(a1 != a2);        // different objects
+            Assert.IsTrue(a1.Equals(a2));   // different objects having same content
+            
+            Assert.IsFalse(a1.Equals(a3));  // Tag is different
+            Assert.IsFalse(a1.Equals(b));   // Value is different
+            
+            var s1 = new YamlMapping(a1, new YamlSequence(a1, a2));
+            var s2 = new YamlMapping(a1, new YamlSequence(a2, a1));
+            var s3 = new YamlMapping(a2, new YamlSequence(a1, a2));
+            
+            Assert.IsFalse(s1.Equals(s2)); // node graph topology is different
+            Assert.IsFalse(s1.Equals(s3)); // node graph topology is different
+            Assert.IsTrue(s2.Equals(s3));  // different objects having same content and node graph topology
+            </code>
+            
+            </remarks>
+            <example>
+            Example 2.27 in YAML 1.2 specification
+            
+            <code>
+            // %YAML 1.2
+            // --- 
+            // !&lt;tag:clarkevans.com,2002:invoice&gt;
+            // invoice: 34843
+            // date   : 2001-01-23
+            // bill-to: &amp;id001
+            //     given  : Chris
+            //     family : Dumars
+            //     address:
+            //         lines: |
+            //             458 Walkman Dr.
+            //             Suite #292
+            //         city    : Royal Oak
+            //         state   : MI
+            //         postal  : 48046
+            // ship-to: *id001
+            // product:
+            //     - sku         : BL394D
+            //       quantity    : 4
+            //       description : Basketball
+            //       price       : 450.00
+            //     - sku         : BL4438H
+            //       quantity    : 1
+            //       description : Super Hoop
+            //       price       : 2392.00
+            // tax  : 251.42
+            // total: 4443.52
+            // comments:
+            //     Late afternoon is best.
+            //     Backup contact is Nancy
+            //     Billsmer @ 338-4338.
+            // ...
+            
+            var invoice = new YamlMapping(
+                "invoice", 34843,
+                "date", new DateTime(2001, 01, 23),
+                "bill-to", new YamlMapping(
+                    "given", "Chris",
+                    "family", "Dumars",
+                    "address", new YamlMapping(
+                        "lines", "458 Walkman Dr.\nSuite #292\n",
+                        "city", "Royal Oak",
+                        "state", "MI",
+                        "postal", 48046
+                        )
+                    ),
+                "product", new YamlSequence(
+                    new YamlMapping(
+                        "sku",         "BL394D",
+                        "quantity",    4,
+                        "description", "Basketball",
+                        "price",       450.00
+                        ),
+                    new YamlMapping(
+                        "sku",         "BL4438H",
+                        "quantity",    1,
+                        "description", "Super Hoop",
+                        "price",       2392.00
+                        )
+                    ),
+                "tax", 251.42,
+                "total", 4443.52,
+                "comments", "Late afternoon is best. Backup contact is Nancy Billsmer @ 338-4338."
+                );
+            invoice["ship-to"] = invoice["bill-to"];
+            invoice.Tag = "tag:clarkevans.com,2002:invoice";
+            
+            invoice.ToYamlFile("invoice.yaml");
+            // %YAML 1.2
+            // ---
+            // !&lt;tag:clarkevans.com,2002:invoice&gt;
+            // invoice: 34843
+            // date: 2001-01-23
+            // bill-to: &amp;A 
+            //   given: Chris
+            //   family: Dumars
+            //   address: 
+            //     lines: "458 Walkman Dr.\n\
+            //       Suite #292\n"
+            //     city: Royal Oak
+            //     state: MI
+            //     postal: 48046
+            // product: 
+            //   - sku: BL394D
+            //     quantity: 4
+            //     description: Basketball
+            //     price: !!float 450
+            //   - sku: BL4438H
+            //     quantity: 1
+            //     description: Super Hoop
+            //     price: !!float 2392
+            // tax: 251.42
+            // total: 4443.52
+            // comments: Late afternoon is best. Backup contact is Nancy Billsmer @ 338-4338.
+            // ship-to: *A
+            // ...
+            
+            </code>
+            </example>
+        </member>
+        <member name="M:System.Yaml.YamlNode.#ctor">
+            <summary>
+            Initialize a node.
+            </summary>
+        </member>
+        <member name="M:System.Yaml.YamlNode.ShorthandTag">
+            <summary>
+            YAML Tag for this node, which represents the type of node's value.
+            The <see cref="P:System.Yaml.YamlNode.Tag"/> property is returned in a shorthand style.
+            </summary>
+        </member>
+        <member name="M:System.Yaml.YamlNode.GetHashCode">
+            <summary>
+            Serves as a hash function for a particular type. 
+            Hash code is calculated using Tag and Value properties.
+            </summary>
+            <returns>Hash code</returns>
+        </member>
+        <member name="M:System.Yaml.YamlNode.GetHashCodeCore">
+            <summary>
+            Return the hash code. 
+            The returned value will be cached until <see cref="M:System.Yaml.YamlNode.OnChanged"/> is called.
+            </summary>
+            <returns>Hash code</returns>
+        </member>
+        <member name="M:System.Yaml.YamlNode.OnChanged">
+            <summary>
+            Call this function when the content of the node is changed.
+            </summary>
+        </member>
+        <member name="M:System.Yaml.YamlNode.Equals(System.Object)">
+            <summary>
+            Returns true if <paramref name="obj"/> is of same type as the <see cref="T:System.Yaml.YamlNode"/> and
+            its content is also logically same.
+            </summary>
+            <remarks>
+            Two <see cref="T:System.Yaml.YamlNode"/>'s are logically equal when the <see cref="T:System.Yaml.YamlNode"/> and its child nodes
+            have the same contents (<see cref="P:System.Yaml.YamlNode.Tag"/> and <see cref="P:System.Yaml.YamlScalar.Value"/>) 
+            and their node graph topology is exactly same as the other.
+            </remarks>
+            <example>
+            <code>
+            var a1 = new YamlNode("a");
+            var a2 = new YamlNode("a");
+            var a3 = new YamlNode("!char", "a");
+            var b  = new YamlNode("b");
+            
+            Assert.IsTrue(a1 != a2);        // different objects
+            Assert.IsTrue(a1.Equals(a2));   // different objects having same content
+            
+            Assert.IsFalse(a1.Equals(a3));  // Tag is different
+            Assert.IsFalse(a1.Equals(b));   // Value is different
+            
+            var s1 = new YamlMapping(a1, new YamlSequence(a1, a2));
+            var s2 = new YamlMapping(a1, new YamlSequence(a2, a1));
+            var s3 = new YamlMapping(a2, new YamlSequence(a1, a2));
+            
+            Assert.IsFalse(s1.Equals(s2)); // node graph topology is different
+            Assert.IsFalse(s1.Equals(s3)); // node graph topology is different
+            Assert.IsTrue(s2.Equals(s3));  // different objects having same content and node graph topology
+            </code>
+            </example>
+            <param name="obj">Object to be compared.</param>
+            <returns>True if the <see cref="T:System.Yaml.YamlNode"/> logically equals to the <paramref name="obj"/>; otherwise false.</returns>
+        </member>
+        <member name="M:System.Yaml.YamlNode.Equals(System.Yaml.YamlNode,System.Yaml.YamlNode.ObjectRepository)">
+            <summary>
+            Returns true if <paramref name="b"/> is of same type as the <see cref="T:System.Yaml.YamlNode"/> and
+            its content is also logically same.
+            </summary>
+            <param name="b">Node to be compared.</param>
+            <param name="repository">Node repository holds the nodes that already appeared and 
+            the corresponding node in the other node tree.</param>
+            <returns>true if they are equal to each other.</returns>
+        </member>
+        <member name="M:System.Yaml.YamlNode.EqualsSub(System.Yaml.YamlNode,System.Yaml.YamlNode.ObjectRepository,System.Boolean@)">
+            <summary>
+            Returns true if <paramref name="b"/> is of same type as the <see cref="T:System.Yaml.YamlNode"/> and
+            its Tag is same as the node. It returns true for <paramref name="skip"/> if they
+            both already appeared in the node trees and were compared.
+            </summary>
+            <param name="b">Node to be compared.</param>
+            <param name="repository">Node repository holds the nodes that already appeared and 
+            the corresponding node in the other node tree.</param>
+            <param name="skip">true if they already appeared in the node tree and were compared.</param>
+            <returns>true if they are equal to each other.</returns>
+        </member>
+        <member name="M:System.Yaml.YamlNode.ToString">
+            <summary>
+            Returns a <see cref="T:System.String"/> that represents the current <see cref="T:System.Object"/>.
+            </summary>
+            <returns>A <see cref="T:System.String"/> that represents the current <see cref="T:System.Object"/></returns>
+        </member>
+        <member name="M:System.Yaml.YamlNode.ToYaml">
+            <summary>
+            Convert <see cref="T:System.Yaml.YamlNode"/> to a YAML text.
+            </summary>
+            <returns>YAML stream.</returns>
+        </member>
+        <member name="M:System.Yaml.YamlNode.ToYaml(System.Yaml.YamlConfig)">
+            <summary>
+            Convert <see cref="T:System.Yaml.YamlNode"/> to a YAML text.
+            </summary>
+            <returns>YAML stream.</returns>
+            <param name="config"><see cref="T:System.Yaml.YamlConfig">YAML configuration</see> to customize serialization.</param>
+        </member>
+        <member name="M:System.Yaml.YamlNode.ToYaml(System.IO.Stream)">
+            <summary>
+            Convert <see cref="T:System.Yaml.YamlNode"/> to a YAML text and save it to <see cref="T:System.IO.Stream"/> <paramref name="s"/>.
+            </summary>
+            <param name="s"><see cref="T:System.IO.Stream"/> to output.</param>
+        </member>
+        <member name="M:System.Yaml.YamlNode.ToYaml(System.IO.Stream,System.Yaml.YamlConfig)">
+            <summary>
+            Convert <see cref="T:System.Yaml.YamlNode"/> to a YAML text and save it to <see cref="T:System.IO.Stream"/> <paramref name="s"/>.
+            </summary>
+            <param name="s"><see cref="T:System.IO.Stream"/> to output.</param>
+            <param name="config"><see cref="T:System.Yaml.YamlConfig">YAML configuration</see> to customize serialization.</param>
+        </member>
+        <member name="M:System.Yaml.YamlNode.ToYaml(System.IO.TextWriter)">
+            <summary>
+            Convert <see cref="T:System.Yaml.YamlNode"/> to a YAML text and save it to <see cref="T:System.IO.TextWriter"/> <paramref name="tw"/>.
+            </summary>
+            <param name="tw"><see cref="T:System.IO.TextWriter"/> to output.</param>
+        </member>
+        <member name="M:System.Yaml.YamlNode.ToYaml(System.IO.TextWriter,System.Yaml.YamlConfig)">
+            <summary>
+            Convert <see cref="T:System.Yaml.YamlNode"/> to a YAML text and save it to <see cref="T:System.IO.TextWriter"/> <paramref name="tw"/>.
+            </summary>
+            <param name="tw"><see cref="T:System.IO.TextWriter"/> to output.</param>
+            <param name="config"><see cref="T:System.Yaml.YamlConfig">YAML configuration</see> to customize serialization.</param>
+        </member>
+        <member name="M:System.Yaml.YamlNode.ToYamlFile(System.String)">
+            <summary>
+            Convert <see cref="T:System.Yaml.YamlNode"/> to a YAML text and save it to the file.
+            </summary>
+            <param name="FileName">Name of the file to output</param>
+        </member>
+        <member name="M:System.Yaml.YamlNode.ToYamlFile(System.String,System.Yaml.YamlConfig)">
+            <summary>
+            Convert <see cref="T:System.Yaml.YamlNode"/> to a YAML text and save it to the file.
+            </summary>
+            <param name="FileName">Name of the file to output</param>
+            <param name="config"><see cref="T:System.Yaml.YamlConfig">YAML configuration</see> to customize serialization.</param>
+        </member>
+        <member name="M:System.Yaml.YamlNode.FromYaml(System.String)">
+            <summary>
+            Convert YAML text <paramref name="yaml"/> to a list of <see cref="T:System.Yaml.YamlNode"/>.
+            </summary>
+            <param name="yaml">YAML text</param>
+            <returns>YAML nodes</returns>
+        </member>
+        <member name="M:System.Yaml.YamlNode.FromYaml(System.String,System.Yaml.YamlConfig)">
+            <summary>
+            Convert YAML text <paramref name="yaml"/> to a list of <see cref="T:System.Yaml.YamlNode"/>.
+            </summary>
+            <param name="yaml">YAML text</param>
+            <returns>YAML nodes</returns>
+            <param name="config"><see cref="T:System.Yaml.YamlConfig">YAML configuration</see> to customize serialization.</param>
+        </member>
+        <member name="M:System.Yaml.YamlNode.FromYaml(System.IO.Stream)">
+            <summary>
+            Convert YAML text <paramref name="yaml"/> to a list of <see cref="T:System.Yaml.YamlNode"/>.
+            </summary>
+            <param name="s"><see cref="T:System.IO.Stream"/> from which YAML document is read.</param>
+            <returns>YAML nodes</returns>
+        </member>
+        <member name="M:System.Yaml.YamlNode.FromYaml(System.IO.Stream,System.Yaml.YamlConfig)">
+            <summary>
+            Convert YAML text <paramref name="yaml"/> to a list of <see cref="T:System.Yaml.YamlNode"/>.
+            </summary>
+            <param name="s"><see cref="T:System.IO.Stream"/> from which YAML document is read.</param>
+            <returns>YAML nodes</returns>
+            <param name="config"><see cref="T:System.Yaml.YamlConfig">YAML configuration</see> to customize serialization.</param>
+        </member>
+        <member name="M:System.Yaml.YamlNode.FromYaml(System.IO.TextReader)">
+            <summary>
+            Convert YAML text <paramref name="yaml"/> to a list of <see cref="T:System.Yaml.YamlNode"/>.
+            </summary>
+            <param name="tr"><see cref="T:System.IO.TextReader"/> from which YAML document is read.</param>
+            <returns>YAML nodes</returns>
+        </member>
+        <member name="M:System.Yaml.YamlNode.FromYaml(System.IO.TextReader,System.Yaml.YamlConfig)">
+            <summary>
+            Convert YAML text <paramref name="yaml"/> to a list of <see cref="T:System.Yaml.YamlNode"/>.
+            </summary>
+            <param name="tr"><see cref="T:System.IO.TextReader"/> from which YAML document is read.</param>
+            <returns>YAML nodes</returns>
+            <param name="config"><see cref="T:System.Yaml.YamlConfig">YAML configuration</see> to customize serialization.</param>
+        </member>
+        <member name="M:System.Yaml.YamlNode.FromYamlFile(System.String)">
+            <summary>
+            Convert YAML text <paramref name="yaml"/> to a list of <see cref="T:System.Yaml.YamlNode"/>.
+            </summary>
+            <param name="FileName">YAML File Name</param>
+            <returns>YAML nodes</returns>
+        </member>
+        <member name="M:System.Yaml.YamlNode.FromYamlFile(System.String,System.Yaml.YamlConfig)">
+            <summary>
+            Convert YAML text <paramref name="yaml"/> to a list of <see cref="T:System.Yaml.YamlNode"/>.
+            </summary>
+            <param name="FileName">YAML File Name</param>
+            <returns>YAML nodes</returns>
+            <param name="config"><see cref="T:System.Yaml.YamlConfig">YAML configuration</see> to customize serialization.</param>
+        </member>
+        <member name="M:System.Yaml.YamlNode.op_Implicit(System.String)~System.Yaml.YamlNode">
+            <summary>
+            Implicit conversion from string to <see cref="T:System.Yaml.YamlScalar"/>.
+            </summary>
+            <param name="value">Value to be converted.</param>
+            <returns>Conversion result.</returns>
+        </member>
+        <member name="M:System.Yaml.YamlNode.op_Implicit(System.Int32)~System.Yaml.YamlNode">
+            <summary>
+            Implicit conversion from string to <see cref="T:System.Yaml.YamlScalar"/>.
+            </summary>
+            <param name="value">Value to be converted.</param>
+            <returns>Conversion result.</returns>
+        </member>
+        <member name="M:System.Yaml.YamlNode.op_Implicit(System.Double)~System.Yaml.YamlNode">
+            <summary>
+            Implicit conversion from string to <see cref="T:System.Yaml.YamlScalar"/>.
+            </summary>
+            <param name="value">Value to be converted.</param>
+            <returns>Conversion result.</returns>
+        </member>
+        <member name="M:System.Yaml.YamlNode.op_Implicit(System.Boolean)~System.Yaml.YamlNode">
+            <summary>
+            Implicit conversion from string to <see cref="T:System.Yaml.YamlScalar"/>.
+            </summary>
+            <param name="value">Value to be converted.</param>
+            <returns>Conversion result.</returns>
+        </member>
+        <member name="M:System.Yaml.YamlNode.op_Implicit(System.DateTime)~System.Yaml.YamlNode">
+            <summary>
+            Implicit conversion from <see cref="T:System.DateTime"/> to <see cref="T:System.Yaml.YamlScalar"/>.
+            </summary>
+            <param name="value">Value to be converted.</param>
+            <returns>Conversion result.</returns>
+        </member>
+        <member name="M:System.Yaml.YamlNode.ExpandTag(System.String)">
+            <summary>
+            Convert shorthand tag starting with "!!" to the formal style that starts with "tag:yaml.org,2002:".
+            </summary>
+            <remarks>
+            When <paramref name="tag"/> starts with "!!", it is converted into formal style.
+            Otherwise, <paramref name="tag"/> is returned as is.
+            </remarks>
+            <example>
+            <code>
+            var tag = YamlNode.DefaultTagPrefix + "int";    // -> "tag:yaml.org,2002:int"
+            tag = YamlNode.ShorthandTag(tag);               // -> "!!int"
+            tag = YamlNode.ExpandTag(tag);                  // -> "tag:yaml.org,2002:int"
+            </code>
+            </example>
+            <param name="tag">Tag in the shorthand style.</param>
+            <returns>Tag in formal style.</returns>
+        </member>
+        <member name="M:System.Yaml.YamlNode.ShorthandTag(System.String)">
+            <summary>
+            Convert a formal style tag that starts with "tag:yaml.org,2002:" to 
+            the shorthand style that starts with "!!".
+            </summary>
+            <remarks>
+            When <paramref name="tag"/> contains YAML standard types, it is converted into !!xxx style.
+            Otherwise, <paramref name="tag"/> is returned as is.
+            </remarks>
+            <example>
+            <code>
+            var tag = YamlNode.DefaultTagPrefix + "int";    // -> "tag:yaml.org,2002:int"
+            tag = YamlNode.ShorthandTag(tag);               // -> "!!int"
+            tag = YamlNode.ExpandTag(tag);                  // -> "tag:yaml.org,2002:int"
+            </code>
+            </example>
+            <param name="tag">Tag in formal style.</param>
+            <returns>Tag in compact style.</returns>
+        </member>
+        <member name="P:System.Yaml.YamlNode.Raw">
+            <summary>
+            Position in a YAML document, where the node appears. 
+            Both <see cref="M:System.Yaml.YamlNode.ToYaml"/> and <see cref="M:System.Yaml.YamlNode.FromYaml(System.String)"/> sets this property.
+            When the node appeared multiple times in the document, this property returns the position
+            where it appeared for the first time.
+            </summary>
+        </member>
+        <member name="P:System.Yaml.YamlNode.Column">
+            <summary>
+            Position in a YAML document, where the node appears. 
+            Both <see cref="M:System.Yaml.YamlNode.ToYaml"/> and <see cref="M:System.Yaml.YamlNode.FromYaml(System.String)"/> sets this property.
+            When the node appeared multiple times in the document, this property returns the position
+            where it appeared for the first time.
+            </summary>
+        </member>
+        <member name="P:System.Yaml.YamlNode.Properties">
+            <summary>
+            Temporary data, transfering information between YamlRepresenter and YamlPresenter.
+            </summary>
+        </member>
+        <member name="P:System.Yaml.YamlNode.Tag">
+            <summary>
+            YAML Tag for this node, which represents the type of node's value.
+            </summary>
+            <remarks>
+            <para>
+            YAML standard types has tags in a form of "tag:yaml.org,2002:???". Well known tags are
+            tag:yaml.org,2002:null, tag:yaml.org,2002:bool, tag:yaml.org,2002:int, tag:yaml.org,2002:str,
+            tag:yaml.org,2002:map, tag:yaml.org,2002:seq, tag:yaml.org,2002:float and tag:yaml.org,2002:timestamp.
+            </para>
+            </remarks>
+        </member>
+        <member name="E:System.Yaml.YamlNode.Changed">
+            <summary>
+            Invoked when the node's content or its childrens' content was changed.
+            </summary>
+        </member>
+        <member name="P:System.Yaml.YamlNode.DefaultTagPrefix">
+            <summary>
+            Gets YAML's default tag prefix.
+            </summary>
+            <value>"tag:yaml.org,2002:"</value>
+        </member>
+        <member name="P:System.Yaml.YamlNode.DefaultConfig">
+            <summary>
+            Gets or sets the default configuration to customize serialization of <see cref="T:System.Yaml.YamlNode"/>.
+            </summary>
+        </member>
+        <member name="T:System.Yaml.YamlNode.ObjectRepository">
+            <summary>
+            Remember the order of appearance of nodes. It also has ability of rewinding.
+            </summary>
+        </member>
+        <member name="T:System.Yaml.YamlScalar">
+            <summary>
+            Represents a scalar node in a YAML document.
+            </summary>
+            <example>
+            <code>
+            var string_node = new YamlNode("abc");
+            Assert.AreEqual("!!str", string_node.ShorthandTag());
+            
+            var int_node1= new YamlNode(YamlNode.DefaultTagPrefix + "int", "1");
+            Assert.AreEqual("!!int", int_node1.ShorthandTag());
+            
+            // shorthand tag style can be specified
+            var int_node2= new YamlNode("!!int", "1");
+            Assert.AreEqual(YamlNode.DefaultTagPrefix + "int", int_node1.Tag);
+            Assert.AreEqual("!!int", int_node1.ShorthandTag());
+            
+            // or use implicit conversion
+            YamlNode int_node3 = 1;
+            
+            // YamlNodes Equals to another node when their values are equal.
+            Assert.AreEqual(int_node1, int_node2);
+            
+            // Of course, they are different if compaired by references.
+            Assert.IsTrue(int_node1 != int_node2);
+            </code>
+            </example>
+        </member>
+        <member name="M:System.Yaml.YamlScalar.#ctor">
+            <summary>
+            Create empty string node.
+            </summary>
+        </member>
+        <member name="M:System.Yaml.YamlScalar.#ctor(System.String)">
+            <summary>
+            Initialize string node that has <paramref name="value"/> as its content.
+            </summary>
+            <param name="value">Value of the node.</param>
+        </member>
+        <member name="M:System.Yaml.YamlScalar.#ctor(System.String,System.String)">
+            <summary>
+            Create a scalar node with arbitral tag.
+            </summary>
+            <param name="tag">Tag to the node.</param>
+            <param name="value">Value of the node.</param>
+        </member>
+        <member name="M:System.Yaml.YamlScalar.#ctor(System.Int32)">
+            <summary>
+            Initialize an integer node that has <paramref name="value"/> as its content.
+            </summary>
+        </member>
+        <member name="M:System.Yaml.YamlScalar.#ctor(System.Double)">
+            <summary>
+            Initialize a float node that has <paramref name="value"/> as its content.
+            </summary>
+        </member>
+        <member name="M:System.Yaml.YamlScalar.#ctor(System.Boolean)">
+            <summary>
+            Initialize a bool node that has <paramref name="value"/> as its content.
+            </summary>
+        </member>
+        <member name="M:System.Yaml.YamlScalar.#ctor(System.DateTime)">
+            <summary>
+            Initialize a timestamp node that has <paramref name="value"/> as its content.
+            </summary>
+        </member>
+        <member name="M:System.Yaml.YamlScalar.op_Implicit(System.String)~System.Yaml.YamlScalar">
+            <summary>
+            Implicit conversion from string to <see cref="T:System.Yaml.YamlScalar"/>.
+            </summary>
+            <param name="value">Value to be converted.</param>
+            <returns>Conversion result.</returns>
+        </member>
+        <member name="M:System.Yaml.YamlScalar.op_Implicit(System.Int32)~System.Yaml.YamlScalar">
+            <summary>
+            Implicit conversion from string to <see cref="T:System.Yaml.YamlScalar"/>.
+            </summary>
+            <param name="value">Value to be converted.</param>
+            <returns>Conversion result.</returns>
+        </member>
+        <member name="M:System.Yaml.YamlScalar.op_Implicit(System.Double)~System.Yaml.YamlScalar">
+            <summary>
+            Implicit conversion from string to <see cref="T:System.Yaml.YamlScalar"/>.
+            </summary>
+            <param name="value">Value to be converted.</param>
+            <returns>Conversion result.</returns>
+        </member>
+        <member name="M:System.Yaml.YamlScalar.op_Implicit(System.Boolean)~System.Yaml.YamlScalar">
+            <summary>
+            Implicit conversion from string to <see cref="T:System.Yaml.YamlScalar"/>.
+            </summary>
+            <param name="value">Value to be converted.</param>
+            <returns>Conversion result.</returns>
+        </member>
+        <member name="M:System.Yaml.YamlScalar.op_Implicit(System.DateTime)~System.Yaml.YamlScalar">
+            <summary>
+            Implicit conversion from <see cref="T:System.DateTime"/> to <see cref="T:System.Yaml.YamlScalar"/>.
+            </summary>
+            <param name="value">Value to be converted.</param>
+            <returns>Conversion result.</returns>
+        </member>
+        <member name="M:System.Yaml.YamlScalar.OnChanged">
+            <summary>
+            Call this function when the content of the node is changed.
+            </summary>
+        </member>
+        <member name="M:System.Yaml.YamlScalar.GetHashCodeCore">
+            <summary>
+            Returns the hash code. 
+            The returned value will be cached until <see cref="M:System.Yaml.YamlNode.OnChanged"/> is called.
+            </summary>
+            <returns>Hash code</returns>
+        </member>
+        <member name="P:System.Yaml.YamlScalar.Value">
+            <summary>
+            String expression of the node value.
+            </summary>
+        </member>
+        <member name="P:System.Yaml.YamlScalar.NativeObject">
+            <summary>
+            <para>When the node has YAML's standard scalar type, the native object corresponding to
+            it can be got from this property. To see if this property contains a valid data,
+            refer to <see cref="P:System.Yaml.YamlScalar.NativeObjectAvailable"/>.</para>
+            </summary>
+            <exception cref="T:System.InvalidOperationException">This property is not available. See <see cref="P:System.Yaml.YamlScalar.NativeObjectAvailable"/>.</exception>
+            <remarks>
+            <para>This property is available when <see cref="P:System.Yaml.YamlNode.DefaultConfig"/>.<see cref="F:System.Yaml.YamlConfig.TagResolver"/> contains
+            an entry for the nodes tag and defines how to decode the <see cref="P:System.Yaml.YamlScalar.Value"/> property into native objects.</para>
+            <para>When this property is available, equality of the scalar node is evaluated by comparing the <see cref="P:System.Yaml.YamlScalar.NativeObject"/>
+            properties by the language default equality operator.</para>
+            </remarks>
+        </member>
+        <member name="P:System.Yaml.YamlScalar.NativeObjectAvailable">
+            <summary>
+            Gets if <see cref="P:System.Yaml.YamlScalar.NativeObject"/> contains a valid content.
+            </summary>
+        </member>
+        <member name="T:System.Yaml.YamlComplexNode">
+            <summary>
+            Abstract base class of <see cref="T:System.Yaml.YamlNode"/> that have child nodes.
+            
+            <see cref="T:System.Yaml.YamlMapping"/> and <see cref="T:System.Yaml.YamlSequence"/> inherites from this class.
+            </summary>
+        </member>
+        <member name="M:System.Yaml.YamlComplexNode.GetHashCodeCore">
+            <summary>
+            Calculate hash code from <see cref="P:System.Yaml.YamlNode.Tag"/> property and all child nodes.
+            The result is cached.
+            </summary>
+            <returns>Hash value for the object.</returns>
+        </member>
+        <member name="M:System.Yaml.YamlComplexNode.GetHashCodeCoreSub(System.Int32,System.Collections.Generic.Dictionary{System.Yaml.YamlNode,System.Int32})">
+            <summary>
+            Calculates the hash code for a collection object. This function is called recursively 
+            on the child objects with the sub cache code repository for the nodes already appeared
+            in the node tree.
+            </summary>
+            <param name="path">The cache code for the path where this node was found.</param>
+            <param name="dict">Repository of the nodes that already appeared in the node tree.
+            Sub hash code for the nodes can be refered to from this dictionary.</param>
+            <returns></returns>
+        </member>
+        <member name="T:System.Yaml.YamlMapping">
+            <summary>
+            Represents a mapping node in a YAML document. 
+            Use <see cref="T:System.Collections.Generic.IDictionary`2">IDictionary&lt;YamlNode,YamlNode&gt;</see> interface to
+            manipulate child key/value pairs.
+            </summary>
+            <remarks>
+            Child items can be accessed via IDictionary&lt;YamlNode, YamlNode&gt; interface.
+            
+            Note that mapping object can not contain multiple keys with same value.
+            </remarks>
+            <example>
+            <code>
+            // Create a mapping.
+            var map1 = new YamlMapping(
+                // (key, value) pairs should be written sequential
+                new YamlScalar("key1"), new YamlScalar("value1"),
+                "key2", "value2" // implicitely converted to YamlScalar
+                );
+                
+            // Refer to the mapping.
+            Assert.AreEqual( map1[new Scalar("key1")], new YamlScalar("value1") );
+            Assert.AreEqual( map1["key1"], "value1" );
+            
+            // Add an entry.
+            map1.Add( "key3", new YamlSequence( "value3a", "value3b" ) );
+            
+            // Create another mapping.
+            var map2 = new YamlMapping(
+                "key1", "value1",
+                "key2", "value2",
+                "key3", new YamlSequence( "value3a", "value3b" )
+                );
+                
+            // Mappings are equal when they have objects that are equal to each other.
+            Assert.IsTrue( map1.Equals( map2 ) );
+            </code>
+            </example>
+        </member>
+        <member name="M:System.Yaml.YamlMapping.GetHashCodeCoreSub(System.Int32,System.Collections.Generic.Dictionary{System.Yaml.YamlNode,System.Int32})">
+            <summary>
+            Calculates the hash code for a collection object. This function is called recursively 
+            on the child objects with the sub cache code repository for the nodes already appeared
+            in the node tree.
+            </summary>
+            <param name="path">The cache code for the path where this node was found.</param>
+            <param name="dict">Repository of the nodes that already appeared in the node tree.
+            Sub hash code for the nodes can be refered to from this dictionary.</param>
+            <returns></returns>
+        </member>
+        <member name="M:System.Yaml.YamlMapping.#ctor(System.Yaml.YamlNode[])">
+            <summary>
+            Create a YamlMapping that contains <paramref name="nodes"/> in it.
+            </summary>
+            <example>
+            <code>
+            // Create a mapping.
+            var map1 = new YamlMapping(
+                // (key, value) pairs should be written sequential
+                new YamlScalar("key1"), new YamlScalar("value1"),
+                new YamlScalar("key2"), new YamlScalar("value2")
+                );
+            </code>
+            </example>
+            <exception cref="T:System.ArgumentException">Even number of arguments are expected.</exception>
+            <param name="nodes">(key, value) pairs are written sequential.</param>
+        </member>
+        <member name="M:System.Yaml.YamlMapping.ToString(System.Int32@)">
+            <summary>
+            Enumerate child nodes.
+            </summary>
+            <returns>Inumerator that iterates child nodes</returns>
+        </member>
+        <member name="M:System.Yaml.YamlMapping.Add(System.Yaml.YamlNode,System.Yaml.YamlNode)">
+            <summary>
+            Adds an element with the provided key and value.
+            </summary>
+            <exception cref="T:System.ArgumentNullException"><paramref name="key"/> or <paramref name="value"/> is a null reference.</exception>
+            <exception cref="T:System.ArgumentException">An element with the same key already exists.</exception>
+            <param name="key">The node to use as the key of the element to add.</param>
+            <param name="value">The node to use as the value of the element to add.</param>
+        </member>
+        <member name="M:System.Yaml.YamlMapping.ContainsKey(System.Yaml.YamlNode)">
+            <summary>
+            Determines whether the <see cref="T:System.Yaml.YamlMapping"/> contains an element with the specified key.
+            </summary>
+            <param name="key">The key to locate in the <see cref="T:System.Yaml.YamlMapping"/>.</param>
+            <exception cref="T:System.ArgumentNullException"><paramref name="key"/> is a null reference </exception>
+            <returns> true if the <see cref="T:System.Yaml.YamlMapping"/> contains an element with the key that is equal to the specified value; otherwise, false.</returns>
+        </member>
+        <member name="M:System.Yaml.YamlMapping.Remove(System.Yaml.YamlNode)">
+            <summary>
+            Removes the element with the specified key from the <see cref="T:System.Yaml.YamlMapping"/>.
+            </summary>
+            <param name="key">The key of the element to remove.</param>
+            <returns> true if the element is successfully removed; otherwise, false. This method also returns false if key was not found in the original <see cref="T:System.Yaml.YamlMapping"/>.</returns>
+        </member>
+        <member name="M:System.Yaml.YamlMapping.TryGetValue(System.Yaml.YamlNode,System.Yaml.YamlNode@)">
+            <summary>
+            Gets the value associated with the specified key.
+            </summary>
+            <param name="key">The key whose value to get.</param>
+            <param name="value">When this method returns, the value associated with the specified key, if the key is found; 
+            otherwise, the default value for the type of the value parameter. This parameter is passed uninitialized.</param>
+            <returns> true if the object that implements <see cref="T:System.Yaml.YamlMapping"/> contains an element with the specified key; otherwise, false.</returns>
+        </member>
+        <member name="M:System.Yaml.YamlMapping.Clear">
+            <summary>
+            Removes all entries from the <see cref="T:System.Yaml.YamlMapping"/>.
+            </summary>
+        </member>
+        <member name="M:System.Yaml.YamlMapping.Contains(System.Collections.Generic.KeyValuePair{System.Yaml.YamlNode,System.Yaml.YamlNode})">
+            <summary>
+            Determines whether the <see cref="T:System.Yaml.YamlMapping"/> contains a specific value.
+            </summary>
+            <param name="item">The object to locate in the <see cref="T:System.Yaml.YamlMapping"/>.</param>
+            <returns>true if item is found in the <see cref="T:System.Yaml.YamlMapping"/> otherwise, false.</returns>
+        </member>
+        <member name="M:System.Yaml.YamlMapping.GetEnumerator">
+            <summary>
+            Returns an enumerator that iterates through the <see cref="T:System.Yaml.YamlMapping"/>.
+            </summary>
+            <returns>An enumerator that iterates through the <see cref="T:System.Yaml.YamlMapping"/>.</returns>
+        </member>
+        <member name="P:System.Yaml.YamlMapping.Keys">
+            <summary>
+            Gets an ICollection&lt;YamlNode&gt; containing the keys of the <see cref="T:System.Yaml.YamlMapping"/>.
+            </summary>
+        </member>
+        <member name="P:System.Yaml.YamlMapping.Values">
+            <summary>
+            Gets an ICollection&lt;YamlNode&gt; containing the values of the <see cref="T:System.Yaml.YamlMapping"/>.
+            </summary>
+        </member>
+        <member name="P:System.Yaml.YamlMapping.Item(System.Yaml.YamlNode)">
+            <summary>
+            Gets or sets the element with the specified key.
+            </summary>
+            <param name="key">The key of the element to get or set.</param>
+            <returns>The element with the specified key.</returns>
+            <exception cref="T:System.ArgumentNullException">key is a null reference</exception>
+            <exception cref="T:System.Collections.Generic.KeyNotFoundException">The property is retrieved and key is not found.</exception>
+        </member>
+        <member name="P:System.Yaml.YamlMapping.Count">
+            <summary>
+            Returns the number of entries in a <see cref="T:System.Yaml.YamlMapping"/>.
+            </summary>
+        </member>
+        <member name="T:System.Yaml.YamlSequence">
+            <summary>
+            Represents a sequence node in a YAML document.
+            Use <see cref="T:System.Collections.Generic.IList`1">IList&lt;YamlNode&gt;</see> interface 
+            to manipulate child nodes.
+            </summary>
+        </member>
+        <member name="M:System.Yaml.YamlSequence.#ctor(System.Yaml.YamlNode[])">
+            <summary>
+            Create a sequence node that has <paramref name="nodes"/> as its child.
+            </summary>
+            <param name="nodes">Child nodes of the sequence.</param>
+        </member>
+        <member name="M:System.Yaml.YamlSequence.Dispose">
+            <summary>
+            Performs application-defined tasks associated with freeing, releasing, or
+            resetting unmanaged resources.
+            </summary>
+        </member>
+        <member name="M:System.Yaml.YamlSequence.GetHashCodeCoreSub(System.Int32,System.Collections.Generic.Dictionary{System.Yaml.YamlNode,System.Int32})">
+            <summary>
+            Calculates the hash code for a collection object. This function is called recursively 
+            on the child objects with the sub cache code repository for the nodes already appeared
+            in the node tree.
+            </summary>
+            <param name="path">The cache code for the path where this node was found.</param>
+            <param name="dict">Repository of the nodes that already appeared in the node tree.
+            Sub hash code for the nodes can be refered to from this dictionary.</param>
+            <returns></returns>
+        </member>
+        <member name="M:System.Yaml.YamlSequence.IndexOf(System.Yaml.YamlNode)">
+            <summary>
+            Determines the index of a specific child node in the <see cref="T:System.Yaml.YamlSequence"/>.
+            </summary>
+            <remarks>
+            If an node appears multiple times in the sequence, the IndexOf method always returns the first instance found.
+            </remarks>
+            <param name="item">The child node to locate in the <see cref="T:System.Yaml.YamlSequence"/>.</param>
+            <returns>The index of <paramref name="item"/> if found in the sequence; otherwise, -1.</returns>
+        </member>
+        <member name="M:System.Yaml.YamlSequence.Insert(System.Int32,System.Yaml.YamlNode)">
+            <summary>
+            Inserts an item to the <see cref="T:System.Yaml.YamlSequence"/> at the specified <paramref name="index"/>.
+            </summary>
+            <param name="index">The zero-based index at which <paramref name="item"/> should be inserted.</param>
+            <param name="item">The node to insert into the <see cref="T:System.Yaml.YamlSequence"/>.</param>
+            <exception cref="T:System.ArgumentOutOfRangeException"><paramref name="index"/> is not a valid index in the 
+            <see cref="T:System.Yaml.YamlSequence"/>.</exception>
+            <remarks>
+            <para>If <paramref name="index"/> equals the number of items in the <see cref="T:System.Yaml.YamlSequence"/>, 
+            then <paramref name="item"/> is appended to the sequence.</para>
+            <para>The nodes that follow the insertion point move down to accommodate the new node.</para>
+            </remarks>
+        </member>
+        <member name="M:System.Yaml.YamlSequence.RemoveAt(System.Int32)">
+            <summary>
+            Removes the <see cref="T:System.Yaml.YamlSequence"/> item at the specified index.
+            </summary>
+            <param name="index">The zero-based index of the node to remove.</param>
+            <exception cref="T:System.ArgumentOutOfRangeException"><paramref name="index"/> is not a valid index in the <see cref="T:System.Yaml.YamlSequence"/>.</exception>
+            <remarks>
+            The nodes that follow the removed node move up to occupy the vacated spot. 
+            </remarks>
+        </member>
+        <member name="M:System.Yaml.YamlSequence.Add(System.Yaml.YamlNode)">
+            <summary>
+            Adds an item to the <see cref="T:System.Yaml.YamlSequence"/>.
+            </summary>
+            <param name="item">The node to add to the <see cref="T:System.Yaml.YamlSequence"/>.</param>
+        </member>
+        <member name="M:System.Yaml.YamlSequence.Clear">
+            <summary>
+            Removes all nodes from the <see cref="T:System.Yaml.YamlSequence"/>.
+            </summary>
+        </member>
+        <member name="M:System.Yaml.YamlSequence.Contains(System.Yaml.YamlNode)">
+            <summary>
+            Determines whether a sequence contains a child node that equals to the specified <paramref name="value"/>
+            by using the default equality comparer.
+            </summary>
+            <param name="value">The node value to locate in the sequence.</param>
+            <returns>true If the sequence contains an node that has the specified value; otherwise, false.</returns>
+            <example>
+            <code>
+            var seq = new YamlSequence(new YamlScalar("a"));
+            
+            // different object that has same value
+            Assert.IsTrue(seq.Contains(new YamlScalar("a")));
+            
+            // different value
+            Assert.IsFalse(s.Contains(str("b")));
+            </code>
+            </example>
+        </member>
+        <member name="M:System.Yaml.YamlSequence.CopyTo(System.Yaml.YamlNode[],System.Int32)">
+            <summary>
+            Copies the child nodes of the <see cref="T:System.Yaml.YamlSequence"/> to an <see cref="T:System.Array"/>, starting at a particular <see cref="T:System.Array"/> index.
+            </summary>
+            <param name="array">The one-dimensional <see cref="T:System.Array"/> that is the destination of the elements copied from <see cref="T:System.Yaml.YamlSequence"/>.</param>
+            <param name="arrayIndex">The zero-based index in <paramref name="array"/> at which copying begins.</param>
+            <exception cref="T:System.ArgumentNullException"><paramref name="array"/> is a null reference.</exception>
+            <exception cref="T:System.ArgumentOutOfRangeException"><paramref name="arrayIndex"/> is less than 0.</exception>
+            <exception cref="T:System.ArgumentException">
+            <para>array is multidimensional.</para>
+            <para>-or-</para>
+            <para>The number of elements in the source <see cref="T:System.Yaml.YamlSequence"/> is greater than the available space from 
+            <paramref name="arrayIndex"/> to the end of the destination array.</para>
+            </exception>
+        </member>
+        <member name="M:System.Yaml.YamlSequence.Remove(System.Yaml.YamlNode)">
+            <summary>
+            Removes the first occurrence of a specific node from the <see cref="T:System.Yaml.YamlSequence"/>.
+            </summary>
+            <param name="node">The node to remove from the <see cref="T:System.Yaml.YamlSequence"/>.</param>
+            <returns> true if <paramref name="node"/> was successfully removed from the <see cref="T:System.Yaml.YamlSequence"/>; otherwise, false. 
+            This method also returns false if <paramref name="node"/> is not found in the original <see cref="T:System.Yaml.YamlSequence"/>.</returns>
+            
+        </member>
+        <member name="M:System.Yaml.YamlSequence.GetEnumerator">
+            <summary>
+            Returns an enumerator that iterates through the all child nodes.
+            </summary>
+            <returns>An enumerator that iterates through the all child nodes.</returns>
+        </member>
+        <member name="P:System.Yaml.YamlSequence.Item(System.Int32)">
+            <summary>
+            Gets or sets the node at the specified index.
+            </summary>
+            <param name="index">The zero-based index of the node to get or set.</param>
+            <returns>The node at the specified index.</returns>
+            <exception cref="T:System.ArgumentOutOfRangeException"><paramref name="index"/> is not a valid index in the <see cref="T:System.Yaml.YamlSequence"/>).</exception>
+            <remarks>
+            <para>This property provides the ability to access a specific node in the sequence by using the following syntax: mySequence[index].</para>
+            </remarks>
+        </member>
+        <member name="P:System.Yaml.YamlSequence.Count">
+            <summary>
+            Gets the number of child nodes of the <see cref="T:System.Yaml.YamlSequence"/>.
+            </summary>
+            <value>The number of child nodes of the sequence.</value>
+        </member>
+        <member name="T:System.Yaml.Serialization.YamlSerializer">
+             <summary>
+             <para><see cref="T:System.Yaml.Serialization.YamlSerializer"/> class has instance methods <see cref="M:System.Yaml.Serialization.YamlSerializer.Serialize(System.Object)"/> and <see cref="M:System.Yaml.Serialization.YamlSerializer.Deserialize(System.String,System.Type[])"/>, 
+             with which C# native objects can be converted into / from YAML text without any preparations.</para>
+             <code>
+             var serializer = new YamlSerializer();
+             object obj = GetObjectToSerialize();
+             string yaml = serializer.Serialize(obj);
+             object restored = serializer.Deserialize(yaml);
+             Assert.AreEqual(obj, restored);
+             </code>
+             </summary>
+             
+             <remarks>
+             <h3>What kind of objects can be serialized?</h3>
+             
+             <para><see cref="T:System.Yaml.Serialization.YamlSerializer"/> can serialize / deserialize native C# objects of primitive types 
+             (bool, char, int,...), enums, built-in non-primitive types (string, decimal), structures, 
+             classes and arrays of these types. </para>
+             
+             <para>
+             On the other hand, it does not deal with IntPtr (which is a primitive type, though) and 
+             pointer types (void*, int*, ...) because these types are, by their nature, not persistent.
+             </para>
+             
+             <para>
+             Classes without a default constructor can be deserialized only when the way of activating an instance 
+             is explicitly specified by <see cref="M:System.Yaml.YamlConfig.AddActivator``1(System.Func{System.Object})"/>.
+             </para>
+             
+             <para><code>
+             object obj = new object[]{ 
+                 null,
+                 "abc", 
+                 true, 
+                 1, 
+                 (Byte)1,
+                 1.0, 
+                 "1",
+                 new double[]{ 1.1, 2, -3 },
+                 new string[]{ "def", "ghi", "1" },
+                 new System.Drawing.Point(1,3), 
+                 new System.Drawing.SolidBrush(Color.Blue)
+             };
+             
+             var serializer = new YamlSerializer();
+             string yaml = serializer.Serialize(obj);
+             // %YAML 1.2
+             // ---
+             // - null
+             // - abc
+             // - True
+             // - 1
+             // - !System.Byte 1
+             // - !!float 1
+             // - "1"
+             // - !&lt;!System.Double[]%gt; [1.1, 2, -3]
+             // - !&lt;!System.String[]%gt;
+             //   - def
+             //   - ghi
+             // - !System.Drawing.Point 1, 3
+             // - !System.Drawing.SolidBrush
+             //   Color: Blue
+             // ...
+             
+             object restored;
+             try {
+                 restored = YamlSerializer.Deserialize(yaml)[0];
+             } catch(MissingMethodException) {
+                 // default constructor is missing for SolidBrush
+             }
+              
+             // Let the library know how to activate an instance of SolidBrush.
+             YamlNode.DefaultConfig.AddActivator&lt;System.Drawing.SolidBrush&gt;(
+                 () =&gt; new System.Drawing.SolidBrush(Color.Black /* dummy */));
+             
+             // Then, all the objects can be restored correctly.
+             restored = serializer.Deserialize(yaml)[0];
+             </code></para>
+             
+             <para>A YAML document generated by <see cref="T:System.Yaml.Serialization.YamlSerializer"/> always have a %YAML directive and
+             explicit document start (<c>"---"</c>) and end (<c>"..."</c>) marks. 
+             This allows several documents to be written in a single YAML stream.</para>
+             
+             <code>
+              var yaml = "";
+              var serializer = new YamlSerializer();
+              yaml += serializer.Serialize("a");
+              yaml += serializer.Serialize(1);
+              yaml += serializer.Serialize(1.1);
+              // %YAML 1.2
+              // ---
+              // a
+              // ...
+              // %YAML 1.2
+              // ---
+              // 1
+              // ...
+              // %YAML 1.2
+              // ---
+              // 1.1
+              // ...
+             
+              object[] objects = serializer.Deserialize(yaml);
+              // objects[0] == "a"
+              // objects[1] == 1
+              // objects[2] == 1.1
+             </code>
+             
+             <para>Since a YAML stream can consist of multiple YAML documents as above,
+             <see cref="M:System.Yaml.Serialization.YamlSerializer.Deserialize(System.String,System.Type[])"/> returns an array of <see cref="T:System.Object"/>.
+             </para>
+             
+             <h3>Serializing structures and classes</h3>
+             
+             <para>For structures and classes, by default, all public fields and public properties are 
+             serialized. Note that protected / private members are always ignored.</para>
+             
+             <h4>Serialization methods</h4>
+             
+             <para>Readonly value-type members are also ignored because there is no way to 
+             assign a new value to them on deserialization, while readonly class-type members 
+             are serialized. When deserializing, instead of creating a new object and assigning it 
+             to the member, the child members of such class instance are restored independently. 
+             Such a deserializing method is refered to <see cref="F:System.Yaml.Serialization.YamlSerializeMethod.Content">
+             YamlSerializeMethod.Content</see>. 
+             </para>
+             <para>
+             On the other hand, when writeable fields/properties are deserialized, new objects are 
+             created by using the parameters in the YAML description and assiend to the fields/properties. 
+             Such a deserializing method is refered to <see cref="F:System.Yaml.Serialization.YamlSerializeMethod.Assign">
+             YamlSerializeMethod.Assign</see>. Writeable properties can be explicitly specified to use 
+             <see cref="F:System.Yaml.Serialization.YamlSerializeMethod.Content"> YamlSerializeMethod.Content</see> method for 
+             deserialization, by adding <see cref="T:System.Yaml.Serialization.YamlSerializeAttribute"/> to its definition.
+             </para>
+             
+             <para>Another type of serializing method is <see cref="F:System.Yaml.Serialization.YamlSerializeMethod.Binary">
+             YamlSerializeMethod.Binary</see>. 
+             This method is only applicable to an array-type field / property that contains
+             only value-type members.</para>
+             
+             <para>If serializing method <see cref="F:System.Yaml.Serialization.YamlSerializeMethod.Never"/> is specified,
+             the member is never serialized nor deserialized.</para>
+             
+             <code>
+             public class Test1
+             {
+                 public int PublicProp { get; set; }         // processed (by assign)
+                 protected int ProtectedProp { get; set; }           // Ignored
+                 private int PrivateProp { get; set; }               // Ignored
+                 internal int InternalProp { get; set; }             // Ignored
+             
+                 public int PublicField;                     // processed (by assign)
+                 protected int ProtectedField;                       // Ignored
+                 private int PrivateField;                           // Ignored
+                 internal int InternalField;                         // Ignored
+             
+                 public List&lt;string&gt; ClassPropByAssign // processed (by assign)
+                 { get; set; }
+                 
+                 public int ReadOnlyValueProp { get; private set; }  // Ignored
+                 public List&lt;string&gt; ReadOnlyClassProp // processed (by content)
+                 { get; private set; }
+             
+                 [YamlSerialize(YamlSerializeMethod.Content)]
+                 public List&lt;string&gt; ClassPropByContent// processed (by content)
+                 { get; set; }
+            
+                 public int[] IntArrayField =                // processed (by assign)
+                    new int[10];
+            
+                 [YamlSerialize(YamlSerializeMethod.Binary)]
+                 public int[] IntArrayFieldBinary =          // processed (as binary)
+                    new int[100];
+            
+                 [YamlSerialize(YamlSerializeMethod.Never)]
+                 public int PublicPropHidden;                        // Ignored
+            
+                 public Test1()
+                 {
+                     ClassPropByAssign = new List&lt;string&gt;();
+                     ReadOnlyClassProp = new List&lt;string&gt;();
+                     ClassPropByContent = new List&lt;string&gt;();
+                 }
+             }
+             
+             public void TestPropertiesAndFields1()
+             {
+                var test1 = new Test1();
+                test1.ClassPropByAssign.Add("abc");
+                test1.ReadOnlyClassProp.Add("def");
+                test1.ClassPropByContent.Add("ghi");
+                var rand = new Random(0);
+                for ( int i = 0; i &lt; test1.IntArrayFieldBinary.Length; i++ )
+                    test1.IntArrayFieldBinary[i] = rand.Next();
+             
+                var serializer = new YamlSerializer();
+                string yaml = serializer.Serialize(test1);
+                // %YAML 1.2
+                // ---
+                // !YamlSerializerTest.Test1
+                // PublicProp: 0
+                // ClassPropByAssign: 
+                //   Capacity: 4
+                //   ICollection.Items: 
+                //     - abc
+                // ReadOnlyClassProp: 
+                //   Capacity: 4
+                //   ICollection.Items: 
+                //     - def
+                // ClassPropByContent: 
+                //   Capacity: 4
+                //   ICollection.Items: 
+                //     - ghi
+                // PublicField: 0
+                // IntArrayField: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+                // IntArrayFieldBinary: |+2
+                //   Gor1XAwenmhGkU5ib9NxR11LXxp1iYlH5LH4c9hImTitWSB9Z78II2UvXSXV99A79fj6UBn3GDzbIbd9
+                //   yBDjAyslYm58iGd/NN+tVjuLRCg3cJBo+PWMbIWm9n4AEC0E7LKXWV5HXUNk7I13APEDWFMM/kWTz2EK
+                //   s7LzFw2gBjpKugkmQJqIfinpQ1J1yqhhz/XjA3TBxDBsEuwrD+SNevQSqEC+/KRbwgE6D011ACMeyRt0
+                //   BOG6ZesRKCtL0YU6tSnLEpgKVBz+R300qD3/W0aZVk+1vHU+auzyGCGUaHCGd6dpRoEhXoIg2m3+AwJX
+                //   EJ37T+TA9BuEPJtyGoq+crQMFQtXj1Zriz3HFbReclLvDdVpZlcOHPga/3+3Y509EHZ7UyT7H1xGeJxn
+                //   eXPrDDb0Ul04MfZb4UYREOfR3HNzNTUYGRsIPUvHOEW7AaoplIfkVQp19DvGBrBqlP2TZ9atlWUHVdth
+                //   7lIBeIh0wiXxoOpCbQ7qVP9GkioQUrMkOcAJaad3exyZaOsXxznFCA==
+                // ...
+             }
+             </code>
+             
+             <h4>Default values of fields and properties</h4>
+             
+             <para><see cref="T:System.Yaml.Serialization.YamlSerializer"/> is aware of <see cref="T:System.ComponentModel.DefaultValueAttribute">
+             System.ComponentModel.DefaultValueAttribute</see>.
+             So, when a member of a structure / class instance has a value that equals to the default value, 
+             the member will not be written in the YAML text.</para>
+             
+             <para>It also checkes for the result of ShouldSerializeXXX method. For instance, just before serializing <c>Font</c>
+             property of some type, <c>bool ShouldSerializeFont()</c> method is called if exists. If the method returns false, 
+             <c>Font</c> property will not be written in the YAML text. ShouldSerializeXXX method can be non-public.</para>
+             
+             <code>
+             using System.ComponentModel;
+             
+             public class Test2
+             {
+                 [DefaultValue(0)]
+                 public int Default0 = 0;
+             
+                 [DefaultValue("a")]
+                 public string Defaulta = "a";
+             
+                 public int DynamicDefault = 0;
+             
+                 bool ShouldSerializeDynamicDefault()
+                 {
+                     return Default0 != DynamicDefault;
+                 }
+             }
+             
+             public void TestDefaultValue()
+             {
+                 var test2 = new Test2();
+                 var serializer = new YamlSerializer();
+                 
+                 // All properties have defalut values.
+                 var yaml = serializer.Serialize(test2);
+                 // %YAML 1.2
+                 // ---
+                 // !YamlSerializerTest.Test2 {}
+                 // ...
+             
+                 test2.Defaulta = "b";
+                 yaml = serializer.Serialize(test2);
+                 // %YAML 1.2
+                 // ---
+                 // !YamlSerializerTest.Test2
+                 // Defaulta: b
+                 // ...
+             
+                 test2.Defaulta = "a";
+                 var yaml = serializer.Serialize(test2);
+                 // %YAML 1.2
+                 // ---
+                 // !YamlSerializerTest.Test2 {}
+                 // ...
+             
+                 test2.DynamicDefault = 1;
+                 yaml = serializer.Serialize(test2);
+                 // %YAML 1.2
+                 // ---
+                 // !YamlSerializerTest.Test2
+                 // DynamicDefault: 1
+                 // ...
+             
+                 test2.Default0 = 1;
+                 yaml = serializer.Serialize(test2);
+                 // %YAML 1.2
+                 // ---
+                 // !YamlSerializerTest.Test2
+                 // Default0: 1
+                 // ...
+             }
+             </code>
+             
+             <h4>Collection classes</h4>
+             
+             <para>If an object implements <see cref="T:System.Collections.Generic.ICollection`1"/>, <see cref="T:System.Collections.IList"/> or <see cref="T:System.Collections.IDictionary"/>
+             the child objects are serialized as well its other public members. 
+             Pseudproperty <c>ICollection.Items</c> or <c>IDictionary.Entries</c> appears to hold the child objects.</para>
+             
+             <h3>Multitime appearance of a same object</h3>
+             
+             <para><see cref="T:System.Yaml.Serialization.YamlSerializer"/> preserve C# objects' graph structure. Namely, when a same objects are refered to
+             from several points in the object graph, the structure is correctly described in YAML text and restored objects
+             preserve the structure. <see cref="T:System.Yaml.Serialization.YamlSerializer"/> can safely manipulate directly / indirectly self refering 
+             objects, too.</para>
+             
+             <code>
+             public class TestClass
+             {
+                 public List&lt;TestClass&gt; list = 
+                     new List&lt;TestClass&gt;();
+             }
+             
+             public class ChildClass: TestClass
+             {
+             }
+             
+             void RecursiveObjectsTest()
+             {
+                 var a = new TestClass();
+                 var b = new ChildClass();
+                 a.list.Add(a);
+                 a.list.Add(a);
+                 a.list.Add(b);
+                 a.list.Add(a);
+                 a.list.Add(b);
+                 b.list.Add(a);
+                 var serializer = new YamlSerializer();
+                 string yaml = serializer.Serialize(a);
+                 // %YAML 1.2
+                 // ---
+                 // &amp;A !TestClass
+                 // list: 
+                 //   Capacity: 8
+                 //   ICollection.Items: 
+                 //     - *A
+                 //     - *A
+                 //     - &amp;B !ChildClass
+                 //       list: 
+                 //         Capacity: 4
+                 //         ICollection.Items: 
+                 //           - *A
+                 //     - *A
+                 //     - *B
+                 // ...
+                 
+                 var restored = (TestClass)serializer.Deserialize(yaml)[0];
+                 Assert.IsTrue(restored == restored.list[0]);
+                 Assert.IsTrue(restored == restored.list[1]);
+                 Assert.IsTrue(restored == restored.list[3]);
+                 Assert.IsTrue(restored == restored.list[5]);
+                 Assert.IsTrue(restored.list[2] == restored.list[4]);
+             }
+             </code>
+             
+             <para>This is not the case if the object is <see cref="T:System.String"/>. Same instances of 
+             <see cref="T:System.String"/> are repeatedly written in a YAML text and restored as different 
+             instance of <see cref="T:System.String"/> when deserialized, unless the content of the string
+             is extremely long (longer than 999 chars).</para>
+             
+             <code>
+              // 1000 chars
+              string long_str =
+                  "0123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789" +
+                  "0123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789" +
+                  "0123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789" +
+                  "0123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789" +
+                  "0123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789" +
+                  "0123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789" +
+                  "0123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789" +
+                  "0123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789" +
+                  "0123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789" +
+                  "0123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789";
+              string short_str = "12345";
+              object obj = new object[] { long_str, long_str, short_str, short_str };
+              var serializer = new YamlSerializer();
+              string yaml = serializer.Serialize(obj);
+              // %YAML 1.2
+              // ---
+              // - &amp;A 01234567890123456789012345678901234567890123456789 ... (snip) ... 789
+              // - *A
+              // - "12345"
+              // - "12345"
+              // ...
+             </code>
+             
+             <h3>YAML text written / read by <see cref="T:System.Yaml.Serialization.YamlSerializer"/></h3>
+             
+             <para>When serializing, <see cref="T:System.Yaml.Serialization.YamlSerializer"/> intelligently uses various YAML 1.2 styles, 
+             namely the block style, flow style, explicit mapping and implicit mapping, to maximize readability
+             of the YAML stream.</para>
+             
+             <code>
+             [Flags]
+             enum TestEnum: uint 
+             { 
+                 abc = 1, 
+                 あいう = 2 
+             } 
+             
+             public void TestVariousFormats()
+             {
+                 var dict = new Dictionary&lt;object, object&gt;();
+                 dict.Add(new object[] { 1, "a" }, new object());
+                 object obj = new object[]{
+                     dict,
+                     null,
+                     "abc",
+                     "1",
+                     "a ",
+                     "- a",
+                     "abc\n", 
+                     "abc\ndef\n", 
+                     "abc\ndef\nghi", 
+                     new double[]{ 1.1, 2, -3, 3.12, 13.2 },
+                     new int[,] { { 1, 3}, {4, 5}, {10, 1} },
+                     new string[]{ "jkl", "mno\npqr" },
+                     new System.Drawing.Point(1,3),
+                     TestEnum.abc,
+                     TestEnum.abc | TestEnum.あいう,
+                 };
+                 var config = new YamlConfig();
+                 config.ExplicitlyPreserveLineBreaks = false;
+                 var serializer = new YamlSerializer(config);
+                 string yaml = serializer.Serialize(obj);
+                 
+                 // %YAML 1.2
+                 // ---
+                 // - !&lt;!System.Collections.Generic.Dictionary%602[[System.Object,...],[System.Object,...]]&gt;
+                 //   Keys: {}
+                 //   Values: {}
+                 //   IDictionary.Entries: 
+                 //     ? - 1
+                 //       - a
+                 //     : !System.Object {}
+                 // - null
+                 // - abc
+                 // - "1"
+                 // - "a "
+                 // - "- a"
+                 // - "abc\n"
+                 // - |+2
+                 //   abc
+                 //   def
+                 // - |-2
+                 //   abc
+                 //   def
+                 //     ghi
+                 // - !&lt;!System.Double[]&gt; [1.1, 2, -3, 3.12, 13.2]
+                 // - !&lt;!System.Int32[,]&gt; [[1, 3], [4, 5], [10, 1]]
+                 // - !&lt;!System.String[]&gt;
+                 //   - jkl
+                 //   - |-2
+                 //     mno
+                 //     pqr
+                 // - !System.Drawing.Point 1, 3
+                 // - !TestEnum abc
+                 // - !TestEnum abc, あいう
+                 // ...
+             }
+             </code>
+             
+             <para>When deserializing, <see cref="T:System.Yaml.Serialization.YamlSerializer"/> accepts any valid YAML 1.2 documents.
+             TAG directives, comments, flow / block styles, implicit / explicit mappings can be freely used
+             to express valid C# objects. Namely, the members of the array can be given eighter in a flow style
+             or in a block style.
+             </para>
+             
+             <para>By default, <see cref="T:System.Yaml.Serialization.YamlSerializer"/> outputs a YAML stream with line break of "\r\n".
+             This can be customized either by setting <c>YamlNode.DefaultConfig.LineBreakForOutput</c> or 
+             by giving an instance of <see cref="T:System.Yaml.YamlConfig"/> to the <see cref="M:System.Yaml.Serialization.YamlSerializer.#ctor(System.Yaml.YamlConfig)">
+             constructor</see>.
+             </para>
+             
+             <code>
+             var serializer = new YamlSerializer();
+             var yaml = serializer.Serialize("abc");
+             // %YAML 1.2\r\n    // line breaks are explicitly shown in this example
+             // ---\r\n
+             // abc\r\n
+             // ...\r\n
+             
+             var config = new YamlConfig();
+             config.LineBreakForOutput = "\n";
+             serializer = new YamlSerializer(config);
+             var yaml = serializer.Serialize("abc");
+             // %YAML 1.2\n
+             // ---\n
+             // abc\n
+             // ...\n
+             
+             YamlNode.DefaultConfig.LineBreakForOutput = "\n";
+             
+             var serializer = new YamlSerializer();
+             serializer = new YamlSerializer();
+             var yaml = serializer.Serialize("abc");
+             // %YAML 1.2\n
+             // ---\n
+             // abc\n
+             // ...\n
+             </code>
+             
+             <h4>Line breaks in YAML text</h4>
+             
+             <para>By default, line breaks in multi line values are explicitly presented as escaped style. 
+             Although, this makes the resulting YAML stream hard to read, it is necessary to preserve
+             the exact content of the string because the YAML specification requires that a YAML parser 
+             must normalize evely line break that is not escaped in a YAML document to be a single line 
+             feed "\n" when deserializing.</para>
+             
+             <para>In order to have the YAML documents easy to be read, set 
+             <see cref="F:System.Yaml.YamlConfig.ExplicitlyPreserveLineBreaks">YamlConfig.ExplicitlyPreserveLineBreaks
+             </see> false. Then, the multiline values of will be written in literal style.</para> 
+             
+             <para>Of course, it makes all the line breaks to be normalized into a single line feeds "\n".</para>
+             
+             <code>
+             var serializer = new YamlSerializer();
+             var text = "abc\r\n  def\r\nghi\r\n";
+             // abc
+             //   def
+             // ghi
+             
+             // By default, line breaks explicitly appears in escaped form.
+             var yaml = serializer.Serialize(text);
+             // %YAML 1.2
+             // ---
+             // "abc\r\n\
+             // \  def\r\n\
+             // ghi\r\n"
+             // ...
+             
+             // Original line breaks are preserved
+             var restored = (string)serializer.Deserialize(yaml)[0];
+             // "abc\r\n  def\r\nghi\r\n"
+            
+             
+             YamlNode.DefaultConfig.ExplicitlyPreserveLineBreaks = false;
+             
+             // Literal style is easier to be read.
+             var yaml = serializer.Serialize(text);
+             // %YAML 1.2
+             // ---
+             // |+2
+             //   abc
+             //     def
+             //   ghi
+             // ...
+             
+             // Original line breaks are lost.
+             var restored = (string)serializer.Deserialize(yaml)[0];
+             // "abc\n  def\nghi\n"
+             </code>
+             
+             <para>This library offers two work arounds for this problem, although both of which
+             violates the official behavior of a YAML parser defined in the YAML specification.</para>
+             
+             <para>One is to set <see cref="F:System.Yaml.YamlConfig.LineBreakForInput">YamlConfig.LineBreakForInput</see> 
+             to be "\r\n". Then, the YAML parser normalizes all line breaks into "\r\n" instead of "\n".</para>
+            
+             <para>The other is to set <see cref="F:System.Yaml.YamlConfig.NormalizeLineBreaks">YamlConfig.NormalizeLineBreaks</see> 
+             false. It disables the line break normalization both at output and at input. Namely, the line breaks are 
+             written and read as-is when serialized / deserialized.</para>
+             
+             <code>
+             var serializer = new YamlSerializer();
+             
+             // text with mixed line breaks
+             var text = "abc\r  def\nghi\r\n"; 
+             // abc\r        // line breaks are explicitly shown in this example
+             //   def\n
+             // ghi\r\n
+             
+             YamlNode.DefaultConfig.ExplicitlyPreserveLineBreaks = false;
+             
+             // By default, all line breaks are normalized to "\r\n" when serialized.
+             var yaml = serializer.Serialize(text);
+             // %YAML 1.2\r\n
+             // ---\r\n
+             // |+2\r\n
+             //   abc\r\n
+             //     def\r\n
+             //   ghi\r\n
+             // ...\r\n
+             
+             // When deserialized, line breaks are normalized into "\n".
+             var restored = (string)serializer.Deserialize(yaml)[0];
+             // "abc\n  def\nghi\n"
+             
+             // Line breaks are normalized into "\r\n" instead of "\n".
+             YamlNode.DefaultConfig.LineBreakForInput = "\r\n";
+             restored = (string)serializer.Deserialize(yaml)[0];
+             // "abc\r\n  def\r\nghi\r\n"
+             
+             // Line breaks are written as is,
+             YamlNode.DefaultConfig.NormalizeLineBreaks = false;
+             var yaml = serializer.Serialize(text);
+             // %YAML 1.2\r\n
+             // ---\r\n
+             // |+2\r\n
+             //   abc\r
+             //     def\n
+             //   ghi\r\n
+             // ...\r\n
+             
+             // and are read as is.
+             restored = (string)serializer.Deserialize(yaml)[0];
+             // "abc\r  def\nghi\r\n"
+             
+             // Note that when the line breaks of YAML stream is changed 
+             // between serialization and deserialization, the original
+             // line breaks are lost.
+             yaml = yaml.Replace("\r\n", "\n").Replace("\r", "\n");
+             restored = (string)serializer.Deserialize(yaml)[0];
+             // "abc\n  def\nghi\n"
+             </code>
+             
+             <para>It is repeatedly stated that although these two options are useful in many situation,
+             they makes the YAML parser violate the YAML specification. </para>
+             
+             </remarks>
+        </member>
+        <member name="M:System.Yaml.Serialization.YamlSerializer.#ctor">
+            <summary>
+            Initialize an instance of <see cref="T:System.Yaml.Serialization.YamlSerializer"/> that obeys
+            <see cref="P:System.Yaml.YamlNode.DefaultConfig"/>.
+            </summary>
+        </member>
+        <member name="M:System.Yaml.Serialization.YamlSerializer.#ctor(System.Yaml.YamlConfig)">
+            <summary>
+            Initialize an instance of <see cref="T:System.Yaml.Serialization.YamlSerializer"/> with custom <paramref name="config"/>.
+            </summary>
+            <param name="config">Custom <see cref="T:System.Yaml.YamlConfig"/> to customize serialization.</param>
+        </member>
+        <member name="M:System.Yaml.Serialization.YamlSerializer.Serialize(System.Object)">
+            <summary>
+            Serialize C# object <paramref name="obj"/> into YAML text.
+            </summary>
+            <param name="obj">Object to be serialized.</param>
+            <returns>YAML text.</returns>
+        </member>
+        <member name="M:System.Yaml.Serialization.YamlSerializer.Serialize(System.IO.Stream,System.Object)">
+            <summary>
+            Serialize C# object <paramref name="obj"/> into YAML text and write it into a <see cref="T:System.IO.Stream"/> <paramref name="s"/>.
+            </summary>
+            <param name="s">A <see cref="T:System.IO.Stream"/> to which the YAML text is written.</param>
+            <param name="obj">Object to be serialized.</param>
+        </member>
+        <member name="M:System.Yaml.Serialization.YamlSerializer.Serialize(System.IO.TextWriter,System.Object)">
+            <summary>
+            Serialize C# object <paramref name="obj"/> into YAML text and write it into a <see cref="T:System.IO.TextWriter"/> <paramref name="tw"/>.
+            </summary>
+            <param name="tw">A <see cref="T:System.IO.TextWriter"/> to which the YAML text is written.</param>
+            <param name="obj">Object to be serialized.</param>
+        </member>
+        <member name="M:System.Yaml.Serialization.YamlSerializer.SerializeToFile(System.String,System.Object)">
+            <summary>
+            Serialize C# object <paramref name="obj"/> into YAML text and save it into a file named as <paramref name="YamlFileName"/>.
+            </summary>
+            <param name="YamlFileName">A file name to which the YAML text is written.</param>
+            <param name="obj">Object to be serialized.</param>
+        </member>
+        <member name="M:System.Yaml.Serialization.YamlSerializer.Deserialize(System.String,System.Type[])">
+            <summary>
+            Deserialize C# object(s) from a YAML text. Since a YAML text can contain multiple YAML documents, each of which 
+            represents a C# object, the result is returned as an array of <see cref="T:System.Object"/>.
+            </summary>
+            <param name="yaml">A YAML text from which C# objects are deserialized.</param>
+            <param name="types">Expected type(s) of the root object(s) in the YAML stream.</param>
+            <returns>C# object(s) deserialized from YAML text.</returns>
+        </member>
+        <member name="M:System.Yaml.Serialization.YamlSerializer.Deserialize(System.IO.Stream,System.Type[])">
+            <summary>
+            Deserialize C# object(s) from a YAML text in a <see cref="T:System.IO.Stream"/> <paramref name="s"/>. 
+            Since a YAML text can contain multiple YAML documents, each of which 
+            represents a C# object, the result is returned as an array of <see cref="T:System.Object"/>.
+            </summary>
+            <param name="s">A <see cref="T:System.IO.Stream"/> that contains YAML text from which C# objects are deserialized.</param>
+            <param name="types">Expected type(s) of the root object(s) in the YAML stream.</param>
+            <returns>C# object(s) deserialized from YAML text.</returns>
+        </member>
+        <member name="M:System.Yaml.Serialization.YamlSerializer.Deserialize(System.IO.TextReader,System.Type[])">
+            <summary>
+            Deserialize C# object(s) from a YAML text in a <see cref="T:System.IO.TextReader"/> <paramref name="tr"/>. 
+            Since a YAML text can contain multiple YAML documents, each of which 
+            represents a C# object, the result is returned as an array of <see cref="T:System.Object"/>.
+            </summary>
+            <param name="tr">A <see cref="T:System.IO.TextReader"/> that contains YAML text from which C# objects are deserialized.</param>
+            <param name="types">Expected type(s) of the root object(s) in the YAML stream.</param>
+            <returns>C# object(s) deserialized from YAML text.</returns>
+        </member>
+        <member name="M:System.Yaml.Serialization.YamlSerializer.DeserializeFromFile(System.String,System.Type[])">
+            <summary>
+            Deserialize C# object(s) from a YAML text in a file named as <paramref name="YamlFileName"/>. 
+            Since a YAML text can contain multiple YAML documents, each of which 
+            represents a C# object, the result is returned as an array of <see cref="T:System.Object"/>.
+            </summary>
+            <param name="YamlFileName">The name of a file that contains YAML text from which C# objects are deserialized.</param>
+            <param name="types">Expected type(s) of the root object(s) in the YAML stream.</param>
+            <returns>C# object(s) deserialized from YAML text.</returns>
+        </member>
+        <member name="T:System.Yaml.Serialization.StringExtention">
+            <summary>
+            Add .DoFunction method to string
+            </summary>
+        </member>
+        <member name="M:System.Yaml.Serialization.StringExtention.DoFormat(System.String,System.Object[])">
+            <summary>
+            Short expression of string.Format(XXX, arg1, arg2, ...)
+            </summary>
+            <param name="format"></param>
+            <param name="args"></param>
+            <returns></returns>
+        </member>
+        <member name="T:System.Yaml.Serialization.YamlSerializeMethod">
+            <summary>
+            <para>Specify the way to store a property or field of some class or structure.</para>
+            <para>See <see cref="T:System.Yaml.Serialization.YamlSerializer"/> for detail.</para>
+            </summary>
+            <seealso cref="T:System.Yaml.Serialization.YamlSerializeAttribute"/>
+            <seealso cref="T:System.Yaml.Serialization.YamlSerializer"/>
+        </member>
+        <member name="F:System.Yaml.Serialization.YamlSerializeMethod.Never">
+            <summary>
+            The property / field will not be stored.
+            </summary>
+        </member>
+        <member name="F:System.Yaml.Serialization.YamlSerializeMethod.Assign">
+            <summary>
+            When restored, new object is created by using the parameters in
+            the YAML data and assigned to the property / field. When the
+            property / filed is writeable, this is the default.
+            </summary>
+        </member>
+        <member name="F:System.Yaml.Serialization.YamlSerializeMethod.Content">
+            <summary>
+             Only valid for a property / field that has a class or struct type.
+             When restored, instead of recreating the whole class or struct,
+             the members are independently restored. When the property / field
+             is not writeable this is the default.
+            </summary>
+        </member>
+        <member name="F:System.Yaml.Serialization.YamlSerializeMethod.Binary">
+            <summary>
+             Only valid for a property / field that has an  array type of a 
+             some value type. The content of the array is stored in a binary
+             format encoded in base64 style.
+            </summary>
+        </member>
+        <member name="T:System.Yaml.Serialization.YamlSerializeAttribute">
+            <summary>
+            Specify the way to store a property or field of some class or structure.
+            
+            See <see cref="T:System.Yaml.Serialization.YamlSerializer"/> for detail.
+            </summary>
+            <seealso cref="T:System.Yaml.Serialization.YamlSerializeAttribute"/>
+            <seealso cref="T:System.Yaml.Serialization.YamlSerializer"/>
+        </member>
+        <member name="M:System.Yaml.Serialization.YamlSerializeAttribute.#ctor(System.Yaml.Serialization.YamlSerializeMethod)">
+            <summary>
+            Specify the way to store a property or field of some class or structure.
+            
+            See <see cref="T:System.Yaml.Serialization.YamlSerializer"/> for detail.
+            </summary>
+            <seealso cref="T:System.Yaml.Serialization.YamlSerializeAttribute"/>
+            <seealso cref="T:System.Yaml.Serialization.YamlSerializer"/>
+            <param name="SerializeMethod">
+             <para>
+             - Never:   The property / field will not be stored.</para>
+             
+             <para>
+             - Assign:  When restored, new object is created by using the parameters in
+                        the YAML data and assigned to the property / field. When the
+                        property / filed is writeable, this is the default.</para>
+             
+             <para>
+             - Content: Only valid for a property / field that has a class or struct type.
+                        When restored, instead of recreating the whole class or struct,
+                        the members are independently restored. When the property / field
+                        is not writeable this is the default.</para>
+            
+             <para>
+             - Binary:  Only valid for a property / field that has an  array type of a 
+                        some value type. The content of the array is stored in a binary
+                        format encoded in base64 style.</para>
+            
+            </param>
+        </member>
+        <member name="T:System.Yaml.TypeUtils">
+            <summary>
+            Type 関連のユーティリティメソッド
+            </summary>
+            <example>
+            <code>
+            Type type;
+            AttributeType attr = type.GetAttribute&lt;AttributeType&gt;();
+            
+            PropertyInfo propInfo;
+            AttributeType attr = propInfo.GetAttribute&lt;AttributeType&gt;();
+            
+            string name;
+            Type type = TypeUtils.GetType(name); // search from all assembly loaded
+            
+            
+            </code>
+            </example>
+        </member>
+        <member name="M:System.Yaml.TypeUtils.GetAttribute``1(System.Reflection.MemberInfo)">
+            <summary>
+            Type や PropertyInfo, FieldInfo から指定された型の属性を取り出して返す
+            複数存在した場合には最後の値を返す
+            存在しなければ null を返す
+            </summary>
+            <typeparam name="AttributeType">取り出したい属性の型</typeparam>
+            <returns>取り出した属性値</returns>
+        </member>
+        <member name="M:System.Yaml.TypeUtils.GetType(System.String)">
+            <summary>
+            現在ロードされているすべてのアセンブリから name という名の型を探して返す
+            </summary>
+            <param name="name"></param>
+            <returns></returns>
+        </member>
+        <member name="M:System.Yaml.TypeUtils.IsPureValueType(System.Type)">
+            <summary>
+            Check if the type is a ValueType and does not contain any non ValueType members.
+            </summary>
+            <param name="type"></param>
+            <returns></returns>
+        </member>
+        <member name="M:System.Yaml.TypeUtils.IsStruct(System.Type)">
+            <summary>
+            Returnes true if the specified <paramref name="type"/> is a struct type.
+            </summary>
+            <param name="type"><see cref="T:System.Type"/> to be analyzed.</param>
+            <returns>true if the specified <paramref name="type"/> is a struct type; otehrwise false.</returns>
+        </member>
+        <member name="M:System.Yaml.TypeUtils.AreEqual(System.Object,System.Object)">
+            <summary>
+            Compare two objects to see if they are equal or not. Null is acceptable.
+            </summary>
+            <param name="a"></param>
+            <param name="b"></param>
+            <returns></returns>
+        </member>
+        <member name="M:System.Yaml.TypeUtils.IsNumeric(System.Object)">
+            <summary>
+            Return if an object is a numeric value.
+            </summary>
+            <param name="obj">Any object to be tested.</param>
+            <returns>True if object is a numeric value.</returns>
+        </member>
+        <member name="M:System.Yaml.TypeUtils.CastToNumericType(System.Object,System.Type)">
+            <summary>
+            Cast an object to a specified numeric type.
+            </summary>
+            <param name="obj">Any object</param>
+            <param name="type">Numric type</param>
+            <returns>Numeric value or null if the object is not a numeric value.</returns>
+        </member>
+        <member name="M:System.Yaml.TypeUtils.CastToDouble(System.Object)">
+            <summary>
+            Cast boxed numeric value to double
+            </summary>
+            <param name="obj">boxed numeric value</param>
+            <returns>Numeric value in double. Double.Nan if obj is not a numeric value.</returns>
+        </member>
+        <member name="M:System.Yaml.TypeUtils.IsPublic(System.Type)">
+            <summary>
+            Check if type is fully public or not.
+            Nested class is checked if all declared types are public.
+            </summary>
+            <param name="type"></param>
+            <returns></returns>
+        </member>
+        <member name="T:System.Yaml.TypeUtils.EqualityComparerByRef`1">
+            <summary>
+            Equality comparer that uses Object.ReferenceEquals(x, y) to compare class values.
+            </summary>
+            <typeparam name="T"></typeparam>
+        </member>
+        <member name="M:System.Yaml.TypeUtils.EqualityComparerByRef`1.Equals(`0,`0)">
+            <summary>
+            Determines whether two objects of type  T are equal by calling Object.ReferenceEquals(x, y).
+            </summary>
+            <param name="x">The first object to compare.</param>
+            <param name="y">The second object to compare.</param>
+            <returns>true if the specified objects are equal; otherwise, false.</returns>
+        </member>
+        <member name="M:System.Yaml.TypeUtils.EqualityComparerByRef`1.GetHashCode(`0)">
+            <summary>
+            Serves as a hash function for the specified object for hashing algorithms and 
+            data structures, such as a hash table.
+            </summary>
+            <param name="obj">The object for which to get a hash code.</param>
+            <returns>A hash code for the specified object.</returns>
+            <exception cref="T:System.ArgumentNullException"><paramref name="obj"/> is null.</exception>
+        </member>
+        <member name="P:System.Yaml.TypeUtils.EqualityComparerByRef`1.Default">
+            <summary>
+            Returns a default equality comparer for the type specified by the generic argument.
+            </summary>
+            <value>The default instance of the System.Collections.Generic.EqualityComparer&lt;T&gt;
+             class for type T.</value>
+        </member>
+        <member name="T:System.Yaml.TypeUtils.HashCodeByRef`1">
+            <summary>
+            Calculate hash code by reference.
+            </summary>
+            <typeparam name="T"></typeparam>
+        </member>
+        <member name="M:System.Yaml.TypeUtils.HashCodeByRef`1.#cctor">
+            <summary>
+            Initializes a new instance of the HashCodeByRef&lt;T&gt; class.
+            </summary>
+        </member>
+        <member name="P:System.Yaml.TypeUtils.HashCodeByRef`1.GetHashCode">
+            <summary>
+            Calculate hash code by reference.
+            </summary>
+        </member>
+        <member name="T:System.Yaml.YamlTagResolver">
+            <summary>
+            Represents the way to automatically resolve Tag from the Value of a YamlScalar.
+            </summary>
+        </member>
+        <member name="M:System.Yaml.YamlTagResolver.#ctor">
+            <summary>
+            Create TagResolver with default resolution rules.
+            </summary>
+        </member>
+        <member name="M:System.Yaml.YamlTagResolver.AddDefaultRules">
+            <summary>
+            Add default tag resolution rules to the rule list.
+            </summary>
+        </member>
+        <member name="F:System.Yaml.YamlTagResolver.Rules">
+            <summary>
+            List of tag resolution rules.
+            </summary>
+        </member>
+        <member name="M:System.Yaml.YamlTagResolver.AddRule``1(System.String,System.String,System.Func{System.Text.RegularExpressions.Match,``0},System.Func{``0,System.String})">
+            <summary>
+            Add a tag resolution rule that is invoked when <paramref name="regex"/> matches 
+            the <see cref="P:System.Yaml.YamlScalar.Value">Value of</see> a <see cref="T:System.Yaml.YamlScalar"/> node.
+            
+            The tag is resolved to <paramref name="tag"/> and <paramref name="decode"/> is
+            invoked when actual value of type <typeparamref name="T"/> is extracted from 
+            the node text.
+            </summary>
+            <remarks>
+            Surround sequential calls of this function by <see cref="M:System.Yaml.YamlTagResolver.BeginUpdate"/> / <see cref="M:System.Yaml.YamlTagResolver.EndUpdate"/>
+            pair to avoid invoking slow internal calculation method many times.
+            </remarks>
+            <example>
+            <code>
+            BeginUpdate(); // to avoid invoking slow internal calculation method many times.
+            Add( ... );
+            Add( ... );
+            Add( ... );
+            Add( ... );
+            EndUpdate();   // automaticall invoke internal calculation method 
+            </code></example>
+            <param name="tag"></param>
+            <param name="regex"></param>
+            <param name="decode"></param>
+            <param name="encode"></param>
+        </member>
+        <member name="M:System.Yaml.YamlTagResolver.BeginUpdate">
+            <summary>
+            Supress invoking slow internal calculation method when 
+            <see cref="M:System.Yaml.YamlTagResolver.AddRule``1(System.String,System.String,System.Func{System.Text.RegularExpressions.Match,``0},System.Func{``0,System.String})"/> called.
+            
+            BeginUpdate / <see cref="M:System.Yaml.YamlTagResolver.EndUpdate"/> can be called nestedly.
+            </summary>
+        </member>
+        <member name="M:System.Yaml.YamlTagResolver.EndUpdate">
+            <summary>
+            Quit to supress invoking slow internal calculation method when 
+            <see cref="M:System.Yaml.YamlTagResolver.AddRule``1(System.String,System.String,System.Func{System.Text.RegularExpressions.Match,``0},System.Func{``0,System.String})"/> called.
+            </summary>
+        </member>
+        <member name="M:System.Yaml.YamlTagResolver.Resolve(System.String)">
+            <summary>
+            Execute tag resolution and returns automatically determined tag value from <paramref name="text"/>.
+            </summary>
+            <param name="text">Node text with which automatic tag resolution is done.</param>
+            <returns>Automatically determined tag value .</returns>
+        </member>
+        <member name="M:System.Yaml.YamlTagResolver.Decode(System.Yaml.YamlScalar,System.Object@)">
+            <summary>
+            Decode <paramref name="text"/> and returns actual value in C# object.
+            </summary>
+            <param name="node">Node to be decoded.</param>
+            <param name="obj">Decoded value.</param>
+            <returns>True if decoded successfully.</returns>
+        </member>
+        <member name="T:System.Yaml.StringYamlDoubleQuoteEscapeExtention">
+            <summary>
+            Extend string object to have .DoubleQuoteEscape() / .DoubleQuoteUnescape().
+            </summary>
+        </member>
+        <member name="M:System.Yaml.StringYamlDoubleQuoteEscapeExtention.YamlDoubleQuoteEscape(System.String)">
+            <summary>
+            Escape control codes with YAML double quoted string format.
+            </summary>
+            <param name="s"></param>
+            <returns></returns>
+        </member>
+        <member name="M:System.Yaml.StringYamlDoubleQuoteEscapeExtention.YamlDoubleQuoteUnescape(System.String)">
+            <summary>
+            Unescape control codes escaped with YAML double quoted string format.
+            </summary>
+            <param name="s"></param>
+            <returns></returns>
+        </member>
+        <member name="T:System.Yaml.YamlDoubleQuoteEscaping">
+            <summary>
+            YAML style double quoted string escape / unescape.
+            </summary>
+        </member>
+        <member name="M:System.Yaml.YamlDoubleQuoteEscaping.#cctor">
+            <summary>
+            Initialize tables
+            </summary>
+        </member>
+        <member name="M:System.Yaml.YamlDoubleQuoteEscaping.Escape(System.String)">
+            <summary>
+            Escape control codes, double quotations, backslashes in the YAML double quoted string format
+            </summary>
+        </member>
+        <member name="M:System.Yaml.YamlDoubleQuoteEscaping.Unescape(System.String)">
+            <summary>
+            Unescape control codes, double quotations, backslashes escape in the YAML double quoted string format
+            </summary>
+        </member>
+    </members>
+</doc>

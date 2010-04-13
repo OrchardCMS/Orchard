@@ -1,8 +1,8 @@
 ﻿<%@ Control Language="C#" Inherits="Orchard.Mvc.ViewUserControl<RoutableEditorViewModel>" %>
+<%@ Import Namespace="Orchard.Utility.Extensions"%>
 <%@ Import Namespace="Orchard.ContentManagement.Extenstions"%>
 <%@ Import Namespace="Orchard.ContentManagement"%>
 <%@ Import Namespace="Orchard.ContentManagement.Aspects"%>
-<%@ Import Namespace="Orchard.Extensions"%>
 <%@ Import Namespace="Orchard.Core.Common.ViewModels"%>
 <% Html.RegisterFootScript("jquery.slugify.js"); %>
 <fieldset>
