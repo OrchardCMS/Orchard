@@ -16,7 +16,7 @@ namespace Orchard.Commands {
     /// executing a single command.
     /// </summary>
     public class CommandHostAgent {
-        public void RunSingleCommand(TextReader input, TextWriter output, string tenant, string[] args, Dictionary<string,string> switches) {
+        public int RunSingleCommand(TextReader input, TextWriter output, string tenant, string[] args, Dictionary<string,string> switches) {
             try {
                 var hostContainer = OrchardStarter.CreateHostContainer(MvcSingletons);
                 var host = hostContainer.Resolve<IOrchardHost>();
@@ -37,11 +37,15 @@ namespace Orchard.Commands {
                     };
                     env.Resolve<ICommandManager>().Execute(parameters);
                 }
+
+                return 0;
             }
             catch (Exception e) {
                 for(; e != null; e = e.InnerException) {
-                    Console.WriteLine("Error: {0}", e.Message);
+                    output.WriteLine("Error: {0}", e.Message);
+                    output.WriteLine("{0}", e.StackTrace);
                 }
+                return 5;
             }
         }
 

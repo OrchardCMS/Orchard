@@ -16,8 +16,8 @@ namespace Orchard.Tests.Commands {
             Assert.That(descriptor.Commands.Count(), Is.EqualTo(4));
             Assert.That(descriptor.Commands.Single(d => d.Name == "FooBar"), Is.Not.Null);
             Assert.That(descriptor.Commands.Single(d => d.Name == "FooBar").MethodInfo, Is.EqualTo(typeof(MyCommand).GetMethod("FooBar")));
-            Assert.That(descriptor.Commands.Single(d => d.Name == "Whereslou"), Is.Not.Null);
-            Assert.That(descriptor.Commands.Single(d => d.Name == "Whereslou").MethodInfo, Is.EqualTo(typeof(MyCommand).GetMethod("FooBar2")));
+            Assert.That(descriptor.Commands.Single(d => d.Name == "MyCommand"), Is.Not.Null);
+            Assert.That(descriptor.Commands.Single(d => d.Name == "MyCommand").MethodInfo, Is.EqualTo(typeof(MyCommand).GetMethod("FooBar2")));
             Assert.That(descriptor.Commands.Single(d => d.Name == "Foo Bar"), Is.Not.Null);
             Assert.That(descriptor.Commands.Single(d => d.Name == "Foo Bar").MethodInfo, Is.EqualTo(typeof(MyCommand).GetMethod("Foo_Bar")));
             Assert.That(descriptor.Commands.Single(d => d.Name == "Foo_Bar"), Is.Not.Null);
@@ -28,14 +28,14 @@ namespace Orchard.Tests.Commands {
             public void FooBar() {
             }
 
-            [OrchardCommand("Whereslou")]
+            [CommandName("MyCommand")]
             public void FooBar2() {
             }
 
             public void Foo_Bar() {
             }
 
-            [OrchardCommand("Foo_Bar")]
+            [CommandName("Foo_Bar")]
             public void Foo_Bar3() {
             }
         }

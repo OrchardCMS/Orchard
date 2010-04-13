@@ -13,8 +13,7 @@ namespace Orchard.Commands {
         }
 
         public void Execute(CommandParameters parameters) {
-            var matches = _handlers.SelectMany(h => MatchCommands(parameters, GetDescriptor(h.Metadata), h.Value));
-
+            var matches = MatchCommands(parameters);
 
             // Workaround autofac integration: module registration is currently run twice...
             //if (matches.Count() == 1) {
@@ -32,18 +31,27 @@ namespace Orchard.Commands {
         }
 
         public IEnumerable<CommandDescriptor> GetCommandDescriptors() {
-            return _handlers.SelectMany(h => GetDescriptor(h.Metadata).Commands);
+            return _handlers
+                .SelectMany(h => GetDescriptor(h.Metadata).Commands)
+                // Workaround autofac integration: module registration is currently run twice...
+                .Distinct(new CommandsComparer());
         }
 
-        private class Match {
-            public CommandContext Context { get; set; }
-            public Func<ICommandHandler> CommandHandlerFactory { get; set; }
+        private IEnumerable<Match> MatchCommands(CommandParameters parameters) {
+            foreach (var argCount in Enumerable.Range(1, parameters.Arguments.Count()).Reverse()) {
+                int count = argCount;
+                var matches = _handlers.SelectMany(h => MatchCommands(parameters, count, GetDescriptor(h.Metadata), h.Value));
+                if (matches.Any())
+                    return matches;
+            }
+
+            return Enumerable.Empty<Match>();
         }
 
-        private static IEnumerable<Match> MatchCommands(CommandParameters parameters, CommandHandlerDescriptor descriptor, Func<ICommandHandler> handlerFactory) {
+        private static IEnumerable<Match> MatchCommands(CommandParameters parameters, int argCount, CommandHandlerDescriptor descriptor, Func<ICommandHandler> handlerFactory) {
             foreach (var commandDescriptor in descriptor.Commands) {
-                string[] names = commandDescriptor.Name.Split(' ');
-                if (!parameters.Arguments.Take(names.Count()).SequenceEqual(names, StringComparer.OrdinalIgnoreCase)) {
+                var names = commandDescriptor.Name.Split(' ');
+                if (!parameters.Arguments.Take(argCount).SequenceEqual(names, StringComparer.OrdinalIgnoreCase)) {
                     // leading arguments not equal to command name
                     continue;
                 }
@@ -51,7 +59,7 @@ namespace Orchard.Commands {
                 yield return new Match {
                     Context = new CommandContext {
                         Arguments = parameters.Arguments.Skip(names.Count()),
-                        Command = string.Join(" ",names),
+                        Command = string.Join(" ", names),
                         CommandDescriptor = commandDescriptor,
                         Input = parameters.Input,
                         Output = parameters.Output,
@@ -64,6 +72,21 @@ namespace Orchard.Commands {
 
         private static CommandHandlerDescriptor GetDescriptor(IDictionary<string, object> metadata) {
             return ((CommandHandlerDescriptor)metadata[typeof(CommandHandlerDescriptor).FullName]);
+        }
+
+        private class Match {
+            public CommandContext Context { get; set; }
+            public Func<ICommandHandler> CommandHandlerFactory { get; set; }
+        }
+
+        public class CommandsComparer : IEqualityComparer<CommandDescriptor> {
+            public bool Equals(CommandDescriptor x, CommandDescriptor y) {
+                return x.MethodInfo.Equals(y.MethodInfo);
+            }
+
+            public int GetHashCode(CommandDescriptor obj) {
+                return obj.MethodInfo.GetHashCode();
+            }
         }
     }
 }

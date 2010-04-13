@@ -32,9 +32,9 @@ namespace Orchard.Commands {
         }
 
         private string GetCommandName(MethodInfo methodInfo) {
-            var attributes = methodInfo.GetCustomAttributes(typeof(OrchardCommandAttribute), false/*inherit*/);
+            var attributes = methodInfo.GetCustomAttributes(typeof(CommandNameAttribute), false/*inherit*/);
             if (attributes != null && attributes.Any()) {
-                return attributes.Cast<OrchardCommandAttribute>().Single().Command;
+                return attributes.Cast<CommandNameAttribute>().Single().Command;
             }
 
             return methodInfo.Name.Replace('_', ' ');

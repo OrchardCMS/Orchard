@@ -18,11 +18,11 @@ namespace Orchard {
             _args = args;
         }
 
-        static void Main(string[] args) {
-            new Program(args).Run();
+        static int Main(string[] args) {
+            return new Program(args).Run();
         }
 
-        public void Run() {
+        public int Run() {
             // Parse command line arguments
             var arguments = new OrchardParametersParser().Parse(new CommandParametersParser().Parse(_args));
 
@@ -51,7 +51,7 @@ namespace Orchard {
             if (arguments.Verbose) {
                 Console.WriteLine("Executing command in ASP.NET AppDomain");
             }
-            host.RunCommand(arguments);
+            return host.RunCommand(arguments);
         }
 
         private DirectoryInfo GetOrchardDirectory(string directory) {

@@ -2,10 +2,10 @@
 
 namespace Orchard.Commands {
     [AttributeUsage(AttributeTargets.Method)]
-    public class OrchardCommandAttribute : Attribute {
+    public class CommandNameAttribute : Attribute {
         private readonly string _commandAlias;
 
-        public OrchardCommandAttribute(string commandAlias) {
+        public CommandNameAttribute(string commandAlias) {
             _commandAlias = commandAlias;
         }
 

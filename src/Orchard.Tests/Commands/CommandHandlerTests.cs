@@ -180,7 +180,7 @@ namespace Orchard.Tests.Commands {
             return "Command Foo Executed";
         }
 
-        [OrchardCommand("Bar")]
+        [CommandName("Bar")]
         public string Hello() {
             return "Hello World!";
         }
