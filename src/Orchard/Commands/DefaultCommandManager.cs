@@ -18,7 +18,7 @@ namespace Orchard.Commands {
             // Workaround autofac integration: module registration is currently run twice...
             //if (matches.Count() == 1) {
             //  var match = matches.Single();
-            if (matches.Count() == 2) {
+            if (matches.Count() == 1 || matches.Count() == 2) {
                 var match = matches.First();
                 match.CommandHandlerFactory().Execute(match.Context);
             }
