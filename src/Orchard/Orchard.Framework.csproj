@@ -181,6 +181,7 @@
     <Compile Include="Extensions\ExtensionFolders.cs" />
     <Compile Include="Extensions\FeatureDescriptor.cs" />
     <Compile Include="Extensions\Loaders\AreaExtensionLoader.cs" />
+    <Compile Include="Extensions\OrchardFeatureAttribute.cs" />
     <Compile Include="Extensions\Records\ExtensionRecord.cs" />
     <Compile Include="Extensions\ShellTopology.cs" />
     <Compile Include="Mvc\AntiForgery\ValidateAntiForgeryTokenOrchardAttribute.cs" />
