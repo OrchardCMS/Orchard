@@ -33,7 +33,8 @@ namespace Orchard.Extensions {
             Logger = NullLogger.Instance;
         }
 
-
+        // This method does not load extension types, simply parses extension manifests from 
+        // the filesystem. 
         public IEnumerable<ExtensionDescriptor> AvailableExtensions() {
             var availableExtensions = new List<ExtensionDescriptor>();
             foreach (var folder in _folders) {
@@ -42,6 +43,14 @@ namespace Orchard.Extensions {
                 }
             }
             return availableExtensions;
+        }
+
+        // This method loads types from extensions into the ExtensionEntry array.
+        public IEnumerable<ExtensionEntry> ActiveExtensions() {
+            if (_activeExtensions == null) {
+                _activeExtensions = BuildActiveExtensions().ToList();
+            }
+            return _activeExtensions;
         }
 
         private static ExtensionDescriptor GetDescriptorForExtension(string name, IExtensionFolders folder) {
@@ -94,17 +103,50 @@ namespace Orchard.Extensions {
             return featureDescriptors;
         }
 
-        public IEnumerable<ExtensionEntry> ActiveExtensions() {
-            if (_activeExtensions == null) {
-                _activeExtensions = BuildActiveExtensions().ToList();
-            }
-            return _activeExtensions;
-        }
-
         public ShellTopology GetExtensionsTopology() {
             var types = ActiveExtensions().SelectMany(x => x.ExportedTypes);
             types = types.Concat(typeof(IOrchardHost).Assembly.GetExportedTypes());
             return new ShellTopology { Types = types.Where(t => t.IsClass && !t.IsAbstract) };
+        }
+
+        public IEnumerable<Type> LoadFeature(string featureName) {
+            string extensionName = GetExtensionForFeature(featureName);
+            if (extensionName == null) throw new ArgumentException(T("Feature ") + featureName + T(" was not found in any of the installed extensions"));
+            var extension = ActiveExtensions().Where(x => x.Descriptor.Name == extensionName).FirstOrDefault();
+            if (extension == null) throw new InvalidOperationException(T("Extension ") + extensionName + T(" is not active"));
+
+            var extensionTypes = extension.ExportedTypes.Where(t => t.IsClass && !t.IsAbstract);
+            var featureTypes = new List<Type>();
+
+            foreach (var type in extensionTypes) {
+                string sourceFeature = GetSourceFeatureNameForType(type, extensionName);
+                if (String.Equals(sourceFeature, featureName, StringComparison.OrdinalIgnoreCase)) {
+                    featureTypes.Add(type);
+                }
+            }
+
+            return featureTypes;
+        }
+
+        private static string GetSourceFeatureNameForType(Type type, string extensionName) {
+            foreach (OrchardFeatureAttribute featureAttribute in type.GetCustomAttributes(typeof(OrchardFeatureAttribute), false)) {
+                return featureAttribute.FeatureName;
+            }
+            return extensionName;
+        }
+
+        private string GetExtensionForFeature(string featureName) {
+            foreach (var extensionDescriptor in AvailableExtensions()) {
+                if (String.Equals(extensionDescriptor.Name, featureName, StringComparison.OrdinalIgnoreCase)) {
+                    return extensionDescriptor.Name;
+                }
+                foreach (var feature in extensionDescriptor.Features) {
+                    if (String.Equals(feature.Name, featureName, StringComparison.OrdinalIgnoreCase)) {
+                        return extensionDescriptor.Name;
+                    }
+                }
+            }
+            return null;
         }
 
         public void InstallExtension(string extensionType, HttpPostedFileBase extensionBundle) {

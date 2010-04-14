@@ -1,8 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Autofac;
 using NUnit.Framework;
 using Orchard.Extensions;
+using Orchard.Extensions.Loaders;
+using Orchard.Tests.Extensions.ExtensionTypes;
 using Yaml.Grammar;
 
 namespace Orchard.Tests.Extensions {
@@ -46,6 +49,20 @@ namespace Orchard.Tests.Extensions {
                 }
                 return null;
             }
+        }
+
+        public class StubLoaders : IExtensionLoader {
+            #region Implementation of IExtensionLoader
+
+            public int Order {
+                get { return 1; }
+            }
+
+            public ExtensionEntry Load(ExtensionDescriptor descriptor) {
+                return new ExtensionEntry { Descriptor = descriptor, ExportedTypes = new[] { typeof(Alpha), typeof(Beta), typeof(Phi) } };
+            }
+
+            #endregion
         }
 
 
@@ -188,6 +205,79 @@ features:
             foreach (var type in topology.Types) {
                 Assert.That(type.IsClass);
                 Assert.That(!type.IsAbstract);
+            }
+        }
+
+        [Test]
+        public void ExtensionManagerShouldThrowIfFeatureDoesNotExist() {
+            Assert.Throws<ArgumentException>(() => _manager.LoadFeature("NoSuchFeature"));
+        }
+
+        [Test]
+        public void ExtensionManagerTestFeatureAttribute() {
+            var extensionManager = new Moq.Mock<IExtensionManager>();
+            extensionManager.Setup(x => x.ActiveExtensions()).Returns(new[] {
+                new ExtensionEntry {
+                    Descriptor = new ExtensionDescriptor { 
+                        Name = "Module", 
+                        Features = new[] {
+                            new FeatureDescriptor { Name = "Module", ExtensionName = "Module" },
+                            new FeatureDescriptor { Name = "TestFeature", ExtensionName = "Module" }
+                        }},
+                        ExportedTypes = new[] { typeof(Alpha), typeof(Beta), typeof(Phi) }
+                }});
+
+            foreach (var type in extensionManager.Object.ActiveExtensions().SelectMany(x => x.ExportedTypes)) {
+                foreach (OrchardFeatureAttribute featureAttribute in type.GetCustomAttributes(typeof(OrchardFeatureAttribute), false)) {
+                    Assert.That(featureAttribute.FeatureName, Is.EqualTo("TestFeature"));
+                }
+            }
+        }
+
+        [Test]
+        public void ExtensionManagerLoadFeatureReturnsTypesFromSpecificFeaturesWithFeatureAttribute() {
+            var extensionLoader = new StubLoaders();
+            var extensionFolder = new StubFolders();
+
+            extensionFolder.Manifests.Add("TestModule", @"
+name: TestModule
+version: 1.0.3
+orchardversion: 1
+features:
+  TestModule: 
+    Description: My test module for Orchard.
+  TestFeature:
+    Description: Contains the Phi type.
+");
+
+            ExtensionManager extensionManager = new ExtensionManager(new []{extensionFolder}, new [] {extensionLoader});
+
+            foreach (var type in extensionManager.LoadFeature("TestFeature")) {
+                Assert.That(type == typeof(Phi));
+            }
+        }
+
+        [Test]
+        public void ExtensionManagerLoadFeatureDoesNotReturnTypesFromNonMatchingFeatures() {
+            var extensionLoader = new StubLoaders();
+            var extensionFolder = new StubFolders();
+
+            extensionFolder.Manifests.Add("TestModule", @"
+name: TestModule
+version: 1.0.3
+orchardversion: 1
+features:
+  TestModule: 
+    Description: My test module for Orchard.
+  TestFeature:
+    Description: Contains the Phi type.
+");
+
+            ExtensionManager extensionManager = new ExtensionManager(new[] { extensionFolder }, new[] { extensionLoader });
+
+            foreach (var type in extensionManager.LoadFeature("TestModule")) {
+                Assert.That(type != typeof(Phi));
+                Assert.That((type == typeof(Alpha) || (type == typeof(Beta))));
             }
         }
     }

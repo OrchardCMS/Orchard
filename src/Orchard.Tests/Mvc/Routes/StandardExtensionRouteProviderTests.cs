@@ -54,6 +54,10 @@ namespace Orchard.Tests.Mvc.Routes {
                 };
             }
 
+            public IEnumerable<Type> LoadFeature(string featureName) {
+                throw new NotImplementedException();
+            }
+
             public ShellTopology GetExtensionsTopology() {
                 throw new NotImplementedException();
             }
