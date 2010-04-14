@@ -77,10 +77,11 @@ namespace Orchard.Tests.Environment {
                 return Enumerable.Empty<ExtensionEntry>();
             }
 
-            public IEnumerable<Type> LoadFeature(string featureName) {
+            public ShellTopology_Obsolete GetExtensionsTopology() {
                 throw new NotImplementedException();
             }
 
+            public IEnumerable<Type> LoadFeature(string featureName) {
                 throw new NotImplementedException();
             }
 

@@ -54,12 +54,14 @@ namespace Orchard.Tests.Mvc.Routes {
                 };
             }
 
+            public ShellTopology_Obsolete GetExtensionsTopology() {
+                throw new NotImplementedException();
+            }
+
             public IEnumerable<Type> LoadFeature(string featureName) {
                 throw new NotImplementedException();
             }
 
-                throw new NotImplementedException();
-            }
 
             public void InstallExtension(string extensionType, HttpPostedFileBase extensionBundle) {
                 throw new NotImplementedException();

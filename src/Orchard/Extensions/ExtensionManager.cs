@@ -103,10 +103,10 @@ namespace Orchard.Extensions {
             return featureDescriptors;
         }
 
-        public ShellTopology GetExtensionsTopology() {
+        public ShellTopology_Obsolete GetExtensionsTopology() {
             var types = ActiveExtensions().SelectMany(x => x.ExportedTypes);
             types = types.Concat(typeof(IOrchardHost).Assembly.GetExportedTypes());
-            return new ShellTopology { Types = types.Where(t => t.IsClass && !t.IsAbstract) };
+            return new ShellTopology_Obsolete { Types = types.Where(t => t.IsClass && !t.IsAbstract) };
         }
 
         public IEnumerable<Type> LoadFeature(string featureName) {
