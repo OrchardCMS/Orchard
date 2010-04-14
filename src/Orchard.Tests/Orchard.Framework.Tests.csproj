@@ -90,6 +90,9 @@
       <HintPath>..\..\lib\sqlite\System.Data.SQLite.DLL</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="System.Runtime.Serialization">
+      <RequiredTargetFramework>3.0</RequiredTargetFramework>
+    </Reference>
     <Reference Include="System.Web" />
     <Reference Include="System.Web.Abstractions">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
@@ -162,6 +165,7 @@
     <Compile Include="Environment\OrchardStarterTests.cs" />
     <Compile Include="Environment\ShellBuilders\SetupShellContainerFactoryTests.cs" />
     <Compile Include="Environment\TestDependencies\TestDependency.cs" />
+    <Compile Include="Environment\Topology\DefaultTopologyDescriptorCacheTests.cs" />
     <Compile Include="EventsTests.cs" />
     <Compile Include="Extensions\ExtensionFoldersTests.cs" />
     <Compile Include="Extensions\ExtensionManagerTests.cs" />

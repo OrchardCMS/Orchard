@@ -123,6 +123,7 @@
     <Compile Include="Scheduling\Models\Task.cs" />
     <Compile Include="Settings\Drivers\SiteSettingsDriver.cs" />
     <Compile Include="Settings\Permissions.cs" />
+    <Compile Include="Settings\Services\TopologyDescriptorProvider.cs" />
     <Compile Include="Themes\DesignerNotes\ZoneManagerEvents.cs" />
     <Compile Include="Themes\Preview\IPreviewTheme.cs" />
     <Compile Include="Themes\Preview\PreviewThemeFilter.cs" />
