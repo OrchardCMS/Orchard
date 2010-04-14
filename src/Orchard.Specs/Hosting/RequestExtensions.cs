@@ -13,14 +13,13 @@ namespace Orchard.Specs.Hosting
     {
         public static RequestDetails SendRequest(this WebHost webHost, string urlPath)
         {
-            var physicalPath = new PathUtil(webHost.PhysicalDirectory);
+            var physicalPath = Bleroy.FluentPath.Path.Get(webHost.PhysicalDirectory);
 
             var details = new RequestDetails
             {
                 Page = physicalPath
                     .Combine(urlPath.TrimStart('/', '\\'))
                     .GetRelativePath(physicalPath)
-                    .ToString()
             };
 
             webHost.Execute(() =>
