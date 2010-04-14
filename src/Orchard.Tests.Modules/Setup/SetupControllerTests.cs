@@ -19,24 +19,24 @@ namespace Orchard.Tests.Modules.Setup {
 
         [SetUp]
         public void Init() {
-            _tempFolder = Path.GetTempFileName();
-            File.Delete(_tempFolder);
-            Directory.CreateDirectory(_tempFolder);
+            //_tempFolder = Path.GetTempFileName();
+            //File.Delete(_tempFolder);
+            //Directory.CreateDirectory(_tempFolder);
 
-            var hostContainer = OrchardStarter.CreateHostContainer(builder => {
-                builder.RegisterInstance(new ControllerBuilder());
-                builder.RegisterInstance(new ViewEngineCollection { new WebFormViewEngine() });
-                builder.RegisterInstance(new RouteCollection());
-                builder.RegisterInstance(new ModelBinderDictionary());
-            });
+            //var hostContainer = OrchardStarter.CreateHostContainer(builder => {
+            //    builder.RegisterInstance(new ControllerBuilder());
+            //    builder.RegisterInstance(new ViewEngineCollection { new WebFormViewEngine() });
+            //    builder.RegisterInstance(new RouteCollection());
+            //    builder.RegisterInstance(new ModelBinderDictionary());
+            //});
 
-            hostContainer.Resolve<IAppDataFolder>().SetBasePath(_tempFolder);
+            //hostContainer.Resolve<IAppDataFolder>().SetBasePath(_tempFolder);
 
-            var host = (DefaultOrchardHost)hostContainer.Resolve<IOrchardHost>();
-            _container = host.CreateShellContainer().BeginLifetimeScope();
-            var updater = new ContainerUpdater();
-            updater.RegisterType<SetupController>();
-            updater.Update(_container);
+            //var host = (DefaultOrchardHost)hostContainer.Resolve<IOrchardHost>();
+            //_container = host.CreateShellContainer().BeginLifetimeScope();
+            //var updater = new ContainerUpdater();
+            //updater.RegisterType<SetupController>();
+            //updater.Update(_container);
 
             //var builder = new ContainerBuilder();
             //builder.Register<SetupController>();
