@@ -408,9 +408,6 @@
     <None Include="app.config" />
     <None Include="ContentManagement\Diagram.cd" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Environment\Models\" />
-  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
