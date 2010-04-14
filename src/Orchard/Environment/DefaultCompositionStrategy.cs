@@ -12,7 +12,7 @@ using Orchard.Extensions.Records;
 namespace Orchard.Environment {
     //TEMP: This will be replaced by packaging system
 
-    public interface ICompositionStrategy {
+    public interface ICompositionStrategy_Obsolete {
         IEnumerable<Type> GetModuleTypes();
         IEnumerable<Type> GetDependencyTypes();
         IEnumerable<RecordDescriptor> GetRecordDescriptors();
@@ -23,7 +23,7 @@ namespace Orchard.Environment {
         public string Prefix { get; set; }
     }
 
-    public class DefaultCompositionStrategy : ICompositionStrategy {
+    public class DefaultCompositionStrategy : ICompositionStrategy_Obsolete {
         private readonly IExtensionManager _extensionManager;
 
         public DefaultCompositionStrategy(IExtensionManager extensionManager) {

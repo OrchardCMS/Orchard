@@ -79,6 +79,7 @@
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
+    <Reference Include="System.Data" />
     <Reference Include="System.Transactions" />
     <Reference Include="System.Web" />
     <Reference Include="System.Web.Abstractions">
@@ -91,6 +92,7 @@
     <Reference Include="System.Web.Routing">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
+    <Reference Include="System.Xml" />
     <Reference Include="Yaml, Version=1.0.3370.39839, Culture=neutral, PublicKeyToken=187a3d240e44a135, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\yaml\Yaml.dll</HintPath>
@@ -165,6 +167,11 @@
     <Compile Include="Environment\Configuration\DefaultTenantManager.cs" />
     <Compile Include="Environment\Configuration\ITenantManager.cs" />
     <Compile Include="Environment\AutofacUtil\ContainerUpdater.cs" />
+    <Compile Include="Environment\Topology\ICompositionStrategy.cs" />
+    <Compile Include="Environment\Topology\ITopologyDescriptorProvider.cs" />
+    <Compile Include="Environment\Topology\ITopologyDescriptorCache.cs" />
+    <Compile Include="Environment\Topology\Models\ShellTopology.cs" />
+    <Compile Include="Environment\Topology\Models\ShellTopologyDescriptor.cs" />
     <Compile Include="Environment\ShellBuilders\DefaultShellContainerFactory.cs" />
     <Compile Include="Environment\ShellBuilders\IShellContainerFactory.cs" />
     <Compile Include="Environment\ShellBuilders\SafeModeShellContainerFactory.cs" />
@@ -399,6 +406,9 @@
   <ItemGroup>
     <None Include="app.config" />
     <None Include="ContentManagement\Diagram.cd" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Environment\Models\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

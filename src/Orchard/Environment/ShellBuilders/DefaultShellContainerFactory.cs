@@ -6,16 +6,16 @@ using Orchard.Environment.AutofacUtil.DynamicProxy2;
 using Orchard.Environment.Configuration;
 
 namespace Orchard.Environment.ShellBuilders {
-    public class DefaultShellContainerFactory : IShellContainerFactory {
+    public class DefaultShellContainerFactory : IShellContainerFactory_Obsolete {
         private readonly IContainer _container;
-        private readonly ICompositionStrategy _compositionStrategy;
+        private readonly ICompositionStrategy_Obsolete _compositionStrategy;
 
-        public DefaultShellContainerFactory(IContainer container, ICompositionStrategy compositionStrategy) {
+        public DefaultShellContainerFactory(IContainer container, ICompositionStrategy_Obsolete compositionStrategy) {
             _container = container;
             _compositionStrategy = compositionStrategy;
         }
 
-        public virtual ILifetimeScope CreateContainer(IShellSettings settings) {
+        public virtual ILifetimeScope CreateContainer(ShellSettings settings) {
             // null settings means we need to defer to the setup container factory
             if (settings == null) {
                 return null;
@@ -25,7 +25,7 @@ namespace Orchard.Environment.ShellBuilders {
 
             // add module types to container being built
             var addingModulesAndServices = new ContainerUpdater();
-            addingModulesAndServices.RegisterInstance(settings).As<IShellSettings>();
+            addingModulesAndServices.RegisterInstance(settings).As<ShellSettings>();
             addingModulesAndServices.RegisterInstance(dynamicProxyContext);
             addingModulesAndServices.RegisterType<DefaultOrchardShell>().As<IOrchardShell>().SingleInstance();
 

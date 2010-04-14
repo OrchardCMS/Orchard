@@ -26,6 +26,6 @@ namespace Orchard.Environment {
         /// Can be used to build an temporary self-contained instance of a shell's configured code.
         /// Services may be resolved from within this instance to configure and initialize it's storage.
         /// </summary>
-        IStandaloneEnvironment CreateStandaloneEnvironment(IShellSettings shellSettings);
+        IStandaloneEnvironment CreateStandaloneEnvironment(ShellSettings shellSettings);
     }
 }

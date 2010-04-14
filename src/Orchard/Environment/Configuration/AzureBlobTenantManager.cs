@@ -9,11 +9,11 @@ namespace Orchard.Environment.Configuration {
 
         public string Foo { get; set; }
 
-        public IEnumerable<IShellSettings> LoadSettings() {
+        public IEnumerable<ShellSettings> LoadSettings() {
             throw new NotImplementedException();
         }
 
-        public void SaveSettings(IShellSettings settings) {
+        public void SaveSettings(ShellSettings settings) {
             throw new NotImplementedException();
         }
     }

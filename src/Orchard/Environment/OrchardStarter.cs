@@ -18,11 +18,11 @@ namespace Orchard.Environment {
 
             // a single default host implementation is needed for bootstrapping a web app domain
             builder.RegisterType<DefaultOrchardHost>().As<IOrchardHost>().SingleInstance();
-            builder.RegisterType<DefaultCompositionStrategy>().As<ICompositionStrategy>().SingleInstance();
-            builder.RegisterType<DefaultShellContainerFactory>().As<IShellContainerFactory>().SingleInstance();
+            builder.RegisterType<DefaultCompositionStrategy>().As<ICompositionStrategy_Obsolete>().SingleInstance();
+            builder.RegisterType<DefaultShellContainerFactory>().As<IShellContainerFactory_Obsolete>().SingleInstance();
             builder.RegisterType<AppDataFolder>().As<IAppDataFolder>().SingleInstance();
             builder.RegisterType<DefaultTenantManager>().As<ITenantManager>().SingleInstance();
-            builder.RegisterType<SafeModeShellContainerFactory>().As<IShellContainerFactory>().SingleInstance();
+            builder.RegisterType<SafeModeShellContainerFactory>().As<IShellContainerFactory_Obsolete>().SingleInstance();
 
             // The container provider gives you access to the lowest container at the time, 
             // and dynamically creates a per-request container. The EndRequestLifetime method

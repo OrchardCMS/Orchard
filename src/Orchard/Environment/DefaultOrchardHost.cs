@@ -13,7 +13,7 @@ namespace Orchard.Environment {
     public class DefaultOrchardHost : IOrchardHost {
         private readonly IContainerProvider _containerProvider;
         private readonly ControllerBuilder _controllerBuilder;
-        private readonly IEnumerable<IShellContainerFactory> _shellContainerFactories;
+        private readonly IEnumerable<IShellContainerFactory_Obsolete> _shellContainerFactories;
 
         private readonly ITenantManager _tenantManager;
         private IOrchardShell _current;
@@ -23,7 +23,7 @@ namespace Orchard.Environment {
             IContainerProvider containerProvider,
             ITenantManager tenantManager,
             ControllerBuilder controllerBuilder,
-            IEnumerable<IShellContainerFactory> shellContainerFactories) {
+            IEnumerable<IShellContainerFactory_Obsolete> shellContainerFactories) {
             _containerProvider = containerProvider;
             _tenantManager = tenantManager;
             _controllerBuilder = controllerBuilder;
@@ -58,7 +58,7 @@ namespace Orchard.Environment {
             EndRequest();
         }
 
-        IStandaloneEnvironment IOrchardHost.CreateStandaloneEnvironment(IShellSettings shellSettings) {
+        IStandaloneEnvironment IOrchardHost.CreateStandaloneEnvironment(ShellSettings shellSettings) {
             var shellContainer = CreateShellContainer(shellSettings);
             return new StandaloneEnvironment(shellContainer);
         }
@@ -105,7 +105,7 @@ namespace Orchard.Environment {
             return CreateShellContainer(null);
         }
 
-        private ILifetimeScope CreateShellContainer(IShellSettings shellSettings) {
+        private ILifetimeScope CreateShellContainer(ShellSettings shellSettings) {
             foreach (var factory in _shellContainerFactories) {
                 var container = factory.CreateContainer(shellSettings);
                 if (container != null) {

@@ -28,14 +28,14 @@ using Orchard.UI.PageTitle;
 using Orchard.UI.Zones;
 
 namespace Orchard.Environment.ShellBuilders {
-    public class SafeModeShellContainerFactory : IShellContainerFactory {
+    public class SafeModeShellContainerFactory : IShellContainerFactory_Obsolete {
         private readonly IContainer _container;
 
         public SafeModeShellContainerFactory(IContainer container) {
             _container = container;
         }
 
-        public ILifetimeScope CreateContainer(IShellSettings settings) {
+        public ILifetimeScope CreateContainer(ShellSettings settings) {
             // when you have settings the setup container factory is not in effect
             if (settings != null) {
                 return null;

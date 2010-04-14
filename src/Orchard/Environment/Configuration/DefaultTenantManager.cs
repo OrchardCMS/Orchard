@@ -15,11 +15,11 @@ namespace Orchard.Environment.Configuration {
             T = NullLocalizer.Instance;
         }
 
-        IEnumerable<IShellSettings> ITenantManager.LoadSettings() {
+        IEnumerable<ShellSettings> ITenantManager.LoadSettings() {
             return LoadSettings().ToArray();
         }
 
-        void ITenantManager.SaveSettings(IShellSettings settings) {
+        void ITenantManager.SaveSettings(ShellSettings settings) {
             if (settings == null)
                 throw new ArgumentException(T("There are no settings to save.").ToString());
             if (string.IsNullOrEmpty(settings.Name))
@@ -29,7 +29,7 @@ namespace Orchard.Environment.Configuration {
             _appDataFolder.CreateFile(filePath, ComposeSettings(settings));
         }
 
-        IEnumerable<IShellSettings> LoadSettings() {
+        IEnumerable<ShellSettings> LoadSettings() {
             var filePaths = _appDataFolder
                 .ListDirectories("Sites")
                 .SelectMany(path => _appDataFolder.ListFiles(path))
@@ -47,7 +47,7 @@ namespace Orchard.Environment.Configuration {
             public string DataPrefix { get; set; }
         }
 
-        static IShellSettings ParseSettings(string text) {
+        static ShellSettings ParseSettings(string text) {
             var ser = new YamlSerializer();
             var content = ser.Deserialize(text, typeof(Content)).Cast<Content>().Single();
             return new ShellSettings {
@@ -58,7 +58,7 @@ namespace Orchard.Environment.Configuration {
             };
         }
 
-        static string ComposeSettings(IShellSettings settings) {
+        static string ComposeSettings(ShellSettings settings) {
             if (settings == null)
                 return "";
 

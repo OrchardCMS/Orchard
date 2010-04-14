@@ -14,16 +14,16 @@ namespace Orchard.Data {
     }
 
     public class SessionFactoryHolder : ISessionFactoryHolder {
-        private readonly IShellSettings _shellSettings;
-        private readonly ICompositionStrategy _compositionStrategy;
+        private readonly ShellSettings _shellSettings;
+        private readonly ICompositionStrategy_Obsolete _compositionStrategy;
         private readonly ISessionFactoryBuilder _sessionFactoryBuilder;
         private readonly IAppDataFolder _appDataFolder;
 
         private ISessionFactory _sessionFactory;
 
         public SessionFactoryHolder(
-            IShellSettings shellSettings,
-            ICompositionStrategy compositionStrategy,
+            ShellSettings shellSettings,
+            ICompositionStrategy_Obsolete compositionStrategy,
             ISessionFactoryBuilder sessionFactoryBuilder,
             IAppDataFolder appDataFolder) {
             _shellSettings = shellSettings;
