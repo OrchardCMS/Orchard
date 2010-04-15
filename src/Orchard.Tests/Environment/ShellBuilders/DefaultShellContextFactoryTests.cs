@@ -45,7 +45,7 @@ namespace Orchard.Tests.Environment.ShellBuilders {
                 .Setup(x => x.CreateContainer(topology))
                 .Returns(shellLifetimeScope = _container.BeginLifetimeScope("shell"));
 
-            _container.Mock<ITopologyDescriptorProvider>()
+            _container.Mock<ITopologyDescriptorManager>()
                 .Setup(x => x.GetTopologyDescriptor())
                 .Returns(topologyDescriptor);
 

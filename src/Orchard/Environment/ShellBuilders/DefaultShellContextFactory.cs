@@ -27,7 +27,7 @@ namespace Orchard.Environment.ShellBuilders {
 
             ShellTopologyDescriptor currentTopology;
             using (var standaloneEnvironment = new StandaloneEnvironment(shellScope)) {
-                var topologyDescriptorProvider = standaloneEnvironment.Resolve<ITopologyDescriptorProvider>();
+                var topologyDescriptorProvider = standaloneEnvironment.Resolve<ITopologyDescriptorManager>();
                 currentTopology = topologyDescriptorProvider.GetTopologyDescriptor();
             }
 

@@ -175,7 +175,7 @@
     <Compile Include="Environment\ShellBuilders\ShellContext.cs" />
     <Compile Include="Environment\Topology\DefaultTopologyDescriptorCache.cs" />
     <Compile Include="Environment\Topology\ICompositionStrategy.cs" />
-    <Compile Include="Environment\Topology\ITopologyDescriptorProvider.cs" />
+    <Compile Include="Environment\Topology\ITopologyDescriptorManager.cs" />
     <Compile Include="Environment\Topology\ITopologyDescriptorCache.cs" />
     <Compile Include="Environment\Topology\Models\ShellTopology.cs" />
     <Compile Include="Environment\Topology\Models\ShellTopologyDescriptor.cs" />
