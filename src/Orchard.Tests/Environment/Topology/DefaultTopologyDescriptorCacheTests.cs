@@ -11,12 +11,25 @@ namespace Orchard.Tests.Environment.Topology {
     [TestFixture]
     public class DefaultTopologyDescriptorCacheTests {
         private IContainer _container;
+        private string _tempFolder;
+        private IAppDataFolder _appDataFolder;
 
         [SetUp]
         public void Init() {
+            _tempFolder = Path.GetTempFileName();
+            File.Delete(_tempFolder);
+            Directory.CreateDirectory(_tempFolder);
+            _appDataFolder = new AppDataFolder();
+            _appDataFolder.SetBasePath(_tempFolder);
             var builder = new ContainerBuilder();
+            builder.RegisterInstance(_appDataFolder).As<IAppDataFolder>();
             builder.RegisterType<DefaultTopologyDescriptorCache>().As<ITopologyDescriptorCache>();
             _container = builder.Build();
+        }
+
+        [TearDown]
+        public void Term() {
+            Directory.Delete(_tempFolder, true);
         }
 
         [Test]
