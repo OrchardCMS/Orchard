@@ -1,5 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.IO;
+using System.Runtime.Serialization;
+using System.Xml;
 using Orchard.Environment.Configuration;
 using Orchard.Environment.Topology.Models;
 using Orchard.Localization;
@@ -7,7 +9,6 @@ using Orchard.Logging;
 
 namespace Orchard.Environment.Topology {
     public class DefaultTopologyDescriptorCache : ITopologyDescriptorCache {
-        readonly IDictionary<string, ShellTopologyDescriptor> _cache= new Dictionary<string, ShellTopologyDescriptor>();
         private readonly IAppDataFolder _appDataFolder;
         private const string TopologyCacheFileName = "cache.dat";
 
@@ -25,20 +26,72 @@ namespace Orchard.Environment.Topology {
 
         public ShellTopologyDescriptor Fetch(string name) {
             VerifyCacheFile();
-            ShellTopologyDescriptor value;
-            return _cache.TryGetValue(name, out value) ? value : null;
+            var text = _appDataFolder.ReadFile(TopologyCacheFileName);
+            XmlDocument xmlDocument = new XmlDocument();
+            xmlDocument.LoadXml(text);
+            XmlNode rootNode = xmlDocument.DocumentElement;
+            foreach (XmlNode tenantNode in rootNode.ChildNodes) {
+                if (String.Equals(tenantNode.Name, name, StringComparison.OrdinalIgnoreCase)) {
+                    var serializer = new DataContractSerializer(typeof(ShellTopologyDescriptor));
+                    var reader = new StringReader(tenantNode.InnerText);
+                    using (var xmlReader = XmlReader.Create(reader)) {
+                        return (ShellTopologyDescriptor) serializer.ReadObject(xmlReader, true); 
+                    }
+                }
+            }
+
+            return null;
         }
 
         public void Store(string name, ShellTopologyDescriptor descriptor) {
             VerifyCacheFile();
-            _cache[name] = descriptor;
+            var text = _appDataFolder.ReadFile(TopologyCacheFileName);
+            bool tenantCacheUpdated = false;
+            var saveWriter = new StringWriter();
+            XmlDocument xmlDocument = new XmlDocument();
+            xmlDocument.LoadXml(text);
+            XmlNode rootNode = xmlDocument.DocumentElement;
+            foreach (XmlNode tenantNode in rootNode.ChildNodes) {
+                if (String.Equals(tenantNode.Name, name, StringComparison.OrdinalIgnoreCase)) {
+                    var serializer = new DataContractSerializer(typeof (ShellTopologyDescriptor));
+                    var writer = new StringWriter();
+                    using (var xmlWriter = XmlWriter.Create(writer)) {
+                        serializer.WriteObject(xmlWriter, descriptor);
+                    }
+                    tenantNode.InnerText = writer.ToString();
+                    tenantCacheUpdated = true;
+                    break;
+                }
+            }
+            if (!tenantCacheUpdated) {
+                XmlElement newTenant = xmlDocument.CreateElement(name);
+                var serializer = new DataContractSerializer(typeof(ShellTopologyDescriptor));
+                var writer = new StringWriter();
+                using (var xmlWriter = XmlWriter.Create(writer)) {
+                    serializer.WriteObject(xmlWriter, descriptor);
+                }
+                newTenant.InnerText = writer.ToString();
+                rootNode.AppendChild(newTenant);
+            }
+
+            xmlDocument.Save(saveWriter);
+            _appDataFolder.CreateFile(TopologyCacheFileName, saveWriter.ToString());
         }
 
         #endregion
 
         private void VerifyCacheFile() {
             if (!_appDataFolder.FileExists(TopologyCacheFileName)) {
-                _appDataFolder.CreateFile(TopologyCacheFileName, String.Empty);
+                var writer = new StringWriter();
+                using (XmlWriter xmlWriter = XmlWriter.Create(writer)) {
+                    if (xmlWriter != null) {
+                        xmlWriter.WriteStartDocument();
+                        xmlWriter.WriteStartElement("Tenants"); 
+                        xmlWriter.WriteEndElement();              
+                        xmlWriter.WriteEndDocument();
+                    }
+                }
+                _appDataFolder.CreateFile(TopologyCacheFileName, writer.ToString());
             }
         }
     }
