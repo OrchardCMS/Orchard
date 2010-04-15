@@ -8,6 +8,8 @@ using Autofac.Integration.Web;
 using Orchard.Environment.AutofacUtil;
 using Orchard.Environment.Configuration;
 using Orchard.Environment.ShellBuilders;
+using Orchard.Environment.Topology;
+using Orchard.Events;
 using Orchard.Extensions;
 using Orchard.Extensions.Loaders;
 
@@ -23,6 +25,9 @@ namespace Orchard.Environment {
             builder.RegisterType<AppDataFolder>().As<IAppDataFolder>().SingleInstance();
             builder.RegisterType<DefaultTenantManager>().As<ITenantManager>().SingleInstance();
             builder.RegisterType<SafeModeShellContainerFactory>().As<IShellContainerFactory_Obsolete>().SingleInstance();
+            builder.RegisterType<DefaultTopologyDescriptorCache>().As<ITopologyDescriptorCache>().SingleInstance();
+
+            builder.RegisterType<DefaultOrchardEventBus>().As<IEventBus>().SingleInstance();
 
             // The container provider gives you access to the lowest container at the time, 
             // and dynamically creates a per-request container. The EndRequestLifetime method
