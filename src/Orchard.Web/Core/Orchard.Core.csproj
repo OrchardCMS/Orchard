@@ -124,7 +124,10 @@
     <Compile Include="Settings\Drivers\SiteSettingsDriver.cs" />
     <Compile Include="Settings\Models\SiteSettingsRecord.cs" />
     <Compile Include="Settings\Permissions.cs" />
-    <Compile Include="Settings\Services\TopologyDescriptorManager.cs" />
+    <Compile Include="Settings\Topology\Records\TopologyFeatureRecord.cs" />
+    <Compile Include="Settings\Topology\Records\TopologyParameterRecord.cs" />
+    <Compile Include="Settings\Topology\Records\TopologyRecord.cs" />
+    <Compile Include="Settings\Topology\TopologyDescriptorManager.cs" />
     <Compile Include="Themes\DesignerNotes\ZoneManagerEvents.cs" />
     <Compile Include="Themes\Preview\IPreviewTheme.cs" />
     <Compile Include="Themes\Preview\PreviewThemeFilter.cs" />
