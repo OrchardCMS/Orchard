@@ -37,14 +37,13 @@ namespace Orchard.Environment.ShellBuilders {
                 shellScope = _shellContainerFactory.CreateContainer(topology);
             }
 
-            var shell = shellScope.Resolve<IOrchardShell>();
             return new ShellContext {
-                                        Settings = settings,
-                                        TopologyDescriptor = currentTopology,
-                                        Topology = topology,
-                                        LifetimeScope = shellScope,
-                                        Shell = shellScope.Resolve<IOrchardShell>(),
-                                    };
-        }        
+                Settings = settings,
+                TopologyDescriptor = currentTopology,
+                Topology = topology,
+                LifetimeScope = shellScope,
+                Shell = shellScope.Resolve<IOrchardShell>(),
+            };
+        }
     }
 }

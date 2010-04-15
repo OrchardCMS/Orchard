@@ -33,7 +33,7 @@ namespace Orchard.Tests.Modules.Setup {
             //hostContainer.Resolve<IAppDataFolder>().SetBasePath(_tempFolder);
 
             //var host = (DefaultOrchardHost)hostContainer.Resolve<IOrchardHost>();
-            //_container = host.CreateShellContainer().BeginLifetimeScope();
+            //_container = host.CreateShellContainer_Obsolete().BeginLifetimeScope();
             //var updater = new ContainerUpdater();
             //updater.RegisterType<SetupController>();
             //updater.Update(_container);

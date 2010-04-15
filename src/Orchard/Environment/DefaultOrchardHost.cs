@@ -11,48 +11,43 @@ using Orchard.Environment.Topology.Models;
 using Orchard.Extensions;
 using Orchard.Mvc;
 using Orchard.Mvc.ViewEngines;
+using Orchard.Utility.Extensions;
 
 namespace Orchard.Environment {
     public class DefaultOrchardHost : IOrchardHost {
         private readonly IContainerProvider _containerProvider;
         private readonly ControllerBuilder _controllerBuilder;
-        private readonly IEnumerable<IShellContainerFactory_Obsolete> _shellContainerFactories;
 
         private readonly ITenantManager _tenantManager;
-        private IOrchardShell _current;
+        private readonly IShellContextFactory _shellContextFactory;
 
+        private IEnumerable<ShellContext> _current;
 
         public DefaultOrchardHost(
             IContainerProvider containerProvider,
             ITenantManager tenantManager,
-            ITopologyDescriptorCache topologyDescriptorCache,
-            ICompositionStrategy compositionStrategy,
-            IShellContainerFactory shellContainerFactory,
-            ControllerBuilder controllerBuilder,
-            IEnumerable<IShellContainerFactory_Obsolete> shellContainerFactories) {
+            IShellContextFactory shellContextFactory,
+            ControllerBuilder controllerBuilder) {
             _containerProvider = containerProvider;
             _tenantManager = tenantManager;
+            _shellContextFactory = shellContextFactory;
             _controllerBuilder = controllerBuilder;
-            _shellContainerFactories = shellContainerFactories;
         }
 
-
-        public IOrchardShell Current {
-            get { return _current; }
+        public IList<ShellContext> Current {
+            get { return BuildCurrent().ToReadOnlyCollection(); }
         }
-
 
         void IOrchardHost.Initialize() {
             ViewEngines.Engines.Insert(0, LayoutViewEngine.CreateShim());
             _controllerBuilder.SetControllerFactory(new OrchardControllerFactory());
             ServiceLocator.SetLocator(t => _containerProvider.RequestLifetime.Resolve(t));
 
-            CreateAndActivateShell();
+            BuildCurrent();
         }
 
-        void IOrchardHost.Reinitialize() {
+        void IOrchardHost.Reinitialize_Obsolete() {
             _current = null;
-            //CreateAndActivateShell();
         }
 
 
@@ -65,61 +60,36 @@ namespace Orchard.Environment {
         }
 
         IStandaloneEnvironment IOrchardHost.CreateStandaloneEnvironment(ShellSettings shellSettings) {
-            var shellContainer = CreateShellContainer(shellSettings);
-            return new StandaloneEnvironment(shellContainer);
+            var shellContext = _shellContextFactory.Create(shellSettings);
+            return new StandaloneEnvironment(shellContext.LifetimeScope);
         }
 
-        protected virtual void CreateAndActivateShell() {
+        IEnumerable<ShellContext> GetCurrent() {
             lock (this) {
-                if (_current != null) {
-                    return;
-                }
+                return _current ?? (_current = BuildCurrent());
+            }
+        }
 
-                var shellContainer = CreateShellContainer();
-                var shell = shellContainer.Resolve<IOrchardShell>();
-                shell.Activate();
-                _current = shell;
+        IEnumerable<ShellContext> BuildCurrent() {
+            return CreateAndActivate().ToArray();
+        }
 
-                // Activate extensions inside shell container
-                HackSimulateExtensionActivation(shellContainer);
+        IEnumerable<ShellContext> CreateAndActivate() {
+            foreach(var settings in _tenantManager.LoadSettings()) {
+                var context = _shellContextFactory.Create(settings);
+                context.Shell.Activate();
+                yield return context;
             }
         }
 
         protected virtual void BeginRequest() {
-            if (_current == null) {
-                CreateAndActivateShell();
-            }
+            BuildCurrent();
         }
 
         protected virtual void EndRequest() {
             _containerProvider.EndRequestLifetime();
         }
 
-
-        public virtual IOrchardShell CreateShell() {
-            return CreateShellContainer().Resolve<IOrchardShell>();
-        }
-
-        public virtual ILifetimeScope CreateShellContainer() {
-            var settings = _tenantManager.LoadSettings();
-            if (settings.Any()) {
-                //TEMP: multi-tenancy not implemented yet
-                var shellContainer = CreateShellContainer(settings.Single());
-                if (shellContainer != null)
-                    return shellContainer;
-            }
-            return CreateShellContainer(null);
-        }
-
-        private ILifetimeScope CreateShellContainer(ShellSettings shellSettings) {
-            foreach (var factory in _shellContainerFactories) {
-                var container = factory.CreateContainer(shellSettings);
-                if (container != null) {
-                    return container;
-                }
-            }
-            return null;
-        }
 
         private void HackSimulateExtensionActivation(ILifetimeScope shellContainer) {
             var containerProvider = new FiniteContainerProvider(shellContainer);

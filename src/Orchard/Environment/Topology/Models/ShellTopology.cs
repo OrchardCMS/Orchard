@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using Orchard.Environment.Configuration;
 using Orchard.Extensions;
 
 namespace Orchard.Environment.Topology.Models {
     public class ShellTopology {
+        public ShellSettings ShellSettings { get; set; }
         public IEnumerable<ModuleTopology> Modules { get; set; }
         public IEnumerable<DependencyTopology> Dependencies { get; set; }
         public IEnumerable<ControllerTopology> Controllers { get; set; }

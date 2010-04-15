@@ -163,6 +163,7 @@
     <Compile Include="Environment\DefaultOrchardHostTests.cs" />
     <Compile Include="Environment\DefaultOrchardShellTests.cs" />
     <Compile Include="Environment\OrchardStarterTests.cs" />
+    <Compile Include="Environment\ShellBuilders\DefaultShellContainerFactoryTests.cs" />
     <Compile Include="Environment\ShellBuilders\DefaultShellContextFactoryTests.cs" />
     <Compile Include="Environment\ShellBuilders\SetupShellContainerFactoryTests.cs" />
     <Compile Include="Environment\TestDependencies\TestDependency.cs" />

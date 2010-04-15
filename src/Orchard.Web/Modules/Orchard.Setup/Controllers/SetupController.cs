@@ -136,7 +136,7 @@ namespace Orchard.Setup.Controllers {
 
                 _tenantManager.SaveSettings(shellSettings);
 
-                _orchardHost.Reinitialize();
+                _orchardHost.Reinitialize_Obsolete();
 
                 // redirect to the welcome page.
                 return Redirect("~/");

@@ -1,70 +1,80 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Linq;
+using System.Web.Mvc;
 using Autofac;
+using Autofac.Builder;
 using Autofac.Core;
-using Orchard.Environment.AutofacUtil;
+using Autofac.Features.Indexed;
 using Orchard.Environment.AutofacUtil.DynamicProxy2;
-using Orchard.Environment.Configuration;
+using Orchard.Environment.Topology.Models;
 
 namespace Orchard.Environment.ShellBuilders {
-    public class DefaultShellContainerFactory : IShellContainerFactory_Obsolete {
-        private readonly IContainer _container;
-        private readonly ICompositionStrategy_Obsolete _compositionStrategy;
+    public class DefaultShellContainerFactory : IShellContainerFactory {
+        private readonly ILifetimeScope _lifetimeScope;
 
-        public DefaultShellContainerFactory(IContainer container, ICompositionStrategy_Obsolete compositionStrategy) {
-            _container = container;
-            _compositionStrategy = compositionStrategy;
+        public DefaultShellContainerFactory(ILifetimeScope lifetimeScope) {
+            _lifetimeScope = lifetimeScope;
         }
 
-        public virtual ILifetimeScope CreateContainer(ShellSettings settings) {
-            // null settings means we need to defer to the setup container factory
-            if (settings == null) {
-                return null;
-            }
+        public ILifetimeScope CreateContainer(ShellTopology topology) {
+            var intermediateScope = _lifetimeScope.BeginLifetimeScope(
+                builder => {
+                    foreach (var item in topology.Modules) {
+                        RegisterType(builder, item)
+                            .Keyed<IModule>(item.Type)
+                            .InstancePerDependency();
+                    }
+                });
 
-            var dynamicProxyContext = new DynamicProxyContext();
+            return intermediateScope.BeginLifetimeScope(
+                "shell",
+                builder => {
+                    var dynamicProxyContext = new DynamicProxyContext();
 
-            // add module types to container being built
-            var addingModulesAndServices = new ContainerUpdater();
-            addingModulesAndServices.RegisterInstance(settings).As<ShellSettings>();
-            addingModulesAndServices.RegisterInstance(dynamicProxyContext);
-            addingModulesAndServices.RegisterType<DefaultOrchardShell>().As<IOrchardShell>().SingleInstance();
+                    builder.Register(ctx => dynamicProxyContext);
+                    builder.Register(ctx => topology.ShellSettings);
 
-            foreach (var moduleType in _compositionStrategy.GetModuleTypes()) {
-                addingModulesAndServices.RegisterType(moduleType).As<IModule>().InstancePerLifetimeScope();
-            }
+                    var moduleIndex = intermediateScope.Resolve<IIndex<Type, IModule>>();
+                    foreach (var item in topology.Modules) {
+                        builder.RegisterModule(moduleIndex[item.Type]);
+                    }
 
-            // add components by the IDependency interfaces they expose
-            foreach (var serviceType in _compositionStrategy.GetDependencyTypes()) {
-                var registrar = addingModulesAndServices.RegisterType(serviceType)
-                    .EnableDynamicProxy(dynamicProxyContext)
-                    .InstancePerLifetimeScope();
+                    foreach (var item in topology.Dependencies) {
+                        var registration = RegisterType(builder, item)
+                            .EnableDynamicProxy(dynamicProxyContext)
+                            .InstancePerDependency();
 
-                foreach (var interfaceType in serviceType.GetInterfaces()) {
-                    if (typeof(IDependency).IsAssignableFrom(interfaceType)) {
-                        registrar = registrar.As(interfaceType);
-                        if (typeof(ISingletonDependency).IsAssignableFrom(interfaceType)) {
-                            registrar = registrar.SingleInstance();
+                        foreach (var interfaceType in item.Type.GetInterfaces().Where(itf => typeof(IDependency).IsAssignableFrom(itf))) {
+                            registration = registration.As(interfaceType);
+                            if (typeof(ISingletonDependency).IsAssignableFrom(interfaceType)) {
+                                registration = registration.InstancePerMatchingLifetimeScope("shell");
+                            }
+                            else if (typeof(ITransientDependency).IsAssignableFrom(interfaceType)) {
+                                registration = registration.InstancePerDependency();
+                            }
                         }
-                        else if (typeof(ITransientDependency).IsAssignableFrom(interfaceType)) {
-                            registrar = registrar.InstancePerDependency();
+
+                        foreach (var parameter in item.Parameters) {
+                            registration = registration
+                                .WithParameter(parameter.Name, parameter.Value)
+                                .WithProperty(parameter.Name, parameter.Value);
                         }
                     }
-                }
-            }
 
-            var shellScope = _container.BeginLifetimeScope("shell");
-            addingModulesAndServices.Update(shellScope);
+                    foreach (var item in topology.Controllers) {
+                        RegisterType(builder, item)
+                            .EnableDynamicProxy(dynamicProxyContext)
+                            .Keyed<IController>(item.AreaName + "|" + item.ControllerName)
+                            .InstancePerDependency();
+                    }
+                });
+        }
 
-            // instantiate and register modules on container being built
-            var modules = shellScope.Resolve<IEnumerable<IModule>>();
-            var addingModules = new ContainerUpdater();
-            foreach (var module in modules) {
-                addingModules.RegisterModule(module);
-            }
-
-            addingModules.Update(shellScope);
-
-            return shellScope;
+        private IRegistrationBuilder<object, ConcreteReflectionActivatorData, SingleRegistrationStyle> RegisterType(ContainerBuilder builder, ShellTopologyItem item) {
+            return builder.RegisterType(item.Type)
+                .WithProperty("ExtensionEntry", item.ExtensionEntry)
+                .WithProperty("FeatureDescriptor", item.FeatureDescriptor)
+                .WithProperty("ExtensionDescriptor", item.ExtensionDescriptor);
         }
     }
 }

@@ -10,7 +10,7 @@ namespace Orchard.Environment {
         /// <summary>
         /// Called when configuration changes requires the shell topology to be reloaded and applied
         /// </summary>
-        void Reinitialize();
+        void Reinitialize_Obsolete();
 
         /// <summary>
         /// Called each time a request begins to offer a just-in-time reinitialization point
