@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using System.Web.Mvc;
 using Autofac;
@@ -5,6 +6,8 @@ using Autofac.Integration.Web;
 using System.Collections.Generic;
 using Orchard.Environment.Configuration;
 using Orchard.Environment.ShellBuilders;
+using Orchard.Environment.Topology;
+using Orchard.Environment.Topology.Models;
 using Orchard.Extensions;
 using Orchard.Mvc;
 using Orchard.Mvc.ViewEngines;
@@ -22,6 +25,9 @@ namespace Orchard.Environment {
         public DefaultOrchardHost(
             IContainerProvider containerProvider,
             ITenantManager tenantManager,
+            ITopologyDescriptorCache topologyDescriptorCache,
+            ICompositionStrategy compositionStrategy,
+            IShellContainerFactory shellContainerFactory,
             ControllerBuilder controllerBuilder,
             IEnumerable<IShellContainerFactory_Obsolete> shellContainerFactories) {
             _containerProvider = containerProvider;
@@ -126,6 +132,7 @@ namespace Orchard.Environment {
             finally {
                 containerProvider.EndRequestLifetime();
             }
-        }
+        }            
+
     }
 }

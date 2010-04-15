@@ -25,8 +25,7 @@ namespace Orchard.Specs.Hosting
             webHost.Execute(() =>
             {
                 var output = new StringWriter();
-                var worker = new Worker(details, output);
-                HttpRuntime.ProcessRequest(worker);
+                HttpRuntime.ProcessRequest(new Worker(details, output));
                 details.ResponseText = output.ToString();
             });
 
@@ -35,8 +34,8 @@ namespace Orchard.Specs.Hosting
 
         class Worker : SimpleWorkerRequest
         {
-            private RequestDetails _details;
-            private TextWriter _output;
+            private readonly RequestDetails _details;
+            private readonly TextWriter _output;
 
             public Worker(RequestDetails details, TextWriter output)
                 : base(details.Page, details.Query, output)
@@ -60,3 +59,4 @@ namespace Orchard.Specs.Hosting
         }
     }
 }
+
