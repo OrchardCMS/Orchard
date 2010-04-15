@@ -83,15 +83,9 @@ namespace Orchard.Tests.Environment.Topology {
 
             var descriptor = new ShellTopologyDescriptor {
                 SerialNumber = 6655321,
-                Settings = new ShellSettings {
-                    Name = "Testing",
-                    DataProvider = "s1",
-                    DataConnectionString = "s2",
-                    DataPrefix = "s3"
-                },
                 EnabledFeatures = new[] { 
-                    new TopologyFeature {ExtensionName = "f1", FeatureName = "f2"},
-                    new TopologyFeature {ExtensionName = "f3", FeatureName = "f4"},
+                    new TopologyFeature { Name = "f2"},
+                    new TopologyFeature { Name = "f4"},
                 },
                 Parameters = new[] { 
                     new TopologyParameter {Component = "p1", Name = "p2",Value = "p3"}, 
@@ -104,8 +98,8 @@ namespace Orchard.Tests.Environment.Topology {
             var result = service.Fetch("Hello");
             var resultInfo = result.ToDataString();
 
-            Assert.That(descriptorInfo, Is.StringContaining("Testing"));
-            Assert.That(resultInfo, Is.StringContaining("Testing"));
+            Assert.That(descriptorInfo, Is.StringContaining("6655321"));
+            Assert.That(resultInfo, Is.StringContaining("6655321"));
             Assert.That(descriptorInfo, Is.EqualTo(resultInfo));
 
         }
