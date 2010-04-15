@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using Orchard.Environment.Configuration;
 
 namespace Orchard.Environment.Topology.Models {
     public class ShellTopologyDescriptor {

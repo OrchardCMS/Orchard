@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using Autofac;
 using NUnit.Framework;
 using Orchard.Core.Settings.Topology;
@@ -60,9 +59,9 @@ namespace Orchard.Tests.Modules.Settings.Topology {
         }
 
         [Test]
-        public void NonZeroInitialUpdateThrowsException() {
+        public void NonZeroInitialUpdateThrowsInvalidOperationException() {
             var manager = _container.Resolve<ITopologyDescriptorManager>();
-            Assert.Throws<Exception>(() => manager.UpdateTopologyDescriptor(
+            Assert.Throws<InvalidOperationException>(() => manager.UpdateTopologyDescriptor(
                 1,
                 Enumerable.Empty<TopologyFeature>(),
                 Enumerable.Empty<TopologyParameter>()));
@@ -79,12 +78,12 @@ namespace Orchard.Tests.Modules.Settings.Topology {
             var topology = manager.GetTopologyDescriptor();
             Assert.That(topology.SerialNumber, Is.Not.EqualTo(0));
 
-            Assert.Throws<Exception>(() => manager.UpdateTopologyDescriptor(
+            Assert.Throws<InvalidOperationException>(() => manager.UpdateTopologyDescriptor(
                                                0,
                                                Enumerable.Empty<TopologyFeature>(),
                                                Enumerable.Empty<TopologyParameter>()));
 
-            Assert.Throws<Exception>(() => manager.UpdateTopologyDescriptor(
+            Assert.Throws<InvalidOperationException>(() => manager.UpdateTopologyDescriptor(
                                                topology.SerialNumber + 665321,
                                                Enumerable.Empty<TopologyFeature>(),
                                                Enumerable.Empty<TopologyParameter>()));
@@ -98,12 +97,12 @@ namespace Orchard.Tests.Modules.Settings.Topology {
             Assert.That(topology2.SerialNumber, Is.Not.EqualTo(0));
             Assert.That(topology2.SerialNumber, Is.Not.EqualTo(topology.SerialNumber));
 
-            Assert.Throws<Exception>(() => manager.UpdateTopologyDescriptor(
+            Assert.Throws<InvalidOperationException>(() => manager.UpdateTopologyDescriptor(
                                                0,
                                                Enumerable.Empty<TopologyFeature>(),
                                                Enumerable.Empty<TopologyParameter>()));
 
-            Assert.Throws<Exception>(() => manager.UpdateTopologyDescriptor(
+            Assert.Throws<InvalidOperationException>(() => manager.UpdateTopologyDescriptor(
                                                topology.SerialNumber,
                                                Enumerable.Empty<TopologyFeature>(),
                                                Enumerable.Empty<TopologyParameter>()));
@@ -113,7 +112,7 @@ namespace Orchard.Tests.Modules.Settings.Topology {
                 Enumerable.Empty<TopologyFeature>(),
                 Enumerable.Empty<TopologyParameter>());
 
-            Assert.Throws<Exception>(() => manager.UpdateTopologyDescriptor(
+            Assert.Throws<InvalidOperationException>(() => manager.UpdateTopologyDescriptor(
                                                topology2.SerialNumber,
                                                Enumerable.Empty<TopologyFeature>(),
                                                Enumerable.Empty<TopologyParameter>()));
@@ -126,7 +125,7 @@ namespace Orchard.Tests.Modules.Settings.Topology {
 
             Assert.That(eventBus.LastMessageName, Is.Null);
 
-            Assert.Throws<Exception>(() => manager.UpdateTopologyDescriptor(
+            Assert.Throws<InvalidOperationException>(() => manager.UpdateTopologyDescriptor(
                                                5,
                                                Enumerable.Empty<TopologyFeature>(),
                                                Enumerable.Empty<TopologyParameter>()));
