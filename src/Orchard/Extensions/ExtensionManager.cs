@@ -6,6 +6,7 @@ using ICSharpCode.SharpZipLib.Zip;
 using Orchard.Environment;
 using Orchard.Extensions.Helpers;
 using Orchard.Extensions.Loaders;
+using Orchard.Extensions.Models;
 using Orchard.Localization;
 using Orchard.Logging;
 using Yaml.Grammar;
@@ -109,7 +110,7 @@ namespace Orchard.Extensions {
             return new ShellTopology_Obsolete { Types = types.Where(t => t.IsClass && !t.IsAbstract) };
         }
 
-        public IEnumerable<Type> LoadFeature(string featureName) {
+        public Feature LoadFeature(string featureName) {
             string extensionName = GetExtensionForFeature(featureName);
             if (extensionName == null) throw new ArgumentException(T("Feature ") + featureName + T(" was not found in any of the installed extensions"));
             var extension = ActiveExtensions().Where(x => x.Descriptor.Name == extensionName).FirstOrDefault();
@@ -125,7 +126,11 @@ namespace Orchard.Extensions {
                 }
             }
 
-            return featureTypes;
+            return new Feature { 
+                ExtensionName = extensionName, 
+                Name = featureName, 
+                Types = featureTypes 
+            };
         }
 
         private static string GetSourceFeatureNameForType(Type type, string extensionName) {

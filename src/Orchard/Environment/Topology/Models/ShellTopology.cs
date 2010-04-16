@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Orchard.Environment.Configuration;
 using Orchard.Extensions;
+using Orchard.Extensions.Models;
 
 namespace Orchard.Environment.Topology.Models {
     public class ShellTopology {

@@ -1,4 +1,4 @@
-﻿namespace Orchard.Extensions {
+﻿namespace Orchard.Extensions.Models {
     public class FeatureDescriptor {
         public string ExtensionName { get; set; }
         public string Name { get; set; }

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Orchard.Extensions.Models;
 
 namespace Orchard.Extensions {
     public class ExtensionDescriptor {

@@ -7,6 +7,7 @@ using Orchard.Extensions;
 using Orchard.Extensions.Loaders;
 using Orchard.Tests.Extensions.ExtensionTypes;
 using Yaml.Grammar;
+using Orchard.Extensions.Models;
 
 namespace Orchard.Tests.Extensions {
     [TestFixture]
@@ -252,7 +253,7 @@ features:
 
             ExtensionManager extensionManager = new ExtensionManager(new []{extensionFolder}, new [] {extensionLoader});
 
-            foreach (var type in extensionManager.LoadFeature("TestFeature")) {
+            foreach (var type in extensionManager.LoadFeature("TestFeature").Types) {
                 Assert.That(type == typeof(Phi));
             }
         }
@@ -275,7 +276,7 @@ features:
 
             ExtensionManager extensionManager = new ExtensionManager(new[] { extensionFolder }, new[] { extensionLoader });
 
-            foreach (var type in extensionManager.LoadFeature("TestModule")) {
+            foreach (var type in extensionManager.LoadFeature("TestModule").Types) {
                 Assert.That(type != typeof(Phi));
                 Assert.That((type == typeof(Alpha) || (type == typeof(Beta))));
             }

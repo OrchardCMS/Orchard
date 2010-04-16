@@ -6,6 +6,7 @@ using System.Web.Routing;
 using NUnit.Framework;
 using Orchard.Mvc.Routes;
 using Orchard.Extensions;
+using Orchard.Extensions.Models;
 
 namespace Orchard.Tests.Mvc.Routes {
     [TestFixture]
@@ -58,7 +59,7 @@ namespace Orchard.Tests.Mvc.Routes {
                 throw new NotImplementedException();
             }
 
-            public IEnumerable<Type> LoadFeature(string featureName) {
+            public Feature LoadFeature(string featureName) {
                 throw new NotImplementedException();
             }
 
