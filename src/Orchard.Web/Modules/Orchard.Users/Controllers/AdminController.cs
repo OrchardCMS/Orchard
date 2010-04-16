@@ -1,7 +1,8 @@
 using System.Linq;
 using System.Web.Mvc;
-using Orchard.Localization;
 using Orchard.ContentManagement;
+using Orchard.Localization;
+using Orchard.Mvc.Extensions;
 using Orchard.Security;
 using Orchard.UI.Notify;
 using Orchard.Users.Drivers;
@@ -70,11 +71,11 @@ namespace Orchard.Users.Controllers {
 
             string userExistsMessage = _userService.VerifyUserUnicity(model.UserName, model.Email);
             if (userExistsMessage != null) {
-                AddModelError("NotUniqueUserName", T(userExistsMessage));
+                ModelState.AddModelError("NotUniqueUserName", T(userExistsMessage));
             }
 
             if (model.Password != model.ConfirmPassword) {
-                AddModelError("ConfirmPassword", T("Password confirmation must match"));
+                ModelState.AddModelError("ConfirmPassword", T("Password confirmation must match"));
             }
 
             user = _membershipService.CreateUser(new CreateUserParams(
@@ -122,7 +123,7 @@ namespace Orchard.Users.Controllers {
 
             string userExistsMessage = _userService.VerifyUserUnicity(id, model.UserName, model.Email);
             if (userExistsMessage != null) {
-                AddModelError("NotUniqueUserName", T(userExistsMessage));
+                ModelState.AddModelError("NotUniqueUserName", T(userExistsMessage));
             }
 
             if (!ModelState.IsValid) {
@@ -146,9 +147,6 @@ namespace Orchard.Users.Controllers {
 
         bool IUpdateModel.TryUpdateModel<TModel>(TModel model, string prefix, string[] includeProperties, string[] excludeProperties) {
             return TryUpdateModel(model, prefix, includeProperties, excludeProperties);
-        }
-        public void AddModelError(string key, LocalizedString errorMessage) {
-            ModelState.AddModelError(key, errorMessage.ToString());
         }
     }
 
