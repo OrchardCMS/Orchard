@@ -51,8 +51,10 @@ namespace Orchard.Users.Services {
             return _contentManager.Get<IUser>(userRecord.Id);
         }
 
-        public IUser ValidateUser(string username, string password) {
-            var userRecord = _userRepository.Get(x => x.NormalizedUserName == username.ToLower());
+        public IUser ValidateUser(string userNameOrEmail, string password) {
+            var userRecord = _userRepository.Get(x => x.NormalizedUserName == userNameOrEmail.ToLower());
+            if(userRecord == null)
+                userRecord = _userRepository.Get(x => x.Email == userNameOrEmail.ToLower());
             if (userRecord == null || ValidatePassword(userRecord, password) == false)
                 return null;
 
