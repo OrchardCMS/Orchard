@@ -44,6 +44,9 @@ namespace Orchard.Users.Services {
         }
 
         public IUser GetUser(string username) {
+            if(username == null) {
+                throw new ArgumentNullException("username");
+            }
             var userRecord = _userRepository.Get(x => x.NormalizedUserName == username.ToLower());
             if (userRecord == null) {
                 return null;

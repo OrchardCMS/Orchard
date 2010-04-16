@@ -172,7 +172,7 @@ namespace Orchard.Core.Common.Handlers {
             var priorOwner = viewModel.Owner;
             context.Updater.TryUpdateModel(viewModel, "CommonAspect", null, null);
 
-            if (viewModel.Owner != priorOwner) {
+            if (viewModel.Owner != null && viewModel.Owner != priorOwner) {
                 var newOwner = _membershipService.GetUser(viewModel.Owner);
                 if (newOwner == null) {
                     context.Updater.AddModelError("CommonAspect.Owner", T("Invalid user name"));
@@ -181,6 +181,7 @@ namespace Orchard.Core.Common.Handlers {
                     instance.Owner = newOwner;
                 }
             }
+
             context.AddEditor(new TemplateViewModel(viewModel, "CommonAspect") { TemplateName = "Parts/Common.Owner", ZoneName = "primary", Position = "999" });
         }
     }
