@@ -14,6 +14,7 @@ using Orchard.Environment.Configuration;
 using Orchard.Environment.ShellBuilders;
 using Orchard.Environment.Topology;
 using Orchard.Environment.Topology.Models;
+using Orchard.Extensions.Models;
 using Orchard.Mvc;
 using Orchard.Mvc.ModelBinders;
 using Orchard.Mvc.Routes;
@@ -76,6 +77,10 @@ namespace Orchard.Tests.Environment {
         public class StuExtensionManager : IExtensionManager {
             public IEnumerable<ExtensionDescriptor> AvailableExtensions() {
                 return Enumerable.Empty<ExtensionDescriptor>();
+            }
+
+            public IEnumerable<Feature> LoadFeatures(IEnumerable<FeatureDescriptor> features) {
+                throw new NotImplementedException();
             }
 
             public IEnumerable<ExtensionEntry> ActiveExtensions() {

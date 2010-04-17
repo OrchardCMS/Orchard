@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Reflection;
+using Orchard.Extensions.Models;
 
 namespace Orchard.Extensions.Loaders {
     public class CoreExtensionLoader : IExtensionLoader {

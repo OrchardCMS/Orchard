@@ -189,8 +189,10 @@
     <Compile Include="Events\IEventBusHandler.cs" />
     <Compile Include="Extensions\AreaFolders.cs" />
     <Compile Include="Extensions\ExtensionFolders.cs" />
-    <Compile Include="Extensions\FeatureDescriptor.cs" />
+    <Compile Include="Extensions\Models\Extension.cs" />
+    <Compile Include="Extensions\Models\FeatureDescriptor.cs" />
     <Compile Include="Extensions\Loaders\AreaExtensionLoader.cs" />
+    <Compile Include="Extensions\Models\Feature.cs" />
     <Compile Include="Extensions\OrchardFeatureAttribute.cs" />
     <Compile Include="Extensions\Records\ExtensionRecord.cs" />
     <Compile Include="Extensions\ShellTopology.cs" />
@@ -271,7 +273,7 @@
     <Compile Include="Data\TransactionManager.cs" />
     <Compile Include="Environment\IOrchardShellEvents.cs" />
     <Compile Include="Environment\OrchardServices.cs" />
-    <Compile Include="Extensions\ExtensionDescriptor.cs" />
+    <Compile Include="Extensions\Models\ExtensionDescriptor.cs" />
     <Compile Include="Extensions\ExtensionEntry.cs" />
     <Compile Include="IOrchardServices.cs" />
     <Compile Include="Themes\ThemeFilter.cs" />

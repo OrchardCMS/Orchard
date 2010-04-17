@@ -165,6 +165,7 @@
     <Compile Include="Environment\OrchardStarterTests.cs" />
     <Compile Include="Environment\ShellBuilders\DefaultShellContainerFactoryTests.cs" />
     <Compile Include="Environment\ShellBuilders\DefaultShellContextFactoryTests.cs" />
+    <Compile Include="Utility\ContainerExtensions.cs" />
     <Compile Include="Environment\ShellBuilders\SetupShellContainerFactoryTests.cs" />
     <Compile Include="Environment\TestDependencies\TestDependency.cs" />
     <Compile Include="Environment\Topology\DefaultTopologyDescriptorCacheTests.cs" />

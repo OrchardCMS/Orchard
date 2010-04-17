@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Routing;
 using NUnit.Framework;
+using Orchard.Extensions.Models;
 using Orchard.Mvc.Routes;
 using Orchard.Extensions;
 
@@ -36,6 +37,10 @@ namespace Orchard.Tests.Mvc.Routes {
 
         public class StubExtensionManager : IExtensionManager {
             public IEnumerable<ExtensionDescriptor> AvailableExtensions() {
+                throw new NotImplementedException();
+            }
+
+            public IEnumerable<Feature> LoadFeatures(IEnumerable<FeatureDescriptor> features) {
                 throw new NotImplementedException();
             }
 

@@ -5,6 +5,7 @@ using System.Linq;
 using System.Reflection;
 using System.Web.Compilation;
 using System.Web.Hosting;
+using Orchard.Extensions.Models;
 
 namespace Orchard.Extensions.Loaders {
     public class DynamicExtensionLoader : IExtensionLoader {

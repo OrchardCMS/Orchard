@@ -6,6 +6,7 @@ using ICSharpCode.SharpZipLib.Zip;
 using Orchard.Environment;
 using Orchard.Extensions.Helpers;
 using Orchard.Extensions.Loaders;
+using Orchard.Extensions.Models;
 using Orchard.Localization;
 using Orchard.Logging;
 using Yaml.Grammar;
@@ -45,6 +46,10 @@ namespace Orchard.Extensions {
             return availableExtensions;
         }
 
+        public IEnumerable<Feature> LoadFeatures(IEnumerable<FeatureDescriptor> features) {
+            throw new NotImplementedException();
+        }
+
         // This method loads types from extensions into the ExtensionEntry array.
         public IEnumerable<ExtensionEntry> ActiveExtensions() {
             if (_activeExtensions == null) {
@@ -52,6 +57,7 @@ namespace Orchard.Extensions {
             }
             return _activeExtensions;
         }
+      
 
         private static ExtensionDescriptor GetDescriptorForExtension(string name, IExtensionFolders folder) {
             string extensionType = folder is ThemeFolders ? "Theme" : "Module";

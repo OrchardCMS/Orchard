@@ -1,4 +1,6 @@
-﻿namespace Orchard.Extensions.Loaders {
+﻿using Orchard.Extensions.Models;
+
+namespace Orchard.Extensions.Loaders {
     public class PrecompiledExtensionLoader : IExtensionLoader {
         public int Order { get { return 3; } }
 

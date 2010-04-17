@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
+using Orchard.Extensions.Models;
 
 namespace Orchard.Extensions {
     public class ExtensionEntry {

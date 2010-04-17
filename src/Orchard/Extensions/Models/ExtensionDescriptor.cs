@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Orchard.Extensions {
+namespace Orchard.Extensions.Models {
     public class ExtensionDescriptor {
         /// <summary>
         /// Virtual path base, "~/Themes", "~/Modules", or "~/Core"

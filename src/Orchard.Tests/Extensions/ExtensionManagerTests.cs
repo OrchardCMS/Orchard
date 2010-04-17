@@ -5,6 +5,7 @@ using Autofac;
 using NUnit.Framework;
 using Orchard.Extensions;
 using Orchard.Extensions.Loaders;
+using Orchard.Extensions.Models;
 using Orchard.Tests.Extensions.ExtensionTypes;
 using Yaml.Grammar;
 
