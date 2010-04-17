@@ -7,11 +7,12 @@ using Autofac.Configuration;
 using Autofac.Integration.Web;
 using Orchard.Environment.AutofacUtil;
 using Orchard.Environment.Configuration;
+using Orchard.Environment.Extensions;
+using Orchard.Environment.Extensions.Folders;
+using Orchard.Environment.Extensions.Loaders;
 using Orchard.Environment.ShellBuilders;
 using Orchard.Environment.Topology;
 using Orchard.Events;
-using Orchard.Extensions;
-using Orchard.Extensions.Loaders;
 
 namespace Orchard.Environment {
     public static class OrchardStarter {

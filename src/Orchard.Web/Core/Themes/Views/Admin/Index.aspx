@@ -1,6 +1,5 @@
 ﻿<%@ Page Language="C#" Inherits="Orchard.Mvc.ViewPage<ThemesIndexViewModel>" %>
 <%@ Import Namespace="Orchard.Themes"%>
-<%@ Import Namespace="Orchard.Extensions"%>
 <%@ Import Namespace="Orchard.Core.Themes.ViewModels"%>
 <h1><%=Html.TitleForPage(T("Manage Themes").ToString()) %></h1>
 <% if (Model.CurrentTheme == null) {

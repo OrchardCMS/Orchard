@@ -12,10 +12,9 @@ using Castle.Core.Interceptor;
 using NUnit.Framework;
 using Orchard.Environment.AutofacUtil.DynamicProxy2;
 using Orchard.Environment.Configuration;
+using Orchard.Environment.Extensions.Models;
 using Orchard.Environment.ShellBuilders;
 using Orchard.Environment.Topology.Models;
-using Orchard.Extensions;
-using Orchard.Extensions.Models;
 
 namespace Orchard.Tests.Environment.ShellBuilders {
     [TestFixture]

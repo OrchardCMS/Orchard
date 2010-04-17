@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using Orchard.Environment.Configuration;
-using Orchard.Extensions;
-using Orchard.Extensions.Models;
+using Orchard.Environment.Extensions;
+using Orchard.Environment.Extensions.Models;
 
 namespace Orchard.Environment.Topology.Models {
     public class ShellTopology {

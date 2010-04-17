@@ -6,19 +6,17 @@ using System.Web.Mvc;
 using Autofac.Core;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Records;
+using Orchard.Environment.Extensions;
+using Orchard.Environment.Extensions.Models;
+using Orchard.Environment.Extensions.Records;
 using Orchard.Environment.Topology;
 using Orchard.Environment.Topology.Models;
-using Orchard.Extensions;
-using Orchard.Extensions.Models;
 using Orchard.Utility.Extensions;
-using Orchard.Extensions.Records;
 
 namespace Orchard.Environment {
     //TEMP: This will be replaced by packaging system
 
     public interface ICompositionStrategy_Obsolete {
-        IEnumerable<Type> GetModuleTypes();
-        IEnumerable<Type> GetDependencyTypes();
         IEnumerable<RecordDescriptor> GetRecordDescriptors();
     }
 
@@ -44,7 +42,7 @@ namespace Orchard.Environment {
 
             return new ShellTopology {
                 Modules = BuildTopology<ModuleTopology>(features, IsModule, BuildModule),
-                Dependencies = BuildTopology<DependencyTopology>(features, IsDependency, BuildDependency),
+                Dependencies = BuildTopology<DependencyTopology>(features, IsDependency, (t, f) => BuildDependency(t, f, topologyDescriptor)),
                 Controllers = BuildTopology<ControllerTopology>(features, IsController, BuildController),
                 Records = BuildTopology<RecordTopology>(features, IsRecord, BuildRecord),
             };
@@ -78,8 +76,12 @@ namespace Orchard.Environment {
             return typeof(IDependency).IsAssignableFrom(type);
         }
 
-        private static DependencyTopology BuildDependency(Type type, Feature feature) {
-            return new DependencyTopology {Type = type, Feature = feature};
+        private static DependencyTopology BuildDependency(Type type, Feature feature, ShellTopologyDescriptor topologyDescriptor) {
+            return new DependencyTopology {
+                Type = type,
+                Feature = feature,
+                Parameters = topologyDescriptor.Parameters.Where(x => x.Component == type.FullName).ToArray()
+            };
         }
 
         private static bool IsController(Type type) {
@@ -87,7 +89,18 @@ namespace Orchard.Environment {
         }
 
         private static ControllerTopology BuildController(Type type, Feature feature) {
-            return new ControllerTopology { Type = type, Feature = feature };
+            var areaName = feature.FeatureDescriptor.ExtensionName;
+
+            var controllerName = type.Name;
+            if (controllerName.EndsWith("Controller"))
+                controllerName = controllerName.Substring(0, controllerName.Length - "Controller".Length);
+
+            return new ControllerTopology {
+                Type = type,
+                Feature = feature,
+                AreaName = areaName,
+                ControllerName = controllerName,
+            };
         }
 
         private static bool IsRecord(Type type) {
@@ -96,21 +109,13 @@ namespace Orchard.Environment {
                    (type.GetProperty("Id").GetAccessors() ?? Enumerable.Empty<MethodInfo>()).All(x => x.IsVirtual) &&
                    !type.IsSealed &&
                    !type.IsAbstract &&
-                   (!typeof(IContent).IsAssignableFrom(type) || typeof(ContentPartRecord).IsAssignableFrom(type));;
+                   (!typeof(IContent).IsAssignableFrom(type) || typeof(ContentPartRecord).IsAssignableFrom(type)); ;
         }
 
         private static RecordTopology BuildRecord(Type type, Feature feature) {
             return new RecordTopology { Type = type, Feature = feature };
         }
 
-
-        public IEnumerable<Type> GetModuleTypes() {
-            return _extensionManager.GetExtensionsTopology().Types.Where(t => typeof(IModule).IsAssignableFrom(t));
-        }
-
-        public IEnumerable<Type> GetDependencyTypes() {
-            return _extensionManager.GetExtensionsTopology().Types.Where(t => typeof(IDependency).IsAssignableFrom(t));
-        }
 
         public IEnumerable<RecordDescriptor> GetRecordDescriptors() {
             var descriptors = new List<RecordDescriptor>{
@@ -120,7 +125,7 @@ namespace Orchard.Environment {
                 new RecordDescriptor { Prefix = "Core", Type = typeof (ExtensionRecord)},
             };
 
-            foreach (var extension in _extensionManager.ActiveExtensions()) {
+            foreach (var extension in _extensionManager.ActiveExtensions_Obsolete()) {
                 var prefix = extension.Descriptor.Name
                     .Replace("Orchard.", "")
                     .Replace(".", "_");

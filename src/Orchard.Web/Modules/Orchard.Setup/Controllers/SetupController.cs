@@ -8,7 +8,7 @@ using Orchard.Core.Settings.Models;
 using Orchard.Data;
 using Orchard.Environment;
 using Orchard.Environment.Configuration;
-using Orchard.Extensions;
+using Orchard.Environment.Extensions;
 using Orchard.Security;
 using Orchard.Settings;
 using Orchard.Setup.ViewModels;

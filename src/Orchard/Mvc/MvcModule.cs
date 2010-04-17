@@ -7,8 +7,8 @@ using Autofac;
 using Autofac.Integration.Web;
 using Autofac.Integration.Web.Mvc;
 using Orchard.Environment.AutofacUtil.DynamicProxy2;
+using Orchard.Environment.Extensions;
 using Orchard.Mvc.Filters;
-using Orchard.Extensions;
 using Autofac.Core;
 
 namespace Orchard.Mvc {
@@ -22,7 +22,7 @@ namespace Orchard.Mvc {
         }
 
         protected override void Load(ContainerBuilder moduleBuilder) {
-            var extensions = _extensionManager.ActiveExtensions();
+            var extensions = _extensionManager.ActiveExtensions_Obsolete();
             var assemblies = extensions.Select(x => x.Assembly);
             var actionInvokerService = new UniqueService();
             moduleBuilder.RegisterType<FilterResolvingActionInvoker>().As(actionInvokerService).InstancePerDependency();

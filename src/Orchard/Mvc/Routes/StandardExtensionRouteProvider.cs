@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Web.Mvc;
 using System.Web.Routing;
-using Orchard.Extensions;
+using Orchard.Environment.Extensions;
 
 namespace Orchard.Mvc.Routes {
     public class StandardExtensionRouteProvider : IRouteProvider {
@@ -12,7 +12,7 @@ namespace Orchard.Mvc.Routes {
         }
 
         public IEnumerable<RouteDescriptor> GetRoutes() {
-            foreach (var entry in _extensionManager.ActiveExtensions()) {
+            foreach (var entry in _extensionManager.ActiveExtensions_Obsolete()) {
                 var areaName = entry.Descriptor.Name;
                 var displayName = entry.Descriptor.DisplayName ?? areaName;
 

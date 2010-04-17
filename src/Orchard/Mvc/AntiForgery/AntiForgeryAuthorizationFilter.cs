@@ -3,7 +3,7 @@ using System.Collections.Specialized;
 using System.Web;
 using System.Web.Mvc;
 using JetBrains.Annotations;
-using Orchard.Extensions;
+using Orchard.Environment.Extensions;
 using Orchard.Mvc.Filters;
 using Orchard.Security;
 using Orchard.Settings;

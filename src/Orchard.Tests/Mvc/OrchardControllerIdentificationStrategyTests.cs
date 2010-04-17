@@ -1,8 +1,8 @@
 ﻿using System.Linq;
 using System.Web.Mvc;
 using NUnit.Framework;
+using Orchard.Environment.Extensions;
 using Orchard.Mvc;
-using Orchard.Extensions;
 using Autofac.Core;
 
 namespace Orchard.Tests.Mvc {

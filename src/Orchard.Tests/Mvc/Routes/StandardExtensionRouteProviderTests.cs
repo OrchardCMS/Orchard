@@ -4,10 +4,9 @@ using System.Linq;
 using System.Web;
 using System.Web.Routing;
 using NUnit.Framework;
-using Orchard.Extensions.Models;
+using Orchard.Environment.Extensions;
+using Orchard.Environment.Extensions.Models;
 using Orchard.Mvc.Routes;
-using Orchard.Extensions;
-using Orchard.Extensions.Models;
 
 namespace Orchard.Tests.Mvc.Routes {
     [TestFixture]
@@ -45,7 +44,11 @@ namespace Orchard.Tests.Mvc.Routes {
                 throw new NotImplementedException();
             }
 
-            public IEnumerable<ExtensionEntry> ActiveExtensions() {
+            public Feature LoadFeature(FeatureDescriptor featureDescriptor) {
+                throw new NotImplementedException();
+            }
+
+            public IEnumerable<ExtensionEntry> ActiveExtensions_Obsolete() {
                 yield return new ExtensionEntry {
                     Descriptor = new ExtensionDescriptor {
                         Name = "Long.Name.Foo",

@@ -1,7 +1,7 @@
 using System.IO;
 using System.Linq;
-using Orchard.Extensions;
-using Orchard.Extensions.Models;
+using Orchard.Environment.Extensions;
+using Orchard.Environment.Extensions.Models;
 
 namespace Orchard.Themes {
     public static class ExtensionManagerExtensions {

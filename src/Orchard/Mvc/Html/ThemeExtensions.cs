@@ -1,7 +1,7 @@
 ﻿using System.Web.Mvc;
 using System.Web.Mvc.Html;
 using System.Web.UI;
-using Orchard.Extensions;
+using Orchard.Environment.Extensions;
 using Orchard.Themes;
 using Orchard.Validation;
 

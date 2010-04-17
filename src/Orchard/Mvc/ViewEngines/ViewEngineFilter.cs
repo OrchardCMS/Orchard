@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Web.Mvc;
-using Orchard.Extensions;
+using Orchard.Environment.Extensions;
 using Orchard.Logging;
 using Orchard.Mvc.Filters;
 using Orchard.Themes;
@@ -52,7 +52,7 @@ namespace Orchard.Mvc.ViewEngines {
             }
 
 
-            var modules = _extensionManager.ActiveExtensions()
+            var modules = _extensionManager.ActiveExtensions_Obsolete()
                 .Where(x => x.Descriptor.ExtensionType == "Module");
 
             var moduleLocations = modules.Select(x => Path.Combine(x.Descriptor.Location, x.Descriptor.Name));

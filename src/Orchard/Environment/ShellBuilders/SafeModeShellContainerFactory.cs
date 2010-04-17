@@ -13,7 +13,7 @@ using Orchard.Data.Builders;
 using Orchard.Environment.AutofacUtil;
 using Orchard.Environment.AutofacUtil.DynamicProxy2;
 using Orchard.Environment.Configuration;
-using Orchard.Extensions;
+using Orchard.Environment.Extensions;
 using Orchard.Localization;
 using Orchard.Mvc;
 using Orchard.Mvc.Filters;

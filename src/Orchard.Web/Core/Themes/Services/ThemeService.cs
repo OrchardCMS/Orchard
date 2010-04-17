@@ -4,7 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Routing;
 using JetBrains.Annotations;
-using Orchard.Extensions;
+using Orchard.Environment.Extensions;
 using Orchard.Logging;
 using Orchard.ContentManagement;
 using Orchard.Settings;

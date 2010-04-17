@@ -11,17 +11,16 @@ using NUnit.Framework;
 using Orchard.Environment;
 using Orchard.Environment.AutofacUtil;
 using Orchard.Environment.Configuration;
+using Orchard.Environment.Extensions;
+using Orchard.Environment.Extensions.Models;
 using Orchard.Environment.ShellBuilders;
 using Orchard.Environment.Topology;
 using Orchard.Environment.Topology.Models;
-using Orchard.Extensions.Models;
 using Orchard.Mvc;
 using Orchard.Mvc.ModelBinders;
 using Orchard.Mvc.Routes;
-using Orchard.Extensions;
 using Orchard.Tests.Environment.TestDependencies;
 using Orchard.Tests.Stubs;
-using Orchard.Extensions.Models;
 
 namespace Orchard.Tests.Environment {
     [TestFixture]
@@ -84,7 +83,11 @@ namespace Orchard.Tests.Environment {
                 throw new NotImplementedException();
             }
 
-            public IEnumerable<ExtensionEntry> ActiveExtensions() {
+            public Feature LoadFeature(FeatureDescriptor featureDescriptor) {
+                throw new NotImplementedException();
+            }
+
+            public IEnumerable<ExtensionEntry> ActiveExtensions_Obsolete() {
                 return Enumerable.Empty<ExtensionEntry>();
             }
 
@@ -115,18 +118,6 @@ namespace Orchard.Tests.Environment {
         }
 
         public class StubCompositionStrategy : ICompositionStrategy_Obsolete, ICompositionStrategy {
-            public IEnumerable<Type> GetModuleTypes() {
-                return Enumerable.Empty<Type>();
-            }
-
-            public IEnumerable<Type> GetDependencyTypes() {
-                return new[] {
-                                 typeof (TestDependency),
-                                 typeof (TestSingletonDependency),
-                                 typeof(TestTransientDependency)
-                             };
-            }
-
             public IEnumerable<RecordDescriptor> GetRecordDescriptors() {
                 return Enumerable.Empty<RecordDescriptor>();
             }
