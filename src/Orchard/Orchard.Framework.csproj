@@ -193,6 +193,7 @@
     <Compile Include="Extensions\Models\FeatureDescriptor.cs" />
     <Compile Include="Extensions\Loaders\AreaExtensionLoader.cs" />
     <Compile Include="Extensions\Models\Feature.cs" />
+    <Compile Include="Extensions\Models\FeatureDescriptor.cs" />
     <Compile Include="Extensions\OrchardFeatureAttribute.cs" />
     <Compile Include="Extensions\Records\ExtensionRecord.cs" />
     <Compile Include="Extensions\ShellTopology.cs" />

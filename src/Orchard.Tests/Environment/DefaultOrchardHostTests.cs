@@ -21,6 +21,7 @@ using Orchard.Mvc.Routes;
 using Orchard.Extensions;
 using Orchard.Tests.Environment.TestDependencies;
 using Orchard.Tests.Stubs;
+using Orchard.Extensions.Models;
 
 namespace Orchard.Tests.Environment {
     [TestFixture]
@@ -91,7 +92,7 @@ namespace Orchard.Tests.Environment {
                 throw new NotImplementedException();
             }
 
-            public IEnumerable<Type> LoadFeature(string featureName) {
+            public Feature LoadFeature(string featureName) {
                 throw new NotImplementedException();
             }
 
