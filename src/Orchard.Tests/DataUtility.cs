@@ -10,7 +10,8 @@ using NHibernate;
 using NHibernate.Tool.hbm2ddl;
 using Orchard.Data;
 using Orchard.Data.Builders;
-using Orchard.Environment;
+using Orchard.Environment.Topology;
+using Orchard.Environment.Topology.Models;
 
 namespace Orchard.Tests {
     public static class DataUtility {
@@ -19,7 +20,7 @@ namespace Orchard.Tests {
             //var persistenceModel = AutoMap.Source(new Types(types))
             //    .Alterations(alt => AddAlterations(alt, types))
             //    .Conventions.AddFromAssemblyOf<DataModule>();
-            var persistenceModel = AbstractBuilder.CreatePersistenceModel(types.Select(t => new RecordDescriptor_Obsolete { Prefix = "Test", Type = t }));
+            var persistenceModel = AbstractBuilder.CreatePersistenceModel(types.Select(t => new RecordTopology { TableName = "Test", Type = t }));
 
             return Fluently.Configure()
                 .Database(SQLiteConfiguration.Standard.UsingFile(fileName).ShowSql())

@@ -2,8 +2,9 @@
 using System.IO;
 using NHibernate;
 using Orchard.Data.Builders;
-using Orchard.Environment;
 using Orchard.Environment.Configuration;
+using Orchard.Environment.Topology;
+using Orchard.Environment.Topology.Models;
 using Orchard.Logging;
 
 namespace Orchard.Data {
@@ -15,7 +16,7 @@ namespace Orchard.Data {
 
     public class SessionFactoryHolder : ISessionFactoryHolder {
         private readonly ShellSettings _shellSettings;
-        private readonly ICompositionStrategy_Obsolete _compositionStrategy;
+        private readonly ShellTopology _shellTopology;
         private readonly ISessionFactoryBuilder _sessionFactoryBuilder;
         private readonly IAppDataFolder _appDataFolder;
 
@@ -23,11 +24,11 @@ namespace Orchard.Data {
 
         public SessionFactoryHolder(
             ShellSettings shellSettings,
-            ICompositionStrategy_Obsolete compositionStrategy,
+            ShellTopology shellTopology,
             ISessionFactoryBuilder sessionFactoryBuilder,
             IAppDataFolder appDataFolder) {
             _shellSettings = shellSettings;
-            _compositionStrategy = compositionStrategy;
+            _shellTopology = shellTopology;
             _sessionFactoryBuilder = sessionFactoryBuilder;
             _appDataFolder = appDataFolder;
             Logger = NullLogger.Instance;
@@ -77,7 +78,7 @@ namespace Orchard.Data {
                 ConnectionString = _shellSettings.DataConnectionString,
                 CreateDatabase = createDatabase,
                 UpdateSchema = updateSchema,
-                RecordDescriptors = _compositionStrategy.GetRecordDescriptors_Obsolete(),
+                RecordDescriptors = _shellTopology.Records,
             });
 
             return sessionFactory;

@@ -8,7 +8,6 @@ using Autofac.Core;
 using Moq;
 using NUnit.Framework;
 using Orchard.ContentManagement.Records;
-using Orchard.Environment;
 using Orchard.Environment.Extensions;
 using Orchard.Environment.Extensions.Models;
 using Orchard.Environment.Topology;
@@ -29,7 +28,7 @@ namespace Orchard.Tests.Environment {
         [SetUp]
         public void Init() {
             var builder = new ContainerBuilder();
-            builder.RegisterType<DefaultCompositionStrategy>().As<ICompositionStrategy>();
+            builder.RegisterType<CompositionStrategy>().As<ICompositionStrategy>();
             builder.RegisterAutoMocking(MockBehavior.Strict);
             _container = builder.Build();
 

@@ -41,7 +41,7 @@ namespace Orchard.Tests.Environment {
                 builder => {
                     //builder.RegisterModule(new ImplicitCollectionSupportModule());
                     builder.RegisterType<StubContainerProvider>().As<IContainerProvider>().InstancePerLifetimeScope();
-                    builder.RegisterType<StubCompositionStrategy>().As<ICompositionStrategy_Obsolete>().As<ICompositionStrategy>().InstancePerLifetimeScope();
+                    builder.RegisterType<StubCompositionStrategy>().As<ICompositionStrategy>().InstancePerLifetimeScope();
                     builder.RegisterType<DefaultOrchardHost>().As<IOrchardHost>().SingleInstance();
                     builder.RegisterType<RoutePublisher>().As<IRoutePublisher>();
                     builder.RegisterType<ModelBinderPublisher>().As<IModelBinderPublisher>();
@@ -52,7 +52,7 @@ namespace Orchard.Tests.Environment {
                     builder.RegisterInstance(new ViewEngineCollection { new WebFormViewEngine() });
                     builder.RegisterInstance(new StuExtensionManager()).As<IExtensionManager>();
                     builder.RegisterInstance(new Mock<IHackInstallationGenerator>().Object);
-                    builder.RegisterInstance(new StubShellSettingsLoader()).As<ITenantManager>();
+                    builder.RegisterInstance(new StubShellSettingsLoader()).As<IShellSettingsManager>();
                     builder.RegisterInstance(new Mock<ITopologyDescriptorCache>().Object);
                 });
             _lifetime = _container.BeginLifetimeScope();
@@ -61,7 +61,7 @@ namespace Orchard.Tests.Environment {
             updater.Update(_lifetime);
         }
 
-        public class StubShellSettingsLoader : ITenantManager {
+        public class StubShellSettingsLoader : IShellSettingsManager {
             private readonly List<ShellSettings> _shellSettings = new List<ShellSettings>
                                                                    {new ShellSettings {Name = "testing"}};
 
@@ -91,10 +91,6 @@ namespace Orchard.Tests.Environment {
                 return Enumerable.Empty<ExtensionEntry>();
             }
 
-            public ShellTopology_Obsolete GetExtensionsTopology() {
-                throw new NotImplementedException();
-            }
-
             public Feature LoadFeature(string featureName) {
                 throw new NotImplementedException();
             }
@@ -117,11 +113,7 @@ namespace Orchard.Tests.Environment {
             Assert.That(_controllerBuilder.GetControllerFactory(), Is.TypeOf<OrchardControllerFactory>());
         }
 
-        public class StubCompositionStrategy : ICompositionStrategy_Obsolete, ICompositionStrategy {
-            public IEnumerable<RecordDescriptor_Obsolete> GetRecordDescriptors_Obsolete() {
-                return Enumerable.Empty<RecordDescriptor_Obsolete>();
-            }
-
+        public class StubCompositionStrategy : ICompositionStrategy {
             public ShellTopology Compose(ShellTopologyDescriptor descriptor) {
                 throw new NotImplementedException();
             }

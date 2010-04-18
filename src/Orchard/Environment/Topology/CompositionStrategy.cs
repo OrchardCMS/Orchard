@@ -8,35 +8,33 @@ using Orchard.ContentManagement;
 using Orchard.ContentManagement.Records;
 using Orchard.Environment.Extensions;
 using Orchard.Environment.Extensions.Models;
-using Orchard.Environment.Topology;
 using Orchard.Environment.Topology.Models;
-using Orchard.Utility.Extensions;
 
-namespace Orchard.Environment {
-    //TEMP: This will be replaced by packaging system
-
-    public interface ICompositionStrategy_Obsolete {
-        IEnumerable<RecordDescriptor_Obsolete> GetRecordDescriptors_Obsolete();
+namespace Orchard.Environment.Topology {
+    /// <summary>
+    /// Service at the host level to transform the cachable topology into the loadable topology.
+    /// </summary>
+    public interface ICompositionStrategy {
+        /// <summary>
+        /// Using information from the IExtensionManager, transforms and populates all of the
+        /// topology model the shell builders will need to correctly initialize a tenant IoC container.
+        /// </summary>
+        ShellTopology Compose(ShellTopologyDescriptor descriptor);
     }
 
-    public class RecordDescriptor_Obsolete {
-        public Type Type { get; set; }
-        public string Prefix { get; set; }
-    }
-
-    public class DefaultCompositionStrategy : ICompositionStrategy, ICompositionStrategy_Obsolete {
+    public class CompositionStrategy : ICompositionStrategy {
         private readonly IExtensionManager _extensionManager;
 
-        public DefaultCompositionStrategy(IExtensionManager extensionManager) {
+        public CompositionStrategy(IExtensionManager extensionManager) {
             _extensionManager = extensionManager;
         }
 
         public ShellTopology Compose(ShellTopologyDescriptor topologyDescriptor) {
-            var featureDescriptors = _extensionManager.AvailableExtensions()
+            var enabledFeatures = _extensionManager.AvailableExtensions()
                 .SelectMany(extensionDescriptor => extensionDescriptor.Features)
                 .Where(featureDescriptor => IsFeatureEnabledInTopology(featureDescriptor, topologyDescriptor));
 
-            var features = _extensionManager.LoadFeatures(featureDescriptors);
+            var features = _extensionManager.LoadFeatures(enabledFeatures);
 
             return new ShellTopology {
                 Modules = BuildTopology<ModuleTopology>(features, IsModule, BuildModule),
@@ -108,7 +106,7 @@ namespace Orchard.Environment {
                    (type.GetProperty("Id").GetAccessors() ?? Enumerable.Empty<MethodInfo>()).All(x => x.IsVirtual) &&
                    !type.IsSealed &&
                    !type.IsAbstract &&
-                   (!typeof(IContent).IsAssignableFrom(type) || typeof(ContentPartRecord).IsAssignableFrom(type)); ;
+                   (!typeof(IContent).IsAssignableFrom(type) || typeof(ContentPartRecord).IsAssignableFrom(type));
         }
 
         private static RecordTopology BuildRecord(Type type, Feature feature) {
@@ -121,39 +119,5 @@ namespace Orchard.Environment {
                 TableName = extensionName + '_' + type.Name,
             };
         }
-
-
-        public IEnumerable<RecordDescriptor_Obsolete> GetRecordDescriptors_Obsolete() {
-            var descriptors = new List<RecordDescriptor_Obsolete>{
-                new RecordDescriptor_Obsolete { Prefix = "Core", Type = typeof (ContentTypeRecord)},
-                new RecordDescriptor_Obsolete { Prefix = "Core", Type = typeof (ContentItemRecord)},
-                new RecordDescriptor_Obsolete { Prefix = "Core", Type = typeof (ContentItemVersionRecord)},
-            };
-
-            foreach (var extension in _extensionManager.ActiveExtensions_Obsolete()) {
-                var prefix = extension.Descriptor.Name
-                    .Replace("Orchard.", "")
-                    .Replace(".", "_");
-
-                var recordDescriptors = extension
-                    .ExportedTypes
-                    .Where(IsRecordType)
-                    .Select(type => new RecordDescriptor_Obsolete { Prefix = prefix, Type = type });
-
-                descriptors.AddRange(recordDescriptors);
-            }
-
-            return descriptors.ToReadOnlyCollection();
-        }
-
-        private static bool IsRecordType(Type type) {
-            return ((type.Namespace ?? "").EndsWith(".Models") || (type.Namespace ?? "").EndsWith(".Records")) &&
-                   type.GetProperty("Id") != null &&
-                   (type.GetProperty("Id").GetAccessors() ?? Enumerable.Empty<MethodInfo>()).All(x => x.IsVirtual) &&
-                   !type.IsSealed &&
-                   !type.IsAbstract &&
-                   (!typeof(IContent).IsAssignableFrom(type) || typeof(ContentPartRecord).IsAssignableFrom(type));
-        }
-
     }
 }

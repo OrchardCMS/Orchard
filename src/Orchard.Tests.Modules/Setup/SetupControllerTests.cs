@@ -43,7 +43,7 @@ namespace Orchard.Tests.Modules.Setup {
             //builder.Register<Notifier>().As<INotifier>();
             //builder.Register<DefaultOrchardHost>().As<IOrchardHost>();
             //builder.Register<DatabaseMigrationManager>().As<IDatabaseMigrationManager>();
-            //builder.Register<DefaultTenantManager>().As<ITenantManager>();
+            //builder.Register<ShellSettingsManager>().As<IShellSettingsManager>();
             //builder.Register<TestAppDataFolder>().As<IAppDataFolder>();
             //_container = builder.Build();
         }

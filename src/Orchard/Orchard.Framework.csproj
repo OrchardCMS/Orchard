@@ -123,7 +123,7 @@
     <Compile Include="Mvc\Routes\RoutePublisher.cs" />
     <Compile Include="Mvc\Routes\RouteDescriptor.cs" />
     <Compile Include="Data\Repository.cs" />
-    <Compile Include="Environment\DefaultCompositionStrategy.cs" />
+    <Compile Include="Environment\Topology\CompositionStrategy.cs" />
     <Compile Include="Environment\DefaultOrchardHost.cs" />
     <Compile Include="Mvc\OrchardControllerFactory.cs" />
     <Compile Include="Environment\IOrchardHost.cs" />
@@ -165,16 +165,12 @@
     <Compile Include="Environment\AutofacUtil\DynamicProxy2\DynamicProxyExtensions.cs" />
     <Compile Include="Environment\AutofacUtil\DynamicProxy2\ConstructorFinderWrapper.cs" />
     <Compile Include="Environment\Configuration\AppDataFolder.cs" />
-    <Compile Include="Environment\Configuration\AzureBlobTenantManager.cs" />
-    <Compile Include="Environment\Configuration\DefaultTenantManager.cs" />
-    <Compile Include="Environment\Configuration\ITenantManager.cs" />
+    <Compile Include="Environment\Configuration\ShellSettingsManager.cs" />
     <Compile Include="Environment\AutofacUtil\ContainerUpdater.cs" />
     <Compile Include="Environment\ShellBuilders\ShellContextFactory.cs" />
     <Compile Include="Environment\ShellBuilders\ShellContext.cs" />
-    <Compile Include="Environment\Topology\DefaultTopologyDescriptorCache.cs" />
-    <Compile Include="Environment\Topology\ICompositionStrategy.cs" />
+    <Compile Include="Environment\Topology\TopologyDescriptorCache.cs" />
     <Compile Include="Environment\Topology\ITopologyDescriptorManager.cs" />
-    <Compile Include="Environment\Topology\ITopologyDescriptorCache.cs" />
     <Compile Include="Environment\Topology\Models\ShellTopology.cs" />
     <Compile Include="Environment\Topology\Models\ShellTopologyDescriptor.cs" />
     <Compile Include="Environment\ShellBuilders\ShellContainerFactory.cs" />

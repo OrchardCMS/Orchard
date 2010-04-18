@@ -13,29 +13,14 @@ namespace Orchard.Environment.Extensions {
     }
 
     public abstract class ExtensionManagerEvents : IExtensionManagerEvents {
-        public virtual void Enabling(ExtensionEventContext context) {
-        }
-
-        public virtual void Enabled(ExtensionEventContext context) {
-        }
-
-        public virtual void Disabling(ExtensionEventContext context) {
-        }
-
-        public virtual void Disabled(ExtensionEventContext context) {
-        }
-
-        public virtual void Activating(ExtensionEventContext context) {
-        }
-
-        public virtual void Activated(ExtensionEventContext context) {
-        }
-
-        public virtual void Deactivating(ExtensionEventContext context) {
-        }
-
-        public virtual void Deactivated(ExtensionEventContext context) {
-        }
+        public virtual void Enabling(ExtensionEventContext context) { }
+        public virtual void Enabled(ExtensionEventContext context) { }
+        public virtual void Disabling(ExtensionEventContext context) {}
+        public virtual void Disabled(ExtensionEventContext context) {}
+        public virtual void Activating(ExtensionEventContext context) {}
+        public virtual void Activated(ExtensionEventContext context) {}
+        public virtual void Deactivating(ExtensionEventContext context) {}
+        public virtual void Deactivated(ExtensionEventContext context) {}
     }
 
     public class ExtensionEventContext {

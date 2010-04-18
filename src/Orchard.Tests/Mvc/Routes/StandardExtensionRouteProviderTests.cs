@@ -87,10 +87,6 @@ namespace Orchard.Tests.Mvc.Routes {
                 };
             }
 
-            public ShellTopology_Obsolete GetExtensionsTopology() {
-                throw new NotImplementedException();
-            }
-
             public Feature LoadFeature(string featureName) {
                 throw new NotImplementedException();
             }

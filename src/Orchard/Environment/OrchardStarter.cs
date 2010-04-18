@@ -29,15 +29,14 @@ namespace Orchard.Environment {
 
             builder.RegisterType<DefaultOrchardHost>().As<IOrchardHost>().SingleInstance();
             {
-                builder.RegisterType<DefaultTenantManager>().As<ITenantManager>().SingleInstance();
+                builder.RegisterType<ShellSettingsManager>().As<IShellSettingsManager>().SingleInstance();
 
                 builder.RegisterType<ShellContextFactory>().As<IShellContextFactory>().SingleInstance();
                 {
-                    builder.RegisterType<DefaultTopologyDescriptorCache>().As<ITopologyDescriptorCache>().SingleInstance();
+                    builder.RegisterType<TopologyDescriptorCache>().As<ITopologyDescriptorCache>().SingleInstance();
 
-                    builder.RegisterType<DefaultCompositionStrategy>()
+                    builder.RegisterType<CompositionStrategy>()
                         .As<ICompositionStrategy>()
-                        .As<ICompositionStrategy_Obsolete>()
                         .SingleInstance();
                     {
                         builder.RegisterType<ExtensionManager>().As<IExtensionManager>().SingleInstance();

@@ -16,18 +16,18 @@ namespace Orchard.Environment {
         //private readonly IContainerProvider _containerProvider;
         private readonly ControllerBuilder _controllerBuilder;
 
-        private readonly ITenantManager _tenantManager;
+        private readonly IShellSettingsManager _shellSettingsManager;
         private readonly IShellContextFactory _shellContextFactory;
 
         private IEnumerable<ShellContext> _current;
 
         public DefaultOrchardHost(
             //IContainerProvider containerProvider,
-            ITenantManager tenantManager,
+            IShellSettingsManager shellSettingsManager,
             IShellContextFactory shellContextFactory,
             ControllerBuilder controllerBuilder) {
             //_containerProvider = containerProvider;
-            _tenantManager = tenantManager;
+            _shellSettingsManager = shellSettingsManager;
             _shellContextFactory = shellContextFactory;
             _controllerBuilder = controllerBuilder;
             Logger = NullLogger.Instance;
@@ -75,7 +75,7 @@ namespace Orchard.Environment {
         }
 
         IEnumerable<ShellContext> CreateAndActivate() {
-            var allSettings = _tenantManager.LoadSettings();
+            var allSettings = _shellSettingsManager.LoadSettings();
             if (allSettings.Any()) {
                 return allSettings.Select(
                     settings => {

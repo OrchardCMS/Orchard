@@ -112,12 +112,6 @@ namespace Orchard.Environment.Extensions {
             return featureDescriptors;
         }
 
-        public ShellTopology_Obsolete GetExtensionsTopology() {
-            var types = ActiveExtensions_Obsolete().SelectMany(x => x.ExportedTypes);
-            types = types.Concat(typeof(IOrchardHost).Assembly.GetExportedTypes());
-            return new ShellTopology_Obsolete { Types = types.Where(t => t.IsClass && !t.IsAbstract) };
-        }
-
         public Feature LoadFeature(FeatureDescriptor featureDescriptor) {
             if (featureDescriptor.Name == "Orchard.Framework") {
                 return new Feature {

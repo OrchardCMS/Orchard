@@ -9,7 +9,6 @@ namespace Orchard.Environment.Extensions {
         Feature LoadFeature(FeatureDescriptor featureDescriptor);
 
         IEnumerable<ExtensionEntry> ActiveExtensions_Obsolete();
-        ShellTopology_Obsolete GetExtensionsTopology();
         void InstallExtension(string extensionType, HttpPostedFileBase extensionBundle);
         void UninstallExtension(string extensionType, string extensionName);
     }

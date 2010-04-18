@@ -1,6 +1,5 @@
 using Autofac;
 using Autofac.Integration.Web;
-using Orchard.Environment.AutofacUtil;
 
 namespace Orchard.Environment {
 
@@ -8,11 +7,11 @@ namespace Orchard.Environment {
         public FiniteContainerProvider(ILifetimeScope applicationContainer) {
             //ApplicationContainer = applicationContainer;
             
-            RequestLifetime = applicationContainer.BeginLifetimeScope();
-            var builder = new ContainerUpdater();
-            // also inject this instance in case anyone asks for the container provider
-            builder.RegisterInstance(this).As<IContainerProvider>();
-            builder.Update(RequestLifetime);
+            RequestLifetime = applicationContainer.BeginLifetimeScope(
+                builder=> {
+                    // also inject this instance in case anyone asks for the container provider
+                    builder.Register(ctx => this).As<IContainerProvider>();
+                });
         }
 
         public void EndRequestLifetime() {

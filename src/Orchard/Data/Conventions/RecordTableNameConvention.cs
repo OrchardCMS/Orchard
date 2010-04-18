@@ -2,22 +2,21 @@ using System.Collections.Generic;
 using System.Linq;
 using FluentNHibernate.Conventions;
 using FluentNHibernate.Conventions.Instances;
-using Orchard.Environment;
+using Orchard.Environment.Topology;
+using Orchard.Environment.Topology.Models;
 
 namespace Orchard.Data.Conventions {
     public class RecordTableNameConvention : IClassConvention {
-        private readonly IEnumerable<RecordDescriptor_Obsolete> _descriptors;
+        private readonly IEnumerable<RecordTopology> _descriptors;
 
-        public RecordTableNameConvention(IEnumerable<RecordDescriptor_Obsolete> descriptors) {
+        public RecordTableNameConvention(IEnumerable<RecordTopology> descriptors) {
             _descriptors = descriptors;
         }
 
         public void Apply(IClassInstance instance) {
             var desc = _descriptors.Where(d => d.Type == instance.EntityType).SingleOrDefault();
             if (desc != null) {
-                if (!string.IsNullOrEmpty(desc.Prefix)) {
-                    instance.Table(desc.Prefix + "_" + desc.Type.Name);
-                }
+                instance.Table(desc.TableName);
             }
         }
     }

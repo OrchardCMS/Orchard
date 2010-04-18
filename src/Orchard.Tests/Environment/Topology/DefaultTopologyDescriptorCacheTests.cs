@@ -23,7 +23,7 @@ namespace Orchard.Tests.Environment.Topology {
             _appDataFolder.SetBasePath(_tempFolder);
             var builder = new ContainerBuilder();
             builder.RegisterInstance(_appDataFolder).As<IAppDataFolder>();
-            builder.RegisterType<DefaultTopologyDescriptorCache>().As<ITopologyDescriptorCache>();
+            builder.RegisterType<TopologyDescriptorCache>().As<ITopologyDescriptorCache>();
             _container = builder.Build();
         }
 

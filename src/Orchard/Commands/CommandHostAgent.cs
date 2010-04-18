@@ -24,7 +24,7 @@ namespace Orchard.Commands {
 
                 // Find tenant (or default)
                 tenant = tenant ?? "default";
-                var tenantManager = hostContainer.Resolve<ITenantManager>();
+                var tenantManager = hostContainer.Resolve<IShellSettingsManager>();
                 var tenantSettings = tenantManager.LoadSettings().Single(s => String.Equals(s.Name, tenant, StringComparison.OrdinalIgnoreCase));
 
                 // Disptach command execution to ICommandManager

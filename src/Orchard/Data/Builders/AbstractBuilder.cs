@@ -11,7 +11,8 @@ using NHibernate.Cfg;
 using NHibernate.Tool.hbm2ddl;
 using Orchard.ContentManagement.Records;
 using Orchard.Data.Conventions;
-using Orchard.Environment;
+using Orchard.Environment.Topology;
+using Orchard.Environment.Topology.Models;
 
 namespace Orchard.Data.Builders {
     public abstract class AbstractBuilder {
@@ -41,7 +42,7 @@ namespace Orchard.Data.Builders {
             }
         }
 
-        public static AutoPersistenceModel CreatePersistenceModel(IEnumerable<RecordDescriptor_Obsolete> recordDescriptors) {
+        public static AutoPersistenceModel CreatePersistenceModel(IEnumerable<RecordTopology> recordDescriptors) {
             return AutoMap.Source(new TypeSource(recordDescriptors))
                 // Ensure that namespaces of types are never auto-imported, so that 
                 // identical type names from different namespaces can be mapped without ambiguity
@@ -58,9 +59,9 @@ namespace Orchard.Data.Builders {
         }
 
         class TypeSource : ITypeSource {
-            private readonly IEnumerable<RecordDescriptor_Obsolete> _recordDescriptors;
+            private readonly IEnumerable<RecordTopology> _recordDescriptors;
 
-            public TypeSource(IEnumerable<RecordDescriptor_Obsolete> recordDescriptors) { _recordDescriptors = recordDescriptors; }
+            public TypeSource(IEnumerable<RecordTopology> recordDescriptors) { _recordDescriptors = recordDescriptors; }
 
             public IEnumerable<Type> GetTypes() { return _recordDescriptors.Select(descriptor => descriptor.Type); }
         }
