@@ -77,7 +77,7 @@ namespace Orchard.Data {
                 ConnectionString = _shellSettings.DataConnectionString,
                 CreateDatabase = createDatabase,
                 UpdateSchema = updateSchema,
-                RecordDescriptors = _compositionStrategy.GetRecordDescriptors(),
+                RecordDescriptors = _compositionStrategy.GetRecordDescriptors_Obsolete(),
             });
 
             return sessionFactory;

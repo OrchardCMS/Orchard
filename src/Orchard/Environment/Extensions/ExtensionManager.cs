@@ -69,30 +69,31 @@ namespace Orchard.Environment.Extensions {
                 .Where(x => x.Key is Scalar)
                 .ToDictionary(x => ((Scalar)x.Key).Text, x => x.Value);
 
-            return new ExtensionDescriptor {
-                                               Location = parseResult.Location,
-                                               Name = name,
-                                               ExtensionType = extensionType,
-                                               DisplayName = GetValue(fields, "name"),
-                                               Description = GetValue(fields, "description"),
-                                               Version = GetValue(fields, "version"),
-                                               OrchardVersion = GetValue(fields, "orchardversion"),
-                                               Author = GetValue(fields, "author"),
-                                               WebSite = GetValue(fields, "website"),
-                                               Tags = GetValue(fields, "tags"),
-                                               AntiForgery = GetValue(fields, "antiforgery"),
-                                               Features = GetFeaturesForExtension(GetMapping(fields, "features"), name),
-                                           };
+            var extensionDescriptor = new ExtensionDescriptor {
+                Location = parseResult.Location,
+                Name = name,
+                ExtensionType = extensionType,
+                DisplayName = GetValue(fields, "name") ?? name,
+                Description = GetValue(fields, "description"),
+                Version = GetValue(fields, "version"),
+                OrchardVersion = GetValue(fields, "orchardversion"),
+                Author = GetValue(fields, "author"),
+                WebSite = GetValue(fields, "website"),
+                Tags = GetValue(fields, "tags"),
+                AntiForgery = GetValue(fields, "antiforgery"),
+            };
+            extensionDescriptor.Features = GetFeaturesForExtension(GetMapping(fields, "features"), extensionDescriptor);
+            return extensionDescriptor;
         }
 
-        private static IEnumerable<FeatureDescriptor> GetFeaturesForExtension(Mapping features, string name) {
+        private static IEnumerable<FeatureDescriptor> GetFeaturesForExtension(Mapping features, ExtensionDescriptor extensionDescriptor) {
             List<FeatureDescriptor> featureDescriptors = new List<FeatureDescriptor>();
             if (features == null) return featureDescriptors;
             foreach (var entity in features.Entities) {
                 FeatureDescriptor featureDescriptor = new FeatureDescriptor {
-                                                                                ExtensionName = name,
-                                                                                Name = entity.Key.ToString(),
-                                                                            };
+                    Extension = extensionDescriptor,
+                    Name = entity.Key.ToString(),
+                };
                 Mapping featureMapping = (Mapping)entity.Value;
                 foreach (var featureEntity in featureMapping.Entities) {
                     if (String.Equals(featureEntity.Key.ToString(), "description", StringComparison.OrdinalIgnoreCase)) {
@@ -135,9 +136,9 @@ namespace Orchard.Environment.Extensions {
             }
 
             return new Feature {
-                                   FeatureDescriptor = featureDescriptor,
-                                   ExportedTypes = featureTypes
-                               };
+                Descriptor = featureDescriptor,
+                ExportedTypes = featureTypes
+            };
         }
 
         private static string GetSourceFeatureNameForType(Type type, string extensionName) {

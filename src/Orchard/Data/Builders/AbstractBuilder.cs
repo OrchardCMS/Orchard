@@ -41,7 +41,7 @@ namespace Orchard.Data.Builders {
             }
         }
 
-        public static AutoPersistenceModel CreatePersistenceModel(IEnumerable<RecordDescriptor> recordDescriptors) {
+        public static AutoPersistenceModel CreatePersistenceModel(IEnumerable<RecordDescriptor_Obsolete> recordDescriptors) {
             return AutoMap.Source(new TypeSource(recordDescriptors))
                 // Ensure that namespaces of types are never auto-imported, so that 
                 // identical type names from different namespaces can be mapped without ambiguity
@@ -58,9 +58,9 @@ namespace Orchard.Data.Builders {
         }
 
         class TypeSource : ITypeSource {
-            private readonly IEnumerable<RecordDescriptor> _recordDescriptors;
+            private readonly IEnumerable<RecordDescriptor_Obsolete> _recordDescriptors;
 
-            public TypeSource(IEnumerable<RecordDescriptor> recordDescriptors) { _recordDescriptors = recordDescriptors; }
+            public TypeSource(IEnumerable<RecordDescriptor_Obsolete> recordDescriptors) { _recordDescriptors = recordDescriptors; }
 
             public IEnumerable<Type> GetTypes() { return _recordDescriptors.Select(descriptor => descriptor.Type); }
         }

@@ -8,7 +8,6 @@ using Orchard.ContentManagement;
 using Orchard.ContentManagement.Records;
 using Orchard.Environment.Extensions;
 using Orchard.Environment.Extensions.Models;
-using Orchard.Environment.Extensions.Records;
 using Orchard.Environment.Topology;
 using Orchard.Environment.Topology.Models;
 using Orchard.Utility.Extensions;
@@ -17,10 +16,10 @@ namespace Orchard.Environment {
     //TEMP: This will be replaced by packaging system
 
     public interface ICompositionStrategy_Obsolete {
-        IEnumerable<RecordDescriptor> GetRecordDescriptors();
+        IEnumerable<RecordDescriptor_Obsolete> GetRecordDescriptors_Obsolete();
     }
 
-    public class RecordDescriptor {
+    public class RecordDescriptor_Obsolete {
         public Type Type { get; set; }
         public string Prefix { get; set; }
     }
@@ -33,12 +32,11 @@ namespace Orchard.Environment {
         }
 
         public ShellTopology Compose(ShellTopologyDescriptor topologyDescriptor) {
-
             var featureDescriptors = _extensionManager.AvailableExtensions()
                 .SelectMany(extensionDescriptor => extensionDescriptor.Features)
                 .Where(featureDescriptor => IsFeatureEnabledInTopology(featureDescriptor, topologyDescriptor));
 
-            var features = _extensionManager.LoadFeatures(featureDescriptors);
+            var features = _extensionManager.LoadFeatures(featureDescriptors).Concat(CoreFeatures());
 
             return new ShellTopology {
                 Modules = BuildTopology<ModuleTopology>(features, IsModule, BuildModule),
@@ -46,6 +44,25 @@ namespace Orchard.Environment {
                 Controllers = BuildTopology<ControllerTopology>(features, IsController, BuildController),
                 Records = BuildTopology<RecordTopology>(features, IsRecord, BuildRecord),
             };
+        }
+
+        private static IEnumerable<Feature> CoreFeatures() {
+            var core = new Feature {
+                Descriptor = new FeatureDescriptor {
+                    Name = "Core",
+                    Extension = new ExtensionDescriptor {
+                        Name = "Core",
+                        DisplayName = "Core",
+                        AntiForgery = "enabled",
+                    },
+                },
+                ExportedTypes = new[] {
+                    typeof (ContentTypeRecord),
+                    typeof (ContentItemRecord),
+                    typeof (ContentItemVersionRecord),
+                },
+            };
+            return new[] { core };
         }
 
 
@@ -89,7 +106,7 @@ namespace Orchard.Environment {
         }
 
         private static ControllerTopology BuildController(Type type, Feature feature) {
-            var areaName = feature.FeatureDescriptor.ExtensionName;
+            var areaName = feature.Descriptor.Extension.Name;
 
             var controllerName = type.Name;
             if (controllerName.EndsWith("Controller"))
@@ -113,16 +130,22 @@ namespace Orchard.Environment {
         }
 
         private static RecordTopology BuildRecord(Type type, Feature feature) {
-            return new RecordTopology { Type = type, Feature = feature };
+            var extensionDescriptor = feature.Descriptor.Extension;
+            var extensionName = extensionDescriptor.Name.Replace('.', '_');
+
+            return new RecordTopology {
+                Type = type,
+                Feature = feature,
+                TableName = extensionName + '_' + type.Name,
+            };
         }
 
 
-        public IEnumerable<RecordDescriptor> GetRecordDescriptors() {
-            var descriptors = new List<RecordDescriptor>{
-                new RecordDescriptor { Prefix = "Core", Type = typeof (ContentTypeRecord)},
-                new RecordDescriptor { Prefix = "Core", Type = typeof (ContentItemRecord)},
-                new RecordDescriptor { Prefix = "Core", Type = typeof (ContentItemVersionRecord)},
-                new RecordDescriptor { Prefix = "Core", Type = typeof (ExtensionRecord)},
+        public IEnumerable<RecordDescriptor_Obsolete> GetRecordDescriptors_Obsolete() {
+            var descriptors = new List<RecordDescriptor_Obsolete>{
+                new RecordDescriptor_Obsolete { Prefix = "Core", Type = typeof (ContentTypeRecord)},
+                new RecordDescriptor_Obsolete { Prefix = "Core", Type = typeof (ContentItemRecord)},
+                new RecordDescriptor_Obsolete { Prefix = "Core", Type = typeof (ContentItemVersionRecord)},
             };
 
             foreach (var extension in _extensionManager.ActiveExtensions_Obsolete()) {
@@ -133,7 +156,7 @@ namespace Orchard.Environment {
                 var recordDescriptors = extension
                     .ExportedTypes
                     .Where(IsRecordType)
-                    .Select(type => new RecordDescriptor { Prefix = prefix, Type = type });
+                    .Select(type => new RecordDescriptor_Obsolete { Prefix = prefix, Type = type });
 
                 descriptors.AddRange(recordDescriptors);
             }

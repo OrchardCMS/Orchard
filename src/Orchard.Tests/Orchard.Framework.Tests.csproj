@@ -157,6 +157,7 @@
     <Compile Include="Data\RepositoryTests.cs" />
     <Compile Include="Data\StubLocator.cs" />
     <Compile Include="Environment\AutofacUtil\DynamicProxy2\DynamicProxyTests.cs" />
+    <Compile Include="Environment\Utility\Build.cs" />
     <Compile Include="Environment\Configuration\AppDataFolderTests.cs" />
     <Compile Include="Environment\Configuration\DefaultTenantManagerTests.cs" />
     <Compile Include="Environment\DefaultCompositionStrategyTests.cs" />
@@ -194,8 +195,8 @@
     <Compile Include="FakeTests.cs" />
     <Compile Include="FluentDbTests.cs" />
     <Compile Include="LinqToNHibernateTests.cs" />
-    <Compile Include="Records\Bar.cs" />
-    <Compile Include="Records\Foo.cs" />
+    <Compile Include="Records\BarRecord.cs" />
+    <Compile Include="Records\FooRecord.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Stubs\StubHttpContext.cs" />
     <Compile Include="UI\Navigation\MenuItemComparerTests.cs" />

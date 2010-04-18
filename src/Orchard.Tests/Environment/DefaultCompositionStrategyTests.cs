@@ -7,11 +7,13 @@ using Autofac;
 using Autofac.Core;
 using Moq;
 using NUnit.Framework;
+using Orchard.ContentManagement.Records;
 using Orchard.Environment;
 using Orchard.Environment.Extensions;
 using Orchard.Environment.Extensions.Models;
 using Orchard.Environment.Topology;
-using Orchard.Environment.Topology.Models;
+using Orchard.Tests.Environment.Utility;
+using Orchard.Tests.Records;
 using Orchard.Tests.Utility;
 
 namespace Orchard.Tests.Environment {
@@ -45,7 +47,7 @@ namespace Orchard.Tests.Environment {
 
         private IEnumerable<Feature> StubLoadFeatures(IEnumerable<FeatureDescriptor> featureDescriptors) {
             return featureDescriptors.Select(featureDescriptor => new Feature {
-                FeatureDescriptor = featureDescriptor,
+                Descriptor = featureDescriptor,
                 ExportedTypes = _featureTypes[featureDescriptor.Name]
             });
         }
@@ -80,11 +82,11 @@ namespace Orchard.Tests.Environment {
 
             var foo = topology.Dependencies.SingleOrDefault(t => t.Type == typeof(FooService1));
             Assert.That(foo, Is.Not.Null);
-            Assert.That(foo.Feature.FeatureDescriptor.Name, Is.EqualTo("Foo"));
+            Assert.That(foo.Feature.Descriptor.Name, Is.EqualTo("Foo"));
 
             var bar = topology.Dependencies.SingleOrDefault(t => t.Type == typeof(BarService1));
             Assert.That(bar, Is.Not.Null);
-            Assert.That(bar.Feature.FeatureDescriptor.Name, Is.EqualTo("Bar"));
+            Assert.That(bar.Feature.Descriptor.Name, Is.EqualTo("Bar"));
         }
 
         public interface IFooService : IDependency {
@@ -141,8 +143,8 @@ namespace Orchard.Tests.Environment {
             var alpha = topology.Modules.Single(x => x.Type == typeof (AlphaModule));
             var beta = topology.Modules.Single(x => x.Type == typeof (BetaModule));
 
-            Assert.That(alpha.Feature.FeatureDescriptor.Name, Is.EqualTo("Foo"));
-            Assert.That(beta.Feature.FeatureDescriptor.Name, Is.EqualTo("Bar"));
+            Assert.That(alpha.Feature.Descriptor.Name, Is.EqualTo("Foo"));
+            Assert.That(beta.Feature.Descriptor.Name, Is.EqualTo("Bar"));
         }
 
         public class AlphaModule : Module {
@@ -155,11 +157,11 @@ namespace Orchard.Tests.Environment {
         }
 
         [Test]
-        public void ControllersArePutIntoTopology() {
+        public void ControllersArePutIntoTopologyWithAreaAndControllerName() {
             var descriptor = Build.TopologyDescriptor().WithFeatures("Foo Plus", "Bar Minus");
 
             _extensionDescriptors = new[] {
-                Build.ExtensionDescriptor("Foo").WithFeatures("Foo", "Foo Plus"),
+                Build.ExtensionDescriptor("MyCompany.Foo", "Foo").WithFeatures("Foo", "Foo Plus"),
                 Build.ExtensionDescriptor("Bar").WithFeatures("Bar", "Bar Minus"),
             };
 
@@ -175,15 +177,15 @@ namespace Orchard.Tests.Environment {
             var delta = topology.Controllers.Single(x => x.Type == typeof (DeltaController));
             var epsilon = topology.Controllers.Single(x => x.Type == typeof (EpsilonController));
 
-            Assert.That(gamma.Feature.FeatureDescriptor.Name, Is.EqualTo("Foo Plus"));
-            Assert.That(gamma.AreaName, Is.EqualTo("Foo"));
+            Assert.That(gamma.Feature.Descriptor.Name, Is.EqualTo("Foo Plus"));
+            Assert.That(gamma.AreaName, Is.EqualTo("MyCompany.Foo"));
             Assert.That(gamma.ControllerName, Is.EqualTo("Gamma"));
 
-            Assert.That(delta.Feature.FeatureDescriptor.Name, Is.EqualTo("Bar Minus"));
+            Assert.That(delta.Feature.Descriptor.Name, Is.EqualTo("Bar Minus"));
             Assert.That(delta.AreaName, Is.EqualTo("Bar"));
             Assert.That(delta.ControllerName, Is.EqualTo("Delta"));
 
-            Assert.That(epsilon.Feature.FeatureDescriptor.Name, Is.EqualTo("Bar Minus"));
+            Assert.That(epsilon.Feature.Descriptor.Name, Is.EqualTo("Bar Minus"));
             Assert.That(epsilon.AreaName, Is.EqualTo("Bar"));
             Assert.That(epsilon.ControllerName, Is.EqualTo("Epsilon"));
         }
@@ -203,47 +205,54 @@ namespace Orchard.Tests.Environment {
                 throw new NotImplementedException();
             }
         }
-    }
 
+        
+        [Test]
+        public void RecordsArePutIntoTopologyWithTableName() {
+            var descriptor = Build.TopologyDescriptor().WithFeatures("Foo Plus", "Bar", "Bar Minus");
 
-    static class Build {
-
-        public static ShellTopologyDescriptor TopologyDescriptor() {
-            var descriptor = new ShellTopologyDescriptor {
-                EnabledFeatures = Enumerable.Empty<TopologyFeature>(),
-                Parameters = Enumerable.Empty<TopologyParameter>(),
+            _extensionDescriptors = new[] {
+                Build.ExtensionDescriptor("MyCompany.Foo", "Foo").WithFeatures("Foo", "Foo Plus"),
+                Build.ExtensionDescriptor("Bar").WithFeatures("Bar", "Bar Minus"),
             };
-            return descriptor;
+
+            _featureTypes["Foo"] = Enumerable.Empty<Type>();
+            _featureTypes["Foo Plus"] = new[] { typeof(FooRecord) };
+            _featureTypes["Bar"] = new[] { typeof(BarRecord) };
+            _featureTypes["Bar Minus"] = Enumerable.Empty<Type>();
+
+            var compositionStrategy = _container.Resolve<ICompositionStrategy>();
+            var topology = compositionStrategy.Compose(descriptor);
+
+            var foo = topology.Records.Single(x => x.Type == typeof (FooRecord));
+            var bar = topology.Records.Single(x => x.Type == typeof (BarRecord));
+
+            Assert.That(foo.Feature.Descriptor.Name, Is.EqualTo("Foo Plus"));
+            Assert.That(foo.TableName, Is.EqualTo("MyCompany_Foo_FooRecord"));
+
+            Assert.That(bar.Feature.Descriptor.Name, Is.EqualTo("Bar"));
+            Assert.That(bar.TableName, Is.EqualTo("Bar_BarRecord"));
         }
 
-        public static ShellTopologyDescriptor WithFeatures(this ShellTopologyDescriptor descriptor, params string[] names) {
-            descriptor.EnabledFeatures = descriptor.EnabledFeatures.Concat(
-                names.Select(name => new TopologyFeature { Name = name }));
+        [Test]
+        public void CoreRecordsAreAddedAutomatically() {
+             var descriptor = Build.TopologyDescriptor();
+            
+            var compositionStrategy = _container.Resolve<ICompositionStrategy>();
+            var topology = compositionStrategy.Compose(descriptor);
 
-            return descriptor;
-        }
+            var ct = topology.Records.Single(x => x.Type == typeof (ContentTypeRecord));
+            var ci = topology.Records.Single(x => x.Type == typeof (ContentItemRecord));
+            var civ = topology.Records.Single(x => x.Type == typeof (ContentItemVersionRecord));
+            
+            Assert.That(ct.Feature.Descriptor.Name, Is.EqualTo("Core"));
+            Assert.That(ct.TableName, Is.EqualTo("Core_ContentTypeRecord"));
 
-        public static ShellTopologyDescriptor WithParameter<TComponent>(this ShellTopologyDescriptor descriptor, string name, string value) {
-            descriptor.Parameters = descriptor.Parameters.Concat(
-                new[] { new TopologyParameter { Component = typeof(TComponent).FullName, Name = name, Value = value } });
-
-            return descriptor;
-        }
-
-        public static ExtensionDescriptor ExtensionDescriptor(string name) {
-            var descriptor = new ExtensionDescriptor {
-                Name = name,
-                DisplayName = name,
-                Features = Enumerable.Empty<FeatureDescriptor>(),
-            };
-            return descriptor;
-        }
-
-        public static ExtensionDescriptor WithFeatures(this ExtensionDescriptor descriptor, params string[] names) {
-            descriptor.Features = descriptor.Features.Concat(
-                names.Select(name => new FeatureDescriptor() { Name = name }));
-
-            return descriptor;
-        }
+            Assert.That(ci.Feature.Descriptor.Name, Is.EqualTo("Core"));
+            Assert.That(ci.TableName, Is.EqualTo("Core_ContentItemRecord"));
+            
+            Assert.That(civ.Feature.Descriptor.Name, Is.EqualTo("Core"));
+            Assert.That(civ.TableName, Is.EqualTo("Core_ContentItemVersionRecord"));
+       }
     }
 }

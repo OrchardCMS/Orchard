@@ -118,8 +118,8 @@ namespace Orchard.Tests.Environment {
         }
 
         public class StubCompositionStrategy : ICompositionStrategy_Obsolete, ICompositionStrategy {
-            public IEnumerable<RecordDescriptor> GetRecordDescriptors() {
-                return Enumerable.Empty<RecordDescriptor>();
+            public IEnumerable<RecordDescriptor_Obsolete> GetRecordDescriptors_Obsolete() {
+                return Enumerable.Empty<RecordDescriptor_Obsolete>();
             }
 
             public ShellTopology Compose(ShellTopologyDescriptor descriptor) {

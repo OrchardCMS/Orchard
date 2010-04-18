@@ -194,7 +194,6 @@
     <Compile Include="Environment\Extensions\Models\Feature.cs" />
     <Compile Include="Environment\Extensions\Models\FeatureDescriptor.cs" />
     <Compile Include="Environment\Extensions\OrchardFeatureAttribute.cs" />
-    <Compile Include="Environment\Extensions\Records\ExtensionRecord.cs" />
     <Compile Include="Environment\Extensions\ShellTopology.cs" />
     <Compile Include="Mvc\AntiForgery\ValidateAntiForgeryTokenOrchardAttribute.cs" />
     <Compile Include="Mvc\Extensions\ControllerExtensions.cs" />

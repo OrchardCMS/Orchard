@@ -12,14 +12,14 @@ using Orchard.Environment;
 
 namespace Orchard.ContentManagement.Records {
     class ContentItemAlteration : IAutoMappingAlteration {
-        private readonly IEnumerable<RecordDescriptor> _recordDescriptors;
+        private readonly IEnumerable<RecordDescriptor_Obsolete> _recordDescriptors;
 
         [UsedImplicitly]
         public ContentItemAlteration() {
-            _recordDescriptors = Enumerable.Empty<RecordDescriptor>();
+            _recordDescriptors = Enumerable.Empty<RecordDescriptor_Obsolete>();
         }
 
-        public ContentItemAlteration(IEnumerable<RecordDescriptor> recordDescriptors) {
+        public ContentItemAlteration(IEnumerable<RecordDescriptor_Obsolete> recordDescriptors) {
             _recordDescriptors = recordDescriptors;
         }
 

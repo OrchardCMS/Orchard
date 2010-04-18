@@ -44,10 +44,10 @@ namespace Orchard.Tests.Environment.Extensions {
                 var stream = parser.ParseYamlStream(new TextInput(Manifests[name]), out success);
                 if (success) {
                     return new ParseResult {
-                                               Location = "~/InMemory",
-                                               Name = name,
-                                               YamlDocument = stream.Documents.Single()
-                                           };
+                        Location = "~/InMemory",
+                        Name = name,
+                        YamlDocument = stream.Documents.Single()
+                    };
                 }
                 return null;
             }
@@ -113,14 +113,14 @@ features:
             Assert.That(descriptor.OrchardVersion, Is.EqualTo("1"));
             Assert.That(descriptor.Features.Count(), Is.EqualTo(1));
             Assert.That(descriptor.Features.First().Name, Is.EqualTo("SuperWiki"));
-            Assert.That(descriptor.Features.First().ExtensionName, Is.EqualTo("SuperWiki"));
+            Assert.That(descriptor.Features.First().Extension.Name, Is.EqualTo("SuperWiki"));
             Assert.That(descriptor.Features.First().Description, Is.EqualTo("My super wiki module for Orchard."));
         }
 
         [Test]
         public void ExtensionDescriptorsShouldBeParsedForCompleteModuleTxt() {
 
-            _folders.Manifests.Add("AnotherWiki", @"
+            _folders.Manifests.Add("MyCompany.AnotherWiki", @"
 name: AnotherWiki
 author: Coder Notaprogrammer
 website: http://anotherwiki.codeplex.com
@@ -146,7 +146,8 @@ features:
 ");
 
             var descriptor = _manager.AvailableExtensions().Single();
-            Assert.That(descriptor.Name, Is.EqualTo("AnotherWiki"));
+            Assert.That(descriptor.Name, Is.EqualTo("MyCompany.AnotherWiki"));
+            Assert.That(descriptor.DisplayName, Is.EqualTo("AnotherWiki"));
             Assert.That(descriptor.Author, Is.EqualTo("Coder Notaprogrammer"));
             Assert.That(descriptor.WebSite, Is.EqualTo("http://anotherwiki.codeplex.com"));
             Assert.That(descriptor.Version, Is.EqualTo("1.2.3"));
@@ -155,7 +156,7 @@ features:
             foreach (var featureDescriptor in descriptor.Features) {
                 switch (featureDescriptor.Name) {
                     case "AnotherWiki":
-                        Assert.That(featureDescriptor.ExtensionName, Is.EqualTo("AnotherWiki"));
+                        Assert.That(featureDescriptor.Extension, Is.SameAs(descriptor));
                         Assert.That(featureDescriptor.Description, Is.EqualTo("My super wiki module for Orchard."));
                         Assert.That(featureDescriptor.Category, Is.EqualTo("Content types"));
                         Assert.That(featureDescriptor.Dependencies.Count(), Is.EqualTo(2));
@@ -163,7 +164,7 @@ features:
                         Assert.That(featureDescriptor.Dependencies.Contains("Search"));
                         break;
                     case "AnotherWiki Editor":
-                        Assert.That(featureDescriptor.ExtensionName, Is.EqualTo("AnotherWiki"));
+                        Assert.That(featureDescriptor.Extension, Is.SameAs(descriptor));
                         Assert.That(featureDescriptor.Description, Is.EqualTo("A rich editor for wiki contents."));
                         Assert.That(featureDescriptor.Category, Is.EqualTo("Input methods"));
                         Assert.That(featureDescriptor.Dependencies.Count(), Is.EqualTo(2));
@@ -171,7 +172,7 @@ features:
                         Assert.That(featureDescriptor.Dependencies.Contains("AnotherWiki"));
                         break;
                     case "AnotherWiki DistributionList":
-                        Assert.That(featureDescriptor.ExtensionName, Is.EqualTo("AnotherWiki"));
+                        Assert.That(featureDescriptor.Extension, Is.SameAs(descriptor));
                         Assert.That(featureDescriptor.Description, Is.EqualTo("Sends e-mail alerts when wiki contents gets published."));
                         Assert.That(featureDescriptor.Category, Is.EqualTo("Email"));
                         Assert.That(featureDescriptor.Dependencies.Count(), Is.EqualTo(2));
@@ -179,7 +180,7 @@ features:
                         Assert.That(featureDescriptor.Dependencies.Contains("Email Subscriptions"));
                         break;
                     case "AnotherWiki Captcha":
-                        Assert.That(featureDescriptor.ExtensionName, Is.EqualTo("AnotherWiki"));
+                        Assert.That(featureDescriptor.Extension, Is.SameAs(descriptor));
                         Assert.That(featureDescriptor.Description, Is.EqualTo("Kills spam. Or makes it zombie-like."));
                         Assert.That(featureDescriptor.Category, Is.EqualTo("Spam"));
                         Assert.That(featureDescriptor.Dependencies.Count(), Is.EqualTo(2));
@@ -223,16 +224,17 @@ features:
         [Test]
         public void ExtensionManagerTestFeatureAttribute() {
             var extensionManager = new Moq.Mock<IExtensionManager>();
-            extensionManager.Setup(x => x.ActiveExtensions_Obsolete()).Returns(new[] {
-                                                                                         new ExtensionEntry {
-                                                                                                                Descriptor = new ExtensionDescriptor { 
-                                                                                                                                                         Name = "Module", 
-                                                                                                                                                         Features = new[] {
-                                                                                                                                                                              new FeatureDescriptor { Name = "Module", ExtensionName = "Module" },
-                                                                                                                                                                              new FeatureDescriptor { Name = "TestFeature", ExtensionName = "Module" }
-                                                                                                                                                                          }},
-                                                                                                                ExportedTypes = new[] { typeof(Alpha), typeof(Beta), typeof(Phi) }
-                                                                                                            }});
+            var extensionEntry =  new ExtensionEntry {
+                                                            Descriptor = new ExtensionDescriptor { Name = "Module"},
+                                                            ExportedTypes = new[] { typeof(Alpha), typeof(Beta), typeof(Phi) }
+                                                        };
+            extensionEntry.Descriptor.Features = new[] {
+                                                           new FeatureDescriptor
+                                                           {Name = "Module", Extension = extensionEntry.Descriptor},
+                                                           new FeatureDescriptor
+                                                           {Name = "TestFeature", Extension = extensionEntry.Descriptor}
+                                                       };
+            extensionManager.Setup(x => x.ActiveExtensions_Obsolete()).Returns(new[] {extensionEntry});
 
             foreach (var type in extensionManager.Object.ActiveExtensions_Obsolete().SelectMany(x => x.ExportedTypes)) {
                 foreach (OrchardFeatureAttribute featureAttribute in type.GetCustomAttributes(typeof(OrchardFeatureAttribute), false)) {

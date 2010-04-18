@@ -6,9 +6,9 @@ using Orchard.Environment;
 
 namespace Orchard.Data.Conventions {
     public class RecordTableNameConvention : IClassConvention {
-        private readonly IEnumerable<RecordDescriptor> _descriptors;
+        private readonly IEnumerable<RecordDescriptor_Obsolete> _descriptors;
 
-        public RecordTableNameConvention(IEnumerable<RecordDescriptor> descriptors) {
+        public RecordTableNameConvention(IEnumerable<RecordDescriptor_Obsolete> descriptors) {
             _descriptors = descriptors;
         }
 

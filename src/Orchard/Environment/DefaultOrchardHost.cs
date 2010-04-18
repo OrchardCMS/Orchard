@@ -1,4 +1,3 @@
-using System;
 using System.Linq;
 using System.Web.Mvc;
 using Autofac;
@@ -7,8 +6,6 @@ using System.Collections.Generic;
 using Orchard.Environment.Configuration;
 using Orchard.Environment.Extensions;
 using Orchard.Environment.ShellBuilders;
-using Orchard.Environment.Topology;
-using Orchard.Environment.Topology.Models;
 using Orchard.Mvc;
 using Orchard.Mvc.ViewEngines;
 using Orchard.Utility.Extensions;

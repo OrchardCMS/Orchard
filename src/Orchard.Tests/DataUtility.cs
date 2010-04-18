@@ -19,7 +19,7 @@ namespace Orchard.Tests {
             //var persistenceModel = AutoMap.Source(new Types(types))
             //    .Alterations(alt => AddAlterations(alt, types))
             //    .Conventions.AddFromAssemblyOf<DataModule>();
-            var persistenceModel = AbstractBuilder.CreatePersistenceModel(types.Select(t => new RecordDescriptor { Prefix = "Test", Type = t }));
+            var persistenceModel = AbstractBuilder.CreatePersistenceModel(types.Select(t => new RecordDescriptor_Obsolete { Prefix = "Test", Type = t }));
 
             return Fluently.Configure()
                 .Database(SQLiteConfiguration.Standard.UsingFile(fileName).ShowSql())

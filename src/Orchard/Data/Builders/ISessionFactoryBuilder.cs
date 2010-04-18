@@ -16,6 +16,6 @@ namespace Orchard.Data.Builders {
         public bool CreateDatabase { get; set; }
         public bool UpdateSchema { get; set; }
 
-        public IEnumerable<RecordDescriptor> RecordDescriptors { get; set; }
+        public IEnumerable<RecordDescriptor_Obsolete> RecordDescriptors { get; set; }
     }
 }

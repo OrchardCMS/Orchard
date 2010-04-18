@@ -11,11 +11,11 @@ namespace Orchard.Tests {
 
         [SetUp]
         public void Init() {
-            var sessionFactory = DataUtility.CreateSessionFactory(typeof (Foo));
+            var sessionFactory = DataUtility.CreateSessionFactory(typeof (FooRecord));
             using (var session = sessionFactory.OpenSession()) {
-                session.Save(new Foo {Name = "one"});
-                session.Save(new Foo {Name = "two"});
-                session.Save(new Foo {Name = "three"});
+                session.Save(new FooRecord {Name = "one"});
+                session.Save(new FooRecord {Name = "two"});
+                session.Save(new FooRecord {Name = "three"});
             }
             _session = sessionFactory.OpenSession();
         }
@@ -31,7 +31,7 @@ namespace Orchard.Tests {
 
         [Test]
         public void WhereClauseShouldLimitResults() {
-            var foos = from f in _session.Linq<Foo>() where f.Name == "two" || f.Name == "one" select f;
+            var foos = from f in _session.Linq<FooRecord>() where f.Name == "two" || f.Name == "one" select f;
 
             Assert.That(foos.Count(), Is.EqualTo(2));
             Assert.That(foos, Has.Some.Property("Name").EqualTo("one"));
