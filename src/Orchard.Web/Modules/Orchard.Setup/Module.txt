@@ -1,2 +1,5 @@
 ﻿name: Setup
 antiforgery: enabled
+features:
+  Orchard.Setup:
+    description: Components needed to initialize a new instance or tenant

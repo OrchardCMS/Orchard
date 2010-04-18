@@ -33,6 +33,7 @@ namespace Orchard.Specs.Hosting {
             VirtualDirectory = virtualDirectory;
 
             _webHostAgent = (WebHostAgent)ApplicationHost.CreateApplicationHost(typeof(WebHostAgent), VirtualDirectory, PhysicalDirectory);
+
         }
 
         public void CopyExtension(string extensionFolder, string extensionName) {

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -15,12 +16,28 @@ namespace Orchard.Specs.Bindings {
     public class WebAppHosting {
         private WebHost _webHost;
         private RequestDetails _details;
+        private MessageSink _messages;
 
         [Given(@"I have a clean site")]
         public void GivenIHaveACleanSite() {
             _webHost = new WebHost();
             _webHost.Initialize("Orchard.Web", "/");
+
+            var sink = new MessageSink();
+            _webHost.Execute(() => {
+                HostingTraceListener.SetHook(msg => sink.Receive(msg));
+            });
+            _messages = sink;
         }
+
+        public class MessageSink : MarshalByRefObject {
+            readonly IList<string> _messages = new List<string>();
+
+            public void Receive(string message) {
+                _messages.Add(message);
+            }
+        }
+
 
         [Given(@"I have module ""(.*)""")]
         public void GivenIHaveModule(string moduleName) {

@@ -47,6 +47,8 @@ namespace Orchard.Environment {
         }
 
         private static IEnumerable<Feature> CoreFeatures() {
+            var frameworkTypes = typeof(OrchardStarter).Assembly.GetExportedTypes();
+
             var core = new Feature {
                 Descriptor = new FeatureDescriptor {
                     Name = "Core",
@@ -56,11 +58,12 @@ namespace Orchard.Environment {
                         AntiForgery = "enabled",
                     },
                 },
-                ExportedTypes = new[] {
-                    typeof (ContentTypeRecord),
-                    typeof (ContentItemRecord),
-                    typeof (ContentItemVersionRecord),
-                },
+                ExportedTypes = frameworkTypes.Where(t => t.IsClass && !t.IsAbstract),
+                //ExportedTypes = new[] {
+                //    typeof (ContentTypeRecord),
+                //    typeof (ContentItemRecord),
+                //    typeof (ContentItemVersionRecord),
+                //},
             };
             return new[] { core };
         }

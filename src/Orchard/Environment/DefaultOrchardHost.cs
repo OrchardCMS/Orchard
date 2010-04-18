@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using Orchard.Environment.Configuration;
 using Orchard.Environment.Extensions;
 using Orchard.Environment.ShellBuilders;
+using Orchard.Logging;
 using Orchard.Mvc;
 using Orchard.Mvc.ViewEngines;
 using Orchard.Utility.Extensions;
@@ -29,13 +30,17 @@ namespace Orchard.Environment {
             _tenantManager = tenantManager;
             _shellContextFactory = shellContextFactory;
             _controllerBuilder = controllerBuilder;
+            Logger = NullLogger.Instance;
         }
+
+        public ILogger Logger { get; set; }
 
         public IList<ShellContext> Current {
             get { return BuildCurrent().ToReadOnlyCollection(); }
         }
 
         void IOrchardHost.Initialize() {
+            Logger.Information("Initializing");
             ViewEngines.Engines.Insert(0, LayoutViewEngine.CreateShim());
             _controllerBuilder.SetControllerFactory(new OrchardControllerFactory());
             ServiceLocator.SetLocator(t => _containerProvider.RequestLifetime.Resolve(t));
@@ -57,26 +62,40 @@ namespace Orchard.Environment {
         }
 
         IStandaloneEnvironment IOrchardHost.CreateStandaloneEnvironment(ShellSettings shellSettings) {
-            var shellContext = _shellContextFactory.Create(shellSettings);
+            Logger.Debug("Creating standalone environment for tenant {0}", shellSettings.Name);
+            var shellContext = CreateShellContext(shellSettings);
             return new StandaloneEnvironment(shellContext.LifetimeScope);
         }
 
-        IEnumerable<ShellContext> GetCurrent() {
-            lock (this) {
-                return _current ?? (_current = BuildCurrent());
-            }
-        }
 
         IEnumerable<ShellContext> BuildCurrent() {
-            return CreateAndActivate().ToArray();
+            lock (this) {
+                return _current ?? (_current = CreateAndActivate().ToArray());
+            }
         }
 
         IEnumerable<ShellContext> CreateAndActivate() {
-            foreach(var settings in _tenantManager.LoadSettings()) {
-                var context = _shellContextFactory.Create(settings);
-                context.Shell.Activate();
-                yield return context;
+            var allSettings = _tenantManager.LoadSettings();
+            if (allSettings.Any()) {
+                return allSettings.Select(
+                    settings => {
+                        var context = CreateShellContext(settings);
+                        context.Shell.Activate();
+                        return context;
+                    });
             }
+
+            return new[] {CreateSetupContext()};
+        }
+
+        ShellContext CreateSetupContext() {
+            Logger.Debug("Creating shell context for setup");
+            return _shellContextFactory.Create(null);
+        }
+
+        ShellContext CreateShellContext(ShellSettings settings) {
+            Logger.Debug("Creating shell context for tenant {0}", settings.Name);
+            return _shellContextFactory.Create(settings);
         }
 
         protected virtual void BeginRequest() {
@@ -99,7 +118,7 @@ namespace Orchard.Environment {
             finally {
                 containerProvider.EndRequestLifetime();
             }
-        }            
+        }
 
     }
 }

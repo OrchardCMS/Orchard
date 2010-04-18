@@ -1,5 +1,6 @@
 ﻿using Autofac;
 using Autofac.Core.Registration;
+using Moq;
 using NUnit.Framework;
 using Orchard.Environment;
 using Orchard.Environment.Configuration;
@@ -17,16 +18,16 @@ namespace Orchard.Tests.Environment.ShellBuilders {
         public void Init() {
             var builder = new ContainerBuilder();
             builder.RegisterType<DefaultShellContextFactory>().As<IShellContextFactory>();
-            builder.RegisterAutoMocking();
+            builder.RegisterAutoMocking(Moq.MockBehavior.Strict);
             _container = builder.Build();
         }
 
         [Test]
         public void NormalExecutionReturnsExpectedObjects() {
-            var settings = new ShellSettings {Name = "Default"};
-            var topologyDescriptor = new ShellTopologyDescriptor {SerialNumber = 6655321};
+            var settings = new ShellSettings { Name = "Default" };
+            var topologyDescriptor = new ShellTopologyDescriptor { SerialNumber = 6655321 };
             var topology = new ShellTopology();
-            ILifetimeScope shellLifetimeScope;
+            var shellLifetimeScope = _container.BeginLifetimeScope("shell");
 
             _container.Mock<ITopologyDescriptorCache>()
                 .Setup(x => x.Fetch("Default"))
@@ -38,7 +39,7 @@ namespace Orchard.Tests.Environment.ShellBuilders {
 
             _container.Mock<IShellContainerFactory>()
                 .Setup(x => x.CreateContainer(topology))
-                .Returns(shellLifetimeScope = _container.BeginLifetimeScope("shell"));
+                .Returns(shellLifetimeScope );
 
             _container.Mock<ITopologyDescriptorManager>()
                 .Setup(x => x.GetTopologyDescriptor())
@@ -53,6 +54,24 @@ namespace Orchard.Tests.Environment.ShellBuilders {
             Assert.That(context.Topology, Is.SameAs(topology));
             Assert.That(context.LifetimeScope, Is.SameAs(shellLifetimeScope));
             Assert.That(context.Shell, Is.SameAs(shellLifetimeScope.Resolve<IOrchardShell>()));
+        }
+
+        [Test]
+        public void NullSettingsReturnsSetupContext() {
+            var topology = new ShellTopology();
+
+            _container.Mock<ICompositionStrategy>()
+                .Setup(x => x.Compose(It.IsAny<ShellTopologyDescriptor>()))
+                .Returns(topology);
+
+            _container.Mock<IShellContainerFactory>()
+                .Setup(x => x.CreateContainer(topology))
+                .Returns(_container.BeginLifetimeScope("shell"));
+
+            var factory = _container.Resolve<IShellContextFactory>();
+            var context = factory.Create(null);
+
+            Assert.That(context.TopologyDescriptor.EnabledFeatures, Has.Some.With.Property("Name").EqualTo("Setup"));
         }
     }
 }
