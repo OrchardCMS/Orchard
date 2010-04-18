@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using System.Web.Mvc;
 using System.Web.Routing;
 using Autofac;
@@ -7,26 +6,28 @@ using Autofac.Integration.Web;
 
 namespace Orchard.Mvc {
     public class OrchardControllerFactory : DefaultControllerFactory {
+         
         public override IController CreateController(RequestContext requestContext, string controllerName) {
             var routeData = requestContext.RouteData;
 
-            // Locate the container this route is bound against
-            var container = GetRequestContainer(routeData);
-
             // Determine the area name for the request, and fall back to stock orchard controllers
-            var areaName = GetAreaName(routeData) ?? "Orchard";
+            var areaName = GetAreaName(routeData);
 
             // Service name pattern matches the identification strategy
-            var serviceName = ("controller." + areaName + "." + controllerName).ToLowerInvariant();
+            var serviceKey = (areaName + "/" + controllerName).ToLowerInvariant();
 
             // Now that the request container is known - try to resolve the controller            
             object controller;
-            NamedService service = new NamedService(serviceName, typeof(IController));
-            TypedParameter parameter = TypedParameter.From(requestContext);
+            var service = new KeyedService(serviceKey, typeof(IController));
+            
+            // Locate the container this route is bound against
+            var container = GetRequestContainer(routeData);
+
             if (container != null &&
-                container.TryResolve(service, new List<Parameter>{parameter}, out controller)) {
+                container.TryResolve(service, out controller)) {
                 return (IController)controller;
             }
+
             return base.CreateController(requestContext, controllerName);
         }
 

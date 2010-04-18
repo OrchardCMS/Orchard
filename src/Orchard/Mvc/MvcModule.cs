@@ -1,35 +1,15 @@
 ﻿using System;
-using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
 using Autofac;
-using Autofac.Integration.Web;
-using Autofac.Integration.Web.Mvc;
-using Orchard.Environment.AutofacUtil.DynamicProxy2;
-using Orchard.Environment.Extensions;
 using Orchard.Mvc.Filters;
-using Autofac.Core;
 
 namespace Orchard.Mvc {
     public class MvcModule : Module {
-        private readonly IExtensionManager _extensionManager;
-        private readonly DynamicProxyContext _dynamicProxyContext;
-
-        public MvcModule(IExtensionManager extensionManager, DynamicProxyContext dynamicProxyContext) {
-            _extensionManager = extensionManager;
-            _dynamicProxyContext = dynamicProxyContext;
-        }
 
         protected override void Load(ContainerBuilder moduleBuilder) {
-            var extensions = _extensionManager.ActiveExtensions_Obsolete();
-            var assemblies = extensions.Select(x => x.Assembly);
-            var actionInvokerService = new UniqueService();
-            moduleBuilder.RegisterType<FilterResolvingActionInvoker>().As(actionInvokerService).InstancePerDependency();
-
-            moduleBuilder.RegisterControllers(new OrchardControllerIdentificationStrategy(extensions), assemblies.ToArray())
-                .EnableDynamicProxy(_dynamicProxyContext)
-                .InjectActionInvoker(actionInvokerService).InstancePerDependency();
+            moduleBuilder.RegisterType<FilterResolvingActionInvoker>().As<IActionInvoker>().InstancePerDependency();
 
             moduleBuilder.Register(ctx => HttpContextBaseFactory(ctx)).As<HttpContextBase>().InstancePerDependency();
             moduleBuilder.Register(ctx => RequestContextFactory(ctx)).As<RequestContext>().InstancePerDependency();

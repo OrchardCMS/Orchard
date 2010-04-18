@@ -5,18 +5,25 @@ using Autofac;
 using Autofac.Builder;
 using Autofac.Core;
 using Autofac.Features.Indexed;
+using Autofac.Integration.Web.Mvc;
 using Orchard.Environment.AutofacUtil.DynamicProxy2;
+using Orchard.Environment.Configuration;
 using Orchard.Environment.Topology.Models;
 
 namespace Orchard.Environment.ShellBuilders {
-    public class DefaultShellContainerFactory : IShellContainerFactory {
+    
+    public interface IShellContainerFactory {
+        ILifetimeScope CreateContainer(ShellSettings settings, ShellTopology topology);
+    }
+
+    public class ShellContainerFactory : IShellContainerFactory {
         private readonly ILifetimeScope _lifetimeScope;
 
-        public DefaultShellContainerFactory(ILifetimeScope lifetimeScope) {
+        public ShellContainerFactory(ILifetimeScope lifetimeScope) {
             _lifetimeScope = lifetimeScope;
         }
 
-        public ILifetimeScope CreateContainer(ShellTopology topology) {
+        public ILifetimeScope CreateContainer(ShellSettings settings, ShellTopology topology) {
             var intermediateScope = _lifetimeScope.BeginLifetimeScope(
                 builder => {
                     foreach (var item in topology.Modules) {
@@ -32,7 +39,8 @@ namespace Orchard.Environment.ShellBuilders {
                     var dynamicProxyContext = new DynamicProxyContext();
 
                     builder.Register(ctx => dynamicProxyContext);
-                    builder.Register(ctx => topology.ShellSettings);
+                    builder.Register(ctx => settings);
+                    builder.Register(ctx => topology);
 
                     var moduleIndex = intermediateScope.Resolve<IIndex<Type, IModule>>();
                     foreach (var item in topology.Modules) {
@@ -42,7 +50,7 @@ namespace Orchard.Environment.ShellBuilders {
                     foreach (var item in topology.Dependencies) {
                         var registration = RegisterType(builder, item)
                             .EnableDynamicProxy(dynamicProxyContext)
-                            .InstancePerDependency();
+                            .InstancePerLifetimeScope();
 
                         foreach (var interfaceType in item.Type.GetInterfaces().Where(itf => typeof(IDependency).IsAssignableFrom(itf))) {
                             registration = registration.As(interfaceType);
@@ -62,19 +70,19 @@ namespace Orchard.Environment.ShellBuilders {
                     }
 
                     foreach (var item in topology.Controllers) {
+                        var serviceKey = (item.AreaName + "/" + item.ControllerName).ToLowerInvariant();
                         RegisterType(builder, item)
                             .EnableDynamicProxy(dynamicProxyContext)
-                            .Keyed<IController>(item.AreaName + "|" + item.ControllerName)
-                            .InstancePerDependency();
+                            .Keyed<IController>(serviceKey)
+                            .InstancePerDependency()
+                            .InjectActionInvoker();
                     }
                 });
         }
 
         private IRegistrationBuilder<object, ConcreteReflectionActivatorData, SingleRegistrationStyle> RegisterType(ContainerBuilder builder, ShellTopologyItem item) {
             return builder.RegisterType(item.Type)
-                .WithProperty("ExtensionEntry", item.ExtensionEntry)
-                .WithProperty("FeatureDescriptor", item.FeatureDescriptor)
-                .WithProperty("ExtensionDescriptor", item.ExtensionDescriptor);
+                .WithProperty("Feature", item.Feature);
         }
     }
 }

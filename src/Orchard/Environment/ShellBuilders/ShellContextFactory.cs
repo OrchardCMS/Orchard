@@ -1,19 +1,22 @@
-using System;
 using System.Linq;
 using Autofac;
 using Orchard.Environment.Configuration;
-using Orchard.Environment.Extensions.Models;
 using Orchard.Environment.Topology;
 using Orchard.Environment.Topology.Models;
 using Orchard.Logging;
 
 namespace Orchard.Environment.ShellBuilders {
-    public class DefaultShellContextFactory : IShellContextFactory {
+
+     public interface IShellContextFactory {
+        ShellContext Create(ShellSettings settings);
+    }
+
+    public class ShellContextFactory : IShellContextFactory {
         private readonly ITopologyDescriptorCache _topologyDescriptorCache;
         private readonly ICompositionStrategy _compositionStrategy;
         private readonly IShellContainerFactory _shellContainerFactory;
 
-        public DefaultShellContextFactory(
+        public ShellContextFactory(
             ITopologyDescriptorCache topologyDescriptorCache,
             ICompositionStrategy compositionStrategy,
             IShellContainerFactory shellContainerFactory) {
@@ -44,7 +47,7 @@ namespace Orchard.Environment.ShellBuilders {
             // handle null-(e.g. cache miss)
 
             var topology = _compositionStrategy.Compose(cachedDescriptor);
-            var shellScope = _shellContainerFactory.CreateContainer(topology);
+            var shellScope = _shellContainerFactory.CreateContainer(settings, topology);
 
             ShellTopologyDescriptor currentDescriptor;
             using (var standaloneEnvironment = new StandaloneEnvironment(shellScope)) {
@@ -57,7 +60,7 @@ namespace Orchard.Environment.ShellBuilders {
 
                 _topologyDescriptorCache.Store(settings.Name, currentDescriptor);
                 topology = _compositionStrategy.Compose(currentDescriptor);
-                shellScope = _shellContainerFactory.CreateContainer(topology);
+                shellScope = _shellContainerFactory.CreateContainer(settings, topology);
             }
 
             return new ShellContext {
@@ -79,7 +82,7 @@ namespace Orchard.Environment.ShellBuilders {
             };
 
             var topology = _compositionStrategy.Compose(descriptor);
-            var shellScope = _shellContainerFactory.CreateContainer(topology);
+            var shellScope = _shellContainerFactory.CreateContainer(settings, topology);
 
             return new ShellContext {
                 Settings = settings,

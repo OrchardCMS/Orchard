@@ -24,14 +24,16 @@ namespace Orchard.Tests.Environment.ShellBuilders {
         [SetUp]
         public void Init() {
             var builder = new ContainerBuilder();
-            builder.RegisterType<DefaultShellContainerFactory>().As<IShellContainerFactory>();
+            builder.RegisterType<ShellContainerFactory>().As<IShellContainerFactory>();
             builder.RegisterType<ComponentForHostContainer>();
             _container = builder.Build();
         }
 
+        ShellSettings CreateSettings() {
+            return new ShellSettings {Name = "Default"};
+        }
         ShellTopology CreateTopology(params ShellTopologyItem[] items) {
             return new ShellTopology {
-                ShellSettings = new ShellSettings { Name = "Default" },
                 Modules = items.OfType<ModuleTopology>(),
                 Dependencies = items.OfType<DependencyTopology>(),
                 Controllers = items.OfType<ControllerTopology>(),
@@ -53,9 +55,10 @@ namespace Orchard.Tests.Environment.ShellBuilders {
 
         [Test]
         public void ShouldReturnChildLifetimeScopeNamedShell() {
+            var settings = CreateSettings();
             var topology = CreateTopology();
             var factory = _container.Resolve<IShellContainerFactory>();
-            var shellContainer = factory.CreateContainer(topology);
+            var shellContainer = factory.CreateContainer(settings, topology);
 
             Assert.That(shellContainer.Tag, Is.EqualTo("shell"));
 
@@ -68,12 +71,13 @@ namespace Orchard.Tests.Environment.ShellBuilders {
 
         [Test]
         public void ControllersAreRegisteredAsKeyedServices() {
+            var settings = CreateSettings();
             var topology = CreateTopology(
                 WithModule<TestModule>(),
                 WithController<TestController>("foo", "bar"));
 
             var factory = _container.Resolve<IShellContainerFactory>();
-            var shellContainer = factory.CreateContainer(topology);
+            var shellContainer = factory.CreateContainer(settings, topology);
             var controllers = shellContainer.Resolve<IIndex<string, IController>>();
             var controller = controllers["foo|bar"];
             Assert.That(controller, Is.Not.Null);
@@ -86,12 +90,13 @@ namespace Orchard.Tests.Environment.ShellBuilders {
 
         [Test]
         public void ModulesAreResolvedAndRegistered() {
+            var settings = CreateSettings();
             var topology = CreateTopology(
                 WithModule<TestModule>(),
                 WithController<TestController>("foo", "bar"));
 
             var factory = _container.Resolve<IShellContainerFactory>();
-            var shellContainer = factory.CreateContainer(topology);
+            var shellContainer = factory.CreateContainer(settings, topology);
 
             var controllerMetas = shellContainer.Resolve<IIndex<string, Meta<IController>>>();
             var metadata = controllerMetas["foo|bar"].Metadata;
@@ -108,11 +113,12 @@ namespace Orchard.Tests.Environment.ShellBuilders {
 
         [Test]
         public void ModulesMayResolveHostServices() {
+            var settings = CreateSettings();
             var topology = CreateTopology(
                 WithModule<ModuleUsingThatComponent>());
 
             var factory = _container.Resolve<IShellContainerFactory>();
-            var shellContainer = factory.CreateContainer(topology);
+            var shellContainer = factory.CreateContainer(settings, topology);
             Assert.That(shellContainer.Resolve<string>(), Is.EqualTo("Module was loaded"));
         }
 
@@ -134,11 +140,12 @@ namespace Orchard.Tests.Environment.ShellBuilders {
 
         [Test]
         public void DependenciesAreResolvable() {
+            var settings = CreateSettings();
             var topology = CreateTopology(
                 WithDependency<TestDependency>());
 
             var factory = _container.Resolve<IShellContainerFactory>();
-            var shellContainer = factory.CreateContainer(topology);
+            var shellContainer = factory.CreateContainer(settings, topology);
 
             var testDependency = shellContainer.Resolve<ITestDependency>();
             Assert.That(testDependency, Is.Not.Null);
@@ -153,30 +160,33 @@ namespace Orchard.Tests.Environment.ShellBuilders {
 
         [Test]
         public void ExtraInformationCanDropIntoProperties() {
+            var settings = CreateSettings();
             var topology = CreateTopology(
                           WithDependency<TestDependency2>());
 
-            topology.Dependencies.Single().FeatureDescriptor =
-                new FeatureDescriptor { Name = "Hello" };
+            topology.Dependencies.Single().Feature =
+                new Feature { Descriptor = new FeatureDescriptor { Name = "Hello" } };
 
             var factory = _container.Resolve<IShellContainerFactory>();
-            var shellContainer = factory.CreateContainer(topology);
+            var shellContainer = factory.CreateContainer(settings, topology);
 
             var testDependency = shellContainer.Resolve<ITestDependency>();
             Assert.That(testDependency, Is.Not.Null);
             Assert.That(testDependency, Is.InstanceOf<TestDependency2>());
 
             var testDependency2 = (TestDependency2)testDependency;
-            Assert.That(testDependency2.FeatureDescriptor, Is.Not.Null);
-            Assert.That(testDependency2.FeatureDescriptor.Name, Is.EqualTo("Hello"));
+            
+            Assert.That(testDependency2.Feature.Descriptor, Is.Not.Null);
+            Assert.That(testDependency2.Feature.Descriptor.Name, Is.EqualTo("Hello"));
         }
 
         public class TestDependency2 : ITestDependency {
-            public FeatureDescriptor FeatureDescriptor { get; set; }
+            public Feature Feature { get; set; }
         }
 
         [Test]
         public void ParametersMayOrMayNotBeUsedAsPropertiesAndConstructorParameters() {
+            var settings = CreateSettings();
             var topology = CreateTopology(
                 WithDependency<TestDependency3>());
 
@@ -188,7 +198,7 @@ namespace Orchard.Tests.Environment.ShellBuilders {
                       };
 
             var factory = _container.Resolve<IShellContainerFactory>();
-            var shellContainer = factory.CreateContainer(topology);
+            var shellContainer = factory.CreateContainer(settings, topology);
 
             var testDependency = shellContainer.Resolve<ITestDependency>();
             Assert.That(testDependency, Is.Not.Null);
@@ -220,12 +230,13 @@ namespace Orchard.Tests.Environment.ShellBuilders {
 
         [Test]
         public void DynamicProxyIsInEffect() {
+            var settings = CreateSettings();
             var topology = CreateTopology(
                 WithModule<ProxModule>(),
                 WithDependency<ProxDependency>());
 
             var factory = _container.Resolve<IShellContainerFactory>();
-            var shellContainer = factory.CreateContainer(topology);
+            var shellContainer = factory.CreateContainer(settings, topology);
 
             var testDependency = shellContainer.Resolve<IProxDependency>();
             Assert.That(testDependency.Hello(), Is.EqualTo("Foo"));
@@ -233,7 +244,7 @@ namespace Orchard.Tests.Environment.ShellBuilders {
             var topology2 = CreateTopology(
                 WithDependency<ProxDependency>());
 
-            var shellContainer2 = factory.CreateContainer(topology2);
+            var shellContainer2 = factory.CreateContainer(settings, topology2);
 
             var testDependency2 = shellContainer2.Resolve<IProxDependency>();
             Assert.That(testDependency2.Hello(), Is.EqualTo("World"));
@@ -269,10 +280,11 @@ namespace Orchard.Tests.Environment.ShellBuilders {
 
         [Test]
         public void DynamicProxyAndShellSettingsAreResolvableToSameInstances() {
+            var settings = CreateSettings();
             var topology = CreateTopology();
 
             var factory = _container.Resolve<IShellContainerFactory>();
-            var shellContainer = factory.CreateContainer(topology);
+            var shellContainer = factory.CreateContainer(settings, topology);
 
             var proxa = shellContainer.Resolve<DynamicProxyContext>();
             var proxb = shellContainer.Resolve<DynamicProxyContext>();
@@ -286,7 +298,7 @@ namespace Orchard.Tests.Environment.ShellBuilders {
 
 
             var topology2 = CreateTopology();
-            var shellContainer2 = factory.CreateContainer(topology2);
+            var shellContainer2 = factory.CreateContainer(settings, topology2);
 
             var proxa2 = shellContainer2.Resolve<DynamicProxyContext>();
             var proxb2 = shellContainer2.Resolve<DynamicProxyContext>();

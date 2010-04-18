@@ -17,7 +17,7 @@ namespace Orchard.Tests.Environment.ShellBuilders {
         [SetUp]
         public void Init() {
             var builder = new ContainerBuilder();
-            builder.RegisterType<DefaultShellContextFactory>().As<IShellContextFactory>();
+            builder.RegisterType<ShellContextFactory>().As<IShellContextFactory>();
             builder.RegisterAutoMocking(Moq.MockBehavior.Strict);
             _container = builder.Build();
         }
@@ -38,7 +38,7 @@ namespace Orchard.Tests.Environment.ShellBuilders {
                 .Returns(topology);
 
             _container.Mock<IShellContainerFactory>()
-                .Setup(x => x.CreateContainer(topology))
+                .Setup(x => x.CreateContainer(settings, topology))
                 .Returns(shellLifetimeScope );
 
             _container.Mock<ITopologyDescriptorManager>()
@@ -65,7 +65,7 @@ namespace Orchard.Tests.Environment.ShellBuilders {
                 .Returns(topology);
 
             _container.Mock<IShellContainerFactory>()
-                .Setup(x => x.CreateContainer(topology))
+                .Setup(x => x.CreateContainer(It.IsAny<ShellSettings>(), topology))
                 .Returns(_container.BeginLifetimeScope("shell"));
 
             var factory = _container.Resolve<IShellContextFactory>();

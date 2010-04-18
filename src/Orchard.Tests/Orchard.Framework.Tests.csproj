@@ -167,7 +167,6 @@
     <Compile Include="Environment\ShellBuilders\DefaultShellContainerFactoryTests.cs" />
     <Compile Include="Environment\ShellBuilders\DefaultShellContextFactoryTests.cs" />
     <Compile Include="Utility\ContainerExtensions.cs" />
-    <Compile Include="Environment\ShellBuilders\SetupShellContainerFactoryTests.cs" />
     <Compile Include="Environment\TestDependencies\TestDependency.cs" />
     <Compile Include="Environment\Topology\DefaultTopologyDescriptorCacheTests.cs" />
     <Compile Include="EventsTests.cs" />
@@ -179,7 +178,6 @@
     <Compile Include="Logging\LoggingModuleTests.cs" />
     <Compile Include="Mvc\ModelBinders\KeyedListModelBinderTests.cs" />
     <Compile Include="Mvc\OrchardControllerFactoryTests.cs" />
-    <Compile Include="Mvc\OrchardControllerIdentificationStrategyTests.cs" />
     <Compile Include="Mvc\RouteCollectionPublisherTests.cs" />
     <Compile Include="Mvc\Routes\StandardExtensionRouteProviderTests.cs" />
     <Compile Include="Tasks\SweepGeneratorTests.cs" />

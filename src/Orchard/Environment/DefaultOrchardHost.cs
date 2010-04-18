@@ -13,7 +13,7 @@ using Orchard.Utility.Extensions;
 
 namespace Orchard.Environment {
     public class DefaultOrchardHost : IOrchardHost {
-        private readonly IContainerProvider _containerProvider;
+        //private readonly IContainerProvider _containerProvider;
         private readonly ControllerBuilder _controllerBuilder;
 
         private readonly ITenantManager _tenantManager;
@@ -22,11 +22,11 @@ namespace Orchard.Environment {
         private IEnumerable<ShellContext> _current;
 
         public DefaultOrchardHost(
-            IContainerProvider containerProvider,
+            //IContainerProvider containerProvider,
             ITenantManager tenantManager,
             IShellContextFactory shellContextFactory,
             ControllerBuilder controllerBuilder) {
-            _containerProvider = containerProvider;
+            //_containerProvider = containerProvider;
             _tenantManager = tenantManager;
             _shellContextFactory = shellContextFactory;
             _controllerBuilder = controllerBuilder;
@@ -43,7 +43,7 @@ namespace Orchard.Environment {
             Logger.Information("Initializing");
             ViewEngines.Engines.Insert(0, LayoutViewEngine.CreateShim());
             _controllerBuilder.SetControllerFactory(new OrchardControllerFactory());
-            ServiceLocator.SetLocator(t => _containerProvider.RequestLifetime.Resolve(t));
+            //ServiceLocator.SetLocator(t => _containerProvider.RequestLifetime.Resolve(t));
 
             BuildCurrent();
         }
@@ -84,8 +84,10 @@ namespace Orchard.Environment {
                         return context;
                     });
             }
-
-            return new[] {CreateSetupContext()};
+            
+            var setupContext = CreateSetupContext();
+            setupContext.Shell.Activate();
+            return new[] {setupContext};
         }
 
         ShellContext CreateSetupContext() {
@@ -103,7 +105,7 @@ namespace Orchard.Environment {
         }
 
         protected virtual void EndRequest() {
-            _containerProvider.EndRequestLifetime();
+            //_containerProvider.EndRequestLifetime();
         }
 
 

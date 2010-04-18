@@ -45,7 +45,7 @@ namespace Orchard.Tests.Environment {
                     builder.RegisterType<DefaultOrchardHost>().As<IOrchardHost>().SingleInstance();
                     builder.RegisterType<RoutePublisher>().As<IRoutePublisher>();
                     builder.RegisterType<ModelBinderPublisher>().As<IModelBinderPublisher>();
-                    builder.RegisterType<DefaultShellContextFactory>().As<IShellContextFactory>();                    
+                    builder.RegisterType<ShellContextFactory>().As<IShellContextFactory>();                    
                     builder.RegisterInstance(_controllerBuilder);
                     builder.RegisterInstance(_routeCollection);
                     builder.RegisterInstance(_modelBinderDictionary);

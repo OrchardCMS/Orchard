@@ -119,6 +119,16 @@ namespace Orchard.Environment.Extensions {
         }
 
         public Feature LoadFeature(FeatureDescriptor featureDescriptor) {
+            if (featureDescriptor.Name == "Orchard.Framework") {
+                return new Feature {
+                    Descriptor = featureDescriptor,
+                    ExportedTypes =
+                        typeof(OrchardStarter).Assembly.GetExportedTypes()
+                        .Where(t => t.IsClass && !t.IsAbstract)
+                        .ToArray()
+                };
+            }
+
             var featureName = featureDescriptor.Name;
             string extensionName = GetExtensionForFeature(featureName);
             if (extensionName == null) throw new ArgumentException(T("Feature ") + featureName + T(" was not found in any of the installed extensions"));

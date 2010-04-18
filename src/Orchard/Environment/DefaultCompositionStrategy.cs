@@ -36,37 +36,16 @@ namespace Orchard.Environment {
                 .SelectMany(extensionDescriptor => extensionDescriptor.Features)
                 .Where(featureDescriptor => IsFeatureEnabledInTopology(featureDescriptor, topologyDescriptor));
 
-            var features = _extensionManager.LoadFeatures(featureDescriptors).Concat(CoreFeatures());
+            var features = _extensionManager.LoadFeatures(featureDescriptors);
 
             return new ShellTopology {
                 Modules = BuildTopology<ModuleTopology>(features, IsModule, BuildModule),
-                Dependencies = BuildTopology<DependencyTopology>(features, IsDependency, (t, f) => BuildDependency(t, f, topologyDescriptor)),
+                Dependencies = BuildTopology(features, IsDependency, (t, f) => BuildDependency(t, f, topologyDescriptor)),
                 Controllers = BuildTopology<ControllerTopology>(features, IsController, BuildController),
                 Records = BuildTopology<RecordTopology>(features, IsRecord, BuildRecord),
             };
         }
 
-        private static IEnumerable<Feature> CoreFeatures() {
-            var frameworkTypes = typeof(OrchardStarter).Assembly.GetExportedTypes();
-
-            var core = new Feature {
-                Descriptor = new FeatureDescriptor {
-                    Name = "Core",
-                    Extension = new ExtensionDescriptor {
-                        Name = "Core",
-                        DisplayName = "Core",
-                        AntiForgery = "enabled",
-                    },
-                },
-                ExportedTypes = frameworkTypes.Where(t => t.IsClass && !t.IsAbstract),
-                //ExportedTypes = new[] {
-                //    typeof (ContentTypeRecord),
-                //    typeof (ContentItemRecord),
-                //    typeof (ContentItemVersionRecord),
-                //},
-            };
-            return new[] { core };
-        }
 
 
         private static bool IsFeatureEnabledInTopology(FeatureDescriptor featureDescriptor, ShellTopologyDescriptor topologyDescriptor) {

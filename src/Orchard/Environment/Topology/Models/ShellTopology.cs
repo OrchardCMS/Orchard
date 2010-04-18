@@ -6,7 +6,6 @@ using Orchard.Environment.Extensions.Models;
 
 namespace Orchard.Environment.Topology.Models {
     public class ShellTopology {
-        public ShellSettings ShellSettings { get; set; }
         public IEnumerable<ModuleTopology> Modules { get; set; }
         public IEnumerable<DependencyTopology> Dependencies { get; set; }
         public IEnumerable<ControllerTopology> Controllers { get; set; }
@@ -16,9 +15,7 @@ namespace Orchard.Environment.Topology.Models {
     public class ShellTopologyItem {
         public Type Type { get; set; }
         public Feature Feature { get; set; }
-        public ExtensionDescriptor ExtensionDescriptor { get; set; }
         public FeatureDescriptor FeatureDescriptor { get; set; }
-        public ExtensionEntry ExtensionEntry { get; set; }
     }
 
     public class ModuleTopology : ShellTopologyItem {

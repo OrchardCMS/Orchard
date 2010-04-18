@@ -1,9 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Configuration;
 using System.IO;
 using System.Web.Hosting;
 using Autofac;
 using Autofac.Configuration;
+using Autofac.Core;
 using Autofac.Integration.Web;
 using Orchard.Environment.AutofacUtil;
 using Orchard.Environment.Configuration;
@@ -29,7 +31,7 @@ namespace Orchard.Environment {
             {
                 builder.RegisterType<DefaultTenantManager>().As<ITenantManager>().SingleInstance();
 
-                builder.RegisterType<DefaultShellContextFactory>().As<IShellContextFactory>().SingleInstance();
+                builder.RegisterType<ShellContextFactory>().As<IShellContextFactory>().SingleInstance();
                 {
                     builder.RegisterType<DefaultTopologyDescriptorCache>().As<ITopologyDescriptorCache>().SingleInstance();
 
@@ -58,7 +60,7 @@ namespace Orchard.Environment {
                         }
                     }
 
-                    builder.RegisterType<DefaultShellContainerFactory>().As<IShellContainerFactory>().SingleInstance();
+                    builder.RegisterType<ShellContainerFactory>().As<IShellContainerFactory>().SingleInstance();
                 }
             }
 
@@ -82,13 +84,55 @@ namespace Orchard.Environment {
             if (File.Exists(optionalHostConfig))
                 builder.RegisterModule(new ConfigurationSettingsReader(ConfigurationSettingsReader.DefaultSectionName, optionalHostConfig));
 
-            var container = builder.Build();
+            builder
+                .Register(ctx => new LifetimeScopeContainer(ctx.Resolve<ILifetimeScope>()))
+                .As<IContainer>()
+                .InstancePerMatchingLifetimeScope("shell");
 
-            var updater = new ContainerUpdater();
-            updater.RegisterInstance(container);
-            updater.Update(container);
+            return builder.Build();
+        }
 
-            return container;
+        public class LifetimeScopeContainer : IContainer {
+            private readonly ILifetimeScope _lifetimeScope;
+
+            public LifetimeScopeContainer(ILifetimeScope lifetimeScope) {
+                _lifetimeScope = lifetimeScope;
+            }
+
+            public object Resolve(IComponentRegistration registration, IEnumerable<Parameter> parameters) {
+                return _lifetimeScope.Resolve(registration, parameters);
+            }
+
+            public IComponentRegistry ComponentRegistry {
+                get { return _lifetimeScope.ComponentRegistry; }
+            }
+
+            public void Dispose() {                
+            }
+
+            public ILifetimeScope BeginLifetimeScope() {
+                return _lifetimeScope.BeginLifetimeScope();
+            }
+
+            public ILifetimeScope BeginLifetimeScope(object tag) {
+                return _lifetimeScope.BeginLifetimeScope(tag);
+            }
+
+            public ILifetimeScope BeginLifetimeScope(Action<ContainerBuilder> configurationAction) {
+                return _lifetimeScope.BeginLifetimeScope(configurationAction);
+            }
+
+            public ILifetimeScope BeginLifetimeScope(object tag, Action<ContainerBuilder> configurationAction) {
+                return _lifetimeScope.BeginLifetimeScope(tag, configurationAction);
+            }
+
+            public IDisposer Disposer {
+                get { return _lifetimeScope.Disposer; }
+            }
+
+            public object Tag {
+                get { return _lifetimeScope.Tag; }
+            }
         }
 
         public static IOrchardHost CreateHost(Action<ContainerBuilder> registrations) {

@@ -169,8 +169,7 @@
     <Compile Include="Environment\Configuration\DefaultTenantManager.cs" />
     <Compile Include="Environment\Configuration\ITenantManager.cs" />
     <Compile Include="Environment\AutofacUtil\ContainerUpdater.cs" />
-    <Compile Include="Environment\ShellBuilders\DefaultShellContextFactory.cs" />
-    <Compile Include="Environment\ShellBuilders\IShellContextFactory.cs" />
+    <Compile Include="Environment\ShellBuilders\ShellContextFactory.cs" />
     <Compile Include="Environment\ShellBuilders\ShellContext.cs" />
     <Compile Include="Environment\Topology\DefaultTopologyDescriptorCache.cs" />
     <Compile Include="Environment\Topology\ICompositionStrategy.cs" />
@@ -178,9 +177,7 @@
     <Compile Include="Environment\Topology\ITopologyDescriptorCache.cs" />
     <Compile Include="Environment\Topology\Models\ShellTopology.cs" />
     <Compile Include="Environment\Topology\Models\ShellTopologyDescriptor.cs" />
-    <Compile Include="Environment\ShellBuilders\DefaultShellContainerFactory.cs" />
-    <Compile Include="Environment\ShellBuilders\IShellContainerFactory.cs" />
-    <Compile Include="Environment\ShellBuilders\SafeModeShellContainerFactory.cs" />
+    <Compile Include="Environment\ShellBuilders\ShellContainerFactory.cs" />
     <Compile Include="Environment\Configuration\ShellSettings.cs" />
     <Compile Include="Environment\StandaloneEnvironment.cs" />
     <Compile Include="Events\DefaultOrchardEventBus.cs" />

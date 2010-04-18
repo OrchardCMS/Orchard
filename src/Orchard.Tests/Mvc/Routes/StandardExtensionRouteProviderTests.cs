@@ -6,6 +6,7 @@ using System.Web.Routing;
 using NUnit.Framework;
 using Orchard.Environment.Extensions;
 using Orchard.Environment.Extensions.Models;
+using Orchard.Environment.Topology.Models;
 using Orchard.Mvc.Routes;
 
 namespace Orchard.Tests.Mvc.Routes {
@@ -13,8 +14,31 @@ namespace Orchard.Tests.Mvc.Routes {
     public class StandardExtensionRouteProviderTests {
         [Test]
         public void ExtensionDisplayNameShouldBeUsedInBothStandardRoutes() {
-            var stubManager = new StubExtensionManager();
-            var routeProvider = new StandardExtensionRouteProvider(stubManager);
+            var topology = new ShellTopology {
+                Controllers = new[] {
+                    new ControllerTopology {
+                        AreaName ="Long.Name.Foo",
+                        Feature =new Feature {
+                            Descriptor=new FeatureDescriptor {
+                                Extension=new ExtensionDescriptor {
+                                    DisplayName="Foo"
+                                }
+                            }
+                        }
+                    },
+                    new ControllerTopology {
+                        AreaName ="Long.Name.Bar",
+                        Feature =new Feature {
+                            Descriptor=new FeatureDescriptor {
+                                Extension=new ExtensionDescriptor {
+                                    DisplayName="Bar"
+                                }
+                            }
+                        }
+                    }
+                }
+            };
+            var routeProvider = new StandardExtensionRouteProvider(topology);
 
             var routes = new List<RouteDescriptor>();
             routeProvider.GetRoutes(routes);
