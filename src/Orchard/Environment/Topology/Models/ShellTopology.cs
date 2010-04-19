@@ -1,10 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
-using Orchard.Environment.Configuration;
-using Orchard.Environment.Extensions;
 using Orchard.Environment.Extensions.Models;
 
 namespace Orchard.Environment.Topology.Models {
+
+    /// <summary>
+    /// Contains the information necessary to initialize an IoC container
+    /// for a particular tenant. This model is created by the ICompositionStrategy
+    /// and is passed into the IShellContainerFactory.
+    /// </summary>
     public class ShellTopology {
         public IEnumerable<ModuleTopology> Modules { get; set; }
         public IEnumerable<DependencyTopology> Dependencies { get; set; }
@@ -15,7 +19,6 @@ namespace Orchard.Environment.Topology.Models {
     public class ShellTopologyItem {
         public Type Type { get; set; }
         public Feature Feature { get; set; }
-        public FeatureDescriptor FeatureDescriptor { get; set; }
     }
 
     public class ModuleTopology : ShellTopologyItem {
