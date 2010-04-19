@@ -5,24 +5,24 @@ using Orchard.Environment.Topology.Models;
 namespace Orchard.Tests.Environment.Utility {
     static class Build {
 
-        public static ShellTopologyDescriptor TopologyDescriptor() {
-            var descriptor = new ShellTopologyDescriptor {
-                                                             EnabledFeatures = Enumerable.Empty<TopologyFeature>(),
-                                                             Parameters = Enumerable.Empty<TopologyParameter>(),
+        public static ShellDescriptor TopologyDescriptor() {
+            var descriptor = new ShellDescriptor {
+                                                             EnabledFeatures = Enumerable.Empty<ShellFeature>(),
+                                                             Parameters = Enumerable.Empty<ShellParameter>(),
                                                          };
             return descriptor;
         }
 
-        public static ShellTopologyDescriptor WithFeatures(this ShellTopologyDescriptor descriptor, params string[] names) {
+        public static ShellDescriptor WithFeatures(this ShellDescriptor descriptor, params string[] names) {
             descriptor.EnabledFeatures = descriptor.EnabledFeatures.Concat(
-                names.Select(name => new TopologyFeature { Name = name }));
+                names.Select(name => new ShellFeature { Name = name }));
 
             return descriptor;
         }
 
-        public static ShellTopologyDescriptor WithParameter<TComponent>(this ShellTopologyDescriptor descriptor, string name, string value) {
+        public static ShellDescriptor WithParameter<TComponent>(this ShellDescriptor descriptor, string name, string value) {
             descriptor.Parameters = descriptor.Parameters.Concat(
-                new[] { new TopologyParameter { Component = typeof(TComponent).FullName, Name = name, Value = value } });
+                new[] { new ShellParameter { Component = typeof(TComponent).FullName, Name = name, Value = value } });
 
             return descriptor;
         }

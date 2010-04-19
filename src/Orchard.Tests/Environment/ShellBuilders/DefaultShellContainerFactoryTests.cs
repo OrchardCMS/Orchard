@@ -50,7 +50,7 @@ namespace Orchard.Tests.Environment.ShellBuilders {
         }
 
         DependencyTopology WithDependency<T>() {
-            return new DependencyTopology { Type = typeof(T), Parameters = Enumerable.Empty<TopologyParameter>() };
+            return new DependencyTopology { Type = typeof(T), Parameters = Enumerable.Empty<ShellParameter>() };
         }
 
         [Test]
@@ -192,9 +192,9 @@ namespace Orchard.Tests.Environment.ShellBuilders {
 
             topology.Dependencies.Single().Parameters =
                 new[] {
-                          new TopologyParameter {Name = "alpha", Value = "-a-"},
-                          new TopologyParameter {Name = "Beta", Value = "-b-"},
-                          new TopologyParameter {Name = "Gamma", Value = "-g-"},
+                          new ShellParameter {Name = "alpha", Value = "-a-"},
+                          new ShellParameter {Name = "Beta", Value = "-b-"},
+                          new ShellParameter {Name = "Gamma", Value = "-g-"},
                       };
 
             var factory = _container.Resolve<IShellContainerFactory>();

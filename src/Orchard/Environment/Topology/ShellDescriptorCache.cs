@@ -13,26 +13,26 @@ namespace Orchard.Environment.Topology {
     /// and recall of topology descriptor information. Default implementation uses
     /// app_data, but configured replacements could use other per-host writable location.
     /// </summary>
-    public interface ITopologyDescriptorCache {
+    public interface IShellDescriptorCache {
         /// <summary>
         /// Recreate the named configuration information. Used at startup. 
         /// Returns null on cache-miss.
         /// </summary>
-        ShellTopologyDescriptor Fetch(string name);
+        ShellDescriptor Fetch(string name);
 
         /// <summary>
         /// Commit named configuration to reasonable persistent storage.
         /// This storage is scoped to the current-server and current-webapp.
         /// Loss of storage is expected.
         /// </summary>
-        void Store(string name, ShellTopologyDescriptor descriptor);
+        void Store(string name, ShellDescriptor descriptor);
     }
 
-    public class TopologyDescriptorCache : ITopologyDescriptorCache {
+    public class ShellDescriptorCache : IShellDescriptorCache {
         private readonly IAppDataFolder _appDataFolder;
         private const string TopologyCacheFileName = "cache.dat";
 
-        public TopologyDescriptorCache(IAppDataFolder appDataFolder) {
+        public ShellDescriptorCache(IAppDataFolder appDataFolder) {
             _appDataFolder = appDataFolder;
             T = NullLocalizer.Instance;
             Logger = NullLogger.Instance;
@@ -42,9 +42,9 @@ namespace Orchard.Environment.Topology {
         public ILogger Logger { get; set; }
         private Localizer T { get; set; }
 
-        #region Implementation of ITopologyDescriptorCache
+        #region Implementation of IShellDescriptorCache
 
-        public ShellTopologyDescriptor Fetch(string name) {
+        public ShellDescriptor Fetch(string name) {
             VerifyCacheFile();
             var text = _appDataFolder.ReadFile(TopologyCacheFileName);
             XmlDocument xmlDocument = new XmlDocument();
@@ -52,10 +52,10 @@ namespace Orchard.Environment.Topology {
             XmlNode rootNode = xmlDocument.DocumentElement;
             foreach (XmlNode tenantNode in rootNode.ChildNodes) {
                 if (String.Equals(tenantNode.Name, name, StringComparison.OrdinalIgnoreCase)) {
-                    var serializer = new DataContractSerializer(typeof(ShellTopologyDescriptor));
+                    var serializer = new DataContractSerializer(typeof(ShellDescriptor));
                     var reader = new StringReader(tenantNode.InnerText);
                     using (var xmlReader = XmlReader.Create(reader)) {
-                        return (ShellTopologyDescriptor) serializer.ReadObject(xmlReader, true); 
+                        return (ShellDescriptor) serializer.ReadObject(xmlReader, true); 
                     }
                 }
             }
@@ -63,7 +63,7 @@ namespace Orchard.Environment.Topology {
             return null;
         }
 
-        public void Store(string name, ShellTopologyDescriptor descriptor) {
+        public void Store(string name, ShellDescriptor descriptor) {
             VerifyCacheFile();
             var text = _appDataFolder.ReadFile(TopologyCacheFileName);
             bool tenantCacheUpdated = false;
@@ -73,7 +73,7 @@ namespace Orchard.Environment.Topology {
             XmlNode rootNode = xmlDocument.DocumentElement;
             foreach (XmlNode tenantNode in rootNode.ChildNodes) {
                 if (String.Equals(tenantNode.Name, name, StringComparison.OrdinalIgnoreCase)) {
-                    var serializer = new DataContractSerializer(typeof (ShellTopologyDescriptor));
+                    var serializer = new DataContractSerializer(typeof (ShellDescriptor));
                     var writer = new StringWriter();
                     using (var xmlWriter = XmlWriter.Create(writer)) {
                         serializer.WriteObject(xmlWriter, descriptor);
@@ -85,7 +85,7 @@ namespace Orchard.Environment.Topology {
             }
             if (!tenantCacheUpdated) {
                 XmlElement newTenant = xmlDocument.CreateElement(name);
-                var serializer = new DataContractSerializer(typeof(ShellTopologyDescriptor));
+                var serializer = new DataContractSerializer(typeof(ShellDescriptor));
                 var writer = new StringWriter();
                 using (var xmlWriter = XmlWriter.Create(writer)) {
                     serializer.WriteObject(xmlWriter, descriptor);

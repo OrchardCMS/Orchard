@@ -33,7 +33,7 @@ namespace Orchard.Environment {
 
                 builder.RegisterType<ShellContextFactory>().As<IShellContextFactory>().SingleInstance();
                 {
-                    builder.RegisterType<TopologyDescriptorCache>().As<ITopologyDescriptorCache>().SingleInstance();
+                    builder.RegisterType<ShellDescriptorCache>().As<IShellDescriptorCache>().SingleInstance();
 
                     builder.RegisterType<CompositionStrategy>()
                         .As<ICompositionStrategy>()

@@ -168,7 +168,7 @@
     <Compile Include="Environment\ShellBuilders\DefaultShellContextFactoryTests.cs" />
     <Compile Include="Utility\ContainerExtensions.cs" />
     <Compile Include="Environment\TestDependencies\TestDependency.cs" />
-    <Compile Include="Environment\Topology\DefaultTopologyDescriptorCacheTests.cs" />
+    <Compile Include="Environment\Topology\DefaultShellDescriptorCacheTests.cs" />
     <Compile Include="EventsTests.cs" />
     <Compile Include="Events\EventTests.cs" />
     <Compile Include="Environment\Extensions\ExtensionFoldersTests.cs" />

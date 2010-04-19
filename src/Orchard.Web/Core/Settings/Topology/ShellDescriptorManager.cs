@@ -9,11 +9,11 @@ using Orchard.Events;
 using Orchard.Localization;
 
 namespace Orchard.Core.Settings.Topology {
-    public class TopologyDescriptorManager : ITopologyDescriptorManager {
+    public class ShellDescriptorManager : IShellDescriptorManager {
         private readonly IRepository<TopologyRecord> _topologyRecordRepository;
         private readonly IEventBus _eventBus;
 
-        public TopologyDescriptorManager(
+        public ShellDescriptorManager(
             IRepository<TopologyRecord> repository,
             IEventBus eventBus) {
             _topologyRecordRepository = repository;
@@ -23,23 +23,23 @@ namespace Orchard.Core.Settings.Topology {
 
         Localizer T { get; set; }
 
-        public ShellTopologyDescriptor GetTopologyDescriptor() {
+        public ShellDescriptor GetShellDescriptor() {
             TopologyRecord topologyRecord = GetTopologyRecord();
             if (topologyRecord == null) return null;
             return GetShellTopologyDescriptorFromRecord(topologyRecord);
         }
 
-        private static ShellTopologyDescriptor GetShellTopologyDescriptorFromRecord(TopologyRecord topologyRecord) {
-            ShellTopologyDescriptor descriptor = new ShellTopologyDescriptor { SerialNumber = topologyRecord.SerialNumber };
-            var descriptorFeatures = new List<TopologyFeature>();
+        private static ShellDescriptor GetShellTopologyDescriptorFromRecord(TopologyRecord topologyRecord) {
+            ShellDescriptor descriptor = new ShellDescriptor { SerialNumber = topologyRecord.SerialNumber };
+            var descriptorFeatures = new List<ShellFeature>();
             foreach (var topologyFeatureRecord in topologyRecord.EnabledFeatures) {
-                descriptorFeatures.Add(new TopologyFeature { Name = topologyFeatureRecord.Name });
+                descriptorFeatures.Add(new ShellFeature { Name = topologyFeatureRecord.Name });
             }
             descriptor.EnabledFeatures = descriptorFeatures;
-            var descriptorParameters = new List<TopologyParameter>();
+            var descriptorParameters = new List<ShellParameter>();
             foreach (var topologyParameterRecord in topologyRecord.Parameters) {
                 descriptorParameters.Add(
-                    new TopologyParameter {
+                    new ShellParameter {
                         Component = topologyParameterRecord.Component,
                         Name = topologyParameterRecord.Name,
                         Value = topologyParameterRecord.Value
@@ -55,7 +55,7 @@ namespace Orchard.Core.Settings.Topology {
             return records.FirstOrDefault();
         }
 
-        public void UpdateTopologyDescriptor(int priorSerialNumber, IEnumerable<TopologyFeature> enabledFeatures, IEnumerable<TopologyParameter> parameters) {
+        public void UpdateShellDescriptor(int priorSerialNumber, IEnumerable<ShellFeature> enabledFeatures, IEnumerable<ShellParameter> parameters) {
             TopologyRecord topologyRecord = GetTopologyRecord();
             var serialNumber = topologyRecord == null ? 0 : topologyRecord.SerialNumber;
             if (priorSerialNumber != serialNumber)
@@ -91,7 +91,7 @@ namespace Orchard.Core.Settings.Topology {
             topologyRecord.Parameters = descriptorParameterRecords;
 
             _eventBus.Notify(
-                typeof(ITopologyDescriptorManager).FullName + ".UpdateTopologyDescriptor",
+                typeof(IShellDescriptorManager).FullName + ".UpdateShellDescriptor",
                 null);
         }
     }

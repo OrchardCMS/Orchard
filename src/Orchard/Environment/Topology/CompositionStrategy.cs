@@ -19,7 +19,7 @@ namespace Orchard.Environment.Topology {
         /// Using information from the IExtensionManager, transforms and populates all of the
         /// topology model the shell builders will need to correctly initialize a tenant IoC container.
         /// </summary>
-        ShellTopology Compose(ShellTopologyDescriptor descriptor);
+        ShellTopology Compose(ShellDescriptor descriptor);
     }
 
     public class CompositionStrategy : ICompositionStrategy {
@@ -29,26 +29,26 @@ namespace Orchard.Environment.Topology {
             _extensionManager = extensionManager;
         }
 
-        public ShellTopology Compose(ShellTopologyDescriptor topologyDescriptor) {
+        public ShellTopology Compose(ShellDescriptor descriptor) {
             var enabledFeatures = _extensionManager.AvailableExtensions()
                 .SelectMany(extensionDescriptor => extensionDescriptor.Features)
-                .Where(featureDescriptor => IsFeatureEnabledInTopology(featureDescriptor, topologyDescriptor));
+                .Where(featureDescriptor => IsFeatureEnabledInTopology(featureDescriptor, descriptor));
 
             var features = _extensionManager.LoadFeatures(enabledFeatures);
 
-            if (topologyDescriptor.EnabledFeatures.Any(feature => feature.Name == "Orchard.Framework"))
+            if (descriptor.EnabledFeatures.Any(feature => feature.Name == "Orchard.Framework"))
                 features = features.Concat(BuiltinFeatures());
 
             return new ShellTopology {
                 Modules = BuildTopology<ModuleTopology>(features, IsModule, BuildModule),
-                Dependencies = BuildTopology(features, IsDependency, (t, f) => BuildDependency(t, f, topologyDescriptor)),
+                Dependencies = BuildTopology(features, IsDependency, (t, f) => BuildDependency(t, f, descriptor)),
                 Controllers = BuildTopology<ControllerTopology>(features, IsController, BuildController),
                 Records = BuildTopology<RecordTopology>(features, IsRecord, BuildRecord),
             };
         }
 
-        private static bool IsFeatureEnabledInTopology(FeatureDescriptor featureDescriptor, ShellTopologyDescriptor topologyDescriptor) {
-            return topologyDescriptor.EnabledFeatures.Any(topologyFeature => topologyFeature.Name == featureDescriptor.Name);
+        private static bool IsFeatureEnabledInTopology(FeatureDescriptor featureDescriptor, ShellDescriptor descriptor) {
+            return descriptor.EnabledFeatures.Any(topologyFeature => topologyFeature.Name == featureDescriptor.Name);
         }
 
         private static IEnumerable<Feature> BuiltinFeatures() {
@@ -89,11 +89,11 @@ namespace Orchard.Environment.Topology {
             return typeof(IDependency).IsAssignableFrom(type);
         }
 
-        private static DependencyTopology BuildDependency(Type type, Feature feature, ShellTopologyDescriptor topologyDescriptor) {
+        private static DependencyTopology BuildDependency(Type type, Feature feature, ShellDescriptor descriptor) {
             return new DependencyTopology {
                 Type = type,
                 Feature = feature,
-                Parameters = topologyDescriptor.Parameters.Where(x => x.Component == type.FullName).ToArray()
+                Parameters = descriptor.Parameters.Where(x => x.Component == type.FullName).ToArray()
             };
         }
 

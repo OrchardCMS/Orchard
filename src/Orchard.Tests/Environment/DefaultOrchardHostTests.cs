@@ -68,8 +68,8 @@ namespace Orchard.Tests.Environment {
             _container.Mock<IContainerProvider>()
                 .Setup(cp => cp.EndRequestLifetime()).Callback(() => _lifetime.Dispose());
 
-            _container.Mock<ITopologyDescriptorManager>()
-                .Setup(cp => cp.GetTopologyDescriptor()).Returns(new ShellTopologyDescriptor());
+            _container.Mock<IShellDescriptorManager>()
+                .Setup(cp => cp.GetShellDescriptor()).Returns(new ShellDescriptor());
 
             var temp = Path.GetTempFileName();
             File.Delete(temp);

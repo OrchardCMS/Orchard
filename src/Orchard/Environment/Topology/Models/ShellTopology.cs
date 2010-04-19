@@ -22,7 +22,7 @@ namespace Orchard.Environment.Topology.Models {
     }
 
     public class DependencyTopology : ShellTopologyItem {
-        public IEnumerable<TopologyParameter> Parameters { get; set; }
+        public IEnumerable<ShellParameter> Parameters { get; set; }
     }
 
     public class ControllerTopology : ShellTopologyItem {

@@ -169,10 +169,10 @@
     <Compile Include="Environment\AutofacUtil\ContainerUpdater.cs" />
     <Compile Include="Environment\ShellBuilders\ShellContextFactory.cs" />
     <Compile Include="Environment\ShellBuilders\ShellContext.cs" />
-    <Compile Include="Environment\Topology\TopologyDescriptorCache.cs" />
-    <Compile Include="Environment\Topology\ITopologyDescriptorManager.cs" />
+    <Compile Include="Environment\Topology\ShellDescriptorCache.cs" />
+    <Compile Include="Environment\Topology\IShellDescriptorManager.cs" />
     <Compile Include="Environment\Topology\Models\ShellTopology.cs" />
-    <Compile Include="Environment\Topology\Models\ShellTopologyDescriptor.cs" />
+    <Compile Include="Environment\Topology\Models\ShellDescriptor.cs" />
     <Compile Include="Environment\ShellBuilders\ShellContainerFactory.cs" />
     <Compile Include="Environment\Configuration\ShellSettings.cs" />
     <Compile Include="Environment\StandaloneEnvironment.cs" />
