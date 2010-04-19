@@ -1,5 +1,2 @@
 ﻿name: Settings
 antiforgery: enabled
-features:
-  Settings:
-    description: Site configuration support
