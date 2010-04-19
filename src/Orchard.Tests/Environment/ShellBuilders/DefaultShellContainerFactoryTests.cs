@@ -34,15 +34,14 @@ namespace Orchard.Tests.Environment.ShellBuilders {
         }
         ShellTopology CreateTopology(params ShellTopologyItem[] items) {
             return new ShellTopology {
-                Modules = items.OfType<ModuleTopology>(),
                 Dependencies = items.OfType<DependencyTopology>(),
                 Controllers = items.OfType<ControllerTopology>(),
                 Records = items.OfType<RecordTopology>(),
             };
         }
 
-        ModuleTopology WithModule<T>() {
-            return new ModuleTopology { Type = typeof(T) };
+        DependencyTopology WithModule<T>() {
+            return new DependencyTopology { Type = typeof(T), Parameters = Enumerable.Empty<ShellParameter>() };
         }
 
         ControllerTopology WithController<T>(string areaName, string controllerName) {

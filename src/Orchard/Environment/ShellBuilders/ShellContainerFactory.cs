@@ -11,7 +11,7 @@ using Orchard.Environment.Configuration;
 using Orchard.Environment.Topology.Models;
 
 namespace Orchard.Environment.ShellBuilders {
-    
+
     public interface IShellContainerFactory {
         ILifetimeScope CreateContainer(ShellSettings settings, ShellTopology topology);
     }
@@ -26,10 +26,16 @@ namespace Orchard.Environment.ShellBuilders {
         public ILifetimeScope CreateContainer(ShellSettings settings, ShellTopology topology) {
             var intermediateScope = _lifetimeScope.BeginLifetimeScope(
                 builder => {
-                    foreach (var item in topology.Modules) {
-                        RegisterType(builder, item)
+                    foreach (var item in topology.Dependencies.Where(t => typeof(IModule).IsAssignableFrom(t.Type))) {
+                        var registration = RegisterType(builder, item)
                             .Keyed<IModule>(item.Type)
                             .InstancePerDependency();
+
+                        foreach (var parameter in item.Parameters) {
+                            registration = registration
+                                .WithParameter(parameter.Name, parameter.Value)
+                                .WithProperty(parameter.Name, parameter.Value);
+                        }
                     }
                 });
 
@@ -43,11 +49,11 @@ namespace Orchard.Environment.ShellBuilders {
                     builder.Register(ctx => topology);
 
                     var moduleIndex = intermediateScope.Resolve<IIndex<Type, IModule>>();
-                    foreach (var item in topology.Modules) {
+                    foreach (var item in topology.Dependencies.Where(t => typeof(IModule).IsAssignableFrom(t.Type))) {
                         builder.RegisterModule(moduleIndex[item.Type]);
                     }
 
-                    foreach (var item in topology.Dependencies) {
+                    foreach (var item in topology.Dependencies.Where(t => typeof(IDependency).IsAssignableFrom(t.Type))) {
                         var registration = RegisterType(builder, item)
                             .EnableDynamicProxy(dynamicProxyContext)
                             .InstancePerLifetimeScope();

@@ -39,11 +39,15 @@ namespace Orchard.Environment.Topology {
             if (descriptor.EnabledFeatures.Any(feature => feature.Name == "Orchard.Framework"))
                 features = features.Concat(BuiltinFeatures());
 
+            var modules = BuildTopology<DependencyTopology>(features, IsModule, BuildModule);
+            var dependencies = BuildTopology(features, IsDependency, (t, f) => BuildDependency(t, f, descriptor));
+            var controllers = BuildTopology<ControllerTopology>(features, IsController, BuildController);
+            var records = BuildTopology<RecordTopology>(features, IsRecord, BuildRecord);
+
             return new ShellTopology {
-                Modules = BuildTopology<ModuleTopology>(features, IsModule, BuildModule),
-                Dependencies = BuildTopology(features, IsDependency, (t, f) => BuildDependency(t, f, descriptor)),
-                Controllers = BuildTopology<ControllerTopology>(features, IsController, BuildController),
-                Records = BuildTopology<RecordTopology>(features, IsRecord, BuildRecord),
+                Dependencies = dependencies.Concat(modules).ToArray(),
+                Controllers = controllers,
+                Records = records,
             };
         }
 
@@ -81,8 +85,8 @@ namespace Orchard.Environment.Topology {
             return typeof(IModule).IsAssignableFrom(type);
         }
 
-        private static ModuleTopology BuildModule(Type type, Feature feature) {
-            return new ModuleTopology { Type = type, Feature = feature };
+        private static DependencyTopology BuildModule(Type type, Feature feature) {
+            return new DependencyTopology { Type = type, Feature = feature, Parameters = Enumerable.Empty<ShellParameter>() };
         }
 
         private static bool IsDependency(Type type) {

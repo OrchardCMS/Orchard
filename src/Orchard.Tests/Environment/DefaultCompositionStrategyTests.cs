@@ -139,8 +139,8 @@ namespace Orchard.Tests.Environment {
             var compositionStrategy = _container.Resolve<ICompositionStrategy>();
             var topology = compositionStrategy.Compose(descriptor);
 
-            var alpha = topology.Modules.Single(x => x.Type == typeof (AlphaModule));
-            var beta = topology.Modules.Single(x => x.Type == typeof (BetaModule));
+            var alpha = topology.Dependencies.Single(x => x.Type == typeof (AlphaModule));
+            var beta = topology.Dependencies.Single(x => x.Type == typeof(BetaModule));
 
             Assert.That(alpha.Feature.Descriptor.Name, Is.EqualTo("Foo"));
             Assert.That(beta.Feature.Descriptor.Name, Is.EqualTo("Bar"));
