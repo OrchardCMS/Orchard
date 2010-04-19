@@ -34,7 +34,7 @@ namespace Orchard.Tests.Environment.ShellBuilders {
                 .Returns(topologyDescriptor);
 
             _container.Mock<ICompositionStrategy>()
-                .Setup(x => x.Compose(topologyDescriptor))
+                .Setup(x => x.Compose(settings, topologyDescriptor))
                 .Returns(topology);
 
             _container.Mock<IShellContainerFactory>()
@@ -47,7 +47,7 @@ namespace Orchard.Tests.Environment.ShellBuilders {
 
             var factory = _container.Resolve<IShellContextFactory>();
 
-            var context = factory.Create(settings);
+            var context = factory.CreateShellContext(settings);
 
             Assert.That(context.Settings, Is.SameAs(settings));
             Assert.That(context.Descriptor, Is.SameAs(topologyDescriptor));
@@ -58,10 +58,11 @@ namespace Orchard.Tests.Environment.ShellBuilders {
 
         [Test]
         public void NullSettingsReturnsSetupContext() {
+            var settings = new ShellSettings { Name = "Default" };
             var topology = new ShellTopology();
 
             _container.Mock<ICompositionStrategy>()
-                .Setup(x => x.Compose(It.IsAny<ShellDescriptor>()))
+                .Setup(x => x.Compose(settings, It.IsAny<ShellDescriptor>()))
                 .Returns(topology);
 
             _container.Mock<IShellContainerFactory>()
@@ -69,7 +70,7 @@ namespace Orchard.Tests.Environment.ShellBuilders {
                 .Returns(_container.BeginLifetimeScope("shell"));
 
             var factory = _container.Resolve<IShellContextFactory>();
-            var context = factory.Create(null);
+            var context = factory.CreateShellContext(null);
 
             Assert.That(context.Descriptor.EnabledFeatures, Has.Some.With.Property("Name").EqualTo("Orchard.Setup"));
         }

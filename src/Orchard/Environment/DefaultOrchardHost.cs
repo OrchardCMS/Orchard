@@ -92,12 +92,12 @@ namespace Orchard.Environment {
 
         ShellContext CreateSetupContext() {
             Logger.Debug("Creating shell context for setup");
-            return _shellContextFactory.Create(null);
+            return _shellContextFactory.CreateSetupContext();
         }
 
         ShellContext CreateShellContext(ShellSettings settings) {
             Logger.Debug("Creating shell context for tenant {0}", settings.Name);
-            return _shellContextFactory.Create(settings);
+            return _shellContextFactory.CreateShellContext(settings);
         }
 
         protected virtual void BeginRequest() {
