@@ -235,7 +235,7 @@ namespace Orchard.Tests.Environment {
 
         [Test]
         public void CoreRecordsAreAddedAutomatically() {
-             var descriptor = Build.TopologyDescriptor();
+            var descriptor = Build.TopologyDescriptor().WithFeatures("Orchard.Framework");
             
             var compositionStrategy = _container.Resolve<ICompositionStrategy>();
             var topology = compositionStrategy.Compose(descriptor);
@@ -244,14 +244,14 @@ namespace Orchard.Tests.Environment {
             var ci = topology.Records.Single(x => x.Type == typeof (ContentItemRecord));
             var civ = topology.Records.Single(x => x.Type == typeof (ContentItemVersionRecord));
             
-            Assert.That(ct.Feature.Descriptor.Name, Is.EqualTo("Core"));
-            Assert.That(ct.TableName, Is.EqualTo("Core_ContentTypeRecord"));
+            Assert.That(ct.Feature.Descriptor.Name, Is.EqualTo("Orchard.Framework"));
+            Assert.That(ct.TableName, Is.EqualTo("Orchard_Framework_ContentTypeRecord"));
 
-            Assert.That(ci.Feature.Descriptor.Name, Is.EqualTo("Core"));
-            Assert.That(ci.TableName, Is.EqualTo("Core_ContentItemRecord"));
-            
-            Assert.That(civ.Feature.Descriptor.Name, Is.EqualTo("Core"));
-            Assert.That(civ.TableName, Is.EqualTo("Core_ContentItemVersionRecord"));
+            Assert.That(ci.Feature.Descriptor.Name, Is.EqualTo("Orchard.Framework"));
+            Assert.That(ci.TableName, Is.EqualTo("Orchard_Framework_ContentItemRecord"));
+
+            Assert.That(civ.Feature.Descriptor.Name, Is.EqualTo("Orchard.Framework"));
+            Assert.That(civ.TableName, Is.EqualTo("Orchard_Framework_ContentItemVersionRecord"));
        }
     }
 }

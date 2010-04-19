@@ -79,7 +79,7 @@ namespace Orchard.Tests.Environment.ShellBuilders {
             var factory = _container.Resolve<IShellContainerFactory>();
             var shellContainer = factory.CreateContainer(settings, topology);
             var controllers = shellContainer.Resolve<IIndex<string, IController>>();
-            var controller = controllers["foo|bar"];
+            var controller = controllers["foo/bar"];
             Assert.That(controller, Is.Not.Null);
             Assert.That(controller, Is.InstanceOf<TestController>());
         }
@@ -99,7 +99,7 @@ namespace Orchard.Tests.Environment.ShellBuilders {
             var shellContainer = factory.CreateContainer(settings, topology);
 
             var controllerMetas = shellContainer.Resolve<IIndex<string, Meta<IController>>>();
-            var metadata = controllerMetas["foo|bar"].Metadata;
+            var metadata = controllerMetas["foo/bar"].Metadata;
 
             Assert.That(metadata["Hello"], Is.EqualTo("World"));
         }
@@ -296,9 +296,9 @@ namespace Orchard.Tests.Environment.ShellBuilders {
             Assert.That(setta, Is.Not.Null);
             Assert.That(setta, Is.SameAs(settb));
 
-
+            var settings2 = CreateSettings();
             var topology2 = CreateTopology();
-            var shellContainer2 = factory.CreateContainer(settings, topology2);
+            var shellContainer2 = factory.CreateContainer(settings2, topology2);
 
             var proxa2 = shellContainer2.Resolve<DynamicProxyContext>();
             var proxb2 = shellContainer2.Resolve<DynamicProxyContext>();

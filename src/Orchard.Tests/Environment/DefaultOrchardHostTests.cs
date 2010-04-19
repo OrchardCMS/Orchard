@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -12,6 +13,7 @@ using Orchard.Environment;
 using Orchard.Environment.AutofacUtil;
 using Orchard.Environment.Configuration;
 using Orchard.Environment.Extensions;
+using Orchard.Environment.Extensions.Folders;
 using Orchard.Environment.Extensions.Models;
 using Orchard.Environment.ShellBuilders;
 using Orchard.Environment.Topology;
@@ -21,6 +23,7 @@ using Orchard.Mvc.ModelBinders;
 using Orchard.Mvc.Routes;
 using Orchard.Tests.Environment.TestDependencies;
 using Orchard.Tests.Stubs;
+using Orchard.Tests.Utility;
 
 namespace Orchard.Tests.Environment {
     [TestFixture]
@@ -30,32 +33,51 @@ namespace Orchard.Tests.Environment {
         private RouteCollection _routeCollection;
         private ModelBinderDictionary _modelBinderDictionary;
         private ControllerBuilder _controllerBuilder;
+        private ViewEngineCollection _viewEngineCollection;
 
         [SetUp]
         public void Init() {
             _controllerBuilder = new ControllerBuilder();
             _routeCollection = new RouteCollection();
             _modelBinderDictionary = new ModelBinderDictionary();
+            _viewEngineCollection = new ViewEngineCollection { new WebFormViewEngine() };
 
             _container = OrchardStarter.CreateHostContainer(
                 builder => {
-                    //builder.RegisterModule(new ImplicitCollectionSupportModule());
+                    builder.RegisterInstance(new StubShellSettingsLoader()).As<IShellSettingsManager>();
                     builder.RegisterType<StubContainerProvider>().As<IContainerProvider>().InstancePerLifetimeScope();
-                    builder.RegisterType<StubCompositionStrategy>().As<ICompositionStrategy>().InstancePerLifetimeScope();
                     builder.RegisterType<DefaultOrchardHost>().As<IOrchardHost>().SingleInstance();
                     builder.RegisterType<RoutePublisher>().As<IRoutePublisher>();
                     builder.RegisterType<ModelBinderPublisher>().As<IModelBinderPublisher>();
-                    builder.RegisterType<ShellContextFactory>().As<IShellContextFactory>();                    
+                    builder.RegisterType<ShellContextFactory>().As<IShellContextFactory>();
                     builder.RegisterInstance(_controllerBuilder);
                     builder.RegisterInstance(_routeCollection);
                     builder.RegisterInstance(_modelBinderDictionary);
-                    builder.RegisterInstance(new ViewEngineCollection { new WebFormViewEngine() });
-                    builder.RegisterInstance(new StuExtensionManager()).As<IExtensionManager>();
-                    builder.RegisterInstance(new Mock<IHackInstallationGenerator>().Object);
-                    builder.RegisterInstance(new StubShellSettingsLoader()).As<IShellSettingsManager>();
-                    builder.RegisterInstance(new Mock<ITopologyDescriptorCache>().Object);
+                    builder.RegisterInstance(_viewEngineCollection);
+                    builder.RegisterAutoMocking()
+                        .Ignore<IExtensionFolders>()
+                        .Ignore<IRouteProvider>()
+                        .Ignore<IModelBinderProvider>();
                 });
             _lifetime = _container.BeginLifetimeScope();
+
+            _container.Mock<IContainerProvider>()
+                .SetupGet(cp=>cp.ApplicationContainer).Returns(_container);
+            _container.Mock<IContainerProvider>()
+                .SetupGet(cp => cp.RequestLifetime).Returns(_lifetime);
+            _container.Mock<IContainerProvider>()
+                .Setup(cp => cp.EndRequestLifetime()).Callback(() => _lifetime.Dispose());
+
+            _container.Mock<ITopologyDescriptorManager>()
+                .Setup(cp => cp.GetTopologyDescriptor()).Returns(new ShellTopologyDescriptor());
+
+            var temp = Path.GetTempFileName();
+            File.Delete(temp);
+            Directory.CreateDirectory(temp);
+
+            _container.Resolve<IAppDataFolder>()
+                .SetBasePath(temp);
+
             var updater = new ContainerUpdater();
             updater.RegisterInstance(_container).SingleInstance();
             updater.Update(_lifetime);
@@ -74,36 +96,6 @@ namespace Orchard.Tests.Environment {
             }
         }
 
-        public class StuExtensionManager : IExtensionManager {
-            public IEnumerable<ExtensionDescriptor> AvailableExtensions() {
-                return Enumerable.Empty<ExtensionDescriptor>();
-            }
-
-            public IEnumerable<Feature> LoadFeatures(IEnumerable<FeatureDescriptor> features) {
-                throw new NotImplementedException();
-            }
-
-            public Feature LoadFeature(FeatureDescriptor featureDescriptor) {
-                throw new NotImplementedException();
-            }
-
-            public IEnumerable<ExtensionEntry> ActiveExtensions_Obsolete() {
-                return Enumerable.Empty<ExtensionEntry>();
-            }
-
-            public Feature LoadFeature(string featureName) {
-                throw new NotImplementedException();
-            }
-
-            public void InstallExtension(string extensionType, HttpPostedFileBase extensionBundle) {
-                throw new NotImplementedException();
-            }
-
-            public void UninstallExtension(string extensionType, string extensionName) {
-                throw new NotImplementedException();
-            }
-        }
-
         [Test]
         public void HostShouldSetControllerFactory() {
             var host = _lifetime.Resolve<IOrchardHost>();
@@ -113,11 +105,6 @@ namespace Orchard.Tests.Environment {
             Assert.That(_controllerBuilder.GetControllerFactory(), Is.TypeOf<OrchardControllerFactory>());
         }
 
-        public class StubCompositionStrategy : ICompositionStrategy {
-            public ShellTopology Compose(ShellTopologyDescriptor descriptor) {
-                throw new NotImplementedException();
-            }
-        }
 
         [Test]
         public void DifferentShellInstanceShouldBeReturnedAfterEachCreate() {

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using Autofac;
 using Autofac.Builder;
 using Autofac.Core;
@@ -12,21 +13,25 @@ namespace Orchard.Tests.Utility {
             return container.Resolve<Mock<T>>();
         }
 
-        public static void RegisterAutoMocking(this ContainerBuilder builder) {
-            builder.RegisterSource(new AutoMockSource(MockBehavior.Default));
+        public static AutoMockSource RegisterAutoMocking(this ContainerBuilder builder) {
+            var source = new AutoMockSource(MockBehavior.Strict);
+            builder.RegisterSource(source);
+            return source;
         }
 
         public static void RegisterAutoMocking(this ContainerBuilder builder, MockBehavior behavior) {
             builder.RegisterSource(new AutoMockSource(behavior));
         }
-        class AutoMockSource : IRegistrationSource {
+
+        public class AutoMockSource : IRegistrationSource {
             private readonly MockBehavior _behavior;
+            private IEnumerable<Type> _ignore = Enumerable.Empty<Type>();
 
             public AutoMockSource(MockBehavior behavior) {
                 _behavior = behavior;
             }
 
-            public IEnumerable<IComponentRegistration> RegistrationsFor(
+            IEnumerable<IComponentRegistration> IRegistrationSource.RegistrationsFor(
                 Service service,
                 Func<Service, IEnumerable<IComponentRegistration>> registrationAccessor) {
 
@@ -42,6 +47,13 @@ namespace Orchard.Tests.Utility {
                         .CreateRegistration();
                 }
                 else if (st.IsInterface) {
+                    if (st.IsGenericType && st.GetGenericTypeDefinition() == typeof(IEnumerable<>)) {
+                        yield break;
+                    }
+                    if (_ignore.Contains(st)) {
+                        yield break;
+                    }
+
                     yield return RegistrationBuilder.ForDelegate(
                         (ctx, p) => {
                             Trace.WriteLine(string.Format("Mocking {0}", st));
@@ -52,8 +64,12 @@ namespace Orchard.Tests.Utility {
                         .As(service)
                         .SingleInstance()
                         .CreateRegistration();
-
                 }
+            }
+
+            public AutoMockSource Ignore<T>() {
+                _ignore = _ignore.Concat(new[]{typeof (T)});
+                return this;
             }
         }
 
