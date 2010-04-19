@@ -9,7 +9,7 @@ using Orchard.Environment.Topology.Models;
 
 namespace Orchard.Tests.Environment.Topology {
     [TestFixture]
-    public class DefaultTopologyDescriptorCacheTests {
+    public class DefaultShellDescriptorCacheTests {
         private IContainer _container;
         private string _tempFolder;
         private IAppDataFolder _appDataFolder;
@@ -23,7 +23,7 @@ namespace Orchard.Tests.Environment.Topology {
             _appDataFolder.SetBasePath(_tempFolder);
             var builder = new ContainerBuilder();
             builder.RegisterInstance(_appDataFolder).As<IAppDataFolder>();
-            builder.RegisterType<TopologyDescriptorCache>().As<ITopologyDescriptorCache>();
+            builder.RegisterType<ShellDescriptorCache>().As<IShellDescriptorCache>();
             _container = builder.Build();
         }
 
@@ -34,15 +34,15 @@ namespace Orchard.Tests.Environment.Topology {
 
         [Test]
         public void FetchReturnsNullForCacheMiss() {
-            var service = _container.Resolve<ITopologyDescriptorCache>();
+            var service = _container.Resolve<IShellDescriptorCache>();
             var descriptor = service.Fetch("No such shell");
             Assert.That(descriptor, Is.Null);
         }
 
         [Test]
         public void StoreCanBeCalledMoreThanOnceOnTheSameName() {
-            var service = _container.Resolve<ITopologyDescriptorCache>();
-            var descriptor = new ShellTopologyDescriptor { SerialNumber = 6655321 };
+            var service = _container.Resolve<IShellDescriptorCache>();
+            var descriptor = new ShellDescriptor { SerialNumber = 6655321 };
             service.Store("Hello", descriptor);
             service.Store("Hello", descriptor);
             var result = service.Fetch("Hello");
@@ -52,10 +52,10 @@ namespace Orchard.Tests.Environment.Topology {
 
         [Test]
         public void SecondCallUpdatesData() {
-            var service = _container.Resolve<ITopologyDescriptorCache>();
-            var descriptor1 = new ShellTopologyDescriptor { SerialNumber = 6655321 };
+            var service = _container.Resolve<IShellDescriptorCache>();
+            var descriptor1 = new ShellDescriptor { SerialNumber = 6655321 };
             service.Store("Hello", descriptor1);
-            var descriptor2 = new ShellTopologyDescriptor { SerialNumber = 42 };
+            var descriptor2 = new ShellDescriptor { SerialNumber = 42 };
             service.Store("Hello", descriptor2);
             var result = service.Fetch("Hello");
             Assert.That(result, Is.Not.Null);
@@ -64,9 +64,9 @@ namespace Orchard.Tests.Environment.Topology {
 
         [Test]
         public void StoreNullWillClearEntry() {
-            var service = _container.Resolve<ITopologyDescriptorCache>();
+            var service = _container.Resolve<IShellDescriptorCache>();
 
-            var descriptor1 = new ShellTopologyDescriptor { SerialNumber = 6655321 };
+            var descriptor1 = new ShellDescriptor { SerialNumber = 6655321 };
             service.Store("Hello", descriptor1);
             var result1 = service.Fetch("Hello");
             Assert.That(result1, Is.Not.Null);
@@ -79,17 +79,17 @@ namespace Orchard.Tests.Environment.Topology {
 
         [Test]
         public void AllDataWillRoundTrip() {
-            var service = _container.Resolve<ITopologyDescriptorCache>();
+            var service = _container.Resolve<IShellDescriptorCache>();
 
-            var descriptor = new ShellTopologyDescriptor {
+            var descriptor = new ShellDescriptor {
                 SerialNumber = 6655321,
                 EnabledFeatures = new[] { 
-                    new TopologyFeature { Name = "f2"},
-                    new TopologyFeature { Name = "f4"},
+                    new ShellFeature { Name = "f2"},
+                    new ShellFeature { Name = "f4"},
                 },
                 Parameters = new[] { 
-                    new TopologyParameter {Component = "p1", Name = "p2",Value = "p3"}, 
-                    new TopologyParameter {Component = "p4",Name = "p5", Value = "p6"},
+                    new ShellParameter {Component = "p1", Name = "p2",Value = "p3"}, 
+                    new ShellParameter {Component = "p4",Name = "p5", Value = "p6"},
                 },
             };
             var descriptorInfo = descriptor.ToDataString();
@@ -107,7 +107,7 @@ namespace Orchard.Tests.Environment.Topology {
 
     static class DataContractExtensions {
         public static string ToDataString<T>(this T obj) {
-            var serializer = new DataContractSerializer(typeof(ShellTopologyDescriptor));
+            var serializer = new DataContractSerializer(typeof(ShellDescriptor));
             var writer = new StringWriter();
             using (var xmlWriter = XmlWriter.Create(writer)) {
                 serializer.WriteObject(xmlWriter, obj);

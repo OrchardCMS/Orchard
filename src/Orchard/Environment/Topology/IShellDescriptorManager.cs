@@ -5,23 +5,23 @@ namespace Orchard.Environment.Topology {
     /// <summary>
     /// Service resolved out of the shell container. Primarily used by host.
     /// </summary>
-    public interface ITopologyDescriptorManager {
+    public interface IShellDescriptorManager : IDependency {
         /// <summary>
         /// Uses shell-specific database or other resources to return 
         /// the current "correct" configuration. The host will use this information
         /// to reinitialize the shell.
         /// </summary>
-        ShellTopologyDescriptor GetTopologyDescriptor();
+        ShellDescriptor GetShellDescriptor();
 
         /// <summary>
         /// Alters databased information to match information passed as arguments.
         /// Prior SerialNumber used for optomistic concurrency, and an exception
         /// should be thrown if the number in storage doesn't match what's provided.
         /// </summary>
-        void UpdateTopologyDescriptor(
+        void UpdateShellDescriptor(
             int priorSerialNumber,
-            IEnumerable<TopologyFeature> enabledFeatures,
-            IEnumerable<TopologyParameter> parameters);
+            IEnumerable<ShellFeature> enabledFeatures,
+            IEnumerable<ShellParameter> parameters);
     }
 
 

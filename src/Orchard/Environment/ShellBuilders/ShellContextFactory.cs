@@ -7,7 +7,7 @@ using Orchard.Logging;
 
 namespace Orchard.Environment.ShellBuilders {
 
-     public interface IShellContextFactory {
+    public interface IShellContextFactory {
         ShellContext Create(ShellSettings settings);
     }
 
@@ -35,18 +35,13 @@ namespace Orchard.Environment.ShellBuilders {
 
             Logger.Debug("Creating shell context for tenant {0}", settings.Name);
 
-            var cachedDescriptor = _topologyDescriptorCache.Fetch(settings.Name);
-            if (cachedDescriptor == null) {
+            var knownDescriptor = _topologyDescriptorCache.Fetch(settings.Name);
+            if (knownDescriptor == null) {
                 Logger.Information("No topology cached. Starting with minimum components.");
-                cachedDescriptor = new ShellTopologyDescriptor {
-                    SerialNumber = 0,
-                    EnabledFeatures = Enumerable.Empty<TopologyFeature>(),
-                    Parameters = Enumerable.Empty<TopologyParameter>(),
-                };
+                knownDescriptor = MinimumTopologyDescriptor();
             }
-            // handle null-(e.g. cache miss)
 
-            var topology = _compositionStrategy.Compose(cachedDescriptor);
+            var topology = _compositionStrategy.Compose(knownDescriptor);
             var shellScope = _shellContainerFactory.CreateContainer(settings, topology);
 
             ShellTopologyDescriptor currentDescriptor;
@@ -55,7 +50,7 @@ namespace Orchard.Environment.ShellBuilders {
                 currentDescriptor = topologyDescriptorProvider.GetTopologyDescriptor();
             }
 
-            if (cachedDescriptor.SerialNumber != currentDescriptor.SerialNumber) {
+            if (currentDescriptor != null && knownDescriptor.SerialNumber != currentDescriptor.SerialNumber) {
                 Logger.Information("Newer topology obtained. Rebuilding shell container.");
 
                 _topologyDescriptorCache.Store(settings.Name, currentDescriptor);
@@ -69,6 +64,17 @@ namespace Orchard.Environment.ShellBuilders {
                 Topology = topology,
                 LifetimeScope = shellScope,
                 Shell = shellScope.Resolve<IOrchardShell>(),
+            };
+        }
+
+        private static ShellTopologyDescriptor MinimumTopologyDescriptor() {
+            return new ShellTopologyDescriptor {
+                SerialNumber = -1,
+                EnabledFeatures = new[] {
+                    new TopologyFeature {Name = "Orchard.Framework"},
+                    new TopologyFeature {Name = "Settings"},
+                },
+                Parameters = Enumerable.Empty<TopologyParameter>(),
             };
         }
 
