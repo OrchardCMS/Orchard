@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Web.Mvc;
 using Orchard.Comments.Models;
 using Orchard.ContentManagement;
@@ -9,6 +10,9 @@ using Orchard.Data;
 using Orchard.Environment;
 using Orchard.Environment.Configuration;
 using Orchard.Environment.Extensions;
+using Orchard.Environment.ShellBuilders;
+using Orchard.Environment.Topology;
+using Orchard.Environment.Topology.Models;
 using Orchard.Security;
 using Orchard.Settings;
 using Orchard.Setup.ViewModels;
@@ -22,16 +26,22 @@ namespace Orchard.Setup.Controllers {
         private readonly INotifier _notifier;
         private readonly IOrchardHost _orchardHost;
         private readonly IShellSettingsManager _shellSettingsManager;
+        private readonly IShellContainerFactory _shellContainerFactory;
+        private readonly ICompositionStrategy _compositionStrategy;
         private readonly IAppDataFolder _appDataFolder;
 
         public SetupController(
             INotifier notifier,
-            IOrchardHost orchardHost, 
+            IOrchardHost orchardHost,
             IShellSettingsManager shellSettingsManager,
+            IShellContainerFactory shellContainerFactory,
+            ICompositionStrategy compositionStrategy,
             IAppDataFolder appDataFolder) {
             _notifier = notifier;
             _orchardHost = orchardHost;
             _shellSettingsManager = shellSettingsManager;
+            _shellContainerFactory = shellContainerFactory;
+            _compositionStrategy = compositionStrategy;
             _appDataFolder = appDataFolder;
             T = NullLocalizer.Instance;
         }
@@ -71,26 +81,44 @@ namespace Orchard.Setup.Controllers {
                     DataConnectionString = model.DatabaseConnectionString
                 };
 
+                const string hardcoded = @"Orchard.Framework,
+                    Common,Dashboard,Feeds,HomePage,Navigation,Scheduling,Settings,Themes,XmlRpc,
+                    Orchard.Users,Orchard.Roles,TinyMce,
+                    Orchard.Pages,Orchard.Comments";
+
+                var shellDescriptor = new ShellDescriptor {
+                    EnabledFeatures = hardcoded.Split(',').Select(name => new ShellFeature { Name = name.Trim() })
+                };
+
+                var shellToplogy = _compositionStrategy.Compose(shellSettings, shellDescriptor);
+
+                // initialize database explicitly, and store shell descriptor
+                var bootstrapLifetimeScope = _shellContainerFactory.CreateContainer(shellSettings, shellToplogy);
+                using (var environment = new StandaloneEnvironment(bootstrapLifetimeScope)) {
+                    environment.Resolve<ISessionFactoryHolder>().CreateDatabase();
+                    
+                    environment.Resolve<IShellDescriptorManager>().UpdateShellDescriptor(
+                        0, 
+                        shellDescriptor.EnabledFeatures, 
+                        shellDescriptor.Parameters);
+                }
+
+
                 // creating a standalone environment. 
                 // in theory this environment can be used to resolve any normal components by interface, and those
                 // components will exist entirely in isolation - no crossover between the safemode container currently in effect
-                using (var finiteEnvironment = _orchardHost.CreateStandaloneEnvironment(shellSettings)) {
+                using (var environment = _orchardHost.CreateStandaloneEnvironment(shellSettings)) {
                     try {
-                        // initialize database before the transaction is created
-                        var sessionFactoryHolder = finiteEnvironment.Resolve<ISessionFactoryHolder>();
-                        sessionFactoryHolder.CreateDatabase();
-
-
                         // create superuser
-                        var membershipService = finiteEnvironment.Resolve<IMembershipService>();
+                        var membershipService = environment.Resolve<IMembershipService>();
                         var user =
                             membershipService.CreateUser(new CreateUserParams(model.AdminUsername, model.AdminPassword,
                                                                               String.Empty, String.Empty, String.Empty,
                                                                               true));
 
-                        
+
                         // set site name and settings
-                        var siteService = finiteEnvironment.Resolve<ISiteService>();
+                        var siteService = environment.Resolve<ISiteService>();
                         var siteSettings = siteService.GetSiteSettings().As<SiteSettings>();
                         siteSettings.Record.SiteSalt = Guid.NewGuid().ToString("N");
                         siteSettings.Record.SiteName = model.SiteName;
@@ -98,13 +126,13 @@ namespace Orchard.Setup.Controllers {
                         siteSettings.Record.PageTitleSeparator = " - ";
 
                         // set site theme
-                        var themeService = finiteEnvironment.Resolve<IThemeService>();
+                        var themeService = environment.Resolve<IThemeService>();
                         themeService.SetSiteTheme("Classic");
 
-                        var contentManager = finiteEnvironment.Resolve<IContentManager>();
+                        var contentManager = environment.Resolve<IContentManager>();
 
                         // simulate installation-time module activation events
-                        var hackInstallationGenerator = finiteEnvironment.Resolve<IHackInstallationGenerator>();
+                        var hackInstallationGenerator = environment.Resolve<IHackInstallationGenerator>();
                         hackInstallationGenerator.GenerateInstallEvents();
 
                         // create home page as a CMS page
@@ -124,12 +152,12 @@ namespace Orchard.Setup.Controllers {
                         menuItem.As<MenuPart>().OnMainMenu = true;
                         menuItem.As<MenuItem>().Url = "";
 
-                        var authenticationService = finiteEnvironment.Resolve<IAuthenticationService>();
+                        var authenticationService = environment.Resolve<IAuthenticationService>();
                         authenticationService.SignIn(user, true);
-                         
+
                     }
                     catch {
-                        finiteEnvironment.Resolve<ITransactionManager>().Cancel();
+                        environment.Resolve<ITransactionManager>().Cancel();
                         throw;
                     }
                 }
@@ -143,7 +171,7 @@ namespace Orchard.Setup.Controllers {
             }
             catch (Exception exception) {
                 _notifier.Error(T("Setup failed:"));
-                for(var scan = exception; scan !=null; scan = scan.InnerException){
+                for (var scan = exception; scan != null; scan = scan.InnerException) {
                     _notifier.Error(scan.Message);
                 }
                 return IndexViewResult(model);
