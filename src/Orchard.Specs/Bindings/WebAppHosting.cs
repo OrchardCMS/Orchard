@@ -6,6 +6,8 @@ using System.Linq;
 using System.Reflection;
 using System.Web;
 using System.Web.Hosting;
+using System.Xml.Linq;
+using HtmlAgilityPack;
 using Orchard.Specs.Hosting;
 using Orchard.Specs.Util;
 using TechTalk.SpecFlow;
@@ -16,6 +18,7 @@ namespace Orchard.Specs.Bindings {
     public class WebAppHosting {
         private WebHost _webHost;
         private RequestDetails _details;
+        private HtmlDocument _doc;
         private MessageSink _messages;
 
         [Given(@"I have a clean site")]
@@ -54,19 +57,62 @@ namespace Orchard.Specs.Bindings {
             _webHost.CopyExtension("Core", moduleName);
         }
 
+        [Given(@"I am on ""(.*)""")]
+        public void GivenIAmOn(string urlPath) {
+            WhenIGoTo(urlPath);
+        }
+
+
         [When(@"I go to ""(.*)""")]
         public void WhenIGoTo(string urlPath) {
             _details = _webHost.SendRequest(urlPath);
+            _doc = new HtmlDocument();
+            _doc.Load(new StringReader(_details.ResponseText));
         }
 
         [When(@"I follow ""(.*)""")]
         public void WhenIFollow(string linkText) {
-            var doc = new HtmlAgilityPack.HtmlDocument();
-            doc.Load(new StringReader(_details.ResponseText));
-            var link = doc.DocumentNode.SelectNodes("//a").Single(elt => elt.InnerText == linkText);
+            var link = _doc.DocumentNode
+                .SelectNodes("//a")
+                .Single(elt => elt.InnerText == linkText);
 
-            WhenIGoTo(link.Attributes["href"].Value);
+            var urlPath = link.Attributes["href"].Value;
+
+            WhenIGoTo(urlPath);
         }
+
+        [When(@"I fill in")]
+        public void WhenIFillIn(Table table) {
+            var inputs = _doc.DocumentNode
+                .SelectNodes("//input");
+
+            foreach (var row in table.Rows) {
+                var r = row;
+                var input = inputs.Single(
+                    x => x.Attributes.Contains("name") &&
+                        x.Attributes["name"].Value == r["name"]);
+                input.Attributes.Add("value", row["value"]);
+            }
+        }
+
+        [When(@"I hit ""(.*)""")]
+        public void WhenIHit(string submitText) {
+            var submit = _doc.DocumentNode
+                .SelectNodes("//input[@type='submit']")
+                .Single(elt => elt.GetAttributeValue("value", null) == submitText);
+
+            var form = Form.LocateAround(submit);
+            var urlPath = form.Start.GetAttributeValue("action", _details.UrlPath);
+            var inputs = form.Children
+                    .SelectMany(elt => elt.DescendantsAndSelf("input"))
+                    .GroupBy(elt => elt.GetAttributeValue("name", elt.GetAttributeValue("id", "")), elt => elt.GetAttributeValue("value", ""))
+                    .ToDictionary(elt => elt.Key, elt => (IEnumerable<string>)elt);
+
+            _details = _webHost.SendRequest(urlPath, inputs);
+            _doc = new HtmlDocument();
+            _doc.Load(new StringReader(_details.ResponseText));
+        }
+
 
         [Then(@"the status should be (.*) (.*)")]
         public void ThenTheStatusShouldBe(int statusCode, string statusDescription) {
@@ -82,6 +128,53 @@ namespace Orchard.Specs.Bindings {
         [Then(@"the title contains ""(.*)""")]
         public void ThenTheTitleContainsText(string text) {
             ScenarioContext.Current.Pending();
+        }
+    }
+
+    public class Form {
+        public static Form LocateAround(HtmlNode cornerstone) {
+            foreach (var inspect in cornerstone.AncestorsAndSelf()) {
+
+                var form = inspect.PreviousSiblingsAndSelf().FirstOrDefault(
+                    n => n.NodeType == HtmlNodeType.Element && n.Name == "form");
+                if (form == null)
+                    continue;
+
+                var endForm = inspect.NextSiblingsAndSelf().FirstOrDefault(
+                    n => n.NodeType == HtmlNodeType.Text && n.InnerText == "</form>");
+                if (endForm == null)
+                    continue;
+
+                return new Form {
+                    Start = form,
+                    End = endForm,
+                    Children = form.NextSibling.NextSiblingsAndSelf().TakeWhile(n => n != endForm).ToArray()
+                };
+            }
+
+            return null;
+        }
+
+
+        public HtmlNode Start { get; set; }
+        public HtmlNode End { get; set; }
+        public IEnumerable<HtmlNode> Children { get; set; }
+    }
+
+    static class HtmlExtensions {
+        public static IEnumerable<HtmlNode> PreviousSiblingsAndSelf(this HtmlNode node) {
+            var scan = node;
+            while (scan != null) {
+                yield return scan;
+                scan = scan.PreviousSibling;
+            }
+        }
+        public static IEnumerable<HtmlNode> NextSiblingsAndSelf(this HtmlNode node) {
+            var scan = node;
+            while (scan != null) {
+                yield return scan;
+                scan = scan.NextSibling;
+            }
         }
     }
 }

@@ -5,6 +5,9 @@ using Orchard.Environment.Extensions;
 using Orchard.Environment.Extensions.Models;
 
 namespace Orchard.Environment.Topology.Models {
+    /// <summary>
+    /// The topology of the shell (humor)
+    /// </summary>
     public class ShellTopology {
         public IEnumerable<ModuleTopology> Modules { get; set; }
         public IEnumerable<DependencyTopology> Dependencies { get; set; }
@@ -14,8 +17,7 @@ namespace Orchard.Environment.Topology.Models {
 
     public class ShellTopologyItem {
         public Type Type { get; set; }
-        public Feature Feature { get; set; }
-        public FeatureDescriptor FeatureDescriptor { get; set; }
+        public Feature Feature { get; set; }        
     }
 
     public class ModuleTopology : ShellTopologyItem {
