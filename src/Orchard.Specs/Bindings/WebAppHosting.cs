@@ -57,6 +57,27 @@ namespace Orchard.Specs.Bindings {
             _webHost.CopyExtension("Core", moduleName);
         }
 
+        [Given(@"I have a clean site with")]
+        public void GivenIHaveACleanSiteWith(Table table) {
+            GivenIHaveACleanSite();
+            foreach (var row in table.Rows) {
+                switch (row["extension"]) {
+                    case "core":
+                        GivenIHaveCore(row["name"]);
+                        break;
+                    case "module":
+                        GivenIHaveModule(row["name"]);
+                        break;
+                    case "theme":
+                        GivenIHaveTheme(row["name"]);
+                        break;
+                    default:
+                        Assert.Fail("Unknown extension type {0}", row["extension"]);
+                        break;
+                }
+            }
+        }
+
         [Given(@"I am on ""(.*)""")]
         public void GivenIAmOn(string urlPath) {
             WhenIGoTo(urlPath);

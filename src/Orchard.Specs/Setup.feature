@@ -30,10 +30,13 @@ Scenario: Some of the initial form values are required
   Then I should see "Site name is required"
     And I should see "Password is required"
 
-Scenario: Initializing the site
-  Given I have a clean site
-    And I have module "Orchard.Setup"
-    And I have theme "SafeMode"
+Scenario: Calling setup on a brand new install
+  Given I have a clean site with
+      | extension | name |
+      | module | Orchard.Setup |
+      | core | Themes |
+      | core | Settings |
+      | theme | SafeMode |
 	And I am on "/Setup"
   When I fill in 
       | name | value |
