@@ -295,5 +295,23 @@ features:
                 Assert.That((type == typeof(Alpha) || (type == typeof(Beta))));
             }
         }
+
+        [Test]
+        public void ModuleNameIsIntroducedAsFeatureImplicitly() {
+            var extensionLoader = new StubLoaders();
+            var extensionFolder = new StubFolders();
+
+            extensionFolder.Manifests.Add("Minimalistic", @"
+name: Minimalistic
+version: 1.0.3
+orchardversion: 1
+");
+
+            ExtensionManager extensionManager = new ExtensionManager(new[] { extensionFolder }, new[] { extensionLoader });
+            var minimalisticModule = extensionManager.AvailableExtensions().Single(x => x.Name == "Minimalistic");
+
+            Assert.That(minimalisticModule.Features.Count(), Is.EqualTo(1));
+            Assert.That(minimalisticModule.Features.Single().Name, Is.EqualTo("Minimalistic"));
+        }
     }
 }

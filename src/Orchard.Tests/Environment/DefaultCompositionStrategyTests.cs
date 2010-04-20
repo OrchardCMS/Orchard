@@ -8,6 +8,7 @@ using Autofac.Core;
 using Moq;
 using NUnit.Framework;
 using Orchard.ContentManagement.Records;
+using Orchard.Environment.Configuration;
 using Orchard.Environment.Extensions;
 using Orchard.Environment.Extensions.Models;
 using Orchard.Environment.Topology;
@@ -51,15 +52,20 @@ namespace Orchard.Tests.Environment {
             });
         }
 
+        private static ShellSettings BuildDefaultSettings() {
+            return new ShellSettings { Name = "Default" };
+        }
+
         [Test]
         public void TopologyIsNotNull() {
             var descriptor = Build.TopologyDescriptor();
 
             var compositionStrategy = _container.Resolve<ICompositionStrategy>();
-            var topology = compositionStrategy.Compose(descriptor);
+            var topology = compositionStrategy.Compose(BuildDefaultSettings(), descriptor);
 
             Assert.That(topology, Is.Not.Null);
         }
+
 
         [Test]
         public void DependenciesFromFeatureArePutIntoTopology() {
@@ -74,7 +80,7 @@ namespace Orchard.Tests.Environment {
             _featureTypes["Bar"] = new[] { typeof(BarService1) };
 
             var compositionStrategy = _container.Resolve<ICompositionStrategy>();
-            var topology = compositionStrategy.Compose(descriptor);
+            var topology = compositionStrategy.Compose(BuildDefaultSettings(), descriptor);
 
             Assert.That(topology, Is.Not.Null);
             Assert.That(topology.Dependencies.Count(), Is.EqualTo(2));
@@ -115,7 +121,7 @@ namespace Orchard.Tests.Environment {
             _featureTypes["Foo"] = new[] { typeof(FooService1) };
 
             var compositionStrategy = _container.Resolve<ICompositionStrategy>();
-            var topology = compositionStrategy.Compose(descriptor);
+            var topology = compositionStrategy.Compose(BuildDefaultSettings(), descriptor);
 
             var foo = topology.Dependencies.SingleOrDefault(t => t.Type == typeof(FooService1));
             Assert.That(foo, Is.Not.Null);
@@ -137,10 +143,10 @@ namespace Orchard.Tests.Environment {
             _featureTypes["Bar"] = new[] { typeof(BetaModule) };
 
             var compositionStrategy = _container.Resolve<ICompositionStrategy>();
-            var topology = compositionStrategy.Compose(descriptor);
+            var topology = compositionStrategy.Compose(BuildDefaultSettings(), descriptor);
 
-            var alpha = topology.Modules.Single(x => x.Type == typeof (AlphaModule));
-            var beta = topology.Modules.Single(x => x.Type == typeof (BetaModule));
+            var alpha = topology.Dependencies.Single(x => x.Type == typeof(AlphaModule));
+            var beta = topology.Dependencies.Single(x => x.Type == typeof(BetaModule));
 
             Assert.That(alpha.Feature.Descriptor.Name, Is.EqualTo("Foo"));
             Assert.That(beta.Feature.Descriptor.Name, Is.EqualTo("Bar"));
@@ -170,11 +176,11 @@ namespace Orchard.Tests.Environment {
             _featureTypes["Bar Minus"] = new[] { typeof(DeltaController), typeof(EpsilonController) };
 
             var compositionStrategy = _container.Resolve<ICompositionStrategy>();
-            var topology = compositionStrategy.Compose(descriptor);
+            var topology = compositionStrategy.Compose(BuildDefaultSettings(), descriptor);
 
-            var gamma = topology.Controllers.Single(x => x.Type == typeof (GammaController));
-            var delta = topology.Controllers.Single(x => x.Type == typeof (DeltaController));
-            var epsilon = topology.Controllers.Single(x => x.Type == typeof (EpsilonController));
+            var gamma = topology.Controllers.Single(x => x.Type == typeof(GammaController));
+            var delta = topology.Controllers.Single(x => x.Type == typeof(DeltaController));
+            var epsilon = topology.Controllers.Single(x => x.Type == typeof(EpsilonController));
 
             Assert.That(gamma.Feature.Descriptor.Name, Is.EqualTo("Foo Plus"));
             Assert.That(gamma.AreaName, Is.EqualTo("MyCompany.Foo"));
@@ -189,7 +195,7 @@ namespace Orchard.Tests.Environment {
             Assert.That(epsilon.ControllerName, Is.EqualTo("Epsilon"));
         }
 
-        
+
         public class GammaController : Controller {
         }
 
@@ -205,7 +211,7 @@ namespace Orchard.Tests.Environment {
             }
         }
 
-        
+
         [Test]
         public void RecordsArePutIntoTopologyWithTableName() {
             var descriptor = Build.TopologyDescriptor().WithFeatures("Foo Plus", "Bar", "Bar Minus");
@@ -221,10 +227,10 @@ namespace Orchard.Tests.Environment {
             _featureTypes["Bar Minus"] = Enumerable.Empty<Type>();
 
             var compositionStrategy = _container.Resolve<ICompositionStrategy>();
-            var topology = compositionStrategy.Compose(descriptor);
+            var topology = compositionStrategy.Compose(BuildDefaultSettings(), descriptor);
 
-            var foo = topology.Records.Single(x => x.Type == typeof (FooRecord));
-            var bar = topology.Records.Single(x => x.Type == typeof (BarRecord));
+            var foo = topology.Records.Single(x => x.Type == typeof(FooRecord));
+            var bar = topology.Records.Single(x => x.Type == typeof(BarRecord));
 
             Assert.That(foo.Feature.Descriptor.Name, Is.EqualTo("Foo Plus"));
             Assert.That(foo.TableName, Is.EqualTo("MyCompany_Foo_FooRecord"));
@@ -236,14 +242,14 @@ namespace Orchard.Tests.Environment {
         [Test]
         public void CoreRecordsAreAddedAutomatically() {
             var descriptor = Build.TopologyDescriptor().WithFeatures("Orchard.Framework");
-            
-            var compositionStrategy = _container.Resolve<ICompositionStrategy>();
-            var topology = compositionStrategy.Compose(descriptor);
 
-            var ct = topology.Records.Single(x => x.Type == typeof (ContentTypeRecord));
-            var ci = topology.Records.Single(x => x.Type == typeof (ContentItemRecord));
-            var civ = topology.Records.Single(x => x.Type == typeof (ContentItemVersionRecord));
-            
+            var compositionStrategy = _container.Resolve<ICompositionStrategy>();
+            var topology = compositionStrategy.Compose(BuildDefaultSettings(), descriptor);
+
+            var ct = topology.Records.Single(x => x.Type == typeof(ContentTypeRecord));
+            var ci = topology.Records.Single(x => x.Type == typeof(ContentItemRecord));
+            var civ = topology.Records.Single(x => x.Type == typeof(ContentItemVersionRecord));
+
             Assert.That(ct.Feature.Descriptor.Name, Is.EqualTo("Orchard.Framework"));
             Assert.That(ct.TableName, Is.EqualTo("Orchard_Framework_ContentTypeRecord"));
 
@@ -252,6 +258,36 @@ namespace Orchard.Tests.Environment {
 
             Assert.That(civ.Feature.Descriptor.Name, Is.EqualTo("Orchard.Framework"));
             Assert.That(civ.TableName, Is.EqualTo("Orchard_Framework_ContentItemVersionRecord"));
-       }
+        }
+
+        [Test]
+        public void DataPrefixChangesTableName() {
+            var settings = BuildDefaultSettings();
+            settings.DataPrefix = "Yadda";
+            var descriptor = Build.TopologyDescriptor().WithFeatures("Foo Plus", "Bar", "Bar Minus");
+
+            _extensionDescriptors = new[] {
+                Build.ExtensionDescriptor("MyCompany.Foo", "Foo").WithFeatures("Foo", "Foo Plus"),
+                Build.ExtensionDescriptor("Bar").WithFeatures("Bar", "Bar Minus"),
+            };
+
+            _featureTypes["Foo"] = Enumerable.Empty<Type>();
+            _featureTypes["Foo Plus"] = new[] { typeof(FooRecord) };
+            _featureTypes["Bar"] = new[] { typeof(BarRecord) };
+            _featureTypes["Bar Minus"] = Enumerable.Empty<Type>();
+
+            var compositionStrategy = _container.Resolve<ICompositionStrategy>();
+            var topology = compositionStrategy.Compose(settings, descriptor);
+
+            var foo = topology.Records.Single(x => x.Type == typeof(FooRecord));
+            var bar = topology.Records.Single(x => x.Type == typeof(BarRecord));
+
+            Assert.That(foo.Feature.Descriptor.Name, Is.EqualTo("Foo Plus"));
+            Assert.That(foo.TableName, Is.EqualTo("Yadda_MyCompany_Foo_FooRecord"));
+
+            Assert.That(bar.Feature.Descriptor.Name, Is.EqualTo("Bar"));
+            Assert.That(bar.TableName, Is.EqualTo("Yadda_Bar_BarRecord"));
+        }
+
     }
 }

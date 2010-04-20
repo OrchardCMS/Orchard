@@ -6,9 +6,21 @@ using Orchard.Environment.Topology.Models;
 using Orchard.Logging;
 
 namespace Orchard.Environment.ShellBuilders {
-
+    /// <summary>
+    /// High-level coordinator that exercises other component capabilities to
+    /// build all of the artifacts for a running shell given a tenant settings.
+    /// </summary>
     public interface IShellContextFactory {
-        ShellContext Create(ShellSettings settings);
+        /// <summary>
+        /// Builds a shell context given a specific tenant settings structure
+        /// </summary>
+        ShellContext CreateShellContext(ShellSettings settings);
+
+        /// <summary>
+        /// Builds a shell context for an uninitialized Orchard instance. Needed
+        /// to display setup user interface.
+        /// </summary>
+        ShellContext CreateSetupContext();
     }
 
     public class ShellContextFactory : IShellContextFactory {
@@ -28,10 +40,7 @@ namespace Orchard.Environment.ShellBuilders {
 
         public ILogger Logger { get; set; }
 
-        public ShellContext Create(ShellSettings settings) {
-            if (settings == null) {
-                return CreateSetupContext();
-            }
+        public ShellContext CreateShellContext(ShellSettings settings) {           
 
             Logger.Debug("Creating shell context for tenant {0}", settings.Name);
 
@@ -41,7 +50,7 @@ namespace Orchard.Environment.ShellBuilders {
                 knownDescriptor = MinimumTopologyDescriptor();
             }
 
-            var topology = _compositionStrategy.Compose(knownDescriptor);
+            var topology = _compositionStrategy.Compose(settings, knownDescriptor);
             var shellScope = _shellContainerFactory.CreateContainer(settings, topology);
 
             ShellDescriptor currentDescriptor;
@@ -54,7 +63,7 @@ namespace Orchard.Environment.ShellBuilders {
                 Logger.Information("Newer topology obtained. Rebuilding shell container.");
 
                 _shellDescriptorCache.Store(settings.Name, currentDescriptor);
-                topology = _compositionStrategy.Compose(currentDescriptor);
+                topology = _compositionStrategy.Compose(settings, currentDescriptor);
                 shellScope = _shellContainerFactory.CreateContainer(settings, topology);
             }
 
@@ -78,16 +87,17 @@ namespace Orchard.Environment.ShellBuilders {
             };
         }
 
-        private ShellContext CreateSetupContext() {
+        public ShellContext CreateSetupContext() {
             Logger.Warning("No shell settings available. Creating shell context for setup");
 
             var settings = new ShellSettings { Name = "__Orchard__Setup__" };
+
             var descriptor = new ShellDescriptor {
                 SerialNumber = -1,
                 EnabledFeatures = new[] { new ShellFeature { Name = "Orchard.Setup" } },
             };
 
-            var topology = _compositionStrategy.Compose(descriptor);
+            var topology = _compositionStrategy.Compose(settings, descriptor);
             var shellScope = _shellContainerFactory.CreateContainer(settings, topology);
 
             return new ShellContext {

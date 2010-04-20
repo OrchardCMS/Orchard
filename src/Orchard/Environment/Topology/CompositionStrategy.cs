@@ -6,6 +6,7 @@ using System.Web.Mvc;
 using Autofac.Core;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Records;
+using Orchard.Environment.Configuration;
 using Orchard.Environment.Extensions;
 using Orchard.Environment.Extensions.Models;
 using Orchard.Environment.Topology.Models;
@@ -19,7 +20,7 @@ namespace Orchard.Environment.Topology {
         /// Using information from the IExtensionManager, transforms and populates all of the
         /// topology model the shell builders will need to correctly initialize a tenant IoC container.
         /// </summary>
-        ShellTopology Compose(ShellDescriptor descriptor);
+        ShellTopology Compose(ShellSettings settings, ShellDescriptor descriptor);
     }
 
     public class CompositionStrategy : ICompositionStrategy {
@@ -29,7 +30,7 @@ namespace Orchard.Environment.Topology {
             _extensionManager = extensionManager;
         }
 
-        public ShellTopology Compose(ShellDescriptor descriptor) {
+        public ShellTopology Compose(ShellSettings settings, ShellDescriptor descriptor) {
             var enabledFeatures = _extensionManager.AvailableExtensions()
                 .SelectMany(extensionDescriptor => extensionDescriptor.Features)
                 .Where(featureDescriptor => IsFeatureEnabledInTopology(featureDescriptor, descriptor));
@@ -39,11 +40,15 @@ namespace Orchard.Environment.Topology {
             if (descriptor.EnabledFeatures.Any(feature => feature.Name == "Orchard.Framework"))
                 features = features.Concat(BuiltinFeatures());
 
+            var modules = BuildTopology<DependencyTopology>(features, IsModule, BuildModule);
+            var dependencies = BuildTopology(features, IsDependency, (t, f) => BuildDependency(t, f, descriptor));
+            var controllers = BuildTopology<ControllerTopology>(features, IsController, BuildController);
+            var records = BuildTopology(features, IsRecord, (t, f) => BuildRecord(t, f, settings));
+
             return new ShellTopology {
-                Modules = BuildTopology<ModuleTopology>(features, IsModule, BuildModule),
-                Dependencies = BuildTopology(features, IsDependency, (t, f) => BuildDependency(t, f, descriptor)),
-                Controllers = BuildTopology<ControllerTopology>(features, IsController, BuildController),
-                Records = BuildTopology<RecordTopology>(features, IsRecord, BuildRecord),
+                Dependencies = dependencies.Concat(modules).ToArray(),
+                Controllers = controllers,
+                Records = records,
             };
         }
 
@@ -81,8 +86,8 @@ namespace Orchard.Environment.Topology {
             return typeof(IModule).IsAssignableFrom(type);
         }
 
-        private static ModuleTopology BuildModule(Type type, Feature feature) {
-            return new ModuleTopology { Type = type, Feature = feature };
+        private static DependencyTopology BuildModule(Type type, Feature feature) {
+            return new DependencyTopology { Type = type, Feature = feature, Parameters = Enumerable.Empty<ShellParameter>() };
         }
 
         private static bool IsDependency(Type type) {
@@ -125,14 +130,18 @@ namespace Orchard.Environment.Topology {
                    (!typeof(IContent).IsAssignableFrom(type) || typeof(ContentPartRecord).IsAssignableFrom(type));
         }
 
-        private static RecordTopology BuildRecord(Type type, Feature feature) {
+        private static RecordTopology BuildRecord(Type type, Feature feature, ShellSettings settings) {
             var extensionDescriptor = feature.Descriptor.Extension;
             var extensionName = extensionDescriptor.Name.Replace('.', '_');
+
+            var dataPrefix = "";
+            if (!string.IsNullOrEmpty(settings.DataPrefix))
+                dataPrefix = settings.DataPrefix + "_";
 
             return new RecordTopology {
                 Type = type,
                 Feature = feature,
-                TableName = extensionName + '_' + type.Name,
+                TableName = dataPrefix + extensionName + '_' + type.Name,
             };
         }
     }

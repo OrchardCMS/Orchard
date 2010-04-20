@@ -88,26 +88,33 @@ namespace Orchard.Environment.Extensions {
 
         private static IEnumerable<FeatureDescriptor> GetFeaturesForExtension(Mapping features, ExtensionDescriptor extensionDescriptor) {
             List<FeatureDescriptor> featureDescriptors = new List<FeatureDescriptor>();
-            if (features == null) return featureDescriptors;
-            foreach (var entity in features.Entities) {
-                FeatureDescriptor featureDescriptor = new FeatureDescriptor {
-                    Extension = extensionDescriptor,
-                    Name = entity.Key.ToString(),
-                };
-                Mapping featureMapping = (Mapping)entity.Value;
-                foreach (var featureEntity in featureMapping.Entities) {
-                    if (String.Equals(featureEntity.Key.ToString(), "description", StringComparison.OrdinalIgnoreCase)) {
-                        featureDescriptor.Description = featureEntity.Value.ToString();
+            if (features != null) {
+                foreach (var entity in features.Entities) {
+                    FeatureDescriptor featureDescriptor = new FeatureDescriptor {
+                        Extension = extensionDescriptor,
+                        Name = entity.Key.ToString(),
+                    };
+                    Mapping featureMapping = (Mapping)entity.Value;
+                    foreach (var featureEntity in featureMapping.Entities) {
+                        if (String.Equals(featureEntity.Key.ToString(), "description", StringComparison.OrdinalIgnoreCase)) {
+                            featureDescriptor.Description = featureEntity.Value.ToString();
+                        }
+                        else if (String.Equals(featureEntity.Key.ToString(), "category", StringComparison.OrdinalIgnoreCase)) {
+                            featureDescriptor.Category = featureEntity.Value.ToString();
+                        }
+                        else if (String.Equals(featureEntity.Key.ToString(), "dependencies", StringComparison.OrdinalIgnoreCase)) {
+                            featureDescriptor.Dependencies = ParseFeatureDependenciesEntry(featureEntity.Value.ToString());
+                        }
                     }
-                    else if (String.Equals(featureEntity.Key.ToString(), "category", StringComparison.OrdinalIgnoreCase)) {
-                        featureDescriptor.Category = featureEntity.Value.ToString();
-                    }
-                    else if (String.Equals(featureEntity.Key.ToString(), "dependencies", StringComparison.OrdinalIgnoreCase)) {
-                        featureDescriptor.Dependencies = ParseFeatureDependenciesEntry(featureEntity.Value.ToString());
-                    }
+                    featureDescriptors.Add(featureDescriptor);
                 }
-                featureDescriptors.Add(featureDescriptor);
-
+            }
+            if (!featureDescriptors.Any(fd => fd.Name == extensionDescriptor.Name)) {
+                featureDescriptors.Add(new FeatureDescriptor {
+                    Name = extensionDescriptor.Name,
+                    Dependencies = new string[0],
+                    Extension = extensionDescriptor,
+                });
             }
             return featureDescriptors;
         }
