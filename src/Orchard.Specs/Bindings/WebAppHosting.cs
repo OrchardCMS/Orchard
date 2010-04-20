@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -23,8 +22,14 @@ namespace Orchard.Specs.Bindings {
 
         [Given(@"I have a clean site")]
         public void GivenIHaveACleanSite() {
+            GivenIHaveACleanSiteBasedOn("Orchard.Web");
+        }
+
+
+        [Given(@"I have a clean site based on (.*)")]
+        public void GivenIHaveACleanSiteBasedOn(string siteFolder) {
             _webHost = new WebHost();
-            _webHost.Initialize("Orchard.Web", "/");
+            _webHost.Initialize(siteFolder, "/");
 
             var sink = new MessageSink();
             _webHost.Execute(() => {
@@ -32,15 +37,6 @@ namespace Orchard.Specs.Bindings {
             });
             _messages = sink;
         }
-
-        public class MessageSink : MarshalByRefObject {
-            readonly IList<string> _messages = new List<string>();
-
-            public void Receive(string message) {
-                _messages.Add(message);
-            }
-        }
-
 
         [Given(@"I have module ""(.*)""")]
         public void GivenIHaveModule(string moduleName) {

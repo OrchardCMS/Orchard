@@ -39,7 +39,7 @@ namespace Orchard.Tests.Environment.ShellBuilders {
 
             _container.Mock<IShellContainerFactory>()
                 .Setup(x => x.CreateContainer(settings, topology))
-                .Returns(shellLifetimeScope );
+                .Returns(shellLifetimeScope);
 
             _container.Mock<IShellDescriptorManager>()
                 .Setup(x => x.GetShellDescriptor())
@@ -57,12 +57,17 @@ namespace Orchard.Tests.Environment.ShellBuilders {
         }
 
         [Test]
-        public void NullSettingsReturnsSetupContext() {
-            var settings = new ShellSettings { Name = "Default" };
+        public void CreatingSetupContextUsesOrchardSetupFeature() {
+            var settings = default(ShellSettings);
+            var descriptor = default(ShellDescriptor);
             var topology = new ShellTopology();
 
             _container.Mock<ICompositionStrategy>()
-                .Setup(x => x.Compose(settings, It.IsAny<ShellDescriptor>()))
+                .Setup(x => x.Compose(It.IsAny<ShellSettings>(), It.IsAny<ShellDescriptor>()))
+                .Callback((ShellSettings s, ShellDescriptor d) => {
+                    settings = s;
+                    descriptor = d;
+                })
                 .Returns(topology);
 
             _container.Mock<IShellContainerFactory>()
@@ -70,7 +75,7 @@ namespace Orchard.Tests.Environment.ShellBuilders {
                 .Returns(_container.BeginLifetimeScope("shell"));
 
             var factory = _container.Resolve<IShellContextFactory>();
-            var context = factory.CreateShellContext(null);
+            var context = factory.CreateSetupContext();
 
             Assert.That(context.Descriptor.EnabledFeatures, Has.Some.With.Property("Name").EqualTo("Orchard.Setup"));
         }
