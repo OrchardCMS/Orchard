@@ -152,7 +152,7 @@ features:
             Assert.That(descriptor.WebSite, Is.EqualTo("http://anotherwiki.codeplex.com"));
             Assert.That(descriptor.Version, Is.EqualTo("1.2.3"));
             Assert.That(descriptor.OrchardVersion, Is.EqualTo("1"));
-            Assert.That(descriptor.Features.Count(), Is.EqualTo(4));
+            Assert.That(descriptor.Features.Count(), Is.EqualTo(5));
             foreach (var featureDescriptor in descriptor.Features) {
                 switch (featureDescriptor.Name) {
                     case "AnotherWiki":
@@ -187,6 +187,10 @@ features:
                         Assert.That(featureDescriptor.Dependencies.Contains("AnotherWiki"));
                         Assert.That(featureDescriptor.Dependencies.Contains("reCaptcha"));
                         break;
+                    // default feature.
+                    case "MyCompany.AnotherWiki":
+                        Assert.That(featureDescriptor.Extension, Is.SameAs(descriptor));
+                        break;
                     default:
                         Assert.Fail("Features not parsed correctly");
                         break;
@@ -196,8 +200,25 @@ features:
 
         [Test]
         public void ExtensionManagerShouldLoadFeatures() {
-            var descriptors = _manager.AvailableExtensions().SelectMany(x => x.Features);
-            var features = _manager.LoadFeatures(descriptors);
+            var extensionLoader = new StubLoaders();
+            var extensionFolder = new StubFolders();
+
+            extensionFolder.Manifests.Add("TestModule", @"
+name: TestModule
+version: 1.0.3
+orchardversion: 1
+features:
+  TestModule: 
+    Description: My test module for Orchard.
+  TestFeature:
+    Description: Contains the Phi type.
+");
+
+            ExtensionManager extensionManager = new ExtensionManager(new[] { extensionFolder }, new[] { extensionLoader });
+            var testFeature = extensionManager.AvailableExtensions()
+                .SelectMany(x => x.Features);
+
+            var features = extensionManager.LoadFeatures(testFeature);
             var types = features.SelectMany(x => x.ExportedTypes);
 
             Assert.That(types.Count(), Is.Not.EqualTo(0));
@@ -205,8 +226,25 @@ features:
 
         [Test]
         public void ExtensionManagerFeaturesContainNonAbstractClasses() {
-            var descriptors = _manager.AvailableExtensions().SelectMany(x => x.Features);
-            var features = _manager.LoadFeatures(descriptors);
+            var extensionLoader = new StubLoaders();
+            var extensionFolder = new StubFolders();
+
+            extensionFolder.Manifests.Add("TestModule", @"
+name: TestModule
+version: 1.0.3
+orchardversion: 1
+features:
+  TestModule: 
+    Description: My test module for Orchard.
+  TestFeature:
+    Description: Contains the Phi type.
+");
+
+            ExtensionManager extensionManager = new ExtensionManager(new[] { extensionFolder }, new[] { extensionLoader });
+            var testFeature = extensionManager.AvailableExtensions()
+                .SelectMany(x => x.Features);
+
+            var features = extensionManager.LoadFeatures(testFeature);
             var types = features.SelectMany(x => x.ExportedTypes);
 
             foreach (var type in types) {

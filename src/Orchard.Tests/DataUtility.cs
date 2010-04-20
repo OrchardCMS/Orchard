@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using FluentNHibernate.Automapping;
 using FluentNHibernate.Automapping.Alterations;
 using FluentNHibernate.Cfg;
@@ -10,7 +9,6 @@ using NHibernate;
 using NHibernate.Tool.hbm2ddl;
 using Orchard.Data;
 using Orchard.Data.Builders;
-using Orchard.Environment.Topology;
 using Orchard.Environment.Topology.Models;
 
 namespace Orchard.Tests {
@@ -20,7 +18,7 @@ namespace Orchard.Tests {
             //var persistenceModel = AutoMap.Source(new Types(types))
             //    .Alterations(alt => AddAlterations(alt, types))
             //    .Conventions.AddFromAssemblyOf<DataModule>();
-            var persistenceModel = AbstractBuilder.CreatePersistenceModel(types.Select(t => new RecordTopology { TableName = "Test", Type = t }));
+            var persistenceModel = AbstractBuilder.CreatePersistenceModel(types.Select(t => new RecordTopology { TableName = "Test_" + t.Name,Type = t }));
 
             return Fluently.Configure()
                 .Database(SQLiteConfiguration.Standard.UsingFile(fileName).ShowSql())
