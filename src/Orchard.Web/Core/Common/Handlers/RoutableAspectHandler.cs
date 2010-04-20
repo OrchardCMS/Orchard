@@ -7,6 +7,7 @@ using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
 using Orchard.ContentManagement.Handlers;
 using Orchard.Core.Common.Models;
+using Orchard.Core.Common.Services;
 using Orchard.Data;
 
 namespace Orchard.Core.Common.Handlers {
@@ -14,7 +15,7 @@ namespace Orchard.Core.Common.Handlers {
     public class RoutableAspectHandler : ContentHandler {
         private readonly IEnumerable<IContentItemDriver> _contentItemDrivers;
 
-        public RoutableAspectHandler(IRepository<RoutableRecord> repository, IEnumerable<IContentItemDriver> contentItemDrivers, UrlHelper urlHelper) {
+        public RoutableAspectHandler(IRepository<RoutableRecord> repository, IEnumerable<IContentItemDriver> contentItemDrivers, IRoutableService routableService, UrlHelper urlHelper) {
             _contentItemDrivers = contentItemDrivers;
 
             Filters.Add(StorageFilter.For(repository));
@@ -32,6 +33,9 @@ namespace Orchard.Core.Common.Handlers {
 
                 routable.ContentItemBasePath = url;
             });
+
+            OnPublished<RoutableAspect>((context, bp) => routableService.ProcessSlug(bp));
+
         }
 
         private static RouteValueDictionary GetRouteValues(IContentItemDriver driver, ContentItem contentItem) {
