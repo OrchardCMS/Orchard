@@ -135,22 +135,21 @@ this.ScenarioSetup(scenarioInfo);
 #line hidden
             TechTalk.SpecFlow.Table table1 = new TechTalk.SpecFlow.Table(new string[] {
                         "extension",
-                        "name"});
+                        "names"});
             table1.AddRow(new string[] {
                         "module",
-                        "Orchard.Setup"});
+                        "Orchard.Setup, Orchard.Users, Orchard.Roles, Orchard.Pages, Orchard.Comments, Tin" +
+                            "yMce"});
             table1.AddRow(new string[] {
                         "core",
-                        "Themes"});
-            table1.AddRow(new string[] {
-                        "core",
-                        "Settings"});
+                        "Common, Dashboard, Feeds, HomePage, Navigation, Scheduling, Settings, Themes, Xml" +
+                            "Rpc"});
             table1.AddRow(new string[] {
                         "theme",
-                        "SafeMode"});
+                        "SafeMode, Classic"});
 #line 34
   testRunner.Given("I have a clean site with", ((string)(null)), table1);
-#line 40
+#line 39
  testRunner.And("I am on \"/Setup\"");
 #line hidden
             TechTalk.SpecFlow.Table table2 = new TechTalk.SpecFlow.Table(new string[] {
@@ -162,12 +161,12 @@ this.ScenarioSetup(scenarioInfo);
             table2.AddRow(new string[] {
                         "AdminPassword",
                         "6655321"});
-#line 41
+#line 40
   testRunner.When("I fill in", ((string)(null)), table2);
-#line 45
+#line 44
     testRunner.And("I hit \"Finish Setup\"");
-#line 46
-  testRunner.Then("I should see \"Blah\"");
+#line 45
+  testRunner.Then("the status should be 302 Found");
 #line hidden
             testRunner.CollectScenarioErrors();
         }

@@ -61,19 +61,21 @@ namespace Orchard.Specs.Bindings {
         public void GivenIHaveACleanSiteWith(Table table) {
             GivenIHaveACleanSite();
             foreach (var row in table.Rows) {
-                switch (row["extension"]) {
-                    case "core":
-                        GivenIHaveCore(row["name"]);
-                        break;
-                    case "module":
-                        GivenIHaveModule(row["name"]);
-                        break;
-                    case "theme":
-                        GivenIHaveTheme(row["name"]);
-                        break;
-                    default:
-                        Assert.Fail("Unknown extension type {0}", row["extension"]);
-                        break;
+                foreach (var name in row["names"].Split(',').Select(x => x.Trim())) {
+                    switch (row["extension"]) {
+                        case "core":
+                            GivenIHaveCore(name);
+                            break;
+                        case "module":
+                            GivenIHaveModule(name);
+                            break;
+                        case "theme":
+                            GivenIHaveTheme(name);
+                            break;
+                        default:
+                            Assert.Fail("Unknown extension type {0}", row["extension"]);
+                            break;
+                    }
                 }
             }
         }
@@ -105,13 +107,12 @@ namespace Orchard.Specs.Bindings {
         [When(@"I fill in")]
         public void WhenIFillIn(Table table) {
             var inputs = _doc.DocumentNode
-                .SelectNodes("//input");
+                .SelectNodes("//input") ?? Enumerable.Empty<HtmlNode>();
 
             foreach (var row in table.Rows) {
                 var r = row;
-                var input = inputs.Single(
-                    x => x.Attributes.Contains("name") &&
-                        x.Attributes["name"].Value == r["name"]);
+                var input = inputs.SingleOrDefault(x => x.GetAttributeValue("name", x.GetAttributeValue("id", "")) == r["name"]);
+                Assert.That(input, Is.Not.Null, "Unable to locate <input> name {0} in page html:\r\n\r\n{1}", r["name"], _details.ResponseText);
                 input.Attributes.Add("value", row["value"]);
             }
         }

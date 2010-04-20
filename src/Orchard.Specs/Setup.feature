@@ -32,16 +32,14 @@ Scenario: Some of the initial form values are required
 
 Scenario: Calling setup on a brand new install
   Given I have a clean site with
-      | extension | name |
-      | module | Orchard.Setup |
-      | core | Themes |
-      | core | Settings |
-      | theme | SafeMode |
+      | extension | names |
+      | module | Orchard.Setup, Orchard.Users, Orchard.Roles, Orchard.Pages, Orchard.Comments, TinyMce |
+      | core | Common, Dashboard, Feeds, HomePage, Navigation, Scheduling, Settings, Themes, XmlRpc  |
+      | theme | SafeMode, Classic |
 	And I am on "/Setup"
   When I fill in 
       | name | value |
       | SiteName | My Site |
       | AdminPassword | 6655321 |
     And I hit "Finish Setup"
-  Then I should see "Blah"
-
+  Then the status should be 302 Found
