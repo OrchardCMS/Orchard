@@ -81,6 +81,7 @@ namespace Orchard.Setup.Controllers {
                     DataConnectionString = model.DatabaseConnectionString
                 };
 
+                // The vanilla Orchard distibution has the following modules enabled.
                 const string hardcoded = @"Orchard.Framework,
                     Common,Dashboard,Feeds,HomePage,Navigation,Scheduling,Settings,Themes,XmlRpc,
                     Orchard.Users,Orchard.Roles,TinyMce,
