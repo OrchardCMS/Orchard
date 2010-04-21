@@ -9,6 +9,7 @@ using Orchard.Localization;
 using Orchard.Security;
 using Orchard.Settings;
 using Orchard.UI.Notify;
+using Orchard.Utility.Extensions;
 
 namespace Orchard.Comments.Controllers {
     public class CommentController : Controller {
@@ -42,7 +43,15 @@ namespace Orchard.Comments.Controllers {
             
             var viewModel = new CommentsCreateViewModel();
             try {
-                UpdateModel(viewModel);
+
+                // UpdateModel(viewModel);
+
+                if(!TryUpdateModel(viewModel)) {
+                    if (Request.Form["Name"].IsNullOrEmptyTrimmed()) {
+                        _notifier.Error("You must provide a Name in order to comment");
+                    }
+                    return Redirect(returnUrl);
+                }
 
                 var context = new CreateCommentContext {
                                                            Author = viewModel.Name,
@@ -63,7 +72,8 @@ namespace Orchard.Comments.Controllers {
             }
             catch (Exception exception) {
                 _notifier.Error(T("Creating Comment failed: " + exception.Message));
-                return View(viewModel);
+                // return View(viewModel);
+                return Redirect(returnUrl);
             }
         }
     }
