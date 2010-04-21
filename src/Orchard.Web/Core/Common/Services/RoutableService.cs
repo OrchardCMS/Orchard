@@ -74,7 +74,8 @@ namespace Orchard.Core.Common.Services {
         }
 
         public bool IsSlugValid(string slug) {
-            return slug == null || String.IsNullOrEmpty(slug.Trim()) || !Regex.IsMatch(slug, @"^[^/:?#\[\]@!$&'()*+,;=\s]+$");
+            // see http://tools.ietf.org/html/rfc3987 for prohibited chars
+            return slug == null || String.IsNullOrEmpty(slug.Trim()) || Regex.IsMatch(slug, @"^[^/:?#\[\]@!$&'()*+,;=\s]+$");
         }
 
         public bool ProcessSlug(RoutableAspect part)

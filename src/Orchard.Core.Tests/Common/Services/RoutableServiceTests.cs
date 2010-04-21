@@ -53,6 +53,24 @@ namespace Orchard.Core.Tests.Common.Services {
         }
 
         [Test]
+        public void EmptySlugsShouldBeConsideredValid() {
+            // so that automatic generation on Publish occurs
+            Assert.That(_routableService.IsSlugValid(null), Is.True);
+            Assert.That(_routableService.IsSlugValid(String.Empty), Is.True);
+            Assert.That(_routableService.IsSlugValid("    "), Is.True);
+        }
+
+        [Test]
+        public void InvalidCharacterShouldBeRefusedInSlugs() {
+            Assert.That(_routableService.IsSlugValid("aaaa-_aaaa"), Is.True);
+
+            foreach (var c in @"/:?#[]@!$&'()*+,;= ") {
+                Assert.That(_routableService.IsSlugValid("a" + c + "b"), Is.False);
+            }
+        }
+    
+
+        [Test]
         public void VeryLongStringTruncatedTo1000Chars() {
             var contentManager = _container.Resolve<IContentManager>();
 
