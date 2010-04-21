@@ -72,7 +72,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Module.txt" />
-    <Content Include="Views\Admin\Add.aspx" />
+    <Content Include="Views\Admin\Add.ascx" />
     <Content Include="Views\Admin\List.ascx" />
     <Content Include="Web.config" />
     <Content Include="Views\Web.config" />

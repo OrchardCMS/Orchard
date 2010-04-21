@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" Inherits="Orchard.Mvc.ViewPage<TenantsAddViewModel>" %>
+﻿<%@ Control Language="C#" Inherits="Orchard.Mvc.ViewUserControl<TenantsAddViewModel>" %>
 <%@ Import Namespace="Orchard.Mvc.Html"%>
 <%@ Import Namespace="Orchard.MultiTenancy.ViewModels"%>
 
