@@ -10,6 +10,10 @@ using Orchard.ContentManagement.Records;
 using Orchard.Core.Common.Models;
 using Orchard.Core.Common.Services;
 using Orchard.Tests.Modules;
+using Orchard.Core.Common.Handlers;
+using System.Web.Mvc;
+using System.Web.Routing;
+using Orchard.Tests.Stubs;
 
 namespace Orchard.Core.Tests.Common.Services {
     [TestFixture]
@@ -23,7 +27,13 @@ namespace Orchard.Core.Tests.Common.Services {
         public override void Register(ContainerBuilder builder) {
             builder.RegisterType<DefaultContentManager>().As<IContentManager>();
             builder.RegisterType<ThingHandler>().As<IContentHandler>();
+            builder.RegisterType<StuffHandler>().As<IContentHandler>();
             builder.RegisterType<RoutableService>().As<IRoutableService>();
+
+            builder.RegisterType<DefaultContentQuery>().As<IContentQuery>();
+            builder.RegisterInstance(new UrlHelper(new RequestContext(new StubHttpContext("~/"), new RouteData()))).As<UrlHelper>();
+            builder.RegisterType<RoutableAspectHandler>().As<IContentHandler>();
+
         }
 
         private IRoutableService _routableService;
@@ -111,6 +121,47 @@ namespace Orchard.Core.Tests.Common.Services {
             Assert.That(thing.Slug, Is.EqualTo("this-is-some-interesting-title"));
         }
 
+        [Test]
+        public void GeneratedSlugsShouldBeUniqueAmongContentType()
+        {
+            var contentManager = _container.Resolve<IContentManager>();
+
+            var thing1 = contentManager.Create<Thing>(ThingDriver.ContentType.Name, t =>
+            {
+                t.As<RoutableAspect>().Record = new RoutableRecord();
+                t.Title = "This Is Some Interesting Title";
+            });
+            
+            var thing2 = contentManager.Create<Thing>(ThingDriver.ContentType.Name , t =>
+            {
+                t.As<RoutableAspect>().Record = new RoutableRecord();
+                t.Title = "This Is Some Interesting Title";
+            });
+
+            Assert.AreNotEqual(thing1.Slug, thing2.Slug);
+        }
+
+        [Test]
+        public void SlugsCanBeDuplicatedAccrossContentTypes()
+        {
+            var contentManager = _container.Resolve<IContentManager>();
+
+            var thing = contentManager.Create<Thing>(ThingDriver.ContentType.Name, t =>
+            {
+                t.As<RoutableAspect>().Record = new RoutableRecord();
+                t.Title = "This Is Some Interesting Title";
+            });
+
+            var stuff = contentManager.Create<Stuff>(StuffDriver.ContentType.Name, s =>
+            {
+                s.As<RoutableAspect>().Record = new RoutableRecord();
+                s.Title = "This Is Some Interesting Title";
+            });
+
+            Assert.AreEqual(thing.Slug, stuff.Slug);
+        }
+
+
         protected override IEnumerable<Type> DatabaseTypes {
             get {
                 return new[] {
@@ -153,6 +204,44 @@ namespace Orchard.Core.Tests.Common.Services {
             public readonly static ContentType ContentType = new ContentType {
                 Name = "thing",
                 DisplayName = "Thing"
+            };
+        }
+
+        [UsedImplicitly]
+        public class StuffHandler : ContentHandler
+        {
+            public StuffHandler()
+            {
+                Filters.Add(new ActivatingFilter<Stuff>(StuffDriver.ContentType.Name));
+                Filters.Add(new ActivatingFilter<ContentPart<CommonVersionRecord>>(StuffDriver.ContentType.Name));
+                Filters.Add(new ActivatingFilter<CommonAspect>(StuffDriver.ContentType.Name));
+                Filters.Add(new ActivatingFilter<RoutableAspect>(StuffDriver.ContentType.Name));
+            }
+        }
+
+        public class Stuff : ContentPart
+        {
+            public int Id { get { return ContentItem.Id; } }
+
+            public string Title
+            {
+                get { return this.As<RoutableAspect>().Title; }
+                set { this.As<RoutableAspect>().Title = value; }
+            }
+
+            public string Slug
+            {
+                get { return this.As<RoutableAspect>().Slug; }
+                set { this.As<RoutableAspect>().Slug = value; }
+            }
+        }
+
+        public class StuffDriver : ContentItemDriver<Stuff>
+        {
+            public readonly static ContentType ContentType = new ContentType
+            {
+                Name = "stuff",
+                DisplayName = "Stuff"
             };
         }
     }

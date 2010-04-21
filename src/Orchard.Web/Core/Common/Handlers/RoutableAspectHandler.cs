@@ -34,7 +34,7 @@ namespace Orchard.Core.Common.Handlers {
                 routable.ContentItemBasePath = url;
             });
 
-            OnPublished<RoutableAspect>((context, bp) => routableService.ProcessSlug(bp));
+            OnCreated<RoutableAspect>((context, ra) => routableService.ProcessSlug(ra));
 
         }
 

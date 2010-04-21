@@ -5,6 +5,7 @@ using Orchard.Core.Common.Models;
 using Orchard.Core.Common.ViewModels;
 using Orchard.Core.Common.Services;
 using Orchard.Localization;
+using Orchard.UI.Notify;
 
 namespace Orchard.Core.Common.Drivers {
     [UsedImplicitly]
@@ -40,7 +41,12 @@ namespace Orchard.Core.Common.Drivers {
                 updater.AddModelError("Routable.Slug", T("Please do not use any of the following characters in your slugs: \"/\", \":\", \"?\", \"#\", \"[\", \"]\", \"@\", \"!\", \"$\", \"&\", \"'\", \"(\", \")\", \"*\", \"+\", \",\", \";\", \"=\". No spaces are allowed (please use dashes or underscores instead).").ToString());
             }
 
-            _routableService.ProcessSlug(part);
+            string originalSlug = part.Slug;
+            if(!_routableService.ProcessSlug(part)) {
+                _services.Notifier.Warning(T("Slugs in conflict. \"{0}\" is already set for a previously created {2} so now it has the slug \"{1}\"",
+                    originalSlug, part.Slug, part.ContentItem.ContentType));
+            }
+                
             return ContentPartTemplate(model, TemplateName, Prefix).Location("primary", "before.5");
         }
 

@@ -11,14 +11,10 @@ using Orchard.UI.Notify;
 namespace Orchard.Core.Common.Services {
     [UsedImplicitly]
     public class RoutableService : IRoutableService {
-        private readonly IOrchardServices _services;
         private readonly IContentManager _contentManager;
-        private Localizer T { get; set; }
 
-        public RoutableService(IOrchardServices services, IContentManager contentManager) {
-            _services = services;
+        public RoutableService(IContentManager contentManager) {
             _contentManager = contentManager;
-            T = NullLocalizer.Instance;
         }
 
         public void FillSlug<TModel>(TModel model) where TModel : RoutableAspect {
@@ -71,10 +67,9 @@ namespace Orchard.Core.Common.Services {
         {
             return
                 _contentManager.Query(contentType).Join<RoutableRecord>()
-                    .Where(rr => rr.Slug.StartsWith(slug, StringComparison.OrdinalIgnoreCase))
                     .List()
-                    .Cast<RoutableRecord>()
-                    .Select(i => i.Slug)
+                    .Select(i => i.As<RoutableAspect>().Slug)
+                    .Where(rr => rr.StartsWith(slug, StringComparison.OrdinalIgnoreCase)) // todo: for some reason the filter doesn't work within the query, even without StringComparison or StartsWith
                     .ToArray();
         }
 
@@ -82,13 +77,13 @@ namespace Orchard.Core.Common.Services {
             return slug == null || String.IsNullOrEmpty(slug.Trim()) || !Regex.IsMatch(slug, @"^[^/:?#\[\]@!$&'()*+,;=\s]+$");
         }
 
-        public void ProcessSlug(RoutableAspect part)
+        public bool ProcessSlug(RoutableAspect part)
         {
             FillSlug(part);
 
             if (string.IsNullOrEmpty(part.Slug))
             {
-                return;
+                return true;
             }
 
             var slugsLikeThis = GetSimilarSlugs(part.ContentItem.ContentType, part.Slug);
@@ -101,10 +96,11 @@ namespace Orchard.Core.Common.Services {
                 part.Slug = GenerateUniqueSlug(part.Slug, slugsLikeThis);
 
                 if (originalSlug != part.Slug) {
-                    _services.Notifier.Warning(T("Slugs in conflict. \"{0}\" is already set for a previously created {2} so now it has the slug \"{1}\"",
-                            originalSlug, part.Slug, part.ContentItem.ContentType));
+                    return false;
                 }
             }
+
+            return true;
         }
     }
 }

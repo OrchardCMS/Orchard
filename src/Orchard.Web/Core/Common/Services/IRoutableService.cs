@@ -21,7 +21,8 @@ namespace Orchard.Core.Common.Services {
         /// <summary>
         /// Defines the slug of a RoutableAspect and validate its unicity
         /// </summary>
-        void ProcessSlug(RoutableAspect part);
+        /// <returns>True if the slug has been created, False if a conflict occured</returns>
+        bool ProcessSlug(RoutableAspect part);
 
     }
 }
