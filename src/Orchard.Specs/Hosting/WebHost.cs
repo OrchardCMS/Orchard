@@ -46,6 +46,9 @@ namespace Orchard.Specs.Hosting {
 
         public string PhysicalDirectory { get; private set; }
         public string VirtualDirectory { get; private set; }
+        
+        public string Cookies { get; set; }
+
 
         public void Execute(Action action) {
             var shuttleSend = new SerializableDelegate<Action>(action);

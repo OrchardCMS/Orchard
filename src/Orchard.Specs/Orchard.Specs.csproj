@@ -222,6 +222,15 @@
     <Content Include="Hosting\Simple.Web\Global.asax">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Hosting\Simple.Web\Simple\Cookie-Show.aspx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hosting\Simple.Web\Simple\Cookie-Set.aspx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hosting\Simple.Web\Simple\Results.aspx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Hosting\Simple.Web\Simple\Page.aspx">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

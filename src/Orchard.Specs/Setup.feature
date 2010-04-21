@@ -42,4 +42,7 @@ Scenario: Calling setup on a brand new install
       | SiteName | My Site |
       | AdminPassword | 6655321 |
     And I hit "Finish Setup"
-  Then the status should be 302 Found
+    And I go to "/Default.aspx"
+  Then I should see "<h1>My Site</h1>"
+    And I should see "Welcome, <strong>admin</strong>!"
+    And I should see "you've successfully set-up your Orchard site"

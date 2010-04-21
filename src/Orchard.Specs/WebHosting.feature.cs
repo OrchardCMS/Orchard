@@ -203,5 +203,56 @@ this.ScenarioSetup(scenarioInfo);
 #line hidden
             testRunner.CollectScenarioErrors();
         }
+        
+        [NUnit.Framework.TestAttribute()]
+        [NUnit.Framework.DescriptionAttribute("Submitting a form with input, default, and hidden fields")]
+        public virtual void SubmittingAFormWithInputDefaultAndHiddenFields()
+        {
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Submitting a form with input, default, and hidden fields", ((string[])(null)));
+#line 55
+this.ScenarioSetup(scenarioInfo);
+#line 56
+  testRunner.Given("I have a clean site based on Simple.Web");
+#line 57
+ testRunner.And("I am on \"/simple/page.aspx\"");
+#line hidden
+            TechTalk.SpecFlow.Table table1 = new TechTalk.SpecFlow.Table(new string[] {
+                        "name",
+                        "value"});
+            table1.AddRow(new string[] {
+                        "input1",
+                        "gamma"});
+#line 58
+  testRunner.When("I fill in", ((string)(null)), table1);
+#line 61
+    testRunner.And("I hit \"Go!\"");
+#line 62
+  testRunner.Then("I should see \"passthrough1:alpha\"");
+#line 63
+    testRunner.And("I should see \"passthrough2:beta\"");
+#line 64
+    testRunner.And("I should see \"input1:gamma\"");
+#line hidden
+            testRunner.CollectScenarioErrors();
+        }
+        
+        [NUnit.Framework.TestAttribute()]
+        [NUnit.Framework.DescriptionAttribute("Cookies follow along your request")]
+        public virtual void CookiesFollowAlongYourRequest()
+        {
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Cookies follow along your request", ((string[])(null)));
+#line 67
+this.ScenarioSetup(scenarioInfo);
+#line 68
+  testRunner.Given("I have a clean site based on Simple.Web");
+#line 69
+  testRunner.When("I go to \"/simple/cookie-set.aspx\"");
+#line 70
+ testRunner.And("I go to \"/simple/cookie-show.aspx\"");
+#line 71
+  testRunner.Then("I should see \"foo:bar\"");
+#line hidden
+            testRunner.CollectScenarioErrors();
+        }
     }
 }

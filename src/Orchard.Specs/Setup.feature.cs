@@ -166,7 +166,13 @@ this.ScenarioSetup(scenarioInfo);
 #line 44
     testRunner.And("I hit \"Finish Setup\"");
 #line 45
-  testRunner.Then("the status should be 302 Found");
+    testRunner.And("I go to \"/Default.aspx\"");
+#line 46
+  testRunner.Then("I should see \"<h1>My Site</h1>\"");
+#line 47
+    testRunner.And("I should see \"Welcome, <strong>admin</strong>!\"");
+#line 48
+    testRunner.And("I should see \"you\'ve successfully set-up your Orchard site\"");
 #line hidden
             testRunner.CollectScenarioErrors();
         }

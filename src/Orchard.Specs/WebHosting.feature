@@ -51,3 +51,21 @@ Scenario: Following a link
     And I follow "next page"
   Then the status should be 200 OK
     And I should see "Hello yet again"
+
+Scenario: Submitting a form with input, default, and hidden fields
+  Given I have a clean site based on Simple.Web
+	And I am on "/simple/page.aspx"  
+  When I fill in 
+      | name | value |
+      | input1 | gamma |
+    And I hit "Go!"
+  Then I should see "passthrough1:alpha"
+    And I should see "passthrough2:beta"
+    And I should see "input1:gamma"
+
+
+Scenario: Cookies follow along your request
+  Given I have a clean site based on Simple.Web
+  When I go to "/simple/cookie-set.aspx"  
+	And I go to "/simple/cookie-show.aspx"  
+  Then I should see "foo:bar"
