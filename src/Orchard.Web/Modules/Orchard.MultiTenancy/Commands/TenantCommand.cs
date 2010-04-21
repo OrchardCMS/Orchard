@@ -1,4 +1,5 @@
 ﻿using Orchard.Commands;
+using Orchard.Environment.Configuration;
 using Orchard.MultiTenancy.Services;
 
 namespace Orchard.MultiTenancy.Commands {
@@ -24,6 +25,19 @@ namespace Orchard.MultiTenancy.Commands {
                 Context.Output.WriteLine(T("Prefix: ") + tenant.DataPrefix);
                 Context.Output.WriteLine(T("---------------------------"));
             }
+        }
+
+        [CommandHelp("tenant add <tenantName> <providerName> <connString> <prefix>: create new tenant named <tenantName> on the site")]
+        [CommandName("tenant add")]
+        public void Create(string tenantName, string providerName, string connectionString, string prefix) {
+            Context.Output.WriteLine(T("Creating tenant"));
+            _tenantService.CreateTenant(
+                    new ShellSettings {
+                        Name = tenantName,
+                        DataProvider = providerName,
+                        DataConnectionString = connectionString,
+                        DataPrefix = prefix
+                    });
         }
     }
 }
