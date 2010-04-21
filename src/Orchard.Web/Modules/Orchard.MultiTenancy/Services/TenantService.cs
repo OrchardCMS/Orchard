@@ -15,6 +15,10 @@ namespace Orchard.MultiTenancy.Services {
             return _shellSettingsManager.LoadSettings();
         }
 
+        public void CreateTenant(ShellSettings settings) {
+            _shellSettingsManager.SaveSettings(settings);
+        }
+
         #endregion
     }
 }

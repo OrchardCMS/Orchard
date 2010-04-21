@@ -8,7 +8,7 @@ namespace Orchard.MultiTenancy {
             builder.Add("MultiTenancy", "2",
                         menu => menu
                                     .Add("Manage Tenants", "1.0", item => item.Action("List", "Admin", new { area = "Orchard.MultiTenancy" }).Permission(Permissions.ManageTenants))
-                                    );
+                                    .Add("Add New Tenant", "1.1", item => item.Action("Add", "Admin", new { area = "Orchard.MultiTenancy" }).Permission(Permissions.ManageTenants)));
         }
     }
 }
