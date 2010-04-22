@@ -123,7 +123,7 @@ namespace Orchard.Environment.Extensions {
             var featureName = featureDescriptor.Name;
             string extensionName = GetExtensionForFeature(featureName);
             if (extensionName == null) throw new ArgumentException(T("Feature ") + featureName + T(" was not found in any of the installed extensions"));
-            var extension = ActiveExtensions_Obsolete().Where(x => x.Descriptor.Name == extensionName).FirstOrDefault();
+            var extension = BuildActiveExtensions().Where(x => x.Descriptor.Name == extensionName).FirstOrDefault();
             if (extension == null) throw new InvalidOperationException(T("Extension ") + extensionName + T(" is not active"));
 
             var extensionTypes = extension.ExportedTypes.Where(t => t.IsClass && !t.IsAbstract);

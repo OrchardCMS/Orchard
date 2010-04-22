@@ -1,20 +1,26 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Web.Routing;
-using Autofac.Integration.Web;
+using Orchard.Environment.Configuration;
 
 namespace Orchard.Mvc.Routes {
     public class RoutePublisher : IRoutePublisher {
         private readonly RouteCollection _routeCollection;
-        private readonly IContainerProvider _containerProvider;
+        private readonly ShellSettings _shellSettings;
+        private readonly Func<RouteBase, ShellRoute> _shellRouteFactory;
 
-        public RoutePublisher(RouteCollection routeCollection, IContainerProvider containerProvider) {
+        public RoutePublisher(
+            RouteCollection routeCollection,
+            ShellSettings shellSettings,
+            Func<RouteBase, ShellRoute> shellRouteFactory) {
             _routeCollection = routeCollection;
-            _containerProvider = containerProvider;
+            _shellSettings = shellSettings;
+            _shellRouteFactory = shellRouteFactory;
         }
 
         public void Publish(IEnumerable<RouteDescriptor> routes) {
-            var routesArray = routes.OrderByDescending(r=>r.Priority).ToArray();
+            var routesArray = routes.OrderByDescending(r => r.Priority).ToArray();
 
             // this is not called often, but is intended to surface problems before
             // the actual collection is modified
@@ -24,18 +30,19 @@ namespace Orchard.Mvc.Routes {
 
             using (_routeCollection.GetWriteLock()) {
                 // existing routes are removed while the collection is briefly inaccessable
-                _routeCollection.Clear();
+                var cropArray = _routeCollection
+                    .OfType<ShellRoute>()
+                    .Where(sr => sr.ShellSettingsName == _shellSettings.Name)
+                    .ToArray();
 
-                // new routes are added
-                foreach (var route in routesArray) {
-                    _routeCollection.Add(route.Name, route.Route);
+                foreach(var crop in cropArray) {
+                    _routeCollection.Remove(crop);
                 }
 
-                // and painted with the IContainerProvider if it's type has data tokens
-                foreach (var route in routesArray.Select(d => d.Route).OfType<Route>()) {
-                    if (route.DataTokens == null)
-                        route.DataTokens = new RouteValueDictionary();
-                    route.DataTokens["IContainerProvider"] = _containerProvider;
+                // new routes are added
+                foreach (var routeDescriptor in routesArray) {
+                    //_routeCollection.Add(route.Name, _shellRouteFactory(_shellSettings.Name, route.Route));
+                    _routeCollection.Add(routeDescriptor.Name, _shellRouteFactory(routeDescriptor.Route));
                 }
             }
         }

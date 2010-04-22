@@ -111,6 +111,9 @@ namespace Orchard.Specs.Hosting {
                 if (index == HeaderSetCookie) {
                     _details.ResponseHeaders.Add("Set-Cookie", value);
                 }
+                else if (index == HeaderLocation) {
+                    _details.ResponseHeaders.Add("Location", value);
+                }
                 else {
                     _details.ResponseHeaders.Add("known header #" + index, value);
                 }

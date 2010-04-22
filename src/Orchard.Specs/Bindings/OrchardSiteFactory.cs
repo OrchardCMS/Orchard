@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Diagnostics;
+using System.Linq;
 using System.Text;
 using Orchard.Environment.Configuration;
 using Orchard.Environment.Topology;
@@ -46,6 +47,8 @@ namespace Orchard.Specs.Bindings {
                         descriptor.EnabledFeatures.Concat(new[] { new ShellFeature { Name = name } }),
                         descriptor.Parameters);
                 }
+                
+                Trace.WriteLine("This call to Host.Reinitialize should not be needed, eventually");
                 MvcApplication.Host.Reinitialize_Obsolete();
             });
 

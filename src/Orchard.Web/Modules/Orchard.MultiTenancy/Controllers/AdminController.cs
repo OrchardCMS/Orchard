@@ -33,10 +33,8 @@ namespace Orchard.MultiTenancy.Controllers {
         }
 
         [HttpPost, ActionName("Add")]
-        public ActionResult AddPOST() {
-            var viewModel = new TenantsAddViewModel();
+        public ActionResult AddPOST(TenantsAddViewModel viewModel) {
             try {
-                UpdateModel(viewModel);
                 if (!Services.Authorizer.Authorize(Permissions.ManageTenants, T("Couldn't create tenant")))
                     return new HttpUnauthorizedResult();
                 _tenantService.CreateTenant(

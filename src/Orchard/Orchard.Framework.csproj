@@ -161,6 +161,8 @@
     <Compile Include="Data\Builders\SqlServerBuilder.cs" />
     <Compile Include="Data\Conventions\StringLengthConvention.cs" />
     <Compile Include="Data\SessionFactoryHolder.cs" />
+    <Compile Include="Environment\AutofacUtil\LifetimeScopeContainer.cs" />
+    <Compile Include="Environment\RunningShellTable.cs" />
     <Compile Include="Environment\AutofacUtil\DynamicProxy2\DynamicProxyContext.cs" />
     <Compile Include="Environment\AutofacUtil\DynamicProxy2\DynamicProxyExtensions.cs" />
     <Compile Include="Environment\AutofacUtil\DynamicProxy2\ConstructorFinderWrapper.cs" />
@@ -191,6 +193,7 @@
     <Compile Include="Mvc\Extensions\ControllerExtensions.cs" />
     <Compile Include="Mvc\Html\FileRegistrationContextExtensions.cs" />
     <Compile Include="Mvc\Extensions\UrlHelperExtensions.cs" />
+    <Compile Include="Mvc\Routes\ShellRoute.cs" />
     <Compile Include="Mvc\ViewModels\AdaptedViewModel.cs" />
     <Compile Include="Mvc\ViewUserControl.cs">
       <SubType>ASPXCodeBehind</SubType>

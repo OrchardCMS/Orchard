@@ -1,12 +1,18 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.Remoting;
 using System.Web;
 using System.Web.Hosting;
 using System.Xml.Linq;
+using Castle.Core.Logging;
 using HtmlAgilityPack;
+using log4net.Appender;
+using log4net.Core;
+using log4net.Repository;
 using Orchard.Specs.Hosting;
 using Orchard.Specs.Util;
 using TechTalk.SpecFlow;
@@ -34,12 +40,51 @@ namespace Orchard.Specs.Bindings {
         public void GivenIHaveACleanSiteBasedOn(string siteFolder) {
             _webHost = new WebHost();
             Host.Initialize(siteFolder, "/");
-
-            var sink = new MessageSink();
+            var cb = new cb1();
             Host.Execute(() => {
-                HostingTraceListener.SetHook(msg => sink.Receive(msg));
+                log4net.Config.BasicConfigurator.Configure(new CallAppender(cb.cb2));
+                HostingTraceListener.SetHook(msg => cb.sink.Receive("  "+ msg));
             });
-            _messages = sink;
+            _messages = cb.sink;
+        }
+
+        public class CallAppender : IAppender {
+            private readonly cb2 _cb2;
+            public CallAppender(cb2 cb2) { _cb2 = cb2; }
+            public void Close() { }
+            public string Name { get; set; }
+
+            public void DoAppend(LoggingEvent loggingEvent) {
+                var traceLoggerFactory = new TraceLoggerFactory();
+                var logger = traceLoggerFactory.Create(loggingEvent.LoggerName);
+                if (loggingEvent.Level <= Level.Debug)
+                    logger.Debug(loggingEvent.RenderedMessage);
+                else if (loggingEvent.Level <= Level.Info)
+                    logger.Info(loggingEvent.RenderedMessage);
+                else if (loggingEvent.Level <= Level.Warn)
+                    logger.Warn(loggingEvent.RenderedMessage);
+                else if (loggingEvent.Level <= Level.Error)
+                    logger.Error(loggingEvent.RenderedMessage);
+                else
+                    logger.Fatal(loggingEvent.RenderedMessage);
+            }
+
+        }
+
+        [Serializable]
+        public class cb1 {
+            public cb2 cb2 = new cb2();
+            public MessageSink sink = new MessageSink();
+
+        }
+
+        public class cb2 : MarshalByRefObject {
+            private IDictionary<string, TraceSource> _sources;
+            public void Trace(string loggerName, Level level, string message) {
+                var traceLoggerFactory = new TraceLoggerFactory();
+                traceLoggerFactory.Create(loggerName).Info(message);
+                //System.Diagnostics.Trace.WriteLine(message);
+            }
         }
 
         [Given(@"I have module ""(.*)""")]
@@ -135,6 +180,16 @@ namespace Orchard.Specs.Bindings {
             _doc.Load(new StringReader(_details.ResponseText));
         }
 
+        [When(@"I am redirected")]
+        public void WhenIAmRedirected() {
+            var urlPath = "";
+            if (_details.ResponseHeaders.TryGetValue("Location", out urlPath)) {
+                WhenIGoTo(urlPath);
+            }
+            else {
+                Assert.Fail("No Location header returned");
+            }
+        }
 
         [Then(@"the status should be (.*) (.*)")]
         public void ThenTheStatusShouldBe(int statusCode, string statusDescription) {

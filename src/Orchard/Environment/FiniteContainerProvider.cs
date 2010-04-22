@@ -1,17 +1,13 @@
 using Autofac;
 using Autofac.Integration.Web;
+using Orchard.Environment.AutofacUtil;
 
 namespace Orchard.Environment {
 
     class FiniteContainerProvider : IContainerProvider {
         public FiniteContainerProvider(ILifetimeScope applicationContainer) {
-            //ApplicationContainer = applicationContainer;
-            
-            RequestLifetime = applicationContainer.BeginLifetimeScope(
-                builder=> {
-                    // also inject this instance in case anyone asks for the container provider
-                    builder.Register(ctx => this).As<IContainerProvider>();
-                });
+            ApplicationContainer = new LifetimeScopeContainer(applicationContainer);
+            RequestLifetime = ApplicationContainer.BeginLifetimeScope("httpRequest");
         }
 
         public void EndRequestLifetime() {

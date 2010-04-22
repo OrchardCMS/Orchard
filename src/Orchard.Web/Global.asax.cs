@@ -15,9 +15,8 @@ namespace Orchard.Web {
     // Note: For instructions on enabling IIS6 or IIS7 classic mode, 
     // visit http://go.microsoft.com/?LinkId=9394801
 
-    public class MvcApplication : HttpApplication, IContainerProviderAccessor {
+    public class MvcApplication : HttpApplication {
         private static IOrchardHost _host;
-        private static IContainerProvider _containerProvider;
 
         public static void RegisterRoutes(RouteCollection routes) {
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
@@ -30,11 +29,6 @@ namespace Orchard.Web {
                 new Version("2.0.50217.0")/*MVC2 RTM file version #*/,
                 new Version("2.0.50129.0")/*MVC2 RC2 file version #*/,
                 new Version("2.0.41211.0")/*MVC2 RC file version #*/);
-
-            var builder = new ContainerBuilder();
-            builder.RegisterControllers(Assembly.GetExecutingAssembly());
-            _containerProvider = new ContainerProvider(builder.Build());
-            ControllerBuilder.Current.SetControllerFactory(new AutofacControllerFactory(ContainerProvider));
 
             RegisterRoutes(RouteTable.Routes);
 
@@ -108,14 +102,5 @@ namespace Orchard.Web {
             builder.RegisterInstance(ViewEngines.Engines);
         }
 
-        #region Implementation of IContainerProviderAccessor
-
-        public IContainerProvider ContainerProvider {
-            get {
-                return _containerProvider;
-            }
-        }
-
-        #endregion
     }
 }

@@ -44,3 +44,9 @@ Scenario: Cookies follow along your request
   When I go to "/simple/cookie-set.aspx"  
 	And I go to "/simple/cookie-show.aspx"  
   Then I should see "foo:bar"
+
+Scenario: Being redirected
+  Given I have a clean site based on Simple.Web
+  When I go to "/simple/redir.aspx"
+    And I am redirected
+  Then I should see "Hello again"
