@@ -34,19 +34,5 @@ namespace Orchard.Tests.Modules.Roles.Services {
             Assert.That(roles, Has.Some.Property("Name").EqualTo("two"));
             Assert.That(roles, Has.Some.Property("Name").EqualTo("three"));
         }
-
-        [Test, Ignore("Permissions should be created first it appears?")]
-        public void PermissionRecordsShouldBeCreatedOnDemand() {
-            var service = _container.Resolve<IRoleService>();
-            service.CreateRole("one");
-            service.CreatePermissionForRole("one", "foo");
-            service.CreatePermissionForRole("one", "bar");
-            ClearSession();
-
-            var one = service.GetRoles().Single(x => x.Name == "one");
-            Assert.That(one.RolesPermissions, Has.Count.EqualTo(2));
-            Assert.That(one.RolesPermissions.Select(x => x.Permission.Name), Has.Some.EqualTo("foo"));
-            Assert.That(one.RolesPermissions.Select(x => x.Permission.Name), Has.Some.EqualTo("bar"));
-        }
     }
 }
