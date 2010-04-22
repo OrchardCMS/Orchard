@@ -263,7 +263,7 @@ namespace Orchard.Tests.Environment {
         [Test]
         public void DataPrefixChangesTableName() {
             var settings = BuildDefaultSettings();
-            settings.DataPrefix = "Yadda";
+            settings.DataTablePrefix = "Yadda";
             var descriptor = Build.TopologyDescriptor().WithFeatures("Foo Plus", "Bar", "Bar Minus");
 
             _extensionDescriptors = new[] {

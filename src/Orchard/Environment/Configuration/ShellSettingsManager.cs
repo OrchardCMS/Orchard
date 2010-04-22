@@ -59,7 +59,7 @@ namespace Orchard.Environment.Configuration {
                 Name = content.Name,
                 DataProvider = content.DataProvider,
                 DataConnectionString = content.DataConnectionString,
-                DataPrefix = content.DataPrefix,
+                DataTablePrefix = content.DataPrefix,
             };
         }
 
@@ -72,7 +72,7 @@ namespace Orchard.Environment.Configuration {
                 Name = settings.Name,
                 DataProvider = settings.DataProvider,
                 DataConnectionString = settings.DataConnectionString,
-                DataPrefix = settings.DataPrefix,
+                DataPrefix = settings.DataTablePrefix,
             });
         }
     }

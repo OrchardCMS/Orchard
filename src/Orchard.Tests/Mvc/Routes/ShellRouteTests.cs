@@ -11,6 +11,7 @@ using Orchard.Environment;
 using Orchard.Environment.Configuration;
 using Orchard.Mvc.Routes;
 using Orchard.Tests.Stubs;
+using Orchard.Tests.Utility;
 
 namespace Orchard.Tests.Mvc.Routes {
     [TestFixture]
@@ -27,6 +28,7 @@ namespace Orchard.Tests.Mvc.Routes {
             var settings = new ShellSettings { Name = "Alpha" };
             var builder = new ContainerBuilder();
             builder.RegisterType<ShellRoute>().InstancePerDependency();
+            builder.RegisterAutoMocking();
             builder.Register(ctx => settings);
 
             var container = builder.Build();
@@ -51,7 +53,7 @@ namespace Orchard.Tests.Mvc.Routes {
 
         private void Init() {
             _settingsA = new ShellSettings {Name = "Alpha"};
-            _settingsB = new ShellSettings {Name = "Beta"};
+            _settingsB = new ShellSettings {Name = "Beta", };
             _routes = new RouteCollection();
 
             var rootBuilder = new ContainerBuilder();

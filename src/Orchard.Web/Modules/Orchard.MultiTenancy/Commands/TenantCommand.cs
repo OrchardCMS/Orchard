@@ -31,7 +31,7 @@ namespace Orchard.MultiTenancy.Commands {
                 Context.Output.WriteLine(T("Name: ") + tenant.Name);
                 Context.Output.WriteLine(T("Provider: ") + tenant.DataProvider);
                 Context.Output.WriteLine(T("ConnectionString: ") + tenant.DataConnectionString);
-                Context.Output.WriteLine(T("Prefix: ") + tenant.DataPrefix);
+                Context.Output.WriteLine(T("Prefix: ") + tenant.DataTablePrefix);
                 Context.Output.WriteLine(T("---------------------------"));
             }
         }
@@ -46,7 +46,7 @@ namespace Orchard.MultiTenancy.Commands {
                         Name = tenantName,
                         DataProvider = providerName,
                         DataConnectionString = ConnectionString,
-                        DataPrefix = prefix
+                        DataTablePrefix = prefix
                     });
         }
 
@@ -64,7 +64,7 @@ namespace Orchard.MultiTenancy.Commands {
                 Context.Output.WriteLine(T("Name: ") + tenant.Name);
                 Context.Output.WriteLine(T("Provider: ") + tenant.DataProvider);
                 Context.Output.WriteLine(T("ConnectionString: ") + tenant.DataConnectionString);
-                Context.Output.WriteLine(T("Prefix: ") + tenant.DataPrefix);
+                Context.Output.WriteLine(T("Prefix: ") + tenant.DataTablePrefix);
                 Context.Output.WriteLine(T("---------------------------"));
             }
         }

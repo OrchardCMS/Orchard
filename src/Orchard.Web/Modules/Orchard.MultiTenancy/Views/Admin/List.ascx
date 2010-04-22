@@ -24,7 +24,7 @@
             <td><%= tenant.Name %></td>
             <td><%= tenant.DataProvider %></td>
             <td><%= tenant.DataConnectionString %></td>
-            <td><%= tenant.DataPrefix %></td>
+            <td><%= tenant.DataTablePrefix %></td>
        </tr><%
     } %>
     </tbody>

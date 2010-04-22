@@ -134,14 +134,14 @@ namespace Orchard.Environment.Topology {
             var extensionDescriptor = feature.Descriptor.Extension;
             var extensionName = extensionDescriptor.Name.Replace('.', '_');
 
-            var dataPrefix = "";
-            if (!string.IsNullOrEmpty(settings.DataPrefix))
-                dataPrefix = settings.DataPrefix + "_";
+            var dataTablePrefix = "";
+            if (!string.IsNullOrEmpty(settings.DataTablePrefix))
+                dataTablePrefix = settings.DataTablePrefix + "_";
 
             return new RecordTopology {
                 Type = type,
                 Feature = feature,
-                TableName = dataPrefix + extensionName + '_' + type.Name,
+                TableName = dataTablePrefix + extensionName + '_' + type.Name,
             };
         }
     }

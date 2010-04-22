@@ -42,7 +42,7 @@ namespace Orchard.MultiTenancy.Controllers {
                         Name = viewModel.Name,
                         DataProvider = viewModel.DataProvider,
                         DataConnectionString = viewModel.ConnectionString,
-                        DataPrefix = viewModel.Prefix
+                        DataTablePrefix = viewModel.Prefix
                     });
 
                 return RedirectToAction("List");
