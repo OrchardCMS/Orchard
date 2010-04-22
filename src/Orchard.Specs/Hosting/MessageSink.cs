@@ -7,7 +7,7 @@ namespace Orchard.Specs.Hosting {
         readonly IList<string> _messages = new List<string>();
 
         public void Receive(string message) {
-            Trace.WriteLine(message);
+            Trace.WriteLine("  "+message);
             _messages.Add(message);
         }
     }

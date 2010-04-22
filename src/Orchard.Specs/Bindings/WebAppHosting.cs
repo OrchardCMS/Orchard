@@ -40,17 +40,15 @@ namespace Orchard.Specs.Bindings {
         public void GivenIHaveACleanSiteBasedOn(string siteFolder) {
             _webHost = new WebHost();
             Host.Initialize(siteFolder, "/");
-            var cb = new cb1();
+            var shuttle = new Shuttle();
             Host.Execute(() => {
-                log4net.Config.BasicConfigurator.Configure(new CallAppender(cb.cb2));
-                HostingTraceListener.SetHook(msg => cb.sink.Receive("  "+ msg));
+                log4net.Config.BasicConfigurator.Configure(new CastleAppender());
+                HostingTraceListener.SetHook(msg => shuttle._sink.Receive(msg));
             });
-            _messages = cb.sink;
+            _messages = shuttle._sink;
         }
 
-        public class CallAppender : IAppender {
-            private readonly cb2 _cb2;
-            public CallAppender(cb2 cb2) { _cb2 = cb2; }
+        private class CastleAppender : IAppender {
             public void Close() { }
             public string Name { get; set; }
 
@@ -72,20 +70,10 @@ namespace Orchard.Specs.Bindings {
         }
 
         [Serializable]
-        public class cb1 {
-            public cb2 cb2 = new cb2();
-            public MessageSink sink = new MessageSink();
-
+        class Shuttle {
+            public readonly MessageSink _sink = new MessageSink();
         }
 
-        public class cb2 : MarshalByRefObject {
-            private IDictionary<string, TraceSource> _sources;
-            public void Trace(string loggerName, Level level, string message) {
-                var traceLoggerFactory = new TraceLoggerFactory();
-                traceLoggerFactory.Create(loggerName).Info(message);
-                //System.Diagnostics.Trace.WriteLine(message);
-            }
-        }
 
         [Given(@"I have module ""(.*)""")]
         public void GivenIHaveModule(string moduleName) {
