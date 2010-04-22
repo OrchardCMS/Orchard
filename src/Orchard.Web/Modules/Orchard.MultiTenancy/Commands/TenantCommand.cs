@@ -10,6 +10,15 @@ namespace Orchard.MultiTenancy.Commands {
             _tenantService = tenantService;
         }
 
+        [OrchardSwitch]
+        public string Host { get; set; }
+
+        [OrchardSwitch]
+        public string UrlPrefix { get; set; }
+
+        [OrchardSwitch]
+        public string ConnectionString { get; set; } 
+
         [CommandHelp("tenant list: Display current tenants of a site")]
         [CommandName("tenant list")]
         public void List() {
@@ -18,7 +27,6 @@ namespace Orchard.MultiTenancy.Commands {
 
             var tenants = _tenantService.GetTenants();
             foreach (var tenant in tenants) {
-                Context.Output.WriteLine(T("---------------------------"));
                 Context.Output.WriteLine(T("Name: ") + tenant.Name);
                 Context.Output.WriteLine(T("Provider: ") + tenant.DataProvider);
                 Context.Output.WriteLine(T("ConnectionString: ") + tenant.DataConnectionString);
@@ -27,15 +35,16 @@ namespace Orchard.MultiTenancy.Commands {
             }
         }
 
-        [CommandHelp("tenant add <tenantName> <providerName> <connString> <prefix>: create new tenant named <tenantName> on the site")]
+        [CommandHelp("tenant add <tenantName> <providerName> <dataPrefix> /ConnectionString:<SQL connection string> /Host:<hostname> /UrlPrefix:<url prefix>" + 
+            ": create new tenant named <tenantName> on the site")]
         [CommandName("tenant add")]
-        public void Create(string tenantName, string providerName, string connectionString, string prefix) {
+        public void Create(string tenantName, string providerName, string prefix) {
             Context.Output.WriteLine(T("Creating tenant"));
             _tenantService.CreateTenant(
                     new ShellSettings {
                         Name = tenantName,
                         DataProvider = providerName,
-                        DataConnectionString = connectionString,
+                        DataConnectionString = ConnectionString,
                         DataPrefix = prefix
                     });
         }
