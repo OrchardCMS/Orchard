@@ -70,96 +70,20 @@ this.ScenarioSetup(scenarioInfo);
         }
         
         [NUnit.Framework.TestAttribute()]
-        [NUnit.Framework.DescriptionAttribute("Returning static files 2")]
-        public virtual void ReturningStaticFiles2()
+        [NUnit.Framework.DescriptionAttribute("Returning web forms page")]
+        public virtual void ReturningWebFormsPage()
         {
-            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Returning static files 2", ((string[])(null)));
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Returning web forms page", ((string[])(null)));
 #line 12
 this.ScenarioSetup(scenarioInfo);
 #line 13
   testRunner.Given("I have a clean site based on Simple.Web");
 #line 14
-  testRunner.When("I go to \"Content\\Static.txt\"");
-#line 15
-  testRunner.Then("the status should be 200 OK");
-#line 16
-    testRunner.And("I should see \"Hello world!\"");
-#line hidden
-            testRunner.CollectScenarioErrors();
-        }
-        
-        [NUnit.Framework.TestAttribute()]
-        [NUnit.Framework.DescriptionAttribute("Returning static files 3")]
-        public virtual void ReturningStaticFiles3()
-        {
-            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Returning static files 3", ((string[])(null)));
-#line 18
-this.ScenarioSetup(scenarioInfo);
-#line 19
-  testRunner.Given("I have a clean site based on Simple.Web");
-#line 20
-  testRunner.When("I go to \"/Static.txt\"");
-#line 21
-  testRunner.Then("the status should be 200 OK");
-#line 22
-    testRunner.And("I should see \"Hello world!\"");
-#line hidden
-            testRunner.CollectScenarioErrors();
-        }
-        
-        [NUnit.Framework.TestAttribute()]
-        [NUnit.Framework.DescriptionAttribute("Returning static files 4")]
-        public virtual void ReturningStaticFiles4()
-        {
-            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Returning static files 4", ((string[])(null)));
-#line 24
-this.ScenarioSetup(scenarioInfo);
-#line 25
-  testRunner.Given("I have a clean site based on Simple.Web");
-#line 26
-  testRunner.When("I go to \"Static.txt\"");
-#line 27
-  testRunner.Then("the status should be 200 OK");
-#line 28
-    testRunner.And("I should see \"Hello world!\"");
-#line hidden
-            testRunner.CollectScenarioErrors();
-        }
-        
-        [NUnit.Framework.TestAttribute()]
-        [NUnit.Framework.DescriptionAttribute("Returning web forms page")]
-        public virtual void ReturningWebFormsPage()
-        {
-            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Returning web forms page", ((string[])(null)));
-#line 30
-this.ScenarioSetup(scenarioInfo);
-#line 31
-  testRunner.Given("I have a clean site based on Simple.Web");
-#line 32
   testRunner.When("I go to \"Simple/Page.aspx\"");
-#line 33
+#line 15
   testRunner.Then("I should see \"Hello again\"");
-#line 34
+#line 16
     testRunner.And("the status should be 200 OK");
-#line hidden
-            testRunner.CollectScenarioErrors();
-        }
-        
-        [NUnit.Framework.TestAttribute()]
-        [NUnit.Framework.DescriptionAttribute("Returning web forms page 2")]
-        public virtual void ReturningWebFormsPage2()
-        {
-            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Returning web forms page 2", ((string[])(null)));
-#line 36
-this.ScenarioSetup(scenarioInfo);
-#line 37
-  testRunner.Given("I have a clean site based on Simple.Web");
-#line 38
-  testRunner.When("I go to \"Simple\\Page.aspx\"");
-#line 39
-  testRunner.Then("the status should be 200 OK");
-#line 40
-    testRunner.And("I should see \"Hello again\"");
 #line hidden
             testRunner.CollectScenarioErrors();
         }
@@ -169,15 +93,15 @@ this.ScenarioSetup(scenarioInfo);
         public virtual void ReturningARoutedRequest()
         {
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Returning a routed request", ((string[])(null)));
-#line 42
+#line 18
 this.ScenarioSetup(scenarioInfo);
-#line 43
+#line 19
   testRunner.Given("I have a clean site based on Simple.Web");
-#line 44
+#line 20
   testRunner.When("I go to \"hello-world\"");
-#line 45
+#line 21
   testRunner.Then("the status should be 200 OK");
-#line 46
+#line 22
     testRunner.And("I should see \"Hello yet again\"");
 #line hidden
             testRunner.CollectScenarioErrors();
@@ -188,17 +112,17 @@ this.ScenarioSetup(scenarioInfo);
         public virtual void FollowingALink()
         {
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Following a link", ((string[])(null)));
-#line 48
+#line 24
 this.ScenarioSetup(scenarioInfo);
-#line 49
+#line 25
   testRunner.Given("I have a clean site based on Simple.Web");
-#line 50
+#line 26
   testRunner.When("I go to \"/simple/page.aspx\"");
-#line 51
+#line 27
     testRunner.And("I follow \"next page\"");
-#line 52
+#line 28
   testRunner.Then("the status should be 200 OK");
-#line 53
+#line 29
     testRunner.And("I should see \"Hello yet again\"");
 #line hidden
             testRunner.CollectScenarioErrors();
@@ -209,11 +133,11 @@ this.ScenarioSetup(scenarioInfo);
         public virtual void SubmittingAFormWithInputDefaultAndHiddenFields()
         {
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Submitting a form with input, default, and hidden fields", ((string[])(null)));
-#line 55
+#line 31
 this.ScenarioSetup(scenarioInfo);
-#line 56
+#line 32
   testRunner.Given("I have a clean site based on Simple.Web");
-#line 57
+#line 33
  testRunner.And("I am on \"/simple/page.aspx\"");
 #line hidden
             TechTalk.SpecFlow.Table table1 = new TechTalk.SpecFlow.Table(new string[] {
@@ -222,15 +146,15 @@ this.ScenarioSetup(scenarioInfo);
             table1.AddRow(new string[] {
                         "input1",
                         "gamma"});
-#line 58
+#line 34
   testRunner.When("I fill in", ((string)(null)), table1);
-#line 61
+#line 37
     testRunner.And("I hit \"Go!\"");
-#line 62
+#line 38
   testRunner.Then("I should see \"passthrough1:alpha\"");
-#line 63
+#line 39
     testRunner.And("I should see \"passthrough2:beta\"");
-#line 64
+#line 40
     testRunner.And("I should see \"input1:gamma\"");
 #line hidden
             testRunner.CollectScenarioErrors();
@@ -241,15 +165,15 @@ this.ScenarioSetup(scenarioInfo);
         public virtual void CookiesFollowAlongYourRequest()
         {
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Cookies follow along your request", ((string[])(null)));
-#line 67
+#line 42
 this.ScenarioSetup(scenarioInfo);
-#line 68
+#line 43
   testRunner.Given("I have a clean site based on Simple.Web");
-#line 69
+#line 44
   testRunner.When("I go to \"/simple/cookie-set.aspx\"");
-#line 70
+#line 45
  testRunner.And("I go to \"/simple/cookie-show.aspx\"");
-#line 71
+#line 46
   testRunner.Then("I should see \"foo:bar\"");
 #line hidden
             testRunner.CollectScenarioErrors();

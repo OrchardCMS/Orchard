@@ -20,6 +20,10 @@ namespace Orchard.Specs.Bindings {
         private HtmlDocument _doc;
         private MessageSink _messages;
 
+        public WebHost Host {
+            get { return _webHost; }
+        }
+
         [Given(@"I have a clean site")]
         public void GivenIHaveACleanSite() {
             GivenIHaveACleanSiteBasedOn("Orchard.Web");
@@ -29,10 +33,10 @@ namespace Orchard.Specs.Bindings {
         [Given(@"I have a clean site based on (.*)")]
         public void GivenIHaveACleanSiteBasedOn(string siteFolder) {
             _webHost = new WebHost();
-            _webHost.Initialize(siteFolder, "/");
+            Host.Initialize(siteFolder, "/");
 
             var sink = new MessageSink();
-            _webHost.Execute(() => {
+            Host.Execute(() => {
                 HostingTraceListener.SetHook(msg => sink.Receive(msg));
             });
             _messages = sink;
@@ -40,17 +44,17 @@ namespace Orchard.Specs.Bindings {
 
         [Given(@"I have module ""(.*)""")]
         public void GivenIHaveModule(string moduleName) {
-            _webHost.CopyExtension("Modules", moduleName);
+            Host.CopyExtension("Modules", moduleName);
         }
 
         [Given(@"I have theme ""(.*)""")]
         public void GivenIHaveTheme(string themeName) {
-            _webHost.CopyExtension("Themes", themeName);
+            Host.CopyExtension("Themes", themeName);
         }
 
         [Given(@"I have core ""(.*)""")]
         public void GivenIHaveCore(string moduleName) {
-            _webHost.CopyExtension("Core", moduleName);
+            Host.CopyExtension("Core", moduleName);
         }
 
         [Given(@"I have a clean site with")]
@@ -84,7 +88,7 @@ namespace Orchard.Specs.Bindings {
 
         [When(@"I go to ""(.*)""")]
         public void WhenIGoTo(string urlPath) {
-            _details = _webHost.SendRequest(urlPath);
+            _details = Host.SendRequest(urlPath);
             _doc = new HtmlDocument();
             _doc.Load(new StringReader(_details.ResponseText));
         }
@@ -126,7 +130,7 @@ namespace Orchard.Specs.Bindings {
                     .GroupBy(elt => elt.GetAttributeValue("name", elt.GetAttributeValue("id", "")), elt => elt.GetAttributeValue("value", ""))
                     .ToDictionary(elt => elt.Key, elt => (IEnumerable<string>)elt);
 
-            _details = _webHost.SendRequest(urlPath, inputs);
+            _details = Host.SendRequest(urlPath, inputs);
             _doc = new HtmlDocument();
             _doc.Load(new StringReader(_details.ResponseText));
         }

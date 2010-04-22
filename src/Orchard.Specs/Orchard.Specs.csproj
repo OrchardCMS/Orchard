@@ -86,12 +86,19 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Bindings\BindingBase.cs" />
+    <Compile Include="Bindings\OrchardSiteFactory.cs" />
     <Compile Include="Hosting\MessageSink.cs" />
     <Compile Include="Hosting\HostingTraceListener.cs" />
     <Compile Include="Hosting\Simple.Web\HelloYetAgainHandler.cs" />
     <Compile Include="Hosting\RequestExtensions.cs" />
     <Compile Include="Hosting\RequestDetails.cs" />
     <Compile Include="Hosting\Simple.Web\Global.asax.cs" />
+    <Compile Include="MultiTenancy.feature.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>MultiTenancy.feature</DependentUpon>
+    </Compile>
     <Compile Include="Util\PathExtensions.cs" />
     <Compile Include="WebHosting.feature.cs">
       <DependentUpon>WebHosting.feature</DependentUpon>
@@ -135,6 +142,10 @@
     <Content Include="Hosting\Simple.Web\Web.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <None Include="MultiTenancy.feature">
+      <Generator>SpecFlowSingleFileGenerator</Generator>
+      <LastGenOutput>MultiTenancy.feature.cs</LastGenOutput>
+    </None>
     <None Include="WebHosting.feature">
       <Generator>SpecFlowSingleFileGenerator</Generator>
       <LastGenOutput>WebHosting.feature.cs</LastGenOutput>

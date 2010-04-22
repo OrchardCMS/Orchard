@@ -20,6 +20,10 @@ namespace Orchard.MultiTenancy.Controllers {
         private Localizer T { get; set; }
         public IOrchardServices Services { get; set; }
 
+        public ActionResult Index() {
+            return View("List", new TenantsListViewModel { TenantSettings = _tenantService.GetTenants() });
+        }
+
         public ActionResult List() {
             return View(new TenantsListViewModel { TenantSettings = _tenantService.GetTenants() });
         }
