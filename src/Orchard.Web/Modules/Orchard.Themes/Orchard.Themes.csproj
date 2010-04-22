@@ -4,12 +4,12 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>9.0.30729</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{72457126-E118-4171-A08F-9A709EE4B7FC}</ProjectGuid>
+    <ProjectGuid>{CDE24A24-01D3-403C-84B9-37722E18DFB7}</ProjectGuid>
     <ProjectTypeGuids>{F85E285D-A4E0-4152-9332-AB1D724D3325};{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Orchard.MultiTenancy</RootNamespace>
-    <AssemblyName>Orchard.MultiTenancy</AssemblyName>
+    <RootNamespace>Orchard.Themes</RootNamespace>
+    <AssemblyName>Orchard.Themes</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <MvcBuildViews>false</MvcBuildViews>
   </PropertyGroup>
@@ -32,10 +32,10 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
+    <Reference Include="System.Data" />
     <Reference Include="System.ComponentModel.DataAnnotations">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
-    <Reference Include="System.Data" />
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
@@ -44,11 +44,12 @@
     </Reference>
     <Reference Include="System.Web.Mvc, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\lib\aspnetmvc\System.Web.Mvc.dll</HintPath>
+      <HintPath>C:\Program Files (x86)\Microsoft ASP.NET\ASP.NET MVC 2\\Assemblies\System.Web.Mvc.dll</HintPath>
     </Reference>
     <Reference Include="System.Xml.Linq">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Web" />
     <Reference Include="System.Web.Extensions, Version=3.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="System.Web.Abstractions" />
@@ -61,20 +62,51 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AdminMenu.cs" />
-    <Compile Include="Commands\TenantCommand.cs" />
     <Compile Include="Controllers\AdminController.cs" />
-    <Compile Include="Services\ITenantService.cs" />
-    <Compile Include="Services\TenantService.cs" />
-    <Compile Include="ViewModels\TenantsAddViewModel.cs" />
-    <Compile Include="ViewModels\TenantsListViewModel.cs" />
+    <Compile Include="DesignerNotes\ZoneManagerEvents.cs" />
+    <Compile Include="Handlers\ThemeSiteSettingsHandler.cs" />
+    <Compile Include="Models\Theme.cs" />
+    <Compile Include="Models\ThemeRecord.cs" />
+    <Compile Include="Models\ThemeSiteSettings.cs" />
+    <Compile Include="Models\ThemeSiteSettingsRecord.cs" />
     <Compile Include="Permissions.cs" />
+    <Compile Include="Preview\IPreviewTheme.cs" />
+    <Compile Include="Preview\PreviewTheme.cs" />
+    <Compile Include="Preview\PreviewThemeFilter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\SafeModeThemeSelector.cs" />
+    <Compile Include="Services\SiteThemeSelector.cs" />
+    <Compile Include="Services\ThemeService.cs" />
+    <Compile Include="Services\ThemeZoneManagerEvents.cs" />
+    <Compile Include="ViewModels\PreviewViewModel.cs" />
+    <Compile Include="ViewModels\ThemesIndexViewModel.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Content\orchard.ico" />
+    <Content Include="Scripts\base.js" />
+    <Content Include="Scripts\jquery-1.4.1.js" />
+    <Content Include="Scripts\jquery-1.4.1.min.js" />
+    <Content Include="Styles\Images\toolBarActiveButtonBackground.gif" />
+    <Content Include="Styles\Images\toolBarBackground.gif" />
+    <Content Include="Styles\Images\toolBarHoverButtonBackground.gif" />
+    <Content Include="Styles\special.css" />
+    <Content Include="Views\Admin\Index.aspx" />
+    <Content Include="Views\Admin\Install.aspx" />
+    <Content Include="Views\Admin\ThemePreview.ascx" />
+    <Content Include="Views\DisplayTemplates\Items\ContentItem.ascx" />
+    <Content Include="Views\Document.aspx" />
+    <Content Include="Views\EditorTemplates\Items\ContentItem.ascx" />
+    <Content Include="Views\Header.ascx" />
+    <Content Include="Views\HeadPreload.ascx" />
+    <Content Include="Views\Layout.ascx" />
+    <Content Include="Views\Menu.ascx" />
+    <Content Include="Views\Messages.ascx" />
+    <Content Include="Views\NotFound.ascx" />
+    <Content Include="Views\User.ascx" />
+    <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Module.txt" />
-    <Content Include="Views\Admin\Add.ascx" />
-    <Content Include="Views\Admin\List.ascx" />
-    <Content Include="Web.config" />
     <Content Include="Views\Web.config" />
   </ItemGroup>
   <ItemGroup>
@@ -98,7 +130,7 @@
         <WebProjectProperties>
           <UseIIS>False</UseIIS>
           <AutoAssignPort>True</AutoAssignPort>
-          <DevelopmentServerPort>3803</DevelopmentServerPort>
+          <DevelopmentServerPort>20578</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
           <IISUrl>
           </IISUrl>

@@ -138,12 +138,11 @@ this.ScenarioSetup(scenarioInfo);
                         "names"});
             table1.AddRow(new string[] {
                         "module",
-                        "Orchard.Setup, Orchard.Users, Orchard.Roles, Orchard.Pages, Orchard.Comments, Tin" +
-                            "yMce"});
+                        "Orchard.Setup, Orchard.Users, Orchard.Roles, Orchard.Pages, Orchard.Comments, Orc" +
+                            "hard.Themes, TinyMce"});
             table1.AddRow(new string[] {
                         "core",
-                        "Common, Dashboard, Feeds, HomePage, Navigation, Scheduling, Settings, Themes, Xml" +
-                            "Rpc"});
+                        "Common, Dashboard, Feeds, HomePage, Navigation, Scheduling, Settings, XmlRpc"});
             table1.AddRow(new string[] {
                         "theme",
                         "SafeMode, Classic"});

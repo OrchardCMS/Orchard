@@ -146,6 +146,10 @@
       <Project>{5D0F00F0-26C9-4785-AD61-B85710C60EB0}</Project>
       <Name>Orchard.Tags</Name>
     </ProjectReference>
+    <ProjectReference Include="Modules\Orchard.Themes\Orchard.Themes.csproj">
+      <Project>{CDE24A24-01D3-403C-84B9-37722E18DFB7}</Project>
+      <Name>Orchard.Themes</Name>
+    </ProjectReference>
     <ProjectReference Include="Modules\Orchard.Users\Orchard.Users.csproj">
       <Project>{79AED36E-ABD0-4747-93D3-8722B042454B}</Project>
       <Name>Orchard.Users</Name>

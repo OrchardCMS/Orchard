@@ -128,30 +128,12 @@
     <Compile Include="Settings\Topology\Records\TopologyParameterRecord.cs" />
     <Compile Include="Settings\Topology\Records\TopologyRecord.cs" />
     <Compile Include="Settings\Topology\ShellDescriptorManager.cs" />
-    <Compile Include="Themes\DesignerNotes\ZoneManagerEvents.cs" />
-    <Compile Include="Themes\Preview\IPreviewTheme.cs" />
-    <Compile Include="Themes\Preview\PreviewThemeFilter.cs" />
-    <Compile Include="Themes\Preview\PreviewTheme.cs" />
-    <Compile Include="Themes\Services\SafeModeThemeSelector.cs" />
     <Compile Include="Settings\AdminMenu.cs" />
     <Compile Include="Settings\Controllers\AdminController.cs" />
     <Compile Include="Settings\Handlers\SiteSettingsHandler.cs" />
     <Compile Include="Settings\Models\SiteSettings.cs" />
     <Compile Include="Settings\Services\SiteService.cs" />
     <Compile Include="Settings\ViewModels\SettingsIndexViewModel.cs" />
-    <Compile Include="Themes\AdminMenu.cs" />
-    <Compile Include="Themes\Controllers\AdminController.cs" />
-    <Compile Include="Themes\Models\Theme.cs" />
-    <Compile Include="Themes\Models\ThemeSiteSettings.cs" />
-    <Compile Include="Themes\Handlers\ThemeSiteSettingsHandler.cs" />
-    <Compile Include="Themes\Permissions.cs" />
-    <Compile Include="Themes\Models\ThemeRecord.cs" />
-    <Compile Include="Themes\Models\ThemeSiteSettingsRecord.cs" />
-    <Compile Include="Themes\Services\SiteThemeSelector.cs" />
-    <Compile Include="Themes\Services\ThemeService.cs" />
-    <Compile Include="Themes\Services\ThemeZoneManagerEvents.cs" />
-    <Compile Include="Themes\ViewModels\PreviewViewModel.cs" />
-    <Compile Include="Themes\ViewModels\ThemesIndexViewModel.cs" />
     <Compile Include="XmlRpc\Controllers\HomeController.cs" />
     <Compile Include="XmlRpc\Controllers\LiveWriterController.cs" />
     <Compile Include="XmlRpc\IXmlRpcHandler.cs" />
@@ -187,8 +169,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Common\Views\Web.config" />
-    <Content Include="Themes\Module.txt" />
-    <Content Include="Themes\Views\Admin\Index.aspx" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Common\Scripts\jquery.slugify.js" />
@@ -200,16 +180,6 @@
     <Content Include="Navigation\Module.txt" />
     <Content Include="Scheduling\Module.txt" />
     <Content Include="Settings\Views\EditorTemplates\Items\Settings.Site.ascx" />
-    <Content Include="Themes\Views\Admin\ThemePreview.ascx" />
-    <Content Include="Themes\Views\Admin\Install.aspx" />
-    <Content Include="Themes\Views\Header.ascx" />
-    <Content Include="Themes\Views\Document.aspx" />
-    <Content Include="Themes\Views\HeadPreload.ascx" />
-    <Content Include="Themes\Views\Layout.ascx" />
-    <Content Include="Themes\Views\Messages.ascx" />
-    <Content Include="Themes\Views\User.ascx" />
-    <Content Include="Themes\Views\Menu.ascx" />
-    <Content Include="Themes\Views\Web.config" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Dashboard\Module.txt" />
@@ -218,10 +188,6 @@
     <Content Include="Navigation\Views\Admin\Index.ascx" />
     <Content Include="Navigation\Views\EditorTemplates\Parts\Navigation.EditMenuPart.ascx" />
     <Content Include="Navigation\Views\Web.config" />
-    <Content Include="Themes\Scripts\jquery-1.4.1.js" />
-    <Content Include="Themes\Scripts\jquery-1.4.1.min.js" />
-    <Content Include="Themes\Views\EditorTemplates\Items\ContentItem.ascx" />
-    <Content Include="Themes\Views\DisplayTemplates\Items\ContentItem.ascx" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Common\Views\DisplayTemplates\Parts\Common.Body.Summary.ascx" />
@@ -229,13 +195,6 @@
     <Content Include="Common\Views\DisplayTemplates\Parts\Common.Body.ManageWrapperPre.ascx" />
     <Content Include="Common\Views\DisplayTemplates\Parts\Common.Body.Manage.ascx" />
     <Content Include="Dashboard\Views\Web.config" />
-    <Content Include="Themes\Styles\Images\toolBarActiveButtonBackground.gif" />
-    <Content Include="Themes\Styles\Images\toolBarBackground.gif" />
-    <Content Include="Themes\Styles\Images\toolBarHoverButtonBackground.gif" />
-    <Content Include="Themes\Content\orchard.ico" />
-    <Content Include="Themes\Scripts\base.js" />
-    <Content Include="Themes\Styles\special.css" />
-    <Content Include="Themes\Views\NotFound.ascx" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v9.0\WebApplications\Microsoft.WebApplication.targets" />

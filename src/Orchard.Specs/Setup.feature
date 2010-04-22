@@ -1,4 +1,4 @@
-﻿Feature: Setup
+Feature: Setup
   In order to install orchard
   As a new user
   I want to setup a new site from the default screen
@@ -33,8 +33,8 @@ Scenario: Some of the initial form values are required
 Scenario: Calling setup on a brand new install
 	Given I have a clean site with
 			| extension | names |
-			| module | Orchard.Setup, Orchard.Users, Orchard.Roles, Orchard.Pages, Orchard.Comments, TinyMce |
-			| core | Common, Dashboard, Feeds, HomePage, Navigation, Scheduling, Settings, Themes, XmlRpc  |
+      | module | Orchard.Setup, Orchard.Users, Orchard.Roles, Orchard.Pages, Orchard.Comments, Orchard.Themes, TinyMce |
+      | core | Common, Dashboard, Feeds, HomePage, Navigation, Scheduling, Settings, XmlRpc  |
 			| theme | SafeMode, Classic |
 		And I am on "/Setup"
 	When I fill in 
