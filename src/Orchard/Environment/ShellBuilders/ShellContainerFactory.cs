@@ -1,8 +1,11 @@
 ﻿using System;
+using System.IO;
 using System.Linq;
+using System.Web.Hosting;
 using System.Web.Mvc;
 using Autofac;
 using Autofac.Builder;
+using Autofac.Configuration;
 using Autofac.Core;
 using Autofac.Features.Indexed;
 using Autofac.Integration.Web.Mvc;
@@ -83,6 +86,10 @@ namespace Orchard.Environment.ShellBuilders {
                             .InstancePerDependency()
                             .InjectActionInvoker();
                     }
+
+                    var optionalHostConfig = HostingEnvironment.MapPath("~/Config/Sites." + settings.Name + ".config");
+                    if (File.Exists(optionalHostConfig))
+                        builder.RegisterModule(new ConfigurationSettingsReader(ConfigurationSettingsReader.DefaultSectionName, optionalHostConfig));
                 });
         }
 

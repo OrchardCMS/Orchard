@@ -50,6 +50,9 @@ namespace Orchard.Environment.Configuration {
             public string DataProvider { get; set; }
             public string DataConnectionString { get; set; }
             public string DataPrefix { get; set; }
+            public string RequestUrlHost { get; set; }
+            public string RequestUrlPrefix { get; set; }
+            public string State { get; set; }
         }
 
         static ShellSettings ParseSettings(string text) {
@@ -59,7 +62,10 @@ namespace Orchard.Environment.Configuration {
                 Name = content.Name,
                 DataProvider = content.DataProvider,
                 DataConnectionString = content.DataConnectionString,
-                DataPrefix = content.DataPrefix,
+                DataTablePrefix = content.DataPrefix,
+                RequestUrlHost = content.RequestUrlHost,
+                RequestUrlPrefix = content.RequestUrlPrefix,
+                State = new TenantState(content.State)
             };
         }
 
@@ -72,7 +78,10 @@ namespace Orchard.Environment.Configuration {
                 Name = settings.Name,
                 DataProvider = settings.DataProvider,
                 DataConnectionString = settings.DataConnectionString,
-                DataPrefix = settings.DataPrefix,
+                DataPrefix = settings.DataTablePrefix,
+                RequestUrlHost = settings.RequestUrlHost,
+                RequestUrlPrefix = settings.RequestUrlPrefix,
+                State = settings.State != null ? settings.State.ToString() : String.Empty
             });
         }
     }

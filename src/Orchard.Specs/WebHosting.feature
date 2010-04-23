@@ -9,35 +9,11 @@ Scenario: Returning static files
   Then I should see "Hello world!"
     And the status should be 200 OK
 
-Scenario: Returning static files 2
-  Given I have a clean site based on Simple.Web
-  When I go to "Content\Static.txt"  
-  Then the status should be 200 OK
-    And I should see "Hello world!"
-
-Scenario: Returning static files 3
-  Given I have a clean site based on Simple.Web
-  When I go to "/Static.txt"  
-  Then the status should be 200 OK
-    And I should see "Hello world!"
-
-Scenario: Returning static files 4
-  Given I have a clean site based on Simple.Web
-  When I go to "Static.txt"  
-  Then the status should be 200 OK
-    And I should see "Hello world!"
-
 Scenario: Returning web forms page
   Given I have a clean site based on Simple.Web
   When I go to "Simple/Page.aspx"  
   Then I should see "Hello again"
     And the status should be 200 OK
-
-Scenario: Returning web forms page 2
-  Given I have a clean site based on Simple.Web
-  When I go to "Simple\Page.aspx"  
-  Then the status should be 200 OK
-    And I should see "Hello again"
 
 Scenario: Returning a routed request
   Given I have a clean site based on Simple.Web
@@ -51,3 +27,26 @@ Scenario: Following a link
     And I follow "next page"
   Then the status should be 200 OK
     And I should see "Hello yet again"
+
+Scenario: Submitting a form with input, default, and hidden fields
+  Given I have a clean site based on Simple.Web
+	And I am on "/simple/page.aspx"  
+  When I fill in 
+      | name | value |
+      | input1 | gamma |
+    And I hit "Go!"
+  Then I should see "passthrough1:alpha"
+    And I should see "passthrough2:beta"
+    And I should see "input1:gamma"
+
+Scenario: Cookies follow along your request
+  Given I have a clean site based on Simple.Web
+  When I go to "/simple/cookie-set.aspx"  
+	And I go to "/simple/cookie-show.aspx"  
+  Then I should see "foo:bar"
+
+Scenario: Being redirected
+  Given I have a clean site based on Simple.Web
+  When I go to "/simple/redir.aspx"
+    And I am redirected
+  Then I should see "Hello again"

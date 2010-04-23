@@ -1,12 +1,18 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.Remoting;
 using System.Web;
 using System.Web.Hosting;
 using System.Xml.Linq;
+using Castle.Core.Logging;
 using HtmlAgilityPack;
+using log4net.Appender;
+using log4net.Core;
+using log4net.Repository;
 using Orchard.Specs.Hosting;
 using Orchard.Specs.Util;
 using TechTalk.SpecFlow;
@@ -20,6 +26,10 @@ namespace Orchard.Specs.Bindings {
         private HtmlDocument _doc;
         private MessageSink _messages;
 
+        public WebHost Host {
+            get { return _webHost; }
+        }
+
         [Given(@"I have a clean site")]
         public void GivenIHaveACleanSite() {
             GivenIHaveACleanSiteBasedOn("Orchard.Web");
@@ -29,28 +39,55 @@ namespace Orchard.Specs.Bindings {
         [Given(@"I have a clean site based on (.*)")]
         public void GivenIHaveACleanSiteBasedOn(string siteFolder) {
             _webHost = new WebHost();
-            _webHost.Initialize(siteFolder, "/");
-
-            var sink = new MessageSink();
-            _webHost.Execute(() => {
-                HostingTraceListener.SetHook(msg => sink.Receive(msg));
+            Host.Initialize(siteFolder, "/");
+            var shuttle = new Shuttle();
+            Host.Execute(() => {
+                log4net.Config.BasicConfigurator.Configure(new CastleAppender());
+                HostingTraceListener.SetHook(msg => shuttle._sink.Receive(msg));
             });
-            _messages = sink;
+            _messages = shuttle._sink;
         }
+
+        private class CastleAppender : IAppender {
+            public void Close() { }
+            public string Name { get; set; }
+
+            public void DoAppend(LoggingEvent loggingEvent) {
+                var traceLoggerFactory = new TraceLoggerFactory();
+                var logger = traceLoggerFactory.Create(loggingEvent.LoggerName);
+                if (loggingEvent.Level <= Level.Debug)
+                    logger.Debug(loggingEvent.RenderedMessage);
+                else if (loggingEvent.Level <= Level.Info)
+                    logger.Info(loggingEvent.RenderedMessage);
+                else if (loggingEvent.Level <= Level.Warn)
+                    logger.Warn(loggingEvent.RenderedMessage);
+                else if (loggingEvent.Level <= Level.Error)
+                    logger.Error(loggingEvent.RenderedMessage);
+                else
+                    logger.Fatal(loggingEvent.RenderedMessage);
+            }
+
+        }
+
+        [Serializable]
+        class Shuttle {
+            public readonly MessageSink _sink = new MessageSink();
+        }
+
 
         [Given(@"I have module ""(.*)""")]
         public void GivenIHaveModule(string moduleName) {
-            _webHost.CopyExtension("Modules", moduleName);
+            Host.CopyExtension("Modules", moduleName);
         }
 
         [Given(@"I have theme ""(.*)""")]
         public void GivenIHaveTheme(string themeName) {
-            _webHost.CopyExtension("Themes", themeName);
+            Host.CopyExtension("Themes", themeName);
         }
 
         [Given(@"I have core ""(.*)""")]
         public void GivenIHaveCore(string moduleName) {
-            _webHost.CopyExtension("Core", moduleName);
+            Host.CopyExtension("Core", moduleName);
         }
 
         [Given(@"I have a clean site with")]
@@ -84,7 +121,7 @@ namespace Orchard.Specs.Bindings {
 
         [When(@"I go to ""(.*)""")]
         public void WhenIGoTo(string urlPath) {
-            _details = _webHost.SendRequest(urlPath);
+            _details = Host.SendRequest(urlPath);
             _doc = new HtmlDocument();
             _doc.Load(new StringReader(_details.ResponseText));
         }
@@ -126,11 +163,21 @@ namespace Orchard.Specs.Bindings {
                     .GroupBy(elt => elt.GetAttributeValue("name", elt.GetAttributeValue("id", "")), elt => elt.GetAttributeValue("value", ""))
                     .ToDictionary(elt => elt.Key, elt => (IEnumerable<string>)elt);
 
-            _details = _webHost.SendRequest(urlPath, inputs);
+            _details = Host.SendRequest(urlPath, inputs);
             _doc = new HtmlDocument();
             _doc.Load(new StringReader(_details.ResponseText));
         }
 
+        [When(@"I am redirected")]
+        public void WhenIAmRedirected() {
+            var urlPath = "";
+            if (_details.ResponseHeaders.TryGetValue("Location", out urlPath)) {
+                WhenIGoTo(urlPath);
+            }
+            else {
+                Assert.Fail("No Location header returned");
+            }
+        }
 
         [Then(@"the status should be (.*) (.*)")]
         public void ThenTheStatusShouldBe(int statusCode, string statusDescription) {

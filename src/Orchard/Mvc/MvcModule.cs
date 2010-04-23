@@ -4,12 +4,14 @@ using System.Web.Mvc;
 using System.Web.Routing;
 using Autofac;
 using Orchard.Mvc.Filters;
+using Orchard.Mvc.Routes;
 
 namespace Orchard.Mvc {
     public class MvcModule : Module {
 
         protected override void Load(ContainerBuilder moduleBuilder) {
             moduleBuilder.RegisterType<FilterResolvingActionInvoker>().As<IActionInvoker>().InstancePerDependency();
+            moduleBuilder.RegisterType<ShellRoute>().InstancePerDependency();
 
             moduleBuilder.Register(ctx => HttpContextBaseFactory(ctx)).As<HttpContextBase>().InstancePerDependency();
             moduleBuilder.Register(ctx => RequestContextFactory(ctx)).As<RequestContext>().InstancePerDependency();

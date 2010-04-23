@@ -90,7 +90,7 @@ namespace Orchard.Environment.ShellBuilders {
         public ShellContext CreateSetupContext() {
             Logger.Warning("No shell settings available. Creating shell context for setup");
 
-            var settings = new ShellSettings { Name = "__Orchard__Setup__" };
+            var settings = new ShellSettings { Name = "Default" };
 
             var descriptor = new ShellDescriptor {
                 SerialNumber = -1,

@@ -11,3 +11,4 @@ glob:*.sln.cache
 glob:src/Orchard.Web/Modules/Orchard.DevTools/Module.txt
 glob:src/Orchard.Web/Modules/Orchard.Sandbox/Module.txt
 glob:src/Orchard.Web/Media/*
+glob:desktop.ini

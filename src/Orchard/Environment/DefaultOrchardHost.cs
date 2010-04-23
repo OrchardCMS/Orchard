@@ -13,22 +13,23 @@ using Orchard.Utility.Extensions;
 
 namespace Orchard.Environment {
     public class DefaultOrchardHost : IOrchardHost {
-        //private readonly IContainerProvider _containerProvider;
         private readonly ControllerBuilder _controllerBuilder;
 
         private readonly IShellSettingsManager _shellSettingsManager;
         private readonly IShellContextFactory _shellContextFactory;
+        private readonly IRunningShellTable _runningShellTable;
 
         private IEnumerable<ShellContext> _current;
 
         public DefaultOrchardHost(
-            //IContainerProvider containerProvider,
             IShellSettingsManager shellSettingsManager,
             IShellContextFactory shellContextFactory,
+            IRunningShellTable runningShellTable,
             ControllerBuilder controllerBuilder) {
             //_containerProvider = containerProvider;
             _shellSettingsManager = shellSettingsManager;
             _shellContextFactory = shellContextFactory;
+            _runningShellTable = runningShellTable;
             _controllerBuilder = controllerBuilder;
             Logger = NullLogger.Instance;
         }
@@ -54,10 +55,12 @@ namespace Orchard.Environment {
 
 
         void IOrchardHost.BeginRequest() {
+            Logger.Debug("BeginRequest");
             BeginRequest();
         }
 
         void IOrchardHost.EndRequest() {
+            Logger.Debug("EndRequest");
             EndRequest();
         }
 
@@ -81,13 +84,15 @@ namespace Orchard.Environment {
                     settings => {
                         var context = CreateShellContext(settings);
                         context.Shell.Activate();
+                        _runningShellTable.Add(settings);
                         return context;
                     });
             }
-            
+
             var setupContext = CreateSetupContext();
             setupContext.Shell.Activate();
-            return new[] {setupContext};
+            _runningShellTable.Add(setupContext.Settings);
+            return new[] { setupContext };
         }
 
         ShellContext CreateSetupContext() {
@@ -105,7 +110,6 @@ namespace Orchard.Environment {
         }
 
         protected virtual void EndRequest() {
-            //_containerProvider.EndRequestLifetime();
         }
 
 

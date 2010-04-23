@@ -81,9 +81,12 @@ namespace Orchard.Setup.Controllers {
                     DataConnectionString = model.DatabaseConnectionString
                 };
 
-                const string hardcoded = @"Orchard.Framework,
-                    Common,Dashboard,Feeds,HomePage,Navigation,Scheduling,Settings,Themes,XmlRpc,
+                // The vanilla Orchard distibution has the following modules enabled.
+                const string hardcoded =
+                    @"Orchard.Framework,
+                    Common,Dashboard,Feeds,HomePage,Navigation,Scheduling,Settings,XmlRpc,
                     Orchard.Users,Orchard.Roles,TinyMce,
+                    Orchard.Modules,Orchard.Themes,
                     Orchard.Pages,Orchard.Comments";
 
                 var shellDescriptor = new ShellDescriptor {
@@ -162,6 +165,7 @@ namespace Orchard.Setup.Controllers {
                     }
                 }
 
+                shellSettings.State = new TenantState("Running");
                 _shellSettingsManager.SaveSettings(shellSettings);
 
                 _orchardHost.Reinitialize_Obsolete();

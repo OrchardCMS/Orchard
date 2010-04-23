@@ -156,7 +156,9 @@
     <Compile Include="Data\Builders\SessionFactoryBuilderTests.cs" />
     <Compile Include="Data\RepositoryTests.cs" />
     <Compile Include="Data\StubLocator.cs" />
+    <Compile Include="Environment\AutofacUtil\AutofacTests.cs" />
     <Compile Include="Environment\AutofacUtil\DynamicProxy2\DynamicProxyTests.cs" />
+    <Compile Include="Environment\RunningShellTableTests.cs" />
     <Compile Include="Environment\Utility\Build.cs" />
     <Compile Include="Environment\Configuration\AppDataFolderTests.cs" />
     <Compile Include="Environment\Configuration\DefaultTenantManagerTests.cs" />
@@ -166,6 +168,7 @@
     <Compile Include="Environment\OrchardStarterTests.cs" />
     <Compile Include="Environment\ShellBuilders\DefaultShellContainerFactoryTests.cs" />
     <Compile Include="Environment\ShellBuilders\DefaultShellContextFactoryTests.cs" />
+    <Compile Include="Mvc\Routes\ShellRouteTests.cs" />
     <Compile Include="Utility\ContainerExtensions.cs" />
     <Compile Include="Environment\TestDependencies\TestDependency.cs" />
     <Compile Include="Environment\Topology\DefaultShellDescriptorCacheTests.cs" />

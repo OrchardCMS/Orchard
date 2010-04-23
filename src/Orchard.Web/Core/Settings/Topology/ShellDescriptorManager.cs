@@ -62,33 +62,28 @@ namespace Orchard.Core.Settings.Topology {
                 throw new InvalidOperationException(T("Invalid serial number for shell topology").ToString());
 
             if (topologyRecord == null) {
-                serialNumber++;
-                _topologyRecordRepository.Create(new TopologyRecord {
-                    SerialNumber = serialNumber
-                });
-                topologyRecord = _topologyRecordRepository.Get(x => x.SerialNumber == serialNumber);
+                topologyRecord = new TopologyRecord {SerialNumber = 1};
+                _topologyRecordRepository.Create(topologyRecord);
             }
             else {
                 topologyRecord.SerialNumber++;
             }
 
-            var descriptorFeatureRecords = new List<TopologyFeatureRecord>();
+            topologyRecord.EnabledFeatures.Clear();
             foreach (var feature in enabledFeatures) {
-                descriptorFeatureRecords.Add(new TopologyFeatureRecord { Name = feature.Name, TopologyRecord = topologyRecord});
+                topologyRecord.EnabledFeatures.Add(new TopologyFeatureRecord { Name = feature.Name, TopologyRecord = topologyRecord });
             }
-            topologyRecord.EnabledFeatures = descriptorFeatureRecords;
 
-            var descriptorParameterRecords = new List<TopologyParameterRecord>();
+
+            topologyRecord.Parameters.Clear();
             foreach (var parameter in parameters) {
-                descriptorParameterRecords.Add(new TopologyParameterRecord {
+                topologyRecord.Parameters.Add(new TopologyParameterRecord {
                     Component = parameter.Component,
                     Name = parameter.Name,
                     Value = parameter.Value,
                     TopologyRecord = topologyRecord
                 });
             }
-            topologyRecord.EnabledFeatures = descriptorFeatureRecords;
-            topologyRecord.Parameters = descriptorParameterRecords;
 
             _eventBus.Notify(
                 typeof(IShellDescriptorManager).FullName + ".UpdateShellDescriptor",

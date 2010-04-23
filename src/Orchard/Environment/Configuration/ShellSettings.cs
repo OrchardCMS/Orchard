@@ -6,8 +6,14 @@
     /// </summary>
     public class ShellSettings {
         public string Name { get; set; }
+
         public string DataProvider { get; set; }
         public string DataConnectionString { get; set; }
-        public string DataPrefix { get; set; }
+        public string DataTablePrefix { get; set; }
+
+        public string RequestUrlHost { get; set; }
+        public string RequestUrlPrefix { get; set; }
+
+        public TenantState State { get; set; }
     }
 }
