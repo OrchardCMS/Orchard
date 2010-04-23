@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using Autofac.Features.Metadata;
 using Orchard.Localization;
 
 namespace Orchard.Commands.Builtin {

@@ -48,6 +48,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="OrchardHost.cs" />
     <Compile Include="Parameters\ICommandParametersParser.cs" />
     <Compile Include="IOrchardParametersParser.cs" />
     <Compile Include="OrchardParameters.cs" />
