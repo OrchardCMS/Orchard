@@ -13,5 +13,7 @@
 
         public string RequestUrlHost { get; set; }
         public string RequestUrlPrefix { get; set; }
+
+        public TenantState State { get; set; }
     }
 }

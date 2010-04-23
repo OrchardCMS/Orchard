@@ -1,21 +1,26 @@
-﻿<%@ Control Language="C#" Inherits="Orchard.Mvc.ViewUserControl<TenantsListViewModel>" %>
+﻿<%@ Control Language="C#" Inherits="Orchard.Mvc.ViewUserControl<TenantsIndexViewModel>" %>
 <%@ Import Namespace="Orchard.Mvc.Html"%>
 <%@ Import Namespace="Orchard.MultiTenancy.ViewModels"%>
-<%@ Import Namespace="Orchard.ContentManagement"%>
 <h1><%=Html.TitleForPage(T("List of Site's Tenants").ToString())%></h1>
 <table class="items">
     <colgroup>
         <col id="Name" />
-        <col id="Provider" />
+        <col id="Data Provider" />
         <col id="ConnectionString" />
-        <col id="Prefix" />
+        <col id="TablePrefix" />
+        <col id="RequestUrlHost" />
+        <col id="RequestUrlPrefix" />
+        <col id="TenantState" />
     </colgroup>
     <thead>
         <tr>
             <td scope="col"><%=_Encoded("Name") %></td>
-            <td scope="col"><%=_Encoded("Provider") %></td>
+            <td scope="col"><%=_Encoded("Data Provider") %></td>
             <td scope="col"><%=_Encoded("ConnectionString") %></td>
-            <td scope="col"><%=_Encoded("Prefix") %></td>
+            <td scope="col"><%=_Encoded("Table Prefix") %></td>
+            <td scope="col"><%=_Encoded("Request Url Host") %></td>
+            <td scope="col"><%=_Encoded("Request Url Prefix") %></td>
+            <td scope="col"><%=_Encoded("State") %></td>
         </tr>
     </thead>
     <tbody><%
@@ -25,6 +30,9 @@
             <td><%= tenant.DataProvider %></td>
             <td><%= tenant.DataConnectionString %></td>
             <td><%= tenant.DataTablePrefix %></td>
+            <td><%= tenant.RequestUrlHost %></td>
+            <td><%= tenant.RequestUrlPrefix %></td>
+            <td><%= tenant.State %></td>
        </tr><%
     } %>
     </tbody>

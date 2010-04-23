@@ -66,14 +66,14 @@
     <Compile Include="Services\ITenantService.cs" />
     <Compile Include="Services\TenantService.cs" />
     <Compile Include="ViewModels\TenantsAddViewModel.cs" />
-    <Compile Include="ViewModels\TenantsListViewModel.cs" />
+    <Compile Include="ViewModels\TenantsIndexViewModel.cs" />
     <Compile Include="Permissions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Module.txt" />
     <Content Include="Views\Admin\Add.ascx" />
-    <Content Include="Views\Admin\List.ascx" />
+    <Content Include="Views\Admin\Index.ascx" />
     <Content Include="Web.config" />
     <Content Include="Views\Web.config" />
   </ItemGroup>

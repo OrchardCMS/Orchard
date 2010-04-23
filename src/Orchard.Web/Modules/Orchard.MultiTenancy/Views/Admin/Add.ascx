@@ -9,12 +9,10 @@
     <fieldset>
         <label for="Name"><%=_Encoded("Tenant Name") %></label>
 		<input id="Name" class="textMedium" name="Name" type="text" /><br />
-		<label for="DataProvider"><%=_Encoded("Data Provider Name") %></label>
-	    <input id="DataProvider" class="textMedium" name="DataProvider" type="text" /><br />
-	    <label for="Name"><%=_Encoded("Connection String") %></label>
-	    <input id="ConnectionString" class="textMedium" name="ConnectionString" type="text" /><br />
-	    <label for="Name"><%=_Encoded("Prefix") %></label>
-	    <input id="Prefix" class="textMedium" name="Prefix" type="text" /><br />
+	    <label for="RequestUrlHost"><%=_Encoded("Host Prefix") %></label>
+		<input id="RequestUrlHost" class="textMedium" name="RequestUrlHost" type="text" /><br />
+		<label for="RequestUrlPrefix"><%=_Encoded("Url Prefix") %></label>
+		<input id="RequestUrlPrefix" class="textMedium" name="RequestUrlPrefix" type="text" /><br />
     </fieldset>
 	<fieldset>
 	    <input type="submit" class="button primaryAction" value="<%=_Encoded("Save") %>" />

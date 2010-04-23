@@ -21,11 +21,7 @@ namespace Orchard.MultiTenancy.Controllers {
         public IOrchardServices Services { get; set; }
 
         public ActionResult Index() {
-            return View("List", new TenantsListViewModel { TenantSettings = _tenantService.GetTenants() });
-        }
-
-        public ActionResult List() {
-            return View(new TenantsListViewModel { TenantSettings = _tenantService.GetTenants() });
+            return View(new TenantsIndexViewModel { TenantSettings = _tenantService.GetTenants() });
         }
 
         public ActionResult Add() {
@@ -40,12 +36,12 @@ namespace Orchard.MultiTenancy.Controllers {
                 _tenantService.CreateTenant(
                     new ShellSettings {
                         Name = viewModel.Name,
-                        DataProvider = viewModel.DataProvider,
-                        DataConnectionString = viewModel.ConnectionString,
-                        DataTablePrefix = viewModel.Prefix
+                        RequestUrlHost = viewModel.RequestUrlHost,
+                        RequestUrlPrefix = viewModel.RequestUrlPrefix,
+                        State = new TenantState("Uninitialized")
                     });
 
-                return RedirectToAction("List");
+                return RedirectToAction("Index");
             }
             catch (Exception exception) {
                 Services.Notifier.Error(T("Creating Tenant failed: ") + exception.Message);

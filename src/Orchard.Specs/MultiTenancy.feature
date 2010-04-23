@@ -25,8 +25,19 @@ Scenario: A new tenant is created
 		And I fill in 
 			| name | value |
 			| Name | Scott |
-			| DataProvider | SQLite |
 		And I hit "Save"
 		And I am redirected
 	Then I should see "<td>Scott</td>"
+		And the status should be 200 OK
+		
+Scenario: A new tenant is created with uninitialized state
+	Given I have installed Orchard
+		And I have installed "Orchard.MultiTenancy"
+	When I go to "Admin/MultiTenancy/Add"
+		And I fill in 
+			| name | value |
+			| Name | Scott |
+		And I hit "Save"
+		And I am redirected
+	Then I should see "<td>Uninitialized</td>"
 		And the status should be 200 OK

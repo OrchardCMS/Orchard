@@ -163,6 +163,7 @@ namespace Orchard.Setup.Controllers {
                     }
                 }
 
+                shellSettings.State = new TenantState("Running");
                 _shellSettingsManager.SaveSettings(shellSettings);
 
                 _orchardHost.Reinitialize_Obsolete();
