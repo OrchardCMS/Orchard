@@ -158,6 +158,7 @@
     <Compile Include="Data\StubLocator.cs" />
     <Compile Include="Environment\AutofacUtil\AutofacTests.cs" />
     <Compile Include="Environment\AutofacUtil\DynamicProxy2\DynamicProxyTests.cs" />
+    <Compile Include="Environment\RunningShellTableTests.cs" />
     <Compile Include="Environment\Utility\Build.cs" />
     <Compile Include="Environment\Configuration\AppDataFolderTests.cs" />
     <Compile Include="Environment\Configuration\DefaultTenantManagerTests.cs" />

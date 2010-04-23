@@ -6,6 +6,7 @@ using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
 using Autofac;
+using Autofac.Integration.Web;
 using NUnit.Framework;
 using Orchard.Environment;
 using Orchard.Environment.Configuration;
@@ -109,19 +110,35 @@ namespace Orchard.Tests.Mvc.Routes {
         public void MatchingRouteToActiveShellTableWillLimitTheAbilityToMatchRoutes() {
             Init();
             
-            var routeA = new Route("foo", new MvcRouteHandler());
-            var routeB = new Route("bar", new MvcRouteHandler());
-            var routeC = new Route("quux", new MvcRouteHandler());
+            var routeFoo = new Route("foo", new MvcRouteHandler());
 
+            _settingsA.RequestUrlHost = "a.example.com";
             _containerA.Resolve<IRoutePublisher>().Publish(
-                new[] {new RouteDescriptor {Priority = 0, Route = routeA}});
+                new[] {new RouteDescriptor {Priority = 0, Route = routeFoo}});
 
+            _settingsB.RequestUrlHost = "b.example.com";
             _containerB.Resolve<IRoutePublisher>().Publish(
-                new[] {new RouteDescriptor {Priority = 0, Route = routeB}});
+                new[] {new RouteDescriptor {Priority = 0, Route = routeFoo}});
 
             var httpContext = new StubHttpContext("~/foo");
             var routeData = _routes.GetRouteData(httpContext);
             Assert.That(routeData, Is.Null);
+
+            var httpContextA = new StubHttpContext("~/foo", "a.example.com");
+            var routeDataA = _routes.GetRouteData(httpContextA);
+            Assert.That(routeDataA, Is.Not.Null);
+            Assert.That(routeDataA.DataTokens.ContainsKey("IContainerProvider"), Is.True);
+            var routeContainerProviderA = (IContainerProvider)routeDataA.DataTokens["IContainerProvider"];
+            Assert.That(routeContainerProviderA.ApplicationContainer.Resolve<IRouteProvider>(), Is.SameAs(_containerA.Resolve<IRouteProvider>()));
+            Assert.That(routeContainerProviderA.ApplicationContainer.Resolve<IRouteProvider>(), Is.Not.SameAs(_containerB.Resolve<IRouteProvider>()));
+
+            var httpContextB = new StubHttpContext("~/foo", "b.example.com");
+            var routeDataB = _routes.GetRouteData(httpContextB);
+            Assert.That(routeDataB, Is.Not.Null);
+            Assert.That(routeDataB.DataTokens.ContainsKey("IContainerProvider"), Is.True);
+            var routeContainerProviderB = (IContainerProvider)routeDataA.DataTokens["IContainerProvider"];
+            Assert.That(routeContainerProviderB.ApplicationContainer.Resolve<IRouteProvider>(), Is.SameAs(_containerB.Resolve<IRouteProvider>()));
+            Assert.That(routeContainerProviderB.ApplicationContainer.Resolve<IRouteProvider>(), Is.Not.SameAs(_containerA.Resolve<IRouteProvider>()));
         }
         
     }
