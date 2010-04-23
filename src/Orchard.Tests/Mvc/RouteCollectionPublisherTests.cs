@@ -1,109 +1,114 @@
-﻿//using System;
-//using System.Linq;
-//using System.Threading;
-//using System.Web.Mvc;
-//using System.Web.Routing;
-//using NUnit.Framework;
-//using Orchard.Mvc.Routes;
-//using Orchard.Tests.Stubs;
+﻿using System;
+using System.Linq;
+using System.Threading;
+using System.Web.Mvc;
+using System.Web.Routing;
+using Autofac;
+using NUnit.Framework;
+using Orchard.Environment.Configuration;
+using Orchard.Mvc.Routes;
+using Orchard.Tests.Stubs;
+using Orchard.Tests.Utility;
 
-//namespace Orchard.Tests.Mvc {
-//    [TestFixture]
-//    public class RouteCollectionPublisherTests {
-//        static RouteDescriptor Desc(string name, string url) {
-//            return new RouteDescriptor {Name = name, Route = new Route(url, new MvcRouteHandler())};
-//        }
+namespace Orchard.Tests.Mvc {
+    [TestFixture]
+    public class RouteCollectionPublisherTests {
+        private IContainer _container;
+        private RouteCollection _routes;
 
-//        //[Test]
-//        //public void PublisherShouldReplaceRoutes() {
+        static RouteDescriptor Desc(string name, string url) {
+            return new RouteDescriptor { Name = name, Route = new Route(url, new MvcRouteHandler()) };
+        }
 
-//        //    var routes = new RouteCollection();
-//        //    routes.MapRoute("foo", "{controller}");
+        [SetUp]
+        public void Init() {
+            _routes = new RouteCollection();
 
-//        //    IRoutePublisher publisher = new RoutePublisher(routes, new StubContainerProvider(null, null));
-//        //    publisher.Publish(new[] {Desc("barname", "bar"), Desc("quuxname", "quux")});
-
-//        //    Assert.That(routes.Count(), Is.EqualTo(2));
-//        //}
-
-//        //[Test]
-//        //public void RoutesCanHaveNullOrEmptyNames() {
-//        //    var routes = new RouteCollection();
-//        //    routes.MapRoute("foo", "{controller}");
-
-//        //    IRoutePublisher publisher = new RoutePublisher(routes, new StubContainerProvider(null, null));
-//        //    publisher.Publish(new[] { Desc(null, "bar"), Desc(string.Empty, "quux") });
-
-//        //    Assert.That(routes.Count(), Is.EqualTo(2));
-//        //}
-
-//        //[Test]
-//        //[ExpectedException(typeof(ArgumentException))]
-//        //public void SameNameTwiceCausesExplosion() {
-//        //    var routes = new RouteCollection();
-//        //    routes.MapRoute("foo", "{controller}");
-
-//        //    IRoutePublisher publisher = new RoutePublisher(routes, new StubContainerProvider(null, null));
-//        //    publisher.Publish(new[] {Desc("yarg", "bar"), Desc("yarg", "quux")});
-
-//        //    Assert.That(routes.Count(), Is.EqualTo(2));
-//        //}
+            var builder = new ContainerBuilder();
+            builder.RegisterType<RoutePublisher>().As<IRoutePublisher>();
+            builder.RegisterType<ShellRoute>().InstancePerDependency();
+            builder.Register(ctx => _routes);
+            builder.Register(ctx => new ShellSettings { Name = "Default" });
+            builder.RegisterAutoMocking();
+            _container = builder.Build();
+        }
 
 
-//        [Test]
-//        public void ExplosionLeavesOriginalRoutesIntact() {
-//            var routes = new RouteCollection();
-//            routes.MapRoute("foo", "{controller}");
+        [Test]
+        public void PublisherShouldAddRoutesThenReplaceTheOnesWhichWereAdded() {
+            
+            _routes.MapRoute("foo", "{controller}");
 
-//            IRoutePublisher publisher = new RoutePublisher(routes, new StubContainerProvider(null, null));
-//            try {
-//                publisher.Publish(new[] { Desc("yarg", "bar"), Desc("yarg", "quux") });
-//            }
-//            catch (ArgumentException) {
-//                Assert.That(routes.Count(), Is.EqualTo(1));
-//                Assert.That(routes.OfType<Route>().Single().Url, Is.EqualTo("{controller}"));
-//            }
-//        }
+            var publisher = _container.Resolve<IRoutePublisher>();
+            publisher.Publish(new[] { Desc("barname", "bar"), Desc("quuxname", "quux") });
 
-//        [Test]
-//        public void RoutesArePaintedWithConainerProviderAsTheyAreApplied() {
-//            var routes = new RouteCollection();
-//            routes.MapRoute("foo", "{controller}");
+            Assert.That(_routes.Count(), Is.EqualTo(3));
 
-//            var containerProvider = new StubContainerProvider(null, null);
-//            IRoutePublisher publisher = new RoutePublisher(routes, containerProvider);
-//            publisher.Publish(new[] { Desc("barname", "bar"), Desc("quuxname", "quux") });
+            publisher.Publish(new[] { Desc("baazname", "baaz")});
 
-//            Assert.That(routes.OfType<Route>().Count(), Is.EqualTo(2));
-//            Assert.That(routes.OfType<Route>().SelectMany(r => r.DataTokens.Values).Count(), Is.EqualTo(2));
-//            Assert.That(routes.OfType<Route>().SelectMany(r => r.DataTokens.Values), Has.All.SameAs(containerProvider));
-//        }
+            Assert.That(_routes.Count(), Is.EqualTo(2));
+        }
 
-//        [Test]
-//        public void WriteBlocksWhileReadIsInEffect() {
-//            var routes = new RouteCollection();
-//            routes.MapRoute("foo", "{controller}");
+        [Test]
+        public void RoutesCanHaveNullOrEmptyNames() {
+            _routes.MapRoute("foo", "{controller}");
 
-//            var containerProvider = new StubContainerProvider(null, null);
-//            IRoutePublisher publisher = new RoutePublisher(routes, containerProvider);
+            var publisher = _container.Resolve<IRoutePublisher>();
+            publisher.Publish(new[] { Desc(null, "bar"), Desc(string.Empty, "quux") });
 
-//            var readLock = routes.GetReadLock();
+            Assert.That(_routes.Count(), Is.EqualTo(3));
+        }
 
-//            string where = "init";
-//            var action = new Action(() => {
-//                where = "before";
-//                publisher.Publish(new[] { Desc("barname", "bar"), Desc("quuxname", "quux") });
-//                where = "after";
-//            });
+        [Test]
+        [ExpectedException(typeof(ArgumentException))]
+        public void SameNameTwiceCausesExplosion() {
+            _routes.MapRoute("foo", "{controller}");
 
-//            Assert.That(where, Is.EqualTo("init"));
-//            var async = action.BeginInvoke(null, null);
-//            Thread.Sleep(75);
-//            Assert.That(where, Is.EqualTo("before"));
-//            readLock.Dispose();
-//            Thread.Sleep(75);
-//            Assert.That(where, Is.EqualTo("after"));
-//            action.EndInvoke(async);
-//        }
-//    }
-//}
+            var publisher = _container.Resolve<IRoutePublisher>();
+            publisher.Publish(new[] { Desc("yarg", "bar"), Desc("yarg", "quux") });
+
+            Assert.That(_routes.Count(), Is.EqualTo(2));
+        }
+
+
+        [Test]
+        public void ExplosionLeavesOriginalRoutesIntact() {
+            _routes.MapRoute("foo", "{controller}");
+
+            var publisher = _container.Resolve<IRoutePublisher>();
+            try {
+                publisher.Publish(new[] { Desc("yarg", "bar"), Desc("yarg", "quux") });
+            }
+            catch (ArgumentException) {
+                Assert.That(_routes.Count(), Is.EqualTo(1));
+                Assert.That(_routes.OfType<Route>().Single().Url, Is.EqualTo("{controller}"));
+            }
+        }
+
+        [Test]
+        public void WriteBlocksWhileReadIsInEffect() {
+            _routes.MapRoute("foo", "{controller}");
+
+            var publisher = _container.Resolve<IRoutePublisher>();
+
+            var readLock = _routes.GetReadLock();
+
+            string where = "init";
+            var action = new Action(() => {
+                where = "before";
+                publisher.Publish(new[] { Desc("barname", "bar"), Desc("quuxname", "quux") });
+                where = "after";
+            });
+
+            Assert.That(where, Is.EqualTo("init"));
+            var async = action.BeginInvoke(null, null);
+            Thread.Sleep(75);
+            Assert.That(where, Is.EqualTo("before"));
+            readLock.Dispose();
+            Thread.Sleep(75);
+            Assert.That(where, Is.EqualTo("after"));
+            action.EndInvoke(async);
+        }
+    }
+}
+

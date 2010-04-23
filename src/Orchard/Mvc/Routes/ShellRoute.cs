@@ -51,7 +51,9 @@ namespace Orchard.Mvc.Routes {
                 return null;
 
             // otherwise paint wrap handler and return it
-            routeData.RouteHandler = new RouteHandler(_container, routeData.RouteHandler);
+            var containerProvider = new ContainerProvider(_container);
+            routeData.RouteHandler = new RouteHandler(containerProvider, routeData.RouteHandler);
+            routeData.DataTokens["IContainerProvider"] = containerProvider;
             return routeData;
         }
 
@@ -66,33 +68,49 @@ namespace Orchard.Mvc.Routes {
             return virtualPath;
         }
 
+        class ContainerProvider : IContainerProvider {
+            public ContainerProvider(IContainer applicationContainer) {
+                ApplicationContainer = applicationContainer;
+            }
+
+            public void BeginRequestLifetime() {
+                RequestLifetime = ApplicationContainer.BeginLifetimeScope("httpRequest");
+            }
+
+            public void EndRequestLifetime() {
+                RequestLifetime.Dispose();
+                RequestLifetime = null;
+            }
+
+            public IContainer ApplicationContainer { get; set; }
+            public ILifetimeScope RequestLifetime { get; set; }
+        }
 
         class RouteHandler : IRouteHandler {
-            private readonly IContainer _container;
+            private readonly ContainerProvider _containerProvider;
             private readonly IRouteHandler _routeHandler;
 
-            public RouteHandler(IContainer container, IRouteHandler routeHandler) {
-                _container = container;
+            public RouteHandler(ContainerProvider containerProvider, IRouteHandler routeHandler) {
+                _containerProvider = containerProvider;
                 _routeHandler = routeHandler;
             }
 
             public IHttpHandler GetHttpHandler(RequestContext requestContext) {
                 var httpHandler = _routeHandler.GetHttpHandler(requestContext);
-                return new HttpAsyncHandler(
-                    _container,
-                    requestContext,
-                    (IHttpAsyncHandler)httpHandler);
+                if (httpHandler is IHttpAsyncHandler) {
+                    return new HttpAsyncHandler(_containerProvider, (IHttpAsyncHandler)httpHandler);
+                }
+                return new HttpHandler(_containerProvider, httpHandler);
             }
         }
 
-        class HttpAsyncHandler : IHttpAsyncHandler, IRequiresSessionState, IContainerProvider {
-            private readonly RequestContext _requestContext;
-            private readonly IHttpAsyncHandler _httpAsyncHandler;
+        class HttpHandler : IHttpHandler, IRequiresSessionState {
+            protected readonly ContainerProvider _containerProvider;
+            private readonly IHttpHandler _httpHandler;
 
-            public HttpAsyncHandler(IContainer applicationContainer, RequestContext requestContext, IHttpAsyncHandler httpAsyncHandler) {
-                ApplicationContainer = applicationContainer;
-                _requestContext = requestContext;
-                _httpAsyncHandler = httpAsyncHandler;
+            public HttpHandler(ContainerProvider containerProvider, IHttpHandler httpHandler) {
+                _containerProvider = containerProvider;
+                _httpHandler = httpHandler;
             }
 
             public bool IsReusable {
@@ -100,22 +118,31 @@ namespace Orchard.Mvc.Routes {
             }
 
             public void ProcessRequest(HttpContext context) {
-                BeginRequestLifetime();
+                _containerProvider.BeginRequestLifetime();
                 try {
-                    _httpAsyncHandler.ProcessRequest(context);
+                    _httpHandler.ProcessRequest(context);
                 }
                 finally {
-                    EndRequestLifetime();
+                    _containerProvider.EndRequestLifetime();
                 }
+            }
+        }
+
+        class HttpAsyncHandler : HttpHandler, IHttpAsyncHandler {
+            private readonly IHttpAsyncHandler _httpAsyncHandler;
+
+            public HttpAsyncHandler(ContainerProvider containerProvider, IHttpAsyncHandler httpAsyncHandler)
+                : base(containerProvider, httpAsyncHandler) {
+                _httpAsyncHandler = httpAsyncHandler;
             }
 
             public IAsyncResult BeginProcessRequest(HttpContext context, AsyncCallback cb, object extraData) {
-                BeginRequestLifetime();
+                _containerProvider.BeginRequestLifetime();
                 try {
                     return _httpAsyncHandler.BeginProcessRequest(context, cb, extraData);
                 }
                 catch {
-                    EndRequestLifetime();
+                    _containerProvider.EndRequestLifetime();
                     throw;
                 }
             }
@@ -125,22 +152,10 @@ namespace Orchard.Mvc.Routes {
                     _httpAsyncHandler.EndProcessRequest(result);
                 }
                 finally {
-                    EndRequestLifetime();
+                    _containerProvider.EndRequestLifetime();
                 }
             }
 
-            public void BeginRequestLifetime() {
-                RequestLifetime = ApplicationContainer.BeginLifetimeScope("httpRequest");
-                _requestContext.RouteData.DataTokens["IContainerProvider"] = this;
-            }
-
-            public void EndRequestLifetime() {
-                _requestContext.RouteData.DataTokens.Remove("IContainerProvider");
-                RequestLifetime.Dispose();
-            }
-
-            public IContainer ApplicationContainer { get; set; }
-            public ILifetimeScope RequestLifetime { get; set; }
         }
     }
 }

@@ -24,6 +24,32 @@ namespace Orchard.Tests.Mvc.Routes {
         private ShellSettings _settingsB;
         private IContainer _rootContainer;
 
+        [SetUp]
+        public void Init() {
+            _settingsA = new ShellSettings { Name = "Alpha" };
+            _settingsB = new ShellSettings { Name = "Beta", };
+            _routes = new RouteCollection();
+
+            var rootBuilder = new ContainerBuilder();
+            rootBuilder.Register(ctx => _routes);
+            rootBuilder.RegisterType<ShellRoute>().InstancePerDependency();
+            rootBuilder.RegisterType<RunningShellTable>().As<IRunningShellTable>().SingleInstance();
+
+            _rootContainer = rootBuilder.Build();
+
+            _containerA = _rootContainer.BeginLifetimeScope(
+                builder => {
+                    builder.Register(ctx => _settingsA);
+                    builder.RegisterType<RoutePublisher>().As<IRoutePublisher>().InstancePerLifetimeScope();
+                });
+
+            _containerB = _rootContainer.BeginLifetimeScope(
+                builder => {
+                    builder.Register(ctx => _settingsB);
+                    builder.RegisterType<RoutePublisher>().As<IRoutePublisher>().InstancePerLifetimeScope();
+                });
+        }
+
         [Test]
         public void FactoryMethodWillCreateShellRoutes() {
             var settings = new ShellSettings { Name = "Alpha" };
@@ -52,33 +78,9 @@ namespace Orchard.Tests.Mvc.Routes {
             Assert.That(route2.Area, Is.EqualTo("Beta"));
         }
 
-        private void Init() {
-            _settingsA = new ShellSettings {Name = "Alpha"};
-            _settingsB = new ShellSettings {Name = "Beta", };
-            _routes = new RouteCollection();
-
-            var rootBuilder = new ContainerBuilder();
-            rootBuilder.Register(ctx => _routes);
-            rootBuilder.RegisterType<ShellRoute>().InstancePerDependency();
-            rootBuilder.RegisterType<RunningShellTable>().As<IRunningShellTable>().SingleInstance();
-
-            _rootContainer = rootBuilder.Build();
-            _containerA = _rootContainer.BeginLifetimeScope(
-                builder => {
-                    builder.Register(ctx => _settingsA);
-                    builder.RegisterType<RoutePublisher>().As<IRoutePublisher>();
-                });
-
-            _containerB = _rootContainer.BeginLifetimeScope(
-                builder => {
-                    builder.Register(ctx => _settingsB);
-                    builder.RegisterType<RoutePublisher>().As<IRoutePublisher>();
-                });
-        }
 
         [Test]
         public void RoutePublisherReplacesOnlyNamedShellsRoutes() {
-            Init();
 
             var routeA = new Route("foo", new MvcRouteHandler());
             var routeB = new Route("bar", new MvcRouteHandler());
@@ -108,17 +110,18 @@ namespace Orchard.Tests.Mvc.Routes {
 
         [Test]
         public void MatchingRouteToActiveShellTableWillLimitTheAbilityToMatchRoutes() {
-            Init();
-            
+   
             var routeFoo = new Route("foo", new MvcRouteHandler());
 
             _settingsA.RequestUrlHost = "a.example.com";
             _containerA.Resolve<IRoutePublisher>().Publish(
                 new[] {new RouteDescriptor {Priority = 0, Route = routeFoo}});
+            _rootContainer.Resolve<IRunningShellTable>().Add(_settingsA);
 
             _settingsB.RequestUrlHost = "b.example.com";
             _containerB.Resolve<IRoutePublisher>().Publish(
                 new[] {new RouteDescriptor {Priority = 0, Route = routeFoo}});
+            _rootContainer.Resolve<IRunningShellTable>().Add(_settingsB);
 
             var httpContext = new StubHttpContext("~/foo");
             var routeData = _routes.GetRouteData(httpContext);
@@ -129,16 +132,16 @@ namespace Orchard.Tests.Mvc.Routes {
             Assert.That(routeDataA, Is.Not.Null);
             Assert.That(routeDataA.DataTokens.ContainsKey("IContainerProvider"), Is.True);
             var routeContainerProviderA = (IContainerProvider)routeDataA.DataTokens["IContainerProvider"];
-            Assert.That(routeContainerProviderA.ApplicationContainer.Resolve<IRouteProvider>(), Is.SameAs(_containerA.Resolve<IRouteProvider>()));
-            Assert.That(routeContainerProviderA.ApplicationContainer.Resolve<IRouteProvider>(), Is.Not.SameAs(_containerB.Resolve<IRouteProvider>()));
+            Assert.That(routeContainerProviderA.ApplicationContainer.Resolve<IRoutePublisher>(), Is.SameAs(_containerA.Resolve<IRoutePublisher>()));
+            Assert.That(routeContainerProviderA.ApplicationContainer.Resolve<IRoutePublisher>(), Is.Not.SameAs(_containerB.Resolve<IRoutePublisher>()));
 
             var httpContextB = new StubHttpContext("~/foo", "b.example.com");
             var routeDataB = _routes.GetRouteData(httpContextB);
             Assert.That(routeDataB, Is.Not.Null);
             Assert.That(routeDataB.DataTokens.ContainsKey("IContainerProvider"), Is.True);
-            var routeContainerProviderB = (IContainerProvider)routeDataA.DataTokens["IContainerProvider"];
-            Assert.That(routeContainerProviderB.ApplicationContainer.Resolve<IRouteProvider>(), Is.SameAs(_containerB.Resolve<IRouteProvider>()));
-            Assert.That(routeContainerProviderB.ApplicationContainer.Resolve<IRouteProvider>(), Is.Not.SameAs(_containerA.Resolve<IRouteProvider>()));
+            var routeContainerProviderB = (IContainerProvider)routeDataB.DataTokens["IContainerProvider"];
+            Assert.That(routeContainerProviderB.ApplicationContainer.Resolve<IRoutePublisher>(), Is.SameAs(_containerB.Resolve<IRoutePublisher>()));
+            Assert.That(routeContainerProviderB.ApplicationContainer.Resolve<IRoutePublisher>(), Is.Not.SameAs(_containerA.Resolve<IRoutePublisher>()));
         }
         
     }
