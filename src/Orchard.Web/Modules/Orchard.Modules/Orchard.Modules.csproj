@@ -63,8 +63,10 @@
   <ItemGroup>
     <Compile Include="AdminMenu.cs" />
     <Compile Include="Controllers\AdminController.cs" />
+    <Compile Include="Models\Module.cs" />
     <Compile Include="Permissions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\ModuleService.cs" />
     <Compile Include="ViewModels\ModulesIndexViewModel.cs" />
   </ItemGroup>
   <ItemGroup>

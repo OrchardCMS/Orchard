@@ -111,6 +111,11 @@
     <Compile Include="Hosting\RequestExtensions.cs" />
     <Compile Include="Hosting\RequestDetails.cs" />
     <Compile Include="Hosting\Simple.Web\Global.asax.cs" />
+    <Compile Include="Modules.feature.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Modules.feature</DependentUpon>
+    </Compile>
     <Compile Include="MultiTenancy.feature.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -165,6 +170,10 @@
     <Content Include="Hosting\Orchard.Web\Config\Host.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <None Include="Modules.feature">
+      <Generator>SpecFlowSingleFileGenerator</Generator>
+      <LastGenOutput>Modules.feature.cs</LastGenOutput>
+    </None>
     <None Include="MultiTenancy.feature">
       <Generator>SpecFlowSingleFileGenerator</Generator>
       <LastGenOutput>MultiTenancy.feature.cs</LastGenOutput>
