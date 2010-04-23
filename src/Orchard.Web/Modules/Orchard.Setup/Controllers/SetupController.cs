@@ -82,10 +82,12 @@ namespace Orchard.Setup.Controllers {
                 };
 
                 // The vanilla Orchard distibution has the following modules enabled.
-                const string hardcoded = @"Orchard.Framework,
+                const string hardcoded =
+                    @"Orchard.Framework,
                     Common,Dashboard,Feeds,HomePage,Navigation,Scheduling,Settings,XmlRpc,
                     Orchard.Users,Orchard.Roles,TinyMce,
-                    Orchard.Pages,Orchard.Comments,Orchard.Themes";
+                    Orchard.Modules,Orchard.Themes,
+                    Orchard.Pages,Orchard.Comments";
 
                 var shellDescriptor = new ShellDescriptor {
                     EnabledFeatures = hardcoded.Split(',').Select(name => new ShellFeature { Name = name.Trim() })

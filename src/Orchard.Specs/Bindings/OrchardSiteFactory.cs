@@ -16,7 +16,7 @@ namespace Orchard.Specs.Bindings {
             var webApp = Binding<WebAppHosting>();
 
             webApp.GivenIHaveACleanSiteWith(TableData(
-                new { extension = "module", names = "Orchard.Setup, Orchard.Themes, Orchard.Users, Orchard.Roles, Orchard.Pages, Orchard.Comments, TinyMce" },
+                new { extension = "module", names = "Orchard.Setup, Orchard.Modules, Orchard.Themes, Orchard.Users, Orchard.Roles, Orchard.Pages, Orchard.Comments, TinyMce" },
                 new { extension = "core", names = "Common, Dashboard, Feeds, HomePage, Navigation, Scheduling, Settings, XmlRpc" },
                 new { extension = "theme", names = "SafeMode, Classic" }));
 
