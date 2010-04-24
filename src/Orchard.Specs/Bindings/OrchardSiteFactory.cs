@@ -53,5 +53,16 @@ namespace Orchard.Specs.Bindings {
             });
 
         }
+
+
+        [When(@"I cycle the app domain")]
+        public void WhenICycleTheAppDomain() {
+            var webApp = Binding<WebAppHosting>();
+            webApp.Host.Execute(() => {
+                Trace.WriteLine("This call to Host.Reinitialize should not be needed, eventually");
+                MvcApplication.Host.Reinitialize_Obsolete();
+            });
+
+        }
     }
 }

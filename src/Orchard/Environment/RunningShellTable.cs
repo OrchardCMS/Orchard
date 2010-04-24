@@ -8,7 +8,6 @@ using Orchard.Environment.Configuration;
 namespace Orchard.Environment {
     public interface IRunningShellTable {
         void Add(ShellSettings settings);
-        IEnumerable<ShellSettings> List();
         ShellSettings Match(HttpContextBase httpContext);
     }
 
@@ -48,10 +47,6 @@ namespace Orchard.Environment {
                 // will not be mapped to routes coming from orchard
                 _fallback = null;
             }
-        }
-
-        public IEnumerable<ShellSettings> List() {
-            return _shells;
         }
 
         public ShellSettings Match(HttpContextBase httpContext) {

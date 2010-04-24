@@ -11,6 +11,7 @@ namespace Orchard.Specs.Hosting {
         private Path _tempSite;
         private Path _orchardWebPath;
 
+
         public void Initialize(string templateName, string virtualDirectory) {
             var baseDir = Path.Get(AppDomain.CurrentDomain.BaseDirectory);
 
@@ -29,6 +30,7 @@ namespace Orchard.Specs.Hosting {
                 .ShallowCopy("*.dll", _tempSite.Combine("bin"))
                 .ShallowCopy("*.pdb", _tempSite.Combine("bin"));
 
+            HostName = "localhost";
             PhysicalDirectory = _tempSite;
             VirtualDirectory = virtualDirectory;
 
@@ -44,6 +46,7 @@ namespace Orchard.Specs.Hosting {
                 sourceModule.Combine("Views").DeepCopy(targetModule.Combine("Views"));
         }
 
+        public string HostName { get; set; }
         public string PhysicalDirectory { get; private set; }
         public string VirtualDirectory { get; private set; }
         

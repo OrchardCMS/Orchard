@@ -162,5 +162,51 @@ namespace Orchard.Tests.Environment {
             Assert.That(table.Match(new StubHttpContext("~/bar/foo", "wiki.example.com")), Is.Null);
         }
 
+        [Test]
+        public void HostNameMatchesRightmostIfRequestIsLonger() {
+            var table = (IRunningShellTable) new RunningShellTable();
+            var settings = new ShellSettings {Name = "Default"};
+            var settingsA = new ShellSettings {Name = "Alpha", RequestUrlHost = "example.com"};
+            table.Add(settings);
+            table.Add(settingsA);
+            Assert.That(table.Match(new StubHttpContext("~/foo/bar", "www.example.com")), Is.SameAs(settingsA));
+            Assert.That(table.Match(new StubHttpContext("~/foo/bar", "wiki.example.com")), Is.SameAs(settingsA));
+            Assert.That(table.Match(new StubHttpContext("~/foo/bar", "example.com")), Is.SameAs(settingsA));
+            Assert.That(table.Match(new StubHttpContext("~/foo/bar", "localhost")), Is.SameAs(settings));
+        }
+
+        [Test]
+        public void LongestMatchingHostHasPriority() {
+            var table = (IRunningShellTable) new RunningShellTable();
+            var settings = new ShellSettings {Name = "Default"};
+            var settingsA = new ShellSettings {Name = "Alpha", RequestUrlHost = "www.example.com"};
+            var settingsB = new ShellSettings {Name = "Beta", RequestUrlHost = "example.com"};
+            var settingsG = new ShellSettings {Name = "Gamma", RequestUrlHost = "wiki.example.com"};
+            table.Add(settings);
+            table.Add(settingsA);
+            table.Add(settingsB);
+            table.Add(settingsG);
+
+            Assert.That(table.Match(new StubHttpContext("~/foo/bar", "www.example.com")), Is.SameAs(settingsA));
+            Assert.That(table.Match(new StubHttpContext("~/foo/bar", "wiki.example.com")), Is.SameAs(settingsG));
+            Assert.That(table.Match(new StubHttpContext("~/foo/bar", "username.example.com")), Is.SameAs(settingsB));
+            Assert.That(table.Match(new StubHttpContext("~/foo/bar", "localhost")), Is.SameAs(settings));
+        }
+
+
+        [Test]
+        public void ShellNameUsedToDistinctThingsAsTheyAreAdded() {
+            var table = (IRunningShellTable)new RunningShellTable();
+            var settings = new ShellSettings { Name = "Default" };
+            var settingsA = new ShellSettings { Name = "Alpha", RequestUrlHost = "removed.example.com" };
+            var settingsB = new ShellSettings { Name = "Alpha", RequestUrlHost = "added.example.com" };
+            table.Add(settings);
+            table.Add(settingsA);
+            table.Add(settingsB);
+
+            Assert.That(table.Match(new StubHttpContext("~/foo/bar", "removed.example.com")), Is.SameAs(settings));
+            Assert.That(table.Match(new StubHttpContext("~/foo/bar", "added.example.com")), Is.SameAs(settingsB));
+            Assert.That(table.Match(new StubHttpContext("~/foo/bar", "localhost")), Is.SameAs(settings));
+        }
     }
 }

@@ -35,6 +35,10 @@ using (Html.BeginFormAntiForgeryPost()) { %>
             <%=Html.EditorFor(svm => svm.DatabaseConnectionString)%>
             <span class="hint"><%=_Encoded("Example:") %><br /><%=_Encoded("Data Source=sqlServerName;Initial Catalog=dbName;Persist Security Info=True;User ID=userName;Password=password") %></span>
         </span>
+        <span data-controllerid="sql">
+            <label for="DatabaseTablePrefix"><%=_Encoded("Database Table Prefix") %></label>
+            <%=Html.EditorFor(svm => svm.DatabaseTablePrefix)%>
+        </span>
     </div>
 </fieldset>
 <fieldset>

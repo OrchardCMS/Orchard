@@ -16,6 +16,7 @@ namespace Orchard.Specs.Hosting {
             var physicalPath = Bleroy.FluentPath.Path.Get(webHost.PhysicalDirectory);
 
             var details = new RequestDetails {
+                HostName = webHost.HostName,
                 UrlPath = urlPath,
                 Page = physicalPath
                     .Combine(urlPath.TrimStart('/', '\\'))
@@ -88,6 +89,9 @@ namespace Orchard.Specs.Hosting {
                     string value;
                     if (_details.RequestHeaders.TryGetValue("Cookie", out value))
                         return value;
+                }
+                else if (index==HeaderHost) {
+                    return _details.HostName;
                 }
                 return base.GetKnownRequestHeader(index);
 
