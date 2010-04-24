@@ -96,11 +96,16 @@ namespace Orchard.Environment {
         }
 
         ShellContext CreateSetupContext() {
-            Logger.Debug("Creating shell context for setup");
-            return _shellContextFactory.CreateSetupContext();
+            Logger.Debug("Creating shell context for root setup");
+            return _shellContextFactory.CreateSetupContext(new ShellSettings { Name = "Default" });
         }
 
         ShellContext CreateShellContext(ShellSettings settings) {
+            if (settings.State.CurrentState == TenantState.State.Uninitialized) {
+                Logger.Debug("Creating shell context for tenant {0} setup", settings.Name);
+                return _shellContextFactory.CreateSetupContext(settings);
+            }
+
             Logger.Debug("Creating shell context for tenant {0}", settings.Name);
             return _shellContextFactory.CreateShellContext(settings);
         }

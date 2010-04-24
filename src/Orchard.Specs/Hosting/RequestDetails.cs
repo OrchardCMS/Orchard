@@ -12,6 +12,7 @@ namespace Orchard.Specs.Hosting {
             ResponseHeaders = new Dictionary<string, string>();
         }
 
+        public string HostName { get; set; }
         public string UrlPath { get; set; }
         public string Page { get; set; }
         public string Query { get; set; }

@@ -23,6 +23,7 @@ using Orchard.UI.Notify;
 namespace Orchard.Setup.Controllers {
     [ValidateInput(false)]
     public class SetupController : Controller {
+        private readonly ShellSettings _shellSettings;
         private readonly INotifier _notifier;
         private readonly IOrchardHost _orchardHost;
         private readonly IShellSettingsManager _shellSettingsManager;
@@ -31,12 +32,14 @@ namespace Orchard.Setup.Controllers {
         private readonly IAppDataFolder _appDataFolder;
 
         public SetupController(
+            ShellSettings shellSettings,
             INotifier notifier,
             IOrchardHost orchardHost,
             IShellSettingsManager shellSettingsManager,
             IShellContainerFactory shellContainerFactory,
             ICompositionStrategy compositionStrategy,
             IAppDataFolder appDataFolder) {
+            _shellSettings = shellSettings;
             _notifier = notifier;
             _orchardHost = orchardHost;
             _shellSettingsManager = shellSettingsManager;
@@ -75,10 +78,10 @@ namespace Orchard.Setup.Controllers {
             }
 
             try {
-                var shellSettings = new ShellSettings {
-                    Name = "Default",
+                var shellSettings = new ShellSettings(_shellSettings) {
                     DataProvider = model.DatabaseOptions ? "SQLite" : "SqlServer",
-                    DataConnectionString = model.DatabaseConnectionString
+                    DataConnectionString = model.DatabaseConnectionString,
+                    DataTablePrefix = model.DatabaseTablePrefix,
                 };
 
                 // The vanilla Orchard distibution has the following modules enabled.
@@ -99,10 +102,10 @@ namespace Orchard.Setup.Controllers {
                 var bootstrapLifetimeScope = _shellContainerFactory.CreateContainer(shellSettings, shellToplogy);
                 using (var environment = new StandaloneEnvironment(bootstrapLifetimeScope)) {
                     environment.Resolve<ISessionFactoryHolder>().CreateDatabase();
-                    
+
                     environment.Resolve<IShellDescriptorManager>().UpdateShellDescriptor(
-                        0, 
-                        shellDescriptor.EnabledFeatures, 
+                        0,
+                        shellDescriptor.EnabledFeatures,
                         shellDescriptor.Parameters);
                 }
 
@@ -110,6 +113,9 @@ namespace Orchard.Setup.Controllers {
                 // creating a standalone environment. 
                 // in theory this environment can be used to resolve any normal components by interface, and those
                 // components will exist entirely in isolation - no crossover between the safemode container currently in effect
+                
+                // must mark state as Running - otherwise standalone enviro is created "for setup"
+                shellSettings.State = new TenantState("Running");
                 using (var environment = _orchardHost.CreateStandaloneEnvironment(shellSettings)) {
                     try {
                         // create superuser
@@ -165,9 +171,9 @@ namespace Orchard.Setup.Controllers {
                     }
                 }
 
-                shellSettings.State = new TenantState("Running");
                 _shellSettingsManager.SaveSettings(shellSettings);
 
+                // MultiTenancy: This will not be needed when host listens to event bus
                 _orchardHost.Reinitialize_Obsolete();
 
                 // redirect to the welcome page.

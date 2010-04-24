@@ -75,7 +75,7 @@ namespace Orchard.Tests.Environment.ShellBuilders {
                 .Returns(_container.BeginLifetimeScope("shell"));
 
             var factory = _container.Resolve<IShellContextFactory>();
-            var context = factory.CreateSetupContext();
+            var context = factory.CreateSetupContext(new ShellSettings { Name = "Default" });
 
             Assert.That(context.Descriptor.EnabledFeatures, Has.Some.With.Property("Name").EqualTo("Orchard.Setup"));
         }

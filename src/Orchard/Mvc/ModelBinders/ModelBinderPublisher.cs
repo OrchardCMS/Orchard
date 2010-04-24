@@ -10,8 +10,9 @@ namespace Orchard.Mvc.ModelBinders {
         }
 
         public void Publish(IEnumerable<ModelBinderDescriptor> binders) {
+            // MultiTenancy: should hook default model binder instead and rely on shell-specific binders (instead adding to type dictionary)
             foreach (var descriptor in binders) {
-                _binders.Add(descriptor.Type, descriptor.ModelBinder);
+                _binders[descriptor.Type] = descriptor.ModelBinder;
             }
         }
     }

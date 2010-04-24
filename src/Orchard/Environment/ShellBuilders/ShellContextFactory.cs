@@ -20,7 +20,7 @@ namespace Orchard.Environment.ShellBuilders {
         /// Builds a shell context for an uninitialized Orchard instance. Needed
         /// to display setup user interface.
         /// </summary>
-        ShellContext CreateSetupContext();
+        ShellContext CreateSetupContext(ShellSettings settings);
     }
 
     public class ShellContextFactory : IShellContextFactory {
@@ -87,10 +87,8 @@ namespace Orchard.Environment.ShellBuilders {
             };
         }
 
-        public ShellContext CreateSetupContext() {
+        public ShellContext CreateSetupContext(ShellSettings settings) {
             Logger.Warning("No shell settings available. Creating shell context for setup");
-
-            var settings = new ShellSettings { Name = "Default" };
 
             var descriptor = new ShellDescriptor {
                 SerialNumber = -1,

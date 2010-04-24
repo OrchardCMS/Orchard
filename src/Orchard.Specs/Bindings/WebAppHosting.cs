@@ -119,6 +119,14 @@ namespace Orchard.Specs.Bindings {
         }
 
 
+        [When(@"I go to ""(.*)"" on host (.*)")]
+        public void WhenIGoToPathOnHost(string urlPath, string host) {
+            Host.HostName = host;
+            _details = Host.SendRequest(urlPath);
+            _doc = new HtmlDocument();
+            _doc.Load(new StringReader(_details.ResponseText));
+        }
+
         [When(@"I go to ""(.*)""")]
         public void WhenIGoTo(string urlPath) {
             _details = Host.SendRequest(urlPath);
