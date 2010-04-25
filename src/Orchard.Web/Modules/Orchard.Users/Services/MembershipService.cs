@@ -39,6 +39,7 @@ namespace Orchard.Users.Services {
                 init.Record.UserName = createUserParams.Username;
                 init.Record.Email = createUserParams.Email;
                 init.Record.NormalizedUserName = createUserParams.Username.ToLower();
+                init.Record.HashAlgorithm = "SHA1";
                 SetPassword(init.Record, createUserParams.Password);
             });
         }
@@ -124,7 +125,7 @@ namespace Orchard.Users.Services {
 
             var combinedBytes = saltBytes.Concat(passwordBytes).ToArray();
 
-            var hashAlgorithm = HashAlgorithm.Create("SHA1");
+            var hashAlgorithm = HashAlgorithm.Create(record.HashAlgorithm);
             var hashBytes = hashAlgorithm.ComputeHash(combinedBytes);
 
             record.PasswordFormat = MembershipPasswordFormat.Hashed;
@@ -140,7 +141,7 @@ namespace Orchard.Users.Services {
 
             var combinedBytes = saltBytes.Concat(passwordBytes).ToArray();
 
-            var hashAlgorithm = HashAlgorithm.Create("SHA1");
+            var hashAlgorithm = HashAlgorithm.Create(record.HashAlgorithm);
             var hashBytes = hashAlgorithm.ComputeHash(combinedBytes);
 
             return record.Password == Convert.ToBase64String(hashBytes);
