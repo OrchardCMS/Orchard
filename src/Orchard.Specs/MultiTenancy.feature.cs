@@ -253,5 +253,28 @@ this.ScenarioSetup(scenarioInfo);
 #line hidden
             testRunner.CollectScenarioErrors();
         }
+        
+        [NUnit.Framework.TestAttribute()]
+        [NUnit.Framework.DescriptionAttribute("Listing tenants from command line")]
+        public virtual void ListingTenantsFromCommandLine()
+        {
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Listing tenants from command line", ((string[])(null)));
+#line 78
+this.ScenarioSetup(scenarioInfo);
+#line 79
+ testRunner.Given("I have installed Orchard");
+#line 80
+  testRunner.And("I have installed \"Orchard.MultiTenancy\"");
+#line 81
+  testRunner.And("I have tenant \"Alpha\" on \"example.org\" as \"New-site-name\"");
+#line 82
+ testRunner.When("I execute >tenant list");
+#line 83
+ testRunner.Then("I should see \"Name: Alpha\"");
+#line 84
+  testRunner.And("I should see \"Request Url Host: example.org\"");
+#line hidden
+            testRunner.CollectScenarioErrors();
+        }
     }
 }

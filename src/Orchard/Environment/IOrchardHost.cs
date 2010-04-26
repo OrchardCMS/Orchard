@@ -28,4 +28,5 @@ namespace Orchard.Environment {
         /// </summary>
         IStandaloneEnvironment CreateStandaloneEnvironment(ShellSettings shellSettings);
     }
+    
 }

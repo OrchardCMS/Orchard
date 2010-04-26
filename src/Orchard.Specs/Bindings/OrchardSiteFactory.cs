@@ -47,7 +47,7 @@ namespace Orchard.Specs.Bindings {
                         descriptor.EnabledFeatures.Concat(new[] { new ShellFeature { Name = name } }),
                         descriptor.Parameters);
                 }
-                
+
                 Trace.WriteLine("This call to Host.Reinitialize should not be needed, eventually");
                 MvcApplication.Host.Reinitialize_Obsolete();
             });
@@ -62,7 +62,30 @@ namespace Orchard.Specs.Bindings {
                 Trace.WriteLine("This call to Host.Reinitialize should not be needed, eventually");
                 MvcApplication.Host.Reinitialize_Obsolete();
             });
+        }
 
+        [Given(@"I have tenant ""(.*)\"" on ""(.*)\"" as ""(.*)\""")]
+        public void GivenIHaveTenantOnSiteAsName(string shellName, string hostName, string siteName) {
+            var webApp = Binding<WebAppHosting>();
+            webApp.Host.Execute(() => {
+                var shellSettings = new ShellSettings {
+                    Name = shellName,
+                    RequestUrlHost = hostName,
+                    State = new TenantState("Uninitialized"),
+                };
+                using (var environment = MvcApplication.CreateStandaloneEnvironment("Default")) {
+                    environment.Resolve<IShellSettingsManager>().SaveSettings(shellSettings);
+                }
+                MvcApplication.Host.Reinitialize_Obsolete();
+            });
+
+            webApp.WhenIGoToPathOnHost("Setup", hostName);
+
+            webApp.WhenIFillIn(TableData(
+                new { name = "SiteName", value = siteName },
+                new { name = "AdminPassword", value = "6655321" }));
+
+            webApp.WhenIHit("Finish Setup");
         }
     }
 }

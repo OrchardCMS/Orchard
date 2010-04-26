@@ -28,6 +28,7 @@ namespace Orchard.Specs.Hosting {
 
             baseDir
                 .ShallowCopy("*.dll", _tempSite.Combine("bin"))
+                .ShallowCopy("*.exe", _tempSite.Combine("bin"))
                 .ShallowCopy("*.pdb", _tempSite.Combine("bin"));
 
             HostName = "localhost";

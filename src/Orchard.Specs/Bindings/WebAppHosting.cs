@@ -30,6 +30,11 @@ namespace Orchard.Specs.Bindings {
             get { return _webHost; }
         }
 
+        public RequestDetails Details {
+            get { return _details; }
+            set { _details = value; }
+        }
+
         [Given(@"I have a clean site")]
         public void GivenIHaveACleanSite() {
             GivenIHaveACleanSiteBasedOn("Orchard.Web");
@@ -122,16 +127,16 @@ namespace Orchard.Specs.Bindings {
         [When(@"I go to ""(.*)"" on host (.*)")]
         public void WhenIGoToPathOnHost(string urlPath, string host) {
             Host.HostName = host;
-            _details = Host.SendRequest(urlPath);
+            Details = Host.SendRequest(urlPath);
             _doc = new HtmlDocument();
-            _doc.Load(new StringReader(_details.ResponseText));
+            _doc.Load(new StringReader(Details.ResponseText));
         }
 
         [When(@"I go to ""(.*)""")]
         public void WhenIGoTo(string urlPath) {
-            _details = Host.SendRequest(urlPath);
+            Details = Host.SendRequest(urlPath);
             _doc = new HtmlDocument();
-            _doc.Load(new StringReader(_details.ResponseText));
+            _doc.Load(new StringReader(Details.ResponseText));
         }
 
         [When(@"I follow ""(.*)""")]
@@ -153,7 +158,7 @@ namespace Orchard.Specs.Bindings {
             foreach (var row in table.Rows) {
                 var r = row;
                 var input = inputs.SingleOrDefault(x => x.GetAttributeValue("name", x.GetAttributeValue("id", "")) == r["name"]);
-                Assert.That(input, Is.Not.Null, "Unable to locate <input> name {0} in page html:\r\n\r\n{1}", r["name"], _details.ResponseText);
+                Assert.That(input, Is.Not.Null, "Unable to locate <input> name {0} in page html:\r\n\r\n{1}", r["name"], Details.ResponseText);
                 input.Attributes.Add("value", row["value"]);
             }
         }
@@ -165,21 +170,21 @@ namespace Orchard.Specs.Bindings {
                 .Single(elt => elt.GetAttributeValue("value", null) == submitText);
 
             var form = Form.LocateAround(submit);
-            var urlPath = form.Start.GetAttributeValue("action", _details.UrlPath);
+            var urlPath = form.Start.GetAttributeValue("action", Details.UrlPath);
             var inputs = form.Children
                     .SelectMany(elt => elt.DescendantsAndSelf("input"))
                     .GroupBy(elt => elt.GetAttributeValue("name", elt.GetAttributeValue("id", "")), elt => elt.GetAttributeValue("value", ""))
                     .ToDictionary(elt => elt.Key, elt => (IEnumerable<string>)elt);
 
-            _details = Host.SendRequest(urlPath, inputs);
+            Details = Host.SendRequest(urlPath, inputs);
             _doc = new HtmlDocument();
-            _doc.Load(new StringReader(_details.ResponseText));
+            _doc.Load(new StringReader(Details.ResponseText));
         }
 
         [When(@"I am redirected")]
         public void WhenIAmRedirected() {
             var urlPath = "";
-            if (_details.ResponseHeaders.TryGetValue("Location", out urlPath)) {
+            if (Details.ResponseHeaders.TryGetValue("Location", out urlPath)) {
                 WhenIGoTo(urlPath);
             }
             else {
@@ -189,13 +194,13 @@ namespace Orchard.Specs.Bindings {
 
         [Then(@"the status should be (.*) (.*)")]
         public void ThenTheStatusShouldBe(int statusCode, string statusDescription) {
-            Assert.That(_details.StatusCode, Is.EqualTo(statusCode));
-            Assert.That(_details.StatusDescription, Is.EqualTo(statusDescription));
+            Assert.That(Details.StatusCode, Is.EqualTo(statusCode));
+            Assert.That(Details.StatusDescription, Is.EqualTo(statusDescription));
         }
 
         [Then(@"I should see ""(.*)""")]
         public void ThenIShouldSee(string text) {
-            Assert.That(_details.ResponseText, Is.StringContaining(text));
+            Assert.That(Details.ResponseText, Is.StringContaining(text));
         }
 
         [Then(@"the title contains ""(.*)""")]
