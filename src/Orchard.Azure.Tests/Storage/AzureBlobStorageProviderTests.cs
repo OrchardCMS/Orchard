@@ -7,6 +7,7 @@ using Orchard.Azure.Storage;
 using Microsoft.WindowsAzure;
 using System.Linq;
 using Microsoft.WindowsAzure.StorageClient;
+using System.Text;
 
 namespace Orchard.Azure.Tests.Storage {
     [TestFixture]
@@ -36,7 +37,7 @@ namespace Orchard.Azure.Tests.Storage {
             CloudStorageAccount devAccount;
             CloudStorageAccount.TryParse("UseDevelopmentStorage=true", out devAccount);
 
-            _azureBlobStorageProvider = new AzureBlobStorageProvider("default", false, devAccount);
+            _azureBlobStorageProvider = new AzureBlobStorageProvider("default", devAccount);
         }
 
         [TestFixtureTearDown]
@@ -186,5 +187,25 @@ namespace Orchard.Azure.Tests.Storage {
             Assert.AreEqual(1, _azureBlobStorageProvider.ListFiles("folder1/folder4/folder3").Count());
         }
 
+        [Test]
+        public void ShouldReadWriteFiles() {
+            const string teststring = "This is a test string.";
+
+            var foo = _azureBlobStorageProvider.CreateFile("folder1/foo.txt");
+
+            using(var stream = foo.OpenWrite())
+                using (var writer = new StreamWriter(stream))
+                    writer.Write(teststring);
+
+            Assert.AreEqual(22, foo.GetSize());
+
+            string content;
+            using ( var stream = foo.OpenRead() )
+            using ( var reader = new StreamReader(stream) ) {
+                content = reader.ReadToEnd();
+            }
+
+            Assert.AreEqual(teststring, content);
+        }
     }
 }

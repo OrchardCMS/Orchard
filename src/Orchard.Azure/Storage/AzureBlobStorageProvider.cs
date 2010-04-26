@@ -16,34 +16,24 @@ namespace Orchard.Azure.Storage
         public CloudBlobClient BlobClient { get; private set; }
         public CloudBlobContainer Container { get; private set; }
 
-        public AzureBlobStorageProvider(string containerName, bool isPrivate) : this(containerName, isPrivate, CloudStorageAccount.FromConfigurationSetting("DataConnectionString"))
+        public AzureBlobStorageProvider(string containerName) : this(containerName, CloudStorageAccount.FromConfigurationSetting("DataConnectionString"))
         {
         }
 
-        public AzureBlobStorageProvider(string containerName, bool isPrivate, CloudStorageAccount storageAccount)
+        public AzureBlobStorageProvider(string containerName, CloudStorageAccount storageAccount)
         {
             // Setup the connection to custom storage accountm, e.g. Development Storage
             _storageAccount = storageAccount;
-            InitBlobClient(containerName, isPrivate);
-        }
 
-        private void InitBlobClient(string containerName, bool isPrivate)
-        {
             BlobClient = _storageAccount.CreateCloudBlobClient();
             // Get and create the container if it does not exist
             // The container is named with DNS naming restrictions (i.e. all lower case)
             Container = BlobClient.GetContainerReference(containerName);
 
-            // Setup the permissions if the container is new
-            if (Container.CreateIfNotExist()) {
-                if (isPrivate) 
-                    Container.SetPermissions(new BlobContainerPermissions { PublicAccess = BlobContainerPublicAccessType.Off });
-                else 
-                    Container.SetPermissions(new BlobContainerPermissions { PublicAccess = BlobContainerPublicAccessType.Container });
-            }
+            Container.SetPermissions(new BlobContainerPermissions { PublicAccess = BlobContainerPublicAccessType.Container });
         }
 
-        private void EnsurePathIsRelative(string path) {
+        private static void EnsurePathIsRelative(string path) {
             if(path.StartsWith("/"))
                 throw new ArgumentException("Path must be relative");
         }
