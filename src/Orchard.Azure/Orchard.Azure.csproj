@@ -50,7 +50,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AzureHelper.cs" />
+    <Compile Include="CloudBlobContainerExtensions.cs" />
     <Compile Include="Environment\Configuration\AzureShellSettingsManager.cs" />
     <Compile Include="Storage\AzureBlobStorageProvider.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -10,37 +10,47 @@ namespace Orchard.Azure.Storage {
     public interface IDependency { }
 
     public class AzureBlobStorageProvider : IStorageProvider {
+        public const string ContainerName = "media"; // container names must be lower cased
+
         private readonly CloudStorageAccount _storageAccount;
+        private string _shellName;
         public CloudBlobClient BlobClient { get; private set; }
         public CloudBlobContainer Container { get; private set; }
 
-        public AzureBlobStorageProvider(string containerName)
-            : this(containerName, CloudStorageAccount.FromConfigurationSetting("DataConnectionString")) {
+        public AzureBlobStorageProvider(string shellName)
+            : this(shellName, CloudStorageAccount.FromConfigurationSetting("DataConnectionString")) {
         }
 
-        public AzureBlobStorageProvider(string containerName, CloudStorageAccount storageAccount) {
+        public AzureBlobStorageProvider(string shellName, CloudStorageAccount storageAccount) {
             // Setup the connection to custom storage accountm, e.g. Development Storage
             _storageAccount = storageAccount;
+
+            _shellName = shellName;
 
             BlobClient = _storageAccount.CreateCloudBlobClient();
             // Get and create the container if it does not exist
             // The container is named with DNS naming restrictions (i.e. all lower case)
-            Container = BlobClient.GetContainerReference(containerName);
+            Container = BlobClient.GetContainerReference(ContainerName);
             Container.CreateIfNotExist();
 
             Container.SetPermissions(new BlobContainerPermissions { PublicAccess = BlobContainerPublicAccessType.Container });
         }
 
+        private static void EnsurePathIsRelative(string path) {
+            if ( path.StartsWith("/") || path.StartsWith("http://"))
+                throw new ArgumentException("Path must be relative");
+        }
+
         public IStorageFile GetFile(string path) {
-            AzureHelper.EnsurePathIsRelative(path);
-            AzureHelper.EnsureBlobExists(Container, path);
+            EnsurePathIsRelative(path);
+            Container.EnsureBlobExists(path);
             return new AzureBlobFileStorage(Container.GetBlockBlobReference(path));
         }
 
         public IEnumerable<IStorageFile> ListFiles(string path) {
-            AzureHelper.EnsurePathIsRelative(path);
+            EnsurePathIsRelative(path);
 
-            string prefix = String.Concat(Container.Name, "/", path);
+            string prefix = String.Concat(Container.Name, "/", _shellName, "/", path);
             if ( !prefix.EndsWith("/") )
                 prefix += "/";
 
@@ -50,8 +60,10 @@ namespace Orchard.Azure.Storage {
         }
 
         public IEnumerable<IStorageFolder> ListFolders(string path) {
-            AzureHelper.EnsurePathIsRelative(path);
-            if ( !AzureHelper.DirectoryExists(Container, path) ) {
+            EnsurePathIsRelative(path);
+            path = String.Concat(_shellName, "/", path);
+
+            if ( !Container.DirectoryExists(path) ) {
                 try {
                     CreateFolder(path);
                 }
@@ -68,25 +80,31 @@ namespace Orchard.Azure.Storage {
         }
 
         public void CreateFolder(string path) {
-            AzureHelper.EnsurePathIsRelative(path);
-            AzureHelper.EnsureDirectoryDoesNotExist(Container, path);
+            EnsurePathIsRelative(path);
+            path = String.Concat(_shellName, "/", path);
+
+            Container.EnsureDirectoryDoesNotExist(path);
             Container.GetDirectoryReference(path);
         }
 
         public void DeleteFolder(string path) {
-            AzureHelper.EnsureDirectoryExists(Container, path);
+            EnsurePathIsRelative(path);
+            path = String.Concat(_shellName, "/", path);
+
+            Container.EnsureDirectoryExists(path);
             foreach ( var blob in Container.GetDirectoryReference(path).ListBlobs() ) {
                 if ( blob is CloudBlob )
                     ( (CloudBlob)blob ).Delete();
 
                 if ( blob is CloudBlobDirectory )
-                    DeleteFolder(blob.Uri.ToString());
+                    DeleteFolder(blob.Uri.ToString().Substring(Container.Uri.ToString().Length + 2 + _shellName.Length));
             }
         }
 
         public void RenameFolder(string path, string newPath) {
-            AzureHelper.EnsurePathIsRelative(path);
-            AzureHelper.EnsurePathIsRelative(newPath);
+            EnsurePathIsRelative(path);
+
+            EnsurePathIsRelative(newPath);
 
             if ( !path.EndsWith("/") )
                 path += "/";
@@ -94,7 +112,7 @@ namespace Orchard.Azure.Storage {
             if ( !newPath.EndsWith("/") )
                 newPath += "/";
 
-            foreach ( var blob in Container.GetDirectoryReference(path).ListBlobs() ) {
+            foreach ( var blob in Container.GetDirectoryReference(_shellName + "/" + path).ListBlobs() ) {
                 if ( blob is CloudBlob ) {
                     string filename = Path.GetFileName(blob.Uri.ToString());
                     string source = String.Concat(path, filename);
@@ -113,17 +131,23 @@ namespace Orchard.Azure.Storage {
         }
 
         public void DeleteFile(string path) {
-            AzureHelper.EnsurePathIsRelative(path);
-            AzureHelper.EnsureBlobExists(Container, path);
+            EnsurePathIsRelative(path);
+            path = String.Concat(_shellName, "/", path);
+
+            Container.EnsureBlobExists(path);
             var blob = Container.GetBlockBlobReference(path);
             blob.Delete();
         }
 
         public void RenameFile(string path, string newPath) {
-            AzureHelper.EnsurePathIsRelative(path);
-            AzureHelper.EnsurePathIsRelative(newPath);
-            AzureHelper.EnsureBlobExists(Container, path);
-            AzureHelper.EnsureBlobDoesNotExist(Container, newPath);
+            EnsurePathIsRelative(path);
+            path = String.Concat(_shellName, "/", path);
+
+            EnsurePathIsRelative(newPath);
+            newPath = String.Concat(_shellName, "/", newPath);
+
+            Container.EnsureBlobExists(path);
+            Container.EnsureBlobDoesNotExist(newPath);
 
             var blob = Container.GetBlockBlobReference(path);
             var newBlob = Container.GetBlockBlobReference(newPath);
@@ -132,8 +156,10 @@ namespace Orchard.Azure.Storage {
         }
 
         public IStorageFile CreateFile(string path) {
-            AzureHelper.EnsurePathIsRelative(path);
-            if ( AzureHelper.BlobExists(Container, path) ) {
+            EnsurePathIsRelative(path);
+            path = String.Concat(_shellName, "/", path);
+
+            if ( Container.BlobExists(path) ) {
                 throw new ArgumentException("File " + path + " already exists");
             }
 
@@ -220,13 +246,5 @@ namespace Orchard.Azure.Storage {
             }
         }
 
-        #region IStorageProvider Members
-
-
-        public string Combine(string path1, string path2) {
-            return AzureHelper.Combine(path1, path2);
-        }
-
-        #endregion
     }
 }
