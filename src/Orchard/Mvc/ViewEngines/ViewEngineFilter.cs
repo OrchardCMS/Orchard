@@ -52,10 +52,10 @@ namespace Orchard.Mvc.ViewEngines {
             }
 
 
-            var modules = _extensionManager.ActiveExtensions_Obsolete()
-                .Where(x => x.Descriptor.ExtensionType == "Module");
+            var modules = _extensionManager.AvailableExtensions()
+                .Where(x => x.ExtensionType == "Module");
 
-            var moduleLocations = modules.Select(x => Path.Combine(x.Descriptor.Location, x.Descriptor.Name));
+            var moduleLocations = modules.Select(x => Path.Combine(x.Location, x.Name));
             var moduleViewEngines = _viewEngineProviders
                 .Select(x => x.CreateModulesViewEngine(new CreateModulesViewEngineParams { VirtualPaths = moduleLocations }));
             Logger.Debug("Module locations:\r\n\t-{0}", string.Join("\r\n\t-", moduleLocations.ToArray()));
