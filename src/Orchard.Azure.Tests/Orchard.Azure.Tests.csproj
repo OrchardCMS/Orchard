@@ -53,6 +53,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AzureVirtualEnvironmentTest.cs" />
+    <Compile Include="Environment\Configuration\AzureShellSettingsManagerTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Storage\AzureBlobStorageProviderTests.cs" />
   </ItemGroup>

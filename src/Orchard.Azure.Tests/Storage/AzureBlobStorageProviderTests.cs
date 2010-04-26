@@ -11,74 +11,21 @@ using System.Text;
 
 namespace Orchard.Azure.Tests.Storage {
     [TestFixture]
-    public class AzureBlobStorageProviderTests {
+    public class AzureBlobStorageProviderTests : AzureVirtualEnvironmentTest {
 
-        #region Azure Environment initialization
+        private AzureBlobStorageProvider _azureBlobStorageProvider;
 
-        private Process _dsService;
-
-        [TestFixtureSetUp]
-        public void FixtureSetup() {
-            var count = Process.GetProcessesByName("DSService").Length;
-            if (count == 0)
-            {
-                var start = new ProcessStartInfo
-                                {
-                                    Arguments = "/devstore:start",
-                                    FileName =
-                                        Path.Combine(ConfigurationManager.AppSettings["AzureSDK"], @"bin\csrun.exe")
-                                };
-
-                _dsService = new Process { StartInfo = start };
-                _dsService.Start();
-                _dsService.WaitForExit();
-            }
-
+        protected override void OnInit() {
             CloudStorageAccount devAccount;
             CloudStorageAccount.TryParse("UseDevelopmentStorage=true", out devAccount);
 
             _azureBlobStorageProvider = new AzureBlobStorageProvider("default", devAccount);
         }
 
-        [TestFixtureTearDown]
-        public void FixtureTearDown() {
-
-            if(_dsService != null)
-                _dsService.Close();
-        }
-
         [SetUp]
         public void Setup() {
             // ensure default container is empty before running any test
-            DeleteAllBlobs();
-        }
-        
-        #endregion
-
-        private AzureBlobStorageProvider _azureBlobStorageProvider;
-
-        private void DeleteAllBlobs() {
-            foreach(var blob in _azureBlobStorageProvider.Container.ListBlobs()) {
-                if(blob is CloudBlob) {
-                    ((CloudBlob) blob).DeleteIfExists();
-                }
-
-                if (blob is CloudBlobDirectory) {
-                    DeleteAllBlobs((CloudBlobDirectory)blob);
-                }
-            }
-        }
-
-        private static void DeleteAllBlobs(CloudBlobDirectory cloudBlobDirectory) {
-            foreach (var blob in cloudBlobDirectory.ListBlobs()) {
-                if (blob is CloudBlob) {
-                    ((CloudBlob)blob).DeleteIfExists();
-                }
-
-                if (blob is CloudBlobDirectory) {
-                    DeleteAllBlobs((CloudBlobDirectory)blob);
-                }
-            }
+            DeleteAllBlobs(_azureBlobStorageProvider.Container);
         }
 
         [Test]
@@ -131,8 +78,7 @@ namespace Orchard.Azure.Tests.Storage {
         }
 
         [Test]
-        public void CreateFileShouldBeFolderAgnostic()
-        {
+        public void CreateFileShouldBeFolderAgnostic() {
             _azureBlobStorageProvider.CreateFile("foo.txt");
             _azureBlobStorageProvider.CreateFile("folder/foo.txt");
             _azureBlobStorageProvider.CreateFile("folder/folder/foo.txt");
@@ -193,9 +139,9 @@ namespace Orchard.Azure.Tests.Storage {
 
             var foo = _azureBlobStorageProvider.CreateFile("folder1/foo.txt");
 
-            using(var stream = foo.OpenWrite())
-                using (var writer = new StreamWriter(stream))
-                    writer.Write(teststring);
+            using ( var stream = foo.OpenWrite() )
+            using ( var writer = new StreamWriter(stream) )
+                writer.Write(teststring);
 
             Assert.AreEqual(22, foo.GetSize());
 
