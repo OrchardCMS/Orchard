@@ -103,6 +103,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Bindings\BindingBase.cs" />
+    <Compile Include="Bindings\CommandLine.cs" />
     <Compile Include="Bindings\OrchardSiteFactory.cs" />
     <Compile Include="Hosting\MessageSink.cs" />
     <Compile Include="Hosting\HostingTraceListener.cs" />
@@ -158,7 +159,7 @@
     <Content Include="Hosting\Orchard.Web\Themes\Web.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Hosting\Orchard.Web\Config\Sites.Default.config">
+    <Content Include="Hosting\Orchard.Web\Config\Sites.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <None Include="Hosting\Orchard.Web\Config\Diagnostics.config">
@@ -247,6 +248,10 @@
     <ProjectReference Include="..\Orchard\Orchard.Framework.csproj">
       <Project>{2D1D92BB-4555-4CBE-8D0E-63563D6CE4C6}</Project>
       <Name>Orchard.Framework</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Tools\Orchard\Orchard.csproj">
+      <Project>{33B1BC8D-E292-4972-A363-22056B207156}</Project>
+      <Name>Orchard</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

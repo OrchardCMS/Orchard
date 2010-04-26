@@ -74,3 +74,11 @@ Scenario: A new tenant runs the setup
 			And I go to "/Default.aspx"
 	Then I should see "<h1>Scott Site</h1>"
 		And I should see "Welcome, <strong>admin</strong>!"
+
+Scenario: Listing tenants from command line
+	Given I have installed Orchard
+		And I have installed "Orchard.MultiTenancy"
+		And I have tenant "Alpha" on "example.org" as "New-site-name"
+	When I execute >orchard tenant list
+	Then I should see "Name: Alpha"
+		And I should see "Request Url Host: example.org"

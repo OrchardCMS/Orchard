@@ -87,9 +87,13 @@ namespace Orchard.Environment.ShellBuilders {
                             .InjectActionInvoker();
                     }
 
-                    var optionalHostConfig = HostingEnvironment.MapPath("~/Config/Sites." + settings.Name + ".config");
-                    if (File.Exists(optionalHostConfig))
-                        builder.RegisterModule(new ConfigurationSettingsReader(ConfigurationSettingsReader.DefaultSectionName, optionalHostConfig));
+                    var optionalShellConfig = HostingEnvironment.MapPath("~/Config/Sites.config");
+                    if (File.Exists(optionalShellConfig))
+                        builder.RegisterModule(new ConfigurationSettingsReader(ConfigurationSettingsReader.DefaultSectionName, optionalShellConfig));
+
+                    var optionalShellByNameConfig = HostingEnvironment.MapPath("~/Config/Sites." + settings.Name + ".config");
+                    if (File.Exists(optionalShellByNameConfig))
+                        builder.RegisterModule(new ConfigurationSettingsReader(ConfigurationSettingsReader.DefaultSectionName, optionalShellByNameConfig));
                 });
         }
 

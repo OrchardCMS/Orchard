@@ -17,7 +17,8 @@ namespace Orchard.Specs.Hosting {
             }
             protected override IPersistenceConfigurer GetPersistenceConfigurer(bool createDatabase) {
                 var config = (SQLiteConfiguration)base.GetPersistenceConfigurer(createDatabase);
-                return config.ShowSql();
+                //config.ShowSql();
+                return config;
             }
         }
     }
