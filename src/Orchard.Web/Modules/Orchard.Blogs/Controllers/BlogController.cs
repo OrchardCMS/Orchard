@@ -98,7 +98,7 @@ namespace Orchard.Blogs.Controllers {
 
             var options = new XElement(
                 XName.Get("service", manifestUri),
-                new XElement(XName.Get("engineName", manifestUri), "Orchar CMS"),
+                new XElement(XName.Get("engineName", manifestUri), "Orchard CMS"),
                 new XElement(XName.Get("engineLink", manifestUri), "http://orchardproject.net"),
                 new XElement(XName.Get("homePageLink", manifestUri), "http://orchardproject.net"),
                 new XElement(XName.Get("apis", manifestUri),
