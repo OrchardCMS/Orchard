@@ -15,11 +15,8 @@ namespace Orchard.Commands {
         public void Execute(CommandParameters parameters) {
             var matches = MatchCommands(parameters);
 
-            // Workaround autofac integration: module registration is currently run twice...
-            //if (matches.Count() == 1) {
-            //  var match = matches.Single();
-            if (matches.Count() == 1 || matches.Count() == 2) {
-                var match = matches.First();
+            if (matches.Count() == 1) {
+                var match = matches.Single();
                 match.CommandHandlerFactory().Execute(match.Context);
             }
             else if (matches.Any()) {
@@ -31,10 +28,7 @@ namespace Orchard.Commands {
         }
 
         public IEnumerable<CommandDescriptor> GetCommandDescriptors() {
-            return _handlers
-                .SelectMany(h => GetDescriptor(h.Metadata).Commands)
-                // Workaround autofac integration: module registration is currently run twice...
-                .Distinct(new CommandsComparer());
+            return _handlers.SelectMany(h => GetDescriptor(h.Metadata).Commands);
         }
 
         private IEnumerable<Match> MatchCommands(CommandParameters parameters) {
@@ -77,16 +71,6 @@ namespace Orchard.Commands {
         private class Match {
             public CommandContext Context { get; set; }
             public Func<ICommandHandler> CommandHandlerFactory { get; set; }
-        }
-
-        public class CommandsComparer : IEqualityComparer<CommandDescriptor> {
-            public bool Equals(CommandDescriptor x, CommandDescriptor y) {
-                return x.MethodInfo.Equals(y.MethodInfo);
-            }
-
-            public int GetHashCode(CommandDescriptor obj) {
-                return obj.MethodInfo.GetHashCode();
-            }
         }
     }
 }
