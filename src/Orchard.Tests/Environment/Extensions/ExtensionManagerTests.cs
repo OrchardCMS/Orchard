@@ -256,7 +256,7 @@ features:
         [Test]
         public void ExtensionManagerShouldThrowIfFeatureDoesNotExist() {
             var featureDescriptor = new FeatureDescriptor { Name = "NoSuchFeature" };
-            Assert.Throws<ArgumentException>(() => _manager.LoadFeature(featureDescriptor));
+            Assert.Throws<ArgumentException>(() => _manager.LoadFeatures(new [] { featureDescriptor }));
         }
 
         [Test]
@@ -302,8 +302,10 @@ features:
                 .SelectMany(x => x.Features)
                 .Single(x => x.Name == "TestFeature");
 
-            foreach (var type in extensionManager.LoadFeature(testFeature).ExportedTypes) {
-                Assert.That(type == typeof(Phi));
+            foreach (var feature in extensionManager.LoadFeatures(new[] { testFeature })) {
+                foreach (var type in feature.ExportedTypes) {
+                    Assert.That(type == typeof(Phi));
+                }
             }
         }
 
@@ -328,9 +330,11 @@ features:
                 .SelectMany(x => x.Features)
                 .Single(x => x.Name == "TestModule");
 
-            foreach (var type in extensionManager.LoadFeature(testModule).ExportedTypes) {
-                Assert.That(type != typeof(Phi));
-                Assert.That((type == typeof(Alpha) || (type == typeof(Beta))));
+            foreach (var feature in extensionManager.LoadFeatures(new [] { testModule })) {
+                foreach (var type in feature.ExportedTypes) {
+                    Assert.That(type != typeof(Phi));
+                    Assert.That((type == typeof(Alpha) || (type == typeof(Beta))));
+                }
             }
         }
 

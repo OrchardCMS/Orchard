@@ -119,7 +119,7 @@ namespace Orchard.Environment.Extensions {
             return featureDescriptors;
         }
 
-        public Feature LoadFeature(FeatureDescriptor featureDescriptor) {
+        private Feature LoadFeature(FeatureDescriptor featureDescriptor) {
             var featureName = featureDescriptor.Name;
             string extensionName = GetExtensionForFeature(featureName);
             if (extensionName == null) throw new ArgumentException(T("Feature ") + featureName + T(" was not found in any of the installed extensions"));
