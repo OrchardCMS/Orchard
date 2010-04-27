@@ -10,9 +10,34 @@ namespace Orchard.Commands {
         }
 
         private IEnumerable<CommandDescriptor> CollectMethods(Type type) {
-            foreach (var methodInfo in type.GetMethods(BindingFlags.Instance | BindingFlags.Public | BindingFlags.DeclaredOnly)) {
+            var allMethods = type
+                .GetMethods(BindingFlags.Instance | BindingFlags.Public | BindingFlags.DeclaredOnly);
+
+            var allAccessors = type
+                .GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.DeclaredOnly)
+                .SelectMany(p => p.GetAccessors());
+
+            var allEventMethods = type
+                .GetEvents(BindingFlags.Instance | BindingFlags.Public | BindingFlags.DeclaredOnly)
+                .SelectMany(e => GetEventMethods(e));
+
+            var methods = allMethods.Except(allAccessors).Except(allEventMethods);
+
+            foreach (var methodInfo in methods) {
                 yield return BuildMethod(methodInfo);
             }
+        }
+
+        private IEnumerable<MethodInfo> GetEventMethods(EventInfo info) {
+            if (info.GetAddMethod() != null) 
+                yield return info.GetAddMethod();
+            if (info.GetRaiseMethod() != null) 
+                yield return info.GetRaiseMethod();
+            if (info.GetRemoveMethod() != null) 
+                yield return info.GetRemoveMethod();
+
+            foreach(var other in info.GetOtherMethods())
+                yield return other;
         }
 
         private CommandDescriptor BuildMethod(MethodInfo methodInfo) {
