@@ -17,7 +17,6 @@ namespace Orchard.Environment.Extensions {
         private readonly IEnumerable<IExtensionFolders> _folders;
         private readonly IEnumerable<IExtensionLoader> _loaders;
         private IEnumerable<ExtensionEntry> _activeExtensions;
-        //private readonly IRepository<ExtensionRecord> _extensionRepository;
 
         public Localizer T { get; set; }
         public ILogger Logger { get; set; }
@@ -25,11 +24,9 @@ namespace Orchard.Environment.Extensions {
         public ExtensionManager(
             IEnumerable<IExtensionFolders> folders,
             IEnumerable<IExtensionLoader> loaders
-            //IRepository<ExtensionRecord> extensionRepository
             ) {
             _folders = folders;
             _loaders = loaders.OrderBy(x => x.Order);
-            //_extensionRepository = extensionRepository;
             T = NullLocalizer.Instance;
             Logger = NullLogger.Instance;
         }
@@ -224,7 +221,6 @@ namespace Orchard.Environment.Extensions {
 
         private IEnumerable<ExtensionEntry> BuildActiveExtensions() {
             foreach (var descriptor in AvailableExtensions()) {
-                //_extensionRepository.Create(new ExtensionRecord { Name = descriptor.Name });
                 // Extensions that are Themes don't have buildable components.
                 if (String.Equals(descriptor.ExtensionType, "Module", StringComparison.OrdinalIgnoreCase)) {
                     yield return BuildEntry(descriptor);
@@ -232,15 +228,7 @@ namespace Orchard.Environment.Extensions {
             }
         }
 
-        private bool IsExtensionEnabled(string name) {
-            //ExtensionRecord extensionRecord = _extensionRepository.Get(x => x.Name == name);
-            //if (extensionRecord.Enabled) return true;
-            //return false;
-            return true;
-        }
-
         private ExtensionEntry BuildEntry(ExtensionDescriptor descriptor) {
-            if (!IsExtensionEnabled(descriptor.Name)) return null;
             foreach (var loader in _loaders) {
                 var entry = loader.Load(descriptor);
                 if (entry != null)
