@@ -17,7 +17,7 @@ namespace Orchard.MultiTenancy.Commands {
         [OrchardSwitch]
         public string UrlPrefix { get; set; }
 
-        [CommandHelp("tenant list: Display current tenants of a site")]
+        [CommandHelp("tenant list\r\n\t" + "Display current tenants of a site")]
         [CommandName("tenant list")]
         public void List() {
             Context.Output.WriteLine(T("List of tenants"));
@@ -36,8 +36,8 @@ namespace Orchard.MultiTenancy.Commands {
             }
         }
 
-        [CommandHelp("tenant add <tenantName> /Host:<hostname> /UrlPrefix:<url prefix>" + 
-            ": create new tenant named <tenantName> on the site")]
+        [CommandHelp("tenant add <tenantName> /Host:<hostname> /UrlPrefix:<url prefix>\r\n\t" + 
+            "Create new tenant named <tenantName> on the site")]
         [CommandName("tenant add")]
         public void Create(string tenantName) {
             Context.Output.WriteLine(T("Creating tenant"));
@@ -50,7 +50,7 @@ namespace Orchard.MultiTenancy.Commands {
                     });
         }
 
-        [CommandHelp("tenant info <tenantName>: Display settings for a tenant")]
+        [CommandHelp("tenant info <tenantName>\r\n\t" + "Display settings for a tenant")]
         [CommandName("tenant info")]
         public void Info(string tenantName) {
             ShellSettings tenant = _tenantService.GetTenants().Where(x => x.Name == tenantName).FirstOrDefault();

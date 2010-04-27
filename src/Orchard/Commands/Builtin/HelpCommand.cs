@@ -11,23 +11,30 @@ namespace Orchard.Commands.Builtin {
         }
 
         [CommandName("help commands")]
-        [CommandHelp("help commands: Display help text for all available commands")]
+        [CommandHelp("help commands\r\n\t" + "Display help text for all available commands")]
         public void AllCommands() {
             Context.Output.WriteLine(T("List of available commands:"));
             Context.Output.WriteLine(T("---------------------------"));
+            Context.Output.WriteLine();
 
             var descriptors = _commandManager.GetCommandDescriptors();
             foreach (var descriptor in descriptors) {
                 Context.Output.WriteLine(GetHelpText(descriptor));
+                Context.Output.WriteLine();
             }
         }
 
         private LocalizedString GetHelpText(CommandDescriptor descriptor) {
-            return string.IsNullOrEmpty(descriptor.HelpText) ? T("[no help text]") : T(descriptor.HelpText);
+            if (string.IsNullOrEmpty(descriptor.HelpText)) {
+                return T("{0}: no help text",
+                         descriptor.MethodInfo.DeclaringType.FullName + "." + descriptor.MethodInfo.Name);
+            }
+
+            return T(descriptor.HelpText);
         }
 
         [CommandName("help")]
-        [CommandHelp("help <command>: Display help text for <command>")]
+        [CommandHelp("help <command>\r\n\t" + "Display help text for <command>")]
         public void SingleCommand(string[] commandNameStrings) {
             string command = string.Join(" ", commandNameStrings);
             var descriptor = _commandManager.GetCommandDescriptors().SingleOrDefault(d => string.Equals(command, d.Name, StringComparison.OrdinalIgnoreCase));
