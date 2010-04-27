@@ -8,7 +8,9 @@ namespace Orchard.Modules {
             builder.Add("Modules", "10",
                         menu => menu
                                     .Add("Manage Modules", "1.0", item => item.Action("Index", "Admin", new { area = "Orchard.Modules" })
-                                                                             .Permission(Permissions.ManageModules)));
+                                        .Permission(Permissions.ManageModules))
+                                    .Add("Manage Features", "2.0", item => item.Action("Features", "Admin", new { area = "Orchard.Modules" })
+                                        .Permission(Permissions.ManageFeatures)));
         }
     }
 }
