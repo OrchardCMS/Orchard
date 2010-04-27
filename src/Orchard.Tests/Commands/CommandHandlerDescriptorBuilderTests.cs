@@ -58,6 +58,18 @@ namespace Orchard.Tests.Commands {
             private void Blah() {
             }
 
+            // no private method
+            public static void Foo() {
+            }
+
+            // no operator
+            public static bool operator ==(PublicMethodsOnly a, PublicMethodsOnly b) {
+                return false;
+            }
+            public static bool operator !=(PublicMethodsOnly a, PublicMethodsOnly b) {
+                return false;
+            }
+
             public void Method() {
             }
         }
