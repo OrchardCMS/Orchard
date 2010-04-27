@@ -84,7 +84,7 @@ namespace Orchard.Setup.Controllers {
                     DataTablePrefix = model.DatabaseTablePrefix,
                 };
 
-                // The vanilla Orchard distibution has the following modules enabled.
+                // The vanilla Orchard distibution has the following features enabled.
                 const string hardcoded =
                     @"Orchard.Framework,
                     Common,Dashboard,Feeds,HomePage,Navigation,Scheduling,Settings,XmlRpc,
