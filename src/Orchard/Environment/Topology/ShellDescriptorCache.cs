@@ -18,14 +18,14 @@ namespace Orchard.Environment.Topology {
         /// Recreate the named configuration information. Used at startup. 
         /// Returns null on cache-miss.
         /// </summary>
-        ShellDescriptor Fetch(string name);
+        ShellDescriptor Fetch(string shellName);
 
         /// <summary>
         /// Commit named configuration to reasonable persistent storage.
         /// This storage is scoped to the current-server and current-webapp.
         /// Loss of storage is expected.
         /// </summary>
-        void Store(string name, ShellDescriptor descriptor);
+        void Store(string shellName, ShellDescriptor descriptor);
     }
 
     public class ShellDescriptorCache : IShellDescriptorCache {
