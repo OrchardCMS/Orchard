@@ -39,6 +39,7 @@ namespace Orchard.MultiTenancy.Commands {
         [CommandHelp("tenant add <tenantName> /Host:<hostname> /UrlPrefix:<url prefix>" + 
             ": create new tenant named <tenantName> on the site")]
         [CommandName("tenant add")]
+        [OrchardSwitches("Host,UrlPrefix")]
         public void Create(string tenantName) {
             Context.Output.WriteLine(T("Creating tenant"));
             _tenantService.CreateTenant(
