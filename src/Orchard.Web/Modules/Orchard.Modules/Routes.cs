@@ -7,9 +7,11 @@ using Orchard.Mvc.Routes;
 namespace Orchard.Modules {
     public class Routes : IRouteProvider {
         private readonly IModuleNameConstraint _moduleNameConstraint;
+        private readonly IFeatureNameConstraint _featureNameConstraint;
 
-        public Routes(IModuleNameConstraint moduleNameConstraint) {
+        public Routes(IModuleNameConstraint moduleNameConstraint, IFeatureNameConstraint featureNameConstraint) {
             _moduleNameConstraint = moduleNameConstraint;
+            _featureNameConstraint = featureNameConstraint;
         }
 
         public IEnumerable<RouteDescriptor> GetRoutes() {
@@ -24,6 +26,38 @@ namespace Orchard.Modules {
                                                                                   },
                                                          new RouteValueDictionary {
                                                                                       {"moduleName", _moduleNameConstraint}
+                                                                                  },
+                                                         new RouteValueDictionary {
+                                                                                      {"area", "Orchard.Modules"}
+                                                                                  },
+                                                         new MvcRouteHandler())
+                                                 },
+                             new RouteDescriptor {
+                                                     Route = new Route(
+                                                         "Admin/Modules/Enable/{featureName}",
+                                                         new RouteValueDictionary {
+                                                                                      {"area", "Orchard.Modules"},
+                                                                                      {"controller", "Admin"},
+                                                                                      {"action", "Enable"}
+                                                                                  },
+                                                         new RouteValueDictionary {
+                                                                                      {"featureName", _featureNameConstraint}
+                                                                                  },
+                                                         new RouteValueDictionary {
+                                                                                      {"area", "Orchard.Modules"}
+                                                                                  },
+                                                         new MvcRouteHandler())
+                                                 },
+                             new RouteDescriptor {
+                                                     Route = new Route(
+                                                         "Admin/Modules/Disable/{featureName}",
+                                                         new RouteValueDictionary {
+                                                                                      {"area", "Orchard.Modules"},
+                                                                                      {"controller", "Admin"},
+                                                                                      {"action", "Disable"}
+                                                                                  },
+                                                         new RouteValueDictionary {
+                                                                                      {"featureName", _featureNameConstraint}
                                                                                   },
                                                          new RouteValueDictionary {
                                                                                       {"area", "Orchard.Modules"}

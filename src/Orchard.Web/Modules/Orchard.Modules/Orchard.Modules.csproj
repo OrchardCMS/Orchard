@@ -63,7 +63,9 @@
   <ItemGroup>
     <Compile Include="AdminMenu.cs" />
     <Compile Include="Controllers\AdminController.cs" />
-    <Compile Include="ViewModels\FeatureListViewModel.cs" />
+    <Compile Include="Models\ModuleFeature.cs" />
+    <Compile Include="Routing\FeatureNameConstraint.cs" />
+    <Compile Include="ViewModels\FeaturesViewModel.cs" />
     <Compile Include="Models\Module.cs" />
     <Compile Include="Permissions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -85,6 +87,8 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\Admin\images\disabled.gif" />
+    <Content Include="Content\Admin\images\enabled.gif" />
     <Content Include="Views\Admin\Features.ascx" />
     <Content Include="Views\Admin\Edit.ascx" />
     <Content Include="Views\Web.config" />

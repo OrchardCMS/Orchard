@@ -191,6 +191,7 @@
     <Compile Include="Environment\Extensions\OrchardFeatureAttribute.cs" />
     <Compile Include="Environment\Extensions\ShellTopology.cs" />
     <Compile Include="Modules\IModule.cs" />
+    <Compile Include="Modules\IModuleFeature.cs" />
     <Compile Include="Modules\IModuleService.cs" />
     <Compile Include="Mvc\AntiForgery\ValidateAntiForgeryTokenOrchardAttribute.cs" />
     <Compile Include="Mvc\Extensions\ControllerExtensions.cs" />

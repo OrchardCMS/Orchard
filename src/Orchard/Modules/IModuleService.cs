@@ -8,7 +8,8 @@ namespace Orchard.Modules {
         IEnumerable<IModule> GetInstalledModules();
         void InstallModule(HttpPostedFileBase file);
         void UninstallModule(string moduleName);
-        IEnumerable<Feature> GetAvailableFeatures();
+        IModule GetModuleByFeatureName(string featureName);
+        IEnumerable<IModuleFeature> GetAvailableFeatures();
         void EnableFeatures(IEnumerable<string> featureNames);
         void DisableFeatures(IEnumerable<string> featureNames);
     }
