@@ -79,6 +79,6 @@ Scenario: Listing tenants from command line
 	Given I have installed Orchard
 		And I have installed "Orchard.MultiTenancy"
 		And I have tenant "Alpha" on "example.org" as "New-site-name"
-	When I execute >orchard tenant list
+	When I execute >tenant list
 	Then I should see "Name: Alpha"
 		And I should see "Request Url Host: example.org"
