@@ -14,6 +14,7 @@ namespace Orchard {
         private readonly TextWriter _output;
         private readonly string[] _args;
         private OrchardParameters _arguments;
+        private Logger _logger;
 
         public OrchardHost(TextReader input, TextWriter output, string[] args) {
             _input = input;
@@ -33,7 +34,7 @@ namespace Orchard {
                 _output.WriteLine("Error:");
                 for (; e != null; e = e.InnerException) {
                     _output.WriteLine("  {0}", e.Message);
-                    if (Verbose) {
+                    if (_logger != null) {
                         _output.WriteLine("   Stacktrace:");
                         _output.WriteLine("{0}", e.StackTrace);
                         _output.WriteLine();
@@ -45,7 +46,25 @@ namespace Orchard {
 
         private int DoRun() {
             _arguments = new OrchardParametersParser().Parse(new CommandParametersParser().Parse(_args));
-            if (!_arguments.Arguments.Any() || _arguments.Switches.ContainsKey("?")) {
+            _logger = new Logger(_arguments.Verbose, _output);
+
+            // Perform some argument validation and display usage if something is incorrect
+            bool showHelp = _arguments.Switches.ContainsKey("?");
+            if (!showHelp) {
+                showHelp = (!_arguments.Arguments.Any() && !_arguments.ResponseFiles.Any());
+                if (showHelp) {
+                    _output.WriteLine("Incorrect syntax: A command or a response file must be specified");
+                }
+            }
+
+            if (!showHelp) {
+                showHelp = (_arguments.Arguments.Any() && _arguments.ResponseFiles.Any());
+                if (showHelp) {
+                    _output.WriteLine("Incorrect syntax: Response files cannot be used in conjunction with commands");
+                }
+            }
+
+            if (showHelp) {
                 return GeneralHelp();
             }
 
@@ -65,10 +84,20 @@ namespace Orchard {
             var host = (CommandHost)CreateWorkerAppDomainWithHost(_arguments.VirtualPath, orchardDirectory.FullName, typeof(CommandHost));
 
             LogInfo("Executing command in ASP.NET AppDomain...");
-            var result = host.RunCommand(_input, _output, _arguments);
+            var result = Execute(host);
             LogInfo("Return code for command: {0}", result);
 
             return result;
+        }
+
+        private int Execute(CommandHost host) {
+            if (_arguments.ResponseFiles.Any()) {
+                var responseLines = new ResponseFiles.ResponseFiles().ReadFiles(_arguments.ResponseFiles);
+                return host.RunCommands(_input, _output, _logger, responseLines.ToArray());
+            }
+            else {
+                return host.RunCommand(_input, _output, _logger, _arguments);
+            }
         }
 
         private int GeneralHelp() {
@@ -76,6 +105,7 @@ namespace Orchard {
             _output.WriteLine("");
             _output.WriteLine("Usage:");
             _output.WriteLine("   orchard.exe command [arg1] ... [argn] [/switch1[:value1]] ... [/switchn[:valuen]]");
+            _output.WriteLine("   orchard.exe @response-file1 ... [@response-filen] [/switch1[:value1]] ... [/switchn[:valuen]]");
             _output.WriteLine("");
             _output.WriteLine("   command");
             _output.WriteLine("       Specify the command to execute");
@@ -86,6 +116,10 @@ namespace Orchard {
             _output.WriteLine("   [/switch1[:value1]] ... [/switchn[:valuen]]");
             _output.WriteLine("       Specify switches to apply to the command. Available switches generally ");
             _output.WriteLine("       depend on the command executed, with the exception of a few built-in ones.");
+            _output.WriteLine("");
+            _output.WriteLine("   [@response-file1] ... [@response-filen]");
+            _output.WriteLine("       Specify one or more response files to be used for reading commands and switches.");
+            _output.WriteLine("       A response file is a text file that contains one line per command to execute.");
             _output.WriteLine("");
             _output.WriteLine("   Built-in commands");
             _output.WriteLine("   =================");
@@ -119,10 +153,8 @@ namespace Orchard {
         }
 
         private void LogInfo(string format, params object[] args) {
-            if (Verbose) {
-                _output.Write("{0}: ", DateTime.Now);
-                _output.WriteLine(format, args);
-            }
+            if (_logger != null)
+                _logger.LogInfo(format, args);
         }
 
         private DirectoryInfo GetOrchardDirectory(string directory) {
