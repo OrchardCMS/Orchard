@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
@@ -25,6 +26,10 @@ namespace Orchard.Tests.Stubs {
         public override HttpRequestBase Request {
             get { return new StubHttpRequest(this); }
         }
+        public override HttpResponseBase Response {
+            get { return new StubHttpResponse(this); }
+        }
+
 
         public override IDictionary Items {
             get { return _items; }
@@ -56,7 +61,18 @@ namespace Orchard.Tests.Stubs {
                         ?? new NameValueCollection { { "HTTP_HOST", _httpContext._hostHeader } };
                 }
             }
-
         }
+
+        class StubHttpResponse : HttpResponseBase {
+            private readonly StubHttpContext _httpContext;
+
+            public StubHttpResponse(StubHttpContext httpContext) {
+                _httpContext = httpContext;
+            }
+            public override string ApplyAppPathModifier(string virtualPath) {
+                return "~/" + virtualPath.TrimStart('/');
+            }
+        }
+
     }
 }

@@ -47,22 +47,10 @@ namespace Orchard.Specs.Bindings {
                         descriptor.EnabledFeatures.Concat(new[] { new ShellFeature { Name = name } }),
                         descriptor.Parameters);
                 }
-
-                Trace.WriteLine("This call to Host.Reinitialize should not be needed, eventually");
-                MvcApplication.Host.Reinitialize_Obsolete();
             });
 
         }
 
-
-        [When(@"I cycle the app domain")]
-        public void WhenICycleTheAppDomain() {
-            var webApp = Binding<WebAppHosting>();
-            webApp.Host.Execute(() => {
-                Trace.WriteLine("This call to Host.Reinitialize should not be needed, eventually");
-                MvcApplication.Host.Reinitialize_Obsolete();
-            });
-        }
 
         [Given(@"I have tenant ""(.*)\"" on ""(.*)\"" as ""(.*)\""")]
         public void GivenIHaveTenantOnSiteAsName(string shellName, string hostName, string siteName) {
@@ -76,7 +64,6 @@ namespace Orchard.Specs.Bindings {
                 using (var environment = MvcApplication.CreateStandaloneEnvironment("Default")) {
                     environment.Resolve<IShellSettingsManager>().SaveSettings(shellSettings);
                 }
-                MvcApplication.Host.Reinitialize_Obsolete();
             });
 
             webApp.WhenIGoToPathOnHost("Setup", hostName);

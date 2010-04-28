@@ -1,7 +1,9 @@
 ﻿using System.IO;
 using System.Linq;
+using Moq;
 using NUnit.Framework;
 using Orchard.Environment.Configuration;
+using Orchard.Events;
 
 namespace Orchard.Tests.Environment.Configuration {
     [TestFixture]
@@ -26,7 +28,7 @@ namespace Orchard.Tests.Environment.Configuration {
             
             _appData.CreateFile("Sites\\Default\\Settings.txt", "Name: Default\r\nDataProvider: SQLite\r\nDataConnectionString: something else");
 
-            IShellSettingsManager loader = new ShellSettingsManager(_appData);
+            IShellSettingsManager loader = new ShellSettingsManager(_appData, new Mock<IEventBus>().Object);
             var settings = loader.LoadSettings().Single();
             Assert.That(settings, Is.Not.Null);
             Assert.That(settings.Name, Is.EqualTo("Default"));
@@ -41,7 +43,7 @@ namespace Orchard.Tests.Environment.Configuration {
             _appData.CreateFile("Sites\\Default\\Settings.txt", "Name: Default\r\nDataProvider: SQLite\r\nDataConnectionString: something else");
             _appData.CreateFile("Sites\\Another\\Settings.txt", "Name: Another\r\nDataProvider: SQLite2\r\nDataConnectionString: something else2");
 
-            IShellSettingsManager loader = new ShellSettingsManager(_appData);
+            IShellSettingsManager loader = new ShellSettingsManager(_appData, new Mock<IEventBus>().Object);
             var settings = loader.LoadSettings();
             Assert.That(settings.Count(), Is.EqualTo(2));
 
@@ -59,8 +61,8 @@ namespace Orchard.Tests.Environment.Configuration {
         [Test]
         public void NewSettingsCanBeStored() {
             _appData.CreateFile("Sites\\Default\\Settings.txt", "Name: Default\r\nDataProvider: SQLite\r\nDataConnectionString: something else");
-            
-            IShellSettingsManager loader = new ShellSettingsManager(_appData);
+
+            IShellSettingsManager loader = new ShellSettingsManager(_appData, new Mock<IEventBus>().Object);
             var foo = new ShellSettings {Name = "Foo", DataProvider = "Bar", DataConnectionString = "Quux"};
 
             Assert.That(loader.LoadSettings().Count(), Is.EqualTo(1));

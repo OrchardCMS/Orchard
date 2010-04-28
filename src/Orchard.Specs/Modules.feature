@@ -19,6 +19,6 @@ Scenario: Edit module shows its features
 Scenario: Features of installed modules are listed
     Given I have installed Orchard
     When I go to "admin/modules/features"
-    Then I should see "<h2>Available Features</h2>"
+    Then I should see "<h1>Manage Features</h1>"
         And I should see "<h3>Common</h3>"
         And the status should be 200 OK
