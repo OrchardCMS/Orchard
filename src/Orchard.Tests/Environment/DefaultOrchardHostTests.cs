@@ -105,10 +105,6 @@ namespace Orchard.Tests.Environment {
                 }
             }
 
-            public Feature LoadFeature(FeatureDescriptor featureDescriptor) {
-                throw new NotImplementedException();
-            }
-
             public IEnumerable<ExtensionEntry> ActiveExtensions_Obsolete() {
                 throw new NotImplementedException();
             }

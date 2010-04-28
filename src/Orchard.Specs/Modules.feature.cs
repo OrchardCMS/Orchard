@@ -51,10 +51,10 @@ namespace Orchard.Specs
         }
         
         [NUnit.Framework.TestAttribute()]
-        [NUnit.Framework.DescriptionAttribute("Default modules are listed")]
-        public virtual void DefaultModulesAreListed()
+        [NUnit.Framework.DescriptionAttribute("Installed modules are listed")]
+        public virtual void InstalledModulesAreListed()
         {
-            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Default modules are listed", ((string[])(null)));
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Installed modules are listed", ((string[])(null)));
 #line 6
 this.ScenarioSetup(scenarioInfo);
 #line 7
@@ -62,11 +62,49 @@ this.ScenarioSetup(scenarioInfo);
 #line 8
  testRunner.When("I go to \"admin/modules\"");
 #line 9
- testRunner.Then("I should see \"Installed Modules\"");
+ testRunner.Then("I should see \"<h2>Installed Modules</h2>\"");
 #line 10
      testRunner.And("I should see \"<h3>Themes</h3>\"");
 #line 11
      testRunner.And("the status should be 200 OK");
+#line hidden
+            testRunner.CollectScenarioErrors();
+        }
+        
+        [NUnit.Framework.TestAttribute()]
+        [NUnit.Framework.DescriptionAttribute("Edit module shows its features")]
+        public virtual void EditModuleShowsItsFeatures()
+        {
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Edit module shows its features", ((string[])(null)));
+#line 13
+this.ScenarioSetup(scenarioInfo);
+#line 14
+    testRunner.Given("I have installed Orchard");
+#line 15
+    testRunner.When("I go to \"admin/modules/Edit/Orchard.Themes\"");
+#line 16
+    testRunner.Then("I should see \"<h1>Edit Module: Themes</h1>\"");
+#line 17
+        testRunner.And("the status should be 200 OK");
+#line hidden
+            testRunner.CollectScenarioErrors();
+        }
+        
+        [NUnit.Framework.TestAttribute()]
+        [NUnit.Framework.DescriptionAttribute("Features of installed modules are listed")]
+        public virtual void FeaturesOfInstalledModulesAreListed()
+        {
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Features of installed modules are listed", ((string[])(null)));
+#line 19
+this.ScenarioSetup(scenarioInfo);
+#line 20
+    testRunner.Given("I have installed Orchard");
+#line 21
+    testRunner.When("I go to \"admin/modules/features\"");
+#line 22
+    testRunner.Then("I should see \"<h2>Available Features</h2>\"");
+#line 23
+        testRunner.And("the status should be 200 OK");
 #line hidden
             testRunner.CollectScenarioErrors();
         }

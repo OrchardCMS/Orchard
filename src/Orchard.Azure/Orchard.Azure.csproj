@@ -44,8 +44,14 @@
     </Reference>
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
+    <Reference Include="YamlSerializer, Version=0.9.0.2, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\yaml\YamlSerializer.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CloudBlobContainerExtensions.cs" />
+    <Compile Include="Environment\Configuration\AzureShellSettingsManager.cs" />
     <Compile Include="Storage\AzureBlobStorageProvider.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

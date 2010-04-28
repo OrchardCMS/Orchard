@@ -68,10 +68,6 @@ namespace Orchard.Tests.Mvc.Routes {
                 throw new NotImplementedException();
             }
 
-            public Feature LoadFeature(FeatureDescriptor featureDescriptor) {
-                throw new NotImplementedException();
-            }
-
             public IEnumerable<ExtensionEntry> ActiveExtensions_Obsolete() {
                 yield return new ExtensionEntry {
                     Descriptor = new ExtensionDescriptor {
@@ -86,11 +82,6 @@ namespace Orchard.Tests.Mvc.Routes {
                     }
                 };
             }
-
-            public Feature LoadFeature(string featureName) {
-                throw new NotImplementedException();
-            }
-
 
             public void InstallExtension(string extensionType, HttpPostedFileBase extensionBundle) {
                 throw new NotImplementedException();
