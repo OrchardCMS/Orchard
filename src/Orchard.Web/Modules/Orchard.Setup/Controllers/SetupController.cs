@@ -173,9 +173,6 @@ namespace Orchard.Setup.Controllers {
 
                 _shellSettingsManager.SaveSettings(shellSettings);
 
-                // MultiTenancy: This will not be needed when host listens to event bus
-                _orchardHost.Reinitialize_Obsolete();
-
                 // redirect to the welcome page.
                 return Redirect("~/");
             }

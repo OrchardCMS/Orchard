@@ -27,6 +27,5 @@ namespace Orchard.Environment {
         /// Services may be resolved from within this instance to configure and initialize it's storage.
         /// </summary>
         IStandaloneEnvironment CreateStandaloneEnvironment(ShellSettings shellSettings);
-    }
-    
+    }    
 }

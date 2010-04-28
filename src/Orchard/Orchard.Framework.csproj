@@ -163,6 +163,7 @@
     <Compile Include="Data\SessionFactoryHolder.cs" />
     <Compile Include="Environment\AutofacUtil\LifetimeScopeContainer.cs" />
     <Compile Include="Environment\Configuration\TenantState.cs" />
+    <Compile Include="Environment\DefaultOrchardHostEventSink.cs" />
     <Compile Include="Environment\RunningShellTable.cs" />
     <Compile Include="Environment\AutofacUtil\DynamicProxy2\DynamicProxyContext.cs" />
     <Compile Include="Environment\AutofacUtil\DynamicProxy2\DynamicProxyExtensions.cs" />
