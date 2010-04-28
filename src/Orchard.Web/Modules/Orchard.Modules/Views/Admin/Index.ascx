@@ -2,8 +2,10 @@
 <%@ Import Namespace="Orchard.Mvc.Html"%>
 <%@ Import Namespace="Orchard.Modules.ViewModels"%>
 <h1><%=Html.TitleForPage(T("Manage Modules").ToString()) %></h1>
+<div class="manage"><%=Html.ActionLink(T("Install a module").ToString(), "Features", new { }, new { @class = "button primaryAction" })%></div>
 <h2><%=T("Installed Modules") %></h2>
 <% if (Model.Modules.Count() > 0) { %>
+<fieldset class="pageList">
 <ul class="contentItems blogs"><%
     foreach (var module in Model.Modules.OrderBy(m => m.DisplayName)) { %>
     <li>
@@ -21,5 +23,6 @@
         } %>
     </li><%
     } %>
-</ul><%
+</ul>
+</fieldset><%
  } %>

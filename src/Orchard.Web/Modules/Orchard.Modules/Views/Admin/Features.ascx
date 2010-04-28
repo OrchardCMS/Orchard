@@ -2,7 +2,7 @@
 <%@ Import Namespace="Orchard.Mvc.Html"%>
 <%@ Import Namespace="Orchard.Modules.ViewModels"%>
 <h1><%=Html.TitleForPage(T("Manage Features").ToString()) %></h1>
-<div class="manage"><%=Html.ActionLink(T("∞").ToString(), "Features", new { }, new { @class = "button primaryAction" })%></div>
+<div class="manage" style="visibility:hidden"><%=Html.ActionLink(T("∞").ToString(), "Features", new { }, new { @class = "button primaryAction" })%></div>
 <% if (Model.Features.Count() > 0) {
        
 using (Html.BeginFormAntiForgeryPost()) { %>
@@ -19,11 +19,11 @@ using (Html.BeginFormAntiForgeryPost()) { %>
     <fieldset class="pageList">
         <ul class="contentItems"><%
             foreach (var featureGroup in Model.Features.OrderBy(f => f.Descriptor.Name).GroupBy(f => f.Descriptor.Category)) { %>
-            <li>
+            <li<%=featureGroup == Model.Features.Last() ? " class=\"last\"" : "" %>>
                 <h2><%=Html.Encode(featureGroup.First().Descriptor.Category ?? T("General")) %></h2>
                 <ul><%
                     foreach (var feature in featureGroup) {%>
-                    <li>
+                    <li<%=feature == featureGroup.Last() ? " class=\"last\"" : "" %>>
                         <div class="summary">
                             <div class="properties">
                                 <input type="checkbox" name="selection" value="<%=Html.Encode(feature.Descriptor.Name) %>" />
@@ -40,18 +40,11 @@ using (Html.BeginFormAntiForgeryPost()) { %>
                                     </li><%
                                     //dependencies
                                     if (feature.Descriptor.Dependencies.Count() > 0) { %>
-                                    <li>&nbsp;&#124;&nbsp;
-                                        <%=_Encoded("Depends on: ") %><%
+                                    <li>&nbsp;&#124;&nbsp;<%=_Encoded("Depends on: ") %><%
                                         foreach (var dependency in feature.Descriptor.Dependencies) {
                                             %><% if (dependency != feature.Descriptor.Dependencies.First()) { %><%=_Encoded(", ") %><% }
                                             %><%=Html.Encode(dependency) %><%
                                         } %>
-                                    </li><%
-                                    } 
-                                    //dependencies == nothing <- temporary just to get some stuff in the UI
-                                    else { %>
-                                    <li>&nbsp;&#124;&nbsp;
-                                        <%=T("Depends on: <em>nothing</em>") %>
                                     </li><%
                                     } %>
                                 </ul>

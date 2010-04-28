@@ -1,8 +1,10 @@
 using System.Web.Mvc;
 using Orchard.Core.Common.Models;
 using Orchard.ContentManagement;
+using Orchard.Environment.Extensions;
 
 namespace Orchard.Blogs.Models {
+    [OrchardFeature("Blog")]
     public class Blog : ContentPart<BlogRecord> {
         [HiddenInput(DisplayValue = false)]
         public int Id { get { return ContentItem.Id; } }
