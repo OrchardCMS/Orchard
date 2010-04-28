@@ -137,7 +137,7 @@ namespace Orchard.Tests.Modules.Settings.Topology {
                 Enumerable.Empty<ShellFeature>(),
                 Enumerable.Empty<ShellParameter>());
 
-            Assert.That(eventBus.LastMessageName, Is.EqualTo(typeof(IShellDescriptorManager).FullName + ".UpdateShellDescriptor"));
+            Assert.That(eventBus.LastMessageName, Is.EqualTo("ShellDescriptor_Changed"));
         }
     }
 }
