@@ -12,20 +12,12 @@ namespace Orchard.MultiTenancy.Services {
             _orchardHost = orchardHost;
         }
 
-        #region Implementation of ITenantService
-
         public IEnumerable<ShellSettings> GetTenants() {
             return _shellSettingsManager.LoadSettings();
         }
 
         public void CreateTenant(ShellSettings settings) {
             _shellSettingsManager.SaveSettings(settings);
-
-
-            // MultiTenancy: This will not be needed when host listens to event bus
-            _orchardHost.Reinitialize_Obsolete();
         }
-
-        #endregion
     }
 }
