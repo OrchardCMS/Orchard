@@ -16,9 +16,6 @@ namespace Orchard.Core.Settings.Models {
         public string SiteSalt {
             get { return Record.SiteSalt; }
         }
-        public string SiteUrl {
-            get { return Record.SiteUrl; }
-        }
         public string SuperUser { 
             get { return Record.SuperUser; }
             set { Record.SuperUser = value; }
