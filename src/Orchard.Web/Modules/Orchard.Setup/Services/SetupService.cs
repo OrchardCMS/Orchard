@@ -132,9 +132,6 @@ namespace Orchard.Setup.Services {
             }
 
             _shellSettingsManager.SaveSettings(shellSettings);
-
-            // MultiTenancy: This will not be needed when host listens to event bus
-            _orchardHost.Reinitialize_Obsolete();
         }
     }
 }
