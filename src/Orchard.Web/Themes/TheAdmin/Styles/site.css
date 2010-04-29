@@ -607,6 +607,9 @@ button.ibutton {
 .contentItems li.first {
 	background:#fff url(images/backgroundGradient.gif) repeat-x top left;
 }
+.contentItems li li.last {
+    border-bottom:0;
+}
 #main .contentItems li h3 {
     border-bottom:0;
     margin-top:0;
@@ -753,6 +756,7 @@ table.items, textarea, input.text, input.text-box,
     margin-top:1em;
 }
 .summary {
+    overflow:auto;
     padding:1.2em .4em;
 }
 .actions {

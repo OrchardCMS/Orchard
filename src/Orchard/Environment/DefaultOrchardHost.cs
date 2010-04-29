@@ -1,7 +1,7 @@
+using System;
 using System.Linq;
 using System.Web.Mvc;
 using Autofac;
-using Autofac.Integration.Web;
 using System.Collections.Generic;
 using Orchard.Environment.Configuration;
 using Orchard.Environment.Extensions;
@@ -131,5 +131,13 @@ namespace Orchard.Environment {
             }
         }
 
+        public void Process(string messageName, IDictionary<string, string> eventData) {
+            if (messageName == "ShellSettings_Saved") {
+                _current = null;
+            }
+            else if (messageName == "ShellDescriptor_Changed") {
+                _current = null;
+            }
+        }
     }
 }

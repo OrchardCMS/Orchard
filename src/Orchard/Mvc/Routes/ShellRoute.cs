@@ -16,12 +16,15 @@ namespace Orchard.Mvc.Routes {
         private readonly ShellSettings _shellSettings;
         private readonly IContainer _container;
         private readonly IRunningShellTable _runningShellTable;
+        private UrlPrefix _urlPrefix;
 
         public ShellRoute(RouteBase route, ShellSettings shellSettings, ILifetimeScope shellLifetimeScope, IRunningShellTable runningShellTable) {
             _route = route;
             _shellSettings = shellSettings;
             _runningShellTable = runningShellTable;
             _container = new LifetimeScopeContainer(shellLifetimeScope);
+            if (!string.IsNullOrEmpty(_shellSettings.RequestUrlPrefix))
+                _urlPrefix = new UrlPrefix(_shellSettings.RequestUrlPrefix);
 
             var routeWithArea = route as IRouteWithArea;
             if (routeWithArea != null) {
@@ -45,8 +48,11 @@ namespace Orchard.Mvc.Routes {
             if (settings == null || settings.Name != _shellSettings.Name)
                 return null;
 
-            // route didn't match anyway
-            var routeData = _route.GetRouteData(httpContext);
+            var effectiveHttpContext = httpContext;
+            if (_urlPrefix != null)
+                effectiveHttpContext = new UrlPrefixAdjustedHttpContext(httpContext, _urlPrefix);
+
+            var routeData = _route.GetRouteData(effectiveHttpContext);
             if (routeData == null)
                 return null;
 
@@ -59,11 +65,23 @@ namespace Orchard.Mvc.Routes {
 
 
         public override VirtualPathData GetVirtualPath(RequestContext requestContext, RouteValueDictionary values) {
-            // todo - ignore conditionally
+            // locate appropriate shell settings for request
+            var settings = _runningShellTable.Match(requestContext.HttpContext);
 
-            var virtualPath = _route.GetVirtualPath(requestContext, values);
+            // only proceed if there was a match, and it was for this client
+            if (settings == null || settings.Name != _shellSettings.Name)
+                return null;
+
+            var effectiveRequestContext = requestContext;
+            if (_urlPrefix != null)
+                effectiveRequestContext = new RequestContext(new UrlPrefixAdjustedHttpContext(requestContext.HttpContext, _urlPrefix), requestContext.RouteData);
+
+            var virtualPath = _route.GetVirtualPath(effectiveRequestContext, values);
             if (virtualPath == null)
                 return null;
+
+            if (_urlPrefix != null)
+                virtualPath.VirtualPath = _urlPrefix.PrependLeadingSegments(virtualPath.VirtualPath);
 
             return virtualPath;
         }

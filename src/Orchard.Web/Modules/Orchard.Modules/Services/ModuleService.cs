@@ -4,19 +4,23 @@ using System.Linq;
 using System.Web;
 using Orchard.Environment.Extensions;
 using Orchard.Environment.Extensions.Models;
+using Orchard.Environment.Topology;
+using Orchard.Environment.Topology.Models;
 using Orchard.Modules.Models;
 
 namespace Orchard.Modules.Services {
     public class ModuleService : IModuleService {
         private const string ModuleExtensionType = "module";
         private readonly IExtensionManager _extensionManager;
+        private readonly IShellDescriptorManager _shellDescriptorManager;
 
-        public ModuleService(IExtensionManager extensionManager) {
+        public ModuleService(IExtensionManager extensionManager, IShellDescriptorManager shellDescriptorManager) {
             _extensionManager = extensionManager;
+            _shellDescriptorManager = shellDescriptorManager;
         }
 
         public IModule GetModuleByName(string moduleName) {
-            return _extensionManager.AvailableExtensions().Where(e => string.Equals(e.Name, moduleName, StringComparison.OrdinalIgnoreCase) && string.Equals(e.ExtensionType, "Module", StringComparison.OrdinalIgnoreCase)).Select(
+            return _extensionManager.AvailableExtensions().Where(e => string.Equals(e.Name, moduleName, StringComparison.OrdinalIgnoreCase) && string.Equals(e.ExtensionType, ModuleExtensionType, StringComparison.OrdinalIgnoreCase)).Select(
                 descriptor => AssembleModuleFromDescriptor(descriptor)).FirstOrDefault();
         }
 
@@ -35,24 +39,41 @@ namespace Orchard.Modules.Services {
             _extensionManager.UninstallExtension(ModuleExtensionType, moduleName);
         }
 
-        public IEnumerable<Feature> GetAvailableFeatures() {
+        public IModule GetModuleByFeatureName(string featureName) {
             return GetInstalledModules()
-                .Where(m => m.Features != null)
-                .SelectMany(m => _extensionManager.LoadFeatures(m.Features));
+                .Where(
+                m =>
+                m.Features.FirstOrDefault(f => string.Equals(f.Name, featureName, StringComparison.OrdinalIgnoreCase)) !=
+                null).FirstOrDefault();
+        }
+
+        public IEnumerable<IModuleFeature> GetAvailableFeatures() {
+            var enabledFeatures = _shellDescriptorManager.GetShellDescriptor().EnabledFeatures;
+            return GetInstalledModules()
+                .SelectMany(m => _extensionManager.LoadFeatures(m.Features))
+                .Select(f => AssembleModuleFromDescriptor(f, enabledFeatures.FirstOrDefault(sf => string.Equals(sf.Name, f.Descriptor.Name, StringComparison.OrdinalIgnoreCase)) != null));
         }
 
         public IEnumerable<Feature> GetAvailableFeaturesByModule(string moduleName) {
-            var module = GetModuleByName(moduleName);
-            if (module == null || module.Features == null)
-                return null;
-
-            return _extensionManager.LoadFeatures(module.Features);
+            throw new NotImplementedException();
         }
 
         public void EnableFeatures(IEnumerable<string> featureNames) {
+            var shellDescriptor = _shellDescriptorManager.GetShellDescriptor();
+
+            var enabledFeatures = shellDescriptor.EnabledFeatures
+                .Union(featureNames.Select(s => new ShellFeature {Name = s}));
+
+            _shellDescriptorManager.UpdateShellDescriptor(shellDescriptor.SerialNumber, enabledFeatures, shellDescriptor.Parameters);
         }
 
         public void DisableFeatures(IEnumerable<string> featureNames) {
+            var shellDescriptor = _shellDescriptorManager.GetShellDescriptor();
+
+            var enabledFeatures = shellDescriptor.EnabledFeatures.ToList();
+            enabledFeatures.RemoveAll(f => featureNames.Contains(f.Name));
+
+            _shellDescriptorManager.UpdateShellDescriptor(shellDescriptor.SerialNumber, enabledFeatures, shellDescriptor.Parameters);
         }
 
         private static IModule AssembleModuleFromDescriptor(ExtensionDescriptor extensionDescriptor) {
@@ -66,6 +87,13 @@ namespace Orchard.Modules.Services {
                                   Tags = extensionDescriptor.Tags,
                                   Features = extensionDescriptor.Features
                               };
+        }
+
+        private static IModuleFeature AssembleModuleFromDescriptor(Feature feature, bool isEnabled) {
+            return new ModuleFeature {
+                                         Descriptor = feature.Descriptor,
+                                         IsEnabled = isEnabled
+                                     };
         }
     }
 }

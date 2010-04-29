@@ -1,2 +1,7 @@
 ﻿name: Blogs
 antiforgery: enabled
+features:
+    Orchard.Blogs:
+        Description: A simple web log
+        Dependencies: Common, XmlRpc
+        Category: Blog

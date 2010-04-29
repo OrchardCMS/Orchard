@@ -102,8 +102,10 @@ this.ScenarioSetup(scenarioInfo);
 #line 21
     testRunner.When("I go to \"admin/modules/features\"");
 #line 22
-    testRunner.Then("I should see \"<h2>Available Features</h2>\"");
+    testRunner.Then("I should see \"<h1>Manage Features</h1>\"");
 #line 23
+        testRunner.And("I should see \"<h3>Common</h3>\"");
+#line 24
         testRunner.And("the status should be 200 OK");
 #line hidden
             testRunner.CollectScenarioErrors();

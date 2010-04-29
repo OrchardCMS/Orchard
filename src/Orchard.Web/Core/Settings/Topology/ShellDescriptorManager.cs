@@ -86,7 +86,7 @@ namespace Orchard.Core.Settings.Topology {
             }
 
             _eventBus.Notify(
-                typeof(IShellDescriptorManager).FullName + ".UpdateShellDescriptor",
+                "ShellDescriptor_Changed",
                 null);
         }
     }

@@ -163,6 +163,7 @@
     <Compile Include="Data\SessionFactoryHolder.cs" />
     <Compile Include="Environment\AutofacUtil\LifetimeScopeContainer.cs" />
     <Compile Include="Environment\Configuration\TenantState.cs" />
+    <Compile Include="Environment\DefaultOrchardHostEventSink.cs" />
     <Compile Include="Environment\RunningShellTable.cs" />
     <Compile Include="Environment\AutofacUtil\DynamicProxy2\DynamicProxyContext.cs" />
     <Compile Include="Environment\AutofacUtil\DynamicProxy2\DynamicProxyExtensions.cs" />
@@ -190,16 +191,22 @@
     <Compile Include="Environment\Extensions\Models\FeatureDescriptor.cs" />
     <Compile Include="Environment\Extensions\OrchardFeatureAttribute.cs" />
     <Compile Include="Modules\IModule.cs" />
+    <Compile Include="Modules\IModuleFeature.cs" />
     <Compile Include="Modules\IModuleService.cs" />
     <Compile Include="Mvc\AntiForgery\ValidateAntiForgeryTokenOrchardAttribute.cs" />
     <Compile Include="Mvc\Extensions\ControllerExtensions.cs" />
     <Compile Include="Mvc\Html\FileRegistrationContextExtensions.cs" />
     <Compile Include="Mvc\Extensions\UrlHelperExtensions.cs" />
+    <Compile Include="Mvc\Routes\UrlPrefix.cs" />
+    <Compile Include="Mvc\Routes\UrlPrefixAdjustedHttpContext.cs" />
     <Compile Include="Mvc\Routes\ShellRoute.cs" />
     <Compile Include="Mvc\ViewModels\AdaptedViewModel.cs" />
     <Compile Include="Mvc\ViewUserControl.cs">
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
+    <Compile Include="Mvc\Wrappers\HttpContextBaseWrapper.cs" />
+    <Compile Include="Mvc\Wrappers\HttpRequestBaseWrapper.cs" />
+    <Compile Include="Mvc\Wrappers\HttpResponseBaseWrapper.cs" />
     <Compile Include="OrchardException.cs" />
     <Compile Include="Security\IAuthorizationServiceEvents.cs" />
     <Compile Include="Security\MembershipSettings.cs" />

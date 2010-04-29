@@ -8,7 +8,7 @@
 //      the code is regenerated.
 //  </auto-generated>
 // ------------------------------------------------------------------------------
-namespace Orchard.Specs
+namespace Orchard.Tests
 {
     using TechTalk.SpecFlow;
     
