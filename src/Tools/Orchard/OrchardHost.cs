@@ -52,9 +52,6 @@ namespace Orchard {
             bool showHelp = _arguments.Switches.ContainsKey("?");
             if (!showHelp) {
                 showHelp = (!_arguments.Arguments.Any() && !_arguments.ResponseFiles.Any());
-                if (showHelp) {
-                    _output.WriteLine("Incorrect syntax: A command or a response file must be specified");
-                }
             }
 
             if (!showHelp) {

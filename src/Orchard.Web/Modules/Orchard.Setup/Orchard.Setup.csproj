@@ -67,9 +67,13 @@
   <ItemGroup>
     <Compile Include="Annotations\SqlDatabaseConnectionStringAttribute.cs" />
     <Compile Include="Annotations\StringLengthMin.cs" />
+    <Compile Include="Commands\SetupCommand.cs" />
     <Compile Include="Controllers\SetupController.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Routes.cs" />
+    <Compile Include="Services\ISetupService.cs" />
+    <Compile Include="Services\SetupContext.cs" />
+    <Compile Include="Services\SetupService.cs" />
     <Compile Include="SetupMode.cs" />
     <Compile Include="ViewModels\SetupViewModel.cs" />
   </ItemGroup>

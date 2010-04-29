@@ -5,9 +5,9 @@ using Orchard.Mvc.ViewModels;
 
 namespace Orchard.Setup.ViewModels {
     public class SetupViewModel : BaseViewModel {
-    	public SetupViewModel() {
-    		DatabaseOptions = true;
-    	}
+        public SetupViewModel() {
+            DatabaseOptions = true;
+        }
 
         [Required(ErrorMessage = "Site name is required."), StringLength(70, ErrorMessage = "Site name can be no longer than 70 characters.")]
         public string SiteName { get; set; }

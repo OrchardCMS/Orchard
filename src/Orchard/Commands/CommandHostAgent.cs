@@ -88,7 +88,10 @@ namespace Orchard.Commands {
                 return 0;
             }
             catch (Exception e) {
-                for (; e != null; e = e.InnerException) {
+                for (int i = 0; e != null; e = e.InnerException, i++) {
+                    if (i > 0) {
+                        output.WriteLine("-------------------------------------------------------------------");
+                    }
                     output.WriteLine("Error: {0}", e.Message);
                     output.WriteLine("{0}", e.StackTrace);
                 }
@@ -100,9 +103,22 @@ namespace Orchard.Commands {
             if (!_tenants.ContainsKey(tenant)) {
                 var host = _hostContainer.Resolve<IOrchardHost>();
                 var tenantManager = _hostContainer.Resolve<IShellSettingsManager>();
-                var tenantSettings = tenantManager.LoadSettings().Single(s => String.Equals(s.Name, tenant, StringComparison.OrdinalIgnoreCase));
-                var env = host.CreateStandaloneEnvironment(tenantSettings);
 
+
+                // Retrieve settings for speficified tenant. In case of an unitiliazed site (no
+                // settings anywhere), we create a default settings instance.
+                var settingsList = tenantManager.LoadSettings();
+                ShellSettings settings;
+                if (settingsList.Any()) {
+                    settings = tenantManager.LoadSettings().Single(s => String.Equals(s.Name, tenant, StringComparison.OrdinalIgnoreCase));
+                }
+                else {
+                    settings = new ShellSettings {Name = "Default", State = new TenantState("Uninitialized")};
+                }
+
+                var env = host.CreateStandaloneEnvironment(settings);
+
+                // Store in cache for next calls
                 _tenants.Add(tenant, env);
             }
             return _tenants[tenant];

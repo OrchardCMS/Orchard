@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Web;
 using System.Web.Routing;
 using Autofac;
+using Orchard.Commands;
+using Orchard.Commands.Builtin;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Handlers;
 using Orchard.Data.Builders;
@@ -14,6 +16,7 @@ using Orchard.Mvc.ModelBinders;
 using Orchard.Mvc.Routes;
 using Orchard.Mvc.ViewEngines;
 using Orchard.Settings;
+using Orchard.Setup.Commands;
 using Orchard.Themes;
 using Orchard.UI.Notify;
 using Orchard.UI.PageClass;
@@ -26,6 +29,7 @@ namespace Orchard.Setup {
 
             // standard services needed in setup mode
             builder.RegisterModule(new MvcModule());
+            builder.RegisterModule(new CommandModule());
             builder.RegisterType<RoutePublisher>().As<IRoutePublisher>().InstancePerLifetimeScope();
             builder.RegisterType<ModelBinderPublisher>().As<IModelBinderPublisher>().InstancePerLifetimeScope();
             builder.RegisterType<WebFormsViewEngineProvider>().As<IViewEngineProvider>().InstancePerLifetimeScope();
@@ -37,6 +41,8 @@ namespace Orchard.Setup {
             builder.RegisterType<Notifier>().As<INotifier>().InstancePerLifetimeScope();
             builder.RegisterType<NotifyFilter>().As<IFilterProvider>().InstancePerLifetimeScope();
             builder.RegisterType<SessionFactoryBuilder>().As<ISessionFactoryBuilder>().InstancePerLifetimeScope();
+            builder.RegisterType<DefaultCommandManager>().As<ICommandManager>().InstancePerLifetimeScope();
+            builder.RegisterType<HelpCommand>().As<ICommandHandler>().InstancePerLifetimeScope();
 
             // setup mode specific implementations of needed service interfaces
             builder.RegisterType<NullHackInstallationGenerator>().As<IHackInstallationGenerator>().InstancePerLifetimeScope();
