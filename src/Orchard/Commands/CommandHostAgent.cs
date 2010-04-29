@@ -100,28 +100,32 @@ namespace Orchard.Commands {
         }
 
         public IStandaloneEnvironment FindOrCreateTenant(string tenant) {
-            if (!_tenants.ContainsKey(tenant)) {
-                var host = _hostContainer.Resolve<IOrchardHost>();
-                var tenantManager = _hostContainer.Resolve<IShellSettingsManager>();
+            IStandaloneEnvironment result;
+            if (_tenants.TryGetValue(tenant, out result))
+                return result;
 
+            var host = _hostContainer.Resolve<IOrchardHost>();
+            var tenantManager = _hostContainer.Resolve<IShellSettingsManager>();
 
-                // Retrieve settings for speficified tenant. In case of an unitiliazed site (no
-                // settings anywhere), we create a default settings instance.
-                var settingsList = tenantManager.LoadSettings();
-                ShellSettings settings;
-                if (settingsList.Any()) {
-                    settings = tenantManager.LoadSettings().Single(s => String.Equals(s.Name, tenant, StringComparison.OrdinalIgnoreCase));
-                }
-                else {
-                    settings = new ShellSettings {Name = "Default", State = new TenantState("Uninitialized")};
+            // Retrieve settings for speficified tenant.
+            var settingsList = tenantManager.LoadSettings();
+            if (settingsList.Any()) {
+                var settings = settingsList.SingleOrDefault(s => String.Equals(s.Name, tenant, StringComparison.OrdinalIgnoreCase));
+                if (settings == null) {
+                    throw new OrchardException(string.Format("Tenant {0} does not exist", tenant));
                 }
 
                 var env = host.CreateStandaloneEnvironment(settings);
 
                 // Store in cache for next calls
                 _tenants.Add(tenant, env);
+                return env;
             }
-            return _tenants[tenant];
+            else {
+                // In case of an unitiliazed site (no default settings yet), we create a default settings instance.
+                var settings = new ShellSettings {Name = "Default", State = new TenantState("Uninitialized")};
+                return host.CreateStandaloneEnvironment(settings);
+            }
         }
 
 
