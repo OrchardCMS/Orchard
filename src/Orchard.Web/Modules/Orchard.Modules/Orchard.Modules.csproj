@@ -62,6 +62,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AdminMenu.cs" />
+    <Compile Include="Commands\FeatureCommand.cs" />
     <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Models\ModuleFeature.cs" />
     <Compile Include="Routing\FeatureNameConstraint.cs" />

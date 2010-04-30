@@ -17,7 +17,7 @@ namespace Orchard.Commands.Builtin {
             Context.Output.WriteLine(T("---------------------------"));
             Context.Output.WriteLine();
 
-            var descriptors = _commandManager.GetCommandDescriptors();
+            var descriptors = _commandManager.GetCommandDescriptors().OrderBy(d => d.Name);
             foreach (var descriptor in descriptors) {
                 Context.Output.WriteLine(GetHelpText(descriptor));
                 Context.Output.WriteLine();

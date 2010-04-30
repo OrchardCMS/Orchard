@@ -5,6 +5,20 @@ namespace Orchard.Tests.Utility.Extensions {
     [TestFixture]
     public class StringExtensionsTests {
         [Test]
+        public void OrDefault_ReturnsDefaultForNull() {
+            const string s = null;
+            Assert.That(s.OrDefault("test"), Is.SameAs("test"));
+        }
+        [Test]
+        public void OrDefault_ReturnsDefault() {
+            Assert.That("".OrDefault("test"), Is.SameAs("test"));
+        }
+
+        [Test]
+        public void OrDefault_ReturnsString() {
+            Assert.That("bar".OrDefault("test"), Is.SameAs("bar"));
+        }
+        [Test]
         public void IsNullOrEmptyTrimmed_EmptyStringReturnsTrue() {
             const string testString = "";
             Assert.AreEqual(true, testString.IsNullOrEmptyTrimmed());
