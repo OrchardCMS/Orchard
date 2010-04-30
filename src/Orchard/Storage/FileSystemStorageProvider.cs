@@ -2,44 +2,68 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Web.Hosting;
+using Orchard.Environment.Configuration;
 
 namespace Orchard.Storage {
     public class FileSystemStorageProvider : IStorageProvider {
+        private readonly ShellSettings _settings;
+        private string _storagePath;
+
+        public FileSystemStorageProvider(ShellSettings settings) {
+            _settings = settings;
+
+            var mediaPath = HostingEnvironment.IsHosted
+                ? HostingEnvironment.MapPath("~/Media/")
+                : Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Media");
+            _storagePath = Path.Combine(mediaPath, settings.Name);
+        }
+
+        string Map(string path) {
+            return Path.Combine(_storagePath, path);
+        }
+
+        static string Fix(string path) {
+            return Path.DirectorySeparatorChar != '/' 
+                ? path.Replace('/', Path.DirectorySeparatorChar) 
+                : path;
+        }
+
         #region Implementation of IStorageProvider
 
         public IStorageFile GetFile(string path) {
-            if (!File.Exists(path)) {
+            if (!File.Exists(Map(path))) {
                 throw new ArgumentException("File " + path + " does not exist");
             }
-            return new FileSystemStorageFile(new FileInfo(path));
+            return new FileSystemStorageFile(Fix(path), new FileInfo(Map(path)));
         }
 
         public IEnumerable<IStorageFile> ListFiles(string path) {
-            if (!Directory.Exists(path)) {
+            if (!Directory.Exists(Map(path))) {
                 throw new ArgumentException("Directory " + path + " does not exist");
             }
 
-            return new DirectoryInfo(path)
+            return new DirectoryInfo(Map(path))
                 .GetFiles()
                 .Where(fi => !IsHidden(fi))
-                .Select<FileInfo, IStorageFile>(fi => new FileSystemStorageFile(fi))
+                .Select<FileInfo, IStorageFile>(fi => new FileSystemStorageFile(Path.Combine(Fix(path), fi.Name), fi))
                 .ToList();
         }
 
         public IEnumerable<IStorageFolder> ListFolders(string path) {
-            if (!Directory.Exists(path)) {
+            if (!Directory.Exists(Map(path))) {
                 try {
-                    Directory.CreateDirectory(path);
-                } 
+                    Directory.CreateDirectory(Map(path));
+                }
                 catch (Exception ex) {
-                    throw new ArgumentException(string.Format("The folder could not be created at path: {0}. {1}",path,ex));
+                    throw new ArgumentException(string.Format("The folder could not be created at path: {0}. {1}", path, ex));
                 }
             }
 
-            return new DirectoryInfo(path)
+            return new DirectoryInfo(Map(path))
                 .GetDirectories()
                 .Where(di => !IsHidden(di))
-                .Select<DirectoryInfo, IStorageFolder>(di => new FileSystemStorageFolder(di))
+                .Select<DirectoryInfo, IStorageFolder>(di => new FileSystemStorageFolder(Path.Combine(Fix(path), di.Name), di))
                 .ToList();
         }
 
@@ -48,81 +72,80 @@ namespace Orchard.Storage {
         }
 
         public void CreateFolder(string path) {
-            if (Directory.Exists(path)) {
+            if (Directory.Exists(Map(path))) {
                 throw new ArgumentException("Directory " + path + " already exists");
             }
 
-            Directory.CreateDirectory(path);
+            Directory.CreateDirectory(Map(path));
         }
 
         public void DeleteFolder(string path) {
-            if (!Directory.Exists(path)) {
+            if (!Directory.Exists(Map(path))) {
                 throw new ArgumentException("Directory " + path + " does not exist");
             }
 
-            Directory.Delete(path, true);
+            Directory.Delete(Map(path), true);
         }
 
         public void RenameFolder(string path, string newPath) {
-            if (!Directory.Exists(path)) {
+            if (!Directory.Exists(Map(path))) {
                 throw new ArgumentException("Directory " + path + "does not exist");
             }
 
-            if (Directory.Exists(newPath)) {
+            if (Directory.Exists(Map(newPath))) {
                 throw new ArgumentException("Directory " + newPath + " already exists");
             }
 
-            Directory.Move(path, newPath);
+            Directory.Move(Map(path), Map(newPath));
         }
 
         public IStorageFile CreateFile(string path) {
-            if (File.Exists(path)) {
+            if (File.Exists(Map(path))) {
                 throw new ArgumentException("File " + path + " already exists");
             }
 
-            var fileInfo = new FileInfo(path);
-            fileInfo.Create();
-            return new FileSystemStorageFile(fileInfo);
+            var fileInfo = new FileInfo(Map(path));
+            using (var stream = fileInfo.Create()) {
+                
+            }
+            return new FileSystemStorageFile(Fix(path), fileInfo);
         }
 
         public void DeleteFile(string path) {
-            if (!File.Exists(path)) {
+            if (!File.Exists(Map(path))) {
                 throw new ArgumentException("File " + path + " does not exist");
             }
 
-            File.Delete(path);
+            File.Delete(Map(path));
         }
 
         public void RenameFile(string path, string newPath) {
-            if (!File.Exists(path)) {
+            if (!File.Exists(Map(path))) {
                 throw new ArgumentException("File " + path + " does not exist");
             }
 
-            if (File.Exists(newPath)) {
+            if (File.Exists(Map(newPath))) {
                 throw new ArgumentException("File " + newPath + " already exists");
             }
 
-            File.Move(path, newPath);
-        }
-
-        public string Combine(string path1, string path2)
-        {
-            return Path.Combine(path1, path2);
+            File.Move(Map(path), Map(newPath));
         }
 
         #endregion
 
         private class FileSystemStorageFile : IStorageFile {
+            private readonly string _path;
             private readonly FileInfo _fileInfo;
 
-            public FileSystemStorageFile(FileInfo fileInfo) {
+            public FileSystemStorageFile(string path, FileInfo fileInfo) {
+                _path = path;
                 _fileInfo = fileInfo;
             }
 
             #region Implementation of IStorageFile
 
             public string GetPath() {
-                return _fileInfo.FullName;
+                return _path;
             }
 
             public string GetName() {
@@ -141,13 +164,11 @@ namespace Orchard.Storage {
                 return _fileInfo.Extension;
             }
 
-            public Stream OpenRead()
-            {
+            public Stream OpenRead() {
                 return new FileStream(_fileInfo.FullName, FileMode.Open, FileAccess.Read);
             }
 
-            public Stream OpenWrite()
-            {
+            public Stream OpenWrite() {
                 return new FileStream(_fileInfo.FullName, FileMode.Open, FileAccess.ReadWrite);
             }
 
@@ -155,13 +176,19 @@ namespace Orchard.Storage {
         }
 
         private class FileSystemStorageFolder : IStorageFolder {
+            private readonly string _path;
             private readonly DirectoryInfo _directoryInfo;
 
-            public FileSystemStorageFolder(DirectoryInfo directoryInfo) {
+            public FileSystemStorageFolder(string path, DirectoryInfo directoryInfo) {
+                _path = path;
                 _directoryInfo = directoryInfo;
             }
 
             #region Implementation of IStorageFolder
+
+            public string GetPath() {
+                return _path;
+            }
 
             public string GetName() {
                 return _directoryInfo.Name;
@@ -177,7 +204,7 @@ namespace Orchard.Storage {
 
             public IStorageFolder GetParent() {
                 if (_directoryInfo.Parent != null) {
-                    return new FileSystemStorageFolder(_directoryInfo.Parent);
+                    return new FileSystemStorageFolder(Path.GetDirectoryName(_path), _directoryInfo.Parent);
                 }
                 throw new ArgumentException("Directory " + _directoryInfo.Name + " does not have a parent directory");
             }
