@@ -62,7 +62,7 @@ this.ScenarioSetup(scenarioInfo);
 #line 8
  testRunner.When("I go to \"admin/modules\"");
 #line 9
- testRunner.Then("I should see \"<h2>Installed Modules</h2>\"");
+ testRunner.Then("I should see \"<h1>Installed Modules</h1>\"");
 #line 10
      testRunner.And("I should see \"<h3>Themes</h3>\"");
 #line 11

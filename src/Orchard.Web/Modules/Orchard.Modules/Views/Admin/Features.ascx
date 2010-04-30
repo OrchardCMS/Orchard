@@ -23,7 +23,7 @@ using (Html.BeginFormAntiForgeryPost()) { %>
                 <h2><%=Html.Encode(featureGroup.First().Descriptor.Category ?? T("General")) %></h2>
                 <ul><%
                     foreach (var feature in featureGroup) {%>
-                    <li<%=feature == featureGroup.Last() ? " class=\"last\"" : "" %>>
+                    <li<%=feature == featureGroup.Last() ? " class=\"last\"" : "" %> id="<%=Html.Encode(feature.Descriptor.Name) %>">
                         <div class="summary">
                             <div class="properties">
                                 <input type="checkbox" name="selection" value="<%=Html.Encode(feature.Descriptor.Name) %>" />
@@ -40,12 +40,7 @@ using (Html.BeginFormAntiForgeryPost()) { %>
                                     </li><%
                                     //dependencies
                                     if (feature.Descriptor.Dependencies.Count() > 0) { %>
-                                    <li>&nbsp;&#124;&nbsp;<%=_Encoded("Depends on: ") %><%
-                                        foreach (var dependency in feature.Descriptor.Dependencies) {
-                                            %><% if (dependency != feature.Descriptor.Dependencies.First()) { %><%=_Encoded(", ") %><% }
-                                            %><%=Html.Encode(dependency) %><%
-                                        } %>
-                                    </li><%
+                                    <li>&nbsp;&#124;&nbsp;<%=T("Depends on: {0}", string.Join(", ", feature.Descriptor.Dependencies.Select(s => Html.Link(Html.Encode(s), string.Format("{0}#{1}", Url.Action("features", new { area = "Orchard.Modules" }), Html.Encode(s)))).OrderBy(s => s).ToArray())) %></li><%
                                     } %>
                                 </ul>
                             </div>

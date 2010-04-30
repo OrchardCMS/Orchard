@@ -6,7 +6,7 @@
 Scenario: Installed modules are listed
 	Given I have installed Orchard
 	When I go to "admin/modules"
-	Then I should see "<h2>Installed Modules</h2>"
+	Then I should see "<h1>Installed Modules</h1>"
 	    And I should see "<h3>Themes</h3>"
 	    And the status should be 200 OK
 
