@@ -82,6 +82,7 @@ namespace Orchard.Setup.Controllers {
                     "Orchard.Themes",
                     "Orchard.MultiTenancy",
                     "Orchard.Pages",
+                    "Orchard.Blogs",
                     "Orchard.Comments" };
 
                 var setupContext = new SetupContext {
