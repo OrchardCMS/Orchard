@@ -129,6 +129,10 @@ namespace Orchard.Core.Common.Handlers {
                                          return user;
                                      });
 
+            // Force call to setter if we had already set a value
+            if (aspect.OwnerField.Value != null)
+                aspect.OwnerField.Value = aspect.OwnerField.Value;
+
             aspect.ContainerField.Setter(container => {
                                              if (container == null) {
                                                  aspect.Record.Container = null;
@@ -138,6 +142,10 @@ namespace Orchard.Core.Common.Handlers {
                                              }
                                              return container;
                                          });
+
+            // Force call to setter if we had already set a value
+            if (aspect.ContainerField.Value != null)
+                aspect.ContainerField.Value = aspect.ContainerField.Value;
         }
 
 
