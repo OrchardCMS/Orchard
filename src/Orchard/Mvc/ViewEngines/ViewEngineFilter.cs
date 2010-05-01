@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Web.Mvc;
-using Orchard.Extensions;
+using Orchard.Environment.Extensions;
 using Orchard.Logging;
 using Orchard.Mvc.Filters;
 using Orchard.Themes;
@@ -52,10 +52,10 @@ namespace Orchard.Mvc.ViewEngines {
             }
 
 
-            var modules = _extensionManager.ActiveExtensions()
-                .Where(x => x.Descriptor.ExtensionType == "Module");
+            var modules = _extensionManager.AvailableExtensions()
+                .Where(x => x.ExtensionType == "Module");
 
-            var moduleLocations = modules.Select(x => Path.Combine(x.Descriptor.Location, x.Descriptor.Name));
+            var moduleLocations = modules.Select(x => Path.Combine(x.Location, x.Name));
             var moduleViewEngines = _viewEngineProviders
                 .Select(x => x.CreateModulesViewEngine(new CreateModulesViewEngineParams { VirtualPaths = moduleLocations }));
             Logger.Debug("Module locations:\r\n\t-{0}", string.Join("\r\n\t-", moduleLocations.ToArray()));

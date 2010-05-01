@@ -10,7 +10,11 @@ namespace Orchard.Commands {
         }
 
         private IEnumerable<CommandDescriptor> CollectMethods(Type type) {
-            foreach (var methodInfo in type.GetMethods(BindingFlags.Instance | BindingFlags.Public | BindingFlags.DeclaredOnly)) {
+            var methods = type
+                .GetMethods(BindingFlags.Instance | BindingFlags.Public | BindingFlags.DeclaredOnly)
+                .Where(m => !m.IsSpecialName);
+
+            foreach (var methodInfo in methods) {
                 yield return BuildMethod(methodInfo);
             }
         }

@@ -1,5 +1,7 @@
-﻿namespace Orchard.Localization {
-    public class LocalizedString {
+﻿using System;
+
+namespace Orchard.Localization {
+    public class LocalizedString : MarshalByRefObject {
         private readonly string _localized;
 
         public LocalizedString(string localized) {

@@ -1,0 +1,1 @@
+﻿<%@ Page AutoEventWireup="true" Inherits="Orchard.Specs.Hosting.Orchard.Web._Default, Orchard.Specs" %>

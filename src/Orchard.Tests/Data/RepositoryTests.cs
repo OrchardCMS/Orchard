@@ -19,9 +19,9 @@ namespace Orchard.Tests.Data {
 
         [SetUp]
         public void Init() {
-            _sessionFactory = DataUtility.CreateSessionFactory(_databaseFilePath, typeof(Foo));
+            _sessionFactory = DataUtility.CreateSessionFactory(_databaseFilePath, typeof(FooRecord));
             _session = _sessionFactory.OpenSession();
-            _fooRepos = new Repository<Foo>(new StubLocator(_session));
+            _fooRepos = new Repository<FooRecord>(new StubLocator(_session));
         }
 
         [TearDown]
@@ -36,15 +36,15 @@ namespace Orchard.Tests.Data {
 
         #endregion
 
-        private IRepository<Foo> _fooRepos;
+        private IRepository<FooRecord> _fooRepos;
         private ISession _session;
         private string _databaseFilePath;
         private ISessionFactory _sessionFactory;
 
         private void CreateThreeFoos() {
-            _fooRepos.Create(new Foo { Name = "one" });
-            _fooRepos.Create(new Foo { Name = "two" });
-            _fooRepos.Create(new Foo { Name = "three" });
+            _fooRepos.Create(new FooRecord { Name = "one" });
+            _fooRepos.Create(new FooRecord { Name = "two" });
+            _fooRepos.Create(new FooRecord { Name = "three" });
         }
 
         [Test]
@@ -121,7 +121,7 @@ namespace Orchard.Tests.Data {
 
             // If look at the "LinqOrderByCanBeUsedToControlResults", you will see this query
             // works fine is the static type of "foos" is "IEnumerable<Foo>"...
-            IOrderedQueryable<Foo> foos =
+            IOrderedQueryable<FooRecord> foos =
                         from f in _fooRepos.Table
                         where f.Name == "two" || f.Name == "three"
                         orderby f.Name, f.Id ascending
@@ -138,7 +138,7 @@ namespace Orchard.Tests.Data {
         public void LinqOrderByCanBeUsedToControlResults() {
             CreateThreeFoos();
 
-            IEnumerable<Foo> foos =
+            IEnumerable<FooRecord> foos =
                         from f in _fooRepos.Table
                         where f.Name == "two" || f.Name == "three"
                         orderby f.Name, f.Id ascending
@@ -152,7 +152,7 @@ namespace Orchard.Tests.Data {
         [Test]
         public void RangeShouldSliceResults() {
             for (var x = 0; x != 40; ++x) {
-                _fooRepos.Create(new Foo { Name = x.ToString().PadLeft(8, '0') });
+                _fooRepos.Create(new FooRecord { Name = x.ToString().PadLeft(8, '0') });
             }
 
             var foos = _fooRepos.Fetch(
@@ -167,7 +167,7 @@ namespace Orchard.Tests.Data {
 
         [Test]
         public void RepositoryCanCreateFetchAndDelete() {
-            var foo1 = new Foo { Name = "yadda" };
+            var foo1 = new FooRecord { Name = "yadda" };
             _fooRepos.Create(foo1);
 
             var foo2 = _fooRepos.Get(foo1.Id);

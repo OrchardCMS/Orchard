@@ -39,5 +39,40 @@ namespace Orchard.Tests.Commands {
             public void Foo_Bar3() {
             }
         }
+
+        [Test]
+        public void BuilderShouldReturnPublicMethodsOnly() {
+            var builder = new CommandHandlerDescriptorBuilder();
+            var descriptor = builder.Build(typeof(PublicMethodsOnly));
+            Assert.That(descriptor, Is.Not.Null);
+            Assert.That(descriptor.Commands.Count(), Is.EqualTo(1));
+            Assert.That(descriptor.Commands.Single(d => d.Name == "Method"), Is.Not.Null);
+        }
+
+        public class PublicMethodsOnly {
+            public bool Bar { get; set; }   // no accessors
+            public bool Field = true;       // no field
+            public event Action<int> Event; // no event adder, remover, etc.
+
+            // no private method
+            private void Blah() {
+            }
+
+            // no private method
+            public static void Foo() {
+            }
+
+            // no operator
+            public static bool operator ==(PublicMethodsOnly a, PublicMethodsOnly b) {
+                return false;
+            }
+            public static bool operator !=(PublicMethodsOnly a, PublicMethodsOnly b) {
+                return false;
+            }
+
+            public void Method() {
+            }
+        }
+
     }
 }

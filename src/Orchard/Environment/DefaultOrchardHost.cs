@@ -1,119 +1,126 @@
+using System;
 using System.Linq;
 using System.Web.Mvc;
 using Autofac;
-using Autofac.Integration.Web;
 using System.Collections.Generic;
 using Orchard.Environment.Configuration;
+using Orchard.Environment.Extensions;
 using Orchard.Environment.ShellBuilders;
-using Orchard.Extensions;
+using Orchard.Logging;
 using Orchard.Mvc;
 using Orchard.Mvc.ViewEngines;
+using Orchard.Utility.Extensions;
 
 namespace Orchard.Environment {
     public class DefaultOrchardHost : IOrchardHost {
-        private readonly IContainerProvider _containerProvider;
         private readonly ControllerBuilder _controllerBuilder;
-        private readonly IEnumerable<IShellContainerFactory> _shellContainerFactories;
 
-        private readonly ITenantManager _tenantManager;
-        private IOrchardShell _current;
+        private readonly IShellSettingsManager _shellSettingsManager;
+        private readonly IShellContextFactory _shellContextFactory;
+        private readonly IRunningShellTable _runningShellTable;
 
+        private IEnumerable<ShellContext> _current;
 
         public DefaultOrchardHost(
-            IContainerProvider containerProvider,
-            ITenantManager tenantManager,
-            ControllerBuilder controllerBuilder,
-            IEnumerable<IShellContainerFactory> shellContainerFactories) {
-            _containerProvider = containerProvider;
-            _tenantManager = tenantManager;
+            IShellSettingsManager shellSettingsManager,
+            IShellContextFactory shellContextFactory,
+            IRunningShellTable runningShellTable,
+            ControllerBuilder controllerBuilder) {
+            //_containerProvider = containerProvider;
+            _shellSettingsManager = shellSettingsManager;
+            _shellContextFactory = shellContextFactory;
+            _runningShellTable = runningShellTable;
             _controllerBuilder = controllerBuilder;
-            _shellContainerFactories = shellContainerFactories;
+            Logger = NullLogger.Instance;
         }
 
+        public ILogger Logger { get; set; }
 
-        public IOrchardShell Current {
-            get { return _current; }
+        public IList<ShellContext> Current {
+            get { return BuildCurrent().ToReadOnlyCollection(); }
         }
-
 
         void IOrchardHost.Initialize() {
+            Logger.Information("Initializing");
             ViewEngines.Engines.Insert(0, LayoutViewEngine.CreateShim());
             _controllerBuilder.SetControllerFactory(new OrchardControllerFactory());
-            ServiceLocator.SetLocator(t => _containerProvider.RequestLifetime.Resolve(t));
+            //ServiceLocator.SetLocator(t => _containerProvider.RequestLifetime.Resolve(t));
 
-            CreateAndActivateShell();
+            BuildCurrent();
         }
 
-        void IOrchardHost.Reinitialize() {
+        void IOrchardHost.Reinitialize_Obsolete() {
             _current = null;
-            //CreateAndActivateShell();
         }
 
 
         void IOrchardHost.BeginRequest() {
+            Logger.Debug("BeginRequest");
             BeginRequest();
         }
 
         void IOrchardHost.EndRequest() {
+            Logger.Debug("EndRequest");
             EndRequest();
         }
 
-        IStandaloneEnvironment IOrchardHost.CreateStandaloneEnvironment(IShellSettings shellSettings) {
-            var shellContainer = CreateShellContainer(shellSettings);
-            return new StandaloneEnvironment(shellContainer);
+        IStandaloneEnvironment IOrchardHost.CreateStandaloneEnvironment(ShellSettings shellSettings) {
+            Logger.Debug("Creating standalone environment for tenant {0}", shellSettings.Name);
+            var shellContext = CreateShellContext(shellSettings);
+            return new StandaloneEnvironment(shellContext.LifetimeScope);
         }
 
-        protected virtual void CreateAndActivateShell() {
+
+        IEnumerable<ShellContext> BuildCurrent() {
             lock (this) {
-                if (_current != null) {
-                    return;
-                }
-
-                var shellContainer = CreateShellContainer();
-                var shell = shellContainer.Resolve<IOrchardShell>();
-                shell.Activate();
-                _current = shell;
-
-                // Activate extensions inside shell container
-                HackSimulateExtensionActivation(shellContainer);
+                return _current ?? (_current = CreateAndActivate().ToArray());
             }
+        }
+
+        IEnumerable<ShellContext> CreateAndActivate() {
+            var allSettings = _shellSettingsManager.LoadSettings();
+            if (allSettings.Any()) {
+                return allSettings.Select(
+                    settings => {
+                        var context = CreateShellContext(settings);
+                        ActivateShell(context);
+                        return context;
+                    });
+            }
+
+            var setupContext = CreateSetupContext();
+            ActivateShell(setupContext);
+            return new[] { setupContext };
+        }
+
+        private void ActivateShell(ShellContext context) {
+            context.Shell.Activate();
+            _runningShellTable.Add(context.Settings);
+            HackSimulateExtensionActivation(context.LifetimeScope);
+        }
+
+        ShellContext CreateSetupContext() {
+            Logger.Debug("Creating shell context for root setup");
+            return _shellContextFactory.CreateSetupContext(new ShellSettings { Name = "Default" });
+        }
+
+        ShellContext CreateShellContext(ShellSettings settings) {
+            if (settings.State.CurrentState == TenantState.State.Uninitialized) {
+                Logger.Debug("Creating shell context for tenant {0} setup", settings.Name);
+                return _shellContextFactory.CreateSetupContext(settings);
+            }
+
+            Logger.Debug("Creating shell context for tenant {0}", settings.Name);
+            return _shellContextFactory.CreateShellContext(settings);
         }
 
         protected virtual void BeginRequest() {
-            if (_current == null) {
-                CreateAndActivateShell();
-            }
+            BuildCurrent();
         }
 
         protected virtual void EndRequest() {
-            _containerProvider.EndRequestLifetime();
         }
 
-
-        public virtual IOrchardShell CreateShell() {
-            return CreateShellContainer().Resolve<IOrchardShell>();
-        }
-
-        public virtual ILifetimeScope CreateShellContainer() {
-            var settings = _tenantManager.LoadSettings();
-            if (settings.Any()) {
-                //TEMP: multi-tenancy not implemented yet
-                var shellContainer = CreateShellContainer(settings.Single());
-                if (shellContainer != null)
-                    return shellContainer;
-            }
-            return CreateShellContainer(null);
-        }
-
-        private ILifetimeScope CreateShellContainer(IShellSettings shellSettings) {
-            foreach (var factory in _shellContainerFactories) {
-                var container = factory.CreateContainer(shellSettings);
-                if (container != null) {
-                    return container;
-                }
-            }
-            return null;
-        }
 
         private void HackSimulateExtensionActivation(ILifetimeScope shellContainer) {
             var containerProvider = new FiniteContainerProvider(shellContainer);
@@ -125,6 +132,15 @@ namespace Orchard.Environment {
             }
             finally {
                 containerProvider.EndRequestLifetime();
+            }
+        }
+
+        public void Process(string messageName, IDictionary<string, string> eventData) {
+            if (messageName == "ShellSettings_Saved") {
+                _current = null;
+            }
+            else if (messageName == "ShellDescriptor_Changed") {
+                _current = null;
             }
         }
     }

@@ -8,7 +8,6 @@ namespace Orchard.Settings {
         string PageTitleSeparator { get; }
         string SiteName { get; }
         string SiteSalt { get; }
-        string SiteUrl { get; }
         string SuperUser { get; }
         string HomePage { get; set; }
     }

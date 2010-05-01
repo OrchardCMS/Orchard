@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace Orchard {
     public class OrchardParameters : MarshalByRefObject {
@@ -9,8 +7,8 @@ namespace Orchard {
         public string VirtualPath { get; set; }
         public string WorkingDirectory { get; set; }
         public string Tenant { get; set; }
-        public IEnumerable<string> Arguments { get; set; }
+        public IList<string> Arguments { get; set; }
+        public IList<string> ResponseFiles { get; set; }
         public IDictionary<string, string> Switches { get; set; }
-
     }
 }

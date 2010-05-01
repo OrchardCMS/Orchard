@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using Autofac.Features.Metadata;
 
 namespace Orchard.Commands {
@@ -15,32 +14,33 @@ namespace Orchard.Commands {
         public void Execute(CommandParameters parameters) {
             var matches = MatchCommands(parameters);
 
-            // Workaround autofac integration: module registration is currently run twice...
-            //if (matches.Count() == 1) {
-            //  var match = matches.Single();
-            if (matches.Count() == 1 || matches.Count() == 2) {
-                var match = matches.First();
+            if (matches.Count() == 1) {
+                var match = matches.Single();
                 match.CommandHandlerFactory().Execute(match.Context);
             }
-            else if (matches.Any()) {
-                // too many
-            }
             else {
-                // none
+                var commandMatch = string.Join(" ", parameters.Arguments.ToArray());
+                var commandList = string.Join(",", GetCommandDescriptors().Select(d => d.Name).ToArray());
+                if (matches.Any()) {
+                    throw new OrchardException(string.Format("Multiple commands found matching arguments \"{0}\". Commands available: {1}.",
+                                                             commandMatch, commandList));
+                }
+                else {
+                    throw new OrchardException(string.Format("No command found matching arguments \"{0}\". Commands available: {1}.",
+                                                             commandMatch, commandList));
+                }
             }
         }
 
         public IEnumerable<CommandDescriptor> GetCommandDescriptors() {
-            return _handlers
-                .SelectMany(h => GetDescriptor(h.Metadata).Commands)
-                // Workaround autofac integration: module registration is currently run twice...
-                .Distinct(new CommandsComparer());
+            return _handlers.SelectMany(h => GetDescriptor(h.Metadata).Commands);
         }
 
         private IEnumerable<Match> MatchCommands(CommandParameters parameters) {
+            // Command names are matched with as many arguments as possible, in decreasing order
             foreach (var argCount in Enumerable.Range(1, parameters.Arguments.Count()).Reverse()) {
                 int count = argCount;
-                var matches = _handlers.SelectMany(h => MatchCommands(parameters, count, GetDescriptor(h.Metadata), h.Value));
+                var matches = _handlers.SelectMany(h => MatchCommands(parameters, count, GetDescriptor(h.Metadata), h.Value)).ToList();
                 if (matches.Any())
                     return matches;
             }
@@ -77,16 +77,6 @@ namespace Orchard.Commands {
         private class Match {
             public CommandContext Context { get; set; }
             public Func<ICommandHandler> CommandHandlerFactory { get; set; }
-        }
-
-        public class CommandsComparer : IEqualityComparer<CommandDescriptor> {
-            public bool Equals(CommandDescriptor x, CommandDescriptor y) {
-                return x.MethodInfo.Equals(y.MethodInfo);
-            }
-
-            public int GetHashCode(CommandDescriptor obj) {
-                return obj.MethodInfo.GetHashCode();
-            }
         }
     }
 }

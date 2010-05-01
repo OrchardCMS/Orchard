@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using JetBrains.Annotations;
-using Orchard.Extensions;
+using Orchard.Environment.Extensions;
 using Orchard.Logging;
 using Orchard.Roles.Services;
 using Orchard.Security.Permissions;

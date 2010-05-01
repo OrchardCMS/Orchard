@@ -1,20 +1,26 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Web.Mvc;
 using System.Web.Routing;
-using Orchard.Extensions;
+using Orchard.Environment.Extensions;
+using Orchard.Environment.Topology.Models;
 
 namespace Orchard.Mvc.Routes {
     public class StandardExtensionRouteProvider : IRouteProvider {
-        private readonly IExtensionManager _extensionManager;
+        private readonly ShellTopology _topology;
 
-        public StandardExtensionRouteProvider(IExtensionManager extensionManager) {
-            _extensionManager = extensionManager;
+        public StandardExtensionRouteProvider(ShellTopology topology) {
+            _topology = topology;
         }
 
         public IEnumerable<RouteDescriptor> GetRoutes() {
-            foreach (var entry in _extensionManager.ActiveExtensions()) {
-                var areaName = entry.Descriptor.Name;
-                var displayName = entry.Descriptor.DisplayName ?? areaName;
+            var displayNamesPerArea = _topology.Controllers.GroupBy(
+                x => x.AreaName,
+                x => x.Feature.Descriptor.Extension.DisplayName);
+
+            foreach (var item in displayNamesPerArea) {
+                var areaName = item.Key;
+                var displayName = item.Distinct().Single();
 
                 yield return new RouteDescriptor {
                     Priority = -10,

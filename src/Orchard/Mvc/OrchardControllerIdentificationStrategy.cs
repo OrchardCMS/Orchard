@@ -4,7 +4,7 @@ using System.Linq;
 using System.Web.Mvc;
 using Autofac.Core;
 using Autofac.Integration.Web.Mvc;
-using Orchard.Extensions;
+using Orchard.Environment.Extensions;
 
 namespace Orchard.Mvc {
     public class OrchardControllerIdentificationStrategy : IControllerIdentificationStrategy {

@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using NHibernate;
-using Orchard.Environment;
+using Orchard.Environment.Topology;
+using Orchard.Environment.Topology.Models;
 
 namespace Orchard.Data.Builders {
 
@@ -16,6 +17,6 @@ namespace Orchard.Data.Builders {
         public bool CreateDatabase { get; set; }
         public bool UpdateSchema { get; set; }
 
-        public IEnumerable<RecordDescriptor> RecordDescriptors { get; set; }
+        public IEnumerable<RecordTopology> RecordDescriptors { get; set; }
     }
 }

@@ -32,7 +32,7 @@ namespace Orchard.Tests {
 
         [Test]
         public void CreatingSchemaForStatedClassesInTempFile() {
-            var types = new Types(typeof (Foo), typeof (Bar));
+            var types = new Types(typeof (FooRecord), typeof (BarRecord));
 
             var sessionFactory = Fluently.Configure()
                 .Database(SQLiteConfiguration.Standard.UsingFile("temp"))
@@ -41,12 +41,12 @@ namespace Orchard.Tests {
                 .BuildSessionFactory();
 
             var session = sessionFactory.OpenSession();
-            session.Save(new Foo {Name = "Hello"});
-            session.Save(new Bar {Height = 3, Width = 4.5m});
+            session.Save(new FooRecord {Name = "Hello"});
+            session.Save(new BarRecord {Height = 3, Width = 4.5m});
             session.Close();
 
             session = sessionFactory.OpenSession();
-            var foos = session.CreateCriteria<Foo>().List();
+            var foos = session.CreateCriteria<FooRecord>().List();
             Assert.That(foos.Count, Is.EqualTo(1));
             Assert.That(foos, Has.All.Property("Name").EqualTo("Hello"));
             session.Close();
@@ -64,17 +64,17 @@ namespace Orchard.Tests {
 
         [Test]
         public void UsingDataUtilityToBuildSessionFactory() {
-            var factory = DataUtility.CreateSessionFactory(typeof (Foo), typeof (Bar));
+            var factory = DataUtility.CreateSessionFactory(typeof (FooRecord), typeof (BarRecord));
 
             var session = factory.OpenSession();
-            var foo1 = new Foo {Name = "world"};
+            var foo1 = new FooRecord {Name = "world"};
             session.Save(foo1);
             session.Close();
 
             session = factory.OpenSession();
-            var foo2 = session.CreateCriteria<Foo>()
+            var foo2 = session.CreateCriteria<FooRecord>()
                 .Add(Restrictions.Eq("Name", "world"))
-                .List<Foo>().Single();
+                .List<FooRecord>().Single();
             session.Close();
 
             Assert.That(foo1, Is.Not.SameAs(foo2));

@@ -2,7 +2,8 @@
 using System.IO;
 using NUnit.Framework;
 using Orchard.Data.Builders;
-using Orchard.Environment;
+using Orchard.Environment.Topology;
+using Orchard.Environment.Topology.Models;
 using Orchard.Tests.Records;
 
 namespace Orchard.Tests.Data.Builders {
@@ -48,7 +49,7 @@ namespace Orchard.Tests.Data.Builders {
         [Test]
         public void SQLiteSchemaShouldBeGeneratedAndUsable() {
             var recordDescriptors = new[] {
-                                              new RecordDescriptor {Prefix = "Hello", Type = typeof (Foo)}
+                                              new RecordTopology {TableName = "Hello", Type = typeof (FooRecord)}
                                           };
             var manager = (ISessionFactoryBuilder)new SessionFactoryBuilder();
             var sessionFactory = manager.BuildSessionFactory(new SessionFactoryParameters {
@@ -60,7 +61,7 @@ namespace Orchard.Tests.Data.Builders {
 
 
             var session = sessionFactory.OpenSession();
-            var foo = new Foo { Name = "hi there" };
+            var foo = new FooRecord { Name = "hi there" };
             session.Save(foo);
             session.Flush();
             session.Close();
@@ -77,7 +78,7 @@ namespace Orchard.Tests.Data.Builders {
             CreateSqlServerDatabase(databasePath);
 
             var recordDescriptors = new[] {
-                                              new RecordDescriptor {Prefix = "Hello", Type = typeof (Foo)}
+                                              new RecordTopology {TableName = "Hello", Type = typeof (FooRecord)}
                                           };
 
             var manager = (ISessionFactoryBuilder)new SessionFactoryBuilder();
@@ -92,7 +93,7 @@ namespace Orchard.Tests.Data.Builders {
 
 
             var session = sessionFactory.OpenSession();
-            var foo = new Foo { Name = "hi there" };
+            var foo = new FooRecord { Name = "hi there" };
             session.Save(foo);
             session.Flush();
             session.Close();

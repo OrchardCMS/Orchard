@@ -11,19 +11,6 @@ namespace Orchard.Tests.Services {
 
     [TestFixture]
     public class ClockTests {
-        [Test, Ignore("At the moment the default clock is using DateTime.Now until a user-time-zone corrected display is in effect.")]
-        public void DefaultClockShouldComeFromSystemUtc() {
-            IClock clock = new Clock();
-            var before = DateTime.UtcNow;
-            Thread.Sleep(2);
-            var mark = clock.UtcNow;
-            Thread.Sleep(2);
-            var after = DateTime.UtcNow;
-
-            Assert.That(mark.Kind, Is.EqualTo(DateTimeKind.Utc));
-            Assert.That(mark, Is.InRange(before, after));
-        }
-
         [Test]
         public void StubClockShouldComeFromSystemUtcAndDoesNotComeFromSystemTime() {
             var clock = new StubClock();

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -11,12 +12,18 @@ using NUnit.Framework;
 using Orchard.Environment;
 using Orchard.Environment.AutofacUtil;
 using Orchard.Environment.Configuration;
+using Orchard.Environment.Extensions;
+using Orchard.Environment.Extensions.Folders;
+using Orchard.Environment.Extensions.Models;
+using Orchard.Environment.ShellBuilders;
+using Orchard.Environment.Topology;
+using Orchard.Environment.Topology.Models;
 using Orchard.Mvc;
 using Orchard.Mvc.ModelBinders;
 using Orchard.Mvc.Routes;
-using Orchard.Extensions;
 using Orchard.Tests.Environment.TestDependencies;
 using Orchard.Tests.Stubs;
+using Orchard.Tests.Utility;
 
 namespace Orchard.Tests.Environment {
     [TestFixture]
@@ -26,58 +33,79 @@ namespace Orchard.Tests.Environment {
         private RouteCollection _routeCollection;
         private ModelBinderDictionary _modelBinderDictionary;
         private ControllerBuilder _controllerBuilder;
+        private ViewEngineCollection _viewEngineCollection;
 
         [SetUp]
         public void Init() {
             _controllerBuilder = new ControllerBuilder();
             _routeCollection = new RouteCollection();
             _modelBinderDictionary = new ModelBinderDictionary();
+            _viewEngineCollection = new ViewEngineCollection { new WebFormViewEngine() };
 
             _container = OrchardStarter.CreateHostContainer(
                 builder => {
-                    //builder.RegisterModule(new ImplicitCollectionSupportModule());
+                    builder.RegisterInstance(new StubShellSettingsLoader()).As<IShellSettingsManager>();
                     builder.RegisterType<StubContainerProvider>().As<IContainerProvider>().InstancePerLifetimeScope();
-                    builder.RegisterType<StubCompositionStrategy>().As<ICompositionStrategy>().InstancePerLifetimeScope();
-                    builder.RegisterType<DefaultOrchardHost>().As<IOrchardHost>().SingleInstance();
                     builder.RegisterType<RoutePublisher>().As<IRoutePublisher>();
                     builder.RegisterType<ModelBinderPublisher>().As<IModelBinderPublisher>();
+                    builder.RegisterType<ShellContextFactory>().As<IShellContextFactory>();
+                    builder.RegisterType<StubExtensionManager>().As<IExtensionManager>();
                     builder.RegisterInstance(_controllerBuilder);
                     builder.RegisterInstance(_routeCollection);
                     builder.RegisterInstance(_modelBinderDictionary);
-                    builder.RegisterInstance(new ViewEngineCollection { new WebFormViewEngine() });
-                    builder.RegisterInstance(new StuExtensionManager()).As<IExtensionManager>();
-                    builder.RegisterInstance(new Mock<IHackInstallationGenerator>().Object);
-                    builder.RegisterInstance(new StubShellSettingsLoader()).As<ITenantManager>();
+                    builder.RegisterInstance(_viewEngineCollection);
+                    builder.RegisterAutoMocking()
+                        .Ignore<IExtensionFolders>()
+                        .Ignore<IRouteProvider>()
+                        .Ignore<IModelBinderProvider>();
                 });
             _lifetime = _container.BeginLifetimeScope();
+
+            _container.Mock<IContainerProvider>()
+                .SetupGet(cp => cp.ApplicationContainer).Returns(_container);
+            _container.Mock<IContainerProvider>()
+                .SetupGet(cp => cp.RequestLifetime).Returns(_lifetime);
+            _container.Mock<IContainerProvider>()
+                .Setup(cp => cp.EndRequestLifetime()).Callback(() => _lifetime.Dispose());
+
+            _container.Mock<IShellDescriptorManager>()
+                .Setup(cp => cp.GetShellDescriptor()).Returns(default(ShellDescriptor));
+
+            var temp = Path.GetTempFileName();
+            File.Delete(temp);
+            Directory.CreateDirectory(temp);
+
+            _container.Resolve<IAppDataFolder>()
+                .SetBasePath(temp);
+
             var updater = new ContainerUpdater();
             updater.RegisterInstance(_container).SingleInstance();
             updater.Update(_lifetime);
         }
 
-        public class StubShellSettingsLoader : ITenantManager {
-            private readonly List<IShellSettings> _shellSettings = new List<IShellSettings>
-                                                                   {new ShellSettings {Name = "testing"}};
-
-            public IEnumerable<IShellSettings> LoadSettings() {
-                return _shellSettings.AsEnumerable();
-            }
-
-            public void SaveSettings(IShellSettings settings) {
-                _shellSettings.Add(settings);
-            }
-        }
-
-        public class StuExtensionManager : IExtensionManager {
+        public class StubExtensionManager : IExtensionManager {
             public IEnumerable<ExtensionDescriptor> AvailableExtensions() {
-                return Enumerable.Empty<ExtensionDescriptor>();
+                var ext = new ExtensionDescriptor { Name = "Orchard.Framework" };
+                ext.Features = new[] { new FeatureDescriptor { Extension = ext, Name = ext.Name } };
+                yield return ext;
             }
 
-            public IEnumerable<ExtensionEntry> ActiveExtensions() {
-                return Enumerable.Empty<ExtensionEntry>();
+            public IEnumerable<Feature> LoadFeatures(IEnumerable<FeatureDescriptor> featureDescriptors) {
+                foreach (var descriptor in featureDescriptors) {
+                    if (descriptor.Name == "Orchard.Framework") {
+                        yield return new Feature {
+                            Descriptor = descriptor,
+                            ExportedTypes = new[] {
+                            typeof (TestDependency),
+                            typeof (TestSingletonDependency),
+                            typeof (TestTransientDependency),
+                        }
+                        };
+                    }
+                }
             }
 
-            public ShellTopology GetExtensionsTopology() {
+            public IEnumerable<ExtensionEntry> ActiveExtensions_Obsolete() {
                 throw new NotImplementedException();
             }
 
@@ -90,6 +118,18 @@ namespace Orchard.Tests.Environment {
             }
         }
 
+        public class StubShellSettingsLoader : IShellSettingsManager {
+            private readonly List<ShellSettings> _shellSettings = new List<ShellSettings> { new ShellSettings { Name = "Default" } };
+
+            public IEnumerable<ShellSettings> LoadSettings() {
+                return _shellSettings.AsEnumerable();
+            }
+
+            public void SaveSettings(ShellSettings settings) {
+                _shellSettings.Add(settings);
+            }
+        }
+
         [Test]
         public void HostShouldSetControllerFactory() {
             var host = _lifetime.Resolve<IOrchardHost>();
@@ -99,38 +139,23 @@ namespace Orchard.Tests.Environment {
             Assert.That(_controllerBuilder.GetControllerFactory(), Is.TypeOf<OrchardControllerFactory>());
         }
 
-        public class StubCompositionStrategy : ICompositionStrategy {
-            public IEnumerable<Type> GetModuleTypes() {
-                return Enumerable.Empty<Type>();
-            }
-
-            public IEnumerable<Type> GetDependencyTypes() {
-                return new[] {
-                                 typeof (TestDependency),
-                                 typeof (TestSingletonDependency),
-                                 typeof(TestTransientDependency)
-                             };
-            }
-
-            public IEnumerable<RecordDescriptor> GetRecordDescriptors() {
-                return Enumerable.Empty<RecordDescriptor>();
-            }
-        }
 
         [Test]
         public void DifferentShellInstanceShouldBeReturnedAfterEachCreate() {
-            var host = (DefaultOrchardHost)_lifetime.Resolve<IOrchardHost>();
-            var runtime1 = host.CreateShell();
-            var runtime2 = host.CreateShell();
+            var host = _lifetime.Resolve<IOrchardHost>();
+            var runtime1 = host.CreateShell_Obsolete();
+            host.Reinitialize_Obsolete();
+            var runtime2 = host.CreateShell_Obsolete();
             Assert.That(runtime1, Is.Not.SameAs(runtime2));
         }
 
 
         [Test]
         public void NormalDependenciesShouldBeUniquePerRequestContainer() {
-            var host = (DefaultOrchardHost)_lifetime.Resolve<IOrchardHost>();
-            var container1 = host.CreateShellContainer();
-            var container2 = host.CreateShellContainer();
+            var host = _lifetime.Resolve<IOrchardHost>();
+            var container1 = host.CreateShellContainer_Obsolete();
+            host.Reinitialize_Obsolete();
+            var container2 = host.CreateShellContainer_Obsolete();
             var requestContainer1a = container1.BeginLifetimeScope();
             var requestContainer1b = container1.BeginLifetimeScope();
             var requestContainer2a = container2.BeginLifetimeScope();
@@ -165,9 +190,9 @@ namespace Orchard.Tests.Environment {
         }
         [Test]
         public void SingletonDependenciesShouldBeUniquePerShell() {
-            var host = (DefaultOrchardHost)_lifetime.Resolve<IOrchardHost>();
-            var container1 = host.CreateShellContainer();
-            var container2 = host.CreateShellContainer();
+            var host = _lifetime.Resolve<IOrchardHost>();
+            var container1 = host.CreateShellContainer_Obsolete();
+            var container2 = host.CreateShellContainer_Obsolete();
             var requestContainer1a = container1.BeginLifetimeScope();
             var requestContainer1b = container1.BeginLifetimeScope();
             var requestContainer2a = container2.BeginLifetimeScope();
@@ -188,9 +213,9 @@ namespace Orchard.Tests.Environment {
         }
         [Test]
         public void TransientDependenciesShouldBeUniquePerResolve() {
-            var host = (DefaultOrchardHost)_lifetime.Resolve<IOrchardHost>();
-            var container1 = host.CreateShellContainer();
-            var container2 = host.CreateShellContainer();
+            var host = _lifetime.Resolve<IOrchardHost>();
+            var container1 = host.CreateShellContainer_Obsolete();
+            var container2 = host.CreateShellContainer_Obsolete();
             var requestContainer1a = container1.BeginLifetimeScope();
             var requestContainer1b = container1.BeginLifetimeScope();
             var requestContainer2a = container2.BeginLifetimeScope();
@@ -223,6 +248,19 @@ namespace Orchard.Tests.Environment {
             Assert.That(again2a, Is.Not.SameAs(dep2a));
             Assert.That(again2b, Is.Not.SameAs(dep2b));
 
+        }
+    }
+
+    public static class TextExtensions {
+        public static ILifetimeScope CreateShellContainer_Obsolete(this IOrchardHost host) {
+            return ((DefaultOrchardHost)host)
+                .Current
+                .Single(x => x.Settings.Name == "Default")
+                .LifetimeScope;
+        }
+
+        public static IOrchardShell CreateShell_Obsolete(this IOrchardHost host) {
+            return host.CreateShellContainer_Obsolete().Resolve<IOrchardShell>();
         }
     }
 }

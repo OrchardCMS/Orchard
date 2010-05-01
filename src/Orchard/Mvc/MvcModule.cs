@@ -1,35 +1,17 @@
 ﻿using System;
-using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
 using Autofac;
-using Autofac.Integration.Web;
-using Autofac.Integration.Web.Mvc;
-using Orchard.Environment.AutofacUtil.DynamicProxy2;
 using Orchard.Mvc.Filters;
-using Orchard.Extensions;
-using Autofac.Core;
+using Orchard.Mvc.Routes;
 
 namespace Orchard.Mvc {
     public class MvcModule : Module {
-        private readonly IExtensionManager _extensionManager;
-        private readonly DynamicProxyContext _dynamicProxyContext;
-
-        public MvcModule(IExtensionManager extensionManager, DynamicProxyContext dynamicProxyContext) {
-            _extensionManager = extensionManager;
-            _dynamicProxyContext = dynamicProxyContext;
-        }
 
         protected override void Load(ContainerBuilder moduleBuilder) {
-            var extensions = _extensionManager.ActiveExtensions();
-            var assemblies = extensions.Select(x => x.Assembly);
-            var actionInvokerService = new UniqueService();
-            moduleBuilder.RegisterType<FilterResolvingActionInvoker>().As(actionInvokerService).InstancePerDependency();
-
-            moduleBuilder.RegisterControllers(new OrchardControllerIdentificationStrategy(extensions), assemblies.ToArray())
-                .EnableDynamicProxy(_dynamicProxyContext)
-                .InjectActionInvoker(actionInvokerService).InstancePerDependency();
+            moduleBuilder.RegisterType<FilterResolvingActionInvoker>().As<IActionInvoker>().InstancePerDependency();
+            moduleBuilder.RegisterType<ShellRoute>().InstancePerDependency();
 
             moduleBuilder.Register(ctx => HttpContextBaseFactory(ctx)).As<HttpContextBase>().InstancePerDependency();
             moduleBuilder.Register(ctx => RequestContextFactory(ctx)).As<RequestContext>().InstancePerDependency();
@@ -64,6 +46,12 @@ namespace Orchard.Mvc {
             var mvcHandler = httpContext.Handler as MvcHandler;
             if (mvcHandler != null) {
                 return mvcHandler.RequestContext;
+            }
+
+            var hasRequestContext = httpContext.Handler as IHasRequestContext;
+            if (hasRequestContext != null) {
+                if (hasRequestContext.RequestContext != null)
+                    return hasRequestContext.RequestContext;
             }
 
             return new RequestContext(httpContext, new RouteData());

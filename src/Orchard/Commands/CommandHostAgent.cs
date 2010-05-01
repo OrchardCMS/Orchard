@@ -16,38 +16,118 @@ namespace Orchard.Commands {
     /// executing a single command.
     /// </summary>
     public class CommandHostAgent {
-        public int RunSingleCommand(TextReader input, TextWriter output, string tenant, string[] args, Dictionary<string,string> switches) {
+        private IContainer _hostContainer;
+        private Dictionary<string, IStandaloneEnvironment> _tenants;
+
+        public int RunSingleCommand(TextReader input, TextWriter output, string tenant, string[] args, Dictionary<string, string> switches) {
+            int result = StartHost(input, output);
+            if (result != 0)
+                return result;
+
+            result = RunCommand(input, output, tenant, args, switches);
+            if (result != 0)
+                return result;
+
+            return StopHost(input, output);
+        }
+
+        public int StartHost(TextReader input, TextWriter output) {
             try {
-                var hostContainer = OrchardStarter.CreateHostContainer(MvcSingletons);
-                var host = hostContainer.Resolve<IOrchardHost>();
+                _hostContainer = OrchardStarter.CreateHostContainer(MvcSingletons);
+                _tenants = new Dictionary<string, IStandaloneEnvironment>();
+
+                var host = _hostContainer.Resolve<IOrchardHost>();
                 host.Initialize();
-
-                // Find tenant (or default)
-                tenant = tenant ?? "default";
-                var tenantManager = hostContainer.Resolve<ITenantManager>();
-                var tenantSettings = tenantManager.LoadSettings().Single(s => String.Equals(s.Name, tenant, StringComparison.OrdinalIgnoreCase));
-
-                // Disptach command execution to ICommandManager
-                using (var env = host.CreateStandaloneEnvironment(tenantSettings)) {
-                    var parameters = new CommandParameters {
-                        Arguments = args, 
-                        Switches = switches,
-                        Input = input,
-                        Output = output
-                    };
-                    env.Resolve<ICommandManager>().Execute(parameters);
-                }
-
                 return 0;
             }
             catch (Exception e) {
-                for(; e != null; e = e.InnerException) {
+                for (; e != null; e = e.InnerException) {
                     output.WriteLine("Error: {0}", e.Message);
                     output.WriteLine("{0}", e.StackTrace);
                 }
                 return 5;
             }
         }
+
+
+        public int StopHost(TextReader input, TextWriter output) {
+            try {
+                foreach (var tenant in _tenants.Values) {
+                    tenant.Dispose();
+                }
+                _hostContainer.Dispose();
+
+                _tenants = null;
+                _hostContainer = null;
+                return 0;
+            }
+            catch (Exception e) {
+                for (; e != null; e = e.InnerException) {
+                    output.WriteLine("Error: {0}", e.Message);
+                    output.WriteLine("{0}", e.StackTrace);
+                }
+                return 5;
+            }
+        }
+
+        public int RunCommand(TextReader input, TextWriter output, string tenant, string[] args, Dictionary<string, string> switches) {
+            try {
+                tenant = tenant ?? "Default";
+
+                var env = FindOrCreateTenant(tenant);
+
+                var parameters = new CommandParameters {
+                    Arguments = args,
+                    Switches = switches,
+                    Input = input,
+                    Output = output
+                };
+
+                env.Resolve<ICommandManager>().Execute(parameters);
+
+                return 0;
+            }
+            catch (Exception e) {
+                for (int i = 0; e != null; e = e.InnerException, i++) {
+                    if (i > 0) {
+                        output.WriteLine("-------------------------------------------------------------------");
+                    }
+                    output.WriteLine("Error: {0}", e.Message);
+                    output.WriteLine("{0}", e.StackTrace);
+                }
+                return 5;
+            }
+        }
+
+        public IStandaloneEnvironment FindOrCreateTenant(string tenant) {
+            IStandaloneEnvironment result;
+            if (_tenants.TryGetValue(tenant, out result))
+                return result;
+
+            var host = _hostContainer.Resolve<IOrchardHost>();
+            var tenantManager = _hostContainer.Resolve<IShellSettingsManager>();
+
+            // Retrieve settings for speficified tenant.
+            var settingsList = tenantManager.LoadSettings();
+            if (settingsList.Any()) {
+                var settings = settingsList.SingleOrDefault(s => String.Equals(s.Name, tenant, StringComparison.OrdinalIgnoreCase));
+                if (settings == null) {
+                    throw new OrchardException(string.Format("Tenant {0} does not exist", tenant));
+                }
+
+                var env = host.CreateStandaloneEnvironment(settings);
+
+                // Store in cache for next calls
+                _tenants.Add(tenant, env);
+                return env;
+            }
+            else {
+                // In case of an unitiliazed site (no default settings yet), we create a default settings instance.
+                var settings = new ShellSettings {Name = "Default", State = new TenantState("Uninitialized")};
+                return host.CreateStandaloneEnvironment(settings);
+            }
+        }
+
 
         protected void MvcSingletons(ContainerBuilder builder) {
             builder.RegisterInstance(ControllerBuilder.Current);

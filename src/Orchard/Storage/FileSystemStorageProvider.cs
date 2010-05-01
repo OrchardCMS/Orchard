@@ -95,7 +95,7 @@ namespace Orchard.Storage {
 
         public void RenameFile(string path, string newPath) {
             if (!File.Exists(path)) {
-                throw new ArgumentException("File " + path + "does not exist");
+                throw new ArgumentException("File " + path + " does not exist");
             }
 
             if (File.Exists(newPath)) {
@@ -103,6 +103,11 @@ namespace Orchard.Storage {
             }
 
             File.Move(path, newPath);
+        }
+
+        public string Combine(string path1, string path2)
+        {
+            return Path.Combine(path1, path2);
         }
 
         #endregion
@@ -136,8 +141,14 @@ namespace Orchard.Storage {
                 return _fileInfo.Extension;
             }
 
-            public Stream OpenStream() {
-                return new FileStream(_fileInfo.FullName, FileMode.Open);
+            public Stream OpenRead()
+            {
+                return new FileStream(_fileInfo.FullName, FileMode.Open, FileAccess.Read);
+            }
+
+            public Stream OpenWrite()
+            {
+                return new FileStream(_fileInfo.FullName, FileMode.Open, FileAccess.ReadWrite);
             }
 
             #endregion
@@ -192,5 +203,6 @@ namespace Orchard.Storage {
                 return size;
             }
         }
+
     }
 }

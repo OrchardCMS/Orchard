@@ -4,16 +4,41 @@ using System.Linq;
 using System.Web;
 using System.Web.Routing;
 using NUnit.Framework;
+using Orchard.Environment.Extensions;
+using Orchard.Environment.Extensions.Models;
+using Orchard.Environment.Topology.Models;
 using Orchard.Mvc.Routes;
-using Orchard.Extensions;
 
 namespace Orchard.Tests.Mvc.Routes {
     [TestFixture]
     public class StandardExtensionRouteProviderTests {
         [Test]
         public void ExtensionDisplayNameShouldBeUsedInBothStandardRoutes() {
-            var stubManager = new StubExtensionManager();
-            var routeProvider = new StandardExtensionRouteProvider(stubManager);
+            var topology = new ShellTopology {
+                Controllers = new[] {
+                    new ControllerTopology {
+                        AreaName ="Long.Name.Foo",
+                        Feature =new Feature {
+                            Descriptor=new FeatureDescriptor {
+                                Extension=new ExtensionDescriptor {
+                                    DisplayName="Foo"
+                                }
+                            }
+                        }
+                    },
+                    new ControllerTopology {
+                        AreaName ="Long.Name.Bar",
+                        Feature =new Feature {
+                            Descriptor=new FeatureDescriptor {
+                                Extension=new ExtensionDescriptor {
+                                    DisplayName="Bar"
+                                }
+                            }
+                        }
+                    }
+                }
+            };
+            var routeProvider = new StandardExtensionRouteProvider(topology);
 
             var routes = new List<RouteDescriptor>();
             routeProvider.GetRoutes(routes);
@@ -39,7 +64,11 @@ namespace Orchard.Tests.Mvc.Routes {
                 throw new NotImplementedException();
             }
 
-            public IEnumerable<ExtensionEntry> ActiveExtensions() {
+            public IEnumerable<Feature> LoadFeatures(IEnumerable<FeatureDescriptor> features) {
+                throw new NotImplementedException();
+            }
+
+            public IEnumerable<ExtensionEntry> ActiveExtensions_Obsolete() {
                 yield return new ExtensionEntry {
                     Descriptor = new ExtensionDescriptor {
                         Name = "Long.Name.Foo",
@@ -52,10 +81,6 @@ namespace Orchard.Tests.Mvc.Routes {
                         DisplayName = "Bar",
                     }
                 };
-            }
-
-            public ShellTopology GetExtensionsTopology() {
-                throw new NotImplementedException();
             }
 
             public void InstallExtension(string extensionType, HttpPostedFileBase extensionBundle) {

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Web.Hosting;
@@ -16,6 +17,7 @@ namespace Orchard.Environment.Configuration {
         void CreateFile(string path, string content);
         string ReadFile(string path);
         void DeleteFile(string path);
+        bool FileExists(string path);
 
         string CreateDirectory(string path);
 
@@ -49,6 +51,11 @@ namespace Orchard.Environment.Configuration {
 
         public void DeleteFile(string path) {
             File.Delete(Path.Combine(_basePath, path));
+        }
+
+        public bool FileExists(string path) {
+            var filePath = Path.Combine(_basePath, path);
+            return File.Exists(filePath);
         }
 
         public IEnumerable<string> ListFiles(string path) {

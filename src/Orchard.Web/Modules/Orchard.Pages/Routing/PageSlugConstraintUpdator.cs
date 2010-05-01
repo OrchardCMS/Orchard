@@ -1,6 +1,6 @@
 using System.Linq;
 using JetBrains.Annotations;
-using Orchard.Extensions;
+using Orchard.Environment.Extensions;
 using Orchard.Pages.Services;
 using Orchard.Tasks;
 

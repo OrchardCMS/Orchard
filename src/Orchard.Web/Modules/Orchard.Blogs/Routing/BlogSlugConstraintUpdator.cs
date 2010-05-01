@@ -1,7 +1,7 @@
 using System.Linq;
 using JetBrains.Annotations;
 using Orchard.Blogs.Services;
-using Orchard.Extensions;
+using Orchard.Environment.Extensions;
 using Orchard.Tasks;
 
 namespace Orchard.Blogs.Routing {

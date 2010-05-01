@@ -18,5 +18,12 @@ namespace Orchard.Utility.Extensions {
             if (text == null) return true;
             return string.IsNullOrEmpty(text.Trim());
         }
+
+        public static string OrDefault(this string text, string defaultValue) {
+            if (string.IsNullOrEmpty(text))
+                return defaultValue;
+            else
+                return text;
+        }
     }
 }

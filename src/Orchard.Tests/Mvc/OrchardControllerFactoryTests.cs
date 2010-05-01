@@ -18,7 +18,7 @@ namespace Orchard.Tests.Mvc {
         public void Init() {
             var builder = new ContainerBuilder();
             builder.RegisterType<ReplacementFooController>()
-                .Named<IController>("controller.orchard.foo")
+                .Keyed<IController>("/foo")
                 .InstancePerDependency();
 
             var container = builder.Build();

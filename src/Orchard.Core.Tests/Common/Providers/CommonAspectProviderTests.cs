@@ -78,20 +78,6 @@ namespace Orchard.Core.Tests.Common.Providers {
             Assert.That(item.Record.OwnerId, Is.EqualTo(0));
         }
 
-        [Test,Ignore("This testing is still being worked out")]
-        public void OwnerShouldBeAuthenticatedUserIfAvailable() {
-            var contentManager = _container.Resolve<IContentManager>();
-
-            var user = contentManager.New<IUser>("user");
-            _authn.Setup(x => x.GetAuthenticatedUser()).Returns(user);
-
-            var item = contentManager.Create<CommonAspect>("test-item", init => { });
-            
-            ClearSession();
-
-            Assert.That(item.Record.OwnerId, Is.EqualTo(6655321));
-        }
-
         [Test]
         public void PublishingShouldFailIfOwnerIsUnknown()
         {

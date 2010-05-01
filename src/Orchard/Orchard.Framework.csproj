@@ -79,6 +79,10 @@
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
+    <Reference Include="System.Data" />
+    <Reference Include="System.Runtime.Serialization">
+      <RequiredTargetFramework>3.0</RequiredTargetFramework>
+    </Reference>
     <Reference Include="System.Transactions" />
     <Reference Include="System.Web" />
     <Reference Include="System.Web.Abstractions">
@@ -91,6 +95,7 @@
     <Reference Include="System.Web.Routing">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
+    <Reference Include="System.Xml" />
     <Reference Include="Yaml, Version=1.0.3370.39839, Culture=neutral, PublicKeyToken=187a3d240e44a135, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\yaml\Yaml.dll</HintPath>
@@ -118,10 +123,9 @@
     <Compile Include="Mvc\Routes\RoutePublisher.cs" />
     <Compile Include="Mvc\Routes\RouteDescriptor.cs" />
     <Compile Include="Data\Repository.cs" />
-    <Compile Include="Environment\DefaultCompositionStrategy.cs" />
+    <Compile Include="Environment\Topology\CompositionStrategy.cs" />
     <Compile Include="Environment\DefaultOrchardHost.cs" />
     <Compile Include="Mvc\OrchardControllerFactory.cs" />
-    <Compile Include="Environment\HostContext.cs" />
     <Compile Include="Environment\IOrchardHost.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Validation\Argument.cs" />
@@ -157,34 +161,54 @@
     <Compile Include="Data\Builders\SqlServerBuilder.cs" />
     <Compile Include="Data\Conventions\StringLengthConvention.cs" />
     <Compile Include="Data\SessionFactoryHolder.cs" />
+    <Compile Include="Environment\AutofacUtil\LifetimeScopeContainer.cs" />
+    <Compile Include="Environment\Configuration\TenantState.cs" />
+    <Compile Include="Environment\DefaultOrchardHostEventSink.cs" />
+    <Compile Include="Environment\RunningShellTable.cs" />
     <Compile Include="Environment\AutofacUtil\DynamicProxy2\DynamicProxyContext.cs" />
     <Compile Include="Environment\AutofacUtil\DynamicProxy2\DynamicProxyExtensions.cs" />
     <Compile Include="Environment\AutofacUtil\DynamicProxy2\ConstructorFinderWrapper.cs" />
     <Compile Include="Environment\Configuration\AppDataFolder.cs" />
-    <Compile Include="Environment\Configuration\AzureBlobTenantManager.cs" />
-    <Compile Include="Environment\Configuration\DefaultTenantManager.cs" />
-    <Compile Include="Environment\Configuration\ITenantManager.cs" />
+    <Compile Include="Environment\Configuration\ShellSettingsManager.cs" />
     <Compile Include="Environment\AutofacUtil\ContainerUpdater.cs" />
-    <Compile Include="Environment\ShellBuilders\DefaultShellContainerFactory.cs" />
-    <Compile Include="Environment\ShellBuilders\IShellContainerFactory.cs" />
-    <Compile Include="Environment\ShellBuilders\SafeModeShellContainerFactory.cs" />
+    <Compile Include="Environment\ShellBuilders\ShellContextFactory.cs" />
+    <Compile Include="Environment\ShellBuilders\ShellContext.cs" />
+    <Compile Include="Environment\Topology\ShellDescriptorCache.cs" />
+    <Compile Include="Environment\Topology\IShellDescriptorManager.cs" />
+    <Compile Include="Environment\Topology\Models\ShellTopology.cs" />
+    <Compile Include="Environment\Topology\Models\ShellDescriptor.cs" />
+    <Compile Include="Environment\ShellBuilders\ShellContainerFactory.cs" />
     <Compile Include="Environment\Configuration\ShellSettings.cs" />
     <Compile Include="Environment\StandaloneEnvironment.cs" />
-    <Compile Include="Extensions\AreaFolders.cs" />
-    <Compile Include="Extensions\ExtensionFolders.cs" />
-    <Compile Include="Extensions\FeatureDescriptor.cs" />
-    <Compile Include="Extensions\Loaders\AreaExtensionLoader.cs" />
-    <Compile Include="Extensions\Records\ExtensionRecord.cs" />
-    <Compile Include="Extensions\ShellTopology.cs" />
+    <Compile Include="Events\DefaultOrchardEventBus.cs" />
+    <Compile Include="Events\IEventBus.cs" />
+    <Compile Include="Events\IEventBusHandler.cs" />
+    <Compile Include="Environment\Extensions\Folders\AreaFolders.cs" />
+    <Compile Include="Environment\Extensions\Folders\ExtensionFolders.cs" />
+    <Compile Include="Environment\Extensions\Models\Extension.cs" />
+    <Compile Include="Environment\Extensions\Loaders\AreaExtensionLoader.cs" />
+    <Compile Include="Environment\Extensions\Models\Feature.cs" />
+    <Compile Include="Environment\Extensions\Models\FeatureDescriptor.cs" />
+    <Compile Include="Environment\Extensions\OrchardFeatureAttribute.cs" />
+    <Compile Include="Modules\IModule.cs" />
+    <Compile Include="Modules\IModuleFeature.cs" />
+    <Compile Include="Modules\IModuleService.cs" />
     <Compile Include="Mvc\AntiForgery\ValidateAntiForgeryTokenOrchardAttribute.cs" />
     <Compile Include="Mvc\Extensions\ControllerExtensions.cs" />
     <Compile Include="Mvc\Extensions\ModelStateDictionaryExtensions.cs" />
     <Compile Include="Mvc\Html\FileRegistrationContextExtensions.cs" />
     <Compile Include="Mvc\Extensions\UrlHelperExtensions.cs" />
+    <Compile Include="Mvc\IHasRequestContext.cs" />
+    <Compile Include="Mvc\Routes\UrlPrefix.cs" />
+    <Compile Include="Mvc\Routes\UrlPrefixAdjustedHttpContext.cs" />
+    <Compile Include="Mvc\Routes\ShellRoute.cs" />
     <Compile Include="Mvc\ViewModels\AdaptedViewModel.cs" />
     <Compile Include="Mvc\ViewUserControl.cs">
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
+    <Compile Include="Mvc\Wrappers\HttpContextBaseWrapper.cs" />
+    <Compile Include="Mvc\Wrappers\HttpRequestBaseWrapper.cs" />
+    <Compile Include="Mvc\Wrappers\HttpResponseBaseWrapper.cs" />
     <Compile Include="OrchardException.cs" />
     <Compile Include="Security\IAuthorizationServiceEvents.cs" />
     <Compile Include="Security\MembershipSettings.cs" />
@@ -244,8 +268,8 @@
     <Compile Include="ContentManagement\Records\ContentPartVersionRecord.cs" />
     <Compile Include="ContentManagement\Records\ContentTypeRecord.cs" />
     <Compile Include="ContentManagement\Records\Utility.cs" />
-    <Compile Include="Extensions\HackInstallationGenerator.cs" />
-    <Compile Include="Extensions\IExtensionManagerEvents.cs" />
+    <Compile Include="Environment\Extensions\HackInstallationGenerator.cs" />
+    <Compile Include="Environment\Extensions\IExtensionManagerEvents.cs" />
     <Compile Include="Localization\Text.cs" />
     <Compile Include="Mvc\ViewModels\ContentItemViewModel.cs" />
     <Compile Include="ContentManagement\ViewModels\TemplateViewModel.cs" />
@@ -254,8 +278,8 @@
     <Compile Include="Data\TransactionManager.cs" />
     <Compile Include="Environment\IOrchardShellEvents.cs" />
     <Compile Include="Environment\OrchardServices.cs" />
-    <Compile Include="Extensions\ExtensionDescriptor.cs" />
-    <Compile Include="Extensions\ExtensionEntry.cs" />
+    <Compile Include="Environment\Extensions\Models\ExtensionDescriptor.cs" />
+    <Compile Include="Environment\Extensions\ExtensionEntry.cs" />
     <Compile Include="IOrchardServices.cs" />
     <Compile Include="Themes\ThemeFilter.cs" />
     <Compile Include="Themes\ThemedAttribute.cs" />
@@ -270,17 +294,17 @@
     <Compile Include="Tasks\Scheduling\IScheduledTaskManager.cs" />
     <Compile Include="Tasks\Scheduling\ScheduledTaskContext.cs" />
     <Compile Include="Themes\ExtensionManagerExtensions.cs" />
-    <Compile Include="Extensions\Helpers\PathHelpers.cs" />
-    <Compile Include="Extensions\IExtensionManager.cs" />
-    <Compile Include="Extensions\ModuleFolders.cs" />
-    <Compile Include="Extensions\ExtensionManager.cs" />
-    <Compile Include="Extensions\IExtensionFolders.cs" />
-    <Compile Include="Extensions\Loaders\CoreExtensionLoader.cs" />
-    <Compile Include="Extensions\Loaders\DynamicExtensionLoader.cs" />
-    <Compile Include="Extensions\Loaders\IExtensionLoader.cs" />
-    <Compile Include="Extensions\Loaders\PrecompiledExtensionLoader.cs" />
-    <Compile Include="Extensions\Loaders\ReferencedExtensionLoader.cs" />
-    <Compile Include="Extensions\ThemeFolders.cs" />
+    <Compile Include="Environment\Extensions\Helpers\PathHelpers.cs" />
+    <Compile Include="Environment\Extensions\IExtensionManager.cs" />
+    <Compile Include="Environment\Extensions\Folders\ModuleFolders.cs" />
+    <Compile Include="Environment\Extensions\ExtensionManager.cs" />
+    <Compile Include="Environment\Extensions\Folders\IExtensionFolders.cs" />
+    <Compile Include="Environment\Extensions\Loaders\CoreExtensionLoader.cs" />
+    <Compile Include="Environment\Extensions\Loaders\DynamicExtensionLoader.cs" />
+    <Compile Include="Environment\Extensions\Loaders\IExtensionLoader.cs" />
+    <Compile Include="Environment\Extensions\Loaders\PrecompiledExtensionLoader.cs" />
+    <Compile Include="Environment\Extensions\Loaders\ReferencedExtensionLoader.cs" />
+    <Compile Include="Environment\Extensions\Folders\ThemeFolders.cs" />
     <Compile Include="IEvents.cs" />
     <Compile Include="Localization\IText.cs" />
     <Compile Include="Localization\LocalizationModule.cs" />

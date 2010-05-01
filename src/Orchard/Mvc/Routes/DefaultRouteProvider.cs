@@ -8,8 +8,7 @@ namespace Orchard.Mvc.Routes {
     public class DefaultRouteProvider : IRouteProvider {
         public IEnumerable<RouteDescriptor> GetRoutes() {
             return new[] {
-                             new RouteDescriptor {
-                                                     Name = "Default",
+                             new RouteDescriptor {                                                     
                                                      Priority = -20,
                                                      Route = new Route(
                                                          "{controller}/{action}/{id}",
