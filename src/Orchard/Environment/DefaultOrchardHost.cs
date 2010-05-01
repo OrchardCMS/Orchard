@@ -83,16 +83,20 @@ namespace Orchard.Environment {
                 return allSettings.Select(
                     settings => {
                         var context = CreateShellContext(settings);
-                        context.Shell.Activate();
-                        _runningShellTable.Add(settings);
+                        ActivateShell(context);
                         return context;
                     });
             }
 
             var setupContext = CreateSetupContext();
-            setupContext.Shell.Activate();
-            _runningShellTable.Add(setupContext.Settings);
+            ActivateShell(setupContext);
             return new[] { setupContext };
+        }
+
+        private void ActivateShell(ShellContext context) {
+            context.Shell.Activate();
+            _runningShellTable.Add(context.Settings);
+            HackSimulateExtensionActivation(context.LifetimeScope);
         }
 
         ShellContext CreateSetupContext() {
