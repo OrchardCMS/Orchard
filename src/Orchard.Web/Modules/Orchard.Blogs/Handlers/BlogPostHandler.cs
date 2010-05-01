@@ -16,12 +16,10 @@ namespace Orchard.Blogs.Handlers {
     [UsedImplicitly]
     public class BlogPostHandler : ContentHandler {
         private readonly IBlogPostService _blogPostService;
-        private readonly IRoutableService _routableService;
         private readonly IOrchardServices _orchardServices;
 
-        public BlogPostHandler(IBlogService blogService, IBlogPostService blogPostService, IRoutableService routableService, IOrchardServices orchardServices, RequestContext requestContext) {
+        public BlogPostHandler(IBlogService blogService, IBlogPostService blogPostService, IOrchardServices orchardServices, RequestContext requestContext) {
             _blogPostService = blogPostService;
-            _routableService = routableService;
             _orchardServices = orchardServices;
             T = NullLocalizer.Instance;
 
@@ -63,8 +61,6 @@ namespace Orchard.Blogs.Handlers {
             OnVersioned<BlogPost>((context, bp1, bp2) => updateBlogPostCount(bp2.Blog));
             OnRemoved<BlogPost>((context, bp) => updateBlogPostCount(bp.Blog));
 
-            OnPublished<BlogPost>((context, bp) => ProcessSlug(bp));
-
             OnRemoved<Blog>(
                 (context, b) =>
                 blogPostService.Get(context.ContentItem.As<Blog>()).ToList().ForEach(
@@ -72,23 +68,5 @@ namespace Orchard.Blogs.Handlers {
         }
 
         Localizer T { get; set; }
-
-        private void ProcessSlug(BlogPost post) {
-            _routableService.FillSlug(post.As<RoutableAspect>());
-
-            var slugsLikeThis = _blogPostService.Get(post.Blog, VersionOptions.Published).Where(
-                p => p.Slug.StartsWith(post.Slug, StringComparison.OrdinalIgnoreCase) &&
-                     p.Id != post.Id).Select(p => p.Slug);
-
-            //todo: (heskew) need better messages
-            if (slugsLikeThis.Count() > 0) {
-                //todo: (heskew) need better messages
-                var originalSlug = post.Slug;
-                post.Slug = _routableService.GenerateUniqueSlug(post.Slug, slugsLikeThis);
-
-                if (originalSlug != post.Slug)
-                    _orchardServices.Notifier.Warning(T("A different blog post is already published with this same slug ({0}) so a unique slug ({1}) was generated for this post.", originalSlug, post.Slug));
-            }
-        }
     }
 }

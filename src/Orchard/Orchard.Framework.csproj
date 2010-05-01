@@ -195,6 +195,7 @@
     <Compile Include="Modules\IModuleService.cs" />
     <Compile Include="Mvc\AntiForgery\ValidateAntiForgeryTokenOrchardAttribute.cs" />
     <Compile Include="Mvc\Extensions\ControllerExtensions.cs" />
+    <Compile Include="Mvc\Extensions\ModelStateDictionaryExtensions.cs" />
     <Compile Include="Mvc\Html\FileRegistrationContextExtensions.cs" />
     <Compile Include="Mvc\Extensions\UrlHelperExtensions.cs" />
     <Compile Include="Mvc\IHasRequestContext.cs" />
