@@ -48,6 +48,12 @@ namespace Orchard.Mvc {
                 return mvcHandler.RequestContext;
             }
 
+            var hasRequestContext = httpContext.Handler as IHasRequestContext;
+            if (hasRequestContext != null) {
+                if (hasRequestContext.RequestContext != null)
+                    return hasRequestContext.RequestContext;
+            }
+
             return new RequestContext(httpContext, new RouteData());
         }
 

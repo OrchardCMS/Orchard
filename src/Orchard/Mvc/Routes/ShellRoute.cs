@@ -122,7 +122,7 @@ namespace Orchard.Mvc.Routes {
             }
         }
 
-        class HttpHandler : IHttpHandler, IRequiresSessionState {
+        class HttpHandler : IHttpHandler, IRequiresSessionState, IHasRequestContext {
             protected readonly ContainerProvider _containerProvider;
             private readonly IHttpHandler _httpHandler;
 
@@ -142,6 +142,13 @@ namespace Orchard.Mvc.Routes {
                 }
                 finally {
                     _containerProvider.EndRequestLifetime();
+                }
+            }
+
+            public RequestContext RequestContext {
+                get {
+                    var mvcHandler = _httpHandler as MvcHandler;
+                    return mvcHandler == null ? null : mvcHandler.RequestContext;
                 }
             }
         }
@@ -173,7 +180,6 @@ namespace Orchard.Mvc.Routes {
                     _containerProvider.EndRequestLifetime();
                 }
             }
-
         }
     }
 }
