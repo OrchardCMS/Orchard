@@ -129,6 +129,10 @@ namespace Orchard.Core.Common.Handlers {
                                          return user;
                                      });
 
+            // Force call to setter if we had already set a value
+            if (aspect.OwnerField.Value != null)
+                aspect.OwnerField.Value = aspect.OwnerField.Value;
+
             aspect.ContainerField.Setter(container => {
                                              if (container == null) {
                                                  aspect.Record.Container = null;
@@ -138,6 +142,10 @@ namespace Orchard.Core.Common.Handlers {
                                              }
                                              return container;
                                          });
+
+            // Force call to setter if we had already set a value
+            if (aspect.ContainerField.Value != null)
+                aspect.ContainerField.Value = aspect.ContainerField.Value;
         }
 
 
@@ -172,7 +180,7 @@ namespace Orchard.Core.Common.Handlers {
             var priorOwner = viewModel.Owner;
             context.Updater.TryUpdateModel(viewModel, "CommonAspect", null, null);
 
-            if (viewModel.Owner != priorOwner) {
+            if (viewModel.Owner != null && viewModel.Owner != priorOwner) {
                 var newOwner = _membershipService.GetUser(viewModel.Owner);
                 if (newOwner == null) {
                     context.Updater.AddModelError("CommonAspect.Owner", T("Invalid user name"));
@@ -181,6 +189,7 @@ namespace Orchard.Core.Common.Handlers {
                     instance.Owner = newOwner;
                 }
             }
+
             context.AddEditor(new TemplateViewModel(viewModel, "CommonAspect") { TemplateName = "Parts/Common.Owner", ZoneName = "primary", Position = "999" });
         }
     }

@@ -1,7 +1,7 @@
 using System.Linq;
 using System.Web.Mvc;
-using Orchard.Localization;
 using Orchard.ContentManagement;
+using Orchard.Localization;
 using Orchard.Security;
 using Orchard.UI.Notify;
 using Orchard.Users.Drivers;
@@ -147,6 +147,7 @@ namespace Orchard.Users.Controllers {
         bool IUpdateModel.TryUpdateModel<TModel>(TModel model, string prefix, string[] includeProperties, string[] excludeProperties) {
             return TryUpdateModel(model, prefix, includeProperties, excludeProperties);
         }
+
         public void AddModelError(string key, LocalizedString errorMessage) {
             ModelState.AddModelError(key, errorMessage.ToString());
         }
