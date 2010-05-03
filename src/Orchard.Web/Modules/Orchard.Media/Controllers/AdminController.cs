@@ -186,9 +186,9 @@ namespace Orchard.Media.Controllers {
                 }
 
                 var file = Request.Files[0];
-                _mediaService.UploadMediaFile(viewModel.MediaPath, file);
+                var publicUrl = _mediaService.UploadMediaFile(viewModel.MediaPath, file);
 
-                return Content(string.Format("<script type=\"text/javascript\">var result = {{ url: \"{0}\" }};</script>", Path.Combine(_mediaService.GetRootUrl(), string.Format("{0}/{1}", viewModel.MediaPath, Path.GetFileName(file.FileName)).Replace("//", "/")).Replace("\\", "/")));
+                return Content(string.Format("<script type=\"text/javascript\">var result = {{ url: \"{0}\" }};</script>", publicUrl));
             }
             catch (Exception exception) {
                 return Content(string.Format("<script type=\"text/javascript\">var result = {{ error: \"{0}\" }};</script>", T("ERROR: Uploading media file failed: {0}", exception.Message)));
@@ -203,6 +203,7 @@ namespace Orchard.Media.Controllers {
             model.Size = size;
             model.FolderName = folderName;
             model.MediaPath = mediaPath;
+            model.PublicUrl = _mediaService.GetPublicUrl(Path.Combine(mediaPath, name));
             return View(model);
         }
 

@@ -2,6 +2,7 @@
 
 namespace Orchard.Storage {
     public interface IStorageProvider : IDependency {
+        string GetPublicUrl(string path);
         IStorageFile GetFile(string path);
         IEnumerable<IStorageFile> ListFiles(string path);
         IEnumerable<IStorageFolder> ListFolders(string path);

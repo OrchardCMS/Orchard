@@ -7,29 +7,46 @@ using Orchard.Environment.Configuration;
 
 namespace Orchard.Storage {
     public class FileSystemStorageProvider : IStorageProvider {
-        private readonly ShellSettings _settings;
-        private string _storagePath;
+        private readonly string _storagePath;
+        private readonly string _publicPath;
 
         public FileSystemStorageProvider(ShellSettings settings) {
-            _settings = settings;
-
             var mediaPath = HostingEnvironment.IsHosted
-                ? HostingEnvironment.MapPath("~/Media/")
+                ? HostingEnvironment.MapPath("~/Media/") ?? ""
                 : Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Media");
+            
             _storagePath = Path.Combine(mediaPath, settings.Name);
+
+            var appPath = "";
+            if (HostingEnvironment.IsHosted) {
+                appPath = HostingEnvironment.ApplicationVirtualPath;
+            }
+            if (!appPath.EndsWith("/"))
+                appPath = appPath + '/';
+            if (!appPath.StartsWith("/"))
+                appPath = '/' + appPath;
+
+            _publicPath = appPath + "Media/" + settings.Name + "/";
         }
 
         string Map(string path) {
-            return Path.Combine(_storagePath, path);
+            return string.IsNullOrEmpty(path) ? _storagePath : Path.Combine(_storagePath, path);
         }
 
         static string Fix(string path) {
-            return Path.DirectorySeparatorChar != '/' 
-                ? path.Replace('/', Path.DirectorySeparatorChar) 
+            return string.IsNullOrEmpty(path)
+                ? ""
+                : Path.DirectorySeparatorChar != '/'
+                ? path.Replace('/', Path.DirectorySeparatorChar)
                 : path;
         }
 
         #region Implementation of IStorageProvider
+
+        public string GetPublicUrl(string path) {
+
+            return _publicPath + path.Replace(Path.DirectorySeparatorChar, '/');
+        }
 
         public IStorageFile GetFile(string path) {
             if (!File.Exists(Map(path))) {
@@ -105,9 +122,8 @@ namespace Orchard.Storage {
             }
 
             var fileInfo = new FileInfo(Map(path));
-            using (var stream = fileInfo.Create()) {
-                
-            }
+            File.WriteAllBytes(Map(path), new byte[0]);
+
             return new FileSystemStorageFile(Fix(path), fileInfo);
         }
 
