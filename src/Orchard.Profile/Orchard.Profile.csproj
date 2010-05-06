@@ -73,6 +73,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="profiling-setup-commands.txt" />
+    <Content Include="Readme.txt" />
     <Content Include="report.xsl" />
     <Content Include="Scripts\scenario.txt" />
     <Content Include="Scripts\dashboard.txt" />
