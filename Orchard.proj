@@ -11,6 +11,7 @@
 		<CompileFolder>$(BuildFolder)\Compile</CompileFolder>
 		<WebSitesFolder>$(CompileFolder)\_PublishedWebsites</WebSitesFolder>
 		<StageFolder>$(BuildFolder)\Stage</StageFolder>
+		<ProfilingFolder>$(BuildFolder)\Profiling</ProfilingFolder>
 		
 		<BuildPlatform Condition="$(ProgramW6432) != ''">x64</BuildPlatform>
 		<BuildPlatform Condition="$(BuildPlatform) == ''">x86</BuildPlatform>
@@ -30,6 +31,14 @@
   <Target Name="Package">
     <CallTarget Targets="Package-Stage"/>
     <CallTarget Targets="Package-Zip"/>
+  </Target>
+
+  <Target Name="Profiling">
+    <CallTarget Targets="Clean"/>
+    <CallTarget Targets="Compile"/>
+    <CallTarget Targets="Package-Stage"/>
+    <CallTarget Targets="Profiling-Stage"/>
+    <CallTarget Targets="Profiling-Setup"/>
   </Target>
 
 
@@ -141,4 +150,20 @@
 		<Zip Files="@(Zip-Source)" WorkingDirectory="$(MSBuildProjectDirectory)" ZipFileName="$(BuildFolder)\Orchard.Source.zip" />
   </Target>
 
+<!-- Profiling -->
+
+  <Target Name="Profiling-Stage">
+    <ItemGroup>
+      <Profiling-Web Include="$(StageFolder)\**\*" />
+    </ItemGroup>
+    
+    <Copy SourceFiles="@(Profiling-Web)" DestinationFolder="$(ProfilingFolder)\%(RecursiveDir)"/>
+    
+  </Target>
+  
+  <Target Name="Profiling-Setup">
+    <Exec Command="$(ProfilingFolder)\bin\Orchard.exe @$(SrcFolder)\Orchard.Profile\profiling-setup-commands.txt" WorkingDirectory="$(ProfilingFolder)"/>
+  </Target>
+
 </Project>
+

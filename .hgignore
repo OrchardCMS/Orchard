@@ -8,9 +8,8 @@ glob:*.patch
 glob:*.hg
 glob:build
 glob:*.sln.cache
-glob:src/Orchard.Web/Modules/Orchard.DevTools/Module.txt
-glob:src/Orchard.Web/Modules/Orchard.Sandbox/Module.txt
 glob:src/Orchard.Web/Media/*
 glob:desktop.ini
 glob:src/Orchard.Azure.suo
 glob:src/Orchard.5.0.ReSharper
+glob:log.xml

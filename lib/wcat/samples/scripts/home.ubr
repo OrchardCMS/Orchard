@@ -1,0 +1,66 @@
+scenario
+{
+    name    = "IIS Home Page";
+
+    warmup      = 30;
+    duration    = 120;
+    cooldown    = 10;
+
+    /////////////////////////////////////////////////////////////////
+    //
+    // All requests inherit the settings from the default request.
+    // Defaults are overridden if specified in the request itself.
+    //
+    /////////////////////////////////////////////////////////////////
+    default
+    {
+        // send keep-alive header
+        setheader
+        {
+            name    = "Connection";
+            value   = "keep-alive";
+        }
+
+        // set the host header
+        setheader
+        {
+            name    = "Host";
+            value   = server();
+        }
+
+        // HTTP1.1 request
+        version     = HTTP11;
+
+        // keep the connection alive after the request
+        close       = ka;
+    }
+
+    //
+    // This script is made for IIS7
+    //
+    transaction
+    {
+        id = "Default Web Site Homepage";
+        weight = 1;
+
+        request
+        {
+            url         = "/";
+            statuscode  = 200;
+        }
+
+        request
+        {
+            url         = "/welcome.png";
+            statuscode  = 200;
+        }
+
+        //
+        // specifically close the connection after both files are requested
+        //
+        close
+        {
+            method      = reset;
+        }
+    }
+}

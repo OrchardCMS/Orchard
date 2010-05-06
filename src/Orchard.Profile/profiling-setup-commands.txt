@@ -1,0 +1,6 @@
+﻿help commands
+setup /SiteName:Profiling /AdminUsername:admin /AdminPassword:profiling-secret /DatabaseProvider:SQLite /EnabledFeatures:Orchard.Framework,Common,Dashboard,Feeds,HomePage,Navigation,Scheduling,Settings,XmlRpc,Orchard.Users,Orchard.Roles,TinyMce,Orchard.Modules,Orchard.Themes,Orchard.MultiTenancy,Orchard.Pages,Orchard.Blogs,Orchard.Comments,Futures.Widgets,Orchard.Media,Orchard.Tags,Orchard.DevTools
+help commands
+tenant list
+feature list
+add profiling data
