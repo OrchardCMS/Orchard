@@ -1,13 +1,9 @@
 ﻿using System;
-using System.Configuration;
 using System.IO;
 using NUnit.Framework;
-using System.Diagnostics;
 using Orchard.Azure.Storage;
 using Microsoft.WindowsAzure;
 using System.Linq;
-using Microsoft.WindowsAzure.StorageClient;
-using System.Text;
 
 namespace Orchard.Azure.Tests.Storage {
     [TestFixture]

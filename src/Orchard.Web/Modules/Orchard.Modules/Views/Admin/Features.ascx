@@ -18,11 +18,11 @@ using (Html.BeginFormAntiForgeryPost()) { %>
     </fieldset>
     <fieldset class="pageList">
         <ul class="contentItems"><%
-            foreach (var featureGroup in Model.Features.OrderBy(f => f.Descriptor.Name).GroupBy(f => f.Descriptor.Category)) { %>
+            foreach (var featureGroup in Model.Features.OrderBy(f => f.Descriptor.Category).GroupBy(f => f.Descriptor.Category)) { %>
             <li<%=featureGroup == Model.Features.Last() ? " class=\"last\"" : "" %>>
-                <h2><%=Html.Encode(featureGroup.First().Descriptor.Category ?? T("General")) %></h2>
+                <h2><%=Html.Encode(featureGroup.First().Descriptor.Category ?? T("Uncategorized")) %></h2>
                 <ul><%
-                    foreach (var feature in featureGroup) {%>
+                    foreach (var feature in featureGroup.OrderBy(f => f.Descriptor.Name)) {%>
                     <li<%=feature == featureGroup.Last() ? " class=\"last\"" : "" %> id="<%=Html.Encode(feature.Descriptor.Name) %>">
                         <div class="summary">
                             <div class="properties">
@@ -39,7 +39,7 @@ using (Html.BeginFormAntiForgeryPost()) { %>
                                     } %>
                                     </li><%
                                     //dependencies
-                                    if (feature.Descriptor.Dependencies.Count() > 0) { %>
+                                    if (feature.Descriptor.Dependencies != null && feature.Descriptor.Dependencies.Count() > 0) { %>
                                     <li>&nbsp;&#124;&nbsp;<%=T("Depends on: {0}", string.Join(", ", feature.Descriptor.Dependencies.Select(s => Html.Link(Html.Encode(s), string.Format("{0}#{1}", Url.Action("features", new { area = "Orchard.Modules" }), Html.Encode(s)))).OrderBy(s => s).ToArray())) %></li><%
                                     } %>
                                 </ul>
