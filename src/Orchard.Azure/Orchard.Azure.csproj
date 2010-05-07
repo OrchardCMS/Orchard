@@ -51,9 +51,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CloudBlobContainerExtensions.cs" />
+    <Compile Include="Environment\Configuration\AzureAppDataFolder.cs" />
     <Compile Include="Environment\Configuration\AzureShellSettingsManager.cs" />
     <Compile Include="Storage\AzureBlobStorageProvider.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="AzureFileSystem.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Orchard\Orchard.Framework.csproj">

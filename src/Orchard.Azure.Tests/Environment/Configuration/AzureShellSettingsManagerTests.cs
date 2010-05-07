@@ -24,6 +24,12 @@ namespace Orchard.Azure.Tests.Environment.Configuration {
             DeleteAllBlobs( ((AzureShellSettingsManager)Loader).Container);
         }
 
+        [TearDown]
+        public void TearDown() {
+            // ensure default container is empty after running tests
+            DeleteAllBlobs(( (AzureShellSettingsManager)Loader ).Container);
+        }
+
         [Test]
         public void SingleSettingsFileShouldComeBackAsExpected() {
 
