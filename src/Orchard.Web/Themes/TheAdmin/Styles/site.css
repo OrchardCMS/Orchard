@@ -767,6 +767,7 @@ table.items, textarea, input.text, input.text-box,
     text-align:right;
 }
 .contentItems {
+    clear:both;
     padding:0;
 }
 .properties {
@@ -797,6 +798,9 @@ table.items, textarea, input.text, input.text-box,
 }
 .icon {
     margin:0 .2em -.2em .2em;
+}
+h3 .icon {
+    margin-bottom:-.05em;
 }
 .linkButton {
     border:none;

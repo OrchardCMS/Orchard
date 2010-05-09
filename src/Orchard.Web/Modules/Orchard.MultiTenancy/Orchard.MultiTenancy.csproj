@@ -71,8 +71,14 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\Admin\images\disabled.gif" />
+    <Content Include="Content\Admin\images\enabled.gif" />
     <Content Include="Module.txt" />
     <Content Include="Views\Admin\Add.ascx" />
+    <Content Include="Views\Admin\DisplayTemplates\ActionsForUninitialized.ascx" />
+    <Content Include="Views\Admin\DisplayTemplates\ActionsForDisabled.ascx" />
+    <Content Include="Views\Admin\DisplayTemplates\ActionsForInvalid.ascx" />
+    <Content Include="Views\Admin\DisplayTemplates\ActionsForRunning.ascx" />
     <Content Include="Views\Admin\Index.ascx" />
     <Content Include="Web.config" />
     <Content Include="Views\Web.config" />
