@@ -17,7 +17,12 @@ namespace Orchard.Specs.Hosting {
 
             _tempSite = Path.Get(System.IO.Path.GetTempFileName()).Delete().CreateDirectory();
 
-            _orchardWebPath = baseDir.Parent.Parent.Parent.Combine("Orchard.Web");
+            // Trying the two known relative paths to the Orchard.Web directory.
+            // The second one is for the target "spec" in orchard.proj.
+            _orchardWebPath = baseDir.Up(3).Combine("Orchard.Web");
+            if (!_orchardWebPath.Exists) {
+                _orchardWebPath = baseDir.Up(2).Combine("src").Combine("Orchard.Web");
+            }
 
             baseDir.Combine("Hosting").Combine(templateName)
                 .DeepCopy(_tempSite);
