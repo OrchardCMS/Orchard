@@ -63,6 +63,7 @@
     <Compile Include="AdminMenu.cs" />
     <Compile Include="Commands\TenantCommand.cs" />
     <Compile Include="Controllers\AdminController.cs" />
+    <Compile Include="Extensions\UrlHelperExtensions.cs" />
     <Compile Include="Services\ITenantService.cs" />
     <Compile Include="Services\TenantService.cs" />
     <Compile Include="ViewModels\TenantsAddViewModel.cs" />

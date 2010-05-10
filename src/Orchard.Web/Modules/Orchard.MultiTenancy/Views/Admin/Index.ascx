@@ -1,5 +1,6 @@
 ﻿<%@ Control Language="C#" Inherits="Orchard.Mvc.ViewUserControl<TenantsIndexViewModel>" %>
 <%@ Import Namespace="Orchard.Environment.Configuration" %>
+<%@ Import Namespace="Orchard.MultiTenancy.Extensions" %>
 <%@ Import Namespace="Orchard.Mvc.Html"%>
 <%@ Import Namespace="Orchard.MultiTenancy.ViewModels"%>
 <h1><%=Html.TitleForPage(T("List of Site's Tenants").ToString())%></h1>
@@ -19,7 +20,7 @@
                         } %></span>
                     <span class="tenantName"><%=Html.Encode(tenant.Name) %></span><%
                     if (!string.IsNullOrEmpty(tenant.RequestUrlHost)) {
-                         %><span class="tenantHost"> - <%=Html.Link(tenant.RequestUrlHost, tenant.RequestUrlHost)%></span><%
+                         %><span class="tenantHost"> - <%=Html.Link(Url.Tenant(tenant), Url.Tenant(tenant))%></span><%
                     } %>
                 </h3>
             </div>
