@@ -1,3 +1,5 @@
 ﻿<%@ Control Language="C#" Inherits="Orchard.Mvc.ViewUserControl<ShellSettings>" %>
+<%@ Import Namespace="Orchard.MultiTenancy.Extensions"%>
+<%@ Import Namespace="Orchard.Mvc.Html"%>
 <%@ Import Namespace="Orchard.Environment.Configuration" %>
-<%=Html.ActionLink(T("Setup").ToString(), "_setup", new {tenantName = Model.Name, area = "Orchard.MultiTenancy"}) %>
+<%=Html.Link(T("Set Up").ToString(), Url.Tenant(Model))%>

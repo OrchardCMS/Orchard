@@ -36,7 +36,7 @@ namespace Orchard.Environment.Configuration {
             var filePath = Path.Combine(Path.Combine("Sites", settings.Name), "Settings.txt");
             _appDataFolder.CreateFile(filePath, ComposeSettings(settings));
 
-            _eventBus.Notify("ShellSettings_Saved", null);
+            _eventBus.Notify_Obsolete("ShellSettings_Saved", null);
         }
 
         IEnumerable<ShellSettings> LoadSettings() {

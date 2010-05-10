@@ -20,7 +20,7 @@ namespace Orchard.Events {
                 yield break;
 
             var serviceType = serviceWithType.ServiceType;
-            if (!serviceType.IsInterface || !typeof(IEventHandler).IsAssignableFrom(serviceType))
+            if (!serviceType.IsInterface || !typeof(IEventHandler).IsAssignableFrom(serviceType) || serviceType == typeof(IEventHandler))
                 yield break;
 
             var interfaceProxyType = _proxyBuilder.CreateInterfaceProxyTypeWithoutTarget(
