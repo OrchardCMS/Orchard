@@ -181,6 +181,9 @@
     <Compile Include="Environment\Configuration\ShellSettings.cs" />
     <Compile Include="Environment\StandaloneEnvironment.cs" />
     <Compile Include="Events\DefaultOrchardEventBus.cs" />
+    <Compile Include="Events\EventsInterceptor.cs" />
+    <Compile Include="Events\EventsModule.cs" />
+    <Compile Include="Events\EventsRegistrationSource.cs" />
     <Compile Include="Events\IEventBus.cs" />
     <Compile Include="Events\IEventBusHandler.cs" />
     <Compile Include="Environment\Extensions\Folders\AreaFolders.cs" />
@@ -190,6 +193,7 @@
     <Compile Include="Environment\Extensions\Models\Feature.cs" />
     <Compile Include="Environment\Extensions\Models\FeatureDescriptor.cs" />
     <Compile Include="Environment\Extensions\OrchardFeatureAttribute.cs" />
+    <Compile Include="Events\IEventHandler.cs" />
     <Compile Include="Modules\IModule.cs" />
     <Compile Include="Modules\IModuleFeature.cs" />
     <Compile Include="Modules\IModuleService.cs" />
