@@ -5,7 +5,7 @@
 <%@ Import Namespace="Orchard.Mvc.ViewModels" %>
 <%@ Import Namespace="Orchard.Mvc.Html" %>
 <%  //todo: (heskew) this should really be using the IResourceManager if it's to be a theme especially for the jquery dep (w/out needing to copy into this theme...)
-    var jquery = ResolveUrl("~/Modules/Orchard.Themes/Scripts/jquery-1.4.1.js");
+    var jquery = ResolveUrl("~/Modules/Orchard.Themes/Scripts/jquery-1.4.2.js");
     Model.Zones.AddAction("head:scripts", html =>
       html.ViewContext.Writer.Write(@"<script type=""text/javascript"" src=""" + jquery + @"""></script>"));
     var basejs = ResolveUrl("~/Modules/Orchard.Themes/Scripts/base.js");

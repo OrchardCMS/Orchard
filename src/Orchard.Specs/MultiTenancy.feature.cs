@@ -66,7 +66,7 @@ this.ScenarioSetup(scenarioInfo);
 #line 10
  testRunner.Then("I should see \"List of Site\'s Tenants\"");
 #line 11
-  testRunner.And("I should see \"<td>Default</td>\"");
+  testRunner.And("I should see \"<span class=\"tenantName\">Default</span>\"");
 #line 12
   testRunner.And("the status should be 200 OK");
 #line hidden
@@ -121,7 +121,7 @@ this.ScenarioSetup(scenarioInfo);
 #line 29
   testRunner.And("I am redirected");
 #line 30
- testRunner.Then("I should see \"<td>Scott</td>\"");
+ testRunner.Then("I should see \"<span class=\"tenantName\">Scott</span>\"");
 #line 31
   testRunner.And("the status should be 200 OK");
 #line hidden
@@ -155,7 +155,7 @@ this.ScenarioSetup(scenarioInfo);
 #line 41
   testRunner.And("I am redirected");
 #line 42
- testRunner.Then("I should see \"<td>Uninitialized</td>\"");
+ testRunner.Then("I should see \"<li class=\"tenant Uninitialized\">\"");
 #line 43
   testRunner.And("the status should be 200 OK");
 #line hidden

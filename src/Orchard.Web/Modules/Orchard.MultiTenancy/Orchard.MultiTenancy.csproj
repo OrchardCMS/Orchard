@@ -61,6 +61,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AdminMenu.cs" />
+    <Compile Include="Annotations\SqlDatabaseConnectionStringAttribute.cs" />
     <Compile Include="Commands\TenantCommand.cs" />
     <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Extensions\UrlHelperExtensions.cs" />

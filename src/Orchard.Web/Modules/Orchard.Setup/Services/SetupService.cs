@@ -44,11 +44,17 @@ namespace Orchard.Setup.Services {
 
         private Localizer T { get; set; }
 
+        public ShellSettings Prime() {
+            return _shellSettings;
+        }
+
         public void Setup(SetupContext context) {
-            var shellSettings = new ShellSettings(_shellSettings) {
-                DataProvider = context.DatabaseProvider,
-                DataConnectionString = context.DatabaseConnectionString,
-                DataTablePrefix = context.DatabaseTablePrefix,
+            var shellSettings = new ShellSettings(_shellSettings);
+            
+            if (string.IsNullOrEmpty(shellSettings.DataProvider)) {
+                shellSettings.DataProvider = context.DatabaseProvider;
+                shellSettings.DataConnectionString = context.DatabaseConnectionString;
+                shellSettings.DataTablePrefix = context.DatabaseTablePrefix;
             };
 
             var shellDescriptor = new ShellDescriptor {

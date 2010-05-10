@@ -9,16 +9,23 @@
     toggleWhatYouControl: function() {
         var _this = $(this);
         var _controllees = $("[data-controllerid=" + _this.attr("id") + "]");
-        if (_this.is(":checked")) {
-            $(_controllees.slideDown(200)[0]).find("input").focus();
-        } else {
-            _controllees.slideUp(200);
+        var _controlleesAreHidden = _controllees.is(":hidden");
+        if (_this.is(":checked") && _controlleesAreHidden) {
+            _controllees.hide(); // <- unhook this when the following comment applies
+            $(_controllees.show()[0]).find("input").focus(); // <- aaaand a slideDown there...eventually
+        } else if (!(_this.is(":checked") && _controlleesAreHidden)) {
+            //_controllees.slideUp(200); <- hook this back up when chrome behaves, or when I care less
+            _controllees.hide()
         }
     }
 });
 (function() {
     $("[data-controllerid]").each(function() {
         var controller = $("#" + $(this).attr("data-controllerid"));
+        if (controller.data("isControlling")) {
+            return;
+        }
+        controller.data("isControlling", 1);
         if (!controller.is(":checked")) {
             $("[data-controllerid=" + controller.attr("id") + "]").hide();
         }
