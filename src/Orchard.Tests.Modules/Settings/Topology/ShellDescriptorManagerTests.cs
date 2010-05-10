@@ -22,9 +22,13 @@ namespace Orchard.Tests.Modules.Settings.Topology {
             public string LastMessageName { get; set; }
             public IDictionary<string, string> LastEventData { get; set; }
 
-            public void Notify(string messageName, IDictionary<string, string> eventData) {
+            public void Notify_Obsolete(string messageName, IDictionary<string, string> eventData) {
                 LastMessageName = messageName;
                 LastEventData = eventData;
+            }
+
+            public void Notify(string messageName, Dictionary<string, object> eventData) {
+                throw new NotImplementedException();
             }
         }
 

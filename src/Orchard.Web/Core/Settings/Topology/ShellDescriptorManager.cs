@@ -85,7 +85,7 @@ namespace Orchard.Core.Settings.Topology {
                 });
             }
 
-            _eventBus.Notify(
+            _eventBus.Notify_Obsolete(
                 "ShellDescriptor_Changed",
                 null);
         }

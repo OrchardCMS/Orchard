@@ -12,6 +12,7 @@ using Autofac.Integration.Web.Mvc;
 using Orchard.Environment.AutofacUtil.DynamicProxy2;
 using Orchard.Environment.Configuration;
 using Orchard.Environment.Topology.Models;
+using Orchard.Events;
 
 namespace Orchard.Environment.ShellBuilders {
 
@@ -69,6 +70,10 @@ namespace Orchard.Environment.ShellBuilders {
                             else if (typeof(ITransientDependency).IsAssignableFrom(interfaceType)) {
                                 registration = registration.InstancePerDependency();
                             }
+                        }
+
+                        if (typeof(IEventHandler).IsAssignableFrom(item.Type)) {
+                            registration = registration.As(typeof(IEventHandler));
                         }
 
                         foreach (var parameter in item.Parameters) {

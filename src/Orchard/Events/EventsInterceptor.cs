@@ -15,9 +15,9 @@ namespace Orchard.Events {
 
             var data = invocation.Method.GetParameters()
                 .Select((parameter, index) => new { parameter.Name, Value = invocation.Arguments[index] })
-                .ToDictionary(kv => kv.Name, kv => kv.Value.ToString());
+                .ToDictionary(kv => kv.Name, kv => kv.Value);
 
-            _eventBus.Notify(interfaceName + "_" + methodName, data);
+            _eventBus.Notify(interfaceName + "." + methodName, data);
         }
     }
 }
