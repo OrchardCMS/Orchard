@@ -37,7 +37,7 @@ namespace Orchard.Events {
             }
         }
 
-        private static void TryInvoke(IEventHandler eventHandler, string interfaceName, string methodName, Dictionary<string, object> arguments) {
+        private static void TryInvoke(IEventHandler eventHandler, string interfaceName, string methodName, IDictionary<string, object> arguments) {
             Type type = eventHandler.GetType();
             foreach (var interfaceType in type.GetInterfaces()) {
                 if (String.Equals(interfaceType.Name, interfaceName, StringComparison.OrdinalIgnoreCase)) {
@@ -47,10 +47,19 @@ namespace Orchard.Events {
             }
         }
 
-        private static void TryInvokeMethod(IEventHandler eventHandler, string methodName, Dictionary<string, object> arguments) {
+        private static void TryInvokeMethod(IEventHandler eventHandler, string methodName, IDictionary<string, object> arguments) {
             foreach (var method in eventHandler.GetType().GetMethods()) {
                 if (String.Equals(method.Name, methodName)) {
-                    method.Invoke(eventHandler, new object[] { });
+                    List<object> parameters = new List<object>();
+                    foreach (var methodParameter in method.GetParameters()) {
+                        if (arguments.ContainsKey(methodParameter.Name)) {
+                            parameters.Add(arguments[methodParameter.Name]);
+                        }
+                        else {
+                            parameters.Add(new object());
+                        }
+                    }
+                    method.Invoke(eventHandler, parameters.ToArray());
                     break;
                 }
             }

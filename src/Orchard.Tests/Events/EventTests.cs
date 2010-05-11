@@ -50,21 +50,37 @@ namespace Orchard.Tests.Events {
             Assert.That(_eventHandler.Count, Is.EqualTo(1));
         }
 
-        public interface ITestEventHandler : IEventHandler {
-            void Increment();
-        }
-
-        public class StubEventHandler : ITestEventHandler {
-            public int Count { get; set; }
-
-            public void Increment() {
-                Count++;
-            }
+        [Test]
+        public void EventParametersAreCorrectlyPassedToEventHandlers() {
+            Assert.That(_eventHandler.Result, Is.EqualTo(0));
+            Dictionary<string, object> arguments = new Dictionary<string, object>();
+            arguments["a"] = 5200;
+            arguments["b"] = 2600;
+            _eventBus.Notify("ITestEventHandler.Substract", arguments);
+            Assert.That(_eventHandler.Result, Is.EqualTo(2600));
         }
 
         [Test]
         public void EventBusThrowsIfMessageNameIsNotCorrectlyFormatted() {
             Assert.Throws<ArgumentException>(() => _eventBus.Notify("StubEventHandlerIncrement", new Dictionary<string, object>()));
+        }
+
+        public interface ITestEventHandler : IEventHandler {
+            void Increment();
+            void Substract(int a, int b);
+        }
+
+        public class StubEventHandler : ITestEventHandler {
+            public int Count { get; set; }
+            public int Result { get; set; }
+
+            public void Increment() {
+                Count++;
+            }
+
+            public void Substract(int a, int b) {
+                Result = a - b;
+            }
         }
     }
 }
