@@ -157,9 +157,26 @@ namespace Orchard.Specs.Bindings {
 
             foreach (var row in table.Rows) {
                 var r = row;
-                var input = inputs.SingleOrDefault(x => x.GetAttributeValue("name", x.GetAttributeValue("id", "")) == r["name"]);
+                var input = inputs.First(x => x.GetAttributeValue("name", x.GetAttributeValue("id", "")) == r["name"]);
                 Assert.That(input, Is.Not.Null, "Unable to locate <input> name {0} in page html:\r\n\r\n{1}", r["name"], Details.ResponseText);
-                input.Attributes.Add("value", row["value"]);
+                var inputType = input.Attributes["type"].Value.ToLowerInvariant();
+                switch(inputType) {
+                    case "radio":
+                        var radios = inputs.Where(
+                            x =>
+                            x.GetAttributeValue("type", "") == "radio" &&
+                            x.GetAttributeValue("name", x.GetAttributeValue("id", "")) == r["name"]);
+                        foreach(var radio in radios) {
+                            if (radio.GetAttributeValue("value", "") == row["value"])
+                                radio.Attributes.Add("checked", "checked");
+                            else if (radio.Attributes.Contains("checked"))
+                                radio.Attributes.Remove("checked");
+                        }
+                        break;
+                    default:
+                        input.Attributes.Add("value", row["value"]);
+                        break;
+                }
             }
         }
 
@@ -201,6 +218,11 @@ namespace Orchard.Specs.Bindings {
         [Then(@"I should see ""(.*)""")]
         public void ThenIShouldSee(string text) {
             Assert.That(Details.ResponseText, Is.StringContaining(text));
+        }
+
+        [Then(@"I should not see ""(.*)""")]
+        public void ThenIShouldNotSee(string text) {
+            Assert.That(Details.ResponseText, Is.Not.StringContaining(text));
         }
 
         [Then(@"the title contains ""(.*)""")]

@@ -41,7 +41,7 @@ Scenario: A new tenant is created with uninitialized state
 		And I am redirected
 	Then I should see "<li class="tenant Uninitialized">"
 		And the status should be 200 OK
-		
+
 Scenario: A new tenant goes to the setup screen
 	Given I have installed Orchard
 		And I have installed "Orchard.MultiTenancy"
@@ -54,6 +54,23 @@ Scenario: A new tenant goes to the setup screen
 		And I go to "/Setup" on host scott.example.org
 	Then I should see "Welcome to Orchard"
 		And I should see "Finish Setup"
+		And the status should be 200 OK
+		
+Scenario: A new tenant with preconfigured database goes to the setup screen
+	Given I have installed Orchard
+		And I have installed "Orchard.MultiTenancy"
+	When I go to "Admin/MultiTenancy/Add"
+		And I fill in 
+			| name | value |
+			| Name | Scott |
+			| RequestUrlHost | scott.example.org |
+			| DatabaseOptions | True |
+		And I hit "Save"
+		And I am redirected
+		And I go to "/Setup" on host scott.example.org
+	Then I should see "Welcome to Orchard"
+		And I should see "Finish Setup"
+		And I should not see "SQLite"
 		And the status should be 200 OK
 
 Scenario: A new tenant runs the setup
