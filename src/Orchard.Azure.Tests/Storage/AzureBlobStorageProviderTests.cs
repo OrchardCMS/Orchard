@@ -4,6 +4,7 @@ using NUnit.Framework;
 using Orchard.Azure.Storage;
 using Microsoft.WindowsAzure;
 using System.Linq;
+using Orchard.Environment.Configuration;
 
 namespace Orchard.Azure.Tests.Storage {
     [TestFixture]
@@ -15,7 +16,7 @@ namespace Orchard.Azure.Tests.Storage {
             CloudStorageAccount devAccount;
             CloudStorageAccount.TryParse("UseDevelopmentStorage=true", out devAccount);
 
-            _azureBlobStorageProvider = new AzureBlobStorageProvider("default", devAccount);
+            _azureBlobStorageProvider = new AzureBlobStorageProvider(new ShellSettings { Name = "default" }, devAccount);
         }
 
         [SetUp]
