@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Web.Mvc;
 using Orchard.Environment.Configuration;
 using Orchard.Localization;
@@ -10,9 +11,11 @@ namespace Orchard.MultiTenancy.Controllers {
     [ValidateInput(false)]
     public class AdminController : Controller {
         private readonly ITenantService _tenantService;
+        private readonly ShellSettings _thisShellSettings;
 
-        public AdminController(ITenantService tenantService, IOrchardServices orchardServices) {
+        public AdminController(ITenantService tenantService, IOrchardServices orchardServices, ShellSettings shellSettings) {
             _tenantService = tenantService;
+            _thisShellSettings = shellSettings;
             Services = orchardServices;
             T = NullLocalizer.Instance;
         }
@@ -50,6 +53,36 @@ namespace Orchard.MultiTenancy.Controllers {
                 Services.Notifier.Error(T("Creating Tenant failed: ") + exception.Message);
                 return View(viewModel);
             }
+        }
+
+        [HttpPost]
+        public ActionResult Disable(ShellSettings shellSettings) {
+            if (!Services.Authorizer.Authorize(Permissions.ManageTenants, T("Couldn't disable tenant")))
+                return new HttpUnauthorizedResult();
+
+            var tenant = _tenantService.GetTenants().FirstOrDefault(ss => ss.Name == shellSettings.Name);
+
+            if (tenant != null && tenant.Name != _thisShellSettings.Name) {
+                tenant.State.CurrentState = TenantState.State.Disabled;
+                _tenantService.UpdateTenant(tenant);
+            }
+
+            return RedirectToAction("index");
+        }
+
+        [HttpPost]
+        public ActionResult Enable(ShellSettings shellSettings) {
+            if (!Services.Authorizer.Authorize(Permissions.ManageTenants, T("Couldn't enable tenant")))
+                return new HttpUnauthorizedResult();
+
+            var tenant = _tenantService.GetTenants().FirstOrDefault(ss => ss.Name == shellSettings.Name);
+
+            if (tenant != null && tenant.Name != _thisShellSettings.Name) {
+                tenant.State.CurrentState = TenantState.State.Running;
+                _tenantService.UpdateTenant(tenant);
+            }
+
+            return RedirectToAction("index");
         }
     }
 }

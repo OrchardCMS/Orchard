@@ -167,7 +167,6 @@ a:hover, a:active, a:focus {
     text-decoration:underline;
 }
 
-
 /* Header - Branding and Login  
 ----------------------------------------------------------*/
 #header {
@@ -468,6 +467,9 @@ button, .button, .button:link, .button:visited {
 	cursor:pointer;
 	text-align:center;
 	padding:0 .8em .1em .8em;
+}
+button {
+    padding-top:.08em;
 }
 .primaryAction, .primaryAction:link, .primaryAction:visited {
 	background:#4687ad;
@@ -786,6 +788,11 @@ table.items, textarea, input.text, input.text-box,
      float:right;
      text-align:right;
 }
+/*todo: (heskew) cleanup */
+.related .button {
+    font-size:1em;    
+}
+/*end todo*/
 .commentcount {
     line-height:2em;
 }
