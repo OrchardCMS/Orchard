@@ -23,7 +23,7 @@ namespace Orchard.Tests.Events {
         [Test]
         public void EventsAreCorrectlyDispatchedToHandlers() {
             Assert.That(_eventBusHandler.LastMessageName, Is.Null);
-            _eventBus.Notify("Notification", new Dictionary<string, string>());
+            _eventBus.Notify_Obsolete("Notification", new Dictionary<string, string>());
             Assert.That(_eventBusHandler.LastMessageName, Is.EqualTo("Notification"));
         }
 

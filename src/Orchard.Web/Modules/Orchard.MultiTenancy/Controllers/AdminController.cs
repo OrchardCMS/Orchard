@@ -38,6 +38,9 @@ namespace Orchard.MultiTenancy.Controllers {
                         Name = viewModel.Name,
                         RequestUrlHost = viewModel.RequestUrlHost,
                         RequestUrlPrefix = viewModel.RequestUrlPrefix,
+                        DataProvider = viewModel.DatabaseOptions != null ? ((bool)viewModel.DatabaseOptions ? "SQLite" : "SqlServer") : null,
+                        DataConnectionString = viewModel.DatabaseConnectionString,
+                        DataTablePrefix = viewModel.DatabaseTablePrefix,
                         State = new TenantState("Uninitialized")
                     });
 

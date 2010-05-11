@@ -8,7 +8,7 @@ Scenario: Default site is listed
 		And I have installed "Orchard.MultiTenancy"
 	When I go to "Admin/MultiTenancy"
 	Then I should see "List of Site's Tenants"
-		And I should see "<td>Default</td>"
+		And I should see "<span class="tenantName">Default</span>"
 		And the status should be 200 OK
 
 Scenario: New tenant fields are required
@@ -27,7 +27,7 @@ Scenario: A new tenant is created
 			| Name | Scott |
 		And I hit "Save"
 		And I am redirected
-	Then I should see "<td>Scott</td>"
+	Then I should see "<span class="tenantName">Scott</span>"
 		And the status should be 200 OK
 		
 Scenario: A new tenant is created with uninitialized state
@@ -39,7 +39,7 @@ Scenario: A new tenant is created with uninitialized state
 			| Name | Scott |
 		And I hit "Save"
 		And I am redirected
-	Then I should see "<td>Uninitialized</td>"
+	Then I should see "<li class="tenant Uninitialized">"
 		And the status should be 200 OK
 		
 Scenario: A new tenant goes to the setup screen

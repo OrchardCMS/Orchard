@@ -1,4 +1,3 @@
-using System;
 using System.ComponentModel.DataAnnotations;
 using Orchard.Setup.Annotations;
 using Orchard.Mvc.ViewModels;
@@ -18,7 +17,7 @@ namespace Orchard.Setup.ViewModels {
         public bool DatabaseOptions { get; set; }
         [SqlDatabaseConnectionString]
         public string DatabaseConnectionString { get; set; }
-
         public string DatabaseTablePrefix { get; set; }
+        public bool DatabaseIsPreconfigured { get; set; }
     }
 }
