@@ -5,12 +5,12 @@
 
 <div class="page-title"><%=Html.TitleForPage(Model.Item.Title)%></div>
 
-<% if (Html.Resolve<IAuthenticationService>().GetAuthenticatedUser() != null){ %>
-<%} %>
+<%--<% if (Html.Resolve<IAuthenticationService>().GetAuthenticatedUser() != null){ %>
+<%} %>--%>
 
 <% Html.Zone("primary");
    Html.ZonesAny(); %>
    
-<% if (Html.Resolve<IAuthenticationService>().GetAuthenticatedUser() != null){ %>
+<%--<% if (Html.Resolve<IAuthenticationService>().GetAuthenticatedUser() != null){ %>
 </a>
-<%} %>
+<%} %>--%>
