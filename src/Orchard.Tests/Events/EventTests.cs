@@ -63,7 +63,7 @@ namespace Orchard.Tests.Events {
         }
 
         [Test]
-        public void EventParametersAreCorrectlyPassedToMatchingMethod2() {
+        public void EventParametersAreCorrectlyPassedToExactlyMatchingMethod() {
             Assert.That(_eventHandler.Result, Is.EqualTo(0));
             Dictionary<string, object> arguments = new Dictionary<string, object>();
             arguments["a"] = 1000;
@@ -74,7 +74,7 @@ namespace Orchard.Tests.Events {
         }
 
         [Test]
-        public void EventParametersAreCorrectlyPassedToMatchingMethod4() {
+        public void EventParametersAreCorrectlyPassedToBestMatchingMethodAndExtraParametersAreIgnored() {
             Assert.That(_eventHandler.Result, Is.EqualTo(0));
             Dictionary<string, object> arguments = new Dictionary<string, object>();
             arguments["a"] = 1000;
@@ -86,7 +86,17 @@ namespace Orchard.Tests.Events {
         }
 
         [Test]
-        public void EventParametersAreCorrectlyPassedToMatchingMethod5() {
+        public void EventParametersAreCorrectlyPassedToBestMatchingMethodAndExtraParametersAreIgnored2() {
+            Assert.That(_eventHandler.Result, Is.EqualTo(0));
+            Dictionary<string, object> arguments = new Dictionary<string, object>();
+            arguments["a"] = 1000;
+            arguments["e"] = 1;
+            _eventBus.Notify("ITestEventHandler.Sum", arguments);
+            Assert.That(_eventHandler.Result, Is.EqualTo(3000));
+        }
+
+        [Test]
+        public void EventParametersAreCorrectlyPassedToExactlyMatchingMethodWhenThereIsOne() {
             Assert.That(_eventHandler.Result, Is.EqualTo(0));
             Dictionary<string, object> arguments = new Dictionary<string, object>();
             arguments["a"] = 1000;
@@ -96,7 +106,7 @@ namespace Orchard.Tests.Events {
         }
 
         [Test]
-        public void EventParametersAreCorrectlyPassedToMatchingMethod6() {
+        public void EventParametersAreCorrectlyPassedToExactlyMatchingMethodWhenThereIsOne2() {
             Assert.That(_eventHandler.Result, Is.EqualTo(0));
             Dictionary<string, object> arguments = new Dictionary<string, object>();
             arguments["a"] = 1000;
@@ -105,17 +115,7 @@ namespace Orchard.Tests.Events {
         }
 
         [Test]
-        public void EventParametersAreCorrectlyPassedToMatchingMethod7() {
-            Assert.That(_eventHandler.Result, Is.EqualTo(0));
-            Dictionary<string, object> arguments = new Dictionary<string, object>();
-            arguments["a"] = 1000;
-            arguments["e"] = 1;
-            _eventBus.Notify("ITestEventHandler.Sum", arguments);
-            Assert.That(_eventHandler.Result, Is.EqualTo(3000));
-        }
-
-        [Test]
-        public void EventParametersAreCorrectlyPassedToMatchingMethod8() {
+        public void EventHandlerWontBeCalledWhenNoParameterMatchExists() {
             Assert.That(_eventHandler.Result, Is.EqualTo(0));
             Dictionary<string, object> arguments = new Dictionary<string, object>();
             arguments["e"] = 1;
@@ -124,7 +124,7 @@ namespace Orchard.Tests.Events {
         }
 
         [Test]
-        public void EventParametersAreCorrectlyPassedToMatchingMethod9() {
+        public void EventHandlerWontBeCalledWhenNoParameterMatchExists2() {
             Assert.That(_eventHandler.Result, Is.EqualTo(0));
             Dictionary<string, object> arguments = new Dictionary<string, object>();
             _eventBus.Notify("ITestEventHandler.Sum", arguments);
