@@ -11,9 +11,11 @@ namespace Orchard.MultiTenancy.Controllers {
     [ValidateInput(false)]
     public class AdminController : Controller {
         private readonly ITenantService _tenantService;
+        private readonly ShellSettings _thisShellSettings;
 
-        public AdminController(ITenantService tenantService, IOrchardServices orchardServices) {
+        public AdminController(ITenantService tenantService, IOrchardServices orchardServices, ShellSettings shellSettings) {
             _tenantService = tenantService;
+            _thisShellSettings = shellSettings;
             Services = orchardServices;
             T = NullLocalizer.Instance;
         }
@@ -60,7 +62,7 @@ namespace Orchard.MultiTenancy.Controllers {
 
             var tenant = _tenantService.GetTenants().FirstOrDefault(ss => ss.Name == shellSettings.Name);
 
-            if (tenant != null) {
+            if (tenant != null && tenant.Name != _thisShellSettings.Name) {
                 tenant.State.CurrentState = TenantState.State.Disabled;
                 _tenantService.UpdateTenant(tenant);
             }
@@ -75,7 +77,7 @@ namespace Orchard.MultiTenancy.Controllers {
 
             var tenant = _tenantService.GetTenants().FirstOrDefault(ss => ss.Name == shellSettings.Name);
 
-            if (tenant != null) {
+            if (tenant != null && tenant.Name != _thisShellSettings.Name) {
                 tenant.State.CurrentState = TenantState.State.Running;
                 _tenantService.UpdateTenant(tenant);
             }
