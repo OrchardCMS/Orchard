@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Orchard.Localization;
 using Orchard.Logging;
 
 namespace Orchard.Events {
@@ -11,9 +12,11 @@ namespace Orchard.Events {
             _handlers = handlers;
             _eventHandlers = eventHandlers;
             Logger = NullLogger.Instance;
+            T = NullLocalizer.Instance;
         }
 
         public ILogger Logger { get; set; }
+        public Localizer T { get; set; }
 
         #region Implementation of IEventBus
 
@@ -22,6 +25,35 @@ namespace Orchard.Events {
         }
 
         public void Notify(string messageName, Dictionary<string, object> eventData) {
+            string[] parameters = messageName.Split('.');
+            if (parameters.Length != 2) {
+                throw new ArgumentException(messageName + T(" is not formatted correctly"));
+            }
+            string interfaceName = parameters[0];
+            string methodName = parameters[1];
+
+            foreach (var eventHandler in _eventHandlers) {
+                TryInvoke(eventHandler, interfaceName, methodName, eventData);
+            }
+        }
+
+        private static void TryInvoke(IEventHandler eventHandler, string interfaceName, string methodName, Dictionary<string, object> arguments) {
+            Type type = eventHandler.GetType();
+            foreach (var interfaceType in type.GetInterfaces()) {
+                if (String.Equals(interfaceType.Name, interfaceName, StringComparison.OrdinalIgnoreCase)) {
+                    TryInvokeMethod(eventHandler, methodName, arguments);
+                    break;
+                }
+            }
+        }
+
+        private static void TryInvokeMethod(IEventHandler eventHandler, string methodName, Dictionary<string, object> arguments) {
+            foreach (var method in eventHandler.GetType().GetMethods()) {
+                if (String.Equals(method.Name, methodName)) {
+                    method.Invoke(eventHandler, new object[] { });
+                    break;
+                }
+            }
         }
 
         #endregion

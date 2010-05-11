@@ -9,8 +9,8 @@ namespace Orchard.Azure.Environment.Configuration {
 
         private readonly AzureFileSystem _fs;
 
-        public AzureAppDataFolder(string shellName) {
-            _fs = new AzureFileSystem("appdata", shellName, true);
+        public AzureAppDataFolder() {
+            _fs = new AzureFileSystem("appdata", null, true);
         }
 
         public void CreateFile(string path, string content) {
