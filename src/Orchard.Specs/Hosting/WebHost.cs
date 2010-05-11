@@ -21,7 +21,7 @@ namespace Orchard.Specs.Hosting {
             // The second one is for the target "spec" in orchard.proj.
             _orchardWebPath = baseDir.Up(3).Combine("Orchard.Web");
             if (!_orchardWebPath.Exists) {
-                _orchardWebPath = baseDir.Up(2).Combine("src").Combine("Orchard.Web");
+                _orchardWebPath = baseDir.Parent.Combine("stage");
             }
 
             baseDir.Combine("Hosting").Combine(templateName)
