@@ -52,25 +52,132 @@ namespace Orchard.Tests.Events {
         }
 
         [Test]
+        public void EventParametersAreCorrectlyPassedToMatchingMethod() {
+            Assert.That(_eventHandler.Summary, Is.Null);
+            Dictionary<string, object> arguments = new Dictionary<string, object>();
+            arguments["a"] = "a";
+            arguments["b"] = "b";
+            arguments["c"] = "c";
+            _eventBus.Notify("ITestEventHandler.Concat", arguments);
+            Assert.That(_eventHandler.Summary, Is.EqualTo("abc"));
+        }
+
+        [Test]
+        public void EventParametersAreCorrectlyPassedToMatchingMethod2() {
+            Assert.That(_eventHandler.Result, Is.EqualTo(0));
+            Dictionary<string, object> arguments = new Dictionary<string, object>();
+            arguments["a"] = 1000;
+            arguments["b"] = 100;
+            arguments["c"] = 10;
+            _eventBus.Notify("ITestEventHandler.Sum", arguments);
+            Assert.That(_eventHandler.Result, Is.EqualTo(1110));
+        }
+
+        [Test]
+        public void EventParametersAreCorrectlyPassedToMatchingMethod4() {
+            Assert.That(_eventHandler.Result, Is.EqualTo(0));
+            Dictionary<string, object> arguments = new Dictionary<string, object>();
+            arguments["a"] = 1000;
+            arguments["b"] = 100;
+            arguments["c"] = 10;
+            arguments["e"] = 1;
+            _eventBus.Notify("ITestEventHandler.Sum", arguments);
+            Assert.That(_eventHandler.Result, Is.EqualTo(1110));
+        }
+
+        [Test]
+        public void EventParametersAreCorrectlyPassedToMatchingMethod5() {
+            Assert.That(_eventHandler.Result, Is.EqualTo(0));
+            Dictionary<string, object> arguments = new Dictionary<string, object>();
+            arguments["a"] = 1000;
+            arguments["b"] = 100;
+            _eventBus.Notify("ITestEventHandler.Sum", arguments);
+            Assert.That(_eventHandler.Result, Is.EqualTo(2200));
+        }
+
+        [Test]
+        public void EventParametersAreCorrectlyPassedToMatchingMethod6() {
+            Assert.That(_eventHandler.Result, Is.EqualTo(0));
+            Dictionary<string, object> arguments = new Dictionary<string, object>();
+            arguments["a"] = 1000;
+            _eventBus.Notify("ITestEventHandler.Sum", arguments);
+            Assert.That(_eventHandler.Result, Is.EqualTo(3000));
+        }
+
+        [Test]
+        public void EventParametersAreCorrectlyPassedToMatchingMethod7() {
+            Assert.That(_eventHandler.Result, Is.EqualTo(0));
+            Dictionary<string, object> arguments = new Dictionary<string, object>();
+            arguments["a"] = 1000;
+            arguments["e"] = 1;
+            _eventBus.Notify("ITestEventHandler.Sum", arguments);
+            Assert.That(_eventHandler.Result, Is.EqualTo(3000));
+        }
+
+        [Test]
+        public void EventParametersAreCorrectlyPassedToMatchingMethod8() {
+            Assert.That(_eventHandler.Result, Is.EqualTo(0));
+            Dictionary<string, object> arguments = new Dictionary<string, object>();
+            arguments["e"] = 1;
+            _eventBus.Notify("ITestEventHandler.Sum", arguments);
+            Assert.That(_eventHandler.Result, Is.EqualTo(0));
+        }
+
+        [Test]
+        public void EventParametersAreCorrectlyPassedToMatchingMethod9() {
+            Assert.That(_eventHandler.Result, Is.EqualTo(0));
+            Dictionary<string, object> arguments = new Dictionary<string, object>();
+            _eventBus.Notify("ITestEventHandler.Sum", arguments);
+            Assert.That(_eventHandler.Result, Is.EqualTo(0));
+        }
+
+        [Test]
+        public void EventHandlerWontThrowIfMethodDoesNotExists() {
+            Dictionary<string, object> arguments = new Dictionary<string, object>();
+            Assert.DoesNotThrow(() => _eventBus.Notify("ITestEventHandler.NotExisting", arguments));
+        }
+
+        [Test]
         public void EventBusThrowsIfMessageNameIsNotCorrectlyFormatted() {
             Assert.Throws<ArgumentException>(() => _eventBus.Notify("StubEventHandlerIncrement", new Dictionary<string, object>()));
         }
 
         public interface ITestEventHandler : IEventHandler {
             void Increment();
+            void Sum(int a);
+            void Sum(int a, int b);
+            void Sum(int a, int b, int c);
             void Substract(int a, int b);
+            void Concat(string a, string b, string c);
         }
 
         public class StubEventHandler : ITestEventHandler {
             public int Count { get; set; }
             public int Result { get; set; }
+            public string Summary { get; set; }
 
             public void Increment() {
                 Count++;
             }
 
+            public void Sum(int a) {
+                Result = 3 * a;
+            }
+
+            public void Sum(int a, int b) {
+                Result = 2 * ( a + b );
+            }
+
+            public void Sum(int a, int b, int c) {
+                Result = a + b + c;
+            }
+
             public void Substract(int a, int b) {
                 Result = a - b;
+            }
+
+            public void Concat(string a, string b, string c) {
+                Summary = a + b + c;
             }
         }
 

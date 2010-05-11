@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
 using Orchard.Localization;
 using Orchard.Logging;
 
@@ -48,21 +50,40 @@ namespace Orchard.Events {
         }
 
         private static void TryInvokeMethod(IEventHandler eventHandler, string methodName, IDictionary<string, object> arguments) {
-            foreach (var method in eventHandler.GetType().GetMethods()) {
-                if (String.Equals(method.Name, methodName)) {
-                    List<object> parameters = new List<object>();
-                    foreach (var methodParameter in method.GetParameters()) {
-                        if (arguments.ContainsKey(methodParameter.Name)) {
-                            parameters.Add(arguments[methodParameter.Name]);
-                        }
-                        else {
-                            parameters.Add(new object());
+            MethodInfo method = GetMatchingMethod(eventHandler, methodName, arguments);
+            if (method != null) {
+                List<object> parameters = new List<object>();
+                foreach (var methodParameter in method.GetParameters()) {
+                    parameters.Add(arguments[methodParameter.Name]);
+                }
+                method.Invoke(eventHandler, parameters.ToArray());
+            }
+        }
+
+        private static MethodInfo GetMatchingMethod(IEventHandler eventHandler, string methodName, IDictionary<string, object> arguments) {            
+            List<MethodInfo> allMethods = new List<MethodInfo>(eventHandler.GetType().GetMethods());
+            List<MethodInfo> candidates = new List<MethodInfo>(allMethods);
+
+            foreach (var method in allMethods) {
+                if (String.Equals(method.Name, methodName, StringComparison.OrdinalIgnoreCase)) {
+                    ParameterInfo[] parameterInfos = method.GetParameters();
+                    foreach (var parameter in parameterInfos) {
+                        if (!arguments.ContainsKey(parameter.Name)) {
+                            candidates.Remove(method);
+                            break;
                         }
                     }
-                    method.Invoke(eventHandler, parameters.ToArray());
-                    break;
+                }
+                else {
+                    candidates.Remove(method);
                 }
             }
+
+            if (candidates.Count != 0) {
+                return candidates.OrderBy(x => x.GetParameters().Length).Last();
+            }
+
+            return null;
         }
 
         #endregion
