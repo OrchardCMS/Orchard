@@ -61,6 +61,16 @@ namespace Orchard.Tests.Events {
         }
 
         [Test]
+        public void EventParametersArePassedInCorrectOrderToEventHandlers() {
+            Assert.That(_eventHandler.Result, Is.EqualTo(0));
+            Dictionary<string, object> arguments = new Dictionary<string, object>();
+            arguments["a"] = 2600;
+            arguments["b"] = 5200;
+            _eventBus.Notify("ITestEventHandler.Substract", arguments);
+            Assert.That(_eventHandler.Result, Is.EqualTo(-2600));
+        }
+
+        [Test]
         public void EventBusThrowsIfMessageNameIsNotCorrectlyFormatted() {
             Assert.Throws<ArgumentException>(() => _eventBus.Notify("StubEventHandlerIncrement", new Dictionary<string, object>()));
         }
