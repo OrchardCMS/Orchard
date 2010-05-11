@@ -25,25 +25,6 @@ namespace Orchard.Tests.Events {
         }
 
         [Test]
-        public void EventsAreCorrectlyDispatchedToHandlers() {
-            Assert.That(_eventBusHandler.LastMessageName, Is.Null);
-            _eventBus.Notify_Obsolete("Notification", new Dictionary<string, string>());
-            Assert.That(_eventBusHandler.LastMessageName, Is.EqualTo("Notification"));
-        }
-
-        public class StubEventBusHandler : IEventBusHandler {
-            public string LastMessageName { get; set; }
-
-            #region Implementation of IEventBusHandler
-
-            public void Process(string messageName, IDictionary<string, string> eventData) {
-                LastMessageName = messageName;
-            }
-
-            #endregion
-        }
-
-        [Test]
         public void EventsAreCorrectlyDispatchedToEventHandlers() {
             Assert.That(_eventHandler.Count, Is.EqualTo(0));
             _eventBus.Notify("ITestEventHandler.Increment", new Dictionary<string, object>());
@@ -91,6 +72,25 @@ namespace Orchard.Tests.Events {
             public void Substract(int a, int b) {
                 Result = a - b;
             }
+        }
+
+        [Test]
+        public void EventsAreCorrectlyDispatchedToHandlers_Obsolete() {
+            Assert.That(_eventBusHandler.LastMessageName, Is.Null);
+            _eventBus.Notify_Obsolete("Notification", new Dictionary<string, string>());
+            Assert.That(_eventBusHandler.LastMessageName, Is.EqualTo("Notification"));
+        }
+
+        public class StubEventBusHandler : IEventBusHandler {
+            public string LastMessageName { get; set; }
+
+            #region Implementation of IEventBusHandler
+
+            public void Process(string messageName, IDictionary<string, string> eventData) {
+                LastMessageName = messageName;
+            }
+
+            #endregion
         }
     }
 }
