@@ -3,9 +3,17 @@ jQuery.fn.extend({
     helpfullyFocus: function() {
         var _this = $(this);
         var firstError = _this.find(".input-validation-error").first();
-        return firstError.size() === 1
-            ? firstError.focus()
-            : _this.find("input:text").first().focus();
+        // try to focus the first error on the page
+        if (firstError.size() === 1) {
+            return firstError.focus();
+        }
+        // or, give it up to the browser to autofocus
+        if ('autofocus' in document.createElement('input')) {
+            return;
+        }
+        // otherwise, make the autofocus attribute work
+        var autofocus = _this.find(":input[autofocus=autofocus]").first();
+        return autofocus.focus();
     },
     toggleWhatYouControl: function() {
         var _this = $(this);
@@ -53,3 +61,7 @@ jQuery.fn.extend({
         $("body").append(_this);
     });
 })();
+// a little better autofocus
+$(function() {
+    $("body").helpfullyFocus();
+});

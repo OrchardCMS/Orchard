@@ -1,5 +1,4 @@
 ﻿<%@ Control Language="C#" Inherits="Orchard.Mvc.ViewUserControl<SetupViewModel>" %>
-<%@ Import Namespace="Orchard.Mvc.Html"%>
 <%@ Import Namespace="Orchard.Setup.ViewModels"%>
 <h1><%=Html.TitleForPage(_Encoded("Get Started").ToHtmlString())%></h1>
 <%
@@ -9,7 +8,7 @@ using (Html.BeginFormAntiForgeryPost()) { %>
 <fieldset class="site">
     <div>
         <label for="SiteName"><%=_Encoded("What is the name of your site?") %></label>
-        <%=Html.EditorFor(svm => svm.SiteName) %>
+        <%=Html.TextBoxFor(svm => svm.SiteName, new { autofocus = "autofocus" })%>
     </div>
     <div>
         <label for="AdminUsername"><%=_Encoded("Choose a user name:") %></label>
