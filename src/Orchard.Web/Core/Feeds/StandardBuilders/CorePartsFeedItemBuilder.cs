@@ -9,7 +9,7 @@ using Orchard.Core.Feeds.Models;
 
 namespace Orchard.Core.Feeds.StandardBuilders {
     [UsedImplicitly]
-    public class CorePartsFeedItemBuilder : IFeedItemBuilder {
+    public class CorePartsFeedItemBuilder : IFeedItemBuilder, IDependency {
         private readonly IContentManager _contentManager;
         private readonly RouteCollection _routes;
 

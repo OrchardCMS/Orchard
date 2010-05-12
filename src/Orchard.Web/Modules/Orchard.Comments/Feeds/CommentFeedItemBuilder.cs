@@ -12,7 +12,7 @@ using Orchard.Localization;
 
 namespace Orchard.Comments.Feeds {
     [UsedImplicitly]
-    public class CommentFeedItemBuilder : IFeedItemBuilder {
+    public class CommentFeedItemBuilder : IFeedItemBuilder, IDependency {
         private readonly IContentManager _contentManager;
 
         public CommentFeedItemBuilder(

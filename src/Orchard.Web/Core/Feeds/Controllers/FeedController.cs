@@ -49,7 +49,9 @@ namespace Orchard.Core.Feeds.Controllers {
 
             return context.Builder.Process(context, () => {
                 bestQueryMatch.FeedQuery.Execute(context);
-                _feedItemBuilders.Invoke(x => x.Populate(context), Logger);
+                foreach (var feedItemBuilder in _feedItemBuilders) {
+                    feedItemBuilder.Populate(context);
+                }
                 foreach (var contextualizer in context.Response.Contextualizers) {
                     if (ControllerContext != null &&
                         ControllerContext.RequestContext != null) {
