@@ -184,6 +184,7 @@
     <Compile Include="Events\EventsInterceptor.cs" />
     <Compile Include="Events\EventsModule.cs" />
     <Compile Include="Events\EventsRegistrationSource.cs" />
+    <Compile Include="Events\IShellSettingsEventHandler.cs" />
     <Compile Include="Events\IEventBus.cs" />
     <Compile Include="Events\IEventBusHandler.cs" />
     <Compile Include="Environment\Extensions\Folders\AreaFolders.cs" />

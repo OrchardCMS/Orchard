@@ -16,6 +16,7 @@ namespace Orchard.MultiTenancy.Controllers {
         public AdminController(ITenantService tenantService, IOrchardServices orchardServices, ShellSettings shellSettings) {
             _tenantService = tenantService;
             _thisShellSettings = shellSettings;
+            
             Services = orchardServices;
             T = NullLocalizer.Instance;
         }
@@ -36,6 +37,7 @@ namespace Orchard.MultiTenancy.Controllers {
             try {
                 if (!Services.Authorizer.Authorize(Permissions.ManageTenants, T("Couldn't create tenant")))
                     return new HttpUnauthorizedResult();
+                
                 _tenantService.CreateTenant(
                     new ShellSettings {
                         Name = viewModel.Name,
