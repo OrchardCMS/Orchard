@@ -418,7 +418,7 @@
     <Compile Include="Utility\Extensions\ReadOnlyCollectionExtensions.cs" />
     <Compile Include="Utility\Extensions\RouteValueDictionaryExtensions.cs" />
     <Compile Include="Utility\Extensions\StringExtensions.cs" />
-    <Compile Include="Utility\Extensions\UriExtensions.cs" />
+    <Compile Include="Utility\Extensions\HttpRequestExtensions.cs" />
     <Compile Include="Utility\Position.cs" />
     <Compile Include="Utility\Reflect.cs" />
     <Compile Include="Utility\ReflectOn.cs" />
