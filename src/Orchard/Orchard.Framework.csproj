@@ -214,7 +214,7 @@
     <Compile Include="Mvc\Wrappers\HttpRequestBaseWrapper.cs" />
     <Compile Include="Mvc\Wrappers\HttpResponseBaseWrapper.cs" />
     <Compile Include="OrchardException.cs" />
-    <Compile Include="Security\IAuthorizationServiceEvents.cs" />
+    <Compile Include="Security\IAuthorizationServiceEventHandler.cs" />
     <Compile Include="Security\MembershipSettings.cs" />
     <Compile Include="Security\StandardPermissions.cs" />
     <Compile Include="Security\OrchardSecurityException.cs" />

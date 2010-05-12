@@ -7,8 +7,11 @@ using Orchard.Security.Permissions;
 
 namespace Orchard.Pages.Security {
     [UsedImplicitly]
-    public class Authorization : AuthorizationServiceEvents {
-        public override void Adjust(CheckAccessContext context) {
+    public class AuthorizationEventHandler : IAuthorizationServiceEventHandler, IDependency {
+        public void Checking(CheckAccessContext context) { }
+        public void Complete(CheckAccessContext context) { }
+        
+        public void Adjust(CheckAccessContext context) {
             if (context.Granted == false && 
                 context.Content.Is<Page>() && 
                 OwnerVariationExists(context.Permission) &&

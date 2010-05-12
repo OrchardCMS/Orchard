@@ -13,13 +13,13 @@ namespace Orchard.Roles.Services {
     [UsedImplicitly]
     public class RolesBasedAuthorizationService : IAuthorizationService {
         private readonly IRoleService _roleService;
-        private readonly IEnumerable<IAuthorizationServiceEvents> _events;
+        private readonly IAuthorizationServiceEventHandler _authorizationServiceEventHandler;
         private static readonly string[] AnonymousRole = new[] { "Anonymous" };
         private static readonly string[] AuthenticatedRole = new[] { "Authenticated" };
 
-        public RolesBasedAuthorizationService(IRoleService roleService, IEnumerable<IAuthorizationServiceEvents> events) {
+        public RolesBasedAuthorizationService(IRoleService roleService, IAuthorizationServiceEventHandler authorizationServiceEventHandler) {
             _roleService = roleService;
-            _events = events;
+            _authorizationServiceEventHandler = authorizationServiceEventHandler;
             Logger = NullLogger.Instance;
         }
 
@@ -35,9 +35,7 @@ namespace Orchard.Roles.Services {
 
         public bool TryCheckAccess(Permission permission, IUser user, IContent content) {
             var context = new CheckAccessContext { Permission = permission, User = user, Content = content };
-
-            _events.Invoke(x => x.Checking(context), Logger);
-
+            _authorizationServiceEventHandler.Checking(context);
 
             for (var adjustmentLimiter = 0; adjustmentLimiter != 3; ++adjustmentLimiter) {
                 if (!context.Granted && context.User != null) {
@@ -83,10 +81,10 @@ namespace Orchard.Roles.Services {
                 }
 
                 context.Adjusted = false;
-                _events.Invoke(x => x.Adjust(context), Logger);
+                _authorizationServiceEventHandler.Adjust(context);
             }
 
-            _events.Invoke(x => x.Complete(context), Logger);
+            _authorizationServiceEventHandler.Complete(context);
 
             return context.Granted;
         }
