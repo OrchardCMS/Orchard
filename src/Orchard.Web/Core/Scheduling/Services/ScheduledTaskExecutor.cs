@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using JetBrains.Annotations;
+using Orchard.ContentManagement;
 using Orchard.Core.Scheduling.Models;
 using Orchard.Data;
 using Orchard.Logging;
@@ -11,24 +12,24 @@ using Orchard.Tasks.Scheduling;
 
 namespace Orchard.Core.Scheduling.Services {
     [UsedImplicitly]
-    public class ScheduledTaskExecutor : IBackgroundTask {
+    public class ScheduledTaskExecutor : IBackgroundTask, IDependency {
         private readonly IClock _clock;
         private readonly IRepository<ScheduledTaskRecord> _repository;
         private readonly IEnumerable<IScheduledTaskHandler> _handlers;
+        private readonly IContentManager _contentManager;
 
         public ScheduledTaskExecutor(
-            IOrchardServices services,
             IClock clock,
             IRepository<ScheduledTaskRecord> repository,
-            IEnumerable<IScheduledTaskHandler> handlers) {
+            IEnumerable<IScheduledTaskHandler> handlers,
+            IContentManager contentManager) {
             _clock = clock;
             _repository = repository;
             _handlers = handlers;
-            Services = services;
+            _contentManager = contentManager;
             Logger = NullLogger.Instance;
         }
 
-        public IOrchardServices Services { get; set; }
         public ILogger Logger { get; set; }
 
         public void Sweep() {
@@ -52,7 +53,7 @@ namespace Orchard.Core.Scheduling.Services {
                     _repository.Delete(taskRecord);
 
                     var context = new ScheduledTaskContext {
-                        Task = new Task(Services.ContentManager, taskRecord)
+                        Task = new Task(_contentManager, taskRecord)
                     };
 
                     // dispatch to standard or custom handlers

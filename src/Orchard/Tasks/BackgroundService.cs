@@ -20,7 +20,9 @@ namespace Orchard.Tasks {
         public ILogger Logger { get; set; }
 
         public void Sweep() {
-            _tasks.Invoke(task => task.Sweep(), Logger);
+            foreach (var task in _tasks) {
+                task.Sweep();
+            }
         }
     }
 }
