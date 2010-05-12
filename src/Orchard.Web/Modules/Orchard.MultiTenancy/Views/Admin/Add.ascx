@@ -1,10 +1,9 @@
 ﻿<%@ Control Language="C#" Inherits="Orchard.Mvc.ViewUserControl<TenantsAddViewModel>" %>
 <%@ Import Namespace="Orchard.Mvc.Html"%>
 <%@ Import Namespace="Orchard.MultiTenancy.ViewModels"%>
-<% Html.RegisterFootScript("multitenancy.js"); %>
 <h1><%=Html.TitleForPage(T("Add New Tenant").ToString()) %></h1> 
 <%using (Html.BeginFormAntiForgeryPost()) { %>
-    <%= Html.ValidationSummary() %>
+    <%=Html.ValidationSummary() %>
     <fieldset>
         <div>
             <label for="Name"><%=_Encoded("Name") %></label>
