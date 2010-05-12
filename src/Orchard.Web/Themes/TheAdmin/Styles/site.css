@@ -56,6 +56,11 @@ body {
     min-width:94.6em; /* 946px */
     padding:0;
 }
+/*todo: (heskew) find out why I need this...*/
+button {
+    font-family:Segoe UI,Trebuchet,Arial,Sans-Serif;
+    font-size:1.01em;
+}
 body#preview {
     min-width:0;
 }
@@ -158,13 +163,20 @@ p .button { font-size:inherit; }
 
 /* Links
 ----------------------------------------------------------*/
-a, a:link, a:visited {
+a, a:link, a:visited,
+form.link button {
     color:#1e5d7d;
     text-decoration:none;
+}
+form.link button {
+    height:1.3em;
 }
 a:hover, a:active, a:focus {
     color:#1e5d7d;
     text-decoration:underline;
+}
+form.link button:hover {
+    border-bottom:1px solid #1e5d7d;
 }
 
 /* Header - Branding and Login  
@@ -466,10 +478,18 @@ button, .button, .button:link, .button:visited {
 	color:#2d2f25;
 	cursor:pointer;
 	text-align:center;
-	padding:0 .8em .1em .8em;
+	padding:0 .8em .1em;
 }
 button {
     padding-top:.08em;
+}
+form.link button {
+    background:inherit;
+    border:0;
+    padding:0;
+    width:auto;
+    margin:-2px -3px 0;
+    
 }
 .primaryAction, .primaryAction:link, .primaryAction:visited {
 	background:#4687ad;

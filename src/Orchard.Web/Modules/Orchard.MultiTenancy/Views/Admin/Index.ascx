@@ -20,10 +20,10 @@
                 var t = tenant; %>
                 <%=Html.DisplayFor(m => t, string.Format("ActionsFor{0}", tenant.State.CurrentState), "") %><%=_Encoded(" | ")%><%
                 } %>
-                <%=Html.ActionLink(T("Edit").ToString(), "edit", new {tenantName = tenant.Name, area = "Orchard.MultiTenancy"}, new {@class = "button"}) %><%
+                <%=Html.ActionLink(T("Edit").ToString(), "edit", new {tenantName = tenant.Name, area = "Orchard.MultiTenancy"}) %><%
                 if (!string.Equals(tenant.Name, "default", StringComparison.OrdinalIgnoreCase)) { //todo: (heskew) base this off the view model so logic on what can be removed and have its state changed stays in the controller
                 %><%=_Encoded(" | ")%>
-                <%=Html.ActionLink(T("Remove").ToString(), "delete", new {tenantName = tenant.Name, area = "Orchard.MultiTenancy"}, new {@class = "button"}) %><%
+                <%=Html.ActionLink(T("Remove").ToString(), "delete", new {tenantName = tenant.Name, area = "Orchard.MultiTenancy"}) %><%
                 } %>
             </div>
         </div>
