@@ -8,4 +8,4 @@ features:
     Orchard.Tags:
         Description: Tag a content item.
         Dependencies: Common
-        Category: Taxonomy
+        Category: Navigation

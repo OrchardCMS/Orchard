@@ -8,4 +8,4 @@ features:
     Orchard.Comments:
         Description: Standard content item comments.
         Dependencies: Common
-        Category: User Interaction
+        Category: Social
