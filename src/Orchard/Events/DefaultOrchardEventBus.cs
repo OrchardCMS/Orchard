@@ -8,9 +8,9 @@ using Orchard.Logging;
 namespace Orchard.Events {
     public class DefaultOrchardEventBus : IEventBus {
         private readonly Func<IEnumerable<IEventBusHandler>> _handlers;
-        private readonly IEnumerable<IEventHandler> _eventHandlers;
+        private readonly Func<IEnumerable<IEventHandler>> _eventHandlers;
 
-        public DefaultOrchardEventBus(Func<IEnumerable<IEventBusHandler>> handlers, IEnumerable<IEventHandler> eventHandlers) {
+        public DefaultOrchardEventBus(Func<IEnumerable<IEventBusHandler>> handlers, Func<IEnumerable<IEventHandler>> eventHandlers) {
             _handlers = handlers;
             _eventHandlers = eventHandlers;
             Logger = NullLogger.Instance;
@@ -34,7 +34,7 @@ namespace Orchard.Events {
             string interfaceName = parameters[0];
             string methodName = parameters[1];
 
-            foreach (var eventHandler in _eventHandlers) {
+            foreach (var eventHandler in _eventHandlers()) {
                 TryInvoke(eventHandler, interfaceName, methodName, eventData);
             }
         }

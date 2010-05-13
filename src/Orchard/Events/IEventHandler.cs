@@ -1,4 +1,4 @@
 ﻿namespace Orchard.Events {
-    public interface IEventHandler {
+    public interface IEventHandler : IDependency {
     }
 }
