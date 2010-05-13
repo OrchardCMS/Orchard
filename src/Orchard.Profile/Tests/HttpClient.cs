@@ -5,6 +5,7 @@ using System.Linq;
 using System.Net;
 using System.Text;
 using System.Web;
+using NUnit.Framework;
 using TechTalk.SpecFlow;
 
 namespace Orchard.Profile.Tests {
