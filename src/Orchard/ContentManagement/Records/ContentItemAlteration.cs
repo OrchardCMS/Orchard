@@ -47,12 +47,18 @@ namespace Orchard.ContentManagement.Records {
             void Override(AutoMapping<TItemRecord> mapping);
         }
 
+        /// <summary>
+        /// Add a "fake" column to the automapping record so that the column can be
+        /// referenced when building joins accross content item record tables.
+        /// <typeparam name="TItemRecord">Either ContentItemRecord or ContentItemVersionRecord</typeparam>
+        /// <typeparam name="TPartRecord">A part record (deriving from TItemRecord)</typeparam>
         class Alteration<TItemRecord, TPartRecord> : IAlteration<TItemRecord> {
             public void Override(AutoMapping<TItemRecord> mapping) {
 
                 // public TPartRecord TPartRecord {get;set;}
                 var name = typeof(TPartRecord).Name;
-                var syntheticMethod = new DynamicMethod(name, typeof(TPartRecord), null, typeof(TItemRecord));
+                var dynamicMethod = new DynamicMethod(name, typeof(TPartRecord), null, typeof(TItemRecord));
+                var syntheticMethod = new SyntheticMethodInfo(dynamicMethod, typeof(TItemRecord));
                 var syntheticProperty = new SyntheticPropertyInfo(syntheticMethod);
 
                 // record => record.TPartRecord
@@ -73,11 +79,85 @@ namespace Orchard.ContentManagement.Records {
             }
         }
 
-        private class SyntheticPropertyInfo : PropertyInfo {
-            private readonly DynamicMethod _getMethod;
+        /// <summary>
+        /// Synthetic method around a dynamic method. We need this so that we can
+        /// override the "static" method attributes, and also return a valid "DeclaringType".
+        /// </summary>
+        private class SyntheticMethodInfo : MethodInfo {
+            private readonly DynamicMethod _dynamicMethod;
+            private readonly Type _declaringType;
 
-            public SyntheticPropertyInfo(DynamicMethod dynamicMethod) {
-                _getMethod = dynamicMethod;
+            public SyntheticMethodInfo(DynamicMethod dynamicMethod, Type declaringType) {
+                _dynamicMethod = dynamicMethod;
+                _declaringType = declaringType;
+            }
+
+            public override object[] GetCustomAttributes(bool inherit) {
+                return _dynamicMethod.GetCustomAttributes(inherit);
+            }
+
+            public override bool IsDefined(Type attributeType, bool inherit) {
+                return IsDefined(attributeType, inherit);
+            }
+
+            public override ParameterInfo[] GetParameters() {
+                return _dynamicMethod.GetParameters();
+            }
+
+            public override MethodImplAttributes GetMethodImplementationFlags() {
+                return _dynamicMethod.GetMethodImplementationFlags();
+            }
+
+            public override object Invoke(object obj, BindingFlags invokeAttr, Binder binder, object[] parameters, CultureInfo culture) {
+                return _dynamicMethod.Invoke(obj, invokeAttr, binder, parameters, culture);
+            }
+
+            public override MethodInfo GetBaseDefinition() {
+                return _dynamicMethod.GetBaseDefinition();
+            }
+
+            public override ICustomAttributeProvider ReturnTypeCustomAttributes {
+                get { return ReturnTypeCustomAttributes; }
+            }
+
+            public override string Name {
+                get { return _dynamicMethod.Name; }
+            }
+
+            public override Type DeclaringType {
+                get { return _declaringType; }
+            }
+
+            public override Type ReflectedType {
+                get { return _dynamicMethod.ReflectedType; }
+            }
+
+            public override RuntimeMethodHandle MethodHandle {
+                get { return _dynamicMethod.MethodHandle; }
+            }
+
+            public override MethodAttributes Attributes {
+                get { return _dynamicMethod.Attributes & ~MethodAttributes.Static; }
+            }
+
+            public override object[] GetCustomAttributes(Type attributeType, bool inherit) {
+                return _dynamicMethod.GetCustomAttributes(attributeType, inherit);
+            }
+
+            public override Type ReturnType {
+                get { return _dynamicMethod.ReturnType; }
+            }
+        }
+
+        /// <summary>
+        /// Synthetic property around a method info (the "getter" method).
+        /// This is a minimal implementation enabling support for AutoMapping.References.
+        /// </summary>
+        private class SyntheticPropertyInfo : PropertyInfo {
+            private readonly MethodInfo _getMethod;
+
+            public SyntheticPropertyInfo(MethodInfo getMethod) {
+                _getMethod = getMethod;
             }
 
             public override object[] GetCustomAttributes(bool inherit) {
@@ -117,11 +197,11 @@ namespace Orchard.ContentManagement.Records {
             }
 
             public override Type DeclaringType {
-                get { throw new NotImplementedException(); }
+                get { return _getMethod.DeclaringType; }
             }
 
             public override Type ReflectedType {
-                get { throw new NotImplementedException(); }
+                get { return _getMethod.ReflectedType; }
             }
 
             public override Type PropertyType {
