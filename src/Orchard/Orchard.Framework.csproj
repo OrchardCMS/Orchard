@@ -162,8 +162,8 @@
     <Compile Include="Data\Conventions\StringLengthConvention.cs" />
     <Compile Include="Data\SessionFactoryHolder.cs" />
     <Compile Include="Environment\AutofacUtil\LifetimeScopeContainer.cs" />
+    <Compile Include="Environment\Configuration\IShellSettingsManager.cs" />
     <Compile Include="Environment\Configuration\TenantState.cs" />
-    <Compile Include="Environment\DefaultOrchardHostEventSink.cs" />
     <Compile Include="Environment\RunningShellTable.cs" />
     <Compile Include="Environment\AutofacUtil\DynamicProxy2\DynamicProxyContext.cs" />
     <Compile Include="Environment\AutofacUtil\DynamicProxy2\DynamicProxyExtensions.cs" />
@@ -184,7 +184,7 @@
     <Compile Include="Events\EventsInterceptor.cs" />
     <Compile Include="Events\EventsModule.cs" />
     <Compile Include="Events\EventsRegistrationSource.cs" />
-    <Compile Include="Events\IShellSettingsEventHandler.cs" />
+    <Compile Include="Environment\Configuration\IShellSettingsManagerEventHandler.cs" />
     <Compile Include="Events\IEventBus.cs" />
     <Compile Include="Events\IEventBusHandler.cs" />
     <Compile Include="Environment\Extensions\Folders\AreaFolders.cs" />

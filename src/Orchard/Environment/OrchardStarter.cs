@@ -20,12 +20,13 @@ namespace Orchard.Environment {
         public static IContainer CreateHostContainer(Action<ContainerBuilder> registrations) {
             var builder = new ContainerBuilder();
             builder.RegisterModule(new LoggingModule());
+            builder.RegisterModule(new EventsModule());
 
             // a single default host implementation is needed for bootstrapping a web app domain
             builder.RegisterType<DefaultOrchardEventBus>().As<IEventBus>().SingleInstance();
             builder.RegisterType<AppDataFolder>().As<IAppDataFolder>().SingleInstance();
 
-            builder.RegisterType<DefaultOrchardHost>().As<IOrchardHost>().SingleInstance();
+            builder.RegisterType<DefaultOrchardHost>().As<IOrchardHost>().As<IEventHandler>().SingleInstance();
             {
                 builder.RegisterType<ShellSettingsManager>().As<IShellSettingsManager>().SingleInstance();
 

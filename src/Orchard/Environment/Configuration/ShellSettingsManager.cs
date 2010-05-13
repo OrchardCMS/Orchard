@@ -6,11 +6,6 @@ using System.Yaml.Serialization;
 using Orchard.Localization;
 
 namespace Orchard.Environment.Configuration {
-    public interface IShellSettingsManager {
-        IEnumerable<ShellSettings> LoadSettings();
-        void SaveSettings(ShellSettings settings);
-    }
-
     public class ShellSettingsManager : IShellSettingsManager {
         private readonly IAppDataFolder _appDataFolder;
         private readonly IShellSettingsManagerEventHandler _events;

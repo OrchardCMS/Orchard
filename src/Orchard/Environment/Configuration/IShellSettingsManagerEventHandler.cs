@@ -1,7 +1,7 @@
-﻿using Orchard.Environment.Configuration;
+﻿using Orchard.Events;
 
-namespace Orchard.Events {
-    public interface IShellSettingsEventHandler : IEventHandler {
+namespace Orchard.Environment.Configuration {
+    public interface IShellSettingsManagerEventHandler : IEventHandler {
         void Saved(ShellSettings settings);
     }
 }

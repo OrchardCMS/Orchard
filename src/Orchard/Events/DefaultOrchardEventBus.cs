@@ -34,7 +34,8 @@ namespace Orchard.Events {
             string interfaceName = parameters[0];
             string methodName = parameters[1];
 
-            foreach (var eventHandler in _eventHandlers()) {
+            var eventHandlers = _eventHandlers();
+            foreach (var eventHandler in eventHandlers) {
                 TryInvoke(eventHandler, interfaceName, methodName, eventData);
             }
         }
@@ -43,14 +44,14 @@ namespace Orchard.Events {
             Type type = eventHandler.GetType();
             foreach (var interfaceType in type.GetInterfaces()) {
                 if (String.Equals(interfaceType.Name, interfaceName, StringComparison.OrdinalIgnoreCase)) {
-                    TryInvokeMethod(eventHandler, methodName, arguments);
+                    TryInvokeMethod(eventHandler, interfaceType, methodName, arguments);
                     break;
                 }
             }
         }
 
-        private static void TryInvokeMethod(IEventHandler eventHandler, string methodName, IDictionary<string, object> arguments) {
-            MethodInfo method = GetMatchingMethod(eventHandler, methodName, arguments);
+        private static void TryInvokeMethod(IEventHandler eventHandler, Type interfaceType, string methodName, IDictionary<string, object> arguments) {
+            MethodInfo method = GetMatchingMethod(eventHandler, interfaceType, methodName, arguments);
             if (method != null) {
                 List<object> parameters = new List<object>();
                 foreach (var methodParameter in method.GetParameters()) {
@@ -60,8 +61,8 @@ namespace Orchard.Events {
             }
         }
 
-        private static MethodInfo GetMatchingMethod(IEventHandler eventHandler, string methodName, IDictionary<string, object> arguments) {            
-            List<MethodInfo> allMethods = new List<MethodInfo>(eventHandler.GetType().GetMethods());
+        private static MethodInfo GetMatchingMethod(IEventHandler eventHandler, Type interfaceType, string methodName, IDictionary<string, object> arguments) {            
+            List<MethodInfo> allMethods = new List<MethodInfo>(interfaceType.GetMethods());
             List<MethodInfo> candidates = new List<MethodInfo>(allMethods);
 
             foreach (var method in allMethods) {
