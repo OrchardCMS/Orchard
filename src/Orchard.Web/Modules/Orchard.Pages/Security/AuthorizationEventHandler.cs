@@ -7,7 +7,7 @@ using Orchard.Security.Permissions;
 
 namespace Orchard.Pages.Security {
     [UsedImplicitly]
-    public class AuthorizationEventHandler : IAuthorizationServiceEventHandler, IDependency {
+    public class AuthorizationEventHandler : IAuthorizationServiceEventHandler {
         public void Checking(CheckAccessContext context) { }
         public void Complete(CheckAccessContext context) { }
         

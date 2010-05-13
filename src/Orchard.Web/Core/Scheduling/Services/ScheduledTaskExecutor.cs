@@ -12,7 +12,7 @@ using Orchard.Tasks.Scheduling;
 
 namespace Orchard.Core.Scheduling.Services {
     [UsedImplicitly]
-    public class ScheduledTaskExecutor : IBackgroundTask, IDependency {
+    public class ScheduledTaskExecutor : IBackgroundTask {
         private readonly IClock _clock;
         private readonly IRepository<ScheduledTaskRecord> _repository;
         private readonly IEnumerable<IScheduledTaskHandler> _handlers;

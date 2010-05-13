@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using JetBrains.Annotations;
 using Orchard.Logging;
 
@@ -10,9 +9,9 @@ namespace Orchard.Tasks {
 
     [UsedImplicitly]
     public class BackgroundService : IBackgroundService {
-        private readonly IEnumerable<IBackgroundTask> _tasks;
+        private readonly IBackgroundTask _tasks;
 
-        public BackgroundService(IEnumerable<IBackgroundTask> tasks) {
+        public BackgroundService(IBackgroundTask tasks) {
             _tasks = tasks;
             Logger = NullLogger.Instance;
         }
@@ -20,9 +19,7 @@ namespace Orchard.Tasks {
         public ILogger Logger { get; set; }
 
         public void Sweep() {
-            foreach (var task in _tasks) {
-                task.Sweep();
-            }
+            _tasks.Sweep();
         }
     }
 }
