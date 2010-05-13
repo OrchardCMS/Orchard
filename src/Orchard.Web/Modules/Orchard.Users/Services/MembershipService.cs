@@ -44,10 +44,9 @@ namespace Orchard.Users.Services {
         }
 
         public IUser GetUser(string username) {
-            if(username == null) {
-                throw new ArgumentNullException("username");
-            }
-            var userRecord = _userRepository.Get(x => x.NormalizedUserName == username.ToLower());
+            var lowerName = username == null ? "" : username.ToLower();
+
+            var userRecord = _userRepository.Get(x => x.NormalizedUserName == lowerName);
             if (userRecord == null) {
                 return null;
             }
@@ -55,9 +54,11 @@ namespace Orchard.Users.Services {
         }
 
         public IUser ValidateUser(string userNameOrEmail, string password) {
-            var userRecord = _userRepository.Get(x => x.NormalizedUserName == userNameOrEmail.ToLower());
+            var lowerName = userNameOrEmail == null ? "" : userNameOrEmail.ToLower();
+
+            var userRecord = _userRepository.Get(x => x.NormalizedUserName == lowerName);
             if(userRecord == null)
-                userRecord = _userRepository.Get(x => x.Email == userNameOrEmail.ToLower());
+                userRecord = _userRepository.Get(x => x.Email == lowerName);
             if (userRecord == null || ValidatePassword(userRecord, password) == false)
                 return null;
 
