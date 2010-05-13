@@ -64,7 +64,7 @@ Scenario: A new tenant with preconfigured database goes to the setup screen
 			| name | value |
 			| Name | Scott |
 			| RequestUrlHost | scott.example.org |
-			| DatabaseOptions | True |
+			| DataProvider | SQLite |
 		And I hit "Save"
 		And I am redirected
 		And I go to "/Setup" on host scott.example.org

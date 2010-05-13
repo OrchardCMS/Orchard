@@ -225,8 +225,8 @@ this.ScenarioSetup(scenarioInfo);
                         "RequestUrlHost",
                         "scott.example.org"});
             table4.AddRow(new string[] {
-                        "DatabaseOptions",
-                        "True"});
+                        "DataProvider",
+                        "SQLite"});
 #line 63
   testRunner.And("I fill in", ((string)(null)), table4);
 #line 68

@@ -51,7 +51,7 @@ namespace Orchard.Setup.Controllers {
 
         public ActionResult Index() {
             var initialSettings = _setupService.Prime();
-            return IndexViewResult(new SetupViewModel { AdminUsername = "admin", DatabaseIsPreconfigured = !(string.IsNullOrEmpty(initialSettings.DataProvider) || string.Equals(initialSettings.DataProvider, "none", StringComparison.OrdinalIgnoreCase))});
+            return IndexViewResult(new SetupViewModel { AdminUsername = "admin", DatabaseIsPreconfigured = !string.IsNullOrEmpty(initialSettings.DataProvider)});
         }
 
         [HttpPost, ActionName("Index")]
