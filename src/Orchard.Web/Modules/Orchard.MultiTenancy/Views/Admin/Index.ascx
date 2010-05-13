@@ -1,5 +1,4 @@
 ﻿<%@ Control Language="C#" Inherits="Orchard.Mvc.ViewUserControl<TenantsIndexViewModel>" %>
-<%@ Import Namespace="Orchard.Environment.Configuration" %>
 <%@ Import Namespace="Orchard.MultiTenancy.Extensions" %>
 <%@ Import Namespace="Orchard.Mvc.Html"%>
 <%@ Import Namespace="Orchard.MultiTenancy.ViewModels"%>
@@ -20,7 +19,7 @@
                 var t = tenant; %>
                 <%=Html.DisplayFor(m => t, string.Format("ActionsFor{0}", tenant.State.CurrentState), "") %><%=_Encoded(" | ")%><%
                 } %>
-                <%=Html.ActionLink(T("Edit").ToString(), "edit", new {tenantName = tenant.Name, area = "Orchard.MultiTenancy"}) %><%
+                <%=Html.ActionLink(T("Edit").ToString(), "Edit", new {name = tenant.Name, area = "Orchard.MultiTenancy"}) %><%
                 if (!string.Equals(tenant.Name, "default", StringComparison.OrdinalIgnoreCase)) { //todo: (heskew) base this off the view model so logic on what can be removed and have its state changed stays in the controller
                 %><%--
                 delete not implemented! <%=_Encoded(" | ")%>

@@ -5,6 +5,7 @@ using Orchard.Environment.Configuration;
 using Orchard.Localization;
 using Orchard.MultiTenancy.Services;
 using Orchard.MultiTenancy.ViewModels;
+using Orchard.Mvc.Results;
 using Orchard.UI.Notify;
 
 namespace Orchard.MultiTenancy.Controllers {
@@ -29,11 +30,13 @@ namespace Orchard.MultiTenancy.Controllers {
         }
 
         public ActionResult Add() {
-            return View(new TenantsAddViewModel());
+            if (!Services.Authorizer.Authorize(Permissions.ManageTenants, T("Cannot create tenant")))
+                return new HttpUnauthorizedResult();
+            return View(new TenantAddViewModel());
         }
 
         [HttpPost, ActionName("Add")]
-        public ActionResult AddPOST(TenantsAddViewModel viewModel) {
+        public ActionResult AddPOST(TenantAddViewModel viewModel) {
             try {
                 if (!Services.Authorizer.Authorize(Permissions.ManageTenants, T("Couldn't create tenant")))
                     return new HttpUnauthorizedResult();
@@ -43,7 +46,7 @@ namespace Orchard.MultiTenancy.Controllers {
                         Name = viewModel.Name,
                         RequestUrlHost = viewModel.RequestUrlHost,
                         RequestUrlPrefix = viewModel.RequestUrlPrefix,
-                        DataProvider = viewModel.DatabaseOptions != null ? ((bool)viewModel.DatabaseOptions ? "SQLite" : "SqlServer") : null,
+                        DataProvider = viewModel.DataProvider,
                         DataConnectionString = viewModel.DatabaseConnectionString,
                         DataTablePrefix = viewModel.DatabaseTablePrefix,
                         State = new TenantState("Uninitialized")
@@ -57,12 +60,60 @@ namespace Orchard.MultiTenancy.Controllers {
             }
         }
 
+        public ActionResult Edit(string name) {
+            if (!Services.Authorizer.Authorize(Permissions.ManageTenants, T("Cannot edit tenant")))
+                return new HttpUnauthorizedResult();
+
+            var tenant = _tenantService.GetTenants().FirstOrDefault(ss => ss.Name == name);
+            if (tenant == null)
+                return new NotFoundResult();
+
+            return View(new TenantEditViewModel {
+                                                    Name = tenant.Name,
+                                                    RequestUrlHost = tenant.RequestUrlHost,
+                                                    RequestUrlPrefix = tenant.RequestUrlPrefix,
+                                                    DataProvider = tenant.DataProvider,
+                                                    DatabaseConnectionString = tenant.DataConnectionString,
+                                                    DatabaseTablePrefix = tenant.DataTablePrefix,
+                                                    State = tenant.State
+                                                });
+        }
+
+        [HttpPost, ActionName("Edit")]
+        public ActionResult EditPost(TenantEditViewModel viewModel) {
+            try {
+                if (!Services.Authorizer.Authorize(Permissions.ManageTenants, T("Couldn't edit tenant")))
+                    return new HttpUnauthorizedResult();
+
+                var tenant = _tenantService.GetTenants().FirstOrDefault(ss => ss.Name == viewModel.Name);
+                if (tenant == null)
+                    return new NotFoundResult();
+                
+                _tenantService.UpdateTenant(
+                    new ShellSettings {
+                        Name = tenant.Name,
+                        RequestUrlHost = viewModel.RequestUrlHost,
+                        RequestUrlPrefix = viewModel.RequestUrlPrefix,
+                        DataProvider = viewModel.DataProvider,
+                        DataConnectionString = viewModel.DatabaseConnectionString,
+                        DataTablePrefix = viewModel.DatabaseTablePrefix,
+                        State = tenant.State
+                    });
+
+                return RedirectToAction("Index");
+            }
+            catch (Exception exception) {
+                Services.Notifier.Error(T("Failed to edit tenant: ") + exception.Message);
+                return View(viewModel);
+            }
+        }
+
         [HttpPost]
-        public ActionResult Disable(ShellSettings shellSettings) {
+        public ActionResult Disable(string name) {
             if (!Services.Authorizer.Authorize(Permissions.ManageTenants, T("Couldn't disable tenant")))
                 return new HttpUnauthorizedResult();
 
-            var tenant = _tenantService.GetTenants().FirstOrDefault(ss => ss.Name == shellSettings.Name);
+            var tenant = _tenantService.GetTenants().FirstOrDefault(ss => ss.Name == name);
 
             if (tenant != null && tenant.Name != _thisShellSettings.Name) {
                 tenant.State.CurrentState = TenantState.State.Disabled;
@@ -73,11 +124,11 @@ namespace Orchard.MultiTenancy.Controllers {
         }
 
         [HttpPost]
-        public ActionResult Enable(ShellSettings shellSettings) {
+        public ActionResult Enable(string name) {
             if (!Services.Authorizer.Authorize(Permissions.ManageTenants, T("Couldn't enable tenant")))
                 return new HttpUnauthorizedResult();
 
-            var tenant = _tenantService.GetTenants().FirstOrDefault(ss => ss.Name == shellSettings.Name);
+            var tenant = _tenantService.GetTenants().FirstOrDefault(ss => ss.Name == name);
 
             if (tenant != null && tenant.Name != _thisShellSettings.Name) {
                 tenant.State.CurrentState = TenantState.State.Running;
