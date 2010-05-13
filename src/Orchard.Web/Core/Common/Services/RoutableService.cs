@@ -63,13 +63,13 @@ namespace Orchard.Core.Common.Services {
                        : null;
         }
 
-        public string[] GetSimilarSlugs(string contentType, string slug)
+        public IEnumerable<RoutableAspect> GetSimilarSlugs(string contentType, string slug)
         {
             return
                 _contentManager.Query(contentType).Join<RoutableRecord>()
                     .List()
-                    .Select(i => i.As<RoutableAspect>().Slug)
-                    .Where(rr => rr.StartsWith(slug, StringComparison.OrdinalIgnoreCase)) // todo: for some reason the filter doesn't work within the query, even without StringComparison or StartsWith
+                    .Select(i => i.As<RoutableAspect>())
+                    .Where(routable => routable.Slug.StartsWith(slug, StringComparison.OrdinalIgnoreCase)) // todo: for some reason the filter doesn't work within the query, even without StringComparison or StartsWith
                     .ToArray();
         }
 
@@ -89,12 +89,17 @@ namespace Orchard.Core.Common.Services {
 
             var slugsLikeThis = GetSimilarSlugs(part.ContentItem.ContentType, part.Slug);
 
+            // If the part is already a valid content item, don't include it in the list
+            // of slug to consider for conflict detection
+            if (part.ContentItem.Id != 0)
+                slugsLikeThis = slugsLikeThis.Where(p => p.ContentItem.Id != part.ContentItem.Id);
+
             //todo: (heskew) need better messages
-            if (slugsLikeThis.Length > 0)
+            if (slugsLikeThis.Count() > 0)
             {
                 var originalSlug = part.Slug;
                 //todo: (heskew) make auto-uniqueness optional
-                part.Slug = GenerateUniqueSlug(part.Slug, slugsLikeThis);
+                part.Slug = GenerateUniqueSlug(part.Slug, slugsLikeThis.Select(p => p.Slug));
 
                 if (originalSlug != part.Slug) {
                     return false;
