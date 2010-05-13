@@ -10,8 +10,8 @@ using (Html.BeginFormAntiForgeryPost(Url.Action("LogOn", new {ReturnUrl = Reques
     <legend><%=_Encoded("Account Information")%></legend>
     <div class="group">
         <label for="username"><%=_Encoded("Username:")%></label>
-        <%= Html.TextBox("username")%>
-        <%= Html.ValidationMessage("username")%>
+        <%= Html.TextBox("userNameOrEmail")%>
+        <%= Html.ValidationMessage("userNameOrEmail")%>
     </div>
     <div class="group">
         <label for="password"><%=_Encoded("Password:")%></label>
