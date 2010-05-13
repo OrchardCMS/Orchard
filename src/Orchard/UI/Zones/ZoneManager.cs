@@ -8,10 +8,10 @@ using Orchard.UI.Navigation;
 namespace Orchard.UI.Zones {
 
     public class ZoneManager : IZoneManager {
-        private readonly IEnumerable<IZoneManagerEvents> _events;
+        private readonly IEnumerable<IZoneManagerEvents> _zoneManagerEventHandler;
 
-        public ZoneManager(IEnumerable<IZoneManagerEvents> events) {
-            _events = events;
+        public ZoneManager(IEnumerable<IZoneManagerEvents> eventHandler) {
+            _zoneManagerEventHandler = eventHandler;
             Logger = NullLogger.Instance;
         }
 
@@ -38,16 +38,23 @@ namespace Orchard.UI.Zones {
                 RenderingItems = groups.SelectMany(x => x.Items).ToList()
             };
 
-            _events.Invoke(x => x.ZoneRendering(context), Logger);
+            foreach (var zoneManagerEventHandler in _zoneManagerEventHandler) {
+                zoneManagerEventHandler.ZoneRendering(context);
+            }
             foreach (var item in context.RenderingItems) {
                 var zoneItem = item;
-                _events.Invoke(x => x.ZoneItemRendering(context, zoneItem), Logger);
+                foreach (var zoneManagerEventHandler in _zoneManagerEventHandler) {
+                    zoneManagerEventHandler.ZoneItemRendering(context, zoneItem);
+                }
                 zoneItem.WasExecuted = true;
                 zoneItem.Execute(html);
-                _events.Invoke(x => x.ZoneItemRendered(context, zoneItem), Logger);
+                foreach (var zoneManagerEventHandler in _zoneManagerEventHandler) {
+                    zoneManagerEventHandler.ZoneItemRendered(context, zoneItem);
+                }
             }
-            _events.Invoke(x => x.ZoneRendered(context), Logger);
-
+            foreach (var zoneManagerEventHandler in _zoneManagerEventHandler) {
+                zoneManagerEventHandler.ZoneRendered(context);
+            }
         }
 
         protected ILogger Logger { get; set; }
