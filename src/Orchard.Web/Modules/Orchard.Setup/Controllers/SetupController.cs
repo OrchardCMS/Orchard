@@ -81,7 +81,6 @@ namespace Orchard.Setup.Controllers {
                     "TinyMce",
                     "Orchard.Modules",
                     "Orchard.Themes",
-                    "Orchard.MultiTenancy",
                     "Orchard.Pages",
                     "Orchard.Blogs",
                     "Orchard.Comments"};

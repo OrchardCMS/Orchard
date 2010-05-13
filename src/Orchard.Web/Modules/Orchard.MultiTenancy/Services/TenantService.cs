@@ -2,18 +2,13 @@
 using System.Linq;
 using Orchard.Environment;
 using Orchard.Environment.Configuration;
-using Orchard.Events;
 
 namespace Orchard.MultiTenancy.Services {
     public class TenantService : ITenantService {
         private readonly IShellSettingsManager _shellSettingsManager;
-        private readonly IOrchardHost _orchardHost;
-        private readonly IShellSettingsEventHandler _shellSettingsEventHandler;
 
-        public TenantService(IShellSettingsManager shellSettingsManager, IOrchardHost orchardHost, IShellSettingsEventHandler shellSettingsEventHandler) {
+        public TenantService(IShellSettingsManager shellSettingsManager) {
             _shellSettingsManager = shellSettingsManager;
-            _orchardHost = orchardHost;
-            _shellSettingsEventHandler = shellSettingsEventHandler;
         }
 
         public IEnumerable<ShellSettings> GetTenants() {
@@ -22,16 +17,13 @@ namespace Orchard.MultiTenancy.Services {
 
         public void CreateTenant(ShellSettings settings) {
             _shellSettingsManager.SaveSettings(settings);
-            _shellSettingsEventHandler.Saved(settings);
         }
 
         public void UpdateTenant(ShellSettings settings) {
             var tenant = GetTenants().FirstOrDefault(ss => ss.Name == settings.Name);
             if ( tenant != null ) {
                 _shellSettingsManager.SaveSettings(settings);
-                _shellSettingsEventHandler.Saved(settings);
             }
-
         }
     }
 }

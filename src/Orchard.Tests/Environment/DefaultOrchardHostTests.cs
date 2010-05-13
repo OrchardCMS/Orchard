@@ -150,20 +150,10 @@ namespace Orchard.Tests.Environment {
 
 
         [Test]
-        public void DifferentShellInstanceShouldBeReturnedAfterEachCreate() {
-            var host = _lifetime.Resolve<IOrchardHost>();
-            var runtime1 = host.CreateShell_Obsolete();
-            host.Reinitialize_Obsolete();
-            var runtime2 = host.CreateShell_Obsolete();
-            Assert.That(runtime1, Is.Not.SameAs(runtime2));
-        }
-
-
-        [Test]
         public void NormalDependenciesShouldBeUniquePerRequestContainer() {
             var host = _lifetime.Resolve<IOrchardHost>();
             var container1 = host.CreateShellContainer_Obsolete();
-            host.Reinitialize_Obsolete();
+            ((IShellDescriptorManagerEventHandler)host).Changed(null);
             var container2 = host.CreateShellContainer_Obsolete();
             var requestContainer1a = container1.BeginLifetimeScope();
             var requestContainer1b = container1.BeginLifetimeScope();

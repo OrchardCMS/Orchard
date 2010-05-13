@@ -6,14 +6,15 @@ using System.Collections.Generic;
 using Orchard.Environment.Configuration;
 using Orchard.Environment.Extensions;
 using Orchard.Environment.ShellBuilders;
+using Orchard.Environment.Topology;
+using Orchard.Environment.Topology.Models;
 using Orchard.Logging;
 using Orchard.Mvc;
 using Orchard.Mvc.ViewEngines;
 using Orchard.Utility.Extensions;
-using Orchard.Events;
 
 namespace Orchard.Environment {
-    public class DefaultOrchardHost : IOrchardHost {
+    public class DefaultOrchardHost : IOrchardHost, IShellSettingsManagerEventHandler, IShellDescriptorManagerEventHandler {
         private readonly ControllerBuilder _controllerBuilder;
 
         private readonly IShellSettingsManager _shellSettingsManager;
@@ -48,10 +49,6 @@ namespace Orchard.Environment {
             //ServiceLocator.SetLocator(t => _containerProvider.RequestLifetime.Resolve(t));
 
             BuildCurrent();
-        }
-
-        void IOrchardHost.Reinitialize_Obsolete() {
-            _current = null;
         }
 
 
@@ -136,12 +133,12 @@ namespace Orchard.Environment {
             }
         }
 
-        public void Process(string messageName, IDictionary<string, string> eventData) {
-            if (messageName == "ShellDescriptor_Changed") {
-                _current = null;
-            }
+
+        void IShellSettingsManagerEventHandler.Saved(ShellSettings settings) {
+            _current = null;
         }
-        public void InvalidateShells() {
+
+        void IShellDescriptorManagerEventHandler.Changed(ShellDescriptor descriptor) {
             _current = null;
         }
     }

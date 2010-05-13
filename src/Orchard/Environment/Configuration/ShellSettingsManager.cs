@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Yaml.Serialization;
-using Orchard.Events;
 using Orchard.Localization;
 
 namespace Orchard.Environment.Configuration {
@@ -14,12 +13,16 @@ namespace Orchard.Environment.Configuration {
 
     public class ShellSettingsManager : IShellSettingsManager {
         private readonly IAppDataFolder _appDataFolder;
-        private readonly IEventBus _eventBus;
-        Localizer T { get; set; }
+        private readonly IShellSettingsManagerEventHandler _events;
 
-        public ShellSettingsManager(IAppDataFolder appDataFolder, IEventBus eventBus) {
+        Localizer T { get; set; }
+        
+        public ShellSettingsManager(
+            IAppDataFolder appDataFolder, 
+            IShellSettingsManagerEventHandler events) {
             _appDataFolder = appDataFolder;
-            _eventBus = eventBus;
+            _events = events;
+
             T = NullLocalizer.Instance;
         }
 
@@ -35,8 +38,7 @@ namespace Orchard.Environment.Configuration {
 
             var filePath = Path.Combine(Path.Combine("Sites", settings.Name), "Settings.txt");
             _appDataFolder.CreateFile(filePath, ComposeSettings(settings));
-
-            _eventBus.Notify_Obsolete("ShellSettings_Saved", null);
+            _events.Saved(settings);
         }
 
         IEnumerable<ShellSettings> LoadSettings() {

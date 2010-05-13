@@ -11,13 +11,13 @@ using Orchard.Localization;
 namespace Orchard.Core.Settings.Topology {
     public class ShellDescriptorManager : IShellDescriptorManager {
         private readonly IRepository<TopologyRecord> _topologyRecordRepository;
-        private readonly IEventBus _eventBus;
+        private readonly IShellDescriptorManagerEventHandler _events;
 
         public ShellDescriptorManager(
             IRepository<TopologyRecord> repository,
-            IEventBus eventBus) {
+            IShellDescriptorManagerEventHandler events) {
             _topologyRecordRepository = repository;
-            _eventBus = eventBus;
+            _events = events;
             T = NullLocalizer.Instance;
         }
 
@@ -85,9 +85,7 @@ namespace Orchard.Core.Settings.Topology {
                 });
             }
 
-            _eventBus.Notify_Obsolete(
-                "ShellDescriptor_Changed",
-                null);
+            _events.Changed(GetShellTopologyDescriptorFromRecord(topologyRecord));
         }
     }
 }
