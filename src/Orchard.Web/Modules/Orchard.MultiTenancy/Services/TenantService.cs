@@ -22,14 +22,14 @@ namespace Orchard.MultiTenancy.Services {
 
         public void CreateTenant(ShellSettings settings) {
             _shellSettingsManager.SaveSettings(settings);
-            _shellSettingsEventHandler.Created(settings);
+            _shellSettingsEventHandler.Saved(settings);
         }
 
         public void UpdateTenant(ShellSettings settings) {
             var tenant = GetTenants().FirstOrDefault(ss => ss.Name == settings.Name);
             if ( tenant != null ) {
                 _shellSettingsManager.SaveSettings(settings);
-                _shellSettingsEventHandler.Updated(settings);
+                _shellSettingsEventHandler.Saved(settings);
             }
 
         }

@@ -6,22 +6,14 @@ using Orchard.Environment;
 namespace Orchard.MultiTenancy.Services {
     public class ShellSettingsEventHandler : IShellSettingsEventHandler, IDependency {
 
-        private readonly IRunningShellTable _runningShellTable;
+        private readonly IOrchardHost _orchardHost;
 
-        public ShellSettingsEventHandler(IRunningShellTable runningShellTable) {
-            _runningShellTable = runningShellTable;        
+        public ShellSettingsEventHandler(IOrchardHost orchardHost) {
+            _orchardHost = orchardHost;        
         }
 
-        public void Created(ShellSettings settings) {
-            _runningShellTable.Add(settings);
-        }
-
-        public void Deleted(ShellSettings settings) {
-            _runningShellTable.Remove(settings);
-        }
-
-        public void Updated(ShellSettings settings) {
-            _runningShellTable.Update(settings);
+        public void Saved(ShellSettings settings) {
+            _orchardHost.InvalidateShells();
         }
     }
 }

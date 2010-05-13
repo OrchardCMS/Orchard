@@ -10,6 +10,7 @@ using Orchard.Logging;
 using Orchard.Mvc;
 using Orchard.Mvc.ViewEngines;
 using Orchard.Utility.Extensions;
+using Orchard.Events;
 
 namespace Orchard.Environment {
     public class DefaultOrchardHost : IOrchardHost {
@@ -136,12 +137,12 @@ namespace Orchard.Environment {
         }
 
         public void Process(string messageName, IDictionary<string, string> eventData) {
-            if (messageName == "ShellSettings_Saved") {
+            if (messageName == "ShellDescriptor_Changed") {
                 _current = null;
             }
-            else if (messageName == "ShellDescriptor_Changed") {
-                _current = null;
-            }
+        }
+        public void InvalidateShells() {
+            _current = null;
         }
     }
 }
