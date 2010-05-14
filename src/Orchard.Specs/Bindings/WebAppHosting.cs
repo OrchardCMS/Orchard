@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -159,7 +160,7 @@ namespace Orchard.Specs.Bindings {
                 var r = row;
                 var input = inputs.First(x => x.GetAttributeValue("name", x.GetAttributeValue("id", "")) == r["name"]);
                 Assert.That(input, Is.Not.Null, "Unable to locate <input> name {0} in page html:\r\n\r\n{1}", r["name"], Details.ResponseText);
-                var inputType = input.Attributes["type"].Value.ToLowerInvariant();
+                var inputType = input.GetAttributeValue("type", "");
                 switch(inputType) {
                     case "radio":
                         var radios = inputs.Where(
@@ -190,6 +191,7 @@ namespace Orchard.Specs.Bindings {
             var urlPath = form.Start.GetAttributeValue("action", Details.UrlPath);
             var inputs = form.Children
                     .SelectMany(elt => elt.DescendantsAndSelf("input"))
+                    .Where(node => !((node.GetAttributeValue("type", "") == "radio" || node.GetAttributeValue("type", "") == "checkbox") && node.GetAttributeValue("checked", "") != "checked"))
                     .GroupBy(elt => elt.GetAttributeValue("name", elt.GetAttributeValue("id", "")), elt => elt.GetAttributeValue("value", ""))
                     .ToDictionary(elt => elt.Key, elt => (IEnumerable<string>)elt);
 
