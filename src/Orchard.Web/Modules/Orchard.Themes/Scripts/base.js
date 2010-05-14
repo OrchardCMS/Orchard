@@ -50,10 +50,10 @@ jQuery.fn.extend({
 (function() {
     $("form.inline.link").each(function() {
         var _this = $(this);
-        var link = $("<a href='.'/>");
+        var link = $("<a class='wasFormInlineLink' href='.'/>");
         var button = _this.children("button").first();
         link.text(button.text())
-            .css("cursor", "pointer")
+            .addClass(button.attr("class"))
             .click(function() { _this.submit(); return false; })
             .unload(function() { _this = 0; });
         _this.replaceWith(link);

@@ -27,33 +27,24 @@
       <div>
         <h3><%=Html.Encode(theme.DisplayName) %></h3>
         <%=Html.Image(Html.ThemePath(theme, "/Theme.png"), Html.Encode(theme.DisplayName), null)%>
-        
-            <% using (Html.BeginFormAntiForgeryPost(Url.Action("Activate"), FormMethod.Post, new { @class = "inline" }))
-               { %>
-                <fieldset>
-                    <button type="submit" title="<%=_Encoded("Activate") %>" name="themeName" value="<%=theme.ThemeName %>"><%=_Encoded("Activate") %></button>
-                </fieldset>
-            <% } %>
-            <% using (Html.BeginFormAntiForgeryPost(Url.Action("Preview"), FormMethod.Post, new { @class = "inline" }))
-               { %>
-                <fieldset>
-                    <button type="submit" title="<%=_Encoded("Preview") %>" name="themeName" value="<%=theme.ThemeName %>"><%=_Encoded("Preview") %></button>
-                </fieldset>
-            <% } %>
-
+        <% using (Html.BeginFormAntiForgeryPost(Url.Action("Activate"), FormMethod.Post, new { @class = "inline" })) { %>
+            <%=Html.Hidden("themeName", theme.ThemeName)%>
+            <button type="submit" title="<%=_Encoded("Activate") %>"><%=_Encoded("Activate") %></button>
+        <% } %>
+        <% using (Html.BeginFormAntiForgeryPost(Url.Action("Preview"), FormMethod.Post, new { @class = "inline" })) { %>
+            <%=Html.Hidden("themeName", theme.ThemeName)%>
+            <button type="submit" title="<%=_Encoded("Preview") %>"><%=_Encoded("Preview") %></button>
+        <% } %>
         <h5><%=_Encoded("By") %> <%=Html.Encode(theme.Author) %></h5>
         <p>
             <%=_Encoded("Version:") %> <%=Html.Encode(theme.Version) %><br />
             <%=Html.Encode(theme.Description) %><br />
             <%=Html.Encode(theme.HomePage) %>
         </p>
-                <% using (Html.BeginFormAntiForgeryPost(Url.Action("Uninstall"), FormMethod.Post, new { @class = "inline" }))
-               { %>
-                <fieldset>
-                    <button type="submit" class="linkButton" title="<%=_Encoded("Uninstall") %>" name="themeName" value="<%=theme.ThemeName %>"><%=_Encoded("Uninstall")%></button>
-                </fieldset>
-            <% } %>
-
+        <% using (Html.BeginFormAntiForgeryPost(Url.Action("Uninstall"), FormMethod.Post, new { @class = "inline link" })) { %>
+            <%=Html.Hidden("themeName", theme.ThemeName)%>
+           <button type="submit" class="uninstall" title="<%=_Encoded("Uninstall") %>"><%=_Encoded("Uninstall")%></button>
+        <% } %>
      </div>   
     </li>
     <% }
