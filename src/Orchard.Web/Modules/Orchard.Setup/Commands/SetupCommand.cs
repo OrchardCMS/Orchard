@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using Orchard.Commands;
 using Orchard.Setup.Services;
 
@@ -37,6 +38,14 @@ namespace Orchard.Setup.Commands {
         [CommandName("setup")]
         [OrchardSwitches("SiteName,AdminUsername,AdminPassword,DatabaseProvider,DatabaseConnectionString,DatabaseTablePrefix,EnabledFeatures")]
         public void Setup() {
+            IEnumerable<string> enabledFeatures = null;
+            if (!string.IsNullOrEmpty(this.EnabledFeatures)) {
+                enabledFeatures = this.EnabledFeatures
+                    .Split(',')
+                    .Select(s => s.Trim())
+                    .Where(s => !string.IsNullOrEmpty(s));
+            }
+
             var setupContext = new SetupContext {
                 SiteName = this.SiteName,
                 AdminUsername = this.AdminUsername,
@@ -44,19 +53,15 @@ namespace Orchard.Setup.Commands {
                 DatabaseProvider = this.DatabaseProvider,
                 DatabaseConnectionString = this.DatabaseConnectionString,
                 DatabaseTablePrefix = this.DatabaseTablePrefix,
-                EnabledFeatures = this.EnabledFeatures.Split(',').Select(s => s.Trim())
+                EnabledFeatures = enabledFeatures
             };
 
             _setupService.Setup(setupContext);
 
-            Context.Output.WriteLine("Site \"{0}\" setup to run data provider \"{1}\" (with table prefix \"{2}\") with the following features enabled:",
+            Context.Output.WriteLine(T("Site \"{0}\" sucessfully setup to run data provider \"{1}\" (with table prefix \"{2}\").",
                 setupContext.SiteName,
                 setupContext.DatabaseProvider,
-                setupContext.DatabaseTablePrefix);
-
-            foreach (var feature in setupContext.EnabledFeatures) {
-                this.Context.Output.WriteLine("{0}", feature);
-            }
+                setupContext.DatabaseTablePrefix));
         }
     }
 }

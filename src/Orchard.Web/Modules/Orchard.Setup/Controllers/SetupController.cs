@@ -65,25 +65,6 @@ namespace Orchard.Setup.Controllers {
             }
 
             try {
-                // The vanilla Orchard distibution has the following features enabled.
-                string[] hardcoded = {
-                    "Orchard.Framework",
-                    "Common",
-                    "Dashboard",
-                    "Feeds",
-                    "HomePage",
-                    "Navigation",
-                    "Scheduling",
-                    "Settings",
-                    "XmlRpc",
-                    "Orchard.Users",
-                    "Orchard.Roles",
-                    "TinyMce",
-                    "Orchard.Modules",
-                    "Orchard.Themes",
-                    "Orchard.Pages",
-                    "Orchard.Blogs",
-                    "Orchard.Comments"};
 
                 var setupContext = new SetupContext {
                     SiteName = model.SiteName,
@@ -92,7 +73,7 @@ namespace Orchard.Setup.Controllers {
                     DatabaseProvider = model.DatabaseOptions ? "SQLite" : "SqlServer",
                     DatabaseConnectionString = model.DatabaseConnectionString,
                     DatabaseTablePrefix = model.DatabaseTablePrefix,
-                    EnabledFeatures = hardcoded
+                    EnabledFeatures = null // default list
                 };
 
                 _setupService.Setup(setupContext);
