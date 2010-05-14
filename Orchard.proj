@@ -7,6 +7,8 @@
 		<LibFolder>$(MSBuildProjectDirectory)\lib</LibFolder>
 		<SrcFolder>$(MSBuildProjectDirectory)\src</SrcFolder>
 		<BuildFolder>$(MSBuildProjectDirectory)\build</BuildFolder>
+		<SourceFolder>$(MSBuildProjectDirectory)\artifacts\Source</SourceFolder>
+		<WebPIFolder>$(MSBuildProjectDirectory)\artifacts\WebPI</WebPIFolder>
 		
 		<CompileFolder>$(BuildFolder)\Compile</CompileFolder>
 		<WebSitesFolder>$(CompileFolder)\_PublishedWebsites</WebSitesFolder>
@@ -146,8 +148,10 @@
         
     </ItemGroup>
 
-		<Zip Files="@(Zip-Stage)" WorkingDirectory="$(StageFolder)" ZipFileName="$(BuildFolder)\Orchard.Web.zip" />
-		<Zip Files="@(Zip-Source)" WorkingDirectory="$(MSBuildProjectDirectory)" ZipFileName="$(BuildFolder)\Orchard.Source.zip" />
+    <MakeDir Directories="$(WebPIFolder);$(SourceFolder)"/>
+
+		<Zip Files="@(Zip-Stage)" WorkingDirectory="$(StageFolder)" ZipFileName="$(WebPIFolder)\Orchard.Web.zip" />
+		<Zip Files="@(Zip-Source)" WorkingDirectory="$(MSBuildProjectDirectory)" ZipFileName="$(SourceFolder)\Orchard.Source.zip" />
   </Target>
 
 <!-- Profiling -->
