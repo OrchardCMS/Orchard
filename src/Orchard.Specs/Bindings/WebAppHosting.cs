@@ -184,8 +184,7 @@ namespace Orchard.Specs.Bindings {
         [When(@"I hit ""(.*)""")]
         public void WhenIHit(string submitText) {
             var submit = _doc.DocumentNode
-                .SelectNodes("//input[@type='submit']")
-                .Single(elt => elt.GetAttributeValue("value", null) == submitText);
+                .SelectSingleNode(string.Format("(//input[@type='submit'][@value='{0}']|//button[@type='submit'][text()='{0}'])", submitText));
 
             var form = Form.LocateAround(submit);
             var urlPath = form.Start.GetAttributeValue("action", Details.UrlPath);

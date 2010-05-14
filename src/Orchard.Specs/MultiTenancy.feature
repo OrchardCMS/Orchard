@@ -91,7 +91,75 @@ Scenario: A new tenant runs the setup
 			And I go to "/Default.aspx"
 	Then I should see "<h1>Scott Site</h1>"
 		And I should see "Welcome, <strong>admin</strong>!"
+		
+Scenario: An existing initialized tenant cannot have its database option cleared
+	Given I have installed Orchard
+		And I have installed "Orchard.MultiTenancy"
+	When I go to "Admin/MultiTenancy/Add"
+		And I fill in 
+			| name | value |
+			| Name | Scott |
+			| RequestUrlHost | scott.example.org |
+		And I hit "Save"
+		And I go to "/Setup" on host scott.example.org
+		And I fill in 
+			| name | value |
+			| SiteName | Scott Site |
+			| AdminPassword | 6655321 |
+		And I hit "Finish Setup"
+        And I go to "/Admin/MultiTenancy/Edit/Scott" on host localhost
+    Then I should see "<h1>Edit Tenant</h1>"
+        And I should see "<h2>Scott</h2>"
+        And I should not see "Allow the tenant to set up the database"
 
+Scenario: Default tenant cannot be disabled
+	Given I have installed Orchard
+		And I have installed "Orchard.MultiTenancy"
+	When I go to "Admin/MultiTenancy"
+    Then I should not see "<form action="/Admin/MultiTenancy/disable""
+
+Scenario: A running tenant can be disabled
+	Given I have installed Orchard
+		And I have installed "Orchard.MultiTenancy"
+	When I go to "Admin/MultiTenancy/Add"
+		And I fill in 
+			| name | value |
+			| Name | Scott |
+			| RequestUrlHost | scott.example.org |
+		And I hit "Save"
+		And I go to "/Setup" on host scott.example.org
+		And I fill in 
+			| name | value |
+			| SiteName | Scott Site |
+			| AdminPassword | 6655321 |
+		And I hit "Finish Setup"
+        And I go to "/Admin/MultiTenancy" on host localhost
+        And I hit "Suspend"
+        And I am redirected
+    Then I should see "<form action="/Admin/MultiTenancy/enable""
+
+Scenario: A running tenant which is disabled can be enabled
+	Given I have installed Orchard
+		And I have installed "Orchard.MultiTenancy"
+	When I go to "Admin/MultiTenancy/Add"
+		And I fill in 
+			| name | value |
+			| Name | Scott |
+			| RequestUrlHost | scott.example.org |
+		And I hit "Save"
+		And I go to "/Setup" on host scott.example.org
+		And I fill in 
+			| name | value |
+			| SiteName | Scott Site |
+			| AdminPassword | 6655321 |
+		And I hit "Finish Setup"
+        And I go to "/Admin/MultiTenancy" on host localhost
+        And I hit "Suspend"
+        And I am redirected
+        And I hit "Resume"
+        And I am redirected
+    Then I should see "<form action="/Admin/MultiTenancy/disable""
+    
 Scenario: Listing tenants from command line
 	Given I have installed Orchard
 		And I have installed "Orchard.MultiTenancy"

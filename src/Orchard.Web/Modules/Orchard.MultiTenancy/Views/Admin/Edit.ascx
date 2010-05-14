@@ -22,7 +22,7 @@
         } else { %>
  	    <div>
             <%=Html.RadioButtonFor(svm => svm.DataProvider, "", new { id = "tenantDatabaseOption" })%>
-	        <label for="tenantDatabaseOption" class="forcheckbox"><%=_Encoded("Allow the client to set up the database") %></label>
+	        <label for="tenantDatabaseOption" class="forcheckbox"><%=_Encoded("Allow the tenant to set up the database") %></label>
 	    </div><%
         } %>
         <div>
