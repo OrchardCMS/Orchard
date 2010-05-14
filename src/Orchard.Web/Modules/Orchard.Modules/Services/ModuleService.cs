@@ -48,10 +48,11 @@ namespace Orchard.Modules.Services {
         }
 
         public IEnumerable<IModuleFeature> GetAvailableFeatures() {
-            var enabledFeatures = _shellDescriptorManager.GetShellDescriptor().EnabledFeatures;
+            var enabledFeatures = _shellDescriptorManager.GetShellDescriptor().EnabledFeatures.ToList();
             return GetInstalledModules()
                 .SelectMany(m => _extensionManager.LoadFeatures(m.Features))
-                .Select(f => AssembleModuleFromDescriptor(f, enabledFeatures.FirstOrDefault(sf => string.Equals(sf.Name, f.Descriptor.Name, StringComparison.OrdinalIgnoreCase)) != null));
+                .Select(f => AssembleModuleFromDescriptor(f, enabledFeatures.FirstOrDefault(sf => string.Equals(sf.Name, f.Descriptor.Name, StringComparison.OrdinalIgnoreCase)) != null))
+                .ToList();
         }
 
         public IEnumerable<Feature> GetAvailableFeaturesByModule(string moduleName) {
@@ -69,9 +70,20 @@ namespace Orchard.Modules.Services {
 
         public void DisableFeatures(IEnumerable<string> featureNames) {
             var shellDescriptor = _shellDescriptorManager.GetShellDescriptor();
-
             var enabledFeatures = shellDescriptor.EnabledFeatures.ToList();
-            enabledFeatures.RemoveAll(f => featureNames.Contains(f.Name));
+            var features = GetAvailableFeatures();
+
+            foreach (var featureName in featureNames) {
+                var feature = featureName;
+                var dependants = features.Where(f => f.IsEnabled && f.Descriptor.Dependencies != null && f.Descriptor.Dependencies.Contains(feature));
+
+                if (dependants.Count() == 0) {
+                    enabledFeatures.RemoveAll(f => f.Name == feature);
+                }
+                else {
+                    // list what else will be disabled with ok/cancel
+                }
+            }
 
             _shellDescriptorManager.UpdateShellDescriptor(shellDescriptor.SerialNumber, enabledFeatures, shellDescriptor.Parameters);
         }
