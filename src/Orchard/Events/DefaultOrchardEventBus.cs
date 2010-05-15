@@ -36,7 +36,15 @@ namespace Orchard.Events {
 
             var eventHandlers = _eventHandlers();
             foreach (var eventHandler in eventHandlers) {
-                TryInvoke(eventHandler, interfaceName, methodName, eventData);
+                try {
+                    TryInvoke(eventHandler, interfaceName, methodName, eventData);
+                }
+                catch(Exception ex) {
+                        Logger.Error(ex, "{2} thrown from {0} by {1}",
+                            interfaceName + "." +methodName,
+                            eventHandler.GetType().FullName,
+                            ex.GetType().Name);
+                }
             }
         }
 

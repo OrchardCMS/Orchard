@@ -35,11 +35,11 @@ namespace Orchard.Pages.Services {
         public IEnumerable<Page> Get(PageStatus status) {
             switch (status) {
                 case PageStatus.All:
-                    return _contentManager.Query<Page>(VersionOptions.Latest).List();
+                    return _contentManager.Query(PageDriver.ContentType.Name).Join<RoutableRecord>().ForVersion(VersionOptions.Latest).List().AsPart<Page>();
                 case PageStatus.Published:
-                    return _contentManager.Query<Page>(VersionOptions.Published).List();
+                    return _contentManager.Query(PageDriver.ContentType.Name).Join<RoutableRecord>().ForVersion(VersionOptions.Published).List().AsPart<Page>();
                 case PageStatus.Offline:
-                    return _contentManager.Query<Page>(VersionOptions.Latest).Where<ContentPartVersionRecord>(ci => !ci.ContentItemVersionRecord.Published).List();
+                    return _contentManager.Query(PageDriver.ContentType.Name).Join<RoutableRecord>().ForVersion(VersionOptions.Latest).Where<ContentPartVersionRecord>(ci => !ci.ContentItemVersionRecord.Published).List().AsPart<Page>();
                 default:
                     return Enumerable.Empty<Page>();
             }
