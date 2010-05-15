@@ -44,44 +44,12 @@ namespace Orchard.Modules.Controllers {
                                            });
         }
 
-        public ActionResult Features(FeaturesOptions options) {
+        public ActionResult Features() {
             if (!Services.Authorizer.Authorize(Permissions.ManageFeatures, T("Not allowed to manage features")))
                 return new HttpUnauthorizedResult();
 
             var features = _moduleService.GetAvailableFeatures();
-            return View(new FeaturesViewModel {Features = features, Options = options});
-        }
-
-        [HttpPost, ActionName("Features")]
-        [FormValueRequired("submit.BulkEdit")]
-        public ActionResult FeaturesPOST(FeaturesOptions options, IList<string> selection) {
-            if (selection != null && selection.Count > 0)
-            {
-                switch (options.BulkAction)
-                {
-                    case FeaturesBulkAction.None:
-                        break;
-                    case FeaturesBulkAction.Enable:
-                        if (!Services.Authorizer.Authorize(Permissions.ManageFeatures, T("Not allowed to enable features")))
-                            return new HttpUnauthorizedResult();
-                        _moduleService.EnableFeatures(selection);
-                        //todo: (heskew) need better messages
-                        //todo: (heskew) hmmm...need a helper to comma-separate all but last, which would get the " and " treatment...all localized, of course
-                        Services.Notifier.Information(T("{0} were enabled", string.Join(", ", selection.ToArray())));
-                        break;
-                    case FeaturesBulkAction.Disable:
-                        if (!Services.Authorizer.Authorize(Permissions.ManageFeatures, T("Not allowed to disable features")))
-                            return new HttpUnauthorizedResult();
-                        _moduleService.DisableFeatures(selection);
-                        //todo: (heskew) need better messages
-                        Services.Notifier.Information(T("{0} were disabled", string.Join(", ", selection.ToArray())));
-                        break;
-                    default:
-                        throw new ArgumentOutOfRangeException();
-                }
-            }
-
-            return RedirectToAction("Features");
+            return View(new FeaturesViewModel {Features = features});
         }
 
         [ValidateAntiForgeryTokenOrchard]
@@ -107,7 +75,7 @@ namespace Orchard.Modules.Controllers {
                 return new NotFoundResult();
 
             _moduleService.DisableFeatures(new[] { featureName });
-            Services.Notifier.Information(T("{0} was disabled", featureName));
+            //Services.Notifier.Information(T("{0} was disabled", featureName));
 
             return RedirectToAction("Features");
         }

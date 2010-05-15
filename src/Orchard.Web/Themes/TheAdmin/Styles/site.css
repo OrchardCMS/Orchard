@@ -731,8 +731,11 @@ todo: (heskew) pull out into relevant modules where appropriate
     zoom:1;
     *display: inline;
 }
-.templates fieldset {
-    margin:0 0 .933%;
+.templates .inline button {
+    font-size:1.2em;
+}
+.templates .wasFormInlineLink {
+    font-size:1.4em;
 }
 .templates p {
     overflow:hidden;
