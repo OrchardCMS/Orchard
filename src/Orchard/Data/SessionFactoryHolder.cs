@@ -3,6 +3,7 @@ using System.IO;
 using NHibernate;
 using Orchard.Data.Builders;
 using Orchard.Environment.Configuration;
+using Orchard.Environment.FileSystems;
 using Orchard.Environment.Topology;
 using Orchard.Environment.Topology.Models;
 using Orchard.Logging;

@@ -18,7 +18,18 @@ namespace Orchard.Profile.Tests {
 
         [Given(@"I am logged in")]
         public void GivenIAmLoggedIn() {
-            DoRequest("/Users/Account/LogOn", "userNameOrEmail=admin&password=profiling-secret&rememberMe=false");
+            DoRequest("/Users/Account/LogOn");
+
+            const string requestVerificationTokenName = "__RequestVerificationToken";
+            const string valueMarker = "value=\"";
+
+            var tokenIndex = _text.IndexOf(requestVerificationTokenName);
+            var valueIndex = _text.IndexOf(valueMarker, tokenIndex);
+            var valueStart = valueIndex + valueMarker.Length;
+            var valueEnd = _text.IndexOf("\"", valueStart);
+            var requestVerificationTokenValue = _text.Substring(valueStart, valueEnd - valueStart);
+
+            DoRequest("/Users/Account/LogOn", "userNameOrEmail=admin&password=profiling-secret&rememberMe=false&" + requestVerificationTokenName + "=" + requestVerificationTokenValue);
         }
 
         [When(@"I go to ""(.*)""")]

@@ -4,6 +4,7 @@ using System.Xml;
 using Autofac;
 using NUnit.Framework;
 using Orchard.Environment.Configuration;
+using Orchard.Environment.FileSystems;
 using Orchard.Environment.Topology;
 using Orchard.Environment.Topology.Models;
 

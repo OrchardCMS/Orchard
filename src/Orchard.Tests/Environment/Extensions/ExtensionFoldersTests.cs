@@ -49,7 +49,7 @@ namespace Orchard.Tests.Environment.Extensions {
 
         [Test]
         public void NamesFromFoldersWithModuleTxtShouldBeListed() {
-            var folders = new ModuleFolders(new[] { _tempFolderName });
+            var folders = new ModuleFolders(new[] { _tempFolderName },null,null);
             var names = folders.ListNames();
             Assert.That(names.Count(), Is.EqualTo(2));
             Assert.That(names, Has.Some.EqualTo("Sample1"));
@@ -58,7 +58,7 @@ namespace Orchard.Tests.Environment.Extensions {
 
         [Test]
         public void ModuleTxtShouldBeParsedAndReturnedAsYamlDocument() {
-            var folders = new ModuleFolders(new[] { _tempFolderName });
+            var folders = new ModuleFolders(new[] { _tempFolderName },null,null);
             var sample1 = folders.ParseManifest("Sample1");
             var mapping = (Mapping)sample1.YamlDocument.Root;
             var entities = mapping.Entities

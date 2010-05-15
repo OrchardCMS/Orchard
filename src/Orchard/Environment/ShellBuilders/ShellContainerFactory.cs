@@ -106,7 +106,8 @@ namespace Orchard.Environment.ShellBuilders {
 
         private IRegistrationBuilder<object, ConcreteReflectionActivatorData, SingleRegistrationStyle> RegisterType(ContainerBuilder builder, ShellTopologyItem item) {
             return builder.RegisterType(item.Type)
-                .WithProperty("Feature", item.Feature);
+                .WithProperty("Feature", item.Feature)
+                .WithMetadata("Feature", item.Feature);
         }
     }
 }

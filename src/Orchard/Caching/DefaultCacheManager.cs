@@ -12,7 +12,7 @@ namespace Orchard.Caching {
 
         #region Implementation of ICacheManager
 
-        public TResult Get<TKey, TResult>(TKey key, Func<AcquireContext, TResult> acquire) {
+        public TResult Get<TKey, TResult>(TKey key, Func<AcquireContext<TKey>, TResult> acquire) {
             return GetCache<TKey, TResult>().Get(key, acquire);
         }
 

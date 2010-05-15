@@ -34,13 +34,7 @@ namespace Orchard.Environment.Extensions {
         // This method does not load extension types, simply parses extension manifests from 
         // the filesystem. 
         public IEnumerable<ExtensionDescriptor> AvailableExtensions() {
-            var availableExtensions = new List<ExtensionDescriptor>();
-            foreach (var folder in _folders) {
-                foreach (var name in folder.ListNames()) {
-                    availableExtensions.Add(GetDescriptorForExtension(name, folder));
-                }
-            }
-            return availableExtensions;
+            return _folders.SelectMany(folder=>folder.AvailableExtensions());
         }
 
         public IEnumerable<Feature> LoadFeatures(IEnumerable<FeatureDescriptor> featureDescriptors) {
@@ -55,65 +49,6 @@ namespace Orchard.Environment.Extensions {
                 _activeExtensions = BuildActiveExtensions().ToList();
             }
             return _activeExtensions;
-        }
-
-
-        private static ExtensionDescriptor GetDescriptorForExtension(string name, IExtensionFolders folder) {
-            string extensionType = folder is ThemeFolders ? "Theme" : "Module";
-            var parseResult = folder.ParseManifest(name);
-            var mapping = (Mapping)parseResult.YamlDocument.Root;
-            var fields = mapping.Entities
-                .Where(x => x.Key is Scalar)
-                .ToDictionary(x => ((Scalar)x.Key).Text, x => x.Value);
-
-            var extensionDescriptor = new ExtensionDescriptor {
-                Location = parseResult.Location,
-                Name = name,
-                ExtensionType = extensionType,
-                DisplayName = GetValue(fields, "name") ?? name,
-                Description = GetValue(fields, "description"),
-                Version = GetValue(fields, "version"),
-                OrchardVersion = GetValue(fields, "orchardversion"),
-                Author = GetValue(fields, "author"),
-                WebSite = GetValue(fields, "website"),
-                Tags = GetValue(fields, "tags"),
-                AntiForgery = GetValue(fields, "antiforgery"),
-            };
-            extensionDescriptor.Features = GetFeaturesForExtension(GetMapping(fields, "features"), extensionDescriptor);
-            return extensionDescriptor;
-        }
-
-        private static IEnumerable<FeatureDescriptor> GetFeaturesForExtension(Mapping features, ExtensionDescriptor extensionDescriptor) {
-            List<FeatureDescriptor> featureDescriptors = new List<FeatureDescriptor>();
-            if (features != null) {
-                foreach (var entity in features.Entities) {
-                    FeatureDescriptor featureDescriptor = new FeatureDescriptor {
-                        Extension = extensionDescriptor,
-                        Name = entity.Key.ToString(),
-                    };
-                    Mapping featureMapping = (Mapping)entity.Value;
-                    foreach (var featureEntity in featureMapping.Entities) {
-                        if (String.Equals(featureEntity.Key.ToString(), "description", StringComparison.OrdinalIgnoreCase)) {
-                            featureDescriptor.Description = featureEntity.Value.ToString();
-                        }
-                        else if (String.Equals(featureEntity.Key.ToString(), "category", StringComparison.OrdinalIgnoreCase)) {
-                            featureDescriptor.Category = featureEntity.Value.ToString();
-                        }
-                        else if (String.Equals(featureEntity.Key.ToString(), "dependencies", StringComparison.OrdinalIgnoreCase)) {
-                            featureDescriptor.Dependencies = ParseFeatureDependenciesEntry(featureEntity.Value.ToString());
-                        }
-                    }
-                    featureDescriptors.Add(featureDescriptor);
-                }
-            }
-            if (!featureDescriptors.Any(fd => fd.Name == extensionDescriptor.Name)) {
-                featureDescriptors.Add(new FeatureDescriptor {
-                    Name = extensionDescriptor.Name,
-                    Dependencies = new string[0],
-                    Extension = extensionDescriptor,
-                });
-            }
-            return featureDescriptors;
         }
 
         private Feature LoadFeature(FeatureDescriptor featureDescriptor) {
@@ -237,28 +172,5 @@ namespace Orchard.Environment.Extensions {
             return null;
         }
 
-        private static string[] ParseFeatureDependenciesEntry(string dependenciesEntry) {
-            List<string> dependencies = new List<string>();
-            foreach (var s in dependenciesEntry.Split(',')) {
-                dependencies.Add(s.Trim());
-            }
-            return dependencies.ToArray();
-        }
-
-        private static Mapping GetMapping(
-            IDictionary<string, DataItem> fields,
-            string key) {
-
-            DataItem value;
-            return fields.TryGetValue(key, out value) ? (Mapping)value : null;
-        }
-
-        private static string GetValue(
-            IDictionary<string, DataItem> fields,
-            string key) {
-
-            DataItem value;
-            return fields.TryGetValue(key, out value) ? value.ToString() : null;
-        }
     }
 }

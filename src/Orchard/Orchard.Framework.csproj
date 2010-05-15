@@ -63,6 +63,18 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\sharpziplib\ICSharpCode.SharpZipLib.dll</HintPath>
     </Reference>
+    <Reference Include="Machine.Core, Version=1.0.0.0, Culture=neutral, PublicKeyToken=5c474de7a495cff1, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\machine.migrations\Machine.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Machine.Migrations, Version=1.0.0.0, Culture=neutral, PublicKeyToken=5c474de7a495cff1, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\machine.migrations\Machine.Migrations.dll</HintPath>
+    </Reference>
+    <Reference Include="Machine.Migrations.NHibernate, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\machine.migrations\Machine.Migrations.NHibernate.dll</HintPath>
+    </Reference>
     <Reference Include="NHibernate, Version=2.1.0.4000, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\fluentnhibernate\NHibernate.dll</HintPath>
@@ -134,8 +146,14 @@
     <Compile Include="Caching\AcquireContext.cs" />
     <Compile Include="Caching\Cache.cs" />
     <Compile Include="Caching\DefaultCacheManager.cs" />
+    <Compile Include="Caching\Providers\IVolatileSink.cs" />
+    <Compile Include="Environment\FileSystems\DefaultVirtualPathProvider.cs" />
+    <Compile Include="Environment\FileSystems\IAppDataFolder.cs" />
+    <Compile Include="Environment\FileSystems\IVirtualPathProvider.cs" />
     <Compile Include="Caching\ICache.cs" />
     <Compile Include="Caching\ICacheManager.cs" />
+    <Compile Include="Caching\Providers\IVolatileSignal.cs" />
+    <Compile Include="Caching\Providers\IVolatileProvider.cs" />
     <Compile Include="Commands\CommandParameters.cs" />
     <Compile Include="Commands\CommandDescriptor.cs" />
     <Compile Include="Commands\CommandHandlerDescriptor.cs" />
@@ -173,7 +191,7 @@
     <Compile Include="Environment\AutofacUtil\DynamicProxy2\DynamicProxyContext.cs" />
     <Compile Include="Environment\AutofacUtil\DynamicProxy2\DynamicProxyExtensions.cs" />
     <Compile Include="Environment\AutofacUtil\DynamicProxy2\ConstructorFinderWrapper.cs" />
-    <Compile Include="Environment\Configuration\AppDataFolder.cs" />
+    <Compile Include="Environment\FileSystems\AppDataFolder.cs" />
     <Compile Include="Environment\Configuration\ShellSettingsManager.cs" />
     <Compile Include="Environment\AutofacUtil\ContainerUpdater.cs" />
     <Compile Include="Environment\ShellBuilders\ShellContextFactory.cs" />
@@ -204,7 +222,6 @@
     <Compile Include="Modules\IModuleFeature.cs" />
     <Compile Include="Modules\IModuleService.cs" />
     <Compile Include="Mvc\AntiForgery\ValidateAntiForgeryTokenOrchardAttribute.cs" />
-    <Compile Include="Mvc\Extensions\ControllerExtensions.cs" />
     <Compile Include="Mvc\Extensions\ModelStateDictionaryExtensions.cs" />
     <Compile Include="Mvc\Html\FileRegistrationContextExtensions.cs" />
     <Compile Include="Mvc\Extensions\UrlHelperExtensions.cs" />

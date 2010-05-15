@@ -51,6 +51,10 @@ namespace Orchard.Tests.Environment.Extensions {
                 }
                 return null;
             }
+
+            public IEnumerable<ExtensionDescriptor> AvailableExtensions() {
+                throw new NotImplementedException();
+            }
         }
 
         public class StubLoaders : IExtensionLoader {

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Orchard.Caching.Providers;
 
 namespace Orchard.Caching {
     public class Cache<TKey, TResult> : ICache<TKey, TResult> {
@@ -9,22 +10,21 @@ namespace Orchard.Caching {
             _entries = new Dictionary<TKey, CacheEntry>();
         }
 
-        #region Implementation of ICache<TKey,TResult>
-
-        public TResult Get(TKey key, Func<AcquireContext, TResult> acquire) {
+        public TResult Get(TKey key, Func<AcquireContext<TKey>, TResult> acquire) {
             CacheEntry entry;
             if (!_entries.TryGetValue(key, out entry)) {
-                AcquireContext context = new AcquireContext();
-                entry = new CacheEntry {Result = acquire(context)};
+                entry = new CacheEntry { VolatileItems = new List<IVolatileSignal>() };
+
+                var context = new AcquireContext<TKey>(key, volatileItem => entry.VolatileItems.Add(volatileItem));
+                entry.Result = acquire(context);
                 _entries.Add(key, entry);
             }
             return entry.Result;
         }
 
-        #endregion
-
-        public class CacheEntry {
+        private class CacheEntry {
             public TResult Result { get; set; }
+            public IList<IVolatileSignal> VolatileItems { get; set; }
         }
     }
 

@@ -3,6 +3,12 @@
 	As a developer
 	I want to generate a fixed number of repeatable requests
 
+Scenario: Warmup
+	Given I am logged in
+	When I go to "/admin"
+	When I go to "/blog0"
+	When I go to "/"
+
 Scenario: Dashboard
 	Given I am logged in
 	When I go to "/admin" 40 times

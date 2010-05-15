@@ -15,6 +15,7 @@ using Orchard.Environment.Configuration;
 using Orchard.Environment.Extensions;
 using Orchard.Environment.Extensions.Folders;
 using Orchard.Environment.Extensions.Models;
+using Orchard.Environment.FileSystems;
 using Orchard.Environment.ShellBuilders;
 using Orchard.Environment.Topology;
 using Orchard.Environment.Topology.Models;
