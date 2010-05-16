@@ -5,6 +5,7 @@
     public interface ISingletonDependency : IDependency {
         
     }
+
     public interface ITransientDependency : IDependency {
 
     }

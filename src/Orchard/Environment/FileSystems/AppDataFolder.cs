@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Web.Hosting;
-using Orchard.Environment.FileSystems;
 
-namespace Orchard.Environment.Configuration {
+namespace Orchard.Environment.FileSystems {
     public class AppDataFolder : IAppDataFolder {
         protected string _basePath;
 
@@ -42,9 +40,9 @@ namespace Orchard.Environment.Configuration {
             var files = Directory.GetFiles(directoryPath);
 
             return files.Select(file => {
-                var fileName = Path.GetFileName(file);
-                return Path.Combine(path, fileName);
-            });
+                                    var fileName = Path.GetFileName(file);
+                                    return Path.Combine(path, fileName);
+                                });
         }
 
         public IEnumerable<string> ListDirectories(string path) {
@@ -55,9 +53,9 @@ namespace Orchard.Environment.Configuration {
             var files = Directory.GetDirectories(directoryPath);
 
             return files.Select(file => {
-                var fileName = Path.GetFileName(file);
-                return Path.Combine(path, fileName);
-            });
+                                    var fileName = Path.GetFileName(file);
+                                    return Path.Combine(path, fileName);
+                                });
         }
 
         public string CreateDirectory(string path) {
@@ -74,5 +72,6 @@ namespace Orchard.Environment.Configuration {
         public string MapPath(string path) {
             return Path.Combine(_basePath, path);
         }
+
     }
 }

@@ -5,6 +5,7 @@ using System.Web.Hosting;
 using Autofac;
 using Autofac.Configuration;
 using Autofac.Integration.Web;
+using Orchard.Caching;
 using Orchard.Environment.AutofacUtil;
 using Orchard.Environment.Configuration;
 using Orchard.Environment.Extensions;
@@ -15,6 +16,7 @@ using Orchard.Environment.ShellBuilders;
 using Orchard.Environment.Topology;
 using Orchard.Events;
 using Orchard.Logging;
+using Orchard.Services;
 
 namespace Orchard.Environment {
     public static class OrchardStarter {
@@ -22,10 +24,15 @@ namespace Orchard.Environment {
             var builder = new ContainerBuilder();
             builder.RegisterModule(new LoggingModule());
             builder.RegisterModule(new EventsModule());
+            builder.RegisterModule(new CacheModule());
 
             // a single default host implementation is needed for bootstrapping a web app domain
             builder.RegisterType<DefaultOrchardEventBus>().As<IEventBus>().SingleInstance();
-            builder.RegisterType<AppDataFolder>().As<IAppDataFolder>().SingleInstance();
+            builder.RegisterType<DefaultCacheHolder>().As<ICacheHolder>().SingleInstance();
+
+            RegisterVolatileProvider<DefaultVirtualPathProvider, IVirtualPathProvider>(builder);
+            RegisterVolatileProvider<AppDataFolder, IAppDataFolder>(builder);
+            RegisterVolatileProvider<Clock, IClock>(builder);
 
             builder.RegisterType<DefaultOrchardHost>().As<IOrchardHost>().As<IEventHandler>().SingleInstance();
             {
@@ -90,6 +97,13 @@ namespace Orchard.Environment {
                 .InstancePerMatchingLifetimeScope("shell");
 
             return builder.Build();
+        }
+
+        private static void RegisterVolatileProvider<TRegister, TService>(ContainerBuilder builder) where TService : IVolatileProvider {
+            builder.RegisterType<TRegister>()
+                .As<TService>()
+                .As<IVolatileProvider>()
+                .SingleInstance();
         }
 
         public static IOrchardHost CreateHost(Action<ContainerBuilder> registrations) {

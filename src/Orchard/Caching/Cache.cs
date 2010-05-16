@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using Orchard.Caching.Providers;
+using System.Linq;
 
 namespace Orchard.Caching {
     public class Cache<TKey, TResult> : ICache<TKey, TResult> {
@@ -12,19 +12,19 @@ namespace Orchard.Caching {
 
         public TResult Get(TKey key, Func<AcquireContext<TKey>, TResult> acquire) {
             CacheEntry entry;
-            if (!_entries.TryGetValue(key, out entry)) {
-                entry = new CacheEntry { VolatileItems = new List<IVolatileSignal>() };
+            if (!_entries.TryGetValue(key, out entry) || entry.Tokens.Any(t => !t.IsCurrent)) {
+                entry = new CacheEntry { Tokens = new List<IVolatileToken>() };
 
-                var context = new AcquireContext<TKey>(key, volatileItem => entry.VolatileItems.Add(volatileItem));
+                var context = new AcquireContext<TKey>(key, volatileItem => entry.Tokens.Add(volatileItem));
                 entry.Result = acquire(context);
-                _entries.Add(key, entry);
+                _entries[key] = entry;
             }
             return entry.Result;
         }
 
         private class CacheEntry {
             public TResult Result { get; set; }
-            public IList<IVolatileSignal> VolatileItems { get; set; }
+            public IList<IVolatileToken> Tokens { get; set; }
         }
     }
 

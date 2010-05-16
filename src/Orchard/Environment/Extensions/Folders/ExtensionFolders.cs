@@ -24,7 +24,7 @@ namespace Orchard.Environment.Extensions.Folders {
         private readonly ICacheManager _cacheManager;
         private readonly IVirtualPathProvider _virtualPathProvider;
 
-        public ExtensionFolders(
+        protected ExtensionFolders(
             IEnumerable<string> paths,
             string manifestName,
             bool manifestIsOptional,
@@ -39,28 +39,39 @@ namespace Orchard.Environment.Extensions.Folders {
         }
 
         public IEnumerable<ExtensionDescriptor> AvailableExtensions() {
-            var virtualPaths = _cacheManager.Get("", ctx => {
-                var x = 5;
-                return new[] { "hello" };
-            });
-
-
             var list = new List<ExtensionDescriptor>();
-            foreach (var virtualPath in virtualPaths) {
-                list.Add(GetExtensionDescriptor(virtualPath));
+            foreach (var locationPath in _paths) {
+                var subfolderPaths = _cacheManager.Get(locationPath, ctx => {
+                    ctx.Monitor(_virtualPathProvider.WhenPathChanges(ctx.Key));
+                    return _virtualPathProvider.GetSubfolderPaths(ctx.Key);
+                });
+                foreach (var subfolderPath in subfolderPaths) {
+                    var extensionName = Path.GetFileName(subfolderPath.TrimEnd('/', '\\'));
+                    var manifestPath = Path.Combine(subfolderPath, _manifestName);
+                    var descriptor = GetExtensionDescriptor(locationPath, extensionName, manifestPath);
+                    if (descriptor != null)
+                        list.Add(descriptor);
+                }
             }
             return list;
         }
 
-        ExtensionDescriptor GetExtensionDescriptor(string virtualPath) {
-            return _cacheManager.Get(virtualPath, context => {
+        ExtensionDescriptor GetExtensionDescriptor(string locationPath, string extensionName, string manifestPath) {
+            return _cacheManager.Get(manifestPath, context => {
 
-                context.IsInvalid(_virtualPathProvider.WhenPathChanges(virtualPath));
+                context.Monitor(_virtualPathProvider.WhenPathChanges(manifestPath));
 
-                var text = _virtualPathProvider.ReadAllText(virtualPath);
+                var manifestText = _virtualPathProvider.ReadAllText(manifestPath);
+                if (manifestText == null) {
+                    if (_manifestIsOptional) {
+                        manifestText = string.Format("name: {0}", extensionName);
+                    }
+                    else {
+                        return null;
+                    }
+                }
 
-                var parseResult = ParseManifest(text);
-                return GetDescriptorForExtension(parseResult.Name, parseResult);
+                return GetDescriptorForExtension(locationPath, extensionName, ParseManifest(manifestText));
             });
         }
 
@@ -78,52 +89,29 @@ namespace Orchard.Environment.Extensions.Folders {
         }
 
         public ParseResult ParseManifest(string name) {
-            foreach (var path in _paths) {
-                if (!Directory.Exists(PathHelpers.GetPhysicalPath(path)))
-                    continue;
-
-                var extensionDirectoryPath = Path.Combine(PathHelpers.GetPhysicalPath(path), name);
-                if (!Directory.Exists(PathHelpers.GetPhysicalPath(extensionDirectoryPath)))
-                    continue;
-
-                var extensionManifestPath = Path.Combine(extensionDirectoryPath, _manifestName);
-
-                if (File.Exists(extensionManifestPath)) {
-                    var yamlStream = YamlParser.Load(extensionManifestPath);
-                    return new ParseResult {
-                        Location = path,
-                        Name = name,
-                        YamlDocument = yamlStream.Documents.Single()
-                    };
-                }
-
-                if (_manifestIsOptional) {
-                    var yamlInput = new TextInput(string.Format("name: {0}", name));
-                    var parser = new YamlParser();
-                    bool success;
-                    var yamlStream = parser.ParseYamlStream(yamlInput, out success);
-                    return new ParseResult {
-                        Location = path,
-                        Name = name,
-                        YamlDocument = yamlStream.Documents.Single()
-                    };
-                }
+            bool success;
+            var yamlStream = new YamlParser().ParseYamlStream(new TextInput(name), out success);
+            if (yamlStream == null || !success) {
+                return null;
             }
-            return null;
+            return new ParseResult {
+                Name = name,
+                YamlDocument = yamlStream.Documents.Single()
+            };
         }
 
 
-        private ExtensionDescriptor GetDescriptorForExtension(string name, ParseResult parseResult) {
+        private ExtensionDescriptor GetDescriptorForExtension(string locationPath, string extensionName, ParseResult parseResult) {
             var mapping = (Mapping)parseResult.YamlDocument.Root;
             var fields = mapping.Entities
                 .Where(x => x.Key is Scalar)
                 .ToDictionary(x => ((Scalar)x.Key).Text, x => x.Value);
 
             var extensionDescriptor = new ExtensionDescriptor {
-                Location = parseResult.Location,
-                Name = name,
+                Location = locationPath,
+                Name = extensionName,
                 ExtensionType = _extensionType,
-                DisplayName = GetValue(fields, "name") ?? name,
+                DisplayName = GetValue(fields, "name") ?? extensionName,
                 Description = GetValue(fields, "description"),
                 Version = GetValue(fields, "version"),
                 OrchardVersion = GetValue(fields, "orchardversion"),

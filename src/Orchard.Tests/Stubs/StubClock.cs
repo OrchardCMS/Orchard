@@ -16,5 +16,6 @@ namespace Orchard.Tests.Stubs {
         public DateTime FutureMoment(TimeSpan span) {
             return UtcNow.Add(span);
         }
+
     }
 }

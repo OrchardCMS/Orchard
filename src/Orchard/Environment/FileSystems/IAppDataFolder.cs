@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Orchard.Caching;
 
 namespace Orchard.Environment.FileSystems {
     /// <summary>
@@ -6,7 +7,7 @@ namespace Orchard.Environment.FileSystems {
     /// Expected to work on physical filesystem, but decouples core
     /// system from web hosting apis
     /// </summary>
-    public interface IAppDataFolder {
+    public interface IAppDataFolder : IVolatileProvider {
         IEnumerable<string> ListFiles(string path);
         IEnumerable<string> ListDirectories(string path);
 

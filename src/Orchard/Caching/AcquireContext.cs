@@ -1,14 +1,13 @@
 ﻿using System;
-using Orchard.Caching.Providers;
 
 namespace Orchard.Caching {
     public class AcquireContext<TKey> {
-        public AcquireContext(TKey key, Action<IVolatileSignal> monitor) {
+        public AcquireContext(TKey key, Action<IVolatileToken> monitor) {
             Key = key;
-            IsInvalid = monitor;
+            Monitor = monitor;
         }
 
         public TKey Key { get; private set; }
-        public Action<IVolatileSignal> IsInvalid { get; private set; }
+        public Action<IVolatileToken> Monitor { get; private set; }
     }
 }

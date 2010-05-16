@@ -125,6 +125,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Caching\CacheScopeTests.cs" />
     <Compile Include="Caching\CacheTests.cs" />
     <Compile Include="Commands\CommandHandlerDescriptorBuilderTests.cs" />
     <Compile Include="Commands\CommandHandlerTests.cs" />
