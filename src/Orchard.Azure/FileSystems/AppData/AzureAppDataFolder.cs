@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Orchard.Environment.Configuration;
+using Orchard.FileSystems.AppData;
 
-namespace Orchard.Azure.Environment.Configuration {
+namespace Orchard.Azure.FileSystems.AppData {
     public class AzureAppDataFolder : IAppDataFolder {
 
         private readonly AzureFileSystem _fs;

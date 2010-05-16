@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Orchard.Storage {
+namespace Orchard.FileSystems.Media {
     public interface IStorageFolder {
         string GetPath();
         string GetName();

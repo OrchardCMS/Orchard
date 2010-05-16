@@ -6,7 +6,7 @@ using System.Web.Hosting;
 using Orchard.Caching;
 using Orchard.Environment.Extensions.Helpers;
 using Orchard.Environment.Extensions.Models;
-using Orchard.Environment.FileSystems;
+using Orchard.FileSystems.WebSite;
 using Yaml.Grammar;
 
 namespace Orchard.Environment.Extensions.Folders {
@@ -22,28 +22,28 @@ namespace Orchard.Environment.Extensions.Folders {
         private readonly string _extensionType;
         private readonly bool _manifestIsOptional;
         private readonly ICacheManager _cacheManager;
-        private readonly IVirtualPathProvider _virtualPathProvider;
+        private readonly IWebSiteFolder _webSiteFolder;
 
         protected ExtensionFolders(
             IEnumerable<string> paths,
             string manifestName,
             bool manifestIsOptional,
             ICacheManager cacheManager,
-            IVirtualPathProvider virtualPathProvider) {
+            IWebSiteFolder webSiteFolder) {
             _paths = paths;
             _manifestName = manifestName;
             _extensionType = manifestName == "Theme.txt" ? "Theme" : "Module";
             _manifestIsOptional = manifestIsOptional;
             _cacheManager = cacheManager;
-            _virtualPathProvider = virtualPathProvider;
+            _webSiteFolder = webSiteFolder;
         }
 
         public IEnumerable<ExtensionDescriptor> AvailableExtensions() {
             var list = new List<ExtensionDescriptor>();
             foreach (var locationPath in _paths) {
                 var subfolderPaths = _cacheManager.Get(locationPath, ctx => {
-                    ctx.Monitor(_virtualPathProvider.WhenPathChanges(ctx.Key));
-                    return _virtualPathProvider.GetSubfolderPaths(ctx.Key);
+                    ctx.Monitor(_webSiteFolder.WhenPathChanges(ctx.Key));
+                    return _webSiteFolder.ListDirectories(ctx.Key);
                 });
                 foreach (var subfolderPath in subfolderPaths) {
                     var extensionName = Path.GetFileName(subfolderPath.TrimEnd('/', '\\'));
@@ -59,9 +59,9 @@ namespace Orchard.Environment.Extensions.Folders {
         ExtensionDescriptor GetExtensionDescriptor(string locationPath, string extensionName, string manifestPath) {
             return _cacheManager.Get(manifestPath, context => {
 
-                context.Monitor(_virtualPathProvider.WhenPathChanges(manifestPath));
+                context.Monitor(_webSiteFolder.WhenPathChanges(manifestPath));
 
-                var manifestText = _virtualPathProvider.ReadAllText(manifestPath);
+                var manifestText = _webSiteFolder.ReadFile(manifestPath);
                 if (manifestText == null) {
                     if (_manifestIsOptional) {
                         manifestText = string.Format("name: {0}", extensionName);

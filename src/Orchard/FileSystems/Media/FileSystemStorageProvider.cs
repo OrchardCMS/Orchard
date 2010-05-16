@@ -5,15 +5,15 @@ using System.Linq;
 using System.Web.Hosting;
 using Orchard.Environment.Configuration;
 
-namespace Orchard.Storage {
+namespace Orchard.FileSystems.Media {
     public class FileSystemStorageProvider : IStorageProvider {
         private readonly string _storagePath;
         private readonly string _publicPath;
 
         public FileSystemStorageProvider(ShellSettings settings) {
             var mediaPath = HostingEnvironment.IsHosted
-                ? HostingEnvironment.MapPath("~/Media/") ?? ""
-                : Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Media");
+                                ? HostingEnvironment.MapPath("~/Media/") ?? ""
+                                : Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Media");
             
             _storagePath = Path.Combine(mediaPath, settings.Name);
 
@@ -35,10 +35,10 @@ namespace Orchard.Storage {
 
         static string Fix(string path) {
             return string.IsNullOrEmpty(path)
-                ? ""
-                : Path.DirectorySeparatorChar != '/'
-                ? path.Replace('/', Path.DirectorySeparatorChar)
-                : path;
+                       ? ""
+                       : Path.DirectorySeparatorChar != '/'
+                             ? path.Replace('/', Path.DirectorySeparatorChar)
+                             : path;
         }
 
         #region Implementation of IStorageProvider

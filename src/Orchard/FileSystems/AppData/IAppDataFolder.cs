@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using Orchard.Caching;
 
-namespace Orchard.Environment.FileSystems {
+namespace Orchard.FileSystems.AppData {
     /// <summary>
     /// Abstraction of App_Data folder
     /// Expected to work on physical filesystem, but decouples core

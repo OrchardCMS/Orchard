@@ -1,9 +1,8 @@
 ﻿using Microsoft.WindowsAzure;
 using Orchard.Environment.Configuration;
-using Orchard.Storage;
+using Orchard.FileSystems.Media;
 
-namespace Orchard.Azure.Storage {
-
+namespace Orchard.Azure.FileSystems.Media {
     public class AzureBlobStorageProvider : AzureFileSystem, IStorageProvider {
 
         public AzureBlobStorageProvider(ShellSettings shellSettings)
@@ -13,5 +12,3 @@ namespace Orchard.Azure.Storage {
         public AzureBlobStorageProvider(ShellSettings shellSettings, CloudStorageAccount storageAccount) : base("media", shellSettings.Name, false, storageAccount) { }
     }
 }
-
-

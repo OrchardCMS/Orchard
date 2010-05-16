@@ -4,7 +4,7 @@ using System.Linq;
 using Microsoft.WindowsAzure;
 using Microsoft.WindowsAzure.StorageClient;
 using System.IO;
-using Orchard.Storage;
+using Orchard.FileSystems.Media;
 
 namespace Orchard.Azure {
     public class AzureFileSystem {

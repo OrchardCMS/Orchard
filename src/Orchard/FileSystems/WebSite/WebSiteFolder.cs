@@ -7,20 +7,20 @@ using System.Web.Hosting;
 using Orchard.Caching;
 using Orchard.Services;
 
-namespace Orchard.Environment.FileSystems {
-    public class DefaultVirtualPathProvider : IVirtualPathProvider {
+namespace Orchard.FileSystems.WebSite {
+    public class WebSiteFolder : IWebSiteFolder {
         private readonly IClock _clock;
         private readonly Thunk _thunk;
         private readonly string _prefix = Guid.NewGuid().ToString("n");
         private readonly IDictionary<string, Weak<Token>> _tokens = new Dictionary<string, Weak<Token>>();
 
 
-        public DefaultVirtualPathProvider(IClock clock) {
+        public WebSiteFolder(IClock clock) {
             _clock = clock;
             _thunk = new Thunk(this);
         }
 
-        public IEnumerable<string> GetSubfolderPaths(string virtualPath) {
+        public IEnumerable<string> ListDirectories(string virtualPath) {
             if (!HostingEnvironment.VirtualPathProvider.DirectoryExists(virtualPath))
                 return Enumerable.Empty<string>();
 
@@ -31,7 +31,7 @@ namespace Orchard.Environment.FileSystems {
                 .ToArray();
         }
 
-        public string ReadAllText(string virtualPath) {
+        public string ReadFile(string virtualPath) {
             if (!HostingEnvironment.VirtualPathProvider.FileExists(virtualPath))
                 return null;
 
@@ -111,10 +111,10 @@ namespace Orchard.Environment.FileSystems {
         }
 
         class Thunk {
-            private readonly Weak<DefaultVirtualPathProvider> _weak;
+            private readonly Weak<WebSiteFolder> _weak;
 
-            public Thunk(DefaultVirtualPathProvider provider) {
-                _weak = new Weak<DefaultVirtualPathProvider>(provider);
+            public Thunk(WebSiteFolder provider) {
+                _weak = new Weak<WebSiteFolder>(provider);
             }
 
             public void Signal(string key, object value, CacheItemRemovedReason reason) {

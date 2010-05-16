@@ -6,7 +6,8 @@ using NUnit.Framework;
 using Orchard.Caching;
 using Orchard.Environment;
 using Autofac;
-using Orchard.Environment.FileSystems;
+using Orchard.FileSystems.AppData;
+using Orchard.FileSystems.WebSite;
 using Orchard.Services;
 
 namespace Orchard.Tests.Caching {
@@ -38,7 +39,7 @@ namespace Orchard.Tests.Caching {
 
         [Test]
         public void HostLevelHasAccessToGlobalVolatileProviders() {
-            Assert.That(_hostContainer.Resolve<IVirtualPathProvider>(), Is.Not.Null);            
+            Assert.That(_hostContainer.Resolve<IWebSiteFolder>(), Is.Not.Null);            
             Assert.That(_hostContainer.Resolve<IAppDataFolder>(), Is.Not.Null);            
             Assert.That(_hostContainer.Resolve<IClock>(), Is.Not.Null);            
         }

@@ -1,12 +1,12 @@
 ﻿using System;
 using System.IO;
 using NUnit.Framework;
-using Orchard.Azure.Storage;
+using Orchard.Azure.FileSystems.Media;
 using Microsoft.WindowsAzure;
 using System.Linq;
 using Orchard.Environment.Configuration;
 
-namespace Orchard.Azure.Tests.Storage {
+namespace Orchard.Azure.Tests.FileSystems.Media {
     [TestFixture]
     public class AzureBlobStorageProviderTests : AzureVirtualEnvironmentTest {
 

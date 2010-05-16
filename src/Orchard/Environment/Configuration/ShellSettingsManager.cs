@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Yaml.Serialization;
-using Orchard.Environment.FileSystems;
+using Orchard.FileSystems.AppData;
 using Orchard.Localization;
 
 namespace Orchard.Environment.Configuration {

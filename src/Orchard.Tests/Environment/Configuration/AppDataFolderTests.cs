@@ -1,7 +1,7 @@
 ﻿using System.IO;
 using System.Linq;
 using NUnit.Framework;
-using Orchard.Environment.FileSystems;
+using Orchard.FileSystems.AppData;
 
 namespace Orchard.Tests.Environment.Configuration {
     [TestFixture]

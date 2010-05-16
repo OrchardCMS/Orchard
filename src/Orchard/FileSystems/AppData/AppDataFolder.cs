@@ -3,7 +3,7 @@ using System.IO;
 using System.Linq;
 using System.Web.Hosting;
 
-namespace Orchard.Environment.FileSystems {
+namespace Orchard.FileSystems.AppData {
     public class AppDataFolder : IAppDataFolder {
         protected string _basePath;
 

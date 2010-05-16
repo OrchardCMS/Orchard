@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Orchard.Storage {
+namespace Orchard.FileSystems.Media {
     public interface IStorageProvider : IDependency {
         string GetPublicUrl(string path);
         IStorageFile GetFile(string path);

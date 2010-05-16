@@ -11,10 +11,11 @@ using Orchard.Environment.Configuration;
 using Orchard.Environment.Extensions;
 using Orchard.Environment.Extensions.Folders;
 using Orchard.Environment.Extensions.Loaders;
-using Orchard.Environment.FileSystems;
 using Orchard.Environment.ShellBuilders;
 using Orchard.Environment.Topology;
 using Orchard.Events;
+using Orchard.FileSystems.AppData;
+using Orchard.FileSystems.WebSite;
 using Orchard.Logging;
 using Orchard.Services;
 
@@ -30,7 +31,7 @@ namespace Orchard.Environment {
             builder.RegisterType<DefaultOrchardEventBus>().As<IEventBus>().SingleInstance();
             builder.RegisterType<DefaultCacheHolder>().As<ICacheHolder>().SingleInstance();
 
-            RegisterVolatileProvider<DefaultVirtualPathProvider, IVirtualPathProvider>(builder);
+            RegisterVolatileProvider<WebSiteFolder, IWebSiteFolder>(builder);
             RegisterVolatileProvider<AppDataFolder, IAppDataFolder>(builder);
             RegisterVolatileProvider<Clock, IClock>(builder);
 

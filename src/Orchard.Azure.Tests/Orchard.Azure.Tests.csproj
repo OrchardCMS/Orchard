@@ -56,7 +56,7 @@
     <Compile Include="AzureVirtualEnvironmentTest.cs" />
     <Compile Include="Environment\Configuration\AzureShellSettingsManagerTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Storage\AzureBlobStorageProviderTests.cs" />
+    <Compile Include="FileSystems\Media\AzureBlobStorageProviderTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Orchard.Azure\Orchard.Azure.csproj">
