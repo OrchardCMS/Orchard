@@ -65,6 +65,8 @@ namespace Orchard.Roles.Services {
 
                     foreach (var role in rolesToExamine) {
                         RoleRecord roleRecord = _roleService.GetRoleByName(role);
+                        if ( roleRecord == null )
+                            continue;
                         foreach (var permissionName in _roleService.GetPermissionsForRole(roleRecord.Id)) {
                             string possessedName = permissionName;
                             if (grantingNames.Any(grantingName => String.Equals(possessedName, grantingName, StringComparison.OrdinalIgnoreCase))) {

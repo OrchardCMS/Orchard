@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Web.Mvc;
 using Orchard.ContentManagement;
+using Orchard.ContentManagement.Utilities;
 using Orchard.Core.Common.Models;
 using Orchard.Security;
 
@@ -52,7 +53,8 @@ namespace Orchard.Pages.Models {
             }
         }
 
-        public DateTime? ScheduledPublishUtc { get; set; }
+        public readonly LazyField<DateTime?> _scheduledPublishUtc = new LazyField<DateTime?>();
+        public DateTime? ScheduledPublishUtc { get { return _scheduledPublishUtc.Value; } set{ _scheduledPublishUtc.Value = value;} }
 
         private string _scheduledPublishUtcDate;
 
