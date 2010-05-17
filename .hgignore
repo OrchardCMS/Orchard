@@ -13,3 +13,4 @@ glob:src/Orchard.Web/Media/*
 glob:desktop.ini
 glob:src/Orchard.Azure.suo
 glob:log.xml
+glob:profiling

@@ -150,6 +150,8 @@
     <Compile Include="Caching\DefaultCacheManager.cs" />
     <Compile Include="Caching\ICacheHolder.cs" />
     <Compile Include="Caching\Weak.cs" />
+    <Compile Include="ContentManagement\DefaultContentManagerSession.cs" />
+    <Compile Include="ContentManagement\IContentManagerSession.cs" />
     <Compile Include="FileSystems\WebSite\WebSiteFolder.cs" />
     <Compile Include="FileSystems\AppData\IAppDataFolder.cs" />
     <Compile Include="FileSystems\WebSite\IWebSiteFolder.cs" />
