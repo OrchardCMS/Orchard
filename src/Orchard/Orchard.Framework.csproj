@@ -152,6 +152,7 @@
     <Compile Include="Caching\Weak.cs" />
     <Compile Include="ContentManagement\DefaultContentManagerSession.cs" />
     <Compile Include="ContentManagement\IContentManagerSession.cs" />
+    <Compile Include="ContentManagement\Utilities\LazyField.cs" />
     <Compile Include="FileSystems\WebSite\WebSiteFolder.cs" />
     <Compile Include="FileSystems\AppData\IAppDataFolder.cs" />
     <Compile Include="FileSystems\WebSite\IWebSiteFolder.cs" />

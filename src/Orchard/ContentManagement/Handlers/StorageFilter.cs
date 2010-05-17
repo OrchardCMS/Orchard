@@ -26,6 +26,16 @@ namespace Orchard.ContentManagement.Handlers {
             _repository = repository;
         }
 
+        protected virtual TRecord GetRecordCore(ContentItemVersionRecord versionRecord) {
+            return _repository.Get(versionRecord.ContentItemRecord.Id);
+        }
+
+        protected virtual TRecord CreateRecordCore(ContentItemVersionRecord versionRecord, TRecord record) {
+            record.ContentItemRecord = versionRecord.ContentItemRecord;
+            _repository.Create(record);
+            return record;
+        }
+
         protected override void Activated(ActivatedContentContext context, ContentPart<TRecord> instance) {
             if (instance.Record != null) {
                 throw new InvalidOperationException(string.Format(
@@ -36,23 +46,12 @@ namespace Orchard.ContentManagement.Handlers {
         }
 
         protected override void Creating(CreateContentContext context, ContentPart<TRecord> instance) {
-            instance.Record.ContentItemRecord = context.ContentItemRecord;
-            _repository.Create(instance.Record);
-        }
-
-        protected virtual TRecord GetRecord(LoadContentContext context) {
-            return _repository.Get(context.Id);
+            CreateRecordCore(context.ContentItemVersionRecord, instance.Record);
         }
 
         protected override void Loading(LoadContentContext context, ContentPart<TRecord> instance) {
-            var record = GetRecord(context);
-            if (record != null) {
-                instance.Record = record;
-            }
-            else {
-                var createContext = new CreateContentContext(context.ContentItem);
-                Creating(createContext, instance);
-            }
+            var versionRecord = context.ContentItemVersionRecord;
+            instance._record.Loader(prior => GetRecordCore(versionRecord) ?? CreateRecordCore(versionRecord, prior));
         }
 
         protected override void Versioning(VersionContentContext context, ContentPart<TRecord> existing, ContentPart<TRecord> building) {
