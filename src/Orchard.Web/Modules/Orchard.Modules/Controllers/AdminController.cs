@@ -28,11 +28,11 @@ namespace Orchard.Modules.Controllers {
             return View(new ModulesIndexViewModel {Modules = modules});
         }
 
-        public ActionResult Edit(string moduleName) {
+        public ActionResult Edit(string id) {
             if (!Services.Authorizer.Authorize(Permissions.ManageModules, T("Not allowed to edit module")))
                 return new HttpUnauthorizedResult();
 
-            var module = _moduleService.GetModuleByName(moduleName);
+            var module = _moduleService.GetModuleByName(id);
 
             if (module == null)
                 return new NotFoundResult();
@@ -51,28 +51,28 @@ namespace Orchard.Modules.Controllers {
         }
 
         [ValidateAntiForgeryTokenOrchard]
-        public ActionResult Enable(string featureName) {
+        public ActionResult Enable(string id) {
             if (!Services.Authorizer.Authorize(Permissions.ManageFeatures, T("Not allowed to manage features")))
                 return new HttpUnauthorizedResult();
 
-            if (string.IsNullOrEmpty(featureName))
+            if (string.IsNullOrEmpty(id))
                 return new NotFoundResult();
 
-            _moduleService.EnableFeatures(new [] {featureName});
-            Services.Notifier.Information(T("{0} was enabled", featureName));
+            _moduleService.EnableFeatures(new [] {id});
+            Services.Notifier.Information(T("{0} was enabled", id));
 
             return RedirectToAction("Features");
         }
 
         [ValidateAntiForgeryTokenOrchard]
-        public ActionResult Disable(string featureName) {
+        public ActionResult Disable(string id) {
             if (!Services.Authorizer.Authorize(Permissions.ManageFeatures, T("Not allowed to manage features")))
                 return new HttpUnauthorizedResult();
 
-            if (string.IsNullOrEmpty(featureName))
+            if (string.IsNullOrEmpty(id))
                 return new NotFoundResult();
 
-            _moduleService.DisableFeatures(new[] { featureName });
+            _moduleService.DisableFeatures(new[] { id });
             //Services.Notifier.Information(T("{0} was disabled", featureName));
 
             return RedirectToAction("Features");

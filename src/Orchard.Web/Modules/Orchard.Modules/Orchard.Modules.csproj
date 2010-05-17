@@ -65,13 +65,10 @@
     <Compile Include="Commands\FeatureCommand.cs" />
     <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Models\ModuleFeature.cs" />
-    <Compile Include="Routing\FeatureNameConstraint.cs" />
     <Compile Include="ViewModels\FeaturesViewModel.cs" />
     <Compile Include="Models\Module.cs" />
     <Compile Include="Permissions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Routes.cs" />
-    <Compile Include="Routing\ModuleNameConstraint.cs" />
     <Compile Include="Services\ModuleService.cs" />
     <Compile Include="ViewModels\ModuleEditViewModel.cs" />
     <Compile Include="ViewModels\ModulesIndexViewModel.cs" />
