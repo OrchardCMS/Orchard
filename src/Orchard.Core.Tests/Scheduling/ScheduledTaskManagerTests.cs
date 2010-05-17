@@ -26,12 +26,14 @@ namespace Orchard.Core.Tests.Scheduling {
             _repository = _container.Resolve<IRepository<ScheduledTaskRecord>>();
             _scheduledTaskManager = _container.Resolve<IScheduledTaskManager>();
             _contentManager = _container.Resolve<IContentManager>();
-            _mockServices.SetupGet(x=>x.ContentManager).Returns(_contentManager);
+            _mockServices.SetupGet(x => x.ContentManager).Returns(_contentManager);
         }
 
-        public override void Register(ContainerBuilder builder) {            
+        public override void Register(ContainerBuilder builder) {
             builder.RegisterInstance(_mockServices.Object);
             builder.RegisterType<DefaultContentManager>().As<IContentManager>();
+            builder.RegisterType<DefaultContentManagerSession>().As<IContentManagerSession>();
+
             builder.RegisterType<ScheduledTaskManager>().As<IScheduledTaskManager>();
         }
 
@@ -86,7 +88,7 @@ namespace Orchard.Core.Tests.Scheduling {
         public void TasksForAllVersionsOfContenItemShouldBeReturned() {
             var hello1 = _contentManager.New("hello");
             _contentManager.Create(hello1);
-            
+
             var hello2 = _contentManager.GetDraftRequired(hello1.Id);
 
             Assert.That(hello1.Version, Is.EqualTo(1));
