@@ -1,45 +1,55 @@
 ﻿<%@ Control Language="C#" Inherits="Orchard.Mvc.ViewUserControl<FeaturesViewModel>" %>
 <%@ Import Namespace="Orchard.Mvc.Html"%>
 <%@ Import Namespace="Orchard.Modules.ViewModels"%>
+<%@ Import Namespace="Orchard.Utility.Extensions" %>
 <h1><%=Html.TitleForPage(T("Manage Features").ToString()) %></h1>
 <% if (Model.Features.Count() > 0) { %>
-<ul class="contentItems"><%
+<ul class="features"><%
     var featureGroups = Model.Features.OrderBy(f => f.Descriptor.Category).GroupBy(f => f.Descriptor.Category);
-    foreach (var featureGroup in featureGroups) { %>
-    <li<%=featureGroup == featureGroups.Last() ? " class=\"last\"" : "" %>>
-        <h2><%=Html.Encode(featureGroup.First().Descriptor.Category ?? T("Uncategorized")) %></h2>
+    foreach (var featureGroup in featureGroups) {
+        var categoryName = featureGroup.First().Descriptor.Category ?? T("Uncategorized");
+        var categoryClassName = string.Format("category {0}", Html.Encode(categoryName.ToString().HtmlClassify()));
+        if (featureGroup == featureGroups.First())
+            categoryClassName += " first";
+        if (featureGroup == featureGroups.Last())
+            categoryClassName += " last"; %>
+    <li class="<%=categoryClassName %>">
+        <h2><%=Html.Encode(categoryName) %></h2>
         <ul><%
             var features = featureGroup.OrderBy(f => f.Descriptor.Name);
-            foreach (var feature in features) {%>
-            <li<%=feature == features.Last() ? " class=\"last\"" : "" %> id="<%=Html.Encode(feature.Descriptor.Name) %>">
+            foreach (var feature in features) {
+                //hmmm...I feel like I've done this before...
+                var featureId = string.Format("{0} feature", feature.Descriptor.Name).HtmlClassify();
+                var featureClassName = string.Format("feature {0}", feature.IsEnabled ? "enabled" : "disabled");
+                if (feature == features.First())
+                    featureClassName += " first";
+                if (feature == features.Last())
+                    featureClassName += " last"; %>
+            <li class="<%=featureClassName %>" id="<%=Html.AttributeEncode(featureId) %>">
                 <div class="summary">
                     <div class="properties">
-                        <h3><%=Html.Encode(feature.Descriptor.Name) %></h3>
-                        <ul class="pageStatus">
-                            <li><%
-                            //enabled or not
-                            if (feature.IsEnabled) { %>
-                                <img class="icon" src="<%=ResolveUrl("~/Modules/Orchard.Modules/Content/Admin/images/enabled.gif") %>" alt="<%=_Encoded("Enabled") %>" title="<%=_Encoded("This feature is currently enabled") %>" /><%=_Encoded("Enabled") %><%
-                            }
-                            else { %>
-                                <img class="icon" src="<%=ResolveUrl("~/Modules/Orchard.Modules/Content/Admin/images/disabled.gif") %>" alt="<%=_Encoded("Disabled") %>" title="<%=_Encoded("This feature is currently disabled") %>" /><%=_Encoded("Disabled")%><%
-                            } %>
-                            </li><%
-                            //dependencies
-                            if (feature.Descriptor.Dependencies != null && feature.Descriptor.Dependencies.Count() > 0) { %>
-                            <li>&nbsp;&#124;&nbsp;<%=T("Depends on: {0}", string.Join(", ", feature.Descriptor.Dependencies.Select(s => Html.Link(Html.Encode(s), string.Format("{0}#{1}", Url.Action("features", new { area = "Orchard.Modules" }), Html.Encode(s)))).OrderBy(s => s).ToArray())) %></li><%
-                            } %>
-                        </ul>
+                        <h3><%=Html.Encode(feature.Descriptor.Name) %></h3><%
+                        if (feature.Descriptor.Dependencies != null) { %>
+                        <div class="dependencies">
+                            <h4><%=_Encoded("Depends on:")%></h4>
+                            <%=Html.UnorderedList(
+                                feature.Descriptor.Dependencies.OrderBy(s => s),
+                                (s, i) => Html.Link(s, string.Format("#{0}", string.Format("{0} feature", s).HtmlClassify())),
+                                "",
+                                "dependency",
+                                "") %>
+                        </div><%
+                        } %>
                     </div>
-                    <div class="related"><%
+                    <div class="actions"><%
                         if (feature.IsEnabled) {
-                        using (Html.BeginFormAntiForgeryPost(string.Format("{0}#{1}", Url.Action("Disable", new { area = "Orchard.Modules" }), Html.AttributeEncode(feature.Descriptor.Name)), FormMethod.Post, new {@class = "inline link"})) { %>
-                            <%=Html.Hidden("featureName", feature.Descriptor.Name) %>
+                        using (Html.BeginFormAntiForgeryPost(string.Format("{0}#{1}", Url.Action("Disable", new { area = "Orchard.Modules" }), featureId), FormMethod.Post, new {@class = "inline link"})) { %>
+                            <%=Html.Hidden("id", feature.Descriptor.Name, new { id = "" })%>
                             <button type="submit"><%=_Encoded("Disable") %></button><%
                         }
                         } else {
-                        using (Html.BeginFormAntiForgeryPost(string.Format("{0}#{1}", Url.Action("Enable", new { area = "Orchard.Modules" }), Html.AttributeEncode(feature.Descriptor.Name)), FormMethod.Post, new {@class = "inline link"})) { %>
-                            <%=Html.Hidden("featureName", feature.Descriptor.Name) %>
+                        using (Html.BeginFormAntiForgeryPost(string.Format("{0}#{1}", Url.Action("Enable", new { area = "Orchard.Modules" }), featureId), FormMethod.Post, new {@class = "inline link"})) { %>
+                            <%=Html.Hidden("id", feature.Descriptor.Name, new { id = "" })%>
                             <button type="submit"><%=_Encoded("Enable") %></button><%
                         }
                         } %>
