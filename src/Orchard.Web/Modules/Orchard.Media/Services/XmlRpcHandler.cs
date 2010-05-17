@@ -5,6 +5,7 @@ using JetBrains.Annotations;
 using Orchard.Core.XmlRpc;
 using Orchard.Core.XmlRpc.Models;
 using Orchard.Security;
+using Orchard.Utility.Extensions;
 
 namespace Orchard.Media.Services {
     [UsedImplicitly]
@@ -18,7 +19,7 @@ namespace Orchard.Media.Services {
         }
 
         public void Process(XmlRpcContext context) {
-            var uriBuilder = new UriBuilder(context.HttpContext.Request.Url) {
+            var uriBuilder = new UriBuilder(context.HttpContext.Request.ToUrlString()) {
                 Path = context.HttpContext.Request.ApplicationPath,
                 Query = string.Empty
             };

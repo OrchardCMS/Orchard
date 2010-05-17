@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Web.Mvc;
+using Orchard.Utility.Extensions;
 
 namespace Orchard.Mvc.Extensions {
     public static class UrlHelperExtensions {
@@ -8,7 +9,7 @@ namespace Orchard.Mvc.Extensions {
         }
 
         private static string MakeAbsolute(this UrlHelper urlHelper, string url) {
-            var siteUrl = urlHelper.RequestContext.HttpContext.Request.Url.GetLeftPart(UriPartial.Authority);
+            var siteUrl = urlHelper.RequestContext.HttpContext.Request.ToRootUrlString();
             return siteUrl + url;
         }
     }

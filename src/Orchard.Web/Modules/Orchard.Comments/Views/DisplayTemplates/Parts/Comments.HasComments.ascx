@@ -2,6 +2,7 @@
 <%@ Import Namespace="Orchard.Comments"%>
 <%@ Import Namespace="Orchard.Security" %>
 <%@ Import Namespace="Orchard.Comments.Models" %>
+<%@ Import Namespace="Orchard.Utility.Extensions" %>
 <%-- todo: clean up this template - waaay too much going on in here :/ --%><%
 if (Model.Comments.Count > 0) { %>
 <h2 id="comments"><%=_Encoded("{0} Comment{1}", Model.Comments.Count, Model.Comments.Count == 1 ? "" : "s")%></h2>
@@ -51,7 +52,7 @@ else { %>
         <div>
             <input type="submit" class="button" value="<%=_Encoded("Submit Comment") %>" />
             <%=Html.Hidden("CommentedOn", Model.ContentItem.Id) %>
-            <%=Html.Hidden("ReturnUrl", Context.Request.Url) %>
+            <%=Html.Hidden("ReturnUrl", Context.Request.ToUrlString()) %>
             <%=Html.AntiForgeryTokenOrchard() %>
         </div>
     </fieldset><%

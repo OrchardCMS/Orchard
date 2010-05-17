@@ -51,7 +51,7 @@ else { %>
         <div>
             <input type="submit" class="button" value="<%=_Encoded("Submit Comment") %>" />
             <%=Html.Hidden("CommentedOn", Model.ContentItem.Id) %>
-            <%=Html.Hidden("ReturnUrl", Context.Request.Url) %>
+            <%=Html.Hidden("ReturnUrl", Context.Request.RawUrl) %>
             <%=Html.AntiForgeryTokenOrchard() %>
         </div>
     </fieldset><%
