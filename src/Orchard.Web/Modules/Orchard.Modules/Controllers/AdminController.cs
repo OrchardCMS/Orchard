@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Reflection;
 using System.Web.Mvc;
 using Orchard.Localization;
@@ -26,7 +24,7 @@ namespace Orchard.Modules.Controllers {
             if (!Services.Authorizer.Authorize(Permissions.ManageModules, T("Not allowed to manage modules")))
                 return new HttpUnauthorizedResult();
 
-            var modules = _moduleService.GetInstalledModules();
+            var modules = _moduleService.GetInstalledModules().ToList();
             return View(new ModulesIndexViewModel {Modules = modules});
         }
 
@@ -48,7 +46,7 @@ namespace Orchard.Modules.Controllers {
             if (!Services.Authorizer.Authorize(Permissions.ManageFeatures, T("Not allowed to manage features")))
                 return new HttpUnauthorizedResult();
 
-            var features = _moduleService.GetAvailableFeatures();
+            var features = _moduleService.GetAvailableFeatures().ToList();
             return View(new FeaturesViewModel {Features = features});
         }
 
