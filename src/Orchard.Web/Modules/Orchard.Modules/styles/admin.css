@@ -1,0 +1,11 @@
+﻿.features .category {
+    overflow:hidden;
+}
+.features .feature {
+    border:1px solid #EEE;
+    display:block;
+    float:left;
+    height:10em;
+    margin:0 .5% 1% .5%;
+    width:32.2%;
+}

@@ -1,7 +1,8 @@
 ﻿<%@ Control Language="C#" Inherits="Orchard.Mvc.ViewUserControl<FeaturesViewModel>" %>
 <%@ Import Namespace="Orchard.Mvc.Html"%>
 <%@ Import Namespace="Orchard.Modules.ViewModels"%>
-<%@ Import Namespace="Orchard.Utility.Extensions" %>
+<%@ Import Namespace="Orchard.Utility.Extensions" %><%
+ Html.RegisterStyle("admin.css"); %>
 <h1><%=Html.TitleForPage(T("Manage Features").ToString()) %></h1>
 <% if (Model.Features.Count() > 0) { %>
 <ul class="features"><%
