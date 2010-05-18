@@ -152,6 +152,7 @@
     <Compile Include="Caching\Weak.cs" />
     <Compile Include="ContentManagement\DefaultContentManagerSession.cs" />
     <Compile Include="ContentManagement\IContentManagerSession.cs" />
+    <Compile Include="ContentManagement\MetaData\Records\ContentTypePartNameRecord.cs" />
     <Compile Include="ContentManagement\Utilities\LazyField.cs" />
     <Compile Include="FileSystems\WebSite\WebSiteFolder.cs" />
     <Compile Include="FileSystems\AppData\IAppDataFolder.cs" />
@@ -182,6 +183,12 @@
     <Compile Include="ContentManagement\Handlers\PublishContentContext.cs" />
     <Compile Include="ContentManagement\Handlers\RemoveContentContext.cs" />
     <Compile Include="ContentManagement\Handlers\VersionContentContext.cs" />
+    <Compile Include="ContentManagement\MetaData\ContentPartHandler.cs" />
+    <Compile Include="ContentManagement\MetaData\ContentPartInfo.cs" />
+    <Compile Include="ContentManagement\MetaData\Models\ContentTypePart.cs" />
+    <Compile Include="ContentManagement\MetaData\Services\ContentTypeService.cs" />
+    <Compile Include="ContentManagement\MetaData\Services\IContentTypeService.cs" />
+    <Compile Include="ContentManagement\MetaData\Records\ContentTypePartRecord.cs" />
     <Compile Include="Data\Conventions\RecordTableNameConvention.cs" />
     <Compile Include="Data\Builders\AbstractBuilder.cs" />
     <Compile Include="Data\Builders\SessionFactoryBuilder.cs" />

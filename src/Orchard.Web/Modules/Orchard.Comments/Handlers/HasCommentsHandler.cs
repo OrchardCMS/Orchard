@@ -14,9 +14,6 @@ namespace Orchard.Comments.Handlers {
             IRepository<HasCommentsRecord> hasCommentsRepository,
             ICommentService commentService) {
 
-            Filters.Add(new ActivatingFilter<HasComments>("sandboxpage"));
-            Filters.Add(new ActivatingFilter<HasComments>("blogpost"));
-            Filters.Add(new ActivatingFilter<HasComments>("page"));
             Filters.Add(StorageFilter.For(hasCommentsRepository));
 
             OnActivated<HasComments>((ctx, x) => {

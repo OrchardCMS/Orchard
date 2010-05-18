@@ -1,5 +1,5 @@
 namespace Orchard.ContentManagement.Drivers {
-    public abstract class AutomaticContentPartDriver<TPart> : ContentPartDriver<TPart> where TPart : class, IContent {
+    public abstract class AutomaticContentPartDriver<TPart> : ContentPartDriver<TPart> where TPart : ContentPart, new() {
         protected override string Prefix {
             get {
                 return (typeof (TPart).Name);
