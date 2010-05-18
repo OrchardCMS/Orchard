@@ -3,12 +3,11 @@
 }
 .features .feature {
     border:1px solid #EAEAEA;
-    -moz-border-radius:3px;
-    -webkit-border-radius:3px;
     display:block;
     float:left;
-    height:10em;
+    height:6.8em;
     margin:0 .5% 1% .5%;
+    position:relative;
     width:32.1%;
 }
 .features .feature:nth-child(3n+1),
@@ -35,4 +34,34 @@
 .features .disabled.feature {
     background:#EAEAEA;
     border-color:#CCC;
+}
+.features .feature .summary {
+    overflow:hidden;
+    padding:.4em .5em;
+}
+.features .dependencies li,
+.features .actions a {
+    font-size:1.4em;
+}
+.features .dependencies {
+    font-size:.9em;
+    margin:.44em 0 0;
+}
+.features .dependencies>* {
+    display:inline;
+}
+.features .dependencies li {
+    display:inline;
+    margin-left:.5ex;
+}
+.features .dependencies li::after {
+    content:", ";
+}
+.features .dependencies li:last-child::after {
+    content:"";
+}
+.features .feature .actions {
+    position:absolute;
+    right:.8em;
+    top:.6em;
 }
