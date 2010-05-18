@@ -1,7 +1,12 @@
-﻿using System.IO;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using NUnit.Framework;
+using Orchard.Caching;
 using Orchard.Environment.Extensions.Folders;
+using Orchard.FileSystems.WebSite;
+using Orchard.Tests.Stubs;
 using Yaml.Grammar;
 
 namespace Orchard.Tests.Environment.Extensions {
@@ -58,14 +63,10 @@ namespace Orchard.Tests.Environment.Extensions {
 
         [Test]
         public void ModuleTxtShouldBeParsedAndReturnedAsYamlDocument() {
-            var folders = new ModuleFolders(new[] { _tempFolderName },null,null);
-            var sample1 = folders.ParseManifest("Sample1");
-            var mapping = (Mapping)sample1.YamlDocument.Root;
-            var entities = mapping.Entities
-                .Where(x => x.Key is Scalar)
-                .ToDictionary(x => ((Scalar)x.Key).Text, x => x.Value);
-            Assert.That(entities.Keys, Has.Some.EqualTo("name"));
-            Assert.That(entities.Keys, Has.Some.EqualTo("author"));
+            var folders = new ModuleFolders(new[] { _tempFolderName }, new StubCacheManager(), new StubWebSiteFolder());
+            var sample1 = folders.AvailableExtensions().Single(d => d.Name == "Sample1");
+            Assert.That(sample1.Name, Is.Not.Empty);
+            Assert.That(sample1.Author, Is.EqualTo("Bertrand Le Roy"));
         }
-    }
+   }
 }

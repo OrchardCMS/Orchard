@@ -179,6 +179,8 @@
     <Compile Include="Environment\ShellBuilders\DefaultShellContextFactoryTests.cs" />
     <Compile Include="Mvc\Routes\ShellRouteTests.cs" />
     <Compile Include="Mvc\Routes\UrlPrefixTests.cs" />
+    <Compile Include="Stubs\StubCacheManager.cs" />
+    <Compile Include="Stubs\StubWebSiteFolder.cs" />
     <Compile Include="Utility\ContainerExtensions.cs" />
     <Compile Include="Environment\TestDependencies\TestDependency.cs" />
     <Compile Include="Environment\Topology\DefaultShellDescriptorCacheTests.cs" />
