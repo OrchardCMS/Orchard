@@ -59,7 +59,6 @@ namespace Orchard.Modules.Controllers {
                 return new NotFoundResult();
 
             _moduleService.EnableFeatures(new [] {id});
-            Services.Notifier.Information(T("{0} was enabled", id));
 
             return RedirectToAction("Features");
         }
@@ -73,7 +72,6 @@ namespace Orchard.Modules.Controllers {
                 return new NotFoundResult();
 
             _moduleService.DisableFeatures(new[] { id });
-            //Services.Notifier.Information(T("{0} was disabled", featureName));
 
             return RedirectToAction("Features");
         }

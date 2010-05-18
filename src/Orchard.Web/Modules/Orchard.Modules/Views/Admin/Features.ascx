@@ -45,12 +45,12 @@
                     </div>
                     <div class="actions"><%
                         if (feature.IsEnabled) {
-                        using (Html.BeginFormAntiForgeryPost(string.Format("{0}#{1}", Url.Action("Disable", new { area = "Orchard.Modules" }), featureId), FormMethod.Post, new {@class = "inline link"})) { %>
+                        using (Html.BeginFormAntiForgeryPost(string.Format("{0}", Url.Action("Disable", new { area = "Orchard.Modules" })), FormMethod.Post, new {@class = "inline link"})) { %>
                             <%=Html.Hidden("id", feature.Descriptor.Name, new { id = "" })%>
                             <button type="submit"><%=_Encoded("Disable") %></button><%
                         }
                         } else {
-                        using (Html.BeginFormAntiForgeryPost(string.Format("{0}#{1}", Url.Action("Enable", new { area = "Orchard.Modules" }), featureId), FormMethod.Post, new {@class = "inline link"})) { %>
+                        using (Html.BeginFormAntiForgeryPost(string.Format("{0}", Url.Action("Enable", new { area = "Orchard.Modules" })), FormMethod.Post, new {@class = "inline link"})) { %>
                             <%=Html.Hidden("id", feature.Descriptor.Name, new { id = "" })%>
                             <button type="submit"><%=_Encoded("Enable") %></button><%
                         }

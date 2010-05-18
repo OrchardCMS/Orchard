@@ -320,8 +320,8 @@ span.message {
 }
 
 .confirmation.message {
-	background:#e6f1c9; /* green */
-	border:1px solid #cfe493;
+	background:#D1F2A5; /* green */
+	border:1px solid #BCD994;
 }
 .warning.message {
 	background:#fdf5bc; /* yellow */
@@ -337,8 +337,8 @@ span.message {
 	color:#fff;
 }
 .info.message {
-    background:#e6f1c9; /* green*/
-	border:1px solid #d4deb9;
+    background:#D1F2A5; /* green*/
+	border:1px solid #BCD994;
 	color:#062232;
 }
 .debug.message {

@@ -6,7 +6,9 @@ using Orchard.Environment.Extensions;
 using Orchard.Environment.Extensions.Models;
 using Orchard.Environment.Topology;
 using Orchard.Environment.Topology.Models;
+using Orchard.Localization;
 using Orchard.Modules.Models;
+using Orchard.UI.Notify;
 
 namespace Orchard.Modules.Services {
     public class ModuleService : IModuleService {
@@ -14,10 +16,15 @@ namespace Orchard.Modules.Services {
         private readonly IExtensionManager _extensionManager;
         private readonly IShellDescriptorManager _shellDescriptorManager;
 
-        public ModuleService(IExtensionManager extensionManager, IShellDescriptorManager shellDescriptorManager) {
+        public ModuleService(IOrchardServices orchardServices,IExtensionManager extensionManager, IShellDescriptorManager shellDescriptorManager) {
+            Services = orchardServices;
             _extensionManager = extensionManager;
             _shellDescriptorManager = shellDescriptorManager;
+            T = NullLocalizer.Instance;
         }
+
+        private Localizer T { get; set; }
+        public IOrchardServices Services { get; set; }
 
         public IModule GetModuleByName(string moduleName) {
             return _extensionManager.AvailableExtensions().Where(e => string.Equals(e.Name, moduleName, StringComparison.OrdinalIgnoreCase) && string.Equals(e.ExtensionType, ModuleExtensionType, StringComparison.OrdinalIgnoreCase)).Select(
@@ -60,9 +67,32 @@ namespace Orchard.Modules.Services {
 
         public void EnableFeatures(IEnumerable<string> featureNames) {
             var shellDescriptor = _shellDescriptorManager.GetShellDescriptor();
+            var enabledFeatures = shellDescriptor.EnabledFeatures.ToList();
+            var features = GetAvailableFeatures().ToList();
 
-            var enabledFeatures = shellDescriptor.EnabledFeatures
-                .Union(featureNames.Select(s => new ShellFeature {Name = s}));
+            foreach (var name in featureNames) {
+                var featureName = name;
+                var feature = features.Single(f => f.Descriptor.Name == featureName);
+                var sleepingDependencies =
+                    feature.Descriptor.Dependencies.Where(s => enabledFeatures.FirstOrDefault(sf => sf.Name == s) == null);
+
+                if (sleepingDependencies.Count() != 0) {
+                    Services.Notifier.Warning(T(
+                        "If you want to enable {0}, then you'll also need {1} (and I won't let you flip everything on in one go yet).",
+                        featureName,
+                        sleepingDependencies.Count() > 1
+                            ? string.Join("",
+                                          sleepingDependencies.Select(
+                                              (s, i) =>
+                                              i == sleepingDependencies.Count() - 2
+                                                  ? T("{0} and ", s).ToString()
+                                                  : T("{0}, ", s).ToString()).ToArray())
+                            : sleepingDependencies.First()));
+                } else if (enabledFeatures.FirstOrDefault(f => f.Name == featureName) == null) {
+                    enabledFeatures.Add(new ShellFeature {Name = featureName});
+                    Services.Notifier.Information(T("{0} was enabled", featureName));
+                }
+            }
 
             _shellDescriptorManager.UpdateShellDescriptor(shellDescriptor.SerialNumber, enabledFeatures, shellDescriptor.Parameters);
         }
@@ -72,15 +102,26 @@ namespace Orchard.Modules.Services {
             var enabledFeatures = shellDescriptor.EnabledFeatures.ToList();
             var features = GetAvailableFeatures().ToList();
 
-            foreach (var featureName in featureNames) {
-                var feature = featureName;
-                var dependants = features.Where(f => f.IsEnabled && f.Descriptor.Dependencies != null && f.Descriptor.Dependencies.Contains(feature));
+            foreach (var name in featureNames) {
+                var featureName = name;
+                var dependants = features.Where(f => f.IsEnabled && f.Descriptor.Dependencies != null && f.Descriptor.Dependencies.Contains(featureName));
 
-                if (dependants.Count() == 0) {
-                    enabledFeatures.RemoveAll(f => f.Name == feature);
+                if (dependants.Count() != 0) {
+                    Services.Notifier.Warning(T(
+                        "If you want to disable {0}, then you'll also lose {1} (and I won't let you do that yet).",
+                        featureName,
+                        dependants.Count() > 0
+                            ? string.Join("",
+                                          dependants.Select(
+                                              (f, i) =>
+                                              i == dependants.Count() - 2
+                                                  ? T("{0} and ", f.Descriptor.Name).ToString()
+                                                  : T("{0}, ", f.Descriptor.Name).ToString()).ToArray())
+                            : dependants.First().Descriptor.Name));
                 }
                 else {
-                    // list what else will be disabled with ok/cancel
+                    enabledFeatures.RemoveAll(f => f.Name == featureName);
+                    Services.Notifier.Information(T("{0} was disabled", featureName));
                 }
             }
 
