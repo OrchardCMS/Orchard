@@ -118,6 +118,20 @@
       <Output TaskParameter="ExtraFiles" ItemName="StageProjectAlteration-ExtraFiles"/>
     </StageProjectAlteration>
 
+    <!-- extra processing of the staged config files -->
+
+    <XmlUpdate XmlFileName="$(StageFolder)\web.config"
+      XPath="/configuration/system.web/compilation/@debug"
+      Value="false" />
+
+    <XmlUpdate XmlFileName="$(StageFolder)\Config\Diagnostics.config"
+      XPath="/system.diagnostics/trace/@autoflush"
+      Value="false" />
+
+    <XmlUpdate XmlFileName="$(StageFolder)\Config\Diagnostics.config"
+      XPath="/system.diagnostics/sources/source/@switchValue"
+      Value="Error" />
+
     <!-- move over extra non-content files the csproj referenced -->
     <Copy SourceFiles="@(StageProjectAlteration-ExtraFiles->'$(SrcFolder)\Orchard.Web\%(Identity)')" 
         DestinationFolder="$(StageFolder)\%(RecursiveDir)"/>
