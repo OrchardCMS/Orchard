@@ -21,12 +21,13 @@
             foreach (var feature in features) {
                 //hmmm...I feel like I've done this before...
                 var featureId = string.Format("{0} feature", feature.Descriptor.Name).HtmlClassify();
-                var featureClassName = string.Format("feature {0}", feature.IsEnabled ? "enabled" : "disabled");
+                var featureState = feature.IsEnabled ? "enabled" : "disabled";
+                var featureClassName = string.Format("feature {0}", featureState);
                 if (feature == features.First())
                     featureClassName += " first";
                 if (feature == features.Last())
                     featureClassName += " last"; %>
-            <li class="<%=featureClassName %>" id="<%=Html.AttributeEncode(featureId) %>">
+            <li class="<%=featureClassName %>" id="<%=Html.AttributeEncode(featureId) %>" title="<%=T("{0} is {1}", Html.AttributeEncode(feature.Descriptor.Name), featureState) %>">
                 <div class="summary">
                     <div class="properties">
                         <h3><%=Html.Encode(feature.Descriptor.Name) %></h3><%
