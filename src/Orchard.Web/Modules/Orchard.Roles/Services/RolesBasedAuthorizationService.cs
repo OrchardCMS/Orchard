@@ -84,6 +84,8 @@ namespace Orchard.Roles.Services {
 
                 context.Adjusted = false;
                 _authorizationServiceEventHandler.Adjust(context);
+                if (!context.Adjusted)
+                    break;
             }
 
             _authorizationServiceEventHandler.Complete(context);
