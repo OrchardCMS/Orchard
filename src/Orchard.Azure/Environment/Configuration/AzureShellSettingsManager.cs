@@ -13,6 +13,7 @@ namespace Orchard.Azure.Environment.Configuration {
 
     public class AzureShellSettingsManager : IShellSettingsManager {
         public const string ContainerName = "sites"; // container names must be lower cased
+        private readonly IShellSettingsManagerEventHandler _events;
 
         private readonly CloudStorageAccount _storageAccount;
         public CloudBlobClient BlobClient { get; private set; }
@@ -21,14 +22,16 @@ namespace Orchard.Azure.Environment.Configuration {
         Localizer T { get; [UsedImplicitly]
         set; }
 
-        public AzureShellSettingsManager() : this(CloudStorageAccount.FromConfigurationSetting("DataConnectionString"))
+        public AzureShellSettingsManager(IShellSettingsManagerEventHandler events)
+            : this(CloudStorageAccount.FromConfigurationSetting("DataConnectionString"), events)
         {
         }
 
-        public AzureShellSettingsManager(CloudStorageAccount storageAccount)
+        public AzureShellSettingsManager(CloudStorageAccount storageAccount, IShellSettingsManagerEventHandler events)
         {
             // Setup the connection to custom storage accountm, e.g. Development Storage
             _storageAccount = storageAccount;
+            _events = events;
 
             BlobClient = _storageAccount.CreateCloudBlobClient();
 
@@ -54,6 +57,8 @@ namespace Orchard.Azure.Environment.Configuration {
             var filePath =String.Concat(settings.Name, "/", "Settings.txt");
             var blob = Container.GetBlockBlobReference(filePath);
             blob.UploadText(ComposeSettings(settings)); 
+
+            _events.Saved(settings);
         }
 
         IEnumerable<ShellSettings> LoadSettings() {
