@@ -12,5 +12,6 @@ namespace Orchard.ContentManagement.MetaData.Services
         bool ValidateContentTypeToContentPartMapping(string contentType, string contentPart);
         IEnumerable<ContentTypeRecord> GetContentTypes();
         IEnumerable<ContentTypePartNameRecord> GetContentTypePartNames();
+        ContentTypePartNameRecord GetContentPartNameRecord(string name);
     }
 }

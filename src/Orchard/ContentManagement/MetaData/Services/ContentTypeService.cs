@@ -11,22 +11,34 @@ namespace Orchard.ContentManagement.MetaData.Services
     [UsedImplicitly]
     public class ContentTypeService : IContentTypeService
     {
-        private readonly IRepository<ContentTypeRecord> _contentTypeRecord;
-        private readonly IRepository<ContentTypePartNameRecord> _contentTypePartNameRecord;
-        private readonly IRepository<ContentTypePartRecord> _contentTypePartRecord;
+        private readonly IRepository<ContentTypeRecord> _contentTypeRepository;
+        private readonly IRepository<ContentTypePartNameRecord> _contentTypePartNameRepository;
+        private readonly IRepository<ContentTypePartRecord> _contentTypePartRepository;
 
-        public ContentTypeService(IRepository<ContentTypePartRecord> contentTypePartRecord, IRepository<ContentTypeRecord> contentTypeRecord, IRepository<ContentTypePartNameRecord> contentTypePartNameRecord)
+        public ContentTypeService(IRepository<ContentTypePartRecord> contentTypePartRepository, IRepository<ContentTypeRecord> contentTypeRepository, IRepository<ContentTypePartNameRecord> contentTypePartNameRepository)
         {
-            _contentTypeRecord = contentTypeRecord;
-            _contentTypePartNameRecord = contentTypePartNameRecord;
-            _contentTypePartRecord = contentTypePartRecord;
+            _contentTypeRepository = contentTypeRepository;
+            _contentTypePartNameRepository = contentTypePartNameRepository;
+            _contentTypePartRepository = contentTypePartRepository;
+        }
+
+        public ContentTypePartNameRecord GetContentPartNameRecord(string name) {
+            return _contentTypePartNameRepository.Fetch(x => x.PartName == name).Single(); 
         }
 
         public void MapContentTypeToContentPart(string contentType, string contentPart) {
             var contentTypeRecord = GetContentTypeRecord(contentType) ?? new ContentTypeRecord();
             contentTypeRecord.Name = contentType;
+            var contentTypePartNameRecord =
+                _contentTypePartNameRepository.Fetch(x => x.PartName == contentPart).SingleOrDefault();
+            if (contentTypePartNameRecord==null) {
+                contentTypePartNameRecord=new ContentTypePartNameRecord(){PartName = contentPart};
+                _contentTypePartNameRepository.Update(contentTypePartNameRecord);
+                contentTypePartNameRecord =
+                _contentTypePartNameRepository.Fetch(x => x.PartName == contentPart).SingleOrDefault();
+            }
             var contentTypePartRecord = new ContentTypePartRecord() {
-                PartName = contentPart                                                     
+                PartName = contentTypePartNameRecord                                                     
             };
             if (contentTypeRecord.ContentParts==null) {
                 contentTypeRecord.ContentParts = new List<ContentTypePartRecord> { contentTypePartRecord };
@@ -35,15 +47,17 @@ namespace Orchard.ContentManagement.MetaData.Services
                 contentTypeRecord.ContentParts.Add(contentTypePartRecord);
             }
 
-            _contentTypeRecord.Update(contentTypeRecord);
+            _contentTypeRepository.Update(contentTypeRecord);
         }
 
         public void UnMapContentTypeToContentPart(string contentType, string contentPart) {
             var contentTypeRecord = GetContentTypeRecord(contentType) ?? new ContentTypeRecord();
-            var contentTypePartRecord = contentTypeRecord.ContentParts.Single(x => x.PartName == contentPart);
+            var contentTypePartNameRecord = _contentTypePartNameRepository.Fetch(x => x.PartName == contentPart).Single();
+
+            var contentTypePartRecord = contentTypeRecord.ContentParts.SingleOrDefault(x => x.PartName == contentTypePartNameRecord);
             if (contentTypePartRecord != null)
             {
-                _contentTypePartRecord.Delete(contentTypePartRecord);
+                _contentTypePartRepository.Delete(contentTypePartRecord);
                 contentTypeRecord.ContentParts.Remove(contentTypePartRecord);
             }
         }
@@ -52,7 +66,7 @@ namespace Orchard.ContentManagement.MetaData.Services
             var contentTypeRecord = GetContentTypeRecord(contentType) ?? new ContentTypeRecord();
             if (contentTypeRecord.ContentParts.Count==0)
                 return false;
-            var contentTypePart = contentTypeRecord.ContentParts.Single(x => x.PartName == contentPart);
+            var contentTypePart = contentTypeRecord.ContentParts.Single(x => x.PartName.PartName == contentPart);
             return contentTypePart != null;
         }
 
@@ -62,27 +76,19 @@ namespace Orchard.ContentManagement.MetaData.Services
                 PartName = contentTypePartName
             };
 
-            _contentTypePartNameRecord.Update(contentTypePartNameRecord);
+            _contentTypePartNameRepository.Update(contentTypePartNameRecord);
         }
 
         public ContentTypeRecord GetContentTypeRecord(string contentTypeName) {
-            var contentTypeCount = _contentTypeRecord.Table.Count(x => x.Name == contentTypeName);
-            if (contentTypeCount > 0) {
-                var contentTypeRecord = _contentTypeRecord.Table.Single(x => x.Name == contentTypeName);
-                return contentTypeRecord;
-            }
-            else {
-                return null;
-            }
-       
+            return _contentTypeRepository.Fetch(x => x.Name == contentTypeName).SingleOrDefault();
         }
 
         public IEnumerable<ContentTypeRecord> GetContentTypes() {
-            return _contentTypeRecord.Table.ToList();
+            return _contentTypeRepository.Table.ToList();
         }
 
         public IEnumerable<ContentTypePartNameRecord> GetContentTypePartNames() {
-            return _contentTypePartNameRecord.Table.ToList();
+            return _contentTypePartNameRepository.Table.ToList();
         }
 
     }

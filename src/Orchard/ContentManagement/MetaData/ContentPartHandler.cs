@@ -25,10 +25,12 @@ namespace Orchard.ContentManagement.MetaData
 
         protected override void Activating(ActivatingContentContext context) {
             var contentTypeRecord = _contentTypeService.GetContentTypeRecord(context.ContentType) ?? new ContentTypeRecord();
+
             if (contentTypeRecord.ContentParts != null){
                 foreach (var contentTypePartRecord in contentTypeRecord.ContentParts){
-                    var record = contentTypePartRecord;
-                    var contentPart = _contentPartInfos.Single(x => x.partName == record.PartName).Factory();
+                    //var record = contentTypePartRecord;
+
+                    var contentPart = _contentPartInfos.Single(x => x.PartName == contentTypePartRecord.PartName.PartName).Factory();
                     context.Builder.Weld(contentPart);
                 }
             }

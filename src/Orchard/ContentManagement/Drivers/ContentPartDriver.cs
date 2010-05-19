@@ -56,7 +56,7 @@ namespace Orchard.ContentManagement.Drivers {
         {
             var contentPartInfo = new List<ContentPartInfo>() {
                 new ContentPartInfo()
-                {partName = typeof(TContent).Name,Factory = () => new TContent()}
+                {PartName = typeof(TContent).Name,Factory = () => new TContent()}
             };
 
             return contentPartInfo;

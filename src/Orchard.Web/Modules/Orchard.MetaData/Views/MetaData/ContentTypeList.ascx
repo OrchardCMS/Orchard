@@ -15,13 +15,13 @@
     <% foreach (var item in Model.ContentTypes) { %>
     
     <%
-           string contentTypeClass = "";
+           var contentTypeClass = "";
            if (Model.SelectedContentType!=null && Model.SelectedContentType.Name == item.Name)
            {
-        contentTypeClass = "SelectedContentPart";
-    }else{
-        contentTypeClass = "UnSelectedContentPart";
-    }       
+                contentTypeClass = "SelectedContentPart";
+            }else{
+                contentTypeClass = "UnSelectedContentPart";
+            }       
     %>
         <tr class="<%=contentTypeClass %>">
             <td>

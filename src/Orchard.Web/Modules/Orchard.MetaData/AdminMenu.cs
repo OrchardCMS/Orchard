@@ -1,14 +1,8 @@
-﻿using System.Linq;
-
+﻿
 using Orchard.UI.Navigation;
 
 namespace Orchard.MetaData {
     public class AdminMenu : INavigationProvider {
-        //private readonly IBlogService _blogService;
-
-        public AdminMenu() {
-            //_blogService = blogService;
-        }
 
         public string MenuName { get { return "admin"; } }
 

@@ -25,6 +25,7 @@ namespace Orchard.Tests.ContentManagement{
                 typeof(ContentTypeRecord),
                 typeof(ContentItemRecord),
                 typeof(ContentTypePartRecord),
+                typeof(ContentTypePartNameRecord),
                 typeof(ContentItemVersionRecord));
         }
 
