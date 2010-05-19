@@ -10,7 +10,7 @@
     border:1px solid #EAEAEA;
     display:block;
     float:left;
-    height:6.8em;
+    height:5em;
     margin:0 .5% 1% .5%;
     position:relative;
     width:32.1%;
@@ -57,7 +57,7 @@
 }
 .features .dependencies li {
     display:inline;
-    margin-left:.5ex;
+    margin-left:.5em;
 }
 .features .dependencies li::after {
     content:", ";
@@ -67,7 +67,7 @@
 }
 .features .feature .actions {
     position:absolute;
-    right:.8em;
+    right:.4em;
     top:.6em;
 }
 
