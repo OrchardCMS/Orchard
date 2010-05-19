@@ -25,18 +25,6 @@ namespace Orchard.Modules.Controllers {
             return View(new ModulesIndexViewModel {Modules = modules});
         }
 
-        public ActionResult Edit(string id) {
-            if (!Services.Authorizer.Authorize(Permissions.ManageModules, T("Not allowed to edit module")))
-                return new HttpUnauthorizedResult();
-
-            var module = _moduleService.GetModuleByName(id);
-
-            if (module == null)
-                return new NotFoundResult();
-
-            return View(new ModuleEditViewModel {Name = module.DisplayName});
-        }
-
         public ActionResult Features() {
             if (!Services.Authorizer.Authorize(Permissions.ManageFeatures, T("Not allowed to manage features")))
                 return new HttpUnauthorizedResult();
