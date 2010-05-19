@@ -1,11 +1,8 @@
 ﻿using System.Linq;
-using System.Reflection;
 using System.Web.Mvc;
 using Orchard.Localization;
 using Orchard.Modules.ViewModels;
-using Orchard.Mvc.AntiForgery;
 using Orchard.Mvc.Results;
-using Orchard.UI.Notify;
 
 namespace Orchard.Modules.Controllers {
     public class AdminController : Controller {
@@ -37,9 +34,7 @@ namespace Orchard.Modules.Controllers {
             if (module == null)
                 return new NotFoundResult();
 
-            return View(new ModuleEditViewModel {
-                                               Name = module.DisplayName
-                                           });
+            return View(new ModuleEditViewModel {Name = module.DisplayName});
         }
 
         public ActionResult Features() {
@@ -50,43 +45,30 @@ namespace Orchard.Modules.Controllers {
             return View(new FeaturesViewModel {Features = features});
         }
 
-        [ValidateAntiForgeryTokenOrchard]
-        public ActionResult Enable(string id) {
+        [HttpPost]
+        public ActionResult Enable(string id, bool? force) {
             if (!Services.Authorizer.Authorize(Permissions.ManageFeatures, T("Not allowed to manage features")))
                 return new HttpUnauthorizedResult();
 
             if (string.IsNullOrEmpty(id))
                 return new NotFoundResult();
 
-            _moduleService.EnableFeatures(new [] {id});
+            _moduleService.EnableFeatures(new[] {id}, force != null && (bool) force);
 
             return RedirectToAction("Features");
         }
 
-        [ValidateAntiForgeryTokenOrchard]
-        public ActionResult Disable(string id) {
+        [HttpPost]
+        public ActionResult Disable(string id, bool? force) {
             if (!Services.Authorizer.Authorize(Permissions.ManageFeatures, T("Not allowed to manage features")))
                 return new HttpUnauthorizedResult();
 
             if (string.IsNullOrEmpty(id))
                 return new NotFoundResult();
 
-            _moduleService.DisableFeatures(new[] { id });
+            _moduleService.DisableFeatures(new[] {id}, force != null && (bool) force);
 
             return RedirectToAction("Features");
-        }
-
-        private class FormValueRequiredAttribute : ActionMethodSelectorAttribute {
-            private readonly string _submitButtonName;
-
-            public FormValueRequiredAttribute(string submitButtonName) {
-                _submitButtonName = submitButtonName;
-            }
-
-            public override bool IsValidForRequest(ControllerContext controllerContext, MethodInfo methodInfo) {
-                var value = controllerContext.HttpContext.Request.Form[_submitButtonName];
-                return !string.IsNullOrEmpty(value);
-            }
         }
     }
 }

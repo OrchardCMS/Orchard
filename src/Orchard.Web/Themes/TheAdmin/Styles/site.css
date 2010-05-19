@@ -337,8 +337,8 @@ span.message {
 	color:#fff;
 }
 .info.message {
-    background:#D1F2A5; /* green*/
-	border:1px solid #BCD994;
+    background:#e6f1c9; /* green */
+	border:1px solid #cfe493;
 	color:#062232;
 }
 .debug.message {

@@ -1,4 +1,9 @@
-﻿.features .category {
+﻿.orchard-modules #main h2 {
+    border:0;
+    margin-bottom:.2em;
+}
+
+.features .category {
     overflow:hidden;
 }
 .features .feature {
@@ -28,8 +33,8 @@
 }
 
 .features .enabled.feature {
-    background:#D1F2A5;
-    border-color:#BCD994;
+    background:#FFF;
+    border-color:#CFE493;cfe493
 }
 .features .disabled.feature {
     background:#EAEAEA;
@@ -40,7 +45,7 @@
     padding:.4em .5em;
 }
 .features .dependencies li,
-.features .actions a {
+.features .actions {
     font-size:1.4em;
 }
 .features .dependencies {
@@ -64,4 +69,17 @@
     position:absolute;
     right:.8em;
     top:.6em;
+}
+
+.cathedral {
+    bottom:0;
+    font-size:.8em;
+    position:absolute;
+    right:3px;
+}
+.cathedral a,
+.cathedral a:link,
+.cathedral a:visited,
+.cathedral form.inline.link button {
+    color:#aeaeae;
 }
