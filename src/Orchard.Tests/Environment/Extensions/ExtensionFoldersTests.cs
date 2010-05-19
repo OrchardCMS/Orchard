@@ -54,8 +54,8 @@ namespace Orchard.Tests.Environment.Extensions {
 
         [Test]
         public void NamesFromFoldersWithModuleTxtShouldBeListed() {
-            var folders = new ModuleFolders(new[] { _tempFolderName },null,null);
-            var names = folders.ListNames();
+            IExtensionFolders folders = new ModuleFolders(new[] { _tempFolderName }, null, null);
+            var names = folders.AvailableExtensions().Select(d => d.Name);
             Assert.That(names.Count(), Is.EqualTo(2));
             Assert.That(names, Has.Some.EqualTo("Sample1"));
             Assert.That(names, Has.Some.EqualTo("Sample3"));
@@ -63,7 +63,7 @@ namespace Orchard.Tests.Environment.Extensions {
 
         [Test]
         public void ModuleTxtShouldBeParsedAndReturnedAsYamlDocument() {
-            var folders = new ModuleFolders(new[] { _tempFolderName }, new StubCacheManager(), new StubWebSiteFolder());
+            IExtensionFolders folders = new ModuleFolders(new[] { _tempFolderName }, new StubCacheManager(), new StubWebSiteFolder());
             var sample1 = folders.AvailableExtensions().Single(d => d.Name == "Sample1");
             Assert.That(sample1.Name, Is.Not.Empty);
             Assert.That(sample1.Author, Is.EqualTo("Bertrand Le Roy"));
