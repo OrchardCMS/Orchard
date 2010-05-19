@@ -38,7 +38,7 @@ namespace Orchard.Tests.Environment.Extensions {
                 foreach(var e in Manifests) {
                     string name = e.Key;
                     var parseResult = ExtensionFolders.ParseManifest(Manifests[name]);
-                    yield return ExtensionFolders.GetDescriptorForExtension("~/", name, "InMemory", parseResult);
+                    yield return ExtensionFolders.GetDescriptorForExtension("~/", name, "Module", parseResult);
                 }
             }
         }
