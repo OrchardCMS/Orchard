@@ -19,30 +19,28 @@ abbr,acronym { border:0;}
 html {height: 100%;}
 
 body {
-	font: normal 90% "Georgia", Times New Roman, Times, serif;
+	font: normal 62.5% "Georgia", Times New Roman, Times, serif; /* 62.5% sets font to 10px */
 	height: 100%;
 	text-align:left;
 	color:#373737;
-	background:#fdfdfd;
 	background:#f7f7f7;
-	/*background:#E5E5E5 url(../Content/Images/bodyBackgroundgrey.gif) repeat-x scroll left top;*/
 }
 
 /* ---------- Headings and defaults ---------- */
 
-h1,h2,h3,h4,h5,h6,legend {font-weight:normal; font-style: normal; margin:12px 0 4px 0;}
+h1,h2,h3,h4,h5,h6,legend {font-weight:normal; font-style: normal; margin:.2em 0;}
 
-h1 {font-size: 180%;}
-h2 {font-size: 160%;}
-h3 {font-size: 145%;}
-h4 {font-size: 130%;}
-h5 {font-size: 120%;}
-h6 {font-size: 105%;}
+h1 { font-size:2.6em; } /* 26px */
+h2 { font-size:2.4em; } /* 24px */
+h3 { font-size:2.2em; } /* 22px */
+h4 { font-size:2.0em; } /* 20px */
+h5 { font-size:1.8em; } /* 18px */
+h6 { font-size:1.6em; } /* 16px */
 
 h1.sitename {border-bottom:none;}
 
-p {line-height:24px; margin:12px 0 32px 0;}
-p.small {line-height:24px; font-size:85%;}
+p {font-size:1.4em; line-height:2em; margin:1.2em 0 1.2em 0;}
+p.small {font-size:1.2em;}
 
 a {color:#004386; text-decoration:none;}     /* unvisited link */
 a:active {color: #004386;}   /* selected link */
@@ -51,8 +49,8 @@ a:hover {color: #087df3;}   /* mouse over link */
 
 #content a:hover, #sidebar a:hover {text-decoration:underline;}
 
-ul.square {list-style:square; list-style-position:inside; line-height:24px; margin:0 0 0 12px;}
-ol.decimal {list-style:decimal; list-style-position:inside; line-height:24px; margin:0 0 0 12px;}
+ul.square {font-size:1.4em; list-style:square; list-style-position:inside; line-height:2em; margin:0 0 0 1.2em;}
+ol.decimal {font-size:1.4em; list-style:decimal; list-style-position:inside; line-height:2em; margin:0 0 0 1.2em;}
 
 
 /* Forms
@@ -61,37 +59,38 @@ ol.decimal {list-style:decimal; list-style-position:inside; line-height:24px; ma
 input[type="text"], #CommentText, #password, #confirmPassword {
     border:1px solid #cacec6;
     display: block;
-    padding:2px;
+    padding:3px;
     width:90%;
     }
 
-fieldset div {margin:16px 0 0 0}
+fieldset div {margin:1.6em 0 0 0}
     
 legend {
-	font-size: 110%;
+	font-size: 1.8em;
 	border:none;
 }
 
 label {
+    font-size: 1.4em;
     display: block;
-    margin:0 0 2px 0;
+    margin:0 0 .1em 0;
     }
 
 input[type="checkbox"] {
-    margin:2px 0 20px 10px;
+    margin:.2em 0 2em 1em;
 }
 
 input[type="submit"], input[type="button"], .button {
-	font: normal 90% "Georgia", Times New Roman, Times, serif;
+	font: normal 1.4em "Georgia", Times New Roman, Times, serif;
 	color:#333;
     padding:2px 14px;
     display: block;
-    margin:2px 0 20px 0;
+    margin:.2em 0 2em 0;
     font-weight:600;
     }
   
 .forcheckbox {
-    margin:0 0 0 4px;
+    margin:0 0 0 .4em;
     display:inline;
 }
 
@@ -99,6 +98,7 @@ input[type="submit"], input[type="button"], .button {
 /* Tables
 ----------------------------------------------------------*/
 table {
+    font:1.2em Verdana, Geneva, Tahoma, sans-serif;
 	background:#fff;
 	border:1px solid #f1f1f1;
 	border-collapse:collapse;
@@ -111,7 +111,6 @@ table thead, table th {
 }
 
 table th {
-	font:70% Verdana, Geneva, Tahoma, sans-serif;
 	background-color:#69625e;
 	color:#f1f1f1;
 	}
@@ -135,15 +134,16 @@ table tbody {
 
 
 th, td {
-	font:70% Verdana, Geneva, Tahoma, sans-serif;
-	padding:6px
+	font:1em Verdana, Geneva, Tahoma, sans-serif;
+	padding:6px;
 	}
 
 td.even {
 	background-color:#f1f1f1;
 }
 
-/* ---------- Layout ---------- */
+/* Layout
+----------------------------------------------------------*/
 
 #headercontainer {
 	border:2px solid #69625e;
@@ -157,21 +157,22 @@ td.even {
 	border:1px solid #69625e;
 	border-left:0;
 	border-right:0;
-	margin:3px 0 3px 0;
+	margin:.3em 0 .3em 0;
 	}
 
 #header h1 {
-	font-size:240%;
+	font-size:3.2em;
 	color:#333;
 	border:0;
-	margin:12px 18px;
+	margin:0 0 0 .8em;
+	padding:10px 0;
 	float:left;
 }
 
 
 #logindisplay {
-	font:80%;
-	margin:12px auto;
+    font-size:1.4em;
+	margin:1em auto;
 	text-align:right;
 	width: 930px;
 }
@@ -185,7 +186,7 @@ td.even {
 }
 
 #main {
-	margin:0 0 0 27px;
+	margin:0 0 0 2.7em;
 	width:930px;
 	background:url(../Content/Images/sidebarBackground.gif) no-repeat right top #fff;
 }
@@ -193,45 +194,45 @@ td.even {
 
 #content {
 	float:left;
-	margin:26px 0 0 27px;
+	margin:2.6em 0 0 2.7em;
 	width:520px;
 	min-height:555px;
 }
 
 #sidebar {
 	float:right;
-	margin:28px 0 0 0;
+	margin:2.8em 0 0 0;
 	width:325px;
 }
 
 #sidebar h3 {
-	border-bottom:1px dotted #f1f1f1;
-	font-size: 130%;
+	border-bottom:1px dotted #666;
+	font-size: 2.0em;
 }
 
 #footercontainer {
 	clear:both;
 	border-top:2px solid #69625e;
 	width:930px;
-	margin:18px 0 6px 0;
+	margin:1.8em 0 .6em 0;
 }
 
 #footer {
 	border-top:1px solid #69625e;
-	margin-top:3px;
+	margin-top:.3em;
 }
 
 #footer a{
 	text-transform:uppercase;
 }
 
-
-/* ---------- Navigation ---------- */
+/* Navigation
+----------------------------------------------------------*/
 
 .menucontainer {
 	display:block;
 	float:right;
-	margin:18px 0;
+	margin-top:1.3em;
 }
 
 .menucontainer ul, #footer ul {
@@ -239,12 +240,13 @@ td.even {
 }
 
 .menucontainer ul li {
-	margin:8px 0 0 0;
+	margin:.8em 0 0 0;
 	float:left;
 	}
 
 .menucontainer ul li a {
-	margin:0 18px 0 18px;
+    font-size:1.4em;
+	margin:0 1.8em 0 1.8em;
 	display:block;
 	text-decoration:none;
 	text-transform:uppercase;
@@ -252,23 +254,23 @@ td.even {
 }
 
 #footer .menucontainer {
-	font-size:80%;
 	margin:0px;
 }
 
 #footer .menucontainer ul li {
-	margin:12px 0;
+	margin:1.2em 0;
 }
 
 /* Confirmations, Messages and the like
 ----------------------------------------------------------*/
 .message, .validation-summary-errors {
-	margin:10px 0 4px 0;
+    font-size:1.4em;
+	margin:1em 0 .4em 0;
     padding:4px;
 }
 span.message {
     display:block;
-	margin:4px 0 4px 4px;
+	margin:.4em 0 .4em .4em;
 }
 .message a {
     font-weight:bold;
@@ -299,22 +301,23 @@ span.message {
     background:#eee;
 	border:1px dashed #D2D6C6;
 	color:#7a7a7a;
-	margin:20px 0 14px 0;
+	margin:2em 0 1.4em 0;
 }
 .debug.message:before {
     content:"DEBUG » ";
+}
+
+
+/* Misc classes
+-------------------------------------------------------------- */
+.clearBoth {
+	clear:both;
 }
 
 /* ---------- Tags and Comments ---------- */
 .tags, .comment {
 	font-style:italic;
 	color:#666666;
-}
-
-
-/* ---------- Generic ---------- */
-.clearBoth {
-	clear:both;
 }
 
 /* ---------- Hide the edit link for blogs hack ---------- */

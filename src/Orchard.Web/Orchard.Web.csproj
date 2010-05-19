@@ -200,6 +200,7 @@
     <Content Include="Themes\ClassicDark\Views\ZoneTest.ascx" />
     <Content Include="Themes\ClassicDark\Zones\Sidebar.html" />
     <Content Include="Themes\Classic\Content\Images\sidebarBackground.gif" />
+    <Content Include="Themes\Classic\Views\Content\Images\sidebarBackground.gif" />
     <Content Include="Themes\Classic\Views\DisplayTemplates\Parts\Blogs.BlogPost.Metadata.ascx" />
     <Content Include="Themes\Classic\Zones\Sidebar.html" />
     <Content Include="Themes\Classic\Styles\blog.css" />
