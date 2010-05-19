@@ -133,6 +133,7 @@
     <Compile Include="ContentManagement\ContentQueryTests.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="ContentManagement\ContentTypeMetaDataTests.cs" />
     <Compile Include="ContentManagement\DefaultContentManagerTests.cs">
       <SubType>Code</SubType>
     </Compile>

@@ -10,10 +10,7 @@ namespace Orchard.Tags.Handlers {
     [UsedImplicitly]
     public class HasTagsHandler : ContentHandler {
         public HasTagsHandler(IRepository<Tag> tagsRepository, IRepository<TagsContentItems> tagsContentItemsRepository) {
-            Filters.Add(new ActivatingFilter<HasTags>("sandboxpage"));
-            Filters.Add(new ActivatingFilter<HasTags>("blogpost"));
-            Filters.Add(new ActivatingFilter<HasTags>("page"));
-
+ 
             OnLoading<HasTags>((context, tags) => {
 
                 // provide names of all tags on demand

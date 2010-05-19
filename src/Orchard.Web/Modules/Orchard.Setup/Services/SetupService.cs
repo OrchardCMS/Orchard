@@ -14,6 +14,7 @@ using Orchard.Environment.ShellBuilders;
 using Orchard.Environment.Topology;
 using Orchard.Environment.Topology.Models;
 using Orchard.Localization;
+using Orchard.ContentManagement.MetaData.Services;
 using Orchard.Security;
 using Orchard.Settings;
 using Orchard.Themes;
@@ -159,6 +160,24 @@ namespace Orchard.Setup.Services {
                         var authenticationService = environment.Resolve<IAuthenticationService>();
                         authenticationService.SignIn(user, true);
                     }
+
+                    //Add ContentType mappings
+                    var contentTypeService = environment.Resolve<IContentTypeService>();
+
+                    //Add ContentTypePartNames to MetaData
+                    contentTypeService.AddContentTypePartNameToMetaData("HasComments");
+                    contentTypeService.AddContentTypePartNameToMetaData("HasTags");
+
+                    //Add mappings from ContentTypes to ContentParts to MetaData
+                    contentTypeService.MapContentTypeToContentPart("blogpost","HasComments");
+                    contentTypeService.MapContentTypeToContentPart("page", "HasComments");
+                    contentTypeService.MapContentTypeToContentPart("sandboxpage", "HasComments");
+                    contentTypeService.MapContentTypeToContentPart("blogpost", "HasTags");
+                    contentTypeService.MapContentTypeToContentPart("page", "HasTags");
+                    contentTypeService.MapContentTypeToContentPart("sandboxpage", "HasTags");
+
+
+
                 }
                 catch {
                     environment.Resolve<ITransactionManager>().Cancel();

@@ -5,7 +5,7 @@ using Orchard.ContentManagement.Handlers;
 using Orchard.Mvc.ViewModels;
 
 namespace Orchard.ContentManagement.Drivers {
-    public abstract class ContentItemDriver<TContent> : ContentPartDriver<TContent>, IContentItemDriver where TContent : class, IContent {
+    public abstract class ContentItemDriver<TContent> : ContentPartDriver<TContent>, IContentItemDriver where TContent : ContentPart, new() {
         private readonly ContentType _contentType;
         protected virtual bool UseDefaultTemplate { get { return false; } }
 
