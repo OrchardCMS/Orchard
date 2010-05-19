@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Orchard.ContentManagement.MetaData.Records;
 using Orchard.ContentManagement.Records;
 
 namespace Orchard.ContentManagement.MetaData.Services
@@ -9,5 +10,7 @@ namespace Orchard.ContentManagement.MetaData.Services
         void AddContentTypePartNameToMetaData(string contentTypePartName);
         ContentTypeRecord GetContentTypeRecord(string contentTypeName);
         bool ValidateContentTypeToContentPartMapping(string contentType, string contentPart);
+        IEnumerable<ContentTypeRecord> GetContentTypes();
+        IEnumerable<ContentTypePartNameRecord> GetContentTypePartNames();
     }
 }

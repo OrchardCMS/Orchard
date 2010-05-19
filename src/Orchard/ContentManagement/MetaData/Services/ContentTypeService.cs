@@ -77,5 +77,13 @@ namespace Orchard.ContentManagement.MetaData.Services
        
         }
 
+        public IEnumerable<ContentTypeRecord> GetContentTypes() {
+            return _contentTypeRecord.Table.ToList();
+        }
+
+        public IEnumerable<ContentTypePartNameRecord> GetContentTypePartNames() {
+            return _contentTypePartNameRecord.Table.ToList();
+        }
+
     }
 }
