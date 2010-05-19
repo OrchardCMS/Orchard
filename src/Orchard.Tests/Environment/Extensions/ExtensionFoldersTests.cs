@@ -54,7 +54,7 @@ namespace Orchard.Tests.Environment.Extensions {
 
         [Test]
         public void NamesFromFoldersWithModuleTxtShouldBeListed() {
-            IExtensionFolders folders = new ModuleFolders(new[] { _tempFolderName }, null, null);
+            IExtensionFolders folders = new ModuleFolders(new[] { _tempFolderName }, new StubCacheManager(), new StubWebSiteFolder());
             var names = folders.AvailableExtensions().Select(d => d.Name);
             Assert.That(names.Count(), Is.EqualTo(2));
             Assert.That(names, Has.Some.EqualTo("Sample1"));
