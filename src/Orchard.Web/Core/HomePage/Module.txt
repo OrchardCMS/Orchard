@@ -7,5 +7,4 @@ orchardversion: 0.1.2010.0312
 features:
     HomePage:
         Description: Standard site home page that allows a specified content type or container to *be* the home page.
-        Dependencies: Common
         Category: Core

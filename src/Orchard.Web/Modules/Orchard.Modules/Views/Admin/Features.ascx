@@ -13,7 +13,10 @@
         if (featureGroup == featureGroups.First())
             categoryClassName += " first";
         if (featureGroup == featureGroups.Last())
-            categoryClassName += " last"; %>
+            categoryClassName += " last";
+        
+        //temporarily "disable" actions on core features
+        var showActions = categoryName.ToString() != "Core"; %>
     <li class="<%=categoryClassName %>">
         <h2><%=Html.Encode(categoryName) %></h2>
         <ul><%
@@ -42,7 +45,8 @@
                                 "") %>
                         </div><%
                         } %>
-                    </div>
+                    </div><%
+                    if (showActions) { %>
                     <div class="actions"><%
                         if (feature.IsEnabled) {
                         using (Html.BeginFormAntiForgeryPost(string.Format("{0}", Url.Action("Disable", new { area = "Orchard.Modules" })), FormMethod.Post, new {@class = "inline link"})) { %>
@@ -56,6 +60,23 @@
                         }
                         } %>
                     </div>
+                    <div class="cathedral"><%
+                        //temporary forceful feature actions
+                        if (feature.IsEnabled) {
+                        using (Html.BeginFormAntiForgeryPost(string.Format("{0}", Url.Action("Disable", new { area = "Orchard.Modules" })), FormMethod.Post, new {@class = "inline link"})) { %>
+                            <%=Html.Hidden("id", feature.Descriptor.Name, new { id = "" })%>
+                            <%=Html.Hidden("force", true)%>
+                            <button type="submit"><%=_Encoded("π")%></button><%
+                        }
+                        } else {
+                        using (Html.BeginFormAntiForgeryPost(string.Format("{0}", Url.Action("Enable", new { area = "Orchard.Modules" })), FormMethod.Post, new {@class = "inline link"})) { %>
+                            <%=Html.Hidden("id", feature.Descriptor.Name, new { id = "" })%>
+                            <%=Html.Hidden("force", true)%>
+                            <button type="submit"><%=_Encoded("π")%></button><%
+                        }
+                        } %>
+                    </div><%
+                    } %>
                 </div>
             </li><%
             } %>

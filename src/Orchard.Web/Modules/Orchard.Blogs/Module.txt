@@ -7,5 +7,5 @@ orchardversion: 0.1.2010.0312
 features:
     Orchard.Blogs:
         Description: A simple web log.
-        Dependencies: Common, XmlRpc
+        Dependencies: XmlRpc
         Category: Content
