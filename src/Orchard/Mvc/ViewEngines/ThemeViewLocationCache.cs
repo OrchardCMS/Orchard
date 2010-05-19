@@ -32,7 +32,7 @@ namespace Orchard.Mvc.ViewEngines {
                 throw new ArgumentNullException("httpContext");
             }
 
-            httpContext.Cache.Insert(AlterKey(key), virtualPath, new CacheDependency(HostingEnvironment.MapPath("~/Themes")), Cache.NoAbsoluteExpiration, TimeSpan);
+            httpContext.Cache.Insert(AlterKey(key), virtualPath, new CacheDependency(HostingEnvironment.MapPath("~/Themes")));
         }
     }
 }
