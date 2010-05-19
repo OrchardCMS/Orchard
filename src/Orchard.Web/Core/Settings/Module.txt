@@ -7,5 +7,4 @@ orchardversion: 0.1.2010.0312
 features:
     Settings:
         Description: Site settings.
-        Dependencies: Common
         Category: Core

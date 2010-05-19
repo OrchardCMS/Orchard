@@ -26,6 +26,7 @@ namespace Orchard.Tests.Environment.ShellBuilders {
             var builder = new ContainerBuilder();
             builder.RegisterType<ShellContainerFactory>().As<IShellContainerFactory>();
             builder.RegisterType<ComponentForHostContainer>();
+            builder.RegisterType<ControllerActionInvoker>().As<IActionInvoker>();
             _container = builder.Build();
         }
 

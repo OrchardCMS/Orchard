@@ -30,6 +30,7 @@ namespace Orchard.Tests.Modules.Users.Controllers {
         public override void Register(ContainerBuilder builder) {
             builder.RegisterType<AdminController>().SingleInstance();
             builder.RegisterType<DefaultContentManager>().As<IContentManager>();
+            builder.RegisterType<DefaultContentManagerSession>().As<IContentManagerSession>();
             builder.RegisterType<DefaultContentQuery>().As<IContentQuery>().InstancePerDependency();
             builder.RegisterType<MembershipService>().As<IMembershipService>();
             builder.RegisterType<UserService>().As<IUserService>();

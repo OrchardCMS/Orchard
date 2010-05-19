@@ -7,5 +7,4 @@ orchardversion: 0.1.2010.0312
 features:
     XmlRpc:
         Description: XML-RPC opt-in implementation.
-        Dependencies: Common
-        Category: Core
+        Category: Content Publishing

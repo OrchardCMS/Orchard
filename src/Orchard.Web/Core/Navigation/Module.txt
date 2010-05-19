@@ -7,5 +7,4 @@ orchardversion: 0.1.2010.0312
 features:
     Navigation:
         Description: Menu management.
-        Dependencies: Common
         Category: Core

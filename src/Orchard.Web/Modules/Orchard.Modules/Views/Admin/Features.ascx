@@ -1,4 +1,5 @@
 ﻿<%@ Control Language="C#" Inherits="Orchard.Mvc.ViewUserControl<FeaturesViewModel>" %>
+<%@ Import Namespace="Orchard.Modules.Extensions" %>
 <%@ Import Namespace="Orchard.Mvc.Html"%>
 <%@ Import Namespace="Orchard.Modules.ViewModels"%>
 <%@ Import Namespace="Orchard.Utility.Extensions" %><%
@@ -13,14 +14,17 @@
         if (featureGroup == featureGroups.First())
             categoryClassName += " first";
         if (featureGroup == featureGroups.Last())
-            categoryClassName += " last"; %>
+            categoryClassName += " last";
+        
+        //temporarily "disable" actions on core features
+        var showActions = categoryName.ToString() != "Core"; %>
     <li class="<%=categoryClassName %>">
         <h2><%=Html.Encode(categoryName) %></h2>
         <ul><%
             var features = featureGroup.OrderBy(f => f.Descriptor.Name);
             foreach (var feature in features) {
                 //hmmm...I feel like I've done this before...
-                var featureId = string.Format("{0} feature", feature.Descriptor.Name).HtmlClassify();
+                var featureId = feature.Descriptor.Name.AsFeatureId(n => T(n));
                 var featureState = feature.IsEnabled ? "enabled" : "disabled";
                 var featureClassName = string.Format("feature {0}", featureState);
                 if (feature == features.First())
@@ -36,26 +40,30 @@
                             <h4><%=_Encoded("Depends on:")%></h4>
                             <%=Html.UnorderedList(
                                 feature.Descriptor.Dependencies.OrderBy(s => s),
-                                (s, i) => Html.Link(s, string.Format("#{0}", string.Format("{0} feature", s).HtmlClassify())),
+                                (s, i) => Html.Link(s, string.Format("#{0}", s.AsFeatureId(n => T(n)))),
                                 "",
                                 "dependency",
                                 "") %>
                         </div><%
                         } %>
-                    </div>
+                    </div><%
+                    if (showActions) { %>
                     <div class="actions"><%
                         if (feature.IsEnabled) {
-                        using (Html.BeginFormAntiForgeryPost(string.Format("{0}#{1}", Url.Action("Disable", new { area = "Orchard.Modules" }), featureId), FormMethod.Post, new {@class = "inline link"})) { %>
+                        using (Html.BeginFormAntiForgeryPost(string.Format("{0}", Url.Action("Disable", new { area = "Orchard.Modules" })), FormMethod.Post, new {@class = "inline link"})) { %>
                             <%=Html.Hidden("id", feature.Descriptor.Name, new { id = "" })%>
+                            <%=Html.Hidden("force", true)%>
                             <button type="submit"><%=_Encoded("Disable") %></button><%
                         }
                         } else {
-                        using (Html.BeginFormAntiForgeryPost(string.Format("{0}#{1}", Url.Action("Enable", new { area = "Orchard.Modules" }), featureId), FormMethod.Post, new {@class = "inline link"})) { %>
+                        using (Html.BeginFormAntiForgeryPost(string.Format("{0}", Url.Action("Enable", new { area = "Orchard.Modules" })), FormMethod.Post, new {@class = "inline link"})) { %>
                             <%=Html.Hidden("id", feature.Descriptor.Name, new { id = "" })%>
+                            <%=Html.Hidden("force", true)%>
                             <button type="submit"><%=_Encoded("Enable") %></button><%
                         }
                         } %>
-                    </div>
+                    </div><%
+                    } %>
                 </div>
             </li><%
             } %>

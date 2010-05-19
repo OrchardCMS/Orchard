@@ -7,5 +7,4 @@ orchardversion: 0.1.2010.0312
 features:
     Orchard.Sandbox:
         Description: A module to mess around with. Currently wiki-like.
-        Dependencies: Common
         Category: Developer

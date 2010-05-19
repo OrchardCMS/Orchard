@@ -7,5 +7,4 @@ orchardversion: 0.1.2010.0312
 features:
     Scheduling:
         Description: Scheduled background tasks.
-        Dependencies: Common
         Category: Core

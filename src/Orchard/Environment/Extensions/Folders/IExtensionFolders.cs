@@ -6,6 +6,4 @@ namespace Orchard.Environment.Extensions.Folders {
     public interface IExtensionFolders {
         IEnumerable<ExtensionDescriptor> AvailableExtensions();
     }
-
-
 }

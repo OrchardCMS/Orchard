@@ -34,26 +34,12 @@ namespace Orchard.Tests.Environment.Extensions {
 
             public IDictionary<string, string> Manifests { get; set; }
 
-            public IEnumerable<string> ListNames() {
-                return Manifests.Keys;
-            }
-
-            public ParseResult ParseManifest(string name) {
-                var parser = new YamlParser();
-                bool success;
-                var stream = parser.ParseYamlStream(new TextInput(Manifests[name]), out success);
-                if (success) {
-                    return new ParseResult {
-                        Location = "~/InMemory",
-                        Name = name,
-                        YamlDocument = stream.Documents.Single()
-                    };
-                }
-                return null;
-            }
-
             public IEnumerable<ExtensionDescriptor> AvailableExtensions() {
-                throw new NotImplementedException();
+                foreach(var e in Manifests) {
+                    string name = e.Key;
+                    var parseResult = ExtensionFolders.ParseManifest(Manifests[name]);
+                    yield return ExtensionFolders.GetDescriptorForExtension("~/", name, "Module", parseResult);
+                }
             }
         }
 
@@ -218,7 +204,7 @@ features:
     Description: Contains the Phi type.
 ");
 
-            ExtensionManager extensionManager = new ExtensionManager(new[] { extensionFolder }, new[] { extensionLoader });
+            IExtensionManager extensionManager = new ExtensionManager(new[] { extensionFolder }, new[] { extensionLoader });
             var testFeature = extensionManager.AvailableExtensions()
                 .SelectMany(x => x.Features);
 
@@ -244,7 +230,7 @@ features:
     Description: Contains the Phi type.
 ");
 
-            ExtensionManager extensionManager = new ExtensionManager(new[] { extensionFolder }, new[] { extensionLoader });
+            IExtensionManager extensionManager = new ExtensionManager(new[] { extensionFolder }, new[] { extensionLoader });
             var testFeature = extensionManager.AvailableExtensions()
                 .SelectMany(x => x.Features);
 
@@ -301,7 +287,7 @@ features:
     Description: Contains the Phi type.
 ");
 
-            ExtensionManager extensionManager = new ExtensionManager(new[] { extensionFolder }, new[] { extensionLoader });
+            IExtensionManager extensionManager = new ExtensionManager(new[] { extensionFolder }, new[] { extensionLoader });
             var testFeature = extensionManager.AvailableExtensions()
                 .SelectMany(x => x.Features)
                 .Single(x => x.Name == "TestFeature");
@@ -329,7 +315,7 @@ features:
     Description: Contains the Phi type.
 ");
 
-            ExtensionManager extensionManager = new ExtensionManager(new[] { extensionFolder }, new[] { extensionLoader });
+            IExtensionManager extensionManager = new ExtensionManager(new[] { extensionFolder }, new[] { extensionLoader });
             var testModule = extensionManager.AvailableExtensions()
                 .SelectMany(x => x.Features)
                 .Single(x => x.Name == "TestModule");
@@ -353,7 +339,7 @@ version: 1.0.3
 orchardversion: 1
 ");
 
-            ExtensionManager extensionManager = new ExtensionManager(new[] { extensionFolder }, new[] { extensionLoader });
+            IExtensionManager extensionManager = new ExtensionManager(new[] { extensionFolder }, new[] { extensionLoader });
             var minimalisticModule = extensionManager.AvailableExtensions().Single(x => x.Name == "Minimalistic");
 
             Assert.That(minimalisticModule.Features.Count(), Is.EqualTo(1));

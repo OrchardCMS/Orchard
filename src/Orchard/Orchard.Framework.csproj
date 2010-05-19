@@ -241,6 +241,7 @@
     <Compile Include="Mvc\Routes\UrlPrefix.cs" />
     <Compile Include="Mvc\Routes\UrlPrefixAdjustedHttpContext.cs" />
     <Compile Include="Mvc\Routes\ShellRoute.cs" />
+    <Compile Include="Mvc\ViewEngines\ThemeViewLocationCache.cs" />
     <Compile Include="Mvc\ViewModels\AdaptedViewModel.cs" />
     <Compile Include="Mvc\ViewUserControl.cs">
       <SubType>ASPXCodeBehind</SubType>

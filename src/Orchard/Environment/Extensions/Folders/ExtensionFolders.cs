@@ -2,9 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Web.Hosting;
 using Orchard.Caching;
-using Orchard.Environment.Extensions.Helpers;
 using Orchard.Environment.Extensions.Models;
 using Orchard.FileSystems.WebSite;
 using Yaml.Grammar;
@@ -56,7 +54,7 @@ namespace Orchard.Environment.Extensions.Folders {
             return list;
         }
 
-        ExtensionDescriptor GetExtensionDescriptor(string locationPath, string extensionName, string manifestPath) {
+        private ExtensionDescriptor GetExtensionDescriptor(string locationPath, string extensionName, string manifestPath) {
             return _cacheManager.Get(manifestPath, context => {
 
                 context.Monitor(_webSiteFolder.WhenPathChanges(manifestPath));
@@ -75,33 +73,23 @@ namespace Orchard.Environment.Extensions.Folders {
             });
         }
 
-        public IEnumerable<string> ListNames() {
-            foreach (var path in _paths) {
-                if (!Directory.Exists(PathHelpers.GetPhysicalPath(path)))
-                    continue;
-
-                foreach (var directoryName in Directory.GetDirectories(PathHelpers.GetPhysicalPath(path))) {
-                    if (_manifestIsOptional || File.Exists(Path.Combine(directoryName, _manifestName))) {
-                        yield return Path.GetFileName(directoryName);
-                    }
-                }
-            }
+        private ExtensionDescriptor GetDescriptorForExtension(string locationPath, string extensionName, ParseResult parseResult) {
+            return GetDescriptorForExtension(locationPath, extensionName, _extensionType, parseResult);
         }
 
-        public ParseResult ParseManifest(string name) {
+        public static ParseResult ParseManifest(string manifestText) {
             bool success;
-            var yamlStream = new YamlParser().ParseYamlStream(new TextInput(name), out success);
+            var yamlStream = new YamlParser().ParseYamlStream(new TextInput(manifestText), out success);
             if (yamlStream == null || !success) {
                 return null;
             }
             return new ParseResult {
-                Name = name,
+                Name = manifestText,
                 YamlDocument = yamlStream.Documents.Single()
             };
         }
 
-
-        private ExtensionDescriptor GetDescriptorForExtension(string locationPath, string extensionName, ParseResult parseResult) {
+        public static ExtensionDescriptor GetDescriptorForExtension(string locationPath, string extensionName, string extensionType, ParseResult parseResult) {
             var mapping = (Mapping)parseResult.YamlDocument.Root;
             var fields = mapping.Entities
                 .Where(x => x.Key is Scalar)
@@ -110,7 +98,7 @@ namespace Orchard.Environment.Extensions.Folders {
             var extensionDescriptor = new ExtensionDescriptor {
                 Location = locationPath,
                 Name = extensionName,
-                ExtensionType = _extensionType,
+                ExtensionType = extensionType,
                 DisplayName = GetValue(fields, "name") ?? extensionName,
                 Description = GetValue(fields, "description"),
                 Version = GetValue(fields, "version"),
@@ -125,14 +113,14 @@ namespace Orchard.Environment.Extensions.Folders {
         }
 
         private static IEnumerable<FeatureDescriptor> GetFeaturesForExtension(Mapping features, ExtensionDescriptor extensionDescriptor) {
-            List<FeatureDescriptor> featureDescriptors = new List<FeatureDescriptor>();
+            var featureDescriptors = new List<FeatureDescriptor>();
             if (features != null) {
                 foreach (var entity in features.Entities) {
-                    FeatureDescriptor featureDescriptor = new FeatureDescriptor {
+                    var featureDescriptor = new FeatureDescriptor {
                         Extension = extensionDescriptor,
                         Name = entity.Key.ToString(),
                     };
-                    Mapping featureMapping = (Mapping)entity.Value;
+                    var featureMapping = (Mapping)entity.Value;
                     foreach (var featureEntity in featureMapping.Entities) {
                         if (String.Equals(featureEntity.Key.ToString(), "description", StringComparison.OrdinalIgnoreCase)) {
                             featureDescriptor.Description = featureEntity.Value.ToString();
@@ -158,25 +146,19 @@ namespace Orchard.Environment.Extensions.Folders {
         }
 
         private static string[] ParseFeatureDependenciesEntry(string dependenciesEntry) {
-            List<string> dependencies = new List<string>();
+            var dependencies = new List<string>();
             foreach (var s in dependenciesEntry.Split(',')) {
                 dependencies.Add(s.Trim());
             }
             return dependencies.ToArray();
         }
 
-        private static Mapping GetMapping(
-            IDictionary<string, DataItem> fields,
-            string key) {
-
+        private static Mapping GetMapping(IDictionary<string, DataItem> fields, string key) {
             DataItem value;
             return fields.TryGetValue(key, out value) ? (Mapping)value : null;
         }
 
-        private static string GetValue(
-            IDictionary<string, DataItem> fields,
-            string key) {
-
+        private static string GetValue(IDictionary<string, DataItem> fields, string key) {
             DataItem value;
             return fields.TryGetValue(key, out value) ? value.ToString() : null;
         }

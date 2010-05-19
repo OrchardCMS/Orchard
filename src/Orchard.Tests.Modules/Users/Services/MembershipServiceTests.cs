@@ -55,6 +55,7 @@ namespace Orchard.Tests.Modules.Users.Services {
             //builder.RegisterModule(new ImplicitCollectionSupportModule());
             builder.RegisterType<MembershipService>().As<IMembershipService>();
             builder.RegisterType<DefaultContentManager>().As<IContentManager>();
+            builder.RegisterType<DefaultContentManagerSession>().As<IContentManagerSession>();
             builder.RegisterType<UserHandler>().As<IContentHandler>();
             builder.RegisterGeneric(typeof(Repository<>)).As(typeof(IRepository<>));
             _session = _sessionFactory.OpenSession();

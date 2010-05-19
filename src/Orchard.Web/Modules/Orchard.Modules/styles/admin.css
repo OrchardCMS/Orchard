@@ -1,14 +1,18 @@
-﻿.features .category {
+﻿.orchard-modules #main h2 {
+    border:0;
+    margin-bottom:.2em;
+}
+
+.features .category {
     overflow:hidden;
 }
 .features .feature {
     border:1px solid #EAEAEA;
-    -moz-border-radius:3px;
-    -webkit-border-radius:3px;
     display:block;
     float:left;
-    height:10em;
+    height:5em;
     margin:0 .5% 1% .5%;
+    position:relative;
     width:32.1%;
 }
 .features .feature:nth-child(3n+1),
@@ -29,10 +33,53 @@
 }
 
 .features .enabled.feature {
-    background:#D1F2A5;
-    border-color:#BCD994;
+    background:#FFF;
+    border-color:#CFE493;cfe493
 }
 .features .disabled.feature {
     background:#EAEAEA;
     border-color:#CCC;
+}
+.features .feature .summary {
+    overflow:hidden;
+    padding:.4em .5em;
+}
+.features .dependencies li,
+.features .actions {
+    font-size:1.4em;
+}
+.features .dependencies {
+    font-size:.9em;
+    margin:.44em 0 0;
+}
+.features .dependencies>* {
+    display:inline;
+}
+.features .dependencies li {
+    display:inline;
+    margin-left:.5em;
+}
+.features .dependencies li::after {
+    content:", ";
+}
+.features .dependencies li:last-child::after {
+    content:"";
+}
+.features .feature .actions {
+    position:absolute;
+    right:.4em;
+    top:.6em;
+}
+
+.cathedral {
+    bottom:0;
+    font-size:.8em;
+    position:absolute;
+    right:3px;
+}
+.cathedral a,
+.cathedral a:link,
+.cathedral a:visited,
+.cathedral form.inline.link button {
+    color:#aeaeae;
 }

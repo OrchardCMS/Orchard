@@ -7,5 +7,4 @@ orchardversion: 0.1.2010.0312
 features:
     Futures.Widgets:
         Description: Widgets container with simple inline content editing widget.
-        Dependencies: Common
         Category: Widget
