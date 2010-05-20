@@ -7,4 +7,4 @@ orchardversion: 0.1.2010.0312
 features:
     Orchard.Themes:
         Description: Basic theming capability.
-        Category: Display
+        Category: Core
