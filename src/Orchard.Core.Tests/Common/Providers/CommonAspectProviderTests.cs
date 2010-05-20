@@ -6,6 +6,7 @@ using JetBrains.Annotations;
 using Moq;
 using NUnit.Framework;
 using Orchard.ContentManagement.Aspects;
+using Orchard.ContentManagement.MetaData.Records;
 using Orchard.Core.Common;
 using Orchard.Core.Common.Handlers;
 using Orchard.Core.Common.Models;
@@ -46,6 +47,8 @@ namespace Orchard.Core.Tests.Common.Providers {
             get {
                 return new[] {
                                  typeof(ContentTypeRecord), 
+                                 typeof(ContentTypePartRecord), 
+                                 typeof(ContentTypePartNameRecord),
                                  typeof(ContentItemRecord), 
                                  typeof(ContentItemVersionRecord), 
                                  typeof(CommonRecord),
