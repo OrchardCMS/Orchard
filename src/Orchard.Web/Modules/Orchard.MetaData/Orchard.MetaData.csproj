@@ -68,9 +68,7 @@
     <Compile Include="ViewModels\ContentTypesViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Content\Site.css" />
     <Content Include="Module.txt" />
-    <Content Include="Views\MetaData\Old_ContentTypeList.ascx" />
     <Content Include="Web.config" />
     <Content Include="Views\MetaData\ContentTypeList.ascx" />
   </ItemGroup>
@@ -87,11 +85,6 @@
   <ItemGroup>
     <Content Include="Styles\ContentTypes.css" />
     <Content Include="Views\Web.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Models\" />
-    <Folder Include="Scripts\" />
-    <Folder Include="Services\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v9.0\WebApplications\Microsoft.WebApplication.targets" />
