@@ -1,5 +1,4 @@
-﻿using System.IO;
-using System.Linq;
+﻿using System.Linq;
 using Microsoft.WindowsAzure;
 using NUnit.Framework;
 using Orchard.Azure.Environment.Configuration;
@@ -15,13 +14,19 @@ namespace Orchard.Azure.Tests.Environment.Configuration {
             CloudStorageAccount devAccount;
             CloudStorageAccount.TryParse("UseDevelopmentStorage=true", out devAccount);
 
-            Loader = new AzureShellSettingsManager(devAccount);
+            Loader = new AzureShellSettingsManager(devAccount, new Moq.Mock<IShellSettingsManagerEventHandler>().Object);
         }
 
         [SetUp]
         public void Setup() {
             // ensure default container is empty before running any test
             DeleteAllBlobs( ((AzureShellSettingsManager)Loader).Container);
+        }
+
+        [TearDown]
+        public void TearDown() {
+            // ensure default container is empty after running tests
+            DeleteAllBlobs(( (AzureShellSettingsManager)Loader ).Container);
         }
 
         [Test]

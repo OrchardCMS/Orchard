@@ -31,6 +31,8 @@ namespace Orchard.Mvc.ViewEngines {
                 AreaPartialViewLocationFormats = DisabledFormats,
             };
 
+            viewEngine.ViewLocationCache = new ThemeViewLocationCache(parameters.VirtualPath);
+
             // enable /Views/{partialName}
             // enable /Views/"DisplayTemplates/"+{templateName}
             // enable /Views/"EditorTemplates/+{templateName}

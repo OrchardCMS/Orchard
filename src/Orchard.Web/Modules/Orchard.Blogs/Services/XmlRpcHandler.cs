@@ -8,6 +8,7 @@ using Orchard.Blogs.Models;
 using Orchard.ContentManagement;
 using Orchard.Core.XmlRpc;
 using Orchard.Core.XmlRpc.Models;
+using Orchard.Environment.Extensions;
 using Orchard.Logging;
 using Orchard.Mvc.Extensions;
 using Orchard.Security;
@@ -15,6 +16,7 @@ using Orchard.Blogs.Extensions;
 
 namespace Orchard.Blogs.Services {
     [UsedImplicitly]
+    [OrchardFeature("Remote Blog Publishing")]
     public class XmlRpcHandler : IXmlRpcHandler {
         private readonly IBlogService _blogService;
         private readonly IBlogPostService _blogPostService;

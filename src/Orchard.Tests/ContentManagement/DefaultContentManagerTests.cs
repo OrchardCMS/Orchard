@@ -4,6 +4,7 @@ using System.Linq;
 using Autofac;
 using NHibernate;
 using NUnit.Framework;
+using Orchard.ContentManagement.MetaData.Records;
 using Orchard.Data;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Handlers;
@@ -25,6 +26,8 @@ namespace Orchard.Tests.ContentManagement {
             _sessionFactory = DataUtility.CreateSessionFactory(
                 databaseFileName,
                 typeof(ContentTypeRecord),
+                typeof(ContentTypePartRecord),
+                typeof(ContentTypePartNameRecord),
                 typeof(ContentItemRecord),
                 typeof(ContentItemVersionRecord),
                 typeof(GammaRecord),
@@ -42,6 +45,8 @@ namespace Orchard.Tests.ContentManagement {
             var builder = new ContainerBuilder();
             //builder.RegisterModule(new ImplicitCollectionSupportModule());
             builder.RegisterType<DefaultContentManager>().As<IContentManager>();
+            builder.RegisterType<DefaultContentManagerSession>().As<IContentManagerSession>();
+
             builder.RegisterType<AlphaHandler>().As<IContentHandler>();
             builder.RegisterType<BetaHandler>().As<IContentHandler>();
             builder.RegisterType<GammaHandler>().As<IContentHandler>();

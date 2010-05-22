@@ -7,10 +7,13 @@
 		<LibFolder>$(MSBuildProjectDirectory)\lib</LibFolder>
 		<SrcFolder>$(MSBuildProjectDirectory)\src</SrcFolder>
 		<BuildFolder>$(MSBuildProjectDirectory)\build</BuildFolder>
+		<SourceFolder>$(MSBuildProjectDirectory)\artifacts\Source</SourceFolder>
+		<WebPIFolder>$(MSBuildProjectDirectory)\artifacts\WebPI</WebPIFolder>
 		
 		<CompileFolder>$(BuildFolder)\Compile</CompileFolder>
 		<WebSitesFolder>$(CompileFolder)\_PublishedWebsites</WebSitesFolder>
 		<StageFolder>$(BuildFolder)\Stage</StageFolder>
+		<ProfilingFolder>$(BuildFolder)\Profiling</ProfilingFolder>
 		
 		<BuildPlatform Condition="$(ProgramW6432) != ''">x64</BuildPlatform>
 		<BuildPlatform Condition="$(BuildPlatform) == ''">x86</BuildPlatform>
@@ -30,6 +33,14 @@
   <Target Name="Package">
     <CallTarget Targets="Package-Stage"/>
     <CallTarget Targets="Package-Zip"/>
+  </Target>
+
+  <Target Name="Profiling">
+    <CallTarget Targets="Clean"/>
+    <CallTarget Targets="Compile"/>
+    <CallTarget Targets="Package-Stage"/>
+    <CallTarget Targets="Profiling-Stage"/>
+    <CallTarget Targets="Profiling-Setup"/>
   </Target>
 
 
@@ -107,6 +118,20 @@
       <Output TaskParameter="ExtraFiles" ItemName="StageProjectAlteration-ExtraFiles"/>
     </StageProjectAlteration>
 
+    <!-- extra processing of the staged config files -->
+
+    <XmlUpdate XmlFileName="$(StageFolder)\web.config"
+      XPath="/configuration/system.web/compilation/@debug"
+      Value="false" />
+
+    <XmlUpdate XmlFileName="$(StageFolder)\Config\Diagnostics.config"
+      XPath="/system.diagnostics/trace/@autoflush"
+      Value="false" />
+
+    <XmlUpdate XmlFileName="$(StageFolder)\Config\Diagnostics.config"
+      XPath="/system.diagnostics/sources/source/@switchValue"
+      Value="Error" />
+
     <!-- move over extra non-content files the csproj referenced -->
     <Copy SourceFiles="@(StageProjectAlteration-ExtraFiles->'$(SrcFolder)\Orchard.Web\%(Identity)')" 
         DestinationFolder="$(StageFolder)\%(RecursiveDir)"/>
@@ -137,8 +162,26 @@
         
     </ItemGroup>
 
-		<Zip Files="@(Zip-Stage)" WorkingDirectory="$(StageFolder)" ZipFileName="$(BuildFolder)\Orchard.Web.zip" />
-		<Zip Files="@(Zip-Source)" WorkingDirectory="$(MSBuildProjectDirectory)" ZipFileName="$(BuildFolder)\Orchard.Source.zip" />
+    <MakeDir Directories="$(WebPIFolder);$(SourceFolder)"/>
+
+		<Zip Files="@(Zip-Stage)" WorkingDirectory="$(StageFolder)" ZipFileName="$(WebPIFolder)\Orchard.Web.zip" />
+		<Zip Files="@(Zip-Source)" WorkingDirectory="$(MSBuildProjectDirectory)" ZipFileName="$(SourceFolder)\Orchard.Source.zip" />
+  </Target>
+
+<!-- Profiling -->
+
+  <Target Name="Profiling-Stage">
+    <ItemGroup>
+      <Profiling-Web Include="$(StageFolder)\**\*" />
+    </ItemGroup>
+    
+    <Copy SourceFiles="@(Profiling-Web)" DestinationFolder="$(ProfilingFolder)\%(RecursiveDir)"/>
+    
+  </Target>
+  
+  <Target Name="Profiling-Setup">
+    <Exec Command="$(ProfilingFolder)\bin\Orchard.exe @$(SrcFolder)\Orchard.Profile\profiling-setup-commands.txt" WorkingDirectory="$(ProfilingFolder)"/>
   </Target>
 
 </Project>
+

@@ -2,6 +2,7 @@ using System.Web.Mvc;
 using System.Web.Mvc.Html;
 using Orchard.ContentManagement;
 using Orchard.Localization;
+using Orchard.Utility.Extensions;
 
 namespace Orchard.Comments.Extensions {
     public static class HtmlHelperExtensions {
@@ -23,7 +24,7 @@ namespace Orchard.Comments.Extensions {
                                 Area = "Orchard.Comments",
                                 Controller = "Admin",
                                 id = item.Id,
-                                returnUrl = html.ViewContext.HttpContext.Request.Url
+                                returnUrl = html.ViewContext.HttpContext.Request.ToUrlString()
                             });
                 }
 

@@ -3,6 +3,7 @@ using System.Web.Security;
 using Autofac;
 using NHibernate;
 using NUnit.Framework;
+using Orchard.ContentManagement.MetaData.Records;
 using Orchard.Data;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Handlers;
@@ -41,7 +42,9 @@ namespace Orchard.Tests.Modules.Users.Services {
                 typeof(UserRecord),
                 typeof(ContentItemVersionRecord),
                 typeof(ContentItemRecord),
-                typeof(ContentTypeRecord));
+                typeof(ContentTypeRecord),
+                typeof(ContentTypePartRecord),
+                typeof(ContentTypePartNameRecord));
         }
 
         [TestFixtureTearDown]
@@ -55,6 +58,7 @@ namespace Orchard.Tests.Modules.Users.Services {
             //builder.RegisterModule(new ImplicitCollectionSupportModule());
             builder.RegisterType<MembershipService>().As<IMembershipService>();
             builder.RegisterType<DefaultContentManager>().As<IContentManager>();
+            builder.RegisterType<DefaultContentManagerSession>().As<IContentManagerSession>();
             builder.RegisterType<UserHandler>().As<IContentHandler>();
             builder.RegisterGeneric(typeof(Repository<>)).As(typeof(IRepository<>));
             _session = _sessionFactory.OpenSession();

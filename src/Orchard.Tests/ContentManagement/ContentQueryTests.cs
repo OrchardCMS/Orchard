@@ -2,6 +2,7 @@
 using Autofac;
 using NHibernate;
 using NUnit.Framework;
+using Orchard.ContentManagement.MetaData.Records;
 using Orchard.Data;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Handlers;
@@ -27,7 +28,9 @@ namespace Orchard.Tests.ContentManagement {
                 typeof(EpsilonRecord),
                 typeof(ContentItemVersionRecord),
                 typeof(ContentItemRecord),
-                typeof(ContentTypeRecord));
+                typeof(ContentTypeRecord),
+                typeof(ContentTypePartRecord),
+                typeof(ContentTypePartNameRecord));
         }
 
         [TestFixtureTearDown]
@@ -43,6 +46,8 @@ namespace Orchard.Tests.ContentManagement {
             // builder.RegisterModule(new ImplicitCollectionSupportModule());
             builder.RegisterModule(new ContentModule());
             builder.RegisterType<DefaultContentManager>().As<IContentManager>().SingleInstance();
+            builder.RegisterType<DefaultContentManagerSession>().As<IContentManagerSession>();
+
             builder.RegisterType<AlphaHandler>().As<IContentHandler>();
             builder.RegisterType<BetaHandler>().As<IContentHandler>();
             builder.RegisterType<GammaHandler>().As<IContentHandler>();
@@ -285,7 +290,7 @@ namespace Orchard.Tests.ContentManagement {
                 init.As<Epsilon>().Record.Quad = "v3";
             });
             _session.Flush();
-            _session.Clear();            
+            _session.Clear();
         }
 
         [Test]

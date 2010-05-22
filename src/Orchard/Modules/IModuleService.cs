@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Web;
-using Orchard.Environment.Extensions.Models;
 
 namespace Orchard.Modules {
     public interface IModuleService : IDependency {
@@ -8,9 +7,10 @@ namespace Orchard.Modules {
         IEnumerable<IModule> GetInstalledModules();
         void InstallModule(HttpPostedFileBase file);
         void UninstallModule(string moduleName);
-        IModule GetModuleByFeatureName(string featureName);
         IEnumerable<IModuleFeature> GetAvailableFeatures();
         void EnableFeatures(IEnumerable<string> featureNames);
+        void EnableFeatures(IEnumerable<string> featureNames, bool force);
         void DisableFeatures(IEnumerable<string> featureNames);
+        void DisableFeatures(IEnumerable<string> featureNames, bool force);
     }
 }

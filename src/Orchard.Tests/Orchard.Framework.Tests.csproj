@@ -21,6 +21,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -55,8 +56,6 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\fluentnhibernate\FluentNHibernate.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework, Version=9.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-    <Reference Include="Microsoft.VisualStudio.TeamSystem.Data.UnitTesting, Version=9.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
     <Reference Include="Moq, Version=4.0.812.4, Culture=neutral, PublicKeyToken=69f491c39445e920, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\moq\Moq.dll</HintPath>
@@ -118,12 +117,15 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Caching\CacheScopeTests.cs" />
+    <Compile Include="Caching\CacheTests.cs" />
     <Compile Include="Commands\CommandHandlerDescriptorBuilderTests.cs" />
     <Compile Include="Commands\CommandHandlerTests.cs" />
     <Compile Include="Commands\CommandManagerTests.cs" />
     <Compile Include="ContentManagement\ContentQueryTests.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="ContentManagement\ContentTypeMetaDataTests.cs" />
     <Compile Include="ContentManagement\DefaultContentManagerTests.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -170,6 +172,8 @@
     <Compile Include="Environment\ShellBuilders\DefaultShellContextFactoryTests.cs" />
     <Compile Include="Mvc\Routes\ShellRouteTests.cs" />
     <Compile Include="Mvc\Routes\UrlPrefixTests.cs" />
+    <Compile Include="Stubs\StubCacheManager.cs" />
+    <Compile Include="Stubs\StubWebSiteFolder.cs" />
     <Compile Include="Utility\ContainerExtensions.cs" />
     <Compile Include="Environment\TestDependencies\TestDependency.cs" />
     <Compile Include="Environment\Topology\DefaultShellDescriptorCacheTests.cs" />

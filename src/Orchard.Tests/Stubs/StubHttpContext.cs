@@ -12,10 +12,12 @@ namespace Orchard.Tests.Stubs {
 
         public StubHttpContext() {
             _appRelativeCurrentExecutionFilePath = "~/yadda";
+            _hostHeader = "localhost";
         }
 
         public StubHttpContext(string appRelativeCurrentExecutionFilePath) {
             _appRelativeCurrentExecutionFilePath = appRelativeCurrentExecutionFilePath;
+            _hostHeader = "localhost";
         }
 
         public StubHttpContext(string appRelativeCurrentExecutionFilePath, string hostHeader) {
@@ -38,6 +40,7 @@ namespace Orchard.Tests.Stubs {
         class StubHttpRequest : HttpRequestBase {
             private readonly StubHttpContext _httpContext;
             private NameValueCollection _serverVariables;
+            private NameValueCollection _headers;
 
             public StubHttpRequest(StubHttpContext httpContext) {
                 _httpContext = httpContext;
@@ -54,7 +57,12 @@ namespace Orchard.Tests.Stubs {
             public override string PathInfo {
                 get { return ""; }
             }
-
+            public override NameValueCollection Headers {
+                get {
+                    return _headers = _headers
+                        ?? new NameValueCollection { { "Host", _httpContext._hostHeader } };
+                }
+            }
             public override NameValueCollection ServerVariables {
                 get {
                     return _serverVariables = _serverVariables

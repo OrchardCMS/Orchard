@@ -12,17 +12,17 @@ using Orchard.Utility.Extensions;
 namespace Orchard.Core.Scheduling.Services {
     [UsedImplicitly]
     public class ScheduledTaskManager : IScheduledTaskManager {
+        private readonly IContentManager _contentManager;
         private readonly IRepository<ScheduledTaskRecord> _repository;
 
         public ScheduledTaskManager(
-            IOrchardServices services,
+            IContentManager contentManager,
             IRepository<ScheduledTaskRecord> repository) {
             _repository = repository;
-            Services = services;
+            _contentManager = contentManager;
             Logger = NullLogger.Instance;
         }
 
-        public IOrchardServices Services { get; set; }
         public ILogger Logger { get; set; }
 
         public void CreateTask(string action, DateTime scheduledUtc, ContentItem contentItem) {
@@ -39,7 +39,7 @@ namespace Orchard.Core.Scheduling.Services {
         public IEnumerable<IScheduledTask> GetTasks(ContentItem contentItem) {
             return _repository
                 .Fetch(x => x.ContentItemVersionRecord.ContentItemRecord == contentItem.Record)
-                .Select(x => new Task(Services.ContentManager, x))
+                .Select(x => new Task(_contentManager, x))
                 .Cast<IScheduledTask>()
                 .ToReadOnlyCollection();
         }
@@ -50,7 +50,7 @@ namespace Orchard.Core.Scheduling.Services {
                 .Fetch(x => x.ContentItemVersionRecord.ContentItemRecord == contentItem.Record);
 
             foreach (var task in tasks) {
-                if (predicate(new Task(Services.ContentManager, task))) {
+                if (predicate(new Task(_contentManager, task))) {
                     _repository.Delete(task);
                 }
             }

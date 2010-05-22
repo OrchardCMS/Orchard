@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+<!-- Initialization -->
+
+	<PropertyGroup>
+		<LibFolder>$(MSBuildProjectDirectory)\lib</LibFolder>
+		<SrcFolder>$(MSBuildProjectDirectory)\src</SrcFolder>
+		<BuildFolder>$(MSBuildProjectDirectory)\build</BuildFolder>
+		<ArtifactsFolder>$(MSBuildProjectDirectory)\artifacts\Azure</ArtifactsFolder>
+		
+		<CompileFolder>$(BuildFolder)\Compile</CompileFolder>
+		<ServiceFolder>$(CompileFolder)\Orchard.Azure.CloudService.csx</ServiceFolder>
+		<CloudRootFolder>$(ServiceFolder)\roles\Orchard.Azure.Web\approot</CloudRootFolder>
+		<WebSitesFolder>$(CompileFolder)\_PublishedWebsites</WebSitesFolder>
+		<StageFolder>$(BuildFolder)\Stage</StageFolder>
+		
+		<BuildPlatform Condition="$(ProgramW6432) != ''">x64</BuildPlatform>
+		<BuildPlatform Condition="$(BuildPlatform) == ''">x86</BuildPlatform>
+
+	</PropertyGroup>
+  
+  <Import Project="$(LibFolder)\msbuild\MSBuild.Community.Tasks.Targets"/>
+  <Import Project="$(MSBuildExtensionsPath)\Microsoft\Cloud Service\v1.0\Microsoft.CloudService.targets" />
+  
+<!-- Coordinating Targets -->
+
+  <Target Name ="Build">
+    <CallTarget Targets="Clean"/>
+    <CallTarget Targets="Compile"/>
+    <CallTarget Targets="Test"/>
+    <CallTarget Targets="Package"/>
+  </Target>
+
+  <Target Name="Package">
+    <CallTarget Targets="Package-Stage"/>
+    <CallTarget Targets="Package-Zip"/>
+  </Target>
+
+
+<!-- Building -->
+
+	<Target Name="Clean">
+		<MSBuild Projects="$(SrcFolder)\Orchard.sln" Targets="Clean" />
+		<MSBuild Projects="$(SrcFolder)\Orchard.Azure\Orchard.Azure.CloudService.sln" Targets="Clean" />
+		<RemoveDir Directories="$(BuildFolder)" />
+	</Target>
+
+  <Target Name ="Compile">
+    <MSBuild
+      Projects="$(SrcFolder)\Orchard.Azure\Orchard.Azure.CloudService.sln"
+      Targets="Build"
+      Properties="Configuration=Release;OutputPath=$(CompileFolder)" />      
+
+    <MSBuild
+      Projects="$(SrcFolder)\Orchard.Azure.sln"
+      Targets="Build"
+      Properties="Configuration=Release;OutputPath=$(CompileFolder)" />      
+    
+    <MSBuild
+      Projects="$(SrcFolder)\Orchard.sln"
+      Targets="Build"
+      Properties="Configuration=Release;OutputPath=$(CompileFolder)" />      
+
+  </Target>
+
+
+<!-- Testing - Azure only -->
+
+  <Target Name ="Test">
+    <Message Text="Testing with x64 version of Sqlite"/>
+    
+		<CreateItem Include="$(CompileFolder)\*Azure.Tests.*dll">
+			<Output TaskParameter="Include" ItemName="TestAssemblies" />
+		</CreateItem>
+
+    <!-- use x64 sqlite for tests depending on build platform -->
+    <Copy 
+      SourceFiles="$(LibFolder)\sqlite\x64\System.Data.SQLite.dll" 
+      DestinationFiles="$(CompileFolder)\System.Data.SQLite.dll" />
+		
+		<NUnit Assemblies="@(TestAssemblies)" ToolPath="$(LibFolder)\nunit" WorkingDirectory="$(CompileFolder)" />
+
+  </Target>
+
+  <Target Name ="Spec">
+		<CreateItem Include="$(CompileFolder)\*.Specs.dll">
+			<Output TaskParameter="Include" ItemName="SpecAssemblies" />
+		</CreateItem>
+		<NUnit Assemblies="@(SpecAssemblies)" ToolPath="$(LibFolder)\nunit" />
+  </Target>
+
+<!-- Packaging -->
+  
+  <Target Name="Package-Stage">
+    
+    <ItemGroup>
+      <Stage-Bin-Exclude Include="$(WebSitesFolder)\**\bin\**\*" />
+      <Stage-Orchard-Web-Exclude Include="$(WebSitesFolder)\**\Orchard.Web\**\*" />
+      
+      <Stage-Themes Include="$(WebSitesFolder)\Orchard.Web\Themes\**\*" />
+      <Stage-Core Include="$(WebSitesFolder)\Orchard.Core\**\*" Exclude="@(Stage-Bin-Exclude)" />
+      <Stage-Modules Include="$(WebSitesFolder)\**\*" Exclude="@(Stage-Core);@(Stage-Bin-Exclude);@(Stage-Orchard-Web-Exclude)" />
+      <Stage-Modules-Bin Include="$(WebSitesFolder)\Orchard.Web\**\bin\*"/>
+    </ItemGroup>
+
+    <Copy SourceFiles="@(Stage-Themes)" DestinationFolder="$(CloudRootFolder)\Themes\%(RecursiveDir)" />
+    <Copy SourceFiles="@(Stage-Core)" DestinationFolder="$(CloudRootFolder)\Core\%(RecursiveDir)" />
+    <Copy SourceFiles="@(Stage-Modules)" DestinationFolder="$(CloudRootFolder)\Modules\%(RecursiveDir)" />
+    <Copy SourceFiles="@(Stage-Modules-Bin)" DestinationFolder="$(CloudRootFolder)\bin\" />
+
+    <!-- extra processing of the staged config files -->
+    <XmlUpdate XmlFileName="$(CloudRootFolder)\web.config"
+      XPath="/configuration/system.web/compilation/@debug"
+      Value="false" />
+
+    <XmlUpdate XmlFileName="$(CloudRootFolder)\Config\Diagnostics.config"
+      XPath="/system.diagnostics/trace/@autoflush"
+      Value="false" />
+
+    <XmlUpdate XmlFileName="$(CloudRootFolder)\Config\Diagnostics.config"
+      XPath="/system.diagnostics/sources/source/@switchValue"
+      Value="Error" />
+
+    <!-- move over extra non-content files the csproj referenced -->
+    <Copy SourceFiles="@(StageProjectAlteration-ExtraFiles->'$(SrcFolder)\Orchard.Web\%(Identity)')" 
+        DestinationFolder="$(StageFolder)\%(RecursiveDir)"/>
+
+    <!-- use x64 sqlite for tests depending on build platform -->
+    <Copy 
+      SourceFiles="$(LibFolder)\sqlite\x64\System.Data.SQLite.dll" 
+      DestinationFiles="$(CloudRootFolder)\bin\System.Data.SQLite.dll" />
+		
+    <Copy 
+        SourceFiles="$(SrcFolder)\Orchard.Azure\Orchard.Azure.CloudService\ServiceConfiguration.cscfg" 
+        DestinationFolder="$(StageFolder)" 
+      />
+
+    <Exec 
+      Command="&quot;$(ServiceHostingSDKBinDir)cspack&quot; &quot;$(ServiceFolder)\ServiceDefinition.csdef&quot; /role:Orchard.Azure.Web;&quot;$(CloudRootFolder)&quot;;Orchard.Azure.Web.dll /out:&quot;$(StageFolder)\Orchard.cspkg&quot;" 
+      WorkingDirectory="$(CloudRootFolder)" 
+    />
+
+  </Target>
+
+  <Target Name="Package-Zip">
+    <ItemGroup>
+      <Zip-Stage Include="$(StageFolder)\ServiceConfiguration.cscfg;$(StageFolder)\Orchard.cspkg" />
+    </ItemGroup>
+    
+    <MakeDir Directories="$(ArtifactsFolder)" />
+		<Zip Files="@(Zip-Stage)" WorkingDirectory="$(StageFolder)" ZipFileName="$(ArtifactsFolder)\AzurePackage.zip" />
+  </Target>
+</Project>

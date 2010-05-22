@@ -64,14 +64,12 @@
     <Compile Include="AdminMenu.cs" />
     <Compile Include="Commands\FeatureCommand.cs" />
     <Compile Include="Controllers\AdminController.cs" />
+    <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="Models\ModuleFeature.cs" />
-    <Compile Include="Routing\FeatureNameConstraint.cs" />
     <Compile Include="ViewModels\FeaturesViewModel.cs" />
     <Compile Include="Models\Module.cs" />
     <Compile Include="Permissions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Routes.cs" />
-    <Compile Include="Routing\ModuleNameConstraint.cs" />
     <Compile Include="Services\ModuleService.cs" />
     <Compile Include="ViewModels\ModuleEditViewModel.cs" />
     <Compile Include="ViewModels\ModulesIndexViewModel.cs" />
@@ -90,8 +88,8 @@
   <ItemGroup>
     <Content Include="Content\Admin\images\disabled.gif" />
     <Content Include="Content\Admin\images\enabled.gif" />
+    <Content Include="styles\admin.css" />
     <Content Include="Views\Admin\Features.ascx" />
-    <Content Include="Views\Admin\Edit.ascx" />
     <Content Include="Views\Web.config" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

@@ -18,6 +18,7 @@ using Orchard.Environment.Extensions.Models;
 using Orchard.Environment.ShellBuilders;
 using Orchard.Environment.Topology;
 using Orchard.Environment.Topology.Models;
+using Orchard.FileSystems.AppData;
 using Orchard.Mvc;
 using Orchard.Mvc.ModelBinders;
 using Orchard.Mvc.Routes;
@@ -90,23 +91,32 @@ namespace Orchard.Tests.Environment {
                 yield return ext;
             }
 
+            public IEnumerable<ExtensionEntry> ActiveExtensions_Obsolete() {
+                var feature = FrameworkFeature(new FeatureDescriptor { Name = "Orchard.Framework" });
+                yield return new ExtensionEntry {
+                    Assembly = feature.ExportedTypes.First().Assembly,
+                    Descriptor = AvailableExtensions().First(),
+                    ExportedTypes = feature.ExportedTypes
+                };
+            }
+
             public IEnumerable<Feature> LoadFeatures(IEnumerable<FeatureDescriptor> featureDescriptors) {
                 foreach (var descriptor in featureDescriptors) {
                     if (descriptor.Name == "Orchard.Framework") {
-                        yield return new Feature {
-                            Descriptor = descriptor,
-                            ExportedTypes = new[] {
-                            typeof (TestDependency),
-                            typeof (TestSingletonDependency),
-                            typeof (TestTransientDependency),
-                        }
-                        };
+                        yield return FrameworkFeature(descriptor);
                     }
                 }
             }
 
-            public IEnumerable<ExtensionEntry> ActiveExtensions_Obsolete() {
-                throw new NotImplementedException();
+            private Feature FrameworkFeature(FeatureDescriptor descriptor) {
+                return new Feature {
+                    Descriptor = descriptor,
+                    ExportedTypes = new[] {
+                        typeof (TestDependency),
+                        typeof (TestSingletonDependency),
+                        typeof (TestTransientDependency),
+                    }
+                };
             }
 
             public void InstallExtension(string extensionType, HttpPostedFileBase extensionBundle) {
@@ -141,20 +151,10 @@ namespace Orchard.Tests.Environment {
 
 
         [Test]
-        public void DifferentShellInstanceShouldBeReturnedAfterEachCreate() {
-            var host = _lifetime.Resolve<IOrchardHost>();
-            var runtime1 = host.CreateShell_Obsolete();
-            host.Reinitialize_Obsolete();
-            var runtime2 = host.CreateShell_Obsolete();
-            Assert.That(runtime1, Is.Not.SameAs(runtime2));
-        }
-
-
-        [Test]
         public void NormalDependenciesShouldBeUniquePerRequestContainer() {
             var host = _lifetime.Resolve<IOrchardHost>();
             var container1 = host.CreateShellContainer_Obsolete();
-            host.Reinitialize_Obsolete();
+            ((IShellDescriptorManagerEventHandler)host).Changed(null);
             var container2 = host.CreateShellContainer_Obsolete();
             var requestContainer1a = container1.BeginLifetimeScope();
             var requestContainer1b = container1.BeginLifetimeScope();

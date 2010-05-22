@@ -1,0 +1,102 @@
+settings
+{
+    //--------------------------------------------------------------------------
+    // General controller settings
+    //
+    //  clientfile     - specifies the client file, relative to working dir
+    //  server         - host name of the webserver
+    //  virtualclients - number of 'threads' per physical client
+    //  clients        - number of physical webcat client machines
+    //
+    //--------------------------------------------------------------------------
+    // Example:
+    //
+    //  clientfile     = "ubr\lcw2.light.ubr";
+    //  server         = "webserver";
+    //  clients        = 10;
+    //  virtualclients = 100;
+    //   
+    //--------------------------------------------------------------------------
+
+    //--------------------------------------------------------------------------
+    // Performance counters (pass '-x' option to wcctl.exe to enable)
+    //
+    //  interval        - polling interval in seconds (default=10)
+    //  host            - host name of machine to monitor (default=webserver)
+    //  counter         - path of counter to monitor
+    //
+    //--------------------------------------------------------------------------
+    // Optional:
+    //
+    //   Additional machines can be monitored by adding more counters blocks.
+    //
+    // Example:
+    //
+    //   counters {
+    //       host = "sqlserver";   // name of remote machine
+    //       interval = 5;
+    //       counter = "...";
+    //   }
+    //
+    //--------------------------------------------------------------------------
+
+    counters
+    {
+        interval = 10;
+
+        counter = "Processor(_Total)\\% Processor Time";
+        counter = "Processor(_Total)\\% Privileged Time";
+        counter = "Processor(_Total)\\% User Time";
+        counter = "Processor(_Total)\\Interrupts/sec";
+
+        counter = "Memory\\Available KBytes";
+
+        counter = "Process(w3wp)\\Working Set";
+
+        counter = "System\\Context Switches/sec";
+        counter = "System\\System Calls/sec";
+
+        counter = "Web Service(_Total)\\Bytes Received/sec" ; 
+        counter = "Web Service(_Total)\\Bytes Sent/sec" ; 
+        counter = "Web Service(_Total)\\Connection Attempts/sec" ; 
+        counter = "Web Service(_Total)\\Get Requests/sec" ; 
+    }
+
+    //--------------------------------------------------------------------------
+    // Registry Key Monitors (pass '-x' option to wcctl.exe to enable)
+    //
+    //  path - registry path, relative to HKLM
+    //  name - name of registry key
+    //  type - type of value (REG_SZ | REG_DWORD)
+    //
+    //--------------------------------------------------------------------------
+    // Optional:
+    //
+    //   Additional registry keys can be monitored on the web server by
+    //   adding more registry blocks to this file.  Note that simple strings and
+    //   dwords are all that webcat currently supports.
+    //
+    // Example:
+    //
+    //   registry {
+    //     path = "System\\CurrentControlSet\\Services\\Tcpip\\Parameters";
+    //     name = "DhcpDomain";
+    //     type = REG_SZ;
+    //   }
+    //
+    //--------------------------------------------------------------------------
+
+    registry
+    {
+        path = "System\\CurrentControlSet\\Control\\FileSystem";
+        name = "NtfsDisableLastAccessUpdate";
+        type = REG_DWORD;
+    }
+
+    registry
+    {
+        path = "System\\CurrentControlSet\\Services\\Tcpip\\Parameters";
+        name = "SynAttackProtect";
+        type = REG_DWORD;
+    }
+}

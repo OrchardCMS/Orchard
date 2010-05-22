@@ -27,7 +27,8 @@ namespace Orchard.Core.Tests.Feeds.Controllers {
             var controller = new FeedController(
                 Enumerable.Empty<IFeedQueryProvider>(),
                 Enumerable.Empty<IFeedBuilderProvider>(),
-                Enumerable.Empty<IFeedItemBuilder>()) {
+                new StubItemBuilder()
+                ) {
                     ValueProvider = Values.From(new { })
                 };
 
@@ -54,7 +55,8 @@ namespace Orchard.Core.Tests.Feeds.Controllers {
             var controller = new FeedController(
                 new[] { queryProvider.Object },
                 new[] { formatProvider.Object },
-                Enumerable.Empty<IFeedItemBuilder>()) {
+                new StubItemBuilder()
+                ) {
                     ValueProvider = Values.From(new { })
                 };
 
@@ -86,15 +88,20 @@ namespace Orchard.Core.Tests.Feeds.Controllers {
             }
         }
 
+        class StubItemBuilder : IFeedItemBuilder {
+            public void Populate(FeedContext context) {
+            }
+        }
+
         [Test]
         public void RssFeedShouldBeStructuredAppropriately() {
             var query = new StubQuery(Enumerable.Empty<ContentItem>());
 
             var builder = new ContainerBuilder();
-            //builder.RegisterModule(new ImplicitCollectionSupportModule());
             builder.RegisterType<FeedController>();
             builder.RegisterType<RssFeedBuilder>().As<IFeedBuilderProvider>();
             builder.RegisterInstance(query).As<IFeedQueryProvider>();
+            builder.RegisterInstance(new StubItemBuilder()).As<IFeedItemBuilder>();
             var container = builder.Build();
 
             var controller = container.Resolve<FeedController>();
@@ -117,9 +124,9 @@ namespace Orchard.Core.Tests.Feeds.Controllers {
             });
 
             var builder = new ContainerBuilder();
-            //builder.RegisterModule(new ImplicitCollectionSupportModule());
             builder.RegisterType<FeedController>();
             builder.RegisterType<RssFeedBuilder>().As<IFeedBuilderProvider>();
+            builder.RegisterInstance(new StubItemBuilder()).As<IFeedItemBuilder>();
             builder.RegisterInstance(query).As<IFeedQueryProvider>();
             var container = builder.Build();
 

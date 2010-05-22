@@ -15,14 +15,17 @@ namespace Orchard.Tests.Modules.Settings.Topology {
         public override void Register(ContainerBuilder builder) {
             builder.RegisterType<ShellDescriptorManager>().As<IShellDescriptorManager>();
             builder.RegisterType<StubEventBus>().As<IEventBus>().SingleInstance();
-
+            builder.RegisterSource(new EventsRegistrationSource());
         }
 
         public class StubEventBus : IEventBus {
             public string LastMessageName { get; set; }
-            public IDictionary<string, string> LastEventData { get; set; }
+            public IDictionary<string, object> LastEventData { get; set; }
 
-            public void Notify(string messageName, IDictionary<string, string> eventData) {
+            public void Notify_Obsolete(string messageName, IDictionary<string, string> eventData) {
+            }
+
+            public void Notify(string messageName, Dictionary<string, object> eventData) {                
                 LastMessageName = messageName;
                 LastEventData = eventData;
             }
@@ -137,7 +140,7 @@ namespace Orchard.Tests.Modules.Settings.Topology {
                 Enumerable.Empty<ShellFeature>(),
                 Enumerable.Empty<ShellParameter>());
 
-            Assert.That(eventBus.LastMessageName, Is.EqualTo("ShellDescriptor_Changed"));
+            Assert.That(eventBus.LastMessageName, Is.EqualTo("IShellDescriptorManagerEventHandler.Changed"));
         }
     }
 }

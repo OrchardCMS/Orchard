@@ -14,5 +14,7 @@ namespace Orchard.Media.ViewModels {
                 return MediaPath.Replace("\\", "/");
             }
         }
+
+        public string PublicUrl { get; set; }
     }
 }

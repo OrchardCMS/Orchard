@@ -1,8 +1,9 @@
 using System.Collections.Generic;
 using System.Web.Mvc;
+using Orchard.Events;
 
 namespace Orchard.UI.Zones {
-    public interface IZoneManagerEvents : IEvents {
+    public interface IZoneManagerEvents : IEventHandler {
         void ZoneRendering(ZoneRenderContext context);
         void ZoneItemRendering(ZoneRenderContext context, ZoneItem item);
         void ZoneItemRendered(ZoneRenderContext context, ZoneItem item);

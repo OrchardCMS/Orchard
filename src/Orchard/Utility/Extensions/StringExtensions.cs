@@ -14,16 +14,20 @@ namespace Orchard.Utility.Extensions {
 
             return cleanTailRegex.Replace(text.Substring(0, characterCount + 1), "") + ellipsis;
         }
+
+        public static string HtmlClassify(this string text) {
+            return Regex.Replace(text, @"[^a-zA-Z]+", m => m.Index == 0 ? "" : "-").ToLowerInvariant();
+        }
+
         public static bool IsNullOrEmptyTrimmed(this string text) {
-            if (text == null) return true;
-            return string.IsNullOrEmpty(text.Trim());
+            return text == null
+                || string.IsNullOrEmpty(text.Trim());
         }
 
         public static string OrDefault(this string text, string defaultValue) {
-            if (string.IsNullOrEmpty(text))
-                return defaultValue;
-            else
-                return text;
+            return string.IsNullOrEmpty(text)
+                ? defaultValue
+                : text;
         }
     }
 }

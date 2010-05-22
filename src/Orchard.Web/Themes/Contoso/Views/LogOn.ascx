@@ -10,7 +10,7 @@ using (Html.BeginFormAntiForgeryPost(Url.Action("LogOn", new {ReturnUrl = Reques
     <legend><%=_Encoded("Account Information")%></legend>
     <div class="group">
         <label for="username"><%=_Encoded("Username:")%></label>
-        <%= Html.TextBox("userNameOrEmail")%>
+        <%= Html.TextBox("userNameOrEmail", "", new { autofocus = "autofocus" })%>
         <%= Html.ValidationMessage("userNameOrEmail")%>
     </div>
     <div class="group">
@@ -23,5 +23,4 @@ using (Html.BeginFormAntiForgeryPost(Url.Action("LogOn", new {ReturnUrl = Reques
     </div>
     <input type="submit" value="<%=_Encoded("Log On") %>" />
 </fieldset><%
-} %><%
-using (this.Capture("end-of-page-scripts")) { %><script type="text/javascript">$("#username").closest("form").helpfullyFocus();</script><% } %>
+} %>

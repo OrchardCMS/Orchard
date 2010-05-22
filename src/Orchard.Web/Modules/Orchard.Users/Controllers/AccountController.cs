@@ -57,7 +57,7 @@ namespace Orchard.Users.Controllers {
         [HttpPost]
         [SuppressMessage("Microsoft.Design", "CA1054:UriParametersShouldNotBeStrings",
             Justification = "Needs to take same parameter type as Controller.Redirect()")]
-        public ActionResult LogOn(string userNameOrEmail, string password, bool rememberMe) {
+        public ActionResult LogOn(string userNameOrEmail, string password, bool rememberMe, string returnUrl) {
             var user = ValidateLogOn(userNameOrEmail, password);
             if (!ModelState.IsValid) {
                 return View("LogOn", new LogOnViewModel {Title = "Log On"});
@@ -65,13 +65,19 @@ namespace Orchard.Users.Controllers {
 
             _authenticationService.SignIn(user, rememberMe);
 
-            return this.ReturnUrlRedirect();
+            if (string.IsNullOrEmpty(returnUrl))
+                return new RedirectResult("~/");
+
+            return new RedirectResult(returnUrl);
         }
 
-        public ActionResult LogOff() {
+        public ActionResult LogOff(string returnUrl) {
             _authenticationService.SignOut();
 
-            return this.ReturnUrlRedirect();
+            if (string.IsNullOrEmpty(returnUrl))
+                return new RedirectResult("~/");
+
+            return new RedirectResult(returnUrl);
         }
 
         int MinPasswordLength {

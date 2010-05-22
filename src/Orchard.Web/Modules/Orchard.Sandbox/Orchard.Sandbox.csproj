@@ -75,7 +75,7 @@
     <Compile Include="ViewModels\PageIndexViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="_Module.txt" />
+    <Content Include="Module.txt" />
     <Content Include="Views\Page\Edit.aspx" />
     <Content Include="Views\Page\Create.aspx" />
     <Content Include="Views\Page\Show.aspx" />

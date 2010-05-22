@@ -18,7 +18,7 @@
         <%= Html.ValidationSummary() %>
         <div class="primary">
 		    <div>
-		    <img src="<%=ResolveUrl("~/Media/" + Html.Encode(Model.RelativePath + "/" + Model.Name))%>" class="previewImage" alt="<%=Html.Encode(Model.Caption) %>" />
+		    <img src="<%=Model.PublicUrl%>" class="previewImage" alt="<%=Html.Encode(Model.Caption) %>" />
 		    </div>
 		    <fieldset>
 		        <%-- todo: make these real (including markup) --%>

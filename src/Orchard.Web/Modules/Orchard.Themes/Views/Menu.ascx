@@ -1,4 +1,5 @@
 ﻿<%@ Control Language="C#" Inherits="Orchard.Mvc.ViewUserControl<BaseViewModel>" %>
+<%@ Import Namespace="Orchard.Utility.Extensions"%>
 <%@ Import Namespace="Orchard.Mvc.Html"%>
 <%@ Import Namespace="Orchard.Mvc.ViewModels"%><%
     var menu = Model.Menu.FirstOrDefault(); 
@@ -14,7 +15,7 @@
             if (counter == count)
                 sbClass.Append("last ");
 
-            if (string.Equals(menuItem.Href, Request.Url.AbsolutePath, StringComparison.InvariantCultureIgnoreCase))
+            if (string.Equals(menuItem.Href, Request.ToUrlString(), StringComparison.InvariantCultureIgnoreCase))
                 sbClass.Append("current ");
 
             var classValue = sbClass.ToString().TrimEnd(); %>

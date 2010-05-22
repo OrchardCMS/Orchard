@@ -10,7 +10,7 @@
     <%=Html.TextBoxFor(m => m.Title, new { @class = "large text" }) %>
 </fieldset>
 <fieldset class="permalink">
-    <label class="sub" for="Slug"><%=_Encoded("Permalink")%><br /><span><%=Html.Encode(Request.Url.ToRootString()) %>/<%=Html.Encode(Model.RoutableAspect.ContentItemBasePath) %></span></label>
+    <label class="sub" for="Slug"><%=_Encoded("Permalink")%><br /><span><%=Html.Encode(Request.ToRootUrlString())%>/<%=Html.Encode(Model.RoutableAspect.ContentItemBasePath) %></span></label>
     <span><%=Html.TextBoxFor(m => m.Slug, new { @class = "text" })%></span>
 </fieldset>
 <% using (this.Capture("end-of-page-scripts")) { %>

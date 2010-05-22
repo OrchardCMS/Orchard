@@ -38,7 +38,7 @@ namespace Orchard.Themes.DesignerNotes {
                                                                                   Controller = "Admin",
                                                                                   context.ZoneName,
                                                                                   theme.ThemeName,
-                                                                                  ReturnUrl = requestContext.HttpContext.Request.Url,
+                                                                                  ReturnUrl = requestContext.HttpContext.Request.RawUrl,
                                                                               }));
                 writer.Write("</div>");
             }

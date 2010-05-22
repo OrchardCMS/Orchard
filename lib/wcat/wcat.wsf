@@ -1,0 +1,1134 @@
+<job id="wcat">
+
+    <script language="jscript">
+
+        var TARGET_SHARE            = "\\admin$\\wcat\\"
+        var CLIENT_COMMAND_LINE     = "\\\\localhost" + TARGET_SHARE + "wcclient.exe";
+        var CONTROLLER_COMMAND_LINE = "\"" + GetScriptPath() + "wcctl.exe\"";
+        
+        var g_ctrl_parameters   = "";
+        var g_clients           = null;
+        var g_bind              = null;
+        var g_hostname          = WScript.CreateObject("WScript.Network").ComputerName;
+        
+        var g_terminate         = false;
+        var g_run               = false;
+        var g_update            = false;
+        var g_setclients        = false;
+        var g_showclients       = false;
+        
+        var g_reboot_localhost  = false;
+        var g_reboots_occurred  = false;
+        
+        var g_outlog            = null;
+        var g_errlog            = null;
+
+        WScript.Echo( "wcat.wsf - WCAT Utility Script" );
+        WScript.Echo( "Copyright (c) 1995-2007 Microsoft Corporation." );
+        WScript.Echo( "" );
+        WScript.Quit( main( WScript.Arguments ) );
+
+        function main(arguments)
+        {
+            var status = 0;
+
+            // parse all the parameters
+            status = ParseParameters( arguments );
+            if( status != 0 )
+            {
+                return status;
+            }
+
+            // set clients if requested
+            if( g_setclients )
+            {
+                status = SetClients( g_clients );
+                if( status != 0 )
+                {
+                    return status;
+                }
+            }
+
+            // terminate wcclient on all clients
+            if( g_terminate )
+            {
+                status = TerminateClients( g_clients );
+                if( status != 0 )
+                {
+                    return status;
+                }           
+            }
+
+            // copy wcclient and *dll from the current directory to \\client\admin$\wcat
+            if( g_update )
+            {
+                status = CopyBinariesToClients( g_clients );
+                if( status != 0 )
+                {
+                    return status;
+                }
+
+                status = UpdateRegistryOnClients( g_clients );
+                if( status != 0 )
+                {
+                    return status;
+                }
+            }
+
+            // launch wcclient on all clients then launch wcctl locally.
+            if( g_run )
+            {
+                // do not run if reboots occurred as part of registry updates
+                if( g_reboots_occurred )
+                {
+                    WScript.Echo( " warning: run aborted because some clients are rebooting..." );
+                }
+                else
+                {
+                    // launch wcclient on all clients
+                    status = LaunchClients( g_clients );
+                    if( status != 0 )
+                    {
+                        TerminateClients( g_clients );
+                        return status;
+                    }
+
+                    // launch wcctl locally
+                    status = LaunchLocalProcess( CONTROLLER_COMMAND_LINE + g_ctrl_parameters, g_outlog, g_errlog );
+                    if( status != 0 )
+                    {
+                        WScript.Echo( " message: Run error detected, terminating clients..." );
+                        TerminateClients( g_clients );
+                        
+                        return status;
+                    }
+                }
+            }   
+
+
+            // if necessary, reboot the local machine
+            if( g_reboot_localhost )
+            {
+                // sleep for 15 seconds before reboot
+                for( i=15;i>0;i-- )
+                {
+                    if( i > 1 )
+                    {
+                        WScript.Echo( " warning: *** REBOOTING LOCAL MACHINE IN " + i + " SECONDS!!! (ctrl-c to cancel)***" );
+                    }
+                    else
+                    {
+                        WScript.Echo( " warning: *** REBOOTING LOCAL MACHINE IN " + i + " SECOND!!! (ctrl-c to cancel)***" );
+                    }
+
+                    WScript.Sleep( 1000 );
+                }
+
+                // reboot the current machine
+                status = Reboot( "localhost", true );
+                if( status != 0 )
+                {
+                    WScript.Echo( " error: wcat.wsf failed to reboot the local machine." );
+                    return status;
+                }
+            }
+            else
+            {
+                WScript.Echo( " message: wcat.wsf completed successfully." );
+            }
+
+            return 0;
+        }
+
+        ////////////////////////////////////////////////////////////////////////
+        //
+        // Parameter parsing logic
+        //
+        ////////////////////////////////////////////////////////////////////////
+        function ShowUsage()
+        {
+            WScript.Echo( "Description:" );
+            WScript.Echo( "    wcat.wsf is a utility script to assist in installing, updating, and running" );            
+            WScript.Echo( "    WCAT 6.3 client and controller executables.  It can remotely install" );              
+            WScript.Echo( "    wcclient and all DLLs from the current directory to all target machines" );
+            WScript.Echo( "    specified in the 'clients' parameter.  It can also simultaneously launch" );
+            WScript.Echo( "    the client software on all target machines and start the controller" );
+            WScript.Echo( "    software on the local machine.  In error cases it also has the ability" );
+            WScript.Echo( "    to terminate the wcclient process on all target machines.  All parameters" );
+            WScript.Echo( "    passed to wcat.wsf that are not recognized are passed through directly" );
+            WScript.Echo( "    to wcctl.exe." );
+            WScript.Echo( "" );
+            WScript.Echo( "    NOTE: This script must be run from an account that has administrator" );
+            WScript.Echo( "    priviledges on ALL the target client machines.  WCAT also needs" );            
+            WScript.Echo( "    administrator rights in order to query performance counters and other" );
+            WScript.Echo( "    useful data like target web server cpu speed, memory, registry, etc..." );
+            WScript.Echo( "" );
+            WScript.Echo( "Usage: wcat.wsf [-clients {c1,c2,...}] [-terminate] [-update] [-run]" );
+            WScript.Echo( "                [-setclients] [-showclients]" );
+            WScript.Echo( "                [-stdout {logfile}] [-stderr {logfile}] [-help]" );
+            WScript.Echo( "                [-{wcctl parameters}]" );
+            WScript.Echo( "" );
+            WScript.Echo( " ACTIONS:" );
+            WScript.Echo( "    -terminate    For all clients in the 'clients' option, terminate all" );
+            WScript.Echo( "                  instances of the wcclient.exe process" );
+            WScript.Echo( "" );           
+            WScript.Echo( "    -update       Copies wcclient.exe and all dlls from the the directory in" );
+            WScript.Echo( "                  which wcat.wsf resides to \\\\client\\admin$\\wcat" );
+            WScript.Echo( "" );
+            WScript.Echo( "    -run          Starts wcclient on all remote clients and then launches" );
+            WScript.Echo( "                  wcctl on the local machine with all pass-through options" );
+            WScript.Echo( "" );
+            WScript.Echo( "    -setclients   Sets the default value for the 'clients' parameter in the" );
+            WScript.Echo( "                  registry key value 'HKLM\\Software\\WCAT\\Clients'.  If" );
+            WScript.Echo( "                  no '-clients' parameter is used this list will be the" );
+            WScript.Echo( "                  default set of clients used for all tests." );
+            WScript.Echo( "" );
+            WScript.Echo( "    -showclients  Shows the list of clients to be used by wcat.wsf." );
+            WScript.Echo( "" );
+            WScript.Echo( " OPTIONS:" );           
+            WScript.Echo( "    -clients      Comma separated list with no spaces of client machine names." );
+            WScript.Echo( "                  If not specified, wcat.wsf will first look in the registry" );
+            WScript.Echo( "                  key path 'HKLM\\Software\\WCAT' for a value named 'Clients'" );
+            WScript.Echo( "                  of type REG_SZ.  If not found, it will default to 'localhost'" );
+            WScript.Echo( "" );
+            WScript.Echo( "    -bind         Comma separated list of addresses to bind each of the" );
+            WScript.Echo( "                  specified clients to. Must be one entry for each client. Use" );
+            WScript.Echo( "                  '*' to have client bind to any address." );
+            WScript.Echo( "" );
+            WScript.Echo( "    -stdout       Optional log file to write wcctl.exe standard output to" );
+            WScript.Echo( "" );
+            WScript.Echo( "    -stderr       Optional log file to write wcctl.exe standard error to" );
+            WScript.Echo( "" );
+            WScript.Echo( "    -help         Displays this help screen (-? and -h also work)" );
+            WScript.Echo( "" );
+            WScript.Echo( " WCClient OPTIONS:" );           
+            WScript.Echo( "    -{wcctl_opts} Type 'wcctl' in the command window for details on what" );
+            WScript.Echo( "                  options to pass to wcctl.  All unrecognized options passed" );
+            WScript.Echo( "                  to wcat.wsf will be passed through to wcclient.exe" );
+            WScript.Echo( "" );
+            WScript.Echo( "Quick Start:" );
+            WScript.Echo( "  1.  Configure the controller, client and web server machines with an" );
+            WScript.Echo( "      administrator account with the same password.  Log into the controller" );
+            WScript.Echo( "      using that administrator account." );
+            WScript.Echo( "  2.  Unzip contents of wcat.zip to c:\\wcat on your 'controller' machine." );
+            WScript.Echo( "  3.  Copy all workload .ubr files and .dll files to c:\\wcat." );
+            WScript.Echo( "  4.  From the controller, install wcat on all 'client' machines using" );
+            WScript.Echo( "      'wcat.wsf -update -clients c1,c2,...'." );
+            WScript.Echo( "  5.  Launch wcat software using wcat.wsf '-run -clients c1,c2,...'." );
+            WScript.Echo( "" );
+            WScript.Echo( "Examples:" );
+            WScript.Echo( "  1. To install WCAT onto the local machine:" );
+            WScript.Echo( "      > wcat.wsf -update" );
+            WScript.Echo( "  2. To run WCAT with a given UBR file from the local machine against" );
+            WScript.Echo( "     a server, 'foo'.  Output will be in the current directory, 'log.xml':" );      
+            WScript.Echo( "      > wcat.wsf -run -s foo -t my.ubr -f settings.ubr" );
+            WScript.Echo( "  3. To run WCAT from multiple machines, bar1 and bar2 against 'foo':" );
+            WScript.Echo( "     > wcat.wsf -run -clients bar1,bar2 -s foo -t my.ubr -f settings.ubr" );
+            WScript.Echo( "  4. To set the default list of clients to bar1 and bar2:" );
+            WScript.Echo( "     > wcat.wsf -setclients -clients bar1,bar2" );
+            WScript.Echo( "" );
+        }
+
+        // populates g_ctrl_parameters, g_clients, g_errlog, g_outlog, g_run,
+        // g_terminate, g_update, g_showclients, g_setclients
+        // returns 0 for success, non-zero usage needs to be displayed.
+        function ParseParameters( arguments )
+        {
+            var i;
+            var usage_regular_expression = /[-\/](?:\?$|h$|help$)/;
+            var clients_regular_expression = /[-\/](?:clients$|c$)/;
+            var bind_regular_expression = /[-\/](?:bind$|b$)/;
+            var terminate_regular_expression = /[-\/]terminate$/;
+            var update_regular_expression = /[-\/]update$/;
+            var run_regular_expression = /[-\/]run$/;
+            var outlog_regular_expression = /[-\/]stdout$/;
+            var errlog_regular_expression = /[-\/]stderr$/;
+            var showclients_regular_expression = /[-\/]showclients$/;
+            var setclients_regular_expression = /[-\/]setclients$/;
+            
+            var argument;
+
+            if( arguments.length == 0 || arguments(i).toLowerCase().match( usage_regular_expression ) )
+            {
+                ShowUsage();
+                WScript.Quit( 1 );
+            }
+
+            WScript.Echo( " message: Parsing parameters..." );
+            
+            // loop through parameters
+            for( i=0; i<arguments.length; i++ )
+            {
+                if( null != arguments(i).toLowerCase().match( clients_regular_expression ) )
+                {
+                    if( g_clients != null )
+                    {
+                        if( i<arguments.length-1 )
+                        {
+                            WScript.Echo( " warning: ParseParameters() duplicate parameter '" + arguments(i) + " " + arguments(i+1) + "' ignored." );
+                            i++; //skip the next value
+                        }
+                        else
+                        {
+                            WScript.Echo( " warning: ParseParameters() duplicate parameter '" + arguments(i) + "' ignored." );
+                        }
+                    }
+                    else
+                    {
+                        // increment i
+                        i++;
+
+                        // assert that i < arguments.length
+                        if( i >= arguments.length )
+                        {
+                            WScript.Echo( " error: ParseParameters() invalid 'clients' parameter.  Must be non-empty" );
+                            return 1;
+                        }
+
+                        // split it on commas
+                        g_clients = arguments(i).split(",");
+                    }
+
+                    WScript.Echo( " parameter: clients = " + arguments(i) );
+                }
+                else if ( null != arguments( i ).toLowerCase().match( bind_regular_expression ) )
+                {
+                    if ( g_bind != null )
+                    {
+                        if( i<arguments.length-1 )
+                        {
+                            WScript.Echo( " warning: ParseParameters() duplicate parameter '" + arguments(i) + " " + arguments(i+1) + "' ignored." );
+                            i++; //skip the next value
+                        }
+                        else
+                        {
+                            WScript.Echo( " warning: ParseParameters() duplicate parameter '" + arguments(i) + "' ignored." );
+                        }                        
+                    }
+                    else
+                    {
+                        i++;
+
+                        if ( i >= arguments.length )
+                        {
+                            WScript.Echo( " error: ParseParameters() invalid 'bind' parameter.  Must be non-empty" );
+                            return 1;                            
+                        }
+
+                        g_bind = arguments( i ).split( "," );
+                    }
+                }
+                else if( null != arguments(i).toLowerCase().match( terminate_regular_expression ) )
+                {
+                    WScript.Echo( " parameter: terminate" );
+                    g_terminate = true;
+                }
+                else if( null != arguments(i).toLowerCase().match( update_regular_expression ) )
+                {
+                    WScript.Echo( " parameter: update" );                   
+                    g_update = true;
+                }
+                else if( null != arguments(i).toLowerCase().match( run_regular_expression ) )
+                {
+                    WScript.Echo( " parameter: run" );                   
+                    g_run = true;
+                }
+                else if( null != arguments(i).toLowerCase().match( showclients_regular_expression ) )
+                {
+                    WScript.Echo( " parameter: showclients" );                                      
+                    g_showclients = true;
+                }
+                else if( null != arguments(i).toLowerCase().match( setclients_regular_expression ) )
+                {
+                    WScript.Echo( " parameter: setclients" );                                      
+                    g_setclients = true;
+                }               
+                else if( null != arguments(i).toLowerCase().match( outlog_regular_expression ) )
+                {
+                    if( ++i >= arguments.length )
+                    {
+                        WScript.Echo( " error: ParseParameters() invalid 'stdout' parameter.  Must be non-empty" );
+                        return 1;
+                    }
+                    g_outlog = arguments(i);
+                    WScript.Echo( " parameter: stdout = " + g_outlog );                   
+                    
+                }
+                else if( null != arguments(i).toLowerCase().match( errlog_regular_expression ) )
+                {
+                    if( ++i >= arguments.length )
+                    {
+                        WScript.Echo( " error: ParseParameters() invalid 'stderr' parameter.  Must be non-empty" );
+                        return 1;
+                    }
+                    g_errlog = arguments(i);
+                    WScript.Echo( " parameter: stderr = " + g_errlog );                        
+                }
+                else
+                {
+                    // concatonate this parameter to the wcctl command line
+                    g_ctrl_parameters += (" " + arguments(i));
+                }
+            }
+
+            // if clients were not specified, look in the registry.
+            // if no registry entry is specified, default to localhost
+            if( g_clients == null )
+            {
+                argument = GetRegistryString( "localhost", "SOFTWARE\\WCAT", "Clients" );
+                if( argument != null && argument.length > 0 )
+                {
+                    g_clients = argument.split( "," );
+                    WScript.Echo( " parameter: clients = " + argument + " (from HKLM\\Software\\WCAT\\Clients regkey)" );
+                }
+                else
+                {
+                    g_clients = new Array( "localhost" );
+                    WScript.Echo( " parameter: clients = localhost (default)" );                    
+                }
+            }
+
+            if ( g_bind != null )
+            {
+                if ( g_bind.length != g_clients.length )
+                {
+                    WScript.Echo( "error: ParseParameters() invalid 'bind' parameter. Must match specified number of clients." );
+                    return 1;
+                }
+            }
+
+            // concatonate "-clients N" to the wcctl command line
+            g_ctrl_parameters += " -clients " + g_clients.length;
+
+            if( g_run )
+            {
+                WScript.Echo( " parameter: {wcctl.exe command line} = " + g_ctrl_parameters );
+            }
+
+            // if no action is specified, error out
+            if( !g_terminate && !g_update && !g_run && !g_showclients && !g_setclients)
+            {
+                WScript.Echo( " error: must specify at least one of the following parameters -run, -update, -terminate, -showclients or -setclients" );
+                return 1;
+            }
+
+            return 0;
+        }
+
+        ////////////////////////////////////////////////////////////////////////
+        //
+        // Client list definition logic
+        //
+        ////////////////////////////////////////////////////////////////////////
+        function GetClients( clients )
+        {
+            var clients_string = "";
+            var i;
+
+            for( i=0; i<clients.length-1; i++ )
+            {
+                clients_string += ( clients[i] + "," );
+            }
+
+            clients_string += ( clients[i] );
+
+            return clients_string;
+        }
+
+        function ShowClients( clients )
+        {
+            var clients_string = GetClients( clients );
+            WScript.Echo( " message: clients = '" + clients_string + "'" );
+            return 0;
+        }
+
+        function SetClients( clients )
+        {
+            var clients_string = GetClients( clients );
+            var status;
+
+            WScript.Echo( " message: updating Clients registry key..." );
+
+            status = CreateRegistryKey( "localhost", "Software\\WCAT" );
+            if( status != 0 )
+            {
+                WScript.Echo( " error: SetClients() failed to create the registry key 'HKLM\\Software\\WCAT'" );
+                return status;
+            }
+
+            status = SetRegistryString( "localhost", "Software\\WCAT", "Clients", clients_string );
+            if( status != 0 )
+            {
+                WScript.Echo( " error: SetClients() failed to set default client list to " + clients_string );
+                return status;
+            }
+
+            return 0;
+        }
+        
+        ////////////////////////////////////////////////////////////////////////
+        //
+        // Copy WCAT files to clients logic
+        //
+        ////////////////////////////////////////////////////////////////////////
+
+        function GetScriptPath()
+        {
+            var fullname = WScript.ScriptFullName;
+            var nameindex = fullname.lastIndexOf(WScript.ScriptName);
+            var scriptpath = fullname.substring(0, nameindex);
+            return scriptpath;
+        }
+
+        function CreateDirectory( directory )
+        {
+            var fso = new ActiveXObject("Scripting.FileSystemObject");
+            
+            if (fso.FolderExists(directory))
+            {
+                return 0;
+            }
+
+            try
+            {
+                if( null == fso.CreateFolder(directory) )
+                {
+                    WScript.Echo( " error: CreateDirectory() failed to create " + directory );
+                    return 1;
+                }
+            }
+            catch( e )
+            {
+                WScript.Echo(" error: CreateDirectory() failed to create " + directory + " (error details: " + e.description + ")" );
+            }
+
+            return 0;
+        }
+
+        function CopyFile(source, destination, optional )
+        {
+            var fso = new ActiveXObject("Scripting.FileSystemObject");
+
+            if ( (source.indexOf("*") == -1) && !fso.FileExists(source) )
+            {
+                if( !optional )
+                {
+                    WScript.Echo(" error: CopyFile() The specified file '" + source + "' does not exist.");
+                    return 1;
+                }
+                else
+                {
+                    return 0;
+                }
+            }
+
+            if ( (source.indexOf("*") != -1) && fso.FileExists(destination) )
+            {
+                if( !optional )
+                {
+                    WScript.Echo(" error: CopyFile() Unable to copy file with wildcards onto specified file '" + destination + "'. Directory expected.");
+                    return 1;
+                }
+                else
+                {
+                    return 0;
+                }
+            }
+
+            // allow overwrites
+            try
+            {
+                fso.CopyFile(source, destination, true);
+            }
+            catch( e )
+            {
+                if( !optional )
+                {
+                    WScript.Echo(" error: CopyFile() Unable to copy file " + source + " to " + destination + " (error details: " + e.description + ")" );
+                    return 1;
+                }
+                else
+                {
+                    return 0;
+                }
+            }
+
+            return 0;
+        }
+
+        function CopyBinaries( srcpath, dstpath )
+        {
+            var status = 0;
+                        
+            // make target directory
+            status = CreateDirectory( dstpath );
+            if( status != 0 )
+            {
+                WScript.Echo(" error: CopyBinaries() could not copy WCAT binaries due to failure to create " + dstpath );
+                return status;
+            }
+            
+            // copy wcclient.exe
+            status = CopyFile( srcpath + "wcclient.exe", dstpath, false );
+            if( status != 0 )
+            {
+                WScript.Echo(" error: CopyBinaries() could not copy WCAT binaries due to failure to copy wcclient -> " + dstpath );
+                return status;
+            }
+            
+            // copy all DLLs
+            status = CopyFile( srcpath + "*.dll", dstpath, true );
+            if( status != 0 )
+            {
+                WScript.Echo(" error: CopyBinaries() could not copy WCAT binaries due to failure to copy *dll -> " + dstpath );
+                return status;
+            }
+
+            // copy all PDBs
+            CopyFile( srcpath + "*.pdb", dstpath, true );
+            if( status != 0 )
+            {
+                WScript.Echo(" error: CopyBinaries() could not copy WCAT binaries due to failure to copy *pdb -> " + dstpath );
+                return status;
+            }
+
+            return status;            
+        }
+
+        function CopyBinariesToClients( clients )
+        {
+            var status = 0;
+            var srcpath = GetScriptPath();
+            var dstpath;
+            var i;
+
+            WScript.Echo( " message: Updating binaries on clients..." );
+
+            for( i=0; i<clients.length; i++ )
+            {
+                dstpath = "\\\\" + clients[i] + TARGET_SHARE;
+
+                WScript.Echo( " message: update " + clients[i] + "..." );
+                
+                status = CopyBinaries( srcpath, dstpath );
+                if( status != 0 )
+                {
+                    WScript.Echo( " error: CopyBinariesToClients() failed to copy WCAT binaries (" + srcpath + " -> " + dstpath + ")" );
+                    return status;
+                }
+            }
+
+            return 0;
+        }
+
+        ////////////////////////////////////////////////////////////////////////
+        //
+        // Remote registry logic
+        //
+        ////////////////////////////////////////////////////////////////////////
+        function UpdateRegistryOnClients( clients )
+        {
+            var status = 0;
+            var registry_is_set;
+            var i;
+            
+            WScript.Echo( " message: Updating registry settings on clients..." );
+
+            for( i=0; i<clients.length; i++ )
+            {
+                WScript.Echo( " message: update registry " + clients[i] + "..." );
+                
+                try
+                {
+                    registry_is_set = CheckRegistrySettings( clients[i] );
+                }
+                catch( e )
+                {
+                    WScript.Echo( " error: UpdateRegistryOnClients() failed to access remote registry settings on " + clients[i] );
+                    return 1;
+                }
+
+                if( registry_is_set == false )
+                {
+                    status = SetRegistrySettings( clients[i] );
+                    if( status != 0 )
+                    {
+                        WScript.Echo( " error: UpdateRegistryOnClients() failed to set remote registry on " + clients[i] );
+                        return status;
+                    }
+                }                       
+            }
+
+            return 0;
+        }
+        
+        function CheckRegistrySettings( host )
+        {
+            if( 0xfffe != GetRegistryDword( host,
+                                            "System\\CurrentControlSet\\Services\\TCPIP\\Parameters",
+                                            "MaxUserPort" ) )
+            {
+                return false;
+            }
+
+            if( 30 > GetRegistryDword( host,
+                                            "System\\CurrentControlSet\\Services\\TCPIP\\Parameters",
+                                            "TcpTimedWaitDelay" ) )
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+        function SetRegistrySettings( host )
+        {
+            var status;
+
+            WScript.Echo( " message: Setting registry values on " + host + " (this will force a reboot)" );
+            
+            status =  SetRegistryDword( host,
+                                        "System\\CurrentControlSet\\Services\\TCPIP\\Parameters",
+                                        "MaxUserPort",
+                                        0xfffe );
+            if( status != 0 )
+            {
+                WScript.Echo( " error: SetRegistrySettings() failed to set MaxUserPort." );
+                return status;
+            }
+
+            status = SetRegistryDword( host,
+                                       "System\\CurrentControlSet\\Services\\TCPIP\\Parameters",
+                                       "TcpTimedWaitDelay",
+                                       30 );
+            if( status != 0 )
+            {
+                WScript.Echo( " error: SetRegistrySettings() failed to set TcpTimedWaitDelay." );
+                return status;
+            }
+
+            status = Reboot( host, false );
+            if( status != 0 )
+            {
+                WScript.Echo( " error: SetRegistrySettings() failed to reboot target machine." );
+                return status;
+            }
+
+            g_reboots_occurred = true;
+
+            return 0;
+        }
+
+        ////////////////////////////////////////////////////////////////////////
+        //
+        // Remote registry utility functions
+        //
+        ////////////////////////////////////////////////////////////////////////
+        function GetRegistryDword( host, keyname, valuename )
+        {
+            var oLocator;
+            var oService;
+            var oRegistry;
+            var oGetDword;
+            var oInputParameters;
+            var oOutputParameters;
+
+            try
+            {
+                oLocator = new ActiveXObject("WbemScripting.SWbemLocator");
+                oService = oLocator.ConnectServer(host, "root\\default");
+                oRegistry = oService.Get("StdRegProv");
+                oGetDword = oRegistry.Methods_.Item("GetDWORDValue");
+                oInputParameters = oGetDword.InParameters.SpawnInstance_();
+                oInputParameters.hDefKey = 0x80000002; //HKLM
+                oInputParameters.sSubKeyName = keyname;
+                oInputParameters.sValueName = valuename;
+                oOutputParameters = oRegistry.ExecMethod_(oGetDword.Name, oInputParameters);
+            }
+            catch(e)
+            {
+                WScript.Echo( " error: GetRegistryDword() failed to get \\\\" + host + "\\HKLM\\" + keyname + "\\" + valuename );
+                WScript.Echo( " error description: " + e.description );
+                throw e;
+            }
+
+            return oOutputParameters.uValue;
+        }
+
+        function GetRegistryString( host, keyname, valuename )
+        {
+            var oLocator;
+            var oService;
+            var oRegistry;
+            var oGetString;
+            var oInputParameters;
+            var oOutputParameters;
+
+            try
+            {
+                oLocator = new ActiveXObject("WbemScripting.SWbemLocator");
+                oService = oLocator.ConnectServer(host, "root\\default");
+                oRegistry = oService.Get("StdRegProv");
+                oGetString = oRegistry.Methods_.Item("GetStringValue");
+                oInputParameters = oGetString.InParameters.SpawnInstance_();
+                oInputParameters.hDefKey = 0x80000002; //HKLM
+                oInputParameters.sSubKeyName = keyname;
+                oInputParameters.sValueName = valuename;
+                oOutputParameters = oRegistry.ExecMethod_(oGetString.Name, oInputParameters);
+            }
+            catch(e)
+            {
+                WScript.Echo( " error: GetRegistryString() failed to get \\\\" + host + "\\HKLM\\" + keyname + "\\" + valuename );
+                WScript.Echo( " error description: " + e.description );
+                throw e;
+            }
+
+            return oOutputParameters.sValue;
+        }
+
+        function CreateRegistryKey( host, keyname )
+        {
+            var oLocator;
+            var oService;
+            var oRegistry;
+            var oCreateKey;
+            var oInputParameters;
+            var oOutputParameters;
+            
+            try
+            {
+                oLocator = new ActiveXObject("WbemScripting.SWbemLocator");
+                oService = oLocator.ConnectServer(host, "root\\default");
+                oRegistry = oService.Get("StdRegProv");
+                oCreateKey = oRegistry.Methods_.Item("CreateKey");
+                oInputParameters = oCreateKey.InParameters.SpawnInstance_();
+                oInputParameters.hDefKey = 0x80000002; //HKLM
+                oInputParameters.sSubKeyName = keyname;
+                oOutputParameters = oRegistry.ExecMethod_(oCreateKey.Name, oInputParameters);
+            }
+            catch( e )
+            {
+                WScript.Echo( " error: CreateRegistryKey() failed to create \\\\" + host + "\\HKLM\\" + keyname );
+                WScript.Echo( " error description: " + e.description );
+                return 1;
+            }
+
+            return 0;
+
+
+        }
+        
+        function SetRegistryDword( host, keyname, valuename, value )
+        {
+            var oLocator;
+            var oService;
+            var oRegistry;
+            var oSetDword;
+            var oInputParameters;
+            var oOutputParameters;
+
+            WScript.Echo( " message: setting \\\\" + host + "\\HKLM\\" + keyname + "\\" + valuename + " = " + value );
+            
+            try
+            {
+                oLocator = new ActiveXObject("WbemScripting.SWbemLocator");
+                oService = oLocator.ConnectServer(host, "root\\default");
+                oRegistry = oService.Get("StdRegProv");
+                oSetDword = oRegistry.Methods_.Item("SetDWORDValue");
+                oInputParameters = oSetDword.InParameters.SpawnInstance_();
+                oInputParameters.hDefKey = 0x80000002; //HKLM
+                oInputParameters.sSubKeyName = keyname;
+                oInputParameters.sValueName = valuename;
+                oInputParameters.uValue = value;
+                oOutputParameters = oRegistry.ExecMethod_(oSetDword.Name, oInputParameters);
+            }
+            catch( e )
+            {
+                WScript.Echo( " error: SetRegistryDword() failed to set \\\\" + host + "\\HKLM\\" + keyname + "\\" + valuename + " = " + value );
+                WScript.Echo( " error description: " + e.description );
+                return 1;
+            }
+
+            return 0;
+        }
+
+        function SetRegistryString( host, keyname, valuename, value )
+        {
+            var oLocator;
+            var oService;
+            var oRegistry;
+            var oSetString;
+            var oInputParameters;
+            var oOutputParameters;
+
+            WScript.Echo( " message: setting \\\\" + host + "\\HKLM\\" + keyname + "\\" + valuename + " = " + value );
+            
+            try
+            {
+                oLocator = new ActiveXObject("WbemScripting.SWbemLocator");
+                oService = oLocator.ConnectServer(host, "root\\default");
+                oRegistry = oService.Get("StdRegProv");
+                oSetString = oRegistry.Methods_.Item("SetStringValue");
+                oInputParameters = oSetString.InParameters.SpawnInstance_();
+                oInputParameters.hDefKey = 0x80000002; //HKLM
+                oInputParameters.sSubKeyName = keyname;
+                oInputParameters.sValueName = valuename;
+                oInputParameters.sValue = value;
+                oOutputParameters = oRegistry.ExecMethod_(oSetString.Name, oInputParameters);
+            }
+            catch( e )
+            {
+                WScript.Echo( " error: SetRegistryString() failed to set \\\\" + host + "\\HKLM\\" + keyname + "\\" + valuename + " = " + value );
+                WScript.Echo( " error description: " + e.description );
+                return 1;
+            }
+
+            return 0;
+        }
+
+        ////////////////////////////////////////////////////////////////////////
+        //
+        // Reboot target machine
+        //
+        ////////////////////////////////////////////////////////////////////////
+        function Reboot( host, force )
+        {
+            if( force == false && (host.toLowerCase() == "localhost" || host.toLowerCase() == g_hostname.toLowerCase() ) )
+            {
+                WScript.Echo( " message: Delaying localhost reboot until end of script." );
+                g_reboot_localhost = true;
+                return 0;
+            }
+            
+            WScript.Echo( " message: Rebooting " + host + "..." );
+
+            var wmi_service = GetObject("winmgmts:{(Shutdown)}//" + host + "/root/cimv2");
+            var wql = "SELECT * FROM Win32_OperatingSystem WHERE Primary=true";
+            var operating_systems = wmi_service.ExecQuery( wql );
+            var enumerator = new Enumerator( operating_systems );
+            var operating_system = null;
+
+            while( !enumerator.atEnd() )
+            {
+                operating_system = enumerator.item();
+                operating_system.Reboot();
+                enumerator.moveNext();
+            }
+
+            return 0;
+        }
+        
+        ////////////////////////////////////////////////////////////////////////
+        //
+        // Remote execution logic
+        //
+        ////////////////////////////////////////////////////////////////////////
+        function TerminateProcess( host, processname )
+        {
+            var process;
+            var wmi_service = GetObject("winmgmts://" + host + "/root/cimv2");
+            var wql = "SELECT * FROM Win32_Process WHERE Name='" + processname + "'";
+            var processes = wmi_service.ExecQuery( wql );
+            var enumerator = new Enumerator( processes );
+
+            while( !enumerator.atEnd() )
+            {
+                process = enumerator.item();
+                WScript.Echo( " message: terminating pid " + process.ProcessId + " on " + host );
+                process.Terminate(0);
+                enumerator.moveNext();
+            }
+            
+            return 0;
+        }
+
+        function TerminateClients( clients )
+        {
+            var i;
+            var status;
+
+            WScript.Echo( " message: Terminating all instances of wcclient..." );
+            
+            for( i=0; i<clients.length; i++ )
+            {               
+                status = TerminateProcess( clients[i], "wcclient.exe" );
+                if( status != 0 )
+                {
+                    WScript.Echo( " error: TerminateClients() failed to terminate wcclient on " + clients[i] );
+                    return 1;
+                }
+            }
+
+            WScript.Echo( " message: Terminating all local instances of wcctl.exe..." );
+            status = TerminateProcess( g_hostname, "wcctl.exe" );
+            if( status != 0 )
+            {
+                WScript.Echo( " error: TeminateClients() failed to terminate wcctl.exe." );
+                return 1;
+            }
+
+            return 0;
+        }
+
+        function GetHostname()
+        {
+            var shell = new ActiveXObject("WScript.Shell");
+            return shell.ExpandEnvironmentStrings("%COMPUTERNAME%");
+        }
+
+        function LaunchRemoteProcess( host, commandline )
+        {
+            var wmi_service = GetObject("winmgmts://" + host + "/root/cimv2");
+            var process = wmi_service.Get("Win32_Process");
+            var program = process.Methods_("Create").InParameters.SpawnInstance_();
+            program.CommandLine = commandline;
+            var shell = wmi_service.ExecMethod("Win32_Process", "Create", program );
+            return 0;
+        }
+
+        function LaunchClients( clients )
+        {
+            var status = 0;
+            var i;
+            var hostname = GetHostname();
+
+            WScript.Echo( " message: Launching wcclient.exe on all clients..." );
+            
+            for( i=0; i<clients.length; i++ )
+            {
+                commandline = CLIENT_COMMAND_LINE + " " + hostname + " -b";
+
+                if ( g_bind != null && g_bind[ i ] != "*" )
+                {
+                    commandline += " -bind " + g_bind[ i ];
+                }
+
+                WScript.Echo( " message: starting wcclient.exe on " + clients[i] + " with command line of " + commandline + "..." );
+                
+                status = LaunchRemoteProcess( clients[i], commandline );
+                if( status != 0 )
+                {
+                    WScript.Echo( " error: LaunchClients() failed to execute '" + commandline + "'" );
+                    return 1;
+                }
+            }
+
+            return 0;
+        }
+
+        ////////////////////////////////////////////////////////////////////////
+        //
+        // Localhost execution and logging logic
+        //
+        ////////////////////////////////////////////////////////////////////////
+        function CreateLog( filename )
+        {
+            var fso = new ActiveXObject("Scripting.FileSystemObject");
+            var file = null;
+
+            try
+            {
+                file = fso.CreateTextFile( filename, false );
+            }
+            catch( e )
+            {
+                WScript.Echo( " error: CreateLog() failed to create '" + filename + "' (error description: " + e.description + ")" );
+                return null;
+            }
+            
+            return file;
+        }
+
+        function LaunchLocalProcess( cmdline, outlog, errlog )
+        {
+            var buffer = "";
+            var shell = null;   // WshScript object
+            var process = null; // WshScriptExec object
+            var status = 0;
+            var outfile = null;
+            var errfile = null;
+                
+
+            // create log files (fails if they already exist)
+            if( outlog != null )
+            {
+                outfile = CreateLog( outlog );
+                if( outfile == null )
+                {
+                    WScript.Echo( " error: LaunchLocalProcess() failed to create stdout logfile " + outlog + "..." );
+                    return 1;
+                }
+            }
+
+            if( errlog != null )
+            {
+                errfile = CreateLog( errlog );
+                if( errfile == null )
+                {
+                    WScript.Echo( " error: LaunchLocalProcess() failed to create stderr logfile " + errlog + "..." );
+                    return 1;
+                }
+            }
+
+            // launch the target process
+            WScript.Echo( " message: executing '" + cmdline + "'..." );
+
+            // get the shell object
+            shell  = new ActiveXObject( "WScript.Shell" );
+            if( shell == null )
+            {
+                WScript.Echo( " error: LaunchLocalProcess() could not create WshScript object" );
+                return 1;
+            }
+
+            // launch the new process
+            try
+            {
+                process = shell.Exec( cmdline );
+            }
+            catch( e )
+            {
+                WScript.Echo( " error: LaunchLocalProcess() could not execute command line '" + cmdline + "'" );
+                return 1;
+            }
+
+            // poll the process until it exits.  Fork stdout to stdout and log.
+            do
+            {
+                while( !process.StdOut.AtEndOfStream ) // this doesn't seem to return true until the process exits...
+                {
+                    buffer = process.StdOut.ReadLine(); // this blocks...
+                    WScript.StdOut.WriteLine( buffer );
+                    
+                    if( outfile != null )
+                    {
+                        outfile.WriteLine( buffer );
+                    }
+                }
+
+                WScript.Sleep( 100 );
+            } while( process.Status == 0 );
+
+            // get remaining standard error
+            if( errfile != null && !process.StdOut.AtEndOfStream )
+            {
+                buffer = process.StdOut.ReadAll();
+                if( buffer.length > 0 )
+                {
+                    WScript.StdOut.Write( buffer );
+                }
+                outfile.Write( buffer );
+            }
+
+            // get standard error
+            if( errfile != null && !process.StdErr.AtEndOfStream )
+            {
+                buffer = process.StdErr.ReadAll();
+                errfile.Write( buffer );
+            }
+
+            return process.ExitCode;
+        }
+
+    </script>
+</job>

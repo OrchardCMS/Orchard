@@ -10,15 +10,15 @@ namespace Orchard.Core.Feeds.Controllers {
     public class FeedController : Controller {
         private readonly IEnumerable<IFeedBuilderProvider> _feedFormatProviders;
         private readonly IEnumerable<IFeedQueryProvider> _feedQueryProviders;
-        private readonly IEnumerable<IFeedItemBuilder> _feedItemBuilders;
+        private readonly IFeedItemBuilder _feedItemBuilder;
 
         public FeedController(
             IEnumerable<IFeedQueryProvider> feedQueryProviders,
             IEnumerable<IFeedBuilderProvider> feedFormatProviders,
-            IEnumerable<IFeedItemBuilder> feedItemBuilders) {
+            IFeedItemBuilder feedItemBuilder) {
             _feedQueryProviders = feedQueryProviders;
             _feedFormatProviders = feedFormatProviders;
-            _feedItemBuilders = feedItemBuilders;
+            _feedItemBuilder = feedItemBuilder;
             Logger = NullLogger.Instance;
         }
 
@@ -49,7 +49,7 @@ namespace Orchard.Core.Feeds.Controllers {
 
             return context.Builder.Process(context, () => {
                 bestQueryMatch.FeedQuery.Execute(context);
-                _feedItemBuilders.Invoke(x => x.Populate(context), Logger);
+                _feedItemBuilder.Populate(context);
                 foreach (var contextualizer in context.Response.Contextualizers) {
                     if (ControllerContext != null &&
                         ControllerContext.RequestContext != null) {
