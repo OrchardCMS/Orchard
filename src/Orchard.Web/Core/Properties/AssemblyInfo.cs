@@ -7,9 +7,9 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("Orchard.Core")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Microsoft IT")]
-[assembly: AssemblyProduct("Orchard.Core")]
-[assembly: AssemblyCopyright("Copyright © Microsoft IT 2009")]
+[assembly: AssemblyCompany("")]
+[assembly: AssemblyProduct("Orchard")]
+[assembly: AssemblyCopyright("Copyright © CodePlex Foundation 2009")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
