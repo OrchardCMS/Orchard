@@ -1,42 +1,34 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using JetBrains.Annotations;
 using Orchard.ContentManagement.Handlers;
-using Orchard.ContentManagement.MetaData.Records;
 using Orchard.ContentManagement.MetaData.Services;
-using Orchard.Data;
 using Orchard.ContentManagement.Drivers;
-using Orchard.ContentManagement.Records;
 
-namespace Orchard.ContentManagement.MetaData
-{
-    [UsedImplicitly]
-    public class ContentPartHandler : ContentHandler
-    {
-        private readonly IEnumerable<ContentPartInfo> _contentPartInfos;
+namespace Orchard.ContentManagement.MetaData {
+    public class ContentPartHandler : ContentHandler {
+        private readonly IEnumerable<IContentPartDriver> _contentPartDrivers;
         private readonly IContentTypeService _contentTypeService;
 
-        public ContentPartHandler(IEnumerable<IContentPartDriver> contentPartDrivers, IOrchardServices orchardServices, IContentTypeService contentTypeService) {
+        public ContentPartHandler(IEnumerable<IContentPartDriver> contentPartDrivers, IContentTypeService contentTypeService) {
+            _contentPartDrivers = contentPartDrivers;
             _contentTypeService = contentTypeService;
-            _contentPartInfos = contentPartDrivers.SelectMany<IContentPartDriver, ContentPartInfo>(cpp => cpp.GetPartInfo());
         }
 
         protected override void Activating(ActivatingContentContext context) {
-            var contentTypeRecord = _contentTypeService.GetContentTypeRecord(context.ContentType) ?? new ContentTypeRecord();
+            var contentTypeRecord = _contentTypeService.GetContentTypeRecord(context.ContentType);
+            if (contentTypeRecord == null)
+                return;
 
-            if (contentTypeRecord.ContentParts != null){
-                foreach (var contentTypePartRecord in contentTypeRecord.ContentParts){
-                    //var record = contentTypePartRecord;
+            var contentPartInfos = _contentPartDrivers.SelectMany(cpp => cpp.GetPartInfo()).ToList();
 
-                    var contentPart = _contentPartInfos.Single(x => x.PartName == contentTypePartRecord.PartName.PartName).Factory();
-                    context.Builder.Weld(contentPart);
+            foreach (var contentTypePartRecord in contentTypeRecord.ContentParts) {
+                // We might have a part in the database, but the corresponding feature might not
+                // be enabled anymore, so we need to be resilient to that situation.
+                var contentPartInfo = contentPartInfos.SingleOrDefault(x => x.PartName == contentTypePartRecord.PartName.PartName);
+                if (contentPartInfo != null) {
+                    context.Builder.Weld(contentPartInfo.Factory());
                 }
             }
-           
         }
-
     }
-
 }

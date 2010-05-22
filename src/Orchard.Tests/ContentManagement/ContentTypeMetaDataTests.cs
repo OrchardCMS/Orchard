@@ -1,16 +1,16 @@
 ﻿using Autofac;
 using NHibernate;
 using NUnit.Framework;
+using Orchard.ContentManagement;
 using Orchard.ContentManagement.MetaData.Records;
 using Orchard.ContentManagement.MetaData.Services;
-using Orchard.Data;
-using Orchard.ContentManagement;
 using Orchard.ContentManagement.Records;
+using Orchard.Data;
 
 
 namespace Orchard.Tests.ContentManagement{
     [TestFixture]
-    class ContentTypeMetaDataTests 
+    public class ContentTypeMetaDataTests 
     {
         private IContainer _container;
         private ISessionFactory _sessionFactory;
@@ -57,8 +57,6 @@ namespace Orchard.Tests.ContentManagement{
             Assert.IsTrue(contentTypeService.ValidateContentTypeToContentPartMapping("foo","bar"),"Content Type not successfully mapped");
             contentTypeService.UnMapContentTypeToContentPart("foo", "bar");
             Assert.IsFalse(contentTypeService.ValidateContentTypeToContentPartMapping("foo", "bar"), "Content Type mapping not successfully deleted");
-
         }
-
     }
 }
