@@ -8,9 +8,9 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("MSBuild.Orchard.Tasks.Tests")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Microsoft IT")]
-[assembly: AssemblyProduct("MSBuild.Orchard.Tasks.Tests")]
-[assembly: AssemblyCopyright("Copyright © Microsoft IT 2010")]
+[assembly: AssemblyCompany("")]
+[assembly: AssemblyProduct("Orchard")]
+[assembly: AssemblyCopyright("Copyright © CodePlex Foundation 2009")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

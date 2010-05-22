@@ -12,5 +12,6 @@ glob:*.sln.cache
 glob:src/Orchard.Web/Media/*
 glob:desktop.ini
 glob:src/Orchard.Azure.suo
+glob:src/Orchard.5.0.ReSharper
 glob:log.xml
 glob:profiling
