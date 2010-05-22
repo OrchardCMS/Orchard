@@ -1,13 +1,18 @@
-﻿using Orchard.ContentManagement.Handlers;
+﻿using System.Collections.Generic;
+using Orchard.ContentManagement.Handlers;
+using Orchard.ContentManagement.MetaData;
 
 namespace Orchard.ContentManagement.Drivers {
+
     public interface IContentPartDriver : IEvents {
         DriverResult BuildDisplayModel(BuildDisplayModelContext context);
         DriverResult BuildEditorModel(BuildEditorModelContext context);
         DriverResult UpdateEditorModel(UpdateEditorModelContext context);
+
+        IEnumerable<ContentPartInfo> GetPartInfo();
     }
 
-    public abstract class ContentPartDriver<TContent> : IContentPartDriver where TContent : class, IContent {
+    public abstract class ContentPartDriver<TContent> : IContentPartDriver where TContent : ContentPart, new() {
         protected virtual string Prefix { get { return ""; } }
         protected virtual string Zone { get { return "body"; } }
 
@@ -46,5 +51,16 @@ namespace Orchard.ContentManagement.Drivers {
         public CombinedResult Combined(params DriverResult[] results) {
             return new CombinedResult(results);
         }
+
+        public IEnumerable<ContentPartInfo> GetPartInfo()
+        {
+            var contentPartInfo = new List<ContentPartInfo>() {
+                new ContentPartInfo()
+                {PartName = typeof(TContent).Name,Factory = () => new TContent()}
+            };
+
+            return contentPartInfo;
+        }
+
     }
 }

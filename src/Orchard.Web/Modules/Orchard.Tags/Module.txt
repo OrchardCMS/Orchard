@@ -7,5 +7,4 @@ orchardversion: 0.1.2010.0312
 features:
     Orchard.Tags:
         Description: Tag a content item.
-        Dependencies: Common
-        Category: Taxonomy
+        Category: Navigation

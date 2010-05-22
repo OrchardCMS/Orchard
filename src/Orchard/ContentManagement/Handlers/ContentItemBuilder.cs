@@ -15,5 +15,11 @@
             _item.Weld(part);
             return this;
         }
+
+        public ContentItemBuilder Weld(ContentPart contentPart) {
+            _item.Weld(contentPart);
+            return this;
+        }
+
     }
 }

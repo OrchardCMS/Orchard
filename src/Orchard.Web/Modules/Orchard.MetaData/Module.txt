@@ -1,0 +1,7 @@
+﻿name: MetaData
+antiforgery: enabled
+features:
+    Orchard.MetaData:
+        Description: Module for managing Orchard MetaData
+        Dependencies: Common, XmlRpc
+        Category: MetaData

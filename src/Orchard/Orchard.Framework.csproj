@@ -84,6 +84,18 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\sharpziplib\ICSharpCode.SharpZipLib.dll</HintPath>
     </Reference>
+    <Reference Include="Machine.Core, Version=1.0.0.0, Culture=neutral, PublicKeyToken=5c474de7a495cff1, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\machine.migrations\Machine.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Machine.Migrations, Version=1.0.0.0, Culture=neutral, PublicKeyToken=5c474de7a495cff1, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\machine.migrations\Machine.Migrations.dll</HintPath>
+    </Reference>
+    <Reference Include="Machine.Migrations.NHibernate, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\machine.migrations\Machine.Migrations.NHibernate.dll</HintPath>
+    </Reference>
     <Reference Include="NHibernate, Version=2.1.0.4000, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\fluentnhibernate\NHibernate.dll</HintPath>
@@ -152,6 +164,24 @@
     <Compile Include="Validation\Argument.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Caching\AcquireContext.cs" />
+    <Compile Include="Caching\Cache.cs" />
+    <Compile Include="Caching\CacheModule.cs" />
+    <Compile Include="Caching\DefaultCacheHolder.cs" />
+    <Compile Include="Caching\DefaultCacheManager.cs" />
+    <Compile Include="Caching\ICacheHolder.cs" />
+    <Compile Include="Caching\Weak.cs" />
+    <Compile Include="ContentManagement\DefaultContentManagerSession.cs" />
+    <Compile Include="ContentManagement\IContentManagerSession.cs" />
+    <Compile Include="ContentManagement\MetaData\Records\ContentTypePartNameRecord.cs" />
+    <Compile Include="ContentManagement\Utilities\LazyField.cs" />
+    <Compile Include="FileSystems\WebSite\WebSiteFolder.cs" />
+    <Compile Include="FileSystems\AppData\IAppDataFolder.cs" />
+    <Compile Include="FileSystems\WebSite\IWebSiteFolder.cs" />
+    <Compile Include="Caching\ICache.cs" />
+    <Compile Include="Caching\ICacheManager.cs" />
+    <Compile Include="Caching\IVolatileToken.cs" />
+    <Compile Include="Caching\IVolatileProvider.cs" />
     <Compile Include="Commands\CommandParameters.cs" />
     <Compile Include="Commands\CommandDescriptor.cs" />
     <Compile Include="Commands\CommandHandlerDescriptor.cs" />
@@ -174,6 +204,11 @@
     <Compile Include="ContentManagement\Handlers\PublishContentContext.cs" />
     <Compile Include="ContentManagement\Handlers\RemoveContentContext.cs" />
     <Compile Include="ContentManagement\Handlers\VersionContentContext.cs" />
+    <Compile Include="ContentManagement\MetaData\ContentPartHandler.cs" />
+    <Compile Include="ContentManagement\MetaData\ContentPartInfo.cs" />
+    <Compile Include="ContentManagement\MetaData\Services\ContentTypeService.cs" />
+    <Compile Include="ContentManagement\MetaData\Services\IContentTypeService.cs" />
+    <Compile Include="ContentManagement\MetaData\Records\ContentTypePartRecord.cs" />
     <Compile Include="Data\Conventions\RecordTableNameConvention.cs" />
     <Compile Include="Data\Builders\AbstractBuilder.cs" />
     <Compile Include="Data\Builders\SessionFactoryBuilder.cs" />
@@ -183,13 +218,13 @@
     <Compile Include="Data\Conventions\StringLengthConvention.cs" />
     <Compile Include="Data\SessionFactoryHolder.cs" />
     <Compile Include="Environment\AutofacUtil\LifetimeScopeContainer.cs" />
+    <Compile Include="Environment\Configuration\IShellSettingsManager.cs" />
     <Compile Include="Environment\Configuration\TenantState.cs" />
-    <Compile Include="Environment\DefaultOrchardHostEventSink.cs" />
     <Compile Include="Environment\RunningShellTable.cs" />
     <Compile Include="Environment\AutofacUtil\DynamicProxy2\DynamicProxyContext.cs" />
     <Compile Include="Environment\AutofacUtil\DynamicProxy2\DynamicProxyExtensions.cs" />
     <Compile Include="Environment\AutofacUtil\DynamicProxy2\ConstructorFinderWrapper.cs" />
-    <Compile Include="Environment\Configuration\AppDataFolder.cs" />
+    <Compile Include="FileSystems\AppData\AppDataFolder.cs" />
     <Compile Include="Environment\Configuration\ShellSettingsManager.cs" />
     <Compile Include="Environment\AutofacUtil\ContainerUpdater.cs" />
     <Compile Include="Environment\ShellBuilders\ShellContextFactory.cs" />
@@ -202,6 +237,10 @@
     <Compile Include="Environment\Configuration\ShellSettings.cs" />
     <Compile Include="Environment\StandaloneEnvironment.cs" />
     <Compile Include="Events\DefaultOrchardEventBus.cs" />
+    <Compile Include="Events\EventsInterceptor.cs" />
+    <Compile Include="Events\EventsModule.cs" />
+    <Compile Include="Events\EventsRegistrationSource.cs" />
+    <Compile Include="Environment\Configuration\IShellSettingsManagerEventHandler.cs" />
     <Compile Include="Events\IEventBus.cs" />
     <Compile Include="Events\IEventBusHandler.cs" />
     <Compile Include="Environment\Extensions\Folders\AreaFolders.cs" />
@@ -211,11 +250,11 @@
     <Compile Include="Environment\Extensions\Models\Feature.cs" />
     <Compile Include="Environment\Extensions\Models\FeatureDescriptor.cs" />
     <Compile Include="Environment\Extensions\OrchardFeatureAttribute.cs" />
+    <Compile Include="Events\IEventHandler.cs" />
     <Compile Include="Modules\IModule.cs" />
     <Compile Include="Modules\IModuleFeature.cs" />
     <Compile Include="Modules\IModuleService.cs" />
     <Compile Include="Mvc\AntiForgery\ValidateAntiForgeryTokenOrchardAttribute.cs" />
-    <Compile Include="Mvc\Extensions\ControllerExtensions.cs" />
     <Compile Include="Mvc\Extensions\ModelStateDictionaryExtensions.cs" />
     <Compile Include="Mvc\Html\FileRegistrationContextExtensions.cs" />
     <Compile Include="Mvc\Extensions\UrlHelperExtensions.cs" />
@@ -223,6 +262,7 @@
     <Compile Include="Mvc\Routes\UrlPrefix.cs" />
     <Compile Include="Mvc\Routes\UrlPrefixAdjustedHttpContext.cs" />
     <Compile Include="Mvc\Routes\ShellRoute.cs" />
+    <Compile Include="Mvc\ViewEngines\ThemeViewLocationCache.cs" />
     <Compile Include="Mvc\ViewModels\AdaptedViewModel.cs" />
     <Compile Include="Mvc\ViewUserControl.cs">
       <SubType>ASPXCodeBehind</SubType>
@@ -231,7 +271,7 @@
     <Compile Include="Mvc\Wrappers\HttpRequestBaseWrapper.cs" />
     <Compile Include="Mvc\Wrappers\HttpResponseBaseWrapper.cs" />
     <Compile Include="OrchardException.cs" />
-    <Compile Include="Security\IAuthorizationServiceEvents.cs" />
+    <Compile Include="Security\IAuthorizationServiceEventHandler.cs" />
     <Compile Include="Security\MembershipSettings.cs" />
     <Compile Include="Security\StandardPermissions.cs" />
     <Compile Include="Security\OrchardSecurityException.cs" />
@@ -427,15 +467,15 @@
     <Compile Include="Security\Providers\OrchardMembershipProvider.cs" />
     <Compile Include="Security\Providers\OrchardRoleProvider.cs" />
     <Compile Include="Services\Clock.cs" />
-    <Compile Include="Storage\FileSystemStorageProvider.cs" />
-    <Compile Include="Storage\IStorageFile.cs" />
-    <Compile Include="Storage\IStorageFolder.cs" />
-    <Compile Include="Storage\IStorageProvider.cs" />
+    <Compile Include="FileSystems\Media\FileSystemStorageProvider.cs" />
+    <Compile Include="FileSystems\Media\IStorageFile.cs" />
+    <Compile Include="FileSystems\Media\IStorageFolder.cs" />
+    <Compile Include="FileSystems\Media\IStorageProvider.cs" />
     <Compile Include="UI\Zones\ZoneManager.cs" />
     <Compile Include="Utility\Extensions\ReadOnlyCollectionExtensions.cs" />
     <Compile Include="Utility\Extensions\RouteValueDictionaryExtensions.cs" />
     <Compile Include="Utility\Extensions\StringExtensions.cs" />
-    <Compile Include="Utility\Extensions\UriExtensions.cs" />
+    <Compile Include="Utility\Extensions\HttpRequestExtensions.cs" />
     <Compile Include="Utility\Position.cs" />
     <Compile Include="Utility\Reflect.cs" />
     <Compile Include="Utility\ReflectOn.cs" />
@@ -447,6 +487,7 @@
     <None Include="ContentManagement\Diagram.cd" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="ContentManagement\MetaData\Models\" />
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
       <Visible>False</Visible>
       <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>

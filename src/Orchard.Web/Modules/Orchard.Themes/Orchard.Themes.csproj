@@ -88,8 +88,6 @@
   <ItemGroup>
     <Content Include="Content\orchard.ico" />
     <Content Include="Scripts\base.js" />
-    <Content Include="Scripts\jquery-1.4.1.js" />
-    <Content Include="Scripts\jquery-1.4.1.min.js" />
     <Content Include="Styles\Images\toolBarActiveButtonBackground.gif" />
     <Content Include="Styles\Images\toolBarBackground.gif" />
     <Content Include="Styles\Images\toolBarHoverButtonBackground.gif" />
@@ -111,6 +109,8 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Module.txt" />
+    <Content Include="Scripts\jquery-1.4.2.js" />
+    <Content Include="Scripts\jquery-1.4.2.min.js" />
     <Content Include="Views\Web.config" />
   </ItemGroup>
   <ItemGroup>

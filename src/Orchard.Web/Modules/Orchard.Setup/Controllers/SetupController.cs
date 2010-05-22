@@ -8,11 +8,11 @@ using Orchard.Core.Navigation.Models;
 using Orchard.Core.Settings.Models;
 using Orchard.Data;
 using Orchard.Environment;
-using Orchard.Environment.Configuration;
 using Orchard.Environment.Extensions;
 using Orchard.Environment.ShellBuilders;
 using Orchard.Environment.Topology;
 using Orchard.Environment.Topology.Models;
+using Orchard.FileSystems.AppData;
 using Orchard.Security;
 using Orchard.Settings;
 using Orchard.Setup.Services;
@@ -50,7 +50,8 @@ namespace Orchard.Setup.Controllers {
         }
 
         public ActionResult Index() {
-            return IndexViewResult(new SetupViewModel { AdminUsername = "admin" });
+            var initialSettings = _setupService.Prime();
+            return IndexViewResult(new SetupViewModel { AdminUsername = "admin", DatabaseIsPreconfigured = !string.IsNullOrEmpty(initialSettings.DataProvider)});
         }
 
         [HttpPost, ActionName("Index")]
@@ -64,26 +65,6 @@ namespace Orchard.Setup.Controllers {
             }
 
             try {
-                // The vanilla Orchard distibution has the following features enabled.
-                string[] hardcoded = {
-                    "Orchard.Framework",
-                    "Common",
-                    "Dashboard",
-                    "Feeds",
-                    "HomePage",
-                    "Navigation",
-                    "Scheduling",
-                    "Settings",
-                    "XmlRpc",
-                    "Orchard.Users",
-                    "Orchard.Roles",
-                    "TinyMce",
-                    "Orchard.Modules",
-                    "Orchard.Themes",
-                    "Orchard.MultiTenancy",
-                    "Orchard.Pages",
-                    "Orchard.Blogs",
-                    "Orchard.Comments"};
 
                 var setupContext = new SetupContext {
                     SiteName = model.SiteName,
@@ -92,7 +73,7 @@ namespace Orchard.Setup.Controllers {
                     DatabaseProvider = model.DatabaseOptions ? "SQLite" : "SqlServer",
                     DatabaseConnectionString = model.DatabaseConnectionString,
                     DatabaseTablePrefix = model.DatabaseTablePrefix,
-                    EnabledFeatures = hardcoded
+                    EnabledFeatures = null // default list
                 };
 
                 _setupService.Setup(setupContext);

@@ -56,6 +56,11 @@ body {
     min-width:94.6em; /* 946px */
     padding:0;
 }
+/*todo: (heskew) find out why I need this...*/
+button {
+    font-family:Segoe UI,Trebuchet,Arial,Sans-Serif;
+    font-size:1.01em;
+}
 body#preview {
     min-width:0;
 }
@@ -158,15 +163,21 @@ p .button { font-size:inherit; }
 
 /* Links
 ----------------------------------------------------------*/
-a, a:link, a:visited {
+a, a:link, a:visited,
+form.link button {
     color:#1e5d7d;
     text-decoration:none;
+}
+form.link button {
+    height:1.3em;
 }
 a:hover, a:active, a:focus {
     color:#1e5d7d;
     text-decoration:underline;
 }
-
+form.link button:hover {
+    border-bottom:1px solid #1e5d7d;
+}
 
 /* Header - Branding and Login  
 ----------------------------------------------------------*/
@@ -309,8 +320,8 @@ span.message {
 }
 
 .confirmation.message {
-	background:#e6f1c9; /* green */
-	border:1px solid #cfe493;
+	background:#D1F2A5; /* green */
+	border:1px solid #BCD994;
 }
 .warning.message {
 	background:#fdf5bc; /* yellow */
@@ -326,8 +337,8 @@ span.message {
 	color:#fff;
 }
 .info.message {
-    background:#e6f1c9; /* green*/
-	border:1px solid #d4deb9;
+    background:#e6f1c9; /* green */
+	border:1px solid #cfe493;
 	color:#062232;
 }
 .debug.message {
@@ -467,7 +478,18 @@ button, .button, .button:link, .button:visited {
 	color:#2d2f25;
 	cursor:pointer;
 	text-align:center;
-	padding:0 .8em .1em .8em;
+	padding:0 .8em .1em;
+}
+button {
+    padding-top:.08em;
+}
+form.link button {
+    background:inherit;
+    border:0;
+    padding:0;
+    width:auto;
+    margin:-2px -3px 0;
+    
 }
 .primaryAction, .primaryAction:link, .primaryAction:visited {
 	background:#4687ad;
@@ -709,8 +731,11 @@ todo: (heskew) pull out into relevant modules where appropriate
     zoom:1;
     *display: inline;
 }
-.templates fieldset {
-    margin:0 0 .933%;
+.templates .inline button {
+    font-size:1.2em;
+}
+.templates .wasFormInlineLink {
+    font-size:1.4em;
 }
 .templates p {
     overflow:hidden;
@@ -767,6 +792,7 @@ table.items, textarea, input.text, input.text-box,
     text-align:right;
 }
 .contentItems {
+    clear:both;
     padding:0;
 }
 .properties {
@@ -785,6 +811,11 @@ table.items, textarea, input.text, input.text-box,
      float:right;
      text-align:right;
 }
+/*todo: (heskew) cleanup */
+.related .button {
+    font-size:1em;    
+}
+/*end todo*/
 .commentcount {
     line-height:2em;
 }
@@ -797,6 +828,9 @@ table.items, textarea, input.text, input.text-box,
 }
 .icon {
     margin:0 .2em -.2em .2em;
+}
+h3 .icon {
+    margin-bottom:-.05em;
 }
 .linkButton {
     border:none;

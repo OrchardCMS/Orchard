@@ -67,6 +67,7 @@ namespace Orchard.Environment.Topology {
                 ExportedTypes =
                     typeof(OrchardStarter).Assembly.GetExportedTypes()
                     .Where(t => t.IsClass && !t.IsAbstract)
+                    .Except(new[] { typeof(DefaultOrchardHost) })
                     .ToArray()
             };
         }

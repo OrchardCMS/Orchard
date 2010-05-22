@@ -12,6 +12,7 @@ using Autofac.Integration.Web.Mvc;
 using Orchard.Environment.AutofacUtil.DynamicProxy2;
 using Orchard.Environment.Configuration;
 using Orchard.Environment.Topology.Models;
+using Orchard.Events;
 
 namespace Orchard.Environment.ShellBuilders {
 
@@ -61,7 +62,9 @@ namespace Orchard.Environment.ShellBuilders {
                             .EnableDynamicProxy(dynamicProxyContext)
                             .InstancePerLifetimeScope();
 
-                        foreach (var interfaceType in item.Type.GetInterfaces().Where(itf => typeof(IDependency).IsAssignableFrom(itf))) {
+                        foreach (var interfaceType in item.Type.GetInterfaces()
+                            .Where(itf => typeof(IDependency).IsAssignableFrom(itf) 
+                                      && !typeof(IEventHandler).IsAssignableFrom(itf))) {
                             registration = registration.As(interfaceType);
                             if (typeof(ISingletonDependency).IsAssignableFrom(interfaceType)) {
                                 registration = registration.InstancePerMatchingLifetimeScope("shell");
@@ -69,6 +72,10 @@ namespace Orchard.Environment.ShellBuilders {
                             else if (typeof(ITransientDependency).IsAssignableFrom(interfaceType)) {
                                 registration = registration.InstancePerDependency();
                             }
+                        }
+
+                        if (typeof(IEventHandler).IsAssignableFrom(item.Type)) {
+                            registration = registration.As(typeof(IEventHandler));
                         }
 
                         foreach (var parameter in item.Parameters) {
@@ -99,7 +106,8 @@ namespace Orchard.Environment.ShellBuilders {
 
         private IRegistrationBuilder<object, ConcreteReflectionActivatorData, SingleRegistrationStyle> RegisterType(ContainerBuilder builder, ShellTopologyItem item) {
             return builder.RegisterType(item.Type)
-                .WithProperty("Feature", item.Feature);
+                .WithProperty("Feature", item.Feature)
+                .WithMetadata("Feature", item.Feature);
         }
     }
 }

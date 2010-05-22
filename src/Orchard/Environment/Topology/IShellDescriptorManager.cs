@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Orchard.Environment.Topology.Models;
+using Orchard.Events;
 
 namespace Orchard.Environment.Topology {
     /// <summary>
@@ -24,5 +25,8 @@ namespace Orchard.Environment.Topology {
             IEnumerable<ShellParameter> parameters);
     }
 
+    public interface IShellDescriptorManagerEventHandler : IEventHandler {
+        void Changed(ShellDescriptor descriptor);
+    }
 
 }

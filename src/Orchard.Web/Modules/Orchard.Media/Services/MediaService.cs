@@ -5,8 +5,8 @@ using System.Text;
 using System.Web;
 using ICSharpCode.SharpZipLib.Zip;
 using JetBrains.Annotations;
+using Orchard.FileSystems.Media;
 using Orchard.Logging;
-using Orchard.Storage;
 using Orchard.Media.Models;
 
 namespace Orchard.Media.Services {

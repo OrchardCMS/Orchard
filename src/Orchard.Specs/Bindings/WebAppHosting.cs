@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -157,22 +158,39 @@ namespace Orchard.Specs.Bindings {
 
             foreach (var row in table.Rows) {
                 var r = row;
-                var input = inputs.SingleOrDefault(x => x.GetAttributeValue("name", x.GetAttributeValue("id", "")) == r["name"]);
+                var input = inputs.First(x => x.GetAttributeValue("name", x.GetAttributeValue("id", "")) == r["name"]);
                 Assert.That(input, Is.Not.Null, "Unable to locate <input> name {0} in page html:\r\n\r\n{1}", r["name"], Details.ResponseText);
-                input.Attributes.Add("value", row["value"]);
+                var inputType = input.GetAttributeValue("type", "");
+                switch(inputType) {
+                    case "radio":
+                        var radios = inputs.Where(
+                            x =>
+                            x.GetAttributeValue("type", "") == "radio" &&
+                            x.GetAttributeValue("name", x.GetAttributeValue("id", "")) == r["name"]);
+                        foreach(var radio in radios) {
+                            if (radio.GetAttributeValue("value", "") == row["value"])
+                                radio.Attributes.Add("checked", "checked");
+                            else if (radio.Attributes.Contains("checked"))
+                                radio.Attributes.Remove("checked");
+                        }
+                        break;
+                    default:
+                        input.Attributes.Add("value", row["value"]);
+                        break;
+                }
             }
         }
 
         [When(@"I hit ""(.*)""")]
         public void WhenIHit(string submitText) {
             var submit = _doc.DocumentNode
-                .SelectNodes("//input[@type='submit']")
-                .Single(elt => elt.GetAttributeValue("value", null) == submitText);
+                .SelectSingleNode(string.Format("(//input[@type='submit'][@value='{0}']|//button[@type='submit'][text()='{0}'])", submitText));
 
             var form = Form.LocateAround(submit);
             var urlPath = form.Start.GetAttributeValue("action", Details.UrlPath);
             var inputs = form.Children
                     .SelectMany(elt => elt.DescendantsAndSelf("input"))
+                    .Where(node => !((node.GetAttributeValue("type", "") == "radio" || node.GetAttributeValue("type", "") == "checkbox") && node.GetAttributeValue("checked", "") != "checked"))
                     .GroupBy(elt => elt.GetAttributeValue("name", elt.GetAttributeValue("id", "")), elt => elt.GetAttributeValue("value", ""))
                     .ToDictionary(elt => elt.Key, elt => (IEnumerable<string>)elt);
 
@@ -201,6 +219,11 @@ namespace Orchard.Specs.Bindings {
         [Then(@"I should see ""(.*)""")]
         public void ThenIShouldSee(string text) {
             Assert.That(Details.ResponseText, Is.StringContaining(text));
+        }
+
+        [Then(@"I should not see ""(.*)""")]
+        public void ThenIShouldNotSee(string text) {
+            Assert.That(Details.ResponseText, Is.Not.StringContaining(text));
         }
 
         [Then(@"the title contains ""(.*)""")]

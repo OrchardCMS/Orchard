@@ -7,5 +7,4 @@ orchardversion: 0.1.2010.0312
 features:
     Orchard.Pages:
         Description: Simple pages.
-        Dependencies: Common
         Category: Content

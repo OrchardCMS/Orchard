@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Orchard.ContentManagement;
+using Orchard.ContentManagement.Utilities;
 
 namespace Orchard.Comments.Models {
     public class HasComments : ContentPart<HasCommentsRecord> {
@@ -8,8 +9,11 @@ namespace Orchard.Comments.Models {
             PendingComments = new List<Comment>();
         }
 
-        public IList<Comment> Comments { get; set; }
-        public IList<Comment> PendingComments { get; set; }
+        public readonly LazyField<IList<Comment>> _comments = new LazyField<IList<Comment>>();
+        public readonly LazyField<IList<Comment>> _pendingComments = new LazyField<IList<Comment>>();
+
+        public IList<Comment> Comments { get { return _comments.Value; } set { _comments.Value = value; } }
+        public IList<Comment> PendingComments { get { return _pendingComments.Value; } set { _pendingComments.Value = value; } }
 
         public bool CommentsShown {
             get { return Record.CommentsShown; }

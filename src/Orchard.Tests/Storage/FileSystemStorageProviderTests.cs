@@ -4,7 +4,7 @@ using System.Linq;
 using NUnit.Framework;
 using System;
 using Orchard.Environment.Configuration;
-using Orchard.Storage;
+using Orchard.FileSystems.Media;
 
 namespace Orchard.Tests.Storage {
     [TestFixture]

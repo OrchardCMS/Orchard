@@ -4,6 +4,7 @@ using Autofac;
 using Moq;
 using NUnit.Framework;
 using Orchard.ContentManagement;
+using Orchard.ContentManagement.MetaData.Records;
 using Orchard.ContentManagement.Records;
 using Orchard.Core.Scheduling.Models;
 using Orchard.Core.Scheduling.Services;
@@ -28,7 +29,9 @@ namespace Orchard.Core.Tests.Scheduling {
             _handler = new StubTaskHandler();
             builder.RegisterInstance(new Mock<IOrchardServices>().Object);
             builder.RegisterType<DefaultContentManager>().As<IContentManager>();
-            builder.RegisterType<ScheduledTaskExecutor>().As<IBackgroundTask>().Named("ScheduledTaskExecutor", typeof (IBackgroundTask));
+            builder.RegisterType<DefaultContentManagerSession>().As<IContentManagerSession>();
+
+            builder.RegisterType<ScheduledTaskExecutor>().As<IBackgroundTask>().Named("ScheduledTaskExecutor", typeof(IBackgroundTask));
             builder.RegisterInstance(_handler).As<IScheduledTaskHandler>();
         }
 
@@ -36,6 +39,8 @@ namespace Orchard.Core.Tests.Scheduling {
             get {
                 return new[] {
                                  typeof(ContentTypeRecord), 
+                                 typeof(ContentTypePartRecord), 
+                                 typeof(ContentTypePartNameRecord), 
                                  typeof(ContentItemRecord), 
                                  typeof(ContentItemVersionRecord), 
                                  typeof(ScheduledTaskRecord),
@@ -98,7 +103,7 @@ namespace Orchard.Core.Tests.Scheduling {
             Assert.That(_handler.TaskContext, Is.Null);
             _executor.Sweep();
             Assert.That(_handler.TaskContext, Is.Not.Null);
-            
+
             Assert.That(_handler.TaskContext.Task.TaskType, Is.EqualTo("Ignore"));
             Assert.That(_handler.TaskContext.Task.ContentItem, Is.Null);
         }

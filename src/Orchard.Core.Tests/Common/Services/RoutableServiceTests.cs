@@ -6,6 +6,7 @@ using NUnit.Framework;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
 using Orchard.ContentManagement.Handlers;
+using Orchard.ContentManagement.MetaData.Records;
 using Orchard.ContentManagement.Records;
 using Orchard.Core.Common.Models;
 using Orchard.Core.Common.Services;
@@ -26,6 +27,8 @@ namespace Orchard.Core.Tests.Common.Services {
 
         public override void Register(ContainerBuilder builder) {
             builder.RegisterType<DefaultContentManager>().As<IContentManager>();
+            builder.RegisterType<DefaultContentManagerSession>().As<IContentManagerSession>();
+
             builder.RegisterType<ThingHandler>().As<IContentHandler>();
             builder.RegisterType<StuffHandler>().As<IContentHandler>();
             builder.RegisterType<RoutableService>().As<IRoutableService>();
@@ -68,7 +71,7 @@ namespace Orchard.Core.Tests.Common.Services {
                 Assert.That(_routableService.IsSlugValid("a" + c + "b"), Is.False);
             }
         }
-    
+
 
         [Test]
         public void VeryLongStringTruncatedTo1000Chars() {
@@ -140,18 +143,15 @@ namespace Orchard.Core.Tests.Common.Services {
         }
 
         [Test]
-        public void GeneratedSlugsShouldBeUniqueAmongContentType()
-        {
+        public void GeneratedSlugsShouldBeUniqueAmongContentType() {
             var contentManager = _container.Resolve<IContentManager>();
 
-            var thing1 = contentManager.Create<Thing>(ThingDriver.ContentType.Name, t =>
-            {
+            var thing1 = contentManager.Create<Thing>(ThingDriver.ContentType.Name, t => {
                 t.As<RoutableAspect>().Record = new RoutableRecord();
                 t.Title = "This Is Some Interesting Title";
             });
-            
-            var thing2 = contentManager.Create<Thing>(ThingDriver.ContentType.Name , t =>
-            {
+
+            var thing2 = contentManager.Create<Thing>(ThingDriver.ContentType.Name, t => {
                 t.As<RoutableAspect>().Record = new RoutableRecord();
                 t.Title = "This Is Some Interesting Title";
             });
@@ -160,18 +160,15 @@ namespace Orchard.Core.Tests.Common.Services {
         }
 
         [Test]
-        public void SlugsCanBeDuplicatedAccrossContentTypes()
-        {
+        public void SlugsCanBeDuplicatedAccrossContentTypes() {
             var contentManager = _container.Resolve<IContentManager>();
 
-            var thing = contentManager.Create<Thing>(ThingDriver.ContentType.Name, t =>
-            {
+            var thing = contentManager.Create<Thing>(ThingDriver.ContentType.Name, t => {
                 t.As<RoutableAspect>().Record = new RoutableRecord();
                 t.Title = "This Is Some Interesting Title";
             });
 
-            var stuff = contentManager.Create<Stuff>(StuffDriver.ContentType.Name, s =>
-            {
+            var stuff = contentManager.Create<Stuff>(StuffDriver.ContentType.Name, s => {
                 s.As<RoutableAspect>().Record = new RoutableRecord();
                 s.Title = "This Is Some Interesting Title";
             });
@@ -184,9 +181,11 @@ namespace Orchard.Core.Tests.Common.Services {
             get {
                 return new[] {
                                  typeof(RoutableRecord), 
+                                 typeof(ContentTypeRecord),
+                                 typeof(ContentTypePartRecord), 
+                                 typeof(ContentTypePartNameRecord),
                                  typeof(ContentItemRecord), 
                                  typeof(ContentItemVersionRecord), 
-                                 typeof(ContentTypeRecord),
                                  typeof(CommonRecord),
                                  typeof(CommonVersionRecord),
                              };
@@ -195,8 +194,7 @@ namespace Orchard.Core.Tests.Common.Services {
 
         [UsedImplicitly]
         public class ThingHandler : ContentHandler {
-            public ThingHandler()
-            {
+            public ThingHandler() {
                 Filters.Add(new ActivatingFilter<Thing>(ThingDriver.ContentType.Name));
                 Filters.Add(new ActivatingFilter<ContentPart<CommonVersionRecord>>(ThingDriver.ContentType.Name));
                 Filters.Add(new ActivatingFilter<CommonAspect>(ThingDriver.ContentType.Name));
@@ -217,7 +215,7 @@ namespace Orchard.Core.Tests.Common.Services {
                 set { this.As<RoutableAspect>().Slug = value; }
             }
         }
-        
+
         public class ThingDriver : ContentItemDriver<Thing> {
             public readonly static ContentType ContentType = new ContentType {
                 Name = "thing",
@@ -226,10 +224,8 @@ namespace Orchard.Core.Tests.Common.Services {
         }
 
         [UsedImplicitly]
-        public class StuffHandler : ContentHandler
-        {
-            public StuffHandler()
-            {
+        public class StuffHandler : ContentHandler {
+            public StuffHandler() {
                 Filters.Add(new ActivatingFilter<Stuff>(StuffDriver.ContentType.Name));
                 Filters.Add(new ActivatingFilter<ContentPart<CommonVersionRecord>>(StuffDriver.ContentType.Name));
                 Filters.Add(new ActivatingFilter<CommonAspect>(StuffDriver.ContentType.Name));
@@ -237,27 +233,22 @@ namespace Orchard.Core.Tests.Common.Services {
             }
         }
 
-        public class Stuff : ContentPart
-        {
+        public class Stuff : ContentPart {
             public int Id { get { return ContentItem.Id; } }
 
-            public string Title
-            {
+            public string Title {
                 get { return this.As<RoutableAspect>().Title; }
                 set { this.As<RoutableAspect>().Title = value; }
             }
 
-            public string Slug
-            {
+            public string Slug {
                 get { return this.As<RoutableAspect>().Slug; }
                 set { this.As<RoutableAspect>().Slug = value; }
             }
         }
 
-        public class StuffDriver : ContentItemDriver<Stuff>
-        {
-            public readonly static ContentType ContentType = new ContentType
-            {
+        public class StuffDriver : ContentItemDriver<Stuff> {
+            public readonly static ContentType ContentType = new ContentType {
                 Name = "stuff",
                 DisplayName = "Stuff"
             };

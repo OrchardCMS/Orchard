@@ -134,6 +134,10 @@
       <Project>{D9A7B330-CD22-4DA1-A95A-8DE1982AD8EB}</Project>
       <Name>Orchard.Media</Name>
     </ProjectReference>
+    <ProjectReference Include="Modules\Orchard.MetaData\Orchard.MetaData.csproj">
+      <Project>{23E04990-2A8D-41B8-9908-6DDB71EA3B23}</Project>
+      <Name>Orchard.MetaData</Name>
+    </ProjectReference>
     <ProjectReference Include="Modules\Orchard.Modules\Orchard.Modules.csproj">
       <Project>{17F86780-9A1F-4AA1-86F1-875EEC2730C7}</Project>
       <Name>Orchard.Modules</Name>

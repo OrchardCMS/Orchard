@@ -8,6 +8,8 @@ using Orchard.Environment.Configuration;
 namespace Orchard.Environment {
     public interface IRunningShellTable {
         void Add(ShellSettings settings);
+        void Remove(ShellSettings settings);
+        void Update(ShellSettings settings);
         ShellSettings Match(HttpContextBase httpContext);
     }
 
@@ -22,6 +24,30 @@ namespace Orchard.Environment {
                 .Concat(new[] { settings })
                 .ToArray();
 
+            Organize();
+        }
+
+        public void Remove(ShellSettings settings) {
+            _shells = _shells
+                .Where(s => s.Name != settings.Name)
+                .ToArray();
+
+            Organize();
+        }
+
+        public void Update(ShellSettings settings) {
+            _shells = _shells
+                .Where(s => s.Name != settings.Name)
+                .ToArray();
+
+            _shells = _shells
+                .Concat(new[] { settings })
+                .ToArray();
+
+            Organize();
+        }
+
+        private void Organize() {
             var qualified =
                 _shells.Where(x => !string.IsNullOrEmpty(x.RequestUrlHost) || !string.IsNullOrEmpty(x.RequestUrlPrefix));
 
@@ -50,7 +76,8 @@ namespace Orchard.Environment {
         }
 
         public ShellSettings Match(HttpContextBase httpContext) {
-            var host = httpContext.Request.ServerVariables.Get("HTTP_HOST") ?? "";
+            // use Host header to prevent proxy alteration of the orignal request
+            var host = httpContext.Request.Headers["Host"];
 
             var hostLength = host.IndexOf(':');
             if (hostLength != -1)

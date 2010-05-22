@@ -1,5 +1,4 @@
-﻿using System.IO;
-using System.Linq;
+﻿using System.Linq;
 using Microsoft.WindowsAzure;
 using NUnit.Framework;
 using Orchard.Azure.Environment.Configuration;
@@ -15,7 +14,7 @@ namespace Orchard.Azure.Tests.Environment.Configuration {
             CloudStorageAccount devAccount;
             CloudStorageAccount.TryParse("UseDevelopmentStorage=true", out devAccount);
 
-            Loader = new AzureShellSettingsManager(devAccount);
+            Loader = new AzureShellSettingsManager(devAccount, new Moq.Mock<IShellSettingsManagerEventHandler>().Object);
         }
 
         [SetUp]

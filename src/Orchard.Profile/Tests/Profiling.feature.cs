@@ -51,16 +51,73 @@ namespace Orchard.Profile.Tests
         }
         
         [NUnit.Framework.TestAttribute()]
-        [NUnit.Framework.DescriptionAttribute("Dashboard")]
-        public virtual void Dashboard()
+        [NUnit.Framework.DescriptionAttribute("Warmup")]
+        public virtual void Warmup()
         {
-            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Dashboard", ((string[])(null)));
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Warmup", ((string[])(null)));
 #line 6
 this.ScenarioSetup(scenarioInfo);
 #line 7
  testRunner.Given("I am logged in");
 #line 8
+ testRunner.When("I go to \"/admin\"");
+#line 9
+ testRunner.When("I go to \"/blog0\"");
+#line 10
+ testRunner.When("I go to \"/\"");
+#line hidden
+            testRunner.CollectScenarioErrors();
+        }
+        
+        [NUnit.Framework.TestAttribute()]
+        [NUnit.Framework.DescriptionAttribute("Dashboard")]
+        public virtual void Dashboard()
+        {
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Dashboard", ((string[])(null)));
+#line 12
+this.ScenarioSetup(scenarioInfo);
+#line 13
+ testRunner.Given("I am logged in");
+#line 14
  testRunner.When("I go to \"/admin\" 40 times");
+#line hidden
+            testRunner.CollectScenarioErrors();
+        }
+        
+        [NUnit.Framework.TestAttribute()]
+        [NUnit.Framework.DescriptionAttribute("Hitting blogs")]
+        public virtual void HittingBlogs()
+        {
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Hitting blogs", ((string[])(null)));
+#line 16
+this.ScenarioSetup(scenarioInfo);
+#line 17
+    testRunner.Given("I am logged in");
+#line 18
+    testRunner.When("I go to \"/blog0\" 10 times");
+#line 19
+    testRunner.When("I go to \"/blog1\" 10 times");
+#line 20
+    testRunner.When("I go to \"/blog2\" 10 times");
+#line 21
+    testRunner.When("I go to \"/blog3\" 10 times");
+#line 22
+    testRunner.When("I go to \"/blog4\" 10 times");
+#line hidden
+            testRunner.CollectScenarioErrors();
+        }
+        
+        [NUnit.Framework.TestAttribute()]
+        [NUnit.Framework.DescriptionAttribute("Hitting home page")]
+        public virtual void HittingHomePage()
+        {
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Hitting home page", ((string[])(null)));
+#line 24
+this.ScenarioSetup(scenarioInfo);
+#line 25
+    testRunner.Given("I am logged in");
+#line 26
+    testRunner.When("I go to \"/\" 40 times");
 #line hidden
             testRunner.CollectScenarioErrors();
         }

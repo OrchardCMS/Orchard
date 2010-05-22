@@ -11,7 +11,7 @@ namespace Orchard.Core.Common.Services {
         /// <summary>
         /// Returns any content item of the specified content type with similar slugs
         /// </summary>
-        string[] GetSimilarSlugs(string contentType, string slug);
+        IEnumerable<RoutableAspect> GetSimilarSlugs(string contentType, string slug);
 
         /// <summary>
         /// Validates the given slug

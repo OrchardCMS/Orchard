@@ -7,5 +7,4 @@ orchardversion: 0.1.2010.0312
 features:
     Orchard.Media:
         Description: File system based media upload, storage and management.
-        Dependencies: Common
         Category: Media

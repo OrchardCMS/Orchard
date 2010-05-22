@@ -104,6 +104,10 @@ namespace Orchard.Core.Common.Drivers {
 
         // Can be moved somewhere else once we have IoC enabled body text filters.
         private static string BbcodeReplace(string bodyText) {
+
+            if ( string.IsNullOrEmpty(bodyText) )
+                return string.Empty;
+
             Regex urlRegex = new Regex(@"\[url\]([^\]]+)\[\/url\]");
             Regex urlRegexWithLink = new Regex(@"\[url=([^\]]+)\]([^\]]+)\[\/url\]");
             Regex imgRegex = new Regex(@"\[img\]([^\]]+)\[\/img\]");

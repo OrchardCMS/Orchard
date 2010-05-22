@@ -83,7 +83,7 @@ namespace Orchard.Tests.Data.Builders {
 
             var manager = (ISessionFactoryBuilder)new SessionFactoryBuilder();
             var sessionFactory = manager.BuildSessionFactory(new SessionFactoryParameters {
-                                                                                              Provider = "SQLite",
+                                                                                              Provider = "SqlServer",
                                                                                               DataFolder = _tempDataFolder,
                                                                                               ConnectionString = "Data Source=.\\SQLEXPRESS;AttachDbFileName=" + databasePath + ";Integrated Security=True;User Instance=True;",
                                                                                               UpdateSchema = true,

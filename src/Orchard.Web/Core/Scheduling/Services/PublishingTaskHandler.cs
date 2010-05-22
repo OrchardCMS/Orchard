@@ -1,16 +1,18 @@
 ﻿using JetBrains.Annotations;
+using Orchard.ContentManagement;
 using Orchard.Logging;
 using Orchard.Tasks.Scheduling;
 
 namespace Orchard.Core.Scheduling.Services {
     [UsedImplicitly]
     public class PublishingTaskHandler : IScheduledTaskHandler {
-        public PublishingTaskHandler(IOrchardServices services) {
-            Services = services;
+        private readonly IContentManager _contentManager;
+
+        public PublishingTaskHandler(IContentManager contentManager) {
+            _contentManager = contentManager;
             Logger = NullLogger.Instance;
         }
 
-        public IOrchardServices Services { get; set; }
         public ILogger Logger { get; set; }
 
         public void Process(ScheduledTaskContext context) {
@@ -20,7 +22,7 @@ namespace Orchard.Core.Scheduling.Services {
                     context.Task.ContentItem.Version,
                     context.Task.ScheduledUtc);
 
-                Services.ContentManager.Publish(context.Task.ContentItem);
+                _contentManager.Publish(context.Task.ContentItem);
             }
             else if (context.Task.TaskType == "Unpublish") {
                 Logger.Information("Unpublishing item #{0} version {1} scheduled at {2} utc",
@@ -28,7 +30,7 @@ namespace Orchard.Core.Scheduling.Services {
                     context.Task.ContentItem.Version,
                     context.Task.ScheduledUtc);
 
-                Services.ContentManager.Unpublish(context.Task.ContentItem);
+                _contentManager.Unpublish(context.Task.ContentItem);
             }
         }
     }

@@ -3,9 +3,9 @@ using System.Runtime.Serialization;
 using System.Xml;
 using Autofac;
 using NUnit.Framework;
-using Orchard.Environment.Configuration;
 using Orchard.Environment.Topology;
 using Orchard.Environment.Topology.Models;
+using Orchard.FileSystems.AppData;
 
 namespace Orchard.Tests.Environment.Topology {
     [TestFixture]

@@ -1,5 +1,4 @@
 ﻿<%@ Control Language="C#" Inherits="Orchard.Mvc.ViewUserControl<SetupViewModel>" %>
-<%@ Import Namespace="Orchard.Mvc.Html"%>
 <%@ Import Namespace="Orchard.Setup.ViewModels"%>
 <h1><%=Html.TitleForPage(_Encoded("Get Started").ToHtmlString())%></h1>
 <%
@@ -9,7 +8,7 @@ using (Html.BeginFormAntiForgeryPost()) { %>
 <fieldset class="site">
     <div>
         <label for="SiteName"><%=_Encoded("What is the name of your site?") %></label>
-        <%=Html.EditorFor(svm => svm.SiteName) %>
+        <%=Html.TextBoxFor(svm => svm.SiteName, new { autofocus = "autofocus" })%>
     </div>
     <div>
         <label for="AdminUsername"><%=_Encoded("Choose a user name:") %></label>
@@ -19,7 +18,8 @@ using (Html.BeginFormAntiForgeryPost()) { %>
         <label for="AdminPassword"><%=_Encoded("Choose a password:") %></label>
         <%=Html.PasswordFor(svm => svm.AdminPassword) %>
     </div>
-</fieldset>
+</fieldset><%
+if (!Model.DatabaseIsPreconfigured) { %>
 <fieldset class="data">
     <legend><%=_Encoded("How would you like to store your data?") %></legend>
     <%=Html.ValidationMessage("DatabaseOptions", "Unable to setup data storage") %>
@@ -30,17 +30,18 @@ using (Html.BeginFormAntiForgeryPost()) { %>
     <div>
         <%=Html.RadioButtonFor(svm => svm.DatabaseOptions, false, new { id = "sql" })%>
         <label for="sql" class="forcheckbox"><%=_Encoded("Use an existing SQL Server (or SQL Express) database") %></label>
-        <span data-controllerid="sql">
+        <div data-controllerid="sql">
             <label for="DatabaseConnectionString"><%=_Encoded("Connection string") %></label>
             <%=Html.EditorFor(svm => svm.DatabaseConnectionString)%>
             <span class="hint"><%=_Encoded("Example:") %><br /><%=_Encoded("Data Source=sqlServerName;Initial Catalog=dbName;Persist Security Info=True;User ID=userName;Password=password") %></span>
-        </span>
-        <span data-controllerid="sql">
+        </div>
+        <div data-controllerid="sql">
             <label for="DatabaseTablePrefix"><%=_Encoded("Database Table Prefix") %></label>
             <%=Html.EditorFor(svm => svm.DatabaseTablePrefix)%>
-        </span>
+        </div>
     </div>
-</fieldset>
+</fieldset><%
+} %>
 <fieldset>
     <input class="button" type="submit" value="<%=_Encoded("Finish Setup") %>" />
 </fieldset><%

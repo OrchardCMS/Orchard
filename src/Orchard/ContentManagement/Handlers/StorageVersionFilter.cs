@@ -7,14 +7,15 @@ namespace Orchard.ContentManagement.Handlers {
             : base(repository) {
         }
 
-        protected override TRecord GetRecord(LoadContentContext context) {
-            return _repository.Get(context.ContentItemVersionRecord.Id);
+        protected override TRecord GetRecordCore(ContentItemVersionRecord versionRecord) {
+            return _repository.Get(versionRecord.Id);
         }
 
-        protected override void Creating(CreateContentContext context, ContentPart<TRecord> instance) {
-            instance.Record.ContentItemRecord = context.ContentItemRecord;
-            instance.Record.ContentItemVersionRecord = context.ContentItemVersionRecord;
-            _repository.Create(instance.Record);
+        protected override TRecord CreateRecordCore(ContentItemVersionRecord versionRecord, TRecord record) {
+            record.ContentItemRecord = versionRecord.ContentItemRecord;
+            record.ContentItemVersionRecord = versionRecord;
+            _repository.Create(record);
+            return record;
         }
 
         protected override void Versioning(VersionContentContext context, ContentPart<TRecord> existing, ContentPart<TRecord> building) {

@@ -20,13 +20,13 @@
 <ul>
     <%foreach (var partType in Model.PartTypes.OrderBy(x => x.Name)) {%>
     <li><span style="font-weight: bold;">
-        <%if (partType.IsGenericType) {%><%=Html.Encode(partType.Name +" "+partType.GetGenericArguments().First().Name)%></span>
+        <%if (partType.IsGenericType) {%><%=Html.Encode(partType.Name +" "+partType.GetGenericArguments().First().Name)%>
         <%=Html.Encode(" (" + partType.GetGenericArguments().First().Namespace + ")")%><%}
-          else {%><%=Html.Encode(partType.Name)%></span>
+          else {%><%=Html.Encode(partType.Name)%>
         <%=Html.Encode( " (" + partType.Namespace + ")")%><%
                                                             }
           
-          %>
+          %></span>
         <ul style="margin-left: 20px">
             <%foreach (var prop in partType.GetProperties().Where(x => x.DeclaringType == partType)) {
                   var value = prop.GetValue(Model.Locate(partType), null);%>

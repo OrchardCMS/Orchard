@@ -1,6 +1,5 @@
 ﻿using System;
 using Autofac;
-using Autofac.Builder;
 using Moq;
 using NUnit.Framework;
 using Orchard.Tasks;

@@ -5,6 +5,7 @@ using Autofac;
 using Moq;
 using NUnit.Framework;
 using Orchard.ContentManagement;
+using Orchard.ContentManagement.MetaData.Records;
 using Orchard.ContentManagement.Records;
 using Orchard.Core.Scheduling.Models;
 using Orchard.Core.Scheduling.Services;
@@ -26,12 +27,14 @@ namespace Orchard.Core.Tests.Scheduling {
             _repository = _container.Resolve<IRepository<ScheduledTaskRecord>>();
             _scheduledTaskManager = _container.Resolve<IScheduledTaskManager>();
             _contentManager = _container.Resolve<IContentManager>();
-            _mockServices.SetupGet(x=>x.ContentManager).Returns(_contentManager);
+            _mockServices.SetupGet(x => x.ContentManager).Returns(_contentManager);
         }
 
-        public override void Register(ContainerBuilder builder) {            
+        public override void Register(ContainerBuilder builder) {
             builder.RegisterInstance(_mockServices.Object);
             builder.RegisterType<DefaultContentManager>().As<IContentManager>();
+            builder.RegisterType<DefaultContentManagerSession>().As<IContentManagerSession>();
+
             builder.RegisterType<ScheduledTaskManager>().As<IScheduledTaskManager>();
         }
 
@@ -39,6 +42,8 @@ namespace Orchard.Core.Tests.Scheduling {
             get {
                 return new[] {
                                  typeof(ContentTypeRecord), 
+                                 typeof(ContentTypePartRecord), 
+                                 typeof(ContentTypePartNameRecord), 
                                  typeof(ContentItemRecord), 
                                  typeof(ContentItemVersionRecord), 
                                  typeof(ScheduledTaskRecord),
@@ -86,7 +91,7 @@ namespace Orchard.Core.Tests.Scheduling {
         public void TasksForAllVersionsOfContenItemShouldBeReturned() {
             var hello1 = _contentManager.New("hello");
             _contentManager.Create(hello1);
-            
+
             var hello2 = _contentManager.GetDraftRequired(hello1.Id);
 
             Assert.That(hello1.Version, Is.EqualTo(1));

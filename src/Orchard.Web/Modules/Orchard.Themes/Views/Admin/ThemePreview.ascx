@@ -2,37 +2,68 @@
 <%@ Import Namespace="Orchard.Mvc.Html"%>
 <%@ Import Namespace="Orchard.Themes.ViewModels"%>
 <style type="text/css">
-#themepreview, #themepreview fieldset, #themepreview input, #themepreview select 
-{
-    margin: 0; padding: 0; border:none; font-size: 1em; width:auto; color: #000;
-    font-family:Frutiger,"Frutiger Linotype",Univers,Calibri,"Gill Sans","Gill Sans MT","Myriad Pro",Myriad,"DejaVu Sans Condensed","Liberation Sans","Nimbus Sans L",Tahoma,Geneva,"Helvetica Neue",Helvetica,Arial,sans-serif;
+body {
+    margin-top:40px;
 }
-/*#themepreview { background: #000; font-size:15px; padding:5px; }*/
-#themepreview span { color: #ccc; padding-right:5px;  }
-#themepreview fieldset {  margin: 0; padding: 3px; }
-/*#themepreview button { font-size: 13px; padding:0 3px; margin-left:10px; }*/
-#themepreview button.preview { margin-left:0; }
+#themepreview {
+    background:#2D2F25 url('<%=ResolveUrl("../../Styles/Images/toolBarBackground.gif") %>') repeat-x left top;
+    border-bottom:1px solid #494d4d;
+    font-size:15px; 
+    left:0;
+    height:30px;
+    margin:0;
+    position:absolute;
+    overflow:hidden;
+    padding:5px 0;
+    top:0;
+    width:100%;
+}   
+#themepreview fieldset,
+#themepreview span, #themepreview input,
+#themepreview select, #themepreview button  {
+    border:none;
+    color:#000;
+    font:1em/1em Frutiger,"Frutiger Linotype",Univers,Calibri,"Gill Sans","Gill Sans MT","Myriad Pro",Myriad,"DejaVu Sans Condensed","Liberation Sans","Nimbus Sans L",Tahoma,Geneva,"Helvetica Neue",Helvetica,Arial,sans-serif;
+    margin:0;
+    padding:0;
+    width:auto;
+}
+#themepreview span { color: #ccc; padding-right:5px; }
+#themepreview fieldset { padding:3px 8px; }
 html.dyn #themepreview button.preview { display:none; }
+#themepreview fieldset * { float:left; }
+#themepreview fieldset span { line-height:1.6em; }
 #themepreview button.cancel { float:right; }
-
-#themepreview { background: #2D2F25 url('<%=ResolveUrl("../../Styles/Images/toolBarBackground.gif") %>') repeat-x left top; font-size:15px; padding:5px; border-bottom:1px solid #494d4d;}
-
 /* Button styles */
-#themepreview button { font-size: 13px; padding:2px 4px; margin: 0 0 0 10px; text-align:center; color:#f1f1f1; border:1px solid; border-top-color:#191d1d; border-right-color:#494d4d; border-bottom-color:#494d4d; border-left-color:#202626; background:#2a2626 url('<%=ResolveUrl("../../Styles/Images/toolBarActiveButtonBackground.gif") %>') repeat-x left center; }
-
-/* Hover for buttons */
-#themepreview button:hover { color:#fdcc64; border:1px #545959 solid; cursor:pointer; background:#2a2626 url('<%=ResolveUrl("../../Styles/Images/toolBarHoverButtonBackground.gif") %>') repeat-x left center; }
-
+#themepreview button {
+    background:#2a2626 url('<%=ResolveUrl("../../Styles/Images/toolBarActiveButtonBackground.gif") %>') repeat-x left center;
+    border:1px solid;
+    border-top-color:#191d1d;
+    border-right-color:#494d4d;
+    border-bottom-color:#494d4d;
+    border-left-color:#202626;
+    color:#f1f1f1;
+    line-height:1.22em;
+    margin: 0 0 0 10px;
+    padding:0 4px 1px;
+    text-align:center;
+}
+#themepreview button:hover {
+    background:#2a2626 url('<%=ResolveUrl("../../Styles/Images/toolBarHoverButtonBackground.gif") %>') repeat-x left center;
+    border-color:#545959;
+    color:#fdcc64;
+    cursor:pointer;
+}
 </style>
 <div id="themepreview">
 <% using(Html.BeginFormAntiForgeryPost(Url.Action("Preview", new{Controller="Admin", Area="Orchard.Themes"}), FormMethod.Post, new { @class = "inline" })) { %>
     <fieldset>    
         <span><%=T("You are previewing: ")%></span>
+        <%=Html.Hidden("ReturnUrl", Context.Request.RawUrl)%>
         <%=Html.DropDownList("ThemeName", Model.Themes, new {onChange = "this.form.submit();"})%>
         <button type="submit" class="preview" title="<%=_Encoded("Preview")%>" name="submit.Preview" value="<%=_Encoded("Preview")%>"><%=_Encoded("Preview")%></button>
         <button type="submit" title="<%=_Encoded("Apply")%>" name="submit.Apply" value="<%=_Encoded("Apply")%>"><%=_Encoded("Apply this theme") %></button>
         <button type="submit" class="cancel" title="<%=_Encoded("Cancel")%>" name="submit.Cancel" value="<%=_Encoded("Cancel")%>"><%=_Encoded("Cancel")%></button>
-        <%=Html.Hidden("ReturnUrl", Context.Request.Url)%>
     </fieldset>
 <% } %>
 </div>

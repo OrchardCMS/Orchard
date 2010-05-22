@@ -57,7 +57,7 @@ namespace Orchard.Users.Controllers {
         [HttpPost]
         [SuppressMessage("Microsoft.Design", "CA1054:UriParametersShouldNotBeStrings",
             Justification = "Needs to take same parameter type as Controller.Redirect()")]
-        public ActionResult LogOn(string userNameOrEmail, string password, bool rememberMe) {
+        public ActionResult LogOn(string userNameOrEmail, string password, bool rememberMe, string returnUrl) {
             var user = ValidateLogOn(userNameOrEmail, password);
             if (!ModelState.IsValid) {
                 return View("LogOn", new LogOnViewModel {Title = "Log On"});
@@ -65,13 +65,19 @@ namespace Orchard.Users.Controllers {
 
             _authenticationService.SignIn(user, rememberMe);
 
-            return this.ReturnUrlRedirect();
+            if (string.IsNullOrEmpty(returnUrl))
+                return new RedirectResult("~/");
+
+            return new RedirectResult(returnUrl);
         }
 
-        public ActionResult LogOff() {
+        public ActionResult LogOff(string returnUrl) {
             _authenticationService.SignOut();
 
-            return this.ReturnUrlRedirect();
+            if (string.IsNullOrEmpty(returnUrl))
+                return new RedirectResult("~/");
+
+            return new RedirectResult(returnUrl);
         }
 
         int MinPasswordLength {
@@ -173,12 +179,20 @@ namespace Orchard.Users.Controllers {
         }
 
         private IUser ValidateLogOn(string userNameOrEmail, string password) {
+            bool validate = true;
+
             if (String.IsNullOrEmpty(userNameOrEmail)) {
                 ModelState.AddModelError("userNameOrEmail", T("You must specify a username or e-mail."));
+                validate = false;
             }
             if (String.IsNullOrEmpty(password)) {
                 ModelState.AddModelError("password", T("You must specify a password."));
+                validate = false;
             }
+
+            if (!validate)
+                return null;
+
             var user = _membershipService.ValidateUser(userNameOrEmail, password);
             if (user == null) {
                 ModelState.AddModelError("_FORM", T("The username or e-mail or password provided is incorrect."));
@@ -188,12 +202,20 @@ namespace Orchard.Users.Controllers {
         }
 
         private bool ValidateRegistration(string userName, string email, string password, string confirmPassword) {
+            bool validate = true;
+
             if (String.IsNullOrEmpty(userName)) {
                 ModelState.AddModelError("username", T("You must specify a username."));
+                validate = false;
             }
             if (String.IsNullOrEmpty(email)) {
                 ModelState.AddModelError("email", T("You must specify an email address."));
+                validate = false;
             }
+
+            if (!validate)
+                return false;
+
             string userUnicityMessage = _userService.VerifyUserUnicity(userName, email);
             if (userUnicityMessage != null) {
                 ModelState.AddModelError("userExists", T(userUnicityMessage));
