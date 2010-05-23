@@ -18,7 +18,7 @@ namespace Orchard.Host {
         }
 
         public void Stop(bool immediate) {
-            //TODO
+            HostingEnvironment.UnregisterObject(this);
         }
 
         public int RunCommand(TextReader input, TextWriter output, Logger logger, OrchardParameters args) {

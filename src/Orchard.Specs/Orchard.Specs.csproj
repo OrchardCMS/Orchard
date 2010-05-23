@@ -285,9 +285,6 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <WCFMetadata Include="Service References\" />
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="Hosting\Simple.Web\Content\Static.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
