@@ -3,6 +3,9 @@
     margin-bottom:.2em;
 }
 
+.features h3 {
+    font-size:1.6em;
+}
 .features .category {
     overflow:hidden;
 }
@@ -68,7 +71,7 @@
 .features .feature .actions {
     position:absolute;
     right:.4em;
-    top:.6em;
+    top:.4em;
 }
 
 .cathedral {
