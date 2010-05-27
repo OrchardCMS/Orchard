@@ -1,12 +1,4 @@
-﻿.orchard-modules #main h2 {
-    border:0;
-    margin-bottom:.2em;
-}
-
-.features h3 {
-    font-size:1.6em;
-}
-.features .category {
+﻿.features .category {
     overflow:hidden;
 }
 .features .feature {
@@ -37,7 +29,7 @@
 
 .features .enabled.feature {
     background:#FFF;
-    border-color:#CFE493;cfe493
+    border-color:#CFE493;
 }
 .features .disabled.feature {
     background:#EAEAEA;
