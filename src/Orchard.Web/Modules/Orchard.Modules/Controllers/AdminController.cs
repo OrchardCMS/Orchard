@@ -25,6 +25,10 @@ namespace Orchard.Modules.Controllers {
             return View(new ModulesIndexViewModel {Modules = modules});
         }
 
+        public ActionResult Add() {
+            return View(new ModulesIndexViewModel());  
+        }
+
         public ActionResult Features() {
             if (!Services.Authorizer.Authorize(Permissions.ManageFeatures, T("Not allowed to manage features")))
                 return new HttpUnauthorizedResult();
