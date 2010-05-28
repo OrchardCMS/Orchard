@@ -1,18 +1,19 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using JetBrains.Annotations;
-using Orchard.Environment.Extensions;
+using Orchard.Environment;
+using Orchard.Environment.Extensions.Models;
 using Orchard.Logging;
 using Orchard.Roles.Services;
 using Orchard.Security.Permissions;
 
 namespace Orchard.Roles {
     [UsedImplicitly]
-    public class Extension : ExtensionManagerEvents {
+    public class DefaultRoleUpdater : IFeatureEventHandler {
         private readonly IRoleService _roleService;
         private readonly IEnumerable<IPermissionProvider> _permissionProviders;
 
-        public Extension(
+        public DefaultRoleUpdater(
             IRoleService roleService,
             IEnumerable<IPermissionProvider> permissionProviders) {
             _roleService = roleService;
@@ -23,18 +24,27 @@ namespace Orchard.Roles {
 
         public ILogger Logger { get; set; }
 
-        public override void Enabled(ExtensionEventContext context) {
-            var extensionDisplayName = context.Extension.Descriptor.DisplayName ?? context.Extension.Descriptor.Name;
+        void IFeatureEventHandler.Install(Feature feature) {
+            AddDefaultRolesForFeature(feature);
+        }
+
+        void IFeatureEventHandler.Enable(Feature feature) {}
+
+        void IFeatureEventHandler.Disable(Feature feature) {}
+
+        void IFeatureEventHandler.Uninstall(Feature feature) {}
+
+        public void AddDefaultRolesForFeature(Feature feature) {
+            var featureName = feature.Descriptor.Name;
 
             // when another module is being enabled, locate matching permission providers
-            var providersForEnabledModule =
-                _permissionProviders.Where(x => x.ModuleName == extensionDisplayName);
+            var providersForEnabledModule = _permissionProviders.Where(x => x.ModuleName == featureName);
 
             if (providersForEnabledModule.Any()) {
-                Logger.Debug("Configuring default roles for module {0}", extensionDisplayName);
+                Logger.Debug("Configuring default roles for module {0}", featureName);
             }
             else {
-                Logger.Debug("No default roles for module {0}", extensionDisplayName);
+                Logger.Debug("No default roles for module {0}", featureName);
             }
 
             foreach (var permissionProvider in providersForEnabledModule) {

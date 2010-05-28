@@ -45,7 +45,6 @@ namespace Orchard.Setup {
             builder.RegisterType<HelpCommand>().As<ICommandHandler>().InstancePerLifetimeScope();
 
             // setup mode specific implementations of needed service interfaces
-            builder.RegisterType<NullHackInstallationGenerator>().As<IHackInstallationGenerator>().InstancePerLifetimeScope();
             builder.RegisterType<SafeModeThemeService>().As<IThemeService>().InstancePerLifetimeScope();
             builder.RegisterType<SafeModeText>().As<IText>().InstancePerLifetimeScope();
             builder.RegisterType<SafeModeSiteService>().As<ISiteService>().InstancePerLifetimeScope();
@@ -88,10 +87,6 @@ namespace Orchard.Setup {
             public void UninstallTheme(string themeName) { }
         }
 
-        class NullHackInstallationGenerator : IHackInstallationGenerator {
-            public void GenerateInstallEvents() { }
-            public void GenerateActivateEvents() { }
-        }
 
         class SafeModeSiteService : ISiteService {
             public ISite GetSiteSettings() {

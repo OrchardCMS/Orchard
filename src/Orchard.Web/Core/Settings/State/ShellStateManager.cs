@@ -7,11 +7,11 @@ using Orchard.Environment.Topology;
 using Orchard.Logging;
 
 namespace Orchard.Core.Settings.State {
-    public class ShellStateProvider : Component, IShellStateProvider {
+    public class ShellStateManager : Component, IShellStateManager {
         private readonly IRepository<ShellStateRecord> _shellStateRepository;
         private readonly IShellDescriptorManager _shellDescriptorManager;
 
-        public ShellStateProvider(
+        public ShellStateManager(
             IRepository<ShellStateRecord> shellStateRepository,
             IShellDescriptorManager shellDescriptorManager) {
             _shellStateRepository = shellStateRepository;

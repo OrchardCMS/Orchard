@@ -132,9 +132,10 @@ namespace Orchard.Setup.Services {
 
                     var contentManager = environment.Resolve<IContentManager>();
 
+                    // this needs to exit the standalone environment? rework this process entirely?
                     // simulate installation-time module activation events
-                    var hackInstallationGenerator = environment.Resolve<IHackInstallationGenerator>();
-                    hackInstallationGenerator.GenerateInstallEvents();
+                    //var hackInstallationGenerator = environment.Resolve<IHackInstallationGenerator>();
+                    //hackInstallationGenerator.GenerateInstallEvents();
 
                     // create home page as a CMS page
                     var page = contentManager.Create("page", VersionOptions.Draft);

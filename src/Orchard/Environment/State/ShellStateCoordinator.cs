@@ -9,21 +9,21 @@ using Orchard.Environment.Topology;
 using Orchard.Environment.Topology.Models;
 
 namespace Orchard.Environment.State {
-    public class ShellStateManager : IShellStateManagerEventHandler, IShellDescriptorManagerEventHandler {
+    public class ShellStateCoordinator : IShellStateManagerEventHandler, IShellDescriptorManagerEventHandler {
         private readonly ShellSettings _settings;
-        private readonly IShellStateProvider _stateProvider;
+        private readonly IShellStateManager _stateManager;
         private readonly IExtensionManager _extensionManager;
         private readonly IProcessingEngine _processingEngine;
         private readonly IFeatureEventHandler _featureEvents;
 
-        public ShellStateManager(
+        public ShellStateCoordinator(
             ShellSettings settings,
-            IShellStateProvider stateProvider,
+            IShellStateManager stateManager,
             IExtensionManager extensionManager,
             IProcessingEngine processingEngine,
             IFeatureEventHandler featureEvents) {
             _settings = settings;
-            _stateProvider = stateProvider;
+            _stateManager = stateManager;
             _extensionManager = extensionManager;
             _processingEngine = processingEngine;
             _featureEvents = featureEvents;
@@ -31,7 +31,7 @@ namespace Orchard.Environment.State {
 
         void IShellDescriptorManagerEventHandler.Changed(ShellDescriptor descriptor) {
             // deduce and apply state changes involved
-            var shellState = _stateProvider.GetShellState();
+            var shellState = _stateManager.GetShellState();
             foreach (var feature in descriptor.Features) {
                 var featureName = feature.Name;
                 var featureState = shellState.Features.SingleOrDefault(f => f.Name == featureName);
@@ -42,10 +42,10 @@ namespace Orchard.Environment.State {
                     shellState.Features = shellState.Features.Concat(new[] { featureState });
                 }
                 if (!featureState.IsInstalled) {
-                    _stateProvider.UpdateInstalledState(featureState, ShellFeatureState.State.Rising);
+                    _stateManager.UpdateInstalledState(featureState, ShellFeatureState.State.Rising);
                 }
                 if (!featureState.IsEnabled) {
-                    _stateProvider.UpdateEnabledState(featureState, ShellFeatureState.State.Rising);
+                    _stateManager.UpdateEnabledState(featureState, ShellFeatureState.State.Rising);
                 }
             }
             foreach (var featureState in shellState.Features) {
@@ -54,7 +54,7 @@ namespace Orchard.Environment.State {
                     continue;
                 }
                 if (!featureState.IsDisabled) {
-                    _stateProvider.UpdateEnabledState(featureState, ShellFeatureState.State.Falling);
+                    _stateManager.UpdateEnabledState(featureState, ShellFeatureState.State.Falling);
                 }
             }
 
@@ -62,7 +62,7 @@ namespace Orchard.Environment.State {
         }
 
         private void FireApplyChangesIfNeeded() {
-            var shellState = _stateProvider.GetShellState();
+            var shellState = _stateManager.GetShellState();
             if (shellState.Features.Any(FeatureIsChanging)) {
                 var descriptor = new ShellDescriptor {
                     Features = shellState.Features
@@ -98,7 +98,7 @@ namespace Orchard.Environment.State {
         }
 
         void IShellStateManagerEventHandler.ApplyChanges() {
-            var shellState = _stateProvider.GetShellState();
+            var shellState = _stateManager.GetShellState();
 
             // start with description of all declared features in order - order preserved with all merging
             var orderedFeatureDescriptors = AllFeaturesInOrder();
@@ -150,24 +150,24 @@ namespace Orchard.Environment.State {
             // lower enabled states in reverse order
             foreach (var entry in allEntries.Where(entry => entry.FeatureState.EnableState == ShellFeatureState.State.Falling)) {
                 _featureEvents.Disable(entry.Feature);
-                _stateProvider.UpdateEnabledState(entry.FeatureState, ShellFeatureState.State.Down);
+                _stateManager.UpdateEnabledState(entry.FeatureState, ShellFeatureState.State.Down);
             }
 
             // lower installed states in reverse order
             foreach (var entry in allEntries.Where(entry => entry.FeatureState.InstallState == ShellFeatureState.State.Falling)) {
                 _featureEvents.Uninstall(entry.Feature);
-                _stateProvider.UpdateInstalledState(entry.FeatureState, ShellFeatureState.State.Down);
+                _stateManager.UpdateInstalledState(entry.FeatureState, ShellFeatureState.State.Down);
             }
 
             // raise install and enabled states in order
             foreach (var entry in allEntries.Where(entry => IsRising(entry.FeatureState))) {
                 if (entry.FeatureState.InstallState == ShellFeatureState.State.Rising) {
                     _featureEvents.Install(entry.Feature);
-                    _stateProvider.UpdateInstalledState(entry.FeatureState, ShellFeatureState.State.Up);
+                    _stateManager.UpdateInstalledState(entry.FeatureState, ShellFeatureState.State.Up);
                 }
                 if (entry.FeatureState.EnableState == ShellFeatureState.State.Rising) {
                     _featureEvents.Enable(entry.Feature);
-                    _stateProvider.UpdateEnabledState(entry.FeatureState, ShellFeatureState.State.Up);
+                    _stateManager.UpdateEnabledState(entry.FeatureState, ShellFeatureState.State.Up);
                 }
             }
 

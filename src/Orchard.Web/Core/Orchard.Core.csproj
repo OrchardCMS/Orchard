@@ -133,7 +133,7 @@
     <Compile Include="Settings\Permissions.cs" />
     <Compile Include="Settings\State\Records\ShellFeatureStateRecord.cs" />
     <Compile Include="Settings\State\Records\ShellStateRecord.cs" />
-    <Compile Include="Settings\State\ShellStateProvider.cs" />
+    <Compile Include="Settings\State\ShellStateManager.cs" />
     <Compile Include="Settings\Topology\Records\ShellFeatureRecord.cs" />
     <Compile Include="Settings\Topology\Records\ShellParameterRecord.cs" />
     <Compile Include="Settings\Topology\Records\ShellDescriptorRecord.cs" />

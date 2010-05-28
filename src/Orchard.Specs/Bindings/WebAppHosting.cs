@@ -169,7 +169,7 @@ namespace Orchard.Specs.Bindings {
 
             foreach (var row in table.Rows) {
                 var r = row;
-                var input = inputs.First(x => x.GetAttributeValue("name", x.GetAttributeValue("id", "")) == r["name"]);
+                var input = inputs.FirstOrDefault(x => x.GetAttributeValue("name", x.GetAttributeValue("id", "")) == r["name"]);
                 Assert.That(input, Is.Not.Null, "Unable to locate <input> name {0} in page html:\r\n\r\n{1}", r["name"], Details.ResponseText);
                 var inputType = input.GetAttributeValue("type", "");
                 switch(inputType) {

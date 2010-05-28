@@ -17,7 +17,6 @@ namespace Orchard.Environment.State.Models {
         public bool IsInstalled { get { return InstallState == State.Up; } }
         public bool IsEnabled { get { return EnableState == State.Up; } }
         public bool IsDisabled { get { return EnableState == State.Down || EnableState == State.Undefined; } }
-        public bool IsUninstalled { get { return InstallState == State.Down || InstallState == State.Undefined; } }
 
         public enum State {
             Undefined,

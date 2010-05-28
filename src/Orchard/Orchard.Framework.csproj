@@ -140,8 +140,8 @@
     <Compile Include="Environment\State\DefaultProcessingEngine.cs" />
     <Compile Include="Environment\State\IProcessingEngine.cs" />
     <Compile Include="Environment\State\IShellStateManagerEventHandler.cs" />
-    <Compile Include="Environment\State\IShellStateProvider.cs" />
-    <Compile Include="Environment\State\ShellStateManager.cs" />
+    <Compile Include="Environment\State\IShellStateManager.cs" />
+    <Compile Include="Environment\State\ShellStateCoordinator.cs" />
     <Compile Include="IDependency.cs" />
     <Compile Include="Mvc\Html\ThemeExtensions.cs" />
     <Compile Include="Mvc\Routes\IRoutePublisher.cs" />
@@ -325,8 +325,6 @@
     <Compile Include="ContentManagement\Records\ContentPartVersionRecord.cs" />
     <Compile Include="ContentManagement\Records\ContentTypeRecord.cs" />
     <Compile Include="ContentManagement\Records\Utility.cs" />
-    <Compile Include="Environment\Extensions\HackInstallationGenerator.cs" />
-    <Compile Include="Environment\Extensions\IExtensionManagerEvents.cs" />
     <Compile Include="Localization\Text.cs" />
     <Compile Include="Mvc\ViewModels\ContentItemViewModel.cs" />
     <Compile Include="ContentManagement\ViewModels\TemplateViewModel.cs" />
@@ -501,7 +499,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="ContentManagement\MetaData\Models\" />
-    <Folder Include="Environment\ProcessEngine\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

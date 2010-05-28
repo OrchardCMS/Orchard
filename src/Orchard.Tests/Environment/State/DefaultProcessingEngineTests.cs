@@ -9,24 +9,20 @@ using Orchard.Environment.Topology.Models;
 using Orchard.Events;
 using Orchard.Tests.Utility;
 
-namespace Orchard.Tests.Environment.State
-{
+namespace Orchard.Tests.Environment.State {
     [TestFixture]
-    public class DefaultProcessingEngineTests
-    {
+    public class DefaultProcessingEngineTests {
         private IContainer _container;
         private ShellContext _shellContext;
 
         [SetUp]
-        public void Init()
-        {
+        public void Init() {
             var builder = new ContainerBuilder();
             builder.RegisterType<DefaultProcessingEngine>().As<IProcessingEngine>();
             builder.RegisterAutoMocking();
             _container = builder.Build();
 
-            _shellContext = new ShellContext
-            {
+            _shellContext = new ShellContext {
                 Descriptor = new ShellDescriptor(),
                 Settings = new ShellSettings(),
                 LifetimeScope = _container.BeginLifetimeScope(),
@@ -39,16 +35,14 @@ namespace Orchard.Tests.Environment.State
         }
 
         [Test]
-        public void NoTasksPendingByDefault()
-        {
+        public void NoTasksPendingByDefault() {
             var engine = _container.Resolve<IProcessingEngine>();
             var pending = engine.AreTasksPending();
             Assert.That(pending, Is.False);
         }
 
         [Test]
-        public void ExecuteTaskIsSafeToCallWhenItDoesNothing()
-        {
+        public void ExecuteTaskIsSafeToCallWhenItDoesNothing() {
             var engine = _container.Resolve<IProcessingEngine>();
             var pending1 = engine.AreTasksPending();
             engine.ExecuteNextTask();
@@ -58,11 +52,10 @@ namespace Orchard.Tests.Environment.State
         }
 
         [Test]
-        public void CallingAddTaskReturnsResultIdentifierAndCausesPendingToBeTrue()
-        {
+        public void CallingAddTaskReturnsResultIdentifierAndCausesPendingToBeTrue() {
             var engine = _container.Resolve<IProcessingEngine>();
             var pending1 = engine.AreTasksPending();
-            var resultId = engine.AddTask(null, null, null, null);
+            var resultId = engine.AddTask(new ShellSettings {Name = "Default"}, null, null, null);
             var pending2 = engine.AreTasksPending();
             Assert.That(pending1, Is.False);
             Assert.That(resultId, Is.Not.Null);
@@ -71,10 +64,9 @@ namespace Orchard.Tests.Environment.State
         }
 
         [Test]
-        public void CallingExecuteCausesEventToFireAndPendingFlagToBeCleared()
-        {
+        public void CallingExecuteCausesEventToFireAndPendingFlagToBeCleared() {
             _container.Mock<IEventBus>()
-                .Setup(x => x.Notify(It.IsAny<string>(), It.IsAny<Dictionary<string,object>>()));
+                .Setup(x => x.Notify(It.IsAny<string>(), It.IsAny<Dictionary<string, object>>()));
 
             var engine = _container.Resolve<IProcessingEngine>();
             var pending1 = engine.AreTasksPending();

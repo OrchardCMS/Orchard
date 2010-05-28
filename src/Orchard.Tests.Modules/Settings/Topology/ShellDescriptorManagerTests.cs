@@ -147,7 +147,7 @@ namespace Orchard.Tests.Modules.Settings.Topology {
         [Test]
         public void ManagerReturnsStateForFeaturesInDescriptor() {
             var descriptorManager = _container.Resolve<IShellDescriptorManager>();
-            var stateManager = _container.Resolve<IShellStateProvider>();
+            var stateManager = _container.Resolve<IShellStateManager>();
             var state = stateManager.GetShellState();
             Assert.That(state.Features.Count(), Is.EqualTo(0));
             descriptorManager.UpdateShellDescriptor(
