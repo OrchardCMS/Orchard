@@ -77,7 +77,7 @@ namespace Orchard.Tests.Environment.ShellBuilders {
             var factory = _container.Resolve<IShellContextFactory>();
             var context = factory.CreateSetupContext(new ShellSettings { Name = "Default" });
 
-            Assert.That(context.Descriptor.EnabledFeatures, Has.Some.With.Property("Name").EqualTo("Orchard.Setup"));
+            Assert.That(context.Descriptor.Features, Has.Some.With.Property("Name").EqualTo("Orchard.Setup"));
         }
     }
 }

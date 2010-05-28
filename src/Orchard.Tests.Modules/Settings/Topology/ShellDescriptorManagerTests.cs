@@ -5,6 +5,7 @@ using Autofac;
 using NUnit.Framework;
 using Orchard.Core.Settings.Topology;
 using Orchard.Core.Settings.Topology.Records;
+using Orchard.Environment.State;
 using Orchard.Environment.Topology;
 using Orchard.Environment.Topology.Models;
 using Orchard.Events;
@@ -34,9 +35,9 @@ namespace Orchard.Tests.Modules.Settings.Topology {
         protected override IEnumerable<Type> DatabaseTypes {
             get {
                 return new[] {
-                                 typeof (TopologyRecord),
-                                 typeof (TopologyFeatureRecord),
-                                 typeof (TopologyParameterRecord),
+                                 typeof (ShellDescriptorRecord),
+                                 typeof (ShellFeatureRecord),
+                                 typeof (ShellParameterRecord),
                              };
             }
         }
@@ -141,6 +142,22 @@ namespace Orchard.Tests.Modules.Settings.Topology {
                 Enumerable.Empty<ShellParameter>());
 
             Assert.That(eventBus.LastMessageName, Is.EqualTo("IShellDescriptorManagerEventHandler.Changed"));
+        }
+
+        [Test]
+        public void ManagerReturnsStateForFeaturesInDescriptor() {
+            var descriptorManager = _container.Resolve<IShellDescriptorManager>();
+            var stateManager = _container.Resolve<IShellStateProvider>();
+            var state = stateManager.GetShellState();
+            Assert.That(state.Features.Count(), Is.EqualTo(0));
+            descriptorManager.UpdateShellDescriptor(
+                0, 
+                new[]{new ShellFeature{ Name="Foo"}},
+                Enumerable.Empty<ShellParameter>());
+
+            var state2 = stateManager.GetShellState();
+            Assert.That(state2.Features.Count(), Is.EqualTo(1));
+            Assert.That(state2.Features, Has.Some.Property("Name").EqualTo("Foo"));
         }
     }
 }

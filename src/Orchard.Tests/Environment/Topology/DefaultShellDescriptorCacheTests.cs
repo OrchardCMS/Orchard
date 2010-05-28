@@ -83,7 +83,7 @@ namespace Orchard.Tests.Environment.Topology {
 
             var descriptor = new ShellDescriptor {
                 SerialNumber = 6655321,
-                EnabledFeatures = new[] { 
+                Features = new[] { 
                     new ShellFeature { Name = "f2"},
                     new ShellFeature { Name = "f4"},
                 },

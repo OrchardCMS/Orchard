@@ -137,6 +137,11 @@
     <Compile Include="Environment\DefaultOrchardShell.cs" />
     <Compile Include="Environment\IOrchardShell.cs" />
     <Compile Include="Environment\OrchardStarter.cs" />
+    <Compile Include="Environment\State\DefaultProcessingEngine.cs" />
+    <Compile Include="Environment\State\IProcessingEngine.cs" />
+    <Compile Include="Environment\State\IShellStateManagerEventHandler.cs" />
+    <Compile Include="Environment\State\IShellStateProvider.cs" />
+    <Compile Include="Environment\State\ShellStateManager.cs" />
     <Compile Include="IDependency.cs" />
     <Compile Include="Mvc\Html\ThemeExtensions.cs" />
     <Compile Include="Mvc\Routes\IRoutePublisher.cs" />
@@ -165,6 +170,7 @@
     <Compile Include="ContentManagement\IContentManagerSession.cs" />
     <Compile Include="ContentManagement\MetaData\Records\ContentTypePartNameRecord.cs" />
     <Compile Include="ContentManagement\Utilities\LazyField.cs" />
+    <Compile Include="Environment\State\Models\ShellState.cs" />
     <Compile Include="FileSystems\WebSite\WebSiteFolder.cs" />
     <Compile Include="FileSystems\AppData\IAppDataFolder.cs" />
     <Compile Include="FileSystems\WebSite\IWebSiteFolder.cs" />
@@ -495,6 +501,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="ContentManagement\MetaData\Models\" />
+    <Folder Include="Environment\ProcessEngine\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -12,6 +12,7 @@ using Orchard.Environment.Extensions;
 using Orchard.Environment.Extensions.Folders;
 using Orchard.Environment.Extensions.Loaders;
 using Orchard.Environment.ShellBuilders;
+using Orchard.Environment.State;
 using Orchard.Environment.Topology;
 using Orchard.Events;
 using Orchard.FileSystems.AppData;
@@ -69,6 +70,8 @@ namespace Orchard.Environment {
 
                     builder.RegisterType<ShellContainerFactory>().As<IShellContainerFactory>().SingleInstance();
                 }
+
+                builder.RegisterType<DefaultProcessingEngine>().As<IProcessingEngine>().SingleInstance();
             }
 
             builder.RegisterType<RunningShellTable>().As<IRunningShellTable>().SingleInstance();

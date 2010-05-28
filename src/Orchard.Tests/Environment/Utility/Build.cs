@@ -7,14 +7,14 @@ namespace Orchard.Tests.Environment.Utility {
 
         public static ShellDescriptor TopologyDescriptor() {
             var descriptor = new ShellDescriptor {
-                                                             EnabledFeatures = Enumerable.Empty<ShellFeature>(),
+                                                             Features = Enumerable.Empty<ShellFeature>(),
                                                              Parameters = Enumerable.Empty<ShellParameter>(),
                                                          };
             return descriptor;
         }
 
         public static ShellDescriptor WithFeatures(this ShellDescriptor descriptor, params string[] names) {
-            descriptor.EnabledFeatures = descriptor.EnabledFeatures.Concat(
+            descriptor.Features = descriptor.Features.Concat(
                 names.Select(name => new ShellFeature { Name = name }));
 
             return descriptor;

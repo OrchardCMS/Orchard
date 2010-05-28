@@ -1,11 +1,13 @@
 using System;
 using System.Linq;
+using System.Threading;
 using System.Web.Mvc;
 using Autofac;
 using System.Collections.Generic;
 using Orchard.Environment.Configuration;
 using Orchard.Environment.Extensions;
 using Orchard.Environment.ShellBuilders;
+using Orchard.Environment.State;
 using Orchard.Environment.Topology;
 using Orchard.Environment.Topology.Models;
 using Orchard.Logging;
@@ -20,6 +22,7 @@ namespace Orchard.Environment {
         private readonly IShellSettingsManager _shellSettingsManager;
         private readonly IShellContextFactory _shellContextFactory;
         private readonly IRunningShellTable _runningShellTable;
+        private readonly IProcessingEngine _processingEngine;
 
         private IEnumerable<ShellContext> _current;
 
@@ -27,11 +30,13 @@ namespace Orchard.Environment {
             IShellSettingsManager shellSettingsManager,
             IShellContextFactory shellContextFactory,
             IRunningShellTable runningShellTable,
+            IProcessingEngine processingEngine,
             ControllerBuilder controllerBuilder) {
             //_containerProvider = containerProvider;
             _shellSettingsManager = shellSettingsManager;
             _shellContextFactory = shellContextFactory;
             _runningShellTable = runningShellTable;
+            _processingEngine = processingEngine;
             _controllerBuilder = controllerBuilder;
             Logger = NullLogger.Instance;
         }
@@ -68,7 +73,6 @@ namespace Orchard.Environment {
             return new StandaloneEnvironment(shellContext.LifetimeScope);
         }
 
-
         IEnumerable<ShellContext> BuildCurrent() {
             lock (this) {
                 return _current ?? (_current = CreateAndActivate().ToArray());
@@ -94,7 +98,8 @@ namespace Orchard.Environment {
         private void ActivateShell(ShellContext context) {
             context.Shell.Activate();
             _runningShellTable.Add(context.Settings);
-            HackSimulateExtensionActivation(context.LifetimeScope);
+            //refactor:lifecycle
+            //HackSimulateExtensionActivation(context.LifetimeScope);
         }
 
         ShellContext CreateSetupContext() {
@@ -117,21 +122,28 @@ namespace Orchard.Environment {
         }
 
         protected virtual void EndRequest() {
-        }
-
-
-        private void HackSimulateExtensionActivation(ILifetimeScope shellContainer) {
-            var containerProvider = new FiniteContainerProvider(shellContainer);
-            try {
-                var requestContainer = containerProvider.RequestLifetime;
-
-                var hackInstallationGenerator = requestContainer.Resolve<IHackInstallationGenerator>();
-                hackInstallationGenerator.GenerateActivateEvents();
-            }
-            finally {
-                containerProvider.EndRequestLifetime();
+            if (_processingEngine.AreTasksPending()) {
+                ThreadPool.QueueUserWorkItem(state => {
+                    while (_processingEngine.AreTasksPending()) {
+                        _processingEngine.ExecuteNextTask();
+                    }
+                });
             }
         }
+
+        //refactor:lifecycle
+        //private void HackSimulateExtensionActivation(ILifetimeScope shellContainer) {
+        //    var containerProvider = new FiniteContainerProvider(shellContainer);
+        //    try {
+        //        var requestContainer = containerProvider.RequestLifetime;
+
+        //        var hackInstallationGenerator = requestContainer.Resolve<IHackInstallationGenerator>();
+        //        hackInstallationGenerator.GenerateActivateEvents();
+        //    }
+        //    finally {
+        //        containerProvider.EndRequestLifetime();
+        //    }
+        //}
 
 
         void IShellSettingsManagerEventHandler.Saved(ShellSettings settings) {

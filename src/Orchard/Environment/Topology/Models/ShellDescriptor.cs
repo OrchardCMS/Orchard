@@ -11,12 +11,12 @@ namespace Orchard.Environment.Topology.Models {
     /// </summary>
     public class ShellDescriptor {
         public ShellDescriptor() {
-            EnabledFeatures = Enumerable.Empty<ShellFeature>();
+            Features = Enumerable.Empty<ShellFeature>();
             Parameters = Enumerable.Empty<ShellParameter>();
         }
 
         public int SerialNumber { get; set; }
-        public IEnumerable<ShellFeature> EnabledFeatures { get; set; }
+        public IEnumerable<ShellFeature> Features { get; set; }
         public IEnumerable<ShellParameter> Parameters { get; set; }
     }
 
@@ -29,4 +29,5 @@ namespace Orchard.Environment.Topology.Models {
         public string Name { get; set; }
         public string Value { get; set; }
     }
+    
 }

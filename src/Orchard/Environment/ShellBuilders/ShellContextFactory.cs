@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using Autofac;
 using Orchard.Environment.Configuration;
@@ -21,6 +22,13 @@ namespace Orchard.Environment.ShellBuilders {
         /// to display setup user interface.
         /// </summary>
         ShellContext CreateSetupContext(ShellSettings settings);
+
+        /// <summary>
+        /// Builds a shell context given a specific description of features and parameters.
+        /// Shell's actual current descriptor has no effect. Does not use or update descriptor cache.
+        /// </summary>
+        ShellContext CreateDescribedContext(ShellSettings settings, ShellDescriptor shellDescriptor);
+
     }
 
     public class ShellContextFactory : IShellContextFactory {
@@ -79,7 +87,7 @@ namespace Orchard.Environment.ShellBuilders {
         private static ShellDescriptor MinimumTopologyDescriptor() {
             return new ShellDescriptor {
                 SerialNumber = -1,
-                EnabledFeatures = new[] {
+                Features = new[] {
                     new ShellFeature {Name = "Orchard.Framework"},
                     new ShellFeature {Name = "Settings"},
                 },
@@ -92,7 +100,7 @@ namespace Orchard.Environment.ShellBuilders {
 
             var descriptor = new ShellDescriptor {
                 SerialNumber = -1,
-                EnabledFeatures = new[] { new ShellFeature { Name = "Orchard.Setup" } },
+                Features = new[] { new ShellFeature { Name = "Orchard.Setup" } },
             };
 
             var topology = _compositionStrategy.Compose(settings, descriptor);
@@ -101,6 +109,22 @@ namespace Orchard.Environment.ShellBuilders {
             return new ShellContext {
                 Settings = settings,
                 Descriptor = descriptor,
+                Topology = topology,
+                LifetimeScope = shellScope,
+                Shell = shellScope.Resolve<IOrchardShell>(),
+            };
+        }
+
+        public ShellContext CreateDescribedContext(ShellSettings settings, ShellDescriptor shellDescriptor) {
+            Logger.Debug("Creating described context for tenant {0}", settings.Name);
+
+            var topology = _compositionStrategy.Compose(settings, shellDescriptor);
+            var shellScope = _shellContainerFactory.CreateContainer(settings, topology);
+
+            return new ShellContext
+            {
+                Settings = settings,
+                Descriptor = shellDescriptor,
                 Topology = topology,
                 LifetimeScope = shellScope,
                 Shell = shellScope.Resolve<IOrchardShell>(),

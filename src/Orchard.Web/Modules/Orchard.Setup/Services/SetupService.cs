@@ -86,7 +86,7 @@ namespace Orchard.Setup.Services {
             }
 
             var shellDescriptor = new ShellDescriptor {
-                EnabledFeatures = context.EnabledFeatures.Select(name => new ShellFeature { Name = name })
+                Features = context.EnabledFeatures.Select(name => new ShellFeature { Name = name })
             };
 
             var shellToplogy = _compositionStrategy.Compose(shellSettings, shellDescriptor);
@@ -98,7 +98,7 @@ namespace Orchard.Setup.Services {
 
                 environment.Resolve<IShellDescriptorManager>().UpdateShellDescriptor(
                     0,
-                    shellDescriptor.EnabledFeatures,
+                    shellDescriptor.Features,
                     shellDescriptor.Parameters);
             }
 

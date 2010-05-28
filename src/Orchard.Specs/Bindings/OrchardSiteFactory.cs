@@ -44,7 +44,7 @@ namespace Orchard.Specs.Bindings {
                     var descriptor = descriptorManager.GetShellDescriptor();
                     descriptorManager.UpdateShellDescriptor(
                         descriptor.SerialNumber,
-                        descriptor.EnabledFeatures.Concat(new[] { new ShellFeature { Name = name } }),
+                        descriptor.Features.Concat(new[] { new ShellFeature { Name = name } }),
                         descriptor.Parameters);
                 }
             });

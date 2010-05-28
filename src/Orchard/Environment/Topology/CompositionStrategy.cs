@@ -37,12 +37,12 @@ namespace Orchard.Environment.Topology {
 
             var features = _extensionManager.LoadFeatures(enabledFeatures);
 
-            if (descriptor.EnabledFeatures.Any(feature => feature.Name == "Orchard.Framework"))
+            if (descriptor.Features.Any(feature => feature.Name == "Orchard.Framework"))
                 features = features.Concat(BuiltinFeatures());
 
-            var modules = BuildTopology<DependencyTopology>(features, IsModule, BuildModule);
+            var modules = BuildTopology(features, IsModule, BuildModule);
             var dependencies = BuildTopology(features, IsDependency, (t, f) => BuildDependency(t, f, descriptor));
-            var controllers = BuildTopology<ControllerTopology>(features, IsController, BuildController);
+            var controllers = BuildTopology(features, IsController, BuildController);
             var records = BuildTopology(features, IsRecord, (t, f) => BuildRecord(t, f, settings));
 
             return new ShellTopology {
@@ -53,7 +53,7 @@ namespace Orchard.Environment.Topology {
         }
 
         private static bool IsFeatureEnabledInTopology(FeatureDescriptor featureDescriptor, ShellDescriptor descriptor) {
-            return descriptor.EnabledFeatures.Any(topologyFeature => topologyFeature.Name == featureDescriptor.Name);
+            return descriptor.Features.Any(topologyFeature => topologyFeature.Name == featureDescriptor.Name);
         }
 
         private static IEnumerable<Feature> BuiltinFeatures() {

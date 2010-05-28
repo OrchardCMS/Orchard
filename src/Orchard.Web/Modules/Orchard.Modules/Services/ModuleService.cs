@@ -53,7 +53,7 @@ namespace Orchard.Modules.Services {
         }
 
         public IEnumerable<IModuleFeature> GetAvailableFeatures() {
-            var enabledFeatures = _shellDescriptorManager.GetShellDescriptor().EnabledFeatures;
+            var enabledFeatures = _shellDescriptorManager.GetShellDescriptor().Features;
             return GetInstalledModules()
                 .SelectMany(m => _extensionManager.LoadFeatures(m.Features))
                 .Select(
@@ -71,7 +71,7 @@ namespace Orchard.Modules.Services {
 
         public void EnableFeatures(IEnumerable<string> features, bool force) {
             var shellDescriptor = _shellDescriptorManager.GetShellDescriptor();
-            var enabledFeatures = shellDescriptor.EnabledFeatures.ToList();
+            var enabledFeatures = shellDescriptor.Features.ToList();
 
             var featuresToEnable =
                 features.Select(s => EnableFeature(s, GetAvailableFeatures(), force)).
@@ -95,7 +95,7 @@ namespace Orchard.Modules.Services {
 
         public void DisableFeatures(IEnumerable<string> features, bool force) {
             var shellDescriptor = _shellDescriptorManager.GetShellDescriptor();
-            var enabledFeatures = shellDescriptor.EnabledFeatures.ToList();
+            var enabledFeatures = shellDescriptor.Features.ToList();
 
             var featuresToDisable =
                 features.Select(s => DisableFeature(s, GetAvailableFeatures(), force)).SelectMany(

@@ -23,10 +23,11 @@ namespace Orchard.Environment.Topology {
             int priorSerialNumber,
             IEnumerable<ShellFeature> enabledFeatures,
             IEnumerable<ShellParameter> parameters);
+
+        
     }
 
     public interface IShellDescriptorManagerEventHandler : IEventHandler {
         void Changed(ShellDescriptor descriptor);
     }
-
 }

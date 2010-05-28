@@ -6,7 +6,6 @@ using Orchard.Environment.Extensions.Models;
 using Orchard.Logging;
 using Orchard.Mvc.ModelBinders;
 using Orchard.Mvc.Routes;
-using Orchard.Utility;
 
 namespace Orchard.Environment {
     public class DefaultOrchardShell : IOrchardShell {
@@ -15,21 +14,21 @@ namespace Orchard.Environment {
         private readonly IEnumerable<IModelBinderProvider> _modelBinderProviders;
         private readonly IModelBinderPublisher _modelBinderPublisher;
         private readonly ViewEngineCollection _viewEngines;
-        private readonly IEnumerable<IOrchardShellEvents> _events;
+        private readonly IOrchardShellEvents _events;
 
         public DefaultOrchardShell(
+            IOrchardShellEvents events,
             IEnumerable<IRouteProvider> routeProviders,
             IRoutePublisher routePublisher,
             IEnumerable<IModelBinderProvider> modelBinderProviders,
             IModelBinderPublisher modelBinderPublisher,
-            ViewEngineCollection viewEngines,
-            IEnumerable<IOrchardShellEvents> events) {
+            ViewEngineCollection viewEngines) {
+            _events = events;
             _routeProviders = routeProviders;
             _routePublisher = routePublisher;
             _modelBinderProviders = modelBinderProviders;
             _modelBinderPublisher = modelBinderPublisher;
             _viewEngines = viewEngines;
-            _events = events;
 
             Logger = NullLogger.Instance;
         }
@@ -42,7 +41,11 @@ namespace Orchard.Environment {
 
             AddOrchardLocationsFormats();
 
-            _events.Invoke(x => x.Activated(), Logger);
+            _events.Activated();
+        }
+
+        public void Terminate() {
+            _events.Terminating();
         }
 
         /// <summary>
@@ -89,14 +92,11 @@ namespace Orchard.Environment {
                 .ToArray();
         }
 
-
-        public void Terminate() {
-            _events.Invoke(x => x.Terminating(), Logger);
-        }
-
-
         private static string ModelsLocationFormat(ExtensionDescriptor descriptor) {
             return Path.Combine(Path.Combine(descriptor.Location, descriptor.Name), "Views/Shared/{0}.ascx");
         }
+
+
+
     }
 }
