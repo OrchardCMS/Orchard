@@ -7,11 +7,9 @@ using Orchard.Logging;
 
 namespace Orchard.Events {
     public class DefaultOrchardEventBus : IEventBus {
-        private readonly Func<IEnumerable<IEventBusHandler>> _handlers;
         private readonly Func<IEnumerable<IEventHandler>> _eventHandlers;
 
-        public DefaultOrchardEventBus(Func<IEnumerable<IEventBusHandler>> handlers, Func<IEnumerable<IEventHandler>> eventHandlers) {
-            _handlers = handlers;
+        public DefaultOrchardEventBus(Func<IEnumerable<IEventHandler>> eventHandlers) {
             _eventHandlers = eventHandlers;
             Logger = NullLogger.Instance;
             T = NullLocalizer.Instance;
@@ -21,10 +19,6 @@ namespace Orchard.Events {
         public Localizer T { get; set; }
 
         #region Implementation of IEventBus
-
-        public void Notify_Obsolete(string messageName, IDictionary<string, string> eventData) {
-            _handlers().Invoke(handler => handler.Process(messageName, eventData), Logger);
-        }
 
         public void Notify(string messageName, Dictionary<string, object> eventData) {
             string[] parameters = messageName.Split('.');
@@ -41,7 +35,7 @@ namespace Orchard.Events {
                 }
                 catch(Exception ex) {
                         Logger.Error(ex, "{2} thrown from {0} by {1}",
-                            interfaceName + "." +methodName,
+                            messageName,
                             eventHandler.GetType().FullName,
                             ex.GetType().Name);
                 }

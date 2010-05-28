@@ -1,7 +1,9 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Web.Mvc;
+using Autofac.Features.OwnedInstances;
 using Orchard.Environment.Extensions.Models;
 using Orchard.Logging;
 using Orchard.Mvc.ModelBinders;
@@ -9,21 +11,21 @@ using Orchard.Mvc.Routes;
 
 namespace Orchard.Environment {
     public class DefaultOrchardShell : IOrchardShell {
+        private readonly Func<Owned<IOrchardShellEvents>> _eventsFactory;
         private readonly IEnumerable<IRouteProvider> _routeProviders;
         private readonly IRoutePublisher _routePublisher;
         private readonly IEnumerable<IModelBinderProvider> _modelBinderProviders;
         private readonly IModelBinderPublisher _modelBinderPublisher;
         private readonly ViewEngineCollection _viewEngines;
-        private readonly IOrchardShellEvents _events;
 
         public DefaultOrchardShell(
-            IOrchardShellEvents events,
+            Func<Owned<IOrchardShellEvents>> eventsFactory,
             IEnumerable<IRouteProvider> routeProviders,
             IRoutePublisher routePublisher,
             IEnumerable<IModelBinderProvider> modelBinderProviders,
             IModelBinderPublisher modelBinderPublisher,
             ViewEngineCollection viewEngines) {
-            _events = events;
+            _eventsFactory = eventsFactory;
             _routeProviders = routeProviders;
             _routePublisher = routePublisher;
             _modelBinderProviders = modelBinderProviders;
@@ -41,11 +43,15 @@ namespace Orchard.Environment {
 
             AddOrchardLocationsFormats();
 
-            _events.Activated();
+            using (var events = _eventsFactory()) {
+                events.Value.Activated();
+            }
         }
 
         public void Terminate() {
-            _events.Terminating();
+             using (var events = _eventsFactory()) {
+                events.Value.Terminating();
+            }
         }
 
         /// <summary>

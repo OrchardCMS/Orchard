@@ -21,7 +21,7 @@ namespace Orchard.Core.Settings.State {
         public ShellState GetShellState() {
             var stateRecord = _shellStateRepository.Get(x => true) ?? new ShellStateRecord();
             var descriptor = _shellDescriptorManager.GetShellDescriptor();
-            var extraFeatures = descriptor.Features
+            var extraFeatures = descriptor == null ? Enumerable.Empty<string>() : descriptor.Features
                 .Select(r => r.Name)
                 .Except(stateRecord.Features.Select(r => r.Name));
 

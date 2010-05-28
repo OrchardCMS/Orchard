@@ -4,6 +4,7 @@ using System.Threading;
 using System.Web.Mvc;
 using Autofac;
 using System.Collections.Generic;
+using Autofac.Features.OwnedInstances;
 using Orchard.Environment.Configuration;
 using Orchard.Environment.Extensions;
 using Orchard.Environment.ShellBuilders;
@@ -98,8 +99,6 @@ namespace Orchard.Environment {
         private void ActivateShell(ShellContext context) {
             context.Shell.Activate();
             _runningShellTable.Add(context.Settings);
-            //refactor:lifecycle
-            //HackSimulateExtensionActivation(context.LifetimeScope);
         }
 
         ShellContext CreateSetupContext() {
@@ -121,30 +120,25 @@ namespace Orchard.Environment {
             BuildCurrent();
         }
 
+
+        // the exit gate is temporary, until better control strategy is in place
+        private readonly ManualResetEvent _exitGate = new ManualResetEvent(true);
+
         protected virtual void EndRequest() {
             if (_processingEngine.AreTasksPending()) {
+                _exitGate.Reset();
                 ThreadPool.QueueUserWorkItem(state => {
                     while (_processingEngine.AreTasksPending()) {
                         _processingEngine.ExecuteNextTask();
+                        if (!_processingEngine.AreTasksPending()) {
+                            _exitGate.Set();
+                        }
                     }
                 });
             }
+
+            _exitGate.WaitOne(250);
         }
-
-        //refactor:lifecycle
-        //private void HackSimulateExtensionActivation(ILifetimeScope shellContainer) {
-        //    var containerProvider = new FiniteContainerProvider(shellContainer);
-        //    try {
-        //        var requestContainer = containerProvider.RequestLifetime;
-
-        //        var hackInstallationGenerator = requestContainer.Resolve<IHackInstallationGenerator>();
-        //        hackInstallationGenerator.GenerateActivateEvents();
-        //    }
-        //    finally {
-        //        containerProvider.EndRequestLifetime();
-        //    }
-        //}
-
 
         void IShellSettingsManagerEventHandler.Saved(ShellSettings settings) {
             _current = null;

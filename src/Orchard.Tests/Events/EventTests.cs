@@ -9,15 +9,12 @@ namespace Orchard.Tests.Events {
     public class EventTests {
         private IContainer _container;
         private IEventBus _eventBus;
-        private StubEventBusHandler _eventBusHandler;
         private StubEventHandler _eventHandler;
 
         [SetUp]
         public void Init() {
             var builder = new ContainerBuilder();
-            _eventBusHandler = new StubEventBusHandler();
             _eventHandler = new StubEventHandler();
-            builder.RegisterInstance(_eventBusHandler).As<IEventBusHandler>();
             builder.RegisterInstance(_eventHandler).As<IEventHandler>();
             builder.RegisterType<DefaultOrchardEventBus>().As<IEventBus>();
             _container = builder.Build();
@@ -181,23 +178,5 @@ namespace Orchard.Tests.Events {
             }
         }
 
-        [Test]
-        public void EventsAreCorrectlyDispatchedToHandlers_Obsolete() {
-            Assert.That(_eventBusHandler.LastMessageName, Is.Null);
-            _eventBus.Notify_Obsolete("Notification", new Dictionary<string, string>());
-            Assert.That(_eventBusHandler.LastMessageName, Is.EqualTo("Notification"));
-        }
-
-        public class StubEventBusHandler : IEventBusHandler {
-            public string LastMessageName { get; set; }
-
-            #region Implementation of IEventBusHandler
-
-            public void Process(string messageName, IDictionary<string, string> eventData) {
-                LastMessageName = messageName;
-            }
-
-            #endregion
-        }
     }
 }

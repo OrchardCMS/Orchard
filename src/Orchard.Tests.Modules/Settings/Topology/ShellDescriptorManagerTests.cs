@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Autofac;
 using NUnit.Framework;
+using Orchard.Core.Settings.State;
 using Orchard.Core.Settings.Topology;
 using Orchard.Core.Settings.Topology.Records;
 using Orchard.Environment.State;
@@ -14,7 +15,8 @@ namespace Orchard.Tests.Modules.Settings.Topology {
     [TestFixture]
     public class ShellDescriptorManagerTests : DatabaseEnabledTestsBase {
         public override void Register(ContainerBuilder builder) {
-            builder.RegisterType<ShellDescriptorManager>().As<IShellDescriptorManager>();
+            builder.RegisterType<ShellDescriptorManager>().As<IShellDescriptorManager>().SingleInstance();
+            builder.RegisterType<ShellStateManager>().As<IShellStateManager>().SingleInstance();
             builder.RegisterType<StubEventBus>().As<IEventBus>().SingleInstance();
             builder.RegisterSource(new EventsRegistrationSource());
         }

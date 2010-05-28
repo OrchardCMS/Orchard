@@ -72,6 +72,9 @@ namespace Orchard.Tests.Environment {
             _container.Mock<IShellDescriptorManager>()
                 .Setup(cp => cp.GetShellDescriptor()).Returns(default(ShellDescriptor));
 
+            _container.Mock<IOrchardShellEvents>()
+                .Setup(e=>e.Activated());
+
             var temp = Path.GetTempFileName();
             File.Delete(temp);
             Directory.CreateDirectory(temp);
