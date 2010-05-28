@@ -3,10 +3,12 @@
 <%@ Import Namespace="Orchard.Mvc.Html"%>
 <%@ Import Namespace="Orchard.Modules.ViewModels"%>
 <%@ Import Namespace="Orchard.Utility.Extensions" %><%
- Html.RegisterStyle("admin.css"); %>
+ Html.RegisterStyle("admin.css");
+ Html.RegisterStyle("jquery.switchable.css");
+ Html.RegisterFootScript("jquery.switchable.js"); %>
 <h1><%=Html.TitleForPage(T("Manage Features").ToString()) %></h1>
 <% if (Model.Features.Count() > 0) { %>
-<ul class="features"><%
+<ul class="features summary-view switchable"><%
     var featureGroups = Model.Features.OrderBy(f => f.Descriptor.Category).GroupBy(f => f.Descriptor.Category);
     foreach (var featureGroup in featureGroups) {
         var categoryName = featureGroup.First().Descriptor.Category ?? T("Uncategorized");
@@ -34,7 +36,8 @@
             <li class="<%=featureClassName %>" id="<%=Html.AttributeEncode(featureId) %>" title="<%=T("{0} is {1}", Html.AttributeEncode(feature.Descriptor.Name), featureState) %>">
                 <div class="summary">
                     <div class="properties">
-                        <h3><%=Html.Encode(feature.Descriptor.Name) %></h3><%
+                        <h3><%:feature.Descriptor.Name %></h3>
+                        <p class="description"><%:feature.Descriptor.Description %></p><%
                         if (feature.Descriptor.Dependencies != null) { %>
                         <div class="dependencies">
                             <h4><%=_Encoded("Depends on:")%></h4>

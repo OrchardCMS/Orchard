@@ -1,7 +1,11 @@
-﻿.features .category {
-    overflow:hidden;
+﻿.features.detail-view .category > ul {
+    border:1px solid #EAEAEA;
 }
-.features .feature {
+.features.features  .category {
+    overflow:hidden;
+    padding-bottom:1.5em;
+}
+.features.features.summary-view  .feature {
     border:1px solid #EAEAEA;
     display:block;
     float:left;
@@ -10,34 +14,70 @@
     position:relative;
     width:32.1%;
 }
-.features .feature:nth-child(3n+1),
-.features .feature:nth-child(3n+2),
-.features .feature:nth-child(3n) {
+.features.features.summary-view  .feature:nth-child(3n+1),
+.features.features.summary-view  .feature:nth-child(3n+2),
+.features.features.summary-view  .feature:nth-child(3n) {
     width:32.55%;
 }
-.features .feature:nth-child(3n+1) {
+.features.features.summary-view  .feature:nth-child(3n+1) {
     margin-left:0;
 }
-.features .feature:nth-child(3n+2) {
+.features.features.summary-view  .feature:nth-child(3n+2) {
     margin-right:0;
 }
-.features .feature:nth-child(3n) {
+.features.features.summary-view  .feature:nth-child(3n) {
     float:right;
     margin-left:0;
     margin-right:0;
 }
 
+.features.summary-view .feature {
+    margin-bottom:.5em;
+}
+.features.detail-view .feature {
+    padding:.25em 0;
+}
+.features.summary-view .feature {
+    margin-bottom:inherit;
+}
 .features .enabled.feature {
     background:#FFF;
+}
+.features.summary-view .enabled.feature {
     border-color:#CFE493;
 }
 .features .disabled.feature {
     background:#EAEAEA;
+}
+.features.summary-view .disabled.feature {
     border-color:#CCC;
 }
+.features.detail-view .feature {
+    border-bottom:1px solid #CCC;
+}
+.features.detail-view .last.feature {
+    border:0;
+}
+
 .features .feature .summary {
     overflow:hidden;
     padding:.4em .5em;
+    position:relative;
+}
+#main .features.detail-view h3 {
+    display:inline;
+    font-size:1.4em;
+    font-weight:bold;
+}
+#main .features.summary-view .description {
+    display:none;
+}
+#main .features.detail-view .description {
+    display:inline;
+    margin:0 0 1em .5ex;
+}
+.features.detail-view .description::before {
+    content:" - ";
 }
 .features .dependencies li,
 .features .actions {
