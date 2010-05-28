@@ -7,7 +7,7 @@
 }
 .features.summary-view .category {
     overflow:hidden;
-    padding-bottom:1.5em;
+    padding-bottom:1em;
 }
 .features.summary-view .feature {
     border:1px solid #EAEAEA;
@@ -35,14 +35,8 @@
     margin-right:0;
 }
 
-.features.summary-view .feature {
-    margin-bottom:.5em;
-}
 .features.detail-view .feature {
     padding:.25em 0;
-}
-.features.summary-view .feature {
-    margin-bottom:inherit;
 }
 .features .enabled.feature {
     background:#FFF;
