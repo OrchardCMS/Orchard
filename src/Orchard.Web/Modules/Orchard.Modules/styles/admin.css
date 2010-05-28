@@ -1,11 +1,15 @@
-﻿.features.detail-view .category > ul {
-    border:1px solid #EAEAEA;
+﻿#main .features h2 {
+    margin-top:0;
 }
-.features.features  .category {
+.features.detail-view .category > ul {
+    border:1px solid #EAEAEA;
+    margin-bottom:2em;
+}
+.features.summary-view .category {
     overflow:hidden;
     padding-bottom:1.5em;
 }
-.features.features.summary-view  .feature {
+.features.summary-view .feature {
     border:1px solid #EAEAEA;
     display:block;
     float:left;
@@ -14,18 +18,18 @@
     position:relative;
     width:32.1%;
 }
-.features.features.summary-view  .feature:nth-child(3n+1),
-.features.features.summary-view  .feature:nth-child(3n+2),
-.features.features.summary-view  .feature:nth-child(3n) {
+.features.summary-view .feature:nth-child(3n+1),
+.features.summary-view .feature:nth-child(3n+2),
+.features.summary-view .feature:nth-child(3n) {
     width:32.55%;
 }
-.features.features.summary-view  .feature:nth-child(3n+1) {
+.features.summary-view .feature:nth-child(3n+1) {
     margin-left:0;
 }
-.features.features.summary-view  .feature:nth-child(3n+2) {
+.features.summary-view .feature:nth-child(3n+2) {
     margin-right:0;
 }
-.features.features.summary-view  .feature:nth-child(3n) {
+.features.summary-view .feature:nth-child(3n) {
     float:right;
     margin-left:0;
     margin-right:0;

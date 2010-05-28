@@ -1,11 +1,10 @@
 ﻿.switch-for-switchable {
-	border-bottom:1px solid #BDBCBC;
-	margin:0 0 10px;
+	margin:0 0 -34px;
     overflow:auto;
 }
 .switch-for-switchable .switch-button-group {
 	float:right;
-	padding:4px 30px;
+	padding:4px 0;
 }
 .switch-for-switchable .switch-button {
 	background: #F5F5F5;
