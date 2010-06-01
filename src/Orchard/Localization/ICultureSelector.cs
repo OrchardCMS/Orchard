@@ -1,4 +1,4 @@
-﻿using System.Web.Routing;
+﻿using System.Web;
 
 namespace Orchard.Localization {
     public class CultureSelectorResult {
@@ -7,6 +7,6 @@ namespace Orchard.Localization {
     }
 
     public interface ICultureSelector : IDependency {
-        CultureSelectorResult GetCulture(RequestContext context);
+        CultureSelectorResult GetCulture(HttpContext context);
     }
 }

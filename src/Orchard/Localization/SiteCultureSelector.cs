@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Web.Routing;
+using System.Web;
 using JetBrains.Annotations;
 using Orchard.Settings;
 
@@ -7,7 +7,7 @@ namespace Orchard.Localization {
     public class SiteCultureSelector : ICultureSelector {
        protected virtual ISite CurrentSite { get; [UsedImplicitly] private set; }
 
-        public CultureSelectorResult GetCulture(RequestContext context) {
+        public CultureSelectorResult GetCulture(HttpContext context) {
             string currentCultureName = CurrentSite.SiteCulture;
 
             if (String.IsNullOrEmpty(currentCultureName)) {

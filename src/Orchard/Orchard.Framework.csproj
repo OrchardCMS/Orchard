@@ -144,8 +144,10 @@
     <Compile Include="Environment\State\ShellStateCoordinator.cs" />
     <Compile Include="IDependency.cs" />
     <Compile Include="Localization\DefaultCultureManager.cs" />
+    <Compile Include="Localization\DefaultResourceManager.cs" />
     <Compile Include="Localization\ICultureManager.cs" />
     <Compile Include="Localization\ICultureSelector.cs" />
+    <Compile Include="Localization\IResourceManager.cs" />
     <Compile Include="Localization\Records\CultureRecord.cs" />
     <Compile Include="Localization\SiteCultureSelector.cs" />
     <Compile Include="Mvc\Html\ThemeExtensions.cs" />

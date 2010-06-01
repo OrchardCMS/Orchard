@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Web;
 using System.Web.Routing;
 using Orchard.Data;
 using Orchard.Localization.Records;
@@ -28,7 +29,7 @@ namespace Orchard.Localization {
             _cultureRepository.Create(new CultureRecord { Culture = cultureName });
         }
 
-        public string GetCurrentCulture(RequestContext requestContext) {
+        public string GetCurrentCulture(HttpContext requestContext) {
             var requestCulture = _cultureSelectors
                 .Select(x => x.GetCulture(requestContext))
                 .Where(x => x != null)

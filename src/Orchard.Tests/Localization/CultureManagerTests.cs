@@ -87,7 +87,7 @@ namespace Orchard.Tests.Localization {
     }
 
     public class TestCultureSelector : ICultureSelector {
-        public CultureSelectorResult GetCulture(RequestContext context) {
+        public CultureSelectorResult GetCulture(HttpContext context) {
             return new CultureSelectorResult { Priority = 1, CultureName = "en-US" };
         }
     }
