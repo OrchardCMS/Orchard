@@ -2,15 +2,18 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Web.Routing;
 using Orchard.Data;
 using Orchard.Localization.Records;
 
 namespace Orchard.Localization {
     public class DefaultCultureManager : ICultureManager {
         private readonly IRepository<CultureRecord> _cultureRepository;
+        private readonly IEnumerable<ICultureSelector> _cultureSelectors;
 
-        public DefaultCultureManager(IRepository<CultureRecord> cultureRepository) {
+        public DefaultCultureManager(IRepository<CultureRecord> cultureRepository, IEnumerable<ICultureSelector> cultureSelectors) {
             _cultureRepository = cultureRepository;
+            _cultureSelectors = cultureSelectors;
         }
 
         public IEnumerable<string> ListCultures() {
@@ -23,6 +26,24 @@ namespace Orchard.Localization {
                 throw new ArgumentException("cultureName");
             }
             _cultureRepository.Create(new CultureRecord { Culture = cultureName });
+        }
+
+        public string GetCurrentCulture(RequestContext requestContext) {
+            var requestCulture = _cultureSelectors
+                .Select(x => x.GetCulture(requestContext))
+                .Where(x => x != null)
+                .OrderByDescending(x => x.Priority);
+
+            if (requestCulture.Count() < 1)
+                return String.Empty;
+
+            foreach (var culture in requestCulture) {
+                if (!String.IsNullOrEmpty(culture.CultureName)) {
+                    return culture.CultureName;
+                }
+            }
+
+            return String.Empty;
         }
 
         // "<languagecode2>" or

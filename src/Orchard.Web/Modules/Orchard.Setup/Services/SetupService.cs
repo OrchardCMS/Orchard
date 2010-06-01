@@ -125,12 +125,13 @@ namespace Orchard.Setup.Services {
                     siteSettings.Record.SiteName = context.SiteName;
                     siteSettings.Record.SuperUser = context.AdminUsername;
                     siteSettings.Record.PageTitleSeparator = " - ";
+                    siteSettings.Record.SiteCulture = "en-US";
 
                     // set site theme
                     var themeService = environment.Resolve<IThemeService>();
                     themeService.SetSiteTheme("Classic");
 
-                    // set default culture
+                    // add default culture
                     var cultureManager = environment.Resolve<ICultureManager>();
                     cultureManager.AddCulture("en-US");
 

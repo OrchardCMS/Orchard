@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.Web;
+using System.Web.Routing;
 using Autofac;
 using NHibernate;
 using NUnit.Framework;
@@ -30,6 +32,7 @@ namespace Orchard.Tests.Localization {
         [SetUp]
         public void Init() {
             var builder = new ContainerBuilder();
+            builder.RegisterType<TestCultureSelector>().As<ICultureSelector>();
             builder.RegisterType<DefaultCultureManager>().As<ICultureManager>();
             builder.RegisterGeneric(typeof(Repository<>)).As(typeof(IRepository<>));
             _session = _sessionFactory.OpenSession();
@@ -75,6 +78,17 @@ namespace Orchard.Tests.Localization {
                     Assert.DoesNotThrow(() => _cultureManager.AddCulture(cultureInfo.Name));
                 }
             }
+        }
+
+        [Test]
+        public void CultureManagerReturnsCultureFromSelector() {
+            Assert.That(_cultureManager.GetCurrentCulture(null), Is.EqualTo("en-US"));
+        }
+    }
+
+    public class TestCultureSelector : ICultureSelector {
+        public CultureSelectorResult GetCulture(RequestContext context) {
+            return new CultureSelectorResult { Priority = 1, CultureName = "en-US" };
         }
     }
 }
