@@ -26,7 +26,7 @@ namespace Orchard.Comments.Drivers {
             }
             else if (displayType.Contains("Summary")) {
                 var model = new CommentCountViewModel(part);
-                return ContentPartTemplate(model, "Parts/Comments.Count").Location("meta");
+                return ContentPartTemplate(model, "Parts/Comments.Count").Location("meta", "5");
             }
             else {
                 var model = new CommentCountViewModel(part);
