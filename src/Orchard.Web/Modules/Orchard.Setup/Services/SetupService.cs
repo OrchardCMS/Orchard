@@ -130,6 +130,10 @@ namespace Orchard.Setup.Services {
                     var themeService = environment.Resolve<IThemeService>();
                     themeService.SetSiteTheme("Classic");
 
+                    // set default culture
+                    var cultureManager = environment.Resolve<ICultureManager>();
+                    cultureManager.AddCulture("en-US");
+
                     var contentManager = environment.Resolve<IContentManager>();
 
                     // this needs to exit the standalone environment? rework this process entirely?

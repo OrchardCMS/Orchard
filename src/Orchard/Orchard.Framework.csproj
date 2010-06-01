@@ -143,6 +143,9 @@
     <Compile Include="Environment\State\IShellStateManager.cs" />
     <Compile Include="Environment\State\ShellStateCoordinator.cs" />
     <Compile Include="IDependency.cs" />
+    <Compile Include="Localization\DefaultCultureManager.cs" />
+    <Compile Include="Localization\ICultureManager.cs" />
+    <Compile Include="Localization\Records\CultureRecord.cs" />
     <Compile Include="Mvc\Html\ThemeExtensions.cs" />
     <Compile Include="Mvc\Routes\IRoutePublisher.cs" />
     <Compile Include="Mvc\Routes\IRouteProvider.cs" />
