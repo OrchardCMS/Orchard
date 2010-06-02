@@ -12,6 +12,8 @@ namespace Orchard.ContentManagement.Handlers {
         protected virtual void Published(PublishContentContext context, TPart instance) { }
         protected virtual void Removing(RemoveContentContext context, TPart instance) { }
         protected virtual void Removed(RemoveContentContext context, TPart instance) { }
+        protected virtual void Indexing(IndexContentContext context, TPart instance) { }
+        protected virtual void Indexed(IndexContentContext context, TPart instance) { }
 
 
         void IContentStorageFilter.Activated(ActivatedContentContext context) {
@@ -68,5 +70,16 @@ namespace Orchard.ContentManagement.Handlers {
             if (context.ContentItem.Is<TPart>())
                 Removed(context, context.ContentItem.As<TPart>());
         }
+
+        void IContentStorageFilter.Indexing(IndexContentContext context) {
+            if ( context.ContentItem.Is<TPart>() )
+                Indexing(context, context.ContentItem.As<TPart>());
+        }
+
+        void IContentStorageFilter.Indexed(IndexContentContext context) {
+            if ( context.ContentItem.Is<TPart>() )
+                Indexed(context, context.ContentItem.As<TPart>());
+        }
+
     }
 }

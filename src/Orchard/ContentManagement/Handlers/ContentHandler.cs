@@ -57,6 +57,14 @@ namespace Orchard.ContentManagement.Handlers {
             Filters.Add(new InlineStorageFilter<TPart> { OnRemoved = handler });
         }
 
+        protected void OnIndexing<TPart>(Action<IndexContentContext, TPart> handler) where TPart : class, IContent {
+            Filters.Add(new InlineStorageFilter<TPart> { OnIndexing = handler });
+        }
+
+        protected void OnIndexed<TPart>(Action<IndexContentContext, TPart> handler) where TPart : class, IContent {
+            Filters.Add(new InlineStorageFilter<TPart> { OnIndexed = handler });
+        }
+
         protected void OnGetContentItemMetadata<TPart>(Action<GetContentItemMetadataContext, TPart> handler) where TPart : class, IContent {
             Filters.Add(new InlineTemplateFilter<TPart> { OnGetItemMetadata = handler });
         }
@@ -84,6 +92,8 @@ namespace Orchard.ContentManagement.Handlers {
             public Action<PublishContentContext, TPart> OnPublished { get; set; }
             public Action<RemoveContentContext, TPart> OnRemoving { get; set; }
             public Action<RemoveContentContext, TPart> OnRemoved { get; set; }
+            public Action<IndexContentContext, TPart> OnIndexing { get; set; }
+            public Action<IndexContentContext, TPart> OnIndexed { get; set; }
             protected override void Activated(ActivatedContentContext context, TPart instance) {
                 if (OnActivated != null) OnActivated(context, instance);
             }
@@ -117,6 +127,15 @@ namespace Orchard.ContentManagement.Handlers {
             protected override void Removed(RemoveContentContext context, TPart instance) {
                 if (OnRemoved != null) OnRemoved(context, instance);
             }
+            protected override void Indexing(IndexContentContext context, TPart instance) {
+                if ( OnIndexing != null )
+                    OnIndexing(context, instance);
+            }
+            protected override void Indexed(IndexContentContext context, TPart instance) {
+                if ( OnIndexed != null )
+                    OnIndexed(context, instance);
+            }
+
         }
 
         class InlineTemplateFilter<TPart> : TemplateFilterBase<TPart> where TPart : class, IContent {
@@ -214,6 +233,17 @@ namespace Orchard.ContentManagement.Handlers {
             Removed(context);
         }
 
+        void IContentHandler.Indexing(IndexContentContext context) {
+            foreach ( var filter in Filters.OfType<IContentStorageFilter>() )
+                filter.Indexing(context);
+            Indexing(context);
+        }
+
+        void IContentHandler.Indexed(IndexContentContext context) {
+            foreach ( var filter in Filters.OfType<IContentStorageFilter>() )
+                filter.Indexed(context);
+            Indexing(context);
+        }
 
         void IContentHandler.GetContentItemMetadata(GetContentItemMetadataContext context) {
             foreach (var filter in Filters.OfType<IContentTemplateFilter>())
@@ -253,6 +283,9 @@ namespace Orchard.ContentManagement.Handlers {
 
         protected virtual void Removing(RemoveContentContext context) { }
         protected virtual void Removed(RemoveContentContext context) { }
+
+        protected virtual void Indexing(IndexContentContext context) { }
+        protected virtual void Indexed(IndexContentContext context) { }
 
         protected virtual void GetItemMetadata(GetContentItemMetadataContext context) { }
         protected virtual void BuildDisplayModel(BuildDisplayModelContext context) { }

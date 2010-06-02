@@ -33,6 +33,8 @@ namespace Orchard.ContentManagement.Drivers {
         void IContentHandler.Published(PublishContentContext context) { }
         void IContentHandler.Removing(RemoveContentContext context) { }
         void IContentHandler.Removed(RemoveContentContext context) { }
+        void IContentHandler.Indexing(IndexContentContext context) { }
+        void IContentHandler.Indexed(IndexContentContext context) { }
 
 
         void IContentHandler.GetContentItemMetadata(GetContentItemMetadataContext context) {
