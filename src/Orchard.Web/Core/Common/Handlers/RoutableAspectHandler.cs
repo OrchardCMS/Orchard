@@ -36,6 +36,10 @@ namespace Orchard.Core.Common.Handlers {
 
             OnCreated<RoutableAspect>((context, ra) => routableService.ProcessSlug(ra));
 
+            OnIndexing<RoutableAspect>((context, part) => context.IndexDocument
+                                                    .Add("slug", part.Slug)
+                                                    .Add("title", part.Title)
+                                                    );
         }
 
         private static RouteValueDictionary GetRouteValues(IContentItemDriver driver, ContentItem contentItem) {

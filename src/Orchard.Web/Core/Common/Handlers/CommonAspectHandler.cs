@@ -54,6 +54,14 @@ namespace Orchard.Core.Common.Handlers {
             //OnGetDisplayViewModel<CommonAspect>();
             OnGetEditorViewModel<CommonAspect>(GetEditor);
             OnUpdateEditorViewModel<CommonAspect>(UpdateEditor);
+
+            OnIndexing<CommonAspect>((context, commonAspect) => context.IndexDocument
+                                                    .Add("type", commonAspect.ContentItem.ContentType)
+                                                    .Add("author", commonAspect.Owner.UserName)
+                                                    .Add("created", commonAspect.CreatedUtc ?? _clock.UtcNow)
+                                                    .Add("published", commonAspect.PublishedUtc ?? _clock.UtcNow)
+                                                    .Add("modified", commonAspect.ModifiedUtc ?? _clock.UtcNow)
+                                                    );
         }
 
         public Localizer T { get; set; }
