@@ -99,6 +99,7 @@
   <ItemGroup>
     <Content Include="Default.aspx" />
     <Content Include="Global.asax" />
+    <Content Include="Themes\TheAdmin\Styles\ie.css" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
