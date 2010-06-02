@@ -24,7 +24,7 @@ namespace Orchard.Modules.Services {
             T = NullLocalizer.Instance;
         }
 
-        private Localizer T { get; set; }
+        public Localizer T { get; set; }
         public IOrchardServices Services { get; set; }
 
         public IModule GetModuleByName(string moduleName) {

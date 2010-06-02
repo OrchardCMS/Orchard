@@ -43,7 +43,7 @@ namespace Orchard.Setup.Services {
             T = NullLocalizer.Instance;
         }
 
-        private Localizer T { get; set; }
+        public Localizer T { get; set; }
 
         public ShellSettings Prime() {
             return _shellSettings;

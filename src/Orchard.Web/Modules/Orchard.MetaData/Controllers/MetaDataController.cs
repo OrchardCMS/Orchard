@@ -19,7 +19,7 @@ namespace Orchard.MetaData.Controllers
             T = NullLocalizer.Instance;
         }
 
-        private Localizer T { get; set; }
+        public Localizer T { get; set; }
         //
         // GET: /ContentTypeList/
 

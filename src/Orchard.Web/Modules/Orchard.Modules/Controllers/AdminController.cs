@@ -18,7 +18,7 @@ namespace Orchard.Modules.Controllers {
             T = NullLocalizer.Instance;
         }
 
-        private Localizer T { get; set; }
+        public Localizer T { get; set; }
         public IOrchardServices Services { get; set; }
 
         public ActionResult Index() {

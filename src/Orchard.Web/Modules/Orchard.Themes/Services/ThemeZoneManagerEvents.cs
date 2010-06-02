@@ -7,7 +7,7 @@ namespace Orchard.Themes.Services {
             T = NullLocalizer.Instance;
         }
 
-        private Localizer T { get; set; }
+        public Localizer T { get; set; }
 
         public void ZoneRendering(ZoneRenderContext context) {
 #if DEBUG
