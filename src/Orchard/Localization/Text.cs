@@ -1,4 +1,5 @@
 using System.Web;
+using Orchard.Localization.Services;
 using Orchard.Logging;
 
 namespace Orchard.Localization {

@@ -7,7 +7,7 @@ using System.Web.Routing;
 using Orchard.Data;
 using Orchard.Localization.Records;
 
-namespace Orchard.Localization {
+namespace Orchard.Localization.Services {
     public class DefaultCultureManager : ICultureManager {
         private readonly IRepository<CultureRecord> _cultureRepository;
         private readonly IEnumerable<ICultureSelector> _cultureSelectors;

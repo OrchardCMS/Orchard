@@ -3,13 +3,12 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Web;
-using System.Web.Routing;
 using Autofac;
 using NHibernate;
 using NUnit.Framework;
 using Orchard.Data;
-using Orchard.Localization;
 using Orchard.Localization.Records;
+using Orchard.Localization.Services;
 using Orchard.Tests.ContentManagement;
 
 namespace Orchard.Tests.Localization {

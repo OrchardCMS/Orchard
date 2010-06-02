@@ -3,7 +3,7 @@ using System.Web;
 using JetBrains.Annotations;
 using Orchard.Settings;
 
-namespace Orchard.Localization {
+namespace Orchard.Localization.Services {
     public class SiteCultureSelector : ICultureSelector {
        protected virtual ISite CurrentSite { get; [UsedImplicitly] private set; }
 

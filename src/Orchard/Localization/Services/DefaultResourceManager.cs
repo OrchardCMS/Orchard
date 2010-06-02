@@ -1,4 +1,4 @@
-﻿namespace Orchard.Localization {
+﻿namespace Orchard.Localization.Services {
     public class DefaultResourceManager : IResourceManager {
         // This will use the .po files shortly.
         public string GetLocalizedString(string key, string cultureName) {
