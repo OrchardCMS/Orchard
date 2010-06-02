@@ -88,6 +88,7 @@
   <ItemGroup>
     <Content Include="Content\orchard.ico" />
     <Content Include="Scripts\base.js" />
+    <Content Include="Styles\admin.css" />
     <Content Include="Styles\Images\toolBarActiveButtonBackground.gif" />
     <Content Include="Styles\Images\toolBarBackground.gif" />
     <Content Include="Styles\Images\toolBarHoverButtonBackground.gif" />

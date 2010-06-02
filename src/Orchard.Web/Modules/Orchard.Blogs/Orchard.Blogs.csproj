@@ -122,6 +122,7 @@
     <Content Include="Scripts\jquery.ui.widget.js" />
     <Content Include="Scripts\jquery.utils.js" />
     <Content Include="Scripts\ui.timepickr.js" />
+    <Content Include="Styles\admin.css" />
     <Content Include="Styles\archives.css" />
     <Content Include="Styles\datetime.css" />
     <Content Include="Styles\images\ui-bg_flat_0_aaaaaa_40x100.png" />
