@@ -26,7 +26,7 @@ namespace Orchard.Events {
             _handlers().Invoke(handler => handler.Process(messageName, eventData), Logger);
         }
 
-        public void Notify(string messageName, Dictionary<string, object> eventData) {
+        public void Notify(string messageName, IDictionary<string, object> eventData) {
             string[] parameters = messageName.Split('.');
             if (parameters.Length != 2) {
                 throw new ArgumentException(messageName + T(" is not formatted correctly"));

@@ -25,7 +25,7 @@ namespace Orchard.Tests.Modules.Settings.Topology {
             public void Notify_Obsolete(string messageName, IDictionary<string, string> eventData) {
             }
 
-            public void Notify(string messageName, Dictionary<string, object> eventData) {                
+            public void Notify(string messageName, IDictionary<string, object> eventData) {                
                 LastMessageName = messageName;
                 LastEventData = eventData;
             }
