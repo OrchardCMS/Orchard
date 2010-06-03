@@ -1,18 +1,31 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using Orchard.Environment.Configuration;
+using Orchard.Environment.Extensions;
 using Orchard.FileSystems.WebSite;
 
 namespace Orchard.Localization.Services {
     public class DefaultResourceManager : IResourceManager {
         private readonly IWebSiteFolder _webSiteFolder;
         private readonly ICultureManager _cultureManager;
+        private readonly IExtensionManager _extensionManager;
+        private readonly ShellSettings _shellSettings;
         private readonly IList<CultureDictionary> _cultures;
         const string CoreLocalizationFilePathFormat = "/Core/App_Data/Localization/{0}/orchard.core.po";
+        const string ModulesLocalizationFilePathFormat = "/Modules/{0}/App_Data/Localization/{1}/orchard.module.po";
+        const string RootLocalizationFilePathFormat = "/App_Data/Localization/{0}/orchard.root.po";
+        const string TenantLocalizationFilePathFormat = "/App_Data/Sites/{0}/Localization/{1}/orchard.po";
 
-        public DefaultResourceManager(ICultureManager cultureManager, IWebSiteFolder webSiteFolder) {
+        public DefaultResourceManager(
+            ICultureManager cultureManager, 
+            IWebSiteFolder webSiteFolder, 
+            IExtensionManager extensionManager, 
+            ShellSettings shellSettings) {
             _cultureManager = cultureManager;
             _webSiteFolder = webSiteFolder;
+            _extensionManager = extensionManager;
+            _shellSettings = shellSettings;
             _cultures = new List<CultureDictionary>();
         }
 
@@ -48,16 +61,39 @@ namespace Orchard.Localization.Services {
         }
 
         private IDictionary<string, string> LoadTranslationsForCulture(string culture) {
-            string path = string.Format(CoreLocalizationFilePathFormat, culture);
-            string text = _webSiteFolder.ReadFile(path);
+            IDictionary<string, string> translations = new Dictionary<string, string>();
+            string corePath = string.Format(CoreLocalizationFilePathFormat, culture);
+            string text = _webSiteFolder.ReadFile(corePath);
             if (text != null) {
-                return ParseLocalizationStream(text);
+                ParseLocalizationStream(text, translations, false);
             }
-            return new Dictionary<string, string>();
+
+            foreach (var module in _extensionManager.AvailableExtensions()) {
+                if (String.Equals(module.ExtensionType, "Module")) {
+                    string modulePath = string.Format(ModulesLocalizationFilePathFormat, module.Name, culture);
+                    text = _webSiteFolder.ReadFile(modulePath);
+                    if (text != null) {
+                        ParseLocalizationStream(text, translations, true);
+                    }
+                }
+            }
+
+            string rootPath = string.Format(RootLocalizationFilePathFormat, culture);
+            text = _webSiteFolder.ReadFile(rootPath);
+            if (text != null) {
+                ParseLocalizationStream(text, translations, true);
+            }
+
+            string tenantPath = string.Format(TenantLocalizationFilePathFormat, _shellSettings.Name, culture);
+            text = _webSiteFolder.ReadFile(tenantPath);
+            if (text != null) {
+                ParseLocalizationStream(text, translations, true);
+            }
+
+            return translations;
         }
 
-        private static IDictionary<string, string> ParseLocalizationStream(string text) {
-            Dictionary<string, string> translations = new Dictionary<string, string>();
+        private static void ParseLocalizationStream(string text, IDictionary<string, string> translations, bool merge) {
             StringReader reader = new StringReader(text);
             string poLine, id, scope;
             id = scope = String.Empty;
@@ -80,18 +116,26 @@ namespace Orchard.Localization.Services {
                             if (!translations.ContainsKey(scopedKey)) {
                                 translations.Add(scopedKey, translation);
                             }
+                            else {
+                                if (merge) {
+                                    translations[scopedKey] = translation;
+                                }
+                            }
                         }
                         string genericKey = "|" + id;
                         if (!translations.ContainsKey(genericKey)) {
                             translations.Add(genericKey, translation);
+                        }
+                        else {
+                            if (merge) {
+                                translations[genericKey] = translation;
+                            }
                         }
                     }
                     id = scope = String.Empty;
                 }
 
             }
-
-            return translations;
         }
 
         private static string ParseTranslation(string poLine) {
