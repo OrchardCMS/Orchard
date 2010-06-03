@@ -26,12 +26,12 @@ msgstr "Bienvenue dans Orchard"
 #: ~/Core/Dashboard/Views/Admin/Index.ascx
 #| msgid : "The Orchard Team"
 msgid "The Orchard Team"
-msgstr "L'Equipe Orchard"
+msgstr "L'équipe Orchard"
 
 #: ~/Core/Dashboard/Views/Admin/Index.ascx
 #| msgid : "This is the place where you can manage your web site, its appearance and its contents. Please take a moment to explore the different menu items on the left of the screen to familiarize yourself with the features of the application. For example, try to change the theme through the “Manage Themes” menu entry. You can also create new pages and manage existing ones through the “Manage Pages” menu entry or create blogs through “Manage Blogs”."
 msgid "This is the place where you can manage your web site, its appearance and its contents. Please take a moment to explore the different menu items on the left of the screen to familiarize yourself with the features of the application. For example, try to change the theme through the “Manage Themes” menu entry. You can also create new pages and manage existing ones through the “Manage Pages” menu entry or create blogs through “Manage Blogs”."
-msgstr "C'est l'endroit pour la gestion de votre site, son apparence et son contenu. Veuillez prendre votre temps explorer le menu à gauche de l'écran pour vous familiariser avec les aspects de l'application. Par exemple, essayez de changer le thème en utilisant le menu “Manage Themes”. Vous pouvez aussi créer de nouvelles pages et gérer les pages existantes via le menu “Manage Pages” ou bien créer des blogs via “Manage Blogs”."
+msgstr "Ceci est l'endroit où vous pouvez gérer votre site, son apparence et son contenu. Veuillez passer un instant à explorer le menu à gauche de l'écran pour vous familiariser avec les différents aspects de l'application. Par exemple, vous pouvez changer le thème en utilisant “Gérer les thèmes”. Vous pouvez également créer de nouvelles pages et gérer les pages existantes via “Gérer les pages” ou bien créer de nouveaux blogs via “Gérer les blogs”."
 
 #: ~/Core/Dashboard/Views/Admin/Index.ascx
 #| msgid : "Have fun!"
@@ -1801,7 +1801,7 @@ msgstr "Accès refusé"
 #: ~/Modules/Orchard.Users/Views/Account/AccessDenied.ascx
 #| msgid : "You do not have permission to complete your request."
 msgid "You do not have permission to complete your request."
-msgstr "Vous n'avez pas la permission de compléter votre requête"
+msgstr "Vous n'avez pas la permission de compléter cette requête."
 
 #: ~/Modules/Orchard.Users/Views/Account/ChangePassword.ascx
 #| msgid : "Change Password"
@@ -1811,12 +1811,12 @@ msgstr "Changer le mot de passe"
 #: ~/Modules/Orchard.Users/Views/Account/ChangePassword.ascx
 #| msgid : "Use the form below to change your password."
 msgid "Use the form below to change your password."
-msgstr "Utilisez le forumulaire ci-dessous pour changer votre mot de passe."
+msgstr "Veuillez utiliser le forumulaire ci-dessous pour changer votre mot de passe."
 
 #: ~/Modules/Orchard.Users/Views/Account/ChangePassword.ascx
 #| msgid : "New passwords are required to be a minimum of {0} characters in length."
 msgid "New passwords are required to be a minimum of {0} characters in length."
-msgstr "Les mots de passe doivent contenir {0} charactères au minimum."
+msgstr "Les mots de passe doivent contenir au moins {0} caractères."
 
 #: ~/Modules/Orchard.Users/Views/Account/ChangePassword.ascx
 #| msgid : "Current password:"
@@ -1856,7 +1856,7 @@ msgstr "La connexion a échoué. Veuillez corriger les erreurs et réessayer."
 #: ~/Modules/Orchard.Users/Views/Account/LogOn.ascx
 #| msgid : "Please enter your username and password."
 msgid "Please enter your username and password."
-msgstr "Veuillez saisir votre nom d'utilisateur et mot de passe."
+msgstr "Veuillez saisir votre nom d'utilisateur et votre mot de passe."
 
 #: ~/Modules/Orchard.Users/Views/Account/LogOn.ascx
 #| msgid : "Register"
@@ -1871,7 +1871,7 @@ msgstr " si vous n'avez pas de compte."
 #: ~/Modules/Orchard.Users/Views/Account/LogOn.ascx
 #| msgid : "Account Information"
 msgid "Account Information"
-msgstr "Données de Compte"
+msgstr "Données du compte"
 
 #: ~/Modules/Orchard.Users/Views/Account/LogOn.ascx
 #| msgid : "Username or Email:"
@@ -1886,7 +1886,7 @@ msgstr "Mot de passe:"
 #: ~/Modules/Orchard.Users/Views/Account/LogOn.ascx
 #| msgid : "Remember me?"
 msgid "Remember me?"
-msgstr "Souviens-moi?"
+msgstr "Se souvenir de moi?"
 
 #: ~/Modules/Orchard.Users/Views/Account/Register.ascx
 #| msgid : "Create a New Account"
@@ -1896,12 +1896,12 @@ msgstr "Créer un nouveau compte utilisateur"
 #: ~/Modules/Orchard.Users/Views/Account/Register.ascx
 #| msgid : "Use the form below to create a new account."
 msgid "Use the form below to create a new account."
-msgstr "Utiliser le formulaire ci-dessous pour créer un nouveau compte."
+msgstr "Veuillez utiliser le formulaire ci-dessous pour créer un nouveau compte."
 
 #: ~/Modules/Orchard.Users/Views/Account/Register.ascx
 #| msgid : "Passwords are required to be a minimum of {0} characters in length."
 msgid "Passwords are required to be a minimum of {0} characters in length."
-msgstr "Les mots de passe doivent contenir {0} charactères au minimum."
+msgstr "Les mots de passe doivent contenir au moins {0} caractères."
 
 #: ~/Modules/Orchard.Users/Views/Account/Register.ascx
 #| msgid : "Username:"
@@ -1971,12 +1971,12 @@ msgstr "La connexion a échoué. Veuillez corriger les erreurs et réessayer."
 #: ~/Themes/Contoso/Views/LogOn.ascx
 #| msgid : "Please enter your username and password."
 msgid "Please enter your username and password."
-msgstr "Veuillez saisir votre nom d'utilisateur et mot de passe."
+msgstr "Veuillez saisir votre nom d'utilisateur et votre mot de passe."
 
 #: ~/Themes/Contoso/Views/LogOn.ascx
 #| msgid : "Register"
 msgid "Register"
-msgstr "Enregistrer"
+msgstr "S'enregistrer"
 
 #: ~/Themes/Contoso/Views/LogOn.ascx
 #| msgid : " if you don't have an account."
@@ -1986,7 +1986,7 @@ msgstr " si vous n'avez pas de compte."
 #: ~/Themes/Contoso/Views/LogOn.ascx
 #| msgid : "Account Information"
 msgid "Account Information"
-msgstr "Données de Compte"
+msgstr "Données du Compte"
 
 #: ~/Themes/Contoso/Views/LogOn.ascx
 #| msgid : "Username or Email:"
@@ -2001,7 +2001,7 @@ msgstr "Mot de passe:"
 #: ~/Themes/Contoso/Views/LogOn.ascx
 #| msgid : "Remember me?"
 msgid "Remember me?"
-msgstr "Souviens-moi?"
+msgstr "Se souvenir de moi?"
 
 #: ~/Themes/Contoso/Views/User.ascx
 #| msgid : "Log Off"
@@ -2061,12 +2061,12 @@ msgstr "La connexion a échoué. Veuillez corriger les erreurs et réessayer."
 #: ~/Themes/Corporate/Views/LogOn.ascx
 #| msgid : "Please enter your username and password."
 msgid "Please enter your username and password."
-msgstr "Veuillez saisir votre nom d'utilisateur et mot de passe."
+msgstr "Veuillez saisir votre nom d'utilisateur et votre mot de passe."
 
 #: ~/Themes/Corporate/Views/LogOn.ascx
 #| msgid : "Register"
 msgid "Register"
-msgstr "Enregistrer"
+msgstr "S'enregistrer"
 
 #: ~/Themes/Corporate/Views/LogOn.ascx
 #| msgid : " if you don't have an account."
@@ -2076,7 +2076,7 @@ msgstr " si vous n'avez pas de compte."
 #: ~/Themes/Corporate/Views/LogOn.ascx
 #| msgid : "Account Information"
 msgid "Account Information"
-msgstr "Données de Compte"
+msgstr "Données du Compte"
 
 #: ~/Themes/Corporate/Views/LogOn.ascx
 #| msgid : "Username or Email:"
@@ -2091,7 +2091,7 @@ msgstr "Mot de passe:"
 #: ~/Themes/Corporate/Views/LogOn.ascx
 #| msgid : "Remember me?"
 msgid "Remember me?"
-msgstr "Souviens-moi?"
+msgstr "Se souvenir de moi?"
 
 #: ~/Themes/Corporate/Views/User.ascx
 #| msgid : "Log Off"
