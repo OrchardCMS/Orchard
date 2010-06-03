@@ -66,6 +66,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controllers\SearchController.cs" />
+    <Compile Include="Filters\SearchFilter.cs" />
     <Compile Include="Services\ISearchService.cs" />
     <Compile Include="Services\SearchService.cs" />
     <Compile Include="ViewModels\SearchResultViewModel.cs" />
@@ -81,6 +82,7 @@
   <ItemGroup>
     <Content Include="Module.txt" />
     <Content Include="Styles\search.css" />
+    <Content Include="Views\SearchForm.ascx" />
     <Content Include="Views\Search\Index.ascx" />
     <Content Include="Views\Web.config" />
   </ItemGroup>
