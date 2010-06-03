@@ -12,10 +12,10 @@ namespace Orchard.Environment.Extensions.Loaders {
 
                 var assembly = Assembly.Load("Orchard.Web");
                 return new ExtensionEntry {
-                                              Descriptor = descriptor,
-                                              Assembly = assembly,
-                                              ExportedTypes = assembly.GetExportedTypes().Where(x => IsTypeFromModule(x, descriptor))
-                                          };
+                    Descriptor = descriptor,
+                    Assembly = assembly,
+                    ExportedTypes = assembly.GetExportedTypes().Where(x => IsTypeFromModule(x, descriptor))
+                };
             }
             return null;
         }
