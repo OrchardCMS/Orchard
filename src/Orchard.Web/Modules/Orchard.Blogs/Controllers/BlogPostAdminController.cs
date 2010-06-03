@@ -25,7 +25,7 @@ namespace Orchard.Blogs.Controllers {
         }
 
         public IOrchardServices Services { get; set; }
-        private Localizer T { get; set; }
+        public Localizer T { get; set; }
 
         public ActionResult Create() {
             if (!Services.Authorizer.Authorize(Permissions.EditBlogPost, T("Not allowed to create blog post")))

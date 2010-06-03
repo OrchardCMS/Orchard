@@ -1,8 +1,12 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
+using System.Web;
 using System.Web.Mvc;
 using Orchard.Localization;
 using Orchard.Modules.ViewModels;
 using Orchard.Mvc.Results;
+using Orchard.UI.Notify;
+using Orchard.Utility.Extensions;
 
 namespace Orchard.Modules.Controllers {
     public class AdminController : Controller {
@@ -14,7 +18,7 @@ namespace Orchard.Modules.Controllers {
             T = NullLocalizer.Instance;
         }
 
-        private Localizer T { get; set; }
+        public Localizer T { get; set; }
         public IOrchardServices Services { get; set; }
 
         public ActionResult Index() {
@@ -26,7 +30,37 @@ namespace Orchard.Modules.Controllers {
         }
 
         public ActionResult Add() {
-            return View(new ModulesIndexViewModel());  
+            return View(new ModuleAddViewModel());  
+        }
+
+        [HttpPost, ActionName("Add")]
+        public ActionResult AddPOST() {
+            // module not used for anything other than display (and that only to not have object in the view 'T')
+            var viewModel = new ModuleAddViewModel();
+            try {
+                UpdateModel(viewModel);
+                if (!Services.Authorizer.Authorize(Permissions.ManageModules, T("Couldn't upload module package.")))
+                    return new HttpUnauthorizedResult();
+
+                if (string.IsNullOrWhiteSpace(Request.Files[0].FileName)) {
+                    ModelState.AddModelError("File", T("Select a file to upload.").ToString());
+                }
+
+                if (!ModelState.IsValid)
+                    return View("add", viewModel);
+
+                foreach (string fileName in Request.Files) {
+                    var file = Request.Files[fileName];
+                    //todo: upload & process module package
+                }
+
+                //todo: add success message
+                return RedirectToAction("index");
+            }
+            catch (Exception exception) {
+                Services.Notifier.Error(T("Uploading module package failed: {0}",  exception.Message));
+                return View("add", viewModel);
+            }
         }
 
         public ActionResult Features() {

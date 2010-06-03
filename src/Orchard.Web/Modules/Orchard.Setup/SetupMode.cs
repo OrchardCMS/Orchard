@@ -123,6 +123,11 @@ namespace Orchard.Setup {
                 get { return ""; }
                 set { throw new NotImplementedException(); }
             }
+
+            public string SiteCulture {
+                get { return ""; }
+                set { throw new NotImplementedException(); }
+            }
         }
     }
 }

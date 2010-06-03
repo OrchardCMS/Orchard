@@ -9,7 +9,6 @@ using Orchard.Environment.Extensions.Loaders;
 using Orchard.Environment.Extensions.Models;
 using Orchard.Localization;
 using Orchard.Logging;
-using Yaml.Grammar;
 using System.Web;
 
 namespace Orchard.Environment.Extensions {
@@ -54,7 +53,7 @@ namespace Orchard.Environment.Extensions {
         private Feature LoadFeature(FeatureDescriptor featureDescriptor) {
             var featureName = featureDescriptor.Name;
             string extensionName = GetExtensionForFeature(featureName);
-            if (extensionName == null) throw new ArgumentException(T("Feature ") + featureName + T(" was not found in any of the installed extensions"));
+            if (extensionName == null) throw new ArgumentException(T("Feature {0} was not found in any of the installed extensions", featureName));
             var extension = BuildActiveExtensions().Where(x => x.Descriptor.Name == extensionName).FirstOrDefault();
             if (extension == null) throw new InvalidOperationException(T("Extension ") + extensionName + T(" is not active"));
 

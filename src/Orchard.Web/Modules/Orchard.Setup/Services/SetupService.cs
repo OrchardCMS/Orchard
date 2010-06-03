@@ -9,12 +9,12 @@ using Orchard.Core.Settings.Models;
 using Orchard.Data;
 using Orchard.Environment;
 using Orchard.Environment.Configuration;
-using Orchard.Environment.Extensions;
 using Orchard.Environment.ShellBuilders;
 using Orchard.Environment.Topology;
 using Orchard.Environment.Topology.Models;
 using Orchard.Localization;
 using Orchard.ContentManagement.MetaData.Services;
+using Orchard.Localization.Services;
 using Orchard.Security;
 using Orchard.Settings;
 using Orchard.Themes;
@@ -43,7 +43,7 @@ namespace Orchard.Setup.Services {
             T = NullLocalizer.Instance;
         }
 
-        private Localizer T { get; set; }
+        public Localizer T { get; set; }
 
         public ShellSettings Prime() {
             return _shellSettings;
@@ -60,6 +60,7 @@ namespace Orchard.Setup.Services {
                     "HomePage",
                     "Navigation",
                     "Scheduling",
+                    "Indexing",
                     "Settings",
                     "XmlRpc",
                     "Orchard.Users",
@@ -125,10 +126,15 @@ namespace Orchard.Setup.Services {
                     siteSettings.Record.SiteName = context.SiteName;
                     siteSettings.Record.SuperUser = context.AdminUsername;
                     siteSettings.Record.PageTitleSeparator = " - ";
+                    siteSettings.Record.SiteCulture = "en-US";
 
                     // set site theme
                     var themeService = environment.Resolve<IThemeService>();
                     themeService.SetSiteTheme("Classic");
+
+                    // add default culture
+                    var cultureManager = environment.Resolve<ICultureManager>();
+                    cultureManager.AddCulture("en-US");
 
                     var contentManager = environment.Resolve<IContentManager>();
 

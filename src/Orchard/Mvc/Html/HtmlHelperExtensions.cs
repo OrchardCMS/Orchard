@@ -95,7 +95,7 @@ namespace Orchard.Mvc.Html {
 
         public static MvcHtmlString Excerpt(this HtmlHelper html, string markup, int length) {
             var tagRegex = new Regex("<[^<>]*>", RegexOptions.Singleline);
-            var text = html.Encode(tagRegex.Replace(markup, ""));
+            var text = tagRegex.Replace(markup, "");
 
             return MvcHtmlString.Create(text.Ellipsize(length));
         }

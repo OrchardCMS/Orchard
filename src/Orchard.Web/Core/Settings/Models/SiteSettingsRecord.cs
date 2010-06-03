@@ -7,5 +7,6 @@ namespace Orchard.Core.Settings.Models {
         public virtual string SuperUser { get; set; }
         public virtual string PageTitleSeparator { get; set; }
         public virtual string HomePage { get; set; }
+        public virtual string SiteCulture { get; set; }
     }
 }

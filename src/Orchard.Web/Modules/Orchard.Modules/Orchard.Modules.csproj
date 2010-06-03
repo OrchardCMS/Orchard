@@ -75,7 +75,7 @@
     <Compile Include="Permissions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\ModuleService.cs" />
-    <Compile Include="ViewModels\ModuleEditViewModel.cs" />
+    <Compile Include="ViewModels\ModuleAddViewModel.cs" />
     <Compile Include="ViewModels\ModulesIndexViewModel.cs" />
   </ItemGroup>
   <ItemGroup>

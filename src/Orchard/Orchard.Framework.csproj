@@ -143,6 +143,15 @@
     <Compile Include="Environment\State\IShellStateManager.cs" />
     <Compile Include="Environment\State\ShellStateCoordinator.cs" />
     <Compile Include="IDependency.cs" />
+    <Compile Include="Localization\Services\DefaultCultureManager.cs" />
+    <Compile Include="Localization\Services\DefaultResourceManager.cs" />
+    <Compile Include="Indexing\DefaultIndexManager.cs" />
+    <Compile Include="Indexing\IIndexManager.cs" />
+    <Compile Include="Localization\Services\ICultureManager.cs" />
+    <Compile Include="Localization\Services\ICultureSelector.cs" />
+    <Compile Include="Localization\Services\IResourceManager.cs" />
+    <Compile Include="Localization\Records\CultureRecord.cs" />
+    <Compile Include="Localization\Services\SiteCultureSelector.cs" />
     <Compile Include="Mvc\Html\ThemeExtensions.cs" />
     <Compile Include="Mvc\Routes\IRoutePublisher.cs" />
     <Compile Include="Mvc\Routes\IRouteProvider.cs" />
@@ -156,6 +165,13 @@
     <Compile Include="Mvc\OrchardControllerFactory.cs" />
     <Compile Include="Environment\IOrchardHost.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Indexing\IIndexDocument.cs" />
+    <Compile Include="Indexing\IIndexProvider.cs" />
+    <Compile Include="Indexing\ISearchBuilder.cs" />
+    <Compile Include="Indexing\ISearchHit.cs" />
+    <Compile Include="Tasks\Indexing\IIndexingTask.cs" />
+    <Compile Include="Tasks\Indexing\IIndexingTaskManager.cs" />
+    <Compile Include="ContentManagement\Handlers\IndexContentContext.cs" />
     <Compile Include="Validation\Argument.cs" />
   </ItemGroup>
   <ItemGroup>

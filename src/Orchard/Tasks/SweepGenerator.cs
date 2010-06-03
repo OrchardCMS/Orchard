@@ -7,7 +7,7 @@ using Orchard.Logging;
 namespace Orchard.Tasks {
     public class SweepGenerator : IOrchardShellEvents {
         private readonly IContainer _container;
-        private Timer _timer;
+        private readonly Timer _timer;
 
         public SweepGenerator(IContainer container) {
             _container = container;

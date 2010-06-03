@@ -16,6 +16,10 @@ namespace Orchard.Localization {
             return _localized;
         }
 
+        public static implicit operator string(LocalizedString x) {
+            return x._localized;
+        }
+
         public override int GetHashCode() {
             var hashCode = 0;
             if (_localized != null)

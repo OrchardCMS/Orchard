@@ -27,7 +27,7 @@ namespace Orchard.Blogs.Drivers {
             T = NullLocalizer.Instance;
         }
 
-        private Localizer T { get; set; }
+        public Localizer T { get; set; }
 
         protected override ContentType GetContentType() {
             return ContentType;
@@ -62,7 +62,7 @@ namespace Orchard.Blogs.Drivers {
         protected override DriverResult Display(BlogPost post, string displayType) {
             return Combined(
                 ContentItemTemplate("Items/Blogs.BlogPost").LongestMatch(displayType, "Summary", "SummaryAdmin"),
-                ContentPartTemplate(post, "Parts/Blogs.BlogPost.Metadata").LongestMatch(displayType, "Summary", "SummaryAdmin").Location("meta"));
+                ContentPartTemplate(post, "Parts/Blogs.BlogPost.Metadata").LongestMatch(displayType, "Summary", "SummaryAdmin").Location("meta", "1"));
         }
 
         protected override DriverResult Editor(BlogPost post) {

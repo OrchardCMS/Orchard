@@ -11,5 +11,7 @@ namespace Orchard.ContentManagement.Handlers {
         void Published(PublishContentContext context);
         void Removing(RemoveContentContext context);
         void Removed(RemoveContentContext context);
+        void Indexing(IndexContentContext context);
+        void Indexed(IndexContentContext context);
     }
 }

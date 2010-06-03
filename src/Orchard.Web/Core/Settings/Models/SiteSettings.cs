@@ -16,13 +16,17 @@ namespace Orchard.Core.Settings.Models {
         public string SiteSalt {
             get { return Record.SiteSalt; }
         }
-        public string SuperUser { 
+        public string SuperUser {
             get { return Record.SuperUser; }
             set { Record.SuperUser = value; }
         }
         public string HomePage {
             get { return Record.HomePage; }
             set { Record.HomePage = value; }
+        }
+        public string SiteCulture {
+            get { return Record.SiteCulture; }
+            set { Record.SiteCulture = value; }
         }
     }
 }

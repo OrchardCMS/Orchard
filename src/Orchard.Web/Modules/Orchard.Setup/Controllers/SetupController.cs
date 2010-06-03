@@ -35,7 +35,7 @@ namespace Orchard.Setup.Controllers {
             T = NullLocalizer.Instance;
         }
 
-        private Localizer T { get; set; }
+        public Localizer T { get; set; }
 
         private ActionResult IndexViewResult(SetupViewModel model) {
             string message;
