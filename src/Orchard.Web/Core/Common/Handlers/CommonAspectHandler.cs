@@ -60,7 +60,7 @@ namespace Orchard.Core.Common.Handlers {
                                                     .Add("author", commonAspect.Owner.UserName).Analyze(false)
                                                     .Add("created", commonAspect.CreatedUtc ?? _clock.UtcNow).Analyze(false)
                                                     .Add("published", commonAspect.PublishedUtc ?? _clock.UtcNow).Analyze(false)
-                                                    .Add("modified", commonAspect.ModifiedUtc ?? _clock.UtcNow).Analyze(false))
+                                                    .Add("modified", commonAspect.ModifiedUtc ?? _clock.UtcNow).Analyze(false)
                                                     );
         }
 
