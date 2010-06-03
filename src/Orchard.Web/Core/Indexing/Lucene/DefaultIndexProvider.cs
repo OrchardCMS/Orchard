@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using Lucene.Net.Analysis;
 using Lucene.Net.Analysis.Standard;
 using Lucene.Net.Documents;
@@ -14,7 +16,7 @@ using Orchard.Logging;
 
 namespace Orchard.Core.Indexing.Lucene {
     /// <summary>
-    /// Represents the default implementation of an IIndexProvider based on Lucene
+    /// Represents the default implementation of an IIndexProvider, based on Lucene
     /// </summary>
     public class DefaultIndexProvider : IIndexProvider {
         private readonly IAppDataFolder _appDataFolder;
@@ -73,40 +75,65 @@ namespace Orchard.Core.Indexing.Lucene {
         }
 
         public void Store(string indexName, IIndexDocument indexDocument) {
-            Store(indexName, (DefaultIndexDocument)indexDocument);
+            Store(indexName, new [] { (DefaultIndexDocument)indexDocument });
         }
 
-        public void Store(string indexName, DefaultIndexDocument indexDocument) {
+        public void Store(string indexName, IEnumerable<IIndexDocument> indexDocuments) {
+            Store(indexName, indexDocuments.Cast<DefaultIndexDocument>());
+        }
+
+        public void Store(string indexName, IEnumerable<DefaultIndexDocument> indexDocuments) {
+            if(indexDocuments.AsQueryable().Count() == 0) {
+                return;
+            }
+
             var writer = new IndexWriter(GetDirectory(indexName), _analyzer, false, IndexWriter.MaxFieldLength.UNLIMITED);
+            DefaultIndexDocument current = null;
 
             try {
-                var doc = CreateDocument(indexDocument);
-                writer.AddDocument(doc);
-                Logger.Debug("Document [{0}] indexed", indexDocument.Id);
+                foreach ( var indexDocument in indexDocuments ) {
+                    current = indexDocument;
+                    var doc = CreateDocument(indexDocument);
+                    writer.AddDocument(doc);
+                    Logger.Debug("Document [{0}] indexed", indexDocument.Id);
+                }
             }
             catch ( Exception ex ) {
-                Logger.Error(ex, "An unexpected error occured while removing the document [{0}] from the index [{1}].", indexDocument.Id, indexName);
+                Logger.Error(ex, "An unexpected error occured while add the document [{0}] from the index [{1}].", current.Id, indexName);
             }
             finally {
+                writer.Optimize();
                 writer.Close();
             }
 
         }
 
-        public void Delete(string indexName, int id) {
-			var reader = IndexReader.Open(GetDirectory(indexName), false);
+        public void Delete(string indexName, int documentId) {
+            Delete(indexName, new[] { documentId });
+        }
+
+        public void Delete(string indexName, IEnumerable<int> documentIds) {
+            if ( documentIds.AsQueryable().Count() == 0 ) {
+                return;
+            }
+            
+            var reader = IndexReader.Open(GetDirectory(indexName), false);
 
             try {
-                var term = new Term("id", id.ToString());
-                if ( reader.DeleteDocuments(term) != 0 ) {
-                    Logger.Error("The document [{0}] could not be removed from the index [{1}]", id, indexName);
+                foreach (var id in documentIds) {
+                    try {
+                        var term = new Term("id", id.ToString());
+                        if (reader.DeleteDocuments(term) != 0) {
+                            Logger.Error("The document [{0}] could not be removed from the index [{1}]", id, indexName);
+                        }
+                        else {
+                            Logger.Debug("Document [{0}] removed from index", id);
+                        }
+                    }
+                    catch (Exception ex) {
+                        Logger.Error(ex, "An unexpected error occured while removing the document [{0}] from the index [{1}].", id, indexName);
+                    }
                 }
-                else {
-                    Logger.Debug("Document [{0}] removed from index", id);
-                }
-            }
-            catch ( Exception ex ) {
-                Logger.Error(ex, "An unexpected error occured while removing the document [{0}] from the index [{1}].", id, indexName);
             }
             finally {
                 reader.Close();
@@ -121,8 +148,5 @@ namespace Orchard.Core.Indexing.Lucene {
             return new DefaultSearchBuilder(GetDirectory(indexName));
         }
 
-        public IIndexDocument Get(string indexName, int id) {
-            throw new NotImplementedException();
-        }
     }
 }

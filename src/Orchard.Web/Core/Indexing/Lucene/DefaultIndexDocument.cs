@@ -25,6 +25,11 @@ namespace Orchard.Core.Indexing.Lucene {
 
         public IIndexDocument Add(string name, string value, bool removeTags) {
             AppendPreviousField();
+            
+            if(value == null) {
+                value = String.Empty;
+            }
+            
             if(removeTags) {
                 value = value.RemoveTags();
             }

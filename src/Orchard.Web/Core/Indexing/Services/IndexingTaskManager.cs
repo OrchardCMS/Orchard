@@ -27,34 +27,46 @@ namespace Orchard.Core.Indexing.Services {
             _clock = clock;
             _repository = repository;
             _contentManager = contentManager;
+            _settings = settings;
             Logger = NullLogger.Instance;
         }
 
         public ILogger Logger { get; set; }
 
-        public void CreateTask(ContentItem contentItem) {
-            if (contentItem == null) {
+        private void CreateTask(ContentItem contentItem, int action) {
+            if ( contentItem == null ) {
                 throw new ArgumentNullException("contentItem");
             }
 
             // remove previous tasks for the same content item
             var tasks = _repository
-                .Fetch(x => x.Id == contentItem.Id )
+                .Fetch(x => x.ContentItemRecord.Id == contentItem.Id)
                 .ToArray();
 
-            foreach (var task in tasks) {
+            foreach ( var task in tasks ) {
                 _repository.Delete(task);
             }
 
             var taskRecord = new IndexingTaskRecord {
-                                                        CreatedUtc = _clock.UtcNow,
-                                                        ContentItemRecord = contentItem.Record
-                                                    };
+                CreatedUtc = _clock.UtcNow,
+                ContentItemRecord = contentItem.Record,
+                Action = action
+            };
 
             _repository.Create(taskRecord);
+            
+        }
 
+        public void CreateUpdateIndexTask(ContentItem contentItem) {
+
+            CreateTask(contentItem, IndexingTaskRecord.Update);
             Logger.Information("Indexing task created for [{0}:{1}]", contentItem.ContentType, contentItem.Id);
+        }
 
+        public void CreateDeleteIndexTask(ContentItem contentItem) {
+
+            CreateTask(contentItem, IndexingTaskRecord.Delete);
+            Logger.Information("Deleting index task created for [{0}:{1}]", contentItem.ContentType, contentItem.Id);
         }
 
         public IEnumerable<IIndexingTask> GetTasks(DateTime? createdAfter) {

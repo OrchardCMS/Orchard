@@ -168,5 +168,18 @@ namespace Orchard.Tests.Indexing {
             Assert.That(searchBuilder.WithField("body", "hr").Search().Count(), Is.EqualTo(1));
             Assert.That(searchBuilder.WithField("body", "hr").Search().First().Id, Is.EqualTo(1));
         }
+
+        [Test] public void ShouldAllowNullOrEmptyStrings() {
+            _provider.CreateIndex("default");
+            _provider.Store("default", _provider.New(1).Add("body", null));
+            _provider.Store("default", _provider.New(2).Add("body", ""));
+            _provider.Store("default", _provider.New(3).Add("body", "<hr></hr>", true));
+
+            var searchBuilder = _provider.CreateSearchBuilder("default");
+
+            Assert.That(searchBuilder.Get(1).Id, Is.EqualTo(1));
+            Assert.That(searchBuilder.Get(2).Id, Is.EqualTo(2));
+            Assert.That(searchBuilder.Get(3).Id, Is.EqualTo(3));
+        }
     }
 }
