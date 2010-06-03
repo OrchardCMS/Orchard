@@ -155,6 +155,10 @@
       <Project>{D10AD48F-407D-4DB5-A328-173EC7CB010F}</Project>
       <Name>Orchard.Roles</Name>
     </ProjectReference>
+    <ProjectReference Include="Modules\Orchard.Search\Orchard.Search.csproj">
+      <Project>{4BE4EB01-AC56-4048-924E-2CA77F509ABA}</Project>
+      <Name>Orchard.Search</Name>
+    </ProjectReference>
     <ProjectReference Include="Modules\Orchard.Setup\Orchard.Setup.csproj">
       <Project>{8C7FCBC2-E6E1-405E-BFB5-D8D9E67A09C4}</Project>
       <Name>Orchard.Setup</Name>
