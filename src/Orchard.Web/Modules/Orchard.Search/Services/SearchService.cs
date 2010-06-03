@@ -6,17 +6,17 @@ namespace Orchard.Search.Services
 {
     public class SearchService : ISearchService
     {
-        private readonly IIndexProvider _indexProvider;
+        private readonly IIndexManager _indexManager;
 
-        public SearchService(IIndexProvider indexProvider) {
-            _indexProvider = indexProvider;
+        public SearchService(IIndexManager indexManager) {
+            _indexManager = indexManager;
         }
 
         public IEnumerable<ISearchHit> Query(string term) {
-            if (string.IsNullOrWhiteSpace(term))
+            if (string.IsNullOrWhiteSpace(term) || !_indexManager.HasIndexProvider())
                 return Enumerable.Empty<ISearchHit>();
 
-            return _indexProvider.CreateSearchBuilder("search")
+            return _indexManager.GetSearchIndexProvider().CreateSearchBuilder("search")
                 .WithField("title", term)
                 .WithField("body", term)
                 .Search();
