@@ -224,6 +224,7 @@
   <ItemGroup />
   <ItemGroup>
     <None Include="App_Data\Localization\en-US\orchard.core.po" />
+    <None Include="App_Data\Localization\fr-FR\orchard.core.po" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />
