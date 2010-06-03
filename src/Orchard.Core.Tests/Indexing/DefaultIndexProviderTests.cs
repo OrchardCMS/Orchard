@@ -142,5 +142,20 @@ namespace Orchard.Tests.Indexing {
             Assert.IsNull(_provider.CreateSearchBuilder("default3").Get(1));
 
         }
+
+        [Test]
+        public void IdentifierShouldNotCollide() {
+            _provider.CreateIndex("default");
+            _provider.Store("default", _provider.New(1).Add("field", "value1"));
+            _provider.Store("default", _provider.New(11).Add("field", "value11"));
+            _provider.Store("default", _provider.New(111).Add("field", "value111"));
+
+            var searchBuilder = _provider.CreateSearchBuilder("default");
+
+            Assert.That(searchBuilder.Get(1).Id, Is.EqualTo(1));
+            Assert.That(searchBuilder.Get(11).Id, Is.EqualTo(11));
+            Assert.That(searchBuilder.Get(111).Id, Is.EqualTo(111));
+
+        }
     }
 }

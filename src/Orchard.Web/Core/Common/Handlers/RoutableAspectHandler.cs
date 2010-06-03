@@ -37,7 +37,7 @@ namespace Orchard.Core.Common.Handlers {
             OnCreated<RoutableAspect>((context, ra) => routableService.ProcessSlug(ra));
 
             OnIndexing<RoutableAspect>((context, part) => context.IndexDocument
-                                                    .Add("slug", part.Slug)
+                                                    .Add("slug", part.Slug).Analyze(false)
                                                     .Add("title", part.Title)
                                                     );
         }

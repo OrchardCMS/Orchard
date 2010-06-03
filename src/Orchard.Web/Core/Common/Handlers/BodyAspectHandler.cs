@@ -10,8 +10,8 @@ namespace Orchard.Core.Common.Handlers {
             Filters.Add(StorageFilter.For(bodyRepository));
 
             OnIndexing<BodyAspect>((context, bodyAspect) => context.IndexDocument
-                                                                .Add("body", bodyAspect.Record.Text)
-                                                                .Add("format", bodyAspect.Record.Format));
+                                                                .Add("body", bodyAspect.Record.Text).Store(false)
+                                                                .Add("format", bodyAspect.Record.Format).Analyze(false));
         }
     }
 }
