@@ -155,7 +155,18 @@ namespace Orchard.Tests.Indexing {
             Assert.That(searchBuilder.Get(1).Id, Is.EqualTo(1));
             Assert.That(searchBuilder.Get(11).Id, Is.EqualTo(11));
             Assert.That(searchBuilder.Get(111).Id, Is.EqualTo(111));
+        }
+        
+        [Test]
+        public void TagsShouldBeRemoved() {
+            _provider.CreateIndex("default");
+            _provider.Store("default", _provider.New(1).Add("body", "<hr>some content</hr>"));
+            _provider.Store("default", _provider.New(2).Add("body", "<hr>some content</hr>", true));
 
+            var searchBuilder = _provider.CreateSearchBuilder("default");
+
+            Assert.That(searchBuilder.WithField("body", "hr").Search().Count(), Is.EqualTo(1));
+            Assert.That(searchBuilder.WithField("body", "hr").Search().First().Id, Is.EqualTo(1));
         }
     }
 }

@@ -29,5 +29,12 @@ namespace Orchard.Utility.Extensions {
                 ? defaultValue
                 : text;
         }
+
+        public static string RemoveTags(this string html) {
+            var tagRegex = new Regex("<[^<>]*>", RegexOptions.Singleline);
+            var text = tagRegex.Replace(html, "");
+
+            return text;
+        }
     }
 }

@@ -94,10 +94,8 @@ namespace Orchard.Mvc.Html {
         #region Excerpt
 
         public static MvcHtmlString Excerpt(this HtmlHelper html, string markup, int length) {
-            var tagRegex = new Regex("<[^<>]*>", RegexOptions.Singleline);
-            var text = tagRegex.Replace(markup, "");
 
-            return MvcHtmlString.Create(text.Ellipsize(length));
+            return MvcHtmlString.Create(markup.RemoveTags().Ellipsize(length));
         }
 
         #endregion
