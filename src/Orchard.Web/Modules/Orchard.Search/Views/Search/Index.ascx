@@ -4,7 +4,7 @@ Html.RegisterStyle("search.css"); %>
 <h1><%=Html.TitleForPage(T("Search"))%></h1><%
 using(Html.BeginForm("index", "search", FormMethod.Get, new { @class = "search" })) { %>
     <fieldset>
-        <%=Html.TextBoxFor(m => m.Term) %>
+        <%=Html.TextBox("q", Model.Term) %>
         <button type="submit"><%=T("Search") %></button>
     </fieldset><%
 }
