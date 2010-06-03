@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using Orchard.Environment.Configuration;
 using Orchard.Environment.Extensions;
@@ -44,9 +45,35 @@ namespace Orchard.Localization.Services {
                     if (culture.Translations.ContainsKey(genericKey)) {
                         return culture.Translations[genericKey];
                     }
-                    return text;
+
+                    return GetParentTranslation(scope, text, cultureName);
                 }
             }
+
+            return text;
+        }
+
+        private string GetParentTranslation(string scope, string text, string cultureName) {
+            string scopedKey = scope + "|" + text;
+            string genericKey = "|" + text;
+            try {
+                CultureInfo cultureInfo = CultureInfo.GetCultureInfo(cultureName);
+                CultureInfo parentCultureInfo = cultureInfo.Parent;
+                if (parentCultureInfo.IsNeutralCulture) {
+                    foreach (var culture in _cultures) {
+                        if (String.Equals(parentCultureInfo.Name, culture.CultureName, StringComparison.OrdinalIgnoreCase)) {
+                            if (culture.Translations.ContainsKey(scopedKey)) {
+                                return culture.Translations[scopedKey];
+                            }
+                            if (culture.Translations.ContainsKey(genericKey)) {
+                                return culture.Translations[genericKey];
+                            }
+                            break;
+                        }
+                    }
+                }
+            }
+            catch (CultureNotFoundException) { }
 
             return text;
         }
