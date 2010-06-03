@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using Orchard.Caching;
 using Orchard.Environment.Configuration;
 using Orchard.Environment.Extensions;
 using Orchard.FileSystems.WebSite;
@@ -11,8 +12,8 @@ namespace Orchard.Localization.Services {
         private readonly IWebSiteFolder _webSiteFolder;
         private readonly ICultureManager _cultureManager;
         private readonly IExtensionManager _extensionManager;
+        private readonly ICacheManager _cacheManager;
         private readonly ShellSettings _shellSettings;
-        private readonly IList<CultureDictionary> _cultures;
         const string CoreLocalizationFilePathFormat = "/Core/App_Data/Localization/{0}/orchard.core.po";
         const string ModulesLocalizationFilePathFormat = "/Modules/{0}/App_Data/Localization/{1}/orchard.module.po";
         const string RootLocalizationFilePathFormat = "/App_Data/Localization/{0}/orchard.root.po";
@@ -21,21 +22,20 @@ namespace Orchard.Localization.Services {
         public DefaultResourceManager(
             ICultureManager cultureManager, 
             IWebSiteFolder webSiteFolder, 
-            IExtensionManager extensionManager, 
+            IExtensionManager extensionManager,
+            ICacheManager cacheManager,
             ShellSettings shellSettings) {
             _cultureManager = cultureManager;
             _webSiteFolder = webSiteFolder;
             _extensionManager = extensionManager;
+            _cacheManager = cacheManager;
             _shellSettings = shellSettings;
-            _cultures = new List<CultureDictionary>();
         }
 
         public string GetLocalizedString(string scope, string text, string cultureName) {
-            if (_cultures.Count == 0) {
-                LoadCultures();
-            }
+            var cultures = LoadCultures();
 
-            foreach (var culture in _cultures) {
+            foreach (var culture in cultures) {
                 if (String.Equals(cultureName, culture.CultureName, StringComparison.OrdinalIgnoreCase)) {
                     string scopedKey = scope + "|" + text;
                     string genericKey = "|" + text;
@@ -46,21 +46,21 @@ namespace Orchard.Localization.Services {
                         return culture.Translations[genericKey];
                     }
 
-                    return GetParentTranslation(scope, text, cultureName);
+                    return GetParentTranslation(scope, text, cultureName, cultures);
                 }
             }
 
             return text;
         }
 
-        private string GetParentTranslation(string scope, string text, string cultureName) {
+        private static string GetParentTranslation(string scope, string text, string cultureName, IEnumerable<CultureDictionary> cultures) {
             string scopedKey = scope + "|" + text;
             string genericKey = "|" + text;
             try {
                 CultureInfo cultureInfo = CultureInfo.GetCultureInfo(cultureName);
                 CultureInfo parentCultureInfo = cultureInfo.Parent;
                 if (parentCultureInfo.IsNeutralCulture) {
-                    foreach (var culture in _cultures) {
+                    foreach (var culture in cultures) {
                         if (String.Equals(parentCultureInfo.Name, culture.CultureName, StringComparison.OrdinalIgnoreCase)) {
                             if (culture.Translations.ContainsKey(scopedKey)) {
                                 return culture.Translations[scopedKey];
@@ -78,21 +78,27 @@ namespace Orchard.Localization.Services {
             return text;
         }
 
-        private void LoadCultures() {
-            foreach (var culture in _cultureManager.ListCultures()) {
-                _cultures.Add(new CultureDictionary {
-                    CultureName = culture,
-                    Translations = LoadTranslationsForCulture(culture)
-                });
-            }
+        private IEnumerable<CultureDictionary> LoadCultures() {
+            return _cacheManager.Get("cultures", ctx => {
+                var cultures = new List<CultureDictionary>();
+                foreach (var culture in _cultureManager.ListCultures()) {
+                    cultures.Add(new CultureDictionary {
+                        CultureName = culture,
+                        Translations = LoadTranslationsForCulture(culture, ctx)
+                    });
+                }
+                return cultures;
+            });
+
         }
 
-        private IDictionary<string, string> LoadTranslationsForCulture(string culture) {
+        private IDictionary<string, string> LoadTranslationsForCulture(string culture, AcquireContext<string> context) {
             IDictionary<string, string> translations = new Dictionary<string, string>();
             string corePath = string.Format(CoreLocalizationFilePathFormat, culture);
             string text = _webSiteFolder.ReadFile(corePath);
             if (text != null) {
                 ParseLocalizationStream(text, translations, false);
+                context.Monitor(_webSiteFolder.WhenPathChanges(corePath));
             }
 
             foreach (var module in _extensionManager.AvailableExtensions()) {
@@ -101,6 +107,7 @@ namespace Orchard.Localization.Services {
                     text = _webSiteFolder.ReadFile(modulePath);
                     if (text != null) {
                         ParseLocalizationStream(text, translations, true);
+                        context.Monitor(_webSiteFolder.WhenPathChanges(modulePath));
                     }
                 }
             }
@@ -109,12 +116,14 @@ namespace Orchard.Localization.Services {
             text = _webSiteFolder.ReadFile(rootPath);
             if (text != null) {
                 ParseLocalizationStream(text, translations, true);
+                context.Monitor(_webSiteFolder.WhenPathChanges(rootPath));
             }
 
             string tenantPath = string.Format(TenantLocalizationFilePathFormat, _shellSettings.Name, culture);
             text = _webSiteFolder.ReadFile(tenantPath);
             if (text != null) {
                 ParseLocalizationStream(text, translations, true);
+                context.Monitor(_webSiteFolder.WhenPathChanges(tenantPath));
             }
 
             return translations;
