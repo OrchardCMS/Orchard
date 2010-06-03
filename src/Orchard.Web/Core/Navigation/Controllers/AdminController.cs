@@ -26,7 +26,7 @@ namespace Orchard.Core.Navigation.Controllers {
             T = NullLocalizer.Instance;
         }
 
-        private Localizer T { get; set; }
+        public Localizer T { get; set; }
 
         public ActionResult Index(NavigationManagementViewModel model) {
             if (!_services.Authorizer.Authorize(Permissions.ManageMainMenu, T("Not allowed to manage the main menu")))

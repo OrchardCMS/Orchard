@@ -28,7 +28,7 @@ namespace Orchard.Pages.Controllers {
 
         protected virtual ISite CurrentSite { get; [UsedImplicitly] private set; }
         public IOrchardServices Services { get; private set; }
-        private Localizer T { get; set; }
+        public Localizer T { get; set; }
 
         public ActionResult List(PagesOptions options) {
             // Default options

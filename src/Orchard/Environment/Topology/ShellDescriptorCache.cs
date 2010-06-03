@@ -40,7 +40,7 @@ namespace Orchard.Environment.Topology {
         }
 
         public ILogger Logger { get; set; }
-        private Localizer T { get; set; }
+        public Localizer T { get; set; }
 
         #region Implementation of IShellDescriptorCache
 

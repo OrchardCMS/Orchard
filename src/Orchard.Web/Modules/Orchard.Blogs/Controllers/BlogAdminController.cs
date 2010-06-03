@@ -28,7 +28,7 @@ namespace Orchard.Blogs.Controllers {
             T = NullLocalizer.Instance;
         }
 
-        private Localizer T { get; set; }
+        public Localizer T { get; set; }
         protected virtual ISite CurrentSite { get; [UsedImplicitly] private set; }
         public IOrchardServices Services { get; set; }
 

@@ -21,7 +21,7 @@ namespace Orchard.Core.Navigation.Drivers {
         }
 
         public virtual IUser CurrentUser { get; set; }
-        private Localizer T { get; set; }
+        public Localizer T { get; set; }
 
         protected override DriverResult Editor(MenuPart part) {
             if (!_authorizationService.TryCheckAccess(Permissions.ManageMainMenu, CurrentUser, part))

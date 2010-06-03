@@ -21,7 +21,7 @@ namespace Orchard.Localization {
             Logger.Debug("{0} localizing '{1}'", _scope, textHint);
 
             string currentCulture = _cultureManager.GetCurrentCulture(HttpContext.Current);
-            var localizedFormat = _resourceManager.GetLocalizedString(textHint, currentCulture);
+            var localizedFormat = _resourceManager.GetLocalizedString(_scope, textHint, currentCulture);
 
             return args.Length < 1
                 ? new LocalizedString(localizedFormat)

@@ -36,7 +36,7 @@ namespace Orchard.Blogs.Drivers {
             T = NullLocalizer.Instance;
         }
 
-        private Localizer T { get; set; }
+        public Localizer T { get; set; }
 
         protected override ContentType GetContentType() {
             return ContentType;

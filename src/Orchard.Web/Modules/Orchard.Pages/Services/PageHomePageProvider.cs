@@ -20,7 +20,7 @@ namespace Orchard.Pages.Services {
         }
 
         public IOrchardServices Services { get; private set; }
-        private Localizer T { get; set; }
+        public Localizer T { get; set; }
 
         public string GetProviderName() {
             return "PageHomePageProvider";

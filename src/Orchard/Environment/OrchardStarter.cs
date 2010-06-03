@@ -4,7 +4,6 @@ using System.IO;
 using System.Web.Hosting;
 using Autofac;
 using Autofac.Configuration;
-using Autofac.Integration.Web;
 using Orchard.Caching;
 using Orchard.Environment.AutofacUtil;
 using Orchard.Environment.Configuration;

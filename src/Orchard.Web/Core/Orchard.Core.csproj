@@ -39,6 +39,10 @@
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Lucene.Net, Version=2.9.2.2, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\lib\lucene.net\Lucene.Net.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
@@ -105,6 +109,16 @@
     <Compile Include="Feeds\Rss\RssResult.cs" />
     <Compile Include="HomePage\Controllers\HomeController.cs" />
     <Compile Include="HomePage\Routes.cs" />
+    <Compile Include="Indexing\Lucene\DefaultIndexDocument.cs" />
+    <Compile Include="Indexing\Lucene\DefaultIndexProvider.cs" />
+    <Compile Include="Indexing\Lucene\DefaultSearchBuilder.cs" />
+    <Compile Include="Indexing\Lucene\DefaultSearchHit.cs" />
+    <Compile Include="Indexing\Models\IndexingSettingsRecord.cs" />
+    <Compile Include="Indexing\Models\IndexingTask.cs" />
+    <Compile Include="Indexing\Models\IndexingTaskRecord.cs" />
+    <Compile Include="Indexing\Services\CreateIndexingTaskHandler.cs" />
+    <Compile Include="Indexing\Services\IndexingTaskExecutor.cs" />
+    <Compile Include="Indexing\Services\IndexingTaskManager.cs" />
     <Compile Include="Navigation\AdminMenu.cs" />
     <Compile Include="Navigation\Controllers\AdminController.cs" />
     <Compile Include="Navigation\Models\MenuItem.cs" />
@@ -159,6 +173,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Common\Module.txt" />
+    <Content Include="Indexing\Module.txt" />
     <Content Include="Settings\Module.txt" />
     <Content Include="Settings\Views\Admin\Index.ascx" />
     <Content Include="Web.config" />
@@ -209,6 +224,7 @@
   <ItemGroup />
   <ItemGroup>
     <None Include="App_Data\Localization\en-US\orchard.core.po" />
+    <None Include="App_Data\Localization\fr-FR\orchard.core.po" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />

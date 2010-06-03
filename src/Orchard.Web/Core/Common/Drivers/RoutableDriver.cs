@@ -14,7 +14,7 @@ namespace Orchard.Core.Common.Drivers {
 
         private readonly IOrchardServices _services;
         private readonly IRoutableService _routableService;
-        private Localizer T { get; set; }
+        public Localizer T { get; set; }
 
         protected override string Prefix {
             get { return "Routable"; }

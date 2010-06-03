@@ -43,7 +43,7 @@ namespace Orchard.Setup.Services {
             T = NullLocalizer.Instance;
         }
 
-        private Localizer T { get; set; }
+        public Localizer T { get; set; }
 
         public ShellSettings Prime() {
             return _shellSettings;
@@ -60,6 +60,7 @@ namespace Orchard.Setup.Services {
                     "HomePage",
                     "Navigation",
                     "Scheduling",
+                    "Indexing",
                     "Settings",
                     "XmlRpc",
                     "Orchard.Users",
@@ -134,6 +135,7 @@ namespace Orchard.Setup.Services {
                     // add default culture
                     var cultureManager = environment.Resolve<ICultureManager>();
                     cultureManager.AddCulture("en-US");
+                    cultureManager.AddCulture("fr-FR");
 
                     var contentManager = environment.Resolve<IContentManager>();
 
