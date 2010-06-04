@@ -4,4 +4,4 @@
 we need "wrapper templates" (among other functionality) in the future of UI composition
 please do not delete or the front end will be broken when the user is authenticated. --%>
 </div>
-<%-- begin: knowingly broken HTML --%
+<%-- begin: knowingly broken HTML --%>
