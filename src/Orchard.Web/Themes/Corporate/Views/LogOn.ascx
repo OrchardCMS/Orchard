@@ -9,9 +9,9 @@ using (Html.BeginFormAntiForgeryPost(Url.Action("LogOn", new {ReturnUrl = Reques
 <fieldset class="login-form">
     <legend><%=_Encoded("Account Information")%></legend>
     <div class="group">
-        <label for="username"><%=_Encoded("Username:")%></label>
-        <%= Html.TextBox("userNameOrEmail", "", new { autofocus = "autofocus" })%>
-        <%= Html.ValidationMessage("userNameOrEmail")%>
+         <label for="userNameOrEmail"><%=_Encoded("Username or Email:")%></label>
+         <%= Html.TextBox("userNameOrEmail", "", new { autofocus = "autofocus" })%>
+         <%= Html.ValidationMessage("userNameOrEmail")%>
     </div>
     <div class="group">
         <label for="password"><%=_Encoded("Password:")%></label>

@@ -170,9 +170,10 @@ caption     { background: #eee; }
    
 -------------------------------------------------------------- */
 
-label       { font-weight: normal; }
-fieldset    { padding:0em; margin: 0 0 0em 0; border: 0px solid #ccc; }
-legend      { font-weight: bold; font-size:1.2em; }
+label             { font-weight: normal; display:block; }
+label.forcheckbox { margin:0 0 0 4px; display:inline; }
+fieldset          { padding:0em; margin: 0 0 0em 0; border: 0px solid #ccc; }
+legend            { font-weight: bold; font-size:1.2em; }
 
 
 /* Form fields
