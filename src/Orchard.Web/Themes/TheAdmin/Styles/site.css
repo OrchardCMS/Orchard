@@ -57,7 +57,6 @@ body {
 }
 button {
     font-family:Segoe UI,Trebuchet,Arial,Sans-Serif;
-    font-size:1.01em;
 }
 body#preview {
     min-width:0;
@@ -157,6 +156,7 @@ table.items th, table.items td, table.items caption { font-size:1.4em; line-heig
 table.items p, table.items label, table.items input, table.items .button { font-size:1em; line-height:1em; }
 p .button { font-size:inherit; }
 .meta, .hint { font-size:1.2em; } /* 12px */
+form.link button { font-size:1.01em; }
 
 /* Links
 ----------------------------------------------------------*/
@@ -450,9 +450,6 @@ button, .button, .button:link, .button:visited {
 	text-align:center;
 	padding:0 .8em .1em;
 }
-button {
-    padding-top:.08em;
-}
 form.link button {
     background:inherit;
     border:0;
@@ -681,7 +678,7 @@ table .button {
 .contentItems .properties .icon {
     margin:0 .2em -.2em;
 }
-.contentItems .related{
+.contentItems .related {
     float:right;
     font-size:1.4em;
     text-align:right;

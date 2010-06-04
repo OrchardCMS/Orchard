@@ -3,6 +3,9 @@ using Orchard.Indexing;
 
 namespace Orchard.Search.Services {
     public interface ISearchService : IDependency {
+        bool HasIndexToManage { get; }
         IEnumerable<ISearchHit> Query(string term);
+        void RebuildIndex();
+        void UpdateIndex();
     }
 }
