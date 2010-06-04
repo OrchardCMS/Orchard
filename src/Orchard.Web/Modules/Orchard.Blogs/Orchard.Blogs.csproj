@@ -66,6 +66,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AdminMenu.cs" />
+    <Compile Include="Commands\BlogCommands.cs" />
     <Compile Include="Controllers\BlogAdminController.cs" />
     <Compile Include="Drivers\BlogDriver.cs" />
     <Compile Include="Controllers\BlogPostAdminController.cs" />
