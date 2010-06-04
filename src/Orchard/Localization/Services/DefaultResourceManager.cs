@@ -32,6 +32,12 @@ namespace Orchard.Localization.Services {
             _shellSettings = shellSettings;
         }
 
+        // This will translate a string into a string in the target cultureName.
+        // The scope portion is optional, it amounts to the location of the file containing 
+        // the string in case it lives in a view, or the namespace name if the string lives in a binary.
+        // If the culture doesn't have a translation for the string, it will fallback to the 
+        // parent culture as defined in the .net culture hierarchy. e.g. fr-FR will fallback to fr.
+        // In case it's not found anywhere, the text is returned as is.
         public string GetLocalizedString(string scope, string text, string cultureName) {
             var cultures = LoadCultures();
 
@@ -78,6 +84,9 @@ namespace Orchard.Localization.Services {
             return text;
         }
 
+        // Loads the culture dictionaries in memory and caches them.
+        // Cache entry will be invalidated any time the directories hosting 
+        // the .po files are modified.
         private IEnumerable<CultureDictionary> LoadCultures() {
             return _cacheManager.Get("cultures", ctx => {
                 var cultures = new List<CultureDictionary>();
@@ -92,6 +101,16 @@ namespace Orchard.Localization.Services {
 
         }
 
+        // Merging occurs from multiple locations:
+        // In reverse priority order: 
+        // "/Core/App_Data/Localization/<culture_name>/orchard.core.po";
+        // "/Modules/<module_name>/App_Data/Localization/<culture_name>/orchard.module.po";
+        // "/App_Data/Localization/<culture_name>/orchard.root.po";
+        // "/App_Data/Sites/<tenant_name>/Localization/<culture_name>/orchard.po";
+        // The dictionary entries from po files that live in higher priority locations will
+        // override the ones from lower priority locations during loading of dictionaries.
+
+        // TODO: Add culture name in the po file name to facilitate usage.
         private IDictionary<string, string> LoadTranslationsForCulture(string culture, AcquireContext<string> context) {
             IDictionary<string, string> translations = new Dictionary<string, string>();
             string corePath = string.Format(CoreLocalizationFilePathFormat, culture);
