@@ -143,6 +143,12 @@
     <Compile Include="Scheduling\Services\ScheduledTaskExecutor.cs" />
     <Compile Include="Scheduling\Models\Task.cs" />
     <Compile Include="Settings\Drivers\SiteSettingsDriver.cs" />
+    <Compile Include="Settings\Metadata\ContentDefinitionManager.cs" />
+    <Compile Include="Settings\Metadata\Records\ContentFieldDefinitionRecord.cs" />
+    <Compile Include="Settings\Metadata\Records\ContentPartDefinitionRecord.cs" />
+    <Compile Include="Settings\Metadata\Records\ContentPartFieldDefinitionRecord.cs" />
+    <Compile Include="Settings\Metadata\Records\ContentTypeDefinitionRecord.cs" />
+    <Compile Include="Settings\Metadata\Records\ContentTypePartDefinitionRecord.cs" />
     <Compile Include="Settings\Models\SiteSettingsRecord.cs" />
     <Compile Include="Settings\Permissions.cs" />
     <Compile Include="Settings\State\Records\ShellFeatureStateRecord.cs" />

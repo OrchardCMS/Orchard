@@ -12,7 +12,7 @@ namespace Orchard.MetaData {
         {
             builder.Add(T("Content Types"), "5",
                         menu => menu
-                                    .Add(T("Content Types"), "1.0", item => item.Action("ContentTypeList", "MetaData", new { area = "Orchard.MetaData" }).Permission(Permissions.ManageMetaData))
+                                    .Add(T("Content Types"), "1.0", item => item.Action("ContentTypeList", "Admin", new { area = "Orchard.MetaData" }).Permission(Permissions.ManageMetaData))
                                     );
         }
 
