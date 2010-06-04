@@ -119,6 +119,7 @@
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
     <Reference Include="System.Xml" />
+    <Reference Include="System.Xml.Linq" />
     <Reference Include="Yaml, Version=1.0.3370.39839, Culture=neutral, PublicKeyToken=187a3d240e44a135, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\yaml\Yaml.dll</HintPath>
@@ -135,6 +136,14 @@
     <Compile Include="Data\DataModule.cs" />
     <Compile Include="Data\Orderable.cs" />
     <Compile Include="Environment\DefaultOrchardShell.cs" />
+    <Compile Include="Environment\Extensions\Loaders\CSharpExtensionBuildProvider.cs" />
+    <Compile Include="Environment\Extensions\Loaders\CSharpExtensionCompiler.cs" />
+    <Compile Include="Environment\Extensions\Loaders\CSharpProjectExtensionCompilerMediumTrust.cs" />
+    <Compile Include="Environment\Extensions\Loaders\CSharpProjectFullTrustCompiler.cs" />
+    <Compile Include="Environment\Extensions\Loaders\CSharpProjectParser.cs" />
+    <Compile Include="Environment\Extensions\Loaders\IAssemblyBuilder.cs" />
+    <Compile Include="Environment\Extensions\Loaders\IBuildManager.cs" />
+    <Compile Include="Environment\Extensions\Loaders\IVirtualPathProvider.cs" />
     <Compile Include="Environment\IOrchardShell.cs" />
     <Compile Include="Environment\OrchardStarter.cs" />
     <Compile Include="Environment\State\DefaultProcessingEngine.cs" />
