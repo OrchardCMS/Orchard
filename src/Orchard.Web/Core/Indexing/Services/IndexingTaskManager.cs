@@ -16,18 +16,15 @@ namespace Orchard.Core.Indexing.Services {
     public class IndexingTaskManager : IIndexingTaskManager {
         private readonly IContentManager _contentManager;
         private readonly IRepository<IndexingTaskRecord> _repository;
-        private readonly IRepository<IndexingSettingsRecord> _settings;
         private readonly IClock _clock;
 
         public IndexingTaskManager(
             IContentManager contentManager,
             IRepository<IndexingTaskRecord> repository,
-            IRepository<IndexingSettingsRecord> settings,
             IClock clock) {
             _clock = clock;
             _repository = repository;
             _contentManager = contentManager;
-            _settings = settings;
             Logger = NullLogger.Instance;
         }
 
@@ -38,14 +35,7 @@ namespace Orchard.Core.Indexing.Services {
                 throw new ArgumentNullException("contentItem");
             }
 
-            // remove previous tasks for the same content item
-            var tasks = _repository
-                .Fetch(x => x.ContentItemRecord.Id == contentItem.Id)
-                .ToArray();
-
-            foreach ( var task in tasks ) {
-                _repository.Delete(task);
-            }
+            DeleteTasks(contentItem);
 
             var taskRecord = new IndexingTaskRecord {
                 CreatedUtc = _clock.UtcNow,
@@ -77,37 +67,16 @@ namespace Orchard.Core.Indexing.Services {
                 .ToReadOnlyCollection();
         }
 
-        public void DeleteTasks(DateTime? createdBefore) {
-            Logger.Debug("Deleting Indexing tasks created before {0}", createdBefore);
-
-            var tasks = _repository
-                .Fetch(x => x.CreatedUtc <= createdBefore);
-
-            foreach (var task in tasks) {
-                _repository.Delete(task);
-            }
-        }
-
+        /// <summary>
+        /// Removes existing tasks for the specified content item
+        /// </summary>
         public void DeleteTasks(ContentItem contentItem) {
-            Logger.Debug("Deleting Indexing tasks for ContentItem [{0}:{1}]", contentItem.ContentType, contentItem.Id);
-
             var tasks = _repository
-                .Fetch(x => x.Id == contentItem.Id);
-
+                .Fetch(x => x.ContentItemRecord.Id == contentItem.Id)
+                .ToArray();
             foreach (var task in tasks) {
                 _repository.Delete(task);
             }
         }
-
-        public void RebuildIndex() {
-            var settingsRecord = _settings.Table.FirstOrDefault();
-            if (settingsRecord == null) {
-                _settings.Create(settingsRecord = new IndexingSettingsRecord() );
-            }
-            
-            settingsRecord.LatestIndexingUtc = new DateTime(1980, 1, 1);
-            _settings.Update(settingsRecord);
-        }
-
     }
 }

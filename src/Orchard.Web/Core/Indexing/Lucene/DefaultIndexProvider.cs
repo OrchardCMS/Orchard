@@ -13,6 +13,7 @@ using Orchard.Indexing;
 using Directory = Lucene.Net.Store.Directory;
 using Version = Lucene.Net.Util.Version;
 using Orchard.Logging;
+using System.Xml.Linq;
 
 namespace Orchard.Core.Indexing.Lucene {
     /// <summary>
@@ -24,6 +25,9 @@ namespace Orchard.Core.Indexing.Lucene {
         public static readonly Version LuceneVersion = Version.LUCENE_29;
         private readonly Analyzer _analyzer = new StandardAnalyzer(LuceneVersion);
         private readonly string _basePath;
+        public static readonly DateTime DefaultMinDateTime = new DateTime(1980, 1, 1);
+        public static readonly string Settings = "Settings";
+        public static readonly string LastIndexUtc = "LastIndexedUtc";
 
         public ILogger Logger { get; set; }
 
@@ -37,6 +41,10 @@ namespace Orchard.Core.Indexing.Lucene {
             Logger = NullLogger.Instance;
 
             // Ensures the directory exists
+            EnsureDirectoryExists();
+        }
+
+        private void EnsureDirectoryExists() {
             var directory = new DirectoryInfo(_appDataFolder.MapPath(_basePath));
             if(!directory.Exists) {
                 directory.Create();
@@ -72,6 +80,11 @@ namespace Orchard.Core.Indexing.Lucene {
         public void DeleteIndex(string indexName) {
             new DirectoryInfo(Path.Combine(_appDataFolder.MapPath(Path.Combine(_basePath, indexName))))
                 .Delete(true);
+
+            var settingsFileName = GetSettingsFileName(indexName);
+            if(File.Exists(settingsFileName)) {
+                File.Delete(settingsFileName);
+            }
         }
 
         public void Store(string indexName, IIndexDocument indexDocument) {
@@ -146,6 +159,39 @@ namespace Orchard.Core.Indexing.Lucene {
 
         public ISearchBuilder CreateSearchBuilder(string indexName) {
             return new DefaultSearchBuilder(GetDirectory(indexName));
+        }
+
+        private string GetSettingsFileName(string indexName) {
+            return Path.Combine(_appDataFolder.MapPath(_basePath), indexName + ".settings.xml");
+        }
+
+        public DateTime GetLastIndexUtc(string indexName) {
+            var settingsFileName = GetSettingsFileName(indexName);
+
+            return File.Exists(settingsFileName) 
+                ? DateTime.Parse(XDocument.Load(settingsFileName).Descendants(LastIndexUtc).First().Value)
+                : DefaultMinDateTime;
+        }
+
+        public void SetLastIndexUtc(string indexName, DateTime lastIndexUtc) {
+            if ( lastIndexUtc < DefaultMinDateTime ) {
+                lastIndexUtc = DefaultMinDateTime;
+            }
+
+            XDocument doc;
+            var settingsFileName = GetSettingsFileName(indexName);
+            if ( !File.Exists(settingsFileName) ) {
+                EnsureDirectoryExists();
+                doc = new XDocument(
+                        new XElement(Settings,
+                            new XElement(LastIndexUtc, lastIndexUtc.ToString("s"))));
+            }
+            else {
+                doc = XDocument.Load(settingsFileName);
+                doc.Element(Settings).Element(LastIndexUtc).Value = lastIndexUtc.ToString("s");
+            }
+
+            doc.Save(settingsFileName);
         }
 
     }

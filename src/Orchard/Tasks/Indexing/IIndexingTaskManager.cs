@@ -20,11 +20,6 @@ namespace Orchard.Tasks.Indexing {
         IEnumerable<IIndexingTask> GetTasks(DateTime? createdAfter);
         
         /// <summary>
-        /// Deletes all indexing tasks previous to a specific date and time
-        /// </summary>
-        void DeleteTasks(DateTime? createdBefore);
-
-        /// <summary>
         /// Deletes all indexing tasks assigned to a specific content item
         /// </summary>
         /// <param name="contentItem"></param>

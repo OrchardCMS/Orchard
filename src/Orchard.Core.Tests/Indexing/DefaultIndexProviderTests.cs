@@ -181,5 +181,17 @@ namespace Orchard.Tests.Indexing {
             Assert.That(searchBuilder.Get(2).Id, Is.EqualTo(2));
             Assert.That(searchBuilder.Get(3).Id, Is.EqualTo(3));
         }
+
+        [Test]
+        public void ProviderShouldStoreSettings() {
+            _provider.CreateIndex("default");
+            Assert.That(_provider.GetLastIndexUtc("default"), Is.EqualTo(DefaultIndexProvider.DefaultMinDateTime));
+
+            _provider.SetLastIndexUtc("default", new DateTime(2010, 1, 1, 1, 1, 1, 1));
+            Assert.That(_provider.GetLastIndexUtc("default"), Is.EqualTo(new DateTime(2010, 1, 1, 1, 1, 1, 0)));
+
+            _provider.SetLastIndexUtc("default", new DateTime(1901, 1, 1, 1, 1, 1, 1));
+            Assert.That(_provider.GetLastIndexUtc("default"), Is.EqualTo(DefaultIndexProvider.DefaultMinDateTime));
+        }
     }
 }
