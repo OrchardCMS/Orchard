@@ -9,6 +9,7 @@ namespace Orchard.Users.Models {
 
         public virtual string Password { get; set; }
         public virtual MembershipPasswordFormat PasswordFormat { get; set; }
+        public virtual string HashAlgorithm { get; set; }
         public virtual string PasswordSalt { get; set; }
     }
 }
