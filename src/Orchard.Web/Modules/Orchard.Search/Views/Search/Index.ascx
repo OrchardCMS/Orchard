@@ -5,7 +5,7 @@ Html.RegisterStyle("search.css"); %>
 <%
 Html.Zone("search"); %><%
 
-if (!string.IsNullOrWhiteSpace(Model.Term)) { %>
+if (!string.IsNullOrWhiteSpace(Model.Query)) { %>
     <p class="search-summary"><%=T("<em>{0}</em> results", Model.Results.Count()) %></p><%
 }
 

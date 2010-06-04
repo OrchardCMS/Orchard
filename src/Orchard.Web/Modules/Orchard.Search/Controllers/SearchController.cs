@@ -15,7 +15,7 @@ namespace Orchard.Search.Controllers {
         }
 
         public ActionResult Index(string q) {
-            var searchViewModel = new SearchViewModel {Term = q};
+            var searchViewModel = new SearchViewModel {Query = q};
 
             var results = _searchService.Query(q);
             searchViewModel.Results = results.Select(result => new SearchResultViewModel {
