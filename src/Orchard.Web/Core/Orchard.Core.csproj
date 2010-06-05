@@ -109,11 +109,11 @@
     <Compile Include="Feeds\Rss\RssResult.cs" />
     <Compile Include="HomePage\Controllers\HomeController.cs" />
     <Compile Include="HomePage\Routes.cs" />
+    <Compile Include="Indexing\Commands\IndexingCommands.cs" />
     <Compile Include="Indexing\Lucene\DefaultIndexDocument.cs" />
     <Compile Include="Indexing\Lucene\DefaultIndexProvider.cs" />
     <Compile Include="Indexing\Lucene\DefaultSearchBuilder.cs" />
     <Compile Include="Indexing\Lucene\DefaultSearchHit.cs" />
-    <Compile Include="Indexing\Models\IndexingSettingsRecord.cs" />
     <Compile Include="Indexing\Models\IndexingTask.cs" />
     <Compile Include="Indexing\Models\IndexingTaskRecord.cs" />
     <Compile Include="Indexing\Services\CreateIndexingTaskHandler.cs" />
@@ -143,6 +143,12 @@
     <Compile Include="Scheduling\Services\ScheduledTaskExecutor.cs" />
     <Compile Include="Scheduling\Models\Task.cs" />
     <Compile Include="Settings\Drivers\SiteSettingsDriver.cs" />
+    <Compile Include="Settings\Metadata\ContentDefinitionManager.cs" />
+    <Compile Include="Settings\Metadata\Records\ContentFieldDefinitionRecord.cs" />
+    <Compile Include="Settings\Metadata\Records\ContentPartDefinitionRecord.cs" />
+    <Compile Include="Settings\Metadata\Records\ContentPartFieldDefinitionRecord.cs" />
+    <Compile Include="Settings\Metadata\Records\ContentTypeDefinitionRecord.cs" />
+    <Compile Include="Settings\Metadata\Records\ContentTypePartDefinitionRecord.cs" />
     <Compile Include="Settings\Models\SiteSettingsRecord.cs" />
     <Compile Include="Settings\Permissions.cs" />
     <Compile Include="Settings\State\Records\ShellFeatureStateRecord.cs" />
@@ -224,6 +230,7 @@
   <ItemGroup />
   <ItemGroup>
     <None Include="App_Data\Localization\en-US\orchard.core.po" />
+    <None Include="App_Data\Localization\fr-FR\orchard.core.po" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />

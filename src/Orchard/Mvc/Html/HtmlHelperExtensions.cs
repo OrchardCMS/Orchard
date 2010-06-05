@@ -94,10 +94,8 @@ namespace Orchard.Mvc.Html {
         #region Excerpt
 
         public static MvcHtmlString Excerpt(this HtmlHelper html, string markup, int length) {
-            var tagRegex = new Regex("<[^<>]*>", RegexOptions.Singleline);
-            var text = tagRegex.Replace(markup, "");
 
-            return MvcHtmlString.Create(text.Ellipsize(length));
+            return MvcHtmlString.Create(markup.RemoveTags().Ellipsize(length));
         }
 
         #endregion
@@ -113,7 +111,7 @@ namespace Orchard.Mvc.Html {
             TimeSpan time = htmlHelper.Resolve<IClock>().UtcNow - value;
 
             if (time.TotalDays > 7)
-                return "at " + htmlHelper.DateTime(value);
+                return "on " + htmlHelper.DateTime(value, "MMM d yyyy 'at' h:mm tt");
             if (time.TotalHours > 24)
                 return string.Format("{0} day{1} ago", time.Days, time.Days == 1 ? "" : "s");
             if (time.TotalMinutes > 60)

@@ -3,6 +3,8 @@ using System.Linq;
 using System.Web;
 using Orchard.Comments.Models;
 using Orchard.ContentManagement;
+using Orchard.ContentManagement.MetaData;
+using Orchard.ContentManagement.MetaData.Builders;
 using Orchard.Core.Common.Models;
 using Orchard.Core.Navigation.Models;
 using Orchard.Core.Settings.Models;
@@ -79,7 +81,7 @@ namespace Orchard.Setup.Services {
             }
 
             var shellSettings = new ShellSettings(_shellSettings);
-            
+
             if (string.IsNullOrEmpty(shellSettings.DataProvider)) {
                 shellSettings.DataProvider = context.DatabaseProvider;
                 shellSettings.DataConnectionString = context.DatabaseConnectionString;
@@ -135,6 +137,7 @@ namespace Orchard.Setup.Services {
                     // add default culture
                     var cultureManager = environment.Resolve<ICultureManager>();
                     cultureManager.AddCulture("en-US");
+                    cultureManager.AddCulture("fr-FR");
 
                     var contentManager = environment.Resolve<IContentManager>();
 
@@ -168,23 +171,10 @@ namespace Orchard.Setup.Services {
                         authenticationService.SignIn(user, true);
                     }
 
-                    //Add ContentType mappings
-                    var contentTypeService = environment.Resolve<IContentTypeService>();
-
-                    //Add ContentTypePartNames to MetaData
-                    contentTypeService.AddContentTypePartNameToMetaData("HasComments");
-                    contentTypeService.AddContentTypePartNameToMetaData("HasTags");
-
-                    //Add mappings from ContentTypes to ContentParts to MetaData
-                    contentTypeService.MapContentTypeToContentPart("blogpost","HasComments");
-                    contentTypeService.MapContentTypeToContentPart("page", "HasComments");
-                    contentTypeService.MapContentTypeToContentPart("sandboxpage", "HasComments");
-                    contentTypeService.MapContentTypeToContentPart("blogpost", "HasTags");
-                    contentTypeService.MapContentTypeToContentPart("page", "HasTags");
-                    contentTypeService.MapContentTypeToContentPart("sandboxpage", "HasTags");
-
-
-
+                    var contentDefinitionManager = environment.Resolve<IContentDefinitionManager>();
+                    contentDefinitionManager.AlterTypeDefinition("blogpost", cfg => cfg.WithPart("HasComments").WithPart("HasTags"));
+                    contentDefinitionManager.AlterTypeDefinition("page", cfg => cfg.WithPart("HasComments").WithPart("HasTags"));
+                    contentDefinitionManager.AlterTypeDefinition("sandboxpage", cfg => cfg.WithPart("HasComments").WithPart("HasTags"));
                 }
                 catch {
                     environment.Resolve<ITransactionManager>().Cancel();

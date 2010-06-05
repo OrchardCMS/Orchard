@@ -6,7 +6,6 @@ using NUnit.Framework;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
 using Orchard.ContentManagement.Handlers;
-using Orchard.ContentManagement.MetaData.Records;
 using Orchard.ContentManagement.Records;
 using Orchard.Core.Common.Models;
 using Orchard.Core.Common.Services;
@@ -182,8 +181,6 @@ namespace Orchard.Core.Tests.Common.Services {
                 return new[] {
                                  typeof(RoutableRecord), 
                                  typeof(ContentTypeRecord),
-                                 typeof(ContentTypePartRecord), 
-                                 typeof(ContentTypePartNameRecord),
                                  typeof(ContentItemRecord), 
                                  typeof(ContentItemVersionRecord), 
                                  typeof(CommonRecord),

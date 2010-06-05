@@ -43,6 +43,7 @@ namespace Orchard.FileSystems.WebSite {
         }
 
         public IVolatileToken WhenPathChanges(string virtualPath) {
+            // Fix this to monitor first existing parent directory.
             var token = BindToken(virtualPath);
             BindSignal(virtualPath);
             return token;

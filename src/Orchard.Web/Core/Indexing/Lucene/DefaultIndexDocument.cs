@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Web.Mvc;
 using Lucene.Net.Documents;
 using Orchard.Indexing;
+using Orchard.Mvc.Html;
+using Orchard.Utility.Extensions;
 
 namespace Orchard.Core.Indexing.Lucene {
 
@@ -17,7 +20,20 @@ namespace Orchard.Core.Indexing.Lucene {
         }
 
         public IIndexDocument Add(string name, string value) {
+            return Add(name, value, false);
+        }
+
+        public IIndexDocument Add(string name, string value, bool removeTags) {
             AppendPreviousField();
+            
+            if(value == null) {
+                value = String.Empty;
+            }
+            
+            if(removeTags) {
+                value = value.RemoveTags();
+            }
+
             _previousField = new Field(name, value, Field.Store.YES, Field.Index.ANALYZED);
             return this;
         }
@@ -27,6 +43,7 @@ namespace Orchard.Core.Indexing.Lucene {
             _previousField = new Field(name, DateTools.DateToString(value, DateTools.Resolution.SECOND), Field.Store.YES, Field.Index.NOT_ANALYZED);
             return this;
         }
+
         public IIndexDocument Add(string name, int value) {
             AppendPreviousField();
             _previousField = new NumericField(name, Field.Store.YES, true).SetIntValue(value);

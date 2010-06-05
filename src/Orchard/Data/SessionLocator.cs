@@ -47,15 +47,15 @@ namespace Orchard.Data {
             }
 
             bool IInterceptor.OnLoad(object entity, object id, object[] state, string[] propertyNames, IType[] types) {
-                return true;
+                return false;
             }
 
             bool IInterceptor.OnFlushDirty(object entity, object id, object[] currentState, object[] previousState, string[] propertyNames, IType[] types) {
-                return true;
+                return false;
             }
 
             bool IInterceptor.OnSave(object entity, object id, object[] state, string[] propertyNames, IType[] types) {
-                return true;
+                return false;
             }
 
             void IInterceptor.OnDelete(object entity, object id, object[] state, string[] propertyNames, IType[] types) {

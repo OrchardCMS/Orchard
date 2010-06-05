@@ -5,7 +5,6 @@ using Autofac;
 using Moq;
 using NUnit.Framework;
 using Orchard.ContentManagement;
-using Orchard.ContentManagement.MetaData.Records;
 using Orchard.ContentManagement.Records;
 using Orchard.Core.Scheduling.Models;
 using Orchard.Core.Scheduling.Services;
@@ -42,8 +41,6 @@ namespace Orchard.Core.Tests.Scheduling {
             get {
                 return new[] {
                                  typeof(ContentTypeRecord), 
-                                 typeof(ContentTypePartRecord), 
-                                 typeof(ContentTypePartNameRecord), 
                                  typeof(ContentItemRecord), 
                                  typeof(ContentItemVersionRecord), 
                                  typeof(ScheduledTaskRecord),

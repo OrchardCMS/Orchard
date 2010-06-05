@@ -1,6 +1,7 @@
 ﻿<%@ Page Language="C#" Inherits="Orchard.Mvc.ViewPage<ThemesIndexViewModel>" %>
 <%@ Import Namespace="Orchard.Mvc.Html"%>
-<%@ Import Namespace="Orchard.Themes.ViewModels"%>
+<%@ Import Namespace="Orchard.Themes.ViewModels"%><%
+ Html.RegisterStyle("admin.css"); %>
 <h1><%=Html.TitleForPage(T("Manage Themes").ToString()) %></h1>
 <% if (Model.CurrentTheme == null) {
     %><p><%=_Encoded("There is no current theme in the application. The built-in theme will be used.")

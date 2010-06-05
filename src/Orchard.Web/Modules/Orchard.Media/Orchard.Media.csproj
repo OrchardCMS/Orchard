@@ -93,6 +93,7 @@
   <ItemGroup>
     <Content Include="Content\Admin\images\folder.gif" />
     <Content Include="Module.txt" />
+    <Content Include="Styles\admin.css" />
     <Content Include="Views\Admin\Add.aspx" />
     <Content Include="Views\Admin\Create.aspx" />
     <Content Include="Views\Admin\Edit.aspx" />

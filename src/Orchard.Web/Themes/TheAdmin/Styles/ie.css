@@ -1,1 +1,7 @@
-﻿
+﻿.contentItems {
+    /* need an alternative to:
+    box-shadow:inset 0 1px 2px #878686;
+    -moz-box-shadow:inset 0 1px 3px #878686;
+    -webkit-box-shadow:inset 0 1px 2px #878686;
+    */
+}

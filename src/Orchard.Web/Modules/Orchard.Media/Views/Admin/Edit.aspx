@@ -1,7 +1,8 @@
 <%@ Page Language="C#" Inherits="Orchard.Mvc.ViewPage<MediaFolderEditViewModel>" %>
 <%@ Import Namespace="Orchard.Media.Models"%>
 <%@ Import Namespace="Orchard.Media.Helpers"%>
-<%@ Import Namespace="Orchard.Media.ViewModels"%>
+<%@ Import Namespace="Orchard.Media.ViewModels"%><%
+Html.RegisterStyle("admin.css"); %>
 <h1><%=Html.TitleForPage(T("Manage Folder").ToString())%></h1>
 
 

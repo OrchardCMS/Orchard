@@ -336,6 +336,20 @@ namespace Orchard.ContentManagement {
             foreach (var handler in Handlers) {
                 handler.Created(context);
             }
+
+            if(options.IsPublished) {
+                var publishContext = new PublishContentContext(contentItem, null);
+
+                // invoke handlers to acquire state, or at least establish lazy loading callbacks
+                foreach ( var handler in Handlers ) {
+                    handler.Publishing(publishContext);
+                }
+
+                // invoke handlers to acquire state, or at least establish lazy loading callbacks
+                foreach ( var handler in Handlers ) {
+                    handler.Published(publishContext);
+                }
+            }
         }
 
         public ContentItemMetadata GetItemMetadata(IContent content) {

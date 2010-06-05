@@ -23,6 +23,21 @@ msgstr "[more]"
 msgid "Welcome to Orchard"
 msgstr "Welcome to Orchard"
 
+#: ~/Core/Dashboard/Views/Admin/Index.ascx
+#| msgid : "The Orchard Team"
+msgid "The Orchard Team"
+msgstr "The Orchard Team"
+
+#: ~/Core/Dashboard/Views/Admin/Index.ascx
+#| msgid : "This is the place where you can manage your web site, its appearance and its contents. Please take a moment to explore the different menu items on the left of the screen to familiarize yourself with the features of the application. For example, try to change the theme through the “Manage Themes” menu entry. You can also create new pages and manage existing ones through the “Manage Pages” menu entry or create blogs through “Manage Blogs”."
+msgid "This is the place where you can manage your web site, its appearance and its contents. Please take a moment to explore the different menu items on the left of the screen to familiarize yourself with the features of the application. For example, try to change the theme through the “Manage Themes” menu entry. You can also create new pages and manage existing ones through the “Manage Pages” menu entry or create blogs through “Manage Blogs”."
+msgstr "This is the place where you can manage your web site, its appearance and its contents. Please take a moment to explore the different menu items on the left of the screen to familiarize yourself with the features of the application. For example, try to change the theme through the “Manage Themes” menu entry. You can also create new pages and manage existing ones through the “Manage Pages” menu entry or create blogs through “Manage Blogs”."
+
+#: ~/Core/Dashboard/Views/Admin/Index.ascx
+#| msgid : "Have fun!"
+msgid "Have fun!"
+msgstr "Have fun!"
+
 #: ~/Core/Navigation/Controllers/AdminController.cs
 #| msgid : "Not allowed to manage the main menu"
 msgid "Not allowed to manage the main menu"
@@ -278,6 +293,16 @@ msgstr "Edit Post"
 msgid "Discard Draft"
 msgstr "Discard Draft"
 
+#: ~/Modules/Orchard.Comments/AdminMenu.cs
+#| msgid : "Comments"
+msgid "Comments"
+msgstr "Comments"
+
+#: ~/Modules/Orchard.Comments/AdminMenu.cs
+#| msgid : "Manage Comments"
+msgid "Manage Comments"
+msgstr "Manage Comments"
+
 #: ~/Modules/Orchard.Comments/Controllers/AdminController.cs
 #| msgid : "Listing comments failed: "
 msgid "Listing comments failed: "
@@ -439,9 +464,34 @@ msgid "log on"
 msgstr "log on"
 
 #: ~/Modules/Orchard.Comments/Views/DisplayTemplates/Parts/Comments.HasComments.ascx
+#| msgid : "Add a Comment"
+msgid "Add a Comment"
+msgstr "Add a Comment"
+
+#: ~/Themes/Contoso/Views/DisplayTemplates/Parts/Comments.HasComments.ascx
+#| msgid : "You must {0} to comment."
+msgid "You must {0} to comment."
+msgstr "You must {0} to comment."
+
+#: ~/Themes/Corporate/Views/DisplayTemplates/Parts/Comments.HasComments.ascx
+#| msgid : "Comments have been disabled for this content."
+msgid "Comments have been disabled for this content."
+msgstr "Comments have been disabled for this content."
+
+#: ~/Modules/Orchard.Comments/Views/DisplayTemplates/Parts/Comments.HasComments.ascx
 #| msgid : "Hi, {0}!"
 msgid "Hi, {0}!"
 msgstr "Hi, {0}!"
+
+#: ~/Modules/Orchard.Comments/Views/DisplayTemplates/Parts/Comments.HasComments.ascx
+#| msgid : "Comment"
+msgid "Comment"
+msgstr "Comment"
+
+#: ~/Modules/Orchard.Comments/Views/DisplayTemplates/Parts/Comments.HasComments.ascx
+#| msgid : "Submit Comment"
+msgid "Submit Comment"
+msgstr "Submit Comment"
 
 #: ~/Modules/Orchard.Comments/Views/EditorTemplates/Parts/Comments.HasComments.ascx
 #| msgid : "Comments are shown. Existing comments are displayed."
@@ -1748,10 +1798,40 @@ msgstr "User deleted"
 msgid "Access Denied"
 msgstr "Access Denied"
 
+#: ~/Modules/Orchard.Users/Views/Account/AccessDenied.ascx
+#| msgid : "You do not have permission to complete your request."
+msgid "You do not have permission to complete your request."
+msgstr "You do not have permission to complete your request."
+
 #: ~/Modules/Orchard.Users/Views/Account/ChangePassword.ascx
 #| msgid : "Change Password"
 msgid "Change Password"
 msgstr "Change Password"
+
+#: ~/Modules/Orchard.Users/Views/Account/ChangePassword.ascx
+#| msgid : "Use the form below to change your password."
+msgid "Use the form below to change your password."
+msgstr "Use the form below to change your password."
+
+#: ~/Modules/Orchard.Users/Views/Account/ChangePassword.ascx
+#| msgid : "New passwords are required to be a minimum of {0} characters in length."
+msgid "New passwords are required to be a minimum of {0} characters in length."
+msgstr "New passwords are required to be a minimum of {0} characters in length."
+
+#: ~/Modules/Orchard.Users/Views/Account/ChangePassword.ascx
+#| msgid : "Current password:"
+msgid "Current password:"
+msgstr "Current password:"
+
+#: ~/Modules/Orchard.Users/Views/Account/ChangePassword.ascx
+#| msgid : "New password:"
+msgid "New password:"
+msgstr "New password:"
+
+#: ~/Modules/Orchard.Users/Views/Account/ChangePassword.ascx
+#| msgid : "Confirm new password:"
+msgid "Confirm new password:"
+msgstr "Confirm new password:"
 
 #: ~/Modules/Orchard.Users/Views/Account/ChangePassword.ascx
 #| msgid : "Password change was unsuccessful. Please correct the errors and try again."
@@ -1763,15 +1843,80 @@ msgstr "Password change was unsuccessful. Please correct the errors and try agai
 msgid "Change Password"
 msgstr "Change Password"
 
+#: ~/Modules/Orchard.Users/Views/Account/ChangePasswordSuccess.ascx
+#| msgid : "Your password has been changed successfully."
+msgid "Your password has been changed successfully."
+msgstr "Your password has been changed successfully."
+
 #: ~/Modules/Orchard.Users/Views/Account/LogOn.ascx
 #| msgid : "Login was unsuccessful. Please correct the errors and try again."
 msgid "Login was unsuccessful. Please correct the errors and try again."
 msgstr "Login was unsuccessful. Please correct the errors and try again."
 
+#: ~/Modules/Orchard.Users/Views/Account/LogOn.ascx
+#| msgid : "Please enter your username and password."
+msgid "Please enter your username and password."
+msgstr "Please enter your username and password."
+
+#: ~/Modules/Orchard.Users/Views/Account/LogOn.ascx
+#| msgid : "Register"
+msgid "Register"
+msgstr "Register"
+
+#: ~/Modules/Orchard.Users/Views/Account/LogOn.ascx
+#| msgid : " if you don't have an account."
+msgid " if you don't have an account."
+msgstr " if you don't have an account."
+
+#: ~/Modules/Orchard.Users/Views/Account/LogOn.ascx
+#| msgid : "Account Information"
+msgid "Account Information"
+msgstr "Account Information"
+
+#: ~/Modules/Orchard.Users/Views/Account/LogOn.ascx
+#| msgid : "Username or Email:"
+msgid "Username or Email:"
+msgstr "Username or Email:"
+
+#: ~/Modules/Orchard.Users/Views/Account/LogOn.ascx
+#| msgid : "Password:"
+msgid "Password:"
+msgstr "Password:"
+
+#: ~/Modules/Orchard.Users/Views/Account/LogOn.ascx
+#| msgid : "Remember me?"
+msgid "Remember me?"
+msgstr "Remember me?"
+
 #: ~/Modules/Orchard.Users/Views/Account/Register.ascx
 #| msgid : "Create a New Account"
 msgid "Create a New Account"
 msgstr "Create a New Account"
+
+#: ~/Modules/Orchard.Users/Views/Account/Register.ascx
+#| msgid : "Use the form below to create a new account."
+msgid "Use the form below to create a new account."
+msgstr "Use the form below to create a new account."
+
+#: ~/Modules/Orchard.Users/Views/Account/Register.ascx
+#| msgid : "Passwords are required to be a minimum of {0} characters in length."
+msgid "Passwords are required to be a minimum of {0} characters in length."
+msgstr "Passwords are required to be a minimum of {0} characters in length."
+
+#: ~/Modules/Orchard.Users/Views/Account/Register.ascx
+#| msgid : "Username:"
+msgid "Username:"
+msgstr "Username:"
+
+#: ~/Modules/Orchard.Users/Views/Account/Register.ascx
+#| msgid : "Email:"
+msgid "Email:"
+msgstr "Email:
+
+#: ~/Modules/Orchard.Users/Views/Account/Register.ascx
+#| msgid : "Confirm password:"
+msgid "Confirm password:"
+msgstr "Confirm password:"
 
 #: ~/Modules/Orchard.Users/Views/Account/Register.ascx
 #| msgid : "Account creation was unsuccessful. Please correct the errors and try again."
@@ -1823,6 +1968,41 @@ msgstr "nobody(?)"
 msgid "Login was unsuccessful. Please correct the errors and try again."
 msgstr "Login was unsuccessful. Please correct the errors and try again."
 
+#: ~/Themes/Contoso/Views/LogOn.ascx
+#| msgid : "Please enter your username and password."
+msgid "Please enter your username and password."
+msgstr "Please enter your username and password."
+
+#: ~/Themes/Contoso/Views/LogOn.ascx
+#| msgid : "Register"
+msgid "Register"
+msgstr "Register"
+
+#: ~/Themes/Contoso/Views/LogOn.ascx
+#| msgid : " if you don't have an account."
+msgid " if you don't have an account."
+msgstr " if you don't have an account."
+
+#: ~/Themes/Contoso/Views/LogOn.ascx
+#| msgid : "Account Information"
+msgid "Account Information"
+msgstr "Account Information"
+
+#: ~/Themes/Contoso/Views/LogOn.ascx
+#| msgid : "Username or Email:"
+msgid "Username or Email:"
+msgstr "Username or Email:"
+
+#: ~/Themes/Contoso/Views/LogOn.ascx
+#| msgid : "Password:"
+msgid "Password:"
+msgstr "Password:"
+
+#: ~/Themes/Contoso/Views/LogOn.ascx
+#| msgid : "Remember me?"
+msgid "Remember me?"
+msgstr "Remember me?"
+
 #: ~/Themes/Contoso/Views/User.ascx
 #| msgid : "Log Off"
 msgid "Log Off"
@@ -1847,6 +2027,21 @@ msgstr "Archives"
 #| msgid : "log on"
 msgid "log on"
 msgstr "log on"
+
+#: ~/Themes/Contoso/Views/DisplayTemplates/Parts/Comments.HasComments.ascx
+#| msgid : "Add a Comment"
+msgid "Add a Comment"
+msgstr "Add a Comment"
+
+#: ~/Themes/Contoso/Views/DisplayTemplates/Parts/Comments.HasComments.ascx
+#| msgid : "You must {0} to comment."
+msgid "You must {0} to comment."
+msgstr "You must {0} to comment."
+
+#: ~/Themes/Corporate/Views/DisplayTemplates/Parts/Comments.HasComments.ascx
+#| msgid : "Comments have been disabled for this content."
+msgid "Comments have been disabled for this content."
+msgstr "Comments have been disabled for this content."
 
 #: ~/Themes/Contoso/Views/DisplayTemplates/Parts/Comments.HasComments.ascx
 #| msgid : "Hi, {0}!"
@@ -1863,6 +2058,41 @@ msgstr "nobody(?)"
 msgid "Login was unsuccessful. Please correct the errors and try again."
 msgstr "Login was unsuccessful. Please correct the errors and try again."
 
+#: ~/Themes/Corporate/Views/LogOn.ascx
+#| msgid : "Please enter your username and password."
+msgid "Please enter your username and password."
+msgstr "Please enter your username and password."
+
+#: ~/Themes/Corporate/Views/LogOn.ascx
+#| msgid : "Register"
+msgid "Register"
+msgstr "Register"
+
+#: ~/Themes/Corporate/Views/LogOn.ascx
+#| msgid : " if you don't have an account."
+msgid " if you don't have an account."
+msgstr " if you don't have an account."
+
+#: ~/Themes/Corporate/Views/LogOn.ascx
+#| msgid : "Account Information"
+msgid "Account Information"
+msgstr "Account Information"
+
+#: ~/Themes/Corporate/Views/LogOn.ascx
+#| msgid : "Username or Email:"
+msgid "Username or Email:"
+msgstr "Username or Email:"
+
+#: ~/Themes/Corporate/Views/LogOn.ascx
+#| msgid : "Password:"
+msgid "Password:"
+msgstr "Password:"
+
+#: ~/Themes/Corporate/Views/LogOn.ascx
+#| msgid : "Remember me?"
+msgid "Remember me?"
+msgstr "Remember me?"
+
 #: ~/Themes/Corporate/Views/User.ascx
 #| msgid : "Log Off"
 msgid "Log Off"
@@ -1892,6 +2122,21 @@ msgstr "log on"
 #| msgid : "Hi, {0}!"
 msgid "Hi, {0}!"
 msgstr "Hi, {0}!"
+
+#: ~/Themes/Corporate/Views/DisplayTemplates/Parts/Comments.HasComments.ascx
+#| msgid : "Add a Comment"
+msgid "Add a Comment"
+msgstr "Add a Comment"
+
+#: ~/Themes/Corporate/Views/DisplayTemplates/Parts/Comments.HasComments.ascx
+#| msgid : "You must {0} to comment."
+msgid "You must {0} to comment."
+msgstr "You must {0} to comment."
+
+#: ~/Themes/Corporate/Views/DisplayTemplates/Parts/Comments.HasComments.ascx
+#| msgid : "Comments have been disabled for this content."
+msgid "Comments have been disabled for this content."
+msgstr "Comments have been disabled for this content."
 
 #: ~/Themes/Corporate/Views/DisplayTemplates/Parts/Pages.Page.Metadata.ascx
 #| msgid : "nobody(?)"
@@ -1917,6 +2162,11 @@ msgstr "Your Site"
 #| msgid : "Logout"
 msgid "Logout"
 msgstr "Logout"
+
+#: ~/Themes/TheAdmin/Views/User.ascx
+#| msgid : "User:"
+msgid "User:"
+msgstr "User:"
 
 #: ~/Commands/DefaultOrchardCommandHandler.cs
 #| msgid : "Switch was not found: "
