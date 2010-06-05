@@ -1,9 +1,9 @@
 ﻿using System.CodeDom.Compiler;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
-using System.Reflection;
 
-namespace Orchard.Environment.Extensions.Loaders {
+namespace Orchard.Environment.Extensions.Compilers {
     /// <summary>
     /// Compile a C# extension into an assembly given a directory location
     /// </summary>
@@ -20,15 +20,17 @@ namespace Orchard.Environment.Extensions.Loaders {
         /// Compile a csproj file given its virtual path. Use the CSharp CodeDomProvider
         /// class, which is only available in full trust.
         /// </summary>
-        public CompilerResults CompileProject(string virtualPath) {
+        public CompilerResults CompileProject(string virtualPath, string outputDirectory) {
             var codeProvider = CodeDomProvider.CreateProvider("cs");
             var directory = _virtualPathProvider.GetDirectoryName(virtualPath);
 
             using (var stream = _virtualPathProvider.OpenFile(virtualPath)) {
                 var descriptor = new CSharpProjectParser().Parse(stream);
 
-                var references = GetAssemblyReferenceNames();
+                var references = GetReferencedAssembliesLocation();
                 var options = new CompilerParameters(references.ToArray());
+                options.GenerateExecutable = false;
+                options.OutputAssembly = Path.Combine(outputDirectory, descriptor.AssemblyName + ".dll");
 
                 var fileNames = descriptor.SourceFilenames
                     .Select(f => _virtualPathProvider.Combine(directory, f))
@@ -39,11 +41,10 @@ namespace Orchard.Environment.Extensions.Loaders {
             }
         }
 
-        private IEnumerable<string> GetAssemblyReferenceNames() {
+        private IEnumerable<string> GetReferencedAssembliesLocation() {
             return _buildManager.GetReferencedAssemblies()
-                .OfType<Assembly>()
-                .Where(a => !string.IsNullOrEmpty(a.Location))
                 .Select(a => a.Location)
+                .Where(a => !string.IsNullOrEmpty(a))
                 .Distinct();
         }
     }

@@ -1,7 +1,7 @@
 ﻿using System.CodeDom;
 using System.Web.Compilation;
 
-namespace Orchard.Environment.Extensions.Loaders {
+namespace Orchard.Environment {
     public interface IAssemblyBuilder {
         void AddCodeCompileUnit(CodeCompileUnit compileUnit);
     }

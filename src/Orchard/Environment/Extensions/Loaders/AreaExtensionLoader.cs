@@ -5,7 +5,7 @@ using Orchard.Environment.Extensions.Models;
 
 namespace Orchard.Environment.Extensions.Loaders {
     public class AreaExtensionLoader : IExtensionLoader {
-        public int Order { get { return 5; } }
+        public int Order { get { return 50; } }
 
         public ExtensionEntry Load(ExtensionDescriptor descriptor) {
             if (descriptor.Location == "~/Areas") {

@@ -1,10 +1,8 @@
-﻿using System;
-using System.CodeDom;
+﻿using System.CodeDom;
 using System.IO;
 using System.Linq;
 
-
-namespace Orchard.Environment.Extensions.Loaders {
+namespace Orchard.Environment.Extensions.Compilers {
     /// <summary>
     /// Compile a C# extension into an assembly given a directory location
     /// </summary>

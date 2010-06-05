@@ -4,9 +4,8 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Web.Compilation;
-using System.Web.Hosting;
 
-namespace Orchard.Environment.Extensions.Loaders {
+namespace Orchard.Environment.Extensions.Compilers {
     /// <summary>
     /// Compile a C# extension into an assembly given a directory location
     /// </summary>
