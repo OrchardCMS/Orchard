@@ -59,12 +59,8 @@ namespace Orchard.Core.Indexing.Services {
             Logger.Information("Deleting index task created for [{0}:{1}]", contentItem.ContentType, contentItem.Id);
         }
 
-        public IEnumerable<IIndexingTask> GetTasks(DateTime? createdAfter) {
-            return _repository
-                .Fetch(x => x.CreatedUtc > createdAfter)
-                .Select(x => new IndexingTask(_contentManager, x))
-                .Cast<IIndexingTask>()
-                .ToReadOnlyCollection();
+        public DateTime GetLastTaskDateTime() {
+            return _repository.Table.Max(t => t.CreatedUtc) ?? DateTime.MinValue;
         }
 
         /// <summary>

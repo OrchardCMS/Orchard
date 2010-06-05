@@ -70,6 +70,21 @@ namespace Orchard.Core.Indexing.Lucene {
             return new DirectoryInfo(_appDataFolder.MapPath(Path.Combine(_basePath, indexName))).Exists;
         }
 
+        public bool IsEmpty(string indexName) {
+            if(!Exists(indexName)) {
+                return true;
+            }
+
+            var reader = IndexReader.Open(GetDirectory(indexName), true);
+
+            try {
+                return reader.NumDocs() == 0;
+            }
+            finally {
+                reader.Close();
+            }
+        }
+
         public void CreateIndex(string indexName) {
             var writer = new IndexWriter(GetDirectory(indexName), _analyzer, true, IndexWriter.MaxFieldLength.UNLIMITED);
             writer.Close();
@@ -118,7 +133,6 @@ namespace Orchard.Core.Indexing.Lucene {
                 writer.Optimize();
                 writer.Close();
             }
-
         }
 
         public void Delete(string indexName, int documentId) {

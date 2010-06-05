@@ -10,7 +10,7 @@ using (Html.BeginForm("update", "admin", FormMethod.Post, new {area = "Orchard.S
 }
 using (Html.BeginForm("rebuild", "admin", FormMethod.Post, new {area = "Orchard.Search"})) { %>
     <fieldset>
-        <p><%=T("Rebuild the search index for a fresh start. <button type=\"submit\" title=\"Rebuild the search index.\">Rebuld</button>") %></p>
+        <p><%=T("Rebuild the search index for a fresh start. <button type=\"submit\" title=\"Rebuild the search index.\">Rebuild</button>") %></p>
         <%=Html.AntiForgeryTokenOrchard() %>
     </fieldset><%
 } %>

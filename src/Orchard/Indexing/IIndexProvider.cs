@@ -19,6 +19,11 @@ namespace Orchard.Indexing {
         void DeleteIndex(string name);
 
         /// <summary>
+        /// Whether an index is empty or not
+        /// </summary>
+        bool IsEmpty(string indexName);
+
+        /// <summary>
         /// Creates an empty document
         /// </summary>
         /// <returns></returns>

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Orchard.Indexing;
 using Orchard.Localization;
@@ -8,12 +9,14 @@ namespace Orchard.Search.Services
 {
     public class SearchService : ISearchService
     {
-        private const string SearchIndexName = "search";
+        private const string SearchIndexName = "Search";
         private readonly IIndexManager _indexManager;
+        private readonly IEnumerable<IIndexNotifierHandler> _indexNotifierHandlers;
 
-        public SearchService(IOrchardServices services, IIndexManager indexManager) {
+        public SearchService(IOrchardServices services, IIndexManager indexManager, IEnumerable<IIndexNotifierHandler> indexNotifierHandlers) {
             Services = services;
             _indexManager = indexManager;
+            _indexNotifierHandlers = indexNotifierHandlers;
             T = NullLocalizer.Instance;
         }
 
@@ -49,10 +52,20 @@ namespace Orchard.Search.Services
         }
 
         public void UpdateIndex() {
-            //todo: this
-            //if (_indexManager.HasIndexProvider())
-            //    _indexManager.GetSearchIndexProvider().UpdateIndex(SearchIndexName);
+            
+            foreach(var handler in _indexNotifierHandlers) {
+                handler.UpdateIndex(SearchIndexName);
+            }
+
             Services.Notifier.Information(T("The search index has been updated."));
+        }
+
+        public DateTime GetIndexUpdatedUtc() {
+            if(!HasIndexToManage) {
+                return DateTime.MinValue;
+            }
+
+            return _indexManager.GetSearchIndexProvider().GetLastIndexUtc(SearchIndexName);
         }
     }
 }

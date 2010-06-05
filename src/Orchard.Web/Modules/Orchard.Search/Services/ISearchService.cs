@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Orchard.Indexing;
 
 namespace Orchard.Search.Services {
@@ -7,5 +8,6 @@ namespace Orchard.Search.Services {
         IEnumerable<ISearchHit> Query(string term);
         void RebuildIndex();
         void UpdateIndex();
+        DateTime GetIndexUpdatedUtc();
     }
 }

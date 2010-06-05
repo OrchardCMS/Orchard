@@ -349,6 +349,7 @@
     <Compile Include="Environment\State\IShellStateManager.cs" />
     <Compile Include="Environment\State\ShellStateCoordinator.cs" />
     <Compile Include="IDependency.cs" />
+    <Compile Include="Indexing\IIndexNotifierHandler.cs" />
     <Compile Include="Localization\Services\DefaultCultureManager.cs" />
     <Compile Include="Localization\Services\DefaultResourceManager.cs" />
     <Compile Include="Indexing\DefaultIndexManager.cs" />
