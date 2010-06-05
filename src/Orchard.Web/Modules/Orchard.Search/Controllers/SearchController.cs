@@ -14,14 +14,28 @@ namespace Orchard.Search.Controllers {
             _contentManager = contentManager;
         }
 
-        public ActionResult Index(string q) {
-            var searchViewModel = new SearchViewModel {Query = q};
+        public ActionResult Index(string q, int page = 0, int pageSize = 0) {
+            var take = pageSize > 0 ? pageSize : 10;
+            var skip = (page > 0 ? page - 1 : 0) * take;
+            var searchViewModel = new SearchViewModel {
+                Query = q,
+                Page = page > 0 ? page : 1,
+                PageSize = take
+            };
 
             var results = _searchService.Query(q);
-            searchViewModel.Results = results.Select(result => new SearchResultViewModel {
-                Content = _contentManager.BuildDisplayModel(_contentManager.Get(result.Id), "SummaryForSearch"),
-                SearchHit = result
-            }).ToList();
+
+            searchViewModel.Count = results.Count();
+            searchViewModel.TotalPageCount = searchViewModel.Count/searchViewModel.PageSize;
+            //todo: deal with page requests beyond result count
+            searchViewModel.ResultsPage = results
+                .Select(result => new SearchResultViewModel {
+                    Content = _contentManager.BuildDisplayModel(_contentManager.Get(result.Id), "SummaryForSearch"),
+                    SearchHit = result
+                })
+                .Skip(skip)
+                .Take(take)
+                .ToList();
 
             return View(searchViewModel);
         }

@@ -40,6 +40,66 @@ namespace Orchard.Mvc.Html {
 
             return MvcHtmlString.Create(builder.ToString(TagRenderMode.Normal));
         }
+        #region Pager
+
+        public static string Pager(this HtmlHelper html, int pageCount, int currentPage, object values, string previousText, string nextText, bool alwaysShowPreviousAndNext) {
+            if (pageCount < 2)
+                return "";
+
+            var sb = new StringBuilder(75);
+            var viewContext = html.ViewContext;
+            var rvd = new RouteValueDictionary();
+
+            foreach (var item in viewContext.RouteData.Values) {
+                rvd.Add(item.Key, item.Value);
+            }
+
+            var urlHelper = new UrlHelper(viewContext.RequestContext);
+
+            if (values != null) {
+                var rvd2 = new RouteValueDictionary(values);
+
+                foreach (var item in rvd2) {
+                    rvd[item.Key] = item.Value;
+                }
+            }
+
+            sb.Append("<p class=\"pager\">");
+
+            if (currentPage > 1 || alwaysShowPreviousAndNext) {
+                if (currentPage == 2)
+                    rvd.Remove("page");
+                else
+                    rvd["page"] = currentPage - 1;
+
+                sb.AppendFormat(" <a href=\"{1}\" class=\"previous\">{0}</a>", previousText,
+                                urlHelper.RouteUrl(rvd));
+            }
+
+            //todo: when there are many pages (> 15?) maybe do something like 1 2 3...6 7 8...13 14 15
+            for (var p = 1; p <= pageCount; p++) {
+                if (p == currentPage) {
+                    sb.AppendFormat(" <span>{0}</span>", p);
+                }
+                else {
+                    rvd["page"] = p;
+                    sb.AppendFormat(" <a href=\"{1}\">{0}</a>", p,
+                                    urlHelper.RouteUrl(rvd));
+                }
+            }
+
+            if (currentPage < pageCount || alwaysShowPreviousAndNext) {
+                rvd["page"] = currentPage + 1;
+                sb.AppendFormat("<a href=\"{1}\" class=\"next\">{0}</a>", nextText,
+                                urlHelper.RouteUrl(rvd));
+            }
+
+            sb.Append("</p>");
+
+            return sb.ToString();
+        }
+
+        #endregion
 
         #region UnorderedList
 
