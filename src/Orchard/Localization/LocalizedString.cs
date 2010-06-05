@@ -12,6 +12,10 @@ namespace Orchard.Localization {
             return new LocalizedString(x);
         }
 
+        public string Text {
+            get { return _localized; }
+        }
+
         public override string ToString() {
             return _localized;
         }
