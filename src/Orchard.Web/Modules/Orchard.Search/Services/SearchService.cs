@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using Orchard.Indexing;
 using Orchard.Localization;
+using Orchard.Search.Models;
 using Orchard.UI.Notify;
 
 namespace Orchard.Search.Services
@@ -27,17 +27,26 @@ namespace Orchard.Search.Services
             get { return _indexManager.HasIndexProvider(); }
         }
 
-        public IEnumerable<ISearchHit> Query(string term) {
-            if (string.IsNullOrWhiteSpace(term) || !_indexManager.HasIndexProvider())
-                return Enumerable.Empty<ISearchHit>();
+        ISearchResult ISearchService.Query(string query, int skip, int? take) {
+            if (string.IsNullOrWhiteSpace(query) || !_indexManager.HasIndexProvider())
+                return null;
 
-            return _indexManager.GetSearchIndexProvider().CreateSearchBuilder(SearchIndexName)
-                .WithField("title", term)
-                .WithField("body", term)
-                .Search();
+            var searchBuilder =  _indexManager.GetSearchIndexProvider().CreateSearchBuilder(SearchIndexName)
+                .WithField("title", query)
+                .WithField("body", query);
+
+            var totalCount = searchBuilder.Count();
+            if (take != null)
+                searchBuilder = searchBuilder
+                    .Slice(skip, (int)take);
+
+            return new SearchResult {
+                Page = searchBuilder.Search(),
+                TotalCount = totalCount
+            };
         }
         
-        public void RebuildIndex() {
+        void ISearchService.RebuildIndex() {
             if (!_indexManager.HasIndexProvider()) {
                 Services.Notifier.Warning(T("There is no search index to rebuild."));
                 return;
@@ -51,7 +60,7 @@ namespace Orchard.Search.Services
             Services.Notifier.Information(T("The search index has been rebuilt."));
         }
 
-        public void UpdateIndex() {
+        void ISearchService.UpdateIndex() {
             
             foreach(var handler in _indexNotifierHandlers) {
                 handler.UpdateIndex(SearchIndexName);
@@ -60,12 +69,10 @@ namespace Orchard.Search.Services
             Services.Notifier.Information(T("The search index has been updated."));
         }
 
-        public DateTime GetIndexUpdatedUtc() {
-            if(!HasIndexToManage) {
-                return DateTime.MinValue;
-            }
-
-            return _indexManager.GetSearchIndexProvider().GetLastIndexUtc(SearchIndexName);
+        DateTime ISearchService.GetIndexUpdatedUtc() {
+            return !HasIndexToManage
+                ? DateTime.MinValue
+                : _indexManager.GetSearchIndexProvider().GetLastIndexUtc(SearchIndexName);
         }
     }
 }

@@ -24,18 +24,19 @@ namespace Orchard.Search.Controllers {
                 PageSize = take
             };
 
-            var results = _searchService.Query(q);
+            var results = _searchService.Query(q, skip, take);
 
-            searchViewModel.Count = results.Count();
+            if (results == null)
+                return View(searchViewModel);
+
+            searchViewModel.Count = results.TotalCount;
             searchViewModel.TotalPageCount = (int)Math.Ceiling((decimal)searchViewModel.Count/searchViewModel.PageSize);
             //todo: deal with page requests beyond result count
-            searchViewModel.ResultsPage = results
+            searchViewModel.ResultsPage = results.Page
                 .Select(result => new SearchResultViewModel {
                     Content = _contentManager.BuildDisplayModel(_contentManager.Get(result.Id), "SummaryForSearch"),
                     SearchHit = result
                 })
-                .Skip(skip)
-                .Take(take)
                 .ToList();
 
             return View(searchViewModel);

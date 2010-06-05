@@ -42,7 +42,7 @@ namespace Orchard.Mvc.Html {
         }
         #region Pager
 
-        public static string Pager(this HtmlHelper html, int pageCount, int currentPage, object values, string previousText, string nextText, bool alwaysShowPreviousAndNext) {
+        public static string Pager(this HtmlHelper html, int pageCount, int currentPage, object values = null, string previousText = "<", string nextText = ">", bool alwaysShowPreviousAndNext = false) {
             if (pageCount < 2)
                 return "";
 
