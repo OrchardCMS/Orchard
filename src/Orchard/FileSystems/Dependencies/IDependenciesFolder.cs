@@ -39,7 +39,7 @@ namespace Orchard.FileSystems.Dependencies {
             if (IsNewerAssembly(assemblyName, assemblyFileName)) {
                 var destinationFileName = Path.GetFileName(assemblyFileName);
                 var destinationPath = _virtualPathProvider.MapPath(_virtualPathProvider.Combine(BasePath, destinationFileName));
-                File.Copy(assemblyFileName, destinationPath);
+                File.Copy(assemblyFileName, destinationPath, true);
 
                 StoreDepencyInformation(assemblyName, destinationFileName);
             }
@@ -56,7 +56,7 @@ namespace Orchard.FileSystems.Dependencies {
                 return true;
             }
 
-            return (File.GetCreationTimeUtc(existingFileName) <= File.GetCreationTimeUtc(assemblyFileName));
+            return (File.GetLastWriteTimeUtc(existingFileName) < File.GetLastWriteTimeUtc(assemblyFileName));
         }
 
         private void StoreDepencyInformation(string name, string fileName) {
