@@ -1,7 +1,7 @@
 ﻿<%@ Control Language="C#" Inherits="Orchard.Mvc.ViewUserControl<Orchard.Search.ViewModels.SearchViewModel>" %>
 <%@ Import Namespace="Orchard.Mvc.Html" %><%
 Html.RegisterStyle("search.css"); %>
-<h1><%=Html.TitleForPage(T("Search"))%></h1><%
+<h1><%=Html.TitleForPage(T("Search").Text)%></h1><%
 Html.Zone("search");
 if (!string.IsNullOrWhiteSpace(Model.Query)) { %>
 <p class="search-summary"><%=T("<em>{0}</em> results", Model.Results.Count()) %></p><%
