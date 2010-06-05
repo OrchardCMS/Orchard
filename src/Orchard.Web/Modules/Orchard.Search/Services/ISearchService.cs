@@ -1,11 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using Orchard.Indexing;
+using Orchard.Search.Models;
 
 namespace Orchard.Search.Services {
     public interface ISearchService : IDependency {
         bool HasIndexToManage { get; }
-        IEnumerable<ISearchHit> Query(string term);
+        ISearchResult Query(string query, int skip, int? take);
         void RebuildIndex();
         void UpdateIndex();
         DateTime GetIndexUpdatedUtc();
