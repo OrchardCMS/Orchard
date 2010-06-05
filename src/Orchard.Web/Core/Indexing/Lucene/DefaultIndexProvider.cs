@@ -71,7 +71,7 @@ namespace Orchard.Core.Indexing.Lucene {
         }
 
         public bool IsEmpty(string indexName) {
-            if(!Exists(indexName)) {
+            if ( !Exists(indexName) ) {
                 return true;
             }
 
@@ -79,6 +79,21 @@ namespace Orchard.Core.Indexing.Lucene {
 
             try {
                 return reader.NumDocs() == 0;
+            }
+            finally {
+                reader.Close();
+            }
+        }
+
+        public int NumDocs(string indexName) {
+            if ( !Exists(indexName) ) {
+                return 0;
+            }
+
+            var reader = IndexReader.Open(GetDirectory(indexName), true);
+
+            try {
+                return reader.NumDocs();
             }
             finally {
                 reader.Close();

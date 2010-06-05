@@ -24,6 +24,11 @@ namespace Orchard.Indexing {
         bool IsEmpty(string indexName);
 
         /// <summary>
+        /// Gets the number of indexed documents
+        /// </summary>
+        int NumDocs(string indexName);
+
+        /// <summary>
         /// Creates an empty document
         /// </summary>
         /// <returns></returns>

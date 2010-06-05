@@ -109,6 +109,7 @@
     <Compile Include="Feeds\Rss\RssResult.cs" />
     <Compile Include="HomePage\Controllers\HomeController.cs" />
     <Compile Include="HomePage\Routes.cs" />
+    <Compile Include="Indexing\Commands\IndexingCommands.cs" />
     <Compile Include="Indexing\Lucene\DefaultIndexDocument.cs" />
     <Compile Include="Indexing\Lucene\DefaultIndexProvider.cs" />
     <Compile Include="Indexing\Lucene\DefaultSearchBuilder.cs" />
