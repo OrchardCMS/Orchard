@@ -13,7 +13,7 @@ namespace Orchard.Environment.Extensions.Loaders {
             _folder = folder;
         }
 
-        public int Order { get { return 30; } }
+        public int Order { get { return 40; } }
 
         public ExtensionEntry Load(ExtensionDescriptor descriptor) {
             var assembly = _folder.LoadAssembly(descriptor.Name);

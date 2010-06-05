@@ -15,7 +15,7 @@ namespace Orchard.Environment.Extensions.Loaders {
             _virtualPathProvider = virtualPathProvider;
         }
 
-        public int Order { get { return 40; } }
+        public int Order { get { return 30; } }
 
         public ExtensionEntry Load(ExtensionDescriptor descriptor) {
             var extensionPath = _virtualPathProvider.Combine(descriptor.Location, descriptor.Name, "bin",

@@ -33,16 +33,30 @@ namespace Orchard.FileSystems.Dependencies {
         }
 
         public void StoreAssemblyFile(string assemblyName, string assemblyFileName) {
-            StoreAssemblyFile(assemblyName, assemblyFileName, Path.GetFileName(assemblyFileName));
-        }
-
-        private void StoreAssemblyFile(string assemblyName, string assemblyFileName, string destinationFileName) {
             _virtualPathProvider.CreateDirectory(BasePath);
 
-            var destinationPath = _virtualPathProvider.MapPath(_virtualPathProvider.Combine(BasePath, destinationFileName));
-            File.Copy(assemblyFileName, destinationPath);
+            // Only store assembly if it's more recent that what we have stored already (if anything)
+            if (IsNewerAssembly(assemblyName, assemblyFileName)) {
+                var destinationFileName = Path.GetFileName(assemblyFileName);
+                var destinationPath = _virtualPathProvider.MapPath(_virtualPathProvider.Combine(BasePath, destinationFileName));
+                File.Copy(assemblyFileName, destinationPath);
 
-            StoreDepencyInformation(assemblyName, destinationFileName);
+                StoreDepencyInformation(assemblyName, destinationFileName);
+            }
+        }
+
+        private bool IsNewerAssembly(string assemblyName, string assemblyFileName) {
+            var dependency = ReadDependencies().SingleOrDefault(d => d.Name == assemblyName);
+            if (dependency == null) {
+                return true;
+            }
+
+            var existingFileName = _virtualPathProvider.MapPath(_virtualPathProvider.Combine(BasePath, dependency.FileName));
+            if (!File.Exists(existingFileName)) {
+                return true;
+            }
+
+            return (File.GetCreationTimeUtc(existingFileName) <= File.GetCreationTimeUtc(assemblyFileName));
         }
 
         private void StoreDepencyInformation(string name, string fileName) {
