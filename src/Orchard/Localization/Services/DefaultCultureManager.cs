@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Web;
@@ -44,6 +45,13 @@ namespace Orchard.Localization.Services {
             }
 
             return String.Empty;
+        }
+
+        public int GetCultureIdByName(string cultureName) {
+            if (!IsValidCulture(cultureName)) {
+                throw new ArgumentException("cultureName");
+            }
+            return _cultureRepository.Get(x => x.Culture == cultureName).Id;
         }
 
         // "<languagecode2>" or

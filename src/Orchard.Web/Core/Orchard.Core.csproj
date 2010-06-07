@@ -121,6 +121,7 @@
     <Compile Include="Indexing\Services\IndexingTaskManager.cs" />
     <Compile Include="Localization\Models\Localized.cs" />
     <Compile Include="Localization\Models\LocalizedRecord.cs" />
+    <Compile Include="Localization\Services\ContentItemLocalizationService.cs" />
     <Compile Include="Localization\Services\IContentItemLocalizationService.cs" />
     <Compile Include="Navigation\AdminMenu.cs" />
     <Compile Include="Navigation\Controllers\AdminController.cs" />
