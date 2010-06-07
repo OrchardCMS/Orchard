@@ -1,15 +1,15 @@
 ﻿using System.IO;
-using System.Reflection;
 using System.Web.Hosting;
+using Orchard.FileSystems.Dependencies;
 
 namespace Orchard.Environment.Extensions.Loaders {
     public class WebFormsExtensionsVirtualFile : VirtualFile {
-        private readonly Assembly _assembly;
+        private readonly DependencyDescriptor _dependencyDescriptor;
         private readonly VirtualFile _actualFile;
 
-        public WebFormsExtensionsVirtualFile(string virtualPath, Assembly assembly, VirtualFile actualFile)
+        public WebFormsExtensionsVirtualFile(string virtualPath, DependencyDescriptor dependencyDescriptor, VirtualFile actualFile)
             : base(virtualPath) {
-            _assembly = assembly;
+            _dependencyDescriptor = dependencyDescriptor;
             _actualFile = actualFile;
         }
 
@@ -26,26 +26,37 @@ namespace Orchard.Environment.Extensions.Loaders {
         }
 
         public override Stream Open() {
-            var reader = new StreamReader(_actualFile.Open());
-            var memoryStream = new MemoryStream();
-            int length;
-            using (var writer = new StreamWriter(memoryStream)) {
+            using (var actualStream = _actualFile.Open()) {
+                var reader = new StreamReader(actualStream);
 
-                bool assemblyDirectiveAdded = false;
-                for (var line = reader.ReadLine(); line != null; line = reader.ReadLine()) {
+                var memoryStream = new MemoryStream();
+                int length;
+                using (var writer = new StreamWriter(memoryStream)) {
 
-                    if (!string.IsNullOrWhiteSpace(line) && !assemblyDirectiveAdded) {
-                        line += string.Format("<%@ Assembly Name=\"{0}\"%>", _assembly);
-                        assemblyDirectiveAdded = true;
+                    bool assemblyDirectiveAdded = false;
+                    for (var line = reader.ReadLine(); line != null; line = reader.ReadLine()) {
+
+                        if (!string.IsNullOrWhiteSpace(line) && !assemblyDirectiveAdded) {
+                            line += GetAssemblyDirective();
+                            assemblyDirectiveAdded = true;
+                        }
+
+                        writer.WriteLine(line);
                     }
-
-                    writer.WriteLine(line);
+                    writer.Flush();
+                    length = (int) memoryStream.Length;
                 }
-                writer.Flush();
-                length = (int)memoryStream.Length;
+                return new MemoryStream(memoryStream.GetBuffer(), 0, length);
             }
-            var result = new MemoryStream(memoryStream.GetBuffer(), 0, length);
-            return result;
+        }
+
+        private string GetAssemblyDirective() {
+            if (_dependencyDescriptor.IsFromBuildProvider) {
+                return string.Format("<%@ Assembly Src=\"{0}\"%>", _dependencyDescriptor.VirtualPath);
+            }
+            else {
+                return string.Format("<%@ Assembly Name=\"{0}\"%>", _dependencyDescriptor.ModuleName);
+            }
         }
     }
 }

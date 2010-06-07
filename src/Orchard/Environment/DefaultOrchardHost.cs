@@ -17,7 +17,7 @@ using Orchard.Mvc.ViewEngines;
 using Orchard.Utility.Extensions;
 
 namespace Orchard.Environment {
-    public class DefaultOrchardHost : IOrchardHost, IShellSettingsManagerEventHandler, IShellDescriptorManagerEventHandler {
+    public class DefaultOrchardHost : IOrchardHost, IShellSettingsManagerEventHandler, IShellDescriptorManagerEventHandler, IExtensionManagerEvents {
         private readonly ControllerBuilder _controllerBuilder;
 
         private readonly IShellSettingsManager _shellSettingsManager;
@@ -145,6 +145,10 @@ namespace Orchard.Environment {
         }
 
         void IShellDescriptorManagerEventHandler.Changed(ShellDescriptor descriptor) {
+            _current = null;
+        }
+
+        void IExtensionManagerEvents.ModuleChanged(string moduleName) {
             _current = null;
         }
     }

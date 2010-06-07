@@ -4,17 +4,13 @@ using System.Web.Hosting;
 using Orchard.FileSystems.Dependencies;
 
 namespace Orchard.Environment.Extensions.Loaders {
-    public class WebFormsExtensionsVirtualPathProvider : VirtualPathProvider {
-        private IDependenciesFolder _dependenciesFolder;
-        private const string _prefix1 = "~/Modules/";
-        private const string _prefix2 = "/Modules/";
+    public class WebFormsExtensionsVirtualPathProvider : VirtualPathProvider, ICustomVirtualPathProvider {
+        private readonly IDependenciesFolder _dependenciesFolder;
+        private readonly string[] _prefixes = { "~/Modules/", "/Modules/" };
+        private readonly string[] _extensions = { ".ascx", ".aspx", ".master" };
 
-        public WebFormsExtensionsVirtualPathProvider() {
-        }
-
-        protected override void Initialize() {
-            base.Initialize();
-            _dependenciesFolder = new DefaultDependenciesFolder(new DefaultVirtualPathProvider());
+        public WebFormsExtensionsVirtualPathProvider(IDependenciesFolder dependenciesFolder) {
+            _dependenciesFolder = dependenciesFolder;
         }
 
         public override bool DirectoryExists(string virtualDir) {
@@ -28,11 +24,11 @@ namespace Orchard.Environment.Extensions.Loaders {
         public override VirtualFile GetFile(string virtualPath) {
             var actualFile = Previous.GetFile(virtualPath);
 
-            var prefix = PrefixMatch(virtualPath);
+            var prefix = PrefixMatch(virtualPath, _prefixes);
             if (prefix == null)
                 return actualFile;
 
-            var extension = ExtensionMatch(virtualPath, ".ascx", ".aspx", ".master");
+            var extension = ExtensionMatch(virtualPath, _extensions);
             if (extension == null)
                 return actualFile;
 
@@ -42,13 +38,13 @@ namespace Orchard.Environment.Extensions.Loaders {
 
             // It looks like we have a module name. Is this one of this modules
             // with its assembly stored in the "App_Data/Dependencies" folder?
-            var assembly = _dependenciesFolder.LoadAssembly(moduleName);
-            if (assembly == null)
+            var dependencyDescriptor = _dependenciesFolder.GetDescriptor(moduleName);
+            if (dependencyDescriptor == null)
                 return actualFile;
 
             // Yes: we need to wrap the VirtualFile to add the <%@ Assembly Name=".."%> directive
             // in the content.
-            return new WebFormsExtensionsVirtualFile(virtualPath, assembly, actualFile);
+            return new WebFormsExtensionsVirtualFile(virtualPath, dependencyDescriptor, actualFile);
         }
 
         private string ModuleMatch(string virtualPath, string prefix) {
@@ -65,13 +61,13 @@ namespace Orchard.Environment.Extensions.Loaders {
                 .FirstOrDefault(e => virtualPath.EndsWith(e, StringComparison.OrdinalIgnoreCase));
         }
 
-        private string PrefixMatch(string virtualPath) {
-            if (virtualPath.StartsWith(_prefix1))
-                return _prefix1;
-            if (virtualPath.StartsWith(_prefix2))
-                return _prefix2;
-            return null;
+        private string PrefixMatch(string virtualPath, params string[] prefixes) {
+            return prefixes
+                .FirstOrDefault(p => virtualPath.StartsWith(p, StringComparison.OrdinalIgnoreCase));
+        }
 
+        VirtualPathProvider ICustomVirtualPathProvider.Instance {
+            get { return this; }
         }
     }
 }

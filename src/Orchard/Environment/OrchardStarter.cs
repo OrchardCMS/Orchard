@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Configuration;
 using System.IO;
 using System.Web.Hosting;
@@ -33,6 +34,7 @@ namespace Orchard.Environment {
             builder.RegisterType<DefaultCacheHolder>().As<ICacheHolder>().SingleInstance();
             builder.RegisterType<DefaultHostEnvironment>().As<IHostEnvironment>().SingleInstance();
             builder.RegisterType<DefaultBuildManager>().As<IBuildManager>().SingleInstance();
+            builder.RegisterType<WebFormsExtensionsVirtualPathProvider>().As<ICustomVirtualPathProvider>().SingleInstance();
 
             RegisterVolatileProvider<WebSiteFolder, IWebSiteFolder>(builder);
             RegisterVolatileProvider<AppDataFolder, IAppDataFolder>(builder);
@@ -117,6 +119,15 @@ namespace Orchard.Environment {
 
         public static IOrchardHost CreateHost(Action<ContainerBuilder> registrations) {
             var container = CreateHostContainer(registrations);
+
+            //
+            // Register Virtual Path Providers
+            //
+            foreach (var vpp in container.Resolve<IEnumerable<ICustomVirtualPathProvider>>()) {
+                HostingEnvironment.RegisterVirtualPathProvider(vpp.Instance);
+            }
+
+
             return container.Resolve<IOrchardHost>();
         }
     }

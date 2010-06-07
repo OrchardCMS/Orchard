@@ -23,7 +23,7 @@ namespace Orchard.Environment.Extensions.Loaders {
             if (!_virtualPathProvider.FileExists(extensionPath))
                 return null;
 
-            _folder.StoreAssemblyFile(descriptor.Name, _virtualPathProvider.MapPath(extensionPath));
+            _folder.StorePrecompiledAssembly(descriptor.Name, extensionPath);
 
             var assembly = _folder.LoadAssembly(descriptor.Name);
             if (assembly == null)

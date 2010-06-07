@@ -341,8 +341,11 @@
     <Compile Include="Data\DataModule.cs" />
     <Compile Include="Data\Orderable.cs" />
     <Compile Include="Environment\DefaultOrchardShell.cs" />
+    <Compile Include="Environment\Extensions\Loaders\MergedReadOnlyStreams.cs" />
+    <Compile Include="Environment\ICustomVirtualPathProvider.cs" />
     <Compile Include="Environment\Extensions\Loaders\WebFormsExtensionsVirtualPathProvider.cs" />
     <Compile Include="Environment\Extensions\Loaders\WebFormsExtensionsVirtualFile.cs" />
+    <Compile Include="Environment\Extensions\IExtensionManagerEvents.cs" />
     <Compile Include="Environment\IHostEnvironment.cs" />
     <Compile Include="FileSystems\Dependencies\IDependenciesFolder.cs" />
     <Compile Include="Environment\Extensions\Loaders\ProbingExtensionLoader.cs" />

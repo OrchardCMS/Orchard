@@ -28,7 +28,7 @@ namespace Orchard.Environment.Extensions.Loaders {
             var assembly = _buildManager.GetCompiledAssembly(projectPath);
 
             if (_hostEnvironment.IsFullTrust) {
-                _dependenciesFolder.StoreAssemblyFile(descriptor.Name, assembly.Location);
+                _dependenciesFolder.StoreBuildProviderAssembly(descriptor.Name, projectPath, assembly);
             }
 
             return new ExtensionEntry {

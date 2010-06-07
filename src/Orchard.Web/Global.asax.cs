@@ -31,7 +31,6 @@ namespace Orchard.Web {
 
             RegisterRoutes(RouteTable.Routes);
 
-            HostingEnvironment.RegisterVirtualPathProvider(new WebFormsExtensionsVirtualPathProvider());
             _host = OrchardStarter.CreateHost(MvcSingletons);
             _host.Initialize();
 
