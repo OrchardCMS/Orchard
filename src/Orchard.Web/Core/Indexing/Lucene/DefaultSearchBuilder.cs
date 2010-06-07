@@ -28,6 +28,7 @@ namespace Orchard.Core.Indexing.Lucene {
         private bool _sortDescending;
         private string _parse;
         private readonly Analyzer _analyzer;
+        private string _defaultField;
 
         public ILogger Logger { get; set; }
 
@@ -46,7 +47,16 @@ namespace Orchard.Core.Indexing.Lucene {
             _analyzer = DefaultIndexProvider.CreateAnalyzer();
         }
 
-        public ISearchBuilder Parse(string query) {
+        public ISearchBuilder Parse(string defaultField, string query) {
+            if ( String.IsNullOrWhiteSpace(defaultField) ) {
+                throw new ArgumentException("Default field can't be empty");
+            }
+
+            if ( String.IsNullOrWhiteSpace(query) ) {
+                throw new ArgumentException("Query can't be empty");
+            }
+
+            _defaultField = defaultField;
             _parse = query;
             return this;
         }
@@ -111,7 +121,7 @@ namespace Orchard.Core.Indexing.Lucene {
 
         private Query CreateQuery() {
             if(!String.IsNullOrWhiteSpace(_parse)) {
-                return new QueryParser(DefaultIndexProvider.LuceneVersion, "body", DefaultIndexProvider.CreateAnalyzer()).Parse(_parse);    
+                return new QueryParser(DefaultIndexProvider.LuceneVersion, _defaultField, DefaultIndexProvider.CreateAnalyzer()).Parse(_parse);    
             }
 
             var query = new BooleanQuery();
