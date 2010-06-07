@@ -63,6 +63,7 @@ namespace Orchard.Setup.Services {
                     "Navigation",
                     "Scheduling",
                     "Indexing",
+                    "Localization",
                     "Settings",
                     "XmlRpc",
                     "Orchard.Users",
