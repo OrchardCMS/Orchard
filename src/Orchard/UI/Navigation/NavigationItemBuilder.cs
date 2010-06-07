@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Routing;
+using Orchard.Localization;
 using Orchard.Security.Permissions;
 
 namespace Orchard.UI.Navigation {
@@ -11,8 +12,9 @@ namespace Orchard.UI.Navigation {
             _item = new MenuItem();
         }
 
-        public NavigationItemBuilder Caption(string caption) {
-            _item.Text = caption;
+        public NavigationItemBuilder Caption(LocalizedString caption) {
+            if (caption != null)
+                _item.Text = caption.Text;
             return this;
         }
 

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace Orchard.Indexing {
     public interface IIndexProvider : IDependency {
@@ -16,6 +17,16 @@ namespace Orchard.Indexing {
         /// Deletes an existing index
         /// </summary>
         void DeleteIndex(string name);
+
+        /// <summary>
+        /// Whether an index is empty or not
+        /// </summary>
+        bool IsEmpty(string indexName);
+
+        /// <summary>
+        /// Gets the number of indexed documents
+        /// </summary>
+        int NumDocs(string indexName);
 
         /// <summary>
         /// Creates an empty document
@@ -48,5 +59,16 @@ namespace Orchard.Indexing {
         /// </summary>
         /// <returns>A search builder instance</returns>
         ISearchBuilder CreateSearchBuilder(string indexName);
+
+        /// <summary>
+        /// Returns the date and time when the index was last processed
+        /// </summary>
+        DateTime GetLastIndexUtc(string indexName);
+
+        /// <summary>
+        /// Sets the date and time when the index was last processed
+        /// </summary>
+        void SetLastIndexUtc(string indexName, DateTime lastIndexUtc);
+
     }
 }

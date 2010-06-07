@@ -53,7 +53,7 @@ namespace Orchard.Environment.Extensions {
         private Feature LoadFeature(FeatureDescriptor featureDescriptor) {
             var featureName = featureDescriptor.Name;
             string extensionName = GetExtensionForFeature(featureName);
-            if (extensionName == null) throw new ArgumentException(T("Feature {0} was not found in any of the installed extensions", featureName));
+            if (extensionName == null) throw new ArgumentException(T("Feature {0} was not found in any of the installed extensions", featureName).ToString());
             var extension = BuildActiveExtensions().Where(x => x.Descriptor.Name == extensionName).FirstOrDefault();
             if (extension == null) throw new InvalidOperationException(T("Extension ") + extensionName + T(" is not active"));
 

@@ -15,14 +15,9 @@ namespace Orchard.Tasks.Indexing {
         void CreateDeleteIndexTask(ContentItem contentItem);
 
         /// <summary>
-        /// Loads all indexing tasks created after to a specific date and time
+        /// Returns the Date Time of the last task created
         /// </summary>
-        IEnumerable<IIndexingTask> GetTasks(DateTime? createdAfter);
-        
-        /// <summary>
-        /// Deletes all indexing tasks previous to a specific date and time
-        /// </summary>
-        void DeleteTasks(DateTime? createdBefore);
+        DateTime GetLastTaskDateTime();
 
         /// <summary>
         /// Deletes all indexing tasks assigned to a specific content item

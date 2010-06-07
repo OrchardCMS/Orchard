@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Web.Mvc;
 using Orchard.ContentManagement;
 using Orchard.Search.Services;
@@ -14,14 +15,17 @@ namespace Orchard.Search.Controllers {
             _contentManager = contentManager;
         }
 
-        public ActionResult Index(string q) {
-            var searchViewModel = new SearchViewModel {Query = q};
+        public ActionResult Index(string q, int page = 1, int pageSize = 10) {
+            var searchViewModel = new SearchViewModel {
+                Query = q,
+                DefaultPageSize = 10, // <- yeah, I know :|
+                PageOfResults = _searchService.Query(q, page, pageSize, searchHit => new SearchResultViewModel {
+                    Content = _contentManager.BuildDisplayModel(_contentManager.Get(searchHit.Id), "SummaryForSearch"),
+                    SearchHit = searchHit
+                })
+            };
 
-            var results = _searchService.Query(q);
-            searchViewModel.Results = results.Select(result => new SearchResultViewModel {
-                Content = _contentManager.BuildDisplayModel(_contentManager.Get(result.Id), "SummaryForSearch"),
-                SearchHit = result
-            }).ToList();
+            //todo: deal with page requests beyond result count
 
             return View(searchViewModel);
         }

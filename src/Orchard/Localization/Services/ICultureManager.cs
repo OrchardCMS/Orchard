@@ -6,5 +6,6 @@ namespace Orchard.Localization.Services {
         IEnumerable<string> ListCultures();
         void AddCulture(string cultureName);
         string GetCurrentCulture(HttpContext requestContext);
+        int GetCultureIdByName(string cultureName);
     }
 }
