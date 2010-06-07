@@ -11,13 +11,13 @@
             <%:t.Name %>
         </td>
         <td>
-            <%:Html.ActionLink(T("List Items"), "List", "Admin", new RouteValueDictionary{{"Area","Contents"},{"Id",t.Name}}, new Dictionary<string, object>()) %>
+            <%:Html.ActionLink(T("List Items").ToString(), "List", "Admin", new RouteValueDictionary{{"Area","Contents"},{"Id",t.Name}}, new Dictionary<string, object>()) %>
         </td>
         <td>
-            <%:Html.ActionLink(T("Create Item"), "Create", "Admin", new RouteValueDictionary{{"Area","Contents"},{"Id",t.Name}}, new Dictionary<string, object>()) %>
+            <%:Html.ActionLink(T("Create Item").ToString(), "Create", "Admin", new RouteValueDictionary{{"Area","Contents"},{"Id",t.Name}}, new Dictionary<string, object>()) %>
         </td>
         <td>
-            <%:Html.ActionLink(T("Edit Type"), "ContentTypeList", "Admin", new RouteValueDictionary{{"Area","Orchard.MetaData"},{"Id",t.Name}}, new Dictionary<string, object>()) %>
+            <%:Html.ActionLink(T("Edit Type").ToString(), "ContentTypeList", "Admin", new RouteValueDictionary{{"Area","Orchard.MetaData"},{"Id",t.Name}}, new Dictionary<string, object>()) %>
         </td>
     </tr>
     <%} %>

@@ -160,7 +160,7 @@ namespace Orchard.Core.Contents.Controllers {
         }
 
         void IUpdateModel.AddModelError(string key, LocalizedString errorMessage) {
-            ModelState.AddModelError(key, errorMessage);
+            ModelState.AddModelError(key, errorMessage.ToString());
         }
     }
 }
