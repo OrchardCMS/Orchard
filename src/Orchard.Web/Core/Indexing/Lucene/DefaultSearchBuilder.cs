@@ -2,12 +2,15 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using Lucene.Net.Analysis;
+using Lucene.Net.Analysis.Tokenattributes;
 using Lucene.Net.Index;
 using Lucene.Net.Search;
 using Lucene.Net.Store;
 using Orchard.Logging;
 using Lucene.Net.Documents;
 using Orchard.Indexing;
+using Lucene.Net.QueryParsers;
 
 namespace Orchard.Core.Indexing.Lucene {
     public class DefaultSearchBuilder : ISearchBuilder {
@@ -23,6 +26,8 @@ namespace Orchard.Core.Indexing.Lucene {
         private readonly Dictionary<string, DateTime> _after;
         private string _sort;
         private bool _sortDescending;
+        private string _parse;
+        private readonly Analyzer _analyzer;
 
         public ILogger Logger { get; set; }
 
@@ -37,9 +42,12 @@ namespace Orchard.Core.Indexing.Lucene {
             _fields = new Dictionary<string, Query[]>();
             _sort = String.Empty;
             _sortDescending = true;
+            _parse = String.Empty;
+            _analyzer = DefaultIndexProvider.CreateAnalyzer();
         }
 
         public ISearchBuilder Parse(string query) {
+            _parse = query;
             return this;
         }
 
@@ -49,8 +57,17 @@ namespace Orchard.Core.Indexing.Lucene {
 
         public ISearchBuilder WithField(string field, string value, bool wildcardSearch) {
 
-            _fields[field] = value.Split(' ')
+            var tokens = new List<string>();
+            using(var sr = new System.IO.StringReader(value)) {
+                var stream = _analyzer.TokenStream(field, sr);
+                while(stream.IncrementToken()) {
+                    tokens.Add(((TermAttribute)stream.GetAttribute(typeof(TermAttribute))).Term());
+                }
+            }
+
+            _fields[field] = tokens
                             .Where(k => !String.IsNullOrWhiteSpace(k))
+                            .Select(QueryParser.Escape)
                             .Select(k => wildcardSearch ? (Query)new PrefixQuery(new Term(field, k)) : new TermQuery(new Term(k)))
                             .ToArray();
             
@@ -93,6 +110,10 @@ namespace Orchard.Core.Indexing.Lucene {
         }
 
         private Query CreateQuery() {
+            if(!String.IsNullOrWhiteSpace(_parse)) {
+                return new QueryParser(DefaultIndexProvider.LuceneVersion, "body", DefaultIndexProvider.CreateAnalyzer()).Parse(_parse);    
+            }
+
             var query = new BooleanQuery();
 
             if ( _fields.Keys.Count > 0 ) {  // apply specific filters if defined
