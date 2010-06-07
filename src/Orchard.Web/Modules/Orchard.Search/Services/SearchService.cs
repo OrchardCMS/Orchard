@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using Orchard.Collections;
 using Orchard.Indexing;
 using Orchard.Localization;
 using Orchard.Search.Models;
@@ -27,23 +29,27 @@ namespace Orchard.Search.Services
             get { return _indexManager.HasIndexProvider(); }
         }
 
-        ISearchResult ISearchService.Query(string query, int skip, int? take) {
+        IPageOfItems<T> ISearchService.Query<T>(string query, int page, int? pageSize, Func<ISearchHit, T> shapeResult) {
             if (string.IsNullOrWhiteSpace(query) || !_indexManager.HasIndexProvider())
                 return null;
 
-            var searchBuilder =  _indexManager.GetSearchIndexProvider().CreateSearchBuilder(SearchIndexName)
+            var searchBuilder = _indexManager.GetSearchIndexProvider().CreateSearchBuilder(SearchIndexName)
                 .WithField("title", query)
                 .WithField("body", query);
 
             var totalCount = searchBuilder.Count();
-            if (take != null)
+            if (pageSize != null)
                 searchBuilder = searchBuilder
-                    .Slice(skip, (int)take);
+                    .Slice((page > 0 ? page - 1 : 0) * (int)pageSize, (int)pageSize);
 
-            return new SearchResult {
-                Page = searchBuilder.Search(),
-                TotalCount = totalCount
+
+            var pageOfItems = new PageOfItems<T>(searchBuilder.Search().Select(shapeResult)) {
+                PageNumber = page,
+                PageSize = pageSize != null ? (int) pageSize : totalCount,
+                TotalItemCount = totalCount
             };
+
+            return pageOfItems;
         }
         
         void ISearchService.RebuildIndex() {

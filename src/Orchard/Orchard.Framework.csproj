@@ -130,6 +130,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Collections\IPageOfItems.cs" />
+    <Compile Include="Collections\PageOfItems.cs" />
     <Compile Include="ContentManagement\Aspects\ICommonAspect.cs">
       <SubType>Code</SubType>
     </Compile>
