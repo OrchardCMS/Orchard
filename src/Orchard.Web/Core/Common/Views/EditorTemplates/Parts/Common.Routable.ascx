@@ -24,7 +24,8 @@
                 url:"<%=Url.Slugify() %>",
                 contentType:"<%=Model.RoutableAspect.ContentItem.ContentType %>",
                 id:"<%=Model.RoutableAspect.ContentItem.Id %>"<%
-                var container = Model.RoutableAspect.ContentItem.As<ICommonAspect>().Container;
+                var commonAspect = Model.RoutableAspect.ContentItem.As<ICommonAspect>();
+                var container = commonAspect != null ? commonAspect.Container : null;
                 if (container != null) { %>,
                 containerId:<%=container.ContentItem.Id %><%
                 } %>

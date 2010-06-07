@@ -86,6 +86,12 @@
     <Compile Include="Common\ViewModels\BodyEditorViewModel.cs" />
     <Compile Include="Common\ViewModels\RoutableEditorViewModel.cs" />
     <Compile Include="Common\ViewModels\OwnerEditorViewModel.cs" />
+    <Compile Include="Contents\AdminMenu.cs" />
+    <Compile Include="Contents\Controllers\AdminController.cs" />
+    <Compile Include="Contents\ViewModels\CreateItemViewModel.cs" />
+    <Compile Include="Contents\ViewModels\ContentTypeListViewModel.cs" />
+    <Compile Include="Contents\ViewModels\EditItemViewModel.cs" />
+    <Compile Include="Contents\ViewModels\ListContentViewModel.cs" />
     <Compile Include="Dashboard\AdminMenu.cs" />
     <Compile Include="Dashboard\Controllers\AdminController.cs" />
     <Compile Include="Dashboard\Routes.cs" />
@@ -179,6 +185,13 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Common\Module.txt" />
+    <Content Include="Contents\Module.txt" />
+    <Content Include="Contents\Views\Admin\Types.aspx" />
+    <Content Include="Contents\Views\Admin\List.aspx" />
+    <Content Include="Contents\Views\Admin\Edit.aspx" />
+    <Content Include="Contents\Views\Admin\CreatableTypeList.aspx" />
+    <Content Include="Contents\Views\Admin\Create.aspx" />
+    <Content Include="Contents\Views\EditorTemplates\Items\Contents.Item.ascx" />
     <Content Include="Indexing\Module.txt" />
     <Content Include="Settings\Module.txt" />
     <Content Include="Settings\Views\Admin\Index.ascx" />
@@ -231,6 +244,7 @@
   <ItemGroup>
     <None Include="App_Data\Localization\en-US\orchard.core.po" />
     <None Include="App_Data\Localization\fr-FR\orchard.core.po" />
+    <Content Include="Contents\Views\Web.config" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />
