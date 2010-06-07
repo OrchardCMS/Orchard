@@ -125,10 +125,9 @@
     <Compile Include="Indexing\Services\CreateIndexingTaskHandler.cs" />
     <Compile Include="Indexing\Services\IndexingTaskExecutor.cs" />
     <Compile Include="Indexing\Services\IndexingTaskManager.cs" />
+    <Compile Include="Localization\Handlers\LocalizedHandler.cs" />
     <Compile Include="Localization\Models\Localized.cs" />
     <Compile Include="Localization\Models\LocalizedRecord.cs" />
-    <Compile Include="Localization\Services\ContentItemLocalizationService.cs" />
-    <Compile Include="Localization\Services\IContentItemLocalizationService.cs" />
     <Compile Include="Navigation\AdminMenu.cs" />
     <Compile Include="Navigation\Controllers\AdminController.cs" />
     <Compile Include="Navigation\Models\MenuItem.cs" />

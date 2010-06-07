@@ -47,11 +47,8 @@ namespace Orchard.Localization.Services {
             return String.Empty;
         }
 
-        public int GetCultureIdByName(string cultureName) {
-            if (!IsValidCulture(cultureName)) {
-                throw new ArgumentException("cultureName");
-            }
-            return _cultureRepository.Get(x => x.Culture == cultureName).Id;
+        public CultureRecord GetCultureById(int id) {
+            return _cultureRepository.Get(id);
         }
 
         // "<languagecode2>" or
