@@ -173,9 +173,9 @@ namespace Orchard.Setup.Services {
                     }
 
                     var contentDefinitionManager = environment.Resolve<IContentDefinitionManager>();
-                    contentDefinitionManager.AlterTypeDefinition("blogpost", cfg => cfg.WithPart("HasComments").WithPart("HasTags"));
-                    contentDefinitionManager.AlterTypeDefinition("page", cfg => cfg.WithPart("HasComments").WithPart("HasTags"));
-                    contentDefinitionManager.AlterTypeDefinition("sandboxpage", cfg => cfg.WithPart("HasComments").WithPart("HasTags"));
+                    contentDefinitionManager.AlterTypeDefinition("blogpost", cfg => cfg.WithPart("HasComments").WithPart("HasTags").WithPart("Localized"));
+                    contentDefinitionManager.AlterTypeDefinition("page", cfg => cfg.WithPart("HasComments").WithPart("HasTags").WithPart("Localized"));
+                    contentDefinitionManager.AlterTypeDefinition("sandboxpage", cfg => cfg.WithPart("HasComments").WithPart("HasTags").WithPart("Localized"));
                 }
                 catch {
                     environment.Resolve<ITransactionManager>().Cancel();
