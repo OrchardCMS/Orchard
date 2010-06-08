@@ -23,7 +23,7 @@
 	<div class="home-hero-container">
 	    <div class="home-hero">
 	        <%-- Init jQuery Slider --%>
-	        <script src="/Themes/Contoso/Scripts/easySlider.js" type="text/javascript"></script>
+            <script src="<%= Url.Content("~/Themes/Contoso/Scripts/easySlider.js") %>" type="text/javascript"></script>
             <script type="text/javascript">
                 $(document).ready(function() {
                     $("#slider").easySlider({

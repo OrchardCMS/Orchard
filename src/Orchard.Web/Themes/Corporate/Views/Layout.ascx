@@ -32,7 +32,7 @@
             <%-- Content Hero --%>
 	        <div class="main-box">
                 <div class="top">
-                     <img src="/Themes/Corporate/Content/Images/content-top.png" /></div>
+                   <img src="<%= Url.Content("~/Themes/Corporate/Content/Images/content-top.png") %>" /></div>
 	                <div class="content">
                         <div class="subpage group">
                             <div class="sub-content">
@@ -57,7 +57,7 @@
                     
 		            </div>
 	            <div class="bottom">
-                    <img src="/Themes/Corporate/Content/Images/content-bottom.png" /></div>
+                   <img src="<%= Url.Content("~/Themes/Corporate/Content/Images/content-bottom.png") %>" /></div>
 	        </div>
 
         </div>
