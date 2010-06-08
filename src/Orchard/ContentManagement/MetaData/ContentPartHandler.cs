@@ -14,14 +14,15 @@ namespace Orchard.ContentManagement.MetaData {
         }
 
         public override void Activating(ActivatingContentContext context) {
-            var contentTypeRecord = _contentDefinitionManager.GetTypeDefinition(context.ContentType);
-            if (contentTypeRecord == null)
+            var contentTypeDefinition = _contentDefinitionManager.GetTypeDefinition(context.ContentType);
+            if (contentTypeDefinition == null)
                 return;
 
-            foreach(var partInfo in _contentPartDrivers.SelectMany(cpp => cpp.GetPartInfo())) {
+            foreach (var partInfo in _contentPartDrivers.SelectMany(cpp => cpp.GetPartInfo())) {
                 var partName = partInfo.PartName;
-                if (contentTypeRecord.Parts.Any(p=>p.PartDefinition.Name == partName)) {
-                    context.Builder.Weld(partInfo.Factory());
+                var typePartDefinition = contentTypeDefinition.Parts.FirstOrDefault(p => p.PartDefinition.Name == partName);
+                if (typePartDefinition != null) {
+                    context.Builder.Weld(partInfo.Factory(typePartDefinition));
                 }
             }
         }

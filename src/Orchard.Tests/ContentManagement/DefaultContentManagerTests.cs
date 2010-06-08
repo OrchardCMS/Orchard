@@ -2,8 +2,11 @@
 using System.Diagnostics;
 using System.Linq;
 using Autofac;
+using Moq;
 using NHibernate;
 using NUnit.Framework;
+using Orchard.ContentManagement.MetaData;
+using Orchard.ContentManagement.MetaData.Builders;
 using Orchard.Data;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Handlers;
@@ -18,6 +21,7 @@ namespace Orchard.Tests.ContentManagement {
         private IContentManager _manager;
         private ISessionFactory _sessionFactory;
         private ISession _session;
+        private Mock<IContentDefinitionManager> _contentDefinitionManager;
 
         [TestFixtureSetUp]
         public void InitFixture() {
@@ -39,10 +43,12 @@ namespace Orchard.Tests.ContentManagement {
 
         [SetUp]
         public void Init() {
+            _contentDefinitionManager = new Mock<IContentDefinitionManager>();
+
             var builder = new ContainerBuilder();
-            //builder.RegisterModule(new ImplicitCollectionSupportModule());
             builder.RegisterType<DefaultContentManager>().As<IContentManager>();
             builder.RegisterType<DefaultContentManagerSession>().As<IContentManagerSession>();
+            builder.RegisterInstance(_contentDefinitionManager.Object);
 
             builder.RegisterType<AlphaHandler>().As<IContentHandler>();
             builder.RegisterType<BetaHandler>().As<IContentHandler>();
@@ -459,6 +465,40 @@ namespace Orchard.Tests.ContentManagement {
             Assert.That(gammas[3].Version, Is.EqualTo(4));
         }
 
+        [Test]
+        public void EmptyTypeDefinitionShouldBeCreatedIfNotAlreadyDefined() {
+            var contentItem = _manager.New("no-such-type");
+            Assert.That(contentItem.ContentType, Is.EqualTo("no-such-type"));
+            Assert.That(contentItem.TypeDefinition, Is.Not.Null);
+            Assert.That(contentItem.TypeDefinition.Name, Is.EqualTo("no-such-type"));
+            Assert.That(contentItem.TypeDefinition.Settings.Count(), Is.EqualTo(0));
+            Assert.That(contentItem.TypeDefinition.Parts.Count(), Is.EqualTo(0));
+        }
+
+
+        [Test]
+        public void ExistingTypeAndPartDefinitionShouldBeUsed() {
+            var alphaType = new ContentTypeDefinitionBuilder()
+                .Named("alpha")
+                .WithSetting("x", "1")
+                .WithPart("foo")
+                .WithPart("Flavored", part => part.WithSetting("spin", "clockwise"))
+                .Build();
+
+            _contentDefinitionManager
+                .Setup(x => x.GetTypeDefinition("alpha"))
+                .Returns(alphaType);
+
+            var contentItem = _manager.New("alpha");
+            Assert.That(contentItem.ContentType, Is.EqualTo("alpha"));
+            Assert.That(contentItem.TypeDefinition, Is.Not.Null);
+            Assert.That(contentItem.TypeDefinition, Is.SameAs(alphaType));
+
+            var flavored = contentItem.As<Flavored>();
+            Assert.That(flavored, Is.Not.Null);
+            Assert.That(flavored.TypePartDefinition, Is.Not.Null);
+            Assert.That(flavored.TypePartDefinition.Settings["spin"], Is.EqualTo("clockwise"));
+        }
     }
 }
 

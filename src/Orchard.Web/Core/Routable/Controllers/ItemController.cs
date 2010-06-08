@@ -24,6 +24,7 @@ namespace Orchard.Core.Routable.Controllers {
             if (string.IsNullOrEmpty(matchedPath)) {
                 throw new ApplicationException("404 - should not have passed path constraint");
             }
+
             var hits = _contentManager
                 .Query<IsRoutable, RoutableRecord>(VersionOptions.Published)
                 .Where(r => r.Path == matchedPath)

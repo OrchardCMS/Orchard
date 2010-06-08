@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using Autofac;
 using Orchard.ContentManagement.Handlers;
+using Orchard.ContentManagement.MetaData;
+using Orchard.ContentManagement.MetaData.Builders;
+using Orchard.ContentManagement.MetaData.Models;
 using Orchard.ContentManagement.Records;
 using Orchard.Data;
 using Orchard.Mvc.ViewModels;
@@ -13,6 +16,7 @@ namespace Orchard.ContentManagement {
         private readonly IRepository<ContentTypeRecord> _contentTypeRepository;
         private readonly IRepository<ContentItemRecord> _contentItemRepository;
         private readonly IRepository<ContentItemVersionRecord> _contentItemVersionRepository;
+        private readonly IContentDefinitionManager _contentDefinitionManager;
         private readonly Func<IContentManagerSession> _contentManagerSession;
 
         public DefaultContentManager(
@@ -20,11 +24,13 @@ namespace Orchard.ContentManagement {
             IRepository<ContentTypeRecord> contentTypeRepository,
             IRepository<ContentItemRecord> contentItemRepository,
             IRepository<ContentItemVersionRecord> contentItemVersionRepository,
+            IContentDefinitionManager contentDefinitionManager,
             Func<IContentManagerSession> contentManagerSession) {
             _context = context;
             _contentTypeRepository = contentTypeRepository;
             _contentItemRepository = contentItemRepository;
             _contentItemVersionRepository = contentItemVersionRepository;
+            _contentDefinitionManager = contentDefinitionManager;
             _contentManagerSession = contentManagerSession;
         }
 
@@ -44,11 +50,16 @@ namespace Orchard.ContentManagement {
         }
 
         public virtual ContentItem New(string contentType) {
+            var contentTypeDefinition = _contentDefinitionManager.GetTypeDefinition(contentType);
+            if (contentTypeDefinition == null) {
+                contentTypeDefinition = new ContentTypeDefinitionBuilder().Named(contentType).Build();
+            }
 
             // create a new kernel for the model instance
             var context = new ActivatingContentContext {
-                ContentType = contentType,
-                Builder = new ContentItemBuilder(contentType)
+                ContentType = contentTypeDefinition.Name,
+                Definition = contentTypeDefinition,
+                Builder = new ContentItemBuilder(contentTypeDefinition)
             };
 
             // invoke handlers to weld aspects onto kernel
@@ -337,16 +348,16 @@ namespace Orchard.ContentManagement {
                 handler.Created(context);
             }
 
-            if(options.IsPublished) {
+            if (options.IsPublished) {
                 var publishContext = new PublishContentContext(contentItem, null);
 
                 // invoke handlers to acquire state, or at least establish lazy loading callbacks
-                foreach ( var handler in Handlers ) {
+                foreach (var handler in Handlers) {
                     handler.Publishing(publishContext);
                 }
 
                 // invoke handlers to acquire state, or at least establish lazy loading callbacks
-                foreach ( var handler in Handlers ) {
+                foreach (var handler in Handlers) {
                     handler.Published(publishContext);
                 }
             }

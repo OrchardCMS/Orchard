@@ -2,10 +2,12 @@
 using System.Collections.Generic;
 using Autofac;
 using JetBrains.Annotations;
+using Moq;
 using NUnit.Framework;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
 using Orchard.ContentManagement.Handlers;
+using Orchard.ContentManagement.MetaData;
 using Orchard.ContentManagement.Records;
 using Orchard.Core.Common.Models;
 using Orchard.Core.Common.Services;
@@ -27,6 +29,7 @@ namespace Orchard.Core.Tests.Common.Services {
         public override void Register(ContainerBuilder builder) {
             builder.RegisterType<DefaultContentManager>().As<IContentManager>();
             builder.RegisterType<DefaultContentManagerSession>().As<IContentManagerSession>();
+            builder.RegisterInstance(new Mock<IContentDefinitionManager>().Object);
 
             builder.RegisterType<ThingHandler>().As<IContentHandler>();
             builder.RegisterType<StuffHandler>().As<IContentHandler>();
