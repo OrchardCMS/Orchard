@@ -63,6 +63,7 @@ namespace Orchard.Search.Services
                 searchProvider.DeleteIndex(SearchIndexName);
 
             searchProvider.CreateIndex(SearchIndexName); // or just reset the updated date and let the background process recreate the index
+
             Services.Notifier.Information(T("The search index has been rebuilt."));
         }
 
