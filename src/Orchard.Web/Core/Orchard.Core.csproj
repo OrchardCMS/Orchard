@@ -70,6 +70,7 @@
     <Compile Include="Common\Handlers\RoutableAspectHandler.cs" />
     <Compile Include="Contents\Controllers\ItemController.cs" />
     <Compile Include="Contents\Handlers\ContentsModuleHandler.cs" />
+    <Compile Include="Localization\Drivers\LocalizedDriver.cs" />
     <Compile Include="Routable\Controllers\ItemController.cs" />
     <Compile Include="Routable\Drivers\RoutableDriver.cs" />
     <Compile Include="Routable\Handlers\RoutableHandler.cs" />
