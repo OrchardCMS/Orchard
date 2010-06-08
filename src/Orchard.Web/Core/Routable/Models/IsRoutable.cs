@@ -1,10 +1,9 @@
-using Orchard.ContentManagement;
+﻿using Orchard.ContentManagement;
 using Orchard.ContentManagement.Aspects;
+using Orchard.Core.Common.Models;
 
-namespace Orchard.Core.Common.Models {
-    public class RoutableAspect : ContentPart<RoutableRecord>, IRoutableAspect {
-        public string ContentItemBasePath { get; set; }
-
+namespace Orchard.Core.Routable.Models {
+    public class IsRoutable : ContentPart<RoutableRecord>, IRoutableAspect {
         public string Title {
             get { return Record.Title; }
             set { Record.Title = value; }
@@ -14,5 +13,6 @@ namespace Orchard.Core.Common.Models {
             get { return Record.Slug; }
             set { Record.Slug = value; }
         }
+    
     }
 }

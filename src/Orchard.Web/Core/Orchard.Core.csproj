@@ -68,6 +68,13 @@
     <Compile Include="Common\Drivers\RoutableDriver.cs" />
     <Compile Include="Common\Controllers\RoutableController.cs" />
     <Compile Include="Common\Handlers\RoutableAspectHandler.cs" />
+    <Compile Include="Contents\Controllers\ItemController.cs" />
+    <Compile Include="Contents\Handlers\ContentsModuleHandler.cs" />
+    <Compile Include="Routable\Controllers\ItemController.cs" />
+    <Compile Include="Routable\Drivers\RoutableDriver.cs" />
+    <Compile Include="Routable\Handlers\RoutableHandler.cs" />
+    <Compile Include="Routable\IRoutablePathConstraint.cs" />
+    <Compile Include="Routable\Models\IsRoutable.cs" />
     <Compile Include="Common\Permissions.cs" />
     <Compile Include="Common\Models\CommonVersionRecord.cs" />
     <Compile Include="Common\Routes.cs" />
@@ -145,6 +152,10 @@
     <Compile Include="Navigation\ViewModels\MenuItemEntry.cs" />
     <Compile Include="Navigation\ViewModels\NavigationManagementViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Routable\Routes.cs" />
+    <Compile Include="Routable\Services\RoutablePathConstraint.cs" />
+    <Compile Include="Routable\Services\RoutablePathConstraintUpdator.cs" />
+    <Compile Include="Routable\ViewModels\RoutableDisplayViewModel.cs" />
     <Compile Include="Scheduling\Models\ScheduledTaskRecord.cs" />
     <Compile Include="Scheduling\Services\PublishingTaskHandler.cs" />
     <Compile Include="Scheduling\Services\PublishingTaskManager.cs" />
@@ -194,9 +205,14 @@
     <Content Include="Contents\Views\Admin\Edit.aspx" />
     <Content Include="Contents\Views\Admin\CreatableTypeList.aspx" />
     <Content Include="Contents\Views\Admin\Create.aspx" />
+    <Content Include="Contents\Views\DisplayTemplates\Items\Contents.Item.ascx" />
     <Content Include="Contents\Views\EditorTemplates\Items\Contents.Item.ascx" />
+    <Content Include="Contents\Views\Item\Preview.aspx" />
+    <Content Include="Contents\Views\Item\Display.aspx" />
     <Content Include="Indexing\Module.txt" />
     <Content Include="Localization\Module.txt" />
+    <Content Include="Routable\Module.txt" />
+    <Content Include="Routable\Views\Item\Display.aspx" />
     <Content Include="Settings\Module.txt" />
     <Content Include="Settings\Views\Admin\Index.ascx" />
     <Content Include="Web.config" />
@@ -249,6 +265,7 @@
     <None Include="App_Data\Localization\en-US\orchard.core.po" />
     <None Include="App_Data\Localization\fr-FR\orchard.core.po" />
     <Content Include="Contents\Views\Web.config" />
+    <Content Include="Routable\Views\Web.config" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />
