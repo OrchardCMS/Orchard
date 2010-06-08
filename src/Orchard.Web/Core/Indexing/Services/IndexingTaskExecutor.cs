@@ -113,10 +113,11 @@ namespace Orchard.Core.Indexing.Services {
                 _indexProvider.SetLastIndexUtc(SearchIndexName, _clock.UtcNow);
 
                 // retrieve not yet processed tasks
-                var taskRecords = _repository.Fetch(x => x.CreatedUtc >= lastIndexing)
+                var taskRecords = _repository.Fetch(x => x.CreatedUtc > lastIndexing)
                     .ToArray();
 
-                if (taskRecords.Length == 0)
+                // nothing to do ?
+                if (taskRecords.Length + updateIndexDocuments.Count == 0)
                     return;
 
                 Logger.Information("Processing {0} indexing tasks", taskRecords.Length);
