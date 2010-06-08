@@ -155,7 +155,16 @@ namespace Orchard.Core.Indexing.Lucene {
         public IEnumerable<ISearchHit> Search() {
             var query = CreateQuery();
 
-            var searcher = new IndexSearcher(_directory, true);
+            IndexSearcher searcher;
+
+            try {
+                searcher = new IndexSearcher(_directory, true);
+            }
+            catch {
+                // index might not exist if it has been rebuilt
+                Logger.Information("Attempt to read a none existing index");
+                return Enumerable.Empty<ISearchHit>();
+            }
 
             try {
                 var sort = String.IsNullOrEmpty(_sort)
@@ -188,8 +197,17 @@ namespace Orchard.Core.Indexing.Lucene {
 
         public int Count() {
             var query = CreateQuery();
+            IndexSearcher searcher;
+            
+            try {
+                 searcher = new IndexSearcher(_directory, true);
+            }
+            catch {
+                // index might not exist if it has been rebuilt
+                Logger.Information("Attempt to read a none existing index");
+                return 0;
+            }
 
-            var searcher = new IndexSearcher(_directory, true);
             try {
                 var hits = searcher.Search(query, Int16.MaxValue);
                 Logger.Information("Search results: {0}", hits.scoreDocs.Length);

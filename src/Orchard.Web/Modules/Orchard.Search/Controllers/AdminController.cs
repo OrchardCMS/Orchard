@@ -43,6 +43,7 @@ namespace Orchard.Search.Controllers {
                 return new HttpUnauthorizedResult();
 
             _searchService.RebuildIndex();
+            _searchService.UpdateIndex();
 
             return RedirectToAction("Index");
         }
