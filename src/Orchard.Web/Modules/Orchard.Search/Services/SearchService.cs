@@ -4,7 +4,6 @@ using System.Linq;
 using Orchard.Collections;
 using Orchard.Indexing;
 using Orchard.Localization;
-using Orchard.Search.Models;
 using Orchard.UI.Notify;
 
 namespace Orchard.Search.Services

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Web.Mvc;
+﻿using System.Web.Mvc;
 using Orchard.Localization;
 using Orchard.Search.Services;
 using Orchard.Search.ViewModels;

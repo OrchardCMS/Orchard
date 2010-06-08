@@ -2,21 +2,26 @@
 <%@ Import Namespace="Orchard.Core.Settings.ViewModels"%>
 <h1><%=Html.TitleForPage(T("Manage Settings").ToString())%></h1>
 <%using (Html.BeginFormAntiForgeryPost()) { %>
-<%= Html.ValidationSummary() %>
+<%=Html.ValidationSummary() %>
 <fieldset>
-    <legend><%=_Encoded("Global Settings")%></legend>
+    <legend><%:T("Global Settings")%></legend>
     <div>
-        <label for="SiteName"><%=_Encoded("Site name") %></label>
+        <label for="SiteName"><%:T("Site name")%></label>
         <%=Html.EditorFor(m => m.SiteName)%>
         <%=Html.ValidationMessage("SiteName", "*") %>
     </div>
     <div>
-        <label for="PageTitleSeparator"><%=_Encoded("Page title separator") %></label>
+        <label for="SiteCulture"><%:T("Default Site Culture") %></label>
+        <%=Html.DropDownList("SiteCulture", new SelectList(Model.AvailableCultures, Model.SiteCulture)) %>
+        <%=Html.ValidationMessage("SiteCulture", "*") %>
+    </div>
+    <div>
+        <label for="PageTitleSeparator"><%:T("Page title separator")%></label>
         <%=Html.EditorFor(x => x.PageTitleSeparator)%>
         <%=Html.ValidationMessage("PageTitleSeparator", "*")%>
     </div>
     <div>
-        <label for="SuperUser"><%=_Encoded("Super user") %></label>
+        <label for="SuperUser"><%:T("Super user")%></label>
         <%=Html.EditorFor(x=>x.SuperUser) %>
         <%=Html.ValidationMessage("SuperUser", "*") %>
     </div>
@@ -24,6 +29,6 @@
 <%= Html.EditorForItem(Model.ViewModel) %>
 <fieldset>
     <%=Html.EditorFor(s => s.Id) %>
-    <input class="button primaryAction" type="submit" value="<%=_Encoded("Save") %>" />
+    <input class="button primaryAction" type="submit" value="<%:T("Save") %>" />
 </fieldset>
 <% } %>

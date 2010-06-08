@@ -1,6 +1,4 @@
-﻿using System;
-using System.Linq;
-using System.Web.Mvc;
+﻿using System.Web.Mvc;
 using Orchard.ContentManagement;
 using Orchard.Search.Services;
 using Orchard.Search.ViewModels;
