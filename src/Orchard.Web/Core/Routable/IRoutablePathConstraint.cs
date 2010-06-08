@@ -3,9 +3,9 @@ using System.Web.Routing;
 
 namespace Orchard.Core.Routable {
     public interface IRoutablePathConstraint : IRouteConstraint, ISingletonDependency {
-        void SetSlugs(IEnumerable<string> slugs);
-        string FindSlug(string slug);
-        void AddSlug(string slug);
-        void RemoveSlug(string slug);
+        void SetPaths(IEnumerable<string> paths);
+        string FindPath(string path);
+        void AddPath(string path);
+        void RemovePath(string path);
     }
 }

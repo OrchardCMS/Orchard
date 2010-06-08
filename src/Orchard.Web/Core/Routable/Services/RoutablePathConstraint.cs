@@ -37,15 +37,15 @@ namespace Orchard.Core.Routable.Services {
             }
         }
 
-        public void AddSlug(string slug) {
+        public void AddPath(string path) {
             lock (_syncLock) {
-                _paths[slug] = slug;
+                _paths[path] = path;
             }
         }
 
-        public void RemoveSlug(string slug) {
+        public void RemovePath(string path) {
             lock (_syncLock) {
-                _paths.Remove(slug);
+                _paths.Remove(path);
             }
         }
 

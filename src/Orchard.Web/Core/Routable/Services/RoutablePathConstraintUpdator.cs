@@ -30,7 +30,7 @@ namespace Orchard.Core.Routable.Services {
         private void Refresh() {
             var slugs = _repository.Fetch(r => r.ContentItemVersionRecord.Published && r.Path != "" && r.Path != null).Select(r => r.Path);
 
-            _pageSlugConstraint.SetSlugs(slugs);
+            _pageSlugConstraint.SetPaths(slugs);
         }
     }
 }
