@@ -13,7 +13,7 @@ namespace Orchard.Core.Routable.Services {
         /// Singleton object, per Orchard Shell instance. We need to protect concurrent access to the dictionary.
         /// </summary>
         private readonly object _syncLock = new object();
-        private IDictionary<string, string> _slugs = new Dictionary<string, string>();
+        private IDictionary<string, string> _paths = new Dictionary<string, string>();
 
         public RoutablePathConstraint() {
             Logger = NullLogger.Instance;
@@ -21,31 +21,31 @@ namespace Orchard.Core.Routable.Services {
 
         public ILogger Logger { get; set; }
 
-        public void SetSlugs(IEnumerable<string> slugs) {
+        public void SetPaths(IEnumerable<string> paths) {
             // Make a copy to avoid performing potential lazy computation inside the lock
-            var slugsArray = slugs.ToArray();
+            var slugsArray = paths.ToArray();
 
             lock (_syncLock) {
-                _slugs = slugsArray.Distinct(StringComparer.OrdinalIgnoreCase).ToDictionary(value => value, StringComparer.OrdinalIgnoreCase);
+                _paths = slugsArray.Distinct(StringComparer.OrdinalIgnoreCase).ToDictionary(value => value, StringComparer.OrdinalIgnoreCase);
             }
         }
 
-        public string FindSlug(string slug) {
+        public string FindPath(string path) {
             lock (_syncLock) {
                 string actual;
-                return _slugs.TryGetValue(slug, out actual) ? actual : slug;
+                return _paths.TryGetValue(path, out actual) ? actual : path;
             }
         }
 
         public void AddSlug(string slug) {
             lock (_syncLock) {
-                _slugs[slug] = slug;
+                _paths[slug] = slug;
             }
         }
 
         public void RemoveSlug(string slug) {
             lock (_syncLock) {
-                _slugs.Remove(slug);
+                _paths.Remove(slug);
             }
         }
 
@@ -58,7 +58,7 @@ namespace Orchard.Core.Routable.Services {
                 var parameterValue = Convert.ToString(value);
 
                 lock (_syncLock) {
-                    return _slugs.ContainsKey(parameterValue);
+                    return _paths.ContainsKey(parameterValue);
                 }
             }
 

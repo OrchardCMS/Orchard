@@ -16,6 +16,7 @@ namespace Orchard.Core.Routable.Drivers {
             part.Record.Path = "routable" + part.ContentItem.Id;
             return base.Editor(part, updater);
         }
+
         //private const string TemplateName = "Parts/Common.Routable";
 
         //private readonly IOrchardServices _services;
