@@ -1,3 +1,6 @@
+using System;
+using System.Globalization;
+using System.Linq;
 using System.Web;
 using Orchard.Localization.Services;
 using Orchard.Logging;
@@ -23,9 +26,25 @@ namespace Orchard.Localization {
             string currentCulture = _cultureManager.GetCurrentCulture(HttpContext.Current);
             var localizedFormat = _resourceManager.GetLocalizedString(_scope, textHint, currentCulture);
 
-            return args.Length < 1
-                ? new LocalizedString(localizedFormat)
-                : new LocalizedString(string.Format(localizedFormat, args));
+            return args.Length == 0 
+                ? new LocalizedString(localizedFormat) 
+                : string.Format(GetFormatProvider(currentCulture), localizedFormat, args.Select(Encode).ToArray());
+        }
+
+        private static IFormatProvider GetFormatProvider(string currentCulture) {
+            try {
+                return CultureInfo.GetCultureInfoByIetfLanguageTag(currentCulture);
+            }
+            catch {
+                return null;
+            }
+        }
+
+        static object Encode(object arg) {
+            if (arg is IFormattable || arg is IHtmlString) {
+                return arg;
+            }
+            return HttpUtility.HtmlEncode(arg);
         }
     }
 }
