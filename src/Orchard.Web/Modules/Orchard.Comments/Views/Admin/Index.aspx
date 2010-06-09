@@ -60,11 +60,11 @@
                 <td><% if (commentEntry.Comment.Status == CommentStatus.Spam) { %><%=_Encoded("Spam") %><% } 
                        else if (commentEntry.Comment.Status == CommentStatus.Pending) { %><%=_Encoded("Pending") %><% } 
                        else { %><%=_Encoded("Approved") %><% } %></td>
-                <td><%=Html.Encode(commentEntry.Comment.UserName) %></td>
+                <td><%: commentEntry.Comment.UserName %></td>
                 <td>
                 <% if (commentEntry.Comment.CommentText != null) {%>
                     <%-- todo: (heskew) same text processing comment as on the public display, also need to use the ellipsis character instead of ... --%>
-                    <%=Html.Encode(commentEntry.Comment.CommentText.Length > 23 ? commentEntry.Comment.CommentText.Substring(0, 24) : commentEntry.Comment.CommentText) %><%=_Encoded(" ...") %>
+                    <%: commentEntry.Comment.CommentText.Length > 23 ? commentEntry.Comment.CommentText.Substring(0, 24) : commentEntry.Comment.CommentText %><%=_Encoded(" ...") %>
                 <% } %> 
                 </td>
                 <td><%=Html.DateTime(commentEntry.Comment.CommentDateUtc.GetValueOrDefault()) %></td>

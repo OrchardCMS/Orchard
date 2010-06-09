@@ -18,7 +18,7 @@
         <%= Html.ValidationSummary() %>
         <div class="primary">
 		    <div>
-		    <img src="<%=Model.PublicUrl%>" class="previewImage" alt="<%=Html.Encode(Model.Caption) %>" />
+		    <img src="<%=Model.PublicUrl%>" class="previewImage" alt="<%: Model.Caption %>" />
 		    </div>
 		    <fieldset>
 		        <%-- todo: make these real (including markup) --%>
@@ -37,8 +37,8 @@
 			  
                 <div>
                     <label for="Name"><%=_Encoded("Name")%></label>
-			        <input id="Name" name="Name" type="hidden" value="<%=Html.Encode(Model.Name) %>"/>
-			        <input id="NewName" class="textMedium" name="NewName" type="text" value="<%=Html.Encode(Model.Name) %>"/>
+			        <input id="Name" name="Name" type="hidden" value="<%: Model.Name %>"/>
+			        <input id="NewName" class="textMedium" name="NewName" type="text" value="<%: Model.Name %>"/>
 			    </div>
                 <div>
 			        <label for="Caption"><%=_Encoded("Caption")%></label>
@@ -57,7 +57,7 @@
 	    </div>
 	    <%--<div class="secondary" style="border:1px solid #ff0000;">
 		    <h2><%=_Encoded("Preview")%></h2>
-		    <div><img src="<%=ResolveUrl("~/Media/" + Html.Encode(Model.RelativePath + "/" + Model.Name))%>" class="previewImage" alt="<%=Html.Encode(Model.Caption) %>" /></div>
+		    <div><img src="<%=ResolveUrl("~/Media/" + Html.Encode(Model.RelativePath + "/" + Model.Name))%>" class="previewImage" alt="<%: Model.Caption %>" /></div>
 		    <ul>
 		        <%-- todo: make these real (including markup) 
 			    <li><label><%=T("Dimensions: <span>500 x 375 pixels</span>")%></label></li>

@@ -70,7 +70,7 @@
                 </td>
                 <td><%=_Encoded("Orchard User")%></td>
                 <td><%=mediaFile.LastUpdated %></td>
-                <td><%=Html.Encode(mediaFile.Type) %></td>
+                <td><%: mediaFile.Type %></td>
                 <td><%=mediaFile.Size %></td>
             </tr>
             <%}%>
@@ -79,7 +79,7 @@
             <tr>
                 <td>
                     <input type="checkbox" value="true" name="<%=_Encoded("Checkbox.Folder.{0}", mediaFolder.Name)  %>"/>
-                    <input type="hidden" value="<%=Html.Encode(mediaFolder.MediaPath) %>" name="<%=Html.Encode(mediaFolder.Name) %>" />
+                    <input type="hidden" value="<%: mediaFolder.MediaPath %>" name="<%: mediaFolder.Name %>" />
                 </td>
                 <td>
                     <img src="<%=ResolveUrl("~/Modules/Orchard.Media/Content/Admin/images/folder.gif")%>" height="16" width="16" class="mediaTypeIcon" alt="<%=_Encoded("Folder") %>" />

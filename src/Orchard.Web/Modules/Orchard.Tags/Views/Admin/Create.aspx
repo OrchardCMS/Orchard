@@ -5,7 +5,7 @@
     <%=Html.ValidationSummary() %>
     <fieldset>
         <label for="TagName"><%=_Encoded("Name:")%></label>
-	    <input id="TagName" class="text" name="TagName" type="text" value="<%=Html.Encode(Model.TagName) %>" />
+	    <input id="TagName" class="text" name="TagName" type="text" value="<%: Model.TagName %>" />
         <input type="submit" class="button" value="<%=_Encoded("Save") %>" />
     </fieldset>
 <% } %>

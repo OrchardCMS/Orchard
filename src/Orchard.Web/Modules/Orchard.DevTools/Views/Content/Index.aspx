@@ -4,7 +4,7 @@
 <h2><%=_Encoded("Content Types")%></h2>
 <ul>
 <%foreach(var item in Model.Types.OrderBy(x=>x.Name)){%>
-    <li><%=Html.Encode(item.Name) %></li>
+    <li><%: item.Name %></li>
 <%}%>
 </ul>
 <h2><%=_Encoded("Content Items")%></h2>

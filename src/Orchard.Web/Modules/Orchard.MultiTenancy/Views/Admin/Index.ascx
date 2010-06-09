@@ -9,7 +9,7 @@
     <li class="tenant <%=tenant.State.CurrentState %>">
         <div class="summary">
             <div class="properties">
-                <h3><span class="tenantName"><%=Html.Encode(tenant.Name) %></span><%
+                <h3><span class="tenantName"><%: tenant.Name %></span><%
                     if (!string.IsNullOrEmpty(tenant.RequestUrlHost)) {
                          %><span class="tenantHost"> - <%=Html.Link(Url.Tenant(tenant), Url.Tenant(tenant))%></span><%
                     } %></h3>

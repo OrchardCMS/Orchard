@@ -21,7 +21,7 @@
         //temporarily "disable" actions on core features
         var showActions = categoryName.ToString() != "Core"; %>
     <li class="<%=categoryClassName %>">
-        <h2><%=Html.Encode(categoryName) %></h2>
+        <h2><%: categoryName %></h2>
         <ul><%
             var features = featureGroup.OrderBy(f => f.Descriptor.Name);
             foreach (var feature in features) {

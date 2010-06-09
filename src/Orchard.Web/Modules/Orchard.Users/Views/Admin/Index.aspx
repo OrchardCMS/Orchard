@@ -22,10 +22,10 @@
                { %>
             <tr>
                 <td>
-                    <%=Html.Encode(row.User.UserName)%>
+                    <%: row.User.UserName %>
                 </td>
                 <td>
-                    <%=Html.Encode(row.User.Email)%>
+                    <%: row.User.Email %>
                 </td>
                 <td>
                     <%=Html.ActionLink(T("Edit").ToString(), "Edit", new { row.User.Id })%> | 

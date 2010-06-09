@@ -7,7 +7,7 @@
     <%=Html.ValidationSummary() %>
     <fieldset>
         <div>
-            <h2><%=Html.Encode(Model.Name) %></h2>
+            <h2><%: Model.Name %></h2>
         </div>
         <div>
             <label for="RequestUrlHost"><%=_Encoded("Host") %></label>

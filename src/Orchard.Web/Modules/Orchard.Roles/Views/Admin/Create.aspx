@@ -6,7 +6,7 @@
     <fieldset>
 	    <legend><%=_Encoded("Information") %></legend>
 	    <label for="pageTitle"><%=_Encoded("Role Name:") %></label>
-	    <input id="Name" class="text" name="Name" type="text" value="<%=Html.Encode(Model.Name) %>" />
+	    <input id="Name" class="text" name="Name" type="text" value="<%: Model.Name %>" />
     </fieldset>
     <fieldset>
         <legend><%=_Encoded("Permissions") %></legend>
@@ -26,7 +26,7 @@
                 </thead>
                 <% foreach (var permission in Model.ModulePermissions[moduleName]) { %>
                 <tr>
-                    <td><%=Html.Encode(permission.Description) %></td>
+                    <td><%: permission.Description %></td>
                     <td style="width:60px;/* todo: (heskew) make not inline :( */"><input type="checkbox" value="true" name="<%=_Encoded("Checkbox.{0}", permission.Name) %>"/></td>
                 </tr>
                 <% } %>

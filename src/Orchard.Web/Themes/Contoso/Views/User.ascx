@@ -2,7 +2,7 @@
 <ul class="admin group">
     <% if (Request.IsAuthenticated)
        { %>
-        <li><%=_Encoded("Welcome")%> <%=Html.Encode(Page.User.Identity.Name) %></li>
+        <li><%=_Encoded("Welcome")%> <%: Page.User.Identity.Name %></li>
         <li><%=Html.ActionLink(T("Log Off").ToString(), "LogOff", new { Controller = "Account", Area = "Orchard.Users" })%></li>
         <li><%= Html.ActionLink("Admin", "Index", new {Area = "Dashboard", Controller = "Admin"})%></li>
     <% }

@@ -17,7 +17,7 @@
     <fieldset>
         <label for="Name"><%=_Encoded("Folder Name") %></label>
 		<input id="Name" class="textMedium" name="Name" type="text" />
-	    <input type="hidden" id="MediaPath" name="MediaPath" value="<%=Html.Encode(Model.MediaPath) %>" />
+	    <input type="hidden" id="MediaPath" name="MediaPath" value="<%: Model.MediaPath %>" />
     </fieldset>
 	<fieldset>
 	    <input type="submit" class="button primaryAction" value="<%=_Encoded("Save") %>" />

@@ -19,8 +19,8 @@
         <label for="pageTitle"><%=T("File Path <span> - multiple files must be in a zipped folder</span>")%></label>
         <input id="MediaItemPath" name="MediaItemPath" type="file" class="text" value="<%=_Encoded("Browse") %>" size="64"/>
 		<span class="hint"><%=_Encoded("After your files have been uploaded, you can edit the titles and descriptions.")%></span>
-        <input type="hidden" id="FolderName" name="FolderName" value="<%=Html.Encode(Model.FolderName) %>" />
-        <input type="hidden" id="MediaPath" name="MediaPath" value="<%=Html.Encode(Model.MediaPath) %>" />
+        <input type="hidden" id="FolderName" name="FolderName" value="<%: Model.FolderName %>" />
+        <input type="hidden" id="MediaPath" name="MediaPath" value="<%: Model.MediaPath %>" />
     </fieldset>
     <fieldset>
 		<input type="submit" class="button primaryAction" value="<%=_Encoded("Upload") %>" />

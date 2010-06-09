@@ -60,7 +60,7 @@ using (Html.BeginFormAntiForgeryPost(Url.Action("Save",new {id=Model.SelectedCon
             <input name="<%="part_" + item.Name%>" type="checkbox" /><%}%>
             </td>
             <td class="ContentTypePartListRowItem">
-                <%= Html.Encode(item.Name)%>
+                <%: item.Name %>
             </td>
         </tr>
     

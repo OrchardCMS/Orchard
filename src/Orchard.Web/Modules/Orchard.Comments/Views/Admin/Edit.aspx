@@ -7,21 +7,21 @@
     <fieldset class="who">
         <div>
             <label for="Name"><%=_Encoded("Name") %></label>
-            <input id="Name" class="text" name="Name" type="text" value="<%=Html.Encode(Model.Name) %>" />
+            <input id="Name" class="text" name="Name" type="text" value="<%: Model.Name %>" />
         </div>
         <div>
             <label for="Email"><%=_Encoded("Email") %></label>
-            <input id="Email" class="text" name="Email" type="text" value="<%=Html.Encode(Model.Email)%>" />				
+            <input id="Email" class="text" name="Email" type="text" value="<%: Model.Email %>" />				
         </div>
         <div>
             <label for="SiteName"><%=_Encoded("Url") %></label>
-            <input id="SiteName" class="text" name="SiteName" type="text" value="<%=Html.Encode(Model.SiteName) %>" />
+            <input id="SiteName" class="text" name="SiteName" type="text" value="<%: Model.SiteName %>" />
         </div>
     </fieldset>
     <fieldset class="what">
         <div>
             <label for="CommentText"><%=_Encoded("Body") %></label>
-            <textarea id="CommentText" rows="10" cols="30" name="CommentText"><%=Html.Encode(Model.CommentText) %></textarea>
+            <textarea id="CommentText" rows="10" cols="30" name="CommentText"><%: Model.CommentText %></textarea>
 	        <input id="CommentId" name="Id" type="hidden" value="<%=Model.Id %>" />
         </div>
     </fieldset>

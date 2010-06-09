@@ -17,8 +17,8 @@
     <%=Html.ValidationSummary() %>
     <fieldset>
         <label for="Name"><%=_Encoded("Folder Name:") %></label>
-		<input id="MediaPath" name="MediaPath" type="hidden" value="<%=Html.Encode(Model.MediaPath) %>" />
-		<input id="Name" class="textMedium" name="Name" type="text" value="<%=Html.Encode(Model.Name) %>" />
+		<input id="MediaPath" name="MediaPath" type="hidden" value="<%: Model.MediaPath %>" />
+		<input id="Name" class="textMedium" name="Name" type="text" value="<%: Model.Name %>" />
     </fieldset>
     <fieldset>		
 		<input type="submit" class="button primaryAction" name="submit.Save" value="<%=_Encoded("Save") %>" />

@@ -12,7 +12,7 @@
     <%=Html.Hidden("Roles[" + index + "].Name", entry.Name)%>
     <div>
     <%=Html.CheckBox("Roles[" + index + "].Granted", entry.Granted)%>
-    <label class="forcheckbox" for="<%="Roles[" + index + "]_Granted"%>"><%=Html.Encode(entry.Name) %></label>
+    <label class="forcheckbox" for="<%="Roles[" + index + "]_Granted"%>"><%: entry.Name %></label>
     </div>
     <%++index;
         }

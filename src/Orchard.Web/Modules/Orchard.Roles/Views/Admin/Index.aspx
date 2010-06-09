@@ -28,7 +28,7 @@
 		    <%foreach (var row in Model.Rows) { %>
                 <tr>
                     <td><input type="checkbox" value="true" name="<%="Checkbox." + row.Id %>"/></td>
-                    <td><%=Html.Encode(row.Name) %></td>
+                    <td><%: row.Name %></td>
                     <td><%=Html.ActionLink(T("Edit").ToString(), "Edit", new { row.Id })%></td>
                 </tr>
             <%}%>
