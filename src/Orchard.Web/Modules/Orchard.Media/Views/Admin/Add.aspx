@@ -2,6 +2,8 @@
 <%@ Import Namespace="Orchard.Media.Helpers"%>
 <%@ Import Namespace="Orchard.Media.Models"%>
 <%@ Import Namespace="Orchard.Media.ViewModels"%>
+<%Html.RegisterStyle("admin.css"); %>
+
 <h1><%: Html.TitleForPage(T("Add Media").ToString()) %></h1>
 <div class="breadCrumbs">
 <p><%: Html.ActionLink(T("Media Folders").ToString(), "Index") %> &#62; 

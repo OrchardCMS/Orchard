@@ -11,6 +11,11 @@
         <%: Html.ValidationMessage("SiteName", "*") %>
     </div>
     <div>
+        <label for="SiteCulture"><%:T("Default Site Culture") %></label>
+        <%=Html.DropDownList("SiteCulture", new SelectList(Model.AvailableCultures, Model.SiteCulture)) %>
+        <%=Html.ValidationMessage("SiteCulture", "*") %>
+    </div>
+    <div>
         <label for="PageTitleSeparator"><%: T("Page title separator") %></label>
         <%: Html.EditorFor(x => x.PageTitleSeparator)%>
         <%: Html.ValidationMessage("PageTitleSeparator", "*")%>

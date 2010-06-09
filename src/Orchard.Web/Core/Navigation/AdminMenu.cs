@@ -1,13 +1,15 @@
-﻿using Orchard.UI.Navigation;
+﻿using Orchard.Localization;
+using Orchard.UI.Navigation;
 
 namespace Orchard.Core.Navigation {
     public class AdminMenu : INavigationProvider {
+        public Localizer T { get; set; }
         public string MenuName { get { return "admin"; } }
 
         public void GetNavigation(NavigationBuilder builder) {
-            builder.Add("Site", "12",
+            builder.Add(T("Site"), "12",
                         menu => menu
-                                    .Add("Manage Menu", "6.0", item => item.Action("Index", "Admin", new { area = "Navigation" }).Permission(Permissions.ManageMainMenu)));
+                                    .Add(T("Manage Menu"), "6.0", item => item.Action("Index", "Admin", new { area = "Navigation" }).Permission(Permissions.ManageMainMenu)));
         }
     }
 }

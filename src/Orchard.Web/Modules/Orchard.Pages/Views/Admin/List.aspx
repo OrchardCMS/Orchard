@@ -3,8 +3,10 @@
 <%@ Import Namespace="Orchard.ContentManagement"%>
 <%@ Import Namespace="Orchard.Core.Common.Models"%>
 <%@ Import Namespace="Orchard.Mvc.Html"%>
-<%@ Import Namespace="Orchard.Pages.ViewModels"%>
-<h1><%: Html.TitleForPage(T("Manage Pages").ToString())%></h1>
+<%@ Import Namespace="Orchard.Pages.ViewModels"%><%
+Html.RegisterStyle("admin.css"); %>
+
+<h1><%=Html.TitleForPage(T("Manage Pages").ToString())%></h1>
 <%-- todo: Add helper text here when ready. <p><%: T("Possible text about setting up a page goes here.")%></p>--%>
 <div class="manage"><%: Html.ActionLink(T("Add a page").ToString(), "Create", new { }, new { @class = "button primaryAction" })%></div><%
 using (Html.BeginFormAntiForgeryPost()) { %>

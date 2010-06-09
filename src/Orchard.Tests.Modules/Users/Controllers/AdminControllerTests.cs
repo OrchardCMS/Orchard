@@ -6,7 +6,6 @@ using System.Web.Routing;
 using Autofac;
 using Moq;
 using NUnit.Framework;
-using Orchard.ContentManagement.MetaData.Records;
 using Orchard.Data;
 using Orchard.Environment;
 using Orchard.ContentManagement;
@@ -47,8 +46,6 @@ namespace Orchard.Tests.Modules.Users.Controllers {
             get {
                 return new[] { typeof(UserRecord), 
                     typeof(ContentTypeRecord),
-                    typeof(ContentTypePartRecord), 
-                    typeof(ContentTypePartNameRecord),
                     typeof(ContentItemRecord),
                     typeof(ContentItemVersionRecord), 
                 };

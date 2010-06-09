@@ -73,6 +73,7 @@
     <Compile Include="Commands\ProfilingCommands.cs" />
     <Compile Include="Controllers\ContentController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\MetadataController.cs" />
     <Compile Include="Handlers\DebugLinkHandler.cs" />
     <Compile Include="Models\ShowDebugLink.cs" />
     <Compile Include="Models\Simple.cs" />
@@ -80,6 +81,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ViewModels\ContentIndexViewModel.cs" />
     <Compile Include="ViewModels\ContentDetailsViewModel.cs" />
+    <Compile Include="ViewModels\MetadataIndexViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Module.txt" />
@@ -90,6 +92,7 @@
     <Content Include="Views\Home\Index.aspx" />
     <Content Include="Views\DisplayTemplates\Parts\DevTools.ShowDebugLink.ascx" />
     <Content Include="Views\EditorTemplates\Parts\DevTools.ShowDebugLink.ascx" />
+    <Content Include="Views\Metadata\Index.aspx" />
     <Content Include="Web.config" />
     <Content Include="Views\Web.config" />
   </ItemGroup>

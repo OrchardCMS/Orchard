@@ -4,7 +4,7 @@ using Autofac;
 using Moq;
 using NUnit.Framework;
 using Orchard.ContentManagement;
-using Orchard.ContentManagement.MetaData.Records;
+using Orchard.ContentManagement.MetaData;
 using Orchard.ContentManagement.Records;
 using Orchard.Core.Scheduling.Models;
 using Orchard.Core.Scheduling.Services;
@@ -30,6 +30,7 @@ namespace Orchard.Core.Tests.Scheduling {
             builder.RegisterInstance(new Mock<IOrchardServices>().Object);
             builder.RegisterType<DefaultContentManager>().As<IContentManager>();
             builder.RegisterType<DefaultContentManagerSession>().As<IContentManagerSession>();
+            builder.RegisterInstance(new Mock<IContentDefinitionManager>().Object);
 
             builder.RegisterType<ScheduledTaskExecutor>().As<IBackgroundTask>().Named("ScheduledTaskExecutor", typeof(IBackgroundTask));
             builder.RegisterInstance(_handler).As<IScheduledTaskHandler>();
@@ -39,8 +40,6 @@ namespace Orchard.Core.Tests.Scheduling {
             get {
                 return new[] {
                                  typeof(ContentTypeRecord), 
-                                 typeof(ContentTypePartRecord), 
-                                 typeof(ContentTypePartNameRecord), 
                                  typeof(ContentItemRecord), 
                                  typeof(ContentItemVersionRecord), 
                                  typeof(ScheduledTaskRecord),

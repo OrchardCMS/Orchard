@@ -15,6 +15,7 @@ using Orchard.Environment.State;
 using Orchard.Environment.Topology;
 using Orchard.Events;
 using Orchard.FileSystems.AppData;
+using Orchard.FileSystems.Dependencies;
 using Orchard.FileSystems.WebSite;
 using Orchard.Logging;
 using Orchard.Services;
@@ -30,10 +31,14 @@ namespace Orchard.Environment {
             // a single default host implementation is needed for bootstrapping a web app domain
             builder.RegisterType<DefaultOrchardEventBus>().As<IEventBus>().SingleInstance();
             builder.RegisterType<DefaultCacheHolder>().As<ICacheHolder>().SingleInstance();
+            builder.RegisterType<DefaultHostEnvironment>().As<IHostEnvironment>().SingleInstance();
+            builder.RegisterType<DefaultBuildManager>().As<IBuildManager>().SingleInstance();
 
             RegisterVolatileProvider<WebSiteFolder, IWebSiteFolder>(builder);
             RegisterVolatileProvider<AppDataFolder, IAppDataFolder>(builder);
             RegisterVolatileProvider<Clock, IClock>(builder);
+            RegisterVolatileProvider<DefaultDependenciesFolder, IDependenciesFolder>(builder);
+            RegisterVolatileProvider<DefaultVirtualPathProvider, IVirtualPathProvider>(builder);
 
             builder.RegisterType<DefaultOrchardHost>().As<IOrchardHost>().As<IEventHandler>().SingleInstance();
             {
@@ -63,6 +68,7 @@ namespace Orchard.Environment {
                             builder.RegisterType<CoreExtensionLoader>().As<IExtensionLoader>().SingleInstance();
                             builder.RegisterType<ReferencedExtensionLoader>().As<IExtensionLoader>().SingleInstance();
                             builder.RegisterType<PrecompiledExtensionLoader>().As<IExtensionLoader>().SingleInstance();
+                            builder.RegisterType<ProbingExtensionLoader>().As<IExtensionLoader>().SingleInstance();
                             builder.RegisterType<DynamicExtensionLoader>().As<IExtensionLoader>().SingleInstance();
                         }
                     }
