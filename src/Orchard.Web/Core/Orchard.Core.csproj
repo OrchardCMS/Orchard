@@ -66,9 +66,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Common\Drivers\BodyDriver.cs" />
+    <Compile Include="Common\Drivers\CommonDriver.cs" />
     <Compile Include="Common\Drivers\RoutableDriver.cs" />
     <Compile Include="Common\Controllers\RoutableController.cs" />
     <Compile Include="Common\Handlers\RoutableAspectHandler.cs" />
+    <Compile Include="Common\ViewModels\ContainerEditorViewModel.cs" />
     <Compile Include="Contents\Controllers\ItemController.cs" />
     <Compile Include="Contents\Handlers\ContentsModuleHandler.cs" />
     <Compile Include="Localization\Drivers\LocalizedDriver.cs" />
@@ -155,8 +157,11 @@
     <Compile Include="Navigation\ViewModels\NavigationManagementViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Routable\Routes.cs" />
+    <Compile Include="Routable\Services\IRoutableService.cs" />
     <Compile Include="Routable\Services\RoutablePathConstraint.cs" />
     <Compile Include="Routable\Services\RoutablePathConstraintUpdator.cs" />
+    <Compile Include="Routable\Services\RoutableService.cs" />
+    <Compile Include="Routable\ViewModels\RoutableEditorViewModel.cs" />
     <Compile Include="Routable\ViewModels\RoutableDisplayViewModel.cs" />
     <Compile Include="Scheduling\Models\ScheduledTaskRecord.cs" />
     <Compile Include="Scheduling\Services\PublishingTaskHandler.cs" />
@@ -201,6 +206,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Common\Module.txt" />
+    <Content Include="Common\Views\EditorTemplates\Parts\Common.Container.ascx" />
     <Content Include="Contents\Module.txt" />
     <Content Include="Contents\Views\Admin\Types.aspx" />
     <Content Include="Contents\Views\Admin\List.aspx" />
@@ -214,6 +220,8 @@
     <Content Include="Indexing\Module.txt" />
     <Content Include="Localization\Module.txt" />
     <Content Include="Routable\Module.txt" />
+    <Content Include="Routable\Scripts\jquery.slugify.js" />
+    <Content Include="Routable\Views\EditorTemplates\Parts\Routable.IsRoutable.ascx" />
     <Content Include="Routable\Views\Item\Display.aspx" />
     <Content Include="Settings\Module.txt" />
     <Content Include="Settings\Views\Admin\Index.ascx" />

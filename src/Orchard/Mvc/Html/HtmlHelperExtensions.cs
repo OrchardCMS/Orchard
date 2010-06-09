@@ -23,6 +23,14 @@ namespace Orchard.Mvc.Html {
             return Reflect.NameOf(html.ViewData.Model, expression);
         }
 
+        public static string FieldNameFor<T, TResult>(this HtmlHelper<T> html, Expression<Func<T, TResult>> expression) {
+            return html.ViewData.TemplateInfo.GetFullHtmlFieldName(ExpressionHelper.GetExpressionText(expression));
+        }
+        public static string FieldIdFor<T, TResult>(this HtmlHelper<T> html, Expression<Func<T, TResult>> expression) {
+            return html.ViewData.TemplateInfo.GetFullHtmlFieldId(ExpressionHelper.GetExpressionText(expression));
+        }
+
+
         public static MvcHtmlString SelectOption<T>(this HtmlHelper html, T currentValue, T optionValue, string text) {
             return SelectOption(html, optionValue, object.Equals(optionValue, currentValue), text);
         }

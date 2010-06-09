@@ -52,8 +52,8 @@ namespace Orchard.Core.Common.Handlers {
             OnPublishing<ContentPart<CommonVersionRecord>>(AssignPublishingDates);
 
             //OnGetDisplayViewModel<CommonAspect>();
-            OnGetEditorViewModel<CommonAspect>(GetEditor);
-            OnUpdateEditorViewModel<CommonAspect>(UpdateEditor);
+            //OnGetEditorViewModel<CommonAspect>(GetEditor);
+            //OnUpdateEditorViewModel<CommonAspect>(UpdateEditor);
 
             OnIndexing<CommonAspect>((context, commonAspect) => context.IndexDocument
                                                     .Add("type", commonAspect.ContentItem.ContentType).Analyze(false)
@@ -157,48 +157,48 @@ namespace Orchard.Core.Common.Handlers {
         }
 
 
-        private void GetEditor(BuildEditorModelContext context, CommonAspect instance) {
-            var currentUser = _authenticationService.GetAuthenticatedUser();
-            if (!_authorizationService.TryCheckAccess(Permissions.ChangeOwner, currentUser, instance)) {
-                return;
-            }
-            var viewModel = new OwnerEditorViewModel();
-            if (instance.Owner != null)
-                viewModel.Owner = instance.Owner.UserName;
+        //private void GetEditor(BuildEditorModelContext context, CommonAspect instance) {
+        //    var currentUser = _authenticationService.GetAuthenticatedUser();
+        //    if (!_authorizationService.TryCheckAccess(Permissions.ChangeOwner, currentUser, instance)) {
+        //        return;
+        //    }
+        //    var viewModel = new OwnerEditorViewModel();
+        //    if (instance.Owner != null)
+        //        viewModel.Owner = instance.Owner.UserName;
 
-            context.AddEditor(new TemplateViewModel(viewModel, "CommonAspect") { TemplateName = "Parts/Common.Owner", ZoneName = "primary", Position = "999" });
-        }
+        //    context.AddEditor(new TemplateViewModel(viewModel, "CommonAspect") { TemplateName = "Parts/Common.Owner", ZoneName = "primary", Position = "999" });
+        //}
 
 
-        private void UpdateEditor(UpdateEditorModelContext context, CommonAspect instance) {
-            // this event is hooked so the modified timestamp is changed when an edit-post occurs.
-            // kind of a loose rule of thumb. may not be sufficient
-            instance.ModifiedUtc = _clock.UtcNow;
-            instance.VersionModifiedUtc = _clock.UtcNow;
+        //private void UpdateEditor(UpdateEditorModelContext context, CommonAspect instance) {
+        //    // this event is hooked so the modified timestamp is changed when an edit-post occurs.
+        //    // kind of a loose rule of thumb. may not be sufficient
+        //    instance.ModifiedUtc = _clock.UtcNow;
+        //    instance.VersionModifiedUtc = _clock.UtcNow;
 
-            var currentUser = _authenticationService.GetAuthenticatedUser();
-            if (!_authorizationService.TryCheckAccess(Permissions.ChangeOwner, currentUser, instance)) {
-                return;
-            }
+        //    var currentUser = _authenticationService.GetAuthenticatedUser();
+        //    if (!_authorizationService.TryCheckAccess(Permissions.ChangeOwner, currentUser, instance)) {
+        //        return;
+        //    }
 
-            var viewModel = new OwnerEditorViewModel();
-            if (instance.Owner != null)
-                viewModel.Owner = instance.Owner.UserName;
+        //    var viewModel = new OwnerEditorViewModel();
+        //    if (instance.Owner != null)
+        //        viewModel.Owner = instance.Owner.UserName;
 
-            var priorOwner = viewModel.Owner;
-            context.Updater.TryUpdateModel(viewModel, "CommonAspect", null, null);
+        //    var priorOwner = viewModel.Owner;
+        //    context.Updater.TryUpdateModel(viewModel, "CommonAspect", null, null);
 
-            if (viewModel.Owner != null && viewModel.Owner != priorOwner) {
-                var newOwner = _membershipService.GetUser(viewModel.Owner);
-                if (newOwner == null) {
-                    context.Updater.AddModelError("CommonAspect.Owner", T("Invalid user name"));
-                }
-                else {
-                    instance.Owner = newOwner;
-                }
-            }
+        //    if (viewModel.Owner != null && viewModel.Owner != priorOwner) {
+        //        var newOwner = _membershipService.GetUser(viewModel.Owner);
+        //        if (newOwner == null) {
+        //            context.Updater.AddModelError("CommonAspect.Owner", T("Invalid user name"));
+        //        }
+        //        else {
+        //            instance.Owner = newOwner;
+        //        }
+        //    }
 
-            context.AddEditor(new TemplateViewModel(viewModel, "CommonAspect") { TemplateName = "Parts/Common.Owner", ZoneName = "primary", Position = "999" });
-        }
+        //    context.AddEditor(new TemplateViewModel(viewModel, "CommonAspect") { TemplateName = "Parts/Common.Owner", ZoneName = "primary", Position = "999" });
+        //}
     }
 }
