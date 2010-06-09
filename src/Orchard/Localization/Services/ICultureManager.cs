@@ -8,5 +8,6 @@ namespace Orchard.Localization.Services {
         void AddCulture(string cultureName);
         string GetCurrentCulture(HttpContext requestContext);
         CultureRecord GetCultureById(int id);
+        string GetSiteCulture();
     }
 }

@@ -4,7 +4,9 @@ using System.Linq;
 using Orchard.Collections;
 using Orchard.Indexing;
 using Orchard.Localization;
+using Orchard.Localization.Services;
 using Orchard.UI.Notify;
+using System.Web;
 
 namespace Orchard.Search.Services
 {
@@ -13,11 +15,13 @@ namespace Orchard.Search.Services
         private const string SearchIndexName = "Search";
         private readonly IIndexManager _indexManager;
         private readonly IEnumerable<IIndexNotifierHandler> _indexNotifierHandlers;
+        private readonly ICultureManager _cultureManager;
 
-        public SearchService(IOrchardServices services, IIndexManager indexManager, IEnumerable<IIndexNotifierHandler> indexNotifierHandlers) {
+        public SearchService(IOrchardServices services, IIndexManager indexManager, IEnumerable<IIndexNotifierHandler> indexNotifierHandlers, ICultureManager cultureManager) {
             Services = services;
             _indexManager = indexManager;
             _indexNotifierHandlers = indexNotifierHandlers;
+            _cultureManager = cultureManager;
             T = NullLocalizer.Instance;
         }
 
@@ -35,6 +39,10 @@ namespace Orchard.Search.Services
             var searchBuilder = _indexManager.GetSearchIndexProvider().CreateSearchBuilder(SearchIndexName)
                 .WithField("title", query)
                 .WithField("body", query);
+
+                if(HttpContext.Current != null) {
+                    searchBuilder.WithField("culture", _cultureManager.GetCurrentCulture(HttpContext.Current));
+                }
 
             var totalCount = searchBuilder.Count();
             if (pageSize != null)

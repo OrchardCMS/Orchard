@@ -5,6 +5,7 @@ using Orchard.Localization;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Handlers;
 using Orchard.Localization.Services;
+using Orchard.Settings;
 
 namespace Orchard.Core.Localization.Handlers {
     [UsedImplicitly]
@@ -22,6 +23,8 @@ namespace Orchard.Core.Localization.Handlers {
             OnActivated<Localized>(InitializePart);
 
             OnLoaded<Localized>(LazyLoadHandlers);
+
+            OnIndexed<Localized>((context, localized) => context.IndexDocument.Add("culture", localized.Culture != null ? localized.Culture.Culture : _cultureManager.GetSiteCulture()).Store(false).Analyze(false));
         }
 
         public Localizer T { get; set; }

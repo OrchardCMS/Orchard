@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Web;
+using JetBrains.Annotations;
 using Orchard.Data;
 using Orchard.Localization.Records;
+using Orchard.Settings;
 
 namespace Orchard.Localization.Services {
     public class DefaultCultureManager : ICultureManager {
@@ -16,6 +17,8 @@ namespace Orchard.Localization.Services {
             _cultureRepository = cultureRepository;
             _cultureSelectors = cultureSelectors;
         }
+
+        protected virtual ISite CurrentSite { get; [UsedImplicitly] private set; }
 
         public IEnumerable<string> ListCultures() {
             var query = from culture in _cultureRepository.Table select culture.Culture;
@@ -49,6 +52,10 @@ namespace Orchard.Localization.Services {
 
         public CultureRecord GetCultureById(int id) {
             return _cultureRepository.Get(id);
+        }
+
+        public string GetSiteCulture() {
+            return CurrentSite == null ? null : CurrentSite.SiteCulture;
         }
 
         // "<languagecode2>" or
