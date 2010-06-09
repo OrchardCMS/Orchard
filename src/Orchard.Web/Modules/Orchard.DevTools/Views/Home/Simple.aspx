@@ -9,4 +9,4 @@
 <div style="border: solid 1px #ccc;">
     <% Html.RenderAction("_RenderableAction"); %></div>
 <p>
-    <%=Html.ActionLink("Test Messages", "SimpleMessage")%></p>
+    <%: Html.ActionLink("Test Messages", "SimpleMessage")%></p>

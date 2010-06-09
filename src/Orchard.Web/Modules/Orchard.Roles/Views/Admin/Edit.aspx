@@ -1,19 +1,19 @@
 <%@ Page Language="C#" Inherits="Orchard.Mvc.ViewPage<RoleEditViewModel>" %>
 <%@ Import Namespace="Orchard.Roles.ViewModels"%>
-<h1><%=Html.TitleForPage(T("Edit Role").ToString()) %></h1>
+<h1><%: Html.TitleForPage(T("Edit Role").ToString()) %></h1>
 <% using(Html.BeginFormAntiForgeryPost()) { %>
-    <%=Html.ValidationSummary() %>
+    <%: Html.ValidationSummary() %>
     <fieldset>
-	    <legend><%=_Encoded("Information") %></legend>
-	    <label for="pageTitle"><%=_Encoded("Role Name:") %></label>
+	    <legend><%: T("Information") %></legend>
+	    <label for="pageTitle"><%: T("Role Name:") %></label>
 	    <input id="Name" class="text" name="Name" type="text" value="<%: Model.Name %>" />
 	    <input type="hidden" value="<%=Model.Id %>" name="Id" />
 	</fieldset>
     <fieldset>
-        <legend><%=_Encoded("Permissions") %></legend>
+        <legend><%: T("Permissions") %></legend>
 		<% foreach (var moduleName in Model.ModulePermissions.Keys) { %>
         <fieldset>
-            <legend><%=_Encoded("{0} Module", moduleName) %></legend>
+            <legend><%: T("{0} Module", moduleName) %></legend>
 		    <table class="items">
 			    <colgroup>
 				    <col id="Col1" />
@@ -21,9 +21,9 @@
 			    </colgroup>
 			    <thead>
 				    <tr>
-					    <th scope="col"><%=_Encoded("Permission") %></th>
-					    <th scope="col"><%=_Encoded("Allow") %></th>
-					    <th scope="col"><%=_Encoded("Effective") %></th>
+					    <th scope="col"><%: T("Permission") %></th>
+					    <th scope="col"><%: T("Allow") %></th>
+					    <th scope="col"><%: T("Effective") %></th>
 				    </tr>
 			    </thead>
 			    <% foreach (var permission in Model.ModulePermissions[moduleName]) { %>
@@ -31,16 +31,16 @@
 				    <td><%: permission.Description %></td>
 				    <td style="width:60px;/* todo: (heskew) make not inline :(">
 				        <% if (Model.CurrentPermissions.Contains(permission.Name)) { %>
-				            <input type="checkbox" value="true" name="<%=_Encoded("Checkbox.{0}", permission.Name) %>" checked="checked"/>
+				            <input type="checkbox" value="true" name="<%: T("Checkbox.{0}", permission.Name) %>" checked="checked"/>
 				        <% } else {%>
-				            <input type="checkbox" value="true" name="<%=_Encoded("Checkbox.{0}", permission.Name) %>"/>
+				            <input type="checkbox" value="true" name="<%: T("Checkbox.{0}", permission.Name) %>"/>
 				        <% }%>
 				    </td>	
 				    <td style="width:60px;/* todo: (heskew) make not inline :(">
 				    <% if (Model.EffectivePermissions.Contains(permission.Name)) { %>
-				            <input type="checkbox" disabled="disabled" name="<%=_Encoded("Effective.{0}", permission.Name) %>" checked="checked"/>
+				            <input type="checkbox" disabled="disabled" name="<%: T("Effective.{0}", permission.Name) %>" checked="checked"/>
 				    <% } else {%>
-				            <input type="checkbox" disabled="disabled" name="<%=_Encoded("Effective.{0}", permission.Name) %>"/>
+				            <input type="checkbox" disabled="disabled" name="<%: T("Effective.{0}", permission.Name) %>"/>
 				        <% }%>
 				    </td>			    
 			    </tr>
@@ -50,7 +50,7 @@
 			<% } %>
     </fieldset>
     <fieldset>
-	    <input type="submit" class="button" name="submit.Save" value="<%=_Encoded("Save") %>" />
-	    <input type="submit" class="button remove" name="submit.Delete" value="<%=_Encoded("Remove") %>" />
+	    <input type="submit" class="button" name="submit.Save" value="<%: T("Save") %>" />
+	    <input type="submit" class="button remove" name="submit.Delete" value="<%: T("Remove") %>" />
 	</fieldset>
 <% } %>

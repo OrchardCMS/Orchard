@@ -1,48 +1,48 @@
 ﻿<%@ Control Language="C#" Inherits="Orchard.Mvc.ViewUserControl<SetupViewModel>" %>
 <%@ Import Namespace="Orchard.Setup.ViewModels"%>
-<h1><%=Html.TitleForPage(_Encoded("Get Started").ToHtmlString())%></h1>
+<h1><%: Html.TitleForPage(_Encoded("Get Started").ToHtmlString())%></h1>
 <%
 using (Html.BeginFormAntiForgeryPost()) { %>
-<%=Html.ValidationSummary() %>
-<h2><%=_Encoded("Please answer a few questions to configure your site.")%></h2>
+<%: Html.ValidationSummary() %>
+<h2><%: T("Please answer a few questions to configure your site.")%></h2>
 <fieldset class="site">
     <div>
-        <label for="SiteName"><%=_Encoded("What is the name of your site?") %></label>
-        <%=Html.TextBoxFor(svm => svm.SiteName, new { autofocus = "autofocus" })%>
+        <label for="SiteName"><%: T("What is the name of your site?") %></label>
+        <%: Html.TextBoxFor(svm => svm.SiteName, new { autofocus = "autofocus" })%>
     </div>
     <div>
-        <label for="AdminUsername"><%=_Encoded("Choose a user name:") %></label>
-        <%=Html.EditorFor(svm => svm.AdminUsername)%>
+        <label for="AdminUsername"><%: T("Choose a user name:") %></label>
+        <%: Html.EditorFor(svm => svm.AdminUsername)%>
     </div>
     <div>
-        <label for="AdminPassword"><%=_Encoded("Choose a password:") %></label>
-        <%=Html.PasswordFor(svm => svm.AdminPassword) %>
+        <label for="AdminPassword"><%: T("Choose a password:") %></label>
+        <%: Html.PasswordFor(svm => svm.AdminPassword) %>
     </div>
 </fieldset><%
 if (!Model.DatabaseIsPreconfigured) { %>
 <fieldset class="data">
-    <legend><%=_Encoded("How would you like to store your data?") %></legend>
-    <%=Html.ValidationMessage("DatabaseOptions", "Unable to setup data storage") %>
+    <legend><%: T("How would you like to store your data?") %></legend>
+    <%: Html.ValidationMessage("DatabaseOptions", "Unable to setup data storage") %>
     <div>
-        <%=Html.RadioButtonFor(svm => svm.DatabaseOptions, true, new { id = "builtin" })%>
-        <label for="builtin" class="forcheckbox"><%=_Encoded("Use built-in data storage (SQLite)") %></label>
+        <%: Html.RadioButtonFor(svm => svm.DatabaseOptions, true, new { id = "builtin" })%>
+        <label for="builtin" class="forcheckbox"><%: T("Use built-in data storage (SQLite)") %></label>
     </div>
     <div>
-        <%=Html.RadioButtonFor(svm => svm.DatabaseOptions, false, new { id = "sql" })%>
-        <label for="sql" class="forcheckbox"><%=_Encoded("Use an existing SQL Server (or SQL Express) database") %></label>
+        <%: Html.RadioButtonFor(svm => svm.DatabaseOptions, false, new { id = "sql" })%>
+        <label for="sql" class="forcheckbox"><%: T("Use an existing SQL Server (or SQL Express) database") %></label>
         <div data-controllerid="sql">
-            <label for="DatabaseConnectionString"><%=_Encoded("Connection string") %></label>
-            <%=Html.EditorFor(svm => svm.DatabaseConnectionString)%>
-            <span class="hint"><%=_Encoded("Example:") %><br /><%=_Encoded("Data Source=sqlServerName;Initial Catalog=dbName;Persist Security Info=True;User ID=userName;Password=password") %></span>
+            <label for="DatabaseConnectionString"><%: T("Connection string") %></label>
+            <%: Html.EditorFor(svm => svm.DatabaseConnectionString)%>
+            <span class="hint"><%: T("Example:") %><br /><%: T("Data Source=sqlServerName;Initial Catalog=dbName;Persist Security Info=True;User ID=userName;Password=password") %></span>
         </div>
         <div data-controllerid="sql">
-            <label for="DatabaseTablePrefix"><%=_Encoded("Database Table Prefix") %></label>
-            <%=Html.EditorFor(svm => svm.DatabaseTablePrefix)%>
+            <label for="DatabaseTablePrefix"><%: T("Database Table Prefix") %></label>
+            <%: Html.EditorFor(svm => svm.DatabaseTablePrefix)%>
         </div>
     </div>
 </fieldset><%
 } %>
 <fieldset>
-    <input class="button" type="submit" value="<%=_Encoded("Finish Setup") %>" />
+    <input class="button" type="submit" value="<%: T("Finish Setup") %>" />
 </fieldset><%
 } %>

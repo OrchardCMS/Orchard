@@ -2,28 +2,28 @@
 <%@ Import Namespace="Orchard.Media.Helpers"%>
 <%@ Import Namespace="Orchard.Media.Models"%>
 <%@ Import Namespace="Orchard.Media.ViewModels"%>
-<h1><%=Html.TitleForPage(T("Add Media").ToString()) %></h1>
+<h1><%: Html.TitleForPage(T("Add Media").ToString()) %></h1>
 <div class="breadCrumbs">
-<p><%=Html.ActionLink(T("Media Folders").ToString(), "Index") %> &#62; 
+<p><%: Html.ActionLink(T("Media Folders").ToString(), "Index") %> &#62; 
     <%foreach (FolderNavigation navigation in MediaHelpers.GetFolderNavigationHierarchy(Model.MediaPath)) { %>
-        <%=Html.ActionLink(navigation.FolderName, "Edit",
+        <%: Html.ActionLink(navigation.FolderName, "Edit",
                   new {name = navigation.FolderName, mediaPath = navigation.FolderPath})%> &#62;
 	    
     <% } %>
-    <%=_Encoded("Add Media") %></p>
+    <%: T("Add Media") %></p>
 </div>
 
 <% using (Html.BeginForm("Add", "Admin", FormMethod.Post, new { enctype = "multipart/form-data" })) { %>
-    <%= Html.ValidationSummary() %>
+    <%: Html.ValidationSummary() %>
     <fieldset>
         <label for="pageTitle"><%=T("File Path <span> - multiple files must be in a zipped folder</span>")%></label>
-        <input id="MediaItemPath" name="MediaItemPath" type="file" class="text" value="<%=_Encoded("Browse") %>" size="64"/>
-		<span class="hint"><%=_Encoded("After your files have been uploaded, you can edit the titles and descriptions.")%></span>
+        <input id="MediaItemPath" name="MediaItemPath" type="file" class="text" value="<%: T("Browse") %>" size="64"/>
+		<span class="hint"><%: T("After your files have been uploaded, you can edit the titles and descriptions.")%></span>
         <input type="hidden" id="FolderName" name="FolderName" value="<%: Model.FolderName %>" />
         <input type="hidden" id="MediaPath" name="MediaPath" value="<%: Model.MediaPath %>" />
     </fieldset>
     <fieldset>
-		<input type="submit" class="button primaryAction" value="<%=_Encoded("Upload") %>" />
-		<%=Html.AntiForgeryTokenOrchard() %>
+		<input type="submit" class="button primaryAction" value="<%: T("Upload") %>" />
+		<%: Html.AntiForgeryTokenOrchard() %>
 	</fieldset>
 <% } %>

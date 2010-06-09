@@ -5,7 +5,7 @@
 <% Html.RegisterStyle("archives.css"); %>
 <% Html.RegisterFootScript("archives.js"); %>
 <div class="archives">
-    <h3><%=_Encoded("Archives") %></h3><%
+    <h3><%: T("Archives") %></h3><%
     if (Model.Archives.Count() > 0) {
         if (Model.Archives.Count() > 20) { %>
     <ul class="years"><%
@@ -33,6 +33,6 @@
         }
     }
     else { %>
-    <div class="message info"><%=_Encoded("None found")%></div><%
+    <div class="message info"><%: T("None found")%></div><%
     } %>
 </div>

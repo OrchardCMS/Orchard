@@ -10,7 +10,7 @@ Model.Zones.AddRenderPartial("menu", "Menu", Model);
 %>
 <div id="header" role="banner"><% Html.Zone("header"); %></div>
 <div id="content">
-    <div id="navshortcut"><a href="#menu"><%=_Encoded("Skip to navigation") %></a></div>
+    <div id="navshortcut"><a href="#menu"><%: T("Skip to navigation") %></a></div>
     <div id="main" role="main"><% Html.ZoneBody("content"); %></div>
     <div id="menu"><% Html.Zone("menu"); %></div>
 </div>

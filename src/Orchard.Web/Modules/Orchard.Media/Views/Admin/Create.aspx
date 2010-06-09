@@ -2,24 +2,24 @@
 <%@ Import Namespace="Orchard.Media.Helpers"%>
 <%@ Import Namespace="Orchard.Media.Models"%>
 <%@ Import Namespace="Orchard.Media.ViewModels"%>
-<h1><%=Html.TitleForPage(T("Add a Folder").ToString()) %></h1>
+<h1><%: Html.TitleForPage(T("Add a Folder").ToString()) %></h1>
 <div class="breadCrumbs">
-<p><%=Html.ActionLink(T("Media Folders").ToString(), "Index") %> &#62; 
+<p><%: Html.ActionLink(T("Media Folders").ToString(), "Index") %> &#62; 
 		<%foreach (FolderNavigation navigation in MediaHelpers.GetFolderNavigationHierarchy(Model.MediaPath)) { %>
-		    <%=Html.ActionLink(navigation.FolderName, "Edit",
+		    <%: Html.ActionLink(navigation.FolderName, "Edit",
                       new {name = navigation.FolderName, mediaPath = navigation.FolderPath}) %> &#62;
 		<% } %>
-		<%=_Encoded("Add a Folder") %></p>
+		<%: T("Add a Folder") %></p>
 </div> 
 			
 <%using (Html.BeginFormAntiForgeryPost()) { %>
-    <%= Html.ValidationSummary() %>
+    <%: Html.ValidationSummary() %>
     <fieldset>
-        <label for="Name"><%=_Encoded("Folder Name") %></label>
+        <label for="Name"><%: T("Folder Name") %></label>
 		<input id="Name" class="textMedium" name="Name" type="text" />
 	    <input type="hidden" id="MediaPath" name="MediaPath" value="<%: Model.MediaPath %>" />
     </fieldset>
 	<fieldset>
-	    <input type="submit" class="button primaryAction" value="<%=_Encoded("Save") %>" />
+	    <input type="submit" class="button primaryAction" value="<%: T("Save") %>" />
     </fieldset>
  <% } %>

@@ -2,21 +2,21 @@
 <%@ Import Namespace="Orchard.DevTools.ViewModels"%>
 <%@ Import Namespace="Orchard.ContentManagement"%>
 <%@ Import Namespace="System.Reflection" %>
-<h1><%=Html.TitleForPage(T("{0} Content Type", Model.Item.ContentItem.ContentType).ToString(), T("Content").ToString())%></h1>
-<h2><%=_Encoded("Content Item")%></h2>
+<h1><%: Html.TitleForPage(T("{0} Content Type", Model.Item.ContentItem.ContentType).ToString(), T("Content").ToString())%></h1>
+<h2><%: T("Content Item")%></h2>
 <p>
-<%=_Encoded("Id:")%>
+<%: T("Id:")%>
     <%=Model.Item.ContentItem.Id %><br />
-<%=_Encoded("Version:")%>
+<%: T("Version:")%>
     <%=Model.Item.ContentItem.Version %><br />
-<%=_Encoded("ContentType:")%>
+<%: T("ContentType:")%>
     <%=Model.Item.ContentItem.ContentType %><br />
-<%=_Encoded("DisplayText:")%> 
+<%: T("DisplayText:")%> 
     <%=Html.ItemDisplayText(Model.Item) %><br />
-<%=_Encoded("Links:")%> 
+<%: T("Links:")%> 
     <%=Html.ItemDisplayLink(T("view").ToString(), Model.Item) %> <%=Html.ItemEditLink(T("edit").ToString(), Model.Item) %>
 </p>
-<h2><%=_Encoded("Content Item Parts")%></h2>
+<h2><%: T("Content Item Parts")%></h2>
 <ul>
     <%foreach (var partType in Model.PartTypes.OrderBy(x => x.Name)) {%>
     <li><span style="font-weight: bold;">
@@ -38,7 +38,7 @@
                       valueItem = (value as IContent).ContentItem;
                   }
                   if (valueItem != null) {
-                      %><%=Html.ActionLink(T("{0} #{1} v{2}", valueItem.ContentType, valueItem.Id, valueItem.Version).ToString(), "details", new { valueItem.Id }, new { })%><%
+                      %><%: Html.ActionLink(T("{0} #{1} v{2}", valueItem.ContentType, valueItem.Id, valueItem.Version).ToString(), "details", new { valueItem.Id }, new { })%><%
                   }
                   %>
                 <ul style="margin-left: 20px">
@@ -99,7 +99,7 @@
         Zone:<%: editor.ZoneName ?? "(null)" %>
         Position:<%: editor.Position??"(null)" %>
         <div style="margin-left: 20px; border: solid 1px black;">
-            <%=Html.EditorFor(x=>editor.Model, editor.TemplateName, editor.Prefix) %>
+            <%: Html.EditorFor(x=>editor.Model, editor.TemplateName, editor.Prefix) %>
         </div>
     </li>
     <%                      

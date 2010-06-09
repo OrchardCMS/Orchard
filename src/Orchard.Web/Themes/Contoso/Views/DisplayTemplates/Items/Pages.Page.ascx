@@ -3,7 +3,7 @@
 <%@ Import Namespace="Orchard.Mvc.Html"%>
 <%@ Import Namespace="Orchard.Mvc.ViewModels"%>
 
-<div class="page-title"><%=Html.TitleForPage(Model.Item.Title)%></div>
+<div class="page-title"><%: Html.TitleForPage(Model.Item.Title)%></div>
 
 <%--<% if (Html.Resolve<IAuthenticationService>().GetAuthenticatedUser() != null){ %>
 <%} %>--%>

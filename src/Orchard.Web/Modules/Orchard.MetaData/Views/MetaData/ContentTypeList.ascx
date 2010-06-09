@@ -25,7 +25,7 @@
     %>
         <tr class="<%=contentTypeClass %>">
             <td>
-                <%= Html.ActionLink(item.Name, "ContentTypeList", new {id=item.Name})%>
+                <%: Html.ActionLink(item.Name, "ContentTypeList", new {id=item.Name})%>
             </td>
         </tr>
     
@@ -68,7 +68,7 @@ using (Html.BeginFormAntiForgeryPost(Url.Action("Save",new {id=Model.SelectedCon
 
     </table>
     <p>
-        <input type="submit" value="<%=_Encoded("Save") %>" />
+        <input type="submit" value="<%: T("Save") %>" />
     </p>
     <% } %>
 </div>
