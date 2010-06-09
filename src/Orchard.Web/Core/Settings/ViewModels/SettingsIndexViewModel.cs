@@ -7,7 +7,7 @@ using Orchard.Core.Settings.Models;
 namespace Orchard.Core.Settings.ViewModels {
     public class SettingsIndexViewModel : BaseViewModel {
         public SiteSettings Site { get; set; }
-        public IEnumerable<string> AvailableCultures { get; set; }
+        public IEnumerable<string> SiteCultures { get; set; }
         public ContentItemViewModel ViewModel { get; set; }
         
 
