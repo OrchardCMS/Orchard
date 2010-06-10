@@ -177,5 +177,19 @@ namespace Orchard.Tests.Indexing {
             Assert.That(date[0].GetDateTime("date") < date[1].GetDateTime("date"), Is.True);
             Assert.That(date[1].GetDateTime("date") < date[2].GetDateTime("date"), Is.True);
         }
+
+        [Test]
+        public void ShouldEscapeSpecialChars() {
+            _provider.CreateIndex("default");
+            _provider.Store("default", _provider.New(1).Add("body", "Orchard has been developped in C#"));
+            _provider.Store("default", _provider.New(2).Add("body", "Windows has been developped in C++"));
+
+            var cs = _searchBuilder.WithField("body", "C#").Search().ToList();
+            Assert.That(cs.Count(), Is.EqualTo(2));
+
+            var cpp = _searchBuilder.WithField("body", "C++").Search().ToList();
+            Assert.That(cpp.Count(), Is.EqualTo(2));
+
+        }
     }
 }

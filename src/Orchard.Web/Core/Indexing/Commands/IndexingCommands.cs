@@ -5,17 +5,24 @@ using Orchard.Commands;
 using Orchard.ContentManagement;
 using Orchard.Indexing;
 using Orchard.Security;
+using Orchard.Tasks.Indexing;
 
 namespace Orchard.Core.Indexing.Commands {
     public class IndexingCommands : DefaultOrchardCommandHandler {
         private readonly IEnumerable<IIndexNotifierHandler> _indexNotifierHandlers;
         private readonly IIndexManager _indexManager;
+        private readonly IIndexingTaskManager _indexingTaskManager;
+        private readonly IContentManager _contentManager;
         private const string SearchIndexName = "Search";
 
         public IndexingCommands(
             IEnumerable<IIndexNotifierHandler> indexNotifierHandlers,
-            IIndexManager indexManager) {
+            IIndexManager indexManager,
+            IIndexingTaskManager indexingTaskManager,
+            IContentManager contentManager) {
             _indexNotifierHandlers = indexNotifierHandlers;
+            _indexingTaskManager = indexingTaskManager;
+            _contentManager = contentManager;
             _indexManager = indexManager;
         }
 
@@ -24,6 +31,9 @@ namespace Orchard.Core.Indexing.Commands {
 
         [OrchardSwitch]
         public string Query { get; set; }
+
+        [OrchardSwitch]
+        public string ContentItemId { get; set; }
 
         [CommandName("index update")]
         [CommandHelp("index update [/IndexName:<index name>]\r\n\t" + "Updates the index with the specified <index name>, or the search index if not specified")]
@@ -97,5 +107,36 @@ namespace Orchard.Core.Indexing.Commands {
             Context.Output.WriteLine("Number of indexed documents: {0}", _indexManager.GetSearchIndexProvider().NumDocs(indexName));
             return "";
         }
+
+        [CommandName("index refresh")]
+        [CommandHelp("index refresh /ContenItem:<content item id> \r\n\t" + "Refreshes the index for the specifed <content item id>")]
+        [OrchardSwitches("ContentItem")]
+        public string Refresh() {
+            int contenItemId;
+            if ( !int.TryParse(ContentItemId, out contenItemId) ) {
+                return "Invalid content item id. Not an integer.";
+            }
+
+            var contentItem = _contentManager.Get(contenItemId);
+            _indexingTaskManager.CreateUpdateIndexTask(contentItem);
+
+            return "Content Item marked for reindexing";
+        }
+
+        [CommandName("index delete")]
+        [CommandHelp("index delete /ContenItem:<content item id>\r\n\t" + "Deletes the specifed <content item id> from the index")]
+        [OrchardSwitches("ContentItem")]
+        public string Delete() {
+            int contenItemId;
+            if(!int.TryParse(ContentItemId, out contenItemId)) {
+                return "Invalid content item id. Not an integer.";
+            }
+            
+            var contentItem = _contentManager.Get(contenItemId);
+            _indexingTaskManager.CreateDeleteIndexTask(contentItem);
+
+            return "Content Item marked for deletion";
+        }
+
     }
 }

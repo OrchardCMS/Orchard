@@ -91,10 +91,12 @@ namespace Orchard.Core.Indexing.Services {
                                 handler.Indexing(context);
                             }
 
-                            updateIndexDocuments.Add(context.IndexDocument);
+                            if ( context.IndexDocument.IsDirty ) {
+                                updateIndexDocuments.Add(context.IndexDocument);
 
-                            foreach (var handler in _handlers) {
-                                handler.Indexed(context);
+                                foreach ( var handler in _handlers ) {
+                                    handler.Indexed(context);
+                                }
                             }
                         }
                         catch (Exception ex) {
@@ -111,10 +113,11 @@ namespace Orchard.Core.Indexing.Services {
                 _indexProvider.SetLastIndexUtc(SearchIndexName, _clock.UtcNow);
 
                 // retrieve not yet processed tasks
-                var taskRecords = _repository.Fetch(x => x.CreatedUtc >= lastIndexing)
+                var taskRecords = _repository.Fetch(x => x.CreatedUtc > lastIndexing)
                     .ToArray();
 
-                if (taskRecords.Length == 0)
+                // nothing to do ?
+                if (taskRecords.Length + updateIndexDocuments.Count == 0)
                     return;
 
                 Logger.Information("Processing {0} indexing tasks", taskRecords.Length);
@@ -146,11 +149,14 @@ namespace Orchard.Core.Indexing.Services {
                             handler.Indexing(context);
                         }
 
-                        updateIndexDocuments.Add(context.IndexDocument);
-
-                        foreach (var handler in _handlers) {
-                            handler.Indexed(context);
+                        if ( context.IndexDocument.IsDirty ) {
+                            updateIndexDocuments.Add(context.IndexDocument);
+                         
+                            foreach (var handler in _handlers) {
+                                handler.Indexed(context);
+                            }
                         }
+
                     }
                     catch (Exception ex) {
                         Logger.Warning(ex, "Unable to process indexing task #{0}", taskRecord.Id);

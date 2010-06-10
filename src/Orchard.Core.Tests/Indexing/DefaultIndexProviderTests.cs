@@ -216,5 +216,38 @@ namespace Orchard.Tests.Indexing {
             _provider.Store("default", _provider.New(1).Add("body", null));
             Assert.That(_provider.IsEmpty("default"), Is.False);
         }
+
+        [Test]
+        public void IsDirtyShouldBeFalseForNewDocuments() {
+            IIndexDocument doc = _provider.New(1);
+            Assert.That(doc.IsDirty, Is.False);
+        }
+
+
+        [Test]
+        public void IsDirtyShouldBeTrueWhenIndexIsModified() {
+            IIndexDocument doc;
+            
+            doc = _provider.New(1);
+            doc.Add("foo", "value");
+            Assert.That(doc.IsDirty, Is.True);
+
+            doc = _provider.New(1);
+            doc.Add("foo", false);
+            Assert.That(doc.IsDirty, Is.True);
+
+            doc = _provider.New(1);
+            doc.Add("foo", (float)1.0);
+            Assert.That(doc.IsDirty, Is.True);
+
+            doc = _provider.New(1);
+            doc.Add("foo", 1);
+            Assert.That(doc.IsDirty, Is.True);
+
+            doc = _provider.New(1);
+            doc.Add("foo", DateTime.Now);
+            Assert.That(doc.IsDirty, Is.True);
+
+        }
     }
 }

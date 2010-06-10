@@ -4,7 +4,7 @@ using System.Collections.Generic;
 namespace Orchard.Indexing {
     public interface ISearchBuilder {
 
-        ISearchBuilder Parse(string query);
+        ISearchBuilder Parse(string defaultField, string query);
 
         ISearchBuilder WithField(string field, string value);
         ISearchBuilder WithField(string field, string value, bool wildcardSearch);

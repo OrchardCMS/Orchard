@@ -48,7 +48,7 @@ namespace Orchard.Mvc.ViewEngines {
 
                 themeViewEngines = _viewEngineProviders
                     .Select(x => x.CreateThemeViewEngine(new CreateThemeViewEngineParams { VirtualPath = themeLocation }));
-                Logger.Debug("Theme location:\r\n\t-{0}", themeLocation);
+                //Logger.Debug("Theme location:\r\n\t-{0}", themeLocation);
             }
 
 
@@ -58,7 +58,7 @@ namespace Orchard.Mvc.ViewEngines {
             var moduleLocations = modules.Select(x => Path.Combine(x.Location, x.Name));
             var moduleViewEngines = _viewEngineProviders
                 .Select(x => x.CreateModulesViewEngine(new CreateModulesViewEngineParams { VirtualPaths = moduleLocations }));
-            Logger.Debug("Module locations:\r\n\t-{0}", string.Join("\r\n\t-", moduleLocations.ToArray()));
+            //Logger.Debug("Module locations:\r\n\t-{0}", string.Join("\r\n\t-", moduleLocations.ToArray()));
 
             var requestViewEngines = new ViewEngineCollection(
                 themeViewEngines

@@ -5,6 +5,7 @@ using Autofac;
 using Moq;
 using NUnit.Framework;
 using Orchard.ContentManagement;
+using Orchard.ContentManagement.MetaData;
 using Orchard.ContentManagement.Records;
 using Orchard.Core.Scheduling.Models;
 using Orchard.Core.Scheduling.Services;
@@ -33,6 +34,7 @@ namespace Orchard.Core.Tests.Scheduling {
             builder.RegisterInstance(_mockServices.Object);
             builder.RegisterType<DefaultContentManager>().As<IContentManager>();
             builder.RegisterType<DefaultContentManagerSession>().As<IContentManagerSession>();
+            builder.RegisterInstance(new Mock<IContentDefinitionManager>().Object);
 
             builder.RegisterType<ScheduledTaskManager>().As<IScheduledTaskManager>();
         }

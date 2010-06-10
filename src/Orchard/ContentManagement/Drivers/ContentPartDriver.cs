@@ -31,19 +31,19 @@ namespace Orchard.ContentManagement.Drivers {
             return part == null ? null : Editor(part, context.Updater);
         }
 
-        protected virtual DriverResult Display(TContent part, string displayType) {return null;}
-        protected virtual DriverResult Editor(TContent part) {return null;}
-        protected virtual DriverResult Editor(TContent part, IUpdateModel updater) {return null;}
+        protected virtual DriverResult Display(TContent part, string displayType) { return null; }
+        protected virtual DriverResult Editor(TContent part) { return null; }
+        protected virtual DriverResult Editor(TContent part, IUpdateModel updater) { return null; }
 
 
         public ContentPartTemplateResult ContentPartTemplate(object model) {
             return new ContentPartTemplateResult(model, null, Prefix).Location(Zone);
         }
-        
+
         public ContentPartTemplateResult ContentPartTemplate(object model, string template) {
             return new ContentPartTemplateResult(model, template, Prefix).Location(Zone);
         }
-        
+
         public ContentPartTemplateResult ContentPartTemplate(object model, string template, string prefix) {
             return new ContentPartTemplateResult(model, template, prefix).Location(Zone);
         }
@@ -52,11 +52,12 @@ namespace Orchard.ContentManagement.Drivers {
             return new CombinedResult(results);
         }
 
-        public IEnumerable<ContentPartInfo> GetPartInfo()
-        {
-            var contentPartInfo = new List<ContentPartInfo>() {
-                new ContentPartInfo()
-                {PartName = typeof(TContent).Name,Factory = () => new TContent()}
+        public IEnumerable<ContentPartInfo> GetPartInfo() {
+            var contentPartInfo = new[] {
+                new ContentPartInfo {
+                    PartName = typeof (TContent).Name,
+                    Factory = typePartDefinition => new TContent {TypePartDefinition = typePartDefinition}
+                }
             };
 
             return contentPartInfo;

@@ -5,6 +5,6 @@
 Html.RegisterStyle("admin.css"); 
 if (AuthorizedFor(Permissions.ManageBlogs)) { %>
 <div class="folderProperties">
-    <p><a href="<%=Url.BlogEdit(Model.Slug) %>" class="edit"><%=_Encoded("Edit") %></a></p>
+    <p><a href="<%=Url.BlogEdit(Model.Slug) %>" class="edit"><%: T("Edit") %></a></p>
 </div><%
 } %>

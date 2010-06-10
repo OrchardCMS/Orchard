@@ -1,7 +1,8 @@
 using Orchard.ContentManagement;
+using Orchard.ContentManagement.Aspects;
 
 namespace Orchard.Core.Common.Models {
-    public class RoutableAspect : ContentPart<RoutableRecord> {
+    public class RoutableAspect : ContentPart<RoutableRecord>, IRoutableAspect {
         public string ContentItemBasePath { get; set; }
 
         public string Title {

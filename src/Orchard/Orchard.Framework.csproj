@@ -130,9 +130,12 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Collections\IPageOfItems.cs" />
+    <Compile Include="Collections\PageOfItems.cs" />
     <Compile Include="ContentManagement\Aspects\ICommonAspect.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="ContentManagement\Aspects\IRoutableAspect.cs" />
     <Compile Include="ContentManagement\ContentExtensions.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -296,7 +299,10 @@
     <Compile Include="ContentManagement\MetaData\ContentPartInfo.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="ContentManagement\MetaData\Services\ContentDefinitionWriter.cs" />
     <Compile Include="ContentManagement\MetaData\IContentDefinitionManager.cs" />
+    <Compile Include="ContentManagement\MetaData\IContentDefinitionReader.cs" />
+    <Compile Include="ContentManagement\MetaData\IContentDefinitionWriter.cs" />
     <Compile Include="ContentManagement\MetaData\Models\ContentFieldDefinition.cs" />
     <Compile Include="ContentManagement\MetaData\Models\ContentPartDefinition.cs">
       <SubType>Code</SubType>
@@ -304,6 +310,7 @@
     <Compile Include="ContentManagement\MetaData\Models\ContentTypeDefinition.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="ContentManagement\MetaData\Services\ContentDefinitionReader.cs" />
     <Compile Include="ContentManagement\MetaData\Services\SettingsFormatter.cs" />
     <Compile Include="ContentManagement\Records\ContentItemAlteration.cs">
       <SubType>Code</SubType>

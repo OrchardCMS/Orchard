@@ -23,7 +23,7 @@ namespace Orchard.Core.Indexing.Lucene {
         private readonly IAppDataFolder _appDataFolder;
         private readonly ShellSettings _shellSettings;
         public static readonly Version LuceneVersion = Version.LUCENE_29;
-        private readonly Analyzer _analyzer = new StandardAnalyzer(LuceneVersion);
+        private readonly Analyzer _analyzer ;
         private readonly string _basePath;
         public static readonly DateTime DefaultMinDateTime = new DateTime(1980, 1, 1);
         public static readonly string Settings = "Settings";
@@ -34,6 +34,7 @@ namespace Orchard.Core.Indexing.Lucene {
         public DefaultIndexProvider(IAppDataFolder appDataFolder, ShellSettings shellSettings) {
             _appDataFolder = appDataFolder;
             _shellSettings = shellSettings;
+            _analyzer = CreateAnalyzer();
 
             // TODO: (sebros) Find a common way to get where tenant's specific files should go. "Sites/Tenant" is hard coded in multiple places
             _basePath = Path.Combine("Sites", _shellSettings.Name, "Indexes");
@@ -42,6 +43,11 @@ namespace Orchard.Core.Indexing.Lucene {
 
             // Ensures the directory exists
             EnsureDirectoryExists();
+        }
+
+        public static Analyzer CreateAnalyzer() {
+            // StandardAnalyzer does lower-case and stop-word filtering. It also removes punctuation
+            return new StandardAnalyzer(LuceneVersion);
         }
 
         private void EnsureDirectoryExists() {

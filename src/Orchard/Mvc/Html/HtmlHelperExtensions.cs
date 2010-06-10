@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
-using System.Text.RegularExpressions;
 using System.Web.Mvc;
 using System.Web.Mvc.Html;
 using System.Web.Routing;
+using Orchard.Collections;
 using Orchard.Mvc.ViewModels;
 using Orchard.Services;
 using Orchard.Settings;
@@ -40,21 +40,25 @@ namespace Orchard.Mvc.Html {
 
             return MvcHtmlString.Create(builder.ToString(TagRenderMode.Normal));
         }
+
         #region Pager
 
-        public static string Pager(this HtmlHelper html, int pageCount, int currentPage, object values = null, string previousText = "<", string nextText = ">", bool alwaysShowPreviousAndNext = false) {
-            if (pageCount < 2)
+        public static string Pager<T>(this HtmlHelper html, IPageOfItems<T> pageOfItems, int currentPage, int defaultPageSize, object values = null, string previousText = "<", string nextText = ">", bool alwaysShowPreviousAndNext = false) {
+            if (pageOfItems.TotalPageCount < 2)
                 return "";
 
             var sb = new StringBuilder(75);
+            var rvd = new RouteValueDictionary {{"q", ""},{"page", 0}};
             var viewContext = html.ViewContext;
-            var rvd = new RouteValueDictionary();
+            var urlHelper = new UrlHelper(viewContext.RequestContext);
+
+            if (pageOfItems.PageSize != defaultPageSize)
+                rvd.Add("pagesize", pageOfItems.PageSize);
 
             foreach (var item in viewContext.RouteData.Values) {
                 rvd.Add(item.Key, item.Value);
             }
 
-            var urlHelper = new UrlHelper(viewContext.RequestContext);
 
             if (values != null) {
                 var rvd2 = new RouteValueDictionary(values);
@@ -77,18 +81,22 @@ namespace Orchard.Mvc.Html {
             }
 
             //todo: when there are many pages (> 15?) maybe do something like 1 2 3...6 7 8...13 14 15
-            for (var p = 1; p <= pageCount; p++) {
+            for (var p = 1; p <= pageOfItems.TotalPageCount; p++) {
                 if (p == currentPage) {
                     sb.AppendFormat(" <span>{0}</span>", p);
                 }
                 else {
-                    rvd["page"] = p;
+                    if (p == 1)
+                        rvd.Remove("page");
+                    else
+                        rvd["page"] = p;
+
                     sb.AppendFormat(" <a href=\"{1}\">{0}</a>", p,
                                     urlHelper.RouteUrl(rvd));
                 }
             }
 
-            if (currentPage < pageCount || alwaysShowPreviousAndNext) {
+            if (currentPage < pageOfItems.TotalPageCount || alwaysShowPreviousAndNext) {
                 rvd["page"] = currentPage + 1;
                 sb.AppendFormat("<a href=\"{1}\" class=\"next\">{0}</a>", nextText,
                                 urlHelper.RouteUrl(rvd));

@@ -59,11 +59,11 @@ html.dyn #themepreview button.preview { display:none; }
 <% using(Html.BeginFormAntiForgeryPost(Url.Action("Preview", new{Controller="Admin", Area="Orchard.Themes"}), FormMethod.Post, new { @class = "inline" })) { %>
     <fieldset>    
         <span><%=T("You are previewing: ")%></span>
-        <%=Html.Hidden("ReturnUrl", Context.Request.RawUrl)%>
+        <%: Html.Hidden("ReturnUrl", Context.Request.RawUrl)%>
         <%=Html.DropDownList("ThemeName", Model.Themes, new {onChange = "this.form.submit();"})%>
-        <button type="submit" class="preview" title="<%=_Encoded("Preview")%>" name="submit.Preview" value="<%=_Encoded("Preview")%>"><%=_Encoded("Preview")%></button>
-        <button type="submit" title="<%=_Encoded("Apply")%>" name="submit.Apply" value="<%=_Encoded("Apply")%>"><%=_Encoded("Apply this theme") %></button>
-        <button type="submit" class="cancel" title="<%=_Encoded("Cancel")%>" name="submit.Cancel" value="<%=_Encoded("Cancel")%>"><%=_Encoded("Cancel")%></button>
+        <button type="submit" class="preview" title="<%: T("Preview")%>" name="submit.Preview" value="<%: T("Preview")%>"><%: T("Preview")%></button>
+        <button type="submit" title="<%: T("Apply")%>" name="submit.Apply" value="<%: T("Apply")%>"><%: T("Apply this theme") %></button>
+        <button type="submit" class="cancel" title="<%: T("Cancel")%>" name="submit.Cancel" value="<%: T("Cancel")%>"><%: T("Cancel")%></button>
     </fieldset>
 <% } %>
 </div>

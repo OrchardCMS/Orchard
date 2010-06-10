@@ -1,5 +1,4 @@
-﻿using System;
-using System.Web.Mvc;
+﻿using System.Web.Mvc;
 using Orchard.Localization;
 using Orchard.Search.Services;
 using Orchard.Search.ViewModels;
@@ -22,7 +21,7 @@ namespace Orchard.Search.Controllers {
             var viewModel = new SearchIndexViewModel {HasIndexToManage = _searchService.HasIndexToManage, IndexUpdatedUtc = _searchService.GetIndexUpdatedUtc()};
 
             if (!viewModel.HasIndexToManage)
-                Services.Notifier.Information(T("There is not search index to manage for this site."));
+                Services.Notifier.Information(T("There is no search index to manage for this site."));
 
             return View(viewModel);
         }
@@ -43,6 +42,7 @@ namespace Orchard.Search.Controllers {
                 return new HttpUnauthorizedResult();
 
             _searchService.RebuildIndex();
+            _searchService.UpdateIndex();
 
             return RedirectToAction("Index");
         }

@@ -71,9 +71,7 @@
     <Compile Include="Filters\SearchFilter.cs" />
     <Compile Include="Permissions.cs" />
     <Compile Include="Routes.cs" />
-    <Compile Include="Models\ISearchResult.cs" />
     <Compile Include="Services\ISearchService.cs" />
-    <Compile Include="Models\SearchResult.cs" />
     <Compile Include="Services\SearchService.cs" />
     <Compile Include="ViewModels\SearchIndexViewModel.cs" />
     <Compile Include="ViewModels\SearchResultViewModel.cs" />

@@ -1,10 +1,11 @@
 ﻿using System;
-using Orchard.Search.Models;
+using Orchard.Collections;
+using Orchard.Indexing;
 
 namespace Orchard.Search.Services {
     public interface ISearchService : IDependency {
         bool HasIndexToManage { get; }
-        ISearchResult Query(string query, int skip, int? take);
+        IPageOfItems<T> Query<T>(string query, int skip, int? take, Func<ISearchHit, T> shapeResult);
         void RebuildIndex();
         void UpdateIndex();
         DateTime GetIndexUpdatedUtc();
