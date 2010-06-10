@@ -10,7 +10,7 @@ foreach (var comment in Model) { %>
         </div>
         <div class="text">
             <%-- todo: (heskew) comment text needs processing depending on comment markup style --%>
-            <p><%=Html.Encode(comment.Record.CommentText)%></p>
+            <p><%: comment.Record.CommentText %></p>
         </div>
     </li><%
 } %>

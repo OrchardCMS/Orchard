@@ -9,24 +9,24 @@
 <% Html.RegisterFootScript("jquery.utils.js"); %>
 <% Html.RegisterFootScript("ui.timepickr.js"); %>
 <fieldset>
-    <legend><%=_Encoded("Publish Settings")%></legend>
+    <legend><%: T("Publish Settings")%></legend>
     <div>
-        <%=Html.RadioButton("Command", "SaveDraft", Model.ContentItem.VersionRecord == null || !Model.ContentItem.VersionRecord.Published, new { id = "Command_SaveDraft" }) %>
-        <label class="forcheckbox" for="Command_SaveDraft"><%=_Encoded("Save Draft")%></label>
+        <%: Html.RadioButton("Command", "SaveDraft", Model.ContentItem.VersionRecord == null || !Model.ContentItem.VersionRecord.Published, new { id = "Command_SaveDraft" }) %>
+        <label class="forcheckbox" for="Command_SaveDraft"><%: T("Save Draft")%></label>
     </div>
     <div>
-        <%=Html.RadioButton("Command", "PublishNow", Model.ContentItem.VersionRecord != null && Model.ContentItem.VersionRecord.Published, new { id = "Command_PublishNow" })%>
-        <label class="forcheckbox" for="Command_PublishNow"><%=_Encoded("Publish Now")%></label>
+        <%: Html.RadioButton("Command", "PublishNow", Model.ContentItem.VersionRecord != null && Model.ContentItem.VersionRecord.Published, new { id = "Command_PublishNow" })%>
+        <label class="forcheckbox" for="Command_PublishNow"><%: T("Publish Now")%></label>
     </div>
     <div>
-        <%=Html.RadioButton("Command", "PublishLater", Model.ScheduledPublishUtc != null, new { id = "Command_PublishLater" }) %>
-        <label class="forcheckbox" for="Command_PublishLater"><%=_Encoded("Publish Later")%></label>
+        <%: Html.RadioButton("Command", "PublishLater", Model.ScheduledPublishUtc != null, new { id = "Command_PublishLater" }) %>
+        <label class="forcheckbox" for="Command_PublishLater"><%: T("Publish Later")%></label>
     </div>
     <div>
-        <label class="forpicker" for="ScheduledPublishUtcDate"><%=_Encoded("Date")%></label>
-        <%=Html.EditorFor(m => m.ScheduledPublishUtcDate)%>
-        <label class="forpicker" for="ScheduledPublishUtcTime"><%=_Encoded("Time")%></label>
-        <%=Html.EditorFor(m => m.ScheduledPublishUtcTime)%>
+        <label class="forpicker" for="ScheduledPublishUtcDate"><%: T("Date")%></label>
+        <%: Html.EditorFor(m => m.ScheduledPublishUtcDate)%>
+        <label class="forpicker" for="ScheduledPublishUtcTime"><%: T("Time")%></label>
+        <%: Html.EditorFor(m => m.ScheduledPublishUtcTime)%>
     </div>
 </fieldset>
 <script type="text/javascript">$(function() {

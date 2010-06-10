@@ -5,7 +5,7 @@ foreach (var comment in Model) { %>
     <li>
 
 <div class="comment">
-<p><%=Html.Encode(comment.Record.CommentText) %></p>
+<p><%: comment.Record.CommentText %></p>
 </div>
         
 <div class="commentauthor">

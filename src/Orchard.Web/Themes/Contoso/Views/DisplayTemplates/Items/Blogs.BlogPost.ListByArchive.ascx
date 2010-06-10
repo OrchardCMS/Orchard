@@ -1,7 +1,7 @@
 <%@ Control Language="C#" Inherits="Orchard.Mvc.ViewUserControl<BlogPostArchiveViewModel>" %>
 <%@ Import Namespace="Orchard.Blogs.Extensions"%>
 <%@ Import Namespace="Orchard.Blogs.ViewModels"%>
-<h1 class="page-title"><%=Html.TitleForPage(T("Archives").ToString(), Model.ArchiveData.Year.ToString(), Model.ArchiveData.Month > 0 ? new DateTime(Model.ArchiveData.Year, Model.ArchiveData.Month, 1).ToString("MMMM") : null, Model.ArchiveData.Day > 0 ? Model.ArchiveData.Day.ToString() : null)%></h1>
+<h1 class="page-title"><%: Html.TitleForPage(T("Archives").ToString(), Model.ArchiveData.Year.ToString(), Model.ArchiveData.Month > 0 ? new DateTime(Model.ArchiveData.Year, Model.ArchiveData.Month, 1).ToString("MMMM") : null, Model.ArchiveData.Day > 0 ? Model.ArchiveData.Day.ToString() : null)%></h1>
 
 <div class="archive-trail">
 <%=T("Archives").ToString()

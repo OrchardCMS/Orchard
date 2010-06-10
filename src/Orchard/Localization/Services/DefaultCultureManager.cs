@@ -32,6 +32,16 @@ namespace Orchard.Localization.Services {
             _cultureRepository.Create(new CultureRecord { Culture = cultureName });
         }
 
+        public void DeleteCulture(string cultureName) {
+            if (!IsValidCulture(cultureName)) {
+                throw new ArgumentException("cultureName");
+            }
+
+            var culture = _cultureRepository.Get(cr => cr.Culture == cultureName);
+            if (culture != null)
+                _cultureRepository.Delete(culture);
+        }
+
         public string GetCurrentCulture(HttpContext requestContext) {
             var requestCulture = _cultureSelectors
                 .Select(x => x.GetCulture(requestContext))

@@ -4,5 +4,5 @@
 <%=Html.UnorderedList(Model.Blogs, (b, i) => Html.DisplayForItem(b).ToHtmlString(), "blogs contentItems") %><%
 }
 else { %>
-<p><%=_Encoded("No blogs found.") %></p><%
+<p><%: T("No blogs found.") %></p><%
 } %>

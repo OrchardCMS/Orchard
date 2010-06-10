@@ -19,7 +19,7 @@
 <%--Top Navigation and branding--%>
 <div id="headercontainer">
     <div id="header">
-        <h1><%=Html.Encode(Html.SiteName()) %></h1>
+        <h1><%: Html.SiteName() %></h1>
         <div class="menucontainer">
             <% Html.Include("menu"); %>
         </div>

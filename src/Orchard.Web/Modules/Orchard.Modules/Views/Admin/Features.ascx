@@ -6,7 +6,7 @@
  Html.RegisterStyle("admin.css");
  Html.RegisterStyle("jquery.switchable.css");
  Html.RegisterFootScript("jquery.switchable.js"); %>
-<h1><%=Html.TitleForPage(T("Manage Features").ToString()) %></h1>
+<h1><%: Html.TitleForPage(T("Manage Features").ToString()) %></h1>
 <% if (Model.Features.Count() > 0) { %>
 <ul class="features summary-view switchable"><%
     var featureGroups = Model.Features.OrderBy(f => f.Descriptor.Category).GroupBy(f => f.Descriptor.Category);
@@ -21,7 +21,7 @@
         //temporarily "disable" actions on core features
         var showActions = categoryName.ToString() != "Core"; %>
     <li class="<%=categoryClassName %>">
-        <h2><%=Html.Encode(categoryName) %></h2>
+        <h2><%: categoryName %></h2>
         <ul><%
             var features = featureGroup.OrderBy(f => f.Descriptor.Name);
             foreach (var feature in features) {
@@ -40,7 +40,7 @@
                         <p class="description"><%:feature.Descriptor.Description %></p><%
                         if (feature.Descriptor.Dependencies != null) { %>
                         <div class="dependencies">
-                            <h4><%=_Encoded("Depends on:")%></h4>
+                            <h4><%: T("Depends on:")%></h4>
                             <%=Html.UnorderedList(
                                 feature.Descriptor.Dependencies.OrderBy(s => s),
                                 (s, i) => Html.Link(s, string.Format("#{0}", s.AsFeatureId(n => T(n)))),
@@ -54,15 +54,15 @@
                     <div class="actions"><%
                         if (feature.IsEnabled) {
                         using (Html.BeginFormAntiForgeryPost(string.Format("{0}", Url.Action("Disable", new { area = "Orchard.Modules" })), FormMethod.Post, new {@class = "inline link"})) { %>
-                            <%=Html.Hidden("id", feature.Descriptor.Name, new { id = "" })%>
-                            <%=Html.Hidden("force", true)%>
-                            <button type="submit"><%=_Encoded("Disable") %></button><%
+                            <%: Html.Hidden("id", feature.Descriptor.Name, new { id = "" })%>
+                            <%: Html.Hidden("force", true)%>
+                            <button type="submit"><%: T("Disable") %></button><%
                         }
                         } else {
                         using (Html.BeginFormAntiForgeryPost(string.Format("{0}", Url.Action("Enable", new { area = "Orchard.Modules" })), FormMethod.Post, new {@class = "inline link"})) { %>
-                            <%=Html.Hidden("id", feature.Descriptor.Name, new { id = "" })%>
-                            <%=Html.Hidden("force", true)%>
-                            <button type="submit"><%=_Encoded("Enable") %></button><%
+                            <%: Html.Hidden("id", feature.Descriptor.Name, new { id = "" })%>
+                            <%: Html.Hidden("force", true)%>
+                            <button type="submit"><%: T("Enable") %></button><%
                         }
                         } %>
                     </div><%

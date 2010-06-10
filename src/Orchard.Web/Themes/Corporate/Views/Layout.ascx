@@ -19,7 +19,7 @@
     <div id="nav">
         <div class="brand group">
             <div class="title">
-                <%=Html.Encode(Html.SiteName()) %></div>
+                <%: Html.SiteName() %></div>
         </div>
         <% Html.Zone("menu"); %>
     </div>
