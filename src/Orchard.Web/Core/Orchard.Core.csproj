@@ -169,6 +169,7 @@
     <Compile Include="Scheduling\Services\ScheduledTaskManager.cs" />
     <Compile Include="Scheduling\Services\ScheduledTaskExecutor.cs" />
     <Compile Include="Scheduling\Models\Task.cs" />
+    <Compile Include="Settings\ViewModels\SiteCulturesViewModel.cs" />
     <Compile Include="Settings\Drivers\SiteSettingsDriver.cs" />
     <Compile Include="Settings\Metadata\ContentDefinitionManager.cs" />
     <Compile Include="Settings\Metadata\Records\ContentFieldDefinitionRecord.cs" />
@@ -224,7 +225,11 @@
     <Content Include="Routable\Views\EditorTemplates\Parts\Routable.IsRoutable.ascx" />
     <Content Include="Routable\Views\Item\Display.aspx" />
     <Content Include="Settings\Module.txt" />
+    <Content Include="Settings\Styles\admin.css" />
     <Content Include="Settings\Views\Admin\Index.ascx" />
+    <Content Include="Settings\Views\Admin\Culture.ascx" />
+    <Content Include="Settings\Views\DisplayTemplates\CurrentCulture.ascx" />
+    <Content Include="Settings\Views\DisplayTemplates\RemovableCulture.ascx" />
     <Content Include="Web.config" />
     <Content Include="XmlRpc\Module.txt" />
     <Content Include="XmlRpc\Views\Home\Index.aspx" />

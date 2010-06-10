@@ -1811,7 +1811,7 @@ msgstr "Changer le mot de passe"
 #: ~/Modules/Orchard.Users/Views/Account/ChangePassword.ascx
 #| msgid : "Use the form below to change your password."
 msgid "Use the form below to change your password."
-msgstr "Veuillez utiliser le forumulaire ci-dessous pour changer votre mot de passe."
+msgstr "Veuillez utiliser le formulaire ci-dessous pour changer votre mot de passe."
 
 #: ~/Modules/Orchard.Users/Views/Account/ChangePassword.ascx
 #| msgid : "New passwords are required to be a minimum of {0} characters in length."
