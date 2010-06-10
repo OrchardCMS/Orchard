@@ -6,8 +6,8 @@
     <fieldset class="actions bulk">
         <label for="publishActions"><%: T("Actions:") %></label>
         <select id="publishActions" name="<%=Html.NameOf(m => m.BulkAction)%>">
-            <%: Html.SelectOption(Model.BulkAction, TagAdminIndexBulkAction.None, _Encoded("Choose action...").ToString())%>
-            <%: Html.SelectOption(Model.BulkAction, TagAdminIndexBulkAction.Delete, _Encoded("Remove").ToString())%>
+            <%: Html.SelectOption(Model.BulkAction, TagAdminIndexBulkAction.None, T("Choose action..."))%>
+            <%: Html.SelectOption(Model.BulkAction, TagAdminIndexBulkAction.Delete, T("Remove"))%>
         </select>
         <input class="button" type="submit" name="submit.BulkEdit" value="<%: T("Apply") %>" />
     </fieldset>

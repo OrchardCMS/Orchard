@@ -12,19 +12,19 @@ using (Html.BeginFormAntiForgeryPost()) { %>
     <fieldset class="actions bulk">
         <label for="publishActions"><%: T("Actions:")%></label>
         <select id="publishActions" name="<%=Html.NameOf(m => m.Options.BulkAction) %>">
-            <%: Html.SelectOption(Model.Options.BulkAction, PagesBulkAction.None, _Encoded("Choose action...").ToString())%>
-            <%: Html.SelectOption(Model.Options.BulkAction, PagesBulkAction.PublishNow, _Encoded("Publish Now").ToString())%>
-            <%: Html.SelectOption(Model.Options.BulkAction, PagesBulkAction.Unpublish, _Encoded("Unpublish").ToString())%>
-            <%: Html.SelectOption(Model.Options.BulkAction, PagesBulkAction.Delete, _Encoded("Remove").ToString())%>
+            <%: Html.SelectOption(Model.Options.BulkAction, PagesBulkAction.None, T("Choose action..."))%>
+            <%: Html.SelectOption(Model.Options.BulkAction, PagesBulkAction.PublishNow, T("Publish Now"))%>
+            <%: Html.SelectOption(Model.Options.BulkAction, PagesBulkAction.Unpublish, T("Unpublish"))%>
+            <%: Html.SelectOption(Model.Options.BulkAction, PagesBulkAction.Delete, T("Remove"))%>
         </select>
         <input class="button" type="submit" name="submit.BulkEdit" value="<%: T("Apply") %>" />
     </fieldset>
     <fieldset class="actions bulk">
         <label for="filterResults"><%: T("Filter:")%></label>
         <select id="filterResults" name="<%=Html.NameOf(m => m.Options.Filter) %>">
-            <%: Html.SelectOption(Model.Options.Filter, PagesFilter.All, _Encoded("All Pages").ToString())%>
-            <%: Html.SelectOption(Model.Options.Filter, PagesFilter.Published, _Encoded("Published Pages").ToString())%>
-            <%: Html.SelectOption(Model.Options.Filter, PagesFilter.Offline, _Encoded("Offline Pages").ToString())%>
+            <%: Html.SelectOption(Model.Options.Filter, PagesFilter.All, T("All Pages"))%>
+            <%: Html.SelectOption(Model.Options.Filter, PagesFilter.Published, T("Published Pages"))%>
+            <%: Html.SelectOption(Model.Options.Filter, PagesFilter.Offline, T("Offline Pages"))%>
         </select>
         <input class="button" type="submit" name="submit.Filter" value="<%: T("Apply") %>"/>
     </fieldset>
@@ -75,7 +75,7 @@ using (Html.BeginFormAntiForgeryPost()) { %>
                     </div>
                     <div class="related"><%
                         if (pageEntry.Page.HasPublished) { %>
-                        <%: Html.ActionLink("View", "Item", new { controller = "Page", slug = pageEntry.Page.PublishedSlug }, new {title = _Encoded("View Page")})%><%: T(" | ")%><%
+                        <%: Html.ActionLink("View", "Item", new { controller = "Page", slug = pageEntry.Page.PublishedSlug }, new {title = T("View Page")})%><%: T(" | ")%><%
                             if (pageEntry.Page.HasDraft) { %>
                         <a href="<%=Html.AntiForgeryTokenGetUrl(Url.Action("Publish", new {id = pageEntry.Page.Id})) %>" title="<%: T("Publish Draft")%>"><%: T("Publish Draft")%></a><%: T(" | ")%><%
                             } %>
@@ -84,7 +84,7 @@ using (Html.BeginFormAntiForgeryPost()) { %>
                         else { %>
                         <a href="<%=Html.AntiForgeryTokenGetUrl(Url.Action("Publish", new {id = pageEntry.Page.Id})) %>" title="<%: T("Publish Page")%>"><%: T("Publish")%></a><%: T(" | ")%><%
                         } %>
-                        <%: Html.ActionLink(_Encoded("Edit").ToString(), "Edit", new {id = pageEntry.Page.Id}, new {title = _Encoded("Edit Page")})%><%: T(" | ")%>
+                        <%: Html.ActionLink(T("Edit"), "Edit", new {id = pageEntry.Page.Id}, new {title = T("Edit Page")})%><%: T(" | ")%>
                         <a href="<%=Html.AntiForgeryTokenGetUrl(Url.Action("Delete", new {id = pageEntry.Page.Id})) %>" title="<%: T("Remove Page")%>"><%: T("Remove")%></a>
                     </div>
                     <div style="clear:both;"></div>

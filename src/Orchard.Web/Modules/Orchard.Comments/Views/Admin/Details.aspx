@@ -22,21 +22,21 @@
     <fieldset class="actions bulk">
         <label for="publishActions"><%: T("Actions:") %></label>
         <select id="publishActions" name="<%=Html.NameOf(m => m.Options.BulkAction)%>">
-            <%: Html.SelectOption(Model.Options.BulkAction, CommentDetailsBulkAction.None, _Encoded("Choose action...").ToString())%>
-            <%: Html.SelectOption(Model.Options.BulkAction, CommentDetailsBulkAction.Approve, _Encoded("Approve").ToString())%>
-            <%: Html.SelectOption(Model.Options.BulkAction, CommentDetailsBulkAction.Pend, _Encoded("Pend").ToString())%>
-            <%: Html.SelectOption(Model.Options.BulkAction, CommentDetailsBulkAction.MarkAsSpam, _Encoded("Mark as Spam").ToString())%>
-            <%: Html.SelectOption(Model.Options.BulkAction, CommentDetailsBulkAction.Delete, _Encoded("Remove").ToString())%>
+            <%: Html.SelectOption(Model.Options.BulkAction, CommentDetailsBulkAction.None, T("Choose action..."))%>
+            <%: Html.SelectOption(Model.Options.BulkAction, CommentDetailsBulkAction.Approve, T("Approve"))%>
+            <%: Html.SelectOption(Model.Options.BulkAction, CommentDetailsBulkAction.Pend, T("Pend"))%>
+            <%: Html.SelectOption(Model.Options.BulkAction, CommentDetailsBulkAction.MarkAsSpam, T("Mark as Spam"))%>
+            <%: Html.SelectOption(Model.Options.BulkAction, CommentDetailsBulkAction.Delete, T("Remove"))%>
         </select>
         <input class="button" type="submit" name="submit.BulkEdit" value="<%: T("Apply") %>" />
     </fieldset>
     <fieldset class="actions bulk">
         <label for="filterResults"><%: T("Filter:")%></label>
         <select id="filterResults" name="<%=Html.NameOf(m => m.Options.Filter)%>">
-            <%: Html.SelectOption(Model.Options.Filter, CommentDetailsFilter.All, _Encoded("All Comments").ToString())%>
-            <%: Html.SelectOption(Model.Options.Filter, CommentDetailsFilter.Approved, _Encoded("Approved Comments").ToString())%>
-            <%: Html.SelectOption(Model.Options.Filter, CommentDetailsFilter.Pending, _Encoded("Pending Comments").ToString())%>
-            <%: Html.SelectOption(Model.Options.Filter, CommentDetailsFilter.Spam, _Encoded("Spam").ToString())%>
+            <%: Html.SelectOption(Model.Options.Filter, CommentDetailsFilter.All, T("All Comments"))%>
+            <%: Html.SelectOption(Model.Options.Filter, CommentDetailsFilter.Approved, T("Approved Comments"))%>
+            <%: Html.SelectOption(Model.Options.Filter, CommentDetailsFilter.Pending, T("Pending Comments"))%>
+            <%: Html.SelectOption(Model.Options.Filter, CommentDetailsFilter.Spam, T("Spam"))%>
         </select>
         <input class="button" type="submit" name="submit.Filter" value="<%: T("Apply") %>"/>
     </fieldset>

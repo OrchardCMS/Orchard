@@ -1,6 +1,6 @@
 ﻿<%@ Control Language="C#" Inherits="Orchard.Mvc.ViewUserControl<SetupViewModel>" %>
 <%@ Import Namespace="Orchard.Setup.ViewModels"%>
-<h1><%: Html.TitleForPage(_Encoded("Get Started").ToHtmlString())%></h1>
+<h1><%: Html.TitleForPage(T("Get Started"))%></h1>
 <%
 using (Html.BeginFormAntiForgeryPost()) { %>
 <%: Html.ValidationSummary() %>

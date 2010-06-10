@@ -36,7 +36,7 @@ namespace Orchard.Mvc.Html {
             if (selected)
                 builder.MergeAttribute("selected", "selected");
 
-            builder.SetInnerText(text);
+            builder.SetInnerText(html.Encode(text));
 
             return MvcHtmlString.Create(builder.ToString(TagRenderMode.Normal));
         }
