@@ -21,7 +21,7 @@ namespace Orchard.Search.Controllers {
             var viewModel = new SearchIndexViewModel {HasIndexToManage = _searchService.HasIndexToManage, IndexUpdatedUtc = _searchService.GetIndexUpdatedUtc()};
 
             if (!viewModel.HasIndexToManage)
-                Services.Notifier.Information(T("There is not search index to manage for this site."));
+                Services.Notifier.Information(T("There is no search index to manage for this site."));
 
             return View(viewModel);
         }

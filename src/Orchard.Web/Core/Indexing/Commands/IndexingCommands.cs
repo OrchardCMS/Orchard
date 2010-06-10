@@ -124,7 +124,7 @@ namespace Orchard.Core.Indexing.Commands {
         }
 
         [CommandName("index delete")]
-        [CommandHelp("index delete /ContenItem:<content item id>\r\n\t" + "Deletes the specifed <content item id> fromthe index")]
+        [CommandHelp("index delete /ContenItem:<content item id>\r\n\t" + "Deletes the specifed <content item id> from the index")]
         [OrchardSwitches("ContentItem")]
         public string Delete() {
             int contenItemId;

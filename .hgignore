@@ -15,3 +15,4 @@ glob:src/Orchard.Azure.suo
 glob:src/Orchard.5.0.ReSharper
 glob:log.xml
 glob:profiling
+glob:*.csproj.orig
