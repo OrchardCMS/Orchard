@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Orchard.ContentManagement.MetaData.Models;
 using Orchard.ContentManagement.Utilities;
 
@@ -7,6 +8,8 @@ namespace Orchard.ContentManagement {
         public ContentTypeDefinition TypeDefinition { get { return ContentItem.TypeDefinition; } }
         public ContentTypeDefinition.Part TypePartDefinition { get; set; }
         public ContentPartDefinition PartDefinition { get { return TypePartDefinition.PartDefinition; } }
+
+        public IEnumerable<ContentField> ContentFields { get; set; }
     }
 
     public class ContentPart<TRecord> : ContentPart {

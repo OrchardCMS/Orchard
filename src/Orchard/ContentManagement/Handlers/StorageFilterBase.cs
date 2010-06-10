@@ -4,6 +4,8 @@ namespace Orchard.ContentManagement.Handlers {
         protected virtual void Activated(ActivatedContentContext context, TPart instance) { }
         protected virtual void Creating(CreateContentContext context, TPart instance) { }
         protected virtual void Created(CreateContentContext context, TPart instance) { }
+        protected virtual void Saving(SaveContentContext context, TPart instance) { }
+        protected virtual void Saved(SaveContentContext context, TPart instance) { }
         protected virtual void Loading(LoadContentContext context, TPart instance) { }
         protected virtual void Loaded(LoadContentContext context, TPart instance) { }
         protected virtual void Versioning(VersionContentContext context, TPart existing, TPart building) { }
@@ -29,6 +31,16 @@ namespace Orchard.ContentManagement.Handlers {
         void IContentStorageFilter.Created(CreateContentContext context) {
             if (context.ContentItem.Is<TPart>())
                 Created(context, context.ContentItem.As<TPart>());
+        }
+
+        void IContentStorageFilter.Saving(SaveContentContext context) {
+            if (context.ContentItem.Is<TPart>())
+                Saving(context, context.ContentItem.As<TPart>());
+        }
+
+        void IContentStorageFilter.Saved(SaveContentContext context) {
+            if (context.ContentItem.Is<TPart>())
+                Saved(context, context.ContentItem.As<TPart>());
         }
 
         void IContentStorageFilter.Loading(LoadContentContext context) {
