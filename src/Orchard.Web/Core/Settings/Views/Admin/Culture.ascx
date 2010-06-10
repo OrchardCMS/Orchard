@@ -10,7 +10,7 @@
 <% using (Html.BeginFormAntiForgeryPost("AddCulture")) { %>
 <%:Html.ValidationSummary() %>
 <fieldset>
-    <legend><%:T("Add a culture...") %></legend>
+    <label for="CultureName"><%:T("Add a culture...") %></label>
     <%:Html.DropDownList("CultureName", new SelectList(Model.AvailableSystemCultures.OrderBy(s => s), Model.CurrentCulture)) %>
     <button class="primaryAction" type="submit"><%:T("Add") %></button>
 </fieldset>

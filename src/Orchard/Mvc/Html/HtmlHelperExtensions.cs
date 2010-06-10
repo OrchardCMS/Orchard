@@ -196,7 +196,7 @@ namespace Orchard.Mvc.Html {
             if (time.TotalSeconds > 60)
                 return T.Plural("1 minute ago", "{0} minutes ago", time.Minutes);
             if (time.TotalSeconds > 10)
-                return T.Plural("1 second ago", "{0} seconds ago", time.Seconds);
+                return T.Plural("1 second ago", "{0} seconds ago", time.Seconds); //aware that the singular won't be used
 
             return T("a moment ago");
         }
