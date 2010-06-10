@@ -79,7 +79,7 @@
         Zone:<%: display.ZoneName ?? "(null)" %>
         Position:<%: display.Position ?? "(null)" %>
         <div style="margin-left: 20px; border: solid 1px black;">
-            <%=Html.DisplayFor(x => display.Model, display.TemplateName, display.Prefix)%>
+            <%: Html.DisplayFor(x => display.Model, display.TemplateName, display.Prefix)%>
         </div>
     </li>
     <%                      

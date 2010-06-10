@@ -17,7 +17,7 @@
             <div class="related"><%
                 if (!string.Equals(tenant.Name, "default", StringComparison.OrdinalIgnoreCase)) { //todo: (heskew) base this off the view model so logic on what can be removed and have its state changed stays in the controller
                 var t = tenant; %>
-                <%=Html.DisplayFor(m => t, string.Format("ActionsFor{0}", tenant.State.CurrentState), "") %><%: T(" | ")%><%
+                <%: Html.DisplayFor(m => t, string.Format("ActionsFor{0}", tenant.State.CurrentState), "") %><%: T(" | ")%><%
                 } %>
                 <%: Html.ActionLink(T("Edit").ToString(), "Edit", new {name = tenant.Name, area = "Orchard.MultiTenancy"}) %><%
                 if (!string.Equals(tenant.Name, "default", StringComparison.OrdinalIgnoreCase)) { //todo: (heskew) base this off the view model so logic on what can be removed and have its state changed stays in the controller

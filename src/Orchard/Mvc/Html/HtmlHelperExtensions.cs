@@ -112,16 +112,16 @@ namespace Orchard.Mvc.Html {
 
         #region UnorderedList
 
-        public static string UnorderedList<T>(this HtmlHelper htmlHelper, IEnumerable<T> items, Func<T, int, string> generateContent, string cssClass) {
+        public static IHtmlString UnorderedList<T>(this HtmlHelper htmlHelper, IEnumerable<T> items, Func<T, int, string> generateContent, string cssClass) {
             return htmlHelper.UnorderedList(items, generateContent, cssClass, null, null);
         }
 
-        public static string UnorderedList<T>(this HtmlHelper htmlHelper, IEnumerable<T> items, Func<T, int, string> generateContent, string cssClass, string itemCssClass, string alternatingItemCssClass) {
+        public static IHtmlString UnorderedList<T>(this HtmlHelper htmlHelper, IEnumerable<T> items, Func<T, int, string> generateContent, string cssClass, string itemCssClass, string alternatingItemCssClass) {
             return UnorderedList(items, generateContent, cssClass, t => itemCssClass, t => alternatingItemCssClass);
         }
 
-        private static string UnorderedList<T>(IEnumerable<T> items, Func<T, int, string> generateContent, string cssClass, Func<T, string> generateItemCssClass, Func<T, string> generateAlternatingItemCssClass) {
-            if (items == null || items.Count() == 0) return "";
+        private static IHtmlString UnorderedList<T>(IEnumerable<T> items, Func<T, int, string> generateContent, string cssClass, Func<T, string> generateItemCssClass, Func<T, string> generateAlternatingItemCssClass) {
+            if (items == null || !items.Any()) return new HtmlString(string.Empty);
 
             var sb = new StringBuilder(250);
             int counter = 0, count = items.Count() - 1;
@@ -155,7 +155,7 @@ namespace Orchard.Mvc.Html {
 
             sb.Append("</ul>");
 
-            return sb.ToString();
+            return new HtmlString(sb.ToString());
         }
 
         #endregion

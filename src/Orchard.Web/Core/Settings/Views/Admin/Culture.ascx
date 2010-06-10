@@ -3,7 +3,7 @@
  Html.RegisterStyle("admin.css"); %>
 <h1><%:Html.TitleForPage(T("Manage Settings").ToString()) %></h1>
 <h2><%:T("Cultures this site supports") %></h2>
-<%=Html.UnorderedList(
+<%: Html.UnorderedList(
     Model.SiteCultures.OrderBy(s => s),
     (s, i) => Html.DisplayFor(scvm => s, s == Model.CurrentCulture ? "CurrentCulture" : "RemovableCulture", "").ToString(),
     "site-cultures", "culture", "odd")%>

@@ -3,6 +3,7 @@ using System.Web.Mvc;
 using Moq;
 using NUnit.Framework;
 using Orchard.Mvc.Html;
+using System.Collections.Generic;
 
 namespace Orchard.Tests.Mvc.Html {
     [TestFixture]
@@ -133,6 +134,32 @@ namespace Orchard.Tests.Mvc.Html {
             Assert.AreEqual(@"<option value=""value"">&lt;br /&gt;</option>", result.ToString());
         }
 
+        [Test]
+        public void UnorderedListWithNullItemsReturnsEmptyHtmlString() {
+            //arrange
+            var viewContext = new ViewContext();
+            var viewDataContainer = new Mock<IViewDataContainer>();
+            var html = new HtmlHelper(viewContext, viewDataContainer.Object);
 
+            //act
+            var result = html.UnorderedList((IEnumerable<string>)null, (a, b) => "", "test");
+
+            //assert
+            Assert.AreEqual(string.Empty, result.ToString());
+        }
+
+        [Test]
+        public void UnorderedListWithEmptyItemsReturnsEmptyHtmlString() {
+            //arrange
+            var viewContext = new ViewContext();
+            var viewDataContainer = new Mock<IViewDataContainer>();
+            var html = new HtmlHelper(viewContext, viewDataContainer.Object);
+
+            //act
+            var result = html.UnorderedList(new string[]{}, (a, b) => "", "test");
+
+            //assert
+            Assert.AreEqual(string.Empty, result.ToString());
+        }
     }
 }

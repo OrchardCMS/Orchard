@@ -41,7 +41,7 @@
                         if (feature.Descriptor.Dependencies != null) { %>
                         <div class="dependencies">
                             <h4><%: T("Depends on:")%></h4>
-                            <%=Html.UnorderedList(
+                            <%: Html.UnorderedList(
                                 feature.Descriptor.Dependencies.OrderBy(s => s),
                                 (s, i) => Html.Link(s, string.Format("#{0}", s.AsFeatureId(n => T(n)))),
                                 "",

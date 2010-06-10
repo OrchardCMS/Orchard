@@ -11,4 +11,4 @@
 %>
 </div>
 
-<%=Html.UnorderedList(Model.BlogPosts, (c, i) => Html.DisplayForItem(c).ToHtmlString(), "blogPosts contentItems")%>
+<%: Html.UnorderedList(Model.BlogPosts, (c, i) => Html.DisplayForItem(c).ToHtmlString(), "blogPosts contentItems")%>
