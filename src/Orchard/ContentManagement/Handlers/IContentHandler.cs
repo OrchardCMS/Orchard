@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using Orchard.Events;
+﻿using System.Collections.Generic;
 
 namespace Orchard.ContentManagement.Handlers {
     public interface IContentHandler : IEvents {
@@ -10,6 +8,8 @@ namespace Orchard.ContentManagement.Handlers {
         void Activated(ActivatedContentContext context);
         void Creating(CreateContentContext context);
         void Created(CreateContentContext context);
+        void Saving(SaveContentContext context);
+        void Saved(SaveContentContext context);
         void Loading(LoadContentContext context);
         void Loaded(LoadContentContext context);
         void Versioning(VersionContentContext context);

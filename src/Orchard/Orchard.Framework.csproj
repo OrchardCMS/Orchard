@@ -170,6 +170,9 @@
     <Compile Include="ContentManagement\Drivers\CombinedResult.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="ContentManagement\Drivers\ContentFieldDriver.cs" />
+    <Compile Include="ContentManagement\Drivers\ContentFieldDriverHandler.cs" />
+    <Compile Include="ContentManagement\Drivers\ContentFieldTemplateResult.cs" />
     <Compile Include="ContentManagement\Drivers\ContentItemDriver.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -255,6 +258,7 @@
     <Compile Include="ContentManagement\Handlers\RemoveContentContext.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="ContentManagement\Handlers\SaveContentContext.cs" />
     <Compile Include="ContentManagement\Handlers\StorageFilter.cs">
       <SubType>Code</SubType>
     </Compile>

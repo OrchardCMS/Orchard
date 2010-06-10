@@ -25,6 +25,14 @@ namespace Orchard.ContentManagement.Handlers {
             Filters.Add(new InlineStorageFilter<TPart> { OnCreated = handler });
         }
 
+        protected void OnSaving<TPart>(Action<SaveContentContext, TPart> handler) where TPart : class, IContent {
+            Filters.Add(new InlineStorageFilter<TPart> { OnSaving = handler });
+        }
+
+        protected void OnSaved<TPart>(Action<SaveContentContext, TPart> handler) where TPart : class, IContent {
+            Filters.Add(new InlineStorageFilter<TPart> { OnSaved = handler });
+        }
+
         protected void OnLoading<TPart>(Action<LoadContentContext, TPart> handler) where TPart : class, IContent {
             Filters.Add(new InlineStorageFilter<TPart> { OnLoading = handler });
         }
@@ -84,6 +92,8 @@ namespace Orchard.ContentManagement.Handlers {
             public Action<ActivatedContentContext, TPart> OnActivated { get; set; }
             public Action<CreateContentContext, TPart> OnCreating { get; set; }
             public Action<CreateContentContext, TPart> OnCreated { get; set; }
+            public Action<SaveContentContext, TPart> OnSaving { get; set; }
+            public Action<SaveContentContext, TPart> OnSaved { get; set; }
             public Action<LoadContentContext, TPart> OnLoading { get; set; }
             public Action<LoadContentContext, TPart> OnLoaded { get; set; }
             public Action<VersionContentContext, TPart, TPart> OnVersioning { get; set; }
@@ -102,6 +112,12 @@ namespace Orchard.ContentManagement.Handlers {
             }
             protected override void Created(CreateContentContext context, TPart instance) {
                 if (OnCreated != null) OnCreated(context, instance);
+            }
+            protected override void Saving(SaveContentContext context, TPart instance) {
+                if (OnSaving != null) OnSaving(context, instance);
+            }
+            protected override void Saved(SaveContentContext context, TPart instance) {
+                if (OnSaved != null) OnSaved(context, instance);
             }
             protected override void Loading(LoadContentContext context, TPart instance) {
                 if (OnLoading != null) OnLoading(context, instance);
@@ -183,6 +199,18 @@ namespace Orchard.ContentManagement.Handlers {
             foreach (var filter in Filters.OfType<IContentStorageFilter>())
                 filter.Created(context);
             Created(context);
+        }
+
+        void IContentHandler.Saving(SaveContentContext context) {
+            foreach (var filter in Filters.OfType<IContentStorageFilter>())
+                filter.Saving(context);
+            Saving(context);
+        }
+
+        void IContentHandler.Saved(SaveContentContext context) {
+            foreach (var filter in Filters.OfType<IContentStorageFilter>())
+                filter.Saved(context);
+            Saved(context);
         }
 
         void IContentHandler.Loading(LoadContentContext context) {
@@ -271,6 +299,9 @@ namespace Orchard.ContentManagement.Handlers {
 
         protected virtual void Creating(CreateContentContext context) { }
         protected virtual void Created(CreateContentContext context) { }
+
+        protected virtual void Saving(SaveContentContext context) { }
+        protected virtual void Saved(SaveContentContext context) { }
 
         protected virtual void Loading(LoadContentContext context) { }
         protected virtual void Loaded(LoadContentContext context) { }
