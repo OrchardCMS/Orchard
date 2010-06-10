@@ -4,7 +4,7 @@
 <%@ Import Namespace="Orchard.Comments.Models" %>
 <%-- todo: clean up this template - waaay too much going on in here :/ --%><%
 if (Model.Comments.Count > 0) { %>
-<h2 id="comments"><%: T("{0} Comment{1}", Model.Comments.Count, Model.Comments.Count == 1 ? "" : "s")%></h2>
+<h2 id="comments"><%: T.Plural("1 Comment", "{0} Comments", Model.Comments.Count)%></h2>
 <% Html.RenderPartial("ListOfComments", Model.Comments);
 }
 
