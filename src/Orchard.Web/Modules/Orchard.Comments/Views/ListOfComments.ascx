@@ -4,7 +4,7 @@
 foreach (var comment in Model) { %>
     <li>
         <div class="comment">
-            <span class="who"><%=Html.LinkOrDefault(Html.Encode(comment.Record.UserName), Html.Encode(comment.Record.SiteName), new { rel = "nofollow" })%></span>
+            <span class="who"><%: Html.LinkOrDefault(comment.Record.UserName, comment.Record.SiteName, new { rel = "nofollow" })%></span>
             <%-- todo: (heskew) need comment permalink --%>
             <span>said <%: Html.Link(Html.DateTimeRelative(comment.Record.CommentDateUtc.GetValueOrDefault()), "#")%></span>
         </div>

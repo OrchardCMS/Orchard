@@ -12,6 +12,7 @@ using Orchard.Services;
 using Orchard.Settings;
 using Orchard.Utility;
 using Orchard.Utility.Extensions;
+using System.Web;
 
 namespace Orchard.Mvc.Html {
     public static class HtmlHelperExtensions {
@@ -241,53 +242,54 @@ namespace Orchard.Mvc.Html {
 
         #region Link
 
-        public static MvcHtmlString Link(this HtmlHelper htmlHelper, string linkContents, string href)
+        public static IHtmlString Link(this HtmlHelper htmlHelper, string linkContents, string href)
         {
             return htmlHelper.Link(linkContents, href, null);
         }
 
-        public static MvcHtmlString Link(this HtmlHelper htmlHelper, string linkContents, string href, object htmlAttributes)
+        public static IHtmlString Link(this HtmlHelper htmlHelper, string linkContents, string href, object htmlAttributes)
         {
             return htmlHelper.Link(linkContents, href, new RouteValueDictionary(htmlAttributes));
         }
 
-        public static MvcHtmlString Link(this HtmlHelper htmlHelper, string linkContents, string href, IDictionary<string, object> htmlAttributes)
+        public static IHtmlString Link(this HtmlHelper htmlHelper, string linkContents, string href, IDictionary<string, object> htmlAttributes)
         {
             TagBuilder tagBuilder = new TagBuilder("a") 
                 { InnerHtml = htmlHelper.Encode(linkContents) };
             tagBuilder.MergeAttributes(htmlAttributes);
             tagBuilder.MergeAttribute("href", href);
-            return MvcHtmlString.Create(tagBuilder.ToString(TagRenderMode.Normal));
+            return new HtmlString(tagBuilder.ToString(TagRenderMode.Normal));
         }
 
         #endregion
 
         #region LinkOrDefault
 
-        public static string LinkOrDefault(this HtmlHelper htmlHelper, string linkContents, string href)
+        public static IHtmlString LinkOrDefault(this HtmlHelper htmlHelper, string linkContents, string href)
         {
             return htmlHelper.LinkOrDefault(linkContents, href, null);
         }
 
-        public static string LinkOrDefault(this HtmlHelper htmlHelper, string linkContents, string href, object htmlAttributes)
+        public static IHtmlString LinkOrDefault(this HtmlHelper htmlHelper, string linkContents, string href, object htmlAttributes)
         {
             return htmlHelper.LinkOrDefault(linkContents, href, new RouteValueDictionary(htmlAttributes));
         }
 
-        public static string LinkOrDefault(this HtmlHelper htmlHelper, string linkContents, string href, IDictionary<string, object> htmlAttributes)
+        public static IHtmlString LinkOrDefault(this HtmlHelper htmlHelper, string linkContents, string href, IDictionary<string, object> htmlAttributes)
         {
-            if (!string.IsNullOrEmpty(href))
-            {
-                TagBuilder tagBuilder = new TagBuilder("a")
-                {
-                    InnerHtml = linkContents
-                };
-                tagBuilder.MergeAttributes(htmlAttributes);
-                tagBuilder.MergeAttribute("href", href);
-                linkContents = tagBuilder.ToString(TagRenderMode.Normal);
+            string linkText = htmlHelper.Encode(linkContents);
+            
+            if (string.IsNullOrEmpty(href)) {
+                return new HtmlString(linkText);
             }
 
-            return linkContents;
+            TagBuilder tagBuilder = new TagBuilder("a")
+            {
+                InnerHtml = linkText
+            };
+            tagBuilder.MergeAttributes(htmlAttributes);
+            tagBuilder.MergeAttribute("href", href);
+            return new HtmlString(tagBuilder.ToString(TagRenderMode.Normal));
         }
 
         #endregion
@@ -336,15 +338,15 @@ namespace Orchard.Mvc.Html {
 
         #region AntiForgeryTokenValueOrchardLink
 
-        public static MvcHtmlString AntiForgeryTokenValueOrchardLink(this HtmlHelper htmlHelper, string linkContents, string href)  {
+        public static IHtmlString AntiForgeryTokenValueOrchardLink(this HtmlHelper htmlHelper, string linkContents, string href)  {
             return htmlHelper.AntiForgeryTokenValueOrchardLink(linkContents, href, (object)null);
         }
 
-        public static MvcHtmlString AntiForgeryTokenValueOrchardLink(this HtmlHelper htmlHelper, string linkContents, string href, object htmlAttributes)  {
+        public static IHtmlString AntiForgeryTokenValueOrchardLink(this HtmlHelper htmlHelper, string linkContents, string href, object htmlAttributes)  {
             return htmlHelper.AntiForgeryTokenValueOrchardLink(linkContents, href, new RouteValueDictionary(htmlAttributes));
         }
 
-        public static MvcHtmlString AntiForgeryTokenValueOrchardLink(this HtmlHelper htmlHelper, string linkContents, string href, IDictionary<string, object> htmlAttributes)  {
+        public static IHtmlString AntiForgeryTokenValueOrchardLink(this HtmlHelper htmlHelper, string linkContents, string href, IDictionary<string, object> htmlAttributes)  {
             return htmlHelper.Link(linkContents, htmlHelper.AntiForgeryTokenGetUrl(href), htmlAttributes);
         }
 
