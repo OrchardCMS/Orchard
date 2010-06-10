@@ -4,7 +4,7 @@ Html.RegisterStyle("admin.css"); %>
 <h1><%=Html.TitleForPage(T("Search Index Management").ToString()) %></h1><%
 using (Html.BeginForm("update", "admin", FormMethod.Post, new {area = "Orchard.Search"})) { %>
     <fieldset>
-        <p><%=T("The search index was last updated {0}. <button type=\"submit\" title=\"Update the search index.\" class=\"primaryAction\">Update</button>", Html.DateTimeRelative(Model.IndexUpdatedUtc))%></p>
+        <p><%=T("The search index was last updated {0}. <button type=\"submit\" title=\"Update the search index.\" class=\"primaryAction\">Update</button>", Html.DateTimeRelative(Model.IndexUpdatedUtc, T))%></p>
         <%=Html.AntiForgeryTokenOrchard() %>
     </fieldset><%
 }
