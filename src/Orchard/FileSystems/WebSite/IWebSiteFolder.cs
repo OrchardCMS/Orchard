@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Orchard.Caching;
 
 namespace Orchard.FileSystems.WebSite {
@@ -7,5 +8,6 @@ namespace Orchard.FileSystems.WebSite {
         string ReadFile(string path);
 
         IVolatileToken WhenPathChanges(string path);
+        void WhenPathChanges(string path, Action action);
     }
 }

@@ -49,6 +49,10 @@ namespace Orchard.FileSystems.WebSite {
             return token;
         }
 
+        public void WhenPathChanges(string virtualPath, Action action) {
+            BindSignal(virtualPath, (key, value, reason) => action());
+        }
+
         private Token BindToken(string virtualPath) {
             lock (_tokens) {
                 Weak<Token> weak;
@@ -80,6 +84,11 @@ namespace Orchard.FileSystems.WebSite {
         }
 
         private void BindSignal(string virtualPath) {
+            BindSignal(virtualPath, _thunk.Signal);
+            
+        }
+
+        private void BindSignal(string virtualPath, CacheItemRemovedCallback callback) {
             var cacheDependency = HostingEnvironment.VirtualPathProvider.GetCacheDependency(
                 virtualPath,
                 new[] { virtualPath },
@@ -92,7 +101,7 @@ namespace Orchard.FileSystems.WebSite {
                 Cache.NoAbsoluteExpiration,
                 Cache.NoSlidingExpiration,
                 CacheItemPriority.NotRemovable,
-                _thunk.Signal);
+                callback);
         }
 
         public void Signal(string key, object value, CacheItemRemovedReason reason) {

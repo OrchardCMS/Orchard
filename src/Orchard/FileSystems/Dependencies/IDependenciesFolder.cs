@@ -3,13 +3,11 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Web.Caching;
-using System.Web.Hosting;
 using System.Xml.Linq;
 using Orchard.Caching;
 using Orchard.Environment;
 using Orchard.Environment.Extensions;
-using Orchard.Environment.Topology;
+using Orchard.FileSystems.WebSite;
 
 namespace Orchard.FileSystems.Dependencies {
     public class DependencyDescriptor {
@@ -20,21 +18,27 @@ namespace Orchard.FileSystems.Dependencies {
     }
 
     public interface IDependenciesFolder : IVolatileProvider {
-        void StoreBuildProviderAssembly(string moduleName, string virtualPath, Assembly assembly);
+        void StoreReferencedAssembly(string moduleName);
         void StorePrecompiledAssembly(string moduleName, string virtualPath);
+        void StoreBuildProviderAssembly(string moduleName, string virtualPath, Assembly assembly);
         DependencyDescriptor GetDescriptor(string moduleName);
         Assembly LoadAssembly(string assemblyName);
     }
 
     public class DefaultDependenciesFolder : IDependenciesFolder {
-        private readonly string _prefix = Guid.NewGuid().ToString("n");
-        private const string _basePath = "~/App_Data/Dependencies";
+        private readonly string _basePath = "~/App_Data/Dependencies";
+        private readonly ICacheManager _cacheManager;
+        private readonly IWebSiteFolder _webSiteFolder;
         private readonly IVirtualPathProvider _virtualPathProvider;
         private readonly IExtensionManagerEvents _events;
+        private readonly InvalidationToken _token;
 
-        public DefaultDependenciesFolder(IVirtualPathProvider virtualPathProvider, IExtensionManagerEvents events) {
+        public DefaultDependenciesFolder(ICacheManager cacheManager, IWebSiteFolder webSiteFolder, IVirtualPathProvider virtualPathProvider, IExtensionManagerEvents events) {
+            _cacheManager = cacheManager;
+            _webSiteFolder = webSiteFolder;
             _virtualPathProvider = virtualPathProvider;
             _events = events;
+            _token = new InvalidationToken();
         }
 
         private string BasePath {
@@ -49,9 +53,33 @@ namespace Orchard.FileSystems.Dependencies {
             }
         }
 
-        public void StoreBuildProviderAssembly(string moduleName, string virtualPath, Assembly assembly) {
-            _virtualPathProvider.CreateDirectory(BasePath);
+        private IList<DependencyDescriptor> Descriptors {
+            get {
+                return _cacheManager.Get(PersistencePath,
+                    ctx => {
+                        ctx.Monitor(_webSiteFolder.WhenPathChanges(ctx.Key));
+                        ctx.Monitor(_token);
 
+                        _virtualPathProvider.CreateDirectory(BasePath);
+                        return ReadDependencies(ctx.Key);
+                    });
+            }
+        }
+
+        public class InvalidationToken : IVolatileToken {
+            public bool IsCurrent { get; set; }
+        }
+
+        public void StoreReferencedAssembly(string moduleName) {
+            if (Descriptors.Any(d => d.ModuleName == moduleName)) {
+                // Remove the moduleName from the list of assemblies in the dependency folder
+                var newDescriptors = Descriptors.Where(d => d.ModuleName != moduleName);
+
+                WriteDependencies(PersistencePath, newDescriptors);
+            }
+        }
+
+        public void StoreBuildProviderAssembly(string moduleName, string virtualPath, Assembly assembly) {
             var descriptor = new DependencyDescriptor {
                 ModuleName = moduleName,
                 IsFromBuildProvider = true,
@@ -61,21 +89,7 @@ namespace Orchard.FileSystems.Dependencies {
 
             StoreDepencyInformation(descriptor);
 
-#if true
-            var cacheDependency = HostingEnvironment.VirtualPathProvider.GetCacheDependency(
-                virtualPath,
-                new[] { virtualPath },
-                DateTime.UtcNow);
-
-            HostingEnvironment.Cache.Add(
-                _prefix + virtualPath,
-                moduleName,
-                cacheDependency,
-                Cache.NoAbsoluteExpiration,
-                Cache.NoSlidingExpiration,
-                CacheItemPriority.NotRemovable,
-                (key, value, reason) => _events.ModuleChanged((string) value));
-#endif
+            _webSiteFolder.WhenPathChanges(virtualPath, () => _events.ModuleChanged(moduleName));
         }
 
         public void StorePrecompiledAssembly(string moduleName, string virtualPath) {
@@ -98,11 +112,11 @@ namespace Orchard.FileSystems.Dependencies {
         }
 
         public DependencyDescriptor GetDescriptor(string moduleName) {
-            return ReadDependencies().SingleOrDefault(d => d.ModuleName == moduleName);
+            return Descriptors.SingleOrDefault(d => d.ModuleName == moduleName);
         }
 
         private bool IsNewerAssembly(string moduleName, string assemblyFileName) {
-            var dependency = ReadDependencies().SingleOrDefault(d => d.ModuleName == moduleName);
+            var dependency = Descriptors.SingleOrDefault(d => d.ModuleName == moduleName);
             if (dependency == null) {
                 return true;
             }
@@ -116,7 +130,7 @@ namespace Orchard.FileSystems.Dependencies {
         }
 
         private void StoreDepencyInformation(DependencyDescriptor descriptor) {
-            var dependencies = ReadDependencies().ToList();
+            var dependencies = Descriptors.ToList();
             int index = dependencies.FindIndex(d => d.ModuleName == descriptor.ModuleName);
             if (index < 0) {
                 dependencies.Add(descriptor);
@@ -125,13 +139,13 @@ namespace Orchard.FileSystems.Dependencies {
                 dependencies[index] = descriptor;
             }
 
-            WriteDependencies(dependencies);
+            WriteDependencies(PersistencePath, dependencies);
         }
 
         public Assembly LoadAssembly(string assemblyName) {
             _virtualPathProvider.CreateDirectory(BasePath);
 
-            var dependency = ReadDependencies().SingleOrDefault(d => d.ModuleName == assemblyName);
+            var dependency = Descriptors.SingleOrDefault(d => d.ModuleName == assemblyName);
             if (dependency == null)
                 return null;
 
@@ -141,11 +155,13 @@ namespace Orchard.FileSystems.Dependencies {
             return Assembly.Load(Path.GetFileNameWithoutExtension(dependency.FileName));
         }
 
-        private IEnumerable<DependencyDescriptor> ReadDependencies() {
-            if (!_virtualPathProvider.FileExists(PersistencePath))
+        private IEnumerable<DependencyDescriptor> ReadDependencies(string persistancePath) {
+            Func<string, XName> ns = (name => XName.Get(name));
+
+            if (!_virtualPathProvider.FileExists(persistancePath))
                 return Enumerable.Empty<DependencyDescriptor>();
 
-            using (var stream = _virtualPathProvider.OpenFile(PersistencePath)) {
+            using (var stream = _virtualPathProvider.OpenFile(persistancePath)) {
                 XDocument document = XDocument.Load(stream);
                 return document
                     .Elements(ns("Dependencies"))
@@ -160,7 +176,9 @@ namespace Orchard.FileSystems.Dependencies {
             }
         }
 
-        private void WriteDependencies(IEnumerable<DependencyDescriptor> dependencies) {
+        private void WriteDependencies(string persistancePath, IEnumerable<DependencyDescriptor> dependencies) {
+            Func<string, XName> ns = (name => XName.Get(name));
+
             var document = new XDocument();
             document.Add(new XElement(ns("Dependencies")));
             var elements = dependencies.Select(d => new XElement("Dependency",
@@ -170,13 +188,12 @@ namespace Orchard.FileSystems.Dependencies {
                                                   new XElement(ns("FileName"), d.FileName)));
             document.Root.Add(elements);
 
-            using (var stream = _virtualPathProvider.CreateText(PersistencePath)) {
+            using (var stream = _virtualPathProvider.CreateText(persistancePath)) {
                 document.Save(stream, SaveOptions.None);
             }
-        }
 
-        private static XName ns(string name) {
-            return XName.Get(name/*, "http://schemas.microsoft.com/developer/msbuild/2003"*/);
+            // Ensure cache is invalidated right away, not waiting for file change notification to happen
+            _token.IsCurrent = false;
         }
     }
 }
