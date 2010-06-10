@@ -7,7 +7,7 @@
 <%@ Import Namespace="Orchard.Blogs.Models"%>
 <div class="summary">
     <div class="properties">
-        <h3><%: Html.Link(s, Url.BlogPostEdit(Model.Item))%></h3>
+        <h3><%: Html.Link(Model.Item.Title, Url.BlogPostEdit(Model.Item))%></h3>
         <ul>
             <li><%
             if (Model.Item.HasPublished) { %>

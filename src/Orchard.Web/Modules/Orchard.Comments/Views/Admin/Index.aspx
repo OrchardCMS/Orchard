@@ -7,7 +7,7 @@
     <fieldset class="actions bulk">
         <label for="publishActions"><%: T("Actions:") %></label>
         <select id="publishActions" name="<%=Html.NameOf(m => m.Options.BulkAction)%>">
-            <%: Html.SelectOption(Model.Options.BulkAction, CommentIndexBulkAction.None, T("Choose action...")) %>
+            <%: Html.SelectOption(Model.Options.BulkAction, CommentIndexBulkAction.None, T("Choose action...").ToString()) %>
             <%: Html.SelectOption(Model.Options.BulkAction, CommentIndexBulkAction.Approve, T("Approve")) %>
             <%: Html.SelectOption(Model.Options.BulkAction, CommentIndexBulkAction.Pend, T("Pend")) %>
             <%: Html.SelectOption(Model.Options.BulkAction, CommentIndexBulkAction.MarkAsSpam, T("Mark as Spam")) %>

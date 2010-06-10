@@ -43,7 +43,7 @@
                             <h4><%: T("Depends on:")%></h4>
                             <%: Html.UnorderedList(
                                 feature.Descriptor.Dependencies.OrderBy(s => s),
-                                (s, i) => Html.Link(s, string.Format("#{0}", s.AsFeatureId(n => T(n)))),
+                                (s, i) => Html.Link(s, string.Format("#{0}", s.AsFeatureId(n => T(n)))).ToString(),
                                 "",
                                 "dependency",
                                 "") %>

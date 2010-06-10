@@ -8,7 +8,7 @@
     <div class="secondary">
         <% Html.Zone("secondary");%>
         <fieldset>
-            <input class="button primaryAction" type="submit" name="submit.Save" value="<%=_Encoded("Save") %>"/>
+            <input class="button primaryAction" type="submit" name="submit.Save" value="<%: T("Save") %>"/>
         </fieldset>
     </div>
 </div>
