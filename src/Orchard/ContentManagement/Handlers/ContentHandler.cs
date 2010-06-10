@@ -242,7 +242,7 @@ namespace Orchard.ContentManagement.Handlers {
         void IContentHandler.Indexed(IndexContentContext context) {
             foreach ( var filter in Filters.OfType<IContentStorageFilter>() )
                 filter.Indexed(context);
-            Indexing(context);
+            Indexed(context);
         }
 
         void IContentHandler.GetContentItemMetadata(GetContentItemMetadataContext context) {

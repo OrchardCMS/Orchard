@@ -40,7 +40,6 @@ table {
 }
 /* end: reset */
 
-
 /* Base setup
 ----------------------------------------------------------*/
 html {
@@ -56,10 +55,8 @@ body {
     min-width:94.6em; /* 946px */
     padding:0;
 }
-/*todo: (heskew) find out why I need this...*/
 button {
     font-family:Segoe UI,Trebuchet,Arial,Sans-Serif;
-    font-size:1.01em;
 }
 body#preview {
     min-width:0;
@@ -67,7 +64,6 @@ body#preview {
 #content {
     background:#fcfcfc;
 }
-
 
 /* Layout
 
@@ -160,6 +156,7 @@ table.items th, table.items td, table.items caption { font-size:1.4em; line-heig
 table.items p, table.items label, table.items input, table.items .button { font-size:1em; line-height:1em; }
 p .button { font-size:inherit; }
 .meta, .hint { font-size:1.2em; } /* 12px */
+form.link button { font-size:1.01em; }
 
 /* Links
 ----------------------------------------------------------*/
@@ -232,7 +229,6 @@ form.link button:hover {
     color:#ffea9b;
 }
 
-
 /* Navigation
 ----------------------------------------------------------*/
 #navshortcut {
@@ -275,7 +271,6 @@ form.link button:hover {
 	color: #000;
 	text-decoration:underline;
 }
-
 
 /* Content
 ----------------------------------------------------------*/
@@ -325,7 +320,6 @@ span.message {
 .message a {
     font-weight:bold;
 }
-
 .confirmation.message {
 	background:#D1F2A5; /* green */
 	border:1px solid #BCD994;
@@ -358,7 +352,6 @@ span.message {
     content:"DEBUG » ";
 }
 
-
 /* Forms   
 ----------------------------------------------------------*/
 form.inline, form.inline fieldset { /* todo: (heskew) need something other than .inline ... */
@@ -381,7 +374,7 @@ legend span {
     font-weight:normal;
 }
 label {
-	display: block;
+	display:block;
 	color:#4c4c4c;
 	font-weight:bold;
 }
@@ -401,9 +394,6 @@ label input {
 .hint {
     display:block;
 }
-.hint.forcheckbox {
-    text-indent:3ex; /* todo: (heskew) this might look out of place */
-}
 /* todo: (heskew) try to get .text on stuff like .text-box */
 select, textarea, input.text, input.textMedium, input.text-box {
 	padding:2px;
@@ -422,39 +412,12 @@ input.check-box {
     margin-left:0;
     vertical-align:-.1em;
 }
-.permalink input {
-    background:transparent;
-    border-color:#EAE9D9;
-    border-style:dashed;
-    margin-left:0;
-	width:350px;
-}
-.permalink input:focus {
-    background:#FFF;
-    border-color:#666d51;
-    border-style:solid;
-}
 input.large.text, textarea, fieldset {
     clear:both;
 }
 fieldset {
     margin:0 0 1.3em 0;
     padding:6px 0 0;
-}
-/* Settings page styles */
-.settings fieldset {
-    margin:.5em 0;
-    padding:1em;
-}
-.orchard-media fieldset div, .settings fieldset div, .orchard-media .button, .settings .button {
-    margin:1em 0 .5em 1em;
-}
-.settings legend {
-    margin:0 0 -.4em 0;
-}
-/* todo: This style is the same as textMedium. Consolidate if possible */
-.settings input.text, .settings input.text-box {
-    width:26em;
 }
 textarea {
     min-height:8em;
@@ -486,9 +449,6 @@ button, .button, .button:link, .button:visited {
 	cursor:pointer;
 	text-align:center;
 	padding:0 .8em .1em;
-}
-button {
-    padding-top:.08em;
 }
 form.link button {
     background:inherit;
@@ -542,9 +502,8 @@ button.remove:focus::-moz-focus-inner, .remove.button:focus::-moz-focus-inner {
     overflow:hidden;
 }
 .actions {
-    height:2em;
-    overflow:hidden;
-    padding:.6em 0 .1em;
+    clear:right;
+    padding:0;
     text-align:right;
 }
 .contentItems .actions li {
@@ -608,58 +567,6 @@ button.ibutton {
 .ibutton.blog:hover, .ibutton.blog:active, .ibutton.blog:focus { background-position:-120px 0; }
 
 
-/* todo: (heskew) needs attention */
-.withActions {
-    overflow:hidden;
-}
-.withActions a {
-    display:inline;
-    float:left;
-    margin-right:7px;
-}
-
-
-/* Content item lists
-----------------------------------------------------------*/
-.contentItems {
-    background:#FFF;
-    box-shadow:inset 0 1px 2px #878686;
-    -moz-box-shadow:inset 0 1px 3px #878686;
-    -webkit-box-shadow:inset 0 1px 2px #878686;
-    margin:1.4em 0;
-    padding:2px;
-}
-.contentItems li {
-    border-bottom:1px solid #eaeaea;
-    margin:0;
-    overflow:hidden;
-    padding:0 1.4em .8em;
-}
-.contentItems li.last {
-    border-bottom:0;
-}
-#main .contentItems li .actions {
-    color:#EAE9D9;
-    height:auto;
-    margin:-1.3em 0 0;
-    padding:0 0 .1em;
-}
-#main .contentItems li .actions .ibutton {
-    margin-right:6px;
-}
-#main .contentItems li .actions .destruct .ibutton {
-    margin-left:8px;
-    margin-right:0;
-}
-#main .contentItems li:hover .ibutton { background-position:0 0; }
-#main .contentItems li:hover .ibutton.remove { background-position:-20px 0; }
-#main .contentItems li:hover .ibutton.view { background-position:-40px 0; }
-#main .contentItems li:hover .ibutton.add.page { background-position:-60px 0; }
-#main .contentItems li:hover .ibutton.edit { background-position:-80px 0; }
-#main .contentItems li:hover .ibutton.publish { background-position:-100px 0; }
-#main .contentItems li:hover .ibutton.blog { background-position:-120px 0; }
-
-
 /* (Items) Tables
 ----------------------------------------------------------*/
 table.items {
@@ -715,170 +622,106 @@ table .button {
 }
 
 
-/* MISC.
-todo: (heskew) pull out into relevant modules where appropriate
+/* Content item lists
 ----------------------------------------------------------*/
-
-/* Pages
-----------------------------------------------------------*/
-#main .templates p {
-    margin:0 0 .3em 0;
+.contentItems {
+    background:#FFF;
+    box-shadow:inset 0 1px 2px #878686;
+    -moz-box-shadow:inset 0 1px 3px #878686;
+    -webkit-box-shadow:inset 0 1px 2px #878686;
+    clear:both;
+    margin:1.4em 0;
 }
-.templates li {
-    margin:.8em;
-    width:30%;
-    display: -moz-inline-stack;
-    display:inline-block;
-    vertical-align:top;
-    zoom:1;
-    *display: inline;
-}
-.templates .inline button {
-    font-size:1.2em;
-}
-.templates .wasFormInlineLink {
-    font-size:1.4em;
-}
-.templates p {
+.contentItems li {
+    border-bottom:1px solid #eaeaea;
+    margin:0;
     overflow:hidden;
+    padding:0 1.4em .8em;
 }
-.templates img, .themePreviewImage {
-	border:1px solid #e8e8e8;
-    height:200px;
-    margin:.27em 0 .93em 0;
-    display:block;
+.contentItems li.last {
+    border-bottom:0;
 }
-.previewImage {
-	border:1px solid #525e50;
-	height:50%;
-	width:50%;
+#main .contentItems li .actions {
+    color:#EAE9D9;
+    height:auto;
+    margin:-1.3em 0 0;
+    padding:0 0 .1em;
 }
-.themes #main h2 {
-    margin:1em 0 0 0;
+#main .contentItems li .actions .ibutton {
+    margin-right:6px;
 }
-.themePreviewImage {
-	height:300px;
+#main .contentItems li .actions .destruct .ibutton {
+    margin-left:8px;
+    margin-right:0;
 }
+#main .contentItems li:hover .ibutton { background-position:0 0; }
+#main .contentItems li:hover .ibutton.remove { background-position:-20px 0; }
+#main .contentItems li:hover .ibutton.view { background-position:-40px 0; }
+#main .contentItems li:hover .ibutton.add.page { background-position:-60px 0; }
+#main .contentItems li:hover .ibutton.edit { background-position:-80px 0; }
+#main .contentItems li:hover .ibutton.publish { background-position:-100px 0; }
+#main .contentItems li:hover .ibutton.blog { background-position:-120px 0; }
 
-/* Rounded borders and other "works in some browsers" additions
-----------------------------------------------------------
-#content, #navigation li, button, .button,
-table.items, textarea, input.text, input.text-box,
-.contentItems, .message, .validation-summary-errors {
-	-moz-border-radius:4px;
-	-webkit-border-radius:4px;
-	border-radius:4px;
-}
-#navigation li h4 a {
-	-moz-border-radius:3px 3px 0 0;
-	-webkit-border-radius:3px 3px 0 0;
-	border-radius:3px 3px 0 0;
-}*/
-
-
-
-/* Added classes for new blog list layout
----------------------------------------------------------- */
-.blogdescription {
-    margin-top:1em;
-}
-.summary {
+.contentItems .summary {
     overflow:auto;
     padding:1.2em .4em;
 }
-.actions {
-    clear:right;
-    height:auto;
-    overflow:visible;
-    padding:0;
-    text-align:right;
-}
-.contentItems {
-    clear:both;
-    padding:0;
-}
-.properties {
+.contentItems .properties {
     float:left;
 }
-.blogs.contentItems .properties {
-    float:none;
-}
-#main .contentItems .properties h3 {
-    border-bottom:none;
-    margin:0;
-    padding:0;
-}
-.related{
-     font-size:1.4em;
-     float:right;
-     text-align:right;
-}
-/*todo: (heskew) cleanup */
-.related .button {
-    font-size:1em;    
-}
-/*end todo*/
-.commentcount {
-    line-height:2em;
-}
-.contentItems .properties ul li{
+.contentItems .properties li {
     border:0;
     float:left;
-    padding:.8em 0;
     font-size:1.4em;
-    background:inherit;
+    padding:.8em 0;
 }
-.icon {
-    margin:0 .2em -.2em .2em;
+.contentItems .properties .icon {
+    margin:0 .2em -.2em;
 }
-h3 .icon {
-    margin-bottom:-.05em;
-}
-.linkButton {
-    border:none;
-    padding:0;
-    background:none;
-    color:#1E5D7D; 
-    }   
-.linkButton:hover {
-    background-color:Transparent;
-    text-decoration:underline;
-    color:#1E5D7D;
-    }
-   
- /* Added classes for new page list layout
----------------------------------------------------------- */  
-.pageList {
-     margin:0;
-     padding:0;
-     /*background:#FFFFFF url(images/backgroundGradient.gif) repeat-x scroll left top;*/
-     }
-.orchard-pages .contentItems {
-     margin:.5em 0 0;
-     padding:0;
- }
-.contentItems .properties ul.pageStatus {
-    margin:0.8em 0 0 2em;
-}    
-.contentItems .properties ul.pageStatus li {
-    margin:0;
-    padding:0 0 .1em 0;
-}
-.properties h3 {
-    display:inline;
-}
-
-/* Added classes for media
----------------------------------------------------------- */  
-.breadCrumbs, .folderProperties {
-    float:left;
-    margin:-2em 0 0 0;
-}
-.folderProperties {
+.contentItems .related {
     float:right;
+    font-size:1.4em;
+    text-align:right;
 }
-/* ---------- Generic ---------- */
+.contentItems .commentcount {
+    line-height:2em;
+}
 
+
+/* Core Modules
+----------------------------------------------------------*/
+/* Routable */
+.permalink input {
+    background:transparent;
+    border-color:#EAE9D9;
+    border-style:dashed;
+    margin-left:0;
+	width:350px;
+}
+.permalink input:focus {
+    background:#FFF;
+    border-color:#666d51;
+    border-style:solid;
+}
+/* Settings */
+.settings fieldset {
+    margin:.5em 0;
+    padding:1em;
+}
+.orchard-media fieldset div, .settings fieldset div, .orchard-media .button, .settings .button {
+    margin:1em 0 .5em 1em;
+}
+.settings legend {
+    margin:0 0 -.4em 0;
+}
+/* todo: This style is the same as textMedium. Consolidate if possible */
+.settings input.text, .settings input.text-box {
+    width:26em;
+}
+
+
+/* ---------- Generic ---------- */
+/* todo: needed? */
 .clearBoth {
 	clear:both;
 }

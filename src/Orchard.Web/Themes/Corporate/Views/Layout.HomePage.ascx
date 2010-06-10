@@ -32,7 +32,7 @@
             <%-- Home Hero --%>
 	        <div class="main-box">
                 <div class="top">
-                     <img src="/Themes/Corporate/Content/Images/content-top.png" /></div>
+                    <img src="<%= Url.Content("~/Themes/Corporate/Content/Images/content-top.png") %>" /></div>
 	                <div class="content group">
 
                         <% Html.Zone("home-hero-gallery"); %>
@@ -41,7 +41,7 @@
 
 		            </div>
 	            <div class="bottom">
-                    <img src="/Themes/Corporate/Content/Images/content-bottom.png" /></div>
+                    <img src="<%= Url.Content("~/Themes/Corporate/Content/Images/content-bottom.png") %>" /></div>
 	        </div>
 
 	        <%-- Main Content Area --%>

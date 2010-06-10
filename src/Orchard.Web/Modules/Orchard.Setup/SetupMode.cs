@@ -7,6 +7,7 @@ using Orchard.Commands;
 using Orchard.Commands.Builtin;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Handlers;
+using Orchard.ContentManagement.MetaData.Builders;
 using Orchard.Data.Builders;
 using Orchard.Environment.Extensions;
 using Orchard.Localization;
@@ -90,7 +91,8 @@ namespace Orchard.Setup {
 
         class SafeModeSiteService : ISiteService {
             public ISite GetSiteSettings() {
-                var site = new ContentItemBuilder("site")
+                var siteType = new ContentTypeDefinitionBuilder().Named("site").Build();
+                var site = new ContentItemBuilder(siteType)
                     .Weld<SafeModeSite>()
                     .Build();
 

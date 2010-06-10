@@ -24,6 +24,10 @@ namespace Orchard.Indexing {
         /// </summary>
         IIndexDocument Analyze(bool analyze);
 
+        /// <summary>
+        /// Whether some property have been added to this document, or otherwise if it's empty
+        /// </summary>
+        bool IsDirty { get; }
 
     }
 }

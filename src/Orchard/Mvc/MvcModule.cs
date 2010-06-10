@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Specialized;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
@@ -81,6 +82,13 @@ namespace Orchard.Mvc {
             /// </summary>
             public override bool IsAuthenticated {
                 get { return false; }
+            }
+
+            // empty collection provided for background operation
+            public override NameValueCollection Form {
+                get {
+                    return new NameValueCollection();
+                }
             }
         }
     }

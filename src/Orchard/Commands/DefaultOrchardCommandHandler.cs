@@ -45,7 +45,7 @@ namespace Orchard.Commands {
                         propertyInfo.SetValue(this, stringValue, null);
                     }
                     else {
-                        throw new InvalidOperationException(T("No property named {0} found of type bool, int or string.", commandSwitch));
+                        throw new InvalidOperationException(T("No property named {0} found of type bool, int or string.", commandSwitch).ToString());
                     }
                 }
             }
@@ -55,7 +55,7 @@ namespace Orchard.Commands {
             CheckMethodForSwitches(context.CommandDescriptor.MethodInfo, context.Switches);
             object[] invokeParameters = GetInvokeParametersForMethod(context.CommandDescriptor.MethodInfo, (context.Arguments ?? Enumerable.Empty<string>()).ToArray());
             if (invokeParameters == null) {
-                throw new InvalidOperationException(T("Command arguments don't match"));
+                throw new InvalidOperationException(T("Command arguments don't match").ToString());
             }
 
             this.Context = context;
@@ -105,7 +105,7 @@ namespace Orchard.Commands {
             }
             foreach (var commandSwitch in switches.Keys) {
                 if (!supportedSwitches.Contains(commandSwitch)) {
-                    throw new InvalidOperationException(T("Method {0} does not support switch {1}.", methodInfo.Name, commandSwitch));
+                    throw new InvalidOperationException(T("Method {0} does not support switch {1}.", methodInfo.Name, commandSwitch).ToString());
                 }
             }
         }

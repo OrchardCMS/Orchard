@@ -12,12 +12,16 @@ namespace Orchard.Core.Indexing.Lucene {
 
         public List<AbstractField> Fields { get; private set; }
         private AbstractField _previousField;
+
         public int Id { get; private set; }
 
         public DefaultIndexDocument(int documentId) {
             Fields = new List<AbstractField>();
             SetContentItemId(documentId);
+            IsDirty = false;
         }
+
+        public bool IsDirty { get; private set; }
 
         public IIndexDocument Add(string name, string value) {
             return Add(name, value, false);
@@ -25,41 +29,52 @@ namespace Orchard.Core.Indexing.Lucene {
 
         public IIndexDocument Add(string name, string value, bool removeTags) {
             AppendPreviousField();
+            
+            if(value == null) {
+                value = String.Empty;
+            }
+            
             if(removeTags) {
                 value = value.RemoveTags();
             }
 
             _previousField = new Field(name, value, Field.Store.YES, Field.Index.ANALYZED);
+            IsDirty = true;
             return this;
         }
 
         public IIndexDocument Add(string name, DateTime value) {
             AppendPreviousField();
             _previousField = new Field(name, DateTools.DateToString(value, DateTools.Resolution.SECOND), Field.Store.YES, Field.Index.NOT_ANALYZED);
+            IsDirty = true;
             return this;
         }
 
         public IIndexDocument Add(string name, int value) {
             AppendPreviousField();
             _previousField = new NumericField(name, Field.Store.YES, true).SetIntValue(value);
+            IsDirty = true;
             return this;
         }
 
         public IIndexDocument Add(string name, bool value) {
             AppendPreviousField();
             _previousField = new Field(name, value.ToString().ToLower(), Field.Store.YES, Field.Index.NOT_ANALYZED);
+            IsDirty = true;
             return this;
         }
 
         public IIndexDocument Add(string name, float value) {
             AppendPreviousField();
             _previousField = new NumericField(name, Field.Store.YES, true).SetFloatValue(value);
+            IsDirty = true;
             return this;
         }
 
         public IIndexDocument Add(string name, object value) {
             AppendPreviousField();
             _previousField = new Field(name, value.ToString(), Field.Store.NO, Field.Index.NOT_ANALYZED);
+            IsDirty = true;
             return this;
         }
 

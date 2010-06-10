@@ -5,8 +5,11 @@ using System.Web.Hosting;
 using Orchard.Environment.Extensions.Models;
 
 namespace Orchard.Environment.Extensions.Loaders {
+    /// <summary>
+    /// Load an extension by looking through the BuildManager referenced assemblies
+    /// </summary>
     public class ReferencedExtensionLoader : IExtensionLoader {
-        public int Order { get { return 2; } }
+        public int Order { get { return 20; } }
 
         public ExtensionEntry Load(ExtensionDescriptor descriptor) {
             if (HostingEnvironment.IsHosted == false)
@@ -20,10 +23,10 @@ namespace Orchard.Environment.Extensions.Loaders {
                 return null;
 
             return new ExtensionEntry {
-                                          Descriptor = descriptor,
-                                          Assembly = assembly,
-                                          ExportedTypes = assembly.GetExportedTypes()
-                                      };
+                Descriptor = descriptor,
+                Assembly = assembly,
+                ExportedTypes = assembly.GetExportedTypes()
+            };
         }
     }
 }

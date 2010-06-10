@@ -6,7 +6,7 @@ using JetBrains.Annotations;
 using Moq;
 using NUnit.Framework;
 using Orchard.ContentManagement.Aspects;
-using Orchard.ContentManagement.MetaData.Records;
+using Orchard.ContentManagement.MetaData;
 using Orchard.Core.Common;
 using Orchard.Core.Common.Handlers;
 using Orchard.Core.Common.Models;
@@ -26,6 +26,7 @@ namespace Orchard.Core.Tests.Common.Providers {
         private Mock<IAuthenticationService> _authn;
         private Mock<IAuthorizationService> _authz;
         private Mock<IMembershipService> _membership;
+        private Mock<IContentDefinitionManager> _contentDefinitionManager;
 
         public override void Register(ContainerBuilder builder) {
             builder.RegisterType<DefaultContentManager>().As<IContentManager>();
@@ -36,19 +37,18 @@ namespace Orchard.Core.Tests.Common.Providers {
             _authn = new Mock<IAuthenticationService>();
             _authz = new Mock<IAuthorizationService>();
             _membership = new Mock<IMembershipService>();
+            _contentDefinitionManager = new Mock<IContentDefinitionManager>();
 
             builder.RegisterInstance(_authn.Object);
             builder.RegisterInstance(_authz.Object);
             builder.RegisterInstance(_membership.Object);
-
+            builder.RegisterInstance(_contentDefinitionManager.Object);
         }
 
         protected override IEnumerable<Type> DatabaseTypes {
             get {
                 return new[] {
                                  typeof(ContentTypeRecord), 
-                                 typeof(ContentTypePartRecord), 
-                                 typeof(ContentTypePartNameRecord),
                                  typeof(ContentItemRecord), 
                                  typeof(ContentItemVersionRecord), 
                                  typeof(CommonRecord),

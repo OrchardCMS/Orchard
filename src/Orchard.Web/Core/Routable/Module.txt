@@ -1,0 +1,11 @@
+﻿Name: Routable
+antiforgery: enabled
+author: The Orchard Team
+website: http://orchardproject.net
+version: 0.1
+orchardversion: 0.1.2010.0312
+description: Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas consectetur consequat risus, vel blandit arcu tincidunt eget. Nam rutrum nulla vestibulum dolor dapibus sagittis. Vivamus convallis faucibus accumsan. Suspendisse sapien enim, cursus at dignissim a, sollicitudin sit amet est. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Donec sed urna magna, in luctus nulla. Pellentesque erat ipsum, convallis sed molestie tempus, mattis vel leo metus. 
+features:
+    Routable:
+        Description: Routable content part.
+        Category: Core2

@@ -12,7 +12,7 @@
     <RootNamespace>Orchard.Media</RootNamespace>
     <AssemblyName>Orchard.Media</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
-    <MvcBuildViews>true</MvcBuildViews>
+    <MvcBuildViews>false</MvcBuildViews>
     <FileUpgradeFlags>
     </FileUpgradeFlags>
     <OldToolsVersion>3.5</OldToolsVersion>
@@ -93,6 +93,7 @@
   <ItemGroup>
     <Content Include="Content\Admin\images\folder.gif" />
     <Content Include="Module.txt" />
+    <Content Include="Styles\admin.css" />
     <Content Include="Views\Admin\Add.aspx" />
     <Content Include="Views\Admin\Create.aspx" />
     <Content Include="Views\Admin\Edit.aspx" />

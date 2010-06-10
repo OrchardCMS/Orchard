@@ -3,7 +3,7 @@
 <%@ Import Namespace="Orchard.Mvc.Html"%>
 <%@ Import Namespace="Orchard.Modules.ViewModels"%>
 <h1><%: Html.TitleForPage(T("Installed Modules").ToString()) %></h1>
-<div class="manage"><%: Html.ActionLink(T("Install a module"), "Add", null, new { @class = "button primaryAction" })%></div>
+<div class="manage"><%: Html.ActionLink(T("Install a module").ToString(), "Add", null, new { @class = "button primaryAction" })%></div>
 <% if (Model.Modules.Count() > 0) { %>
 <ul class="contentItems"><%
     foreach (var module in Model.Modules.OrderBy(m => m.DisplayName)) { %>

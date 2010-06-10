@@ -19,11 +19,11 @@ namespace Orchard.Core.Indexing.Services {
         }
 
         void CreateIndexingTask(PublishContentContext context, ContentPart<CommonRecord> part) {
-            _indexingTaskManager.CreateTask(context.ContentItem);
+            _indexingTaskManager.CreateUpdateIndexTask(context.ContentItem);
         }
 
         void RemoveIndexingTask(RemoveContentContext context, ContentPart<CommonRecord> part) {
-            _indexingTaskManager.DeleteTasks(context.ContentItem);
+            _indexingTaskManager.CreateDeleteIndexTask(context.ContentItem);
         }
 
     }

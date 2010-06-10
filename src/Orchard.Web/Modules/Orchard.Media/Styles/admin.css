@@ -1,0 +1,7 @@
+﻿.breadCrumbs, .folderProperties {
+    float:left;
+    margin:-2em 0 0;
+}
+.folderProperties {
+    float:right;
+}

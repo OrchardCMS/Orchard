@@ -148,13 +148,13 @@ namespace Orchard.Environment.State {
             }));
 
             // lower enabled states in reverse order
-            foreach (var entry in allEntries.Where(entry => entry.FeatureState.EnableState == ShellFeatureState.State.Falling)) {
+            foreach (var entry in allEntries.Reverse().Where(entry => entry.FeatureState.EnableState == ShellFeatureState.State.Falling)) {
                 _featureEvents.Disable(entry.Feature);
                 _stateManager.UpdateEnabledState(entry.FeatureState, ShellFeatureState.State.Down);
             }
 
             // lower installed states in reverse order
-            foreach (var entry in allEntries.Where(entry => entry.FeatureState.InstallState == ShellFeatureState.State.Falling)) {
+            foreach (var entry in allEntries.Reverse().Where(entry => entry.FeatureState.InstallState == ShellFeatureState.State.Falling)) {
                 _featureEvents.Uninstall(entry.Feature);
                 _stateManager.UpdateInstalledState(entry.FeatureState, ShellFeatureState.State.Down);
             }

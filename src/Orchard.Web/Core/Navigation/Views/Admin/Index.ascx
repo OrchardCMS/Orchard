@@ -38,7 +38,7 @@ using (Html.BeginFormAntiForgeryPost()) { %>
 %>
 
 <h2><%: T("Add New Item") %></h2><%
-using (Html.BeginFormAntiForgeryPost("/admin/navigation/create", FormMethod.Post)) { %>
+using (Html.BeginFormAntiForgeryPost(Url.Action("create"), FormMethod.Post)) { %>
 <table class="menu items">
     <colgroup>
         <col id="AddText" />

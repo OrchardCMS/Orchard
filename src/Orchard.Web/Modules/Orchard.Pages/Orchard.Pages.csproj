@@ -12,7 +12,7 @@
     <RootNamespace>Orchard.Pages</RootNamespace>
     <AssemblyName>Orchard.Pages</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
-    <MvcBuildViews>true</MvcBuildViews>
+    <MvcBuildViews>false</MvcBuildViews>
     <FileUpgradeFlags>
     </FileUpgradeFlags>
     <OldToolsVersion>3.5</OldToolsVersion>
@@ -93,6 +93,7 @@
     <Compile Include="ViewModels\PageViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Styles\admin.css" />
     <Content Include="Content\Admin\images\draft.gif" />
     <Content Include="Content\Admin\images\offline.gif" />
     <Content Include="Content\Admin\images\online.gif" />

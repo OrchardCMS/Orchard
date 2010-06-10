@@ -1,4 +1,5 @@
-﻿using System.Web.Mvc;
+﻿using System.Collections.Generic;
+using System.Web.Mvc;
 using Orchard.ContentManagement;
 using Orchard.Mvc.ViewModels;
 using Orchard.Core.Settings.Models;
@@ -6,6 +7,7 @@ using Orchard.Core.Settings.Models;
 namespace Orchard.Core.Settings.ViewModels {
     public class SettingsIndexViewModel : BaseViewModel {
         public SiteSettings Site { get; set; }
+        public IEnumerable<string> SiteCultures { get; set; }
         public ContentItemViewModel ViewModel { get; set; }
         
 
@@ -20,10 +22,14 @@ namespace Orchard.Core.Settings.ViewModels {
             set { Site.As<SiteSettings>().Record.PageTitleSeparator = value; }
         }
 
-        public string SiteName
-        {
+        public string SiteName {
             get { return Site.As<SiteSettings>().Record.SiteName; }
             set { Site.As<SiteSettings>().Record.SiteName = value; }
+        }
+
+        public string SiteCulture {
+            get { return Site.As<SiteSettings>().Record.SiteCulture; }
+            set { Site.As<SiteSettings>().Record.SiteCulture = value; }
         }
 
         public string SuperUser {

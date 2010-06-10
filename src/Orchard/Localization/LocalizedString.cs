@@ -12,12 +12,12 @@ namespace Orchard.Localization {
             return new LocalizedString(x);
         }
 
-        public override string ToString() {
-            return _localized;
+        public string Text {
+            get { return _localized; }
         }
 
-        public static implicit operator string(LocalizedString x) {
-            return x._localized;
+        public override string ToString() {
+            return _localized;
         }
 
         public override int GetHashCode() {
