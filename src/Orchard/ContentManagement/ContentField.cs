@@ -3,11 +3,14 @@ using Orchard.ContentManagement.MetaData.Models;
 using Orchard.ContentManagement.Utilities;
 
 namespace Orchard.ContentManagement {
-    public class ContentField : IContent {
-        public virtual ContentItem ContentItem { get; set;}
+    public class ContentField : ContentPart {
+        public virtual ContentPart ContentPart { get; set; }
         public string Name { get; set; }
-        public ContentFieldDefinition Definition { get; set; }
         public IDictionary<string, string> Settings { get; private set; }
+
+        public new ContentPartDefinition PartDefinition { get { return ContentPart.PartDefinition; } }
+        public ContentPartDefinition.Field PartFieldDefinition { get; set; }
+        public ContentFieldDefinition FieldDefinition { get { return PartFieldDefinition.FieldDefinition; } }
     }
 
     public class ContentField<TRecord> : ContentField {
