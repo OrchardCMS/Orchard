@@ -11,7 +11,7 @@
             <div class="properties">
                 <h3><span class="tenantName"><%: tenant.Name %></span><%
                     if (!string.IsNullOrEmpty(tenant.RequestUrlHost)) {
-                         %><span class="tenantHost"> - <%=Html.Link(Url.Tenant(tenant), Url.Tenant(tenant))%></span><%
+                         %><span class="tenantHost"> - <%: Html.Link(Url.Tenant(tenant), Url.Tenant(tenant))%></span><%
                     } %></h3>
             </div>
             <div class="related"><%

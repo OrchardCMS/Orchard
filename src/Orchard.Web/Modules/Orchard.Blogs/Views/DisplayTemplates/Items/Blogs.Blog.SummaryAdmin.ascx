@@ -14,7 +14,7 @@
         } %>
     </div>
     <div class="properties">
-        <h3><%=Html.Link(Html.Encode(Model.Item.Name), Url.BlogForAdmin(Model.Item.Slug)) %></h3>
+        <h3><%: Html.Link(Model.Item.Name, Url.BlogForAdmin(Model.Item.Slug)) %></h3>
         <p><% Html.Zone("meta");%></p>
         <%--<p>[list of authors] [modify blog access]</p>--%>
         <p><%: Model.Item.Description %></p>              
