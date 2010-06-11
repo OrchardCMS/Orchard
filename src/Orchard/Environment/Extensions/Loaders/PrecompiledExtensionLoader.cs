@@ -1,5 +1,6 @@
 ﻿using Orchard.Environment.Extensions.Models;
 using Orchard.FileSystems.Dependencies;
+using Orchard.FileSystems.VirtualPath;
 
 namespace Orchard.Environment.Extensions.Loaders {
     /// <summary>

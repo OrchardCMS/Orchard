@@ -1,7 +1,10 @@
 ﻿using System.IO;
 using System.Linq;
 using NUnit.Framework;
+using Orchard.Environment;
 using Orchard.FileSystems.AppData;
+using Orchard.FileSystems.VirtualPath;
+using Orchard.Services;
 
 namespace Orchard.Tests.Environment.Configuration {
     [TestFixture]
@@ -18,7 +21,7 @@ namespace Orchard.Tests.Environment.Configuration {
             File.WriteAllText(Path.Combine(_tempFolder, "alpha\\gamma.txt"), "gamma-content");
             Directory.CreateDirectory(Path.Combine(_tempFolder, "alpha\\omega"));
 
-            _appDataFolder = new AppDataFolder();
+            _appDataFolder = new AppDataFolder(new DefaultVirtualPathMonitor(new Clock()));
             _appDataFolder.SetBasePath(_tempFolder);
         }
 
@@ -31,8 +34,8 @@ namespace Orchard.Tests.Environment.Configuration {
         public void ListFilesShouldContainSubPathAndFileName() {
             var files = _appDataFolder.ListFiles("alpha");
             Assert.That(files.Count(), Is.EqualTo(2));
-            Assert.That(files, Has.Some.EqualTo("alpha\\beta.txt"));
-            Assert.That(files, Has.Some.EqualTo("alpha\\gamma.txt"));
+            Assert.That(files, Has.Some.EqualTo("alpha/beta.txt"));
+            Assert.That(files, Has.Some.EqualTo("alpha/gamma.txt"));
         }
 
         [Test]
@@ -51,7 +54,7 @@ namespace Orchard.Tests.Environment.Configuration {
         public void ListSubdirectoriesShouldContainFullSubpath() {
             var files = _appDataFolder.ListDirectories("alpha");
             Assert.That(files.Count(), Is.EqualTo(1));
-            Assert.That(files, Has.Some.EqualTo("alpha\\omega"));
+            Assert.That(files, Has.Some.EqualTo("alpha/omega"));
         }
 
         [Test]

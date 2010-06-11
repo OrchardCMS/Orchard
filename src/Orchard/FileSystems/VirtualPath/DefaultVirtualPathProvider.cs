@@ -1,26 +1,14 @@
 ﻿using System.IO;
 using System.Web.Hosting;
-using Orchard.Caching;
 
-namespace Orchard.Environment {
-    public interface IVirtualPathProvider : IVolatileProvider {
-        string GetDirectoryName(string virtualPath);
-        string Combine(params string[] paths);
-        Stream OpenFile(string virtualPath);
-        StreamWriter CreateText(string virtualPath);
-        string MapPath(string virtualPath);
-        bool FileExists(string virtualPath);
-        bool DirectoryExists(string virtualPath);
-        void CreateDirectory(string virtualPath);
-    }
-
+namespace Orchard.FileSystems.VirtualPath {
     public class DefaultVirtualPathProvider : IVirtualPathProvider {
         public string GetDirectoryName(string virtualPath) {
-            return Path.GetDirectoryName(virtualPath).Replace('\\', '/');
+            return Path.GetDirectoryName(virtualPath).Replace(Path.DirectorySeparatorChar, '/');
         }
 
         public string Combine(params string[] paths) {
-            return Path.Combine(paths).Replace('\\', '/');
+            return Path.Combine(paths).Replace(Path.DirectorySeparatorChar, '/');
         }
 
         public Stream OpenFile(string virtualPath) {

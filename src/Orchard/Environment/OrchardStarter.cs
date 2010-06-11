@@ -17,6 +17,7 @@ using Orchard.Environment.Topology;
 using Orchard.Events;
 using Orchard.FileSystems.AppData;
 using Orchard.FileSystems.Dependencies;
+using Orchard.FileSystems.VirtualPath;
 using Orchard.FileSystems.WebSite;
 using Orchard.Logging;
 using Orchard.Services;
@@ -40,6 +41,7 @@ namespace Orchard.Environment {
             RegisterVolatileProvider<AppDataFolder, IAppDataFolder>(builder);
             RegisterVolatileProvider<Clock, IClock>(builder);
             RegisterVolatileProvider<DefaultDependenciesFolder, IDependenciesFolder>(builder);
+            RegisterVolatileProvider<DefaultVirtualPathMonitor, IVirtualPathMonitor>(builder);
             RegisterVolatileProvider<DefaultVirtualPathProvider, IVirtualPathProvider>(builder);
 
             builder.RegisterType<DefaultOrchardHost>().As<IOrchardHost>().As<IEventHandler>().SingleInstance();
@@ -123,10 +125,11 @@ namespace Orchard.Environment {
             //
             // Register Virtual Path Providers
             //
-            foreach (var vpp in container.Resolve<IEnumerable<ICustomVirtualPathProvider>>()) {
-                HostingEnvironment.RegisterVirtualPathProvider(vpp.Instance);
+            if (HostingEnvironment.IsHosted) {
+                foreach (var vpp in container.Resolve<IEnumerable<ICustomVirtualPathProvider>>()) {
+                    HostingEnvironment.RegisterVirtualPathProvider(vpp.Instance);
+                }
             }
-
 
             return container.Resolve<IOrchardHost>();
         }

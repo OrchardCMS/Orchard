@@ -1,6 +1,7 @@
 ﻿using System.CodeDom;
 using System.IO;
 using System.Linq;
+using Orchard.FileSystems.VirtualPath;
 
 namespace Orchard.Environment.Extensions.Compilers {
     /// <summary>

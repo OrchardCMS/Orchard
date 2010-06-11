@@ -3,10 +3,13 @@ using System.IO;
 using System.Linq;
 using Autofac;
 using NUnit.Framework;
+using Orchard.Environment;
 using Orchard.Environment.Configuration;
 using Orchard.FileSystems.AppData;
+using Orchard.FileSystems.VirtualPath;
 using Orchard.Indexing;
 using Orchard.Core.Indexing.Lucene;
+using Orchard.Services;
 
 namespace Orchard.Tests.Indexing {
     public class DefaultSearchBuilderTests {
@@ -29,7 +32,7 @@ namespace Orchard.Tests.Indexing {
             Directory.CreateDirectory(_basePath);
 
 
-            _appDataFolder = new AppDataFolder();
+            _appDataFolder = new AppDataFolder(new DefaultVirtualPathMonitor(new Clock()));
             _appDataFolder.SetBasePath(_basePath);
 
             var builder = new ContainerBuilder();

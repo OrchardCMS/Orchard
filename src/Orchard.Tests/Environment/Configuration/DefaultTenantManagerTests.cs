@@ -2,8 +2,11 @@
 using System.Linq;
 using Moq;
 using NUnit.Framework;
+using Orchard.Environment;
 using Orchard.Environment.Configuration;
 using Orchard.FileSystems.AppData;
+using Orchard.FileSystems.VirtualPath;
+using Orchard.Services;
 
 namespace Orchard.Tests.Environment.Configuration {
     [TestFixture]
@@ -13,7 +16,7 @@ namespace Orchard.Tests.Environment.Configuration {
 
         [SetUp]
         public void Init() {
-            _appData = new AppDataFolder();
+            _appData = new AppDataFolder(new DefaultVirtualPathMonitor(new Clock()));
             _tempFolder = Path.GetTempFileName();
             File.Delete(_tempFolder);
             _appData.SetBasePath(_tempFolder);

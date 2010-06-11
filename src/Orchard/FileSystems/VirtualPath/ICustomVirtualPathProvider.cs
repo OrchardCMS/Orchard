@@ -1,6 +1,6 @@
 ﻿using System.Web.Hosting;
 
-namespace Orchard.Environment {
+namespace Orchard.FileSystems.VirtualPath {
     public interface ICustomVirtualPathProvider {
         VirtualPathProvider Instance { get; }
     }

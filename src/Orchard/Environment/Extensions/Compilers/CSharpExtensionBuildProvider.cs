@@ -1,5 +1,5 @@
-﻿using System.Diagnostics;
-using System.Web.Compilation;
+﻿using System.Web.Compilation;
+using Orchard.FileSystems.VirtualPath;
 
 namespace Orchard.Environment.Extensions.Compilers {
     public class CSharpExtensionBuildProvider : BuildProvider {

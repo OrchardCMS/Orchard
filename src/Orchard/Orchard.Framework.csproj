@@ -353,11 +353,15 @@
     <Compile Include="Data\Orderable.cs" />
     <Compile Include="Environment\DefaultOrchardShell.cs" />
     <Compile Include="Environment\Extensions\Loaders\MergedReadOnlyStreams.cs" />
-    <Compile Include="Environment\ICustomVirtualPathProvider.cs" />
-    <Compile Include="Environment\Extensions\Loaders\WebFormsExtensionsVirtualPathProvider.cs" />
-    <Compile Include="Environment\Extensions\Loaders\WebFormsExtensionsVirtualFile.cs" />
+    <Compile Include="FileSystems\Dependencies\DefaultDependenciesFolder.cs" />
+    <Compile Include="FileSystems\VirtualPath\DefaultVirtualPathMonitor.cs" />
+    <Compile Include="FileSystems\VirtualPath\DefaultVirtualPathProvider.cs" />
+    <Compile Include="FileSystems\VirtualPath\ICustomVirtualPathProvider.cs" />
+    <Compile Include="FileSystems\Dependencies\WebFormsExtensionsVirtualPathProvider.cs" />
+    <Compile Include="FileSystems\Dependencies\WebFormsExtensionsVirtualFile.cs" />
     <Compile Include="Environment\Extensions\IExtensionManagerEvents.cs" />
     <Compile Include="Environment\IHostEnvironment.cs" />
+    <Compile Include="FileSystems\VirtualPath\IVirtualPathMonitor.cs" />
     <Compile Include="FileSystems\Dependencies\IDependenciesFolder.cs" />
     <Compile Include="Environment\Extensions\Loaders\ProbingExtensionLoader.cs" />
     <Compile Include="Environment\Extensions\Compilers\CSharpExtensionBuildProvider.cs" />
@@ -367,7 +371,7 @@
     <Compile Include="Environment\Extensions\Compilers\CSharpProjectParser.cs" />
     <Compile Include="Environment\IAssemblyBuilder.cs" />
     <Compile Include="Environment\IBuildManager.cs" />
-    <Compile Include="Environment\IVirtualPathProvider.cs" />
+    <Compile Include="FileSystems\VirtualPath\IVirtualPathProvider.cs" />
     <Compile Include="Environment\IOrchardShell.cs" />
     <Compile Include="Environment\OrchardStarter.cs" />
     <Compile Include="Environment\State\DefaultProcessingEngine.cs" />

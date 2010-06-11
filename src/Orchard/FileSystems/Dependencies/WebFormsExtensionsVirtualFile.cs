@@ -1,8 +1,7 @@
 ﻿using System.IO;
 using System.Web.Hosting;
-using Orchard.FileSystems.Dependencies;
 
-namespace Orchard.Environment.Extensions.Loaders {
+namespace Orchard.FileSystems.Dependencies {
     public class WebFormsExtensionsVirtualFile : VirtualFile {
         private readonly DependencyDescriptor _dependencyDescriptor;
         private readonly VirtualFile _actualFile;

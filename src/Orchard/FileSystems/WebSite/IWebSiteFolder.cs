@@ -3,11 +3,14 @@ using System.Collections.Generic;
 using Orchard.Caching;
 
 namespace Orchard.FileSystems.WebSite {
+    /// <summary>
+    /// Abstraction over the virtual files/directories of a web site.
+    /// </summary>
     public interface IWebSiteFolder : IVolatileProvider {
-        IEnumerable<string> ListDirectories(string path);
-        string ReadFile(string path);
+        IEnumerable<string> ListDirectories(string virtualPath);
+        string ReadFile(string virtualPath);
 
-        IVolatileToken WhenPathChanges(string path);
-        void WhenPathChanges(string path, Action action);
+        IVolatileToken WhenPathChanges(string virtualPath);
+        void WhenPathChanges(string virtualPath, Action action);
     }
 }

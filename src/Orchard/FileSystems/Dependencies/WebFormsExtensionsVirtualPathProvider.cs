@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Linq;
 using System.Web.Hosting;
-using Orchard.FileSystems.Dependencies;
+using Orchard.FileSystems.VirtualPath;
 
-namespace Orchard.Environment.Extensions.Loaders {
+namespace Orchard.FileSystems.Dependencies {
     public class WebFormsExtensionsVirtualPathProvider : VirtualPathProvider, ICustomVirtualPathProvider {
         private readonly IDependenciesFolder _dependenciesFolder;
         private readonly string[] _prefixes = { "~/Modules/", "/Modules/" };

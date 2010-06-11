@@ -3,9 +3,12 @@ using System.Runtime.Serialization;
 using System.Xml;
 using Autofac;
 using NUnit.Framework;
+using Orchard.Environment;
 using Orchard.Environment.Topology;
 using Orchard.Environment.Topology.Models;
 using Orchard.FileSystems.AppData;
+using Orchard.FileSystems.VirtualPath;
+using Orchard.Services;
 
 namespace Orchard.Tests.Environment.Topology {
     [TestFixture]
@@ -19,7 +22,7 @@ namespace Orchard.Tests.Environment.Topology {
             _tempFolder = Path.GetTempFileName();
             File.Delete(_tempFolder);
             Directory.CreateDirectory(_tempFolder);
-            _appDataFolder = new AppDataFolder();
+            _appDataFolder = new AppDataFolder(new DefaultVirtualPathMonitor(new Clock()));
             _appDataFolder.SetBasePath(_tempFolder);
             var builder = new ContainerBuilder();
             builder.RegisterInstance(_appDataFolder).As<IAppDataFolder>();
