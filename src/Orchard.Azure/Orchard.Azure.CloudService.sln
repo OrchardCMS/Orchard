@@ -1,6 +1,6 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 10.00
-# Visual Studio 2008
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
 Project("{CC5FD16D-436D-48AD-A40C-5A424C6E3E79}") = "Orchard.Azure.CloudService", "Orchard.Azure.CloudService\Orchard.Azure.CloudService.ccproj", "{03C5327D-4E8E-45A7-ACD1-E18E7CAA3C4A}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orchard.Azure.Web", "Orchard.Azure.Web\Orchard.Azure.Web.csproj", "{0DF8F426-9F30-4918-8F64-A5B40BA12D10}"

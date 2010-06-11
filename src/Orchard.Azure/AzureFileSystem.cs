@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Web;
 using Microsoft.WindowsAzure;
+using Microsoft.WindowsAzure.ServiceRuntime;
 using Microsoft.WindowsAzure.StorageClient;
 using System.IO;
 using Orchard.FileSystems.Media;
@@ -16,7 +18,7 @@ namespace Orchard.Azure {
         public CloudBlobContainer Container { get; private set; }
 
         public AzureFileSystem(string containerName, string root, bool isPrivate)
-            : this(containerName, root, isPrivate, CloudStorageAccount.FromConfigurationSetting("DataConnectionString")) {
+            : this(containerName, root, isPrivate, CloudStorageAccount.Parse(RoleEnvironment.GetConfigurationSettingValue("DataConnectionString"))) {
         }
 
         public AzureFileSystem(string containerName, string root, bool isPrivate, CloudStorageAccount storageAccount) {
@@ -25,19 +27,37 @@ namespace Orchard.Azure {
             ContainerName = containerName;
             _root = String.IsNullOrEmpty(root) || root == "/" ? String.Empty : root + "/";
 
-            BlobClient = _storageAccount.CreateCloudBlobClient();
-            // Get and create the container if it does not exist
-            // The container is named with DNS naming restrictions (i.e. all lower case)
-            Container = BlobClient.GetContainerReference(ContainerName);
-            Container.CreateIfNotExist();
+            AzureHelper.InjectHttpContext(()
+                                          =>
+                                              {
 
-            if ( isPrivate ) {
-                Container.SetPermissions(new BlobContainerPermissions
-                                         {PublicAccess = BlobContainerPublicAccessType.Off});
-            }
-            else {
-                Container.SetPermissions(new BlobContainerPermissions { PublicAccess = BlobContainerPublicAccessType.Container });
-            }
+                                                  BlobClient = _storageAccount.CreateCloudBlobClient();
+                                                  // Get and create the container if it does not exist
+                                                  // The container is named with DNS naming restrictions (i.e. all lower case)
+                                                  Container = BlobClient.GetContainerReference(ContainerName);
+
+                                                  Container.CreateIfNotExist();
+
+                                                  if (isPrivate)
+                                                  {
+                                                      Container.SetPermissions(new BlobContainerPermissions
+                                                                                   {
+                                                                                       PublicAccess =
+                                                                                           BlobContainerPublicAccessType
+                                                                                           .Off
+                                                                                   });
+                                                  }
+                                                  else
+                                                  {
+                                                      Container.SetPermissions(new BlobContainerPermissions
+                                                                                   {
+                                                                                       PublicAccess =
+                                                                                           BlobContainerPublicAccessType
+                                                                                           .Container
+                                                                                   });
+                                                  }
+                                              });
+            
         }
 
         private static void EnsurePathIsRelative(string path) {
