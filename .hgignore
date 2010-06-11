@@ -2,7 +2,6 @@ glob:bin
 glob:obj
 glob:App_Data
 glob:_ReSharper*
-glob:src/Orchard.suo
 glob:*.user
 glob:*.patch
 glob:*.hg
@@ -11,8 +10,8 @@ glob:artifacts
 glob:*.sln.cache
 glob:src/Orchard.Web/Media/*
 glob:desktop.ini
-glob:src/Orchard.Azure.suo
-glob:src/Orchard.5.0.ReSharper
 glob:log.xml
 glob:profiling
-glob:*.csproj.orig
+glob:src/*.suo
+glob:src/*.ReSharper
+glob:*.orig

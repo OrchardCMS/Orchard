@@ -20,14 +20,14 @@ namespace Orchard.ContentManagement {
         public IEnumerable<ContentField> Fields { get { return _fields; } }
 
 
-        public bool Has(Type fieldType) {
-            return fieldType == typeof(ContentItem) || _fields.Any(field => fieldType.IsAssignableFrom(field.GetType()));
+        public bool Has(Type fieldType, string fieldName) {
+            return fieldType == typeof(ContentItem) || _fields.Any(field => fieldType.IsAssignableFrom(field.GetType()) && field.Name == fieldName);
         }
 
-        public IContent Get(Type fieldType) {
+        public IContent Get(Type fieldType, string fieldName) {
             if (fieldType == typeof(ContentItem))
                 return this;
-            return _fields.FirstOrDefault(field => fieldType.IsAssignableFrom(field.GetType()));
+            return _fields.FirstOrDefault(field => fieldType.IsAssignableFrom(field.GetType()) && field.Name == fieldName);
         }
 
         public void Weld(ContentField field) {

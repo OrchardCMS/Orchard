@@ -5,7 +5,7 @@ using Orchard.ContentManagement.Utilities;
 namespace Orchard.ContentManagement {
     public class ContentField : ContentPart {
         public virtual ContentPart ContentPart { get; set; }
-        public string Name { get; set; }
+        public string Name { get { return PartFieldDefinition.Name; } }
         public IDictionary<string, string> Settings { get; private set; }
 
         public new ContentPartDefinition PartDefinition { get { return ContentPart.PartDefinition; } }

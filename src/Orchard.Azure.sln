@@ -1,6 +1,6 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 10.00
-# Visual Studio 2008
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orchard.Azure", "Orchard.Azure\Orchard.Azure.csproj", "{2505AA84-65A6-43D0-9C27-4F44FD576284}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orchard.Azure.Tests", "Orchard.Azure.Tests\Orchard.Azure.Tests.csproj", "{1CC62F45-E6FF-43D5-84BF-509A1085D994}"
