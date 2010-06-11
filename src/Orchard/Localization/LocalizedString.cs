@@ -13,10 +13,6 @@ namespace Orchard.Localization {
             return new LocalizedString(x);
         }
 
-        public static implicit operator string(LocalizedString x) {
-            return x.ToString();
-        }
-
         public string Text {
             get { return _localized; }
         }

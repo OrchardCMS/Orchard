@@ -33,7 +33,7 @@
                     featureClassName += " first";
                 if (feature == features.Last())
                     featureClassName += " last"; %>
-            <li class="<%=featureClassName %>" id="<%=Html.AttributeEncode(featureId) %>" title="<%=T("{0} is {1}", Html.AttributeEncode(feature.Descriptor.Name), featureState) %>">
+            <li class="<%: featureClassName %>" id="<%: featureId %>" title="<%: T("{0} is {1}", Html.AttributeEncode(feature.Descriptor.Name), featureState) %>">
                 <div class="summary">
                     <div class="properties">
                         <h3><%:feature.Descriptor.Name %></h3>

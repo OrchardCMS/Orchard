@@ -5,9 +5,9 @@
 	<%: Html.ValidationSummary() %>
     <fieldset class="actions bulk">
         <label for="publishActions"><%: T("Actions:") %></label>
-        <select id="publishActions" name="<%=Html.NameOf(m => m.BulkAction)%>">
-            <%: Html.SelectOption(Model.BulkAction, TagAdminIndexBulkAction.None, T("Choose action..."))%>
-            <%: Html.SelectOption(Model.BulkAction, TagAdminIndexBulkAction.Delete, T("Remove"))%>
+        <select id="publishActions" name="<%: Html.NameOf(m => m.BulkAction)%>">
+            <%: Html.SelectOption(Model.BulkAction, TagAdminIndexBulkAction.None, T("Choose action...").ToString())%>
+            <%: Html.SelectOption(Model.BulkAction, TagAdminIndexBulkAction.Delete, T("Remove").ToString())%>
         </select>
         <input class="button" type="submit" name="submit.BulkEdit" value="<%: T("Apply") %>" />
     </fieldset>
@@ -33,8 +33,8 @@
             %>
             <tr>
                 <td>
-                    <input type="hidden" value="<%=Model.Tags[tagIndex].Tag.Id%>" name="<%=Html.NameOf(m => m.Tags[ti].Tag.Id)%>"/>
-                    <input type="checkbox" value="true" name="<%=Html.NameOf(m => m.Tags[ti].IsChecked)%>"/>
+                    <input type="hidden" value="<%=Model.Tags[tagIndex].Tag.Id%>" name="<%: Html.NameOf(m => m.Tags[ti].Tag.Id)%>"/>
+                    <input type="checkbox" value="true" name="<%: Html.NameOf(m => m.Tags[ti].IsChecked)%>"/>
                 </td>
                 <td>
                     <%: Html.ActionLink(Html.Encode(tagEntry.Tag.TagName), "Search", new {id = tagEntry.Tag.Id}) %>

@@ -18,7 +18,7 @@
             </li>
             <li><%
             if (Model.Item.HasDraft) { %>
-                <img class="icon" src="<%=ResolveUrl("~/Modules/Orchard.Blogs/Content/Admin/images/draft.gif") %>" alt="<%: T("Draft") %>" title="<%: T("The post has a draft") %>" /><%=Html.PublishedState(Model.Item, T) %><%
+                <img class="icon" src="<%=ResolveUrl("~/Modules/Orchard.Blogs/Content/Admin/images/draft.gif") %>" alt="<%: T("Draft") %>" title="<%: T("The post has a draft") %>" /><%: Html.PublishedState(Model.Item, T) %><%
             }
             else { %>
                 <%: T("No draft")%><%
@@ -27,7 +27,7 @@
             <li><%
             if (Model.Item.ScheduledPublishUtc.HasValue && Model.Item.ScheduledPublishUtc.Value > DateTime.UtcNow) { %>
                 <img class="icon" src="<%=ResolveUrl("~/Modules/Orchard.Blogs/Content/Admin/images/scheduled.gif") %>" alt="<%: T("Scheduled") %>" title="<%: T("The post is scheduled for publishing") %>" /><%: T("Scheduled")%>
-                <%=Html.DateTime(Model.Item.ScheduledPublishUtc.Value, "M/d/yyyy h:mm tt")%><%
+                <%: Html.DateTime(Model.Item.ScheduledPublishUtc.Value, "M/d/yyyy h:mm tt")%><%
             }
             else if (Model.Item.IsPublished) { %>
                 <%: T("Published: {0}", Html.DateTimeRelative(Model.Item.As<ICommonAspect>().VersionPublishedUtc.Value, T)) %><%
@@ -41,17 +41,17 @@
     </div>
     <div class="related"><%
         if (Model.Item.HasPublished){ %>
-        <a href="<%=Url.BlogPost(Model.Item) %>" title="<%: T("View Post")%>"><%: T("View")%></a><%: T(" | ")%><%
+        <a href="<%: Url.BlogPost(Model.Item) %>" title="<%: T("View Post")%>"><%: T("View")%></a><%: T(" | ")%><%
             if (Model.Item.HasDraft) { %>
-        <a href="<%=Html.AntiForgeryTokenGetUrl(Url.BlogPostPublish(Model.Item)) %>" title="<%: T("Publish Draft")%>"><%: T("Publish Draft")%></a><%: T(" | ")%><%
+        <a href="<%: Html.AntiForgeryTokenGetUrl(Url.BlogPostPublish(Model.Item)) %>" title="<%: T("Publish Draft")%>"><%: T("Publish Draft")%></a><%: T(" | ")%><%
             } %>
-        <a href="<%=Html.AntiForgeryTokenGetUrl(Url.BlogPostUnpublish(Model.Item)) %>" title="<%: T("Unpublish Post")%>"><%: T("Unpublish")%></a><%: T(" | ")%><%
+        <a href="<%: Html.AntiForgeryTokenGetUrl(Url.BlogPostUnpublish(Model.Item)) %>" title="<%: T("Unpublish Post")%>"><%: T("Unpublish")%></a><%: T(" | ")%><%
         }
         else { %>
-        <a href="<%=Html.AntiForgeryTokenGetUrl(Url.BlogPostPublish(Model.Item)) %>" title="<%: T("Publish Post")%>"><%: T("Publish")%></a><%: T(" | ")%><%
+        <a href="<%: Html.AntiForgeryTokenGetUrl(Url.BlogPostPublish(Model.Item)) %>" title="<%: T("Publish Post")%>"><%: T("Publish")%></a><%: T(" | ")%><%
         } %>
-        <a href="<%=Url.BlogPostEdit(Model.Item) %>" title="<%: T("Edit Post")%>"><%: T("Edit")%></a><%: T(" | ")%>
-        <a href="<%=Html.AntiForgeryTokenGetUrl(Url.BlogPostDelete(Model.Item)) %>" title="<%: T("Remove Post")%>"><%: T("Remove")%></a>
+        <a href="<%: Url.BlogPostEdit(Model.Item) %>" title="<%: T("Edit Post")%>"><%: T("Edit")%></a><%: T(" | ")%>
+        <a href="<%: Html.AntiForgeryTokenGetUrl(Url.BlogPostDelete(Model.Item)) %>" title="<%: T("Remove Post")%>"><%: T("Remove")%></a>
         <br /><%Html.Zone("meta");%>
     </div>
     <div style="clear:both;"></div>

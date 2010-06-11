@@ -13,7 +13,7 @@
             <input class="button primaryAction" type="submit" name="submit.Save" value="<%: T("Save") %>"/><%
             //TODO: (erikpo) In the future, remove the HasPublished check so the user can delete the content item from here if the choose to
             if (Model.Item.HasDraft && Model.Item.HasPublished) { %>
-            <%=Html.AntiForgeryTokenValueOrchardLink(T("Discard Draft").ToString(), Url.Action("DiscardDraft", new {Area = "Orchard.Blogs", Controller = "BlogPostAdmin", id = Model.Item.Id}), new {@class = "button"})%><%
+            <%: Html.AntiForgeryTokenValueOrchardLink(T("Discard Draft").ToString(), Url.Action("DiscardDraft", new {Area = "Orchard.Blogs", Controller = "BlogPostAdmin", id = Model.Item.Id}), new {@class = "button"})%><%
             } %>
         </fieldset>
     </div>

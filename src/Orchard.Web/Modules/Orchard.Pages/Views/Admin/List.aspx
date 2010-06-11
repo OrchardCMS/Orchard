@@ -5,27 +5,27 @@
 <%@ Import Namespace="Orchard.Pages.ViewModels"%><%
 Html.RegisterStyle("admin.css"); %>
 
-<h1><%=Html.TitleForPage(T("Manage Pages").ToString())%></h1>
+<h1><%: Html.TitleForPage(T("Manage Pages").ToString())%></h1>
 <%-- todo: Add helper text here when ready. <p><%: T("Possible text about setting up a page goes here.")%></p>--%>
 <div class="manage"><%: Html.ActionLink(T("Add a page").ToString(), "Create", new { }, new { @class = "button primaryAction" })%></div><%
 using (Html.BeginFormAntiForgeryPost()) { %>
     <%: Html.ValidationSummary()%>
     <fieldset class="actions bulk">
         <label for="publishActions"><%: T("Actions:")%></label>
-        <select id="publishActions" name="<%=Html.NameOf(m => m.Options.BulkAction) %>">
-            <%: Html.SelectOption(Model.Options.BulkAction, PagesBulkAction.None, T("Choose action..."))%>
-            <%: Html.SelectOption(Model.Options.BulkAction, PagesBulkAction.PublishNow, T("Publish Now"))%>
-            <%: Html.SelectOption(Model.Options.BulkAction, PagesBulkAction.Unpublish, T("Unpublish"))%>
-            <%: Html.SelectOption(Model.Options.BulkAction, PagesBulkAction.Delete, T("Remove"))%>
+        <select id="publishActions" name="<%: Html.NameOf(m => m.Options.BulkAction) %>">
+            <%: Html.SelectOption(Model.Options.BulkAction, PagesBulkAction.None, T("Choose action...").ToString())%>
+            <%: Html.SelectOption(Model.Options.BulkAction, PagesBulkAction.PublishNow, T("Publish Now").ToString())%>
+            <%: Html.SelectOption(Model.Options.BulkAction, PagesBulkAction.Unpublish, T("Unpublish").ToString())%>
+            <%: Html.SelectOption(Model.Options.BulkAction, PagesBulkAction.Delete, T("Remove").ToString())%>
         </select>
         <input class="button" type="submit" name="submit.BulkEdit" value="<%: T("Apply") %>" />
     </fieldset>
     <fieldset class="actions bulk">
         <label for="filterResults"><%: T("Filter:")%></label>
-        <select id="filterResults" name="<%=Html.NameOf(m => m.Options.Filter) %>">
-            <%: Html.SelectOption(Model.Options.Filter, PagesFilter.All, T("All Pages"))%>
-            <%: Html.SelectOption(Model.Options.Filter, PagesFilter.Published, T("Published Pages"))%>
-            <%: Html.SelectOption(Model.Options.Filter, PagesFilter.Offline, T("Offline Pages"))%>
+        <select id="filterResults" name="<%: Html.NameOf(m => m.Options.Filter) %>">
+            <%: Html.SelectOption(Model.Options.Filter, PagesFilter.All, T("All Pages").ToString())%>
+            <%: Html.SelectOption(Model.Options.Filter, PagesFilter.Published, T("Published Pages").ToString())%>
+            <%: Html.SelectOption(Model.Options.Filter, PagesFilter.Offline, T("Offline Pages").ToString())%>
         </select>
         <input class="button" type="submit" name="submit.Filter" value="<%: T("Apply") %>"/>
     </fieldset>
@@ -37,8 +37,8 @@ using (Html.BeginFormAntiForgeryPost()) { %>
             <li>
                 <div class="summary">
                     <div class="properties">
-                        <input type="hidden" value="<%=Model.PageEntries[pageIndex].PageId %>" name="<%=Html.NameOf(m => m.PageEntries[pi].PageId) %>"/>
-                        <input type="checkbox" value="true" name="<%=Html.NameOf(m => m.PageEntries[pi].IsChecked) %>"/>
+                        <input type="hidden" value="<%=Model.PageEntries[pageIndex].PageId %>" name="<%: Html.NameOf(m => m.PageEntries[pi].PageId) %>"/>
+                        <input type="checkbox" value="true" name="<%: Html.NameOf(m => m.PageEntries[pi].IsChecked) %>"/>
                         <h3><%: Html.ActionLink(pageEntry.Page.Title, "Edit", new { id = pageEntry.PageId })%></h3>
                         <ul class="pageStatus">
                             <li><%
@@ -62,7 +62,7 @@ using (Html.BeginFormAntiForgeryPost()) { %>
                             <li><%
                             if (pageEntry.Page.ScheduledPublishUtc.HasValue && pageEntry.Page.ScheduledPublishUtc.Value > DateTime.UtcNow) { %>
                                 <img class="icon" src="<%=ResolveUrl("~/Modules/Orchard.Pages/Content/Admin/images/scheduled.gif") %>" alt="<%: T("Scheduled") %>" title="<%: T("The page is scheduled for publishing") %>" /><%: T("Scheduled")%>
-                                <%=Html.DateTime(pageEntry.Page.ScheduledPublishUtc.Value, "M/d/yyyy h:mm tt")%><%
+                                <%: Html.DateTime(pageEntry.Page.ScheduledPublishUtc.Value, "M/d/yyyy h:mm tt")%><%
                             }
                             else if (pageEntry.Page.IsPublished) { %>
                                 <%: T("Published: {0}", Html.DateTimeRelative(pageEntry.Page.As<ICommonAspect>().VersionPublishedUtc.Value, T)) %><%
@@ -78,15 +78,15 @@ using (Html.BeginFormAntiForgeryPost()) { %>
                         if (pageEntry.Page.HasPublished) { %>
                         <%: Html.ActionLink("View", "Item", new { controller = "Page", slug = pageEntry.Page.PublishedSlug }, new {title = T("View Page")})%><%: T(" | ")%><%
                             if (pageEntry.Page.HasDraft) { %>
-                        <a href="<%=Html.AntiForgeryTokenGetUrl(Url.Action("Publish", new {id = pageEntry.Page.Id})) %>" title="<%: T("Publish Draft")%>"><%: T("Publish Draft")%></a><%: T(" | ")%><%
+                        <a href="<%: Html.AntiForgeryTokenGetUrl(Url.Action("Publish", new {id = pageEntry.Page.Id})) %>" title="<%: T("Publish Draft")%>"><%: T("Publish Draft")%></a><%: T(" | ")%><%
                             } %>
-                        <a href="<%=Html.AntiForgeryTokenGetUrl(Url.Action("Unpublish", new {id = pageEntry.Page.Id})) %>" title="<%: T("Unpublish Page")%>"><%: T("Unpublish")%></a><%: T(" | ")%><%
+                        <a href="<%: Html.AntiForgeryTokenGetUrl(Url.Action("Unpublish", new {id = pageEntry.Page.Id})) %>" title="<%: T("Unpublish Page")%>"><%: T("Unpublish")%></a><%: T(" | ")%><%
                         }
                         else { %>
-                        <a href="<%=Html.AntiForgeryTokenGetUrl(Url.Action("Publish", new {id = pageEntry.Page.Id})) %>" title="<%: T("Publish Page")%>"><%: T("Publish")%></a><%: T(" | ")%><%
+                        <a href="<%: Html.AntiForgeryTokenGetUrl(Url.Action("Publish", new {id = pageEntry.Page.Id})) %>" title="<%: T("Publish Page")%>"><%: T("Publish")%></a><%: T(" | ")%><%
                         } %>
-                        <%: Html.ActionLink(T("Edit"), "Edit", new {id = pageEntry.Page.Id}, new {title = T("Edit Page")})%><%: T(" | ")%>
-                        <a href="<%=Html.AntiForgeryTokenGetUrl(Url.Action("Delete", new {id = pageEntry.Page.Id})) %>" title="<%: T("Remove Page")%>"><%: T("Remove")%></a>
+                        <%: Html.ActionLink(T("Edit").ToString(), "Edit", new { id = pageEntry.Page.Id }, new { title = T("Edit Page").ToString() })%><%: T(" | ")%>
+                        <a href="<%: Html.AntiForgeryTokenGetUrl(Url.Action("Delete", new {id = pageEntry.Page.Id})) %>" title="<%: T("Remove Page")%>"><%: T("Remove")%></a>
                     </div>
                     <div style="clear:both;"></div>
                 </div>

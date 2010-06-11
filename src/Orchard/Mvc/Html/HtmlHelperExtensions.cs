@@ -28,10 +28,10 @@ namespace Orchard.Mvc.Html {
         public static string FieldNameFor<T, TResult>(this HtmlHelper<T> html, Expression<Func<T, TResult>> expression) {
             return html.ViewData.TemplateInfo.GetFullHtmlFieldName(ExpressionHelper.GetExpressionText(expression));
         }
+
         public static string FieldIdFor<T, TResult>(this HtmlHelper<T> html, Expression<Func<T, TResult>> expression) {
             return html.ViewData.TemplateInfo.GetFullHtmlFieldId(ExpressionHelper.GetExpressionText(expression));
         }
-
 
         public static MvcHtmlString SelectOption<T>(this HtmlHelper html, T currentValue, T optionValue, string text) {
             return SelectOption(html, optionValue, object.Equals(optionValue, currentValue), text);
@@ -53,9 +53,9 @@ namespace Orchard.Mvc.Html {
 
         #region Pager
 
-        public static string Pager<T>(this HtmlHelper html, IPageOfItems<T> pageOfItems, int currentPage, int defaultPageSize, object values = null, string previousText = "<", string nextText = ">", bool alwaysShowPreviousAndNext = false) {
+        public static IHtmlString Pager<T>(this HtmlHelper html, IPageOfItems<T> pageOfItems, int currentPage, int defaultPageSize, object values = null, string previousText = "<", string nextText = ">", bool alwaysShowPreviousAndNext = false) {
             if (pageOfItems.TotalPageCount < 2)
-                return "";
+                return new HtmlString(string.Empty);
 
             var sb = new StringBuilder(75);
             var rvd = new RouteValueDictionary {{"q", ""},{"page", 0}};
@@ -114,7 +114,7 @@ namespace Orchard.Mvc.Html {
 
             sb.Append("</p>");
 
-            return sb.ToString();
+            return new HtmlString(sb.ToString());
         }
 
         #endregion
@@ -356,28 +356,28 @@ namespace Orchard.Mvc.Html {
         }
 
         public static IHtmlString AntiForgeryTokenValueOrchardLink(this HtmlHelper htmlHelper, string linkContents, string href, IDictionary<string, object> htmlAttributes)  {
-            return htmlHelper.Link(linkContents, htmlHelper.AntiForgeryTokenGetUrl(href), htmlAttributes);
+            return htmlHelper.Link(linkContents, htmlHelper.AntiForgeryTokenGetUrl(href).ToString(), htmlAttributes);
         }
 
         #endregion
 
         #region AntiForgeryTokenGetUrl
 
-        public static string AntiForgeryTokenGetUrl(this HtmlHelper htmlHelper, string baseUrl)  {
-            return string.Format("{0}{1}__RequestVerificationToken={2}", baseUrl, baseUrl.IndexOf('?') > -1 ? "&" : "?", htmlHelper.ViewContext.HttpContext.Server.UrlEncode(htmlHelper.AntiForgeryTokenValueOrchard()));
+        public static IHtmlString AntiForgeryTokenGetUrl(this HtmlHelper htmlHelper, string baseUrl)  {
+            return new HtmlString(string.Format("{0}{1}__RequestVerificationToken={2}", baseUrl, baseUrl.IndexOf('?') > -1 ? "&" : "?", htmlHelper.ViewContext.HttpContext.Server.UrlEncode(htmlHelper.AntiForgeryTokenValueOrchard().ToString())));
         }
 
         #endregion
 
         #region AntiForgeryTokenValueOrchard
 
-        public static string AntiForgeryTokenValueOrchard(this HtmlHelper htmlHelper) {
+        public static IHtmlString AntiForgeryTokenValueOrchard(this HtmlHelper htmlHelper) {
             //HAACK: (erikpo) Since MVC doesn't expose any of its methods for generating the antiforgery token and setting the cookie, we'll just let it do its thing and parse out what we need
             var field = htmlHelper.AntiForgeryTokenOrchard().ToHtmlString();
             var beginIndex = field.IndexOf("value=\"") + 7;
             var endIndex = field.IndexOf("\"", beginIndex);
 
-            return field.Substring(beginIndex, endIndex - beginIndex);
+            return new HtmlString(field.Substring(beginIndex, endIndex - beginIndex));
         }
 
         #endregion

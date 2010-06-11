@@ -2,7 +2,7 @@
 <%@ Import Namespace="Orchard.Mvc.ViewModels"%>
 <%@ Import Namespace="Orchard.Blogs.Extensions"%>
 <%@ Import Namespace="Orchard.Blogs.Models"%>
-<h1><a href="<%=Url.BlogForAdmin(Model.Item.Slug) %>"><%: Html.TitleForPage(Model.Item.Name) %></a>
+<h1><a href="<%: Url.BlogForAdmin(Model.Item.Slug) %>"><%: Html.TitleForPage(Model.Item.Name) %></a>
     
 </h1>
 <% Html.Zone("manage"); %><%--
@@ -18,6 +18,6 @@
 </fieldset>
 </div>
 </form>--%>
-<div class="actions"><a href="<%=Url.BlogPostCreate(Model.Item) %>" class="add button primaryAction"><%: T("New Post")%></a></div>
+<div class="actions"><a href="<%: Url.BlogPostCreate(Model.Item) %>" class="add button primaryAction"><%: T("New Post")%></a></div>
 <% Html.Zone("primary");
    Html.ZonesAny(); %>

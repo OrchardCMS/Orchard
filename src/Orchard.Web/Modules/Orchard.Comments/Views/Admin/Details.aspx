@@ -21,22 +21,22 @@
 	<%: Html.ValidationSummary() %>
     <fieldset class="actions bulk">
         <label for="publishActions"><%: T("Actions:") %></label>
-        <select id="publishActions" name="<%=Html.NameOf(m => m.Options.BulkAction)%>">
-            <%: Html.SelectOption(Model.Options.BulkAction, CommentDetailsBulkAction.None, T("Choose action..."))%>
-            <%: Html.SelectOption(Model.Options.BulkAction, CommentDetailsBulkAction.Approve, T("Approve"))%>
-            <%: Html.SelectOption(Model.Options.BulkAction, CommentDetailsBulkAction.Pend, T("Pend"))%>
-            <%: Html.SelectOption(Model.Options.BulkAction, CommentDetailsBulkAction.MarkAsSpam, T("Mark as Spam"))%>
-            <%: Html.SelectOption(Model.Options.BulkAction, CommentDetailsBulkAction.Delete, T("Remove"))%>
+        <select id="publishActions" name="<%: Html.NameOf(m => m.Options.BulkAction)%>">
+            <%: Html.SelectOption(Model.Options.BulkAction, CommentDetailsBulkAction.None, T("Choose action...").ToString())%>
+            <%: Html.SelectOption(Model.Options.BulkAction, CommentDetailsBulkAction.Approve, T("Approve").ToString())%>
+            <%: Html.SelectOption(Model.Options.BulkAction, CommentDetailsBulkAction.Pend, T("Pend").ToString())%>
+            <%: Html.SelectOption(Model.Options.BulkAction, CommentDetailsBulkAction.MarkAsSpam, T("Mark as Spam").ToString())%>
+            <%: Html.SelectOption(Model.Options.BulkAction, CommentDetailsBulkAction.Delete, T("Remove").ToString())%>
         </select>
         <input class="button" type="submit" name="submit.BulkEdit" value="<%: T("Apply") %>" />
     </fieldset>
     <fieldset class="actions bulk">
         <label for="filterResults"><%: T("Filter:")%></label>
-        <select id="filterResults" name="<%=Html.NameOf(m => m.Options.Filter)%>">
-            <%: Html.SelectOption(Model.Options.Filter, CommentDetailsFilter.All, T("All Comments"))%>
-            <%: Html.SelectOption(Model.Options.Filter, CommentDetailsFilter.Approved, T("Approved Comments"))%>
-            <%: Html.SelectOption(Model.Options.Filter, CommentDetailsFilter.Pending, T("Pending Comments"))%>
-            <%: Html.SelectOption(Model.Options.Filter, CommentDetailsFilter.Spam, T("Spam"))%>
+        <select id="filterResults" name="<%: Html.NameOf(m => m.Options.Filter)%>">
+            <%: Html.SelectOption(Model.Options.Filter, CommentDetailsFilter.All, T("All Comments").ToString())%>
+            <%: Html.SelectOption(Model.Options.Filter, CommentDetailsFilter.Approved, T("Approved Comments").ToString())%>
+            <%: Html.SelectOption(Model.Options.Filter, CommentDetailsFilter.Pending, T("Pending Comments").ToString())%>
+            <%: Html.SelectOption(Model.Options.Filter, CommentDetailsFilter.Spam, T("Spam").ToString())%>
         </select>
         <input class="button" type="submit" name="submit.Filter" value="<%: T("Apply") %>"/>
     </fieldset>
@@ -67,8 +67,8 @@
             %>
             <tr>
                 <td>
-                    <input type="hidden" value="<%=Model.Comments[commentIndex].Comment.Id %>" name="<%=Html.NameOf(m => m.Comments[ci].Comment.Id) %>"/>
-                    <input type="checkbox" value="true" name="<%=Html.NameOf(m => m.Comments[ci].IsChecked) %>"/>
+                    <input type="hidden" value="<%=Model.Comments[commentIndex].Comment.Id %>" name="<%: Html.NameOf(m => m.Comments[ci].Comment.Id) %>"/>
+                    <input type="checkbox" value="true" name="<%: Html.NameOf(m => m.Comments[ci].IsChecked) %>"/>
                     <input type="hidden" value="<%=Model.DisplayNameForCommentedItem %>" name="DisplayNameForCommentedtem" />
                     <input type="hidden" value="<%=Model.CommentedItemId %>" name="CommentedItemId" />
                 </td>
@@ -83,11 +83,11 @@
                     <%: commentEntry.Comment.CommentText.Length > 23 ? commentEntry.Comment.CommentText.Substring(0, 24) : commentEntry.Comment.CommentText %><%: T(" ...") %>
                 <% } %> 
                 </td>
-                <td><%=Html.DateTime(commentEntry.Comment.CommentDateUtc.GetValueOrDefault()) %></td>
+                <td><%: Html.DateTime(commentEntry.Comment.CommentDateUtc.GetValueOrDefault()) %></td>
                 <td>
                     <ul class="actions">
                         <li class="construct">
-                            <a href="<%=Url.Action("Edit", new {commentEntry.Comment.Id}) %>" class="ibutton edit" title="<%: T("Edit Comment")%>"><%: T("Edit Comment")%></a>
+                            <a href="<%: Url.Action("Edit", new {commentEntry.Comment.Id}) %>" class="ibutton edit" title="<%: T("Edit Comment")%>"><%: T("Edit Comment")%></a>
                         </li>
                         <li class="destruct">
 <%-- a form in a form doesn't quite work                            <% using (Html.BeginFormAntiForgeryPost(Url.Action("Delete", new {id = commentEntry.Comment.Id, redirectToAction = "Details"}), FormMethod.Post, new { @class = "inline" })) { %>
