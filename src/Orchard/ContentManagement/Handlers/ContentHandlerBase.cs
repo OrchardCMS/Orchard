@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 
 namespace Orchard.ContentManagement.Handlers {
@@ -18,6 +17,12 @@ namespace Orchard.ContentManagement.Handlers {
         }
 
         public virtual void Created(CreateContentContext context) {
+        }
+
+        public virtual void Saving(SaveContentContext context) {
+        }
+
+        public virtual void Saved(SaveContentContext context) {
         }
 
         public virtual void Loading(LoadContentContext context) {

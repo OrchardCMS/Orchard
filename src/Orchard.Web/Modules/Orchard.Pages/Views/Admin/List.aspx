@@ -1,7 +1,6 @@
 ﻿<%@ Page Language="C#" Inherits="Orchard.Mvc.ViewPage<PagesViewModel>" %>
 <%@ Import Namespace="Orchard.ContentManagement.Aspects"%>
 <%@ Import Namespace="Orchard.ContentManagement"%>
-<%@ Import Namespace="Orchard.Core.Common.Models"%>
 <%@ Import Namespace="Orchard.Mvc.Html"%>
 <%@ Import Namespace="Orchard.Pages.ViewModels"%><%
 Html.RegisterStyle("admin.css"); %>
@@ -45,10 +44,10 @@ using (Html.BeginFormAntiForgeryPost()) { %>
                             <li><%
                             // Published or not
                             if (pageEntry.Page.HasPublished) { %>
-                                <img class="icon" src="<%=ResolveUrl("~/Modules/Orchard.Pages/Content/Admin/images/online.gif") %>" alt="<%: T("Online") %>" title="<%: T("The page is currently online") %>" /><%: T("Published") %>&nbsp;&#124;&nbsp;<%
+                                <img class="icon" src="<%=ResolveUrl("~/Modules/Orchard.Pages/Content/Admin/images/online.gif") %>" alt="<%: T("Online") %>" title="<%: T("The page is currently online") %>" /> <%: T("Published") %>&nbsp;&#124;&nbsp;<%
                             }
                             else { %>
-                                <img class="icon" src="<%=ResolveUrl("~/Modules/Orchard.Pages/Content/Admin/images/offline.gif") %>" alt="<%: T("Offline") %>" title="<%: T("The page is currently offline") %>" /><%: T("Not Published")%>&nbsp;&#124;&nbsp;<%
+                                <img class="icon" src="<%=ResolveUrl("~/Modules/Orchard.Pages/Content/Admin/images/offline.gif") %>" alt="<%: T("Offline") %>" title="<%: T("The page is currently offline") %>" /> <%: T("Not Published")%>&nbsp;&#124;&nbsp;<%
                             } %>
                             </li>
                             <li><%
@@ -66,10 +65,10 @@ using (Html.BeginFormAntiForgeryPost()) { %>
                                 <%=Html.DateTime(pageEntry.Page.ScheduledPublishUtc.Value, "M/d/yyyy h:mm tt")%><%
                             }
                             else if (pageEntry.Page.IsPublished) { %>
-                                <%: T("Published: ") + Html.DateTimeRelative(pageEntry.Page.As<ICommonAspect>().VersionPublishedUtc.Value) %><%
+                                <%: T("Published: {0}", Html.DateTimeRelative(pageEntry.Page.As<ICommonAspect>().VersionPublishedUtc.Value, T)) %><%
                             }
                             else { %>
-                                <%: T("Last modified: ") + Html.DateTimeRelative(pageEntry.Page.As<ICommonAspect>().ModifiedUtc.Value) %><%
+                                <%: T("Last modified: {0}", Html.DateTimeRelative(pageEntry.Page.As<ICommonAspect>().ModifiedUtc.Value, T)) %><%
                             } %>&nbsp;&#124;&nbsp;
                             </li>
                             <li><%: T("By {0}", pageEntry.Page.Creator.UserName)%></li>

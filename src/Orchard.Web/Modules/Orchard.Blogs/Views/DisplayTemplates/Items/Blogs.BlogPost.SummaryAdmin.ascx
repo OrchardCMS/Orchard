@@ -1,7 +1,6 @@
 ﻿<%@ Control Language="C#" Inherits="Orchard.Mvc.ViewUserControl<ContentItemViewModel<BlogPost>>" %>
 <%@ Import Namespace="Orchard.ContentManagement.Aspects"%>
 <%@ Import Namespace="Orchard.ContentManagement"%>
-<%@ Import Namespace="Orchard.Core.Common.Models"%>
 <%@ Import Namespace="Orchard.Mvc.ViewModels"%>
 <%@ Import Namespace="Orchard.Blogs.Extensions"%>
 <%@ Import Namespace="Orchard.Blogs.Models"%>
@@ -11,15 +10,15 @@
         <ul>
             <li><%
             if (Model.Item.HasPublished) { %>
-                <img class="icon" src="<%=ResolveUrl("~/Modules/Orchard.Blogs/Content/Admin/images/online.gif") %>" alt="<%: T("Online") %>" title="<%: T("The page is currently online") %>" /><%: T(" Published")%><%
+                <img class="icon" src="<%=ResolveUrl("~/Modules/Orchard.Blogs/Content/Admin/images/online.gif") %>" alt="<%: T("Online") %>" title="<%: T("The page is currently online") %>" /> <%: T("Published")%><%
             }
             else { %>
-                <img class="icon" src="<%=ResolveUrl("~/Modules/Orchard.Blogs/Content/Admin/images/offline.gif") %>" alt="<%: T("Offline") %>" title="<%: T("The page is currently offline") %>" /><%: T(" Not Published")%><%
+                <img class="icon" src="<%=ResolveUrl("~/Modules/Orchard.Blogs/Content/Admin/images/offline.gif") %>" alt="<%: T("Offline") %>" title="<%: T("The page is currently offline") %>" /> <%: T("Not Published")%><%
             } %>&nbsp;&#124;&nbsp;
             </li>
             <li><%
             if (Model.Item.HasDraft) { %>
-                <img class="icon" src="<%=ResolveUrl("~/Modules/Orchard.Blogs/Content/Admin/images/draft.gif") %>" alt="<%: T("Draft") %>" title="<%: T("The post has a draft") %>" /><%=Html.PublishedState(Model.Item)%><%
+                <img class="icon" src="<%=ResolveUrl("~/Modules/Orchard.Blogs/Content/Admin/images/draft.gif") %>" alt="<%: T("Draft") %>" title="<%: T("The post has a draft") %>" /><%=Html.PublishedState(Model.Item, T) %><%
             }
             else { %>
                 <%: T("No draft")%><%
@@ -31,10 +30,10 @@
                 <%=Html.DateTime(Model.Item.ScheduledPublishUtc.Value, "M/d/yyyy h:mm tt")%><%
             }
             else if (Model.Item.IsPublished) { %>
-                <%: T("Published: ") + Html.DateTimeRelative(Model.Item.As<ICommonAspect>().VersionPublishedUtc.Value)%><%
+                <%: T("Published: {0}", Html.DateTimeRelative(Model.Item.As<ICommonAspect>().VersionPublishedUtc.Value, T)) %><%
             }
             else { %>
-                <%: T("Last modified: ") + Html.DateTimeRelative(Model.Item.As<ICommonAspect>().ModifiedUtc.Value) %><%
+                <%: T("Last modified: {0}", Html.DateTimeRelative(Model.Item.As<ICommonAspect>().ModifiedUtc.Value, T)) %><%
             } %>&nbsp;&#124;&nbsp;
             </li>
             <li><%: T("By {0}", Model.Item.Creator.UserName)%></li>                   

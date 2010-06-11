@@ -721,6 +721,9 @@ table .button {
 
 
 /* ---------- Generic ---------- */
+#main .breadcrumb {
+    margin-top:-1.5em;
+}
 /* todo: needed? */
 .clearBoth {
 	clear:both;

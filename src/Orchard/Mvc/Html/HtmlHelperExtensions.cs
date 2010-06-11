@@ -7,6 +7,7 @@ using System.Web.Mvc;
 using System.Web.Mvc.Html;
 using System.Web.Routing;
 using Orchard.Collections;
+using Orchard.Localization;
 using Orchard.Mvc.ViewModels;
 using Orchard.Services;
 using Orchard.Settings;
@@ -23,6 +24,14 @@ namespace Orchard.Mvc.Html {
         public static string NameOf<T, TResult>(this HtmlHelper<T> html, Expression<Func<T, TResult>> expression) {
             return Reflect.NameOf(html.ViewData.Model, expression);
         }
+
+        public static string FieldNameFor<T, TResult>(this HtmlHelper<T> html, Expression<Func<T, TResult>> expression) {
+            return html.ViewData.TemplateInfo.GetFullHtmlFieldName(ExpressionHelper.GetExpressionText(expression));
+        }
+        public static string FieldIdFor<T, TResult>(this HtmlHelper<T> html, Expression<Func<T, TResult>> expression) {
+            return html.ViewData.TemplateInfo.GetFullHtmlFieldId(ExpressionHelper.GetExpressionText(expression));
+        }
+
 
         public static MvcHtmlString SelectOption<T>(this HtmlHelper html, T currentValue, T optionValue, string text) {
             return SelectOption(html, optionValue, object.Equals(optionValue, currentValue), text);
@@ -171,44 +180,44 @@ namespace Orchard.Mvc.Html {
 
         #region Format Date/Time
 
-        public static string DateTimeRelative(this HtmlHelper htmlHelper, DateTime? value, string defaultIfNull) {
-            return value.HasValue ? htmlHelper.DateTimeRelative(value.Value) : defaultIfNull;
+        public static LocalizedString DateTimeRelative(this HtmlHelper htmlHelper, DateTime? value, LocalizedString defaultIfNull, Localizer T) {
+            return value.HasValue ? htmlHelper.DateTimeRelative(value.Value, T) : defaultIfNull;
         }
 
         //TODO: (erikpo) This method needs localized
-        public static string DateTimeRelative(this HtmlHelper htmlHelper, DateTime value) {
-            TimeSpan time = htmlHelper.Resolve<IClock>().UtcNow - value;
+        public static LocalizedString DateTimeRelative(this HtmlHelper htmlHelper, DateTime value, Localizer T) {
+            var time = htmlHelper.Resolve<IClock>().UtcNow - value;
 
             if (time.TotalDays > 7)
-                return "on " + htmlHelper.DateTime(value, "MMM d yyyy 'at' h:mm tt");
+                return htmlHelper.DateTime(value, T("'on' MMM d yyyy 'at' h:mm tt"));
             if (time.TotalHours > 24)
-                return string.Format("{0} day{1} ago", time.Days, time.Days == 1 ? "" : "s");
+                return T.Plural("1 day ago", "{0} days ago", time.Days);
             if (time.TotalMinutes > 60)
-                return string.Format("{0} hour{1} ago", time.Hours, time.Hours == 1 ? "" : "s");
+                return T.Plural("1 hour ago", "{0} hours ago", time.Hours);
             if (time.TotalSeconds > 60)
-                return string.Format("{0} minute{1} ago", time.Minutes, time.Minutes == 1 ? "" : "s");
+                return T.Plural("1 minute ago", "{0} minutes ago", time.Minutes);
             if (time.TotalSeconds > 10)
-                return string.Format("{0} second{1} ago", time.Seconds, time.Seconds == 1 ? "" : "s");
+                return T.Plural("1 second ago", "{0} seconds ago", time.Seconds); //aware that the singular won't be used
 
-            return "a moment ago";
+            return T("a moment ago");
         }
 
-        public static string DateTime(this HtmlHelper htmlHelper, DateTime? value, string defaultIfNull) {
+        public static LocalizedString DateTime(this HtmlHelper htmlHelper, DateTime? value, LocalizedString defaultIfNull) {
             return value.HasValue ? htmlHelper.DateTime(value.Value) : defaultIfNull;
         }
 
-        public static string DateTime(this HtmlHelper htmlHelper, DateTime? value, string defaultIfNull, string customFormat) {
+        public static LocalizedString DateTime(this HtmlHelper htmlHelper, DateTime? value, LocalizedString defaultIfNull, LocalizedString customFormat) {
             return value.HasValue ? htmlHelper.DateTime(value.Value, customFormat) : defaultIfNull;
         }
 
-        public static string DateTime(this HtmlHelper htmlHelper, DateTime value) {
+        public static LocalizedString DateTime(this HtmlHelper htmlHelper, DateTime value) {
             //TODO: (erikpo) This default format should come from a site setting
-            return htmlHelper.DateTime(value, "MMM d yyyy h:mm tt");
+            return htmlHelper.DateTime(value, new LocalizedString("MMM d yyyy h:mm tt")); //todo: above comment and get rid of just wrapping this as a localized string
         }
 
-        public static string DateTime(this HtmlHelper htmlHelper, DateTime value, string customFormat) {
+        public static LocalizedString DateTime(this HtmlHelper htmlHelper, DateTime value, LocalizedString customFormat) {
             //TODO: (erikpo) In the future, convert this to "local" time before calling ToString
-            return value.ToString(customFormat);
+            return value.ToString(customFormat.Text);
         }
 
         #endregion

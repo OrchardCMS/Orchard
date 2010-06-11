@@ -6,16 +6,20 @@ using Orchard.ContentManagement.Aspects;
 using Orchard.Core.Common.Models;
 using Orchard.Core.Routable.Models;
 using Orchard.Core.Routable.ViewModels;
+using Orchard.Data;
+using Orchard.Localization;
 using Orchard.Mvc.ViewModels;
 
 namespace Orchard.Core.Routable.Controllers {
     [ValidateInput(false)]
-    public class ItemController : Controller {
+    public class ItemController : Controller, IUpdateModel {
         private readonly IContentManager _contentManager;
+        private readonly ITransactionManager _transactionManager;
         private readonly IRoutablePathConstraint _routablePathConstraint;
 
-        public ItemController(IContentManager contentManager, IRoutablePathConstraint routablePathConstraint) {
+        public ItemController(IContentManager contentManager, ITransactionManager transactionManager, IRoutablePathConstraint routablePathConstraint) {
             _contentManager = contentManager;
+            _transactionManager = transactionManager;
             _routablePathConstraint = routablePathConstraint;
         }
 
@@ -46,6 +50,40 @@ namespace Orchard.Core.Routable.Controllers {
             if (string.IsNullOrEmpty(itemViewModel.TemplateName)) {
                 itemViewModel.TemplateName = "Items/Contents.Item";
             }
+        }
+
+        public ActionResult Slugify(string contentType, int? id, int? containerId) {
+            const string slug = "";
+            ContentItem contentItem = null;
+
+            if (string.IsNullOrEmpty(contentType))
+                return Json(slug);
+
+            if (id != null)
+                contentItem = _contentManager.Get((int)id, VersionOptions.Latest);
+
+            if (contentItem == null) {
+                contentItem = _contentManager.New(contentType);
+
+                if (containerId != null) {
+                    var containerItem = _contentManager.Get((int)containerId);
+                    contentItem.As<ICommonAspect>().Container = containerItem;
+                }
+            }
+
+            _contentManager.UpdateEditorModel(contentItem, this);
+            _transactionManager.Cancel();
+
+            return Json(contentItem.As<IRoutableAspect>().Slug ?? slug);
+        }
+
+
+        bool IUpdateModel.TryUpdateModel<TModel>(TModel model, string prefix, string[] includeProperties, string[] excludeProperties) {
+            return TryUpdateModel(model, prefix, includeProperties, excludeProperties);
+        }
+
+        void IUpdateModel.AddModelError(string key, LocalizedString errorMessage) {
+            ModelState.AddModelError(key, errorMessage.ToString());
         }
     }
 }

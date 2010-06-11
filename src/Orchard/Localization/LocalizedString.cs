@@ -1,7 +1,8 @@
 ﻿using System;
+using System.Web;
 
 namespace Orchard.Localization {
-    public class LocalizedString : MarshalByRefObject {
+    public class LocalizedString : MarshalByRefObject, IHtmlString {
         private readonly string _localized;
 
         public LocalizedString(string localized) {
@@ -24,6 +25,10 @@ namespace Orchard.Localization {
             return _localized;
         }
 
+        string IHtmlString.ToHtmlString() {
+            return _localized;
+        }
+
         public override int GetHashCode() {
             var hashCode = 0;
             if (_localized != null)
@@ -35,8 +40,9 @@ namespace Orchard.Localization {
             if (obj == null || obj.GetType() != GetType())
                 return false;
 
-            var that = (LocalizedString) obj;
+            var that = (LocalizedString)obj;
             return string.Equals(_localized, that._localized);
         }
+
     }
 }
