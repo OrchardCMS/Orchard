@@ -37,7 +37,7 @@ namespace Orchard.Core.Indexing.Lucene {
             _analyzer = CreateAnalyzer();
 
             // TODO: (sebros) Find a common way to get where tenant's specific files should go. "Sites/Tenant" is hard coded in multiple places
-            _basePath = Path.Combine("Sites", _shellSettings.Name, "Indexes");
+            _basePath = _appDataFolder.Combine("Sites", _shellSettings.Name, "Indexes");
 
             Logger = NullLogger.Instance;
 
@@ -58,7 +58,7 @@ namespace Orchard.Core.Indexing.Lucene {
         }
 
         protected virtual Directory GetDirectory(string indexName) {
-            var directoryInfo = new DirectoryInfo(_appDataFolder.MapPath(Path.Combine(_basePath, indexName)));
+            var directoryInfo = new DirectoryInfo(_appDataFolder.MapPath(_appDataFolder.Combine(_basePath, indexName)));
             return FSDirectory.Open(directoryInfo);
         }
 
@@ -73,7 +73,7 @@ namespace Orchard.Core.Indexing.Lucene {
         }
 
         public bool Exists(string indexName) {
-            return new DirectoryInfo(_appDataFolder.MapPath(Path.Combine(_basePath, indexName))).Exists;
+            return new DirectoryInfo(_appDataFolder.MapPath(_appDataFolder.Combine(_basePath, indexName))).Exists;
         }
 
         public bool IsEmpty(string indexName) {
@@ -114,7 +114,7 @@ namespace Orchard.Core.Indexing.Lucene {
         }
 
         public void DeleteIndex(string indexName) {
-            new DirectoryInfo(Path.Combine(_appDataFolder.MapPath(Path.Combine(_basePath, indexName))))
+            new DirectoryInfo(_appDataFolder.MapPath(_appDataFolder.Combine(_basePath, indexName)))
                 .Delete(true);
 
             var settingsFileName = GetSettingsFileName(indexName);
@@ -197,7 +197,7 @@ namespace Orchard.Core.Indexing.Lucene {
         }
 
         private string GetSettingsFileName(string indexName) {
-            return Path.Combine(_appDataFolder.MapPath(_basePath), indexName + ".settings.xml");
+            return _appDataFolder.MapPath(_appDataFolder.Combine(_basePath, indexName + ".settings.xml"));
         }
 
         public DateTime GetLastIndexUtc(string indexName) {
