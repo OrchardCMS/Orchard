@@ -12,11 +12,12 @@ namespace Orchard.Environment.Extensions.Loaders {
     /// </summary>
     public class ReferencedExtensionLoader : IExtensionLoader {
         private readonly IDependenciesFolder _dependenciesFolder;
-        public int Order { get { return 20; } }
 
         public ReferencedExtensionLoader(IDependenciesFolder dependenciesFolder) {
             _dependenciesFolder = dependenciesFolder;
         }
+
+        public int Order { get { return 20; } }
 
         public ExtensionProbeEntry Probe(ExtensionDescriptor descriptor) {
             if (HostingEnvironment.IsHosted == false)
@@ -47,7 +48,13 @@ namespace Orchard.Environment.Extensions.Loaders {
                     .OfType<Assembly>()
                     .FirstOrDefault(x => x.GetName().Name == entry.Descriptor.Name);
 
-                _dependenciesFolder.StoreReferencedAssembly(entry.Descriptor.Name);
+                _dependenciesFolder.Store(new DependencyDescriptor {
+                    ModuleName = entry.Descriptor.Name, 
+                    LoaderName = this.GetType().FullName,
+                    VirtualPath = entry.VirtualPath,
+                    FileName = assembly.Location
+                });
+
 
                 return new ExtensionEntry {
                     Descriptor = entry.Descriptor,
@@ -55,8 +62,12 @@ namespace Orchard.Environment.Extensions.Loaders {
                     ExportedTypes = assembly.GetExportedTypes()
                 };
             }
-
-            return null;
+            else {
+                // If the extension is not loaded by us, there is no cached state 
+                // we need to invalidate
+                _dependenciesFolder.Remove(entry.Descriptor.Name, this.GetType().FullName);
+                return null;
+            }
         }
     }
 }

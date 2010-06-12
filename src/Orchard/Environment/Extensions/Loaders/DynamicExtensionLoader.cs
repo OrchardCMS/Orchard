@@ -39,7 +39,12 @@ namespace Orchard.Environment.Extensions.Loaders {
             if (entry.Loader == this) {
                 var assembly = _buildManager.GetCompiledAssembly(entry.VirtualPath);
 
-                _dependenciesFolder.StoreBuildProviderAssembly(entry.Descriptor.Name, entry.VirtualPath, assembly);
+                _dependenciesFolder.Store(new DependencyDescriptor {
+                    ModuleName = entry.Descriptor.Name, 
+                    LoaderName = this.GetType().FullName,
+                    VirtualPath = entry.VirtualPath,
+                    FileName = assembly.Location
+                });
 
                 return new ExtensionEntry {
                     Descriptor = entry.Descriptor,
@@ -47,7 +52,14 @@ namespace Orchard.Environment.Extensions.Loaders {
                     ExportedTypes = assembly.GetExportedTypes(),
                 };
             }
-            return null;
+            else {
+                // If the extension is not loaded by us, there is some cached state we need to invalidate
+                // 1) The webforms views which have been compiled with ".csproj" assembly source
+                // 2) The modules which contains features which depend on us
+                //TODO
+                _dependenciesFolder.Remove(entry.Descriptor.Name, this.GetType().FullName);
+                return null;
+            }
         }
     }
 }

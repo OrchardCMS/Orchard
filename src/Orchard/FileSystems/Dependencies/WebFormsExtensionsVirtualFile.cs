@@ -1,5 +1,6 @@
 ﻿using System.IO;
 using System.Web.Hosting;
+using Orchard.Environment.Extensions.Loaders;
 
 namespace Orchard.FileSystems.Dependencies {
     public class WebFormsExtensionsVirtualFile : VirtualFile {
@@ -50,7 +51,7 @@ namespace Orchard.FileSystems.Dependencies {
         }
 
         private string GetAssemblyDirective() {
-            if (_dependencyDescriptor.IsFromBuildProvider) {
+            if (_dependencyDescriptor.LoaderName == typeof(DynamicExtensionLoader).FullName) {
                 return string.Format("<%@ Assembly Src=\"{0}\"%>", _dependencyDescriptor.VirtualPath);
             }
             else {

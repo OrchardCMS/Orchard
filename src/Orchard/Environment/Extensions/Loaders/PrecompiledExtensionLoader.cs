@@ -9,11 +9,11 @@ namespace Orchard.Environment.Extensions.Loaders {
     /// extension directory.
     /// </summary>
     public class PrecompiledExtensionLoader : IExtensionLoader {
-        private readonly IDependenciesFolder _folder;
+        private readonly IDependenciesFolder _dependenciesFolder;
         private readonly IVirtualPathProvider _virtualPathProvider;
 
-        public PrecompiledExtensionLoader(IDependenciesFolder folder, IVirtualPathProvider virtualPathProvider) {
-            _folder = folder;
+        public PrecompiledExtensionLoader(IDependenciesFolder dependenciesFolder, IVirtualPathProvider virtualPathProvider) {
+            _dependenciesFolder = dependenciesFolder;
             _virtualPathProvider = virtualPathProvider;
         }
 
@@ -35,9 +35,9 @@ namespace Orchard.Environment.Extensions.Loaders {
 
         public ExtensionEntry Load(ExtensionProbeEntry entry) {
             if (entry.Loader == this) {
-                _folder.StorePrecompiledAssembly(entry.Descriptor.Name, entry.VirtualPath);
+                _dependenciesFolder.StorePrecompiledAssembly(entry.Descriptor.Name, entry.VirtualPath, this.GetType().FullName);
 
-                var assembly = _folder.LoadAssembly(entry.Descriptor.Name);
+                var assembly = _dependenciesFolder.LoadAssembly(entry.Descriptor.Name);
                 if (assembly == null)
                     return null;
 
@@ -47,7 +47,14 @@ namespace Orchard.Environment.Extensions.Loaders {
                     ExportedTypes = assembly.GetExportedTypes()
                 };
             }
-            return null;
+            else {
+                // If the extension is not loaded by us, there is some cached state we need to invalidate
+                // 1) The webforms views which have been compiled with ".csproj" assembly source
+                // 2) The modules which contains features which depend on us
+                //TODO
+                _dependenciesFolder.Remove(entry.Descriptor.Name, this.GetType().FullName);
+                return null;
+            }
         }
     }
 }

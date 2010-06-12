@@ -55,45 +55,58 @@ namespace Orchard.FileSystems.Dependencies {
             public bool IsCurrent { get; set; }
         }
 
-        public void StoreReferencedAssembly(string moduleName) {
-            if (Descriptors.Any(d => d.ModuleName == moduleName)) {
-                // Remove the moduleName from the list of assemblies in the dependency folder
-                var newDescriptors = Descriptors.Where(d => d.ModuleName != moduleName);
+        //public void StoreReferencedAssembly(string moduleName) {
+        //    if (Descriptors.Any(d => d.ModuleName == moduleName)) {
+        //        // Remove the moduleName from the list of assemblies in the dependency folder
+        //        var newDescriptors = Descriptors.Where(d => d.ModuleName != moduleName);
 
-                WriteDependencies(PersistencePath, newDescriptors);
-            }
-        }
+        //        WriteDependencies(PersistencePath, newDescriptors);
+        //    }
+        //}
 
-        public void StoreBuildProviderAssembly(string moduleName, string virtualPath, Assembly assembly) {
-            var descriptor = new DependencyDescriptor {
-                ModuleName = moduleName,
-                IsFromBuildProvider = true,
-                VirtualPath = virtualPath,
-                FileName = assembly.Location
-            };
+        //public void StoreBuildProviderAssembly(string moduleName, string virtualPath, Assembly assembly) {
+        //    var descriptor = new DependencyDescriptor {
+        //        ModuleName = moduleName,
+        //        IsFromBuildProvider = true,
+        //        VirtualPath = virtualPath,
+        //        FileName = assembly.Location
+        //    };
 
-            StoreDepencyInformation(descriptor);
+        //    StoreDepencyInformation(descriptor);
 
-            _webSiteFolder.WhenPathChanges(virtualPath, () => _events.ModuleChanged(moduleName));
-        }
+        //    _webSiteFolder.WhenPathChanges(virtualPath, () => _events.ModuleChanged(moduleName));
+        //}
 
-        public void StorePrecompiledAssembly(string moduleName, string virtualPath) {
+        public void StorePrecompiledAssembly(string moduleModuleName, string virtualPath, string loaderName) {
             _appDataFolder.CreateDirectory(BasePath);
 
             // Only store assembly if it's more recent that what we have stored already (if anything)
             var assemblyFileName = _appDataFolder.MapPath(virtualPath);
-            if (IsNewerAssembly(moduleName, assemblyFileName)) {
+            if (IsNewerAssembly(moduleModuleName, assemblyFileName)) {
                 var destinationFileName = Path.GetFileName(assemblyFileName);
                 var destinationPath = _appDataFolder.MapPath(_appDataFolder.Combine(BasePath, destinationFileName));
                 File.Copy(assemblyFileName, destinationPath, true);
 
                 StoreDepencyInformation(new DependencyDescriptor {
-                    ModuleName = moduleName,
-                    IsFromBuildProvider = false,
+                    ModuleName = moduleModuleName,
+                    LoaderName = loaderName,
                     VirtualPath = virtualPath,
                     FileName = destinationFileName
                 });
             }
+        }
+
+        public void Remove(string moduleName, string loaderName) {
+            Func<DependencyDescriptor, bool> predicate = (d => d.ModuleName == moduleName && d.LoaderName == loaderName);
+            if (Descriptors.Any(predicate)) {
+                var newDescriptors = Descriptors.Where(e => !predicate(e));
+
+                WriteDependencies(PersistencePath, newDescriptors);
+            }
+        }
+
+        public void Store(DependencyDescriptor descriptor) {
+            StoreDepencyInformation(descriptor);
         }
 
         public DependencyDescriptor GetDescriptor(string moduleName) {
@@ -127,10 +140,10 @@ namespace Orchard.FileSystems.Dependencies {
             WriteDependencies(PersistencePath, dependencies);
         }
 
-        public Assembly LoadAssembly(string assemblyName) {
+        public Assembly LoadAssembly(string moduleName) {
             _appDataFolder.CreateDirectory(BasePath);
 
-            var dependency = Descriptors.SingleOrDefault(d => d.ModuleName == assemblyName);
+            var dependency = Descriptors.SingleOrDefault(d => d.ModuleName == moduleName);
             if (dependency == null)
                 return null;
 
@@ -138,6 +151,17 @@ namespace Orchard.FileSystems.Dependencies {
                 return null;
 
             return Assembly.Load(Path.GetFileNameWithoutExtension(dependency.FileName));
+        }
+
+        public bool HasPrecompiledAssembly(string moduleName) {
+            var dependency = Descriptors.SingleOrDefault(d => d.ModuleName == moduleName);
+            if (dependency == null)
+                return false;
+
+            if (!_appDataFolder.FileExists(_appDataFolder.Combine(BasePath, dependency.FileName)))
+                return false;
+
+            return true;
         }
 
         private IEnumerable<DependencyDescriptor> ReadDependencies(string persistancePath) {
@@ -156,7 +180,7 @@ namespace Orchard.FileSystems.Dependencies {
                         ModuleName = elem(e, "ModuleName"),
                         VirtualPath = elem(e, "VirtualPath"),
                         FileName = elem(e, "FileName"),
-                        IsFromBuildProvider = bool.Parse(elem(e, "IsFromBuildProvider"))
+                        LoaderName = elem(e, "LoaderName")
                     })
                     .ToList();
             }
@@ -170,7 +194,7 @@ namespace Orchard.FileSystems.Dependencies {
             var elements = dependencies.Select(d => new XElement("Dependency",
                                                                  new XElement(ns("ModuleName"), d.ModuleName),
                                                                  new XElement(ns("VirtualPath"), d.VirtualPath),
-                                                                 new XElement(ns("IsFromBuildProvider"), d.IsFromBuildProvider),
+                                                                 new XElement(ns("LoaderName"), d.LoaderName),
                                                                  new XElement(ns("FileName"), d.FileName)));
             document.Root.Add(elements);
 
