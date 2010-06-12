@@ -130,6 +130,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Caching\Signals.cs" />
     <Compile Include="Collections\IPageOfItems.cs" />
     <Compile Include="Collections\PageOfItems.cs" />
     <Compile Include="ContentManagement\Aspects\ICommonAspect.cs">
@@ -397,7 +398,7 @@
     <Compile Include="Mvc\Routes\RoutePublisher.cs" />
     <Compile Include="Mvc\Routes\RouteDescriptor.cs" />
     <Compile Include="Data\Repository.cs" />
-    <Compile Include="Environment\Topology\CompositionStrategy.cs" />
+    <Compile Include="Environment\ShellBuilders\CompositionStrategy.cs" />
     <Compile Include="Environment\DefaultOrchardHost.cs" />
     <Compile Include="Mvc\OrchardControllerFactory.cs" />
     <Compile Include="Environment\IOrchardHost.cs" />
@@ -462,10 +463,10 @@
     <Compile Include="Environment\AutofacUtil\ContainerUpdater.cs" />
     <Compile Include="Environment\ShellBuilders\ShellContextFactory.cs" />
     <Compile Include="Environment\ShellBuilders\ShellContext.cs" />
-    <Compile Include="Environment\Topology\ShellDescriptorCache.cs" />
-    <Compile Include="Environment\Topology\IShellDescriptorManager.cs" />
-    <Compile Include="Environment\Topology\Models\ShellTopology.cs" />
-    <Compile Include="Environment\Topology\Models\ShellDescriptor.cs" />
+    <Compile Include="Environment\Descriptor\ShellDescriptorCache.cs" />
+    <Compile Include="Environment\Descriptor\IShellDescriptorManager.cs" />
+    <Compile Include="Environment\ShellBuilders\Models\ShellBlueprint.cs" />
+    <Compile Include="Environment\Descriptor\Models\ShellDescriptor.cs" />
     <Compile Include="Environment\ShellBuilders\ShellContainerFactory.cs" />
     <Compile Include="Environment\Configuration\ShellSettings.cs" />
     <Compile Include="Environment\StandaloneEnvironment.cs" />

@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
-using Orchard.Environment.Topology.Models;
+using Orchard.Environment.Descriptor.Models;
 using Orchard.Events;
 
-namespace Orchard.Environment.Topology {
+namespace Orchard.Environment.Descriptor {
     /// <summary>
     /// Service resolved out of the shell container. Primarily used by host.
     /// </summary>

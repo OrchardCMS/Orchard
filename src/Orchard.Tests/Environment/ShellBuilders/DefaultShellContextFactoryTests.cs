@@ -5,8 +5,9 @@ using NUnit.Framework;
 using Orchard.Environment;
 using Orchard.Environment.Configuration;
 using Orchard.Environment.ShellBuilders;
-using Orchard.Environment.Topology;
-using Orchard.Environment.Topology.Models;
+using Orchard.Environment.Descriptor;
+using Orchard.Environment.Descriptor.Models;
+using Orchard.Environment.ShellBuilders.Models;
 using Orchard.Tests.Utility;
 
 namespace Orchard.Tests.Environment.ShellBuilders {
@@ -25,33 +26,33 @@ namespace Orchard.Tests.Environment.ShellBuilders {
         [Test]
         public void NormalExecutionReturnsExpectedObjects() {
             var settings = new ShellSettings { Name = "Default" };
-            var topologyDescriptor = new ShellDescriptor { SerialNumber = 6655321 };
-            var topology = new ShellTopology();
+            var descriptor = new ShellDescriptor { SerialNumber = 6655321 };
+            var blueprint = new ShellBlueprint();
             var shellLifetimeScope = _container.BeginLifetimeScope("shell");
 
             _container.Mock<IShellDescriptorCache>()
                 .Setup(x => x.Fetch("Default"))
-                .Returns(topologyDescriptor);
+                .Returns(descriptor);
 
             _container.Mock<ICompositionStrategy>()
-                .Setup(x => x.Compose(settings, topologyDescriptor))
-                .Returns(topology);
+                .Setup(x => x.Compose(settings, descriptor))
+                .Returns(blueprint);
 
             _container.Mock<IShellContainerFactory>()
-                .Setup(x => x.CreateContainer(settings, topology))
+                .Setup(x => x.CreateContainer(settings, blueprint))
                 .Returns(shellLifetimeScope);
 
             _container.Mock<IShellDescriptorManager>()
                 .Setup(x => x.GetShellDescriptor())
-                .Returns(topologyDescriptor);
+                .Returns(descriptor);
 
             var factory = _container.Resolve<IShellContextFactory>();
 
             var context = factory.CreateShellContext(settings);
 
             Assert.That(context.Settings, Is.SameAs(settings));
-            Assert.That(context.Descriptor, Is.SameAs(topologyDescriptor));
-            Assert.That(context.Topology, Is.SameAs(topology));
+            Assert.That(context.Descriptor, Is.SameAs(descriptor));
+            Assert.That(context.Blueprint, Is.SameAs(blueprint));
             Assert.That(context.LifetimeScope, Is.SameAs(shellLifetimeScope));
             Assert.That(context.Shell, Is.SameAs(shellLifetimeScope.Resolve<IOrchardShell>()));
         }
@@ -60,7 +61,7 @@ namespace Orchard.Tests.Environment.ShellBuilders {
         public void CreatingSetupContextUsesOrchardSetupFeature() {
             var settings = default(ShellSettings);
             var descriptor = default(ShellDescriptor);
-            var topology = new ShellTopology();
+            var blueprint = new ShellBlueprint();
 
             _container.Mock<ICompositionStrategy>()
                 .Setup(x => x.Compose(It.IsAny<ShellSettings>(), It.IsAny<ShellDescriptor>()))
@@ -68,10 +69,10 @@ namespace Orchard.Tests.Environment.ShellBuilders {
                     settings = s;
                     descriptor = d;
                 })
-                .Returns(topology);
+                .Returns(blueprint);
 
             _container.Mock<IShellContainerFactory>()
-                .Setup(x => x.CreateContainer(It.IsAny<ShellSettings>(), topology))
+                .Setup(x => x.CreateContainer(It.IsAny<ShellSettings>(), blueprint))
                 .Returns(_container.BeginLifetimeScope("shell"));
 
             var factory = _container.Resolve<IShellContextFactory>();

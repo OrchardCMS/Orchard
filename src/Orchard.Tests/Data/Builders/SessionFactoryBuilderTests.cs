@@ -2,8 +2,9 @@
 using System.IO;
 using NUnit.Framework;
 using Orchard.Data.Builders;
-using Orchard.Environment.Topology;
-using Orchard.Environment.Topology.Models;
+using Orchard.Environment.Descriptor;
+using Orchard.Environment.Descriptor.Models;
+using Orchard.Environment.ShellBuilders.Models;
 using Orchard.Tests.Records;
 
 namespace Orchard.Tests.Data.Builders {
@@ -49,7 +50,7 @@ namespace Orchard.Tests.Data.Builders {
         [Test]
         public void SQLiteSchemaShouldBeGeneratedAndUsable() {
             var recordDescriptors = new[] {
-                                              new RecordTopology {TableName = "Hello", Type = typeof (FooRecord)}
+                                              new RecordBlueprint {TableName = "Hello", Type = typeof (FooRecord)}
                                           };
             var manager = (ISessionFactoryBuilder)new SessionFactoryBuilder();
             var sessionFactory = manager.BuildSessionFactory(new SessionFactoryParameters {
@@ -78,7 +79,7 @@ namespace Orchard.Tests.Data.Builders {
             CreateSqlServerDatabase(databasePath);
 
             var recordDescriptors = new[] {
-                                              new RecordTopology {TableName = "Hello", Type = typeof (FooRecord)}
+                                              new RecordBlueprint {TableName = "Hello", Type = typeof (FooRecord)}
                                           };
 
             var manager = (ISessionFactoryBuilder)new SessionFactoryBuilder();

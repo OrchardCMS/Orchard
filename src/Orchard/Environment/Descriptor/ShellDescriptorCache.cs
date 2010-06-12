@@ -2,15 +2,15 @@
 using System.IO;
 using System.Runtime.Serialization;
 using System.Xml;
-using Orchard.Environment.Topology.Models;
+using Orchard.Environment.Descriptor.Models;
 using Orchard.FileSystems.AppData;
 using Orchard.Localization;
 using Orchard.Logging;
 
-namespace Orchard.Environment.Topology {
+namespace Orchard.Environment.Descriptor {
         /// <summary>
     /// Single service instance registered at the host level. Provides storage
-    /// and recall of topology descriptor information. Default implementation uses
+    /// and recall of shell descriptor information. Default implementation uses
     /// app_data, but configured replacements could use other per-host writable location.
     /// </summary>
     public interface IShellDescriptorCache {
@@ -30,7 +30,7 @@ namespace Orchard.Environment.Topology {
 
     public class ShellDescriptorCache : IShellDescriptorCache {
         private readonly IAppDataFolder _appDataFolder;
-        private const string TopologyCacheFileName = "cache.dat";
+        private const string DescriptorCacheFileName = "cache.dat";
 
         public ShellDescriptorCache(IAppDataFolder appDataFolder) {
             _appDataFolder = appDataFolder;
@@ -46,7 +46,7 @@ namespace Orchard.Environment.Topology {
 
         public ShellDescriptor Fetch(string name) {
             VerifyCacheFile();
-            var text = _appDataFolder.ReadFile(TopologyCacheFileName);
+            var text = _appDataFolder.ReadFile(DescriptorCacheFileName);
             XmlDocument xmlDocument = new XmlDocument();
             xmlDocument.LoadXml(text);
             XmlNode rootNode = xmlDocument.DocumentElement;
@@ -65,7 +65,7 @@ namespace Orchard.Environment.Topology {
 
         public void Store(string name, ShellDescriptor descriptor) {
             VerifyCacheFile();
-            var text = _appDataFolder.ReadFile(TopologyCacheFileName);
+            var text = _appDataFolder.ReadFile(DescriptorCacheFileName);
             bool tenantCacheUpdated = false;
             var saveWriter = new StringWriter();
             XmlDocument xmlDocument = new XmlDocument();
@@ -95,13 +95,13 @@ namespace Orchard.Environment.Topology {
             }
 
             xmlDocument.Save(saveWriter);
-            _appDataFolder.CreateFile(TopologyCacheFileName, saveWriter.ToString());
+            _appDataFolder.CreateFile(DescriptorCacheFileName, saveWriter.ToString());
         }
 
         #endregion
 
         private void VerifyCacheFile() {
-            if (!_appDataFolder.FileExists(TopologyCacheFileName)) {
+            if (!_appDataFolder.FileExists(DescriptorCacheFileName)) {
                 var writer = new StringWriter();
                 using (XmlWriter xmlWriter = XmlWriter.Create(writer)) {
                     if (xmlWriter != null) {
@@ -111,7 +111,7 @@ namespace Orchard.Environment.Topology {
                         xmlWriter.WriteEndDocument();
                     }
                 }
-                _appDataFolder.CreateFile(TopologyCacheFileName, writer.ToString());
+                _appDataFolder.CreateFile(DescriptorCacheFileName, writer.ToString());
             }
         }
     }

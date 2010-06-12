@@ -13,7 +13,7 @@ using Orchard.Environment.Extensions.Folders;
 using Orchard.Environment.Extensions.Loaders;
 using Orchard.Environment.ShellBuilders;
 using Orchard.Environment.State;
-using Orchard.Environment.Topology;
+using Orchard.Environment.Descriptor;
 using Orchard.Events;
 using Orchard.FileSystems.AppData;
 using Orchard.FileSystems.Dependencies;
