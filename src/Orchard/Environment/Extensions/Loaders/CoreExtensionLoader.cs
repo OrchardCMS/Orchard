@@ -10,13 +10,25 @@ namespace Orchard.Environment.Extensions.Loaders {
     public class CoreExtensionLoader : IExtensionLoader {
         public int Order { get { return 10; } }
 
-        public ExtensionEntry Load(ExtensionDescriptor descriptor) {
+        public ExtensionProbeEntry Probe(ExtensionDescriptor descriptor) {
             if (descriptor.Location == "~/Core") {
+                return new ExtensionProbeEntry {
+                    Descriptor = descriptor,
+                    LastModificationTimeUtc = DateTime.MinValue,
+                    Loader = this,
+                    VirtualPath = "~/Core/" + descriptor.Name
+                };
+            }
+            return null;
+        }
+
+        public ExtensionEntry Load(ExtensionProbeEntry entry) {
+            if (entry.Loader == this) {
                 var assembly = Assembly.Load("Orchard.Core");
                 return new ExtensionEntry {
-                    Descriptor = descriptor,
+                    Descriptor = entry.Descriptor,
                     Assembly = assembly,
-                    ExportedTypes = assembly.GetExportedTypes().Where(x => IsTypeFromModule(x, descriptor))
+                    ExportedTypes = assembly.GetExportedTypes().Where(x => IsTypeFromModule(x, entry.Descriptor))
                 };
             }
             return null;

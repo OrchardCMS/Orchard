@@ -1,4 +1,5 @@
-﻿using Orchard.Environment.Extensions.Models;
+﻿using System.IO;
+using Orchard.Environment.Extensions.Models;
 using Orchard.FileSystems.Dependencies;
 using Orchard.FileSystems.VirtualPath;
 
@@ -18,23 +19,35 @@ namespace Orchard.Environment.Extensions.Loaders {
 
         public int Order { get { return 30; } }
 
-        public ExtensionEntry Load(ExtensionDescriptor descriptor) {
+        public ExtensionProbeEntry Probe(ExtensionDescriptor descriptor) {
             var extensionPath = _virtualPathProvider.Combine(descriptor.Location, descriptor.Name, "bin",
                                                               descriptor.Name + ".dll");
             if (!_virtualPathProvider.FileExists(extensionPath))
                 return null;
 
-            _folder.StorePrecompiledAssembly(descriptor.Name, extensionPath);
-
-            var assembly = _folder.LoadAssembly(descriptor.Name);
-            if (assembly == null)
-                return null;
-
-            return new ExtensionEntry {
+            return new ExtensionProbeEntry {
                 Descriptor = descriptor,
-                Assembly = assembly,
-                ExportedTypes = assembly.GetExportedTypes()
+                LastModificationTimeUtc = File.GetLastWriteTimeUtc(_virtualPathProvider.MapPath(extensionPath)),
+                Loader = this,
+                VirtualPath = extensionPath
             };
+        }
+
+        public ExtensionEntry Load(ExtensionProbeEntry entry) {
+            if (entry.Loader == this) {
+                _folder.StorePrecompiledAssembly(entry.Descriptor.Name, entry.VirtualPath);
+
+                var assembly = _folder.LoadAssembly(entry.Descriptor.Name);
+                if (assembly == null)
+                    return null;
+
+                return new ExtensionEntry {
+                    Descriptor = entry.Descriptor,
+                    Assembly = assembly,
+                    ExportedTypes = assembly.GetExportedTypes()
+                };
+            }
+            return null;
         }
     }
 }

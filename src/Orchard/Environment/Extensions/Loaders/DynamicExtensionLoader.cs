@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using Orchard.Environment.Extensions.Models;
 using Orchard.FileSystems.Dependencies;
 using Orchard.FileSystems.VirtualPath;
@@ -19,24 +20,34 @@ namespace Orchard.Environment.Extensions.Loaders {
 
         public int Order { get { return 100; } }
 
-        public ExtensionEntry Load(ExtensionDescriptor descriptor) {
+        public ExtensionProbeEntry Probe(ExtensionDescriptor descriptor) {
             string projectPath = _virtualPathProvider.Combine(descriptor.Location, descriptor.Name,
                                                               descriptor.Name + ".csproj");
             if (!_virtualPathProvider.FileExists(projectPath)) {
                 return null;
             }
 
-            var assembly = _buildManager.GetCompiledAssembly(projectPath);
-
-            if (_hostEnvironment.IsFullTrust) {
-                _dependenciesFolder.StoreBuildProviderAssembly(descriptor.Name, projectPath, assembly);
-            }
-
-            return new ExtensionEntry {
+            return new ExtensionProbeEntry {
                 Descriptor = descriptor,
-                Assembly = assembly,
-                ExportedTypes = assembly.GetExportedTypes(),
+                LastModificationTimeUtc = File.GetLastWriteTimeUtc(_virtualPathProvider.MapPath(projectPath)),
+                Loader = this,
+                VirtualPath = projectPath
             };
+        }
+
+        public ExtensionEntry Load(ExtensionProbeEntry entry) {
+            if (entry.Loader == this) {
+                var assembly = _buildManager.GetCompiledAssembly(entry.VirtualPath);
+
+                _dependenciesFolder.StoreBuildProviderAssembly(entry.Descriptor.Name, entry.VirtualPath, assembly);
+
+                return new ExtensionEntry {
+                    Descriptor = entry.Descriptor,
+                    Assembly = assembly,
+                    ExportedTypes = assembly.GetExportedTypes(),
+                };
+            }
+            return null;
         }
     }
 }

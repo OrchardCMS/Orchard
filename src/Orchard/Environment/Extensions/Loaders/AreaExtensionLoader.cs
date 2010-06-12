@@ -7,14 +7,25 @@ namespace Orchard.Environment.Extensions.Loaders {
     public class AreaExtensionLoader : IExtensionLoader {
         public int Order { get { return 50; } }
 
-        public ExtensionEntry Load(ExtensionDescriptor descriptor) {
+        public ExtensionProbeEntry Probe(ExtensionDescriptor descriptor) {
             if (descriptor.Location == "~/Areas") {
+                return new ExtensionProbeEntry {
+                    Descriptor = descriptor,
+                    Loader = this,
+                    LastModificationTimeUtc = DateTime.MinValue,
+                    VirtualPath = "~/Areas/" + descriptor.Name,
+                };
+            }
+            return null;
+        }
 
+        public ExtensionEntry Load(ExtensionProbeEntry entry) {
+            if (entry.Loader == this) {
                 var assembly = Assembly.Load("Orchard.Web");
                 return new ExtensionEntry {
-                    Descriptor = descriptor,
+                    Descriptor = entry.Descriptor,
                     Assembly = assembly,
-                    ExportedTypes = assembly.GetExportedTypes().Where(x => IsTypeFromModule(x, descriptor))
+                    ExportedTypes = assembly.GetExportedTypes().Where(x => IsTypeFromModule(x, entry.Descriptor))
                 };
             }
             return null;

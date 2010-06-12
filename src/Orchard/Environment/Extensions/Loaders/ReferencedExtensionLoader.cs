@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Web.Compilation;
 using System.Web.Hosting;
@@ -17,7 +18,7 @@ namespace Orchard.Environment.Extensions.Loaders {
             _dependenciesFolder = dependenciesFolder;
         }
 
-        public ExtensionEntry Load(ExtensionDescriptor descriptor) {
+        public ExtensionProbeEntry Probe(ExtensionDescriptor descriptor) {
             if (HostingEnvironment.IsHosted == false)
                 return null;
 
@@ -28,13 +29,34 @@ namespace Orchard.Environment.Extensions.Loaders {
             if (assembly == null)
                 return null;
 
-            _dependenciesFolder.StoreReferencedAssembly(descriptor.Name);
-
-            return new ExtensionEntry {
+            return new ExtensionProbeEntry {
                 Descriptor = descriptor,
-                Assembly = assembly,
-                ExportedTypes = assembly.GetExportedTypes()
+                LastModificationTimeUtc = File.GetLastWriteTimeUtc(assembly.Location),
+                Loader = this,
+                VirtualPath = "~/bin/" + descriptor.Name
             };
+        }
+
+        public ExtensionEntry Load(ExtensionProbeEntry entry) {
+            if (HostingEnvironment.IsHosted == false)
+                return null;
+
+            if (entry.Loader == this) {
+
+                var assembly = BuildManager.GetReferencedAssemblies()
+                    .OfType<Assembly>()
+                    .FirstOrDefault(x => x.GetName().Name == entry.Descriptor.Name);
+
+                _dependenciesFolder.StoreReferencedAssembly(entry.Descriptor.Name);
+
+                return new ExtensionEntry {
+                    Descriptor = entry.Descriptor,
+                    Assembly = assembly,
+                    ExportedTypes = assembly.GetExportedTypes()
+                };
+            }
+
+            return null;
         }
     }
 }

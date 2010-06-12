@@ -50,8 +50,12 @@ namespace Orchard.Tests.Environment.Extensions {
                 get { return 1; }
             }
 
-            public ExtensionEntry Load(ExtensionDescriptor descriptor) {
-                return new ExtensionEntry { Descriptor = descriptor, ExportedTypes = new[] { typeof(Alpha), typeof(Beta), typeof(Phi) } };
+            public ExtensionProbeEntry Probe(ExtensionDescriptor descriptor) {
+                return new ExtensionProbeEntry { Descriptor = descriptor, Loader = this };
+            }
+
+            public ExtensionEntry Load(ExtensionProbeEntry entry) {
+                return new ExtensionEntry { Descriptor = entry.Descriptor, ExportedTypes = new[] { typeof(Alpha), typeof(Beta), typeof(Phi) } };
             }
 
             #endregion

@@ -20,10 +20,7 @@ namespace Orchard.Environment.Extensions {
         public Localizer T { get; set; }
         public ILogger Logger { get; set; }
 
-        public ExtensionManager(
-            IEnumerable<IExtensionFolders> folders,
-            IEnumerable<IExtensionLoader> loaders
-            ) {
+        public ExtensionManager(IEnumerable<IExtensionFolders> folders, IEnumerable<IExtensionLoader> loaders) {
             _folders = folders;
             _loaders = loaders.OrderBy(x => x.Order);
             T = NullLocalizer.Instance;
@@ -163,13 +160,21 @@ namespace Orchard.Environment.Extensions {
         }
 
         private ExtensionEntry BuildEntry(ExtensionDescriptor descriptor) {
-            foreach (var loader in _loaders) {
-                var entry = loader.Load(descriptor);
-                if (entry != null)
-                    return entry;
-            }
-            return null;
-        }
+            var loaders = _loaders.ToList();
 
+            var moreRecentEntry = loaders
+                .Select(loader => loader.Probe(descriptor))
+                .Where(entry => entry != null)
+                .OrderByDescending( entry => entry.LastModificationTimeUtc)
+                .FirstOrDefault();
+
+            ExtensionEntry result = null;
+            foreach (var loader in loaders) {
+                ExtensionEntry entry = loader.Load(moreRecentEntry);
+                if (entry != null && result == null)
+                    result = entry;
+            }
+            return result;
+        }
     }
 }
