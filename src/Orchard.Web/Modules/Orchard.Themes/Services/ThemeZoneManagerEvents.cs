@@ -11,7 +11,7 @@ namespace Orchard.Themes.Services {
 
         public void ZoneRendering(ZoneRenderContext context) {
 #if DEBUG
-            context.Html.ViewContext.Writer.WriteLine(T("<!-- begin zone: {0} -->", context.ZoneName ?? T("etc. (ZonesAny)")));
+            context.Html.ViewContext.Writer.WriteLine(T("<!-- begin zone: {0} -->", LocalizedString.TextOrDefault(context.ZoneName, T("etc. (ZonesAny)"))));
 #endif
         }
 
@@ -43,7 +43,7 @@ namespace Orchard.Themes.Services {
 
         public void ZoneRendered(ZoneRenderContext context) {
 #if DEBUG
-            context.Html.ViewContext.Writer.WriteLine(T("<!-- end zone: {0} -->", context.ZoneName ?? T("etc. (ZonesAny)")));
+            context.Html.ViewContext.Writer.WriteLine(T("<!-- end zone: {0} -->", LocalizedString.TextOrDefault(context.ZoneName, T("etc. (ZonesAny)"))));
 #endif
         }
     }

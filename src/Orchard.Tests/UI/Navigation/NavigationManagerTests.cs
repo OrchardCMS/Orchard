@@ -3,6 +3,7 @@ using System.Web.Mvc;
 using System.Web.Routing;
 using NUnit.Framework;
 using Orchard.ContentManagement;
+using Orchard.Localization;
 using Orchard.Security;
 using Orchard.Security.Permissions;
 using Orchard.Tests.Stubs;
@@ -71,9 +72,10 @@ namespace Orchard.Tests.UI.Navigation {
             public string MenuName { get { return "admin"; } }
 
             public void GetNavigation(NavigationBuilder builder) {
+                var T = NullLocalizer.Instance;
                 builder
-                    .Add("Foo", "1.0", x => x.Action("foo"))
-                    .Add("Bar", "2.0", x => x.Add("Frap", "1.b"));
+                    .Add(T("Foo"), "1.0", x => x.Action("foo"))
+                    .Add(T("Bar"), "2.0", x => x.Add(T("Frap"), "1.b"));
             }
         }
 
@@ -81,9 +83,10 @@ namespace Orchard.Tests.UI.Navigation {
             public string MenuName { get { return "admin"; } }
 
             public void GetNavigation(NavigationBuilder builder) {
+                var T = NullLocalizer.Instance;
                 builder
-                    .Add("Frap", "3.0", x => x.Action("foo"))
-                    .Add("Bar", "4.0", x => x.Add("Quad", "1.a"));
+                    .Add(T("Frap"), "3.0", x => x.Action("foo"))
+                    .Add(T("Bar"), "4.0", x => x.Add(T("Quad"), "1.a"));
             }
         }
     }

@@ -62,7 +62,7 @@ using (Html.BeginFormAntiForgeryPost()) { %>
                             <li><%
                             if (pageEntry.Page.ScheduledPublishUtc.HasValue && pageEntry.Page.ScheduledPublishUtc.Value > DateTime.UtcNow) { %>
                                 <img class="icon" src="<%=ResolveUrl("~/Modules/Orchard.Pages/Content/Admin/images/scheduled.gif") %>" alt="<%: T("Scheduled") %>" title="<%: T("The page is scheduled for publishing") %>" /><%: T("Scheduled")%>
-                                <%=Html.DateTime(pageEntry.Page.ScheduledPublishUtc.Value, "M/d/yyyy h:mm tt")%><%
+                                <%=Html.DateTime(pageEntry.Page.ScheduledPublishUtc.Value, T("M/d/yyyy h:mm tt"))%><%
                             }
                             else if (pageEntry.Page.IsPublished) { %>
                                 <%: T("Published: {0}", Html.DateTimeRelative(pageEntry.Page.As<ICommonAspect>().VersionPublishedUtc.Value, T)) %><%

@@ -27,7 +27,7 @@
             <li><%
             if (Model.Item.ScheduledPublishUtc.HasValue && Model.Item.ScheduledPublishUtc.Value > DateTime.UtcNow) { %>
                 <img class="icon" src="<%=ResolveUrl("~/Modules/Orchard.Blogs/Content/Admin/images/scheduled.gif") %>" alt="<%: T("Scheduled") %>" title="<%: T("The post is scheduled for publishing") %>" /><%: T("Scheduled")%>
-                <%=Html.DateTime(Model.Item.ScheduledPublishUtc.Value, "M/d/yyyy h:mm tt")%><%
+                <%=Html.DateTime(Model.Item.ScheduledPublishUtc.Value, T("M/d/yyyy h:mm tt"))%><%
             }
             else if (Model.Item.IsPublished) { %>
                 <%: T("Published: {0}", Html.DateTimeRelative(Model.Item.As<ICommonAspect>().VersionPublishedUtc.Value, T)) %><%

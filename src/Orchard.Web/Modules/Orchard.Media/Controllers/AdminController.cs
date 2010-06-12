@@ -42,7 +42,7 @@ namespace Orchard.Media.Controllers {
                 return RedirectToAction("Index");
             }
             catch (Exception exception) {
-                Services.Notifier.Error("Deleting Folder failed: " + exception.Message);
+                Services.Notifier.Error(T("Deleting Folder failed: {0}", exception.Message));
                 return View();
             }
         }
@@ -62,7 +62,7 @@ namespace Orchard.Media.Controllers {
                 return RedirectToAction("Index");
             }
             catch (Exception exception) {
-                Services.Notifier.Error("Creating Folder failed: " + exception.Message);
+                Services.Notifier.Error(T("Creating Folder failed: {0}", exception.Message));
                 return View(viewModel);
             }
         }
@@ -96,7 +96,7 @@ namespace Orchard.Media.Controllers {
                 return RedirectToAction("Index");
             }
             catch (Exception exception) {
-                Services.Notifier.Error("Deleting failed: " + exception.Message);
+                Services.Notifier.Error(T("Deleting failed: {0}", exception.Message));
                 return View();
             }
         }
@@ -128,7 +128,7 @@ namespace Orchard.Media.Controllers {
                 return RedirectToAction("Index");
             }
             catch (Exception exception) {
-                Services.Notifier.Error("Modifying Folder Properties failed: " + exception.Message);
+                Services.Notifier.Error(T("Modifying Folder Properties failed: {0}", exception.Message));
                 return View(viewModel);
             }
         }
@@ -161,7 +161,7 @@ namespace Orchard.Media.Controllers {
                 return RedirectToAction("Edit", new { name = viewModel.FolderName, mediaPath = viewModel.MediaPath });
             }
             catch (Exception exception) {
-                Services.Notifier.Error("Uploading media file failed: " + exception.Message);
+                Services.Notifier.Error(T("Uploading media file failed: {0}", exception.Message));
                 return View(viewModel);
             }
         }
@@ -240,7 +240,7 @@ namespace Orchard.Media.Controllers {
                                                            mediaPath = viewModel.MediaPath });
             }
             catch (Exception exception) {
-                Services.Notifier.Error("Editing media file failed: " + exception.Message);
+                Services.Notifier.Error(T("Editing media file failed: {0}", exception.Message));
                 return View(viewModel);
             }
         }

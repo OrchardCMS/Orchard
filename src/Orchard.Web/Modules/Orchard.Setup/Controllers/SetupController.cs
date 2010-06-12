@@ -84,7 +84,7 @@ namespace Orchard.Setup.Controllers {
             catch (Exception exception) {
                 _notifier.Error(T("Setup failed:"));
                 for (var scan = exception; scan != null; scan = scan.InnerException) {
-                    _notifier.Error(scan.Message);
+                    _notifier.Error(new LocalizedString(scan.Message));
                 }
                 return IndexViewResult(model);
             }

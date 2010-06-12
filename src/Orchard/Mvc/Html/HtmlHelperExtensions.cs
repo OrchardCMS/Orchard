@@ -216,7 +216,7 @@ namespace Orchard.Mvc.Html {
 
         public static LocalizedString DateTime(this HtmlHelper htmlHelper, DateTime value, LocalizedString customFormat) {
             //TODO: (erikpo) In the future, convert this to "local" time before calling ToString
-            return value.ToString(customFormat.Text);
+            return new LocalizedString(value.ToString(customFormat.Text));
         }
 
         #endregion
