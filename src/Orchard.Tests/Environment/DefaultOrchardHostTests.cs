@@ -94,15 +94,6 @@ namespace Orchard.Tests.Environment {
                 yield return ext;
             }
 
-            public IEnumerable<ExtensionEntry> ActiveExtensions_Obsolete() {
-                var feature = FrameworkFeature(new FeatureDescriptor { Name = "Orchard.Framework" });
-                yield return new ExtensionEntry {
-                    Assembly = feature.ExportedTypes.First().Assembly,
-                    Descriptor = AvailableExtensions().First(),
-                    ExportedTypes = feature.ExportedTypes
-                };
-            }
-
             public IEnumerable<Feature> LoadFeatures(IEnumerable<FeatureDescriptor> featureDescriptors) {
                 foreach (var descriptor in featureDescriptors) {
                     if (descriptor.Name == "Orchard.Framework") {

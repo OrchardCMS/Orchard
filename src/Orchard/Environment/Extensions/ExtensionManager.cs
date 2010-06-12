@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Web;
 using ICSharpCode.SharpZipLib.Zip;
 using Orchard.Environment.Extensions.Folders;
 using Orchard.Environment.Extensions.Helpers;
@@ -9,13 +10,11 @@ using Orchard.Environment.Extensions.Loaders;
 using Orchard.Environment.Extensions.Models;
 using Orchard.Localization;
 using Orchard.Logging;
-using System.Web;
 
 namespace Orchard.Environment.Extensions {
     public class ExtensionManager : IExtensionManager {
         private readonly IEnumerable<IExtensionFolders> _folders;
         private readonly IEnumerable<IExtensionLoader> _loaders;
-        private IEnumerable<ExtensionEntry> _activeExtensions;
 
         public Localizer T { get; set; }
         public ILogger Logger { get; set; }
@@ -30,21 +29,13 @@ namespace Orchard.Environment.Extensions {
         // This method does not load extension types, simply parses extension manifests from 
         // the filesystem. 
         public IEnumerable<ExtensionDescriptor> AvailableExtensions() {
-            return _folders.SelectMany(folder=>folder.AvailableExtensions());
+            return _folders.SelectMany(folder => folder.AvailableExtensions());
         }
 
         public IEnumerable<Feature> LoadFeatures(IEnumerable<FeatureDescriptor> featureDescriptors) {
             return featureDescriptors
                 .Select(featureDescriptor => LoadFeature(featureDescriptor))
                 .ToArray();
-        }
-
-        // This method loads types from extensions into the ExtensionEntry array.
-        public IEnumerable<ExtensionEntry> ActiveExtensions_Obsolete() {
-            if (_activeExtensions == null) {
-                _activeExtensions = BuildActiveExtensions().ToList();
-            }
-            return _activeExtensions;
         }
 
         private Feature LoadFeature(FeatureDescriptor featureDescriptor) {
@@ -165,14 +156,15 @@ namespace Orchard.Environment.Extensions {
             var moreRecentEntry = loaders
                 .Select(loader => loader.Probe(descriptor))
                 .Where(entry => entry != null)
-                .OrderByDescending( entry => entry.LastModificationTimeUtc)
+                .OrderByDescending(entry => entry.LastModificationTimeUtc)
                 .FirstOrDefault();
 
             ExtensionEntry result = null;
             foreach (var loader in loaders) {
                 ExtensionEntry entry = loader.Load(moreRecentEntry);
-                if (entry != null && result == null)
+                if (entry != null && result == null) {
                     result = entry;
+                }
             }
             return result;
         }

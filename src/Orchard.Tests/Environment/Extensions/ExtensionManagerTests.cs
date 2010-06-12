@@ -8,7 +8,6 @@ using Orchard.Environment.Extensions.Folders;
 using Orchard.Environment.Extensions.Loaders;
 using Orchard.Environment.Extensions.Models;
 using Orchard.Tests.Extensions.ExtensionTypes;
-using Yaml.Grammar;
 
 namespace Orchard.Tests.Environment.Extensions {
     [TestFixture]
@@ -35,7 +34,7 @@ namespace Orchard.Tests.Environment.Extensions {
             public IDictionary<string, string> Manifests { get; set; }
 
             public IEnumerable<ExtensionDescriptor> AvailableExtensions() {
-                foreach(var e in Manifests) {
+                foreach (var e in Manifests) {
                     string name = e.Key;
                     var parseResult = ExtensionFolders.ParseManifest(Manifests[name]);
                     yield return ExtensionFolders.GetDescriptorForExtension("~/", name, "Module", parseResult);
@@ -250,27 +249,35 @@ features:
         [Test]
         public void ExtensionManagerShouldThrowIfFeatureDoesNotExist() {
             var featureDescriptor = new FeatureDescriptor { Name = "NoSuchFeature" };
-            Assert.Throws<ArgumentException>(() => _manager.LoadFeatures(new [] { featureDescriptor }));
+            Assert.Throws<ArgumentException>(() => _manager.LoadFeatures(new[] { featureDescriptor }));
         }
 
         [Test]
         public void ExtensionManagerTestFeatureAttribute() {
-            var extensionManager = new Moq.Mock<IExtensionManager>();
-            var extensionEntry =  new ExtensionEntry {
-                                                            Descriptor = new ExtensionDescriptor { Name = "Module"},
-                                                            ExportedTypes = new[] { typeof(Alpha), typeof(Beta), typeof(Phi) }
-                                                        };
-            extensionEntry.Descriptor.Features = new[] {
-                                                           new FeatureDescriptor
-                                                           {Name = "Module", Extension = extensionEntry.Descriptor},
-                                                           new FeatureDescriptor
-                                                           {Name = "TestFeature", Extension = extensionEntry.Descriptor}
-                                                       };
-            extensionManager.Setup(x => x.ActiveExtensions_Obsolete()).Returns(new[] {extensionEntry});
+            var extensionLoader = new StubLoaders();
+            var extensionFolder = new StubFolders();
 
-            foreach (var type in extensionManager.Object.ActiveExtensions_Obsolete().SelectMany(x => x.ExportedTypes)) {
-                foreach (OrchardFeatureAttribute featureAttribute in type.GetCustomAttributes(typeof(OrchardFeatureAttribute), false)) {
-                    Assert.That(featureAttribute.FeatureName, Is.EqualTo("TestFeature"));
+            extensionFolder.Manifests.Add("TestModule", @"
+name: TestModule
+version: 1.0.3
+orchardversion: 1
+features:
+  TestModule: 
+    Description: My test module for Orchard.
+  TestFeature:
+    Description: Contains the Phi type.
+");
+
+            IExtensionManager extensionManager = new ExtensionManager(new[] { extensionFolder }, new[] { extensionLoader });
+            var testFeature = extensionManager.AvailableExtensions()
+                .SelectMany(x => x.Features)
+                .Single(x => x.Name == "TestFeature");
+
+            foreach (var feature in extensionManager.LoadFeatures(new[] { testFeature })) {
+                foreach (var type in feature.ExportedTypes) {
+                    foreach (OrchardFeatureAttribute featureAttribute in type.GetCustomAttributes(typeof(OrchardFeatureAttribute), false)) {
+                        Assert.That(featureAttribute.FeatureName, Is.EqualTo("TestFeature"));
+                    }
                 }
             }
         }
@@ -324,7 +331,7 @@ features:
                 .SelectMany(x => x.Features)
                 .Single(x => x.Name == "TestModule");
 
-            foreach (var feature in extensionManager.LoadFeatures(new [] { testModule })) {
+            foreach (var feature in extensionManager.LoadFeatures(new[] { testModule })) {
                 foreach (var type in feature.ExportedTypes) {
                     Assert.That(type != typeof(Phi));
                     Assert.That((type == typeof(Alpha) || (type == typeof(Beta))));
