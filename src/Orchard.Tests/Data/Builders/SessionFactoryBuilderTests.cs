@@ -2,8 +2,9 @@
 using System.IO;
 using NUnit.Framework;
 using Orchard.Data.Builders;
-using Orchard.Environment.Blueprint;
-using Orchard.Environment.Blueprint.Models;
+using Orchard.Environment.Descriptor;
+using Orchard.Environment.Descriptor.Models;
+using Orchard.Environment.ShellBuilders.Models;
 using Orchard.Tests.Records;
 
 namespace Orchard.Tests.Data.Builders {

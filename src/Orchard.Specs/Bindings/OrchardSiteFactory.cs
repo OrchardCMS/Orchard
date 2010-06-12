@@ -2,8 +2,8 @@
 using System.Linq;
 using System.Text;
 using Orchard.Environment.Configuration;
-using Orchard.Environment.Blueprint;
-using Orchard.Environment.Blueprint.Models;
+using Orchard.Environment.Descriptor;
+using Orchard.Environment.Descriptor.Models;
 using Orchard.Specs.Hosting.Orchard.Web;
 using TechTalk.SpecFlow;
 

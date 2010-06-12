@@ -3,8 +3,9 @@ using System.IO;
 using NHibernate;
 using Orchard.Data.Builders;
 using Orchard.Environment.Configuration;
-using Orchard.Environment.Blueprint;
-using Orchard.Environment.Blueprint.Models;
+using Orchard.Environment.Descriptor;
+using Orchard.Environment.Descriptor.Models;
+using Orchard.Environment.ShellBuilders.Models;
 using Orchard.FileSystems.AppData;
 using Orchard.Logging;
 

@@ -5,8 +5,8 @@ using Orchard.Environment.Configuration;
 using Orchard.Environment.Extensions;
 using Orchard.Environment.Extensions.Models;
 using Orchard.Environment.State.Models;
-using Orchard.Environment.Blueprint;
-using Orchard.Environment.Blueprint.Models;
+using Orchard.Environment.Descriptor;
+using Orchard.Environment.Descriptor.Models;
 
 namespace Orchard.Environment.State {
     public class ShellStateCoordinator : IShellStateManagerEventHandler, IShellDescriptorManagerEventHandler {

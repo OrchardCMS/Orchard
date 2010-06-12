@@ -6,12 +6,13 @@ using System.Web.Mvc;
 using Autofac.Core;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Records;
-using Orchard.Environment.Blueprint.Models;
 using Orchard.Environment.Configuration;
+using Orchard.Environment.Descriptor.Models;
 using Orchard.Environment.Extensions;
 using Orchard.Environment.Extensions.Models;
+using Orchard.Environment.ShellBuilders.Models;
 
-namespace Orchard.Environment.Blueprint {
+namespace Orchard.Environment.ShellBuilders {
     /// <summary>
     /// Service at the host level to transform the cachable descriptor into the loadable blueprint.
     /// </summary>

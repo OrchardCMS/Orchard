@@ -1,6 +1,6 @@
 using System.Linq;
 using Orchard.Environment.Extensions.Models;
-using Orchard.Environment.Blueprint.Models;
+using Orchard.Environment.Descriptor.Models;
 
 namespace Orchard.Tests.Environment.Utility {
     static class Build {

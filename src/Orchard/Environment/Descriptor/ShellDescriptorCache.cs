@@ -2,12 +2,12 @@
 using System.IO;
 using System.Runtime.Serialization;
 using System.Xml;
-using Orchard.Environment.Blueprint.Models;
+using Orchard.Environment.Descriptor.Models;
 using Orchard.FileSystems.AppData;
 using Orchard.Localization;
 using Orchard.Logging;
 
-namespace Orchard.Environment.Blueprint {
+namespace Orchard.Environment.Descriptor {
         /// <summary>
     /// Single service instance registered at the host level. Provides storage
     /// and recall of shell descriptor information. Default implementation uses

@@ -11,8 +11,9 @@ using NHibernate.Cfg;
 using NHibernate.Tool.hbm2ddl;
 using Orchard.ContentManagement.Records;
 using Orchard.Data.Conventions;
-using Orchard.Environment.Blueprint;
-using Orchard.Environment.Blueprint.Models;
+using Orchard.Environment.Descriptor;
+using Orchard.Environment.Descriptor.Models;
+using Orchard.Environment.ShellBuilders.Models;
 
 namespace Orchard.Data.Builders {
     public abstract class AbstractBuilder {

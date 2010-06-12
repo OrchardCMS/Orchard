@@ -1,6 +1,7 @@
 using Autofac;
 using Orchard.Environment.Configuration;
-using Orchard.Environment.Blueprint.Models;
+using Orchard.Environment.Descriptor.Models;
+using Orchard.Environment.ShellBuilders.Models;
 
 namespace Orchard.Environment.ShellBuilders {
     public class ShellContext {

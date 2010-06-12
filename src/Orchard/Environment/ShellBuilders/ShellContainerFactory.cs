@@ -11,7 +11,8 @@ using Autofac.Features.Indexed;
 using Autofac.Integration.Web.Mvc;
 using Orchard.Environment.AutofacUtil.DynamicProxy2;
 using Orchard.Environment.Configuration;
-using Orchard.Environment.Blueprint.Models;
+using Orchard.Environment.Descriptor.Models;
+using Orchard.Environment.ShellBuilders.Models;
 using Orchard.Events;
 
 namespace Orchard.Environment.ShellBuilders {

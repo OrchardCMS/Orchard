@@ -3,8 +3,8 @@ using System.Runtime.Serialization;
 using System.Xml;
 using Autofac;
 using NUnit.Framework;
-using Orchard.Environment.Blueprint;
-using Orchard.Environment.Blueprint.Models;
+using Orchard.Environment.Descriptor;
+using Orchard.Environment.Descriptor.Models;
 using Orchard.FileSystems.AppData;
 
 namespace Orchard.Tests.Environment.Blueprint {

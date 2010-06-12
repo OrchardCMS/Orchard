@@ -7,8 +7,8 @@ using Orchard.Core.Settings.State;
 using Orchard.Core.Settings.Descriptor;
 using Orchard.Core.Settings.Descriptor.Records;
 using Orchard.Environment.State;
-using Orchard.Environment.Blueprint;
-using Orchard.Environment.Blueprint.Models;
+using Orchard.Environment.Descriptor;
+using Orchard.Environment.Descriptor.Models;
 using Orchard.Events;
 
 namespace Orchard.Tests.Modules.Settings.Blueprint {

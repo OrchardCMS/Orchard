@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 
-namespace Orchard.Environment.Blueprint.Models {
+namespace Orchard.Environment.Descriptor.Models {
 
     /// <summary>
     /// Contains a snapshot of a tenant's enabled features.

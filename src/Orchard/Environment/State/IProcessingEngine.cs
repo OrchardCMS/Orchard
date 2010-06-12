@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using Orchard.Environment.Configuration;
-using Orchard.Environment.Blueprint.Models;
+using Orchard.Environment.Descriptor.Models;
 
 namespace Orchard.Environment.State
 {

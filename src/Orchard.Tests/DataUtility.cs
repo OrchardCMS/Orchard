@@ -9,7 +9,8 @@ using NHibernate;
 using NHibernate.Tool.hbm2ddl;
 using Orchard.Data;
 using Orchard.Data.Builders;
-using Orchard.Environment.Blueprint.Models;
+using Orchard.Environment.Descriptor.Models;
+using Orchard.Environment.ShellBuilders.Models;
 
 namespace Orchard.Tests {
     public static class DataUtility {

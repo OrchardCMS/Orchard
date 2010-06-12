@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using Orchard.Environment.Descriptor.Models;
 using Orchard.Environment.Extensions.Models;
 
-namespace Orchard.Environment.Blueprint.Models {
+namespace Orchard.Environment.ShellBuilders.Models {
 
     /// <summary>
     /// Contains the information necessary to initialize an IoC container

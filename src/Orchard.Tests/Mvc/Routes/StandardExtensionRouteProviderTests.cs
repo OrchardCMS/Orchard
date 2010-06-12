@@ -6,7 +6,8 @@ using System.Web.Routing;
 using NUnit.Framework;
 using Orchard.Environment.Extensions;
 using Orchard.Environment.Extensions.Models;
-using Orchard.Environment.Blueprint.Models;
+using Orchard.Environment.Descriptor.Models;
+using Orchard.Environment.ShellBuilders.Models;
 using Orchard.Mvc.Routes;
 
 namespace Orchard.Tests.Mvc.Routes {

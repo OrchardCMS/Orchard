@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using Orchard.Core.Settings.Descriptor.Records;
 using Orchard.Data;
-using Orchard.Environment.Blueprint;
-using Orchard.Environment.Blueprint.Models;
+using Orchard.Environment.Descriptor;
+using Orchard.Environment.Descriptor.Models;
 using Orchard.Localization;
 
 namespace Orchard.Core.Settings.Descriptor {
