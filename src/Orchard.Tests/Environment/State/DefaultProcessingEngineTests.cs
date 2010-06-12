@@ -5,7 +5,7 @@ using NUnit.Framework;
 using Orchard.Environment.Configuration;
 using Orchard.Environment.ShellBuilders;
 using Orchard.Environment.State;
-using Orchard.Environment.Topology.Models;
+using Orchard.Environment.Blueprint.Models;
 using Orchard.Events;
 using Orchard.Tests.Utility;
 

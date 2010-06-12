@@ -3,18 +3,18 @@ using System.Linq;
 using System.Web.Mvc;
 using System.Web.Routing;
 using Orchard.Environment.Extensions;
-using Orchard.Environment.Topology.Models;
+using Orchard.Environment.Blueprint.Models;
 
 namespace Orchard.Mvc.Routes {
     public class StandardExtensionRouteProvider : IRouteProvider {
-        private readonly ShellTopology _topology;
+        private readonly ShellBlueprint _blueprint;
 
-        public StandardExtensionRouteProvider(ShellTopology topology) {
-            _topology = topology;
+        public StandardExtensionRouteProvider(ShellBlueprint blueprint) {
+            _blueprint = blueprint;
         }
 
         public IEnumerable<RouteDescriptor> GetRoutes() {
-            var displayNamesPerArea = _topology.Controllers.GroupBy(
+            var displayNamesPerArea = _blueprint.Controllers.GroupBy(
                 x => x.AreaName,
                 x => x.Feature.Descriptor.Extension.DisplayName);
 

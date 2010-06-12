@@ -1,4 +1,4 @@
-namespace Orchard.Core.Settings.Topology.Records {
+namespace Orchard.Core.Settings.Descriptor.Records {
     public class ShellFeatureRecord {
         public virtual int Id { get; set; }
         public virtual ShellDescriptorRecord ShellDescriptorRecord { get; set; }

@@ -3,11 +3,11 @@ using System.Runtime.Serialization;
 using System.Xml;
 using Autofac;
 using NUnit.Framework;
-using Orchard.Environment.Topology;
-using Orchard.Environment.Topology.Models;
+using Orchard.Environment.Blueprint;
+using Orchard.Environment.Blueprint.Models;
 using Orchard.FileSystems.AppData;
 
-namespace Orchard.Tests.Environment.Topology {
+namespace Orchard.Tests.Environment.Blueprint {
     [TestFixture]
     public class DefaultShellDescriptorCacheTests {
         private IContainer _container;

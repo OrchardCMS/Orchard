@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using Orchard.Data.Conventions;
 
-namespace Orchard.Core.Settings.Topology.Records {
+namespace Orchard.Core.Settings.Descriptor.Records {
     public class ShellDescriptorRecord {
         public ShellDescriptorRecord() {
             Features=new List<ShellFeatureRecord>();

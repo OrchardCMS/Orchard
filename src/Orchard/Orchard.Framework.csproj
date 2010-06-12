@@ -130,6 +130,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Caching\Signals.cs" />
     <Compile Include="Collections\IPageOfItems.cs" />
     <Compile Include="Collections\PageOfItems.cs" />
     <Compile Include="ContentManagement\Aspects\ICommonAspect.cs">
@@ -456,7 +457,7 @@
     <Compile Include="Environment\ShellBuilders\ShellContext.cs" />
     <Compile Include="Environment\Topology\ShellDescriptorCache.cs" />
     <Compile Include="Environment\Topology\IShellDescriptorManager.cs" />
-    <Compile Include="Environment\Topology\Models\ShellTopology.cs" />
+    <Compile Include="Environment\Topology\Models\ShellBlueprint.cs" />
     <Compile Include="Environment\Topology\Models\ShellDescriptor.cs" />
     <Compile Include="Environment\ShellBuilders\ShellContainerFactory.cs" />
     <Compile Include="Environment\Configuration\ShellSettings.cs" />

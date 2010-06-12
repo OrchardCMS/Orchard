@@ -4,14 +4,14 @@ using System.Linq;
 using Autofac;
 using NUnit.Framework;
 using Orchard.Core.Settings.State;
-using Orchard.Core.Settings.Topology;
-using Orchard.Core.Settings.Topology.Records;
+using Orchard.Core.Settings.Descriptor;
+using Orchard.Core.Settings.Descriptor.Records;
 using Orchard.Environment.State;
-using Orchard.Environment.Topology;
-using Orchard.Environment.Topology.Models;
+using Orchard.Environment.Blueprint;
+using Orchard.Environment.Blueprint.Models;
 using Orchard.Events;
 
-namespace Orchard.Tests.Modules.Settings.Topology {
+namespace Orchard.Tests.Modules.Settings.Blueprint {
     [TestFixture]
     public class ShellDescriptorManagerTests : DatabaseEnabledTestsBase {
         public override void Register(ContainerBuilder builder) {
@@ -45,10 +45,10 @@ namespace Orchard.Tests.Modules.Settings.Topology {
         }
 
         [Test]
-        public void TopologyShouldBeNullWhenItsNotInitialized() {
+        public void BlueprintShouldBeNullWhenItsNotInitialized() {
             var manager = _container.Resolve<IShellDescriptorManager>();
-            var topology = manager.GetShellDescriptor();
-            Assert.That(topology, Is.Null);
+            var descriptor = manager.GetShellDescriptor();
+            Assert.That(descriptor, Is.Null);
         }
 
         [Test]
@@ -59,9 +59,9 @@ namespace Orchard.Tests.Modules.Settings.Topology {
                 Enumerable.Empty<ShellFeature>(),
                 Enumerable.Empty<ShellParameter>());
 
-            var topology = manager.GetShellDescriptor();
-            Assert.That(topology, Is.Not.Null);
-            Assert.That(topology.SerialNumber, Is.Not.EqualTo(0));
+            var descriptor = manager.GetShellDescriptor();
+            Assert.That(descriptor, Is.Not.Null);
+            Assert.That(descriptor.SerialNumber, Is.Not.EqualTo(0));
         }
 
         [Test]
@@ -81,8 +81,8 @@ namespace Orchard.Tests.Modules.Settings.Topology {
                 Enumerable.Empty<ShellFeature>(),
                 Enumerable.Empty<ShellParameter>());
 
-            var topology = manager.GetShellDescriptor();
-            Assert.That(topology.SerialNumber, Is.Not.EqualTo(0));
+            var descriptor = manager.GetShellDescriptor();
+            Assert.That(descriptor.SerialNumber, Is.Not.EqualTo(0));
 
             Assert.Throws<InvalidOperationException>(() => manager.UpdateShellDescriptor(
                                                0,
@@ -90,18 +90,18 @@ namespace Orchard.Tests.Modules.Settings.Topology {
                                                Enumerable.Empty<ShellParameter>()));
 
             Assert.Throws<InvalidOperationException>(() => manager.UpdateShellDescriptor(
-                                               topology.SerialNumber + 665321,
+                                               descriptor.SerialNumber + 665321,
                                                Enumerable.Empty<ShellFeature>(),
                                                Enumerable.Empty<ShellParameter>()));
 
             manager.UpdateShellDescriptor(
-                topology.SerialNumber,
+                descriptor.SerialNumber,
                 Enumerable.Empty<ShellFeature>(),
                 Enumerable.Empty<ShellParameter>());
 
-            var topology2 = manager.GetShellDescriptor();
-            Assert.That(topology2.SerialNumber, Is.Not.EqualTo(0));
-            Assert.That(topology2.SerialNumber, Is.Not.EqualTo(topology.SerialNumber));
+            var descriptor2 = manager.GetShellDescriptor();
+            Assert.That(descriptor2.SerialNumber, Is.Not.EqualTo(0));
+            Assert.That(descriptor2.SerialNumber, Is.Not.EqualTo(descriptor.SerialNumber));
 
             Assert.Throws<InvalidOperationException>(() => manager.UpdateShellDescriptor(
                                                0,
@@ -109,17 +109,17 @@ namespace Orchard.Tests.Modules.Settings.Topology {
                                                Enumerable.Empty<ShellParameter>()));
 
             Assert.Throws<InvalidOperationException>(() => manager.UpdateShellDescriptor(
-                                               topology.SerialNumber,
+                                               descriptor.SerialNumber,
                                                Enumerable.Empty<ShellFeature>(),
                                                Enumerable.Empty<ShellParameter>()));
 
             manager.UpdateShellDescriptor(
-                topology2.SerialNumber,
+                descriptor2.SerialNumber,
                 Enumerable.Empty<ShellFeature>(),
                 Enumerable.Empty<ShellParameter>());
 
             Assert.Throws<InvalidOperationException>(() => manager.UpdateShellDescriptor(
-                                               topology2.SerialNumber,
+                                               descriptor2.SerialNumber,
                                                Enumerable.Empty<ShellFeature>(),
                                                Enumerable.Empty<ShellParameter>()));
         }

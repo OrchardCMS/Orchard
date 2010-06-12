@@ -11,13 +11,13 @@ using Autofac.Features.Indexed;
 using Autofac.Integration.Web.Mvc;
 using Orchard.Environment.AutofacUtil.DynamicProxy2;
 using Orchard.Environment.Configuration;
-using Orchard.Environment.Topology.Models;
+using Orchard.Environment.Blueprint.Models;
 using Orchard.Events;
 
 namespace Orchard.Environment.ShellBuilders {
 
     public interface IShellContainerFactory {
-        ILifetimeScope CreateContainer(ShellSettings settings, ShellTopology topology);
+        ILifetimeScope CreateContainer(ShellSettings settings, ShellBlueprint blueprint);
     }
 
     public class ShellContainerFactory : IShellContainerFactory {
@@ -27,10 +27,10 @@ namespace Orchard.Environment.ShellBuilders {
             _lifetimeScope = lifetimeScope;
         }
 
-        public ILifetimeScope CreateContainer(ShellSettings settings, ShellTopology topology) {
+        public ILifetimeScope CreateContainer(ShellSettings settings, ShellBlueprint blueprint) {
             var intermediateScope = _lifetimeScope.BeginLifetimeScope(
                 builder => {
-                    foreach (var item in topology.Dependencies.Where(t => typeof(IModule).IsAssignableFrom(t.Type))) {
+                    foreach (var item in blueprint.Dependencies.Where(t => typeof(IModule).IsAssignableFrom(t.Type))) {
                         var registration = RegisterType(builder, item)
                             .Keyed<IModule>(item.Type)
                             .InstancePerDependency();
@@ -50,14 +50,14 @@ namespace Orchard.Environment.ShellBuilders {
 
                     builder.Register(ctx => dynamicProxyContext);
                     builder.Register(ctx => settings);
-                    builder.Register(ctx => topology);
+                    builder.Register(ctx => blueprint);
 
                     var moduleIndex = intermediateScope.Resolve<IIndex<Type, IModule>>();
-                    foreach (var item in topology.Dependencies.Where(t => typeof(IModule).IsAssignableFrom(t.Type))) {
+                    foreach (var item in blueprint.Dependencies.Where(t => typeof(IModule).IsAssignableFrom(t.Type))) {
                         builder.RegisterModule(moduleIndex[item.Type]);
                     }
 
-                    foreach (var item in topology.Dependencies.Where(t => typeof(IDependency).IsAssignableFrom(t.Type))) {
+                    foreach (var item in blueprint.Dependencies.Where(t => typeof(IDependency).IsAssignableFrom(t.Type))) {
                         var registration = RegisterType(builder, item)
                             .EnableDynamicProxy(dynamicProxyContext)
                             .InstancePerLifetimeScope();
@@ -85,7 +85,7 @@ namespace Orchard.Environment.ShellBuilders {
                         }
                     }
 
-                    foreach (var item in topology.Controllers) {
+                    foreach (var item in blueprint.Controllers) {
                         var serviceKey = (item.AreaName + "/" + item.ControllerName).ToLowerInvariant();
                         RegisterType(builder, item)
                             .EnableDynamicProxy(dynamicProxyContext)
@@ -104,7 +104,7 @@ namespace Orchard.Environment.ShellBuilders {
                 });
         }
 
-        private IRegistrationBuilder<object, ConcreteReflectionActivatorData, SingleRegistrationStyle> RegisterType(ContainerBuilder builder, ShellTopologyItem item) {
+        private IRegistrationBuilder<object, ConcreteReflectionActivatorData, SingleRegistrationStyle> RegisterType(ContainerBuilder builder, ShellBlueprintItem item) {
             return builder.RegisterType(item.Type)
                 .WithProperty("Feature", item.Feature)
                 .WithMetadata("Feature", item.Feature);

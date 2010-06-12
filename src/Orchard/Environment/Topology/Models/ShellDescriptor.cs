@@ -1,13 +1,13 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 
-namespace Orchard.Environment.Topology.Models {
+namespace Orchard.Environment.Blueprint.Models {
 
     /// <summary>
     /// Contains a snapshot of a tenant's enabled features.
     /// The information is drawn out of the shell via IShellDescriptorManager
     /// and cached by the host via IShellDescriptorCache. It is
-    /// passed to the ICompositionStrategy to build the ShellTopology.
+    /// passed to the ICompositionStrategy to build the ShellBlueprint.
     /// </summary>
     public class ShellDescriptor {
         public ShellDescriptor() {

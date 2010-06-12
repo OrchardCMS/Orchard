@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using Orchard.Core.Settings.Topology.Records;
+using Orchard.Core.Settings.Descriptor.Records;
 using Orchard.Data;
-using Orchard.Environment.Topology;
-using Orchard.Environment.Topology.Models;
+using Orchard.Environment.Blueprint;
+using Orchard.Environment.Blueprint.Models;
 using Orchard.Localization;
 
-namespace Orchard.Core.Settings.Topology {
+namespace Orchard.Core.Settings.Descriptor {
     public class ShellDescriptorManager : IShellDescriptorManager {
         private readonly IRepository<ShellDescriptorRecord> _shellDescriptorRepository;
         private readonly IShellDescriptorManagerEventHandler _events;
@@ -22,25 +22,25 @@ namespace Orchard.Core.Settings.Topology {
         Localizer T { get; set; }
 
         public ShellDescriptor GetShellDescriptor() {
-            ShellDescriptorRecord shellDescriptorRecord = GetTopologyRecord();
+            ShellDescriptorRecord shellDescriptorRecord = GetDescriptorRecord();
             if (shellDescriptorRecord == null) return null;
-            return GetShellTopologyDescriptorFromRecord(shellDescriptorRecord);
+            return GetShellDescriptorFromRecord(shellDescriptorRecord);
         }
 
-        private static ShellDescriptor GetShellTopologyDescriptorFromRecord(ShellDescriptorRecord shellDescriptorRecord) {
+        private static ShellDescriptor GetShellDescriptorFromRecord(ShellDescriptorRecord shellDescriptorRecord) {
             ShellDescriptor descriptor = new ShellDescriptor { SerialNumber = shellDescriptorRecord.SerialNumber };
             var descriptorFeatures = new List<ShellFeature>();
-            foreach (var topologyFeatureRecord in shellDescriptorRecord.Features) {
-                descriptorFeatures.Add(new ShellFeature { Name = topologyFeatureRecord.Name });
+            foreach (var descriptorFeatureRecord in shellDescriptorRecord.Features) {
+                descriptorFeatures.Add(new ShellFeature { Name = descriptorFeatureRecord.Name });
             }
             descriptor.Features = descriptorFeatures;
             var descriptorParameters = new List<ShellParameter>();
-            foreach (var topologyParameterRecord in shellDescriptorRecord.Parameters) {
+            foreach (var descriptorParameterRecord in shellDescriptorRecord.Parameters) {
                 descriptorParameters.Add(
                     new ShellParameter {
-                        Component = topologyParameterRecord.Component,
-                        Name = topologyParameterRecord.Name,
-                        Value = topologyParameterRecord.Value
+                        Component = descriptorParameterRecord.Component,
+                        Name = descriptorParameterRecord.Name,
+                        Value = descriptorParameterRecord.Value
                     });
             }
             descriptor.Parameters = descriptorParameters;
@@ -48,15 +48,15 @@ namespace Orchard.Core.Settings.Topology {
             return descriptor;
         }
 
-        private ShellDescriptorRecord GetTopologyRecord() {
+        private ShellDescriptorRecord GetDescriptorRecord() {
             return _shellDescriptorRepository.Get(x => true);
         }
 
         public void UpdateShellDescriptor(int priorSerialNumber, IEnumerable<ShellFeature> enabledFeatures, IEnumerable<ShellParameter> parameters) {
-            ShellDescriptorRecord shellDescriptorRecord = GetTopologyRecord();
+            ShellDescriptorRecord shellDescriptorRecord = GetDescriptorRecord();
             var serialNumber = shellDescriptorRecord == null ? 0 : shellDescriptorRecord.SerialNumber;
             if (priorSerialNumber != serialNumber)
-                throw new InvalidOperationException(T("Invalid serial number for shell topology").ToString());
+                throw new InvalidOperationException(T("Invalid serial number for shell descriptor").ToString());
 
             if (shellDescriptorRecord == null) {
                 shellDescriptorRecord = new ShellDescriptorRecord { SerialNumber = 1 };
@@ -82,7 +82,7 @@ namespace Orchard.Core.Settings.Topology {
                 });
             }
 
-            _events.Changed(GetShellTopologyDescriptorFromRecord(shellDescriptorRecord));
+            _events.Changed(GetShellDescriptorFromRecord(shellDescriptorRecord));
         }
 
 

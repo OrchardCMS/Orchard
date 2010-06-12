@@ -6,21 +6,21 @@ using System.Web.Mvc;
 using Autofac.Core;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Records;
+using Orchard.Environment.Blueprint.Models;
 using Orchard.Environment.Configuration;
 using Orchard.Environment.Extensions;
 using Orchard.Environment.Extensions.Models;
-using Orchard.Environment.Topology.Models;
 
-namespace Orchard.Environment.Topology {
+namespace Orchard.Environment.Blueprint {
     /// <summary>
-    /// Service at the host level to transform the cachable topology into the loadable topology.
+    /// Service at the host level to transform the cachable descriptor into the loadable blueprint.
     /// </summary>
     public interface ICompositionStrategy {
         /// <summary>
         /// Using information from the IExtensionManager, transforms and populates all of the
-        /// topology model the shell builders will need to correctly initialize a tenant IoC container.
+        /// blueprint model the shell builders will need to correctly initialize a tenant IoC container.
         /// </summary>
-        ShellTopology Compose(ShellSettings settings, ShellDescriptor descriptor);
+        ShellBlueprint Compose(ShellSettings settings, ShellDescriptor descriptor);
     }
 
     public class CompositionStrategy : ICompositionStrategy {
@@ -30,30 +30,30 @@ namespace Orchard.Environment.Topology {
             _extensionManager = extensionManager;
         }
 
-        public ShellTopology Compose(ShellSettings settings, ShellDescriptor descriptor) {
+        public ShellBlueprint Compose(ShellSettings settings, ShellDescriptor descriptor) {
             var enabledFeatures = _extensionManager.AvailableExtensions()
                 .SelectMany(extensionDescriptor => extensionDescriptor.Features)
-                .Where(featureDescriptor => IsFeatureEnabledInTopology(featureDescriptor, descriptor));
+                .Where(featureDescriptor => IsFeatureEnabledInDescriptor(featureDescriptor, descriptor));
 
             var features = _extensionManager.LoadFeatures(enabledFeatures);
 
             if (descriptor.Features.Any(feature => feature.Name == "Orchard.Framework"))
                 features = features.Concat(BuiltinFeatures());
 
-            var modules = BuildTopology(features, IsModule, BuildModule);
-            var dependencies = BuildTopology(features, IsDependency, (t, f) => BuildDependency(t, f, descriptor));
-            var controllers = BuildTopology(features, IsController, BuildController);
-            var records = BuildTopology(features, IsRecord, (t, f) => BuildRecord(t, f, settings));
+            var modules = BuildBlueprint(features, IsModule, BuildModule);
+            var dependencies = BuildBlueprint(features, IsDependency, (t, f) => BuildDependency(t, f, descriptor));
+            var controllers = BuildBlueprint(features, IsController, BuildController);
+            var records = BuildBlueprint(features, IsRecord, (t, f) => BuildRecord(t, f, settings));
 
-            return new ShellTopology {
+            return new ShellBlueprint {
                 Dependencies = dependencies.Concat(modules).ToArray(),
                 Controllers = controllers,
                 Records = records,
             };
         }
 
-        private static bool IsFeatureEnabledInTopology(FeatureDescriptor featureDescriptor, ShellDescriptor descriptor) {
-            return descriptor.Features.Any(topologyFeature => topologyFeature.Name == featureDescriptor.Name);
+        private static bool IsFeatureEnabledInDescriptor(FeatureDescriptor featureDescriptor, ShellDescriptor shellDescriptor) {
+            return shellDescriptor.Features.Any(shellDescriptorFeature => shellDescriptorFeature.Name == featureDescriptor.Name);
         }
 
         private static IEnumerable<Feature> BuiltinFeatures() {
@@ -72,7 +72,7 @@ namespace Orchard.Environment.Topology {
             };
         }
 
-        private static IEnumerable<T> BuildTopology<T>(
+        private static IEnumerable<T> BuildBlueprint<T>(
             IEnumerable<Feature> features,
             Func<Type, bool> predicate,
             Func<Type, Feature, T> selector) {
@@ -87,16 +87,16 @@ namespace Orchard.Environment.Topology {
             return typeof(IModule).IsAssignableFrom(type);
         }
 
-        private static DependencyTopology BuildModule(Type type, Feature feature) {
-            return new DependencyTopology { Type = type, Feature = feature, Parameters = Enumerable.Empty<ShellParameter>() };
+        private static DependencyBlueprint BuildModule(Type type, Feature feature) {
+            return new DependencyBlueprint { Type = type, Feature = feature, Parameters = Enumerable.Empty<ShellParameter>() };
         }
 
         private static bool IsDependency(Type type) {
             return typeof(IDependency).IsAssignableFrom(type);
         }
 
-        private static DependencyTopology BuildDependency(Type type, Feature feature, ShellDescriptor descriptor) {
-            return new DependencyTopology {
+        private static DependencyBlueprint BuildDependency(Type type, Feature feature, ShellDescriptor descriptor) {
+            return new DependencyBlueprint {
                 Type = type,
                 Feature = feature,
                 Parameters = descriptor.Parameters.Where(x => x.Component == type.FullName).ToArray()
@@ -107,14 +107,14 @@ namespace Orchard.Environment.Topology {
             return typeof(IController).IsAssignableFrom(type);
         }
 
-        private static ControllerTopology BuildController(Type type, Feature feature) {
+        private static ControllerBlueprint BuildController(Type type, Feature feature) {
             var areaName = feature.Descriptor.Extension.Name;
 
             var controllerName = type.Name;
             if (controllerName.EndsWith("Controller"))
                 controllerName = controllerName.Substring(0, controllerName.Length - "Controller".Length);
 
-            return new ControllerTopology {
+            return new ControllerBlueprint {
                 Type = type,
                 Feature = feature,
                 AreaName = areaName,
@@ -131,7 +131,7 @@ namespace Orchard.Environment.Topology {
                    (!typeof(IContent).IsAssignableFrom(type) || typeof(ContentPartRecord).IsAssignableFrom(type));
         }
 
-        private static RecordTopology BuildRecord(Type type, Feature feature, ShellSettings settings) {
+        private static RecordBlueprint BuildRecord(Type type, Feature feature, ShellSettings settings) {
             var extensionDescriptor = feature.Descriptor.Extension;
             var extensionName = extensionDescriptor.Name.Replace('.', '_');
 
@@ -139,7 +139,7 @@ namespace Orchard.Environment.Topology {
             if (!string.IsNullOrEmpty(settings.DataTablePrefix))
                 dataTablePrefix = settings.DataTablePrefix + "_";
 
-            return new RecordTopology {
+            return new RecordBlueprint {
                 Type = type,
                 Feature = feature,
                 TableName = dataTablePrefix + extensionName + '_' + type.Name,
