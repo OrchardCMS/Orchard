@@ -1,4 +1,6 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
+using Orchard.Caching;
 using Orchard.Environment.Extensions.Models;
 using Orchard.FileSystems.Dependencies;
 using Orchard.FileSystems.VirtualPath;
@@ -16,6 +18,12 @@ namespace Orchard.Environment.Extensions.Loaders {
         }
 
         public int Order { get { return 40; } }
+
+        public void Monitor(ExtensionDescriptor descriptor, Action<IVolatileToken> monitor) {
+            // We don't monitor assemblies loaded from this probing directory,
+            // because they are just a copy of the assemblies from the module
+            // bin directory.
+        }
 
         public ExtensionProbeEntry Probe(ExtensionDescriptor descriptor) {
             if (!_dependenciesFolder.HasPrecompiledAssembly(descriptor.Name))

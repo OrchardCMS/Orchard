@@ -1,4 +1,6 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
+using Orchard.Caching;
 using Orchard.Environment.Extensions.Models;
 using Orchard.FileSystems.Dependencies;
 using Orchard.FileSystems.VirtualPath;
@@ -11,25 +13,41 @@ namespace Orchard.Environment.Extensions.Loaders {
     public class PrecompiledExtensionLoader : IExtensionLoader {
         private readonly IDependenciesFolder _dependenciesFolder;
         private readonly IVirtualPathProvider _virtualPathProvider;
+        private readonly IVirtualPathMonitor _virtualPathMonitor;
 
-        public PrecompiledExtensionLoader(IDependenciesFolder dependenciesFolder, IVirtualPathProvider virtualPathProvider) {
+        public PrecompiledExtensionLoader(IDependenciesFolder dependenciesFolder, IVirtualPathProvider virtualPathProvider, IVirtualPathMonitor virtualPathMonitor) {
             _dependenciesFolder = dependenciesFolder;
             _virtualPathProvider = virtualPathProvider;
+            _virtualPathMonitor = virtualPathMonitor;
         }
 
         public int Order { get { return 30; } }
 
-        public ExtensionProbeEntry Probe(ExtensionDescriptor descriptor) {
-            var extensionPath = _virtualPathProvider.Combine(descriptor.Location, descriptor.Name, "bin",
+        public void Monitor(ExtensionDescriptor descriptor, Action<IVolatileToken> monitor) {
+            string assemblyPath = GetAssemblyPath(descriptor);
+            if (assemblyPath != null)
+                monitor(_virtualPathMonitor.WhenPathChanges(assemblyPath));
+        }
+
+        public string GetAssemblyPath(ExtensionDescriptor descriptor) {
+            var assemblyPath = _virtualPathProvider.Combine(descriptor.Location, descriptor.Name, "bin",
                                                               descriptor.Name + ".dll");
-            if (!_virtualPathProvider.FileExists(extensionPath))
+            if (!_virtualPathProvider.FileExists(assemblyPath))
+                return null;
+
+            return assemblyPath;
+        }
+
+        public ExtensionProbeEntry Probe(ExtensionDescriptor descriptor) {
+            var assemblyPath = GetAssemblyPath(descriptor);
+            if (assemblyPath == null)
                 return null;
 
             return new ExtensionProbeEntry {
                 Descriptor = descriptor,
-                LastModificationTimeUtc = File.GetLastWriteTimeUtc(_virtualPathProvider.MapPath(extensionPath)),
+                LastModificationTimeUtc = File.GetLastWriteTimeUtc(_virtualPathProvider.MapPath(assemblyPath)),
                 Loader = this,
-                VirtualPath = extensionPath
+                VirtualPath = assemblyPath
             };
         }
 

@@ -360,7 +360,6 @@
     <Compile Include="FileSystems\VirtualPath\ICustomVirtualPathProvider.cs" />
     <Compile Include="FileSystems\Dependencies\WebFormsExtensionsVirtualPathProvider.cs" />
     <Compile Include="FileSystems\Dependencies\WebFormsExtensionsVirtualFile.cs" />
-    <Compile Include="Environment\Extensions\IExtensionManagerEvents.cs" />
     <Compile Include="Environment\IHostEnvironment.cs" />
     <Compile Include="FileSystems\VirtualPath\IVirtualPathMonitor.cs" />
     <Compile Include="FileSystems\Dependencies\IDependenciesFolder.cs" />

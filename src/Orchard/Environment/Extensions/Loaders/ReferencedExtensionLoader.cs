@@ -1,8 +1,10 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Web.Compilation;
 using System.Web.Hosting;
+using Orchard.Caching;
 using Orchard.Environment.Extensions.Models;
 using Orchard.FileSystems.Dependencies;
 
@@ -18,6 +20,11 @@ namespace Orchard.Environment.Extensions.Loaders {
         }
 
         public int Order { get { return 20; } }
+
+        public void Monitor(ExtensionDescriptor descriptor, Action<IVolatileToken> monitor) {
+            // We don't monitor assemblies loaded from the "~/bin" directory,
+            // because they are monitored by the ASP.NET runtime.
+        }
 
         public ExtensionProbeEntry Probe(ExtensionDescriptor descriptor) {
             if (HostingEnvironment.IsHosted == false)

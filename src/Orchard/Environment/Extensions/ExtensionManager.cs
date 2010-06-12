@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Web;
 using ICSharpCode.SharpZipLib.Zip;
+using Orchard.Caching;
 using Orchard.Environment.Extensions.Folders;
 using Orchard.Environment.Extensions.Helpers;
 using Orchard.Environment.Extensions.Loaders;
@@ -32,6 +33,15 @@ namespace Orchard.Environment.Extensions {
             return _folders.SelectMany(folder => folder.AvailableExtensions());
         }
 
+        private IEnumerable<ExtensionEntry> LoadedModules() {
+            foreach (var descriptor in AvailableExtensions()) {
+                // Extensions that are Themes don't have buildable components.
+                if (String.Equals(descriptor.ExtensionType, "Module", StringComparison.OrdinalIgnoreCase)) {
+                    yield return BuildEntry(descriptor);
+                }
+            }
+        }
+
         public IEnumerable<Feature> LoadFeatures(IEnumerable<FeatureDescriptor> featureDescriptors) {
             return featureDescriptors
                 .Select(featureDescriptor => LoadFeature(featureDescriptor))
@@ -41,9 +51,12 @@ namespace Orchard.Environment.Extensions {
         private Feature LoadFeature(FeatureDescriptor featureDescriptor) {
             var featureName = featureDescriptor.Name;
             string extensionName = GetExtensionForFeature(featureName);
-            if (extensionName == null) throw new ArgumentException(T("Feature {0} was not found in any of the installed extensions", featureName).ToString());
-            var extension = BuildActiveExtensions().Where(x => x.Descriptor.Name == extensionName).FirstOrDefault();
-            if (extension == null) throw new InvalidOperationException(T("Extension ") + extensionName + T(" is not active"));
+            if (extensionName == null)
+                throw new ArgumentException(T("Feature {0} was not found in any of the installed extensions", featureName).ToString());
+
+            var extension = LoadedModules().Where(x => x.Descriptor.Name == extensionName).FirstOrDefault();
+            if (extension == null)
+                throw new InvalidOperationException(T("Extension {0} is not active", extensionName).ToString());
 
             var extensionTypes = extension.ExportedTypes.Where(t => t.IsClass && !t.IsAbstract);
             var featureTypes = new List<Type>();
@@ -141,11 +154,12 @@ namespace Orchard.Environment.Extensions {
             Directory.Delete(targetFolder, true);
         }
 
-        private IEnumerable<ExtensionEntry> BuildActiveExtensions() {
+        public void Monitor(Action<IVolatileToken> monitor) {
             foreach (var descriptor in AvailableExtensions()) {
-                // Extensions that are Themes don't have buildable components.
-                if (String.Equals(descriptor.ExtensionType, "Module", StringComparison.OrdinalIgnoreCase)) {
-                    yield return BuildEntry(descriptor);
+                if (string.Equals(descriptor.ExtensionType, "Module", StringComparison.OrdinalIgnoreCase)) {
+                    foreach (var loader in _loaders) {
+                        loader.Monitor(descriptor, monitor);
+                    }
                 }
             }
         }

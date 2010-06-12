@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Autofac;
 using NUnit.Framework;
+using Orchard.Caching;
 using Orchard.Environment.Extensions;
 using Orchard.Environment.Extensions.Folders;
 using Orchard.Environment.Extensions.Loaders;
@@ -55,6 +56,10 @@ namespace Orchard.Tests.Environment.Extensions {
 
             public ExtensionEntry Load(ExtensionProbeEntry entry) {
                 return new ExtensionEntry { Descriptor = entry.Descriptor, ExportedTypes = new[] { typeof(Alpha), typeof(Beta), typeof(Phi) } };
+            }
+
+            public void Monitor(ExtensionDescriptor descriptor, Action<IVolatileToken> monitor) {
+                throw new NotImplementedException();
             }
 
             #endregion

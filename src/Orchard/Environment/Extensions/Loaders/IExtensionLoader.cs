@@ -1,4 +1,5 @@
 ﻿using System;
+using Orchard.Caching;
 using Orchard.Environment.Extensions.Models;
 
 namespace Orchard.Environment.Extensions.Loaders {
@@ -6,6 +7,7 @@ namespace Orchard.Environment.Extensions.Loaders {
         int Order { get; }
         ExtensionProbeEntry Probe(ExtensionDescriptor descriptor);
         ExtensionEntry Load(ExtensionProbeEntry descriptor);
+        void Monitor(ExtensionDescriptor descriptor, Action<IVolatileToken> monitor);
     }
 
     public class ExtensionProbeEntry {

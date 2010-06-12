@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Reflection;
+using Orchard.Caching;
 using Orchard.Environment.Extensions.Models;
 using Orchard.FileSystems.Dependencies;
 using Orchard.FileSystems.VirtualPath;
@@ -16,6 +17,11 @@ namespace Orchard.Environment.Extensions.Loaders {
         }
 
         public int Order { get { return 50; } }
+
+        public void Monitor(ExtensionDescriptor descriptor, Action<IVolatileToken> monitor) {
+            // We don't need to monitor anything since we are loaded
+            // from the application assembly itself.
+        }
 
         public ExtensionProbeEntry Probe(ExtensionDescriptor descriptor) {
             if (descriptor.Location == "~/Areas") {
