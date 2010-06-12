@@ -10,6 +10,7 @@ using Orchard.FileSystems.VirtualPath;
 using Orchard.Indexing;
 using Orchard.Core.Indexing.Lucene;
 using Orchard.Services;
+using Orchard.Tests.Environment.Configuration;
 
 namespace Orchard.Tests.Indexing {
     public class DefaultIndexProviderTests {
@@ -31,8 +32,7 @@ namespace Orchard.Tests.Indexing {
             }
             Directory.CreateDirectory(_basePath);
 
-            _appDataFolder = new AppDataFolder(new DefaultVirtualPathMonitor(new Clock()));
-            _appDataFolder.SetBasePath(_basePath);
+            _appDataFolder = AppDataFolderTests.CreateAppDataFolder(_basePath);
 
             var builder = new ContainerBuilder();
             builder.RegisterType<DefaultIndexProvider>().As<IIndexProvider>();

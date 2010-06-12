@@ -9,6 +9,7 @@ using Autofac;
 using Autofac.Integration.Web;
 using Moq;
 using NUnit.Framework;
+using Orchard.Caching;
 using Orchard.Environment;
 using Orchard.Environment.AutofacUtil;
 using Orchard.Environment.Configuration;
@@ -22,6 +23,7 @@ using Orchard.FileSystems.AppData;
 using Orchard.Mvc;
 using Orchard.Mvc.ModelBinders;
 using Orchard.Mvc.Routes;
+using Orchard.Tests.Environment.Configuration;
 using Orchard.Tests.Environment.TestDependencies;
 using Orchard.Tests.Stubs;
 using Orchard.Tests.Utility;
@@ -38,6 +40,12 @@ namespace Orchard.Tests.Environment {
 
         [SetUp]
         public void Init() {
+            var temp = Path.GetTempFileName();
+            File.Delete(temp);
+            Directory.CreateDirectory(temp);
+
+            var appDataFolder = AppDataFolderTests.CreateAppDataFolder(temp);
+            
             _controllerBuilder = new ControllerBuilder();
             _routeCollection = new RouteCollection();
             _modelBinderDictionary = new ModelBinderDictionary();
@@ -51,6 +59,7 @@ namespace Orchard.Tests.Environment {
                     builder.RegisterType<ModelBinderPublisher>().As<IModelBinderPublisher>();
                     builder.RegisterType<ShellContextFactory>().As<IShellContextFactory>();
                     builder.RegisterType<StubExtensionManager>().As<IExtensionManager>();
+                    builder.RegisterInstance(appDataFolder);
                     builder.RegisterInstance(_controllerBuilder);
                     builder.RegisterInstance(_routeCollection);
                     builder.RegisterInstance(_modelBinderDictionary);
@@ -74,13 +83,6 @@ namespace Orchard.Tests.Environment {
 
             _container.Mock<IOrchardShellEvents>()
                 .Setup(e=>e.Activated());
-
-            var temp = Path.GetTempFileName();
-            File.Delete(temp);
-            Directory.CreateDirectory(temp);
-
-            _container.Resolve<IAppDataFolder>()
-                .SetBasePath(temp);
 
             var updater = new ContainerUpdater();
             updater.RegisterInstance(_container).SingleInstance();
@@ -118,6 +120,10 @@ namespace Orchard.Tests.Environment {
             }
 
             public void UninstallExtension(string extensionType, string extensionName) {
+                throw new NotImplementedException();
+            }
+
+            public void Monitor(Action<IVolatileToken> monitor) {
                 throw new NotImplementedException();
             }
         }

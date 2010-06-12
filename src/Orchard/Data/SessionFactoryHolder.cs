@@ -72,11 +72,14 @@ namespace Orchard.Data {
         private ISessionFactory BuildSessionFactory(bool createDatabase, bool updateSchema) {
             Logger.Debug("Building session factory");
 
-            var shellPath = _appDataFolder.CreateDirectory(Path.Combine("Sites", _shellSettings.Name));
+            var shellPath = _appDataFolder.Combine("Sites", _shellSettings.Name);
+            _appDataFolder.CreateDirectory(shellPath);
+
+            var shellFolder = _appDataFolder.MapPath(shellPath);
 
             var sessionFactory = _sessionFactoryBuilder.BuildSessionFactory(new SessionFactoryParameters {
                 Provider = _shellSettings.DataProvider,
-                DataFolder = shellPath,
+                DataFolder = shellFolder,
                 ConnectionString = _shellSettings.DataConnectionString,
                 CreateDatabase = createDatabase,
                 UpdateSchema = updateSchema,

@@ -1,32 +1,50 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Web.Hosting;
 using Orchard.Caching;
-using Orchard.Environment;
 using Orchard.FileSystems.VirtualPath;
 
 namespace Orchard.FileSystems.AppData {
     public class AppDataFolder : IAppDataFolder {
+        private readonly IAppDataFolderRoot _root;
         private readonly IVirtualPathMonitor _virtualPathMonitor;
-        protected string _basePath;
 
-        public AppDataFolder(IVirtualPathMonitor virtualPathMonitor) {
+        public AppDataFolder(IAppDataFolderRoot root, IVirtualPathMonitor virtualPathMonitor) {
+            _root = root;
             _virtualPathMonitor = virtualPathMonitor;
-            _basePath = HostingEnvironment.MapPath("~/App_Data");
+        }
+
+        public string RootFolder {
+            get {
+                return _root.RootFolder;
+            }
+        }
+
+        public string _appDataPath {
+            get {
+                return _root.RootPath;
+            }
         }
 
         /// <summary>
-        /// Combine a set of virtual paths into a physical path based at "_basePath"
+        /// Combine a set of virtual paths relative to "~/App_Data" into an absolute physical path
+        /// starting with "_basePath".
         /// </summary>
         private string CombineToPhysicalPath(params string[] paths) {
-            return Path.Combine(_basePath, Path.Combine(paths))
+            return Path.Combine(RootFolder, Path.Combine(paths))
                 .Replace('/', Path.DirectorySeparatorChar);
         }
 
+        /// <summary>
+        /// Combine a set of virtual paths into a virtual path relative to "~/App_Data"
+        /// </summary>
+        public string Combine(params string[] paths) {
+            return Path.Combine(paths).Replace(Path.DirectorySeparatorChar, '/');
+        }
+
         public IVolatileToken WhenPathChanges(string path) {
-            var replace = Path.Combine("~/App_Data", path).Replace(Path.DirectorySeparatorChar, '/');
+            var replace = Combine(_appDataPath, path);
             return _virtualPathMonitor.WhenPathChanges(replace);
         }
 
@@ -59,12 +77,7 @@ namespace Orchard.FileSystems.AppData {
         }
 
         public bool FileExists(string path) {
-            var filePath = CombineToPhysicalPath(path);
-            return File.Exists(filePath);
-        }
-
-        public string Combine(params string[] paths) {
-            return Path.Combine(paths).Replace(Path.DirectorySeparatorChar, '/');
+            return File.Exists(CombineToPhysicalPath(path));
         }
 
         public IEnumerable<string> ListFiles(string path) {
@@ -93,15 +106,8 @@ namespace Orchard.FileSystems.AppData {
                                 });
         }
 
-        public string CreateDirectory(string path) {
-            var directory = CombineToPhysicalPath(path);
-            if (!Directory.Exists(directory))
-                Directory.CreateDirectory(directory);
-            return directory;
-        }
-
-        public void SetBasePath(string basePath) {
-            _basePath = basePath;
+        public void CreateDirectory(string path) {
+            Directory.CreateDirectory(CombineToPhysicalPath(path));
         }
 
         public string MapPath(string path) {

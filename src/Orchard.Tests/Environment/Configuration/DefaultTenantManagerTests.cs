@@ -12,14 +12,14 @@ namespace Orchard.Tests.Environment.Configuration {
     [TestFixture]
     public class DefaultTenantManagerTests {
         private string _tempFolder;
-        private AppDataFolder _appData;
+        private IAppDataFolder _appData;
 
         [SetUp]
         public void Init() {
-            _appData = new AppDataFolder(new DefaultVirtualPathMonitor(new Clock()));
             _tempFolder = Path.GetTempFileName();
             File.Delete(_tempFolder);
-            _appData.SetBasePath(_tempFolder);
+
+            _appData = AppDataFolderTests.CreateAppDataFolder(_tempFolder);
         }
         [TearDown]
         public void Term() {

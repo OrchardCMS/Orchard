@@ -1,7 +1,6 @@
 ﻿using System.IO;
 using System.Linq;
 using NUnit.Framework;
-using Orchard.Environment;
 using Orchard.FileSystems.AppData;
 using Orchard.FileSystems.VirtualPath;
 using Orchard.Services;
@@ -12,6 +11,16 @@ namespace Orchard.Tests.Environment.Configuration {
         private string _tempFolder;
         private IAppDataFolder _appDataFolder;
 
+        public class StubAppDataFolderRoot : IAppDataFolderRoot {
+            public string RootPath { get; set; }
+            public string RootFolder { get; set; }
+        }
+
+        public static IAppDataFolder CreateAppDataFolder(string tempFolder) {
+            var folderRoot = new StubAppDataFolderRoot {RootPath = "~/App_Data", RootFolder = tempFolder};
+            return new AppDataFolder(folderRoot, new DefaultVirtualPathMonitor(new Clock()));
+        }
+
         [SetUp]
         public void Init() {
             _tempFolder = Path.GetTempFileName();
@@ -21,8 +30,7 @@ namespace Orchard.Tests.Environment.Configuration {
             File.WriteAllText(Path.Combine(_tempFolder, "alpha\\gamma.txt"), "gamma-content");
             Directory.CreateDirectory(Path.Combine(_tempFolder, "alpha\\omega"));
 
-            _appDataFolder = new AppDataFolder(new DefaultVirtualPathMonitor(new Clock()));
-            _appDataFolder.SetBasePath(_tempFolder);
+            _appDataFolder = CreateAppDataFolder(_tempFolder);
         }
 
         [TearDown]

@@ -36,6 +36,7 @@ namespace Orchard.Environment {
             builder.RegisterType<DefaultHostEnvironment>().As<IHostEnvironment>().SingleInstance();
             builder.RegisterType<DefaultBuildManager>().As<IBuildManager>().SingleInstance();
             builder.RegisterType<WebFormsExtensionsVirtualPathProvider>().As<ICustomVirtualPathProvider>().SingleInstance();
+            builder.RegisterType<AppDataFolderRoot>().As<IAppDataFolderRoot>().SingleInstance();
 
             RegisterVolatileProvider<WebSiteFolder, IWebSiteFolder>(builder);
             RegisterVolatileProvider<AppDataFolder, IAppDataFolder>(builder);
