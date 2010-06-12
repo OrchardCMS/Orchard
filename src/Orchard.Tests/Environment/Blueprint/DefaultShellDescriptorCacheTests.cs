@@ -6,6 +6,8 @@ using NUnit.Framework;
 using Orchard.Environment.Descriptor;
 using Orchard.Environment.Descriptor.Models;
 using Orchard.FileSystems.AppData;
+using Orchard.FileSystems.VirtualPath;
+using Orchard.Services;
 
 namespace Orchard.Tests.Environment.Blueprint {
     [TestFixture]
@@ -19,7 +21,7 @@ namespace Orchard.Tests.Environment.Blueprint {
             _tempFolder = Path.GetTempFileName();
             File.Delete(_tempFolder);
             Directory.CreateDirectory(_tempFolder);
-            _appDataFolder = new AppDataFolder();
+            _appDataFolder = new AppDataFolder(new DefaultVirtualPathMonitor(new Clock()));
             _appDataFolder.SetBasePath(_tempFolder);
             var builder = new ContainerBuilder();
             builder.RegisterInstance(_appDataFolder).As<IAppDataFolder>();
