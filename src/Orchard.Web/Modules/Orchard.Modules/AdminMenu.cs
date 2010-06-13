@@ -8,11 +8,11 @@ namespace Orchard.Modules {
         public string MenuName { get { return "admin"; } }
 
         public void GetNavigation(NavigationBuilder builder) {
-            builder.Add(T("Features"), "10",
+            builder.Add(T("Site Configuration"), "11",
                         menu => menu
-                                    .Add(T("Manage Features"), "1.0", item => item.Action("Features", "Admin", new { area = "Orchard.Modules" })
+                                    .Add(T("Features"), "5.0", item => item.Action("Features", "Admin", new { area = "Orchard.Modules" })
                                         .Permission(Permissions.ManageFeatures))
-                                    .Add(T("Installed Modules"), "2.0", item => item.Action("Index", "Admin", new { area = "Orchard.Modules" })
+                                    .Add(T("Modules"), "5.1", item => item.Action("Index", "Admin", new { area = "Orchard.Modules" })
                                         .Permission(Permissions.ManageModules)));
         }
     }
