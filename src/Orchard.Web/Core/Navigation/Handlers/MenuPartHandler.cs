@@ -13,7 +13,7 @@ namespace Orchard.Core.Navigation.Handlers {
             Filters.Add(new ActivatingFilter<MenuPart>("menuitem"));
             Filters.Add(StorageFilter.For(menuPartRepository));
 
-            OnActivated<MenuPart>((ctx, x) => {
+            OnInitializing<MenuPart>((ctx, x) => {
                                       x.OnMainMenu = false;
                                       x.MenuText = String.Empty;
                                   });

@@ -21,12 +21,10 @@ namespace Orchard.ContentManagement {
 
 
         public bool Has(Type fieldType, string fieldName) {
-            return fieldType == typeof(ContentItem) || _fields.Any(field => fieldType.IsAssignableFrom(field.GetType()) && field.Name == fieldName);
+            return _fields.Any(field => fieldType.IsAssignableFrom(field.GetType()) && field.Name == fieldName);
         }
 
-        public IContent Get(Type fieldType, string fieldName) {
-            if (fieldType == typeof(ContentItem))
-                return this;
+        public ContentField Get(Type fieldType, string fieldName) {
             return _fields.FirstOrDefault(field => fieldType.IsAssignableFrom(field.GetType()) && field.Name == fieldName);
         }
 

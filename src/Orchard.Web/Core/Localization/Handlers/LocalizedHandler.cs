@@ -5,7 +5,6 @@ using Orchard.Localization;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Handlers;
 using Orchard.Localization.Services;
-using Orchard.Settings;
 
 namespace Orchard.Core.Localization.Handlers {
     [UsedImplicitly]
@@ -20,7 +19,7 @@ namespace Orchard.Core.Localization.Handlers {
 
             Filters.Add(StorageFilter.For(localizedRepository));
 
-            OnActivated<Localized>(InitializePart);
+            OnInitializing<Localized>(InitializePart);
 
             OnLoaded<Localized>(LazyLoadHandlers);
 
@@ -34,7 +33,7 @@ namespace Orchard.Core.Localization.Handlers {
             localized.MasterContentItemField.Loader(ctx => _contentManager.Get(localized.Record.MasterContentItemId)); 
         }
 
-        void InitializePart(ActivatedContentContext context, Localized localized) {
+        void InitializePart(InitializingContentContext context, Localized localized) {
             localized.CultureField.Setter(cultureRecord => {
                 localized.Record.CultureId = cultureRecord.Id;
                 return cultureRecord;

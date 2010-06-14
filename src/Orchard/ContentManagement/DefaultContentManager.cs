@@ -5,7 +5,6 @@ using Autofac;
 using Orchard.ContentManagement.Handlers;
 using Orchard.ContentManagement.MetaData;
 using Orchard.ContentManagement.MetaData.Builders;
-using Orchard.ContentManagement.MetaData.Models;
 using Orchard.ContentManagement.Records;
 using Orchard.Data;
 using Orchard.Mvc.ViewModels;
@@ -78,8 +77,18 @@ namespace Orchard.ContentManagement {
                 handler.Activated(context2);
             }
 
+            var context3 = new InitializingContentContext {
+                ContentType = contentType,
+                ContentItem = context.Builder.Build()
+            };
+            context3.ContentItem.ContentManager = this;
+
+            foreach (var handler in Handlers) {
+                handler.Initializing(context3);
+            }
+
             // composite result is returned
-            return context2.ContentItem;
+            return context3.ContentItem;
         }
 
         public virtual ContentItem Get(int id) {

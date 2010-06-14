@@ -1,11 +1,9 @@
 using JetBrains.Annotations;
 using Orchard.Core.Common.Models;
-using Orchard.Core.Common.ViewModels;
 using Orchard.Data;
 using Orchard.Localization;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Handlers;
-using Orchard.ContentManagement.ViewModels;
 using Orchard.Security;
 using Orchard.Services;
 
@@ -37,10 +35,10 @@ namespace Orchard.Core.Common.Handlers {
             Filters.Add(StorageFilter.For(commonRepository));
             Filters.Add(StorageFilter.For(commonVersionRepository));
 
-            OnActivated<CommonAspect>(PropertySetHandlers);
-            OnActivated<CommonAspect>(AssignCreatingOwner);
-            OnActivated<ContentPart<CommonRecord>>(AssignCreatingDates);
-            OnActivated<ContentPart<CommonVersionRecord>>(AssignCreatingDates);
+            OnInitializing<CommonAspect>(PropertySetHandlers);
+            OnInitializing<CommonAspect>(AssignCreatingOwner);
+            OnInitializing<ContentPart<CommonRecord>>(AssignCreatingDates);
+            OnInitializing<ContentPart<CommonVersionRecord>>(AssignCreatingDates);
 
             OnLoaded<CommonAspect>(LazyLoadHandlers);
 
@@ -67,20 +65,20 @@ namespace Orchard.Core.Common.Handlers {
         public Localizer T { get; set; }
 
 
-        void AssignCreatingOwner(ActivatedContentContext context, CommonAspect part) {
+        void AssignCreatingOwner(InitializingContentContext context, CommonAspect part) {
             // and use the current user as Owner
             if (part.Record.OwnerId == 0) {
                 part.Owner = _authenticationService.GetAuthenticatedUser();
             }
         }
 
-        void AssignCreatingDates(ActivatedContentContext context, ContentPart<CommonRecord> part) {
+        void AssignCreatingDates(InitializingContentContext context, ContentPart<CommonRecord> part) {
             // assign default create/modified dates
             part.Record.CreatedUtc = _clock.UtcNow;
             part.Record.ModifiedUtc = _clock.UtcNow;
         }
 
-        void AssignCreatingDates(ActivatedContentContext context, ContentPart<CommonVersionRecord> part) {
+        void AssignCreatingDates(InitializingContentContext context, ContentPart<CommonVersionRecord> part) {
             // assign default create/modified dates
             part.Record.CreatedUtc = _clock.UtcNow;
             part.Record.ModifiedUtc = _clock.UtcNow;
@@ -124,7 +122,7 @@ namespace Orchard.Core.Common.Handlers {
             aspect.ContainerField.Loader(() => aspect.Record.Container == null ? null : _contentManager.Get(aspect.Record.Container.Id));
         }
 
-        static void PropertySetHandlers(ActivatedContentContext context, CommonAspect aspect) {
+        static void PropertySetHandlers(InitializingContentContext context, CommonAspect aspect) {
             // add handlers that will update records when aspect properties are set
 
             aspect.OwnerField.Setter(user => {

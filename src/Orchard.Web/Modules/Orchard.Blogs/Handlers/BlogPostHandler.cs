@@ -8,9 +8,7 @@ using Orchard.Blogs.Services;
 using Orchard.ContentManagement;
 using Orchard.Core.Common.Models;
 using Orchard.ContentManagement.Handlers;
-using Orchard.Core.Common.Services;
 using Orchard.Localization;
-using Orchard.UI.Notify;
 
 namespace Orchard.Blogs.Handlers {
     [UsedImplicitly]
@@ -40,7 +38,7 @@ namespace Orchard.Blogs.Handlers {
                      blog.PostCount = posts.Count;
                  });
 
-            OnActivated<BlogPost>((context, bp) => {
+            OnInitializing<BlogPost>((context, bp) => {
                 var blogSlug = requestContext.RouteData.Values.ContainsKey("blogSlug") ? requestContext.RouteData.Values["blogSlug"] as string : null;
                 if (!string.IsNullOrEmpty(blogSlug)) {
                     bp.Blog = blogService.Get(blogSlug);
