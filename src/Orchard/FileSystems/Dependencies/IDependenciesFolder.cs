@@ -1,20 +1,27 @@
-﻿using System.Reflection;
+﻿using System;
+using System.Collections.Generic;
+using System.Reflection;
 using Orchard.Caching;
 
 namespace Orchard.FileSystems.Dependencies {
     public class DependencyDescriptor {
-        public string ModuleName { get; set; }
+        public string Name { get; set; }
         public string LoaderName { get; set; }
         public string VirtualPath { get; set; }
-        public string FileName { get; set; }
+    }
+
+    public class ProbingAssembly {
+        public string Path { get; set; }
+        public Func<DateTime> LastWriteTimeUtc { get; set; }
+        public Func<Assembly> Assembly { get; set; }
     }
 
     public interface IDependenciesFolder : IVolatileProvider {
-        void Store(DependencyDescriptor descriptor);
-        void StorePrecompiledAssembly(string moduleName, string virtualPath, string loaderName);
-        void Remove(string moduleName, string loaderName);
         DependencyDescriptor GetDescriptor(string moduleName);
-        bool HasPrecompiledAssembly(string moduleName);
-        Assembly LoadAssembly(string moduleName);
+        IEnumerable<DependencyDescriptor> LoadDescriptors();
+        void StoreDescriptors(IEnumerable<DependencyDescriptor> dependencyDescriptors);
+
+        ProbingAssembly GetProbingAssembly(string moduleName);
+        string GetProbingAssemblyPhysicalFileName(string moduleName);
     }
 }

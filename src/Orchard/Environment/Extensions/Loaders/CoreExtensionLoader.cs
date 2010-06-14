@@ -10,23 +10,16 @@ namespace Orchard.Environment.Extensions.Loaders {
     /// <summary>
     /// Load an extension by looking into specific namespaces of the "Orchard.Core" assembly
     /// </summary>
-    public class CoreExtensionLoader : IExtensionLoader {
+    public class CoreExtensionLoader : ExtensionLoaderBase {
         private readonly IDependenciesFolder _dependenciesFolder;
-        private readonly IVirtualPathProvider _virtualPathProvider;
 
-        public CoreExtensionLoader(IDependenciesFolder dependenciesFolder, IVirtualPathProvider virtualPathProvider) {
+        public CoreExtensionLoader(IDependenciesFolder dependenciesFolder) {
             _dependenciesFolder = dependenciesFolder;
-            _virtualPathProvider = virtualPathProvider;
         }
 
-        public int Order { get { return 10; } }
+        public override int Order { get { return 10; } }
 
-        public void Monitor(ExtensionDescriptor descriptor, Action<IVolatileToken> monitor) {
-            // We don't need to monitor anything since we are loaded
-            // from the core assembly.
-        }
-
-        public ExtensionProbeEntry Probe(ExtensionDescriptor descriptor) {
+        public override ExtensionProbeEntry Probe(ExtensionDescriptor descriptor) {
             if (descriptor.Location == "~/Core") {
                 return new ExtensionProbeEntry {
                     Descriptor = descriptor,
@@ -38,24 +31,19 @@ namespace Orchard.Environment.Extensions.Loaders {
             return null;
         }
 
-        public ExtensionEntry Load(ExtensionProbeEntry entry) {
-            if (entry.Loader == this) {
+        public override ExtensionEntry Load(ExtensionDescriptor descriptor) {
+            var dependency = _dependenciesFolder.GetDescriptor(descriptor.Name);
+            if (dependency != null && dependency.LoaderName == this.Name) {
+
                 var assembly = Assembly.Load("Orchard.Core");
 
-                _dependenciesFolder.Store(new DependencyDescriptor { ModuleName = entry.Descriptor.Name, LoaderName = this.GetType().FullName });
-
                 return new ExtensionEntry {
-                    Descriptor = entry.Descriptor,
+                    Descriptor = descriptor,
                     Assembly = assembly,
-                    ExportedTypes = assembly.GetExportedTypes().Where(x => IsTypeFromModule(x, entry.Descriptor))
+                    ExportedTypes = assembly.GetExportedTypes().Where(x => IsTypeFromModule(x, descriptor))
                 };
             }
-            else {
-                // If the extension is not loaded by us, there is no cached state 
-                // we need to invalidate
-                _dependenciesFolder.Remove(entry.Descriptor.Name, this.GetType().FullName);
-                return null;
-            }
+            return null;
         }
 
         private static bool IsTypeFromModule(Type type, ExtensionDescriptor descriptor) {

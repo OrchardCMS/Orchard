@@ -1,16 +1,18 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using Orchard.Caching;
 using Orchard.Environment.Extensions.Models;
 using Orchard.FileSystems.Dependencies;
 using Orchard.FileSystems.VirtualPath;
+using Orchard.Logging;
 
 namespace Orchard.Environment.Extensions.Loaders {
     /// <summary>
     /// Load an extension by looking into the "bin" subdirectory of an
     /// extension directory.
     /// </summary>
-    public class PrecompiledExtensionLoader : IExtensionLoader {
+    public class PrecompiledExtensionLoader : ExtensionLoaderBase {
         private readonly IDependenciesFolder _dependenciesFolder;
         private readonly IVirtualPathProvider _virtualPathProvider;
         private readonly IVirtualPathMonitor _virtualPathMonitor;
@@ -19,26 +21,64 @@ namespace Orchard.Environment.Extensions.Loaders {
             _dependenciesFolder = dependenciesFolder;
             _virtualPathProvider = virtualPathProvider;
             _virtualPathMonitor = virtualPathMonitor;
+            Logger = NullLogger.Instance;
         }
 
-        public int Order { get { return 30; } }
+        public ILogger Logger { get; set; }
 
-        public void Monitor(ExtensionDescriptor descriptor, Action<IVolatileToken> monitor) {
+        public override int Order { get { return 30; } }
+
+        public override string GetAssemblyDirective(DependencyDescriptor dependency) {
+            return string.Format("<%@ Assembly Name=\"{0}\"%>", dependency.Name);
+        }
+
+        public override void ExtensionRemoved(ExtensionLoadingContext ctx, DependencyDescriptor dependency) {
+            var assemblyFileName = _dependenciesFolder.GetProbingAssemblyPhysicalFileName(dependency.Name);
+            if (File.Exists(assemblyFileName)) {
+                ctx.FilesToDelete.Add(assemblyFileName);
+
+                // We need to restart the appDomain if the assembly is loaded
+                if (IsAssemblyLoaded(dependency.Name)) {
+                    Logger.Information("Extension removed: Setting AppDomain for restart because assembly {0} is loaded", dependency.Name);
+                    ctx.RestartAppDomain = true;
+                }
+            }
+        }
+
+        public override void ExtensionActivated(ExtensionLoadingContext ctx, bool isNewExtension, ExtensionDescriptor extension) {
+            string sourceFileName = _virtualPathProvider.MapPath(GetAssemblyPath(extension));
+            string destinationFileName = _dependenciesFolder.GetProbingAssemblyPhysicalFileName(extension.Name);
+            if (FileIsNewer(sourceFileName, destinationFileName)) {
+                ctx.FilesToCopy.Add(sourceFileName, destinationFileName);
+                // We need to restart the appDomain if the assembly is loaded
+                if (IsAssemblyLoaded(extension.Name)) {
+                    Logger.Information("Extension activated: Setting AppDomain for restart because assembly {0} is loaded", extension.Name);
+                    ctx.RestartAppDomain = true;
+                }
+            }
+        }
+
+        public override void ExtensionDeactivated(ExtensionLoadingContext ctx, bool isNewExtension, ExtensionDescriptor extension) {
+            var assemblyFileName = _dependenciesFolder.GetProbingAssemblyPhysicalFileName(extension.Name);
+            if (File.Exists(assemblyFileName)) {
+                ctx.FilesToDelete.Add(assemblyFileName);
+                // We need to restart the appDomain if the assembly is loaded
+                if (IsAssemblyLoaded(extension.Name)) {
+                    Logger.Information("Extension deactivated: Setting AppDomain for restart because assembly {0} is loaded", extension.Name);
+                    ctx.RestartAppDomain = true;
+                }
+            }
+        }
+
+        public override void Monitor(ExtensionDescriptor descriptor, Action<IVolatileToken> monitor) {
             string assemblyPath = GetAssemblyPath(descriptor);
-            if (assemblyPath != null)
+            if (assemblyPath != null) {
+                Logger.Information("Monitoring virtual path \"{0}\"", assemblyPath);
                 monitor(_virtualPathMonitor.WhenPathChanges(assemblyPath));
+            }
         }
 
-        public string GetAssemblyPath(ExtensionDescriptor descriptor) {
-            var assemblyPath = _virtualPathProvider.Combine(descriptor.Location, descriptor.Name, "bin",
-                                                              descriptor.Name + ".dll");
-            if (!_virtualPathProvider.FileExists(assemblyPath))
-                return null;
-
-            return assemblyPath;
-        }
-
-        public ExtensionProbeEntry Probe(ExtensionDescriptor descriptor) {
+        public override ExtensionProbeEntry Probe(ExtensionDescriptor descriptor) {
             var assemblyPath = GetAssemblyPath(descriptor);
             if (assemblyPath == null)
                 return null;
@@ -51,28 +91,30 @@ namespace Orchard.Environment.Extensions.Loaders {
             };
         }
 
-        public ExtensionEntry Load(ExtensionProbeEntry entry) {
-            if (entry.Loader == this) {
-                _dependenciesFolder.StorePrecompiledAssembly(entry.Descriptor.Name, entry.VirtualPath, this.GetType().FullName);
+        public override ExtensionEntry Load(ExtensionDescriptor descriptor) {
+            var dependency = _dependenciesFolder.GetDescriptor(descriptor.Name);
+            if (dependency != null && dependency.LoaderName == this.Name) {
 
-                var assembly = _dependenciesFolder.LoadAssembly(entry.Descriptor.Name);
+                var assembly = _dependenciesFolder.GetProbingAssembly(descriptor.Name);
                 if (assembly == null)
                     return null;
 
                 return new ExtensionEntry {
-                    Descriptor = entry.Descriptor,
-                    Assembly = assembly,
-                    ExportedTypes = assembly.GetExportedTypes()
+                    Descriptor = descriptor,
+                    Assembly = assembly.Assembly(),
+                    ExportedTypes = assembly.Assembly().GetExportedTypes()
                 };
             }
-            else {
-                // If the extension is not loaded by us, there is some cached state we need to invalidate
-                // 1) The webforms views which have been compiled with ".csproj" assembly source
-                // 2) The modules which contains features which depend on us
-                //TODO
-                _dependenciesFolder.Remove(entry.Descriptor.Name, this.GetType().FullName);
+            return null;
+        }
+
+        public string GetAssemblyPath(ExtensionDescriptor descriptor) {
+            var assemblyPath = _virtualPathProvider.Combine(descriptor.Location, descriptor.Name, "bin",
+                                                            descriptor.Name + ".dll");
+            if (!_virtualPathProvider.FileExists(assemblyPath))
                 return null;
-            }
+
+            return assemblyPath;
         }
     }
 }

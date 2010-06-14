@@ -4,36 +4,60 @@ using Orchard.Caching;
 using Orchard.Environment.Extensions.Models;
 using Orchard.FileSystems.Dependencies;
 using Orchard.FileSystems.VirtualPath;
+using Orchard.Logging;
 
 namespace Orchard.Environment.Extensions.Loaders {
-    public class DynamicExtensionLoader : IExtensionLoader {
-        private readonly IHostEnvironment _hostEnvironment;
+    public class DynamicExtensionLoader : ExtensionLoaderBase {
         private readonly IBuildManager _buildManager;
         private readonly IVirtualPathProvider _virtualPathProvider;
         private readonly IVirtualPathMonitor _virtualPathMonitor;
         private readonly IDependenciesFolder _dependenciesFolder;
 
-        public DynamicExtensionLoader(IHostEnvironment hostEnvironment, 
-            IBuildManager buildManager, 
-            IVirtualPathProvider virtualPathProvider, 
-            IVirtualPathMonitor virtualPathMonitor, 
+        public DynamicExtensionLoader(
+            IBuildManager buildManager,
+            IVirtualPathProvider virtualPathProvider,
+            IVirtualPathMonitor virtualPathMonitor,
             IDependenciesFolder dependenciesFolder) {
-            _hostEnvironment = hostEnvironment;
+
             _buildManager = buildManager;
             _virtualPathProvider = virtualPathProvider;
             _virtualPathMonitor = virtualPathMonitor;
             _dependenciesFolder = dependenciesFolder;
+            Logger = NullLogger.Instance;
         }
 
-        public int Order { get { return 100; } }
+        public ILogger Logger { get; set; }
 
-        public void Monitor(ExtensionDescriptor descriptor, Action<IVolatileToken> monitor) {
+        public override int Order { get { return 100; } }
+
+        public override string GetAssemblyDirective(DependencyDescriptor dependency) {
+            return string.Format("<%@ Assembly Src=\"{0}\"%>", dependency.VirtualPath);
+        }
+
+        public override void Monitor(ExtensionDescriptor descriptor, Action<IVolatileToken> monitor) {
+            // We need to monitor the path to the ".csproj" file.
             string projectPath = GetProjectPath(descriptor);
-            if (projectPath != null)
+            if (projectPath != null) {
+                Logger.Information("Monitoring virtual path {0}", projectPath);
                 monitor(_virtualPathMonitor.WhenPathChanges(projectPath));
+            }
         }
 
-        public ExtensionProbeEntry Probe(ExtensionDescriptor descriptor) {
+        public override void ExtensionRemoved(ExtensionLoadingContext ctx, DependencyDescriptor dependency) {
+            // Since a dynamic assembly is not active anymore, we need to notify ASP.NET
+            // that a new site compilation is needed (since ascx files may be referencing
+            // this now removed extension).
+            ctx.ResetSiteCompilation = true;
+        }
+
+        public override void ExtensionDeactivated(ExtensionLoadingContext ctx, bool isNewExtension, ExtensionDescriptor extension) {
+            // Since a dynamic assembly is not active anymore, we need to notify ASP.NET
+            // that a new site compilation is needed (since ascx files may be referencing
+            // this now removed extension).
+            ctx.ResetSiteCompilation = true;
+        }
+
+        public override ExtensionProbeEntry Probe(ExtensionDescriptor descriptor) {
             string projectPath = GetProjectPath(descriptor);
             if (projectPath == null)
                 return null;
@@ -46,6 +70,21 @@ namespace Orchard.Environment.Extensions.Loaders {
             };
         }
 
+        public override ExtensionEntry Load(ExtensionDescriptor descriptor) {
+            var dependency = _dependenciesFolder.GetDescriptor(descriptor.Name);
+            if (dependency != null && dependency.LoaderName == this.Name) {
+
+                var assembly = _buildManager.GetCompiledAssembly(dependency.VirtualPath);
+
+                return new ExtensionEntry {
+                    Descriptor = descriptor,
+                    Assembly = assembly,
+                    ExportedTypes = assembly.GetExportedTypes(),
+                };
+            }
+            return null;
+        }
+
         private string GetProjectPath(ExtensionDescriptor descriptor) {
             string projectPath = _virtualPathProvider.Combine(descriptor.Location, descriptor.Name,
                                                        descriptor.Name + ".csproj");
@@ -55,34 +94,6 @@ namespace Orchard.Environment.Extensions.Loaders {
             }
 
             return projectPath;
-        }
-
-
-        public ExtensionEntry Load(ExtensionProbeEntry entry) {
-            if (entry.Loader == this) {
-                var assembly = _buildManager.GetCompiledAssembly(entry.VirtualPath);
-
-                _dependenciesFolder.Store(new DependencyDescriptor {
-                    ModuleName = entry.Descriptor.Name, 
-                    LoaderName = this.GetType().FullName,
-                    VirtualPath = entry.VirtualPath,
-                    FileName = assembly.Location
-                });
-
-                return new ExtensionEntry {
-                    Descriptor = entry.Descriptor,
-                    Assembly = assembly,
-                    ExportedTypes = assembly.GetExportedTypes(),
-                };
-            }
-            else {
-                // If the extension is not loaded by us, there is some cached state we need to invalidate
-                // 1) The webforms views which have been compiled with ".csproj" assembly source
-                // 2) The modules which contains features which depend on us
-                //TODO
-                _dependenciesFolder.Remove(entry.Descriptor.Name, this.GetType().FullName);
-                return null;
-            }
         }
     }
 }

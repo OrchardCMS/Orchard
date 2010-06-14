@@ -1,16 +1,15 @@
 ﻿using System.IO;
 using System.Web.Hosting;
-using Orchard.Environment.Extensions.Loaders;
 
 namespace Orchard.FileSystems.Dependencies {
     public class WebFormsExtensionsVirtualFile : VirtualFile {
-        private readonly DependencyDescriptor _dependencyDescriptor;
         private readonly VirtualFile _actualFile;
+        private readonly string _assemblyDirective;
 
-        public WebFormsExtensionsVirtualFile(string virtualPath, DependencyDescriptor dependencyDescriptor, VirtualFile actualFile)
+        public WebFormsExtensionsVirtualFile(string virtualPath, VirtualFile actualFile, string assemblyDirective)
             : base(virtualPath) {
-            _dependencyDescriptor = dependencyDescriptor;
             _actualFile = actualFile;
+            _assemblyDirective = assemblyDirective;
         }
 
         public override string Name {
@@ -37,7 +36,7 @@ namespace Orchard.FileSystems.Dependencies {
                     for (var line = reader.ReadLine(); line != null; line = reader.ReadLine()) {
 
                         if (!string.IsNullOrWhiteSpace(line) && !assemblyDirectiveAdded) {
-                            line += GetAssemblyDirective();
+                            line += _assemblyDirective;
                             assemblyDirectiveAdded = true;
                         }
 
@@ -47,15 +46,6 @@ namespace Orchard.FileSystems.Dependencies {
                     length = (int) memoryStream.Length;
                 }
                 return new MemoryStream(memoryStream.GetBuffer(), 0, length);
-            }
-        }
-
-        private string GetAssemblyDirective() {
-            if (_dependencyDescriptor.LoaderName == typeof(DynamicExtensionLoader).FullName) {
-                return string.Format("<%@ Assembly Src=\"{0}\"%>", _dependencyDescriptor.VirtualPath);
-            }
-            else {
-                return string.Format("<%@ Assembly Name=\"{0}\"%>", _dependencyDescriptor.ModuleName);
             }
         }
     }

@@ -43,23 +43,19 @@ namespace Orchard.Tests.Environment.Extensions {
             }
         }
 
-        public class StubLoaders : IExtensionLoader {
+        public class StubLoaders : ExtensionLoaderBase {
             #region Implementation of IExtensionLoader
 
-            public int Order {
+            public override int Order {
                 get { return 1; }
             }
 
-            public ExtensionProbeEntry Probe(ExtensionDescriptor descriptor) {
+            public override ExtensionProbeEntry Probe(ExtensionDescriptor descriptor) {
                 return new ExtensionProbeEntry { Descriptor = descriptor, Loader = this };
             }
 
-            public ExtensionEntry Load(ExtensionProbeEntry entry) {
-                return new ExtensionEntry { Descriptor = entry.Descriptor, ExportedTypes = new[] { typeof(Alpha), typeof(Beta), typeof(Phi) } };
-            }
-
-            public void Monitor(ExtensionDescriptor descriptor, Action<IVolatileToken> monitor) {
-                throw new NotImplementedException();
+            public override ExtensionEntry Load(ExtensionDescriptor descriptor) {
+                return new ExtensionEntry { Descriptor = descriptor, ExportedTypes = new[] { typeof(Alpha), typeof(Beta), typeof(Phi) } };
             }
 
             #endregion

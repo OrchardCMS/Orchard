@@ -57,6 +57,7 @@ namespace Orchard.Environment {
                         .As<ICompositionStrategy>()
                         .SingleInstance();
                     {
+                        builder.RegisterType<ExtensionLoaderCoordinator>().As<IExtensionLoaderCoordinator>().SingleInstance();
                         builder.RegisterType<ExtensionManager>().As<IExtensionManager>().SingleInstance();
                         {
                             builder.RegisterType<ModuleFolders>().As<IExtensionFolders>()

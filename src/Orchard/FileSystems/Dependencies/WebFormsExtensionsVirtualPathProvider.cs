@@ -1,16 +1,20 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Web.Hosting;
+using Orchard.Environment.Extensions.Loaders;
 using Orchard.FileSystems.VirtualPath;
 
 namespace Orchard.FileSystems.Dependencies {
     public class WebFormsExtensionsVirtualPathProvider : VirtualPathProvider, ICustomVirtualPathProvider {
         private readonly IDependenciesFolder _dependenciesFolder;
+        private readonly IEnumerable<IExtensionLoader> _loaders;
         private readonly string[] _prefixes = { "~/Modules/", "/Modules/" };
         private readonly string[] _extensions = { ".ascx", ".aspx", ".master" };
 
-        public WebFormsExtensionsVirtualPathProvider(IDependenciesFolder dependenciesFolder) {
+        public WebFormsExtensionsVirtualPathProvider(IDependenciesFolder dependenciesFolder, IEnumerable<IExtensionLoader> loaders) {
             _dependenciesFolder = dependenciesFolder;
+            _loaders = loaders;
         }
 
         public override bool DirectoryExists(string virtualDir) {
@@ -24,27 +28,35 @@ namespace Orchard.FileSystems.Dependencies {
         public override VirtualFile GetFile(string virtualPath) {
             var actualFile = Previous.GetFile(virtualPath);
 
+            return GetCustomVirtualFile(virtualPath, actualFile) ?? actualFile;
+        }
+
+        private VirtualFile GetCustomVirtualFile(string virtualPath, VirtualFile actualFile) {
             var prefix = PrefixMatch(virtualPath, _prefixes);
             if (prefix == null)
-                return actualFile;
+                return null;
 
             var extension = ExtensionMatch(virtualPath, _extensions);
             if (extension == null)
-                return actualFile;
+                return null;
 
             var moduleName = ModuleMatch(virtualPath, prefix);
             if (moduleName == null)
-                return actualFile;
+                return null;
 
-            // It looks like we have a module name. Is this one of this modules
-            // with its assembly stored in the "App_Data/Dependencies" folder?
             var dependencyDescriptor = _dependenciesFolder.GetDescriptor(moduleName);
             if (dependencyDescriptor == null)
-                return actualFile;
+                return null;
 
-            // Yes: we need to wrap the VirtualFile to add the <%@ Assembly Name=".."%> directive
-            // in the content.
-            return new WebFormsExtensionsVirtualFile(virtualPath, dependencyDescriptor, actualFile);
+            var loader = _loaders.Where(l => l.Name == dependencyDescriptor.LoaderName).FirstOrDefault();
+            if (loader == null)
+                return null;
+
+            var directive = loader.GetAssemblyDirective(dependencyDescriptor);
+            if (string.IsNullOrEmpty(directive))
+                return null;
+
+            return new WebFormsExtensionsVirtualFile(virtualPath, actualFile, directive);
         }
 
         private string ModuleMatch(string virtualPath, string prefix) {

@@ -4,7 +4,6 @@ using System.IO;
 using System.Linq;
 using System.Web;
 using ICSharpCode.SharpZipLib.Zip;
-using Orchard.Caching;
 using Orchard.Environment.Extensions.Folders;
 using Orchard.Environment.Extensions.Helpers;
 using Orchard.Environment.Extensions.Loaders;
@@ -154,33 +153,13 @@ namespace Orchard.Environment.Extensions {
             Directory.Delete(targetFolder, true);
         }
 
-        public void Monitor(Action<IVolatileToken> monitor) {
-            foreach (var descriptor in AvailableExtensions()) {
-                if (string.Equals(descriptor.ExtensionType, "Module", StringComparison.OrdinalIgnoreCase)) {
-                    foreach (var loader in _loaders) {
-                        loader.Monitor(descriptor, monitor);
-                    }
-                }
-            }
-        }
-
         private ExtensionEntry BuildEntry(ExtensionDescriptor descriptor) {
-            var loaders = _loaders.ToList();
-
-            var moreRecentEntry = loaders
-                .Select(loader => loader.Probe(descriptor))
-                .Where(entry => entry != null)
-                .OrderByDescending(entry => entry.LastModificationTimeUtc)
-                .FirstOrDefault();
-
-            ExtensionEntry result = null;
-            foreach (var loader in loaders) {
-                ExtensionEntry entry = loader.Load(moreRecentEntry);
-                if (entry != null && result == null) {
-                    result = entry;
-                }
+            foreach (var loader in _loaders) {
+                ExtensionEntry entry = loader.Load(descriptor);
+                if (entry != null)
+                    return entry;
             }
-            return result;
+            return null;
         }
     }
 }

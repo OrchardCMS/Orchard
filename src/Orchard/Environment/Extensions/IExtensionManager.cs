@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Web;
-using Orchard.Caching;
 using Orchard.Environment.Extensions.Models;
 
 namespace Orchard.Environment.Extensions {
@@ -10,6 +8,5 @@ namespace Orchard.Environment.Extensions {
         IEnumerable<Feature> LoadFeatures(IEnumerable<FeatureDescriptor> featureDescriptors);
         void InstallExtension(string extensionType, HttpPostedFileBase extensionBundle);
         void UninstallExtension(string extensionType, string extensionName);
-        void Monitor(Action<IVolatileToken> monitor);
     }
 }

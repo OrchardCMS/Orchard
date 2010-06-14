@@ -1,32 +1,62 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using Orchard.Caching;
 using Orchard.Environment.Extensions.Models;
 using Orchard.FileSystems.Dependencies;
 using Orchard.FileSystems.VirtualPath;
+using Orchard.Logging;
 
 namespace Orchard.Environment.Extensions.Loaders {
     /// <summary>
     /// Load an extension using the "Assembly.Load" method if the
     /// file can be found in the "App_Data/Dependencies" folder.
     /// </summary>
-    public class ProbingExtensionLoader : IExtensionLoader {
+    public class ProbingExtensionLoader : ExtensionLoaderBase {
         private readonly IDependenciesFolder _dependenciesFolder;
+        private readonly IVirtualPathProvider _virtualPathProvider;
 
-        public ProbingExtensionLoader(IDependenciesFolder dependenciesFolder) {
+        public ProbingExtensionLoader(IDependenciesFolder dependenciesFolder, IVirtualPathProvider virtualPathProvider) {
             _dependenciesFolder = dependenciesFolder;
+            _virtualPathProvider = virtualPathProvider;
+            Logger = NullLogger.Instance;
         }
 
-        public int Order { get { return 40; } }
+        public ILogger Logger { get; set; }
 
-        public void Monitor(ExtensionDescriptor descriptor, Action<IVolatileToken> monitor) {
-            // We don't monitor assemblies loaded from this probing directory,
-            // because they are just a copy of the assemblies from the module
-            // bin directory.
+        public override int Order { get { return 40; } }
+
+        public override string GetAssemblyDirective(DependencyDescriptor dependency) {
+            return string.Format("<%@ Assembly Name=\"{0}\"%>", dependency.Name);
         }
 
-        public ExtensionProbeEntry Probe(ExtensionDescriptor descriptor) {
-            if (!_dependenciesFolder.HasPrecompiledAssembly(descriptor.Name))
+        public override void ExtensionRemoved(ExtensionLoadingContext ctx, DependencyDescriptor dependency) {
+            var assemblyFileName = _dependenciesFolder.GetProbingAssemblyPhysicalFileName(dependency.Name);
+            if (File.Exists(assemblyFileName)) {
+                ctx.FilesToDelete.Add(assemblyFileName);
+                // We need to restart the appDomain if the assembly is loaded
+                if (IsAssemblyLoaded(dependency.Name)) {
+                    Logger.Information("Extension removed: Setting AppDomain for restart because assembly {0} is loaded", dependency.Name);
+                    ctx.RestartAppDomain = true;
+                }
+            }
+        }
+
+        public override void ExtensionDeactivated(ExtensionLoadingContext ctx, bool isNewExtension, ExtensionDescriptor extension) {
+            var assemblyFileName = _dependenciesFolder.GetProbingAssemblyPhysicalFileName(extension.Name);
+            if (File.Exists(assemblyFileName)) {
+                ctx.FilesToDelete.Add(assemblyFileName);
+                // We need to restart the appDomain if the assembly is loaded
+                if (IsAssemblyLoaded(extension.Name)) {
+                    Logger.Information("Extension deactivated: Setting AppDomain for restart because assembly {0} is loaded", extension.Name);
+                    ctx.RestartAppDomain = true;
+                }
+            }
+        }
+
+        public override ExtensionProbeEntry Probe(ExtensionDescriptor descriptor) {
+            var probingAssembly = _dependenciesFolder.GetProbingAssembly(descriptor.Name);
+            if (probingAssembly == null)
                 return null;
 
             var desc = _dependenciesFolder.GetDescriptor(descriptor.Name);
@@ -35,33 +65,27 @@ namespace Orchard.Environment.Extensions.Loaders {
 
             return new ExtensionProbeEntry {
                     Descriptor = descriptor,
-                    LastModificationTimeUtc = File.GetLastWriteTimeUtc(desc.FileName),
+                    LastModificationTimeUtc = probingAssembly.LastWriteTimeUtc(),
                     Loader = this,
                     VirtualPath = desc.VirtualPath
                 };
         }
 
-        public ExtensionEntry Load(ExtensionProbeEntry entry) {
-            if (entry.Loader == this) {
-                var assembly = _dependenciesFolder.LoadAssembly(entry.Descriptor.Name);
+        public override ExtensionEntry Load(ExtensionDescriptor descriptor) {
+            var dependency = _dependenciesFolder.GetDescriptor(descriptor.Name);
+            if (dependency != null && dependency.LoaderName == this.Name) {
+
+                var assembly = _dependenciesFolder.GetProbingAssembly(descriptor.Name);
                 if (assembly == null)
                     return null;
 
                 return new ExtensionEntry {
-                    Descriptor = entry.Descriptor,
-                    Assembly = assembly,
-                    ExportedTypes = assembly.GetExportedTypes()
+                    Descriptor = descriptor,
+                    Assembly = assembly.Assembly(),
+                    ExportedTypes = assembly.Assembly().GetExportedTypes()
                 };
             }
-            else {
-                // If the extension is not loaded by us, there is some cached state we need to invalidate
-                // 1) The webforms views which have been compiled with "Assembly Name=""" directive
-                // 2) The modules which contains features which depend on us
-                // 3) The binary from the App_Data directory
-                //TODO
-                _dependenciesFolder.Remove(entry.Descriptor.Name, this.GetType().FullName);
-                return null;
-            }
+            return null;
         }
     }
 }
