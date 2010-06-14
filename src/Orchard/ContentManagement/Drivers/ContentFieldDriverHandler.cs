@@ -6,9 +6,9 @@ using Orchard.Logging;
 namespace Orchard.ContentManagement.Drivers {
     [UsedImplicitly]
     public class ContentFieldDriverHandler : ContentHandlerBase {
-        private readonly IEnumerable<IContentPartDriver> _drivers;
+        private readonly IEnumerable<IContentFieldDriver> _drivers;
 
-        public ContentFieldDriverHandler(IEnumerable<IContentPartDriver> drivers) {
+        public ContentFieldDriverHandler(IEnumerable<IContentFieldDriver> drivers) {
             _drivers = drivers;
             Logger = NullLogger.Instance;
         }

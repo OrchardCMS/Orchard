@@ -16,7 +16,7 @@ namespace Orchard.Blogs {
         public string MenuName { get { return "admin"; } }
 
         public void GetNavigation(NavigationBuilder builder) {
-            builder.Add(T("Blogs"), "2", BuildMenu);
+            builder.Add(T("Blogs"), "1", BuildMenu);
         }
 
         private void BuildMenu(NavigationItemBuilder menu) {
@@ -33,12 +33,12 @@ namespace Orchard.Blogs {
                     item =>
                     item.Action("Item", "BlogAdmin", new {area = "Orchard.Blogs", blogSlug = singleBlog.Slug}).Permission(Permissions.MetaListBlogs));
 
-            menu.Add(T("Add New Blog"), "1.1",
+            menu.Add(T("Create New Blog"), "1.1",
                      item =>
                      item.Action("Create", "BlogAdmin", new {area = "Orchard.Blogs"}).Permission(Permissions.ManageBlogs));
 
             if (singleBlog != null)
-                menu.Add(T("Add New Post"), "1.2",
+                menu.Add(T("Create New Post"), "1.2",
                          item =>
                          item.Action("Create", "BlogPostAdmin", new {area = "Orchard.Blogs", blogSlug = singleBlog.Slug}).Permission(Permissions.PublishBlogPost));
         }
