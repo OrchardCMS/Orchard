@@ -44,7 +44,7 @@ namespace Orchard.Environment.Extensions.Loaders {
                 Descriptor = descriptor,
                 LastModificationTimeUtc = File.GetLastWriteTimeUtc(assembly.Location),
                 Loader = this,
-                VirtualPath = "~/bin/" + descriptor.Name
+                VirtualPath = _virtualPathProvider.Combine("~/bin", descriptor.Name + ".dll")
             };
         }
 

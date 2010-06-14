@@ -51,7 +51,28 @@ namespace Orchard.FileSystems.Dependencies {
         }
 
         public void StoreDescriptors(IEnumerable<DependencyDescriptor> dependencyDescriptors) {
-            WriteDependencies(PersistencePath, dependencyDescriptors);
+            var existingDescriptors = this.Descriptors.OrderBy(d => d.Name);
+            var newDescriptors = dependencyDescriptors.OrderBy(d => d.Name);
+            if (!newDescriptors.SequenceEqual(existingDescriptors, new DependencyDescriptorComparer())) {
+                WriteDependencies(PersistencePath, dependencyDescriptors);
+            }
+        }
+
+        private class DependencyDescriptorComparer : EqualityComparer<DependencyDescriptor> {
+            public override bool Equals(DependencyDescriptor x, DependencyDescriptor y) {
+                return
+                    StringComparer.OrdinalIgnoreCase.Equals(x.Name, y.Name) &&
+                    StringComparer.OrdinalIgnoreCase.Equals(x.LoaderName, y.LoaderName) &&
+                    StringComparer.OrdinalIgnoreCase.Equals(x.VirtualPath, y.VirtualPath);
+
+            }
+
+            public override int GetHashCode(DependencyDescriptor obj) {
+                return
+                    StringComparer.OrdinalIgnoreCase.GetHashCode(obj.Name) ^
+                    StringComparer.OrdinalIgnoreCase.GetHashCode(obj.LoaderName) ^
+                    StringComparer.OrdinalIgnoreCase.GetHashCode(obj.VirtualPath);
+            }
         }
 
         public DependencyDescriptor GetDescriptor(string moduleName) {
