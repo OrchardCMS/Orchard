@@ -173,7 +173,6 @@
     </Compile>
     <Compile Include="ContentManagement\Drivers\ContentFieldDriver.cs" />
     <Compile Include="ContentManagement\Drivers\ContentFieldDriverHandler.cs" />
-    <Compile Include="ContentManagement\Drivers\ContentFieldTemplateResult.cs" />
     <Compile Include="ContentManagement\Drivers\ContentItemDriver.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -189,9 +188,7 @@
     <Compile Include="ContentManagement\Drivers\ContentPartDriverHandler.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="ContentManagement\Drivers\ContentPartTemplateResult.cs">
-      <SubType>Code</SubType>
-    </Compile>
+    <Compile Include="ContentManagement\Drivers\ContentTemplateResult.cs" />
     <Compile Include="ContentManagement\Drivers\DriverResult.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -219,6 +216,7 @@
     <Compile Include="ContentManagement\Handlers\ContentContextBase.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="ContentManagement\Handlers\ContentFieldHandler.cs" />
     <Compile Include="ContentManagement\Handlers\ContentHandler.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -250,6 +248,7 @@
     <Compile Include="ContentManagement\Handlers\IContentTemplateFilter.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="ContentManagement\Handlers\InitializingContentContext.cs" />
     <Compile Include="ContentManagement\Handlers\LoadContentContext.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -298,6 +297,7 @@
     </Compile>
     <Compile Include="ContentManagement\MetaData\Builders\ContentPartDefinitionBuilder.cs" />
     <Compile Include="ContentManagement\MetaData\Builders\ContentTypeDefinitionBuilder.cs" />
+    <Compile Include="ContentManagement\MetaData\ContentFieldInfo.cs" />
     <Compile Include="ContentManagement\MetaData\ContentPartHandler.cs">
       <SubType>Code</SubType>
     </Compile>

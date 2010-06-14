@@ -1,15 +1,15 @@
-using System.Linq;
+﻿using System.Linq;
 using Orchard.ContentManagement.Handlers;
 
 namespace Orchard.ContentManagement.Drivers {
-    public class ContentPartTemplateResult : DriverResult {
+    public class ContentTemplateResult : DriverResult {
         public object Model { get; set; }
         public string TemplateName { get; set; }
         public string Prefix { get; set; }
         public string Zone { get; set; }
         public string Position { get; set; }
 
-        public ContentPartTemplateResult(object model, string templateName, string prefix) {
+        public ContentTemplateResult(object model, string templateName, string prefix) {
             Model = model;
             TemplateName = templateName;
             Prefix = prefix;
@@ -25,18 +25,18 @@ namespace Orchard.ContentManagement.Drivers {
                 Zone + ":" + Position, Model, TemplateName, Prefix);
         }
 
-        public ContentPartTemplateResult Location(string zone) {
+        public ContentTemplateResult Location(string zone) {
             Zone = zone;
             return this;
         }
 
-        public ContentPartTemplateResult Location(string zone, string position) {
+        public ContentTemplateResult Location(string zone, string position) {
             Zone = zone;
             Position = position;
             return this;
         }
 
-        public ContentPartTemplateResult LongestMatch(string displayType, params string[] knownDisplayTypes) {
+        public ContentTemplateResult LongestMatch(string displayType, params string[] knownDisplayTypes) {
 
             if (string.IsNullOrEmpty(displayType))
                 return this;

@@ -1,4 +1,7 @@
-﻿using Orchard.ContentManagement.Handlers;
+﻿using System.Collections.Generic;
+using System.Linq;
+using Orchard.ContentManagement.Handlers;
+using Orchard.ContentManagement.MetaData;
 
 namespace Orchard.ContentManagement.Drivers {
 
@@ -6,42 +9,61 @@ namespace Orchard.ContentManagement.Drivers {
         DriverResult BuildDisplayModel(BuildDisplayModelContext context);
         DriverResult BuildEditorModel(BuildEditorModelContext context);
         DriverResult UpdateEditorModel(UpdateEditorModelContext context);
+
+        IEnumerable<ContentFieldInfo> GetFieldInfo();
     }
 
-    public abstract class ContentFieldDriver<TContent> : IContentFieldDriver where TContent : ContentField, new() {
+    public abstract class ContentFieldDriver<TField> : IContentFieldDriver where TField : ContentField, new() {
         protected virtual string Prefix { get { return ""; } }
         protected virtual string Zone { get { return "body"; } }
 
         DriverResult IContentFieldDriver.BuildDisplayModel(BuildDisplayModelContext context) {
-            var field = context.ContentItem.As<TContent>();
-            return field == null ? null : Display(field, context.DisplayType);
+            var results = context.ContentItem.Parts.SelectMany(part => part.Fields).
+                OfType<TField>().
+                Select(field => Display(field, context.DisplayType));
+            return Combined(results.ToArray());
         }
 
         DriverResult IContentFieldDriver.BuildEditorModel(BuildEditorModelContext context) {
-            var field = context.ContentItem.As<TContent>();
-            return field == null ? null : Editor(field);
+            var results = context.ContentItem.Parts.SelectMany(part => part.Fields).
+                OfType<TField>().
+                Select(field => Editor(field));
+            return Combined(results.ToArray());
         }
 
         DriverResult IContentFieldDriver.UpdateEditorModel(UpdateEditorModelContext context) {
-            var field = context.ContentItem.As<TContent>();
-            return field == null ? null : Editor(field, context.Updater);
+            var results = context.ContentItem.Parts.SelectMany(part => part.Fields).
+                OfType<TField>().
+                Select(field => Editor(field, context.Updater));
+            return Combined(results.ToArray());
         }
 
-        protected virtual DriverResult Display(TContent field, string displayType) { return null; }
-        protected virtual DriverResult Editor(TContent field) { return null; }
-        protected virtual DriverResult Editor(TContent field, IUpdateModel updater) { return null; }
+        public IEnumerable<ContentFieldInfo> GetFieldInfo() {
+            var contentFieldInfo = new[] {
+                new ContentFieldInfo {
+                    FieldTypeName = typeof (TField).Name,
+                    Factory = partFieldDefinition => new TField {PartFieldDefinition = partFieldDefinition}
+                }
+            };
 
-
-        public ContentFieldTemplateResult ContentPartTemplate(object model) {
-            return new ContentFieldTemplateResult(model, null, Prefix).Location(Zone);
+            return contentFieldInfo;
         }
 
-        public ContentFieldTemplateResult ContentPartTemplate(object model, string template) {
-            return new ContentFieldTemplateResult(model, template, Prefix).Location(Zone);
+        protected virtual DriverResult Display(TField field, string displayType) { return null; }
+        protected virtual DriverResult Editor(TField field) { return null; }
+        protected virtual DriverResult Editor(TField field, IUpdateModel updater) { return null; }
+
+
+        public ContentTemplateResult ContentPartTemplate(object model) {
+            return new ContentTemplateResult(model, null, Prefix).Location(Zone);
         }
 
-        public ContentFieldTemplateResult ContentPartTemplate(object model, string template, string prefix) {
-            return new ContentFieldTemplateResult(model, template, prefix).Location(Zone);
+        public ContentTemplateResult ContentPartTemplate(object model, string template) {
+            return new ContentTemplateResult(model, template, Prefix).Location(Zone);
+        }
+
+        public ContentTemplateResult ContentPartTemplate(object model, string template, string prefix) {
+            return new ContentTemplateResult(model, template, prefix).Location(Zone);
         }
 
         public CombinedResult Combined(params DriverResult[] results) {
