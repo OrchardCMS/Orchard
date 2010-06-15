@@ -69,8 +69,13 @@
     <Compile Include="Common\Drivers\CommonDriver.cs" />
     <Compile Include="Common\Drivers\RoutableDriver.cs" />
     <Compile Include="Common\Controllers\RoutableController.cs" />
+    <Compile Include="Common\Drivers\TextContentFieldDriver.cs" />
+    <Compile Include="Common\Fields\TextContentField.cs" />
     <Compile Include="Common\Handlers\RoutableAspectHandler.cs" />
+    <Compile Include="Common\Handlers\TextContentFieldHandler.cs" />
     <Compile Include="Common\ViewModels\ContainerEditorViewModel.cs" />
+    <Compile Include="Common\ViewModels\TextContentFieldDisplayViewModel.cs" />
+    <Compile Include="Common\ViewModels\TextContentFieldEditorViewModel.cs" />
     <Compile Include="Contents\Controllers\ItemController.cs" />
     <Compile Include="Contents\Handlers\ContentsModuleHandler.cs" />
     <Compile Include="Localization\Drivers\LocalizedDriver.cs" />
@@ -207,7 +212,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Common\Module.txt" />
+    <Content Include="Common\Views\DisplayTemplates\Fields\Common.TextContentField.ascx" />
     <Content Include="Common\Views\EditorTemplates\Parts\Common.Container.ascx" />
+    <Content Include="Common\Views\EditorTemplates\Parts\Common.TextContentField.ascx" />
     <Content Include="Contents\Module.txt" />
     <Content Include="Contents\Views\Admin\Types.aspx" />
     <Content Include="Contents\Views\Admin\List.aspx" />

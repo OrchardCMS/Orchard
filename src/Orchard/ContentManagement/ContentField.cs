@@ -15,11 +15,4 @@ namespace Orchard.ContentManagement {
         public Func<string, string> Getter { get; set; }
         public Action<string, string> Setter { get; set; }
     }
-
-    //public class AddressField : ContentField {
-    //    public string Zip { 
-    //        get {return Getter("zip");}
-    //        set { Setter("zip", value); }
-    //    }
-    //}
 }
