@@ -2,10 +2,9 @@
 using System.Linq;
 using NUnit.Framework;
 using Orchard.FileSystems.AppData;
-using Orchard.FileSystems.VirtualPath;
-using Orchard.Services;
+using Orchard.Tests.Stubs;
 
-namespace Orchard.Tests.Environment.Configuration {
+namespace Orchard.Tests.FileSystems.AppData {
     [TestFixture]
     public class AppDataFolderTests {
         private string _tempFolder;
@@ -18,7 +17,8 @@ namespace Orchard.Tests.Environment.Configuration {
 
         public static IAppDataFolder CreateAppDataFolder(string tempFolder) {
             var folderRoot = new StubAppDataFolderRoot {RootPath = "~/App_Data", RootFolder = tempFolder};
-            return new AppDataFolder(folderRoot, new DefaultVirtualPathMonitor(new Clock()));
+            var monitor = new StubVirtualPathMonitor();
+            return new AppDataFolder(folderRoot, monitor);
         }
 
         [SetUp]

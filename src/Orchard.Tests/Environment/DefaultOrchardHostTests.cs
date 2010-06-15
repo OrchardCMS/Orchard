@@ -25,6 +25,7 @@ using Orchard.Mvc.ModelBinders;
 using Orchard.Mvc.Routes;
 using Orchard.Tests.Environment.Configuration;
 using Orchard.Tests.Environment.TestDependencies;
+using Orchard.Tests.FileSystems.AppData;
 using Orchard.Tests.Stubs;
 using Orchard.Tests.Utility;
 

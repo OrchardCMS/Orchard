@@ -11,6 +11,7 @@ using Orchard.Indexing;
 using Orchard.Core.Indexing.Lucene;
 using Orchard.Services;
 using Orchard.Tests.Environment.Configuration;
+using Orchard.Tests.FileSystems.AppData;
 
 namespace Orchard.Tests.Indexing {
     public class DefaultSearchBuilderTests {

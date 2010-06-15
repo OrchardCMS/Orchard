@@ -7,6 +7,7 @@ using Orchard.Environment.Configuration;
 using Orchard.FileSystems.AppData;
 using Orchard.FileSystems.VirtualPath;
 using Orchard.Services;
+using Orchard.Tests.FileSystems.AppData;
 
 namespace Orchard.Tests.Environment.Configuration {
     [TestFixture]

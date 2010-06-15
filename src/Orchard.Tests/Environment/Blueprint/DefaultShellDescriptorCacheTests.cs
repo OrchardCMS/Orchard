@@ -9,6 +9,7 @@ using Orchard.FileSystems.AppData;
 using Orchard.FileSystems.VirtualPath;
 using Orchard.Services;
 using Orchard.Tests.Environment.Configuration;
+using Orchard.Tests.FileSystems.AppData;
 
 namespace Orchard.Tests.Environment.Blueprint {
     [TestFixture]

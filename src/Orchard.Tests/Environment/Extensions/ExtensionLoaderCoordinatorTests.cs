@@ -11,9 +11,10 @@ using Orchard.Tests.Extensions.ExtensionTypes;
 
 namespace Orchard.Tests.Environment.Extensions {
     [TestFixture]
-    public class ExtensionManagerTests {
+    public class ExtensionLoaderCoordinatorTests {
         private IContainer _container;
         private IExtensionManager _manager;
+        private IExtensionLoaderCoordinator _loader;
         private StubFolders _folders;
 
         [SetUp]
