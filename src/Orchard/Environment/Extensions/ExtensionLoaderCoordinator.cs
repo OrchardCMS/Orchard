@@ -6,30 +6,25 @@ using Orchard.Caching;
 using Orchard.Environment.Extensions.Loaders;
 using Orchard.Environment.Extensions.Models;
 using Orchard.FileSystems.Dependencies;
-using Orchard.FileSystems.VirtualPath;
 using Orchard.Localization;
 using Orchard.Logging;
-using Orchard.Services;
 
 namespace Orchard.Environment.Extensions {
     public class ExtensionLoaderCoordinator : IExtensionLoaderCoordinator {
         private readonly IDependenciesFolder _dependenciesFolder;
         private readonly IExtensionManager _extensionManager;
         private readonly IEnumerable<IExtensionLoader> _loaders;
-        private readonly IVirtualPathProvider _virtualPathProvider;
-        private readonly IClock _clock;
+        private readonly IHostEnvironment _hostEnvironment;
 
         public ExtensionLoaderCoordinator(
             IDependenciesFolder dependenciesFolder,
             IExtensionManager extensionManager,
             IEnumerable<IExtensionLoader> loaders,
-            IVirtualPathProvider virtualPathProvider,
-            IClock clock) {
+            IHostEnvironment hostEnvironment) {
             _dependenciesFolder = dependenciesFolder;
             _extensionManager = extensionManager;
             _loaders = loaders.OrderBy(l => l.Order);
-            _virtualPathProvider = virtualPathProvider;
-            _clock = clock;
+            _hostEnvironment = hostEnvironment;
             T = NullLocalizer.Instance;
             Logger = NullLogger.Instance;
         }
@@ -143,15 +138,14 @@ namespace Orchard.Environment.Extensions {
                 File.Move(entry.Key, entry.Value);
             }
 
-            if (ctx.RestartAppDomain || ctx.ResetSiteCompilation) {
-                if (ctx.RestartAppDomain)
-                    Logger.Information("AppDomain restart required.");
+            if (ctx.RestartAppDomain) {
+                 Logger.Information("AppDomain restart required.");
+                _hostEnvironment.RestartAppDomain();
+            }
 
-                if (ctx.ResetSiteCompilation)
+            if (ctx.ResetSiteCompilation) {
                     Logger.Information("Reset site compilation state required.");
-
-                // Touch web.config
-                File.SetLastWriteTimeUtc(_virtualPathProvider.MapPath("~/web.config"), _clock.UtcNow);
+                _hostEnvironment.ResetSiteCompilation();
             }
         }
 
