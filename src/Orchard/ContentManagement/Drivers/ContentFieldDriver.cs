@@ -54,15 +54,15 @@ namespace Orchard.ContentManagement.Drivers {
         protected virtual DriverResult Editor(TField field, IUpdateModel updater) { return null; }
 
 
-        public ContentTemplateResult ContentPartTemplate(object model) {
+        public ContentTemplateResult ContentFieldTemplate(object model) {
             return new ContentTemplateResult(model, null, Prefix).Location(Zone);
         }
 
-        public ContentTemplateResult ContentPartTemplate(object model, string template) {
+        public ContentTemplateResult ContentFieldTemplate(object model, string template) {
             return new ContentTemplateResult(model, template, Prefix).Location(Zone);
         }
 
-        public ContentTemplateResult ContentPartTemplate(object model, string template, string prefix) {
+        public ContentTemplateResult ContentFieldTemplate(object model, string template, string prefix) {
             return new ContentTemplateResult(model, template, prefix).Location(Zone);
         }
 

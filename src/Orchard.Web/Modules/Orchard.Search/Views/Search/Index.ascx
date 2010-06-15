@@ -1,14 +1,14 @@
 ﻿<%@ Control Language="C#" Inherits="Orchard.Mvc.ViewUserControl<Orchard.Search.ViewModels.SearchViewModel>" %>
 <%@ Import Namespace="Orchard.Mvc.Html" %><%
 Html.RegisterStyle("search.css"); %>
-<h1><%=Html.TitleForPage(T("Search").Text)%></h1><%
+<h1><%:Html.TitleForPage(T("Search").Text)%></h1><%
 Html.Zone("search");
 if (!string.IsNullOrWhiteSpace(Model.Query)) {
     if (Model.PageOfResults.Count() == 0) { %>
-    <p class="search-summary"><%=T("<em>zero</em> results") %></p><%
+    <p class="search-summary"><%=T.Plural("the <em>one</em> result", "<em>zero</em> results", Model.PageOfResults.Count()) %></p><%
     }
     else { %>
-    <p class="search-summary"><%=T("<em>{0} - {1}</em> of <em>{2}</em> results", Model.PageOfResults.StartPosition, Model.PageOfResults.EndPosition, Model.PageOfResults.TotalItemCount)%></p><%
+    <p class="search-summary"><%=T.Plural("the <em>one</em> result", "<em>{1} - {2}</em> of <em>{0}</em> results", Model.PageOfResults.TotalItemCount, Model.PageOfResults.StartPosition, Model.PageOfResults.EndPosition)%></p><%
     }
 }
 if (Model.PageOfResults != null && Model.PageOfResults.Count() > 0) { %>
