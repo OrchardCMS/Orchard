@@ -143,6 +143,10 @@
       <Project>{17F86780-9A1F-4AA1-86F1-875EEC2730C7}</Project>
       <Name>Orchard.Modules</Name>
     </ProjectReference>
+    <ProjectReference Include="Modules\Orchard.MultiTenancy\Orchard.MultiTenancy.csproj">
+      <Project>{72457126-E118-4171-A08F-9A709EE4B7FC}</Project>
+      <Name>Orchard.MultiTenancy</Name>
+    </ProjectReference>
     <ProjectReference Include="Modules\Orchard.Pages\Orchard.Pages.csproj">
       <Project>{4A9C04A6-0986-4A92-A610-5F59FF273FB9}</Project>
       <Name>Orchard.Pages</Name>
