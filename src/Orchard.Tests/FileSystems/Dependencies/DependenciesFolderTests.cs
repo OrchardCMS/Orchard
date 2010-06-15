@@ -27,14 +27,16 @@ namespace Orchard.Tests.FileSystems.Dependencies {
 
         [Test]
         public void LoadDescriptorsShouldReturnEmptyList() {
-            Directory.Delete(_tempFolder, true);
+            if (Directory.Exists(_tempFolder))
+                Directory.Delete(_tempFolder, true);
             var e = _dependenciesFolder.LoadDescriptors();
             Assert.That(e, Is.Empty);
         }
 
         [Test]
-        public void StoreDescriptors() {
-            Directory.Delete(_tempFolder, true);
+        public void StoreDescriptorsShouldWork() {
+            if (Directory.Exists(_tempFolder))
+                Directory.Delete(_tempFolder, true);
             var d = new DependencyDescriptor {
                 LoaderName = "test",
                 Name = "name",
@@ -44,6 +46,31 @@ namespace Orchard.Tests.FileSystems.Dependencies {
             _dependenciesFolder.StoreDescriptors(new [] { d });
             var e = _dependenciesFolder.LoadDescriptors();
             Assert.That(e, Has.Count.EqualTo(1));
+        }
+
+        [Test]
+        public void StoreDescriptorsShouldNoOpIfNoChanges() {
+            if (Directory.Exists(_tempFolder))
+                Directory.Delete(_tempFolder, true);
+            var d1 = new DependencyDescriptor {
+                LoaderName = "test1",
+                Name = "name1",
+                VirtualPath = "~/bin1"
+            };
+
+            var d2 = new DependencyDescriptor {
+                LoaderName = "test2",
+                Name = "name2",
+                VirtualPath = "~/bin2"
+            };
+
+            _dependenciesFolder.StoreDescriptors(new[] { d1, d2 });
+            var dateTime1 = File.GetLastWriteTimeUtc(Path.Combine(_tempFolder, "Dependencies", "Dependencies.xml"));
+
+            _dependenciesFolder.StoreDescriptors(new[] { d2, d1 });
+            var dateTime2 = File.GetLastWriteTimeUtc(Path.Combine(_tempFolder, "Dependencies", "Dependencies.xml"));
+            Assert.That(dateTime1, Is.EqualTo(dateTime2));
+            
         }
     }
 }
