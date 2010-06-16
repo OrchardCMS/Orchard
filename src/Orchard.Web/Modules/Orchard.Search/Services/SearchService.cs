@@ -37,11 +37,10 @@ namespace Orchard.Search.Services
                 return null;
 
             var searchBuilder = _indexManager.GetSearchIndexProvider().CreateSearchBuilder(SearchIndexName)
-                .WithField("title", query)
-                .WithField("body", query);
+                .Parse(new [] {"title", "body"}, query);
 
                 if(HttpContext.Current != null) {
-                    searchBuilder.WithField("culture", _cultureManager.GetCurrentCulture(HttpContext.Current));
+                    searchBuilder.WithField("culture", _cultureManager.GetCurrentCulture(HttpContext.Current)).Mandatory();
                 }
 
             var totalCount = searchBuilder.Count();

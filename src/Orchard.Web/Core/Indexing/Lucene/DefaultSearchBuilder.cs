@@ -19,7 +19,7 @@ namespace Orchard.Core.Indexing.Lucene {
 
         private readonly Directory _directory;
 
-        private readonly Dictionary<string, Query[]> _fields;
+        private readonly Dictionary<string, BooleanClause[]> _fields;
         private int _count;
         private int _skip;
         private readonly Dictionary<string, DateTime> _before;
@@ -28,7 +28,15 @@ namespace Orchard.Core.Indexing.Lucene {
         private bool _sortDescending;
         private string _parse;
         private readonly Analyzer _analyzer;
-        private string _defaultField;
+        private string[] _defaultFields;
+
+        // pending clause attributes
+        private string _field;
+        private string _terms;
+        private BooleanClause.Occur _occur;
+        private bool _prefix;
+        private bool _stem;
+        private float _boost;
 
         public ILogger Logger { get; set; }
 
@@ -40,15 +48,17 @@ namespace Orchard.Core.Indexing.Lucene {
             _skip = 0;
             _before = new Dictionary<string, DateTime>();
             _after = new Dictionary<string, DateTime>();
-            _fields = new Dictionary<string, Query[]>();
+            _fields = new Dictionary<string, BooleanClause[]>();
             _sort = String.Empty;
             _sortDescending = true;
             _parse = String.Empty;
             _analyzer = DefaultIndexProvider.CreateAnalyzer();
+
+            InitPendingClause();
         }
 
-        public ISearchBuilder Parse(string defaultField, string query) {
-            if ( String.IsNullOrWhiteSpace(defaultField) ) {
+        public ISearchBuilder Parse(string[] defaultFields, string query) {
+            if ( defaultFields.Length == 0 ) {
                 throw new ArgumentException("Default field can't be empty");
             }
 
@@ -56,32 +66,84 @@ namespace Orchard.Core.Indexing.Lucene {
                 throw new ArgumentException("Query can't be empty");
             }
 
-            _defaultField = defaultField;
+            _defaultFields = defaultFields;
             _parse = query;
             return this;
         }
 
         public ISearchBuilder WithField(string field, string value) {
-            return WithField(field, value, true);
+            CreatePendingClause();
+
+            _field = field;
+            _terms = value;
+
+            return this;
         }
 
-        public ISearchBuilder WithField(string field, string value, bool wildcardSearch) {
+        public ISearchBuilder Mandatory() {
+            _occur = BooleanClause.Occur.MUST;
+            return this;
+        }
+
+        public ISearchBuilder Forbidden() {
+            _occur = BooleanClause.Occur.MUST_NOT;
+            return this;
+        }
+
+        public ISearchBuilder ExactMatch() {
+            _prefix = false;
+            _stem = false;
+            return this;
+        }
+
+        public ISearchBuilder Weighted(float weight) {
+            _boost = weight;
+            return this;
+        }
+
+        private void InitPendingClause() {
+            _field = String.Empty;
+            _terms = String.Empty;
+            _occur = BooleanClause.Occur.SHOULD;
+            _prefix = true;
+            _stem = true;
+            _boost = 0;
+        }
+
+        private void CreatePendingClause() {
+            if(String.IsNullOrWhiteSpace(_field) || String.IsNullOrWhiteSpace(_terms)) {
+                return;
+            }
 
             var tokens = new List<string>();
-            using(var sr = new System.IO.StringReader(value)) {
-                var stream = _analyzer.TokenStream(field, sr);
-                while(stream.IncrementToken()) {
-                    tokens.Add(((TermAttribute)stream.GetAttribute(typeof(TermAttribute))).Term());
+            using ( var sr = new System.IO.StringReader(_terms) ) {
+                var stream = _analyzer.TokenStream(_field, sr);
+                
+                if(_stem) {
+                    stream = new PorterStemFilter(stream);
+                }
+                
+                while ( stream.IncrementToken() ) {
+                    tokens.Add(( (TermAttribute)stream.GetAttribute(typeof(TermAttribute)) ).Term());
                 }
             }
 
-            _fields[field] = tokens
-                            .Where(k => !String.IsNullOrWhiteSpace(k))
-                            .Select(QueryParser.Escape)
-                            .Select(k => wildcardSearch ? (Query)new PrefixQuery(new Term(field, k)) : new TermQuery(new Term(k)))
-                            .ToArray();
-            
-            return this;
+            var clauses = tokens
+                .Where(k => !String.IsNullOrWhiteSpace(k)) // remove empty strings
+                .Select(QueryParser.Escape) // escape special chars (e.g. C#)
+                .Select(k => new Term(_field, k)) // creates the Term instance
+                .Select(t => _prefix ? new PrefixQuery(t) as Query : new TermQuery(t) as Query) // apply the corresponding Query
+                .Select(q => {
+                            if (_boost != 0) q.SetBoost(_boost);
+                            return q;
+                        })
+                .Select(q => new BooleanClause(q, _occur)); // apply the corresponding clause
+
+            if ( !_fields.ContainsKey(_field) ) {
+                _fields[_field] = new BooleanClause[0];
+            }
+
+            _fields[_field] = _fields[_field].Union(clauses).ToArray();
         }
 
         public ISearchBuilder After(string name, DateTime date) {
@@ -120,16 +182,23 @@ namespace Orchard.Core.Indexing.Lucene {
         }
 
         private Query CreateQuery() {
-            if(!String.IsNullOrWhiteSpace(_parse)) {
-                return new QueryParser(DefaultIndexProvider.LuceneVersion, _defaultField, DefaultIndexProvider.CreateAnalyzer()).Parse(_parse);    
-            }
+            CreatePendingClause();
 
             var query = new BooleanQuery();
 
+            if(!String.IsNullOrWhiteSpace(_parse)) {
+                
+                 foreach ( var defaultField in _defaultFields ) {
+                     var clause = new BooleanClause(new QueryParser(DefaultIndexProvider.LuceneVersion, defaultField, DefaultIndexProvider.CreateAnalyzer()).Parse(_parse), BooleanClause.Occur.SHOULD);   
+                     query.Add(clause);
+                }
+            }
+
+
             if ( _fields.Keys.Count > 0 ) {  // apply specific filters if defined
-                foreach ( var filters in _fields.Values ) {
-                    foreach(var filter in filters)
-                        query.Add(filter, BooleanClause.Occur.SHOULD);
+                foreach ( var clauses in _fields.Values ) {
+                    foreach( var clause in clauses)
+                        query.Add(clause);
                 }
             }
 
