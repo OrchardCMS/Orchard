@@ -1,6 +1,5 @@
 ﻿using System;
 using System.IO;
-using System.Linq;
 using Orchard.Caching;
 using Orchard.Environment.Extensions.Models;
 using Orchard.FileSystems.Dependencies;
@@ -14,11 +13,13 @@ namespace Orchard.Environment.Extensions.Loaders {
     /// </summary>
     public class PrecompiledExtensionLoader : ExtensionLoaderBase {
         private readonly IDependenciesFolder _dependenciesFolder;
+        private readonly IAssemblyProbingFolder _assemblyProbingFolder;
         private readonly IVirtualPathProvider _virtualPathProvider;
         private readonly IVirtualPathMonitor _virtualPathMonitor;
 
-        public PrecompiledExtensionLoader(IDependenciesFolder dependenciesFolder, IVirtualPathProvider virtualPathProvider, IVirtualPathMonitor virtualPathMonitor) {
+        public PrecompiledExtensionLoader(IDependenciesFolder dependenciesFolder, IAssemblyProbingFolder assemblyProbingFolder, IVirtualPathProvider virtualPathProvider, IVirtualPathMonitor virtualPathMonitor) {
             _dependenciesFolder = dependenciesFolder;
+            _assemblyProbingFolder = assemblyProbingFolder;
             _virtualPathProvider = virtualPathProvider;
             _virtualPathMonitor = virtualPathMonitor;
             Logger = NullLogger.Instance;
@@ -33,7 +34,7 @@ namespace Orchard.Environment.Extensions.Loaders {
         }
 
         public override void ExtensionRemoved(ExtensionLoadingContext ctx, DependencyDescriptor dependency) {
-            var assemblyFileName = _dependenciesFolder.GetProbingAssemblyPhysicalFileName(dependency.Name);
+            var assemblyFileName = _assemblyProbingFolder.GetAssemblyPhysicalFileName(dependency.Name);
             if (File.Exists(assemblyFileName)) {
                 ctx.FilesToDelete.Add(assemblyFileName);
 
@@ -47,7 +48,7 @@ namespace Orchard.Environment.Extensions.Loaders {
 
         public override void ExtensionActivated(ExtensionLoadingContext ctx, bool isNewExtension, ExtensionDescriptor extension) {
             string sourceFileName = _virtualPathProvider.MapPath(GetAssemblyPath(extension));
-            string destinationFileName = _dependenciesFolder.GetProbingAssemblyPhysicalFileName(extension.Name);
+            string destinationFileName = _assemblyProbingFolder.GetAssemblyPhysicalFileName(extension.Name);
             if (FileIsNewer(sourceFileName, destinationFileName)) {
                 ctx.FilesToCopy.Add(sourceFileName, destinationFileName);
                 // We need to restart the appDomain if the assembly is loaded
@@ -59,7 +60,7 @@ namespace Orchard.Environment.Extensions.Loaders {
         }
 
         public override void ExtensionDeactivated(ExtensionLoadingContext ctx, bool isNewExtension, ExtensionDescriptor extension) {
-            var assemblyFileName = _dependenciesFolder.GetProbingAssemblyPhysicalFileName(extension.Name);
+            var assemblyFileName = _assemblyProbingFolder.GetAssemblyPhysicalFileName(extension.Name);
             if (File.Exists(assemblyFileName)) {
                 ctx.FilesToDelete.Add(assemblyFileName);
                 // We need to restart the appDomain if the assembly is loaded
@@ -95,14 +96,14 @@ namespace Orchard.Environment.Extensions.Loaders {
             var dependency = _dependenciesFolder.GetDescriptor(descriptor.Name);
             if (dependency != null && dependency.LoaderName == this.Name) {
 
-                var assembly = _dependenciesFolder.GetProbingAssembly(descriptor.Name);
+                var assembly = _assemblyProbingFolder.LoadAssembly(descriptor.Name);
                 if (assembly == null)
                     return null;
 
                 return new ExtensionEntry {
                     Descriptor = descriptor,
-                    Assembly = assembly.Assembly(),
-                    ExportedTypes = assembly.Assembly().GetExportedTypes()
+                    Assembly = assembly,
+                    ExportedTypes = assembly.GetExportedTypes()
                 };
             }
             return null;

@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Reflection;
 using System.Xml.Linq;
 using Orchard.Caching;
 using Orchard.FileSystems.AppData;
@@ -31,72 +29,29 @@ namespace Orchard.FileSystems.Dependencies {
             }
         }
 
-        private IEnumerable<DependencyDescriptor> Descriptors {
-            get {
-                return _cacheManager.Get(PersistencePath,
-                                         ctx => {
-                                             _appDataFolder.CreateDirectory(BasePath);
-
-                                             ctx.Monitor(_appDataFolder.WhenPathChanges(ctx.Key));
-                                             ctx.Monitor(_writeThroughToken);
-
-                                             _appDataFolder.CreateDirectory(BasePath);
-                                             return ReadDependencies(ctx.Key).ToList();
-                                         });
-            }
+        public DependencyDescriptor GetDescriptor(string moduleName) {
+            return LoadDescriptors().SingleOrDefault(d => d.Name == moduleName);
         }
 
         public IEnumerable<DependencyDescriptor> LoadDescriptors() {
-            return Descriptors;
+            return _cacheManager.Get(PersistencePath,
+                                     ctx => {
+                                         _appDataFolder.CreateDirectory(BasePath);
+
+                                         ctx.Monitor(_appDataFolder.WhenPathChanges(ctx.Key));
+                                         ctx.Monitor(_writeThroughToken);
+
+                                         _appDataFolder.CreateDirectory(BasePath);
+                                         return ReadDependencies(ctx.Key).ToList();
+                                     });
         }
 
         public void StoreDescriptors(IEnumerable<DependencyDescriptor> dependencyDescriptors) {
-            var existingDescriptors = this.Descriptors.OrderBy(d => d.Name);
+            var existingDescriptors = LoadDescriptors().OrderBy(d => d.Name);
             var newDescriptors = dependencyDescriptors.OrderBy(d => d.Name);
             if (!newDescriptors.SequenceEqual(existingDescriptors, new DependencyDescriptorComparer())) {
                 WriteDependencies(PersistencePath, dependencyDescriptors);
             }
-        }
-
-        private class DependencyDescriptorComparer : EqualityComparer<DependencyDescriptor> {
-            public override bool Equals(DependencyDescriptor x, DependencyDescriptor y) {
-                return
-                    StringComparer.OrdinalIgnoreCase.Equals(x.Name, y.Name) &&
-                    StringComparer.OrdinalIgnoreCase.Equals(x.LoaderName, y.LoaderName) &&
-                    StringComparer.OrdinalIgnoreCase.Equals(x.VirtualPath, y.VirtualPath);
-
-            }
-
-            public override int GetHashCode(DependencyDescriptor obj) {
-                return
-                    StringComparer.OrdinalIgnoreCase.GetHashCode(obj.Name) ^
-                    StringComparer.OrdinalIgnoreCase.GetHashCode(obj.LoaderName) ^
-                    StringComparer.OrdinalIgnoreCase.GetHashCode(obj.VirtualPath);
-            }
-        }
-
-        public DependencyDescriptor GetDescriptor(string moduleName) {
-            return Descriptors.SingleOrDefault(d => d.Name == moduleName);
-        }
-
-        public ProbingAssembly GetProbingAssembly(string moduleName) {
-            var path = PrecompiledAssemblyPath(moduleName);
-            if (!_appDataFolder.FileExists(path))
-                return null;
-
-            return new ProbingAssembly {
-                Path = path,
-                Assembly = () => Assembly.Load(moduleName),
-                LastWriteTimeUtc = () => File.GetLastWriteTimeUtc(_appDataFolder.MapPath(path)),
-            };
-        }
-
-        public string GetProbingAssemblyPhysicalFileName(string moduleName) {
-            return _appDataFolder.MapPath(PrecompiledAssemblyPath(moduleName));
-        }
-
-        private string PrecompiledAssemblyPath(string moduleName) {
-            return _appDataFolder.Combine(BasePath, moduleName + ".dll");
         }
 
         private IEnumerable<DependencyDescriptor> ReadDependencies(string persistancePath) {
@@ -141,6 +96,23 @@ namespace Orchard.FileSystems.Dependencies {
 
         private class InvalidationToken : IVolatileToken {
             public bool IsCurrent { get; set; }
+        }
+
+        private class DependencyDescriptorComparer : EqualityComparer<DependencyDescriptor> {
+            public override bool Equals(DependencyDescriptor x, DependencyDescriptor y) {
+                return
+                    StringComparer.OrdinalIgnoreCase.Equals(x.Name, y.Name) &&
+                    StringComparer.OrdinalIgnoreCase.Equals(x.LoaderName, y.LoaderName) &&
+                    StringComparer.OrdinalIgnoreCase.Equals(x.VirtualPath, y.VirtualPath);
+
+            }
+
+            public override int GetHashCode(DependencyDescriptor obj) {
+                return
+                    StringComparer.OrdinalIgnoreCase.GetHashCode(obj.Name) ^
+                    StringComparer.OrdinalIgnoreCase.GetHashCode(obj.LoaderName) ^
+                    StringComparer.OrdinalIgnoreCase.GetHashCode(obj.VirtualPath);
+            }
         }
     }
 }

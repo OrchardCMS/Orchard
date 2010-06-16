@@ -358,7 +358,9 @@
     <Compile Include="Environment\Extensions\IExtensionLoaderCoordinator.cs" />
     <Compile Include="Environment\Extensions\Loaders\ExtensionLoaderBase.cs" />
     <Compile Include="FileSystems\AppData\IAppDataFolderRoot.cs" />
+    <Compile Include="FileSystems\Dependencies\DefaultAssemblyProbingFolder.cs" />
     <Compile Include="FileSystems\Dependencies\DefaultDependenciesFolder.cs" />
+    <Compile Include="FileSystems\Dependencies\IAssenblyProbyFolder.cs" />
     <Compile Include="FileSystems\VirtualPath\DefaultVirtualPathMonitor.cs" />
     <Compile Include="FileSystems\VirtualPath\DefaultVirtualPathProvider.cs" />
     <Compile Include="FileSystems\VirtualPath\ICustomVirtualPathProvider.cs" />
