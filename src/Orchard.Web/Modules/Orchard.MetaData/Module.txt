@@ -1,5 +1,6 @@
 ﻿name: MetaData
 antiforgery: enabled
+description: The MetaData module enables the management of the content type meta data, which describes how content types are built from parts and parts from fields.
 features:
     Orchard.MetaData:
         Description: Module for managing Orchard MetaData

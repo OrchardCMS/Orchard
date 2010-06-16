@@ -4,7 +4,7 @@ author: The Orchard Team
 website: http://orchardproject.net
 version: 0.1
 orchardversion: 0.1.2010.0312
-description: Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent ut arcu turpis, et placerat nunc. Nunc sollicitudin iaculis est, in ultricies mi facilisis et. Aenean et tortor non metus adipiscing laoreet in a justo. Pellentesque faucibus nisl ac lectus mollis quis pellentesque tortor egestas. Curabitur vel velit semper nunc gravida scelerisque. Vivamus at tellus dolor, in ultrices quam posuere.
+description: This module is not activated by default and should only be used in a development environment. It contains various debugging and tracing tools that can display information about your content types.
 features:
     Orchard.DevTools:
         Description: An assortment of debuging tools.
