@@ -3,11 +3,13 @@ using System.Collections.Generic;
 
 namespace Orchard.Indexing {
     public interface ISearchBuilder {
-
-        ISearchBuilder Parse(string defaultField, string query);
+        ISearchBuilder Parse(string[] defaultFields, string query);
 
         ISearchBuilder WithField(string field, string value);
-        ISearchBuilder WithField(string field, string value, bool wildcardSearch);
+        ISearchBuilder Mandatory();
+        ISearchBuilder Forbidden();
+        ISearchBuilder ExactMatch();
+        ISearchBuilder Weighted(float weight);
 
         ISearchBuilder After(string name, DateTime date);
         ISearchBuilder Before(string name, DateTime date);

@@ -3,17 +3,13 @@ using System.IO;
 using System.Linq;
 using Autofac;
 using NUnit.Framework;
-using Orchard.Environment;
 using Orchard.Environment.Configuration;
 using Orchard.FileSystems.AppData;
-using Orchard.FileSystems.VirtualPath;
 using Orchard.Indexing;
 using Orchard.Core.Indexing.Lucene;
-using Orchard.Services;
-using Orchard.Tests.Environment.Configuration;
 using Orchard.Tests.FileSystems.AppData;
 
-namespace Orchard.Tests.Indexing {
+namespace Orchard.Core.Tests.Indexing {
     public class DefaultSearchBuilderTests {
         private IContainer _container;
         private IIndexProvider _provider;
@@ -194,5 +190,57 @@ namespace Orchard.Tests.Indexing {
             Assert.That(cpp.Count(), Is.EqualTo(2));
 
         }
+
+        [Test]
+        public void ShouldHandleMandatoryFields() {
+            _provider.CreateIndex("default");
+            _provider.Store("default", _provider.New(1).Add("body", "Orchard has been developped in C#"));
+            _provider.Store("default", _provider.New(2).Add("body", "Windows has been developped in C++"));
+
+            Assert.That(_searchBuilder.WithField("body", "develop").Search().ToList().Count(), Is.EqualTo(2));
+            Assert.That(_searchBuilder.WithField("body", "develop").WithField("body", "Orchard").Search().ToList().Count(), Is.EqualTo(2));
+            Assert.That(_searchBuilder.WithField("body", "develop").WithField("body", "Orchard").Mandatory().Search().ToList().Count(), Is.EqualTo(1));
+            Assert.That(_searchBuilder.WithField("body", "develop").WithField("body", "Orchard").Mandatory().Search().First().Id, Is.EqualTo(1));
+        }
+
+        [Test]
+        public void ShouldHandleForbiddenFields() {
+            _provider.CreateIndex("default");
+            _provider.Store("default", _provider.New(1).Add("body", "Orchard has been developped in C#"));
+            _provider.Store("default", _provider.New(2).Add("body", "Windows has been developped in C++"));
+
+            Assert.That(_searchBuilder.WithField("body", "develop").Search().ToList().Count(), Is.EqualTo(2));
+            Assert.That(_searchBuilder.WithField("body", "develop").WithField("body", "Orchard").Search().ToList().Count(), Is.EqualTo(2));
+            Assert.That(_searchBuilder.WithField("body", "develop").WithField("body", "Orchard").Forbidden().Search().ToList().Count(), Is.EqualTo(1));
+            Assert.That(_searchBuilder.WithField("body", "develop").WithField("body", "Orchard").Forbidden().Search().First().Id, Is.EqualTo(2));
+        }
+
+        [Test]
+        public void ShouldHandleWeight() {
+            _provider.CreateIndex("default");
+            _provider.Store("default", _provider.New(1).Add("body", "Orchard has been developped in C#"));
+            _provider.Store("default", _provider.New(2).Add("body", "Windows has been developped in C++"));
+
+            Assert.That(_searchBuilder.WithField("body", "develop").WithField("body", "Orchard").Weighted(2).Search().First().Id, Is.EqualTo(1));
+        }
+
+        [Test]
+        public void ShouldParseLuceneQueries() {
+            _provider.CreateIndex("default");
+            _provider.Store("default", _provider.New(1).Add("body", "Bradley is in the kitchen.").Add("title", "Beer and takos"));
+            _provider.Store("default", _provider.New(2).Add("body", "Renaud is also in the kitchen.").Add("title", "A love affair"));
+            _provider.Store("default", _provider.New(3).Add("body", "Bertrand is a little bit jealous.").Add("title", "Soap opera"));
+
+            Assert.That(_searchBuilder.Parse(new[] { "body" }, "kitchen").Count(), Is.EqualTo(2));
+            Assert.That(_searchBuilder.Parse(new[] { "body" }, "kitchen bertrand").Count(), Is.EqualTo(3));
+            Assert.That(_searchBuilder.Parse(new[] { "body" }, "kitchen +bertrand").Count(), Is.EqualTo(1));
+            Assert.That(_searchBuilder.Parse(new[] { "body" }, "+kitchen +bertrand").Count(), Is.EqualTo(0));
+            Assert.That(_searchBuilder.Parse(new[] { "body" }, "kit").Count(), Is.EqualTo(0));
+            Assert.That(_searchBuilder.Parse(new[] { "body" }, "kit*").Count(), Is.EqualTo(2));
+            Assert.That(_searchBuilder.Parse(new[] { "body", "title" }, "bradley love^3 soap").Count(), Is.EqualTo(3));
+            Assert.That(_searchBuilder.Parse(new[] { "body", "title" }, "bradley love^3 soap").Search().First().Id, Is.EqualTo(2));
+        }
+
+
     }
 }
