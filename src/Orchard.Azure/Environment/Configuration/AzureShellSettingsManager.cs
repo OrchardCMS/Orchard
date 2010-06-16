@@ -2,14 +2,13 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Web;
 using System.Yaml.Serialization;
 using JetBrains.Annotations;
+using Microsoft.WindowsAzure;
 using Microsoft.WindowsAzure.ServiceRuntime;
 using Microsoft.WindowsAzure.StorageClient;
-using Orchard.Localization;
 using Orchard.Environment.Configuration;
-using Microsoft.WindowsAzure;
+using Orchard.Localization;
 
 namespace Orchard.Azure.Environment.Configuration {
 
