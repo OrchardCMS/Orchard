@@ -2,37 +2,28 @@
 using System.Linq;
 using Moq;
 using NUnit.Framework;
-using Orchard.Environment;
 using Orchard.Environment.Configuration;
 using Orchard.FileSystems.AppData;
-using Orchard.FileSystems.VirtualPath;
-using Orchard.Services;
 using Orchard.Tests.FileSystems.AppData;
+using Orchard.Tests.Stubs;
 
 namespace Orchard.Tests.Environment.Configuration {
     [TestFixture]
     public class DefaultTenantManagerTests {
-        private string _tempFolder;
-        private IAppDataFolder _appData;
+        private StubAppDataFolder _appDataFolder;
 
         [SetUp]
         public void Init() {
-            _tempFolder = Path.GetTempFileName();
-            File.Delete(_tempFolder);
-
-            _appData = AppDataFolderTests.CreateAppDataFolder(_tempFolder);
-        }
-        [TearDown]
-        public void Term() {
-            Directory.Delete(_tempFolder, true);
+            var clock = new StubClock();
+            _appDataFolder = new StubAppDataFolder(clock);
         }
 
         [Test]
         public void SingleSettingsFileShouldComeBackAsExpected() {
-            
-            _appData.CreateFile("Sites\\Default\\Settings.txt", "Name: Default\r\nDataProvider: SQLite\r\nDataConnectionString: something else");
 
-            IShellSettingsManager loader = new ShellSettingsManager(_appData, new Mock<IShellSettingsManagerEventHandler>().Object);
+            _appDataFolder.CreateFile("Sites\\Default\\Settings.txt", "Name: Default\r\nDataProvider: SQLite\r\nDataConnectionString: something else");
+
+            IShellSettingsManager loader = new ShellSettingsManager(_appDataFolder, new Mock<IShellSettingsManagerEventHandler>().Object);
             var settings = loader.LoadSettings().Single();
             Assert.That(settings, Is.Not.Null);
             Assert.That(settings.Name, Is.EqualTo("Default"));
@@ -44,10 +35,10 @@ namespace Orchard.Tests.Environment.Configuration {
         [Test]
         public void MultipleFilesCanBeDetected() {
 
-            _appData.CreateFile("Sites\\Default\\Settings.txt", "Name: Default\r\nDataProvider: SQLite\r\nDataConnectionString: something else");
-            _appData.CreateFile("Sites\\Another\\Settings.txt", "Name: Another\r\nDataProvider: SQLite2\r\nDataConnectionString: something else2");
+            _appDataFolder.CreateFile("Sites\\Default\\Settings.txt", "Name: Default\r\nDataProvider: SQLite\r\nDataConnectionString: something else");
+            _appDataFolder.CreateFile("Sites\\Another\\Settings.txt", "Name: Another\r\nDataProvider: SQLite2\r\nDataConnectionString: something else2");
 
-            IShellSettingsManager loader = new ShellSettingsManager(_appData, new Mock<IShellSettingsManagerEventHandler>().Object);
+            IShellSettingsManager loader = new ShellSettingsManager(_appDataFolder, new Mock<IShellSettingsManagerEventHandler>().Object);
             var settings = loader.LoadSettings();
             Assert.That(settings.Count(), Is.EqualTo(2));
 
@@ -64,16 +55,16 @@ namespace Orchard.Tests.Environment.Configuration {
 
         [Test]
         public void NewSettingsCanBeStored() {
-            _appData.CreateFile("Sites\\Default\\Settings.txt", "Name: Default\r\nDataProvider: SQLite\r\nDataConnectionString: something else");
+            _appDataFolder.CreateFile("Sites\\Default\\Settings.txt", "Name: Default\r\nDataProvider: SQLite\r\nDataConnectionString: something else");
 
-            IShellSettingsManager loader = new ShellSettingsManager(_appData, new Mock<IShellSettingsManagerEventHandler>().Object);
-            var foo = new ShellSettings {Name = "Foo", DataProvider = "Bar", DataConnectionString = "Quux"};
+            IShellSettingsManager loader = new ShellSettingsManager(_appDataFolder, new Mock<IShellSettingsManagerEventHandler>().Object);
+            var foo = new ShellSettings { Name = "Foo", DataProvider = "Bar", DataConnectionString = "Quux" };
 
             Assert.That(loader.LoadSettings().Count(), Is.EqualTo(1));
             loader.SaveSettings(foo);
             Assert.That(loader.LoadSettings().Count(), Is.EqualTo(2));
 
-            var text = File.ReadAllText(_appData.MapPath("Sites\\Foo\\Settings.txt"));
+            var text = _appDataFolder.ReadFile("Sites\\Foo\\Settings.txt");
             Assert.That(text, Is.StringContaining("Foo"));
             Assert.That(text, Is.StringContaining("Bar"));
             Assert.That(text, Is.StringContaining("Quux"));

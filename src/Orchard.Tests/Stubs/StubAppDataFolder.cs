@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using Orchard.Caching;
 using Orchard.FileSystems.AppData;
 using Orchard.Services;
@@ -8,27 +9,35 @@ using Orchard.Services;
 namespace Orchard.Tests.Stubs {
     public class StubAppDataFolder : IAppDataFolder {
         private readonly IClock _clock;
-        private readonly StubFileSystem _stubFileSystem;
+        private readonly StubFileSystem _fileSystem;
 
         public StubAppDataFolder(IClock clock) {
             _clock = clock;
-            _stubFileSystem = new StubFileSystem(_clock);
+            _fileSystem = new StubFileSystem(_clock);
         }
 
-        public StubFileSystem StubFileSystem {
-            get { return _stubFileSystem; }
+        public StubFileSystem FileSystem {
+            get { return _fileSystem; }
         }
 
         public IEnumerable<string> ListFiles(string path) {
-            throw new NotImplementedException();
+            var entry = _fileSystem.GetDirectoryEntry(path);
+            if (entry == null)
+                throw new ArgumentException();
+
+            return entry.Entries.Where(e => e is StubFileSystem.FileEntry).Select(e => Combine(path, e.Name));
         }
 
         public IEnumerable<string> ListDirectories(string path) {
-            throw new NotImplementedException();
+            var entry = _fileSystem.GetDirectoryEntry(path);
+            if (entry == null)
+                throw new ArgumentException();
+
+            return entry.Entries.Where(e => e is StubFileSystem.DirectoryEntry).Select(e => Combine(path, e.Name));
         }
 
         public bool FileExists(string path) {
-            return _stubFileSystem.GetFileEntry(path) != null;
+            return _fileSystem.GetFileEntry(path) != null;
         }
 
         public string Combine(params string[] paths) {
@@ -36,19 +45,27 @@ namespace Orchard.Tests.Stubs {
         }
 
         public void CreateFile(string path, string content) {
-            throw new NotImplementedException();
+            using(var stream = CreateFile(path)) {
+                using (var writer = new StreamWriter(stream)) {
+                    writer.Write(content);
+                }
+            }
         }
 
         public Stream CreateFile(string path) {
-            return _stubFileSystem.CreateFile(path);
+            return _fileSystem.CreateFile(path);
         }
 
         public string ReadFile(string path) {
-            throw new NotImplementedException();
+            using (var stream = OpenFile(path)) {
+                using (var reader = new StreamReader(stream)) {
+                    return reader.ReadToEnd();
+                }
+            }
         }
 
         public Stream OpenFile(string path) {
-            return _stubFileSystem.OpenFile(path);
+            return _fileSystem.OpenFile(path);
         }
 
         public void DeleteFile(string path) {
@@ -56,11 +73,11 @@ namespace Orchard.Tests.Stubs {
         }
 
         public void CreateDirectory(string path) {
-            var entry = _stubFileSystem.CreateDirectoryEntry(path);
+            var entry = _fileSystem.CreateDirectoryEntry(path);
         }
 
         public IVolatileToken WhenPathChanges(string path) {
-            return _stubFileSystem.WhenPathChanges(path);
+            return _fileSystem.WhenPathChanges(path);
         }
 
         public string MapPath(string path) {
@@ -68,7 +85,7 @@ namespace Orchard.Tests.Stubs {
         }
 
         public DateTime GetLastWriteTimeUtc(string path) {
-            var entry = _stubFileSystem.GetFileEntry(path);
+            var entry = _fileSystem.GetFileEntry(path);
             if (entry == null)
                 throw new InvalidOperationException();
             return entry.LastWriteTime;

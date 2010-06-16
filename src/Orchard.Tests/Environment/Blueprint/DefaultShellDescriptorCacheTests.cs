@@ -6,35 +6,23 @@ using NUnit.Framework;
 using Orchard.Environment.Descriptor;
 using Orchard.Environment.Descriptor.Models;
 using Orchard.FileSystems.AppData;
-using Orchard.FileSystems.VirtualPath;
-using Orchard.Services;
-using Orchard.Tests.Environment.Configuration;
-using Orchard.Tests.FileSystems.AppData;
+using Orchard.Tests.Stubs;
 
 namespace Orchard.Tests.Environment.Blueprint {
     [TestFixture]
     public class DefaultShellDescriptorCacheTests {
         private IContainer _container;
-        private string _tempFolder;
         private IAppDataFolder _appDataFolder;
 
         [SetUp]
         public void Init() {
-            _tempFolder = Path.GetTempFileName();
-            File.Delete(_tempFolder);
-            Directory.CreateDirectory(_tempFolder);
-
-            _appDataFolder = AppDataFolderTests.CreateAppDataFolder(_tempFolder);
+            var clock = new StubClock();
+            _appDataFolder = new StubAppDataFolder(clock);
 
             var builder = new ContainerBuilder();
             builder.RegisterInstance(_appDataFolder).As<IAppDataFolder>();
             builder.RegisterType<ShellDescriptorCache>().As<IShellDescriptorCache>();
             _container = builder.Build();
-        }
-
-        [TearDown]
-        public void Term() {
-            Directory.Delete(_tempFolder, true);
         }
 
         [Test]

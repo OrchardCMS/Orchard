@@ -287,11 +287,15 @@ namespace Orchard.Tests.Stubs {
             _tokens = new Dictionary<string, Weak<Token>>(StringComparer.OrdinalIgnoreCase);
         }
 
-        private DirectoryEntry GetDirectoryEntry(string path) {
+        public DirectoryEntry GetDirectoryEntry(string path) {
+            // Root is a special case: it has no name.
+            if (string.IsNullOrEmpty(path))
+                return _root;
+
             path = path.Replace(Path.AltDirectorySeparatorChar, Path.DirectorySeparatorChar);
             var current = _root;
             foreach (var name in path.Split(Path.DirectorySeparatorChar)) {
-                current = current.GetEntry(name) as StubFileSystem.DirectoryEntry;
+                current = current.GetEntry(name) as DirectoryEntry;
                 if (current == null)
                     break;
             }
@@ -299,6 +303,10 @@ namespace Orchard.Tests.Stubs {
         }
 
         public DirectoryEntry CreateDirectoryEntry(string path) {
+            // Root is a special case: it has no name.
+            if (string.IsNullOrEmpty(path))
+                return _root;
+
             path = path.Replace(Path.AltDirectorySeparatorChar, Path.DirectorySeparatorChar);
             var current = _root;
             foreach (var name in path.Split(Path.DirectorySeparatorChar)) {
@@ -306,7 +314,6 @@ namespace Orchard.Tests.Stubs {
             }
             return current;
         }
-
 
         public FileEntry GetFileEntry(string path) {
             var directoryName = Path.GetDirectoryName(path);
@@ -350,6 +357,7 @@ namespace Orchard.Tests.Stubs {
 
         public Stream CreateFile(string path) {
             var entry = CreateFileEntry(path);
+            entry.Content.Clear();
             return new FileEntryWriteStream(GetToken(path), entry, _clock);
         }
 
