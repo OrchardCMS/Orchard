@@ -1,5 +1,4 @@
-<%@ Page Language="C#" Inherits="Orchard.Mvc.ViewPage<ContentTypeListViewModel>" %>
-
+<%@ Page Language="C#" Inherits="Orchard.Mvc.ViewPage<ListContentTypesViewModel>" %>
 <%@ Import Namespace="Orchard.Core.Contents.ViewModels" %>
 <% Html.AddTitleParts(T("Create Content").ToString()); %>
 <p>

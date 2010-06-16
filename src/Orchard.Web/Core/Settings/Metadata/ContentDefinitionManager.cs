@@ -54,7 +54,7 @@ namespace Orchard.Core.Settings.Metadata {
         private ContentTypeDefinitionRecord Acquire(ContentTypeDefinition contentTypeDefinition) {
             var result = _typeDefinitionRepository.Fetch(x => x.Name == contentTypeDefinition.Name).SingleOrDefault();
             if (result == null) {
-                result = new ContentTypeDefinitionRecord { Name = contentTypeDefinition.Name };
+                result = new ContentTypeDefinitionRecord { Name = contentTypeDefinition.Name, DisplayName = contentTypeDefinition.DisplayName};
                 _typeDefinitionRepository.Create(result);
             }
             return result;
@@ -100,6 +100,7 @@ namespace Orchard.Core.Settings.Metadata {
         ContentTypeDefinition Build(ContentTypeDefinitionRecord source) {
             return new ContentTypeDefinition(
                 source.Name,
+                source.DisplayName,
                 source.ContentTypePartDefinitionRecords.Select(Build),
                 _settingsReader.Map(Parse(source.Settings)));
         }

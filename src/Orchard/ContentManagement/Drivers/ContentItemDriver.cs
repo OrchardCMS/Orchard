@@ -27,6 +27,7 @@ namespace Orchard.ContentManagement.Drivers {
                 context.Metadata.DisplayText = GetDisplayText(item) ?? context.Metadata.DisplayText;
                 context.Metadata.DisplayRouteValues = GetDisplayRouteValues(item) ?? context.Metadata.DisplayRouteValues;
                 context.Metadata.EditorRouteValues = GetEditorRouteValues(item) ?? context.Metadata.EditorRouteValues;
+                context.Metadata.CreateRouteValues = GetCreateRouteValues(item) ?? context.Metadata.CreateRouteValues;
             }
         }
 
@@ -67,6 +68,7 @@ namespace Orchard.ContentManagement.Drivers {
         protected virtual string GetDisplayText(TContent item) { return null; }
         public virtual RouteValueDictionary GetDisplayRouteValues(TContent item) { return null; }
         public virtual RouteValueDictionary GetEditorRouteValues(TContent item) { return null; }
+        public virtual RouteValueDictionary GetCreateRouteValues(TContent item) { return null; }
 
         protected virtual DriverResult Display(ContentItemViewModel<TContent> viewModel, string displayType) { return GetDefaultItemTemplate(); }
         protected virtual DriverResult Editor(ContentItemViewModel<TContent> viewModel) { return GetDefaultItemTemplate(); }

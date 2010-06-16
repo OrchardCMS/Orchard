@@ -1,5 +1,4 @@
-<%@ Page Language="C#" Inherits="Orchard.Mvc.ViewPage<ListContentViewModel>" %>
-
+<%@ Page Language="C#" Inherits="Orchard.Mvc.ViewPage<ListContentsViewModel>" %>
 <%@ Import Namespace="Orchard.Core.Contents.ViewModels" %>
 <% Html.AddTitleParts(T("Browse Contents").ToString()); %>
 <p>

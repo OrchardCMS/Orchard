@@ -61,6 +61,14 @@ namespace Orchard.Pages.Drivers {
                                             };
         }
 
+        public override RouteValueDictionary GetCreateRouteValues(Page page) {
+            return new RouteValueDictionary {
+                                                {"Area", "Orchard.Pages"},
+                                                {"Controller", "Admin"},
+                                                {"Action", "Create"},
+                                            };
+        }
+
         protected override DriverResult Display(Page page, string displayType) {
             return Combined(
                 ContentItemTemplate("Items/Pages.Page").LongestMatch(displayType, "Summary", "SummaryAdmin"),
