@@ -35,23 +35,18 @@ namespace Orchard.Azure.Environment.Configuration {
             _storageAccount = storageAccount;
             _events = events;
 
-            AzureHelper.InjectHttpContext(() =>
-                                       {
-                                           BlobClient = _storageAccount.CreateCloudBlobClient();
+            using ( new HttpContextWeaver() ) {
+                BlobClient = _storageAccount.CreateCloudBlobClient();
 
-                                           // Get and create the container if it does not exist
-                                           // The container is named with DNS naming restrictions (i.e. all lower case)
-                                           Container = new CloudBlobContainer(ContainerName, BlobClient);
-                                           Container.CreateIfNotExist();
+                // Get and create the container if it does not exist
+                // The container is named with DNS naming restrictions (i.e. all lower case)
+                Container = new CloudBlobContainer(ContainerName, BlobClient);
+                Container.CreateIfNotExist();
 
-                                           // Tenant settings are protected by default
-                                           Container.SetPermissions(new BlobContainerPermissions
-                                                                        {
-                                                                            PublicAccess =
-                                                                                BlobContainerPublicAccessType.Off
-                                                                        });
-                                       });
-            
+                // Tenant settings are protected by default
+                Container.SetPermissions(new BlobContainerPermissions { PublicAccess = BlobContainerPublicAccessType.Off });
+            }
+
         }
 
         IEnumerable<ShellSettings> IShellSettingsManager.LoadSettings() {
@@ -65,37 +60,29 @@ namespace Orchard.Azure.Environment.Configuration {
             if ( string.IsNullOrEmpty(settings.Name) )
                 throw new ArgumentException(T("Settings \"Name\" is not set.").ToString());
 
-            AzureHelper.InjectHttpContext(
-                () =>
-                    {
-                        var filePath = String.Concat(settings.Name, "/", "Settings.txt");
-                        var blob = Container.GetBlockBlobReference(filePath);
-                        blob.UploadText(ComposeSettings(settings));
-                    });
+            using ( new HttpContextWeaver() ) {
+                var filePath = String.Concat(settings.Name, "/", "Settings.txt");
+                var blob = Container.GetBlockBlobReference(filePath);
+                blob.UploadText(ComposeSettings(settings));
+            }
 
             _events.Saved(settings);
         }
 
         IEnumerable<ShellSettings> LoadSettings() {
 
-            var result = new List<ShellSettings>();
+            using ( new HttpContextWeaver() ) {
+                var settingsBlobs =
+                    BlobClient.ListBlobsWithPrefix(Container.Name + "/").OfType<CloudBlobDirectory>()
+                        .SelectMany(directory => directory.ListBlobs()).OfType<CloudBlockBlob>()
+                        .Where(
+                            blob =>
+                            string.Equals(Path.GetFileName(blob.Uri.ToString()),
+                                          "Settings.txt",
+                                          StringComparison.OrdinalIgnoreCase));
 
-            AzureHelper.InjectHttpContext(
-                () =>
-                    {
-                        var settingsBlobs =
-                            BlobClient.ListBlobsWithPrefix(Container.Name + "/").OfType<CloudBlobDirectory>()
-                                .SelectMany(directory => directory.ListBlobs()).OfType<CloudBlockBlob>()
-                                .Where(
-                                    blob =>
-                                    string.Equals(Path.GetFileName(blob.Uri.ToString()),
-                                                  "Settings.txt",
-                                                  StringComparison.OrdinalIgnoreCase));
-
-                        result.AddRange(settingsBlobs.Select(settingsBlob => ParseSettings(settingsBlob.DownloadText())));
-                    });
-
-            return result;
+                return settingsBlobs.Select(settingsBlob => ParseSettings(settingsBlob.DownloadText())).ToList();
+            }
         }
 
         class Content {

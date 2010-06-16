@@ -15,21 +15,25 @@ namespace Orchard.Azure.FileSystems.AppData {
         }
 
         public void CreateFile(string path, string content) {
-            if(_fs.FileExists(path)) {
-                DeleteFile(path);
-            }
+            using ( new HttpContextWeaver() ) {
+                if (_fs.FileExists(path)) {
+                    DeleteFile(path);
+                }
 
-            using (var stream = _fs.CreateFile(path).OpenWrite()) {
-                using(var writer = new StreamWriter(stream)) {
-                    writer.Write(content);
+                using (var stream = _fs.CreateFile(path).OpenWrite()) {
+                    using (var writer = new StreamWriter(stream)) {
+                        writer.Write(content);
+                    }
                 }
             }
         }
 
         public string ReadFile(string path) {
-            using ( var stream = _fs.GetFile(path).OpenRead() ) {
-                using ( var reader = new StreamReader(stream) ) {
-                    return reader.ReadToEnd();
+            using ( new HttpContextWeaver() ) {
+                using (var stream = _fs.GetFile(path).OpenRead()) {
+                    using (var reader = new StreamReader(stream)) {
+                        return reader.ReadToEnd();
+                    }
                 }
             }
         }
