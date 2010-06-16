@@ -167,7 +167,7 @@ namespace Orchard.Core.Tests.Feeds.Controllers {
 
             var mockContentManager = new Mock<IContentManager>();
             mockContentManager.Setup(x => x.GetItemMetadata(It.IsAny<IContent>()))
-                .Returns(new ContentItemMetadata { DisplayText = "foo" });
+                .Returns(new ContentItemMetadata(hello) { DisplayText = "foo" });
 
             var builder = new ContainerBuilder();
             //builder.RegisterModule(new ImplicitCollectionSupportModule());

@@ -25,7 +25,7 @@
     %>
         <tr class="<%=contentTypeClass %>">
             <td>
-                <%= Html.ActionLink(item.Name, "ContentTypeList", new {id=item.Name})%>
+                <%= Html.ActionLink(string.IsNullOrWhiteSpace(item.Name) ? "unkwn" : item.Name, "ContentTypeList", new {id=item.Name})%>
             </td>
         </tr>
     

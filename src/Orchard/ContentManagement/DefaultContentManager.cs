@@ -375,7 +375,7 @@ namespace Orchard.ContentManagement {
         public ContentItemMetadata GetItemMetadata(IContent content) {
             var context = new GetContentItemMetadataContext {
                 ContentItem = content.ContentItem,
-                Metadata = new ContentItemMetadata()
+                Metadata = new ContentItemMetadata(content)
             };
             foreach (var handler in Handlers) {
                 handler.GetContentItemMetadata(context);

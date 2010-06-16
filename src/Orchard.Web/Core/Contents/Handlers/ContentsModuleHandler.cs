@@ -1,13 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.Routing;
+﻿using System.Web.Routing;
 using Orchard.ContentManagement.Handlers;
 
 namespace Orchard.Core.Contents.Handlers {
     public class ContentsModuleHandler : ContentHandlerBase {
         public override void GetContentItemMetadata(GetContentItemMetadataContext context) {
+            if (context.Metadata.CreateRouteValues == null) {
+                context.Metadata.CreateRouteValues = new RouteValueDictionary {
+                    {"Area", "Contents"},
+                    {"Controller", "Item"},
+                    {"Action", "Create"}
+                };
+            }
             if (context.Metadata.EditorRouteValues == null) {
                 context.Metadata.EditorRouteValues = new RouteValueDictionary {
                     {"Area", "Contents"},

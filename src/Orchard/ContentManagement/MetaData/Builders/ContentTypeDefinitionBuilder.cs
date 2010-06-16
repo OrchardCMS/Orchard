@@ -6,6 +6,7 @@ using Orchard.ContentManagement.MetaData.Models;
 namespace Orchard.ContentManagement.MetaData.Builders {
     public class ContentTypeDefinitionBuilder {
         private string _name;
+        private string _displayName;
         private readonly IList<ContentTypeDefinition.Part> _parts;
         private readonly IDictionary<string, string> _settings;
 
@@ -20,6 +21,7 @@ namespace Orchard.ContentManagement.MetaData.Builders {
             }
             else {
                 _name = existing.Name;
+                _displayName = existing.DisplayName;
                 _parts = existing.Parts.ToList();
                 _settings = existing.Settings.ToDictionary(kv => kv.Key, kv => kv.Value);
             }
@@ -30,11 +32,12 @@ namespace Orchard.ContentManagement.MetaData.Builders {
         }
 
         public ContentTypeDefinition Build() {
-            return new ContentTypeDefinition(_name, _parts, _settings);
+            return new ContentTypeDefinition(_name, _displayName, _parts, _settings);
         }
 
-        public ContentTypeDefinitionBuilder Named(string name) {
+        public ContentTypeDefinitionBuilder Named(string name, string displayName = null) {
             _name = name;
+            _displayName = displayName ?? name;
             return this;
         }
 
