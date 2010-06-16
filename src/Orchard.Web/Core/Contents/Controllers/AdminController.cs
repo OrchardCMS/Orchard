@@ -4,7 +4,7 @@ using System.Web.Mvc;
 using System.Web.Routing;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.MetaData;
-using Orchard.ContentManagement.Records;
+using Orchard.Core.Contents.Services;
 using Orchard.Core.Contents.ViewModels;
 using Orchard.Data;
 using Orchard.Localization;
@@ -16,37 +16,72 @@ namespace Orchard.Core.Contents.Controllers {
     [ValidateInput(false)]
     public class AdminController : Controller, IUpdateModel {
         private readonly INotifier _notifier;
-        private readonly IContentDefinitionManager _contentDefinitionManager;
+        private readonly IContentDefinitionService _contentDefinitionService;
         private readonly IContentManager _contentManager;
         private readonly ITransactionManager _transactionManager;
 
         public AdminController(
+            IOrchardServices orchardServices,
             INotifier notifier,
-            IContentDefinitionManager contentDefinitionManager,
+            IContentDefinitionService contentDefinitionService,
             IContentManager contentManager,
             ITransactionManager transactionManager) {
+            Services = orchardServices;
             _notifier = notifier;
-            _contentDefinitionManager = contentDefinitionManager;
+            _contentDefinitionService = contentDefinitionService;
             _contentManager = contentManager;
             _transactionManager = transactionManager;
             T = NullLocalizer.Instance;
             Logger = NullLogger.Instance;
         }
 
+        public IOrchardServices Services { get; private set; }
         public Localizer T { get; set; }
         public ILogger Logger { get; set; }
+
+        #region Types
 
         public ActionResult Index() {
             return Types();
         }
 
         public ActionResult Types() {
-            return View("Types", new ContentTypeListViewModel {
-                Types = _contentDefinitionManager.ListTypeDefinitions()
+            return View("Types", new ListContentTypesViewModel {
+                Types = _contentDefinitionService.GetTypeDefinitions()
             });
         }
 
-        public ActionResult List(ListContentViewModel model) {
+        public ActionResult CreateType(CreateTypeViewModel viewModel) {
+            if (!Services.Authorizer.Authorize(Permissions.CreateContentType, T("Not allowed to create a content type.")))
+                return new HttpUnauthorizedResult();
+
+            return View(viewModel);
+        }
+
+        [HttpPost, ActionName("CreateType")]
+        public ActionResult CreateTypePOST(CreateTypeViewModel viewModel) {
+            if (!Services.Authorizer.Authorize(Permissions.CreateContentType, T("Not allowed to create a content type.")))
+                return new HttpUnauthorizedResult();
+
+            var model = new ContentTypeDefinitionStub();
+            TryUpdateModel(model);
+
+            if (!ModelState.IsValid) {
+                Services.TransactionManager.Cancel();
+                return View(viewModel);
+            }
+            
+            _contentDefinitionService.AddTypeDefinition(model);
+            
+            return RedirectToAction("Index");
+        }
+
+        #endregion
+
+        #region Content
+        #endregion
+
+        public ActionResult List(ListContentsViewModel model) {
             const int pageSize = 20;
             var skip = (Math.Max(model.Page ?? 0, 1) - 1) * pageSize;
 
@@ -63,8 +98,8 @@ namespace Orchard.Core.Contents.Controllers {
             return View("List", model);
         }
 
-        private ListContentViewModel.Entry BuildEntry(ContentItem contentItem) {
-            var entry = new ListContentViewModel.Entry {
+        private ListContentsViewModel.Entry BuildEntry(ContentItem contentItem) {
+            var entry = new ListContentsViewModel.Entry {
                 ContentItem = contentItem,
                 ContentItemMetadata = _contentManager.GetItemMetadata(contentItem),
                 ViewModel = _contentManager.BuildDisplayModel(contentItem, "List"),
@@ -84,8 +119,8 @@ namespace Orchard.Core.Contents.Controllers {
         }
 
         ActionResult CreatableTypeList() {
-            var model = new ContentTypeListViewModel {
-                Types = _contentDefinitionManager.ListTypeDefinitions()
+            var model = new ListContentTypesViewModel {
+                Types = _contentDefinitionService.GetTypeDefinitions()
             };
 
             return View("CreatableTypeList", model);
@@ -107,6 +142,7 @@ namespace Orchard.Core.Contents.Controllers {
 
         [HttpPost]
         public ActionResult Create(CreateItemViewModel model) {
+            //todo: need to integrate permissions into generic content management
             var contentItem = _contentManager.New(model.Id);
             model.Content = _contentManager.UpdateEditorModel(contentItem, this);
             if (ModelState.IsValid) {

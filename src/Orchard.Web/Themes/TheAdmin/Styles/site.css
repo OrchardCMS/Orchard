@@ -638,9 +638,6 @@ table .button {
     overflow:hidden;
     padding:0 1.4em .8em;
 }
-.contentItems li.last {
-    border-bottom:0;
-}
 #main .contentItems li .actions {
     color:#EAE9D9;
     height:auto;

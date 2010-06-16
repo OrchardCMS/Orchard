@@ -130,6 +130,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Caching\Signals.cs" />
     <Compile Include="Collections\IPageOfItems.cs" />
     <Compile Include="Collections\PageOfItems.cs" />
     <Compile Include="ContentManagement\Aspects\ICommonAspect.cs">
@@ -172,7 +173,6 @@
     </Compile>
     <Compile Include="ContentManagement\Drivers\ContentFieldDriver.cs" />
     <Compile Include="ContentManagement\Drivers\ContentFieldDriverHandler.cs" />
-    <Compile Include="ContentManagement\Drivers\ContentFieldTemplateResult.cs" />
     <Compile Include="ContentManagement\Drivers\ContentItemDriver.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -188,9 +188,7 @@
     <Compile Include="ContentManagement\Drivers\ContentPartDriverHandler.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="ContentManagement\Drivers\ContentPartTemplateResult.cs">
-      <SubType>Code</SubType>
-    </Compile>
+    <Compile Include="ContentManagement\Drivers\ContentTemplateResult.cs" />
     <Compile Include="ContentManagement\Drivers\DriverResult.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -218,6 +216,7 @@
     <Compile Include="ContentManagement\Handlers\ContentContextBase.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="ContentManagement\Handlers\ContentFieldHandler.cs" />
     <Compile Include="ContentManagement\Handlers\ContentHandler.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -249,6 +248,7 @@
     <Compile Include="ContentManagement\Handlers\IContentTemplateFilter.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="ContentManagement\Handlers\InitializingContentContext.cs" />
     <Compile Include="ContentManagement\Handlers\LoadContentContext.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -297,6 +297,7 @@
     </Compile>
     <Compile Include="ContentManagement\MetaData\Builders\ContentPartDefinitionBuilder.cs" />
     <Compile Include="ContentManagement\MetaData\Builders\ContentTypeDefinitionBuilder.cs" />
+    <Compile Include="ContentManagement\MetaData\ContentFieldInfo.cs" />
     <Compile Include="ContentManagement\MetaData\ContentPartHandler.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -352,7 +353,19 @@
     <Compile Include="Data\DataModule.cs" />
     <Compile Include="Data\Orderable.cs" />
     <Compile Include="Environment\DefaultOrchardShell.cs" />
+    <Compile Include="Environment\Extensions\ExtensionLoaderCoordinator.cs" />
+    <Compile Include="Environment\Extensions\ExtensionLoadingContext.cs" />
+    <Compile Include="Environment\Extensions\IExtensionLoaderCoordinator.cs" />
+    <Compile Include="Environment\Extensions\Loaders\ExtensionLoaderBase.cs" />
+    <Compile Include="FileSystems\AppData\IAppDataFolderRoot.cs" />
+    <Compile Include="FileSystems\Dependencies\DefaultDependenciesFolder.cs" />
+    <Compile Include="FileSystems\VirtualPath\DefaultVirtualPathMonitor.cs" />
+    <Compile Include="FileSystems\VirtualPath\DefaultVirtualPathProvider.cs" />
+    <Compile Include="FileSystems\VirtualPath\ICustomVirtualPathProvider.cs" />
+    <Compile Include="FileSystems\Dependencies\WebFormsExtensionsVirtualPathProvider.cs" />
+    <Compile Include="FileSystems\Dependencies\WebFormsExtensionsVirtualFile.cs" />
     <Compile Include="Environment\IHostEnvironment.cs" />
+    <Compile Include="FileSystems\VirtualPath\IVirtualPathMonitor.cs" />
     <Compile Include="FileSystems\Dependencies\IDependenciesFolder.cs" />
     <Compile Include="Environment\Extensions\Loaders\ProbingExtensionLoader.cs" />
     <Compile Include="Environment\Extensions\Compilers\CSharpExtensionBuildProvider.cs" />
@@ -362,7 +375,7 @@
     <Compile Include="Environment\Extensions\Compilers\CSharpProjectParser.cs" />
     <Compile Include="Environment\IAssemblyBuilder.cs" />
     <Compile Include="Environment\IBuildManager.cs" />
-    <Compile Include="Environment\IVirtualPathProvider.cs" />
+    <Compile Include="FileSystems\VirtualPath\IVirtualPathProvider.cs" />
     <Compile Include="Environment\IOrchardShell.cs" />
     <Compile Include="Environment\OrchardStarter.cs" />
     <Compile Include="Environment\State\DefaultProcessingEngine.cs" />
@@ -389,7 +402,7 @@
     <Compile Include="Mvc\Routes\RoutePublisher.cs" />
     <Compile Include="Mvc\Routes\RouteDescriptor.cs" />
     <Compile Include="Data\Repository.cs" />
-    <Compile Include="Environment\Topology\CompositionStrategy.cs" />
+    <Compile Include="Environment\ShellBuilders\CompositionStrategy.cs" />
     <Compile Include="Environment\DefaultOrchardHost.cs" />
     <Compile Include="Mvc\OrchardControllerFactory.cs" />
     <Compile Include="Environment\IOrchardHost.cs" />
@@ -454,10 +467,10 @@
     <Compile Include="Environment\AutofacUtil\ContainerUpdater.cs" />
     <Compile Include="Environment\ShellBuilders\ShellContextFactory.cs" />
     <Compile Include="Environment\ShellBuilders\ShellContext.cs" />
-    <Compile Include="Environment\Topology\ShellDescriptorCache.cs" />
-    <Compile Include="Environment\Topology\IShellDescriptorManager.cs" />
-    <Compile Include="Environment\Topology\Models\ShellTopology.cs" />
-    <Compile Include="Environment\Topology\Models\ShellDescriptor.cs" />
+    <Compile Include="Environment\Descriptor\ShellDescriptorCache.cs" />
+    <Compile Include="Environment\Descriptor\IShellDescriptorManager.cs" />
+    <Compile Include="Environment\ShellBuilders\Models\ShellBlueprint.cs" />
+    <Compile Include="Environment\Descriptor\Models\ShellDescriptor.cs" />
     <Compile Include="Environment\ShellBuilders\ShellContainerFactory.cs" />
     <Compile Include="Environment\Configuration\ShellSettings.cs" />
     <Compile Include="Environment\StandaloneEnvironment.cs" />

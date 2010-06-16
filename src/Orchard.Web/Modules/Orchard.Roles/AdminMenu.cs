@@ -7,10 +7,9 @@ namespace Orchard.Roles {
         public string MenuName { get { return "admin"; } }
 
         public void GetNavigation(NavigationBuilder builder) {
-            builder.Add(T("Users"), "5",
+            builder.Add(T("Users"), "9",
                         menu => menu
-                                    .Add(T("Manage Roles"), "2.0", item => item.Action("Index", "Admin", new { area = "Orchard.Roles" }).Permission(Permissions.ManageRoles))
-                                    .Add(T("Add New Role"), "2.1", item => item.Action("Create", "Admin", new { area = "Orchard.Roles" }).Permission(Permissions.ManageRoles)));
+                                    .Add(T("Manage Roles"), "2.0", item => item.Action("Index", "Admin", new { area = "Orchard.Roles" }).Permission(Permissions.ManageRoles)));
         }
     }
 }

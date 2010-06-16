@@ -40,6 +40,9 @@ namespace Orchard.Blogs.Drivers {
         }
 
         public override RouteValueDictionary GetDisplayRouteValues(BlogPost post) {
+            if (post.Blog == null)
+                return new RouteValueDictionary();
+
             return new RouteValueDictionary {
                                                 {"Area", "Orchard.Blogs"},
                                                 {"Controller", "BlogPost"},
@@ -50,12 +53,27 @@ namespace Orchard.Blogs.Drivers {
         }
 
         public override RouteValueDictionary GetEditorRouteValues(BlogPost post) {
+            if (post.Blog == null)
+                return new RouteValueDictionary();
+
             return new RouteValueDictionary {
                                                 {"Area", "Orchard.Blogs"},
                                                 {"Controller", "BlogPostAdmin"},
                                                 {"Action", "Edit"},
                                                 {"blogSlug", post.Blog.Slug},
                                                 {"postId", post.Id},
+                                            };
+        }
+
+        public override RouteValueDictionary GetCreateRouteValues(BlogPost post) {
+            if (post.Blog == null)
+                return new RouteValueDictionary();
+
+            return new RouteValueDictionary {
+                                                {"Area", "Orchard.Blogs"},
+                                                {"Controller", "BlogPostAdmin"},
+                                                {"Action", "Create"},
+                                                {"blogSlug", post.Blog.Slug},
                                             };
         }
 

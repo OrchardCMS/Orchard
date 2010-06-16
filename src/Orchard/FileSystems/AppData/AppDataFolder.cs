@@ -2,38 +2,86 @@
 using System.IO;
 using System.Linq;
 using System.Web.Hosting;
+using Orchard.Caching;
+using Orchard.FileSystems.VirtualPath;
 
 namespace Orchard.FileSystems.AppData {
     public class AppDataFolder : IAppDataFolder {
-        protected string _basePath;
+        private readonly IAppDataFolderRoot _root;
+        private readonly IVirtualPathMonitor _virtualPathMonitor;
 
-        public AppDataFolder() {
-            _basePath = HostingEnvironment.MapPath("~/App_Data");
+        public AppDataFolder(IAppDataFolderRoot root, IVirtualPathMonitor virtualPathMonitor) {
+            _root = root;
+            _virtualPathMonitor = virtualPathMonitor;
+        }
+
+        public string RootFolder {
+            get {
+                return _root.RootFolder;
+            }
+        }
+
+        public string _appDataPath {
+            get {
+                return _root.RootPath;
+            }
+        }
+
+        /// <summary>
+        /// Combine a set of virtual paths relative to "~/App_Data" into an absolute physical path
+        /// starting with "_basePath".
+        /// </summary>
+        private string CombineToPhysicalPath(params string[] paths) {
+            return Path.Combine(RootFolder, Path.Combine(paths))
+                .Replace('/', Path.DirectorySeparatorChar);
+        }
+
+        /// <summary>
+        /// Combine a set of virtual paths into a virtual path relative to "~/App_Data"
+        /// </summary>
+        public string Combine(params string[] paths) {
+            return Path.Combine(paths).Replace(Path.DirectorySeparatorChar, '/');
+        }
+
+        public IVolatileToken WhenPathChanges(string path) {
+            var replace = Combine(_appDataPath, path);
+            return _virtualPathMonitor.WhenPathChanges(replace);
         }
 
         public void CreateFile(string path, string content) {
-            var filePath = Path.Combine(_basePath, path);
+            using(var stream = CreateFile(path)) {
+                using(var tw = new StreamWriter(stream)) {
+                    tw.Write(content);
+                }
+            }
+        }
+
+        public Stream CreateFile(string path) {
+            var filePath = CombineToPhysicalPath(path);
             var folderPath = Path.GetDirectoryName(filePath);
             if (!Directory.Exists(folderPath))
                 Directory.CreateDirectory(folderPath);
-            File.WriteAllText(filePath, content);
+            return File.Create(filePath);
         }
 
         public string ReadFile(string path) {
-            return File.ReadAllText(Path.Combine(_basePath, path));
+            return File.ReadAllText(CombineToPhysicalPath(path));
+        }
+
+        public Stream OpenFile(string path) {
+            return File.OpenRead(CombineToPhysicalPath(path));
         }
 
         public void DeleteFile(string path) {
-            File.Delete(Path.Combine(_basePath, path));
+            File.Delete(CombineToPhysicalPath(path));
         }
 
         public bool FileExists(string path) {
-            var filePath = Path.Combine(_basePath, path);
-            return File.Exists(filePath);
+            return File.Exists(CombineToPhysicalPath(path));
         }
 
         public IEnumerable<string> ListFiles(string path) {
-            var directoryPath = Path.Combine(_basePath, path);
+            var directoryPath = CombineToPhysicalPath(path);
             if (!Directory.Exists(directoryPath))
                 return Enumerable.Empty<string>();
 
@@ -41,12 +89,12 @@ namespace Orchard.FileSystems.AppData {
 
             return files.Select(file => {
                                     var fileName = Path.GetFileName(file);
-                                    return Path.Combine(path, fileName);
+                                    return Combine(path, fileName);
                                 });
         }
 
         public IEnumerable<string> ListDirectories(string path) {
-            var directoryPath = Path.Combine(_basePath, path);
+            var directoryPath = CombineToPhysicalPath(path);
             if (!Directory.Exists(directoryPath))
                 return Enumerable.Empty<string>();
 
@@ -54,24 +102,16 @@ namespace Orchard.FileSystems.AppData {
 
             return files.Select(file => {
                                     var fileName = Path.GetFileName(file);
-                                    return Path.Combine(path, fileName);
+                                    return Combine(path, fileName);
                                 });
         }
 
-        public string CreateDirectory(string path) {
-            var directory = Path.Combine(_basePath, path);
-            if (!Directory.Exists(directory))
-                Directory.CreateDirectory(directory);
-            return directory;
-        }
-
-        public void SetBasePath(string basePath) {
-            _basePath = basePath;
+        public void CreateDirectory(string path) {
+            Directory.CreateDirectory(CombineToPhysicalPath(path));
         }
 
         public string MapPath(string path) {
-            return Path.Combine(_basePath, path);
+            return CombineToPhysicalPath(path);
         }
-
     }
 }

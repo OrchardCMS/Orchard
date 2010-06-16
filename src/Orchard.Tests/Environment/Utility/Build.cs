@@ -1,11 +1,11 @@
 using System.Linq;
 using Orchard.Environment.Extensions.Models;
-using Orchard.Environment.Topology.Models;
+using Orchard.Environment.Descriptor.Models;
 
 namespace Orchard.Tests.Environment.Utility {
     static class Build {
 
-        public static ShellDescriptor TopologyDescriptor() {
+        public static ShellDescriptor ShellDescriptor() {
             var descriptor = new ShellDescriptor {
                                                              Features = Enumerable.Empty<ShellFeature>(),
                                                              Parameters = Enumerable.Empty<ShellParameter>(),

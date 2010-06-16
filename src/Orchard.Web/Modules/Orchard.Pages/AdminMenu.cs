@@ -24,7 +24,7 @@ namespace Orchard.Pages {
                          item =>
                          item.Action("List", "Admin", new {area = "Orchard.Pages"}).Permission(Permissions.MetaListPages));
 
-            menu.Add(T("Add New Page"), "1.1",
+            menu.Add(T("Create New Page"), "1.1",
                      item =>
                      item.Action("Create", "Admin", new {area = "Orchard.Pages"}).Permission(Permissions.EditPages));
         }

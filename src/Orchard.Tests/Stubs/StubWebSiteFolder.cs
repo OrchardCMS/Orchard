@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -21,7 +22,15 @@ namespace Orchard.Tests.Stubs {
         }
 
         public IVolatileToken WhenPathChanges(string path) {
-            return new WebSiteFolder.Token(path);
+            return new Token {IsCurrent = true};
+        }
+
+        public void WhenPathChanges(string path, Action action) {
+            throw new NotImplementedException();
+        }
+
+        public class Token : IVolatileToken {
+            public bool IsCurrent { get; set; }
         }
     }
 }

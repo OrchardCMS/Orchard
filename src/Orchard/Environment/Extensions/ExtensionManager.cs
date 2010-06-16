@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Web;
 using ICSharpCode.SharpZipLib.Zip;
 using Orchard.Environment.Extensions.Folders;
 using Orchard.Environment.Extensions.Helpers;
@@ -9,21 +10,16 @@ using Orchard.Environment.Extensions.Loaders;
 using Orchard.Environment.Extensions.Models;
 using Orchard.Localization;
 using Orchard.Logging;
-using System.Web;
 
 namespace Orchard.Environment.Extensions {
     public class ExtensionManager : IExtensionManager {
         private readonly IEnumerable<IExtensionFolders> _folders;
         private readonly IEnumerable<IExtensionLoader> _loaders;
-        private IEnumerable<ExtensionEntry> _activeExtensions;
 
         public Localizer T { get; set; }
         public ILogger Logger { get; set; }
 
-        public ExtensionManager(
-            IEnumerable<IExtensionFolders> folders,
-            IEnumerable<IExtensionLoader> loaders
-            ) {
+        public ExtensionManager(IEnumerable<IExtensionFolders> folders, IEnumerable<IExtensionLoader> loaders) {
             _folders = folders;
             _loaders = loaders.OrderBy(x => x.Order);
             T = NullLocalizer.Instance;
@@ -33,7 +29,16 @@ namespace Orchard.Environment.Extensions {
         // This method does not load extension types, simply parses extension manifests from 
         // the filesystem. 
         public IEnumerable<ExtensionDescriptor> AvailableExtensions() {
-            return _folders.SelectMany(folder=>folder.AvailableExtensions());
+            return _folders.SelectMany(folder => folder.AvailableExtensions());
+        }
+
+        private IEnumerable<ExtensionEntry> LoadedModules() {
+            foreach (var descriptor in AvailableExtensions()) {
+                // Extensions that are Themes don't have buildable components.
+                if (String.Equals(descriptor.ExtensionType, "Module", StringComparison.OrdinalIgnoreCase)) {
+                    yield return BuildEntry(descriptor);
+                }
+            }
         }
 
         public IEnumerable<Feature> LoadFeatures(IEnumerable<FeatureDescriptor> featureDescriptors) {
@@ -42,20 +47,15 @@ namespace Orchard.Environment.Extensions {
                 .ToArray();
         }
 
-        // This method loads types from extensions into the ExtensionEntry array.
-        public IEnumerable<ExtensionEntry> ActiveExtensions_Obsolete() {
-            if (_activeExtensions == null) {
-                _activeExtensions = BuildActiveExtensions().ToList();
-            }
-            return _activeExtensions;
-        }
-
         private Feature LoadFeature(FeatureDescriptor featureDescriptor) {
             var featureName = featureDescriptor.Name;
             string extensionName = GetExtensionForFeature(featureName);
-            if (extensionName == null) throw new ArgumentException(T("Feature {0} was not found in any of the installed extensions", featureName).ToString());
-            var extension = BuildActiveExtensions().Where(x => x.Descriptor.Name == extensionName).FirstOrDefault();
-            if (extension == null) throw new InvalidOperationException(T("Extension ") + extensionName + T(" is not active"));
+            if (extensionName == null)
+                throw new ArgumentException(T("Feature {0} was not found in any of the installed extensions", featureName).ToString());
+
+            var extension = LoadedModules().Where(x => x.Descriptor.Name == extensionName).FirstOrDefault();
+            if (extension == null)
+                throw new InvalidOperationException(T("Extension {0} is not active", extensionName).ToString());
 
             var extensionTypes = extension.ExportedTypes.Where(t => t.IsClass && !t.IsAbstract);
             var featureTypes = new List<Type>();
@@ -153,23 +153,13 @@ namespace Orchard.Environment.Extensions {
             Directory.Delete(targetFolder, true);
         }
 
-        private IEnumerable<ExtensionEntry> BuildActiveExtensions() {
-            foreach (var descriptor in AvailableExtensions()) {
-                // Extensions that are Themes don't have buildable components.
-                if (String.Equals(descriptor.ExtensionType, "Module", StringComparison.OrdinalIgnoreCase)) {
-                    yield return BuildEntry(descriptor);
-                }
-            }
-        }
-
         private ExtensionEntry BuildEntry(ExtensionDescriptor descriptor) {
             foreach (var loader in _loaders) {
-                var entry = loader.Load(descriptor);
+                ExtensionEntry entry = loader.Load(descriptor);
                 if (entry != null)
                     return entry;
             }
             return null;
         }
-
     }
 }

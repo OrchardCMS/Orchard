@@ -15,6 +15,7 @@ namespace Orchard.Core.Contents.Controllers {
             _contentManager = contentManager;
         }
 
+        // /Contents/Item/Display/72
         public ActionResult Display(int id) {
             var contentItem = _contentManager.Get(id, VersionOptions.Published);
 
@@ -25,6 +26,8 @@ namespace Orchard.Core.Contents.Controllers {
             return View("Display", model);
         }
 
+        // /Contents/Item/Preview/72
+        // /Contents/Item/Preview/72?version=5
         public ActionResult Preview(int id, int? version) {
             var versionOptions = VersionOptions.Latest;
             if (version != null) {

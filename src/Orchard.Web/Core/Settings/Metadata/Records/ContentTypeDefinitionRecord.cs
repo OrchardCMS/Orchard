@@ -9,6 +9,7 @@ namespace Orchard.Core.Settings.Metadata.Records {
 
         public virtual int Id { get; set; }
         public virtual string Name { get; set; }
+        public virtual string DisplayName { get; set; }
         public virtual bool Hidden { get; set; }
         public virtual string Settings { get; set; }
 

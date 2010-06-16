@@ -22,7 +22,7 @@ namespace Orchard.DevTools.Controllers {
         }
 
         public ActionResult NotAuthorized() {
-            _notifier.Warning("Simulated error goes here.");
+            _notifier.Warning(T("Simulated error goes here."));
             return new HttpUnauthorizedResult();
         }
 

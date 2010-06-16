@@ -16,7 +16,7 @@ namespace Orchard.Comments.Handlers {
 
             Filters.Add(StorageFilter.For(hasCommentsRepository));
 
-            OnActivated<HasComments>((ctx, x) => {
+            OnInitializing<HasComments>((ctx, x) => {
                 x.CommentsActive = true;
                 x.CommentsShown = true;
             });

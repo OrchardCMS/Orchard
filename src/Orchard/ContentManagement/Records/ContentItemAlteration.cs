@@ -8,19 +8,20 @@ using System.Reflection.Emit;
 using FluentNHibernate.Automapping;
 using FluentNHibernate.Automapping.Alterations;
 using JetBrains.Annotations;
-using Orchard.Environment.Topology;
-using Orchard.Environment.Topology.Models;
+using Orchard.Environment.Descriptor;
+using Orchard.Environment.Descriptor.Models;
+using Orchard.Environment.ShellBuilders.Models;
 
 namespace Orchard.ContentManagement.Records {
     class ContentItemAlteration : IAutoMappingAlteration {
-        private readonly IEnumerable<RecordTopology> _recordDescriptors;
+        private readonly IEnumerable<RecordBlueprint> _recordDescriptors;
 
         [UsedImplicitly]
         public ContentItemAlteration() {
-            _recordDescriptors = Enumerable.Empty<RecordTopology>();
+            _recordDescriptors = Enumerable.Empty<RecordBlueprint>();
         }
 
-        public ContentItemAlteration(IEnumerable<RecordTopology> recordDescriptors) {
+        public ContentItemAlteration(IEnumerable<RecordBlueprint> recordDescriptors) {
             _recordDescriptors = recordDescriptors;
         }
 

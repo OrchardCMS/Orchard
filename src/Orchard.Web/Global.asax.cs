@@ -3,13 +3,12 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Web;
+using System.Web.Hosting;
 using System.Web.Mvc;
 using System.Web.Routing;
 using Autofac;
-using Autofac.Builder;
-using Autofac.Integration.Web;
-using Autofac.Integration.Web.Mvc;
 using Orchard.Environment;
+using Orchard.Environment.Extensions.Loaders;
 
 namespace Orchard.Web {
     // Note: For instructions on enabling IIS6 or IIS7 classic mode, 
@@ -101,6 +100,5 @@ namespace Orchard.Web {
             builder.RegisterInstance(ModelMetadataProviders.Current);
             builder.RegisterInstance(ViewEngines.Engines);
         }
-
     }
 }

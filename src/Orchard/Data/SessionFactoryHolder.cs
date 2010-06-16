@@ -3,8 +3,9 @@ using System.IO;
 using NHibernate;
 using Orchard.Data.Builders;
 using Orchard.Environment.Configuration;
-using Orchard.Environment.Topology;
-using Orchard.Environment.Topology.Models;
+using Orchard.Environment.Descriptor;
+using Orchard.Environment.Descriptor.Models;
+using Orchard.Environment.ShellBuilders.Models;
 using Orchard.FileSystems.AppData;
 using Orchard.Logging;
 
@@ -17,7 +18,7 @@ namespace Orchard.Data {
 
     public class SessionFactoryHolder : ISessionFactoryHolder {
         private readonly ShellSettings _shellSettings;
-        private readonly ShellTopology _shellTopology;
+        private readonly ShellBlueprint _shellBlueprint;
         private readonly ISessionFactoryBuilder _sessionFactoryBuilder;
         private readonly IAppDataFolder _appDataFolder;
 
@@ -25,11 +26,11 @@ namespace Orchard.Data {
 
         public SessionFactoryHolder(
             ShellSettings shellSettings,
-            ShellTopology shellTopology,
+            ShellBlueprint shellBlueprint,
             ISessionFactoryBuilder sessionFactoryBuilder,
             IAppDataFolder appDataFolder) {
             _shellSettings = shellSettings;
-            _shellTopology = shellTopology;
+            _shellBlueprint = shellBlueprint;
             _sessionFactoryBuilder = sessionFactoryBuilder;
             _appDataFolder = appDataFolder;
             Logger = NullLogger.Instance;
@@ -71,15 +72,18 @@ namespace Orchard.Data {
         private ISessionFactory BuildSessionFactory(bool createDatabase, bool updateSchema) {
             Logger.Debug("Building session factory");
 
-            var shellPath = _appDataFolder.CreateDirectory(Path.Combine("Sites", _shellSettings.Name));
+            var shellPath = _appDataFolder.Combine("Sites", _shellSettings.Name);
+            _appDataFolder.CreateDirectory(shellPath);
+
+            var shellFolder = _appDataFolder.MapPath(shellPath);
 
             var sessionFactory = _sessionFactoryBuilder.BuildSessionFactory(new SessionFactoryParameters {
                 Provider = _shellSettings.DataProvider,
-                DataFolder = shellPath,
+                DataFolder = shellFolder,
                 ConnectionString = _shellSettings.DataConnectionString,
                 CreateDatabase = createDatabase,
                 UpdateSchema = updateSchema,
-                RecordDescriptors = _shellTopology.Records,
+                RecordDescriptors = _shellBlueprint.Records,
             });
 
             return sessionFactory;

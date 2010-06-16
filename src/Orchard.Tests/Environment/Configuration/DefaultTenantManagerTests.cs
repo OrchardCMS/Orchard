@@ -2,21 +2,25 @@
 using System.Linq;
 using Moq;
 using NUnit.Framework;
+using Orchard.Environment;
 using Orchard.Environment.Configuration;
 using Orchard.FileSystems.AppData;
+using Orchard.FileSystems.VirtualPath;
+using Orchard.Services;
+using Orchard.Tests.FileSystems.AppData;
 
 namespace Orchard.Tests.Environment.Configuration {
     [TestFixture]
     public class DefaultTenantManagerTests {
         private string _tempFolder;
-        private AppDataFolder _appData;
+        private IAppDataFolder _appData;
 
         [SetUp]
         public void Init() {
-            _appData = new AppDataFolder();
             _tempFolder = Path.GetTempFileName();
             File.Delete(_tempFolder);
-            _appData.SetBasePath(_tempFolder);
+
+            _appData = AppDataFolderTests.CreateAppDataFolder(_tempFolder);
         }
         [TearDown]
         public void Term() {

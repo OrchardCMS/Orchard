@@ -4,7 +4,6 @@ using System.Web;
 using Orchard.Comments.Models;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.MetaData;
-using Orchard.ContentManagement.MetaData.Builders;
 using Orchard.Core.Common.Models;
 using Orchard.Core.Navigation.Models;
 using Orchard.Core.Settings.Models;
@@ -12,10 +11,9 @@ using Orchard.Data;
 using Orchard.Environment;
 using Orchard.Environment.Configuration;
 using Orchard.Environment.ShellBuilders;
-using Orchard.Environment.Topology;
-using Orchard.Environment.Topology.Models;
+using Orchard.Environment.Descriptor;
+using Orchard.Environment.Descriptor.Models;
 using Orchard.Localization;
-using Orchard.ContentManagement.MetaData.Services;
 using Orchard.Localization.Services;
 using Orchard.Security;
 using Orchard.Settings;
@@ -149,9 +147,9 @@ namespace Orchard.Setup.Services {
                     //hackInstallationGenerator.GenerateInstallEvents();
 
                     var contentDefinitionManager = environment.Resolve<IContentDefinitionManager>();
-                    contentDefinitionManager.AlterTypeDefinition("blogpost", cfg => cfg.WithPart("HasComments").WithPart("HasTags").WithPart("Localized"));
-                    contentDefinitionManager.AlterTypeDefinition("page", cfg => cfg.WithPart("HasComments").WithPart("HasTags").WithPart("Localized"));
-                    contentDefinitionManager.AlterTypeDefinition("sandboxpage", cfg => cfg.WithPart("HasComments").WithPart("HasTags").WithPart("Localized"));
+                    contentDefinitionManager.AlterTypeDefinition("blogpost", cfg => cfg.Named("blogpost", "Blog Post").WithPart("HasComments").WithPart("HasTags").WithPart("Localized"));
+                    contentDefinitionManager.AlterTypeDefinition("page", cfg => cfg.Named("page", "Page").WithPart("HasComments").WithPart("HasTags").WithPart("Localized"));
+                    contentDefinitionManager.AlterTypeDefinition("sandboxpage", cfg => cfg.Named("sandboxpage", "Sandbox Page").WithPart("HasComments").WithPart("HasTags").WithPart("Localized"));
 
                     // create home page as a CMS page
                     var page = contentManager.Create("page", VersionOptions.Draft);

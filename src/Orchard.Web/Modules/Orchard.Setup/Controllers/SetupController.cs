@@ -1,24 +1,9 @@
 ﻿using System;
-using System.Linq;
 using System.Web.Mvc;
-using Orchard.Comments.Models;
-using Orchard.ContentManagement;
-using Orchard.Core.Common.Models;
-using Orchard.Core.Navigation.Models;
-using Orchard.Core.Settings.Models;
-using Orchard.Data;
-using Orchard.Environment;
-using Orchard.Environment.Extensions;
-using Orchard.Environment.ShellBuilders;
-using Orchard.Environment.Topology;
-using Orchard.Environment.Topology.Models;
 using Orchard.FileSystems.AppData;
-using Orchard.Security;
-using Orchard.Settings;
 using Orchard.Setup.Services;
 using Orchard.Setup.ViewModels;
 using Orchard.Localization;
-using Orchard.Themes;
 using Orchard.UI.Notify;
 
 namespace Orchard.Setup.Controllers {
@@ -84,7 +69,7 @@ namespace Orchard.Setup.Controllers {
             catch (Exception exception) {
                 _notifier.Error(T("Setup failed:"));
                 for (var scan = exception; scan != null; scan = scan.InnerException) {
-                    _notifier.Error(scan.Message);
+                    _notifier.Error(new LocalizedString(scan.Message));
                 }
                 return IndexViewResult(model);
             }

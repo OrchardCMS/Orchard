@@ -3,6 +3,7 @@ using JetBrains.Annotations;
 using Orchard.ContentManagement.Drivers;
 using Orchard.Data;
 using Orchard.ContentManagement;
+using Orchard.Localization;
 using Orchard.Roles.Models;
 using Orchard.Roles.Services;
 using Orchard.Roles.ViewModels;
@@ -29,6 +30,7 @@ namespace Orchard.Roles.Drivers {
             _notifier = notifier;
             _authenticationService = authenticationService;
             _authorizationService = authorizationService;
+            T = NullLocalizer.Instance;
         }
 
         protected override string Prefix {
@@ -36,6 +38,8 @@ namespace Orchard.Roles.Drivers {
                 return "UserRoles";
             }
         }
+
+        public Localizer T { get; set; }
 
         protected override DriverResult Editor(UserRoles userRoles) {
             // don't show editor without apply roles permission
@@ -75,12 +79,12 @@ namespace Orchard.Roles.Drivers {
                 var targetRoleRecords = model.Roles.Where(x => x.Granted).Select(x => _roleService.GetRole(x.RoleId));
 
                 foreach (var addingRole in targetRoleRecords.Where(x => !currentRoleRecords.Contains(x))) {
-                    _notifier.Warning(string.Format("Adding role {0} to user {1}", addingRole.Name, userRoles.As<IUser>().UserName));
+                    _notifier.Warning(T("Adding role {0} to user {1}", addingRole.Name, userRoles.As<IUser>().UserName));
                     _userRolesRepository.Create(new UserRolesRecord { UserId = model.User.Id, Role = addingRole });
                 }
 
                 foreach (var removingRole in currentUserRoleRecords.Where(x => !targetRoleRecords.Contains(x.Role))) {
-                    _notifier.Warning(string.Format("Removing role {0} from user {1}", removingRole.Role.Name, userRoles.As<IUser>().UserName));
+                    _notifier.Warning(T("Removing role {0} from user {1}", removingRole.Role.Name, userRoles.As<IUser>().UserName));
                     _userRolesRepository.Delete(removingRole);
                 }
 

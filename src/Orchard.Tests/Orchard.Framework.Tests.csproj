@@ -185,10 +185,11 @@
     <Compile Include="Data\StubLocator.cs" />
     <Compile Include="Environment\AutofacUtil\AutofacTests.cs" />
     <Compile Include="Environment\AutofacUtil\DynamicProxy2\DynamicProxyTests.cs" />
+    <Compile Include="Environment\Extensions\ExtensionLoaderCoordinatorTests.cs" />
     <Compile Include="Environment\State\DefaultProcessingEngineTests.cs" />
     <Compile Include="Environment\RunningShellTableTests.cs" />
     <Compile Include="Environment\Utility\Build.cs" />
-    <Compile Include="Environment\Configuration\AppDataFolderTests.cs" />
+    <Compile Include="FileSystems\AppData\AppDataFolderTests.cs" />
     <Compile Include="Environment\Configuration\DefaultTenantManagerTests.cs" />
     <Compile Include="Environment\DefaultCompositionStrategyTests.cs" />
     <Compile Include="Environment\DefaultOrchardHostTests.cs" />
@@ -196,14 +197,18 @@
     <Compile Include="Environment\OrchardStarterTests.cs" />
     <Compile Include="Environment\ShellBuilders\DefaultShellContainerFactoryTests.cs" />
     <Compile Include="Environment\ShellBuilders\DefaultShellContextFactoryTests.cs" />
+    <Compile Include="FileSystems\Dependencies\DependenciesFolderTests.cs" />
     <Compile Include="Localization\CultureManagerTests.cs" />
     <Compile Include="Mvc\Routes\ShellRouteTests.cs" />
     <Compile Include="Mvc\Routes\UrlPrefixTests.cs" />
+    <Compile Include="Stubs\StubFileSystem.cs" />
+    <Compile Include="Stubs\StubAppDataFolder.cs" />
+    <Compile Include="Stubs\StubVirtualPathMonitor.cs" />
     <Compile Include="Stubs\StubCacheManager.cs" />
     <Compile Include="Stubs\StubWebSiteFolder.cs" />
     <Compile Include="Utility\ContainerExtensions.cs" />
     <Compile Include="Environment\TestDependencies\TestDependency.cs" />
-    <Compile Include="Environment\Topology\DefaultShellDescriptorCacheTests.cs" />
+    <Compile Include="Environment\Blueprint\DefaultShellDescriptorCacheTests.cs" />
     <Compile Include="EventsTests.cs" />
     <Compile Include="Events\EventTests.cs" />
     <Compile Include="Environment\Extensions\ExtensionFoldersTests.cs" />
@@ -270,6 +275,7 @@
       <Install>true</Install>
     </BootstrapperPackage>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

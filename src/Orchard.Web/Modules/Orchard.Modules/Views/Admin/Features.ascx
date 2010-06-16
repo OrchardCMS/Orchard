@@ -1,4 +1,5 @@
 ﻿<%@ Control Language="C#" Inherits="Orchard.Mvc.ViewUserControl<FeaturesViewModel>" %>
+<%@ Import Namespace="Orchard.Localization" %>
 <%@ Import Namespace="Orchard.Modules.Extensions" %>
 <%@ Import Namespace="Orchard.Mvc.Html"%>
 <%@ Import Namespace="Orchard.Modules.ViewModels"%>
@@ -11,7 +12,7 @@
 <ul class="features summary-view switchable"><%
     var featureGroups = Model.Features.OrderBy(f => f.Descriptor.Category).GroupBy(f => f.Descriptor.Category);
     foreach (var featureGroup in featureGroups) {
-        var categoryName = featureGroup.First().Descriptor.Category ?? T("Uncategorized");
+        var categoryName = LocalizedString.TextOrDefault(featureGroup.First().Descriptor.Category, T("Uncategorized"));
         var categoryClassName = string.Format("category {0}", Html.Encode(categoryName.ToString().HtmlClassify()));
         if (featureGroup == featureGroups.First())
             categoryClassName += " first";

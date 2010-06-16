@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Orchard.Environment.Configuration;
 using Orchard.Environment.ShellBuilders;
-using Orchard.Environment.Topology.Models;
+using Orchard.Environment.Descriptor.Models;
 using Orchard.Events;
 using Orchard.Logging;
 

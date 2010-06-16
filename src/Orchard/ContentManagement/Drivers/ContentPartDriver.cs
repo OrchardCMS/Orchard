@@ -36,16 +36,16 @@ namespace Orchard.ContentManagement.Drivers {
         protected virtual DriverResult Editor(TContent part, IUpdateModel updater) { return null; }
 
 
-        public ContentPartTemplateResult ContentPartTemplate(object model) {
-            return new ContentPartTemplateResult(model, null, Prefix).Location(Zone);
+        public ContentTemplateResult ContentPartTemplate(object model) {
+            return new ContentTemplateResult(model, null, Prefix).Location(Zone);
         }
 
-        public ContentPartTemplateResult ContentPartTemplate(object model, string template) {
-            return new ContentPartTemplateResult(model, template, Prefix).Location(Zone);
+        public ContentTemplateResult ContentPartTemplate(object model, string template) {
+            return new ContentTemplateResult(model, template, Prefix).Location(Zone);
         }
 
-        public ContentPartTemplateResult ContentPartTemplate(object model, string template, string prefix) {
-            return new ContentPartTemplateResult(model, template, prefix).Location(Zone);
+        public ContentTemplateResult ContentPartTemplate(object model, string template, string prefix) {
+            return new ContentTemplateResult(model, template, prefix).Location(Zone);
         }
 
         public CombinedResult Combined(params DriverResult[] results) {

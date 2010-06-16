@@ -83,9 +83,9 @@ msgstr "Non autorisé à gérer la configuration"
 msgid "Settings updated"
 msgstr "Configuration mise à jour"
 
-#: ~/Core/Settings/Topology/ShellDescriptorManager.cs
-#| msgid : "Invalid serial number for shell topology"
-msgid "Invalid serial number for shell topology"
+#: ~/Core/Settings/Descriptor/ShellDescriptorManager.cs
+#| msgid : "Invalid serial number for shell descriptor"
+msgid "Invalid serial number for shell descriptor"
 msgstr "Numéro de série de topologie de shell invalide."
 
 #: ~/Core/Settings/Views/Admin/Index.ascx

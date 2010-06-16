@@ -69,10 +69,22 @@
     <Compile Include="Common\Drivers\CommonDriver.cs" />
     <Compile Include="Common\Drivers\RoutableDriver.cs" />
     <Compile Include="Common\Controllers\RoutableController.cs" />
+    <Compile Include="Common\Drivers\TextContentFieldDriver.cs" />
+    <Compile Include="Common\Fields\TextContentField.cs" />
     <Compile Include="Common\Handlers\RoutableAspectHandler.cs" />
+    <Compile Include="Common\Handlers\TextContentFieldHandler.cs" />
     <Compile Include="Common\ViewModels\ContainerEditorViewModel.cs" />
+    <Compile Include="Common\ViewModels\TextContentFieldDisplayViewModel.cs" />
+    <Compile Include="Common\ViewModels\TextContentFieldEditorViewModel.cs" />
+    <Compile Include="Contents\ContentTypeDefinitionStub.cs" />
     <Compile Include="Contents\Controllers\ItemController.cs" />
     <Compile Include="Contents\Handlers\ContentsModuleHandler.cs" />
+    <Compile Include="Contents\Permissions.cs" />
+    <Compile Include="Contents\Services\ContentDefinitionService.cs" />
+    <Compile Include="Contents\Services\IContentDefinitionService.cs" />
+    <Compile Include="Contents\ViewModels\CreateTypeViewModel.cs" />
+    <Compile Include="Contents\ViewModels\ListContentsViewModel.cs" />
+    <Compile Include="Contents\ViewModels\ListContentTypesViewModel.cs" />
     <Compile Include="Localization\Drivers\LocalizedDriver.cs" />
     <Compile Include="Routable\Controllers\ItemController.cs" />
     <Compile Include="Routable\Drivers\RoutableDriver.cs" />
@@ -100,9 +112,7 @@
     <Compile Include="Contents\AdminMenu.cs" />
     <Compile Include="Contents\Controllers\AdminController.cs" />
     <Compile Include="Contents\ViewModels\CreateItemViewModel.cs" />
-    <Compile Include="Contents\ViewModels\ContentTypeListViewModel.cs" />
     <Compile Include="Contents\ViewModels\EditItemViewModel.cs" />
-    <Compile Include="Contents\ViewModels\ListContentViewModel.cs" />
     <Compile Include="Dashboard\AdminMenu.cs" />
     <Compile Include="Dashboard\Controllers\AdminController.cs" />
     <Compile Include="Dashboard\Routes.cs" />
@@ -182,10 +192,10 @@
     <Compile Include="Settings\State\Records\ShellFeatureStateRecord.cs" />
     <Compile Include="Settings\State\Records\ShellStateRecord.cs" />
     <Compile Include="Settings\State\ShellStateManager.cs" />
-    <Compile Include="Settings\Topology\Records\ShellFeatureRecord.cs" />
-    <Compile Include="Settings\Topology\Records\ShellParameterRecord.cs" />
-    <Compile Include="Settings\Topology\Records\ShellDescriptorRecord.cs" />
-    <Compile Include="Settings\Topology\ShellDescriptorManager.cs" />
+    <Compile Include="Settings\Descriptor\Records\ShellFeatureRecord.cs" />
+    <Compile Include="Settings\Descriptor\Records\ShellParameterRecord.cs" />
+    <Compile Include="Settings\Descriptor\Records\ShellDescriptorRecord.cs" />
+    <Compile Include="Settings\Descriptor\ShellDescriptorManager.cs" />
     <Compile Include="Settings\AdminMenu.cs" />
     <Compile Include="Settings\Controllers\AdminController.cs" />
     <Compile Include="Settings\Handlers\SiteSettingsHandler.cs" />
@@ -207,13 +217,17 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Common\Module.txt" />
+    <Content Include="Common\Views\DisplayTemplates\Fields\Common.TextContentField.ascx" />
     <Content Include="Common\Views\EditorTemplates\Parts\Common.Container.ascx" />
+    <Content Include="Common\Views\EditorTemplates\Parts\Common.TextContentField.ascx" />
     <Content Include="Contents\Module.txt" />
-    <Content Include="Contents\Views\Admin\Types.aspx" />
+    <Content Include="Contents\Views\Admin\CreateType.ascx" />
+    <Content Include="Contents\Views\Admin\Types.ascx" />
     <Content Include="Contents\Views\Admin\List.aspx" />
     <Content Include="Contents\Views\Admin\Edit.aspx" />
     <Content Include="Contents\Views\Admin\CreatableTypeList.aspx" />
     <Content Include="Contents\Views\Admin\Create.aspx" />
+    <Content Include="Contents\Views\DisplayTemplates\ContentTypeDefinition.ascx" />
     <Content Include="Contents\Views\DisplayTemplates\Items\Contents.Item.ascx" />
     <Content Include="Contents\Views\EditorTemplates\Items\Contents.Item.ascx" />
     <Content Include="Contents\Views\Item\Preview.aspx" />

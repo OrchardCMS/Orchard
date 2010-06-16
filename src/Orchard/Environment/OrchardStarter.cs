@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Configuration;
 using System.IO;
 using System.Web.Hosting;
@@ -12,10 +13,11 @@ using Orchard.Environment.Extensions.Folders;
 using Orchard.Environment.Extensions.Loaders;
 using Orchard.Environment.ShellBuilders;
 using Orchard.Environment.State;
-using Orchard.Environment.Topology;
+using Orchard.Environment.Descriptor;
 using Orchard.Events;
 using Orchard.FileSystems.AppData;
 using Orchard.FileSystems.Dependencies;
+using Orchard.FileSystems.VirtualPath;
 using Orchard.FileSystems.WebSite;
 using Orchard.Logging;
 using Orchard.Services;
@@ -33,11 +35,14 @@ namespace Orchard.Environment {
             builder.RegisterType<DefaultCacheHolder>().As<ICacheHolder>().SingleInstance();
             builder.RegisterType<DefaultHostEnvironment>().As<IHostEnvironment>().SingleInstance();
             builder.RegisterType<DefaultBuildManager>().As<IBuildManager>().SingleInstance();
+            builder.RegisterType<WebFormsExtensionsVirtualPathProvider>().As<ICustomVirtualPathProvider>().SingleInstance();
+            builder.RegisterType<AppDataFolderRoot>().As<IAppDataFolderRoot>().SingleInstance();
 
             RegisterVolatileProvider<WebSiteFolder, IWebSiteFolder>(builder);
             RegisterVolatileProvider<AppDataFolder, IAppDataFolder>(builder);
             RegisterVolatileProvider<Clock, IClock>(builder);
             RegisterVolatileProvider<DefaultDependenciesFolder, IDependenciesFolder>(builder);
+            RegisterVolatileProvider<DefaultVirtualPathMonitor, IVirtualPathMonitor>(builder);
             RegisterVolatileProvider<DefaultVirtualPathProvider, IVirtualPathProvider>(builder);
 
             builder.RegisterType<DefaultOrchardHost>().As<IOrchardHost>().As<IEventHandler>().SingleInstance();
@@ -52,6 +57,7 @@ namespace Orchard.Environment {
                         .As<ICompositionStrategy>()
                         .SingleInstance();
                     {
+                        builder.RegisterType<ExtensionLoaderCoordinator>().As<IExtensionLoaderCoordinator>().SingleInstance();
                         builder.RegisterType<ExtensionManager>().As<IExtensionManager>().SingleInstance();
                         {
                             builder.RegisterType<ModuleFolders>().As<IExtensionFolders>()
@@ -117,6 +123,16 @@ namespace Orchard.Environment {
 
         public static IOrchardHost CreateHost(Action<ContainerBuilder> registrations) {
             var container = CreateHostContainer(registrations);
+
+            //
+            // Register Virtual Path Providers
+            //
+            if (HostingEnvironment.IsHosted) {
+                foreach (var vpp in container.Resolve<IEnumerable<ICustomVirtualPathProvider>>()) {
+                    HostingEnvironment.RegisterVirtualPathProvider(vpp.Instance);
+                }
+            }
+
             return container.Resolve<IOrchardHost>();
         }
     }

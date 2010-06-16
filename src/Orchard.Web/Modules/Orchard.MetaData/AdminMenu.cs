@@ -10,9 +10,9 @@ namespace Orchard.MetaData {
 
         public void GetNavigation(NavigationBuilder builder)
         {
-            builder.Add(T("Content Types"), "5",
+            builder.Add(T("Site Configuration"), "11",
                         menu => menu
-                                    .Add(T("Content Types"), "1.0", item => item.Action("ContentTypeList", "Admin", new { area = "Orchard.MetaData" }).Permission(Permissions.ManageMetaData))
+                                    .Add(T("Content Types (metadata)"), "3.1", item => item.Action("ContentTypeList", "Admin", new { area = "Orchard.MetaData" }).Permission(Permissions.ManageMetaData))
                                     );
         }
 

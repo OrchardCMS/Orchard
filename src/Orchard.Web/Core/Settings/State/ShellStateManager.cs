@@ -3,7 +3,7 @@ using Orchard.Core.Settings.State.Records;
 using Orchard.Data;
 using Orchard.Environment.State;
 using Orchard.Environment.State.Models;
-using Orchard.Environment.Topology;
+using Orchard.Environment.Descriptor;
 using Orchard.Logging;
 
 namespace Orchard.Core.Settings.State {

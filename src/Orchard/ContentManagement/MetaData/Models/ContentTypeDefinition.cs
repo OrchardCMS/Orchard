@@ -3,8 +3,9 @@ using System.Linq;
 
 namespace Orchard.ContentManagement.MetaData.Models {
     public class ContentTypeDefinition {
-        public ContentTypeDefinition(string name, IEnumerable<Part> parts, IDictionary<string, string> settings) {
+        public ContentTypeDefinition(string name, string displayName, IEnumerable<Part> parts, IDictionary<string, string> settings) {
             Name = name;
+            DisplayName = displayName;
             Parts = parts;
             Settings = settings;
         }
@@ -16,6 +17,7 @@ namespace Orchard.ContentManagement.MetaData.Models {
         }
 
         public string Name { get; private set; }
+        public string DisplayName { get; set; }
         public IEnumerable<Part> Parts { get; private set; }
         public IDictionary<string, string> Settings { get; private set; }
 

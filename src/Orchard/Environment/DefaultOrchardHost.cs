@@ -1,16 +1,14 @@
-using System;
 using System.Linq;
 using System.Threading;
 using System.Web.Mvc;
-using Autofac;
 using System.Collections.Generic;
-using Autofac.Features.OwnedInstances;
+using Orchard.Caching;
 using Orchard.Environment.Configuration;
 using Orchard.Environment.Extensions;
 using Orchard.Environment.ShellBuilders;
 using Orchard.Environment.State;
-using Orchard.Environment.Topology;
-using Orchard.Environment.Topology.Models;
+using Orchard.Environment.Descriptor;
+using Orchard.Environment.Descriptor.Models;
 using Orchard.Logging;
 using Orchard.Mvc;
 using Orchard.Mvc.ViewEngines;
@@ -24,6 +22,9 @@ namespace Orchard.Environment {
         private readonly IShellContextFactory _shellContextFactory;
         private readonly IRunningShellTable _runningShellTable;
         private readonly IProcessingEngine _processingEngine;
+        private readonly IExtensionManager _extensionManager;
+        private readonly IExtensionLoaderCoordinator _extensionLoaderCoordinator;
+        private readonly ICacheManager _cacheManager;
 
         private IEnumerable<ShellContext> _current;
 
@@ -32,12 +33,17 @@ namespace Orchard.Environment {
             IShellContextFactory shellContextFactory,
             IRunningShellTable runningShellTable,
             IProcessingEngine processingEngine,
+            IExtensionManager extensionManager,
+            IExtensionLoaderCoordinator extensionLoaderCoordinator,
+            ICacheManager cacheManager,
             ControllerBuilder controllerBuilder) {
-            //_containerProvider = containerProvider;
             _shellSettingsManager = shellSettingsManager;
             _shellContextFactory = shellContextFactory;
             _runningShellTable = runningShellTable;
             _processingEngine = processingEngine;
+            _extensionManager = extensionManager;
+            _extensionLoaderCoordinator = extensionLoaderCoordinator;
+            _cacheManager = cacheManager;
             _controllerBuilder = controllerBuilder;
             Logger = NullLogger.Instance;
         }
@@ -75,9 +81,16 @@ namespace Orchard.Environment {
         }
 
         IEnumerable<ShellContext> BuildCurrent() {
-            lock (this) {
-                return _current ?? (_current = CreateAndActivate().ToArray());
+            if (_current == null) {
+                lock (this) {
+                    if (_current == null) {
+                        SetupExtensions();
+                        MonitorExtensions();
+                        _current = CreateAndActivate().ToArray();
+                    }
+                }
             }
+            return _current;
         }
 
         IEnumerable<ShellContext> CreateAndActivate() {
@@ -116,7 +129,21 @@ namespace Orchard.Environment {
             return _shellContextFactory.CreateShellContext(settings);
         }
 
+        private void SetupExtensions() {
+            _extensionLoaderCoordinator.SetupExtensions();
+        }
+
+        private void MonitorExtensions() {
+            _cacheManager.Get("OrchardHost_Extensions",
+                              ctx => {
+                                  _extensionLoaderCoordinator.MonitorExtensions(ctx.Monitor);
+                                  _current = null;
+                                  return "";
+                              });
+        }
+
         protected virtual void BeginRequest() {
+            MonitorExtensions();
             BuildCurrent();
         }
 

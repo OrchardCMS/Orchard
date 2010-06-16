@@ -13,6 +13,9 @@ namespace Orchard.ContentManagement.Handlers {
         public virtual void Activated(ActivatedContentContext context) {
         }
 
+        public virtual void Initializing(InitializingContentContext context) {
+        }
+
         public virtual void Creating(CreateContentContext context) {
         }
 
