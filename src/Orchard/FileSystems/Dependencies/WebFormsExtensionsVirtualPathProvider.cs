@@ -4,18 +4,23 @@ using System.Linq;
 using System.Web.Hosting;
 using Orchard.Environment.Extensions.Loaders;
 using Orchard.FileSystems.VirtualPath;
+using Orchard.Logging;
 
 namespace Orchard.FileSystems.Dependencies {
     public class WebFormsExtensionsVirtualPathProvider : VirtualPathProvider, ICustomVirtualPathProvider {
         private readonly IDependenciesFolder _dependenciesFolder;
         private readonly IEnumerable<IExtensionLoader> _loaders;
-        private readonly string[] _prefixes = { "~/Modules/", "/Modules/" };
+        private readonly string[] _modulesPrefixes = { "~/Modules/", "/Modules/" };
+        private readonly string[] _themesPrefixes = { "~/Themes/", "/Themes/" };
         private readonly string[] _extensions = { ".ascx", ".aspx", ".master" };
 
         public WebFormsExtensionsVirtualPathProvider(IDependenciesFolder dependenciesFolder, IEnumerable<IExtensionLoader> loaders) {
             _dependenciesFolder = dependenciesFolder;
             _loaders = loaders;
+            Logger = NullLogger.Instance;
         }
+
+        public ILogger Logger { get; set; }
 
         public override bool DirectoryExists(string virtualDir) {
             return Previous.DirectoryExists(virtualDir);
@@ -28,11 +33,14 @@ namespace Orchard.FileSystems.Dependencies {
         public override VirtualFile GetFile(string virtualPath) {
             var actualFile = Previous.GetFile(virtualPath);
 
-            return GetCustomVirtualFile(virtualPath, actualFile) ?? actualFile;
+            return 
+                GetModuleCustomVirtualFile(virtualPath, actualFile) ??
+                GetThemeCustomVirtualFile(virtualPath, actualFile) ??
+                actualFile;
         }
 
-        private VirtualFile GetCustomVirtualFile(string virtualPath, VirtualFile actualFile) {
-            var prefix = PrefixMatch(virtualPath, _prefixes);
+        private VirtualFile GetModuleCustomVirtualFile(string virtualPath, VirtualFile actualFile) {
+            var prefix = PrefixMatch(virtualPath, _modulesPrefixes);
             if (prefix == null)
                 return null;
 
@@ -55,6 +63,41 @@ namespace Orchard.FileSystems.Dependencies {
             var directive = loader.GetAssemblyDirective(dependencyDescriptor);
             if (string.IsNullOrEmpty(directive))
                 return null;
+
+            if (Logger.IsEnabled(LogLevel.Debug)) {
+                Logger.Debug("Virtual file from module \"{0}\" served with specific assembly directive:", moduleName);
+                Logger.Debug("  Virtual path:       {0}", virtualPath);
+                Logger.Debug("  Assembly directive: {0}", directive);
+            }
+
+            return new WebFormsExtensionsVirtualFile(virtualPath, actualFile, directive);
+        }
+
+        private VirtualFile GetThemeCustomVirtualFile(string virtualPath, VirtualFile actualFile) {
+            var prefix = PrefixMatch(virtualPath, _themesPrefixes);
+            if (prefix == null)
+                return null;
+
+            var extension = ExtensionMatch(virtualPath, _extensions);
+            if (extension == null)
+                return null;
+
+            string directive = _dependenciesFolder.LoadDescriptors().Aggregate("", (s, desc) => {
+                var loader = _loaders.Where(l => l.Name == desc.LoaderName).FirstOrDefault();
+                if (loader == null)
+                    return s;
+                else {
+                    return s + loader.GetAssemblyDirective(desc);
+                }});
+
+            if (string.IsNullOrEmpty(directive))
+                return null;
+
+            if (Logger.IsEnabled(LogLevel.Debug)) {
+                Logger.Debug("Virtual file from theme served with specific assembly directive:");
+                Logger.Debug("  Virtual path:       {0}", virtualPath);
+                Logger.Debug("  Assembly directive: {0}", directive);
+            }
 
             return new WebFormsExtensionsVirtualFile(virtualPath, actualFile, directive);
         }
