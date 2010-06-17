@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Web.Hosting;
 using Orchard.Caching;
 using Orchard.FileSystems.VirtualPath;
 using Orchard.Localization;
@@ -29,7 +28,7 @@ namespace Orchard.FileSystems.AppData {
             }
         }
 
-        public string _appDataPath {
+        public string AppDataPath {
             get {
                 return _root.RootPath;
             }
@@ -66,7 +65,7 @@ namespace Orchard.FileSystems.AppData {
             }
 
             // Everything failed, throw an exception
-            throw new OrchardException(T("Unable to make room for file {0} in \"App_Data\" folder: too many conflicts.", destinationFileName).Text);
+            throw new OrchardException(T("Unable to make room for file \"{0}\" in \"App_Data\" folder: too many conflicts.", destinationFileName).Text);
         }
 
         /// <summary>
@@ -86,7 +85,7 @@ namespace Orchard.FileSystems.AppData {
         }
 
         public IVolatileToken WhenPathChanges(string path) {
-            var replace = Combine(_appDataPath, path);
+            var replace = Combine(AppDataPath, path);
             return _virtualPathMonitor.WhenPathChanges(replace);
         }
 
@@ -115,7 +114,7 @@ namespace Orchard.FileSystems.AppData {
         }
 
         public void StoreFile(string sourceFileName, string destinationPath) {
-            Logger.Information("Storing file \"{0}\" as \"{1}\" in App_Data folder", sourceFileName, destinationPath);
+            Logger.Information("Storing file \"{0}\" as \"{1}\" in \"App_Data\" folder", sourceFileName, destinationPath);
 
             var destinationFileName = CombineToPhysicalPath(destinationPath);
             MakeDestinationFileNameAvailable(destinationFileName);
@@ -123,9 +122,8 @@ namespace Orchard.FileSystems.AppData {
         }
 
         public void DeleteFile(string path) {
-            Logger.Information("Deleting file \"{0}\" from App_Data folder", path);
-
-            File.Delete(CombineToPhysicalPath(path));
+            Logger.Information("Deleting file \"{0}\" from \"App_Data\" folder", path);
+            MakeDestinationFileNameAvailable(CombineToPhysicalPath(path));
         }
 
         public DateTime GetFileLastWriteTimeUtc(string path) {
