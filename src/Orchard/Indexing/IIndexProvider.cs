@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Orchard.ContentManagement;
 
 namespace Orchard.Indexing {
     public interface IIndexProvider : IDependency {
@@ -32,17 +33,17 @@ namespace Orchard.Indexing {
         /// Creates an empty document
         /// </summary>
         /// <returns></returns>
-        IIndexDocument New(int documentId);
+        IDocumentIndex New(int documentId);
 
         /// <summary>
         /// Adds a new document to the index
         /// </summary>
-        void Store(string indexName, IIndexDocument indexDocument);
+        void Store(string indexName, IDocumentIndex indexDocument);
 
         /// <summary>
         /// Adds a set of new document to the index
         /// </summary>
-        void Store(string indexName, IEnumerable<IIndexDocument> indexDocuments);
+        void Store(string indexName, IEnumerable<IDocumentIndex> indexDocuments);
 
         /// <summary>
         /// Removes an existing document from the index

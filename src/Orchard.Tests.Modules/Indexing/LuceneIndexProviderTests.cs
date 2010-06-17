@@ -3,18 +3,14 @@ using System.IO;
 using System.Linq;
 using Autofac;
 using NUnit.Framework;
-using Orchard.Environment;
 using Orchard.Environment.Configuration;
 using Orchard.FileSystems.AppData;
-using Orchard.FileSystems.VirtualPath;
 using Orchard.Indexing;
-using Orchard.Core.Indexing.Lucene;
-using Orchard.Services;
-using Orchard.Tests.Environment.Configuration;
+using Orchard.Indexing.Services;
 using Orchard.Tests.FileSystems.AppData;
 
-namespace Orchard.Tests.Indexing {
-    public class DefaultIndexProviderTests {
+namespace Orchard.Tests.Modules.Indexing {
+    public class LuceneIndexProviderTests {
         private IContainer _container;
         private IIndexProvider _provider;
         private IAppDataFolder _appDataFolder;
@@ -36,7 +32,7 @@ namespace Orchard.Tests.Indexing {
             _appDataFolder = AppDataFolderTests.CreateAppDataFolder(_basePath);
 
             var builder = new ContainerBuilder();
-            builder.RegisterType<DefaultIndexProvider>().As<IIndexProvider>();
+            builder.RegisterType<LuceneIndexProvider>().As<IIndexProvider>();
             builder.RegisterInstance(_appDataFolder).As<IAppDataFolder>();
 
             // setting up a ShellSettings instance
@@ -111,7 +107,7 @@ namespace Orchard.Tests.Indexing {
 
             var hit = searchBuilder.Get(42);
             Assert.IsNotNull(hit);
-            Assert.That(hit.Id, Is.EqualTo(42));
+            Assert.That(hit.ContentItemId, Is.EqualTo(42));
 
             hit = searchBuilder.Get(1);
             Assert.IsNull(hit);
@@ -120,12 +116,12 @@ namespace Orchard.Tests.Indexing {
         [Test]
         public void PropertiesShouldNotBeLost() {
             _provider.CreateIndex("default");
-            _provider.Store("default", _provider.New(42).Add("prop1", "value1"));
+            _provider.Store("default", _provider.New(42).Add("prop1", "value1").Store());
 
             var hit = _provider.CreateSearchBuilder("default").Get(42);
             
             Assert.IsNotNull(hit);
-            Assert.That(hit.Id, Is.EqualTo(42));
+            Assert.That(hit.ContentItemId, Is.EqualTo(42));
             Assert.That(hit.GetString("prop1"), Is.EqualTo("value1"));
             
         }
@@ -160,21 +156,21 @@ namespace Orchard.Tests.Indexing {
 
             var searchBuilder = _provider.CreateSearchBuilder("default");
 
-            Assert.That(searchBuilder.Get(1).Id, Is.EqualTo(1));
-            Assert.That(searchBuilder.Get(11).Id, Is.EqualTo(11));
-            Assert.That(searchBuilder.Get(111).Id, Is.EqualTo(111));
+            Assert.That(searchBuilder.Get(1).ContentItemId, Is.EqualTo(1));
+            Assert.That(searchBuilder.Get(11).ContentItemId, Is.EqualTo(11));
+            Assert.That(searchBuilder.Get(111).ContentItemId, Is.EqualTo(111));
         }
         
         [Test]
         public void TagsShouldBeRemoved() {
             _provider.CreateIndex("default");
-            _provider.Store("default", _provider.New(1).Add("body", "<hr>some content</hr>"));
-            _provider.Store("default", _provider.New(2).Add("body", "<hr>some content</hr>", true));
+            _provider.Store("default", _provider.New(1).Add("body", "<hr>some content</hr>").Analyze());
+            _provider.Store("default", _provider.New(2).Add("body", "<hr>some content</hr>", true).Analyze());
 
             var searchBuilder = _provider.CreateSearchBuilder("default");
 
             Assert.That(searchBuilder.WithField("body", "hr").Search().Count(), Is.EqualTo(1));
-            Assert.That(searchBuilder.WithField("body", "hr").Search().First().Id, Is.EqualTo(1));
+            Assert.That(searchBuilder.WithField("body", "hr").Search().First().ContentItemId, Is.EqualTo(1));
         }
 
         [Test] public void ShouldAllowNullOrEmptyStrings() {
@@ -185,21 +181,21 @@ namespace Orchard.Tests.Indexing {
 
             var searchBuilder = _provider.CreateSearchBuilder("default");
 
-            Assert.That(searchBuilder.Get(1).Id, Is.EqualTo(1));
-            Assert.That(searchBuilder.Get(2).Id, Is.EqualTo(2));
-            Assert.That(searchBuilder.Get(3).Id, Is.EqualTo(3));
+            Assert.That(searchBuilder.Get(1).ContentItemId, Is.EqualTo(1));
+            Assert.That(searchBuilder.Get(2).ContentItemId, Is.EqualTo(2));
+            Assert.That(searchBuilder.Get(3).ContentItemId, Is.EqualTo(3));
         }
 
         [Test]
         public void ProviderShouldStoreSettings() {
             _provider.CreateIndex("default");
-            Assert.That(_provider.GetLastIndexUtc("default"), Is.EqualTo(DefaultIndexProvider.DefaultMinDateTime));
+            Assert.That(_provider.GetLastIndexUtc("default"), Is.EqualTo(LuceneIndexProvider.DefaultMinDateTime));
 
             _provider.SetLastIndexUtc("default", new DateTime(2010, 1, 1, 1, 1, 1, 1));
             Assert.That(_provider.GetLastIndexUtc("default"), Is.EqualTo(new DateTime(2010, 1, 1, 1, 1, 1, 0)));
 
             _provider.SetLastIndexUtc("default", new DateTime(1901, 1, 1, 1, 1, 1, 1));
-            Assert.That(_provider.GetLastIndexUtc("default"), Is.EqualTo(DefaultIndexProvider.DefaultMinDateTime));
+            Assert.That(_provider.GetLastIndexUtc("default"), Is.EqualTo(LuceneIndexProvider.DefaultMinDateTime));
         }
 
         [Test]
@@ -223,14 +219,14 @@ namespace Orchard.Tests.Indexing {
 
         [Test]
         public void IsDirtyShouldBeFalseForNewDocuments() {
-            IIndexDocument doc = _provider.New(1);
+            IDocumentIndex doc = _provider.New(1);
             Assert.That(doc.IsDirty, Is.False);
         }
 
 
         [Test]
         public void IsDirtyShouldBeTrueWhenIndexIsModified() {
-            IIndexDocument doc;
+            IDocumentIndex doc;
             
             doc = _provider.New(1);
             doc.Add("foo", "value");

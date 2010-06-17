@@ -2,7 +2,7 @@ using System;
 using Orchard.ContentManagement;
 using Orchard.Tasks.Indexing;
 
-namespace Orchard.Core.Indexing.Models {
+namespace Orchard.Indexing.Models {
     public class IndexingTask : IIndexingTask {
         private readonly IContentManager _contentManager;
         private readonly IndexingTaskRecord _record;

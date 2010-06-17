@@ -1,7 +1,7 @@
 ﻿using System;
 using Orchard.ContentManagement.Records;
 
-namespace Orchard.Core.Indexing.Models {
+namespace Orchard.Indexing.Models {
     public class IndexingTaskRecord {
 
         public const int Update = 0;

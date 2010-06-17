@@ -131,6 +131,10 @@
       <Project>{67C1D3AF-A0EC-46B2-BAE1-DF1DA8E0B890}</Project>
       <Name>Orchard.DevTools</Name>
     </ProjectReference>
+    <ProjectReference Include="Modules\Orchard.Indexing\Orchard.Indexing.csproj">
+      <Project>{EA2B9121-EF54-40A6-A53E-6593C86EE696}</Project>
+      <Name>Orchard.Indexing</Name>
+    </ProjectReference>
     <ProjectReference Include="Modules\Orchard.Media\Orchard.Media.csproj">
       <Project>{D9A7B330-CD22-4DA1-A95A-8DE1982AD8EB}</Project>
       <Name>Orchard.Media</Name>

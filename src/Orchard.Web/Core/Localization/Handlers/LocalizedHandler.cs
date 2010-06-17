@@ -1,4 +1,5 @@
-﻿using JetBrains.Annotations;
+﻿using System.Globalization;
+using JetBrains.Annotations;
 using Orchard.Core.Localization.Models;
 using Orchard.Data;
 using Orchard.Localization;
@@ -23,7 +24,10 @@ namespace Orchard.Core.Localization.Handlers {
 
             OnLoaded<Localized>(LazyLoadHandlers);
 
-            OnIndexed<Localized>((context, localized) => context.IndexDocument.Add("culture", localized.Culture != null ? localized.Culture.Culture : _cultureManager.GetSiteCulture()).Store(false).Analyze(false));
+            OnIndexed<Localized>((context, localized) => context.DocumentIndex
+                .Add("culture", CultureInfo.GetCultureInfo(localized.Culture != null ? localized.Culture.Culture : _cultureManager.GetSiteCulture()).LCID)
+                .Store()
+                );
         }
 
         public Localizer T { get; set; }

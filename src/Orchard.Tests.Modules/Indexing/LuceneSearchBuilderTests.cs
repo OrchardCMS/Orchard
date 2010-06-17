@@ -6,11 +6,11 @@ using NUnit.Framework;
 using Orchard.Environment.Configuration;
 using Orchard.FileSystems.AppData;
 using Orchard.Indexing;
-using Orchard.Core.Indexing.Lucene;
+using Orchard.Indexing.Services;
 using Orchard.Tests.FileSystems.AppData;
 
-namespace Orchard.Core.Tests.Indexing {
-    public class DefaultSearchBuilderTests {
+namespace Orchard.Tests.Modules.Indexing {
+    public class LuceneSearchBuilderTests {
         private IContainer _container;
         private IIndexProvider _provider;
         private IAppDataFolder _appDataFolder;
@@ -32,7 +32,7 @@ namespace Orchard.Core.Tests.Indexing {
             _appDataFolder = AppDataFolderTests.CreateAppDataFolder(_basePath);
 
             var builder = new ContainerBuilder();
-            builder.RegisterType<DefaultIndexProvider>().As<IIndexProvider>();
+            builder.RegisterType<LuceneIndexProvider>().As<IIndexProvider>();
             builder.RegisterInstance(_appDataFolder).As<IAppDataFolder>();
 
             // setting up a ShellSettings instance
@@ -50,7 +50,7 @@ namespace Orchard.Core.Tests.Indexing {
             _provider.CreateIndex("default");
             _provider.Store("default", 
                 _provider.New(42)
-                    .Add("title", "title1 title2 title3")
+                    .Add("title", "title1 title2 title3").Analyze()
                     .Add("date", new DateTime(2010, 05, 28, 14, 13, 56, 123))
                 );
 
@@ -60,7 +60,6 @@ namespace Orchard.Core.Tests.Indexing {
             Assert.IsNotNull(_provider.CreateSearchBuilder("default").WithField("title", "title2").Search().FirstOrDefault());
             Assert.IsNotNull(_provider.CreateSearchBuilder("default").WithField("title", "title3").Search().FirstOrDefault());
             Assert.IsNull(_provider.CreateSearchBuilder("default").WithField("title", "title4").Search().FirstOrDefault());
-            Assert.IsNotNull(_provider.CreateSearchBuilder("default").WithField("title", "title").Search().FirstOrDefault());
 
         }
 
@@ -72,9 +71,9 @@ namespace Orchard.Core.Tests.Indexing {
             _provider.Store("default", _provider.New(3));
 
 
-            Assert.That(_searchBuilder.Get(1).Id, Is.EqualTo(1));
-            Assert.That(_searchBuilder.Get(2).Id, Is.EqualTo(2));
-            Assert.That(_searchBuilder.Get(3).Id, Is.EqualTo(3));
+            Assert.That(_searchBuilder.Get(1).ContentItemId, Is.EqualTo(1));
+            Assert.That(_searchBuilder.Get(2).ContentItemId, Is.EqualTo(2));
+            Assert.That(_searchBuilder.Get(3).ContentItemId, Is.EqualTo(3));
         }
 
         [Test]
@@ -86,7 +85,7 @@ namespace Orchard.Core.Tests.Indexing {
 
 
             Assert.That(_searchBuilder.WithField("title", "cat").Search().Count(), Is.EqualTo(2));
-            Assert.That(_searchBuilder.WithField("title", "cat").Search().Any(hit => new[] { 1, 3 }.Contains(hit.Id)), Is.True);
+            Assert.That(_searchBuilder.WithField("title", "cat").Search().Any(hit => new[] { 1, 3 }.Contains(hit.ContentItemId)), Is.True);
 
         }
 
@@ -99,8 +98,6 @@ namespace Orchard.Core.Tests.Indexing {
 
             Assert.That(_searchBuilder.WithField("title", "dog").Count(), Is.EqualTo(1));
             Assert.That(_searchBuilder.WithField("title", "cat").Count(), Is.EqualTo(2));
-            Assert.That(_searchBuilder.WithField("title", "c").Count(), Is.EqualTo(2));
-
         }
 
         [Test]
@@ -110,12 +107,12 @@ namespace Orchard.Core.Tests.Indexing {
             _provider.Store("default", _provider.New(2).Add("date", new DateTime(2010, 05, 28, 12, 30, 30)));
             _provider.Store("default", _provider.New(3).Add("date", new DateTime(2010, 05, 28, 12, 30, 45)));
 
-            Assert.That(_searchBuilder.After("date", new DateTime(2010, 05, 28, 12, 30, 15)).Count(), Is.EqualTo(3));
-            Assert.That(_searchBuilder.Before("date", new DateTime(2010, 05, 28, 12, 30, 45)).Count(), Is.EqualTo(3));
-            Assert.That(_searchBuilder.After("date", new DateTime(2010, 05, 28, 12, 30, 15)).Before("date", new DateTime(2010, 05, 28, 12, 30, 45)).Count(), Is.EqualTo(3));
-            Assert.That(_searchBuilder.After("date", new DateTime(2010, 05, 28, 12, 30, 16)).Before("date", new DateTime(2010, 05, 28, 12, 30, 44)).Count(), Is.EqualTo(1));
-            Assert.That(_searchBuilder.After("date", new DateTime(2010, 05, 28, 12, 30, 46)).Count(), Is.EqualTo(0));
-            Assert.That(_searchBuilder.Before("date", new DateTime(2010, 05, 28, 12, 30, 1)).Count(), Is.EqualTo(0));
+            Assert.That(_searchBuilder.WithinRange("date", new DateTime(2010, 05, 28, 12, 30, 15), DateTime.MaxValue).Count(), Is.EqualTo(3));
+            Assert.That(_searchBuilder.WithinRange("date", DateTime.MinValue, new DateTime(2010, 05, 28, 12, 30, 45)).Count(), Is.EqualTo(3));
+            Assert.That(_searchBuilder.WithinRange("date", new DateTime(2010, 05, 28, 12, 30, 15), new DateTime(2010, 05, 28, 12, 30, 45)).Count(), Is.EqualTo(3));
+            Assert.That(_searchBuilder.WithinRange("date", new DateTime(2010, 05, 28, 12, 30, 16), new DateTime(2010, 05, 28, 12, 30, 44)).Count(), Is.EqualTo(1));
+            Assert.That(_searchBuilder.WithinRange("date", new DateTime(2010, 05, 28, 12, 30, 46), DateTime.MaxValue).Count(), Is.EqualTo(0));
+            Assert.That(_searchBuilder.WithinRange("date", DateTime.MinValue, new DateTime(2010, 05, 28, 12, 30, 1)).Count(), Is.EqualTo(0));
         }
 
         [Test]
@@ -143,28 +140,28 @@ namespace Orchard.Core.Tests.Indexing {
         [Test]
         public void ShouldSortByRelevance() {
             _provider.CreateIndex("default");
-            _provider.Store("default", _provider.New(1).Add("body", "michaelson is in the kitchen"));
-            _provider.Store("default", _provider.New(2).Add("body", "michael as a cousin named michael"));
-            _provider.Store("default", _provider.New(3).Add("body", "speak inside the mic"));
-            _provider.Store("default", _provider.New(4).Add("body", "a dog is pursuing a cat"));
-            _provider.Store("default", _provider.New(5).Add("body", "the elephant can't catch up the dog"));
+            _provider.Store("default", _provider.New(1).Add("body", "michael is in the kitchen").Analyze());
+            _provider.Store("default", _provider.New(2).Add("body", "michael as a cousin named michel").Analyze());
+            _provider.Store("default", _provider.New(3).Add("body", "speak inside the mic").Analyze());
+            _provider.Store("default", _provider.New(4).Add("body", "a dog is pursuing a cat").Analyze());
+            _provider.Store("default", _provider.New(5).Add("body", "the elephant can't catch up the dog").Analyze());
 
-            var michael = _searchBuilder.WithField("body", "mic").Search().ToList();
-            Assert.That(michael.Count(), Is.EqualTo(3));
+            var michael = _searchBuilder.WithField("body", "michael").Search().ToList();
+            Assert.That(michael.Count(), Is.EqualTo(2));
             Assert.That(michael[0].Score >= michael[1].Score, Is.True);
 
             // Sorting on score is always descending
-            michael = _searchBuilder.WithField("body", "mic").Ascending().Search().ToList();
-            Assert.That(michael.Count(), Is.EqualTo(3));
+            michael = _searchBuilder.WithField("body", "michael").Ascending().Search().ToList();
+            Assert.That(michael.Count(), Is.EqualTo(2));
             Assert.That(michael[0].Score >= michael[1].Score, Is.True);
         }
 
         [Test]
         public void ShouldSortByDate() {
             _provider.CreateIndex("default");
-            _provider.Store("default", _provider.New(1).Add("date", new DateTime(2010, 05, 28, 12, 30, 15)));
-            _provider.Store("default", _provider.New(2).Add("date", new DateTime(2010, 05, 28, 12, 30, 30)));
-            _provider.Store("default", _provider.New(3).Add("date", new DateTime(2010, 05, 28, 12, 30, 45)));
+            _provider.Store("default", _provider.New(1).Add("date", new DateTime(2010, 05, 28, 12, 30, 15)).Store());
+            _provider.Store("default", _provider.New(2).Add("date", new DateTime(2010, 05, 28, 12, 30, 30)).Store());
+            _provider.Store("default", _provider.New(3).Add("date", new DateTime(2010, 05, 28, 12, 30, 45)).Store());
 
             var date = _searchBuilder.SortBy("date").Search().ToList();
             Assert.That(date.Count(), Is.EqualTo(3));
@@ -180,13 +177,13 @@ namespace Orchard.Core.Tests.Indexing {
         [Test]
         public void ShouldEscapeSpecialChars() {
             _provider.CreateIndex("default");
-            _provider.Store("default", _provider.New(1).Add("body", "Orchard has been developped in C#"));
-            _provider.Store("default", _provider.New(2).Add("body", "Windows has been developped in C++"));
+            _provider.Store("default", _provider.New(1).Add("body", "Orchard has been developped in C#").Analyze());
+            _provider.Store("default", _provider.New(2).Add("body", "Windows has been developped in C++").Analyze());
 
-            var cs = _searchBuilder.WithField("body", "C#").Search().ToList();
+            var cs = _searchBuilder.Parse("body", "C#").Search().ToList();
             Assert.That(cs.Count(), Is.EqualTo(2));
 
-            var cpp = _searchBuilder.WithField("body", "C++").Search().ToList();
+            var cpp = _searchBuilder.Parse("body", "C++").Search().ToList();
             Assert.That(cpp.Count(), Is.EqualTo(2));
 
         }
@@ -194,42 +191,42 @@ namespace Orchard.Core.Tests.Indexing {
         [Test]
         public void ShouldHandleMandatoryFields() {
             _provider.CreateIndex("default");
-            _provider.Store("default", _provider.New(1).Add("body", "Orchard has been developped in C#"));
-            _provider.Store("default", _provider.New(2).Add("body", "Windows has been developped in C++"));
+            _provider.Store("default", _provider.New(1).Add("body", "Orchard has been developped in C#").Analyze());
+            _provider.Store("default", _provider.New(2).Add("body", "Windows has been developped in C++").Analyze());
 
             Assert.That(_searchBuilder.WithField("body", "develop").Search().ToList().Count(), Is.EqualTo(2));
             Assert.That(_searchBuilder.WithField("body", "develop").WithField("body", "Orchard").Search().ToList().Count(), Is.EqualTo(2));
             Assert.That(_searchBuilder.WithField("body", "develop").WithField("body", "Orchard").Mandatory().Search().ToList().Count(), Is.EqualTo(1));
-            Assert.That(_searchBuilder.WithField("body", "develop").WithField("body", "Orchard").Mandatory().Search().First().Id, Is.EqualTo(1));
+            Assert.That(_searchBuilder.WithField("body", "develop").WithField("body", "Orchard").Mandatory().Search().First().ContentItemId, Is.EqualTo(1));
         }
 
         [Test]
         public void ShouldHandleForbiddenFields() {
             _provider.CreateIndex("default");
-            _provider.Store("default", _provider.New(1).Add("body", "Orchard has been developped in C#"));
-            _provider.Store("default", _provider.New(2).Add("body", "Windows has been developped in C++"));
+            _provider.Store("default", _provider.New(1).Add("body", "Orchard has been developped in C#").Analyze());
+            _provider.Store("default", _provider.New(2).Add("body", "Windows has been developped in C++").Analyze());
 
-            Assert.That(_searchBuilder.WithField("body", "develop").Search().ToList().Count(), Is.EqualTo(2));
-            Assert.That(_searchBuilder.WithField("body", "develop").WithField("body", "Orchard").Search().ToList().Count(), Is.EqualTo(2));
-            Assert.That(_searchBuilder.WithField("body", "develop").WithField("body", "Orchard").Forbidden().Search().ToList().Count(), Is.EqualTo(1));
-            Assert.That(_searchBuilder.WithField("body", "develop").WithField("body", "Orchard").Forbidden().Search().First().Id, Is.EqualTo(2));
+            Assert.That(_searchBuilder.WithField("body", "developped").Search().ToList().Count(), Is.EqualTo(2));
+            Assert.That(_searchBuilder.WithField("body", "developped").WithField("body", "Orchard").Search().ToList().Count(), Is.EqualTo(2));
+            Assert.That(_searchBuilder.WithField("body", "developped").WithField("body", "Orchard").Forbidden().Search().ToList().Count(), Is.EqualTo(1));
+            Assert.That(_searchBuilder.WithField("body", "developped").WithField("body", "Orchard").Forbidden().Search().First().ContentItemId, Is.EqualTo(2));
         }
 
         [Test]
         public void ShouldHandleWeight() {
             _provider.CreateIndex("default");
-            _provider.Store("default", _provider.New(1).Add("body", "Orchard has been developped in C#"));
-            _provider.Store("default", _provider.New(2).Add("body", "Windows has been developped in C++"));
+            _provider.Store("default", _provider.New(1).Add("body", "Orchard has been developped in C#").Analyze());
+            _provider.Store("default", _provider.New(2).Add("body", "Windows has been developped in C++").Analyze());
 
-            Assert.That(_searchBuilder.WithField("body", "develop").WithField("body", "Orchard").Weighted(2).Search().First().Id, Is.EqualTo(1));
+            Assert.That(_searchBuilder.WithField("body", "developped").WithField("body", "Orchard").Weighted(2).Search().First().ContentItemId, Is.EqualTo(1));
         }
 
         [Test]
         public void ShouldParseLuceneQueries() {
             _provider.CreateIndex("default");
-            _provider.Store("default", _provider.New(1).Add("body", "Bradley is in the kitchen.").Add("title", "Beer and takos"));
-            _provider.Store("default", _provider.New(2).Add("body", "Renaud is also in the kitchen.").Add("title", "A love affair"));
-            _provider.Store("default", _provider.New(3).Add("body", "Bertrand is a little bit jealous.").Add("title", "Soap opera"));
+            _provider.Store("default", _provider.New(1).Add("body", "Bradley is in the kitchen.").Analyze().Add("title", "Beer and takos").Analyze());
+            _provider.Store("default", _provider.New(2).Add("body", "Renaud is also in the kitchen.").Analyze().Add("title", "A love affair").Analyze());
+            _provider.Store("default", _provider.New(3).Add("body", "Bertrand is a little bit jealous.").Analyze().Add("title", "Soap opera").Analyze());
 
             Assert.That(_searchBuilder.Parse(new[] { "body" }, "kitchen").Count(), Is.EqualTo(2));
             Assert.That(_searchBuilder.Parse(new[] { "body" }, "kitchen bertrand").Count(), Is.EqualTo(3));
@@ -238,9 +235,24 @@ namespace Orchard.Core.Tests.Indexing {
             Assert.That(_searchBuilder.Parse(new[] { "body" }, "kit").Count(), Is.EqualTo(0));
             Assert.That(_searchBuilder.Parse(new[] { "body" }, "kit*").Count(), Is.EqualTo(2));
             Assert.That(_searchBuilder.Parse(new[] { "body", "title" }, "bradley love^3 soap").Count(), Is.EqualTo(3));
-            Assert.That(_searchBuilder.Parse(new[] { "body", "title" }, "bradley love^3 soap").Search().First().Id, Is.EqualTo(2));
+            Assert.That(_searchBuilder.Parse(new[] { "body", "title" }, "bradley love^3 soap").Search().First().ContentItemId, Is.EqualTo(2));
         }
 
+        [Test]
+        public void ShouldFilterIntValues() {
+            _provider.CreateIndex("default");
+            _provider.Store("default", _provider.New(1).Add("field", 1));
+            _provider.Store("default", _provider.New(2).Add("field", 22));
+            _provider.Store("default", _provider.New(3).Add("field", 333));
+
+            Assert.That(_searchBuilder.WithField("field", 1).ExactMatch().Count(), Is.EqualTo(1));
+            Assert.That(_searchBuilder.WithField("field", 22).ExactMatch().Count(), Is.EqualTo(1));
+            Assert.That(_searchBuilder.WithField("field", 333).ExactMatch().Count(), Is.EqualTo(1));
+
+            Assert.That(_searchBuilder.WithField("field", 0).ExactMatch().Count(), Is.EqualTo(0));
+            Assert.That(_searchBuilder.WithField("field", 2).ExactMatch().Count(), Is.EqualTo(0));
+            Assert.That(_searchBuilder.WithField("field", 3).ExactMatch().Count(), Is.EqualTo(0));
+        }
 
     }
 }

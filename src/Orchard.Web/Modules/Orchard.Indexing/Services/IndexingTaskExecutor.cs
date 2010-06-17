@@ -3,60 +3,49 @@ using System.Collections.Generic;
 using System.Linq;
 using JetBrains.Annotations;
 using Orchard.ContentManagement;
-using Orchard.ContentManagement.Handlers;
 using Orchard.Data;
-using Orchard.Indexing;
+using Orchard.Indexing.Models;
 using Orchard.Logging;
 using Orchard.Services;
-using Orchard.Tasks;
-using Orchard.Core.Indexing.Models;
 using Orchard.Tasks.Indexing;
-using Orchard.Indexing;
 
-namespace Orchard.Core.Indexing.Services {
+namespace Orchard.Indexing.Services {
     /// <summary>
     /// Contains the logic which is regularly executed to retrieve index information from multiple content handlers.
     /// </summary>
     [UsedImplicitly]
-    public class IndexingTaskExecutor : IBackgroundTask, IIndexNotifierHandler {
+    public class IndexingTaskExecutor : IIndexNotifierHandler {
         private readonly IClock _clock;
         private readonly IRepository<IndexingTaskRecord> _repository;
-        private readonly IEnumerable<IContentHandler> _handlers;
         private IIndexProvider _indexProvider;
         private readonly IIndexManager _indexManager;
         private readonly IIndexingTaskManager _indexingTaskManager;
         private readonly IContentManager _contentManager;
+        private readonly IIndexSynLock _indexSynLock;
         private const string SearchIndexName = "Search";
         
-        private readonly object _synLock = new object();
-
         public IndexingTaskExecutor(
             IClock clock,
             IRepository<IndexingTaskRecord> repository,
-            IEnumerable<IContentHandler> handlers,
             IIndexManager indexManager,
             IIndexingTaskManager indexingTaskManager,
-            IContentManager contentManager) {
+            IContentManager contentManager,
+            IIndexSynLock indexSynLock) {
             _clock = clock;
             _repository = repository;
             _indexManager = indexManager;
-            _handlers = handlers;
             _indexingTaskManager = indexingTaskManager;
             _contentManager = contentManager;
+            _indexSynLock = indexSynLock;
             Logger = NullLogger.Instance;
         }
 
         public ILogger Logger { get; set; }
 
         public void UpdateIndex(string indexName) {
-            if (indexName == SearchIndexName) {
-                Sweep();
-            }
-        }
+            var synLock = _indexSynLock.GetSynLock(SearchIndexName);
 
-        public void Sweep() {
-
-            if ( !System.Threading.Monitor.TryEnter(_synLock) ) {
+            if ( !System.Threading.Monitor.TryEnter(synLock) ) {
                 Logger.Information("Index was requested but was already running");
                 return;
             }
@@ -68,8 +57,8 @@ namespace Orchard.Core.Indexing.Services {
                 }
 
                 _indexProvider = _indexManager.GetSearchIndexProvider();
-                var updateIndexDocuments = new List<IIndexDocument>();
-                var lastIndexing = DateTime.UtcNow;
+                var updateIndexDocuments = new List<IDocumentIndex>();
+                DateTime lastIndexing;
 
                 // Do we need to rebuild the full index (first time module is used, or rebuild index requested) ?
                 if (_indexProvider.IsEmpty(SearchIndexName)) {
@@ -81,22 +70,11 @@ namespace Orchard.Core.Indexing.Services {
                     // get every existing content item to index it
                     foreach (var contentItem in _contentManager.Query(VersionOptions.Published).List()) {
                         try {
-                            var context = new IndexContentContext {
-                                ContentItem = contentItem,
-                                IndexDocument = _indexProvider.New(contentItem.Id)
-                            };
+                            var documentIndex =  _indexProvider.New(contentItem.Id);
 
-                            // dispatch to handlers to retrieve index information
-                            foreach (var handler in _handlers) {
-                                handler.Indexing(context);
-                            }
-
-                            if ( context.IndexDocument.IsDirty ) {
-                                updateIndexDocuments.Add(context.IndexDocument);
-
-                                foreach ( var handler in _handlers ) {
-                                    handler.Indexed(context);
-                                }
+                            _contentManager.Index(contentItem, documentIndex);
+                            if(documentIndex.IsDirty) {
+                                updateIndexDocuments.Add(documentIndex);
                             }
                         }
                         catch (Exception ex) {
@@ -139,22 +117,11 @@ namespace Orchard.Core.Indexing.Services {
                     var task = new IndexingTask(_contentManager, taskRecord);
 
                     try {
-                        var context = new IndexContentContext {
-                            ContentItem = task.ContentItem,
-                            IndexDocument = _indexProvider.New(task.ContentItem.Id)
-                        };
+                        var documentIndex = _indexProvider.New(task.ContentItem.Id);
 
-                        // dispatch to handlers to retrieve index information
-                        foreach (var handler in _handlers) {
-                            handler.Indexing(context);
-                        }
-
-                        if ( context.IndexDocument.IsDirty ) {
-                            updateIndexDocuments.Add(context.IndexDocument);
-                         
-                            foreach (var handler in _handlers) {
-                                handler.Indexed(context);
-                            }
+                        _contentManager.Index(task.ContentItem, documentIndex);
+                        if ( documentIndex.IsDirty ) {
+                            updateIndexDocuments.Add(documentIndex);
                         }
 
                     }
@@ -173,7 +140,7 @@ namespace Orchard.Core.Indexing.Services {
                 }
             }
             finally {
-                System.Threading.Monitor.Exit(_synLock);
+                System.Threading.Monitor.Exit(synLock);
             }
         }
     }

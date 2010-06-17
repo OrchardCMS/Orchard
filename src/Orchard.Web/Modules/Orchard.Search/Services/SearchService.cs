@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using Orchard.Collections;
 using Orchard.Indexing;
@@ -39,9 +40,11 @@ namespace Orchard.Search.Services
             var searchBuilder = _indexManager.GetSearchIndexProvider().CreateSearchBuilder(SearchIndexName)
                 .Parse(new [] {"title", "body"}, query);
 
-                if(HttpContext.Current != null) {
-                    searchBuilder.WithField("culture", _cultureManager.GetCurrentCulture(HttpContext.Current)).Mandatory();
-                }
+                var culture = _cultureManager.GetSiteCulture();
+                    
+                // use LCID as the text representation gets analyzed by the query parser
+                searchBuilder
+                    .WithField("culture", CultureInfo.GetCultureInfo(culture).LCID);
 
             var totalCount = searchBuilder.Count();
             if (pageSize != null)

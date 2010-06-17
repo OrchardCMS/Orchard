@@ -3,7 +3,7 @@ using Orchard.ContentManagement;
 using Orchard.Core.Common.Models;
 using Orchard.Tasks.Indexing;
 
-namespace Orchard.Core.Indexing.Services {
+namespace Orchard.Indexing.Handlers {
     /// <summary>
     /// Intercepts the ContentHandler events to create indexing tasks when a content item 
     /// is published, and to delete them when the content item is unpublished.

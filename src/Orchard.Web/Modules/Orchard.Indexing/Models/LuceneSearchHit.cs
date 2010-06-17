@@ -1,21 +1,20 @@
 ﻿using Lucene.Net.Documents;
 using System.Globalization;
 using Lucene.Net.Util;
-using Orchard.Indexing;
 
-namespace Orchard.Core.Indexing.Lucene {
-    public class DefaultSearchHit : ISearchHit {
+namespace Orchard.Indexing.Models {
+    public class LuceneSearchHit : ISearchHit {
         private readonly Document _doc;
         private readonly float _score;
 
         public float Score { get { return _score; } }
 
-        public DefaultSearchHit(Document document, float score) {
+        public LuceneSearchHit(Document document, float score) {
             _doc = document;
             _score = score;
         }
 
-        public int Id { get { return int.Parse(GetString("id")); } }
+        public int ContentItemId { get { return int.Parse(GetString("id")); } }
 
         public int GetInt(string name) {
             return NumericUtils.PrefixCodedToInt(_doc.GetField(name).StringValue());

@@ -1,15 +1,15 @@
 ﻿using System.Web.Mvc;
+using Orchard.Indexing.Services;
 using Orchard.Localization;
-using Orchard.Search.Services;
-using Orchard.Search.ViewModels;
 using Orchard.UI.Notify;
+using Orchard.Indexing.ViewModels;
 
-namespace Orchard.Search.Controllers {
+namespace Orchard.Indexing.Controllers {
     public class AdminController : Controller {
-        private readonly ISearchService _searchService;
+        private readonly IIndexingService _indexingService;
 
-        public AdminController(ISearchService searchService, IOrchardServices services) {
-            _searchService = searchService;
+        public AdminController(IIndexingService indexingService, IOrchardServices services) {
+            _indexingService = indexingService;
             Services = services;
             T = NullLocalizer.Instance;
         }
@@ -18,7 +18,7 @@ namespace Orchard.Search.Controllers {
         public Localizer T { get; set; }
 
         public ActionResult Index() {
-            var viewModel = new SearchIndexViewModel {HasIndexToManage = _searchService.HasIndexToManage, IndexUpdatedUtc = _searchService.GetIndexUpdatedUtc()};
+            var viewModel = new IndexViewModel {HasIndexToManage = _indexingService.HasIndexToManage, IndexUpdatedUtc = _indexingService.GetIndexUpdatedUtc()};
 
             if (!viewModel.HasIndexToManage)
                 Services.Notifier.Information(T("There is no search index to manage for this site."));
@@ -28,21 +28,21 @@ namespace Orchard.Search.Controllers {
 
         [HttpPost]
         public ActionResult Update() {
-            if (!Services.Authorizer.Authorize(Permissions.ManageSearchIndex, T("Not allowed to manage the search index.")))
+            if ( !Services.Authorizer.Authorize(Permissions.ManageSearchIndex, T("Not allowed to manage the search index.")) )
                 return new HttpUnauthorizedResult();
 
-            _searchService.UpdateIndex();
+            _indexingService.UpdateIndex();
 
             return RedirectToAction("Index");
         }
 
         [HttpPost]
         public ActionResult Rebuild() {
-            if (!Services.Authorizer.Authorize(Permissions.ManageSearchIndex, T("Not allowed to manage the search index.")))
+            if ( !Services.Authorizer.Authorize(Permissions.ManageSearchIndex, T("Not allowed to manage the search index.")) )
                 return new HttpUnauthorizedResult();
 
-            _searchService.RebuildIndex();
-            _searchService.UpdateIndex();
+            _indexingService.RebuildIndex();
+            _indexingService.UpdateIndex();
 
             return RedirectToAction("Index");
         }

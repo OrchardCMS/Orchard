@@ -9,17 +9,17 @@ using Lucene.Net.Index;
 using Lucene.Net.Store;
 using Orchard.Environment.Configuration;
 using Orchard.FileSystems.AppData;
-using Orchard.Indexing;
-using Directory = Lucene.Net.Store.Directory;
-using Version = Lucene.Net.Util.Version;
+using Orchard.Indexing.Models;
 using Orchard.Logging;
 using System.Xml.Linq;
+using Directory = Lucene.Net.Store.Directory;
+using Version = Lucene.Net.Util.Version;
 
-namespace Orchard.Core.Indexing.Lucene {
+namespace Orchard.Indexing.Services {
     /// <summary>
     /// Represents the default implementation of an IIndexProvider, based on Lucene
     /// </summary>
-    public class DefaultIndexProvider : IIndexProvider {
+    public class LuceneIndexProvider : IIndexProvider {
         private readonly IAppDataFolder _appDataFolder;
         private readonly ShellSettings _shellSettings;
         public static readonly Version LuceneVersion = Version.LUCENE_29;
@@ -31,7 +31,7 @@ namespace Orchard.Core.Indexing.Lucene {
 
         public ILogger Logger { get; set; }
 
-        public DefaultIndexProvider(IAppDataFolder appDataFolder, ShellSettings shellSettings) {
+        public LuceneIndexProvider(IAppDataFolder appDataFolder, ShellSettings shellSettings) {
             _appDataFolder = appDataFolder;
             _shellSettings = shellSettings;
             _analyzer = CreateAnalyzer();
@@ -62,7 +62,7 @@ namespace Orchard.Core.Indexing.Lucene {
             return FSDirectory.Open(directoryInfo);
         }
 
-        private static Document CreateDocument(DefaultIndexDocument indexDocument) {
+        private static Document CreateDocument(LuceneDocumentIndex indexDocument) {
             var doc = new Document();
 
             indexDocument.PrepareForIndexing();
@@ -123,21 +123,21 @@ namespace Orchard.Core.Indexing.Lucene {
             }
         }
 
-        public void Store(string indexName, IIndexDocument indexDocument) {
-            Store(indexName, new [] { (DefaultIndexDocument)indexDocument });
+        public void Store(string indexName, IDocumentIndex indexDocument) {
+            Store(indexName, new [] { (LuceneDocumentIndex)indexDocument });
         }
 
-        public void Store(string indexName, IEnumerable<IIndexDocument> indexDocuments) {
-            Store(indexName, indexDocuments.Cast<DefaultIndexDocument>());
+        public void Store(string indexName, IEnumerable<IDocumentIndex> indexDocuments) {
+            Store(indexName, indexDocuments.Cast<LuceneDocumentIndex>());
         }
 
-        public void Store(string indexName, IEnumerable<DefaultIndexDocument> indexDocuments) {
+        public void Store(string indexName, IEnumerable<LuceneDocumentIndex> indexDocuments) {
             if(indexDocuments.AsQueryable().Count() == 0) {
                 return;
             }
 
             var writer = new IndexWriter(GetDirectory(indexName), _analyzer, false, IndexWriter.MaxFieldLength.UNLIMITED);
-            DefaultIndexDocument current = null;
+            LuceneDocumentIndex current = null;
 
             try {
                 foreach ( var indexDocument in indexDocuments ) {
@@ -188,12 +188,12 @@ namespace Orchard.Core.Indexing.Lucene {
             }
         }
 
-        public IIndexDocument New(int documentId) {
-            return new DefaultIndexDocument(documentId);
+        public IDocumentIndex New(int documentId) {
+            return new LuceneDocumentIndex(documentId);
         }
 
         public ISearchBuilder CreateSearchBuilder(string indexName) {
-            return new DefaultSearchBuilder(GetDirectory(indexName));
+            return new LuceneSearchBuilder(GetDirectory(indexName));
         }
 
         private string GetSettingsFileName(string indexName) {

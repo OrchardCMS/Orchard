@@ -7,6 +7,7 @@ using Orchard.ContentManagement.MetaData;
 using Orchard.ContentManagement.MetaData.Builders;
 using Orchard.ContentManagement.Records;
 using Orchard.Data;
+using Orchard.Indexing;
 using Orchard.Mvc.ViewModels;
 
 namespace Orchard.ContentManagement {
@@ -428,6 +429,19 @@ namespace Orchard.ContentManagement {
                 _contentTypeRepository.Create(contentTypeRecord);
             }
             return contentTypeRecord;
+        }
+
+        public void Index(ContentItem contentItem, IDocumentIndex documentIndex) {
+            var indexContentContext = new IndexContentContext(contentItem, documentIndex);
+
+            // dispatch to handlers to retrieve index information
+            foreach ( var handler in Handlers ) {
+                handler.Indexing(indexContentContext);
+            }
+
+            foreach ( var handler in Handlers ) {
+                handler.Indexed(indexContentContext);
+            }
         }
     }
 }

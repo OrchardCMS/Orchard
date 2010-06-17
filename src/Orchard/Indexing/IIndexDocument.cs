@@ -3,26 +3,26 @@ using System.Collections.Generic;
 
 namespace Orchard.Indexing {
 
-    public interface IIndexDocument {
+    public interface IDocumentIndex {
 
-        IIndexDocument SetContentItemId(int documentId);
+        IDocumentIndex SetContentItemId(int documentId);
 
-        IIndexDocument Add(string name, string value);
-        IIndexDocument Add(string name, string value, bool removeTags);
-        IIndexDocument Add(string name, DateTime value);
-        IIndexDocument Add(string name, int value);
-        IIndexDocument Add(string name, bool value);
-        IIndexDocument Add(string name, float value);
-
-        /// <summary>
-        /// Whether to store the original value to the index.
-        /// </summary>
-        IIndexDocument Store(bool store);
+        IDocumentIndex Add(string name, string value);
+        IDocumentIndex Add(string name, string value, bool removeTags);
+        IDocumentIndex Add(string name, DateTime value);
+        IDocumentIndex Add(string name, int value);
+        IDocumentIndex Add(string name, bool value);
+        IDocumentIndex Add(string name, float value);
 
         /// <summary>
-        /// Whether the content should be tokenized or not. If not, value will be taken as a whole.
+        /// Stores the original value to the index.
         /// </summary>
-        IIndexDocument Analyze(bool analyze);
+        IDocumentIndex Store();
+
+        /// <summary>
+        /// Content is analyzed and tokenized.
+        /// </summary>
+        IDocumentIndex Analyze();
 
         /// <summary>
         /// Whether some property have been added to this document, or otherwise if it's empty

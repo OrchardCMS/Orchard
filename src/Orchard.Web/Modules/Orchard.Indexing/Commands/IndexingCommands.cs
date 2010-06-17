@@ -7,7 +7,7 @@ using Orchard.Indexing;
 using Orchard.Security;
 using Orchard.Tasks.Indexing;
 
-namespace Orchard.Core.Indexing.Commands {
+namespace Orchard.Indexing.Commands {
     public class IndexingCommands : DefaultOrchardCommandHandler {
         private readonly IEnumerable<IIndexNotifierHandler> _indexNotifierHandlers;
         private readonly IIndexManager _indexManager;

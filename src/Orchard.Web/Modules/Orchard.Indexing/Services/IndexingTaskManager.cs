@@ -1,20 +1,16 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using JetBrains.Annotations;
 using Orchard.ContentManagement;
 using Orchard.Data;
+using Orchard.Indexing.Models;
 using Orchard.Logging;
-using Orchard.Tasks.Scheduling;
-using Orchard.Utility.Extensions;
 using Orchard.Tasks.Indexing;
-using Orchard.Core.Indexing.Models;
 using Orchard.Services;
 
-namespace Orchard.Core.Indexing.Services {
+namespace Orchard.Indexing.Services {
     [UsedImplicitly]
     public class IndexingTaskManager : IIndexingTaskManager {
-        private readonly IContentManager _contentManager;
         private readonly IRepository<IndexingTaskRecord> _repository;
         private readonly IClock _clock;
 
@@ -24,7 +20,6 @@ namespace Orchard.Core.Indexing.Services {
             IClock clock) {
             _clock = clock;
             _repository = repository;
-            _contentManager = contentManager;
             Logger = NullLogger.Instance;
         }
 

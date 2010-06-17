@@ -1,8 +1,13 @@
-﻿using Orchard.Indexing;
+using Orchard.Indexing;
 
 namespace Orchard.ContentManagement.Handlers {
-    public class IndexContentContext {
-        public ContentItem ContentItem { get; set; }
-        public IIndexDocument IndexDocument { get; set; }
+    public class IndexContentContext : ContentContextBase {
+
+        public IDocumentIndex DocumentIndex { get; private set; }
+
+        public IndexContentContext(ContentItem contentItem, IDocumentIndex documentIndex)
+            : base(contentItem) {
+            DocumentIndex = documentIndex;
+        }
     }
 }

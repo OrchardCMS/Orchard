@@ -18,7 +18,7 @@ namespace Orchard.Search.Controllers {
                 Query = q,
                 DefaultPageSize = 10, // <- yeah, I know :|
                 PageOfResults = _searchService.Query(q, page, pageSize, searchHit => new SearchResultViewModel {
-                    Content = _contentManager.BuildDisplayModel(_contentManager.Get(searchHit.Id), "SummaryForSearch"),
+                    Content = _contentManager.BuildDisplayModel(_contentManager.Get(searchHit.ContentItemId), "SummaryForSearch"),
                     SearchHit = searchHit
                 })
             };
