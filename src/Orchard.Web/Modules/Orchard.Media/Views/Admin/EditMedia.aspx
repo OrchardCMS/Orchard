@@ -24,11 +24,11 @@ Html.RegisterStyle("admin.css"); %>
 		    <fieldset>
 		        <%-- todo: make these real (including markup) --%>
 			    <div>
-			    <label><%=T("Dimensions: <span>500 x 375 pixels</span>")%></label>
+			    <label><%: T("Dimensions: <span>500 x 375 pixels</span>")%></label>
 			   
-			    <label><%=T("Size: <span>{0}</span>", Model.Size)%></label>
+			    <label><%: T("Size: <span>{0}</span>", Model.Size)%></label>
 			   
-			    <label><%=T("Added on: <span>{0} by Orchard User</span>", Model.LastUpdated)%></label>
+			    <label><%: T("Added on: <span>{0} by Orchard User</span>", Model.LastUpdated)%></label>
 			    </div>
 			    <div>
 			        <label for="embedPath"><%: T("Embed:")%></label>
@@ -61,9 +61,9 @@ Html.RegisterStyle("admin.css"); %>
 		    <div><img src="<%=ResolveUrl("~/Media/" + Html.Encode(Model.RelativePath + "/" + Model.Name))%>" class="previewImage" alt="<%: Model.Caption %>" /></div>
 		    <ul>
 		        <%-- todo: make these real (including markup) 
-			    <li><label><%=T("Dimensions: <span>500 x 375 pixels</span>")%></label></li>
-			    <li><label><%=T("Size: <span>{0}</span>", Model.Size)%></label></li>
-			    <li><label><%=T("Added on: <span>{0} by Orchard User</span>", Model.LastUpdated)%></label></li>
+			    <li><label><%: T("Dimensions: <span>500 x 375 pixels</span>")%></label></li>
+			    <li><label><%: T("Size: <span>{0}</span>", Model.Size)%></label></li>
+			    <li><label><%: T("Added on: <span>{0} by Orchard User</span>", Model.LastUpdated)%></label></li>
 			    <li>
 			        <label for="embedPath"><%: T("Embed:")%></label>
 			        <input id="embedPath" class="text" name="embedPath" type="text" readonly="readonly" value="<%: T("<img src=\"{0}\" width=\"{1}\" height=\"{2}\" alt=\"{3}\" />", ResolveUrl("~/Media/" + Model.RelativePath + "/" + Model.Name), 500, 375, Model.Caption) %>" />

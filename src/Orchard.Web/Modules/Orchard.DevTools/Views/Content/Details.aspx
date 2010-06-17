@@ -12,9 +12,9 @@
 <%: T("ContentType:")%>
     <%=Model.Item.ContentItem.ContentType %><br />
 <%: T("DisplayText:")%> 
-    <%=Html.ItemDisplayText(Model.Item) %><br />
+    <%: Html.ItemDisplayText(Model.Item) %><br />
 <%: T("Links:")%> 
-    <%=Html.ItemDisplayLink(T("view").ToString(), Model.Item) %> <%=Html.ItemEditLink(T("edit").ToString(), Model.Item) %>
+    <%: Html.ItemDisplayLink(T("view").ToString(), Model.Item) %> <%: Html.ItemEditLink(T("edit").ToString(), Model.Item) %>
 </p>
 <h2><%: T("Content Item Parts")%></h2>
 <ul>
@@ -79,7 +79,7 @@
         Zone:<%: display.ZoneName ?? "(null)" %>
         Position:<%: display.Position ?? "(null)" %>
         <div style="margin-left: 20px; border: solid 1px black;">
-            <%=Html.DisplayFor(x => display.Model, display.TemplateName, display.Prefix)%>
+            <%: Html.DisplayFor(x => display.Model, display.TemplateName, display.Prefix)%>
         </div>
     </li>
     <%                      

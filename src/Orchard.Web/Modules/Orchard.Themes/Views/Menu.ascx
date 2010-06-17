@@ -19,7 +19,7 @@
                 sbClass.Append("current ");
 
             var classValue = sbClass.ToString().TrimEnd(); %>
-        <li<%=!string.IsNullOrEmpty(classValue) ? string.Format(" class=\"{0}\"", classValue) : "" %>><%=Html.Link(menuItem.Text, menuItem.Href) %></li><%
+        <li<%=!string.IsNullOrEmpty(classValue) ? string.Format(" class=\"{0}\"", classValue) : "" %>><%: Html.Link(menuItem.Text, menuItem.Href) %></li><%
             ++counter;
         } %>
     </ul>

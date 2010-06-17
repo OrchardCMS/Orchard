@@ -4,7 +4,7 @@
 <h1><%:Html.TitleForPage(T("Supported Cultures").ToString()) %></h1>
 <p class="breadcrumb"><%:Html.ActionLink(T("Manage Settings").Text, "index") %><%:T(" &#62; ") %><%:T("Supported Cultures")%></p>
 <h2><%:T("Cultures this site supports") %></h2>
-<%=Html.UnorderedList(
+<%: Html.UnorderedList(
     Model.SiteCultures.OrderBy(s => s),
     (s, i) => Html.DisplayFor(scvm => s, s == Model.CurrentCulture ? "CurrentCulture" : "RemovableCulture", "").ToString(),
     "site-cultures", "culture", "odd")%>

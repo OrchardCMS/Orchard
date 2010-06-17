@@ -4,11 +4,11 @@
 <h1 class="page-title"><%: Html.TitleForPage(T("Archives").ToString(), Model.ArchiveData.Year.ToString(), Model.ArchiveData.Month > 0 ? new DateTime(Model.ArchiveData.Year, Model.ArchiveData.Month, 1).ToString("MMMM") : null, Model.ArchiveData.Day > 0 ? Model.ArchiveData.Day.ToString() : null)%></h1>
 
 <div class="archive-trail">
-<%=T("Archives").ToString()
-%> / <%=Html.Link(Model.ArchiveData.Year.ToString(), Url.BlogArchiveYear(Model.Blog.Slug, Model.ArchiveData.Year))
+<%: T("Archives").ToString()
+%> / <%: Html.Link(Model.ArchiveData.Year.ToString(), Url.BlogArchiveYear(Model.Blog.Slug, Model.ArchiveData.Year))
 %><%=Model.ArchiveData.Month > 0 ? string.Format(" / {0}", Html.Link(Model.ArchiveData.ToDateTime().ToString("MMMM"), Url.BlogArchiveMonth(Model.Blog.Slug, Model.ArchiveData.Year, Model.ArchiveData.Month))) : ""
 %><%=Model.ArchiveData.Day > 0 ? string.Format(" / {0}", Html.Link(Model.ArchiveData.Day.ToString(), Url.BlogArchiveDay(Model.Blog.Slug, Model.ArchiveData.Year, Model.ArchiveData.Month, Model.ArchiveData.Day))) : ""
 %>
 </div>
 
-<%=Html.UnorderedList(Model.BlogPosts, (c, i) => Html.DisplayForItem(c).ToHtmlString(), "blogPosts contentItems")%>
+<%: Html.UnorderedList(Model.BlogPosts, (c, i) => Html.DisplayForItem(c).ToHtmlString(), "blogPosts contentItems")%>

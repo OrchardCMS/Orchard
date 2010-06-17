@@ -16,7 +16,7 @@ if (Model.CommentsActive == false) {
 }
 else if(!Request.IsAuthenticated && !AuthorizedFor(Permissions.AddComment)) { %>
 <h2 id="addacomment"><%: T("Add a Comment") %></h2>
-<p class="info message"><%=T("You must {0} to comment.", Html.ActionLink(T("log on").ToString(), "LogOn", new { Controller = "Account", Area = "Orchard.Users", ReturnUrl = string.Format("{0}#addacomment", Context.Request.RawUrl) }))%></p><%
+<p class="info message"><%: T("You must {0} to comment.", Html.ActionLink(T("log on").ToString(), "LogOn", new { Controller = "Account", Area = "Orchard.Users", ReturnUrl = string.Format("{0}#addacomment", Context.Request.RawUrl) }))%></p><%
 }
 else { %>
 <% using (Html.BeginForm("Create", "Comment", new { area = "Orchard.Comments" }, FormMethod.Post, new { @class = "comment" })) { %>
@@ -46,7 +46,7 @@ else { %>
     }%>
     <fieldset class="what">
         <div>
-            <label for="CommentText"><% if (Request.IsAuthenticated) { %><%=T("Hi, {0}!", Html.Encode(Page.User.Identity.Name)) %><br /><% } %><%: T("Comment") %></label>
+            <label for="CommentText"><% if (Request.IsAuthenticated) { %><%: T("Hi, {0}!", Html.Encode(Page.User.Identity.Name)) %><br /><% } %><%: T("Comment") %></label>
             <textarea id="CommentText" rows="10" cols="30" name="CommentText"></textarea>
         </div>
         <div>

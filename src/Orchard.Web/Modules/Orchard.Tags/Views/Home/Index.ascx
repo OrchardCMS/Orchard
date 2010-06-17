@@ -1,7 +1,7 @@
 ﻿<%@ Control Language="C#" Inherits="Orchard.Mvc.ViewUserControl<TagsIndexViewModel>" %>
 <%@ Import Namespace="Orchard.Tags.ViewModels"%>
 <h1 class="page-title"><%: Html.TitleForPage(T("Tags").ToString())%></h1>
-<%=Html.UnorderedList(
+<%: Html.UnorderedList(
     Model.Tags,
     (t, i) => Html.ActionLink(
         Html.Encode(t.TagName),

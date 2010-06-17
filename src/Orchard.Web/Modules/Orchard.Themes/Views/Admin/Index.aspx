@@ -9,7 +9,7 @@
    } else {
     %><h3><%: T("Current Theme")%> - <%: Model.CurrentTheme.DisplayName %></h3>
 
-        <%=Html.Image(Html.ThemePath(Model.CurrentTheme, "/Theme.png"), Html.Encode(Model.CurrentTheme.DisplayName), new { @class = "themePreviewImage" })%>
+        <%: Html.Image(Html.ThemePath(Model.CurrentTheme, "/Theme.png"), Html.Encode(Model.CurrentTheme.DisplayName), new { @class = "themePreviewImage" })%>
         <h5><%: T("By") %> <%: Model.CurrentTheme.Author %></h5>
         
         <p>
@@ -27,7 +27,7 @@
         %> <li>
       <div>
         <h3><%: theme.DisplayName %></h3>
-        <%=Html.Image(Html.ThemePath(theme, "/Theme.png"), Html.Encode(theme.DisplayName), null)%>
+        <%: Html.Image(Html.ThemePath(theme, "/Theme.png"), Html.Encode(theme.DisplayName), null)%>
         <% using (Html.BeginFormAntiForgeryPost(Url.Action("Activate"), FormMethod.Post, new { @class = "inline" })) { %>
             <%: Html.Hidden("themeName", theme.ThemeName)%>
             <button type="submit" title="<%: T("Activate") %>"><%: T("Activate") %></button>

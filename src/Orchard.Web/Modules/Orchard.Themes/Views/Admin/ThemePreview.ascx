@@ -58,9 +58,9 @@ html.dyn #themepreview button.preview { display:none; }
 <div id="themepreview">
 <% using(Html.BeginFormAntiForgeryPost(Url.Action("Preview", new{Controller="Admin", Area="Orchard.Themes"}), FormMethod.Post, new { @class = "inline" })) { %>
     <fieldset>    
-        <span><%=T("You are previewing: ")%></span>
+        <span><%: T("You are previewing: ")%></span>
         <%: Html.Hidden("ReturnUrl", Context.Request.RawUrl)%>
-        <%=Html.DropDownList("ThemeName", Model.Themes, new {onChange = "this.form.submit();"})%>
+        <%: Html.DropDownList("ThemeName", Model.Themes, new {onChange = "this.form.submit();"})%>
         <button type="submit" class="preview" title="<%: T("Preview")%>" name="submit.Preview" value="<%: T("Preview")%>"><%: T("Preview")%></button>
         <button type="submit" title="<%: T("Apply")%>" name="submit.Apply" value="<%: T("Apply")%>"><%: T("Apply this theme") %></button>
         <button type="submit" class="cancel" title="<%: T("Cancel")%>" name="submit.Cancel" value="<%: T("Cancel")%>"><%: T("Cancel")%></button>

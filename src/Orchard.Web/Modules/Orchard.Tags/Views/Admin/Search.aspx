@@ -15,8 +15,8 @@
 	</thead>
     <% foreach (var contentItem in Model.Contents) { %>
     <tr>
-        <td><%=Html.ItemDisplayText(contentItem) %></td>
-        <td><%=Html.ItemDisplayLink(contentItem) %></td>
+        <td><%: Html.ItemDisplayText(contentItem) %></td>
+        <td><%: Html.ItemDisplayLink(contentItem) %></td>
     </tr>
     <% } %>
 </table>

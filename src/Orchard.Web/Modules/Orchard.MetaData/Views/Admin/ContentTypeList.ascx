@@ -25,7 +25,7 @@
     %>
         <tr class="<%=contentTypeClass %>">
             <td>
-                <%= Html.ActionLink(string.IsNullOrWhiteSpace(item.Name) ? "unkwn" : item.Name, "ContentTypeList", new {id=item.Name})%>
+                <%: Html.ActionLink(string.IsNullOrWhiteSpace(item.Name) ? "unkwn" : item.Name, "ContentTypeList", new {id=item.Name})%>
             </td>
         </tr>
     
@@ -60,7 +60,7 @@ using (Html.BeginFormAntiForgeryPost(Url.Action("Save",new {id=Model.SelectedCon
             <input name="<%="part_" + item.Name%>" type="checkbox" /><%}%>
             </td>
             <td class="ContentTypePartListRowItem">
-                <%= Html.Encode(item.Name)%>
+                <%: item.Name%>
             </td>
         </tr>
     
@@ -68,7 +68,7 @@ using (Html.BeginFormAntiForgeryPost(Url.Action("Save",new {id=Model.SelectedCon
 
     </table>
     <p>
-        <input type="submit" value="<%=_Encoded("Save") %>" />
+        <input type="submit" value="<%: T("Save") %>" />
     </p>
     <% } %>
 </div>

@@ -199,6 +199,7 @@
     <Compile Include="Environment\ShellBuilders\DefaultShellContextFactoryTests.cs" />
     <Compile Include="FileSystems\Dependencies\DependenciesFolderTests.cs" />
     <Compile Include="Localization\CultureManagerTests.cs" />
+    <Compile Include="Mvc\Html\HtmlHelperExtensionsTests.cs" />
     <Compile Include="Mvc\Routes\ShellRouteTests.cs" />
     <Compile Include="Mvc\Routes\UrlPrefixTests.cs" />
     <Compile Include="Stubs\StubFileSystem.cs" />
