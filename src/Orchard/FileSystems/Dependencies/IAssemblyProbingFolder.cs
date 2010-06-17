@@ -13,7 +13,7 @@ namespace Orchard.FileSystems.Dependencies {
         /// Return "true" if the assembly corresponding to "moduleName" is
         /// present in the folder.
         /// </summary>
-        bool HasAssembly(string moduleName);
+        bool AssemblyExists(string moduleName);
 
         /// <summary>
         /// Return the last modification date of the assembly corresponding
@@ -29,12 +29,13 @@ namespace Orchard.FileSystems.Dependencies {
         Assembly LoadAssembly(string moduleName);
 
         /// <summary>
-        /// Return the physical location where to store the assembly
-        /// corresponding to "moduleName". This will return a correct path
-        /// even if the assembly is not currently stored in that location.
-        /// This method can be used to answer the question "Where would the assembly
-        /// for module "moduleName" be stored if it exsisted?"
+        /// Ensure the assembly corresponding to "moduleName" is removed from the folder
         /// </summary>
-        string GetAssemblyPhysicalFileName(string moduleName);
+        void DeleteAssembly(string moduleName);
+
+        /// <summary>
+        /// Store an assembly corresponding to "moduleName" from the given fileName
+        /// </summary>
+        void StoreAssembly(string moduleName, string fileName);
     }
 }

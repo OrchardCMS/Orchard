@@ -1,9 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Web.Hosting;
 using Orchard.Caching;
 using Orchard.FileSystems.VirtualPath;
+using Orchard.Localization;
+using Orchard.Logging;
 
 namespace Orchard.FileSystems.AppData {
     public class AppDataFolder : IAppDataFolder {
@@ -13,7 +16,12 @@ namespace Orchard.FileSystems.AppData {
         public AppDataFolder(IAppDataFolderRoot root, IVirtualPathMonitor virtualPathMonitor) {
             _root = root;
             _virtualPathMonitor = virtualPathMonitor;
+            T = NullLocalizer.Instance;
+            Logger = NullLogger.Instance;
         }
+
+        public Localizer T { get; set; }
+        public ILogger Logger { get; set; }
 
         public string RootFolder {
             get {
@@ -25,6 +33,40 @@ namespace Orchard.FileSystems.AppData {
             get {
                 return _root.RootPath;
             }
+        }
+
+        private void MakeDestinationFileNameAvailable(string destinationFileName) {
+            // Try deleting the destination first
+            try {
+                File.Delete(destinationFileName);
+            }
+            catch {
+                // We land here if the file is in use, for example. Let's move on.
+            }
+
+            // If destination doesn't exist, we are good
+            if (!File.Exists(destinationFileName))
+                return;
+
+            // Try renaming destination to a unique filename
+            const string extension = "deleted";
+            for (int i = 0; i < 100; i++) {
+                var newExtension = (i == 0 ? extension : string.Format("{0}{1}", extension, i));
+                var newFileName = Path.ChangeExtension(destinationFileName, newExtension);
+                try {
+                    File.Delete(newFileName);
+                    File.Move(destinationFileName, newFileName);
+
+                    // If successful, we are done...
+                    return;
+                }
+                catch (Exception) {
+                    // We need to try with another extension
+                }
+            }
+
+            // Everything failed, throw an exception
+            throw new OrchardException(T("Unable to make room for file {0} in \"App_Data\" folder: too many conflicts.", destinationFileName).Text);
         }
 
         /// <summary>
@@ -72,8 +114,22 @@ namespace Orchard.FileSystems.AppData {
             return File.OpenRead(CombineToPhysicalPath(path));
         }
 
+        public void StoreFile(string sourceFileName, string destinationPath) {
+            Logger.Information("Storing file \"{0}\" as \"{1}\" in App_Data folder", sourceFileName, destinationPath);
+
+            var destinationFileName = CombineToPhysicalPath(destinationPath);
+            MakeDestinationFileNameAvailable(destinationFileName);
+            File.Copy(sourceFileName, destinationFileName);
+        }
+
         public void DeleteFile(string path) {
+            Logger.Information("Deleting file \"{0}\" from App_Data folder", path);
+
             File.Delete(CombineToPhysicalPath(path));
+        }
+
+        public DateTime GetFileLastWriteTimeUtc(string path) {
+            return File.GetLastWriteTimeUtc(CombineToPhysicalPath(path));
         }
 
         public bool FileExists(string path) {

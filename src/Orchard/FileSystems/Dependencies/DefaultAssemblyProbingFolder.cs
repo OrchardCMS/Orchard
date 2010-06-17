@@ -1,5 +1,4 @@
 ﻿using System;
-using System.IO;
 using System.Reflection;
 using Orchard.FileSystems.AppData;
 
@@ -12,14 +11,14 @@ namespace Orchard.FileSystems.Dependencies {
             _appDataFolder = appDataFolder;
         }
 
-        public bool HasAssembly(string moduleName) {
+        public bool AssemblyExists(string moduleName) {
             var path = PrecompiledAssemblyPath(moduleName);
             return _appDataFolder.FileExists(path);
         }
 
         public DateTime GetAssemblyDateTimeUtc(string moduleName) {
             var path = PrecompiledAssemblyPath(moduleName);
-            return File.GetLastWriteTimeUtc(_appDataFolder.MapPath(path));
+            return _appDataFolder.GetFileLastWriteTimeUtc(path);
         }
 
         public Assembly LoadAssembly(string moduleName) {
@@ -30,8 +29,14 @@ namespace Orchard.FileSystems.Dependencies {
             return Assembly.Load(moduleName);
         }
 
-        public string GetAssemblyPhysicalFileName(string moduleName) {
-            return _appDataFolder.MapPath(PrecompiledAssemblyPath(moduleName));
+        public void DeleteAssembly(string moduleName) {
+            var path = PrecompiledAssemblyPath(moduleName);
+            _appDataFolder.DeleteFile(path);
+        }
+
+        public void StoreAssembly(string moduleName, string fileName) {
+            var path = PrecompiledAssemblyPath(moduleName);
+            _appDataFolder.StoreFile(fileName, path);
         }
 
         private string PrecompiledAssemblyPath(string moduleName) {

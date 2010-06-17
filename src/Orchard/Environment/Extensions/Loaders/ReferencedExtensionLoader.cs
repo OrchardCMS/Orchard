@@ -25,7 +25,7 @@ namespace Orchard.Environment.Extensions.Loaders {
         public override void ExtensionDeactivated(ExtensionLoadingContext ctx, bool isNewExtension, ExtensionDescriptor extension) {
             var assemblyPath = _virtualPathProvider.Combine("~/bin", extension.Name + ".dll");
             if (_virtualPathProvider.FileExists(assemblyPath)) {
-                ctx.FilesToDelete.Add(_virtualPathProvider.MapPath(assemblyPath));
+                ctx.DeleteActions.Add(() => File.Delete(_virtualPathProvider.MapPath(assemblyPath)));
             }
         }
 

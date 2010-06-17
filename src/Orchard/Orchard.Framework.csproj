@@ -360,7 +360,7 @@
     <Compile Include="FileSystems\AppData\IAppDataFolderRoot.cs" />
     <Compile Include="FileSystems\Dependencies\DefaultAssemblyProbingFolder.cs" />
     <Compile Include="FileSystems\Dependencies\DefaultDependenciesFolder.cs" />
-    <Compile Include="FileSystems\Dependencies\IAssenblyProbyFolder.cs" />
+    <Compile Include="FileSystems\Dependencies\IAssemblyProbingFolder.cs" />
     <Compile Include="FileSystems\VirtualPath\DefaultVirtualPathMonitor.cs" />
     <Compile Include="FileSystems\VirtualPath\DefaultVirtualPathProvider.cs" />
     <Compile Include="FileSystems\VirtualPath\ICustomVirtualPathProvider.cs" />

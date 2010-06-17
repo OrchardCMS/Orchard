@@ -42,7 +42,7 @@ namespace Orchard.Environment.Extensions {
             var deletedDependencies = existingDependencies.Where(e => !extensions.Any(e2 => e2.Name == e.Name)).ToList();
             var newExtensions = extensions.Except(sameExtensions).ToList();
 
-            var ctx = new ExtensionLoadingContext { DependenciesFolder = _dependenciesFolder };
+            var ctx = new ExtensionLoadingContext();
 
             // Notify all loaders about extensions removed from the web site
             foreach (var dependency in deletedDependencies) {
@@ -123,19 +123,12 @@ namespace Orchard.Environment.Extensions {
 
         private void ProcessContextCommands(ExtensionLoadingContext ctx) {
             Logger.Information("Executing list of operations needed for loading extensions...");
-            foreach (var fileName in ctx.FilesToDelete) {
-                Logger.Information("Deleting file \"{0}\"", fileName);
-                File.Delete(fileName);
+            foreach (var action in ctx.DeleteActions) {
+                action();
             }
-            foreach (var entry in ctx.FilesToCopy) {
-                Logger.Information("Copying file from \"{0}\" to \"{1}\"", entry.Key, entry.Value);
-                MakeDestinationFileNameAvailable(entry.Value);
-                File.Copy(entry.Key, entry.Value);
-            }
-            foreach (var entry in ctx.FilesToRename) {
-                Logger.Information("Moving file from \"{0}\" to \"{1}\"", entry.Key, entry.Value);
-                MakeDestinationFileNameAvailable(entry.Value);
-                File.Move(entry.Key, entry.Value);
+
+            foreach (var action in ctx.CopyActions) {
+                action();
             }
 
             if (ctx.RestartAppDomain) {
@@ -147,39 +140,6 @@ namespace Orchard.Environment.Extensions {
                     Logger.Information("Reset site compilation state required.");
                 _hostEnvironment.ResetSiteCompilation();
             }
-        }
-
-        private void MakeDestinationFileNameAvailable(string destinationFileName) {
-            // Try deleting the destination first
-            try {
-                File.Delete(destinationFileName);
-            } catch {
-                // We land here if the file is in use, for example. Let's move on.
-            }
-
-            // If destination doesn't exist, we are good
-            if (!File.Exists(destinationFileName))
-                return;
-
-            // Try renaming destination to a unique filename
-            const string extension = "deleted";
-            for (int i = 0; i < 100; i++) {
-                var newExtension = (i == 0 ? extension : string.Format("{0}{1}", extension, i));
-                var newFileName = Path.ChangeExtension(destinationFileName, newExtension);
-                try {
-                    File.Delete(newFileName);
-                    File.Move(destinationFileName, newFileName);
-
-                    // If successful, we are done...
-                    return;
-                }
-                catch (Exception) {
-                    // We need to try with another extension
-                }
-            }
-
-            // Everything failed, throw an exception
-            throw new OrchardException(T("Unable to make room for file {0} in dependencies folder: too many conflicts.", destinationFileName).Text);
         }
 
         public void MonitorExtensions(Action<IVolatileToken> monitor) {

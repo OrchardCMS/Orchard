@@ -29,8 +29,8 @@ namespace Orchard.Tests.FileSystems.Dependencies {
                 LoaderName = "test",
                 VirtualPath = "~/bin"
             };
-            
-            dependenciesFolder.StoreDescriptors(new [] { d });
+
+            dependenciesFolder.StoreDescriptors(new[] { d });
             var e = dependenciesFolder.LoadDescriptors();
             Assert.That(e, Has.Count.EqualTo(1));
             Assert.That(e.First().Name, Is.EqualTo("name"));
@@ -113,7 +113,7 @@ namespace Orchard.Tests.FileSystems.Dependencies {
             };
 
             dependenciesFolder.StoreDescriptors(new[] { d1, d2 });
-            
+
             // Create a new instance over the same appDataFolder
             var dependenciesFolder2 = new DefaultDependenciesFolder(new StubCacheManager(), appDataFolder);
 

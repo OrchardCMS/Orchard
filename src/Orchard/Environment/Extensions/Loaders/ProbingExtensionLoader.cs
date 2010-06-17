@@ -27,9 +27,9 @@ namespace Orchard.Environment.Extensions.Loaders {
         }
 
         public override void ExtensionRemoved(ExtensionLoadingContext ctx, DependencyDescriptor dependency) {
-            var assemblyFileName = _assemblyProbingFolder.GetAssemblyPhysicalFileName(dependency.Name);
-            if (File.Exists(assemblyFileName)) {
-                ctx.FilesToDelete.Add(assemblyFileName);
+            if (_assemblyProbingFolder.AssemblyExists(dependency.Name)) {
+                ctx.DeleteActions.Add(() => _assemblyProbingFolder.DeleteAssembly(dependency.Name));
+
                 // We need to restart the appDomain if the assembly is loaded
                 if (IsAssemblyLoaded(dependency.Name)) {
                     Logger.Information("Extension removed: Setting AppDomain for restart because assembly {0} is loaded", dependency.Name);
@@ -39,9 +39,9 @@ namespace Orchard.Environment.Extensions.Loaders {
         }
 
         public override void ExtensionDeactivated(ExtensionLoadingContext ctx, bool isNewExtension, ExtensionDescriptor extension) {
-            var assemblyFileName = _assemblyProbingFolder.GetAssemblyPhysicalFileName(extension.Name);
-            if (File.Exists(assemblyFileName)) {
-                ctx.FilesToDelete.Add(assemblyFileName);
+            if (_assemblyProbingFolder.AssemblyExists(extension.Name)) {
+                ctx.DeleteActions.Add(() => _assemblyProbingFolder.DeleteAssembly(extension.Name));
+
                 // We need to restart the appDomain if the assembly is loaded
                 if (IsAssemblyLoaded(extension.Name)) {
                     Logger.Information("Extension deactivated: Setting AppDomain for restart because assembly {0} is loaded", extension.Name);
@@ -51,7 +51,7 @@ namespace Orchard.Environment.Extensions.Loaders {
         }
 
         public override ExtensionProbeEntry Probe(ExtensionDescriptor descriptor) {
-            if (!_assemblyProbingFolder.HasAssembly(descriptor.Name))
+            if (!_assemblyProbingFolder.AssemblyExists(descriptor.Name))
                 return null;
 
             var desc = _dependenciesFolder.GetDescriptor(descriptor.Name);

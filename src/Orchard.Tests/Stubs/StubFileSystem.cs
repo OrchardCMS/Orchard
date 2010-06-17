@@ -68,12 +68,12 @@ namespace Orchard.Tests.Stubs {
 
             public FileEntry(IClock clock) {
                 _clock = clock;
-                LastWriteTime = _clock.UtcNow;
+                LastWriteTimeUtc = _clock.UtcNow;
                 Content = new List<byte>();
             }
 
             public List<byte> Content { get; private set; }
-            public DateTime LastWriteTime { get; set; }
+            public DateTime LastWriteTimeUtc { get; set; }
         }
 
         public class Token : IVolatileToken {
@@ -178,7 +178,7 @@ namespace Orchard.Tests.Stubs {
                 var wrapper = new ArrayWrapper<byte>(buffer, offset, count);
                 _entry.Content.AddRange(wrapper);
 
-                _entry.LastWriteTime = _clock.UtcNow;
+                _entry.LastWriteTimeUtc = _clock.UtcNow;
                 if (_token != null)
                     _token.OnChange();
                 _position += count;
@@ -367,6 +367,21 @@ namespace Orchard.Tests.Stubs {
                 throw new InvalidOperationException();
 
             return new FileEntryReadStream(entry, _clock);
+        }
+
+        public void DeleteFile(string path) {
+            var directoryName = Path.GetDirectoryName(path);
+            var fileName = Path.GetFileName(path);
+
+            var directory = GetDirectoryEntry(directoryName);
+            if (directory == null)
+                return;
+
+            var entry = directory.GetEntry(fileName);
+            if (entry == null)
+                return;
+
+            directory.Entries.Remove(entry);
         }
     }
 }

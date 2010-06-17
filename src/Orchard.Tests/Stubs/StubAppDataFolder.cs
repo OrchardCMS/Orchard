@@ -45,7 +45,7 @@ namespace Orchard.Tests.Stubs {
         }
 
         public void CreateFile(string path, string content) {
-            using(var stream = CreateFile(path)) {
+            using (var stream = CreateFile(path)) {
                 using (var writer = new StreamWriter(stream)) {
                     writer.Write(content);
                 }
@@ -68,8 +68,29 @@ namespace Orchard.Tests.Stubs {
             return _fileSystem.OpenFile(path);
         }
 
+        public void StoreFile(string sourceFileName, string destinationPath) {
+            using (var inputStream = File.OpenRead(sourceFileName)) {
+                using (var outputStream = _fileSystem.CreateFile(destinationPath)) {
+                    byte[] buffer = new byte[1024];
+                    for (; ; ) {
+                        var count = inputStream.Read(buffer, 0, buffer.Length);
+                        if (count == 0)
+                            break;
+                        outputStream.Write(buffer, 0, count);
+                    }
+                }
+            }
+        }
+
         public void DeleteFile(string path) {
-            throw new NotImplementedException();
+            _fileSystem.DeleteFile(path);
+        }
+
+        public DateTime GetFileLastWriteTimeUtc(string path) {
+            var entry = _fileSystem.GetFileEntry(path);
+            if (entry == null)
+                throw new ArgumentException();
+            return entry.LastWriteTimeUtc;
         }
 
         public void CreateDirectory(string path) {
@@ -88,7 +109,7 @@ namespace Orchard.Tests.Stubs {
             var entry = _fileSystem.GetFileEntry(path);
             if (entry == null)
                 throw new InvalidOperationException();
-            return entry.LastWriteTime;
+            return entry.LastWriteTimeUtc;
         }
     }
 }

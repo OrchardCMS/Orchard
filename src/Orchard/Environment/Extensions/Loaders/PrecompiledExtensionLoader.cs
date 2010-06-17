@@ -34,9 +34,8 @@ namespace Orchard.Environment.Extensions.Loaders {
         }
 
         public override void ExtensionRemoved(ExtensionLoadingContext ctx, DependencyDescriptor dependency) {
-            var assemblyFileName = _assemblyProbingFolder.GetAssemblyPhysicalFileName(dependency.Name);
-            if (File.Exists(assemblyFileName)) {
-                ctx.FilesToDelete.Add(assemblyFileName);
+            if (_assemblyProbingFolder.AssemblyExists(dependency.Name)) {
+                ctx.DeleteActions.Add(() => _assemblyProbingFolder.DeleteAssembly(dependency.Name));
 
                 // We need to restart the appDomain if the assembly is loaded
                 if (IsAssemblyLoaded(dependency.Name)) {
@@ -48,9 +47,14 @@ namespace Orchard.Environment.Extensions.Loaders {
 
         public override void ExtensionActivated(ExtensionLoadingContext ctx, bool isNewExtension, ExtensionDescriptor extension) {
             string sourceFileName = _virtualPathProvider.MapPath(GetAssemblyPath(extension));
-            string destinationFileName = _assemblyProbingFolder.GetAssemblyPhysicalFileName(extension.Name);
-            if (FileIsNewer(sourceFileName, destinationFileName)) {
-                ctx.FilesToCopy.Add(sourceFileName, destinationFileName);
+
+            // Copy the assembly if it doesn't exist or if it is older than the source file.
+            bool copyAssembly =
+                !_assemblyProbingFolder.AssemblyExists(extension.Name) ||
+                File.GetLastWriteTimeUtc(sourceFileName) > _assemblyProbingFolder.GetAssemblyDateTimeUtc(extension.Name);
+                
+            if (copyAssembly) {
+                ctx.CopyActions.Add(() => _assemblyProbingFolder.StoreAssembly(extension.Name, sourceFileName));
                 // We need to restart the appDomain if the assembly is loaded
                 if (IsAssemblyLoaded(extension.Name)) {
                     Logger.Information("Extension activated: Setting AppDomain for restart because assembly {0} is loaded", extension.Name);
@@ -60,9 +64,9 @@ namespace Orchard.Environment.Extensions.Loaders {
         }
 
         public override void ExtensionDeactivated(ExtensionLoadingContext ctx, bool isNewExtension, ExtensionDescriptor extension) {
-            var assemblyFileName = _assemblyProbingFolder.GetAssemblyPhysicalFileName(extension.Name);
-            if (File.Exists(assemblyFileName)) {
-                ctx.FilesToDelete.Add(assemblyFileName);
+            if (_assemblyProbingFolder.AssemblyExists(extension.Name)) {
+                ctx.DeleteActions.Add(() => _assemblyProbingFolder.DeleteAssembly(extension.Name));
+
                 // We need to restart the appDomain if the assembly is loaded
                 if (IsAssemblyLoaded(extension.Name)) {
                     Logger.Information("Extension deactivated: Setting AppDomain for restart because assembly {0} is loaded", extension.Name);
