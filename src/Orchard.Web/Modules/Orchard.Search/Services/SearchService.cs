@@ -33,18 +33,20 @@ namespace Orchard.Search.Services
             get { return _indexManager.HasIndexProvider(); }
         }
 
-        IPageOfItems<T> ISearchService.Query<T>(string query, int page, int? pageSize, Func<ISearchHit, T> shapeResult) {
+        IPageOfItems<T> ISearchService.Query<T>(string query, int page, int? pageSize, bool filterCulture, Func<ISearchHit, T> shapeResult) {
             if (string.IsNullOrWhiteSpace(query) || !_indexManager.HasIndexProvider())
                 return null;
 
             var searchBuilder = _indexManager.GetSearchIndexProvider().CreateSearchBuilder(SearchIndexName)
-                .Parse(new [] {"title", "body"}, query);
+                .Parse(new[] {"title", "body"}, query);
 
+            if ( filterCulture ) {
                 var culture = _cultureManager.GetSiteCulture();
-                    
+
                 // use LCID as the text representation gets analyzed by the query parser
                 searchBuilder
                     .WithField("culture", CultureInfo.GetCultureInfo(culture).LCID);
+            }
 
             var totalCount = searchBuilder.Count();
             if (pageSize != null)

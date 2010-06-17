@@ -67,7 +67,10 @@
   <ItemGroup>
     <Compile Include="Controllers\SearchController.cs" />
     <Compile Include="Filters\SearchFilter.cs" />
+    <Compile Include="Models\SearchSettings.cs" />
+    <Compile Include="Models\SearchSettingsRecord.cs" />
     <Compile Include="Routes.cs" />
+    <Compile Include="Handlers\SearchSettingsHandler.cs" />
     <Compile Include="Services\ISearchService.cs" />
     <Compile Include="Services\SearchService.cs" />
     <Compile Include="ViewModels\SearchResultViewModel.cs" />
@@ -84,6 +87,7 @@
     <Content Include="Module.txt" />
     <Content Include="Styles\admin.css" />
     <Content Include="Styles\search.css" />
+    <Content Include="Views\EditorTemplates\Parts\Search.SiteSettings.ascx" />
     <Content Include="Views\SearchForm.ascx" />
     <Content Include="Views\Search\Index.ascx" />
     <Content Include="Views\Web.config" />
