@@ -165,6 +165,7 @@
     <Compile Include="ContentManagement\Models\Flavored.cs" />
     <Compile Include="ContentManagement\Models\FlavoredHandler.cs" />
     <Compile Include="ContentManagement\Models\Gamma.cs" />
+    <Compile Include="ContentManagement\Models\Phi.cs" />
     <Compile Include="ContentManagement\Models\Styled.cs" />
     <Compile Include="ContentManagement\Models\StyledHandler.cs" />
     <Compile Include="ContentManagement\ContentPartDriverHandlerTests.cs">
