@@ -1,7 +1,6 @@
 ﻿<%@ Control Language="C#" AutoEventWireup="true" Inherits="Orchard.Mvc.ViewUserControl<BlogArchivesViewModel>" %>
 <%@ Import Namespace="Orchard.Blogs.ViewModels"%>
 <%@ Import Namespace="Orchard.Blogs.Extensions"%>
-<%@ Import Namespace="Orchard.Blogs.Models"%>
 <% Html.RegisterStyle("archives.css"); %>
 <% Html.RegisterFootScript("archives.js"); %>
 <div class="archives">

@@ -4,6 +4,6 @@
 <div class="manage"><%: Html.ActionLink(T("Create new type").ToString(), "CreateType", null, new { @class = "button primaryAction" })%></div>
 <%=Html.UnorderedList(
     Model.Types,
-    (t,i) => Html.DisplayFor(m => t).ToHtmlString(),
+    (t,i) => Html.DisplayFor(m => t),
     "contentItems"
     ) %>

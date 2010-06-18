@@ -121,15 +121,23 @@ namespace Orchard.Mvc.Html {
 
         #region UnorderedList
 
-        public static IHtmlString UnorderedList<T>(this HtmlHelper htmlHelper, IEnumerable<T> items, Func<T, int, string> generateContent, string cssClass) {
+        public static IHtmlString UnorderedList<T>(this HtmlHelper htmlHelper, IEnumerable<T> items, Func<T, int, MvcHtmlString> generateContent, string cssClass) {
             return htmlHelper.UnorderedList(items, generateContent, cssClass, null, null);
         }
 
-        public static IHtmlString UnorderedList<T>(this HtmlHelper htmlHelper, IEnumerable<T> items, Func<T, int, string> generateContent, string cssClass, string itemCssClass, string alternatingItemCssClass) {
+        public static IHtmlString UnorderedList<T>(this HtmlHelper htmlHelper, IEnumerable<T> items, Func<T, int, MvcHtmlString> generateContent, string cssClass, string itemCssClass, string alternatingItemCssClass) {
+            return UnorderedList(items, (t, i) => generateContent(t, i) as IHtmlString, cssClass, t => itemCssClass, t => alternatingItemCssClass);
+        }
+
+        public static IHtmlString UnorderedList<T>(this HtmlHelper htmlHelper, IEnumerable<T> items, Func<T, int, IHtmlString> generateContent, string cssClass) {
+            return htmlHelper.UnorderedList(items, generateContent, cssClass, null, null);
+        }
+
+        public static IHtmlString UnorderedList<T>(this HtmlHelper htmlHelper, IEnumerable<T> items, Func<T, int, IHtmlString> generateContent, string cssClass, string itemCssClass, string alternatingItemCssClass) {
             return UnorderedList(items, generateContent, cssClass, t => itemCssClass, t => alternatingItemCssClass);
         }
 
-        private static IHtmlString UnorderedList<T>(IEnumerable<T> items, Func<T, int, string> generateContent, string cssClass, Func<T, string> generateItemCssClass, Func<T, string> generateAlternatingItemCssClass) {
+        private static IHtmlString UnorderedList<T>(IEnumerable<T> items, Func<T, int, IHtmlString> generateContent, string cssClass, Func<T, string> generateItemCssClass, Func<T, string> generateAlternatingItemCssClass) {
             if (items == null || !items.Any()) return new HtmlString(string.Empty);
 
             var sb = new StringBuilder(250);

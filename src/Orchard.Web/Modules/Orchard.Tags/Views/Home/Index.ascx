@@ -8,6 +8,6 @@
         "Search",
         new { tagName = t.TagName },
         new { @class = "" /* todo: (heskew) classify according to tag use */ }
-        ).ToHtmlString(),
+        ),
     "tagCloud")
      %>

@@ -142,7 +142,7 @@ namespace Orchard.Tests.Mvc.Html {
             var html = new HtmlHelper(viewContext, viewDataContainer.Object);
 
             //act
-            var result = html.UnorderedList((IEnumerable<string>)null, (a, b) => "", "test");
+            var result = html.UnorderedList((IEnumerable<string>)null, (a, b) => MvcHtmlString.Create(""), "test");
 
             //assert
             Assert.AreEqual(string.Empty, result.ToString());
@@ -156,7 +156,7 @@ namespace Orchard.Tests.Mvc.Html {
             var html = new HtmlHelper(viewContext, viewDataContainer.Object);
 
             //act
-            var result = html.UnorderedList(new string[]{}, (a, b) => "", "test");
+            var result = html.UnorderedList(new string[] { }, (a, b) => MvcHtmlString.Create(""), "test");
 
             //assert
             Assert.AreEqual(string.Empty, result.ToString());

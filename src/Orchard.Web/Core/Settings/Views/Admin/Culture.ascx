@@ -6,7 +6,7 @@
 <h2><%:T("Cultures this site supports") %></h2>
 <%: Html.UnorderedList(
     Model.SiteCultures.OrderBy(s => s),
-    (s, i) => Html.DisplayFor(scvm => s, s == Model.CurrentCulture ? "CurrentCulture" : "RemovableCulture", "").ToString(),
+    (s, i) => Html.DisplayFor(scvm => s, s == Model.CurrentCulture ? "CurrentCulture" : "RemovableCulture", ""),
     "site-cultures", "culture", "odd")%>
 <% using (Html.BeginFormAntiForgeryPost("AddCulture")) { %>
 <%:Html.ValidationSummary() %>
