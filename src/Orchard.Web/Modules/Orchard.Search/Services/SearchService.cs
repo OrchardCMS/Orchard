@@ -63,35 +63,5 @@ namespace Orchard.Search.Services
 
             return pageOfItems;
         }
-        
-        void ISearchService.RebuildIndex() {
-            if (!_indexManager.HasIndexProvider()) {
-                Services.Notifier.Warning(T("There is no search index to rebuild."));
-                return;
-            }
-
-            var searchProvider = _indexManager.GetSearchIndexProvider();
-            if (searchProvider.Exists(SearchIndexName))
-                searchProvider.DeleteIndex(SearchIndexName);
-
-            searchProvider.CreateIndex(SearchIndexName); // or just reset the updated date and let the background process recreate the index
-
-            Services.Notifier.Information(T("The search index has been rebuilt."));
-        }
-
-        void ISearchService.UpdateIndex() {
-            
-            foreach(var handler in _indexNotifierHandlers) {
-                handler.UpdateIndex(SearchIndexName);
-            }
-
-            Services.Notifier.Information(T("The search index has been updated."));
-        }
-
-        DateTime ISearchService.GetIndexUpdatedUtc() {
-            return !HasIndexToManage
-                ? DateTime.MinValue
-                : _indexManager.GetSearchIndexProvider().GetLastIndexUtc(SearchIndexName);
-        }
     }
 }
