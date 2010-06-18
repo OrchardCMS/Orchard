@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using Orchard.Caching;
 using Orchard.Environment.Extensions.Models;
@@ -29,8 +30,12 @@ namespace Orchard.Environment.Extensions.Loaders {
 
         public override int Order { get { return 30; } }
 
-        public override string GetAssemblyDirective(DependencyDescriptor dependency) {
+        public override string GetWebFormAssemblyDirective(DependencyDescriptor dependency) {
             return string.Format("<%@ Assembly Name=\"{0}\"%>", dependency.Name);
+        }
+
+        public override IEnumerable<string> GetWebFormVirtualDependencies(DependencyDescriptor dependency) {
+            yield return _assemblyProbingFolder.GetAssemblyVirtualPath(dependency.Name);
         }
 
         public override void ExtensionRemoved(ExtensionLoadingContext ctx, DependencyDescriptor dependency) {
@@ -52,7 +57,7 @@ namespace Orchard.Environment.Extensions.Loaders {
             bool copyAssembly =
                 !_assemblyProbingFolder.AssemblyExists(extension.Name) ||
                 File.GetLastWriteTimeUtc(sourceFileName) > _assemblyProbingFolder.GetAssemblyDateTimeUtc(extension.Name);
-                
+
             if (copyAssembly) {
                 ctx.CopyActions.Add(() => _assemblyProbingFolder.StoreAssembly(extension.Name, sourceFileName));
                 // We need to restart the appDomain if the assembly is loaded
@@ -103,6 +108,8 @@ namespace Orchard.Environment.Extensions.Loaders {
                 var assembly = _assemblyProbingFolder.LoadAssembly(descriptor.Name);
                 if (assembly == null)
                     return null;
+
+                Logger.Information("Loading extension \"{0}\"", dependency.Name);
 
                 return new ExtensionEntry {
                     Descriptor = descriptor,

@@ -23,6 +23,11 @@ namespace Orchard.FileSystems.Dependencies {
         DateTime GetAssemblyDateTimeUtc(string moduleName);
 
         /// <summary>
+        /// Return the virtual path of the assembly (optional)
+        /// </summary>
+        string GetAssemblyVirtualPath(string moduleName);
+
+        /// <summary>
         /// Load the assembly corresponding to "moduleName" if the assembly file
         /// is present in the folder.
         /// </summary>

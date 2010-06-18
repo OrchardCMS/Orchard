@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Orchard.Caching;
 using Orchard.Environment.Extensions.Models;
 using Orchard.FileSystems.Dependencies;
@@ -24,6 +25,7 @@ namespace Orchard.Environment.Extensions.Loaders {
 
         void Monitor(ExtensionDescriptor extension, Action<IVolatileToken> monitor);
 
-        string GetAssemblyDirective(DependencyDescriptor dependency);
+        string GetWebFormAssemblyDirective(DependencyDescriptor dependency);
+        IEnumerable<string> GetWebFormVirtualDependencies(DependencyDescriptor dependency);
     }
 }

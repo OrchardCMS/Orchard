@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System.Collections.Generic;
+using System.IO;
 using Orchard.Environment.Extensions.Models;
 using Orchard.FileSystems.Dependencies;
 using Orchard.Logging;
@@ -22,8 +23,12 @@ namespace Orchard.Environment.Extensions.Loaders {
 
         public override int Order { get { return 40; } }
 
-        public override string GetAssemblyDirective(DependencyDescriptor dependency) {
+        public override string GetWebFormAssemblyDirective(DependencyDescriptor dependency) {
             return string.Format("<%@ Assembly Name=\"{0}\"%>", dependency.Name);
+        }
+
+        public override IEnumerable<string> GetWebFormVirtualDependencies(DependencyDescriptor dependency) {
+            yield return _assemblyProbingFolder.GetAssemblyVirtualPath(dependency.Name);
         }
 
         public override void ExtensionRemoved(ExtensionLoadingContext ctx, DependencyDescriptor dependency) {
@@ -73,6 +78,8 @@ namespace Orchard.Environment.Extensions.Loaders {
                 var assembly = _assemblyProbingFolder.LoadAssembly(descriptor.Name);
                 if (assembly == null)
                     return null;
+
+                Logger.Information("Loading extension \"{0}\"", dependency.Name);
 
                 return new ExtensionEntry {
                     Descriptor = descriptor,

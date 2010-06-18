@@ -30,5 +30,6 @@ namespace Orchard.FileSystems.AppData {
         IVolatileToken WhenPathChanges(string path);
 
         string MapPath(string path);
+        string GetVirtualPath(string path);
     }
 }

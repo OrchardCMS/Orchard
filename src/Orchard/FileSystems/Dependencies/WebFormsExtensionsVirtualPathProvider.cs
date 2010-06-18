@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Hosting;
@@ -30,16 +31,73 @@ namespace Orchard.FileSystems.Dependencies {
             return Previous.FileExists(virtualPath);
         }
 
+        public override string GetFileHash(string virtualPath, System.Collections.IEnumerable virtualPathDependencies) {
+            var result = GetFileHashWorker(virtualPath, virtualPathDependencies);
+            Logger.Information("GetFileHash(\"{0}\"): {1}", virtualPath, result);
+            return result;
+        }
+
+        private string GetFileHashWorker(string virtualPath, IEnumerable virtualPathDependencies) {
+            // We override the "GetFileHash()" behavior to take into account the dependencies folder
+            // state. This ensures that if any dependency changes, ASP.NET will recompile views that
+            // have been customized to include custom assembly directives.
+            var file = GetModuleVirtualOverride(virtualPath) ?? GetThemeVirtualOverride(virtualPath);
+            if (file == null) {
+                return base.GetFileHash(virtualPath, virtualPathDependencies);
+            }
+
+            var dependencies =
+                virtualPathDependencies
+                    .OfType<string>()
+                    .Concat(file.Loaders.SelectMany(dl => dl.Loader.GetWebFormVirtualDependencies(dl.Descriptor)));
+
+            if (Logger.IsEnabled(LogLevel.Debug)) {
+                Logger.Debug("GetFilHash(\"{0}\") - virtual path dependencies:", virtualPath);
+                foreach(var dependency in dependencies) {
+                    Logger.Debug("  Dependency: \"{0}\"", dependency);
+                }
+            }
+            return base.GetFileHash(virtualPath, dependencies);
+        }
+
         public override VirtualFile GetFile(string virtualPath) {
+            Logger.Debug("GetFile(\"{0}\")", virtualPath);
             var actualFile = Previous.GetFile(virtualPath);
 
-            return 
-                GetModuleCustomVirtualFile(virtualPath, actualFile) ??
-                GetThemeCustomVirtualFile(virtualPath, actualFile) ??
-                actualFile;
+            return GetModuleCustomVirtualFile(virtualPath, actualFile) ??
+                   GetThemeCustomVirtualFile(virtualPath, actualFile) ??
+                   actualFile;
         }
 
         private VirtualFile GetModuleCustomVirtualFile(string virtualPath, VirtualFile actualFile) {
+            var file = GetModuleVirtualOverride(virtualPath);
+            if (file == null)
+                return null;
+
+            if (Logger.IsEnabled(LogLevel.Debug)) {
+                Logger.Debug("Virtual file from module \"{0}\" served with specific assembly directive:", file.ModuleName);
+                Logger.Debug("  Virtual path:       {0}", virtualPath);
+                Logger.Debug("  Assembly directive: {0}", file.Directive);
+            }
+
+            return new WebFormsExtensionsVirtualFile(virtualPath, actualFile, file.Directive);
+        }
+
+        private VirtualFile GetThemeCustomVirtualFile(string virtualPath, VirtualFile actualFile) {
+            var file = GetThemeVirtualOverride(virtualPath);
+            if (file == null)
+                return null;
+
+            if (Logger.IsEnabled(LogLevel.Debug)) {
+                Logger.Debug("Virtual file from theme served with specific assembly directive:");
+                Logger.Debug("  Virtual path:       {0}", virtualPath);
+                Logger.Debug("  Assembly directive: {0}", file.Directive);
+            }
+
+            return new WebFormsExtensionsVirtualFile(virtualPath, actualFile, file.Directive);
+        }
+
+        private VirtualFileOverride GetModuleVirtualOverride(string virtualPath) {
             var prefix = PrefixMatch(virtualPath, _modulesPrefixes);
             if (prefix == null)
                 return null;
@@ -60,20 +118,18 @@ namespace Orchard.FileSystems.Dependencies {
             if (loader == null)
                 return null;
 
-            var directive = loader.GetAssemblyDirective(dependencyDescriptor);
+            var directive = loader.GetWebFormAssemblyDirective(dependencyDescriptor);
             if (string.IsNullOrEmpty(directive))
                 return null;
 
-            if (Logger.IsEnabled(LogLevel.Debug)) {
-                Logger.Debug("Virtual file from module \"{0}\" served with specific assembly directive:", moduleName);
-                Logger.Debug("  Virtual path:       {0}", virtualPath);
-                Logger.Debug("  Assembly directive: {0}", directive);
-            }
-
-            return new WebFormsExtensionsVirtualFile(virtualPath, actualFile, directive);
+            return new VirtualFileOverride {
+                ModuleName = moduleName,
+                Directive = directive,
+                Loaders = new[] { new DependencyLoader { Loader = loader, Descriptor = dependencyDescriptor } }
+            };
         }
 
-        private VirtualFile GetThemeCustomVirtualFile(string virtualPath, VirtualFile actualFile) {
+        private VirtualFileOverride GetThemeVirtualOverride(string virtualPath) {
             var prefix = PrefixMatch(virtualPath, _themesPrefixes);
             if (prefix == null)
                 return null;
@@ -82,24 +138,23 @@ namespace Orchard.FileSystems.Dependencies {
             if (extension == null)
                 return null;
 
-            string directive = _dependenciesFolder.LoadDescriptors().Aggregate("", (s, desc) => {
-                var loader = _loaders.Where(l => l.Name == desc.LoaderName).FirstOrDefault();
-                if (loader == null)
-                    return s;
-                else {
-                    return s + loader.GetAssemblyDirective(desc);
-                }});
+            var loaders = _loaders
+                .SelectMany(loader => _dependenciesFolder
+                                          .LoadDescriptors()
+                                          .Where(d => d.LoaderName == loader.Name),
+                            (loader, desr) => new DependencyLoader { Loader = loader, Descriptor = desr });
+
+            var directive = loaders
+                .Aggregate("", (s, dl) => s + dl.Loader.GetWebFormAssemblyDirective(dl.Descriptor));
 
             if (string.IsNullOrEmpty(directive))
                 return null;
 
-            if (Logger.IsEnabled(LogLevel.Debug)) {
-                Logger.Debug("Virtual file from theme served with specific assembly directive:");
-                Logger.Debug("  Virtual path:       {0}", virtualPath);
-                Logger.Debug("  Assembly directive: {0}", directive);
-            }
-
-            return new WebFormsExtensionsVirtualFile(virtualPath, actualFile, directive);
+            return new VirtualFileOverride {
+                ModuleName = "",
+                Directive = directive,
+                Loaders = loaders
+            };
         }
 
         private string ModuleMatch(string virtualPath, string prefix) {
@@ -123,6 +178,17 @@ namespace Orchard.FileSystems.Dependencies {
 
         VirtualPathProvider ICustomVirtualPathProvider.Instance {
             get { return this; }
+        }
+
+        private class VirtualFileOverride {
+            public string ModuleName { get; set; }
+            public string Directive { get; set; }
+            public IEnumerable<DependencyLoader> Loaders { get; set; }
+        }
+
+        private class DependencyLoader {
+            public IExtensionLoader Loader { get; set; }
+            public DependencyDescriptor Descriptor { get; set; }
         }
     }
 }

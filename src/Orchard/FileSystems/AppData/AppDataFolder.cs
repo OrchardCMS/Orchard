@@ -85,8 +85,11 @@ namespace Orchard.FileSystems.AppData {
         }
 
         public IVolatileToken WhenPathChanges(string path) {
-            var replace = Combine(AppDataPath, path);
-            return _virtualPathMonitor.WhenPathChanges(replace);
+            return _virtualPathMonitor.WhenPathChanges(GetVirtualPath(path));
+        }
+
+        public string GetVirtualPath(string path) {
+            return Combine(AppDataPath, path);
         }
 
         public void CreateFile(string path, string content) {

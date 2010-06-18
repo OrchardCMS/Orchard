@@ -94,7 +94,7 @@ namespace Orchard.Tests.Stubs {
         }
 
         public void CreateDirectory(string path) {
-            var entry = _fileSystem.CreateDirectoryEntry(path);
+            _fileSystem.CreateDirectoryEntry(path);
         }
 
         public IVolatileToken WhenPathChanges(string path) {
@@ -102,6 +102,10 @@ namespace Orchard.Tests.Stubs {
         }
 
         public string MapPath(string path) {
+            throw new NotImplementedException();
+        }
+
+        public string GetVirtualPath(string path) {
             throw new NotImplementedException();
         }
 

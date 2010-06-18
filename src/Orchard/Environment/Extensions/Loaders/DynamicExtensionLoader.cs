@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using Orchard.Caching;
 using Orchard.Environment.Extensions.Models;
@@ -30,8 +31,12 @@ namespace Orchard.Environment.Extensions.Loaders {
 
         public override int Order { get { return 100; } }
 
-        public override string GetAssemblyDirective(DependencyDescriptor dependency) {
+        public override string GetWebFormAssemblyDirective(DependencyDescriptor dependency) {
             return string.Format("<%@ Assembly Src=\"{0}\"%>", dependency.VirtualPath);
+        }
+
+        public override IEnumerable<string> GetWebFormVirtualDependencies(DependencyDescriptor dependency) {
+            yield return dependency.VirtualPath;
         }
 
         public override void Monitor(ExtensionDescriptor descriptor, Action<IVolatileToken> monitor) {
@@ -75,6 +80,7 @@ namespace Orchard.Environment.Extensions.Loaders {
             if (dependency != null && dependency.LoaderName == this.Name) {
 
                 var assembly = _buildManager.GetCompiledAssembly(dependency.VirtualPath);
+                Logger.Information("Loading extension \"{0}\": assembly name=\"{1}\"", dependency.Name, assembly.GetName().Name);
 
                 return new ExtensionEntry {
                     Descriptor = descriptor,

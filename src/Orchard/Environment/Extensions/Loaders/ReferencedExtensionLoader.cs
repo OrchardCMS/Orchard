@@ -6,6 +6,7 @@ using System.Web.Hosting;
 using Orchard.Environment.Extensions.Models;
 using Orchard.FileSystems.Dependencies;
 using Orchard.FileSystems.VirtualPath;
+using Orchard.Logging;
 
 namespace Orchard.Environment.Extensions.Loaders {
     /// <summary>
@@ -18,7 +19,10 @@ namespace Orchard.Environment.Extensions.Loaders {
         public ReferencedExtensionLoader(IDependenciesFolder dependenciesFolder, IVirtualPathProvider virtualPathProvider) {
             _dependenciesFolder = dependenciesFolder;
             _virtualPathProvider = virtualPathProvider;
+            Logger = NullLogger.Instance;
         }
+
+        public ILogger Logger { get; set; }
 
         public override int Order { get { return 20; } }
 
@@ -58,6 +62,11 @@ namespace Orchard.Environment.Extensions.Loaders {
                 var assembly = BuildManager.GetReferencedAssemblies()
                     .OfType<Assembly>()
                     .FirstOrDefault(x => x.GetName().Name == descriptor.Name);
+
+                if (assembly == null)
+                    return null;
+
+                Logger.Information("Loading extension \"{0}\"", dependency.Name);
 
                 return new ExtensionEntry {
                     Descriptor = descriptor,

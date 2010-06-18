@@ -1,5 +1,5 @@
 ﻿using System;
-using System.IO;
+using System.Collections.Generic;
 using System.Linq;
 using Orchard.Caching;
 using Orchard.Environment.Extensions.Models;
@@ -17,16 +17,16 @@ namespace Orchard.Environment.Extensions.Loaders {
         public virtual void ExtensionDeactivated(ExtensionLoadingContext ctx, bool isNewExtension, ExtensionDescriptor extension){}
         public virtual void ExtensionRemoved(ExtensionLoadingContext ctx, DependencyDescriptor dependency) { }
         public virtual void Monitor(ExtensionDescriptor extension, Action<IVolatileToken> monitor) { }
-        public virtual string GetAssemblyDirective(DependencyDescriptor dependency) { return null; }
 
-        public static bool FileIsNewer(string sourceFileName, string destinationFileName) {
-            if (!File.Exists(destinationFileName))
-                return true;
-
-            return File.GetLastWriteTimeUtc(sourceFileName) > File.GetLastWriteTimeUtc(destinationFileName);
+        public virtual string GetWebFormAssemblyDirective(DependencyDescriptor dependency) {
+            return null;
         }
 
-        public static bool IsAssemblyLoaded(string moduleName) {
+        public virtual IEnumerable<string> GetWebFormVirtualDependencies(DependencyDescriptor dependency) {
+            return Enumerable.Empty<string>();
+        }
+
+        protected static bool IsAssemblyLoaded(string moduleName) {
             return AppDomain.CurrentDomain.GetAssemblies().Any(a => a.GetName().Name == moduleName);
         }
     }

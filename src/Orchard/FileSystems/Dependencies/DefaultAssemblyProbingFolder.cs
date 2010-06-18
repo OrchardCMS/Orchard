@@ -21,6 +21,14 @@ namespace Orchard.FileSystems.Dependencies {
             return _appDataFolder.GetFileLastWriteTimeUtc(path);
         }
 
+        public string GetAssemblyVirtualPath(string moduleName) {
+            var path = PrecompiledAssemblyPath(moduleName);
+            if (!_appDataFolder.FileExists(path))
+                return null;
+
+            return _appDataFolder.GetVirtualPath(path);
+        }
+
         public Assembly LoadAssembly(string moduleName) {
             var path = PrecompiledAssemblyPath(moduleName);
             if (!_appDataFolder.FileExists(path))

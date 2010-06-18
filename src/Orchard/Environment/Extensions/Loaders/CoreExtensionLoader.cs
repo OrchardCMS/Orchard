@@ -5,6 +5,7 @@ using Orchard.Caching;
 using Orchard.Environment.Extensions.Models;
 using Orchard.FileSystems.Dependencies;
 using Orchard.FileSystems.VirtualPath;
+using Orchard.Logging;
 
 namespace Orchard.Environment.Extensions.Loaders {
     /// <summary>
@@ -15,7 +16,10 @@ namespace Orchard.Environment.Extensions.Loaders {
 
         public CoreExtensionLoader(IDependenciesFolder dependenciesFolder) {
             _dependenciesFolder = dependenciesFolder;
+            Logger = NullLogger.Instance;
         }
+
+        public ILogger Logger { get; set; }
 
         public override int Order { get { return 10; } }
 
@@ -34,6 +38,7 @@ namespace Orchard.Environment.Extensions.Loaders {
         public override ExtensionEntry Load(ExtensionDescriptor descriptor) {
             var dependency = _dependenciesFolder.GetDescriptor(descriptor.Name);
             if (dependency != null && dependency.LoaderName == this.Name) {
+                Logger.Information("Loading extension \"{0}\"", dependency.Name);
 
                 var assembly = Assembly.Load("Orchard.Core");
 
