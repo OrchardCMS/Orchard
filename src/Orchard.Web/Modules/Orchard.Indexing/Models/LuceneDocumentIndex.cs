@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Threading;
 using Lucene.Net.Documents;
 using Orchard.Utility.Extensions;
 

@@ -1,27 +1,22 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using Orchard.Collections;
 using Orchard.Indexing;
 using Orchard.Localization;
 using Orchard.Localization.Services;
-using Orchard.UI.Notify;
-using System.Web;
+using Orchard.ContentManagement;
 
 namespace Orchard.Search.Services
 {
     public class SearchService : ISearchService
     {
-        private const string SearchIndexName = "Search";
-        private readonly IIndexManager _indexManager;
-        private readonly IEnumerable<IIndexNotifierHandler> _indexNotifierHandlers;
+        private readonly IContentManager _contentManager;
         private readonly ICultureManager _cultureManager;
 
-        public SearchService(IOrchardServices services, IIndexManager indexManager, IEnumerable<IIndexNotifierHandler> indexNotifierHandlers, ICultureManager cultureManager) {
+        public SearchService(IOrchardServices services, IContentManager contentManager, ICultureManager cultureManager) {
             Services = services;
-            _indexManager = indexManager;
-            _indexNotifierHandlers = indexNotifierHandlers;
+            _contentManager = contentManager;
             _cultureManager = cultureManager;
             T = NullLocalizer.Instance;
         }
@@ -29,16 +24,12 @@ namespace Orchard.Search.Services
         public IOrchardServices Services { get; set; }
         public Localizer T { get; set; }
 
-        public bool HasIndexToManage {
-            get { return _indexManager.HasIndexProvider(); }
-        }
-
         IPageOfItems<T> ISearchService.Query<T>(string query, int page, int? pageSize, bool filterCulture, string[] searchFields, Func<ISearchHit, T> shapeResult) {
-            if (string.IsNullOrWhiteSpace(query) || !_indexManager.HasIndexProvider())
+
+            if (string.IsNullOrWhiteSpace(query))
                 return null;
 
-            var searchBuilder = _indexManager.GetSearchIndexProvider().CreateSearchBuilder(SearchIndexName)
-                .Parse(searchFields, query);
+            var searchBuilder = _contentManager.Search().Parse(searchFields, query);
 
             if ( filterCulture ) {
                 var culture = _cultureManager.GetSiteCulture();
