@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using Autofac;
 using NUnit.Framework;
+using Orchard.Caching;
 using Orchard.Environment.Extensions;
 using Orchard.Environment.Extensions.Folders;
 using Orchard.Environment.Extensions.Loaders;
 using Orchard.Environment.Extensions.Models;
+using Orchard.FileSystems.Dependencies;
 using Orchard.Tests.Extensions.ExtensionTypes;
 
 namespace Orchard.Tests.Environment.Extensions {
@@ -43,19 +45,47 @@ namespace Orchard.Tests.Environment.Extensions {
             }
         }
 
-        public class StubLoaders : ExtensionLoaderBase {
+        public class StubLoaders : IExtensionLoader {
             #region Implementation of IExtensionLoader
 
-            public override int Order {
+            public int Order {
                 get { return 1; }
             }
 
-            public override ExtensionProbeEntry Probe(ExtensionDescriptor descriptor) {
+            public string Name {
+                get { return this.GetType().Name; }
+            }
+
+            public ExtensionProbeEntry Probe(ExtensionDescriptor descriptor) {
                 return new ExtensionProbeEntry { Descriptor = descriptor, Loader = this };
             }
 
-            public override ExtensionEntry Load(ExtensionDescriptor descriptor) {
+            public ExtensionEntry Load(ExtensionDescriptor descriptor) {
                 return new ExtensionEntry { Descriptor = descriptor, ExportedTypes = new[] { typeof(Alpha), typeof(Beta), typeof(Phi) } };
+            }
+
+            public void ExtensionActivated(ExtensionLoadingContext ctx, bool isNewExtension, ExtensionDescriptor extension) {
+                throw new NotImplementedException();
+            }
+
+            public void ExtensionDeactivated(ExtensionLoadingContext ctx, bool isNewExtension, ExtensionDescriptor extension) {
+                throw new NotImplementedException();
+            }
+
+            public void ExtensionRemoved(ExtensionLoadingContext ctx, DependencyDescriptor dependency) {
+                throw new NotImplementedException();
+            }
+
+            public void Monitor(ExtensionDescriptor extension, Action<IVolatileToken> monitor) {
+                throw new NotImplementedException();
+            }
+
+            public string GetWebFormAssemblyDirective(DependencyDescriptor dependency) {
+                throw new NotImplementedException();
+            }
+
+            public IEnumerable<string> GetWebFormVirtualDependencies(DependencyDescriptor dependency) {
+                throw new NotImplementedException();
             }
 
             #endregion

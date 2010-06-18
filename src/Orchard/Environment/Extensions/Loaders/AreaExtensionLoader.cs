@@ -10,7 +10,8 @@ namespace Orchard.Environment.Extensions.Loaders {
     public class AreaExtensionLoader : ExtensionLoaderBase {
         private readonly IDependenciesFolder _dependenciesFolder;
 
-        public AreaExtensionLoader(IDependenciesFolder dependenciesFolder) {
+        public AreaExtensionLoader(IDependenciesFolder dependenciesFolder)
+            : base(dependenciesFolder) {
             _dependenciesFolder = dependenciesFolder;
             Logger = NullLogger.Instance;
         }
@@ -31,20 +32,16 @@ namespace Orchard.Environment.Extensions.Loaders {
             return null;
         }
 
-        public override ExtensionEntry Load(ExtensionDescriptor descriptor) {
-            var dependency = _dependenciesFolder.GetDescriptor(descriptor.Name);
-            if (dependency != null && dependency.LoaderName == this.Name) {
-                Logger.Information("Loading extension \"{0}\"", dependency.Name);
+        public override ExtensionEntry LoadWorker(ExtensionDescriptor descriptor) {
+            Logger.Information("Loading extension \"{0}\"", descriptor.Name);
 
-                var assembly = Assembly.Load("Orchard.Web");
+            var assembly = Assembly.Load("Orchard.Web");
 
-                return new ExtensionEntry {
-                    Descriptor = descriptor,
-                    Assembly = assembly,
-                    ExportedTypes = assembly.GetExportedTypes().Where(x => IsTypeFromModule(x, descriptor))
-                };
-            }
-            return null;
+            return new ExtensionEntry {
+                Descriptor = descriptor,
+                Assembly = assembly,
+                ExportedTypes = assembly.GetExportedTypes().Where(x => IsTypeFromModule(x, descriptor))
+            };
         }
 
         private static bool IsTypeFromModule(Type type, ExtensionDescriptor descriptor) {

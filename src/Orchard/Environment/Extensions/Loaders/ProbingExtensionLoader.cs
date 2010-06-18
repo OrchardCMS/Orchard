@@ -13,7 +13,9 @@ namespace Orchard.Environment.Extensions.Loaders {
         private readonly IDependenciesFolder _dependenciesFolder;
         private readonly IAssemblyProbingFolder _assemblyProbingFolder;
 
-        public ProbingExtensionLoader(IDependenciesFolder dependenciesFolder, IAssemblyProbingFolder assemblyProbingFolder) {
+        public ProbingExtensionLoader(IDependenciesFolder dependenciesFolder, IAssemblyProbingFolder assemblyProbingFolder)
+            : base(dependenciesFolder) {
+
             _dependenciesFolder = dependenciesFolder;
             _assemblyProbingFolder = assemblyProbingFolder;
             Logger = NullLogger.Instance;
@@ -64,30 +66,25 @@ namespace Orchard.Environment.Extensions.Loaders {
                 return null;
 
             return new ExtensionProbeEntry {
-                    Descriptor = descriptor,
-                    LastModificationTimeUtc = _assemblyProbingFolder.GetAssemblyDateTimeUtc(descriptor.Name),
-                    Loader = this,
-                    VirtualPath = desc.VirtualPath
-                };
+                Descriptor = descriptor,
+                LastModificationTimeUtc = _assemblyProbingFolder.GetAssemblyDateTimeUtc(descriptor.Name),
+                Loader = this,
+                VirtualPath = desc.VirtualPath
+            };
         }
 
-        public override ExtensionEntry Load(ExtensionDescriptor descriptor) {
-            var dependency = _dependenciesFolder.GetDescriptor(descriptor.Name);
-            if (dependency != null && dependency.LoaderName == this.Name) {
+        public override ExtensionEntry LoadWorker(ExtensionDescriptor descriptor) {
+            var assembly = _assemblyProbingFolder.LoadAssembly(descriptor.Name);
+            if (assembly == null)
+                return null;
 
-                var assembly = _assemblyProbingFolder.LoadAssembly(descriptor.Name);
-                if (assembly == null)
-                    return null;
+            Logger.Information("Loading extension \"{0}\"", descriptor.Name);
 
-                Logger.Information("Loading extension \"{0}\"", dependency.Name);
-
-                return new ExtensionEntry {
-                    Descriptor = descriptor,
-                    Assembly = assembly,
-                    ExportedTypes = assembly.GetExportedTypes()
-                };
-            }
-            return null;
+            return new ExtensionEntry {
+                Descriptor = descriptor,
+                Assembly = assembly,
+                ExportedTypes = assembly.GetExportedTypes()
+            };
         }
     }
 }

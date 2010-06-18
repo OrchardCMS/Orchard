@@ -18,7 +18,8 @@ namespace Orchard.Environment.Extensions.Loaders {
             IBuildManager buildManager,
             IVirtualPathProvider virtualPathProvider,
             IVirtualPathMonitor virtualPathMonitor,
-            IDependenciesFolder dependenciesFolder) {
+            IDependenciesFolder dependenciesFolder)
+            : base(dependenciesFolder) {
 
             _buildManager = buildManager;
             _virtualPathProvider = virtualPathProvider;
@@ -75,20 +76,19 @@ namespace Orchard.Environment.Extensions.Loaders {
             };
         }
 
-        public override ExtensionEntry Load(ExtensionDescriptor descriptor) {
-            var dependency = _dependenciesFolder.GetDescriptor(descriptor.Name);
-            if (dependency != null && dependency.LoaderName == this.Name) {
+        public override ExtensionEntry LoadWorker(ExtensionDescriptor descriptor) {
+            string projectPath = GetProjectPath(descriptor);
+            if (projectPath == null)
+                return null;
 
-                var assembly = _buildManager.GetCompiledAssembly(dependency.VirtualPath);
-                Logger.Information("Loading extension \"{0}\": assembly name=\"{1}\"", dependency.Name, assembly.GetName().Name);
+            var assembly = _buildManager.GetCompiledAssembly(projectPath);
+            Logger.Information("Loading extension \"{0}\": assembly name=\"{1}\"", descriptor.Name, assembly.GetName().Name);
 
-                return new ExtensionEntry {
-                    Descriptor = descriptor,
-                    Assembly = assembly,
-                    ExportedTypes = assembly.GetExportedTypes(),
-                };
-            }
-            return null;
+            return new ExtensionEntry {
+                Descriptor = descriptor,
+                Assembly = assembly,
+                ExportedTypes = assembly.GetExportedTypes(),
+            };
         }
 
         private string GetProjectPath(ExtensionDescriptor descriptor) {

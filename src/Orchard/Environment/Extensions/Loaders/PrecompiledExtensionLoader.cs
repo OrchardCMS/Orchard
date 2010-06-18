@@ -18,7 +18,12 @@ namespace Orchard.Environment.Extensions.Loaders {
         private readonly IVirtualPathProvider _virtualPathProvider;
         private readonly IVirtualPathMonitor _virtualPathMonitor;
 
-        public PrecompiledExtensionLoader(IDependenciesFolder dependenciesFolder, IAssemblyProbingFolder assemblyProbingFolder, IVirtualPathProvider virtualPathProvider, IVirtualPathMonitor virtualPathMonitor) {
+        public PrecompiledExtensionLoader(IDependenciesFolder dependenciesFolder, 
+            IAssemblyProbingFolder assemblyProbingFolder, 
+            IVirtualPathProvider virtualPathProvider,
+            IVirtualPathMonitor virtualPathMonitor)
+            : base(dependenciesFolder) {
+
             _dependenciesFolder = dependenciesFolder;
             _assemblyProbingFolder = assemblyProbingFolder;
             _virtualPathProvider = virtualPathProvider;
@@ -101,23 +106,18 @@ namespace Orchard.Environment.Extensions.Loaders {
             };
         }
 
-        public override ExtensionEntry Load(ExtensionDescriptor descriptor) {
-            var dependency = _dependenciesFolder.GetDescriptor(descriptor.Name);
-            if (dependency != null && dependency.LoaderName == this.Name) {
+        public override ExtensionEntry LoadWorker(ExtensionDescriptor descriptor) {
+            var assembly = _assemblyProbingFolder.LoadAssembly(descriptor.Name);
+            if (assembly == null)
+                return null;
 
-                var assembly = _assemblyProbingFolder.LoadAssembly(descriptor.Name);
-                if (assembly == null)
-                    return null;
+            Logger.Information("Loading extension \"{0}\"", descriptor.Name);
 
-                Logger.Information("Loading extension \"{0}\"", dependency.Name);
-
-                return new ExtensionEntry {
-                    Descriptor = descriptor,
-                    Assembly = assembly,
-                    ExportedTypes = assembly.GetExportedTypes()
-                };
-            }
-            return null;
+            return new ExtensionEntry {
+                Descriptor = descriptor,
+                Assembly = assembly,
+                ExportedTypes = assembly.GetExportedTypes()
+            };
         }
 
         public string GetAssemblyPath(ExtensionDescriptor descriptor) {

@@ -16,7 +16,9 @@ namespace Orchard.Environment.Extensions.Loaders {
         private readonly IDependenciesFolder _dependenciesFolder;
         private readonly IVirtualPathProvider _virtualPathProvider;
 
-        public ReferencedExtensionLoader(IDependenciesFolder dependenciesFolder, IVirtualPathProvider virtualPathProvider) {
+        public ReferencedExtensionLoader(IDependenciesFolder dependenciesFolder, IVirtualPathProvider virtualPathProvider)
+            : base(dependenciesFolder) {
+
             _dependenciesFolder = dependenciesFolder;
             _virtualPathProvider = virtualPathProvider;
             Logger = NullLogger.Instance;
@@ -52,29 +54,24 @@ namespace Orchard.Environment.Extensions.Loaders {
             };
         }
 
-        public override ExtensionEntry Load(ExtensionDescriptor descriptor) {
+        public override ExtensionEntry LoadWorker(ExtensionDescriptor descriptor) {
             if (HostingEnvironment.IsHosted == false)
                 return null;
 
-            var dependency = _dependenciesFolder.GetDescriptor(descriptor.Name);
-            if (dependency != null && dependency.LoaderName == this.Name) {
+            var assembly = BuildManager.GetReferencedAssemblies()
+                .OfType<Assembly>()
+                .FirstOrDefault(x => x.GetName().Name == descriptor.Name);
 
-                var assembly = BuildManager.GetReferencedAssemblies()
-                    .OfType<Assembly>()
-                    .FirstOrDefault(x => x.GetName().Name == descriptor.Name);
+            if (assembly == null)
+                return null;
 
-                if (assembly == null)
-                    return null;
+            Logger.Information("Loading extension \"{0}\"", descriptor.Name);
 
-                Logger.Information("Loading extension \"{0}\"", dependency.Name);
-
-                return new ExtensionEntry {
-                    Descriptor = descriptor,
-                    Assembly = assembly,
-                    ExportedTypes = assembly.GetExportedTypes()
-                };
-            }
-            return null;
+            return new ExtensionEntry {
+                Descriptor = descriptor,
+                Assembly = assembly,
+                ExportedTypes = assembly.GetExportedTypes()
+            };
         }
     }
 }
