@@ -254,5 +254,56 @@ namespace Orchard.Tests.Modules.Indexing {
             Assert.That(_searchBuilder.WithField("field", 3).ExactMatch().Count(), Is.EqualTo(0));
         }
 
+        [Test]
+        public void ShouldFilterStoredIntValues() {
+            _provider.CreateIndex("default");
+            _provider.Store("default", _provider.New(1).Add("field", 1).Store());
+            _provider.Store("default", _provider.New(2).Add("field", 22).Store());
+            _provider.Store("default", _provider.New(3).Add("field", 333).Store());
+
+            Assert.That(_searchBuilder.WithField("field", 1).ExactMatch().Count(), Is.EqualTo(1));
+            Assert.That(_searchBuilder.WithField("field", 22).ExactMatch().Count(), Is.EqualTo(1));
+            Assert.That(_searchBuilder.WithField("field", 333).ExactMatch().Count(), Is.EqualTo(1));
+
+            Assert.That(_searchBuilder.WithField("field", 0).ExactMatch().Count(), Is.EqualTo(0));
+            Assert.That(_searchBuilder.WithField("field", 2).ExactMatch().Count(), Is.EqualTo(0));
+            Assert.That(_searchBuilder.WithField("field", 3).ExactMatch().Count(), Is.EqualTo(0));
+        }
+
+        [Test]
+        public void ShouldProvideAvailableFields() {
+            _provider.CreateIndex("default");
+            _provider.Store("default", _provider.New(1).Add("a", "Home").Analyze());
+            _provider.Store("default", _provider.New(2).Add("b", DateTime.Now).Store());
+            _provider.Store("default", _provider.New(3).Add("c", 333));
+
+            Assert.That(_provider.GetFields("default").Length, Is.EqualTo(4));
+            Assert.That(_provider.GetFields("default").OrderBy(s => s).ToArray(), Is.EqualTo(new [] { "a", "b", "c", "id"}));
+        }
+
+        [Test]
+        public void FiltersShouldNotAlterResults() {
+            _provider.CreateIndex("default");
+            _provider.Store("default", _provider.New(1).Add("body", "Orchard has been developped by Mirosoft in C#").Analyze().Add("culture", 1033));
+            _provider.Store("default", _provider.New(2).Add("body", "Windows a été développé par Mirosoft en C++").Analyze().Add("culture", 1036));
+            _provider.Store("default", _provider.New(3).Add("title", "Home").Analyze().Add("culture", 1033));
+
+            Assert.That(_searchBuilder.WithField("body", "Mirosoft").Count(), Is.EqualTo(2));
+            Assert.That(_searchBuilder.WithField("body", "Mirosoft").WithField("culture", 1033).Count(), Is.EqualTo(3));
+            Assert.That(_searchBuilder.WithField("body", "Mirosoft").WithField("culture", 1033).AsFilter().Count(), Is.EqualTo(1));
+            
+            Assert.That(_searchBuilder.WithField("body", "Orchard").WithField("culture", 1036).Count(), Is.EqualTo(2));
+            Assert.That(_searchBuilder.WithField("body", "Orchard").WithField("culture", 1036).AsFilter().Count(), Is.EqualTo(0));
+
+            Assert.That(_searchBuilder.WithField("culture", 1033).Count(), Is.EqualTo(2));
+            Assert.That(_searchBuilder.WithField("culture", 1033).AsFilter().Count(), Is.EqualTo(2));
+            
+            Assert.That(_searchBuilder.WithField("body", "blabla").WithField("culture", 1033).Count(), Is.EqualTo(2));
+            Assert.That(_searchBuilder.WithField("body", "blabla").WithField("culture", 1033).AsFilter().Count(), Is.EqualTo(0));
+
+            Assert.That(_searchBuilder.Parse("title", "home").Count(), Is.EqualTo(1));
+            Assert.That(_searchBuilder.Parse("title", "home").WithField("culture", 1033).AsFilter().Count(), Is.EqualTo(1));
+
+        }
     }
 }

@@ -144,11 +144,11 @@ namespace Orchard.Indexing.Services {
                     current = indexDocument;
                     var doc = CreateDocument(indexDocument);
                     writer.AddDocument(doc);
-                    Logger.Debug("Document [{0}] indexed", indexDocument.Id);
+                    Logger.Debug("Document [{0}] indexed", indexDocument.ContentItemId);
                 }
             }
             catch ( Exception ex ) {
-                Logger.Error(ex, "An unexpected error occured while add the document [{0}] from the index [{1}].", current.Id, indexName);
+                Logger.Error(ex, "An unexpected error occured while add the document [{0}] from the index [{1}].", current.ContentItemId, indexName);
             }
             finally {
                 writer.Optimize();
@@ -229,5 +229,19 @@ namespace Orchard.Indexing.Services {
             doc.Save(settingsFileName);
         }
 
+        public string[] GetFields(string indexName) {
+            if ( !Exists(indexName) ) {
+                return new string[0];
+            }
+
+            var reader = IndexReader.Open(GetDirectory(indexName), true);
+
+            try {
+                return reader.GetFieldNames(IndexReader.FieldOption.ALL).ToArray();
+            }
+            finally {
+                reader.Close();
+            }
+        }
     }
 }

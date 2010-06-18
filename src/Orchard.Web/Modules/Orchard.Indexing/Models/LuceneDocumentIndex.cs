@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading;
 using Lucene.Net.Documents;
 using Orchard.Utility.Extensions;
 
@@ -8,34 +9,33 @@ namespace Orchard.Indexing.Models {
     public class LuceneDocumentIndex : IDocumentIndex {
 
         public List<AbstractField> Fields { get; private set; }
-        private AbstractField _previousField;
 
-        public int Id { get; private set; }
+        private string _name;
+        private string  _stringValue;
+        private int _intValue;
+        private float _floatValue;
+        private bool _analyze;
+        private bool _store;
+        private bool _removeTags;
+        private TypeCode _typeCode;
+
+        public int ContentItemId { get; private set; }
 
         public LuceneDocumentIndex(int documentId) {
             Fields = new List<AbstractField>();
             SetContentItemId(documentId);
             IsDirty = false;
+            
+            _typeCode = TypeCode.Empty;
         }
 
         public bool IsDirty { get; private set; }
 
         public IDocumentIndex Add(string name, string value) {
-            return Add(name, value, false);
-        }
-
-        public IDocumentIndex Add(string name, string value, bool removeTags) {
-            AppendPreviousField();
-            
-            if(value == null) {
-                value = String.Empty;
-            }
-            
-            if(removeTags) {
-                value = value.RemoveTags();
-            }
-
-            _previousField = new Field(name, value, Field.Store.NO, Field.Index.NOT_ANALYZED);
+            PrepareForIndexing();
+            _name = name;
+            _stringValue = value;
+            _typeCode = TypeCode.String;
             IsDirty = true;
             return this;
         }
@@ -45,8 +45,10 @@ namespace Orchard.Indexing.Models {
         }
 
         public IDocumentIndex Add(string name, int value) {
-            AppendPreviousField();
-            _previousField = new NumericField(name, Field.Store.NO, true).SetIntValue(value);
+            PrepareForIndexing();
+            _name = name;
+            _intValue = value;
+            _typeCode = TypeCode.Int32;
             IsDirty = true;
             return this;
         }
@@ -56,8 +58,10 @@ namespace Orchard.Indexing.Models {
         }
 
         public IDocumentIndex Add(string name, float value) {
-            AppendPreviousField();
-            _previousField = new NumericField(name, Field.Store.NO, true).SetFloatValue(value);
+            PrepareForIndexing();
+            _name = name;
+            _floatValue = value;
+            _typeCode = TypeCode.Single;
             IsDirty = true;
             return this;
         }
@@ -66,46 +70,57 @@ namespace Orchard.Indexing.Models {
             return Add(name, value.ToString());
         }
 
+        public IDocumentIndex RemoveTags() {
+            _removeTags = true;
+            return this;
+        }
+
         public IDocumentIndex Store() {
-            EnsurePreviousField();
-            var index = _previousField.IsTokenized() ? Field.Index.ANALYZED : Field.Index.NOT_ANALYZED;
-            _previousField = new Field(_previousField.Name(), _previousField.StringValue(), Field.Store.YES, index); 
+            _store = true;
             return this;
         }
 
         public IDocumentIndex Analyze() {
-            EnsurePreviousField();
-
-            var index = Field.Index.ANALYZED;
-            var store = _previousField.IsStored() ? Field.Store.YES : Field.Store.NO;
-            _previousField = new Field(_previousField.Name(), _previousField.StringValue(), store, index);
+            _analyze = true;
             return this;
         }
 
-        public IDocumentIndex SetContentItemId(int id) {
-            Id = id;
-            Fields.Add(new Field("id", id.ToString(), Field.Store.YES, Field.Index.NOT_ANALYZED));
+        public IDocumentIndex SetContentItemId(int contentItemId) {
+            ContentItemId = contentItemId;
+            Fields.Add(new Field("id", contentItemId.ToString(), Field.Store.YES, Field.Index.NOT_ANALYZED));
             return this;
         }
-
-        private void AppendPreviousField() {
-            if (_previousField == null) {
-                return;
-            }
-
-            Fields.Add(_previousField);
-            _previousField = null;
-        }
-
 
         public void PrepareForIndexing() {
-            AppendPreviousField();
-        }
-
-        private void EnsurePreviousField() {
-            if(_previousField == null) {
-                throw new ApplicationException("Operation can't be applied in this context.");
+            switch(_typeCode) {
+                case TypeCode.String:
+                    if(_removeTags) {
+                        _stringValue = _stringValue.RemoveTags();
+                    }
+                    Fields.Add(new Field(_name, _stringValue ?? String.Empty, 
+                        _store ? Field.Store.YES : Field.Store.NO, 
+                        _analyze ? Field.Index.ANALYZED : Field.Index.NOT_ANALYZED));
+                    break;
+                case TypeCode.Int32:
+                    Fields.Add(new NumericField(_name, 
+                        _store ? Field.Store.YES : Field.Store.NO,
+                        true).SetIntValue(_intValue));
+                    break;
+                case TypeCode.Single:
+                    Fields.Add(new NumericField(_name,
+                        _store ? Field.Store.YES : Field.Store.NO,
+                        true).SetFloatValue(_floatValue));
+                    break;
+                case TypeCode.Empty:
+                    break;
+                default:
+                    throw new OrchardException("Unexpected index type");
             }
+
+            _removeTags = false;
+            _analyze = false;
+            _store = false;
+            _typeCode = TypeCode.Empty;
         }
     }
 }

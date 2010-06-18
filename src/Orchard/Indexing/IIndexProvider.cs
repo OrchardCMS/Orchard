@@ -71,5 +71,9 @@ namespace Orchard.Indexing {
         /// </summary>
         void SetLastIndexUtc(string indexName, DateTime lastIndexUtc);
 
+        /// <summary>
+        /// Returns every field available in the specified index
+        /// </summary>
+        string[] GetFields(string indexName);
     }
 }

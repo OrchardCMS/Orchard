@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using Lucene.Net.Analysis;
-using Lucene.Net.Analysis.Tokenattributes;
 using Lucene.Net.Index;
 using Lucene.Net.Search;
 using Lucene.Net.Store;
@@ -20,15 +19,12 @@ namespace Orchard.Indexing.Services {
         private readonly Directory _directory;
 
         private readonly List<BooleanClause> _clauses;
+        private readonly List<BooleanClause> _filters;
         private int _count;
         private int _skip;
-        private readonly Dictionary<string, DateTime> _before;
-        private readonly Dictionary<string, DateTime> _after;
         private string _sort;
         private bool _sortDescending;
-        private string _parse;
-        private readonly Analyzer _analyzer;
-        private string[] _defaultFields;
+        private bool _asFilter;
 
         // pending clause attributes
         private BooleanClause.Occur _occur;
@@ -44,13 +40,10 @@ namespace Orchard.Indexing.Services {
 
             _count = MaxResults;
             _skip = 0;
-            _before = new Dictionary<string, DateTime>();
-            _after = new Dictionary<string, DateTime>();
             _clauses = new List<BooleanClause>();
+            _filters = new List<BooleanClause>();
             _sort = String.Empty;
             _sortDescending = true;
-            _parse = String.Empty;
-            _analyzer = LuceneIndexProvider.CreateAnalyzer();
 
             InitPendingClause();
         }
@@ -67,8 +60,13 @@ namespace Orchard.Indexing.Services {
                 throw new ArgumentException("Query can't be empty");
             }
 
-            _defaultFields = defaultFields;
-            _parse = query;
+            var analyzer = LuceneIndexProvider.CreateAnalyzer();
+            foreach ( var defaultField in defaultFields ) {
+                var clause = new BooleanClause(new QueryParser(LuceneIndexProvider.LuceneVersion, defaultField, analyzer).Parse(query), BooleanClause.Occur.SHOULD);
+                _clauses.Add(clause);
+            }
+            
+            _query = null;
             return this;
         }
 
@@ -155,6 +153,7 @@ namespace Orchard.Indexing.Services {
             _exactMatch = false;
             _query = null;
             _boost = 0;
+            _asFilter = false;
         }
 
         private void CreatePendingClause() {
@@ -172,8 +171,12 @@ namespace Orchard.Indexing.Services {
                     _query = new PrefixQuery(termQuery.GetTerm());
                 }
             }
-
-            _clauses.Add(new BooleanClause(_query, _occur));
+            if ( _asFilter ) {
+                _filters.Add(new BooleanClause(_query, _occur));
+            }
+            else {
+                _clauses.Add(new BooleanClause(_query, _occur));
+            }
         }
 
         public ISearchBuilder SortBy(string name) {
@@ -183,6 +186,11 @@ namespace Orchard.Indexing.Services {
 
         public ISearchBuilder Ascending() {
             _sortDescending = false;
+            return this;
+        }
+
+        public ISearchBuilder AsFilter() {
+            _asFilter = true;
             return this;
         }
 
@@ -206,23 +214,27 @@ namespace Orchard.Indexing.Services {
 
             var query = new BooleanQuery();
 
-            if(!String.IsNullOrWhiteSpace(_parse)) {
-                
-                 foreach ( var defaultField in _defaultFields ) {
-                     var clause = new BooleanClause(new QueryParser(LuceneIndexProvider.LuceneVersion, defaultField, LuceneIndexProvider.CreateAnalyzer()).Parse(_parse), BooleanClause.Occur.SHOULD);   
-                     query.Add(clause);
-                }
-            }
-
             foreach( var clause in _clauses)
                 query.Add(clause);
+           
 
             if ( query.Clauses().Count == 0 ) { // get all documents ?
                 query.Add(new TermRangeQuery("id", "0", "9", true, true), BooleanClause.Occur.SHOULD);
             }
 
-            Logger.Debug("New search query: {0}", query.ToString());
-            return query;
+            Query finalQuery = query;
+
+            if(_filters.Count > 0) {
+                var filter = new BooleanQuery();
+                foreach( var clause in _filters)
+                    filter.Add(clause);
+                var queryFilter = new QueryWrapperFilter(filter);
+
+                finalQuery = new FilteredQuery(query, queryFilter);
+            }
+
+            Logger.Debug("New search query: {0}", finalQuery.ToString());
+            return finalQuery;
         }
 
         public IEnumerable<ISearchHit> Search() {

@@ -165,7 +165,7 @@ namespace Orchard.Tests.Modules.Indexing {
         public void TagsShouldBeRemoved() {
             _provider.CreateIndex("default");
             _provider.Store("default", _provider.New(1).Add("body", "<hr>some content</hr>").Analyze());
-            _provider.Store("default", _provider.New(2).Add("body", "<hr>some content</hr>", true).Analyze());
+            _provider.Store("default", _provider.New(2).Add("body", "<hr>some content</hr>").RemoveTags().Analyze());
 
             var searchBuilder = _provider.CreateSearchBuilder("default");
 
@@ -177,7 +177,7 @@ namespace Orchard.Tests.Modules.Indexing {
             _provider.CreateIndex("default");
             _provider.Store("default", _provider.New(1).Add("body", null));
             _provider.Store("default", _provider.New(2).Add("body", ""));
-            _provider.Store("default", _provider.New(3).Add("body", "<hr></hr>", true));
+            _provider.Store("default", _provider.New(3).Add("body", "<hr></hr>").RemoveTags());
 
             var searchBuilder = _provider.CreateSearchBuilder("default");
 
