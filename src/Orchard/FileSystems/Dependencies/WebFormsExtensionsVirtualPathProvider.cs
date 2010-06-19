@@ -52,7 +52,7 @@ namespace Orchard.FileSystems.Dependencies {
                     .Concat(file.Loaders.SelectMany(dl => dl.Loader.GetWebFormVirtualDependencies(dl.Descriptor)));
 
             if (Logger.IsEnabled(LogLevel.Debug)) {
-                Logger.Debug("GetFilHash(\"{0}\") - virtual path dependencies:", virtualPath);
+                Logger.Debug("GetFileHash(\"{0}\") - virtual path dependencies:", virtualPath);
                 foreach(var dependency in dependencies) {
                     Logger.Debug("  Dependency: \"{0}\"", dependency);
                 }
@@ -61,7 +61,7 @@ namespace Orchard.FileSystems.Dependencies {
         }
 
         public override VirtualFile GetFile(string virtualPath) {
-            Logger.Debug("GetFile(\"{0}\")", virtualPath);
+            //Logger.Debug("GetFile(\"{0}\")", virtualPath);
             var actualFile = Previous.GetFile(virtualPath);
 
             return GetModuleCustomVirtualFile(virtualPath, actualFile) ??

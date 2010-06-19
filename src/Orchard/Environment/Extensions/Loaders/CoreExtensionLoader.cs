@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Linq;
 using System.Reflection;
-using Orchard.Caching;
 using Orchard.Environment.Extensions.Models;
 using Orchard.FileSystems.Dependencies;
-using Orchard.FileSystems.VirtualPath;
 using Orchard.Logging;
 
 namespace Orchard.Environment.Extensions.Loaders {
@@ -12,11 +10,10 @@ namespace Orchard.Environment.Extensions.Loaders {
     /// Load an extension by looking into specific namespaces of the "Orchard.Core" assembly
     /// </summary>
     public class CoreExtensionLoader : ExtensionLoaderBase {
-        private readonly IDependenciesFolder _dependenciesFolder;
 
         public CoreExtensionLoader(IDependenciesFolder dependenciesFolder)
             : base(dependenciesFolder) {
-            _dependenciesFolder = dependenciesFolder;
+
             Logger = NullLogger.Instance;
         }
 
@@ -36,8 +33,8 @@ namespace Orchard.Environment.Extensions.Loaders {
             return null;
         }
 
-        public override ExtensionEntry LoadWorker(ExtensionDescriptor descriptor) {
-            Logger.Information("Loading extension \"{0}\"", descriptor.Name);
+        protected override ExtensionEntry LoadWorker(ExtensionDescriptor descriptor) {
+            //Logger.Information("Loading extension \"{0}\"", descriptor.Name);
 
             var assembly = Assembly.Load("Orchard.Core");
 

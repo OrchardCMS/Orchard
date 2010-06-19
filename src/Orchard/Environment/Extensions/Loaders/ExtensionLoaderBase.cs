@@ -7,7 +7,7 @@ using Orchard.FileSystems.Dependencies;
 
 namespace Orchard.Environment.Extensions.Loaders {
     public abstract class ExtensionLoaderBase : IExtensionLoader {
-        private readonly IDependenciesFolder _dependenciesFolder;
+        protected readonly IDependenciesFolder _dependenciesFolder;
 
         protected ExtensionLoaderBase(IDependenciesFolder dependenciesFolder) {
             _dependenciesFolder = dependenciesFolder;
@@ -31,7 +31,7 @@ namespace Orchard.Environment.Extensions.Loaders {
         public virtual void ExtensionRemoved(ExtensionLoadingContext ctx, DependencyDescriptor dependency) { }
         public virtual void Monitor(ExtensionDescriptor extension, Action<IVolatileToken> monitor) { }
 
-        public abstract ExtensionEntry LoadWorker(ExtensionDescriptor descriptor);
+        protected abstract ExtensionEntry LoadWorker(ExtensionDescriptor descriptor);
 
         public virtual string GetWebFormAssemblyDirective(DependencyDescriptor dependency) {
             return null;

@@ -13,21 +13,20 @@ namespace Orchard.Environment.Extensions.Loaders {
     /// extension directory.
     /// </summary>
     public class PrecompiledExtensionLoader : ExtensionLoaderBase {
-        private readonly IDependenciesFolder _dependenciesFolder;
         private readonly IAssemblyProbingFolder _assemblyProbingFolder;
         private readonly IVirtualPathProvider _virtualPathProvider;
         private readonly IVirtualPathMonitor _virtualPathMonitor;
 
-        public PrecompiledExtensionLoader(IDependenciesFolder dependenciesFolder, 
-            IAssemblyProbingFolder assemblyProbingFolder, 
+        public PrecompiledExtensionLoader(IDependenciesFolder dependenciesFolder,
+            IAssemblyProbingFolder assemblyProbingFolder,
             IVirtualPathProvider virtualPathProvider,
             IVirtualPathMonitor virtualPathMonitor)
             : base(dependenciesFolder) {
 
-            _dependenciesFolder = dependenciesFolder;
             _assemblyProbingFolder = assemblyProbingFolder;
             _virtualPathProvider = virtualPathProvider;
             _virtualPathMonitor = virtualPathMonitor;
+
             Logger = NullLogger.Instance;
         }
 
@@ -45,11 +44,15 @@ namespace Orchard.Environment.Extensions.Loaders {
 
         public override void ExtensionRemoved(ExtensionLoadingContext ctx, DependencyDescriptor dependency) {
             if (_assemblyProbingFolder.AssemblyExists(dependency.Name)) {
-                ctx.DeleteActions.Add(() => _assemblyProbingFolder.DeleteAssembly(dependency.Name));
+                ctx.DeleteActions.Add(
+                    () => {
+                        Logger.Information("ExtensionRemoved: Deleting assembly \"{0}\" from probing directory", dependency.Name);
+                        _assemblyProbingFolder.DeleteAssembly(dependency.Name);
+                    });
 
                 // We need to restart the appDomain if the assembly is loaded
                 if (IsAssemblyLoaded(dependency.Name)) {
-                    Logger.Information("Extension removed: Setting AppDomain for restart because assembly {0} is loaded", dependency.Name);
+                    Logger.Information("ExtensionRemoved: Module \"{0}\" is removed and its assembly is loaded, forcing AppDomain restart", dependency.Name);
                     ctx.RestartAppDomain = true;
                 }
             }
@@ -65,9 +68,10 @@ namespace Orchard.Environment.Extensions.Loaders {
 
             if (copyAssembly) {
                 ctx.CopyActions.Add(() => _assemblyProbingFolder.StoreAssembly(extension.Name, sourceFileName));
+
                 // We need to restart the appDomain if the assembly is loaded
                 if (IsAssemblyLoaded(extension.Name)) {
-                    Logger.Information("Extension activated: Setting AppDomain for restart because assembly {0} is loaded", extension.Name);
+                    Logger.Information("ExtensionRemoved: Module \"{0}\" is activated with newer file and its assembly is loaded, forcing AppDomain restart", extension.Name);
                     ctx.RestartAppDomain = true;
                 }
             }
@@ -75,11 +79,15 @@ namespace Orchard.Environment.Extensions.Loaders {
 
         public override void ExtensionDeactivated(ExtensionLoadingContext ctx, ExtensionDescriptor extension) {
             if (_assemblyProbingFolder.AssemblyExists(extension.Name)) {
-                ctx.DeleteActions.Add(() => _assemblyProbingFolder.DeleteAssembly(extension.Name));
+                ctx.DeleteActions.Add(
+                    () => {
+                        Logger.Information("ExtensionDeactivated: Deleting assembly \"{0}\" from probing directory", extension.Name);
+                        _assemblyProbingFolder.DeleteAssembly(extension.Name);
+                    });
 
                 // We need to restart the appDomain if the assembly is loaded
                 if (IsAssemblyLoaded(extension.Name)) {
-                    Logger.Information("Extension deactivated: Setting AppDomain for restart because assembly {0} is loaded", extension.Name);
+                    Logger.Information("ExtensionDeactivated: Module \"{0}\" is deactivated and its assembly is loaded, forcing AppDomain restart", extension.Name);
                     ctx.RestartAppDomain = true;
                 }
             }
@@ -106,12 +114,12 @@ namespace Orchard.Environment.Extensions.Loaders {
             };
         }
 
-        public override ExtensionEntry LoadWorker(ExtensionDescriptor descriptor) {
+        protected override ExtensionEntry LoadWorker(ExtensionDescriptor descriptor) {
             var assembly = _assemblyProbingFolder.LoadAssembly(descriptor.Name);
             if (assembly == null)
                 return null;
 
-            Logger.Information("Loading extension \"{0}\"", descriptor.Name);
+            //Logger.Information("Loading extension \"{0}\"", descriptor.Name);
 
             return new ExtensionEntry {
                 Descriptor = descriptor,

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Reflection;
 using Orchard.FileSystems.AppData;
+using Orchard.Logging;
 
 namespace Orchard.FileSystems.Dependencies {
     public class DefaultAssemblyProbingFolder : IAssemblyProbingFolder {
@@ -9,7 +10,11 @@ namespace Orchard.FileSystems.Dependencies {
 
         public DefaultAssemblyProbingFolder(IAppDataFolder appDataFolder) {
             _appDataFolder = appDataFolder;
+
+            Logger = NullLogger.Instance;
         }
+
+        public ILogger Logger { get; set; }
 
         public bool AssemblyExists(string moduleName) {
             var path = PrecompiledAssemblyPath(moduleName);
@@ -39,11 +44,17 @@ namespace Orchard.FileSystems.Dependencies {
 
         public void DeleteAssembly(string moduleName) {
             var path = PrecompiledAssemblyPath(moduleName);
-            _appDataFolder.DeleteFile(path);
+
+            if (_appDataFolder.FileExists(path)) {
+                Logger.Information("Deleting assembly for module \"{0}\" from probing directory", moduleName);
+                _appDataFolder.DeleteFile(path);
+            }
         }
 
         public void StoreAssembly(string moduleName, string fileName) {
             var path = PrecompiledAssemblyPath(moduleName);
+
+            Logger.Information("Storing assembly file \"{0}\" for module \"{1}\"", fileName, moduleName);
             _appDataFolder.StoreFile(fileName, path);
         }
 

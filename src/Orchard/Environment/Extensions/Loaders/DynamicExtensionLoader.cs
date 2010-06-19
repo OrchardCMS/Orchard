@@ -55,6 +55,7 @@ namespace Orchard.Environment.Extensions.Loaders {
             // Since a dynamic assembly is not active anymore, we need to notify ASP.NET
             // that a new site compilation is needed (since ascx files may be referencing
             // this now removed extension).
+            Logger.Information("ExtensionRemoved: Module \"{0}\" has been removed, forcing site recompilation");
             ctx.ResetSiteCompilation = true;
         }
 
@@ -62,12 +63,13 @@ namespace Orchard.Environment.Extensions.Loaders {
             // Since a dynamic assembly is not active anymore, we need to notify ASP.NET
             // that a new site compilation is needed (since ascx files may be referencing
             // this now removed extension).
+            Logger.Information("ExtensionDeactivated: Module \"{0}\" has been de-activated, forcing site recompilation");
             ctx.ResetSiteCompilation = true;
         }
 
         public override void ExtensionActivated(ExtensionLoadingContext ctx, ExtensionDescriptor extension) {
             if (_reloadWorkaround.AppDomainRestartNeeded) {
-                Logger.Information("ExtensionActivated: Setting AppDomain for restart because csproj for module \"{0}\" changed and will need to be re-compiled", extension.Name);
+                Logger.Information("ExtensionActivated: Module \"{0}\" has changed, forcing AppDomain restart", extension.Name);
                 ctx.RestartAppDomain = _reloadWorkaround.AppDomainRestartNeeded;
             }
         }
@@ -85,13 +87,13 @@ namespace Orchard.Environment.Extensions.Loaders {
             };
         }
 
-        public override ExtensionEntry LoadWorker(ExtensionDescriptor descriptor) {
+        protected override ExtensionEntry LoadWorker(ExtensionDescriptor descriptor) {
             string projectPath = GetProjectPath(descriptor);
             if (projectPath == null)
                 return null;
 
             var assembly = _buildManager.GetCompiledAssembly(projectPath);
-            Logger.Information("Loading extension \"{0}\": assembly name=\"{1}\"", descriptor.Name, assembly.GetName().Name);
+            //Logger.Information("Loading extension \"{0}\": assembly name=\"{1}\"", descriptor.Name, assembly.GetName().Name);
 
             return new ExtensionEntry {
                 Descriptor = descriptor,
