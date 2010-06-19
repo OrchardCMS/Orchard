@@ -58,8 +58,7 @@ namespace Orchard.Environment.Extensions {
             // load that extension.
             var newDependencies = new List<DependencyDescriptor>();
             foreach (var extension in extensions) {
-                bool isNewExtension = newExtensions.Any(e => e.Name == extension.Name);
-                ProcessExtension(ctx, extension, isNewExtension, existingDependencies, newDependencies);
+                ProcessExtension(ctx, extension, existingDependencies, newDependencies);
             }
 
             // Execute all the work need by "ctx"
@@ -71,9 +70,8 @@ namespace Orchard.Environment.Extensions {
         }
 
         private void ProcessExtension(
-            ExtensionLoadingContext ctx,
+            ExtensionLoadingContext loadingContext,
             ExtensionDescriptor extension,
-            bool isNewExtension,
             IEnumerable<DependencyDescriptor> existingDependencies,
             List<DependencyDescriptor> newDependencies) {
 
@@ -98,17 +96,17 @@ namespace Orchard.Environment.Extensions {
             var previousDependency = existingDependencies.Where(d => d.Name == extension.Name).FirstOrDefault();
 
             if (activatedExtension == null) {
-                Logger.Warning("No loader found for extension {0}!", extension.Name);
+                Logger.Warning("No loader found for extension \"{0}\"!", extension.Name);
             }
 
             foreach (var loader in _loaders) {
                 if (activatedExtension != null && activatedExtension.Loader.Name == loader.Name) {
                     Logger.Information("Activating extension \"{0}\" with loader \"{1}\"", activatedExtension.Descriptor.Name, loader.Name);
-                    loader.ExtensionActivated(ctx, isNewExtension, extension);
+                    loader.ExtensionActivated(loadingContext, extension);
                 }
                 else if (previousDependency != null && previousDependency.LoaderName == loader.Name) {
                     Logger.Information("Deactivating extension \"{0}\" from loader \"{1}\"", previousDependency.Name, loader.Name);
-                    loader.ExtensionDeactivated(ctx, isNewExtension, extension);
+                    loader.ExtensionDeactivated(loadingContext, extension);
                 }
             }
 
@@ -132,12 +130,12 @@ namespace Orchard.Environment.Extensions {
             }
 
             if (ctx.RestartAppDomain) {
-                 Logger.Information("AppDomain restart required.");
+                Logger.Information("AppDomain restart required.");
                 _hostEnvironment.RestartAppDomain();
             }
 
             if (ctx.ResetSiteCompilation) {
-                    Logger.Information("Reset site compilation state required.");
+                Logger.Information("Reset site compilation state required.");
                 _hostEnvironment.ResetSiteCompilation();
             }
         }

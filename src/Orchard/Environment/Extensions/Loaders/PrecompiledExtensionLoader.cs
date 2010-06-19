@@ -55,7 +55,7 @@ namespace Orchard.Environment.Extensions.Loaders {
             }
         }
 
-        public override void ExtensionActivated(ExtensionLoadingContext ctx, bool isNewExtension, ExtensionDescriptor extension) {
+        public override void ExtensionActivated(ExtensionLoadingContext ctx, ExtensionDescriptor extension) {
             string sourceFileName = _virtualPathProvider.MapPath(GetAssemblyPath(extension));
 
             // Copy the assembly if it doesn't exist or if it is older than the source file.
@@ -73,7 +73,7 @@ namespace Orchard.Environment.Extensions.Loaders {
             }
         }
 
-        public override void ExtensionDeactivated(ExtensionLoadingContext ctx, bool isNewExtension, ExtensionDescriptor extension) {
+        public override void ExtensionDeactivated(ExtensionLoadingContext ctx, ExtensionDescriptor extension) {
             if (_assemblyProbingFolder.AssemblyExists(extension.Name)) {
                 ctx.DeleteActions.Add(() => _assemblyProbingFolder.DeleteAssembly(extension.Name));
 

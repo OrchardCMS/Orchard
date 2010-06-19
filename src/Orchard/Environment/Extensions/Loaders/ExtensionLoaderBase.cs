@@ -26,8 +26,8 @@ namespace Orchard.Environment.Extensions.Loaders {
             return null;
         }
 
-        public virtual void ExtensionActivated(ExtensionLoadingContext ctx, bool isNewExtension, ExtensionDescriptor extension) { }
-        public virtual void ExtensionDeactivated(ExtensionLoadingContext ctx, bool isNewExtension, ExtensionDescriptor extension) { }
+        public virtual void ExtensionActivated(ExtensionLoadingContext ctx, ExtensionDescriptor extension) { }
+        public virtual void ExtensionDeactivated(ExtensionLoadingContext ctx, ExtensionDescriptor extension) { }
         public virtual void ExtensionRemoved(ExtensionLoadingContext ctx, DependencyDescriptor dependency) { }
         public virtual void Monitor(ExtensionDescriptor extension, Action<IVolatileToken> monitor) { }
 

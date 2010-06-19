@@ -45,7 +45,7 @@ namespace Orchard.Environment.Extensions.Loaders {
             }
         }
 
-        public override void ExtensionDeactivated(ExtensionLoadingContext ctx, bool isNewExtension, ExtensionDescriptor extension) {
+        public override void ExtensionDeactivated(ExtensionLoadingContext ctx, ExtensionDescriptor extension) {
             if (_assemblyProbingFolder.AssemblyExists(extension.Name)) {
                 ctx.DeleteActions.Add(() => _assemblyProbingFolder.DeleteAssembly(extension.Name));
 

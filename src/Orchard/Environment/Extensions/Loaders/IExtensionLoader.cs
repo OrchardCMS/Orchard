@@ -19,8 +19,8 @@ namespace Orchard.Environment.Extensions.Loaders {
         ExtensionProbeEntry Probe(ExtensionDescriptor descriptor);
         ExtensionEntry Load(ExtensionDescriptor descriptor);
 
-        void ExtensionActivated(ExtensionLoadingContext ctx, bool isNewExtension, ExtensionDescriptor extension);
-        void ExtensionDeactivated(ExtensionLoadingContext ctx, bool isNewExtension, ExtensionDescriptor extension);
+        void ExtensionActivated(ExtensionLoadingContext ctx, ExtensionDescriptor extension);
+        void ExtensionDeactivated(ExtensionLoadingContext ctx, ExtensionDescriptor extension);
         void ExtensionRemoved(ExtensionLoadingContext ctx, DependencyDescriptor dependency);
 
         void Monitor(ExtensionDescriptor extension, Action<IVolatileToken> monitor);

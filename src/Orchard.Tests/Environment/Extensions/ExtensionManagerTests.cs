@@ -63,11 +63,11 @@ namespace Orchard.Tests.Environment.Extensions {
                 return new ExtensionEntry { Descriptor = descriptor, ExportedTypes = new[] { typeof(Alpha), typeof(Beta), typeof(Phi) } };
             }
 
-            public void ExtensionActivated(ExtensionLoadingContext ctx, bool isNewExtension, ExtensionDescriptor extension) {
+            public void ExtensionActivated(ExtensionLoadingContext ctx, ExtensionDescriptor extension) {
                 throw new NotImplementedException();
             }
 
-            public void ExtensionDeactivated(ExtensionLoadingContext ctx, bool isNewExtension, ExtensionDescriptor extension) {
+            public void ExtensionDeactivated(ExtensionLoadingContext ctx, ExtensionDescriptor extension) {
                 throw new NotImplementedException();
             }
 
