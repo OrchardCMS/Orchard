@@ -499,6 +499,27 @@ namespace Orchard.Tests.ContentManagement {
             Assert.That(flavored.TypePartDefinition, Is.Not.Null);
             Assert.That(flavored.TypePartDefinition.Settings["spin"], Is.EqualTo("clockwise"));
         }
+
+        [Test]
+        public void FieldsCanBeWeldIntoParts() {
+            var contentItem = _manager.New("alpha");
+            var part = contentItem.As<Flavored>();
+            var field = new Phi();
+            part.Weld(field);
+            Assert.That(part.Has(typeof(Phi), "Phi"));
+        }
+
+        [Test]
+        public void PartGetReturnsFieldWithName() {
+            var contentItem = _manager.New("alpha");
+            var part = contentItem.As<Flavored>();
+            var field = new Phi();
+            part.Weld(field);
+            var phi = part.Get(typeof(Phi), "Phi");
+            var phi2 = part.Get(typeof(Phi), "Phi2");
+            Assert.That(phi.Name, Is.EqualTo("Phi"));
+            Assert.That(phi2, Is.Null);
+        }
     }
 }
 

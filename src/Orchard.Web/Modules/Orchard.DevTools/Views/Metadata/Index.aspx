@@ -40,5 +40,5 @@ Exported as xml</h2>
 <% using (Html.BeginFormAntiForgeryPost()) { %>
 <%:Html.TextAreaFor(m=>m.ExportText, new{style="width:100%;height:640px;"}) %>
 <br />
-<input class="button primaryAction" type="submit" value="<%=_Encoded("Merge Changes") %>" />
+<input class="button primaryAction" type="submit" value="<%: T("Merge Changes") %>" />
 <%} %>

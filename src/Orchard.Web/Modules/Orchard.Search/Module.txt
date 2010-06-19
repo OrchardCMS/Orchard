@@ -9,3 +9,4 @@ features:
     Orchard.Search:
         Description: Standard interface to Orchard's built-in search.
         Category: Search
+        Dependencies: Orchard.Indexing

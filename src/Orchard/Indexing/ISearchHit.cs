@@ -1,7 +1,7 @@
 ﻿using System;
 namespace Orchard.Indexing {
     public interface ISearchHit {
-        int Id { get; }
+        int ContentItemId { get; }
         float Score { get; }
 
         int GetInt(string name);

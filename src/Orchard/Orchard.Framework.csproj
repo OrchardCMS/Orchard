@@ -227,6 +227,7 @@
     <Compile Include="ContentManagement\Handlers\ContentItemTemplates.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="ContentManagement\Handlers\IndexContentContext.cs" />
     <Compile Include="ContentManagement\Handlers\CreateContentContext.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -386,6 +387,7 @@
     <Compile Include="Environment\State\IShellStateManager.cs" />
     <Compile Include="Environment\State\ShellStateCoordinator.cs" />
     <Compile Include="IDependency.cs" />
+    <Compile Include="Indexing\NullSearchBuilder.cs" />
     <Compile Include="Indexing\IIndexNotifierHandler.cs" />
     <Compile Include="Localization\Services\DefaultCultureManager.cs" />
     <Compile Include="Localization\Services\DefaultResourceManager.cs" />
@@ -415,7 +417,6 @@
     <Compile Include="Indexing\ISearchHit.cs" />
     <Compile Include="Tasks\Indexing\IIndexingTask.cs" />
     <Compile Include="Tasks\Indexing\IIndexingTaskManager.cs" />
-    <Compile Include="ContentManagement\Handlers\IndexContentContext.cs" />
     <Compile Include="Validation\Argument.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -2,7 +2,7 @@
 <%@ Import Namespace="Orchard.Search.ViewModels" %><%
 using(Html.BeginForm("index", "search", new { area = "Orchard.Search" }, FormMethod.Get, new { @class = "search" })) { %>
     <fieldset>
-        <%=Html.TextBox("q", Model.Query) %>
-        <button type="submit"><%=T("Search") %></button>
+        <%: Html.TextBox("q", Model.Query) %>
+        <button type="submit"><%: T("Search") %></button>
     </fieldset><%
 } %>

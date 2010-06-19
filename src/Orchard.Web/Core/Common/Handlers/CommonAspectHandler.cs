@@ -53,12 +53,12 @@ namespace Orchard.Core.Common.Handlers {
             //OnGetEditorViewModel<CommonAspect>(GetEditor);
             //OnUpdateEditorViewModel<CommonAspect>(UpdateEditor);
 
-            OnIndexing<CommonAspect>((context, commonAspect) => context.IndexDocument
-                                                    .Add("type", commonAspect.ContentItem.ContentType).Analyze(false)
-                                                    .Add("author", commonAspect.Owner.UserName).Analyze(false)
-                                                    .Add("created", commonAspect.CreatedUtc ?? _clock.UtcNow).Analyze(false)
-                                                    .Add("published", commonAspect.PublishedUtc ?? _clock.UtcNow).Analyze(false)
-                                                    .Add("modified", commonAspect.ModifiedUtc ?? _clock.UtcNow).Analyze(false)
+            OnIndexing<CommonAspect>((context, commonAspect) => context.DocumentIndex
+                                                    .Add("type", commonAspect.ContentItem.ContentType).Store()
+                                                    .Add("author", commonAspect.Owner.UserName).Store()
+                                                    .Add("created", commonAspect.CreatedUtc ?? _clock.UtcNow).Store()
+                                                    .Add("published", commonAspect.PublishedUtc ?? _clock.UtcNow).Store()
+                                                    .Add("modified", commonAspect.ModifiedUtc ?? _clock.UtcNow).Store()
                                                     );
         }
 

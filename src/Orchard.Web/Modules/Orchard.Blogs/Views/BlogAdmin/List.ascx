@@ -4,8 +4,8 @@
 <h1><%: Html.TitleForPage(T("Manage Blogs").ToString()) %></h1>
 <%-- todo: Add helper text here when ready. <p><%: T("Possible text about setting up and managing a blog goes here.") %></p> --%><%
 if (Model.Entries.Count() > 0) { %>
-<div class="actions"><a class="add button primaryAction" href="<%=Url.BlogCreate() %>"><%: T("New Blog") %></a></div>
-<%=Html.UnorderedList(Model.Entries, (entry, i) => {
+<div class="actions"><a class="add button primaryAction" href="<%: Url.BlogCreate() %>"><%: T("New Blog") %></a></div>
+<%: Html.UnorderedList(Model.Entries, (entry, i) => {
         // Add blog post count rendering into "meta" zone
         entry.ContentItemViewModel.Zones.AddAction("meta", html => {
             int draftCount = entry.TotalPostCount - entry.ContentItemViewModel.Item.PostCount;
@@ -20,7 +20,7 @@ if (Model.Entries.Count() > 0) { %>
         });
 
         // Display the summary for the blog post
-        return Html.DisplayForItem(entry.ContentItemViewModel).ToHtmlString();
+        return Html.DisplayForItem(entry.ContentItemViewModel);
     }, "blogs contentItems")%><%
 } else { %>
 <div class="info message"><%:T("There are no blogs for you to see. Want to <a href=\"{0}\">add one</a>?", Url.BlogCreate())%></div><%

@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Orchard.Indexing;
 using Orchard.Mvc.ViewModels;
 
 namespace Orchard.ContentManagement {
@@ -17,6 +18,9 @@ namespace Orchard.ContentManagement {
         void Publish(ContentItem contentItem);
         void Unpublish(ContentItem contentItem);
         void Remove(ContentItem contentItem);
+        void Index(ContentItem contentItem, IDocumentIndex documentIndex);
+
+        ISearchBuilder Search();
 
         void Flush();
         IContentQuery<ContentItem> Query();

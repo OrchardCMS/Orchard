@@ -165,6 +165,7 @@
     <Compile Include="ContentManagement\Models\Flavored.cs" />
     <Compile Include="ContentManagement\Models\FlavoredHandler.cs" />
     <Compile Include="ContentManagement\Models\Gamma.cs" />
+    <Compile Include="ContentManagement\Models\Phi.cs" />
     <Compile Include="ContentManagement\Models\Styled.cs" />
     <Compile Include="ContentManagement\Models\StyledHandler.cs" />
     <Compile Include="ContentManagement\ContentPartDriverHandlerTests.cs">
@@ -200,6 +201,7 @@
     <Compile Include="FileSystems\Dependencies\AssemblyProbingFolderTests.cs" />
     <Compile Include="FileSystems\Dependencies\DependenciesFolderTests.cs" />
     <Compile Include="Localization\CultureManagerTests.cs" />
+    <Compile Include="Mvc\Html\HtmlHelperExtensionsTests.cs" />
     <Compile Include="Mvc\Routes\ShellRouteTests.cs" />
     <Compile Include="Mvc\Routes\UrlPrefixTests.cs" />
     <Compile Include="Stubs\StubFileSystem.cs" />

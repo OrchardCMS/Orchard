@@ -1,7 +1,7 @@
 ﻿<%@ Control Language="C#" Inherits="Orchard.Mvc.ViewUserControl<BodyEditorViewModel>" %>
 <%@ Import Namespace="Orchard.Core.Common.ViewModels"%>
 <% Html.RegisterScript("tiny_mce.js"); %>
-<%=Html.TextArea("Text", Model.Text, 25, 80, new { @class = "html" }) %><%
+<%: Html.TextArea("Text", Model.Text, 25, 80, new { @class = "html" }) %><%
 using (this.Capture("end-of-page-scripts")) {%>
 <script type="text/javascript">
     tinyMCE.init({
@@ -15,9 +15,9 @@ using (this.Capture("end-of-page-scripts")) {%>
         theme_advanced_buttons2: "",
         theme_advanced_buttons3: "",
         convert_urls: false,
-        addmedia_action: "<%=Url.Action("AddFromClient", "Admin", new {area = "Orchard.Media"}) %>",
-        addmedia_path: "<%= Model.AddMediaPath %>",
-        request_verification_token: "<%=Html.AntiForgeryTokenValueOrchard() %>"
+        addmedia_action: "<%: Url.Action("AddFromClient", "Admin", new {area = "Orchard.Media"}) %>",
+        addmedia_path: "<%: Model.AddMediaPath %>",
+        request_verification_token: "<%: Html.AntiForgeryTokenValueOrchard() %>"
     });
 </script><%
 }%>

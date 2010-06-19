@@ -21,7 +21,7 @@
         $("<%=String.Format("input#{0}Title", !string.IsNullOrEmpty(Model.Prefix) ? Model.Prefix + "_" : "") %>").blur(function(){
             $(this).slugify({
                 target:$("<%=String.Format("input#{0}Slug", !string.IsNullOrEmpty(Model.Prefix) ? Model.Prefix + "_" : "") %>"),
-                url:"<%=Url.Slugify() %>",
+                url:"<%: Url.Slugify() %>",
                 contentType:"<%=Model.RoutableAspect.ContentItem.ContentType %>",
                 id:"<%=Model.RoutableAspect.ContentItem.Id %>"<%
                 var commonAspect = Model.RoutableAspect.ContentItem.As<ICommonAspect>();

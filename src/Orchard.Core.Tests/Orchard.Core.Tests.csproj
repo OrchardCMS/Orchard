@@ -104,8 +104,6 @@
     <Compile Include="Common\Providers\CommonAspectProviderTests.cs" />
     <Compile Include="Common\Services\RoutableServiceTests.cs" />
     <Compile Include="Feeds\Controllers\FeedControllerTests.cs" />
-    <Compile Include="Indexing\DefaultIndexProviderTests.cs" />
-    <Compile Include="Indexing\DefaultSearchBuilderTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Scheduling\ScheduledTaskManagerTests.cs" />
     <Compile Include="Scheduling\ScheduledTaskExecutorTests.cs" />

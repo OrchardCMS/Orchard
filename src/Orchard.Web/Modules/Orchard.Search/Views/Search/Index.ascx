@@ -12,6 +12,6 @@ if (!string.IsNullOrWhiteSpace(Model.Query)) {
     }
 }
 if (Model.PageOfResults != null && Model.PageOfResults.Count() > 0) { %>
-<%=Html.UnorderedList(Model.PageOfResults, (r, i) => Html.DisplayForItem(r.Content).ToHtmlString() , "search-results contentItems") %>
+<%=Html.UnorderedList(Model.PageOfResults, (r, i) => Html.DisplayForItem(r.Content) , "search-results contentItems") %>
 <%=Html.Pager(Model.PageOfResults, Model.PageOfResults.PageNumber, Model.DefaultPageSize, new {q = Model.Query}) %><%
 } %>

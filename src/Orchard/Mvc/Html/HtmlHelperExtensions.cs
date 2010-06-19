@@ -13,6 +13,7 @@ using Orchard.Services;
 using Orchard.Settings;
 using Orchard.Utility;
 using Orchard.Utility.Extensions;
+using System.Web;
 
 namespace Orchard.Mvc.Html {
     public static class HtmlHelperExtensions {
@@ -27,10 +28,10 @@ namespace Orchard.Mvc.Html {
         public static string FieldNameFor<T, TResult>(this HtmlHelper<T> html, Expression<Func<T, TResult>> expression) {
             return html.ViewData.TemplateInfo.GetFullHtmlFieldName(ExpressionHelper.GetExpressionText(expression));
         }
+
         public static string FieldIdFor<T, TResult>(this HtmlHelper<T> html, Expression<Func<T, TResult>> expression) {
             return html.ViewData.TemplateInfo.GetFullHtmlFieldId(ExpressionHelper.GetExpressionText(expression));
         }
-
 
         public static MvcHtmlString SelectOption<T>(this HtmlHelper html, T currentValue, T optionValue, string text) {
             return SelectOption(html, optionValue, object.Equals(optionValue, currentValue), text);
@@ -52,9 +53,9 @@ namespace Orchard.Mvc.Html {
 
         #region Pager
 
-        public static string Pager<T>(this HtmlHelper html, IPageOfItems<T> pageOfItems, int currentPage, int defaultPageSize, object values = null, string previousText = "<", string nextText = ">", bool alwaysShowPreviousAndNext = false) {
+        public static IHtmlString Pager<T>(this HtmlHelper html, IPageOfItems<T> pageOfItems, int currentPage, int defaultPageSize, object values = null, string previousText = "<", string nextText = ">", bool alwaysShowPreviousAndNext = false) {
             if (pageOfItems.TotalPageCount < 2)
-                return "";
+                return new HtmlString(string.Empty);
 
             var sb = new StringBuilder(75);
             var rvd = new RouteValueDictionary {{"q", ""},{"page", 0}};
@@ -113,23 +114,31 @@ namespace Orchard.Mvc.Html {
 
             sb.Append("</p>");
 
-            return sb.ToString();
+            return new HtmlString(sb.ToString());
         }
 
         #endregion
 
         #region UnorderedList
 
-        public static string UnorderedList<T>(this HtmlHelper htmlHelper, IEnumerable<T> items, Func<T, int, string> generateContent, string cssClass) {
+        public static IHtmlString UnorderedList<T>(this HtmlHelper htmlHelper, IEnumerable<T> items, Func<T, int, MvcHtmlString> generateContent, string cssClass) {
             return htmlHelper.UnorderedList(items, generateContent, cssClass, null, null);
         }
 
-        public static string UnorderedList<T>(this HtmlHelper htmlHelper, IEnumerable<T> items, Func<T, int, string> generateContent, string cssClass, string itemCssClass, string alternatingItemCssClass) {
+        public static IHtmlString UnorderedList<T>(this HtmlHelper htmlHelper, IEnumerable<T> items, Func<T, int, MvcHtmlString> generateContent, string cssClass, string itemCssClass, string alternatingItemCssClass) {
+            return UnorderedList(items, (t, i) => generateContent(t, i) as IHtmlString, cssClass, t => itemCssClass, t => alternatingItemCssClass);
+        }
+
+        public static IHtmlString UnorderedList<T>(this HtmlHelper htmlHelper, IEnumerable<T> items, Func<T, int, IHtmlString> generateContent, string cssClass) {
+            return htmlHelper.UnorderedList(items, generateContent, cssClass, null, null);
+        }
+
+        public static IHtmlString UnorderedList<T>(this HtmlHelper htmlHelper, IEnumerable<T> items, Func<T, int, IHtmlString> generateContent, string cssClass, string itemCssClass, string alternatingItemCssClass) {
             return UnorderedList(items, generateContent, cssClass, t => itemCssClass, t => alternatingItemCssClass);
         }
 
-        private static string UnorderedList<T>(IEnumerable<T> items, Func<T, int, string> generateContent, string cssClass, Func<T, string> generateItemCssClass, Func<T, string> generateAlternatingItemCssClass) {
-            if (items == null || items.Count() == 0) return "";
+        private static IHtmlString UnorderedList<T>(IEnumerable<T> items, Func<T, int, IHtmlString> generateContent, string cssClass, Func<T, string> generateItemCssClass, Func<T, string> generateAlternatingItemCssClass) {
+            if (items == null || !items.Any()) return new HtmlString(string.Empty);
 
             var sb = new StringBuilder(250);
             int counter = 0, count = items.Count() - 1;
@@ -163,7 +172,7 @@ namespace Orchard.Mvc.Html {
 
             sb.Append("</ul>");
 
-            return sb.ToString();
+            return new HtmlString(sb.ToString());
         }
 
         #endregion
@@ -250,53 +259,54 @@ namespace Orchard.Mvc.Html {
 
         #region Link
 
-        public static string Link(this HtmlHelper htmlHelper, string linkContents, string href)
+        public static IHtmlString Link(this HtmlHelper htmlHelper, string linkContents, string href)
         {
             return htmlHelper.Link(linkContents, href, null);
         }
 
-        public static string Link(this HtmlHelper htmlHelper, string linkContents, string href, object htmlAttributes)
+        public static IHtmlString Link(this HtmlHelper htmlHelper, string linkContents, string href, object htmlAttributes)
         {
             return htmlHelper.Link(linkContents, href, new RouteValueDictionary(htmlAttributes));
         }
 
-        public static string Link(this HtmlHelper htmlHelper, string linkContents, string href, IDictionary<string, object> htmlAttributes)
+        public static IHtmlString Link(this HtmlHelper htmlHelper, string linkContents, string href, IDictionary<string, object> htmlAttributes)
         {
             TagBuilder tagBuilder = new TagBuilder("a") 
                 { InnerHtml = htmlHelper.Encode(linkContents) };
             tagBuilder.MergeAttributes(htmlAttributes);
             tagBuilder.MergeAttribute("href", href);
-            return tagBuilder.ToString(TagRenderMode.Normal);
+            return new HtmlString(tagBuilder.ToString(TagRenderMode.Normal));
         }
 
         #endregion
 
         #region LinkOrDefault
 
-        public static string LinkOrDefault(this HtmlHelper htmlHelper, string linkContents, string href)
+        public static IHtmlString LinkOrDefault(this HtmlHelper htmlHelper, string linkContents, string href)
         {
             return htmlHelper.LinkOrDefault(linkContents, href, null);
         }
 
-        public static string LinkOrDefault(this HtmlHelper htmlHelper, string linkContents, string href, object htmlAttributes)
+        public static IHtmlString LinkOrDefault(this HtmlHelper htmlHelper, string linkContents, string href, object htmlAttributes)
         {
             return htmlHelper.LinkOrDefault(linkContents, href, new RouteValueDictionary(htmlAttributes));
         }
 
-        public static string LinkOrDefault(this HtmlHelper htmlHelper, string linkContents, string href, IDictionary<string, object> htmlAttributes)
+        public static IHtmlString LinkOrDefault(this HtmlHelper htmlHelper, string linkContents, string href, IDictionary<string, object> htmlAttributes)
         {
-            if (!string.IsNullOrEmpty(href))
-            {
-                TagBuilder tagBuilder = new TagBuilder("a")
-                {
-                    InnerHtml = linkContents
-                };
-                tagBuilder.MergeAttributes(htmlAttributes);
-                tagBuilder.MergeAttribute("href", href);
-                linkContents = tagBuilder.ToString(TagRenderMode.Normal);
+            string linkText = htmlHelper.Encode(linkContents);
+            
+            if (string.IsNullOrEmpty(href)) {
+                return new HtmlString(linkText);
             }
 
-            return linkContents;
+            TagBuilder tagBuilder = new TagBuilder("a")
+            {
+                InnerHtml = linkText
+            };
+            tagBuilder.MergeAttributes(htmlAttributes);
+            tagBuilder.MergeAttribute("href", href);
+            return new HtmlString(tagBuilder.ToString(TagRenderMode.Normal));
         }
 
         #endregion
@@ -345,37 +355,37 @@ namespace Orchard.Mvc.Html {
 
         #region AntiForgeryTokenValueOrchardLink
 
-        public static string AntiForgeryTokenValueOrchardLink(this HtmlHelper htmlHelper, string linkContents, string href)  {
+        public static IHtmlString AntiForgeryTokenValueOrchardLink(this HtmlHelper htmlHelper, string linkContents, string href)  {
             return htmlHelper.AntiForgeryTokenValueOrchardLink(linkContents, href, (object)null);
         }
 
-        public static string AntiForgeryTokenValueOrchardLink(this HtmlHelper htmlHelper, string linkContents, string href, object htmlAttributes)  {
+        public static IHtmlString AntiForgeryTokenValueOrchardLink(this HtmlHelper htmlHelper, string linkContents, string href, object htmlAttributes)  {
             return htmlHelper.AntiForgeryTokenValueOrchardLink(linkContents, href, new RouteValueDictionary(htmlAttributes));
         }
 
-        public static string AntiForgeryTokenValueOrchardLink(this HtmlHelper htmlHelper, string linkContents, string href, IDictionary<string, object> htmlAttributes)  {
-            return htmlHelper.Link(linkContents, htmlHelper.AntiForgeryTokenGetUrl(href), htmlAttributes);
+        public static IHtmlString AntiForgeryTokenValueOrchardLink(this HtmlHelper htmlHelper, string linkContents, string href, IDictionary<string, object> htmlAttributes)  {
+            return htmlHelper.Link(linkContents, htmlHelper.AntiForgeryTokenGetUrl(href).ToString(), htmlAttributes);
         }
 
         #endregion
 
         #region AntiForgeryTokenGetUrl
 
-        public static string AntiForgeryTokenGetUrl(this HtmlHelper htmlHelper, string baseUrl)  {
-            return string.Format("{0}{1}__RequestVerificationToken={2}", baseUrl, baseUrl.IndexOf('?') > -1 ? "&" : "?", htmlHelper.ViewContext.HttpContext.Server.UrlEncode(htmlHelper.AntiForgeryTokenValueOrchard()));
+        public static IHtmlString AntiForgeryTokenGetUrl(this HtmlHelper htmlHelper, string baseUrl)  {
+            return new HtmlString(string.Format("{0}{1}__RequestVerificationToken={2}", baseUrl, baseUrl.IndexOf('?') > -1 ? "&" : "?", htmlHelper.ViewContext.HttpContext.Server.UrlEncode(htmlHelper.AntiForgeryTokenValueOrchard().ToString())));
         }
 
         #endregion
 
         #region AntiForgeryTokenValueOrchard
 
-        public static string AntiForgeryTokenValueOrchard(this HtmlHelper htmlHelper) {
+        public static IHtmlString AntiForgeryTokenValueOrchard(this HtmlHelper htmlHelper) {
             //HAACK: (erikpo) Since MVC doesn't expose any of its methods for generating the antiforgery token and setting the cookie, we'll just let it do its thing and parse out what we need
             var field = htmlHelper.AntiForgeryTokenOrchard().ToHtmlString();
             var beginIndex = field.IndexOf("value=\"") + 7;
             var endIndex = field.IndexOf("\"", beginIndex);
 
-            return field.Substring(beginIndex, endIndex - beginIndex);
+            return new HtmlString(field.Substring(beginIndex, endIndex - beginIndex));
         }
 
         #endregion
