@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using Orchard.Caching;
 using Orchard.Environment.Extensions.Models;
 using Orchard.FileSystems.Dependencies;
@@ -12,7 +13,7 @@ namespace Orchard.Environment.Extensions.Loaders {
         private readonly IBuildManager _buildManager;
         private readonly IVirtualPathProvider _virtualPathProvider;
         private readonly IVirtualPathMonitor _virtualPathMonitor;
-        private readonly IDependenciesFolder _dependenciesFolder;
+        private static readonly ReloadWorkaround _reloadWorkaround = new ReloadWorkaround();
 
         public DynamicExtensionLoader(
             IBuildManager buildManager,
@@ -24,7 +25,7 @@ namespace Orchard.Environment.Extensions.Loaders {
             _buildManager = buildManager;
             _virtualPathProvider = virtualPathProvider;
             _virtualPathMonitor = virtualPathMonitor;
-            _dependenciesFolder = dependenciesFolder;
+
             Logger = NullLogger.Instance;
         }
 
@@ -44,8 +45,9 @@ namespace Orchard.Environment.Extensions.Loaders {
             // We need to monitor the path to the ".csproj" file.
             string projectPath = GetProjectPath(descriptor);
             if (projectPath != null) {
-                Logger.Information("Monitoring virtual path {0}", projectPath);
+                Logger.Information("Monitoring virtual path \"{0}\"", projectPath);
                 monitor(_virtualPathMonitor.WhenPathChanges(projectPath));
+                _reloadWorkaround.Monitor(_virtualPathMonitor.WhenPathChanges(projectPath));
             }
         }
 
@@ -56,11 +58,18 @@ namespace Orchard.Environment.Extensions.Loaders {
             ctx.ResetSiteCompilation = true;
         }
 
-        public override void ExtensionDeactivated(ExtensionLoadingContext ctx, bool isNewExtension, ExtensionDescriptor extension) {
+        public override void ExtensionDeactivated(ExtensionLoadingContext ctx, ExtensionDescriptor extension) {
             // Since a dynamic assembly is not active anymore, we need to notify ASP.NET
             // that a new site compilation is needed (since ascx files may be referencing
             // this now removed extension).
             ctx.ResetSiteCompilation = true;
+        }
+
+        public override void ExtensionActivated(ExtensionLoadingContext ctx, ExtensionDescriptor extension) {
+            if (_reloadWorkaround.AppDomainRestartNeeded) {
+                Logger.Information("ExtensionActivated: Setting AppDomain for restart because csproj for module \"{0}\" changed and will need to be re-compiled", extension.Name);
+                ctx.RestartAppDomain = _reloadWorkaround.AppDomainRestartNeeded;
+            }
         }
 
         public override ExtensionProbeEntry Probe(ExtensionDescriptor descriptor) {
@@ -100,6 +109,33 @@ namespace Orchard.Environment.Extensions.Loaders {
             }
 
             return projectPath;
+        }
+
+        /// <summary>
+        /// We should be able to support reloading multiple version of a compiled module from
+        /// a ".csproj" file in the same AppDomain. However, we are currently running into a 
+        /// limitation with NHibernate getting confused when a type name is present in
+        /// multiple assemblies loaded in an AppDomain.  So, until a solution is found, any change 
+        /// to a ".csproj" file of an active module requires an AppDomain restart.
+        /// The purpose of this class is to keep track of all .csproj files monitored until
+        /// an AppDomain restart.
+        /// </summary>
+        class ReloadWorkaround {
+            private readonly List<IVolatileToken> _tokens = new List<IVolatileToken>();
+
+            public void Monitor(IVolatileToken whenProjectFileChanges) {
+                lock(_tokens) {
+                    _tokens.Add(whenProjectFileChanges);
+                }
+            }
+
+            public bool AppDomainRestartNeeded {
+                get {
+                    lock(_tokens) {
+                        return _tokens.Any(t => t.IsCurrent == false);
+                    }
+                }
+            }
         }
     }
 }
