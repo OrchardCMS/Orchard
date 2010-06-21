@@ -8,8 +8,9 @@ using System.Web.Compilation;
 namespace Orchard.Environment.Extensions.Compilers {
     /// <summary>
     /// Compile a C# extension into an assembly given a directory location
+    /// Note: Currently not used...
     /// </summary>
-    public class CSharpExtensionCompiler {
+    public class CSharpExtensionDirectoryCompiler {
         public CompilerResults CompileProject(string location) {
             var codeProvider = CodeDomProvider.CreateProvider("cs");
 

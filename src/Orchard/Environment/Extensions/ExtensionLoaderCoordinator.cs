@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using Orchard.Caching;
 using Orchard.Environment.Extensions.Loaders;
@@ -21,10 +20,12 @@ namespace Orchard.Environment.Extensions {
             IExtensionManager extensionManager,
             IEnumerable<IExtensionLoader> loaders,
             IHostEnvironment hostEnvironment) {
+
             _dependenciesFolder = dependenciesFolder;
             _extensionManager = extensionManager;
             _loaders = loaders.OrderBy(l => l.Order);
             _hostEnvironment = hostEnvironment;
+
             T = NullLocalizer.Instance;
             Logger = NullLogger.Instance;
         }
@@ -37,19 +38,16 @@ namespace Orchard.Environment.Extensions {
 
             var extensions = _extensionManager.AvailableExtensions().Where(d => d.ExtensionType == "Module").ToList();
             var existingDependencies = _dependenciesFolder.LoadDescriptors().ToList();
-
-            var sameExtensions = extensions.Where(e => existingDependencies.Any(e2 => e2.Name == e.Name)).ToList();
             var deletedDependencies = existingDependencies.Where(e => !extensions.Any(e2 => e2.Name == e.Name)).ToList();
-            var newExtensions = extensions.Except(sameExtensions).ToList();
 
-            var ctx = new ExtensionLoadingContext();
+            var loadingContext = new ExtensionLoadingContext();
 
             // Notify all loaders about extensions removed from the web site
             foreach (var dependency in deletedDependencies) {
                 Logger.Information("Extension {0} has been removed from site", dependency.Name);
                 foreach (var loader in _loaders) {
                     if (dependency.LoaderName == loader.Name) {
-                        loader.ExtensionRemoved(ctx, dependency);
+                        loader.ExtensionRemoved(loadingContext, dependency);
                     }
                 }
             }
@@ -58,11 +56,11 @@ namespace Orchard.Environment.Extensions {
             // load that extension.
             var newDependencies = new List<DependencyDescriptor>();
             foreach (var extension in extensions) {
-                ProcessExtension(ctx, extension, existingDependencies, newDependencies);
+                ProcessExtension(loadingContext, extension, existingDependencies, newDependencies);
             }
 
             // Execute all the work need by "ctx"
-            ProcessContextCommands(ctx);
+            ProcessContextCommands(loadingContext);
 
             // And finally save the new entries in the dependencies folder
             _dependenciesFolder.StoreDescriptors(newDependencies);

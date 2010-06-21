@@ -2,28 +2,33 @@
 using System.IO;
 using System.Linq;
 using Orchard.FileSystems.VirtualPath;
+using Orchard.Logging;
 
 namespace Orchard.Environment.Extensions.Compilers {
     /// <summary>
     /// Compile a C# extension into an assembly given a directory location
     /// </summary>
-    public class CSharpProjectMediumTrustCompiler {
+    public class DefaultExtensionCompiler : IExtensionCompiler {
         private readonly IVirtualPathProvider _virtualPathProvider;
+        private readonly IProjectFileParser _projectFileParser;
 
-        public CSharpProjectMediumTrustCompiler(IVirtualPathProvider virtualPathProvider) {
+        public DefaultExtensionCompiler(IVirtualPathProvider virtualPathProvider, IProjectFileParser projectFileParser) {
             _virtualPathProvider = virtualPathProvider;
+            _projectFileParser = projectFileParser;
+            Logger = NullLogger.Instance;
         }
-        /// <summary>
-        /// Compile a csproj file given its virtual path, a build provider and an assembly builder.
-        /// This method works in medium trust.
-        /// </summary>
-        public void CompileProject(string virtualPath, IAssemblyBuilder assemblyBuilder) {
-            using (var stream = _virtualPathProvider.OpenFile(virtualPath)) {
-                var descriptor = new CSharpProjectParser().Parse(stream);
 
-                var directory = _virtualPathProvider.GetDirectoryName(virtualPath);
+        public ILogger Logger { get; set; }
+
+        public void Compile(CompileExtensionContext context) {
+            Logger.Information("Generate code for file \"{0}\"", context.VirtualPath);
+
+            using (var stream = _virtualPathProvider.OpenFile(context.VirtualPath)) {
+                var descriptor = _projectFileParser.Parse(stream);
+
+                var directory = _virtualPathProvider.GetDirectoryName(context.VirtualPath);
                 foreach (var filename in descriptor.SourceFilenames.Select(f => _virtualPathProvider.Combine(directory, f))) {
-                    assemblyBuilder.AddCodeCompileUnit(CreateCompileUnit(filename));
+                    context.AssemblyBuilder.AddCodeCompileUnit(CreateCompileUnit(filename));
                 }
             }
         }

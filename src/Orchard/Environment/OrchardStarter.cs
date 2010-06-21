@@ -9,6 +9,7 @@ using Orchard.Caching;
 using Orchard.Environment.AutofacUtil;
 using Orchard.Environment.Configuration;
 using Orchard.Environment.Extensions;
+using Orchard.Environment.Extensions.Compilers;
 using Orchard.Environment.Extensions.Folders;
 using Orchard.Environment.Extensions.Loaders;
 using Orchard.Environment.ShellBuilders;
@@ -37,6 +38,8 @@ namespace Orchard.Environment {
             builder.RegisterType<DefaultBuildManager>().As<IBuildManager>().SingleInstance();
             builder.RegisterType<WebFormsExtensionsVirtualPathProvider>().As<ICustomVirtualPathProvider>().SingleInstance();
             builder.RegisterType<AppDataFolderRoot>().As<IAppDataFolderRoot>().SingleInstance();
+            builder.RegisterType<DefaultExtensionCompiler>().As<IExtensionCompiler>().SingleInstance();
+            builder.RegisterType<DefaultProjectFileParser>().As<IProjectFileParser>().SingleInstance();
 
             RegisterVolatileProvider<WebSiteFolder, IWebSiteFolder>(builder);
             RegisterVolatileProvider<AppDataFolder, IAppDataFolder>(builder);
@@ -134,6 +137,7 @@ namespace Orchard.Environment {
                 }
             }
 
+            OrchardHostContainerRegistry.RegisterHostContainer(new DefaultOrchardHostContainer(container));
             return container.Resolve<IOrchardHost>();
         }
     }

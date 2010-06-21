@@ -7,6 +7,7 @@ using Orchard.FileSystems.VirtualPath;
 namespace Orchard.Environment.Extensions.Compilers {
     /// <summary>
     /// Compile a C# extension into an assembly given a directory location
+    /// Note: currently not used...
     /// </summary>
     public class CSharpProjectFullTrustCompiler {
         private readonly IVirtualPathProvider _virtualPathProvider;
@@ -26,7 +27,7 @@ namespace Orchard.Environment.Extensions.Compilers {
             var directory = _virtualPathProvider.GetDirectoryName(virtualPath);
 
             using (var stream = _virtualPathProvider.OpenFile(virtualPath)) {
-                var descriptor = new CSharpProjectParser().Parse(stream);
+                var descriptor = new DefaultProjectFileParser().Parse(stream);
 
                 var references = GetReferencedAssembliesLocation();
                 var options = new CompilerParameters(references.ToArray());

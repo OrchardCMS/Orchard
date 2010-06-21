@@ -5,24 +5,11 @@ using System.Xml;
 using System.Xml.Linq;
 
 namespace Orchard.Environment.Extensions.Compilers {
-    public class CSharpProjectDescriptor {
-        public string AssemblyName { get; set; }
-        public IEnumerable<string> SourceFilenames { get; set; }
-        public IEnumerable<ReferenceDescriptor> References { get; set; }
-    }
+    public class DefaultProjectFileParser : IProjectFileParser {
 
-    public class ReferenceDescriptor {
-        public string AssemblyName { get; set; }
-
-        public override string ToString() {
-            return "{" + (AssemblyName ?? "") + "}";
-        }
-    }
-
-    public class CSharpProjectParser {
-        public CSharpProjectDescriptor Parse(Stream stream) {
+        public ProjectFileDescriptor Parse(Stream stream) {
             var document = XDocument.Load(XmlReader.Create(stream));
-            return new CSharpProjectDescriptor {
+            return new ProjectFileDescriptor {
                 AssemblyName = GetAssemblyName(document),
                 SourceFilenames = GetSourceFilenames(document).ToArray(),
                 References = GetReferences(document).ToArray()

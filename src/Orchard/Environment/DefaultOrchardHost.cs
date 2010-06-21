@@ -17,14 +17,13 @@ using Orchard.Utility.Extensions;
 namespace Orchard.Environment {
     public class DefaultOrchardHost : IOrchardHost, IShellSettingsManagerEventHandler, IShellDescriptorManagerEventHandler {
         private readonly ControllerBuilder _controllerBuilder;
-
         private readonly IShellSettingsManager _shellSettingsManager;
         private readonly IShellContextFactory _shellContextFactory;
         private readonly IRunningShellTable _runningShellTable;
         private readonly IProcessingEngine _processingEngine;
-        private readonly IExtensionManager _extensionManager;
         private readonly IExtensionLoaderCoordinator _extensionLoaderCoordinator;
         private readonly ICacheManager _cacheManager;
+        private readonly object _syncLock = new object();
 
         private IEnumerable<ShellContext> _current;
 
@@ -33,18 +32,18 @@ namespace Orchard.Environment {
             IShellContextFactory shellContextFactory,
             IRunningShellTable runningShellTable,
             IProcessingEngine processingEngine,
-            IExtensionManager extensionManager,
             IExtensionLoaderCoordinator extensionLoaderCoordinator,
             ICacheManager cacheManager,
             ControllerBuilder controllerBuilder) {
+
             _shellSettingsManager = shellSettingsManager;
             _shellContextFactory = shellContextFactory;
             _runningShellTable = runningShellTable;
             _processingEngine = processingEngine;
-            _extensionManager = extensionManager;
             _extensionLoaderCoordinator = extensionLoaderCoordinator;
             _cacheManager = cacheManager;
             _controllerBuilder = controllerBuilder;
+
             Logger = NullLogger.Instance;
         }
 
@@ -82,7 +81,7 @@ namespace Orchard.Environment {
 
         IEnumerable<ShellContext> BuildCurrent() {
             if (_current == null) {
-                lock (this) {
+                lock (_syncLock) {
                     if (_current == null) {
                         SetupExtensions();
                         MonitorExtensions();
