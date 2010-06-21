@@ -149,24 +149,6 @@ namespace Orchard.Tests.DataMigration {
             }
         }
 
-        public class StubLoaders : ExtensionLoaderBase {
-            #region Implementation of IExtensionLoader
-
-            public override int Order {
-                get { return 1; }
-            }
-
-            public override ExtensionProbeEntry Probe(ExtensionDescriptor descriptor) {
-                return new ExtensionProbeEntry { Descriptor = descriptor, Loader = this };
-            }
-
-            public override ExtensionEntry Load(ExtensionDescriptor descriptor) {
-                return new ExtensionEntry { Descriptor = descriptor, ExportedTypes = new Type[0]  };
-            }
-
-            #endregion
-        }
-
         [Test]
         public void DataMigrationShouldDoNothingIfNoDataMigrationIsProvidedForFeature() {
             Init(new Type[] {typeof (DataMigrationEmpty)});

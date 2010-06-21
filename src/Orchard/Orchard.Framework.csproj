@@ -348,7 +348,8 @@
     <Compile Include="ContentManagement\ViewModels\TemplateViewModel.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="DataMigration\Commands\IDataMigrationCommand.cs" />
+    <Compile Include="DataMigration\Commands\DataMigrationCommands.cs" />
+    <Compile Include="DataMigration\IDataMigrationCommand.cs" />
     <Compile Include="DataMigration\DefaultDataMigrationGenerator.cs" />
     <Compile Include="DataMigration\IDataMigrationGenerator.cs" />
     <Compile Include="DataMigration\DataMigration.cs" />

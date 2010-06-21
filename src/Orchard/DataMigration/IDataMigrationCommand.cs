@@ -1,4 +1,4 @@
-﻿namespace Orchard.DataMigration.Commands {
+﻿namespace Orchard.DataMigration {
     public interface IDataMigrationCommand {
     }
 }
