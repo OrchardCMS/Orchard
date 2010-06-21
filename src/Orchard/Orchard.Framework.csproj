@@ -348,6 +348,14 @@
     <Compile Include="ContentManagement\ViewModels\TemplateViewModel.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="DataMigration\Commands\IDataMigrationCommand.cs" />
+    <Compile Include="DataMigration\DefaultDataMigrationGenerator.cs" />
+    <Compile Include="DataMigration\IDataMigrationGenerator.cs" />
+    <Compile Include="DataMigration\DataMigration.cs" />
+    <Compile Include="DataMigration\DataMigrationManager.cs" />
+    <Compile Include="DataMigration\DataMigrationRecord.cs" />
+    <Compile Include="DataMigration\IDataMigration.cs" />
+    <Compile Include="DataMigration\IDataMigrationManager.cs" />
     <Compile Include="Data\SessionLocator.cs" />
     <Compile Include="Data\IRepository.cs" />
     <Compile Include="Data\ISessionLocator.cs" />
