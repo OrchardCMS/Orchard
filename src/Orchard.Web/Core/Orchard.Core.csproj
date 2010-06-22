@@ -208,6 +208,7 @@
     <Content Include="Common\Views\EditorTemplates\Parts\Common.TextContentField.ascx" />
     <Content Include="Contents\Module.txt" />
     <Content Include="Contents\Styles\admin.css" />
+    <Content Include="Contents\Views\Admin\EditPart.ascx" />
     <Content Include="Contents\Views\Admin\EditType.ascx" />
     <Content Include="Contents\Views\Admin\CreateType.ascx" />
     <Content Include="Contents\Views\Admin\Types.ascx" />
@@ -217,11 +218,12 @@
     <Content Include="Contents\Views\Admin\Create.aspx" />
     <Content Include="Contents\Views\DisplayTemplates\ContentTypeDefinition.ascx" />
     <Content Include="Contents\Views\DisplayTemplates\Items\Contents.Item.ascx" />
+    <Content Include="Contents\Views\DisplayTemplates\Settings.ascx" />
     <Content Include="Contents\Views\EditorTemplates\Settings.ascx" />
     <Content Include="Contents\Views\EditorTemplates\FieldsOnPart.ascx" />
     <Content Include="Contents\Views\EditorTemplates\FieldOnPart.ascx" />
-    <Content Include="Contents\Views\EditorTemplates\Parts.ascx" />
-    <Content Include="Contents\Views\EditorTemplates\Part.ascx" />
+    <Content Include="Contents\Views\EditorTemplates\Type.Parts.ascx" />
+    <Content Include="Contents\Views\EditorTemplates\Type.Part.ascx" />
     <Content Include="Contents\Views\EditorTemplates\Items\Contents.Item.ascx" />
     <Content Include="Contents\Views\Item\Preview.aspx" />
     <Content Include="Contents\Views\Item\Display.aspx" />

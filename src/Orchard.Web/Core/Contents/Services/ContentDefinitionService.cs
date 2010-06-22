@@ -55,6 +55,22 @@ namespace Orchard.Core.Contents.Services {
             throw new NotImplementedException();
         }
 
+        public ContentPartDefinition GetPartDefinition(string name) {
+            return _contentDefinitionManager.GetPartDefinition(name);
+        }
+
+        public void AddPartDefinition(ContentPartDefinition contentPartDefinition) {
+            throw new NotImplementedException();
+        }
+
+        public void AlterPartDefinition(ContentPartDefinition contentPartDefinition) {
+            _contentDefinitionManager.StorePartDefinition(contentPartDefinition);
+        }
+
+        public void RemovePartDefinition(string name) {
+            throw new NotImplementedException();
+        }
+
         //gratuitously stolen from the RoutableService
         private static string GenerateTypeName(string displayName) {
             if (string.IsNullOrWhiteSpace(displayName))

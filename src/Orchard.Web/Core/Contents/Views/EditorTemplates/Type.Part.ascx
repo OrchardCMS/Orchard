@@ -11,11 +11,12 @@
             <button type="submit" title="<%:T("Remove") %>"><%:T("Remove") %></button>
         <% } %> --%>
         </div>
-        <%--
-        what is this settings for?        
-        <%:Html.EditorFor(m => m.PartDefinition.Settings, "Settings") %>--%>
-        <%:Html.EditorFor(m => m.Settings, "Settings", "") %>
+        <%:Html.EditorFor(m => m.Settings, "Settings", "") %><%
+    if (Model.PartDefinition.Settings.Any()) { %>
+        <h4><%:T("Tenant-wide settings") %></h4>
+        <div class="manage"><%:Html.ActionLink(T("Edit part settings").Text, "EditPart", new { area = "Contents", id = Model.PartDefinition.Name }) %></div>
+        <%:Html.DisplayFor(m => m.PartDefinition.Settings, "Settings", "PartDefinition") %><%
+    } %>
         <%:Html.EditorFor(m => m.PartDefinition.Fields, "FieldsOnPart") %>
-        <%:Html.Hidden("PartDefinition.Name", Model.PartDefinition.Name) %>
         <%:Html.Hidden("PartDefinition.Name", Model.PartDefinition.Name) %>
     </fieldset>
