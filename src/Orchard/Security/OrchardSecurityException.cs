@@ -1,14 +1,16 @@
 ﻿using System;
 using System.Runtime.Serialization;
+using Orchard.ContentManagement;
+using Orchard.Localization;
 
 namespace Orchard.Security {
-    public class OrchardSecurityException : OrchardException {
-        public OrchardSecurityException() : base("A security exception occurred in the content management system.") { }
-        public OrchardSecurityException(Exception innerException) : base(innerException.Message, innerException) { }
-        public OrchardSecurityException(string message) : base(message) { }
+    public class OrchardSecurityException : OrchardSystemException {
+        public OrchardSecurityException(LocalizedString message) : base(message) { }
+        public OrchardSecurityException(LocalizedString message, Exception innerException) : base(message, innerException) { }
         protected OrchardSecurityException(SerializationInfo info, StreamingContext context) : base(info, context) { }
-        public OrchardSecurityException(string message, Exception innerException) : base(message, innerException) { }
 
         public string PermissionName { get; set; }
+        public IUser User { get; set; }
+        public IContent Content { get; set; }
     }
 }

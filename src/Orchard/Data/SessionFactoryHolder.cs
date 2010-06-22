@@ -7,6 +7,7 @@ using Orchard.Environment.Descriptor;
 using Orchard.Environment.Descriptor.Models;
 using Orchard.Environment.ShellBuilders.Models;
 using Orchard.FileSystems.AppData;
+using Orchard.Localization;
 using Orchard.Logging;
 
 namespace Orchard.Data {
@@ -33,16 +34,19 @@ namespace Orchard.Data {
             _shellBlueprint = shellBlueprint;
             _sessionFactoryBuilder = sessionFactoryBuilder;
             _appDataFolder = appDataFolder;
+
+            T = NullLocalizer.Instance;
             Logger = NullLogger.Instance;
         }
 
+        public Localizer T { get; set; }
         public ILogger Logger { get; set; }
 
         public void CreateDatabase() {
             lock (this) {
                 if (_sessionFactory != null) {
                     Logger.Error("CreateSchema can not be called after a session factory was created");
-                    throw new OrchardException("CreateSchema can not be called after a session factory was created");
+                    throw new OrchardSystemException(T("CreateSchema can not be called after a session factory was created"));
                 }
 
                 _sessionFactory = BuildSessionFactory(true /*createDatabase*/, false /*updateSchema*/);
@@ -53,7 +57,7 @@ namespace Orchard.Data {
             lock (this) {
                 if (_sessionFactory != null) {
                     Logger.Error("UpdateSchema can not be called after a session factory was created");
-                    throw new OrchardException("UpdateSchema can not be called after a session factory was created");
+                    throw new OrchardSystemException(T("UpdateSchema can not be called after a session factory was created"));
                 }
 
                 _sessionFactory = BuildSessionFactory(false /*createDatabase*/, true /*updateSchema*/);

@@ -38,7 +38,7 @@ namespace Orchard.Environment.Extensions {
 
             var extensions = _extensionManager.AvailableExtensions().Where(d => d.ExtensionType == "Module").ToList();
             var existingDependencies = _dependenciesFolder.LoadDescriptors().ToList();
-            var deletedDependencies = existingDependencies.Where(e => !extensions.Any(e2 => e2.Name == e.Name)).ToList();
+            var deletedDependencies = existingDependencies.Where(e => !extensions.Any(e2 => StringComparer.OrdinalIgnoreCase.Equals(e2.Name, e.Name))).ToList();
 
             var loadingContext = new ExtensionLoadingContext();
 
@@ -91,7 +91,7 @@ namespace Orchard.Environment.Extensions {
             }
 
             var activatedExtension = extensionProbes.FirstOrDefault();
-            var previousDependency = existingDependencies.Where(d => d.Name == extension.Name).FirstOrDefault();
+            var previousDependency = existingDependencies.Where(d => StringComparer.OrdinalIgnoreCase.Equals(d.Name, extension.Name)).FirstOrDefault();
 
             if (activatedExtension == null) {
                 Logger.Warning("No loader found for extension \"{0}\"!", extension.Name);

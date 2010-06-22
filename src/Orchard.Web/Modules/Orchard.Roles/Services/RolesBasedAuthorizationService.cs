@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using JetBrains.Annotations;
+using Orchard.Localization;
 using Orchard.Logging;
 using Orchard.ContentManagement;
 using Orchard.Roles.Models;
@@ -20,16 +21,23 @@ namespace Orchard.Roles.Services {
         public RolesBasedAuthorizationService(IRoleService roleService, IAuthorizationServiceEventHandler authorizationServiceEventHandler) {
             _roleService = roleService;
             _authorizationServiceEventHandler = authorizationServiceEventHandler;
+
+            T = NullLocalizer.Instance;
             Logger = NullLogger.Instance;
         }
 
+        public Localizer T { get; set; }
         public ILogger Logger { get; set; }
         protected virtual ISite CurrentSite { get; [UsedImplicitly] private set; }
 
 
         public void CheckAccess(Permission permission, IUser user, IContent content) {
             if (!TryCheckAccess(permission, user, content)) {
-                throw new OrchardSecurityException { PermissionName = permission.Name };
+                throw new OrchardSecurityException(T("A security exception occurred in the content management system.")) {
+                    PermissionName = permission.Name,
+                    User = user,
+                    Content = content
+                };
             }
         }
 

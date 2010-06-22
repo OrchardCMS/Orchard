@@ -93,6 +93,8 @@ namespace Orchard.Environment.Extensions.Loaders {
                 return null;
 
             var assembly = _buildManager.GetCompiledAssembly(projectPath);
+            if (assembly == null)
+                return null;
             //Logger.Information("Loading extension \"{0}\": assembly name=\"{1}\"", descriptor.Name, assembly.GetName().Name);
 
             return new ExtensionEntry {

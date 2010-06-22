@@ -30,7 +30,7 @@ namespace Orchard.FileSystems.Dependencies {
         }
 
         public DependencyDescriptor GetDescriptor(string moduleName) {
-            return LoadDescriptors().SingleOrDefault(d => d.Name == moduleName);
+            return LoadDescriptors().SingleOrDefault(d => StringComparer.OrdinalIgnoreCase.Equals(d.Name, moduleName));
         }
 
         public IEnumerable<DependencyDescriptor> LoadDescriptors() {

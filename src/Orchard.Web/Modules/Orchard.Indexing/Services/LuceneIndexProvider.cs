@@ -10,6 +10,7 @@ using Lucene.Net.Store;
 using Orchard.Environment.Configuration;
 using Orchard.FileSystems.AppData;
 using Orchard.Indexing.Models;
+using Orchard.Localization;
 using Orchard.Logging;
 using System.Xml.Linq;
 using Directory = Lucene.Net.Store.Directory;
@@ -29,8 +30,6 @@ namespace Orchard.Indexing.Services {
         public static readonly string Settings = "Settings";
         public static readonly string LastIndexUtc = "LastIndexedUtc";
 
-        public ILogger Logger { get; set; }
-
         public LuceneIndexProvider(IAppDataFolder appDataFolder, ShellSettings shellSettings) {
             _appDataFolder = appDataFolder;
             _shellSettings = shellSettings;
@@ -43,7 +42,13 @@ namespace Orchard.Indexing.Services {
 
             // Ensures the directory exists
             EnsureDirectoryExists();
+
+            T = NullLocalizer.Instance;
+            Logger = NullLogger.Instance;
         }
+
+        public Localizer T { get; set; }
+        public ILogger Logger { get; set; }
 
         public static Analyzer CreateAnalyzer() {
             // StandardAnalyzer does lower-case and stop-word filtering. It also removes punctuation
@@ -189,7 +194,7 @@ namespace Orchard.Indexing.Services {
         }
 
         public IDocumentIndex New(int documentId) {
-            return new LuceneDocumentIndex(documentId);
+            return new LuceneDocumentIndex(documentId, T);
         }
 
         public ISearchBuilder CreateSearchBuilder(string indexName) {

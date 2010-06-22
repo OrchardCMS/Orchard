@@ -1,36 +1,46 @@
 ﻿using System.Collections.Generic;
+using Orchard.Caching;
 
 namespace Orchard.Environment {
     /// <summary>
-    /// Provides ability to connect Shims and the OrchardHostContainer
+    /// Provides ability to connect Shims to the OrchardHostContainer
     /// </summary>
     public static class OrchardHostContainerRegistry {
-        private static readonly IList<IShim> _shims = new List<IShim>();
+        private static readonly IList<Weak<IShim>> _shims = new List<Weak<IShim>>();
         private static IOrchardHostContainer _hostContainer;
+        private static readonly object _syncLock = new object();
 
         public static void RegisterShim(IShim shim) {
-            _shims.Add(shim);
-            shim.HostContainer = _hostContainer;
+            lock (_syncLock) {
+                CleanupShims();
+
+                _shims.Add(new Weak<IShim>(shim));
+                shim.HostContainer = _hostContainer;
+            }
         }
 
         public static void RegisterHostContainer(IOrchardHostContainer container) {
-            if (object.ReferenceEquals(_hostContainer, container))
-                return;
+            lock (_syncLock) {
+                CleanupShims();
 
-            UnregisterContainerShims();
-            _hostContainer = container;
-            RegisterContainerInShims();
-        }
-
-        private static void UnregisterContainerShims() {
-            foreach (var shim in _shims) {
-                shim.HostContainer = null;
+                _hostContainer = container;
+                RegisterContainerInShims();
             }
         }
 
         private static void RegisterContainerInShims() {
             foreach (var shim in _shims) {
-                shim.HostContainer = _hostContainer;
+                var target = shim.Target;
+                if (target != null) {
+                    target.HostContainer = _hostContainer;
+                }
+            }
+        }
+
+        private static void CleanupShims() {
+            for (int i = _shims.Count - 1; i >= 0; i--) {
+                if (_shims[i].Target == null)
+                    _shims.RemoveAt(i);
             }
         }
     }

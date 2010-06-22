@@ -65,7 +65,7 @@ namespace Orchard.FileSystems.AppData {
             }
 
             // Everything failed, throw an exception
-            throw new OrchardException(T("Unable to make room for file \"{0}\" in \"App_Data\" folder: too many conflicts.", destinationFileName).Text);
+            throw new OrchardSystemException(T("Unable to make room for file \"{0}\" in \"App_Data\" folder: too many conflicts.", destinationFileName));
         }
 
         /// <summary>

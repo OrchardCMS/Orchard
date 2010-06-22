@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Lucene.Net.Documents;
+using Orchard.Localization;
 using Orchard.Utility.Extensions;
 
 namespace Orchard.Indexing.Models {
@@ -20,13 +21,16 @@ namespace Orchard.Indexing.Models {
 
         public int ContentItemId { get; private set; }
 
-        public LuceneDocumentIndex(int documentId) {
+        public LuceneDocumentIndex(int documentId, Localizer t) {
             Fields = new List<AbstractField>();
             SetContentItemId(documentId);
             IsDirty = false;
             
             _typeCode = TypeCode.Empty;
+            T = t;
         }
+
+        public Localizer T { get; set; }
 
         public bool IsDirty { get; private set; }
 
@@ -113,7 +117,7 @@ namespace Orchard.Indexing.Models {
                 case TypeCode.Empty:
                     break;
                 default:
-                    throw new OrchardException("Unexpected index type");
+                    throw new OrchardException(T("Unexpected index type"));
             }
 
             _removeTags = false;

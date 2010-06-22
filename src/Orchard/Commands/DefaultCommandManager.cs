@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using Autofac.Features.Metadata;
+using Orchard.Localization;
+using Orchard.Logging;
 
 namespace Orchard.Commands {
     public class DefaultCommandManager : ICommandManager {
@@ -9,7 +11,13 @@ namespace Orchard.Commands {
 
         public DefaultCommandManager(IEnumerable<Meta<Func<ICommandHandler>>> handlers) {
             _handlers = handlers;
+
+            T = NullLocalizer.Instance;
+            Logger = NullLogger.Instance;
         }
+
+        public Localizer T { get; set; }
+        public ILogger Logger { get; set; }
 
         public void Execute(CommandParameters parameters) {
             var matches = MatchCommands(parameters);
@@ -22,11 +30,11 @@ namespace Orchard.Commands {
                 var commandMatch = string.Join(" ", parameters.Arguments.ToArray());
                 var commandList = string.Join(",", GetCommandDescriptors().Select(d => d.Name).ToArray());
                 if (matches.Any()) {
-                    throw new OrchardException(string.Format("Multiple commands found matching arguments \"{0}\". Commands available: {1}.",
+                    throw new OrchardSystemException(T("Multiple commands found matching arguments \"{0}\". Commands available: {1}.",
                                                              commandMatch, commandList));
                 }
                 else {
-                    throw new OrchardException(string.Format("No command found matching arguments \"{0}\". Commands available: {1}.",
+                    throw new OrchardSystemException(T("No command found matching arguments \"{0}\". Commands available: {1}.",
                                                              commandMatch, commandList));
                 }
             }

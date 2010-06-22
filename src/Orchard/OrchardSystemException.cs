@@ -3,20 +3,20 @@ using System.Runtime.Serialization;
 using Orchard.Localization;
 
 namespace Orchard {
-    public class OrchardException : ApplicationException {
+    public class OrchardSystemException : Exception {
         private readonly LocalizedString _localizedMessage;
 
-        public OrchardException(LocalizedString message)
+        public OrchardSystemException(LocalizedString message)
             : base(message.Text) {
             _localizedMessage = message;
         }
 
-        public OrchardException(LocalizedString message, Exception innerException)
+        public OrchardSystemException(LocalizedString message, Exception innerException)
             : base(message.Text, innerException) {
             _localizedMessage = message;
         }
 
-        protected OrchardException(SerializationInfo info, StreamingContext context)
+        protected OrchardSystemException(SerializationInfo info, StreamingContext context)
             : base(info, context) {
         }
 
