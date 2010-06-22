@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using Orchard.ContentManagement.MetaData.Models;
 
 namespace Orchard.ContentManagement.Handlers {
@@ -26,7 +25,7 @@ namespace Orchard.ContentManagement.Handlers {
             if (typePartDefinition == null) {
                 typePartDefinition = new ContentTypeDefinition.Part(
                     new ContentPartDefinition(partName),
-                    new Dictionary<string, string>());
+                    new SettingsDictionary());
             }
 
             var part = new TPart {

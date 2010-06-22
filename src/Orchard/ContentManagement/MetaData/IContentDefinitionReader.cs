@@ -5,6 +5,7 @@ using Orchard.ContentManagement.MetaData.Models;
 namespace Orchard.ContentManagement.MetaData {
     public interface IContentDefinitionReader : IDependency {
         void Merge(XElement source, ContentTypeDefinitionBuilder builder);
+        void Merge(XElement source, ContentPartDefinitionBuilder builder);
     }
 
     public static class ContentDefinitionReaderExtensions {

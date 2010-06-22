@@ -16,7 +16,6 @@ using Orchard.ContentManagement.Records;
 using Orchard.Localization;
 using Orchard.Security;
 using Orchard.Tests.Modules;
-using Orchard.Mvc.ViewModels;
 using Orchard.Core.Common.ViewModels;
 using System.Web.Mvc;
 

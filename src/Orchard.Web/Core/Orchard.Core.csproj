@@ -72,12 +72,12 @@
     <Compile Include="Common\ViewModels\ContainerEditorViewModel.cs" />
     <Compile Include="Common\ViewModels\TextContentFieldDisplayViewModel.cs" />
     <Compile Include="Common\ViewModels\TextContentFieldEditorViewModel.cs" />
-    <Compile Include="Contents\ContentTypeDefinitionStub.cs" />
     <Compile Include="Contents\Controllers\ItemController.cs" />
     <Compile Include="Contents\Handlers\ContentsModuleHandler.cs" />
     <Compile Include="Contents\Permissions.cs" />
     <Compile Include="Contents\Services\ContentDefinitionService.cs" />
     <Compile Include="Contents\Services\IContentDefinitionService.cs" />
+    <Compile Include="Contents\ViewModels\EditTypeViewModel.cs" />
     <Compile Include="Contents\ViewModels\CreateTypeViewModel.cs" />
     <Compile Include="Contents\ViewModels\ListContentsViewModel.cs" />
     <Compile Include="Contents\ViewModels\ListContentTypesViewModel.cs" />
@@ -207,6 +207,8 @@
     <Content Include="Common\Views\EditorTemplates\Parts\Common.Container.ascx" />
     <Content Include="Common\Views\EditorTemplates\Parts\Common.TextContentField.ascx" />
     <Content Include="Contents\Module.txt" />
+    <Content Include="Contents\Styles\admin.css" />
+    <Content Include="Contents\Views\Admin\EditType.ascx" />
     <Content Include="Contents\Views\Admin\CreateType.ascx" />
     <Content Include="Contents\Views\Admin\Types.ascx" />
     <Content Include="Contents\Views\Admin\List.aspx" />
@@ -215,6 +217,11 @@
     <Content Include="Contents\Views\Admin\Create.aspx" />
     <Content Include="Contents\Views\DisplayTemplates\ContentTypeDefinition.ascx" />
     <Content Include="Contents\Views\DisplayTemplates\Items\Contents.Item.ascx" />
+    <Content Include="Contents\Views\EditorTemplates\Settings.ascx" />
+    <Content Include="Contents\Views\EditorTemplates\FieldsOnPart.ascx" />
+    <Content Include="Contents\Views\EditorTemplates\FieldOnPart.ascx" />
+    <Content Include="Contents\Views\EditorTemplates\Parts.ascx" />
+    <Content Include="Contents\Views\EditorTemplates\Part.ascx" />
     <Content Include="Contents\Views\EditorTemplates\Items\Contents.Item.ascx" />
     <Content Include="Contents\Views\Item\Preview.aspx" />
     <Content Include="Contents\Views\Item\Display.aspx" />

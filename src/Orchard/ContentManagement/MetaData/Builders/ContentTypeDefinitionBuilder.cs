@@ -8,7 +8,7 @@ namespace Orchard.ContentManagement.MetaData.Builders {
         private string _name;
         private string _displayName;
         private readonly IList<ContentTypeDefinition.Part> _parts;
-        private readonly IDictionary<string, string> _settings;
+        private readonly SettingsDictionary _settings;
 
         public ContentTypeDefinitionBuilder()
             : this(new ContentTypeDefinition(null)) {
@@ -17,13 +17,13 @@ namespace Orchard.ContentManagement.MetaData.Builders {
         public ContentTypeDefinitionBuilder(ContentTypeDefinition existing) {
             if (existing == null) {
                 _parts = new List<ContentTypeDefinition.Part>();
-                _settings = new Dictionary<string, string>();
+                _settings = new SettingsDictionary();
             }
             else {
                 _name = existing.Name;
                 _displayName = existing.DisplayName;
                 _parts = existing.Parts.ToList();
-                _settings = existing.Settings.ToDictionary(kv => kv.Key, kv => kv.Value);
+                _settings = new SettingsDictionary(existing.Settings.ToDictionary(kv => kv.Key, kv => kv.Value));
             }
         }
 
@@ -68,7 +68,7 @@ namespace Orchard.ContentManagement.MetaData.Builders {
                 _parts.Remove(existingPart);
             }
             else {
-                existingPart = new ContentTypeDefinition.Part(partDefinition, new Dictionary<string, string>());
+                existingPart = new ContentTypeDefinition.Part(partDefinition, new SettingsDictionary());
             }
             var configurer = new PartConfigurerImpl(existingPart);
             configuration(configurer);
@@ -77,10 +77,10 @@ namespace Orchard.ContentManagement.MetaData.Builders {
         }
 
         public abstract class PartConfigurer {
-            protected readonly IDictionary<string, string> _settings;
+            protected readonly SettingsDictionary _settings;
 
             protected PartConfigurer(ContentTypeDefinition.Part part) {
-                _settings = part.Settings.ToDictionary(kv => kv.Key, kv => kv.Value);
+                _settings = new SettingsDictionary(part.Settings.ToDictionary(kv => kv.Key, kv => kv.Value));
             }
 
             public PartConfigurer WithSetting(string name, string value) {

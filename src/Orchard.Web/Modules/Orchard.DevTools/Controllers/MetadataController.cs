@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Web;
+﻿using System.IO;
 using System.Web.Mvc;
 using System.Xml;
 using System.Xml.Linq;
@@ -58,6 +54,11 @@ namespace Orchard.DevTools.Controllers {
                 var typeElement = element;
                 var typeName = XmlConvert.DecodeName(element.Name.LocalName);
                 _contentDefinitionManager.AlterTypeDefinition(typeName, alteration => _contentDefinitionReader.Merge(typeElement, alteration));
+            }
+            foreach (var element in root.Elements("Parts").Elements()) {
+                var partElement = element;
+                var partName = XmlConvert.DecodeName(element.Name.LocalName);
+                _contentDefinitionManager.AlterPartDefinition(partName, alteration => _contentDefinitionReader.Merge(partElement, alteration));
             }
             return RedirectToAction("Index");
         }

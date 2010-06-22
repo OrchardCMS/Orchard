@@ -305,6 +305,7 @@
     <Compile Include="ContentManagement\MetaData\ContentPartInfo.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="ContentManagement\MetaData\Models\SettingsDictionary.cs" />
     <Compile Include="ContentManagement\MetaData\Services\ContentDefinitionWriter.cs" />
     <Compile Include="ContentManagement\MetaData\IContentDefinitionManager.cs" />
     <Compile Include="ContentManagement\MetaData\IContentDefinitionReader.cs" />
@@ -348,6 +349,15 @@
     <Compile Include="ContentManagement\ViewModels\TemplateViewModel.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="DataMigration\Commands\DataMigrationCommands.cs" />
+    <Compile Include="DataMigration\IDataMigrationCommand.cs" />
+    <Compile Include="DataMigration\DefaultDataMigrationGenerator.cs" />
+    <Compile Include="DataMigration\IDataMigrationGenerator.cs" />
+    <Compile Include="DataMigration\DataMigration.cs" />
+    <Compile Include="DataMigration\DataMigrationManager.cs" />
+    <Compile Include="DataMigration\DataMigrationRecord.cs" />
+    <Compile Include="DataMigration\IDataMigration.cs" />
+    <Compile Include="DataMigration\IDataMigrationManager.cs" />
     <Compile Include="Data\SessionLocator.cs" />
     <Compile Include="Data\IRepository.cs" />
     <Compile Include="Data\ISessionLocator.cs" />
