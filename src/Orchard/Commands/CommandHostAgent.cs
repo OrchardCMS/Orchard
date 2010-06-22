@@ -1,14 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.Specialized;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Web.Mvc;
 using System.Web.Routing;
 using Autofac;
 using Orchard.Environment;
 using Orchard.Environment.Configuration;
+using Orchard.Localization;
+using Orchard.Logging;
 
 namespace Orchard.Commands {
     /// <summary>
@@ -18,6 +18,15 @@ namespace Orchard.Commands {
     public class CommandHostAgent {
         private IContainer _hostContainer;
         private Dictionary<string, IStandaloneEnvironment> _tenants;
+
+        public CommandHostAgent() {
+            T = NullLocalizer.Instance;
+            Logger = NullLogger.Instance;
+        }
+
+        public Localizer T { get; set; }
+        public ILogger Logger { get; set; }
+
 
         public int RunSingleCommand(TextReader input, TextWriter output, string tenant, string[] args, Dictionary<string, string> switches) {
             int result = StartHost(input, output);
@@ -112,7 +121,7 @@ namespace Orchard.Commands {
             if (settingsList.Any()) {
                 var settings = settingsList.SingleOrDefault(s => String.Equals(s.Name, tenant, StringComparison.OrdinalIgnoreCase));
                 if (settings == null) {
-                    throw new OrchardException(string.Format("Tenant {0} does not exist", tenant));
+                    throw new OrchardSystemException(T("Tenant {0} does not exist", tenant));
                 }
 
                 var env = host.CreateStandaloneEnvironment(settings);
