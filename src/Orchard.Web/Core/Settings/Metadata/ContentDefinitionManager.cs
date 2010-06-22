@@ -13,16 +13,19 @@ namespace Orchard.Core.Settings.Metadata {
     public class ContentDefinitionManager : Component, IContentDefinitionManager {
         private readonly IRepository<ContentTypeDefinitionRecord> _typeDefinitionRepository;
         private readonly IRepository<ContentPartDefinitionRecord> _partDefinitionRepository;
+        private readonly IRepository<ContentFieldDefinitionRecord> _fieldDefinitionRepository;
         private readonly IMapper<XElement, IDictionary<string, string>> _settingsReader;
         private readonly IMapper<IDictionary<string, string>, XElement> _settingsWriter;
 
         public ContentDefinitionManager(
             IRepository<ContentTypeDefinitionRecord> typeDefinitionRepository,
             IRepository<ContentPartDefinitionRecord> partDefinitionRepository,
+            IRepository<ContentFieldDefinitionRecord> fieldDefinitionRepository,
             IMapper<XElement, IDictionary<string, string>> settingsReader,
             IMapper<IDictionary<string, string>, XElement> settingsWriter) {
             _typeDefinitionRepository = typeDefinitionRepository;
             _partDefinitionRepository = partDefinitionRepository;
+            _fieldDefinitionRepository = fieldDefinitionRepository;
             _settingsReader = settingsReader;
             _settingsWriter = settingsWriter;
         }
@@ -48,7 +51,7 @@ namespace Orchard.Core.Settings.Metadata {
         }
 
         public void StorePartDefinition(ContentPartDefinition contentPartDefinition) {
-            throw new NotImplementedException();
+            Apply(contentPartDefinition, Acquire(contentPartDefinition));
         }
 
         private ContentTypeDefinitionRecord Acquire(ContentTypeDefinition contentTypeDefinition) {
@@ -65,6 +68,15 @@ namespace Orchard.Core.Settings.Metadata {
             if (result == null) {
                 result = new ContentPartDefinitionRecord { Name = contentPartDefinition.Name };
                 _partDefinitionRepository.Create(result);
+            }
+            return result;
+        }
+
+        private ContentFieldDefinitionRecord Acquire(ContentFieldDefinition contentFieldDefinition) {
+            var result = _fieldDefinitionRepository.Fetch(x => x.Name == contentFieldDefinition.Name).SingleOrDefault();
+            if (result == null) {
+                result = new ContentFieldDefinitionRecord { Name = contentFieldDefinition.Name };
+                _fieldDefinitionRepository.Create(result);
             }
             return result;
         }
@@ -95,7 +107,34 @@ namespace Orchard.Core.Settings.Metadata {
             record.Settings = Compose(_settingsWriter.Map(model.Settings));
         }
 
+        private void Apply(ContentPartDefinition model, ContentPartDefinitionRecord record) {
+            record.Settings = _settingsWriter.Map(model.Settings).ToString();
 
+            var toRemove = record.ContentPartFieldDefinitionRecords
+                .Where(fieldDefinitionRecord => !model.Fields.Any(field => fieldDefinitionRecord.ContentFieldDefinitionRecord.Name == field.FieldDefinition.Name))
+                .ToList();
+
+            foreach (var remove in toRemove) {
+                record.ContentPartFieldDefinitionRecords.Remove(remove);
+            }
+
+            foreach (var field in model.Fields) {
+                var fieldName = field.FieldDefinition.Name;
+                var partFieldRecord = record.ContentPartFieldDefinitionRecords.SingleOrDefault(r => r.ContentFieldDefinitionRecord.Name == fieldName);
+                if (partFieldRecord == null) {
+                    partFieldRecord = new ContentPartFieldDefinitionRecord { 
+                        ContentFieldDefinitionRecord = Acquire(field.FieldDefinition),
+                        Name = field.Name
+                    };
+                    record.ContentPartFieldDefinitionRecords.Add(partFieldRecord);
+                }
+                Apply(field, partFieldRecord);
+            }
+        }
+
+        private void Apply(ContentPartDefinition.Field model, ContentPartFieldDefinitionRecord record) {
+            record.Settings = Compose(_settingsWriter.Map(model.Settings));
+        }
 
         ContentTypeDefinition Build(ContentTypeDefinitionRecord source) {
             return new ContentTypeDefinition(

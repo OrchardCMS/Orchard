@@ -24,8 +24,8 @@ namespace Orchard.ContentManagement.MetaData.Services {
         public XElement Export(ContentPartDefinition partDefinition) {
             var partElement = NewElement(partDefinition.Name, partDefinition.Settings);
             foreach(var partField in partDefinition.Fields) {
-                var partFieldElement = NewElement(partField.Name, partField.Settings);
-                partFieldElement.SetAttributeValue("FieldType", partField.FieldDefinition.Name);
+                var attributeName = partField.Name + "." + partField.FieldDefinition.Name;
+                var partFieldElement = NewElement(attributeName, partField.Settings);
                 partElement.Add(partFieldElement);
             }
             return partElement;
