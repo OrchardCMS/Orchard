@@ -46,7 +46,7 @@ namespace Orchard.Data {
             lock (this) {
                 if (_sessionFactory != null) {
                     Logger.Error("CreateSchema can not be called after a session factory was created");
-                    throw new OrchardSystemException(T("CreateSchema can not be called after a session factory was created"));
+                    throw new OrchardCoreException(T("CreateSchema can not be called after a session factory was created"));
                 }
 
                 _sessionFactory = BuildSessionFactory(true /*createDatabase*/, false /*updateSchema*/);
@@ -57,7 +57,7 @@ namespace Orchard.Data {
             lock (this) {
                 if (_sessionFactory != null) {
                     Logger.Error("UpdateSchema can not be called after a session factory was created");
-                    throw new OrchardSystemException(T("UpdateSchema can not be called after a session factory was created"));
+                    throw new OrchardCoreException(T("UpdateSchema can not be called after a session factory was created"));
                 }
 
                 _sessionFactory = BuildSessionFactory(false /*createDatabase*/, true /*updateSchema*/);

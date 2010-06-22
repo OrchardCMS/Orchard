@@ -45,7 +45,7 @@ namespace Orchard.Environment.Extensions.Compilers {
                 }
             }
             catch(Exception e) {
-                throw new OrchardSystemException(T("Error compiling module \"{0}\" from file \"{1}\"", moduleName, context.VirtualPath), e);
+                throw new OrchardCoreException(T("Error compiling module \"{0}\" from file \"{1}\"", moduleName, context.VirtualPath), e);
             }
         }
 

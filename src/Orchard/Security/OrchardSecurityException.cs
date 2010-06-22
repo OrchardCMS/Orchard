@@ -4,7 +4,7 @@ using Orchard.ContentManagement;
 using Orchard.Localization;
 
 namespace Orchard.Security {
-    public class OrchardSecurityException : OrchardSystemException {
+    public class OrchardSecurityException : OrchardCoreException {
         public OrchardSecurityException(LocalizedString message) : base(message) { }
         public OrchardSecurityException(LocalizedString message, Exception innerException) : base(message, innerException) { }
         protected OrchardSecurityException(SerializationInfo info, StreamingContext context) : base(info, context) { }

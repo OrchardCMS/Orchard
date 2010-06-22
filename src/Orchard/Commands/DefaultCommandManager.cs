@@ -30,11 +30,11 @@ namespace Orchard.Commands {
                 var commandMatch = string.Join(" ", parameters.Arguments.ToArray());
                 var commandList = string.Join(",", GetCommandDescriptors().Select(d => d.Name).ToArray());
                 if (matches.Any()) {
-                    throw new OrchardSystemException(T("Multiple commands found matching arguments \"{0}\". Commands available: {1}.",
+                    throw new OrchardCoreException(T("Multiple commands found matching arguments \"{0}\". Commands available: {1}.",
                                                              commandMatch, commandList));
                 }
                 else {
-                    throw new OrchardSystemException(T("No command found matching arguments \"{0}\". Commands available: {1}.",
+                    throw new OrchardCoreException(T("No command found matching arguments \"{0}\". Commands available: {1}.",
                                                              commandMatch, commandList));
                 }
             }

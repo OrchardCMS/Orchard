@@ -428,7 +428,7 @@
     <Compile Include="Environment\DefaultOrchardHost.cs" />
     <Compile Include="Mvc\OrchardControllerFactory.cs" />
     <Compile Include="Environment\IOrchardHost.cs" />
-    <Compile Include="OrchardSystemException.cs" />
+    <Compile Include="OrchardCoreException.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Indexing\IIndexDocument.cs" />
     <Compile Include="Indexing\IIndexProvider.cs" />

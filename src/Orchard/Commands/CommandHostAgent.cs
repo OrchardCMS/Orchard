@@ -121,7 +121,7 @@ namespace Orchard.Commands {
             if (settingsList.Any()) {
                 var settings = settingsList.SingleOrDefault(s => String.Equals(s.Name, tenant, StringComparison.OrdinalIgnoreCase));
                 if (settings == null) {
-                    throw new OrchardSystemException(T("Tenant {0} does not exist", tenant));
+                    throw new OrchardCoreException(T("Tenant {0} does not exist", tenant));
                 }
 
                 var env = host.CreateStandaloneEnvironment(settings);
