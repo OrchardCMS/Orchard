@@ -63,13 +63,18 @@
   <ItemGroup>
     <Compile Include="Common\Drivers\BodyDriver.cs" />
     <Compile Include="Common\Drivers\CommonDriver.cs" />
+    <Compile Include="Common\Drivers\ItemReferenceContentFieldDriver.cs" />
     <Compile Include="Common\Drivers\RoutableDriver.cs" />
     <Compile Include="Common\Controllers\RoutableController.cs" />
     <Compile Include="Common\Drivers\TextContentFieldDriver.cs" />
+    <Compile Include="Common\Fields\ItemReferenceContentField.cs" />
     <Compile Include="Common\Fields\TextContentField.cs" />
+    <Compile Include="Common\Handlers\ItemReferenceContentFieldHandler.cs" />
     <Compile Include="Common\Handlers\RoutableAspectHandler.cs" />
     <Compile Include="Common\Handlers\TextContentFieldHandler.cs" />
     <Compile Include="Common\ViewModels\ContainerEditorViewModel.cs" />
+    <Compile Include="Common\ViewModels\ItemReferenceContentFieldDisplayModel.cs" />
+    <Compile Include="Common\ViewModels\ItemReferenceContentFieldEditorViewModel.cs" />
     <Compile Include="Common\ViewModels\TextContentFieldDisplayViewModel.cs" />
     <Compile Include="Common\ViewModels\TextContentFieldEditorViewModel.cs" />
     <Compile Include="Contents\Controllers\ItemController.cs" />
@@ -203,9 +208,11 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Common\Module.txt" />
+    <Content Include="Common\Views\DisplayTemplates\Fields\Common.ItemReferenceContentField.ascx" />
     <Content Include="Common\Views\DisplayTemplates\Fields\Common.TextContentField.ascx" />
+    <Content Include="Common\Views\EditorTemplates\Fields\Common.ItemReferenceContentField.ascx" />
     <Content Include="Common\Views\EditorTemplates\Parts\Common.Container.ascx" />
-    <Content Include="Common\Views\EditorTemplates\Parts\Common.TextContentField.ascx" />
+    <Content Include="Common\Views\EditorTemplates\Fields\Common.TextContentField.ascx" />
     <Content Include="Contents\Module.txt" />
     <Content Include="Contents\Styles\admin.css" />
     <Content Include="Contents\Views\Admin\EditType.ascx" />
