@@ -20,7 +20,6 @@ namespace Orchard.ContentManagement {
         void Remove(ContentItem contentItem);
         void Index(ContentItem contentItem, IDocumentIndex documentIndex);
 
-        ISearchBuilder Search();
 
         void Flush();
         IContentQuery<ContentItem> Query();

@@ -168,7 +168,7 @@
     <Compile Include="ContentManagement\Models\Phi.cs" />
     <Compile Include="ContentManagement\Models\Styled.cs" />
     <Compile Include="ContentManagement\Models\StyledHandler.cs" />
-    <Compile Include="ContentManagement\ContentPartDriverHandlerTests.cs">
+    <Compile Include="ContentManagement\Handlers\Coordinators\ContentPartDriverCoordinatorTests.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="ContentManagement\Records\DeltaRecord.cs">

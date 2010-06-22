@@ -18,7 +18,6 @@ namespace Orchard.ContentManagement {
         private readonly IRepository<ContentItemVersionRecord> _contentItemVersionRepository;
         private readonly IContentDefinitionManager _contentDefinitionManager;
         private readonly Func<IContentManagerSession> _contentManagerSession;
-        private readonly IIndexManager _indexManager;
 
         public DefaultContentManager(
             IComponentContext context,
@@ -26,15 +25,13 @@ namespace Orchard.ContentManagement {
             IRepository<ContentItemRecord> contentItemRepository,
             IRepository<ContentItemVersionRecord> contentItemVersionRepository,
             IContentDefinitionManager contentDefinitionManager,
-            Func<IContentManagerSession> contentManagerSession,
-            IIndexManager indexManager) {
+            Func<IContentManagerSession> contentManagerSession) {
             _context = context;
             _contentTypeRepository = contentTypeRepository;
             _contentItemRepository = contentItemRepository;
             _contentItemVersionRepository = contentItemVersionRepository;
             _contentDefinitionManager = contentDefinitionManager;
             _contentManagerSession = contentManagerSession;
-            _indexManager = indexManager;
         }
 
         private IEnumerable<IContentHandler> _handlers;
@@ -447,10 +444,10 @@ namespace Orchard.ContentManagement {
             }
         }
 
-        public ISearchBuilder Search() {
-            return _indexManager.HasIndexProvider() 
-                ? _indexManager.GetSearchIndexProvider().CreateSearchBuilder("Search") 
-                : new NullSearchBuilder();
-        }
+        //public ISearchBuilder Search() {
+        //    return _indexManager.HasIndexProvider() 
+        //        ? _indexManager.GetSearchIndexProvider().CreateSearchBuilder("Search") 
+        //        : new NullSearchBuilder();
+        //}
     }
 }

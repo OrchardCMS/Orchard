@@ -1,19 +1,37 @@
 using System.Collections.Generic;
+using System.Linq;
 using JetBrains.Annotations;
 using Orchard.ContentManagement.Handlers;
+using Orchard.ContentManagement.MetaData;
 using Orchard.Logging;
 
-namespace Orchard.ContentManagement.Drivers {
+namespace Orchard.ContentManagement.Drivers.Coordinators {
     [UsedImplicitly]
-    public class ContentPartDriverHandler : ContentHandlerBase {
+    public class ContentPartDriverCoordinator : ContentHandlerBase {
         private readonly IEnumerable<IContentPartDriver> _drivers;
+        private readonly IContentDefinitionManager _contentDefinitionManager;
 
-        public ContentPartDriverHandler(IEnumerable<IContentPartDriver> drivers) {
+        public ContentPartDriverCoordinator(IEnumerable<IContentPartDriver> drivers, IContentDefinitionManager contentDefinitionManager) {
             _drivers = drivers;
+            _contentDefinitionManager = contentDefinitionManager;
             Logger = NullLogger.Instance;
         }
 
         public ILogger Logger { get; set; }
+        
+        public override void Activating(ActivatingContentContext context) {
+            var contentTypeDefinition = _contentDefinitionManager.GetTypeDefinition(context.ContentType);
+            if (contentTypeDefinition == null)
+                return;
+
+            foreach (var partInfo in _drivers.SelectMany(cpp => cpp.GetPartInfo())) {
+                var partName = partInfo.PartName;
+                var typePartDefinition = contentTypeDefinition.Parts.FirstOrDefault(p => p.PartDefinition.Name == partName);
+                if (typePartDefinition != null) {
+                    context.Builder.Weld(partInfo.Factory(typePartDefinition));
+                }
+            }
+        }
 
         public override void BuildDisplayModel(BuildDisplayModelContext context) {
             _drivers.Invoke(driver => {

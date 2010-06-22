@@ -5,21 +5,24 @@ using Moq;
 using NUnit.Framework;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
+using Orchard.ContentManagement.Drivers.Coordinators;
 using Orchard.ContentManagement.Handlers;
 using Orchard.Environment.AutofacUtil;
 using Orchard.Mvc.ViewModels;
+using Orchard.Tests.Utility;
 using Orchard.UI.Zones;
 
-namespace Orchard.Tests.ContentManagement {
+namespace Orchard.Tests.ContentManagement.Handlers.Coordinators {
     [TestFixture]
-    public class ContentPartDriverHandlerTests {
+    public class ContentPartDriverCoordinatorTests {
         private IContainer _container;
 
         [SetUp]
         public void Init() {
             var builder = new ContainerBuilder();
             //builder.RegisterModule(new ImplicitCollectionSupportModule());
-            builder.RegisterType<ContentPartDriverHandler>().As<IContentHandler>();
+            builder.RegisterType<ContentPartDriverCoordinator>().As<IContentHandler>();
+            builder.RegisterAutoMocking();
             _container = builder.Build();
         }
 

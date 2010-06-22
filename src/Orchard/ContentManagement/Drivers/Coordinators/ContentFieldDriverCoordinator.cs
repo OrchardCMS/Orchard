@@ -3,12 +3,12 @@ using JetBrains.Annotations;
 using Orchard.ContentManagement.Handlers;
 using Orchard.Logging;
 
-namespace Orchard.ContentManagement.Drivers {
+namespace Orchard.ContentManagement.Drivers.Coordinators {
     [UsedImplicitly]
-    public class ContentFieldDriverHandler : ContentHandlerBase {
+    public class ContentFieldDriverCoordinator : ContentHandlerBase {
         private readonly IEnumerable<IContentFieldDriver> _drivers;
 
-        public ContentFieldDriverHandler(IEnumerable<IContentFieldDriver> drivers) {
+        public ContentFieldDriverCoordinator(IEnumerable<IContentFieldDriver> drivers) {
             _drivers = drivers;
             Logger = NullLogger.Instance;
         }
