@@ -3,15 +3,17 @@ using Orchard.Security.Permissions;
 
 namespace Orchard.Core.Contents {
     public class Permissions : IPermissionProvider {
-        public static readonly Permission CreateContentType = new Permission { Name = "CreateContentType", Description = "Create custom content type." };
+        public static readonly Permission CreateContentTypes = new Permission { Name = "CreateContentTypes", Description = "Create custom content types." };
+        public static readonly Permission EditContentTypes = new Permission { Name = "EditContentTypes", Description = "Edit content types." };
 
         public string ModuleName {
             get { return "Contents"; }
         }
 
         public IEnumerable<Permission> GetPermissions() {
-            return new Permission[] {
-                CreateContentType,
+            return new [] {
+                CreateContentTypes,
+                EditContentTypes,
             };
         }
 
@@ -19,7 +21,7 @@ namespace Orchard.Core.Contents {
             return new[] {
                 new PermissionStereotype {
                     Name = "Administrator",
-                    Permissions = new[] {CreateContentType}
+                    Permissions = GetPermissions()
                 }
             };
         }

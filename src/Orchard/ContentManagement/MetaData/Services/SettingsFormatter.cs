@@ -1,21 +1,21 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
+using Orchard.ContentManagement.MetaData.Models;
 
 namespace Orchard.ContentManagement.MetaData.Services {
     public class SettingsFormatter :
-        IMapper<XElement, IDictionary<string, string>>,
-        IMapper<IDictionary<string, string>, XElement> {
+        IMapper<XElement, SettingsDictionary>,
+        IMapper<SettingsDictionary, XElement> {
 
-        public IDictionary<string, string> Map(XElement source) {
+        public SettingsDictionary Map(XElement source) {
             if (source == null)
-                return new Dictionary<string, string>();
+                return new SettingsDictionary();
 
-            return source.Attributes().ToDictionary(attr => XmlConvert.DecodeName(attr.Name.LocalName), attr => attr.Value);
+            return new SettingsDictionary(source.Attributes().ToDictionary(attr => XmlConvert.DecodeName(attr.Name.LocalName), attr => attr.Value));
         }
 
-        public XElement Map(IDictionary<string, string> source) {
+        public XElement Map(SettingsDictionary source) {
             if (source == null)
                 return new XElement("settings");
 

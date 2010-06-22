@@ -7,7 +7,7 @@ namespace Orchard.ContentManagement.MetaData.Builders {
     public class ContentPartDefinitionBuilder {
         private string _name;
         private readonly IList<ContentPartDefinition.Field> _fields;
-        private readonly IDictionary<string, string> _settings;
+        private readonly SettingsDictionary _settings;
 
         public ContentPartDefinitionBuilder()
             : this(new ContentPartDefinition(null)) {
@@ -16,12 +16,12 @@ namespace Orchard.ContentManagement.MetaData.Builders {
         public ContentPartDefinitionBuilder(ContentPartDefinition existing) {
             if (existing == null) {
                 _fields = new List<ContentPartDefinition.Field>();
-                _settings = new Dictionary<string, string>();
+                _settings = new SettingsDictionary();
             }
             else {
                 _name = existing.Name;
                 _fields = existing.Fields.ToList();
-                _settings = existing.Settings.ToDictionary(kv => kv.Key, kv => kv.Value);
+                _settings = new SettingsDictionary(existing.Settings.ToDictionary(kv => kv.Key, kv => kv.Value));
             }
         }
 
@@ -58,7 +58,7 @@ namespace Orchard.ContentManagement.MetaData.Builders {
                 _fields.Remove(existingField);
             }
             else {
-                existingField = new ContentPartDefinition.Field(fieldDefinition, fieldName, new Dictionary<string, string>());
+                existingField = new ContentPartDefinition.Field(fieldDefinition, fieldName, new SettingsDictionary());
             }
             var configurer = new FieldConfigurerImpl(existingField);
             configuration(configurer);
@@ -67,10 +67,10 @@ namespace Orchard.ContentManagement.MetaData.Builders {
         }
 
         public abstract class FieldConfigurer {
-            protected readonly IDictionary<string, string> _settings;
+            protected readonly SettingsDictionary _settings;
 
             protected FieldConfigurer(ContentPartDefinition.Field field) {
-                _settings = field.Settings.ToDictionary(kv => kv.Key, kv => kv.Value);
+                _settings = new SettingsDictionary(field.Settings.ToDictionary(kv => kv.Key, kv => kv.Value));
             }
 
             public FieldConfigurer WithSetting(string name, string value) {

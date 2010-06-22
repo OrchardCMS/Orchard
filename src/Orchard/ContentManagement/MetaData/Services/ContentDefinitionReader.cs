@@ -1,13 +1,13 @@
-﻿using System.Collections.Generic;
-using System.Xml;
+﻿using System.Xml;
 using System.Xml.Linq;
 using Orchard.ContentManagement.MetaData.Builders;
+using Orchard.ContentManagement.MetaData.Models;
 
 namespace Orchard.ContentManagement.MetaData.Services {
     public class ContentDefinitionReader : IContentDefinitionReader {
-        private readonly IMapper<XElement, IDictionary<string, string>> _settingsReader;
+        private readonly IMapper<XElement, SettingsDictionary> _settingsReader;
 
-        public ContentDefinitionReader(IMapper<XElement, IDictionary<string, string>> settingsReader) {
+        public ContentDefinitionReader(IMapper<XElement, SettingsDictionary> settingsReader) {
             _settingsReader = settingsReader;
         }
 

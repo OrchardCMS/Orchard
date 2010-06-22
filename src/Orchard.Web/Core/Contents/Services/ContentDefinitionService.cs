@@ -25,25 +25,30 @@ namespace Orchard.Core.Contents.Services {
         }
 
         public ContentTypeDefinition GetTypeDefinition(string name) {
-            throw new NotImplementedException();
+            return _contentDefinitionManager.GetTypeDefinition(name);
         }
 
-        public void AddTypeDefinition(ContentTypeDefinitionStub definitionStub) {
-            if (string.IsNullOrWhiteSpace(definitionStub.Name))
-                definitionStub.Name = GenerateTypeName(definitionStub.DisplayName);
+        public void AddTypeDefinition(ContentTypeDefinition contentTypeDefinition) {
+            var typeName = string.IsNullOrWhiteSpace(contentTypeDefinition.Name)
+                ? GenerateTypeName(contentTypeDefinition.DisplayName)
+                : contentTypeDefinition.Name;
 
-            while (_contentDefinitionManager.GetTypeDefinition(definitionStub.Name) != null)
-                definitionStub.Name = VersionTypeName(definitionStub.Name);
+            while (_contentDefinitionManager.GetTypeDefinition(typeName) != null)
+                typeName = VersionTypeName(typeName);
 
             //just giving the new type some default parts for now
             _contentDefinitionManager.AlterTypeDefinition(
-                definitionStub.Name,
-                cfg => cfg.Named(definitionStub.Name, definitionStub.DisplayName)
+                typeName,
+                cfg => cfg.Named(typeName, contentTypeDefinition.DisplayName)
                            .WithPart("CommonAspect")
                            //.WithPart("RoutableAspect") //need to go the new routable route
                            .WithPart("BodyAspect"));
+             
+            Services.Notifier.Information(T("Created content type: {0}", contentTypeDefinition.DisplayName));
+        }
 
-            Services.Notifier.Information(T("Created content type: {0}", definitionStub.DisplayName));
+        public void AlterTypeDefinition(ContentTypeDefinition contentTypeDefinition) {
+            _contentDefinitionManager.StoreTypeDefinition(contentTypeDefinition);
         }
 
         public void RemoveTypeDefinition(string name) {
@@ -69,13 +74,16 @@ namespace Orchard.Core.Contents.Services {
         }
 
         private static string VersionTypeName(string name) {
-            var version = 2;
+            int version;
             var nameParts = name.Split(new[] { '-' }, StringSplitOptions.RemoveEmptyEntries);
 
             if (nameParts.Length > 1 && int.TryParse(nameParts.Last(), out version)) {
                 version = version > 0 ? ++version : 2;
                 //this could unintentionally chomp something that looks like a version
                 name = string.Join("-", nameParts.Take(nameParts.Length - 1));
+            }
+            else {
+                version = 2;
             }
 
             return string.Format("{0}-{1}", name, version);

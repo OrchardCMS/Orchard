@@ -3,12 +3,13 @@ using System.Linq;
 using System.Web.Mvc;
 using System.Web.Routing;
 using Orchard.ContentManagement;
-using Orchard.ContentManagement.MetaData;
+using Orchard.ContentManagement.MetaData.Models;
 using Orchard.Core.Contents.Services;
 using Orchard.Core.Contents.ViewModels;
 using Orchard.Data;
 using Orchard.Localization;
 using Orchard.Logging;
+using Orchard.Mvc.Results;
 using Orchard.Mvc.ViewModels;
 using Orchard.UI.Notify;
 
@@ -51,19 +52,19 @@ namespace Orchard.Core.Contents.Controllers {
             });
         }
 
-        public ActionResult CreateType(CreateTypeViewModel viewModel) {
-            if (!Services.Authorizer.Authorize(Permissions.CreateContentType, T("Not allowed to create a content type.")))
+        public ActionResult CreateType() {
+            if (!Services.Authorizer.Authorize(Permissions.CreateContentTypes, T("Not allowed to create a content type.")))
                 return new HttpUnauthorizedResult();
 
-            return View(viewModel);
+            return View(new CreateTypeViewModel());
         }
 
         [HttpPost, ActionName("CreateType")]
         public ActionResult CreateTypePOST(CreateTypeViewModel viewModel) {
-            if (!Services.Authorizer.Authorize(Permissions.CreateContentType, T("Not allowed to create a content type.")))
+            if (!Services.Authorizer.Authorize(Permissions.CreateContentTypes, T("Not allowed to create a content type.")))
                 return new HttpUnauthorizedResult();
 
-            var model = new ContentTypeDefinitionStub();
+            var model = new ContentTypeDefinition("");
             TryUpdateModel(model);
 
             if (!ModelState.IsValid) {
@@ -76,9 +77,69 @@ namespace Orchard.Core.Contents.Controllers {
             return RedirectToAction("Index");
         }
 
+        public ActionResult EditType(string id) {
+            if (!Services.Authorizer.Authorize(Permissions.CreateContentTypes, T("Not allowed to edit a content type.")))
+                return new HttpUnauthorizedResult();
+
+            var contentTypeDefinition = _contentDefinitionService.GetTypeDefinition(id);
+
+            if (contentTypeDefinition == null)
+                return new NotFoundResult();
+
+            return View(new EditTypeViewModel(contentTypeDefinition));
+        }
+
+        [HttpPost, ActionName("EditType")]
+        public ActionResult EditTypePOST(string id) {
+            if (!Services.Authorizer.Authorize(Permissions.CreateContentTypes, T("Not allowed to edit a content type.")))
+                return new HttpUnauthorizedResult();
+
+            var contentTypeDefinition = _contentDefinitionService.GetTypeDefinition(id);
+
+            if (contentTypeDefinition == null)
+                return new NotFoundResult();
+
+            var viewModel = new EditTypeViewModel();
+            TryUpdateModel(viewModel);
+
+            if (!ModelState.IsValid) {
+                return EditType(id);
+            }
+
+            //todo: apply the changes along the lines of but definately not resembling
+            // for now this _might_ just get a little messy -> 
+            _contentDefinitionService.AlterTypeDefinition(
+                new ContentTypeDefinition(
+                    viewModel.Name,
+                    viewModel.DisplayName,
+                    viewModel.Parts.Select(
+                        p => new ContentTypeDefinition.Part(
+                                 new ContentPartDefinition(
+                                     p.PartDefinition.Name,
+                                     p.PartDefinition.Fields.Select(
+                                        f => new ContentPartDefinition.Field(
+                                            new ContentFieldDefinition(f.FieldDefinition.Name),
+                                            f.Name,
+                                            f.Settings
+                                        )
+                                     ),
+                                     p.PartDefinition.Settings
+                                     ),
+                                 p.Settings
+                                 )
+                        ),
+                    viewModel.Settings
+                    )
+                );
+            // little == lot
+
+            return RedirectToAction("Index");
+        }
+
         #endregion
 
         #region Content
+
         #endregion
 
         public ActionResult List(ListContentsViewModel model) {

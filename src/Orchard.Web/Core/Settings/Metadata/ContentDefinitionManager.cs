@@ -14,15 +14,15 @@ namespace Orchard.Core.Settings.Metadata {
         private readonly IRepository<ContentTypeDefinitionRecord> _typeDefinitionRepository;
         private readonly IRepository<ContentPartDefinitionRecord> _partDefinitionRepository;
         private readonly IRepository<ContentFieldDefinitionRecord> _fieldDefinitionRepository;
-        private readonly IMapper<XElement, IDictionary<string, string>> _settingsReader;
-        private readonly IMapper<IDictionary<string, string>, XElement> _settingsWriter;
+        private readonly IMapper<XElement, SettingsDictionary> _settingsReader;
+        private readonly IMapper<SettingsDictionary, XElement> _settingsWriter;
 
         public ContentDefinitionManager(
             IRepository<ContentTypeDefinitionRecord> typeDefinitionRepository,
             IRepository<ContentPartDefinitionRecord> partDefinitionRepository,
             IRepository<ContentFieldDefinitionRecord> fieldDefinitionRepository,
-            IMapper<XElement, IDictionary<string, string>> settingsReader,
-            IMapper<IDictionary<string, string>, XElement> settingsWriter) {
+            IMapper<XElement, SettingsDictionary> settingsReader,
+            IMapper<SettingsDictionary, XElement> settingsWriter) {
             _typeDefinitionRepository = typeDefinitionRepository;
             _partDefinitionRepository = partDefinitionRepository;
             _fieldDefinitionRepository = fieldDefinitionRepository;

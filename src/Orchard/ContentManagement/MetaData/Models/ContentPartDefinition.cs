@@ -4,7 +4,7 @@ using Orchard.Utility.Extensions;
 
 namespace Orchard.ContentManagement.MetaData.Models {
     public class ContentPartDefinition {
-        public ContentPartDefinition(string name, IEnumerable<Field> fields, IDictionary<string, string> settings) {
+        public ContentPartDefinition(string name, IEnumerable<Field> fields, SettingsDictionary settings) {
             Name = name;
             Fields = fields.ToReadOnlyCollection();
             Settings = settings;
@@ -13,15 +13,15 @@ namespace Orchard.ContentManagement.MetaData.Models {
         public ContentPartDefinition(string name) {  
             Name = name;
             Fields = Enumerable.Empty<Field>();
-            Settings = new Dictionary<string, string>();
+            Settings = new SettingsDictionary();
         }
 
         public string Name { get; private set; }
         public IEnumerable<Field> Fields { get; private set; }
-        public IDictionary<string, string> Settings { get; private set; }
+        public SettingsDictionary Settings { get; private set; }
 
         public class Field {
-            public Field(ContentFieldDefinition contentFieldDefinition, string name, IDictionary<string, string> settings) {
+            public Field(ContentFieldDefinition contentFieldDefinition, string name, SettingsDictionary settings) {
                 FieldDefinition = contentFieldDefinition;
                 Name = name;
                 Settings = settings;
@@ -29,7 +29,7 @@ namespace Orchard.ContentManagement.MetaData.Models {
 
             public string Name { get; private set; }
             public ContentFieldDefinition FieldDefinition { get; private set; }
-            public IDictionary<string, string> Settings { get; private set; }
+            public SettingsDictionary Settings { get; private set; }
         }
     }
 }
