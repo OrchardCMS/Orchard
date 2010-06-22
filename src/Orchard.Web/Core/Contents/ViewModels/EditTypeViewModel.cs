@@ -35,7 +35,7 @@ namespace Orchard.Core.Contents.ViewModels {
         public SettingsDictionary Settings { get; set; }
     }
 
-    public class EditPartViewModel {
+    public class EditPartViewModel : BaseViewModel {
         public EditPartViewModel() {
             Fields = new List<EditPartFieldViewModel>();
             Settings = new SettingsDictionary();

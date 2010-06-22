@@ -136,6 +136,55 @@ namespace Orchard.Core.Contents.Controllers {
             return RedirectToAction("Index");
         }
 
+        public ActionResult EditPart(string id) {
+            if (!Services.Authorizer.Authorize(Permissions.CreateContentTypes, T("Not allowed to edit a part.")))
+                return new HttpUnauthorizedResult();
+
+            var contentPartDefinition = _contentDefinitionService.GetPartDefinition(id);
+
+            if (contentPartDefinition == null)
+                return new NotFoundResult();
+
+            return View(new EditPartViewModel(contentPartDefinition));
+        }
+
+        [HttpPost, ActionName("EditPart")]
+        public ActionResult EditPartPOST(string id) {
+            if (!Services.Authorizer.Authorize(Permissions.CreateContentTypes, T("Not allowed to edit a part.")))
+                return new HttpUnauthorizedResult();
+
+            var contentPartDefinition = _contentDefinitionService.GetPartDefinition(id);
+
+            if (contentPartDefinition == null)
+                return new NotFoundResult();
+
+            var viewModel = new EditPartViewModel();
+            TryUpdateModel(viewModel);
+
+            if (!ModelState.IsValid) {
+                return EditPart(id);
+            }
+
+            //todo: apply the changes along the lines of but definately not resembling
+            // for now this _might_ just get a little messy -> 
+            _contentDefinitionService.AlterPartDefinition(
+                new ContentPartDefinition(
+                    viewModel.Name,
+                    viewModel.Fields.Select(
+                    f => new ContentPartDefinition.Field(
+                        new ContentFieldDefinition(f.FieldDefinition.Name),
+                        f.Name,
+                        f.Settings
+                    )
+                    ),
+                    viewModel.Settings
+                    )
+                );
+            // little == lot
+
+            return RedirectToAction("Index");
+        }
+
         #endregion
 
         #region Content
