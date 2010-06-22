@@ -17,6 +17,6 @@
         <div class="manage"><%:Html.ActionLink(T("Edit part settings").Text, "EditPart", new { area = "Contents", id = Model.PartDefinition.Name }) %></div>
         <%:Html.DisplayFor(m => m.PartDefinition.Settings, "Settings", "PartDefinition") %><%
     } %>
-        <%:Html.EditorFor(m => m.PartDefinition.Fields, "FieldsOnPart") %>
+        <%:Html.EditorFor(m => m.PartDefinition.Fields, "Part.Fields") %>
         <%:Html.Hidden("PartDefinition.Name", Model.PartDefinition.Name) %>
     </fieldset>

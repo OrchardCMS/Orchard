@@ -6,7 +6,7 @@ if (Model.Any()) { %>
         foreach (var part in Model) {
             var p = part;
             var htmlFieldName = string.Format("Parts[{0}]", pi++); %>
-            <%:Html.EditorFor(m => p, "Type.Part", htmlFieldName) %><%
+            <%:Html.EditorFor(m => p, "Part", htmlFieldName) %><%
         } %>
     </fieldset><%
 } %>

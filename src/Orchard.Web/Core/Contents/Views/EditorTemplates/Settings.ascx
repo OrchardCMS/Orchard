@@ -2,7 +2,7 @@
 <%@ import Namespace="Orchard.ContentManagement.MetaData.Models" %><%
 if (Model.Any()) { %>
     <fieldset>
-        <legend><%:T("Settings for this content type") %></legend><%
+        <legend><%:T("[Settings]") %></legend><%
         var si = 0;
         foreach (var setting in Model) {
             var s = setting;

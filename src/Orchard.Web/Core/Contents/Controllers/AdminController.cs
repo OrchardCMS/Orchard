@@ -106,28 +106,48 @@ namespace Orchard.Core.Contents.Controllers {
                 return EditType(id);
             }
 
+            var contentTypeDefinitionParts = viewModel.Parts.Select(
+                p => new ContentTypeDefinition.Part(
+                         new ContentPartDefinition(
+                             p.PartDefinition.Name,
+                             p.PartDefinition.Fields.Select(
+                                 f => new ContentPartDefinition.Field(
+                                          new ContentFieldDefinition(f.FieldDefinition.Name),
+                                          f.Name,
+                                          f.Settings
+                                          )
+                                 ),
+                             p.PartDefinition.Settings
+                             ),
+                         p.Settings
+                         )
+                ).ToList();
+            
+            if (viewModel.Fields.Any()) {
+                var implicitContentTypeDefinitionPart = new ContentTypeDefinition.Part(
+                    new ContentPartDefinition(
+                        viewModel.Name,
+                        viewModel.Fields.Select(
+                            f => new ContentPartDefinition.Field(
+                                     new ContentFieldDefinition(f.FieldDefinition.Name),
+                                     f.Name,
+                                     f.Settings
+                                     )
+                            ),
+                        null
+                        ),
+                    null
+                    );
+                contentTypeDefinitionParts.Add(implicitContentTypeDefinitionPart);
+            }
+
             //todo: apply the changes along the lines of but definately not resembling
             // for now this _might_ just get a little messy -> 
             _contentDefinitionService.AlterTypeDefinition(
                 new ContentTypeDefinition(
                     viewModel.Name,
                     viewModel.DisplayName,
-                    viewModel.Parts.Select(
-                        p => new ContentTypeDefinition.Part(
-                                 new ContentPartDefinition(
-                                     p.PartDefinition.Name,
-                                     p.PartDefinition.Fields.Select(
-                                        f => new ContentPartDefinition.Field(
-                                            new ContentFieldDefinition(f.FieldDefinition.Name),
-                                            f.Name,
-                                            f.Settings
-                                        )
-                                     ),
-                                     p.PartDefinition.Settings
-                                     ),
-                                 p.Settings
-                                 )
-                        ),
+                    contentTypeDefinitionParts,
                     viewModel.Settings
                     )
                 );
