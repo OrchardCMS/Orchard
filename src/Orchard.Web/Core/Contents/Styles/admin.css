@@ -4,3 +4,11 @@
 .manage.add-to-type {
     margin-top:-4em;
 }
+
+.manage-part h3 {
+    border-bottom:1px solid #EAEAEA;
+}
+.manage-part .manage {
+    font-size:1.4em;
+    margin-top:-2.4em;
+}
