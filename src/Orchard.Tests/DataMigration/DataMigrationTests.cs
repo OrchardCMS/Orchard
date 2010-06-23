@@ -2,10 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using Autofac;
+using Moq;
 using NHibernate;
 using NUnit.Framework;
 using Orchard.ContentManagement.Records;
 using Orchard.Data;
+using Orchard.Environment.Configuration;
 using Orchard.Environment.Extensions;
 using Orchard.Environment.Extensions.Folders;
 using Orchard.Environment.Extensions.Loaders;
@@ -42,6 +44,9 @@ namespace Orchard.Tests.DataMigration {
 
             var builder = new ContainerBuilder();
             _folders = new StubFolders();
+            
+            builder.RegisterInstance(new ShellSettings { DataTablePrefix = "TEST_"});
+
             builder.RegisterInstance(_folders).As<IExtensionFolders>();
             builder.RegisterType<ExtensionManager>().As<IExtensionManager>();
             builder.RegisterType<DataMigrationManager>().As<IDataMigrationManager>();
@@ -149,6 +154,17 @@ namespace Orchard.Tests.DataMigration {
             }
         }
 
+        public class DataMigrationWithSchemaBuilder : DataMigrationImpl {
+            public override string Feature {
+                get { return "Feature1"; }
+            }
+
+            public int Create() {
+                Assert.That(SchemaBuilder, Is.Not.Null);
+                Assert.That(SchemaBuilder.TablePrefix, Is.EqualTo("TEST_"));
+                return 1;
+            }
+        }
         [Test]
         public void DataMigrationShouldDoNothingIfNoDataMigrationIsProvidedForFeature() {
             Init(new Type[] {typeof (DataMigrationEmpty)});
@@ -162,7 +178,7 @@ features:
     Description: Feature
 ");
 
-            _dataMigrationManager.Upgrade("Feature1");
+            _dataMigrationManager.Update("Feature1");
             Assert.That(_repository.Table.Count(), Is.EqualTo(0));
         }
 
@@ -179,7 +195,7 @@ features:
     Description: Feature
 ");
             
-            _dataMigrationManager.Upgrade("Feature1");
+            _dataMigrationManager.Update("Feature1");
             Assert.That(_repository.Table.Count(), Is.EqualTo(0));
         }
 
@@ -196,7 +212,7 @@ features:
     Description: Feature
 ");
             
-            _dataMigrationManager.Upgrade("Feature1");
+            _dataMigrationManager.Update("Feature1");
             Assert.That(_repository.Table.Count(), Is.EqualTo(1));
             Assert.That(_repository.Table.First().Current, Is.EqualTo(999));
             Assert.That(_repository.Table.First().DataMigrationClass, Is.EqualTo("Orchard.Tests.DataMigration.DataMigrationTests+DataMigration11Create"));
@@ -215,7 +231,7 @@ features:
     Description: Feature
 ");
             
-            _dataMigrationManager.Upgrade("Feature1");
+            _dataMigrationManager.Update("Feature1");
             Assert.That(_repository.Table.Count(), Is.EqualTo(1));
             Assert.That(_repository.Table.First().Current, Is.EqualTo(666));
         }
@@ -237,7 +253,7 @@ features:
                 DataMigrationClass = "Orchard.Tests.DataMigration.DataMigrationTests+DataMigrationSameMigrationClassCanEvolve"
             });
 
-            _dataMigrationManager.Upgrade("Feature1");
+            _dataMigrationManager.Update("Feature1");
             Assert.That(_repository.Table.Count(), Is.EqualTo(1));
             Assert.That(_repository.Table.First().Current, Is.EqualTo(999));
         }
@@ -265,12 +281,28 @@ features:
   Feature2: 
     Description: Feature
 ");
-            _dataMigrationManager.Upgrade("Feature1");
+            _dataMigrationManager.Update("Feature1");
             Assert.That(_repository.Table.Count(), Is.EqualTo(2));
             Assert.That(_repository.Fetch(d => d.Current == 999).Count(), Is.EqualTo(2));
             Assert.That(_repository.Fetch(d => d.DataMigrationClass == "Orchard.Tests.DataMigration.DataMigrationTests+DataMigrationDependenciesModule1").Count(), Is.EqualTo(1));
             Assert.That(_repository.Fetch(d => d.DataMigrationClass == "Orchard.Tests.DataMigration.DataMigrationTests+DataMigrationDependenciesModule2").Count(), Is.EqualTo(1));
         }
 
+        [Test]
+        public void DataMigrationImplShouldGetASchemaBuilder() {
+            Init(new Type[] { typeof(DataMigrationWithSchemaBuilder) });
+
+            _folders.Manifests.Add("Module1", @"
+name: Module1
+version: 0.1
+orchardversion: 1
+features:
+  Feature1: 
+    Description: Feature
+");
+
+            _dataMigrationManager.Update("Feature1");
+            Assert.That(_repository.Table.Count(), Is.EqualTo(1));
+        }
     }
 }

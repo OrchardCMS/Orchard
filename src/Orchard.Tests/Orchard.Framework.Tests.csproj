@@ -180,6 +180,7 @@
     <Compile Include="ContentManagement\Records\GammaRecord.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="DataMigration\DataMigrationCommandsTests.cs" />
     <Compile Include="DataMigration\DataMigrationTests.cs" />
     <Compile Include="DataUtility.cs" />
     <Compile Include="Data\Builders\SessionFactoryBuilderTests.cs" />

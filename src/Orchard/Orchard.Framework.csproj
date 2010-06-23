@@ -349,7 +349,19 @@
     <Compile Include="ContentManagement\ViewModels\TemplateViewModel.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="DataMigration\Schema\SqlStatementCommand.cs" />
+    <Compile Include="DataMigration\Schema\CreateColumnCommand.cs" />
+    <Compile Include="DataMigration\Schema\CreateForeignKeyCommand.cs" />
+    <Compile Include="DataMigration\Schema\DropForeignKeyCommand.cs" />
+    <Compile Include="DataMigration\Schema\DropIndexCommand.cs" />
+    <Compile Include="DataMigration\Schema\CreateIndexCommand.cs" />
+    <Compile Include="DataMigration\Schema\DropColumnCommand.cs" />
+    <Compile Include="DataMigration\Schema\AlterColumnCommand.cs" />
+    <Compile Include="DataMigration\Schema\DropTableCommand.cs" />
+    <Compile Include="DataMigration\Schema\AlterTableCommand.cs" />
     <Compile Include="DataMigration\Commands\DataMigrationCommands.cs" />
+    <Compile Include="DataMigration\Schema\SchemaBuilder.cs" />
+    <Compile Include="DataMigration\DataMigrationCoordinator.cs" />
     <Compile Include="DataMigration\IDataMigrationCommand.cs" />
     <Compile Include="DataMigration\DefaultDataMigrationGenerator.cs" />
     <Compile Include="DataMigration\IDataMigrationGenerator.cs" />
@@ -358,6 +370,10 @@
     <Compile Include="DataMigration\DataMigrationRecord.cs" />
     <Compile Include="DataMigration\IDataMigration.cs" />
     <Compile Include="DataMigration\IDataMigrationManager.cs" />
+    <Compile Include="DataMigration\Schema\ColumnCommand.cs" />
+    <Compile Include="DataMigration\Schema\CreateTableCommand.cs" />
+    <Compile Include="DataMigration\Schema\TableCommand.cs" />
+    <Compile Include="DataMigration\Schema\SchemaCommand.cs" />
     <Compile Include="Data\SessionLocator.cs" />
     <Compile Include="Data\IRepository.cs" />
     <Compile Include="Data\ISessionLocator.cs" />
