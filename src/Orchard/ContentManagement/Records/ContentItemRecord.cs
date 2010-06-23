@@ -12,5 +12,6 @@ namespace Orchard.ContentManagement.Records {
         public virtual ContentTypeRecord ContentType { get; set; }
         public virtual IList<ContentItemVersionRecord> Versions { get; set; }
 
+        public virtual IList<ContentItemVersionRecord> Infoset { get; set; }
     }
 }

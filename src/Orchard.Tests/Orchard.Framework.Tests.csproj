@@ -151,6 +151,7 @@
     <Compile Include="ContentManagement\DefaultContentManagerTests.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="ContentManagement\Drivers\FieldStorage\FieldStorageProviderSelectorTests.cs" />
     <Compile Include="ContentManagement\Handlers\ContentHandlerTests.cs" />
     <Compile Include="ContentManagement\Handlers\ModelBuilderTests.cs" />
     <Compile Include="ContentManagement\MetaData\Builders\ContentTypeDefinitionBuilderTests.cs" />

@@ -192,9 +192,16 @@
     <Compile Include="ContentManagement\Drivers\DriverResult.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="ContentManagement\Drivers\FieldStorage\FieldStorageProviderSelector.cs" />
+    <Compile Include="ContentManagement\Drivers\IContentFieldDriver.cs" />
     <Compile Include="ContentManagement\Drivers\IContentItemDriver.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="ContentManagement\Drivers\IContentPartDriver.cs" />
+    <Compile Include="ContentManagement\Drivers\FieldStorage\IFieldStorage.cs" />
+    <Compile Include="ContentManagement\Drivers\FieldStorage\IFieldStorageProvider.cs" />
+    <Compile Include="ContentManagement\Drivers\FieldStorage\IFieldStorageProviderSelector.cs" />
+    <Compile Include="ContentManagement\Drivers\FieldStorage\InfosetFieldStorageProvider.cs" />
     <Compile Include="ContentManagement\Extenstions\UrlHelperExtensions.cs">
       <SubType>Code</SubType>
     </Compile>

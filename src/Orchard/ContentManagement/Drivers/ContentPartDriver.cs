@@ -3,15 +3,6 @@ using Orchard.ContentManagement.Handlers;
 using Orchard.ContentManagement.MetaData;
 
 namespace Orchard.ContentManagement.Drivers {
-
-    public interface IContentPartDriver : IEvents {
-        DriverResult BuildDisplayModel(BuildDisplayModelContext context);
-        DriverResult BuildEditorModel(BuildEditorModelContext context);
-        DriverResult UpdateEditorModel(UpdateEditorModelContext context);
-
-        IEnumerable<ContentPartInfo> GetPartInfo();
-    }
-
     public abstract class ContentPartDriver<TContent> : IContentPartDriver where TContent : ContentPart, new() {
         protected virtual string Prefix { get { return ""; } }
         protected virtual string Zone { get { return "body"; } }
