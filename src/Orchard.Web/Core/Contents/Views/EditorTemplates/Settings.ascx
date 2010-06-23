@@ -1,8 +1,7 @@
 ﻿<%@ Control Language="C#" Inherits="Orchard.Mvc.ViewUserControl<SettingsDictionary>" %>
 <%@ import Namespace="Orchard.ContentManagement.MetaData.Models" %><%
 if (Model.Any()) { %>
-    <fieldset>
-        <legend><%:T("[Settings]") %></legend><%
+    <fieldset><%
         var si = 0;
         foreach (var setting in Model) {
             var s = setting;
