@@ -1,0 +1,5 @@
+﻿name: <ModuleName>
+antiforgery: enabled
+features:
+    Orchard.<ModuleName>:
+        Description: Description for feature <ModuleName>.
