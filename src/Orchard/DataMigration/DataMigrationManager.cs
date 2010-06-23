@@ -38,7 +38,38 @@ namespace Orchard.DataMigration {
         public ILogger Logger { get; set; }
 
         public IEnumerable<string> GetFeaturesThatNeedUpdate() {
-            throw new NotImplementedException();
+
+            var features = new List<string>();
+
+            // compare current version and available migration methods for each migration class
+            foreach ( var dataMigration in _dataMigrations ) {
+                
+                // get current version for this migration
+                var dataMigrationRecord = GetDataMigrationRecord(dataMigration);
+
+                var current = 0;
+                if (dataMigrationRecord != null) {
+                    current = dataMigrationRecord.Current;
+                }
+
+                // do we need to call Create() ?
+                if (current == 0) {
+                    
+                    // try to resolve a Create method
+                    if ( GetCreateMethod(dataMigration) != null ) {
+                        features.Add(dataMigration.Feature);
+                        continue;
+                    }
+                }
+
+                var lookupTable = CreateUpgradeLookupTable(dataMigration);
+
+                if(lookupTable.ContainsKey(current)) {
+                    features.Add(dataMigration.Feature);
+                }
+            }
+
+            return features;
         }
 
         public void Update(IEnumerable<string> features) {
@@ -71,7 +102,6 @@ namespace Orchard.DataMigration {
                 // get current version for this migration
                 var dataMigrationRecord = GetDataMigrationRecord(tempMigration);
 
-                var updateMethodNameRegex = new Regex(@"^UpdateFrom(?<version>\d+)$", RegexOptions.Compiled);
                 var current = 0;
                 if(dataMigrationRecord != null) {
                     current = dataMigrationRecord.Current;
@@ -81,8 +111,8 @@ namespace Orchard.DataMigration {
                 if(current == 0) {
                     // try to resolve a Create method
 
-                    var createMethod = migration.GetType().GetMethod("Create", BindingFlags.Public | BindingFlags.Instance);
-                    if(createMethod != null && createMethod.ReturnType == typeof(int)) {
+                    var createMethod = GetCreateMethod(migration);
+                    if(createMethod != null) {
                         current = (int)createMethod.Invoke(migration, new object[0]);
                     }
                     else {
@@ -91,16 +121,7 @@ namespace Orchard.DataMigration {
                     }
                 }
 
-                // update methods might also be called after Create()
-                var lookupTable = new Dictionary<int, MethodInfo>();
-
-                // construct a lookup table with all managed initial versions
-                foreach(var methodInfo in migration.GetType().GetMethods(BindingFlags.Public | BindingFlags.Instance)) {
-                    var match = updateMethodNameRegex.Match(methodInfo.Name);
-                    if(match.Success) {
-                        lookupTable.Add(int.Parse(match.Groups["version"].Value), methodInfo);
-                    }
-                }
+                var lookupTable = CreateUpgradeLookupTable(migration);
 
                 while(lookupTable.ContainsKey(current)) {
                     try {
@@ -153,6 +174,38 @@ namespace Orchard.DataMigration {
         /// </summary>
         public bool IsFeatureAlreadyInstalled(string feature) {
             return GetDataMigrations(feature).Any(dataMigration => GetDataMigrationRecord(dataMigration) != null);
+        }
+
+        /// <summary>
+        /// Create a list of all available Update methods from a data migration class, indexed by the version number
+        /// </summary>
+        private static Dictionary<int, MethodInfo> CreateUpgradeLookupTable(IDataMigration dataMigration) {
+            var updateMethodNameRegex = new Regex(@"^UpdateFrom(?<version>\d+)$", RegexOptions.Compiled);
+
+            // update methods might also be called after Create()
+            var lookupTable = new Dictionary<int, MethodInfo>();
+
+            // construct a lookup table with all managed initial versions
+            foreach ( var methodInfo in dataMigration.GetType().GetMethods(BindingFlags.Public | BindingFlags.Instance) ) {
+                var match = updateMethodNameRegex.Match(methodInfo.Name);
+                if ( match.Success ) {
+                    lookupTable.Add(int.Parse(match.Groups["version"].Value), methodInfo);
+                }
+            }
+
+            return lookupTable;
+        }
+
+        /// <summary>
+        /// Returns the Create metho from a data migration class if it's found
+        /// </summary>
+        private static MethodInfo GetCreateMethod(IDataMigration dataMigration) {
+            var methodInfo = dataMigration.GetType().GetMethod("Create", BindingFlags.Public | BindingFlags.Instance);
+            if(methodInfo != null && methodInfo.ReturnType == typeof(int)) {
+                return methodInfo;
+            }
+
+            return null;
         }
     }
 }
