@@ -3,7 +3,6 @@
     <fieldset class="manage-part">
         <h3><%:Model.PartDefinition.Name %></h3>
         <div class="manage">
-            <%:Html.ActionLink(T("Edit").Text, "EditPart", new { area = "Contents", id = Model.PartDefinition.Name }) %><%: T(" | ")%>
         <%--// these inline forms can't be here. should probably have some JavaScript in here to build up the forms and add the "remove" link.
             // get the antiforgery token from the edit type form and mark up the part in a semantic way so I can get some info from the DOM --%>
             <%:Html.Link("[remove]", "#forshowonlyandnotintendedtowork") %>
@@ -13,10 +12,11 @@
         <% } %> --%>
         </div>
         <%:Html.EditorFor(m => m.Settings, "Settings", "") %><%
-    if (Model.PartDefinition.Settings.Any()) { %>
-        <h4><%:T("Tenant-wide settings") %></h4>
-        <%:Html.DisplayFor(m => m.PartDefinition.Settings, "Settings", "PartDefinition") %><%
+    if (Model.PartDefinition.Settings.Any() || Model.PartDefinition.Fields.Any()) { %>
+        <h4><%:T("Global configuration") %></h4>
+        <div class="manage minor"><%:Html.ActionLink(T("Edit").Text, "EditPart", new { area = "Contents", id = Model.PartDefinition.Name }) %></div>
+        <%:Html.DisplayFor(m => m.PartDefinition.Settings, "Settings", "PartDefinition") %>
+        <%:Html.EditorFor(m => m.PartDefinition.Fields, "Part.Fields") %><%
     } %>
-        <%:Html.EditorFor(m => m.PartDefinition.Fields, "Part.Fields") %>
         <%:Html.Hidden("PartDefinition.Name", Model.PartDefinition.Name) %>
     </fieldset>
