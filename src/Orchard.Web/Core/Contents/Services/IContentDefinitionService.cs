@@ -8,5 +8,10 @@ namespace Orchard.Core.Contents.Services {
         void AddTypeDefinition(ContentTypeDefinition contentTypeDefinition);
         void AlterTypeDefinition(ContentTypeDefinition contentTypeDefinition);
         void RemoveTypeDefinition(string name);
+
+        ContentPartDefinition GetPartDefinition(string name);
+        void AddPartDefinition(ContentPartDefinition contentPartDefinition);
+        void AlterPartDefinition(ContentPartDefinition contentPartDefinition);
+        void RemovePartDefinition(string name);
     }
 }

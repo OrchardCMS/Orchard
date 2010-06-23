@@ -3,9 +3,11 @@ using Orchard.ContentManagement;
 using Orchard.ContentManagement.Aspects;
 using Orchard.Core.Common.Models;
 using Orchard.Core.Navigation.Models;
+using Orchard.Environment.Extensions;
 using Orchard.Security;
 
 namespace Orchard.DevTools.Commands {
+    [OrchardFeature("Profiling")]
     public class ProfilingCommands : DefaultOrchardCommandHandler {
         private readonly IContentManager _contentManager;
         private readonly IMembershipService _membershipService;

@@ -13,13 +13,27 @@ namespace Orchard.Core.Contents.ViewModels {
             Name = contentTypeDefinition.Name;
             DisplayName = contentTypeDefinition.DisplayName;
             Settings = contentTypeDefinition.Settings;
-            Parts = contentTypeDefinition.Parts.Select(p => new EditTypePartViewModel(p));
+            Fields = GetTypeFields(contentTypeDefinition);
+            Parts = GetTypeParts(contentTypeDefinition);
         }
 
         public string Name { get; set; }
         public string DisplayName { get; set; }
         public SettingsDictionary Settings { get; set; }
+        public IEnumerable<EditPartFieldViewModel> Fields { get; set; }
         public IEnumerable<EditTypePartViewModel> Parts { get; set; }
+
+        private IEnumerable<EditPartFieldViewModel> GetTypeFields(ContentTypeDefinition contentTypeDefinition) {
+            var implicitTypePart = contentTypeDefinition.Parts.SingleOrDefault(p => p.PartDefinition.Name == Name);
+
+            return implicitTypePart == null
+                ? Enumerable.Empty<EditPartFieldViewModel>()
+                : implicitTypePart.PartDefinition.Fields.Select(f => new EditPartFieldViewModel(f));
+        }
+
+        private IEnumerable<EditTypePartViewModel> GetTypeParts(ContentTypeDefinition contentTypeDefinition) {
+            return contentTypeDefinition.Parts.Where(p => p.PartDefinition.Name != Name).Select(p => new EditTypePartViewModel(p));
+        }
     }
 
     public class EditTypePartViewModel {
@@ -35,7 +49,7 @@ namespace Orchard.Core.Contents.ViewModels {
         public SettingsDictionary Settings { get; set; }
     }
 
-    public class EditPartViewModel {
+    public class EditPartViewModel : BaseViewModel {
         public EditPartViewModel() {
             Fields = new List<EditPartFieldViewModel>();
             Settings = new SettingsDictionary();
@@ -69,7 +83,7 @@ namespace Orchard.Core.Contents.ViewModels {
     public class EditFieldViewModel {
         public EditFieldViewModel() { }
         public EditFieldViewModel(ContentFieldDefinition contentFieldDefinition) {
-            Name = Name;
+            Name = contentFieldDefinition.Name;
         }
 
         public string Name { get; set; }

@@ -195,7 +195,7 @@ namespace Orchard.Environment.State {
             }
         }
 
-        private static IEnumerable<FeatureDescriptor> OrderByDependencies(IEnumerable<FeatureDescriptor> descriptors) {
+        public static IEnumerable<FeatureDescriptor> OrderByDependencies(IEnumerable<FeatureDescriptor> descriptors) {
             var population = descriptors.Select(d => new Linkage {
                 Feature = d
             }).ToArray();

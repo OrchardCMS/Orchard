@@ -4,3 +4,43 @@
 .manage.add-to-type {
     margin-top:-4em;
 }
+
+.manage-part h3,
+.manage-field h3 {
+    border-bottom:1px solid #EAEAEA;
+}
+.manage-part .manage,
+.manage-field .manage {
+    font-size:1.4em;
+    margin-top:-2.4em;
+}
+.manage-part .manage.minor {
+    margin-top:-1.7em;
+}
+.manage-part label,
+.manage-field label {
+    font-weight:normal;
+}
+
+/* should pull this back into the base admin theme css, w/out the .manage-part of course */
+.manage-part dl {
+    margin:0 0 1em;
+    overflow:auto;
+    padding:6px 0 0;
+}
+.manage-part dt {
+    font-weight:bold;
+}
+.manage-part dl dl {
+    font-size:1em;
+    margin:0;
+    padding:0;
+}
+.manage-part dd dt {
+    clear:left;
+    float:left;
+}
+.manage-part dd dd {
+    float:left;
+    padding-left:.5em;
+}

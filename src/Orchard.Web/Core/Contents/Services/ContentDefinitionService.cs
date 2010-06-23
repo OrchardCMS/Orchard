@@ -49,9 +49,30 @@ namespace Orchard.Core.Contents.Services {
 
         public void AlterTypeDefinition(ContentTypeDefinition contentTypeDefinition) {
             _contentDefinitionManager.StoreTypeDefinition(contentTypeDefinition);
+
+            var implicitTypePart = contentTypeDefinition.Parts.SingleOrDefault(p => p.PartDefinition.Name == contentTypeDefinition.Name);
+            if (implicitTypePart != null) {
+                AlterPartDefinition(implicitTypePart.PartDefinition);
+            }
         }
 
         public void RemoveTypeDefinition(string name) {
+            throw new NotImplementedException();
+        }
+
+        public ContentPartDefinition GetPartDefinition(string name) {
+            return _contentDefinitionManager.GetPartDefinition(name);
+        }
+
+        public void AddPartDefinition(ContentPartDefinition contentPartDefinition) {
+            throw new NotImplementedException();
+        }
+
+        public void AlterPartDefinition(ContentPartDefinition contentPartDefinition) {
+            _contentDefinitionManager.StorePartDefinition(contentPartDefinition);
+        }
+
+        public void RemovePartDefinition(string name) {
             throw new NotImplementedException();
         }
 

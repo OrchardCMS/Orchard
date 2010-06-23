@@ -18,7 +18,7 @@ namespace Orchard.DataMigration.Commands {
         [OrchardSwitches("Feature")]
         public string UpgradeDatabase() {
             try {
-                _dataMigrationManager.Upgrade(Feature);
+                _dataMigrationManager.Update(Feature);
             }
             catch ( Exception ex ) {
                 Context.Output.WriteLine(T("An error occured while upgrading the database: " + ex.Message));

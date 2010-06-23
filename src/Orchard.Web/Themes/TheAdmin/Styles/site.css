@@ -147,10 +147,11 @@ h1 { font-size:2.6em; } /* 26px */
 h2 { font-size:2.1em; } /* 21px */
 h2 span { font-size:.57em; } /* 12px */
 h3 { font-size:1.8em; } /* 18px */
+h3 span { font-size:.667em; } /* 12px */
 h4 { font-size:1.6em; } /* 16px */
 h5 { font-size:1.4em; } /* 14px */
 
-h6, p, label, /*input, select,*/ .button,
+h6, p, dl, label, /*input, select,*/ .button,
 .message, .validation-summary-errors,
 table.items th, table.items td, table.items caption { font-size:1.4em; line-height:1.4em; } /* 14px */
 table.items p, table.items label, table.items input, table.items .button { font-size:1em; line-height:1em; }
@@ -510,7 +511,6 @@ button.remove:focus::-moz-focus-inner, .remove.button:focus::-moz-focus-inner {
 .manage {
     float:right;
     margin:0 0 10px 8px;
-    overflow:hidden;
 }
 .actions {
     clear:right;
