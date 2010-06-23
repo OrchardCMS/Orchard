@@ -6,9 +6,9 @@ using NHibernate;
 using NUnit.Framework;
 using Orchard.ContentManagement.Records;
 using Orchard.Data;
+using Orchard.Environment.Configuration;
 using Orchard.Environment.Extensions;
 using Orchard.Environment.Extensions.Folders;
-using Orchard.Environment.Extensions.Loaders;
 using Orchard.Environment.Extensions.Models;
 using Orchard.Tests.ContentManagement;
 using Orchard.DataMigration;
@@ -17,7 +17,6 @@ namespace Orchard.Tests.DataMigration {
     [TestFixture]
     public class DataMigrationTests {
         private IContainer _container;
-        private IExtensionManager _manager;
         private StubFolders _folders;
         private IDataMigrationManager _dataMigrationManager;
         private IRepository<DataMigrationRecord> _repository;
@@ -25,13 +24,8 @@ namespace Orchard.Tests.DataMigration {
         private ISessionFactory _sessionFactory;
         private ISession _session;
 
-        [SetUp]
-        public void Init() {
-            Init(Enumerable.Empty<Type>());
-        }
-
-        public void Init(IEnumerable<Type> dataMigrations) {
-
+        [TestFixtureSetUp]
+        public void CreateDb() {
             var databaseFileName = System.IO.Path.GetTempFileName();
             _sessionFactory = DataUtility.CreateSessionFactory(
                 databaseFileName,
@@ -39,9 +33,22 @@ namespace Orchard.Tests.DataMigration {
                 typeof(ContentItemVersionRecord),
                 typeof(ContentItemRecord),
                 typeof(ContentTypeRecord));
+        }
 
+        public void InitDb() {
+            foreach ( var record in _repository.Fetch(m => true) ) {
+                _repository.Delete(record);
+            }
+            _repository.Flush();
+        }
+
+        public void Init(IEnumerable<Type> dataMigrations) {
+           
             var builder = new ContainerBuilder();
             _folders = new StubFolders();
+            
+            builder.RegisterInstance(new ShellSettings { DataTablePrefix = "TEST_"});
+
             builder.RegisterInstance(_folders).As<IExtensionFolders>();
             builder.RegisterType<ExtensionManager>().As<IExtensionManager>();
             builder.RegisterType<DataMigrationManager>().As<IDataMigrationManager>();
@@ -53,10 +60,11 @@ namespace Orchard.Tests.DataMigration {
                 builder.RegisterType(type).As<IDataMigration>();
             }
             _container = builder.Build();
-            _manager = _container.Resolve<IExtensionManager>();
+            _container.Resolve<IExtensionManager>();
             _dataMigrationManager = _container.Resolve<IDataMigrationManager>();
             _repository = _container.Resolve<IRepository<DataMigrationRecord>>();
 
+            InitDb();
         }
 
         public class StubFolders : IExtensionFolders {
@@ -139,6 +147,7 @@ namespace Orchard.Tests.DataMigration {
                 return 999;
             }
         }
+
         public class DataMigrationDependenciesModule2 : IDataMigration {
             public string Feature {
                 get { return "Feature2"; }
@@ -149,9 +158,52 @@ namespace Orchard.Tests.DataMigration {
             }
         }
 
+        public class DataMigrationWithSchemaBuilder : DataMigrationImpl {
+            public override string Feature {
+                get { return "Feature1"; }
+            }
+
+            public int Create() {
+                Assert.That(SchemaBuilder, Is.Not.Null);
+                Assert.That(SchemaBuilder.TablePrefix, Is.EqualTo("TEST_"));
+                return 1;
+            }
+        }
+
+        public class DataMigrationFeatureNeedUpdate1 : IDataMigration {
+            public string Feature {
+                get { return "Feature1"; }
+            }
+        }
+
+
+        public class DataMigrationFeatureNeedUpdate2 : IDataMigration {
+            public string Feature {
+                get { return "Feature2"; }
+            }
+
+            public int Create() {
+                return 999;
+            }
+        }
+
+        public class DataMigrationFeatureNeedUpdate3 : IDataMigration {
+            public string Feature {
+                get { return "Feature3"; }
+            }
+
+            public int Create() {
+                return 999;
+            }
+
+            public int UpdateFrom42() {
+                return 999;
+            }
+        }
+
         [Test]
         public void DataMigrationShouldDoNothingIfNoDataMigrationIsProvidedForFeature() {
-            Init(new Type[] {typeof (DataMigrationEmpty)});
+            Init(new[] {typeof (DataMigrationEmpty)});
 
             _folders.Manifests.Add("Module2", @"
 name: Module2
@@ -162,13 +214,13 @@ features:
     Description: Feature
 ");
 
-            _dataMigrationManager.Upgrade("Feature1");
+            _dataMigrationManager.Update("Feature1");
             Assert.That(_repository.Table.Count(), Is.EqualTo(0));
         }
 
         [Test]
         public void DataMigrationShouldDoNothingIfNoUpgradeOrCreateMethodWasFound() {
-            Init(new Type[] { typeof(DataMigration11) });
+            Init(new[] { typeof(DataMigration11) });
 
             _folders.Manifests.Add("Module1", @"
 name: Module1
@@ -179,13 +231,13 @@ features:
     Description: Feature
 ");
             
-            _dataMigrationManager.Upgrade("Feature1");
+            _dataMigrationManager.Update("Feature1");
             Assert.That(_repository.Table.Count(), Is.EqualTo(0));
         }
 
         [Test]
         public void CreateShouldReturnVersionNumber() {
-            Init(new Type[] { typeof(DataMigration11Create) });
+            Init(new[] { typeof(DataMigration11Create) });
 
             _folders.Manifests.Add("Module1", @"
 name: Module1
@@ -196,7 +248,7 @@ features:
     Description: Feature
 ");
             
-            _dataMigrationManager.Upgrade("Feature1");
+            _dataMigrationManager.Update("Feature1");
             Assert.That(_repository.Table.Count(), Is.EqualTo(1));
             Assert.That(_repository.Table.First().Current, Is.EqualTo(999));
             Assert.That(_repository.Table.First().DataMigrationClass, Is.EqualTo("Orchard.Tests.DataMigration.DataMigrationTests+DataMigration11Create"));
@@ -204,7 +256,7 @@ features:
 
         [Test]
         public void CreateCanBeFollowedByUpdates() {
-            Init(new Type[] {typeof (DataMigrationCreateCanBeFollowedByUpdates)});
+            Init(new[] {typeof (DataMigrationCreateCanBeFollowedByUpdates)});
 
             _folders.Manifests.Add("Module1", @"
 name: Module1
@@ -215,14 +267,14 @@ features:
     Description: Feature
 ");
             
-            _dataMigrationManager.Upgrade("Feature1");
+            _dataMigrationManager.Update("Feature1");
             Assert.That(_repository.Table.Count(), Is.EqualTo(1));
             Assert.That(_repository.Table.First().Current, Is.EqualTo(666));
         }
 
         [Test]
         public void SameMigrationClassCanEvolve() {
-            Init(new Type[] { typeof(DataMigrationSameMigrationClassCanEvolve) });
+            Init(new[] { typeof(DataMigrationSameMigrationClassCanEvolve) });
 
             _folders.Manifests.Add("Module1", @"
 name: Module1
@@ -232,12 +284,12 @@ features:
   Feature1: 
     Description: Feature
 ");
-            _repository.Create(new DataMigrationRecord() {
+            _repository.Create(new DataMigrationRecord {
                 Current = 42,
                 DataMigrationClass = "Orchard.Tests.DataMigration.DataMigrationTests+DataMigrationSameMigrationClassCanEvolve"
             });
 
-            _dataMigrationManager.Upgrade("Feature1");
+            _dataMigrationManager.Update("Feature1");
             Assert.That(_repository.Table.Count(), Is.EqualTo(1));
             Assert.That(_repository.Table.First().Current, Is.EqualTo(999));
         }
@@ -245,7 +297,7 @@ features:
         [Test]
         public void DependenciesShouldBeUpgradedFirst() {
 
-            Init(new Type[] { typeof(DataMigrationDependenciesModule1), typeof(DataMigrationDependenciesModule2) });
+            Init(new[] { typeof(DataMigrationDependenciesModule1), typeof(DataMigrationDependenciesModule2) });
 
             _folders.Manifests.Add("Module1", @"
 name: Module1
@@ -265,12 +317,77 @@ features:
   Feature2: 
     Description: Feature
 ");
-            _dataMigrationManager.Upgrade("Feature1");
+            _dataMigrationManager.Update("Feature1");
             Assert.That(_repository.Table.Count(), Is.EqualTo(2));
             Assert.That(_repository.Fetch(d => d.Current == 999).Count(), Is.EqualTo(2));
             Assert.That(_repository.Fetch(d => d.DataMigrationClass == "Orchard.Tests.DataMigration.DataMigrationTests+DataMigrationDependenciesModule1").Count(), Is.EqualTo(1));
             Assert.That(_repository.Fetch(d => d.DataMigrationClass == "Orchard.Tests.DataMigration.DataMigrationTests+DataMigrationDependenciesModule2").Count(), Is.EqualTo(1));
         }
 
+        [Test]
+        public void DataMigrationImplShouldGetASchemaBuilder() {
+            Init(new[] { typeof(DataMigrationWithSchemaBuilder) });
+
+            _folders.Manifests.Add("Module1", @"
+name: Module1
+version: 0.1
+orchardversion: 1
+features:
+  Feature1: 
+    Description: Feature
+");
+
+            _dataMigrationManager.Update("Feature1");
+            Assert.That(_repository.Table.Count(), Is.EqualTo(1));
+        }
+
+        [Test]
+        public void ShouldDetectFeaturesThatNeedUpdates() {
+
+            Init(new[] { typeof(DataMigrationFeatureNeedUpdate1), typeof(DataMigrationFeatureNeedUpdate2), typeof(DataMigrationFeatureNeedUpdate3) });
+
+            _folders.Manifests.Add("Module1", @"
+name: Module1
+version: 0.1
+orchardversion: 1
+features:
+  Feature1: 
+    Description: Feature
+  Feature2: 
+    Description: Feature
+  Feature3: 
+    Description: Feature
+  Feature4: 
+    Description: Feature
+");
+
+            // even if there is a data migration class, as it is empty there should me no migration to do
+            Assert.That(_dataMigrationManager.GetFeaturesThatNeedUpdate().Contains("Feature1"), Is.False);
+
+            // there is no available class for this feature
+            Assert.That(_dataMigrationManager.GetFeaturesThatNeedUpdate().Contains("Feature4"), Is.False);
+
+            // there is a create method and no record in db, so let's create it
+            Assert.That(_dataMigrationManager.GetFeaturesThatNeedUpdate().Contains("Feature2"), Is.True);
+
+            // there is an UpdateFrom42 method, so it should be fired if Current == 42
+
+            _repository.Create(new DataMigrationRecord {
+                Current = 42,
+                DataMigrationClass = "Orchard.Tests.DataMigration.DataMigrationTests+DataMigrationFeatureNeedUpdate3"
+            });
+
+            Assert.That(_dataMigrationManager.GetFeaturesThatNeedUpdate().Contains("Feature3"), Is.True);
+
+            _repository.Delete(_repository.Fetch(m => m.Current == 42).First());
+            _repository.Flush();
+
+            _repository.Create(new DataMigrationRecord {
+                Current = 43,
+                DataMigrationClass = "Orchard.Tests.DataMigration.DataMigrationTests+DataMigrationFeatureNeedUpdate3"
+            });
+
+            Assert.That(_dataMigrationManager.GetFeaturesThatNeedUpdate().Contains("Feature3"), Is.False);
+        }
     }
 }

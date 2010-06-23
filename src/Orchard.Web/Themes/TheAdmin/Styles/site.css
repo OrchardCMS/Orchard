@@ -510,7 +510,6 @@ button.remove:focus::-moz-focus-inner, .remove.button:focus::-moz-focus-inner {
 .manage {
     float:right;
     margin:0 0 10px 8px;
-    overflow:hidden;
 }
 .actions {
     clear:right;

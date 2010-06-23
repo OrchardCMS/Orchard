@@ -1,4 +1,5 @@
-﻿<%@ Control Language="C#" Inherits="Orchard.Mvc.ViewUserControl<Orchard.ContentManagement.MetaData.Models.ContentTypeDefinition>" %>
+﻿<%@ Control Language="C#" Inherits="Orchard.Mvc.ViewUserControl<ContentTypeDefinition>" %>
+<%@ Import namespace="Orchard.ContentManagement.MetaData.Models" %>
 <div class="summary">
     <div class="properties">
         <h3><%:Model.DisplayName%></h3>

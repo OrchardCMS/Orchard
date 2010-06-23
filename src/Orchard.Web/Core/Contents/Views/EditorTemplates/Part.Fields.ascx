@@ -4,7 +4,7 @@ if (Model.Any()) { %>
     <fieldset><%
         foreach (var field in Model) {
             var f = field; %>
-            <%:Html.EditorFor(m => f, "FieldOnPart") %><%
+            <%:Html.EditorFor(m => f, "Part.Fields") %><%
         } %>
     </fieldset><%
 } %>

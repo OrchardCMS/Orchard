@@ -1,8 +1,8 @@
 ﻿<%@ Control Language="C#" Inherits="Orchard.Mvc.ViewUserControl<EditTypePartViewModel>" %>
 <%@ Import Namespace="Orchard.Core.Contents.ViewModels" %>
-    <fieldset>
+    <fieldset class="manage-part">
         <h3><%:Model.PartDefinition.Name %></h3>
-        <div class="manage add-to-type">
+        <div class="manage">
         <%--// these inline forms can't be here. should probably have some JavaScript in here to build up the forms and add the "remove" link.
             // get the antiforgery token from the edit type form and mark up the part in a semantic way so I can get some info from the DOM --%>
             <%:Html.Link("[remove]", "#forshowonlyandnotintendedtowork") %>
@@ -11,11 +11,12 @@
             <button type="submit" title="<%:T("Remove") %>"><%:T("Remove") %></button>
         <% } %> --%>
         </div>
-        <%--
-        what is this settings for?        
-        <%:Html.EditorFor(m => m.PartDefinition.Settings, "Settings") %>--%>
-        <%:Html.EditorFor(m => m.Settings, "Settings", "") %>
-        <%:Html.EditorFor(m => m.PartDefinition.Fields, "FieldsOnPart") %>
-        <%:Html.Hidden("PartDefinition.Name", Model.PartDefinition.Name) %>
+        <%:Html.EditorFor(m => m.Settings, "Settings", "") %><%
+    if (Model.PartDefinition.Settings.Any() || Model.PartDefinition.Fields.Any()) { %>
+        <h4><%:T("Global configuration") %></h4>
+        <div class="manage minor"><%:Html.ActionLink(T("Edit").Text, "EditPart", new { area = "Contents", id = Model.PartDefinition.Name }) %></div>
+        <%:Html.DisplayFor(m => m.PartDefinition.Settings, "Settings", "PartDefinition") %>
+        <%:Html.EditorFor(m => m.PartDefinition.Fields, "Part.Fields") %><%
+    } %>
         <%:Html.Hidden("PartDefinition.Name", Model.PartDefinition.Name) %>
     </fieldset>
