@@ -68,7 +68,6 @@
     <Compile Include="Common\Drivers\TextContentFieldDriver.cs" />
     <Compile Include="Common\Fields\TextContentField.cs" />
     <Compile Include="Common\Handlers\RoutableAspectHandler.cs" />
-    <Compile Include="Common\Handlers\TextContentFieldHandler.cs" />
     <Compile Include="Common\ViewModels\ContainerEditorViewModel.cs" />
     <Compile Include="Common\ViewModels\TextContentFieldDisplayViewModel.cs" />
     <Compile Include="Common\ViewModels\TextContentFieldEditorViewModel.cs" />

@@ -2,6 +2,7 @@
 using System.Linq;
 using Autofac;
 using NUnit.Framework;
+using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers.FieldStorage;
 using Orchard.ContentManagement.MetaData.Builders;
 using Orchard.ContentManagement.MetaData.Models;
@@ -28,9 +29,10 @@ namespace Orchard.Tests.ContentManagement.Drivers.FieldStorage {
                 get { return "TestProvName"; }
             }
 
-            public IFieldStorage BindStorage(ContentPartDefinition.Field partFieldDefinition) {
+            public IFieldStorage BindStorage(ContentPart contentPart, ContentPartDefinition.Field partFieldDefinition) {
                 throw new NotImplementedException();
             }
+
         }
 
         [Test]

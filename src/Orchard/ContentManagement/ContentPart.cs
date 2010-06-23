@@ -5,7 +5,7 @@ using Orchard.ContentManagement.MetaData.Models;
 using Orchard.ContentManagement.Utilities;
 
 namespace Orchard.ContentManagement {
-    public abstract class ContentPart : IContent {
+    public class ContentPart : IContent {
         private readonly IList<ContentField> _fields;
 
         public ContentPart() {
@@ -29,7 +29,6 @@ namespace Orchard.ContentManagement {
         }
 
         public void Weld(ContentField field) {
-            field.ContentPart = this;
             _fields.Add(field);
         }
     }
