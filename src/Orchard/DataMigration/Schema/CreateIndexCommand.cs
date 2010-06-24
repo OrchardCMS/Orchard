@@ -1,7 +1,7 @@
 ﻿namespace Orchard.DataMigration.Schema {
     public class CreateIndexCommand : TableCommand {
-        public CreateIndexCommand(string name, params string[] columnNames)
-            : base(name) {
+        public CreateIndexCommand(string indexName, params string[] columnNames)
+            : base(indexName) {
             ColumnNames = columnNames;
         }
 

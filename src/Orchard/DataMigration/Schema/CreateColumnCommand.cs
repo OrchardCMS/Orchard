@@ -1,59 +1,67 @@
-﻿namespace Orchard.DataMigration.Schema {
-    public class CreateColumnCommand : ColumnCommand {
-        private bool _primaryKey;
-        private byte? _precision;
-        private byte? _scale;
-        private int? _length;
-        private bool _notNull;
-        private bool _unique;
-        
+﻿using System.Data;
 
-        public CreateColumnCommand(string name) : base(name) {
-            _precision = null;
-            _scale = null;
-            _length = null;
-            _notNull = false;
-            _unique = false;
-            
+namespace Orchard.DataMigration.Schema {
+    public class CreateColumnCommand : ColumnCommand {
+        public CreateColumnCommand(string tableName, string name) : base(tableName, name) {
+            IsNotNull = false;
+            IsUnique = false;
         }
+
+        public bool IsUnique { get; protected set; }
+
+        public bool IsNotNull { get; protected set; }
+
+        public bool IsPrimaryKey { get; protected set; }
 
         public CreateColumnCommand PrimaryKey() {
-            _primaryKey = true;
+            IsPrimaryKey = true;
+            IsUnique = false;
             return this;
         }
 
-        public CreateColumnCommand Precision(byte? precision) {
-            _precision = precision;
+        public CreateColumnCommand WithPrecision(byte precision) {
+            Precision = precision;
             return this;
         }
 
-        public CreateColumnCommand Scale(byte? scale) {
-            _scale = scale;
-            return this;
-        }
-
-        public CreateColumnCommand Length(int? length) {
-            _length = length;
+        public CreateColumnCommand WithScale(byte scale) {
+            Scale = scale;
             return this;
         }
 
         public CreateColumnCommand NotNull() {
-            _notNull = true;
+            IsNotNull = true;
             return this;
         }
 
         public CreateColumnCommand Nullable() {
-            _notNull = false;
+            IsNotNull = false;
             return this;
         }
 
         public CreateColumnCommand Unique() {
-            _unique = true;
+            IsUnique = true;
+            IsPrimaryKey = false;
             return this;
         }
 
         public CreateColumnCommand NotUnique() {
-            _unique = false;
+            IsUnique = false;
+            return this;
+        }
+
+        public new CreateColumnCommand WithLength(int? length) {
+            base.WithLength(length);
+            return this;
+        }
+
+        public new CreateColumnCommand WithType(DbType dbType) {
+            base.WithType(dbType);
+            return this;
+        }
+
+        public new CreateColumnCommand WithDefault(string @default) {
+            base.WithDefault(@default);
             return this;
         }
     }

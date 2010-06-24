@@ -2,22 +2,40 @@
 
 namespace Orchard.DataMigration.Schema {
     public class ColumnCommand : TableCommand {
-        private DbType _dbType;
-        private object _default;
-        public ColumnCommand(string name) : base(name) {
-            _dbType = DbType.Object;
-            _default = null;
-        }
+        public string ColumnName { get; set; }
 
-        public ColumnCommand Type(DbType dbType) {
-            _dbType = dbType;
+        public ColumnCommand(string tableName, string name)
+            : base(tableName) {
+            ColumnName = name;
+            DbType = DbType.Object;
+            Default = null;
+            Length = null;
+        }
+        public byte Scale { get; protected set; }
+
+        public byte Precision { get; protected set; }
+
+        public DbType DbType { get; private set; }
+
+        public string Default { get; private set; }
+
+        public int? Length { get; private set; }
+
+        public ColumnCommand WithType(DbType dbType) {
+            DbType = dbType;
             return this;
         }
 
-        public ColumnCommand Default(object @default) {
-            _default = @default;
+        public ColumnCommand WithDefault(string @default) {
+            Default = @default;
             return this;
         }
 
-   }
+
+        public ColumnCommand WithLength(int? length) {
+            Length = length;
+            return this;
+        }
+
+    }
 }
