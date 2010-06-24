@@ -7,6 +7,7 @@ namespace Orchard.ContentManagement.MetaData {
     public interface IContentDefinitionManager : IDependency {
         IEnumerable<ContentTypeDefinition> ListTypeDefinitions();
         IEnumerable<ContentPartDefinition> ListPartDefinitions();
+        IEnumerable<ContentFieldDefinition> ListFieldDefinitions();
 
         ContentTypeDefinition GetTypeDefinition(string name);
         ContentPartDefinition GetPartDefinition(string name);

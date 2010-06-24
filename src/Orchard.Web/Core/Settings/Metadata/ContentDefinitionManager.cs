@@ -46,6 +46,10 @@ namespace Orchard.Core.Settings.Metadata {
             return _partDefinitionRepository.Fetch(x => !x.Hidden).Select(Build).ToReadOnlyCollection();
         }
 
+        public IEnumerable<ContentFieldDefinition> ListFieldDefinitions() {
+            return _fieldDefinitionRepository.Fetch(x => true, cfdr => cfdr.Asc(fdr => fdr.Name)).Select(Build).ToReadOnlyCollection();
+        }
+
         public void StoreTypeDefinition(ContentTypeDefinition contentTypeDefinition) {
             Apply(contentTypeDefinition, Acquire(contentTypeDefinition));
         }
