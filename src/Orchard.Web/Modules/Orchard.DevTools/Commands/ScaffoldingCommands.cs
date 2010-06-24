@@ -1,8 +1,100 @@
-﻿using Orchard.Commands;
+﻿using System;
+using System.IO;
+using System.Linq;
+using System.Web.Hosting;
+using Orchard.Commands;
 using Orchard.Environment.Extensions;
 
 namespace Orchard.DevTools.Commands {
     [OrchardFeature("Scaffolding")]
     public class ScaffoldingCommands : DefaultOrchardCommandHandler {
+        private readonly IExtensionManager _extensionManager;
+
+        public ScaffoldingCommands(IExtensionManager extensionManager) {
+            _extensionManager = extensionManager;
+        }
+
+        [OrchardSwitch]
+        public bool IncludeInSolution { get; set; }
+
+        [CommandHelp("scaffolding create module <module-name> [/IncludeInSolution:true|false]\r\n\t" + "Create a new Orchard module")]
+        [CommandName("scaffolding create module")]
+        [OrchardSwitches("IncludeInSolution")]
+        public void CreateModule(string moduleName) {
+            Context.Output.WriteLine(T("Creating Module {0}", moduleName));
+
+            if (_extensionManager.AvailableExtensions().Any(extension => extension.ExtensionType == "Module" && String.Equals(moduleName, extension.DisplayName, StringComparison.OrdinalIgnoreCase))) {
+                Context.Output.WriteLine(T("Creating Module {0} failed: a module of the same name already exists", moduleName));
+                return;
+            }
+
+            IntegrateModule(moduleName);
+
+            Context.Output.WriteLine(T("Module {0} created successfully", moduleName));
+        }
+
+        private void IntegrateModule(string moduleName) {
+            string rootWebProjectPath = HostingEnvironment.MapPath("~/Orchard.Web.csproj");
+            string projectGuid = Guid.NewGuid().ToString().ToUpper();
+
+            CreateFilesFromTemplates(moduleName, projectGuid);
+            if (IncludeInSolution) {
+                // Add project reference to Orchard.Web.csproj
+                string webProjectReference = string.Format(
+                    "</ProjectReference>\r\n    <ProjectReference Include=\"Modules\\Orchard.{0}\\Orchard.{0}.csproj\">\r\n      <Project>{{{1}}}</Project>\r\n      <Name>Orchard.{0}</Name>\r\n    ",
+                    moduleName, projectGuid);
+                string webProjectText = File.ReadAllText(rootWebProjectPath);
+                webProjectText = webProjectText.Insert(webProjectText.LastIndexOf("</ProjectReference>\r\n"), webProjectReference);
+                File.WriteAllText(rootWebProjectPath, webProjectText);
+
+                // Add project to Orchard.sln
+                string solutionPath = Directory.GetParent(rootWebProjectPath).Parent.FullName + "\\Orchard.sln";
+                if (File.Exists(solutionPath)) {
+                    string projectReference = string.Format(
+                        "EndProject\r\nProject(\"{{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}}\") = \"Orchard.{0}\", \"Orchard.Web\\Modules\\Orchard.{0}\\Orchard.{0}.csproj\", \"{{{1}}}\"\r\n",
+                        moduleName, projectGuid);
+                    string projectConfiguationPlatforms = string.Format(
+                        "GlobalSection(ProjectConfigurationPlatforms) = postSolution\r\n\t\t{{{0}}}.Debug|Any CPU.ActiveCfg = Debug|Any CPU\r\n\t\t{{{0}}}.Debug|Any CPU.Build.0 = Debug|Any CPU\r\n\t\t{{{0}}}.Release|Any CPU.ActiveCfg = Release|Any CPU\r\n\t\t{{{0}}}.Release|Any CPU.Build.0 = Release|Any CPU\r\n",
+                        projectGuid);
+                    string solutionText = File.ReadAllText(solutionPath);
+                    solutionText = solutionText.Insert(solutionText.LastIndexOf("EndProject\r\n"), projectReference);
+                    solutionText = solutionText.Replace("GlobalSection(ProjectConfigurationPlatforms) = postSolution\r\n", projectConfiguationPlatforms);
+                    solutionText = solutionText.Insert(solutionText.LastIndexOf("EndGlobalSection"), "\t{" + projectGuid + "} = {E9C9F120-07BA-4DFB-B9C3-3AFB9D44C9D5}\r\n\t");
+
+                    File.WriteAllText(solutionPath, solutionText);
+                }
+                else {
+                    Context.Output.WriteLine(T("Warning: Solution file could not be found at {0}", solutionPath));
+                }
+            }
+        }
+
+        private static void CreateFilesFromTemplates(string moduleName, string projectGuid) {
+            string modulePath = HostingEnvironment.MapPath("~/Modules/Orchard." + moduleName + "/");
+            string propertiesPath = modulePath + "Properties";
+            string templatesPath = HostingEnvironment.MapPath("~/Modules/Orchard.DevTools/ScaffoldingTemplates/");
+
+            Directory.CreateDirectory(modulePath);
+            Directory.CreateDirectory(propertiesPath);
+            string templateText = File.ReadAllText(templatesPath + "ModuleAssemblyInfo.txt");
+            templateText = templateText.Replace("$$ModuleName$$", moduleName);
+            templateText = templateText.Replace("$$ModuleTypeLibGuid$$", Guid.NewGuid().ToString());
+            File.WriteAllText(propertiesPath + "\\AssemblyInfo.cs", templateText);
+            File.WriteAllText(modulePath + "\\Web.config", File.ReadAllText(templatesPath + "ModuleWebConfig.txt"));
+            templateText = File.ReadAllText(templatesPath + "ModuleManifest.txt");
+            templateText = templateText.Replace("$$ModuleName$$", moduleName);
+            File.WriteAllText(modulePath + "\\Module.txt", templateText);
+            templateText = File.ReadAllText(templatesPath + "\\ModuleCsProj.txt");
+            templateText = templateText.Replace("$$ModuleName$$", moduleName);
+            templateText = templateText.Replace("$$ModuleProjectGuid$$", projectGuid);
+            File.WriteAllText(modulePath + "\\Orchard." + moduleName + ".csproj", templateText);
+        }
+
+        [CommandHelp("scaffolding create controller <module-name> <controller-name>\r\n\t" + "Create a new Orchard controller in a module")]
+        [CommandName("scaffolding create controller")]
+        public void CreateController(string moduleName, string controllerName) {
+            Context.Output.WriteLine(T("Creating Controller {0} in Module {1}", controllerName, moduleName));
+        }
     }
 }
+
