@@ -38,6 +38,40 @@ namespace Orchard.DevTools.Commands {
         [CommandName("scaffolding create controller")]
         public void CreateController(string moduleName, string controllerName) {
             Context.Output.WriteLine(T("Creating Controller {0} in Module {1}", controllerName, moduleName));
+
+            foreach (var extension in _extensionManager.AvailableExtensions()) {
+                if (extension.ExtensionType == "Module" && String.Equals(moduleName, extension.DisplayName, StringComparison.OrdinalIgnoreCase)) {
+                    string moduleControllersPath = HostingEnvironment.MapPath("~/Modules/" + extension.Name + "/Controllers/");
+                    string controllerPath = moduleControllersPath + controllerName + ".cs";
+                    string moduleCsProjPath = HostingEnvironment.MapPath(string.Format("~/Modules/{0}/{0}.csproj", extension.Name)); 
+                    string templatesPath = HostingEnvironment.MapPath("~/Modules/Orchard.DevTools/ScaffoldingTemplates/");
+                    if (!Directory.Exists(moduleControllersPath)) {
+                        Directory.CreateDirectory(moduleControllersPath);
+                    }
+                    if (File.Exists(controllerPath)) {
+                        Context.Output.WriteLine(T("Controller {0} already exists in target Module {1}.", controllerName, moduleName));
+                        return;
+                    }
+                    string controllerText = File.ReadAllText(templatesPath + "Controller.txt");
+                    controllerText = controllerText.Replace("$$ModuleName$$", moduleName);
+                    controllerText = controllerText.Replace("$$ControllerName$$", controllerName);
+                    File.WriteAllText(controllerPath, controllerText);
+                    string projectFileText = File.ReadAllText(moduleCsProjPath);
+                    // The string searches in solution/project files can be made aware of comment lines.
+                    if (projectFileText.Contains("<Compile Include")) {
+                        string compileReference = string.Format("<Compile Include=\"{0}\" />\r\n    ", "Controllers\\" + controllerName + ".cs");
+                        projectFileText = projectFileText.Insert(projectFileText.LastIndexOf("<Compile Include"), compileReference);
+                    }
+                    else {
+                        string itemGroupReference = string.Format("</ItemGroup>\r\n  <ItemGroup>\r\n    <Compile Include=\"{0}\" />\r\n  ", "Controllers\\" + controllerName + ".cs");
+                        projectFileText = projectFileText.Insert(projectFileText.LastIndexOf("</ItemGroup>"), itemGroupReference);
+                    }
+                    File.WriteAllText(moduleCsProjPath, projectFileText);
+                    Context.Output.WriteLine(T("Controller {0} created successfully in Module {1}", controllerName, moduleName));
+                    return;
+                }
+            }
+            Context.Output.WriteLine(T("Creating Controller {0} failed: target Module {1} could not be found.", controllerName, moduleName));
         }
 
         private void IntegrateModule(string moduleName) {
@@ -45,6 +79,7 @@ namespace Orchard.DevTools.Commands {
             string projectGuid = Guid.NewGuid().ToString().ToUpper();
 
             CreateFilesFromTemplates(moduleName, projectGuid);
+            // The string searches in solution/project files can be made aware of comment lines.
             if (IncludeInSolution) {
                 // Add project reference to Orchard.Web.csproj
                 string webProjectReference = string.Format(
