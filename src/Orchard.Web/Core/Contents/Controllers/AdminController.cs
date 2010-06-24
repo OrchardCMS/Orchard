@@ -102,44 +102,12 @@ namespace Orchard.Core.Contents.Controllers {
             var viewModel = new EditTypeViewModel();
             TryUpdateModel(viewModel);
 
-            if (!ModelState.IsValid) {
+            if (!ModelState.IsValid)
                 return EditType(id);
-            }
 
-            var contentTypeDefinitionParts = viewModel.Parts.Select(
-                p => new ContentTypeDefinition.Part(
-                         new ContentPartDefinition(
-                             p.PartDefinition.Name,
-                             p.PartDefinition.Fields.Select(
-                                 f => new ContentPartDefinition.Field(
-                                          new ContentFieldDefinition(f.FieldDefinition.Name),
-                                          f.Name,
-                                          f.Settings
-                                          )
-                                 ),
-                             p.PartDefinition.Settings
-                             ),
-                         p.Settings
-                         )
-                ).ToList();
-            
-            if (viewModel.Fields.Any()) {
-                var implicitContentTypeDefinitionPart = new ContentTypeDefinition.Part(
-                    new ContentPartDefinition(
-                        viewModel.Name,
-                        viewModel.Fields.Select(
-                            f => new ContentPartDefinition.Field(
-                                     new ContentFieldDefinition(f.FieldDefinition.Name),
-                                     f.Name,
-                                     f.Settings
-                                     )
-                            ),
-                        null
-                        ),
-                    null
-                    );
-                contentTypeDefinitionParts.Add(implicitContentTypeDefinitionPart);
-            }
+            var contentTypeDefinitionParts = viewModel.Parts.Select(GenerateTypePart).ToList();
+            if (viewModel.Fields.Any())
+                contentTypeDefinitionParts.Add(GenerateTypePart(viewModel));
 
             //todo: apply the changes along the lines of but definately not resembling
             // for now this _might_ just get a little messy -> 
@@ -151,10 +119,47 @@ namespace Orchard.Core.Contents.Controllers {
                     viewModel.Settings
                     )
                 );
-            // little == lot
 
             return RedirectToAction("Index");
         }
+
+        private static ContentTypeDefinition.Part GenerateTypePart(EditTypePartViewModel viewModel) {
+            return new ContentTypeDefinition.Part(
+                new ContentPartDefinition(
+                    viewModel.PartDefinition.Name,
+                    viewModel.PartDefinition.Fields.Select(
+                        f => new ContentPartDefinition.Field(
+                                 new ContentFieldDefinition(f.FieldDefinition.Name),
+                                 f.Name,
+                                 f.Settings
+                                 )
+                        ),
+                    viewModel.PartDefinition.Settings
+                    ),
+                viewModel.Settings
+                );
+        }
+
+        private static ContentTypeDefinition.Part GenerateTypePart(EditTypeViewModel viewModel) {
+            return new ContentTypeDefinition.Part(
+                new ContentPartDefinition(
+                    viewModel.Name,
+                    viewModel.Fields.Select(
+                        f => new ContentPartDefinition.Field(
+                                 new ContentFieldDefinition(f.FieldDefinition.Name),
+                                 f.Name,
+                                 f.Settings
+                                 )
+                        ),
+                    null
+                    ),
+                null
+                );
+        }
+
+        #endregion
+
+        #region Parts
 
         public ActionResult EditPart(string id) {
             if (!Services.Authorizer.Authorize(Permissions.CreateContentTypes, T("Not allowed to edit a part.")))
@@ -187,29 +192,65 @@ namespace Orchard.Core.Contents.Controllers {
 
             //todo: apply the changes along the lines of but definately not resembling
             // for now this _might_ just get a little messy -> 
-            _contentDefinitionService.AlterPartDefinition(
-                new ContentPartDefinition(
-                    viewModel.Name,
-                    viewModel.Fields.Select(
-                    f => new ContentPartDefinition.Field(
-                        new ContentFieldDefinition(f.FieldDefinition.Name),
-                        f.Name,
-                        f.Settings
-                    )
-                    ),
-                    viewModel.Settings
-                    )
-                );
-            // little == lot
+            _contentDefinitionService.AlterPartDefinition(GeneratePart(viewModel));
 
             return RedirectToAction("Index");
+        }
+
+        public ActionResult AddFieldTo(string id) {
+            if (!Services.Authorizer.Authorize(Permissions.CreateContentTypes, T("Not allowed to edit a part.")))
+                return new HttpUnauthorizedResult();
+
+            var contentPartDefinition = _contentDefinitionService.GetPartDefinition(id);
+
+            if (contentPartDefinition == null) {
+                //id passed in might be that of a type w/ no implicit field
+                var contentTypeDefinition = _contentDefinitionService.GetTypeDefinition(id);
+                if (contentTypeDefinition != null)
+                    contentPartDefinition = new ContentPartDefinition(id);
+                else
+                    return new NotFoundResult();
+            }
+
+            //get all of the field types
+            
+
+            var viewModel = new AddFieldViewModel(contentPartDefinition);
+
+            return View(viewModel);
+        }
+
+        [HttpPost, ActionName("AddFieldTo")]
+        public ActionResult AddFieldToPOST(string id) {
+            if (!Services.Authorizer.Authorize(Permissions.CreateContentTypes, T("Not allowed to edit a part.")))
+                return new HttpUnauthorizedResult();
+
+            var contentPartDefinition = _contentDefinitionService.GetPartDefinition(id);
+            var contentTypeDefinition = _contentDefinitionService.GetTypeDefinition(id);
+
+            if (contentTypeDefinition != null)
+                return RedirectToAction("EditType", new { id });
+
+            return RedirectToAction("EditPart", new {id});
+        }
+
+        private static ContentPartDefinition GeneratePart(EditPartViewModel viewModel) {
+            return new ContentPartDefinition(
+                viewModel.Name,
+                viewModel.Fields.Select(
+                    f => new ContentPartDefinition.Field(
+                             new ContentFieldDefinition(f.FieldDefinition.Name),
+                             f.Name,
+                             f.Settings
+                             )
+                    ),
+                viewModel.Settings
+                );
         }
 
         #endregion
 
         #region Content
-
-        #endregion
 
         public ActionResult List(ListContentsViewModel model) {
             const int pageSize = 20;
@@ -328,5 +369,7 @@ namespace Orchard.Core.Contents.Controllers {
         void IUpdateModel.AddModelError(string key, LocalizedString errorMessage) {
             ModelState.AddModelError(key, errorMessage.ToString());
         }
+
+        #endregion
     }
 }
