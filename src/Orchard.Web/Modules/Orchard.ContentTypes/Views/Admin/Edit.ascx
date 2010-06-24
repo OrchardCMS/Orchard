@@ -1,4 +1,4 @@
-<%@ Control Language="C#" Inherits="Orchard.Mvc.ViewUserControl<EditTypeViewModel>" %>
+<%@ Control Language="C#" Inherits="Orchard.Mvc.ViewUserControl<Orchard.ContentTypes.ViewModels.EditTypeViewModel>" %>
 <%@ Import Namespace="Orchard.Core.Contents.ViewModels" %><%
 Html.RegisterStyle("admin.css"); %>
 <h1><%:Html.TitleForPage(T("Edit Content Type").ToString())%></h1>
@@ -18,7 +18,7 @@ using (Html.BeginFormAntiForgeryPost()) { %>
     <div class="manage add-to-type"><%: Html.ActionLink(T("Add").Text, "AddPart", new { }, new { @class = "button" }) %></div>
     <%:Html.EditorFor(m => m.Parts, "Parts", "") %>
     <h2><%:T("Fields") %></h2>
-    <div class="manage add-to-type"><%: Html.ActionLink(T("Add").Text, "AddFieldTo", new { area = "Contents", id = Model.Name }, new { @class = "button" }) %></div>
+    <div class="manage add-to-type"><%: Html.ActionLink(T("Add").Text, "AddFieldTo", new { area = "Orchard.ContentTypes", id = Model.Name }, new { @class = "button" }) %></div>
     <%:Html.EditorFor(m => m.Fields, "Fields", "") %>
     <fieldset>
         <button class="primaryAction" type="submit"><%:T("Save") %></button>

@@ -1,4 +1,4 @@
-﻿<%@ Control Language="C#" Inherits="Orchard.Mvc.ViewUserControl<IEnumerable<EditPartFieldViewModel>>" %>
+﻿<%@ Control Language="C#" Inherits="Orchard.Mvc.ViewUserControl<IEnumerable<Orchard.ContentTypes.ViewModels.EditPartFieldViewModel>>" %>
 <%@ Import Namespace="Orchard.Core.Contents.ViewModels" %><%
 if (Model.Any()) { %>
     <fieldset><%

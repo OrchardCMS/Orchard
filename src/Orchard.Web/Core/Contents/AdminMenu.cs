@@ -21,7 +21,7 @@ namespace Orchard.Core.Contents {
             var contentTypeDefinitions = _contentDefinitionManager.ListTypeDefinitions().OrderBy(d => d.Name);
 
             builder.Add(T("Content"), "1", menu => {
-                menu.Add(T("Manage Content"), "1.2", item => item.Action("List", "Admin", new {area = "Contents"}));
+                menu.Add(T("Manage Content"), "1.2", item => item.Action("List", "Admin", new {area = "Orchard.ContentTypes"}));
                 //foreach (var contentTypeDefinition in contentTypeDefinitions) {
                 //    var ci = _contentManager.New(contentTypeDefinition.Name);
                 //    var cim = _contentManager.GetItemMetadata(ci);
@@ -30,8 +30,6 @@ namespace Orchard.Core.Contents {
                 //        menu.Add(T("Create New {0}", contentTypeDefinition.DisplayName), "1.3", item => item.Action(cim.CreateRouteValues["Action"] as string, cim.CreateRouteValues["Controller"] as string, cim.CreateRouteValues));
                 //}
                                            });
-            builder.Add(T("Site Configuration"), "11",
-                        menu => menu.Add(T("Content Types"), "3", item => item.Action("Index", "Admin", new { area = "Contents" })));
         }
     }
 }

@@ -3,7 +3,7 @@ using System.Linq;
 using Orchard.ContentManagement.MetaData.Models;
 using Orchard.Mvc.ViewModels;
 
-namespace Orchard.Core.Contents.ViewModels {
+namespace Orchard.ContentTypes.ViewModels {
     public class EditTypeViewModel : BaseViewModel {
         public EditTypeViewModel() {
             Settings = new SettingsDictionary();

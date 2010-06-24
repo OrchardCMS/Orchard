@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using Orchard.Security.Permissions;
 
-namespace Orchard.Core.Contents {
+namespace Orchard.ContentTypes {
     public class Permissions : IPermissionProvider {
         public static readonly Permission CreateContentTypes = new Permission { Name = "CreateContentTypes", Description = "Create custom content types." };
         public static readonly Permission EditContentTypes = new Permission { Name = "EditContentTypes", Description = "Edit content types." };

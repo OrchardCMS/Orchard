@@ -2,7 +2,7 @@
 using Orchard.ContentManagement.MetaData;
 using Orchard.Mvc.ViewModels;
 
-namespace Orchard.Core.Contents.ViewModels {
+namespace Orchard.ContentTypes.ViewModels {
     public class AddFieldViewModel : BaseViewModel {
         public AddFieldViewModel() {
             Fields = new List<ContentFieldInfo>();

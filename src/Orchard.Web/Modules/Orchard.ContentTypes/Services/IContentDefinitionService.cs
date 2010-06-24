@@ -2,7 +2,7 @@
 using Orchard.ContentManagement.MetaData;
 using Orchard.ContentManagement.MetaData.Models;
 
-namespace Orchard.Core.Contents.Services {
+namespace Orchard.ContentTypes.Services {
     public interface IContentDefinitionService : IDependency {
         IEnumerable<ContentTypeDefinition> GetTypeDefinitions();
         ContentTypeDefinition GetTypeDefinition(string name);

@@ -8,7 +8,7 @@ using Orchard.ContentManagement.MetaData.Models;
 using Orchard.Localization;
 using Orchard.UI.Notify;
 
-namespace Orchard.Core.Contents.Services {
+namespace Orchard.ContentTypes.Services {
     public class ContentDefinitionService : IContentDefinitionService {
         private readonly IContentDefinitionManager _contentDefinitionManager;
         private readonly IEnumerable<IContentFieldDriver> _contentFieldDrivers;
