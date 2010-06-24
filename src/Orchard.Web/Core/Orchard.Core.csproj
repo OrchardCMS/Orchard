@@ -224,8 +224,8 @@
     <Content Include="Contents\Views\EditorTemplates\Field.ascx" />
     <Content Include="Contents\Views\EditorTemplates\Fields.ascx" />
     <Content Include="Contents\Views\EditorTemplates\Settings.ascx" />
-    <Content Include="Contents\Views\EditorTemplates\Part.Fields.ascx" />
-    <Content Include="Contents\Views\EditorTemplates\Part.Field.ascx" />
+    <Content Include="Contents\Views\DisplayTemplates\Fields.ascx" />
+    <Content Include="Contents\Views\DisplayTemplates\Field.ascx" />
     <Content Include="Contents\Views\EditorTemplates\Parts.ascx" />
     <Content Include="Contents\Views\EditorTemplates\Part.ascx" />
     <Content Include="Contents\Views\EditorTemplates\Items\Contents.Item.ascx" />

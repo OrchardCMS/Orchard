@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
 using System.Web.Routing;
@@ -186,9 +187,8 @@ namespace Orchard.Core.Contents.Controllers {
             var viewModel = new EditPartViewModel();
             TryUpdateModel(viewModel);
 
-            if (!ModelState.IsValid) {
+            if (!ModelState.IsValid)
                 return EditPart(id);
-            }
 
             //todo: apply the changes along the lines of but definately not resembling
             // for now this _might_ just get a little messy -> 
@@ -212,10 +212,10 @@ namespace Orchard.Core.Contents.Controllers {
                     return new NotFoundResult();
             }
 
-            //get all of the field types
-            
-
-            var viewModel = new AddFieldViewModel(contentPartDefinition);
+            var viewModel = new AddFieldViewModel {
+                Part = new EditPartViewModel(contentPartDefinition),
+                Fields = _contentDefinitionService.GetFieldDefinitions()
+            };
 
             return View(viewModel);
         }
@@ -225,8 +225,38 @@ namespace Orchard.Core.Contents.Controllers {
             if (!Services.Authorizer.Authorize(Permissions.CreateContentTypes, T("Not allowed to edit a part.")))
                 return new HttpUnauthorizedResult();
 
+            var viewModel = new AddFieldViewModel();
+            TryUpdateModel(viewModel);
+
             var contentPartDefinition = _contentDefinitionService.GetPartDefinition(id);
             var contentTypeDefinition = _contentDefinitionService.GetTypeDefinition(id);
+
+            if (!ModelState.IsValid)
+                return AddFieldTo(id);
+
+            if (contentPartDefinition == null) {
+                //id passed in might be that of a type w/ no implicit field
+                if (contentTypeDefinition != null) {
+                    contentPartDefinition = new ContentPartDefinition(id);
+                    var contentTypeDefinitionParts = contentTypeDefinition.Parts.ToList();
+                    contentTypeDefinitionParts.Add(new ContentTypeDefinition.Part(contentPartDefinition, null));
+                    _contentDefinitionService.AlterTypeDefinition(
+                        new ContentTypeDefinition(
+                            contentTypeDefinition.Name,
+                            contentTypeDefinition.DisplayName,
+                            contentTypeDefinitionParts,
+                            contentTypeDefinition.Settings
+                            )
+                        );
+                }
+                else {
+                    return new NotFoundResult();
+                }
+            }
+
+            var contentPartFields = contentPartDefinition.Fields.ToList();
+            contentPartFields.Add(new ContentPartDefinition.Field(new ContentFieldDefinition(viewModel.FieldTypeName), viewModel.DisplayName, null));
+            _contentDefinitionService.AlterPartDefinition(new ContentPartDefinition(contentPartDefinition.Name, contentPartFields, contentPartDefinition.Settings));
 
             if (contentTypeDefinition != null)
                 return RedirectToAction("EditType", new { id });

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Orchard.ContentManagement.MetaData;
 using Orchard.ContentManagement.MetaData.Models;
 
 namespace Orchard.Core.Contents.Services {
@@ -13,5 +14,7 @@ namespace Orchard.Core.Contents.Services {
         void AddPartDefinition(ContentPartDefinition contentPartDefinition);
         void AlterPartDefinition(ContentPartDefinition contentPartDefinition);
         void RemovePartDefinition(string name);
+
+        IEnumerable<ContentFieldInfo> GetFieldDefinitions();
     }
 }

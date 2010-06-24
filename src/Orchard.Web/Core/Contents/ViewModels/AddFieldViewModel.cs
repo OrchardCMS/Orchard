@@ -1,12 +1,16 @@
-﻿using Orchard.ContentManagement.MetaData.Models;
+﻿using System.Collections.Generic;
+using Orchard.ContentManagement.MetaData;
 using Orchard.Mvc.ViewModels;
 
 namespace Orchard.Core.Contents.ViewModels {
     public class AddFieldViewModel : BaseViewModel {
-        public AddFieldViewModel(ContentPartDefinition part) {
-            Part = part;
+        public AddFieldViewModel() {
+            Fields = new List<ContentFieldInfo>();
         }
 
-        public ContentPartDefinition Part { get; private set; }
+        public string DisplayName { get; set; }
+        public string FieldTypeName { get; set; }
+        public EditPartViewModel Part { get; set; }
+        public IEnumerable<ContentFieldInfo> Fields { get; set; }
     }
 }

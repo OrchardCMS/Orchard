@@ -4,7 +4,7 @@ if (Model.Any()) { %>
     <dl><%
         foreach (var field in Model) {
             var f = field; %>
-            <%:Html.EditorFor(m => f, "Part.Field") %><%
+            <%:Html.DisplayFor(m => f, "Field") %><%
         } %>
     </dl><%
 } %>

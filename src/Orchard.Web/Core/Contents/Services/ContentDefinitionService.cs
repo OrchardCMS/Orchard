@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
+using Orchard.ContentManagement.Drivers;
 using Orchard.ContentManagement.MetaData;
 using Orchard.ContentManagement.MetaData.Models;
 using Orchard.Localization;
@@ -10,10 +11,12 @@ using Orchard.UI.Notify;
 namespace Orchard.Core.Contents.Services {
     public class ContentDefinitionService : IContentDefinitionService {
         private readonly IContentDefinitionManager _contentDefinitionManager;
+        private readonly IEnumerable<IContentFieldDriver> _contentFieldDrivers;
 
-        public ContentDefinitionService(IOrchardServices services, IContentDefinitionManager contentDefinitionManager) {
+        public ContentDefinitionService(IOrchardServices services, IContentDefinitionManager contentDefinitionManager, IEnumerable<IContentFieldDriver> contentFieldDrivers) {
             Services = services;
             _contentDefinitionManager = contentDefinitionManager;
+            _contentFieldDrivers = contentFieldDrivers;
             T = NullLocalizer.Instance;
         }
 
@@ -74,6 +77,10 @@ namespace Orchard.Core.Contents.Services {
 
         public void RemovePartDefinition(string name) {
             throw new NotImplementedException();
+        }
+
+        public IEnumerable<ContentFieldInfo> GetFieldDefinitions() {
+            return _contentFieldDrivers.SelectMany(d => d.GetFieldInfo());
         }
 
         //gratuitously stolen from the RoutableService
