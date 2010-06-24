@@ -33,6 +33,13 @@ namespace Orchard.DevTools.Commands {
             Context.Output.WriteLine(T("Module {0} created successfully", moduleName));
         }
 
+
+        [CommandHelp("scaffolding create controller <module-name> <controller-name>\r\n\t" + "Create a new Orchard controller in a module")]
+        [CommandName("scaffolding create controller")]
+        public void CreateController(string moduleName, string controllerName) {
+            Context.Output.WriteLine(T("Creating Controller {0} in Module {1}", controllerName, moduleName));
+        }
+
         private void IntegrateModule(string moduleName) {
             string rootWebProjectPath = HostingEnvironment.MapPath("~/Orchard.Web.csproj");
             string projectGuid = Guid.NewGuid().ToString().ToUpper();
@@ -88,12 +95,6 @@ namespace Orchard.DevTools.Commands {
             templateText = templateText.Replace("$$ModuleName$$", moduleName);
             templateText = templateText.Replace("$$ModuleProjectGuid$$", projectGuid);
             File.WriteAllText(modulePath + "\\Orchard." + moduleName + ".csproj", templateText);
-        }
-
-        [CommandHelp("scaffolding create controller <module-name> <controller-name>\r\n\t" + "Create a new Orchard controller in a module")]
-        [CommandName("scaffolding create controller")]
-        public void CreateController(string moduleName, string controllerName) {
-            Context.Output.WriteLine(T("Creating Controller {0} in Module {1}", controllerName, moduleName));
         }
     }
 }
