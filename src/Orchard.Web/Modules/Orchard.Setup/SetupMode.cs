@@ -91,7 +91,7 @@ namespace Orchard.Setup {
 
         class SafeModeSiteService : ISiteService {
             public ISite GetSiteSettings() {
-                var siteType = new ContentTypeDefinitionBuilder().Named("site").Build();
+                var siteType = new ContentTypeDefinitionBuilder().Named("Site").Build();
                 var site = new ContentItemBuilder(siteType)
                     .Weld<SafeModeSite>()
                     .Build();

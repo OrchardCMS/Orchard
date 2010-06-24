@@ -7,7 +7,7 @@ using Orchard.Security;
 namespace Orchard.Roles.Models {
     public static class UserSimulation {
         public static IUser Create(string role) {
-            var simulationType = new ContentTypeDefinitionBuilder().Named("user").Build();
+            var simulationType = new ContentTypeDefinitionBuilder().Named("User").Build();
             var simulation = new ContentItemBuilder(simulationType)
                 .Weld<SimulatedUser>()
                 .Weld<SimulatedUserRoles>()

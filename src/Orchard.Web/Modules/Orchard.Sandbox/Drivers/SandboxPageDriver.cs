@@ -10,7 +10,7 @@ namespace Orchard.Sandbox.Drivers {
     [UsedImplicitly]
     public class SandboxPageDriver : ContentItemDriver<SandboxPage> {
         public readonly static ContentType ContentType = new ContentType {
-                                                                             Name = "sandboxpage",
+                                                                             Name = "SandboxPage",
                                                                              DisplayName = "Sandbox Page"
                                                                          };
 

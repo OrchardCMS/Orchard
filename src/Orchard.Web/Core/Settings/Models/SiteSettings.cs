@@ -3,7 +3,7 @@ using Orchard.Settings;
 
 namespace Orchard.Core.Settings.Models {
     public sealed class SiteSettings : ContentPart<SiteSettingsRecord>, ISite {
-        public static readonly ContentType ContentType = new ContentType { Name = "site", DisplayName = "Site Settings" };
+        public static readonly ContentType ContentType = new ContentType { Name = "Site", DisplayName = "Site Settings" };
 
         public string PageTitleSeparator {
             get { return Record.PageTitleSeparator; }

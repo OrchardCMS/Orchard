@@ -35,9 +35,13 @@ namespace Orchard.ContentManagement.MetaData.Builders {
             return new ContentTypeDefinition(_name, _displayName, _parts, _settings);
         }
 
-        public ContentTypeDefinitionBuilder Named(string name, string displayName = null) {
+        public ContentTypeDefinitionBuilder Named(string name) {
             _name = name;
-            _displayName = displayName ?? name;
+            return this;
+        }
+
+        public ContentTypeDefinitionBuilder DisplayedAs(string displayName ) {
+            _displayName = displayName;
             return this;
         }
 

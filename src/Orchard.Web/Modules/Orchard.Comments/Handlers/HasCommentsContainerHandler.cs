@@ -6,7 +6,7 @@ namespace Orchard.Comments.Handlers {
     [UsedImplicitly]
     public class HasCommentsContainerHandler : ContentHandler {
         public HasCommentsContainerHandler() {
-            Filters.Add(new ActivatingFilter<HasCommentsContainer>("blog"));
+            Filters.Add(new ActivatingFilter<HasCommentsContainer>("Blog"));
         }
     }
 }

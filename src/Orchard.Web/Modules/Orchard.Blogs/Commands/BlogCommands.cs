@@ -53,7 +53,7 @@ namespace Orchard.Blogs.Commands {
                 return "Invalid Slug provided. Blog creation failed.";    
             }
 
-            var blog = _contentManager.New("blog");
+            var blog = _contentManager.New("Blog");
             blog.As<ICommonAspect>().Owner = admin;
             blog.As<RoutableAspect>().Slug = Slug;
             blog.As<RoutableAspect>().Title = Title;
@@ -95,7 +95,7 @@ namespace Orchard.Blogs.Commands {
                 string postName = item.Element("title").Value;
 
                 Context.Output.WriteLine("Adding post: {0}...", postName.Substring(0, Math.Min(postName.Length, 40)));
-                var post = _contentManager.New("blogpost");
+                var post = _contentManager.New("BlogPost");
                 post.As<ICommonAspect>().Owner = admin;
                 post.As<ICommonAspect>().Container = blog;
                 post.As<RoutableAspect>().Slug = Slugify(postName);

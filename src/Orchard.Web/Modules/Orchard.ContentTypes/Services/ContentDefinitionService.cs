@@ -42,7 +42,7 @@ namespace Orchard.ContentTypes.Services {
             //just giving the new type some default parts for now
             _contentDefinitionManager.AlterTypeDefinition(
                 typeName,
-                cfg => cfg.Named(typeName, contentTypeDefinition.DisplayName)
+                cfg => cfg.DisplayedAs(contentTypeDefinition.DisplayName)
                            .WithPart("CommonAspect")
                            //.WithPart("RoutableAspect") //need to go the new routable route
                            .WithPart("BodyAspect"));

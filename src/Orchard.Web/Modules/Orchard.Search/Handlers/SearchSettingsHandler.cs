@@ -7,7 +7,7 @@ namespace Orchard.Search.Handlers {
     [UsedImplicitly]
     public class SearchSettingsHandler : ContentHandler {
         public SearchSettingsHandler(IRepository<SearchSettingsRecord> repository) {
-            Filters.Add(new ActivatingFilter<SearchSettings>("site"));
+            Filters.Add(new ActivatingFilter<SearchSettings>("Site"));
             Filters.Add(StorageFilter.For(repository));
             Filters.Add(new TemplateFilterForRecord<SearchSettingsRecord>("CommentSettings", "Parts/Search.SiteSettings"));
         }

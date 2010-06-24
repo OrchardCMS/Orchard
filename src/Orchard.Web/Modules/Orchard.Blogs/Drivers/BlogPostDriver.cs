@@ -16,7 +16,7 @@ namespace Orchard.Blogs.Drivers {
         private readonly IRoutableService _routableService;
 
         public readonly static ContentType ContentType = new ContentType {
-                                                                             Name = "blogpost",
+                                                                             Name = "BlogPost",
                                                                              DisplayName = "Blog Post"
                                                                          };
 

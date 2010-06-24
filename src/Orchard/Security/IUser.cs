@@ -2,7 +2,7 @@ using Orchard.ContentManagement;
 
 namespace Orchard.Security {
     /// <summary>
-    /// Interface provided by the "user" model. 
+    /// Interface provided by the "User" model. 
     /// </summary>
     public interface IUser : IContent {
         int Id { get; }

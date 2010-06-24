@@ -20,7 +20,7 @@ namespace Orchard.Pages.Drivers {
         private readonly IRoutableService _routableService;
 
         public readonly static ContentType ContentType = new ContentType {
-                                                                             Name = "page",
+                                                                             Name = "Page",
                                                                              DisplayName = "Page"
                                                                          };
 
