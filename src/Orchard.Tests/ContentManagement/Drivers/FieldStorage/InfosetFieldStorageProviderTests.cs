@@ -5,7 +5,8 @@ using System.Text;
 using Autofac;
 using NUnit.Framework;
 using Orchard.ContentManagement;
-using Orchard.ContentManagement.Drivers.FieldStorage;
+using Orchard.ContentManagement.FieldStorage;
+using Orchard.ContentManagement.FieldStorage.InfosetStorage;
 using Orchard.ContentManagement.MetaData.Builders;
 using Orchard.ContentManagement.MetaData.Models;
 using Orchard.ContentManagement.Records;
@@ -18,7 +19,7 @@ namespace Orchard.Tests.ContentManagement.Drivers.FieldStorage {
         [SetUp]
         public void Init() {
             var builder = new ContainerBuilder();
-            builder.RegisterType<InfosetFieldStorageProvider>().As<IFieldStorageProvider>();
+            builder.RegisterType<InfosetStorageProvider>().As<IFieldStorageProvider>();
 
             _container = builder.Build();
             _provider = _container.Resolve<IFieldStorageProvider>();

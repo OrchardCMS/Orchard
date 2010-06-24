@@ -10,7 +10,7 @@ namespace Orchard.ContentManagement.MetaData.Models {
             Settings = settings;
         }
 
-        public ContentPartDefinition(string name) {  
+        public ContentPartDefinition(string name) {
             Name = name;
             Fields = Enumerable.Empty<Field>();
             Settings = new SettingsDictionary();
@@ -21,9 +21,14 @@ namespace Orchard.ContentManagement.MetaData.Models {
         public SettingsDictionary Settings { get; private set; }
 
         public class Field {
-            public Field(ContentFieldDefinition contentFieldDefinition, string name, SettingsDictionary settings) {
-                FieldDefinition = contentFieldDefinition;
+            public Field(string name) {
                 Name = name;
+                FieldDefinition = new ContentFieldDefinition(null);
+                Settings = new SettingsDictionary();
+            }
+            public Field( ContentFieldDefinition contentFieldDefinition, string name, SettingsDictionary settings) {
+                Name = name;
+                FieldDefinition = contentFieldDefinition;
                 Settings = settings;
             }
 

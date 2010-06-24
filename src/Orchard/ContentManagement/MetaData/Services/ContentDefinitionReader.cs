@@ -36,14 +36,14 @@ namespace Orchard.ContentManagement.MetaData.Services {
 
             foreach (var iter in source.Elements()) {
                 var fieldElement = iter;
-                string[] fieldParameters = fieldElement.Name.LocalName.Split('.');
+                var fieldParameters = XmlConvert.DecodeName(fieldElement.Name.LocalName).Split('.');
                 builder.WithField(
-                    XmlConvert.DecodeName(fieldParameters[0]),
+                    fieldParameters[0],
                     fieldBuilder => {
+                        fieldBuilder.OfType(fieldParameters[1]);
                         foreach (var setting in _settingsReader.Map(fieldElement)) {
                             fieldBuilder.WithSetting(setting.Key, setting.Value);
                         }
-                        fieldBuilder.OfType(fieldParameters[1]);
                     });
             }
         }

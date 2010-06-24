@@ -3,7 +3,8 @@ using System.Linq;
 using Autofac;
 using NUnit.Framework;
 using Orchard.ContentManagement;
-using Orchard.ContentManagement.Drivers.FieldStorage;
+using Orchard.ContentManagement.FieldStorage;
+using Orchard.ContentManagement.FieldStorage.InfosetStorage;
 using Orchard.ContentManagement.MetaData.Builders;
 using Orchard.ContentManagement.MetaData.Models;
 
@@ -17,7 +18,7 @@ namespace Orchard.Tests.ContentManagement.Drivers.FieldStorage {
         public void Init() {
             var builder = new ContainerBuilder();
             builder.RegisterType<FieldStorageProviderSelector>().As<IFieldStorageProviderSelector>();
-            builder.RegisterType<InfosetFieldStorageProvider>().As<IFieldStorageProvider>();
+            builder.RegisterType<InfosetStorageProvider>().As<IFieldStorageProvider>();
             builder.RegisterType<TestProvider>().As<IFieldStorageProvider>();
 
             _container = builder.Build();

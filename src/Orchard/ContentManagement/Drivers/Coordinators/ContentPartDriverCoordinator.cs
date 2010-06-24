@@ -18,43 +18,46 @@ namespace Orchard.ContentManagement.Drivers.Coordinators {
         }
 
         public ILogger Logger { get; set; }
-        
+
         public override void Activating(ActivatingContentContext context) {
             var contentTypeDefinition = _contentDefinitionManager.GetTypeDefinition(context.ContentType);
             if (contentTypeDefinition == null)
                 return;
 
-            foreach (var partInfo in _drivers.SelectMany(cpp => cpp.GetPartInfo())) {
-                var partName = partInfo.PartName;
-                var typePartDefinition = contentTypeDefinition.Parts.FirstOrDefault(p => p.PartDefinition.Name == partName);
-                if (typePartDefinition != null) {
-                    context.Builder.Weld(partInfo.Factory(typePartDefinition));
-                }
+            var partInfos = _drivers.SelectMany(cpp => cpp.GetPartInfo());
+
+            foreach (var typePartDefinition in contentTypeDefinition.Parts) {
+                var partName = typePartDefinition.PartDefinition.Name;
+                var partInfo = partInfos.FirstOrDefault(pi => pi.PartName == partName);
+                var part = partInfo != null 
+                    ? partInfo.Factory(typePartDefinition) 
+                    : new ContentPart { TypePartDefinition = typePartDefinition };
+                context.Builder.Weld(part);
             }
         }
 
         public override void BuildDisplayModel(BuildDisplayModelContext context) {
             _drivers.Invoke(driver => {
-                                var result = driver.BuildDisplayModel(context);
-                                if (result != null)
-                                    result.Apply(context);
-                            }, Logger);
+                var result = driver.BuildDisplayModel(context);
+                if (result != null)
+                    result.Apply(context);
+            }, Logger);
         }
 
         public override void BuildEditorModel(BuildEditorModelContext context) {
             _drivers.Invoke(driver => {
-                                var result = driver.BuildEditorModel(context);
-                                if (result != null)
-                                    result.Apply(context);
-                            }, Logger);
+                var result = driver.BuildEditorModel(context);
+                if (result != null)
+                    result.Apply(context);
+            }, Logger);
         }
 
         public override void UpdateEditorModel(UpdateEditorModelContext context) {
             _drivers.Invoke(driver => {
-                                var result = driver.UpdateEditorModel(context);
-                                if (result != null)
-                                    result.Apply(context);
-                            }, Logger);
+                var result = driver.UpdateEditorModel(context);
+                if (result != null)
+                    result.Apply(context);
+            }, Logger);
         }
     }
 }

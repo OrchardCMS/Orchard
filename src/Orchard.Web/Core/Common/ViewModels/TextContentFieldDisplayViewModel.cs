@@ -2,6 +2,6 @@
 
 namespace Orchard.Core.Common.ViewModels {
     public class TextContentFieldDisplayViewModel {
-        public TextContentField Text { get; set; }
+        public TextField Text { get; set; }
     }
 }

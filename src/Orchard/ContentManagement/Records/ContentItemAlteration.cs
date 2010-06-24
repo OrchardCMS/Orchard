@@ -33,6 +33,7 @@ namespace Orchard.ContentManagement.Records {
                     var alteration = (IAlteration<ContentItemRecord>)Activator.CreateInstance(type);
                     alteration.Override(mapping);
                 }
+                mapping.IgnoreProperty(x => x.Infoset);
             });
 
             model.Override<ContentItemVersionRecord>(mapping => {
@@ -41,6 +42,7 @@ namespace Orchard.ContentManagement.Records {
                     var alteration = (IAlteration<ContentItemVersionRecord>)Activator.CreateInstance(type);
                     alteration.Override(mapping);
                 }
+                mapping.IgnoreProperty(x => x.Infoset);
             });
         }
 

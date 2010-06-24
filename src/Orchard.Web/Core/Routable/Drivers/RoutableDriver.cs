@@ -59,7 +59,7 @@ namespace Orchard.Core.Routable.Drivers {
 
             // TEMP: path format patterns replaces this logic
             var path = part.Record.Path;
-            if (path.EndsWith(part.Slug)) {
+            if (path != null && path.EndsWith(part.Slug)) {
                 model.DisplayLeadingPath = path.Substring(0, path.Length - part.Slug.Length);
             }
 

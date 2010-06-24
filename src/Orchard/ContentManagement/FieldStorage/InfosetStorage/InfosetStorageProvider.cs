@@ -3,8 +3,8 @@ using System.Xml;
 using System.Xml.Linq;
 using Orchard.ContentManagement.MetaData.Models;
 
-namespace Orchard.ContentManagement.Drivers.FieldStorage {
-    public class InfosetFieldStorageProvider : IFieldStorageProvider {
+namespace Orchard.ContentManagement.FieldStorage.InfosetStorage {
+    public class InfosetStorageProvider : IFieldStorageProvider {
         public string ProviderName {
             get { return FieldStorageProviderSelector.DefaultProviderName; }
         }
@@ -12,10 +12,11 @@ namespace Orchard.ContentManagement.Drivers.FieldStorage {
         public IFieldStorage BindStorage(ContentPart contentPart, ContentPartDefinition.Field partFieldDefinition) {
             var partName = XmlConvert.EncodeLocalName(contentPart.PartDefinition.Name);
             var fieldName = XmlConvert.EncodeLocalName(partFieldDefinition.Name);
+            var infosetPart = contentPart.As<InfosetPart>();
 
             return new Storage {
-                Getter = name => Get(contentPart.ContentItem.Record.Infoset.Element, partName, fieldName, name),
-                Setter = (name, value) => Set(contentPart.ContentItem.Record.Infoset.Element, partName, fieldName, name, value)
+                Getter = name => Get(infosetPart.Infoset.Element, partName, fieldName, name),
+                Setter = (name, value) => Set(infosetPart.Infoset.Element, partName, fieldName, name, value)
             };
         }
 

@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
-using Orchard.ContentManagement.Drivers.FieldStorage;
 using Orchard.ContentManagement.Handlers;
 using Orchard.ContentManagement.MetaData;
 using Orchard.ContentManagement.MetaData.Models;
@@ -11,23 +11,21 @@ namespace Orchard.ContentManagement.Drivers {
         protected virtual string Zone { get { return "body"; } }
 
         DriverResult IContentFieldDriver.BuildDisplayModel(BuildDisplayModelContext context) {
-            var results = context.ContentItem.Parts.SelectMany(part => part.Fields).
-                OfType<TField>().
-                Select(field => Display(field, context.DisplayType));
-            return Combined(results.ToArray());
+            return Process(context.ContentItem, (part, field) => Display(part, field, context.DisplayType));
         }
 
         DriverResult IContentFieldDriver.BuildEditorModel(BuildEditorModelContext context) {
-            var results = context.ContentItem.Parts.SelectMany(part => part.Fields).
-                OfType<TField>().
-                Select(field => Editor(field));
-            return Combined(results.ToArray());
+            return Process(context.ContentItem, (part, field) => Editor(part, field));
         }
 
         DriverResult IContentFieldDriver.UpdateEditorModel(UpdateEditorModelContext context) {
-            var results = context.ContentItem.Parts.SelectMany(part => part.Fields).
-                OfType<TField>().
-                Select(field => Editor(field, context.Updater));
+            return Process(context.ContentItem, (part, field) => Editor(part, field, context.Updater));
+        }
+
+        DriverResult Process(ContentItem item, Func<ContentPart, TField, DriverResult> effort) {
+            var results = item.Parts
+                    .SelectMany(part => part.Fields.OfType<TField>().Select(field => new { part, field }))
+                    .Select(pf => effort(pf.part, pf.field));
             return Combined(results.ToArray());
         }
 
@@ -47,9 +45,9 @@ namespace Orchard.ContentManagement.Drivers {
         }
 
 
-        protected virtual DriverResult Display(TField field, string displayType) { return null; }
-        protected virtual DriverResult Editor(TField field) { return null; }
-        protected virtual DriverResult Editor(TField field, IUpdateModel updater) { return null; }
+        protected virtual DriverResult Display(ContentPart part, TField field, string displayType) { return null; }
+        protected virtual DriverResult Editor(ContentPart part, TField field) { return null; }
+        protected virtual DriverResult Editor(ContentPart part, TField field, IUpdateModel updater) { return null; }
 
 
         public ContentTemplateResult ContentFieldTemplate(object model) {

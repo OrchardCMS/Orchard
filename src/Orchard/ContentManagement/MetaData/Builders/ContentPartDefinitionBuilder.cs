@@ -52,13 +52,16 @@ namespace Orchard.ContentManagement.MetaData.Builders {
         }
 
         public ContentPartDefinitionBuilder WithField(string fieldName, Action<FieldConfigurer> configuration) {
-            var fieldDefinition = new ContentFieldDefinition(fieldName);
-            var existingField = _fields.SingleOrDefault(x => x.FieldDefinition.Name == fieldDefinition.Name);
+
+            var existingField = _fields.FirstOrDefault(x => x.Name == fieldName);
             if (existingField != null) {
-                _fields.Remove(existingField);
+                var toRemove = _fields.Where(x => x.Name == fieldName).ToArray();
+                foreach (var remove in toRemove) {
+                    _fields.Remove(remove);
+                }
             }
             else {
-                existingField = new ContentPartDefinition.Field(fieldDefinition, fieldName, new SettingsDictionary());
+                existingField = new ContentPartDefinition.Field(fieldName);
             }
             var configurer = new FieldConfigurerImpl(existingField);
             configuration(configurer);
@@ -84,7 +87,7 @@ namespace Orchard.ContentManagement.MetaData.Builders {
 
         class FieldConfigurerImpl : FieldConfigurer {
             private ContentFieldDefinition _fieldDefinition;
-            private string _fieldName;
+            private readonly string _fieldName;
 
             public FieldConfigurerImpl(ContentPartDefinition.Field field)
                 : base(field) {

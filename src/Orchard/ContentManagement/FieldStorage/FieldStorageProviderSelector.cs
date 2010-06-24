@@ -1,9 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Orchard.ContentManagement.MetaData.Models;
 
-namespace Orchard.ContentManagement.Drivers.FieldStorage {
+namespace Orchard.ContentManagement.FieldStorage {
     public class FieldStorageProviderSelector : IFieldStorageProviderSelector {
         public const string Storage = "Storage";
         public const string DefaultProviderName = "Infoset";

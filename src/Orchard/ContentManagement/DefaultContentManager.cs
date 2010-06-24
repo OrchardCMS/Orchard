@@ -79,10 +79,9 @@ namespace Orchard.ContentManagement {
             }
 
             var context3 = new InitializingContentContext {
-                ContentType = contentType,
-                ContentItem = context.Builder.Build()
+                ContentType = context2.ContentType,
+                ContentItem = context2.ContentItem,
             };
-            context3.ContentItem.ContentManager = this;
 
             foreach (var handler in Handlers) {
                 handler.Initializing(context3);
@@ -276,7 +275,8 @@ namespace Orchard.ContentManagement {
             var buildingItemVersionRecord = new ContentItemVersionRecord {
                 ContentItemRecord = contentItemRecord,
                 Latest = true,
-                Published = false
+                Published = false,
+                Data = existingItemVersionRecord.Data,
             };
 
 
@@ -435,11 +435,11 @@ namespace Orchard.ContentManagement {
             var indexContentContext = new IndexContentContext(contentItem, documentIndex);
 
             // dispatch to handlers to retrieve index information
-            foreach ( var handler in Handlers ) {
+            foreach (var handler in Handlers) {
                 handler.Indexing(indexContentContext);
             }
 
-            foreach ( var handler in Handlers ) {
+            foreach (var handler in Handlers) {
                 handler.Indexed(indexContentContext);
             }
         }

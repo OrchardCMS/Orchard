@@ -192,19 +192,21 @@
     <Compile Include="ContentManagement\Drivers\DriverResult.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="ContentManagement\Drivers\FieldStorage\FieldStorageProviderSelector.cs" />
+    <Compile Include="ContentManagement\FieldStorage\FieldStorageProviderSelector.cs" />
     <Compile Include="ContentManagement\Drivers\IContentFieldDriver.cs" />
     <Compile Include="ContentManagement\Drivers\IContentItemDriver.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="ContentManagement\Drivers\IContentPartDriver.cs" />
-    <Compile Include="ContentManagement\Drivers\FieldStorage\IFieldStorage.cs" />
-    <Compile Include="ContentManagement\Drivers\FieldStorage\IFieldStorageProvider.cs" />
-    <Compile Include="ContentManagement\Drivers\FieldStorage\IFieldStorageProviderSelector.cs" />
-    <Compile Include="ContentManagement\Drivers\FieldStorage\InfosetFieldStorageProvider.cs" />
+    <Compile Include="ContentManagement\FieldStorage\IFieldStorage.cs" />
+    <Compile Include="ContentManagement\FieldStorage\IFieldStorageProvider.cs" />
+    <Compile Include="ContentManagement\FieldStorage\IFieldStorageProviderSelector.cs" />
+    <Compile Include="ContentManagement\FieldStorage\InfosetStorage\InfosetStorageProvider.cs" />
     <Compile Include="ContentManagement\Extenstions\UrlHelperExtensions.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="ContentManagement\FieldStorage\InfosetStorage\InfosetHandler.cs" />
+    <Compile Include="ContentManagement\FieldStorage\InfosetStorage\InfosetPart.cs" />
     <Compile Include="ContentManagement\Handlers\ActivatedContentContext.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -343,6 +345,7 @@
     <Compile Include="ContentManagement\Records\ContentTypeRecord.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="ContentManagement\FieldStorage\InfosetStorage\Infoset.cs" />
     <Compile Include="ContentManagement\Records\Utility.cs">
       <SubType>Code</SubType>
     </Compile>

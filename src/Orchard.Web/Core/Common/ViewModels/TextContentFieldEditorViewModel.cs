@@ -3,12 +3,12 @@ using Orchard.Core.Common.Fields;
 
 namespace Orchard.Core.Common.ViewModels {
     public class TextContentFieldEditorViewModel {
-        public TextContentField TextContentField { get; set; }
+        public TextField TextField { get; set; }
 
         [Required]
         public string Text {
-            get { return TextContentField.TextField; }
-            set { TextContentField.TextField = value; }
+            get { return TextField.Value; }
+            set { TextField.Value = value; }
         }
     }
 }

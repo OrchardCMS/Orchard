@@ -57,7 +57,7 @@ namespace Orchard.Core.Settings.Metadata {
         private ContentTypeDefinitionRecord Acquire(ContentTypeDefinition contentTypeDefinition) {
             var result = _typeDefinitionRepository.Fetch(x => x.Name == contentTypeDefinition.Name).SingleOrDefault();
             if (result == null) {
-                result = new ContentTypeDefinitionRecord { Name = contentTypeDefinition.Name, DisplayName = contentTypeDefinition.DisplayName};
+                result = new ContentTypeDefinitionRecord { Name = contentTypeDefinition.Name, DisplayName = contentTypeDefinition.DisplayName };
                 _typeDefinitionRepository.Create(result);
             }
             return result;
@@ -111,7 +111,7 @@ namespace Orchard.Core.Settings.Metadata {
             record.Settings = _settingsWriter.Map(model.Settings).ToString();
 
             var toRemove = record.ContentPartFieldDefinitionRecords
-                .Where(fieldDefinitionRecord => !model.Fields.Any(field => fieldDefinitionRecord.ContentFieldDefinitionRecord.Name == field.FieldDefinition.Name))
+                .Where(partFieldDefinitionRecord => model.Fields.Any(partField => partFieldDefinitionRecord.Name == partField.Name))
                 .ToList();
 
             foreach (var remove in toRemove) {
@@ -120,9 +120,9 @@ namespace Orchard.Core.Settings.Metadata {
 
             foreach (var field in model.Fields) {
                 var fieldName = field.FieldDefinition.Name;
-                var partFieldRecord = record.ContentPartFieldDefinitionRecords.SingleOrDefault(r => r.ContentFieldDefinitionRecord.Name == fieldName);
+                var partFieldRecord = record.ContentPartFieldDefinitionRecords.SingleOrDefault(r => r.Name == fieldName);
                 if (partFieldRecord == null) {
-                    partFieldRecord = new ContentPartFieldDefinitionRecord { 
+                    partFieldRecord = new ContentPartFieldDefinitionRecord {
                         ContentFieldDefinitionRecord = Acquire(field.FieldDefinition),
                         Name = field.Name
                     };

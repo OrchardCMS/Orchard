@@ -1,6 +1,6 @@
 ﻿using Orchard.ContentManagement.MetaData.Models;
 
-namespace Orchard.ContentManagement.Drivers.FieldStorage {
+namespace Orchard.ContentManagement.FieldStorage {
     public interface IFieldStorageProvider : IDependency {
         string ProviderName { get; }
         
