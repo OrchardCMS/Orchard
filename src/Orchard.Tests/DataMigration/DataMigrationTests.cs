@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using Autofac;
 using NHibernate;
 using NUnit.Framework;
 using Orchard.ContentManagement.Records;
 using Orchard.Data;
+using Orchard.DataMigration.Interpreters;
 using Orchard.Environment.Configuration;
 using Orchard.Environment.Extensions;
 using Orchard.Environment.Extensions.Folders;
@@ -49,6 +51,7 @@ namespace Orchard.Tests.DataMigration {
             
             builder.RegisterInstance(new ShellSettings { DataTablePrefix = "TEST_"});
 
+            builder.RegisterType<NullInterpreter>().As<IDataMigrationInterpreter>();
             builder.RegisterInstance(_folders).As<IExtensionFolders>();
             builder.RegisterType<ExtensionManager>().As<IExtensionManager>();
             builder.RegisterType<DataMigrationManager>().As<IDataMigrationManager>();
@@ -135,7 +138,6 @@ namespace Orchard.Tests.DataMigration {
             public int UpdateFrom666() {
                 return 999;
             }
-
         }
 
         public class DataMigrationDependenciesModule1 : IDataMigration {
@@ -165,7 +167,6 @@ namespace Orchard.Tests.DataMigration {
 
             public int Create() {
                 Assert.That(SchemaBuilder, Is.Not.Null);
-                Assert.That(SchemaBuilder.TablePrefix, Is.EqualTo("TEST_"));
                 return 1;
             }
         }
@@ -175,7 +176,6 @@ namespace Orchard.Tests.DataMigration {
                 get { return "Feature1"; }
             }
         }
-
 
         public class DataMigrationFeatureNeedUpdate2 : IDataMigration {
             public string Feature {
@@ -198,6 +198,20 @@ namespace Orchard.Tests.DataMigration {
 
             public int UpdateFrom42() {
                 return 999;
+            }
+        }
+        
+        public class DataMigrationSimpleBuilder : DataMigrationImpl {
+            public override string Feature {
+                get { return "Feature1"; }
+            }
+
+            public int Create() {
+                SchemaBuilder.CreateTable("UserRecord", table => 
+                    table.Column("Id", DbType.Int32, column => 
+                        column.PrimaryKey()));
+
+                return 1;
             }
         }
 
@@ -389,5 +403,23 @@ features:
 
             Assert.That(_dataMigrationManager.GetFeaturesThatNeedUpdate().Contains("Feature3"), Is.False);
         }
+
+
+        [Test] public void SchemaBuilderShouldCreateSql() {
+
+            Init(new[] { typeof(DataMigrationSimpleBuilder) });
+
+            _folders.Manifests.Add("Module1", @"
+name: Module1
+version: 0.1
+orchardversion: 1
+features:
+  Feature1: 
+    Description: Feature
+");
+
+            _dataMigrationManager.Update("Feature1");
+        }
+
     }
 }

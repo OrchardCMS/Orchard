@@ -4,17 +4,17 @@ using System.Data;
 namespace Orchard.DataMigration.Schema {
     public class CreateTableCommand : SchemaCommand {
         public CreateTableCommand(string name)
-            : base(name) {
+            : base(name, SchemaCommandType.CreateTable) {
         }
 
-        public CreateTableCommand Column(string name, DbType dbType, Action<CreateColumnCommand> column = null) {
-            var command = new CreateColumnCommand(name);
-            command.Type(dbType);
+        public CreateTableCommand Column(string columnName, DbType dbType, Action<CreateColumnCommand> column = null) {
+            var command = new CreateColumnCommand(Name, columnName);
+            command.WithType(dbType);
 
             if ( column != null ) {
                 column(command);
             }
-            _tableCommands.Add(command);
+            TableCommands.Add(command);
             return this;
         }
 
@@ -25,13 +25,6 @@ namespace Orchard.DataMigration.Schema {
 
         public CreateTableCommand VersionedContentPartRecord() {
             /// TODO: Call Column() with necessary information for content part records
-            return this;
-        }
-
-        public CreateTableCommand ForeignKey(string name, Action<CreateForeignKeyCommand> fk) {
-            var command = new CreateForeignKeyCommand(name);
-            fk(command);
-            _tableCommands.Add(command);
             return this;
         }
     }

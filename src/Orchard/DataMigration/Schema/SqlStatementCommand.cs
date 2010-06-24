@@ -2,17 +2,18 @@
 
 namespace Orchard.DataMigration.Schema {
     public class SqlStatementCommand : SchemaCommand {
-        protected readonly List<string> _dialects;
+        protected readonly List<string> _providers;
         public SqlStatementCommand(string sql)
-            : base("") {
+            : base(string.Empty, SchemaCommandType.SqlStatement) {
             Sql = sql;
-            _dialects = new List<string>();
+            _providers = new List<string>();
         }
 
         public string Sql { get; private set; }
+        public List<string> Providers { get { return _providers; } }
 
-        public SqlStatementCommand ForDialect(string dialect) {
-            _dialects.Add(dialect);
+        public SqlStatementCommand ForProvider(string dataProvider) {
+            _providers.Add(dataProvider);
             return this;
         }
     }

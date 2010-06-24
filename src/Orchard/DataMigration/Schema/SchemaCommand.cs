@@ -1,19 +1,31 @@
 ﻿using System.Collections.Generic;
+using JetBrains.Annotations;
 
 namespace Orchard.DataMigration.Schema {
-    public class SchemaCommand {
-        protected readonly List<TableCommand> _tableCommands;
-
-        public SchemaCommand(string tableName) {
-            _tableCommands = new List<TableCommand>();
-            Name(tableName);
+    public abstract class SchemaCommand : ISchemaBuilderCommand {
+        protected SchemaCommand(string name, SchemaCommandType type ) {
+            TableCommands = new List<TableCommand>();
+            Type = type;
+            WithName(name);
         }
 
-        public string TableName { get; private set; }
+        public string Name { get; private set; }
+        public List<TableCommand> TableCommands { get; private set; }
 
-        public SchemaCommand Name(string name) {
-            TableName = name;
+        public SchemaCommandType Type { get; [UsedImplicitly]private set; }
+
+        public SchemaCommand WithName(string name) {
+            Name = name;
             return this;
         }
+    }
+
+    public enum SchemaCommandType {
+        CreateTable,
+        DropTable,
+        AlterTable,
+        SqlStatement,
+        CreateForeignKey,
+        DropForeignKey
     }
 }

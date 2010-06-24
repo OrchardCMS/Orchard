@@ -182,8 +182,9 @@
     <Compile Include="ContentManagement\Records\GammaRecord.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="DataMigration\DataMigrationCommandsTests.cs" />
+    <Compile Include="DataMigration\SchemaBuilderTests.cs" />
     <Compile Include="DataMigration\DataMigrationTests.cs" />
+    <Compile Include="DataMigration\Utilities\NullInterpreter.cs" />
     <Compile Include="DataUtility.cs" />
     <Compile Include="Data\Builders\SessionFactoryBuilderTests.cs" />
     <Compile Include="Data\RepositoryTests.cs" />

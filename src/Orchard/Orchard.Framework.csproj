@@ -355,6 +355,13 @@
     <Compile Include="ContentManagement\ViewModels\TemplateViewModel.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="DataMigration\Interpreters\ICommandInterpreter.cs" />
+    <Compile Include="DataMigration\Interpreters\DefaultDataMigrationInterpreter.cs" />
+    <Compile Include="DataMigration\Interpreters\IDataMigrationInterpreter.cs" />
+    <Compile Include="DataMigration\Interpreters\SqLiteCommandInterpreter.cs" />
+    <Compile Include="DataMigration\Schema\AddColumnCommand.cs" />
+    <Compile Include="DataMigration\Schema\ISchemaBuilderCommand.cs" />
+    <Compile Include="DataMigration\Schema\IShellSettings.cs" />
     <Compile Include="DataMigration\Schema\SqlStatementCommand.cs" />
     <Compile Include="DataMigration\Schema\CreateColumnCommand.cs" />
     <Compile Include="DataMigration\Schema\CreateForeignKeyCommand.cs" />

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using Orchard.Data;
+using Orchard.DataMigration.Interpreters;
 using Orchard.DataMigration.Schema;
 using Orchard.Environment.Configuration;
 using Orchard.Environment.Extensions;
@@ -20,18 +21,21 @@ namespace Orchard.DataMigration {
         private readonly IDataMigrationGenerator _dataMigrationGenerator;
         private readonly IExtensionManager _extensionManager;
         private readonly ShellSettings _shellSettings;
+        private readonly IDataMigrationInterpreter _interpreter;
 
         public DataMigrationManager(
             IEnumerable<IDataMigration> dataMigrations, 
             IRepository<DataMigrationRecord> dataMigrationRepository,
             IDataMigrationGenerator dataMigrationGenerator,
             IExtensionManager extensionManager,
-            ShellSettings shellSettings) {
+            ShellSettings shellSettings,
+            IDataMigrationInterpreter interpreter) {
             _dataMigrations = dataMigrations;
             _dataMigrationRepository = dataMigrationRepository;
             _dataMigrationGenerator = dataMigrationGenerator;
             _extensionManager = extensionManager;
             _shellSettings = shellSettings;
+            _interpreter = interpreter;
             Logger = NullLogger.Instance;
         }
 
@@ -163,7 +167,7 @@ namespace Orchard.DataMigration {
                     .ToList();
 
             foreach (var migration in migrations.OfType<DataMigrationImpl>()) {
-                migration.SchemaBuilder = new SchemaBuilder(_shellSettings.DataTablePrefix);
+                migration.SchemaBuilder = new SchemaBuilder(_interpreter);
             }
 
             return migrations;

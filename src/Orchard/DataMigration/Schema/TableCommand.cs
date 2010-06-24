@@ -1,9 +1,9 @@
 ﻿namespace Orchard.DataMigration.Schema {
-    public class TableCommand {
-        private string _name;
+    public class TableCommand : ISchemaBuilderCommand{
+        public string TableName { get; private set; }
 
-        public TableCommand(string name) {
-            _name = name;
+        public TableCommand(string tableName) {
+            TableName = tableName;
         }
 
     }
