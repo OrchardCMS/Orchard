@@ -376,7 +376,6 @@
     <Compile Include="DataMigration\Commands\DataMigrationCommands.cs" />
     <Compile Include="DataMigration\Schema\SchemaBuilder.cs" />
     <Compile Include="DataMigration\DataMigrationCoordinator.cs" />
-    <Compile Include="DataMigration\IDataMigrationCommand.cs" />
     <Compile Include="DataMigration\DefaultDataMigrationGenerator.cs" />
     <Compile Include="DataMigration\IDataMigrationGenerator.cs" />
     <Compile Include="DataMigration\DataMigration.cs" />

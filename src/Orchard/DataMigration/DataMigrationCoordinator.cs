@@ -23,9 +23,7 @@ namespace Orchard.DataMigration {
 
         public void Install(Feature feature) {
             var featureName = feature.Descriptor.Name;
-            if ( !_dataMigrationManager.IsFeatureAlreadyInstalled(featureName) ) {
-                _dataMigrationManager.Update(featureName);
-            }
+            _dataMigrationManager.Update(featureName);
         }
 
         public void Enable(Feature feature) {

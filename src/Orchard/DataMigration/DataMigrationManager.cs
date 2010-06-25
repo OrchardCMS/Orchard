@@ -9,6 +9,7 @@ using Orchard.DataMigration.Schema;
 using Orchard.Environment.Extensions;
 using Orchard.Environment.State;
 using Orchard.Logging;
+using Orchard.Environment.ShellBuilders.Models;
 
 namespace Orchard.DataMigration {
     /// <summary>
@@ -20,18 +21,21 @@ namespace Orchard.DataMigration {
         private readonly IDataMigrationGenerator _dataMigrationGenerator;
         private readonly IExtensionManager _extensionManager;
         private readonly IDataMigrationInterpreter _interpreter;
+        private readonly ShellBlueprint _shellBlueprint;
 
         public DataMigrationManager(
             IEnumerable<IDataMigration> dataMigrations, 
             IRepository<DataMigrationRecord> dataMigrationRepository,
             IDataMigrationGenerator dataMigrationGenerator,
             IExtensionManager extensionManager,
-            IDataMigrationInterpreter interpreter) {
+            IDataMigrationInterpreter interpreter,
+            ShellBlueprint shellBlueprint) {
             _dataMigrations = dataMigrations;
             _dataMigrationRepository = dataMigrationRepository;
             _dataMigrationGenerator = dataMigrationGenerator;
             _extensionManager = extensionManager;
             _interpreter = interpreter;
+            _shellBlueprint = shellBlueprint;
             Logger = NullLogger.Instance;
         }
 
@@ -116,8 +120,10 @@ namespace Orchard.DataMigration {
                         current = (int)createMethod.Invoke(migration, new object[0]);
                     }
                     else {
-                        var commands = _dataMigrationGenerator.CreateCommands();
-                        /// TODO: Execute commands and define current version number
+                        var commands = _dataMigrationGenerator.CreateCommands(_shellBlueprint.Records.Where(record => record.Feature.Descriptor.Name == feature));
+                        foreach(var command in commands) {
+                            _interpreter.Visit(command);        
+                        }
                     }
                 }
 

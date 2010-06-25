@@ -4,7 +4,8 @@ using Orchard.DataMigration.Interpreters;
 using Orchard.DataMigration.Schema;
 
 public class NullInterpreter : IDataMigrationInterpreter {
-    public void Visit(SchemaCommand command) {
+
+    public void Visit(ISchemaBuilderCommand command) {
     }
 
     public void Visit(CreateTableCommand command) {

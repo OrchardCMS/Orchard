@@ -2,7 +2,7 @@
 
 namespace Orchard.DataMigration.Interpreters {
     public interface IDataMigrationInterpreter : IDependency{
-        void Visit(SchemaCommand command);
+        void Visit(ISchemaBuilderCommand command);
         void Visit(CreateTableCommand command);
         void Visit(DropTableCommand command);
         void Visit(AlterTableCommand command);

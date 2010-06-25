@@ -35,25 +35,30 @@ namespace Orchard.DataMigration.Interpreters {
             get { return _sqlStatements; }
         }
 
-        public void Visit(SchemaCommand command) {
-            switch (command.Type) {
+        public void Visit(ISchemaBuilderCommand command) {
+            var schemaCommand = command as SchemaCommand;
+            if (schemaCommand == null) {
+                return;
+            }
+
+            switch ( schemaCommand.Type ) {
                 case SchemaCommandType.CreateTable:
-                    Visit((CreateTableCommand)command);
+                    Visit((CreateTableCommand)schemaCommand);
                     break;
                 case SchemaCommandType.AlterTable:
-                    Visit((AlterTableCommand)command);
+                    Visit((AlterTableCommand)schemaCommand);
                     break;
                 case SchemaCommandType.DropTable:
-                    Visit((DropTableCommand)command);
+                    Visit((DropTableCommand)schemaCommand);
                     break;
                 case SchemaCommandType.SqlStatement:
-                    Visit((SqlStatementCommand)command);
+                    Visit((SqlStatementCommand)schemaCommand);
                     break;
                 case SchemaCommandType.CreateForeignKey:
-                    Visit((CreateForeignKeyCommand)command);
+                    Visit((CreateForeignKeyCommand)schemaCommand);
                     break;
                 case SchemaCommandType.DropForeignKey:
-                    Visit((DropForeignKeyCommand)command);
+                    Visit((DropForeignKeyCommand)schemaCommand);
                     break;
             }
         }
