@@ -1,7 +1,9 @@
-﻿using System.Data.SqlClient;
+﻿using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.IO;
+using Autofac.Features.Metadata;
 using NUnit.Framework;
-using Orchard.Data.Builders;
+using Orchard.Data.Providers;
 using Orchard.Environment.Descriptor;
 using Orchard.Environment.Descriptor.Models;
 using Orchard.Environment.ShellBuilders.Models;
@@ -50,19 +52,25 @@ namespace Orchard.Tests.Data.Builders {
         [Test]
         public void SQLiteSchemaShouldBeGeneratedAndUsable() {
             var recordDescriptors = new[] {
-                                              new RecordBlueprint {TableName = "Hello", Type = typeof (FooRecord)}
-                                          };
-            var manager = (ISessionFactoryBuilder)new SessionFactoryBuilder();
+                new RecordBlueprint {TableName = "Hello", Type = typeof (FooRecord)}
+            };
+
+            var manager = (IDataServicesProviderFactory) new DataServicesProviderFactory(new[] {
+                new Meta<CreateDataServicesProvider>(
+                    (dataFolder, connectionString) => new SQLiteDataServicesProvider(dataFolder, connectionString),
+                    new Dictionary<string, object> {{"ProviderName", "SQLite"}})
+            });
+
             var sessionFactory = manager.BuildSessionFactory(new SessionFactoryParameters {
-                                                                                              Provider = "SQLite",
-                                                                                              DataFolder = _tempDataFolder,
-                                                                                              UpdateSchema = true,
-                                                                                              RecordDescriptors = recordDescriptors
-                                                                                          });
+                Provider = "SQLite",
+                DataFolder = _tempDataFolder,
+                UpdateSchema = true,
+                RecordDescriptors = recordDescriptors
+            });
 
 
             var session = sessionFactory.OpenSession();
-            var foo = new FooRecord { Name = "hi there" };
+            var foo = new FooRecord {Name = "hi there"};
             session.Save(foo);
             session.Flush();
             session.Close();
@@ -82,14 +90,18 @@ namespace Orchard.Tests.Data.Builders {
                                               new RecordBlueprint {TableName = "Hello", Type = typeof (FooRecord)}
                                           };
 
-            var manager = (ISessionFactoryBuilder)new SessionFactoryBuilder();
+            var manager = (IDataServicesProviderFactory)new DataServicesProviderFactory(new[] {
+                new Meta<CreateDataServicesProvider>(
+                    (dataFolder, connectionString) => new SqlServerDataServicesProvider(dataFolder, connectionString),
+                    new Dictionary<string, object> {{"ProviderName", "SqlServer"}})
+            });
             var sessionFactory = manager.BuildSessionFactory(new SessionFactoryParameters {
-                                                                                              Provider = "SqlServer",
-                                                                                              DataFolder = _tempDataFolder,
-                                                                                              ConnectionString = "Data Source=.\\SQLEXPRESS;AttachDbFileName=" + databasePath + ";Integrated Security=True;User Instance=True;",
-                                                                                              UpdateSchema = true,
-                                                                                              RecordDescriptors = recordDescriptors,
-                                                                                          });
+                Provider = "SqlServer",
+                DataFolder = _tempDataFolder,
+                ConnectionString = "Data Source=.\\SQLEXPRESS;AttachDbFileName=" + databasePath + ";Integrated Security=True;User Instance=True;",
+                UpdateSchema = true,
+                RecordDescriptors = recordDescriptors,
+            });
 
 
 

@@ -1,14 +1,18 @@
 using System.IO;
 using FluentNHibernate.Cfg.Db;
 
-namespace Orchard.Data.Builders {
-    public class SQLiteBuilder : AbstractBuilder {
+namespace Orchard.Data.Providers {    
+    public class SQLiteDataServicesProvider : AbstractDataServicesProvider {
         private readonly string _dataFolder;
         private readonly string _connectionString;
 
-        public SQLiteBuilder(string dataFolder, string connectionString) {
+        public SQLiteDataServicesProvider(string dataFolder, string connectionString) {
             _dataFolder = dataFolder;
             _connectionString = connectionString;
+        }
+
+        public static string ProviderName {
+            get { return "SQLite"; }
         }
 
         protected override IPersistenceConfigurer GetPersistenceConfigurer(bool createDatabase) {

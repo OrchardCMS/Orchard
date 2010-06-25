@@ -14,7 +14,7 @@ using (Html.BeginFormAntiForgeryPost()) { %>
         <%:Html.TextBoxFor(m => m.Name, new {@class = "textMedium", disabled = "disabled"}) %>
         <%:Html.HiddenFor(m => m.Name) %>
     </fieldset>
-    <% Html.RenderTemplate(Model.Templates); %>
+    <% Html.RenderTemplates(Model.Templates); %>
     <h2><%:T("Parts") %></h2>
     <div class="manage add-to-type"><%: Html.ActionLink(T("Add").Text, "AddPart", new { }, new { @class = "button" }) %></div>
     <%:Html.EditorFor(m => m.Parts, "Parts", "") %>

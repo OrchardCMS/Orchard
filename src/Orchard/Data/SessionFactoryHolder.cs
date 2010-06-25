@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
 using NHibernate;
-using Orchard.Data.Builders;
+using Orchard.Data.Providers;
 using Orchard.Environment.Configuration;
 using Orchard.Environment.Descriptor;
 using Orchard.Environment.Descriptor.Models;
@@ -20,7 +20,7 @@ namespace Orchard.Data {
     public class SessionFactoryHolder : ISessionFactoryHolder {
         private readonly ShellSettings _shellSettings;
         private readonly ShellBlueprint _shellBlueprint;
-        private readonly ISessionFactoryBuilder _sessionFactoryBuilder;
+        private readonly IDataServicesProviderFactory _dataServicesProviderFactory;
         private readonly IAppDataFolder _appDataFolder;
 
         private ISessionFactory _sessionFactory;
@@ -28,11 +28,11 @@ namespace Orchard.Data {
         public SessionFactoryHolder(
             ShellSettings shellSettings,
             ShellBlueprint shellBlueprint,
-            ISessionFactoryBuilder sessionFactoryBuilder,
+            IDataServicesProviderFactory dataServicesProviderFactory,
             IAppDataFolder appDataFolder) {
             _shellSettings = shellSettings;
             _shellBlueprint = shellBlueprint;
-            _sessionFactoryBuilder = sessionFactoryBuilder;
+            _dataServicesProviderFactory = dataServicesProviderFactory;
             _appDataFolder = appDataFolder;
 
             T = NullLocalizer.Instance;
@@ -81,7 +81,7 @@ namespace Orchard.Data {
 
             var shellFolder = _appDataFolder.MapPath(shellPath);
 
-            var sessionFactory = _sessionFactoryBuilder.BuildSessionFactory(new SessionFactoryParameters {
+            var sessionFactory = _dataServicesProviderFactory.BuildSessionFactory(new SessionFactoryParameters {
                 Provider = _shellSettings.DataProvider,
                 DataFolder = shellFolder,
                 ConnectionString = _shellSettings.DataConnectionString,

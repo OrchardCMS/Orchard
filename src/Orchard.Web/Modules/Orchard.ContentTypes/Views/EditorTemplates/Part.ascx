@@ -12,7 +12,7 @@
             <button type="submit" title="<%:T("Remove") %>"><%:T("Remove") %></button>
         <% } %> --%>
         </div>
-        <% Html.RenderTemplate(Model.Templates); %>
+        <% Html.RenderTemplates(Model.Templates); %>
                 
         <h4><%:T("Global configuration") %></h4>
         <div class="manage minor"><%:Html.ActionLink(T("Edit").Text, "EditPart", new { area = "Orchard.ContentTypes", id = Model.PartDefinition.Name }) %></div>

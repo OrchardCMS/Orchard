@@ -8,7 +8,7 @@ using Orchard.Commands.Builtin;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Handlers;
 using Orchard.ContentManagement.MetaData.Builders;
-using Orchard.Data.Builders;
+using Orchard.Data.Providers;
 using Orchard.Environment.Extensions;
 using Orchard.Localization;
 using Orchard.Mvc;
@@ -41,7 +41,7 @@ namespace Orchard.Setup {
             builder.RegisterType<PageClassBuilder>().As<IPageClassBuilder>().InstancePerLifetimeScope();
             builder.RegisterType<Notifier>().As<INotifier>().InstancePerLifetimeScope();
             builder.RegisterType<NotifyFilter>().As<IFilterProvider>().InstancePerLifetimeScope();
-            builder.RegisterType<SessionFactoryBuilder>().As<ISessionFactoryBuilder>().InstancePerLifetimeScope();
+            builder.RegisterType<DataServicesProviderFactory>().As<IDataServicesProviderFactory>().InstancePerLifetimeScope();
             builder.RegisterType<DefaultCommandManager>().As<ICommandManager>().InstancePerLifetimeScope();
             builder.RegisterType<HelpCommand>().As<ICommandHandler>().InstancePerLifetimeScope();
 

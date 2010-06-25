@@ -129,7 +129,7 @@
     <Compile Include="Bindings\OrchardSiteFactory.cs" />
     <Compile Include="Hosting\MessageSink.cs" />
     <Compile Include="Hosting\HostingTraceListener.cs" />
-    <Compile Include="Hosting\TraceEnabledSessionFactoryBuilder.cs" />
+    <Compile Include="Hosting\TraceEnabledDataServicesProviderFactory.cs" />
     <Compile Include="Hosting\Simple.Web\HelloYetAgainHandler.cs" />
     <Compile Include="Hosting\RequestExtensions.cs" />
     <Compile Include="Hosting\RequestDetails.cs" />
