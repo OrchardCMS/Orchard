@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using Autofac;
 using NUnit.Framework;
 using Orchard.Events;
@@ -13,10 +14,13 @@ namespace Orchard.Tests.Events {
 
         [SetUp]
         public void Init() {
-            var builder = new ContainerBuilder();
             _eventHandler = new StubEventHandler();
-            builder.RegisterInstance(_eventHandler).As<IEventHandler>();
+
+            var builder = new ContainerBuilder();
             builder.RegisterType<DefaultOrchardEventBus>().As<IEventBus>();
+            builder.RegisterType<StubEventHandler2>().As<IEventHandler>();
+            builder.RegisterInstance(_eventHandler).As<IEventHandler>();
+
             _container = builder.Build();
             _eventBus = _container.Resolve<IEventBus>();
         }
@@ -139,6 +143,25 @@ namespace Orchard.Tests.Events {
             Assert.Throws<ArgumentException>(() => _eventBus.Notify("StubEventHandlerIncrement", new Dictionary<string, object>()));
         }
 
+        [Test]
+        public void InterceptorCanCoerceResultingCollection() {
+            var data = new object[]{"5","18","2"};
+            var adjusted = EventsInterceptor.Adjust(data, typeof(IEnumerable<string>));
+            Assert.That(data, Is.InstanceOf<IEnumerable<object>>());
+            Assert.That(data, Is.Not.InstanceOf<IEnumerable<string>>());
+            Assert.That(adjusted, Is.InstanceOf<IEnumerable<string>>());
+        }
+
+        [Test]
+        public void EnumerableResultsAreTreatedLikeSelectMany() {
+            var results = _eventBus.Notify("ITestEventHandler.Gather", new Dictionary<string, object> { { "a", 42 }, { "b", "alpha" } }).Cast<string>();
+            Assert.That(results.Count(), Is.EqualTo(3));
+            Assert.That(results, Has.Some.EqualTo("42"));
+            Assert.That(results, Has.Some.EqualTo("alpha"));
+            Assert.That(results, Has.Some.EqualTo("[42,alpha]"));
+        }
+
+
         public interface ITestEventHandler : IEventHandler {
             void Increment();
             void Sum(int a);
@@ -146,6 +169,7 @@ namespace Orchard.Tests.Events {
             void Sum(int a, int b, int c);
             void Substract(int a, int b);
             void Concat(string a, string b, string c);
+            IEnumerable<string> Gather(int a, string b);
         }
 
         public class StubEventHandler : ITestEventHandler {
@@ -162,7 +186,7 @@ namespace Orchard.Tests.Events {
             }
 
             public void Sum(int a, int b) {
-                Result = 2 * ( a + b );
+                Result = 2 * (a + b);
             }
 
             public void Sum(int a, int b, int c) {
@@ -176,7 +200,39 @@ namespace Orchard.Tests.Events {
             public void Concat(string a, string b, string c) {
                 Summary = a + b + c;
             }
-        }
 
+            public IEnumerable<string> Gather(int a, string b) {
+                yield return String.Format("[{0},{1}]", a, b);
+            }
+        }
+        public class StubEventHandler2 : ITestEventHandler {
+            public void Increment() {
+                throw new NotImplementedException();
+            }
+
+            public void Sum(int a) {
+                throw new NotImplementedException();
+            }
+
+            public void Sum(int a, int b) {
+                throw new NotImplementedException();
+            }
+
+            public void Sum(int a, int b, int c) {
+                throw new NotImplementedException();
+            }
+
+            public void Substract(int a, int b) {
+                throw new NotImplementedException();
+            }
+
+            public void Concat(string a, string b, string c) {
+                throw new NotImplementedException();
+            }
+
+            public IEnumerable<string> Gather(int a, string b) {
+                return new[] { a.ToString(), b };
+            }
+        }
     }
 }

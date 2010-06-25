@@ -1,12 +1,14 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Orchard.ContentManagement.MetaData.Models;
+using Orchard.ContentManagement.ViewModels;
 using Orchard.Mvc.ViewModels;
 
 namespace Orchard.ContentTypes.ViewModels {
     public class EditTypeViewModel : BaseViewModel {
         public EditTypeViewModel() {
             Settings = new SettingsDictionary();
+            Fields = new List<EditPartFieldViewModel>();
             Parts = new List<EditTypePartViewModel>();
         }
         public EditTypeViewModel(ContentTypeDefinition contentTypeDefinition) {
@@ -19,6 +21,8 @@ namespace Orchard.ContentTypes.ViewModels {
 
         public string Name { get; set; }
         public string DisplayName { get; set; }
+        public IEnumerable<TemplateViewModel> Templates { get; set; }
+
         public SettingsDictionary Settings { get; set; }
         public IEnumerable<EditPartFieldViewModel> Fields { get; set; }
         public IEnumerable<EditTypePartViewModel> Parts { get; set; }
@@ -47,6 +51,7 @@ namespace Orchard.ContentTypes.ViewModels {
 
         public EditPartViewModel PartDefinition { get; set; }
         public SettingsDictionary Settings { get; set; }
+        public IEnumerable<TemplateViewModel> Templates { get; set; }
     }
 
     public class EditPartViewModel : BaseViewModel {

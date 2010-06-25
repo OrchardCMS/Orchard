@@ -1,5 +1,6 @@
 <%@ Control Language="C#" Inherits="Orchard.Mvc.ViewUserControl<Orchard.ContentTypes.ViewModels.EditTypeViewModel>" %>
-<%@ Import Namespace="Orchard.Core.Contents.ViewModels" %><%
+<%@ Import Namespace="Orchard.Core.Contents.ViewModels" %>
+<%@ Import Namespace="Orchard.ContentTypes.ViewModels" %><%
 Html.RegisterStyle("admin.css"); %>
 <h1><%:Html.TitleForPage(T("Edit Content Type").ToString())%></h1>
 <p class="breadcrumb"><%:Html.ActionLink(T("Content Types").Text, "index") %><%:T(" &#62; ") %><%:T("Edit Content Type") %></p><%
@@ -13,7 +14,7 @@ using (Html.BeginFormAntiForgeryPost()) { %>
         <%:Html.TextBoxFor(m => m.Name, new {@class = "textMedium", disabled = "disabled"}) %>
         <%:Html.HiddenFor(m => m.Name) %>
     </fieldset>
-    <%:Html.EditorFor(m => m.Settings) %>
+    <% Html.RenderTemplate(Model.Templates); %>
     <h2><%:T("Parts") %></h2>
     <div class="manage add-to-type"><%: Html.ActionLink(T("Add").Text, "AddPart", new { }, new { @class = "button" }) %></div>
     <%:Html.EditorFor(m => m.Parts, "Parts", "") %>

@@ -310,6 +310,7 @@
     <Compile Include="ContentManagement\MetaData\ContentPartInfo.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="ContentManagement\MetaData\IContentDefinitionEditorEvents.cs" />
     <Compile Include="ContentManagement\MetaData\Models\SettingsDictionary.cs" />
     <Compile Include="ContentManagement\MetaData\Services\ContentDefinitionWriter.cs" />
     <Compile Include="ContentManagement\MetaData\IContentDefinitionManager.cs" />
@@ -445,6 +446,7 @@
     <Compile Include="Localization\Services\IResourceManager.cs" />
     <Compile Include="Localization\Records\CultureRecord.cs" />
     <Compile Include="Localization\Services\SiteCultureSelector.cs" />
+    <Compile Include="Mvc\Html\TemplateViewModelExtensions.cs" />
     <Compile Include="Mvc\Html\ThemeExtensions.cs" />
     <Compile Include="Mvc\Routes\IRoutePublisher.cs" />
     <Compile Include="Mvc\Routes\IRouteProvider.cs" />

@@ -1,5 +1,6 @@
 ﻿<%@ Control Language="C#" Inherits="Orchard.Mvc.ViewUserControl<Orchard.ContentTypes.ViewModels.EditTypePartViewModel>" %>
 <%@ Import Namespace="Orchard.Core.Contents.ViewModels" %>
+<%@ Import Namespace="Orchard.ContentTypes.ViewModels" %>
     <fieldset class="manage-part">
         <h3><%:Model.PartDefinition.Name %></h3>
         <div class="manage">
@@ -11,7 +12,8 @@
             <button type="submit" title="<%:T("Remove") %>"><%:T("Remove") %></button>
         <% } %> --%>
         </div>
-        <%:Html.EditorFor(m => m.Settings, "Settings", "") %>
+        <% Html.RenderTemplate(Model.Templates); %>
+                
         <h4><%:T("Global configuration") %></h4>
         <div class="manage minor"><%:Html.ActionLink(T("Edit").Text, "EditPart", new { area = "Orchard.ContentTypes", id = Model.PartDefinition.Name }) %></div>
         <%:Html.DisplayFor(m => m.PartDefinition.Settings, "Settings", "PartDefinition") %>

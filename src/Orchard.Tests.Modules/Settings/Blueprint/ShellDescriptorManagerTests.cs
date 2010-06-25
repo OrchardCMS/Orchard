@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Autofac;
@@ -28,9 +29,10 @@ namespace Orchard.Tests.Modules.Settings.Blueprint {
             public void Notify_Obsolete(string messageName, IDictionary<string, string> eventData) {
             }
 
-            public void Notify(string messageName, Dictionary<string, object> eventData) {                
+            public IEnumerable Notify(string messageName, Dictionary<string, object> eventData) {                
                 LastMessageName = messageName;
                 LastEventData = eventData;
+                return new object[0];
             }
         }
 

@@ -19,7 +19,7 @@ namespace Orchard.ContentManagement.MetaData.Services {
             if (source == null)
                 return new XElement("settings");
 
-            return new XElement("settings", source.Select(kv => new XAttribute(XmlConvert.EncodeLocalName(kv.Key), kv.Value)));
+            return new XElement("settings", source.Where(kv => kv.Value != null).Select(kv => new XAttribute(XmlConvert.EncodeLocalName(kv.Key), kv.Value)));
         }
     }
 }

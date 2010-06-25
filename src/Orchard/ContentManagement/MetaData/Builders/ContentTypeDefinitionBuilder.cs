@@ -40,7 +40,7 @@ namespace Orchard.ContentManagement.MetaData.Builders {
             return this;
         }
 
-        public ContentTypeDefinitionBuilder DisplayedAs(string displayName ) {
+        public ContentTypeDefinitionBuilder DisplayedAs(string displayName) {
             _displayName = displayName;
             return this;
         }
@@ -84,8 +84,11 @@ namespace Orchard.ContentManagement.MetaData.Builders {
             protected readonly SettingsDictionary _settings;
 
             protected PartConfigurer(ContentTypeDefinition.Part part) {
+                Name = part.PartDefinition.Name;
                 _settings = new SettingsDictionary(part.Settings.ToDictionary(kv => kv.Key, kv => kv.Value));
             }
+
+            public string Name { get; private set; }
 
             public PartConfigurer WithSetting(string name, string value) {
                 _settings[name] = value;
