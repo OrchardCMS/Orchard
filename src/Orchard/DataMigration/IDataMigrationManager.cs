@@ -21,5 +21,11 @@ namespace Orchard.DataMigration {
         /// Updates the database to the latest version for the specified features
         /// </summary>
         void Update(IEnumerable<string> features);
+
+        /// <summary>
+        /// Execute a script to delete any information relative to the feature
+        /// </summary>
+        /// <param name="feature"></param>
+        void Uninstall(string feature);
     }
 }

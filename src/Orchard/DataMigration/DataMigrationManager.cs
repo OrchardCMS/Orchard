@@ -148,6 +148,34 @@ namespace Orchard.DataMigration {
             }
         }
 
+        public void Uninstall(string feature) {
+
+            var migrations = GetDataMigrations(feature);
+
+            // apply update methods to each migration class for the module
+            foreach (var migration in migrations) {
+                // copy the objet for the Linq query
+                var tempMigration = migration;
+
+                // get current version for this migration
+                var dataMigrationRecord = GetDataMigrationRecord(tempMigration);
+
+                var uninstallMethod = GetUninstallMethod(migration);
+                if (uninstallMethod != null) {
+                    uninstallMethod.Invoke(migration, new object[0]);
+                }
+
+                if ( dataMigrationRecord == null ) {
+                    continue;
+                }
+
+                _dataMigrationRepository.Delete(dataMigrationRecord);
+                _dataMigrationRepository.Flush();
+            }
+
+        }
+
+
         private DataMigrationRecord GetDataMigrationRecord(IDataMigration tempMigration) {
             return _dataMigrationRepository.Table
                 .Where(dm => dm.DataMigrationClass == tempMigration.GetType().FullName)
@@ -197,7 +225,7 @@ namespace Orchard.DataMigration {
         }
 
         /// <summary>
-        /// Returns the Create metho from a data migration class if it's found
+        /// Returns the Create method from a data migration class if it's found
         /// </summary>
         private static MethodInfo GetCreateMethod(IDataMigration dataMigration) {
             var methodInfo = dataMigration.GetType().GetMethod("Create", BindingFlags.Public | BindingFlags.Instance);
@@ -207,5 +235,18 @@ namespace Orchard.DataMigration {
 
             return null;
         }
+
+        /// <summary>
+        /// Returns the Uninstall method from a data migration class if it's found
+        /// </summary>
+        private static MethodInfo GetUninstallMethod(IDataMigration dataMigration) {
+            var methodInfo = dataMigration.GetType().GetMethod("Uninstall", BindingFlags.Public | BindingFlags.Instance);
+            if ( methodInfo != null && methodInfo.ReturnType == typeof(void) ) {
+                return methodInfo;
+            }
+
+            return null;
+        }
+
     }
 }

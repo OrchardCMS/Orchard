@@ -35,6 +35,10 @@ namespace Orchard.DataMigration {
         }
 
         public void Uninstall(Feature feature) {
+            var featureName = feature.Descriptor.Name;
+            if ( _dataMigrationManager.IsFeatureAlreadyInstalled(featureName) ) {
+                _dataMigrationManager.Uninstall(featureName);
+            }
         }
     }
 }
