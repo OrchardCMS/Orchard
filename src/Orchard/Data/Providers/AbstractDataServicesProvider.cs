@@ -11,12 +11,11 @@ using NHibernate.Cfg;
 using NHibernate.Tool.hbm2ddl;
 using Orchard.ContentManagement.Records;
 using Orchard.Data.Conventions;
-using Orchard.Environment.Descriptor;
-using Orchard.Environment.Descriptor.Models;
 using Orchard.Environment.ShellBuilders.Models;
 
-namespace Orchard.Data.Builders {
-    public abstract class AbstractBuilder {
+namespace Orchard.Data.Providers {
+    public abstract class AbstractDataServicesProvider : IDataServicesProvider {
+
         protected abstract IPersistenceConfigurer GetPersistenceConfigurer(bool createDatabase);
 
         public ISessionFactory BuildSessionFactory(SessionFactoryParameters parameters) {
@@ -66,6 +65,8 @@ namespace Orchard.Data.Builders {
 
             public IEnumerable<Type> GetTypes() { return _recordDescriptors.Select(descriptor => descriptor.Type); }
         }
+
+
 
     }
 }
