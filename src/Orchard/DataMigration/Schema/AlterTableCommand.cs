@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Data;
-using JetBrains.Annotations;
 
 namespace Orchard.DataMigration.Schema {
     public class AlterTableCommand : SchemaCommand {
@@ -34,13 +33,13 @@ namespace Orchard.DataMigration.Schema {
             TableCommands.Add(command);
         }
 
-        public void CreateIndex(string name, params string[] columnNames) {
-            var command = new CreateIndexCommand(name, columnNames);
+        public void CreateIndex(string indexName, params string[] columnNames) {
+            var command = new AddIndexCommand(Name, indexName, columnNames);
             TableCommands.Add(command);
         }
 
-        public void DropIndex(string name) {
-            var command = new DropIndexCommand(name);
+        public void DropIndex(string indexName) {
+            var command = new DropIndexCommand(Name, indexName);
             TableCommands.Add(command);
         }
     }

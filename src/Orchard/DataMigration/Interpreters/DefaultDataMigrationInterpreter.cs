@@ -129,6 +129,21 @@ namespace Orchard.DataMigration.Interpreters {
                 Visit(builder, alterColumn);
                 RunPendingStatements();
             }
+
+            // add index
+            foreach ( var addIndex in command.TableCommands.OfType<AddIndexCommand>() ) {
+                var builder = new StringBuilder();
+                Visit(builder, addIndex);
+                RunPendingStatements();
+            }
+
+            // drop index
+            foreach ( var dropIndex in command.TableCommands.OfType<DropIndexCommand>() ) {
+                var builder = new StringBuilder();
+                Visit(builder, dropIndex);
+                RunPendingStatements();
+            }
+
         }
 
         public void Visit(StringBuilder builder, AddColumnCommand command) {
@@ -149,7 +164,7 @@ namespace Orchard.DataMigration.Interpreters {
 
             builder.AppendFormat("alter table {0} drop column {1}", 
                 _dialect.QuoteForTableName(_shellSettings.DataTablePrefix + command.TableName),
-                _dialect.QuoteForColumnName(command.TableName));
+                _dialect.QuoteForColumnName(command.ColumnName));
             _sqlStatements.Add(builder.ToString());
         }
 
@@ -174,6 +189,30 @@ namespace Orchard.DataMigration.Interpreters {
             _sqlStatements.Add(builder.ToString());
         }
 
+
+        public void Visit(StringBuilder builder, AddIndexCommand command) {
+            if ( ExecuteCustomInterpreter(command) ) {
+                return;
+            }
+
+            builder.AppendFormat("alter table {0} add index {1} ({2}) ",
+                _dialect.QuoteForTableName(_shellSettings.DataTablePrefix + command.TableName),
+                _dialect.QuoteForColumnName(command.IndexName),
+                String.Join(", ", command.ColumnNames));
+
+            _sqlStatements.Add(builder.ToString());
+        }
+
+        public void Visit(StringBuilder builder, DropIndexCommand command) {
+            if ( ExecuteCustomInterpreter(command) ) {
+                return;
+            }
+
+            builder.AppendFormat("alter table {0} drop index {1}",
+                _dialect.QuoteForTableName(_shellSettings.DataTablePrefix + command.TableName),
+                _dialect.QuoteForColumnName(command.IndexName));
+            _sqlStatements.Add(builder.ToString());
+        }
         public void Visit(SqlStatementCommand command) {
             if (command.Providers.Count == 0 || command.Providers.Contains(_shellSettings.DataProvider) ) {
                 if (ExecuteCustomInterpreter(command)) {

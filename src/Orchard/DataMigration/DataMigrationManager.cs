@@ -6,7 +6,6 @@ using System.Text.RegularExpressions;
 using Orchard.Data;
 using Orchard.DataMigration.Interpreters;
 using Orchard.DataMigration.Schema;
-using Orchard.Environment.Configuration;
 using Orchard.Environment.Extensions;
 using Orchard.Environment.State;
 using Orchard.Logging;
@@ -20,7 +19,6 @@ namespace Orchard.DataMigration {
         private readonly IRepository<DataMigrationRecord> _dataMigrationRepository;
         private readonly IDataMigrationGenerator _dataMigrationGenerator;
         private readonly IExtensionManager _extensionManager;
-        private readonly ShellSettings _shellSettings;
         private readonly IDataMigrationInterpreter _interpreter;
 
         public DataMigrationManager(
@@ -28,13 +26,11 @@ namespace Orchard.DataMigration {
             IRepository<DataMigrationRecord> dataMigrationRepository,
             IDataMigrationGenerator dataMigrationGenerator,
             IExtensionManager extensionManager,
-            ShellSettings shellSettings,
             IDataMigrationInterpreter interpreter) {
             _dataMigrations = dataMigrations;
             _dataMigrationRepository = dataMigrationRepository;
             _dataMigrationGenerator = dataMigrationGenerator;
             _extensionManager = extensionManager;
-            _shellSettings = shellSettings;
             _interpreter = interpreter;
             Logger = NullLogger.Instance;
         }

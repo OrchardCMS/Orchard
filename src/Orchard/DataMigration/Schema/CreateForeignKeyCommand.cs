@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace Orchard.DataMigration.Schema {
+﻿namespace Orchard.DataMigration.Schema {
     public class CreateForeignKeyCommand : SchemaCommand {
 
         public string[] DestColumns { get; private set; }

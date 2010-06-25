@@ -367,7 +367,7 @@
     <Compile Include="DataMigration\Schema\CreateForeignKeyCommand.cs" />
     <Compile Include="DataMigration\Schema\DropForeignKeyCommand.cs" />
     <Compile Include="DataMigration\Schema\DropIndexCommand.cs" />
-    <Compile Include="DataMigration\Schema\CreateIndexCommand.cs" />
+    <Compile Include="DataMigration\Schema\AddIndexCommand.cs" />
     <Compile Include="DataMigration\Schema\DropColumnCommand.cs" />
     <Compile Include="DataMigration\Schema\AlterColumnCommand.cs" />
     <Compile Include="DataMigration\Schema\DropTableCommand.cs" />
