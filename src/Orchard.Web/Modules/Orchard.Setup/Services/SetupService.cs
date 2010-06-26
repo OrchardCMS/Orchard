@@ -19,6 +19,8 @@ using Orchard.Security;
 using Orchard.Settings;
 using Orchard.Themes;
 using Orchard.UI.Notify;
+using Orchard.Environment.State;
+using Orchard.DataMigration;
 
 namespace Orchard.Setup.Services {
     public class SetupService : ISetupService {
@@ -27,6 +29,8 @@ namespace Orchard.Setup.Services {
         private readonly IShellSettingsManager _shellSettingsManager;
         private readonly IShellContainerFactory _shellContainerFactory;
         private readonly ICompositionStrategy _compositionStrategy;
+        private readonly IProcessingEngine _processingEngine;
+        private readonly IDataMigrationManager _dataMigrationManager;
 
         public SetupService(
             ShellSettings shellSettings,
@@ -34,12 +38,16 @@ namespace Orchard.Setup.Services {
             IOrchardHost orchardHost,
             IShellSettingsManager shellSettingsManager,
             IShellContainerFactory shellContainerFactory,
-            ICompositionStrategy compositionStrategy) {
+            ICompositionStrategy compositionStrategy,
+            IProcessingEngine processingEngine,
+            IDataMigrationManager dataMigrationManager) {
             _shellSettings = shellSettings;
             _orchardHost = orchardHost;
             _shellSettingsManager = shellSettingsManager;
             _shellContainerFactory = shellContainerFactory;
             _compositionStrategy = compositionStrategy;
+            _processingEngine = processingEngine;
+            _dataMigrationManager = dataMigrationManager;
             T = NullLocalizer.Instance;
         }
 
@@ -97,13 +105,17 @@ namespace Orchard.Setup.Services {
             // initialize database explicitly, and store shell descriptor
             var bootstrapLifetimeScope = _shellContainerFactory.CreateContainer(shellSettings, shellToplogy);
             using (var environment = new StandaloneEnvironment(bootstrapLifetimeScope)) {
-                environment.Resolve<ISessionFactoryHolder>().CreateDatabase();
+                _dataMigrationManager.Update(new [] { "Orchard.Framework", "Settings" });
 
                 environment.Resolve<IShellDescriptorManager>().UpdateShellDescriptor(
                     0,
                     shellDescriptor.Features,
                     shellDescriptor.Parameters);
             }
+
+            // in effect "pump messages" see PostMessage circa 1980
+            while ( _processingEngine.AreTasksPending() )
+                _processingEngine.ExecuteNextTask();
 
 
             // creating a standalone environment. 
