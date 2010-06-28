@@ -61,12 +61,15 @@ namespace Orchard.Tests.Data.Builders {
                     new Dictionary<string, object> {{"ProviderName", "SQLite"}})
             });
 
-            var sessionFactory = manager.BuildSessionFactory(new SessionFactoryParameters {
+            var parameters = new SessionFactoryParameters {
                 Provider = "SQLite",
                 DataFolder = _tempDataFolder,
                 UpdateSchema = true,
                 RecordDescriptors = recordDescriptors
-            });
+            };
+            var sessionFactory = manager
+                .CreateProvider(parameters)
+                .BuildSessionFactory(parameters);
 
 
             var session = sessionFactory.OpenSession();
@@ -95,13 +98,16 @@ namespace Orchard.Tests.Data.Builders {
                     (dataFolder, connectionString) => new SqlServerDataServicesProvider(dataFolder, connectionString),
                     new Dictionary<string, object> {{"ProviderName", "SqlServer"}})
             });
-            var sessionFactory = manager.BuildSessionFactory(new SessionFactoryParameters {
+            var parameters = new SessionFactoryParameters {
                 Provider = "SqlServer",
                 DataFolder = _tempDataFolder,
                 ConnectionString = "Data Source=.\\SQLEXPRESS;AttachDbFileName=" + databasePath + ";Integrated Security=True;User Instance=True;",
                 UpdateSchema = true,
                 RecordDescriptors = recordDescriptors,
-            });
+            };
+            var sessionFactory = manager
+                .CreateProvider(parameters)
+                .BuildSessionFactory(parameters);
 
 
 

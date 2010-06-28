@@ -81,14 +81,18 @@ namespace Orchard.Data {
 
             var shellFolder = _appDataFolder.MapPath(shellPath);
 
-            var sessionFactory = _dataServicesProviderFactory.BuildSessionFactory(new SessionFactoryParameters {
+            var parameters = new SessionFactoryParameters {
                 Provider = _shellSettings.DataProvider,
                 DataFolder = shellFolder,
                 ConnectionString = _shellSettings.DataConnectionString,
                 CreateDatabase = createDatabase,
                 UpdateSchema = updateSchema,
                 RecordDescriptors = _shellBlueprint.Records,
-            });
+            };
+
+            var sessionFactory = _dataServicesProviderFactory
+                .CreateProvider(parameters)
+                .BuildSessionFactory(parameters);
 
             return sessionFactory;
         }
