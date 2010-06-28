@@ -1,5 +1,4 @@
-﻿<%@ Control Language="C#" Inherits="Orchard.Mvc.ViewUserControl<IEnumerable<Orchard.ContentTypes.ViewModels.EditPartFieldViewModel>>" %>
-<%@ Import Namespace="Orchard.Core.Contents.ViewModels" %><%
+﻿<%@ Control Language="C#" Inherits="Orchard.Mvc.ViewUserControl<IEnumerable<Orchard.ContentTypes.ViewModels.EditPartFieldViewModel>>" %><%
 if (Model.Any()) { %>
     <dl><%
         foreach (var field in Model) {
