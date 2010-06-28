@@ -83,6 +83,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Module.txt" />
+    <Content Include="Styles\admin.css" />
     <Content Include="Views\Admin\AddFieldTo.ascx" />
     <Content Include="Views\Admin\Create.ascx" />
     <Content Include="Views\Admin\EditPart.ascx" />

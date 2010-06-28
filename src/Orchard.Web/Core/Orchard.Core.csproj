@@ -201,7 +201,6 @@
     <Content Include="Common\Views\EditorTemplates\Fields\Common.TextField.ascx" />
     <Content Include="Common\Views\EditorTemplates\Parts\Common.Container.ascx" />
     <Content Include="Contents\Module.txt" />
-    <Content Include="Contents\Styles\admin.css" />
     <Content Include="Contents\Views\Admin\List.aspx" />
     <Content Include="Contents\Views\Admin\Edit.aspx" />
     <Content Include="Contents\Views\Admin\CreatableTypeList.aspx" />
