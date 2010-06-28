@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using Orchard.ContentManagement.Handlers;
 using Orchard.ContentManagement.MetaData;
-using Orchard.ContentManagement.MetaData.Models;
 
 namespace Orchard.ContentManagement.Drivers {
     public abstract class ContentFieldDriver<TField> : IContentFieldDriver where TField : ContentField, new() {
@@ -15,7 +14,7 @@ namespace Orchard.ContentManagement.Drivers {
         }
 
         DriverResult IContentFieldDriver.BuildEditorModel(BuildEditorModelContext context) {
-            return Process(context.ContentItem, (part, field) => Editor(part, field));
+            return Process(context.ContentItem, Editor);
         }
 
         DriverResult IContentFieldDriver.UpdateEditorModel(UpdateEditorModelContext context) {

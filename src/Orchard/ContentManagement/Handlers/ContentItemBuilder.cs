@@ -26,12 +26,12 @@ namespace Orchard.ContentManagement.Handlers {
                 typePartDefinition = new ContentTypeDefinition.Part(
                     new ContentPartDefinition(partName),
                     new SettingsDictionary());
-            }
 
-            var part = new TPart {
-                TypePartDefinition = typePartDefinition
-            };
-            _item.Weld(part);
+                var part = new TPart {
+                    TypePartDefinition = typePartDefinition
+                };
+                _item.Weld(part);
+            }
             return this;
         }
 

@@ -1,5 +1,4 @@
 ﻿<%@ Control Language="C#" Inherits="Orchard.Mvc.ViewUserControl<Orchard.ContentTypes.ViewModels.EditPartFieldViewModel>" %>
-<%@ Import Namespace="Orchard.Core.Contents.ViewModels" %>
     <fieldset class="manage-field">
         <h3><%:Model.Name %> <span>(<%:Model.FieldDefinition.Name %>)</span></h3>
         <div class="manage">
