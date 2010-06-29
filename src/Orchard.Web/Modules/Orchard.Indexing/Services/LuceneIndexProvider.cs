@@ -6,6 +6,7 @@ using Lucene.Net.Analysis;
 using Lucene.Net.Analysis.Standard;
 using Lucene.Net.Documents;
 using Lucene.Net.Index;
+using Lucene.Net.Search;
 using Lucene.Net.Store;
 using Orchard.Environment.Configuration;
 using Orchard.FileSystems.AppData;
@@ -141,13 +142,18 @@ namespace Orchard.Indexing.Services {
                 return;
             }
 
+            // Remove any previous document for these content items
+            Delete(indexName, indexDocuments.Select(i => i.ContentItemId));
+
             var writer = new IndexWriter(GetDirectory(indexName), _analyzer, false, IndexWriter.MaxFieldLength.UNLIMITED);
             LuceneDocumentIndex current = null;
 
             try {
+
                 foreach ( var indexDocument in indexDocuments ) {
                     current = indexDocument;
                     var doc = CreateDocument(indexDocument);
+                    
                     writer.AddDocument(doc);
                     Logger.Debug("Document [{0}] indexed", indexDocument.ContentItemId);
                 }
@@ -166,30 +172,28 @@ namespace Orchard.Indexing.Services {
         }
 
         public void Delete(string indexName, IEnumerable<int> documentIds) {
-            if ( documentIds.AsQueryable().Count() == 0 ) {
+            if (!documentIds.Any()) {
                 return;
             }
-            
-            var reader = IndexReader.Open(GetDirectory(indexName), false);
+
+            var writer = new IndexWriter(GetDirectory(indexName), _analyzer, false, IndexWriter.MaxFieldLength.UNLIMITED);
 
             try {
-                foreach (var id in documentIds) {
-                    try {
-                        var term = new Term("id", id.ToString());
-                        if (reader.DeleteDocuments(term) != 0) {
-                            Logger.Error("The document [{0}] could not be removed from the index [{1}]", id, indexName);
-                        }
-                        else {
-                            Logger.Debug("Document [{0}] removed from index", id);
-                        }
+                var query = new BooleanQuery();
+
+                try {
+                    foreach (var id in documentIds) {
+                        query.Add(new BooleanClause(new TermQuery(new Term("id", id.ToString())), BooleanClause.Occur.SHOULD));
                     }
-                    catch (Exception ex) {
-                        Logger.Error(ex, "An unexpected error occured while removing the document [{0}] from the index [{1}].", id, indexName);
-                    }
+
+                    writer.DeleteDocuments(query);
+                }
+                catch (Exception ex) {
+                    Logger.Error(ex, "An unexpected error occured while removing the documents [{0}] from the index [{1}].", String.Join(", ", documentIds), indexName);
                 }
             }
             finally {
-                reader.Close();
+                writer.Close();
             }
         }
 
