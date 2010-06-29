@@ -67,7 +67,7 @@ namespace Orchard.Data {
         public ISessionFactory GetSessionFactory() {
             lock (this) {
                 if (_sessionFactory == null) {
-                    _sessionFactory = BuildSessionFactory(false /*createDatabase*/, true /*updateSchema*/);
+                    _sessionFactory = BuildSessionFactory(false /*createDatabase*/, false /*updateSchema*/);
                 }
             }
             return _sessionFactory;
