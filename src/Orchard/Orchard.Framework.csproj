@@ -207,6 +207,7 @@
     </Compile>
     <Compile Include="ContentManagement\FieldStorage\InfosetStorage\InfosetHandler.cs" />
     <Compile Include="ContentManagement\FieldStorage\InfosetStorage\InfosetPart.cs" />
+    <Compile Include="ContentManagement\FieldStorage\SimpleFieldStorage.cs" />
     <Compile Include="ContentManagement\Handlers\ActivatedContentContext.cs">
       <SubType>Code</SubType>
     </Compile>

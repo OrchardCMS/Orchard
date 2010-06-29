@@ -60,9 +60,9 @@ namespace Orchard.Tests.ContentManagement.Drivers.FieldStorage {
         public void GettingUnsetNamedAndUnnamedValueIsSafeAndNull() {
             var part = CreateContentItemPart();
             var storage = _provider.BindStorage(part, part.PartDefinition.Fields.Single());
-            Assert.That(storage.Getter(null), Is.Null);
-            Assert.That(storage.Getter("value"), Is.Null);
-            Assert.That(storage.Getter("This is a test"), Is.Null);
+            Assert.That(storage.Get<string>(null), Is.Null);
+            Assert.That(storage.Get<string>("value"), Is.Null);
+            Assert.That(storage.Get<string>("This is a test"), Is.Null);
         }
 
         [Test]
@@ -70,10 +70,10 @@ namespace Orchard.Tests.ContentManagement.Drivers.FieldStorage {
             var part = CreateContentItemPart();
             var storage = _provider.BindStorage(part, part.PartDefinition.Fields.Single());
 
-            Assert.That(storage.Getter("alpha"), Is.Null);
-            storage.Setter("alpha", "one");
-            Assert.That(storage.Getter("alpha"), Is.Not.Null);
-            Assert.That(storage.Getter("alpha"), Is.EqualTo("one"));
+            Assert.That(storage.Get<string>("alpha"), Is.Null);
+            storage.Set("alpha", "one");
+            Assert.That(storage.Get<string>("alpha"), Is.Not.Null);
+            Assert.That(storage.Get<string>("alpha"), Is.EqualTo("one"));
         }
 
         [Test]
@@ -81,14 +81,14 @@ namespace Orchard.Tests.ContentManagement.Drivers.FieldStorage {
             var part = CreateContentItemPart();
             var storage = _provider.BindStorage(part, part.PartDefinition.Fields.Single());
 
-            Assert.That(storage.Getter(null), Is.Null);
-            Assert.That(storage.Getter(""), Is.Null);
-            storage.Setter(null, "one");
-            Assert.That(storage.Getter(null), Is.EqualTo("one"));
-            Assert.That(storage.Getter(""), Is.EqualTo("one"));
-            storage.Setter(null, "two");
-            Assert.That(storage.Getter(null), Is.EqualTo("two"));
-            Assert.That(storage.Getter(""), Is.EqualTo("two"));
+            Assert.That(storage.Get<string>(null), Is.Null);
+            Assert.That(storage.Get<string>(""), Is.Null);
+            storage.Set(null, "one");
+            Assert.That(storage.Get<string>(null), Is.EqualTo("one"));
+            Assert.That(storage.Get<string>(""), Is.EqualTo("one"));
+            storage.Set(null, "two");
+            Assert.That(storage.Get<string>(null), Is.EqualTo("two"));
+            Assert.That(storage.Get<string>(""), Is.EqualTo("two"));
         }
 
         [Test]
@@ -96,8 +96,8 @@ namespace Orchard.Tests.ContentManagement.Drivers.FieldStorage {
             var part = CreateContentItemPart();
             var storage = _provider.BindStorage(part, part.PartDefinition.Fields.Single());
 
-            storage.Setter(null, "one");
-            storage.Setter("alpha", "two");
+            storage.Set(null, "one");
+            storage.Set("alpha", "two");
 
             Assert.That(part.ContentItem.Record.Data, Is.EqualTo("<Data><Foo><Bar alpha=\"two\">one</Bar></Foo></Data>"));
         }
@@ -107,14 +107,14 @@ namespace Orchard.Tests.ContentManagement.Drivers.FieldStorage {
             var part = CreateContentItemPart();
             var storage = _provider.BindStorage(part, part.PartDefinition.Fields.Single());
 
-            storage.Setter(null, "one");
-            storage.Setter("alpha", "two");
+            storage.Set(null, "one");
+            storage.Set("alpha", "two");
 
             Assert.That(part.ContentItem.Record.Data, Is.EqualTo("<Data><Foo><Bar alpha=\"two\">one</Bar></Foo></Data>"));
             part.ContentItem.Record.Data = "<Data><Foo><Bar alpha=\"four\">three</Bar></Foo></Data>";
 
-            storage.Setter(null, "three");
-            storage.Setter("alpha", "four");
+            storage.Set(null, "three");
+            storage.Set("alpha", "four");
         }
 
         [Test]
