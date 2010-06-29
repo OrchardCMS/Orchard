@@ -10,7 +10,7 @@
             <button type="submit" title="<%:T("Remove") %>"><%:T("Remove") %></button>
         <% } %> --%>
         </div>
-        <%:Html.EditorFor(m => m.Settings, "Settings", "") %>
+        <% Html.RenderTemplates(Model.Templates); %>
         <%:Html.HiddenFor(m => m.Name) %>
         <%:Html.HiddenFor(m => m.FieldDefinition.Name) %>
     </fieldset>

@@ -78,9 +78,35 @@ namespace Orchard.ContentTypes.Controllers {
                                                m => m.PartDefinition.Name,
                                                d => d.PartDefinition.Name,
                                                (model, definition) => new {model, definition});
-            foreach (var entry in entries)
+            foreach (var entry in entries) {
                 entry.model.Templates = _extendViewModels.TypePartEditor(entry.definition);
 
+                var fields = entry.model.PartDefinition.Fields.Join(entry.definition.PartDefinition.Fields,
+                                   m => m.FieldDefinition.Name,
+                                   d => d.FieldDefinition.Name,
+                                   (model, definition) => new { model, definition });
+
+                foreach (var field in fields) {
+                    field.model.Templates = _extendViewModels.PartFieldEditor(field.definition);
+                }
+            }
+
+
+            //Oy, this action is getting massive :(
+            //todo: put this action on a diet
+            var contentPartDefinition = _contentDefinitionService.GetPartDefinition(id);
+            if (contentPartDefinition != null) {
+                viewModel.Fields = viewModel.Fields.ToArray();
+                var fields = viewModel.Fields.Join(contentPartDefinition.Fields,
+                                    m => m.FieldDefinition.Name,
+                                    d => d.FieldDefinition.Name,
+                                    (model, definition) => new { model, definition });
+
+                foreach (var field in fields) {
+                    field.model.Templates = _extendViewModels.PartFieldEditor(field.definition);
+                }
+            }
+            
             return View(viewModel);
         }
 
