@@ -1,0 +1,6 @@
+﻿<%@ Control Language="C#" Inherits="Orchard.Mvc.ViewUserControl<Orchard.Core.Common.Settings.BodyTypePartSettings>" %>
+<fieldset>
+    <label for="<%:Html.FieldIdFor(m => m.Flavor) %>"><%:T("Flavor") %></label>
+    <%:Html.EditorFor(m => m.Flavor) %>
+    <%:Html.ValidationMessageFor(m => m.Flavor) %>
+</fieldset>
