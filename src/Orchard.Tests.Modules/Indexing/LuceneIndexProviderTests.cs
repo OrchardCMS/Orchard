@@ -249,5 +249,45 @@ namespace Orchard.Tests.Modules.Indexing {
             Assert.That(doc.IsDirty, Is.True);
 
         }
+
+        [Test]
+        public void DocumentsShouldBeDeleted() {
+            _provider.CreateIndex("default");
+            _provider.Store("default", _provider.New(1).Add("field", "value1"));
+            _provider.Store("default", _provider.New(11).Add("field", "value11"));
+            _provider.Store("default", _provider.New(111).Add("field", "value111"));
+
+            var searchBuilder = _provider.CreateSearchBuilder("default");
+
+            Assert.That(searchBuilder.Get(1).ContentItemId, Is.EqualTo(1));
+            Assert.That(searchBuilder.Get(11).ContentItemId, Is.EqualTo(11));
+            Assert.That(searchBuilder.Get(111).ContentItemId, Is.EqualTo(111));
+
+            _provider.Delete("default", 1);
+
+            Assert.That(searchBuilder.Get(1), Is.Null);
+            Assert.That(searchBuilder.Get(11).ContentItemId, Is.EqualTo(11));
+            Assert.That(searchBuilder.Get(111).ContentItemId, Is.EqualTo(111));
+
+            _provider.Delete("default", new int[] {1, 11, 111 });
+
+            Assert.That(searchBuilder.Get(1), Is.Null);
+            Assert.That(searchBuilder.Get(11), Is.Null);
+            Assert.That(searchBuilder.Get(111), Is.Null);
+
+        }
+
+        [Test]
+        public void SameContentItemShouldNotBeIndexedTwice() {
+            _provider.CreateIndex("default");
+
+            var searchBuilder = _provider.CreateSearchBuilder("default");
+
+            _provider.Store("default", _provider.New(1).Add("field", "value1"));
+            Assert.That(searchBuilder.WithField("id", "1").Count(), Is.EqualTo(1));
+
+            _provider.Store("default", _provider.New(1).Add("field", "value2"));
+            Assert.That(searchBuilder.WithField("id", "1").Count(), Is.EqualTo(1));
+        }
     }
 }
