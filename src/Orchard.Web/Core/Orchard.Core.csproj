@@ -69,6 +69,7 @@
     <Compile Include="Common\Drivers\TextFieldDriver.cs" />
     <Compile Include="Common\Fields\TextField.cs" />
     <Compile Include="Common\Handlers\RoutableAspectHandler.cs" />
+    <Compile Include="Common\Settings\BodySettings.cs" />
     <Compile Include="Common\ViewModels\ContainerEditorViewModel.cs" />
     <Compile Include="Common\ViewModels\TextContentFieldDisplayViewModel.cs" />
     <Compile Include="Common\ViewModels\TextContentFieldEditorViewModel.cs" />
@@ -202,11 +203,13 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Common\Module.txt" />
+    <Content Include="Common\Views\DefinitionTemplates\BodyTypePartSettings.ascx" />
+    <Content Include="Common\Views\DefinitionTemplates\BodyPartSettings.ascx" />
     <Content Include="Common\Views\DisplayTemplates\Fields\Common.TextField.ascx" />
     <Content Include="Common\Views\EditorTemplates\Fields\Common.TextField.ascx" />
     <Content Include="Common\Views\EditorTemplates\Parts\Common.Container.ascx" />
+    <Content Include="Common\Views\EditorTemplates\PlainTextEditor.ascx" />
     <Content Include="Contents\Module.txt" />
-    <Content Include="Contents\Styles\admin.css" />
     <Content Include="Contents\Views\Admin\List.aspx" />
     <Content Include="Contents\Views\Admin\Edit.aspx" />
     <Content Include="Contents\Views\Admin\CreatableTypeList.aspx" />

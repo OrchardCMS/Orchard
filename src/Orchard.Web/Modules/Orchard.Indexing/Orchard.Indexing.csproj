@@ -56,6 +56,7 @@
   <ItemGroup>
     <Content Include="Module.txt" />
     <Content Include="Views\Admin\Index.ascx" />
+    <Content Include="Views\DefinitionTemplates\IndexingSettings.ascx" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
@@ -78,6 +79,7 @@
     <Compile Include="Models\LuceneSearchHit.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\IndexService.cs" />
+    <Compile Include="Settings\IndexingSettings.cs" />
     <Compile Include="ViewModels\IndexViewModel.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -25,6 +25,8 @@ namespace Orchard.ContentManagement.MetaData.Builders {
             }
         }
 
+        public string Name { get { return _name; } }
+
         public ContentPartDefinition Build() {
             return new ContentPartDefinition(_name, _fields, _settings);
         }
@@ -35,7 +37,7 @@ namespace Orchard.ContentManagement.MetaData.Builders {
         }
 
         public ContentPartDefinitionBuilder RemoveField(string fieldName) {
-            var existingField = _fields.SingleOrDefault(x => x.FieldDefinition.Name == fieldName);
+            var existingField = _fields.SingleOrDefault(x => x.Name == fieldName);
             if (existingField != null) {
                 _fields.Remove(existingField);
             }

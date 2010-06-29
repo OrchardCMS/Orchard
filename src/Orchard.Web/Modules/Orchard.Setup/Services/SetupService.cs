@@ -5,6 +5,7 @@ using Orchard.Comments.Models;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.MetaData;
 using Orchard.Core.Common.Models;
+using Orchard.Core.Common.Settings;
 using Orchard.Core.Navigation.Models;
 using Orchard.Core.Settings.Models;
 using Orchard.Data;
@@ -172,6 +173,7 @@ namespace Orchard.Setup.Services {
                     contentDefinitionManager.AlterTypeDefinition("BlogPost", cfg => cfg.DisplayedAs("Blog Post").WithPart("HasComments").WithPart("HasTags").WithPart("Localized"));
                     contentDefinitionManager.AlterTypeDefinition("Page", cfg => cfg.DisplayedAs("Page").WithPart("HasComments").WithPart("HasTags").WithPart("Localized"));
                     contentDefinitionManager.AlterTypeDefinition("SandboxPage", cfg => cfg.DisplayedAs("Sandbox Page").WithPart("HasComments").WithPart("HasTags").WithPart("Localized"));
+                    contentDefinitionManager.AlterPartDefinition("BodyAspect", cfg => cfg.WithSetting("BodyPartSettings.FlavorDefault", BodyPartSettings.FlavorDefaultDefault));
 
                     // create home page as a CMS page
                     var page = contentManager.Create("Page", VersionOptions.Draft);

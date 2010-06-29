@@ -115,7 +115,7 @@ namespace Orchard.Core.Settings.Metadata {
             record.Settings = _settingsWriter.Map(model.Settings).ToString();
 
             var toRemove = record.ContentPartFieldDefinitionRecords
-                .Where(partFieldDefinitionRecord => model.Fields.Any(partField => partFieldDefinitionRecord.Name == partField.Name))
+                .Where(partFieldDefinitionRecord => !model.Fields.Any(partField => partFieldDefinitionRecord.Name == partField.Name))
                 .ToList();
 
             foreach (var remove in toRemove) {
@@ -123,7 +123,7 @@ namespace Orchard.Core.Settings.Metadata {
             }
 
             foreach (var field in model.Fields) {
-                var fieldName = field.FieldDefinition.Name;
+                var fieldName = field.Name;
                 var partFieldRecord = record.ContentPartFieldDefinitionRecords.SingleOrDefault(r => r.Name == fieldName);
                 if (partFieldRecord == null) {
                     partFieldRecord = new ContentPartFieldDefinitionRecord {

@@ -13,7 +13,6 @@ using Orchard.Logging;
 namespace Orchard.Data {
     public interface ISessionFactoryHolder : ISingletonDependency {
         ISessionFactory GetSessionFactory();
-        SessionFactoryParameters CreateSessionFactoryParameters(bool createDatabase, bool updateSchema);
         void CreateDatabase();
         void UpdateSchema();
     }
@@ -68,7 +67,7 @@ namespace Orchard.Data {
         public ISessionFactory GetSessionFactory() {
             lock (this) {
                 if (_sessionFactory == null) {
-                    _sessionFactory = BuildSessionFactory(false /*createDatabase*/, false /*updateSchema*/);
+                    _sessionFactory = BuildSessionFactory(false /*createDatabase*/, true /*updateSchema*/);
                 }
             }
             return _sessionFactory;
@@ -77,17 +76,12 @@ namespace Orchard.Data {
         private ISessionFactory BuildSessionFactory(bool createDatabase, bool updateSchema) {
             Logger.Debug("Building session factory");
 
-            var sessionFactory = _dataServicesProviderFactory.BuildSessionFactory(CreateSessionFactoryParameters(createDatabase, updateSchema));
-            return sessionFactory;
-        }
-
-        public SessionFactoryParameters CreateSessionFactoryParameters(bool createDatabase, bool updateSchema) {
             var shellPath = _appDataFolder.Combine("Sites", _shellSettings.Name);
             _appDataFolder.CreateDirectory(shellPath);
 
             var shellFolder = _appDataFolder.MapPath(shellPath);
 
-            return new SessionFactoryParameters {
+            var parameters = new SessionFactoryParameters {
                 Provider = _shellSettings.DataProvider,
                 DataFolder = shellFolder,
                 ConnectionString = _shellSettings.DataConnectionString,
@@ -95,6 +89,15 @@ namespace Orchard.Data {
                 UpdateSchema = updateSchema,
                 RecordDescriptors = _shellBlueprint.Records,
             };
+
+            var sessionFactory = _dataServicesProviderFactory
+                .CreateProvider(parameters)
+                .BuildSessionFactory(parameters);
+
+            return sessionFactory;
         }
+
     }
+
+
 }
