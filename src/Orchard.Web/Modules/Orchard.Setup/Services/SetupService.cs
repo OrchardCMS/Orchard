@@ -8,9 +8,9 @@ using Orchard.Core.Common.Models;
 using Orchard.Core.Navigation.Models;
 using Orchard.Core.Settings.Models;
 using Orchard.Data;
+using Orchard.Data.Migration.Interpreters;
 using Orchard.Data.Providers;
-using Orchard.DataMigration.Interpreters;
-using Orchard.DataMigration.Schema;
+using Orchard.Data.Migration.Schema;
 using Orchard.Environment;
 using Orchard.Environment.Configuration;
 using Orchard.Environment.ShellBuilders;
@@ -23,7 +23,7 @@ using Orchard.Settings;
 using Orchard.Themes;
 using Orchard.UI.Notify;
 using Orchard.Environment.State;
-using Orchard.DataMigration;
+using Orchard.Data.Migration;
 
 namespace Orchard.Setup.Services {
     public class SetupService : ISetupService {
@@ -114,6 +114,7 @@ namespace Orchard.Setup.Services {
                     .Column<int>("Current"));
 
                 var dataMigrationManager = environment.Resolve<IDataMigrationManager>();
+                dataMigrationManager.Update("Orchard.Framework");
                 dataMigrationManager.Update("Settings");
 
                 environment.Resolve<IShellDescriptorManager>().UpdateShellDescriptor(

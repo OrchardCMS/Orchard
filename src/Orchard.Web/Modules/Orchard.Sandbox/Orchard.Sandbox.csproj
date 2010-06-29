@@ -67,6 +67,7 @@
   <ItemGroup>
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\PageController.cs" />
+    <Compile Include="DataMigrations\SandBoxDataMigration.cs" />
     <Compile Include="Drivers\SandboxPageDriver.cs" />
     <Compile Include="Models\SandboxPage.cs" />
     <Compile Include="Handlers\SandboxContentHandler.cs" />

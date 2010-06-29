@@ -66,6 +66,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controllers\SearchController.cs" />
+    <Compile Include="DataMigrations\SearchDataMigration.cs" />
     <Compile Include="Filters\SearchFilter.cs" />
     <Compile Include="Models\SearchSettings.cs" />
     <Compile Include="Models\SearchSettingsRecord.cs" />

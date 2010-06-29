@@ -62,6 +62,7 @@
     <Compile Include="AdminMenu.cs" />
     <Compile Include="Commands\IndexingCommands.cs" />
     <Compile Include="Controllers\AdminController.cs" />
+    <Compile Include="DataMigrations\IndexingDataMigration.cs" />
     <Compile Include="Handlers\CreateIndexingTaskHandler.cs" />
     <Compile Include="Models\IndexingTask.cs" />
     <Compile Include="Models\IndexingTaskRecord.cs" />

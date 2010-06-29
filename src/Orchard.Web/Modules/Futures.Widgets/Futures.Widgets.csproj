@@ -59,6 +59,7 @@
   <ItemGroup>
     <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Controllers\WidgetHandler.cs" />
+    <Compile Include="DataMigrations\WidgetsDataMigration.cs" />
     <Compile Include="Models\HasWidgets.cs" />
     <Compile Include="Models\Widget.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
