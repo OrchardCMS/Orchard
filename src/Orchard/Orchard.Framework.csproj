@@ -356,7 +356,6 @@
     <Compile Include="ContentManagement\ViewModels\TemplateViewModel.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="DataMigration\AutomaticDataMigration.cs" />
     <Compile Include="DataMigration\Interpreters\ICommandInterpreter.cs" />
     <Compile Include="DataMigration\Interpreters\DefaultDataMigrationInterpreter.cs" />
     <Compile Include="DataMigration\Interpreters\IDataMigrationInterpreter.cs" />

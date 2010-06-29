@@ -86,6 +86,18 @@ namespace Orchard.DataMigration.Interpreters {
                 Visit(builder, createColumn);
             }
 
+            var primaryKeys = command.TableCommands.OfType<CreateColumnCommand>().Where(ccc => ccc.IsPrimaryKey).Select(ccc=>ccc.ColumnName);
+            if(primaryKeys.Any()) {
+                if ( appendComma ) {
+                    builder.Append(", ");
+                }
+
+                builder.Append(_dialect.PrimaryKeyString)
+                    .Append(" ( ")
+                    .Append(String.Join(", ", primaryKeys.ToArray()))
+                    .Append(" )");
+            }
+
             builder.Append(" )");
             _sqlStatements.Add(builder.ToString());
 
@@ -297,10 +309,6 @@ namespace Orchard.DataMigration.Interpreters {
             // append unique if handled, otherwise at the end of the satement
             if ( command.IsUnique && _dialect.SupportsUnique ) {
                 builder.Append(" unique");
-            }
-
-            if ( command.IsPrimaryKey ) {
-                builder.Append(Space).Append(_dialect.PrimaryKeyString);
             }
         }
 

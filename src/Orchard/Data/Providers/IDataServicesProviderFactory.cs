@@ -10,5 +10,6 @@ namespace Orchard.Data.Providers {
             var provider = factory.CreateProvider(sessionFactoryParameters);
             return provider != null ? provider.BuildSessionFactory(sessionFactoryParameters) : null;
         }
+
     }
 }

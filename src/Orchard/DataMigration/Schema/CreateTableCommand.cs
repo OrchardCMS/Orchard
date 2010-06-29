@@ -18,6 +18,23 @@ namespace Orchard.DataMigration.Schema {
             return this;
         }
 
+        public CreateTableCommand Column<T>(string columnName, Action<CreateColumnCommand> column = null) {
+            var dbType = System.Data.DbType.Object;
+            switch(System.Type.GetTypeCode(typeof(T))) {
+                case TypeCode.String :
+                    dbType = DbType.String;
+                    break;
+                case TypeCode.Int32 :
+                    dbType = DbType.Int32;
+                    break;
+                default:
+                    Enum.TryParse(System.Type.GetTypeCode(typeof (T)).ToString(), true, out dbType);
+                    break;
+            }
+
+            return Column(columnName, dbType, column);
+        }
+
         public CreateTableCommand ContentPartRecord() {
             /// TODO: Call Column() with necessary information for content part records
             return this;

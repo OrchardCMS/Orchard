@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using Orchard.Data;
+using Orchard.Data.Providers;
 using Orchard.DataMigration.Interpreters;
 using Orchard.DataMigration.Schema;
 using Orchard.Environment.Extensions;
@@ -18,24 +19,18 @@ namespace Orchard.DataMigration {
     public class DataMigrationManager : IDataMigrationManager {
         private readonly IEnumerable<IDataMigration> _dataMigrations;
         private readonly IRepository<DataMigrationRecord> _dataMigrationRepository;
-        private readonly IDataMigrationGenerator _dataMigrationGenerator;
         private readonly IExtensionManager _extensionManager;
         private readonly IDataMigrationInterpreter _interpreter;
-        private readonly ShellBlueprint _shellBlueprint;
 
         public DataMigrationManager(
             IEnumerable<IDataMigration> dataMigrations, 
             IRepository<DataMigrationRecord> dataMigrationRepository,
-            IDataMigrationGenerator dataMigrationGenerator,
             IExtensionManager extensionManager,
-            IDataMigrationInterpreter interpreter,
-            ShellBlueprint shellBlueprint) {
+            IDataMigrationInterpreter interpreter) {
             _dataMigrations = dataMigrations;
             _dataMigrationRepository = dataMigrationRepository;
-            _dataMigrationGenerator = dataMigrationGenerator;
             _extensionManager = extensionManager;
             _interpreter = interpreter;
-            _shellBlueprint = shellBlueprint;
             Logger = NullLogger.Instance;
         }
 
@@ -84,6 +79,8 @@ namespace Orchard.DataMigration {
 
         public void Update(string feature){
             
+            Logger.Information("Updating {0}", feature);
+
             // proceed with dependent features first, whatever the module it's in
             var dependencies = ShellStateCoordinator.OrderByDependencies(_extensionManager.AvailableExtensions()
                 .SelectMany(ext => ext.Features))
@@ -118,12 +115,6 @@ namespace Orchard.DataMigration {
                     var createMethod = GetCreateMethod(migration);
                     if(createMethod != null) {
                         current = (int)createMethod.Invoke(migration, new object[0]);
-                    }
-                    else {
-                        var commands = _dataMigrationGenerator.CreateCommands(_shellBlueprint.Records.Where(record => record.Feature.Descriptor.Name == feature));
-                        foreach(var command in commands) {
-                            _interpreter.Visit(command);        
-                        }
                     }
                 }
 

@@ -14,6 +14,7 @@ using Orchard.Environment.Extensions.Folders;
 using Orchard.Environment.Extensions.Models;
 using Orchard.Tests.ContentManagement;
 using Orchard.DataMigration;
+using Orchard.Data.Providers;
 
 namespace Orchard.Tests.DataMigration {
     [TestFixture]
@@ -50,7 +51,9 @@ namespace Orchard.Tests.DataMigration {
             _folders = new StubFolders();
             
             builder.RegisterInstance(new ShellSettings { DataTablePrefix = "TEST_"});
-
+            
+            builder.RegisterType<SqlServerDataServicesProvider>().As<IDataServicesProvider>();
+            builder.RegisterType<DataServicesProviderFactory>().As<IDataServicesProviderFactory>();
             builder.RegisterType<NullInterpreter>().As<IDataMigrationInterpreter>();
             builder.RegisterInstance(_folders).As<IExtensionFolders>();
             builder.RegisterType<ExtensionManager>().As<IExtensionManager>();

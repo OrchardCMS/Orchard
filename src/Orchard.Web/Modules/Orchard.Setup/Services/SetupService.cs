@@ -8,6 +8,9 @@ using Orchard.Core.Common.Models;
 using Orchard.Core.Navigation.Models;
 using Orchard.Core.Settings.Models;
 using Orchard.Data;
+using Orchard.Data.Providers;
+using Orchard.DataMigration.Interpreters;
+using Orchard.DataMigration.Schema;
 using Orchard.Environment;
 using Orchard.Environment.Configuration;
 using Orchard.Environment.ShellBuilders;
@@ -30,7 +33,6 @@ namespace Orchard.Setup.Services {
         private readonly IShellContainerFactory _shellContainerFactory;
         private readonly ICompositionStrategy _compositionStrategy;
         private readonly IProcessingEngine _processingEngine;
-        private readonly IDataMigrationManager _dataMigrationManager;
 
         public SetupService(
             ShellSettings shellSettings,
@@ -39,15 +41,13 @@ namespace Orchard.Setup.Services {
             IShellSettingsManager shellSettingsManager,
             IShellContainerFactory shellContainerFactory,
             ICompositionStrategy compositionStrategy,
-            IProcessingEngine processingEngine,
-            IDataMigrationManager dataMigrationManager) {
+            IProcessingEngine processingEngine) {
             _shellSettings = shellSettings;
             _orchardHost = orchardHost;
             _shellSettingsManager = shellSettingsManager;
             _shellContainerFactory = shellContainerFactory;
             _compositionStrategy = compositionStrategy;
             _processingEngine = processingEngine;
-            _dataMigrationManager = dataMigrationManager;
             T = NullLocalizer.Instance;
         }
 
@@ -105,7 +105,16 @@ namespace Orchard.Setup.Services {
             // initialize database explicitly, and store shell descriptor
             var bootstrapLifetimeScope = _shellContainerFactory.CreateContainer(shellSettings, shellToplogy);
             using (var environment = new StandaloneEnvironment(bootstrapLifetimeScope)) {
-                _dataMigrationManager.Update(new [] { "Orchard.Framework", "Settings" });
+
+                var schemaBuilder = new SchemaBuilder(environment.Resolve<IDataMigrationInterpreter>() );
+
+                schemaBuilder.CreateTable("Orchard_Framework_DataMigrationRecord", table => table
+                    .Column<int>("Id", column => column.PrimaryKey())
+                    .Column<string>("DataMigrationClass")
+                    .Column<int>("Current"));
+
+                var dataMigrationManager = environment.Resolve<IDataMigrationManager>();
+                dataMigrationManager.Update("Settings");
 
                 environment.Resolve<IShellDescriptorManager>().UpdateShellDescriptor(
                     0,

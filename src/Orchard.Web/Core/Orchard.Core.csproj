@@ -159,6 +159,7 @@
     <Compile Include="Scheduling\Services\ScheduledTaskManager.cs" />
     <Compile Include="Scheduling\Services\ScheduledTaskExecutor.cs" />
     <Compile Include="Scheduling\Models\Task.cs" />
+    <Compile Include="Settings\DataMigrations\SettingsDataMigration.cs" />
     <Compile Include="Settings\ViewModels\SiteCulturesViewModel.cs" />
     <Compile Include="Settings\Drivers\SiteSettingsDriver.cs" />
     <Compile Include="Settings\Metadata\ContentDefinitionManager.cs" />

@@ -1,9 +1,11 @@
 ﻿using System;
 using Orchard.DataMigration.Interpreters;
+using Orchard.Environment.ShellBuilders.Models;
 
 namespace Orchard.DataMigration.Schema {
     public class SchemaBuilder {
         private readonly IDataMigrationInterpreter _interpreter;
+        
         public SchemaBuilder(IDataMigrationInterpreter interpreter) {
             _interpreter = interpreter;
         }
@@ -13,6 +15,10 @@ namespace Orchard.DataMigration.Schema {
             table(createTable);
             Run(createTable);
             return this;
+        }
+
+        public SchemaBuilder CreateTable<TRecord>(Action<CreateTableCommand> table) {
+            return CreateTable(typeof (TRecord).FullName.Replace(".", "_"), table);
         }
 
         public SchemaBuilder AlterTable(string name, Action<AlterTableCommand> table) {

@@ -65,7 +65,7 @@ namespace Orchard.Tests.DataMigration {
                     .CreateIndex("IDX_XYZ", "NickName"))
                 .AlterTable("User", table => table
                     .DropIndex("IDX_XYZ"))
-                .DropForeignKey("Addresse", "User_Address")
+                .DropForeignKey("Address", "User_Address")
                 .DropTable("Address")
                 .ExecuteSql("drop database", statement => statement.ForProvider("SQLite"))
                 .ExecuteSql("DROP DATABASE", statement => statement.ForProvider("SQLServer"));
