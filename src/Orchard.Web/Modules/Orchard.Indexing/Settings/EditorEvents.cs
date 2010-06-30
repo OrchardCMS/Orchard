@@ -26,8 +26,8 @@ namespace Orchard.Indexing.Settings {
 
         public override IEnumerable<TemplateViewModel> PartFieldEditorUpdate(ContentPartDefinitionBuilder.FieldConfigurer builder, IUpdateModel updateModel) {
             var model = new FieldIndexing();
-            updateModel.TryUpdateModel(model, "IndexingSettings", null, null);
-            builder.WithSetting("IndexingSettings.Included", model.Included ? true.ToString() : null);
+            updateModel.TryUpdateModel(model, "FieldIndexing", null, null);
+            builder.WithSetting("FieldIndexing.Included", model.Included ? true.ToString() : null);
             yield return DefinitionTemplate(model);
         }
     }

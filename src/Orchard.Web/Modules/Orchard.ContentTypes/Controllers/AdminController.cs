@@ -79,6 +79,7 @@ namespace Orchard.ContentTypes.Controllers {
                                                d => d.PartDefinition.Name,
                                                (model, definition) => new {model, definition});
             foreach (var entry in entries) {
+                entry.model.PartDefinition.Fields = entry.model.PartDefinition.Fields.ToArray();
                 entry.model.Templates = _extendViewModels.TypePartEditor(entry.definition);
 
                 var fields = entry.model.PartDefinition.Fields.Join(entry.definition.PartDefinition.Fields,
@@ -132,6 +133,7 @@ namespace Orchard.ContentTypes.Controllers {
                     var partViewModel = entry.part;
 
                     // enable updater to be aware of changing part prefix
+                    // todo: stick this info on the view model so the strings don't need to be in code & view
                     var firstHalf = "Parts[" + entry.index + "].";
                     updater._prefix = secondHalf => firstHalf + secondHalf;
 
@@ -145,10 +147,11 @@ namespace Orchard.ContentTypes.Controllers {
 
                     _contentDefinitionManager.AlterPartDefinition(partViewModel.PartDefinition.Name, partBuilder => {
                         foreach (var fieldEntry in partViewModel.PartDefinition.Fields.Select((field, index) => new { field, index })) {
+                            partViewModel.PartDefinition.Fields = partViewModel.PartDefinition.Fields.ToArray();
                             var fieldViewModel = fieldEntry.field;
 
                             // enable updater to be aware of changing field prefix
-                            var firstHalfFieldName = "Fields[" + fieldEntry.index + "].";
+                            var firstHalfFieldName = firstHalf + "PartDefinition.Fields[" + fieldEntry.index + "].";
                             updater._prefix = secondHalf => firstHalfFieldName + secondHalf;
 
                             // allow extensions to alter partField configuration
@@ -161,6 +164,7 @@ namespace Orchard.ContentTypes.Controllers {
 
                 if (viewModel.Fields.Any()) {
                     _contentDefinitionManager.AlterPartDefinition(viewModel.Name, partBuilder => {
+                        viewModel.Fields = viewModel.Fields.ToArray();
                         foreach (var fieldEntry in viewModel.Fields.Select((field, index) => new { field, index })) {
                             var fieldViewModel = fieldEntry.field;
 
