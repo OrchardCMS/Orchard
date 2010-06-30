@@ -46,6 +46,10 @@ namespace Orchard.Tests.ContentManagement.Drivers.FieldStorage {
                 TypePartDefinition = typeDefinition.Parts.Single()
             };
             contentItem.Weld(contentPart);
+            contentItem.Weld(new InfosetPart {
+                Infoset = contentItem.Record.Infoset,
+                VersionInfoset = contentItem.VersionRecord.Infoset
+            });
             return contentPart;
         }
 
@@ -117,7 +121,7 @@ namespace Orchard.Tests.ContentManagement.Drivers.FieldStorage {
             storage.Set("alpha", "four");
         }
 
-        [Test]
+        [Test, Ignore("implementation pending")]
         public void VersionedSettingOnInfosetField() {
             Assert.Fail("todo");
         }
