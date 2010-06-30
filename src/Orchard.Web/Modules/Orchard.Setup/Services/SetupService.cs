@@ -5,9 +5,13 @@ using Orchard.Comments.Models;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.MetaData;
 using Orchard.Core.Common.Models;
+using Orchard.Core.Common.Settings;
 using Orchard.Core.Navigation.Models;
 using Orchard.Core.Settings.Models;
 using Orchard.Data;
+using Orchard.Data.Migration.Interpreters;
+using Orchard.Data.Providers;
+using Orchard.Data.Migration.Schema;
 using Orchard.Environment;
 using Orchard.Environment.Configuration;
 using Orchard.Environment.ShellBuilders;
@@ -19,6 +23,8 @@ using Orchard.Security;
 using Orchard.Settings;
 using Orchard.Themes;
 using Orchard.UI.Notify;
+using Orchard.Environment.State;
+using Orchard.Data.Migration;
 
 namespace Orchard.Setup.Services {
     public class SetupService : ISetupService {
@@ -27,6 +33,7 @@ namespace Orchard.Setup.Services {
         private readonly IShellSettingsManager _shellSettingsManager;
         private readonly IShellContainerFactory _shellContainerFactory;
         private readonly ICompositionStrategy _compositionStrategy;
+        private readonly IProcessingEngine _processingEngine;
 
         public SetupService(
             ShellSettings shellSettings,
@@ -34,12 +41,14 @@ namespace Orchard.Setup.Services {
             IOrchardHost orchardHost,
             IShellSettingsManager shellSettingsManager,
             IShellContainerFactory shellContainerFactory,
-            ICompositionStrategy compositionStrategy) {
+            ICompositionStrategy compositionStrategy,
+            IProcessingEngine processingEngine) {
             _shellSettings = shellSettings;
             _orchardHost = orchardHost;
             _shellSettingsManager = shellSettingsManager;
             _shellContainerFactory = shellContainerFactory;
             _compositionStrategy = compositionStrategy;
+            _processingEngine = processingEngine;
             T = NullLocalizer.Instance;
         }
 
@@ -97,13 +106,27 @@ namespace Orchard.Setup.Services {
             // initialize database explicitly, and store shell descriptor
             var bootstrapLifetimeScope = _shellContainerFactory.CreateContainer(shellSettings, shellToplogy);
             using (var environment = new StandaloneEnvironment(bootstrapLifetimeScope)) {
-                environment.Resolve<ISessionFactoryHolder>().CreateDatabase();
+
+                var schemaBuilder = new SchemaBuilder(environment.Resolve<IDataMigrationInterpreter>() );
+
+                schemaBuilder.CreateTable("Orchard_Framework_DataMigrationRecord", table => table
+                    .Column<int>("Id", column => column.PrimaryKey())
+                    .Column<string>("DataMigrationClass")
+                    .Column<int>("Current"));
+
+                var dataMigrationManager = environment.Resolve<IDataMigrationManager>();
+                dataMigrationManager.Update("Orchard.Framework");
+                dataMigrationManager.Update("Settings");
 
                 environment.Resolve<IShellDescriptorManager>().UpdateShellDescriptor(
                     0,
                     shellDescriptor.Features,
                     shellDescriptor.Parameters);
             }
+
+            // in effect "pump messages" see PostMessage circa 1980
+            while ( _processingEngine.AreTasksPending() )
+                _processingEngine.ExecuteNextTask();
 
 
             // creating a standalone environment. 
@@ -150,6 +173,7 @@ namespace Orchard.Setup.Services {
                     contentDefinitionManager.AlterTypeDefinition("BlogPost", cfg => cfg.DisplayedAs("Blog Post").WithPart("HasComments").WithPart("HasTags").WithPart("Localized"));
                     contentDefinitionManager.AlterTypeDefinition("Page", cfg => cfg.DisplayedAs("Page").WithPart("HasComments").WithPart("HasTags").WithPart("Localized"));
                     contentDefinitionManager.AlterTypeDefinition("SandboxPage", cfg => cfg.DisplayedAs("Sandbox Page").WithPart("HasComments").WithPart("HasTags").WithPart("Localized"));
+                    contentDefinitionManager.AlterPartDefinition("BodyAspect", cfg => cfg.WithSetting("BodyPartSettings.FlavorDefault", BodyPartSettings.FlavorDefaultDefault));
 
                     // create home page as a CMS page
                     var page = contentManager.Create("Page", VersionOptions.Draft);

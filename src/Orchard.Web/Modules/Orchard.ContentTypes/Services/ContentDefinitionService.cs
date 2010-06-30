@@ -31,23 +31,21 @@ namespace Orchard.ContentTypes.Services {
             return _contentDefinitionManager.GetTypeDefinition(name);
         }
 
-        public void AddTypeDefinition(ContentTypeDefinition contentTypeDefinition) {
-            var typeName = string.IsNullOrWhiteSpace(contentTypeDefinition.Name)
-                ? GenerateTypeName(contentTypeDefinition.DisplayName)
-                : contentTypeDefinition.Name;
+        public void AddTypeDefinition(string displayName) {
+            var name = GenerateTypeName(displayName);
 
-            while (_contentDefinitionManager.GetTypeDefinition(typeName) != null)
-                typeName = VersionTypeName(typeName);
+            while (_contentDefinitionManager.GetTypeDefinition(name) != null)
+                name = VersionTypeName(name);
 
             //just giving the new type some default parts for now
+            _contentDefinitionManager.StoreTypeDefinition(new ContentTypeDefinition(name) {DisplayName = displayName});
             _contentDefinitionManager.AlterTypeDefinition(
-                typeName,
-                cfg => cfg.DisplayedAs(contentTypeDefinition.DisplayName)
-                           .WithPart("CommonAspect")
+                name,
+                cfg => cfg.WithPart("CommonAspect")
                            //.WithPart("RoutableAspect") //need to go the new routable route
                            .WithPart("BodyAspect"));
              
-            Services.Notifier.Information(T("Created content type: {0}", contentTypeDefinition.DisplayName));
+            Services.Notifier.Information(T("Created content type: {0}", displayName));
         }
 
         public void AlterTypeDefinition(ContentTypeDefinition contentTypeDefinition) {

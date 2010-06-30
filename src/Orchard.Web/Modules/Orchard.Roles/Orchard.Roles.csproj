@@ -67,6 +67,7 @@
   <ItemGroup>
     <Compile Include="AdminMenu.cs" />
     <Compile Include="Controllers\AdminController.cs" />
+    <Compile Include="DataMigrations\RolesDataMigration.cs" />
     <Compile Include="Drivers\UserRolesDriver.cs" />
     <Compile Include="DefaultRoleUpdater.cs" />
     <Compile Include="Models\IUserRoles.cs" />

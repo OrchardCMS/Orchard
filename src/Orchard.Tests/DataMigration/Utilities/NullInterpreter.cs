@@ -1,10 +1,9 @@
-﻿
-using System;
-using Orchard.DataMigration.Interpreters;
-using Orchard.DataMigration.Schema;
+﻿using Orchard.Data.Migration.Interpreters;
+using Orchard.Data.Migration.Schema;
 
 public class NullInterpreter : IDataMigrationInterpreter {
-    public void Visit(SchemaCommand command) {
+
+    public void Visit(ISchemaBuilderCommand command) {
     }
 
     public void Visit(CreateTableCommand command) {

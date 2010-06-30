@@ -12,6 +12,6 @@ glob:src/Orchard.Web/Media/*
 glob:desktop.ini
 glob:log.xml
 glob:profiling
-glob:src/*.suo
 glob:src/*.ReSharper
 glob:*.orig
+glob:*.suo

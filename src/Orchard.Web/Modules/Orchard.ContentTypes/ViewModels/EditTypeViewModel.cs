@@ -66,6 +66,7 @@ namespace Orchard.ContentTypes.ViewModels {
         }
 
         public string Name { get; set; }
+        public IEnumerable<TemplateViewModel> Templates { get; set; }
         public IEnumerable<EditPartFieldViewModel> Fields { get; set; }
         public SettingsDictionary Settings { get; set; }
     }
@@ -81,6 +82,7 @@ namespace Orchard.ContentTypes.ViewModels {
         }
 
         public string Name { get; set; }
+        public IEnumerable<TemplateViewModel> Templates { get; set; }
         public EditFieldViewModel FieldDefinition { get; set; }
         public SettingsDictionary Settings { get; set; }
     }

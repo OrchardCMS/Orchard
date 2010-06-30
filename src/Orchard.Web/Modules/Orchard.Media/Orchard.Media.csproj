@@ -71,6 +71,7 @@
   <ItemGroup>
     <Compile Include="AdminMenu.cs" />
     <Compile Include="Controllers\AdminController.cs" />
+    <Compile Include="DataMigrations\MediaDataMigration.cs" />
     <Compile Include="Helpers\MediaHelpers.cs" />
     <Compile Include="Models\MediaSettings.cs" />
     <Compile Include="Handlers\MediaSettingsHandler.cs" />

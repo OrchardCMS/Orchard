@@ -25,6 +25,8 @@ namespace Orchard.ContentManagement.MetaData.Builders {
             }
         }
 
+        public string Name { get { return _name; } }
+
         public ContentPartDefinition Build() {
             return new ContentPartDefinition(_name, _fields, _settings);
         }

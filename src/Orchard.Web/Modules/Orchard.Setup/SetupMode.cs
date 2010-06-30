@@ -8,7 +8,9 @@ using Orchard.Commands.Builtin;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Handlers;
 using Orchard.ContentManagement.MetaData.Builders;
+using Orchard.Data.Migration.Interpreters;
 using Orchard.Data.Providers;
+using Orchard.Data.Migration;
 using Orchard.Environment.Extensions;
 using Orchard.Localization;
 using Orchard.Mvc;
@@ -49,6 +51,9 @@ namespace Orchard.Setup {
             builder.RegisterType<SafeModeThemeService>().As<IThemeService>().InstancePerLifetimeScope();
             builder.RegisterType<SafeModeText>().As<IText>().InstancePerLifetimeScope();
             builder.RegisterType<SafeModeSiteService>().As<ISiteService>().InstancePerLifetimeScope();
+
+            builder.RegisterType<DefaultDataMigrationInterpreter>().As<IDataMigrationInterpreter>().InstancePerLifetimeScope();
+            builder.RegisterType<DataMigrationManager>().As<IDataMigrationManager>().InstancePerLifetimeScope();
 
         }
 

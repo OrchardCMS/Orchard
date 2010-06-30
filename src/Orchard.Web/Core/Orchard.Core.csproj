@@ -61,6 +61,7 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Common\DataMigrations\CommonDataMigration.cs" />
     <Compile Include="Common\Drivers\BodyDriver.cs" />
     <Compile Include="Common\Drivers\CommonDriver.cs" />
     <Compile Include="Common\Drivers\RoutableDriver.cs" />
@@ -68,6 +69,7 @@
     <Compile Include="Common\Drivers\TextFieldDriver.cs" />
     <Compile Include="Common\Fields\TextField.cs" />
     <Compile Include="Common\Handlers\RoutableAspectHandler.cs" />
+    <Compile Include="Common\Settings\BodySettings.cs" />
     <Compile Include="Common\ViewModels\ContainerEditorViewModel.cs" />
     <Compile Include="Common\ViewModels\TextContentFieldDisplayViewModel.cs" />
     <Compile Include="Common\ViewModels\TextContentFieldEditorViewModel.cs" />
@@ -76,7 +78,9 @@
     <Compile Include="Contents\ViewModels\EditItemViewModel.cs" />
     <Compile Include="Contents\ViewModels\ListContentsViewModel.cs" />
     <Compile Include="Contents\ViewModels\ListContentTypesViewModel.cs" />
+    <Compile Include="Localization\DataMigrations\LocalizationDataMigration.cs" />
     <Compile Include="Localization\Drivers\LocalizedDriver.cs" />
+    <Compile Include="Navigation\DataMigrations\NavigationDataMigration.cs" />
     <Compile Include="Routable\Controllers\ItemController.cs" />
     <Compile Include="Routable\Drivers\RoutableDriver.cs" />
     <Compile Include="Routable\Handlers\RoutableHandler.cs" />
@@ -153,12 +157,14 @@
     <Compile Include="Routable\Services\RoutableService.cs" />
     <Compile Include="Routable\ViewModels\RoutableEditorViewModel.cs" />
     <Compile Include="Routable\ViewModels\RoutableDisplayViewModel.cs" />
+    <Compile Include="Scheduling\DataMigrations\SchedulingDataMigration.cs" />
     <Compile Include="Scheduling\Models\ScheduledTaskRecord.cs" />
     <Compile Include="Scheduling\Services\PublishingTaskHandler.cs" />
     <Compile Include="Scheduling\Services\PublishingTaskManager.cs" />
     <Compile Include="Scheduling\Services\ScheduledTaskManager.cs" />
     <Compile Include="Scheduling\Services\ScheduledTaskExecutor.cs" />
     <Compile Include="Scheduling\Models\Task.cs" />
+    <Compile Include="Settings\DataMigrations\SettingsDataMigration.cs" />
     <Compile Include="Settings\ViewModels\SiteCulturesViewModel.cs" />
     <Compile Include="Settings\Drivers\SiteSettingsDriver.cs" />
     <Compile Include="Settings\Metadata\ContentDefinitionManager.cs" />
@@ -197,9 +203,12 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Common\Module.txt" />
+    <Content Include="Common\Views\DefinitionTemplates\BodyTypePartSettings.ascx" />
+    <Content Include="Common\Views\DefinitionTemplates\BodyPartSettings.ascx" />
     <Content Include="Common\Views\DisplayTemplates\Fields\Common.TextField.ascx" />
     <Content Include="Common\Views\EditorTemplates\Fields\Common.TextField.ascx" />
     <Content Include="Common\Views\EditorTemplates\Parts\Common.Container.ascx" />
+    <Content Include="Common\Views\EditorTemplates\PlainTextEditor.ascx" />
     <Content Include="Contents\Module.txt" />
     <Content Include="Contents\Views\Admin\List.aspx" />
     <Content Include="Contents\Views\Admin\Edit.aspx" />
