@@ -463,6 +463,7 @@
     <Compile Include="Environment\DefaultOrchardHost.cs" />
     <Compile Include="Mvc\OrchardControllerFactory.cs" />
     <Compile Include="Environment\IOrchardHost.cs" />
+    <Compile Include="Mvc\ViewEngines\WebForms\WebFormViewEngineForAspNet4.cs" />
     <Compile Include="OrchardCoreException.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Indexing\IIndexDocument.cs" />
@@ -557,7 +558,7 @@
     <Compile Include="Mvc\Routes\UrlPrefix.cs" />
     <Compile Include="Mvc\Routes\UrlPrefixAdjustedHttpContext.cs" />
     <Compile Include="Mvc\Routes\ShellRoute.cs" />
-    <Compile Include="Mvc\ViewEngines\ThemeViewLocationCache.cs" />
+    <Compile Include="Mvc\ViewEngines\WebForms\ThemeViewLocationCache.cs" />
     <Compile Include="Mvc\ViewModels\AdaptedViewModel.cs" />
     <Compile Include="Mvc\ViewUserControl.cs">
       <SubType>ASPXCodeBehind</SubType>
@@ -644,7 +645,7 @@
     <Compile Include="Mvc\ViewEngines\LayoutViewEngine.cs" />
     <Compile Include="Mvc\ViewEngines\LayoutViewContext.cs" />
     <Compile Include="Mvc\ViewEngines\ViewEngineFilter.cs" />
-    <Compile Include="Mvc\ViewEngines\WebFormsViewEngineProvider.cs" />
+    <Compile Include="Mvc\ViewEngines\WebForms\WebFormViewEngineProvider.cs" />
     <Compile Include="Mvc\ViewModels\BaseViewModel.cs" />
     <Compile Include="UI\Admin\AdminThemeSelector.cs" />
     <Compile Include="UI\Navigation\INavigationManager.cs" />

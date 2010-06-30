@@ -63,13 +63,21 @@ namespace Orchard.Mvc.ViewEngines {
             var requestViewEngines = new ViewEngineCollection(
                 themeViewEngines
                     .Concat(moduleViewEngines)
-                    .Concat(_viewEngines.Where(x => x.GetType().Assembly != typeof(LayoutViewEngine).Assembly))
+                    .Concat(_viewEngines.Where(ViewEngineIsForwarded))
                     .ToArray());
 
             var layoutViewEngine = new LayoutViewEngine(requestViewEngines);
 
             viewResultBase.ViewEngineCollection = new ViewEngineCollection(_viewEngines.ToList());
             viewResultBase.ViewEngineCollection.Insert(0, layoutViewEngine);
+        }
+
+        static bool ViewEngineIsForwarded(IViewEngine x) {
+            // default view engine, and layout view engine, are not forwarded to 
+            // be used for resolving partials
+            return 
+                x.GetType().Assembly != typeof(LayoutViewEngine).Assembly &&
+                x.GetType() != typeof(WebFormViewEngine);
         }
 
         public void OnResultExecuted(ResultExecutedContext filterContext) {

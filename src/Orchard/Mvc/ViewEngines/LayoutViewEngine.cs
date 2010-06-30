@@ -31,7 +31,6 @@ namespace Orchard.Mvc.ViewEngines {
             if (skipLayoutViewEngine)
                 return new ViewEngineResult(Enumerable.Empty<string>());
 
-
             var bodyView = _viewEngines.FindPartialView(controllerContext, viewName);
 
             ViewEngineResult layoutView = null;
@@ -109,7 +108,6 @@ namespace Orchard.Mvc.ViewEngines {
                 return new ViewEngineResult(Enumerable.Empty<string>());
             }
 
-
             public ViewEngineResult FindView(ControllerContext controllerContext, string viewName, string masterName, bool useCache) {
                 var scope = Scope.From(controllerContext);
                 if (scope != null && scope.LayoutViewEngine != null) {
@@ -120,10 +118,7 @@ namespace Orchard.Mvc.ViewEngines {
                 return new ViewEngineResult(Enumerable.Empty<string>());
             }
 
-
-
             public void ReleaseView(ControllerContext controllerContext, IView view) {
-                throw new NotImplementedException();
             }
         }
 

@@ -1,13 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Web.Mvc;
 using System.Web.Caching;
 using System.Web;
 using System.Web.Hosting;
 
-namespace Orchard.Mvc.ViewEngines {
+namespace Orchard.Mvc.ViewEngines.WebForms {
     public class ThemeViewLocationCache : IViewLocationCache {
         private readonly string _requestTheme;
 

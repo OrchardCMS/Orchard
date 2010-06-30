@@ -18,6 +18,7 @@ using Orchard.Mvc.Filters;
 using Orchard.Mvc.ModelBinders;
 using Orchard.Mvc.Routes;
 using Orchard.Mvc.ViewEngines;
+using Orchard.Mvc.ViewEngines.WebForms;
 using Orchard.Settings;
 using Orchard.Setup.Commands;
 using Orchard.Themes;
@@ -35,7 +36,7 @@ namespace Orchard.Setup {
             builder.RegisterModule(new CommandModule());
             builder.RegisterType<RoutePublisher>().As<IRoutePublisher>().InstancePerLifetimeScope();
             builder.RegisterType<ModelBinderPublisher>().As<IModelBinderPublisher>().InstancePerLifetimeScope();
-            builder.RegisterType<WebFormsViewEngineProvider>().As<IViewEngineProvider>().InstancePerLifetimeScope();
+            builder.RegisterType<WebFormViewEngineProvider>().As<IViewEngineProvider>().InstancePerLifetimeScope();
             builder.RegisterType<ViewEngineFilter>().As<IFilterProvider>().InstancePerLifetimeScope();
             builder.RegisterType<ThemeFilter>().As<IFilterProvider>().InstancePerLifetimeScope();
             builder.RegisterType<PageTitleBuilder>().As<IPageTitleBuilder>().InstancePerLifetimeScope();
