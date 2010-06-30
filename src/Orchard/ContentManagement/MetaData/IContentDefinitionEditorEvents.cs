@@ -15,7 +15,7 @@ namespace Orchard.ContentManagement.MetaData {
         IEnumerable<TemplateViewModel> TypeEditorUpdate(ContentTypeDefinitionBuilder builder, IUpdateModel updateModel);
         IEnumerable<TemplateViewModel> TypePartEditorUpdate(ContentTypeDefinitionBuilder.PartConfigurer builder, IUpdateModel updateModel);
         IEnumerable<TemplateViewModel> PartEditorUpdate(ContentPartDefinitionBuilder builder, IUpdateModel updateModel);
-        IEnumerable<TemplateViewModel> PartFieldEditorUpdate(ContentPartDefinitionBuilder builder, IUpdateModel updateModel);
+        IEnumerable<TemplateViewModel> PartFieldEditorUpdate(ContentPartDefinitionBuilder.FieldConfigurer builder, IUpdateModel updateModel);
     }
 
     public abstract class ContentDefinitionEditorEventsBase : IContentDefinitionEditorEvents {
@@ -47,7 +47,7 @@ namespace Orchard.ContentManagement.MetaData {
             return Enumerable.Empty<TemplateViewModel>();
         }
 
-        public virtual IEnumerable<TemplateViewModel> PartFieldEditorUpdate(ContentPartDefinitionBuilder builder, IUpdateModel updateModel) {
+        public virtual IEnumerable<TemplateViewModel> PartFieldEditorUpdate(ContentPartDefinitionBuilder.FieldConfigurer builder, IUpdateModel updateModel) {
             return Enumerable.Empty<TemplateViewModel>();
         }
 
