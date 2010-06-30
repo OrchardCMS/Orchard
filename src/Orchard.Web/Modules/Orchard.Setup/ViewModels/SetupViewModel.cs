@@ -14,6 +14,8 @@ namespace Orchard.Setup.ViewModels {
         public string AdminUsername { get; set; }
         [Required(ErrorMessage = "Password is required."), StringLengthMin(6, ErrorMessage = "Password must be longer than 6 characters."), StringLength(50, ErrorMessage = "Password can be no longer than 50 characters.")]
         public string AdminPassword { get; set; }
+        [Required(ErrorMessage = "Password confirmation is required.")]
+        public string ConfirmPassword { get; set; }
         public bool DatabaseOptions { get; set; }
         [SqlDatabaseConnectionString]
         public string DatabaseConnectionString { get; set; }
