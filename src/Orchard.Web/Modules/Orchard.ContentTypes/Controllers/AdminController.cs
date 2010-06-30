@@ -139,6 +139,41 @@ namespace Orchard.ContentTypes.Controllers {
                     typeBuilder.WithPart(entry.part.PartDefinition.Name, typePartBuilder => {
                         partViewModel.Templates = _extendViewModels.TypePartEditorUpdate(typePartBuilder, updater);
                     });
+
+                    if (!partViewModel.PartDefinition.Fields.Any())
+                        continue;
+
+                    _contentDefinitionManager.AlterPartDefinition(partViewModel.PartDefinition.Name, partBuilder => {
+                        foreach (var fieldEntry in partViewModel.PartDefinition.Fields.Select((field, index) => new { field, index })) {
+                            var fieldViewModel = fieldEntry.field;
+
+                            // enable updater to be aware of changing field prefix
+                            var firstHalfFieldName = "Fields[" + fieldEntry.index + "].";
+                            updater._prefix = secondHalf => firstHalfFieldName + secondHalf;
+
+                            // allow extensions to alter partField configuration
+                            partBuilder.WithField(fieldViewModel.Name, partFieldBuilder => {
+                                fieldViewModel.Templates = _extendViewModels.PartFieldEditorUpdate(partFieldBuilder, updater);
+                            });
+                        }
+                    });
+                }
+
+                if (viewModel.Fields.Any()) {
+                    _contentDefinitionManager.AlterPartDefinition(viewModel.Name, partBuilder => {
+                        foreach (var fieldEntry in viewModel.Fields.Select((field, index) => new { field, index })) {
+                            var fieldViewModel = fieldEntry.field;
+
+                            // enable updater to be aware of changing field prefix
+                            var firstHalfFieldName = "Fields[" + fieldEntry.index + "].";
+                            updater._prefix = secondHalf => firstHalfFieldName + secondHalf;
+
+                            // allow extensions to alter partField configuration
+                            partBuilder.WithField(fieldViewModel.Name, partFieldBuilder => {
+                                fieldViewModel.Templates = _extendViewModels.PartFieldEditorUpdate(partFieldBuilder, updater);
+                            });
+                        }
+                    });
                 }
             });
 
