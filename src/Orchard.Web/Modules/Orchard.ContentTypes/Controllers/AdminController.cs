@@ -8,6 +8,7 @@ using Orchard.ContentTypes.Services;
 using Orchard.ContentTypes.ViewModels;
 using Orchard.Localization;
 using Orchard.Mvc.Results;
+using Orchard.UI.Notify;
 
 namespace Orchard.ContentTypes.Controllers {
     public class AdminController : Controller {
@@ -186,6 +187,8 @@ namespace Orchard.ContentTypes.Controllers {
                 return View(viewModel);
             }
 
+            Services.Notifier.Information(T("\"{0}\" settings have been saved.", viewModel.DisplayName));
+
             return RedirectToAction("Index");
         }
 
@@ -293,6 +296,8 @@ namespace Orchard.ContentTypes.Controllers {
             var contentPartFields = contentPartDefinition.Fields.ToList();
             contentPartFields.Add(new ContentPartDefinition.Field(new ContentFieldDefinition(viewModel.FieldTypeName), viewModel.DisplayName, null));
             _contentDefinitionService.AlterPartDefinition(new ContentPartDefinition(contentPartDefinition.Name, contentPartFields, contentPartDefinition.Settings));
+
+            Services.Notifier.Information(T("The \"{0}\" field has been added.", viewModel.DisplayName));
 
             if (contentTypeDefinition != null)
                 return RedirectToAction("Edit", new { id });

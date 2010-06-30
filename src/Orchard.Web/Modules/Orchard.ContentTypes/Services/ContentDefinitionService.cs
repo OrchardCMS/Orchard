@@ -45,7 +45,7 @@ namespace Orchard.ContentTypes.Services {
                            //.WithPart("RoutableAspect") //need to go the new routable route
                            .WithPart("BodyAspect"));
              
-            Services.Notifier.Information(T("Created content type: {0}", displayName));
+            Services.Notifier.Information(T("The \"{0}\" content type has created.", displayName));
         }
 
         public void AlterTypeDefinition(ContentTypeDefinition contentTypeDefinition) {
