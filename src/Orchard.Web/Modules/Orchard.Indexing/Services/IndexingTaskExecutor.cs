@@ -5,6 +5,7 @@ using JetBrains.Annotations;
 using Orchard.ContentManagement;
 using Orchard.Data;
 using Orchard.Indexing.Models;
+using Orchard.Indexing.Settings;
 using Orchard.Logging;
 using Orchard.Services;
 using Orchard.Tasks.Indexing;
@@ -23,7 +24,7 @@ namespace Orchard.Indexing.Services {
         private readonly IContentManager _contentManager;
         private readonly IIndexSynLock _indexSynLock;
         private const string SearchIndexName = "Search";
-        
+
         public IndexingTaskExecutor(
             IClock clock,
             IRepository<IndexingTaskRecord> repository,
@@ -45,7 +46,7 @@ namespace Orchard.Indexing.Services {
         public void UpdateIndex(string indexName) {
             var synLock = _indexSynLock.GetSynLock(SearchIndexName);
 
-            if ( !System.Threading.Monitor.TryEnter(synLock) ) {
+            if (!System.Threading.Monitor.TryEnter(synLock)) {
                 Logger.Information("Index was requested but was already running");
                 return;
             }
@@ -70,10 +71,15 @@ namespace Orchard.Indexing.Services {
                     // get every existing content item to index it
                     foreach (var contentItem in _contentManager.Query(VersionOptions.Published).List()) {
                         try {
-                            var documentIndex =  _indexProvider.New(contentItem.Id);
+                            // skip items which are not indexed
+                            var settings = GetTypeIndexingSettings(contentItem);
+                            if (!settings.Included)
+                                continue;
+
+                            var documentIndex = _indexProvider.New(contentItem.Id);
 
                             _contentManager.Index(contentItem, documentIndex);
-                            if(documentIndex.IsDirty) {
+                            if (documentIndex.IsDirty) {
                                 updateIndexDocuments.Add(documentIndex);
                             }
                         }
@@ -91,8 +97,10 @@ namespace Orchard.Indexing.Services {
                 _indexProvider.SetLastIndexUtc(SearchIndexName, _clock.UtcNow);
 
                 // retrieve not yet processed tasks
-                var taskRecords = _repository.Fetch(x => x.CreatedUtc > lastIndexing)
-                    .ToArray();
+                var taskRecords = lastIndexing == DateTime.MinValue
+                    ? _repository.Fetch(x => true).ToArray()
+                    : _repository.Fetch(x => x.CreatedUtc > lastIndexing).ToArray();
+
 
                 // nothing to do ?
                 if (taskRecords.Length + updateIndexDocuments.Count == 0)
@@ -116,11 +124,15 @@ namespace Orchard.Indexing.Services {
                 foreach (var taskRecord in taskRecords.Where(t => t.Action == IndexingTaskRecord.Update)) {
                     var task = new IndexingTask(_contentManager, taskRecord);
 
+                    // skip items which are not indexed
+                    var settings = GetTypeIndexingSettings(task.ContentItem);
+                    if (!settings.Included)
+                        continue;
+
                     try {
                         var documentIndex = _indexProvider.New(task.ContentItem.Id);
-
                         _contentManager.Index(task.ContentItem, documentIndex);
-                        if ( documentIndex.IsDirty ) {
+                        if (documentIndex.IsDirty) {
                             updateIndexDocuments.Add(documentIndex);
                         }
 
@@ -142,6 +154,15 @@ namespace Orchard.Indexing.Services {
             finally {
                 System.Threading.Monitor.Exit(synLock);
             }
+        }
+
+        static TypeIndexing GetTypeIndexingSettings(ContentItem contentItem) {
+            if (contentItem == null ||
+                contentItem.TypeDefinition == null ||
+                contentItem.TypeDefinition.Settings == null) {
+                return new TypeIndexing { Included = false };
+            }
+            return contentItem.TypeDefinition.Settings.GetModel<TypeIndexing>();
         }
     }
 }

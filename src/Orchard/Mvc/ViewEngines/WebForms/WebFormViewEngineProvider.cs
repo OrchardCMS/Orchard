@@ -2,9 +2,9 @@
 using System.Web.Mvc;
 using Orchard.Logging;
 
-namespace Orchard.Mvc.ViewEngines {
-    public class WebFormsViewEngineProvider : IViewEngineProvider {
-        public WebFormsViewEngineProvider() {
+namespace Orchard.Mvc.ViewEngines.WebForms {
+    public class WebFormViewEngineProvider : IViewEngineProvider {
+        public WebFormViewEngineProvider() {
             Logger = NullLogger.Instance;
         }
         static string[] DisabledFormats = new[] { "~/Disabled" };
@@ -22,35 +22,35 @@ namespace Orchard.Mvc.ViewEngines {
             // Partial Paths - 
             //   {area}/{controller}/
 
-
-            var viewEngine = new WebFormViewEngine {
-                MasterLocationFormats = DisabledFormats,
-                ViewLocationFormats = DisabledFormats,
-                AreaMasterLocationFormats = DisabledFormats,
-                AreaViewLocationFormats = DisabledFormats,
-                AreaPartialViewLocationFormats = DisabledFormats,
-            };
-
-            viewEngine.ViewLocationCache = new ThemeViewLocationCache(parameters.VirtualPath);
+            // for "routed" request views...
+            // enable /Views/{area}/{controller}/{viewName}
 
             // enable /Views/{partialName}
             // enable /Views/"DisplayTemplates/"+{templateName}
             // enable /Views/"EditorTemplates/+{templateName}
-            viewEngine.PartialViewLocationFormats = new[] {
+            var partialViewLocationFormats = new[] {
                 parameters.VirtualPath + "/Views/{0}.ascx",
                 parameters.VirtualPath + "/Views/{0}.aspx",
             };
 
-            Logger.Debug("PartialViewLocationFormats (theme): \r\n\t-{0}", string.Join("\r\n\t-", viewEngine.PartialViewLocationFormats));
+            //Logger.Debug("PartialViewLocationFormats (theme): \r\n\t-{0}", string.Join("\r\n\t-", partialViewLocationFormats));
 
-            // for "routed" request views...
-            // enable /Views/{area}/{controller}/{viewName}
-            viewEngine.AreaPartialViewLocationFormats = new[] {
+            var areaPartialViewLocationFormats = new[] {
                 parameters.VirtualPath + "/Views/{2}/{1}/{0}.ascx",
                 parameters.VirtualPath + "/Views/{2}/{1}/{0}.aspx",
             };
 
-            Logger.Debug("AreaPartialViewLocationFormats (theme): \r\n\t-{0}", string.Join("\r\n\t-", viewEngine.AreaPartialViewLocationFormats));
+            //Logger.Debug("AreaPartialViewLocationFormats (theme): \r\n\t-{0}", string.Join("\r\n\t-", areaPartialViewLocationFormats));
+
+            var viewEngine = new WebFormViewEngineForAspNet4 {
+                MasterLocationFormats = DisabledFormats,
+                ViewLocationFormats = DisabledFormats,
+                PartialViewLocationFormats = partialViewLocationFormats,
+                AreaMasterLocationFormats = DisabledFormats,
+                AreaViewLocationFormats = DisabledFormats,
+                AreaPartialViewLocationFormats = areaPartialViewLocationFormats,
+                ViewLocationCache = new ThemeViewLocationCache(parameters.VirtualPath),
+            };
 
             return viewEngine;
         }
@@ -63,7 +63,7 @@ namespace Orchard.Mvc.ViewEngines {
                                         "~/Modules/{2}/Views/{1}/{0}.aspx",
                                     };
 
-            Logger.Debug("AreaFormats (module): \r\n\t-{0}", string.Join("\r\n\t-", areaFormats));
+            //Logger.Debug("AreaFormats (module): \r\n\t-{0}", string.Join("\r\n\t-", areaFormats));
 
             var universalFormats = parameters.VirtualPaths
                 .SelectMany(x => new[] {
@@ -72,9 +72,9 @@ namespace Orchard.Mvc.ViewEngines {
                                        })
                 .ToArray();
 
-            Logger.Debug("UniversalFormats (module): \r\n\t-{0}", string.Join("\r\n\t-", universalFormats));
+            //Logger.Debug("UniversalFormats (module): \r\n\t-{0}", string.Join("\r\n\t-", universalFormats));
 
-            var viewEngine = new WebFormViewEngine {
+            var viewEngine = new WebFormViewEngineForAspNet4 {
                 MasterLocationFormats = DisabledFormats,
                 ViewLocationFormats = universalFormats,
                 PartialViewLocationFormats = universalFormats,
