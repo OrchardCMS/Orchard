@@ -61,6 +61,11 @@ namespace Orchard.ContentTypes.Services {
             throw new NotImplementedException();
         }
 
+        public IEnumerable<ContentPartDefinition> GetPartDefinitions() {
+            var typeNames = GetTypeDefinitions().Select(ctd => ctd.Name);
+            return _contentDefinitionManager.ListPartDefinitions().Where(cpd => !typeNames.Contains(cpd.Name));
+        }
+
         public ContentPartDefinition GetPartDefinition(string name) {
             return _contentDefinitionManager.GetPartDefinition(name);
         }

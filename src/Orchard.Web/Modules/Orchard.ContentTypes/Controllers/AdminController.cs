@@ -192,6 +192,52 @@ namespace Orchard.ContentTypes.Controllers {
             return RedirectToAction("Index");
         }
 
+        public ActionResult AddPartsTo(string id) {
+            if (!Services.Authorizer.Authorize(Permissions.CreateContentTypes, T("Not allowed to edit a content type.")))
+                return new HttpUnauthorizedResult();
+
+            var contentTypeDefinition = _contentDefinitionService.GetTypeDefinition(id);
+
+            if (contentTypeDefinition == null)
+                return new NotFoundResult();
+
+            var viewModel = new AddPartsViewModel {
+                Type = new EditTypeViewModel(contentTypeDefinition),
+                PartSelections = _contentDefinitionService.GetPartDefinitions()
+                    .Where(cpd => !contentTypeDefinition.Parts.Any(p => p.PartDefinition.Name == cpd.Name))
+                    .Select(cpd => new PartSelectionViewModel {PartName = cpd.Name})
+            };
+
+            return View(viewModel);
+        }
+
+        [HttpPost, ActionName("AddPartsTo")]
+        public ActionResult AddPartsToPOST(string id) {
+            if (!Services.Authorizer.Authorize(Permissions.CreateContentTypes, T("Not allowed to edit a content type.")))
+                return new HttpUnauthorizedResult();
+
+            var contentTypeDefinition = _contentDefinitionService.GetTypeDefinition(id);
+
+            if (contentTypeDefinition == null)
+                return new NotFoundResult();
+
+            var viewModel = new AddPartsViewModel();
+            TryUpdateModel(viewModel);
+
+            if (!ModelState.IsValid) {
+                viewModel.Type = new EditTypeViewModel(contentTypeDefinition);
+                return View(viewModel);
+            }
+
+            _contentDefinitionManager.AlterTypeDefinition(contentTypeDefinition.Name, typeBuilder => {
+                var partsToAdd = viewModel.PartSelections.Where(ps => ps.IsSelected).Select(ps => ps.PartName);
+                foreach (var partToAdd in partsToAdd)
+                    typeBuilder.WithPart(partToAdd);
+            });
+
+            return RedirectToAction("Edit", new {id});
+        }
+
         #endregion
 
         #region Parts

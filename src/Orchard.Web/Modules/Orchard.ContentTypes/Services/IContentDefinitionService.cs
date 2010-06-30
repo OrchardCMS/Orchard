@@ -10,6 +10,7 @@ namespace Orchard.ContentTypes.Services {
         void AlterTypeDefinition(ContentTypeDefinition contentTypeDefinition);
         void RemoveTypeDefinition(string name);
 
+        IEnumerable<ContentPartDefinition> GetPartDefinitions();
         ContentPartDefinition GetPartDefinition(string name);
         void AddPartDefinition(ContentPartDefinition contentPartDefinition);
         void AlterPartDefinition(ContentPartDefinition contentPartDefinition);

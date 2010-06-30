@@ -70,6 +70,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AdminMenu.cs" />
+    <Compile Include="ViewModels\AddPartsViewModel.cs" />
     <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Permissions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -85,6 +86,7 @@
     <Content Include="Module.txt" />
     <Content Include="Styles\admin.css" />
     <Content Include="Views\Admin\AddFieldTo.ascx" />
+    <Content Include="Views\Admin\AddPartsTo.ascx" />
     <Content Include="Views\Admin\Create.ascx" />
     <Content Include="Views\Admin\EditPart.ascx" />
     <Content Include="Views\Admin\Edit.ascx" />
