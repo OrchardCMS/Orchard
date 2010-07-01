@@ -1,5 +1,4 @@
-﻿<%@ Control Language="C#" Inherits="Orchard.Mvc.ViewUserControl<IEnumerable<Orchard.ContentTypes.ViewModels.EditTypePartViewModel>>" %>
-<%
+﻿<%@ Control Language="C#" Inherits="Orchard.Mvc.ViewUserControl<IEnumerable<Orchard.ContentTypes.ViewModels.EditTypePartViewModel>>" %><%
 if (Model.Any()) { %>
     <fieldset><%
         var pi = 0;

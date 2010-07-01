@@ -32,11 +32,11 @@ namespace Orchard.ContentTypes.ViewModels {
 
             return implicitTypePart == null
                 ? Enumerable.Empty<EditPartFieldViewModel>()
-                : implicitTypePart.PartDefinition.Fields.Select(f => new EditPartFieldViewModel(f));
+                : implicitTypePart.PartDefinition.Fields.Select(f => new EditPartFieldViewModel(f) { Part = new EditPartViewModel(implicitTypePart.PartDefinition) });
         }
 
         private IEnumerable<EditTypePartViewModel> GetTypeParts(ContentTypeDefinition contentTypeDefinition) {
-            return contentTypeDefinition.Parts.Where(p => p.PartDefinition.Name != Name).Select(p => new EditTypePartViewModel(p));
+            return contentTypeDefinition.Parts.Where(p => p.PartDefinition.Name != Name).Select(p => new EditTypePartViewModel(p) { Type = this });
         }
     }
 
@@ -49,6 +49,7 @@ namespace Orchard.ContentTypes.ViewModels {
             Settings = part.Settings;
         }
 
+        public EditTypeViewModel Type { get; set; }
         public EditPartViewModel PartDefinition { get; set; }
         public SettingsDictionary Settings { get; set; }
         public IEnumerable<TemplateViewModel> Templates { get; set; }
@@ -61,7 +62,7 @@ namespace Orchard.ContentTypes.ViewModels {
         }
         public EditPartViewModel(ContentPartDefinition contentPartDefinition) {
             Name = contentPartDefinition.Name;
-            Fields = contentPartDefinition.Fields.Select(f => new EditPartFieldViewModel(f));
+            Fields = contentPartDefinition.Fields.Select(f => new EditPartFieldViewModel(f) { Part = this });
             Settings = contentPartDefinition.Settings;
         }
 
@@ -81,6 +82,7 @@ namespace Orchard.ContentTypes.ViewModels {
             Settings = field.Settings;
         }
 
+        public EditPartViewModel Part { get; set; }
         public string Name { get; set; }
         public IEnumerable<TemplateViewModel> Templates { get; set; }
         public EditFieldViewModel FieldDefinition { get; set; }
