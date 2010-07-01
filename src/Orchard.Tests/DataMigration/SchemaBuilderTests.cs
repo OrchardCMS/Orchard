@@ -4,8 +4,8 @@ using Autofac;
 using NHibernate;
 using NUnit.Framework;
 using Orchard.Data;
-using Orchard.DataMigration.Interpreters;
-using Orchard.DataMigration.Schema;
+using Orchard.Data.Migration.Interpreters;
+using Orchard.Data.Migration.Schema;
 using Orchard.Environment.Configuration;
 using Orchard.Tests.ContentManagement;
 using System.IO;
@@ -65,7 +65,7 @@ namespace Orchard.Tests.DataMigration {
                     .CreateIndex("IDX_XYZ", "NickName"))
                 .AlterTable("User", table => table
                     .DropIndex("IDX_XYZ"))
-                .DropForeignKey("Addresse", "User_Address")
+                .DropForeignKey("Address", "User_Address")
                 .DropTable("Address")
                 .ExecuteSql("drop database", statement => statement.ForProvider("SQLite"))
                 .ExecuteSql("DROP DATABASE", statement => statement.ForProvider("SQLServer"));

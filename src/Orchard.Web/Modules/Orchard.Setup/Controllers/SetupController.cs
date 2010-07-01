@@ -45,6 +45,10 @@ namespace Orchard.Setup.Controllers {
             if (!model.DatabaseOptions && string.IsNullOrEmpty(model.DatabaseConnectionString))
                 ModelState.AddModelError("DatabaseConnectionString", "A SQL connection string is required");
 
+            if (!String.IsNullOrWhiteSpace(model.ConfirmPassword) && model.AdminPassword != model.ConfirmPassword ) {
+                ModelState.AddModelError("ConfirmPassword", T("Password confirmation must match").ToString());
+            }
+
             if (!ModelState.IsValid) {
                 return IndexViewResult(model);
             }

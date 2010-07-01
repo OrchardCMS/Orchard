@@ -1,5 +1,4 @@
-﻿using System;
-using System.Xml;
+﻿using System.Xml;
 using System.Xml.Linq;
 using Orchard.ContentManagement.MetaData.Models;
 
@@ -14,10 +13,9 @@ namespace Orchard.ContentManagement.FieldStorage.InfosetStorage {
             var fieldName = XmlConvert.EncodeLocalName(partFieldDefinition.Name);
             var infosetPart = contentPart.As<InfosetPart>();
 
-            return new Storage {
-                Getter = name => Get(infosetPart.Infoset.Element, partName, fieldName, name),
-                Setter = (name, value) => Set(infosetPart.Infoset.Element, partName, fieldName, name, value)
-            };
+            return new SimpleFieldStorage(
+                name => Get(infosetPart.Infoset.Element, partName, fieldName, name),
+                (name, value) => Set(infosetPart.Infoset.Element, partName, fieldName, name, value));
         }
 
         private static string Get(XElement element, string partName, string fieldName, string valueName) {
@@ -56,11 +54,6 @@ namespace Orchard.ContentManagement.FieldStorage.InfosetStorage {
             else {
                 fieldElement.SetAttributeValue(XmlConvert.EncodeLocalName(valueName), value);
             }
-        }
-
-        class Storage : IFieldStorage {
-            public Func<string, string> Getter { get; set; }
-            public Action<string, string> Setter { get; set; }
         }
     }
 }

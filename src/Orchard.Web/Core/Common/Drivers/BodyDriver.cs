@@ -4,6 +4,7 @@ using Orchard.ContentManagement;
 using Orchard.ContentManagement.Aspects;
 using Orchard.ContentManagement.Drivers;
 using Orchard.Core.Common.Models;
+using Orchard.Core.Common.Settings;
 using Orchard.Core.Common.ViewModels;
 
 namespace Orchard.Core.Common.Drivers {
@@ -12,6 +13,7 @@ namespace Orchard.Core.Common.Drivers {
         public IOrchardServices Services { get; set; }
         private const string TemplateName = "Parts/Common.Body";
         private const string DefaultTextEditorTemplate = "TinyMceTextEditor";
+        private const string PlainTextEditorTemplate = "PlainTextEditor";
 
         public BodyDriver(IOrchardServices services) {
             Services = services;
@@ -21,7 +23,7 @@ namespace Orchard.Core.Common.Drivers {
             get { return "Body"; }
         }
 
-        // \/\/ Haackalicious on many accounts - don't copy what has been done here for the wrapper \/\/
+        // \/\/ Hackalicious on many accounts - don't copy what has been done here for the wrapper \/\/
         protected override DriverResult Display(BodyAspect part, string displayType) {
             var model = new BodyDisplayViewModel { BodyAspect = part, Text = BbcodeReplace(part.Text) };
 
@@ -40,16 +42,29 @@ namespace Orchard.Core.Common.Drivers {
         protected override DriverResult Editor(BodyAspect part, IUpdateModel updater) {
             var model = BuildEditorViewModel(part);
             updater.TryUpdateModel(model, Prefix, null, null);
+
+            // only set the format if it has not yet been set to preserve the initial format type - might want to change this later to support changing body formats but...later
+            if (string.IsNullOrWhiteSpace(model.Format))
+                model.Format = GetFlavor(part);
+
             return ContentPartTemplate(model, TemplateName, Prefix).Location("primary", "5");
         }
 
         private static BodyEditorViewModel BuildEditorViewModel(BodyAspect part) {
             return new BodyEditorViewModel {
                 BodyAspect = part,
-                TextEditorTemplate = DefaultTextEditorTemplate,
+                TextEditorTemplate = GetFlavor(part) == "html" ? DefaultTextEditorTemplate : PlainTextEditorTemplate,
                 AddMediaPath= new PathBuilder(part).AddContentType().AddContainerSlug().AddSlug().ToString()
             };
         }
+
+        private static string GetFlavor(BodyAspect part) {
+            var typePartSettings = part.Settings.GetModel<BodyTypePartSettings>();
+            return (typePartSettings != null && !string.IsNullOrWhiteSpace(typePartSettings.Flavor))
+                       ? typePartSettings.Flavor
+                       : part.PartDefinition.Settings.GetModel<BodyPartSettings>().FlavorDefault;
+        }
+
         class PathBuilder {
             private readonly IContent _content;
             private string _path;

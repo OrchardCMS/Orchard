@@ -43,6 +43,7 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\lib\autofac\Autofac.dll</HintPath>
     </Reference>
+    <Reference Include="NHibernate, Version=2.1.2.4000, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL" />
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.ComponentModel.DataAnnotations">

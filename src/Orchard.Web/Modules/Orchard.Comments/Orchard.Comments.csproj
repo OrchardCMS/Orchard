@@ -72,6 +72,7 @@
     <Compile Include="AdminMenu.cs" />
     <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Controllers\CommentController.cs" />
+    <Compile Include="DataMigrations\CommentsDataMigration.cs" />
     <Compile Include="Drivers\CommentDriver.cs" />
     <Compile Include="Drivers\HasCommentsContainerDriver.cs" />
     <Compile Include="Drivers\HasCommentsDriver.cs" />

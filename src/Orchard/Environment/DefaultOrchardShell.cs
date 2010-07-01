@@ -41,7 +41,7 @@ namespace Orchard.Environment {
             _routePublisher.Publish(_routeProviders.SelectMany(provider => provider.GetRoutes()));
             _modelBinderPublisher.Publish(_modelBinderProviders.SelectMany(provider => provider.GetModelBinders()));
 
-            AddOrchardLocationsFormats();
+            //AddOrchardLocationsFormats();
 
             using (var events = _eventsFactory()) {
                 events.Value.Activated();

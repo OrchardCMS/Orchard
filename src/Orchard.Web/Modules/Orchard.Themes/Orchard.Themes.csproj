@@ -67,6 +67,7 @@
   <ItemGroup>
     <Compile Include="AdminMenu.cs" />
     <Compile Include="Controllers\AdminController.cs" />
+    <Compile Include="DataMigrations\ThemesDataMigration.cs" />
     <Compile Include="DesignerNotes\ZoneManagerEvents.cs" />
     <Compile Include="Handlers\ThemeSiteSettingsHandler.cs" />
     <Compile Include="Models\Theme.cs" />

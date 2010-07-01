@@ -8,7 +8,9 @@ using Orchard.Commands.Builtin;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Handlers;
 using Orchard.ContentManagement.MetaData.Builders;
+using Orchard.Data.Migration.Interpreters;
 using Orchard.Data.Providers;
+using Orchard.Data.Migration;
 using Orchard.Environment.Extensions;
 using Orchard.Localization;
 using Orchard.Mvc;
@@ -16,6 +18,7 @@ using Orchard.Mvc.Filters;
 using Orchard.Mvc.ModelBinders;
 using Orchard.Mvc.Routes;
 using Orchard.Mvc.ViewEngines;
+using Orchard.Mvc.ViewEngines.WebForms;
 using Orchard.Settings;
 using Orchard.Setup.Commands;
 using Orchard.Themes;
@@ -33,7 +36,7 @@ namespace Orchard.Setup {
             builder.RegisterModule(new CommandModule());
             builder.RegisterType<RoutePublisher>().As<IRoutePublisher>().InstancePerLifetimeScope();
             builder.RegisterType<ModelBinderPublisher>().As<IModelBinderPublisher>().InstancePerLifetimeScope();
-            builder.RegisterType<WebFormsViewEngineProvider>().As<IViewEngineProvider>().InstancePerLifetimeScope();
+            builder.RegisterType<WebFormViewEngineProvider>().As<IViewEngineProvider>().InstancePerLifetimeScope();
             builder.RegisterType<ViewEngineFilter>().As<IFilterProvider>().InstancePerLifetimeScope();
             builder.RegisterType<ThemeFilter>().As<IFilterProvider>().InstancePerLifetimeScope();
             builder.RegisterType<PageTitleBuilder>().As<IPageTitleBuilder>().InstancePerLifetimeScope();
@@ -49,6 +52,9 @@ namespace Orchard.Setup {
             builder.RegisterType<SafeModeThemeService>().As<IThemeService>().InstancePerLifetimeScope();
             builder.RegisterType<SafeModeText>().As<IText>().InstancePerLifetimeScope();
             builder.RegisterType<SafeModeSiteService>().As<ISiteService>().InstancePerLifetimeScope();
+
+            builder.RegisterType<DefaultDataMigrationInterpreter>().As<IDataMigrationInterpreter>().InstancePerLifetimeScope();
+            builder.RegisterType<DataMigrationManager>().As<IDataMigrationManager>().InstancePerLifetimeScope();
 
         }
 

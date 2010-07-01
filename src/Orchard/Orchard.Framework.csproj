@@ -207,6 +207,7 @@
     </Compile>
     <Compile Include="ContentManagement\FieldStorage\InfosetStorage\InfosetHandler.cs" />
     <Compile Include="ContentManagement\FieldStorage\InfosetStorage\InfosetPart.cs" />
+    <Compile Include="ContentManagement\FieldStorage\SimpleFieldStorage.cs" />
     <Compile Include="ContentManagement\Handlers\ActivatedContentContext.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -356,38 +357,38 @@
     <Compile Include="ContentManagement\ViewModels\TemplateViewModel.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="DataMigration\Interpreters\ICommandInterpreter.cs" />
-    <Compile Include="DataMigration\Interpreters\DefaultDataMigrationInterpreter.cs" />
-    <Compile Include="DataMigration\Interpreters\IDataMigrationInterpreter.cs" />
-    <Compile Include="DataMigration\Interpreters\SqLiteCommandInterpreter.cs" />
-    <Compile Include="DataMigration\Schema\AddColumnCommand.cs" />
-    <Compile Include="DataMigration\Schema\ISchemaBuilderCommand.cs" />
-    <Compile Include="DataMigration\Schema\IShellSettings.cs" />
-    <Compile Include="DataMigration\Schema\SqlStatementCommand.cs" />
-    <Compile Include="DataMigration\Schema\CreateColumnCommand.cs" />
-    <Compile Include="DataMigration\Schema\CreateForeignKeyCommand.cs" />
-    <Compile Include="DataMigration\Schema\DropForeignKeyCommand.cs" />
-    <Compile Include="DataMigration\Schema\DropIndexCommand.cs" />
-    <Compile Include="DataMigration\Schema\AddIndexCommand.cs" />
-    <Compile Include="DataMigration\Schema\DropColumnCommand.cs" />
-    <Compile Include="DataMigration\Schema\AlterColumnCommand.cs" />
-    <Compile Include="DataMigration\Schema\DropTableCommand.cs" />
-    <Compile Include="DataMigration\Schema\AlterTableCommand.cs" />
-    <Compile Include="DataMigration\Commands\DataMigrationCommands.cs" />
-    <Compile Include="DataMigration\Schema\SchemaBuilder.cs" />
-    <Compile Include="DataMigration\DataMigrationCoordinator.cs" />
-    <Compile Include="DataMigration\IDataMigrationCommand.cs" />
-    <Compile Include="DataMigration\DefaultDataMigrationGenerator.cs" />
-    <Compile Include="DataMigration\IDataMigrationGenerator.cs" />
-    <Compile Include="DataMigration\DataMigration.cs" />
-    <Compile Include="DataMigration\DataMigrationManager.cs" />
-    <Compile Include="DataMigration\DataMigrationRecord.cs" />
-    <Compile Include="DataMigration\IDataMigration.cs" />
-    <Compile Include="DataMigration\IDataMigrationManager.cs" />
-    <Compile Include="DataMigration\Schema\ColumnCommand.cs" />
-    <Compile Include="DataMigration\Schema\CreateTableCommand.cs" />
-    <Compile Include="DataMigration\Schema\TableCommand.cs" />
-    <Compile Include="DataMigration\Schema\SchemaCommand.cs" />
+    <Compile Include="ContentManagement\DataMigrations\FrameworkDataMigration.cs" />
+    <Compile Include="Data\Migration\Interpreters\ICommandInterpreter.cs" />
+    <Compile Include="Data\Migration\Interpreters\DefaultDataMigrationInterpreter.cs" />
+    <Compile Include="Data\Migration\Interpreters\IDataMigrationInterpreter.cs" />
+    <Compile Include="Data\Migration\Interpreters\SqLiteCommandInterpreter.cs" />
+    <Compile Include="Data\Migration\Schema\AddColumnCommand.cs" />
+    <Compile Include="Data\Migration\Schema\ISchemaBuilderCommand.cs" />
+    <Compile Include="Data\Migration\Schema\IShellSettings.cs" />
+    <Compile Include="Data\Migration\Schema\SqlStatementCommand.cs" />
+    <Compile Include="Data\Migration\Schema\CreateColumnCommand.cs" />
+    <Compile Include="Data\Migration\Schema\CreateForeignKeyCommand.cs" />
+    <Compile Include="Data\Migration\Schema\DropForeignKeyCommand.cs" />
+    <Compile Include="Data\Migration\Schema\DropIndexCommand.cs" />
+    <Compile Include="Data\Migration\Schema\AddIndexCommand.cs" />
+    <Compile Include="Data\Migration\Schema\DropColumnCommand.cs" />
+    <Compile Include="Data\Migration\Schema\AlterColumnCommand.cs" />
+    <Compile Include="Data\Migration\Schema\DropTableCommand.cs" />
+    <Compile Include="Data\Migration\Schema\AlterTableCommand.cs" />
+    <Compile Include="Data\Migration\Commands\DataMigrationCommands.cs" />
+    <Compile Include="Data\Migration\Schema\SchemaBuilder.cs" />
+    <Compile Include="Data\Migration\DataMigrationCoordinator.cs" />
+    <Compile Include="Data\Migration\DefaultDataMigrationGenerator.cs" />
+    <Compile Include="Data\Migration\IDataMigrationGenerator.cs" />
+    <Compile Include="Data\Migration\DataMigration.cs" />
+    <Compile Include="Data\Migration\DataMigrationManager.cs" />
+    <Compile Include="Data\Migration\Records\DataMigrationRecord.cs" />
+    <Compile Include="Data\Migration\IDataMigration.cs" />
+    <Compile Include="Data\Migration\IDataMigrationManager.cs" />
+    <Compile Include="Data\Migration\Schema\ColumnCommand.cs" />
+    <Compile Include="Data\Migration\Schema\CreateTableCommand.cs" />
+    <Compile Include="Data\Migration\Schema\TableCommand.cs" />
+    <Compile Include="Data\Migration\Schema\SchemaCommand.cs" />
     <Compile Include="Data\Providers\DataServiceParameters.cs" />
     <Compile Include="Data\Providers\IDataServicesProvider.cs" />
     <Compile Include="Data\Providers\SessionFactoryParameters.cs" />
@@ -462,6 +463,7 @@
     <Compile Include="Environment\DefaultOrchardHost.cs" />
     <Compile Include="Mvc\OrchardControllerFactory.cs" />
     <Compile Include="Environment\IOrchardHost.cs" />
+    <Compile Include="Mvc\ViewEngines\WebForms\WebFormViewEngineForAspNet4.cs" />
     <Compile Include="OrchardCoreException.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Indexing\IIndexDocument.cs" />
@@ -556,7 +558,7 @@
     <Compile Include="Mvc\Routes\UrlPrefix.cs" />
     <Compile Include="Mvc\Routes\UrlPrefixAdjustedHttpContext.cs" />
     <Compile Include="Mvc\Routes\ShellRoute.cs" />
-    <Compile Include="Mvc\ViewEngines\ThemeViewLocationCache.cs" />
+    <Compile Include="Mvc\ViewEngines\WebForms\ThemeViewLocationCache.cs" />
     <Compile Include="Mvc\ViewModels\AdaptedViewModel.cs" />
     <Compile Include="Mvc\ViewUserControl.cs">
       <SubType>ASPXCodeBehind</SubType>
@@ -643,7 +645,7 @@
     <Compile Include="Mvc\ViewEngines\LayoutViewEngine.cs" />
     <Compile Include="Mvc\ViewEngines\LayoutViewContext.cs" />
     <Compile Include="Mvc\ViewEngines\ViewEngineFilter.cs" />
-    <Compile Include="Mvc\ViewEngines\WebFormsViewEngineProvider.cs" />
+    <Compile Include="Mvc\ViewEngines\WebForms\WebFormViewEngineProvider.cs" />
     <Compile Include="Mvc\ViewModels\BaseViewModel.cs" />
     <Compile Include="UI\Admin\AdminThemeSelector.cs" />
     <Compile Include="UI\Navigation\INavigationManager.cs" />

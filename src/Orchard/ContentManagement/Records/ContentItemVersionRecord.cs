@@ -1,5 +1,3 @@
-using System;
-using Orchard.ContentManagement.FieldStorage;
 using Orchard.ContentManagement.FieldStorage.InfosetStorage;
 
 namespace Orchard.ContentManagement.Records {

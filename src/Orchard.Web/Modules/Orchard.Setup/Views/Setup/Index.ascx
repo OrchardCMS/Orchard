@@ -18,6 +18,10 @@ using (Html.BeginFormAntiForgeryPost()) { %>
         <label for="AdminPassword"><%: T("Choose a password:") %></label>
         <%: Html.PasswordFor(svm => svm.AdminPassword) %>
     </div>
+    <div>
+        <label for="ConfirmAdminPassword"><%: T("Confirm the password:") %></label>
+        <%: Html.PasswordFor(svm => svm.ConfirmPassword)%>
+    </div>
 </fieldset><%
 if (!Model.DatabaseIsPreconfigured) { %>
 <fieldset class="data">

@@ -34,8 +34,7 @@ namespace Orchard.ContentManagement.Drivers {
                     FieldTypeName = typeof (TField).Name,
                     Factory = (partFieldDefinition, storage) => new TField {
                         PartFieldDefinition = partFieldDefinition,
-                        Getter = storage.Getter,
-                        Setter = storage.Setter,
+                        Storage = storage,
                     }
                 }
             };

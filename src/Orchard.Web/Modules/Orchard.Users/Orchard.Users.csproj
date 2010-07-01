@@ -67,6 +67,7 @@
   <ItemGroup>
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\AdminController.cs" />
+    <Compile Include="DataMigrations\UsersDataMigration.cs" />
     <Compile Include="Drivers\UserDriver.cs" />
     <Compile Include="Models\User.cs" />
     <Compile Include="Handlers\UserHandler.cs" />

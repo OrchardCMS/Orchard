@@ -14,7 +14,7 @@ using (Html.BeginFormAntiForgeryPost()) { %>
     </fieldset>
     <% Html.RenderTemplates(Model.Templates); %>
     <h2><%:T("Parts") %></h2>
-    <div class="manage add-to-type"><%: Html.ActionLink(T("Add").Text, "AddPart", new { }, new { @class = "button" }) %></div>
+    <div class="manage add-to-type"><%: Html.ActionLink(T("Add").Text, "AddPartsTo", new { area = "Orchard.ContentTypes", id = Model.Name }, new { @class = "button" })%></div>
     <%:Html.EditorFor(m => m.Parts, "Parts", "") %>
     <h2><%:T("Fields") %></h2>
     <div class="manage add-to-type"><%: Html.ActionLink(T("Add").Text, "AddFieldTo", new { area = "Orchard.ContentTypes", id = Model.Name }, new { @class = "button" }) %></div>
