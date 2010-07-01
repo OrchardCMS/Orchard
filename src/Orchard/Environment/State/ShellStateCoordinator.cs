@@ -186,7 +186,8 @@ namespace Orchard.Environment.State {
         }
 
         public static IEnumerable<FeatureDescriptor> OrderByDependencies(IEnumerable<FeatureDescriptor> descriptors) {
-            return descriptors.OrderByDependencies((item, dep) => 
+            return descriptors.OrderByDependencies((item, dep) =>
+                item.Dependencies != null &&
                 item.Dependencies.Any(x => StringComparer.OrdinalIgnoreCase.Equals(x, dep.Name)));
         }
     }
