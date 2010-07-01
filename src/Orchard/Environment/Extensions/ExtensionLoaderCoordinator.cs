@@ -159,7 +159,7 @@ namespace Orchard.Environment.Extensions {
 
             var referenceNames = (context.ReferencesByModule.ContainsKey(activatedExtension.Descriptor.Name) ?
                 context.ReferencesByModule[activatedExtension.Descriptor.Name] :
-                Enumerable.Empty<ExtensionReferenceEntry>())
+                Enumerable.Empty<ExtensionReferenceProbeEntry>())
                 .Select(r => r.Name)
                 .Distinct(StringComparer.OrdinalIgnoreCase);
 
@@ -184,7 +184,7 @@ namespace Orchard.Environment.Extensions {
 
             var references = context.ReferencesByName.ContainsKey(referenceName) ?
                 context.ReferencesByName[referenceName] :
-                Enumerable.Empty<ExtensionReferenceEntry>();
+                Enumerable.Empty<ExtensionReferenceProbeEntry>();
 
             // Binary references
             var bestBinaryReference = references

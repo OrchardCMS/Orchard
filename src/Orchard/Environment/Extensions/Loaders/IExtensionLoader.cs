@@ -13,7 +13,7 @@ namespace Orchard.Environment.Extensions.Loaders {
         public DateTime LastModificationTimeUtc { get; set; }
     }
 
-    public class ExtensionReferenceEntry {
+    public class ExtensionReferenceProbeEntry {
         public ExtensionDescriptor Descriptor { get; set; }
         public IExtensionLoader Loader { get; set; }
         public string Name { get; set; }
@@ -24,10 +24,10 @@ namespace Orchard.Environment.Extensions.Loaders {
         int Order { get; }
         string Name { get; }
 
-        IEnumerable<ExtensionReferenceEntry> ProbeReferences(ExtensionDescriptor extensionDescriptor);
+        IEnumerable<ExtensionReferenceProbeEntry> ProbeReferences(ExtensionDescriptor extensionDescriptor);
         Assembly LoadReference(DependencyReferenceDescriptor reference);
-        void ReferenceActivated(ExtensionLoadingContext context, ExtensionReferenceEntry referenceEntry);
-        void ReferenceDeactivated(ExtensionLoadingContext context, ExtensionReferenceEntry referenceEntry);
+        void ReferenceActivated(ExtensionLoadingContext context, ExtensionReferenceProbeEntry referenceEntry);
+        void ReferenceDeactivated(ExtensionLoadingContext context, ExtensionReferenceProbeEntry referenceEntry);
 
         ExtensionProbeEntry Probe(ExtensionDescriptor descriptor);
         ExtensionEntry Load(ExtensionDescriptor descriptor);

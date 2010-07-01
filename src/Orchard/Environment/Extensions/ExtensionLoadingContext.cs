@@ -51,11 +51,11 @@ namespace Orchard.Environment.Extensions {
         /// <summary>
         /// For every reference name, list of potential loaders/locations
         /// </summary>
-        public IDictionary<string, IEnumerable<ExtensionReferenceEntry>> ReferencesByModule { get; set; }
+        public IDictionary<string, IEnumerable<ExtensionReferenceProbeEntry>> ReferencesByModule { get; set; }
 
         /// <summary>
-        /// For every extension name, list of references
+        /// For every extension name, list of potential loaders/locations
         /// </summary>
-        public IDictionary<string, IEnumerable<ExtensionReferenceEntry>> ReferencesByName { get; set; }
+        public IDictionary<string, IEnumerable<ExtensionReferenceProbeEntry>> ReferencesByName { get; set; }
     }
 }

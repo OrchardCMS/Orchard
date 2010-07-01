@@ -95,7 +95,7 @@ namespace Orchard.Environment.Extensions.Loaders {
             }
         }
 
-        public override void ReferenceActivated(ExtensionLoadingContext context, ExtensionReferenceEntry referenceEntry) {
+        public override void ReferenceActivated(ExtensionLoadingContext context, ExtensionReferenceProbeEntry referenceEntry) {
             if (string.IsNullOrEmpty(referenceEntry.VirtualPath))
                 return;
 
@@ -125,16 +125,16 @@ namespace Orchard.Environment.Extensions.Loaders {
             }
         }
 
-        public override IEnumerable<ExtensionReferenceEntry> ProbeReferences(ExtensionDescriptor descriptor) {
+        public override IEnumerable<ExtensionReferenceProbeEntry> ProbeReferences(ExtensionDescriptor descriptor) {
             var assemblyPath = GetAssemblyPath(descriptor);
             if (assemblyPath == null)
-                return Enumerable.Empty<ExtensionReferenceEntry>();
+                return Enumerable.Empty<ExtensionReferenceProbeEntry>();
 
             return _virtualPathProvider
                 .ListFiles(_virtualPathProvider.GetDirectoryName(assemblyPath))
                 .Where(s => StringComparer.OrdinalIgnoreCase.Equals(Path.GetExtension(s), ".dll"))
                 .Where(s => !StringComparer.OrdinalIgnoreCase.Equals(Path.GetFileNameWithoutExtension(s), descriptor.Name))
-                .Select(path => new ExtensionReferenceEntry {
+                .Select(path => new ExtensionReferenceProbeEntry {
                     Descriptor = descriptor,
                     Loader = this,
                     Name = Path.GetFileNameWithoutExtension(path),

@@ -79,15 +79,15 @@ namespace Orchard.Environment.Extensions.Loaders {
             }
         }
 
-        public override IEnumerable<ExtensionReferenceEntry> ProbeReferences(ExtensionDescriptor descriptor) {
+        public override IEnumerable<ExtensionReferenceProbeEntry> ProbeReferences(ExtensionDescriptor descriptor) {
             string projectPath = GetProjectPath(descriptor);
             if (projectPath == null)
-                return Enumerable.Empty<ExtensionReferenceEntry>();
+                return Enumerable.Empty<ExtensionReferenceProbeEntry>();
 
             using(var stream = _virtualPathProvider.OpenFile(projectPath)) {
                 var projectFile = _projectFileParser.Parse(stream);
 
-                return projectFile.References.Select(r => new ExtensionReferenceEntry {
+                return projectFile.References.Select(r => new ExtensionReferenceProbeEntry {
                     Descriptor = descriptor,
                     Loader = this,
                     Name = r.AssemblyName,

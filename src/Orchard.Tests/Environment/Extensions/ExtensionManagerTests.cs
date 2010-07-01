@@ -60,11 +60,11 @@ namespace Orchard.Tests.Environment.Extensions {
                 throw new NotImplementedException();
             }
 
-            public void ReferenceActivated(ExtensionLoadingContext context, ExtensionReferenceEntry referenceEntry) {
+            public void ReferenceActivated(ExtensionLoadingContext context, ExtensionReferenceProbeEntry referenceEntry) {
                 throw new NotImplementedException();
             }
 
-            public void ReferenceDeactivated(ExtensionLoadingContext context, ExtensionReferenceEntry referenceEntry) {
+            public void ReferenceDeactivated(ExtensionLoadingContext context, ExtensionReferenceProbeEntry referenceEntry) {
                 throw new NotImplementedException();
             }
 
@@ -72,7 +72,7 @@ namespace Orchard.Tests.Environment.Extensions {
                 return new ExtensionProbeEntry { Descriptor = descriptor, Loader = this };
             }
 
-            public IEnumerable<ExtensionReferenceEntry> ProbeReferences(ExtensionDescriptor extensionDescriptor) {
+            public IEnumerable<ExtensionReferenceProbeEntry> ProbeReferences(ExtensionDescriptor extensionDescriptor) {
                 throw new NotImplementedException();
             }
 

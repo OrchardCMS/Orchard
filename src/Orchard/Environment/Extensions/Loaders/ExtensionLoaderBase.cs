@@ -17,8 +17,8 @@ namespace Orchard.Environment.Extensions.Loaders {
         public abstract int Order { get; }
         public string Name { get { return this.GetType().Name; } }
 
-        public virtual IEnumerable<ExtensionReferenceEntry> ProbeReferences(ExtensionDescriptor descriptor) {
-            return Enumerable.Empty<ExtensionReferenceEntry>();
+        public virtual IEnumerable<ExtensionReferenceProbeEntry> ProbeReferences(ExtensionDescriptor descriptor) {
+            return Enumerable.Empty<ExtensionReferenceProbeEntry>();
         }
 
         public virtual Assembly LoadReference(DependencyReferenceDescriptor reference) {
@@ -35,8 +35,8 @@ namespace Orchard.Environment.Extensions.Loaders {
             return null;
         }
 
-        public virtual void ReferenceActivated(ExtensionLoadingContext context, ExtensionReferenceEntry referenceEntry) { }
-        public virtual void ReferenceDeactivated(ExtensionLoadingContext context, ExtensionReferenceEntry referenceEntry) { }
+        public virtual void ReferenceActivated(ExtensionLoadingContext context, ExtensionReferenceProbeEntry referenceEntry) { }
+        public virtual void ReferenceDeactivated(ExtensionLoadingContext context, ExtensionReferenceProbeEntry referenceEntry) { }
 
         public virtual void ExtensionActivated(ExtensionLoadingContext ctx, ExtensionDescriptor extension) { }
         public virtual void ExtensionDeactivated(ExtensionLoadingContext ctx, ExtensionDescriptor extension) { }
