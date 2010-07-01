@@ -238,6 +238,46 @@ namespace Orchard.ContentTypes.Controllers {
             return RedirectToAction("Edit", new {id});
         }
 
+        public ActionResult RemovePartFrom(string id) {
+            if (!Services.Authorizer.Authorize(Permissions.CreateContentTypes, T("Not allowed to edit a content type.")))
+                return new HttpUnauthorizedResult();
+
+            var contentTypeDefinition = _contentDefinitionService.GetTypeDefinition(id);
+
+            var viewModel = new RemovePartViewModel();
+            if (contentTypeDefinition == null
+                || !TryUpdateModel(viewModel)
+                || !contentTypeDefinition.Parts.Any(p => p.PartDefinition.Name == viewModel.Name))
+                return new NotFoundResult();
+
+            viewModel.Type = new EditTypeViewModel { Name = contentTypeDefinition.Name, DisplayName = contentTypeDefinition.DisplayName };
+            return View(viewModel);
+        }
+
+        [HttpPost, ActionName("RemovePartFrom")]
+        public ActionResult RemovePartFromPOST(string id) {
+            if (!Services.Authorizer.Authorize(Permissions.CreateContentTypes, T("Not allowed to edit a content type.")))
+                return new HttpUnauthorizedResult();
+
+            var contentTypeDefinition = _contentDefinitionService.GetTypeDefinition(id);
+
+            var viewModel = new RemovePartViewModel();
+            if (contentTypeDefinition == null
+                || !TryUpdateModel(viewModel)
+                || !contentTypeDefinition.Parts.Any(p => p.PartDefinition.Name == viewModel.Name))
+                return new NotFoundResult();
+
+            if (!ModelState.IsValid) {
+                viewModel.Type = new EditTypeViewModel { Name = contentTypeDefinition.Name, DisplayName = contentTypeDefinition.DisplayName };
+                return View(viewModel);
+            }
+
+            _contentDefinitionManager.AlterTypeDefinition(id, typeBuilder => typeBuilder.RemovePart(viewModel.Name));
+            Services.Notifier.Information(T("The \"{0}\" part has been removed.", viewModel.Name));
+
+            return RedirectToAction("Edit", new {id});
+        }
+
         #endregion
 
         #region Parts

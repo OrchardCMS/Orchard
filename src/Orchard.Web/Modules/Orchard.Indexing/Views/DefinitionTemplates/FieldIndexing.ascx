@@ -1,7 +1,7 @@
 ﻿<%@ Control Language="C#" Inherits="Orchard.Mvc.ViewUserControl<Orchard.Indexing.Settings.FieldIndexing>" %>
 <%@ Import Namespace="Orchard.Mvc.Html" %>
-<fieldset>
-    <%:Html.EditorFor(m=>m.Included) %>
-    <label for="<%:Html.FieldIdFor(m => m.Included) %>" class="forcheckbox"><%:T("Include in the index") %></label>
-    <%:Html.ValidationMessageFor(m => m.Included)%>
-</fieldset>
+    <fieldset>
+        <%:Html.EditorFor(m=>m.Included) %>
+        <label for="<%:Html.FieldIdFor(m => m.Included) %>" class="forcheckbox"><%:T("Include in the index") %></label><%:
+        Html.ValidationMessageFor(m => m.Included)%>
+    </fieldset>

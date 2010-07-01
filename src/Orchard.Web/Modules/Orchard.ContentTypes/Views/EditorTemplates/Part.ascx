@@ -1,20 +1,13 @@
 ﻿<%@ Control Language="C#" Inherits="Orchard.Mvc.ViewUserControl<Orchard.ContentTypes.ViewModels.EditTypePartViewModel>" %>
-    <fieldset class="manage-part">
-        <h3><%:Model.PartDefinition.Name %></h3>
+    <fieldset class="manage-part" itemscope itemid="<%:Model.PartDefinition.Name %>" itemtype="http://orchardproject.net/data/ContentTypePart">
+        <h3 itemprop="Name"><%:Model.PartDefinition.Name %></h3>
         <div class="manage">
-        <%--// these inline forms can't be here. should probably have some JavaScript in here to build up the forms and add the "remove" link.
-            // get the antiforgery token from the edit type form and mark up the part in a semantic way so I can get some info from the DOM --%>
-            <%:Html.Link("[remove]", "#forshowonlyandnotintendedtowork") %>
-<%--        <% using (Html.BeginFormAntiForgeryPost(Url.Action("RemovePart", new { area = "Contents" }), FormMethod.Post, new {@class = "inline link"})) { %>
-            <%:Html.Hidden("name", Model.PartDefinition.Name, new { id = "" }) %>
-            <button type="submit" title="<%:T("Remove") %>"><%:T("Remove") %></button>
-        <% } %> --%>
-        </div>
-        <% Html.RenderTemplates(Model.Templates); %>
-                
+            <%:Html.ActionLink(T("Remove").Text, "RemovePartFrom", new { area = "Orchard.ContentTypes", id = Model.Type.Name, Model.PartDefinition.Name }, new { itemprop = "RemoveUrl UnsafeUrl" })%><%--// <- some experimentation--%>
+        </div><%
+        Html.RenderTemplates(Model.Templates); %>
         <h4><%:T("Global configuration") %></h4>
         <div class="manage minor"><%:Html.ActionLink(T("Edit").Text, "EditPart", new { area = "Orchard.ContentTypes", id = Model.PartDefinition.Name }) %></div>
-        <%:Html.DisplayFor(m => m.PartDefinition.Settings, "Settings", "PartDefinition") %>
-        <%:Html.EditorFor(m => m.PartDefinition.Fields, "Fields", "PartDefinition") %>
-        <%:Html.Hidden("PartDefinition.Name", Model.PartDefinition.Name) %>
+        <%:Html.DisplayFor(m => m.PartDefinition.Settings, "Settings", "PartDefinition")
+        %><%:Html.EditorFor(m => m.PartDefinition.Fields, "Fields", "PartDefinition")
+        %><%:Html.Hidden("PartDefinition.Name", Model.PartDefinition.Name) %>
     </fieldset>
