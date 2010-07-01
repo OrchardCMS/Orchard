@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Xml;
@@ -36,12 +35,21 @@ namespace Orchard.Environment.Extensions.Compilers {
         }
 
         private IEnumerable<ReferenceDescriptor> GetReferences(XDocument document) {
-            return document
+            var assemblyReferences = document
                 .Elements(ns("Project"))
                 .Elements(ns("ItemGroup"))
                 .Elements(ns("Reference"))
                 .Attributes("Include")
                 .Select(c => new ReferenceDescriptor { AssemblyName = ExtractAssemblyName(c.Value) });
+
+            var projectReferences = document
+                .Elements(ns("Project"))
+                .Elements(ns("ItemGroup"))
+                .Elements(ns("ProjectReference"))
+                .Attributes("Include")
+                .Select(c => new ReferenceDescriptor { AssemblyName = Path.GetFileNameWithoutExtension(c.Value) });
+
+            return assemblyReferences.Union(projectReferences);
         }
 
         private static string ExtractAssemblyName(string value) {
