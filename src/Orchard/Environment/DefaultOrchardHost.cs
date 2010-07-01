@@ -152,13 +152,21 @@ namespace Orchard.Environment {
         protected virtual void BeginRequest() {
             MonitorExtensions();
             BuildCurrent();
+
+            // If setting up extensions/modules requires an AppDomain restart, it's very unlikely the
+            // current request can be processed correctly.  So, we redirect to the same URL, so that the
+            // new request will come to the newly started AppDomain.
             if (_setupExtensionsContext.RestartAppDomain) {
-                if (HttpContext.Current != null)
+                if (HttpContext.Current != null) {
                     // Don't redirect posts...
-                    if (HttpContext.Current.Request.RequestType == "GET")
-                        HttpContext.Current.Response.Redirect(HttpContext.Current.Request.ToUrlString(), true/*endResponse*/);
-                    else
-                        throw new HttpException(T("Orchard is temporarily unavailable as a change in configuration requires a restart. A simple page refresh usually solve this issue.").Text);
+                    if (HttpContext.Current.Request.RequestType == "GET") {
+                        HttpContext.Current.Response.Redirect(HttpContext.Current.Request.ToUrlString(), true /*endResponse*/);
+                    }
+                    else {
+                        HttpContext.Current.Response.WriteFile("~/Refresh.html");
+                        HttpContext.Current.Response.End();
+                    }
+                }
             }
         }
 
