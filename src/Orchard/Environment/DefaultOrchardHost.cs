@@ -1,5 +1,6 @@
 using System.Linq;
 using System.Threading;
+using System.Web;
 using System.Web.Mvc;
 using System.Collections.Generic;
 using Orchard.Caching;
@@ -9,6 +10,7 @@ using Orchard.Environment.ShellBuilders;
 using Orchard.Environment.State;
 using Orchard.Environment.Descriptor;
 using Orchard.Environment.Descriptor.Models;
+using Orchard.Localization;
 using Orchard.Logging;
 using Orchard.Mvc;
 using Orchard.Mvc.ViewEngines;
@@ -24,6 +26,7 @@ namespace Orchard.Environment {
         private readonly IExtensionLoaderCoordinator _extensionLoaderCoordinator;
         private readonly ICacheManager _cacheManager;
         private readonly object _syncLock = new object();
+        private readonly SetupExtensionsContext _setupExtensionsContext = new SetupExtensionsContext();
 
         private IEnumerable<ShellContext> _current;
 
@@ -44,9 +47,11 @@ namespace Orchard.Environment {
             _cacheManager = cacheManager;
             _controllerBuilder = controllerBuilder;
 
+            T = NullLocalizer.Instance;
             Logger = NullLogger.Instance;
         }
 
+        public Localizer T { get; set; }
         public ILogger Logger { get; set; }
 
         public IList<ShellContext> Current {
@@ -129,10 +134,13 @@ namespace Orchard.Environment {
         }
 
         private void SetupExtensions() {
-            _extensionLoaderCoordinator.SetupExtensions();
+            _extensionLoaderCoordinator.SetupExtensions(_setupExtensionsContext);
         }
 
         private void MonitorExtensions() {
+            // This is a "fake" cache entry to allow the extension loader coordinator
+            // notify us (by resetting _current to "null") when an extension has changed
+            // on disk, and we need to reload new/updated extensions.
             _cacheManager.Get("OrchardHost_Extensions",
                               ctx => {
                                   _extensionLoaderCoordinator.MonitorExtensions(ctx.Monitor);
@@ -144,6 +152,14 @@ namespace Orchard.Environment {
         protected virtual void BeginRequest() {
             MonitorExtensions();
             BuildCurrent();
+            if (_setupExtensionsContext.RestartAppDomain) {
+                if (HttpContext.Current != null)
+                    // Don't redirect posts...
+                    if (HttpContext.Current.Request.RequestType == "GET")
+                        HttpContext.Current.Response.Redirect(HttpContext.Current.Request.ToUrlString(), true/*endResponse*/);
+                    else
+                        throw new HttpException(T("Orchard is temporarily unavailable as a change in configuration requires a restart. A simple page refresh usually solve this issue.").Text);
+            }
         }
 
 

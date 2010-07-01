@@ -41,8 +41,8 @@ namespace Orchard.Environment.Extensions {
         public Localizer T { get; set; }
         public ILogger Logger { get; set; }
 
-        public void SetupExtensions() {
-            Logger.Information("Loading extensions.");
+        public void SetupExtensions(SetupExtensionsContext setupExtensionsContext) {
+            Logger.Information("Start loading extensions...");
 
             var context = CreateLoadingContext();
 
@@ -67,7 +67,10 @@ namespace Orchard.Environment.Extensions {
 
             // And finally save the new entries in the dependencies folder
             _dependenciesFolder.StoreDescriptors(context.NewDependencies);
-            Logger.Information("Done loading extensions.");
+
+            setupExtensionsContext.RestartAppDomain = context.RestartAppDomain;
+
+            Logger.Information("Done loading extensions...");
         }
 
         private void ProcessExtension(ExtensionLoadingContext context, ExtensionDescriptor extension) {
