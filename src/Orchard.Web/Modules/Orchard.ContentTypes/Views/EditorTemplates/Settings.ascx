@@ -1,5 +1,6 @@
 ﻿<%@ Control Language="C#" Inherits="Orchard.Mvc.ViewUserControl<SettingsDictionary>" %>
-<%@ import Namespace="Orchard.ContentManagement.MetaData.Models" %><%
+<%@ import Namespace="Orchard.ContentManagement.MetaData.Models" %>
+<%
 if (Model.Any()) { %>
     <fieldset><%
         var si = 0;
