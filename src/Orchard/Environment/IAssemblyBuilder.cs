@@ -1,9 +1,12 @@
-﻿using System.CodeDom;
+﻿using System;
+using System.CodeDom;
+using System.Reflection;
 using System.Web.Compilation;
 
 namespace Orchard.Environment {
     public interface IAssemblyBuilder {
         void AddCodeCompileUnit(CodeCompileUnit compileUnit);
+        void AddAssemblyReference(Assembly assembly);
     }
 
     public class AspNetAssemblyBuilder : IAssemblyBuilder {
@@ -17,6 +20,10 @@ namespace Orchard.Environment {
 
         public void AddCodeCompileUnit(CodeCompileUnit compileUnit) {
             _assemblyBuilder.AddCodeCompileUnit(_buildProvider, compileUnit);
+        }
+
+        public void AddAssemblyReference(Assembly assembly) {
+            _assemblyBuilder.AddAssemblyReference(assembly);
         }
     }
 }

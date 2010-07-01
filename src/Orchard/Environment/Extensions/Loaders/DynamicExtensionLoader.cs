@@ -2,29 +2,35 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using Orchard.Caching;
+using Orchard.Environment.Extensions.Compilers;
 using Orchard.Environment.Extensions.Models;
 using Orchard.FileSystems.Dependencies;
 using Orchard.FileSystems.VirtualPath;
 using Orchard.Logging;
+using ReferenceDescriptor = Orchard.FileSystems.Dependencies.ReferenceDescriptor;
 
 namespace Orchard.Environment.Extensions.Loaders {
     public class DynamicExtensionLoader : ExtensionLoaderBase {
         private readonly IBuildManager _buildManager;
         private readonly IVirtualPathProvider _virtualPathProvider;
         private readonly IVirtualPathMonitor _virtualPathMonitor;
+        private readonly IProjectFileParser _projectFileParser;
         private static readonly ReloadWorkaround _reloadWorkaround = new ReloadWorkaround();
 
         public DynamicExtensionLoader(
             IBuildManager buildManager,
             IVirtualPathProvider virtualPathProvider,
             IVirtualPathMonitor virtualPathMonitor,
-            IDependenciesFolder dependenciesFolder)
+            IDependenciesFolder dependenciesFolder,
+            IProjectFileParser projectFileParser)
             : base(dependenciesFolder) {
 
             _buildManager = buildManager;
             _virtualPathProvider = virtualPathProvider;
             _virtualPathMonitor = virtualPathMonitor;
+            _projectFileParser = projectFileParser;
 
             Logger = NullLogger.Instance;
         }
@@ -72,6 +78,27 @@ namespace Orchard.Environment.Extensions.Loaders {
                 Logger.Information("ExtensionActivated: Module \"{0}\" has changed, forcing AppDomain restart", extension.Name);
                 ctx.RestartAppDomain = _reloadWorkaround.AppDomainRestartNeeded;
             }
+        }
+
+        public override IEnumerable<ExtensionReferenceEntry> ProbeReferences(ExtensionDescriptor descriptor) {
+            string projectPath = GetProjectPath(descriptor);
+            if (projectPath == null)
+                return Enumerable.Empty<ExtensionReferenceEntry>();
+
+            using(var stream = _virtualPathProvider.OpenFile(projectPath)) {
+                var projectFile = _projectFileParser.Parse(stream);
+
+                return projectFile.References.Select(r => new ExtensionReferenceEntry {
+                    Descriptor = descriptor,
+                    Loader = this,
+                    Name = r.AssemblyName,
+                    VirtualPath = null
+                });
+            }
+        }
+
+        public override Assembly LoadReference(ReferenceDescriptor reference) {
+            return _buildManager.GetCompiledAssembly(reference.VirtualPath);
         }
 
         public override ExtensionProbeEntry Probe(ExtensionDescriptor descriptor) {

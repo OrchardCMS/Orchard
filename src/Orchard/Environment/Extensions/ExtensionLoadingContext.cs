@@ -1,17 +1,61 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using Orchard.Environment.Extensions.Loaders;
+using Orchard.Environment.Extensions.Models;
+using Orchard.FileSystems.Dependencies;
 
 namespace Orchard.Environment.Extensions {
     public class ExtensionLoadingContext {
         public ExtensionLoadingContext() {
+            ProcessedExtensions = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+            ProcessedReferences = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
             DeleteActions = new List<Action>();
             CopyActions = new List<Action>();
+            NewDependencies = new List<DependencyDescriptor>();
         }
 
-        public IList<Action> DeleteActions { get; set; }
-        public IList<Action> CopyActions { get; set; }
+        public ISet<string> ProcessedExtensions { get; private set; }
+        public ISet<string> ProcessedReferences { get; private set; }
+
+        public IList<DependencyDescriptor> NewDependencies { get; private set; }
+
+        public IList<Action> DeleteActions { get; private set; }
+        public IList<Action> CopyActions { get; private set; }
 
         public bool RestartAppDomain { get; set; }
         public bool ResetSiteCompilation { get; set; }
+
+        /// <summary>
+        /// List of extensions (modules) present in the system
+        /// </summary>
+        public List<ExtensionDescriptor> AvailableExtensions { get; set; }
+
+        /// <summary>
+        /// List of extensions (modules) that were loaded during a previous successful run
+        /// </summary>
+        public List<DependencyDescriptor> PreviousDependencies { get; set; }
+
+        /// <summary>
+        /// The list of extensions/modules that are were present in the previous successful run
+        /// and that are not present in the system anymore.
+        /// </summary>
+        public List<DependencyDescriptor> DeletedDependencies { get; set; }
+
+        /// <summary>
+        /// For every extension name, the list of loaders that can potentially load
+        /// that extension (in order of "best-of" applicable)
+        /// </summary>
+        public IDictionary<string, IOrderedEnumerable<ExtensionProbeEntry>> AvailableExtensionsProbes { get; set; }
+
+        /// <summary>
+        /// For every reference name, list of potential loaders/locations
+        /// </summary>
+        public IDictionary<string, IEnumerable<ExtensionReferenceEntry>> ReferencesByModule { get; set; }
+
+        /// <summary>
+        /// For every extension name, list of references
+        /// </summary>
+        public IDictionary<string, IEnumerable<ExtensionReferenceEntry>> ReferencesByName { get; set; }
     }
 }

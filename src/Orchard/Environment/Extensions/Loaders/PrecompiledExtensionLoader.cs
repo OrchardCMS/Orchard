@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using System.Reflection;
 using Orchard.Caching;
 using Orchard.Environment.Extensions.Models;
 using Orchard.FileSystems.Dependencies;
@@ -93,12 +95,51 @@ namespace Orchard.Environment.Extensions.Loaders {
             }
         }
 
+        public override void ReferenceActivated(ExtensionLoadingContext context, ExtensionReferenceEntry referenceEntry) {
+            if (string.IsNullOrEmpty(referenceEntry.VirtualPath))
+                return;
+
+            string sourceFileName = _virtualPathProvider.MapPath(referenceEntry.VirtualPath);
+
+            // Copy the assembly if it doesn't exist or if it is older than the source file.
+            bool copyAssembly =
+                !_assemblyProbingFolder.AssemblyExists(referenceEntry.Name) ||
+                File.GetLastWriteTimeUtc(sourceFileName) > _assemblyProbingFolder.GetAssemblyDateTimeUtc(referenceEntry.Name);
+
+            if (copyAssembly) {
+                context.CopyActions.Add(() => _assemblyProbingFolder.StoreAssembly(referenceEntry.Name, sourceFileName));
+
+                // We need to restart the appDomain if the assembly is loaded
+                if (IsAssemblyLoaded(referenceEntry.Name)) {
+                    Logger.Information("ReferenceActivated: Reference \"{0}\" is activated with newer file and its assembly is loaded, forcing AppDomain restart", referenceEntry.Name);
+                    context.RestartAppDomain = true;
+                }
+            }
+        }
+
         public override void Monitor(ExtensionDescriptor descriptor, Action<IVolatileToken> monitor) {
             string assemblyPath = GetAssemblyPath(descriptor);
             if (assemblyPath != null) {
                 Logger.Information("Monitoring virtual path \"{0}\"", assemblyPath);
                 monitor(_virtualPathMonitor.WhenPathChanges(assemblyPath));
             }
+        }
+
+        public override IEnumerable<ExtensionReferenceEntry> ProbeReferences(ExtensionDescriptor descriptor) {
+            var assemblyPath = GetAssemblyPath(descriptor);
+            if (assemblyPath == null)
+                return Enumerable.Empty<ExtensionReferenceEntry>();
+
+            return _virtualPathProvider
+                .ListFiles(_virtualPathProvider.GetDirectoryName(assemblyPath))
+                .Where(s => StringComparer.OrdinalIgnoreCase.Equals(Path.GetExtension(s), ".dll"))
+                .Where(s => !StringComparer.OrdinalIgnoreCase.Equals(Path.GetFileNameWithoutExtension(s), descriptor.Name))
+                .Select(path => new ExtensionReferenceEntry {
+                    Descriptor = descriptor,
+                    Loader = this,
+                    Name = Path.GetFileNameWithoutExtension(path),
+                    VirtualPath = path
+                } );
         }
 
         public override ExtensionProbeEntry Probe(ExtensionDescriptor descriptor) {
@@ -112,6 +153,10 @@ namespace Orchard.Environment.Extensions.Loaders {
                 Loader = this,
                 VirtualPath = assemblyPath
             };
+        }
+
+        public override Assembly LoadReference(ReferenceDescriptor reference) {
+            return _assemblyProbingFolder.LoadAssembly(reference.Name);
         }
 
         protected override ExtensionEntry LoadWorker(ExtensionDescriptor descriptor) {

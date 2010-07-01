@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Xml;
@@ -40,7 +41,14 @@ namespace Orchard.Environment.Extensions.Compilers {
                 .Elements(ns("ItemGroup"))
                 .Elements(ns("Reference"))
                 .Attributes("Include")
-                .Select(c => new ReferenceDescriptor { AssemblyName = c.Value });
+                .Select(c => new ReferenceDescriptor { AssemblyName = ExtractAssemblyName(c.Value) });
+        }
+
+        private static string ExtractAssemblyName(string value) {
+            int index = value.IndexOf(',');
+            if (index < 0)
+                return value;
+            return value.Substring(0, index);
         }
 
         private static XName ns(string name) {

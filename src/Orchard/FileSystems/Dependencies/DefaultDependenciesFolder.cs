@@ -69,9 +69,12 @@ namespace Orchard.FileSystems.Dependencies {
                     .Select(e => new DependencyDescriptor {
                         Name = elem(e, "ModuleName"),
                         VirtualPath = elem(e, "VirtualPath"),
-                        LoaderName = elem(e, "LoaderName")
-                    })
-                    .ToList();
+                        LoaderName = elem(e, "LoaderName"),
+                        References = e.Elements(ns("References")).Elements(ns("Reference")).Select(r => new ReferenceDescriptor {
+                            Name = elem(r, "Name"),
+                            LoaderName = elem(r, "LoaderName"),
+                            VirtualPath = elem(r, "VirtualPath")
+                    })}).ToList();
             }
         }
 
@@ -83,7 +86,13 @@ namespace Orchard.FileSystems.Dependencies {
             var elements = dependencies.Select(d => new XElement("Dependency",
                                                                  new XElement(ns("ModuleName"), d.Name),
                                                                  new XElement(ns("VirtualPath"), d.VirtualPath),
-                                                                 new XElement(ns("LoaderName"), d.LoaderName)));
+                                                                 new XElement(ns("LoaderName"), d.LoaderName),
+                                                                 new XElement(ns("References"), d.References
+                                                                     .Select(r => new XElement(ns("Reference"),
+                                                                        new XElement(ns("Name"), r.Name),
+                                                                        new XElement(ns("LoaderName"), r.LoaderName),
+                                                                        new XElement(ns("VirtualPath"), r.VirtualPath))).ToArray())));
+
             document.Root.Add(elements);
 
             using (var stream = _appDataFolder.CreateFile(persistancePath)) {
@@ -99,7 +108,27 @@ namespace Orchard.FileSystems.Dependencies {
         }
 
         private class DependencyDescriptorComparer : EqualityComparer<DependencyDescriptor> {
+            private readonly ReferenceDescriptorComparer _referenceDescriptorComparer = new ReferenceDescriptorComparer();
+
             public override bool Equals(DependencyDescriptor x, DependencyDescriptor y) {
+                return
+                    StringComparer.OrdinalIgnoreCase.Equals(x.Name, y.Name) &&
+                    StringComparer.OrdinalIgnoreCase.Equals(x.LoaderName, y.LoaderName) &&
+                    StringComparer.OrdinalIgnoreCase.Equals(x.VirtualPath, y.VirtualPath) &&
+                    x.References.SequenceEqual(y.References, _referenceDescriptorComparer);
+            }
+
+            public override int GetHashCode(DependencyDescriptor obj) {
+                return
+                    StringComparer.OrdinalIgnoreCase.GetHashCode(obj.Name) ^
+                    StringComparer.OrdinalIgnoreCase.GetHashCode(obj.LoaderName) ^
+                    StringComparer.OrdinalIgnoreCase.GetHashCode(obj.VirtualPath) ^
+                    obj.References.Aggregate(0, (a, entry) => a + _referenceDescriptorComparer.GetHashCode(entry));
+            }
+        }
+
+        private class ReferenceDescriptorComparer : EqualityComparer<ReferenceDescriptor> {
+            public override bool Equals(ReferenceDescriptor x, ReferenceDescriptor y) {
                 return
                     StringComparer.OrdinalIgnoreCase.Equals(x.Name, y.Name) &&
                     StringComparer.OrdinalIgnoreCase.Equals(x.LoaderName, y.LoaderName) &&
@@ -107,7 +136,7 @@ namespace Orchard.FileSystems.Dependencies {
 
             }
 
-            public override int GetHashCode(DependencyDescriptor obj) {
+            public override int GetHashCode(ReferenceDescriptor obj) {
                 return
                     StringComparer.OrdinalIgnoreCase.GetHashCode(obj.Name) ^
                     StringComparer.OrdinalIgnoreCase.GetHashCode(obj.LoaderName) ^

@@ -6,6 +6,13 @@ namespace Orchard.FileSystems.Dependencies {
         public string Name { get; set; }
         public string LoaderName { get; set; }
         public string VirtualPath { get; set; }
+        public IEnumerable<ReferenceDescriptor> References { get; set; }
+    }
+
+    public class ReferenceDescriptor {
+        public string Name { get; set; }
+        public string LoaderName { get; set; }
+        public string VirtualPath { get; set; }
     }
 
     public interface IDependenciesFolder : IVolatileProvider {

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using Orchard.Caching;
 using Orchard.Environment.Extensions.Models;
 using Orchard.FileSystems.Dependencies;
@@ -16,6 +17,14 @@ namespace Orchard.Environment.Extensions.Loaders {
         public abstract int Order { get; }
         public string Name { get { return this.GetType().Name; } }
 
+        public virtual IEnumerable<ExtensionReferenceEntry> ProbeReferences(ExtensionDescriptor descriptor) {
+            return Enumerable.Empty<ExtensionReferenceEntry>();
+        }
+
+        public virtual Assembly LoadReference(ReferenceDescriptor reference) {
+            return null;
+        }
+
         public abstract ExtensionProbeEntry Probe(ExtensionDescriptor descriptor);
 
         public ExtensionEntry Load(ExtensionDescriptor descriptor) {
@@ -26,9 +35,13 @@ namespace Orchard.Environment.Extensions.Loaders {
             return null;
         }
 
+        public virtual void ReferenceActivated(ExtensionLoadingContext context, ExtensionReferenceEntry referenceEntry) { }
+        public virtual void ReferenceDeactivated(ExtensionLoadingContext context, ExtensionReferenceEntry referenceEntry) { }
+
         public virtual void ExtensionActivated(ExtensionLoadingContext ctx, ExtensionDescriptor extension) { }
         public virtual void ExtensionDeactivated(ExtensionLoadingContext ctx, ExtensionDescriptor extension) { }
         public virtual void ExtensionRemoved(ExtensionLoadingContext ctx, DependencyDescriptor dependency) { }
+
         public virtual void Monitor(ExtensionDescriptor extension, Action<IVolatileToken> monitor) { }
 
         protected abstract ExtensionEntry LoadWorker(ExtensionDescriptor descriptor);

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using Autofac;
 using NUnit.Framework;
 using Orchard.Caching;
@@ -55,8 +56,24 @@ namespace Orchard.Tests.Environment.Extensions {
                 get { throw new NotImplementedException(); }
             }
 
+            public Assembly LoadReference(ReferenceDescriptor reference) {
+                throw new NotImplementedException();
+            }
+
+            public void ReferenceActivated(ExtensionLoadingContext context, ExtensionReferenceEntry referenceEntry) {
+                throw new NotImplementedException();
+            }
+
+            public void ReferenceDeactivated(ExtensionLoadingContext context, ExtensionReferenceEntry referenceEntry) {
+                throw new NotImplementedException();
+            }
+
             public ExtensionProbeEntry Probe(ExtensionDescriptor descriptor) {
                 return new ExtensionProbeEntry { Descriptor = descriptor, Loader = this };
+            }
+
+            public IEnumerable<ExtensionReferenceEntry> ProbeReferences(ExtensionDescriptor extensionDescriptor) {
+                throw new NotImplementedException();
             }
 
             public ExtensionEntry Load(ExtensionDescriptor descriptor) {
