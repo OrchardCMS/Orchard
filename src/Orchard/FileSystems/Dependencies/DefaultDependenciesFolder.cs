@@ -70,7 +70,7 @@ namespace Orchard.FileSystems.Dependencies {
                         Name = elem(e, "ModuleName"),
                         VirtualPath = elem(e, "VirtualPath"),
                         LoaderName = elem(e, "LoaderName"),
-                        References = e.Elements(ns("References")).Elements(ns("Reference")).Select(r => new ReferenceDescriptor {
+                        References = e.Elements(ns("References")).Elements(ns("Reference")).Select(r => new DependencyReferenceDescriptor {
                             Name = elem(r, "Name"),
                             LoaderName = elem(r, "LoaderName"),
                             VirtualPath = elem(r, "VirtualPath")
@@ -127,8 +127,8 @@ namespace Orchard.FileSystems.Dependencies {
             }
         }
 
-        private class ReferenceDescriptorComparer : EqualityComparer<ReferenceDescriptor> {
-            public override bool Equals(ReferenceDescriptor x, ReferenceDescriptor y) {
+        private class ReferenceDescriptorComparer : EqualityComparer<DependencyReferenceDescriptor> {
+            public override bool Equals(DependencyReferenceDescriptor x, DependencyReferenceDescriptor y) {
                 return
                     StringComparer.OrdinalIgnoreCase.Equals(x.Name, y.Name) &&
                     StringComparer.OrdinalIgnoreCase.Equals(x.LoaderName, y.LoaderName) &&
@@ -136,7 +136,7 @@ namespace Orchard.FileSystems.Dependencies {
 
             }
 
-            public override int GetHashCode(ReferenceDescriptor obj) {
+            public override int GetHashCode(DependencyReferenceDescriptor obj) {
                 return
                     StringComparer.OrdinalIgnoreCase.GetHashCode(obj.Name) ^
                     StringComparer.OrdinalIgnoreCase.GetHashCode(obj.LoaderName) ^

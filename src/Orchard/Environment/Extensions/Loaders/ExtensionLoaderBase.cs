@@ -21,7 +21,7 @@ namespace Orchard.Environment.Extensions.Loaders {
             return Enumerable.Empty<ExtensionReferenceEntry>();
         }
 
-        public virtual Assembly LoadReference(ReferenceDescriptor reference) {
+        public virtual Assembly LoadReference(DependencyReferenceDescriptor reference) {
             return null;
         }
 

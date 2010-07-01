@@ -9,7 +9,6 @@ using Orchard.Environment.Extensions.Models;
 using Orchard.FileSystems.Dependencies;
 using Orchard.FileSystems.VirtualPath;
 using Orchard.Logging;
-using ReferenceDescriptor = Orchard.FileSystems.Dependencies.ReferenceDescriptor;
 
 namespace Orchard.Environment.Extensions.Loaders {
     public class DynamicExtensionLoader : ExtensionLoaderBase {
@@ -97,7 +96,7 @@ namespace Orchard.Environment.Extensions.Loaders {
             }
         }
 
-        public override Assembly LoadReference(ReferenceDescriptor reference) {
+        public override Assembly LoadReference(DependencyReferenceDescriptor reference) {
             return _buildManager.GetCompiledAssembly(reference.VirtualPath);
         }
 

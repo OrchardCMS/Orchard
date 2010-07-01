@@ -155,7 +155,7 @@ namespace Orchard.Environment.Extensions.Loaders {
             };
         }
 
-        public override Assembly LoadReference(ReferenceDescriptor reference) {
+        public override Assembly LoadReference(DependencyReferenceDescriptor reference) {
             return _assemblyProbingFolder.LoadAssembly(reference.Name);
         }
 

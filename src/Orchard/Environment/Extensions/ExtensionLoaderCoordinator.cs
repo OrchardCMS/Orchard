@@ -153,9 +153,9 @@ namespace Orchard.Environment.Extensions {
             }
         }
 
-        IEnumerable<ReferenceDescriptor> ProcessExtensionReferences(ExtensionLoadingContext context, ExtensionProbeEntry activatedExtension) {
+        IEnumerable<DependencyReferenceDescriptor> ProcessExtensionReferences(ExtensionLoadingContext context, ExtensionProbeEntry activatedExtension) {
             if (activatedExtension == null)
-                return Enumerable.Empty<ReferenceDescriptor>();
+                return Enumerable.Empty<DependencyReferenceDescriptor>();
 
             var referenceNames = (context.ReferencesByModule.ContainsKey(activatedExtension.Descriptor.Name) ?
                 context.ReferencesByModule[activatedExtension.Descriptor.Name] :
@@ -163,7 +163,7 @@ namespace Orchard.Environment.Extensions {
                 .Select(r => r.Name)
                 .Distinct(StringComparer.OrdinalIgnoreCase);
 
-            var referencesDecriptors = new List<ReferenceDescriptor>();
+            var referencesDecriptors = new List<DependencyReferenceDescriptor>();
             foreach (var referenceName in referenceNames) {
                 ProcessExtensionReference(context, activatedExtension, referenceName, referencesDecriptors);
             }
@@ -174,7 +174,7 @@ namespace Orchard.Environment.Extensions {
         private void ProcessExtensionReference(ExtensionLoadingContext context,
             ExtensionProbeEntry activatedExtension,
             string referenceName,
-            IList<ReferenceDescriptor> activatedReferences) {
+            IList<DependencyReferenceDescriptor> activatedReferences) {
 
             // Assemblies loaded by the BuildManager are ignored, since
             // we don't want to update them and they are automatically
@@ -213,7 +213,7 @@ namespace Orchard.Environment.Extensions {
                     context.ProcessedReferences.Add(bestBinaryReference.Entry.Name);
                     bestBinaryReference.Entry.Loader.ReferenceActivated(context, bestBinaryReference.Entry);
                 }
-                activatedReferences.Add(new ReferenceDescriptor {
+                activatedReferences.Add(new DependencyReferenceDescriptor {
                     LoaderName = bestBinaryReference.Entry.Loader.Name,
                     Name = bestBinaryReference.Entry.Name,
                     VirtualPath = bestBinaryReference.Entry.VirtualPath
@@ -224,7 +224,7 @@ namespace Orchard.Environment.Extensions {
             // Activated the module ref
             if (bestProbe != null)
             {
-                activatedReferences.Add(new ReferenceDescriptor {
+                activatedReferences.Add(new DependencyReferenceDescriptor {
                     LoaderName = bestProbe.Loader.Name,
                     Name = referenceName,
                     VirtualPath = bestProbe.VirtualPath

@@ -25,7 +25,7 @@ namespace Orchard.Environment.Extensions.Loaders {
         string Name { get; }
 
         IEnumerable<ExtensionReferenceEntry> ProbeReferences(ExtensionDescriptor extensionDescriptor);
-        Assembly LoadReference(ReferenceDescriptor reference);
+        Assembly LoadReference(DependencyReferenceDescriptor reference);
         void ReferenceActivated(ExtensionLoadingContext context, ExtensionReferenceEntry referenceEntry);
         void ReferenceDeactivated(ExtensionLoadingContext context, ExtensionReferenceEntry referenceEntry);
 

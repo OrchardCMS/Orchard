@@ -56,7 +56,7 @@ namespace Orchard.Tests.Environment.Extensions {
                 get { throw new NotImplementedException(); }
             }
 
-            public Assembly LoadReference(ReferenceDescriptor reference) {
+            public Assembly LoadReference(DependencyReferenceDescriptor reference) {
                 throw new NotImplementedException();
             }
 

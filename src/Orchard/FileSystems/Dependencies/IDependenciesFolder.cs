@@ -5,15 +5,15 @@ using Orchard.Caching;
 namespace Orchard.FileSystems.Dependencies {
     public class DependencyDescriptor {
         public DependencyDescriptor() {
-            References = Enumerable.Empty<ReferenceDescriptor>();
+            References = Enumerable.Empty<DependencyReferenceDescriptor>();
         }
         public string Name { get; set; }
         public string LoaderName { get; set; }
         public string VirtualPath { get; set; }
-        public IEnumerable<ReferenceDescriptor> References { get; set; }
+        public IEnumerable<DependencyReferenceDescriptor> References { get; set; }
     }
 
-    public class ReferenceDescriptor {
+    public class DependencyReferenceDescriptor {
         public string Name { get; set; }
         public string LoaderName { get; set; }
         public string VirtualPath { get; set; }
