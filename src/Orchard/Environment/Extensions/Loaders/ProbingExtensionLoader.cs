@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using Orchard.Environment.Extensions.Models;
 using Orchard.FileSystems.Dependencies;
 using Orchard.Logging;
@@ -62,6 +63,17 @@ namespace Orchard.Environment.Extensions.Loaders {
                     ctx.RestartAppDomain = true;
                 }
             }
+        }
+
+        public override bool IsCompatibleWithReferences(ExtensionDescriptor extension, IEnumerable<ExtensionProbeEntry> references) {
+            // A pre-compiled module is _not_ compatible with a dynamically loaded module
+            // because a pre-compiled module usually references a pre-compiled assembly binary
+            // which will have a different identity (i.e. name) from the dynamic module.
+            bool result = references.All(r => r.Loader.GetType() != typeof(DynamicExtensionLoader));
+            if (!result) {
+                Logger.Information("Extension \"{0}\" will not be loaded as pre-compiled extension because one or more referenced extension is dynamically compiled", extension.Name);
+            }
+            return result;
         }
 
         public override ExtensionProbeEntry Probe(ExtensionDescriptor descriptor) {

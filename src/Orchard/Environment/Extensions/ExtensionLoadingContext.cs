@@ -8,14 +8,14 @@ using Orchard.FileSystems.Dependencies;
 namespace Orchard.Environment.Extensions {
     public class ExtensionLoadingContext {
         public ExtensionLoadingContext() {
-            ProcessedExtensions = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+            ProcessedExtensions = new Dictionary<string, ExtensionProbeEntry>(StringComparer.OrdinalIgnoreCase);
             ProcessedReferences = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
             DeleteActions = new List<Action>();
             CopyActions = new List<Action>();
             NewDependencies = new List<DependencyDescriptor>();
         }
 
-        public ISet<string> ProcessedExtensions { get; private set; }
+        public IDictionary<string, ExtensionProbeEntry> ProcessedExtensions { get; private set; }
         public ISet<string> ProcessedReferences { get; private set; }
 
         public IList<DependencyDescriptor> NewDependencies { get; private set; }

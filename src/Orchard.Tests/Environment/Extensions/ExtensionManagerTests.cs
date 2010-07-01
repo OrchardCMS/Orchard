@@ -68,6 +68,10 @@ namespace Orchard.Tests.Environment.Extensions {
                 throw new NotImplementedException();
             }
 
+            public bool IsCompatibleWithReferences(ExtensionDescriptor extension, IEnumerable<ExtensionProbeEntry> references) {
+                throw new NotImplementedException();
+            }
+
             public ExtensionProbeEntry Probe(ExtensionDescriptor descriptor) {
                 return new ExtensionProbeEntry { Descriptor = descriptor, Loader = this };
             }

@@ -36,7 +36,9 @@ namespace Orchard.Environment.Extensions {
             foreach (var descriptor in AvailableExtensions()) {
                 // Extensions that are Themes don't have buildable components.
                 if (String.Equals(descriptor.ExtensionType, "Module", StringComparison.OrdinalIgnoreCase)) {
-                    yield return BuildEntry(descriptor);
+                    var entry = BuildEntry(descriptor);
+                    if (entry != null)
+                        yield return entry;
                 }
             }
         }
@@ -159,6 +161,8 @@ namespace Orchard.Environment.Extensions {
                 if (entry != null)
                     return entry;
             }
+
+            Logger.Warning("No suitable loader found for extension \"{0}\"", descriptor.Name);
             return null;
         }
     }

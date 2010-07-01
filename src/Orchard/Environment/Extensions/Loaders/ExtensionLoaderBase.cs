@@ -25,6 +25,10 @@ namespace Orchard.Environment.Extensions.Loaders {
             return null;
         }
 
+        public virtual bool IsCompatibleWithReferences(ExtensionDescriptor extension, IEnumerable<ExtensionProbeEntry> references) {
+            return true;
+        }
+
         public abstract ExtensionProbeEntry Probe(ExtensionDescriptor descriptor);
 
         public ExtensionEntry Load(ExtensionDescriptor descriptor) {
