@@ -27,8 +27,8 @@ namespace Orchard.Localization {
             var localizedFormat = _resourceManager.GetLocalizedString(_scope, textHint, currentCulture);
 
             return args.Length == 0 
-                ? new LocalizedString(localizedFormat)
-                : new LocalizedString(string.Format(GetFormatProvider(currentCulture), localizedFormat, args.Select(Encode).ToArray()));
+                ? new LocalizedString(localizedFormat, _scope, textHint, args)
+                : new LocalizedString(string.Format(GetFormatProvider(currentCulture), localizedFormat, args.Select(Encode).ToArray()), _scope, textHint, args);
         }
 
         private static IFormatProvider GetFormatProvider(string currentCulture) {
