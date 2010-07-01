@@ -7,6 +7,7 @@ using Orchard.Environment.Extensions.Models;
 using Orchard.Environment.State.Models;
 using Orchard.Environment.Descriptor;
 using Orchard.Environment.Descriptor.Models;
+using Orchard.Utility;
 
 namespace Orchard.Environment.State {
     public class ShellStateCoordinator : IShellStateManagerEventHandler, IShellDescriptorManagerEventHandler {
@@ -184,39 +185,9 @@ namespace Orchard.Environment.State {
                    state.EnableState == ShellFeatureState.State.Rising;
         }
 
-        class Linkage {
-            public FeatureDescriptor Feature {
-                get;
-                set;
-            }
-            public bool Used {
-                get;
-                set;
-            }
-        }
-
         public static IEnumerable<FeatureDescriptor> OrderByDependencies(IEnumerable<FeatureDescriptor> descriptors) {
-            var population = descriptors.Select(d => new Linkage {
-                Feature = d
-            }).ToArray();
-
-            var result = new List<FeatureDescriptor>();
-            foreach (var item in population) {
-                Add(item, result, population);
-            }
-            return result;
-        }
-
-        private static void Add(Linkage item, ICollection<FeatureDescriptor> list, IEnumerable<Linkage> population) {
-            if (item.Used)
-                return;
-
-            item.Used = true;
-            var dependencies = item.Feature.Dependencies ?? Enumerable.Empty<string>();
-            foreach (var dependency in dependencies.SelectMany(d => population.Where(p => p.Feature.Name == d))) {
-                Add(dependency, list, population);
-            }
-            list.Add(item.Feature);
+            return descriptors.OrderByDependencies((item, dep) => 
+                item.Dependencies.Any(x => StringComparer.OrdinalIgnoreCase.Equals(x, dep.Name)));
         }
     }
 }
