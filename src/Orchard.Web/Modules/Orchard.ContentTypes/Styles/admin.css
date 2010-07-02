@@ -1,13 +1,19 @@
-﻿.contents #main h2 {
-    margin:1.5em 0 .5em;
+﻿.orchard-contenttypes #main h2 {
+    margin:1.5em 0 0;
 }
 .manage.add-to-type {
-    margin-top:-4em;
+    margin-top:-3.1em;
 }
 
 .manage-part h3,
 .manage-field h3 {
     border-bottom:1px solid #EAEAEA;
+    padding-top:0;
+}
+.manage-part h3,
+.manage-part .manage-field,
+.manage-part .settings {
+    padding-left:20px;
 }
 .manage-part .manage,
 .manage-field .manage {
@@ -15,11 +21,22 @@
     margin-top:-2.4em;
 }
 .manage-part .manage.minor {
-    margin-top:-1.7em;
+    margin:0 0 -1.2em;
 }
 .manage-part label,
 .manage-field label {
     font-weight:normal;
+}
+.manage-part fieldset {
+    margin:1.5em 0 0;
+    padding:0;
+}
+.manage-field .settings {
+    margin:-1.5em 0 0 1em;
+    padding-left:0;
+}
+.manage-part .settings fieldset {
+    padding-left:0;
 }
 
 /* should pull this back into the base admin theme css, w/out the .manage-part of course */
@@ -28,8 +45,16 @@
     overflow:auto;
     padding:6px 0 0;
 }
-.manage-part dt {
-    font-weight:bold;
+.manage-part dt,
+.manage-part dd {
+    display:inline;
+}
+.manage-part dt::after {
+    content:":";
+}
+.manage-part dd {
+    font-style:italic;
+    padding-left:.5em;
 }
 .manage-part dl dl {
     font-size:1em;
