@@ -17,7 +17,6 @@ namespace Orchard.Tests.Environment.Extensions {
     public class ExtensionLoaderCoordinatorTests {
         private IContainer _container;
         private IExtensionManager _manager;
-        private IExtensionLoaderCoordinator _loader;
         private StubFolders _folders;
 
         [SetUp]

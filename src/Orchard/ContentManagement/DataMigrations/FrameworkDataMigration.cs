@@ -1,6 +1,4 @@
 ﻿using Orchard.Data.Migration;
-using Orchard.Data.Migration;
-using Orchard.Environment.Extensions.Models;
 
 namespace Orchard.ContentManagement.DataMigrations {
     public class FrameworkDataMigration : DataMigrationImpl {
