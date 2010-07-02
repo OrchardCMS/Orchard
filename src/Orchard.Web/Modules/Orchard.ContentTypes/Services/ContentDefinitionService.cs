@@ -31,21 +31,24 @@ namespace Orchard.ContentTypes.Services {
             return _contentDefinitionManager.GetTypeDefinition(name);
         }
 
-        public void AddTypeDefinition(string displayName) {
-            var name = GenerateTypeName(displayName);
+        public ContentTypeDefinition AddTypeDefinition(string displayName) {
+            var name = GenerateName(displayName);
 
             while (_contentDefinitionManager.GetTypeDefinition(name) != null)
-                name = VersionTypeName(name);
+                name = VersionName(name);
 
+            var contentTypeDefinition = new ContentTypeDefinition(name) { DisplayName = displayName };
             //just giving the new type some default parts for now
-            _contentDefinitionManager.StoreTypeDefinition(new ContentTypeDefinition(name) {DisplayName = displayName});
+            _contentDefinitionManager.StoreTypeDefinition(contentTypeDefinition);
             _contentDefinitionManager.AlterTypeDefinition(
-                name,
+                contentTypeDefinition.Name,
                 cfg => cfg.WithPart("CommonAspect")
                            //.WithPart("RoutableAspect") //need to go the new routable route
                            .WithPart("BodyAspect"));
              
-            Services.Notifier.Information(T("The \"{0}\" content type has created.", displayName));
+            Services.Notifier.Information(T("The \"{0}\" content type has created.", contentTypeDefinition.DisplayName));
+
+            return contentTypeDefinition;
         }
 
         public void AlterTypeDefinition(ContentTypeDefinition contentTypeDefinition) {
@@ -70,8 +73,16 @@ namespace Orchard.ContentTypes.Services {
             return _contentDefinitionManager.GetPartDefinition(name);
         }
 
-        public void AddPartDefinition(ContentPartDefinition contentPartDefinition) {
-            throw new NotImplementedException();
+        public ContentPartDefinition AddPartDefinition(string name) {
+            name = GenerateName(name);
+
+            while (_contentDefinitionManager.GetPartDefinition(name) != null)
+                name = VersionName(name);
+
+            var contentPartDefinition = new ContentPartDefinition(name);
+            _contentDefinitionManager.StorePartDefinition(contentPartDefinition);
+
+            return contentPartDefinition;
         }
 
         public void AlterPartDefinition(ContentPartDefinition contentPartDefinition) {
@@ -87,7 +98,7 @@ namespace Orchard.ContentTypes.Services {
         }
 
         //gratuitously stolen from the RoutableService
-        private static string GenerateTypeName(string displayName) {
+        private static string GenerateName(string displayName) {
             if (string.IsNullOrWhiteSpace(displayName))
                 return "";
 
@@ -104,7 +115,7 @@ namespace Orchard.ContentTypes.Services {
             return name.ToLowerInvariant();
         }
 
-        private static string VersionTypeName(string name) {
+        private static string VersionName(string name) {
             int version;
             var nameParts = name.Split(new[] { '-' }, StringSplitOptions.RemoveEmptyEntries);
 

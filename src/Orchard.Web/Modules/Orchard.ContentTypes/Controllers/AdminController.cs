@@ -57,9 +57,9 @@ namespace Orchard.ContentTypes.Controllers {
             if (!ModelState.IsValid)
                 return View(viewModel);
 
-            _contentDefinitionService.AddTypeDefinition(viewModel.DisplayName);
+            var definition = _contentDefinitionService.AddTypeDefinition(viewModel.DisplayName);
 
-            return RedirectToAction("Index");
+            return RedirectToAction("Edit", new { id = definition.Name });
         }
 
         public ActionResult Edit(string id) {
@@ -288,6 +288,26 @@ namespace Orchard.ContentTypes.Controllers {
             });
         }
 
+        public ActionResult CreatePart() {
+            if (!Services.Authorizer.Authorize(Permissions.CreateContentTypes, T("Not allowed to create a content part.")))
+                return new HttpUnauthorizedResult();
+
+            return View(new CreatePartViewModel());
+        }
+
+        [HttpPost, ActionName("CreatePart")]
+        public ActionResult CreatePartPOST(CreatePartViewModel viewModel) {
+            if (!Services.Authorizer.Authorize(Permissions.CreateContentTypes, T("Not allowed to create a content part.")))
+                return new HttpUnauthorizedResult();
+
+            if (!ModelState.IsValid)
+                return View(viewModel);
+
+            var definition = _contentDefinitionService.AddPartDefinition(viewModel.Name);
+
+            return RedirectToAction("EditPart", new { id = definition.Name });
+        }
+
         public ActionResult EditPart(string id) {
             if (!Services.Authorizer.Authorize(Permissions.CreateContentTypes, T("Not allowed to edit a content part.")))
                 return new HttpUnauthorizedResult();
@@ -325,7 +345,7 @@ namespace Orchard.ContentTypes.Controllers {
                 return View(viewModel);
             }
 
-            return RedirectToAction("Index");
+            return RedirectToAction("ListParts");
         }
 
         public ActionResult AddFieldTo(string id) {

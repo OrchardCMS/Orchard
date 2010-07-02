@@ -6,13 +6,13 @@ namespace Orchard.ContentTypes.Services {
     public interface IContentDefinitionService : IDependency {
         IEnumerable<ContentTypeDefinition> GetTypeDefinitions();
         ContentTypeDefinition GetTypeDefinition(string name);
-        void AddTypeDefinition(string displayName);
+        ContentTypeDefinition AddTypeDefinition(string displayName);
         void AlterTypeDefinition(ContentTypeDefinition contentTypeDefinition);
         void RemoveTypeDefinition(string name);
 
         IEnumerable<ContentPartDefinition> GetPartDefinitions();
         ContentPartDefinition GetPartDefinition(string name);
-        void AddPartDefinition(ContentPartDefinition contentPartDefinition);
+        ContentPartDefinition AddPartDefinition(string name);
         void AlterPartDefinition(ContentPartDefinition contentPartDefinition);
         void RemovePartDefinition(string name);
 

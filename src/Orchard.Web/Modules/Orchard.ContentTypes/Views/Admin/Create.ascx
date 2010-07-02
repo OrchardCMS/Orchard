@@ -1,5 +1,4 @@
 <%@ Control Language="C#" Inherits="Orchard.Mvc.ViewUserControl<Orchard.ContentTypes.ViewModels.CreateTypeViewModel>" %>
-
 <h1><%:Html.TitleForPage(T("New Content Type").ToString())%></h1><%
 using (Html.BeginFormAntiForgeryPost()) { %>
     <%:Html.ValidationSummary() %>
