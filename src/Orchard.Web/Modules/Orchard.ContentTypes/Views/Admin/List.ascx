@@ -1,4 +1,6 @@
 <%@ Control Language="C#" Inherits="Orchard.Mvc.ViewUserControl<Orchard.ContentTypes.ViewModels.ListContentTypesViewModel>" %>
+<%
+    Html.RegisterStyle("admin.css"); %>
 <h1><%:Html.TitleForPage(T("Content Types").ToString())%></h1>
 <div class="manage">
     <%:Html.ActionLink(T("Create new type").ToString(), "Create", new{Controller="Admin",Area="Orchard.ContentTypes"}, new { @class = "button primaryAction" }) %>
