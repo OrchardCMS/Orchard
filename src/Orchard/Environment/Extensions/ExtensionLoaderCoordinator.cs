@@ -15,6 +15,7 @@ namespace Orchard.Environment.Extensions {
         private readonly IDependenciesFolder _dependenciesFolder;
         private readonly IExtensionManager _extensionManager;
         private readonly IVirtualPathProvider _virtualPathProvider;
+        private readonly IVirtualPathMonitor _virtualPathMonitor;
         private readonly IEnumerable<IExtensionLoader> _loaders;
         private readonly IHostEnvironment _hostEnvironment;
         private readonly IBuildManager _buildManager;
@@ -23,6 +24,7 @@ namespace Orchard.Environment.Extensions {
             IDependenciesFolder dependenciesFolder,
             IExtensionManager extensionManager,
             IVirtualPathProvider virtualPathProvider,
+            IVirtualPathMonitor virtualPathMonitor,
             IEnumerable<IExtensionLoader> loaders,
             IHostEnvironment hostEnvironment,
             IBuildManager buildManager) {
@@ -30,6 +32,7 @@ namespace Orchard.Environment.Extensions {
             _dependenciesFolder = dependenciesFolder;
             _extensionManager = extensionManager;
             _virtualPathProvider = virtualPathProvider;
+            _virtualPathMonitor = virtualPathMonitor;
             _loaders = loaders.OrderBy(l => l.Order);
             _hostEnvironment = hostEnvironment;
             _buildManager = buildManager;
@@ -287,6 +290,10 @@ namespace Orchard.Environment.Extensions {
         }
 
         public void MonitorExtensions(Action<IVolatileToken> monitor) {
+            // Monitor add/remove of any module
+            monitor(_virtualPathMonitor.WhenPathChanges("~/Modules"));
+
+            // Give loaders a chance to monitor any additional changes
             var extensions = _extensionManager.AvailableExtensions().Where(d => d.ExtensionType == "Module").ToList();
             foreach (var extension in extensions) {
                 foreach (var loader in _loaders) {
