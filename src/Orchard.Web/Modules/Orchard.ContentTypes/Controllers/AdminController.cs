@@ -282,6 +282,12 @@ namespace Orchard.ContentTypes.Controllers {
 
         #region Parts
 
+        public ActionResult ListParts() {
+            return View(new ListContentPartsViewModel {
+                Parts = _contentDefinitionService.GetPartDefinitions()
+            });
+        }
+
         public ActionResult EditPart(string id) {
             if (!Services.Authorizer.Authorize(Permissions.CreateContentTypes, T("Not allowed to edit a content part.")))
                 return new HttpUnauthorizedResult();
