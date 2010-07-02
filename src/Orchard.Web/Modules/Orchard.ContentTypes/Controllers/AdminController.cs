@@ -84,8 +84,8 @@ namespace Orchard.ContentTypes.Controllers {
                 entry.model.Templates = _extendViewModels.TypePartEditor(entry.definition);
 
                 var fields = entry.model.PartDefinition.Fields.Join(entry.definition.PartDefinition.Fields,
-                                   m => m.FieldDefinition.Name,
-                                   d => d.FieldDefinition.Name,
+                                   m => m.Name,
+                                   d => d.Name,
                                    (model, definition) => new { model, definition });
 
                 foreach (var field in fields) {
@@ -100,8 +100,8 @@ namespace Orchard.ContentTypes.Controllers {
             if (contentPartDefinition != null) {
                 viewModel.Fields = viewModel.Fields.ToArray();
                 var fields = viewModel.Fields.Join(contentPartDefinition.Fields,
-                                    m => m.FieldDefinition.Name,
-                                    d => d.FieldDefinition.Name,
+                                    m => m.Name,
+                                    d => d.Name,
                                     (model, definition) => new { model, definition });
 
                 foreach (var field in fields) {
@@ -281,6 +281,12 @@ namespace Orchard.ContentTypes.Controllers {
         #endregion
 
         #region Parts
+
+        public ActionResult ListParts() {
+            return View(new ListContentPartsViewModel {
+                Parts = _contentDefinitionService.GetPartDefinitions()
+            });
+        }
 
         public ActionResult EditPart(string id) {
             if (!Services.Authorizer.Authorize(Permissions.CreateContentTypes, T("Not allowed to edit a content part.")))

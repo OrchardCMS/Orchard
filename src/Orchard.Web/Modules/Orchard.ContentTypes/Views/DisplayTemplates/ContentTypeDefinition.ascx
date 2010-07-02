@@ -1,15 +1,11 @@
-﻿<%@ Control Language="C#" Inherits="Orchard.Mvc.ViewUserControl<ContentTypeDefinition>" %>
-<%@ Import namespace="Orchard.ContentManagement.MetaData.Models" %>
+﻿<%@ Control Language="C#" Inherits="Orchard.Mvc.ViewUserControl<Orchard.ContentManagement.MetaData.Models.ContentTypeDefinition>" %>
 <div class="summary">
     <div class="properties">
         <h3><%:Model.DisplayName%></h3>
-        <p><%:Model.Name %> - <%:Html.ActionLink("[new content]", "Create", new {area = "Contents", id = Model.Name}) %></p>
+        <p class="pageStatus"><%:Html.ActionLink(T("Create a new {0}", Model.DisplayName).Text, "Create", new {area = "Contents", id = Model.Name}) %></p>
     </div>
     <div class="related">
         <%:Html.ActionLink(T("List Items").ToString(), "List", new {area = "Contents", id = Model.Name})%><%:T(" | ")%>
-        <%:Html.ActionLink(T("Edit").ToString(), "Edit", new {area = "Orchard.ContentTypes", id = Model.Name})%><%:T(" | ") %>
-        <% using (Html.BeginFormAntiForgeryPost(Url.Action("RemoveType", new {area = "Orchard.ContentTypes", id = Model.Name}), FormMethod.Post, new { @class = "inline link" })) { %>
-            <button type="submit" class="linkButton" title="<%:T("Delete") %>"><%:T("[Delete]")%></button><%
-        } %>
+        <%:Html.ActionLink(T("Edit").ToString(), "Edit", new {area = "Orchard.ContentTypes", id = Model.Name})%>
     </div>
 </div>

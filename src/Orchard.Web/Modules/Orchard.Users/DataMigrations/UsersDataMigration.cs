@@ -1,5 +1,4 @@
 ﻿using Orchard.Data.Migration;
-using Orchard.Data.Migration;
 
 namespace Orchard.Users.DataMigrations {
     public class UsersDataMigration : DataMigrationImpl {

@@ -1,9 +1,11 @@
 <%@ Control Language="C#" Inherits="Orchard.Mvc.ViewUserControl<Orchard.ContentTypes.ViewModels.ListContentTypesViewModel>" %>
-
-<h1>
-    <%:Html.TitleForPage(T("Content Types").ToString())%></h1>
+<%
+    Html.RegisterStyle("admin.css"); %>
+<h1><%:Html.TitleForPage(T("Content Types").ToString())%></h1>
 <div class="manage">
-    <%: Html.ActionLink(T("Create new type").ToString(), "Create", new{Controller="Admin",Area="Orchard.ContentTypes"}, new { @class = "button primaryAction" })%></div>
+    <%:Html.ActionLink(T("Create new type").ToString(), "Create", new{Controller="Admin",Area="Orchard.ContentTypes"}, new { @class = "button primaryAction" }) %>
+    <%:Html.ActionLink(T("Content Parts").ToString(), "ListParts", new{Controller="Admin",Area="Orchard.ContentTypes"}, new { @class = "button" }) %>
+</div>
 <%:Html.UnorderedList(
     Model.Types,
     (t,i) => Html.DisplayFor(m => t),
