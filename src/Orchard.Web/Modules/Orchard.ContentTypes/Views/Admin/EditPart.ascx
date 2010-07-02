@@ -1,7 +1,8 @@
 <%@ Control Language="C#" Inherits="Orchard.Mvc.ViewUserControl<Orchard.ContentTypes.ViewModels.EditPartViewModel>" %>
 <%
 Html.RegisterStyle("admin.css"); %>
-<h1><%:Html.TitleForPage(T("Edit Part").ToString()) %></h1><%
+<h1><%:Html.TitleForPage(T("Edit Part").ToString()) %></h1>
+<p class="breadcrumb"><%:Html.ActionLink(T("Content Types").Text, "index") %><%:T(" &#62; ") %><%:T("Edit Part") %></p><%
 using (Html.BeginFormAntiForgeryPost()) { %>
     <%:Html.ValidationSummary() %>
     <fieldset>
@@ -13,7 +14,7 @@ using (Html.BeginFormAntiForgeryPost()) { %>
     <h2><%:T("Fields") %></h2>
     <div class="manage add-to-type"><%: Html.ActionLink(T("Add").Text, "AddFieldTo", new { area = "Orchard.ContentTypes", id = Model.Name }, new { @class = "button" }) %></div>
     <%:Html.EditorFor(m => m.Fields, "Fields", "") %>
-    <fieldset>
+    <fieldset class="action">
         <button class="primaryAction" type="submit"><%:T("Save") %></button>
     </fieldset><%
 } %>

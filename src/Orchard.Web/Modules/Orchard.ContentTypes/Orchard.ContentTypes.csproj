@@ -77,6 +77,7 @@
     <Compile Include="Services\ContentDefinitionService.cs" />
     <Compile Include="Services\IContentDefinitionService.cs" />
     <Compile Include="ViewModels\AddFieldViewModel.cs" />
+    <Compile Include="ViewModels\RemoveFieldViewModel.cs" />
     <Compile Include="ViewModels\RemovePartViewModel.cs" />
     <Compile Include="ViewModels\CreateTypeViewModel.cs" />
     <Compile Include="ViewModels\EditTypeViewModel.cs" />
@@ -88,6 +89,7 @@
     <Content Include="Styles\admin.css" />
     <Content Include="Views\Admin\AddFieldTo.ascx" />
     <Content Include="Views\Admin\AddPartsTo.ascx" />
+    <Content Include="Views\Admin\RemoveFieldFrom.ascx" />
     <Content Include="Views\Admin\RemovePartFrom.ascx" />
     <Content Include="Views\Admin\Create.ascx" />
     <Content Include="Views\Admin\EditPart.ascx" />
@@ -97,10 +99,12 @@
     <Content Include="Views\DisplayTemplates\Field.ascx" />
     <Content Include="Views\DisplayTemplates\Fields.ascx" />
     <Content Include="Views\DisplayTemplates\Settings.ascx" />
+    <Content Include="Views\EditorTemplates\TypePartField.ascx" />
+    <Content Include="Views\EditorTemplates\TypePartFields.ascx" />
     <Content Include="Views\EditorTemplates\Field.ascx" />
     <Content Include="Views\EditorTemplates\Fields.ascx" />
-    <Content Include="Views\EditorTemplates\Part.ascx" />
-    <Content Include="Views\EditorTemplates\Parts.ascx" />
+    <Content Include="Views\EditorTemplates\TypePart.ascx" />
+    <Content Include="Views\EditorTemplates\TypeParts.ascx" />
     <Content Include="Views\EditorTemplates\Settings.ascx" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
