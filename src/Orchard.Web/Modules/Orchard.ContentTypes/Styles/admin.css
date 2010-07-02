@@ -5,13 +5,18 @@
     margin-top:-3.1em;
 }
 
+.manage-part {
+    margin-bottom:2em;
+}
 .manage-part h3,
 .manage-field h3 {
     border-bottom:1px solid #EAEAEA;
     padding-top:0;
 }
 .manage-part h3,
+.manage-field h3,
 .manage-part .manage-field,
+.manage-field fieldset,
 .manage-part .settings {
     padding-left:20px;
 }
@@ -37,6 +42,10 @@
 }
 .manage-part .settings fieldset {
     padding-left:0;
+}
+
+fieldset.action {
+    margin-top:2em;
 }
 
 /* should pull this back into the base admin theme css, w/out the .manage-part of course */

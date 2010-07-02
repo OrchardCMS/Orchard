@@ -3,7 +3,7 @@
 %><h1><%:Html.TitleForPage(T("Edit Content Type").ToString())%></h1>
 <p class="breadcrumb"><%:Html.ActionLink(T("Content Types").Text, "index") %><%:T(" &#62; ") %><%:T("Edit Content Type") %></p><%
 using (Html.BeginFormAntiForgeryPost()) { %>
-    <%--//todo: come up with real itemtype definitions and locations for said definitions--%>
+    <%--// todo: come up with real itemtype definitions and locations for said definitions--%>
     <div itemscope itemid="<%:Model.Name %>" itemtype="http://orchardproject.net/data/ContentType"><%:Html.ValidationSummary() %>
     <fieldset>
         <label for="DisplayName"><%:T("Display Name") %></label>
@@ -23,7 +23,7 @@ using (Html.BeginFormAntiForgeryPost()) { %>
     <h2><%:T("Fields") %></h2>
     <div class="manage add-to-type"><%: Html.ActionLink(T("Add").Text, "AddFieldTo", new { area = "Orchard.ContentTypes", id = Model.Name }, new { @class = "button" }) %></div><%:
     Html.EditorFor(m => m.Fields, "Fields", "") %>
-    <fieldset>
+    <fieldset class="action">
         <button class="primaryAction" type="submit"><%:T("Save") %></button>
     </fieldset>
     </div><%

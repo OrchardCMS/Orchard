@@ -1,7 +1,8 @@
 <%@ Control Language="C#" Inherits="Orchard.Mvc.ViewUserControl<Orchard.ContentTypes.ViewModels.EditPartViewModel>" %>
 <%
 Html.RegisterStyle("admin.css"); %>
-<h1><%:Html.TitleForPage(T("Edit Part").ToString()) %></h1><%
+<h1><%:Html.TitleForPage(T("Edit Part").ToString()) %></h1>
+<p class="breadcrumb"><%:Html.ActionLink(T("Content Types").Text, "index") %><%:T(" &#62; ") %><%:T("Edit Part") %></p><%
 using (Html.BeginFormAntiForgeryPost()) { %>
     <%:Html.ValidationSummary() %>
     <fieldset>
