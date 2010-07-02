@@ -44,7 +44,7 @@ namespace Orchard.Environment.Extensions {
         public Localizer T { get; set; }
         public ILogger Logger { get; set; }
 
-        public void SetupExtensions(SetupExtensionsContext setupExtensionsContext) {
+        public void SetupExtensions() {
             Logger.Information("Start loading extensions...");
 
             var context = CreateLoadingContext();
@@ -71,9 +71,18 @@ namespace Orchard.Environment.Extensions {
             // And finally save the new entries in the dependencies folder
             _dependenciesFolder.StoreDescriptors(context.NewDependencies);
 
-            setupExtensionsContext.RestartAppDomain = context.RestartAppDomain;
-
             Logger.Information("Done loading extensions...");
+
+            // Very last step: Notify the host environment to restart the AppDomain if needed
+            if (context.ResetSiteCompilation) {
+                Logger.Information("Reset site compilation state required.");
+                _hostEnvironment.ResetSiteCompilation();
+            }
+
+            if (context.RestartAppDomain) {
+                Logger.Information("AppDomain restart required.");
+                _hostEnvironment.RestartAppDomain();
+            }
         }
 
         private void ProcessExtension(ExtensionLoadingContext context, ExtensionDescriptor extension) {
@@ -276,16 +285,6 @@ namespace Orchard.Environment.Extensions {
 
             foreach (var action in ctx.CopyActions) {
                 action();
-            }
-
-            if (ctx.RestartAppDomain) {
-                Logger.Information("AppDomain restart required.");
-                _hostEnvironment.RestartAppDomain();
-            }
-
-            if (ctx.ResetSiteCompilation) {
-                Logger.Information("Reset site compilation state required.");
-                _hostEnvironment.ResetSiteCompilation();
             }
         }
 

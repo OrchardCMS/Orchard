@@ -26,7 +26,6 @@ namespace Orchard.Environment {
         private readonly IExtensionLoaderCoordinator _extensionLoaderCoordinator;
         private readonly ICacheManager _cacheManager;
         private readonly object _syncLock = new object();
-        private readonly SetupExtensionsContext _setupExtensionsContext = new SetupExtensionsContext();
 
         private IEnumerable<ShellContext> _current;
 
@@ -134,7 +133,7 @@ namespace Orchard.Environment {
         }
 
         private void SetupExtensions() {
-            _extensionLoaderCoordinator.SetupExtensions(_setupExtensionsContext);
+            _extensionLoaderCoordinator.SetupExtensions();
         }
 
         private void MonitorExtensions() {
@@ -152,22 +151,6 @@ namespace Orchard.Environment {
         protected virtual void BeginRequest() {
             MonitorExtensions();
             BuildCurrent();
-
-            // If setting up extensions/modules requires an AppDomain restart, it's very unlikely the
-            // current request can be processed correctly.  So, we redirect to the same URL, so that the
-            // new request will come to the newly started AppDomain.
-            if (_setupExtensionsContext.RestartAppDomain) {
-                if (HttpContext.Current != null) {
-                    // Don't redirect posts...
-                    if (HttpContext.Current.Request.RequestType == "GET") {
-                        HttpContext.Current.Response.Redirect(HttpContext.Current.Request.ToUrlString(), true /*endResponse*/);
-                    }
-                    else {
-                        HttpContext.Current.Response.WriteFile("~/Refresh.html");
-                        HttpContext.Current.Response.End();
-                    }
-                }
-            }
         }
 
 
