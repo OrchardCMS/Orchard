@@ -13,7 +13,7 @@ using (Html.BeginFormAntiForgeryPost()) { %>
     <h2><%:T("Fields") %></h2>
     <div class="manage add-to-type"><%: Html.ActionLink(T("Add").Text, "AddFieldTo", new { area = "Orchard.ContentTypes", id = Model.Name }, new { @class = "button" }) %></div>
     <%:Html.EditorFor(m => m.Fields, "Fields", "") %>
-    <fieldset>
+    <fieldset class="action">
         <button class="primaryAction" type="submit"><%:T("Save") %></button>
     </fieldset><%
 } %>

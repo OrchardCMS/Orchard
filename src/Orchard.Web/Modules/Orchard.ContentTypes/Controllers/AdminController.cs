@@ -283,7 +283,7 @@ namespace Orchard.ContentTypes.Controllers {
         #region Parts
 
         public ActionResult EditPart(string id) {
-            if (!Services.Authorizer.Authorize(Permissions.CreateContentTypes, T("Not allowed to edit a part.")))
+            if (!Services.Authorizer.Authorize(Permissions.CreateContentTypes, T("Not allowed to edit a content part.")))
                 return new HttpUnauthorizedResult();
 
             var contentPartDefinition = _contentDefinitionService.GetPartDefinition(id);
@@ -300,7 +300,7 @@ namespace Orchard.ContentTypes.Controllers {
 
         [HttpPost, ActionName("EditPart")]
         public ActionResult EditPartPOST(EditPartViewModel viewModel) {
-            if (!Services.Authorizer.Authorize(Permissions.CreateContentTypes, T("Not allowed to edit a part.")))
+            if (!Services.Authorizer.Authorize(Permissions.CreateContentTypes, T("Not allowed to edit a content part.")))
                 return new HttpUnauthorizedResult();
 
             var contentPartDefinition = _contentDefinitionService.GetPartDefinition(viewModel.Name);
@@ -323,7 +323,7 @@ namespace Orchard.ContentTypes.Controllers {
         }
 
         public ActionResult AddFieldTo(string id) {
-            if (!Services.Authorizer.Authorize(Permissions.CreateContentTypes, T("Not allowed to edit a part.")))
+            if (!Services.Authorizer.Authorize(Permissions.CreateContentTypes, T("Not allowed to edit a content part.")))
                 return new HttpUnauthorizedResult();
 
             var contentPartDefinition = _contentDefinitionService.GetPartDefinition(id);
@@ -347,7 +347,7 @@ namespace Orchard.ContentTypes.Controllers {
 
         [HttpPost, ActionName("AddFieldTo")]
         public ActionResult AddFieldToPOST(string id) {
-            if (!Services.Authorizer.Authorize(Permissions.CreateContentTypes, T("Not allowed to edit a part.")))
+            if (!Services.Authorizer.Authorize(Permissions.CreateContentTypes, T("Not allowed to edit a content part.")))
                 return new HttpUnauthorizedResult();
 
             var viewModel = new AddFieldViewModel();
@@ -386,6 +386,50 @@ namespace Orchard.ContentTypes.Controllers {
             Services.Notifier.Information(T("The \"{0}\" field has been added.", viewModel.DisplayName));
 
             if (contentTypeDefinition != null)
+                return RedirectToAction("Edit", new { id });
+
+            return RedirectToAction("EditPart", new { id });
+        }
+
+
+        public ActionResult RemoveFieldFrom(string id) {
+            if (!Services.Authorizer.Authorize(Permissions.CreateContentTypes, T("Not allowed to edit a content part.")))
+                return new HttpUnauthorizedResult();
+
+            var contentPartDefinition = _contentDefinitionService.GetPartDefinition(id);
+
+            var viewModel = new RemoveFieldViewModel();
+            if (contentPartDefinition == null
+                || !TryUpdateModel(viewModel)
+                || !contentPartDefinition.Fields.Any(p => p.Name == viewModel.Name))
+                return new NotFoundResult();
+
+            viewModel.Part = new EditPartViewModel { Name = contentPartDefinition.Name };
+            return View(viewModel);
+        }
+
+        [HttpPost, ActionName("RemoveFieldFrom")]
+        public ActionResult RemoveFieldFromPOST(string id) {
+            if (!Services.Authorizer.Authorize(Permissions.CreateContentTypes, T("Not allowed to edit a content part.")))
+                return new HttpUnauthorizedResult();
+
+            var contentPartDefinition = _contentDefinitionService.GetPartDefinition(id);
+
+            var viewModel = new RemoveFieldViewModel();
+            if (contentPartDefinition == null
+                || !TryUpdateModel(viewModel)
+                || !contentPartDefinition.Fields.Any(p => p.Name == viewModel.Name))
+                return new NotFoundResult();
+
+            if (!ModelState.IsValid) {
+                viewModel.Part = new EditPartViewModel { Name = contentPartDefinition.Name };
+                return View(viewModel);
+            }
+
+            _contentDefinitionManager.AlterPartDefinition(id, typeBuilder => typeBuilder.RemoveField(viewModel.Name));
+            Services.Notifier.Information(T("The \"{0}\" field has been removed.", viewModel.Name));
+
+            if (_contentDefinitionService.GetTypeDefinition(id) != null)
                 return RedirectToAction("Edit", new { id });
 
             return RedirectToAction("EditPart", new { id });
