@@ -71,42 +71,19 @@ namespace Orchard.ContentTypes.Controllers {
             if (contentTypeDefinition == null)
                 return new NotFoundResult();
 
-            var viewModel = new EditTypeViewModel(contentTypeDefinition);
-            viewModel.Parts = viewModel.Parts.ToArray();
-            viewModel.Templates = _extendViewModels.TypeEditor(contentTypeDefinition);
+            var viewModel = new EditTypeViewModel(contentTypeDefinition) {
+                Templates = _extendViewModels.TypeEditor(contentTypeDefinition)
+            };
 
-            var entries = viewModel.Parts.Join(contentTypeDefinition.Parts,
-                                               m => m.PartDefinition.Name,
-                                               d => d.PartDefinition.Name,
-                                               (model, definition) => new {model, definition});
-            foreach (var entry in entries) {
-                entry.model.PartDefinition.Fields = entry.model.PartDefinition.Fields.ToArray();
-                entry.model.Templates = _extendViewModels.TypePartEditor(entry.definition);
-
-                var fields = entry.model.PartDefinition.Fields.Join(entry.definition.PartDefinition.Fields,
-                                   m => m.Name,
-                                   d => d.Name,
-                                   (model, definition) => new { model, definition });
-
-                foreach (var field in fields) {
-                    field.model.Templates = _extendViewModels.PartFieldEditor(field.definition);
-                }
+            foreach (var part in viewModel.Parts) {
+                part.Templates = _extendViewModels.TypePartEditor(new ContentTypeDefinition.Part(part.PartDefinition.Definition, part.Settings));
+                foreach (var field in part.PartDefinition.Fields)
+                    field.Templates = _extendViewModels.PartFieldEditor(new ContentPartDefinition.Field(field.FieldDefinition.Definition, field.Name, field.Settings));
             }
 
-
-            //Oy, this action is getting massive :(
-            //todo: put this action on a diet
-            var contentPartDefinition = _contentDefinitionService.GetPartDefinition(id);
-            if (contentPartDefinition != null) {
-                viewModel.Fields = viewModel.Fields.ToArray();
-                var fields = viewModel.Fields.Join(contentPartDefinition.Fields,
-                                    m => m.Name,
-                                    d => d.Name,
-                                    (model, definition) => new { model, definition });
-
-                foreach (var field in fields) {
-                    field.model.Templates = _extendViewModels.PartFieldEditor(field.definition);
-                }
+            if (viewModel.Fields.Any()) {
+                foreach (var field in viewModel.Fields)
+                    field.Templates = _extendViewModels.PartFieldEditor(new ContentPartDefinition.Field(field.FieldDefinition.Definition, field.Name, field.Settings));
             }
             
             return View(viewModel);

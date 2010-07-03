@@ -15,12 +15,14 @@ namespace Orchard.ContentTypes.ViewModels {
             Name = contentTypeDefinition.Name;
             DisplayName = contentTypeDefinition.DisplayName;
             Settings = contentTypeDefinition.Settings;
-            Fields = GetTypeFields(contentTypeDefinition);
-            Parts = GetTypeParts(contentTypeDefinition);
+            Fields = GetTypeFields(contentTypeDefinition).ToList();
+            Parts = GetTypeParts(contentTypeDefinition).ToList();
+            Definition = contentTypeDefinition;
         }
 
         public string Name { get; set; }
         public string DisplayName { get; set; }
+        public ContentTypeDefinition Definition { get; private set; }
         public IEnumerable<TemplateViewModel> Templates { get; set; }
 
         public SettingsDictionary Settings { get; set; }
@@ -62,13 +64,15 @@ namespace Orchard.ContentTypes.ViewModels {
         }
         public EditPartViewModel(ContentPartDefinition contentPartDefinition) {
             Name = contentPartDefinition.Name;
-            Fields = contentPartDefinition.Fields.Select(f => new EditPartFieldViewModel(f) { Part = this });
+            Fields = contentPartDefinition.Fields.Select(f => new EditPartFieldViewModel(f) { Part = this }).ToList();
             Settings = contentPartDefinition.Settings;
+            Definition = contentPartDefinition;
         }
 
         public string Name { get; set; }
         public IEnumerable<TemplateViewModel> Templates { get; set; }
         public IEnumerable<EditPartFieldViewModel> Fields { get; set; }
+        public ContentPartDefinition Definition { get; private set; }
         public SettingsDictionary Settings { get; set; }
     }
 
@@ -93,8 +97,10 @@ namespace Orchard.ContentTypes.ViewModels {
         public EditFieldViewModel() { }
         public EditFieldViewModel(ContentFieldDefinition contentFieldDefinition) {
             Name = contentFieldDefinition.Name;
+            Definition = contentFieldDefinition;
         }
 
         public string Name { get; set; }
+        public ContentFieldDefinition Definition { get; private set; }
     }
 }
