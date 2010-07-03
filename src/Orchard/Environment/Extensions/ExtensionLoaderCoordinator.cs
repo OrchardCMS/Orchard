@@ -96,7 +96,7 @@ namespace Orchard.Environment.Extensions {
                 foreach (var probe in extensionProbes) {
                     Logger.Debug("  Loader: {0}", probe.Loader.Name);
                     Logger.Debug("    VirtualPath: {0}", probe.VirtualPath);
-                    Logger.Debug("    DateTimeUtc: {0}", probe.LastModificationTimeUtc);
+                    Logger.Debug("    DateTimeUtc: {0}", probe.LastWriteTimeUtc);
                 }
             }
 
@@ -162,7 +162,7 @@ namespace Orchard.Environment.Extensions {
                                                                                             .Where(probe => probe != null))
                 .GroupBy(e => e.Descriptor.Name)
                 .ToDictionary(g => g.Key, g => g.AsEnumerable()
-                                                   .OrderByDescending(probe => probe.LastModificationTimeUtc)
+                                                   .OrderByDescending(probe => probe.LastWriteTimeUtc)
                                                    .ThenBy(probe => probe.Loader.Order), StringComparer.OrdinalIgnoreCase);
 
             var deletedDependencies = previousDependencies
@@ -222,57 +222,50 @@ namespace Orchard.Environment.Extensions {
             string referenceName,
             IList<DependencyReferenceDescriptor> activatedReferences) {
 
-            // Assemblies loaded by the BuildManager are ignored, since
-            // we don't want to update them and they are automatically
-            // referenced by the build manager
-            if (_buildManager.GetReferencedAssemblies().Any(a => StringComparer.OrdinalIgnoreCase.Equals(a.GetName().Name, referenceName)))
-                return;
-
+            // Binary references
             var references = context.ReferencesByName.ContainsKey(referenceName) ?
                 context.ReferencesByName[referenceName] :
                 Enumerable.Empty<ExtensionReferenceProbeEntry>();
 
-            // Binary references
             var bestBinaryReference = references
                 .Where(entry => !string.IsNullOrEmpty(entry.VirtualPath))
-                .Select(entry => new { Entry = entry, LastWriteTimeUtc = _virtualPathProvider.GetFileLastWriteTimeUtc(entry.VirtualPath) })
                 .OrderBy(e => e.LastWriteTimeUtc)
-                .ThenBy(e => e.Entry.Name).FirstOrDefault();
+                .ThenBy(e => e.Name).FirstOrDefault();
 
-            var bestProbe = context.ProcessedExtensions.ContainsKey(referenceName) ?
+            var bestExtensionReference = context.ProcessedExtensions.ContainsKey(referenceName) ?
                 context.ProcessedExtensions[referenceName] :
                 null;
 
             // Pick the best one of module vs binary
-            if (bestProbe != null && bestBinaryReference != null) {
-                if (bestProbe.LastModificationTimeUtc >= bestBinaryReference.LastWriteTimeUtc) {
+            if (bestExtensionReference != null && bestBinaryReference != null) {
+                if (bestExtensionReference.LastWriteTimeUtc >= bestBinaryReference.LastWriteTimeUtc) {
                     bestBinaryReference = null;
                 }
                 else {
-                    bestProbe = null;
+                    bestExtensionReference = null;
                 }
             }
 
             // Activate the binary ref
             if (bestBinaryReference != null) {
-                if (!context.ProcessedReferences.Contains(bestBinaryReference.Entry.Name)) {
-                    context.ProcessedReferences.Add(bestBinaryReference.Entry.Name);
-                    bestBinaryReference.Entry.Loader.ReferenceActivated(context, bestBinaryReference.Entry);
+                if (!context.ProcessedReferences.Contains(bestBinaryReference.Name)) {
+                    context.ProcessedReferences.Add(bestBinaryReference.Name);
+                    bestBinaryReference.Loader.ReferenceActivated(context, bestBinaryReference);
                 }
                 activatedReferences.Add(new DependencyReferenceDescriptor {
-                    LoaderName = bestBinaryReference.Entry.Loader.Name,
-                    Name = bestBinaryReference.Entry.Name,
-                    VirtualPath = bestBinaryReference.Entry.VirtualPath
+                    LoaderName = bestBinaryReference.Loader.Name,
+                    Name = bestBinaryReference.Name,
+                    VirtualPath = bestBinaryReference.VirtualPath
                 });
                 return;
             }
 
             // Activated the module ref
-            if (bestProbe != null) {
+            if (bestExtensionReference != null) {
                 activatedReferences.Add(new DependencyReferenceDescriptor {
-                    LoaderName = bestProbe.Loader.Name,
+                    LoaderName = bestExtensionReference.Loader.Name,
                     Name = referenceName,
-                    VirtualPath = bestProbe.VirtualPath
+                    VirtualPath = bestExtensionReference.VirtualPath
                 });
             }
         }

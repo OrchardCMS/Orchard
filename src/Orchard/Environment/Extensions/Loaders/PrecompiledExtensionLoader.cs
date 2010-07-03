@@ -138,7 +138,8 @@ namespace Orchard.Environment.Extensions.Loaders {
                     Descriptor = descriptor,
                     Loader = this,
                     Name = Path.GetFileNameWithoutExtension(path),
-                    VirtualPath = path
+                    VirtualPath = path,
+                    LastWriteTimeUtc = _virtualPathProvider.GetFileLastWriteTimeUtc(path)
                 } );
         }
 
@@ -160,7 +161,7 @@ namespace Orchard.Environment.Extensions.Loaders {
 
             return new ExtensionProbeEntry {
                 Descriptor = descriptor,
-                LastModificationTimeUtc = File.GetLastWriteTimeUtc(_virtualPathProvider.MapPath(assemblyPath)),
+                LastWriteTimeUtc = _virtualPathProvider.GetFileLastWriteTimeUtc(assemblyPath),
                 Loader = this,
                 VirtualPath = assemblyPath
             };

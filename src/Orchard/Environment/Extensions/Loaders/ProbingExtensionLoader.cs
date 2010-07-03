@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using Orchard.Environment.Extensions.Models;
 using Orchard.FileSystems.Dependencies;
@@ -86,7 +86,7 @@ namespace Orchard.Environment.Extensions.Loaders {
 
             return new ExtensionProbeEntry {
                 Descriptor = descriptor,
-                LastModificationTimeUtc = _assemblyProbingFolder.GetAssemblyDateTimeUtc(descriptor.Name),
+                LastWriteTimeUtc = _assemblyProbingFolder.GetAssemblyDateTimeUtc(descriptor.Name),
                 Loader = this,
                 VirtualPath = desc.VirtualPath
             };

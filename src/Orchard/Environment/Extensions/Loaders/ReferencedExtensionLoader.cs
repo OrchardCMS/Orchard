@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Web.Compilation;
@@ -14,11 +15,13 @@ namespace Orchard.Environment.Extensions.Loaders {
     /// </summary>
     public class ReferencedExtensionLoader : ExtensionLoaderBase {
         private readonly IVirtualPathProvider _virtualPathProvider;
+        private readonly IBuildManager _buildManager;
 
-        public ReferencedExtensionLoader(IDependenciesFolder dependenciesFolder, IVirtualPathProvider virtualPathProvider)
+        public ReferencedExtensionLoader(IDependenciesFolder dependenciesFolder, IVirtualPathProvider virtualPathProvider, IBuildManager buildManager)
             : base(dependenciesFolder) {
 
             _virtualPathProvider = virtualPathProvider;
+            _buildManager = buildManager;
             Logger = NullLogger.Instance;
         }
 
@@ -49,16 +52,13 @@ namespace Orchard.Environment.Extensions.Loaders {
             if (HostingEnvironment.IsHosted == false)
                 return null;
 
-            var assembly = BuildManager.GetReferencedAssemblies()
-                .OfType<Assembly>()
-                .FirstOrDefault(x => x.GetName().Name == descriptor.Name);
-
+            var assembly = _buildManager.GetReferencedAssembly(descriptor.Name);
             if (assembly == null)
                 return null;
 
             return new ExtensionProbeEntry {
                 Descriptor = descriptor,
-                LastModificationTimeUtc = File.GetLastWriteTimeUtc(assembly.Location),
+                LastWriteTimeUtc = File.GetLastWriteTimeUtc(assembly.Location),
                 Loader = this,
                 VirtualPath = _virtualPathProvider.Combine("~/bin", descriptor.Name + ".dll")
             };
@@ -68,10 +68,7 @@ namespace Orchard.Environment.Extensions.Loaders {
             if (HostingEnvironment.IsHosted == false)
                 return null;
 
-            var assembly = BuildManager.GetReferencedAssemblies()
-                .OfType<Assembly>()
-                .FirstOrDefault(x => x.GetName().Name == descriptor.Name);
-
+            var assembly = _buildManager.GetReferencedAssembly(descriptor.Name);
             if (assembly == null)
                 return null;
 

@@ -10,7 +10,7 @@ namespace Orchard.Environment.Extensions.Loaders {
         public ExtensionDescriptor Descriptor { get; set; }
         public IExtensionLoader Loader { get; set; }
         public string VirtualPath { get; set; }
-        public DateTime LastModificationTimeUtc { get; set; }
+        public DateTime LastWriteTimeUtc { get; set; }
     }
 
     public class ExtensionReferenceProbeEntry {
@@ -18,6 +18,7 @@ namespace Orchard.Environment.Extensions.Loaders {
         public IExtensionLoader Loader { get; set; }
         public string Name { get; set; }
         public string VirtualPath { get; set; }
+        public DateTime LastWriteTimeUtc { get; set; }
     }
 
     public interface IExtensionLoader {

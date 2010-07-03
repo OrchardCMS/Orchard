@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Reflection;
 using Orchard.Environment.Extensions.Models;
@@ -23,7 +23,7 @@ namespace Orchard.Environment.Extensions.Loaders {
                 return new ExtensionProbeEntry {
                     Descriptor = descriptor,
                     Loader = this,
-                    LastModificationTimeUtc = DateTime.MinValue,
+                    LastWriteTimeUtc = DateTime.MinValue,
                     VirtualPath = "~/Areas/" + descriptor.Name,
                 };
             }

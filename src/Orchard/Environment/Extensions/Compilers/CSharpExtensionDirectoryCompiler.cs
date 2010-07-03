@@ -1,4 +1,5 @@
-﻿using System.CodeDom.Compiler;
+﻿using System;
+using System.CodeDom.Compiler;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -11,6 +12,12 @@ namespace Orchard.Environment.Extensions.Compilers {
     /// Note: Currently not used...
     /// </summary>
     public class CSharpExtensionDirectoryCompiler {
+        private readonly IBuildManager _buildManager;
+
+        public CSharpExtensionDirectoryCompiler(IBuildManager buildManager) {
+            _buildManager = buildManager;
+        }
+
         public CompilerResults CompileProject(string location) {
             var codeProvider = CodeDomProvider.CreateProvider("cs");
 
@@ -23,10 +30,11 @@ namespace Orchard.Environment.Extensions.Compilers {
         }
 
         private IEnumerable<string> GetAssemblyReferenceNames() {
-            return Enumerable.Distinct<string>(BuildManager.GetReferencedAssemblies()
-                                      .OfType<Assembly>()
-                                      .Select(x => x.Location)
-                                      .Where(x => !string.IsNullOrEmpty(x)));
+            return _buildManager
+                .GetReferencedAssemblies()
+                .Select(x => x.Location)
+                .Where(x => !string.IsNullOrEmpty(x))
+                .Distinct(StringComparer.OrdinalIgnoreCase);
         }
 
         private IEnumerable<string> GetSourceFileNames(string path) {

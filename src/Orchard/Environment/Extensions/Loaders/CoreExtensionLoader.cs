@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Reflection;
 using Orchard.Environment.Extensions.Models;
@@ -25,7 +25,7 @@ namespace Orchard.Environment.Extensions.Loaders {
             if (descriptor.Location == "~/Core") {
                 return new ExtensionProbeEntry {
                     Descriptor = descriptor,
-                    LastModificationTimeUtc = DateTime.MinValue,
+                    LastWriteTimeUtc = DateTime.MinValue,
                     Loader = this,
                     VirtualPath = "~/Core/" + descriptor.Name
                 };
