@@ -115,18 +115,7 @@ namespace Orchard.Environment {
                 .As<IContainer>()
                 .InstancePerMatchingLifetimeScope("shell");
 
-            return builder.Build();
-        }
-
-        private static void RegisterVolatileProvider<TRegister, TService>(ContainerBuilder builder) where TService : IVolatileProvider {
-            builder.RegisterType<TRegister>()
-                .As<TService>()
-                .As<IVolatileProvider>()
-                .SingleInstance();
-        }
-
-        public static IOrchardHost CreateHost(Action<ContainerBuilder> registrations) {
-            var container = CreateHostContainer(registrations);
+            var container = builder.Build();
 
             //
             // Register Virtual Path Providers
@@ -138,6 +127,19 @@ namespace Orchard.Environment {
             }
 
             OrchardHostContainerRegistry.RegisterHostContainer(new DefaultOrchardHostContainer(container));
+
+            return container;
+        }
+
+        private static void RegisterVolatileProvider<TRegister, TService>(ContainerBuilder builder) where TService : IVolatileProvider {
+            builder.RegisterType<TRegister>()
+                .As<TService>()
+                .As<IVolatileProvider>()
+                .SingleInstance();
+        }
+
+        public static IOrchardHost CreateHost(Action<ContainerBuilder> registrations) {
+            var container = CreateHostContainer(registrations);
             return container.Resolve<IOrchardHost>();
         }
     }

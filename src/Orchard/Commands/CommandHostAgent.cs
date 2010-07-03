@@ -42,7 +42,7 @@ namespace Orchard.Commands {
 
         public int StartHost(TextReader input, TextWriter output) {
             try {
-                _hostContainer = OrchardStarter.CreateHostContainer(MvcSingletons);
+                _hostContainer = OrchardStarter.CreateHostContainer(ContainerRegistrations);
                 _tenants = new Dictionary<string, IStandaloneEnvironment>();
 
                 var host = _hostContainer.Resolve<IOrchardHost>();
@@ -137,6 +137,11 @@ namespace Orchard.Commands {
             }
         }
 
+
+        protected void ContainerRegistrations(ContainerBuilder builder) {
+            MvcSingletons(builder);
+            builder.RegisterType<CommandHostEnvironment>().As<IHostEnvironment>();
+        }
 
         protected void MvcSingletons(ContainerBuilder builder) {
             builder.RegisterInstance(ControllerBuilder.Current);
