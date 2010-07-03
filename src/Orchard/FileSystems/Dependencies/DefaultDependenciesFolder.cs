@@ -37,11 +37,11 @@ namespace Orchard.FileSystems.Dependencies {
             return _cacheManager.Get(PersistencePath,
                                      ctx => {
                                          _appDataFolder.CreateDirectory(BasePath);
-
                                          ctx.Monitor(_appDataFolder.WhenPathChanges(ctx.Key));
+
+                                         _writeThroughToken.IsCurrent = true;
                                          ctx.Monitor(_writeThroughToken);
 
-                                         _appDataFolder.CreateDirectory(BasePath);
                                          return ReadDependencies(ctx.Key).ToList();
                                      });
         }
