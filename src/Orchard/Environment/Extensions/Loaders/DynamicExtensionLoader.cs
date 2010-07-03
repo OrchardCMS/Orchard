@@ -16,7 +16,7 @@ namespace Orchard.Environment.Extensions.Loaders {
         private readonly IVirtualPathProvider _virtualPathProvider;
         private readonly IVirtualPathMonitor _virtualPathMonitor;
         private readonly IProjectFileParser _projectFileParser;
-        private static readonly ReloadWorkaround _reloadWorkaround = new ReloadWorkaround();
+        private readonly ReloadWorkaround _reloadWorkaround = new ReloadWorkaround();
 
         public DynamicExtensionLoader(
             IBuildManager buildManager,
@@ -43,16 +43,20 @@ namespace Orchard.Environment.Extensions.Loaders {
         }
 
         public override IEnumerable<string> GetWebFormVirtualDependencies(DependencyDescriptor dependency) {
-            yield return dependency.VirtualPath;
+            // Return csproj and all .cs files
+            return GetDependencies(dependency.VirtualPath);
         }
 
         public override void Monitor(ExtensionDescriptor descriptor, Action<IVolatileToken> monitor) {
-            // We need to monitor the path to the ".csproj" file.
+            // Monitor .csproj and all .cs files
             string projectPath = GetProjectPath(descriptor);
             if (projectPath != null) {
-                Logger.Information("Monitoring virtual path \"{0}\"", projectPath);
-                monitor(_virtualPathMonitor.WhenPathChanges(projectPath));
-                _reloadWorkaround.Monitor(_virtualPathMonitor.WhenPathChanges(projectPath));
+                foreach (var path in GetDependencies(projectPath)) {
+                    Logger.Information("Monitoring virtual path \"{0}\"", path);
+
+                    monitor(_virtualPathMonitor.WhenPathChanges(path));
+                    _reloadWorkaround.Monitor(_virtualPathMonitor.WhenPathChanges(path));
+                }
             }
         }
 
@@ -60,7 +64,7 @@ namespace Orchard.Environment.Extensions.Loaders {
             // Since a dynamic assembly is not active anymore, we need to notify ASP.NET
             // that a new site compilation is needed (since ascx files may be referencing
             // this now removed extension).
-            Logger.Information("ExtensionRemoved: Module \"{0}\" has been removed, forcing site recompilation");
+            Logger.Information("ExtensionRemoved: Module \"{0}\" has been removed, forcing site recompilation", dependency.Name);
             ctx.ResetSiteCompilation = true;
         }
 
@@ -68,7 +72,7 @@ namespace Orchard.Environment.Extensions.Loaders {
             // Since a dynamic assembly is not active anymore, we need to notify ASP.NET
             // that a new site compilation is needed (since ascx files may be referencing
             // this now removed extension).
-            Logger.Information("ExtensionDeactivated: Module \"{0}\" has been de-activated, forcing site recompilation");
+            Logger.Information("ExtensionDeactivated: Module \"{0}\" has been de-activated, forcing site recompilation", extension.Name);
             ctx.ResetSiteCompilation = true;
         }
 
@@ -107,7 +111,7 @@ namespace Orchard.Environment.Extensions.Loaders {
 
             return new ExtensionProbeEntry {
                 Descriptor = descriptor,
-                LastWriteTimeUtc = _virtualPathProvider.GetFileLastWriteTimeUtc(projectPath),
+                LastWriteTimeUtc = GetDependencies(projectPath).Max(f => _virtualPathProvider.GetFileLastWriteTimeUtc(f)),
                 Loader = this,
                 VirtualPath = projectPath
             };
@@ -128,6 +132,20 @@ namespace Orchard.Environment.Extensions.Loaders {
                 Assembly = assembly,
                 ExportedTypes = assembly.GetExportedTypes(),
             };
+        }
+
+        private IEnumerable<string> GetDependencies(string projectPath) {
+            return new[] {projectPath}.Concat(GetSourceFiles(projectPath));
+        }
+
+        private IEnumerable<string> GetSourceFiles(string projectPath) {
+            var basePath = _virtualPathProvider.GetDirectoryName(projectPath);
+
+            using (var stream = _virtualPathProvider.OpenFile(projectPath)) {
+                var projectFile = _projectFileParser.Parse(stream);
+
+                return projectFile.SourceFilenames.Select(f => _virtualPathProvider.Combine(basePath, f));
+            }
         }
 
         private string GetProjectPath(ExtensionDescriptor descriptor) {
