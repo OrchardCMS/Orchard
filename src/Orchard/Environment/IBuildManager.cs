@@ -8,6 +8,7 @@ using Orchard.FileSystems.VirtualPath;
 namespace Orchard.Environment {
     public interface IBuildManager : IDependency {
         IEnumerable<Assembly> GetReferencedAssemblies();
+        bool HasReferencedAssembly(string name);
         Assembly GetReferencedAssembly(string name);
         Assembly GetCompiledAssembly(string virtualPath);
     }
@@ -23,9 +24,13 @@ namespace Orchard.Environment {
             return BuildManager.GetReferencedAssemblies().OfType<Assembly>();
         }
 
-        public Assembly GetReferencedAssembly(string name) {
+        public bool HasReferencedAssembly(string name) {
             var assemblyPath = _virtualPathProvider.Combine("~/bin", name + ".dll");
-            if (!_virtualPathProvider.FileExists(assemblyPath))
+            return _virtualPathProvider.FileExists(assemblyPath);
+        }
+
+        public Assembly GetReferencedAssembly(string name) {
+            if (!HasReferencedAssembly(name))
                 return null;
 
             return Assembly.Load(name);

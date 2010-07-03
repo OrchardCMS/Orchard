@@ -222,6 +222,10 @@ namespace Orchard.Environment.Extensions {
             string referenceName,
             IList<DependencyReferenceDescriptor> activatedReferences) {
 
+            // Skip references from "~/bin"
+            if (_buildManager.HasReferencedAssembly(referenceName))
+                return;
+
             // Binary references
             var references = context.ReferencesByName.ContainsKey(referenceName) ?
                 context.ReferencesByName[referenceName] :
