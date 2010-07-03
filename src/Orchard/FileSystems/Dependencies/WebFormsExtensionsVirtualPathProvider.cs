@@ -8,14 +8,14 @@ using Orchard.FileSystems.VirtualPath;
 using Orchard.Logging;
 
 namespace Orchard.FileSystems.Dependencies {
-    public class WebFormsExtensionsVirtualPathProvider : VirtualPathProvider, ICustomVirtualPathProvider {
+    public class WebFormVirtualPathProvider : VirtualPathProvider, ICustomVirtualPathProvider {
         private readonly IDependenciesFolder _dependenciesFolder;
         private readonly IEnumerable<IExtensionLoader> _loaders;
         private readonly string[] _modulesPrefixes = { "~/Modules/", "/Modules/" };
         private readonly string[] _themesPrefixes = { "~/Themes/", "/Themes/" };
         private readonly string[] _extensions = { ".ascx", ".aspx", ".master" };
 
-        public WebFormsExtensionsVirtualPathProvider(IDependenciesFolder dependenciesFolder, IEnumerable<IExtensionLoader> loaders) {
+        public WebFormVirtualPathProvider(IDependenciesFolder dependenciesFolder, IEnumerable<IExtensionLoader> loaders) {
             _dependenciesFolder = dependenciesFolder;
             _loaders = loaders;
             Logger = NullLogger.Instance;
@@ -31,7 +31,7 @@ namespace Orchard.FileSystems.Dependencies {
             return Previous.FileExists(virtualPath);
         }
 
-        public override string GetFileHash(string virtualPath, System.Collections.IEnumerable virtualPathDependencies) {
+        public override string GetFileHash(string virtualPath, IEnumerable virtualPathDependencies) {
             var result = GetFileHashWorker(virtualPath, virtualPathDependencies);
             Logger.Information("GetFileHash(\"{0}\"): {1}", virtualPath, result);
             return result;
@@ -80,7 +80,7 @@ namespace Orchard.FileSystems.Dependencies {
                 Logger.Debug("  Assembly directive: {0}", file.Directive);
             }
 
-            return new WebFormsExtensionsVirtualFile(virtualPath, actualFile, file.Directive);
+            return new WebFormVirtualFile(virtualPath, actualFile, file.Directive);
         }
 
         private VirtualFile GetThemeCustomVirtualFile(string virtualPath, VirtualFile actualFile) {
@@ -94,7 +94,7 @@ namespace Orchard.FileSystems.Dependencies {
                 Logger.Debug("  Assembly directive: {0}", file.Directive);
             }
 
-            return new WebFormsExtensionsVirtualFile(virtualPath, actualFile, file.Directive);
+            return new WebFormVirtualFile(virtualPath, actualFile, file.Directive);
         }
 
         private VirtualFileOverride GetModuleVirtualOverride(string virtualPath) {

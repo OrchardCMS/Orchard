@@ -1,12 +1,12 @@
-﻿using System.IO;
+using System.IO;
 using System.Web.Hosting;
 
 namespace Orchard.FileSystems.Dependencies {
-    public class WebFormsExtensionsVirtualFile : VirtualFile {
+    public class WebFormVirtualFile : VirtualFile {
         private readonly VirtualFile _actualFile;
         private readonly string _assemblyDirective;
 
-        public WebFormsExtensionsVirtualFile(string virtualPath, VirtualFile actualFile, string assemblyDirective)
+        public WebFormVirtualFile(string virtualPath, VirtualFile actualFile, string assemblyDirective)
             : base(virtualPath) {
             _actualFile = actualFile;
             _assemblyDirective = assemblyDirective;

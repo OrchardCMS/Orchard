@@ -36,7 +36,7 @@ namespace Orchard.Environment {
             builder.RegisterType<DefaultCacheHolder>().As<ICacheHolder>().SingleInstance();
             builder.RegisterType<DefaultHostEnvironment>().As<IHostEnvironment>().SingleInstance();
             builder.RegisterType<DefaultBuildManager>().As<IBuildManager>().SingleInstance();
-            builder.RegisterType<WebFormsExtensionsVirtualPathProvider>().As<ICustomVirtualPathProvider>().SingleInstance();
+            builder.RegisterType<WebFormVirtualPathProvider>().As<ICustomVirtualPathProvider>().SingleInstance();
             builder.RegisterType<AppDataFolderRoot>().As<IAppDataFolderRoot>().SingleInstance();
             builder.RegisterType<DefaultExtensionCompiler>().As<IExtensionCompiler>().SingleInstance();
             builder.RegisterType<DefaultProjectFileParser>().As<IProjectFileParser>().SingleInstance();
