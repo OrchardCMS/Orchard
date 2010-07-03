@@ -22,6 +22,18 @@ namespace Orchard.Tests.Stubs {
 
             public IList<Entry> Entries { get; private set; }
 
+            public IEnumerable<FileEntry> Files {
+                get {
+                    return Entries.OfType<FileEntry>();
+                }
+            }
+
+            public IEnumerable<DirectoryEntry> Directories {
+                get {
+                    return Entries.OfType<DirectoryEntry>();
+                }
+            }
+
             public Entry GetEntry(string name) {
                 if (string.IsNullOrEmpty(name))
                     throw new ArgumentException();

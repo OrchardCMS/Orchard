@@ -30,6 +30,10 @@ namespace Orchard.FileSystems.VirtualPath {
             return File.CreateText(MapPath(virtualPath));
         }
 
+        public Stream CreateFile(string virtualPath) {
+            return File.Create(MapPath(virtualPath));
+        }
+
         public DateTime GetFileLastWriteTimeUtc(string virtualPath) {
             return File.GetLastWriteTimeUtc(MapPath(virtualPath));
         }

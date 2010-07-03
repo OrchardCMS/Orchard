@@ -107,7 +107,7 @@ namespace Orchard.Environment.Extensions.Loaders {
 
             return new ExtensionProbeEntry {
                 Descriptor = descriptor,
-                LastModificationTimeUtc = File.GetLastWriteTimeUtc(_virtualPathProvider.MapPath(projectPath)),
+                LastModificationTimeUtc = _virtualPathProvider.GetFileLastWriteTimeUtc(projectPath),
                 Loader = this,
                 VirtualPath = projectPath
             };

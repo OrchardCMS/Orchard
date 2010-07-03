@@ -11,6 +11,7 @@ namespace Orchard.FileSystems.VirtualPath {
         bool FileExists(string virtualPath);
         Stream OpenFile(string virtualPath);
         StreamWriter CreateText(string virtualPath);
+        Stream CreateFile(string virtualPath);
         DateTime GetFileLastWriteTimeUtc(string virtualPath);
 
         bool DirectoryExists(string virtualPath);
