@@ -63,6 +63,7 @@
     <Reference Include="System.EnterpriseServices" />
     <Reference Include="System.Web.Mobile" />
     <Reference Include="System.Xml.Linq" />
+    <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AdminMenu.cs" />
@@ -70,6 +71,11 @@
     <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="Models\ModuleFeature.cs" />
+    <Compile Include="Packaging\Commands\PackagingCommands.cs" />
+    <Compile Include="Packaging\Controllers\PackagingController.cs" />
+    <Compile Include="Packaging\Services\PackageBuilder.cs" />
+    <Compile Include="Packaging\Services\PackageRepository.cs" />
+    <Compile Include="Packaging\ViewModels\PackagingIndexViewModel.cs" />
     <Compile Include="ViewModels\FeaturesViewModel.cs" />
     <Compile Include="Models\Module.cs" />
     <Compile Include="Permissions.cs" />
@@ -88,6 +94,8 @@
     <Content Include="styles\jquery.switchable.css" />
     <Content Include="Views\Admin\Add.ascx" />
     <Content Include="Views\Admin\Index.ascx" />
+    <Content Include="Views\Packaging\Sources.ascx" />
+    <Content Include="Views\Packaging\Modules.ascx" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>

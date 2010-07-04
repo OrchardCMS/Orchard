@@ -71,6 +71,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orchard.Indexing", "Orchard
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orchard.ContentTypes", "Orchard.Web\Modules\Orchard.ContentTypes\Orchard.ContentTypes.csproj", "{0E7646E8-FE8F-43C1-8799-D97860925EC4}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PackageIndexReferenceImplementation", "Tools\PackageIndexReferenceImplementation\PackageIndexReferenceImplementation.csproj", "{8A4E42CE-79F8-4BE2-8B1E-A6B83432123B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -201,6 +203,10 @@ Global
 		{0E7646E8-FE8F-43C1-8799-D97860925EC4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0E7646E8-FE8F-43C1-8799-D97860925EC4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0E7646E8-FE8F-43C1-8799-D97860925EC4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8A4E42CE-79F8-4BE2-8B1E-A6B83432123B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8A4E42CE-79F8-4BE2-8B1E-A6B83432123B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8A4E42CE-79F8-4BE2-8B1E-A6B83432123B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8A4E42CE-79F8-4BE2-8B1E-A6B83432123B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -233,6 +239,7 @@ Global
 		{5E5E7A21-C7B2-44D8-8593-2F9541AE041D} = {383DBA32-4A3E-48D1-AAC3-75377A694452}
 		{4AB4B5B6-277E-4FF6-B69B-7AE9E16D2A56} = {383DBA32-4A3E-48D1-AAC3-75377A694452}
 		{33B1BC8D-E292-4972-A363-22056B207156} = {383DBA32-4A3E-48D1-AAC3-75377A694452}
+		{8A4E42CE-79F8-4BE2-8B1E-A6B83432123B} = {383DBA32-4A3E-48D1-AAC3-75377A694452}
 		{E65E5633-C0FF-453C-A906-481C14F969D6} = {E75A4CE4-CAA6-41E4-B951-33ACC60DC77C}
 	EndGlobalSection
 EndGlobal
