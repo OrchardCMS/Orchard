@@ -3,9 +3,7 @@ using System.IO;
 using System.Linq;
 using System.Web.Hosting;
 using Orchard.Commands;
-using Orchard.Data.Migration;
 using Orchard.Data.Migration.Generator;
-using Orchard.Data.Migration.Interpreters;
 using Orchard.DevTools.Services;
 using Orchard.Environment.Extensions;
 
@@ -13,17 +11,11 @@ namespace Orchard.DevTools.Commands {
     [OrchardFeature("Scaffolding")]
     public class ScaffoldingCommands : DefaultOrchardCommandHandler {
         private readonly IExtensionManager _extensionManager;
-        private readonly IDataMigrationManager _dataMigrationManager;
-        private readonly IDataMigrationInterpreter _dataMigrationInterpreter;
         private readonly ISchemaCommandGenerator _schemaCommandGenerator;
 
         public ScaffoldingCommands(IExtensionManager extensionManager,
-            IDataMigrationManager dataMigrationManager,
-            IDataMigrationInterpreter dataMigrationInterpreter,
             ISchemaCommandGenerator schemaCommandGenerator) {
             _extensionManager = extensionManager;
-            _dataMigrationManager = dataMigrationManager;
-            _dataMigrationInterpreter = dataMigrationInterpreter;
             _schemaCommandGenerator = schemaCommandGenerator;
         }
 

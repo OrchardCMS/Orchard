@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using NHibernate.Cfg;
@@ -8,7 +7,6 @@ using NHibernate.Tool.hbm2ddl;
 using Orchard.Data.Migration.Schema;
 using Orchard.Data.Providers;
 using NHibernate.Dialect;
-using Orchard.Environment.Extensions;
 
 namespace Orchard.Data.Migration.Generator {
     public class SchemaCommandGenerator : ISchemaCommandGenerator {
@@ -30,7 +28,7 @@ namespace Orchard.Data.Migration.Generator {
             }
 
             var configuration = _dataServicesProviderFactory.CreateProvider(parameters).BuildConfiguration(parameters);
-            var dialect = Dialect.GetDialect(configuration.Properties);
+            Dialect.GetDialect(configuration.Properties);
             var mapping = configuration.BuildMapping();
 
             // get the tables using reflection

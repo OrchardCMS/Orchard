@@ -1,10 +1,6 @@
-﻿using System;
-using System.IO;
-using NHibernate;
+﻿using NHibernate;
 using Orchard.Data.Providers;
 using Orchard.Environment.Configuration;
-using Orchard.Environment.Descriptor;
-using Orchard.Environment.Descriptor.Models;
 using Orchard.Environment.ShellBuilders.Models;
 using Orchard.FileSystems.AppData;
 using Orchard.Localization;
