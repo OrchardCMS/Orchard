@@ -7,25 +7,40 @@ using NHibernate;
 using NHibernate.Dialect;
 using NHibernate.SqlTypes;
 using Orchard.Data.Migration.Schema;
+using Orchard.Data.Providers;
 using Orchard.Environment.Configuration;
 using Orchard.Logging;
 
 namespace Orchard.Data.Migration.Interpreters {
-    public class DefaultDataMigrationInterpreter : IDataMigrationInterpreter {
+    public class DefaultDataMigrationInterpreter : AbstractDataMigrationInterpreter, IDataMigrationInterpreter {
         private readonly ShellSettings _shellSettings;
         private readonly IEnumerable<ICommandInterpreter> _commandInterpreters;
         private readonly ISession _session;
         private readonly Dialect _dialect;
         private readonly List<string> _sqlStatements;
+        private readonly IDataServicesProviderFactory _dataServicesProviderFactory;
+        private readonly ISessionFactoryHolder _sessionFactoryHolder;
+
         private const char Space = ' ' ;
 
-        public DefaultDataMigrationInterpreter(ShellSettings shellSettings, ISessionLocator sessionLocator, IEnumerable<ICommandInterpreter> commandInterpreters) {
+        public DefaultDataMigrationInterpreter(
+            ShellSettings shellSettings, 
+            ISessionLocator sessionLocator, 
+            IEnumerable<ICommandInterpreter> commandInterpreters,
+            IDataServicesProviderFactory dataServicesProviderFactory,
+            ISessionFactoryHolder sessionFactoryHolder) {
             _shellSettings = shellSettings;
             _commandInterpreters = commandInterpreters;
             _session = sessionLocator.For(typeof(DefaultDataMigrationInterpreter));
             _sqlStatements = new List<string>();
-            _dialect = _shellSettings.DataProvider == "SQLite" ? (Dialect) new SQLiteDialect() : new MsSql2008Dialect();
+            _dataServicesProviderFactory = dataServicesProviderFactory;
+            _sessionFactoryHolder = sessionFactoryHolder;
+
             Logger = NullLogger.Instance;
+
+            var parameters = _sessionFactoryHolder.GetSessionFactoryParameters();
+            var configuration = _dataServicesProviderFactory.CreateProvider(parameters).BuildConfiguration(parameters);
+            _dialect = Dialect.GetDialect(configuration.Properties);
         }
 
         public ILogger Logger { get; set; }
@@ -34,35 +49,7 @@ namespace Orchard.Data.Migration.Interpreters {
             get { return _sqlStatements; }
         }
 
-        public void Visit(ISchemaBuilderCommand command) {
-            var schemaCommand = command as SchemaCommand;
-            if (schemaCommand == null) {
-                return;
-            }
-
-            switch ( schemaCommand.Type ) {
-                case SchemaCommandType.CreateTable:
-                    Visit((CreateTableCommand)schemaCommand);
-                    break;
-                case SchemaCommandType.AlterTable:
-                    Visit((AlterTableCommand)schemaCommand);
-                    break;
-                case SchemaCommandType.DropTable:
-                    Visit((DropTableCommand)schemaCommand);
-                    break;
-                case SchemaCommandType.SqlStatement:
-                    Visit((SqlStatementCommand)schemaCommand);
-                    break;
-                case SchemaCommandType.CreateForeignKey:
-                    Visit((CreateForeignKeyCommand)schemaCommand);
-                    break;
-                case SchemaCommandType.DropForeignKey:
-                    Visit((DropForeignKeyCommand)schemaCommand);
-                    break;
-            }
-        }
-
-        public void Visit(CreateTableCommand command) {
+        public override void Visit(CreateTableCommand command) {
 
             if ( ExecuteCustomInterpreter(command) ) {
                 return;
@@ -103,7 +90,7 @@ namespace Orchard.Data.Migration.Interpreters {
             RunPendingStatements();
         }
 
-        public void Visit(DropTableCommand command) {
+        public override void Visit(DropTableCommand command) {
             if ( ExecuteCustomInterpreter(command) ) {
                 return;
             }
@@ -116,7 +103,7 @@ namespace Orchard.Data.Migration.Interpreters {
             RunPendingStatements();
         }
 
-        public void Visit(AlterTableCommand command) {
+        public override void Visit(AlterTableCommand command) {
             if ( ExecuteCustomInterpreter(command) ) {
                 return;
             }
@@ -229,18 +216,21 @@ namespace Orchard.Data.Migration.Interpreters {
                 _dialect.QuoteForColumnName(command.IndexName));
             _sqlStatements.Add(builder.ToString());
         }
-        public void Visit(SqlStatementCommand command) {
-            if (command.Providers.Count == 0 || command.Providers.Contains(_shellSettings.DataProvider) ) {
-                if (ExecuteCustomInterpreter(command)) {
-                    return;
-                }
-                _sqlStatements.Add(command.Sql);
 
-                RunPendingStatements();
+        public override void Visit(SqlStatementCommand command) {
+            if (command.Providers.Count != 0 && !command.Providers.Contains(_shellSettings.DataProvider)) {
+                return;
             }
+
+            if (ExecuteCustomInterpreter(command)) {
+                return;
+            }
+            _sqlStatements.Add(command.Sql);
+
+            RunPendingStatements();
         }
 
-        public void Visit(CreateForeignKeyCommand command) {
+        public override void Visit(CreateForeignKeyCommand command) {
             if ( ExecuteCustomInterpreter(command) ) {
                 return;
             }
@@ -261,7 +251,7 @@ namespace Orchard.Data.Migration.Interpreters {
             RunPendingStatements();
         }
 
-        public void Visit(DropForeignKeyCommand command) {
+        public override void Visit(DropForeignKeyCommand command) {
             if ( ExecuteCustomInterpreter(command) ) {
                 return;
             }

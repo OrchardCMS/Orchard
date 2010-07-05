@@ -59,7 +59,6 @@ namespace Orchard.Tests.DataMigration {
             builder.RegisterInstance(_folders).As<IExtensionFolders>();
             builder.RegisterType<ExtensionManager>().As<IExtensionManager>();
             builder.RegisterType<DataMigrationManager>().As<IDataMigrationManager>();
-            builder.RegisterType<DefaultDataMigrationGenerator>().As<IDataMigrationGenerator>();
             builder.RegisterGeneric(typeof(Repository<>)).As(typeof(IRepository<>));
             _session = _sessionFactory.OpenSession();
             builder.RegisterInstance(new DefaultContentManagerTests.TestSessionLocator(_session)).As<ISessionLocator>();

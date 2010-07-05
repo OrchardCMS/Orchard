@@ -3,10 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
+using FluentNHibernate.Cfg;
+using NHibernate.Tool.hbm2ddl;
+using Orchard.Data.Migration.Generator;
 using Orchard.Data.Migration.Interpreters;
 using Orchard.Data.Migration.Records;
 using Orchard.Data.Migration.Schema;
+using Orchard.Data.Providers;
 using Orchard.Environment.Extensions;
+using Orchard.Environment.ShellBuilders.Models;
 using Orchard.Environment.State;
 using Orchard.Logging;
 
@@ -19,16 +24,21 @@ namespace Orchard.Data.Migration {
         private readonly IRepository<DataMigrationRecord> _dataMigrationRepository;
         private readonly IExtensionManager _extensionManager;
         private readonly IDataMigrationInterpreter _interpreter;
+        private readonly ISchemaCommandGenerator _generator;
 
         public DataMigrationManager(
             IEnumerable<IDataMigration> dataMigrations, 
             IRepository<DataMigrationRecord> dataMigrationRepository,
             IExtensionManager extensionManager,
-            IDataMigrationInterpreter interpreter) {
+            IDataMigrationInterpreter interpreter,
+            ISchemaCommandGenerator generator
+            ) {
             _dataMigrations = dataMigrations;
             _dataMigrationRepository = dataMigrationRepository;
             _extensionManager = extensionManager;
             _interpreter = interpreter;
+            _generator = generator;
+
             Logger = NullLogger.Instance;
         }
 
@@ -93,7 +103,7 @@ namespace Orchard.Data.Migration {
 
             var migrations = GetDataMigrations(feature);
 
-            // apply update methods to each migration class for the module
+            // apply update methods to each migration class for the module))))
             foreach ( var migration in migrations ) {
                 // copy the objet for the Linq query
                 var tempMigration = migration;
@@ -149,7 +159,7 @@ namespace Orchard.Data.Migration {
 
             // apply update methods to each migration class for the module
             foreach (var migration in migrations) {
-                // copy the objet for the Linq query
+                // copy the object for the Linq query
                 var tempMigration = migration;
 
                 // get current version for this migration

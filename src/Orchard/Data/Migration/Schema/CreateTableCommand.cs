@@ -19,25 +19,7 @@ namespace Orchard.Data.Migration.Schema {
         }
 
         public CreateTableCommand Column<T>(string columnName, Action<CreateColumnCommand> column = null) {
-            var dbType = System.Data.DbType.Object;
-            switch(System.Type.GetTypeCode(typeof(T))) {
-                case TypeCode.String :
-                    dbType = DbType.String;
-                    break;
-                case TypeCode.Int32:
-                    dbType = DbType.Int32;
-                    break;
-                case TypeCode.DateTime:
-                    dbType = DbType.DateTime;
-                    break;
-                case TypeCode.Boolean:
-                    dbType = DbType.Boolean;
-                    break;
-                default:
-                    Enum.TryParse(System.Type.GetTypeCode(typeof (T)).ToString(), true, out dbType);
-                    break;
-            }
-
+            var dbType = SchemaUtils.ToDbType(typeof (T));
             return Column(columnName, dbType, column);
         }
 
@@ -50,5 +32,7 @@ namespace Orchard.Data.Migration.Schema {
             /// TODO: Call Column() with necessary information for content part records
             return this;
         }
+
+        
     }
 }

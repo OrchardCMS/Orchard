@@ -359,13 +359,18 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="ContentManagement\DataMigrations\FrameworkDataMigration.cs" />
+    <Compile Include="Data\Migration\Generator\ISchemaCommandGenerator.cs" />
+    <Compile Include="Data\Migration\Interpreters\AbstractDataMigrationInterpreter.cs" />
     <Compile Include="Data\Migration\Interpreters\ICommandInterpreter.cs" />
     <Compile Include="Data\Migration\Interpreters\DefaultDataMigrationInterpreter.cs" />
     <Compile Include="Data\Migration\Interpreters\IDataMigrationInterpreter.cs" />
     <Compile Include="Data\Migration\Interpreters\SqLiteCommandInterpreter.cs" />
+    <Compile Include="Data\Migration\Interpreters\StringCommandInterpreter.cs" />
     <Compile Include="Data\Migration\Schema\AddColumnCommand.cs" />
     <Compile Include="Data\Migration\Schema\ISchemaBuilderCommand.cs" />
     <Compile Include="Data\Migration\Schema\IShellSettings.cs" />
+    <Compile Include="Data\Migration\Generator\SchemaCommandGenerator.cs" />
+    <Compile Include="Data\Migration\Schema\SchemaUtils.cs" />
     <Compile Include="Data\Migration\Schema\SqlStatementCommand.cs" />
     <Compile Include="Data\Migration\Schema\CreateColumnCommand.cs" />
     <Compile Include="Data\Migration\Schema\CreateForeignKeyCommand.cs" />
@@ -379,8 +384,6 @@
     <Compile Include="Data\Migration\Commands\DataMigrationCommands.cs" />
     <Compile Include="Data\Migration\Schema\SchemaBuilder.cs" />
     <Compile Include="Data\Migration\DataMigrationCoordinator.cs" />
-    <Compile Include="Data\Migration\DefaultDataMigrationGenerator.cs" />
-    <Compile Include="Data\Migration\IDataMigrationGenerator.cs" />
     <Compile Include="Data\Migration\DataMigration.cs" />
     <Compile Include="Data\Migration\DataMigrationManager.cs" />
     <Compile Include="Data\Migration\Records\DataMigrationRecord.cs" />

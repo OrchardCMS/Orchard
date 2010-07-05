@@ -15,7 +15,7 @@ namespace Orchard.Data.Providers {
             get { return "SQLite"; }
         }
 
-        protected override IPersistenceConfigurer GetPersistenceConfigurer(bool createDatabase) {
+        public override IPersistenceConfigurer GetPersistenceConfigurer(bool createDatabase) {
             var persistence = SQLiteConfiguration.Standard;
             if (string.IsNullOrEmpty(_connectionString)) {
                 var dataFile = Path.Combine(_dataFolder, "Orchard.db");

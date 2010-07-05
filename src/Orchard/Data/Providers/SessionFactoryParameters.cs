@@ -5,6 +5,5 @@ namespace Orchard.Data.Providers {
     public class SessionFactoryParameters : DataServiceParameters {
         public IEnumerable<RecordBlueprint> RecordDescriptors { get; set; }
         public bool CreateDatabase { get; set; }
-        public bool UpdateSchema { get; set; }
     }
 }
