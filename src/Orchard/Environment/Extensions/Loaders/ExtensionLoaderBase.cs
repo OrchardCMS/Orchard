@@ -25,7 +25,7 @@ namespace Orchard.Environment.Extensions.Loaders {
             return null;
         }
 
-        public virtual bool IsCompatibleWithReferences(ExtensionDescriptor extension, IEnumerable<ExtensionProbeEntry> references) {
+        public virtual bool IsCompatibleWithModuleReferences(ExtensionDescriptor extension, IEnumerable<ExtensionProbeEntry> references) {
             return true;
         }
 
@@ -56,10 +56,6 @@ namespace Orchard.Environment.Extensions.Loaders {
 
         public virtual IEnumerable<string> GetWebFormVirtualDependencies(DependencyDescriptor dependency) {
             return Enumerable.Empty<string>();
-        }
-
-        protected static bool IsAssemblyLoaded(string moduleName) {
-            return AppDomain.CurrentDomain.GetAssemblies().Any(a => a.GetName().Name == moduleName);
         }
     }
 }

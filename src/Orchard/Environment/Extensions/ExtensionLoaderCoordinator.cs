@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Orchard.Caching;
@@ -112,7 +112,7 @@ namespace Orchard.Environment.Extensions {
                 .Select(e => context.ProcessedExtensions[e.Name]);
 
             var activatedExtension = extensionProbes
-                .Where(e => e.Loader.IsCompatibleWithReferences(extension, processedModuleReferences))
+                .Where(e => e.Loader.IsCompatibleWithModuleReferences(extension, processedModuleReferences))
                 .FirstOrDefault();
 
             var previousDependency = context.PreviousDependencies.Where(d => StringComparer.OrdinalIgnoreCase.Equals(d.Name, extension.Name)).FirstOrDefault();

@@ -10,12 +10,17 @@ namespace Orchard.Environment.Extensions.Loaders {
     /// file can be found in the "App_Data/Dependencies" folder.
     /// </summary>
     public class ProbingExtensionLoader : ExtensionLoaderBase {
+        private readonly IHostEnvironment _hostEnvironment;
         private readonly IDependenciesFolder _dependenciesFolder;
         private readonly IAssemblyProbingFolder _assemblyProbingFolder;
 
-        public ProbingExtensionLoader(IDependenciesFolder dependenciesFolder, IAssemblyProbingFolder assemblyProbingFolder)
+        public ProbingExtensionLoader(
+            IHostEnvironment hostEnvironment,
+            IDependenciesFolder dependenciesFolder, 
+            IAssemblyProbingFolder assemblyProbingFolder)
             : base(dependenciesFolder) {
 
+            _hostEnvironment = hostEnvironment;
             _dependenciesFolder = dependenciesFolder;
             _assemblyProbingFolder = assemblyProbingFolder;
             Logger = NullLogger.Instance;
@@ -42,7 +47,7 @@ namespace Orchard.Environment.Extensions.Loaders {
                     });
 
                 // We need to restart the appDomain if the assembly is loaded
-                if (IsAssemblyLoaded(dependency.Name)) {
+                if (_hostEnvironment.IsAssemblyLoaded(dependency.Name)) {
                     Logger.Information("ExtensionRemoved: Module \"{0}\" is removed and its assembly is loaded, forcing AppDomain restart", dependency.Name);
                     ctx.RestartAppDomain = true;
                 }
@@ -58,14 +63,14 @@ namespace Orchard.Environment.Extensions.Loaders {
                     });
 
                 // We need to restart the appDomain if the assembly is loaded
-                if (IsAssemblyLoaded(extension.Name)) {
+                if (_hostEnvironment.IsAssemblyLoaded(extension.Name)) {
                     Logger.Information("ExtensionDeactivated: Module \"{0}\" is deactivated and its assembly is loaded, forcing AppDomain restart", extension.Name);
                     ctx.RestartAppDomain = true;
                 }
             }
         }
 
-        public override bool IsCompatibleWithReferences(ExtensionDescriptor extension, IEnumerable<ExtensionProbeEntry> references) {
+        public override bool IsCompatibleWithModuleReferences(ExtensionDescriptor extension, IEnumerable<ExtensionProbeEntry> references) {
             // A pre-compiled module is _not_ compatible with a dynamically loaded module
             // because a pre-compiled module usually references a pre-compiled assembly binary
             // which will have a different identity (i.e. name) from the dynamic module.

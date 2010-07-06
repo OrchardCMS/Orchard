@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using System.Web;
 using System.Web.Hosting;
 using Orchard.Services;
@@ -12,6 +13,8 @@ namespace Orchard.Environment {
     public interface IHostEnvironment {
         bool IsFullTrust { get; }
         string MapPath(string virtualPath);
+
+        bool IsAssemblyLoaded(string name);
 
         void RestartAppDomain();
         void ResetSiteCompilation();
@@ -30,6 +33,10 @@ namespace Orchard.Environment {
 
         public string MapPath(string virtualPath) {
             return HostingEnvironment.MapPath(virtualPath);
+        }
+
+        public bool IsAssemblyLoaded(string name) {
+            return AppDomain.CurrentDomain.GetAssemblies().Any(a => a.GetName().Name == name);
         }
 
         public void RestartAppDomain() {

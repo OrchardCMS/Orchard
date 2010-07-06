@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Reflection;
 using Orchard.Caching;
@@ -29,7 +29,7 @@ namespace Orchard.Environment.Extensions.Loaders {
         Assembly LoadReference(DependencyReferenceDescriptor reference);
         void ReferenceActivated(ExtensionLoadingContext context, ExtensionReferenceProbeEntry referenceEntry);
         void ReferenceDeactivated(ExtensionLoadingContext context, ExtensionReferenceProbeEntry referenceEntry);
-        bool IsCompatibleWithReferences(ExtensionDescriptor extension, IEnumerable<ExtensionProbeEntry> references);
+        bool IsCompatibleWithModuleReferences(ExtensionDescriptor extension, IEnumerable<ExtensionProbeEntry> references);
 
         ExtensionProbeEntry Probe(ExtensionDescriptor descriptor);
         ExtensionEntry Load(ExtensionDescriptor descriptor);

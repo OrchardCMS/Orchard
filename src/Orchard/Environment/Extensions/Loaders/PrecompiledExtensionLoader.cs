@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -15,16 +15,19 @@ namespace Orchard.Environment.Extensions.Loaders {
     /// extension directory.
     /// </summary>
     public class PrecompiledExtensionLoader : ExtensionLoaderBase {
+        private readonly IHostEnvironment _hostEnvironment;
         private readonly IAssemblyProbingFolder _assemblyProbingFolder;
         private readonly IVirtualPathProvider _virtualPathProvider;
         private readonly IVirtualPathMonitor _virtualPathMonitor;
 
-        public PrecompiledExtensionLoader(IDependenciesFolder dependenciesFolder,
+        public PrecompiledExtensionLoader(
+            IHostEnvironment hostEnvironment,
+            IDependenciesFolder dependenciesFolder,
             IAssemblyProbingFolder assemblyProbingFolder,
             IVirtualPathProvider virtualPathProvider,
             IVirtualPathMonitor virtualPathMonitor)
             : base(dependenciesFolder) {
-
+            _hostEnvironment = hostEnvironment;
             _assemblyProbingFolder = assemblyProbingFolder;
             _virtualPathProvider = virtualPathProvider;
             _virtualPathMonitor = virtualPathMonitor;
@@ -53,7 +56,7 @@ namespace Orchard.Environment.Extensions.Loaders {
                     });
 
                 // We need to restart the appDomain if the assembly is loaded
-                if (IsAssemblyLoaded(dependency.Name)) {
+                if (_hostEnvironment.IsAssemblyLoaded(dependency.Name)) {
                     Logger.Information("ExtensionRemoved: Module \"{0}\" is removed and its assembly is loaded, forcing AppDomain restart", dependency.Name);
                     ctx.RestartAppDomain = true;
                 }
@@ -72,7 +75,7 @@ namespace Orchard.Environment.Extensions.Loaders {
                 ctx.CopyActions.Add(() => _assemblyProbingFolder.StoreAssembly(extension.Name, sourceFileName));
 
                 // We need to restart the appDomain if the assembly is loaded
-                if (IsAssemblyLoaded(extension.Name)) {
+                if (_hostEnvironment.IsAssemblyLoaded(extension.Name)) {
                     Logger.Information("ExtensionRemoved: Module \"{0}\" is activated with newer file and its assembly is loaded, forcing AppDomain restart", extension.Name);
                     ctx.RestartAppDomain = true;
                 }
@@ -88,7 +91,7 @@ namespace Orchard.Environment.Extensions.Loaders {
                     });
 
                 // We need to restart the appDomain if the assembly is loaded
-                if (IsAssemblyLoaded(extension.Name)) {
+                if (_hostEnvironment.IsAssemblyLoaded(extension.Name)) {
                     Logger.Information("ExtensionDeactivated: Module \"{0}\" is deactivated and its assembly is loaded, forcing AppDomain restart", extension.Name);
                     ctx.RestartAppDomain = true;
                 }
@@ -110,7 +113,7 @@ namespace Orchard.Environment.Extensions.Loaders {
                 context.CopyActions.Add(() => _assemblyProbingFolder.StoreAssembly(referenceEntry.Name, sourceFileName));
 
                 // We need to restart the appDomain if the assembly is loaded
-                if (IsAssemblyLoaded(referenceEntry.Name)) {
+                if (_hostEnvironment.IsAssemblyLoaded(referenceEntry.Name)) {
                     Logger.Information("ReferenceActivated: Reference \"{0}\" is activated with newer file and its assembly is loaded, forcing AppDomain restart", referenceEntry.Name);
                     context.RestartAppDomain = true;
                 }
@@ -143,7 +146,7 @@ namespace Orchard.Environment.Extensions.Loaders {
                 } );
         }
 
-        public override bool IsCompatibleWithReferences(ExtensionDescriptor extension, IEnumerable<ExtensionProbeEntry> references) {
+        public override bool IsCompatibleWithModuleReferences(ExtensionDescriptor extension, IEnumerable<ExtensionProbeEntry> references) {
             // A pre-compiled module is _not_ compatible with a dynamically loaded module
             // because a pre-compiled module usually references a pre-compiled assembly binary
             // which will have a different identity (i.e. name) from the dynamic module.
