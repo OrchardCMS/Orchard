@@ -86,7 +86,6 @@
     <Compile Include="Settings\DevToolsSettings.cs" />
     <Compile Include="ViewModels\ContentIndexViewModel.cs" />
     <Compile Include="ViewModels\ContentDetailsViewModel.cs" />
-    <Compile Include="ViewModels\DataMigrationIndexViewModel.cs" />
     <Compile Include="ViewModels\MetadataIndexViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
