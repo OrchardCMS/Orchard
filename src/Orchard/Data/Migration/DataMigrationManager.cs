@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
-using Orchard.Data.Migration.Generator;
 using Orchard.Data.Migration.Interpreters;
 using Orchard.Data.Migration.Records;
 using Orchard.Data.Migration.Schema;
@@ -20,20 +19,17 @@ namespace Orchard.Data.Migration {
         private readonly IRepository<DataMigrationRecord> _dataMigrationRepository;
         private readonly IExtensionManager _extensionManager;
         private readonly IDataMigrationInterpreter _interpreter;
-        private readonly ISchemaCommandGenerator _generator;
 
         public DataMigrationManager(
             IEnumerable<IDataMigration> dataMigrations, 
             IRepository<DataMigrationRecord> dataMigrationRepository,
             IExtensionManager extensionManager,
-            IDataMigrationInterpreter interpreter,
-            ISchemaCommandGenerator generator
+            IDataMigrationInterpreter interpreter
             ) {
             _dataMigrations = dataMigrations;
             _dataMigrationRepository = dataMigrationRepository;
             _extensionManager = extensionManager;
             _interpreter = interpreter;
-            _generator = generator;
 
             Logger = NullLogger.Instance;
         }

@@ -4,5 +4,6 @@ using Orchard.Mvc.ViewModels;
 namespace Orchard.Modules.ViewModels {
     public class FeaturesViewModel : BaseViewModel {
         public IEnumerable<IModuleFeature> Features { get; set; }
+        public IEnumerable<string> FeaturesThatNeedUpdate { get; set; }
     }
 }
