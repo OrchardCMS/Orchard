@@ -12,16 +12,20 @@ using Orchard.Localization;
 namespace Orchard.ContentTypes.Services {
     public class ContentDefinitionService : IContentDefinitionService {
         private readonly IContentDefinitionManager _contentDefinitionManager;
+        private readonly IEnumerable<IContentPartDriver> _contentPartDrivers;
         private readonly IEnumerable<IContentFieldDriver> _contentFieldDrivers;
         private readonly IContentDefinitionEditorEvents _contentDefinitionEditorEvents;
 
         public ContentDefinitionService(
                 IOrchardServices services,
                 IContentDefinitionManager contentDefinitionManager,
+                IEnumerable<IContentPartDriver> contentPartDrivers,
                 IEnumerable<IContentFieldDriver> contentFieldDrivers,
-                IContentDefinitionEditorEvents contentDefinitionEditorEvents) {
+                IContentDefinitionEditorEvents contentDefinitionEditorEvents)
+        {
             Services = services;
             _contentDefinitionManager = contentDefinitionManager;
+            _contentPartDrivers = contentPartDrivers;
             _contentFieldDrivers = contentFieldDrivers;
             _contentDefinitionEditorEvents = contentDefinitionEditorEvents;
             T = NullLocalizer.Instance;
@@ -141,7 +145,12 @@ namespace Orchard.ContentTypes.Services {
 
         public IEnumerable<EditPartViewModel> GetParts() {
             var typeNames = GetTypes().Select(ctd => ctd.Name);
-            return _contentDefinitionManager.ListPartDefinitions().Where(cpd => !typeNames.Contains(cpd.Name)).Select(cpd => new EditPartViewModel(cpd));
+            // code-defined parts
+            var codeDefinedParts = _contentPartDrivers.SelectMany(d => d.GetPartInfo().Select(cpi => new EditPartViewModel {Name = cpi.PartName}));
+            // user-defined parts
+            var contentParts = _contentDefinitionManager.ListPartDefinitions().Where(cpd => !codeDefinedParts.Any(m => m.Name == cpd.Name)).Select(cpd => new EditPartViewModel(cpd));
+            // all together now, except for those parts with the same name as a type (implicit type's part or a mistake)
+            return contentParts.Where(m => !typeNames.Contains(m.Name)).Union(codeDefinedParts).OrderBy(m => m.Name);
         }
 
         public EditPartViewModel GetPart(string name) {
