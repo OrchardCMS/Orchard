@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Web;
 using JetBrains.Annotations;
+using Orchard.Caching;
 using Orchard.Data;
 using Orchard.Localization.Records;
 using Orchard.Settings;
@@ -12,10 +13,12 @@ namespace Orchard.Localization.Services {
     public class DefaultCultureManager : ICultureManager {
         private readonly IRepository<CultureRecord> _cultureRepository;
         private readonly IEnumerable<ICultureSelector> _cultureSelectors;
+        private readonly ISignals _signals;
 
-        public DefaultCultureManager(IRepository<CultureRecord> cultureRepository, IEnumerable<ICultureSelector> cultureSelectors) {
+        public DefaultCultureManager(IRepository<CultureRecord> cultureRepository, IEnumerable<ICultureSelector> cultureSelectors, ISignals signals) {
             _cultureRepository = cultureRepository;
             _cultureSelectors = cultureSelectors;
+            _signals = signals;
         }
 
         protected virtual ISite CurrentSite { get; [UsedImplicitly] private set; }
@@ -30,6 +33,7 @@ namespace Orchard.Localization.Services {
                 throw new ArgumentException("cultureName");
             }
             _cultureRepository.Create(new CultureRecord { Culture = cultureName });
+            _signals.Trigger("culturesChanged");
         }
 
         public void DeleteCulture(string cultureName) {
@@ -38,8 +42,10 @@ namespace Orchard.Localization.Services {
             }
 
             var culture = _cultureRepository.Get(cr => cr.Culture == cultureName);
-            if (culture != null)
+            if (culture != null) {
                 _cultureRepository.Delete(culture);
+                _signals.Trigger("culturesChanged");
+            }
         }
 
         public string GetCurrentCulture(HttpContext requestContext) {
