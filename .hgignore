@@ -15,3 +15,4 @@ glob:profiling
 glob:src/*.ReSharper
 glob:*.orig
 glob:*.suo
+glob:src/Orchard.Web/Modules-temp/*
