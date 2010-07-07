@@ -65,13 +65,7 @@ namespace Orchard.ContentTypes.Services {
                 name = VersionName(name);
 
             var contentTypeDefinition = new ContentTypeDefinition(name, typeViewModel.DisplayName);
-            //just giving the new type some default parts for now
             _contentDefinitionManager.StoreTypeDefinition(contentTypeDefinition);
-            _contentDefinitionManager.AlterTypeDefinition(
-                contentTypeDefinition.Name,
-                cfg => cfg.WithPart("CommonAspect")
-                           //.WithPart("RoutableAspect") //need to go the new routable route
-                           .WithPart("BodyAspect"));
 
             return new EditTypeViewModel(contentTypeDefinition);
         }
