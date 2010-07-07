@@ -3,19 +3,64 @@ using System.IO;
 using System.Linq;
 using System.Web.Hosting;
 using Orchard.Commands;
+using Orchard.Data.Migration.Generator;
+using Orchard.DevTools.Services;
 using Orchard.Environment.Extensions;
 
 namespace Orchard.DevTools.Commands {
     [OrchardFeature("Scaffolding")]
     public class ScaffoldingCommands : DefaultOrchardCommandHandler {
         private readonly IExtensionManager _extensionManager;
+        private readonly ISchemaCommandGenerator _schemaCommandGenerator;
 
-        public ScaffoldingCommands(IExtensionManager extensionManager) {
+        public ScaffoldingCommands(IExtensionManager extensionManager,
+            ISchemaCommandGenerator schemaCommandGenerator) {
             _extensionManager = extensionManager;
+            _schemaCommandGenerator = schemaCommandGenerator;
         }
 
         [OrchardSwitch]
         public bool IncludeInSolution { get; set; }
+
+        [CommandHelp("scaffolding create datamigration <feature-name> \r\n\t" + "Create a new Data Migration class")]
+        [CommandName("scaffolding create datamigration")]
+        public void CreateDataMigration(string featureName) {
+            Context.Output.WriteLine(T("Creating Data Migration for {0}", featureName));
+
+            foreach ( var extension in _extensionManager.AvailableExtensions() ) {
+                if ( extension.ExtensionType == "Module" && extension.Features.Any(f => String.Equals(f.Name, featureName, StringComparison.OrdinalIgnoreCase)) ) {
+                    string dataMigrationsPath = HostingEnvironment.MapPath("~/Modules/" + extension.Name + "/DataMigrations/");
+                    string dataMigrationPath = dataMigrationsPath  + extension.DisplayName + "DataMigration.cs";
+                    string templatesPath = HostingEnvironment.MapPath("~/Modules/Orchard.DevTools/ScaffoldingTemplates/");
+                    if ( !Directory.Exists(dataMigrationsPath) ) {
+                        Directory.CreateDirectory(dataMigrationsPath);
+                    }
+                    if ( File.Exists(dataMigrationPath) ) {
+                        Context.Output.WriteLine(T("Data migration already exists in target Module {0}.", extension.Name));
+                        return;
+                    }
+
+                    var commands = _schemaCommandGenerator.GetCreateFeatureCommands(featureName, false).ToList();
+                    
+                    var stringWriter = new StringWriter();
+                    var interpreter = new ScaffoldingCommandInterpreter(stringWriter);
+
+                    foreach ( var command in commands ) {
+                        interpreter.Visit(command);
+                        stringWriter.WriteLine();
+                    }
+
+                    string dataMigrationText = File.ReadAllText(templatesPath + "DataMigration.txt");
+                    dataMigrationText = dataMigrationText.Replace("$$FeatureName$$", featureName);
+                    dataMigrationText = dataMigrationText.Replace("$$ClassName$$", extension.DisplayName);
+                    dataMigrationText = dataMigrationText.Replace("$$Commands$$", stringWriter.ToString());
+                    File.WriteAllText(dataMigrationPath, dataMigrationText);
+                    Context.Output.WriteLine(T("Data migration created successfully in Module {0}", extension.DisplayName));
+                    return;
+                }
+            }
+            Context.Output.WriteLine(T("Creating data migration failed: target Feature {0} could not be found.", featureName));
+        }
 
         [CommandHelp("scaffolding create module <module-name> [/IncludeInSolution:true|false]\r\n\t" + "Create a new Orchard module")]
         [CommandName("scaffolding create module")]
@@ -23,7 +68,7 @@ namespace Orchard.DevTools.Commands {
         public void CreateModule(string moduleName) {
             Context.Output.WriteLine(T("Creating Module {0}", moduleName));
 
-            if (_extensionManager.AvailableExtensions().Any(extension => extension.ExtensionType == "Module" && String.Equals(moduleName, extension.DisplayName, StringComparison.OrdinalIgnoreCase))) {
+            if ( _extensionManager.AvailableExtensions().Any(extension => extension.ExtensionType == "Module" && String.Equals(moduleName, extension.DisplayName, StringComparison.OrdinalIgnoreCase)) ) {
                 Context.Output.WriteLine(T("Creating Module {0} failed: a module of the same name already exists", moduleName));
                 return;
             }

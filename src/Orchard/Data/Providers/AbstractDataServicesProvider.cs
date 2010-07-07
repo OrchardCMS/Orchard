@@ -16,30 +16,16 @@ using Orchard.Environment.ShellBuilders.Models;
 namespace Orchard.Data.Providers {
     public abstract class AbstractDataServicesProvider : IDataServicesProvider {
 
-        protected abstract IPersistenceConfigurer GetPersistenceConfigurer(bool createDatabase);
+        public abstract IPersistenceConfigurer GetPersistenceConfigurer(bool createDatabase);
 
-        public ISessionFactory BuildSessionFactory(SessionFactoryParameters parameters) {
+        public Configuration BuildConfiguration(SessionFactoryParameters parameters) {
             var database = GetPersistenceConfigurer(parameters.CreateDatabase);
             var persistenceModel = CreatePersistenceModel(parameters.RecordDescriptors);
 
-            var sessionFactory = Fluently.Configure()
+            return Fluently.Configure()
                 .Database(database)
                 .Mappings(m => m.AutoMappings.Add(persistenceModel))
-                .ExposeConfiguration(config => Initialization(parameters, config))
-                .BuildSessionFactory();
-
-            return sessionFactory;
-        }
-
-        private static void Initialization(SessionFactoryParameters parameters, Configuration configuration) {
-            if (parameters.CreateDatabase) {
-                var export = new SchemaExport(configuration);
-                export.Execute(false/*script*/, true/*export*/, false/*justDrop*/);
-            }
-            else if (parameters.UpdateSchema) {
-                var update = new SchemaUpdate(configuration);
-                update.Execute(false/*script*/, true /*doUpdate*/);
-            }
+                .BuildConfiguration();
         }
 
         public static AutoPersistenceModel CreatePersistenceModel(IEnumerable<RecordBlueprint> recordDescriptors) {
@@ -65,8 +51,5 @@ namespace Orchard.Data.Providers {
 
             public IEnumerable<Type> GetTypes() { return _recordDescriptors.Select(descriptor => descriptor.Type); }
         }
-
-
-
     }
 }

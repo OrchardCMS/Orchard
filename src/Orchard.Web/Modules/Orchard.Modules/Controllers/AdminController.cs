@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using Orchard.Data.Migration;
 using Orchard.Localization;
 using Orchard.Modules.ViewModels;
 using Orchard.Mvc.Results;
@@ -11,10 +12,12 @@ using Orchard.Utility.Extensions;
 namespace Orchard.Modules.Controllers {
     public class AdminController : Controller {
         private readonly IModuleService _moduleService;
+        private readonly IDataMigrationManager _dataMigrationManager;
 
-        public AdminController(IOrchardServices services, IModuleService moduleService) {
+        public AdminController(IOrchardServices services, IModuleService moduleService, IDataMigrationManager dataMigrationManager) {
             Services = services;
             _moduleService = moduleService;
+            _dataMigrationManager = dataMigrationManager;
             T = NullLocalizer.Instance;
         }
 
@@ -68,7 +71,9 @@ namespace Orchard.Modules.Controllers {
                 return new HttpUnauthorizedResult();
 
             var features = _moduleService.GetAvailableFeatures().ToList();
-            return View(new FeaturesViewModel {Features = features});
+            var featuresThatNeedUpdate = _dataMigrationManager.GetFeaturesThatNeedUpdate();
+
+            return View(new FeaturesViewModel { Features = features, FeaturesThatNeedUpdate = featuresThatNeedUpdate });
         }
 
         [HttpPost]
@@ -93,6 +98,25 @@ namespace Orchard.Modules.Controllers {
                 return new NotFoundResult();
 
             _moduleService.DisableFeatures(new[] {id}, force != null && (bool) force);
+
+            return RedirectToAction("Features");
+        }
+
+        [HttpPost]
+        public ActionResult Update(string id, bool? force) {
+            if ( !Services.Authorizer.Authorize(Permissions.ManageFeatures, T("Not allowed to manage features")) )
+                return new HttpUnauthorizedResult();
+
+            if ( string.IsNullOrEmpty(id) )
+                return new NotFoundResult();
+
+            try {
+                _dataMigrationManager.Update(id);
+                Services.Notifier.Information(T("The feature {0} was updated succesfuly", id));
+            }
+            catch(Exception ex) {
+                Services.Notifier.Error(T("An error occured while updating the feature {0}: {1}", id, ex.Message));
+            }
 
             return RedirectToAction("Features");
         }

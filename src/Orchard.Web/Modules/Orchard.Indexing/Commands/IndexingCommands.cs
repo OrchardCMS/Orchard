@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using Orchard.Commands;
 using Orchard.ContentManagement;
-using Orchard.Indexing;
-using Orchard.Security;
 using Orchard.Tasks.Indexing;
 
 namespace Orchard.Indexing.Commands {

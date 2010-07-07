@@ -4,9 +4,11 @@ using Orchard.Localization;
 using Orchard.Mvc.ViewModels;
 using Orchard.Themes;
 using Orchard.UI.Notify;
+using Orchard.UI.Admin;
 
 namespace Orchard.DevTools.Controllers {
     [Themed]
+    [Admin]
     public class HomeController : Controller {
         private readonly INotifier _notifier;
 
