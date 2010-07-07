@@ -75,6 +75,7 @@
     <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="Models\ModuleFeature.cs" />
     <Compile Include="Packaging\Commands\PackagingCommands.cs" />
+    <Compile Include="Packaging\Controllers\DownloadStreamResult.cs" />
     <Compile Include="Packaging\Controllers\PackagingController.cs" />
     <Compile Include="Packaging\Services\PackageExpander.cs" />
     <Compile Include="Packaging\Services\PackageBuilder.cs" />
