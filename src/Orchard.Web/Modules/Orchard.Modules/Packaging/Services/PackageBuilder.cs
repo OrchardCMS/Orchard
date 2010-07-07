@@ -11,7 +11,7 @@ using Orchard.FileSystems.WebSite;
 
 namespace Orchard.Modules.Packaging.Services {
     public interface IPackageBuilder : IDependency {
-        Stream Create(string moduleName);
+        Stream BuildPackage(ExtensionDescriptor extensionDescriptor);
     }
 
     [OrchardFeature("Orchard.Modules.Packaging")]
@@ -35,28 +35,26 @@ namespace Orchard.Modules.Packaging.Services {
             public XDocument Project { get; set; }
         }
 
-        public Stream Create(string moduleName) {
-            var extensionDescriptor = _extensionManager
-                .AvailableExtensions()
-                .FirstOrDefault(x => x.Name == moduleName);
 
-            return Create(extensionDescriptor);
-        }
-
-        public Stream Create(ExtensionDescriptor extensionDescriptor) {
-            var projectFile = extensionDescriptor.Name + ".csproj";
+        public Stream BuildPackage(ExtensionDescriptor extensionDescriptor) {
+            
 
             var context = new CreateContext();
             BeginPackage(context);
-            EstablishPaths(context, _webSiteFolder, extensionDescriptor.Location, extensionDescriptor.Name);
-            SetCoreProperties(context, extensionDescriptor);
+            try {
+                EstablishPaths(context, _webSiteFolder, extensionDescriptor.Location, extensionDescriptor.Name);
+                SetCoreProperties(context, extensionDescriptor);
 
-            if (LoadProject(context, projectFile)) {
-                EmbedVirtualFile(context, projectFile, System.Net.Mime.MediaTypeNames.Text.Xml);
-                EmbedProjectFiles(context, "Compile", "Content", "None", "EmbeddedResource");
-                EmbedReferenceFiles(context);
+                var projectFile = extensionDescriptor.Name + ".csproj";
+                if (LoadProject(context, projectFile)) {
+                    EmbedVirtualFile(context, projectFile, System.Net.Mime.MediaTypeNames.Text.Xml);
+                    EmbedProjectFiles(context, "Compile", "Content", "None", "EmbeddedResource");
+                    EmbedReferenceFiles(context);
+                }
             }
-            EndPackage(context);
+            finally {
+                EndPackage(context);
+            }
 
             return context.Stream;
         }

@@ -2,20 +2,22 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.ServiceModel.Syndication;
 using System.Web;
+using System.Xml;
 using System.Xml.Linq;
 using System.Xml.Serialization;
 using Orchard.Environment.Extensions;
 using Orchard.FileSystems.AppData;
 
 namespace Orchard.Modules.Packaging.Services {
-    public interface IPackageRepository : IDependency {
+    public interface IPackageSourceManager : IDependency {
         IEnumerable<PackageSource> GetSources();
         void AddSource(PackageSource source);
         void RemoveSource(Guid id);
         void UpdateLists();
 
-        IEnumerable<PackageInfo> GetModuleList();
+        IEnumerable<PackageEntry> GetModuleList();
     }
 
     public class PackageSource {
@@ -23,17 +25,13 @@ namespace Orchard.Modules.Packaging.Services {
         public string FeedUrl { get; set; }
     }
 
-    public class PackageInfo {
+    public class PackageEntry {
         public PackageSource Source { get; set; }
-
-        public AtomEntry AtomEntry { get; set; }
+        public SyndicationFeed SyndicationFeed { get; set; }
+        public SyndicationItem SyndicationItem { get; set; }
+        public string PackageStreamUri { get; set; }
     }
 
-    public class AtomEntry {
-        public string Id { get; set; }
-        public string Title { get; set; }
-        public string Updated { get; set; }
-    }
 
     static class AtomExtensions {
         public static string Atom(this XElement entry, string localName) {
@@ -47,11 +45,11 @@ namespace Orchard.Modules.Packaging.Services {
     }
 
     [OrchardFeature("Orchard.Modules.Packaging")]
-    public class PackageRepository : IPackageRepository {
+    public class PackageSourceManager : IPackageSourceManager {
         private readonly IAppDataFolder _appDataFolder;
         private static readonly XmlSerializer _sourceSerializer = new XmlSerializer(typeof(List<PackageSource>), new XmlRootAttribute("Sources"));
 
-        public PackageRepository(IAppDataFolder appDataFolder) {
+        public PackageSourceManager(IAppDataFolder appDataFolder) {
             _appDataFolder = appDataFolder;
         }
 
@@ -103,39 +101,39 @@ namespace Orchard.Modules.Packaging.Services {
             return AtomExtensions.AtomXName(localName);
         }
 
-        public IEnumerable<PackageInfo> GetModuleList() {
-            var packageInfos = GetSources()
-                .SelectMany(
-                    source =>
-                    Bind(_appDataFolder.ReadFile(GetFeedCachePath(source)),
-                         content =>
-                         XDocument.Parse(content)
-                             .Elements(Atom("feed"))
-                             .Elements(Atom("entry"))
-                             .SelectMany(
-                                 element =>
-                                 Bind(new AtomEntry {
-                                     Id = element.Atom("id"),
-                                     Title = element.Atom("title"),
-                                     Updated = element.Atom("updated"),
-                                 },
-                                      atom =>
-                                      Unit(new PackageInfo {
-                                          Source = source,
-                                          AtomEntry = atom,
-                                      })))));
-
-            return packageInfos.ToArray();
-        }
-
-
         static IEnumerable<T> Unit<T>(T t) where T : class {
             return t != null ? new[] { t } : Enumerable.Empty<T>();
         }
         static IEnumerable<T2> Bind<T, T2>(T t, Func<T, IEnumerable<T2>> f) where T : class {
             return Unit(t).SelectMany(f);
         }
-    }
 
+        private SyndicationFeed ParseFeed(string content) {
+            var formatter = new Atom10FeedFormatter<SyndicationFeed>();
+            formatter.ReadFrom(XmlReader.Create(new StringReader(content)));
+            return formatter.Feed;
+        }
+
+        public IEnumerable<PackageEntry> GetModuleList() {
+            var packageInfos = GetSources()
+                .SelectMany(
+                    source =>
+                    Bind(ParseFeed(_appDataFolder.ReadFile(GetFeedCachePath(source))),
+                         feed =>
+                             feed.Items.SelectMany(
+                             item =>
+                                 Unit(new PackageEntry {
+                                     Source = source,
+                                     SyndicationFeed = feed,
+                                     SyndicationItem = item,
+                                     PackageStreamUri = item.Links.Single().GetAbsoluteUri().AbsoluteUri,
+                                 }))));
+
+
+            return packageInfos.ToArray();
+        }
+
+
+    }
 
 }

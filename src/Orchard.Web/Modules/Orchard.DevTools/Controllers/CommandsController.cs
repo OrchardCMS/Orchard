@@ -42,5 +42,7 @@ namespace Orchard.DevTools.Controllers {
             model.Results = writer.ToString();
             return View("Execute", model);
         }
+
+
     }
 }

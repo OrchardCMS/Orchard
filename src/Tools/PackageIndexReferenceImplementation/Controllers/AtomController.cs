@@ -1,42 +1,27 @@
 ﻿using System;
 using System.IO;
 using System.IO.Packaging;
-using System.Reflection;
+using System.Linq;
+using System.Security.Policy;
 using System.Web.Mvc;
-using System.Xml;
-using System.Xml.Linq;
+using System.Web.Routing;
 using System.ServiceModel.Syndication;
+using PackageIndexReferenceImplementation.Controllers.Artifacts;
+using PackageIndexReferenceImplementation.Services;
 
 namespace PackageIndexReferenceImplementation.Controllers {
-    public class SyndicationResult : ActionResult {
-        public SyndicationFeedFormatter Formatter { get; set; }
-
-        public SyndicationResult(SyndicationFeedFormatter formatter) {
-            Formatter = formatter;
-        }
-
-        public override void ExecuteResult(ControllerContext context) {
-            context.HttpContext.Response.ContentType = "application/atom+xml";
-            using (var writer = XmlWriter.Create(context.HttpContext.Response.OutputStream)) {
-                Formatter.WriteTo(writer);
-            }
-        }
-    }
-
     [HandleError]
     public class AtomController : Controller {
-        public ActionResult Index() {
-            var feed = new SyndicationFeed {
-                Items = new[] {
-                    new SyndicationItem {
-                        Id = "hello",
-                        Title = new TextSyndicationContent("Orchard.Media", TextSyndicationContentKind.Plaintext),
-                        LastUpdatedTime = DateTimeOffset.UtcNow
-                    }
-                }
-            };
+        private readonly FeedStorage _feedStorage;
+        private readonly MediaStorage _mediaStorage;
 
-            return new SyndicationResult(new Atom10FeedFormatter(feed));
+        public AtomController() {
+            _feedStorage = new FeedStorage();
+            _mediaStorage = new MediaStorage();
+        }
+
+        public ActionResult Index() {
+            return new AtomFeedResult(_feedStorage.GetFeed());
         }
 
         [ActionName("Index"), HttpPost, ContentType("application/atom+xml"), XmlBody]
@@ -46,37 +31,68 @@ namespace PackageIndexReferenceImplementation.Controllers {
 
         [ActionName("Index"), HttpPost, ContentType("application/x-package")]
         public ActionResult PostPackage() {
+
+            var hostHeader = HttpContext.Request.Headers["Host"];
+            var slugHeader = HttpContext.Request.Headers["Slug"];
+            var utcNowDateString = DateTimeOffset.UtcNow.ToString("yyyy-MM-dd");
+
             var package = Package.Open(Request.InputStream, FileMode.Open, FileAccess.Read);
+            var packageProperties = package.PackageProperties;
 
-            return RedirectToAction("Index");
+            var feed = _feedStorage.GetFeed();
+
+            var item = feed.Items.FirstOrDefault(i => i.Id.StartsWith("tag:") && i.Id.EndsWith(":" + packageProperties.Identifier));
+            if (item == null) {
+                item = new SyndicationItem {
+                    Id = "tag:" + hostHeader + "," + utcNowDateString + ":" + packageProperties.Identifier
+                };
+                feed.Items = feed.Items.Concat(new[] { item });
+            }
+
+
+            if (!string.IsNullOrEmpty(packageProperties.Category)) {
+                item.Authors.Clear();
+                //parse package.PackageProperties.Creator into email-style authors
+                item.Authors.Add(new SyndicationPerson { Name = packageProperties.Creator });
+            }
+
+            if (!string.IsNullOrEmpty(packageProperties.Category)) {
+                item.Categories.Clear();
+                item.Categories.Add(new SyndicationCategory(packageProperties.Category));
+            }
+
+            if (packageProperties.Modified.HasValue) {
+                item.LastUpdatedTime = new DateTimeOffset(packageProperties.Modified.Value);
+            }
+
+            if (!string.IsNullOrEmpty(packageProperties.Title)) {
+                item.Title = new TextSyndicationContent(packageProperties.Title);
+            }
+
+            if (!string.IsNullOrEmpty(packageProperties.Description)) {
+                item.Summary = new TextSyndicationContent(packageProperties.Description);
+            }
+
+            if (!string.IsNullOrEmpty(packageProperties.Title)) {
+                item.Title = new TextSyndicationContent(packageProperties.Title);
+            }
+
+            var mediaIdentifier = packageProperties.Identifier + "-" + packageProperties.Version + ".zip";
+
+            var mediaUrl = Url.Action("Resource", "Media", new RouteValueDictionary { { "Id", mediaIdentifier }, { "ContentType", "application/x-package" } });
+            item.Links.Clear();
+            item.Links.Add(new SyndicationLink(new Uri(HostBaseUri(), new Uri(mediaUrl, UriKind.Relative))));
+
+            Request.InputStream.Seek(0, SeekOrigin.Begin);
+            _mediaStorage.StoreMedia(mediaIdentifier+":application/x-package", Request.InputStream);
+            _feedStorage.StoreFeed(feed);
+
+            return new AtomItemResult("201 Created", null, item);
         }
 
-        static XElement Atom(string localName, params XNode[] content) {
-            return new XElement(XName.Get(localName, "http://www.w3.org/2005/Atom"), content);
-        }
-        static XElement Atom(string localName, string value) {
-            return new XElement(XName.Get(localName, "http://www.w3.org/2005/Atom"), new XText(value));
-        }
-    }
-
-    [AttributeUsage(AttributeTargets.Method, AllowMultiple = false, Inherited = true)]
-    public class ContentTypeAttribute : ActionMethodSelectorAttribute {
-        public ContentTypeAttribute(string contentType) {
-            ContentType = contentType;
+        private Uri HostBaseUri() {
+            return new Uri("http://" + HttpContext.Request.Headers["Host"]);
         }
 
-        public string ContentType { get; set; }
-
-        public override bool IsValidForRequest(ControllerContext controllerContext, MethodInfo methodInfo) {
-            return controllerContext.HttpContext.Request.ContentType.StartsWith(ContentType);
-        }
-    }
-
-    [AttributeUsage(AttributeTargets.Method, AllowMultiple = false, Inherited = true)]
-    public class XmlBodyAttribute : ActionFilterAttribute {
-        public override void OnActionExecuting(ActionExecutingContext filterContext) {
-            var body = XElement.Load(filterContext.HttpContext.Request.InputStream);
-            filterContext.ActionParameters["body"] = body.ToString();
-        }
     }
 }
