@@ -6,7 +6,7 @@ namespace Orchard.Search.Models {
         public virtual string SearchedFields { get; set; }
         
         public SearchSettingsRecord() {
-            FilterCulture = true;
+            FilterCulture = false;
             SearchedFields = "body, title";
         }
     }
