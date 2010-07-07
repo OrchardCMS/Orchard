@@ -406,6 +406,7 @@
     <Compile Include="Environment\Extensions\Compilers\CSharpExtensionBuildProviderShim.cs" />
     <Compile Include="Environment\Extensions\Compilers\ProjectFileDescriptor.cs" />
     <Compile Include="Environment\Extensions\Compilers\IProjectFileParser.cs" />
+    <Compile Include="Localization\Commands\CultureCommands.cs" />
     <Compile Include="Utility\DependencyOrderingUtility.cs" />
     <Compile Include="Environment\IOrchardHostContainer.cs" />
     <Compile Include="Environment\IShim.cs" />
