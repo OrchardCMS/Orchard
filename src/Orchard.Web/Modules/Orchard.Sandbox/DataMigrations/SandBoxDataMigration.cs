@@ -5,12 +5,12 @@ namespace Orchard.Sandbox.DataMigrations {
 
         public int Create() {
             SchemaBuilder.CreateTable("SandboxPageRecord", table => table
-                .Column<int>("Id", column => column.PrimaryKey())
+                .ContentPartRecord()
                 .Column<string>("Name")
                 );
 
             SchemaBuilder.CreateTable("SandboxSettingsRecord", table => table
-                .Column<int>("Id", column => column.PrimaryKey())
+                .ContentPartRecord()
                 .Column<bool>("AllowAnonymousEdits")
                 );
 

@@ -82,7 +82,7 @@ namespace Orchard.Core.Settings.DataMigrations {
 
             //CREATE TABLE Settings_SiteSettingsRecord (Id INTEGER not null, SiteSalt TEXT, SiteName TEXT, SuperUser TEXT, PageTitleSeparator TEXT, HomePage TEXT, SiteCulture TEXT, primary key (Id));
             SchemaBuilder.CreateTable("SiteSettingsRecord", table => table
-                .Column<int>("Id", column => column.PrimaryKey())
+                .ContentPartRecord()
                 .Column<string>("SiteSalt")
                 .Column<string>("SiteName")
                 .Column<string>("SuperUser")

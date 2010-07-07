@@ -13,7 +13,7 @@ namespace Orchard.Comments.DataMigrations {
 
             //CREATE TABLE Orchard_Comments_CommentRecord (Id INTEGER not null, Author TEXT, SiteName TEXT, UserName TEXT, Email TEXT, Status TEXT, CommentDateUtc DATETIME, CommentText TEXT, CommentedOn INTEGER, CommentedOnContainer INTEGER, primary key (Id));
             SchemaBuilder.CreateTable("CommentRecord", table => table
-                .Column<int>("Id", column => column.PrimaryKey())
+                .ContentPartRecord()
                 .Column<string>("Author")
                 .Column<string>("SiteName")
                 .Column<string>("UserName")
@@ -27,7 +27,7 @@ namespace Orchard.Comments.DataMigrations {
 
             //CREATE TABLE Orchard_Comments_CommentSettingsRecord (Id INTEGER not null, ModerateComments INTEGER, EnableSpamProtection INTEGER, AkismetKey TEXT, AkismetUrl TEXT, primary key (Id));
             SchemaBuilder.CreateTable("CommentSettingsRecord", table => table
-                .Column<int>("Id", column => column.PrimaryKey())
+                .ContentPartRecord()
                 .Column<bool>("ModerateComments")
                 .Column<bool>("EnableSpamProtection")
                 .Column<string>("AkismetKey")
@@ -36,7 +36,7 @@ namespace Orchard.Comments.DataMigrations {
 
             //CREATE TABLE Orchard_Comments_HasCommentsRecord (Id INTEGER not null, CommentsShown INTEGER, CommentsActive INTEGER, primary key (Id));
             SchemaBuilder.CreateTable("HasCommentsRecord", table => table
-                .Column<int>("Id", column => column.PrimaryKey())
+                .ContentPartRecord()
                 .Column<bool>("CommentsShown")
                 .Column<bool>("CommentsActive")
                 );
