@@ -13,7 +13,7 @@ using (Html.BeginFormAntiForgeryPost()) { %>
                     string.Format(
                         "{0} <label for=\"{1}\" class=\"forcheckbox\">{2}</label>{3}",
                         Html.CheckBox(fieldNameStart + "IsSelected"),
-                        fieldNameStart + "IsSelected",
+                        ViewData.TemplateInfo.GetFullHtmlFieldId(fieldNameStart + "IsSelected"),
                         partSelection.PartName,
                         Html.Hidden(fieldNameStart + "PartName", partSelection.PartName)));
             },

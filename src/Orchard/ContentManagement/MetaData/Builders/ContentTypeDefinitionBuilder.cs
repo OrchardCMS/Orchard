@@ -11,7 +11,7 @@ namespace Orchard.ContentManagement.MetaData.Builders {
         private readonly SettingsDictionary _settings;
 
         public ContentTypeDefinitionBuilder()
-            : this(new ContentTypeDefinition(null)) {
+            : this(new ContentTypeDefinition(null, null)) {
         }
 
         public ContentTypeDefinitionBuilder(ContentTypeDefinition existing) {

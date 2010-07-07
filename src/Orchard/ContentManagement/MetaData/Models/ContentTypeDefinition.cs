@@ -11,8 +11,9 @@ namespace Orchard.ContentManagement.MetaData.Models {
             Settings = settings;
         }
 
-        public ContentTypeDefinition(string name) {
+        public ContentTypeDefinition(string name, string displayName) {
             Name = name;
+            DisplayName = displayName;
             Parts = Enumerable.Empty<Part>();
             Settings = new SettingsDictionary();
         }
@@ -20,7 +21,7 @@ namespace Orchard.ContentManagement.MetaData.Models {
         [StringLength(128)]
         public string Name { get; private set; }
         [Required, StringLength(1024)]
-        public string DisplayName { get; set; }
+        public string DisplayName { get; private set; }
         public IEnumerable<Part> Parts { get; private set; }
         public SettingsDictionary Settings { get; private set; }
 

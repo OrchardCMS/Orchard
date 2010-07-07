@@ -99,8 +99,8 @@
     <Content Include="Views\Admin\EditPart.ascx" />
     <Content Include="Views\Admin\Edit.ascx" />
     <Content Include="Views\Admin\List.ascx" />
-    <Content Include="Views\DisplayTemplates\ContentTypeDefinition.ascx" />
-    <Content Include="Views\DisplayTemplates\ContentPartDefinition.ascx" />
+    <Content Include="Views\DisplayTemplates\EditTypeViewModel.ascx" />
+    <Content Include="Views\DisplayTemplates\EditPartViewModel.ascx" />
     <Content Include="Views\DisplayTemplates\Field.ascx" />
     <Content Include="Views\DisplayTemplates\Fields.ascx" />
     <Content Include="Views\DisplayTemplates\Settings.ascx" />

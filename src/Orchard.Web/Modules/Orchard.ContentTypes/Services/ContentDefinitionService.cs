@@ -2,79 +2,172 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
+using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
 using Orchard.ContentManagement.MetaData;
 using Orchard.ContentManagement.MetaData.Models;
+using Orchard.ContentTypes.ViewModels;
 using Orchard.Localization;
-using Orchard.UI.Notify;
 
 namespace Orchard.ContentTypes.Services {
     public class ContentDefinitionService : IContentDefinitionService {
         private readonly IContentDefinitionManager _contentDefinitionManager;
+        private readonly IEnumerable<IContentPartDriver> _contentPartDrivers;
         private readonly IEnumerable<IContentFieldDriver> _contentFieldDrivers;
+        private readonly IContentDefinitionEditorEvents _contentDefinitionEditorEvents;
 
-        public ContentDefinitionService(IOrchardServices services, IContentDefinitionManager contentDefinitionManager, IEnumerable<IContentFieldDriver> contentFieldDrivers) {
+        public ContentDefinitionService(
+                IOrchardServices services,
+                IContentDefinitionManager contentDefinitionManager,
+                IEnumerable<IContentPartDriver> contentPartDrivers,
+                IEnumerable<IContentFieldDriver> contentFieldDrivers,
+                IContentDefinitionEditorEvents contentDefinitionEditorEvents)
+        {
             Services = services;
             _contentDefinitionManager = contentDefinitionManager;
+            _contentPartDrivers = contentPartDrivers;
             _contentFieldDrivers = contentFieldDrivers;
+            _contentDefinitionEditorEvents = contentDefinitionEditorEvents;
             T = NullLocalizer.Instance;
         }
 
         public IOrchardServices Services { get; set; }
         public Localizer T { get; set; }
 
-        public IEnumerable<ContentTypeDefinition> GetTypeDefinitions() {
-            return _contentDefinitionManager.ListTypeDefinitions();
+        public IEnumerable<EditTypeViewModel> GetTypes() {
+            return _contentDefinitionManager.ListTypeDefinitions().Select(ctd => new EditTypeViewModel(ctd));
         }
 
-        public ContentTypeDefinition GetTypeDefinition(string name) {
-            return _contentDefinitionManager.GetTypeDefinition(name);
+        public EditTypeViewModel GetType(string name) {
+            var contentTypeDefinition = _contentDefinitionManager.GetTypeDefinition(name);
+
+            if (contentTypeDefinition == null)
+                return null;
+
+            var viewModel = new EditTypeViewModel(contentTypeDefinition) {
+                Templates = _contentDefinitionEditorEvents.TypeEditor(contentTypeDefinition)
+            };
+
+            foreach (var part in viewModel.Parts) {
+                part.Templates = _contentDefinitionEditorEvents.TypePartEditor(part._Definition);
+                foreach (var field in part.PartDefinition.Fields)
+                    field.Templates = _contentDefinitionEditorEvents.PartFieldEditor(field._Definition);
+            }
+
+            if (viewModel.Fields.Any()) {
+                foreach (var field in viewModel.Fields)
+                    field.Templates = _contentDefinitionEditorEvents.PartFieldEditor(field._Definition);
+            }
+
+            return viewModel;
         }
 
-        public ContentTypeDefinition AddTypeDefinition(string displayName) {
-            var name = GenerateName(displayName);
+        public EditTypeViewModel AddType(CreateTypeViewModel typeViewModel) {
+            var name = GenerateName(typeViewModel.DisplayName);
 
             while (_contentDefinitionManager.GetTypeDefinition(name) != null)
                 name = VersionName(name);
 
-            var contentTypeDefinition = new ContentTypeDefinition(name) { DisplayName = displayName };
-            //just giving the new type some default parts for now
-            _contentDefinitionManager.StoreTypeDefinition(contentTypeDefinition);
-            _contentDefinitionManager.AlterTypeDefinition(
-                contentTypeDefinition.Name,
-                cfg => cfg.WithPart("CommonAspect")
-                           //.WithPart("RoutableAspect") //need to go the new routable route
-                           .WithPart("BodyAspect"));
-             
-            Services.Notifier.Information(T("The \"{0}\" content type has created.", contentTypeDefinition.DisplayName));
-
-            return contentTypeDefinition;
-        }
-
-        public void AlterTypeDefinition(ContentTypeDefinition contentTypeDefinition) {
+            var contentTypeDefinition = new ContentTypeDefinition(name, typeViewModel.DisplayName);
             _contentDefinitionManager.StoreTypeDefinition(contentTypeDefinition);
 
-            var implicitTypePart = contentTypeDefinition.Parts.SingleOrDefault(p => p.PartDefinition.Name == contentTypeDefinition.Name);
-            if (implicitTypePart != null) {
-                AlterPartDefinition(implicitTypePart.PartDefinition);
-            }
+            return new EditTypeViewModel(contentTypeDefinition);
         }
 
-        public void RemoveTypeDefinition(string name) {
+        public void AlterType(EditTypeViewModel typeViewModel, IUpdateModel updateModel) {
+            var updater = new Updater(updateModel);
+            _contentDefinitionManager.AlterTypeDefinition(typeViewModel.Name, typeBuilder => {
+                typeBuilder.DisplayedAs(typeViewModel.DisplayName);
+
+                // allow extensions to alter type configuration
+                typeViewModel.Templates = _contentDefinitionEditorEvents.TypeEditorUpdate(typeBuilder, updater);
+
+                foreach (var part in typeViewModel.Parts) {
+                    var partViewModel = part;
+
+                    // enable updater to be aware of changing part prefix
+                    updater._prefix = secondHalf => string.Format("{0}.{1}", partViewModel.Prefix, secondHalf);
+
+                    // allow extensions to alter typePart configuration
+                    typeBuilder.WithPart(partViewModel.PartDefinition.Name, typePartBuilder => {
+                        partViewModel.Templates = _contentDefinitionEditorEvents.TypePartEditorUpdate(typePartBuilder, updater);
+                    });
+
+                    if (!partViewModel.PartDefinition.Fields.Any())
+                        continue;
+
+                    _contentDefinitionManager.AlterPartDefinition(partViewModel.PartDefinition.Name, partBuilder => {
+                        var fieldFirstHalf = string.Format("{0}.{1}", partViewModel.Prefix, partViewModel.PartDefinition.Prefix);
+                        foreach (var field in partViewModel.PartDefinition.Fields) {
+                            var fieldViewModel = field;
+
+                            // enable updater to be aware of changing field prefix
+                            updater._prefix = secondHalf =>
+                                string.Format("{0}.{1}.{2}", fieldFirstHalf, fieldViewModel.Prefix, secondHalf);
+                            // allow extensions to alter partField configuration
+                            partBuilder.WithField(fieldViewModel.Name, partFieldBuilder => {
+                                fieldViewModel.Templates = _contentDefinitionEditorEvents.PartFieldEditorUpdate(partFieldBuilder, updater);
+                            });
+                        }
+                    });
+                }
+
+                if (typeViewModel.Fields.Any()) {
+                    _contentDefinitionManager.AlterPartDefinition(typeViewModel.Name, partBuilder => {
+                        foreach (var field in typeViewModel.Fields) {
+                            var fieldViewModel = field;
+
+                            // enable updater to be aware of changing field prefix
+                            updater._prefix = secondHalf =>
+                                string.Format("{0}.{1}", fieldViewModel.Prefix, secondHalf);
+
+                            // allow extensions to alter partField configuration
+                            partBuilder.WithField(fieldViewModel.Name, partFieldBuilder => {
+                                fieldViewModel.Templates = _contentDefinitionEditorEvents.PartFieldEditorUpdate(partFieldBuilder, updater);
+                            });
+                        }
+                    });
+                }
+            });
+        }
+
+        public void RemoveType(string name) {
             throw new NotImplementedException();
         }
 
-        public IEnumerable<ContentPartDefinition> GetPartDefinitions() {
-            var typeNames = GetTypeDefinitions().Select(ctd => ctd.Name);
-            return _contentDefinitionManager.ListPartDefinitions().Where(cpd => !typeNames.Contains(cpd.Name));
+        public void AddPartToType(string partName, string typeName) {
+            _contentDefinitionManager.AlterTypeDefinition(typeName, typeBuilder => typeBuilder.WithPart(partName));
         }
 
-        public ContentPartDefinition GetPartDefinition(string name) {
-            return _contentDefinitionManager.GetPartDefinition(name);
+        public void RemovePartFromType(string partName, string typeName) {
+            _contentDefinitionManager.AlterTypeDefinition(typeName, typeBuilder => typeBuilder.RemovePart(partName));
         }
 
-        public ContentPartDefinition AddPartDefinition(string name) {
-            name = GenerateName(name);
+        public IEnumerable<EditPartViewModel> GetParts() {
+            var typeNames = GetTypes().Select(ctd => ctd.Name);
+            // code-defined parts
+            var codeDefinedParts = _contentPartDrivers.SelectMany(d => d.GetPartInfo().Select(cpi => new EditPartViewModel {Name = cpi.PartName}));
+            // user-defined parts
+            var contentParts = _contentDefinitionManager.ListPartDefinitions().Where(cpd => !codeDefinedParts.Any(m => m.Name == cpd.Name)).Select(cpd => new EditPartViewModel(cpd));
+            // all together now, except for those parts with the same name as a type (implicit type's part or a mistake)
+            return contentParts.Where(m => !typeNames.Contains(m.Name)).Union(codeDefinedParts).OrderBy(m => m.Name);
+        }
+
+        public EditPartViewModel GetPart(string name) {
+            var contentPartDefinition = _contentDefinitionManager.GetPartDefinition(name);
+
+            if (contentPartDefinition == null)
+                return null;
+
+            var viewModel = new EditPartViewModel(contentPartDefinition) {
+                Templates = _contentDefinitionEditorEvents.PartEditor(contentPartDefinition)
+            };
+
+            return viewModel;
+        }
+
+        public EditPartViewModel AddPart(CreatePartViewModel partViewModel) {
+            var name = GenerateName(partViewModel.Name);
 
             while (_contentDefinitionManager.GetPartDefinition(name) != null)
                 name = VersionName(name);
@@ -82,19 +175,32 @@ namespace Orchard.ContentTypes.Services {
             var contentPartDefinition = new ContentPartDefinition(name);
             _contentDefinitionManager.StorePartDefinition(contentPartDefinition);
 
-            return contentPartDefinition;
+            return new EditPartViewModel(contentPartDefinition);
         }
 
-        public void AlterPartDefinition(ContentPartDefinition contentPartDefinition) {
-            _contentDefinitionManager.StorePartDefinition(contentPartDefinition);
+        public void AlterPart(EditPartViewModel partViewModel, IUpdateModel updateModel) {
+            var updater = new Updater(updateModel);
+            _contentDefinitionManager.AlterPartDefinition(partViewModel.Name, partBuilder => {
+                partViewModel.Templates = _contentDefinitionEditorEvents.PartEditorUpdate(partBuilder, updater);
+            });
         }
 
-        public void RemovePartDefinition(string name) {
+        public void RemovePart(string name) {
             throw new NotImplementedException();
         }
 
-        public IEnumerable<ContentFieldInfo> GetFieldDefinitions() {
+        public IEnumerable<ContentFieldInfo> GetFields() {
             return _contentFieldDrivers.SelectMany(d => d.GetFieldInfo());
+        }
+
+        public void AddFieldToPart(string fieldName, string fieldTypeName, string partName) {
+            _contentDefinitionManager.AlterPartDefinition(partName, partBuilder => 
+                partBuilder.WithField(fieldName, fieldBuilder => fieldBuilder.OfType(fieldTypeName))
+            );
+        }
+
+        public void RemoveFieldFromPart(string fieldName, string partName) {
+            _contentDefinitionManager.AlterPartDefinition(partName, typeBuilder => typeBuilder.RemoveField(fieldName));
         }
 
         //gratuitously stolen from the RoutableService
@@ -129,6 +235,24 @@ namespace Orchard.ContentTypes.Services {
             }
 
             return string.Format("{0}-{1}", name, version);
+        }
+
+        class Updater : IUpdateModel {
+            private readonly IUpdateModel _thunk;
+
+            public Updater(IUpdateModel thunk) {
+                _thunk = thunk;
+            }
+
+            public Func<string, string> _prefix = x => x;
+
+            public bool TryUpdateModel<TModel>(TModel model, string prefix, string[] includeProperties, string[] excludeProperties) where TModel : class {
+                return _thunk.TryUpdateModel(model, _prefix(prefix), includeProperties, excludeProperties);
+            }
+
+            public void AddModelError(string key, LocalizedString errorMessage) {
+                _thunk.AddModelError(_prefix(key), errorMessage);
+            }
         }
     }
 }

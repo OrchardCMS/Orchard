@@ -14,6 +14,7 @@ namespace Orchard.Localization.Services {
         private readonly IExtensionManager _extensionManager;
         private readonly ICacheManager _cacheManager;
         private readonly ShellSettings _shellSettings;
+        private readonly ISignals _signals;
         const string CoreLocalizationFilePathFormat = "/Core/App_Data/Localization/{0}/orchard.core.po";
         const string ModulesLocalizationFilePathFormat = "/Modules/{0}/App_Data/Localization/{1}/orchard.module.po";
         const string RootLocalizationFilePathFormat = "/App_Data/Localization/{0}/orchard.root.po";
@@ -24,12 +25,14 @@ namespace Orchard.Localization.Services {
             IWebSiteFolder webSiteFolder, 
             IExtensionManager extensionManager,
             ICacheManager cacheManager,
-            ShellSettings shellSettings) {
+            ShellSettings shellSettings,
+            ISignals signals) {
             _cultureManager = cultureManager;
             _webSiteFolder = webSiteFolder;
             _extensionManager = extensionManager;
             _cacheManager = cacheManager;
             _shellSettings = shellSettings;
+            _signals = signals;
         }
 
         // This will translate a string into a string in the target cultureName.
@@ -96,6 +99,7 @@ namespace Orchard.Localization.Services {
                         Translations = LoadTranslationsForCulture(culture, ctx)
                     });
                 }
+                ctx.Monitor(_signals.When("culturesChanged"));
                 return cultures;
             });
 

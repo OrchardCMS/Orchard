@@ -18,7 +18,7 @@ namespace Orchard.ContentManagement.MetaData {
 
     public static class ContentDefinitionManagerExtensions{
         public static void AlterTypeDefinition(this IContentDefinitionManager manager, string name, Action<ContentTypeDefinitionBuilder> alteration) {
-            var typeDefinition = manager.GetTypeDefinition(name) ?? new ContentTypeDefinition(name);
+            var typeDefinition = manager.GetTypeDefinition(name) ?? new ContentTypeDefinition(name, name);
             var builder = new ContentTypeDefinitionBuilder(typeDefinition);
             alteration(builder);
             manager.StoreTypeDefinition(builder.Build());

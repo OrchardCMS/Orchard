@@ -17,12 +17,12 @@ using (Html.BeginFormAntiForgeryPost()) { %>
         <%:Html.HiddenFor(m => m.Name) %>
     </fieldset><%
     Html.RenderTemplates(Model.Templates); %>
-    <h2><%:T("Parts") %></h2>
-    <div class="manage add-to-type"><%: Html.ActionLink(T("Add").Text, "AddPartsTo", new { area = "Orchard.ContentTypes", id = Model.Name }, new { @class = "button" })%></div><%:
-    Html.EditorFor(m => m.Parts, "TypeParts", "") %>
     <h2><%:T("Fields") %></h2>
     <div class="manage add-to-type"><%: Html.ActionLink(T("Add").Text, "AddFieldTo", new { area = "Orchard.ContentTypes", id = Model.Name }, new { @class = "button" }) %></div><%:
     Html.EditorFor(m => m.Fields, "Fields", "") %>
+    <h2><%:T("Parts") %></h2>
+    <div class="manage add-to-type"><%: Html.ActionLink(T("Add").Text, "AddPartsTo", new { area = "Orchard.ContentTypes", id = Model.Name }, new { @class = "button" })%></div><%:
+    Html.EditorFor(m => m.Parts, "TypeParts", "") %>
     <fieldset class="action">
         <button class="primaryAction" type="submit"><%:T("Save") %></button>
     </fieldset>

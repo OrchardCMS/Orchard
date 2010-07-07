@@ -83,8 +83,8 @@ namespace Orchard.Indexing.Commands {
             Context.Output.WriteLine("│ {0} │ {1,6} │", "Title" + new string(' ', 60 - "Title".Length), "Score");
             Context.Output.WriteLine("├──────────────────────────────────────────────────────────────┼────────┤");
             foreach ( var searchHit in results ) {
-                var title = searchHit.GetString("title");
-                title = title.Substring(0, Math.Min(60, title.Length)) ?? "- no title -";
+                var title = searchHit.GetString("title") ?? "- no title -";
+                title = title.Substring(0, Math.Min(60, title.Length));
                 var score = searchHit.Score;
                 Context.Output.WriteLine("│ {0} │ {1,6} │", title + new string(' ', 60 - title.Length), score);
             }
