@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -46,8 +45,8 @@ namespace Orchard.Azure.Web {
             _host.EndRequest();
         }
 
-        private void CheckMvcVersion(params Version[] allowedVersions) {
-            Assembly loadedMvcAssembly = typeof(System.Web.Mvc.Controller).Assembly;
+        private static void CheckMvcVersion(params Version[] allowedVersions) {
+            Assembly loadedMvcAssembly = typeof(Controller).Assembly;
             Version loadedMvcVersion = ReadAssemblyFileVersion(loadedMvcAssembly);
 
             if ( allowedVersions.All(allowed => loadedMvcVersion != allowed) ) {
@@ -79,7 +78,7 @@ namespace Orchard.Azure.Web {
             }
         }
 
-        private Version ReadAssemblyFileVersion(Assembly assembly) {
+        private static Version ReadAssemblyFileVersion(Assembly assembly) {
             object[] attributes = assembly.GetCustomAttributes(typeof(AssemblyFileVersionAttribute), true);
             if ( attributes == null || attributes.Length != 1 ) {
                 string message = string.Format("Assembly \"{0}\" doesn't have a \"{1}\" attribute",
@@ -99,6 +98,5 @@ namespace Orchard.Azure.Web {
             builder.RegisterInstance(ModelMetadataProviders.Current);
             builder.RegisterInstance(ViewEngines.Engines);
         }
-
     }
 }
