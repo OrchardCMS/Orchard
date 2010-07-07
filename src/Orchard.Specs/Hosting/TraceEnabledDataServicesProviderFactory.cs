@@ -12,7 +12,7 @@ namespace Orchard.Specs.Hosting {
         class TraceEnabledBuilder : SQLiteDataServicesProvider {
             public TraceEnabledBuilder(string dataFolder, string connectionString) : base(dataFolder, connectionString) {
             }
-            protected override IPersistenceConfigurer GetPersistenceConfigurer(bool createDatabase) {
+            public override IPersistenceConfigurer GetPersistenceConfigurer(bool createDatabase) {
                 var config = (SQLiteConfiguration)base.GetPersistenceConfigurer(createDatabase);
                 //config.ShowSql();
                 return config;

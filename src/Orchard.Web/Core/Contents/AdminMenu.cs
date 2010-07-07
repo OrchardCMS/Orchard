@@ -18,10 +18,10 @@ namespace Orchard.Core.Contents {
         public string MenuName { get { return "admin"; } }
 
         public void GetNavigation(NavigationBuilder builder) {
-            var contentTypeDefinitions = _contentDefinitionManager.ListTypeDefinitions().OrderBy(d => d.Name);
+            //var contentTypeDefinitions = _contentDefinitionManager.ListTypeDefinitions().OrderBy(d => d.Name);
 
-            builder.Add(T("Content"), "1", menu => {
-                menu.Add(T("Manage Content"), "1.2", item => item.Action("List", "Admin", new {area = "Orchard.ContentTypes"}));
+            //builder.Add(T("Content"), "1", menu => {
+            //    menu.Add(T("Manage Content"), "1.2", item => item.Action("List", "Admin", new {area = "Orchard.ContentTypes"}));
                 //foreach (var contentTypeDefinition in contentTypeDefinitions) {
                 //    var ci = _contentManager.New(contentTypeDefinition.Name);
                 //    var cim = _contentManager.GetItemMetadata(ci);
@@ -29,7 +29,7 @@ namespace Orchard.Core.Contents {
                 //    if (createRouteValues.Any())
                 //        menu.Add(T("Create New {0}", contentTypeDefinition.DisplayName), "1.3", item => item.Action(cim.CreateRouteValues["Action"] as string, cim.CreateRouteValues["Controller"] as string, cim.CreateRouteValues));
                 //}
-                                           });
+                                           //});
         }
     }
 }

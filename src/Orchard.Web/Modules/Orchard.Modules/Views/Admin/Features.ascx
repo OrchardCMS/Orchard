@@ -29,7 +29,7 @@
                 //hmmm...I feel like I've done this before...
                 var featureId = feature.Descriptor.Name.AsFeatureId(n => T(n));
                 var featureState = feature.IsEnabled ? "enabled" : "disabled";
-                var featureClassName = string.Format("feature {0}", featureState);
+                var featureClassName = string.Format("feature {0}", featureState + (Model.FeaturesThatNeedUpdate.Contains(feature.Descriptor.Name) ? " update" : String.Empty));
                 if (feature == features.First())
                     featureClassName += " first";
                 if (feature == features.Last())
@@ -65,7 +65,15 @@
                             <%: Html.Hidden("force", true)%>
                             <button type="submit"><%: T("Enable") %></button><%
                         }
-                        } %>
+                        }
+                        if(Model.FeaturesThatNeedUpdate.Contains(feature.Descriptor.Name)){
+                             using (Html.BeginFormAntiForgeryPost(string.Format("{0}", Url.Action("Update", new { area = "Orchard.Modules" })), FormMethod.Post, new {@class = "inline link"})) { %>
+                                <%: Html.Hidden("id", feature.Descriptor.Name, new { id = "" })%>
+                                <%: Html.Hidden("force", true)%>
+                                <button type="submit" class="update"><%: T("Update") %></button><%
+                            }
+                        }
+                         %>
                     </div><%
                     } %>
                 </div>

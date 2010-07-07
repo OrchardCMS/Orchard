@@ -5,7 +5,6 @@ namespace Orchard.Indexing.DataMigrations {
     public class IndexingDataMigration : DataMigrationImpl {
 
         public int Create() {
-
             SchemaBuilder.CreateTable("IndexingTaskRecord", table => table
                 .Column<int>("Id", column => column.PrimaryKey())
                 .Column<int>("Action")

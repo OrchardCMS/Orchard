@@ -110,6 +110,16 @@
     top:.4em;
 }
 
+a.update  {
+    margin-left:.5em;
+}
+.features .update.feature {
+    background:#ecc;
+}
+.features.summary-view .update.feature {
+    border-color:#e77;
+}
+
 .cathedral {
     bottom:0;
     font-size:.8em;

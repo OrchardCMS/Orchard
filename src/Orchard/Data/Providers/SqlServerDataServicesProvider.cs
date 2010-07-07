@@ -16,7 +16,7 @@ namespace Orchard.Data.Providers {
             get { return "SqlServer"; }
         }
 
-        protected override IPersistenceConfigurer GetPersistenceConfigurer(bool createDatabase) {
+        public override IPersistenceConfigurer GetPersistenceConfigurer(bool createDatabase) {
             var persistence = MsSqlConfiguration.MsSql2008;
             if (string.IsNullOrEmpty(_connectionString)) {
                 throw new NotImplementedException();

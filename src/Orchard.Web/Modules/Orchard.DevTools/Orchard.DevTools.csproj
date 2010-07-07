@@ -74,6 +74,7 @@
     <Compile Include="Commands\ScaffoldingCommands.cs" />
     <Compile Include="Controllers\CommandsController.cs" />
     <Compile Include="Controllers\ContentController.cs" />
+    <Compile Include="Controllers\DataMigrationController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\MetadataController.cs" />
     <Compile Include="Handlers\DebugLinkHandler.cs" />
@@ -81,6 +82,8 @@
     <Compile Include="Models\Simple.cs" />
     <Compile Include="Permissions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Content Include="ScaffoldingTemplates\DataMigration.txt" />
+    <Compile Include="Services\ScaffoldingCommandInterpreter.cs" />
     <Compile Include="Settings\DevToolsSettings.cs" />
     <Compile Include="ViewModels\CommandsExecuteViewModel.cs" />
     <Compile Include="ViewModels\ContentIndexViewModel.cs" />
@@ -95,6 +98,7 @@
     <Content Include="ScaffoldingTemplates\ModuleManifest.txt" />
     <Content Include="ScaffoldingTemplates\ModuleWebConfig.txt" />
     <Content Include="Views\Commands\Execute.ascx" />
+    <Content Include="Views\DataMigration\Index.aspx" />
     <Content Include="Views\DefinitionTemplates\DevToolsSettings.ascx" />
     <Content Include="Views\Home\_RenderableAction.ascx" />
     <Content Include="Views\Home\Simple.aspx" />
