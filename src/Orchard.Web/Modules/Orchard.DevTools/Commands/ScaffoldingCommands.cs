@@ -32,6 +32,7 @@ namespace Orchard.DevTools.Commands {
                     string dataMigrationsPath = HostingEnvironment.MapPath("~/Modules/" + extension.Name + "/DataMigrations/");
                     string dataMigrationPath = dataMigrationsPath  + extension.DisplayName + "DataMigration.cs";
                     string templatesPath = HostingEnvironment.MapPath("~/Modules/Orchard.DevTools/ScaffoldingTemplates/");
+                    string moduleCsProjPath = HostingEnvironment.MapPath(string.Format("~/Modules/{0}/{0}.csproj", extension.Name));
                     if ( !Directory.Exists(dataMigrationsPath) ) {
                         Directory.CreateDirectory(dataMigrationsPath);
                     }
@@ -55,7 +56,20 @@ namespace Orchard.DevTools.Commands {
                     dataMigrationText = dataMigrationText.Replace("$$ClassName$$", extension.DisplayName);
                     dataMigrationText = dataMigrationText.Replace("$$Commands$$", stringWriter.ToString());
                     File.WriteAllText(dataMigrationPath, dataMigrationText);
-                    Context.Output.WriteLine(T("Data migration created successfully in Module {0}", extension.DisplayName));
+
+                    string projectFileText = File.ReadAllText(moduleCsProjPath);
+                    // The string searches in solution/project files can be made aware of comment lines.
+                    if ( projectFileText.Contains("<Compile Include") ) {
+                        string compileReference = string.Format("<Compile Include=\"{0}\" />\r\n    ", "DataMigrations\\" + extension.DisplayName + "DataMigration.cs");
+                        projectFileText = projectFileText.Insert(projectFileText.LastIndexOf("<Compile Include"), compileReference);
+                    }
+                    else {
+                        string itemGroupReference = string.Format("</ItemGroup>\r\n  <ItemGroup>\r\n    <Compile Include=\"{0}\" />\r\n  ", "DataMigrations\\" + extension.DisplayName + "DataMigration.cs");
+                        projectFileText = projectFileText.Insert(projectFileText.LastIndexOf("</ItemGroup>"), itemGroupReference);
+                    }
+                    File.WriteAllText(moduleCsProjPath, projectFileText);
+
+                    Context.Output.WriteLine(T("Data migration created successfully in Module {0}", extension.Name));
                     return;
                 }
             }
