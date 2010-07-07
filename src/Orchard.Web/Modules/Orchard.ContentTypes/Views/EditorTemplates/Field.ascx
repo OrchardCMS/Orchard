@@ -4,6 +4,8 @@
         <div class="manage">
             <%:Html.ActionLink(T("Remove").Text, "RemoveFieldFrom", new { area = "Orchard.ContentTypes", id = Model.Part.Name, Model.Name }, new { itemprop = "RemoveUrl UnsafeUrl" })%><%--// <- some experimentation--%>
         </div><%
-        Html.RenderTemplates(Model.Templates); %>
-        <%:Html.HiddenFor(m => m.Name) %><%:Html.HiddenFor(m => m.FieldDefinition.Name) %>
+        Html.RenderTemplates(Model.Templates);
+        %><%:Html.HiddenFor(m => m.Name)
+        %><%:Html.HiddenFor(m => m.FieldDefinition.Name)
+        %><%:Html.HiddenFor(m => m.Index) %>
     </fieldset>

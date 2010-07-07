@@ -6,5 +6,7 @@
         Html.RenderTemplates(Model.Templates); %>
         </div><%
         } %>
-        <%:Html.HiddenFor(m => m.Name) %><%:Html.HiddenFor(m => m.FieldDefinition.Name) %>
+        <%:Html.HiddenFor(m => m.Name)
+        %><%:Html.HiddenFor(m => m.FieldDefinition.Name)
+        %><%:Html.HiddenFor(m => m.Index) %>
     </fieldset>

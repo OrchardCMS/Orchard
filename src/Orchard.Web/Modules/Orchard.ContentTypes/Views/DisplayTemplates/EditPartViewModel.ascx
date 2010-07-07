@@ -1,4 +1,4 @@
-﻿<%@ Control Language="C#" Inherits="Orchard.Mvc.ViewUserControl<Orchard.ContentManagement.MetaData.Models.ContentPartDefinition>" %>
+﻿<%@ Control Language="C#" Inherits="Orchard.Mvc.ViewUserControl<Orchard.ContentTypes.ViewModels.EditPartViewModel>" %>
 <div class="summary">
     <div class="properties">
         <h3><%:Model.Name%></h3>

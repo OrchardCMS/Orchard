@@ -86,6 +86,7 @@ namespace Orchard.Core.Settings.Metadata {
         }
 
         private void Apply(ContentTypeDefinition model, ContentTypeDefinitionRecord record) {
+            record.DisplayName = model.DisplayName;
             record.Settings = _settingsWriter.Map(model.Settings).ToString();
 
             var toRemove = record.ContentTypePartDefinitionRecords

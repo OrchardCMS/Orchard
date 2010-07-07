@@ -12,5 +12,6 @@
         <div class="manage minor"><%:Html.ActionLink(T("Edit global part config").Text, "EditPart", new { area = "Orchard.ContentTypes", id = Model.PartDefinition.Name })%></div>
         <%:Html.DisplayFor(m => m.PartDefinition.Settings, "Settings", "PartDefinition")
         %><%:Html.EditorFor(m => m.PartDefinition.Fields, "TypePartFields", "PartDefinition")
-        %><%:Html.Hidden("PartDefinition.Name", Model.PartDefinition.Name) %>
+        %><%:Html.HiddenFor(m => m.PartDefinition.Name)
+        %><%:Html.HiddenFor(m => m.Index) %>
     </fieldset>
