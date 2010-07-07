@@ -11,6 +11,7 @@ namespace PackageIndexReferenceImplementation.Services {
             var safeIdentifier = GetSafeIdentifier(identifier);
             var filePath = HostingEnvironment.MapPath("~/App_Data/Media/" + safeIdentifier);
             using (var destination = new FileStream(filePath, FileMode.Create, FileAccess.Write)) {
+                data.Seek(0, SeekOrigin.Begin);
                 data.CopyTo(destination);
             }
         }

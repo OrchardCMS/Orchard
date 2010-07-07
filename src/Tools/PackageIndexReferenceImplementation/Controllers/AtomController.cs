@@ -50,6 +50,16 @@ namespace PackageIndexReferenceImplementation.Controllers {
             }
 
 
+            var mediaIdentifier = UpdateSyndicationItem(packageProperties, item);
+
+
+            _mediaStorage.StoreMedia(mediaIdentifier + ":application/x-package", Request.InputStream);
+            _feedStorage.StoreFeed(feed);
+
+            return new AtomItemResult("201 Created", null, item);
+        }
+
+        private string UpdateSyndicationItem(PackageProperties packageProperties, SyndicationItem item) {
             if (!string.IsNullOrEmpty(packageProperties.Category)) {
                 item.Authors.Clear();
                 //parse package.PackageProperties.Creator into email-style authors
@@ -82,12 +92,7 @@ namespace PackageIndexReferenceImplementation.Controllers {
             var mediaUrl = Url.Action("Resource", "Media", new RouteValueDictionary { { "Id", mediaIdentifier }, { "ContentType", "application/x-package" } });
             item.Links.Clear();
             item.Links.Add(new SyndicationLink(new Uri(HostBaseUri(), new Uri(mediaUrl, UriKind.Relative))));
-
-            Request.InputStream.Seek(0, SeekOrigin.Begin);
-            _mediaStorage.StoreMedia(mediaIdentifier+":application/x-package", Request.InputStream);
-            _feedStorage.StoreFeed(feed);
-
-            return new AtomItemResult("201 Created", null, item);
+            return mediaIdentifier;
         }
 
         private Uri HostBaseUri() {

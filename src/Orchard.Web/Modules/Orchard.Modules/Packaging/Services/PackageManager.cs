@@ -24,6 +24,7 @@ namespace Orchard.Modules.Packaging.Services {
         void Install(PackageData packageData);
     }
 
+    [OrchardFeature("Orchard.Modules.Packaging")]
     public class PackageManager : IPackageManager {
         private readonly IExtensionManager _extensionManager;
         private readonly IPackageSourceManager _packageSourceManager;
