@@ -71,7 +71,7 @@ namespace Orchard.Localization.Services {
         // "<languagecode2>" or
         // "<languagecode2>-<country/regioncode2>" or
         // "<languagecode2>-<scripttag>-<country/regioncode2>"
-        private static bool IsValidCulture(string cultureName) {
+        public bool IsValidCulture(string cultureName) {
             Regex cultureRegex = new Regex(@"\w{2}(-\w{2,})*");
             if (cultureRegex.IsMatch(cultureName)) {
                 return true;

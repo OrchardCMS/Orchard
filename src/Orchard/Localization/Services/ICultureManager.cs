@@ -10,5 +10,6 @@ namespace Orchard.Localization.Services {
         string GetCurrentCulture(HttpContext requestContext);
         CultureRecord GetCultureById(int id);
         string GetSiteCulture();
+        bool IsValidCulture(string cultureName);
     }
 }
