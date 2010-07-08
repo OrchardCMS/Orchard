@@ -9,3 +9,6 @@ features:
     Orchard.Modules:
         Description: Standard module and feature management.
         Category: Core
+    Orchard.Modules.Packaging:
+        Description: Standard module and feature management.
+        Category: Developer

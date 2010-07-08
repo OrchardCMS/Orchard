@@ -14,11 +14,19 @@ namespace Orchard.Tests.Stubs {
             return Directory.GetDirectories(path);
         }
 
+        public bool FileExists(string virtualPath) {
+            throw new NotImplementedException();
+        }
+
         public string ReadFile(string path) {
             if (!File.Exists(path))
                 return null;
 
             return File.ReadAllText(path);
+        }
+
+        public void CopyFileTo(string virtualPath, Stream destination) {
+            throw new NotImplementedException();
         }
 
         public IVolatileToken WhenPathChanges(string path) {

@@ -25,15 +25,25 @@ namespace Orchard.FileSystems.WebSite {
                 .Select(d => d.VirtualPath)
                 .ToArray();
         }
+        
+        public bool FileExists(string virtualPath) {
+            return HostingEnvironment.VirtualPathProvider.FileExists(virtualPath);
+        }
 
         public string ReadFile(string virtualPath) {
             if (!HostingEnvironment.VirtualPathProvider.FileExists(virtualPath))
                 return null;
 
-            using (var stream = VirtualPathProvider.OpenFile(virtualPath)) {
+            using (var stream = VirtualPathProvider.OpenFile(Normalize(virtualPath))) {
                 using (var reader = new StreamReader(stream)) {
                     return reader.ReadToEnd();
                 }
+            }
+        }
+
+        public void CopyFileTo(string virtualPath, Stream destination) {
+            using (var stream = VirtualPathProvider.OpenFile(Normalize(virtualPath))) {
+                stream.CopyTo(destination);
             }
         }
 
@@ -43,6 +53,10 @@ namespace Orchard.FileSystems.WebSite {
 
         public void WhenPathChanges(string virtualPath, Action action) {
             _virtualPathMonitor.WhenPathChanges(virtualPath, action);
+        }
+
+        static string Normalize(string virtualPath) {
+            return HostingEnvironment.VirtualPathProvider.GetFile(virtualPath).VirtualPath;
         }
     }
 }
