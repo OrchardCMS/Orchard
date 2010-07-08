@@ -1,7 +1,6 @@
-<%@ Page Language="C#" Inherits="Orchard.Mvc.ViewPage<EditItemViewModel>" %>
-
+<%@ Control Language="C#" Inherits="Orchard.Mvc.ViewUserControl<EditItemViewModel>" %>
 <%@ Import Namespace="Orchard.Core.Contents.ViewModels" %>
-<% Html.AddTitleParts(T("Edit Content").ToString()); %>
+<h1><%:Html.TitleForPage(T("Edit Content").ToString())%></h1>
 <% using (Html.BeginFormAntiForgeryPost()) { %>
 <%:Html.ValidationSummary() %>
 <%:Html.EditorForItem(m=>m.Content) %>

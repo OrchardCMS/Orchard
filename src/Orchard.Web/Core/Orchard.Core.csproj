@@ -223,7 +223,7 @@
     <Content Include="Common\Views\EditorTemplates\Parts\Common.Container.ascx" />
     <Content Include="Common\Views\EditorTemplates\PlainTextEditor.ascx" />
     <Content Include="Contents\Module.txt" />
-    <Content Include="Contents\Views\Admin\Edit.aspx" />
+    <Content Include="Contents\Views\Admin\Edit.ascx" />
     <Content Include="Contents\Views\Admin\CreatableTypeList.ascx" />
     <Content Include="Contents\Views\Admin\Create.aspx" />
     <Content Include="Contents\Views\Admin\List.ascx" />
