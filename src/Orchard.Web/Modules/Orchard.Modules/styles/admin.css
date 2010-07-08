@@ -56,6 +56,12 @@
 .features.summary-view .disabled.feature {
     border-color:#CCC;
 }
+.features .update.feature {
+    background:#ECC;
+}
+.features.summary-view .update.feature {
+    border-color:#E77;
+}
 .features.detail-view .feature {
     border-bottom:1px solid #CCC;
 }
@@ -109,26 +115,7 @@
     right:.4em;
     top:.4em;
 }
-
-a.update  {
+.features .feature .actions form.inline.link,
+.features .feature .actions a {
     margin-left:.5em;
-}
-.features .update.feature {
-    background:#ecc;
-}
-.features.summary-view .update.feature {
-    border-color:#e77;
-}
-
-.cathedral {
-    bottom:0;
-    font-size:.8em;
-    position:absolute;
-    right:3px;
-}
-.cathedral a,
-.cathedral a:link,
-.cathedral a:visited,
-.cathedral form.inline.link button {
-    color:#aeaeae;
 }

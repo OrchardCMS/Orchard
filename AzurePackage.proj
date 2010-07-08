@@ -33,6 +33,7 @@
   </Target>
 
   <Target Name="Package">
+    <CallTarget Targets="Package-ForCloud"/>
     <CallTarget Targets="Package-Stage"/>
     <CallTarget Targets="Package-Zip"/>
   </Target>
@@ -92,7 +93,7 @@
 
 <!-- Packaging -->
   
-  <Target Name="Package-Stage">
+  <Target Name="Package-ForCloud">
     
     <ItemGroup>
       <Stage-Bin-Exclude Include="$(WebSitesFolder)\**\bin\**\*" />
@@ -135,7 +136,10 @@
         SourceFiles="$(SrcFolder)\Orchard.Azure\Orchard.Azure.CloudService\ServiceConfiguration.cscfg" 
         DestinationFolder="$(StageFolder)" 
       />
-
+  </Target>
+  
+  <Target Name="Package-Stage">
+ 
     <Exec 
       Command="&quot;$(ServiceHostingSDKBinDir)cspack&quot; &quot;$(ServiceFolder)\ServiceDefinition.csdef&quot; /role:Orchard.Azure.Web;&quot;$(CloudRootFolder)&quot;;Orchard.Azure.Web.dll /out:&quot;$(StageFolder)\Orchard.cspkg&quot;" 
       WorkingDirectory="$(CloudRootFolder)" 

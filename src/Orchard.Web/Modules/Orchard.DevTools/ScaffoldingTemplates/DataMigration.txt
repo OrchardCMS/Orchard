@@ -5,7 +5,7 @@ namespace $$FeatureName$$.DataMigrations {
     public class $$ClassName$$DataMigration : DataMigrationImpl {
 
         public int Create() {
-			$$Commands$$
+$$Commands$$
 
             return 0100;
         }

@@ -51,7 +51,7 @@ namespace Orchard.Tests.DataMigration {
                     .Column("Firstname", DbType.String, column => column.WithLength(255))
                     .Column("Lastname", DbType.String, column => column.WithPrecision(0).WithScale(1)))
                 .CreateTable("Address", table => table
-                    .VersionedContentPartRecord()
+                    .ContentPartVersionRecord()
                     .Column("City", DbType.String)
                     .Column("ZIP", DbType.Int32, column => column.Unique())
                     .Column("UserId", DbType.Int32, column => column.NotNull()))

@@ -13,7 +13,7 @@ namespace Orchard.DevTools.Services {
         }
 
         public override void Visit(CreateTableCommand command) {
-            _output.WriteLine("// Creating table {0}", command.Name);
+            _output.WriteLine("\t\t\t// Creating table {0}", command.Name);
             _output.WriteLine("\t\t\tSchemaBuilder.CreateTable(\"{0}\", table => table", command.Name);
 
             foreach ( var createColumn in command.TableCommands.OfType<CreateColumnCommand>() ) {
@@ -22,7 +22,7 @@ namespace Orchard.DevTools.Services {
                 var options = new List<string>();
 
                 if ( createColumn.IsPrimaryKey ) {
-                    options.Add(string.Format("WithLength({0})", createColumn.Length));
+                    options.Add("PrimaryKey()");
                 }
 
                 if ( createColumn.IsUnique ) {
@@ -31,10 +31,6 @@ namespace Orchard.DevTools.Services {
 
                 if ( createColumn.IsNotNull ) {
                     options.Add("NotNull()");
-                }
-
-                if ( createColumn.IsPrimaryKey ) {
-                    options.Add("PrimaryKey()");
                 }
 
                 if ( createColumn.Length.HasValue ) {

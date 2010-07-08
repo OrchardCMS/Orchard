@@ -6,13 +6,13 @@ namespace Orchard.Core.Navigation.DataMigrations {
         public int Create() {
             //CREATE TABLE Navigation_MenuItemRecord (Id INTEGER not null, Url TEXT, primary key (Id));
             SchemaBuilder.CreateTable("MenuItemRecord", table => table
-                .Column<int>("Id", column => column.PrimaryKey())
+                .ContentPartRecord()
                 .Column<string>("Url")
                 );
 
             //CREATE TABLE Navigation_MenuPartRecord (Id INTEGER not null, MenuText TEXT, MenuPosition TEXT, OnMainMenu INTEGER, primary key (Id));
             SchemaBuilder.CreateTable("MenuPartRecord", table => table
-                .Column<int>("Id", column => column.PrimaryKey())
+                .ContentPartRecord()
                 .Column<string>("MenuText")
                 .Column<string>("MenuPosition")
                 .Column<bool>("OnMainMenu")
