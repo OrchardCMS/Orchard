@@ -22,7 +22,7 @@ namespace Orchard.DevTools.Services {
                 var options = new List<string>();
 
                 if ( createColumn.IsPrimaryKey ) {
-                    options.Add(string.Format("WithLength({0})", createColumn.Length));
+                    options.Add("PrimaryKey()");
                 }
 
                 if ( createColumn.IsUnique ) {
@@ -31,10 +31,6 @@ namespace Orchard.DevTools.Services {
 
                 if ( createColumn.IsNotNull ) {
                     options.Add("NotNull()");
-                }
-
-                if ( createColumn.IsPrimaryKey ) {
-                    options.Add("PrimaryKey()");
                 }
 
                 if ( createColumn.Length.HasValue ) {
