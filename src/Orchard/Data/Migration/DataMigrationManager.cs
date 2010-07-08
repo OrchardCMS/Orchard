@@ -48,7 +48,7 @@ namespace Orchard.Data.Migration {
 
                 var current = 0;
                 if (dataMigrationRecord != null) {
-                    current = dataMigrationRecord.Current;
+                    current = dataMigrationRecord.Version;
                 }
 
                 // do we need to call Create() ?
@@ -105,7 +105,7 @@ namespace Orchard.Data.Migration {
 
                 var current = 0;
                 if(dataMigrationRecord != null) {
-                    current = dataMigrationRecord.Current;
+                    current = dataMigrationRecord.Version;
                 }
 
                 // do we need to call Create() ?
@@ -136,10 +136,10 @@ namespace Orchard.Data.Migration {
                     continue;
                 }
                 if (dataMigrationRecord == null) {
-                    _dataMigrationRepository.Create(new DataMigrationRecord {Current = current, DataMigrationClass = migration.GetType().FullName});
+                    _dataMigrationRepository.Create(new DataMigrationRecord {Version = current, DataMigrationClass = migration.GetType().FullName});
                 }
                 else {
-                    dataMigrationRecord.Current = current;
+                    dataMigrationRecord.Version = current;
                     _dataMigrationRepository.Update(dataMigrationRecord);
                 }
             }

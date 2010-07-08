@@ -112,7 +112,7 @@ namespace Orchard.Setup.Services {
                 schemaBuilder.CreateTable("Orchard_Framework_DataMigrationRecord", table => table
                     .Column<int>("Id", column => column.PrimaryKey())
                     .Column<string>("DataMigrationClass")
-                    .Column<int>("Current"));
+                    .Column<int>("Version"));
 
                 var dataMigrationManager = environment.Resolve<IDataMigrationManager>();
                 dataMigrationManager.Update("Orchard.Framework");

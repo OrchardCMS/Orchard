@@ -267,7 +267,7 @@ features:
             
             _dataMigrationManager.Update("Feature1");
             Assert.That(_repository.Table.Count(), Is.EqualTo(1));
-            Assert.That(_repository.Table.First().Current, Is.EqualTo(999));
+            Assert.That(_repository.Table.First().Version, Is.EqualTo(999));
             Assert.That(_repository.Table.First().DataMigrationClass, Is.EqualTo("Orchard.Tests.DataMigration.DataMigrationTests+DataMigration11Create"));
         }
 
@@ -286,7 +286,7 @@ features:
             
             _dataMigrationManager.Update("Feature1");
             Assert.That(_repository.Table.Count(), Is.EqualTo(1));
-            Assert.That(_repository.Table.First().Current, Is.EqualTo(666));
+            Assert.That(_repository.Table.First().Version, Is.EqualTo(666));
         }
 
         [Test]
@@ -302,13 +302,13 @@ features:
     Description: Feature
 ");
             _repository.Create(new DataMigrationRecord {
-                Current = 42,
+                Version = 42,
                 DataMigrationClass = "Orchard.Tests.DataMigration.DataMigrationTests+DataMigrationSameMigrationClassCanEvolve"
             });
 
             _dataMigrationManager.Update("Feature1");
             Assert.That(_repository.Table.Count(), Is.EqualTo(1));
-            Assert.That(_repository.Table.First().Current, Is.EqualTo(999));
+            Assert.That(_repository.Table.First().Version, Is.EqualTo(999));
         }
 
         [Test]
@@ -336,7 +336,7 @@ features:
 ");
             _dataMigrationManager.Update("Feature1");
             Assert.That(_repository.Table.Count(), Is.EqualTo(2));
-            Assert.That(_repository.Fetch(d => d.Current == 999).Count(), Is.EqualTo(2));
+            Assert.That(_repository.Fetch(d => d.Version == 999).Count(), Is.EqualTo(2));
             Assert.That(_repository.Fetch(d => d.DataMigrationClass == "Orchard.Tests.DataMigration.DataMigrationTests+DataMigrationDependenciesModule1").Count(), Is.EqualTo(1));
             Assert.That(_repository.Fetch(d => d.DataMigrationClass == "Orchard.Tests.DataMigration.DataMigrationTests+DataMigrationDependenciesModule2").Count(), Is.EqualTo(1));
         }
@@ -390,17 +390,17 @@ features:
             // there is an UpdateFrom42 method, so it should be fired if Current == 42
 
             _repository.Create(new DataMigrationRecord {
-                Current = 42,
+                Version = 42,
                 DataMigrationClass = "Orchard.Tests.DataMigration.DataMigrationTests+DataMigrationFeatureNeedUpdate3"
             });
 
             Assert.That(_dataMigrationManager.GetFeaturesThatNeedUpdate().Contains("Feature3"), Is.True);
 
-            _repository.Delete(_repository.Fetch(m => m.Current == 42).First());
+            _repository.Delete(_repository.Fetch(m => m.Version == 42).First());
             _repository.Flush();
 
             _repository.Create(new DataMigrationRecord {
-                Current = 43,
+                Version = 43,
                 DataMigrationClass = "Orchard.Tests.DataMigration.DataMigrationTests+DataMigrationFeatureNeedUpdate3"
             });
 
