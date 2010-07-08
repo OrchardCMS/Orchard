@@ -2,7 +2,7 @@
 using Orchard.ContentManagement.Handlers;
 
 namespace Orchard.Core.Contents.Handlers {
-    public class ContentsModuleHandler : ContentHandlerBase {
+    public class ContentsHandler : ContentHandlerBase {
         public override void GetContentItemMetadata(GetContentItemMetadataContext context) {
             if (context.Metadata.CreateRouteValues == null) {
                 context.Metadata.CreateRouteValues = new RouteValueDictionary {

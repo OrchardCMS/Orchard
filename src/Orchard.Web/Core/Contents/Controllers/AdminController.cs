@@ -1,11 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
 using System.Web.Routing;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.MetaData;
-using Orchard.ContentManagement.MetaData.Models;
 using Orchard.Core.Contents.ViewModels;
 using Orchard.Data;
 using Orchard.Localization;
@@ -41,9 +39,6 @@ namespace Orchard.Core.Contents.Controllers {
         public Localizer T { get; set; }
         public ILogger Logger { get; set; }
 
-
-        #region Content
-
         public ActionResult List(ListContentsViewModel model) {
             const int pageSize = 20;
             var skip = (Math.Max(model.Page ?? 0, 1) - 1) * pageSize;
@@ -72,7 +67,7 @@ namespace Orchard.Core.Contents.Controllers {
             var entry = new ListContentsViewModel.Entry {
                 ContentItem = contentItem,
                 ContentItemMetadata = _contentManager.GetItemMetadata(contentItem),
-                ViewModel = _contentManager.BuildDisplayModel(contentItem, "List"),
+                ViewModel = _contentManager.BuildDisplayModel(contentItem, "SummaryAdmin"),
             };
             if (string.IsNullOrEmpty(entry.ContentItemMetadata.DisplayText)) {
                 entry.ContentItemMetadata.DisplayText = string.Format("[{0}#{1}]", contentItem.ContentType, contentItem.Id);
@@ -180,7 +175,5 @@ namespace Orchard.Core.Contents.Controllers {
         void IUpdateModel.AddModelError(string key, LocalizedString errorMessage) {
             ModelState.AddModelError(key, errorMessage.ToString());
         }
-
-        #endregion
     }
 }

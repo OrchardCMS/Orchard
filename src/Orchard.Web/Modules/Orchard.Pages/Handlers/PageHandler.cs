@@ -1,25 +1,19 @@
-﻿using System;
-using System.Linq;
-using JetBrains.Annotations;
+﻿using JetBrains.Annotations;
 using Orchard.ContentManagement;
-using Orchard.Core.Common.Services;
 using Orchard.Localization;
 using Orchard.Core.Common.Models;
 using Orchard.ContentManagement.Handlers;
 using Orchard.Pages.Drivers;
 using Orchard.Pages.Models;
 using Orchard.Pages.Services;
-using Orchard.UI.Notify;
 
 namespace Orchard.Pages.Handlers {
     [UsedImplicitly]
     public class PageHandler : ContentHandler {
         private readonly IPageService _pageService;
-        private readonly IOrchardServices _orchardServices;
 
-        public PageHandler(IPageService pageService, IOrchardServices orchardServices) {
+        public PageHandler(IPageService pageService) {
             _pageService = pageService;
-            _orchardServices = orchardServices;
             T = NullLocalizer.Instance;
 
             Filters.Add(new ActivatingFilter<Page>(PageDriver.ContentType.Name));

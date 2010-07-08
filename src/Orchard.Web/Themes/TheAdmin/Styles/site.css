@@ -677,11 +677,14 @@ table .button {
 .contentItems .properties {
     float:left;
 }
+.contentItems h3 {
+    padding-top:0;
+}
 .contentItems .properties li {
     border:0;
     float:left;
     font-size:1.4em;
-    padding:.8em 0;
+    padding:0 0 .1em 0;
 }
 .contentItems .properties .icon {
     margin:0 .2em -.2em;

@@ -123,9 +123,9 @@
     <Content Include="Styles\jquery-ui-1.7.2.custom.css" />
     <Content Include="Styles\ui.datepicker.css" />
     <Content Include="Styles\ui.timepickr.css" />
+    <Content Include="Views\DisplayTemplates\Items\Pages.Page.SummaryAdmin.ascx" />
     <Content Include="Views\DisplayTemplates\Items\Pages.Page.ascx" />
     <Content Include="Views\DisplayTemplates\Items\Pages.Page.Summary.ascx" />
-    <Content Include="Views\DisplayTemplates\Parts\Pages.Page.Metadata.ascx" />
     <Content Include="Views\EditorTemplates\Items\Pages.Page.ascx" />
     <Content Include="Views\EditorTemplates\Parts\Pages.Page.Publish.ascx" />
     <Content Include="Views\Admin\Create.ascx" />
@@ -145,6 +145,7 @@
       <Name>Orchard.Core</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

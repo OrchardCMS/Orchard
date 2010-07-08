@@ -30,6 +30,13 @@ namespace Orchard.Core.Common.Drivers {
 
         public Localizer T { get; set; }
 
+        protected override DriverResult Display(CommonAspect part, string displayType) {
+            var model = new CommonMetadataViewModel(part);
+            return Combined(
+                ContentPartTemplate(model, "Parts/Common.Metadata").LongestMatch(displayType, "Summary", "SummaryAdmin").Location("metadata"),
+                ContentPartTemplate(model, "Parts/Common.Publish").LongestMatch(displayType, "Summary", "SummaryAdmin").Location("secondary"));
+        }
+
         protected override DriverResult Editor(CommonAspect part) {
             return Combined(OwnerEditor(part, null), ContainerEditor(part, null));
         }

@@ -28,10 +28,10 @@ namespace Orchard.Core.Common.Drivers {
             var model = new BodyDisplayViewModel { BodyAspect = part, Text = BbcodeReplace(part.Text) };
 
             return Combined(
-                Services.Authorizer.Authorize(Permissions.ChangeOwner) ? ContentPartTemplate(model, "Parts/Common.Body.ManageWrapperPre").Location("primary", "5") : null,
-                Services.Authorizer.Authorize(Permissions.ChangeOwner) ? ContentPartTemplate(model, "Parts/Common.Body.Manage").Location("primary", "5") : null,
+                Services.Authorizer.Authorize(Permissions.ChangeOwner) ? ContentPartTemplate(model, "Parts/Common.Body.ManageWrapperPre").LongestMatch(displayType, "Summary", "SummaryAdmin").Location("primary", "5") : null,
+                Services.Authorizer.Authorize(Permissions.ChangeOwner) ? ContentPartTemplate(model, "Parts/Common.Body.Manage").LongestMatch(displayType, "Summary", "SummaryAdmin").Location("primary", "5") : null,
                 ContentPartTemplate(model, TemplateName, Prefix).LongestMatch(displayType, "Summary", "SummaryAdmin").Location("primary", "5"),
-                Services.Authorizer.Authorize(Permissions.ChangeOwner) ? ContentPartTemplate(model, "Parts/Common.Body.ManageWrapperPost").Location("primary", "5") : null);
+                Services.Authorizer.Authorize(Permissions.ChangeOwner) ? ContentPartTemplate(model, "Parts/Common.Body.ManageWrapperPost").LongestMatch(displayType, "Summary", "SummaryAdmin").Location("primary", "5") : null);
         }
         
         protected override DriverResult Editor(BodyAspect part) {
