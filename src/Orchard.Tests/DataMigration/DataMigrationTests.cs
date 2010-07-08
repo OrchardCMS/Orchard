@@ -212,7 +212,7 @@ namespace Orchard.Tests.DataMigration {
             public int Create() {
                 SchemaBuilder.CreateTable("UserRecord", table => 
                     table.Column("Id", DbType.Int32, column => 
-                        column.PrimaryKey()));
+                        column.PrimaryKey().Identity()));
 
                 return 1;
             }

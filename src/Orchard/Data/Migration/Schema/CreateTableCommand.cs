@@ -27,7 +27,7 @@ namespace Orchard.Data.Migration.Schema {
         /// Defines a primary column as for content parts
         /// </summary>
         public CreateTableCommand ContentPartRecord() {
-            Column<int>("Id", column => column.PrimaryKey());
+            Column<int>("Id", column => column.PrimaryKey().NotNull());
 
             return this;
         }
@@ -36,7 +36,7 @@ namespace Orchard.Data.Migration.Schema {
         /// Defines a primary column as for versionnable content parts
         /// </summary>
         public CreateTableCommand ContentPartVersionRecord() {
-            Column<int>("Id", column => column.PrimaryKey());
+            Column<int>("Id", column => column.PrimaryKey().NotNull());
             Column<int>("ContentItemRecord_id");
             return this;
         }

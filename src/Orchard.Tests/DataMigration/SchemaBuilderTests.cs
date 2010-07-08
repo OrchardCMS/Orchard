@@ -47,7 +47,6 @@ namespace Orchard.Tests.DataMigration {
             _schemaBuilder
                 .CreateTable("User", table => table
                     .ContentPartRecord()
-                    .Column("Id", DbType.Int32, column => column.PrimaryKey())
                     .Column("Firstname", DbType.String, column => column.WithLength(255))
                     .Column("Lastname", DbType.String, column => column.WithPrecision(0).WithScale(1)))
                 .CreateTable("Address", table => table
@@ -75,7 +74,7 @@ namespace Orchard.Tests.DataMigration {
             
             _schemaBuilder
                 .CreateTable("User", table => table
-                    .Column("Id", DbType.Int32, column => column.PrimaryKey())
+                    .Column("Id", DbType.Int32, column => column.PrimaryKey().Identity())
                     .Column("Firstname", DbType.String, column => column.WithLength(255))
                     .Column("Lastname", DbType.String, column => column.WithLength(100).NotNull())
                     .Column("SN", DbType.AnsiString, column => column.WithLength(40).Unique())
@@ -119,7 +118,7 @@ namespace Orchard.Tests.DataMigration {
 
             _schemaBuilder
                 .CreateTable("User", table => table
-                    .Column("Id", DbType.Int32, column => column.PrimaryKey())
+                    .Column("Id", DbType.Int32, column => column.PrimaryKey().Identity())
                     .Column("Firstname", DbType.String, column => column.WithLength(255))
                     .Column("Lastname", DbType.String, column => column.WithPrecision(0).WithScale(1)))
                 .CreateTable("Address", table => table

@@ -9,6 +9,7 @@ using Orchard.Core.Common.Settings;
 using Orchard.Core.Navigation.Models;
 using Orchard.Core.Settings.Models;
 using Orchard.Data;
+using Orchard.Data.Migration.Generator;
 using Orchard.Data.Migration.Interpreters;
 using Orchard.Data.Providers;
 using Orchard.Data.Migration.Schema;
@@ -89,6 +90,7 @@ namespace Orchard.Setup.Services {
                 context.EnabledFeatures = hardcoded;
             }
 
+            
             var shellSettings = new ShellSettings(_shellSettings);
 
             if (string.IsNullOrEmpty(shellSettings.DataProvider)) {
@@ -110,7 +112,7 @@ namespace Orchard.Setup.Services {
                 var schemaBuilder = new SchemaBuilder(environment.Resolve<IDataMigrationInterpreter>() );
 
                 schemaBuilder.CreateTable("Orchard_Framework_DataMigrationRecord", table => table
-                    .Column<int>("Id", column => column.PrimaryKey())
+                    .Column<int>("Id", column => column.PrimaryKey().Identity())
                     .Column<string>("DataMigrationClass")
                     .Column<int>("Version"));
 

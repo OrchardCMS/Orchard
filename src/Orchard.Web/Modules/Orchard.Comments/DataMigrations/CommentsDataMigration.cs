@@ -7,7 +7,7 @@ namespace Orchard.Comments.DataMigrations {
         public int Create() {
             //CREATE TABLE Orchard_Comments_ClosedCommentsRecord (Id  integer, ContentItemId INTEGER, primary key (Id));
             SchemaBuilder.CreateTable("ClosedCommentsRecord", table => table
-                .Column<int>("Id", column => column.PrimaryKey())
+                .Column<int>("Id", column => column.PrimaryKey().Identity())
                 .Column<int>("ContentItemId")
                 );
 
@@ -20,7 +20,7 @@ namespace Orchard.Comments.DataMigrations {
                 .Column<string>("Email")
                 .Column<string>("Status")
                 .Column<DateTime>("CommentDateUtc")
-                .Column<string>("CommentText")
+                .Column<string>("CommentText", column => column.WithLength(10000))
                 .Column<int>("CommentedOn")
                 .Column<int>("CommentedOnContainer")
                 );

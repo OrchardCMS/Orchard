@@ -6,7 +6,7 @@ namespace Orchard.Blogs.DataMigrations {
         public int Create() {
             //CREATE TABLE Orchard_Blogs_BlogArchiveRecord (Id  integer, Year INTEGER, Month INTEGER, PostCount INTEGER, Blog_id INTEGER, primary key (Id));
             SchemaBuilder.CreateTable("BlogArchiveRecord", table => table
-                .Column<int>("Id", column => column.PrimaryKey())
+                .Column<int>("Id", column => column.PrimaryKey().Identity())
                 .Column<int>("Year")
                 .Column<int>("Month")
                 .Column<int>("PostCount")
@@ -15,7 +15,7 @@ namespace Orchard.Blogs.DataMigrations {
 
             //CREATE TABLE Orchard_Blogs_BlogRecord (Id INTEGER not null, Description TEXT, PostCount INTEGER, primary key (Id));
             SchemaBuilder.CreateTable("BlogRecord", table => table
-                .Column<int>("Id", column => column.PrimaryKey())
+                .ContentPartRecord()
                 .Column<string>("Description")
                 .Column<int>("PostCount")
                 );

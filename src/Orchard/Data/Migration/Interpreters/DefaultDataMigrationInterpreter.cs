@@ -280,8 +280,14 @@ namespace Orchard.Data.Migration.Interpreters {
             // name
             builder.Append(_dialect.QuoteForColumnName(command.ColumnName)).Append(Space);
 
-            // type
-            builder.Append(GetTypeName(command.DbType, command.Length, command.Precision, command.Scale));
+            if (!command.IsIdentity || _dialect.HasDataTypeInIdentityColumn ) {
+                builder.Append(GetTypeName(command.DbType, command.Length, command.Precision, command.Scale));
+            }
+            
+            // append identity if handled
+            if ( command.IsIdentity && _dialect.SupportsIdentityColumns ) {
+                builder.Append(Space).Append(_dialect.IdentityColumnString);
+            }
 
             // [default value]
             if ( !string.IsNullOrEmpty(command.Default) ) {
@@ -299,6 +305,7 @@ namespace Orchard.Data.Migration.Interpreters {
             if ( command.IsUnique && _dialect.SupportsUnique ) {
                 builder.Append(" unique");
             }
+
         }
 
         private void RunPendingStatements() {

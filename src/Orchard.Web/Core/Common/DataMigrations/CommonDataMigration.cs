@@ -8,7 +8,7 @@ namespace Orchard.Core.Common.DataMigrations {
             //CREATE TABLE Common_BodyRecord (Id INTEGER not null, Text TEXT, Format TEXT, ContentItemRecord_id INTEGER, primary key (Id));
             SchemaBuilder.CreateTable("BodyRecord", table => table
                 .ContentPartVersionRecord()
-                .Column<string>("Text")
+                .Column<string>("Text", column => column.WithLength(10000))
                 .Column<string>("Format")
                 );
 
@@ -33,9 +33,9 @@ namespace Orchard.Core.Common.DataMigrations {
             //CREATE TABLE Common_RoutableRecord (Id INTEGER not null, Title TEXT, Slug TEXT, Path TEXT, ContentItemRecord_id INTEGER, primary key (Id));
             SchemaBuilder.CreateTable("RoutableRecord", table => table
                 .ContentPartVersionRecord()
-                .Column<string>("Title")
+                .Column<string>("Title", column => column.WithLength(1024))
                 .Column<string>("Slug")
-                .Column<string>("Path")
+                .Column<string>("Path", column => column.WithLength(2048))
                 );
 
             return 0010;

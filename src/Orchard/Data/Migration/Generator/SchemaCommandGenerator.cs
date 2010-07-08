@@ -20,6 +20,9 @@ namespace Orchard.Data.Migration.Generator {
             _sessionFactoryHolder = sessionFactoryHolder;
         }
 
+        /// <summary>
+        /// Generates SchemaCommand instances in order to create the schema for a specific feature
+        /// </summary>
         public IEnumerable<SchemaCommand> GetCreateFeatureCommands(string feature, bool drop) {
             var parameters = _sessionFactoryHolder.GetSessionFactoryParameters();
 
@@ -31,7 +34,7 @@ namespace Orchard.Data.Migration.Generator {
             Dialect.GetDialect(configuration.Properties);
             var mapping = configuration.BuildMapping();
 
-            // get the tables using reflection
+            // get the table mappings using reflection
             var tablesField = typeof(Configuration).GetField("tables", BindingFlags.Instance | BindingFlags.NonPublic);
             var tables = ((IDictionary<string, Table>) tablesField.GetValue(configuration)).Values;
 
@@ -56,7 +59,7 @@ namespace Orchard.Data.Migration.Generator {
                     command.Column(column.Name, sqlType.DbType,
                         action => {
                             if (table1.PrimaryKey.Columns.Any(c => c.Name == column1.Name)) {
-                                action.PrimaryKey();
+                                action.PrimaryKey().Identity();
                             }
 
                             if (column1.IsLengthDefined()) {
@@ -85,12 +88,18 @@ namespace Orchard.Data.Migration.Generator {
             }
         }
 
+        /// <summary>
+        /// Automatically updates a db to a functionning schema
+        /// </summary>
         public void UpdateDatabase() {
             var parameters = _sessionFactoryHolder.GetSessionFactoryParameters();
             var configuration = _dataServicesProviderFactory.CreateProvider(parameters).BuildConfiguration(parameters);
             new SchemaUpdate(configuration).Execute(false, true);
         }
 
+        /// <summary>
+        /// Automatically creates a db with a functionning schema
+        /// </summary>
         public void CreateDatabase() {
             var parameters = _sessionFactoryHolder.GetSessionFactoryParameters();
             var configuration = _dataServicesProviderFactory.CreateProvider(parameters).BuildConfiguration(parameters);

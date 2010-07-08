@@ -13,8 +13,16 @@ namespace Orchard.Data.Migration.Schema {
 
         public bool IsPrimaryKey { get; protected set; }
 
+        public bool IsIdentity { get; protected set; }
+
         public CreateColumnCommand PrimaryKey() {
             IsPrimaryKey = true;
+            IsUnique = false;
+            return this;
+        }
+
+        public CreateColumnCommand Identity() {
+            IsIdentity = true;
             IsUnique = false;
             return this;
         }
@@ -42,6 +50,7 @@ namespace Orchard.Data.Migration.Schema {
         public CreateColumnCommand Unique() {
             IsUnique = true;
             IsPrimaryKey = false;
+            IsIdentity = false;
             return this;
         }
 
