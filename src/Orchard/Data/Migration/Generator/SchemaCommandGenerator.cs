@@ -34,14 +34,20 @@ namespace Orchard.Data.Migration.Generator {
             // get the tables using reflection
             var tablesField = typeof(Configuration).GetField("tables", BindingFlags.Instance | BindingFlags.NonPublic);
             var tables = ((IDictionary<string, Table>) tablesField.GetValue(configuration)).Values;
- 
+
+            string prefix = feature.Replace(".", "_") + "_";
 
             foreach(var table in tables.Where(t => parameters.RecordDescriptors.Any(rd => rd.Feature.Descriptor.Name == feature && rd.TableName == t.Name))) {
-                if(drop) {
-                    yield return new DropTableCommand(table.Name);
+                string tableName = table.Name;
+                if(tableName.StartsWith(prefix)) {
+                    tableName = tableName.Substring(prefix.Length);
                 }
 
-                var command = new CreateTableCommand(table.Name);
+                if(drop) {
+                    yield return new DropTableCommand(tableName);
+                }
+
+                var command = new CreateTableCommand(tableName);
                 
                 foreach(var column in table.ColumnIterator) {
                     var table1 = table;

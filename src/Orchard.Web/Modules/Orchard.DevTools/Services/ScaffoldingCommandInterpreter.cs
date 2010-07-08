@@ -13,7 +13,7 @@ namespace Orchard.DevTools.Services {
         }
 
         public override void Visit(CreateTableCommand command) {
-            _output.WriteLine("// Creating table {0}", command.Name);
+            _output.WriteLine("\t\t\t// Creating table {0}", command.Name);
             _output.WriteLine("\t\t\tSchemaBuilder.CreateTable(\"{0}\", table => table", command.Name);
 
             foreach ( var createColumn in command.TableCommands.OfType<CreateColumnCommand>() ) {
