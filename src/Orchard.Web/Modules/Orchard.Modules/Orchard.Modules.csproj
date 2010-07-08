@@ -45,6 +45,7 @@
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
     <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.ServiceModel" />
     <Reference Include="System.Web.ApplicationServices" />
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
@@ -63,6 +64,9 @@
     <Reference Include="System.EnterpriseServices" />
     <Reference Include="System.Web.Mobile" />
     <Reference Include="System.Xml.Linq" />
+    <Reference Include="WindowsBase">
+      <Private>True</Private>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AdminMenu.cs" />
@@ -70,6 +74,14 @@
     <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="Models\ModuleFeature.cs" />
+    <Compile Include="Packaging\Commands\PackagingCommands.cs" />
+    <Compile Include="Packaging\Controllers\DownloadStreamResult.cs" />
+    <Compile Include="Packaging\Controllers\PackagingController.cs" />
+    <Compile Include="Packaging\Services\PackageExpander.cs" />
+    <Compile Include="Packaging\Services\PackageBuilder.cs" />
+    <Compile Include="Packaging\Services\PackageManager.cs" />
+    <Compile Include="Packaging\Services\PackageSourceManager.cs" />
+    <Compile Include="Packaging\ViewModels\PackagingModulesViewModel.cs" />
     <Compile Include="ViewModels\FeaturesViewModel.cs" />
     <Compile Include="Models\Module.cs" />
     <Compile Include="Permissions.cs" />
@@ -88,6 +100,10 @@
     <Content Include="styles\jquery.switchable.css" />
     <Content Include="Views\Admin\Add.ascx" />
     <Content Include="Views\Admin\Index.ascx" />
+    <Content Include="Views\Packaging\_Subnav.ascx" />
+    <Content Include="Views\Packaging\Harvest.ascx" />
+    <Content Include="Views\Packaging\Sources.ascx" />
+    <Content Include="Views\Packaging\Modules.ascx" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>

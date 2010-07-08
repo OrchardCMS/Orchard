@@ -17,3 +17,6 @@ features:
         Description: Tools to help profile Orchard.
         Category: Developer
         Dependencies: Orchard.DevTools
+    Orchard.DevTools.WebCommandLine:
+        Description: Enables site administrators to execute Orchard.exe commands via web interface
+        Category: Developer

@@ -93,8 +93,8 @@ namespace Orchard.FileSystems.AppData {
         }
 
         public void CreateFile(string path, string content) {
-            using(var stream = CreateFile(path)) {
-                using(var tw = new StreamWriter(stream)) {
+            using (var stream = CreateFile(path)) {
+                using (var tw = new StreamWriter(stream)) {
                     tw.Write(content);
                 }
             }
@@ -109,7 +109,8 @@ namespace Orchard.FileSystems.AppData {
         }
 
         public string ReadFile(string path) {
-            return File.ReadAllText(CombineToPhysicalPath(path));
+            var physicalPath = CombineToPhysicalPath(path);
+            return File.Exists(physicalPath) ? File.ReadAllText(physicalPath) : null;
         }
 
         public Stream OpenFile(string path) {
@@ -145,9 +146,9 @@ namespace Orchard.FileSystems.AppData {
             var files = Directory.GetFiles(directoryPath);
 
             return files.Select(file => {
-                                    var fileName = Path.GetFileName(file);
-                                    return Combine(path, fileName);
-                                });
+                var fileName = Path.GetFileName(file);
+                return Combine(path, fileName);
+            });
         }
 
         public IEnumerable<string> ListDirectories(string path) {
@@ -158,9 +159,9 @@ namespace Orchard.FileSystems.AppData {
             var files = Directory.GetDirectories(directoryPath);
 
             return files.Select(file => {
-                                    var fileName = Path.GetFileName(file);
-                                    return Combine(path, fileName);
-                                });
+                var fileName = Path.GetFileName(file);
+                return Combine(path, fileName);
+            });
         }
 
         public void CreateDirectory(string path) {
