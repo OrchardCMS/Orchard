@@ -2,9 +2,16 @@ using System;
 using System.Linq;
 using System.Web.Hosting;
 using Orchard.Environment;
+using Orchard.Localization;
 
 namespace Orchard.Commands {
     public class CommandHostEnvironment : IHostEnvironment {
+        public CommandHostEnvironment() {
+            T = NullLocalizer.Instance;
+        }
+
+        public Localizer T { get; set; }
+
         public bool IsFullTrust {
             get { return AppDomain.CurrentDomain.IsFullyTrusted; }
         }
@@ -18,11 +25,11 @@ namespace Orchard.Commands {
         }
 
         public void RestartAppDomain() {
-            //Don't restart AppDomain in command line environment
+            ResetSiteCompilation();
         }
 
         public void ResetSiteCompilation() {
-            //Don't restart AppDomain in command line environment
+            throw new OrchardCoreException(T("A change of configuration requires the application to be restarted. Running the command again usually solves this problem."));
         }
     }
 }
