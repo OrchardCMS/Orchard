@@ -6,7 +6,7 @@ namespace Orchard.Core.Localization.DataMigrations {
         public int Create() {
             //CREATE TABLE Localization_LocalizedRecord (Id INTEGER not null, CultureId INTEGER, MasterContentItemId INTEGER, primary key (Id));
             SchemaBuilder.CreateTable("LocalizedRecord", table => table
-                .Column<int>("Id", column => column.PrimaryKey())
+                .ContentPartRecord()
                 .Column<int>("CultureId")
                 .Column<int>("MasterContentItemId")
                 );

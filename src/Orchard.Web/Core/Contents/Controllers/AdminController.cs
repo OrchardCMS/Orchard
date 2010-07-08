@@ -48,10 +48,17 @@ namespace Orchard.Core.Contents.Controllers {
             const int pageSize = 20;
             var skip = (Math.Max(model.Page ?? 0, 1) - 1) * pageSize;
 
-            var query = _contentManager.Query(VersionOptions.Latest);
+            var query = _contentManager.Query(VersionOptions.Latest, _contentDefinitionManager.ListTypeDefinitions().Select(ctd => ctd.Name).ToArray());
 
-            if (!string.IsNullOrEmpty(model.Id)) {
-                query = query.ForType(model.Id);
+            if (!string.IsNullOrEmpty(model.TypeName)) {
+                var contentTypeDefinition = _contentDefinitionManager.GetTypeDefinition(model.TypeName);
+                if (contentTypeDefinition == null)
+                    return new NotFoundResult();
+
+                model.TypeDisplayName = !string.IsNullOrWhiteSpace(contentTypeDefinition.DisplayName)
+                                            ? contentTypeDefinition.DisplayName
+                                            : contentTypeDefinition.Name;
+                query = query.ForType(model.TypeName);
             }
 
             var contentItems = query.Slice(skip, pageSize);
@@ -146,6 +153,18 @@ namespace Orchard.Core.Contents.Controllers {
             }
             _contentManager.Publish(contentItem);
             return RedirectToAction("Edit", new RouteValueDictionary { { "Id", contentItem.Id } });
+        }
+
+        [HttpPost, ActionName("Remove")]
+        public ActionResult RemovePOST(int id, string returnUrl) {
+            var contentItem = _contentManager.Get(id);
+            if (contentItem != null)
+                _contentManager.Remove(contentItem);
+
+            if (!String.IsNullOrEmpty(returnUrl))
+                return Redirect(returnUrl);
+
+            return RedirectToAction("List");
         }
 
         private void PrepareEditorViewModel(ContentItemViewModel itemViewModel) {

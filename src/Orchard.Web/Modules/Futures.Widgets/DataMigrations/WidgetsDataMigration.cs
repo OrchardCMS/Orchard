@@ -11,7 +11,7 @@ namespace Futures.Widgets.DataMigrations {
 
             //CREATE TABLE Futures_Widgets_WidgetRecord (Id INTEGER not null, Zone TEXT, Position TEXT, Scope_id INTEGER, primary key (Id));
             SchemaBuilder.CreateTable("WidgetRecord", table => table
-                .Column<int>("Id", column => column.PrimaryKey())
+                .ContentPartRecord()
                 .Column<string>("Zone")
                 .Column<string>("Position")
                 .Column<int>("Scope_id")

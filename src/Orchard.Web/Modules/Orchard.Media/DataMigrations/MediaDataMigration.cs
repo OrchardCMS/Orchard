@@ -6,7 +6,7 @@ namespace Orchard.Media.DataMigrations {
         public int Create() {
             //CREATE TABLE Orchard_Media_MediaSettingsRecord (Id INTEGER not null, RootMediaFolder TEXT, primary key (Id));
             SchemaBuilder.CreateTable("MediaSettingsRecord", table => table
-                .Column<int>("Id", column => column.PrimaryKey())
+                .ContentPartRecord()
                 .Column<string>("RootMediaFolder")
                 );
 

@@ -6,7 +6,7 @@ namespace Orchard.Search.DataMigrations {
         public int Create() {
 
             SchemaBuilder.CreateTable("SearchSettingsRecord", table => table
-                .Column<int>("Id", column => column.PrimaryKey())
+                .ContentPartRecord()
                 .Column<bool>("FilterCulture")
                 .Column<string>("SearchedFields")
                 );

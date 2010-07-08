@@ -45,6 +45,7 @@ namespace Orchard.Environment.Extensions.Loaders {
                         Logger.Information("ExtensionRemoved: Deleting assembly \"{0}\" from bin directory (AppDomain will restart)", moduleName);
                         File.Delete(_virtualPathProvider.MapPath(assemblyPath));
                     });
+                ctx.RestartAppDomain = true;
             }
         }
 

@@ -23,16 +23,23 @@ namespace Orchard.Data.Migration.Schema {
             return Column(columnName, dbType, column);
         }
 
+        /// <summary>
+        /// Defines a primary column as for content parts
+        /// </summary>
         public CreateTableCommand ContentPartRecord() {
-            /// TODO: Call Column() with necessary information for content part records
+            Column<int>("Id", column => column.PrimaryKey());
+
             return this;
         }
 
-        public CreateTableCommand VersionedContentPartRecord() {
-            /// TODO: Call Column() with necessary information for content part records
+        /// <summary>
+        /// Defines a primary column as for versionnable content parts
+        /// </summary>
+        public CreateTableCommand ContentPartVersionRecord() {
+            Column<int>("Id", column => column.PrimaryKey());
+            Column<int>("ContentItemRecord_id");
             return this;
         }
 
-        
     }
 }
