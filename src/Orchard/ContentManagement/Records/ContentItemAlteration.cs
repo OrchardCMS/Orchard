@@ -55,6 +55,7 @@ namespace Orchard.ContentManagement.Records {
         /// referenced when building joins accross content item record tables.
         /// <typeparam name="TItemRecord">Either ContentItemRecord or ContentItemVersionRecord</typeparam>
         /// <typeparam name="TPartRecord">A part record (deriving from TItemRecord)</typeparam>
+        /// </summary>
         class Alteration<TItemRecord, TPartRecord> : IAlteration<TItemRecord> {
             public void Override(AutoMapping<TItemRecord> mapping) {
 
