@@ -1,5 +1,5 @@
 ﻿name: $$ModuleName$$
 antiforgery: enabled
 features:
-    Orchard.$$ModuleName$$:
+    $$ModuleName$$:
         Description: Description for feature $$ModuleName$$.

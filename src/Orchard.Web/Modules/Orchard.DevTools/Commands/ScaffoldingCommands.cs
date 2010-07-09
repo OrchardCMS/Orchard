@@ -142,7 +142,7 @@ namespace Orchard.DevTools.Commands {
             if (IncludeInSolution) {
                 // Add project reference to Orchard.Web.csproj
                 string webProjectReference = string.Format(
-                    "</ProjectReference>\r\n    <ProjectReference Include=\"Modules\\Orchard.{0}\\Orchard.{0}.csproj\">\r\n      <Project>{{{1}}}</Project>\r\n      <Name>Orchard.{0}</Name>\r\n    ",
+                    "</ProjectReference>\r\n    <ProjectReference Include=\"Modules\\{0}\\{0}.csproj\">\r\n      <Project>{{{1}}}</Project>\r\n      <Name>{0}</Name>\r\n    ",
                     moduleName, projectGuid);
                 string webProjectText = File.ReadAllText(rootWebProjectPath);
                 webProjectText = webProjectText.Insert(webProjectText.LastIndexOf("</ProjectReference>\r\n"), webProjectReference);
@@ -152,7 +152,7 @@ namespace Orchard.DevTools.Commands {
                 string solutionPath = Directory.GetParent(rootWebProjectPath).Parent.FullName + "\\Orchard.sln";
                 if (File.Exists(solutionPath)) {
                     string projectReference = string.Format(
-                        "EndProject\r\nProject(\"{{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}}\") = \"Orchard.{0}\", \"Orchard.Web\\Modules\\Orchard.{0}\\Orchard.{0}.csproj\", \"{{{1}}}\"\r\n",
+                        "EndProject\r\nProject(\"{{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}}\") = \"{0}\", \"Orchard.Web\\Modules\\{0}\\{0}.csproj\", \"{{{1}}}\"\r\n",
                         moduleName, projectGuid);
                     string projectConfiguationPlatforms = string.Format(
                         "GlobalSection(ProjectConfigurationPlatforms) = postSolution\r\n\t\t{{{0}}}.Debug|Any CPU.ActiveCfg = Debug|Any CPU\r\n\t\t{{{0}}}.Debug|Any CPU.Build.0 = Debug|Any CPU\r\n\t\t{{{0}}}.Release|Any CPU.ActiveCfg = Release|Any CPU\r\n\t\t{{{0}}}.Release|Any CPU.Build.0 = Release|Any CPU\r\n",
@@ -171,7 +171,7 @@ namespace Orchard.DevTools.Commands {
         }
 
         private static void CreateFilesFromTemplates(string moduleName, string projectGuid) {
-            string modulePath = HostingEnvironment.MapPath("~/Modules/Orchard." + moduleName + "/");
+            string modulePath = HostingEnvironment.MapPath("~/Modules/" + moduleName + "/");
             string propertiesPath = modulePath + "Properties";
             string templatesPath = HostingEnvironment.MapPath("~/Modules/Orchard.DevTools/ScaffoldingTemplates/");
 
@@ -188,7 +188,7 @@ namespace Orchard.DevTools.Commands {
             templateText = File.ReadAllText(templatesPath + "\\ModuleCsProj.txt");
             templateText = templateText.Replace("$$ModuleName$$", moduleName);
             templateText = templateText.Replace("$$ModuleProjectGuid$$", projectGuid);
-            File.WriteAllText(modulePath + "\\Orchard." + moduleName + ".csproj", templateText);
+            File.WriteAllText(modulePath + "\\" + moduleName + ".csproj", templateText);
         }
     }
 }
