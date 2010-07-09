@@ -97,6 +97,7 @@
     <Content Include="ScaffoldingTemplates\ModuleCsProj.txt" />
     <Content Include="ScaffoldingTemplates\ModuleManifest.txt" />
     <Content Include="ScaffoldingTemplates\ModuleWebConfig.txt" />
+    <Content Include="ScaffoldingTemplates\ViewsWebConfig.txt" />
     <Content Include="Views\Commands\Execute.ascx" />
     <Content Include="Views\DataMigration\Index.aspx" />
     <Content Include="Views\DefinitionTemplates\DevToolsSettings.ascx" />
