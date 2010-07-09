@@ -18,6 +18,7 @@ using Orchard.Environment.Configuration;
 using Orchard.Environment.ShellBuilders;
 using Orchard.Environment.Descriptor;
 using Orchard.Environment.Descriptor.Models;
+using Orchard.Indexing;
 using Orchard.Localization;
 using Orchard.Localization.Services;
 using Orchard.Security;
@@ -172,9 +173,9 @@ namespace Orchard.Setup.Services {
                     //hackInstallationGenerator.GenerateInstallEvents();
 
                     var contentDefinitionManager = environment.Resolve<IContentDefinitionManager>();
-                    contentDefinitionManager.AlterTypeDefinition("BlogPost", cfg => cfg.DisplayedAs("Blog Post").WithPart("HasComments").WithPart("HasTags").WithPart("Localized"));
-                    contentDefinitionManager.AlterTypeDefinition("Page", cfg => cfg.DisplayedAs("Page").WithPart("HasComments").WithPart("HasTags").WithPart("Localized"));
-                    contentDefinitionManager.AlterTypeDefinition("SandboxPage", cfg => cfg.DisplayedAs("Sandbox Page").WithPart("HasComments").WithPart("HasTags").WithPart("Localized"));
+                    contentDefinitionManager.AlterTypeDefinition("BlogPost", cfg => cfg.DisplayedAs("Blog Post").WithPart("HasComments").WithPart("HasTags").WithPart("Localized").Indexed());
+                    contentDefinitionManager.AlterTypeDefinition("Page", cfg => cfg.DisplayedAs("Page").WithPart("HasComments").WithPart("HasTags").WithPart("Localized").Indexed());
+                    contentDefinitionManager.AlterTypeDefinition("SandboxPage", cfg => cfg.DisplayedAs("Sandbox Page").WithPart("HasComments").WithPart("HasTags").WithPart("Localized").Indexed());
                     contentDefinitionManager.AlterPartDefinition("BodyAspect", cfg => cfg.WithSetting("BodyPartSettings.FlavorDefault", BodyPartSettings.FlavorDefaultDefault));
 
                     // create home page as a CMS page

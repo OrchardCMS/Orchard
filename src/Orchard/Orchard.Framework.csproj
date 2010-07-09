@@ -406,6 +406,7 @@
     <Compile Include="Environment\Extensions\Compilers\CSharpExtensionBuildProviderShim.cs" />
     <Compile Include="Environment\Extensions\Compilers\ProjectFileDescriptor.cs" />
     <Compile Include="Environment\Extensions\Compilers\IProjectFileParser.cs" />
+    <Compile Include="Indexing\MetaDataExtensions.cs" />
     <Compile Include="Localization\Commands\CultureCommands.cs" />
     <Compile Include="UI\Admin\Notification\NotificationFilter.cs" />
     <Compile Include="Data\Migration\DataMigrationNotificationProvider.cs" />

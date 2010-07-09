@@ -1,8 +1,9 @@
 ﻿using Lucene.Net.Documents;
 using System.Globalization;
 using Lucene.Net.Util;
+using Orchard.Indexing;
 
-namespace Orchard.Indexing.Models {
+namespace Lucene.Models {
     public class LuceneSearchHit : ISearchHit {
         private readonly Document _doc;
         private readonly float _score;

@@ -2,22 +2,23 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Lucene.Models;
 using Lucene.Net.Analysis;
 using Lucene.Net.Analysis.Standard;
 using Lucene.Net.Documents;
 using Lucene.Net.Index;
 using Lucene.Net.Search;
 using Lucene.Net.Store;
+using System.Xml.Linq;
 using Orchard.Environment.Configuration;
 using Orchard.FileSystems.AppData;
-using Orchard.Indexing.Models;
+using Orchard.Indexing;
 using Orchard.Localization;
 using Orchard.Logging;
-using System.Xml.Linq;
 using Directory = Lucene.Net.Store.Directory;
 using Version = Lucene.Net.Util.Version;
 
-namespace Orchard.Indexing.Services {
+namespace Lucene.Services {
     /// <summary>
     /// Represents the default implementation of an IIndexProvider, based on Lucene
     /// </summary>

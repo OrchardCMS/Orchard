@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using Lucene.Net.Documents;
+using Orchard;
+using Orchard.Indexing;
 using Orchard.Localization;
 using Orchard.Utility.Extensions;
 
-namespace Orchard.Indexing.Models {
+namespace Lucene.Models {
 
     public class LuceneDocumentIndex : IDocumentIndex {
 

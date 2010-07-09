@@ -2,16 +2,16 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using Lucene.Net.Analysis;
+using Lucene.Models;
 using Lucene.Net.Index;
 using Lucene.Net.Search;
 using Lucene.Net.Store;
-using Orchard.Indexing.Models;
+using Orchard.Indexing;
 using Orchard.Logging;
 using Lucene.Net.Documents;
 using Lucene.Net.QueryParsers;
 
-namespace Orchard.Indexing.Services {
+namespace Lucene.Services {
     public class LuceneSearchBuilder : ISearchBuilder {
 
         private const int MaxResults = Int16.MaxValue;
