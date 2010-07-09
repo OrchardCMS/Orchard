@@ -289,7 +289,9 @@
     <Content Include="Common\Views\DisplayTemplates\Parts\Common.Body.Manage.ascx" />
     <Content Include="Dashboard\Views\Web.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Notification\" />
+  </ItemGroup>
   <ItemGroup>
     <None Include="App_Data\Localization\en-US\orchard.core.po" />
     <None Include="App_Data\Localization\fr-FR\orchard.core.po" />

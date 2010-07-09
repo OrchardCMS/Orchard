@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
+using Orchard.Caching;
 using Orchard.Data.Migration.Interpreters;
 using Orchard.Data.Migration.Records;
 using Orchard.Data.Migration.Schema;
@@ -19,17 +20,20 @@ namespace Orchard.Data.Migration {
         private readonly IRepository<DataMigrationRecord> _dataMigrationRepository;
         private readonly IExtensionManager _extensionManager;
         private readonly IDataMigrationInterpreter _interpreter;
+        private readonly ISignals _signals;
 
         public DataMigrationManager(
             IEnumerable<IDataMigration> dataMigrations, 
             IRepository<DataMigrationRecord> dataMigrationRepository,
             IExtensionManager extensionManager,
-            IDataMigrationInterpreter interpreter
+            IDataMigrationInterpreter interpreter,
+            ISignals signals
             ) {
             _dataMigrations = dataMigrations;
             _dataMigrationRepository = dataMigrationRepository;
             _extensionManager = extensionManager;
             _interpreter = interpreter;
+            _signals = signals;
 
             Logger = NullLogger.Instance;
         }
@@ -78,7 +82,9 @@ namespace Orchard.Data.Migration {
         }
 
         public void Update(string feature){
-            
+            // invalidate the notifications cache
+            _signals.Trigger(DataMigrationNotificationProvider.SignalKey);
+
             Logger.Information("Updating {0}", feature);
 
             // proceed with dependent features first, whatever the module it's in
@@ -146,6 +152,8 @@ namespace Orchard.Data.Migration {
         }
 
         public void Uninstall(string feature) {
+            // invalidate the notifications cache
+            _signals.Trigger(DataMigrationNotificationProvider.SignalKey);
 
             var migrations = GetDataMigrations(feature);
 

@@ -407,6 +407,11 @@
     <Compile Include="Environment\Extensions\Compilers\ProjectFileDescriptor.cs" />
     <Compile Include="Environment\Extensions\Compilers\IProjectFileParser.cs" />
     <Compile Include="Localization\Commands\CultureCommands.cs" />
+    <Compile Include="UI\Admin\Notification\NotificationFilter.cs" />
+    <Compile Include="Data\Migration\DataMigrationNotificationProvider.cs" />
+    <Compile Include="UI\Admin\Notification\INotificationManager.cs" />
+    <Compile Include="UI\Admin\Notification\INotificationProvider.cs" />
+    <Compile Include="UI\Admin\Notification\NotificationManager.cs" />
     <Compile Include="Utility\DependencyOrderingUtility.cs" />
     <Compile Include="Environment\IOrchardHostContainer.cs" />
     <Compile Include="Environment\IShim.cs" />
