@@ -9,7 +9,7 @@
         </div>
         <div class="related"><%
             Html.Zone("secondary"); %>
-            <%:Html.ActionLink(T("Edit").ToString(), "Edit", new { id = Model.Item.Id }, new { title = T("Edit Page").ToString() })%><%:T(" | ") %>
+            <%:Html.ItemEditLink(T("Edit").Text, Model.Item) %><%:T(" | ") %>
             <a href="<%:Html.AntiForgeryTokenGetUrl(Url.Action("Delete", new {id = Model.Item.Id})) %>" title="<%:T("Remove Page") %>"><%:T("Remove") %></a>
         </div>
         <div style="clear:both;"></div>

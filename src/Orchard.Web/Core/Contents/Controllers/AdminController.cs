@@ -162,7 +162,7 @@ namespace Orchard.Core.Contents.Controllers {
             return RedirectToAction("List");
         }
 
-        private void PrepareEditorViewModel(ContentItemViewModel itemViewModel) {
+        private static void PrepareEditorViewModel(ContentItemViewModel itemViewModel) {
             if (string.IsNullOrEmpty(itemViewModel.TemplateName)) {
                 itemViewModel.TemplateName = "Items/Contents.Item";
             }
