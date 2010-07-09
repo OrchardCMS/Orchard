@@ -35,7 +35,7 @@ namespace Orchard.Modules.Commands {
                         Context.Output.WriteLine(T("    Description:   {0}", feature.Descriptor.Description.OrDefault("<none>")));
                         Context.Output.WriteLine(T("    Category:      {0}", feature.Descriptor.Category.OrDefault("<none>")));
                         Context.Output.WriteLine(T("    Module:        {0}", feature.Descriptor.Extension.Name.OrDefault("<none>")));
-                        Context.Output.WriteLine(T("    Dependencies:  {0}", string.Join(",", feature.Descriptor.Dependencies).OrDefault("<none>")));
+                        Context.Output.WriteLine(T("    Dependencies:  {0}", feature.Descriptor.Dependencies == null ? "<none>" : string.Join(",", feature.Descriptor.Dependencies).OrDefault("<none>")));
                     }
                 }
             }
