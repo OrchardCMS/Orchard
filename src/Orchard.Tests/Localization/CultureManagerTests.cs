@@ -6,6 +6,7 @@ using System.Web;
 using Autofac;
 using NHibernate;
 using NUnit.Framework;
+using Orchard.Caching;
 using Orchard.Data;
 using Orchard.Localization.Records;
 using Orchard.Localization.Services;
@@ -33,6 +34,7 @@ namespace Orchard.Tests.Localization {
             var builder = new ContainerBuilder();
             builder.RegisterType<TestCultureSelector>().As<ICultureSelector>();
             builder.RegisterType<DefaultCultureManager>().As<ICultureManager>();
+            builder.RegisterType<Signals>().As<ISignals>();
             builder.RegisterGeneric(typeof(Repository<>)).As(typeof(IRepository<>));
             _session = _sessionFactory.OpenSession();
             builder.RegisterInstance(new DefaultContentManagerTests.TestSessionLocator(_session)).As<ISessionLocator>();
