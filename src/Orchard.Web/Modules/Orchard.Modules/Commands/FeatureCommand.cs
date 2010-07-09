@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using Orchard.Commands;
 using Orchard.Utility.Extensions;
 
@@ -35,7 +36,7 @@ namespace Orchard.Modules.Commands {
                         Context.Output.WriteLine(T("    Description:   {0}", feature.Descriptor.Description.OrDefault("<none>")));
                         Context.Output.WriteLine(T("    Category:      {0}", feature.Descriptor.Category.OrDefault("<none>")));
                         Context.Output.WriteLine(T("    Module:        {0}", feature.Descriptor.Extension.Name.OrDefault("<none>")));
-                        Context.Output.WriteLine(T("    Dependencies:  {0}", string.Join(",", feature.Descriptor.Dependencies).OrDefault("<none>")));
+                        Context.Output.WriteLine(T("    Dependencies:  {0}", feature.Descriptor.Dependencies == null ? "<none>" : string.Join(",", feature.Descriptor.Dependencies).OrDefault("<none>")));
                     }
                 }
             }
@@ -45,8 +46,28 @@ namespace Orchard.Modules.Commands {
         [CommandName("feature enable")]
         public void Enable(params string[] featureNames) {
             Context.Output.WriteLine(T("Enabling features {0}", string.Join(",", featureNames)));
-            _moduleService.EnableFeatures(featureNames);
-            Context.Output.WriteLine(T("Enabled features  {0}", string.Join(",", featureNames)));
+            bool listAvailableFeatures = false;
+            List<string> featuresToEnable = new List<string>();
+            string[] availableFeatures = _moduleService.GetAvailableFeatures().Select(x => x.Descriptor.Name).ToArray();
+            foreach (var featureName in featureNames) {
+                if (availableFeatures.Contains(featureName)) {
+                    featuresToEnable.Add(featureName);
+                }
+                else {
+                    Context.Output.WriteLine(T("Could not find feature {0}", featureName));
+                    listAvailableFeatures = true;
+                }
+            }
+            if (featuresToEnable.Count != 0) {
+                _moduleService.EnableFeatures(featuresToEnable);
+                Context.Output.WriteLine(T("Enabled features  {0}", string.Join(",", featuresToEnable)));
+            }
+            else {
+                Context.Output.WriteLine(T("Could not enable features: {0}", string.Join(",", featureNames)));
+                listAvailableFeatures = true;
+            }
+            if (listAvailableFeatures)
+                Context.Output.WriteLine(T("Available features are : {0}", string.Join(",", availableFeatures)));
         }
 
         [CommandHelp("feature disable <feature-name-1> ... <feature-name-n>\r\n\t" + "Disable one or more features")]

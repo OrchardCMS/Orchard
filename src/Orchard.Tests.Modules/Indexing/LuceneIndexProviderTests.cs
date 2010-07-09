@@ -2,6 +2,7 @@
 using System.IO;
 using System.Linq;
 using Autofac;
+using Lucene.Services;
 using NUnit.Framework;
 using Orchard.Environment.Configuration;
 using Orchard.FileSystems.AppData;

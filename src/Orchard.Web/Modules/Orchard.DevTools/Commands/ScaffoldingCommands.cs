@@ -140,14 +140,6 @@ namespace Orchard.DevTools.Commands {
             CreateFilesFromTemplates(moduleName, projectGuid);
             // The string searches in solution/project files can be made aware of comment lines.
             if (IncludeInSolution) {
-                // Add project reference to Orchard.Web.csproj
-                string webProjectReference = string.Format(
-                    "</ProjectReference>\r\n    <ProjectReference Include=\"Modules\\{0}\\{0}.csproj\">\r\n      <Project>{{{1}}}</Project>\r\n      <Name>{0}</Name>\r\n    ",
-                    moduleName, projectGuid);
-                string webProjectText = File.ReadAllText(rootWebProjectPath);
-                webProjectText = webProjectText.Insert(webProjectText.LastIndexOf("</ProjectReference>\r\n"), webProjectReference);
-                File.WriteAllText(rootWebProjectPath, webProjectText);
-
                 // Add project to Orchard.sln
                 string solutionPath = Directory.GetParent(rootWebProjectPath).Parent.FullName + "\\Orchard.sln";
                 if (File.Exists(solutionPath)) {
@@ -177,6 +169,12 @@ namespace Orchard.DevTools.Commands {
 
             Directory.CreateDirectory(modulePath);
             Directory.CreateDirectory(propertiesPath);
+            Directory.CreateDirectory(modulePath + "Controllers");
+            Directory.CreateDirectory(modulePath + "Views");
+            File.WriteAllText(modulePath + "\\Views\\Web.config", File.ReadAllText(templatesPath + "ViewsWebConfig.txt"));
+            Directory.CreateDirectory(modulePath + "Models");
+            Directory.CreateDirectory(modulePath + "Scripts");
+
             string templateText = File.ReadAllText(templatesPath + "ModuleAssemblyInfo.txt");
             templateText = templateText.Replace("$$ModuleName$$", moduleName);
             templateText = templateText.Replace("$$ModuleTypeLibGuid$$", Guid.NewGuid().ToString());
