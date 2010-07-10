@@ -39,7 +39,7 @@
                     <div class="properties">
                         <h3><%:feature.Descriptor.Name %></h3>
                         <p class="description"><%:feature.Descriptor.Description %></p><%
-                        if (feature.Descriptor.Dependencies != null) { %>
+                        if (feature.Descriptor.Dependencies != null && feature.Descriptor.Dependencies.Any()) { %>
                         <div class="dependencies">
                             <h4><%: T("Depends on:")%></h4>
                             <%: Html.UnorderedList(

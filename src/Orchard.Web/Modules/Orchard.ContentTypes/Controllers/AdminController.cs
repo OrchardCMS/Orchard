@@ -364,11 +364,11 @@ namespace Orchard.ContentTypes.Controllers {
 
         #endregion
 
-        public new bool TryUpdateModel<TModel>(TModel model, string prefix, string[] includeProperties, string[] excludeProperties) where TModel : class {
+        bool IUpdateModel.TryUpdateModel<TModel>(TModel model, string prefix, string[] includeProperties, string[] excludeProperties) {
             return base.TryUpdateModel(model, prefix, includeProperties, excludeProperties);
         }
 
-        public void AddModelError(string key, LocalizedString errorMessage) {
+        void IUpdateModel.AddModelError(string key, LocalizedString errorMessage) {
             ModelState.AddModelError(key, errorMessage.ToString());
         }
     }

@@ -82,9 +82,10 @@
     <Compile Include="Contents\ViewModels\EditItemViewModel.cs" />
     <Compile Include="Contents\ViewModels\ListContentsViewModel.cs" />
     <Compile Include="Contents\ViewModels\ListContentTypesViewModel.cs" />
+    <Compile Include="Localization\Controllers\AdminController.cs" />
     <Compile Include="Localization\DataMigrations\LocalizationDataMigration.cs" />
     <Compile Include="Localization\ViewModels\ContentTranslationsViewModel.cs" />
-    <Compile Include="Localization\Drivers\LocalizedDriver.cs" />
+    <Compile Include="Localization\Drivers\LocalizationDriver.cs" />
     <Compile Include="Navigation\DataMigrations\NavigationDataMigration.cs" />
     <Compile Include="Routable\Controllers\ItemController.cs" />
     <Compile Include="Routable\Drivers\RoutableDriver.cs" />
@@ -135,7 +136,7 @@
     <Compile Include="Feeds\Rss\RssResult.cs" />
     <Compile Include="HomePage\Controllers\HomeController.cs" />
     <Compile Include="HomePage\Routes.cs" />
-    <Compile Include="Localization\Handlers\LocalizedHandler.cs" />
+    <Compile Include="Localization\Handlers\LocalizationHandler.cs" />
     <Compile Include="Localization\Models\Localized.cs" />
     <Compile Include="Localization\Models\LocalizedRecord.cs" />
     <Compile Include="Navigation\AdminMenu.cs" />
@@ -229,11 +230,14 @@
     <Content Include="Contents\Views\Admin\List.ascx" />
     <Content Include="Contents\Views\DisplayTemplates\Items\Contents.Item.ascx" />
     <Content Include="Contents\Views\DisplayTemplates\Items\Contents.Item.SummaryAdmin.ascx" />
+    <Content Include="Contents\Views\DisplayTemplates\Items\Contents.Item.Summary.ascx" />
     <Content Include="Contents\Views\EditorTemplates\Items\Contents.Item.ascx" />
     <Content Include="Contents\Views\Item\Preview.aspx" />
     <Content Include="Contents\Views\Item\Display.aspx" />
     <Content Include="Localization\Module.txt" />
-    <Content Include="Localization\Views\DisplayTemplates\Parts\Localized.ContentTranslations.SummaryAdmin.ascx" />
+    <Content Include="Localization\Views\Admin\Translate.ascx" />
+    <Content Include="Localization\Views\DisplayTemplates\Parts\Localization.ContentTranslations.SummaryAdmin.ascx" />
+    <Content Include="Localization\Views\EditorTemplates\Parts\Localization.CultureSelection.ascx" />
     <Content Include="Routable\Module.txt" />
     <Content Include="Routable\Scripts\jquery.slugify.js" />
     <Content Include="Routable\Views\EditorTemplates\Parts\Routable.IsRoutable.ascx" />
@@ -289,9 +293,7 @@
     <Content Include="Common\Views\DisplayTemplates\Parts\Common.Body.Manage.ascx" />
     <Content Include="Dashboard\Views\Web.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Notification\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <None Include="App_Data\Localization\en-US\orchard.core.po" />
     <None Include="App_Data\Localization\fr-FR\orchard.core.po" />

@@ -9,11 +9,11 @@ using Orchard.Localization.Services;
 
 namespace Orchard.Core.Localization.Handlers {
     [UsedImplicitly]
-    public class LocalizedHandler : ContentHandler {
+    public class LocalizationHandler : ContentHandler {
         private readonly ICultureManager _cultureManager;
         private readonly IContentManager _contentManager;
 
-        public LocalizedHandler(IRepository<LocalizedRecord> localizedRepository, ICultureManager cultureManager, IContentManager contentManager) {
+        public LocalizationHandler(IRepository<LocalizedRecord> localizedRepository, ICultureManager cultureManager, IContentManager contentManager) {
             _cultureManager = cultureManager;
             _contentManager = contentManager;
             T = NullLocalizer.Instance;
