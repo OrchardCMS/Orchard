@@ -9,7 +9,9 @@ using NHibernate.SqlTypes;
 using Orchard.Data.Migration.Schema;
 using Orchard.Data.Providers;
 using Orchard.Environment.Configuration;
+using Orchard.Localization;
 using Orchard.Logging;
+using Orchard.Reports.Services;
 
 namespace Orchard.Data.Migration.Interpreters {
     public class DefaultDataMigrationInterpreter : AbstractDataMigrationInterpreter, IDataMigrationInterpreter {
@@ -20,6 +22,7 @@ namespace Orchard.Data.Migration.Interpreters {
         private readonly List<string> _sqlStatements;
         private readonly IDataServicesProviderFactory _dataServicesProviderFactory;
         private readonly ISessionFactoryHolder _sessionFactoryHolder;
+        private readonly IReportsCoordinator _reportsCoordinator;
 
         private const char Space = ' ' ;
 
@@ -28,13 +31,15 @@ namespace Orchard.Data.Migration.Interpreters {
             ISessionLocator sessionLocator, 
             IEnumerable<ICommandInterpreter> commandInterpreters,
             IDataServicesProviderFactory dataServicesProviderFactory,
-            ISessionFactoryHolder sessionFactoryHolder) {
+            ISessionFactoryHolder sessionFactoryHolder,
+            IReportsCoordinator reportsCoordinator) {
             _shellSettings = shellSettings;
             _commandInterpreters = commandInterpreters;
             _session = sessionLocator.For(typeof(DefaultDataMigrationInterpreter));
             _sqlStatements = new List<string>();
             _dataServicesProviderFactory = dataServicesProviderFactory;
             _sessionFactoryHolder = sessionFactoryHolder;
+            _reportsCoordinator = reportsCoordinator;
 
             Logger = NullLogger.Instance;
 
@@ -44,6 +49,7 @@ namespace Orchard.Data.Migration.Interpreters {
         }
 
         public ILogger Logger { get; set; }
+        public Localizer T { get; set; }
 
         public IEnumerable<string> SqlStatements {
             get { return _sqlStatements; }
@@ -318,6 +324,8 @@ namespace Orchard.Data.Migration.Interpreters {
                     command.CommandText = sqlStatement;
                     command.ExecuteNonQuery();
                 }
+
+                _reportsCoordinator.Information("Data Migration", String.Format("Executing SQL Query: {0}", sqlStatement));
             }
 
             _sqlStatements.Clear();

@@ -21,6 +21,7 @@ using Orchard.Environment.Descriptor.Models;
 using Orchard.Indexing;
 using Orchard.Localization;
 using Orchard.Localization.Services;
+using Orchard.Reports.Services;
 using Orchard.Security;
 using Orchard.Settings;
 using Orchard.Themes;
@@ -68,6 +69,7 @@ namespace Orchard.Setup.Services {
                     "Common",
                     "Contents",
                     "Dashboard",
+                    "Reports",
                     "Feeds",
                     "HomePage",
                     "Navigation",
@@ -111,6 +113,9 @@ namespace Orchard.Setup.Services {
             using (var environment = new StandaloneEnvironment(bootstrapLifetimeScope)) {
 
                 var schemaBuilder = new SchemaBuilder(environment.Resolve<IDataMigrationInterpreter>() );
+                var reportsCoordinator = environment.Resolve<IReportsCoordinator>();
+
+                reportsCoordinator.Register("Data Migration", "Setup", "Orchard installation");
 
                 schemaBuilder.CreateTable("Orchard_Framework_DataMigrationRecord", table => table
                     .Column<int>("Id", column => column.PrimaryKey().Identity())

@@ -8,7 +8,9 @@ using Orchard.Data.Migration.Records;
 using Orchard.Data.Migration.Schema;
 using Orchard.Environment.Extensions;
 using Orchard.Environment.State;
+using Orchard.Localization;
 using Orchard.Logging;
+using Orchard.Reports.Services;
 
 namespace Orchard.Data.Migration {
     /// <summary>
@@ -19,21 +21,24 @@ namespace Orchard.Data.Migration {
         private readonly IRepository<DataMigrationRecord> _dataMigrationRepository;
         private readonly IExtensionManager _extensionManager;
         private readonly IDataMigrationInterpreter _interpreter;
+        private readonly IReportsCoordinator _reportsCoordinator;
 
         public DataMigrationManager(
             IEnumerable<IDataMigration> dataMigrations, 
             IRepository<DataMigrationRecord> dataMigrationRepository,
             IExtensionManager extensionManager,
-            IDataMigrationInterpreter interpreter
+            IDataMigrationInterpreter interpreter,
+            IReportsCoordinator reportsCoordinator
             ) {
             _dataMigrations = dataMigrations;
             _dataMigrationRepository = dataMigrationRepository;
             _extensionManager = extensionManager;
             _interpreter = interpreter;
+            _reportsCoordinator = reportsCoordinator;
 
             Logger = NullLogger.Instance;
         }
-
+        public Localizer T { get; set; }
         public ILogger Logger { get; set; }
 
         public IEnumerable<string> GetFeaturesThatNeedUpdate() {
@@ -78,7 +83,8 @@ namespace Orchard.Data.Migration {
         }
 
         public void Update(string feature){
-            Logger.Information("Updating {0}", feature);
+
+            Logger.Information("Updating feature: {0}", feature);
 
             // proceed with dependent features first, whatever the module it's in
             var dependencies = ShellStateCoordinator.OrderByDependencies(_extensionManager.AvailableExtensions()
