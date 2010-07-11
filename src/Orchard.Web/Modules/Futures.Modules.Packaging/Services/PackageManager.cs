@@ -1,30 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
+﻿using System.IO;
 using System.IO.Packaging;
 using System.Linq;
 using System.Net;
-using System.Web;
 using Orchard.Environment.Extensions;
 
-namespace Orchard.Modules.Packaging.Services {
-
-    public class PackageData {
-        public string ExtensionName { get; set; }
-        public string ExtensionVersion { get; set; }
-
-        public Stream PackageStream { get; set; }
-    }
-
-    public interface IPackageManager : IDependency {
-        PackageData Harvest(string extensionName);
-        PackageData Download(string feedItemId);
-
-        void Push(PackageData packageData, string feedUrl);
-        void Install(PackageData packageData);
-    }
-
-    [OrchardFeature("Orchard.Modules.Packaging")]
+namespace Futures.Modules.Packaging.Services {
     public class PackageManager : IPackageManager {
         private readonly IExtensionManager _extensionManager;
         private readonly IPackageSourceManager _packageSourceManager;

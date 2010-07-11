@@ -1,16 +1,16 @@
 ﻿using System;
 using System.Linq;
 using System.Web.Mvc;
+using Futures.Modules.Packaging.Services;
+using Futures.Modules.Packaging.ViewModels;
 using Orchard.Environment.Extensions;
 using Orchard.Localization;
-using Orchard.Modules.Packaging.Services;
-using Orchard.Modules.Packaging.ViewModels;
 using Orchard.Themes;
 using Orchard.UI.Admin;
 using Orchard.UI.Notify;
 
-namespace Orchard.Modules.Packaging.Controllers {
-    [Admin, Themed, OrchardFeature("Orchard.Modules.Packaging")]
+namespace Futures.Modules.Packaging.Controllers {
+    [Themed, Admin]
     public class PackagingController : Controller {
         private readonly IPackageManager _packageManager;
         private readonly IPackageSourceManager _packageSourceManager;

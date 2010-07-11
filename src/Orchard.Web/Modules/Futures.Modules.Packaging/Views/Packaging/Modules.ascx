@@ -1,4 +1,4 @@
-﻿<%@ Control Language="C#" Inherits="Orchard.Mvc.ViewUserControl<Orchard.Modules.Packaging.ViewModels.PackagingModulesViewModel>" %>
+﻿<%@ Control Language="C#" Inherits="Orchard.Mvc.ViewUserControl<Futures.Modules.Packaging.ViewModels.PackagingModulesViewModel>" %>
 <%@ Import Namespace="Orchard.Mvc.Html" %>
 <h1>
     <%: Html.TitleForPage(T("Packaging").ToString(), T("Browse Packages").ToString())%></h1>

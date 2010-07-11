@@ -1,7 +1,7 @@
 ﻿using System.IO;
 using System.Web.Mvc;
 
-namespace Orchard.Modules.Packaging.Controllers {
+namespace Futures.Modules.Packaging.Controllers {
     public class DownloadStreamResult : ActionResult {
         public string FileName { get; set; }
         public string ContentType { get; set; }

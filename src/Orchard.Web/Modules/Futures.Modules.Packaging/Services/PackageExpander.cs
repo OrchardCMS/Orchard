@@ -3,19 +3,12 @@ using System.IO;
 using System.IO.Packaging;
 using System.Linq;
 using System.Reflection;
-using System.Xml;
 using System.Xml.Linq;
 using Orchard.Environment.Extensions;
-using Orchard.Environment.Extensions.Models;
 using Orchard.FileSystems.VirtualPath;
 using Orchard.FileSystems.WebSite;
 
-namespace Orchard.Modules.Packaging.Services {
-    public interface IPackageExpander : IDependency {
-        void ExpandPackage(Stream packageStream);
-    }
-
-    [OrchardFeature("Orchard.Modules.Packaging")]
+namespace Futures.Modules.Packaging.Services {
     public class PackageExpander : IPackageExpander {
         private const string ContentTypePrefix = "Orchard ";
         private readonly IExtensionManager _extensionManager;

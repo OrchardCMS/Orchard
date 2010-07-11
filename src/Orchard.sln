@@ -73,6 +73,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PackageIndexReferenceImplem
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lucene", "Orchard.Web\Modules\Lucene\Lucene.csproj", "{D5D447D7-EF8E-43A6-B9A4-3B025DD9F45D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Futures.Modules.Packaging", "Orchard.Web\Modules\Futures.Modules.Packaging\Futures.Modules.Packaging.csproj", "{DFD137A2-DDB5-4D22-BE0D-FA9AD4C8B059}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -207,6 +209,10 @@ Global
 		{D5D447D7-EF8E-43A6-B9A4-3B025DD9F45D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D5D447D7-EF8E-43A6-B9A4-3B025DD9F45D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D5D447D7-EF8E-43A6-B9A4-3B025DD9F45D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DFD137A2-DDB5-4D22-BE0D-FA9AD4C8B059}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DFD137A2-DDB5-4D22-BE0D-FA9AD4C8B059}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DFD137A2-DDB5-4D22-BE0D-FA9AD4C8B059}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DFD137A2-DDB5-4D22-BE0D-FA9AD4C8B059}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -241,5 +247,6 @@ Global
 		{33B1BC8D-E292-4972-A363-22056B207156} = {383DBA32-4A3E-48D1-AAC3-75377A694452}
 		{8A4E42CE-79F8-4BE2-8B1E-A6B83432123B} = {383DBA32-4A3E-48D1-AAC3-75377A694452}
 		{E65E5633-C0FF-453C-A906-481C14F969D6} = {E75A4CE4-CAA6-41E4-B951-33ACC60DC77C}
+		{DFD137A2-DDB5-4D22-BE0D-FA9AD4C8B059} = {E75A4CE4-CAA6-41E4-B951-33ACC60DC77C}
 	EndGlobalSection
 EndGlobal
