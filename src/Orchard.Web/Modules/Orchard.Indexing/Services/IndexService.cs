@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Orchard.Localization;
 using Orchard.Localization.Services;
 using Orchard.UI.Notify;
@@ -21,10 +20,6 @@ namespace Orchard.Indexing.Services
 
         public IOrchardServices Services { get; set; }
         public Localizer T { get; set; }
-
-        public bool HasIndexToManage {
-            get { return _indexManager.HasIndexProvider(); }
-        }
 
         void IIndexingService.RebuildIndex() {
             if (!_indexManager.HasIndexProvider()) {
@@ -50,10 +45,17 @@ namespace Orchard.Indexing.Services
             Services.Notifier.Information(T("The search index has been updated."));
         }
 
-        DateTime IIndexingService.GetIndexUpdatedUtc() {
-            return !HasIndexToManage
-                ? DateTime.MinValue
-                : _indexManager.GetSearchIndexProvider().GetLastIndexUtc(SearchIndexName);
+        IndexEntry IIndexingService.GetIndexEntry() {
+            var provider = _indexManager.GetSearchIndexProvider();
+            if (provider == null)
+                return null;
+
+            return new IndexEntry {
+                IndexName = SearchIndexName,
+                DocumentCount = provider.NumDocs(SearchIndexName),
+                Fields = provider.GetFields(SearchIndexName),
+                LastUpdateUtc = provider.GetLastIndexUtc(SearchIndexName)
+            };
         }
     }
 }

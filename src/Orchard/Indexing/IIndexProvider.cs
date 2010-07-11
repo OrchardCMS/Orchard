@@ -64,7 +64,7 @@ namespace Orchard.Indexing {
         /// <summary>
         /// Returns the date and time when the index was last processed
         /// </summary>
-        DateTime GetLastIndexUtc(string indexName);
+        DateTime? GetLastIndexUtc(string indexName);
 
         /// <summary>
         /// Sets the date and time when the index was last processed
@@ -74,6 +74,6 @@ namespace Orchard.Indexing {
         /// <summary>
         /// Returns every field available in the specified index
         /// </summary>
-        string[] GetFields(string indexName);
+        IEnumerable<string> GetFields(string indexName);
     }
 }

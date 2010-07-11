@@ -278,7 +278,7 @@ namespace Orchard.Tests.Modules.Indexing {
             _provider.Store("default", _provider.New(2).Add("b", DateTime.Now).Store());
             _provider.Store("default", _provider.New(3).Add("c", 333));
 
-            Assert.That(_provider.GetFields("default").Length, Is.EqualTo(4));
+            Assert.That(_provider.GetFields("default").Count(), Is.EqualTo(4));
             Assert.That(_provider.GetFields("default").OrderBy(s => s).ToArray(), Is.EqualTo(new [] { "a", "b", "c", "id"}));
         }
 

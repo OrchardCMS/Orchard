@@ -210,12 +210,13 @@ namespace Lucene.Services {
             return _appDataFolder.MapPath(_appDataFolder.Combine(_basePath, indexName + ".settings.xml"));
         }
 
-        public DateTime GetLastIndexUtc(string indexName) {
+        public DateTime? GetLastIndexUtc(string indexName) {
             var settingsFileName = GetSettingsFileName(indexName);
 
-            return File.Exists(settingsFileName) 
-                ? DateTime.Parse(XDocument.Load(settingsFileName).Descendants(LastIndexUtc).First().Value)
-                : DefaultMinDateTime;
+            if (!File.Exists(settingsFileName))
+                return null;
+
+            return DateTime.Parse(XDocument.Load(settingsFileName).Descendants(LastIndexUtc).First().Value);
         }
 
         public void SetLastIndexUtc(string indexName, DateTime lastIndexUtc) {
@@ -239,15 +240,15 @@ namespace Lucene.Services {
             doc.Save(settingsFileName);
         }
 
-        public string[] GetFields(string indexName) {
+        public IEnumerable<string> GetFields(string indexName) {
             if ( !Exists(indexName) ) {
-                return new string[0];
+                return Enumerable.Empty<string>();
             }
 
             var reader = IndexReader.Open(GetDirectory(indexName), true);
 
             try {
-                return reader.GetFieldNames(IndexReader.FieldOption.ALL).ToArray();
+                return reader.GetFieldNames(IndexReader.FieldOption.ALL).ToList();
             }
             finally {
                 reader.Close();

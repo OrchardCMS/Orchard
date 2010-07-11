@@ -59,14 +59,14 @@ namespace Orchard.Indexing.Services {
 
                 _indexProvider = _indexManager.GetSearchIndexProvider();
                 var updateIndexDocuments = new List<IDocumentIndex>();
-                DateTime lastIndexing;
+                DateTime? lastIndexUtc;
 
                 // Do we need to rebuild the full index (first time module is used, or rebuild index requested) ?
                 if (_indexProvider.IsEmpty(SearchIndexName)) {
                     Logger.Information("Rebuild index started");
 
                     // mark current last task, as we should process older ones (in case of rebuild index only)
-                    lastIndexing = _indexingTaskManager.GetLastTaskDateTime();
+                    lastIndexUtc = _indexingTaskManager.GetLastTaskDateTime();
 
                     // get every existing content item to index it
                     foreach (var contentItem in _contentManager.Query(VersionOptions.Published).List()) {
@@ -91,15 +91,15 @@ namespace Orchard.Indexing.Services {
                 }
                 else {
                     // retrieve last processed index time
-                    lastIndexing = _indexProvider.GetLastIndexUtc(SearchIndexName);
+                    lastIndexUtc = _indexProvider.GetLastIndexUtc(SearchIndexName);
                 }
 
                 _indexProvider.SetLastIndexUtc(SearchIndexName, _clock.UtcNow);
 
                 // retrieve not yet processed tasks
-                var taskRecords = lastIndexing == DateTime.MinValue
+                var taskRecords = lastIndexUtc == null
                     ? _repository.Fetch(x => true).ToArray()
-                    : _repository.Fetch(x => x.CreatedUtc > lastIndexing).ToArray();
+                    : _repository.Fetch(x => x.CreatedUtc > lastIndexUtc).ToArray();
 
 
                 // nothing to do ?

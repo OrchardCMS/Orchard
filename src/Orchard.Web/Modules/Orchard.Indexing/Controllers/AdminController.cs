@@ -18,9 +18,9 @@ namespace Orchard.Indexing.Controllers {
         public Localizer T { get; set; }
 
         public ActionResult Index() {
-            var viewModel = new IndexViewModel {HasIndexToManage = _indexingService.HasIndexToManage, IndexUpdatedUtc = _indexingService.GetIndexUpdatedUtc()};
+            var viewModel = new IndexViewModel { IndexEntry = _indexingService.GetIndexEntry() };
 
-            if (!viewModel.HasIndexToManage)
+            if (viewModel.IndexEntry == null)
                 Services.Notifier.Information(T("There is no search index to manage for this site."));
 
             return View(viewModel);
@@ -28,7 +28,7 @@ namespace Orchard.Indexing.Controllers {
 
         [HttpPost]
         public ActionResult Update() {
-            if ( !Services.Authorizer.Authorize(Permissions.ManageSearchIndex, T("Not allowed to manage the search index.")) )
+            if (!Services.Authorizer.Authorize(Permissions.ManageSearchIndex, T("Not allowed to manage the search index.")))
                 return new HttpUnauthorizedResult();
 
             _indexingService.UpdateIndex();
@@ -38,7 +38,7 @@ namespace Orchard.Indexing.Controllers {
 
         [HttpPost]
         public ActionResult Rebuild() {
-            if ( !Services.Authorizer.Authorize(Permissions.ManageSearchIndex, T("Not allowed to manage the search index.")) )
+            if (!Services.Authorizer.Authorize(Permissions.ManageSearchIndex, T("Not allowed to manage the search index.")))
                 return new HttpUnauthorizedResult();
 
             _indexingService.RebuildIndex();
