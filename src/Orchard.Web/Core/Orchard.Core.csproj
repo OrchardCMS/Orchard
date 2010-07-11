@@ -82,11 +82,16 @@
     <Compile Include="Contents\ViewModels\EditItemViewModel.cs" />
     <Compile Include="Contents\ViewModels\ListContentsViewModel.cs" />
     <Compile Include="Contents\ViewModels\ListContentTypesViewModel.cs" />
+    <Compile Include="Reports\AdminMenu.cs" />
+    <Compile Include="Reports\Controllers\AdminController.cs" />
+    <Compile Include="Reports\Routes.cs" />
     <Compile Include="Localization\Controllers\AdminController.cs" />
     <Compile Include="Localization\DataMigrations\LocalizationDataMigration.cs" />
     <Compile Include="Localization\ViewModels\ContentTranslationsViewModel.cs" />
     <Compile Include="Localization\Drivers\LocalizationDriver.cs" />
     <Compile Include="Navigation\DataMigrations\NavigationDataMigration.cs" />
+    <Compile Include="Reports\ViewModels\DisplayReportViewModel.cs" />
+    <Compile Include="Reports\ViewModels\ReportsAdminIndexViewModel.cs" />
     <Compile Include="Routable\Controllers\ItemController.cs" />
     <Compile Include="Routable\Drivers\RoutableDriver.cs" />
     <Compile Include="Routable\Handlers\RoutableHandler.cs" />
@@ -234,6 +239,9 @@
     <Content Include="Contents\Views\EditorTemplates\Items\Contents.Item.ascx" />
     <Content Include="Contents\Views\Item\Preview.aspx" />
     <Content Include="Contents\Views\Item\Display.aspx" />
+    <Content Include="Reports\Module.txt" />
+    <Content Include="Reports\Views\Admin\Display.aspx" />
+    <Content Include="Reports\Views\Admin\Index.aspx" />
     <Content Include="Localization\Module.txt" />
     <Content Include="Localization\Views\Admin\Translate.ascx" />
     <Content Include="Localization\Views\DisplayTemplates\Parts\Localization.ContentTranslations.SummaryAdmin.ascx" />
@@ -300,6 +308,7 @@
     <Content Include="Contents\Views\Web.config" />
     <Content Include="Routable\Views\Web.config" />
     <Content Include="Localization\Views\Web.config" />
+    <Content Include="Reports\Views\Web.config" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />
