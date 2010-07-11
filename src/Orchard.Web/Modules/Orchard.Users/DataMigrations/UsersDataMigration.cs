@@ -12,6 +12,7 @@ namespace Orchard.Users.DataMigrations {
                 .Column<string>("NormalizedUserName")
                 .Column<string>("Password")
                 .Column<string>("PasswordFormat")
+                .Column<string>("HashAlgorithm")
                 .Column<string>("PasswordSalt")
                 );
 
