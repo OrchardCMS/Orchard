@@ -27,16 +27,16 @@ namespace Orchard.Modules.Commands {
                 Context.Output.WriteLine(T("List of available features"));
                 Context.Output.WriteLine(T("--------------------------"));
 
-                var categories = _moduleService.GetAvailableFeatures().GroupBy(f => f.Descriptor.Category);
+                var categories = _moduleService.GetAvailableFeatures().ToList().GroupBy(f => f.Descriptor.Category);
                 foreach (var category in categories) {
-                    Context.Output.WriteLine(T("{0}", category.Key.OrDefault("General")));
+                    Context.Output.WriteLine(T("Category: {0}", category.Key.OrDefault(T("General"))));
                     foreach (var feature in category.OrderBy(f => f.Descriptor.Name)) {
-                        Context.Output.WriteLine(T("  {0}", feature.Descriptor.Name));
+                        Context.Output.WriteLine(T("  Name: {0}", feature.Descriptor.Name));
                         Context.Output.WriteLine(T("    State:         {0}", feature.IsEnabled ? T("Enabled") : T("Disabled")));
-                        Context.Output.WriteLine(T("    Description:   {0}", feature.Descriptor.Description.OrDefault("<none>")));
-                        Context.Output.WriteLine(T("    Category:      {0}", feature.Descriptor.Category.OrDefault("<none>")));
-                        Context.Output.WriteLine(T("    Module:        {0}", feature.Descriptor.Extension.Name.OrDefault("<none>")));
-                        Context.Output.WriteLine(T("    Dependencies:  {0}", feature.Descriptor.Dependencies == null ? "<none>" : string.Join(",", feature.Descriptor.Dependencies).OrDefault("<none>")));
+                        Context.Output.WriteLine(T("    Description:   {0}", feature.Descriptor.Description.OrDefault(T("<none>"))));
+                        Context.Output.WriteLine(T("    Category:      {0}", feature.Descriptor.Category.OrDefault(T("<none>"))));
+                        Context.Output.WriteLine(T("    Module:        {0}", feature.Descriptor.Extension.Name.OrDefault(T("<none>"))));
+                        Context.Output.WriteLine(T("    Dependencies:  {0}", string.Join(", ", feature.Descriptor.Dependencies).OrDefault(T("<none>"))));
                     }
                 }
             }
