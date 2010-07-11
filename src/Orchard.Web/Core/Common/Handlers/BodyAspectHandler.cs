@@ -8,6 +8,10 @@ namespace Orchard.Core.Common.Handlers {
     public class BodyAspectHandler : ContentHandler {       
         public BodyAspectHandler(IRepository<BodyRecord> bodyRepository) {
             Filters.Add(StorageFilter.For(bodyRepository));
+
+            OnIndexing<BodyAspect>((context, bodyAspect) => context.DocumentIndex
+                                                                .Add("body", bodyAspect.Record.Text).RemoveTags().Analyze()
+                                                                .Add("format", bodyAspect.Record.Format).Store());
         }
     }
 }

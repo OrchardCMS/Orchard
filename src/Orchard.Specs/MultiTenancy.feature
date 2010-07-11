@@ -7,7 +7,7 @@ Scenario: Default site is listed
 	Given I have installed Orchard
 		And I have installed "Orchard.MultiTenancy"
 	When I go to "Admin/MultiTenancy"
-	Then I should see "List of Site's Tenants"
+	Then I should see "List of Site&#39;s Tenants"
 		And I should see "<span class="tenantName">Default</span>"
 		And the status should be 200 OK
 

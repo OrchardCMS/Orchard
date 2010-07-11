@@ -7,7 +7,7 @@ namespace Orchard.Comments.Drivers {
     [UsedImplicitly]
     public class CommentDriver : ContentItemDriver<Comment> {
         public readonly static ContentType ContentType = new ContentType {
-                                                                             Name = "comment",
+                                                                             Name = "Comment",
                                                                              DisplayName = "Comment"
                                                                          };
 

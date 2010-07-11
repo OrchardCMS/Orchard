@@ -9,6 +9,7 @@ namespace Orchard.Blogs.Models {
 
         public string Name {
             get { return this.As<RoutableAspect>().Title; }
+            set { this.As<RoutableAspect>().Title = value; }
         }
 
         //TODO: (erikpo) Need a data type for slug

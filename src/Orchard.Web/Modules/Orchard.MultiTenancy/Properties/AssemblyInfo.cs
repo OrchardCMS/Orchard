@@ -8,9 +8,9 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("Orchard.MultiTenancy")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("MSIT")]
-[assembly: AssemblyProduct("Orchard.MultiTenancy")]
-[assembly: AssemblyCopyright("Copyright © MSIT 2010")]
+[assembly: AssemblyCompany("")]
+[assembly: AssemblyProduct("Orchard")]
+[assembly: AssemblyCopyright("Copyright © CodePlex Foundation 2009")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

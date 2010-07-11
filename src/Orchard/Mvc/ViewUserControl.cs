@@ -21,13 +21,6 @@ namespace Orchard.Mvc {
             return MvcHtmlString.Create(Html.Encode(value));
         }
 
-        public MvcHtmlString _Encoded(string textHint) {
-            return MvcHtmlString.Create(Html.Encode(T(textHint)));
-        }
-        public MvcHtmlString _Encoded(string textHint, params object[] formatTokens) {
-            return MvcHtmlString.Create(Html.Encode(T(textHint, formatTokens)));
-        }
-
         public bool AuthorizedFor(Permission permission) {
             return Html.Resolve<IAuthorizer>().Authorize(permission);
         }

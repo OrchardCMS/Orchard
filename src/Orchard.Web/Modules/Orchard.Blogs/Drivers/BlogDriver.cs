@@ -20,7 +20,7 @@ namespace Orchard.Blogs.Drivers {
         public IOrchardServices Services { get; set; }
 
         public readonly static ContentType ContentType = new ContentType {
-                                                                             Name = "blog",
+                                                                             Name = "Blog",
                                                                              DisplayName = "Blog"
                                                                          };
 
@@ -36,7 +36,7 @@ namespace Orchard.Blogs.Drivers {
             T = NullLocalizer.Instance;
         }
 
-        private Localizer T { get; set; }
+        public Localizer T { get; set; }
 
         protected override ContentType GetContentType() {
             return ContentType;

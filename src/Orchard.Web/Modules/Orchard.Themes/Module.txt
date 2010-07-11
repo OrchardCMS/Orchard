@@ -4,6 +4,7 @@ author: The Orchard Team
 website: http://orchardproject.net
 version: 0.1
 orchardversion: 0.1.2010.0312
+description: The themes module makes it possible for Orchard applications to customize the look and feel of an Orchard web site.
 features:
     Orchard.Themes:
         Description: Basic theming capability.

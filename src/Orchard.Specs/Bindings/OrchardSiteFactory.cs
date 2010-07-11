@@ -2,8 +2,8 @@
 using System.Linq;
 using System.Text;
 using Orchard.Environment.Configuration;
-using Orchard.Environment.Topology;
-using Orchard.Environment.Topology.Models;
+using Orchard.Environment.Descriptor;
+using Orchard.Environment.Descriptor.Models;
 using Orchard.Specs.Hosting.Orchard.Web;
 using TechTalk.SpecFlow;
 
@@ -44,7 +44,7 @@ namespace Orchard.Specs.Bindings {
                     var descriptor = descriptorManager.GetShellDescriptor();
                     descriptorManager.UpdateShellDescriptor(
                         descriptor.SerialNumber,
-                        descriptor.EnabledFeatures.Concat(new[] { new ShellFeature { Name = name } }),
+                        descriptor.Features.Concat(new[] { new ShellFeature { Name = name } }),
                         descriptor.Parameters);
                 }
             });

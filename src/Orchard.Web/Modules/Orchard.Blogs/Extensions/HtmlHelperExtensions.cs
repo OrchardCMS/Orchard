@@ -2,24 +2,25 @@ using System.Web.Mvc;
 using Orchard.Blogs.Models;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Aspects;
+using Orchard.Localization;
 using Orchard.Mvc.Html;
 
 namespace Orchard.Blogs.Extensions {
     public static class HtmlHelperExtensions {
-        public static string PublishedState(this HtmlHelper<BlogPost> htmlHelper) {
-            return htmlHelper.PublishedState(htmlHelper.ViewData.Model);
+        public static LocalizedString PublishedState(this HtmlHelper<BlogPost> htmlHelper, Localizer T) {
+            return htmlHelper.PublishedState(htmlHelper.ViewData.Model, T);
         }
 
-        public static string PublishedState(this HtmlHelper htmlHelper, BlogPost blogPost) {
-            return htmlHelper.DateTime(blogPost.As<ICommonAspect>().VersionPublishedUtc, "Draft");
+        public static LocalizedString PublishedState(this HtmlHelper htmlHelper, BlogPost blogPost, Localizer T) {
+            return htmlHelper.DateTime(blogPost.As<ICommonAspect>().VersionPublishedUtc, T("Draft"));
         }
 
-        public static string PublishedWhen(this HtmlHelper<BlogPost> htmlHelper) {
-            return htmlHelper.PublishedWhen(htmlHelper.ViewData.Model);
+        public static LocalizedString PublishedWhen(this HtmlHelper<BlogPost> htmlHelper, Localizer T) {
+            return htmlHelper.PublishedWhen(htmlHelper.ViewData.Model, T);
         }
 
-        public static string PublishedWhen(this HtmlHelper htmlHelper, BlogPost blogPost) {
-            return htmlHelper.DateTimeRelative(blogPost.As<ICommonAspect>().VersionPublishedUtc, "as a Draft");
+        public static LocalizedString PublishedWhen(this HtmlHelper htmlHelper, BlogPost blogPost, Localizer T) {
+            return htmlHelper.DateTimeRelative(blogPost.As<ICommonAspect>().VersionPublishedUtc, T("as a Draft"), T);
         }
     }
 }

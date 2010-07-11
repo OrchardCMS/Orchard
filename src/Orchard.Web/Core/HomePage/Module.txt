@@ -4,6 +4,7 @@ author: The Orchard Team
 website: http://orchardproject.net
 version: 0.1
 orchardversion: 0.1.2010.0312
+description: The HomePage module enables the promotion of a content item or container to be the home page of the site.
 features:
     HomePage:
         Description: Standard site home page that allows a specified content type or container to *be* the home page.

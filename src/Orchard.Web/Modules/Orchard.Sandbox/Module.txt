@@ -4,6 +4,7 @@ author: The Orchard Team
 website: http://orchardproject.net
 version: 0.1
 orchardversion: 0.1.2010.0312
+description: The sandbox module is a testing ground for Orchard developers and should not be activated except for testing and development purposes.
 features:
     Orchard.Sandbox:
         Description: A module to mess around with. Currently wiki-like.

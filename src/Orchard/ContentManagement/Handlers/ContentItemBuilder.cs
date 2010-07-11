@@ -1,9 +1,17 @@
-﻿namespace Orchard.ContentManagement.Handlers {
+﻿using System.Linq;
+using Orchard.ContentManagement.MetaData.Models;
+
+namespace Orchard.ContentManagement.Handlers {
     public class ContentItemBuilder {
+        private readonly ContentTypeDefinition _definition;
         private readonly ContentItem _item;
 
-        public ContentItemBuilder(string contentType) {
-            _item = new ContentItem { ContentType = contentType };
+        public ContentItemBuilder(ContentTypeDefinition definition) {
+            _definition = definition;
+            _item = new ContentItem {
+                ContentType = definition.Name,
+                TypeDefinition = definition
+            };
         }
 
         public ContentItem Build() {
@@ -11,8 +19,19 @@
         }
 
         public ContentItemBuilder Weld<TPart>() where TPart : ContentPart, new() {
-            var part = new TPart();
-            _item.Weld(part);
+            var partName = typeof(TPart).Name;
+
+            var typePartDefinition = _definition.Parts.FirstOrDefault(p => p.PartDefinition.Name == partName);
+            if (typePartDefinition == null) {
+                typePartDefinition = new ContentTypeDefinition.Part(
+                    new ContentPartDefinition(partName),
+                    new SettingsDictionary());
+
+                var part = new TPart {
+                    TypePartDefinition = typePartDefinition
+                };
+                _item.Weld(part);
+            }
             return this;
         }
 
@@ -20,6 +39,5 @@
             _item.Weld(contentPart);
             return this;
         }
-
     }
 }

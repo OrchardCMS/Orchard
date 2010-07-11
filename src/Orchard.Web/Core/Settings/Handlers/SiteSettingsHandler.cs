@@ -7,7 +7,7 @@ namespace Orchard.Core.Settings.Handlers {
     [UsedImplicitly]
     public class SiteSettingsHandler : ContentHandler {
         public SiteSettingsHandler(IRepository<SiteSettingsRecord> repository){
-            Filters.Add(new ActivatingFilter<SiteSettings>("site"));
+            Filters.Add(new ActivatingFilter<SiteSettings>("Site"));
             Filters.Add(StorageFilter.For(repository));
         }
     }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -7,11 +8,9 @@ using Orchard.Logging;
 
 namespace Orchard.Events {
     public class DefaultOrchardEventBus : IEventBus {
-        private readonly Func<IEnumerable<IEventBusHandler>> _handlers;
         private readonly Func<IEnumerable<IEventHandler>> _eventHandlers;
 
-        public DefaultOrchardEventBus(Func<IEnumerable<IEventBusHandler>> handlers, Func<IEnumerable<IEventHandler>> eventHandlers) {
-            _handlers = handlers;
+        public DefaultOrchardEventBus(Func<IEnumerable<IEventHandler>> eventHandlers) {
             _eventHandlers = eventHandlers;
             Logger = NullLogger.Instance;
             T = NullLocalizer.Instance;
@@ -20,13 +19,13 @@ namespace Orchard.Events {
         public ILogger Logger { get; set; }
         public Localizer T { get; set; }
 
-        #region Implementation of IEventBus
 
-        public void Notify_Obsolete(string messageName, IDictionary<string, string> eventData) {
-            _handlers().Invoke(handler => handler.Process(messageName, eventData), Logger);
+        public IEnumerable Notify(string messageName, IDictionary<string, object> eventData) {
+            // call ToArray to ensure evaluation has taken place
+            return NotifyHandlers(messageName, eventData).ToArray();
         }
 
-        public void Notify(string messageName, IDictionary<string, object> eventData) {
+        private IEnumerable<object> NotifyHandlers(string messageName, IDictionary<string, object> eventData) {
             string[] parameters = messageName.Split('.');
             if (parameters.Length != 2) {
                 throw new ArgumentException(messageName + T(" is not formatted correctly"));
@@ -36,40 +35,61 @@ namespace Orchard.Events {
 
             var eventHandlers = _eventHandlers();
             foreach (var eventHandler in eventHandlers) {
-                try {
-                    TryInvoke(eventHandler, interfaceName, methodName, eventData);
-                }
-                catch(Exception ex) {
-                        Logger.Error(ex, "{2} thrown from {0} by {1}",
-                            interfaceName + "." +methodName,
-                            eventHandler.GetType().FullName,
-                            ex.GetType().Name);
+                IEnumerable returnValue;
+                if (TryNotifyHandler(eventHandler, messageName, interfaceName, methodName, eventData, out returnValue)) {
+                    if (returnValue != null) {
+                        foreach (var value in returnValue) {
+                            yield return value;
+                        }
+                    }
                 }
             }
         }
 
-        private static void TryInvoke(IEventHandler eventHandler, string interfaceName, string methodName, IDictionary<string, object> arguments) {
+        private bool TryNotifyHandler(IEventHandler eventHandler, string messageName, string interfaceName, string methodName, IDictionary<string, object> eventData, out IEnumerable returnValue) {
+            try {
+                return TryInvoke(eventHandler, interfaceName, methodName, eventData, out returnValue);
+            }
+            catch (Exception ex) {
+                Logger.Error(ex, "{2} thrown from {0} by {1}",
+                             messageName,
+                             eventHandler.GetType().FullName,
+                             ex.GetType().Name);
+
+                returnValue = null;
+                return false;
+            }
+        }
+
+        private static bool TryInvoke(IEventHandler eventHandler, string interfaceName, string methodName, IDictionary<string, object> arguments, out IEnumerable returnValue) {
             Type type = eventHandler.GetType();
             foreach (var interfaceType in type.GetInterfaces()) {
                 if (String.Equals(interfaceType.Name, interfaceName, StringComparison.OrdinalIgnoreCase)) {
-                    TryInvokeMethod(eventHandler, interfaceType, methodName, arguments);
-                    break;
+                    return TryInvokeMethod(eventHandler, interfaceType, methodName, arguments, out returnValue);
                 }
             }
+            returnValue = null;
+            return false;
         }
 
-        private static void TryInvokeMethod(IEventHandler eventHandler, Type interfaceType, string methodName, IDictionary<string, object> arguments) {
+        private static bool TryInvokeMethod(IEventHandler eventHandler, Type interfaceType, string methodName, IDictionary<string, object> arguments, out IEnumerable returnValue) {
             MethodInfo method = GetMatchingMethod(eventHandler, interfaceType, methodName, arguments);
             if (method != null) {
                 List<object> parameters = new List<object>();
                 foreach (var methodParameter in method.GetParameters()) {
                     parameters.Add(arguments[methodParameter.Name]);
                 }
-                method.Invoke(eventHandler, parameters.ToArray());
+                var result = method.Invoke(eventHandler, parameters.ToArray());
+                returnValue = result as IEnumerable;
+                if (returnValue == null && result != null)
+                    returnValue = new[] { result };
+                return true;
             }
+            returnValue = null;
+            return false;
         }
 
-        private static MethodInfo GetMatchingMethod(IEventHandler eventHandler, Type interfaceType, string methodName, IDictionary<string, object> arguments) {            
+        private static MethodInfo GetMatchingMethod(IEventHandler eventHandler, Type interfaceType, string methodName, IDictionary<string, object> arguments) {
             List<MethodInfo> allMethods = new List<MethodInfo>(interfaceType.GetMethods());
             List<MethodInfo> candidates = new List<MethodInfo>(allMethods);
 
@@ -95,6 +115,5 @@ namespace Orchard.Events {
             return null;
         }
 
-        #endregion
     }
 }

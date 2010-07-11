@@ -8,10 +8,13 @@ namespace Orchard.Core.Common.Models {
     public class CommonAspect : ContentPart<CommonRecord>, ICommonAspect {
         private readonly LazyField<IUser> _owner = new LazyField<IUser>();
         private readonly LazyField<IContent> _container = new LazyField<IContent>();
+        private readonly LazyField<DateTime?> _scheduledPublishUtc = new LazyField<DateTime?>();
 
         public LazyField<IUser> OwnerField { get { return _owner; } }
 
         public LazyField<IContent> ContainerField { get { return _container; } }
+
+        public LazyField<DateTime?> ScheduledPublishUtc { get { return _scheduledPublishUtc; } }
 
         public IUser Owner {
             get { return _owner.Value; }

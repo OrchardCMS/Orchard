@@ -10,7 +10,7 @@ namespace Orchard.Sandbox.Handlers {
     [UsedImplicitly]
     public class SandboxContentHandler : ContentHandler {
         public SandboxContentHandler(IRepository<SandboxPageRecord> pageRepository, IRepository<SandboxSettingsRecord> settingsRepository) {
-            // define the "sandboxpage" content type
+            // define the "SandboxPage" content type
             Filters.Add(new ActivatingFilter<SandboxPage>(SandboxPageDriver.ContentType.Name));
             Filters.Add(new ActivatingFilter<CommonAspect>(SandboxPageDriver.ContentType.Name));
             Filters.Add(new ActivatingFilter<RoutableAspect>(SandboxPageDriver.ContentType.Name));
@@ -18,7 +18,7 @@ namespace Orchard.Sandbox.Handlers {
             Filters.Add(StorageFilter.For(pageRepository) );
 
             // add settings to site, and simple record-template gui
-            Filters.Add(new ActivatingFilter<ContentPart<SandboxSettingsRecord>>("site"));
+            Filters.Add(new ActivatingFilter<ContentPart<SandboxSettingsRecord>>("Site"));
             Filters.Add(StorageFilter.For(settingsRepository));
             Filters.Add(new TemplateFilterForRecord<SandboxSettingsRecord>("SandboxSettings", "Parts/Sandbox.SiteSettings"));
         }

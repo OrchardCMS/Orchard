@@ -33,6 +33,5 @@ namespace Orchard.Utility.Extensions {
         public static string ToUrlString(this HttpRequest request) {
             return string.Format("{0}://{1}{2}", request.Url.Scheme, request.Headers["Host"], request.RawUrl);
         }
-
     }
 }

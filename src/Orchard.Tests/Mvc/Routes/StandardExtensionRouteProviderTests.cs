@@ -1,12 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using System.Web.Routing;
 using NUnit.Framework;
-using Orchard.Environment.Extensions;
 using Orchard.Environment.Extensions.Models;
-using Orchard.Environment.Topology.Models;
+using Orchard.Environment.Descriptor.Models;
+using Orchard.Environment.ShellBuilders.Models;
 using Orchard.Mvc.Routes;
 
 namespace Orchard.Tests.Mvc.Routes {
@@ -14,9 +12,9 @@ namespace Orchard.Tests.Mvc.Routes {
     public class StandardExtensionRouteProviderTests {
         [Test]
         public void ExtensionDisplayNameShouldBeUsedInBothStandardRoutes() {
-            var topology = new ShellTopology {
+            var blueprint = new ShellBlueprint {
                 Controllers = new[] {
-                    new ControllerTopology {
+                    new ControllerBlueprint {
                         AreaName ="Long.Name.Foo",
                         Feature =new Feature {
                             Descriptor=new FeatureDescriptor {
@@ -26,7 +24,7 @@ namespace Orchard.Tests.Mvc.Routes {
                             }
                         }
                     },
-                    new ControllerTopology {
+                    new ControllerBlueprint {
                         AreaName ="Long.Name.Bar",
                         Feature =new Feature {
                             Descriptor=new FeatureDescriptor {
@@ -38,7 +36,7 @@ namespace Orchard.Tests.Mvc.Routes {
                     }
                 }
             };
-            var routeProvider = new StandardExtensionRouteProvider(topology);
+            var routeProvider = new StandardExtensionRouteProvider(blueprint);
 
             var routes = new List<RouteDescriptor>();
             routeProvider.GetRoutes(routes);
@@ -57,39 +55,6 @@ namespace Orchard.Tests.Mvc.Routes {
             Assert.That(fooRoute.DataTokens["area"], Is.EqualTo("Long.Name.Foo"));
             Assert.That(barAdmin.DataTokens["area"], Is.EqualTo("Long.Name.Bar"));
             Assert.That(barRoute.DataTokens["area"], Is.EqualTo("Long.Name.Bar"));
-        }
-
-        public class StubExtensionManager : IExtensionManager {
-            public IEnumerable<ExtensionDescriptor> AvailableExtensions() {
-                throw new NotImplementedException();
-            }
-
-            public IEnumerable<Feature> LoadFeatures(IEnumerable<FeatureDescriptor> features) {
-                throw new NotImplementedException();
-            }
-
-            public IEnumerable<ExtensionEntry> ActiveExtensions_Obsolete() {
-                yield return new ExtensionEntry {
-                    Descriptor = new ExtensionDescriptor {
-                        Name = "Long.Name.Foo",
-                        DisplayName = "Foo",
-                    }
-                };
-                yield return new ExtensionEntry {
-                    Descriptor = new ExtensionDescriptor {
-                        Name = "Long.Name.Bar",
-                        DisplayName = "Bar",
-                    }
-                };
-            }
-
-            public void InstallExtension(string extensionType, HttpPostedFileBase extensionBundle) {
-                throw new NotImplementedException();
-            }
-
-            public void UninstallExtension(string extensionType, string extensionName) {
-                throw new NotImplementedException();
-            }
         }
     }
 }

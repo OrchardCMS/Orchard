@@ -9,6 +9,8 @@ using Moq;
 using NUnit.Framework;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Handlers;
+using Orchard.ContentManagement.MetaData.Builders;
+using Orchard.ContentManagement.MetaData.Models;
 using Orchard.Core.Common.Models;
 using Orchard.Core.Feeds;
 using Orchard.Core.Feeds.Controllers;
@@ -145,7 +147,7 @@ namespace Orchard.Core.Tests.Feeds.Controllers {
         [Test]
         public void CorePartValuesAreExtracted() {
             var clock = new StubClock();
-            var hello = new ContentItemBuilder("hello")
+            var hello = new ContentItemBuilder(new ContentTypeDefinitionBuilder().Named("hello").Build())
                 .Weld<CommonAspect>()
                 .Weld<RoutableAspect>()
                 .Weld<BodyAspect>()
@@ -165,7 +167,7 @@ namespace Orchard.Core.Tests.Feeds.Controllers {
 
             var mockContentManager = new Mock<IContentManager>();
             mockContentManager.Setup(x => x.GetItemMetadata(It.IsAny<IContent>()))
-                .Returns(new ContentItemMetadata { DisplayText = "foo" });
+                .Returns(new ContentItemMetadata(hello) { DisplayText = "foo" });
 
             var builder = new ContainerBuilder();
             //builder.RegisterModule(new ImplicitCollectionSupportModule());

@@ -1,12 +1,12 @@
 using System.Linq;
 using JetBrains.Annotations;
-using Orchard.Environment.Extensions;
+using Orchard.Environment;
 using Orchard.Pages.Services;
 using Orchard.Tasks;
 
 namespace Orchard.Pages.Routing {
     [UsedImplicitly]
-    public class PageSlugConstraintUpdator : ExtensionManagerEvents, IBackgroundTask {
+    public class PageSlugConstraintUpdator : IOrchardShellEvents, IBackgroundTask {
         private readonly IPageSlugConstraint _pageSlugConstraint;
         private readonly IPageService _pageService;
 
@@ -15,18 +15,20 @@ namespace Orchard.Pages.Routing {
             _pageService = pageService;
         }
 
-        public override void Activated(ExtensionEventContext context) {
-            if (context.Extension.Descriptor.Name == "Orchard.Pages") {
-                Refresh();
-            }
+        void IOrchardShellEvents.Activated() {
+            Refresh();
         }
 
-        public void Sweep() {
+        void IOrchardShellEvents.Terminating() {
+        }
+
+        void IBackgroundTask.Sweep() {
             Refresh();
         }
 
         private void Refresh() {
             _pageSlugConstraint.SetSlugs(_pageService.Get(PageStatus.Published).Select(p => p.Slug));
         }
+
     }
 }

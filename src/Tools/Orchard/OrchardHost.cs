@@ -7,6 +7,7 @@ using System.Web;
 using System.Web.Hosting;
 using Orchard.Host;
 using Orchard.Parameters;
+using System.Threading;
 
 namespace Orchard {
     class OrchardHost {
@@ -77,12 +78,22 @@ namespace Orchard {
             var orchardDirectory = GetOrchardDirectory(_arguments.WorkingDirectory);
             LogInfo("Orchard root directory: \"{0}\"", orchardDirectory.FullName);
 
+            return CreateHostAndExecute(orchardDirectory);
+        }
+
+        private int CreateHostAndExecute(DirectoryInfo orchardDirectory) {
+            var appManager = ApplicationManager.GetApplicationManager();
+
             LogInfo("Creating ASP.NET AppDomain for command agent...");
-            var host = (CommandHost)CreateWorkerAppDomainWithHost(_arguments.VirtualPath, orchardDirectory.FullName, typeof(CommandHost));
+            var appObject = CreateWorkerAppDomainWithHost(appManager, _arguments.VirtualPath, orchardDirectory.FullName, typeof(CommandHost));
+            var host = (CommandHost)appObject.ObjectInstance;
 
             LogInfo("Executing command in ASP.NET AppDomain...");
             var result = Execute(host);
             LogInfo("Return code for command: {0}", result);
+
+            LogInfo("Shutting down ASP.NET AppDomain...");
+            appManager.ShutdownApplication(appObject.ApplicationId);
 
             return result;
         }
@@ -182,14 +193,13 @@ namespace Orchard {
                 string.Format("Directory \"{0}\" doesn't seem to contain an Orchard installation", new DirectoryInfo(directory).FullName));
         }
 
-        private static object CreateWorkerAppDomainWithHost(string virtualPath, string physicalPath, Type hostType) {
+        private static ApplicationObject CreateWorkerAppDomainWithHost(ApplicationManager appManager, string virtualPath, string physicalPath, Type hostType) {
             // this creates worker app domain in a way that host doesn't need to be in GAC or bin
             // using BuildManagerHost via private reflection
             string uniqueAppString = string.Concat(virtualPath, physicalPath).ToLowerInvariant();
             string appId = (uniqueAppString.GetHashCode()).ToString("x", CultureInfo.InvariantCulture);
 
             // create BuildManagerHost in the worker app domain
-            var appManager = ApplicationManager.GetApplicationManager();
             var buildManagerHostType = typeof(HttpRuntime).Assembly.GetType("System.Web.Compilation.BuildManagerHost");
             var buildManagerHost = appManager.CreateObject(appId, buildManagerHostType, virtualPath, physicalPath, false);
 
@@ -202,7 +212,9 @@ namespace Orchard {
                 new object[] { hostType.Assembly.FullName, hostType.Assembly.Location });
 
             // create Host in the worker app domain
-            return appManager.CreateObject(appId, hostType, virtualPath, physicalPath, false);
+            return new ApplicationObject { 
+                ApplicationId = appId, 
+                ObjectInstance = appManager.CreateObject(appId, hostType, virtualPath, physicalPath, false) };
         }
     }
 }

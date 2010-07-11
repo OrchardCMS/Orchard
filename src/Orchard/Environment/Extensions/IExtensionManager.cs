@@ -8,8 +8,5 @@ namespace Orchard.Environment.Extensions {
         IEnumerable<Feature> LoadFeatures(IEnumerable<FeatureDescriptor> featureDescriptors);
         void InstallExtension(string extensionType, HttpPostedFileBase extensionBundle);
         void UninstallExtension(string extensionType, string extensionName);
-
-        // Used by the HackInstallationGenerator and will be removed along with it.
-        IEnumerable<ExtensionEntry> ActiveExtensions_Obsolete();
     }
 }

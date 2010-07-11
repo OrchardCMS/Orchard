@@ -7,12 +7,12 @@ namespace Orchard.Media.Handlers {
     [UsedImplicitly]
     public class MediaSettingsHandler : ContentHandler {
         public MediaSettingsHandler(IRepository<MediaSettingsRecord> repository) {
-            Filters.Add(new ActivatingFilter<MediaSettings>("site"));
+            Filters.Add(new ActivatingFilter<MediaSettings>("Site"));
             Filters.Add(StorageFilter.For(repository) );
-            OnActivated<MediaSettings>(DefaultSettings);
+            OnInitializing<MediaSettings>(DefaultSettings);
         }
 
-        private static void DefaultSettings(ActivatedContentContext context, MediaSettings settings) {
+        private static void DefaultSettings(InitializingContentContext context, MediaSettings settings) {
             settings.Record.RootMediaFolder = "~/Media";
         }
     }

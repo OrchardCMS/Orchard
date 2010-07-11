@@ -1,4 +1,5 @@
 ﻿using NUnit.Framework;
+using Orchard.Localization;
 using Orchard.Utility.Extensions;
 
 namespace Orchard.Tests.Utility.Extensions {
@@ -27,16 +28,16 @@ namespace Orchard.Tests.Utility.Extensions {
         [Test]
         public void OrDefault_ReturnsDefaultForNull() {
             const string s = null;
-            Assert.That(s.OrDefault("test"), Is.SameAs("test"));
+            Assert.That(s.OrDefault(new LocalizedString("test")), Is.SameAs("test"));
         }
         [Test]
         public void OrDefault_ReturnsDefault() {
-            Assert.That("".OrDefault("test"), Is.SameAs("test"));
+            Assert.That("".OrDefault(new LocalizedString("test")), Is.SameAs("test"));
         }
 
         [Test]
         public void OrDefault_ReturnsString() {
-            Assert.That("bar".OrDefault("test"), Is.SameAs("bar"));
+            Assert.That("bar".OrDefault(new LocalizedString("test")), Is.SameAs("bar"));
         }
         [Test]
         public void IsNullOrEmptyTrimmed_EmptyStringReturnsTrue() {

@@ -1,4 +1,5 @@
 ﻿using System.Text.RegularExpressions;
+using Orchard.Localization;
 
 namespace Orchard.Utility.Extensions {
     public static class StringExtensions {
@@ -24,10 +25,17 @@ namespace Orchard.Utility.Extensions {
                 || string.IsNullOrEmpty(text.Trim());
         }
 
-        public static string OrDefault(this string text, string defaultValue) {
+        public static LocalizedString OrDefault(this string text, LocalizedString defaultValue) {
             return string.IsNullOrEmpty(text)
                 ? defaultValue
-                : text;
+                : new LocalizedString(text);
+        }
+
+        public static string RemoveTags(this string html) {
+            var tagRegex = new Regex("<[^<>]*>", RegexOptions.Singleline);
+            var text = tagRegex.Replace(html, "");
+
+            return text;
         }
     }
 }

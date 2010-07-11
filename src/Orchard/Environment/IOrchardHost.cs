@@ -1,4 +1,5 @@
 using Orchard.Environment.Configuration;
+using Orchard.Environment.Descriptor.Models;
 
 namespace Orchard.Environment {
     public interface IOrchardHost {

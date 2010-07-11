@@ -1,20 +1,24 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Configuration;
 using System.IO;
 using System.Web.Hosting;
 using Autofac;
 using Autofac.Configuration;
-using Autofac.Integration.Web;
 using Orchard.Caching;
 using Orchard.Environment.AutofacUtil;
 using Orchard.Environment.Configuration;
 using Orchard.Environment.Extensions;
+using Orchard.Environment.Extensions.Compilers;
 using Orchard.Environment.Extensions.Folders;
 using Orchard.Environment.Extensions.Loaders;
 using Orchard.Environment.ShellBuilders;
-using Orchard.Environment.Topology;
+using Orchard.Environment.State;
+using Orchard.Environment.Descriptor;
 using Orchard.Events;
 using Orchard.FileSystems.AppData;
+using Orchard.FileSystems.Dependencies;
+using Orchard.FileSystems.VirtualPath;
 using Orchard.FileSystems.WebSite;
 using Orchard.Logging;
 using Orchard.Services;
@@ -30,10 +34,20 @@ namespace Orchard.Environment {
             // a single default host implementation is needed for bootstrapping a web app domain
             builder.RegisterType<DefaultOrchardEventBus>().As<IEventBus>().SingleInstance();
             builder.RegisterType<DefaultCacheHolder>().As<ICacheHolder>().SingleInstance();
+            builder.RegisterType<DefaultHostEnvironment>().As<IHostEnvironment>().SingleInstance();
+            builder.RegisterType<DefaultBuildManager>().As<IBuildManager>().SingleInstance();
+            builder.RegisterType<WebFormVirtualPathProvider>().As<ICustomVirtualPathProvider>().SingleInstance();
+            builder.RegisterType<AppDataFolderRoot>().As<IAppDataFolderRoot>().SingleInstance();
+            builder.RegisterType<DefaultExtensionCompiler>().As<IExtensionCompiler>().SingleInstance();
+            builder.RegisterType<DefaultProjectFileParser>().As<IProjectFileParser>().SingleInstance();
 
             RegisterVolatileProvider<WebSiteFolder, IWebSiteFolder>(builder);
             RegisterVolatileProvider<AppDataFolder, IAppDataFolder>(builder);
             RegisterVolatileProvider<Clock, IClock>(builder);
+            RegisterVolatileProvider<DefaultDependenciesFolder, IDependenciesFolder>(builder);
+            RegisterVolatileProvider<DefaultAssemblyProbingFolder, IAssemblyProbingFolder>(builder);
+            RegisterVolatileProvider<DefaultVirtualPathMonitor, IVirtualPathMonitor>(builder);
+            RegisterVolatileProvider<DefaultVirtualPathProvider, IVirtualPathProvider>(builder);
 
             builder.RegisterType<DefaultOrchardHost>().As<IOrchardHost>().As<IEventHandler>().SingleInstance();
             {
@@ -47,6 +61,7 @@ namespace Orchard.Environment {
                         .As<ICompositionStrategy>()
                         .SingleInstance();
                     {
+                        builder.RegisterType<ExtensionLoaderCoordinator>().As<IExtensionLoaderCoordinator>().SingleInstance();
                         builder.RegisterType<ExtensionManager>().As<IExtensionManager>().SingleInstance();
                         {
                             builder.RegisterType<ModuleFolders>().As<IExtensionFolders>()
@@ -63,12 +78,15 @@ namespace Orchard.Environment {
                             builder.RegisterType<CoreExtensionLoader>().As<IExtensionLoader>().SingleInstance();
                             builder.RegisterType<ReferencedExtensionLoader>().As<IExtensionLoader>().SingleInstance();
                             builder.RegisterType<PrecompiledExtensionLoader>().As<IExtensionLoader>().SingleInstance();
+                            builder.RegisterType<ProbingExtensionLoader>().As<IExtensionLoader>().SingleInstance();
                             builder.RegisterType<DynamicExtensionLoader>().As<IExtensionLoader>().SingleInstance();
                         }
                     }
 
                     builder.RegisterType<ShellContainerFactory>().As<IShellContainerFactory>().SingleInstance();
                 }
+
+                builder.RegisterType<DefaultProcessingEngine>().As<IProcessingEngine>().SingleInstance();
             }
 
             builder.RegisterType<RunningShellTable>().As<IRunningShellTable>().SingleInstance();
@@ -97,7 +115,20 @@ namespace Orchard.Environment {
                 .As<IContainer>()
                 .InstancePerMatchingLifetimeScope("shell");
 
-            return builder.Build();
+            var container = builder.Build();
+
+            //
+            // Register Virtual Path Providers
+            //
+            if (HostingEnvironment.IsHosted) {
+                foreach (var vpp in container.Resolve<IEnumerable<ICustomVirtualPathProvider>>()) {
+                    HostingEnvironment.RegisterVirtualPathProvider(vpp.Instance);
+                }
+            }
+
+            OrchardHostContainerRegistry.RegisterHostContainer(new DefaultOrchardHostContainer(container));
+
+            return container;
         }
 
         private static void RegisterVolatileProvider<TRegister, TService>(ContainerBuilder builder) where TService : IVolatileProvider {

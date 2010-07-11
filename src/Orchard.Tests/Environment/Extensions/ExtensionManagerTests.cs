@@ -1,14 +1,16 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using Autofac;
 using NUnit.Framework;
+using Orchard.Caching;
 using Orchard.Environment.Extensions;
 using Orchard.Environment.Extensions.Folders;
 using Orchard.Environment.Extensions.Loaders;
 using Orchard.Environment.Extensions.Models;
+using Orchard.FileSystems.Dependencies;
 using Orchard.Tests.Extensions.ExtensionTypes;
-using Yaml.Grammar;
 
 namespace Orchard.Tests.Environment.Extensions {
     [TestFixture]
@@ -35,7 +37,7 @@ namespace Orchard.Tests.Environment.Extensions {
             public IDictionary<string, string> Manifests { get; set; }
 
             public IEnumerable<ExtensionDescriptor> AvailableExtensions() {
-                foreach(var e in Manifests) {
+                foreach (var e in Manifests) {
                     string name = e.Key;
                     var parseResult = ExtensionFolders.ParseManifest(Manifests[name]);
                     yield return ExtensionFolders.GetDescriptorForExtension("~/", name, "Module", parseResult);
@@ -50,8 +52,60 @@ namespace Orchard.Tests.Environment.Extensions {
                 get { return 1; }
             }
 
+            public string Name {
+                get { throw new NotImplementedException(); }
+            }
+
+            public Assembly LoadReference(DependencyReferenceDescriptor reference) {
+                throw new NotImplementedException();
+            }
+
+            public void ReferenceActivated(ExtensionLoadingContext context, ExtensionReferenceProbeEntry referenceEntry) {
+                throw new NotImplementedException();
+            }
+
+            public void ReferenceDeactivated(ExtensionLoadingContext context, ExtensionReferenceProbeEntry referenceEntry) {
+                throw new NotImplementedException();
+            }
+
+            public bool IsCompatibleWithModuleReferences(ExtensionDescriptor extension, IEnumerable<ExtensionProbeEntry> references) {
+                throw new NotImplementedException();
+            }
+
+            public ExtensionProbeEntry Probe(ExtensionDescriptor descriptor) {
+                return new ExtensionProbeEntry { Descriptor = descriptor, Loader = this };
+            }
+
+            public IEnumerable<ExtensionReferenceProbeEntry> ProbeReferences(ExtensionDescriptor extensionDescriptor) {
+                throw new NotImplementedException();
+            }
+
             public ExtensionEntry Load(ExtensionDescriptor descriptor) {
                 return new ExtensionEntry { Descriptor = descriptor, ExportedTypes = new[] { typeof(Alpha), typeof(Beta), typeof(Phi) } };
+            }
+
+            public void ExtensionActivated(ExtensionLoadingContext ctx, ExtensionDescriptor extension) {
+                throw new NotImplementedException();
+            }
+
+            public void ExtensionDeactivated(ExtensionLoadingContext ctx, ExtensionDescriptor extension) {
+                throw new NotImplementedException();
+            }
+
+            public void ExtensionRemoved(ExtensionLoadingContext ctx, DependencyDescriptor dependency) {
+                throw new NotImplementedException();
+            }
+
+            public void Monitor(ExtensionDescriptor extension, Action<IVolatileToken> monitor) {
+                throw new NotImplementedException();
+            }
+
+            public string GetWebFormAssemblyDirective(DependencyDescriptor dependency) {
+                throw new NotImplementedException();
+            }
+
+            public IEnumerable<string> GetWebFormVirtualDependencies(DependencyDescriptor dependency) {
+                throw new NotImplementedException();
             }
 
             #endregion
@@ -246,27 +300,35 @@ features:
         [Test]
         public void ExtensionManagerShouldThrowIfFeatureDoesNotExist() {
             var featureDescriptor = new FeatureDescriptor { Name = "NoSuchFeature" };
-            Assert.Throws<ArgumentException>(() => _manager.LoadFeatures(new [] { featureDescriptor }));
+            Assert.Throws<ArgumentException>(() => _manager.LoadFeatures(new[] { featureDescriptor }));
         }
 
         [Test]
         public void ExtensionManagerTestFeatureAttribute() {
-            var extensionManager = new Moq.Mock<IExtensionManager>();
-            var extensionEntry =  new ExtensionEntry {
-                                                            Descriptor = new ExtensionDescriptor { Name = "Module"},
-                                                            ExportedTypes = new[] { typeof(Alpha), typeof(Beta), typeof(Phi) }
-                                                        };
-            extensionEntry.Descriptor.Features = new[] {
-                                                           new FeatureDescriptor
-                                                           {Name = "Module", Extension = extensionEntry.Descriptor},
-                                                           new FeatureDescriptor
-                                                           {Name = "TestFeature", Extension = extensionEntry.Descriptor}
-                                                       };
-            extensionManager.Setup(x => x.ActiveExtensions_Obsolete()).Returns(new[] {extensionEntry});
+            var extensionLoader = new StubLoaders();
+            var extensionFolder = new StubFolders();
 
-            foreach (var type in extensionManager.Object.ActiveExtensions_Obsolete().SelectMany(x => x.ExportedTypes)) {
-                foreach (OrchardFeatureAttribute featureAttribute in type.GetCustomAttributes(typeof(OrchardFeatureAttribute), false)) {
-                    Assert.That(featureAttribute.FeatureName, Is.EqualTo("TestFeature"));
+            extensionFolder.Manifests.Add("TestModule", @"
+name: TestModule
+version: 1.0.3
+orchardversion: 1
+features:
+  TestModule: 
+    Description: My test module for Orchard.
+  TestFeature:
+    Description: Contains the Phi type.
+");
+
+            IExtensionManager extensionManager = new ExtensionManager(new[] { extensionFolder }, new[] { extensionLoader });
+            var testFeature = extensionManager.AvailableExtensions()
+                .SelectMany(x => x.Features)
+                .Single(x => x.Name == "TestFeature");
+
+            foreach (var feature in extensionManager.LoadFeatures(new[] { testFeature })) {
+                foreach (var type in feature.ExportedTypes) {
+                    foreach (OrchardFeatureAttribute featureAttribute in type.GetCustomAttributes(typeof(OrchardFeatureAttribute), false)) {
+                        Assert.That(featureAttribute.FeatureName, Is.EqualTo("TestFeature"));
+                    }
                 }
             }
         }
@@ -320,7 +382,7 @@ features:
                 .SelectMany(x => x.Features)
                 .Single(x => x.Name == "TestModule");
 
-            foreach (var feature in extensionManager.LoadFeatures(new [] { testModule })) {
+            foreach (var feature in extensionManager.LoadFeatures(new[] { testModule })) {
                 foreach (var type in feature.ExportedTypes) {
                     Assert.That(type != typeof(Phi));
                     Assert.That((type == typeof(Alpha) || (type == typeof(Beta))));

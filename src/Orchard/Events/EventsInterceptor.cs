@@ -1,4 +1,8 @@
-﻿using System.Linq;
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
 using Castle.Core.Interceptor;
 
 namespace Orchard.Events {
@@ -17,7 +21,36 @@ namespace Orchard.Events {
                 .Select((parameter, index) => new { parameter.Name, Value = invocation.Arguments[index] })
                 .ToDictionary(kv => kv.Name, kv => kv.Value);
 
-            _eventBus.Notify(interfaceName + "." + methodName, data);
+            var results = _eventBus.Notify(interfaceName + "." + methodName, data);
+
+            invocation.ReturnValue = Adjust(results, invocation.Method.ReturnType);
+        }
+
+        public static object Adjust(IEnumerable results, Type returnType) {
+            if (returnType == typeof(void) ||
+                results == null ||
+                results.GetType() == returnType) {
+                return results;
+            }
+
+            // acquire method:
+            // static IEnumerable<T> IEnumerable.OfType<T>(this IEnumerable source)
+            // where T is from returnType's IEnumerable<T>
+            var enumerableOfTypeT = typeof(Enumerable).GetGenericMethod("OfType", returnType.GetGenericArguments(), new[] { typeof(IEnumerable) }, typeof(IEnumerable<>));
+            return enumerableOfTypeT.Invoke(null, new[] { results });
         }
     }
+
+    public static class Extensions {
+        public static MethodInfo GetGenericMethod(this Type t, string name, Type[] genericArgTypes, Type[] argTypes, Type returnType) {
+            return (from m in t.GetMethods(BindingFlags.Public | BindingFlags.Static)
+                    where m.Name == name &&
+                    m.GetGenericArguments().Length == genericArgTypes.Length &&
+                    m.GetParameters().Select(pi => pi.ParameterType).SequenceEqual(argTypes) &&
+                    (m.ReturnType.IsGenericType && !m.ReturnType.IsGenericTypeDefinition ? returnType.GetGenericTypeDefinition() : m.ReturnType) == returnType
+                    select m).Single().MakeGenericMethod(genericArgTypes);
+
+        }
+    }
+
 }

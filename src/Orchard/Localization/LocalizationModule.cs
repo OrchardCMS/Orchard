@@ -19,9 +19,6 @@ namespace Orchard.Localization {
                 var scope = registration.Activator.LimitType.FullName;
 
                 registration.Activated += (sender, e) => {
-                    //var authenticationService = e.Context.Resolve<IAuthenticationService>();
-                    //var currentUser = authenticationService.GetAuthenticatedUser();
-
                     var localizer = LocalizationUtilities.Resolve(e.Context, scope);
                     userProperty.SetValue(e.Instance, localizer, null);
                 };

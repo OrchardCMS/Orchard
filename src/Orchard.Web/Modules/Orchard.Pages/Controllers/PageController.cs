@@ -20,7 +20,7 @@ namespace Orchard.Pages.Controllers {
         }
 
         public IOrchardServices Services { get; set; }
-        private Localizer T { get; set; }
+        public Localizer T { get; set; }
 
         public ActionResult Item(string slug) {
             if (!Services.Authorizer.Authorize(StandardPermissions.AccessFrontEnd, T("Couldn't view page")))

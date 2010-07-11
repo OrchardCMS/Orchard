@@ -1,0 +1,13 @@
+﻿using System.Data;
+using Orchard.Data.Migration;
+
+namespace $$FeatureName$$.DataMigrations {
+    public class $$ClassName$$DataMigration : DataMigrationImpl {
+
+        public int Create() {
+$$Commands$$
+
+            return 0100;
+        }
+    }
+}

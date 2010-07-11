@@ -48,7 +48,7 @@ namespace Orchard.Comments.Controllers {
 
                 if(!TryUpdateModel(viewModel)) {
                     if (Request.Form["Name"].IsNullOrEmptyTrimmed()) {
-                        _notifier.Error("You must provide a Name in order to comment");
+                        _notifier.Error(T("You must provide a Name in order to comment"));
                     }
                     return Redirect(returnUrl);
                 }

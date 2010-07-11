@@ -4,6 +4,7 @@ author: The Orchard Team
 website: http://orchardproject.net
 version: 0.1
 orchardversion: 0.1.2010.0312
+description: The dashboard module is providing the dashboard screen of the admininstration UI of the application.
 features:
     Dashboard:
         Description: Standard admin dashboard.

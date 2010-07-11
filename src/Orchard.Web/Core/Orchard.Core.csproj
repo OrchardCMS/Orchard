@@ -1,4 +1,5 @@
-﻿<Project ToolsVersion="3.5" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
@@ -10,8 +11,13 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Orchard.Core</RootNamespace>
     <AssemblyName>Orchard.Core</AssemblyName>
-    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <MvcBuildViews>false</MvcBuildViews>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <OldToolsVersion>3.5</OldToolsVersion>
+    <UpgradeBackupLocation />
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -21,6 +27,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -29,34 +36,67 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
-    <Reference Include="System.Core">
-      <RequiredTargetFramework>3.5</RequiredTargetFramework>
-    </Reference>
+    <Reference Include="System.Data" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Web.ApplicationServices" />
+    <Reference Include="System.Web.DynamicData" />
+    <Reference Include="System.Web.Entity" />
+    <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Web.Mvc, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\lib\aspnetmvc\System.Web.Mvc.dll</HintPath>
     </Reference>
-    <Reference Include="System.Xml.Linq">
-      <RequiredTargetFramework>3.5</RequiredTargetFramework>
-    </Reference>
     <Reference Include="System.Web" />
-    <Reference Include="System.Web.Extensions, Version=3.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="System.Web.Abstractions" />
     <Reference Include="System.Web.Routing" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Configuration" />
+    <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Common\DataMigrations\CommonDataMigration.cs" />
     <Compile Include="Common\Drivers\BodyDriver.cs" />
+    <Compile Include="Common\Drivers\CommonDriver.cs" />
     <Compile Include="Common\Drivers\RoutableDriver.cs" />
     <Compile Include="Common\Controllers\RoutableController.cs" />
+    <Compile Include="Common\Drivers\TextFieldDriver.cs" />
+    <Compile Include="Common\Fields\TextField.cs" />
     <Compile Include="Common\Handlers\RoutableAspectHandler.cs" />
+    <Compile Include="Common\Services\ICommonService.cs" />
+    <Compile Include="Common\Services\CommonService.cs" />
+    <Compile Include="Common\Settings\BodySettings.cs" />
+    <Compile Include="Common\ViewModels\CommonMetadataViewModel.cs" />
+    <Compile Include="Common\ViewModels\ContainerEditorViewModel.cs" />
+    <Compile Include="Common\ViewModels\TextContentFieldDisplayViewModel.cs" />
+    <Compile Include="Common\ViewModels\TextContentFieldEditorViewModel.cs" />
+    <Compile Include="Contents\Controllers\ItemController.cs" />
+    <Compile Include="Contents\Drivers\ContentsDriver.cs" />
+    <Compile Include="Contents\Handlers\ContentsHandler.cs" />
+    <Compile Include="Contents\ViewModels\EditItemViewModel.cs" />
+    <Compile Include="Contents\ViewModels\ListContentsViewModel.cs" />
+    <Compile Include="Contents\ViewModels\ListContentTypesViewModel.cs" />
+    <Compile Include="Reports\AdminMenu.cs" />
+    <Compile Include="Reports\Controllers\AdminController.cs" />
+    <Compile Include="Reports\Routes.cs" />
+    <Compile Include="Localization\Controllers\AdminController.cs" />
+    <Compile Include="Localization\DataMigrations\LocalizationDataMigration.cs" />
+    <Compile Include="Localization\ViewModels\ContentTranslationsViewModel.cs" />
+    <Compile Include="Localization\Drivers\LocalizationDriver.cs" />
+    <Compile Include="Navigation\DataMigrations\NavigationDataMigration.cs" />
+    <Compile Include="Reports\ViewModels\DisplayReportViewModel.cs" />
+    <Compile Include="Reports\ViewModels\ReportsAdminIndexViewModel.cs" />
+    <Compile Include="Routable\Controllers\ItemController.cs" />
+    <Compile Include="Routable\Drivers\RoutableDriver.cs" />
+    <Compile Include="Routable\Handlers\RoutableHandler.cs" />
+    <Compile Include="Routable\IRoutablePathConstraint.cs" />
+    <Compile Include="Routable\Models\IsRoutable.cs" />
     <Compile Include="Common\Permissions.cs" />
     <Compile Include="Common\Models\CommonVersionRecord.cs" />
     <Compile Include="Common\Routes.cs" />
@@ -75,6 +115,9 @@
     <Compile Include="Common\ViewModels\BodyEditorViewModel.cs" />
     <Compile Include="Common\ViewModels\RoutableEditorViewModel.cs" />
     <Compile Include="Common\ViewModels\OwnerEditorViewModel.cs" />
+    <Compile Include="Contents\AdminMenu.cs" />
+    <Compile Include="Contents\Controllers\AdminController.cs" />
+    <Compile Include="Contents\ViewModels\CreateItemViewModel.cs" />
     <Compile Include="Dashboard\AdminMenu.cs" />
     <Compile Include="Dashboard\Controllers\AdminController.cs" />
     <Compile Include="Dashboard\Routes.cs" />
@@ -98,6 +141,9 @@
     <Compile Include="Feeds\Rss\RssResult.cs" />
     <Compile Include="HomePage\Controllers\HomeController.cs" />
     <Compile Include="HomePage\Routes.cs" />
+    <Compile Include="Localization\Handlers\LocalizationHandler.cs" />
+    <Compile Include="Localization\Models\Localized.cs" />
+    <Compile Include="Localization\Models\LocalizedRecord.cs" />
     <Compile Include="Navigation\AdminMenu.cs" />
     <Compile Include="Navigation\Controllers\AdminController.cs" />
     <Compile Include="Navigation\Models\MenuItem.cs" />
@@ -115,19 +161,38 @@
     <Compile Include="Navigation\ViewModels\MenuItemEntry.cs" />
     <Compile Include="Navigation\ViewModels\NavigationManagementViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Routable\Routes.cs" />
+    <Compile Include="Routable\Services\IRoutableService.cs" />
+    <Compile Include="Routable\Services\RoutablePathConstraint.cs" />
+    <Compile Include="Routable\Services\RoutablePathConstraintUpdator.cs" />
+    <Compile Include="Routable\Services\RoutableService.cs" />
+    <Compile Include="Routable\ViewModels\RoutableEditorViewModel.cs" />
+    <Compile Include="Routable\ViewModels\RoutableDisplayViewModel.cs" />
+    <Compile Include="Scheduling\DataMigrations\SchedulingDataMigration.cs" />
     <Compile Include="Scheduling\Models\ScheduledTaskRecord.cs" />
     <Compile Include="Scheduling\Services\PublishingTaskHandler.cs" />
     <Compile Include="Scheduling\Services\PublishingTaskManager.cs" />
     <Compile Include="Scheduling\Services\ScheduledTaskManager.cs" />
     <Compile Include="Scheduling\Services\ScheduledTaskExecutor.cs" />
     <Compile Include="Scheduling\Models\Task.cs" />
+    <Compile Include="Settings\DataMigrations\SettingsDataMigration.cs" />
+    <Compile Include="Settings\ViewModels\SiteCulturesViewModel.cs" />
     <Compile Include="Settings\Drivers\SiteSettingsDriver.cs" />
+    <Compile Include="Settings\Metadata\ContentDefinitionManager.cs" />
+    <Compile Include="Settings\Metadata\Records\ContentFieldDefinitionRecord.cs" />
+    <Compile Include="Settings\Metadata\Records\ContentPartDefinitionRecord.cs" />
+    <Compile Include="Settings\Metadata\Records\ContentPartFieldDefinitionRecord.cs" />
+    <Compile Include="Settings\Metadata\Records\ContentTypeDefinitionRecord.cs" />
+    <Compile Include="Settings\Metadata\Records\ContentTypePartDefinitionRecord.cs" />
     <Compile Include="Settings\Models\SiteSettingsRecord.cs" />
     <Compile Include="Settings\Permissions.cs" />
-    <Compile Include="Settings\Topology\Records\TopologyFeatureRecord.cs" />
-    <Compile Include="Settings\Topology\Records\TopologyParameterRecord.cs" />
-    <Compile Include="Settings\Topology\Records\TopologyRecord.cs" />
-    <Compile Include="Settings\Topology\ShellDescriptorManager.cs" />
+    <Compile Include="Settings\State\Records\ShellFeatureStateRecord.cs" />
+    <Compile Include="Settings\State\Records\ShellStateRecord.cs" />
+    <Compile Include="Settings\State\ShellStateManager.cs" />
+    <Compile Include="Settings\Descriptor\Records\ShellFeatureRecord.cs" />
+    <Compile Include="Settings\Descriptor\Records\ShellParameterRecord.cs" />
+    <Compile Include="Settings\Descriptor\Records\ShellDescriptorRecord.cs" />
+    <Compile Include="Settings\Descriptor\ShellDescriptorManager.cs" />
     <Compile Include="Settings\AdminMenu.cs" />
     <Compile Include="Settings\Controllers\AdminController.cs" />
     <Compile Include="Settings\Handlers\SiteSettingsHandler.cs" />
@@ -149,8 +214,48 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Common\Module.txt" />
+    <Content Include="Common\Views\DefinitionTemplates\BodyTypePartSettings.ascx" />
+    <Content Include="Common\Views\DefinitionTemplates\BodyPartSettings.ascx" />
+    <Content Include="Common\Views\DisplayTemplates\Fields\Common.TextField.ascx" />
+    <Content Include="Common\Views\DisplayTemplates\Parts\Common.Body.SummaryAdmin.ascx" />
+    <Content Include="Common\Views\DisplayTemplates\Parts\Common.Body.Manage.SummaryAdmin.ascx" />
+    <Content Include="Common\Views\DisplayTemplates\Parts\Common.Body.ManageWrapperPost.SummaryAdmin.ascx" />
+    <Content Include="Common\Views\DisplayTemplates\Parts\Common.Body.ManageWrapperPre.SummaryAdmin.ascx" />
+    <Content Include="Common\Views\DisplayTemplates\Parts\Common.Metadata.ascx" />
+    <Content Include="Common\Views\DisplayTemplates\Parts\Common.Metadata.SummaryAdmin.ascx" />
+    <Content Include="Common\Views\DisplayTemplates\Parts\Common.Publish.SummaryAdmin.ascx" />
+    <Content Include="Common\Views\DisplayTemplates\Parts\Common.Publish.ascx" />
+    <Content Include="Common\Views\EditorTemplates\Fields\Common.TextField.ascx" />
+    <Content Include="Common\Views\EditorTemplates\Parts\Common.Container.ascx" />
+    <Content Include="Common\Views\EditorTemplates\PlainTextEditor.ascx" />
+    <Content Include="Contents\Module.txt" />
+    <Content Include="Contents\Views\Admin\Edit.ascx" />
+    <Content Include="Contents\Views\Admin\CreatableTypeList.ascx" />
+    <Content Include="Contents\Views\Admin\Create.aspx" />
+    <Content Include="Contents\Views\Admin\List.ascx" />
+    <Content Include="Contents\Views\DisplayTemplates\Items\Contents.Item.ascx" />
+    <Content Include="Contents\Views\DisplayTemplates\Items\Contents.Item.SummaryAdmin.ascx" />
+    <Content Include="Contents\Views\DisplayTemplates\Items\Contents.Item.Summary.ascx" />
+    <Content Include="Contents\Views\EditorTemplates\Items\Contents.Item.ascx" />
+    <Content Include="Contents\Views\Item\Preview.aspx" />
+    <Content Include="Contents\Views\Item\Display.aspx" />
+    <Content Include="Reports\Module.txt" />
+    <Content Include="Reports\Views\Admin\Display.aspx" />
+    <Content Include="Reports\Views\Admin\Index.aspx" />
+    <Content Include="Localization\Module.txt" />
+    <Content Include="Localization\Views\Admin\Translate.ascx" />
+    <Content Include="Localization\Views\DisplayTemplates\Parts\Localization.ContentTranslations.SummaryAdmin.ascx" />
+    <Content Include="Localization\Views\EditorTemplates\Parts\Localization.CultureSelection.ascx" />
+    <Content Include="Routable\Module.txt" />
+    <Content Include="Routable\Scripts\jquery.slugify.js" />
+    <Content Include="Routable\Views\EditorTemplates\Parts\Routable.IsRoutable.ascx" />
+    <Content Include="Routable\Views\Item\Display.aspx" />
     <Content Include="Settings\Module.txt" />
+    <Content Include="Settings\Styles\admin.css" />
     <Content Include="Settings\Views\Admin\Index.ascx" />
+    <Content Include="Settings\Views\Admin\Culture.ascx" />
+    <Content Include="Settings\Views\DisplayTemplates\CurrentCulture.ascx" />
+    <Content Include="Settings\Views\DisplayTemplates\RemovableCulture.ascx" />
     <Content Include="Web.config" />
     <Content Include="XmlRpc\Module.txt" />
     <Content Include="XmlRpc\Views\Home\Index.aspx" />
@@ -196,8 +301,17 @@
     <Content Include="Common\Views\DisplayTemplates\Parts\Common.Body.Manage.ascx" />
     <Content Include="Dashboard\Views\Web.config" />
   </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <None Include="App_Data\Localization\en-US\orchard.core.po" />
+    <None Include="App_Data\Localization\fr-FR\orchard.core.po" />
+    <Content Include="Contents\Views\Web.config" />
+    <Content Include="Routable\Views\Web.config" />
+    <Content Include="Localization\Views\Web.config" />
+    <Content Include="Reports\Views\Web.config" />
+  </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
-  <Import Project="$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v9.0\WebApplications\Microsoft.WebApplication.targets" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

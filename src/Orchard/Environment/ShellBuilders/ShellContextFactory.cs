@@ -1,8 +1,9 @@
+using System;
 using System.Linq;
 using Autofac;
 using Orchard.Environment.Configuration;
-using Orchard.Environment.Topology;
-using Orchard.Environment.Topology.Models;
+using Orchard.Environment.Descriptor;
+using Orchard.Environment.Descriptor.Models;
 using Orchard.Logging;
 
 namespace Orchard.Environment.ShellBuilders {
@@ -21,6 +22,13 @@ namespace Orchard.Environment.ShellBuilders {
         /// to display setup user interface.
         /// </summary>
         ShellContext CreateSetupContext(ShellSettings settings);
+
+        /// <summary>
+        /// Builds a shell context given a specific description of features and parameters.
+        /// Shell's actual current descriptor has no effect. Does not use or update descriptor cache.
+        /// </summary>
+        ShellContext CreateDescribedContext(ShellSettings settings, ShellDescriptor shellDescriptor);
+
     }
 
     public class ShellContextFactory : IShellContextFactory {
@@ -46,40 +54,40 @@ namespace Orchard.Environment.ShellBuilders {
 
             var knownDescriptor = _shellDescriptorCache.Fetch(settings.Name);
             if (knownDescriptor == null) {
-                Logger.Information("No topology cached. Starting with minimum components.");
-                knownDescriptor = MinimumTopologyDescriptor();
+                Logger.Information("No descriptor cached. Starting with minimum components.");
+                knownDescriptor = MinimumShellDescriptor();
             }
 
-            var topology = _compositionStrategy.Compose(settings, knownDescriptor);
-            var shellScope = _shellContainerFactory.CreateContainer(settings, topology);
+            var blueprint = _compositionStrategy.Compose(settings, knownDescriptor);
+            var shellScope = _shellContainerFactory.CreateContainer(settings, blueprint);
 
             ShellDescriptor currentDescriptor;
             using (var standaloneEnvironment = new StandaloneEnvironment(shellScope)) {
-                var topologyDescriptorProvider = standaloneEnvironment.Resolve<IShellDescriptorManager>();
-                currentDescriptor = topologyDescriptorProvider.GetShellDescriptor();
+                var shellDescriptorManager = standaloneEnvironment.Resolve<IShellDescriptorManager>();
+                currentDescriptor = shellDescriptorManager.GetShellDescriptor();
             }
 
             if (currentDescriptor != null && knownDescriptor.SerialNumber != currentDescriptor.SerialNumber) {
-                Logger.Information("Newer topology obtained. Rebuilding shell container.");
+                Logger.Information("Newer descriptor obtained. Rebuilding shell container.");
 
                 _shellDescriptorCache.Store(settings.Name, currentDescriptor);
-                topology = _compositionStrategy.Compose(settings, currentDescriptor);
-                shellScope = _shellContainerFactory.CreateContainer(settings, topology);
+                blueprint = _compositionStrategy.Compose(settings, currentDescriptor);
+                shellScope = _shellContainerFactory.CreateContainer(settings, blueprint);
             }
 
             return new ShellContext {
                 Settings = settings,
                 Descriptor = currentDescriptor,
-                Topology = topology,
+                Blueprint = blueprint,
                 LifetimeScope = shellScope,
                 Shell = shellScope.Resolve<IOrchardShell>(),
             };
         }
 
-        private static ShellDescriptor MinimumTopologyDescriptor() {
+        private static ShellDescriptor MinimumShellDescriptor() {
             return new ShellDescriptor {
                 SerialNumber = -1,
-                EnabledFeatures = new[] {
+                Features = new[] {
                     new ShellFeature {Name = "Orchard.Framework"},
                     new ShellFeature {Name = "Settings"},
                 },
@@ -92,16 +100,32 @@ namespace Orchard.Environment.ShellBuilders {
 
             var descriptor = new ShellDescriptor {
                 SerialNumber = -1,
-                EnabledFeatures = new[] { new ShellFeature { Name = "Orchard.Setup" } },
+                Features = new[] { new ShellFeature { Name = "Orchard.Setup" } },
             };
 
-            var topology = _compositionStrategy.Compose(settings, descriptor);
-            var shellScope = _shellContainerFactory.CreateContainer(settings, topology);
+            var blueprint = _compositionStrategy.Compose(settings, descriptor);
+            var shellScope = _shellContainerFactory.CreateContainer(settings, blueprint);
 
             return new ShellContext {
                 Settings = settings,
                 Descriptor = descriptor,
-                Topology = topology,
+                Blueprint = blueprint,
+                LifetimeScope = shellScope,
+                Shell = shellScope.Resolve<IOrchardShell>(),
+            };
+        }
+
+        public ShellContext CreateDescribedContext(ShellSettings settings, ShellDescriptor shellDescriptor) {
+            Logger.Debug("Creating described context for tenant {0}", settings.Name);
+
+            var blueprint = _compositionStrategy.Compose(settings, shellDescriptor);
+            var shellScope = _shellContainerFactory.CreateContainer(settings, blueprint);
+
+            return new ShellContext
+            {
+                Settings = settings,
+                Descriptor = shellDescriptor,
+                Blueprint = blueprint,
                 LifetimeScope = shellScope,
                 Shell = shellScope.Resolve<IOrchardShell>(),
             };

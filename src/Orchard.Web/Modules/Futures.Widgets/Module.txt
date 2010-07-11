@@ -4,6 +4,7 @@ author: The Orchard Team
 website: http://orchardproject.net
 version: 0.1
 orchardversion: 0.1.2010.0312
+description: A prototype implementation of Orchard widgets that only allows for editable global text regions.
 features:
     Futures.Widgets:
         Description: Widgets container with simple inline content editing widget.

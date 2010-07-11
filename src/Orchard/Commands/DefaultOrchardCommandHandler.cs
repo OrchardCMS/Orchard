@@ -25,10 +25,10 @@ namespace Orchard.Commands {
                 foreach (var commandSwitch in context.Switches.Keys) {
                     PropertyInfo propertyInfo = GetType().GetProperty(commandSwitch);
                     if (propertyInfo == null) {
-                        throw new InvalidOperationException(T("Switch : ") + commandSwitch + T(" was not found"));
+                        throw new InvalidOperationException(T("Switch was not found: ") + commandSwitch);
                     }
                     if (propertyInfo.GetCustomAttributes(typeof(OrchardSwitchAttribute), false).Length == 0) {
-                        throw new InvalidOperationException(T("A property of the name ") + commandSwitch + T(" exists but is not decorated with the OrchardSwitch attribute"));
+                        throw new InvalidOperationException(T("A property of this name exists but is not decorated with the OrchardSwitch attribute: ") + commandSwitch);
                     }
                     string stringValue = context.Switches[commandSwitch];
                     if (propertyInfo.PropertyType.IsAssignableFrom(typeof(bool))) {
@@ -45,8 +45,7 @@ namespace Orchard.Commands {
                         propertyInfo.SetValue(this, stringValue, null);
                     }
                     else {
-                        throw new InvalidOperationException(T("No property named ") + commandSwitch +
-                                                            T(" found of type bool, int or string"));
+                        throw new InvalidOperationException(T("No property named {0} found of type bool, int or string.", commandSwitch).ToString());
                     }
                 }
             }
@@ -106,8 +105,7 @@ namespace Orchard.Commands {
             }
             foreach (var commandSwitch in switches.Keys) {
                 if (!supportedSwitches.Contains(commandSwitch)) {
-                    throw new InvalidOperationException(T("Method ") + methodInfo.Name +
-                                    T(" does not support switch ") + commandSwitch);
+                    throw new InvalidOperationException(T("Method {0} does not support switch {1}.", methodInfo.Name, commandSwitch).ToString());
                 }
             }
         }

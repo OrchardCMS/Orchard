@@ -2,5 +2,5 @@
 <%@ Import Namespace="Orchard.Blogs.Extensions"%>
 <%@ Import Namespace="Orchard.Blogs.Models"%><%
 if (Model.Creator != null) { 
-   %><span class="posted"><%=_Encoded("Posted by {0} {1}", Model.Creator.UserName, Html.PublishedWhen(Model)) %> | </span><%
+   %><span class="posted"><%: T("Posted by {0} {1}", Model.Creator.UserName, Html.PublishedWhen(Model, T)) %> | </span><%
 } %>

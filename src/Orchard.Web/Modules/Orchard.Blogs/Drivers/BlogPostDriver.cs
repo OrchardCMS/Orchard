@@ -16,7 +16,7 @@ namespace Orchard.Blogs.Drivers {
         private readonly IRoutableService _routableService;
 
         public readonly static ContentType ContentType = new ContentType {
-                                                                             Name = "blogpost",
+                                                                             Name = "BlogPost",
                                                                              DisplayName = "Blog Post"
                                                                          };
 
@@ -27,7 +27,7 @@ namespace Orchard.Blogs.Drivers {
             T = NullLocalizer.Instance;
         }
 
-        private Localizer T { get; set; }
+        public Localizer T { get; set; }
 
         protected override ContentType GetContentType() {
             return ContentType;
@@ -40,6 +40,9 @@ namespace Orchard.Blogs.Drivers {
         }
 
         public override RouteValueDictionary GetDisplayRouteValues(BlogPost post) {
+            if (post.Blog == null)
+                return new RouteValueDictionary();
+
             return new RouteValueDictionary {
                                                 {"Area", "Orchard.Blogs"},
                                                 {"Controller", "BlogPost"},
@@ -50,6 +53,9 @@ namespace Orchard.Blogs.Drivers {
         }
 
         public override RouteValueDictionary GetEditorRouteValues(BlogPost post) {
+            if (post.Blog == null)
+                return new RouteValueDictionary();
+
             return new RouteValueDictionary {
                                                 {"Area", "Orchard.Blogs"},
                                                 {"Controller", "BlogPostAdmin"},
@@ -59,10 +65,22 @@ namespace Orchard.Blogs.Drivers {
                                             };
         }
 
+        public override RouteValueDictionary GetCreateRouteValues(BlogPost post) {
+            if (post.Blog == null)
+                return new RouteValueDictionary();
+
+            return new RouteValueDictionary {
+                                                {"Area", "Orchard.Blogs"},
+                                                {"Controller", "BlogPostAdmin"},
+                                                {"Action", "Create"},
+                                                {"blogSlug", post.Blog.Slug},
+                                            };
+        }
+
         protected override DriverResult Display(BlogPost post, string displayType) {
             return Combined(
                 ContentItemTemplate("Items/Blogs.BlogPost").LongestMatch(displayType, "Summary", "SummaryAdmin"),
-                ContentPartTemplate(post, "Parts/Blogs.BlogPost.Metadata").LongestMatch(displayType, "Summary", "SummaryAdmin").Location("meta"));
+                ContentPartTemplate(post, "Parts/Blogs.BlogPost.Metadata").LongestMatch(displayType, "Summary", "SummaryAdmin").Location("meta", "1"));
         }
 
         protected override DriverResult Editor(BlogPost post) {

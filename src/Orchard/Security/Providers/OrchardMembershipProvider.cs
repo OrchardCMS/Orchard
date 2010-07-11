@@ -6,7 +6,7 @@ namespace Orchard.Security.Providers {
     public class OrchardMembershipProvider : MembershipProvider {
 
         static IMembershipService GetService() {
-            return ServiceLocator.Resolve<IMembershipService>();
+            throw new NotImplementedException("The OrchardMemberShipProvider is not supported anymore. Use the IMembershipService interface instead.");
         }
 
         static MembershipSettings GetSettings() {

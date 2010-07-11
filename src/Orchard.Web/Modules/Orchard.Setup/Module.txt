@@ -4,7 +4,8 @@ author: The Orchard Team
 website: http://orchardproject.net
 version: 0.1
 orchardversion: 0.1.2010.0312
+description: The setup module is creating the application's setup experience.
 features:
     Orchard.Setup:
-        Description: Standard site setup.
+        Description: Standard site setup. This feature is disabled automatically once setup is over.
         Category: Core

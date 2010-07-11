@@ -61,8 +61,14 @@ input[type="text"], #CommentText, #password, #confirmPassword {
     display: block;
     padding:3px;
     width:90%;
-    }
-
+}
+form.search {
+    margin-bottom:2em;
+}
+.search input[type=text] {
+    display:inline;
+    width:17em;
+}
 fieldset div {margin:1.6em 0 0 0}
     
 legend {

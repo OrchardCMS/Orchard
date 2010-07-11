@@ -3,16 +3,8 @@
   <Role name="Orchard.Azure.Web">
     <Instances count="1" />
     <ConfigurationSettings>
-      <!-- Development Settings -->
       <Setting name="DiagnosticsConnectionString" value="UseDevelopmentStorage=true" />
       <Setting name="DataConnectionString" value="UseDevelopmentStorage=true" />
-
-      <!-- Cloud Settings -->
-      <!--
-      <Setting name="DiagnosticsConnectionString" value="DefaultEndpointsProtocol=https; AccountName=ACCOUNT; AccountKey=KEY" />
-      <Setting name="DataConnectionString" value="DefaultEndpointsProtocol=https; AccountName=ACCOUNT; AccountKey=KEY" />
-      -->
-
     </ConfigurationSettings>
   </Role>
 </ServiceConfiguration>

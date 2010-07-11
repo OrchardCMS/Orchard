@@ -23,7 +23,8 @@ namespace Orchard.Tests.UI.Notify {
         public void AfterActionExecutedMessagesShouldAppearInTempData() {
             var sink = new Notifier();
             var filter = new NotifyFilter(sink);
-            sink.Information("Hello world");
+            var T = NullLocalizer.Instance;
+            sink.Information(T("Hello world"));
 
             var executedContext = BuildContext();
             filter.OnActionExecuted(executedContext);
@@ -47,7 +48,8 @@ namespace Orchard.Tests.UI.Notify {
         public void NewMessagesAreConcatinated() {
             var sink = new Notifier();
             var filter = new NotifyFilter(sink);
-            sink.Error("Boom");
+            var T = NullLocalizer.Instance;
+            sink.Error(T("Boom"));
 
             var executedContext = BuildContext();
             executedContext.Controller.TempData.Add("messages", "dont-destroy");
@@ -60,7 +62,8 @@ namespace Orchard.Tests.UI.Notify {
         public void TempDataBuildsMessagesWhenResultExecutingIsBaseViewModel() {
             var sink = new Notifier();
             var filter = new NotifyFilter(sink);
-            sink.Information("Working");
+            var T = NullLocalizer.Instance;
+            sink.Information(T("Working"));
 
             var model = new BaseViewModel();
 
@@ -73,8 +76,6 @@ namespace Orchard.Tests.UI.Notify {
 
             filter.OnActionExecuted(context);
             filter.OnResultExecuting(new ResultExecutingContext(context, context.Result));
-
-            var T = NullLocalizer.Instance;
 
             Assert.That(model.Messages, Is.Not.Null);
             Assert.That(model.Messages, Has.Count.EqualTo(2));

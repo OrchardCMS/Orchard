@@ -8,7 +8,7 @@ namespace Orchard.Users.Drivers {
     [UsedImplicitly]
     public class UserDriver : ContentItemDriver<User> {
         public readonly static ContentType ContentType = new ContentType {
-                                                                             Name = "user",
+                                                                             Name = "User",
                                                                              DisplayName = "User Profile"
                                                                          };
 

@@ -6,7 +6,7 @@ using JetBrains.Annotations;
 using Moq;
 using NUnit.Framework;
 using Orchard.ContentManagement.Aspects;
-using Orchard.ContentManagement.MetaData.Records;
+using Orchard.ContentManagement.MetaData;
 using Orchard.Core.Common;
 using Orchard.Core.Common.Handlers;
 using Orchard.Core.Common.Models;
@@ -16,7 +16,6 @@ using Orchard.ContentManagement.Records;
 using Orchard.Localization;
 using Orchard.Security;
 using Orchard.Tests.Modules;
-using Orchard.Mvc.ViewModels;
 using Orchard.Core.Common.ViewModels;
 using System.Web.Mvc;
 
@@ -26,6 +25,7 @@ namespace Orchard.Core.Tests.Common.Providers {
         private Mock<IAuthenticationService> _authn;
         private Mock<IAuthorizationService> _authz;
         private Mock<IMembershipService> _membership;
+        private Mock<IContentDefinitionManager> _contentDefinitionManager;
 
         public override void Register(ContainerBuilder builder) {
             builder.RegisterType<DefaultContentManager>().As<IContentManager>();
@@ -36,19 +36,18 @@ namespace Orchard.Core.Tests.Common.Providers {
             _authn = new Mock<IAuthenticationService>();
             _authz = new Mock<IAuthorizationService>();
             _membership = new Mock<IMembershipService>();
+            _contentDefinitionManager = new Mock<IContentDefinitionManager>();
 
             builder.RegisterInstance(_authn.Object);
             builder.RegisterInstance(_authz.Object);
             builder.RegisterInstance(_membership.Object);
-
+            builder.RegisterInstance(_contentDefinitionManager.Object);
         }
 
         protected override IEnumerable<Type> DatabaseTypes {
             get {
                 return new[] {
                                  typeof(ContentTypeRecord), 
-                                 typeof(ContentTypePartRecord), 
-                                 typeof(ContentTypePartNameRecord),
                                  typeof(ContentItemRecord), 
                                  typeof(ContentItemVersionRecord), 
                                  typeof(CommonRecord),
@@ -62,7 +61,7 @@ namespace Orchard.Core.Tests.Common.Providers {
             public TestHandler() {
                 Filters.Add(new ActivatingFilter<CommonAspect>("test-item"));
                 Filters.Add(new ActivatingFilter<ContentPart<CommonVersionRecord>>("test-item"));
-                Filters.Add(new ActivatingFilter<TestUser>("user"));
+                Filters.Add(new ActivatingFilter<TestUser>("User"));
             }
         }
 
@@ -88,12 +87,12 @@ namespace Orchard.Core.Tests.Common.Providers {
             var contentManager = _container.Resolve<IContentManager>();
             var updateModel = new Mock<IUpdateModel>();
 
-            var user = contentManager.New<IUser>("user");
+            var user = contentManager.New<IUser>("User");
             _authn.Setup(x => x.GetAuthenticatedUser()).Returns(user);
 
             var createUtc = _clock.UtcNow;
             var item = contentManager.Create<ICommonAspect>("test-item", VersionOptions.Draft, init => { });
-            var viewModel = new OwnerEditorViewModel() { Owner = "user" };
+            var viewModel = new OwnerEditorViewModel() { Owner = "User" };
             updateModel.Setup(x => x.TryUpdateModel(viewModel, "", null, null)).Returns(true);
             contentManager.UpdateEditorModel(item.ContentItem, updateModel.Object);
         }
@@ -126,7 +125,7 @@ namespace Orchard.Core.Tests.Common.Providers {
 
             var item = contentManager.Create<ICommonAspect>("test-item", VersionOptions.Draft, init => { });
 
-            var user = contentManager.New<IUser>("user");
+            var user = contentManager.New<IUser>("User");
             _authn.Setup(x => x.GetAuthenticatedUser()).Returns(user);
             _authz.Setup(x => x.TryCheckAccess(Permissions.ChangeOwner, user, item)).Returns(true);
 
@@ -144,7 +143,7 @@ namespace Orchard.Core.Tests.Common.Providers {
 
             var item = contentManager.Create<ICommonAspect>("test-item", VersionOptions.Draft, init => { });
             
-            var user = contentManager.New<IUser>("user");
+            var user = contentManager.New<IUser>("User");
             _authn.Setup(x => x.GetAuthenticatedUser()).Returns(user);
             _authz.Setup(x => x.TryCheckAccess(Permissions.ChangeOwner, user, item)).Returns(true);
 

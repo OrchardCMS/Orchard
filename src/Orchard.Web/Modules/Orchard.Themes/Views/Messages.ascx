@@ -6,5 +6,5 @@
                          : item.Type == NotifyType.Warning
                                ? "warning"
                                : "info"; %>
-<div class="<%=className %> message"><%=Html.Encode(item.Message) %></div>
+<div class="<%=className %> message"><%: item.Message %></div>
 <% } %>

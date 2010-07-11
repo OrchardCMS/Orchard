@@ -4,9 +4,11 @@ using Orchard.Localization;
 using Orchard.Mvc.ViewModels;
 using Orchard.Themes;
 using Orchard.UI.Notify;
+using Orchard.UI.Admin;
 
 namespace Orchard.DevTools.Controllers {
     [Themed]
+    [Admin]
     public class HomeController : Controller {
         private readonly INotifier _notifier;
 
@@ -22,7 +24,7 @@ namespace Orchard.DevTools.Controllers {
         }
 
         public ActionResult NotAuthorized() {
-            _notifier.Warning("Simulated error goes here.");
+            _notifier.Warning(T("Simulated error goes here."));
             return new HttpUnauthorizedResult();
         }
 

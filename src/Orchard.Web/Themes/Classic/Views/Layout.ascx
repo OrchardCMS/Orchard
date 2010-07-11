@@ -19,7 +19,7 @@
 <%--Top Navigation and branding--%>
 <div id="headercontainer">
     <div id="header">
-        <h1><%=Html.Encode(Html.SiteName()) %></h1>
+        <h1><%: Html.SiteName() %></h1>
         <div class="menucontainer">
             <% Html.Include("menu"); %>
         </div>
@@ -33,7 +33,8 @@
         <%Html.ZoneBody("content");%>
         </div>
         <div id="sidebar">
-            <%Html.Zone("sidebar");%>
+            <% Html.Zone("search");
+               Html.Zone("sidebar");%>
         </div>
         <%-- End Content --%>
         <% Html.Include("Footer"); %>

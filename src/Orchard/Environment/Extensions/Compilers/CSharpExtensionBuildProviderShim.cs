@@ -1,0 +1,29 @@
+﻿using System.Web.Compilation;
+
+namespace Orchard.Environment.Extensions.Compilers {
+    public class CSharpExtensionBuildProviderShim : BuildProvider, IShim {
+        private readonly CompilerType _codeCompilerType;
+
+        public CSharpExtensionBuildProviderShim() {
+            OrchardHostContainerRegistry.RegisterShim(this);
+
+            _codeCompilerType = GetDefaultCompilerTypeForLanguage("C#");
+        }
+
+        public IOrchardHostContainer HostContainer { get; set; }
+
+        public override CompilerType CodeCompilerType {
+            get {
+                return _codeCompilerType;
+            }
+        }
+
+        public override void GenerateCode(AssemblyBuilder assemblyBuilder) {
+            var context = new CompileExtensionContext {
+                VirtualPath = this.VirtualPath,
+                AssemblyBuilder =  new AspNetAssemblyBuilder(assemblyBuilder, this)
+            };
+            HostContainer.Resolve<IExtensionCompiler>().Compile(context);
+        }
+    }
+}

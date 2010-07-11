@@ -1,35 +1,36 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Web.Mvc;
+using Autofac.Features.OwnedInstances;
 using Orchard.Environment.Extensions.Models;
 using Orchard.Logging;
 using Orchard.Mvc.ModelBinders;
 using Orchard.Mvc.Routes;
-using Orchard.Utility;
 
 namespace Orchard.Environment {
     public class DefaultOrchardShell : IOrchardShell {
+        private readonly Func<Owned<IOrchardShellEvents>> _eventsFactory;
         private readonly IEnumerable<IRouteProvider> _routeProviders;
         private readonly IRoutePublisher _routePublisher;
         private readonly IEnumerable<IModelBinderProvider> _modelBinderProviders;
         private readonly IModelBinderPublisher _modelBinderPublisher;
         private readonly ViewEngineCollection _viewEngines;
-        private readonly IEnumerable<IOrchardShellEvents> _events;
 
         public DefaultOrchardShell(
+            Func<Owned<IOrchardShellEvents>> eventsFactory,
             IEnumerable<IRouteProvider> routeProviders,
             IRoutePublisher routePublisher,
             IEnumerable<IModelBinderProvider> modelBinderProviders,
             IModelBinderPublisher modelBinderPublisher,
-            ViewEngineCollection viewEngines,
-            IEnumerable<IOrchardShellEvents> events) {
+            ViewEngineCollection viewEngines) {
+            _eventsFactory = eventsFactory;
             _routeProviders = routeProviders;
             _routePublisher = routePublisher;
             _modelBinderProviders = modelBinderProviders;
             _modelBinderPublisher = modelBinderPublisher;
             _viewEngines = viewEngines;
-            _events = events;
 
             Logger = NullLogger.Instance;
         }
@@ -40,9 +41,17 @@ namespace Orchard.Environment {
             _routePublisher.Publish(_routeProviders.SelectMany(provider => provider.GetRoutes()));
             _modelBinderPublisher.Publish(_modelBinderProviders.SelectMany(provider => provider.GetModelBinders()));
 
-            AddOrchardLocationsFormats();
+            //AddOrchardLocationsFormats();
 
-            _events.Invoke(x => x.Activated(), Logger);
+            using (var events = _eventsFactory()) {
+                events.Value.Activated();
+            }
+        }
+
+        public void Terminate() {
+             using (var events = _eventsFactory()) {
+                events.Value.Terminating();
+            }
         }
 
         /// <summary>
@@ -89,14 +98,11 @@ namespace Orchard.Environment {
                 .ToArray();
         }
 
-
-        public void Terminate() {
-            _events.Invoke(x => x.Terminating(), Logger);
-        }
-
-
         private static string ModelsLocationFormat(ExtensionDescriptor descriptor) {
             return Path.Combine(Path.Combine(descriptor.Location, descriptor.Name), "Views/Shared/{0}.ascx");
         }
+
+
+
     }
 }

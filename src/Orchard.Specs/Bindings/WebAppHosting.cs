@@ -14,10 +14,10 @@ using HtmlAgilityPack;
 using log4net.Appender;
 using log4net.Core;
 using log4net.Repository;
+using NUnit.Framework;
 using Orchard.Specs.Hosting;
 using Orchard.Specs.Util;
 using TechTalk.SpecFlow;
-using NUnit.Framework;
 
 namespace Orchard.Specs.Bindings {
     [Binding]
@@ -27,6 +27,9 @@ namespace Orchard.Specs.Bindings {
         private HtmlDocument _doc;
         private MessageSink _messages;
 
+        public WebAppHosting() {
+        }
+
         public WebHost Host {
             get { return _webHost; }
         }
@@ -34,6 +37,14 @@ namespace Orchard.Specs.Bindings {
         public RequestDetails Details {
             get { return _details; }
             set { _details = value; }
+        }
+
+        [AfterScenario]
+        public void AfterScenario() {
+            if (_webHost != null) {
+                _webHost.Dispose();
+                _webHost = null;
+            }
         }
 
         [Given(@"I have a clean site")]
@@ -158,7 +169,7 @@ namespace Orchard.Specs.Bindings {
 
             foreach (var row in table.Rows) {
                 var r = row;
-                var input = inputs.First(x => x.GetAttributeValue("name", x.GetAttributeValue("id", "")) == r["name"]);
+                var input = inputs.FirstOrDefault(x => x.GetAttributeValue("name", x.GetAttributeValue("id", "")) == r["name"]);
                 Assert.That(input, Is.Not.Null, "Unable to locate <input> name {0} in page html:\r\n\r\n{1}", r["name"], Details.ResponseText);
                 var inputType = input.GetAttributeValue("type", "");
                 switch(inputType) {

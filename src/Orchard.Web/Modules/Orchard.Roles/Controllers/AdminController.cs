@@ -25,6 +25,7 @@ namespace Orchard.Roles.Controllers {
             Services = services;
             _roleService = roleService;
             _authorizationService = authorizationService;
+            T = NullLocalizer.Instance;
         }
 
         public IOrchardServices Services { get; set; }
@@ -55,7 +56,7 @@ namespace Orchard.Roles.Controllers {
                 return RedirectToAction("Index");
             }
             catch (Exception exception) {
-                Services.Notifier.Error("Deleting Role failed: " + exception.Message);
+                Services.Notifier.Error(T("Deleting Role failed: {0}", exception.Message));
                 return View();
             }
         }
@@ -87,7 +88,7 @@ namespace Orchard.Roles.Controllers {
                 return RedirectToAction("Index");
             }
             catch (Exception exception) {
-                Services.Notifier.Error("Creating Role failed: " + exception.Message);
+                Services.Notifier.Error(T("Creating Role failed: {0}", exception.Message));
                 return RedirectToAction("Create");
             }
         }
@@ -141,7 +142,7 @@ namespace Orchard.Roles.Controllers {
                 return RedirectToAction("Edit", new { viewModel.Id });
             }
             catch (Exception exception) {
-                Services.Notifier.Error("Editing Role failed: " + exception.Message);
+                Services.Notifier.Error(T("Editing Role failed: {0}", exception.Message));
                 return RedirectToAction("Edit", viewModel.Id);
             }
         }

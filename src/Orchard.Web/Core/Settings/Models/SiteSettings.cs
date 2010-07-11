@@ -3,7 +3,7 @@ using Orchard.Settings;
 
 namespace Orchard.Core.Settings.Models {
     public sealed class SiteSettings : ContentPart<SiteSettingsRecord>, ISite {
-        public static readonly ContentType ContentType = new ContentType { Name = "site", DisplayName = "Site Settings" };
+        public static readonly ContentType ContentType = new ContentType { Name = "Site", DisplayName = "Site Settings" };
 
         public string PageTitleSeparator {
             get { return Record.PageTitleSeparator; }
@@ -16,13 +16,17 @@ namespace Orchard.Core.Settings.Models {
         public string SiteSalt {
             get { return Record.SiteSalt; }
         }
-        public string SuperUser { 
+        public string SuperUser {
             get { return Record.SuperUser; }
             set { Record.SuperUser = value; }
         }
         public string HomePage {
             get { return Record.HomePage; }
             set { Record.HomePage = value; }
+        }
+        public string SiteCulture {
+            get { return Record.SiteCulture; }
+            set { Record.SiteCulture = value; }
         }
     }
 }

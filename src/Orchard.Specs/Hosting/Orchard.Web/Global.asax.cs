@@ -8,16 +8,12 @@ using Autofac.Integration.Web;
 using Orchard.Environment;
 using Orchard.Environment.Configuration;
 
-namespace Orchard.Specs.Hosting.Orchard.Web
-{
-    public class MvcApplication : HttpApplication
-    {
+namespace Orchard.Specs.Hosting.Orchard.Web {
+    public class MvcApplication : HttpApplication {
         private static IContainer _hostContainer;
         private static IOrchardHost _host;
 
-
-        protected void Application_Start()
-        {
+        protected void Application_Start() {
             _hostContainer = OrchardStarter.CreateHostContainer(MvcSingletons);
             _host = _hostContainer.Resolve<IOrchardHost>();
             Host.Initialize();
@@ -27,18 +23,15 @@ namespace Orchard.Specs.Hosting.Orchard.Web
 
         }
 
-        protected void Application_BeginRequest()
-        {
+        protected void Application_BeginRequest() {
             Host.BeginRequest();
         }
 
-        protected void Application_EndRequest()
-        {
+        protected void Application_EndRequest() {
             Host.EndRequest();
         }
 
-        protected void MvcSingletons(ContainerBuilder builder)
-        {
+        protected void MvcSingletons(ContainerBuilder builder) {
             builder.RegisterInstance(ControllerBuilder.Current);
             builder.RegisterInstance(RouteTable.Routes);
             builder.RegisterInstance(ModelBinders.Binders);

@@ -1,0 +1,10 @@
+﻿<%@ Control Language="C#" Inherits="Orchard.Mvc.ViewUserControl<IEnumerable<Orchard.ContentTypes.ViewModels.EditTypePartViewModel>>" %>
+<%
+if (Model.Any()) { %>
+    <fieldset><%
+        foreach (var part in Model) {
+            var p = part; %>
+            <%:Html.EditorFor(m => p, "TypePart", p.Prefix) %><%
+        } %>
+    </fieldset><%
+} %>

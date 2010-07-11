@@ -1,7 +1,7 @@
 ﻿<%@ Page Language="C#" Inherits="Orchard.Mvc.ViewPage<TagsAdminSearchViewModel>" %>
 <%@ Import Namespace="Orchard.ContentManagement"%>
 <%@ Import Namespace="Orchard.Tags.ViewModels"%>
-<h1><%=Html.TitleForPage(T("List of contents tagged with {0}", Model.TagName).ToString()) %></h1>
+<h1><%: Html.TitleForPage(T("List of contents tagged with {0}", Model.TagName).ToString()) %></h1>
 <table class="items">
 	<colgroup>
 		<col id="Col1" />
@@ -9,14 +9,14 @@
 	</colgroup>
 	<thead>
 		<tr>
-			<th scope="col"><%=_Encoded("Name")%></th>
-			<th scope="col"><%=_Encoded("Link to the content item")%></th>
+			<th scope="col"><%: T("Name")%></th>
+			<th scope="col"><%: T("Link to the content item")%></th>
 		</tr>
 	</thead>
     <% foreach (var contentItem in Model.Contents) { %>
     <tr>
-        <td><%=Html.ItemDisplayText(contentItem) %></td>
-        <td><%=Html.ItemDisplayLink(contentItem) %></td>
+        <td><%: Html.ItemDisplayText(contentItem) %></td>
+        <td><%: Html.ItemDisplayLink(contentItem) %></td>
     </tr>
     <% } %>
 </table>

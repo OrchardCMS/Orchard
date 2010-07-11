@@ -4,8 +4,8 @@ using System.Linq;
 using System.Web;
 using Orchard.Environment.Extensions;
 using Orchard.Environment.Extensions.Models;
-using Orchard.Environment.Topology;
-using Orchard.Environment.Topology.Models;
+using Orchard.Environment.Descriptor;
+using Orchard.Environment.Descriptor.Models;
 using Orchard.Localization;
 using Orchard.Modules.Models;
 using Orchard.UI.Notify;
@@ -24,7 +24,7 @@ namespace Orchard.Modules.Services {
             T = NullLocalizer.Instance;
         }
 
-        private Localizer T { get; set; }
+        public Localizer T { get; set; }
         public IOrchardServices Services { get; set; }
 
         public IModule GetModuleByName(string moduleName) {
@@ -53,7 +53,7 @@ namespace Orchard.Modules.Services {
         }
 
         public IEnumerable<IModuleFeature> GetAvailableFeatures() {
-            var enabledFeatures = _shellDescriptorManager.GetShellDescriptor().EnabledFeatures;
+            var enabledFeatures = _shellDescriptorManager.GetShellDescriptor().Features;
             return GetInstalledModules()
                 .SelectMany(m => _extensionManager.LoadFeatures(m.Features))
                 .Select(
@@ -71,7 +71,7 @@ namespace Orchard.Modules.Services {
 
         public void EnableFeatures(IEnumerable<string> features, bool force) {
             var shellDescriptor = _shellDescriptorManager.GetShellDescriptor();
-            var enabledFeatures = shellDescriptor.EnabledFeatures.ToList();
+            var enabledFeatures = shellDescriptor.Features.ToList();
 
             var featuresToEnable =
                 features.Select(s => EnableFeature(s, GetAvailableFeatures(), force)).
@@ -95,7 +95,7 @@ namespace Orchard.Modules.Services {
 
         public void DisableFeatures(IEnumerable<string> features, bool force) {
             var shellDescriptor = _shellDescriptorManager.GetShellDescriptor();
-            var enabledFeatures = shellDescriptor.EnabledFeatures.ToList();
+            var enabledFeatures = shellDescriptor.Features.ToList();
 
             var featuresToDisable =
                 features.Select(s => DisableFeature(s, GetAvailableFeatures(), force)).SelectMany(

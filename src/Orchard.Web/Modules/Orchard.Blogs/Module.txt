@@ -4,6 +4,7 @@ author: The Orchard Team
 website: http://orchardproject.net
 version: 0.1
 orchardversion: 0.1.2010.0312
+description: The Orchard Blogs module is implementing basic blogging features. 
 features:
     Orchard.Blogs:
         Description: A simple web log.

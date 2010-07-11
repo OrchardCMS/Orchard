@@ -4,6 +4,7 @@ author: The Orchard Team
 website: http://orchardproject.net
 version: 0.1
 orchardversion: 0.1.2010.0312
+description: The XmlRpc module enables creation of contents from client applications such as LiveWriter.
 features:
     XmlRpc:
         Description: XML-RPC opt-in implementation.

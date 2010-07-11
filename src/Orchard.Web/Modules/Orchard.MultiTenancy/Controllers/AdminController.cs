@@ -22,7 +22,7 @@ namespace Orchard.MultiTenancy.Controllers {
             T = NullLocalizer.Instance;
         }
 
-        private Localizer T { get; set; }
+        public Localizer T { get; set; }
         public IOrchardServices Services { get; set; }
 
         public ActionResult Index() {
@@ -55,7 +55,7 @@ namespace Orchard.MultiTenancy.Controllers {
                 return RedirectToAction("Index");
             }
             catch (Exception exception) {
-                Services.Notifier.Error(T("Creating Tenant failed: ") + exception.Message);
+                Services.Notifier.Error(T("Creating Tenant failed: {0}", exception.Message));
                 return View(viewModel);
             }
         }
@@ -103,7 +103,7 @@ namespace Orchard.MultiTenancy.Controllers {
                 return RedirectToAction("Index");
             }
             catch (Exception exception) {
-                Services.Notifier.Error(T("Failed to edit tenant: ") + exception.Message);
+                Services.Notifier.Error(T("Failed to edit tenant: {0} ", exception.Message));
                 return View(viewModel);
             }
         }

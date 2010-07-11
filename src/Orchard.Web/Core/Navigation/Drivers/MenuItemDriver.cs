@@ -10,7 +10,7 @@ namespace Orchard.Core.Navigation.Drivers {
         private readonly IAuthorizationService _authorizationService;
 
         public readonly static ContentType ContentType = new ContentType {
-                                                                             Name = "menuitem",
+                                                                             Name = "MenuItem",
                                                                              DisplayName = "Menu Item"
                                                                          };
 

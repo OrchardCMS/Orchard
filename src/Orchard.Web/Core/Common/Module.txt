@@ -4,6 +4,7 @@ author: The Orchard Team
 website: http://orchardproject.net
 version: 0.1
 orchardversion: 0.1.2010.0312
+description: The common module introduces content parts that are going to be used by most content types (common, body and routable).
 features:
     Common:
         Description: Core content parts.

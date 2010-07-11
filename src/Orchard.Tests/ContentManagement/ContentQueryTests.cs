@@ -1,8 +1,9 @@
 ﻿using System.Linq;
 using Autofac;
+using Moq;
 using NHibernate;
 using NUnit.Framework;
-using Orchard.ContentManagement.MetaData.Records;
+using Orchard.ContentManagement.MetaData;
 using Orchard.Data;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Handlers;
@@ -28,9 +29,7 @@ namespace Orchard.Tests.ContentManagement {
                 typeof(EpsilonRecord),
                 typeof(ContentItemVersionRecord),
                 typeof(ContentItemRecord),
-                typeof(ContentTypeRecord),
-                typeof(ContentTypePartRecord),
-                typeof(ContentTypePartNameRecord));
+                typeof(ContentTypeRecord));
         }
 
         [TestFixtureTearDown]
@@ -47,6 +46,7 @@ namespace Orchard.Tests.ContentManagement {
             builder.RegisterModule(new ContentModule());
             builder.RegisterType<DefaultContentManager>().As<IContentManager>().SingleInstance();
             builder.RegisterType<DefaultContentManagerSession>().As<IContentManagerSession>();
+            builder.RegisterInstance(new Mock<IContentDefinitionManager>().Object);
 
             builder.RegisterType<AlphaHandler>().As<IContentHandler>();
             builder.RegisterType<BetaHandler>().As<IContentHandler>();

@@ -14,7 +14,7 @@ namespace Orchard.Core.Common.Drivers {
 
         private readonly IOrchardServices _services;
         private readonly IRoutableService _routableService;
-        private Localizer T { get; set; }
+        public Localizer T { get; set; }
 
         protected override string Prefix {
             get { return "Routable"; }
@@ -38,7 +38,7 @@ namespace Orchard.Core.Common.Drivers {
             updater.TryUpdateModel(model, Prefix, null, null);
 
             if (!_routableService.IsSlugValid(part.Slug)){
-                updater.AddModelError("Routable.Slug", T("Please do not use any of the following characters in your slugs: \"/\", \":\", \"?\", \"#\", \"[\", \"]\", \"@\", \"!\", \"$\", \"&\", \"'\", \"(\", \")\", \"*\", \"+\", \",\", \";\", \"=\". No spaces are allowed (please use dashes or underscores instead).").ToString());
+                updater.AddModelError("Routable.Slug", T("Please do not use any of the following characters in your slugs: \"/\", \":\", \"?\", \"#\", \"[\", \"]\", \"@\", \"!\", \"$\", \"&\", \"'\", \"(\", \")\", \"*\", \"+\", \",\", \";\", \"=\". No spaces are allowed (please use dashes or underscores instead)."));
             }
 
             string originalSlug = part.Slug;

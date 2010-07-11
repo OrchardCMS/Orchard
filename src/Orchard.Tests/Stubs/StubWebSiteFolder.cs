@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -13,6 +14,10 @@ namespace Orchard.Tests.Stubs {
             return Directory.GetDirectories(path);
         }
 
+        public bool FileExists(string virtualPath) {
+            throw new NotImplementedException();
+        }
+
         public string ReadFile(string path) {
             if (!File.Exists(path))
                 return null;
@@ -20,8 +25,20 @@ namespace Orchard.Tests.Stubs {
             return File.ReadAllText(path);
         }
 
+        public void CopyFileTo(string virtualPath, Stream destination) {
+            throw new NotImplementedException();
+        }
+
         public IVolatileToken WhenPathChanges(string path) {
-            return new WebSiteFolder.Token(path);
+            return new Token {IsCurrent = true};
+        }
+
+        public void WhenPathChanges(string path, Action action) {
+            throw new NotImplementedException();
+        }
+
+        public class Token : IVolatileToken {
+            public bool IsCurrent { get; set; }
         }
     }
 }

@@ -12,7 +12,7 @@ namespace Orchard.Roles.Handlers {
         public UserRolesHandler(IRepository<UserRolesRecord> userRolesRepository) {
             _userRolesRepository = userRolesRepository;
 
-            Filters.Add(new ActivatingFilter<UserRoles>("user"));
+            Filters.Add(new ActivatingFilter<UserRoles>("User"));
             OnLoaded<UserRoles>((context, userRoles) => {
                                     userRoles.Roles = _userRolesRepository
                                         .Fetch(x => x.UserId == context.ContentItem.Id)

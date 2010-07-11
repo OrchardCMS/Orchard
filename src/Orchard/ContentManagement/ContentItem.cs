@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Orchard.ContentManagement.MetaData.Models;
 using Orchard.ContentManagement.Records;
 
 namespace Orchard.ContentManagement {
@@ -17,6 +18,7 @@ namespace Orchard.ContentManagement {
         public int Version { get { return VersionRecord == null ? 0 : VersionRecord.Number; } }
 
         public string ContentType { get; set; }
+        public ContentTypeDefinition TypeDefinition { get; set; }
         public ContentItemRecord Record { get { return VersionRecord == null ? null : VersionRecord.ContentItemRecord; } }
         public ContentItemVersionRecord VersionRecord { get; set; }
 

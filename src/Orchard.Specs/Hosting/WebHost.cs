@@ -44,6 +44,13 @@ namespace Orchard.Specs.Hosting {
 
         }
 
+        public void Dispose() {
+            if (_webHostAgent != null) {
+                _webHostAgent.Shutdown();
+                _webHostAgent = null;
+            }
+        }
+
         public void CopyExtension(string extensionFolder, string extensionName) {
             var sourceModule = _orchardWebPath.Combine(extensionFolder).Combine(extensionName);
             var targetModule = _tempSite.Combine(extensionFolder).Combine(extensionName);
@@ -73,6 +80,5 @@ namespace Orchard.Specs.Hosting {
                 fieldInfo.SetValue(to, value);
             }
         }
-
     }
 }

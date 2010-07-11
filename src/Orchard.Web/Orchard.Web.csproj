@@ -1,4 +1,5 @@
-﻿<Project ToolsVersion="3.5" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
@@ -10,8 +11,13 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Orchard.Web</RootNamespace>
     <AssemblyName>Orchard.Web</AssemblyName>
-    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <MvcBuildViews>false</MvcBuildViews>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <OldToolsVersion>3.5</OldToolsVersion>
+    <UpgradeBackupLocation />
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -21,6 +27,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -29,6 +36,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Autofac, Version=2.1.13.813, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
@@ -52,28 +60,23 @@
     <Reference Include="System.ComponentModel.DataAnnotations">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
-    <Reference Include="System.Core">
-      <RequiredTargetFramework>3.5</RequiredTargetFramework>
-    </Reference>
-    <Reference Include="System.Data.DataSetExtensions">
-      <RequiredTargetFramework>3.5</RequiredTargetFramework>
-    </Reference>
+    <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Data.SQLite, Version=1.0.65.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=x86">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\sqlite\System.Data.SQLite.DLL</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="System.Web.ApplicationServices" />
+    <Reference Include="System.Web.DynamicData" />
+    <Reference Include="System.Web.Entity" />
+    <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Web.Mvc, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\aspnetmvc\System.Web.Mvc.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="System.Xml.Linq">
-      <RequiredTargetFramework>3.5</RequiredTargetFramework>
-    </Reference>
     <Reference Include="System.Drawing" />
     <Reference Include="System.Web" />
-    <Reference Include="System.Web.Extensions, Version=3.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="System.Web.Abstractions" />
     <Reference Include="System.Web.Routing" />
     <Reference Include="System.Xml" />
@@ -81,6 +84,7 @@
     <Reference Include="System.Web.Services" />
     <Reference Include="System.EnterpriseServices" />
     <Reference Include="System.Web.Mobile" />
+    <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Default.aspx.cs">
@@ -95,7 +99,11 @@
   <ItemGroup>
     <Content Include="Default.aspx" />
     <Content Include="Global.asax" />
-    <Content Include="Web.config" />
+    <Content Include="Refresh.html" />
+    <Content Include="Themes\TheAdmin\Styles\ie.css" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Orchard\Orchard.Framework.csproj">
@@ -109,70 +117,6 @@
     <ProjectReference Include="Core\Orchard.Core.csproj">
       <Project>{9916839C-39FC-4CEB-A5AF-89CA7E87119F}</Project>
       <Name>Orchard.Core</Name>
-    </ProjectReference>
-    <ProjectReference Include="Modules\Futures.Widgets\Futures.Widgets.csproj">
-      <Project>{E65E5633-C0FF-453C-A906-481C14F969D6}</Project>
-      <Name>Futures.Widgets</Name>
-    </ProjectReference>
-    <ProjectReference Include="Modules\Orchard.Blogs\Orchard.Blogs.csproj">
-      <Project>{63FBD4D9-E1DA-4A7B-AA6A-D6074FE50867}</Project>
-      <Name>Orchard.Blogs</Name>
-    </ProjectReference>
-    <ProjectReference Include="Modules\Orchard.Comments\Orchard.Comments.csproj">
-      <Project>{14C049FD-B35B-415A-A824-87F26B26E7FD}</Project>
-      <Name>Orchard.Comments</Name>
-    </ProjectReference>
-    <ProjectReference Include="Modules\Orchard.DevTools\Orchard.DevTools.csproj">
-      <Project>{67C1D3AF-A0EC-46B2-BAE1-DF1DA8E0B890}</Project>
-      <Name>Orchard.DevTools</Name>
-    </ProjectReference>
-    <ProjectReference Include="Modules\Orchard.Media\Orchard.Media.csproj">
-      <Project>{D9A7B330-CD22-4DA1-A95A-8DE1982AD8EB}</Project>
-      <Name>Orchard.Media</Name>
-    </ProjectReference>
-    <ProjectReference Include="Modules\Orchard.MetaData\Orchard.MetaData.csproj">
-      <Project>{23E04990-2A8D-41B8-9908-6DDB71EA3B23}</Project>
-      <Name>Orchard.MetaData</Name>
-    </ProjectReference>
-    <ProjectReference Include="Modules\Orchard.Modules\Orchard.Modules.csproj">
-      <Project>{17F86780-9A1F-4AA1-86F1-875EEC2730C7}</Project>
-      <Name>Orchard.Modules</Name>
-    </ProjectReference>
-    <ProjectReference Include="Modules\Orchard.MultiTenancy\Orchard.MultiTenancy.csproj">
-      <Project>{72457126-E118-4171-A08F-9A709EE4B7FC}</Project>
-      <Name>Orchard.MultiTenancy</Name>
-    </ProjectReference>
-    <ProjectReference Include="Modules\Orchard.Pages\Orchard.Pages.csproj">
-      <Project>{4A9C04A6-0986-4A92-A610-5F59FF273FB9}</Project>
-      <Name>Orchard.Pages</Name>
-    </ProjectReference>
-    <ProjectReference Include="Modules\Orchard.Roles\Orchard.Roles.csproj">
-      <Project>{D10AD48F-407D-4DB5-A328-173EC7CB010F}</Project>
-      <Name>Orchard.Roles</Name>
-    </ProjectReference>
-    <ProjectReference Include="Modules\Orchard.Setup\Orchard.Setup.csproj">
-      <Project>{8C7FCBC2-E6E1-405E-BFB5-D8D9E67A09C4}</Project>
-      <Name>Orchard.Setup</Name>
-    </ProjectReference>
-    <ProjectReference Include="Modules\Orchard.Tags\Orchard.Tags.csproj">
-      <Project>{5D0F00F0-26C9-4785-AD61-B85710C60EB0}</Project>
-      <Name>Orchard.Tags</Name>
-    </ProjectReference>
-    <ProjectReference Include="Modules\Orchard.Themes\Orchard.Themes.csproj">
-      <Project>{CDE24A24-01D3-403C-84B9-37722E18DFB7}</Project>
-      <Name>Orchard.Themes</Name>
-    </ProjectReference>
-    <ProjectReference Include="Modules\Orchard.Users\Orchard.Users.csproj">
-      <Project>{79AED36E-ABD0-4747-93D3-8722B042454B}</Project>
-      <Name>Orchard.Users</Name>
-    </ProjectReference>
-    <ProjectReference Include="Modules\Orchard.Sandbox\Orchard.Sandbox.csproj">
-      <Project>{17C44253-65A2-4597-98C7-16EE576824B6}</Project>
-      <Name>Orchard.Sandbox</Name>
-    </ProjectReference>
-    <ProjectReference Include="Modules\TinyMce\TinyMce.csproj">
-      <Project>{954CA994-D204-468B-9D69-51F6AD3E1C29}</Project>
-      <Name>TinyMce</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
@@ -367,7 +311,7 @@
     <Folder Include="Themes\SafeMode\Content\Images\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
-  <Import Project="$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v9.0\WebApplications\Microsoft.WebApplication.targets" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

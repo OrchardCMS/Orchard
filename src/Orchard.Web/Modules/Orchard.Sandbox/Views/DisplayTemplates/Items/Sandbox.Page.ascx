@@ -8,8 +8,8 @@
     </div>
     <% Html.Zone("metatop"); %>
     <div class="actions">
-        <%=Html.ItemEditLink(T("Edit this page").ToString(), Model.Item) %>
-        <%=Html.ActionLink(T("Return to list").ToString(), "index") %>
+        <%: Html.ItemEditLink(T("Edit this page").ToString(), Model.Item) %>
+        <%: Html.ActionLink(T("Return to list").ToString(), "index") %>
         <% Html.Zone("actions"); %>
     </div>
     <div class="body">

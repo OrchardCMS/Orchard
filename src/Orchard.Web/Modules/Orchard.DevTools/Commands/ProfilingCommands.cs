@@ -3,9 +3,11 @@ using Orchard.ContentManagement;
 using Orchard.ContentManagement.Aspects;
 using Orchard.Core.Common.Models;
 using Orchard.Core.Navigation.Models;
+using Orchard.Environment.Extensions;
 using Orchard.Security;
 
 namespace Orchard.DevTools.Commands {
+    [OrchardFeature("Profiling")]
     public class ProfilingCommands : DefaultOrchardCommandHandler {
         private readonly IContentManager _contentManager;
         private readonly IMembershipService _membershipService;
@@ -22,7 +24,7 @@ namespace Orchard.DevTools.Commands {
             for (var index = 0; index != 5; ++index) {
 
                 var pageName = "page" + index;
-                var page = _contentManager.Create("page", VersionOptions.Draft);
+                var page = _contentManager.Create("Page", VersionOptions.Draft);
                 page.As<ICommonAspect>().Owner = admin;
                 page.As<RoutableAspect>().Slug = pageName;
                 page.As<RoutableAspect>().Title = pageName;
@@ -33,7 +35,7 @@ namespace Orchard.DevTools.Commands {
                 _contentManager.Publish(page);
 
                 var blogName = "blog" + index;
-                var blog = _contentManager.New("blog");
+                var blog = _contentManager.New("Blog");
                 blog.As<ICommonAspect>().Owner = admin;
                 blog.As<RoutableAspect>().Slug = blogName;
                 blog.As<RoutableAspect>().Title = blogName;
@@ -42,10 +44,10 @@ namespace Orchard.DevTools.Commands {
                 blog.As<MenuPart>().MenuText = blogName;
                 _contentManager.Create(blog);
 
-                // "blogpost" content type can't be created w/out http context at the moment
+                // "BlogPost" content type can't be created w/out http context at the moment
                 //for (var index2 = 0; index2 != 5; ++index2) {
                 //    var postName = "post" + index;
-                //    var post = _contentManager.New("blogpost");
+                //    var post = _contentManager.New("BlogPost");
                 //    post.As<ICommonAspect>().Owner = admin;
                 //    post.As<ICommonAspect>().Container = blog;
                 //    post.As<RoutableAspect>().Slug = postName;

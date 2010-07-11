@@ -1,0 +1,375 @@
+﻿using System.Linq;
+using System.Web.Mvc;
+using Orchard.ContentManagement;
+using Orchard.ContentManagement.MetaData.Models;
+using Orchard.ContentTypes.Services;
+using Orchard.ContentTypes.ViewModels;
+using Orchard.Localization;
+using Orchard.Mvc.Results;
+using Orchard.UI.Notify;
+
+namespace Orchard.ContentTypes.Controllers {
+    public class AdminController : Controller, IUpdateModel {
+        private readonly IContentDefinitionService _contentDefinitionService;
+
+        public AdminController(IOrchardServices orchardServices, IContentDefinitionService contentDefinitionService) {
+            Services = orchardServices;
+            _contentDefinitionService = contentDefinitionService;
+            T = NullLocalizer.Instance;
+        }
+
+        public IOrchardServices Services { get; private set; }
+        public Localizer T { get; set; }
+
+        public ActionResult Index() { return List(); }
+
+        #region Types
+
+        public ActionResult List() {
+            return View("List", new ListContentTypesViewModel {
+                Types = _contentDefinitionService.GetTypes()
+            });
+        }
+
+        public ActionResult Create() {
+            if (!Services.Authorizer.Authorize(Permissions.CreateContentTypes, T("Not allowed to create a content type.")))
+                return new HttpUnauthorizedResult();
+
+            return View(new CreateTypeViewModel());
+        }
+
+        [HttpPost, ActionName("Create")]
+        public ActionResult CreatePOST(CreateTypeViewModel viewModel) {
+            if (!Services.Authorizer.Authorize(Permissions.CreateContentTypes, T("Not allowed to create a content type.")))
+                return new HttpUnauthorizedResult();
+
+            var typeViewModel = _contentDefinitionService.AddType(viewModel);
+
+            if (!ModelState.IsValid) {
+                Services.TransactionManager.Cancel();
+                return View(viewModel);
+            }
+
+            Services.Notifier.Information(T("The \"{0}\" content type has been created.", typeViewModel.DisplayName));
+
+            return RedirectToAction("Edit", new { id = typeViewModel.Name });
+        }
+
+        public ActionResult Edit(string id) {
+            if (!Services.Authorizer.Authorize(Permissions.CreateContentTypes, T("Not allowed to edit a content type.")))
+                return new HttpUnauthorizedResult();
+
+            var typeViewModel = _contentDefinitionService.GetType(id);
+
+            if (typeViewModel == null)
+                return new NotFoundResult();
+
+            return View(typeViewModel);
+        }
+
+        [HttpPost, ActionName("Edit")]
+        public ActionResult EditPOST(string id) {
+            if (!Services.Authorizer.Authorize(Permissions.CreateContentTypes, T("Not allowed to edit a content type.")))
+                return new HttpUnauthorizedResult();
+
+            var typeViewModel = _contentDefinitionService.GetType(id);
+
+            if (typeViewModel == null)
+                return new NotFoundResult();
+
+            if (!TryUpdateModel(typeViewModel))
+                return View(typeViewModel);
+
+            _contentDefinitionService.AlterType(typeViewModel, this);
+
+            if (!ModelState.IsValid) {
+                Services.TransactionManager.Cancel();
+                return View(typeViewModel);
+            }
+
+            Services.Notifier.Information(T("\"{0}\" settings have been saved.", typeViewModel.DisplayName));
+
+            return RedirectToAction("Index");
+        }
+
+        public ActionResult AddPartsTo(string id) {
+            if (!Services.Authorizer.Authorize(Permissions.CreateContentTypes, T("Not allowed to edit a content type.")))
+                return new HttpUnauthorizedResult();
+
+            var typeViewModel = _contentDefinitionService.GetType(id);
+
+            if (typeViewModel == null)
+                return new NotFoundResult();
+
+            var viewModel = new AddPartsViewModel {
+                Type = typeViewModel,
+                PartSelections = _contentDefinitionService.GetParts()
+                    .Where(cpd => !typeViewModel.Parts.Any(p => p.PartDefinition.Name == cpd.Name))
+                    .Select(cpd => new PartSelectionViewModel { PartName = cpd.Name })
+            };
+
+            return View(viewModel);
+        }
+
+        [HttpPost, ActionName("AddPartsTo")]
+        public ActionResult AddPartsToPOST(string id) {
+            if (!Services.Authorizer.Authorize(Permissions.CreateContentTypes, T("Not allowed to edit a content type.")))
+                return new HttpUnauthorizedResult();
+
+            var typeViewModel = _contentDefinitionService.GetType(id);
+
+            if (typeViewModel == null)
+                return new NotFoundResult();
+
+            var viewModel = new AddPartsViewModel();
+            if (!TryUpdateModel(viewModel)) {
+                viewModel.Type = typeViewModel;
+                return View(viewModel);
+            }
+
+            var partsToAdd = viewModel.PartSelections.Where(ps => ps.IsSelected).Select(ps => ps.PartName);
+            foreach (var partToAdd in partsToAdd) {
+                _contentDefinitionService.AddPartToType(partToAdd, typeViewModel.Name);
+                Services.Notifier.Information(T("The \"{0}\" part has been added.", partToAdd));
+            }
+
+            if (!ModelState.IsValid) {
+                Services.TransactionManager.Cancel(); ;
+                viewModel.Type = typeViewModel;
+                return View(viewModel);
+            }
+
+            return RedirectToAction("Edit", new {id});
+        }
+
+        public ActionResult RemovePartFrom(string id) {
+            if (!Services.Authorizer.Authorize(Permissions.CreateContentTypes, T("Not allowed to edit a content type.")))
+                return new HttpUnauthorizedResult();
+
+            var typeViewModel = _contentDefinitionService.GetType(id);
+
+            var viewModel = new RemovePartViewModel();
+            if (typeViewModel == null
+                || !TryUpdateModel(viewModel)
+                || !typeViewModel.Parts.Any(p => p.PartDefinition.Name == viewModel.Name))
+                return new NotFoundResult();
+
+            viewModel.Type = typeViewModel;
+            return View(viewModel);
+        }
+
+        [HttpPost, ActionName("RemovePartFrom")]
+        public ActionResult RemovePartFromPOST(string id) {
+            if (!Services.Authorizer.Authorize(Permissions.CreateContentTypes, T("Not allowed to edit a content type.")))
+                return new HttpUnauthorizedResult();
+
+            var typeViewModel = _contentDefinitionService.GetType(id);
+
+            var viewModel = new RemovePartViewModel();
+            if (typeViewModel == null
+                || !TryUpdateModel(viewModel)
+                || !typeViewModel.Parts.Any(p => p.PartDefinition.Name == viewModel.Name))
+                return new NotFoundResult();
+
+            _contentDefinitionService.RemovePartFromType(viewModel.Name, typeViewModel.Name);
+
+            if (!ModelState.IsValid) {
+                Services.TransactionManager.Cancel();
+                viewModel.Type = typeViewModel;
+                return View(viewModel);
+            }
+
+            Services.Notifier.Information(T("The \"{0}\" part has been removed.", viewModel.Name));
+
+            return RedirectToAction("Edit", new {id});
+        }
+
+        #endregion
+
+        #region Parts
+
+        public ActionResult ListParts() {
+            return View(new ListContentPartsViewModel {
+                Parts = _contentDefinitionService.GetParts()
+            });
+        }
+
+        public ActionResult CreatePart() {
+            if (!Services.Authorizer.Authorize(Permissions.CreateContentTypes, T("Not allowed to create a content part.")))
+                return new HttpUnauthorizedResult();
+
+            return View(new CreatePartViewModel());
+        }
+
+        [HttpPost, ActionName("CreatePart")]
+        public ActionResult CreatePartPOST(CreatePartViewModel viewModel) {
+            if (!Services.Authorizer.Authorize(Permissions.CreateContentTypes, T("Not allowed to create a content part.")))
+                return new HttpUnauthorizedResult();
+
+            var partViewModel = _contentDefinitionService.AddPart(viewModel);
+
+            if (!ModelState.IsValid)
+                return View(viewModel);
+
+            Services.Notifier.Information(T("The \"{0}\" content part has been created.", partViewModel.Name));
+
+            return RedirectToAction("EditPart", new { id = partViewModel.Name });
+        }
+
+        public ActionResult EditPart(string id) {
+            if (!Services.Authorizer.Authorize(Permissions.CreateContentTypes, T("Not allowed to edit a content part.")))
+                return new HttpUnauthorizedResult();
+
+            var partViewModel = _contentDefinitionService.GetPart(id);
+
+            if (partViewModel == null)
+                return new NotFoundResult();
+
+            return View(partViewModel);
+        }
+
+        [HttpPost, ActionName("EditPart")]
+        public ActionResult EditPartPOST(string id) {
+            if (!Services.Authorizer.Authorize(Permissions.CreateContentTypes, T("Not allowed to edit a content part.")))
+                return new HttpUnauthorizedResult();
+
+            var partViewModel = _contentDefinitionService.GetPart(id);
+
+            if (partViewModel == null)
+                return new NotFoundResult();
+
+            if (!TryUpdateModel(partViewModel))
+                return View(partViewModel);
+
+            _contentDefinitionService.AlterPart(partViewModel, this);
+
+            if (!ModelState.IsValid) {
+                Services.TransactionManager.Cancel();
+                return View(partViewModel);
+            }
+
+            Services.Notifier.Information(T("\"{0}\" settings have been saved.", partViewModel.Name));
+
+            return RedirectToAction("ListParts");
+        }
+
+        public ActionResult AddFieldTo(string id) {
+            if (!Services.Authorizer.Authorize(Permissions.CreateContentTypes, T("Not allowed to edit a content part.")))
+                return new HttpUnauthorizedResult();
+
+            var partViewModel = _contentDefinitionService.GetPart(id);
+
+            if (partViewModel == null) {
+                //id passed in might be that of a type w/ no implicit field
+                var typeViewModel = _contentDefinitionService.GetType(id);
+                if (typeViewModel != null)
+                    partViewModel = new EditPartViewModel(new ContentPartDefinition(id));
+                else
+                    return new NotFoundResult();
+            }
+
+            var viewModel = new AddFieldViewModel {
+                Part = partViewModel,
+                Fields = _contentDefinitionService.GetFields()
+            };
+
+            return View(viewModel);
+        }
+
+        [HttpPost, ActionName("AddFieldTo")]
+        public ActionResult AddFieldToPOST(string id) {
+            if (!Services.Authorizer.Authorize(Permissions.CreateContentTypes, T("Not allowed to edit a content part.")))
+                return new HttpUnauthorizedResult();
+
+            var partViewModel = _contentDefinitionService.GetPart(id);
+            var typeViewModel = _contentDefinitionService.GetType(id);
+            if (partViewModel == null) {
+                //id passed in might be that of a type w/ no implicit field
+                if (typeViewModel != null) {
+                    partViewModel = new EditPartViewModel { Name = typeViewModel.Name };
+                    _contentDefinitionService.AddPart(new CreatePartViewModel { Name = partViewModel.Name });
+                    _contentDefinitionService.AddPartToType(partViewModel.Name, typeViewModel.Name);
+                }
+                else {
+                    return new NotFoundResult();
+                }
+            }
+
+            var viewModel = new AddFieldViewModel();
+            if (!TryUpdateModel(viewModel)) {
+                Services.TransactionManager.Cancel();
+                return AddFieldTo(id);
+            }
+
+            _contentDefinitionService.AddFieldToPart(viewModel.DisplayName, viewModel.FieldTypeName, partViewModel.Name);
+
+            if (!ModelState.IsValid) {
+                Services.TransactionManager.Cancel();
+                return AddFieldTo(id);
+            }
+
+            Services.Notifier.Information(T("The \"{0}\" field has been added.", viewModel.DisplayName));
+
+            if (typeViewModel != null)
+                return RedirectToAction("Edit", new { id });
+
+            return RedirectToAction("EditPart", new { id });
+        }
+
+
+        public ActionResult RemoveFieldFrom(string id) {
+            if (!Services.Authorizer.Authorize(Permissions.CreateContentTypes, T("Not allowed to edit a content part.")))
+                return new HttpUnauthorizedResult();
+
+            var partViewModel = _contentDefinitionService.GetPart(id);
+
+            var viewModel = new RemoveFieldViewModel();
+            if (partViewModel == null
+                || !TryUpdateModel(viewModel)
+                || !partViewModel.Fields.Any(p => p.Name == viewModel.Name))
+                return new NotFoundResult();
+
+            viewModel.Part = partViewModel;
+            return View(viewModel);
+        }
+
+        [HttpPost, ActionName("RemoveFieldFrom")]
+        public ActionResult RemoveFieldFromPOST(string id) {
+            if (!Services.Authorizer.Authorize(Permissions.CreateContentTypes, T("Not allowed to edit a content part.")))
+                return new HttpUnauthorizedResult();
+
+            var partViewModel = _contentDefinitionService.GetPart(id);
+
+            var viewModel = new RemoveFieldViewModel();
+            if (partViewModel == null
+                || !TryUpdateModel(viewModel)
+                || !partViewModel.Fields.Any(p => p.Name == viewModel.Name))
+                return new NotFoundResult();
+
+            _contentDefinitionService.RemoveFieldFromPart(viewModel.Name, partViewModel.Name);
+
+            if (!ModelState.IsValid) {
+                Services.TransactionManager.Cancel();
+                viewModel.Part = partViewModel;
+                return View(viewModel);
+            }
+
+            Services.Notifier.Information(T("The \"{0}\" field has been removed.", viewModel.Name));
+
+            if (_contentDefinitionService.GetType(id) != null)
+                return RedirectToAction("Edit", new { id });
+
+            return RedirectToAction("EditPart", new { id });
+        }
+
+        #endregion
+
+        bool IUpdateModel.TryUpdateModel<TModel>(TModel model, string prefix, string[] includeProperties, string[] excludeProperties) {
+            return base.TryUpdateModel(model, prefix, includeProperties, excludeProperties);
+        }
+
+        void IUpdateModel.AddModelError(string key, LocalizedString errorMessage) {
+            ModelState.AddModelError(key, errorMessage.ToString());
+        }
+    }
+}

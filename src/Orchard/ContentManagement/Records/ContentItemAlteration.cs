@@ -8,19 +8,20 @@ using System.Reflection.Emit;
 using FluentNHibernate.Automapping;
 using FluentNHibernate.Automapping.Alterations;
 using JetBrains.Annotations;
-using Orchard.Environment.Topology;
-using Orchard.Environment.Topology.Models;
+using Orchard.Environment.Descriptor;
+using Orchard.Environment.Descriptor.Models;
+using Orchard.Environment.ShellBuilders.Models;
 
 namespace Orchard.ContentManagement.Records {
     class ContentItemAlteration : IAutoMappingAlteration {
-        private readonly IEnumerable<RecordTopology> _recordDescriptors;
+        private readonly IEnumerable<RecordBlueprint> _recordDescriptors;
 
         [UsedImplicitly]
         public ContentItemAlteration() {
-            _recordDescriptors = Enumerable.Empty<RecordTopology>();
+            _recordDescriptors = Enumerable.Empty<RecordBlueprint>();
         }
 
-        public ContentItemAlteration(IEnumerable<RecordTopology> recordDescriptors) {
+        public ContentItemAlteration(IEnumerable<RecordBlueprint> recordDescriptors) {
             _recordDescriptors = recordDescriptors;
         }
 
@@ -32,6 +33,7 @@ namespace Orchard.ContentManagement.Records {
                     var alteration = (IAlteration<ContentItemRecord>)Activator.CreateInstance(type);
                     alteration.Override(mapping);
                 }
+                mapping.IgnoreProperty(x => x.Infoset);
             });
 
             model.Override<ContentItemVersionRecord>(mapping => {
@@ -40,6 +42,7 @@ namespace Orchard.ContentManagement.Records {
                     var alteration = (IAlteration<ContentItemVersionRecord>)Activator.CreateInstance(type);
                     alteration.Override(mapping);
                 }
+                mapping.IgnoreProperty(x => x.Infoset);
             });
         }
 
@@ -52,6 +55,7 @@ namespace Orchard.ContentManagement.Records {
         /// referenced when building joins accross content item record tables.
         /// <typeparam name="TItemRecord">Either ContentItemRecord or ContentItemVersionRecord</typeparam>
         /// <typeparam name="TPartRecord">A part record (deriving from TItemRecord)</typeparam>
+        /// </summary>
         class Alteration<TItemRecord, TPartRecord> : IAlteration<TItemRecord> {
             public void Override(AutoMapping<TItemRecord> mapping) {
 

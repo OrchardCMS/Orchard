@@ -9,11 +9,11 @@ namespace Orchard.Tests.UI.Notify {
         [Test]
         public void MessageServiceCanAccumulateWarningsAndErrorsToReturn() {
             INotifier notifier = new Notifier();
-            notifier.Warning("Hello world");
-            notifier.Information("More Info");
-            notifier.Error("Boom");
-
             Localizer T = NullLocalizer.Instance;
+
+            notifier.Warning(T("Hello world"));
+            notifier.Information(T("More Info"));
+            notifier.Error(T("Boom"));
 
             Assert.That(notifier.List(), Has.Count.EqualTo(3));
             Assert.That(notifier.List(), Has.Some.Property("Message").EqualTo(T("Hello world")));

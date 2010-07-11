@@ -1,20 +1,20 @@
 using System.Linq;
 using Orchard.Environment.Extensions.Models;
-using Orchard.Environment.Topology.Models;
+using Orchard.Environment.Descriptor.Models;
 
 namespace Orchard.Tests.Environment.Utility {
     static class Build {
 
-        public static ShellDescriptor TopologyDescriptor() {
+        public static ShellDescriptor ShellDescriptor() {
             var descriptor = new ShellDescriptor {
-                                                             EnabledFeatures = Enumerable.Empty<ShellFeature>(),
+                                                             Features = Enumerable.Empty<ShellFeature>(),
                                                              Parameters = Enumerable.Empty<ShellParameter>(),
                                                          };
             return descriptor;
         }
 
         public static ShellDescriptor WithFeatures(this ShellDescriptor descriptor, params string[] names) {
-            descriptor.EnabledFeatures = descriptor.EnabledFeatures.Concat(
+            descriptor.Features = descriptor.Features.Concat(
                 names.Select(name => new ShellFeature { Name = name }));
 
             return descriptor;

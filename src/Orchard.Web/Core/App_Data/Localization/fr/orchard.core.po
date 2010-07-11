@@ -1,0 +1,2304 @@
+﻿#: ~/Core/Common/Drivers/RoutableDriver.cs
+#| msgid : "Please do not use any of the following characters in your slugs: \"/\", \":\", \"?\", \"#\", \"[\", \"]\", \"@\", \"!\", \"$\", \"&\", \"'\", \"(\", \")\", \"*\", \"+\", \",\", \";\", \"=\". No spaces are allowed (please use dashes or underscores instead)."
+msgid "Please do not use any of the following characters in your slugs: \"/\", \":\", \"?\", \"#\", \"[\", \"]\", \"@\", \"!\", \"$\", \"&\", \"'\", \"(\", \")\", \"*\", \"+\", \",\", \";\", \"=\". No spaces are allowed (please use dashes or underscores instead)."
+msgstr "Merci de n'utiliser aucun des caractères suivants dans vos alias: \"/\", \":\", \"?\", \"#\", \"[\", \"]\", \"@\", \"!\", \"$\", \"&\", \"'\", \"(\", \")\", \"*\", \"+\", \",\", \";\", \"=\". Les espaces ne sont pas admis (merci d'utiliser des tirets '-' ou '_')."
+
+#: ~/Core/Common/Drivers/RoutableDriver.cs
+#| msgid : "Slugs in conflict. \"{0}\" is already set for a previously created {2} so now it has the slug \"{1}\""
+msgid "Slugs in conflict. \"{0}\" is already set for a previously created {2} so now it has the slug \"{1}\""
+msgstr "Conflit d'alias. \"{0}\" est déjà utilisé dans un {2} existant. Alias changé en \"{1}\"."
+
+#: ~/Core/Common/Handlers/CommonAspectHandler.cs
+#| msgid : "Invalid user name"
+msgid "Invalid user name"
+msgstr "Nom d'utilisateur invalide"
+
+#: ~/Core/Common/Views/DisplayTemplates/Parts/Common.Body.Summary.ascx
+#| msgid : "[more]"
+msgid "[more]"
+msgstr "[En voir plus]"
+
+#: ~/Core/Dashboard/Views/Admin/Index.ascx
+#| msgid : "Welcome to Orchard"
+msgid "Welcome to Orchard"
+msgstr "Bienvenue dans Orchard"
+
+#: ~/Core/Dashboard/Views/Admin/Index.ascx
+#| msgid : "The Orchard Team"
+msgid "The Orchard Team"
+msgstr "L'équipe Orchard"
+
+#: ~/Core/Dashboard/Views/Admin/Index.ascx
+#| msgid : "This is the place where you can manage your web site, its appearance and its contents. Please take a moment to explore the different menu items on the left of the screen to familiarize yourself with the features of the application. For example, try to change the theme through the “Manage Themes” menu entry. You can also create new pages and manage existing ones through the “Manage Pages” menu entry or create blogs through “Manage Blogs”."
+msgid "This is the place where you can manage your web site, its appearance and its contents. Please take a moment to explore the different menu items on the left of the screen to familiarize yourself with the features of the application. For example, try to change the theme through the “Manage Themes” menu entry. You can also create new pages and manage existing ones through the “Manage Pages” menu entry or create blogs through “Manage Blogs”."
+msgstr "Ceci est l'endroit où vous pouvez gérer votre site, son apparence et son contenu. Veuillez passer un instant à explorer le menu à gauche de l'écran pour vous familiariser avec les différents aspects de l'application. Par exemple, vous pouvez changer le thème en utilisant “Gérer les thèmes”. Vous pouvez également créer de nouvelles pages et gérer les pages existantes via “Gérer les pages” ou bien créer de nouveaux blogs via “Gérer les blogs”."
+
+#: ~/Core/Dashboard/Views/Admin/Index.ascx
+#| msgid : "Have fun!"
+msgid "Have fun!"
+msgstr "Amusez-vous bien!"
+
+#: ~/Core/Navigation/Controllers/AdminController.cs
+#| msgid : "Not allowed to manage the main menu"
+msgid "Not allowed to manage the main menu"
+msgstr "Non autorisé à gérer le menu principal"
+
+#: ~/Core/Navigation/Controllers/AdminController.cs
+#| msgid : "Couldn't manage the main menu"
+msgid "Couldn't manage the main menu"
+msgstr "Le menu principal n'a pas pu être modifié."
+
+#: ~/Core/Navigation/Controllers/AdminController.cs
+#| msgid : "Couldn't manage the main menu"
+msgid "Couldn't manage the main menu"
+msgstr "Le menu principal n'a pas pu être modifié."
+
+#: ~/Core/Navigation/Controllers/AdminController.cs
+#| msgid : "Couldn't manage the main menu"
+msgid "Couldn't manage the main menu"
+msgstr "Le menu principal n'a pas pu être modifié."
+
+#: ~/Core/Navigation/Drivers/MenuPartDriver.cs
+#| msgid : "The MenuText field is required"
+msgid "The MenuText field is required"
+msgstr "Le champ MenuText est requis"
+
+#: ~/Core/Navigation/Views/Admin/Index.ascx
+#| msgid : "Manage Main Menu"
+msgid "Manage Main Menu"
+msgstr "Gérer le menu principal"
+
+#: ~/Core/Settings/Controllers/AdminController.cs
+#| msgid : "Not authorized to manage settings"
+msgid "Not authorized to manage settings"
+msgstr "Non autorisé à gérer la configuration"
+
+#: ~/Core/Settings/Controllers/AdminController.cs
+#| msgid : "Not authorized to manage settings"
+msgid "Not authorized to manage settings"
+msgstr "Non autorisé à gérer la configuration"
+
+#: ~/Core/Settings/Controllers/AdminController.cs
+#| msgid : "Settings updated"
+msgid "Settings updated"
+msgstr "Configuration mise à jour"
+
+#: ~/Core/Settings/Descriptor/ShellDescriptorManager.cs
+#| msgid : "Invalid serial number for shell descriptor"
+msgid "Invalid serial number for shell descriptor"
+msgstr "Numéro de série de topologie de shell invalide."
+
+#: ~/Core/Settings/Views/Admin/Index.ascx
+#| msgid : "Manage Settings"
+msgid "Manage Settings"
+msgstr "Configurer"
+
+#: ~/Modules/Futures.Widgets/Controllers/AdminController.cs
+#| msgid : "Designer notes not found."
+msgid "Designer notes not found."
+msgstr "Notes de design introuvables."
+
+#: ~/Modules/Futures.Widgets/Views/Admin/Edit.ascx
+#| msgid : "Edit Widget"
+msgid "Edit Widget"
+msgstr "Modifier le gadget"
+
+#: ~/Modules/Orchard.Blogs/Controllers/BlogAdminController.cs
+#| msgid : "Not allowed to create blogs"
+msgid "Not allowed to create blogs"
+msgstr "Non autorisé à créer un blog."
+
+#: ~/Modules/Orchard.Blogs/Controllers/BlogAdminController.cs
+#| msgid : "Couldn't create blog"
+msgid "Couldn't create blog"
+msgstr "Le blog n'a pas pu être créé."
+
+#: ~/Modules/Orchard.Blogs/Controllers/BlogAdminController.cs
+#| msgid : "Not allowed to edit blog"
+msgid "Not allowed to edit blog"
+msgstr "Non autorisé à modifier le blog."
+
+#: ~/Modules/Orchard.Blogs/Controllers/BlogAdminController.cs
+#| msgid : "Couldn't edit blog"
+msgid "Couldn't edit blog"
+msgstr "La blog n'a pas pu être modifié."
+
+#: ~/Modules/Orchard.Blogs/Controllers/BlogAdminController.cs
+#| msgid : "Blog information updated"
+msgid "Blog information updated"
+msgstr "Les informations du blog ont été mises à jour."
+
+#: ~/Modules/Orchard.Blogs/Controllers/BlogAdminController.cs
+#| msgid : "Couldn't delete blog"
+msgid "Couldn't delete blog"
+msgstr "Le blog n'a pas pu être effacé."
+
+#: ~/Modules/Orchard.Blogs/Controllers/BlogAdminController.cs
+#| msgid : "Blog was successfully deleted"
+msgid "Blog was successfully deleted"
+msgstr "Le blog a été effacé."
+
+#: ~/Modules/Orchard.Blogs/Controllers/BlogPostAdminController.cs
+#| msgid : "Not allowed to create blog post"
+msgid "Not allowed to create blog post"
+msgstr "Non autorisé à créer un billet."
+
+#: ~/Modules/Orchard.Blogs/Controllers/BlogPostAdminController.cs
+#| msgid : "Couldn't create blog post"
+msgid "Couldn't create blog post"
+msgstr "Le billet n'a pas pu être créé."
+
+#: ~/Modules/Orchard.Blogs/Controllers/BlogPostAdminController.cs
+#| msgid : "Blog post has been published"
+msgid "Blog post has been published"
+msgstr "Le billet a été publié."
+
+#: ~/Modules/Orchard.Blogs/Controllers/BlogPostAdminController.cs
+#| msgid : "Blog post has been scheduled for publishing"
+msgid "Blog post has been scheduled for publishing"
+msgstr "La publication du billet a été planifiée."
+
+#: ~/Modules/Orchard.Blogs/Controllers/BlogPostAdminController.cs
+#| msgid : "Blog post draft has been saved"
+msgid "Blog post draft has been saved"
+msgstr "Le brouillon du billet a été sauvegardé."
+
+#: ~/Modules/Orchard.Blogs/Controllers/BlogPostAdminController.cs
+#| msgid : "Couldn't edit blog post"
+msgid "Couldn't edit blog post"
+msgstr "Le billet n'a pas pu être modifié."
+
+#: ~/Modules/Orchard.Blogs/Controllers/BlogPostAdminController.cs
+#| msgid : "Couldn't edit blog post"
+msgid "Couldn't edit blog post"
+msgstr "Le billet n'a pas pu être modifié."
+
+#: ~/Modules/Orchard.Blogs/Controllers/BlogPostAdminController.cs
+#| msgid : "Blog post has been published"
+msgid "Blog post has been published"
+msgstr "Le billet a été publié."
+
+#: ~/Modules/Orchard.Blogs/Controllers/BlogPostAdminController.cs
+#| msgid : "Blog post has been scheduled for publishing"
+msgid "Blog post has been scheduled for publishing"
+msgstr "La publication du billet a été planifiée."
+
+#: ~/Modules/Orchard.Blogs/Controllers/BlogPostAdminController.cs
+#| msgid : "Blog post draft has been saved"
+msgid "Blog post draft has been saved"
+msgstr "Le brouillon du billet a été sauvegardé."
+
+#: ~/Modules/Orchard.Blogs/Controllers/BlogPostAdminController.cs
+#| msgid : "There is no draft to discard."
+msgid "There is no draft to discard."
+msgstr "Aucun brouillon n'existe."
+
+#: ~/Modules/Orchard.Blogs/Controllers/BlogPostAdminController.cs
+#| msgid : "Couldn't discard blog post draft"
+msgid "Couldn't discard blog post draft"
+msgstr "Le brouillon n'a pas pu être effacé."
+
+#: ~/Modules/Orchard.Blogs/Controllers/BlogPostAdminController.cs
+#| msgid : "Can not discard draft on unpublished blog post."
+msgid "Can not discard draft on unpublished blog post."
+msgstr "Le brouillon de ce billet non publié n'a pas pu être effacé."
+
+#: ~/Modules/Orchard.Blogs/Controllers/BlogPostAdminController.cs
+#| msgid : "Blog post draft version discarded"
+msgid "Blog post draft version discarded"
+msgstr "Le brouillon du billet a été effacé."
+
+#: ~/Modules/Orchard.Blogs/Controllers/BlogPostAdminController.cs
+#| msgid : "Couldn't delete blog post"
+msgid "Couldn't delete blog post"
+msgstr "Le billet n'a pas pu être effacé."
+
+#: ~/Modules/Orchard.Blogs/Controllers/BlogPostAdminController.cs
+#| msgid : "Blog post was successfully deleted"
+msgid "Blog post was successfully deleted"
+msgstr "Le billet a été effacé."
+
+#: ~/Modules/Orchard.Blogs/Controllers/BlogPostAdminController.cs
+#| msgid : "Couldn't publish blog post"
+msgid "Couldn't publish blog post"
+msgstr "Le billet n'a pas pu être publié."
+
+#: ~/Modules/Orchard.Blogs/Controllers/BlogPostAdminController.cs
+#| msgid : "Blog post successfully published."
+msgid "Blog post successfully published."
+msgstr "Le billet a été publié."
+
+#: ~/Modules/Orchard.Blogs/Controllers/BlogPostAdminController.cs
+#| msgid : "Couldn't unpublish blog post"
+msgid "Couldn't unpublish blog post"
+msgstr "Le billet n'a pas pu être dépublié."
+
+#: ~/Modules/Orchard.Blogs/Controllers/BlogPostAdminController.cs
+#| msgid : "Blog post successfully unpublished."
+msgid "Blog post successfully unpublished."
+msgstr "Le billet a été dépublié."
+
+#: ~/Modules/Orchard.Blogs/Controllers/BlogPostController.cs
+#| msgid : "Couldn't view blog post"
+msgid "Couldn't view blog post"
+msgstr "Le billet ne peut être visualisé."
+
+#: ~/Modules/Orchard.Blogs/Views/BlogAdmin/Create.ascx
+#| msgid : "Add Blog"
+msgid "Add Blog"
+msgstr "Ajouter un blog"
+
+#: ~/Modules/Orchard.Blogs/Views/BlogAdmin/Edit.ascx
+#| msgid : "Edit Blog"
+msgid "Edit Blog"
+msgstr "Modifier le blog"
+
+#: ~/Modules/Orchard.Blogs/Views/BlogAdmin/Item.ascx
+#| msgid : "Manage Blog"
+msgid "Manage Blog"
+msgstr "Gérer le blog"
+
+#: ~/Modules/Orchard.Blogs/Views/BlogAdmin/List.ascx
+#| msgid : "Manage Blogs"
+msgid "Manage Blogs"
+msgstr "Gérer les blogs"
+
+#: ~/Modules/Orchard.Blogs/Views/BlogAdmin/List.ascx
+#| msgid : "There are no blogs for you to see. Want to <a href=\"{0}\">add one</a>?"
+msgid "There are no blogs for you to see. Want to <a href=\"{0}\">add one</a>?"
+msgstr "Il n'y a pas encore de blog. Désirez-vous en <a href=\"{0}\">créer un</a>?"
+
+#: ~/Modules/Orchard.Blogs/Views/BlogPost/ListByArchive.ascx
+#| msgid : "Archives"
+msgid "Archives"
+msgstr "Archives"
+
+#: ~/Modules/Orchard.Blogs/Views/BlogPost/ListByArchive.ascx
+#| msgid : "Archives"
+msgid "Archives"
+msgstr "Archives"
+
+#: ~/Modules/Orchard.Blogs/Views/BlogPostAdmin/Create.ascx
+#| msgid : "Add Post"
+msgid "Add Post"
+msgstr "Ajouter un billet"
+
+#: ~/Modules/Orchard.Blogs/Views/BlogPostAdmin/Edit.ascx
+#| msgid : "Edit Post"
+msgid "Edit Post"
+msgstr "Modifier un billet"
+
+#: ~/Modules/Orchard.Blogs/Views/EditorTemplates/Items/Blogs.BlogPost.ascx
+#| msgid : "Discard Draft"
+msgid "Discard Draft"
+msgstr "Effacer le brouillon"
+
+#: ~/Modules/Orchard.Comments/AdminMenu.cs
+#| msgid : "Comments"
+msgid "Comments"
+msgstr "Commentaires"
+
+#: ~/Modules/Orchard.Comments/AdminMenu.cs
+#| msgid : "Manage Comments"
+msgid "Manage Comments"
+msgstr "Gérer les Commentaires"
+
+#: ~/Modules/Orchard.Comments/Controllers/AdminController.cs
+#| msgid : "Listing comments failed: "
+msgid "Listing comments failed: "
+msgstr "Les commentaires ne peuvent être listés: "
+
+#: ~/Modules/Orchard.Comments/Controllers/AdminController.cs
+#| msgid : "Couldn't moderate comment"
+msgid "Couldn't moderate comment"
+msgstr "Le commentaire n'a pas pu être modéré."
+
+#: ~/Modules/Orchard.Comments/Controllers/AdminController.cs
+#| msgid : "Couldn't moderate comment"
+msgid "Couldn't moderate comment"
+msgstr "Le commentaire n'a pas pu être modéré."
+
+#: ~/Modules/Orchard.Comments/Controllers/AdminController.cs
+#| msgid : "Couldn't moderate comment"
+msgid "Couldn't moderate comment"
+msgstr "Le commentaire n'a pas pu être modéré."
+
+#: ~/Modules/Orchard.Comments/Controllers/AdminController.cs
+#| msgid : "Couldn't delete comment"
+msgid "Couldn't delete comment"
+msgstr "Le commentaire n'a pas pu être effacé."
+
+#: ~/Modules/Orchard.Comments/Controllers/AdminController.cs
+#| msgid : "Editing comments failed: "
+msgid "Editing comments failed: "
+msgstr "La modification des commentaires a échoué: "
+
+#: ~/Modules/Orchard.Comments/Controllers/AdminController.cs
+#| msgid : "Listing comments failed: "
+msgid "Listing comments failed: "
+msgstr "L'énumération des commentaires a échoué: "
+
+#: ~/Modules/Orchard.Comments/Controllers/AdminController.cs
+#| msgid : "Couldn't moderate comment"
+msgid "Couldn't moderate comment"
+msgstr "Le commentaire n'a pas pu être modéré."
+
+#: ~/Modules/Orchard.Comments/Controllers/AdminController.cs
+#| msgid : "Couldn't moderate comment"
+msgid "Couldn't moderate comment"
+msgstr "Le commentaire n'a pas pu être modéré."
+
+#: ~/Modules/Orchard.Comments/Controllers/AdminController.cs
+#| msgid : "Couldn't moderate comment"
+msgid "Couldn't moderate comment"
+msgstr "Le commentaire n'a pas pu être modéré."
+
+#: ~/Modules/Orchard.Comments/Controllers/AdminController.cs
+#| msgid : "Couldn't delete comment"
+msgid "Couldn't delete comment"
+msgstr "Le commentaire n'a pas pu être effacé."
+
+#: ~/Modules/Orchard.Comments/Controllers/AdminController.cs
+#| msgid : "Editing comments failed: "
+msgid "Editing comments failed: "
+msgstr "La modification des commentaires a échoué: "
+
+#: ~/Modules/Orchard.Comments/Controllers/AdminController.cs
+#| msgid : "Couldn't close comments"
+msgid "Couldn't close comments"
+msgstr "Les commentaires n'ont pas pu être fermés."
+
+#: ~/Modules/Orchard.Comments/Controllers/AdminController.cs
+#| msgid : "Closing Comments failed: "
+msgid "Closing Comments failed: "
+msgstr "La fermeture des commentaires a échoué: "
+
+#: ~/Modules/Orchard.Comments/Controllers/AdminController.cs
+#| msgid : "Couldn't enable comments"
+msgid "Couldn't enable comments"
+msgstr "Les commentaires n'ont pas pu être activés."
+
+#: ~/Modules/Orchard.Comments/Controllers/AdminController.cs
+#| msgid : "Enabling Comments failed: "
+msgid "Enabling Comments failed: "
+msgstr "L'activation des commentaires a échoué: "
+
+#: ~/Modules/Orchard.Comments/Controllers/AdminController.cs
+#| msgid : "Editing comment failed: "
+msgid "Editing comment failed: "
+msgstr "La modification du commentaire a échoué: "
+
+#: ~/Modules/Orchard.Comments/Controllers/AdminController.cs
+#| msgid : "Couldn't edit comment"
+msgid "Couldn't edit comment"
+msgstr "Le commentaire n'a pas pu être modifié"
+
+#: ~/Modules/Orchard.Comments/Controllers/AdminController.cs
+#| msgid : "Editing Comment failed: "
+msgid "Editing Comment failed: "
+msgstr "La modification du commentaire a échoué: "
+
+#: ~/Modules/Orchard.Comments/Controllers/AdminController.cs
+#| msgid : "Couldn't delete comment"
+msgid "Couldn't delete comment"
+msgstr "Le commentaire n'a pas pu être effacé."
+
+#: ~/Modules/Orchard.Comments/Controllers/AdminController.cs
+#| msgid : "Deleting comment failed: "
+msgid "Deleting comment failed: "
+msgstr "L'effacement du commentaire a échoué: "
+
+#: ~/Modules/Orchard.Comments/Controllers/CommentController.cs
+#| msgid : "Couldn't add comment"
+msgid "Couldn't add comment"
+msgstr "Le commentaire n'a pas pu être ajouté."
+
+#: ~/Modules/Orchard.Comments/Controllers/CommentController.cs
+#| msgid : "Your comment will appear after the site administrator approves it."
+msgid "Your comment will appear after the site administrator approves it."
+msgstr "Votre commentaire apparaitra sur le site dès que l'administrateur du site l'aura approuvé."
+
+#: ~/Modules/Orchard.Comments/Controllers/CommentController.cs
+#| msgid : "Creating Comment failed: "
+msgid "Creating Comment failed: "
+msgstr "La création du commentaire a échoué: "
+
+#: ~/Modules/Orchard.Comments/Extensions/HtmlHelperExtensions.cs
+#| msgid : "0 comments"
+msgid "0 comments"
+msgstr "0 commentaires"
+
+#: ~/Modules/Orchard.Comments/Extensions/HtmlHelperExtensions.cs
+#| msgid : "({0} pending)"
+msgid "({0} pending)"
+msgstr "({0} en attente)"
+
+#: ~/Modules/Orchard.Comments/Feeds/CommentFeedItemBuilder.cs
+#| msgid : "Comment on {0} by {1}"
+msgid "Comment on {0} by {1}"
+msgstr "Commentaire de {1} sur {0}"
+
+#: ~/Modules/Orchard.Comments/Services/CommentValidator.cs
+#| msgid : "Please configure your Akismet key for spam protection"
+msgid "Please configure your Akismet key for spam protection"
+msgstr "Veuillez configurer votre clé Akismet pour activer la protection contre le spam."
+
+#: ~/Modules/Orchard.Comments/Views/Admin/Details.aspx
+#| msgid : "Comments for {0}"
+msgid "Comments for {0}"
+msgstr "Commentaires sur {0}"
+
+#: ~/Modules/Orchard.Comments/Views/Admin/Edit.aspx
+#| msgid : "Edit Comment"
+msgid "Edit Comment"
+msgstr "Modifier le commentaire"
+
+#: ~/Modules/Orchard.Comments/Views/Admin/Index.aspx
+#| msgid : "Manage Comments"
+msgid "Manage Comments"
+msgstr "Gérer les commentaires"
+
+#: ~/Modules/Orchard.Comments/Views/DisplayTemplates/Parts/Comments.HasComments.ascx
+#| msgid : "log on"
+msgid "log on"
+msgstr "s'authentifier"
+
+#: ~/Modules/Orchard.Comments/Views/DisplayTemplates/Parts/Comments.HasComments.ascx
+#| msgid : "Add a Comment"
+msgid "Add a Comment"
+msgstr "Ajouter un commentaire"
+
+#: ~/Modules/Orchard.Comments/Views/DisplayTemplates/Parts/Comments.HasComments.ascx
+#| msgid : "You must {0} to comment."
+msgid "You must {0} to comment."
+msgstr "Vous devez {0} pour ajouter un commentaire."
+
+#: ~/Modules/Orchard.Comments/Views/DisplayTemplates/Parts/Comments.HasComments.ascx
+#| msgid : "Comments have been disabled for this content."
+msgid "Comments have been disabled for this content."
+msgstr "Les commentaires ont été désactivés pour ce contenu."
+
+#: ~/Modules/Orchard.Comments/Views/DisplayTemplates/Parts/Comments.HasComments.ascx
+#| msgid : "Hi, {0}!"
+msgid "Hi, {0}!"
+msgstr "Bonjour {0}!"
+
+#: ~/Modules/Orchard.Comments/Views/DisplayTemplates/Parts/Comments.HasComments.ascx
+#| msgid : "Comment"
+msgid "Comment"
+msgstr "Commentaire"
+
+#: ~/Modules/Orchard.Comments/Views/DisplayTemplates/Parts/Comments.HasComments.ascx
+#| msgid : "Submit Comment"
+msgid "Submit Comment"
+msgstr "Envoyer le commentaire"
+
+#: ~/Modules/Orchard.Comments/Views/EditorTemplates/Parts/Comments.HasComments.ascx
+#| msgid : "Comments are shown. Existing comments are displayed."
+msgid "Comments are shown. Existing comments are displayed."
+msgstr "Les commentaires sont visibles. Les commentaires existants sont affichés."
+
+#: ~/Modules/Orchard.Comments/Views/EditorTemplates/Parts/Comments.HasComments.ascx
+#| msgid : "Allow new comments"
+msgid "Allow new comments"
+msgstr "Permettre les nouveaux commentaires"
+
+#: ~/Modules/Orchard.Comments/Views/EditorTemplates/Parts/Comments.HasComments.ascx
+#| msgid : "Enable to show the comment form. Disabling still allows the existing comments to be shown but does not allow the conversation to continue."
+msgid "Enable to show the comment form. Disabling still allows the existing comments to be shown but does not allow the conversation to continue."
+msgstr "Permettre l'affichage du formulaire de commentaire. Désactiver ceci permet aux commentaires existants d'être affichés mais ne permet pas à la conversation de se prolonger."
+
+#: ~/Modules/Orchard.DevTools/Controllers/HomeController.cs
+#| msgid : "Notifier works without BaseViewModel"
+msgid "Notifier works without BaseViewModel"
+msgstr "Notifier fonctionne sans BaseViewModel"
+
+#: ~/Modules/Orchard.DevTools/Views/Content/Details.aspx
+#| msgid : "{0} Content Type"
+msgid "{0} Content Type"
+msgstr "{0} type de contenu"
+
+#: ~/Modules/Orchard.DevTools/Views/Content/Details.aspx
+#| msgid : "Content"
+msgid "Content"
+msgstr "Contenu"
+
+#: ~/Modules/Orchard.DevTools/Views/Content/Details.aspx
+#| msgid : "view"
+msgid "view"
+msgstr "voir"
+
+#: ~/Modules/Orchard.DevTools/Views/Content/Details.aspx
+#| msgid : "edit"
+msgid "edit"
+msgstr "modifier"
+
+#: ~/Modules/Orchard.DevTools/Views/Content/Details.aspx
+#| msgid : "{0} #{1} v{2}"
+msgid "{0} #{1} v{2}"
+msgstr "{0} #{1} v{2}"
+
+#: ~/Modules/Orchard.DevTools/Views/Content/Index.aspx
+#| msgid : "Content"
+msgid "Content"
+msgstr "Contenu"
+
+#: ~/Modules/Orchard.DevTools/Views/Content/Index.aspx
+#| msgid : "{0}: {1}"
+msgid "{0}: {1}"
+msgstr "{0}: {1}"
+
+#: ~/Modules/Orchard.DevTools/Views/Content/Index.aspx
+#| msgid : "view"
+msgid "view"
+msgstr "voir"
+
+#: ~/Modules/Orchard.DevTools/Views/Content/Index.aspx
+#| msgid : "edit"
+msgid "edit"
+msgstr "modifier"
+
+#: ~/Modules/Orchard.DevTools/Views/DisplayTemplates/Parts/DevTools.ShowDebugLink.ascx
+#| msgid : "{0} #{1} v{2}"
+msgid "{0} #{1} v{2}"
+msgstr "{0} #{1} v{2}"
+
+#: ~/Modules/Orchard.DevTools/Views/EditorTemplates/Parts/DevTools.ShowDebugLink.ascx
+#| msgid : "{0} #{1} v{2}"
+msgid "{0} #{1} v{2}"
+msgstr "{0} #{1} v{2}"
+
+#: ~/Modules/Orchard.DevTools/Views/Home/Index.aspx
+#| msgid : "Dev Tools"
+msgid "Dev Tools"
+msgstr "Outils de développement"
+
+#: ~/Modules/Orchard.DevTools/Views/Home/Index.aspx
+#| msgid : "Contents"
+msgid "Contents"
+msgstr "Contenus"
+
+#: ~/Modules/Orchard.DevTools/Views/Home/Index.aspx
+#| msgid : "Test Unauthorized Request"
+msgid "Test Unauthorized Request"
+msgstr "Test de requête non autorisée"
+
+#: ~/Modules/Orchard.Media/Controllers/AdminController.cs
+#| msgid : "Couldn't create media folder"
+msgid "Couldn't create media folder"
+msgstr "Le dossier de media n'a pas pu être créé."
+
+#: ~/Modules/Orchard.Media/Controllers/AdminController.cs
+#| msgid : "Couldn't delete media file"
+msgid "Couldn't delete media file"
+msgstr "Le fichier de media n'a pas pu être effacé."
+
+#: ~/Modules/Orchard.Media/Controllers/AdminController.cs
+#| msgid : "Couldn't delete media folder"
+msgid "Couldn't delete media folder"
+msgstr "Le dossier de media n'a pas pu être effacé."
+
+#: ~/Modules/Orchard.Media/Controllers/AdminController.cs
+#| msgid : "Couldn't delete media folder"
+msgid "Couldn't delete media folder"
+msgstr "Le dossier de media n'a pas pu être effacé."
+
+#: ~/Modules/Orchard.Media/Controllers/AdminController.cs
+#| msgid : "Couldn't rename media folder"
+msgid "Couldn't rename media folder"
+msgstr "Le dossier de media n'a pas pu être renommé."
+
+#: ~/Modules/Orchard.Media/Controllers/AdminController.cs
+#| msgid : "Couldn't upload media file"
+msgid "Couldn't upload media file"
+msgstr "Le fichier de media n'a pas pu être téléchargé."
+
+#: ~/Modules/Orchard.Media/Controllers/AdminController.cs
+#| msgid : "Select a file to upload"
+msgid "Select a file to upload"
+msgstr "Choisissez un fichier à télécharger."
+
+#: ~/Modules/Orchard.Media/Controllers/AdminController.cs
+#| msgid : "ERROR: You don't have permission to upload media files"
+msgid "ERROR: You don't have permission to upload media files"
+msgstr "Erreur: vous n'êtes pas autorisé à télécharger des fichiers de media."
+
+#: ~/Modules/Orchard.Media/Controllers/AdminController.cs
+#| msgid : "HEY: You didn't give me a file to upload"
+msgid "HEY: You didn't give me a file to upload"
+msgstr "Vous ne m'avez pas fourni de fichier à télécharger."
+
+#: ~/Modules/Orchard.Media/Controllers/AdminController.cs
+#| msgid : "ERROR: Uploading media file failed: {0}"
+msgid "ERROR: Uploading media file failed: {0}"
+msgstr "Erreur: le téléchargement du fichier de media a échoué: {0}"
+
+#: ~/Modules/Orchard.Media/Controllers/AdminController.cs
+#| msgid : "Couldn't modify media file"
+msgid "Couldn't modify media file"
+msgstr "La modification du fichier de media a échoué."
+
+#: ~/Modules/Orchard.Media/Controllers/AdminController.cs
+#| msgid : "Couldn't delete media file"
+msgid "Couldn't delete media file"
+msgstr "Le fichier de media n'a pas pu être effacé."
+
+#: ~/Modules/Orchard.Media/Views/Admin/Add.aspx
+#| msgid : "Add Media"
+msgid "Add Media"
+msgstr "Ajouter un fichier de media"
+
+#: ~/Modules/Orchard.Media/Views/Admin/Add.aspx
+#| msgid : "Media Folders"
+msgid "Media Folders"
+msgstr "Dossiers de media"
+
+#: ~/Modules/Orchard.Media/Views/Admin/Add.aspx
+#| msgid : "File Path <span> - multiple files must be in a zipped folder</span>"
+msgid "File Path <span> - multiple files must be in a zipped folder</span>"
+msgstr "Chemin du fichier <span> - vous pouvez télécharger plusieurs fichiers à la fois en les zippant.</span>"
+
+#: ~/Modules/Orchard.Media/Views/Admin/Create.aspx
+#| msgid : "Add a Folder"
+msgid "Add a Folder"
+msgstr "Ajouter un dossier"
+
+#: ~/Modules/Orchard.Media/Views/Admin/Create.aspx
+#| msgid : "Media Folders"
+msgid "Media Folders"
+msgstr "Dossiers de media"
+
+#: ~/Modules/Orchard.Media/Views/Admin/Edit.aspx
+#| msgid : "Manage Folder"
+msgid "Manage Folder"
+msgstr "Gérer le dossier"
+
+#: ~/Modules/Orchard.Media/Views/Admin/Edit.aspx
+#| msgid : "Folder Properties"
+msgid "Folder Properties"
+msgstr "Propriétés du dossier"
+
+#: ~/Modules/Orchard.Media/Views/Admin/Edit.aspx
+#| msgid : "Media Folders"
+msgid "Media Folders"
+msgstr "Dossiers de media"
+
+#: ~/Modules/Orchard.Media/Views/Admin/Edit.aspx
+#| msgid : "Folder Properties"
+msgid "Folder Properties"
+msgstr "Propriétés du dossier"
+
+#: ~/Modules/Orchard.Media/Views/Admin/Edit.aspx
+#| msgid : "Add media"
+msgid "Add media"
+msgstr "Ajouter un fichier media"
+
+#: ~/Modules/Orchard.Media/Views/Admin/Edit.aspx
+#| msgid : "Add a folder"
+msgid "Add a folder"
+msgstr "Ajouter un dossier"
+
+#: ~/Modules/Orchard.Media/Views/Admin/Edit.aspx
+#| msgid : "Add media"
+msgid "Add media"
+msgstr "Ajouter un fichier media"
+
+#: ~/Modules/Orchard.Media/Views/Admin/Edit.aspx
+#| msgid : "Add a folder"
+msgid "Add a folder"
+msgstr "Ajouter un dossier"
+
+#: ~/Modules/Orchard.Media/Views/Admin/EditMedia.aspx
+#| msgid : "Edit Media - {0}"
+msgid "Edit Media - {0}"
+msgstr "Modifier Media - {0}"
+
+#: ~/Modules/Orchard.Media/Views/Admin/EditMedia.aspx
+#| msgid : "Media Folders"
+msgid "Media Folders"
+msgstr "Dossiers de media"
+
+#: ~/Modules/Orchard.Media/Views/Admin/EditMedia.aspx
+#| msgid : "Dimensions: <span>500 x 375 pixels</span>"
+msgid "Dimensions: <span>500 x 375 pixels</span>"
+msgstr "Dimensions: <span>500 x 375 pixels</span>"
+
+#: ~/Modules/Orchard.Media/Views/Admin/EditMedia.aspx
+#| msgid : "Size: <span>{0}</span>"
+msgid "Size: <span>{0}</span>"
+msgstr "Taille: <span>{0}</span>"
+
+#: ~/Modules/Orchard.Media/Views/Admin/EditMedia.aspx
+#| msgid : "Added on: <span>{0} by Orchard User</span>"
+msgid "Added on: <span>{0} by Orchard User</span>"
+msgstr "Ajouté le: <span>{0} par Orchard User</span>"
+
+#: ~/Modules/Orchard.Media/Views/Admin/EditMedia.aspx
+#| msgid : "Dimensions: <span>500 x 375 pixels</span>"
+msgid "Dimensions: <span>500 x 375 pixels</span>"
+msgstr "Dimensions: <span>500 x 375 pixels</span>"
+
+#: ~/Modules/Orchard.Media/Views/Admin/EditMedia.aspx
+#| msgid : "Size: <span>{0}</span>"
+msgid "Size: <span>{0}</span>"
+msgstr "Taille: <span>{0}</span>"
+
+#: ~/Modules/Orchard.Media/Views/Admin/EditMedia.aspx
+#| msgid : "Added on: <span>{0} by Orchard User</span>"
+msgid "Added on: <span>{0} by Orchard User</span>"
+msgstr "Ajouté le: <span>{0} par Orchard User</span>"
+
+#: ~/Modules/Orchard.Media/Views/Admin/EditProperties.aspx
+#| msgid : "Folder Properties"
+msgid "Folder Properties"
+msgstr "Propriétés du dossier"
+
+#: ~/Modules/Orchard.Media/Views/Admin/EditProperties.aspx
+#| msgid : "Media Folders"
+msgid "Media Folders"
+msgstr "Dossiers de media"
+
+#: ~/Modules/Orchard.Media/Views/Admin/Index.aspx
+#| msgid : "Manage Media Folders"
+msgid "Manage Media Folders"
+msgstr "Gérer les dossiers de media"
+
+#: ~/Modules/Orchard.Media/Views/Admin/Index.aspx
+#| msgid : "Add a folder"
+msgid "Add a folder"
+msgstr "Ajouter un dossier"
+
+#: ~/Modules/Orchard.Media/Views/Admin/Index.aspx
+#| msgid : "Add a folder"
+msgid "Add a folder"
+msgstr "Ajouter un dossier"
+
+#: ~/Modules/Orchard.MetaData/Controllers/MetaDataController.cs
+#| msgid : "Not allowed to manage MetaData"
+msgid "Not allowed to manage MetaData"
+msgstr "Non autorisé à gérer les meta-données."
+
+#: ~/Modules/Orchard.MetaData/Controllers/MetaDataController.cs
+#| msgid : "Not allowed to manage MetaData"
+msgid "Not allowed to manage MetaData"
+msgstr "Non autorisé à gérer les meta-données."
+
+#: ~/Modules/Orchard.Modules/Commands/FeatureCommand.cs
+#| msgid : "Enabled"
+msgid "Enabled"
+msgstr "Activé"
+
+#: ~/Modules/Orchard.Modules/Commands/FeatureCommand.cs
+#| msgid : "Disabled"
+msgid "Disabled"
+msgstr "Désactivé"
+
+#: ~/Modules/Orchard.Modules/Commands/FeatureCommand.cs
+#| msgid : "List of available features"
+msgid "List of available features"
+msgstr "Liste des fonctionnalités disponibles"
+
+#: ~/Modules/Orchard.Modules/Commands/FeatureCommand.cs
+#| msgid : "--------------------------"
+msgid "--------------------------"
+msgstr "-------------------------------------"
+
+#: ~/Modules/Orchard.Modules/Commands/FeatureCommand.cs
+#| msgid : "  {0}"
+msgid "  {0}"
+msgstr "  {0}"
+
+#: ~/Modules/Orchard.Modules/Commands/FeatureCommand.cs
+#| msgid : "Enabled"
+msgid "Enabled"
+msgstr "Activé"
+
+#: ~/Modules/Orchard.Modules/Commands/FeatureCommand.cs
+#| msgid : "Disabled"
+msgid "Disabled"
+msgstr "Désactivé"
+
+#: ~/Modules/Orchard.Modules/Controllers/AdminController.cs
+#| msgid : "Not allowed to manage modules"
+msgid "Not allowed to manage modules"
+msgstr "Non autorisé à gérer les modules."
+
+#: ~/Modules/Orchard.Modules/Controllers/AdminController.cs
+#| msgid : "Couldn't upload module package."
+msgid "Couldn't upload module package."
+msgstr "Le paquetage du module n'a pas pu être téléchargé."
+
+#: ~/Modules/Orchard.Modules/Controllers/AdminController.cs
+#| msgid : "Select a file to upload."
+msgid "Select a file to upload."
+msgstr "Choisissez un fichier à télécharger."
+
+#: ~/Modules/Orchard.Modules/Controllers/AdminController.cs
+#| msgid : "Uploading module package failed: {0}"
+msgid "Uploading module package failed: {0}"
+msgstr "Le téléchargement du paquetage du module a échoué: {0}"
+
+#: ~/Modules/Orchard.Modules/Controllers/AdminController.cs
+#| msgid : "Not allowed to manage features"
+msgid "Not allowed to manage features"
+msgstr "Non autorisé à gérer les fonctionnalités."
+
+#: ~/Modules/Orchard.Modules/Controllers/AdminController.cs
+#| msgid : "Not allowed to manage features"
+msgid "Not allowed to manage features"
+msgstr "Non autorisé à gérer les fonctionnalités."
+
+#: ~/Modules/Orchard.Modules/Controllers/AdminController.cs
+#| msgid : "Not allowed to manage features"
+msgid "Not allowed to manage features"
+msgstr "Non autorisé à gérer les fonctionnalités."
+
+#: ~/Modules/Orchard.Modules/Services/ModuleService.cs
+#| msgid : "{0} was enabled"
+msgid "{0} was enabled"
+msgstr "{0} a été activé."
+
+#: ~/Modules/Orchard.Modules/Services/ModuleService.cs
+#| msgid : "{0} was disabled"
+msgid "{0} was disabled"
+msgstr "{0} a été désactivé."
+
+#: ~/Modules/Orchard.Modules/Views/Admin/Add.ascx
+#| msgid : "Install a Module"
+msgid "Install a Module"
+msgstr "Installer un module"
+
+#: ~/Modules/Orchard.Modules/Views/Admin/Add.ascx
+#| msgid : "Module Package"
+msgid "Module Package"
+msgstr "Paquetage de module"
+
+#: ~/Modules/Orchard.Modules/Views/Admin/Add.ascx
+#| msgid : "Install"
+msgid "Install"
+msgstr "Installer"
+
+#: ~/Modules/Orchard.Modules/Views/Admin/Features.ascx
+#| msgid : "Manage Features"
+msgid "Manage Features"
+msgstr "Gérer les fonctionnalités"
+
+#: ~/Modules/Orchard.Modules/Views/Admin/Features.ascx
+#| msgid : "Uncategorized"
+msgid "Uncategorized"
+msgstr "Non classé"
+
+#: ~/Modules/Orchard.Modules/Views/Admin/Features.ascx
+#| msgid : "{0} is {1}"
+msgid "{0} is {1}"
+msgstr "{0} est {1}"
+
+#: ~/Modules/Orchard.Modules/Views/Admin/Index.ascx
+#| msgid : "Installed Modules"
+msgid "Installed Modules"
+msgstr "Modules installés"
+
+#: ~/Modules/Orchard.Modules/Views/Admin/Index.ascx
+#| msgid : "Install a module"
+msgid "Install a module"
+msgstr "Installer un module"
+
+#: ~/Modules/Orchard.Modules/Views/Admin/Index.ascx
+#| msgid : "Version: {0}"
+msgid "Version: {0}"
+msgstr "Version: {0}"
+
+#: ~/Modules/Orchard.Modules/Views/Admin/Index.ascx
+#| msgid : "1.0"
+msgid "1.0"
+msgstr "1.0"
+
+#: ~/Modules/Orchard.Modules/Views/Admin/Index.ascx
+#| msgid : "Author: {0}"
+msgid "Author: {0}"
+msgstr "Auteur: {0}"
+
+#: ~/Modules/Orchard.Modules/Views/Admin/Index.ascx
+#| msgid : "Website: {0}"
+msgid "Website: {0}"
+msgstr "Site Web: {0}"
+
+#: ~/Modules/Orchard.Modules/Views/Admin/Index.ascx
+#| msgid : "<a href=\"http://orchardproject.net\">http://orchardproject.net</a>"
+msgid "<a href=\"http://orchardproject.net\">http://orchardproject.net</a>"
+msgstr "<a href=\"http://orchardproject.net\">http://orchardproject.net</a>"
+
+#: ~/Modules/Orchard.MultiTenancy/Commands/TenantCommand.cs
+#| msgid : "List of tenants"
+msgid "List of tenants"
+msgstr "Liste des locataires"
+
+#: ~/Modules/Orchard.MultiTenancy/Commands/TenantCommand.cs
+#| msgid : "---------------------------"
+msgid "---------------------------"
+msgstr "---------------------------"
+
+#: ~/Modules/Orchard.MultiTenancy/Commands/TenantCommand.cs
+#| msgid : "Name: "
+msgid "Name: "
+msgstr "Nom: "
+
+#: ~/Modules/Orchard.MultiTenancy/Commands/TenantCommand.cs
+#| msgid : "Provider: "
+msgid "Provider: "
+msgstr "Fournisseur: "
+
+#: ~/Modules/Orchard.MultiTenancy/Commands/TenantCommand.cs
+#| msgid : "ConnectionString: "
+msgid "ConnectionString: "
+msgstr "Chaîne de connexion: "
+
+#: ~/Modules/Orchard.MultiTenancy/Commands/TenantCommand.cs
+#| msgid : "Data Table Prefix: "
+msgid "Data Table Prefix: "
+msgstr "Préfixe des tables de données: "
+
+#: ~/Modules/Orchard.MultiTenancy/Commands/TenantCommand.cs
+#| msgid : "Request Url Host: "
+msgid "Request Url Host: "
+msgstr "Hôte des URL de requête: "
+
+#: ~/Modules/Orchard.MultiTenancy/Commands/TenantCommand.cs
+#| msgid : "Request Url Prefix: "
+msgid "Request Url Prefix: "
+msgstr "Préfixe des URL de requête: "
+
+#: ~/Modules/Orchard.MultiTenancy/Commands/TenantCommand.cs
+#| msgid : "State: "
+msgid "State: "
+msgstr "État: "
+
+#: ~/Modules/Orchard.MultiTenancy/Commands/TenantCommand.cs
+#| msgid : "---------------------------"
+msgid "---------------------------"
+msgstr "---------------------------"
+
+#: ~/Modules/Orchard.MultiTenancy/Commands/TenantCommand.cs
+#| msgid : "Creating tenant"
+msgid "Creating tenant"
+msgstr "Locataire en cours de création"
+
+#: ~/Modules/Orchard.MultiTenancy/Commands/TenantCommand.cs
+#| msgid : "Tenant: "
+msgid "Tenant: "
+msgstr "Locataire: "
+
+#: ~/Modules/Orchard.MultiTenancy/Commands/TenantCommand.cs
+#| msgid : " was not found"
+msgid " was not found"
+msgstr " non trouvé"
+
+#: ~/Modules/Orchard.MultiTenancy/Commands/TenantCommand.cs
+#| msgid : "Tenant Settings:"
+msgid "Tenant Settings:"
+msgstr "Configuration du locataire:"
+
+#: ~/Modules/Orchard.MultiTenancy/Commands/TenantCommand.cs
+#| msgid : "---------------------------"
+msgid "---------------------------"
+msgstr "---------------------------"
+
+#: ~/Modules/Orchard.MultiTenancy/Commands/TenantCommand.cs
+#| msgid : "Name: "
+msgid "Name: "
+msgstr "Nom: "
+
+#: ~/Modules/Orchard.MultiTenancy/Commands/TenantCommand.cs
+#| msgid : "Provider: "
+msgid "Provider: "
+msgstr "Fournisseur: "
+
+#: ~/Modules/Orchard.MultiTenancy/Commands/TenantCommand.cs
+#| msgid : "ConnectionString: "
+msgid "ConnectionString: "
+msgstr "Chaîne de connexion: "
+
+#: ~/Modules/Orchard.MultiTenancy/Commands/TenantCommand.cs
+#| msgid : "Data Table Prefix: "
+msgid "Data Table Prefix: "
+msgstr "Préfixe des tables de données: "
+
+#: ~/Modules/Orchard.MultiTenancy/Commands/TenantCommand.cs
+#| msgid : "Request Url Host: "
+msgid "Request Url Host: "
+msgstr "Hôte des URL de requête: "
+
+#: ~/Modules/Orchard.MultiTenancy/Commands/TenantCommand.cs
+#| msgid : "Request Url Prefix: "
+msgid "Request Url Prefix: "
+msgstr "Préfixe des URL de requête: "
+
+#: ~/Modules/Orchard.MultiTenancy/Commands/TenantCommand.cs
+#| msgid : "State: "
+msgid "State: "
+msgstr "État: "
+
+#: ~/Modules/Orchard.MultiTenancy/Commands/TenantCommand.cs
+#| msgid : "---------------------------"
+msgid "---------------------------"
+msgstr "---------------------------"
+
+#: ~/Modules/Orchard.MultiTenancy/Controllers/AdminController.cs
+#| msgid : "Cannot create tenant"
+msgid "Cannot create tenant"
+msgstr "Le locataire ne peut pas être créé."
+
+#: ~/Modules/Orchard.MultiTenancy/Controllers/AdminController.cs
+#| msgid : "Couldn't create tenant"
+msgid "Couldn't create tenant"
+msgstr "Le locataire n'a pas pu être créé."
+
+#: ~/Modules/Orchard.MultiTenancy/Controllers/AdminController.cs
+#| msgid : "Creating Tenant failed: "
+msgid "Creating Tenant failed: "
+msgstr "La création du locataire a échoué: "
+
+#: ~/Modules/Orchard.MultiTenancy/Controllers/AdminController.cs
+#| msgid : "Cannot edit tenant"
+msgid "Cannot edit tenant"
+msgstr "Le locataire ne peut pas être modifié."
+
+#: ~/Modules/Orchard.MultiTenancy/Controllers/AdminController.cs
+#| msgid : "Couldn't edit tenant"
+msgid "Couldn't edit tenant"
+msgstr "Le locataire n'a pas pu être modifié."
+
+#: ~/Modules/Orchard.MultiTenancy/Controllers/AdminController.cs
+#| msgid : "Failed to edit tenant: "
+msgid "Failed to edit tenant: "
+msgstr "La modification du locataire a échoué: "
+
+#: ~/Modules/Orchard.MultiTenancy/Controllers/AdminController.cs
+#| msgid : "Couldn't disable tenant"
+msgid "Couldn't disable tenant"
+msgstr "Le locataire n'a pas pu être désactivé."
+
+#: ~/Modules/Orchard.MultiTenancy/Controllers/AdminController.cs
+#| msgid : "Couldn't enable tenant"
+msgid "Couldn't enable tenant"
+msgstr "Le locataire n'a pas pu être activé."
+
+#: ~/Modules/Orchard.MultiTenancy/Views/Admin/Add.ascx
+#| msgid : "Add New Tenant"
+msgid "Add New Tenant"
+msgstr "Ajouter un locataire"
+
+#: ~/Modules/Orchard.MultiTenancy/Views/Admin/Edit.ascx
+#| msgid : "Edit Tenant"
+msgid "Edit Tenant"
+msgstr "Modifier un locataire"
+
+#: ~/Modules/Orchard.MultiTenancy/Views/Admin/Index.ascx
+#| msgid : "List of Site's Tenants"
+msgid "List of Site's Tenants"
+msgstr "Liste des locataires du site"
+
+#: ~/Modules/Orchard.MultiTenancy/Views/Admin/Index.ascx
+#| msgid : "Add a Tenant"
+msgid "Add a Tenant"
+msgstr "Ajouter un locataire"
+
+#: ~/Modules/Orchard.MultiTenancy/Views/Admin/Index.ascx
+#| msgid : "Edit"
+msgid "Edit"
+msgstr "Modifier"
+
+#: ~/Modules/Orchard.MultiTenancy/Views/Admin/Index.ascx
+#| msgid : "Remove"
+msgid "Remove"
+msgstr "Supprimer"
+
+#: ~/Modules/Orchard.MultiTenancy/Views/Admin/DisplayTemplates/ActionsForInvalid.ascx
+#| msgid : "Make Valid*"
+msgid "Make Valid*"
+msgstr "Valider*"
+
+#: ~/Modules/Orchard.MultiTenancy/Views/Admin/DisplayTemplates/ActionsForUninitialized.ascx
+#| msgid : "Set Up"
+msgid "Set Up"
+msgstr "Installer"
+
+#: ~/Modules/Orchard.Pages/Controllers/AdminController.cs
+#| msgid : "Couldn't publish page"
+msgid "Couldn't publish page"
+msgstr "La page n'a pas pu être publiée."
+
+#: ~/Modules/Orchard.Pages/Controllers/AdminController.cs
+#| msgid : "Couldn't unpublish page"
+msgid "Couldn't unpublish page"
+msgstr "La page n'a pas pu être dépubliée."
+
+#: ~/Modules/Orchard.Pages/Controllers/AdminController.cs
+#| msgid : "Couldn't delete page"
+msgid "Couldn't delete page"
+msgstr "La page n'a pas pu être effacée."
+
+#: ~/Modules/Orchard.Pages/Controllers/AdminController.cs
+#| msgid : "Not allowed to create a page"
+msgid "Not allowed to create a page"
+msgstr "Non autorisé à créer une page"
+
+#: ~/Modules/Orchard.Pages/Controllers/AdminController.cs
+#| msgid : "Couldn't create page"
+msgid "Couldn't create page"
+msgstr "La page n'a pas pu être créée."
+
+#: ~/Modules/Orchard.Pages/Controllers/AdminController.cs
+#| msgid : "Page has been published"
+msgid "Page has been published"
+msgstr "La page a été publiée."
+
+#: ~/Modules/Orchard.Pages/Controllers/AdminController.cs
+#| msgid : "Page has been scheduled for publishing"
+msgid "Page has been scheduled for publishing"
+msgstr "La publication de la page a été planifiée."
+
+#: ~/Modules/Orchard.Pages/Controllers/AdminController.cs
+#| msgid : "Page draft has been saved"
+msgid "Page draft has been saved"
+msgstr "Le brouillon de la page a été sauvé."
+
+#: ~/Modules/Orchard.Pages/Controllers/AdminController.cs
+#| msgid : "Couldn't edit page"
+msgid "Couldn't edit page"
+msgstr "La page n'a pas pu être modifiée."
+
+#: ~/Modules/Orchard.Pages/Controllers/AdminController.cs
+#| msgid : "Couldn't edit page"
+msgid "Couldn't edit page"
+msgstr "La page n'a pas pu être modifiée."
+
+#: ~/Modules/Orchard.Pages/Controllers/AdminController.cs
+#| msgid : "Page has been published"
+msgid "Page has been published"
+msgstr "La page a été publiée."
+
+#: ~/Modules/Orchard.Pages/Controllers/AdminController.cs
+#| msgid : "Page has been scheduled for publishing"
+msgid "Page has been scheduled for publishing"
+msgstr "La publication de la page a été planifiée."
+
+#: ~/Modules/Orchard.Pages/Controllers/AdminController.cs
+#| msgid : "Page draft has been saved"
+msgid "Page draft has been saved"
+msgstr "Le brouillon de la page a été sauvé."
+
+#: ~/Modules/Orchard.Pages/Controllers/AdminController.cs
+#| msgid : "There is no draft to discard."
+msgid "There is no draft to discard."
+msgstr "Il n'y a pas de brouillon à supprimer."
+
+#: ~/Modules/Orchard.Pages/Controllers/AdminController.cs
+#| msgid : "Couldn't discard page draft"
+msgid "Couldn't discard page draft"
+msgstr "Le brouillon n'a pas pu être supprimé."
+
+#: ~/Modules/Orchard.Pages/Controllers/AdminController.cs
+#| msgid : "Can not discard draft on unpublished page."
+msgid "Can not discard draft on unpublished page."
+msgstr "Le brouillon d'une page non publiée ne peut pas être supprimé."
+
+#: ~/Modules/Orchard.Pages/Controllers/AdminController.cs
+#| msgid : "Page draft version discarded"
+msgid "Page draft version discarded"
+msgstr "Le brouillon de la page a été supprimé."
+
+#: ~/Modules/Orchard.Pages/Controllers/AdminController.cs
+#| msgid : "Couldn't publish page"
+msgid "Couldn't publish page"
+msgstr "La page n'a pas pu être publiée."
+
+#: ~/Modules/Orchard.Pages/Controllers/AdminController.cs
+#| msgid : "Page successfully published."
+msgid "Page successfully published."
+msgstr "La page a été publiée."
+
+#: ~/Modules/Orchard.Pages/Controllers/AdminController.cs
+#| msgid : "Couldn't unpublish page"
+msgid "Couldn't unpublish page"
+msgstr "La page n'a pas pu être dépubliée."
+
+#: ~/Modules/Orchard.Pages/Controllers/AdminController.cs
+#| msgid : "Page successfully unpublished."
+msgid "Page successfully unpublished."
+msgstr "La page a été dépubliée."
+
+#: ~/Modules/Orchard.Pages/Controllers/AdminController.cs
+#| msgid : "Couldn't delete page"
+msgid "Couldn't delete page"
+msgstr "La page n'a pas pu être effacée."
+
+#: ~/Modules/Orchard.Pages/Controllers/AdminController.cs
+#| msgid : "Page successfully deleted"
+msgid "Page successfully deleted"
+msgstr "La page a été effacée."
+
+#: ~/Modules/Orchard.Pages/Controllers/PageController.cs
+#| msgid : "Couldn't view page"
+msgid "Couldn't view page"
+msgstr "La page ne peut être visualisée."
+
+#: ~/Modules/Orchard.Pages/Views/Admin/Create.ascx
+#| msgid : "Add Page"
+msgid "Add Page"
+msgstr "Ajouter une page"
+
+#: ~/Modules/Orchard.Pages/Views/Admin/Edit.ascx
+#| msgid : "Edit Page"
+msgid "Edit Page"
+msgstr "Modifier une page"
+
+#: ~/Modules/Orchard.Pages/Views/Admin/List.aspx
+#| msgid : "Manage Pages"
+msgid "Manage Pages"
+msgstr "Gérer les pages"
+
+#: ~/Modules/Orchard.Pages/Views/Admin/List.aspx
+#| msgid : "Add a page"
+msgid "Add a page"
+msgstr "Ajouter une page"
+
+#: ~/Modules/Orchard.Pages/Views/Admin/List.aspx
+#| msgid : "Add a page"
+msgid "Add a page"
+msgstr "Ajouter une page"
+
+#: ~/Modules/Orchard.Pages/Views/DisplayTemplates/Items/Pages.Page.Summary.ascx
+#| msgid : "Item"
+msgid "Item"
+msgstr "Article"
+
+#: ~/Modules/Orchard.Pages/Views/DisplayTemplates/Parts/Pages.Page.Metadata.ascx
+#| msgid : "nobody(?)"
+msgid "nobody(?)"
+msgstr "personne(?)"
+
+#: ~/Modules/Orchard.Pages/Views/EditorTemplates/Items/Pages.Page.ascx
+#| msgid : "Discard Draft"
+msgid "Discard Draft"
+msgstr "Supprimer le brouillon"
+
+#: ~/Modules/Orchard.Roles/Controllers/AdminController.cs
+#| msgid : "Not authorized to manage roles"
+msgid "Not authorized to manage roles"
+msgstr "Non autorisé à gérer les rôles"
+
+#: ~/Modules/Orchard.Roles/Controllers/AdminController.cs
+#| msgid : "Not authorized to manage roles"
+msgid "Not authorized to manage roles"
+msgstr "Non autorisé à gérer les rôles"
+
+#: ~/Modules/Orchard.Roles/Controllers/AdminController.cs
+#| msgid : "Not authorized to manage roles"
+msgid "Not authorized to manage roles"
+msgstr "Non autorisé à gérer les rôles"
+
+#: ~/Modules/Orchard.Roles/Controllers/AdminController.cs
+#| msgid : "Not authorized to manage roles"
+msgid "Not authorized to manage roles"
+msgstr "Non autorisé à gérer les rôles"
+
+#: ~/Modules/Orchard.Roles/Controllers/AdminController.cs
+#| msgid : "Not authorized to manage roles"
+msgid "Not authorized to manage roles"
+msgstr "Non autorisé à gérer les rôles"
+
+#: ~/Modules/Orchard.Roles/Controllers/AdminController.cs
+#| msgid : "Not authorized to manage roles"
+msgid "Not authorized to manage roles"
+msgstr "Non autorisé à gérer les rôles"
+
+#: ~/Modules/Orchard.Roles/Views/Admin/Create.aspx
+#| msgid : "Add Role"
+msgid "Add Role"
+msgstr "Ajouter un rôle"
+
+#: ~/Modules/Orchard.Roles/Views/Admin/Edit.aspx
+#| msgid : "Edit Role"
+msgid "Edit Role"
+msgstr "Modifier un rôle"
+
+#: ~/Modules/Orchard.Roles/Views/Admin/Index.aspx
+#| msgid : "Manage Roles"
+msgid "Manage Roles"
+msgstr "Gérer les rôles"
+
+#: ~/Modules/Orchard.Roles/Views/Admin/Index.aspx
+#| msgid : "Add a role"
+msgid "Add a role"
+msgstr "Ajouter un rôle"
+
+#: ~/Modules/Orchard.Roles/Views/Admin/Index.aspx
+#| msgid : "Edit"
+msgid "Edit"
+msgstr "Modifier"
+
+#: ~/Modules/Orchard.Sandbox/Controllers/PageController.cs
+#| msgid : "Anonymous users can not create pages"
+msgid "Anonymous users can not create pages"
+msgstr "Les utilisateurs anonymes ne peuvent pas créer des pages."
+
+#: ~/Modules/Orchard.Sandbox/Controllers/PageController.cs
+#| msgid : "Anonymous users can not create pages"
+msgid "Anonymous users can not create pages"
+msgstr "Les utilisateurs anonymes ne peuvent pas créer des pages."
+
+#: ~/Modules/Orchard.Sandbox/Controllers/PageController.cs
+#| msgid : "Anonymous users can not edit pages"
+msgid "Anonymous users can not edit pages"
+msgstr "Les utilisateurs anonymes ne peuvent pas modifier des pages."
+
+#: ~/Modules/Orchard.Sandbox/Views/DisplayTemplates/Items/Sandbox.Page.ascx
+#| msgid : "Edit this page"
+msgid "Edit this page"
+msgstr "Modifier cette page"
+
+#: ~/Modules/Orchard.Sandbox/Views/DisplayTemplates/Items/Sandbox.Page.ascx
+#| msgid : "Return to list"
+msgid "Return to list"
+msgstr "Retourner à la liste"
+
+#: ~/Modules/Orchard.Sandbox/Views/Page/Create.aspx
+#| msgid : "Create Page"
+msgid "Create Page"
+msgstr "Créer une page"
+
+#: ~/Modules/Orchard.Sandbox/Views/Page/Edit.aspx
+#| msgid : "Edit Page"
+msgid "Edit Page"
+msgstr "Modifier une page"
+
+#: ~/Modules/Orchard.Sandbox/Views/Page/Index.aspx
+#| msgid : "Sandbox Pages"
+msgid "Sandbox Pages"
+msgstr "Pages du bac à sable"
+
+#: ~/Modules/Orchard.Sandbox/Views/Page/Index.aspx
+#| msgid : "Add new page"
+msgid "Add new page"
+msgstr "Ajouter une page"
+
+#: ~/Modules/Orchard.Setup/Commands/SetupCommand.cs
+#| msgid : "Site \"{0}\" sucessfully setup to run data provider \"{1}\" (with table prefix \"{2}\")."
+msgid "Site \"{0}\" sucessfully setup to run data provider \"{1}\" (with table prefix \"{2}\")."
+msgstr "Le site \"{0}\" a été installé avec succès au-dessus du fournisseur de données \"{1}\" (avec le préfixe \"{2}\")."
+
+#: ~/Modules/Orchard.Setup/Controllers/SetupController.cs
+#| msgid : "Setup failed:"
+msgid "Setup failed:"
+msgstr "L'installation a échoué:"
+
+#: ~/Modules/Orchard.Setup/Services/SetupService.cs
+#| msgid : "Home"
+msgid "Home"
+msgstr "Accueil"
+
+#: ~/Modules/Orchard.Setup/Services/SetupService.cs
+#| msgid : "Home"
+msgid "Home"
+msgstr "Accueil"
+
+#: ~/Modules/Orchard.Tags/Controllers/AdminController.cs
+#| msgid : "Listing tags failed: "
+msgid "Listing tags failed: "
+msgstr "L'énumération des étiquettes: "
+
+#: ~/Modules/Orchard.Tags/Controllers/AdminController.cs
+#| msgid : "Couldn't delete tag"
+msgid "Couldn't delete tag"
+msgstr "L'étiquette n'a pas pu être effacée."
+
+#: ~/Modules/Orchard.Tags/Controllers/AdminController.cs
+#| msgid : "Editing tags failed: "
+msgid "Editing tags failed: "
+msgstr "La modification des étiquettes a échoué: "
+
+#: ~/Modules/Orchard.Tags/Controllers/AdminController.cs
+#| msgid : "Couldn't create tag"
+msgid "Couldn't create tag"
+msgstr "L'étiquette n'a pas pu être créée."
+
+#: ~/Modules/Orchard.Tags/Controllers/AdminController.cs
+#| msgid : "Creating tag failed: "
+msgid "Creating tag failed: "
+msgstr "La création de l'étiquette a échoué: "
+
+#: ~/Modules/Orchard.Tags/Controllers/AdminController.cs
+#| msgid : "Retrieving tag information failed: "
+msgid "Retrieving tag information failed: "
+msgstr "L'accès aux informations de l'étiquette a échoué: "
+
+#: ~/Modules/Orchard.Tags/Controllers/AdminController.cs
+#| msgid : "Couldn't edit tag"
+msgid "Couldn't edit tag"
+msgstr "L'étiquette n'a pas pu être modifiée."
+
+#: ~/Modules/Orchard.Tags/Controllers/AdminController.cs
+#| msgid : "Editing tag failed: "
+msgid "Editing tag failed: "
+msgstr "La modification de l'étiquette a échoué."
+
+#: ~/Modules/Orchard.Tags/Controllers/AdminController.cs
+#| msgid : "Retrieving tagged items failed: "
+msgid "Retrieving tagged items failed: "
+msgstr "L'accès aux articles étiquetés a échoué: "
+
+#: ~/Modules/Orchard.Tags/Controllers/HomeController.cs
+#| msgid : "Listing tags failed: "
+msgid "Listing tags failed: "
+msgstr "L'énumération des étiquettes a échoué: "
+
+#: ~/Modules/Orchard.Tags/Controllers/HomeController.cs
+#| msgid : "Couldn't create tag"
+msgid "Couldn't create tag"
+msgstr "L'étiquette n'a pas pu être créée."
+
+#: ~/Modules/Orchard.Tags/Controllers/HomeController.cs
+#| msgid : "Editing tags failed: "
+msgid "Editing tags failed: "
+msgstr "La modification des étiquettes a échoué: "
+
+#: ~/Modules/Orchard.Tags/Controllers/HomeController.cs
+#| msgid : "Couldn't create tag"
+msgid "Couldn't create tag"
+msgstr "L'étiquette n'a pas pu être créée."
+
+#: ~/Modules/Orchard.Tags/Controllers/HomeController.cs
+#| msgid : "Updating tags failed: "
+msgid "Updating tags failed: "
+msgstr "La modification des étiquettes a échoué: "
+
+#: ~/Modules/Orchard.Tags/Controllers/HomeController.cs
+#| msgid : "Retrieving tagged items failed: "
+msgid "Retrieving tagged items failed: "
+msgstr "L'accès aux articles étiquetés a échoué: "
+
+#: ~/Modules/Orchard.Tags/Services/TagService.cs
+#| msgid : "Couldn't rename tag: name was empty"
+msgid "Couldn't rename tag: name was empty"
+msgstr "L'étiquette n'a pas pu être renommée: le nom était vide."
+
+#: ~/Modules/Orchard.Tags/Views/Admin/Create.aspx
+#| msgid : "Add a Tag"
+msgid "Add a Tag"
+msgstr "Ajouter une étiquette"
+
+#: ~/Modules/Orchard.Tags/Views/Admin/Edit.aspx
+#| msgid : "Edit a Tag"
+msgid "Edit a Tag"
+msgstr "Modifier une étiquette"
+
+#: ~/Modules/Orchard.Tags/Views/Admin/Index.aspx
+#| msgid : "Manage Tags"
+msgid "Manage Tags"
+msgstr "Gérer les étiquettes"
+
+#: ~/Modules/Orchard.Tags/Views/Admin/Index.aspx
+#| msgid : "Add a tag"
+msgid "Add a tag"
+msgstr "Ajouter une étiquette"
+
+#: ~/Modules/Orchard.Tags/Views/Admin/Index.aspx
+#| msgid : "Edit"
+msgid "Edit"
+msgstr "Modifier"
+
+#: ~/Modules/Orchard.Tags/Views/Admin/Index.aspx
+#| msgid : "Add a tag"
+msgid "Add a tag"
+msgstr "Ajouter une étiquette"
+
+#: ~/Modules/Orchard.Tags/Views/Admin/Search.aspx
+#| msgid : "List of contents tagged with {0}"
+msgid "List of contents tagged with {0}"
+msgstr "Liste des articles étiquetés avec {0}"
+
+#: ~/Modules/Orchard.Tags/Views/Home/Index.ascx
+#| msgid : "Tags"
+msgid "Tags"
+msgstr "Étiquettes"
+
+#: ~/Modules/Orchard.Tags/Views/Home/Search.ascx
+#| msgid : "Tags"
+msgid "Tags"
+msgstr "Étiquettes"
+
+#: ~/Modules/Orchard.Tags/Views/Home/Search.ascx
+#| msgid : "Contents tagged with {0}"
+msgid "Contents tagged with {0}"
+msgstr "Articles étiquetés avec {0}"
+
+#: ~/Modules/Orchard.Tags/Views/Home/Search.ascx
+#| msgid : "Contents tagged with <span>{0}</span>"
+msgid "Contents tagged with <span>{0}</span>"
+msgstr "Articles étiquetés avec <span>{0}</span>"
+
+#: ~/Modules/Orchard.Themes/Controllers/AdminController.cs
+#| msgid : "Listing themes failed: "
+msgid "Listing themes failed: "
+msgstr "L'énumération des thèmes a échoué: "
+
+#: ~/Modules/Orchard.Themes/Controllers/AdminController.cs
+#| msgid : "Couldn't preview the current theme"
+msgid "Couldn't preview the current theme"
+msgstr "Le thème courant ne peut pas être visualisé."
+
+#: ~/Modules/Orchard.Themes/Controllers/AdminController.cs
+#| msgid : "Previewing theme failed: "
+msgid "Previewing theme failed: "
+msgstr "La prévisualisation du thème a échoué: "
+
+#: ~/Modules/Orchard.Themes/Controllers/AdminController.cs
+#| msgid : "Couldn't preview the current theme"
+msgid "Couldn't preview the current theme"
+msgstr "Le thème n'a pas pu être prévisualisé"
+
+#: ~/Modules/Orchard.Themes/Controllers/AdminController.cs
+#| msgid : "Previewing theme failed: "
+msgid "Previewing theme failed: "
+msgstr "La prévisualisation du thème a échoué: "
+
+#: ~/Modules/Orchard.Themes/Controllers/AdminController.cs
+#| msgid : "Couldn't preview the current theme"
+msgid "Couldn't preview the current theme"
+msgstr "Le thème courant n'a pas pu être prévisualisé"
+
+#: ~/Modules/Orchard.Themes/Controllers/AdminController.cs
+#| msgid : "Previewing theme failed: "
+msgid "Previewing theme failed: "
+msgstr "La prévisualisation du thème a échoué: "
+
+#: ~/Modules/Orchard.Themes/Controllers/AdminController.cs
+#| msgid : "Couldn't set the current theme"
+msgid "Couldn't set the current theme"
+msgstr "Le thème en cours n'a pas pu être défini."
+
+#: ~/Modules/Orchard.Themes/Controllers/AdminController.cs
+#| msgid : "Activating theme failed: "
+msgid "Activating theme failed: "
+msgstr "L'activation du thème a échoué: "
+
+#: ~/Modules/Orchard.Themes/Controllers/AdminController.cs
+#| msgid : "Couldn't install theme"
+msgid "Couldn't install theme"
+msgstr "Le thème n'a pas pu être installé."
+
+#: ~/Modules/Orchard.Themes/Controllers/AdminController.cs
+#| msgid : "Installing theme failed: "
+msgid "Installing theme failed: "
+msgstr "L'installation du thème a échoué: "
+
+#: ~/Modules/Orchard.Themes/Controllers/AdminController.cs
+#| msgid : "Couldn't uninstall theme"
+msgid "Couldn't uninstall theme"
+msgstr "Le thème n'a pas pu être désinstallé."
+
+#: ~/Modules/Orchard.Themes/Controllers/AdminController.cs
+#| msgid : "Uninstalling theme failed: "
+msgid "Uninstalling theme failed: "
+msgstr "La désinstallation du thème a échoué: "
+
+#: ~/Modules/Orchard.Themes/Services/ThemeZoneManagerEvents.cs
+#| msgid : "etc. (ZonesAny)"
+msgid "etc. (ZonesAny)"
+msgstr "etc. (ZonesAny)"
+
+#: ~/Modules/Orchard.Themes/Services/ThemeZoneManagerEvents.cs
+#| msgid : "<!-- begin: {0} -->"
+msgid "<!-- begin: {0} -->"
+msgstr "<!-- begin: {0} -->"
+
+#: ~/Modules/Orchard.Themes/Services/ThemeZoneManagerEvents.cs
+#| msgid : "<!-- begin: {0} -->"
+msgid "<!-- begin: {0} -->"
+msgstr "<!-- begin: {0} -->"
+
+#: ~/Modules/Orchard.Themes/Services/ThemeZoneManagerEvents.cs
+#| msgid : "<!-- begin: {0} -->"
+msgid "<!-- begin: {0} -->"
+msgstr "<!-- begin: {0} -->"
+
+#: ~/Modules/Orchard.Themes/Services/ThemeZoneManagerEvents.cs
+#| msgid : "<!-- end: {0} -->"
+msgid "<!-- end: {0} -->"
+msgstr "<!-- end: {0} -->"
+
+#: ~/Modules/Orchard.Themes/Services/ThemeZoneManagerEvents.cs
+#| msgid : "<!-- end: {0} -->"
+msgid "<!-- end: {0} -->"
+msgstr "<!-- end: {0} -->"
+
+#: ~/Modules/Orchard.Themes/Services/ThemeZoneManagerEvents.cs
+#| msgid : "<!-- end: {0} -->"
+msgid "<!-- end: {0} -->"
+msgstr "<!-- end: {0} -->"
+
+#: ~/Modules/Orchard.Themes/Services/ThemeZoneManagerEvents.cs
+#| msgid : "etc. (ZonesAny)"
+msgid "etc. (ZonesAny)"
+msgstr "etc. (ZonesAny)"
+
+#: ~/Modules/Orchard.Themes/Views/NotFound.ascx
+#| msgid : "Not found"
+msgid "Not found"
+msgstr "Non trouvé"
+
+#: ~/Modules/Orchard.Themes/Views/User.ascx
+#| msgid : "Welcome, <strong>{0}</strong>!"
+msgid "Welcome, <strong>{0}</strong>!"
+msgstr "Bienvenue <strong>{0}</strong>!"
+
+#: ~/Modules/Orchard.Themes/Views/User.ascx
+#| msgid : "Log Off"
+msgid "Log Off"
+msgstr "Déconnexion"
+
+#: ~/Modules/Orchard.Themes/Views/User.ascx
+#| msgid : "Log On"
+msgid "Log On"
+msgstr "Connexion"
+
+#: ~/Modules/Orchard.Themes/Views/Admin/Index.aspx
+#| msgid : "Manage Themes"
+msgid "Manage Themes"
+msgstr "Gérer les thèmes"
+
+#: ~/Modules/Orchard.Themes/Views/Admin/Index.aspx
+#| msgid : "Install a new Theme"
+msgid "Install a new Theme"
+msgstr "Installer un thème"
+
+#: ~/Modules/Orchard.Themes/Views/Admin/Index.aspx
+#| msgid : "Install a new Theme"
+msgid "Install a new Theme"
+msgstr "Installer un thème"
+
+#: ~/Modules/Orchard.Themes/Views/Admin/Install.aspx
+#| msgid : "Install Theme"
+msgid "Install Theme"
+msgstr "Installer un thème"
+
+#: ~/Modules/Orchard.Themes/Views/Admin/ThemePreview.ascx
+#| msgid : "You are previewing: "
+msgid "You are previewing: "
+msgstr "Vous prévisualisez actuellement: "
+
+#: ~/Modules/Orchard.Users/Controllers/AccountController.cs
+#| msgid : "The current password is incorrect or the new password is invalid."
+msgid "The current password is incorrect or the new password is invalid."
+msgstr "Le mot de passe courant est incorrect ou le nouveau mot de passe est invalide."
+
+#: ~/Modules/Orchard.Users/Controllers/AccountController.cs
+#| msgid : "The current password is incorrect or the new password is invalid."
+msgid "The current password is incorrect or the new password is invalid."
+msgstr "Le mot de passe courant est incorrect ou le nouveau mot de passe est invalide."
+
+#: ~/Modules/Orchard.Users/Controllers/AccountController.cs
+#| msgid : "You must specify a current password."
+msgid "You must specify a current password."
+msgstr "Vous devez spécifier le mot de passe courant."
+
+#: ~/Modules/Orchard.Users/Controllers/AccountController.cs
+#| msgid : "You must specify a new password of {0} or more characters."
+msgid "You must specify a new password of {0} or more characters."
+msgstr "Votre nouveau mot de passe doit comporter au moins {0} caractères."
+
+#: ~/Modules/Orchard.Users/Controllers/AccountController.cs
+#| msgid : "The new password and confirmation password do not match."
+msgid "The new password and confirmation password do not match."
+msgstr "Le nouvau mot de passe et sa confirmation ne coincident pas."
+
+#: ~/Modules/Orchard.Users/Controllers/AccountController.cs
+#| msgid : "You must specify a username or e-mail."
+msgid "You must specify a username or e-mail."
+msgstr "Vous devez spécifier un nom d'utilisateur ou une adresse e-mail."
+
+#: ~/Modules/Orchard.Users/Controllers/AccountController.cs
+#| msgid : "You must specify a password."
+msgid "You must specify a password."
+msgstr "Vous devez spécifier un mot de passe."
+
+#: ~/Modules/Orchard.Users/Controllers/AccountController.cs
+#| msgid : "The username or e-mail or password provided is incorrect."
+msgid "The username or e-mail or password provided is incorrect."
+msgstr "Le nom d'utilisateur ou l'adresse e-mail est incorrect."
+
+#: ~/Modules/Orchard.Users/Controllers/AccountController.cs
+#| msgid : "You must specify a username."
+msgid "You must specify a username."
+msgstr "Vous devez spécifier un nom d'utilisateur."
+
+#: ~/Modules/Orchard.Users/Controllers/AccountController.cs
+#| msgid : "You must specify an email address."
+msgid "You must specify an email address."
+msgstr "Vous devez spécifier une adresse e-mail."
+
+#: ~/Modules/Orchard.Users/Controllers/AccountController.cs
+#| msgid : "You must specify a password of {0} or more characters."
+msgid "You must specify a password of {0} or more characters."
+msgstr "Votre mot de passe doit comporter au moins {0} caractères."
+
+#: ~/Modules/Orchard.Users/Controllers/AccountController.cs
+#| msgid : "The new password and confirmation password do not match."
+msgid "The new password and confirmation password do not match."
+msgstr "Le nouvau mot de passe et sa confirmation ne coincident pas."
+
+#: ~/Modules/Orchard.Users/Controllers/AdminController.cs
+#| msgid : "Not authorized to list users"
+msgid "Not authorized to list users"
+msgstr "Non autorisé à voir la liste des utilisateurs"
+
+#: ~/Modules/Orchard.Users/Controllers/AdminController.cs
+#| msgid : "Not authorized to manage users"
+msgid "Not authorized to manage users"
+msgstr "Non autorisé à gérer les utilisateurs"
+
+#: ~/Modules/Orchard.Users/Controllers/AdminController.cs
+#| msgid : "Not authorized to manage users"
+msgid "Not authorized to manage users"
+msgstr "Non autorisé à gérer les utilisateurs"
+
+#: ~/Modules/Orchard.Users/Controllers/AdminController.cs
+#| msgid : "Password confirmation must match"
+msgid "Password confirmation must match"
+msgstr "La confirmation du mot de passe doit coincider."
+
+#: ~/Modules/Orchard.Users/Controllers/AdminController.cs
+#| msgid : "Not authorized to manage users"
+msgid "Not authorized to manage users"
+msgstr "Non autorisé à gérer les utilisateurs"
+
+#: ~/Modules/Orchard.Users/Controllers/AdminController.cs
+#| msgid : "Not authorized to manage users"
+msgid "Not authorized to manage users"
+msgstr "Non autorisé à gérer les utilisateurs"
+
+#: ~/Modules/Orchard.Users/Controllers/AdminController.cs
+#| msgid : "User information updated"
+msgid "User information updated"
+msgstr "Informations sur l'utilisateur mises à jour."
+
+#: ~/Modules/Orchard.Users/Controllers/AdminController.cs
+#| msgid : "Not authorized to manage users"
+msgid "Not authorized to manage users"
+msgstr "Non autorisé à gérer les utilisateurs"
+
+#: ~/Modules/Orchard.Users/Controllers/AdminController.cs
+#| msgid : "User deleted"
+msgid "User deleted"
+msgstr "Utilisateur effacé"
+
+#: ~/Modules/Orchard.Users/Views/Account/AccessDenied.ascx
+#| msgid : "Access Denied"
+msgid "Access Denied"
+msgstr "Accès refusé"
+
+#: ~/Modules/Orchard.Users/Views/Account/AccessDenied.ascx
+#| msgid : "You do not have permission to complete your request."
+msgid "You do not have permission to complete your request."
+msgstr "Vous n'avez pas la permission de compléter cette requête."
+
+#: ~/Modules/Orchard.Users/Views/Account/ChangePassword.ascx
+#| msgid : "Change Password"
+msgid "Change Password"
+msgstr "Changer le mot de passe"
+
+#: ~/Modules/Orchard.Users/Views/Account/ChangePassword.ascx
+#| msgid : "Use the form below to change your password."
+msgid "Use the form below to change your password."
+msgstr "Veuillez utiliser le formulaire ci-dessous pour changer votre mot de passe."
+
+#: ~/Modules/Orchard.Users/Views/Account/ChangePassword.ascx
+#| msgid : "New passwords are required to be a minimum of {0} characters in length."
+msgid "New passwords are required to be a minimum of {0} characters in length."
+msgstr "Les mots de passe doivent contenir au moins {0} caractères."
+
+#: ~/Modules/Orchard.Users/Views/Account/ChangePassword.ascx
+#| msgid : "Current password:"
+msgid "Current password:"
+msgstr "Mot de passe courant:"
+
+#: ~/Modules/Orchard.Users/Views/Account/ChangePassword.ascx
+#| msgid : "New password:"
+msgid "New password:"
+msgstr "Nouveau mot de passe:"
+
+#: ~/Modules/Orchard.Users/Views/Account/ChangePassword.ascx
+#| msgid : "Confirm new password:"
+msgid "Confirm new password:"
+msgstr "Confirmez le nouveau mot de passe:"
+
+#: ~/Modules/Orchard.Users/Views/Account/ChangePassword.ascx
+#| msgid : "Password change was unsuccessful. Please correct the errors and try again."
+msgid "Password change was unsuccessful. Please correct the errors and try again."
+msgstr "Le changement de mot de passe a échoué. Veuillez corriger les erreurs et réessayer."
+
+#: ~/Modules/Orchard.Users/Views/Account/ChangePasswordSuccess.ascx
+#| msgid : "Change Password"
+msgid "Change Password"
+msgstr "Changer le mot de passe"
+
+#: ~/Modules/Orchard.Users/Views/Account/ChangePasswordSuccess.ascx
+#| msgid : "Your password has been changed successfully."
+msgid "Your password has been changed successfully."
+msgstr "Votre mot de passe a été changé."
+
+#: ~/Modules/Orchard.Users/Views/Account/LogOn.ascx
+#| msgid : "Login was unsuccessful. Please correct the errors and try again."
+msgid "Login was unsuccessful. Please correct the errors and try again."
+msgstr "La connexion a échoué. Veuillez corriger les erreurs et réessayer."
+
+#: ~/Modules/Orchard.Users/Views/Account/LogOn.ascx
+#| msgid : "Please enter your username and password."
+msgid "Please enter your username and password."
+msgstr "Veuillez saisir votre nom d'utilisateur et votre mot de passe."
+
+#: ~/Modules/Orchard.Users/Views/Account/LogOn.ascx
+#| msgid : "Register"
+msgid "Register"
+msgstr "Enregistrer"
+
+#: ~/Modules/Orchard.Users/Views/Account/LogOn.ascx
+#| msgid : " if you don't have an account."
+msgid " if you don't have an account."
+msgstr " si vous n'avez pas de compte."
+
+#: ~/Modules/Orchard.Users/Views/Account/LogOn.ascx
+#| msgid : "Account Information"
+msgid "Account Information"
+msgstr "Données du compte"
+
+#: ~/Modules/Orchard.Users/Views/Account/LogOn.ascx
+#| msgid : "Username or Email:"
+msgid "Username or Email:"
+msgstr "Nom d'utilisateur ou e-mail:"
+
+#: ~/Modules/Orchard.Users/Views/Account/LogOn.ascx
+#| msgid : "Password:"
+msgid "Password:"
+msgstr "Mot de passe:"
+
+#: ~/Modules/Orchard.Users/Views/Account/LogOn.ascx
+#| msgid : "Remember me?"
+msgid "Remember me?"
+msgstr "Se souvenir de moi?"
+
+#: ~/Modules/Orchard.Users/Views/Account/Register.ascx
+#| msgid : "Create a New Account"
+msgid "Create a New Account"
+msgstr "Créer un nouveau compte utilisateur"
+
+#: ~/Modules/Orchard.Users/Views/Account/Register.ascx
+#| msgid : "Use the form below to create a new account."
+msgid "Use the form below to create a new account."
+msgstr "Veuillez utiliser le formulaire ci-dessous pour créer un nouveau compte."
+
+#: ~/Modules/Orchard.Users/Views/Account/Register.ascx
+#| msgid : "Passwords are required to be a minimum of {0} characters in length."
+msgid "Passwords are required to be a minimum of {0} characters in length."
+msgstr "Les mots de passe doivent contenir au moins {0} caractères."
+
+#: ~/Modules/Orchard.Users/Views/Account/Register.ascx
+#| msgid : "Username:"
+msgid "Username:"
+msgstr "Nom d'utilisateur:"
+
+#: ~/Modules/Orchard.Users/Views/Account/Register.ascx
+#| msgid : "Email:"
+msgid "Email:"
+msgstr "E-mail:
+
+#: ~/Modules/Orchard.Users/Views/Account/Register.ascx
+#| msgid : "Confirm password:"
+msgid "Confirm password:"
+msgstr "Confirmez le mot de passe:"
+
+#: ~/Modules/Orchard.Users/Views/Account/Register.ascx
+#| msgid : "Account creation was unsuccessful. Please correct the errors and try again."
+msgid "Account creation was unsuccessful. Please correct the errors and try again."
+msgstr "La création du compte a échoué. Veuillez corriger les erreurs et réessayer."
+
+#: ~/Modules/Orchard.Users/Views/Admin/Create.aspx
+#| msgid : "Add User"
+msgid "Add User"
+msgstr "Ajouter un utilisateur"
+
+#: ~/Modules/Orchard.Users/Views/Admin/Edit.aspx
+#| msgid : "Edit User"
+msgid "Edit User"
+msgstr "Modifier un utilisateur"
+
+#: ~/Modules/Orchard.Users/Views/Admin/Index.aspx
+#| msgid : "Manage Users"
+msgid "Manage Users"
+msgstr "Gérer les utilisateurs"
+
+#: ~/Modules/Orchard.Users/Views/Admin/Index.aspx
+#| msgid : "Add a new user"
+msgid "Add a new user"
+msgstr "Ajouter un utilisateur"
+
+#: ~/Modules/Orchard.Users/Views/Admin/Index.aspx
+#| msgid : "Edit"
+msgid "Edit"
+msgstr "Modifier"
+
+#: ~/Modules/Orchard.Users/Views/Admin/Index.aspx
+#| msgid : "Remove"
+msgid "Remove"
+msgstr "Supprimer"
+
+#: ~/Themes/Classic/Views/DisplayTemplates/Parts/Pages.Page.Metadata.ascx
+#| msgid : "nobody(?)"
+msgid "nobody(?)"
+msgstr "personne(?)"
+
+#: ~/Themes/ClassicDark/Views/DisplayTemplates/Parts/Pages.Page.Metadata.ascx
+#| msgid : "nobody(?)"
+msgid "nobody(?)"
+msgstr "personne(?)"
+
+#: ~/Themes/Contoso/Views/LogOn.ascx
+#| msgid : "Login was unsuccessful. Please correct the errors and try again."
+msgid "Login was unsuccessful. Please correct the errors and try again."
+msgstr "La connexion a échoué. Veuillez corriger les erreurs et réessayer."
+
+#: ~/Themes/Contoso/Views/LogOn.ascx
+#| msgid : "Please enter your username and password."
+msgid "Please enter your username and password."
+msgstr "Veuillez saisir votre nom d'utilisateur et votre mot de passe."
+
+#: ~/Themes/Contoso/Views/LogOn.ascx
+#| msgid : "Register"
+msgid "Register"
+msgstr "S'enregistrer"
+
+#: ~/Themes/Contoso/Views/LogOn.ascx
+#| msgid : " if you don't have an account."
+msgid " if you don't have an account."
+msgstr " si vous n'avez pas de compte."
+
+#: ~/Themes/Contoso/Views/LogOn.ascx
+#| msgid : "Account Information"
+msgid "Account Information"
+msgstr "Données du Compte"
+
+#: ~/Themes/Contoso/Views/LogOn.ascx
+#| msgid : "Username or Email:"
+msgid "Username or Email:"
+msgstr "Nom d'utilisateur ou e-mail:"
+
+#: ~/Themes/Contoso/Views/LogOn.ascx
+#| msgid : "Password:"
+msgid "Password:"
+msgstr "Mot de passe:"
+
+#: ~/Themes/Contoso/Views/LogOn.ascx
+#| msgid : "Remember me?"
+msgid "Remember me?"
+msgstr "Se souvenir de moi?"
+
+#: ~/Themes/Contoso/Views/User.ascx
+#| msgid : "Log Off"
+msgid "Log Off"
+msgstr "Déconnexion"
+
+#: ~/Themes/Contoso/Views/User.ascx
+#| msgid : "Login"
+msgid "Login"
+msgstr "Connexion"
+
+#: ~/Themes/Contoso/Views/DisplayTemplates/Items/Blogs.BlogPost.ListByArchive.ascx
+#| msgid : "Archives"
+msgid "Archives"
+msgstr "Archives"
+
+#: ~/Themes/Contoso/Views/DisplayTemplates/Items/Blogs.BlogPost.ListByArchive.ascx
+#| msgid : "Archives"
+msgid "Archives"
+msgstr "Archives"
+
+#: ~/Themes/Contoso/Views/DisplayTemplates/Parts/Comments.HasComments.ascx
+#| msgid : "log on"
+msgid "log on"
+msgstr "se connecter"
+
+#: ~/Themes/Contoso/Views/DisplayTemplates/Parts/Comments.HasComments.ascx
+#| msgid : "Add a Comment"
+msgid "Add a Comment"
+msgstr "Ajouter un commentaire"
+
+#: ~/Themes/Contoso/Views/DisplayTemplates/Parts/Comments.HasComments.ascx
+#| msgid : "You must {0} to comment."
+msgid "You must {0} to comment."
+msgstr "Vous devez {0} pour ajouter un commentaire."
+
+#: ~/Themes/Contoso/Views/DisplayTemplates/Parts/Comments.HasComments.ascx
+#| msgid : "Comments have been disabled for this content."
+msgid "Comments have been disabled for this content."
+msgstr "Les commentaires ont été désactivés pour ce contenu."
+
+#: ~/Themes/Contoso/Views/DisplayTemplates/Parts/Comments.HasComments.ascx
+#| msgid : "Hi, {0}!"
+msgid "Hi, {0}!"
+msgstr "Bonjour {0}!"
+
+#: ~/Themes/Contoso/Views/DisplayTemplates/Parts/Pages.Page.Metadata.ascx
+#| msgid : "nobody(?)"
+msgid "nobody(?)"
+msgstr "personne(?)"
+
+#: ~/Themes/Corporate/Views/LogOn.ascx
+#| msgid : "Login was unsuccessful. Please correct the errors and try again."
+msgid "Login was unsuccessful. Please correct the errors and try again."
+msgstr "La connexion a échoué. Veuillez corriger les erreurs et réessayer."
+
+#: ~/Themes/Corporate/Views/LogOn.ascx
+#| msgid : "Please enter your username and password."
+msgid "Please enter your username and password."
+msgstr "Veuillez saisir votre nom d'utilisateur et votre mot de passe."
+
+#: ~/Themes/Corporate/Views/LogOn.ascx
+#| msgid : "Register"
+msgid "Register"
+msgstr "S'enregistrer"
+
+#: ~/Themes/Corporate/Views/LogOn.ascx
+#| msgid : " if you don't have an account."
+msgid " if you don't have an account."
+msgstr " si vous n'avez pas de compte."
+
+#: ~/Themes/Corporate/Views/LogOn.ascx
+#| msgid : "Account Information"
+msgid "Account Information"
+msgstr "Données du Compte"
+
+#: ~/Themes/Corporate/Views/LogOn.ascx
+#| msgid : "Username or Email:"
+msgid "Username or Email:"
+msgstr "Nom d'utilisateur ou e-mail:"
+
+#: ~/Themes/Corporate/Views/LogOn.ascx
+#| msgid : "Password:"
+msgid "Password:"
+msgstr "Mot de passe:"
+
+#: ~/Themes/Corporate/Views/LogOn.ascx
+#| msgid : "Remember me?"
+msgid "Remember me?"
+msgstr "Se souvenir de moi?"
+
+#: ~/Themes/Corporate/Views/User.ascx
+#| msgid : "Log Off"
+msgid "Log Off"
+msgstr "Déconnexion"
+
+#: ~/Themes/Corporate/Views/User.ascx
+#| msgid : "Login"
+msgid "Login"
+msgstr "Connexion"
+
+#: ~/Themes/Corporate/Views/DisplayTemplates/Items/Blogs.BlogPost.ListByArchive.ascx
+#| msgid : "Archives"
+msgid "Archives"
+msgstr "Archives"
+
+#: ~/Themes/Corporate/Views/DisplayTemplates/Items/Blogs.BlogPost.ListByArchive.ascx
+#| msgid : "Archives"
+msgid "Archives"
+msgstr "Archives"
+
+#: ~/Themes/Corporate/Views/DisplayTemplates/Parts/Comments.HasComments.ascx
+#| msgid : "log on"
+msgid "log on"
+msgstr "se connecter"
+
+#: ~/Themes/Corporate/Views/DisplayTemplates/Parts/Comments.HasComments.ascx
+#| msgid : "Add a Comment"
+msgid "Add a Comment"
+msgstr "Ajouter un commentaire"
+
+#: ~/Themes/Corporate/Views/DisplayTemplates/Parts/Comments.HasComments.ascx
+#| msgid : "You must {0} to comment."
+msgid "You must {0} to comment."
+msgstr "Vous devez {0} pour ajouter un commentaire."
+
+#: ~/Themes/Corporate/Views/DisplayTemplates/Parts/Comments.HasComments.ascx
+#| msgid : "Comments have been disabled for this content."
+msgid "Comments have been disabled for this content."
+msgstr "Les commentaires ont été désactivés pour ce contenu."
+
+#: ~/Themes/Corporate/Views/DisplayTemplates/Parts/Comments.HasComments.ascx
+#| msgid : "Hi, {0}!"
+msgid "Hi, {0}!"
+msgstr "Bonjour {0}!"
+
+#: ~/Themes/Corporate/Views/DisplayTemplates/Parts/Pages.Page.Metadata.ascx
+#| msgid : "nobody(?)"
+msgid "nobody(?)"
+msgstr "personne(?)"
+
+#: ~/Themes/Green/Views/DisplayTemplates/Parts/Pages.Page.Metadata.ascx
+#| msgid : "nobody(?)"
+msgid "nobody(?)"
+msgstr "personne(?)"
+
+#: ~/Themes/TheAdmin/Views/Header.ascx
+#| msgid : "Project Orchard"
+msgid "Project Orchard"
+msgstr "Projet Orchard"
+
+#: ~/Themes/TheAdmin/Views/Header.ascx
+#| msgid : "Your Site"
+msgid "Your Site"
+msgstr "Votre site"
+
+#: ~/Themes/TheAdmin/Views/User.ascx
+#| msgid : "Logout"
+msgid "Logout"
+msgstr "Déconnexion"
+
+#: ~/Themes/TheAdmin/Views/User.ascx
+#| msgid : "User:"
+msgid "User:"
+msgstr "Utilisateur:"
+
+#: ~/Commands/DefaultOrchardCommandHandler.cs
+#| msgid : "Switch was not found: "
+msgid "Switch was not found: "
+msgstr "Le switch n'a pas été trouvé: "
+
+#: ~/Commands/DefaultOrchardCommandHandler.cs
+#| msgid : "A property of this name exists but is not decorated with the OrchardSwitch attribute: "
+msgid "A property of this name exists but is not decorated with the OrchardSwitch attribute: "
+msgstr "Il existe une propriété portant ce nom mais elle n'est pas décorée avec l'attribut OrchardSwitch: "
+
+#: ~/Commands/DefaultOrchardCommandHandler.cs
+#| msgid : "No property named {0} found of type bool, int or string."
+msgid "No property named {0} found of type bool, int or string."
+msgstr "Aucune propriété {0} de type bool, int ou string n'a été trouvée."
+
+#: ~/Commands/DefaultOrchardCommandHandler.cs
+#| msgid : "Command arguments don't match"
+msgid "Command arguments don't match"
+msgstr "Les arguments de la commande ne coincident pas."
+
+#: ~/Commands/DefaultOrchardCommandHandler.cs
+#| msgid : "Method {0} does not support switch {1}."
+msgid "Method {0} does not support switch {1}."
+msgstr "La méthode {0} ne supporte pas le switch {1}."
+
+#: ~/Commands/Builtin/HelpCommand.cs
+#| msgid : "List of available commands:"
+msgid "List of available commands:"
+msgstr "Liste des commandes disponibles:"
+
+#: ~/Commands/Builtin/HelpCommand.cs
+#| msgid : "---------------------------"
+msgid "---------------------------"
+msgstr "--------------------------------"
+
+#: ~/Commands/Builtin/HelpCommand.cs
+#| msgid : "Command {0} doesn't exist"
+msgid "Command {0} doesn't exist"
+msgstr "La commande {0} n'existe pas."
+
+#: ~/Environment/Configuration/ShellSettingsManager.cs
+#| msgid : "There are no settings to save."
+msgid "There are no settings to save."
+msgstr "Il n'y a aucune configuration à sauver."
+
+#: ~/Environment/Configuration/ShellSettingsManager.cs
+#| msgid : "Settings \"Name\" is not set."
+msgid "Settings \"Name\" is not set."
+msgstr "Le paramètre de configuration \"Name\" n'est pas valorisé."
+
+#: ~/Environment/Extensions/ExtensionManager.cs
+#| msgid : "Feature {0} was not found in any of the installed extensions"
+msgid "Feature {0} was not found in any of the installed extensions"
+msgstr "La fonctionnalité {0} n'a été trouvée dans aucune extension."
+
+#: ~/Environment/Extensions/ExtensionManager.cs
+#| msgid : "Extension "
+msgid "Extension "
+msgstr "Extension "
+
+#: ~/Environment/Extensions/ExtensionManager.cs
+#| msgid : " is not active"
+msgid " is not active"
+msgstr " n'est pas active."
+
+#: ~/Environment/Extensions/ExtensionManager.cs
+#| msgid : "extensionType was null or empty"
+msgid "extensionType was null or empty"
+msgstr "extensionType était nul ou vide."
+
+#: ~/Environment/Extensions/ExtensionManager.cs
+#| msgid : "extensionType was not recognized"
+msgid "extensionType was not recognized"
+msgstr "extensionType non reconnu."
+
+#: ~/Environment/Extensions/ExtensionManager.cs
+#| msgid : "extensionType was null or empty"
+msgid "extensionType was null or empty"
+msgstr "extensionType était nul ou vide."
+
+#: ~/Environment/Extensions/ExtensionManager.cs
+#| msgid : "extensionType was not recognized"
+msgid "extensionType was not recognized"
+msgstr "extensionType non reconnu."
+
+#: ~/Environment/Extensions/ExtensionManager.cs
+#| msgid : "extension was not found"
+msgid "extension was not found"
+msgstr "extension non trouvée."
+
+#: ~/Events/DefaultOrchardEventBus.cs
+#| msgid : " is not formatted correctly"
+msgid " is not formatted correctly"
+msgstr " n'est pas correctement composé."
+
+#: ~/Security/Authorizer.cs
+#| msgid : "{0}. Anonymous users do not have {1} permission."
+msgid "{0}. Anonymous users do not have {1} permission."
+msgstr "{0}. Les utilisateurs anonymes n'ont pas la permission {1}."
+
+#: ~/Security/Authorizer.cs
+#| msgid : "{0}. Current user, {2}, does not have {1} permission."
+msgid "{0}. Current user, {2}, does not have {1} permission."
+msgstr "{0}. L'utilisateur en cours, {2}, n'a pas la permission {1}."
+
+#: ~/UI/Admin/AdminFilter.cs
+#| msgid : "Can't access the admin"
+msgid "Can't access the admin"
+msgstr "L'interface d'administration est inaccessible."
+
+#: ~/UI/Resources/ResourceManager.cs
+#| msgid : "Style fileName was not given."
+msgid "Style fileName was not given."
+msgstr "Le nom de fichier de feuille de style n'est pas spécifié."
+
+#: ~/UI/Resources/ResourceManager.cs
+#| msgid : "Head script fileName was not given."
+msgid "Head script fileName was not given."
+msgstr "Le nom de fichier de script d'en-tête n'est pas spécifié."
+
+#: ~/UI/Resources/ResourceManager.cs
+#| msgid : "Foot script fileName was not given."
+msgid "Foot script fileName was not given."
+msgstr "Le nom de fichier de script de bas de page n'est pas spécifié."
+
+#: ~/Environment/Configuration/AzureShellSettingsManager.cs
+#| msgid : "There are no settings to save."
+msgid "There are no settings to save."
+msgstr "Il n'y a pas de paramètre de configuration à sauver."
+
+#: ~/Environment/Configuration/AzureShellSettingsManager.cs
+#| msgid : "Settings \"Name\" is not set."
+msgid "Settings \"Name\" is not set."
+msgstr "Le paramètre de configuration \"Name\" n'est pas spécifié."

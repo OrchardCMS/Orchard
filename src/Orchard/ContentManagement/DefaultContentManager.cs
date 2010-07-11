@@ -3,8 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using Autofac;
 using Orchard.ContentManagement.Handlers;
+using Orchard.ContentManagement.MetaData;
+using Orchard.ContentManagement.MetaData.Builders;
 using Orchard.ContentManagement.Records;
 using Orchard.Data;
+using Orchard.Indexing;
 using Orchard.Mvc.ViewModels;
 
 namespace Orchard.ContentManagement {
@@ -13,6 +16,7 @@ namespace Orchard.ContentManagement {
         private readonly IRepository<ContentTypeRecord> _contentTypeRepository;
         private readonly IRepository<ContentItemRecord> _contentItemRepository;
         private readonly IRepository<ContentItemVersionRecord> _contentItemVersionRepository;
+        private readonly IContentDefinitionManager _contentDefinitionManager;
         private readonly Func<IContentManagerSession> _contentManagerSession;
 
         public DefaultContentManager(
@@ -20,11 +24,13 @@ namespace Orchard.ContentManagement {
             IRepository<ContentTypeRecord> contentTypeRepository,
             IRepository<ContentItemRecord> contentItemRepository,
             IRepository<ContentItemVersionRecord> contentItemVersionRepository,
+            IContentDefinitionManager contentDefinitionManager,
             Func<IContentManagerSession> contentManagerSession) {
             _context = context;
             _contentTypeRepository = contentTypeRepository;
             _contentItemRepository = contentItemRepository;
             _contentItemVersionRepository = contentItemVersionRepository;
+            _contentDefinitionManager = contentDefinitionManager;
             _contentManagerSession = contentManagerSession;
         }
 
@@ -44,11 +50,16 @@ namespace Orchard.ContentManagement {
         }
 
         public virtual ContentItem New(string contentType) {
+            var contentTypeDefinition = _contentDefinitionManager.GetTypeDefinition(contentType);
+            if (contentTypeDefinition == null) {
+                contentTypeDefinition = new ContentTypeDefinitionBuilder().Named(contentType).Build();
+            }
 
             // create a new kernel for the model instance
             var context = new ActivatingContentContext {
-                ContentType = contentType,
-                Builder = new ContentItemBuilder(contentType)
+                ContentType = contentTypeDefinition.Name,
+                Definition = contentTypeDefinition,
+                Builder = new ContentItemBuilder(contentTypeDefinition)
             };
 
             // invoke handlers to weld aspects onto kernel
@@ -67,8 +78,17 @@ namespace Orchard.ContentManagement {
                 handler.Activated(context2);
             }
 
+            var context3 = new InitializingContentContext {
+                ContentType = context2.ContentType,
+                ContentItem = context2.ContentItem,
+            };
+
+            foreach (var handler in Handlers) {
+                handler.Initializing(context3);
+            }
+
             // composite result is returned
-            return context2.ContentItem;
+            return context3.ContentItem;
         }
 
         public virtual ContentItem Get(int id) {
@@ -255,7 +275,8 @@ namespace Orchard.ContentManagement {
             var buildingItemVersionRecord = new ContentItemVersionRecord {
                 ContentItemRecord = contentItemRecord,
                 Latest = true,
-                Published = false
+                Published = false,
+                Data = existingItemVersionRecord.Data,
             };
 
 
@@ -336,12 +357,26 @@ namespace Orchard.ContentManagement {
             foreach (var handler in Handlers) {
                 handler.Created(context);
             }
+
+            if (options.IsPublished) {
+                var publishContext = new PublishContentContext(contentItem, null);
+
+                // invoke handlers to acquire state, or at least establish lazy loading callbacks
+                foreach (var handler in Handlers) {
+                    handler.Publishing(publishContext);
+                }
+
+                // invoke handlers to acquire state, or at least establish lazy loading callbacks
+                foreach (var handler in Handlers) {
+                    handler.Published(publishContext);
+                }
+            }
         }
 
         public ContentItemMetadata GetItemMetadata(IContent content) {
             var context = new GetContentItemMetadataContext {
                 ContentItem = content.ContentItem,
-                Metadata = new ContentItemMetadata()
+                Metadata = new ContentItemMetadata(content)
             };
             foreach (var handler in Handlers) {
                 handler.GetContentItemMetadata(context);
@@ -395,5 +430,24 @@ namespace Orchard.ContentManagement {
             }
             return contentTypeRecord;
         }
+
+        public void Index(ContentItem contentItem, IDocumentIndex documentIndex) {
+            var indexContentContext = new IndexContentContext(contentItem, documentIndex);
+
+            // dispatch to handlers to retrieve index information
+            foreach (var handler in Handlers) {
+                handler.Indexing(indexContentContext);
+            }
+
+            foreach (var handler in Handlers) {
+                handler.Indexed(indexContentContext);
+            }
+        }
+
+        //public ISearchBuilder Search() {
+        //    return _indexManager.HasIndexProvider() 
+        //        ? _indexManager.GetSearchIndexProvider().CreateSearchBuilder("Search") 
+        //        : new NullSearchBuilder();
+        //}
     }
 }

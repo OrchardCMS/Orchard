@@ -11,8 +11,11 @@ namespace Orchard.Azure {
                 throw new ArgumentException("Path can't be empty");
 
             try {
-                var blob = container.GetBlockBlobReference(path);
-                blob.FetchAttributes();
+                using ( new HttpContextWeaver() )
+                {
+                    var blob = container.GetBlockBlobReference(path);
+                    blob.FetchAttributes();
+                }
                 return true;
             }
             catch ( StorageClientException e ) {
