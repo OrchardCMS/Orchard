@@ -20,12 +20,12 @@ namespace Orchard.Events {
         public Localizer T { get; set; }
 
 
-        public IEnumerable Notify(string messageName, Dictionary<string, object> eventData) {
+        public IEnumerable Notify(string messageName, IDictionary<string, object> eventData) {
             // call ToArray to ensure evaluation has taken place
             return NotifyHandlers(messageName, eventData).ToArray();
         }
 
-        private IEnumerable<object> NotifyHandlers(string messageName, Dictionary<string, object> eventData) {
+        private IEnumerable<object> NotifyHandlers(string messageName, IDictionary<string, object> eventData) {
             string[] parameters = messageName.Split('.');
             if (parameters.Length != 2) {
                 throw new ArgumentException(messageName + T(" is not formatted correctly"));
@@ -46,7 +46,7 @@ namespace Orchard.Events {
             }
         }
 
-        private bool TryNotifyHandler(IEventHandler eventHandler, string messageName, string interfaceName, string methodName, Dictionary<string, object> eventData, out IEnumerable returnValue) {
+        private bool TryNotifyHandler(IEventHandler eventHandler, string messageName, string interfaceName, string methodName, IDictionary<string, object> eventData, out IEnumerable returnValue) {
             try {
                 return TryInvoke(eventHandler, interfaceName, methodName, eventData, out returnValue);
             }
