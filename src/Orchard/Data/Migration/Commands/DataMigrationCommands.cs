@@ -52,7 +52,7 @@ namespace Orchard.Data.Migration.Commands {
         }
 
         [CommandName("create tables")]
-        [CommandHelp("create tables <feature-name> [/Drop:true|false] \r\n\t" + "Creates the database tables for the <feature-name> and optionaly drops them before if specified")]
+        [CommandHelp("create tables <feature-name> [/Drop:true|false] \r\n\t" + "Creates the database tables for the <feature-name> and optionally drops them before if specified")]
         [OrchardSwitches("Drop")]
         public string CreateTables(string featureName) {
             var stringInterpreter = new StringCommandInterpreter(Context.Output);
