@@ -1,0 +1,23 @@
+﻿.content-localization .content-localizations li,
+.content-localization .add-localization {
+    font-size:1.4em;
+}
+.content-localization .content-localizations {
+    font-size:.9em;
+    margin:1.44em 0 .44em;
+}
+.content-localization .content-localizations>* {
+    display:inline;
+}
+.content-localization .content-localizations li {
+    border-bottom:0;
+    display:inline;
+    margin-left:.5em;
+    padding:0;
+}
+.content-localization .content-localizations li::after {
+    content:", ";
+}
+.content-localization .content-localizations li:last-child::after {
+    content:"";
+}

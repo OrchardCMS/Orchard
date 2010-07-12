@@ -1,31 +1,44 @@
 ﻿using System;
+using System.Linq;
 using System.Web.Mvc;
-using System.Web.Routing;
 using Orchard.ContentManagement;
-using Orchard.Core.Contents.ViewModels;
+using Orchard.Core.Localization.Models;
+using Orchard.Core.Localization.Services;
+using Orchard.Core.Localization.ViewModels;
 using Orchard.Localization;
+using Orchard.Localization.Services;
 using Orchard.Mvc.Results;
 using Orchard.Mvc.ViewModels;
 
 namespace Orchard.Core.Localization.Controllers {
+    [ValidateInput(false)]
     public class AdminController : Controller, IUpdateModel {
         private readonly IContentManager _contentManager;
+        private readonly ICultureManager _cultureManager;
+        private readonly ILocalizationService _localizationService;
 
-        public AdminController(IOrchardServices orchardServices, IContentManager contentManager) {
+        public AdminController(IOrchardServices orchardServices, IContentManager contentManager, ICultureManager cultureManager, ILocalizationService localizationService) {
             _contentManager = contentManager;
+            _cultureManager = cultureManager;
+            _localizationService = localizationService;
             Services = orchardServices;
         }
 
         public IOrchardServices Services { get; set; }
 
-        public ActionResult Translate(int id, string from) {
+        public ActionResult Translate(int id, string to) {
             var contentItem = _contentManager.Get(id, VersionOptions.Latest);
 
             if (contentItem == null)
                 return new NotFoundResult();
 
-            var model = new EditItemViewModel {
+            var siteCultures = _cultureManager.ListCultures().Where(s => s != _localizationService.GetContentCulture(contentItem));
+            var model = new AddLocalizationViewModel {
                 Id = id,
+                SelectedCulture = siteCultures.Any(s => s == to)
+                    ? to
+                    : _cultureManager.GetCurrentCulture(HttpContext), // could be null but the person doing the translating might be translating into their current culture
+                SiteCultures = siteCultures,
                 Content = _contentManager.BuildEditorModel(contentItem)
             };
 
@@ -40,21 +53,37 @@ namespace Orchard.Core.Localization.Controllers {
             if (contentItem == null)
                 return new NotFoundResult();
 
-            var viewModel = new EditItemViewModel();
-            if (TryUpdateModel(viewModel))
-                viewModel.Content = _contentManager.UpdateEditorModel(contentItem, this);
+            var viewModel = new AddLocalizationViewModel();
+            TryUpdateModel(viewModel);
 
-            //todo: create translation here
+            ContentItem contentItemTranslation;
+            var existingTranslation = _localizationService.GetLocalizedContentItem(contentItem, viewModel.SelectedCulture);
+            if (existingTranslation != null) { // edit existing
+                contentItemTranslation = existingTranslation.ContentItem;
+            }
+            else { // create
+                contentItemTranslation = _contentManager.New(contentItem.ContentType);
+                var localized = contentItemTranslation.As<Localized>();
+                localized.MasterContentItem = contentItem;
+                localized.Culture = _cultureManager.GetCultureByName(viewModel.SelectedCulture);
+                _contentManager.Create(contentItemTranslation, VersionOptions.Draft);
+            }
+
+            if (ModelState.IsValid)
+                viewModel.Content = _contentManager.UpdateEditorModel(contentItemTranslation, this);
+
             if (!ModelState.IsValid) {
                 Services.TransactionManager.Cancel();
+                viewModel.SiteCultures = _cultureManager.ListCultures().Where(s => s != _localizationService.GetContentCulture(contentItem));
                 PrepareEditorViewModel(viewModel.Content);
                 return View(viewModel);
             }
-            _contentManager.Publish(contentItem);
+
+            _contentManager.Publish(contentItemTranslation);
 
             var metadata = _contentManager.GetItemMetadata(viewModel.Content.Item);
             if (metadata.EditorRouteValues == null)
-                return null;
+                return null; //todo: (heskew) redirect to somewhere better than nowhere
 
             return RedirectToRoute(metadata.EditorRouteValues);
         }

@@ -59,7 +59,7 @@ namespace Orchard.Core.Settings.Controllers {
                 return new HttpUnauthorizedResult();
 
             var viewModel = new SiteCulturesViewModel {
-                CurrentCulture = CultureInfo.CurrentCulture.Name,
+                CurrentCulture = _cultureManager.GetCurrentCulture(HttpContext),
                 SiteCultures = _cultureManager.ListCultures(),
             };
             viewModel.AvailableSystemCultures = CultureInfo.GetCultures(CultureTypes.SpecificCultures)

@@ -7,7 +7,7 @@ namespace Orchard.Localization.Services {
     public class SiteCultureSelector : ICultureSelector {
        protected virtual ISite CurrentSite { get; [UsedImplicitly] private set; }
 
-        public CultureSelectorResult GetCulture(HttpContext context) {
+        public CultureSelectorResult GetCulture(HttpContextBase context) {
             string currentCultureName = CurrentSite.SiteCulture;
 
             if (String.IsNullOrEmpty(currentCultureName)) {
