@@ -71,13 +71,12 @@
     <Compile Include="Common\Settings\BodySettings.cs" />
     <Compile Include="Common\ViewModels\CommonMetadataViewModel.cs" />
     <Compile Include="Common\ViewModels\ContainerEditorViewModel.cs" />
+    <Compile Include="Common\ViewModels\PublishEditorViewModel.cs" />
     <Compile Include="Common\ViewModels\TextContentFieldDisplayViewModel.cs" />
     <Compile Include="Common\ViewModels\TextContentFieldEditorViewModel.cs" />
     <Compile Include="Contents\Controllers\ItemController.cs" />
     <Compile Include="Contents\Drivers\ContentsDriver.cs" />
     <Compile Include="Contents\Handlers\ContentsHandler.cs" />
-    <Compile Include="Contents\Services\IContentsService.cs" />
-    <Compile Include="Contents\Services\ContentsService.cs" />
     <Compile Include="Contents\ViewModels\EditItemViewModel.cs" />
     <Compile Include="Contents\ViewModels\ListContentsViewModel.cs" />
     <Compile Include="Contents\ViewModels\ListContentTypesViewModel.cs" />
@@ -214,6 +213,28 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Common\Module.txt" />
+    <Content Include="Common\Scripts\jquery.ui.core.js" />
+    <Content Include="Common\Scripts\jquery.ui.datepicker.js" />
+    <Content Include="Common\Scripts\jquery.ui.widget.js" />
+    <Content Include="Common\Scripts\jquery.utils.js" />
+    <Content Include="Common\Scripts\ui.timepickr.js" />
+    <Content Include="Common\Styles\datetime.css" />
+    <Content Include="Common\Styles\images\ui-bg_flat_0_aaaaaa_40x100.png" />
+    <Content Include="Common\Styles\images\ui-bg_flat_75_ffffff_40x100.png" />
+    <Content Include="Common\Styles\images\ui-bg_glass_55_fbf9ee_1x400.png" />
+    <Content Include="Common\Styles\images\ui-bg_glass_65_ffffff_1x400.png" />
+    <Content Include="Common\Styles\images\ui-bg_glass_75_dadada_1x400.png" />
+    <Content Include="Common\Styles\images\ui-bg_glass_75_e6e6e6_1x400.png" />
+    <Content Include="Common\Styles\images\ui-bg_glass_95_fef1ec_1x400.png" />
+    <Content Include="Common\Styles\images\ui-bg_highlight-soft_75_cccccc_1x100.png" />
+    <Content Include="Common\Styles\images\ui-icons_222222_256x240.png" />
+    <Content Include="Common\Styles\images\ui-icons_2e83ff_256x240.png" />
+    <Content Include="Common\Styles\images\ui-icons_454545_256x240.png" />
+    <Content Include="Common\Styles\images\ui-icons_888888_256x240.png" />
+    <Content Include="Common\Styles\images\ui-icons_cd0a0a_256x240.png" />
+    <Content Include="Common\Styles\jquery-ui-1.7.2.custom.css" />
+    <Content Include="Common\Styles\ui.datepicker.css" />
+    <Content Include="Common\Styles\ui.timepickr.css" />
     <Content Include="Common\Views\DefinitionTemplates\BodyTypePartSettings.ascx" />
     <Content Include="Common\Views\DefinitionTemplates\BodyPartSettings.ascx" />
     <Content Include="Common\Views\DisplayTemplates\Fields\Common.TextField.ascx" />
@@ -227,6 +248,7 @@
     <Content Include="Common\Views\DisplayTemplates\Parts\Common.Publish.ascx" />
     <Content Include="Common\Views\EditorTemplates\Fields\Common.TextField.ascx" />
     <Content Include="Common\Views\EditorTemplates\Parts\Common.Container.ascx" />
+    <Content Include="Common\Views\EditorTemplates\Parts\Common.Publish.ascx" />
     <Content Include="Common\Views\EditorTemplates\PlainTextEditor.ascx" />
     <Content Include="Contents\Module.txt" />
     <Content Include="Contents\Views\Admin\Edit.ascx" />

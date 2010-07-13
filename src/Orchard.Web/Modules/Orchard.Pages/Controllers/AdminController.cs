@@ -136,24 +136,6 @@ namespace Orchard.Pages.Controllers {
             Services.ContentManager.Create(model.Page.Item.ContentItem, VersionOptions.Draft);
             Services.ContentManager.UpdateEditorModel(page, this);
 
-            // Execute publish command
-            switch (Request.Form["Command"]) {
-                case "PublishNow":
-                    _pageService.Publish(model.Page.Item);
-                    Services.Notifier.Information(T("Page has been published"));
-                    if (model.PromoteToHomePage) {
-                        CurrentSite.HomePage = "PageHomePageProvider;" + model.Page.Item.Id;
-                    }
-                    break;
-                case "PublishLater":
-                    _pageService.Publish(model.Page.Item, model.Page.Item.ScheduledPublishUtc.Value);
-                    Services.Notifier.Information(T("Page has been scheduled for publishing"));
-                    break;
-                default:
-                    Services.Notifier.Information(T("Page draft has been saved"));
-                    break;
-            }
-
             return RedirectToAction("Edit", "Admin", new { id = model.Page.Item.ContentItem.Id });
         }
 
@@ -192,25 +174,6 @@ namespace Orchard.Pages.Controllers {
             if (!ModelState.IsValid) {
                 Services.TransactionManager.Cancel();
                 return View(model);
-            }
-
-            // Execute publish command
-            switch (Request.Form["Command"]) {
-                case "PublishNow":
-                    _pageService.Publish(model.Page.Item);
-                    Services.Notifier.Information(T("Page has been published"));
-                    if (model.PromoteToHomePage) {
-                        CurrentSite.HomePage = "PageHomePageProvider;" + model.Page.Item.Id;
-                    }
-                    break;
-                case "PublishLater":
-                    _pageService.Publish(model.Page.Item, model.Page.Item.ScheduledPublishUtc.Value);
-                    Services.Notifier.Information(T("Page has been scheduled for publishing"));
-                    break;
-                default:
-                    //_pageService.Unpublish(model.Page.Item);
-                    Services.Notifier.Information(T("Page draft has been saved"));
-                    break;
             }
 
             return RedirectToAction("Edit", "Admin", new {id = model.Page.Item.ContentItem.Id});

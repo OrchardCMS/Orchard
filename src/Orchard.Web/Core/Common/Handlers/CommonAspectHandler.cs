@@ -45,6 +45,7 @@ namespace Orchard.Core.Common.Handlers {
             OnInitializing<ContentPart<CommonVersionRecord>>(AssignCreatingDates);
 
             OnLoaded<CommonAspect>(LazyLoadHandlers);
+            OnLoaded<CommonAspect>((context, commonAspect) => commonAspect.ScheduledPublishUtc.Value = _commonService.GetScheduledPublishUtc(commonAspect));
 
             OnVersioning<CommonAspect>(CopyOwnerAndContainer);
 

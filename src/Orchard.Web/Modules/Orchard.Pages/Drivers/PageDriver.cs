@@ -56,17 +56,11 @@ namespace Orchard.Pages.Drivers {
         }
 
         protected override DriverResult Editor(Page page) {
-            return Combined(
-                ContentItemTemplate("Items/Pages.Page"),
-                ContentPartTemplate(page, "Parts/Pages.Page.Publish").Location("secondary", "1"));
+            return ContentItemTemplate("Items/Pages.Page");
         }
 
         protected override DriverResult Editor(Page page, IUpdateModel updater) {
             updater.TryUpdateModel(page, Prefix, null, null);
-
-            DateTime scheduled;
-            if (DateTime.TryParse(string.Format("{0} {1}", page.ScheduledPublishUtcDate, page.ScheduledPublishUtcTime), out scheduled))
-                page.ScheduledPublishUtc = scheduled;
 
             return Editor(page);
         }

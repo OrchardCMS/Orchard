@@ -63,21 +63,6 @@ namespace Orchard.Blogs.Controllers {
             Services.ContentManager.Create(model.BlogPost.Item.ContentItem, VersionOptions.Draft);
             Services.ContentManager.UpdateEditorModel(blogPost, this);
 
-            // Execute publish command
-            switch (Request.Form["Command"]) {
-                case "PublishNow":
-                    _blogPostService.Publish(model.BlogPost.Item);
-                    Services.Notifier.Information(T("Blog post has been published"));
-                    break;
-                case "PublishLater":
-                    _blogPostService.Publish(model.BlogPost.Item, model.BlogPost.Item.ScheduledPublishUtc.Value);
-                    Services.Notifier.Information(T("Blog post has been scheduled for publishing"));
-                    break;
-                default:
-                    Services.Notifier.Information(T("Blog post draft has been saved"));
-                    break;
-            }
-
             return Redirect(Url.BlogPostEdit(model.BlogPost.Item));
         }
 
@@ -124,22 +109,6 @@ namespace Orchard.Blogs.Controllers {
             if (!ModelState.IsValid) {
                 Services.TransactionManager.Cancel();
                 return View(model);
-            }
-
-            // Execute publish command
-            switch (Request.Form["Command"]) {
-                case "PublishNow":
-                    _blogPostService.Publish(model.BlogPost.Item);
-                    Services.Notifier.Information(T("Blog post has been published"));
-                    break;
-                case "PublishLater":
-                    _blogPostService.Publish(model.BlogPost.Item, model.BlogPost.Item.ScheduledPublishUtc.Value);
-                    Services.Notifier.Information(T("Blog post has been scheduled for publishing"));
-                    break;
-                default:
-                    //_blogPostService.Unpublish(model.BlogPost.Item);
-                    Services.Notifier.Information(T("Blog post draft has been saved"));
-                    break;
             }
 
             return Redirect(Url.BlogPostEdit(model.BlogPost.Item));

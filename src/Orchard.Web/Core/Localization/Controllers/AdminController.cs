@@ -50,7 +50,7 @@ namespace Orchard.Core.Localization.Controllers {
         }
 
         [HttpPost, ActionName("Translate")]
-        public ActionResult TranslatePOST(int id, string command, DateTime? scheduledPublishUtc) {
+        public ActionResult TranslatePOST(int id) {
             var contentItem = _contentManager.Get(id, VersionOptions.Latest);
 
             if (contentItem == null)
@@ -80,20 +80,6 @@ namespace Orchard.Core.Localization.Controllers {
                 viewModel.SiteCultures = _cultureManager.ListCultures().Where(s => s != _localizationService.GetContentCulture(contentItem));
                 PrepareEditorViewModel(viewModel.Content);
                 return View(viewModel);
-            }
-
-            switch (command) {
-                case "PublishNow":
-                    _localizationService.Publish(contentItemTranslation);
-                    Services.Notifier.Information(T("{0} has been published", contentItem.TypeDefinition.DisplayName));
-                    break;
-                case "PublishLater":
-                    _localizationService.Publish(contentItemTranslation, scheduledPublishUtc.HasValue ? scheduledPublishUtc.Value : DateTime.MaxValue);
-                    Services.Notifier.Information(T("{0} has been scheduled for publishing", contentItem.TypeDefinition.DisplayName));
-                    break;
-                default:
-                    Services.Notifier.Information(T("{0} draft has been saved", contentItem.TypeDefinition.DisplayName));
-                    break;
             }
 
             var metadata = _contentManager.GetItemMetadata(viewModel.Content.Item);

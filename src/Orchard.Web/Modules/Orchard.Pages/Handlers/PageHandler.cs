@@ -22,8 +22,6 @@ namespace Orchard.Pages.Handlers {
             Filters.Add(new ActivatingFilter<ContentPart<CommonVersionRecord>>(PageDriver.ContentType.Name));
             Filters.Add(new ActivatingFilter<IsRoutable>(PageDriver.ContentType.Name));
             Filters.Add(new ActivatingFilter<BodyAspect>(PageDriver.ContentType.Name));
-
-            OnLoaded<Page>((context, page) => page._scheduledPublishUtc.Loader(value => _pageService.GetScheduledPublishUtc(page)));
         }
 
         Localizer T { get; set; }

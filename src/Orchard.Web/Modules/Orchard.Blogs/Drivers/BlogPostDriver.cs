@@ -84,18 +84,11 @@ namespace Orchard.Blogs.Drivers {
         }
 
         protected override DriverResult Editor(BlogPost post) {
-            return Combined(
-                ContentItemTemplate("Items/Blogs.BlogPost"),
-                ContentPartTemplate(post, "Parts/Blogs.BlogPost.Publish").Location("secondary", "1"));
+            return ContentItemTemplate("Items/Blogs.BlogPost");
         }
 
         protected override DriverResult Editor(BlogPost post, IUpdateModel updater) {
             updater.TryUpdateModel(post, Prefix, null, null);
-
-            DateTime scheduled;
-            if (DateTime.TryParse(string.Format("{0} {1}", post.ScheduledPublishUtcDate, post.ScheduledPublishUtcTime), out scheduled))
-                post.ScheduledPublishUtc = scheduled;
-
             return Editor(post);
         }
     }

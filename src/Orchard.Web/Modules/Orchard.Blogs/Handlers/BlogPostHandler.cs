@@ -28,8 +28,6 @@ namespace Orchard.Blogs.Handlers {
             Filters.Add(new ActivatingFilter<IsRoutable>(BlogPostDriver.ContentType.Name));
             Filters.Add(new ActivatingFilter<BodyAspect>(BlogPostDriver.ContentType.Name));
 
-            OnLoaded<BlogPost>((context, p) => p.ScheduledPublishUtc = _blogPostService.GetScheduledPublishUtc(p));
-
             Action<Blog> updateBlogPostCount =
                 (blog => {
                      // Ensure we get the "right" set of published posts for the blog
