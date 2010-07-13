@@ -120,6 +120,7 @@ number of columns: 24; actual width: 946; column width: 26; gutter width:14
     display:inline;
     float:left;
     width:15.401%;
+    border-right:1px solid #eeeeee;
 }
 .wrapper, .sections {
     overflow:hidden;
@@ -238,7 +239,7 @@ form.link button:hover {
     width:0;
 }
 #navigation li {
-	margin:7px 0 20px 0;
+	margin:7px 0 20px 12px;
 }
 #navigation ul li {
     border:0;
@@ -248,12 +249,8 @@ form.link button:hover {
     padding:0;
 }
 #navigation li h3 a, #navigation li h3 span {
-	border-bottom:1px solid #bdbcbc;
     display:block;
 	padding:6px 4px 8px 8px;
-}
-#navigation li h3 a, #navigation li h3 a:link, #navigation li h3 a:visited {
-    color:inherit;
 }
 #navigation li h3 a:hover, #navigation li h3 a:active, #navigation li h3 a:focus {
     text-decoration:none;
