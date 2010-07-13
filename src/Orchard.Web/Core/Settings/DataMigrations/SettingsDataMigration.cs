@@ -77,7 +77,7 @@ namespace Orchard.Core.Settings.DataMigrations {
             //CREATE TABLE Settings_ShellStateRecord (Id  integer, primary key (Id));
             SchemaBuilder.CreateTable("ShellStateRecord", table => table
                 .Column<int>("Id", column => column.PrimaryKey().Identity())
-                .Column<string>("Name")
+                .Column<string>("Unused")
                 );
 
             //CREATE TABLE Settings_SiteSettingsRecord (Id INTEGER not null, SiteSalt TEXT, SiteName TEXT, SuperUser TEXT, PageTitleSeparator TEXT, HomePage TEXT, SiteCulture TEXT, primary key (Id));
