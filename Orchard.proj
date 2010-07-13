@@ -76,6 +76,13 @@
       SourceFiles="$(BuildFolder)\Test\nunit\nunit-console-x86.exe"
       DestinationFiles="$(BuildFolder)\Test\nunit\nunit-console.exe" />
 
+    <!-- TeamCity support -->
+    <ItemGroup>
+      <NUnitAddinFiles Include="$(teamcity_dotnet_nunitaddin)-2.5.2.*" />
+    </ItemGroup>
+    <Copy SourceFiles="@(NUnitAddinFiles)" DestinationFolder="$(BuildFolder)\Test\nunit\addins" />
+
+    <!-- Copy and run unit test assemblies -->
     <CreateItem Include="$(CompileFolder)\*.Tests.*dll">
       <Output TaskParameter="Include" ItemName="TestAssemblies" />
     </CreateItem>
