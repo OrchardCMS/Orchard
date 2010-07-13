@@ -9,8 +9,11 @@
         </div>
         <div class="related"><%
             Html.Zone("secondary"); %>
-            <%:Html.ItemEditLink(T("Edit").Text, Model.Item) %><%:T(" | ") %>
-            <a href="<%:Html.AntiForgeryTokenGetUrl(Url.Action("Delete", new {id = Model.Item.Id})) %>" title="<%:T("Remove Page") %>"><%:T("Remove") %></a>
+            <%:Html.ItemEditLink(T("Edit").Text, Model.Item) %><%:T(" | ") %><%
+            using (Html.BeginFormAntiForgeryPost(string.Format("{0}", Url.Action("Remove", new { area = "Contents" })), FormMethod.Post, new {@class = "inline link"})) { %>
+                <%:Html.Hidden("id", Model.Item.Id, new { id = "" })%>
+                <button type="submit"><%:T("Remove") %></button><%
+            } %>
         </div>
         <div style="clear:both;"></div>
         <% Html.Zone("primary"); %>
