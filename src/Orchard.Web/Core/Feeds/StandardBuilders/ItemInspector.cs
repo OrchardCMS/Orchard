@@ -3,20 +3,21 @@ using System.Web.Routing;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Aspects;
 using Orchard.Core.Common.Models;
+using Orchard.Core.Routable.Models;
 
 namespace Orchard.Core.Feeds.StandardBuilders {
     public class ItemInspector {
         private readonly IContent _item;
         private readonly ContentItemMetadata _metadata;
         private readonly ICommonAspect _common;
-        private readonly RoutableAspect _routable;
+        private readonly IsRoutable _routable;
         private readonly BodyAspect _body;
 
         public ItemInspector(IContent item, ContentItemMetadata metadata) {
             _item = item;
             _metadata = metadata;
             _common = item.Get<ICommonAspect>();
-            _routable = item.Get<RoutableAspect>();
+            _routable = item.Get<IsRoutable>();
             _body = item.Get<BodyAspect>();
         }
 

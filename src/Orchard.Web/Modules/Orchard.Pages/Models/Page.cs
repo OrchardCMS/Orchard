@@ -3,6 +3,7 @@ using System.Web.Mvc;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Utilities;
 using Orchard.Core.Common.Models;
+using Orchard.Core.Routable.Models;
 using Orchard.Security;
 
 namespace Orchard.Pages.Models {
@@ -11,12 +12,12 @@ namespace Orchard.Pages.Models {
         public int Id { get { return ContentItem.Id; } }
 
         public string Title {
-            get { return this.As<RoutableAspect>().Title; }
+            get { return this.As<IsRoutable>().Title; }
         }
 
         public string Slug {
-            get { return this.As<RoutableAspect>().Slug; }
-            set { this.As<RoutableAspect>().Slug = value; }
+            get { return this.As<IsRoutable>().Slug; }
+            set { this.As<IsRoutable>().Slug = value; }
         }
 
         public IUser Creator {

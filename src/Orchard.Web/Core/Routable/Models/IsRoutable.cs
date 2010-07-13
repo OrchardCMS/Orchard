@@ -1,6 +1,5 @@
 ﻿using Orchard.ContentManagement;
 using Orchard.ContentManagement.Aspects;
-using Orchard.Core.Common.Models;
 
 namespace Orchard.Core.Routable.Models {
     public class IsRoutable : ContentPart<RoutableRecord>, IRoutableAspect {
@@ -13,6 +12,5 @@ namespace Orchard.Core.Routable.Models {
             get { return Record.Slug; }
             set { Record.Slug = value; }
         }
-    
     }
 }

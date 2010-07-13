@@ -8,4 +8,4 @@ description: The routable module enables content items to be accessed through a 
 features:
     Routable:
         Description: Routable content part.
-        Category: Core2
+        Category: Core

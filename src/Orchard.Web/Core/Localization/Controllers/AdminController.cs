@@ -9,6 +9,7 @@ using Orchard.Localization;
 using Orchard.Localization.Services;
 using Orchard.Mvc.Results;
 using Orchard.Mvc.ViewModels;
+using Orchard.UI.Notify;
 
 namespace Orchard.Core.Localization.Controllers {
     [ValidateInput(false)]
@@ -21,9 +22,11 @@ namespace Orchard.Core.Localization.Controllers {
             _contentManager = contentManager;
             _cultureManager = cultureManager;
             _localizationService = localizationService;
+            T = NullLocalizer.Instance;
             Services = orchardServices;
         }
 
+        public Localizer T { get; set; }
         public IOrchardServices Services { get; set; }
 
         public ActionResult Translate(int id, string to) {
@@ -47,8 +50,8 @@ namespace Orchard.Core.Localization.Controllers {
         }
 
         [HttpPost, ActionName("Translate")]
-        public ActionResult TranslatePOST(int id) {
-            var contentItem = _contentManager.Get(id, VersionOptions.DraftRequired);
+        public ActionResult TranslatePOST(int id, string command, DateTime? scheduledPublishUtc) {
+            var contentItem = _contentManager.Get(id, VersionOptions.Latest);
 
             if (contentItem == null)
                 return new NotFoundResult();
@@ -59,7 +62,7 @@ namespace Orchard.Core.Localization.Controllers {
             ContentItem contentItemTranslation;
             var existingTranslation = _localizationService.GetLocalizedContentItem(contentItem, viewModel.SelectedCulture);
             if (existingTranslation != null) { // edit existing
-                contentItemTranslation = existingTranslation.ContentItem;
+                contentItemTranslation = _contentManager.Get(existingTranslation.ContentItem.Id, VersionOptions.DraftRequired);
             }
             else { // create
                 contentItemTranslation = _contentManager.New(contentItem.ContentType);
@@ -79,7 +82,19 @@ namespace Orchard.Core.Localization.Controllers {
                 return View(viewModel);
             }
 
-            _contentManager.Publish(contentItemTranslation);
+            switch (command) {
+                case "PublishNow":
+                    _localizationService.Publish(contentItemTranslation);
+                    Services.Notifier.Information(T("{0} has been published", contentItem.TypeDefinition.DisplayName));
+                    break;
+                case "PublishLater":
+                    _localizationService.Publish(contentItemTranslation, scheduledPublishUtc.HasValue ? scheduledPublishUtc.Value : DateTime.MaxValue);
+                    Services.Notifier.Information(T("{0} has been scheduled for publishing", contentItem.TypeDefinition.DisplayName));
+                    break;
+                default:
+                    Services.Notifier.Information(T("{0} draft has been saved", contentItem.TypeDefinition.DisplayName));
+                    break;
+            }
 
             var metadata = _contentManager.GetItemMetadata(viewModel.Content.Item);
             if (metadata.EditorRouteValues == null)

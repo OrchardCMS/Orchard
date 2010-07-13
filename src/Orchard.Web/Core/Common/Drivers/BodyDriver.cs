@@ -6,6 +6,7 @@ using Orchard.ContentManagement.Drivers;
 using Orchard.Core.Common.Models;
 using Orchard.Core.Common.Settings;
 using Orchard.Core.Common.ViewModels;
+using Orchard.Core.Routable.Models;
 
 namespace Orchard.Core.Common.Drivers {
     [UsedImplicitly]
@@ -88,7 +89,7 @@ namespace Orchard.Core.Common.Drivers {
                 if (common == null)
                     return this;
 
-                var routable = common.Container.As<RoutableAspect>();
+                var routable = common.Container.As<IsRoutable>();
                 if (routable == null)
                     return this;
 
@@ -97,7 +98,7 @@ namespace Orchard.Core.Common.Drivers {
             }
 
             public PathBuilder AddSlug() {
-                var routable = _content.As<RoutableAspect>();
+                var routable = _content.As<IsRoutable>();
                 if (routable == null)
                     return this;
 

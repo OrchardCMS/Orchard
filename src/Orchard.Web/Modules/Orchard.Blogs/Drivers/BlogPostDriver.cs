@@ -5,7 +5,7 @@ using Orchard.Blogs.Models;
 using Orchard.Blogs.Services;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
-using Orchard.Core.Common.Services;
+using Orchard.Core.Routable.Services;
 using Orchard.Localization;
 
 namespace Orchard.Blogs.Drivers {

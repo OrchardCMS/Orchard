@@ -2,15 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
-using JetBrains.Annotations;
 using Orchard.ContentManagement;
 using Orchard.Core.Common.Models;
 using Orchard.Core.Routable.Models;
-using Orchard.Localization;
-using Orchard.UI.Notify;
 
 namespace Orchard.Core.Routable.Services {
-    [UsedImplicitly]
     public class RoutableService : IRoutableService {
         private readonly IContentManager _contentManager;
 

@@ -2,14 +2,13 @@
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Xml.Linq;
-using Orchard.Blogs.Models;
 using Orchard.Commands;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Aspects;
 using Orchard.Core.Common.Models;
 using Orchard.Core.Navigation.Models;
+using Orchard.Core.Routable.Models;
 using Orchard.Security;
-using System.IO;
 using Orchard.Blogs.Services;
 using Orchard.Core.Navigation.Services;
 
@@ -55,8 +54,8 @@ namespace Orchard.Blogs.Commands {
 
             var blog = _contentManager.New("Blog");
             blog.As<ICommonAspect>().Owner = admin;
-            blog.As<RoutableAspect>().Slug = Slug;
-            blog.As<RoutableAspect>().Title = Title;
+            blog.As<IsRoutable>().Slug = Slug;
+            blog.As<IsRoutable>().Title = Title;
             if ( !String.IsNullOrWhiteSpace(MenuText) ) {
                 blog.As<MenuPart>().OnMainMenu = true;
                 blog.As<MenuPart>().MenuPosition = _menuService.Get().Select(menuPart => menuPart.MenuPosition).Max() + 1 + ".0";
@@ -98,8 +97,8 @@ namespace Orchard.Blogs.Commands {
                 var post = _contentManager.New("BlogPost");
                 post.As<ICommonAspect>().Owner = admin;
                 post.As<ICommonAspect>().Container = blog;
-                post.As<RoutableAspect>().Slug = Slugify(postName);
-                post.As<RoutableAspect>().Title = postName;
+                post.As<IsRoutable>().Slug = Slugify(postName);
+                post.As<IsRoutable>().Title = postName;
                 post.As<BodyAspect>().Text = item.Element("description").Value;
                 _contentManager.Create(post);
             }

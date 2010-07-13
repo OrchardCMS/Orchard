@@ -1,5 +1,6 @@
 ﻿using JetBrains.Annotations;
 using Orchard.Core.Common.Models;
+using Orchard.Core.Routable.Models;
 using Orchard.Data;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Handlers;
@@ -13,7 +14,7 @@ namespace Orchard.Sandbox.Handlers {
             // define the "SandboxPage" content type
             Filters.Add(new ActivatingFilter<SandboxPage>(SandboxPageDriver.ContentType.Name));
             Filters.Add(new ActivatingFilter<CommonAspect>(SandboxPageDriver.ContentType.Name));
-            Filters.Add(new ActivatingFilter<RoutableAspect>(SandboxPageDriver.ContentType.Name));
+            Filters.Add(new ActivatingFilter<IsRoutable>(SandboxPageDriver.ContentType.Name));
             Filters.Add(new ActivatingFilter<BodyAspect>(SandboxPageDriver.ContentType.Name));
             Filters.Add(StorageFilter.For(pageRepository) );
 

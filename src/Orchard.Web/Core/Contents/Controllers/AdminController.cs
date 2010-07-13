@@ -4,6 +4,7 @@ using System.Web.Mvc;
 using System.Web.Routing;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.MetaData;
+using Orchard.Core.Contents.Services;
 using Orchard.Core.Contents.ViewModels;
 using Orchard.Data;
 using Orchard.Localization;
@@ -19,18 +20,21 @@ namespace Orchard.Core.Contents.Controllers {
         private readonly IContentManager _contentManager;
         private readonly IContentDefinitionManager _contentDefinitionManager;
         private readonly ITransactionManager _transactionManager;
+        private readonly IContentsService _contentsService;
 
         public AdminController(
             IOrchardServices orchardServices,
             INotifier notifier,
             IContentManager contentManager,
             IContentDefinitionManager contentDefinitionManager,
-            ITransactionManager transactionManager) {
+            ITransactionManager transactionManager,
+            IContentsService contentsService) {
             Services = orchardServices;
             _notifier = notifier;
             _contentManager = contentManager;
             _contentDefinitionManager = contentDefinitionManager;
             _transactionManager = transactionManager;
+            _contentsService = contentsService;
             T = NullLocalizer.Instance;
             Logger = NullLogger.Instance;
         }
@@ -106,7 +110,7 @@ namespace Orchard.Core.Contents.Controllers {
 
 
         [HttpPost]
-        public ActionResult Create(CreateItemViewModel model) {
+        public ActionResult Create(CreateItemViewModel model, string command, DateTime? scheduledPublishUtc) {
             //todo: need to integrate permissions into generic content management
             var contentItem = _contentManager.New(model.Id);
             model.Content = _contentManager.UpdateEditorModel(contentItem, this);
@@ -114,13 +118,24 @@ namespace Orchard.Core.Contents.Controllers {
                 _contentManager.Create(contentItem, VersionOptions.Draft);
                 model.Content = _contentManager.UpdateEditorModel(contentItem, this);
             }
-            if (ModelState.IsValid) {
-                _contentManager.Publish(contentItem);
-            }
             if (!ModelState.IsValid) {
                 _transactionManager.Cancel();
                 PrepareEditorViewModel(model.Content);
                 return View("Create", model);
+            }
+
+            switch (command) {
+                case "PublishNow":
+                    _contentsService.Publish(model.Content.Item);
+                    Services.Notifier.Information(T("{0} has been published", contentItem.TypeDefinition.DisplayName));
+                    break;
+                case "PublishLater":
+                    _contentsService.Publish(model.Content.Item, scheduledPublishUtc.HasValue ? scheduledPublishUtc.Value : DateTime.MaxValue);
+                    Services.Notifier.Information(T("{0} has been scheduled for publishing", contentItem.TypeDefinition.DisplayName));
+                    break;
+                default:
+                    Services.Notifier.Information(T("{0} draft has been saved", contentItem.TypeDefinition.DisplayName));
+                    break;
             }
 
             _notifier.Information(T("Created content item"));
@@ -138,7 +153,7 @@ namespace Orchard.Core.Contents.Controllers {
         }
 
         [HttpPost]
-        public ActionResult Edit(EditItemViewModel model) {
+        public ActionResult Edit(EditItemViewModel model, string command, DateTime? scheduledPublishUtc) {
             var contentItem = _contentManager.Get(model.Id, VersionOptions.DraftRequired);
             model.Content = _contentManager.UpdateEditorModel(contentItem, this);
             if (!ModelState.IsValid) {
@@ -146,13 +161,27 @@ namespace Orchard.Core.Contents.Controllers {
                 PrepareEditorViewModel(model.Content);
                 return View("Edit", model);
             }
-            _contentManager.Publish(contentItem);
+
+            switch (command) {
+                case "PublishNow":
+                    _contentsService.Publish(model.Content.Item);
+                    Services.Notifier.Information(T("{0} has been published", contentItem.TypeDefinition.DisplayName));
+                    break;
+                case "PublishLater":
+                    _contentsService.Publish(model.Content.Item, scheduledPublishUtc.HasValue ? scheduledPublishUtc.Value : DateTime.MaxValue);
+                    Services.Notifier.Information(T("{0} has been scheduled for publishing", contentItem.TypeDefinition.DisplayName));
+                    break;
+                default:
+                    Services.Notifier.Information(T("{0} draft has been saved", contentItem.TypeDefinition.DisplayName));
+                    break;
+            }
+
             return RedirectToAction("Edit", new RouteValueDictionary { { "Id", contentItem.Id } });
         }
 
         [HttpPost, ActionName("Remove")]
         public ActionResult RemovePOST(int id, string returnUrl) {
-            var contentItem = _contentManager.Get(id);
+            var contentItem = _contentManager.Get(id, VersionOptions.Latest);
             if (contentItem != null)
                 _contentManager.Remove(contentItem);
 

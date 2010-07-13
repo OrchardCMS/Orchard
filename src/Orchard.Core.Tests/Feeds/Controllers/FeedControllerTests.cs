@@ -10,13 +10,13 @@ using NUnit.Framework;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Handlers;
 using Orchard.ContentManagement.MetaData.Builders;
-using Orchard.ContentManagement.MetaData.Models;
 using Orchard.Core.Common.Models;
 using Orchard.Core.Feeds;
 using Orchard.Core.Feeds.Controllers;
 using Orchard.Core.Feeds.Models;
 using Orchard.Core.Feeds.Rss;
 using Orchard.Core.Feeds.StandardBuilders;
+using Orchard.Core.Routable.Models;
 using Orchard.Mvc.Results;
 using Orchard.Tests.Modules;
 using Orchard.Tests.Stubs;
@@ -149,16 +149,16 @@ namespace Orchard.Core.Tests.Feeds.Controllers {
             var clock = new StubClock();
             var hello = new ContentItemBuilder(new ContentTypeDefinitionBuilder().Named("hello").Build())
                 .Weld<CommonAspect>()
-                .Weld<RoutableAspect>()
+                .Weld<IsRoutable>()
                 .Weld<BodyAspect>()
                 .Build();
             hello.As<CommonAspect>().Record = new CommonRecord();
-            hello.As<RoutableAspect>().Record = new RoutableRecord();
+            hello.As<IsRoutable>().Record = new RoutableRecord();
             hello.As<BodyAspect>().Record = new BodyRecord();
 
             hello.As<CommonAspect>().PublishedUtc = clock.UtcNow;
-            hello.As<RoutableAspect>().Title = "alpha";
-            hello.As<RoutableAspect>().Slug = "beta";
+            hello.As<IsRoutable>().Title = "alpha";
+            hello.As<IsRoutable>().Slug = "beta";
             hello.As<BodyAspect>().Text = "gamma";
 
             var query = new StubQuery(new[] {

@@ -3,6 +3,7 @@ using System.Web.Mvc;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Aspects;
 using Orchard.Core.Common.Models;
+using Orchard.Core.Routable.Models;
 using Orchard.Security;
 
 namespace Orchard.Blogs.Models {
@@ -13,13 +14,13 @@ namespace Orchard.Blogs.Models {
         }
 
         public string Title {
-            get { return this.As<RoutableAspect>().Title; }
-            set { this.As<RoutableAspect>().Title = value; }
+            get { return this.As<IsRoutable>().Title; }
+            set { this.As<IsRoutable>().Title = value; }
         }
 
         public string Slug {
-            get { return this.As<RoutableAspect>().Slug; }
-            set { this.As<RoutableAspect>().Slug = value; }
+            get { return this.As<IsRoutable>().Slug; }
+            set { this.As<IsRoutable>().Slug = value; }
         }
 
         public string Text {

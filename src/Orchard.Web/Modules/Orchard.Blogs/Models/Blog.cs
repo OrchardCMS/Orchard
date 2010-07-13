@@ -1,6 +1,6 @@
 using System.Web.Mvc;
-using Orchard.Core.Common.Models;
 using Orchard.ContentManagement;
+using Orchard.Core.Routable.Models;
 
 namespace Orchard.Blogs.Models {
     public class Blog : ContentPart<BlogRecord> {
@@ -8,14 +8,14 @@ namespace Orchard.Blogs.Models {
         public int Id { get { return ContentItem.Id; } }
 
         public string Name {
-            get { return this.As<RoutableAspect>().Title; }
-            set { this.As<RoutableAspect>().Title = value; }
+            get { return this.As<IsRoutable>().Title; }
+            set { this.As<IsRoutable>().Title = value; }
         }
 
         //TODO: (erikpo) Need a data type for slug
         public string Slug {
-            get { return this.As<RoutableAspect>().Slug; }
-            set { this.As<RoutableAspect>().Slug = value; }
+            get { return this.As<IsRoutable>().Slug; }
+            set { this.As<IsRoutable>().Slug = value; }
         }
 
         public string Description {

@@ -3,6 +3,7 @@ using Orchard.ContentManagement;
 using Orchard.ContentManagement.Aspects;
 using Orchard.Core.Common.Models;
 using Orchard.Core.Navigation.Models;
+using Orchard.Core.Routable.Models;
 using Orchard.Environment.Extensions;
 using Orchard.Security;
 
@@ -26,8 +27,8 @@ namespace Orchard.DevTools.Commands {
                 var pageName = "page" + index;
                 var page = _contentManager.Create("Page", VersionOptions.Draft);
                 page.As<ICommonAspect>().Owner = admin;
-                page.As<RoutableAspect>().Slug = pageName;
-                page.As<RoutableAspect>().Title = pageName;
+                page.As<IsRoutable>().Slug = pageName;
+                page.As<IsRoutable>().Title = pageName;
                 page.As<BodyAspect>().Text = pageName;
                 page.As<MenuPart>().OnMainMenu = true;
                 page.As<MenuPart>().MenuPosition = "5." + index;
@@ -37,8 +38,8 @@ namespace Orchard.DevTools.Commands {
                 var blogName = "blog" + index;
                 var blog = _contentManager.New("Blog");
                 blog.As<ICommonAspect>().Owner = admin;
-                blog.As<RoutableAspect>().Slug = blogName;
-                blog.As<RoutableAspect>().Title = blogName;
+                blog.As<IsRoutable>().Slug = blogName;
+                blog.As<IsRoutable>().Title = blogName;
                 blog.As<MenuPart>().OnMainMenu = true;
                 blog.As<MenuPart>().MenuPosition = "6." + index;
                 blog.As<MenuPart>().MenuText = blogName;

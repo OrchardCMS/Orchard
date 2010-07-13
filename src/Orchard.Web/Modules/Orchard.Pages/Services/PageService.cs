@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using JetBrains.Annotations;
 using Orchard.ContentManagement.Records;
-using Orchard.Core.Common.Models;
+using Orchard.Core.Routable.Models;
 using Orchard.Pages.Drivers;
 using Orchard.Pages.Models;
 using Orchard.ContentManagement;

@@ -1,8 +1,7 @@
-﻿using System;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using Orchard.ContentManagement.Records;
 
-namespace Orchard.Core.Common.Models {
+namespace Orchard.Core.Routable.Models {
     public class RoutableRecord : ContentPartVersionRecord {
         [StringLength(1024)]
         public virtual string Title { get; set; }

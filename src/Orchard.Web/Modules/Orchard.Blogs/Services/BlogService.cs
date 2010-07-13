@@ -5,6 +5,7 @@ using Orchard.Blogs.Models;
 using Orchard.Blogs.Routing;
 using Orchard.Core.Common.Models;
 using Orchard.ContentManagement;
+using Orchard.Core.Routable.Models;
 
 namespace Orchard.Blogs.Services {
     [UsedImplicitly]

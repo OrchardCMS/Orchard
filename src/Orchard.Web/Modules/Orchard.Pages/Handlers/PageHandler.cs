@@ -1,5 +1,6 @@
 ﻿using JetBrains.Annotations;
 using Orchard.ContentManagement;
+using Orchard.Core.Routable.Models;
 using Orchard.Localization;
 using Orchard.Core.Common.Models;
 using Orchard.ContentManagement.Handlers;
@@ -19,7 +20,7 @@ namespace Orchard.Pages.Handlers {
             Filters.Add(new ActivatingFilter<Page>(PageDriver.ContentType.Name));
             Filters.Add(new ActivatingFilter<CommonAspect>(PageDriver.ContentType.Name));
             Filters.Add(new ActivatingFilter<ContentPart<CommonVersionRecord>>(PageDriver.ContentType.Name));
-            Filters.Add(new ActivatingFilter<RoutableAspect>(PageDriver.ContentType.Name));
+            Filters.Add(new ActivatingFilter<IsRoutable>(PageDriver.ContentType.Name));
             Filters.Add(new ActivatingFilter<BodyAspect>(PageDriver.ContentType.Name));
 
             OnLoaded<Page>((context, page) => page._scheduledPublishUtc.Loader(value => _pageService.GetScheduledPublishUtc(page)));

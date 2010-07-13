@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Orchard.ContentManagement;
 using Orchard.Core.Localization.Models;
 
@@ -7,5 +8,7 @@ namespace Orchard.Core.Localization.Services {
         Localized GetLocalizedContentItem(IContent masterContentItem, string culture);
         string GetContentCulture(IContent contentItem);
         IEnumerable<IContent> GetLocalizations(IContent contentItem);
+        void Publish(ContentItem contentItem);
+        void Publish(ContentItem contentItem, DateTime scheduledPublishUtc);
     }
 }

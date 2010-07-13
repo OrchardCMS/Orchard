@@ -6,6 +6,7 @@ using Orchard.Blogs.Drivers;
 using Orchard.Blogs.Models;
 using Orchard.Core.Common.Models;
 using Orchard.ContentManagement;
+using Orchard.Core.Routable.Models;
 using Orchard.Data;
 using Orchard.Tasks.Scheduling;
 
