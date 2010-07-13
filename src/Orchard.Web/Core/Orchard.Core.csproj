@@ -244,6 +244,7 @@
     <Content Include="Contents\Views\Item\Preview.aspx" />
     <Content Include="Contents\Views\Item\Display.aspx" />
     <Content Include="Localization\Styles\admin.css" />
+    <Content Include="Localization\Styles\base.css" />
     <Content Include="Localization\Views\DisplayTemplates\Parts\Localization.ContentTranslations.Summary.ascx" />
     <Content Include="Localization\Views\DisplayTemplates\Parts\Localization.ContentTranslations.ascx" />
     <Content Include="Localization\Views\EditorTemplates\Parts\Localization.ContentTranslations.ascx" />

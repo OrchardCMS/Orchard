@@ -1,9 +1,14 @@
 ﻿.content-localization {
-    margin:1.44em 0 .44em;
+    overflow:auto;
+}
+.content-localization .content-localizations,
+.content-localization .add-localization {
+    clear:right;
+    float:right;
 }
 .content-localization .content-localizations li,
 .content-localization .add-localization {
-    font-size:1.4em;
+    font-size:1.2em;
 }
 .content-localization .content-localizations {
     font-size:.9em;

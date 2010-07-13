@@ -23,13 +23,8 @@ namespace Orchard.Core.Localization.Drivers {
         public IOrchardServices Services { get; set; }
 
         protected override DriverResult Display(Localized part, string displayType) {
-            // for viewing or adding translation
-            if (!Services.Authorizer.Authorize(Permissions.ChangeOwner)) {
-                return null;
-            }
-
             var model = new ContentLocalizationsViewModel(part) {
-                CanLocalize = _cultureManager.ListCultures()
+                CanLocalize = Services.Authorizer.Authorize(Permissions.ChangeOwner) && _cultureManager.ListCultures()
                     .Where(s => s != _cultureManager.GetCurrentCulture(new HttpContextWrapper(HttpContext.Current)) && s != _localizationService.GetContentCulture(part.ContentItem))
                     .Count() > 0,
                 Localizations = _localizationService.GetLocalizations(part.ContentItem)
@@ -38,12 +33,6 @@ namespace Orchard.Core.Localization.Drivers {
         }
 
         protected override DriverResult Editor(Localized part) {
-            // ContentTranslations: for when there are drafts of translations
-            // CultureSelection: for a new translation
-
-            //var model = new SelectTranslationsViewModel(part);
-            //if (part.ContentItem.Is<Localized>())
-
             return ContentPartTemplate(new SelectLocalizationsViewModel(part), "Parts/Localization.ContentTranslations").Location("secondary", "5");
         }
     }
