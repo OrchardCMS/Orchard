@@ -120,7 +120,7 @@ number of columns: 24; actual width: 946; column width: 26; gutter width:14
     display:inline;
     float:left;
     width:15.401%;
-    border-right:1px solid #eeeeee;
+    border-right:1px solid #eaeaea;
 }
 .wrapper, .sections {
     overflow:hidden;
@@ -239,7 +239,7 @@ form.link button:hover {
     width:0;
 }
 #navigation li {
-	margin:7px 0 20px 12px;
+	margin:7px 0 20px 0;
 }
 #navigation ul li {
     border:0;
@@ -294,7 +294,7 @@ form.link button:hover {
     margin:0;
 }
 #main h1, #main h2 {
-    border-bottom:1px solid #bdbcbc;
+    border-bottom:1px solid #eaeaea;
 }
 #main ul h2 {
     border-bottom:0;
