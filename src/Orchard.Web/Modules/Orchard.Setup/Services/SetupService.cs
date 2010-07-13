@@ -123,8 +123,10 @@ namespace Orchard.Setup.Services {
                     .Column<int>("Version"));
 
                 var dataMigrationManager = environment.Resolve<IDataMigrationManager>();
-                dataMigrationManager.Update("Orchard.Framework");
-                dataMigrationManager.Update("Settings");
+
+                foreach ( var feature in context.EnabledFeatures ) {
+                    dataMigrationManager.Update(feature);
+                } 
 
                 environment.Resolve<IShellDescriptorManager>().UpdateShellDescriptor(
                     0,
