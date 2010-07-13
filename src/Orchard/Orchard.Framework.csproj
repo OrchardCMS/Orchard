@@ -393,6 +393,7 @@
     <Compile Include="Data\Migration\Schema\CreateTableCommand.cs" />
     <Compile Include="Data\Migration\Schema\TableCommand.cs" />
     <Compile Include="Data\Migration\Schema\SchemaCommand.cs" />
+    <Compile Include="Data\Providers\SqlCeDataServicesProvider.cs" />
     <Compile Include="Data\Providers\DataServiceParameters.cs" />
     <Compile Include="Data\Providers\IDataServicesProvider.cs" />
     <Compile Include="Data\Providers\SessionFactoryParameters.cs" />
