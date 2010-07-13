@@ -1,5 +1,4 @@
 ﻿<%@ Control Language="C#" Inherits="Orchard.Mvc.ViewUserControl<Futures.Modules.Packaging.ViewModels.PackagingHarvestViewModel>" %>
-<%@ Import Namespace="Orchard.Mvc.Html" %>
 <h1>
     <%: Html.TitleForPage(T("Packaging").ToString(), T("Harvest Packages").ToString())%></h1>
     <%: Html.Partial("_Subnav") %>

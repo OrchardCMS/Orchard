@@ -1,10 +1,5 @@
 ﻿<%@ Control Language="C#" Inherits="System.Web.Mvc.ViewUserControl<BaseViewModel>" %>
-<%@ Import Namespace="Orchard.Mvc.Html" %>
 <%@ Import Namespace="Orchard.Mvc.ViewModels" %>
-<%@ Import Namespace="Orchard.ContentManagement"%>
-<%@ Import Namespace="Orchard.Core.Common.Models"%>
-<%@ Import Namespace="Orchard.Blogs.Extensions"%>
-<%@ Import Namespace="Orchard.Blogs.Models"%>
 <%
   Html.RegisterStyle("site.css");
   Html.RegisterStyle("blog.css");
