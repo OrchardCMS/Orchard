@@ -77,6 +77,7 @@
     <Compile Include="Contents\Controllers\ItemController.cs" />
     <Compile Include="Contents\Drivers\ContentsDriver.cs" />
     <Compile Include="Contents\Handlers\ContentsHandler.cs" />
+    <Compile Include="Routable\Services\RoutableHomePageProvider.cs" />
     <Compile Include="Contents\ViewModels\EditItemViewModel.cs" />
     <Compile Include="Contents\ViewModels\ListContentsViewModel.cs" />
     <Compile Include="Contents\ViewModels\ListContentTypesViewModel.cs" />
@@ -276,7 +277,7 @@
     <Content Include="Routable\Module.txt" />
     <Content Include="Routable\Scripts\jquery.slugify.js" />
     <Content Include="Routable\Views\EditorTemplates\Parts\Routable.IsRoutable.ascx" />
-    <Content Include="Routable\Views\Item\Display.aspx" />
+    <Content Include="Routable\Views\Item\Display.ascx" />
     <Content Include="Settings\Module.txt" />
     <Content Include="Settings\Styles\admin.css" />
     <Content Include="Settings\Views\Admin\Index.ascx" />

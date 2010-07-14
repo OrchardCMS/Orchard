@@ -1,6 +1,6 @@
 ﻿<%@ Control Language="C#" Inherits="Orchard.Mvc.ViewUserControl<Orchard.Search.ViewModels.SearchViewModel>" %>
-<%@ Import Namespace="Orchard.Mvc.Html" %><%
-Html.RegisterStyle("search.css"); %>
+
+<% Html.RegisterStyle("search.css"); %>
 <h1><%:Html.TitleForPage(T("Search").Text)%></h1><%
 Html.Zone("search");
 if (!string.IsNullOrWhiteSpace(Model.Query)) {

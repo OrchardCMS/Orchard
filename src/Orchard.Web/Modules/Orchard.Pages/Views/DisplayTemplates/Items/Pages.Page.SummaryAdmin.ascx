@@ -1,5 +1,4 @@
 ﻿<%@ Control Language="C#" Inherits="Orchard.Mvc.ViewUserControl<ContentItemViewModel<Orchard.Pages.Models.Page>>" %>
-<%@ Import Namespace="Orchard.Mvc.Html" %>
 <%@ Import Namespace="Orchard.Mvc.ViewModels" %>
     <div class="summary">
         <div class="properties">

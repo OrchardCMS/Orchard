@@ -1,6 +1,5 @@
 ﻿<%@ Control Language="C#" Inherits="Orchard.Mvc.ViewUserControl<Orchard.Indexing.ViewModels.IndexViewModel>" %>
-<%@ Import Namespace="Orchard.Mvc.Html" %><%
-Html.RegisterStyle("admin.css"); %>
+<% Html.RegisterStyle("admin.css"); %>
 <h1><%:Html.TitleForPage(T("Search Index Management").ToString()) %></h1><%
 using (Html.BeginForm("update", "admin", FormMethod.Post, new {area = "Orchard.Indexing"})) { %>
     <fieldset>

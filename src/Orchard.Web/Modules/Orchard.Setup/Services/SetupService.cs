@@ -83,7 +83,6 @@ namespace Orchard.Setup.Services {
                     "TinyMce",
                     "Orchard.Modules",
                     "Orchard.Themes",
-                    "Orchard.Pages",
                     "Orchard.Blogs",
                     "Orchard.Comments",
                     "Orchard.Tags",
@@ -123,8 +122,10 @@ namespace Orchard.Setup.Services {
                     .Column<int>("Version"));
 
                 var dataMigrationManager = environment.Resolve<IDataMigrationManager>();
-                dataMigrationManager.Update("Orchard.Framework");
-                dataMigrationManager.Update("Settings");
+
+                foreach ( var feature in context.EnabledFeatures ) {
+                    dataMigrationManager.Update(feature);
+                } 
 
                 environment.Resolve<IShellDescriptorManager>().UpdateShellDescriptor(
                     0,
@@ -179,7 +180,7 @@ namespace Orchard.Setup.Services {
 
                     var contentDefinitionManager = environment.Resolve<IContentDefinitionManager>();
                     contentDefinitionManager.AlterTypeDefinition("BlogPost", cfg => cfg.DisplayedAs("Blog Post").WithPart("HasComments").WithPart("HasTags").WithPart("Localized").Indexed());
-                    contentDefinitionManager.AlterTypeDefinition("Page", cfg => cfg.DisplayedAs("Page").WithPart("HasComments").WithPart("HasTags").WithPart("Localized").Indexed());
+                    contentDefinitionManager.AlterTypeDefinition("Page", cfg => cfg.DisplayedAs("Page").WithPart("CommonAspect").WithPart("IsRoutable").WithPart("BodyAspect").WithPart("HasComments").WithPart("HasTags").WithPart("Localized").Indexed());
                     contentDefinitionManager.AlterTypeDefinition("SandboxPage", cfg => cfg.DisplayedAs("Sandbox Page").WithPart("HasComments").WithPart("HasTags").WithPart("Localized").Indexed());
                     contentDefinitionManager.AlterPartDefinition("BodyAspect", cfg => cfg.WithSetting("BodyPartSettings.FlavorDefault", BodyPartSettings.FlavorDefaultDefault));
 
@@ -193,7 +194,7 @@ namespace Orchard.Setup.Services {
                         page.As<HasComments>().CommentsShown = false;
                     }
                     contentManager.Publish(page);
-                    siteSettings.Record.HomePage = "PageHomePageProvider;" + page.Id;
+                    siteSettings.Record.HomePage = "RoutableHomePageProvider;" + page.Id;
 
                     // add a menu item for the shiny new home page
                     var menuItem = contentManager.Create("MenuItem");

@@ -126,17 +126,27 @@ namespace Orchard.Core.Contents.Controllers {
 
         public ActionResult Edit(int id) {
             var contentItem = _contentManager.Get(id, VersionOptions.Latest);
+
+            if (contentItem == null)
+                return new NotFoundResult();
+
             var model = new EditItemViewModel {
                 Id = id,
                 Content = _contentManager.BuildEditorModel(contentItem)
             };
+
             PrepareEditorViewModel(model.Content);
+
             return View("Edit", model);
         }
 
         [HttpPost]
         public ActionResult Edit(EditItemViewModel model) {
             var contentItem = _contentManager.Get(model.Id, VersionOptions.DraftRequired);
+
+            if (contentItem == null)
+                return new NotFoundResult();
+
             model.Content = _contentManager.UpdateEditorModel(contentItem, this);
             if (!ModelState.IsValid) {
                 _transactionManager.Cancel();

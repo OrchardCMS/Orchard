@@ -47,6 +47,6 @@ if (!Model.DatabaseIsPreconfigured) { %>
 </fieldset><%
 } %>
 <fieldset>
-    <input class="button" type="submit" value="<%: T("Finish Setup") %>" />
+    <input class="button primaryAction" type="submit" value="<%: T("Finish Setup") %>" />
 </fieldset><%
 } %>
