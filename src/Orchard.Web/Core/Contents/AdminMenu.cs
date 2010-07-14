@@ -20,7 +20,7 @@ namespace Orchard.Core.Contents {
         public void GetNavigation(NavigationBuilder builder) {
             var contentTypeDefinitions = _contentDefinitionManager.ListTypeDefinitions().OrderBy(d => d.Name);
 
-            builder.Add(T("Content"), "1", menu => {
+            builder.Add(T("Content"), "2", menu => {
                 menu.Add(T("Manage Content"), "1", item => item.Action("List", "Admin", new { area = "Contents" }));
                 foreach (var contentTypeDefinition in contentTypeDefinitions) {
                     var ci = _contentManager.New(contentTypeDefinition.Name);
