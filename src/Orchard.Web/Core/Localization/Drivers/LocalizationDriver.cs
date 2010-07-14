@@ -39,9 +39,5 @@ namespace Orchard.Core.Localization.Drivers {
             
             return ContentPartTemplate(model, "Parts/Localization.ContentTranslations").LongestMatch(displayType, "Summary", "SummaryAdmin").Location("primary", "5");
         }
-
-        protected override DriverResult Editor(Localized part) {
-            return ContentPartTemplate(new SelectLocalizationsViewModel(part), "Parts/Localization.ContentTranslations").Location("secondary", "5");
-        }
     }
 }
