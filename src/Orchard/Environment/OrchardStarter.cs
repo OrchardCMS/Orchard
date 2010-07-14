@@ -6,6 +6,7 @@ using System.Web.Hosting;
 using Autofac;
 using Autofac.Configuration;
 using Orchard.Caching;
+using Orchard.Data;
 using Orchard.Environment.AutofacUtil;
 using Orchard.Environment.Configuration;
 using Orchard.Environment.Extensions;
@@ -52,6 +53,7 @@ namespace Orchard.Environment {
             builder.RegisterType<DefaultOrchardHost>().As<IOrchardHost>().As<IEventHandler>().SingleInstance();
             {
                 builder.RegisterType<ShellSettingsManager>().As<IShellSettingsManager>().SingleInstance();
+                builder.RegisterType<SessionConfigurationCache>().As<ISessionConfigurationCache>().SingleInstance();
 
                 builder.RegisterType<ShellContextFactory>().As<IShellContextFactory>().SingleInstance();
                 {

@@ -1,7 +1,9 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using NHibernate;
 using NHibernate.Cfg;
+using Orchard.Data;
 using Orchard.Data.Providers;
 using Orchard.Environment.Configuration;
 using Orchard.Environment.ShellBuilders.Models;
@@ -16,11 +18,57 @@ namespace Orchard.Data {
         SessionFactoryParameters GetSessionFactoryParameters();
     }
 
+    public interface ISessionConfigurationCache {
+        void StoreConfig(string shellName, Configuration config);
+        void DeleteConfig(string shellName);
+        Configuration GetConfiguration(string shellName);
+    }
+
+    public class SessionConfigurationCache : ISessionConfigurationCache {
+        private readonly IAppDataFolder _appDataFolder;
+
+        public SessionConfigurationCache(IAppDataFolder appDataFolder) {
+            _appDataFolder = appDataFolder;
+        }
+
+        public void StoreConfig(string shellName, Configuration config) {
+            var filename = GetFileName(shellName);
+
+            using ( var stream = File.OpenWrite(filename) ) {
+                new BinaryFormatter().Serialize(stream, config);
+            }
+        }
+
+        public void DeleteConfig(string shellName) {
+            var filename = GetFileName(shellName);
+            if(File.Exists(filename)) {
+                File.Delete(filename);
+            }
+        }
+
+        public Configuration GetConfiguration(string shellName) {
+            var filename = GetFileName(shellName);
+
+            if (!_appDataFolder.FileExists(filename)) {
+                return null;
+            }
+            
+            using (var stream = File.OpenRead(filename)) {
+                return new BinaryFormatter().Deserialize(stream) as Configuration;
+            }
+        }
+
+        private string GetFileName(string shellName) {
+            return _appDataFolder.MapPath(_appDataFolder.Combine("Sites", shellName, "mappings.bin"));
+        }
+    }
+
     public class SessionFactoryHolder : ISessionFactoryHolder {
         private readonly ShellSettings _shellSettings;
         private readonly ShellBlueprint _shellBlueprint;
         private readonly IDataServicesProviderFactory _dataServicesProviderFactory;
         private readonly IAppDataFolder _appDataFolder;
+        private readonly ISessionConfigurationCache _sessionConfigurationCache;
 
         private ISessionFactory _sessionFactory;
         private Configuration _configuration;
@@ -29,11 +77,13 @@ namespace Orchard.Data {
             ShellSettings shellSettings,
             ShellBlueprint shellBlueprint,
             IDataServicesProviderFactory dataServicesProviderFactory,
-            IAppDataFolder appDataFolder) {
+            IAppDataFolder appDataFolder,
+            ISessionConfigurationCache sessionConfigurationCache) {
             _shellSettings = shellSettings;
             _shellBlueprint = shellBlueprint;
             _dataServicesProviderFactory = dataServicesProviderFactory;
             _appDataFolder = appDataFolder;
+            _sessionConfigurationCache = sessionConfigurationCache;
 
             T = NullLocalizer.Instance;
             Logger = NullLogger.Instance;
@@ -70,26 +120,16 @@ namespace Orchard.Data {
         private Configuration BuildConfiguration() {
             var parameters = GetSessionFactoryParameters();
 
-            Configuration config = null;
-            var bf = new BinaryFormatter();
+            var config = _sessionConfigurationCache.GetConfiguration(_shellSettings.Name);
 
-            var filename = _appDataFolder.MapPath(_appDataFolder.Combine("Sites", "mappings.bin"));
-            if(_appDataFolder.FileExists(filename)) {
-                Logger.Debug("Loading mappings from cached file");
-                using ( var stream = File.OpenRead(filename) ) {
-                    config = bf.Deserialize(stream) as Configuration;
-                }
-            }
-            else {
-                Logger.Debug("Generating mappings and cached file");
+            if ( config == null ) {
                 config = _dataServicesProviderFactory
                     .CreateProvider(parameters)
                     .BuildConfiguration(parameters);
 
-                using ( var stream = File.OpenWrite(filename) ) {
-                    bf.Serialize(stream, config);
-                }
+                _sessionConfigurationCache.StoreConfig(_shellSettings.Name, config);
             }
+
             return config;
         }
 

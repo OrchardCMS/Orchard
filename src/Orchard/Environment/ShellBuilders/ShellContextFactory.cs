@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using Autofac;
+using Orchard.Data;
 using Orchard.Environment.Configuration;
 using Orchard.Environment.Descriptor;
 using Orchard.Environment.Descriptor.Models;
@@ -35,14 +36,17 @@ namespace Orchard.Environment.ShellBuilders {
         private readonly IShellDescriptorCache _shellDescriptorCache;
         private readonly ICompositionStrategy _compositionStrategy;
         private readonly IShellContainerFactory _shellContainerFactory;
+        private readonly ISessionConfigurationCache _sessionConfigurationCache;
 
         public ShellContextFactory(
             IShellDescriptorCache shellDescriptorCache,
             ICompositionStrategy compositionStrategy,
-            IShellContainerFactory shellContainerFactory) {
+            IShellContainerFactory shellContainerFactory,
+            ISessionConfigurationCache sessionConfigurationCache) {
             _shellDescriptorCache = shellDescriptorCache;
             _compositionStrategy = compositionStrategy;
             _shellContainerFactory = shellContainerFactory;
+            _sessionConfigurationCache = sessionConfigurationCache;
             Logger = NullLogger.Instance;
         }
 
@@ -70,6 +74,7 @@ namespace Orchard.Environment.ShellBuilders {
             if (currentDescriptor != null && knownDescriptor.SerialNumber != currentDescriptor.SerialNumber) {
                 Logger.Information("Newer descriptor obtained. Rebuilding shell container.");
 
+                _sessionConfigurationCache.DeleteConfig(settings.Name);
                 _shellDescriptorCache.Store(settings.Name, currentDescriptor);
                 blueprint = _compositionStrategy.Compose(settings, currentDescriptor);
                 shellScope = _shellContainerFactory.CreateContainer(settings, blueprint);
