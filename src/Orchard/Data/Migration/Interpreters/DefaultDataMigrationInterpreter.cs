@@ -20,7 +20,6 @@ namespace Orchard.Data.Migration.Interpreters {
         private readonly ISession _session;
         private readonly Dialect _dialect;
         private readonly List<string> _sqlStatements;
-        private readonly IDataServicesProviderFactory _dataServicesProviderFactory;
         private readonly ISessionFactoryHolder _sessionFactoryHolder;
         private readonly IReportsCoordinator _reportsCoordinator;
 
@@ -30,21 +29,18 @@ namespace Orchard.Data.Migration.Interpreters {
             ShellSettings shellSettings, 
             ISessionLocator sessionLocator, 
             IEnumerable<ICommandInterpreter> commandInterpreters,
-            IDataServicesProviderFactory dataServicesProviderFactory,
             ISessionFactoryHolder sessionFactoryHolder,
             IReportsCoordinator reportsCoordinator) {
             _shellSettings = shellSettings;
             _commandInterpreters = commandInterpreters;
             _session = sessionLocator.For(typeof(DefaultDataMigrationInterpreter));
             _sqlStatements = new List<string>();
-            _dataServicesProviderFactory = dataServicesProviderFactory;
             _sessionFactoryHolder = sessionFactoryHolder;
             _reportsCoordinator = reportsCoordinator;
 
             Logger = NullLogger.Instance;
 
-            var parameters = _sessionFactoryHolder.GetSessionFactoryParameters();
-            var configuration = _dataServicesProviderFactory.CreateProvider(parameters).BuildConfiguration(parameters);
+            var configuration = _sessionFactoryHolder.GetConfiguration();
             _dialect = Dialect.GetDialect(configuration.Properties);
         }
 

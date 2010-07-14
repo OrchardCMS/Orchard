@@ -30,21 +30,23 @@ namespace Orchard.Core.Localization.Services {
                        : _cultureManager.GetSiteCulture();
         }
 
-        IEnumerable<IContent> ILocalizationService.GetLocalizations(IContent content) {
+        IEnumerable<Localized> ILocalizationService.GetLocalizations(IContent content) {
             var localized = content.As<Localized>();
 
             //todo: (heskew) get scheduled content as well
 
             if (localized.MasterContentItem != null)
-                return _contentManager.Query(VersionOptions.Latest, content.ContentItem.ContentType).Join<LocalizedRecord>()
+                return _contentManager.Query(VersionOptions.Latest, localized.ContentItem.ContentType).Join<LocalizedRecord>()
                     .List()
                     .Select(i => i.As<Localized>())
-                    .Where(l => l.Id != content.ContentItem.Id && (l.Id == localized.MasterContentItem.ContentItem.Id || l.MasterContentItem != null && l.MasterContentItem.ContentItem.Id == localized.MasterContentItem.ContentItem.Id));
+                    .Where(l => l.Id != localized.ContentItem.Id
+                        && (l.Id == localized.MasterContentItem.ContentItem.Id
+                            || l.MasterContentItem != null && l.MasterContentItem.ContentItem.Id == localized.MasterContentItem.ContentItem.Id));
 
-            return _contentManager.Query(VersionOptions.Latest, content.ContentItem.ContentType).Join<LocalizedRecord>()
+            return _contentManager.Query(VersionOptions.Latest, localized.ContentItem.ContentType).Join<LocalizedRecord>()
                 .List()
                 .Select(i => i.As<Localized>())
-                .Where(l => l.MasterContentItem != null && l.MasterContentItem.ContentItem.Id == content.ContentItem.Id);
+                .Where(l => l.MasterContentItem != null && l.MasterContentItem.ContentItem.Id == localized.ContentItem.Id);
         }
     }
 }

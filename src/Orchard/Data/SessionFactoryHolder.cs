@@ -1,4 +1,7 @@
-﻿using NHibernate;
+﻿using System.IO;
+using System.Runtime.Serialization.Formatters.Binary;
+using NHibernate;
+using NHibernate.Cfg;
 using Orchard.Data.Providers;
 using Orchard.Environment.Configuration;
 using Orchard.Environment.ShellBuilders.Models;
@@ -9,6 +12,7 @@ using Orchard.Logging;
 namespace Orchard.Data {
     public interface ISessionFactoryHolder : ISingletonDependency {
         ISessionFactory GetSessionFactory();
+        Configuration GetConfiguration();
         SessionFactoryParameters GetSessionFactoryParameters();
     }
 
@@ -19,6 +23,7 @@ namespace Orchard.Data {
         private readonly IAppDataFolder _appDataFolder;
 
         private ISessionFactory _sessionFactory;
+        private Configuration _configuration;
 
         public SessionFactoryHolder(
             ShellSettings shellSettings,
@@ -46,17 +51,46 @@ namespace Orchard.Data {
             return _sessionFactory;
         }
 
+        public Configuration GetConfiguration() {
+            lock ( this ) {
+                if ( _configuration == null ) {
+                    _configuration = BuildConfiguration();
+                }
+            }
+            return _configuration;
+        }
+
         private ISessionFactory BuildSessionFactory() {
             Logger.Debug("Building session factory");
 
+            var config = GetConfiguration();
+            return config.BuildSessionFactory();
+        }
+
+        private Configuration BuildConfiguration() {
             var parameters = GetSessionFactoryParameters();
 
-            var sessionFactory = _dataServicesProviderFactory
-                .CreateProvider(parameters)
-                .BuildConfiguration(parameters)
-                .BuildSessionFactory();
+            Configuration config = null;
+            var bf = new BinaryFormatter();
 
-            return sessionFactory;
+            var filename = _appDataFolder.MapPath(_appDataFolder.Combine("Sites", "mappings.bin"));
+            if(_appDataFolder.FileExists(filename)) {
+                Logger.Debug("Loading mappings from cached file");
+                using ( var stream = File.OpenRead(filename) ) {
+                    config = bf.Deserialize(stream) as Configuration;
+                }
+            }
+            else {
+                Logger.Debug("Generating mappings and cached file");
+                config = _dataServicesProviderFactory
+                    .CreateProvider(parameters)
+                    .BuildConfiguration(parameters);
+
+                using ( var stream = File.OpenWrite(filename) ) {
+                    bf.Serialize(stream, config);
+                }
+            }
+            return config;
         }
 
         public SessionFactoryParameters GetSessionFactoryParameters() {
