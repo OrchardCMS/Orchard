@@ -12,7 +12,7 @@ namespace Orchard.Core.Routable.Handlers {
             _routablePathConstraint = routablePathConstraint;
             Filters.Add(StorageFilter.For(repository));
 
-            OnPublished<IsRoutable>((context, routable) => _routablePathConstraint.AddPath(routable.Record.Path));
+            OnPublished<IsRoutable>((context, routable) => _routablePathConstraint.AddPath(routable.Path));
         }
     }
     public class IsRoutableHandler : ContentHandlerBase {
@@ -23,7 +23,7 @@ namespace Orchard.Core.Routable.Handlers {
                     {"Area", "Routable"},
                     {"Controller", "Item"},
                     {"Action", "Display"},
-                    {"path", routable.Record.Path}
+                    {"path", routable.Path}
                 };
             }
         }

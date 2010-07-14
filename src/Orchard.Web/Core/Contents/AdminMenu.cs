@@ -21,7 +21,7 @@ namespace Orchard.Core.Contents {
             var contentTypeDefinitions = _contentDefinitionManager.ListTypeDefinitions().OrderBy(d => d.Name);
 
             builder.Add(T("Content"), "1", menu => {
-                menu.Add(T("Manage Content"), "1.2", item => item.Action("List", "Admin", new { area = "Contents" }));
+                menu.Add(T("Manage Content"), "1", item => item.Action("List", "Admin", new { area = "Contents" }));
                 foreach (var contentTypeDefinition in contentTypeDefinitions) {
                     var ci = _contentManager.New(contentTypeDefinition.Name);
                     var cim = _contentManager.GetItemMetadata(ci);
