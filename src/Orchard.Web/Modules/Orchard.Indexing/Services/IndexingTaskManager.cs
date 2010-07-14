@@ -55,7 +55,7 @@ namespace Orchard.Indexing.Services {
         }
 
         public DateTime GetLastTaskDateTime() {
-            return _repository.Table.Max(t => t.CreatedUtc) ?? DateTime.MinValue;
+            return _repository.Table.Max(t => t.CreatedUtc) ?? new DateTime(1980, 1, 1);
         }
 
         /// <summary>
