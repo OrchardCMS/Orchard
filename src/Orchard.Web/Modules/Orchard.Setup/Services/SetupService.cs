@@ -66,6 +66,7 @@ namespace Orchard.Setup.Services {
                 string[] hardcoded = {
                     "Orchard.Framework",
                     "Common",
+                    "PublishLater",
                     "Contents",
                     "Dashboard",
                     "Reports",

@@ -3,9 +3,11 @@ using System.Linq;
 using System.Web.Mvc;
 using System.Web.Routing;
 using Orchard.ContentManagement;
+using Orchard.ContentManagement.Aspects;
 using Orchard.ContentManagement.MetaData;
 using Orchard.Core.Common.Models;
 using Orchard.Core.Contents.ViewModels;
+using Orchard.Core.PublishLater.Models;
 using Orchard.Data;
 using Orchard.Localization;
 using Orchard.Logging;
@@ -124,7 +126,7 @@ namespace Orchard.Core.Contents.Controllers {
             }
 
             //need to go about this differently - to know when to publish (IPlublishableAspect ?)
-            if (!contentItem.Has<CommonAspect>())
+            if (!contentItem.Has<IPublishingControlAspect>())
                 _contentManager.Publish(contentItem);
 
             _notifier.Information(T("Created content item"));
@@ -160,6 +162,10 @@ namespace Orchard.Core.Contents.Controllers {
                 PrepareEditorViewModel(model.Content);
                 return View("Edit", model);
             }
+
+            //need to go about this differently - to know when to publish (IPlublishableAspect ?)
+            if (!contentItem.Has<IPublishingControlAspect>())
+                _contentManager.Publish(contentItem);
 
             return RedirectToAction("Edit", new RouteValueDictionary { { "Id", contentItem.Id } });
         }

@@ -6,9 +6,9 @@ html.dyn input.hinted {
     color:#ccc;
     font-style:italic;
 }
-input#CommonAspect_ScheduledPublishUtcDate {
+input#PublishLater_ScheduledPublishUtcDate {
     width:56%;
 }
-input#CommonAspect_ScheduledPublishUtcTime {
+input#PublishLater_ScheduledPublishUtcTime {
     width:36%;
 }

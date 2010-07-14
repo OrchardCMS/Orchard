@@ -1,13 +1,10 @@
-﻿using System;
-using Orchard.ContentManagement;
+﻿using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
 using Orchard.Core.Common.Models;
-using Orchard.Core.Common.Services;
 using Orchard.Core.Common.ViewModels;
 using Orchard.Localization;
 using Orchard.Security;
 using Orchard.Services;
-using Orchard.UI.Notify;
 
 namespace Orchard.Core.Common.Drivers {
     public class CommonDriver : ContentPartDriver<CommonAspect> {
@@ -16,7 +13,6 @@ namespace Orchard.Core.Common.Drivers {
         private readonly IAuthenticationService _authenticationService;
         private readonly IAuthorizationService _authorizationService;
         private readonly IMembershipService _membershipService;
-        private readonly ICommonService _commonService;
         private readonly IClock _clock;
 
         public CommonDriver(
@@ -25,13 +21,11 @@ namespace Orchard.Core.Common.Drivers {
             IAuthenticationService authenticationService,
             IAuthorizationService authorizationService,
             IMembershipService membershipService,
-            ICommonService commonService,
             IClock clock) {
             _contentManager = contentManager;
             _authenticationService = authenticationService;
             _authorizationService = authorizationService;
             _membershipService = membershipService;
-            _commonService = commonService;
             _clock = clock;
             T = NullLocalizer.Instance;
             Services = services;
@@ -43,15 +37,14 @@ namespace Orchard.Core.Common.Drivers {
         protected override DriverResult Display(CommonAspect part, string displayType) {
             var model = new CommonMetadataViewModel(part);
             return Combined(
-                ContentPartTemplate(model, "Parts/Common.Metadata").LongestMatch(displayType, "Summary", "SummaryAdmin").Location("metadata"),
+                ContentPartTemplate(model, "Parts/Common.Metadata").LongestMatch(displayType, "Summary", "SummaryAdmin").Location("metadata", "5"),
                 ContentPartTemplate(model, "Parts/Common.Publish").LongestMatch(displayType, "Summary", "SummaryAdmin").Location("secondary"));
         }
 
         protected override DriverResult Editor(CommonAspect part) {
             return Combined(
                 OwnerEditor(part, null),
-                ContainerEditor(part, null),
-                PublishEditor(part, null));
+                ContainerEditor(part, null));
         }
 
         protected override DriverResult Editor(CommonAspect instance, ContentManagement.IUpdateModel updater) {
@@ -61,34 +54,7 @@ namespace Orchard.Core.Common.Drivers {
 
             return Combined(
                 OwnerEditor(instance, updater),
-                ContainerEditor(instance, updater),
-                PublishEditor(instance, updater));
-        }
-
-        DriverResult PublishEditor(CommonAspect part, IUpdateModel updater) {
-            var model = new PublishEditorViewModel(part);
-
-            if (updater != null) {
-                updater.TryUpdateModel(model, TemplatePrefix, null, null);
-                switch (model.Command) {
-                    case "PublishNow":
-                        _commonService.Publish(model.ContentItem);
-                        Services.Notifier.Information(T("{0} has been published!", model.ContentItem.TypeDefinition.DisplayName));
-                        break;
-                    case "PublishLater":
-                        DateTime scheduled;
-                        if (DateTime.TryParse(string.Format("{0} {1}", model.ScheduledPublishUtcDate, model.ScheduledPublishUtcTime), out scheduled))
-                            model.ScheduledPublishUtc = scheduled;
-                        _commonService.Publish(model.ContentItem, model.ScheduledPublishUtc.HasValue ? model.ScheduledPublishUtc.Value : DateTime.MaxValue);
-                        Services.Notifier.Information(T("{0} has been scheduled for publishing!", model.ContentItem.TypeDefinition.DisplayName));
-                        break;
-                    case "SaveDraft":
-                        Services.Notifier.Information(T("{0} draft has been saved!", model.ContentItem.TypeDefinition.DisplayName));
-                        break;
-                }
-            }
-
-            return ContentPartTemplate(model, "Parts/Common.Publish", TemplatePrefix).Location("secondary", "1");
+                ContainerEditor(instance, updater));
         }
 
         DriverResult OwnerEditor(CommonAspect part, IUpdateModel updater) {

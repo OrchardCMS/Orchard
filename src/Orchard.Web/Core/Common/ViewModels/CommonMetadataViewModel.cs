@@ -22,8 +22,6 @@ namespace Orchard.Core.Common.ViewModels {
         public DateTime? VersionPublishedUtc { get { return _commonAspect.VersionPublishedUtc; } }
         public DateTime? VersionModifiedUtc { get { return _commonAspect.VersionModifiedUtc; } }
 
-        public DateTime? ScheduledPublishUtc { get { return _commonAspect.ScheduledPublishUtc.Value; } }
-
         public bool IsPublished {
             get { return ContentItem.VersionRecord != null && ContentItem.VersionRecord.Published; }
         }

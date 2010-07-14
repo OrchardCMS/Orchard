@@ -3,7 +3,6 @@ using Orchard.Data.Migration;
 
 namespace Orchard.Core.Common.DataMigrations {
     public class CommonDataMigration : DataMigrationImpl {
-
         public int Create() {
             //CREATE TABLE Common_BodyRecord (Id INTEGER not null, Text TEXT, Format TEXT, ContentItemRecord_id INTEGER, primary key (Id));
             SchemaBuilder.CreateTable("BodyRecord", table => table

@@ -1,4 +1,4 @@
-﻿<%@ Control Language="C#" Inherits="Orchard.Mvc.ViewUserControl<Orchard.Core.Common.ViewModels.PublishEditorViewModel>" %>
+﻿<%@ Control Language="C#" Inherits="Orchard.Mvc.ViewUserControl<Orchard.Core.PublishLater.ViewModels.PublishLaterViewModel>" %>
 <% Html.RegisterStyle("datetime.css"); %>
 <% Html.RegisterStyle("jquery-ui-1.7.2.custom.css"); %>
 <% Html.RegisterStyle("ui.datepicker.css"); %>

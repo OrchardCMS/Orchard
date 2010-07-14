@@ -137,6 +137,7 @@
     <Compile Include="ContentManagement\Aspects\ICommonAspect.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="ContentManagement\Aspects\IPublishingControlAspect.cs" />
     <Compile Include="ContentManagement\Aspects\IRoutableAspect.cs" />
     <Compile Include="ContentManagement\ContentExtensions.cs">
       <SubType>Code</SubType>
