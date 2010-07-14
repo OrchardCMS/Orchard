@@ -13,8 +13,11 @@ using Orchard.Core.Common.Models;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Handlers;
 using Orchard.ContentManagement.Records;
+using Orchard.Core.Common.Services;
+using Orchard.Core.Scheduling.Services;
 using Orchard.Localization;
 using Orchard.Security;
+using Orchard.Tasks.Scheduling;
 using Orchard.Tests.Modules;
 using Orchard.Core.Common.ViewModels;
 using System.Web.Mvc;
@@ -32,6 +35,9 @@ namespace Orchard.Core.Tests.Common.Providers {
             builder.RegisterType<DefaultContentManagerSession>().As<IContentManagerSession>();
             builder.RegisterType<TestHandler>().As<IContentHandler>();
             builder.RegisterType<CommonAspectHandler>().As<IContentHandler>();
+            builder.RegisterType<CommonService>().As<ICommonService>();
+            builder.RegisterType<PublishingTaskManager>().As<IPublishingTaskManager>();
+            builder.RegisterType<ScheduledTaskManager>().As<IScheduledTaskManager>();
 
             _authn = new Mock<IAuthenticationService>();
             _authz = new Mock<IAuthorizationService>();
