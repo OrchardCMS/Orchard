@@ -4,7 +4,7 @@
 <p class="breadcrumb"><%:Html.ActionLink(T("Content Types").Text, "index") %><%:T(" &#62; ") %><%:T("Edit Content Type") %></p><%
 using (Html.BeginFormAntiForgeryPost()) { %>
     <%--// todo: come up with real itemtype definitions and locations for said definitions--%>
-    <div itemscope itemid="<%:Model.Name %>" itemtype="http://orchardproject.net/data/ContentType"><%:Html.ValidationSummary() %>
+    <div itemscope="itemscope" itemid="<%:Model.Name %>" itemtype="http://orchardproject.net/data/ContentType"><%:Html.ValidationSummary() %>
     <fieldset>
         <label for="DisplayName"><%:T("Display Name") %></label>
         <%:Html.TextBoxFor(m => m.DisplayName, new { @class = "textMedium" })%>
