@@ -3,9 +3,14 @@ using System.Collections.Generic;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
+using System.Xml.Linq;
 using Autofac;
 using Moq;
 using NUnit.Framework;
+using Orchard.ContentManagement.MetaData;
+using Orchard.ContentManagement.MetaData.Models;
+using Orchard.ContentManagement.MetaData.Services;
+using Orchard.Core.Settings.Metadata;
 using Orchard.Data;
 using Orchard.Environment;
 using Orchard.ContentManagement;
@@ -30,6 +35,10 @@ namespace Orchard.Tests.Modules.Users.Controllers {
         public override void Register(ContainerBuilder builder) {
             builder.RegisterType<AdminController>().SingleInstance();
             builder.RegisterType<DefaultContentManager>().As<IContentManager>();
+            builder.RegisterType(typeof(SettingsFormatter))
+                .As(typeof(IMapper<XElement, SettingsDictionary>))
+                .As(typeof(IMapper<SettingsDictionary, XElement>));
+            builder.RegisterType<ContentDefinitionManager>().As<IContentDefinitionManager>();
             builder.RegisterType<DefaultContentManagerSession>().As<IContentManagerSession>();
             builder.RegisterType<DefaultContentQuery>().As<IContentQuery>().InstancePerDependency();
             builder.RegisterType<MembershipService>().As<IMembershipService>();

@@ -1,19 +1,20 @@
 ﻿using System;
 using Orchard.ContentManagement;
 using Orchard.Core.Common.Models;
+using Orchard.Core.PublishLater.Models;
 
-namespace Orchard.Core.Common.ViewModels {
-    public class PublishEditorViewModel {
-        private readonly CommonAspect _commonAspect;
+namespace Orchard.Core.PublishLater.ViewModels {
+    public class PublishLaterViewModel {
+        private readonly PublishLaterPart _publishLaterPart;
         private string _scheduledPublishUtcTime;
         private string _scheduledPublishUtcDate;
 
-        public PublishEditorViewModel(CommonAspect commonAspect) {
-            _commonAspect = commonAspect;
+        public PublishLaterViewModel(PublishLaterPart publishLaterPart) {
+            _publishLaterPart = publishLaterPart;
         }
 
         public string Command { get; set; }
-        public ContentItem ContentItem { get { return _commonAspect.ContentItem; } }
+        public ContentItem ContentItem { get { return _publishLaterPart.ContentItem; } }
 
         public bool IsPublished {
             get { return ContentItem.VersionRecord != null && ContentItem.VersionRecord.Published; }
@@ -31,6 +32,8 @@ namespace Orchard.Core.Common.ViewModels {
         public bool HasPublished {
             get { return IsPublished || ContentItem.ContentManager.Get(ContentItem.Id, VersionOptions.Published) != null; }
         }
+
+        public DateTime? VersionPublishedUtc { get { return ContentItem.As<CommonAspect>().VersionPublishedUtc; } }
 
         public DateTime? ScheduledPublishUtc { get; set; }
 

@@ -4,8 +4,8 @@
 <%@ Import Namespace="Orchard.ContentManagement" %>
     <div class="summary">
         <div class="properties">
-            <h3><%:Html.ActionLink(Model.Item.Is<IRoutableAspect>() ? Model.Item.As<IRoutableAspect>().Title : string.Format("[title for this {0}]", Model.Item.TypeDefinition.DisplayName), "Edit", new { id = Model.Item.Id }) %></h3><%
-            Html.Zone("metadata"); %>
+            <h3><%:Html.ActionLink(Model.Item.Is<IRoutableAspect>() ? Model.Item.As<IRoutableAspect>().Title : string.Format("[title for this {0}]", Model.Item.TypeDefinition.DisplayName), "Edit", new { id = Model.Item.Id }) %></h3>
+            <div class="metadata"><% Html.Zone("metadata"); %></div>
         </div>
         <div class="related"><%
             Html.Zone("secondary"); %>

@@ -677,6 +677,9 @@ table .button {
 .contentItems h3 {
     padding-top:0;
 }
+.contentItems .metadata ul {
+    display:inline;
+}
 .contentItems .properties li {
     border:0;
     float:left;

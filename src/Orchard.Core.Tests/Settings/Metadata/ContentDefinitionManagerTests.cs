@@ -45,8 +45,8 @@ namespace Orchard.Core.Tests.Settings.Metadata {
             builder.RegisterType<ContentDefinitionManager>().As<IContentDefinitionManager>();
             builder.RegisterGeneric(typeof(Repository<>)).As(typeof(IRepository<>));
             builder.RegisterType(typeof(SettingsFormatter))
-                .As(typeof(IMapper<XElement, IDictionary<string, string>>))
-                .As(typeof(IMapper<IDictionary<string, string>, XElement>));
+                .As(typeof(IMapper<XElement, SettingsDictionary>))
+                .As(typeof(IMapper<SettingsDictionary, XElement>));
             _container = builder.Build();
 
             _container.Mock<ISessionLocator>()

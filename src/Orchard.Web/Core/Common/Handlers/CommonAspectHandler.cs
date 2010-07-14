@@ -1,6 +1,5 @@
 using JetBrains.Annotations;
 using Orchard.Core.Common.Models;
-using Orchard.Core.Common.Services;
 using Orchard.Data;
 using Orchard.Localization;
 using Orchard.ContentManagement;
@@ -13,27 +12,18 @@ namespace Orchard.Core.Common.Handlers {
     public class CommonAspectHandler : ContentHandler {
         private readonly IClock _clock;
         private readonly IAuthenticationService _authenticationService;
-        private readonly IAuthorizationService _authorizationService;
-        private readonly IMembershipService _membershipService;
         private readonly IContentManager _contentManager;
-        private readonly ICommonService _commonService;
 
         public CommonAspectHandler(
             IRepository<CommonRecord> commonRepository,
             IRepository<CommonVersionRecord> commonVersionRepository,
             IClock clock,
             IAuthenticationService authenticationService,
-            IAuthorizationService authorizationService,
-            IMembershipService membershipService,
-            IContentManager contentManager,
-            ICommonService commonService) {
+            IContentManager contentManager) {
 
             _clock = clock;
             _authenticationService = authenticationService;
-            _authorizationService = authorizationService;
-            _membershipService = membershipService;
             _contentManager = contentManager;
-            _commonService = commonService;
             T = NullLocalizer.Instance;
 
             Filters.Add(StorageFilter.For(commonRepository));
@@ -45,7 +35,6 @@ namespace Orchard.Core.Common.Handlers {
             OnInitializing<ContentPart<CommonVersionRecord>>(AssignCreatingDates);
 
             OnLoaded<CommonAspect>(LazyLoadHandlers);
-            OnLoaded<CommonAspect>((context, commonAspect) => commonAspect.ScheduledPublishUtc.Value = _commonService.GetScheduledPublishUtc(commonAspect));
 
             OnVersioning<CommonAspect>(CopyOwnerAndContainer);
 
@@ -125,7 +114,6 @@ namespace Orchard.Core.Common.Handlers {
             // add handlers that will load content for id's just-in-time
             aspect.OwnerField.Loader(() => _contentManager.Get<IUser>(aspect.Record.OwnerId));
             aspect.ContainerField.Loader(() => aspect.Record.Container == null ? null : _contentManager.Get(aspect.Record.Container.Id));
-            aspect.ScheduledPublishUtc.Loader(() => _commonService.GetScheduledPublishUtc(context.ContentItem));
         }
 
         static void PropertySetHandlers(InitializingContentContext context, CommonAspect aspect) {
