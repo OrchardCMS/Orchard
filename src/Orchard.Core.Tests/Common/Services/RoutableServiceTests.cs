@@ -10,6 +10,7 @@ using Orchard.ContentManagement.Handlers;
 using Orchard.ContentManagement.MetaData;
 using Orchard.ContentManagement.Records;
 using Orchard.Core.Common.Models;
+using Orchard.Core.Routable;
 using Orchard.Core.Routable.Handlers;
 using Orchard.Core.Routable.Models;
 using Orchard.Core.Routable.Services;
@@ -35,6 +36,7 @@ namespace Orchard.Core.Tests.Common.Services {
             builder.RegisterType<ThingHandler>().As<IContentHandler>();
             builder.RegisterType<StuffHandler>().As<IContentHandler>();
             builder.RegisterType<RoutableService>().As<IRoutableService>();
+            builder.RegisterType<RoutablePathConstraint>().As<IRoutablePathConstraint>();
 
             builder.RegisterType<DefaultContentQuery>().As<IContentQuery>();
             builder.RegisterInstance(new UrlHelper(new RequestContext(new StubHttpContext("~/"), new RouteData()))).As<UrlHelper>();
