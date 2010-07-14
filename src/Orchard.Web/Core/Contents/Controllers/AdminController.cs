@@ -4,6 +4,7 @@ using System.Web.Mvc;
 using System.Web.Routing;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.MetaData;
+using Orchard.Core.Common.Models;
 using Orchard.Core.Contents.ViewModels;
 using Orchard.Data;
 using Orchard.Localization;
@@ -110,15 +111,21 @@ namespace Orchard.Core.Contents.Controllers {
             //todo: need to integrate permissions into generic content management
             var contentItem = _contentManager.New(model.Id);
             model.Content = _contentManager.UpdateEditorModel(contentItem, this);
+
             if (ModelState.IsValid) {
                 _contentManager.Create(contentItem, VersionOptions.Draft);
                 model.Content = _contentManager.UpdateEditorModel(contentItem, this);
             }
+
             if (!ModelState.IsValid) {
                 _transactionManager.Cancel();
                 PrepareEditorViewModel(model.Content);
                 return View("Create", model);
             }
+
+            //need to go about this differently - to know when to publish (IPlublishableAspect ?)
+            if (!contentItem.Has<CommonAspect>())
+                _contentManager.Publish(contentItem);
 
             _notifier.Information(T("Created content item"));
             return RedirectToAction("Edit", new RouteValueDictionary { { "Id", contentItem.Id } });
