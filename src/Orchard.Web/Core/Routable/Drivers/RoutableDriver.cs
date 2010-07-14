@@ -18,7 +18,6 @@ namespace Orchard.Core.Routable.Drivers {
             T = NullLocalizer.Instance;
         }
 
-
         private const string TemplateName = "Parts/Routable.IsRoutable";
 
         public Localizer T { get; set; }
