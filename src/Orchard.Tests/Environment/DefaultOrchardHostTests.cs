@@ -19,6 +19,7 @@ using Orchard.Environment.ShellBuilders;
 using Orchard.Environment.Descriptor;
 using Orchard.Environment.Descriptor.Models;
 using Orchard.FileSystems.AppData;
+using Orchard.FileSystems.VirtualPath;
 using Orchard.Mvc;
 using Orchard.Mvc.ModelBinders;
 using Orchard.Mvc.Routes;
@@ -54,6 +55,7 @@ namespace Orchard.Tests.Environment {
                     builder.RegisterType<ModelBinderPublisher>().As<IModelBinderPublisher>();
                     builder.RegisterType<ShellContextFactory>().As<IShellContextFactory>();
                     builder.RegisterType<StubExtensionManager>().As<IExtensionManager>();
+                    builder.RegisterType<StubVirtualPathMonitor>().As<IVirtualPathMonitor>();
                     builder.RegisterInstance(appDataFolder).As<IAppDataFolder>();
                     builder.RegisterInstance(_controllerBuilder);
                     builder.RegisterInstance(_routeCollection);
