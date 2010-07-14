@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Orchard.ContentManagement;
+using Orchard.Core.Localization.Models;
 
 namespace Orchard.Core.Localization.ViewModels {
     public class ContentLocalizationsViewModel {
@@ -8,7 +9,6 @@ namespace Orchard.Core.Localization.ViewModels {
         }
 
         public int Id { get; private set; }
-        public bool CanLocalize { get; set; }
-        public IEnumerable<IContent> Localizations { get; set; }
+        public IEnumerable<Localized> Localizations { get; set; }
     }
 }

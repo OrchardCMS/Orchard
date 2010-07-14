@@ -6,6 +6,6 @@ namespace Orchard.Core.Localization.Services {
     public interface ILocalizationService : IDependency {
         Localized GetLocalizedContentItem(IContent masterContentItem, string culture);
         string GetContentCulture(IContent contentItem);
-        IEnumerable<IContent> GetLocalizations(IContent contentItem);
+        IEnumerable<Localized> GetLocalizations(IContent contentItem);
     }
 }
