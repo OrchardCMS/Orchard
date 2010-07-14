@@ -1,13 +1,20 @@
 ﻿using System.Data;
+using System.Linq;
 using Autofac;
 using NHibernate;
 using NUnit.Framework;
 using Orchard.Data;
 using Orchard.Data.Migration.Interpreters;
 using Orchard.Data.Migration.Schema;
+using Orchard.Data.Providers;
 using Orchard.Environment.Configuration;
+using Orchard.Environment.ShellBuilders.Models;
+using Orchard.FileSystems.AppData;
+using Orchard.Reports.Services;
 using Orchard.Tests.ContentManagement;
 using System.IO;
+using Orchard.Tests.FileSystems.AppData;
+using Orchard.Tests.Stubs;
 
 namespace Orchard.Tests.DataMigration {
     [TestFixture]
@@ -15,24 +22,35 @@ namespace Orchard.Tests.DataMigration {
         private IContainer _container;
         private ISessionFactory _sessionFactory;
         private string _databaseFileName;
+        private string _tempFolder;
         private SchemaBuilder _schemaBuilder;
         private DefaultDataMigrationInterpreter _interpreter;
 
         [SetUp]
         public void Setup() {
             _databaseFileName = Path.GetTempFileName();
-            _sessionFactory = DataUtility.CreateSessionFactory(
-                _databaseFileName);
+            _sessionFactory = DataUtility.CreateSessionFactory(_databaseFileName);
+
+            _tempFolder = Path.GetTempFileName();
+            File.Delete(_tempFolder);
+            var appDataFolder = AppDataFolderTests.CreateAppDataFolder(_tempFolder);
 
             var builder = new ContainerBuilder();
 
             builder.RegisterInstance(new ShellSettings { DataTablePrefix = "TEST_", DataProvider = "SqlCe" });
 
             var session = _sessionFactory.OpenSession();
+            builder.RegisterInstance(appDataFolder).As<IAppDataFolder>();
+            builder.RegisterType<SqlCeDataServicesProvider>().As<IDataServicesProvider>();
+            builder.RegisterType<DataServicesProviderFactory>().As<IDataServicesProviderFactory>();
+            builder.RegisterType<StubReportsCoordinator>().As<IReportsCoordinator>();
             builder.RegisterType<DefaultDataMigrationInterpreter>().As<IDataMigrationInterpreter>();
+            builder.RegisterType<SessionFactoryHolder>().As<ISessionFactoryHolder>();
             builder.RegisterInstance(new DefaultContentManagerTests.TestSessionLocator(session)).As<ISessionLocator>();
-            builder.RegisterInstance(new ShellSettings { DataProvider = "SqlCe", DataTablePrefix = "TEST_" }).As<ShellSettings>();
+            builder.RegisterInstance(new ShellBlueprint { Records = Enumerable.Empty<RecordBlueprint>() }).As<ShellBlueprint>();
+            builder.RegisterInstance(new ShellSettings { Name = "temp", DataProvider = "SqlCe", DataTablePrefix = "TEST_" }).As<ShellSettings>();
             builder.RegisterType<SqlCeCommandInterpreter>().As<ICommandInterpreter>();
+            builder.RegisterModule(new DataModule());
             _container = builder.Build();
 
             _interpreter = _container.Resolve<IDataMigrationInterpreter>() as DefaultDataMigrationInterpreter;
@@ -71,7 +89,7 @@ namespace Orchard.Tests.DataMigration {
 
         [Test]
         public void CreateCommandShouldBeHandled() {
-            
+
             _schemaBuilder
                 .CreateTable("User", table => table
                     .Column("Id", DbType.Int32, column => column.PrimaryKey().Identity())

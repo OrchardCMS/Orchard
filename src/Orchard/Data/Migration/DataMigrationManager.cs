@@ -21,20 +21,16 @@ namespace Orchard.Data.Migration {
         private readonly IRepository<DataMigrationRecord> _dataMigrationRepository;
         private readonly IExtensionManager _extensionManager;
         private readonly IDataMigrationInterpreter _interpreter;
-        private readonly IReportsCoordinator _reportsCoordinator;
 
         public DataMigrationManager(
             IEnumerable<IDataMigration> dataMigrations, 
             IRepository<DataMigrationRecord> dataMigrationRepository,
             IExtensionManager extensionManager,
-            IDataMigrationInterpreter interpreter,
-            IReportsCoordinator reportsCoordinator
-            ) {
+            IDataMigrationInterpreter interpreter) {
             _dataMigrations = dataMigrations;
             _dataMigrationRepository = dataMigrationRepository;
             _extensionManager = extensionManager;
             _interpreter = interpreter;
-            _reportsCoordinator = reportsCoordinator;
 
             Logger = NullLogger.Instance;
         }
