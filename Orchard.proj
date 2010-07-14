@@ -62,32 +62,18 @@
   <!-- Testing -->
 
   <Target Name ="Test">
-    <!-- We only support running test in 32-bit environement for now (because of SQLite) -->
-    <!-- Copy nunit to a temporaty directory and rename nunit-console-x86 -->
-    <ItemGroup>
-      <Test-NUnit-Include Include="$(LibFolder)\nunit\**\*" />
-    </ItemGroup>
-
-    <Copy
-      SourceFiles="@(Test-NUnit-Include)"
-      DestinationFolder="$(BuildFolder)\Test\nunit" />
-
-    <Copy
-      SourceFiles="$(BuildFolder)\Test\nunit\nunit-console-x86.exe"
-      DestinationFiles="$(BuildFolder)\Test\nunit\nunit-console.exe" />
-
     <!-- TeamCity support -->
     <ItemGroup>
       <NUnitAddinFiles Include="$(teamcity_dotnet_nunitaddin)-2.5.2.*" />
     </ItemGroup>
-    <Copy SourceFiles="@(NUnitAddinFiles)" DestinationFolder="$(BuildFolder)\Test\nunit\addins" />
+    <Copy SourceFiles="@(NUnitAddinFiles)" DestinationFolder="$(LibFolder)\nunit\addins" />
 
-    <!-- Copy and run unit test assemblies -->
+    <!-- Run unit test assemblies -->
     <CreateItem Include="$(CompileFolder)\*.Tests.*dll">
       <Output TaskParameter="Include" ItemName="TestAssemblies" />
     </CreateItem>
 
-    <NUnit Assemblies="@(TestAssemblies)" ToolPath="$(BuildFolder)\Test\nunit" WorkingDirectory="$(CompileFolder)" OutputXmlFile="$(BuildFolder)\Orchard.Tests.xml" />
+    <NUnit Assemblies="@(TestAssemblies)" ToolPath="$(LibFolder)\nunit" WorkingDirectory="$(CompileFolder)" OutputXmlFile="$(BuildFolder)\Orchard.Tests.xml" />
   </Target>
 
   <Target Name ="Spec">
