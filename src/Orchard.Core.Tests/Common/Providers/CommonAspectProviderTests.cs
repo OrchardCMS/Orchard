@@ -14,6 +14,7 @@ using Orchard.ContentManagement;
 using Orchard.ContentManagement.Handlers;
 using Orchard.ContentManagement.Records;
 using Orchard.Core.Common.Services;
+using Orchard.Core.Scheduling.Models;
 using Orchard.Core.Scheduling.Services;
 using Orchard.Localization;
 using Orchard.Security;
@@ -58,6 +59,7 @@ namespace Orchard.Core.Tests.Common.Providers {
                                  typeof(ContentItemVersionRecord), 
                                  typeof(CommonRecord),
                                  typeof(CommonVersionRecord),
+                                 typeof(ScheduledTaskRecord),
                              };
             }
         }
