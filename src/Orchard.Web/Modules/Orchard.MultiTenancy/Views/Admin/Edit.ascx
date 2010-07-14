@@ -26,8 +26,8 @@
 	    </div><%
         } %>
         <div>
-            <%: Html.RadioButtonFor(svm => svm.DataProvider, "SQLite", new { id = "builtinDatabaseOption" })%>
-            <label for="builtinDatabaseOption" class="forcheckbox"><%: T("Use built-in data storage (SQLite)") %></label>
+            <%: Html.RadioButtonFor(svm => svm.DataProvider, "SqlCe", new { id = "builtinDatabaseOption" })%>
+            <label for="builtinDatabaseOption" class="forcheckbox"><%: T("Use built-in data storage (SQL Server Compact)") %></label>
         </div>
         <div>
             <%: Html.RadioButtonFor(svm => svm.DataProvider, "SqlServer", new { id = "sqlDatabaseOption" })%>

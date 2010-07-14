@@ -11,7 +11,6 @@ namespace Orchard.Data.Providers {
             _connectionString = connectionString;
         }
 
-
         public static string ProviderName {
             get { return "SqlServer"; }
         }

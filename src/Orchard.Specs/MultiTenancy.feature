@@ -64,13 +64,13 @@ Scenario: A new tenant with preconfigured database goes to the setup screen
 			| name | value |
 			| Name | Scott |
 			| RequestUrlHost | scott.example.org |
-			| DataProvider | SQLite |
+			| DataProvider | SqlCe |
 		And I hit "Save"
 		And I am redirected
 		And I go to "/Setup" on host scott.example.org
 	Then I should see "Welcome to Orchard"
 		And I should see "Finish Setup"
-		And I should not see "SQLite"
+		And I should not see "SQL Server Compact"
 		And the status should be 200 OK
 
 Scenario: A new tenant runs the setup

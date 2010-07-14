@@ -29,7 +29,7 @@ if (!Model.DatabaseIsPreconfigured) { %>
     <%: Html.ValidationMessage("DatabaseOptions", "Unable to setup data storage") %>
     <div>
         <%: Html.RadioButtonFor(svm => svm.DatabaseOptions, true, new { id = "builtin" })%>
-        <label for="builtin" class="forcheckbox"><%: T("Use built-in data storage (SQLite)") %></label>
+        <label for="builtin" class="forcheckbox"><%: T("Use built-in data storage (SQL Server Compact)")%></label>
     </div>
     <div>
         <%: Html.RadioButtonFor(svm => svm.DatabaseOptions, false, new { id = "sql" })%>

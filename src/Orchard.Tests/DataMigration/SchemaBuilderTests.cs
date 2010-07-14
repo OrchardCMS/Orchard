@@ -26,13 +26,13 @@ namespace Orchard.Tests.DataMigration {
 
             var builder = new ContainerBuilder();
 
-            builder.RegisterInstance(new ShellSettings { DataTablePrefix = "TEST_", DataProvider = "SQLite" });
+            builder.RegisterInstance(new ShellSettings { DataTablePrefix = "TEST_", DataProvider = "SqlCe" });
 
             var session = _sessionFactory.OpenSession();
             builder.RegisterType<DefaultDataMigrationInterpreter>().As<IDataMigrationInterpreter>();
             builder.RegisterInstance(new DefaultContentManagerTests.TestSessionLocator(session)).As<ISessionLocator>();
-            builder.RegisterInstance(new ShellSettings { DataProvider = "SQLite", DataTablePrefix = "TEST_" }).As<ShellSettings>();
-            builder.RegisterType<SqLiteCommandInterpreter>().As<ICommandInterpreter>();
+            builder.RegisterInstance(new ShellSettings { DataProvider = "SqlCe", DataTablePrefix = "TEST_" }).As<ShellSettings>();
+            builder.RegisterType<SqlCeCommandInterpreter>().As<ICommandInterpreter>();
             _container = builder.Build();
 
             _interpreter = _container.Resolve<IDataMigrationInterpreter>() as DefaultDataMigrationInterpreter;
@@ -65,7 +65,7 @@ namespace Orchard.Tests.DataMigration {
                     .DropIndex("IDX_XYZ"))
                 .DropForeignKey("Address", "User_Address")
                 .DropTable("Address")
-                .ExecuteSql("drop database", statement => statement.ForProvider("SQLite"))
+                .ExecuteSql("drop database", statement => statement.ForProvider("SqlCe"))
                 .ExecuteSql("DROP DATABASE", statement => statement.ForProvider("SQLServer"));
         }
 

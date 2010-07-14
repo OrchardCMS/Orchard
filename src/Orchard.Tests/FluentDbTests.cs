@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using FluentNHibernate.Automapping;
 using FluentNHibernate.Cfg;
@@ -9,6 +10,7 @@ using NHibernate;
 using NHibernate.Criterion;
 using NHibernate.Tool.hbm2ddl;
 using NUnit.Framework;
+using Orchard.Data.Providers;
 using Orchard.Tests.Records;
 
 namespace Orchard.Tests {
@@ -32,17 +34,28 @@ namespace Orchard.Tests {
 
         [Test]
         public void CreatingSchemaForStatedClassesInTempFile() {
-            var types = new Types(typeof (FooRecord), typeof (BarRecord));
+            var types = new Types(typeof(FooRecord), typeof(BarRecord));
+
+            var fileName = "temp.sdf";
+            var persistenceConfigurer = new SqlCeDataServicesProvider(fileName).GetPersistenceConfigurer(true/*createDatabase*/);
+            ((MsSqlCeConfiguration)persistenceConfigurer).ShowSql();
 
             var sessionFactory = Fluently.Configure()
-                .Database(SQLiteConfiguration.Standard.UsingFile("temp"))
+                .Database(persistenceConfigurer)
                 .Mappings(m => m.AutoMappings.Add(AutoMap.Source(types)))
-                .ExposeConfiguration(c => new SchemaExport(c).Create(false, true))
+                .ExposeConfiguration(c => {
+                    // This is to work around what looks to be an issue in the NHibernate driver:
+                    // When inserting a row with IDENTITY column, the "SELET @@IDENTITY" statement
+                    // is issued as a separate command. By default, it is also issued in a separate
+                    // connection, which is not supported (returns NULL).
+                    c.SetProperty("connection.release_mode", "on_close");
+                    new SchemaExport(c).Create(false, true);
+                })
                 .BuildSessionFactory();
 
             var session = sessionFactory.OpenSession();
-            session.Save(new FooRecord {Name = "Hello"});
-            session.Save(new BarRecord {Height = 3, Width = 4.5m});
+            session.Save(new FooRecord { Name = "Hello" });
+            session.Save(new BarRecord { Height = 3, Width = 4.5m });
             session.Close();
 
             session = sessionFactory.OpenSession();
@@ -52,22 +65,13 @@ namespace Orchard.Tests {
             session.Close();
         }
 
-        [Test]
-        public void InMemorySQLiteCanBeUsedInSessionFactory() {
-            var sessionFactory = Fluently.Configure()
-                .Database(SQLiteConfiguration.Standard.InMemory())
-                .BuildSessionFactory();
-
-            var session = sessionFactory.OpenSession();
-            session.Close();
-        }
 
         [Test]
         public void UsingDataUtilityToBuildSessionFactory() {
-            var factory = DataUtility.CreateSessionFactory(typeof (FooRecord), typeof (BarRecord));
+            var factory = DataUtility.CreateSessionFactory(typeof(FooRecord), typeof(BarRecord));
 
             var session = factory.OpenSession();
-            var foo1 = new FooRecord {Name = "world"};
+            var foo1 = new FooRecord { Name = "world" };
             session.Save(foo1);
             session.Close();
 

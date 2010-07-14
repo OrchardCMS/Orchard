@@ -65,11 +65,6 @@
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
     <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="System.Data.SQLite, Version=1.0.65.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=x86">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\lib\sqlite\System.Data.SQLite.DLL</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="System.Web.ApplicationServices" />
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
@@ -324,32 +319,19 @@
   <UsingTask TaskName="Microsoft.Web.Mvc.Build.CreateAreaManifest" AssemblyName="Microsoft.Web.Mvc.Build, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" />
   <UsingTask TaskName="Microsoft.Web.Mvc.Build.CopyAreaManifests" AssemblyName="Microsoft.Web.Mvc.Build, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" />
   -->
-  
   <Target Name="CopySqlCeBinaries">
     <ItemGroup>
-      <SqlCeBinariesx86 Include="..\..\lib\sqlce\x86\*.*"/>
-      <SqlCeBinariesx64 Include="..\..\lib\sqlce\amd64\*.*"/>
+      <SqlCeBinariesx86 Include="$(ProjectDir)..\..\lib\sqlce\x86\*.*" />
+      <SqlCeBinariesx64 Include="$(ProjectDir)..\..\lib\sqlce\amd64\*.*" />
     </ItemGroup>
-
-    <Copy
-        SourceFiles="@(SqlCeBinariesx86)"
-        DestinationFolder="$(ProjectDir)\bin\x86"
-        SkipUnchangedFiles="true"
-        />
-
-    <Copy
-        SourceFiles="@(SqlCeBinariesx64)"
-        DestinationFolder="$(ProjectDir)\bin\amd64"
-        SkipUnchangedFiles="true"
-        />
+    <Copy SourceFiles="@(SqlCeBinariesx86)" DestinationFolder="$(ProjectDir)$(OutputPath)x86" SkipUnchangedFiles="true" />
+    <Copy SourceFiles="@(SqlCeBinariesx64)" DestinationFolder="$(ProjectDir)$(OutputPath)amd64" SkipUnchangedFiles="true" />
   </Target>
-  
   <Target Name="AfterBuild" DependsOnTargets="AfterBuildCompiler">
     <PropertyGroup>
       <AreasManifestDir>$(ProjectDir)\..\Manifests</AreasManifestDir>
     </PropertyGroup>
-    <CallTarget Targets="CopySqlCeBinaries"/>
-
+    <CallTarget Targets="CopySqlCeBinaries" />
     <!-- If this is an area child project, uncomment the following line:
     <CreateAreaManifest AreaName="$(AssemblyName)" AreaType="Child" AreaPath="$(ProjectDir)" ManifestPath="$(AreasManifestDir)" ContentFiles="@(Content)" />
     -->

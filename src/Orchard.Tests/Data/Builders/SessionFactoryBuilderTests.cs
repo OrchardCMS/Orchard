@@ -50,19 +50,19 @@ namespace Orchard.Tests.Data.Builders {
 
 
         [Test]
-        public void SQLiteSchemaShouldBeGeneratedAndUsable() {
+        public void SqlCeSchemaShouldBeGeneratedAndUsable() {
             var recordDescriptors = new[] {
                 new RecordBlueprint {TableName = "Hello", Type = typeof (FooRecord)}
             };
 
             var manager = (IDataServicesProviderFactory) new DataServicesProviderFactory(new[] {
                 new Meta<CreateDataServicesProvider>(
-                    (dataFolder, connectionString) => new SQLiteDataServicesProvider(dataFolder, connectionString),
-                    new Dictionary<string, object> {{"ProviderName", "SQLite"}})
+                    (dataFolder, connectionString) => new SqlCeDataServicesProvider(dataFolder, connectionString),
+                    new Dictionary<string, object> {{"ProviderName", "SqlCe"}})
             });
 
             var parameters = new SessionFactoryParameters {
-                Provider = "SQLite",
+                Provider = "SqlCe",
                 DataFolder = _tempDataFolder,
                 RecordDescriptors = recordDescriptors
             };

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using FluentNHibernate.Automapping;
 using FluentNHibernate.Automapping.Alterations;
@@ -19,12 +20,21 @@ namespace Orchard.Tests {
             //var persistenceModel = AutoMap.Source(new Types(types))
             //    .Alterations(alt => AddAlterations(alt, types))
             //    .Conventions.AddFromAssemblyOf<DataModule>();
-            var persistenceModel = AbstractDataServicesProvider.CreatePersistenceModel(types.Select(t => new RecordBlueprint { TableName = "Test_" + t.Name,Type = t }));
+            var persistenceModel = AbstractDataServicesProvider.CreatePersistenceModel(types.Select(t => new RecordBlueprint { TableName = "Test_" + t.Name, Type = t }));
+            var persistenceConfigurer = new SqlCeDataServicesProvider(fileName).GetPersistenceConfigurer(true/*createDatabase*/);
+            ((MsSqlCeConfiguration)persistenceConfigurer).ShowSql();
 
             return Fluently.Configure()
-                .Database(SQLiteConfiguration.Standard.UsingFile(fileName).ShowSql())
+                .Database(persistenceConfigurer)
                 .Mappings(m => m.AutoMappings.Add(persistenceModel))
-                .ExposeConfiguration(c => new SchemaExport(c).Create(false /*script*/, true /*export*/))
+                .ExposeConfiguration(c => {
+                    // This is to work around what looks to be an issue in the NHibernate driver:
+                    // When inserting a row with IDENTITY column, the "SELET @@IDENTITY" statement
+                    // is issued as a separate command. By default, it is also issued in a separate
+                    // connection, which is not supported (returns NULL).
+                    c.SetProperty("connection.release_mode", "on_close");
+                    new SchemaExport(c).Create(false /*script*/, true /*export*/);
+                })
                 .BuildSessionFactory();
         }
 
