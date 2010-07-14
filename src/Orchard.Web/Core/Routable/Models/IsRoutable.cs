@@ -12,5 +12,10 @@ namespace Orchard.Core.Routable.Models {
             get { return Record.Slug; }
             set { Record.Slug = value; }
         }
+
+        public string Path {
+            get { return Record.Path; }
+            set { Record.Path = value; }
+        }
     }
 }
