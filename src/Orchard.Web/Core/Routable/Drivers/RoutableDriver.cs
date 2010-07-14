@@ -55,7 +55,7 @@ namespace Orchard.Core.Routable.Drivers {
             };
 
             // TEMP: path format patterns replaces this logic
-            var path = part.Record.Path;
+            var path = part.Path;
             if (path != null && path.EndsWith(part.Slug)) {
                 model.DisplayLeadingPath = path.Substring(0, path.Length - part.Slug.Length);
             }
@@ -73,10 +73,10 @@ namespace Orchard.Core.Routable.Drivers {
             // TEMP: path format patterns replaces this logic
             var containerSlug = GetContainerSlug(part);
             if (string.IsNullOrEmpty(containerSlug)) {
-                part.Record.Path = model.Slug;
+                part.Path = model.Slug;
             }
             else {
-                part.Record.Path = containerSlug + "/" + model.Slug;
+                part.Path = containerSlug + "/" + model.Slug;
             }
 
             if (!_routableService.IsSlugValid(part.Slug)) {
