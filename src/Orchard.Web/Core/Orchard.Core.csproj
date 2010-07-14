@@ -254,7 +254,7 @@
     <Content Include="Contents\Module.txt" />
     <Content Include="Contents\Views\Admin\Edit.ascx" />
     <Content Include="Contents\Views\Admin\CreatableTypeList.ascx" />
-    <Content Include="Contents\Views\Admin\Create.aspx" />
+    <Content Include="Contents\Views\Admin\Create.ascx" />
     <Content Include="Contents\Views\Admin\List.ascx" />
     <Content Include="Contents\Views\DisplayTemplates\Items\Contents.Item.ascx" />
     <Content Include="Contents\Views\DisplayTemplates\Items\Contents.Item.SummaryAdmin.ascx" />

@@ -1,5 +1,4 @@
-<%@ Page Language="C#" Inherits="Orchard.Mvc.ViewPage<CreateItemViewModel>" %>
-
+<%@ Control Language="C#" Inherits="Orchard.Mvc.ViewUserControl<CreateItemViewModel>" %>
 <%@ Import Namespace="Orchard.Core.Contents.ViewModels" %>
 <% Html.AddTitleParts(T("Create Content").ToString()); %>
 <% using (Html.BeginFormAntiForgeryPost()) { %>
