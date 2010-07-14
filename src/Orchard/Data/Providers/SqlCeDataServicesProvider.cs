@@ -47,7 +47,8 @@ namespace Orchard.Data.Providers {
             // dependency on SqlCe assembly
 
             //engine engine = new SqlCeEngine();
-            const string assemblyName = "System.Data.SqlServerCe, Version=4.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL";
+            //const string assemblyName = "System.Data.SqlServerCe, Version=4.0.0.1, Culture=neutral, PublicKeyToken=89845dcd8080cc91";
+            const string assemblyName = "System.Data.SqlServerCe";
             const string typeName = "System.Data.SqlServerCe.SqlCeEngine";
 
             var sqlceEngineHandle = Activator.CreateInstance(assemblyName, typeName);
