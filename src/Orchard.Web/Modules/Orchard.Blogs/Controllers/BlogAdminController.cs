@@ -1,4 +1,3 @@
-using System;
 using System.Linq;
 using System.Web.Mvc;
 using JetBrains.Annotations;
@@ -8,7 +7,6 @@ using Orchard.Blogs.Models;
 using Orchard.Blogs.Services;
 using Orchard.Blogs.ViewModels;
 using Orchard.ContentManagement;
-using Orchard.Core.Common.Models;
 using Orchard.Localization;
 using Orchard.Mvc.Results;
 using Orchard.Settings;
