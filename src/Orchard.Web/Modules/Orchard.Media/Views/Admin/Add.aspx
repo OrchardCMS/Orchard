@@ -19,7 +19,7 @@
     <%: Html.ValidationSummary() %>
     <fieldset>
         <label for="pageTitle"><%: T("File Path <span> - multiple files must be in a zipped folder</span>")%></label>
-        <input id="MediaItemPath" name="MediaItemPath" type="file" class="text" value="<%: T("Browse") %>" size="64"/>
+        <input id="MediaItemPath" name="MediaItemPath" type="file" value="<%: T("Browse") %>" size="64"/>
 		<span class="hint"><%: T("After your files have been uploaded, you can edit the titles and descriptions.")%></span>
         <input type="hidden" id="FolderName" name="FolderName" value="<%: Model.FolderName %>" />
         <input type="hidden" id="MediaPath" name="MediaPath" value="<%: Model.MediaPath %>" />

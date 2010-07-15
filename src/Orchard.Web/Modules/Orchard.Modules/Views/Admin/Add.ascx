@@ -5,7 +5,7 @@ using (Html.BeginFormAntiForgeryPost(Url.Action("add", new { area = "Orchard.Mod
 <%: Html.ValidationSummary()
 %><fieldset>
     <label for="ModulePackage"><%:T("Module Package") %></label>
-    <input type="file" id="ModulePackage" name="ModulePackage" />
+    <input type="file" id="ModulePackage" size="64" name="ModulePackage" />
 </fieldset>
 <button type="submit" class="button primaryAction"><%:T("Install") %></button><%
 } %>
