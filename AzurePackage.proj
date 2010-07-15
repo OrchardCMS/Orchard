@@ -61,17 +61,11 @@
 <!-- Testing - Azure only -->
 
   <Target Name ="Test">
-    <Message Text="Testing with x64 version of Sqlite"/>
     
 		<CreateItem Include="$(CompileFolder)\*Azure.Tests.*dll">
 			<Output TaskParameter="Include" ItemName="TestAssemblies" />
 		</CreateItem>
 
-    <!-- use x64 sqlite for tests depending on build platform -->
-    <Copy 
-      SourceFiles="$(LibFolder)\sqlite\x64\System.Data.SQLite.dll" 
-      DestinationFiles="$(CompileFolder)\System.Data.SQLite.dll" />
-		
 		<NUnit Assemblies="@(TestAssemblies)" ToolPath="$(LibFolder)\nunit" WorkingDirectory="$(CompileFolder)" />
 
   </Target>
@@ -108,7 +102,7 @@
     <Delete Files="@(WebConfigs)" />
 
     <!-- extra processing of the staged config files -->
-    <!--<XmlUpdate XmlFileName="$(CloudRootFolder)\web.config"
+    <XmlUpdate XmlFileName="$(CloudRootFolder)\web.config"
       XPath="/configuration/system.web/compilation/@debug"
       Value="false" />
 
@@ -119,7 +113,6 @@
     <XmlUpdate XmlFileName="$(CloudRootFolder)\Config\Diagnostics.config"
       XPath="/system.diagnostics/sources/source/@switchValue"
       Value="Error" />
-    -->
     
     <Copy 
         SourceFiles="$(SrcFolder)\Orchard.Azure\Orchard.Azure.CloudService\ServiceConfiguration.cscfg" 
