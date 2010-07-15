@@ -41,6 +41,7 @@ Scenario: Calling setup on a brand new install
 			| name | value |
 			| SiteName | My Site |
 			| AdminPassword | 6655321 |
+			| ConfirmPassword | 6655321 |
 		And I hit "Finish Setup"
 		And I go to "/Default.aspx"
 	Then I should see "<h1>My Site</h1>"
