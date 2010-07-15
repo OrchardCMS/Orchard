@@ -12,7 +12,7 @@ if (Model.Entries.Count() > 0) { %>
             int totalPostCount = entry.TotalPostCount;
                         
             var linkText = T.Plural("1 post", "{0} posts", totalPostCount).ToString();
-            if (draftCount==0){
+            if (draftCount > 0){
                 linkText = linkText + " (" + T.Plural("1 draft", "{0} drafts", draftCount).ToString() + ")";
             }
             
