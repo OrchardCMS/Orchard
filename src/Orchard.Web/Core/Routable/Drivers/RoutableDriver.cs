@@ -59,6 +59,9 @@ namespace Orchard.Core.Routable.Drivers {
             if (path != null && path.EndsWith(part.Slug)) {
                 model.DisplayLeadingPath = path.Substring(0, path.Length - part.Slug.Length);
             }
+            else {
+                model.DisplayLeadingPath = GetContainerSlug(part) + "/";
+            }
 
             return ContentPartTemplate(model, TemplateName, Prefix).Location("primary", "before.5");
         }
