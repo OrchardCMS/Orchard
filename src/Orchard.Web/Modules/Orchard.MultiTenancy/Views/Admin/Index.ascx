@@ -2,6 +2,7 @@
 <%@ Import Namespace="Orchard.MultiTenancy.Extensions" %>
 <%@ Import Namespace="Orchard.Mvc.Html"%>
 <%@ Import Namespace="Orchard.MultiTenancy.ViewModels"%>
+<%Html.RegisterStyle("admin.css"); %>
 <h1><%: Html.TitleForPage(T("List of Site's Tenants").ToString())%></h1>
 <div class="manage"><%: Html.ActionLink(T("Add a Tenant").ToString(), "Add", new {area = "Orchard.MultiTenancy"}, new { @class = "button primaryAction" })%></div>
 <ul class="contentItems tenants"><%
@@ -9,7 +10,7 @@
     <li class="tenant <%=tenant.State.CurrentState %>">
         <div class="summary">
             <div class="properties">
-                <h3><span class="tenantName"><%: tenant.Name %></span><%
+                <h3><%: tenant.Name %><%
                     if (!string.IsNullOrEmpty(tenant.RequestUrlHost)) {
                          %><span class="tenantHost"> - <%: Html.Link(Url.Tenant(tenant), Url.Tenant(tenant))%></span><%
                     } %></h3>
