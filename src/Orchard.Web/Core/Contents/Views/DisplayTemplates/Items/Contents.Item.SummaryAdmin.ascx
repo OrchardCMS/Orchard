@@ -1,10 +1,8 @@
 ﻿<%@ Control Language="C#" Inherits="Orchard.Mvc.ViewUserControl<ContentItemViewModel>" %>
 <%@ Import Namespace="Orchard.Mvc.ViewModels" %>
-<%@ Import Namespace="Orchard.ContentManagement.Aspects" %>
-<%@ Import Namespace="Orchard.ContentManagement" %>
     <div class="summary">
         <div class="properties">
-            <h3><%:Html.ActionLink(Model.Item.Is<IRoutableAspect>() ? Model.Item.As<IRoutableAspect>().Title : string.Format("[title for this {0}]", Model.Item.TypeDefinition.DisplayName), "Edit", new { id = Model.Item.Id }) %></h3>
+            <h3><%:Html.ItemEditLink(Model.Item) %></h3>
             <div class="metadata"><% Html.Zone("metadata"); %></div>
         </div>
         <div class="related"><%
