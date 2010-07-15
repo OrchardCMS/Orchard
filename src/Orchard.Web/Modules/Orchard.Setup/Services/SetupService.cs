@@ -180,10 +180,24 @@ namespace Orchard.Setup.Services {
                     //hackInstallationGenerator.GenerateInstallEvents();
 
                     var contentDefinitionManager = environment.Resolve<IContentDefinitionManager>();
-                    contentDefinitionManager.AlterTypeDefinition("BlogPost", cfg => cfg.DisplayedAs("Blog Post").WithPart("HasComments").WithPart("HasTags").WithPart("Localized").Indexed());
-                    contentDefinitionManager.AlterTypeDefinition("Page", cfg => cfg.DisplayedAs("Page").WithPart("CommonAspect").WithPart("IsRoutable").WithPart("BodyAspect").WithPart("HasComments").WithPart("HasTags").WithPart("Localized").Indexed());
-                    contentDefinitionManager.AlterTypeDefinition("SandboxPage", cfg => cfg.DisplayedAs("Sandbox Page").WithPart("HasComments").WithPart("HasTags").WithPart("Localized").Indexed());
-                    contentDefinitionManager.AlterPartDefinition("BodyAspect", cfg => cfg.WithSetting("BodyPartSettings.FlavorDefault", BodyPartSettings.FlavorDefaultDefault));
+                    contentDefinitionManager.AlterTypeDefinition("BlogPost", cfg => cfg
+                        .DisplayedAs("Blog Post")
+                        .WithPart("HasComments")
+                        .WithPart("HasTags")
+                        .WithPart("Localized")
+                        .Indexed());
+                    contentDefinitionManager.AlterTypeDefinition("Page", cfg => cfg
+                        .DisplayedAs("Page")
+                        .WithPart("CommonAspect")
+                        .WithPart("PublishLaterPart")
+                        .WithPart("IsRoutable")
+                        .WithPart("BodyAspect")
+                        .WithPart("HasComments")
+                        .WithPart("HasTags")
+                        .WithPart("Localized")
+                        .Indexed());
+                    contentDefinitionManager.AlterPartDefinition("BodyAspect", cfg => cfg
+                        .WithSetting("BodyPartSettings.FlavorDefault", BodyPartSettings.FlavorDefaultDefault));
 
                     // create home page as a CMS page
                     var page = contentManager.Create("Page", VersionOptions.Draft);
