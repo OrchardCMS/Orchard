@@ -46,7 +46,9 @@ namespace Orchard.Blogs.Handlers {
                     return;
                 }
 
-                var containerId = requestContext.HttpContext.Request.Form["containerId"];
+                //todo: don't get at the container form data directly. right now the container is set in the common driver editor (updater)
+                //todo: which is too late for what's needed (currently) in this handler
+                var containerId = requestContext.HttpContext.Request.Form["CommonAspect.containerId"];
                 if (!string.IsNullOrEmpty(containerId)) {
                     int cId;
                     if (int.TryParse(containerId, out cId)) {

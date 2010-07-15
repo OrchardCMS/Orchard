@@ -77,12 +77,6 @@ namespace Orchard.Blogs.Drivers {
                                             };
         }
 
-        protected override DriverResult Display(BlogPost post, string displayType) {
-            return Combined(
-                ContentItemTemplate("Items/Blogs.BlogPost").LongestMatch(displayType, "Summary", "SummaryAdmin"),
-                ContentPartTemplate(post, "Parts/Blogs.BlogPost.Metadata").LongestMatch(displayType, "Summary", "SummaryAdmin").Location("meta", "1"));
-        }
-
         protected override DriverResult Editor(BlogPost post) {
             return ContentItemTemplate("Items/Blogs.BlogPost");
         }

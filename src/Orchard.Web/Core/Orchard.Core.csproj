@@ -65,6 +65,7 @@
     <Compile Include="Common\Drivers\BodyDriver.cs" />
     <Compile Include="Common\Drivers\CommonDriver.cs" />
     <Compile Include="Common\Drivers\TextFieldDriver.cs" />
+    <Compile Include="Common\Extensions\HtmlHelperExtensions.cs" />
     <Compile Include="Common\Fields\TextField.cs" />
     <Compile Include="Common\Services\ICommonService.cs" />
     <Compile Include="Common\Services\CommonService.cs" />
