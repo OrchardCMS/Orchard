@@ -31,6 +31,19 @@ namespace Orchard.Specs.Hosting {
                 .ShallowCopy("*.dll", _tempSite.Combine("bin"))
                 .ShallowCopy("*.pdb", _tempSite.Combine("bin"));
 
+            // Copy SqlCe binaries
+            if (_orchardWebPath.Combine("bin").Combine("x86").IsDirectory) {
+                _orchardWebPath.Combine("bin").Combine("x86")
+                    .ShallowCopy("*.dll", _tempSite.Combine("bin").Combine("x86"))
+                    .ShallowCopy("*.pdb", _tempSite.Combine("bin").Combine("x86"));
+            }
+
+            if (_orchardWebPath.Combine("bin").Combine("amd64").IsDirectory) {
+                _orchardWebPath.Combine("bin").Combine("amd64")
+                    .ShallowCopy("*.dll", _tempSite.Combine("bin").Combine("amd64"))
+                    .ShallowCopy("*.pdb", _tempSite.Combine("bin").Combine("amd64"));
+            }
+
             baseDir
                 .ShallowCopy("*.dll", _tempSite.Combine("bin"))
                 .ShallowCopy("*.exe", _tempSite.Combine("bin"))
@@ -54,7 +67,18 @@ namespace Orchard.Specs.Hosting {
         public void CopyExtension(string extensionFolder, string extensionName) {
             var sourceModule = _orchardWebPath.Combine(extensionFolder).Combine(extensionName);
             var targetModule = _tempSite.Combine(extensionFolder).Combine(extensionName);
+
             sourceModule.ShallowCopy("*.txt", targetModule);
+
+            //sourceModule.ShallowCopy("*.csproj", targetModule);
+            //sourceModule.DeepCopy("*.cs", targetModule);
+
+            if (sourceModule.Combine("bin").IsDirectory) {
+                sourceModule.Combine("bin").ShallowCopy("*.dll", targetModule.Combine("bin"));
+                sourceModule.Combine("bin").ShallowCopy("*.exe", targetModule.Combine("bin"));
+                sourceModule.Combine("bin").ShallowCopy("*.pdb", targetModule.Combine("bin"));
+            }
+
             if (sourceModule.Combine("Views").IsDirectory)
                 sourceModule.Combine("Views").DeepCopy(targetModule.Combine("Views"));
         }
