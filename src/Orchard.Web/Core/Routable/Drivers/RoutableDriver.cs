@@ -60,7 +60,10 @@ namespace Orchard.Core.Routable.Drivers {
                 model.DisplayLeadingPath = path.Substring(0, path.Length - part.Slug.Length);
             }
             else {
-                model.DisplayLeadingPath = GetContainerSlug(part) + "/";
+                var containerSlug = GetContainerSlug(part);
+                model.DisplayLeadingPath = !string.IsNullOrWhiteSpace(containerSlug)
+                    ? string.Format("{0}/", containerSlug)
+                    : "";
             }
 
             return ContentPartTemplate(model, TemplateName, Prefix).Location("primary", "before.5");
