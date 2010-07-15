@@ -55,8 +55,8 @@ namespace Orchard.Data {
         }
 
         public Configuration GetConfiguration() {
-            lock ( this ) {
-                if ( _configuration == null ) {
+            lock (this) {
+                if (_configuration == null) {
                     _configuration = BuildConfiguration();
                 }
             }
@@ -73,15 +73,10 @@ namespace Orchard.Data {
         private Configuration BuildConfiguration() {
             var parameters = GetSessionFactoryParameters();
 
-            var config = _sessionConfigurationCache.GetConfiguration(_shellSettings.Name);
-
-            if ( config == null ) {
-                config = _dataServicesProviderFactory
+            var config = _sessionConfigurationCache.GetConfiguration(() =>
+                _dataServicesProviderFactory
                     .CreateProvider(parameters)
-                    .BuildConfiguration(parameters);
-
-                _sessionConfigurationCache.StoreConfiguration(_shellSettings.Name, config);
-            }
+                    .BuildConfiguration(parameters));
 
             return config;
         }

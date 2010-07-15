@@ -1,8 +1,8 @@
+using System;
 using NHibernate.Cfg;
-using Orchard.Environment.ShellBuilders.Models;
 
 namespace Orchard.Data {
-    public interface ISessionConfigurationCache {
-        Configuration GetConfiguration(ShellBlueprint shellBlueprint);
+    public interface ISessionConfigurationCache : ISingletonDependency {
+        Configuration GetConfiguration(Func<Configuration> builder);
     }
 }

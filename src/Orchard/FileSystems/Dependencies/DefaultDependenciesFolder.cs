@@ -13,13 +13,11 @@ namespace Orchard.FileSystems.Dependencies {
         private const string FileName = "dependencies.xml";
         private readonly ICacheManager _cacheManager;
         private readonly IAppDataFolder _appDataFolder;
-        private readonly ISessionConfigurationCache _sessionConfigurationCache;
         private readonly InvalidationToken _writeThroughToken;
 
-        public DefaultDependenciesFolder(ICacheManager cacheManager, IAppDataFolder appDataFolder, ISessionConfigurationCache sessionConfigurationCache) {
+        public DefaultDependenciesFolder(ICacheManager cacheManager, IAppDataFolder appDataFolder) {
             _cacheManager = cacheManager;
             _appDataFolder = appDataFolder;
-            _sessionConfigurationCache = sessionConfigurationCache;
             _writeThroughToken = new InvalidationToken();
             T = NullLocalizer.Instance;
         }
@@ -52,8 +50,8 @@ namespace Orchard.FileSystems.Dependencies {
         public void StoreDescriptors(IEnumerable<DependencyDescriptor> dependencyDescriptors) {
             var existingDescriptors = LoadDescriptors().OrderBy(d => d.Name);
             var newDescriptors = dependencyDescriptors.OrderBy(d => d.Name);
+
             if (!newDescriptors.SequenceEqual(existingDescriptors, new DependencyDescriptorComparer())) {
-                _sessionConfigurationCache.DeleteAll();
                 WriteDependencies(PersistencePath, dependencyDescriptors);
             }
         }
