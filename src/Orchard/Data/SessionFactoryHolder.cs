@@ -1,6 +1,4 @@
 ﻿using System;
-using System.IO;
-using System.Runtime.Serialization.Formatters.Binary;
 using NHibernate;
 using NHibernate.Cfg;
 using Orchard.Data;
@@ -16,51 +14,6 @@ namespace Orchard.Data {
         ISessionFactory GetSessionFactory();
         Configuration GetConfiguration();
         SessionFactoryParameters GetSessionFactoryParameters();
-    }
-
-    public interface ISessionConfigurationCache {
-        void StoreConfig(string shellName, Configuration config);
-        void DeleteConfig(string shellName);
-        Configuration GetConfiguration(string shellName);
-    }
-
-    public class SessionConfigurationCache : ISessionConfigurationCache {
-        private readonly IAppDataFolder _appDataFolder;
-
-        public SessionConfigurationCache(IAppDataFolder appDataFolder) {
-            _appDataFolder = appDataFolder;
-        }
-
-        public void StoreConfig(string shellName, Configuration config) {
-            var filename = GetFileName(shellName);
-
-            using ( var stream = File.OpenWrite(filename) ) {
-                new BinaryFormatter().Serialize(stream, config);
-            }
-        }
-
-        public void DeleteConfig(string shellName) {
-            var filename = GetFileName(shellName);
-            if(File.Exists(filename)) {
-                File.Delete(filename);
-            }
-        }
-
-        public Configuration GetConfiguration(string shellName) {
-            var filename = GetFileName(shellName);
-
-            if (!_appDataFolder.FileExists(filename)) {
-                return null;
-            }
-            
-            using (var stream = File.OpenRead(filename)) {
-                return new BinaryFormatter().Deserialize(stream) as Configuration;
-            }
-        }
-
-        private string GetFileName(string shellName) {
-            return _appDataFolder.MapPath(_appDataFolder.Combine("Sites", shellName, "mappings.bin"));
-        }
     }
 
     public class SessionFactoryHolder : ISessionFactoryHolder {
@@ -127,7 +80,7 @@ namespace Orchard.Data {
                     .CreateProvider(parameters)
                     .BuildConfiguration(parameters);
 
-                _sessionConfigurationCache.StoreConfig(_shellSettings.Name, config);
+                _sessionConfigurationCache.StoreConfiguration(_shellSettings.Name, config);
             }
 
             return config;

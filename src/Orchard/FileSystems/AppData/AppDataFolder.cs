@@ -138,6 +138,10 @@ namespace Orchard.FileSystems.AppData {
             return File.Exists(CombineToPhysicalPath(path));
         }
 
+        public bool DirectoryExists(string path) {
+            return Directory.Exists(CombineToPhysicalPath(path));
+        }
+
         public IEnumerable<string> ListFiles(string path) {
             var directoryPath = CombineToPhysicalPath(path);
             if (!Directory.Exists(directoryPath))

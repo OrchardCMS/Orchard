@@ -26,6 +26,7 @@ namespace Orchard.FileSystems.AppData {
         DateTime GetFileLastWriteTimeUtc(string path);
 
         void CreateDirectory(string path);
+        bool DirectoryExists(string path);
 
         IVolatileToken WhenPathChanges(string path);
 

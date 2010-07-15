@@ -97,6 +97,10 @@ namespace Orchard.Tests.Stubs {
             _fileSystem.CreateDirectoryEntry(path);
         }
 
+        public bool DirectoryExists(string path) {
+            return _fileSystem.GetDirectoryEntry(path) != null;
+        }
+
         public IVolatileToken WhenPathChanges(string path) {
             return _fileSystem.WhenPathChanges(path);
         }

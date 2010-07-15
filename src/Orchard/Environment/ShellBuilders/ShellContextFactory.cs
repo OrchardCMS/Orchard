@@ -74,7 +74,7 @@ namespace Orchard.Environment.ShellBuilders {
             if (currentDescriptor != null && knownDescriptor.SerialNumber != currentDescriptor.SerialNumber) {
                 Logger.Information("Newer descriptor obtained. Rebuilding shell container.");
 
-                _sessionConfigurationCache.DeleteConfig(settings.Name);
+                _sessionConfigurationCache.DeleteConfiguration(settings.Name);
                 _shellDescriptorCache.Store(settings.Name, currentDescriptor);
                 blueprint = _compositionStrategy.Compose(settings, currentDescriptor);
                 shellScope = _shellContainerFactory.CreateContainer(settings, blueprint);
