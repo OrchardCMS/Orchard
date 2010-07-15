@@ -82,6 +82,7 @@
     <Content Include="Content\Admin\images\disabled.gif" />
     <Content Include="Content\Admin\images\enabled.gif" />
     <Content Include="Module.txt" />
+    <Content Include="Styles\admin.css" />
     <Content Include="Views\Admin\Add.ascx" />
     <Content Include="Views\Admin\Edit.ascx" />
     <Content Include="Views\Admin\DisplayTemplates\ActionsForUninitialized.ascx" />
