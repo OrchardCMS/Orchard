@@ -8,7 +8,8 @@
     <SrcFolder>$(MSBuildProjectDirectory)\src</SrcFolder>
     <BuildFolder>$(MSBuildProjectDirectory)\build</BuildFolder>
     <SqlCeFolder>$(MSBuildProjectDirectory)\lib\sqlce</SqlCeFolder>
-    <SourceFolder>$(MSBuildProjectDirectory)\artifacts\Source</SourceFolder>
+    <SourceArtifactFolder>$(MSBuildProjectDirectory)\artifacts\Source</SourceArtifactFolder>
+    <MsDeployArtifactFolder>$(MSBuildProjectDirectory)\artifacts\MsDeploy</MsDeployArtifactFolder>
 
     <CompileFolder>$(BuildFolder)\Compile</CompileFolder>
     <WebSitesFolder>$(CompileFolder)\_PublishedWebsites</WebSitesFolder>
@@ -174,10 +175,10 @@
 
     </ItemGroup>
 
-    <MakeDir Directories="$(WebPIFolder);$(SourceFolder)"/>
+    <MakeDir Directories="$(MsDeployArtifactFolder);$(SourceArtifactFolder)"/>
 
-    <Zip Files="@(Zip-Stage)" WorkingDirectory="$(StageFolder)" ZipFileName="$(WebPIFolder)\Orchard.Web.zip" />
-    <Zip Files="@(Zip-Source)" WorkingDirectory="$(MSBuildProjectDirectory)" ZipFileName="$(SourceFolder)\Orchard.Source.zip" />
+    <Zip Files="@(Zip-MsDeploy)" WorkingDirectory="$(MsDeployFolder)" ZipFileName="$(MsDeployArtifactFolder)\Orchard.Web.zip" />
+    <Zip Files="@(Zip-Source)" WorkingDirectory="$(MSBuildProjectDirectory)" ZipFileName="$(SourceArtifactFolder)\Orchard.Source.zip" />
   </Target>
 
   <!-- Profiling -->
