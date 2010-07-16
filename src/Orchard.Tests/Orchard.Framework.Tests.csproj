@@ -172,6 +172,7 @@
     <Compile Include="ContentManagement\Handlers\Coordinators\ContentPartDriverCoordinatorTests.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="ContentManagement\Records\MegaRecord.cs" />
     <Compile Include="ContentManagement\Records\DeltaRecord.cs">
       <SubType>Code</SubType>
     </Compile>

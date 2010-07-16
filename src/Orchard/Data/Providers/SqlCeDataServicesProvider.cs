@@ -1,6 +1,11 @@
 using System;
+using System.Collections.Generic;
+using System.Data;
 using System.IO;
+using System.Reflection;
 using FluentNHibernate.Cfg.Db;
+using NHibernate.Driver;
+using NHibernate.SqlTypes;
 
 namespace Orchard.Data.Providers {
     public class SqlCeDataServicesProvider : AbstractDataServicesProvider {
@@ -36,6 +41,7 @@ namespace Orchard.Data.Providers {
             }
 
             persistence = persistence.ConnectionString(localConnectionString);
+            persistence = persistence.Driver(typeof(OrchardSqlServerCeDriver).AssemblyQualifiedName);
             return persistence;
         }
 
@@ -64,5 +70,35 @@ namespace Orchard.Data.Providers {
             engine.GetType().GetMethod("Dispose").Invoke(engine, null);
         }
 
+        public class OrchardSqlServerCeDriver : SqlServerCeDriver {
+            private PropertyInfo _dbParamSqlDbTypeProperty;
+
+            public override void Configure(IDictionary<string, string> settings) {
+                base.Configure(settings);
+                using ( var cmd = CreateCommand() ) {
+                    var dbParam = cmd.CreateParameter();
+                    _dbParamSqlDbTypeProperty = dbParam.GetType().GetProperty("SqlDbType");
+                }
+            }
+
+            protected override void InitializeParameter(IDbDataParameter dbParam, string name, SqlType sqlType) {
+                base.InitializeParameter(dbParam, name, sqlType);
+                if (sqlType.Length <= 4000) {
+                    return;
+                }
+
+                switch(sqlType.DbType) {
+                    case DbType.String:
+                        _dbParamSqlDbTypeProperty.SetValue(dbParam, SqlDbType.NText, null);
+                        break;
+                    case DbType.AnsiString:
+                        _dbParamSqlDbTypeProperty.SetValue(dbParam, SqlDbType.Text, null);
+                        break;
+                    case DbType.Byte:
+                        _dbParamSqlDbTypeProperty.SetValue(dbParam, SqlDbType.Image, null);
+                        break;
+                }
+            }
+        }
     }
 }
