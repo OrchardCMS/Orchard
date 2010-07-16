@@ -177,7 +177,7 @@ namespace Orchard.Tests.ContentManagement {
         [Test]
         public void BigStringsShouldNotBeTruncated() {
             var megaRepository = _container.Resolve<IRepository<MegaRecord>>();
-            var mega = new MegaRecord() { BigStuff = new string('x', 4000) };
+            var mega = new MegaRecord() { BigStuff = new string('x', 20000) };
             megaRepository.Create(mega);
             _session.Flush();
         }
