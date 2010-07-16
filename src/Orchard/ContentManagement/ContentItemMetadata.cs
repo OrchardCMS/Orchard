@@ -13,6 +13,7 @@ namespace Orchard.ContentManagement {
         public RouteValueDictionary DisplayRouteValues { get; set; }
         public RouteValueDictionary EditorRouteValues { get; set; }
         public RouteValueDictionary CreateRouteValues { get; set; }
+        public RouteValueDictionary RemoveRouteValues { get; set; }
 
         public IEnumerable<string> DisplayGroups { get; set; }
         public IEnumerable<string> EditorGroups { get; set; }
@@ -41,6 +42,14 @@ namespace Orchard.ContentManagement {
                 {"Controller", "Admin"},
                 {"Action", "Create"},
                 {"id", item.ContentItem.ContentType}
+            };
+        }
+
+        private static RouteValueDictionary GetRemoveRouteValues(IContent item) {
+            return new RouteValueDictionary {
+                {"Area", "Contents"},
+                {"Controller", "Admin"},
+                {"Action", "Remove"}
             };
         }
     }

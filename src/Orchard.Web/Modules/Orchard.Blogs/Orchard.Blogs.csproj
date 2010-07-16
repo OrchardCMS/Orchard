@@ -74,7 +74,6 @@
     <Compile Include="Controllers\BlogPostController.cs" />
     <Compile Include="Drivers\BlogPostDriver.cs" />
     <Compile Include="Extensions\FeedManagerExtensions.cs" />
-    <Compile Include="Extensions\HtmlHelperExtensions.cs" />
     <Compile Include="Extensions\UrlHelperExtensions.cs" />
     <Compile Include="Filters\ArchivesFilter.cs" />
     <Compile Include="Models\ArchiveData.cs" />
@@ -136,16 +135,12 @@
     <Content Include="Views\DisplayTemplates\Parts\Blogs.Blog.Manage.ascx" />
     <Content Include="Views\DisplayTemplates\Parts\Blogs.BlogPost.List.ascx" />
     <Content Include="Views\DisplayTemplates\Items\Blogs.Blog.Summary.ascx" />
-    <Content Include="Views\DisplayTemplates\Parts\Blogs.BlogPost.Metadata.ascx" />
     <Content Include="Views\DisplayTemplates\Parts\Blogs.Blog.Description.ascx" />
     <Content Include="Views\DisplayTemplates\Parts\Blogs.Blog.Metadata.ascx" />
-    <Content Include="Views\DisplayTemplates\Parts\Blogs.BlogPost.Metadata.SummaryAdmin.ascx" />
-    <Content Include="Views\DisplayTemplates\Parts\Blogs.BlogPost.Metadata.Summary.ascx" />
     <Content Include="Views\BlogPost\Item.ascx" />
     <Content Include="Views\BlogAdmin\Create.ascx" />
     <Content Include="Views\BlogAdmin\Edit.ascx" />
     <Content Include="Views\Blog\Item.ascx" />
-    <Content Include="Views\DisplayTemplates\Items\Blogs.BlogPost.SummaryAdmin.ascx" />
     <Content Include="Views\EditorTemplates\Parts\Blogs.Blog.Fields.ascx" />
     <Content Include="Views\EditorTemplates\Items\Blogs.Blog.ascx" />
     <Content Include="Views\EditorTemplates\Items\Blogs.BlogPost.ascx" />

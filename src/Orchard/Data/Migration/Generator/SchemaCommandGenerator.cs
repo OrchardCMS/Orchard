@@ -1,22 +1,21 @@
 ﻿using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Reflection;
 using NHibernate.Cfg;
 using NHibernate.Mapping;
 using NHibernate.Tool.hbm2ddl;
+using Orchard.ContentManagement.Records;
 using Orchard.Data.Migration.Schema;
 using Orchard.Data.Providers;
 using NHibernate.Dialect;
 
 namespace Orchard.Data.Migration.Generator {
     public class SchemaCommandGenerator : ISchemaCommandGenerator {
-        private readonly IDataServicesProviderFactory _dataServicesProviderFactory;
         private readonly ISessionFactoryHolder _sessionFactoryHolder;
 
         public SchemaCommandGenerator(
-            IDataServicesProviderFactory dataServicesProviderFactory,
             ISessionFactoryHolder sessionFactoryHolder) {
-            _dataServicesProviderFactory = dataServicesProviderFactory;
             _sessionFactoryHolder = sessionFactoryHolder;
         }
 
@@ -30,7 +29,7 @@ namespace Orchard.Data.Migration.Generator {
                 yield break;
             }
 
-            var configuration = _dataServicesProviderFactory.CreateProvider(parameters).BuildConfiguration(parameters);
+            var configuration = _sessionFactoryHolder.GetConfiguration();
             Dialect.GetDialect(configuration.Properties);
             var mapping = configuration.BuildMapping();
 
@@ -42,7 +41,10 @@ namespace Orchard.Data.Migration.Generator {
 
             foreach(var table in tables.Where(t => parameters.RecordDescriptors.Any(rd => rd.Feature.Descriptor.Name == feature && rd.TableName == t.Name))) {
                 string tableName = table.Name;
-                if(tableName.StartsWith(prefix)) {
+                var recordType = parameters.RecordDescriptors.Where(rd => rd.Feature.Descriptor.Name == feature && rd.TableName == tableName).First().Type;
+                var isContentPart = typeof(ContentPartRecord).IsAssignableFrom(recordType);
+
+                if ( tableName.StartsWith(prefix) ) {
                     tableName = tableName.Substring(prefix.Length);
                 }
 
@@ -59,10 +61,17 @@ namespace Orchard.Data.Migration.Generator {
                     command.Column(column.Name, sqlType.DbType,
                         action => {
                             if (table1.PrimaryKey.Columns.Any(c => c.Name == column1.Name)) {
-                                action.PrimaryKey().Identity();
+                                action.PrimaryKey();
+
+                                if ( !isContentPart ) {
+                                    action.Identity();
+                                }
                             }
 
-                            if (column1.IsLengthDefined()) {
+                            
+                            if ( column1.IsLengthDefined() 
+                                && new DbType[] { DbType.StringFixedLength, DbType.String, DbType.AnsiString, DbType.AnsiStringFixedLength }.Contains(sqlType.DbType) 
+                                && column1.Length != 255 ) {
                                 action.WithLength(column1.Length);
                             }
 
@@ -92,8 +101,7 @@ namespace Orchard.Data.Migration.Generator {
         /// Automatically updates a db to a functionning schema
         /// </summary>
         public void UpdateDatabase() {
-            var parameters = _sessionFactoryHolder.GetSessionFactoryParameters();
-            var configuration = _dataServicesProviderFactory.CreateProvider(parameters).BuildConfiguration(parameters);
+            var configuration = _sessionFactoryHolder.GetConfiguration();
             new SchemaUpdate(configuration).Execute(false, true);
         }
 
@@ -101,8 +109,7 @@ namespace Orchard.Data.Migration.Generator {
         /// Automatically creates a db with a functionning schema
         /// </summary>
         public void CreateDatabase() {
-            var parameters = _sessionFactoryHolder.GetSessionFactoryParameters();
-            var configuration = _dataServicesProviderFactory.CreateProvider(parameters).BuildConfiguration(parameters);
+            var configuration = _sessionFactoryHolder.GetConfiguration();
             new SchemaExport(configuration).Execute(false, true, false);
         }
 

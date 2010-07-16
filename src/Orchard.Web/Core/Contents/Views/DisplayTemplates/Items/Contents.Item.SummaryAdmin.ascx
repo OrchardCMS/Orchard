@@ -12,7 +12,8 @@
                 <%:Html.Hidden("id", Model.Item.Id, new { id = "" })%>
                 <button type="submit"><%:T("Remove") %></button><%
             } %>
+            <br /><% Html.Zone("meta"); %>
         </div>
         <div style="clear:both;"></div>
-        <% Html.Zone("primary"); %>
+        <% Html.ZonesAny(); %>
     </div>

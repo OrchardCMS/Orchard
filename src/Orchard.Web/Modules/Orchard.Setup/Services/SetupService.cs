@@ -24,7 +24,6 @@ using Orchard.Reports.Services;
 using Orchard.Security;
 using Orchard.Settings;
 using Orchard.Themes;
-using Orchard.UI.Notify;
 using Orchard.Environment.State;
 using Orchard.Data.Migration;
 
@@ -39,7 +38,6 @@ namespace Orchard.Setup.Services {
 
         public SetupService(
             ShellSettings shellSettings,
-            INotifier notifier,
             IOrchardHost orchardHost,
             IShellSettingsManager shellSettingsManager,
             IShellContainerFactory shellContainerFactory,
