@@ -7,6 +7,8 @@ using System.Web.Routing;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Aspects;
 using Orchard.ContentManagement.MetaData;
+using Orchard.ContentManagement.Records;
+using Orchard.Core.Common.Models;
 using Orchard.Core.Contents.ViewModels;
 using Orchard.Data;
 using Orchard.Localization;
@@ -43,6 +45,9 @@ namespace Orchard.Core.Contents.Controllers {
         public ILogger Logger { get; set; }
 
         public ActionResult List(ListContentsViewModel model) {
+            if (model.ContainerId != null && _contentManager.GetLatest((int)model.ContainerId) == null)
+                    return new NotFoundResult();
+
             const int pageSize = 20;
             var skip = (Math.Max(model.Page ?? 0, 1) - 1) * pageSize;
 
@@ -58,6 +63,9 @@ namespace Orchard.Core.Contents.Controllers {
                                             : contentTypeDefinition.Name;
                 query = query.ForType(model.TypeName);
             }
+
+            if (model.ContainerId != null)
+                query = query.Join<CommonRecord>().Where(cr => cr.Container.Id == model.ContainerId);
 
             var contentItems = query.Slice(skip, pageSize);
 
