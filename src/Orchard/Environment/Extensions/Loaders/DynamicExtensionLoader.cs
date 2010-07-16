@@ -47,6 +47,16 @@ namespace Orchard.Environment.Extensions.Loaders {
             return GetDependencies(dependency.VirtualPath);
         }
 
+        public override IEnumerable<string> GetFileDependencies(DependencyDescriptor dependency, string virtualPath){
+            var path1 = virtualPath.StartsWith("~") ? virtualPath : "~" + virtualPath;
+            var path2 = dependency.VirtualPath.StartsWith("~") ? dependency.VirtualPath : "~" + dependency.VirtualPath;
+
+            if (StringComparer.OrdinalIgnoreCase.Equals(path1, path2)) {
+                return GetSourceFiles(virtualPath);
+            }
+            return base.GetFileDependencies(dependency, virtualPath);
+        }
+
         public override void Monitor(ExtensionDescriptor descriptor, Action<IVolatileToken> monitor) {
             // Monitor .csproj and all .cs files
             string projectPath = GetProjectPath(descriptor);
