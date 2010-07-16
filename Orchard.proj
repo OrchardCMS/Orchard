@@ -13,6 +13,7 @@
     <CompileFolder>$(BuildFolder)\Compile</CompileFolder>
     <WebSitesFolder>$(CompileFolder)\_PublishedWebsites</WebSitesFolder>
     <StageFolder>$(BuildFolder)\Stage</StageFolder>
+    <StageFolderOrchard>$(StageFolder)\Orchard</StageFolderOrchard>
     <ProfilingFolder>$(BuildFolder)\Profiling</ProfilingFolder>
 
     <BuildPlatform Condition="$(ProgramW6432) != ''">x64</BuildPlatform>
@@ -97,13 +98,13 @@
       <Stage-License Include="$(MSBuildProjectDirectory)\*.txt" />
     </ItemGroup>
 
-    <Copy SourceFiles="@(Stage-Web);@(Stage-License)" DestinationFolder="$(StageFolder)\%(RecursiveDir)" />
-    <Copy SourceFiles="@(Stage-Core)" DestinationFolder="$(StageFolder)\Core\%(RecursiveDir)" />
-    <Copy SourceFiles="@(Stage-Modules)" DestinationFolder="$(StageFolder)\Modules\%(RecursiveDir)" />
+    <Copy SourceFiles="@(Stage-Web);@(Stage-License)" DestinationFolder="$(StageFolderOrchard)\%(RecursiveDir)" />
+    <Copy SourceFiles="@(Stage-Core)" DestinationFolder="$(StageFolderOrchard)\Core\%(RecursiveDir)" />
+    <Copy SourceFiles="@(Stage-Modules)" DestinationFolder="$(StageFolderOrchard)\Modules\%(RecursiveDir)" />
 
 
     <!-- extra processing of the staged csproj file -->
-    <StageProjectAlteration ProjectFileName="$(StageFolder)\Orchard.Web.csproj" AddContentFiles="
+    <StageProjectAlteration ProjectFileName="$(StageFolderOrchard)\Orchard.Web.csproj" AddContentFiles="
         @(Stage-Modules->'Modules\%(RecursiveDir)%(Filename)%(Extension)');
         @(Stage-Core->'Core\%(RecursiveDir)%(Filename)%(Extension)')">
       <Output TaskParameter="ExtraFiles" ItemName="StageProjectAlteration-ExtraFiles"/>
@@ -111,21 +112,21 @@
 
     <!-- extra processing of the staged config files -->
 
-    <XmlUpdate XmlFileName="$(StageFolder)\web.config"
+    <XmlUpdate XmlFileName="$(StageFolderOrchard)\web.config"
       XPath="/configuration/system.web/compilation/@debug"
       Value="false" />
 
-    <XmlUpdate XmlFileName="$(StageFolder)\Config\Diagnostics.config"
+    <XmlUpdate XmlFileName="$(StageFolderOrchard)\Config\Diagnostics.config"
       XPath="/system.diagnostics/trace/@autoflush"
       Value="false" />
 
-    <XmlUpdate XmlFileName="$(StageFolder)\Config\Diagnostics.config"
+    <XmlUpdate XmlFileName="$(StageFolderOrchard)\Config\Diagnostics.config"
       XPath="/system.diagnostics/sources/source/@switchValue"
       Value="Error" />
 
     <!-- move over extra non-content files the csproj referenced -->
     <Copy SourceFiles="@(StageProjectAlteration-ExtraFiles->'$(SrcFolder)\Orchard.Web\%(Identity)')"
-        DestinationFolder="$(StageFolder)\%(RecursiveDir)"/>
+        DestinationFolder="$(StageFolderOrchard)\%(RecursiveDir)"/>
 
   </Target>
 
@@ -163,7 +164,7 @@
 
   <Target Name="Profiling-Stage">
     <ItemGroup>
-      <Profiling-Web Include="$(StageFolder)\**\*" />
+      <Profiling-Web Include="$(StageFolderOrchard)\**\*" />
     </ItemGroup>
 
     <Copy SourceFiles="@(Profiling-Web)" DestinationFolder="$(ProfilingFolder)\%(RecursiveDir)"/>
