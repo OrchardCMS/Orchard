@@ -181,6 +181,7 @@
     <Compile Include="ContentManagement\Records\GammaRecord.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="DataMigration\SchemaCommandGeneratorTests.cs" />
     <Compile Include="DataMigration\SchemaBuilderTests.cs" />
     <Compile Include="DataMigration\DataMigrationTests.cs" />
     <Compile Include="DataMigration\Utilities\NullInterpreter.cs" />
@@ -254,6 +255,10 @@
     <Compile Include="Utility\ReflectTests.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Orchard.Web\Modules\Orchard.DevTools\Orchard.DevTools.csproj">
+      <Project>{67C1D3AF-A0EC-46B2-BAE1-DF1DA8E0B890}</Project>
+      <Name>Orchard.DevTools</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Orchard.Web\Modules\Orchard.Users\Orchard.Users.csproj">
       <Project>{79AED36E-ABD0-4747-93D3-8722B042454B}</Project>
       <Name>Orchard.Users</Name>
