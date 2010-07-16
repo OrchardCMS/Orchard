@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Web.Mvc;
 using System.Web.Routing;
 using Orchard.ContentManagement;
@@ -62,6 +64,50 @@ namespace Orchard.Core.Contents.Controllers {
             model.Entries = contentItems.Select(BuildEntry).ToList();
 
             return View("List", model);
+        }
+
+        [HttpPost, ActionName("List")]
+        [FormValueRequired("submit.BulkEdit")]
+        public ActionResult ListPOST(ContentOptions options, IEnumerable<int> itemIds) {
+            switch (options.BulkAction) {
+                case ContentsBulkAction.None:
+                    break;
+                case ContentsBulkAction.PublishNow:
+                    if (!Services.Authorizer.Authorize(Permissions.PublishContent, T("Couldn't publish selected content.")))
+                        return new HttpUnauthorizedResult();
+
+                    foreach (var item in itemIds.Select(itemId => _contentManager.GetLatest(itemId))) {
+                        _contentManager.Publish(item);
+                        Services.ContentManager.Flush();
+                    }
+                    Services.Notifier.Information(T("Content successfully published."));
+                    break;
+                case ContentsBulkAction.Unpublish:
+                    if (!Services.Authorizer.Authorize(Permissions.PublishContent, T("Couldn't unpublish selected content.")))
+                        return new HttpUnauthorizedResult();
+
+                    foreach (var item in itemIds.Select(itemId => _contentManager.GetLatest(itemId))) {
+                        _contentManager.Unpublish(item);
+                        Services.ContentManager.Flush();
+                    }
+                    Services.Notifier.Information(T("Content successfully unpublished."));
+                    break;
+                case ContentsBulkAction.Remove:
+                    if (!Services.Authorizer.Authorize(Permissions.PublishContent, T("Couldn't delete selected content.")))
+                        return new HttpUnauthorizedResult();
+
+                    foreach (var item in itemIds.Select(itemId => _contentManager.GetLatest(itemId))) {
+                        _contentManager.Remove(item);
+                        Services.ContentManager.Flush();
+                    }
+                    Services.Notifier.Information(T("Content successfully removed."));
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+
+            // todo: persist filter & order
+            return RedirectToAction("List");
         }
 
         private ListContentsViewModel.Entry BuildEntry(ContentItem contentItem) {
@@ -220,6 +266,19 @@ namespace Orchard.Core.Contents.Controllers {
 
         void IUpdateModel.AddModelError(string key, LocalizedString errorMessage) {
             ModelState.AddModelError(key, errorMessage.ToString());
+        }
+    }
+
+    public class FormValueRequiredAttribute : ActionMethodSelectorAttribute {
+        private readonly string _submitButtonName;
+
+        public FormValueRequiredAttribute(string submitButtonName) {
+            _submitButtonName = submitButtonName;
+        }
+
+        public override bool IsValidForRequest(ControllerContext controllerContext, MethodInfo methodInfo) {
+            var value = controllerContext.HttpContext.Request.Form[_submitButtonName];
+            return !string.IsNullOrEmpty(value);
         }
     }
 }

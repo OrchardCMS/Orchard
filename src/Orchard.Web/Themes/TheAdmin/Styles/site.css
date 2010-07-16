@@ -358,7 +358,7 @@ form.inline, form.inline fieldset { /* todo: (heskew) need something other than 
 form.inline fieldset {
     margin:0;
 }
-fieldset.bulk.actions {
+.bulk-actions {
     display:inline;
     height:auto;
     margin:0 1.4em 0 0;
@@ -380,8 +380,11 @@ label.forcheckbox {
     display:inline;
     line-height:1.8em;
 }
-fieldset.bulk.actions label, label.sub {
+.bulk-actions label, .bulk-items h3, label, label.sub {
     display:inline;
+}
+label.bulk-order {
+    text-transform:lowercase;
 }
 label span {
 	font-weight:normal;
@@ -638,13 +641,18 @@ table .button {
     -moz-box-shadow:inset 0 1px 3px #878686;
     -webkit-box-shadow:inset 0 1px 2px #878686;
     clear:both;
-    margin:1.4em 0;
+    margin:1em 0;
+    padding:0;
 }
 .contentItems li {
     border-bottom:1px solid #eaeaea;
     margin:0;
     overflow:hidden;
     padding:0 1.4em .8em;
+}
+.contentItems.bulk-items li {
+    padding-bottom:.6em;
+    padding-left:.6em;
 }
 #main .contentItems li .actions {
     color:#EAE9D9;
@@ -680,6 +688,14 @@ table .button {
 .contentItems .metadata ul {
     display:inline;
 }
+.contentItems.bulk-items .metadata, .contentItems.bulk-items .primary {
+    margin:.6em 0 0 2em;
+}
+.contentItems.bulk-items .primary {
+    clear:both;
+    float:left;
+    margin-top:0;
+}
 .contentItems .properties li {
     border:0;
     float:left;
@@ -696,6 +712,9 @@ table .button {
 }
 .contentItems .commentcount {
     line-height:2em;
+}
+#main .contentItems p {
+    margin:1em 0 0;
 }
 
 
