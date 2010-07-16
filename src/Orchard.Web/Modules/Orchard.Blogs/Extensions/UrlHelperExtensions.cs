@@ -48,8 +48,8 @@ namespace Orchard.Blogs.Extensions {
             return urlHelper.Action("Edit", "BlogAdmin", new {blogSlug, area = "Orchard.Blogs"});
         }
 
-        public static string BlogDelete(this UrlHelper urlHelper, string blogSlug) {
-            return urlHelper.Action("Delete", "BlogAdmin", new {blogSlug, area = "Orchard.Blogs"});
+        public static string BlogRemove(this UrlHelper urlHelper, string blogSlug) {
+            return urlHelper.Action("Remove", "BlogAdmin", new {blogSlug, area = "Orchard.Blogs"});
         }
 
         public static string BlogPost(this UrlHelper urlHelper, BlogPost blogPost) {

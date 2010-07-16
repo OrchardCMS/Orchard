@@ -9,7 +9,7 @@
         <a href="<%: Url.BlogPostCreate(Model.Item) %>" title="<%: T("New Post") %>"><%: T("New Post") %></a><%: T(" | ")%>
         <a href="<%: Url.BlogEdit(Model.Item.Slug) %>" title="<%: T("Settings") %>"><%: T("Settings") %></a><%: T(" | ")%>
         <%-- todo: (heskew) this is waaaaa too verbose. need template helpers for all ibuttons --%>
-        <% using (Html.BeginFormAntiForgeryPost(Url.BlogDelete(Model.Item.Slug), FormMethod.Post, new { @class = "inline link" })) { %>
+        <% using (Html.BeginFormAntiForgeryPost(Url.BlogRemove(Model.Item.Slug), FormMethod.Post, new { @class = "inline link" })) { %>
         <button type="submit" class="linkButton" title="<%: T("Remove") %>"><%: T("Remove") %></button><%
         } %>
     </div>
