@@ -3,10 +3,12 @@ using System.Web.Mvc;
 using Orchard.Data.Migration.Generator;
 using Orchard.Localization;
 using Orchard.Mvc.ViewModels;
+using Orchard.UI.Admin;
 using Orchard.UI.Notify;
 
 namespace Orchard.DevTools.Controllers {
     [ValidateInput(false)]
+    [Admin]
     public class DataMigrationController : Controller {
         private readonly ISchemaCommandGenerator _schemaCommandGenerator;
 
