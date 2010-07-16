@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Web.Mvc;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.MetaData.Models;
@@ -42,6 +43,14 @@ namespace Orchard.ContentTypes.Controllers {
         public ActionResult CreatePOST(CreateTypeViewModel viewModel) {
             if (!Services.Authorizer.Authorize(Permissions.CreateContentTypes, T("Not allowed to create a content type.")))
                 return new HttpUnauthorizedResult();
+
+            if(String.IsNullOrWhiteSpace(viewModel.DisplayName)) {
+                ModelState.AddModelError("DisplayName", T("The Content Type name can't be empty.").ToString());
+            }
+
+            if(_contentDefinitionService.GetTypes().Any(t => t.DisplayName == viewModel.DisplayName)) {
+                ModelState.AddModelError("DisplayName", T("A type with the same name already exists.").ToString());
+            }
 
             var typeViewModel = _contentDefinitionService.AddType(viewModel);
 
