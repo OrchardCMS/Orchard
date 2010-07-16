@@ -1,0 +1,5 @@
+<MSDeploy.iisApp>
+	<iisapp path="Orchard" />
+	<setAcl path="Orchard/App_Data" setAclAccess="ReadAndExecute,Write" />
+	<setAcl path="Orchard/Media" setAclAccess="ReadAndExecute,Write" />
+</MSDeploy.iisApp>

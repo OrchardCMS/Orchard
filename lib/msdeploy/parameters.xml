@@ -1,0 +1,15 @@
+<parameters>
+
+	<parameter name="Application Path" description="Full site path where you would like to install your application (i.e., Default Web Site/orchard)" defaultValue="Default Web Site/orchard" tags="iisapp">
+		<parameterEntry type="ProviderPath" scope="iisapp" match="Orchard" />
+	</parameter>
+
+	<parameter name="SetAclParameter1" description="Hidden - automatically sets write access for the app" defaultValue="{Application Path}/App_Data" tags="Hidden, NoDatabase">
+		<parameterEntry type="ProviderPath" scope="setAcl" match="Orchard/App_Data" /> 
+	</parameter>
+
+	<parameter name="SetAclParameter2" description="Hidden - automatically sets write access for the app" defaultValue="{Application Path}/Media" tags="Hidden, NoDatabase">
+		<parameterEntry type="ProviderPath" scope="setAcl" match="Orchard/Media" /> 
+	</parameter>
+
+</parameters>

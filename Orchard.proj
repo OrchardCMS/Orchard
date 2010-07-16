@@ -7,13 +7,13 @@
     <LibFolder>$(MSBuildProjectDirectory)\lib</LibFolder>
     <SrcFolder>$(MSBuildProjectDirectory)\src</SrcFolder>
     <BuildFolder>$(MSBuildProjectDirectory)\build</BuildFolder>
+    <SqlCeFolder>$(MSBuildProjectDirectory)\lib\sqlce</SqlCeFolder>
     <SourceFolder>$(MSBuildProjectDirectory)\artifacts\Source</SourceFolder>
-    <WebPIFolder>$(MSBuildProjectDirectory)\artifacts\WebPI</WebPIFolder>
 
     <CompileFolder>$(BuildFolder)\Compile</CompileFolder>
     <WebSitesFolder>$(CompileFolder)\_PublishedWebsites</WebSitesFolder>
     <StageFolder>$(BuildFolder)\Stage</StageFolder>
-    <StageFolderOrchard>$(StageFolder)\Orchard</StageFolderOrchard>
+    <MsDeployFolder>$(BuildFolder)\MsDeploy</MsDeployFolder>
     <ProfilingFolder>$(BuildFolder)\Profiling</ProfilingFolder>
 
     <BuildPlatform Condition="$(ProgramW6432) != ''">x64</BuildPlatform>
@@ -33,6 +33,7 @@
 
   <Target Name="Package">
     <CallTarget Targets="Package-Stage"/>
+    <CallTarget Targets="Package-MsDeploy"/>
     <CallTarget Targets="Package-Zip"/>
   </Target>
 
@@ -84,7 +85,7 @@
     <NUnit Assemblies="@(SpecAssemblies)" ToolPath="$(LibFolder)\nunit" />
   </Target>
 
-  <!-- Packaging -->
+  <!-- Packaging (Stage) -->
 
   <UsingTask AssemblyFile="$(CompileFolder)\MSBuild.Orchard.Tasks.dll" TaskName="MSBuild.Orchard.Tasks.StageProjectAlteration" />
 
@@ -96,15 +97,19 @@
       <Stage-Core Include="$(WebSitesFolder)\Orchard.Core\**\*" Exclude="@(Stage-Bin-Exclude)" />
       <Stage-Modules Include="$(WebSitesFolder)\**\*" Exclude="@(Stage-Web);@(Stage-Core);@(Stage-Bin-Exclude)" />
       <Stage-License Include="$(MSBuildProjectDirectory)\*.txt" />
+      <Stage-SqlCe-Native-Binaries-x86 Include="$(SqlCeFolder)\x86\*"/>
+      <Stage-SqlCe-Native-Binaries-amd64 Include="$(SqlCeFolder)\amd64\*"/>
     </ItemGroup>
 
-    <Copy SourceFiles="@(Stage-Web);@(Stage-License)" DestinationFolder="$(StageFolderOrchard)\%(RecursiveDir)" />
-    <Copy SourceFiles="@(Stage-Core)" DestinationFolder="$(StageFolderOrchard)\Core\%(RecursiveDir)" />
-    <Copy SourceFiles="@(Stage-Modules)" DestinationFolder="$(StageFolderOrchard)\Modules\%(RecursiveDir)" />
+    <Copy SourceFiles="@(Stage-Web);@(Stage-License)" DestinationFolder="$(StageFolder)\%(RecursiveDir)" />
+    <Copy SourceFiles="@(Stage-SqlCe-Native-Binaries-x86)" DestinationFolder="$(StageFolder)\bin\x86" />
+    <Copy SourceFiles="@(Stage-SqlCe-Native-Binaries-amd64)" DestinationFolder="$(StageFolder)\bin\amd64" />
+    <Copy SourceFiles="@(Stage-Core)" DestinationFolder="$(StageFolder)\Core\%(RecursiveDir)" />
+    <Copy SourceFiles="@(Stage-Modules)" DestinationFolder="$(StageFolder)\Modules\%(RecursiveDir)" />
 
 
     <!-- extra processing of the staged csproj file -->
-    <StageProjectAlteration ProjectFileName="$(StageFolderOrchard)\Orchard.Web.csproj" AddContentFiles="
+    <StageProjectAlteration ProjectFileName="$(StageFolder)\Orchard.Web.csproj" AddContentFiles="
         @(Stage-Modules->'Modules\%(RecursiveDir)%(Filename)%(Extension)');
         @(Stage-Core->'Core\%(RecursiveDir)%(Filename)%(Extension)')">
       <Output TaskParameter="ExtraFiles" ItemName="StageProjectAlteration-ExtraFiles"/>
@@ -112,22 +117,35 @@
 
     <!-- extra processing of the staged config files -->
 
-    <XmlUpdate XmlFileName="$(StageFolderOrchard)\web.config"
+    <XmlUpdate XmlFileName="$(StageFolder)\web.config"
       XPath="/configuration/system.web/compilation/@debug"
       Value="false" />
 
-    <XmlUpdate XmlFileName="$(StageFolderOrchard)\Config\Diagnostics.config"
+    <XmlUpdate XmlFileName="$(StageFolder)\Config\Diagnostics.config"
       XPath="/system.diagnostics/trace/@autoflush"
       Value="false" />
 
-    <XmlUpdate XmlFileName="$(StageFolderOrchard)\Config\Diagnostics.config"
+    <XmlUpdate XmlFileName="$(StageFolder)\Config\Diagnostics.config"
       XPath="/system.diagnostics/sources/source/@switchValue"
       Value="Error" />
 
     <!-- move over extra non-content files the csproj referenced -->
     <Copy SourceFiles="@(StageProjectAlteration-ExtraFiles->'$(SrcFolder)\Orchard.Web\%(Identity)')"
-        DestinationFolder="$(StageFolderOrchard)\%(RecursiveDir)"/>
+        DestinationFolder="$(StageFolder)\%(RecursiveDir)"/>
 
+  </Target>
+
+  <!-- Packaging (MsDeploy) -->
+  <Target Name="Package-MsDeploy">
+    <ItemGroup>
+      <MsDeploy-Folder-Input Include="$(StageFolder)\**\*" Exclude="$(StageFolder)\**\*.pdb" />
+      <MsDeploy-Parameters Include="$(LibFolder)\msdeploy\*.xml"/>
+    </ItemGroup>
+
+    <Copy SourceFiles="@(MsDeploy-Folder-Input)"
+        DestinationFolder="$(MsDeployFolder)\Orchard\%(RecursiveDir)"/>
+    <Copy SourceFiles="@(MsDeploy-Parameters)"
+        DestinationFolder="$(MsDeployFolder)"/>
   </Target>
 
   <Target Name="Package-Zip">
@@ -145,6 +163,8 @@
         " />
 
       <Zip-Stage Include="$(StageFolder)\**\*" />
+
+      <Zip-MsDeploy Include="$(MsDeployFolder)\**\*" />
 
       <Zip-Source Include="
         $(MSBuildProjectDirectory)\lib\**\*;
@@ -164,7 +184,7 @@
 
   <Target Name="Profiling-Stage">
     <ItemGroup>
-      <Profiling-Web Include="$(StageFolderOrchard)\**\*" />
+      <Profiling-Web Include="$(StageFolder)\**\*" />
     </ItemGroup>
 
     <Copy SourceFiles="@(Profiling-Web)" DestinationFolder="$(ProfilingFolder)\%(RecursiveDir)"/>
