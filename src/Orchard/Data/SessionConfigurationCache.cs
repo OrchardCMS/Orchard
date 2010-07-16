@@ -26,20 +26,17 @@ namespace Orchard.Data {
         public ILogger Logger { get; set; }
 
         public Configuration GetConfiguration(Func<Configuration> builder) {
-            var hash = ComputeHash(_shellBlueprint).Value;
+            var hash = ComputeHash().Value;
 
             // Return previous configuration if it exsists and has the same hash as
             // the current blueprint.
-            var previousConfig = ReadConfiguration(_shellSettings.Name);
+            var previousConfig = ReadConfiguration(hash);
             if (previousConfig != null) {
-                if (previousConfig.ShellName == _shellSettings.Name && previousConfig.Hash == hash) {
-                    return previousConfig.Configuration;
-                }
+                return previousConfig.Configuration;
             }
 
             // Create cache and persist it
             var cache = new ConfigurationCache {
-                ShellName = _shellSettings.Name,
                 Hash = hash,
                 Configuration = builder()
             };
@@ -50,51 +47,75 @@ namespace Orchard.Data {
 
         [Serializable]
         public class ConfigurationCache {
-            public string ShellName { get; set; }
             public string Hash { get; set; }
             public Configuration Configuration { get; set; }
         }
 
         private void StoreConfiguration(ConfigurationCache cache) {
-            var pathName = GetPathName(cache.ShellName);
+            var pathName = GetPathName(_shellSettings.Name);
 
+            var formatter = new BinaryFormatter();
             using (var stream = _appDataFolder.CreateFile(pathName)) {
-                new BinaryFormatter().Serialize(stream, cache);
+                formatter.Serialize(stream, cache.Hash);
+                formatter.Serialize(stream, cache.Configuration);
             }
         }
 
-        private ConfigurationCache ReadConfiguration(string shellName) {
-            var pathName = GetPathName(shellName);
+        private ConfigurationCache ReadConfiguration(string hash) {
+            var pathName = GetPathName(_shellSettings.Name);
 
             if (!_appDataFolder.FileExists(pathName))
                 return null;
 
             try {
+                var formatter = new BinaryFormatter();
                 using (var stream = _appDataFolder.OpenFile(pathName)) {
-                    return new BinaryFormatter().Deserialize(stream) as ConfigurationCache;
+
+                    var oldHash = (string)formatter.Deserialize(stream);
+                    if (hash != oldHash) {
+                        Logger.Information("The cached NHibernate configuration is out of date. A new one will be re-generated.");
+                        return null;
+                    }
+
+                    var oldConfig = (Configuration)formatter.Deserialize(stream);
+
+                    return new ConfigurationCache {
+                        Hash = oldHash,
+                        Configuration = oldConfig
+                    };
                 }
             }
             catch (Exception e) {
                 for (var scan = e; scan != null; scan = scan.InnerException)
-                    Logger.Warning("The cached NHibernate configuration cache can't be read: {0}", scan.Message);
+                    Logger.Warning("Error reading the cached NHibernate configuration: {0}", scan.Message);
+                Logger.Information("A new one will be re-generated.");
                 return null;
             }
         }
 
-        private Hash ComputeHash(ShellBlueprint shellBlueprint) {
-            // We need to hash the assemnly names, record names and property names
+        private Hash ComputeHash() {
             var hash = new Hash();
 
-            foreach (var tableName in shellBlueprint.Records.Select(x => x.TableName)) {
+            hash.AddString(_shellSettings.Name);
+
+            // We need to hash the assemnly names, record names and property names
+            foreach (var tableName in _shellBlueprint.Records.Select(x => x.TableName)) {
                 hash.AddString(tableName);
             }
 
-            foreach (var recordType in shellBlueprint.Records.Select(x => x.Type)) {
+            foreach (var recordType in _shellBlueprint.Records.Select(x => x.Type)) {
                 hash.AddTypeReference(recordType);
+
+                if (recordType.BaseType != null)
+                    hash.AddTypeReference(recordType.BaseType);
 
                 foreach (var property in recordType.GetProperties(BindingFlags.DeclaredOnly | BindingFlags.Public)) {
                     hash.AddString(property.Name);
                     hash.AddTypeReference(property.PropertyType);
+
+                    foreach(var attr in property.GetCustomAttributesData()) {
+                        hash.AddTypeReference(attr.Constructor.DeclaringType);
+                    }
                 }
             }
 
