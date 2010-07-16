@@ -1,6 +1,7 @@
 ﻿using Orchard.ContentManagement;
 using Orchard.ContentManagement.Aspects;
 using Orchard.ContentManagement.Drivers;
+using Orchard.Core.Contents.ViewModels;
 
 namespace Orchard.Core.Contents.Drivers {
     public class ContentsDriver : ContentItemDriver<ContentPart> {
@@ -11,7 +12,9 @@ namespace Orchard.Core.Contents.Drivers {
         }
 
         protected override DriverResult Display(ContentPart part, string displayType) {
-            return ContentItemTemplate("Items/Contents.Item").LongestMatch(displayType, "Summary", "SummaryAdmin");
+            return Combined(
+                ContentItemTemplate("Items/Contents.Item").LongestMatch(displayType, "Summary", "SummaryAdmin"),
+                ContentPartTemplate(new PublishContentViewModel(part.ContentItem), "Parts/Contents.Publish").LongestMatch(displayType, "Summary", "SummaryAdmin").Location("secondary"));
         }
     }
 }

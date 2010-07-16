@@ -1,5 +1,6 @@
 using System.Web.Mvc;
 using Orchard.Core.Common.ViewModels;
+using Orchard.Core.Contents.ViewModels;
 using Orchard.Localization;
 using Orchard.Mvc.Html;
 

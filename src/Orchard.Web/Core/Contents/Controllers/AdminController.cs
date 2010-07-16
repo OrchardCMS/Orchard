@@ -5,9 +5,7 @@ using System.Web.Routing;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Aspects;
 using Orchard.ContentManagement.MetaData;
-using Orchard.Core.Common.Models;
 using Orchard.Core.Contents.ViewModels;
-using Orchard.Core.PublishLater.Models;
 using Orchard.Data;
 using Orchard.Localization;
 using Orchard.Logging;
@@ -175,6 +173,38 @@ namespace Orchard.Core.Contents.Controllers {
 
             if (!String.IsNullOrEmpty(returnUrl))
                 return Redirect(returnUrl);
+
+            return RedirectToAction("List");
+        }
+
+        [HttpPost]
+        public ActionResult Publish(int id) {
+            if (!Services.Authorizer.Authorize(Permissions.PublishContent, T("Couldn't publish content")))
+                return new HttpUnauthorizedResult();
+
+            var contentItem = _contentManager.GetLatest(id);
+            if (contentItem == null)
+                return new NotFoundResult();
+
+            _contentManager.Publish(contentItem);
+            Services.ContentManager.Flush();
+            Services.Notifier.Information(T("{0} successfully published.", contentItem.TypeDefinition.DisplayName));
+
+            return RedirectToAction("List");
+        }
+
+        [HttpPost]
+        public ActionResult Unpublish(int id) {
+            if (!Services.Authorizer.Authorize(Permissions.PublishContent, T("Couldn't unpublish content")))
+                return new HttpUnauthorizedResult();
+
+            var contentItem = _contentManager.GetLatest(id);
+            if (contentItem == null)
+                return new NotFoundResult();
+
+            _contentManager.Unpublish(contentItem);
+            Services.ContentManager.Flush();
+            Services.Notifier.Information(T("{0} successfully unpublished.", contentItem.TypeDefinition.DisplayName));
 
             return RedirectToAction("List");
         }
