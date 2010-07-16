@@ -110,6 +110,7 @@ namespace Orchard.Core.Contents.Controllers {
         public ActionResult Create(CreateItemViewModel model) {
             //todo: need to integrate permissions into generic content management
             var contentItem = _contentManager.New(model.Id);
+            _contentManager.Create(contentItem, VersionOptions.Draft);
             model.Content = _contentManager.UpdateEditorModel(contentItem, this);
 
             if (!ModelState.IsValid) {
@@ -118,13 +119,11 @@ namespace Orchard.Core.Contents.Controllers {
                 return View("Create", model);
             }
 
-            _contentManager.Create(contentItem, VersionOptions.Draft);
-
-            //need to go about this differently - to know when to publish (IPlublishableAspect ?)
-            if (!contentItem.Has<IPublishingControlAspect>())
+            if (!contentItem.Has<IPublishingControlAspect>()) {
                 _contentManager.Publish(contentItem);
+                _notifier.Information(T("Created content item"));
+            }
 
-            _notifier.Information(T("Created content item"));
             return RedirectToAction("Edit", new RouteValueDictionary { { "Id", contentItem.Id } });
         }
 

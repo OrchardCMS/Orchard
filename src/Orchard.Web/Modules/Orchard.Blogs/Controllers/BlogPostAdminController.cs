@@ -53,15 +53,13 @@ namespace Orchard.Blogs.Controllers {
             if (blogPost.Blog == null)
                 return new NotFoundResult();
 
+            Services.ContentManager.Create(blogPost, VersionOptions.Draft);
             model.BlogPost = Services.ContentManager.UpdateEditorModel(blogPost, this);
 
             if (!ModelState.IsValid) {
                 Services.TransactionManager.Cancel();
                 return View(model);
             }
-
-            Services.ContentManager.Create(model.BlogPost.Item.ContentItem, VersionOptions.Draft);
-            Services.ContentManager.UpdateEditorModel(blogPost, this);
 
             return Redirect(Url.BlogPostEdit(model.BlogPost.Item));
         }
