@@ -114,16 +114,13 @@ namespace Orchard.Core.Contents.Controllers {
             var contentItem = _contentManager.New(model.Id);
             model.Content = _contentManager.UpdateEditorModel(contentItem, this);
 
-            if (ModelState.IsValid) {
-                _contentManager.Create(contentItem, VersionOptions.Draft);
-                model.Content = _contentManager.UpdateEditorModel(contentItem, this);
-            }
-
             if (!ModelState.IsValid) {
                 _transactionManager.Cancel();
                 PrepareEditorViewModel(model.Content);
                 return View("Create", model);
             }
+
+            _contentManager.Create(contentItem, VersionOptions.Draft);
 
             //need to go about this differently - to know when to publish (IPlublishableAspect ?)
             if (!contentItem.Has<IPublishingControlAspect>())
