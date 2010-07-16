@@ -10,6 +10,7 @@
     <SqlCeFolder>$(MSBuildProjectDirectory)\lib\sqlce</SqlCeFolder>
     <SourceArtifactFolder>$(MSBuildProjectDirectory)\artifacts\Source</SourceArtifactFolder>
     <MsDeployArtifactFolder>$(MSBuildProjectDirectory)\artifacts\MsDeploy</MsDeployArtifactFolder>
+    <ModulesSrcFolder>$(MSBuildProjectDirectory)\src\Orchard.Web\Modules</ModulesSrcFolder>
 
     <CompileFolder>$(BuildFolder)\Compile</CompileFolder>
     <WebSitesFolder>$(CompileFolder)\_PublishedWebsites</WebSitesFolder>
@@ -92,17 +93,20 @@
 
   <Target Name="Package-Stage">
     <ItemGroup>
+      <Stage-Orchard-Web-Bins Include="$(WebSitesFolder)\Orchard.Web\bin\*"/>
       <Stage-Bin-Exclude Include="$(WebSitesFolder)\**\bin\**\*" />
       <Stage-Module-Exclude Include="$(WebSitesFolder)\PackageIndexReferenceImplementation\**\*"/>
+      <Stage-Modules-Sources Include="$(ModulesSrcFolder)\**\*.csproj;$(ModulesSrcFolder)\**\*.cs;"/>
 
       <Stage-Web Include="$(WebSitesFolder)\Orchard.Web\**\*;$(SrcFolder)\Orchard.Web\*.csproj" />
       <Stage-Core Include="$(WebSitesFolder)\Orchard.Core\**\*" Exclude="@(Stage-Bin-Exclude)" />
-      <Stage-Modules Include="$(WebSitesFolder)\**\*" Exclude="@(Stage-Web);@(Stage-Core);@(Stage-Bin-Exclude);@(Stage-Module-Exclude)" />
+      <Stage-Modules Include="$(WebSitesFolder)\**\*;@(Stage-Modules-Sources)" Exclude="@(Stage-Web);@(Stage-Core);@(Stage-Bin-Exclude);@(Stage-Module-Exclude)" />
       <Stage-License Include="$(MSBuildProjectDirectory)\*.txt" />
       <Stage-SqlCe-Native-Binaries-x86 Include="$(SqlCeFolder)\x86\*"/>
       <Stage-SqlCe-Native-Binaries-amd64 Include="$(SqlCeFolder)\amd64\*"/>
     </ItemGroup>
 
+    
     <Copy SourceFiles="@(Stage-Web);@(Stage-License)" DestinationFolder="$(StageFolder)\%(RecursiveDir)" />
     <Copy SourceFiles="@(Stage-SqlCe-Native-Binaries-x86)" DestinationFolder="$(StageFolder)\bin\x86" />
     <Copy SourceFiles="@(Stage-SqlCe-Native-Binaries-amd64)" DestinationFolder="$(StageFolder)\bin\amd64" />
