@@ -67,7 +67,12 @@ namespace Orchard.DevTools.Services {
                 }
 
                 if ( createColumn.Length.HasValue ) {
-                    options.Add(string.Format("WithLength({0})", createColumn.Length ));
+                    if ( createColumn.Length == 10000 ) {
+                        options.Add("Unlimited()");
+                    }
+                    else {
+                        options.Add(string.Format("WithLength({0})", createColumn.Length));
+                    }
                 }
 
                 if ( createColumn.Precision > 0 ) {

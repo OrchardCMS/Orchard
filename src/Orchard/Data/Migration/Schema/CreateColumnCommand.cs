@@ -64,6 +64,10 @@ namespace Orchard.Data.Migration.Schema {
             return this;
         }
 
+        public new CreateColumnCommand Unlimited() {
+            return WithLength(10000);
+        }
+
         public new CreateColumnCommand WithType(DbType dbType) {
             base.WithType(dbType);
             return this;

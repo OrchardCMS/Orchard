@@ -165,7 +165,7 @@ features:
             interpreter.Visit(bodyRecord);
             Assert.That(sw.ToString().Contains("SchemaBuilder.CreateTable(\"TEST_BodyRecord"));
             Assert.That(sw.ToString().Contains(".ContentPartVersionRecord()"));
-            Assert.That(sw.ToString().Contains(".Column(\"Text\", DbType.String, column => column.WithLength(10000))"));
+            Assert.That(sw.ToString().Contains(".Column(\"Text\", DbType.String, column => column.Unlimited())"));
             Assert.That(sw.ToString().Contains(".Column(\"Format\", DbType.String, column => column.WithLength(42))"));
             Assert.That(!sw.ToString().Contains("ContentItemRecord_id"));
         }
