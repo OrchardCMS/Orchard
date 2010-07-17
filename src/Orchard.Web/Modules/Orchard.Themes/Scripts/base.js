@@ -69,7 +69,7 @@
     // UnsafeUrl links -> form POST
     //todo: need some real microdata support eventually (incl. revisiting usage of data-* attributes)
     $(function () {
-        var magicToken = $("input[name=__RequestVerificationToken]");
+        var magicToken = $("input[name=__RequestVerificationToken]").first();
         if (!magicToken) { return; } // no sense in continuing if form POSTS will fail
         $("a[itemprop~=UnsafeUrl]").each(function () {
             var _this = $(this);

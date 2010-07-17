@@ -77,6 +77,9 @@
     <Compile Include="Contents\Controllers\ItemController.cs" />
     <Compile Include="Contents\Drivers\ContentsDriver.cs" />
     <Compile Include="Contents\Handlers\ContentsHandler.cs" />
+    <Compile Include="Contents\Permissions.cs" />
+    <Compile Include="Contents\Routes.cs" />
+    <Compile Include="Contents\ViewModels\PublishContentViewModel.cs" />
     <Compile Include="PublishLater\Drivers\PublishLaterPartDriver.cs" />
     <Compile Include="PublishLater\Models\PublishLaterPart.cs" />
     <Compile Include="PublishLater\Handlers\PublishLaterPartHandler.cs" />
@@ -228,8 +231,8 @@
     <Content Include="Common\Views\DisplayTemplates\Parts\Common.Body.ManageWrapperPre.SummaryAdmin.ascx" />
     <Content Include="Common\Views\DisplayTemplates\Parts\Common.Metadata.ascx" />
     <Content Include="Common\Views\DisplayTemplates\Parts\Common.Metadata.SummaryAdmin.ascx" />
-    <Content Include="Common\Views\DisplayTemplates\Parts\Common.Publish.SummaryAdmin.ascx" />
-    <Content Include="Common\Views\DisplayTemplates\Parts\Common.Publish.ascx" />
+    <Content Include="Contents\Views\DisplayTemplates\Parts\Contents.Publish.SummaryAdmin.ascx" />
+    <Content Include="Contents\Views\DisplayTemplates\Parts\Contents.Publish.ascx" />
     <Content Include="PublishLater\Views\DisplayTemplates\Parts\PublishLater.Metadata.ascx" />
     <Content Include="PublishLater\Views\DisplayTemplates\Parts\PublishLater.Metadata.SummaryAdmin.ascx" />
     <Content Include="PublishLater\Views\DisplayTemplates\Parts\PublishLater.SummaryAdmin.ascx" />

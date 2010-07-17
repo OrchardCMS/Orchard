@@ -82,7 +82,6 @@ namespace Orchard.Blogs.Drivers {
         }
 
         protected override DriverResult Editor(BlogPost post, IUpdateModel updater) {
-            updater.TryUpdateModel(post, Prefix, null, null);
             return Editor(post);
         }
     }

@@ -29,8 +29,9 @@ namespace Orchard.UI.Admin.Notification {
             
             var messageEntries = _notificationManager.GetNotifications().ToList();
 
-            baseViewModel.Messages = baseViewModel.Messages == null ? messageEntries : baseViewModel.Messages.Union(messageEntries).ToList();
-            baseViewModel.Zones.AddRenderPartial("content:before", "Messages", baseViewModel.Messages);
+            if ( messageEntries.Any() ) {
+                baseViewModel.Zones.AddRenderPartial("content:before", "Messages", messageEntries);
+            }
         }
 
         public void OnResultExecuted(ResultExecutedContext filterContext) {

@@ -20,7 +20,7 @@ namespace Orchard.Comments.DataMigrations {
                 .Column<string>("Email")
                 .Column<string>("Status")
                 .Column<DateTime>("CommentDateUtc")
-                .Column<string>("CommentText", column => column.WithLength(10000))
+                .Column<string>("CommentText", column => column.Unlimited())
                 .Column<int>("CommentedOn")
                 .Column<int>("CommentedOnContainer")
                 );

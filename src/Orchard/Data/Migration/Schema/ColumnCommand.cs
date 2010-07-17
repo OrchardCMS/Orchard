@@ -37,5 +37,8 @@ namespace Orchard.Data.Migration.Schema {
             return this;
         }
 
+        public ColumnCommand Unlimited() {
+            return WithLength(10000);
+        }
     }
 }

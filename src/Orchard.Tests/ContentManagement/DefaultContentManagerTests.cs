@@ -33,7 +33,8 @@ namespace Orchard.Tests.ContentManagement {
                 typeof(ContentItemVersionRecord),
                 typeof(GammaRecord),
                 typeof(DeltaRecord),
-                typeof(EpsilonRecord));
+                typeof(EpsilonRecord),
+                typeof(MegaRecord));
         }
 
         [TestFixtureTearDown]
@@ -170,6 +171,23 @@ namespace Orchard.Tests.ContentManagement {
             Assert.That(types, Has.Some.With.Property("Name").EqualTo("beta"));
             Assert.That(types, Has.Some.With.Property("Name").EqualTo("gamma"));
             Assert.That(types, Has.Some.With.Property("Name").EqualTo("delta"));
+        }
+
+
+        [Test]
+        public void BigStringsShouldNotBeTruncated() {
+            var megaRepository = _container.Resolve<IRepository<MegaRecord>>();
+            var mega = new MegaRecord() { BigStuff = new string('x', 20000) };
+            megaRepository.Create(mega);
+            _session.Flush();
+        }
+
+        [Test, ExpectedException]
+        public void StandardStringsShouldNotHaveAStandardSize() {
+            var megaRepository = _container.Resolve<IRepository<MegaRecord>>();
+            var mega = new MegaRecord() { SmallStuff = new string('x', 256) };
+            megaRepository.Create(mega);
+            _session.Flush();
         }
 
         private ContentItemRecord CreateModelRecord(string contentType) {

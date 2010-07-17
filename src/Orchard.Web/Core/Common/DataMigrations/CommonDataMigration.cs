@@ -7,7 +7,7 @@ namespace Orchard.Core.Common.DataMigrations {
             //CREATE TABLE Common_BodyRecord (Id INTEGER not null, Text TEXT, Format TEXT, ContentItemRecord_id INTEGER, primary key (Id));
             SchemaBuilder.CreateTable("BodyRecord", table => table
                 .ContentPartVersionRecord()
-                .Column<string>("Text", column => column.WithLength(10000))
+                .Column<string>("Text", column => column.Unlimited())
                 .Column<string>("Format")
                 );
 
