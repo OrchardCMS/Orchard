@@ -1,17 +1,17 @@
 ﻿<%@ Control Language="C#" Inherits="Orchard.Mvc.ViewUserControl<Orchard.Core.Contents.ViewModels.ListContentsViewModel>" %>
 <%@ Import Namespace="Orchard.Core.Contents.ViewModels" %>
-<h1><%:Html.TitleForPage((string.IsNullOrEmpty(Model.TypeDisplayName) ? T("Manage Content") : T("Manage {0} Content", Model.TypeDisplayName)).ToString())%></h1>
+<h1><%:Html.TitleForPage((string.IsNullOrEmpty(Model.TypeDisplayName) ? T("Manage Content") : T("Manage {0} Content", Model.TypeDisplayName)).ToString()) %></h1>
 <div class="manage">
-    <%:Html.ActionLink(!string.IsNullOrEmpty(Model.TypeDisplayName) ? T("Add new {0} content", Model.TypeDisplayName).Text : T("Add new content").Text, "Create", new { }, new { @class = "button primaryAction" })%>
+    <%:Html.ActionLink(!string.IsNullOrEmpty(Model.TypeDisplayName) ? T("Add new {0} content", Model.TypeDisplayName).Text : T("Add new content").Text, "Create", new { }, new { @class = "button primaryAction" }) %>
 </div><%
-using (Html.BeginFormAntiForgeryPost()) {  %>
+using (Html.BeginFormAntiForgeryPost()) { %>
     <fieldset class="bulk-actions">
-        <label for="publishActions"><%:T("Actions:")%></label>
+        <label for="publishActions"><%:T("Actions:") %></label>
         <select id="publishActions" name="<%:Html.NameOf(m => m.Options.BulkAction) %>">
-            <%:Html.SelectOption(Model.Options.BulkAction, ContentsBulkAction.None, T("Choose action...").ToString())%>
-            <%:Html.SelectOption(Model.Options.BulkAction, ContentsBulkAction.PublishNow, T("Publish Now").ToString())%>
-            <%:Html.SelectOption(Model.Options.BulkAction, ContentsBulkAction.Unpublish, T("Unpublish").ToString())%>
-            <%:Html.SelectOption(Model.Options.BulkAction, ContentsBulkAction.Remove, T("Remove").ToString())%>
+            <%:Html.SelectOption(Model.Options.BulkAction, ContentsBulkAction.None, T("Choose action...").ToString()) %>
+            <%:Html.SelectOption(Model.Options.BulkAction, ContentsBulkAction.PublishNow, T("Publish Now").ToString()) %>
+            <%:Html.SelectOption(Model.Options.BulkAction, ContentsBulkAction.Unpublish, T("Unpublish").ToString()) %>
+            <%:Html.SelectOption(Model.Options.BulkAction, ContentsBulkAction.Remove, T("Remove").ToString()) %>
         </select>
         <button type="submit" name="submit.BulkEdit" value="yes"><%:T("Apply") %></button>
     </fieldset>
@@ -35,6 +35,6 @@ using (Html.BeginFormAntiForgeryPost()) {  %>
     <%:Html.UnorderedList(
         Model.Entries,
         (entry, i) => Html.DisplayForItem(entry.ViewModel),
-        "")%>
+        "") %>
     </fieldset><%
 } %>

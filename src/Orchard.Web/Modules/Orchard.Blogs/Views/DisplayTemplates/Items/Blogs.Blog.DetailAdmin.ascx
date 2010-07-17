@@ -16,6 +16,6 @@
 </fieldset>
 </div>
 </form>--%>
-<div class="actions"><a href="<%: Url.BlogPostCreate(Model.Item) %>" class="add button primaryAction"><%: T("New Post")%></a></div>
+<div class="manage"><a href="<%: Url.BlogPostCreate(Model.Item) %>" class="add button primaryAction"><%: T("New Post")%></a></div>
 <% Html.Zone("primary");
    Html.ZonesAny(); %>
