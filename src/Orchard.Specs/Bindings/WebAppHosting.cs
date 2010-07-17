@@ -194,6 +194,7 @@ namespace Orchard.Specs.Bindings {
                     .SelectMany(elt => elt.DescendantsAndSelf("input"))
                     .Where(node => !((node.GetAttributeValue("type", "") == "radio" || node.GetAttributeValue("type", "") == "checkbox") && node.GetAttributeValue("checked", "") != "checked"))
                     .GroupBy(elt => elt.GetAttributeValue("name", elt.GetAttributeValue("id", "")), elt => elt.GetAttributeValue("value", ""))
+                    .Where(g => !string.IsNullOrEmpty(g.Key))
                     .ToDictionary(elt => elt.Key, elt => (IEnumerable<string>)elt);
 
             Details = Host.SendRequest(urlPath, inputs);
