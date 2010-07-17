@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Web;
 using System.Web.Hosting;
 using Orchard.Environment.Extensions.Loaders;
 using Orchard.FileSystems.VirtualPath;
@@ -11,7 +12,7 @@ namespace Orchard.FileSystems.Dependencies {
     public class DynamicModuleVirtualPathProvider : VirtualPathProvider, ICustomVirtualPathProvider {
         private readonly IDependenciesFolder _dependenciesFolder;
         private readonly IEnumerable<IExtensionLoader> _loaders;
-        private readonly string[] _modulesPrefixes = { "~/Modules/", "/Modules/" };
+        private readonly string[] _modulesPrefixes = { "~/Modules/" };
 
         public DynamicModuleVirtualPathProvider(IDependenciesFolder dependenciesFolder, IEnumerable<IExtensionLoader> loaders) {
             _dependenciesFolder = dependenciesFolder;
@@ -66,11 +67,12 @@ namespace Orchard.FileSystems.Dependencies {
         }
 
         private DependencyDescriptor GetDependencyDescriptor(string virtualPath) {
-            var prefix = PrefixMatch(virtualPath, _modulesPrefixes);
+            var appRelativePath = VirtualPathUtility.ToAppRelative(virtualPath);
+            var prefix = PrefixMatch(appRelativePath, _modulesPrefixes);
             if (prefix == null)
                 return null;
 
-            var moduleName = ModuleMatch(virtualPath, prefix);
+            var moduleName = ModuleMatch(appRelativePath, prefix);
             if (moduleName == null)
                 return null;
 
