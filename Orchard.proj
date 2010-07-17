@@ -90,29 +90,45 @@
   <!-- Packaging (Stage) -->
 
   <UsingTask AssemblyFile="$(CompileFolder)\MSBuild.Orchard.Tasks.dll" TaskName="MSBuild.Orchard.Tasks.StageProjectAlteration" />
+  <UsingTask AssemblyFile="$(CompileFolder)\MSBuild.Orchard.Tasks.dll" TaskName="MSBuild.Orchard.Tasks.FilterModuleBinaries" />
 
   <Target Name="Package-Stage">
     <ItemGroup>
-      <Stage-Orchard-Web-Bins Include="$(WebSitesFolder)\Orchard.Web\bin\*"/>
-      <Stage-Bin-Exclude Include="$(WebSitesFolder)\**\bin\**\*" />
-      <Stage-Module-Exclude Include="$(WebSitesFolder)\PackageIndexReferenceImplementation\**\*"/>
-      <Stage-Modules-Sources Include="$(ModulesSrcFolder)\**\*.csproj;$(ModulesSrcFolder)\**\*.cs;"/>
-
-      <Stage-Web Include="$(WebSitesFolder)\Orchard.Web\**\*;$(SrcFolder)\Orchard.Web\*.csproj" />
-      <Stage-Core Include="$(WebSitesFolder)\Orchard.Core\**\*" Exclude="@(Stage-Bin-Exclude)" />
-      <Stage-Modules Include="$(WebSitesFolder)\**\*;@(Stage-Modules-Sources)" Exclude="@(Stage-Web);@(Stage-Core);@(Stage-Bin-Exclude);@(Stage-Module-Exclude)" />
-      <Stage-License Include="$(MSBuildProjectDirectory)\*.txt" />
       <Stage-SqlCe-Native-Binaries-x86 Include="$(SqlCeFolder)\x86\*"/>
       <Stage-SqlCe-Native-Binaries-amd64 Include="$(SqlCeFolder)\amd64\*"/>
+      <Stage-Orchard-Web-Bins Include="$(WebSitesFolder)\Orchard.Web\bin\*"/>
+      <Stage-Bin-Exclude Include="$(WebSitesFolder)\**\bin\**\*" />
+      <Stage-Web Include="$(WebSitesFolder)\Orchard.Web\**\*;$(SrcFolder)\Orchard.Web\*.csproj" />
+      <Stage-Core Include="$(WebSitesFolder)\Orchard.Core\**\*" Exclude="$(WebSitesFolder)\Orchard.Core\**\bin\**\*" />
+      
+      <Stage-Module-Exclude Include="@(Stage-Web);@(Stage-Core);$(WebSitesFolder)\PackageIndexReferenceImplementation\**\*"/>
+      
+      <Stage-Modules Include="$(WebSitesFolder)\**\*" Exclude="@(Stage-Bin-Exclude);@(Stage-Module-Exclude)" />
+      <Stage-Modules-Binaries Include="$(WebSitesFolder)\**\bin\**\*"  Exclude="@(Stage-Module-Exclude)"/>
+      <Stage-Modules-Sources Include="$(ModulesSrcFolder)\**\*.csproj;$(ModulesSrcFolder)\**\*.cs"/>
+      <Stage-License Include="$(MSBuildProjectDirectory)\*.txt" />
     </ItemGroup>
 
-    
+    <!-- Copying module binaries is somewhat tricky: From a module "bin" directory, we
+         only want to include the files that are _not_ already present in 
+         the "Orchard.Web\Bin" folder. -->
+    <FilterModuleBinaries
+      ModulesBinaries="@(Stage-Modules-Binaries)"
+      OrchardWebBinaries="@(Stage-Orchard-Web-Bins)">
+      <Output TaskParameter="ExcludedBinaries" ItemName="FilterModuleBinaries-ExcludedBinaries"/>
+    </FilterModuleBinaries>
+
+    <ItemGroup>
+      <Stage-Modules-Binaries-Unique Include="@(Stage-Modules-Binaries)"  Exclude="@(FilterModuleBinaries-ExcludedBinaries)"/>
+    </ItemGroup>
+
     <Copy SourceFiles="@(Stage-Web);@(Stage-License)" DestinationFolder="$(StageFolder)\%(RecursiveDir)" />
     <Copy SourceFiles="@(Stage-SqlCe-Native-Binaries-x86)" DestinationFolder="$(StageFolder)\bin\x86" />
     <Copy SourceFiles="@(Stage-SqlCe-Native-Binaries-amd64)" DestinationFolder="$(StageFolder)\bin\amd64" />
     <Copy SourceFiles="@(Stage-Core)" DestinationFolder="$(StageFolder)\Core\%(RecursiveDir)" />
     <Copy SourceFiles="@(Stage-Modules)" DestinationFolder="$(StageFolder)\Modules\%(RecursiveDir)" />
-
+    <Copy SourceFiles="@(Stage-Modules-Sources)" DestinationFolder="$(StageFolder)\Modules\%(RecursiveDir)" />
+    <Copy SourceFiles="@(Stage-Modules-Binaries-Unique)" DestinationFolder="$(StageFolder)\Modules\%(RecursiveDir)" />
 
     <!-- extra processing of the staged csproj file -->
     <StageProjectAlteration ProjectFileName="$(StageFolder)\Orchard.Web.csproj" AddContentFiles="
@@ -144,7 +160,7 @@
   <!-- Packaging (MsDeploy) -->
   <Target Name="Package-MsDeploy">
     <ItemGroup>
-      <MsDeploy-Folder-Input Include="$(StageFolder)\**\*" Exclude="$(StageFolder)\**\*.pdb" />
+      <MsDeploy-Folder-Input Include="$(StageFolder)\**\*" Exclude="$(StageFolder)\**\bin\**\*.pdb;$(StageFolder)\**\bin\**\*.xml" />
       <MsDeploy-Parameters Include="$(LibFolder)\msdeploy\*.xml"/>
     </ItemGroup>
 
