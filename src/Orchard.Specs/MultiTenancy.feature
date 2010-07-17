@@ -8,7 +8,7 @@ Scenario: Default site is listed
         And I have installed "Orchard.MultiTenancy"
     When I go to "Admin/MultiTenancy"
     Then I should see "List of Site&#39;s Tenants"
-        And I should see "<span class="tenantName">Default</span>"
+        And I should see "<h3>Default</h3>"
         And the status should be 200 OK
 
 Scenario: New tenant fields are required

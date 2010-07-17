@@ -69,7 +69,7 @@ testRunner.When("I go to \"Admin/MultiTenancy\"");
 #line 10
 testRunner.Then("I should see \"List of Site&#39;s Tenants\"");
 #line 11
-testRunner.And("I should see \"<span class=\"tenantName\">Default</span>\"");
+testRunner.And("I should see \"<h3>Default</h3>\"");
 #line 12
 testRunner.And("the status should be 200 OK");
 #line hidden
