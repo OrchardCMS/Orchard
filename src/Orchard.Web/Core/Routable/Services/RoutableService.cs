@@ -66,7 +66,7 @@ namespace Orchard.Core.Routable.Services {
                 _contentManager.Query(contentType).Join<RoutableRecord>()
                     .List()
                     .Select(i => i.As<IsRoutable>())
-                    .Where(routable => routable.Slug.StartsWith(slug, StringComparison.OrdinalIgnoreCase)) // todo: for some reason the filter doesn't work within the query, even without StringComparison or StartsWith
+                    .Where(routable => routable.Path.Equals(slug, StringComparison.OrdinalIgnoreCase)) // todo: for some reason the filter doesn't work within the query, even without StringComparison or StartsWith
                     .ToArray();
         }
 
@@ -84,7 +84,7 @@ namespace Orchard.Core.Routable.Services {
                 return true;
             }
 
-            var slugsLikeThis = GetSimilarSlugs(part.ContentItem.ContentType, part.Slug);
+            var slugsLikeThis = GetSimilarSlugs(part.ContentItem.ContentType, part.Path);
 
             // If the part is already a valid content item, don't include it in the list
             // of slug to consider for conflict detection
