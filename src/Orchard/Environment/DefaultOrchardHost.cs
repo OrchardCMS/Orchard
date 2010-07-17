@@ -66,6 +66,10 @@ namespace Orchard.Environment {
             BuildCurrent();
         }
 
+        void IOrchardHost.ReloadExtensions() {
+            _current = null;
+            BuildCurrent();
+        }
 
         void IOrchardHost.BeginRequest() {
             Logger.Debug("BeginRequest");

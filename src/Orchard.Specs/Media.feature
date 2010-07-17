@@ -8,7 +8,7 @@ Scenario: Media admin is available
 		And I have installed "Orchard.Media"
 	When I go to "admin/media"
 	Then I should see "Manage Media Folders"
-	    And the status should be 200 OK
+		And the status should be 200 OK
 
 Scenario: Creating a folder
 	Given I have installed Orchard
@@ -21,5 +21,4 @@ Scenario: Creating a folder
 		And I am redirected
 	Then I should see "Manage Media Folders"
 		And I should see "Hello World"
-	    And the status should be 200 OK
-
+		And the status should be 200 OK

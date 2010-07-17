@@ -9,6 +9,12 @@ namespace Orchard.Environment {
         void Initialize();
 
         /// <summary>
+        /// Called externally when there is explicit knowledge that the list of installed
+        /// modules/extensions has changed, and they need to be reloaded.
+        /// </summary>
+        void ReloadExtensions();
+
+        /// <summary>
         /// Called each time a request begins to offer a just-in-time reinitialization point
         /// </summary>
         void BeginRequest();
@@ -23,5 +29,5 @@ namespace Orchard.Environment {
         /// Services may be resolved from within this instance to configure and initialize it's storage.
         /// </summary>
         IStandaloneEnvironment CreateStandaloneEnvironment(ShellSettings shellSettings);
-    }    
+    }
 }

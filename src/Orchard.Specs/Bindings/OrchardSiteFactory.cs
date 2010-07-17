@@ -32,7 +32,12 @@ namespace Orchard.Specs.Bindings {
 
         [Given(@"I have installed ""(.*)\""")]
         public void GivenIHaveInstalled(string name) {
-            Binding<WebAppHosting>().GivenIHaveModule(name);
+            var webApp = Binding<WebAppHosting>();
+            webApp.GivenIHaveModule(name);
+            webApp.Host.Execute(() => {
+                MvcApplication.ReloadExtensions();
+            });
+
             GivenIHaveEnabled(name);
         }
 
