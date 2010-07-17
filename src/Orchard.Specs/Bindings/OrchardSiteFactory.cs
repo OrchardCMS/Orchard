@@ -17,7 +17,7 @@ namespace Orchard.Specs.Bindings {
 
             webApp.GivenIHaveACleanSiteWith(TableData(
                 new { extension = "module", names = "Orchard.Setup, Orchard.Modules, Orchard.Themes, Orchard.Users, Orchard.Roles, Orchard.Comments, Orchard.Tags, TinyMce" },
-                new { extension = "core", names = "Common, Dashboard, Feeds, HomePage, Navigation, PublishLater, Routable, Scheduling, Settings, XmlRpc" },
+                new { extension = "core", names = "Common, Dashboard, Feeds, HomePage, Navigation, Contents, PublishLater, Routable, Scheduling, Settings, XmlRpc" },
                 new { extension = "theme", names = "SafeMode, Classic" }));
 
             webApp.WhenIGoTo("Setup");
