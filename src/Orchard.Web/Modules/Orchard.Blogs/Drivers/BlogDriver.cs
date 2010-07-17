@@ -6,6 +6,7 @@ using Orchard.Blogs.Models;
 using Orchard.Blogs.Services;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
+using Orchard.Core.Contents.ViewModels;
 using Orchard.Localization;
 using Orchard.Mvc.ViewModels;
 
@@ -20,13 +21,11 @@ namespace Orchard.Blogs.Drivers {
                                                                          };
 
         private readonly IContentManager _contentManager;
-        private readonly IBlogService _blogService;
         private readonly IBlogPostService _blogPostService;
 
-        public BlogDriver(IOrchardServices services, IContentManager contentManager, IBlogService blogService, IBlogPostService blogPostService) {
+        public BlogDriver(IOrchardServices services, IContentManager contentManager, IBlogPostService blogPostService) {
             Services = services;
             _contentManager = contentManager;
-            _blogService = blogService;
             _blogPostService = blogPostService;
             T = NullLocalizer.Instance;
         }
@@ -78,7 +77,19 @@ namespace Orchard.Blogs.Drivers {
                 ContentPartTemplate(blog, "Parts/Blogs.Blog.Manage").Location("manage"),
                 ContentPartTemplate(blog, "Parts/Blogs.Blog.Metadata").Location("metadata"),
                 ContentPartTemplate(blog, "Parts/Blogs.Blog.Description").Location("primary"),
-                blogPosts == null ? null : ContentPartTemplate(blogPosts, "Parts/Blogs.BlogPost.List", "").Location("primary"));
+                blogPosts == null
+                    ? null
+                    : ContentPartTemplate(
+                        new ListContentsViewModel {
+                            ContainerId = blog.Id,
+                            Entries = blogPosts.Select(bp => new ListContentsViewModel.Entry {
+                                ContentItem = bp.Item.ContentItem,
+                                ContentItemMetadata = _contentManager.GetItemMetadata(bp.Item.ContentItem),
+                                ViewModel = bp
+                            }).ToList()
+                        },
+                        "Parts/Blogs.BlogPost.List",
+                        "").Location("primary"));
         }
 
         protected override DriverResult Editor(Blog blog) {

@@ -7,7 +7,6 @@ using System.Web.Routing;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Aspects;
 using Orchard.ContentManagement.MetaData;
-using Orchard.ContentManagement.Records;
 using Orchard.Core.Common.Models;
 using Orchard.Core.Contents.ViewModels;
 using Orchard.Data;
@@ -76,7 +75,7 @@ namespace Orchard.Core.Contents.Controllers {
 
         [HttpPost, ActionName("List")]
         [FormValueRequired("submit.BulkEdit")]
-        public ActionResult ListPOST(ContentOptions options, IEnumerable<int> itemIds) {
+        public ActionResult ListPOST(ContentOptions options, IEnumerable<int> itemIds, string returnUrl) {
             switch (options.BulkAction) {
                 case ContentsBulkAction.None:
                     break;
@@ -114,7 +113,9 @@ namespace Orchard.Core.Contents.Controllers {
                     throw new ArgumentOutOfRangeException();
             }
 
-            // todo: persist filter & order
+            if (!String.IsNullOrEmpty(returnUrl))
+                return Redirect(returnUrl);
+
             return RedirectToAction("List");
         }
 
