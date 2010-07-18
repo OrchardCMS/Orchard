@@ -3,6 +3,6 @@ using Orchard.Packaging;
 
 namespace Futures.Modules.Packaging.ViewModels {
     public class PackagingModulesViewModel {
-        public IEnumerable<PackageEntry> Modules { get; set; }
+        public IEnumerable<PackagingEntry> Modules { get; set; }
     }
 }

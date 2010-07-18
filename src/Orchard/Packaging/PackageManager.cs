@@ -7,17 +7,17 @@ using Orchard.Environment.Extensions;
 namespace Orchard.Packaging {
     public class PackageManager : IPackageManager {
         private readonly IExtensionManager _extensionManager;
-        private readonly IPackageSourceManager _packageSourceManager;
+        private readonly IPackagingSourceManager _packagingSourceManager;
         private readonly IPackageBuilder _packageBuilder;
         private readonly IPackageExpander _packageExpander;
 
         public PackageManager(
             IExtensionManager extensionManager,
-            IPackageSourceManager packageSourceManager,
+            IPackagingSourceManager packagingSourceManager,
             IPackageBuilder packageBuilder,
             IPackageExpander packageExpander) {
             _extensionManager = extensionManager;
-            _packageSourceManager = packageSourceManager;
+            _packagingSourceManager = packagingSourceManager;
             _packageBuilder = packageBuilder;
             _packageExpander = packageExpander;
         }
@@ -49,7 +49,7 @@ namespace Orchard.Packaging {
         }
 
         public PackageData Download(string feedItemId) {
-            var entry = _packageSourceManager.GetModuleList().Single(x => x.SyndicationItem.Id == feedItemId);
+            var entry = _packagingSourceManager.GetModuleList().Single(x => x.SyndicationItem.Id == feedItemId);
             var request = WebRequest.Create(entry.PackageStreamUri);
             using (var response = request.GetResponse()) {
                 using (var responseStream = response.GetResponseStream()) {
@@ -70,8 +70,8 @@ namespace Orchard.Packaging {
             }
         }
 
-        public void Install(PackageData packageData) {
-            _packageExpander.ExpandPackage(packageData.PackageStream);
+        public PackageInfo Install(Stream packageStream) {
+            return _packageExpander.ExpandPackage(packageStream);
         }
     }
 }

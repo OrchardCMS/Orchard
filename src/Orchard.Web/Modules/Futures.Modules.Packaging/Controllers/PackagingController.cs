@@ -13,17 +13,17 @@ namespace Futures.Modules.Packaging.Controllers {
     [Themed, Admin]
     public class PackagingController : Controller {
         private readonly IPackageManager _packageManager;
-        private readonly IPackageSourceManager _packageSourceManager;
+        private readonly IPackagingSourceManager _packagingSourceManager;
         private readonly IExtensionManager _extensionManager;
         private readonly INotifier _notifier;
 
         public PackagingController(
             IPackageManager packageManager,
-            IPackageSourceManager packageSourceManager,
+            IPackagingSourceManager packagingSourceManager,
             IExtensionManager extensionManager,
             INotifier notifier) {
             _packageManager = packageManager;
-            _packageSourceManager = packageSourceManager;
+            _packagingSourceManager = packagingSourceManager;
             _extensionManager = extensionManager;
             _notifier = notifier;
             T = NullLocalizer.Instance;
@@ -37,12 +37,12 @@ namespace Futures.Modules.Packaging.Controllers {
 
         public ActionResult Sources() {
             return View("Sources", new PackagingSourcesViewModel {
-                Sources = _packageSourceManager.GetSources(),
+                Sources = _packagingSourceManager.GetSources(),
             });
         }
 
         public ActionResult AddSource(string url) {
-            _packageSourceManager.AddSource(new PackageSource { Id = Guid.NewGuid(), FeedUrl = url });
+            _packagingSourceManager.AddSource(new PackagingSource { Id = Guid.NewGuid(), FeedUrl = url });
             Update();
             return RedirectToAction("Sources");
         }
@@ -50,12 +50,12 @@ namespace Futures.Modules.Packaging.Controllers {
 
         public ActionResult Modules() {
             return View("Modules", new PackagingModulesViewModel {
-                Modules = _packageSourceManager.GetModuleList()
+                Modules = _packagingSourceManager.GetModuleList()
             });
         }
 
         public ActionResult Update() {
-            _packageSourceManager.UpdateLists();
+            _packagingSourceManager.UpdateLists();
             _notifier.Information(T("List of available modules and themes is updated."));
             return RedirectToAction("Index");
         }
@@ -64,14 +64,14 @@ namespace Futures.Modules.Packaging.Controllers {
             return View("Harvest", new PackagingHarvestViewModel {
                 ExtensionName = extensionName,
                 FeedUrl = feedUrl,
-                Sources = _packageSourceManager.GetSources(),
+                Sources = _packagingSourceManager.GetSources(),
                 Extensions = _extensionManager.AvailableExtensions()
             });
         }
 
         [HttpPost]
         public ActionResult Harvest(PackagingHarvestViewModel model) {
-            model.Sources = _packageSourceManager.GetSources();
+            model.Sources = _packagingSourceManager.GetSources();
             model.Extensions = _extensionManager.AvailableExtensions();
 
             var packageData = _packageManager.Harvest(model.ExtensionName);
@@ -98,7 +98,7 @@ namespace Futures.Modules.Packaging.Controllers {
 
         public ActionResult Install(string syndicationId) {
             var packageData = _packageManager.Download(syndicationId);
-            _packageManager.Install(packageData);
+            _packageManager.Install(packageData.PackageStream);
             _notifier.Information(T("Installed module"));
             return RedirectToAction("Modules");
         }

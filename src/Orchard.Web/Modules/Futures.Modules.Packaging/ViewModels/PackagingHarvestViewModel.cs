@@ -5,7 +5,7 @@ using Orchard.Packaging;
 
 namespace Futures.Modules.Packaging.ViewModels {
     public class PackagingHarvestViewModel {
-        public IEnumerable<PackageSource> Sources { get; set; }
+        public IEnumerable<PackagingSource> Sources { get; set; }
         public IEnumerable<ExtensionDescriptor> Extensions { get; set; }
 
         [Required]

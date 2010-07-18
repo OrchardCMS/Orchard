@@ -9,38 +9,38 @@ using System.Xml.Serialization;
 using Orchard.FileSystems.AppData;
 
 namespace Orchard.Packaging {
-    public class PackageSourceManager : IPackageSourceManager {
+    public class PackagingSourceManager : IPackagingSourceManager {
         private readonly IAppDataFolder _appDataFolder;
-        private static readonly XmlSerializer _sourceSerializer = new XmlSerializer(typeof(List<PackageSource>), new XmlRootAttribute("Sources"));
+        private static readonly XmlSerializer _sourceSerializer = new XmlSerializer(typeof(List<PackagingSource>), new XmlRootAttribute("Sources"));
 
-        public PackageSourceManager(IAppDataFolder appDataFolder) {
+        public PackagingSourceManager(IAppDataFolder appDataFolder) {
             _appDataFolder = appDataFolder;
         }
 
         static string GetSourcesPath() {
             return ".Packaging/Sources.xml";
         }
-        static string GetFeedCachePath(PackageSource source) {
+        static string GetFeedCachePath(PackagingSource source) {
             return ".Packaging/Feed." + source.Id.ToString("n") + ".xml";
         }
 
-        public IEnumerable<PackageSource> GetSources() {
+        public IEnumerable<PackagingSource> GetSources() {
             var text = _appDataFolder.ReadFile(GetSourcesPath());
             if (string.IsNullOrEmpty(text))
-                return Enumerable.Empty<PackageSource>();
+                return Enumerable.Empty<PackagingSource>();
 
             var textReader = new StringReader(_appDataFolder.ReadFile(GetSourcesPath()));
-            return (IEnumerable<PackageSource>)_sourceSerializer.Deserialize(textReader);
+            return (IEnumerable<PackagingSource>)_sourceSerializer.Deserialize(textReader);
         }
 
-        void SaveSources(IEnumerable<PackageSource> sources) {
+        void SaveSources(IEnumerable<PackagingSource> sources) {
             var textWriter = new StringWriter();
             _sourceSerializer.Serialize(textWriter, sources.ToList());
 
             _appDataFolder.CreateFile(GetSourcesPath(), textWriter.ToString());
         }
 
-        public void AddSource(PackageSource source) {
+        public void AddSource(PackagingSource source) {
             UpdateSource(source);
             SaveSources(GetSources().Concat(new[] { source }));
         }
@@ -55,7 +55,7 @@ namespace Orchard.Packaging {
             }
         }
 
-        private void UpdateSource(PackageSource source) {
+        private void UpdateSource(PackagingSource source) {
             var feed = XDocument.Load(source.FeedUrl, LoadOptions.PreserveWhitespace);
             _appDataFolder.CreateFile(GetFeedCachePath(source), feed.ToString(SaveOptions.DisableFormatting));
         }
@@ -78,7 +78,7 @@ namespace Orchard.Packaging {
             return formatter.Feed;
         }
 
-        public IEnumerable<PackageEntry> GetModuleList() {
+        public IEnumerable<PackagingEntry> GetModuleList() {
             var packageInfos = GetSources()
                 .SelectMany(
                     source =>
@@ -86,7 +86,7 @@ namespace Orchard.Packaging {
                          feed =>
                              feed.Items.SelectMany(
                              item =>
-                                 Unit(new PackageEntry {
+                                 Unit(new PackagingEntry {
                                      Source = source,
                                      SyndicationFeed = feed,
                                      SyndicationItem = item,

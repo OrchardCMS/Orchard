@@ -4,9 +4,7 @@ using System.IO.Packaging;
 using System.Linq;
 using System.Reflection;
 using System.Xml.Linq;
-using Orchard.Environment.Extensions;
 using Orchard.FileSystems.VirtualPath;
-using Orchard.FileSystems.WebSite;
 
 namespace Orchard.Packaging {
     public class PackageExpander : IPackageExpander {
@@ -23,6 +21,7 @@ namespace Orchard.Packaging {
             public Package Package { get; set; }
 
             public string ExtensionName { get; set; }
+            public string ExtensionVersion { get; set; }
             public string ExtensionType { get; set; }
 
             public string TargetPath { get; set; }
@@ -32,7 +31,7 @@ namespace Orchard.Packaging {
             public XDocument Project { get; set; }
         }
 
-        public void ExpandPackage(Stream packageStream) {
+        public PackageInfo ExpandPackage(Stream packageStream) {
             var context = new ExpandContext();
             BeginPackage(context, packageStream);
             try {
@@ -49,6 +48,13 @@ namespace Orchard.Packaging {
             finally {
                 EndPackage(context);
             }
+
+            return new PackageInfo {
+                ExtensionName = context.ExtensionName,
+                ExtensionVersion = context.ExtensionVersion,
+                ExtensionType = context.ExtensionType,
+                ExtensionPath = context.TargetPath
+            };
         }
 
         private void ExtractFile(ExpandContext context, string relativePath) {
@@ -143,6 +149,7 @@ namespace Orchard.Packaging {
 
         private void GetCoreProperties(ExpandContext context) {
             context.ExtensionName = context.Package.PackageProperties.Identifier;
+            context.ExtensionVersion = context.Package.PackageProperties.Version;
 
             var contentType = context.Package.PackageProperties.ContentType;
             if (contentType.StartsWith(ContentTypePrefix))
