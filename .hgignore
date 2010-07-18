@@ -1,4 +1,5 @@
 glob:bin
+glob:Bin
 glob:obj
 glob:App_Data
 glob:_ReSharper*
