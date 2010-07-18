@@ -1,7 +1,6 @@
 using System.IO;
-using Orchard;
 
-namespace Futures.Modules.Packaging.Services {
+namespace Orchard.Packaging {
     public interface IPackageExpander : IDependency {
         void ExpandPackage(Stream packageStream);
     }

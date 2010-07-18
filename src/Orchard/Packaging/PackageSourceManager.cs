@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -8,7 +8,7 @@ using System.Xml.Linq;
 using System.Xml.Serialization;
 using Orchard.FileSystems.AppData;
 
-namespace Futures.Modules.Packaging.Services {
+namespace Orchard.Packaging {
     public class PackageSourceManager : IPackageSourceManager {
         private readonly IAppDataFolder _appDataFolder;
         private static readonly XmlSerializer _sourceSerializer = new XmlSerializer(typeof(List<PackageSource>), new XmlRootAttribute("Sources"));

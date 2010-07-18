@@ -2,13 +2,14 @@
 using System.IO;
 using System.IO.Packaging;
 using System.Linq;
+using System.Net.Mime;
 using System.Reflection;
 using System.Xml.Linq;
 using Orchard.Environment.Extensions;
 using Orchard.Environment.Extensions.Models;
 using Orchard.FileSystems.WebSite;
 
-namespace Futures.Modules.Packaging.Services {
+namespace Orchard.Packaging {
     public class PackageBuilder : IPackageBuilder {
         private readonly IExtensionManager _extensionManager;
         private readonly IWebSiteFolder _webSiteFolder;
@@ -82,7 +83,7 @@ namespace Futures.Modules.Packaging.Services {
                     .Attributes("Include")
                     .Select(x => x.Value);
                 foreach (var includePath in includePaths) {
-                    EmbedVirtualFile(context, includePath, System.Net.Mime.MediaTypeNames.Application.Octet);
+                    EmbedVirtualFile(context, includePath, MediaTypeNames.Application.Octet);
                 }
             }
         }
@@ -104,7 +105,7 @@ namespace Futures.Modules.Packaging.Services {
 
                 var virtualPath = "bin/" + assemblyName.Name + ".dll";
                 if (context.SourceFolder.FileExists(context.SourcePath + virtualPath)) {
-                    EmbedVirtualFile(context, virtualPath, System.Net.Mime.MediaTypeNames.Application.Octet);
+                    EmbedVirtualFile(context, virtualPath, MediaTypeNames.Application.Octet);
                 }
                 else if (hintPath != null) {
                 }

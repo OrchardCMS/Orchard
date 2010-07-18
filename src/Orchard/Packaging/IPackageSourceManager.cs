@@ -1,8 +1,7 @@
 using System;
 using System.Collections.Generic;
-using Orchard;
 
-namespace Futures.Modules.Packaging.Services {
+namespace Orchard.Packaging {
     public interface IPackageSourceManager : IDependency {
         IEnumerable<PackageSource> GetSources();
         void AddSource(PackageSource source);

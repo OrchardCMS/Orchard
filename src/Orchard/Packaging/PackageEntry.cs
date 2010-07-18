@@ -1,6 +1,6 @@
 using System.ServiceModel.Syndication;
 
-namespace Futures.Modules.Packaging.Services {
+namespace Orchard.Packaging {
     public class PackageEntry {
         public PackageSource Source { get; set; }
         public SyndicationFeed SyndicationFeed { get; set; }

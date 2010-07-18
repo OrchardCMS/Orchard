@@ -1,6 +1,6 @@
 using System.IO;
 
-namespace Futures.Modules.Packaging.Services {
+namespace Orchard.Packaging {
     public class PackageData {
         public string ExtensionName { get; set; }
         public string ExtensionVersion { get; set; }

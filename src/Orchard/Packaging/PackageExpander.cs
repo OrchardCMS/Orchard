@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using System.IO.Packaging;
 using System.Linq;
@@ -8,19 +8,13 @@ using Orchard.Environment.Extensions;
 using Orchard.FileSystems.VirtualPath;
 using Orchard.FileSystems.WebSite;
 
-namespace Futures.Modules.Packaging.Services {
+namespace Orchard.Packaging {
     public class PackageExpander : IPackageExpander {
         private const string ContentTypePrefix = "Orchard ";
-        private readonly IExtensionManager _extensionManager;
-        private readonly IWebSiteFolder _webSiteFolder;
         private readonly IVirtualPathProvider _virtualPathProvider;
 
         public PackageExpander(
-            IExtensionManager extensionManager,
-            IWebSiteFolder webSiteFolder,
             IVirtualPathProvider virtualPathProvider) {
-            _extensionManager = extensionManager;
-            _webSiteFolder = webSiteFolder;
             _virtualPathProvider = virtualPathProvider;
         }
 
@@ -167,6 +161,5 @@ namespace Futures.Modules.Packaging.Services {
                 throw new ApplicationException("Unknown extension type");
             }
         }
-
     }
 }

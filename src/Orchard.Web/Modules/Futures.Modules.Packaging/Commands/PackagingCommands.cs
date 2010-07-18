@@ -1,9 +1,9 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Net;
-using Futures.Modules.Packaging.Services;
 using Orchard.Commands;
 using Orchard.Environment.Extensions;
+using Orchard.Packaging;
 
 namespace Futures.Modules.Packaging.Commands {
     public class PackagingCommands : DefaultOrchardCommandHandler {

@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using Futures.Modules.Packaging.Services;
+using Orchard.Packaging;
 
 namespace Futures.Modules.Packaging.ViewModels {
     public class PackagingModulesViewModel {

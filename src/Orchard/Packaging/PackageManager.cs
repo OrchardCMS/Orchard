@@ -1,10 +1,10 @@
-﻿using System.IO;
+using System.IO;
 using System.IO.Packaging;
 using System.Linq;
 using System.Net;
 using Orchard.Environment.Extensions;
 
-namespace Futures.Modules.Packaging.Services {
+namespace Orchard.Packaging {
     public class PackageManager : IPackageManager {
         private readonly IExtensionManager _extensionManager;
         private readonly IPackageSourceManager _packageSourceManager;

@@ -37,7 +37,6 @@
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
-    <Reference Include="System.ServiceModel" />
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
     <Reference Include="System.Web.ApplicationServices" />
@@ -64,25 +63,12 @@
     <Reference Include="System.Configuration" />
     <Reference Include="System.Web.Services" />
     <Reference Include="System.EnterpriseServices" />
-    <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AdminMenu.cs" />
     <Compile Include="Commands\PackagingCommands.cs" />
     <Compile Include="Controllers\DownloadStreamResult.cs" />
     <Compile Include="Controllers\PackagingController.cs" />
-    <Compile Include="Services\AtomExtensions.cs" />
-    <Compile Include="Services\IPackageBuilder.cs" />
-    <Compile Include="Services\IPackageExpander.cs" />
-    <Compile Include="Services\IPackageManager.cs" />
-    <Compile Include="Services\IPackageSourceManager.cs" />
-    <Compile Include="Services\PackageBuilder.cs" />
-    <Compile Include="Services\PackageData.cs" />
-    <Compile Include="Services\PackageEntry.cs" />
-    <Compile Include="Services\PackageExpander.cs" />
-    <Compile Include="Services\PackageManager.cs" />
-    <Compile Include="Services\PackageSource.cs" />
-    <Compile Include="Services\PackageSourceManager.cs" />
     <Compile Include="ViewModels\PackagingHarvestViewModel.cs" />
     <Compile Include="ViewModels\PackagingModulesViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -100,6 +86,7 @@
     <Folder Include="Content\" />
     <Folder Include="Models\" />
     <Folder Include="Scripts\" />
+    <Folder Include="Services\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\Orchard\Orchard.Framework.csproj">

@@ -1,6 +1,4 @@
-using Orchard;
-
-namespace Futures.Modules.Packaging.Services {
+namespace Orchard.Packaging {
     public interface IPackageManager : IDependency {
         PackageData Harvest(string extensionName);
         PackageData Download(string feedItemId);

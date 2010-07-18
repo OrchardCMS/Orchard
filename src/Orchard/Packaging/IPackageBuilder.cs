@@ -1,8 +1,7 @@
 using System.IO;
-using Orchard;
 using Orchard.Environment.Extensions.Models;
 
-namespace Futures.Modules.Packaging.Services {
+namespace Orchard.Packaging {
     public interface IPackageBuilder : IDependency {
         Stream BuildPackage(ExtensionDescriptor extensionDescriptor);
     }

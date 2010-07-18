@@ -1,6 +1,6 @@
 using System.Xml.Linq;
 
-namespace Futures.Modules.Packaging.Services {
+namespace Orchard.Packaging {
     static class AtomExtensions {
         public static string Atom(this XElement entry, string localName) {
             var element = entry.Element(AtomXName(localName));
