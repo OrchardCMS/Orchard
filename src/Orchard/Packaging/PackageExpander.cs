@@ -5,16 +5,20 @@ using System.Linq;
 using System.Reflection;
 using System.Xml.Linq;
 using Orchard.FileSystems.VirtualPath;
+using Orchard.Localization;
 
 namespace Orchard.Packaging {
     public class PackageExpander : IPackageExpander {
         private const string ContentTypePrefix = "Orchard ";
         private readonly IVirtualPathProvider _virtualPathProvider;
 
-        public PackageExpander(
-            IVirtualPathProvider virtualPathProvider) {
+        public PackageExpander(IVirtualPathProvider virtualPathProvider) {
             _virtualPathProvider = virtualPathProvider;
+
+            T = NullLocalizer.Instance;
         }
+
+        public Localizer T { get; set; }
 
         class ExpandContext {
             public Stream Stream { get; set; }
@@ -61,12 +65,12 @@ namespace Orchard.Packaging {
             var partUri = PackUriHelper.CreatePartUri(new Uri(context.SourcePath + relativePath, UriKind.Relative));
             var packagePart = context.Package.GetPart(partUri);
             using (var packageStream = packagePart.GetStream(FileMode.Open, FileAccess.Read)) {
-                var filePath = Path.Combine(context.TargetPath, relativePath);
-                var folderPath = Path.GetDirectoryName(filePath);
-                if (!Directory.Exists(folderPath))
-                    Directory.CreateDirectory(folderPath);
+                var filePath = _virtualPathProvider.Combine(context.TargetPath, relativePath);
+                var folderPath = _virtualPathProvider.GetDirectoryName(filePath);
+                if (!_virtualPathProvider.DirectoryExists(folderPath))
+                    _virtualPathProvider.CreateDirectory(folderPath);
 
-                using (var fileStream = new FileStream(filePath, FileMode.Create, FileAccess.Write, FileShare.Read)) {
+                using (var fileStream = _virtualPathProvider.CreateFile(filePath)) {
                     packageStream.CopyTo(fileStream);
                 }
             }
@@ -158,14 +162,15 @@ namespace Orchard.Packaging {
 
         private void EstablishPaths(ExpandContext context, IVirtualPathProvider virtualPathProvider) {
             context.SourcePath = "\\" + context.ExtensionName + "\\";
-            if (context.ExtensionType == "Theme") {
-                context.TargetPath = virtualPathProvider.MapPath("~/Themes-temp/" + context.ExtensionName);
-            }
-            else if (context.ExtensionType == "Module") {
-                context.TargetPath = virtualPathProvider.MapPath("~/Modules-temp/" + context.ExtensionName);
-            }
-            else {
-                throw new ApplicationException("Unknown extension type");
+            switch (context.ExtensionType) {
+                case "Theme":
+                    context.TargetPath = virtualPathProvider.Combine("~/Themes/" + context.ExtensionName);
+                    break;
+                case "Module":
+                    context.TargetPath = virtualPathProvider.Combine("~/Modules/" + context.ExtensionName);
+                    break;
+                default:
+                    throw new OrchardCoreException(T("Unknown extension type \"{0}\"", context.ExtensionType));
             }
         }
     }

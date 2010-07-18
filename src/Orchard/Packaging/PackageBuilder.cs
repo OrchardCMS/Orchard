@@ -39,7 +39,7 @@ namespace Orchard.Packaging {
 
                 var projectFile = extensionDescriptor.Name + ".csproj";
                 if (LoadProject(context, projectFile)) {
-                    EmbedVirtualFile(context, projectFile, System.Net.Mime.MediaTypeNames.Text.Xml);
+                    EmbedVirtualFile(context, projectFile, MediaTypeNames.Text.Xml);
                     EmbedProjectFiles(context, "Compile", "Content", "None", "EmbeddedResource");
                     EmbedReferenceFiles(context);
                 }
