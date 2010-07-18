@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Web;
 using System.Web.Hosting;
 
 namespace Orchard.FileSystems.VirtualPath {
@@ -11,11 +12,21 @@ namespace Orchard.FileSystems.VirtualPath {
         }
 
         public IEnumerable<string> ListFiles(string path) {
-            return HostingEnvironment.VirtualPathProvider.GetDirectory(path).Files.OfType<VirtualFile>().Select(f => f.VirtualPath);
+            return HostingEnvironment
+                .VirtualPathProvider
+                .GetDirectory(path)
+                .Files
+                .OfType<VirtualFile>()
+                .Select(f => VirtualPathUtility.ToAppRelative(f.VirtualPath));
         }
 
         public IEnumerable<string> ListDirectories(string path) {
-            return HostingEnvironment.VirtualPathProvider.GetDirectory(path).Directories.OfType<VirtualDirectory>().Select(d => d.VirtualPath);
+            return HostingEnvironment
+                .VirtualPathProvider
+                .GetDirectory(path)
+                .Directories
+                .OfType<VirtualDirectory>()
+                .Select(d => VirtualPathUtility.ToAppRelative(d.VirtualPath));
         }
 
         public string Combine(params string[] paths) {
