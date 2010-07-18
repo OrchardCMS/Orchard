@@ -17,7 +17,7 @@ namespace Orchard.FileSystems.VirtualPath {
                 .GetDirectory(path)
                 .Files
                 .OfType<VirtualFile>()
-                .Select(f => VirtualPathUtility.ToAppRelative(f.VirtualPath));
+                .Select(f => ToAppRelative(f.VirtualPath));
         }
 
         public IEnumerable<string> ListDirectories(string path) {
@@ -26,11 +26,15 @@ namespace Orchard.FileSystems.VirtualPath {
                 .GetDirectory(path)
                 .Directories
                 .OfType<VirtualDirectory>()
-                .Select(d => VirtualPathUtility.ToAppRelative(d.VirtualPath));
+                .Select(d => ToAppRelative(d.VirtualPath));
         }
 
         public string Combine(params string[] paths) {
             return Path.Combine(paths).Replace(Path.DirectorySeparatorChar, '/');
+        }
+
+        public string ToAppRelative(string virtualPath) {
+            return VirtualPathUtility.ToAppRelative(virtualPath);
         }
 
         public Stream OpenFile(string virtualPath) {

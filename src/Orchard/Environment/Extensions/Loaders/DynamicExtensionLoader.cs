@@ -48,10 +48,9 @@ namespace Orchard.Environment.Extensions.Loaders {
         }
 
         public override IEnumerable<string> GetFileDependencies(DependencyDescriptor dependency, string virtualPath){
-            var path1 = virtualPath.StartsWith("~") ? virtualPath : "~" + virtualPath;
-            var path2 = dependency.VirtualPath.StartsWith("~") ? dependency.VirtualPath : "~" + dependency.VirtualPath;
+            virtualPath = _virtualPathProvider.ToAppRelative(virtualPath);
 
-            if (StringComparer.OrdinalIgnoreCase.Equals(path1, path2)) {
+            if (StringComparer.OrdinalIgnoreCase.Equals(virtualPath, dependency.VirtualPath)) {
                 return GetSourceFiles(virtualPath);
             }
             return base.GetFileDependencies(dependency, virtualPath);

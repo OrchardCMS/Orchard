@@ -29,6 +29,10 @@ namespace Orchard.Tests.Stubs {
             return Path.Combine(paths).Replace(Path.DirectorySeparatorChar, '/');
         }
 
+        public string ToAppRelative(string virtualPath) {
+            return "~/" + ToFileSystemPath(virtualPath);
+        }
+
         public string MapPath(string virtualPath) {
             throw new NotImplementedException("Mapping to a physical file is not supported in Unit Test with this stub.");
         }
