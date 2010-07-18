@@ -141,9 +141,9 @@ namespace Orchard.Environment.Extensions.Loaders {
                     Descriptor = descriptor,
                     Loader = this,
                     Name = Path.GetFileNameWithoutExtension(path),
-                    VirtualPath = path,
-                    LastWriteTimeUtc = _virtualPathProvider.GetFileLastWriteTimeUtc(path)
-                } );
+                    VirtualPath = path
+                } )
+                .ToList();
         }
 
         public override bool IsCompatibleWithModuleReferences(ExtensionDescriptor extension, IEnumerable<ExtensionProbeEntry> references) {

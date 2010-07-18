@@ -104,18 +104,23 @@ namespace Orchard.Environment.Extensions {
                 context.AvailableExtensions
                     .Where(e =>
                            context.ReferencesByModule.ContainsKey(extension.Name) &&
-                           context.ReferencesByModule[extension.Name].Any(r => StringComparer.OrdinalIgnoreCase.Equals(e.Name, r.Name)));
+                           context.ReferencesByModule[extension.Name].Any(r => StringComparer.OrdinalIgnoreCase.Equals(e.Name, r.Name)))
+                    .ToList();
 
             var processedModuleReferences =
                 moduleReferences
                 .Where(e => context.ProcessedExtensions.ContainsKey(e.Name))
-                .Select(e => context.ProcessedExtensions[e.Name]);
+                .Select(e => context.ProcessedExtensions[e.Name])
+                .ToList();
 
             var activatedExtension = extensionProbes
                 .Where(e => e.Loader.IsCompatibleWithModuleReferences(extension, processedModuleReferences))
                 .FirstOrDefault();
 
-            var previousDependency = context.PreviousDependencies.Where(d => StringComparer.OrdinalIgnoreCase.Equals(d.Name, extension.Name)).FirstOrDefault();
+            var previousDependency = context
+                .PreviousDependencies
+                .Where(d => StringComparer.OrdinalIgnoreCase.Equals(d.Name, extension.Name))
+                .FirstOrDefault();
 
             if (activatedExtension == null) {
                 Logger.Warning("No loader found for extension \"{0}\"!", extension.Name);
@@ -233,8 +238,10 @@ namespace Orchard.Environment.Extensions {
 
             var bestBinaryReference = references
                 .Where(entry => !string.IsNullOrEmpty(entry.VirtualPath))
+                .Select(entry => new { Entry = entry, LastWriteTimeUtc = _virtualPathProvider.GetFileLastWriteTimeUtc(entry.VirtualPath) })
                 .OrderBy(e => e.LastWriteTimeUtc)
-                .ThenBy(e => e.Name).FirstOrDefault();
+                .ThenBy(e => e.Entry.Name)
+                .FirstOrDefault();
 
             var bestExtensionReference = context.ProcessedExtensions.ContainsKey(referenceName) ?
                 context.ProcessedExtensions[referenceName] :
@@ -252,14 +259,14 @@ namespace Orchard.Environment.Extensions {
 
             // Activate the binary ref
             if (bestBinaryReference != null) {
-                if (!context.ProcessedReferences.Contains(bestBinaryReference.Name)) {
-                    context.ProcessedReferences.Add(bestBinaryReference.Name);
-                    bestBinaryReference.Loader.ReferenceActivated(context, bestBinaryReference);
+                if (!context.ProcessedReferences.Contains(bestBinaryReference.Entry.Name)) {
+                    context.ProcessedReferences.Add(bestBinaryReference.Entry.Name);
+                    bestBinaryReference.Entry.Loader.ReferenceActivated(context, bestBinaryReference.Entry);
                 }
                 activatedReferences.Add(new DependencyReferenceDescriptor {
-                    LoaderName = bestBinaryReference.Loader.Name,
-                    Name = bestBinaryReference.Name,
-                    VirtualPath = bestBinaryReference.VirtualPath
+                    LoaderName = bestBinaryReference.Entry.Loader.Name,
+                    Name = bestBinaryReference.Entry.Name,
+                    VirtualPath = bestBinaryReference.Entry.VirtualPath
                 });
                 return;
             }

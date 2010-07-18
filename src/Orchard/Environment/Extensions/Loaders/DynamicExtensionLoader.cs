@@ -105,9 +105,17 @@ namespace Orchard.Environment.Extensions.Loaders {
                     Descriptor = descriptor,
                     Loader = this,
                     Name = r.AssemblyName,
-                    VirtualPath = null
+                    VirtualPath = GetReferenceVirtualPath(projectPath, r.AssemblyName)
                 });
             }
+        }
+
+        private string GetReferenceVirtualPath(string projectPath, string referenceName) {
+            var path = _virtualPathProvider.GetDirectoryName(projectPath);
+            path = _virtualPathProvider.Combine(path, "bin", referenceName + ".dll");
+            if (_virtualPathProvider.FileExists(path))
+                return path;
+            return null;
         }
 
         public override Assembly LoadReference(DependencyReferenceDescriptor reference) {
