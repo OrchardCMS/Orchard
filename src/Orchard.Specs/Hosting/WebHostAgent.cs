@@ -1,5 +1,8 @@
 using System;
+using System.Threading;
+using System.Web;
 using System.Web.Hosting;
+using Orchard.Specs.Hosting.Orchard.Web;
 
 namespace Orchard.Specs.Hosting {
     public class WebHostAgent : MarshalByRefObject
@@ -11,11 +14,7 @@ namespace Orchard.Specs.Hosting {
         }
 
         public void Shutdown() {
-            //TODO: this line is required to properly shutdown the ASP.NET
-            //      host and release memory when running multiple SpecFlow tests.
-            //      However, nuint complains about an unhandled AppdomainUnloadedException
-            //      When we figure out a way around this, we will re-enable this line.
-            //HostingEnvironment.InitiateShutdown();
+            HostingEnvironment.InitiateShutdown();
         }
     }
 }
