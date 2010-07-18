@@ -51,10 +51,6 @@ namespace Orchard.FileSystems.WebSite {
             return _virtualPathMonitor.WhenPathChanges(virtualPath);
         }
 
-        public void WhenPathChanges(string virtualPath, Action action) {
-            _virtualPathMonitor.WhenPathChanges(virtualPath, action);
-        }
-
         static string Normalize(string virtualPath) {
             return HostingEnvironment.VirtualPathProvider.GetFile(virtualPath).VirtualPath;
         }

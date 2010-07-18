@@ -33,10 +33,6 @@ namespace Orchard.Tests.Stubs {
             return new Token {IsCurrent = true};
         }
 
-        public void WhenPathChanges(string path, Action action) {
-            throw new NotImplementedException();
-        }
-
         public class Token : IVolatileToken {
             public bool IsCurrent { get; set; }
         }
