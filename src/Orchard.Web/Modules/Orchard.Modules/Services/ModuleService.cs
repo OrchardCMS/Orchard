@@ -28,20 +28,19 @@ namespace Orchard.Modules.Services {
         public IOrchardServices Services { get; set; }
 
         public IModule GetModuleByName(string moduleName) {
-            return
-                _extensionManager.AvailableExtensions().Where(
-                    e =>
-                    string.Equals(e.Name, moduleName, StringComparison.OrdinalIgnoreCase) &&
-                    string.Equals(e.ExtensionType, ModuleExtensionType, StringComparison.OrdinalIgnoreCase)).Select(
-                        descriptor => AssembleModuleFromDescriptor(descriptor)).FirstOrDefault();
+            return _extensionManager
+                .AvailableExtensions()
+                .Where(e => string.Equals(e.Name, moduleName, StringComparison.OrdinalIgnoreCase))
+                .Where(e => string.Equals(e.ExtensionType, ModuleExtensionType, StringComparison.OrdinalIgnoreCase))
+                .Select(descriptor => AssembleModuleFromDescriptor(descriptor))
+                .FirstOrDefault();
         }
 
         public IEnumerable<IModule> GetInstalledModules() {
-            return
-                _extensionManager.AvailableExtensions().Where(
-                    e => String.Equals(e.ExtensionType, ModuleExtensionType, StringComparison.OrdinalIgnoreCase)).Select
-                    (
-                        descriptor => AssembleModuleFromDescriptor(descriptor));
+            return _extensionManager
+                .AvailableExtensions()
+                .Where(e => String.Equals(e.ExtensionType, ModuleExtensionType, StringComparison.OrdinalIgnoreCase))
+                .Select(descriptor => AssembleModuleFromDescriptor(descriptor));
         }
 
         public void InstallModule(HttpPostedFileBase file) {
@@ -56,13 +55,8 @@ namespace Orchard.Modules.Services {
             var enabledFeatures = _shellDescriptorManager.GetShellDescriptor().Features;
             return GetInstalledModules()
                 .SelectMany(m => _extensionManager.LoadFeatures(m.Features))
-                .Select(
-                    f =>
-                    AssembleModuleFromDescriptor(f,
-                                                 enabledFeatures.FirstOrDefault(
-                                                     sf =>
-                                                     string.Equals(sf.Name, f.Descriptor.Name,
-                                                                   StringComparison.OrdinalIgnoreCase)) != null));
+                .Select(f => AssembleModuleFromDescriptor(f, enabledFeatures
+                    .FirstOrDefault(sf => string.Equals(sf.Name, f.Descriptor.Name, StringComparison.OrdinalIgnoreCase)) != null));
         }
 
         public void EnableFeatures(IEnumerable<string> featureNames) {

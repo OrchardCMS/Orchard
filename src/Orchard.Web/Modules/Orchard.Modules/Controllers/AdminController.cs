@@ -1,23 +1,29 @@
 ﻿using System;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 using Orchard.Data.Migration;
 using Orchard.Localization;
 using Orchard.Modules.ViewModels;
 using Orchard.Mvc.Results;
+using Orchard.Packaging;
 using Orchard.UI.Notify;
-using Orchard.Utility.Extensions;
 
 namespace Orchard.Modules.Controllers {
     public class AdminController : Controller {
         private readonly IModuleService _moduleService;
         private readonly IDataMigrationManager _dataMigrationManager;
+        private readonly IPackageManager _packageManager;
 
-        public AdminController(IOrchardServices services, IModuleService moduleService, IDataMigrationManager dataMigrationManager) {
+        public AdminController(IOrchardServices services,
+            IModuleService moduleService,
+            IDataMigrationManager dataMigrationManager,
+            IPackageManager packageManager) {
+
             Services = services;
             _moduleService = moduleService;
             _dataMigrationManager = dataMigrationManager;
+            _packageManager = packageManager;
+
             T = NullLocalizer.Instance;
         }
 
@@ -29,11 +35,11 @@ namespace Orchard.Modules.Controllers {
                 return new HttpUnauthorizedResult();
 
             var modules = _moduleService.GetInstalledModules().ToList();
-            return View(new ModulesIndexViewModel {Modules = modules});
+            return View(new ModulesIndexViewModel { Modules = modules });
         }
 
         public ActionResult Add() {
-            return View(new ModuleAddViewModel());  
+            return View(new ModuleAddViewModel());
         }
 
         [HttpPost, ActionName("Add")]
@@ -54,14 +60,18 @@ namespace Orchard.Modules.Controllers {
 
                 foreach (string fileName in Request.Files) {
                     var file = Request.Files[fileName];
-                    //todo: upload & process module package
+
+                    var info = _packageManager.Install(file.InputStream);
+                    Services.Notifier.Information(T("Installed package \"{0}\", version {1} of type \"{2}\" at location \"{3}\"",
+                        info.ExtensionName, info.ExtensionVersion, info.ExtensionType, info.ExtensionPath));
                 }
 
-                //todo: add success message
                 return RedirectToAction("index");
             }
             catch (Exception exception) {
-                Services.Notifier.Error(T("Uploading module package failed: {0}",  exception.Message));
+                for (var scan = exception; scan != null; scan = scan.InnerException) {
+                    Services.Notifier.Error(T("Uploading module package failed: {0}", exception.Message));
+                }
                 return View("add", viewModel);
             }
         }
@@ -84,7 +94,7 @@ namespace Orchard.Modules.Controllers {
             if (string.IsNullOrEmpty(id))
                 return new NotFoundResult();
 
-            _moduleService.EnableFeatures(new[] {id}, force != null && (bool) force);
+            _moduleService.EnableFeatures(new[] { id }, force != null && (bool)force);
 
             return RedirectToAction("Features");
         }
@@ -97,24 +107,24 @@ namespace Orchard.Modules.Controllers {
             if (string.IsNullOrEmpty(id))
                 return new NotFoundResult();
 
-            _moduleService.DisableFeatures(new[] {id}, force != null && (bool) force);
+            _moduleService.DisableFeatures(new[] { id }, force != null && (bool)force);
 
             return RedirectToAction("Features");
         }
 
         [HttpPost]
         public ActionResult Update(string id, bool? force) {
-            if ( !Services.Authorizer.Authorize(Permissions.ManageFeatures, T("Not allowed to manage features")) )
+            if (!Services.Authorizer.Authorize(Permissions.ManageFeatures, T("Not allowed to manage features")))
                 return new HttpUnauthorizedResult();
 
-            if ( string.IsNullOrEmpty(id) )
+            if (string.IsNullOrEmpty(id))
                 return new NotFoundResult();
 
             try {
                 _dataMigrationManager.Update(id);
                 Services.Notifier.Information(T("The feature {0} was updated succesfuly", id));
             }
-            catch(Exception ex) {
+            catch (Exception ex) {
                 Services.Notifier.Error(T("An error occured while updating the feature {0}: {1}", id, ex.Message));
             }
 
