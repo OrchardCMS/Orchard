@@ -81,7 +81,7 @@
                 for (var i = 0; i < queryParts.length; i++) {
                     var queryPartKVP = queryParts[i].split("=");
                     //trusting hrefs in the page here
-                    form.append($("<input type=\"hidden\" name=\"" + queryPartKVP[0] + "\" value=\"" + queryPartKVP[1] + "\" />"));
+                    form.append($("<input type=\"hidden\" name=\"" + decodeURIComponent(queryPartKVP[0]) + "\" value=\"" + decodeURIComponent(queryPartKVP[1]) + "\" />"));
                 }
             }
             form.css({ "position": "absolute", "left": "-9999em" });

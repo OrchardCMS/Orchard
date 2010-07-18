@@ -232,7 +232,7 @@ namespace Orchard.Core.Contents.Controllers {
         }
 
         [HttpPost]
-        public ActionResult Publish(int id) {
+        public ActionResult Publish(int id, string returnUrl) {
             if (!Services.Authorizer.Authorize(Permissions.PublishContent, T("Couldn't publish content")))
                 return new HttpUnauthorizedResult();
 
@@ -244,11 +244,14 @@ namespace Orchard.Core.Contents.Controllers {
             Services.ContentManager.Flush();
             Services.Notifier.Information(T("{0} successfully published.", contentItem.TypeDefinition.DisplayName));
 
+            if (!String.IsNullOrEmpty(returnUrl))
+                return Redirect(returnUrl);
+
             return RedirectToAction("List");
         }
 
         [HttpPost]
-        public ActionResult Unpublish(int id) {
+        public ActionResult Unpublish(int id, string returnUrl) {
             if (!Services.Authorizer.Authorize(Permissions.PublishContent, T("Couldn't unpublish content")))
                 return new HttpUnauthorizedResult();
 
@@ -259,6 +262,9 @@ namespace Orchard.Core.Contents.Controllers {
             _contentManager.Unpublish(contentItem);
             Services.ContentManager.Flush();
             Services.Notifier.Information(T("{0} successfully unpublished.", contentItem.TypeDefinition.DisplayName));
+
+            if (!String.IsNullOrEmpty(returnUrl))
+                return Redirect(returnUrl);
 
             return RedirectToAction("List");
         }

@@ -235,8 +235,6 @@
     <Content Include="Contents\Views\DisplayTemplates\Parts\Contents.Publish.ascx" />
     <Content Include="PublishLater\Views\DisplayTemplates\Parts\PublishLater.Metadata.ascx" />
     <Content Include="PublishLater\Views\DisplayTemplates\Parts\PublishLater.Metadata.SummaryAdmin.ascx" />
-    <Content Include="PublishLater\Views\DisplayTemplates\Parts\PublishLater.SummaryAdmin.ascx" />
-    <Content Include="PublishLater\Views\DisplayTemplates\Parts\PublishLater.ascx" />
     <Content Include="Common\Views\EditorTemplates\Fields\Common.TextField.ascx" />
     <Content Include="Common\Views\EditorTemplates\Parts\Common.Container.ascx" />
     <Content Include="Common\Views\EditorTemplates\PlainTextEditor.ascx" />
