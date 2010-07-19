@@ -33,26 +33,19 @@ namespace Orchard.Core.Contents.ViewModels {
 
     public class ContentOptions {
         public ContentOptions() {
-            Filter = ContentsFilter.All;
-            Order = ContentsOrder.Modified;
+            OrderBy = ContentsOrder.Modified;
             BulkAction = ContentsBulkAction.None;
         }
-        public ContentsFilter Filter { get; set; }
-        public ContentsOrder Order { get; set; }
+        public string SelectedFilter { get; set; }
+        public IEnumerable<KeyValuePair<string, string>> FilterOptions { get; set; }
+        public ContentsOrder OrderBy { get; set; }
         public ContentsBulkAction BulkAction { get; set; }
-    }
-
-    public enum ContentsFilter {
-        All,
-        Page,
-        BlogPost
     }
 
     public enum ContentsOrder {
         Modified,
         Published,
-        Created,
-        Title
+        Created
     }
 
     public enum ContentsBulkAction {

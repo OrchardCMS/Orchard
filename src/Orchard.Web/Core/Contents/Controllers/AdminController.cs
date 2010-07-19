@@ -52,6 +52,19 @@ namespace Orchard.Core.Contents.Controllers {
 
             var query = _contentManager.Query(VersionOptions.Latest, _contentDefinitionManager.ListTypeDefinitions().Select(ctd => ctd.Name).ToArray());
 
+            // Ordering
+            switch (model.Options.OrderBy) {
+                case ContentsOrder.Modified:
+                    query = query.OrderByDescending<CommonRecord, DateTime?>(cr => cr.ModifiedUtc);
+                    break;
+                case ContentsOrder.Published:
+                    query = query.OrderByDescending<CommonRecord, DateTime?>(cr => cr.PublishedUtc);
+                    break;
+                case ContentsOrder.Created:
+                    query = query.OrderByDescending<CommonRecord, DateTime?>(cr => cr.CreatedUtc);
+                    break;
+            }
+
             if (!string.IsNullOrEmpty(model.TypeName)) {
                 var contentTypeDefinition = _contentDefinitionManager.GetTypeDefinition(model.TypeName);
                 if (contentTypeDefinition == null)
@@ -69,10 +82,31 @@ namespace Orchard.Core.Contents.Controllers {
             var contentItems = query.Slice(skip, pageSize);
 
             model.Entries = contentItems.Select(BuildEntry).ToList();
+            model.Options.SelectedFilter = model.TypeName;
+            model.Options.FilterOptions = _contentDefinitionManager.ListTypeDefinitions()
+                .Select(ctd => new KeyValuePair<string, string>(ctd.Name, ctd.DisplayName))
+                .ToList().OrderBy(kvp => kvp.Key);
 
             return View("List", model);
         }
 
+        [HttpPost, ActionName("List")]
+        [FormValueRequired("submit.Filter")]
+        public ActionResult ListFilterPOST(ContentOptions options) {
+            var routeValues = ControllerContext.RouteData.Values;
+            if (options != null) {
+                routeValues["Options.OrderBy"] = options.OrderBy; //todo: don't hard-code the key
+                if (_contentDefinitionManager.ListTypeDefinitions().Any(ctd => string.Equals(ctd.Name, options.SelectedFilter, StringComparison.OrdinalIgnoreCase))) {
+                    routeValues["id"] = options.SelectedFilter;
+                }
+                else {
+                    routeValues.Remove("id");
+                }
+            }
+
+            return RedirectToAction("List", routeValues);
+        }
+        
         [HttpPost, ActionName("List")]
         [FormValueRequired("submit.BulkEdit")]
         public ActionResult ListPOST(ContentOptions options, IEnumerable<int> itemIds, string returnUrl) {
