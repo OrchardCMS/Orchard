@@ -32,6 +32,9 @@ namespace Orchard.Caching {
         }
 
         class Token : IVolatileToken {
+            public Token() {
+                IsCurrent = true;
+            }
             public bool IsCurrent { get; private set; }
             public void Trigger() { IsCurrent = false; }
         }
