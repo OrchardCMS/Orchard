@@ -59,8 +59,17 @@
   </Target>
 
   <Target Name ="Compile">
+    <CallTarget Targets="CompileMsBuildTasks"/>
+
     <MSBuild
       Projects="$(SrcFolder)\Orchard.sln"
+      Targets="Build"
+      Properties="Configuration=Release;OutputPath=$(CompileFolder)" />
+  </Target>
+
+  <Target Name ="CompileMsBuildTasks">
+    <MSBuild
+      Projects="$(SrcFolder)\Tools\MSBuild.Orchard.Tasks\MSBuild.Orchard.Tasks.csproj"
       Targets="Build"
       Properties="Configuration=Release;OutputPath=$(CompileFolder)" />
   </Target>
@@ -225,7 +234,8 @@
 
   <!-- Version -->
   <!-- Update all AssemblyInfo.cs and module.txt files to contain $(Version) -->
-  <Target Name="SetVersion">
+  <Target Name="SetVersion" Condition="$(Version) != ''">
+    <CallTarget Targets="CompileMsBuildTasks"/>
     <ItemGroup>
       <Version-AssemblyInfos Include="$(SrcFolder)\**\AssemblyInfo.cs" />
       <Version-Modules Include="$(SrcFolder)\**\Module.txt" />
@@ -233,9 +243,12 @@
 
     <FileUpdateLines Files="@(Version-Modules)"
         Regex="^(orchardversion|version)(\s*):(\s*)(.*)"
-        ReplacementText="$1$2:${3}$(Version)"/>
+        ReplacementText="${1}${2}:${3}$(Version)"
+        IgnoreCase="True"/>
 
+    <FileUpdateLines Files="@(Version-AssemblyInfos)"
+        Regex="^\[assembly:(\s)*(AssemblyVersion|AssemblyFileVersion)(\s)*\(&quot;(.*)&quot;\)(\s)*\]"
+        ReplacementText="[assembly:${1}${2}${3}(&quot;$(Version)&quot;)${5}]"
+        IgnoreCase="True"/>
   </Target>
-
 </Project>
-
