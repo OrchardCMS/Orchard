@@ -36,6 +36,15 @@
     <CallTarget Targets="Package"/>
   </Target>
 
+  <Target Name ="BuildWithVersion">
+    <CallTarget Targets="Clean"/>
+    <CallTarget Targets="SetVersion"/>
+    <CallTarget Targets="Compile"/>
+    <CallTarget Targets="Test"/>
+    <CallTarget Targets="Package"/>
+  </Target>
+
+
   <Target Name="Package">
     <CallTarget Targets="Package-Stage"/>
     <CallTarget Targets="Package-MsDeploy"/>
