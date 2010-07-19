@@ -25,9 +25,9 @@ using (Html.BeginFormAntiForgeryPost()) { %>
         </select>
         <label for="orderResults" class="bulk-order"><%:T("Ordered by")%></label>
         <select id="orderResults" name="<%:Html.NameOf(m => m.Options.OrderBy) %>">
-            <%:Html.SelectOption(Model.Options.OrderBy, ContentsOrder.Created, T("Date Created").ToString())%>
-            <%:Html.SelectOption(Model.Options.OrderBy, ContentsOrder.Modified, T("Date Modified").ToString())%>
-            <%:Html.SelectOption(Model.Options.OrderBy, ContentsOrder.Published, T("Date Published").ToString())%>
+            <%:Html.SelectOption(Model.Options.OrderBy, ContentsOrder.Created, T("most recently created").ToString())%>
+            <%:Html.SelectOption(Model.Options.OrderBy, ContentsOrder.Modified, T("most recently modified").ToString())%>
+            <%--<%:Html.SelectOption(Model.Options.OrderBy, ContentsOrder.Published, T("Date Published").ToString())%>--%>
         </select>
         <button type="submit" name="submit.Filter" value="yes please"><%:T("Apply") %></button>
     </fieldset>

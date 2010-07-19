@@ -52,19 +52,6 @@ namespace Orchard.Core.Contents.Controllers {
 
             var query = _contentManager.Query(VersionOptions.Latest, _contentDefinitionManager.ListTypeDefinitions().Select(ctd => ctd.Name).ToArray());
 
-            // Ordering
-            switch (model.Options.OrderBy) {
-                case ContentsOrder.Modified:
-                    query = query.OrderByDescending<CommonRecord, DateTime?>(cr => cr.ModifiedUtc);
-                    break;
-                case ContentsOrder.Published:
-                    query = query.OrderByDescending<CommonRecord, DateTime?>(cr => cr.PublishedUtc);
-                    break;
-                case ContentsOrder.Created:
-                    query = query.OrderByDescending<CommonRecord, DateTime?>(cr => cr.CreatedUtc);
-                    break;
-            }
-
             if (!string.IsNullOrEmpty(model.TypeName)) {
                 var contentTypeDefinition = _contentDefinitionManager.GetTypeDefinition(model.TypeName);
                 if (contentTypeDefinition == null)
@@ -79,7 +66,44 @@ namespace Orchard.Core.Contents.Controllers {
             if (model.ContainerId != null)
                 query = query.Join<CommonRecord>().Where(cr => cr.Container.Id == model.ContainerId);
 
-            var contentItems = query.Slice(skip, pageSize);
+            // Ordering
+            //-- want something like 
+            //switch (model.Options.OrderBy) {
+            //    case ContentsOrder.Modified:
+            //        query = query.OrderByDescending<CommonRecord, DateTime?>(cr => cr.ModifiedUtc);
+            //        break;
+            //    case ContentsOrder.Published:
+            //        query = query.OrderByDescending<CommonRecord, DateTime?>(cr => cr.PublishedUtc);
+            //        break;
+            //    case ContentsOrder.Created:
+            //        query = query.OrderByDescending<CommonRecord, DateTime?>(cr => cr.CreatedUtc);
+            //        break;
+            //}
+
+            //-- but resorting to
+
+            IEnumerable<ContentItem> contentItems = query.List();
+            switch (model.Options.OrderBy) {
+                case ContentsOrder.Modified:
+                    contentItems = contentItems.OrderByDescending(ci => ci.VersionRecord.Id);
+                    break;
+                //case ContentsOrder.Published:
+                // would be lying w/out a published date instead of a bool but that only comes with the common aspect
+                //    contentItems = contentItems.OrderByDescending(ci => ci.VersionRecord.Published/*Date*/);
+                //    break;
+                case ContentsOrder.Created:
+                    contentItems = contentItems.OrderByDescending(ci => ci.Id);
+                    break;
+            }
+
+            //-- for the moment
+            //-- because I'd rather do this
+
+            //var contentItems = query.Slice(skip, pageSize);
+
+            //-- instead of this (having the ordering and skip/take after the query)
+
+            contentItems = contentItems.Skip(skip).Take(pageSize);
 
             model.Entries = contentItems.Select(BuildEntry).ToList();
             model.Options.SelectedFilter = model.TypeName;
