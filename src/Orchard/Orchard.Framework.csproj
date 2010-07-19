@@ -135,6 +135,7 @@
     <Compile Include="Caching\Signals.cs" />
     <Compile Include="Collections\IPageOfItems.cs" />
     <Compile Include="Collections\PageOfItems.cs" />
+    <Compile Include="Commands\CommandBackgroundService.cs" />
     <Compile Include="Commands\CommandHostEnvironment.cs" />
     <Compile Include="ContentManagement\Aspects\ICommonAspect.cs">
       <SubType>Code</SubType>

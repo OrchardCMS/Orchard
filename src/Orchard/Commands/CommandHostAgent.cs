@@ -9,6 +9,7 @@ using Orchard.Environment;
 using Orchard.Environment.Configuration;
 using Orchard.Localization;
 using Orchard.Logging;
+using Orchard.Tasks;
 
 namespace Orchard.Commands {
     /// <summary>
@@ -141,6 +142,7 @@ namespace Orchard.Commands {
         protected void ContainerRegistrations(ContainerBuilder builder) {
             MvcSingletons(builder);
             builder.RegisterType<CommandHostEnvironment>().As<IHostEnvironment>();
+            builder.RegisterType<CommandBackgroundService>().As<IBackgroundService>();
         }
 
         protected void MvcSingletons(ContainerBuilder builder) {
