@@ -221,8 +221,13 @@
 
     <MakeDir Directories="$(MsDeployArtifactFolder);$(SourceArtifactFolder)"/>
 
-    <Zip Files="@(Zip-MsDeploy)" WorkingDirectory="$(MsDeployFolder)" ZipFileName="$(MsDeployArtifactFolder)\Orchard.Web.zip" />
-    <Zip Files="@(Zip-Source)" WorkingDirectory="$(MSBuildProjectDirectory)" ZipFileName="$(SourceArtifactFolder)\Orchard.Source.zip" />
+    <PropertyGroup>
+      <ZipVersionFileSuffix Condition="$(Version) != ''">.$(Version)</ZipVersionFileSuffix>
+      <ZipVersionFileSuffix Condition="$(Version) == ''"></ZipVersionFileSuffix>
+    </PropertyGroup>
+
+    <Zip Files="@(Zip-MsDeploy)" WorkingDirectory="$(MsDeployFolder)" ZipFileName="$(MsDeployArtifactFolder)\Orchard.Web$(ZipVersionFileSuffix).zip" />
+    <Zip Files="@(Zip-Source)" WorkingDirectory="$(MSBuildProjectDirectory)" ZipFileName="$(SourceArtifactFolder)\Orchard.Source$(ZipVersionFileSuffix).zip" />
   </Target>
 
   <!-- Profiling -->
