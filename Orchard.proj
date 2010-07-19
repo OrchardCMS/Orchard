@@ -20,6 +20,9 @@
 
     <BuildPlatform Condition="$(ProgramW6432) != ''">x64</BuildPlatform>
     <BuildPlatform Condition="$(BuildPlatform) == ''">x86</BuildPlatform>
+
+    <!-- TeamCity build number -->
+    <Version>$(BUILD_NUMBER)</Version>
   </PropertyGroup>
 
   <Import Project="$(LibFolder)\msbuild\MSBuild.Community.Tasks.Targets"/>
@@ -91,6 +94,7 @@
 
   <UsingTask AssemblyFile="$(CompileFolder)\MSBuild.Orchard.Tasks.dll" TaskName="MSBuild.Orchard.Tasks.StageProjectAlteration" />
   <UsingTask AssemblyFile="$(CompileFolder)\MSBuild.Orchard.Tasks.dll" TaskName="MSBuild.Orchard.Tasks.FilterModuleBinaries" />
+  <UsingTask AssemblyFile="$(CompileFolder)\MSBuild.Orchard.Tasks.dll" TaskName="MSBuild.Orchard.Tasks.FileUpdateLines" />
 
   <Target Name="Package-Stage">
     <ItemGroup>
@@ -216,6 +220,21 @@
 
   <Target Name="Profiling-Setup">
     <Exec Command="$(ProfilingFolder)\bin\Orchard.exe @$(SrcFolder)\Orchard.Profile\profiling-setup-commands.txt" WorkingDirectory="$(ProfilingFolder)"/>
+  </Target>
+
+
+  <!-- Version -->
+  <!-- Update all AssemblyInfo.cs and module.txt files to contain $(Version) -->
+  <Target Name="SetVersion">
+    <ItemGroup>
+      <Version-AssemblyInfos Include="$(SrcFolder)\**\AssemblyInfo.cs" />
+      <Version-Modules Include="$(SrcFolder)\**\Module.txt" />
+    </ItemGroup>
+
+    <FileUpdateLines Files="@(Version-Modules)"
+        Regex="^(orchardversion|version)(\s*):(\s*)(.*)"
+        ReplacementText="$1$2:${3}$(Version)"/>
+
   </Target>
 
 </Project>
