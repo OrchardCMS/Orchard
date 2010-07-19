@@ -16,7 +16,7 @@ namespace Orchard.Users.DataMigrations {
                 .Column<string>("PasswordSalt")
                 );
 
-            return 0010;
+            return 1;
         }
     }
 }

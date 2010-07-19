@@ -11,7 +11,7 @@ namespace Orchard.Core.Localization.DataMigrations {
                 .Column<int>("MasterContentItemId")
                 );
 
-            return 0010;
+            return 1;
         }
     }
 }

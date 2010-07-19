@@ -14,7 +14,7 @@ namespace Orchard.Sandbox.DataMigrations {
                 .Column<bool>("AllowAnonymousEdits")
                 );
 
-            return 0010;
+            return 1;
         }
     }
 }

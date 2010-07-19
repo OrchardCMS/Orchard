@@ -12,7 +12,7 @@ namespace Orchard.Core.Routable.DataMigrations {
                 .Column<string>("Path", column => column.WithLength(2048))
                 );
 
-            return 0010;
+            return 1;
         }
     }
 }

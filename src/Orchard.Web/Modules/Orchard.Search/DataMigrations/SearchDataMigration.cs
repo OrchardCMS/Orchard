@@ -11,7 +11,7 @@ namespace Orchard.Search.DataMigrations {
                 .Column<string>("SearchedFields")
                 );
 
-            return 0010;
+            return 1;
         }
     }
 }

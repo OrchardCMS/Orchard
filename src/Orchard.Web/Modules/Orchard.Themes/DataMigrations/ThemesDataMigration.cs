@@ -22,7 +22,7 @@ namespace Orchard.Themes.DataMigrations {
                 .Column<string>("CurrentThemeName")
                 );
 
-            return 0010;
+            return 1;
         }
     }
 }

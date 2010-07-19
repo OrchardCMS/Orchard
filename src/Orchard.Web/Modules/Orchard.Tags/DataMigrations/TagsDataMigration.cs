@@ -17,7 +17,7 @@ namespace Orchard.Tags.DataMigrations {
                 .Column<int>("ContentItemId")
                 );
 
-            return 0010;
+            return 1;
         }
     }
 }

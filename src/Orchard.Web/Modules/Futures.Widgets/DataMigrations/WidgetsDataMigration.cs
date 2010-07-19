@@ -17,7 +17,7 @@ namespace Futures.Widgets.DataMigrations {
                 .Column<int>("Scope_id")
                 );
 
-            return 0010;
+            return 1;
         }
     }
 }

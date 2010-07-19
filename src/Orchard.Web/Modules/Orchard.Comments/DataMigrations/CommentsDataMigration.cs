@@ -41,7 +41,7 @@ namespace Orchard.Comments.DataMigrations {
                 .Column<bool>("CommentsActive")
                 );
 
-            return 0010;
+            return 1;
         }
     }
 }

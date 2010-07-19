@@ -18,7 +18,7 @@ namespace Orchard.Core.Navigation.DataMigrations {
                 .Column<bool>("OnMainMenu")
                 );
 
-            return 0010;
+            return 1;
         }
     }
 }
