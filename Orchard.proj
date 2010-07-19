@@ -7,6 +7,7 @@
     <LibFolder>$(MSBuildProjectDirectory)\lib</LibFolder>
     <SrcFolder>$(MSBuildProjectDirectory)\src</SrcFolder>
     <BuildFolder>$(MSBuildProjectDirectory)\build</BuildFolder>
+    <MsBuildTasksFolder>$(MSBuildProjectDirectory)\buildtasks</MsBuildTasksFolder>
     <ArtifactsFolder>$(MSBuildProjectDirectory)\artifacts</ArtifactsFolder>
     <SqlCeFolder>$(MSBuildProjectDirectory)\lib\sqlce</SqlCeFolder>
     <SourceArtifactFolder>$(ArtifactsFolder)\Source</SourceArtifactFolder>
@@ -37,15 +38,6 @@
     <CallTarget Targets="Package"/>
   </Target>
 
-  <Target Name ="BuildWithVersion">
-    <CallTarget Targets="Clean"/>
-    <CallTarget Targets="SetVersion"/>
-    <CallTarget Targets="Compile"/>
-    <CallTarget Targets="Test"/>
-    <CallTarget Targets="Package"/>
-  </Target>
-
-
   <Target Name="Package">
     <CallTarget Targets="Package-Stage"/>
     <CallTarget Targets="Package-MsDeploy"/>
@@ -70,8 +62,6 @@
   </Target>
 
   <Target Name ="Compile">
-    <CallTarget Targets="CompileMsBuildTasks"/>
-
     <MSBuild
       Projects="$(SrcFolder)\Orchard.sln"
       Targets="Build"
@@ -82,9 +72,8 @@
     <MSBuild
       Projects="$(SrcFolder)\Tools\MSBuild.Orchard.Tasks\MSBuild.Orchard.Tasks.csproj"
       Targets="Build"
-      Properties="Configuration=Release;OutputPath=$(CompileFolder)" />
+      Properties="Configuration=Release;OutputPath=$(MsBuildTasksFolder)" />
   </Target>
-
 
   <!-- Testing -->
 
@@ -112,11 +101,13 @@
 
   <!-- Packaging (Stage) -->
 
-  <UsingTask AssemblyFile="$(CompileFolder)\MSBuild.Orchard.Tasks.dll" TaskName="MSBuild.Orchard.Tasks.StageProjectAlteration" />
-  <UsingTask AssemblyFile="$(CompileFolder)\MSBuild.Orchard.Tasks.dll" TaskName="MSBuild.Orchard.Tasks.FilterModuleBinaries" />
-  <UsingTask AssemblyFile="$(CompileFolder)\MSBuild.Orchard.Tasks.dll" TaskName="MSBuild.Orchard.Tasks.FileUpdateLines" />
+  <UsingTask AssemblyFile="$(MsBuildTasksFolder)\MSBuild.Orchard.Tasks.dll" TaskName="MSBuild.Orchard.Tasks.StageProjectAlteration" />
+  <UsingTask AssemblyFile="$(MsBuildTasksFolder)\MSBuild.Orchard.Tasks.dll" TaskName="MSBuild.Orchard.Tasks.FilterModuleBinaries" />
+  <UsingTask AssemblyFile="$(MsBuildTasksFolder)\MSBuild.Orchard.Tasks.dll" TaskName="MSBuild.Orchard.Tasks.FileUpdateLines" />
 
   <Target Name="Package-Stage">
+    <CallTarget Targets="CompileMsBuildTasks"/>
+    
     <ItemGroup>
       <SqlCe-Native-Binaries-x86 Include="$(SqlCeFolder)\x86\*"/>
       <SqlCe-Native-Binaries-amd64 Include="$(SqlCeFolder)\amd64\*"/>
@@ -252,6 +243,7 @@
   <!-- Update all AssemblyInfo.cs and module.txt files to contain $(Version) -->
   <Target Name="SetVersion" Condition="$(Version) != ''">
     <CallTarget Targets="CompileMsBuildTasks"/>
+    
     <ItemGroup>
       <Version-AssemblyInfos Include="$(SrcFolder)\**\AssemblyInfo.cs" />
       <Version-Modules Include="$(SrcFolder)\**\Module.txt" />
