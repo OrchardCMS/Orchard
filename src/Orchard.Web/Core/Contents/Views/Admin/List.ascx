@@ -15,23 +15,23 @@ using (Html.BeginFormAntiForgeryPost()) { %>
         </select>
         <button type="submit" name="submit.BulkEdit" value="yes"><%:T("Apply") %></button>
     </fieldset>
-<%--    <fieldset class="bulk-actions">
-        <label for="filterResults" class="bulk-filter"><%:T("Filter")%></label>
-        <select id="filterResults" name="<%:Html.NameOf(m => m.Options.Filter) %>">
-            <%:Html.SelectOption(Model.Options.Filter, ContentsFilter.All, T("All Content").ToString())%>
-            <%:Html.SelectOption(Model.Options.Filter, ContentsFilter.Page, T("Page").ToString())%>
-            <%:Html.SelectOption(Model.Options.Filter, ContentsFilter.BlogPost, T("Blog Post").ToString())%>
+    <fieldset class="bulk-actions">
+        <label for="filterResults" class="bulk-filter"><%:T("Show only of type")%></label>
+        <select id="filterResults" name="<%:Html.NameOf(m => m.Options.SelectedFilter) %>">
+            <%:Html.SelectOption(Model.Options.SelectedFilter, "", T("Any (show all)").ToString()) %>
+            <% foreach(var filterOption in Model.Options.FilterOptions) { %>
+                <%:Html.SelectOption(Model.Options.SelectedFilter, filterOption.Key, filterOption.Value) %><%
+            } %>
         </select>
         <label for="orderResults" class="bulk-order"><%:T("Ordered by")%></label>
-        <select id="orderResults" name="<%:Html.NameOf(m => m.Options.Order) %>">
-            <%:Html.SelectOption(Model.Options.Order, ContentsOrder.Created, T("Date Created").ToString())%>
-            <%:Html.SelectOption(Model.Options.Order, ContentsOrder.Modified, T("Date Modified").ToString())%>
-            <%:Html.SelectOption(Model.Options.Order, ContentsOrder.Published, T("Date Published").ToString())%>
-            <%:Html.SelectOption(Model.Options.Order, ContentsOrder.Title, T("Title").ToString())%>
+        <select id="orderResults" name="<%:Html.NameOf(m => m.Options.OrderBy) %>">
+            <%:Html.SelectOption(Model.Options.OrderBy, ContentsOrder.Created, T("most recently created").ToString())%>
+            <%:Html.SelectOption(Model.Options.OrderBy, ContentsOrder.Modified, T("most recently modified").ToString())%>
+            <%--<%:Html.SelectOption(Model.Options.OrderBy, ContentsOrder.Published, T("Date Published").ToString())%>--%>
         </select>
-        <button type="submit" name="submit.Filter"><%:T("Apply") %></button>
+        <button type="submit" name="submit.Filter" value="yes please"><%:T("Apply") %></button>
     </fieldset>
---%>    <fieldset class="contentItems bulk-items">
+    <fieldset class="contentItems bulk-items">
     <%:Html.UnorderedList(
         Model.Entries,
         (entry, i) => Html.DisplayForItem(entry.ViewModel),

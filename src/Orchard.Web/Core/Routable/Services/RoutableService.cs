@@ -63,10 +63,10 @@ namespace Orchard.Core.Routable.Services {
         public IEnumerable<IsRoutable> GetSimilarSlugs(string contentType, string slug)
         {
             return
-                _contentManager.Query(contentType).Join<RoutableRecord>()
+                _contentManager.Query().Join<RoutableRecord>()
                     .List()
                     .Select(i => i.As<IsRoutable>())
-                    .Where(routable => routable.Path.Equals(slug, StringComparison.OrdinalIgnoreCase)) // todo: for some reason the filter doesn't work within the query, even without StringComparison or StartsWith
+                    .Where(routable => routable.Path != null && routable.Path.Equals(slug, StringComparison.OrdinalIgnoreCase)) // todo: for some reason the filter doesn't work within the query, even without StringComparison or StartsWith
                     .ToArray();
         }
 

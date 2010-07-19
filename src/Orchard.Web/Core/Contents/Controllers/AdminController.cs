@@ -66,13 +66,71 @@ namespace Orchard.Core.Contents.Controllers {
             if (model.ContainerId != null)
                 query = query.Join<CommonRecord>().Where(cr => cr.Container.Id == model.ContainerId);
 
-            var contentItems = query.Slice(skip, pageSize);
+            // Ordering
+            //-- want something like 
+            //switch (model.Options.OrderBy) {
+            //    case ContentsOrder.Modified:
+            //        query = query.OrderByDescending<CommonRecord, DateTime?>(cr => cr.ModifiedUtc);
+            //        break;
+            //    case ContentsOrder.Published:
+            //        query = query.OrderByDescending<CommonRecord, DateTime?>(cr => cr.PublishedUtc);
+            //        break;
+            //    case ContentsOrder.Created:
+            //        query = query.OrderByDescending<CommonRecord, DateTime?>(cr => cr.CreatedUtc);
+            //        break;
+            //}
+
+            //-- but resorting to
+
+            IEnumerable<ContentItem> contentItems = query.List();
+            switch (model.Options.OrderBy) {
+                case ContentsOrder.Modified:
+                    contentItems = contentItems.OrderByDescending(ci => ci.VersionRecord.Id);
+                    break;
+                //case ContentsOrder.Published:
+                // would be lying w/out a published date instead of a bool but that only comes with the common aspect
+                //    contentItems = contentItems.OrderByDescending(ci => ci.VersionRecord.Published/*Date*/);
+                //    break;
+                case ContentsOrder.Created:
+                    contentItems = contentItems.OrderByDescending(ci => ci.Id);
+                    break;
+            }
+
+            //-- for the moment
+            //-- because I'd rather do this
+
+            //var contentItems = query.Slice(skip, pageSize);
+
+            //-- instead of this (having the ordering and skip/take after the query)
+
+            contentItems = contentItems.Skip(skip).Take(pageSize);
 
             model.Entries = contentItems.Select(BuildEntry).ToList();
+            model.Options.SelectedFilter = model.TypeName;
+            model.Options.FilterOptions = _contentDefinitionManager.ListTypeDefinitions()
+                .Select(ctd => new KeyValuePair<string, string>(ctd.Name, ctd.DisplayName))
+                .ToList().OrderBy(kvp => kvp.Key);
 
             return View("List", model);
         }
 
+        [HttpPost, ActionName("List")]
+        [FormValueRequired("submit.Filter")]
+        public ActionResult ListFilterPOST(ContentOptions options) {
+            var routeValues = ControllerContext.RouteData.Values;
+            if (options != null) {
+                routeValues["Options.OrderBy"] = options.OrderBy; //todo: don't hard-code the key
+                if (_contentDefinitionManager.ListTypeDefinitions().Any(ctd => string.Equals(ctd.Name, options.SelectedFilter, StringComparison.OrdinalIgnoreCase))) {
+                    routeValues["id"] = options.SelectedFilter;
+                }
+                else {
+                    routeValues.Remove("id");
+                }
+            }
+
+            return RedirectToAction("List", routeValues);
+        }
+        
         [HttpPost, ActionName("List")]
         [FormValueRequired("submit.BulkEdit")]
         public ActionResult ListPOST(ContentOptions options, IEnumerable<int> itemIds, string returnUrl) {

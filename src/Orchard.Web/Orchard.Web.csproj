@@ -139,7 +139,6 @@
     <Content Include="Themes\ClassicDark\Views\DisplayTemplates\Items\Blogs.Blog.Summary.ascx" />
     <Content Include="Themes\ClassicDark\Views\DisplayTemplates\Items\Blogs.BlogPost.ascx" />
     <Content Include="Themes\ClassicDark\Views\DisplayTemplates\Items\Blogs.BlogPost.Summary.ascx" />
-    <Content Include="Themes\ClassicDark\Views\DisplayTemplates\Parts\Blogs.BlogPost.List.ascx" />
     <Content Include="Themes\ClassicDark\Views\DisplayTemplates\Parts\Blogs.BlogPost.Metadata.ascx" />
     <Content Include="Themes\ClassicDark\Views\DisplayTemplates\Parts\Pages.Page.Metadata.ascx" />
     <Content Include="Themes\ClassicDark\Views\Footer.ascx" />
@@ -157,7 +156,6 @@
     <Content Include="Themes\Classic\Views\DisplayTemplates\Items\Blogs.Blog.Summary.ascx" />
     <Content Include="Themes\Classic\Views\DisplayTemplates\Items\Blogs.BlogPost.ascx" />
     <Content Include="Themes\Classic\Views\DisplayTemplates\Items\Blogs.BlogPost.Summary.ascx" />
-    <Content Include="Themes\Classic\Views\DisplayTemplates\Parts\Blogs.BlogPost.List.ascx" />
     <Content Include="Themes\Classic\Views\DisplayTemplates\Parts\Pages.Page.Metadata.ascx" />
     <Content Include="Themes\Classic\Views\Footer.ascx" />
     <Content Include="Themes\Classic\Views\Layout.ascx" />
@@ -192,7 +190,6 @@
     <Content Include="Themes\Contoso\Views\DisplayTemplates\Items\Blogs.BlogPost.ascx" />
     <Content Include="Themes\Contoso\Views\DisplayTemplates\Items\Pages.Page.ascx" />
     <Content Include="Themes\Contoso\Views\DisplayTemplates\Items\Blogs.BlogPost.ListByArchive.ascx" />
-    <Content Include="Themes\Contoso\Views\DisplayTemplates\Parts\Blogs.BlogPost.List.ascx" />
     <Content Include="Themes\Contoso\Views\DisplayTemplates\Parts\Comments.HasComments.ascx" />
     <Content Include="Themes\Contoso\Views\DisplayTemplates\Parts\Pages.Page.Metadata.ascx" />
     <Content Include="Themes\Contoso\Views\DisplayTemplates\Parts\Tags.ShowTags.ascx" />
@@ -237,7 +234,6 @@
     <Content Include="Themes\Corporate\Views\DisplayTemplates\Items\Blogs.BlogPost.ascx" />
     <Content Include="Themes\Corporate\Views\DisplayTemplates\Items\Blogs.BlogPost.ListByArchive.ascx" />
     <Content Include="Themes\Corporate\Views\DisplayTemplates\Items\Pages.Page.ascx" />
-    <Content Include="Themes\Corporate\Views\DisplayTemplates\Parts\Blogs.BlogPost.List.ascx" />
     <Content Include="Themes\Corporate\Views\DisplayTemplates\Parts\Comments.HasComments.ascx" />
     <Content Include="Themes\Corporate\Views\DisplayTemplates\Parts\Pages.Page.Metadata.ascx" />
     <Content Include="Themes\Corporate\Views\DisplayTemplates\Parts\Tags.ShowTags.ascx" />

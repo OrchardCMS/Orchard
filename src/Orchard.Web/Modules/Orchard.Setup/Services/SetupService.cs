@@ -8,6 +8,7 @@ using Orchard.Core.Common.Models;
 using Orchard.Core.Common.Settings;
 using Orchard.Core.Navigation.Models;
 using Orchard.Core.Routable.Models;
+using Orchard.Core.Settings.Descriptor.Records;
 using Orchard.Core.Settings.Models;
 using Orchard.Data;
 using Orchard.Data.Migration.Interpreters;
@@ -108,28 +109,36 @@ namespace Orchard.Setup.Services {
 
             // initialize database explicitly, and store shell descriptor
             var bootstrapLifetimeScope = _shellContainerFactory.CreateContainer(shellSettings, shellToplogy);
-            using (var environment = new StandaloneEnvironment(bootstrapLifetimeScope)) {
+            using ( var environment = new StandaloneEnvironment(bootstrapLifetimeScope) ) {
 
-                var schemaBuilder = new SchemaBuilder(environment.Resolve<IDataMigrationInterpreter>() );
-                var reportsCoordinator = environment.Resolve<IReportsCoordinator>();
+                // check if the database is already created (in case an exception occured in the second phase)
+                var shellDescriptorRepository = environment.Resolve<IRepository<ShellDescriptorRecord>>();
+                try {
+                    shellDescriptorRepository.Get(x => true);
+                }
+                catch {
+                    var schemaBuilder = new SchemaBuilder(environment.Resolve<IDataMigrationInterpreter>());
+                    var reportsCoordinator = environment.Resolve<IReportsCoordinator>();
 
-                reportsCoordinator.Register("Data Migration", "Setup", "Orchard installation");
+                    reportsCoordinator.Register("Data Migration", "Setup", "Orchard installation");
 
-                schemaBuilder.CreateTable("Orchard_Framework_DataMigrationRecord", table => table
-                    .Column<int>("Id", column => column.PrimaryKey().Identity())
-                    .Column<string>("DataMigrationClass")
-                    .Column<int>("Version"));
+                    schemaBuilder.CreateTable("Orchard_Framework_DataMigrationRecord",
+                                              table => table
+                                                           .Column<int>("Id", column => column.PrimaryKey().Identity())
+                                                           .Column<string>("DataMigrationClass")
+                                                           .Column<int>("Version"));
 
-                var dataMigrationManager = environment.Resolve<IDataMigrationManager>();
+                    var dataMigrationManager = environment.Resolve<IDataMigrationManager>();
 
-                foreach ( var feature in context.EnabledFeatures ) {
-                    dataMigrationManager.Update(feature);
-                } 
+                    foreach ( var feature in context.EnabledFeatures ) {
+                        dataMigrationManager.Update(feature);
+                    }
 
-                environment.Resolve<IShellDescriptorManager>().UpdateShellDescriptor(
-                    0,
-                    shellDescriptor.Features,
-                    shellDescriptor.Parameters);
+                    environment.Resolve<IShellDescriptorManager>().UpdateShellDescriptor(
+                        0,
+                        shellDescriptor.Features,
+                        shellDescriptor.Parameters);
+                }
             }
 
             // in effect "pump messages" see PostMessage circa 1980
