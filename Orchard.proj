@@ -7,9 +7,10 @@
     <LibFolder>$(MSBuildProjectDirectory)\lib</LibFolder>
     <SrcFolder>$(MSBuildProjectDirectory)\src</SrcFolder>
     <BuildFolder>$(MSBuildProjectDirectory)\build</BuildFolder>
+    <ArtifactsFolder>$(MSBuildProjectDirectory)\artifacts</ArtifactsFolder>
     <SqlCeFolder>$(MSBuildProjectDirectory)\lib\sqlce</SqlCeFolder>
-    <SourceArtifactFolder>$(MSBuildProjectDirectory)\artifacts\Source</SourceArtifactFolder>
-    <MsDeployArtifactFolder>$(MSBuildProjectDirectory)\artifacts\MsDeploy</MsDeployArtifactFolder>
+    <SourceArtifactFolder>$(ArtifactsFolder)\Source</SourceArtifactFolder>
+    <MsDeployArtifactFolder>$(ArtifactsFolder)\MsDeploy</MsDeployArtifactFolder>
     <ModulesSrcFolder>$(MSBuildProjectDirectory)\src\Orchard.Web\Modules</ModulesSrcFolder>
 
     <CompileFolder>$(BuildFolder)\Compile</CompileFolder>
@@ -65,6 +66,7 @@
   <Target Name="Clean">
     <MSBuild Projects="$(SrcFolder)\Orchard.sln" Targets="Clean" />
     <RemoveDir Directories="$(BuildFolder)" />
+    <RemoveDir Directories="$(ArtifactsFolder)" />
   </Target>
 
   <Target Name ="Compile">
