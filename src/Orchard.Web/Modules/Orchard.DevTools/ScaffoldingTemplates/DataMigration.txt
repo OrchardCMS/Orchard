@@ -7,7 +7,7 @@ namespace $$FeatureName$$.DataMigrations {
         public int Create() {
 $$Commands$$
 
-            return 0100;
+            return 1;
         }
     }
 }

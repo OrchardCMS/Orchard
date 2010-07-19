@@ -29,7 +29,7 @@ namespace Orchard.Core.Common.DataMigrations {
                 .Column<DateTime>("ModifiedUtc")
                 );
 
-            return 0010;
+            return 1;
         }
     }
 }

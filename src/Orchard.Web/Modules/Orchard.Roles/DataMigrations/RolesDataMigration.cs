@@ -33,7 +33,7 @@ namespace Orchard.Roles.DataMigrations {
                 .Column<int>("Role_id")
                 );
 
-            return 0010;
+            return 1;
         }
     }
 }

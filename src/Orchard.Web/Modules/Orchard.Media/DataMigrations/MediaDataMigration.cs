@@ -10,7 +10,7 @@ namespace Orchard.Media.DataMigrations {
                 .Column<string>("RootMediaFolder")
                 );
 
-            return 0010;
+            return 1;
         }
     }
 }

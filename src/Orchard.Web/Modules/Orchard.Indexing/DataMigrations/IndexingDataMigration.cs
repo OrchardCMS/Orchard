@@ -12,7 +12,7 @@ namespace Orchard.Indexing.DataMigrations {
                 .Column<int>("ContentItemRecord_id")
                 );
 
-            return 0010;
+            return 1;
         }
     }
 }

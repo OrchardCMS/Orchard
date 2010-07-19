@@ -91,7 +91,7 @@ namespace Orchard.Core.Settings.DataMigrations {
                 .Column<string>("SiteCulture")
                 );
 
-            return 0010;
+            return 1;
         }
     }
 }

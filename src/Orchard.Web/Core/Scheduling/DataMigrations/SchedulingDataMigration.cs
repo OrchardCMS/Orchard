@@ -13,7 +13,7 @@ namespace Orchard.Core.Scheduling.DataMigrations {
                 .Column<int>("ContentItemVersionRecord_id")
                 );
 
-            return 0010;
+            return 1;
         }
     }
 }

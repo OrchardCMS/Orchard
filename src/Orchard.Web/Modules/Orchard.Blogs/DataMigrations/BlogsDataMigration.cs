@@ -20,7 +20,7 @@ namespace Orchard.Blogs.DataMigrations {
                 .Column<int>("PostCount")
                 );
 
-            return 0010;
+            return 1;
         }
     }
 }
