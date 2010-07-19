@@ -14,6 +14,7 @@ namespace Orchard.Data {
         private readonly ShellSettings _shellSettings;
         private readonly ShellBlueprint _shellBlueprint;
         private readonly IAppDataFolder _appDataFolder;
+        private readonly object _syncRoot = new object();
 
         public SessionConfigurationCache(ShellSettings shellSettings, ShellBlueprint shellBlueprint, IAppDataFolder appDataFolder) {
             _shellSettings = shellSettings;
@@ -30,9 +31,11 @@ namespace Orchard.Data {
 
             // Return previous configuration if it exsists and has the same hash as
             // the current blueprint.
-            var previousConfig = ReadConfiguration(hash);
-            if (previousConfig != null) {
-                return previousConfig.Configuration;
+            lock (_syncRoot) {
+                var previousConfig = ReadConfiguration(hash);
+                if (previousConfig != null) {
+                    return previousConfig.Configuration;
+                }
             }
 
             // Create cache and persist it
@@ -41,7 +44,9 @@ namespace Orchard.Data {
                 Configuration = builder()
             };
 
-            StoreConfiguration(cache);
+            lock (_syncRoot) {
+                StoreConfiguration(cache);
+            }
             return cache.Configuration;
         }
 
