@@ -6,6 +6,6 @@ version: 0.5.0
 orchardversion: 0.5.0
 description: The dashboard module is providing the reports screen of the application.
 features:
-    Dashboard:
+    Reports:
         Description: Reports management.
         Category: Core
