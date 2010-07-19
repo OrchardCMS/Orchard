@@ -89,7 +89,7 @@ namespace Orchard.Blogs.Drivers {
                             }).ToList()
                         },
                         "Parts/Blogs.BlogPost.List",
-                        "").Location("primary"));
+                        "").LongestMatch(displayType, "DetailAdmin").Location("primary"));
         }
 
         protected override DriverResult Editor(Blog blog) {

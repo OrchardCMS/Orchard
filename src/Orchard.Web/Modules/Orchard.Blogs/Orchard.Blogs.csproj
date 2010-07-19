@@ -134,6 +134,7 @@
     <Content Include="Views\DisplayTemplates\Items\Blogs.Blog.ascx" />
     <Content Include="Views\DisplayTemplates\Parts\Blogs.Blog.Manage.ascx" />
     <Content Include="Views\DisplayTemplates\Parts\Blogs.BlogPost.List.ascx" />
+    <Content Include="Views\DisplayTemplates\Parts\Blogs.BlogPost.List.DetailAdmin.ascx" />
     <Content Include="Views\DisplayTemplates\Items\Blogs.Blog.Summary.ascx" />
     <Content Include="Views\DisplayTemplates\Parts\Blogs.Blog.Description.ascx" />
     <Content Include="Views\DisplayTemplates\Parts\Blogs.Blog.Metadata.ascx" />
