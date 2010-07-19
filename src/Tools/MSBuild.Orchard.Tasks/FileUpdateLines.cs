@@ -7,8 +7,6 @@ using Microsoft.Build.Utilities;
 
 namespace MSBuild.Orchard.Tasks {
     public class FileUpdateLines : Task {
-        private bool _multiline;
-        private bool _singleline;
         private int _replacementCount = -1;
         private Encoding _encodingValue { get; set; }
 
@@ -33,14 +31,9 @@ namespace MSBuild.Orchard.Tasks {
 
         public override bool Execute() {
             RegexOptions options = RegexOptions.None;
+            options |= RegexOptions.Singleline;
             if (this.IgnoreCase) {
                 options |= RegexOptions.IgnoreCase;
-            }
-            if (this._multiline) {
-                options |= RegexOptions.Multiline;
-            }
-            if (this._singleline) {
-                options |= RegexOptions.Singleline;
             }
             if (this._replacementCount == 0) {
                 this._replacementCount = -1;
