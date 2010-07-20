@@ -380,7 +380,7 @@ label.forcheckbox {
     display:inline;
     line-height:1.8em;
 }
-.bulk-actions label, .bulk-items h3, label, label.sub {
+.bulk-actions label, .bulk-items h3, label.sub {
     display:inline;
 }
 label.bulk-order {
