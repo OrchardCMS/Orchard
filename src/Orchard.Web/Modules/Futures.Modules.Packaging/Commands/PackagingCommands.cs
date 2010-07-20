@@ -2,18 +2,13 @@ using System;
 using System.IO;
 using System.Net;
 using Orchard.Commands;
-using Orchard.Environment.Extensions;
 using Orchard.Packaging;
 
 namespace Futures.Modules.Packaging.Commands {
     public class PackagingCommands : DefaultOrchardCommandHandler {
-        private readonly IExtensionManager _extensionManager;
-        private readonly IPackageBuilder _packageBuilder;
         private readonly IPackageManager _packageManager;
 
-        public PackagingCommands(IExtensionManager extensionManager, IPackageBuilder packageBuilder, IPackageManager packageManager) {
-            _extensionManager = extensionManager;
-            _packageBuilder = packageBuilder;
+        public PackagingCommands(IPackageManager packageManager) {
             _packageManager = packageManager;
         }
 
