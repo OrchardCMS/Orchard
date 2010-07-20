@@ -69,7 +69,7 @@ namespace Orchard.DevTools.Commands {
                         projectFileText = projectFileText.Insert(projectFileText.LastIndexOf("</ItemGroup>"), itemGroupReference);
                     }
                     File.WriteAllText(moduleCsProjPath, projectFileText);
-
+                    TouchSolution();
                     Context.Output.WriteLine(T("Data migration created successfully in Module {0}", extension.Name));
                     return;
                 }
@@ -89,7 +89,7 @@ namespace Orchard.DevTools.Commands {
             }
 
             IntegrateModule(moduleName);
-
+            TouchSolution();
             Context.Output.WriteLine(T("Module {0} created successfully", moduleName));
         }
 
@@ -128,6 +128,7 @@ namespace Orchard.DevTools.Commands {
                     }
                     File.WriteAllText(moduleCsProjPath, projectFileText);
                     Context.Output.WriteLine(T("Controller {0} created successfully in Module {1}", controllerName, moduleName));
+                    TouchSolution();
                     return;
                 }
             }
@@ -188,6 +189,12 @@ namespace Orchard.DevTools.Commands {
             templateText = templateText.Replace("$$ModuleName$$", moduleName);
             templateText = templateText.Replace("$$ModuleProjectGuid$$", projectGuid);
             File.WriteAllText(modulePath + "\\" + moduleName + ".csproj", templateText);
+        }
+
+        private static void TouchSolution() {
+            string rootWebProjectPath = HostingEnvironment.MapPath("~/Orchard.Web.csproj");
+            string solutionPath = Directory.GetParent(rootWebProjectPath).Parent.FullName + "\\Orchard.sln";
+            File.SetLastWriteTime(solutionPath, DateTime.Now);
         }
     }
 }
