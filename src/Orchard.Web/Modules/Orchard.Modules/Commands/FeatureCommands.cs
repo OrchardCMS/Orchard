@@ -5,11 +5,11 @@ using Orchard.UI.Notify;
 using Orchard.Utility.Extensions;
 
 namespace Orchard.Modules.Commands {
-    public class FeatureCommand : DefaultOrchardCommandHandler {
+    public class FeatureCommands : DefaultOrchardCommandHandler {
         private readonly IModuleService _moduleService;
         private readonly INotifier _notifier;
 
-        public FeatureCommand(IModuleService moduleService, INotifier notifier) {
+        public FeatureCommands(IModuleService moduleService, INotifier notifier) {
             _moduleService = moduleService;
             _notifier = notifier;
         }
@@ -63,8 +63,8 @@ namespace Orchard.Modules.Commands {
             }
             if (featuresToEnable.Count != 0) {
                 _moduleService.EnableFeatures(featuresToEnable, true);
-                foreach(var entry in _notifier.List()) {
-                    Context.Output.WriteLine(entry.Message);    
+                foreach (var entry in _notifier.List()) {
+                    Context.Output.WriteLine(entry.Message);
                 }
             }
             else {

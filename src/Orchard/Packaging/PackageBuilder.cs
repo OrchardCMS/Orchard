@@ -48,6 +48,9 @@ namespace Orchard.Packaging {
                 EndPackage(context);
             }
 
+            if (context.Stream.CanSeek)
+                context.Stream.Seek(0, SeekOrigin.Begin);
+
             return context.Stream;
         }
 

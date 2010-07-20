@@ -66,7 +66,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AdminMenu.cs" />
-    <Compile Include="Commands\FeatureCommand.cs" />
+    <Compile Include="Commands\PackagingCommands.cs" />
+    <Compile Include="Commands\FeatureCommands.cs" />
     <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="Models\ModuleFeature.cs" />
