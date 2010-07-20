@@ -141,7 +141,7 @@ namespace Orchard.Packaging {
             var partUri = PackUriHelper.CreatePartUri(new Uri(context.TargetPath + relativePath, UriKind.Relative));
             var packagePart = context.Package.CreatePart(partUri, contentType);
             using (var stream = packagePart.GetStream(FileMode.Create, FileAccess.Write)) {
-                context.SourceFolder.CopyFileTo(context.SourcePath + relativePath, stream);
+                context.SourceFolder.CopyFileTo(context.SourcePath + relativePath, stream, true/*actualContent*/);
             }
             return partUri;
         }

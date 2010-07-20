@@ -9,10 +9,12 @@ using Orchard.FileSystems.VirtualPath;
 
 namespace Orchard.FileSystems.WebSite {
     public class WebSiteFolder : IWebSiteFolder {
+        private readonly IVirtualPathProvider _virtualPathProvider;
         private readonly IVirtualPathMonitor _virtualPathMonitor;
 
-        public WebSiteFolder(IVirtualPathMonitor virtualPathMonitor) {
+        public WebSiteFolder(IVirtualPathMonitor virtualPathMonitor, IVirtualPathProvider virtualPathProvider) {
             _virtualPathMonitor = virtualPathMonitor;
+            _virtualPathProvider = virtualPathProvider;
         }
 
         public IEnumerable<string> ListDirectories(string virtualPath) {
@@ -31,19 +33,50 @@ namespace Orchard.FileSystems.WebSite {
         }
 
         public string ReadFile(string virtualPath) {
+            return ReadFile(virtualPath, false);
+        }
+
+        public string ReadFile(string virtualPath, bool actualContent) {
             if (!HostingEnvironment.VirtualPathProvider.FileExists(virtualPath))
                 return null;
 
-            using (var stream = VirtualPathProvider.OpenFile(Normalize(virtualPath))) {
-                using (var reader = new StreamReader(stream)) {
-                    return reader.ReadToEnd();
+            if (actualContent) {
+                var physicalPath = _virtualPathProvider.MapPath(virtualPath);
+                using (var stream = File.Open(physicalPath, FileMode.Open, FileAccess.Read)) {
+                    using (var reader = new StreamReader(stream)) {
+                        return reader.ReadToEnd();
+                    }
+                }
+            }
+            else {
+                using (var stream = VirtualPathProvider.OpenFile(Normalize(virtualPath))) {
+                    using (var reader = new StreamReader(stream)) {
+                        return reader.ReadToEnd();
+                    }
                 }
             }
         }
 
         public void CopyFileTo(string virtualPath, Stream destination) {
-            using (var stream = VirtualPathProvider.OpenFile(Normalize(virtualPath))) {
-                stream.CopyTo(destination);
+            CopyFileTo(virtualPath, destination, false/*actualContent*/);
+        }
+
+        public void CopyFileTo(string virtualPath, Stream destination, bool actualContent) {
+            if (actualContent) {
+                // This is an unfortunate side-effect of the dynamic compilation work.
+                // Orchard has a custom virtual path provider which adds "<@Assembly xxx@>"
+                // directives to WebForm view files. There are cases when this side effect
+                // is not expected by the consumer of the WebSiteFolder API.
+                // The workaround here is to go directly to the file system.
+                var physicalPath = _virtualPathProvider.MapPath(virtualPath);
+                using (var stream = File.Open(physicalPath, FileMode.Open, FileAccess.Read)) {
+                    stream.CopyTo(destination);
+                }
+            }
+            else {
+                using (var stream = VirtualPathProvider.OpenFile(Normalize(virtualPath))) {
+                    stream.CopyTo(destination);
+                }
             }
         }
 

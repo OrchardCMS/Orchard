@@ -19,6 +19,10 @@ namespace Orchard.Tests.Stubs {
         }
 
         public string ReadFile(string path) {
+            return ReadFile(path, false);
+        }
+
+        public string ReadFile(string path, bool actualContent) {
             if (!File.Exists(path))
                 return null;
 
@@ -26,6 +30,10 @@ namespace Orchard.Tests.Stubs {
         }
 
         public void CopyFileTo(string virtualPath, Stream destination) {
+            throw new NotImplementedException();
+        }
+
+        public void CopyFileTo(string virtualPath, Stream destination, bool actualContent) {
             throw new NotImplementedException();
         }
 
