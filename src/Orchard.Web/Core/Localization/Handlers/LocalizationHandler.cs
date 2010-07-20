@@ -22,8 +22,6 @@ namespace Orchard.Core.Localization.Handlers {
 
             OnInitializing<Localized>(InitializePart);
 
-            OnLoaded<Localized>(LazyLoadHandlers);
-
             OnIndexed<Localized>((context, localized) => context.DocumentIndex
                 .Add("culture", CultureInfo.GetCultureInfo(localized.Culture != null ? localized.Culture.Culture : _cultureManager.GetSiteCulture()).LCID)
                 .Store()
@@ -31,11 +29,6 @@ namespace Orchard.Core.Localization.Handlers {
         }
 
         public Localizer T { get; set; }
-
-        void LazyLoadHandlers(LoadContentContext context, Localized localized) {
-            localized.CultureField.Loader(ctx => _cultureManager.GetCultureById(localized.Record.CultureId));
-            localized.MasterContentItemField.Loader(ctx => _contentManager.Get(localized.Record.MasterContentItemId)); 
-        }
 
         void InitializePart(InitializingContentContext context, Localized localized) {
             localized.CultureField.Setter(cultureRecord => {
@@ -46,6 +39,8 @@ namespace Orchard.Core.Localization.Handlers {
                 localized.Record.MasterContentItemId = masterContentItem.ContentItem.Id;
                 return masterContentItem;
             });
+            localized.CultureField.Loader(ctx => _cultureManager.GetCultureById(localized.Record.CultureId));
+            localized.MasterContentItemField.Loader(ctx => _contentManager.Get(localized.Record.MasterContentItemId)); 
         }
     }
 }

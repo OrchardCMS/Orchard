@@ -9,7 +9,6 @@ using Orchard.Localization;
 using Orchard.Localization.Services;
 using Orchard.Mvc.Results;
 using Orchard.Mvc.ViewModels;
-using Orchard.UI.Notify;
 
 namespace Orchard.Core.Localization.Controllers {
     [ValidateInput(false)]
@@ -32,8 +31,14 @@ namespace Orchard.Core.Localization.Controllers {
         public ActionResult Translate(int id, string to) {
             var contentItem = _contentManager.Get(id, VersionOptions.Latest);
 
+            // only support translations from the site culture, at the moment at least
             if (contentItem == null)
                 return new NotFoundResult();
+
+            if (!contentItem.Is<Localized>() || contentItem.As<Localized>().MasterContentItem != null) {
+                var metadata = _contentManager.GetItemMetadata(contentItem);
+                return RedirectToAction(Convert.ToString(metadata.EditorRouteValues["action"]), metadata.EditorRouteValues);
+            }
 
             var siteCultures = _cultureManager.ListCultures().Where(s => s != _localizationService.GetContentCulture(contentItem));
             var model = new AddLocalizationViewModel {

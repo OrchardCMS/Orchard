@@ -6,5 +6,5 @@
     <%--//todo: need this info in the view model--%>
     <div class="content-localizations"><%:Html.UnorderedList(Model.Localizations, (c, i) => Html.ItemDisplayLink(c.Culture.Culture, c), "localizations") %></div><%
     } %>
-    <div class="add-localization"><%:Html.ActionLink(T("+ New translation").Text, "translate", "admin", new { area = "Localization", id = Model.Id }, null)%></div>
+    <div class="add-localization"><%:Html.ActionLink(T("+ New translation").Text, "translate", "admin", new { area = "Localization", id = Model.MasterId }, null)%></div>
 </div>

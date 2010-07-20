@@ -1,14 +1,15 @@
 ﻿using System.Collections.Generic;
-using Orchard.ContentManagement;
 using Orchard.Core.Localization.Models;
 
 namespace Orchard.Core.Localization.ViewModels {
     public class ContentLocalizationsViewModel {
-        public ContentLocalizationsViewModel(IContent part) {
-            Id = part.ContentItem.Id;
+        public ContentLocalizationsViewModel(Localized part) {
+            MasterId = part.MasterContentItem != null
+                ? part.MasterContentItem.ContentItem.Id
+                : part.Id;
         }
 
-        public int Id { get; private set; }
+        public int? MasterId { get; private set; }
         public IEnumerable<Localized> Localizations { get; set; }
     }
 }

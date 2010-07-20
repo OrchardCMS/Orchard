@@ -80,6 +80,7 @@
     <Compile Include="Contents\Permissions.cs" />
     <Compile Include="Contents\Routes.cs" />
     <Compile Include="Contents\ViewModels\PublishContentViewModel.cs" />
+    <Compile Include="Localization\ViewModels\EditLocalizationViewModel.cs" />
     <Compile Include="PublishLater\Drivers\PublishLaterPartDriver.cs" />
     <Compile Include="PublishLater\Models\PublishLaterPart.cs" />
     <Compile Include="PublishLater\Handlers\PublishLaterPartHandler.cs" />
@@ -93,7 +94,6 @@
     <Compile Include="Localization\Services\ILocalizationService.cs" />
     <Compile Include="Localization\Services\LocalizationService.cs" />
     <Compile Include="Localization\ViewModels\ContentLocalizationsViewModel.cs" />
-    <Compile Include="Localization\ViewModels\SelectLocalizationsViewModel.cs" />
     <Compile Include="Reports\AdminMenu.cs" />
     <Compile Include="Reports\Controllers\AdminController.cs" />
     <Compile Include="Reports\Routes.cs" />
@@ -233,6 +233,7 @@
     <Content Include="Common\Views\DisplayTemplates\Parts\Common.Metadata.SummaryAdmin.ascx" />
     <Content Include="Contents\Views\DisplayTemplates\Parts\Contents.Publish.SummaryAdmin.ascx" />
     <Content Include="Contents\Views\DisplayTemplates\Parts\Contents.Publish.ascx" />
+    <Content Include="Localization\Views\EditorTemplates\Parts\Localization.Translation.ascx" />
     <Content Include="PublishLater\Views\DisplayTemplates\Parts\PublishLater.Metadata.ascx" />
     <Content Include="PublishLater\Views\DisplayTemplates\Parts\PublishLater.Metadata.SummaryAdmin.ascx" />
     <Content Include="Common\Views\EditorTemplates\Fields\Common.TextField.ascx" />
