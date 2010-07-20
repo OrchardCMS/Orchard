@@ -45,7 +45,7 @@ namespace Orchard.Environment.Extensions {
 
         public IEnumerable<Feature> LoadFeatures(IEnumerable<FeatureDescriptor> featureDescriptors) {
             return featureDescriptors
-                .Select(featureDescriptor => LoadFeature(featureDescriptor))
+                .Select(LoadFeature)
                 .ToArray();
         }
 

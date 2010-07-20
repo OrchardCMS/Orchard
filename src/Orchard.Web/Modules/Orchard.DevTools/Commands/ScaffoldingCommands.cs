@@ -6,6 +6,7 @@ using Orchard.Commands;
 using Orchard.Data.Migration.Generator;
 using Orchard.DevTools.Services;
 using Orchard.Environment.Extensions;
+using Orchard.Environment.State;
 
 namespace Orchard.DevTools.Commands {
     [OrchardFeature("Scaffolding")]

@@ -105,10 +105,10 @@ namespace Orchard.Setup.Services {
                 Features = context.EnabledFeatures.Select(name => new ShellFeature { Name = name })
             };
 
-            var shellToplogy = _compositionStrategy.Compose(shellSettings, shellDescriptor);
+            var shellBlueprint = _compositionStrategy.Compose(shellSettings, shellDescriptor);
 
             // initialize database explicitly, and store shell descriptor
-            var bootstrapLifetimeScope = _shellContainerFactory.CreateContainer(shellSettings, shellToplogy);
+            var bootstrapLifetimeScope = _shellContainerFactory.CreateContainer(shellSettings, shellBlueprint);
             using ( var environment = new StandaloneEnvironment(bootstrapLifetimeScope) ) {
 
                 // check if the database is already created (in case an exception occured in the second phase)
