@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Reflection;
@@ -9,27 +10,65 @@ using Orchard.ContentManagement.Records;
 using Orchard.Data.Migration.Schema;
 using Orchard.Data.Providers;
 using NHibernate.Dialect;
+using Orchard.Environment.Configuration;
+using Orchard.Environment.Descriptor.Models;
+using Orchard.Environment.Extensions;
+using Orchard.Environment.Extensions.Models;
+using Orchard.Environment.ShellBuilders;
+using Orchard.Environment.ShellBuilders.Models;
+using Orchard.Environment.State;
 
 namespace Orchard.Data.Migration.Generator {
     public class SchemaCommandGenerator : ISchemaCommandGenerator {
         private readonly ISessionFactoryHolder _sessionFactoryHolder;
+        private readonly IExtensionManager _extensionManager;
+        private readonly ICompositionStrategy _compositionStrategy;
+        private readonly ShellSettings _shellSettings;
+        private readonly IDataServicesProviderFactory _dataServicesProviderFactory;
 
         public SchemaCommandGenerator(
-            ISessionFactoryHolder sessionFactoryHolder) {
+            ISessionFactoryHolder sessionFactoryHolder,
+            IExtensionManager extensionManager,
+            ICompositionStrategy compositionStrategy,
+            ShellSettings shellSettings,
+            IDataServicesProviderFactory dataServicesProviderFactory) {
             _sessionFactoryHolder = sessionFactoryHolder;
+            _extensionManager = extensionManager;
+            _compositionStrategy = compositionStrategy;
+            _shellSettings = shellSettings;
+            _dataServicesProviderFactory = dataServicesProviderFactory;
         }
 
         /// <summary>
         /// Generates SchemaCommand instances in order to create the schema for a specific feature
         /// </summary>
         public IEnumerable<SchemaCommand> GetCreateFeatureCommands(string feature, bool drop) {
-            var parameters = _sessionFactoryHolder.GetSessionFactoryParameters();
+            var dependencies = ShellStateCoordinator.OrderByDependencies(_extensionManager.AvailableExtensions()
+                .SelectMany(ext => ext.Features))
+                .Where(f => String.Equals(f.Name, feature, StringComparison.OrdinalIgnoreCase))
+                .Where(f => f.Dependencies != null)
+                .SelectMany(f => f.Dependencies)
+                .ToList();
 
-            if (!parameters.RecordDescriptors.Any()) {
+            var shellDescriptor = new ShellDescriptor {
+                Features = dependencies.Select(name => new ShellFeature { Name = name }).Union(new[] { new ShellFeature { Name = feature }, new ShellFeature { Name = "Orchard.Framework" } })
+            };
+
+            var shellBlueprint = _compositionStrategy.Compose(_shellSettings, shellDescriptor);
+
+            if ( !shellBlueprint.Records.Any() ) {
                 yield break;
             }
 
-            var configuration = _sessionFactoryHolder.GetConfiguration();
+            //var features = dependencies.Select(name => new ShellFeature {Name = name}).Union(new[] {new ShellFeature {Name = feature}, new ShellFeature {Name = "Orchard.Framework"}});
+
+            var parameters = _sessionFactoryHolder.GetSessionFactoryParameters();
+            parameters.RecordDescriptors = shellBlueprint.Records;
+
+            var configuration = _dataServicesProviderFactory
+                .CreateProvider(parameters)
+                .BuildConfiguration(parameters);
+
             Dialect.GetDialect(configuration.Properties);
             var mapping = configuration.BuildMapping();
 
