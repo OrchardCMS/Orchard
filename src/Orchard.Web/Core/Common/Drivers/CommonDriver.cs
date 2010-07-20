@@ -79,7 +79,7 @@ namespace Orchard.Core.Common.Drivers {
                 }
             }
 
-            return ContentPartTemplate(model, "Parts/Common.Owner", TemplatePrefix).Location("primary", "10");
+            return ContentPartTemplate(model, "Parts/Common.Owner", TemplatePrefix).Location("primary", "20");
         }
 
         DriverResult ContainerEditor(CommonAspect part, IUpdateModel updater) {
@@ -106,7 +106,7 @@ namespace Orchard.Core.Common.Drivers {
                     }
                 }
             }
-            return ContentPartTemplate(model, "Parts/Common.Container", TemplatePrefix).Location("primary", "10.1");
+            return ContentPartTemplate(model, "Parts/Common.Container", TemplatePrefix).Location("primary", "20.1");
         }
     }
 }
