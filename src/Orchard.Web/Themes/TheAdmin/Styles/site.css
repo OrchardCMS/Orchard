@@ -239,7 +239,7 @@ form.link button:hover {
     width:0;
 }
 #navigation li {
-	margin:7px 0 20px 0;
+	margin:7px 0 20px 4px;
 }
 #navigation ul li {
     border:0;
@@ -268,6 +268,19 @@ form.link button:hover {
 	background:#f5f5f5;
 	color: #000;
 	text-decoration:underline;
+}
+
+/* todo: make generic so all toggles can use this and clean up jQuery */
+.menuGlyph {
+display:block;
+height:11px;
+width:11px;
+margin:0 0 -22px -8px;
+background:url("images/menuOpen.gif") no-repeat center top;
+}
+.menuGlyph:hover {
+background:url("images/menuOpenHover.gif") no-repeat center top;
+cursor:pointer;
 }
 
 /* Content

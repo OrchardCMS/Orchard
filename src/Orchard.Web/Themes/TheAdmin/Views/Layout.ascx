@@ -8,6 +8,7 @@ Model.Zones.AddRenderPartial("header", "Header", Model);
 Model.Zones.AddRenderPartial("header:after", "User", Model); // todo: (heskew) should be a user display or widget
 Model.Zones.AddRenderPartial("menu", "Menu", Model);
 %>
+<script src="<%: Url.Content("~/Themes/TheAdmin/Scripts/admin.js") %>" type="text/javascript"></script>
 <div id="header" role="banner"><% Html.Zone("header"); %></div>
 <div id="content">
     <div id="navshortcut"><a href="#menu"><%: T("Skip to navigation") %></a></div>
