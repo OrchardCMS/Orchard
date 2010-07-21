@@ -246,14 +246,11 @@ form.link button:hover {
     margin:0;
 }
 #navigation li h3 {
-    padding:0;
+    padding:0 0 0 8px;
 }
 #navigation li h3 a, #navigation li h3 span {
     display:block;
-	padding:6px 4px 8px 8px;
-}
-#navigation li h3 a:hover, #navigation li h3 a:active, #navigation li h3 a:focus {
-    text-decoration:none;
+	padding:6px 4px 8px 0;
 }
 #navigation ul a, #navigation ul a:link, #navigation ul a:visited {
 	color:#2d2f25;
@@ -271,16 +268,40 @@ form.link button:hover {
 }
 
 /* todo: make generic so all toggles can use this and clean up jQuery */
-.menuGlyph {
-display:block;
-height:11px;
-width:11px;
-margin:0 0 -22px -8px;
-background:url("images/menuOpen.gif") no-repeat center top;
+.expandoGlyph {
+    background:#fcfcfc url("images/menuOpen.gif") no-repeat center center;
+    cursor:pointer;
+    display:block;
+    height:17px;
+    margin:0 0 -2.5em -11px;
+    width:17px;
+    position:relative;
+    -webkit-transform:rotate(0deg);
 }
-.menuGlyph:hover {
-background:url("images/menuOpenHover.gif") no-repeat center top;
-cursor:pointer;
+.expandoGlyph:hover {
+    background-image:url("images/menuOpenHover.gif");
+}
+.expandoGlyph.closed {
+    background-image:url("images/menuClosed.gif");
+}
+.expandoGlyph.closed:hover {
+    background-image:url("images/menuClosedHover.gif");
+}
+.expandoGlyph.closing {
+    -webkit-transition:all .2s ease-in-out;
+    -moz-transition:all .2s ease-in-out;
+    transition:all .2s ease-in-out;
+    -webkit-transform:rotate(-90deg);
+    -moz-transform:rotate(-90deg);
+    transform:rotate(-90deg);
+}
+.expandoGlyph.opening {
+    -webkit-transition:all .2s ease-in-out;
+    -moz-transition:all .2s ease-in-out;
+    transition:all .2s ease-in-out;
+    -webkit-transform:rotate(90deg);
+    -moz-transform:rotate(90deg);
+    transform:rotate(90deg);
 }
 
 /* Content
