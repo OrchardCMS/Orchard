@@ -43,7 +43,7 @@ namespace Orchard.UI.Resources {
             context.SetAttribute("rel", "stylesheet");
 
             if (!_styles.Contains(context))
-                _styles.Add(context);
+                _styles.Insert(0, context);
 
             return context;
         }
@@ -60,7 +60,7 @@ namespace Orchard.UI.Resources {
             context.SetAttribute("type", "text/javascript");
 
             if (!_headScripts.Contains(context))
-                _headScripts.Add(context);
+                _headScripts.Insert(0, context);
 
             return context;
         }
@@ -73,7 +73,7 @@ namespace Orchard.UI.Resources {
             context.SetAttribute("type", "text/javascript");
 
             if (!_footScripts.Contains(context))
-                _footScripts.Add(context);
+                _footScripts.Insert(0, context);
 
             return context;
         }

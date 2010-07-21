@@ -1,15 +1,12 @@
 ﻿<%@ Control Language="C#" Inherits="Orchard.Mvc.ViewUserControl<FeaturesViewModel>" %>
 <%@ Import Namespace="Orchard.Localization" %>
 <%@ Import Namespace="Orchard.Modules.Extensions" %>
-<%@ Import Namespace="Orchard.Mvc.Html"%>
 <%@ Import Namespace="Orchard.Modules.ViewModels"%>
 <%@ Import Namespace="Orchard.Utility.Extensions" %><%
- Html.RegisterStyle("admin.css");
- Html.RegisterStyle("jquery.switchable.css");
- Html.RegisterFootScript("jquery.switchable.js"); %>
+ Html.RegisterStyle("admin.css"); %>
 <h1><%: Html.TitleForPage(T("Manage Features").ToString()) %></h1>
 <% if (Model.Features.Count() > 0) { %>
-<ul class="features summary-view switchable"><%
+<ul class="<% Html.RenderPartial("UI/Switchable", "features summary-view"); %>"><%
     var featureGroups = Model.Features.OrderBy(f => f.Descriptor.Category).GroupBy(f => f.Descriptor.Category);
     foreach (var featureGroup in featureGroups) {
         var categoryName = LocalizedString.TextOrDefault(featureGroup.First().Descriptor.Category, T("Uncategorized"));

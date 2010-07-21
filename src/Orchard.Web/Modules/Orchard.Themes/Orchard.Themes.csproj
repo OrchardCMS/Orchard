@@ -89,10 +89,16 @@
   <ItemGroup>
     <Content Include="Content\orchard.ico" />
     <Content Include="Scripts\base.js" />
+    <Content Include="Scripts\jquery.switchable.js" />
     <Content Include="Styles\admin.css" />
+    <Content Include="Styles\Images\detail-view-on.gif" />
+    <Content Include="Styles\Images\detail-view.gif" />
+    <Content Include="Styles\Images\summary-view-on.gif" />
+    <Content Include="Styles\Images\summary-view.gif" />
     <Content Include="Styles\Images\toolBarActiveButtonBackground.gif" />
     <Content Include="Styles\Images\toolBarBackground.gif" />
     <Content Include="Styles\Images\toolBarHoverButtonBackground.gif" />
+    <Content Include="Styles\jquery.switchable.css" />
     <Content Include="Styles\special.css" />
     <Content Include="Views\Admin\Index.aspx" />
     <Content Include="Views\Admin\Install.aspx" />
@@ -106,6 +112,7 @@
     <Content Include="Views\Menu.ascx" />
     <Content Include="Views\Messages.ascx" />
     <Content Include="Views\NotFound.ascx" />
+    <Content Include="Views\UI\Switchable.ascx" />
     <Content Include="Views\User.ascx" />
     <Content Include="Web.config" />
   </ItemGroup>
