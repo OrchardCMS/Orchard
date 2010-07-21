@@ -4,58 +4,110 @@ using Orchard.ContentManagement.MetaData;
 using Orchard.ContentManagement.MetaData.Builders;
 using Orchard.ContentManagement.MetaData.Models;
 using Orchard.ContentManagement.ViewModels;
+using Orchard.Core.Common.Models;
+using Orchard.Localization;
 
 namespace Orchard.Core.Common.Settings {
     public class LocationSettingsEditorEvents : ContentDefinitionEditorEventsBase {
 
-        public override IEnumerable<TemplateViewModel> TypePartEditor(ContentTypeDefinition.Part definition) {
-            yield return TypePartEditorForLocation(definition, "DisplayLocation");
-            yield return TypePartEditorForLocation(definition, "EditorLocation");
+        public LocationSettingsEditorEvents() {
+            T = NullLocalizer.Instance;
         }
 
-        private TemplateViewModel TypePartEditorForLocation(ContentTypeDefinition.Part definition, string locationSettings) {
+        public Localizer T { get; set; }
+
+        private IEnumerable<LocationDefinition> GetPredefinedLocations() {
+            yield return new LocationDefinition { Name = "Detail", DisplayName = T("Location in a \"Detail\" screen") };
+            yield return new LocationDefinition { Name = "Editor", DisplayName = T("Location in a \"Editor\" screen") };
+            yield return new LocationDefinition { Name = "Summary", DisplayName = T("Location in a \"Summary\" screen (Front-end)") };
+            yield return new LocationDefinition { Name = "SummaryAdmin", DisplayName = T("Location in a \"Summary\" screen (Admin)") };
+        }
+
+        private LocationSettings MergeSettings(LocationSettings partSettings, LocationSettings partDefinitionSettings) {
+            var result = new LocationSettings(partSettings);
+            foreach (var entry in partDefinitionSettings) {
+                if (!partSettings.ContainsKey(entry.Key))
+                    partSettings[entry.Key] = entry.Value;
+            }
+            return result;
+        }
+
+        #region Standalone part definition
+        public override IEnumerable<TemplateViewModel> PartEditor(ContentPartDefinition definition) {
+            var settings = definition.Settings.GetModel<LocationSettings>();
+
+            foreach (var location in GetPredefinedLocations()) {
+                var viewModel = new LocationSettingsViewModel {
+                    Definition = location,
+                    Location = settings.Get(location.Name)
+                };
+                yield return DefinitionTemplate(viewModel, templateName: "LocationSettings", prefix: location.Name);
+            }
+        }
+
+        public override IEnumerable<TemplateViewModel> PartEditorUpdate(ContentPartDefinitionBuilder builder, IUpdateModel updateModel) {
+            var settings = new LocationSettings();
+            foreach (var location in GetPredefinedLocations()) {
+                var viewModel = new LocationSettingsViewModel();
+                updateModel.TryUpdateModel(viewModel, location.Name, null, null);
+                settings[location.Name] = viewModel.Location;
+                yield return DefinitionTemplate(viewModel, templateName: "LocationSettings", prefix: location.Name);
+            }
+            builder.WithLocation(settings);
+        }
+        #endregion
+
+        #region Part in the context of a content type
+        public override IEnumerable<TemplateViewModel> TypePartEditor(ContentTypeDefinition.Part definition) {
             // Look for the setting in the most specific settings first (part definition in type)
             // then in the global part definition.
-            var settings =
-                definition.Settings.TryGetModel<LocationSettings>(locationSettings) ??
-                definition.PartDefinition.Settings.GetModel<LocationSettings>(locationSettings);
+            var partSettings = definition.Settings.GetModel<LocationSettings>();
+            var partDefinitionSettings = definition.PartDefinition.Settings.GetModel<LocationSettings>();
+            var settings = MergeSettings(partSettings, partDefinitionSettings);
 
-            return DefinitionTemplate(settings, locationSettings, locationSettings);
+            foreach (var location in GetPredefinedLocations()) {
+                var viewModel = new LocationSettingsViewModel {
+                    Definition = location,
+                    Location = settings.Get(location.Name)
+                };
+                yield return DefinitionTemplate(viewModel, templateName: "LocationSettings", prefix: location.Name);
+            }
         }
 
         public override IEnumerable<TemplateViewModel> TypePartEditorUpdate(ContentTypeDefinitionBuilder.PartConfigurer builder, IUpdateModel updateModel) {
-            yield return TypePartEditorUpdateForLocation(builder, updateModel, "DisplayLocation");
-            yield return TypePartEditorUpdateForLocation(builder, updateModel, "EditorLocation");
+            var settings = new LocationSettings();
+            foreach (var location in GetPredefinedLocations()) {
+                var viewModel = new LocationSettingsViewModel();
+                updateModel.TryUpdateModel(viewModel, location.Name, null, null);
+                settings[location.Name] = viewModel.Location;
+                yield return DefinitionTemplate(viewModel, templateName: "LocationSettings", prefix: location.Name);
+            }
+            builder.WithLocation(settings);
         }
+        #endregion
 
-        private TemplateViewModel TypePartEditorUpdateForLocation(ContentTypeDefinitionBuilder.PartConfigurer builder, IUpdateModel updateModel, string locationSettings) {
-            var locationsettings = new LocationSettings();
-            updateModel.TryUpdateModel(locationsettings, locationSettings, null, null);
-            builder.WithLocation("EditorLocation", locationsettings.Zone, locationsettings.Position);
-            return DefinitionTemplate(locationsettings, locationSettings, locationSettings);
-        }
-
+        #region Field within a content part
         public override IEnumerable<TemplateViewModel> PartFieldEditor(ContentPartDefinition.Field definition) {
-            yield return PartFieldEditorForLocation(definition, "DisplayLocation");
-            yield return PartFieldEditorForLocation(definition, "EditorLocation");
+            var settings = definition.Settings.GetModel<LocationSettings>();
+            foreach (var location in GetPredefinedLocations()) {
+                var viewModel = new LocationSettingsViewModel {
+                    Definition = location,
+                    Location = settings.Get(location.Name)
+                };
+                yield return DefinitionTemplate(viewModel, templateName: "LocationSettings", prefix: location.Name);
+            }
         }
-
-        private TemplateViewModel PartFieldEditorForLocation(ContentPartDefinition.Field definition, string locationSettings) {
-            var settings = definition.Settings.GetModel<LocationSettings>(locationSettings);
-            return DefinitionTemplate(settings, locationSettings, locationSettings);
-        }
-
 
         public override IEnumerable<TemplateViewModel> PartFieldEditorUpdate(ContentPartDefinitionBuilder.FieldConfigurer builder, IUpdateModel updateModel) {
-            yield return PartFieldEditorUpdateForLocation(builder, updateModel, "DisplayLocation");
-            yield return PartFieldEditorUpdateForLocation(builder, updateModel, "EditorLocation");
+            var settings = new LocationSettings();
+            foreach (var location in GetPredefinedLocations()) {
+                var viewModel = new LocationSettingsViewModel();
+                updateModel.TryUpdateModel(viewModel, location.Name, null, null);
+                settings[location.Name] = viewModel.Location;
+                yield return DefinitionTemplate(viewModel, templateName: "LocationSettings", prefix: location.Name);
+            }
+            builder.WithLocation(settings);
         }
-
-        private TemplateViewModel PartFieldEditorUpdateForLocation(ContentPartDefinitionBuilder.FieldConfigurer builder, IUpdateModel updateModel, string locationSettings) {
-            var model = new LocationSettings();
-            updateModel.TryUpdateModel(model, locationSettings, null, null);
-            builder.WithLocation(locationSettings, model.Zone, model.Position);
-            return DefinitionTemplate(model);
-        }
+        #endregion
     }
 }

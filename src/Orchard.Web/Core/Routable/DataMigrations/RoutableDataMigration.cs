@@ -1,4 +1,6 @@
-﻿using Orchard.ContentManagement.MetaData;
+﻿using System.Collections.Generic;
+using Orchard.ContentManagement.Drivers;
+using Orchard.ContentManagement.MetaData;
 using Orchard.ContentManagement.MetaData.Builders;
 using Orchard.Core.Routable.Models;
 using Orchard.Data.Migration;
@@ -20,7 +22,9 @@ namespace Orchard.Core.Routable.DataMigrations {
 
         public int UpdateFrom1() {
             ContentDefinitionManager.AlterPartDefinition(typeof(IsRoutable).Name, cfg => cfg
-                .WithLocation("EditorLocation", "primary", "before.5"));
+                .WithLocation(new Dictionary<string, ContentLocation> {
+                    {"Editor", new ContentLocation { Zone = "primary", Position = "before.5" }}
+                } ));
 
             return 2;
         }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Orchard.ContentManagement.Drivers;
 using Orchard.ContentManagement.MetaData.Models;
 
 namespace Orchard.ContentManagement.MetaData.Builders {
@@ -114,35 +115,38 @@ namespace Orchard.ContentManagement.MetaData.Builders {
     }
 
     public static class ContentPartDefinitionBuilderExtensions {
+        public static IEnumerable<KeyValuePair<string, string>> GetSettingEntries(IDictionary<string, ContentLocation> locationSettings) {
+            int index = 0;
+            foreach (var entry in locationSettings) {
+                var zone = string.IsNullOrEmpty(entry.Value.Zone) ? null : entry.Value.Zone;
+                var position = string.IsNullOrEmpty(entry.Value.Position) ? null : entry.Value.Position;
+                var locationName = (zone == null && position == null) ? null : entry.Key;
 
-        public static ContentPartDefinitionBuilder WithLocation(this ContentPartDefinitionBuilder obj, string location, string zone, string position) {
-            if (string.IsNullOrEmpty(zone)) 
-                zone = null;
-            if (string.IsNullOrEmpty(position)) 
-                position = null;
-            return obj
-                .WithSetting(string.Format("{0}.Zone", location), zone)
-                .WithSetting(string.Format("{0}.Position", location), position);
+                var prefix = string.Format("LocationSettings[{0}]", index);
+                yield return new KeyValuePair<string, string>(string.Format("{0}.Key", prefix), locationName);
+                yield return new KeyValuePair<string, string>(string.Format("{0}.Value.Zone", prefix), zone);
+                yield return new KeyValuePair<string, string>(string.Format("{0}.Value.Position", prefix), position);
+
+                index++;
+            }
         }
 
-        public static ContentTypeDefinitionBuilder.PartConfigurer WithLocation(this ContentTypeDefinitionBuilder.PartConfigurer obj, string location, string zone, string position) {
-            if (string.IsNullOrEmpty(zone))
-                zone = null;
-            if (string.IsNullOrEmpty(position))
-                position = null;
-            return obj
-                .WithSetting(string.Format("{0}.Zone", location), zone)
-                .WithSetting(string.Format("{0}.Position", location), position);
+        public static ContentPartDefinitionBuilder WithLocation(this ContentPartDefinitionBuilder obj, IDictionary<string, ContentLocation> settings) {
+            foreach (var entry in GetSettingEntries(settings))
+                obj = obj.WithSetting(entry.Key, entry.Value);
+            return obj;
         }
 
-        public static ContentPartDefinitionBuilder.FieldConfigurer WithLocation(this ContentPartDefinitionBuilder.FieldConfigurer obj, string location, string zone, string position) {
-            if (string.IsNullOrEmpty(zone))
-                zone = null;
-            if (string.IsNullOrEmpty(position))
-                position = null;
-            return obj
-                .WithSetting(string.Format("{0}.Zone", location), zone)
-                .WithSetting(string.Format("{0}.Position", location), position);
+        public static ContentTypeDefinitionBuilder.PartConfigurer WithLocation(this ContentTypeDefinitionBuilder.PartConfigurer obj, IDictionary<string, ContentLocation> settings) {
+            foreach (var entry in GetSettingEntries(settings))
+                obj = obj.WithSetting(entry.Key, entry.Value);
+            return obj;
+        }
+
+        public static ContentPartDefinitionBuilder.FieldConfigurer WithLocation(this ContentPartDefinitionBuilder.FieldConfigurer obj, IDictionary<string, ContentLocation> settings) {
+            foreach (var entry in GetSettingEntries(settings))
+                obj = obj.WithSetting(entry.Key, entry.Value);
+            return obj;
         }
     }
 }

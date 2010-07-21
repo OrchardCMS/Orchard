@@ -197,6 +197,7 @@
     <Compile Include="ContentManagement\Drivers\DriverResult.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="ContentManagement\Drivers\ContentLocation.cs" />
     <Compile Include="ContentManagement\FieldStorage\FieldStorageProviderSelector.cs" />
     <Compile Include="ContentManagement\Drivers\IContentFieldDriver.cs" />
     <Compile Include="ContentManagement\Drivers\IContentItemDriver.cs">
