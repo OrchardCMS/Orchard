@@ -35,15 +35,27 @@ namespace Orchard.UI.Resources {
         }
 
         public FileRegistrationContext RegisterStyle(string fileName, HtmlHelper html) {
+            return RegisterStyle(fileName, html, "5");
+        }
+
+        public FileRegistrationContext RegisterHeadScript(string fileName, HtmlHelper html) {
+            return RegisterHeadScript(fileName, html, "5");
+        }
+
+        public FileRegistrationContext RegisterFootScript(string fileName, HtmlHelper html) {
+            return RegisterFootScript(fileName, html, "5");
+        }
+
+        public FileRegistrationContext RegisterStyle(string fileName, HtmlHelper html, string position) {
             if (string.IsNullOrEmpty(fileName))
                 throw new ArgumentException(T("Style fileName was not given.").ToString());
 
-            var context = new FileRegistrationContext(html.ViewContext, html.ViewDataContainer, "link", fileName);
+            var context = new FileRegistrationContext(html.ViewContext, html.ViewDataContainer, "link", fileName, position);
             context.SetAttribute("type", "text/css");
             context.SetAttribute("rel", "stylesheet");
 
             if (!_styles.Contains(context))
-                _styles.Insert(0, context);
+                _styles.Add(context);
 
             return context;
         }
@@ -52,28 +64,28 @@ namespace Orchard.UI.Resources {
             _links.Add(entry);
         }
 
-        public FileRegistrationContext RegisterHeadScript(string fileName, HtmlHelper html) {
+        public FileRegistrationContext RegisterHeadScript(string fileName, HtmlHelper html, string position) {
             if (string.IsNullOrEmpty(fileName))
                 throw new ArgumentException(T("Head script fileName was not given.").ToString());
 
-            var context = new FileRegistrationContext(html.ViewContext, html.ViewDataContainer, "script", fileName);
+            var context = new FileRegistrationContext(html.ViewContext, html.ViewDataContainer, "script", fileName, position);
             context.SetAttribute("type", "text/javascript");
 
             if (!_headScripts.Contains(context))
-                _headScripts.Insert(0, context);
+                _headScripts.Add(context);
 
             return context;
         }
 
-        public FileRegistrationContext RegisterFootScript(string fileName, HtmlHelper html) { // type=\"text/javascript\" src=\"{0}\"
+        public FileRegistrationContext RegisterFootScript(string fileName, HtmlHelper html, string position) {
             if (string.IsNullOrEmpty(fileName))
                 throw new ArgumentException(T("Foot script fileName was not given.").ToString());
 
-            var context = new FileRegistrationContext(html.ViewContext, html.ViewDataContainer, "script", fileName);
+            var context = new FileRegistrationContext(html.ViewContext, html.ViewDataContainer, "script", fileName, position);
             context.SetAttribute("type", "text/javascript");
 
             if (!_footScripts.Contains(context))
-                _footScripts.Insert(0, context);
+                _footScripts.Add(context);
 
             return context;
         }
@@ -139,7 +151,9 @@ namespace Orchard.UI.Resources {
         private static MvcHtmlString GetFiles(IEnumerable<FileRegistrationContext> fileRegistrationContexts, string containerRelativePath) {
             return
                 MvcHtmlString.Create(string.Join("",
-                                                 fileRegistrationContexts.Select(
+                                                 fileRegistrationContexts
+                                                 .OrderBy(c => c.Position)
+                                                 .Select(
                                                      c =>
                                                      string.Format(
                                                          !string.IsNullOrEmpty(c.Condition)

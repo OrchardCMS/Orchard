@@ -99,6 +99,7 @@
     <Content Include="Default.aspx" />
     <Content Include="Global.asax" />
     <Content Include="Refresh.html" />
+    <Content Include="Themes\TheAdmin\Scripts\admin.js" />
     <Content Include="Themes\TheAdmin\Styles\ie.css" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>

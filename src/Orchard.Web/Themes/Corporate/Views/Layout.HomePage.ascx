@@ -2,7 +2,7 @@
 <%@ Import Namespace="Orchard.Mvc.ViewModels"%>
 
 <%
-    Html.RegisterStyle("site.css");
+    Html.RegisterStyle("site.css", "1");
    
     Model.Zones.AddRenderPartial("header", "Header", Model);
     Model.Zones.AddRenderPartial("menu", "Menu", Model);

@@ -2,9 +2,9 @@
 <%@ Import Namespace="Orchard.Mvc.ViewModels"%>
 
 <%
-    Html.RegisterStyle("yui.css");
-    Html.RegisterStyle("site.css");
-    Html.RegisterStyle("blog.css");
+    Html.RegisterStyle("yui.css", "1");
+    Html.RegisterStyle("site.css", "1");
+    Html.RegisterStyle("blog.css", "1");
     %>
     
 <script type="text/javascript"> 
