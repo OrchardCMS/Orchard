@@ -35,8 +35,8 @@ namespace Orchard.Blogs.Handlers {
                      // Ensure we get the "right" set of published posts for the blog
                      blog.ContentItem.ContentManager.Flush();
 
-                     var posts = _blogPostService.Get(blog, VersionOptions.Published).ToList();
-                     blog.PostCount = posts.Count;
+                     var postsCount = _blogPostService.Get(blog, VersionOptions.Published).Count();
+                     blog.PostCount = postsCount;
                  });
 
             OnInitializing<BlogPost>((context, bp) => {
