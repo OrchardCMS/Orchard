@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
+using Orchard.ContentManagement.MetaData;
 using Orchard.Data.Migration.Interpreters;
 using Orchard.Data.Migration.Records;
 using Orchard.Data.Migration.Schema;
@@ -21,16 +22,19 @@ namespace Orchard.Data.Migration {
         private readonly IRepository<DataMigrationRecord> _dataMigrationRepository;
         private readonly IExtensionManager _extensionManager;
         private readonly IDataMigrationInterpreter _interpreter;
+        private readonly IContentDefinitionManager _contentDefinitionManager;
 
         public DataMigrationManager(
             IEnumerable<IDataMigration> dataMigrations, 
             IRepository<DataMigrationRecord> dataMigrationRepository,
             IExtensionManager extensionManager,
-            IDataMigrationInterpreter interpreter) {
+            IDataMigrationInterpreter interpreter,
+            IContentDefinitionManager contentDefinitionManager) {
             _dataMigrations = dataMigrations;
             _dataMigrationRepository = dataMigrationRepository;
             _extensionManager = extensionManager;
             _interpreter = interpreter;
+            _contentDefinitionManager = contentDefinitionManager;
 
             Logger = NullLogger.Instance;
         }
@@ -188,6 +192,7 @@ namespace Orchard.Data.Migration {
 
             foreach (var migration in migrations.OfType<DataMigrationImpl>()) {
                 migration.SchemaBuilder = new SchemaBuilder(_interpreter, migration.Feature.Descriptor.Name.Replace(".", "_") + "_");
+                migration.ContentDefinitionManager = _contentDefinitionManager;
             }
 
             return migrations;

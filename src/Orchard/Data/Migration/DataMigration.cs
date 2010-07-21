@@ -1,4 +1,5 @@
-﻿using Orchard.Data.Migration.Schema;
+﻿using Orchard.ContentManagement.MetaData;
+using Orchard.Data.Migration.Schema;
 using Orchard.Environment.Extensions.Models;
 
 namespace Orchard.Data.Migration {
@@ -7,7 +8,7 @@ namespace Orchard.Data.Migration {
     /// </summary>
     public abstract class DataMigrationImpl : IDataMigration {
         public SchemaBuilder SchemaBuilder { get; set; }
+        public IContentDefinitionManager ContentDefinitionManager {get; set; }
         public virtual Feature Feature { get; set; }
-
     }
 }
