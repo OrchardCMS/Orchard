@@ -6,6 +6,7 @@ using Orchard.Localization;
 using Orchard.Modules.ViewModels;
 using Orchard.Mvc.Results;
 using Orchard.Packaging;
+using Orchard.Reports.Services;
 using Orchard.UI.Notify;
 
 namespace Orchard.Modules.Controllers {
@@ -13,16 +14,19 @@ namespace Orchard.Modules.Controllers {
         private readonly IModuleService _moduleService;
         private readonly IDataMigrationManager _dataMigrationManager;
         private readonly IPackageManager _packageManager;
+        private readonly IReportsCoordinator _reportsCoordinator;
 
         public AdminController(IOrchardServices services,
             IModuleService moduleService,
             IDataMigrationManager dataMigrationManager,
-            IPackageManager packageManager) {
+            IPackageManager packageManager,
+            IReportsCoordinator reportsCoordinator) {
 
             Services = services;
             _moduleService = moduleService;
             _dataMigrationManager = dataMigrationManager;
             _packageManager = packageManager;
+            _reportsCoordinator = reportsCoordinator;
 
             T = NullLocalizer.Instance;
         }
@@ -113,7 +117,7 @@ namespace Orchard.Modules.Controllers {
         }
 
         [HttpPost]
-        public ActionResult Update(string id, bool? force) {
+        public ActionResult Update(string id) {
             if (!Services.Authorizer.Authorize(Permissions.ManageFeatures, T("Not allowed to manage features")))
                 return new HttpUnauthorizedResult();
 
@@ -121,6 +125,7 @@ namespace Orchard.Modules.Controllers {
                 return new NotFoundResult();
 
             try {
+                _reportsCoordinator.Register("Data Migration", "Upgrade " + id, "Orchard installation");
                 _dataMigrationManager.Update(id);
                 Services.Notifier.Information(T("The feature {0} was updated succesfuly", id));
             }

@@ -69,7 +69,6 @@
                     if(Model.FeaturesThatNeedUpdate.Contains(feature.Descriptor.Name)){
                             using (Html.BeginFormAntiForgeryPost(string.Format("{0}", Url.Action("Update", new { area = "Orchard.Modules" })), FormMethod.Post, new {@class = "inline link"})) { %>
                             <%: Html.Hidden("id", feature.Descriptor.Name, new { id = "" })%>
-                            <%: Html.Hidden("force", true)%>
                             <button type="submit" class="update"><%: T("Update") %></button><%
                         }
                     }%>
