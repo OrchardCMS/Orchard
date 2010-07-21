@@ -16,8 +16,8 @@
 
                 glyph.data("controllees", getControllees(controller));
                 if (settings.remember) {
-                    var shouldClose = $.orchard.setting("expando", { key: _this.selector + "-" + controller.text(), path: settings.path });
-                    if (shouldClose) {
+                    var state = $.orchard.setting("expando", { key: _this.selector + "-" + controller.text(), path: settings.path });
+                    if (state === "closed") {
                         glyph.addClass("closed").data("controllees").hide();
                     }
                 }
