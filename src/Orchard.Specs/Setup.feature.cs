@@ -145,8 +145,8 @@ this.ScenarioSetup(scenarioInfo);
                             "nyMce"});
             table1.AddRow(new string[] {
                         "core",
-                        "Common, Contents, Dashboard, Feeds, HomePage, Navigation, Routable, PublishLater," +
-                            " Scheduling, Settings, XmlRpc"});
+                        "Common, Contents, ContentsLocation, Dashboard, Feeds, HomePage, Navigation, Routa" +
+                            "ble, PublishLater, Scheduling, Settings, XmlRpc"});
             table1.AddRow(new string[] {
                         "theme",
                         "SafeMode, Classic"});

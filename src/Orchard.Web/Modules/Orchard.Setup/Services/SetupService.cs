@@ -67,6 +67,7 @@ namespace Orchard.Setup.Services {
                     "Common",
                     "PublishLater",
                     "Contents",
+                    "ContentsLocation",
                     "Dashboard",
                     "Reports",
                     "Feeds",

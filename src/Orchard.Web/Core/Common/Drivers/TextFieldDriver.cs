@@ -2,8 +2,7 @@
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
 using Orchard.Core.Common.Fields;
-using Orchard.Core.Common.Models;
-using Orchard.Core.Common.Settings;
+using Orchard.Core.ContentsLocation.Models;
 
 namespace Orchard.Core.Common.Drivers {
     [UsedImplicitly]

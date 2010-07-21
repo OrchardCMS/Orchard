@@ -1,8 +1,7 @@
 ﻿using Orchard.ContentManagement;
 using Orchard.ContentManagement.Aspects;
 using Orchard.ContentManagement.Drivers;
-using Orchard.Core.Common.Models;
-using Orchard.Core.Common.Settings;
+using Orchard.Core.ContentsLocation.Models;
 using Orchard.Core.Routable.Models;
 using Orchard.Core.Routable.Services;
 using Orchard.Core.Routable.ViewModels;

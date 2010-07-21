@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using Orchard.ContentManagement.Drivers;
 
-namespace Orchard.Core.Common.Models {
+namespace Orchard.Core.ContentsLocation.Models {
     public class LocationSettings : Dictionary<string, ContentLocation> {
         public LocationSettings() { }
         public LocationSettings(LocationSettings value)
