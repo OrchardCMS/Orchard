@@ -72,12 +72,33 @@ namespace Orchard.Tags.Services {
         }
 
         public void UpdateTag(int id, string tagName) {
-            Tag tag = _tagRepository.Get(id);
-            if (String.IsNullOrEmpty(tagName)) {
+            if ( String.IsNullOrEmpty(tagName) ) {
                 _notifier.Warning(T("Couldn't rename tag: name was empty"));
                 return;
             }
-            tag.TagName = tagName;
+
+            Tag tag = GetTagByName(tagName);
+            if(tag != null) {
+                // new tag name already existing => merge
+                IEnumerable<TagsContentItems> tagsContentItems = _tagsContentItemsRepository.Fetch(x => x.TagId == id);
+                
+                // get contentItems already tagged with the existing one
+                var taggedContentItems = GetTaggedContentItems(tag.Id);
+
+                foreach ( var tagContentItem in tagsContentItems ) {
+                    var tagContentItemId = tagContentItem.ContentItemId;
+                    if ( !taggedContentItems.Any(c => c.ContentItem.Id == tagContentItemId) ) {
+                        TagContentItem(tagContentItem.ContentItemId, tagName);
+                    }
+                    _tagsContentItemsRepository.Delete(tagContentItem);
+                }
+
+                _tagRepository.Delete(GetTag(id));
+            }
+            else {
+                tag = _tagRepository.Get(id);
+                tag.TagName = tagName;
+            }
         }
 
         public IEnumerable<IContent> GetTaggedContentItems(int id) {
