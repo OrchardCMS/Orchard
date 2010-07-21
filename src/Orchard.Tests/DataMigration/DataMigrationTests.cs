@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using Autofac;
+using Moq;
 using NHibernate;
 using NUnit.Framework;
+using Orchard.ContentManagement.MetaData;
 using Orchard.ContentManagement.Records;
 using Orchard.Data;
 using Orchard.Data.Migration;
@@ -16,6 +18,7 @@ using Orchard.Environment.Extensions.Folders;
 using Orchard.Environment.Extensions.Models;
 using Orchard.Tests.ContentManagement;
 using Orchard.Data.Providers;
+using Orchard.Tests.Utility;
 
 namespace Orchard.Tests.DataMigration {
     [TestFixture]
@@ -50,6 +53,7 @@ namespace Orchard.Tests.DataMigration {
            
             var builder = new ContainerBuilder();
             _folders = new StubFolders();
+            var contentDefinitionManager = new Mock<IContentDefinitionManager>().Object;
             
             builder.RegisterInstance(new ShellSettings { DataTablePrefix = "TEST_"});
             
@@ -57,6 +61,7 @@ namespace Orchard.Tests.DataMigration {
             builder.RegisterType<DataServicesProviderFactory>().As<IDataServicesProviderFactory>();
             builder.RegisterType<NullInterpreter>().As<IDataMigrationInterpreter>();
             builder.RegisterInstance(_folders).As<IExtensionFolders>();
+            builder.RegisterInstance(contentDefinitionManager).As<IContentDefinitionManager>();
             builder.RegisterType<ExtensionManager>().As<IExtensionManager>();
             builder.RegisterType<DataMigrationManager>().As<IDataMigrationManager>();
             builder.RegisterGeneric(typeof(Repository<>)).As(typeof(IRepository<>));
