@@ -2,6 +2,7 @@
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
 using Orchard.Core.Common.Fields;
+using Orchard.Core.Common.Settings;
 
 namespace Orchard.Core.Common.Drivers {
     [UsedImplicitly]
@@ -12,17 +13,27 @@ namespace Orchard.Core.Common.Drivers {
         public TextFieldDriver(IOrchardServices services) {
             Services = services;
         }
-        
+
         private static string GetPrefix(TextField field, ContentPart part) {
             return part.PartDefinition.Name + "." + field.Name;
         }
 
         protected override DriverResult Display(ContentPart part, TextField field, string displayType) {
-            return ContentFieldTemplate(field, TemplateName, GetPrefix(field, part));
+            var locationSettings = 
+                field.PartFieldDefinition.Settings.GetModel<LocationSettings>("DisplayLocation") ??
+                new LocationSettings { Zone = "primary", Position = "5" };
+
+            return ContentFieldTemplate(field, TemplateName, GetPrefix(field, part))
+                .Location(locationSettings.Zone, locationSettings.Position);
         }
 
         protected override DriverResult Editor(ContentPart part, TextField field) {
-            return ContentFieldTemplate(field, TemplateName, GetPrefix(field, part)).Location("primary", "5");
+            var locationSettings = 
+                field.PartFieldDefinition.Settings.GetModel<LocationSettings>("EditorLocation") ??
+                new LocationSettings { Zone = "primary", Position = "5" };
+
+            return ContentFieldTemplate(field, TemplateName, GetPrefix(field, part))
+                .Location(locationSettings.Zone, locationSettings.Position);
         }
 
         protected override DriverResult Editor(ContentPart part, TextField field, IUpdateModel updater) {
