@@ -25,7 +25,7 @@
 <% using (this.Capture("end-of-page-scripts")) { %>
 <script type="text/javascript">
     $(function () {
-        $("#navigation h3").expandoControl(function(controller) { return controller.next(); }, { collapse: false, remember: true, path: "<%:ResolveUrl("~/Admin") %>" });
+        $("#navigation h3").expandoControl(function(controller) { return controller.next(); }, { key: "N42", path: "<%:ResolveUrl("~/Admin") %>" });
     });
 </script>
 <% } %>
