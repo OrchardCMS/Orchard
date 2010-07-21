@@ -81,12 +81,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Module.txt" />
-    <Content Include="scripts\jquery.switchable.js" />
-    <Content Include="styles\images\summary-view.gif" />
-    <Content Include="styles\images\summary-view-on.gif" />
-    <Content Include="styles\images\detail-view.gif" />
-    <Content Include="styles\images\detail-view-on.gif" />
-    <Content Include="styles\jquery.switchable.css" />
     <Content Include="Views\Admin\Add.ascx" />
     <Content Include="Views\Admin\Index.ascx" />
     <Content Include="Web.config" />
