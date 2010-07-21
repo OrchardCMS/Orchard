@@ -7,7 +7,7 @@ namespace Orchard.ContentManagement.MetaData.Models {
         public SettingsDictionary() { }
         public SettingsDictionary(IDictionary<string, string> dictionary) : base(dictionary) { }
 
-        private T TryGetModel<T>(string key) where T : class {
+        public T TryGetModel<T>(string key) where T : class {
             var binder = new DefaultModelBinder();
             var controllerContext = new ControllerContext();
             var context = new ModelBindingContext {
@@ -19,20 +19,16 @@ namespace Orchard.ContentManagement.MetaData.Models {
 
         }
 
+        public T TryGetModel<T>() where T : class {
+            return TryGetModel<T>(typeof (T).Name);
+        }
+
         public T GetModel<T>() where T : class, new() {
             return GetModel<T>(typeof(T).Name);
         }
 
         public T GetModel<T>(string key) where T : class, new() {
             return TryGetModel<T>(key) ?? new T();
-        }
-
-        public bool ContainsModel<T>() where T : class {
-            return TryGetModel<T>(typeof(T).Name) != null;
-        }
-
-        public bool ContainsModel<T>(string key) where T : class {
-            return TryGetModel<T>(key) != null;
         }
     }
 }

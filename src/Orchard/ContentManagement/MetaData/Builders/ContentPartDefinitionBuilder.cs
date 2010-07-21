@@ -111,6 +111,38 @@ namespace Orchard.ContentManagement.MetaData.Builders {
                 return this;
             }
         }
+    }
 
+    public static class ContentPartDefinitionBuilderExtensions {
+
+        public static ContentPartDefinitionBuilder WithLocation(this ContentPartDefinitionBuilder obj, string location, string zone, string position) {
+            if (string.IsNullOrEmpty(zone)) 
+                zone = null;
+            if (string.IsNullOrEmpty(position)) 
+                position = null;
+            return obj
+                .WithSetting(string.Format("{0}.Zone", location), zone)
+                .WithSetting(string.Format("{0}.Position", location), position);
+        }
+
+        public static ContentTypeDefinitionBuilder.PartConfigurer WithLocation(this ContentTypeDefinitionBuilder.PartConfigurer obj, string location, string zone, string position) {
+            if (string.IsNullOrEmpty(zone))
+                zone = null;
+            if (string.IsNullOrEmpty(position))
+                position = null;
+            return obj
+                .WithSetting(string.Format("{0}.Zone", location), zone)
+                .WithSetting(string.Format("{0}.Position", location), position);
+        }
+
+        public static ContentPartDefinitionBuilder.FieldConfigurer WithLocation(this ContentPartDefinitionBuilder.FieldConfigurer obj, string location, string zone, string position) {
+            if (string.IsNullOrEmpty(zone))
+                zone = null;
+            if (string.IsNullOrEmpty(position))
+                position = null;
+            return obj
+                .WithSetting(string.Format("{0}.Zone", location), zone)
+                .WithSetting(string.Format("{0}.Position", location), position);
+        }
     }
 }

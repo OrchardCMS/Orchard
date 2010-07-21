@@ -52,8 +52,12 @@ namespace Orchard.ContentManagement.MetaData {
         }
 
         protected static TemplateViewModel DefinitionTemplate<TModel>(TModel model) {
-            return new TemplateViewModel(model, typeof(TModel).Name) {
-                TemplateName = "DefinitionTemplates/" + typeof(TModel).Name
+            return DefinitionTemplate(model, typeof(TModel).Name, typeof(TModel).Name);
+        }
+
+        protected static TemplateViewModel DefinitionTemplate<TModel>(TModel model, string templateName, string prefix) {
+            return new TemplateViewModel(model, prefix) {
+                TemplateName = "DefinitionTemplates/" + templateName
             };
         }
     }

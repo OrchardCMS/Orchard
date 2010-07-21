@@ -70,6 +70,8 @@
     <Compile Include="Common\Services\ICommonService.cs" />
     <Compile Include="Common\Services\CommonService.cs" />
     <Compile Include="Common\Settings\BodySettings.cs" />
+    <Compile Include="Common\Settings\LocationSettingsEditorEvents.cs" />
+    <Compile Include="Common\Settings\LocationSettings.cs" />
     <Compile Include="Common\ViewModels\CommonMetadataViewModel.cs" />
     <Compile Include="Common\ViewModels\ContainerEditorViewModel.cs" />
     <Compile Include="Common\ViewModels\TextContentFieldDisplayViewModel.cs" />
@@ -224,6 +226,8 @@
     <Content Include="Common\Module.txt" />
     <Content Include="Common\Views\DefinitionTemplates\BodyTypePartSettings.ascx" />
     <Content Include="Common\Views\DefinitionTemplates\BodyPartSettings.ascx" />
+    <Content Include="Common\Views\DefinitionTemplates\DisplayLocation.ascx" />
+    <Content Include="Common\Views\DefinitionTemplates\EditorLocation.ascx" />
     <Content Include="Common\Views\DisplayTemplates\Fields\Common.TextField.ascx" />
     <Content Include="Common\Views\DisplayTemplates\Parts\Common.Body.SummaryAdmin.ascx" />
     <Content Include="Common\Views\DisplayTemplates\Parts\Common.Body.Manage.SummaryAdmin.ascx" />
