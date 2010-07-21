@@ -63,6 +63,7 @@
     <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="DataMigrations\IndexingDataMigration.cs" />
     <Compile Include="Handlers\CreateIndexingTaskHandler.cs" />
+    <Compile Include="Handlers\InfosetFieldIndexingHandler.cs" />
     <Compile Include="Models\IndexingTask.cs" />
     <Compile Include="Models\IndexingTaskRecord.cs" />
     <Compile Include="Permissions.cs" />

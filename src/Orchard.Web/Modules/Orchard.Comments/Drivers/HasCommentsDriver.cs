@@ -35,12 +35,12 @@ namespace Orchard.Comments.Drivers {
         }
 
         protected override DriverResult Editor(HasComments part) {
-            return ContentPartTemplate(part, "Parts/Comments.HasComments").Location("primary", "99");
+            return ContentPartTemplate(part, "Parts/Comments.HasComments").Location("primary", "10");
         }
 
         protected override DriverResult Editor(HasComments part, IUpdateModel updater) {
             updater.TryUpdateModel(part, Prefix, null, null);
-            return ContentPartTemplate(part, "Parts/Comments.HasComments").Location("primary", "99");
+            return ContentPartTemplate(part, "Parts/Comments.HasComments").Location("primary", "10");
         }
     }
 }

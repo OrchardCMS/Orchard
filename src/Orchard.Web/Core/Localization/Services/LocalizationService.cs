@@ -4,7 +4,6 @@ using System.Linq;
 using Orchard.ContentManagement;
 using Orchard.Core.Localization.Models;
 using Orchard.Localization.Services;
-using Orchard.Tasks.Scheduling;
 
 namespace Orchard.Core.Localization.Services {
     public class LocalizationService : ILocalizationService {
@@ -25,9 +24,18 @@ namespace Orchard.Core.Localization.Services {
         }
 
         string ILocalizationService.GetContentCulture(IContent content) {
-            return content.Is<Localized>() && content.As<Localized>().Culture != null
-                       ? content.As<Localized>().Culture.Culture
+            var localized = content.As<Localized>();
+            return localized != null && localized.Culture != null
+                       ? localized.Culture.Culture
                        : _cultureManager.GetSiteCulture();
+        }
+
+        void ILocalizationService.SetContentCulture(IContent content, string culture) {
+            var localized = content.As<Localized>();
+            if (localized == null || localized.MasterContentItem == null)
+                return;
+
+            localized.Culture = _cultureManager.GetCultureByName(culture);
         }
 
         IEnumerable<Localized> ILocalizationService.GetLocalizations(IContent content) {

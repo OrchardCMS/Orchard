@@ -9,6 +9,6 @@ namespace Orchard.ContentManagement {
         public ContentPartDefinition.Field PartFieldDefinition { get; set; }
         public ContentFieldDefinition FieldDefinition { get { return PartFieldDefinition.FieldDefinition; } }
 
-        public IFieldStorage Storage { protected get; set; }
+        public IFieldStorage Storage { get; set; }
     }
 }

@@ -9,10 +9,10 @@ using Orchard.UI.Notify;
 namespace Orchard.DevTools.Controllers {
     [ValidateInput(false)]
     [Admin]
-    public class DataMigrationController : Controller {
+    public class DatabaseUpdateController : Controller {
         private readonly ISchemaCommandGenerator _schemaCommandGenerator;
 
-        public DataMigrationController(ISchemaCommandGenerator schemaCommandGenerator, IOrchardServices orchardServices) {
+        public DatabaseUpdateController(ISchemaCommandGenerator schemaCommandGenerator, IOrchardServices orchardServices) {
             _schemaCommandGenerator = schemaCommandGenerator;
             Services = orchardServices;
         }

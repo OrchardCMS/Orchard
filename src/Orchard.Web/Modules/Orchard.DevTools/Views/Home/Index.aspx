@@ -4,4 +4,4 @@
 <p><%: Html.ActionLink(T("Contents").ToString(), "Index", "Content") %></p>
 <p><%: Html.ActionLink(T("Metadata").ToString(), "Index", "Metadata") %></p>
 <p><%: Html.ActionLink(T("Test Unauthorized Request").ToString(), "NotAuthorized", "Home")%></p>
-<p><%: Html.ActionLink(T("Data migration").ToString(), "Index", "DataMigration")%></p>
+<p><%: Html.ActionLink(T("Database Update").ToString(), "Index", "DatabaseUpdate")%></p>
