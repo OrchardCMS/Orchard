@@ -1,4 +1,7 @@
-﻿using Orchard.Data.Migration;
+﻿using Orchard.ContentManagement.MetaData;
+using Orchard.ContentManagement.MetaData.Builders;
+using Orchard.Core.Routable.Models;
+using Orchard.Data.Migration;
 
 namespace Orchard.Core.Routable.DataMigrations {
     public class RoutableDataMigration : DataMigrationImpl {
@@ -13,6 +16,13 @@ namespace Orchard.Core.Routable.DataMigrations {
                 );
 
             return 1;
+        }
+
+        public int UpdateFrom1() {
+            ContentDefinitionManager.AlterPartDefinition(typeof(IsRoutable).Name, cfg => cfg
+                .WithLocation("EditorLocation", "primary", "before.5"));
+
+            return 2;
         }
     }
 }

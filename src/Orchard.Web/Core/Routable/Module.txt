@@ -8,4 +8,5 @@ description: The routable module enables content items to be accessed through a 
 features:
     Routable:
         Description: Routable content part.
+        Dependencies: Settings
         Category: Core

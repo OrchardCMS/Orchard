@@ -1,6 +1,7 @@
 ﻿using Orchard.ContentManagement;
 using Orchard.ContentManagement.Aspects;
 using Orchard.ContentManagement.Drivers;
+using Orchard.Core.Common.Settings;
 using Orchard.Core.Routable.Models;
 using Orchard.Core.Routable.Services;
 using Orchard.Core.Routable.ViewModels;
@@ -66,7 +67,8 @@ namespace Orchard.Core.Routable.Drivers {
                     : "";
             }
 
-            return ContentPartTemplate(model, TemplateName, Prefix).Location("primary", "before.5");
+            var locationSettings = part.PartDefinition.Settings.GetModel<LocationSettings>("EditorLocation");
+            return ContentPartTemplate(model, TemplateName, Prefix).Location(locationSettings.Zone, locationSettings.Position);
         }
 
         protected override DriverResult Editor(IsRoutable part, IUpdateModel updater) {
