@@ -10,11 +10,11 @@ using Orchard.Localization;
 
 namespace Orchard.Blogs.Handlers {
     [UsedImplicitly]
-    public class BlogPostHandler : ContentHandler {
+    public class BlogPostPartHandler : ContentHandler {
         private readonly IBlogPostService _blogPostService;
         private readonly IOrchardServices _orchardServices;
 
-        public BlogPostHandler(IBlogService blogService, IBlogPostService blogPostService, IOrchardServices orchardServices, RequestContext requestContext) {
+        public BlogPostPartHandler(IBlogService blogService, IBlogPostService blogPostService, IOrchardServices orchardServices, RequestContext requestContext) {
             _blogPostService = blogPostService;
             _orchardServices = orchardServices;
             T = NullLocalizer.Instance;

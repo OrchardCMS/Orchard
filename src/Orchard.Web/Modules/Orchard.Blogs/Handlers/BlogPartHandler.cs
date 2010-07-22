@@ -5,8 +5,8 @@ using Orchard.Data;
 
 namespace Orchard.Blogs.Handlers {
     [UsedImplicitly]
-    public class BlogHandler : ContentHandler {
-        public BlogHandler(IRepository<BlogPartRecord> repository) {
+    public class BlogPartHandler : ContentHandler {
+        public BlogPartHandler(IRepository<BlogPartRecord> repository) {
             Filters.Add(StorageFilter.For(repository));
         }
     }

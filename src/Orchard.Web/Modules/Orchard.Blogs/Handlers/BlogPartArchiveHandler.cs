@@ -10,8 +10,8 @@ using Orchard.Data;
 
 namespace Orchard.Blogs.Handlers {
     [UsedImplicitly]
-    public class BlogArchiveHandler : ContentHandler {
-        public BlogArchiveHandler(IRepository<BlogPartArchiveRecord> blogArchiveRepository, IRepository<CommonPartRecord> commonRepository) {
+    public class BlogPartArchiveHandler : ContentHandler {
+        public BlogPartArchiveHandler(IRepository<BlogPartArchiveRecord> blogArchiveRepository, IRepository<CommonPartRecord> commonRepository) {
             OnPublished<BlogPostPart>((context, bp) => RecalculateBlogArchive(blogArchiveRepository, commonRepository, bp));
             OnRemoved<BlogPostPart>((context, bp) => RecalculateBlogArchive(blogArchiveRepository, commonRepository, bp));
         }
