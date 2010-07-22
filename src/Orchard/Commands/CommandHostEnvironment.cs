@@ -1,10 +1,25 @@
 using System;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Web.Hosting;
 using Orchard.Environment;
 using Orchard.Localization;
 
 namespace Orchard.Commands {
+    public class OrchardCommandHostRetryException : OrchardCoreException {
+        public OrchardCommandHostRetryException(LocalizedString message)
+            : base(message) {
+        }
+
+        public OrchardCommandHostRetryException(LocalizedString message, Exception innerException)
+            : base(message, innerException) {
+        }
+
+        protected OrchardCommandHostRetryException(SerializationInfo info, StreamingContext context)
+            : base(info, context) {
+        }
+    }
+
     public class CommandHostEnvironment : IHostEnvironment {
         public CommandHostEnvironment() {
             T = NullLocalizer.Instance;
@@ -29,7 +44,7 @@ namespace Orchard.Commands {
         }
 
         public void ResetSiteCompilation() {
-            throw new OrchardCoreException(T("A change of configuration requires the application to be restarted. Running the command again usually solves this problem."));
+            throw new OrchardCommandHostRetryException(T("A change of configuration requires the host to be restarted."));
         }
     }
 }

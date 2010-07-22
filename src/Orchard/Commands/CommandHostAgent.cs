@@ -42,13 +42,18 @@ namespace Orchard.Commands {
         }
 
         public int StartHost(TextReader input, TextWriter output) {
-            try {
-                _hostContainer = OrchardStarter.CreateHostContainer(ContainerRegistrations);
-                _tenants = new Dictionary<string, IStandaloneEnvironment>();
 
-                var host = _hostContainer.Resolve<IOrchardHost>();
-                host.Initialize();
+            // This retry logic is not exactly clean, but a change in configuration
+            // sometimes need us to re-try initializing a host container.
+        Retry:
+            try {
+                _hostContainer = CreateHostContainer();
+                _tenants = new Dictionary<string, IStandaloneEnvironment>();
                 return 0;
+            }
+            catch (OrchardCommandHostRetryException e) {
+                output.WriteLine("{0} (Retrying...)", e.Message);
+                goto Retry;
             }
             catch (Exception e) {
                 for (; e != null; e = e.InnerException) {
@@ -57,6 +62,14 @@ namespace Orchard.Commands {
                 }
                 return 5;
             }
+        }
+
+        private IContainer CreateHostContainer() {
+            var hostContainer = OrchardStarter.CreateHostContainer(ContainerRegistrations);
+
+            var host = hostContainer.Resolve<IOrchardHost>();
+            host.Initialize();
+            return hostContainer;
         }
 
 
@@ -133,7 +146,7 @@ namespace Orchard.Commands {
             }
             else {
                 // In case of an unitiliazed site (no default settings yet), we create a default settings instance.
-                var settings = new ShellSettings {Name = "Default", State = new TenantState("Uninitialized")};
+                var settings = new ShellSettings { Name = "Default", State = new TenantState("Uninitialized") };
                 return host.CreateStandaloneEnvironment(settings);
             }
         }
