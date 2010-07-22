@@ -18,6 +18,7 @@ namespace Orchard.Core.ContentsLocation.Settings {
         public Localizer T { get; set; }
 
         private IEnumerable<LocationDefinition> GetPredefinedLocations() {
+            yield return new LocationDefinition { Name = "Default", DisplayName = T("Default location (i.e. fallback if no specific override)") };
             yield return new LocationDefinition { Name = "Detail", DisplayName = T("Location in a \"Detail\" screen") };
             yield return new LocationDefinition { Name = "Editor", DisplayName = T("Location in a \"Editor\" screen") };
             yield return new LocationDefinition { Name = "Summary", DisplayName = T("Location in a \"Summary\" screen (Front-end)") };

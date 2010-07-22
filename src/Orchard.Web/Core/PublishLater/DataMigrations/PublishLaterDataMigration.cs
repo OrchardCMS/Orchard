@@ -10,9 +10,7 @@ namespace Orchard.Core.PublishLater.DataMigrations {
         public int Create() {
             ContentDefinitionManager.AlterPartDefinition(typeof(PublishLaterPart).Name, cfg => cfg
                 .WithLocation(new Dictionary<string, ContentLocation> {
-                    {"Display", new ContentLocation { Zone = "metadata", Position = "1" }},
-                    {"Summary", new ContentLocation { Zone = "metadata", Position = "1" }},
-                    {"SummaryAdmin", new ContentLocation { Zone = "metadata", Position = "1" }},
+                    {"Default", new ContentLocation { Zone = "metadata", Position = "1" }},
                     {"Editor", new ContentLocation { Zone = "secondary", Position = "1" }}
                 }));
             return 1;

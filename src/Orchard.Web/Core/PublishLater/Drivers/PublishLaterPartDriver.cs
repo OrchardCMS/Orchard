@@ -32,8 +32,7 @@ namespace Orchard.Core.PublishLater.Drivers {
             var model = new PublishLaterViewModel(part) {
                 ScheduledPublishUtc = part.ScheduledPublishUtc.Value
             };
-            var location = part.GetLocation(displayType, "metadata", "1");
-            return ContentPartTemplate(model, "Parts/PublishLater.Metadata").LongestMatch(displayType, "Summary", "SummaryAdmin").Location(location);
+            return ContentPartTemplate(model, "Parts/PublishLater.Metadata").LongestMatch(displayType, "Summary", "SummaryAdmin").Location(part.GetLocation(displayType));
         }
 
         protected override DriverResult Editor(PublishLaterPart part) {
@@ -67,8 +66,7 @@ namespace Orchard.Core.PublishLater.Drivers {
                 }
             }
 
-            var location = part.GetLocation("Editor", "secondary", "1");
-            return ContentPartTemplate(model, "Parts/PublishLater", TemplatePrefix).Location(location);
+            return ContentPartTemplate(model, "Parts/PublishLater", TemplatePrefix).Location(part.GetLocation("Editor"));
         }
     }
 }

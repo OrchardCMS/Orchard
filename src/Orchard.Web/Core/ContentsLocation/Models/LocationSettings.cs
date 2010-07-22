@@ -18,6 +18,11 @@ namespace Orchard.Core.ContentsLocation.Models {
             if (this.TryGetValue(location, out result)) {
                 return result;
             }
+
+            if (this.TryGetValue("Default", out result)) {
+                return result;
+            }
+
             return new ContentLocation { Zone = defaultZone, Position = defaultPosition };
         }
     }
@@ -28,11 +33,13 @@ namespace Orchard.Core.ContentsLocation.Models {
         }
 
         public static ContentLocation GetLocation<TContent>(this TContent part, string locationName, string defaultZone, string defaultPosition) where TContent : ContentPart {
-            var typePartLocation = part.TypePartDefinition.Settings.GetModel<LocationSettings>().Get(locationName);
-            if (typePartLocation.Position == null && typePartLocation.Zone == null) {
-                return part.PartDefinition.Settings.GetModel<LocationSettings>().Get(locationName, defaultZone, defaultPosition);
-            }
-            return typePartLocation;
+            // Get the specific location from the part in the type context
+            var location = part.TypePartDefinition.Settings.GetModel<LocationSettings>().Get(locationName);
+            if (location.Position != null || location.Zone != null)
+                return location;
+
+            // Get the specific location from the part definition
+            return part.PartDefinition.Settings.GetModel<LocationSettings>().Get(locationName, defaultZone, defaultPosition);
         }
     }
 }
