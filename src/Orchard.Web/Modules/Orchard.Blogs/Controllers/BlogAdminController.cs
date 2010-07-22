@@ -35,7 +35,7 @@ namespace Orchard.Blogs.Controllers {
             if (!Services.Authorizer.Authorize(Permissions.ManageBlogs, T("Not allowed to create blogs")))
                 return new HttpUnauthorizedResult();
 
-            var blog = Services.ContentManager.New<Blog>(BlogDriver.ContentType.Name);
+            var blog = Services.ContentManager.New<BlogPart>(BlogPartDriver.ContentType.Name);
             if (blog == null)
                 return new NotFoundResult();
 
@@ -52,7 +52,7 @@ namespace Orchard.Blogs.Controllers {
             if (!Services.Authorizer.Authorize(Permissions.ManageBlogs, T("Couldn't create blog")))
                 return new HttpUnauthorizedResult();
 
-            model.Blog = Services.ContentManager.UpdateEditorModel(Services.ContentManager.New<Blog>(BlogDriver.ContentType.Name), this);
+            model.Blog = Services.ContentManager.UpdateEditorModel(Services.ContentManager.New<BlogPart>(BlogPartDriver.ContentType.Name), this);
 
             if (!ModelState.IsValid)
                 return View(model);
@@ -116,12 +116,12 @@ namespace Orchard.Blogs.Controllers {
                 return new HttpUnauthorizedResult();
 
             //TODO: (erikpo) Move looking up the current blog up into a modelbinder
-            Blog blog = _blogService.Get(blogSlug);
+            BlogPart blogPart = _blogService.Get(blogSlug);
 
-            if (blog == null)
+            if (blogPart == null)
                 return new NotFoundResult();
 
-            _blogService.Delete(blog);
+            _blogService.Delete(blogPart);
 
             Services.Notifier.Information(T("Blog was successfully deleted"));
 
@@ -141,14 +141,14 @@ namespace Orchard.Blogs.Controllers {
 
         //TODO: (erikpo) Should move the slug parameter and get call and null check up into a model binder
         public ActionResult Item(string blogSlug) {
-            Blog blog = _blogService.Get(blogSlug);
+            BlogPart blogPart = _blogService.Get(blogSlug);
 
-            if (blog == null)
+            if (blogPart == null)
                 return new NotFoundResult();
 
             //TODO: (erikpo) Need to make templatePath be more convention based so if my controller name has "Admin" in it then "Admin/{type}" is assumed
             var model = new BlogForAdminViewModel {
-                Blog = Services.ContentManager.BuildDisplayModel(blog, "DetailAdmin")
+                Blog = Services.ContentManager.BuildDisplayModel(blogPart, "DetailAdmin")
             };
 
             return View(model);

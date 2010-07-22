@@ -7,7 +7,7 @@ using Orchard.Core.Routable.Models;
 using Orchard.Security;
 
 namespace Orchard.Blogs.Models {
-    public class BlogPost : ContentPart {
+    public class BlogPostPart : ContentPart {
         [HiddenInput(DisplayValue = false)]
         public int Id {
             get { return ContentItem.Id; }
@@ -28,8 +28,8 @@ namespace Orchard.Blogs.Models {
             set { this.As<BodyAspect>().Text = value; }
         }
 
-        public Blog Blog {
-            get { return this.As<ICommonAspect>().Container.As<Blog>(); }
+        public BlogPart BlogPart {
+            get { return this.As<ICommonAspect>().Container.As<BlogPart>(); }
             set { this.As<ICommonAspect>().Container = value; }
         }
 

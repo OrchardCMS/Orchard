@@ -19,7 +19,7 @@ namespace Orchard.Blogs.Handlers {
             _orchardServices = orchardServices;
             T = NullLocalizer.Instance;
 
-            Action<Blog> updateBlogPostCount =
+            Action<BlogPart> updateBlogPostCount =
                 (blog => {
                      // Ensure we get the "right" set of published posts for the blog
                      blog.ContentItem.ContentManager.Flush();
@@ -28,10 +28,10 @@ namespace Orchard.Blogs.Handlers {
                      blog.PostCount = postsCount;
                  });
 
-            OnInitializing<BlogPost>((context, bp) => {
+            OnInitializing<BlogPostPart>((context, bp) => {
                 var blogSlug = requestContext.RouteData.Values.ContainsKey("blogSlug") ? requestContext.RouteData.Values["blogSlug"] as string : null;
                 if (!string.IsNullOrEmpty(blogSlug)) {
-                    bp.Blog = blogService.Get(blogSlug);
+                    bp.BlogPart = blogService.Get(blogSlug);
                     return;
                 }
 
@@ -41,19 +41,19 @@ namespace Orchard.Blogs.Handlers {
                 if (!string.IsNullOrEmpty(containerId)) {
                     int cId;
                     if (int.TryParse(containerId, out cId)) {
-                        bp.Blog = context.ContentItem.ContentManager.Get(cId).As<Blog>();
+                        bp.BlogPart = context.ContentItem.ContentManager.Get(cId).As<BlogPart>();
                         return;
                     }
                 }
             });
-            OnCreated<BlogPost>((context, bp) => updateBlogPostCount(bp.Blog));
-            OnPublished<BlogPost>((context, bp) => updateBlogPostCount(bp.Blog));
-            OnVersioned<BlogPost>((context, bp1, bp2) => updateBlogPostCount(bp2.Blog));
-            OnRemoved<BlogPost>((context, bp) => updateBlogPostCount(bp.Blog));
+            OnCreated<BlogPostPart>((context, bp) => updateBlogPostCount(bp.BlogPart));
+            OnPublished<BlogPostPart>((context, bp) => updateBlogPostCount(bp.BlogPart));
+            OnVersioned<BlogPostPart>((context, bp1, bp2) => updateBlogPostCount(bp2.BlogPart));
+            OnRemoved<BlogPostPart>((context, bp) => updateBlogPostCount(bp.BlogPart));
 
-            OnRemoved<Blog>(
+            OnRemoved<BlogPart>(
                 (context, b) =>
-                blogPostService.Get(context.ContentItem.As<Blog>()).ToList().ForEach(
+                blogPostService.Get(context.ContentItem.As<BlogPart>()).ToList().ForEach(
                     blogPost => context.ContentManager.Remove(blogPost.ContentItem)));
         }
 

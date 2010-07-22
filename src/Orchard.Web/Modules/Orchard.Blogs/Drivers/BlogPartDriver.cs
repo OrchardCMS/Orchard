@@ -13,7 +13,7 @@ using Orchard.Mvc.ViewModels;
 
 namespace Orchard.Blogs.Drivers {
     [UsedImplicitly]
-    public class BlogDriver : ContentItemDriver<Blog> {
+    public class BlogPartDriver : ContentItemDriver<BlogPart> {
         public IOrchardServices Services { get; set; }
 
         public readonly static ContentType ContentType = new ContentType {
@@ -24,7 +24,7 @@ namespace Orchard.Blogs.Drivers {
         private readonly IContentManager _contentManager;
         private readonly IBlogPostService _blogPostService;
 
-        public BlogDriver(IOrchardServices services, IContentManager contentManager, IBlogPostService blogPostService) {
+        public BlogPartDriver(IOrchardServices services, IContentManager contentManager, IBlogPostService blogPostService) {
             Services = services;
             _contentManager = contentManager;
             _blogPostService = blogPostService;
@@ -39,50 +39,50 @@ namespace Orchard.Blogs.Drivers {
 
         protected override string Prefix { get { return ""; } }
 
-        protected override string GetDisplayText(Blog item) {
+        protected override string GetDisplayText(BlogPart item) {
             return item.Name;
         }
 
-        public override RouteValueDictionary GetDisplayRouteValues(Blog blog) {
+        public override RouteValueDictionary GetDisplayRouteValues(BlogPart blogPart) {
             return new RouteValueDictionary {
                                                 {"Area", "Orchard.Blogs"},
                                                 {"Controller", "Blog"},
                                                 {"Action", "Item"},
-                                                {"blogSlug", blog.Slug}
+                                                {"blogSlug", blogPart.Slug}
                                             };
         }
 
-        public override RouteValueDictionary GetEditorRouteValues(Blog blog) {
+        public override RouteValueDictionary GetEditorRouteValues(BlogPart blogPart) {
             return new RouteValueDictionary {
                                                 {"Area", "Orchard.Blogs"},
                                                 {"Controller", "Blog"},
                                                 {"Action", "Edit"},
-                                                {"blogSlug", blog.Slug}
+                                                {"blogSlug", blogPart.Slug}
                                             };
         }
 
-        protected override DriverResult Display(Blog blog, string displayType) {
+        protected override DriverResult Display(BlogPart blogPart, string displayType) {
 
-            IEnumerable<ContentItemViewModel<BlogPost>> blogPosts = null;
+            IEnumerable<ContentItemViewModel<BlogPostPart>> blogPosts = null;
             if (displayType.StartsWith("DetailAdmin")) {
-                blogPosts = _blogPostService.Get(blog, VersionOptions.Latest)
+                blogPosts = _blogPostService.Get(blogPart, VersionOptions.Latest)
                     .Select(bp => _contentManager.BuildDisplayModel(bp, "SummaryAdmin"));
             }
             else if (displayType.StartsWith("Detail")) {
-                blogPosts = _blogPostService.Get(blog)
+                blogPosts = _blogPostService.Get(blogPart)
                     .Select(bp => _contentManager.BuildDisplayModel(bp, "Summary"));
             }
 
             return Combined(
                 ContentItemTemplate("Items/Blogs.Blog").LongestMatch(displayType, "Summary", "DetailAdmin", "SummaryAdmin"),
-                ContentPartTemplate(blog, "Parts/Blogs.Blog.Manage").Location("manage"),
-                ContentPartTemplate(blog, "Parts/Blogs.Blog.Metadata").Location("metadata"),
-                ContentPartTemplate(blog, "Parts/Blogs.Blog.Description").Location("primary"),
+                ContentPartTemplate(blogPart, "Parts/Blogs.Blog.Manage").Location("manage"),
+                ContentPartTemplate(blogPart, "Parts/Blogs.Blog.Metadata").Location("metadata"),
+                ContentPartTemplate(blogPart, "Parts/Blogs.Blog.Description").Location("primary"),
                 blogPosts == null
                     ? null
                     : ContentPartTemplate(
                         new ListContentsViewModel {
-                            ContainerId = blog.Id,
+                            ContainerId = blogPart.Id,
                             Entries = blogPosts.Select(bp => new ListContentsViewModel.Entry {
                                 ContentItem = bp.Item.ContentItem,
                                 ContentItemMetadata = _contentManager.GetItemMetadata(bp.Item.ContentItem),
@@ -93,16 +93,16 @@ namespace Orchard.Blogs.Drivers {
                         "").LongestMatch(displayType, "DetailAdmin").Location("primary"));
         }
 
-        protected override DriverResult Editor(Blog blog) {
-            var location = blog.GetLocation("Editor");
+        protected override DriverResult Editor(BlogPart blogPart) {
+            var location = blogPart.GetLocation("Editor");
             return Combined(
                 ContentItemTemplate("Items/Blogs.Blog"),
-                ContentPartTemplate(blog, "Parts/Blogs.Blog.Fields").Location(location));
+                ContentPartTemplate(blogPart, "Parts/Blogs.Blog.Fields").Location(location));
         }
 
-        protected override DriverResult Editor(Blog blog, IUpdateModel updater) {
-            updater.TryUpdateModel(blog, Prefix, null, null);
-            return Editor(blog);
+        protected override DriverResult Editor(BlogPart blogPart, IUpdateModel updater) {
+            updater.TryUpdateModel(blogPart, Prefix, null, null);
+            return Editor(blogPart);
         }
     }
 }

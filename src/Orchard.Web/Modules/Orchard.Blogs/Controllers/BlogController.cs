@@ -61,9 +61,9 @@ namespace Orchard.Blogs.Controllers {
         public ActionResult LiveWriterManifest(string blogSlug) {
             Logger.Debug("Live Writer Manifest requested");
 
-            Blog blog = _blogService.Get(blogSlug);
+            BlogPart blogPart = _blogService.Get(blogSlug);
 
-            if (blog == null)
+            if (blogPart == null)
                 return new NotFoundResult();
 
             const string manifestUri = "http://schemas.microsoft.com/wlw/manifest/weblog";
@@ -86,9 +86,9 @@ namespace Orchard.Blogs.Controllers {
         public ActionResult Rsd(string blogSlug) {
             Logger.Debug("RSD requested");
 
-            Blog blog = _blogService.Get(blogSlug);
+            BlogPart blogPart = _blogService.Get(blogSlug);
 
-            if (blog == null)
+            if (blogPart == null)
                 return new NotFoundResult();
 
             const string manifestUri = "http://archipelago.phrasewise.com/rsd";
@@ -106,7 +106,7 @@ namespace Orchard.Blogs.Controllers {
                         new XAttribute("name", "MetaWeblog"),
                         new XAttribute("preferred", true),
                         new XAttribute("apiLink", url),
-                        new XAttribute("blogID", blog.Id))));
+                        new XAttribute("blogID", blogPart.Id))));
 
             var doc = new XDocument(new XElement(
                                         XName.Get("rsd", manifestUri),

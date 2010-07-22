@@ -1,4 +1,4 @@
-﻿<%@ Control Language="C#" Inherits="Orchard.Mvc.ViewUserControl<Blog>" %>
+﻿<%@ Control Language="C#" Inherits="Orchard.Mvc.ViewUserControl<BlogPart>" %>
 <%@ Import Namespace="Orchard.Blogs.Models"%>
 <fieldset>
     <%: Html.LabelFor(m => m.Description) %>

@@ -9,17 +9,17 @@ namespace Orchard.Blogs.DataMigrations {
     public class BlogsDataMigration : DataMigrationImpl {
 
         public int Create() {
-            //CREATE TABLE Orchard_Blogs_BlogArchiveRecord (Id  integer, Year INTEGER, Month INTEGER, PostCount INTEGER, Blog_id INTEGER, primary key (Id));
-            SchemaBuilder.CreateTable("BlogArchiveRecord", table => table
+            //CREATE TABLE Orchard_Blogs_BlogPartArchiveRecord (Id  integer, Year INTEGER, Month INTEGER, PostCount INTEGER, Blog_id INTEGER, primary key (Id));
+            SchemaBuilder.CreateTable("BlogPartArchiveRecord", table => table
                 .Column<int>("Id", column => column.PrimaryKey().Identity())
                 .Column<int>("Year")
                 .Column<int>("Month")
                 .Column<int>("PostCount")
-                .Column<int>("Blog_id")
+                .Column<int>("BlogPart_id")
                 );
 
-            //CREATE TABLE Orchard_Blogs_BlogRecord (Id INTEGER not null, Description TEXT, PostCount INTEGER, primary key (Id));
-            SchemaBuilder.CreateTable("BlogRecord", table => table
+            //CREATE TABLE Orchard_Blogs_BlogPartRecord (Id INTEGER not null, Description TEXT, PostCount INTEGER, primary key (Id));
+            SchemaBuilder.CreateTable("BlogPartRecord", table => table
                 .ContentPartRecord()
                 .Column<string>("Description")
                 .Column<int>("PostCount")
@@ -31,14 +31,14 @@ namespace Orchard.Blogs.DataMigrations {
         public int UpdateFrom1() {
             ContentDefinitionManager.AlterTypeDefinition("Blog",
                 cfg => cfg
-                    .WithPart("Blog")
+                    .WithPart("BlogPart")
                     .WithPart("CommonAspect")
                     .WithPart("IsRoutable")
                 );
 
             ContentDefinitionManager.AlterTypeDefinition("BlogPost", 
                 cfg => cfg
-                    .WithPart("BlogPost")
+                    .WithPart("BlogPostPart")
                     .WithPart("CommonAspect")
                     .WithPart("PublishLaterPart")
                     .WithPart("IsRoutable")
@@ -49,7 +49,7 @@ namespace Orchard.Blogs.DataMigrations {
         }
         
         public int UpdateFrom2() {
-            ContentDefinitionManager.AlterPartDefinition(typeof(Blog).Name, cfg => cfg
+            ContentDefinitionManager.AlterPartDefinition(typeof(BlogPart).Name, cfg => cfg
                 .WithLocation(new Dictionary<string, ContentLocation> {
                     {"Editor", new ContentLocation { Zone = "primary", Position = "1" }}
                 }));
