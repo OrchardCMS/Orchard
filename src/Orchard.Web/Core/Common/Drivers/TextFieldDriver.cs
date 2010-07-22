@@ -2,8 +2,7 @@
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
 using Orchard.Core.Common.Fields;
-using Orchard.Core.Common.Models;
-using Orchard.Core.Common.Settings;
+using Orchard.Core.ContentsLocation.Models;
 
 namespace Orchard.Core.Common.Drivers {
     [UsedImplicitly]
@@ -20,17 +19,17 @@ namespace Orchard.Core.Common.Drivers {
         }
 
         protected override DriverResult Display(ContentPart part, TextField field, string displayType) {
-            var locationSettings = field.PartFieldDefinition.Settings.GetModel<LocationSettings>().Get(displayType, "primary", "5");
+            var location = field.PartFieldDefinition.Settings.GetModel<LocationSettings>().Get(displayType, "primary", "5");
 
             return ContentFieldTemplate(field, TemplateName, GetPrefix(field, part))
-                .Location(locationSettings.Zone, locationSettings.Position);
+                .Location(location);
         }
 
         protected override DriverResult Editor(ContentPart part, TextField field) {
-            var locationSettings = field.PartFieldDefinition.Settings.GetModel<LocationSettings>().Get("Editor", "primary", "5");
+            var location = field.PartFieldDefinition.Settings.GetModel<LocationSettings>().Get("Editor", "primary", "5");
 
             return ContentFieldTemplate(field, TemplateName, GetPrefix(field, part))
-                .Location(locationSettings.Zone, locationSettings.Position);
+                .Location(location);
         }
 
         protected override DriverResult Editor(ContentPart part, TextField field, IUpdateModel updater) {

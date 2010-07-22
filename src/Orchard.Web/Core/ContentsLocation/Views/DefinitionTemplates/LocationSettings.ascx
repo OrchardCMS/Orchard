@@ -1,4 +1,4 @@
-﻿<%@ Control Language="C#" Inherits="Orchard.Mvc.ViewUserControl<Orchard.Core.Common.Settings.LocationSettingsViewModel>" %>
+﻿<%@ Control Language="C#" Inherits="Orchard.Mvc.ViewUserControl<Orchard.Core.ContentsLocation.ViewModels.LocationSettingsViewModel>" %>
     <fieldset >
         <legend><%:T("{0}", Model.Definition.DisplayName) %></legend>
 

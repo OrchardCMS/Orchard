@@ -4,6 +4,7 @@ using System.Web;
 using JetBrains.Annotations;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
+using Orchard.Core.ContentsLocation.Models;
 using Orchard.Core.Localization.Models;
 using Orchard.Core.Localization.Services;
 using Orchard.Core.Localization.ViewModels;
@@ -26,7 +27,8 @@ namespace Orchard.Core.Localization.Drivers {
                 Localizations = GetDisplayLocalizations(part)
             };
 
-            return ContentPartTemplate(model, "Parts/Localization.ContentTranslations", TemplatePrefix).LongestMatch(displayType, "Summary", "SummaryAdmin").Location("primary", "5");
+            var location = part.GetLocation(displayType, "primary", "5");
+            return ContentPartTemplate(model, "Parts/Localization.ContentTranslations", TemplatePrefix).LongestMatch(displayType, "Summary", "SummaryAdmin").Location(location);
         }
 
         protected override DriverResult Editor(Localized part) {
@@ -38,7 +40,8 @@ namespace Orchard.Core.Localization.Drivers {
                 ContentLocalizations = new ContentLocalizationsViewModel(part) { Localizations = localizations }
             };
 
-            return ContentPartTemplate(model, "Parts/Localization.Translation", TemplatePrefix).Location("primary", "1");
+            var location = part.GetLocation("Editor", "primary", "1");
+            return ContentPartTemplate(model, "Parts/Localization.Translation", TemplatePrefix).Location(location);
         }
 
         protected override DriverResult Editor(Localized part, IUpdateModel updater) {

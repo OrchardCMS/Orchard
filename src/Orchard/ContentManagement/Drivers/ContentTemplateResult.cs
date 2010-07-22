@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using Orchard.ContentManagement.Handlers;
 
 namespace Orchard.ContentManagement.Drivers {
@@ -34,6 +35,12 @@ namespace Orchard.ContentManagement.Drivers {
             Zone = zone;
             Position = position;
             return this;
+        }
+
+        public ContentTemplateResult Location(ContentLocation location) {
+            if (location.Position == null)
+                return Location(location.Zone);
+            return Location(location.Zone, location.Position);
         }
 
         public ContentTemplateResult LongestMatch(string displayType, params string[] knownDisplayTypes) {

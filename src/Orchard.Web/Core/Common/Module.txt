@@ -8,4 +8,5 @@ description: The common module introduces content parts that are going to be use
 features:
     Common:
         Description: Core content parts.
+        Dependencies: ContentsLocation
         Category: Core

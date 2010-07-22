@@ -1,7 +1,7 @@
 ﻿using Orchard.ContentManagement.Drivers;
-using Orchard.Core.Common.Models;
+using Orchard.Core.ContentsLocation.Models;
 
-namespace Orchard.Core.Common.Settings {
+namespace Orchard.Core.ContentsLocation.ViewModels {
     public class LocationSettingsViewModel {
         public LocationDefinition Definition { get; set; }
         public ContentLocation Location { get; set; }

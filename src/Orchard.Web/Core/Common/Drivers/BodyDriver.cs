@@ -6,6 +6,7 @@ using Orchard.ContentManagement.Drivers;
 using Orchard.Core.Common.Models;
 using Orchard.Core.Common.Settings;
 using Orchard.Core.Common.ViewModels;
+using Orchard.Core.ContentsLocation.Models;
 using Orchard.Core.Routable.Models;
 
 namespace Orchard.Core.Common.Drivers {
@@ -27,17 +28,19 @@ namespace Orchard.Core.Common.Drivers {
         // \/\/ Hackalicious on many accounts - don't copy what has been done here for the wrapper \/\/
         protected override DriverResult Display(BodyAspect part, string displayType) {
             var model = new BodyDisplayViewModel { BodyAspect = part, Text = BbcodeReplace(part.Text) };
+            var location = part.GetLocation(displayType, "primary", "5");
 
             return Combined(
-                Services.Authorizer.Authorize(Permissions.ChangeOwner) ? ContentPartTemplate(model, "Parts/Common.Body.ManageWrapperPre").LongestMatch(displayType, "SummaryAdmin").Location("primary", "5") : null,
-                Services.Authorizer.Authorize(Permissions.ChangeOwner) ? ContentPartTemplate(model, "Parts/Common.Body.Manage").LongestMatch(displayType, "SummaryAdmin").Location("primary", "5") : null,
-                ContentPartTemplate(model, TemplateName, Prefix).LongestMatch(displayType, "Summary", "SummaryAdmin").Location("primary", "5"),
-                Services.Authorizer.Authorize(Permissions.ChangeOwner) ? ContentPartTemplate(model, "Parts/Common.Body.ManageWrapperPost").LongestMatch(displayType, "SummaryAdmin").Location("primary", "5") : null);
+                Services.Authorizer.Authorize(Permissions.ChangeOwner) ? ContentPartTemplate(model, "Parts/Common.Body.ManageWrapperPre").LongestMatch(displayType, "SummaryAdmin").Location(location) : null,
+                Services.Authorizer.Authorize(Permissions.ChangeOwner) ? ContentPartTemplate(model, "Parts/Common.Body.Manage").LongestMatch(displayType, "SummaryAdmin").Location(location) : null,
+                ContentPartTemplate(model, TemplateName, Prefix).LongestMatch(displayType, "Summary", "SummaryAdmin").Location(location),
+                Services.Authorizer.Authorize(Permissions.ChangeOwner) ? ContentPartTemplate(model, "Parts/Common.Body.ManageWrapperPost").LongestMatch(displayType, "SummaryAdmin").Location(location) : null);
         }
         
         protected override DriverResult Editor(BodyAspect part) {
             var model = BuildEditorViewModel(part);
-            return ContentPartTemplate(model, TemplateName, Prefix).Location("primary", "5");
+            var location = part.GetLocation("Editor", "primary", "5");
+            return ContentPartTemplate(model, TemplateName, Prefix).Location(location);
         }
 
         protected override DriverResult Editor(BodyAspect part, IUpdateModel updater) {
@@ -48,7 +51,8 @@ namespace Orchard.Core.Common.Drivers {
             if (string.IsNullOrWhiteSpace(model.Format))
                 model.Format = GetFlavor(part);
 
-            return ContentPartTemplate(model, TemplateName, Prefix).Location("primary", "5");
+            var location = part.GetLocation("Editor", "primary", "5");
+            return ContentPartTemplate(model, TemplateName, Prefix).Location(location);
         }
 
         private static BodyEditorViewModel BuildEditorViewModel(BodyAspect part) {

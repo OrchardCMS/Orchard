@@ -116,18 +116,28 @@ namespace Orchard.ContentManagement.MetaData.Builders {
 
     public static class ContentPartDefinitionBuilderExtensions {
         public static IEnumerable<KeyValuePair<string, string>> GetSettingEntries(IDictionary<string, ContentLocation> locationSettings) {
-            int index = 0;
+            int entryIndex = 0;
             foreach (var entry in locationSettings) {
                 var zone = string.IsNullOrEmpty(entry.Value.Zone) ? null : entry.Value.Zone;
                 var position = string.IsNullOrEmpty(entry.Value.Position) ? null : entry.Value.Position;
                 var locationName = (zone == null && position == null) ? null : entry.Key;
 
-                var prefix = string.Format("LocationSettings[{0}]", index);
-                yield return new KeyValuePair<string, string>(string.Format("{0}.Key", prefix), locationName);
-                yield return new KeyValuePair<string, string>(string.Format("{0}.Value.Zone", prefix), zone);
-                yield return new KeyValuePair<string, string>(string.Format("{0}.Value.Position", prefix), position);
+                if (locationName != null) {
+                    var prefix = string.Format("LocationSettings[{0}]", entryIndex);
+                    yield return new KeyValuePair<string, string>(string.Format("{0}.Key", prefix), locationName);
+                    yield return new KeyValuePair<string, string>(string.Format("{0}.Value.Zone", prefix), zone);
+                    yield return new KeyValuePair<string, string>(string.Format("{0}.Value.Position", prefix), position);
 
-                index++;
+                    entryIndex++;
+                }
+            }
+
+            // Clear the remaining entries from [index -> end of collection]
+            for (int i = entryIndex; i < locationSettings.Count; i++) {
+                var prefix = string.Format("LocationSettings[{0}]", i);
+                yield return new KeyValuePair<string, string>(string.Format("{0}.Key", prefix), null);
+                yield return new KeyValuePair<string, string>(string.Format("{0}.Value.Zone", prefix), null);
+                yield return new KeyValuePair<string, string>(string.Format("{0}.Value.Position", prefix), null);
             }
         }
 

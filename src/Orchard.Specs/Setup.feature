@@ -34,7 +34,7 @@ Scenario: Calling setup on a brand new install
     Given I have a clean site with
             | extension | names |
             | module | Orchard.Setup, Orchard.Users, Orchard.Roles, Orchard.Comments, Orchard.Themes, TinyMce |
-            | core | Common, Contents, Dashboard, Feeds, HomePage, Navigation, Routable, PublishLater, Scheduling, Settings, XmlRpc  |
+            | core | Common, Contents, ContentsLocation, Dashboard, Feeds, HomePage, Navigation, Routable, PublishLater, Scheduling, Settings, XmlRpc  |
             | theme | SafeMode, Classic |
         And I am on "/Setup"
     When I fill in 

@@ -5,16 +5,19 @@ using Orchard.Comments.ViewModels;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
 using Orchard.Core.Common.Models;
+using Orchard.Core.ContentsLocation.Models;
 
 namespace Orchard.Comments.Drivers {
     [UsedImplicitly]
     public class HasCommentsContainerDriver : ContentPartDriver<HasCommentsContainer> {
         protected override DriverResult Display(HasCommentsContainer part, string displayType) {
             if (displayType == "SummaryAdmin") {
-                return ContentPartTemplate(CreateViewModel(part.ContentItem), "Parts/Comments.CountAdmin").Location("meta");
+                var location = part.GetLocation("SummaryAdmin", "meta", null);
+                return ContentPartTemplate(CreateViewModel(part.ContentItem), "Parts/Comments.CountAdmin").Location(location);
             }
             else if (displayType.Contains("Summary")) {
-                return ContentPartTemplate(CreateViewModel(part.ContentItem), "Parts/Comments.Count").Location("meta");
+                var location = part.GetLocation("Summary", "meta", null);
+                return ContentPartTemplate(CreateViewModel(part.ContentItem), "Parts/Comments.Count").Location(location);
             }
 
             return null;
