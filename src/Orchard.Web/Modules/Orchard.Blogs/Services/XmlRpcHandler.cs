@@ -130,7 +130,7 @@ namespace Orchard.Blogs.Services {
             var user = _membershipService.ValidateUser(userName, password);
             _authorizationService.CheckAccess(StandardPermissions.AccessFrontEnd, user, null);
 
-            var blog = _contentManager.Get<Blog>(Convert.ToInt32(blogId));
+            var blog = _contentManager.Get<BlogPart>(Convert.ToInt32(blogId));
             if (blog == null)
                 throw new ArgumentException();
 
@@ -151,7 +151,7 @@ namespace Orchard.Blogs.Services {
             var user = _membershipService.ValidateUser(userName, password);
             _authorizationService.CheckAccess(Permissions.EditBlogPost, user, null);
 
-            var blog = _contentManager.Get<Blog>(Convert.ToInt32(blogId));
+            var blog = _contentManager.Get<BlogPart>(Convert.ToInt32(blogId));
             if (blog == null)
                 throw new ArgumentException();
 
@@ -159,8 +159,8 @@ namespace Orchard.Blogs.Services {
             var description = content.Optional<string>("description");
             var slug = content.Optional<string>("wp_slug");
 
-            var blogPost = _contentManager.New<BlogPost>(BlogPostDriver.ContentType.Name);
-            blogPost.Blog = blog;
+            var blogPost = _contentManager.New<BlogPostPart>(BlogPostDriver.ContentType.Name);
+            blogPost.BlogPart = blog;
             blogPost.Title = title;
             blogPost.Slug = slug;
             blogPost.Text = description;
@@ -237,14 +237,14 @@ namespace Orchard.Blogs.Services {
             return true;
         }
 
-        private static XRpcStruct CreateBlogStruct(BlogPost blogPost, UrlHelper urlHelper) {
-            var url = urlHelper.AbsoluteAction(() => urlHelper.BlogPost(blogPost));
+        private static XRpcStruct CreateBlogStruct(BlogPostPart blogPostPart, UrlHelper urlHelper) {
+            var url = urlHelper.AbsoluteAction(() => urlHelper.BlogPost(blogPostPart));
             return new XRpcStruct()
-                .Set("postid", blogPost.Id)
-                .Set("dateCreated", blogPost.CreatedUtc)
-                .Set("title", blogPost.Title)
-                .Set("wp_slug", blogPost.Slug)
-                .Set("description", blogPost.Text)
+                .Set("postid", blogPostPart.Id)
+                .Set("dateCreated", blogPostPart.CreatedUtc)
+                .Set("title", blogPostPart.Title)
+                .Set("wp_slug", blogPostPart.Slug)
+                .Set("description", blogPostPart.Text)
                 .Set("link", url)
                 .Set("permaLink", url);
         }

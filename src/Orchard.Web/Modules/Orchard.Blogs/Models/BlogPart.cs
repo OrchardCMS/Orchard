@@ -3,7 +3,7 @@ using Orchard.ContentManagement;
 using Orchard.Core.Routable.Models;
 
 namespace Orchard.Blogs.Models {
-    public class Blog : ContentPart<BlogRecord> {
+    public class BlogPart : ContentPart<BlogPartRecord> {
         [HiddenInput(DisplayValue = false)]
         public int Id { get { return ContentItem.Id; } }
 

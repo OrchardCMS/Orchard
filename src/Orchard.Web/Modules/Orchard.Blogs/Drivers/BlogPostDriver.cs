@@ -7,7 +7,7 @@ using Orchard.Localization;
 
 namespace Orchard.Blogs.Drivers {
     [UsedImplicitly]                                                                                                                                                                                        
-    public class BlogPostDriver : ContentItemDriver<BlogPost> {
+    public class BlogPostDriver : ContentItemDriver<BlogPostPart> {
         public IOrchardServices Services { get; set; }
 
         public readonly static ContentType ContentType = new ContentType {
@@ -28,54 +28,54 @@ namespace Orchard.Blogs.Drivers {
 
         protected override string Prefix { get { return ""; } }
 
-        protected override string GetDisplayText(BlogPost post) {
-            return post.Title;
+        protected override string GetDisplayText(BlogPostPart postPart) {
+            return postPart.Title;
         }
 
-        public override RouteValueDictionary GetDisplayRouteValues(BlogPost post) {
-            if (post.Blog == null)
+        public override RouteValueDictionary GetDisplayRouteValues(BlogPostPart postPart) {
+            if (postPart.BlogPart == null)
                 return new RouteValueDictionary();
 
             return new RouteValueDictionary {
                                                 {"Area", "Orchard.Blogs"},
                                                 {"Controller", "BlogPost"},
                                                 {"Action", "Item"},
-                                                {"blogSlug", post.Blog.Slug},
-                                                {"postSlug", post.Slug},
+                                                {"blogSlug", postPart.BlogPart.Slug},
+                                                {"postSlug", postPart.Slug},
                                             };
         }
 
-        public override RouteValueDictionary GetEditorRouteValues(BlogPost post) {
-            if (post.Blog == null)
+        public override RouteValueDictionary GetEditorRouteValues(BlogPostPart postPart) {
+            if (postPart.BlogPart == null)
                 return new RouteValueDictionary();
 
             return new RouteValueDictionary {
                                                 {"Area", "Orchard.Blogs"},
                                                 {"Controller", "BlogPostAdmin"},
                                                 {"Action", "Edit"},
-                                                {"blogSlug", post.Blog.Slug},
-                                                {"postId", post.Id},
+                                                {"blogSlug", postPart.BlogPart.Slug},
+                                                {"postId", postPart.Id},
                                             };
         }
 
-        public override RouteValueDictionary GetCreateRouteValues(BlogPost post) {
-            if (post.Blog == null)
+        public override RouteValueDictionary GetCreateRouteValues(BlogPostPart postPart) {
+            if (postPart.BlogPart == null)
                 return new RouteValueDictionary();
 
             return new RouteValueDictionary {
                                                 {"Area", "Orchard.Blogs"},
                                                 {"Controller", "BlogPostAdmin"},
                                                 {"Action", "Create"},
-                                                {"blogSlug", post.Blog.Slug},
+                                                {"blogSlug", postPart.BlogPart.Slug},
                                             };
         }
 
-        protected override DriverResult Editor(BlogPost post) {
+        protected override DriverResult Editor(BlogPostPart postPart) {
             return ContentItemTemplate("Items/Blogs.BlogPost");
         }
 
-        protected override DriverResult Editor(BlogPost post, IUpdateModel updater) {
-            return Editor(post);
+        protected override DriverResult Editor(BlogPostPart postPart, IUpdateModel updater) {
+            return Editor(postPart);
         }
     }
 }

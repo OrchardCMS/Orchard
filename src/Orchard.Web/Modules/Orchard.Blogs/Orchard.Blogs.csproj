@@ -69,7 +69,7 @@
     <Compile Include="Commands\BlogCommands.cs" />
     <Compile Include="Controllers\BlogAdminController.cs" />
     <Compile Include="DataMigrations\BlogsDataMigration.cs" />
-    <Compile Include="Drivers\BlogDriver.cs" />
+    <Compile Include="Drivers\BlogPartDriver.cs" />
     <Compile Include="Controllers\BlogPostAdminController.cs" />
     <Compile Include="Controllers\BlogPostController.cs" />
     <Compile Include="Drivers\BlogPostDriver.cs" />
@@ -78,7 +78,7 @@
     <Compile Include="Filters\ArchivesFilter.cs" />
     <Compile Include="Models\ArchiveData.cs" />
     <Compile Include="Handlers\BlogArchiveHandler.cs" />
-    <Compile Include="Models\BlogArchiveRecord.cs" />
+    <Compile Include="Models\BlogPartArchiveRecord.cs" />
     <Compile Include="Permissions.cs" />
     <Compile Include="Routing\IBlogSlugConstraint.cs" />
     <Compile Include="Routing\IsArchiveConstraint.cs" />
@@ -87,11 +87,11 @@
     <Compile Include="Services\BlogHomePageProvider.cs" />
     <Compile Include="Services\BlogService.cs" />
     <Compile Include="Controllers\BlogController.cs" />
-    <Compile Include="Models\Blog.cs" />
+    <Compile Include="Models\BlogPart.cs" />
     <Compile Include="Handlers\BlogHandler.cs" />
-    <Compile Include="Models\BlogPost.cs" />
+    <Compile Include="Models\BlogPostPart.cs" />
     <Compile Include="Handlers\BlogPostHandler.cs" />
-    <Compile Include="Models\BlogRecord.cs" />
+    <Compile Include="Models\BlogPartRecord.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Routes.cs" />
     <Compile Include="Services\BlogPostService.cs" />

@@ -11,25 +11,25 @@ using Orchard.Data;
 namespace Orchard.Blogs.Handlers {
     [UsedImplicitly]
     public class BlogArchiveHandler : ContentHandler {
-        public BlogArchiveHandler(IRepository<BlogArchiveRecord> blogArchiveRepository, IRepository<CommonRecord> commonRepository) {
-            OnPublished<BlogPost>((context, bp) => RecalculateBlogArchive(blogArchiveRepository, commonRepository, bp));
-            OnRemoved<BlogPost>((context, bp) => RecalculateBlogArchive(blogArchiveRepository, commonRepository, bp));
+        public BlogArchiveHandler(IRepository<BlogPartArchiveRecord> blogArchiveRepository, IRepository<CommonRecord> commonRepository) {
+            OnPublished<BlogPostPart>((context, bp) => RecalculateBlogArchive(blogArchiveRepository, commonRepository, bp));
+            OnRemoved<BlogPostPart>((context, bp) => RecalculateBlogArchive(blogArchiveRepository, commonRepository, bp));
         }
 
-        private static void RecalculateBlogArchive(IRepository<BlogArchiveRecord> blogArchiveRepository, IRepository<CommonRecord> commonRepository, BlogPost blogPost) {
+        private static void RecalculateBlogArchive(IRepository<BlogPartArchiveRecord> blogArchiveRepository, IRepository<CommonRecord> commonRepository, BlogPostPart blogPostPart) {
             blogArchiveRepository.Flush();
 
             //INFO: (erikpo) Remove all current blog archive records
             var blogArchiveRecords =
                 from bar in blogArchiveRepository.Table
-                where bar.Blog == blogPost.Blog.Record
+                where bar.BlogPart == blogPostPart.BlogPart.Record
                 select bar;
             blogArchiveRecords.ToList().ForEach(blogArchiveRepository.Delete);
 
             //INFO: (erikpo) Get all blog posts for the current blog
             var postsQuery =
                 from bpr in commonRepository.Table
-                where bpr.ContentItemRecord.ContentType.Name == BlogPostDriver.ContentType.Name && bpr.Container.Id == blogPost.Blog.Record.Id
+                where bpr.ContentItemRecord.ContentType.Name == BlogPostDriver.ContentType.Name && bpr.Container.Id == blogPostPart.BlogPart.Record.Id
                 orderby bpr.PublishedUtc
                 select bpr;
 
@@ -49,7 +49,7 @@ namespace Orchard.Blogs.Handlers {
 
             //INFO: (erikpo) Create the new blog archive records based on the in memory values
             foreach (KeyValuePair<DateTime, int> item in inMemoryBlogArchives) {
-                blogArchiveRepository.Create(new BlogArchiveRecord {Blog = blogPost.Blog.Record, Year = item.Key.Year, Month = item.Key.Month, PostCount = item.Value});
+                blogArchiveRepository.Create(new BlogPartArchiveRecord {BlogPart = blogPostPart.BlogPart.Record, Year = item.Key.Year, Month = item.Key.Month, PostCount = item.Value});
             }
         }
     }

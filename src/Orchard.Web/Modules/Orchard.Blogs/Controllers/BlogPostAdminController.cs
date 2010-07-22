@@ -31,9 +31,9 @@ namespace Orchard.Blogs.Controllers {
             if (!Services.Authorizer.Authorize(Permissions.EditBlogPost, T("Not allowed to create blog post")))
                 return new HttpUnauthorizedResult();
 
-            var blogPost = Services.ContentManager.New<BlogPost>(BlogPostDriver.ContentType.Name);
+            var blogPost = Services.ContentManager.New<BlogPostPart>(BlogPostDriver.ContentType.Name);
 
-            if (blogPost.Blog == null)
+            if (blogPost.BlogPart == null)
                 return new NotFoundResult();
 
             var model = new CreateBlogPostViewModel {
@@ -48,9 +48,9 @@ namespace Orchard.Blogs.Controllers {
             if (!Services.Authorizer.Authorize(Permissions.EditBlogPost, T("Couldn't create blog post")))
                 return new HttpUnauthorizedResult();
 
-            var blogPost = Services.ContentManager.New<BlogPost>(BlogPostDriver.ContentType.Name);
+            var blogPost = Services.ContentManager.New<BlogPostPart>(BlogPostDriver.ContentType.Name);
             
-            if (blogPost.Blog == null)
+            if (blogPost.BlogPart == null)
                 return new NotFoundResult();
 
             Services.ContentManager.Create(blogPost, VersionOptions.Draft);
@@ -142,13 +142,13 @@ namespace Orchard.Blogs.Controllers {
         }
 
         ActionResult RedirectToEdit(int id) {
-            return RedirectToEdit(Services.ContentManager.GetLatest<BlogPost>(id));
+            return RedirectToEdit(Services.ContentManager.GetLatest<BlogPostPart>(id));
         }
 
         ActionResult RedirectToEdit(IContent item) {
-            if (item == null || item.As<BlogPost>() == null)
+            if (item == null || item.As<BlogPostPart>() == null)
                 return new NotFoundResult();
-            return RedirectToAction("Edit", new { BlogSlug = item.As<BlogPost>().Blog.Slug, PostId = item.ContentItem.Id });
+            return RedirectToAction("Edit", new { BlogSlug = item.As<BlogPostPart>().BlogPart.Slug, PostId = item.ContentItem.Id });
         }
 
         [ValidateAntiForgeryTokenOrchard]

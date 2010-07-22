@@ -8,7 +8,7 @@ namespace Orchard.Blogs.ViewModels {
     }
 
     public class AdminBlogEntry {
-        public ContentItemViewModel<Blog> ContentItemViewModel { get; set; }
+        public ContentItemViewModel<BlogPart> ContentItemViewModel { get; set; }
         public int TotalPostCount { get; set; }
     }
 }

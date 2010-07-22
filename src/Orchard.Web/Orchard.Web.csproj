@@ -101,6 +101,10 @@
     <Content Include="Refresh.html" />
     <Content Include="Themes\TheAdmin\Scripts\admin.js" />
     <Content Include="Themes\TheAdmin\Styles\ie.css" />
+    <Content Include="Themes\TheAdmin\Styles\images\menuClosed.gif" />
+    <Content Include="Themes\TheAdmin\Styles\images\menuClosedHover.gif" />
+    <Content Include="Themes\TheAdmin\Styles\images\menuOpen.gif" />
+    <Content Include="Themes\TheAdmin\Styles\images\menuOpenHover.gif" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
