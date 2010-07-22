@@ -8,4 +8,5 @@ description: The comments system implemented by this module can be applied to ar
 features:
     Orchard.Comments:
         Description: Standard content item comments.
+        Dependencies: Settings
         Category: Social

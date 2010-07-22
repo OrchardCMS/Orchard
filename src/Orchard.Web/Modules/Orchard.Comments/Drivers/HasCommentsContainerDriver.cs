@@ -12,12 +12,10 @@ namespace Orchard.Comments.Drivers {
     public class HasCommentsContainerDriver : ContentPartDriver<HasCommentsContainer> {
         protected override DriverResult Display(HasCommentsContainer part, string displayType) {
             if (displayType == "SummaryAdmin") {
-                var location = part.GetLocation("SummaryAdmin", "meta", null);
-                return ContentPartTemplate(CreateViewModel(part.ContentItem), "Parts/Comments.CountAdmin").Location(location);
+                return ContentPartTemplate(CreateViewModel(part.ContentItem), "Parts/Comments.CountAdmin").Location(part.GetLocation("SummaryAdmin"));
             }
             else if (displayType.Contains("Summary")) {
-                var location = part.GetLocation("Summary", "meta", null);
-                return ContentPartTemplate(CreateViewModel(part.ContentItem), "Parts/Comments.Count").Location(location);
+                return ContentPartTemplate(CreateViewModel(part.ContentItem), "Parts/Comments.Count").Location(part.GetLocation("Summary"));
             }
 
             return null;

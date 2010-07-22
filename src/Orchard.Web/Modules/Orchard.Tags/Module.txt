@@ -8,5 +8,5 @@ description: The tags module is providing basic tagging for arbitrary content ty
 features:
     Orchard.Tags:
         Description: Tag a content item.
-        Dependencies: ContentsLocation
+        Dependencies: Settings
         Category: Navigation

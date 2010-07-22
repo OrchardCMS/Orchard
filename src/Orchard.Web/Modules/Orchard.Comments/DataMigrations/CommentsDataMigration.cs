@@ -1,5 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
+using Orchard.Comments.Models;
+using Orchard.ContentManagement.Drivers;
 using Orchard.ContentManagement.MetaData;
+using Orchard.ContentManagement.MetaData.Builders;
 using Orchard.Data.Migration;
 
 namespace Orchard.Comments.DataMigrations {
@@ -58,6 +62,25 @@ namespace Orchard.Comments.DataMigrations {
                 );
 
             return 2;
+        }
+
+        public int UpdateFrom2() {
+            ContentDefinitionManager.AlterPartDefinition(typeof(HasComments).Name, cfg => cfg
+                .WithLocation(new Dictionary<string, ContentLocation> {
+                    {"Default", new ContentLocation { Zone = "primary", Position = "before.5" }},
+                    {"Detail", new ContentLocation { Zone = "primary", Position = "after.5" }},
+                    {"SummaryAdmin", new ContentLocation { Zone = "meta", Position = null }},
+                    {"Summary", new ContentLocation { Zone = "meta", Position = "5" }},
+                    {"Editor", new ContentLocation { Zone = "primary", Position = "10" }},
+                }));
+
+            ContentDefinitionManager.AlterPartDefinition(typeof(HasCommentsContainer).Name, cfg => cfg
+                .WithLocation(new Dictionary<string, ContentLocation> {
+                    {"SummaryAdmin", new ContentLocation { Zone = "meta", Position = null }},
+                    {"Summary", new ContentLocation { Zone = "meta", Position = null }},
+                }));
+
+            return 3;
         }
     }
 }

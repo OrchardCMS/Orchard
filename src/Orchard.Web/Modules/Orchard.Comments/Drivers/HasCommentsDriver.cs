@@ -16,38 +16,29 @@ namespace Orchard.Comments.Drivers {
             // todo: (heskew) need to be more flexible with displaying parts somehow. e.g. where should the...
             // comment count go in any given skin or what if the skin builder doesn't want the count
             if (displayType.StartsWith("Detail")) {
-                //return Combined(
-                //    ContentPartTemplate(part, "Parts/Comments.Count").Location("body", "above.5"),
-                //    ContentPartTemplate(part, "Parts/Comments.HasComments").Location("body", "below.5"));
-                var location = part.GetLocation("Detail", "primary", "after.5");
-                return ContentPartTemplate(part, "Parts/Comments.HasComments").Location(location);
+                return ContentPartTemplate(part, "Parts/Comments.HasComments").Location(part.GetLocation("Detail"));
             }
             else if (displayType == "SummaryAdmin") {
-                var location = part.GetLocation("SummaryAdmin", "meta", null);
                 var model = new CommentCountViewModel(part);
-                return ContentPartTemplate(model, "Parts/Comments.CountAdmin").Location(location);
+                return ContentPartTemplate(model, "Parts/Comments.CountAdmin").Location(part.GetLocation("SummaryAdmin"));
             }
             else if (displayType.Contains("Summary")) {
-                var location = part.GetLocation("Summary", "meta", "5");
                 var model = new CommentCountViewModel(part);
-                return ContentPartTemplate(model, "Parts/Comments.Count").Location(location);
+                return ContentPartTemplate(model, "Parts/Comments.Count").Location(part.GetLocation("Summary"));
             }
             else {
-                var location = part.GetLocation(displayType, "primary", "before.5");
                 var model = new CommentCountViewModel(part);
-                return ContentPartTemplate(model, "Parts/Comments.Count").Location(location);
+                return ContentPartTemplate(model, "Parts/Comments.Count").Location(part.GetLocation(displayType));
             }
         }
 
         protected override DriverResult Editor(HasComments part) {
-            var location = part.GetLocation("Editor", "primary", "10");
-            return ContentPartTemplate(part, "Parts/Comments.HasComments").Location(location);
+            return ContentPartTemplate(part, "Parts/Comments.HasComments").Location(part.GetLocation("Editor"));
         }
 
         protected override DriverResult Editor(HasComments part, IUpdateModel updater) {
-            var location = part.GetLocation("Editor", "primary", "10");
             updater.TryUpdateModel(part, Prefix, null, null);
-            return ContentPartTemplate(part, "Parts/Comments.HasComments").Location(location);
+            return ContentPartTemplate(part, "Parts/Comments.HasComments").Location(part.GetLocation("Editor"));
         }
     }
 }
