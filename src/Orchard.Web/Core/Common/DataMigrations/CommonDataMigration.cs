@@ -44,5 +44,14 @@ namespace Orchard.Core.Common.DataMigrations {
                 }));
             return 2;
         }
+
+        public int UpdateFrom2() {
+            ContentDefinitionManager.AlterPartDefinition(typeof(CommonAspect).Name, cfg => cfg
+                .WithLocation(new Dictionary<string, ContentLocation> {
+                    {"Default", new ContentLocation { Zone = "metadata", Position = "5" }},
+                    {"Editor", new ContentLocation { Zone = "primary", Position = "20" }},
+                }));
+            return 3;
+        }
     }
 }

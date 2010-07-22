@@ -36,10 +36,9 @@ namespace Orchard.Core.Common.Drivers {
         public IOrchardServices Services { get; set; }
 
         protected override DriverResult Display(CommonAspect part, string displayType) {
-            var location = part.GetLocation(displayType, "metadata", "5");
             return ContentPartTemplate(new CommonMetadataViewModel(part), "Parts/Common.Metadata")
                 .LongestMatch(displayType, "Summary", "SummaryAdmin")
-                .Location(location);
+                .Location(part.GetLocation(displayType));
         }
 
         protected override DriverResult Editor(CommonAspect part) {
@@ -83,8 +82,7 @@ namespace Orchard.Core.Common.Drivers {
                 }
             }
 
-            var location = part.GetLocation("Editor", "primary", "20");
-            return ContentPartTemplate(model, "Parts/Common.Owner", TemplatePrefix).Location(location);
+            return ContentPartTemplate(model, "Parts/Common.Owner", TemplatePrefix).Location(part.GetLocation("Editor"));
         }
 
         DriverResult ContainerEditor(CommonAspect part, IUpdateModel updater) {
@@ -112,8 +110,7 @@ namespace Orchard.Core.Common.Drivers {
                 }
             }
 
-            var location = part.GetLocation("Editor", "primary", "20.1");
-            return ContentPartTemplate(model, "Parts/Common.Container", TemplatePrefix).Location(location);
+            return ContentPartTemplate(model, "Parts/Common.Container", TemplatePrefix).Location(part.GetLocation("Editor"));
         }
     }
 }
