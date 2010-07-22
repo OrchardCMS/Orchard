@@ -134,34 +134,38 @@ namespace Orchard.Core.Contents.Controllers {
         [HttpPost, ActionName("List")]
         [FormValueRequired("submit.BulkEdit")]
         public ActionResult ListPOST(ContentOptions options, IEnumerable<int> itemIds, string returnUrl) {
+            var accessChecked = false;
             switch (options.BulkAction) {
                 case ContentsBulkAction.None:
                     break;
                 case ContentsBulkAction.PublishNow:
-                    if (!Services.Authorizer.Authorize(Permissions.PublishContent, T("Couldn't publish selected content.")))
-                        return new HttpUnauthorizedResult();
-
                     foreach (var item in itemIds.Select(itemId => _contentManager.GetLatest(itemId))) {
+                        if (!accessChecked && !Services.Authorizer.Authorize(Permissions.PublishContent, item, T("Couldn't publish selected content.")))
+                            return new HttpUnauthorizedResult();
+
+                        accessChecked = true;
                         _contentManager.Publish(item);
                         Services.ContentManager.Flush();
                     }
                     Services.Notifier.Information(T("Content successfully published."));
                     break;
                 case ContentsBulkAction.Unpublish:
-                    if (!Services.Authorizer.Authorize(Permissions.PublishContent, T("Couldn't unpublish selected content.")))
-                        return new HttpUnauthorizedResult();
-
                     foreach (var item in itemIds.Select(itemId => _contentManager.GetLatest(itemId))) {
+                        if (!accessChecked && !Services.Authorizer.Authorize(Permissions.PublishContent, item, T("Couldn't unpublish selected content.")))
+                            return new HttpUnauthorizedResult();
+
+                        accessChecked = true;
                         _contentManager.Unpublish(item);
                         Services.ContentManager.Flush();
                     }
                     Services.Notifier.Information(T("Content successfully unpublished."));
                     break;
                 case ContentsBulkAction.Remove:
-                    if (!Services.Authorizer.Authorize(Permissions.PublishContent, T("Couldn't delete selected content.")))
-                        return new HttpUnauthorizedResult();
-
                     foreach (var item in itemIds.Select(itemId => _contentManager.GetLatest(itemId))) {
+                        if (!accessChecked && !Services.Authorizer.Authorize(Permissions.DeleteContent, item, T("Couldn't remove selected content.")))
+                            return new HttpUnauthorizedResult();
+
+                        accessChecked = true;
                         _contentManager.Remove(item);
                         Services.ContentManager.Flush();
                     }
@@ -210,6 +214,10 @@ namespace Orchard.Core.Contents.Controllers {
                 return CreatableTypeList();
 
             var contentItem = _contentManager.New(id);
+
+            if (!Services.Authorizer.Authorize(Permissions.PublishContent, contentItem, T("Cannot create content")))
+                return new HttpUnauthorizedResult();
+
             var model = new CreateItemViewModel {
                 Id = id,
                 Content = _contentManager.BuildEditorModel(contentItem)
@@ -221,8 +229,11 @@ namespace Orchard.Core.Contents.Controllers {
 
         [HttpPost]
         public ActionResult Create(CreateItemViewModel model) {
-            //todo: need to integrate permissions into generic content management
             var contentItem = _contentManager.New(model.Id);
+
+            if (!Services.Authorizer.Authorize(Permissions.PublishContent, contentItem, T("Couldn't create content")))
+                return new HttpUnauthorizedResult();
+
             _contentManager.Create(contentItem, VersionOptions.Draft);
             model.Content = _contentManager.UpdateEditorModel(contentItem, this);
 
@@ -246,6 +257,9 @@ namespace Orchard.Core.Contents.Controllers {
             if (contentItem == null)
                 return new NotFoundResult();
 
+            if (!Services.Authorizer.Authorize(Permissions.EditOthersContent, contentItem, T("Cannot edit content")))
+                return new HttpUnauthorizedResult();
+
             var model = new EditItemViewModel {
                 Id = id,
                 Content = _contentManager.BuildEditorModel(contentItem)
@@ -262,6 +276,9 @@ namespace Orchard.Core.Contents.Controllers {
 
             if (contentItem == null)
                 return new NotFoundResult();
+
+            if (!Services.Authorizer.Authorize(Permissions.EditOthersContent, contentItem, T("Couldn't edit content")))
+                return new HttpUnauthorizedResult();
 
             model.Content = _contentManager.UpdateEditorModel(contentItem, this);
             if (!ModelState.IsValid) {
@@ -280,6 +297,10 @@ namespace Orchard.Core.Contents.Controllers {
         [HttpPost, ActionName("Remove")]
         public ActionResult RemovePOST(int id, string returnUrl) {
             var contentItem = _contentManager.Get(id, VersionOptions.Latest);
+
+            if (!Services.Authorizer.Authorize(Permissions.DeleteOthersContent, contentItem, T("Couldn't remove content")))
+                return new HttpUnauthorizedResult();
+
             if (contentItem != null)
                 _contentManager.Remove(contentItem);
 
@@ -291,12 +312,12 @@ namespace Orchard.Core.Contents.Controllers {
 
         [HttpPost]
         public ActionResult Publish(int id, string returnUrl) {
-            if (!Services.Authorizer.Authorize(Permissions.PublishContent, T("Couldn't publish content")))
-                return new HttpUnauthorizedResult();
-
             var contentItem = _contentManager.GetLatest(id);
             if (contentItem == null)
                 return new NotFoundResult();
+
+            if (!Services.Authorizer.Authorize(Permissions.PublishContent, contentItem, T("Couldn't publish content")))
+                return new HttpUnauthorizedResult();
 
             _contentManager.Publish(contentItem);
             Services.ContentManager.Flush();
@@ -310,12 +331,12 @@ namespace Orchard.Core.Contents.Controllers {
 
         [HttpPost]
         public ActionResult Unpublish(int id, string returnUrl) {
-            if (!Services.Authorizer.Authorize(Permissions.PublishContent, T("Couldn't unpublish content")))
-                return new HttpUnauthorizedResult();
-
             var contentItem = _contentManager.GetLatest(id);
             if (contentItem == null)
                 return new NotFoundResult();
+
+            if (!Services.Authorizer.Authorize(Permissions.PublishContent, contentItem, T("Couldn't unpublish content")))
+                return new HttpUnauthorizedResult();
 
             _contentManager.Unpublish(contentItem);
             Services.ContentManager.Flush();

@@ -67,6 +67,7 @@
     <Compile Include="Common\Drivers\TextFieldDriver.cs" />
     <Compile Include="Common\Extensions\HtmlHelperExtensions.cs" />
     <Compile Include="Common\Fields\TextField.cs" />
+    <Compile Include="Common\Security\AuthorizationEventHandler.cs" />
     <Compile Include="ContentsLocation\Models\LocationDefinition.cs" />
     <Compile Include="Common\Services\ICommonService.cs" />
     <Compile Include="Common\Services\CommonService.cs" />

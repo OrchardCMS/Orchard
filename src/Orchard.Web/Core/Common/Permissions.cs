@@ -20,7 +20,7 @@ namespace Orchard.Core.Common {
                 new PermissionStereotype {
                     Name = "Administrator",
                     Permissions = new[] {ChangeOwner}
-                }
+                },
             };
         }
     }
