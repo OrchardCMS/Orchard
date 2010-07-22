@@ -19,10 +19,6 @@ namespace Orchard.Core.ContentsLocation.Models {
                 return result;
             }
 
-            if (this.TryGetValue("Default", out result)) {
-                return result;
-            }
-
             return new ContentLocation { Zone = defaultZone, Position = defaultPosition };
         }
     }
@@ -32,14 +28,42 @@ namespace Orchard.Core.ContentsLocation.Models {
             return part.GetLocation(locationName, null, null);
         }
 
-        public static ContentLocation GetLocation<TContent>(this TContent part, string locationName, string defaultZone, string defaultPosition) where TContent : ContentPart {
+        public static ContentLocation GetLocation(this ContentPart part, string locationName, string defaultZone, string defaultPosition) {
             // Get the specific location from the part in the type context
             var location = part.TypePartDefinition.Settings.GetModel<LocationSettings>().Get(locationName);
             if (location.Position != null || location.Zone != null)
                 return location;
 
+            // Get the "Default" location from the part in the type context
+            location = part.TypePartDefinition.Settings.GetModel<LocationSettings>().Get("Default");
+            if (location.Position != null || location.Zone != null)
+                return location;
+
             // Get the specific location from the part definition
-            return part.PartDefinition.Settings.GetModel<LocationSettings>().Get(locationName, defaultZone, defaultPosition);
+            location = part.PartDefinition.Settings.GetModel<LocationSettings>().Get(locationName);
+            if (location.Position != null || location.Zone != null)
+                return location;
+
+            // Get the "Default" location from the part definition
+            location = part.PartDefinition.Settings.GetModel<LocationSettings>().Get("Default");
+            if (location.Position != null || location.Zone != null)
+                return location;
+
+            return new ContentLocation { Zone = defaultZone, Position = defaultPosition };
+        }
+
+        public static ContentLocation GetLocation(this ContentField field, string locationName, string defaultZone, string defaultPosition) {
+            // Get the specific location from the part in the type context
+            var location = field.PartFieldDefinition.Settings.GetModel<LocationSettings>().Get(locationName);
+            if (location.Position != null || location.Zone != null)
+                return location;
+
+            // Get the "Default" location from the part in the type context
+            location = field.PartFieldDefinition.Settings.GetModel<LocationSettings>().Get("Default");
+            if (location.Position != null || location.Zone != null)
+                return location;
+
+            return new ContentLocation { Zone = defaultZone, Position = defaultPosition };
         }
     }
 }

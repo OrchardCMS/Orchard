@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Orchard.ContentManagement;
+using Orchard.ContentManagement.Drivers;
 using Orchard.ContentManagement.MetaData;
 using Orchard.ContentManagement.MetaData.Builders;
 using Orchard.ContentManagement.MetaData.Models;
@@ -26,12 +27,13 @@ namespace Orchard.Core.ContentsLocation.Settings {
         }
 
         private LocationSettings MergeSettings(LocationSettings partSettings, LocationSettings partDefinitionSettings) {
-            var result = new LocationSettings(partSettings);
-            foreach (var entry in partDefinitionSettings) {
-                if (!partSettings.ContainsKey(entry.Key))
-                    partSettings[entry.Key] = entry.Value;
-            }
-            return result;
+            return partSettings;
+            //var result = new LocationSettings(partSettings);
+            //foreach (var entry in partDefinitionSettings) {
+            //    if (!partSettings.ContainsKey(entry.Key))
+            //        partSettings[entry.Key] = entry.Value;
+            //}
+            //return result;
         }
 
         #region Standalone part definition
@@ -41,7 +43,8 @@ namespace Orchard.Core.ContentsLocation.Settings {
             foreach (var location in GetPredefinedLocations()) {
                 var viewModel = new LocationSettingsViewModel {
                     Definition = location,
-                    Location = settings.Get(location.Name)
+                    Location = settings.Get(location.Name),
+                    DefaultLocation = new ContentLocation()
                 };
                 yield return DefinitionTemplate(viewModel, templateName: "LocationSettings", prefix: location.Name);
             }
@@ -70,7 +73,8 @@ namespace Orchard.Core.ContentsLocation.Settings {
             foreach (var location in GetPredefinedLocations()) {
                 var viewModel = new LocationSettingsViewModel {
                     Definition = location,
-                    Location = settings.Get(location.Name)
+                    Location = settings.Get(location.Name),
+                    DefaultLocation = partDefinitionSettings.Get(location.Name)
                 };
                 yield return DefinitionTemplate(viewModel, templateName: "LocationSettings", prefix: location.Name);
             }
@@ -94,7 +98,8 @@ namespace Orchard.Core.ContentsLocation.Settings {
             foreach (var location in GetPredefinedLocations()) {
                 var viewModel = new LocationSettingsViewModel {
                     Definition = location,
-                    Location = settings.Get(location.Name)
+                    Location = settings.Get(location.Name),
+                    DefaultLocation = new ContentLocation { Zone = "body", Position = "" }
                 };
                 yield return DefinitionTemplate(viewModel, templateName: "LocationSettings", prefix: location.Name);
             }
