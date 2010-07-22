@@ -1,4 +1,5 @@
 ﻿using System;
+using Orchard.ContentManagement.MetaData;
 using Orchard.Data.Migration;
 
 namespace Orchard.Comments.DataMigrations {
@@ -42,6 +43,21 @@ namespace Orchard.Comments.DataMigrations {
                 );
 
             return 1;
+        }
+
+        public int UpdateFrom1() {
+            ContentDefinitionManager.AlterTypeDefinition("Comment",
+               cfg => cfg
+                   .WithPart("Comment")
+                   .WithPart("CommonAspect")
+                );
+
+            ContentDefinitionManager.AlterTypeDefinition("Blog",
+               cfg => cfg
+                   .WithPart("HasCommentsContainer")
+                );
+
+            return 2;
         }
     }
 }

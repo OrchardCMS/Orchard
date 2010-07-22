@@ -130,6 +130,7 @@ namespace Orchard.Setup.Services {
                                                            .Column<int>("Version"));
 
                     var dataMigrationManager = environment.Resolve<IDataMigrationManager>();
+                    dataMigrationManager.Update("Settings");
 
                     foreach ( var feature in context.EnabledFeatures ) {
                         dataMigrationManager.Update(feature);

@@ -2,14 +2,10 @@ using System;
 using System.Linq;
 using System.Web.Routing;
 using JetBrains.Annotations;
-using Orchard.Blogs.Drivers;
 using Orchard.Blogs.Models;
 using Orchard.Blogs.Services;
 using Orchard.ContentManagement;
-using Orchard.Core.Common.Models;
 using Orchard.ContentManagement.Handlers;
-using Orchard.Core.PublishLater.Models;
-using Orchard.Core.Routable.Models;
 using Orchard.Localization;
 
 namespace Orchard.Blogs.Handlers {
@@ -22,13 +18,6 @@ namespace Orchard.Blogs.Handlers {
             _blogPostService = blogPostService;
             _orchardServices = orchardServices;
             T = NullLocalizer.Instance;
-
-            Filters.Add(new ActivatingFilter<BlogPost>(BlogPostDriver.ContentType.Name));
-            Filters.Add(new ActivatingFilter<CommonAspect>(BlogPostDriver.ContentType.Name));
-            Filters.Add(new ActivatingFilter<PublishLaterPart>(BlogPostDriver.ContentType.Name));
-            Filters.Add(new ActivatingFilter<ContentPart<CommonVersionRecord>>(BlogPostDriver.ContentType.Name));
-            Filters.Add(new ActivatingFilter<IsRoutable>(BlogPostDriver.ContentType.Name));
-            Filters.Add(new ActivatingFilter<BodyAspect>(BlogPostDriver.ContentType.Name));
 
             Action<Blog> updateBlogPostCount =
                 (blog => {

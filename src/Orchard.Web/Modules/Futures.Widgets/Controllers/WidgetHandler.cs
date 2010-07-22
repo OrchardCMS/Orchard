@@ -13,13 +13,6 @@ namespace Futures.Widgets.Controllers {
             IRepository<HasWidgetsRecord> hasWidgetRepository,
             IRepository<WidgetRecord> widgetRepository) {
 
-            // marking the "Site" content type as a widget container
-            Filters.Add(new ActivatingFilter<HasWidgets>("Site"));
-
-            // adding parts to the "HtmlWidget" content type
-            Filters.Add(new ActivatingFilter<Widget>("HtmlWidget"));
-            Filters.Add(new ActivatingFilter<BodyAspect>("HtmlWidget"));
-
             // providing standard storage support for widget records
             Filters.Add(StorageFilter.For(hasWidgetRepository));
             Filters.Add(StorageFilter.For(widgetRepository));

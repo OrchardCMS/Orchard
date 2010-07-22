@@ -1,29 +1,22 @@
-﻿using System;
-using System.Web.Routing;
+﻿using System.Web.Routing;
 using JetBrains.Annotations;
 using Orchard.Blogs.Models;
-using Orchard.Blogs.Services;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
-using Orchard.Core.Routable.Services;
 using Orchard.Localization;
 
 namespace Orchard.Blogs.Drivers {
     [UsedImplicitly]                                                                                                                                                                                        
     public class BlogPostDriver : ContentItemDriver<BlogPost> {
         public IOrchardServices Services { get; set; }
-        private readonly IBlogPostService _blogPostService;
-        private readonly IRoutableService _routableService;
 
         public readonly static ContentType ContentType = new ContentType {
                                                                              Name = "BlogPost",
                                                                              DisplayName = "Blog Post"
                                                                          };
 
-        public BlogPostDriver(IOrchardServices services, IBlogService blogService, IBlogPostService blogPostService, IRoutableService routableService) {
+        public BlogPostDriver(IOrchardServices services) {
             Services = services;
-            _blogPostService = blogPostService;
-            _routableService = routableService;
             T = NullLocalizer.Instance;
         }
 

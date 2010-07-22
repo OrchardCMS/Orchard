@@ -1,4 +1,5 @@
-﻿using Orchard.Data.Migration;
+﻿using Orchard.ContentManagement.MetaData;
+using Orchard.Data.Migration;
 
 namespace Orchard.Core.Navigation.DataMigrations {
     public class NavigationDataMigration : DataMigrationImpl {
@@ -19,6 +20,15 @@ namespace Orchard.Core.Navigation.DataMigrations {
                 );
 
             return 1;
+        }
+
+        public int UpdateFrom1() {
+
+            ContentDefinitionManager.AlterTypeDefinition("Blog", cfg => cfg.WithPart("MenuPart"));
+            ContentDefinitionManager.AlterTypeDefinition("Page", cfg => cfg.WithPart("MenuPart"));
+            ContentDefinitionManager.AlterTypeDefinition("MenuItem", cfg => cfg.WithPart("MenuPart"));
+
+            return 2;
         }
     }
 }

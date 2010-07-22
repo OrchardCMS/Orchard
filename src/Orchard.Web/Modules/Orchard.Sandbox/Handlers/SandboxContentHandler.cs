@@ -1,10 +1,7 @@
 ﻿using JetBrains.Annotations;
-using Orchard.Core.Common.Models;
-using Orchard.Core.Routable.Models;
 using Orchard.Data;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Handlers;
-using Orchard.Sandbox.Drivers;
 using Orchard.Sandbox.Models;
 
 namespace Orchard.Sandbox.Handlers {
@@ -12,10 +9,6 @@ namespace Orchard.Sandbox.Handlers {
     public class SandboxContentHandler : ContentHandler {
         public SandboxContentHandler(IRepository<SandboxPageRecord> pageRepository, IRepository<SandboxSettingsRecord> settingsRepository) {
             // define the "SandboxPage" content type
-            Filters.Add(new ActivatingFilter<SandboxPage>(SandboxPageDriver.ContentType.Name));
-            Filters.Add(new ActivatingFilter<CommonAspect>(SandboxPageDriver.ContentType.Name));
-            Filters.Add(new ActivatingFilter<IsRoutable>(SandboxPageDriver.ContentType.Name));
-            Filters.Add(new ActivatingFilter<BodyAspect>(SandboxPageDriver.ContentType.Name));
             Filters.Add(StorageFilter.For(pageRepository) );
 
             // add settings to site, and simple record-template gui

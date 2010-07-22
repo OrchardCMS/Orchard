@@ -1,4 +1,5 @@
-﻿using Orchard.Data.Migration;
+﻿using Orchard.ContentManagement.MetaData;
+using Orchard.Data.Migration;
 
 namespace Futures.Widgets.DataMigrations {
     public class WidgetsDataMigration : DataMigrationImpl {
@@ -18,6 +19,21 @@ namespace Futures.Widgets.DataMigrations {
                 );
 
             return 1;
+        }
+
+        public int UpdateFrom1() {
+            ContentDefinitionManager.AlterTypeDefinition("Site",
+                cfg => cfg
+                    .WithPart("HasWidgets")
+                );
+
+            ContentDefinitionManager.AlterTypeDefinition("HtmlWidget",
+                cfg => cfg
+                    .WithPart("Widget")
+                    .WithPart("BodyAspect")
+                );
+
+            return 2;
         }
     }
 }

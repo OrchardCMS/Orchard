@@ -1,4 +1,3 @@
-using Orchard.Data.Conventions;
 using Orchard.ContentManagement.Records;
 
 namespace Orchard.Blogs.Models {

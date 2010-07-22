@@ -29,12 +29,31 @@ namespace Orchard.Blogs.DataMigrations {
         }
 
         public int UpdateFrom1() {
+            ContentDefinitionManager.AlterTypeDefinition("Blog",
+                cfg => cfg
+                    .WithPart("Blog")
+                    .WithPart("CommonAspect")
+                    .WithPart("IsRoutable")
+                );
+
+            ContentDefinitionManager.AlterTypeDefinition("BlogPost", 
+                cfg => cfg
+                    .WithPart("BlogPost")
+                    .WithPart("CommonAspect")
+                    .WithPart("PublishLaterPart")
+                    .WithPart("IsRoutable")
+                    .WithPart("BodyAspect")
+                );
+
+            return 2;
+        }
+        
+        public int UpdateFrom2() {
             ContentDefinitionManager.AlterPartDefinition(typeof(Blog).Name, cfg => cfg
                 .WithLocation(new Dictionary<string, ContentLocation> {
                     {"Editor", new ContentLocation { Zone = "primary", Position = "1" }}
                 }));
-
-            return 2;
+            return 3;
         }
     }
 }
