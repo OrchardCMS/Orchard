@@ -1,4 +1,9 @@
-﻿using Orchard.Data.Migration;
+﻿using System.Collections.Generic;
+using Orchard.ContentManagement.Drivers;
+using Orchard.ContentManagement.MetaData;
+using Orchard.ContentManagement.MetaData.Builders;
+using Orchard.Data.Migration;
+using Orchard.Tags.Models;
 
 namespace Orchard.Tags.DataMigrations {
     public class TagsDataMigration : DataMigrationImpl {
@@ -18,6 +23,14 @@ namespace Orchard.Tags.DataMigrations {
                 );
 
             return 1;
+        }
+        public int UpdateFrom1() {
+            ContentDefinitionManager.AlterPartDefinition(typeof(HasTags).Name, cfg => cfg
+                .WithLocation(new Dictionary<string, ContentLocation> {
+                    {"Default", new ContentLocation { Zone = "primary", Position = "49" }},
+                    {"Editor", new ContentLocation { Zone = "primary", Position = "9" }},
+                }));
+            return 2;
         }
     }
 }

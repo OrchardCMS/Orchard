@@ -24,8 +24,7 @@ namespace Orchard.Tags.Drivers {
         public virtual IUser CurrentUser { get; set; }
 
         protected override DriverResult Display(HasTags part, string displayType) {
-            var location = part.GetLocation(displayType, "primary", "49");
-            return ContentPartTemplate(part, "Parts/Tags.ShowTags").Location(location);
+            return ContentPartTemplate(part, "Parts/Tags.ShowTags").Location(part.GetLocation(displayType));
         }
 
         protected override DriverResult Editor(HasTags part) {
@@ -35,8 +34,7 @@ namespace Orchard.Tags.Drivers {
             var model = new EditTagsViewModel {
                                                   Tags = string.Join(", ", part.CurrentTags.Select((t, i) => t.TagName).ToArray())
                                               };
-            var location = part.GetLocation("Editor", "primary", "9");
-            return ContentPartTemplate(model, "Parts/Tags.EditTags").Location(location);
+            return ContentPartTemplate(model, "Parts/Tags.EditTags").Location(part.GetLocation("Editor"));
         }
 
         protected override DriverResult Editor(HasTags part, IUpdateModel updater) {
@@ -51,8 +49,7 @@ namespace Orchard.Tags.Drivers {
                 _tagService.UpdateTagsForContentItem(part.ContentItem.Id, tagNames);
             }
 
-            var location = part.GetLocation("Editor", "primary", "9");
-            return ContentPartTemplate(model, "Parts/Tags.EditTags").Location(location);
+            return ContentPartTemplate(model, "Parts/Tags.EditTags").Location(part.GetLocation("Editor"));
         }
     }
 }
