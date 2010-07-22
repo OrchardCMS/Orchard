@@ -191,7 +191,7 @@ namespace Orchard.Setup.Services {
                     var contentDefinitionManager = environment.Resolve<IContentDefinitionManager>();
                     contentDefinitionManager.AlterTypeDefinition("BlogPost", cfg => cfg
                         .DisplayedAs("Blog Post")
-                        .WithPart("HasComments")
+                        .WithPart("CommentsPart")
                         .WithPart("HasTags")
                         .WithPart("Localized")
                         .Indexed());
@@ -201,7 +201,7 @@ namespace Orchard.Setup.Services {
                         .WithPart("PublishLaterPart")
                         .WithPart("IsRoutable")
                         .WithPart("BodyPart")
-                        .WithPart("HasComments")
+                        .WithPart("CommentsPart")
                         .WithPart("HasTags")
                         .WithPart("Localized")
                         .Indexed());
@@ -215,8 +215,8 @@ namespace Orchard.Setup.Services {
                     page.As<IsRoutable>().Path = "home"; 
                     page.As<IsRoutable>().Title = T("Home").ToString();
                     page.As<CommonPart>().Owner = user;
-                    if (page.Has<HasComments>()) {
-                        page.As<HasComments>().CommentsShown = false;
+                    if (page.Has<CommentsPart>()) {
+                        page.As<CommentsPart>().CommentsShown = false;
                     }
                     contentManager.Publish(page);
                     siteSettings.Record.HomePage = "RoutableHomePageProvider;" + page.Id;

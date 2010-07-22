@@ -6,7 +6,7 @@ namespace Orchard.Comments.ViewModels {
         public CommentCountViewModel() {
         }
 
-        public CommentCountViewModel(HasComments part) {
+        public CommentCountViewModel(CommentsPart part) {
             Item = part.ContentItem;
             CommentCount = part.Comments.Count;
             PendingCount = part.PendingComments.Count;

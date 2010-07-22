@@ -7,8 +7,8 @@ using Orchard.Data;
 
 namespace Orchard.Comments.Handlers {
     [UsedImplicitly]
-    public class CommentHandler : ContentHandler {
-        public CommentHandler(IRepository<CommentRecord> commentsRepository) {
+    public class CommentPartHandler : ContentHandler {
+        public CommentPartHandler(IRepository<CommentPartRecord> commentsRepository) {
             Filters.Add(StorageFilter.For(commentsRepository));
         }
     }

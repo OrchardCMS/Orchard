@@ -5,7 +5,7 @@ using Orchard.ContentManagement.Drivers;
 
 namespace Orchard.Comments.Drivers {
     [UsedImplicitly]
-    public class CommentDriver : ContentItemDriver<Comment> {
+    public class CommentPartDriver : ContentItemDriver<CommentPart> {
         public readonly static ContentType ContentType = new ContentType {
                                                                              Name = "Comment",
                                                                              DisplayName = "Comment"

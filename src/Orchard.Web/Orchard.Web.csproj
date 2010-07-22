@@ -195,7 +195,7 @@
     <Content Include="Themes\Contoso\Views\DisplayTemplates\Items\Blogs.BlogPost.ascx" />
     <Content Include="Themes\Contoso\Views\DisplayTemplates\Items\Pages.Page.ascx" />
     <Content Include="Themes\Contoso\Views\DisplayTemplates\Items\Blogs.BlogPost.ListByArchive.ascx" />
-    <Content Include="Themes\Contoso\Views\DisplayTemplates\Parts\Comments.HasComments.ascx" />
+    <Content Include="Themes\Contoso\Views\DisplayTemplates\Parts\Comments.Comments.ascx" />
     <Content Include="Themes\Contoso\Views\DisplayTemplates\Parts\Pages.Page.Metadata.ascx" />
     <Content Include="Themes\Contoso\Views\DisplayTemplates\Parts\Tags.ShowTags.ascx" />
     <Content Include="Themes\Contoso\Views\Header.ascx" />
@@ -239,7 +239,7 @@
     <Content Include="Themes\Corporate\Views\DisplayTemplates\Items\Blogs.BlogPost.ascx" />
     <Content Include="Themes\Corporate\Views\DisplayTemplates\Items\Blogs.BlogPost.ListByArchive.ascx" />
     <Content Include="Themes\Corporate\Views\DisplayTemplates\Items\Pages.Page.ascx" />
-    <Content Include="Themes\Corporate\Views\DisplayTemplates\Parts\Comments.HasComments.ascx" />
+    <Content Include="Themes\Corporate\Views\DisplayTemplates\Parts\Comments.Comments.ascx" />
     <Content Include="Themes\Corporate\Views\DisplayTemplates\Parts\Pages.Page.Metadata.ascx" />
     <Content Include="Themes\Corporate\Views\DisplayTemplates\Parts\Tags.ShowTags.ascx" />
     <Content Include="Themes\Corporate\Views\Footer.ascx" />

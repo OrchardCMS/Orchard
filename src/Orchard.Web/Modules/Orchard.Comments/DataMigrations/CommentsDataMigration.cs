@@ -16,8 +16,8 @@ namespace Orchard.Comments.DataMigrations {
                 .Column<int>("ContentItemId")
                 );
 
-            //CREATE TABLE Orchard_Comments_CommentRecord (Id INTEGER not null, Author TEXT, SiteName TEXT, UserName TEXT, Email TEXT, Status TEXT, CommentDateUtc DATETIME, CommentText TEXT, CommentedOn INTEGER, CommentedOnContainer INTEGER, primary key (Id));
-            SchemaBuilder.CreateTable("CommentRecord", table => table
+            //CREATE TABLE Orchard_Comments_CommentPartRecord (Id INTEGER not null, Author TEXT, SiteName TEXT, UserName TEXT, Email TEXT, Status TEXT, CommentDateUtc DATETIME, CommentText TEXT, CommentedOn INTEGER, CommentedOnContainer INTEGER, primary key (Id));
+            SchemaBuilder.CreateTable("CommentPartRecord", table => table
                 .ContentPartRecord()
                 .Column<string>("Author")
                 .Column<string>("SiteName")
@@ -30,8 +30,8 @@ namespace Orchard.Comments.DataMigrations {
                 .Column<int>("CommentedOnContainer")
                 );
 
-            //CREATE TABLE Orchard_Comments_CommentSettingsRecord (Id INTEGER not null, ModerateComments INTEGER, EnableSpamProtection INTEGER, AkismetKey TEXT, AkismetUrl TEXT, primary key (Id));
-            SchemaBuilder.CreateTable("CommentSettingsRecord", table => table
+            //CREATE TABLE Orchard_Comments_CommentSettingsPartRecord (Id INTEGER not null, ModerateComments INTEGER, EnableSpamProtection INTEGER, AkismetKey TEXT, AkismetUrl TEXT, primary key (Id));
+            SchemaBuilder.CreateTable("CommentSettingsPartRecord", table => table
                 .ContentPartRecord()
                 .Column<bool>("ModerateComments")
                 .Column<bool>("EnableSpamProtection")
@@ -39,8 +39,8 @@ namespace Orchard.Comments.DataMigrations {
                 .Column<string>("AkismetUrl")
                );
 
-            //CREATE TABLE Orchard_Comments_HasCommentsRecord (Id INTEGER not null, CommentsShown INTEGER, CommentsActive INTEGER, primary key (Id));
-            SchemaBuilder.CreateTable("HasCommentsRecord", table => table
+            //CREATE TABLE Orchard_Comments_CommentsPartRecord (Id INTEGER not null, CommentsShown INTEGER, CommentsActive INTEGER, primary key (Id));
+            SchemaBuilder.CreateTable("CommentsPartRecord", table => table
                 .ContentPartRecord()
                 .Column<bool>("CommentsShown")
                 .Column<bool>("CommentsActive")
@@ -52,20 +52,20 @@ namespace Orchard.Comments.DataMigrations {
         public int UpdateFrom1() {
             ContentDefinitionManager.AlterTypeDefinition("Comment",
                cfg => cfg
-                   .WithPart("Comment")
+                   .WithPart("CommentPart")
                    .WithPart("CommonPart")
                 );
 
             ContentDefinitionManager.AlterTypeDefinition("Blog",
                cfg => cfg
-                   .WithPart("HasCommentsContainer")
+                   .WithPart("CommentsContainerPart")
                 );
 
             return 2;
         }
 
         public int UpdateFrom2() {
-            ContentDefinitionManager.AlterPartDefinition(typeof(HasComments).Name, cfg => cfg
+            ContentDefinitionManager.AlterPartDefinition(typeof(CommentsPart).Name, cfg => cfg
                 .WithLocation(new Dictionary<string, ContentLocation> {
                     {"Default", new ContentLocation { Zone = "primary", Position = "before.5" }},
                     {"Detail", new ContentLocation { Zone = "primary", Position = "after.5" }},
@@ -74,7 +74,7 @@ namespace Orchard.Comments.DataMigrations {
                     {"Editor", new ContentLocation { Zone = "primary", Position = "10" }},
                 }));
 
-            ContentDefinitionManager.AlterPartDefinition(typeof(HasCommentsContainer).Name, cfg => cfg
+            ContentDefinitionManager.AlterPartDefinition(typeof(CommentsContainerPart).Name, cfg => cfg
                 .WithLocation(new Dictionary<string, ContentLocation> {
                     {"SummaryAdmin", new ContentLocation { Zone = "meta", Position = null }},
                     {"Summary", new ContentLocation { Zone = "meta", Position = null }},

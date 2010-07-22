@@ -8,32 +8,32 @@ using Orchard.ContentManagement.Handlers;
 
 namespace Orchard.Comments.Handlers {
     [UsedImplicitly]
-    public class HasCommentsHandler : ContentHandler {
-        public HasCommentsHandler(
+    public class CommentsPartHandler : ContentHandler {
+        public CommentsPartHandler(
             IContentManager contentManager,
-            IRepository<HasCommentsRecord> hasCommentsRepository,
+            IRepository<CommentsPartRecord> commentsRepository,
             ICommentService commentService) {
 
-            Filters.Add(StorageFilter.For(hasCommentsRepository));
+            Filters.Add(StorageFilter.For(commentsRepository));
 
-            OnInitializing<HasComments>((ctx, x) => {
+            OnInitializing<CommentsPart>((ctx, x) => {
                 x.CommentsActive = true;
                 x.CommentsShown = true;
             });
 
-            OnLoading<HasComments>((context, comments) => {
+            OnLoading<CommentsPart>((context, comments) => {
                 comments._comments.Loader(list => contentManager
-                    .Query<Comment, CommentRecord>()
+                    .Query<CommentPart, CommentPartRecord>()
                     .Where(x => x.CommentedOn == context.ContentItem.Id && x.Status == CommentStatus.Approved)
                     .List().ToList());
 
                 comments._pendingComments.Loader(list => contentManager
-                    .Query<Comment, CommentRecord>()
+                    .Query<CommentPart, CommentPartRecord>()
                     .Where(x => x.CommentedOn == context.ContentItem.Id && x.Status == CommentStatus.Pending)
                     .List().ToList());
             });
 
-            OnRemoved<HasComments>(
+            OnRemoved<CommentsPart>(
                 (context, c) => {
                     foreach (var comment in commentService.GetCommentsForCommentedContent(context.ContentItem.Id)) {
                         contentManager.Remove(comment.ContentItem);

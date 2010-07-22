@@ -32,36 +32,36 @@ namespace Orchard.Comments.Services {
         public ILogger Logger { get; set; }
         protected virtual IUser CurrentUser { get; [UsedImplicitly] private set; }
 
-        public IEnumerable<Comment> GetComments() {
+        public IEnumerable<CommentPart> GetComments() {
             return _contentManager
-                .Query<Comment, CommentRecord>()
+                .Query<CommentPart, CommentPartRecord>()
                 .List();
         }
 
-        public IEnumerable<Comment> GetComments(CommentStatus status) {
+        public IEnumerable<CommentPart> GetComments(CommentStatus status) {
             return _contentManager
-                .Query<Comment, CommentRecord>()
+                .Query<CommentPart, CommentPartRecord>()
                 .Where(c => c.Status == status)
                 .List();
         }
 
-        public IEnumerable<Comment> GetCommentsForCommentedContent(int id) {
+        public IEnumerable<CommentPart> GetCommentsForCommentedContent(int id) {
             return _contentManager
-                .Query<Comment, CommentRecord>()
+                .Query<CommentPart, CommentPartRecord>()
                 .Where(c => c.CommentedOn == id || c.CommentedOnContainer == id)
                 .List();
         }
 
-        public IEnumerable<Comment> GetCommentsForCommentedContent(int id, CommentStatus status) {
+        public IEnumerable<CommentPart> GetCommentsForCommentedContent(int id, CommentStatus status) {
             return _contentManager
-                .Query<Comment, CommentRecord>()
+                .Query<CommentPart, CommentPartRecord>()
                 .Where(c => c.CommentedOn == id || c.CommentedOnContainer == id)
                 .Where(ctx => ctx.Status == status)
                 .List();
         }
 
-        public Comment GetComment(int id) {
-            return _contentManager.Get<Comment>(id);
+        public CommentPart GetComment(int id) {
+            return _contentManager.Get<CommentPart>(id);
         }
 
         public ContentItemMetadata GetDisplayForCommentedContent(int id) {
@@ -71,8 +71,8 @@ namespace Orchard.Comments.Services {
             return _contentManager.GetItemMetadata(content);
         }
 
-        public Comment CreateComment(CreateCommentContext context, bool moderateComments) {
-            var comment = _contentManager.Create<Comment>(CommentDriver.ContentType.Name);
+        public CommentPart CreateComment(CreateCommentContext context, bool moderateComments) {
+            var comment = _contentManager.Create<CommentPart>(CommentPartDriver.ContentType.Name);
 
             comment.Record.Author = context.Author;
             comment.Record.CommentDateUtc = _clock.UtcNow;
@@ -95,27 +95,27 @@ namespace Orchard.Comments.Services {
         }
 
         public void UpdateComment(int id, string name, string email, string siteName, string commentText, CommentStatus status) {
-            Comment comment = GetComment(id);
-            comment.Record.Author = name;
-            comment.Record.Email = email;
-            comment.Record.SiteName = siteName;
-            comment.Record.CommentText = commentText;
-            comment.Record.Status = status;
+            CommentPart commentPart = GetComment(id);
+            commentPart.Record.Author = name;
+            commentPart.Record.Email = email;
+            commentPart.Record.SiteName = siteName;
+            commentPart.Record.CommentText = commentText;
+            commentPart.Record.Status = status;
         }
 
         public void ApproveComment(int commentId) {
-            Comment comment = GetComment(commentId);
-            comment.Record.Status = CommentStatus.Approved;
+            CommentPart commentPart = GetComment(commentId);
+            commentPart.Record.Status = CommentStatus.Approved;
         }
 
         public void PendComment(int commentId) {
-            Comment comment = GetComment(commentId);
-            comment.Record.Status = CommentStatus.Pending;
+            CommentPart commentPart = GetComment(commentId);
+            commentPart.Record.Status = CommentStatus.Pending;
         }
 
         public void MarkCommentAsSpam(int commentId) {
-            Comment comment = GetComment(commentId);
-            comment.Record.Status = CommentStatus.Spam;
+            CommentPart commentPart = GetComment(commentId);
+            commentPart.Record.Status = CommentStatus.Spam;
         }
 
         public void DeleteComment(int commentId) {
