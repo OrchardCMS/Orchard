@@ -64,6 +64,9 @@
   <Target Name ="Compile">
     <MSBuild
       Projects="$(SrcFolder)\Orchard.sln"
+      Targets="Build"/>
+    <MSBuild
+      Projects="$(SrcFolder)\Orchard.sln"
       Targets="Build"
       Properties="Configuration=Release;OutputPath=$(CompileFolder)" />
   </Target>
