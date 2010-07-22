@@ -5,7 +5,7 @@ namespace Orchard.Media.DataMigrations {
 
         public int Create() {
             //CREATE TABLE Orchard_Media_MediaSettingsRecord (Id INTEGER not null, RootMediaFolder TEXT, primary key (Id));
-            SchemaBuilder.CreateTable("MediaSettingsRecord", table => table
+            SchemaBuilder.CreateTable("MediaSettingsPartRecord", table => table
                 .ContentPartRecord()
                 .Column<string>("RootMediaFolder")
                 );
@@ -14,7 +14,7 @@ namespace Orchard.Media.DataMigrations {
         }
 
         public int UpdateFrom1() {
-            // Filters.Add(new ActivatingFilter<MediaSettings>("Site"));
+            // Filters.Add(new ActivatingFilter<MediaSettingsPart>("Site"));
 
             return 2;
         }

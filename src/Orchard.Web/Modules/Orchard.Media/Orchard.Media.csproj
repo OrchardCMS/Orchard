@@ -73,9 +73,9 @@
     <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="DataMigrations\MediaDataMigration.cs" />
     <Compile Include="Helpers\MediaHelpers.cs" />
-    <Compile Include="Models\MediaSettings.cs" />
-    <Compile Include="Handlers\MediaSettingsHandler.cs" />
-    <Compile Include="Models\MediaSettingsRecord.cs" />
+    <Compile Include="Models\MediaSettingsPart.cs" />
+    <Compile Include="Handlers\MediaSettingsPartHandler.cs" />
+    <Compile Include="Models\MediaSettingsPartRecord.cs" />
     <Compile Include="Permissions.cs" />
     <Compile Include="Models\FolderNavigation.cs" />
     <Compile Include="Models\MediaFile.cs" />
