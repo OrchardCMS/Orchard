@@ -62,9 +62,9 @@
   </Target>
 
   <Target Name ="Compile">
-    <MSBuild
+    <!--<MSBuild
       Projects="$(SrcFolder)\Orchard.sln"
-      Targets="Build"/>
+      Targets="Build"/>-->
     <MSBuild
       Projects="$(SrcFolder)\Orchard.sln"
       Targets="Build"
