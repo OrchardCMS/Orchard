@@ -28,7 +28,7 @@ namespace Orchard.Core.Common.Drivers {
         // \/\/ Hackalicious on many accounts - don't copy what has been done here for the wrapper \/\/
         protected override DriverResult Display(BodyAspect part, string displayType) {
             var model = new BodyDisplayViewModel { BodyAspect = part, Text = BbcodeReplace(part.Text) };
-            var location = part.GetLocation(displayType, "primary", "5");
+            var location = part.GetLocation(displayType);
 
             return Combined(
                 Services.Authorizer.Authorize(Permissions.ChangeOwner) ? ContentPartTemplate(model, "Parts/Common.Body.ManageWrapperPre").LongestMatch(displayType, "SummaryAdmin").Location(location) : null,
@@ -39,7 +39,7 @@ namespace Orchard.Core.Common.Drivers {
         
         protected override DriverResult Editor(BodyAspect part) {
             var model = BuildEditorViewModel(part);
-            var location = part.GetLocation("Editor", "primary", "5");
+            var location = part.GetLocation("Editor");
             return ContentPartTemplate(model, TemplateName, Prefix).Location(location);
         }
 
@@ -51,7 +51,7 @@ namespace Orchard.Core.Common.Drivers {
             if (string.IsNullOrWhiteSpace(model.Format))
                 model.Format = GetFlavor(part);
 
-            var location = part.GetLocation("Editor", "primary", "5");
+            var location = part.GetLocation("Editor");
             return ContentPartTemplate(model, TemplateName, Prefix).Location(location);
         }
 

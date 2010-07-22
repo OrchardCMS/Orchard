@@ -9,4 +9,4 @@ features:
     PublishLater:
         Description: Draft creation and scheduled publishing.
         Category: Content
-        Dependencies: Common
+        Dependencies: Common, Settings

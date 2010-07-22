@@ -1,4 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
+using Orchard.ContentManagement.Drivers;
+using Orchard.ContentManagement.MetaData;
+using Orchard.ContentManagement.MetaData.Builders;
+using Orchard.Core.Common.Models;
 using Orchard.Data.Migration;
 
 namespace Orchard.Core.Common.DataMigrations {
@@ -30,6 +35,14 @@ namespace Orchard.Core.Common.DataMigrations {
                 );
 
             return 1;
+        }
+
+        public int UpdateFrom1() {
+            ContentDefinitionManager.AlterPartDefinition(typeof(BodyAspect).Name, cfg => cfg
+                .WithLocation(new Dictionary<string, ContentLocation> {
+                    {"Default", new ContentLocation { Zone = "primary", Position = "5" }},
+                }));
+            return 2;
         }
     }
 }
