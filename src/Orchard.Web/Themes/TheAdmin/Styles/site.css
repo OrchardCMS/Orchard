@@ -350,6 +350,9 @@ form.link button:hover {
 	margin:10px 0 4px 0;
     padding:4px;
 }
+div.message {
+    clear:both;
+}
 span.message {
     display:block;
 	margin:4px 0 4px 4px;
