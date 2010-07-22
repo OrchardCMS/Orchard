@@ -145,7 +145,6 @@ namespace Orchard.Data.Migration {
                 }
                 else {
                     dataMigrationRecord.Version = current;
-                    _dataMigrationRepository.Update(dataMigrationRecord);
                 }
             }
         }

@@ -294,7 +294,7 @@ features:
             Assert.That(_repository.Table.First().Version, Is.EqualTo(666));
         }
 
-        [Test, Ignore("Fix pending")]
+        [Test]
         public void SameMigrationClassCanEvolve() {
             Init(new[] { typeof(DataMigrationSameMigrationClassCanEvolve) });
 
