@@ -5,26 +5,48 @@
             __cookieName: "Orchrd", // Orchard, on a diet
             __cookieExpiration: 180, // roughly 6 months
             cookie: function (scope, value, options) { // a light-weight wrapper around $.cookie for an Orchard.* cookie name
-                return $.cookie($.orchard.__cookieName + (scope ? "-" + scope.toLowerCase() : ""), value, options);
+                return $.cookie($.orchard.__cookieName + (scope ? scope.toLowerCase() : ""), value, options);
+            },
+            cookiesInTheOrchard: function () {
+                return $.orchard.cookiesLike($.orchard.__cookieName);
+            },
+            cookiesLike: function (name) {
+                var jar = [];
+                // taken from the $.cookie plugin to get all of the cookies that begin with the name
+                if (document.cookie && document.cookie != '') {
+                    var cookies = document.cookie.split(';');
+                    for (var i = 0; i < cookies.length; i++) {
+                        var cookie = jQuery.trim(cookies[i]);
+                        // Does this cookie string begin with the name we want?
+                        if (cookie.split("=")[0].substring(0, name.length) === (name)) {
+                            jar.push(decodeURIComponent(cookie.substring(cookie.indexOf("=") + 1)));
+                        }
+                    }
+                }
+                return jar;
             },
             setting: function (name, value, options) { // cookie-stored settings (only, at the moment)
                 if (value && value.path) {
                     options = value;
                     value = undefined;
                 }
-                var scope = (options && options.path && options.path.replace(/\W+/g, "-")) || ""; // this could become a problem with long paths as it's appended to the cookie name
-                var cookie = $.orchard.cookie(scope);
-                var key = (name + ((options && !!options.key && options.key) || "")).replace(/\W+/g, "-");
+                var key = (name + ((options && !!options.key && ("-" + options.key)) || "")).replace(/\W+/g, "-");
                 if (typeof value === "undefined") { // try to get the setting value from the default "root" cookie
-                    if (cookie) {
-                        var data = $.parseJSON(cookie);
-                        return data && data[key];
+                    var cookies = $.orchard.cookiesInTheOrchard();
+                    for (var i = 0; i < cookies.length; i++) {
+                        var data = $.parseJSON(cookies[i]);
+                        var value = data && data[key];
+                        if (typeof value !== "undefined") {
+                            return value;
+                        }
                     }
                     return undefined;
                 }
                 else { // store the setting value - the setting isn't removable by the way, setting to "" might be enough for most cases
-                    var data = (cookie && $.parseJSON(cookie)) || {};
-                    data[key] = value;
+                    var scope = (options && options.path && options.path.replace(/\W+/g, "-")) || ""; // this could become a problem with long paths as it's appended to the cookie name
+                    var cookie = $.orchard.cookie(scope);
+                    var newData = (cookie && $.parseJSON(cookie)) || {};
+                    newData[key] = value;
                     var dataString = (function (obj) { //todo: pull out into a seperate function
                         if (!obj) { return ""; }
                         var k, str = "{";
@@ -35,7 +57,7 @@
                             str = str.substring(0, str.length - 1);
                         }
                         return str + "}";
-                    })(data);
+                    })(newData);
                     $.orchard.cookie(scope, dataString, { expires: $.orchard.__cookieExpiration, path: (options && options.path) || "/" }); // todo: default path should be app path
                 }
             }
@@ -69,6 +91,7 @@
                 //_controllees.slideUp(200); <- hook this back up when chrome behaves, or when I care less
                 _controllees.hide()
             }
+            return this;
         }
     });
     // collapsable areas - anything with a data-controllerid attribute has its visibility controlled by the id-ed radio/checkbox
