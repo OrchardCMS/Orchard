@@ -30,49 +30,50 @@
                 if (feature == features.First())
                     featureClassName += " first";
                 if (feature == features.Last())
-                    featureClassName += " last"; %>
-            <li class="<%: featureClassName %>" id="<%: featureId %>" title="<%: T("{0} is {1}", Html.AttributeEncode(feature.Descriptor.Name), featureState) %>">
+                    featureClassName += " last";%>
+            <li class="<%:featureClassName%>" id="<%:featureId%>" title="<%:T("{0} is {1}", Html.AttributeEncode(feature.Descriptor.Name), featureState)%>">
                 <div class="summary">
                     <div class="properties">
-                        <h3><%:feature.Descriptor.Name %></h3>
-                        <p class="description"><%:feature.Descriptor.Description %></p><%
-                        if (feature.Descriptor.Dependencies != null && feature.Descriptor.Dependencies.Any()) { %>
+                        <h3><%:feature.Descriptor.Name%></h3>
+                        <p class="description"><%:feature.Descriptor.Description%></p><%
+                if (feature.Descriptor.Dependencies != null && feature.Descriptor.Dependencies.Any()) {%>
                         <div class="dependencies">
-                            <h4><%: T("Depends on:")%></h4>
-                            <%: Html.UnorderedList(
-                                feature.Descriptor.Dependencies.OrderBy(s => s),
-                                (s, i) => Html.Link(s, string.Format("#{0}", s.AsFeatureId(n => T(n)))),
-                                "",
-                                "dependency",
-                                "") %>
+                            <h4><%:T("Depends on:")%></h4>
+                            <%:Html.UnorderedList(
+                        feature.Descriptor.Dependencies.OrderBy(s => s),
+                        (s, i) => Html.Link(s, string.Format("#{0}", s.AsFeatureId(n => T(n)))),
+                        "",
+                        "dependency",
+                        "")%>
                         </div><%
-                        } %>
-                    </div><%
-                    if (showActions) { %>
-                    <div class="actions"><%
+                }%>
+                    </div>
+                    <div class="actions">
+                    <%
+                    if (showActions) {
                         if (feature.IsEnabled) {
-                        using (Html.BeginFormAntiForgeryPost(string.Format("{0}", Url.Action("Disable", new { area = "Orchard.Modules" })), FormMethod.Post, new {@class = "inline link"})) { %>
-                            <%: Html.Hidden("id", feature.Descriptor.Name, new { id = "" })%>
-                            <%: Html.Hidden("force", true)%>
-                            <button type="submit"><%: T("Disable") %></button><%
-                        }
-                        } else {
-                        using (Html.BeginFormAntiForgeryPost(string.Format("{0}", Url.Action("Enable", new { area = "Orchard.Modules" })), FormMethod.Post, new {@class = "inline link"})) { %>
-                            <%: Html.Hidden("id", feature.Descriptor.Name, new { id = "" })%>
-                            <%: Html.Hidden("force", true)%>
-                            <button type="submit"><%: T("Enable") %></button><%
-                        }
-                        }
-                        if(Model.FeaturesThatNeedUpdate.Contains(feature.Descriptor.Name)){
-                             using (Html.BeginFormAntiForgeryPost(string.Format("{0}", Url.Action("Update", new { area = "Orchard.Modules" })), FormMethod.Post, new {@class = "inline link"})) { %>
-                                <%: Html.Hidden("id", feature.Descriptor.Name, new { id = "" })%>
-                                <%: Html.Hidden("force", true)%>
-                                <button type="submit" class="update"><%: T("Update") %></button><%
+                            using (Html.BeginFormAntiForgeryPost(string.Format("{0}", Url.Action("Disable", new { area = "Orchard.Modules" })), FormMethod.Post, new {@class = "inline link"})) { %>
+                                <%:Html.Hidden("id", feature.Descriptor.Name, new {id = ""})%>
+                                <%:Html.Hidden("force", true)%>
+                                <button type="submit"><%:T("Disable")%></button><%
                             }
                         }
-                         %>
-                    </div><%
-                    } %>
+                        else {
+                            using (Html.BeginFormAntiForgeryPost(string.Format("{0}", Url.Action("Enable", new { area = "Orchard.Modules" })), FormMethod.Post, new {@class = "inline link"})) { %>
+                                <%: Html.Hidden("id", feature.Descriptor.Name, new { id = "" })%>
+                                <%: Html.Hidden("force", true)%>
+                                <button type="submit"><%: T("Enable") %></button><%
+                            }
+                        }
+                    }
+                    if(Model.FeaturesThatNeedUpdate.Contains(feature.Descriptor.Name)){
+                            using (Html.BeginFormAntiForgeryPost(string.Format("{0}", Url.Action("Update", new { area = "Orchard.Modules" })), FormMethod.Post, new {@class = "inline link"})) { %>
+                            <%: Html.Hidden("id", feature.Descriptor.Name, new { id = "" })%>
+                            <%: Html.Hidden("force", true)%>
+                            <button type="submit" class="update"><%: T("Update") %></button><%
+                        }
+                    }%>
+                    </div>
                 </div>
             </li><%
             } %>
