@@ -1,4 +1,8 @@
-﻿using Orchard.ContentManagement.MetaData;
+﻿using System.Collections.Generic;
+using Orchard.ContentManagement.Drivers;
+using Orchard.ContentManagement.MetaData;
+using Orchard.ContentManagement.MetaData.Builders;
+using Orchard.Core.Navigation.Models;
 using Orchard.Data.Migration;
 
 namespace Orchard.Core.Navigation.DataMigrations {
@@ -29,6 +33,14 @@ namespace Orchard.Core.Navigation.DataMigrations {
             ContentDefinitionManager.AlterTypeDefinition("MenuItem", cfg => cfg.WithPart("MenuPart"));
 
             return 2;
+        }
+
+        public int UpdateFrom2() {
+            ContentDefinitionManager.AlterPartDefinition(typeof(MenuPart).Name, cfg => cfg
+                .WithLocation(new Dictionary<string, ContentLocation> {
+                    {"Editor", new ContentLocation { Zone = "primary", Position = "9" }}
+                }));
+            return 3;
         }
     }
 }

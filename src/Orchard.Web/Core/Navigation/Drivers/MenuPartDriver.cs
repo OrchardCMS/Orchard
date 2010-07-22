@@ -28,8 +28,7 @@ namespace Orchard.Core.Navigation.Drivers {
             if (!_authorizationService.TryCheckAccess(Permissions.ManageMainMenu, CurrentUser, part))
                 return null;
 
-            var location = part.GetLocation("Editor", "primary", "9");
-            return ContentPartTemplate(part, "Parts/Navigation.EditMenuPart").Location(location);
+            return ContentPartTemplate(part, "Parts/Navigation.EditMenuPart").Location(part.GetLocation("Editor"));
         }
 
         protected override DriverResult Editor(MenuPart part, IUpdateModel updater) {
@@ -43,8 +42,7 @@ namespace Orchard.Core.Navigation.Drivers {
             if (part.OnMainMenu && String.IsNullOrEmpty(part.MenuText)) {
                 updater.AddModelError("MenuText", T("The MenuText field is required"));
             }
-            var location = part.GetLocation("Editor", "primary", "9");
-            return ContentPartTemplate(part, "Parts/Navigation.EditMenuPart").Location(location);
+            return ContentPartTemplate(part, "Parts/Navigation.EditMenuPart").Location(part.GetLocation("Editor"));
         }
     }
 }
