@@ -1,4 +1,9 @@
-﻿using Orchard.Data.Migration;
+﻿using System.Collections.Generic;
+using Orchard.ContentManagement.Drivers;
+using Orchard.ContentManagement.MetaData;
+using Orchard.ContentManagement.MetaData.Builders;
+using Orchard.Core.Localization.Models;
+using Orchard.Data.Migration;
 
 namespace Orchard.Core.Localization.DataMigrations {
     public class LocalizationDataMigration : DataMigrationImpl {
@@ -12,6 +17,14 @@ namespace Orchard.Core.Localization.DataMigrations {
                 );
 
             return 1;
+        }
+        public int UpdateFrom1() {
+            ContentDefinitionManager.AlterPartDefinition(typeof(Localized).Name, cfg => cfg
+                .WithLocation(new Dictionary<string, ContentLocation> {
+                    {"Default", new ContentLocation { Zone = "primary", Position = "5" }},
+                    {"Editor", new ContentLocation { Zone = "primary", Position = "1" }},
+                }));
+            return 2;
         }
     }
 }

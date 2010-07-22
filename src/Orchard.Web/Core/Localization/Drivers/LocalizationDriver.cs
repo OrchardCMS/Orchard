@@ -27,8 +27,7 @@ namespace Orchard.Core.Localization.Drivers {
                 Localizations = GetDisplayLocalizations(part)
             };
 
-            var location = part.GetLocation(displayType, "primary", "5");
-            return ContentPartTemplate(model, "Parts/Localization.ContentTranslations", TemplatePrefix).LongestMatch(displayType, "Summary", "SummaryAdmin").Location(location);
+            return ContentPartTemplate(model, "Parts/Localization.ContentTranslations", TemplatePrefix).LongestMatch(displayType, "Summary", "SummaryAdmin").Location(part.GetLocation(displayType));
         }
 
         protected override DriverResult Editor(Localized part) {
@@ -40,8 +39,7 @@ namespace Orchard.Core.Localization.Drivers {
                 ContentLocalizations = new ContentLocalizationsViewModel(part) { Localizations = localizations }
             };
 
-            var location = part.GetLocation("Editor", "primary", "1");
-            return ContentPartTemplate(model, "Parts/Localization.Translation", TemplatePrefix).Location(location);
+            return ContentPartTemplate(model, "Parts/Localization.Translation", TemplatePrefix).Location(part.GetLocation("Editor"));
         }
 
         protected override DriverResult Editor(Localized part, IUpdateModel updater) {

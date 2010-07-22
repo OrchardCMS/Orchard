@@ -8,4 +8,5 @@ description: The localization module enables the localization of content items.
 features:
     Localization:
         Description: Localize content items.
+        Dependencies: Settings
         Category: Content
