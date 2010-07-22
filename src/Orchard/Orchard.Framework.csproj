@@ -312,12 +312,16 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="ContentManagement\MetaData\Builders\ContentPartDefinitionBuilder.cs" />
+    <Compile Include="ContentManagement\MetaData\Builders\ContentPartFieldDefinitionBuilder.cs" />
     <Compile Include="ContentManagement\MetaData\Builders\ContentTypeDefinitionBuilder.cs" />
+    <Compile Include="ContentManagement\MetaData\Builders\ContentTypePartDefinitionBuilder.cs" />
     <Compile Include="ContentManagement\MetaData\ContentFieldInfo.cs" />
     <Compile Include="ContentManagement\MetaData\ContentPartInfo.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="ContentManagement\MetaData\IContentDefinitionEditorEvents.cs" />
+    <Compile Include="ContentManagement\MetaData\Models\ContentPartFieldDefinition.cs" />
+    <Compile Include="ContentManagement\MetaData\Models\ContentTypePartDefinition.cs" />
     <Compile Include="ContentManagement\MetaData\Models\SettingsDictionary.cs" />
     <Compile Include="ContentManagement\MetaData\Services\ContentDefinitionWriter.cs" />
     <Compile Include="ContentManagement\MetaData\IContentDefinitionManager.cs" />

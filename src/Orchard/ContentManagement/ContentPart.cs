@@ -14,7 +14,7 @@ namespace Orchard.ContentManagement {
 
         public virtual ContentItem ContentItem { get; set; }
         public ContentTypeDefinition TypeDefinition { get { return ContentItem.TypeDefinition; } }
-        public ContentTypeDefinition.Part TypePartDefinition { get; set; }
+        public ContentTypePartDefinition TypePartDefinition { get; set; }
         public ContentPartDefinition PartDefinition { get { return TypePartDefinition.PartDefinition; } }
         public SettingsDictionary Settings { get { return TypePartDefinition.Settings; } }
 

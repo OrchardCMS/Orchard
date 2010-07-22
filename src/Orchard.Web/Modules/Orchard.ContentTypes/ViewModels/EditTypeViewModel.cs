@@ -49,7 +49,7 @@ namespace Orchard.ContentTypes.ViewModels {
             Settings = new SettingsDictionary();
         }
 
-        public EditTypePartViewModel(int index, ContentTypeDefinition.Part part) {
+        public EditTypePartViewModel(int index, ContentTypePartDefinition part) {
             Index = index;
             PartDefinition = new EditPartViewModel(part.PartDefinition);
             Settings = part.Settings;
@@ -62,7 +62,7 @@ namespace Orchard.ContentTypes.ViewModels {
         public SettingsDictionary Settings { get; set; }
         public EditTypeViewModel Type { get; set; }
         public IEnumerable<TemplateViewModel> Templates { get; set; }
-        public ContentTypeDefinition.Part _Definition { get; private set; }
+        public ContentTypePartDefinition _Definition { get; private set; }
     }
 
     public class EditPartViewModel : BaseViewModel {
@@ -92,7 +92,7 @@ namespace Orchard.ContentTypes.ViewModels {
             Settings = new SettingsDictionary();
         }
 
-        public EditPartFieldViewModel(int index, ContentPartDefinition.Field field) {
+        public EditPartFieldViewModel(int index, ContentPartFieldDefinition field) {
             Index = index;
             Name = field.Name;
             FieldDefinition = new EditFieldViewModel(field.FieldDefinition);
@@ -108,7 +108,7 @@ namespace Orchard.ContentTypes.ViewModels {
         public IEnumerable<TemplateViewModel> Templates { get; set; }
         public EditFieldViewModel FieldDefinition { get; set; }
         public SettingsDictionary Settings { get; set; }
-        public ContentPartDefinition.Field _Definition { get; private set; }
+        public ContentPartFieldDefinition _Definition { get; private set; }
     }
 
     public class EditFieldViewModel {

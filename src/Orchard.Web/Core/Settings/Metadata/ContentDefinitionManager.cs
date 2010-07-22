@@ -108,7 +108,7 @@ namespace Orchard.Core.Settings.Metadata {
             }
         }
 
-        private void Apply(ContentTypeDefinition.Part model, ContentTypePartDefinitionRecord record) {
+        private void Apply(ContentTypePartDefinition model, ContentTypePartDefinitionRecord record) {
             record.Settings = Compose(_settingsWriter.Map(model.Settings));
         }
 
@@ -137,7 +137,7 @@ namespace Orchard.Core.Settings.Metadata {
             }
         }
 
-        private void Apply(ContentPartDefinition.Field model, ContentPartFieldDefinitionRecord record) {
+        private void Apply(ContentPartFieldDefinition model, ContentPartFieldDefinitionRecord record) {
             record.Settings = Compose(_settingsWriter.Map(model.Settings));
         }
 
@@ -149,8 +149,8 @@ namespace Orchard.Core.Settings.Metadata {
                 _settingsReader.Map(Parse(source.Settings)));
         }
 
-        ContentTypeDefinition.Part Build(ContentTypePartDefinitionRecord source) {
-            return new ContentTypeDefinition.Part(
+        ContentTypePartDefinition Build(ContentTypePartDefinitionRecord source) {
+            return new ContentTypePartDefinition(
                 Build(source.ContentPartDefinitionRecord),
                 _settingsReader.Map(Parse(source.Settings)));
         }
@@ -162,8 +162,8 @@ namespace Orchard.Core.Settings.Metadata {
                 _settingsReader.Map(Parse(source.Settings)));
         }
 
-        ContentPartDefinition.Field Build(ContentPartFieldDefinitionRecord source) {
-            return new ContentPartDefinition.Field(
+        ContentPartFieldDefinition Build(ContentPartFieldDefinitionRecord source) {
+            return new ContentPartFieldDefinition(
                 Build(source.ContentFieldDefinitionRecord),
                 source.Name,
                 _settingsReader.Map(Parse(source.Settings)));

@@ -8,7 +8,7 @@ namespace Orchard.ContentManagement.FieldStorage.InfosetStorage {
             get { return FieldStorageProviderSelector.DefaultProviderName; }
         }
 
-        public IFieldStorage BindStorage(ContentPart contentPart, ContentPartDefinition.Field partFieldDefinition) {
+        public IFieldStorage BindStorage(ContentPart contentPart, ContentPartFieldDefinition partFieldDefinition) {
             var partName = XmlConvert.EncodeLocalName(contentPart.PartDefinition.Name);
             var fieldName = XmlConvert.EncodeLocalName(partFieldDefinition.Name);
             var infosetPart = contentPart.As<InfosetPart>();

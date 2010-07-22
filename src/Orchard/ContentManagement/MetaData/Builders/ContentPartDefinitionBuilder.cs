@@ -7,7 +7,7 @@ using Orchard.ContentManagement.MetaData.Models;
 namespace Orchard.ContentManagement.MetaData.Builders {
     public class ContentPartDefinitionBuilder {
         private string _name;
-        private readonly IList<ContentPartDefinition.Field> _fields;
+        private readonly IList<ContentPartFieldDefinition> _fields;
         private readonly SettingsDictionary _settings;
 
         public ContentPartDefinitionBuilder()
@@ -16,7 +16,7 @@ namespace Orchard.ContentManagement.MetaData.Builders {
 
         public ContentPartDefinitionBuilder(ContentPartDefinition existing) {
             if (existing == null) {
-                _fields = new List<ContentPartDefinition.Field>();
+                _fields = new List<ContentPartFieldDefinition>();
                 _settings = new SettingsDictionary();
             }
             else {
@@ -54,7 +54,7 @@ namespace Orchard.ContentManagement.MetaData.Builders {
             return WithField(fieldName, configuration => { });
         }
 
-        public ContentPartDefinitionBuilder WithField(string fieldName, Action<FieldConfigurer> configuration) {
+        public ContentPartDefinitionBuilder WithField(string fieldName, Action<ContentPartFieldDefinitionBuilder> configuration) {
 
             var existingField = _fields.FirstOrDefault(x => x.Name == fieldName);
             if (existingField != null) {
@@ -64,7 +64,7 @@ namespace Orchard.ContentManagement.MetaData.Builders {
                 }
             }
             else {
-                existingField = new ContentPartDefinition.Field(fieldName);
+                existingField = new ContentPartFieldDefinition(fieldName);
             }
             var configurer = new FieldConfigurerImpl(existingField);
             configuration(configurer);
@@ -72,42 +72,26 @@ namespace Orchard.ContentManagement.MetaData.Builders {
             return this;
         }
 
-        public abstract class FieldConfigurer {
-            protected readonly SettingsDictionary _settings;
-
-            protected FieldConfigurer(ContentPartDefinition.Field field) {
-                _settings = new SettingsDictionary(field.Settings.ToDictionary(kv => kv.Key, kv => kv.Value));
-            }
-
-            public FieldConfigurer WithSetting(string name, string value) {
-                _settings[name] = value;
-                return this;
-            }
-
-            public abstract FieldConfigurer OfType(ContentFieldDefinition fieldDefinition);
-            public abstract FieldConfigurer OfType(string fieldType);
-        }
-
-        class FieldConfigurerImpl : FieldConfigurer {
+        class FieldConfigurerImpl : ContentPartFieldDefinitionBuilder {
             private ContentFieldDefinition _fieldDefinition;
             private readonly string _fieldName;
 
-            public FieldConfigurerImpl(ContentPartDefinition.Field field)
+            public FieldConfigurerImpl(ContentPartFieldDefinition field)
                 : base(field) {
                 _fieldDefinition = field.FieldDefinition;
                 _fieldName = field.Name;
             }
 
-            public ContentPartDefinition.Field Build() {
-                return new ContentPartDefinition.Field(_fieldDefinition, _fieldName, _settings);
+            public ContentPartFieldDefinition Build() {
+                return new ContentPartFieldDefinition(_fieldDefinition, _fieldName, _settings);
             }
 
-            public override FieldConfigurer OfType(ContentFieldDefinition fieldDefinition) {
+            public override ContentPartFieldDefinitionBuilder OfType(ContentFieldDefinition fieldDefinition) {
                 _fieldDefinition = fieldDefinition;
                 return this;
             }
 
-            public override FieldConfigurer OfType(string fieldType) {
+            public override ContentPartFieldDefinitionBuilder OfType(string fieldType) {
                 _fieldDefinition = new ContentFieldDefinition(fieldType);
                 return this;
             }
@@ -147,13 +131,13 @@ namespace Orchard.ContentManagement.MetaData.Builders {
             return obj;
         }
 
-        public static ContentTypeDefinitionBuilder.PartConfigurer WithLocation(this ContentTypeDefinitionBuilder.PartConfigurer obj, IDictionary<string, ContentLocation> settings) {
+        public static ContentTypePartDefinitionBuilder WithLocation(this ContentTypePartDefinitionBuilder obj, IDictionary<string, ContentLocation> settings) {
             foreach (var entry in GetSettingEntries(settings))
                 obj = obj.WithSetting(entry.Key, entry.Value);
             return obj;
         }
 
-        public static ContentPartDefinitionBuilder.FieldConfigurer WithLocation(this ContentPartDefinitionBuilder.FieldConfigurer obj, IDictionary<string, ContentLocation> settings) {
+        public static ContentPartFieldDefinitionBuilder WithLocation(this ContentPartFieldDefinitionBuilder obj, IDictionary<string, ContentLocation> settings) {
             foreach (var entry in GetSettingEntries(settings))
                 obj = obj.WithSetting(entry.Key, entry.Value);
             return obj;

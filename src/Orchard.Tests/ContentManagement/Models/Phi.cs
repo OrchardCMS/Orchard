@@ -4,7 +4,7 @@ using Orchard.ContentManagement.MetaData.Models;
 namespace Orchard.Tests.ContentManagement.Models {
     public class Phi : ContentField {
         public Phi() {
-            PartFieldDefinition = new ContentPartDefinition.Field(new ContentFieldDefinition("Phi"), "Phi", new SettingsDictionary());
+            PartFieldDefinition = new ContentPartFieldDefinition(new ContentFieldDefinition("Phi"), "Phi", new SettingsDictionary());
         }
     }
 }

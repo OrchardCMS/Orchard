@@ -63,7 +63,7 @@ namespace Orchard.Core.ContentsLocation.Settings {
         #endregion
 
         #region Part in the context of a content type
-        public override IEnumerable<TemplateViewModel> TypePartEditor(ContentTypeDefinition.Part definition) {
+        public override IEnumerable<TemplateViewModel> TypePartEditor(ContentTypePartDefinition definition) {
             // Look for the setting in the most specific settings first (part definition in type)
             // then in the global part definition.
             var partSettings = definition.Settings.GetModel<LocationSettings>();
@@ -80,7 +80,7 @@ namespace Orchard.Core.ContentsLocation.Settings {
             }
         }
 
-        public override IEnumerable<TemplateViewModel> TypePartEditorUpdate(ContentTypeDefinitionBuilder.PartConfigurer builder, IUpdateModel updateModel) {
+        public override IEnumerable<TemplateViewModel> TypePartEditorUpdate(ContentTypePartDefinitionBuilder builder, IUpdateModel updateModel) {
             var settings = new LocationSettings();
             foreach (var location in GetPredefinedLocations()) {
                 var viewModel = new LocationSettingsViewModel();
@@ -93,7 +93,7 @@ namespace Orchard.Core.ContentsLocation.Settings {
         #endregion
 
         #region Field within a content part
-        public override IEnumerable<TemplateViewModel> PartFieldEditor(ContentPartDefinition.Field definition) {
+        public override IEnumerable<TemplateViewModel> PartFieldEditor(ContentPartFieldDefinition definition) {
             var settings = definition.Settings.GetModel<LocationSettings>();
             foreach (var location in GetPredefinedLocations()) {
                 var viewModel = new LocationSettingsViewModel {
@@ -105,7 +105,7 @@ namespace Orchard.Core.ContentsLocation.Settings {
             }
         }
 
-        public override IEnumerable<TemplateViewModel> PartFieldEditorUpdate(ContentPartDefinitionBuilder.FieldConfigurer builder, IUpdateModel updateModel) {
+        public override IEnumerable<TemplateViewModel> PartFieldEditorUpdate(ContentPartFieldDefinitionBuilder builder, IUpdateModel updateModel) {
             var settings = new LocationSettings();
             foreach (var location in GetPredefinedLocations()) {
                 var viewModel = new LocationSettingsViewModel();
