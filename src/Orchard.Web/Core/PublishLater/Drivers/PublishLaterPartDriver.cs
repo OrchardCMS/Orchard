@@ -2,6 +2,7 @@
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
 using Orchard.Core.Common.Services;
+using Orchard.Core.ContentsLocation.Models;
 using Orchard.Core.PublishLater.Models;
 using Orchard.Core.PublishLater.Services;
 using Orchard.Core.PublishLater.ViewModels;
@@ -31,7 +32,8 @@ namespace Orchard.Core.PublishLater.Drivers {
             var model = new PublishLaterViewModel(part) {
                 ScheduledPublishUtc = part.ScheduledPublishUtc.Value
             };
-            return ContentPartTemplate(model, "Parts/PublishLater.Metadata").LongestMatch(displayType, "Summary", "SummaryAdmin").Location("metadata", "1");
+            var location = part.GetLocation(displayType, "metadata", "1");
+            return ContentPartTemplate(model, "Parts/PublishLater.Metadata").LongestMatch(displayType, "Summary", "SummaryAdmin").Location(location);
         }
 
         protected override DriverResult Editor(PublishLaterPart part) {
@@ -65,7 +67,8 @@ namespace Orchard.Core.PublishLater.Drivers {
                 }
             }
 
-            return ContentPartTemplate(model, "Parts/PublishLater", TemplatePrefix).Location("secondary", "1");
+            var location = part.GetLocation("Editor", "secondary", "1");
+            return ContentPartTemplate(model, "Parts/PublishLater", TemplatePrefix).Location(location);
         }
     }
 }

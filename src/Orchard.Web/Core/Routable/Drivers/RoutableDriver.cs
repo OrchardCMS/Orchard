@@ -67,8 +67,8 @@ namespace Orchard.Core.Routable.Drivers {
                     : "";
             }
 
-            var location = part.PartDefinition.Settings.GetModel<LocationSettings>().Get("Editor");
-            return ContentPartTemplate(model, TemplateName, Prefix).Location(location.Zone, location.Position);
+            var location = part.GetLocation("Editor");
+            return ContentPartTemplate(model, TemplateName, Prefix).Location(location);
         }
 
         protected override DriverResult Editor(IsRoutable part, IUpdateModel updater) {

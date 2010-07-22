@@ -26,7 +26,6 @@ namespace Orchard.ContentManagement.Drivers {
         protected virtual DriverResult Editor(TContent part) { return null; }
         protected virtual DriverResult Editor(TContent part, IUpdateModel updater) { return null; }
 
-
         public ContentTemplateResult ContentPartTemplate(object model) {
             return new ContentTemplateResult(model, null, Prefix).Location(Zone);
         }

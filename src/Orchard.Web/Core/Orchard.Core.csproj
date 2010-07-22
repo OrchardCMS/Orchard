@@ -72,7 +72,7 @@
     <Compile Include="Common\Services\CommonService.cs" />
     <Compile Include="Common\Settings\BodySettings.cs" />
     <Compile Include="ContentsLocation\Models\LocationSettings.cs" />
-    <Compile Include="Common\Settings\LocationSettingsEditorEvents.cs" />
+    <Compile Include="ContentsLocation\Settings\LocationSettingsEditorEvents.cs" />
     <Compile Include="ContentsLocation\ViewModels\LocationSettingsViewModel.cs" />
     <Compile Include="Common\ViewModels\CommonMetadataViewModel.cs" />
     <Compile Include="Common\ViewModels\ContainerEditorViewModel.cs" />

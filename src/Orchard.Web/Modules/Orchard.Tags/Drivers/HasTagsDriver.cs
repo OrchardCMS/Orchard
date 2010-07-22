@@ -2,6 +2,7 @@
 using JetBrains.Annotations;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
+using Orchard.Core.ContentsLocation.Models;
 using Orchard.Security;
 using Orchard.Tags.Helpers;
 using Orchard.Tags.Models;
@@ -23,7 +24,8 @@ namespace Orchard.Tags.Drivers {
         public virtual IUser CurrentUser { get; set; }
 
         protected override DriverResult Display(HasTags part, string displayType) {
-            return ContentPartTemplate(part, "Parts/Tags.ShowTags").Location("primary", "49");
+            var location = part.GetLocation(displayType, "primary", "49");
+            return ContentPartTemplate(part, "Parts/Tags.ShowTags").Location(location);
         }
 
         protected override DriverResult Editor(HasTags part) {
@@ -33,7 +35,8 @@ namespace Orchard.Tags.Drivers {
             var model = new EditTagsViewModel {
                                                   Tags = string.Join(", ", part.CurrentTags.Select((t, i) => t.TagName).ToArray())
                                               };
-            return ContentPartTemplate(model, "Parts/Tags.EditTags").Location("primary", "9");
+            var location = part.GetLocation("Editor", "primary", "9");
+            return ContentPartTemplate(model, "Parts/Tags.EditTags").Location(location);
         }
 
         protected override DriverResult Editor(HasTags part, IUpdateModel updater) {
@@ -48,7 +51,8 @@ namespace Orchard.Tags.Drivers {
                 _tagService.UpdateTagsForContentItem(part.ContentItem.Id, tagNames);
             }
 
-            return ContentPartTemplate(model, "Parts/Tags.EditTags").Location("primary", "9");
+            var location = part.GetLocation("Editor", "primary", "9");
+            return ContentPartTemplate(model, "Parts/Tags.EditTags").Location(location);
         }
     }
 }

@@ -7,6 +7,7 @@ using Orchard.Blogs.Services;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
 using Orchard.Core.Contents.ViewModels;
+using Orchard.Core.ContentsLocation.Models;
 using Orchard.Localization;
 using Orchard.Mvc.ViewModels;
 
@@ -93,17 +94,15 @@ namespace Orchard.Blogs.Drivers {
         }
 
         protected override DriverResult Editor(Blog blog) {
+            var location = blog.GetLocation("Editor", "primary", "1");
             return Combined(
                 ContentItemTemplate("Items/Blogs.Blog"),
-                ContentPartTemplate(blog, "Parts/Blogs.Blog.Fields").Location("primary", "1"));
+                ContentPartTemplate(blog, "Parts/Blogs.Blog.Fields").Location(location));
         }
 
         protected override DriverResult Editor(Blog blog, IUpdateModel updater) {
             updater.TryUpdateModel(blog, Prefix, null, null);
-
-            return Combined(
-                ContentItemTemplate("Items/Blogs.Blog"),
-                ContentPartTemplate(blog, "Parts/Blogs.Blog.Fields").Location("primary", "1"));
+            return Editor(blog);
         }
     }
 }

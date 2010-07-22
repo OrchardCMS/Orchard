@@ -4,12 +4,11 @@ using Orchard.ContentManagement.MetaData;
 using Orchard.ContentManagement.MetaData.Builders;
 using Orchard.ContentManagement.MetaData.Models;
 using Orchard.ContentManagement.ViewModels;
-using Orchard.Core.Common.Models;
 using Orchard.Core.ContentsLocation.Models;
 using Orchard.Core.ContentsLocation.ViewModels;
 using Orchard.Localization;
 
-namespace Orchard.Core.Common.Settings {
+namespace Orchard.Core.ContentsLocation.Settings {
     public class LocationSettingsEditorEvents : ContentDefinitionEditorEventsBase {
 
         public LocationSettingsEditorEvents() {
