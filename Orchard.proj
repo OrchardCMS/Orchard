@@ -149,6 +149,9 @@
     <Copy SourceFiles="@(Stage-Modules)" DestinationFolder="$(StageFolder)\Modules\%(RecursiveDir)"/>
     <Copy SourceFiles="@(Stage-Modules-Sources)" DestinationFolder="$(StageFolder)\Modules\%(RecursiveDir)"/>
     <Copy SourceFiles="@(Stage-Modules-Binaries-Unique)" DestinationFolder="$(StageFolder)\Modules\%(RecursiveDir)"/>
+    <MakeDir Directories="$(StageFolder)\App_Data"/>
+    <WriteLinesToFile File="$(StageFolder)\App_Data\_marker.txt" Lines="some_text" Overwrite="true"/>
+
 
     <!-- extra processing of the staged csproj file -->
     <StageProjectAlteration ProjectFileName="$(StageFolder)\Orchard.Web.csproj" AddContentFiles="
