@@ -5,7 +5,7 @@ using Orchard.ContentManagement.Aspects;
 using Orchard.Security;
 
 namespace Orchard.Core.Common.Models {
-    public class CommonAspect : ContentPart<CommonRecord>, ICommonAspect {
+    public class CommonPart : ContentPart<CommonPartRecord>, ICommonPart {
         private readonly LazyField<IUser> _owner = new LazyField<IUser>();
         private readonly LazyField<IContent> _container = new LazyField<IContent>();
 
@@ -38,42 +38,42 @@ namespace Orchard.Core.Common.Models {
             set { Record.ModifiedUtc = value; }
         }
 
-        CommonVersionRecord VersionRecord {
+        CommonPartVersionRecord PartVersionRecord {
             get {
-                var versionPart = this.As<ContentPart<CommonVersionRecord>>();
+                var versionPart = this.As<ContentPart<CommonPartVersionRecord>>();
                 return versionPart == null ? null : versionPart.Record;
             }
         }
 
         public DateTime? VersionCreatedUtc {
             get {
-                return VersionRecord == null ? CreatedUtc : VersionRecord.CreatedUtc;
+                return PartVersionRecord == null ? CreatedUtc : PartVersionRecord.CreatedUtc;
             }
             set {
-                if (VersionRecord != null) {
-                    VersionRecord.CreatedUtc = value;
+                if (PartVersionRecord != null) {
+                    PartVersionRecord.CreatedUtc = value;
                 }
             }
         }
 
         public DateTime? VersionPublishedUtc {
             get {
-                return VersionRecord == null ? PublishedUtc : VersionRecord.PublishedUtc;
+                return PartVersionRecord == null ? PublishedUtc : PartVersionRecord.PublishedUtc;
             }
             set {
-                if (VersionRecord != null) {
-                    VersionRecord.PublishedUtc = value;
+                if (PartVersionRecord != null) {
+                    PartVersionRecord.PublishedUtc = value;
                 }
             }
         }
 
         public DateTime? VersionModifiedUtc {
             get {
-                return VersionRecord == null ? ModifiedUtc : VersionRecord.ModifiedUtc;
+                return PartVersionRecord == null ? ModifiedUtc : PartVersionRecord.ModifiedUtc;
             }
             set {
-                if (VersionRecord != null) {
-                    VersionRecord.ModifiedUtc = value;
+                if (PartVersionRecord != null) {
+                    PartVersionRecord.ModifiedUtc = value;
                 }
             }
         }

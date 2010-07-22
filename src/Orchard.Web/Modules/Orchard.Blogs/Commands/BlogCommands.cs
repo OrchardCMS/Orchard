@@ -53,7 +53,7 @@ namespace Orchard.Blogs.Commands {
             }
 
             var blog = _contentManager.New("Blog");
-            blog.As<ICommonAspect>().Owner = admin;
+            blog.As<ICommonPart>().Owner = admin;
             blog.As<IsRoutable>().Slug = Slug;
             blog.As<IsRoutable>().Title = Title;
             if ( !String.IsNullOrWhiteSpace(MenuText) ) {
@@ -95,11 +95,11 @@ namespace Orchard.Blogs.Commands {
 
                 Context.Output.WriteLine("Adding post: {0}...", postName.Substring(0, Math.Min(postName.Length, 40)));
                 var post = _contentManager.New("BlogPost");
-                post.As<ICommonAspect>().Owner = admin;
-                post.As<ICommonAspect>().Container = blog;
+                post.As<ICommonPart>().Owner = admin;
+                post.As<ICommonPart>().Container = blog;
                 post.As<IsRoutable>().Slug = Slugify(postName);
                 post.As<IsRoutable>().Title = postName;
-                post.As<BodyAspect>().Text = item.Element("description").Value;
+                post.As<BodyPart>().Text = item.Element("description").Value;
                 _contentManager.Create(post);
             }
 

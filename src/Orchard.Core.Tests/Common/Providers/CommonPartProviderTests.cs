@@ -25,7 +25,7 @@ using System.Web.Mvc;
 
 namespace Orchard.Core.Tests.Common.Providers {
     [TestFixture]
-    public class CommonAspectProviderTests : DatabaseEnabledTestsBase {
+    public class CommonPartProviderTests : DatabaseEnabledTestsBase {
         private Mock<IAuthenticationService> _authn;
         private Mock<IAuthorizationService> _authz;
         private Mock<IMembershipService> _membership;
@@ -35,7 +35,7 @@ namespace Orchard.Core.Tests.Common.Providers {
             builder.RegisterType<DefaultContentManager>().As<IContentManager>();
             builder.RegisterType<DefaultContentManagerSession>().As<IContentManagerSession>();
             builder.RegisterType<TestHandler>().As<IContentHandler>();
-            builder.RegisterType<CommonAspectHandler>().As<IContentHandler>();
+            builder.RegisterType<CommonPartHandler>().As<IContentHandler>();
             builder.RegisterType<CommonService>().As<ICommonService>();
             builder.RegisterType<PublishingTaskManager>().As<IPublishingTaskManager>();
             builder.RegisterType<ScheduledTaskManager>().As<IScheduledTaskManager>();
@@ -57,8 +57,8 @@ namespace Orchard.Core.Tests.Common.Providers {
                                  typeof(ContentTypeRecord), 
                                  typeof(ContentItemRecord), 
                                  typeof(ContentItemVersionRecord), 
-                                 typeof(CommonRecord),
-                                 typeof(CommonVersionRecord),
+                                 typeof(CommonPartRecord),
+                                 typeof(CommonPartVersionRecord),
                                  typeof(ScheduledTaskRecord),
                              };
             }
@@ -67,8 +67,8 @@ namespace Orchard.Core.Tests.Common.Providers {
         [UsedImplicitly]
         class TestHandler : ContentHandler {
             public TestHandler() {
-                Filters.Add(new ActivatingFilter<CommonAspect>("test-item"));
-                Filters.Add(new ActivatingFilter<ContentPart<CommonVersionRecord>>("test-item"));
+                Filters.Add(new ActivatingFilter<CommonPart>("test-item"));
+                Filters.Add(new ActivatingFilter<ContentPart<CommonPartVersionRecord>>("test-item"));
                 Filters.Add(new ActivatingFilter<TestUser>("User"));
             }
         }
@@ -82,7 +82,7 @@ namespace Orchard.Core.Tests.Common.Providers {
         [Test]
         public void OwnerShouldBeNullAndZeroByDefault() {
             var contentManager = _container.Resolve<IContentManager>();
-            var item = contentManager.Create<CommonAspect>("test-item", init => { });
+            var item = contentManager.Create<CommonPart>("test-item", init => { });
             ClearSession();
 
             Assert.That(item.Owner, Is.Null);
@@ -99,7 +99,7 @@ namespace Orchard.Core.Tests.Common.Providers {
             _authn.Setup(x => x.GetAuthenticatedUser()).Returns(user);
 
             var createUtc = _clock.UtcNow;
-            var item = contentManager.Create<ICommonAspect>("test-item", VersionOptions.Draft, init => { });
+            var item = contentManager.Create<ICommonPart>("test-item", VersionOptions.Draft, init => { });
             var viewModel = new OwnerEditorViewModel() { Owner = "User" };
             updateModel.Setup(x => x.TryUpdateModel(viewModel, "", null, null)).Returns(true);
             contentManager.UpdateEditorModel(item.ContentItem, updateModel.Object);
@@ -131,7 +131,7 @@ namespace Orchard.Core.Tests.Common.Providers {
         {
             var contentManager = _container.Resolve<IContentManager>();
 
-            var item = contentManager.Create<ICommonAspect>("test-item", VersionOptions.Draft, init => { });
+            var item = contentManager.Create<ICommonPart>("test-item", VersionOptions.Draft, init => { });
 
             var user = contentManager.New<IUser>("User");
             _authn.Setup(x => x.GetAuthenticatedUser()).Returns(user);
@@ -149,7 +149,7 @@ namespace Orchard.Core.Tests.Common.Providers {
         {
             var contentManager = _container.Resolve<IContentManager>();
 
-            var item = contentManager.Create<ICommonAspect>("test-item", VersionOptions.Draft, init => { });
+            var item = contentManager.Create<ICommonPart>("test-item", VersionOptions.Draft, init => { });
             
             var user = contentManager.New<IUser>("User");
             _authn.Setup(x => x.GetAuthenticatedUser()).Returns(user);
@@ -161,7 +161,7 @@ namespace Orchard.Core.Tests.Common.Providers {
 
             contentManager.UpdateEditorModel(item.ContentItem, updater);
 
-            Assert.That(updater.ModelErrors.ContainsKey("CommonAspect.Owner"), Is.True);
+            Assert.That(updater.ModelErrors.ContainsKey("CommonPart.Owner"), Is.True);
         }
 
         [Test]
@@ -170,7 +170,7 @@ namespace Orchard.Core.Tests.Common.Providers {
             var contentManager = _container.Resolve<IContentManager>();
 
             var createUtc = _clock.UtcNow;
-            var item = contentManager.Create<ICommonAspect>("test-item", VersionOptions.Draft, init => { });
+            var item = contentManager.Create<ICommonPart>("test-item", VersionOptions.Draft, init => { });
 
             Assert.That(item.CreatedUtc, Is.EqualTo(createUtc));
             Assert.That(item.PublishedUtc, Is.Null);
@@ -190,7 +190,7 @@ namespace Orchard.Core.Tests.Common.Providers {
             var contentManager = _container.Resolve<IContentManager>();
 
             var createUtc = _clock.UtcNow;
-            var item1 = contentManager.Create<ICommonAspect>("test-item", VersionOptions.Draft, init => { });
+            var item1 = contentManager.Create<ICommonPart>("test-item", VersionOptions.Draft, init => { });
 
             Assert.That(item1.CreatedUtc, Is.EqualTo(createUtc));
             Assert.That(item1.PublishedUtc, Is.Null);
@@ -204,7 +204,7 @@ namespace Orchard.Core.Tests.Common.Providers {
 
             _clock.Advance(TimeSpan.FromMinutes(1));
             var draftUtc = _clock.UtcNow;
-            var item2 = contentManager.GetDraftRequired<ICommonAspect>(item1.ContentItem.Id);
+            var item2 = contentManager.GetDraftRequired<ICommonPart>(item1.ContentItem.Id);
 
             _clock.Advance(TimeSpan.FromMinutes(1));
             var publish2Utc = _clock.UtcNow;
@@ -232,7 +232,7 @@ namespace Orchard.Core.Tests.Common.Providers {
             var contentManager = _container.Resolve<IContentManager>();
 
             var createUtc = _clock.UtcNow;
-            var item = contentManager.Create<ICommonAspect>("test-item", VersionOptions.Draft, init => { });
+            var item = contentManager.Create<ICommonPart>("test-item", VersionOptions.Draft, init => { });
 
             Assert.That(item.CreatedUtc, Is.EqualTo(createUtc));
             Assert.That(item.PublishedUtc, Is.Null);
@@ -252,9 +252,9 @@ namespace Orchard.Core.Tests.Common.Providers {
             _session.Flush();
             _session.Clear();
 
-            var publishedItem = contentManager.Get<ICommonAspect>(item.ContentItem.Id, VersionOptions.Published);
-            var latestItem = contentManager.Get<ICommonAspect>(item.ContentItem.Id, VersionOptions.Latest);
-            var draftItem = contentManager.Get<ICommonAspect>(item.ContentItem.Id, VersionOptions.Draft);
+            var publishedItem = contentManager.Get<ICommonPart>(item.ContentItem.Id, VersionOptions.Published);
+            var latestItem = contentManager.Get<ICommonPart>(item.ContentItem.Id, VersionOptions.Latest);
+            var draftItem = contentManager.Get<ICommonPart>(item.ContentItem.Id, VersionOptions.Draft);
             var allVersions = contentManager.GetAllVersions(item.ContentItem.Id);
 
             Assert.That(publishedItem, Is.Null);

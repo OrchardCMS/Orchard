@@ -64,19 +64,19 @@ namespace Orchard.Core.Contents.Controllers {
             }
 
             if (model.ContainerId != null)
-                query = query.Join<CommonRecord>().Where(cr => cr.Container.Id == model.ContainerId);
+                query = query.Join<CommonPartRecord>().Where(cr => cr.Container.Id == model.ContainerId);
 
             // Ordering
             //-- want something like 
             //switch (model.Options.OrderBy) {
             //    case ContentsOrder.Modified:
-            //        query = query.OrderByDescending<CommonRecord, DateTime?>(cr => cr.ModifiedUtc);
+            //        query = query.OrderByDescending<CommonPartRecord, DateTime?>(cr => cr.ModifiedUtc);
             //        break;
             //    case ContentsOrder.Published:
-            //        query = query.OrderByDescending<CommonRecord, DateTime?>(cr => cr.PublishedUtc);
+            //        query = query.OrderByDescending<CommonPartRecord, DateTime?>(cr => cr.PublishedUtc);
             //        break;
             //    case ContentsOrder.Created:
-            //        query = query.OrderByDescending<CommonRecord, DateTime?>(cr => cr.CreatedUtc);
+            //        query = query.OrderByDescending<CommonPartRecord, DateTime?>(cr => cr.CreatedUtc);
             //        break;
             //}
 

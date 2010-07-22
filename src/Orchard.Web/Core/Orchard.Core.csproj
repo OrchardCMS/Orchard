@@ -62,8 +62,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Common\DataMigrations\CommonDataMigration.cs" />
-    <Compile Include="Common\Drivers\BodyDriver.cs" />
-    <Compile Include="Common\Drivers\CommonDriver.cs" />
+    <Compile Include="Common\Drivers\BodyPartDriver.cs" />
+    <Compile Include="Common\Drivers\CommonPartDriver.cs" />
     <Compile Include="Common\Drivers\TextFieldDriver.cs" />
     <Compile Include="Common\Extensions\HtmlHelperExtensions.cs" />
     <Compile Include="Common\Fields\TextField.cs" />
@@ -116,14 +116,14 @@
     <Compile Include="Routable\IRoutablePathConstraint.cs" />
     <Compile Include="Routable\Models\IsRoutable.cs" />
     <Compile Include="Common\Permissions.cs" />
-    <Compile Include="Common\Models\CommonVersionRecord.cs" />
+    <Compile Include="Common\Models\CommonPartVersionRecord.cs" />
     <Compile Include="Common\Utilities\LazyField.cs" />
-    <Compile Include="Common\Handlers\CommonAspectHandler.cs" />
-    <Compile Include="Common\Models\CommonAspect.cs" />
-    <Compile Include="Common\Handlers\BodyAspectHandler.cs" />
-    <Compile Include="Common\Models\BodyAspect.cs" />
-    <Compile Include="Common\Models\BodyRecord.cs" />
-    <Compile Include="Common\Models\CommonRecord.cs" />
+    <Compile Include="Common\Handlers\CommonPartHandler.cs" />
+    <Compile Include="Common\Models\CommonPart.cs" />
+    <Compile Include="Common\Handlers\BodyPartHandler.cs" />
+    <Compile Include="Common\Models\BodyPart.cs" />
+    <Compile Include="Common\Models\BodyPartRecord.cs" />
+    <Compile Include="Common\Models\CommonPartRecord.cs" />
     <Compile Include="Common\ViewModels\BodyDisplayViewModel.cs" />
     <Compile Include="Common\ViewModels\BodyEditorViewModel.cs" />
     <Compile Include="Common\ViewModels\OwnerEditorViewModel.cs" />

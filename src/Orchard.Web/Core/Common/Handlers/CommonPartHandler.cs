@@ -9,14 +9,14 @@ using Orchard.Services;
 
 namespace Orchard.Core.Common.Handlers {
     [UsedImplicitly]
-    public class CommonAspectHandler : ContentHandler {
+    public class CommonPartHandler : ContentHandler {
         private readonly IClock _clock;
         private readonly IAuthenticationService _authenticationService;
         private readonly IContentManager _contentManager;
 
-        public CommonAspectHandler(
-            IRepository<CommonRecord> commonRepository,
-            IRepository<CommonVersionRecord> commonVersionRepository,
+        public CommonPartHandler(
+            IRepository<CommonPartRecord> commonRepository,
+            IRepository<CommonPartVersionRecord> commonVersionRepository,
             IClock clock,
             IAuthenticationService authenticationService,
             IContentManager contentManager) {
@@ -29,56 +29,56 @@ namespace Orchard.Core.Common.Handlers {
             Filters.Add(StorageFilter.For(commonRepository));
             Filters.Add(StorageFilter.For(commonVersionRepository));
 
-            OnInitializing<CommonAspect>(PropertySetHandlers);
-            OnInitializing<CommonAspect>(AssignCreatingOwner);
-            OnInitializing<ContentPart<CommonRecord>>(AssignCreatingDates);
-            OnInitializing<ContentPart<CommonVersionRecord>>(AssignCreatingDates);
+            OnInitializing<CommonPart>(PropertySetHandlers);
+            OnInitializing<CommonPart>(AssignCreatingOwner);
+            OnInitializing<ContentPart<CommonPartRecord>>(AssignCreatingDates);
+            OnInitializing<ContentPart<CommonPartVersionRecord>>(AssignCreatingDates);
 
-            OnLoaded<CommonAspect>(LazyLoadHandlers);
+            OnLoaded<CommonPart>(LazyLoadHandlers);
 
-            OnVersioning<CommonAspect>(CopyOwnerAndContainer);
+            OnVersioning<CommonPart>(CopyOwnerAndContainer);
 
-            OnVersioned<ContentPart<CommonVersionRecord>>(AssignVersioningDates);
+            OnVersioned<ContentPart<CommonPartVersionRecord>>(AssignVersioningDates);
 
-            OnPublishing<ContentPart<CommonRecord>>(AssignPublishingDates);
-            OnPublishing<ContentPart<CommonVersionRecord>>(AssignPublishingDates);
+            OnPublishing<ContentPart<CommonPartRecord>>(AssignPublishingDates);
+            OnPublishing<ContentPart<CommonPartVersionRecord>>(AssignPublishingDates);
 
-            //OnGetDisplayViewModel<CommonAspect>();
-            //OnGetEditorViewModel<CommonAspect>(GetEditor);
-            //OnUpdateEditorViewModel<CommonAspect>(UpdateEditor);
+            //OnGetDisplayViewModel<CommonPart>();
+            //OnGetEditorViewModel<CommonPart>(GetEditor);
+            //OnUpdateEditorViewModel<CommonPart>(UpdateEditor);
 
-            OnIndexing<CommonAspect>((context, commonAspect) => context.DocumentIndex
-                                                    .Add("type", commonAspect.ContentItem.ContentType).Store()
-                                                    .Add("author", commonAspect.Owner.UserName).Store()
-                                                    .Add("created", commonAspect.CreatedUtc ?? _clock.UtcNow).Store()
-                                                    .Add("published", commonAspect.PublishedUtc ?? _clock.UtcNow).Store()
-                                                    .Add("modified", commonAspect.ModifiedUtc ?? _clock.UtcNow).Store()
+            OnIndexing<CommonPart>((context, commonPart) => context.DocumentIndex
+                                                    .Add("type", commonPart.ContentItem.ContentType).Store()
+                                                    .Add("author", commonPart.Owner.UserName).Store()
+                                                    .Add("created", commonPart.CreatedUtc ?? _clock.UtcNow).Store()
+                                                    .Add("published", commonPart.PublishedUtc ?? _clock.UtcNow).Store()
+                                                    .Add("modified", commonPart.ModifiedUtc ?? _clock.UtcNow).Store()
                                                     );
         }
 
         public Localizer T { get; set; }
 
 
-        void AssignCreatingOwner(InitializingContentContext context, CommonAspect part) {
+        void AssignCreatingOwner(InitializingContentContext context, CommonPart part) {
             // and use the current user as Owner
             if (part.Record.OwnerId == 0) {
                 part.Owner = _authenticationService.GetAuthenticatedUser();
             }
         }
 
-        void AssignCreatingDates(InitializingContentContext context, ContentPart<CommonRecord> part) {
+        void AssignCreatingDates(InitializingContentContext context, ContentPart<CommonPartRecord> part) {
             // assign default create/modified dates
             part.Record.CreatedUtc = _clock.UtcNow;
             part.Record.ModifiedUtc = _clock.UtcNow;
         }
 
-        void AssignCreatingDates(InitializingContentContext context, ContentPart<CommonVersionRecord> part) {
+        void AssignCreatingDates(InitializingContentContext context, ContentPart<CommonPartVersionRecord> part) {
             // assign default create/modified dates
             part.Record.CreatedUtc = _clock.UtcNow;
             part.Record.ModifiedUtc = _clock.UtcNow;
         }
 
-        void AssignVersioningDates(VersionContentContext context, ContentPart<CommonVersionRecord> existing, ContentPart<CommonVersionRecord> building) {
+        void AssignVersioningDates(VersionContentContext context, ContentPart<CommonPartVersionRecord> existing, ContentPart<CommonPartVersionRecord> building) {
             // assign create/modified dates for the new version
             building.Record.CreatedUtc = _clock.UtcNow;
             building.Record.ModifiedUtc = _clock.UtcNow;
@@ -87,7 +87,7 @@ namespace Orchard.Core.Common.Handlers {
             building.Record.PublishedUtc = null;
         }
 
-        void AssignPublishingDates(PublishContentContext context, ContentPart<CommonRecord> part) {
+        void AssignPublishingDates(PublishContentContext context, ContentPart<CommonPartRecord> part) {
             // don't assign dates when unpublishing
             if (context.PublishingItemVersionRecord == null)
                 return;
@@ -96,7 +96,7 @@ namespace Orchard.Core.Common.Handlers {
             part.Record.PublishedUtc = _clock.UtcNow;
         }
 
-        void AssignPublishingDates(PublishContentContext context, ContentPart<CommonVersionRecord> part) {
+        void AssignPublishingDates(PublishContentContext context, ContentPart<CommonPartVersionRecord> part) {
             // don't assign dates when unpublishing
             if (context.PublishingItemVersionRecord == null)
                 return;
@@ -105,51 +105,51 @@ namespace Orchard.Core.Common.Handlers {
             part.Record.PublishedUtc = _clock.UtcNow;
         }
 
-        private static void CopyOwnerAndContainer(VersionContentContext c, CommonAspect c1, CommonAspect c2) {
+        private static void CopyOwnerAndContainer(VersionContentContext c, CommonPart c1, CommonPart c2) {
             c2.Owner = c1.Owner;
             c2.Container = c1.Container;
         }
 
-        void LazyLoadHandlers(LoadContentContext context, CommonAspect aspect) {
+        void LazyLoadHandlers(LoadContentContext context, CommonPart part) {
             // add handlers that will load content for id's just-in-time
-            aspect.OwnerField.Loader(() => _contentManager.Get<IUser>(aspect.Record.OwnerId));
-            aspect.ContainerField.Loader(() => aspect.Record.Container == null ? null : _contentManager.Get(aspect.Record.Container.Id));
+            part.OwnerField.Loader(() => _contentManager.Get<IUser>(part.Record.OwnerId));
+            part.ContainerField.Loader(() => part.Record.Container == null ? null : _contentManager.Get(part.Record.Container.Id));
         }
 
-        static void PropertySetHandlers(InitializingContentContext context, CommonAspect aspect) {
-            // add handlers that will update records when aspect properties are set
+        static void PropertySetHandlers(InitializingContentContext context, CommonPart part) {
+            // add handlers that will update records when part properties are set
 
-            aspect.OwnerField.Setter(user => {
+            part.OwnerField.Setter(user => {
                                          if (user == null) {
-                                             aspect.Record.OwnerId = 0;
+                                             part.Record.OwnerId = 0;
                                          }
                                          else {
-                                             aspect.Record.OwnerId = user.ContentItem.Id;
+                                             part.Record.OwnerId = user.ContentItem.Id;
                                          }
                                          return user;
                                      });
 
             // Force call to setter if we had already set a value
-            if (aspect.OwnerField.Value != null)
-                aspect.OwnerField.Value = aspect.OwnerField.Value;
+            if (part.OwnerField.Value != null)
+                part.OwnerField.Value = part.OwnerField.Value;
 
-            aspect.ContainerField.Setter(container => {
+            part.ContainerField.Setter(container => {
                                              if (container == null) {
-                                                 aspect.Record.Container = null;
+                                                 part.Record.Container = null;
                                              }
                                              else {
-                                                 aspect.Record.Container = container.ContentItem.Record;
+                                                 part.Record.Container = container.ContentItem.Record;
                                              }
                                              return container;
                                          });
 
             // Force call to setter if we had already set a value
-            if (aspect.ContainerField.Value != null)
-                aspect.ContainerField.Value = aspect.ContainerField.Value;
+            if (part.ContainerField.Value != null)
+                part.ContainerField.Value = part.ContainerField.Value;
         }
 
 
-        //private void GetEditor(BuildEditorModelContext context, CommonAspect instance) {
+        //private void GetEditor(BuildEditorModelContext context, CommonPart instance) {
         //    var currentUser = _authenticationService.GetAuthenticatedUser();
         //    if (!_authorizationService.TryCheckAccess(Permissions.ChangeOwner, currentUser, instance)) {
         //        return;
@@ -158,11 +158,11 @@ namespace Orchard.Core.Common.Handlers {
         //    if (instance.Owner != null)
         //        viewModel.Owner = instance.Owner.UserName;
 
-        //    context.AddEditor(new TemplateViewModel(viewModel, "CommonAspect") { TemplateName = "Parts/Common.Owner", ZoneName = "primary", Position = "999" });
+        //    context.AddEditor(new TemplateViewModel(viewModel, "CommonPart") { TemplateName = "Parts/Common.Owner", ZoneName = "primary", Position = "999" });
         //}
 
 
-        //private void UpdateEditor(UpdateEditorModelContext context, CommonAspect instance) {
+        //private void UpdateEditor(UpdateEditorModelContext context, CommonPart instance) {
         //    // this event is hooked so the modified timestamp is changed when an edit-post occurs.
         //    // kind of a loose rule of thumb. may not be sufficient
         //    instance.ModifiedUtc = _clock.UtcNow;
@@ -178,19 +178,19 @@ namespace Orchard.Core.Common.Handlers {
         //        viewModel.Owner = instance.Owner.UserName;
 
         //    var priorOwner = viewModel.Owner;
-        //    context.Updater.TryUpdateModel(viewModel, "CommonAspect", null, null);
+        //    context.Updater.TryUpdateModel(viewModel, "CommonPart", null, null);
 
         //    if (viewModel.Owner != null && viewModel.Owner != priorOwner) {
         //        var newOwner = _membershipService.GetUser(viewModel.Owner);
         //        if (newOwner == null) {
-        //            context.Updater.AddModelError("CommonAspect.Owner", T("Invalid user name"));
+        //            context.Updater.AddModelError("CommonPart.Owner", T("Invalid user name"));
         //        }
         //        else {
         //            instance.Owner = newOwner;
         //        }
         //    }
 
-        //    context.AddEditor(new TemplateViewModel(viewModel, "CommonAspect") { TemplateName = "Parts/Common.Owner", ZoneName = "primary", Position = "999" });
+        //    context.AddEditor(new TemplateViewModel(viewModel, "CommonPart") { TemplateName = "Parts/Common.Owner", ZoneName = "primary", Position = "999" });
         //}
     }
 }

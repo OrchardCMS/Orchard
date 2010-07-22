@@ -35,7 +35,7 @@ namespace Futures.Widgets.Controllers {
                 init.Record.Scope = hasWidgetsRecord;
                 init.Record.Zone = zoneName;
                 init.Record.Position = "1";
-                init.As<BodyAspect>().Text = System.IO.File.ReadAllText(physicalPath);
+                init.As<BodyPart>().Text = System.IO.File.ReadAllText(physicalPath);
             });
 
             return RedirectToAction("Edit", new { widget.ContentItem.Id, returnUrl });

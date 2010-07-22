@@ -11,12 +11,12 @@ using Orchard.Data;
 namespace Orchard.Blogs.Handlers {
     [UsedImplicitly]
     public class BlogArchiveHandler : ContentHandler {
-        public BlogArchiveHandler(IRepository<BlogPartArchiveRecord> blogArchiveRepository, IRepository<CommonRecord> commonRepository) {
+        public BlogArchiveHandler(IRepository<BlogPartArchiveRecord> blogArchiveRepository, IRepository<CommonPartRecord> commonRepository) {
             OnPublished<BlogPostPart>((context, bp) => RecalculateBlogArchive(blogArchiveRepository, commonRepository, bp));
             OnRemoved<BlogPostPart>((context, bp) => RecalculateBlogArchive(blogArchiveRepository, commonRepository, bp));
         }
 
-        private static void RecalculateBlogArchive(IRepository<BlogPartArchiveRecord> blogArchiveRepository, IRepository<CommonRecord> commonRepository, BlogPostPart blogPostPart) {
+        private static void RecalculateBlogArchive(IRepository<BlogPartArchiveRecord> blogArchiveRepository, IRepository<CommonPartRecord> commonRepository, BlogPostPart blogPostPart) {
             blogArchiveRepository.Flush();
 
             //INFO: (erikpo) Remove all current blog archive records

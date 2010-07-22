@@ -32,17 +32,17 @@ namespace Orchard.Blogs.DataMigrations {
             ContentDefinitionManager.AlterTypeDefinition("Blog",
                 cfg => cfg
                     .WithPart("BlogPart")
-                    .WithPart("CommonAspect")
+                    .WithPart("CommonPart")
                     .WithPart("IsRoutable")
                 );
 
             ContentDefinitionManager.AlterTypeDefinition("BlogPost", 
                 cfg => cfg
                     .WithPart("BlogPostPart")
-                    .WithPart("CommonAspect")
+                    .WithPart("CommonPart")
                     .WithPart("PublishLaterPart")
                     .WithPart("IsRoutable")
-                    .WithPart("BodyAspect")
+                    .WithPart("BodyPart")
                 );
 
             return 2;

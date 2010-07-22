@@ -8,15 +8,15 @@ using Orchard.Security;
 using Orchard.Services;
 
 namespace Orchard.Core.Common.Drivers {
-    public class CommonDriver : ContentPartDriver<CommonAspect> {
-        private const string TemplatePrefix = "CommonAspect";
+    public class CommonPartDriver : ContentPartDriver<CommonPart> {
+        private const string TemplatePrefix = "CommonPart";
         private readonly IContentManager _contentManager;
         private readonly IAuthenticationService _authenticationService;
         private readonly IAuthorizationService _authorizationService;
         private readonly IMembershipService _membershipService;
         private readonly IClock _clock;
 
-        public CommonDriver(
+        public CommonPartDriver(
             IOrchardServices services,
             IContentManager contentManager,
             IAuthenticationService authenticationService,
@@ -35,19 +35,19 @@ namespace Orchard.Core.Common.Drivers {
         public Localizer T { get; set; }
         public IOrchardServices Services { get; set; }
 
-        protected override DriverResult Display(CommonAspect part, string displayType) {
+        protected override DriverResult Display(CommonPart part, string displayType) {
             return ContentPartTemplate(new CommonMetadataViewModel(part), "Parts/Common.Metadata")
                 .LongestMatch(displayType, "Summary", "SummaryAdmin")
                 .Location(part.GetLocation(displayType));
         }
 
-        protected override DriverResult Editor(CommonAspect part) {
+        protected override DriverResult Editor(CommonPart part) {
             return Combined(
                 OwnerEditor(part, null),
                 ContainerEditor(part, null));
         }
 
-        protected override DriverResult Editor(CommonAspect instance, ContentManagement.IUpdateModel updater) {
+        protected override DriverResult Editor(CommonPart instance, ContentManagement.IUpdateModel updater) {
             // this event is hooked so the modified timestamp is changed when an edit-post occurs.            
             instance.ModifiedUtc = _clock.UtcNow;
             instance.VersionModifiedUtc = _clock.UtcNow;
@@ -57,7 +57,7 @@ namespace Orchard.Core.Common.Drivers {
                 ContainerEditor(instance, updater));
         }
 
-        DriverResult OwnerEditor(CommonAspect part, IUpdateModel updater) {
+        DriverResult OwnerEditor(CommonPart part, IUpdateModel updater) {
             var currentUser = _authenticationService.GetAuthenticatedUser();
             if (!_authorizationService.TryCheckAccess(Permissions.ChangeOwner, currentUser, part)) {
                 return null;
@@ -74,7 +74,7 @@ namespace Orchard.Core.Common.Drivers {
                 if (model.Owner != null && model.Owner != priorOwner) {
                     var newOwner = _membershipService.GetUser(model.Owner);
                     if (newOwner == null) {
-                        updater.AddModelError("CommonAspect.Owner", T("Invalid user name"));
+                        updater.AddModelError("CommonPart.Owner", T("Invalid user name"));
                     }
                     else {
                         part.Owner = newOwner;
@@ -85,7 +85,7 @@ namespace Orchard.Core.Common.Drivers {
             return ContentPartTemplate(model, "Parts/Common.Owner", TemplatePrefix).Location(part.GetLocation("Editor"));
         }
 
-        DriverResult ContainerEditor(CommonAspect part, IUpdateModel updater) {
+        DriverResult ContainerEditor(CommonPart part, IUpdateModel updater) {
             var currentUser = _authenticationService.GetAuthenticatedUser();
             if (!_authorizationService.TryCheckAccess(Permissions.ChangeOwner, currentUser, part)) {
                 return null;
@@ -102,7 +102,7 @@ namespace Orchard.Core.Common.Drivers {
                 if (model.ContainerId != null && model.ContainerId != priorContainerId) {
                     var newContainer = _contentManager.Get((int)model.ContainerId, VersionOptions.Latest);
                     if (newContainer == null) {
-                        updater.AddModelError("CommonAspect.ContainerId", T("Invalid container"));
+                        updater.AddModelError("CommonPart.ContainerId", T("Invalid container"));
                     }
                     else {
                         part.Container = newContainer;

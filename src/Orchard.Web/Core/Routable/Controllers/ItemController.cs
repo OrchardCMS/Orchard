@@ -67,7 +67,7 @@ namespace Orchard.Core.Routable.Controllers {
 
                 if (containerId != null) {
                     var containerItem = _contentManager.Get((int)containerId);
-                    contentItem.As<ICommonAspect>().Container = containerItem;
+                    contentItem.As<ICommonPart>().Container = containerItem;
                 }
             }
 

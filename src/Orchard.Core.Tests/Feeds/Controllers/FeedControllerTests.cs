@@ -148,18 +148,18 @@ namespace Orchard.Core.Tests.Feeds.Controllers {
         public void CorePartValuesAreExtracted() {
             var clock = new StubClock();
             var hello = new ContentItemBuilder(new ContentTypeDefinitionBuilder().Named("hello").Build())
-                .Weld<CommonAspect>()
+                .Weld<CommonPart>()
                 .Weld<IsRoutable>()
-                .Weld<BodyAspect>()
+                .Weld<BodyPart>()
                 .Build();
-            hello.As<CommonAspect>().Record = new CommonRecord();
+            hello.As<CommonPart>().Record = new CommonPartRecord();
             hello.As<IsRoutable>().Record = new RoutableRecord();
-            hello.As<BodyAspect>().Record = new BodyRecord();
+            hello.As<BodyPart>().Record = new BodyPartRecord();
 
-            hello.As<CommonAspect>().PublishedUtc = clock.UtcNow;
+            hello.As<CommonPart>().PublishedUtc = clock.UtcNow;
             hello.As<IsRoutable>().Title = "alpha";
             hello.As<IsRoutable>().Slug = "beta";
-            hello.As<BodyAspect>().Text = "gamma";
+            hello.As<BodyPart>().Text = "gamma";
 
             var query = new StubQuery(new[] {
                 hello,

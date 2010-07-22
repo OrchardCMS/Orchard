@@ -53,7 +53,7 @@ namespace Orchard.Comments.DataMigrations {
             ContentDefinitionManager.AlterTypeDefinition("Comment",
                cfg => cfg
                    .WithPart("Comment")
-                   .WithPart("CommonAspect")
+                   .WithPart("CommonPart")
                 );
 
             ContentDefinitionManager.AlterTypeDefinition("Blog",

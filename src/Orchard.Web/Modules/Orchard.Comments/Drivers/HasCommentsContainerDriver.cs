@@ -24,7 +24,7 @@ namespace Orchard.Comments.Drivers {
         private static CommentCountViewModel CreateViewModel(ContentItem contentItem) {
             // Find all contents item with this part as the container
             var parts = contentItem.ContentManager.Query()
-                .Where<CommonRecord>(rec => rec.Container == contentItem.Record).List();
+                .Where<CommonPartRecord>(rec => rec.Container == contentItem.Record).List();
 
             // Count comments and create template
             int count = parts.Aggregate(0, (seed, item) => seed + (item.Has<HasComments>() ? item.As<HasComments>().Comments.Count : 0));

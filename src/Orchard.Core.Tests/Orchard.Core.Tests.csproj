@@ -100,7 +100,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Common\Providers\CommonAspectProviderTests.cs" />
+    <Compile Include="Common\Providers\CommonPartProviderTests.cs" />
     <Compile Include="Common\Services\RoutableServiceTests.cs" />
     <Compile Include="Feeds\Controllers\FeedControllerTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

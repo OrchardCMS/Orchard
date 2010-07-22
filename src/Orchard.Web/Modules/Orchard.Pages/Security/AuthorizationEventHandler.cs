@@ -26,7 +26,7 @@ namespace Orchard.Pages.Security {
             if (user==null || content==null)
                 return false;
             
-            var common = content.As<ICommonAspect>();
+            var common = content.As<ICommonPart>();
             if (common==null || common.Owner==null)
                 return false;
 

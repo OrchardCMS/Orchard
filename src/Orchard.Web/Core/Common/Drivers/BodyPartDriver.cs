@@ -11,13 +11,13 @@ using Orchard.Core.Routable.Models;
 
 namespace Orchard.Core.Common.Drivers {
     [UsedImplicitly]
-    public class BodyDriver : ContentPartDriver<BodyAspect> {
+    public class BodyPartDriver : ContentPartDriver<BodyPart> {
         public IOrchardServices Services { get; set; }
         private const string TemplateName = "Parts/Common.Body";
         private const string DefaultTextEditorTemplate = "TinyMceTextEditor";
         private const string PlainTextEditorTemplate = "PlainTextEditor";
 
-        public BodyDriver(IOrchardServices services) {
+        public BodyPartDriver(IOrchardServices services) {
             Services = services;
         }
 
@@ -26,8 +26,8 @@ namespace Orchard.Core.Common.Drivers {
         }
 
         // \/\/ Hackalicious on many accounts - don't copy what has been done here for the wrapper \/\/
-        protected override DriverResult Display(BodyAspect part, string displayType) {
-            var model = new BodyDisplayViewModel { BodyAspect = part, Text = BbcodeReplace(part.Text) };
+        protected override DriverResult Display(BodyPart part, string displayType) {
+            var model = new BodyDisplayViewModel { BodyPart = part, Text = BbcodeReplace(part.Text) };
             var location = part.GetLocation(displayType);
 
             return Combined(
@@ -37,13 +37,13 @@ namespace Orchard.Core.Common.Drivers {
                 Services.Authorizer.Authorize(Permissions.ChangeOwner) ? ContentPartTemplate(model, "Parts/Common.Body.ManageWrapperPost").LongestMatch(displayType, "SummaryAdmin").Location(location) : null);
         }
         
-        protected override DriverResult Editor(BodyAspect part) {
+        protected override DriverResult Editor(BodyPart part) {
             var model = BuildEditorViewModel(part);
             var location = part.GetLocation("Editor");
             return ContentPartTemplate(model, TemplateName, Prefix).Location(location);
         }
 
-        protected override DriverResult Editor(BodyAspect part, IUpdateModel updater) {
+        protected override DriverResult Editor(BodyPart part, IUpdateModel updater) {
             var model = BuildEditorViewModel(part);
             updater.TryUpdateModel(model, Prefix, null, null);
 
@@ -55,15 +55,15 @@ namespace Orchard.Core.Common.Drivers {
             return ContentPartTemplate(model, TemplateName, Prefix).Location(location);
         }
 
-        private static BodyEditorViewModel BuildEditorViewModel(BodyAspect part) {
+        private static BodyEditorViewModel BuildEditorViewModel(BodyPart part) {
             return new BodyEditorViewModel {
-                BodyAspect = part,
+                BodyPart = part,
                 TextEditorTemplate = GetFlavor(part) == "html" ? DefaultTextEditorTemplate : PlainTextEditorTemplate,
                 AddMediaPath= new PathBuilder(part).AddContentType().AddContainerSlug().AddSlug().ToString()
             };
         }
 
-        private static string GetFlavor(BodyAspect part) {
+        private static string GetFlavor(BodyPart part) {
             var typePartSettings = part.Settings.GetModel<BodyTypePartSettings>();
             return (typePartSettings != null && !string.IsNullOrWhiteSpace(typePartSettings.Flavor))
                        ? typePartSettings.Flavor
@@ -89,7 +89,7 @@ namespace Orchard.Core.Common.Drivers {
             }
 
             public PathBuilder AddContainerSlug() {
-                var common = _content.As<ICommonAspect>();
+                var common = _content.As<ICommonPart>();
                 if (common == null)
                     return this;
 

@@ -9,9 +9,9 @@ namespace Orchard.Pages.DataMigrations {
             ContentDefinitionManager.AlterTypeDefinition("Page",
               cfg => cfg
                   .WithPart("Page")
-                  .WithPart("CommonAspect")
+                  .WithPart("CommonPart")
                   .WithPart("IsRoutable")
-                  .WithPart("BodyAspect")
+                  .WithPart("BodyPart")
                );
             
             return 1;
