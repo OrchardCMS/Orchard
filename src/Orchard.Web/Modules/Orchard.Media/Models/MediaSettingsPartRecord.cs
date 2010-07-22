@@ -1,7 +1,7 @@
 using Orchard.ContentManagement.Records;
 
 namespace Orchard.Media.Models {
-    public class MediaSettingsRecord : ContentPartRecord {
+    public class MediaSettingsPartRecord : ContentPartRecord {
         public virtual string RootMediaFolder { get; set; }
     }
 }

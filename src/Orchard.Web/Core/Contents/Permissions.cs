@@ -19,7 +19,7 @@ namespace Orchard.Core.Contents {
         }
 
         public IEnumerable<Permission> GetPermissions() {
-            return new Permission[] {
+            return new [] {
                 EditContent,
                 EditOthersContent,
                 PublishContent,

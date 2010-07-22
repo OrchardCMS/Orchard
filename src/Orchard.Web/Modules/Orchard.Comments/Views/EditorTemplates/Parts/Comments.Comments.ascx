@@ -1,4 +1,4 @@
-﻿<%@ Control Language="C#" Inherits="Orchard.Mvc.ViewUserControl<HasComments>" %>
+﻿<%@ Control Language="C#" Inherits="Orchard.Mvc.ViewUserControl<CommentsPart>" %>
 <%@ Import Namespace="Orchard.Comments.Extensions"%>
 <%@ Import Namespace="Orchard.Localization" %>
 <%@ Import Namespace="Orchard.Comments.Models" %>

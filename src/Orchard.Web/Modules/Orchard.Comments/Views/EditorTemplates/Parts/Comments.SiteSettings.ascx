@@ -1,4 +1,4 @@
-<%@ Control Language="C#" Inherits="Orchard.Mvc.ViewUserControl<CommentSettingsRecord>" %>
+<%@ Control Language="C#" Inherits="Orchard.Mvc.ViewUserControl<CommentSettingsPartRecord>" %>
 <%@ Import Namespace="Orchard.Comments.Models"%>
 <fieldset>
     <legend><%: T("Comments")%></legend>

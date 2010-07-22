@@ -4,13 +4,13 @@ using Orchard.ContentManagement;
 
 namespace Orchard.Comments.Services {
     public interface ICommentService : IDependency {
-        IEnumerable<Comment> GetComments();
-        IEnumerable<Comment> GetComments(CommentStatus status);
-        IEnumerable<Comment> GetCommentsForCommentedContent(int id);
-        IEnumerable<Comment> GetCommentsForCommentedContent(int id, CommentStatus status);
-        Comment GetComment(int id);
+        IEnumerable<CommentPart> GetComments();
+        IEnumerable<CommentPart> GetComments(CommentStatus status);
+        IEnumerable<CommentPart> GetCommentsForCommentedContent(int id);
+        IEnumerable<CommentPart> GetCommentsForCommentedContent(int id, CommentStatus status);
+        CommentPart GetComment(int id);
         ContentItemMetadata GetDisplayForCommentedContent(int id);
-        Comment CreateComment(CreateCommentContext commentRecord, bool moderateComments);
+        CommentPart CreateComment(CreateCommentContext commentRecord, bool moderateComments);
         void UpdateComment(int id, string name, string email, string siteName, string commentText, CommentStatus status);
         void ApproveComment(int commentId);
         void PendComment(int commentId);

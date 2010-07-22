@@ -9,8 +9,8 @@ using Orchard.Core.ContentsLocation.Models;
 
 namespace Orchard.Comments.Drivers {
     [UsedImplicitly]
-    public class HasCommentsContainerDriver : ContentPartDriver<HasCommentsContainer> {
-        protected override DriverResult Display(HasCommentsContainer part, string displayType) {
+    public class CommentsContainerPartDriver : ContentPartDriver<CommentsContainerPart> {
+        protected override DriverResult Display(CommentsContainerPart part, string displayType) {
             if (displayType == "SummaryAdmin") {
                 return ContentPartTemplate(CreateViewModel(part.ContentItem), "Parts/Comments.CountAdmin").Location(part.GetLocation("SummaryAdmin"));
             }
@@ -27,8 +27,8 @@ namespace Orchard.Comments.Drivers {
                 .Where<CommonPartRecord>(rec => rec.Container == contentItem.Record).List();
 
             // Count comments and create template
-            int count = parts.Aggregate(0, (seed, item) => seed + (item.Has<HasComments>() ? item.As<HasComments>().Comments.Count : 0));
-            int pendingCount = parts.Aggregate(0, (seed, item) => seed + (item.Has<HasComments>() ? item.As<HasComments>().PendingComments.Count : 0));
+            int count = parts.Aggregate(0, (seed, item) => seed + (item.Has<CommentsPart>() ? item.As<CommentsPart>().Comments.Count : 0));
+            int pendingCount = parts.Aggregate(0, (seed, item) => seed + (item.Has<CommentsPart>() ? item.As<CommentsPart>().PendingComments.Count : 0));
 
             return new CommentCountViewModel { Item = contentItem, CommentCount = count, PendingCount = pendingCount};
         }

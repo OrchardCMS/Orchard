@@ -61,9 +61,9 @@ namespace Orchard.Comments.Controllers {
                                                            CommentedOn = viewModel.CommentedOn
                                                        };
 
-                Comment comment = _commentService.CreateComment(context, CurrentSite.As<CommentSettings>().Record.ModerateComments);
+                CommentPart commentPart = _commentService.CreateComment(context, CurrentSite.As<CommentSettingsPart>().Record.ModerateComments);
 
-                if (comment.Record.Status == CommentStatus.Pending)
+                if (commentPart.Record.Status == CommentStatus.Pending)
                     Services.Notifier.Information(T("Your comment will appear after the site administrator approves it."));
 
                 return !String.IsNullOrEmpty(returnUrl)

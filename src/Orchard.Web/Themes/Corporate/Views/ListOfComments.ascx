@@ -1,4 +1,4 @@
-﻿<%@ Control Language="C#" Inherits="Orchard.Mvc.ViewUserControl<IEnumerable<Comment>>" %>
+﻿<%@ Control Language="C#" Inherits="Orchard.Mvc.ViewUserControl<IEnumerable<CommentPart>>" %>
 <%@ Import Namespace="Orchard.Comments.Models"%>
 <ul class="comments"><%
 foreach (var comment in Model) { %>

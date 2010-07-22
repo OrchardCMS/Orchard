@@ -27,7 +27,7 @@ namespace Orchard.Roles.DataMigrations {
                 );
 
             //CREATE TABLE Orchard_Roles_UserRolesRecord (Id  integer, UserId INTEGER, Role_id INTEGER, primary key (Id));
-            SchemaBuilder.CreateTable("UserRolesRecord", table => table
+            SchemaBuilder.CreateTable("UserRolesPartRecord", table => table
                 .Column<int>("Id", column => column.PrimaryKey().Identity())
                 .Column<int>("UserId")
                 .Column<int>("Role_id")
