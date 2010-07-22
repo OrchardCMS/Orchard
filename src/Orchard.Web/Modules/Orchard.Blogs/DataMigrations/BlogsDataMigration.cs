@@ -1,4 +1,5 @@
-﻿using Orchard.Data.Migration;
+﻿using Orchard.ContentManagement.MetaData;
+using Orchard.Data.Migration;
 
 namespace Orchard.Blogs.DataMigrations {
     public class BlogsDataMigration : DataMigrationImpl {
@@ -21,6 +22,26 @@ namespace Orchard.Blogs.DataMigrations {
                 );
 
             return 1;
+        }
+
+        public int UpdateFrom1() {
+            ContentDefinitionManager.AlterTypeDefinition("Blog",
+                cfg => cfg
+                    .WithPart("Blog")
+                    .WithPart("CommonAspect")
+                    .WithPart("IsRoutable")
+                );
+
+            ContentDefinitionManager.AlterTypeDefinition("BlogPost", 
+                cfg => cfg
+                    .WithPart("BlogPost")
+                    .WithPart("CommonAspect")
+                    .WithPart("PublishLaterPart")
+                    .WithPart("IsRoutable")
+                    .WithPart("BodyAspect")
+                );
+
+            return 2;
         }
     }
 }

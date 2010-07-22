@@ -12,5 +12,11 @@ namespace Orchard.Media.DataMigrations {
 
             return 1;
         }
+
+        public int UpdateFrom1() {
+            // Filters.Add(new ActivatingFilter<MediaSettings>("Site"));
+
+            return 2;
+        }
     }
 }

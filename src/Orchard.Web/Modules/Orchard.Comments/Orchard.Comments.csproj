@@ -82,7 +82,6 @@
     <Compile Include="Handlers\CommentHandler.cs" />
     <Compile Include="Models\CommentStatus.cs" />
     <Compile Include="Models\HasCommentsContainer.cs" />
-    <Compile Include="Handlers\HasCommentsContainerHandler.cs" />
     <Compile Include="Feeds\CommentedOnContainerFeedQuery.cs" />
     <Compile Include="Feeds\CommentedOnFeedQuery.cs" />
     <Compile Include="Feeds\CommentFeedItemBuilder.cs" />

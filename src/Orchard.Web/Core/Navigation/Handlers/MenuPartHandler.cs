@@ -8,9 +8,6 @@ namespace Orchard.Core.Navigation.Handlers {
     [UsedImplicitly]
     public class MenuPartHandler : ContentHandler {
         public MenuPartHandler(IRepository<MenuPartRecord> menuPartRepository) {
-            Filters.Add(new ActivatingFilter<MenuPart>("Blog"));
-            Filters.Add(new ActivatingFilter<MenuPart>("Page"));
-            Filters.Add(new ActivatingFilter<MenuPart>("MenuItem"));
             Filters.Add(StorageFilter.For(menuPartRepository));
 
             OnInitializing<MenuPart>((ctx, x) => {

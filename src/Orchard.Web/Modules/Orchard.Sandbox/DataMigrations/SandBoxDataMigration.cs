@@ -1,4 +1,5 @@
-﻿using Orchard.Data.Migration;
+﻿using Orchard.ContentManagement.MetaData;
+using Orchard.Data.Migration;
 
 namespace Orchard.Sandbox.DataMigrations {
     public class SandboxDataMigration : DataMigrationImpl {
@@ -15,6 +16,19 @@ namespace Orchard.Sandbox.DataMigrations {
                 );
 
             return 1;
+        }
+
+        public int UpdateFrom1() {
+
+            ContentDefinitionManager.AlterTypeDefinition("SandboxPage", 
+                cfg => cfg
+                    .WithPart("SandboxPage")
+                    .WithPart("CommonAspect")
+                    .WithPart("IsRoutable")
+                    .WithPart("BodyAspect")
+                );
+            
+            return 2;
         }
     }
 }
