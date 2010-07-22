@@ -94,7 +94,7 @@ namespace Orchard.Blogs.Drivers {
         }
 
         protected override DriverResult Editor(Blog blog) {
-            var location = blog.GetLocation("Editor", "primary", "1");
+            var location = blog.GetLocation("Editor");
             return Combined(
                 ContentItemTemplate("Items/Blogs.Blog"),
                 ContentPartTemplate(blog, "Parts/Blogs.Blog.Fields").Location(location));

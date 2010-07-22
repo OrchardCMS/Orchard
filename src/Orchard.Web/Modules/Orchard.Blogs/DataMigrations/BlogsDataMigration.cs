@@ -1,4 +1,9 @@
-﻿using Orchard.Data.Migration;
+﻿using System.Collections.Generic;
+using Orchard.Blogs.Models;
+using Orchard.ContentManagement.Drivers;
+using Orchard.ContentManagement.MetaData;
+using Orchard.ContentManagement.MetaData.Builders;
+using Orchard.Data.Migration;
 
 namespace Orchard.Blogs.DataMigrations {
     public class BlogsDataMigration : DataMigrationImpl {
@@ -21,6 +26,15 @@ namespace Orchard.Blogs.DataMigrations {
                 );
 
             return 1;
+        }
+
+        public int UpdateFrom1() {
+            ContentDefinitionManager.AlterPartDefinition(typeof(Blog).Name, cfg => cfg
+                .WithLocation(new Dictionary<string, ContentLocation> {
+                    {"Editor", new ContentLocation { Zone = "primary", Position = "1" }}
+                }));
+
+            return 2;
         }
     }
 }
