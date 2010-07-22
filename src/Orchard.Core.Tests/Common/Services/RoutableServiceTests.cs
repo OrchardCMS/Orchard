@@ -189,8 +189,8 @@ namespace Orchard.Core.Tests.Common.Services {
                                  typeof(ContentTypeRecord),
                                  typeof(ContentItemRecord), 
                                  typeof(ContentItemVersionRecord), 
-                                 typeof(CommonRecord),
-                                 typeof(CommonVersionRecord),
+                                 typeof(CommonPartRecord),
+                                 typeof(CommonPartVersionRecord),
                              };
             }
         }
@@ -199,8 +199,8 @@ namespace Orchard.Core.Tests.Common.Services {
         public class ThingHandler : ContentHandler {
             public ThingHandler() {
                 Filters.Add(new ActivatingFilter<Thing>(ThingDriver.ContentType.Name));
-                Filters.Add(new ActivatingFilter<ContentPart<CommonVersionRecord>>(ThingDriver.ContentType.Name));
-                Filters.Add(new ActivatingFilter<CommonAspect>(ThingDriver.ContentType.Name));
+                Filters.Add(new ActivatingFilter<ContentPart<CommonPartVersionRecord>>(ThingDriver.ContentType.Name));
+                Filters.Add(new ActivatingFilter<CommonPart>(ThingDriver.ContentType.Name));
                 Filters.Add(new ActivatingFilter<IsRoutable>(ThingDriver.ContentType.Name));
             }
         }
@@ -230,8 +230,8 @@ namespace Orchard.Core.Tests.Common.Services {
         public class StuffHandler : ContentHandler {
             public StuffHandler() {
                 Filters.Add(new ActivatingFilter<Stuff>(StuffDriver.ContentType.Name));
-                Filters.Add(new ActivatingFilter<ContentPart<CommonVersionRecord>>(StuffDriver.ContentType.Name));
-                Filters.Add(new ActivatingFilter<CommonAspect>(StuffDriver.ContentType.Name));
+                Filters.Add(new ActivatingFilter<ContentPart<CommonPartVersionRecord>>(StuffDriver.ContentType.Name));
+                Filters.Add(new ActivatingFilter<CommonPart>(StuffDriver.ContentType.Name));
                 Filters.Add(new ActivatingFilter<IsRoutable>(StuffDriver.ContentType.Name));
             }
         }

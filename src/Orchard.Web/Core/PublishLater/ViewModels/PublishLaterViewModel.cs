@@ -33,7 +33,7 @@ namespace Orchard.Core.PublishLater.ViewModels {
             get { return IsPublished || ContentItem.ContentManager.Get(ContentItem.Id, VersionOptions.Published) != null; }
         }
 
-        public DateTime? VersionPublishedUtc { get { return ContentItem.As<CommonAspect>() == null ? null : ContentItem.As<CommonAspect>().VersionPublishedUtc; } }
+        public DateTime? VersionPublishedUtc { get { return ContentItem.As<CommonPart>() == null ? null : ContentItem.As<CommonPart>().VersionPublishedUtc; } }
 
         public DateTime? ScheduledPublishUtc { get; set; }
 

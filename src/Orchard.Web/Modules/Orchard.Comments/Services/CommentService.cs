@@ -86,7 +86,7 @@ namespace Orchard.Comments.Services {
 
             // store id of the next layer for large-grained operations, e.g. rss on blog
             //TODO:(rpaquay) Get rid of this (comment aspect takes care of container)
-            var commentedOn = _contentManager.Get<ICommonAspect>(comment.Record.CommentedOn);
+            var commentedOn = _contentManager.Get<ICommonPart>(comment.Record.CommentedOn);
             if (commentedOn != null && commentedOn.Container != null) {
                 comment.Record.CommentedOnContainer = commentedOn.Container.ContentItem.Id;
             }

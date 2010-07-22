@@ -30,7 +30,7 @@ namespace Futures.Widgets.DataMigrations {
             ContentDefinitionManager.AlterTypeDefinition("HtmlWidget",
                 cfg => cfg
                     .WithPart("Widget")
-                    .WithPart("BodyAspect")
+                    .WithPart("BodyPart")
                 );
 
             return 2;

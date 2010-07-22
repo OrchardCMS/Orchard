@@ -65,10 +65,10 @@ using (Html.BeginFormAntiForgeryPost()) { %>
                                 <%: Html.DateTime(pageEntry.Page.ScheduledPublishUtc.Value, T("M/d/yyyy h:mm tt"))%><%
                             }
                             else if (pageEntry.Page.IsPublished) { %>
-                                <%: T("Published: {0}", Html.DateTimeRelative(pageEntry.Page.As<ICommonAspect>().VersionPublishedUtc.Value, T)) %><%
+                                <%: T("Published: {0}", Html.DateTimeRelative(pageEntry.Page.As<ICommonPart>().VersionPublishedUtc.Value, T)) %><%
                             }
                             else { %>
-                                <%: T("Last modified: {0}", Html.DateTimeRelative(pageEntry.Page.As<ICommonAspect>().ModifiedUtc.Value, T)) %><%
+                                <%: T("Last modified: {0}", Html.DateTimeRelative(pageEntry.Page.As<ICommonPart>().ModifiedUtc.Value, T)) %><%
                             } %>&nbsp;&#124;&nbsp;
                             </li>
                             <li><%: T("By {0}", pageEntry.Page.Creator.UserName)%></li>

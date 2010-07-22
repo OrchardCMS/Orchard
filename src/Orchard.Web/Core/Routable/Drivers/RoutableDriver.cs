@@ -28,15 +28,15 @@ namespace Orchard.Core.Routable.Drivers {
         }
 
         int? GetContainerId(IContent item) {
-            var commonAspect = item.As<ICommonAspect>();
-            if (commonAspect != null && commonAspect.Container != null) {
-                return commonAspect.Container.ContentItem.Id;
+            var commonPart = item.As<ICommonPart>();
+            if (commonPart != null && commonPart.Container != null) {
+                return commonPart.Container.ContentItem.Id;
             }
             return null;
         }
 
         string GetContainerSlug(IContent item) {
-            var commonAspect = item.As<ICommonAspect>();
+            var commonAspect = item.As<ICommonPart>();
             if (commonAspect != null && commonAspect.Container != null) {
                 var routable = commonAspect.Container.As<IRoutableAspect>();
                 if (routable != null) {

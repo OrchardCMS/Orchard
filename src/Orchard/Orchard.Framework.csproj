@@ -137,7 +137,7 @@
     <Compile Include="Collections\PageOfItems.cs" />
     <Compile Include="Commands\CommandBackgroundService.cs" />
     <Compile Include="Commands\CommandHostEnvironment.cs" />
-    <Compile Include="ContentManagement\Aspects\ICommonAspect.cs">
+    <Compile Include="ContentManagement\Aspects\ICommonPart.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="ContentManagement\Aspects\IPublishingControlAspect.cs" />

@@ -24,18 +24,18 @@ namespace Orchard.Blogs.Models {
         }
 
         public string Text {
-            get { return this.As<BodyAspect>().Text; }
-            set { this.As<BodyAspect>().Text = value; }
+            get { return this.As<BodyPart>().Text; }
+            set { this.As<BodyPart>().Text = value; }
         }
 
         public BlogPart BlogPart {
-            get { return this.As<ICommonAspect>().Container.As<BlogPart>(); }
-            set { this.As<ICommonAspect>().Container = value; }
+            get { return this.As<ICommonPart>().Container.As<BlogPart>(); }
+            set { this.As<ICommonPart>().Container = value; }
         }
 
         public IUser Creator {
-            get { return this.As<ICommonAspect>().Owner; }
-            set { this.As<ICommonAspect>().Owner = value; }
+            get { return this.As<ICommonPart>().Owner; }
+            set { this.As<ICommonPart>().Owner = value; }
         }
 
         public bool IsPublished {
@@ -58,7 +58,7 @@ namespace Orchard.Blogs.Models {
         }
 
         public DateTime? CreatedUtc {
-            get { return this.As<ICommonAspect>().CreatedUtc; }
+            get { return this.As<ICommonPart>().CreatedUtc; }
         }
 
         public DateTime? ScheduledPublishUtc { get; set; }

@@ -23,9 +23,9 @@ namespace Orchard.Sandbox.DataMigrations {
             ContentDefinitionManager.AlterTypeDefinition("SandboxPage", 
                 cfg => cfg
                     .WithPart("SandboxPage")
-                    .WithPart("CommonAspect")
+                    .WithPart("CommonPart")
                     .WithPart("IsRoutable")
-                    .WithPart("BodyAspect")
+                    .WithPart("BodyPart")
                 );
             
             return 2;

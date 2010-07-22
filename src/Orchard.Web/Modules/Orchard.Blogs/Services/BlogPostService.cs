@@ -30,7 +30,7 @@ namespace Orchard.Blogs.Services {
         public BlogPostPart Get(BlogPart blogPart, string slug, VersionOptions versionOptions) {
             return
                 _contentManager.Query(versionOptions, BlogPostPartDriver.ContentType.Name).Join<RoutableRecord>().Where(rr => rr.Slug == slug).
-                    Join<CommonRecord>().Where(cr => cr.Container == blogPart.Record.ContentItemRecord).List().
+                    Join<CommonPartRecord>().Where(cr => cr.Container == blogPart.Record.ContentItemRecord).List().
                     SingleOrDefault().As<BlogPostPart>();
         }
 
@@ -110,9 +110,9 @@ namespace Orchard.Blogs.Services {
             return (task == null ? null : task.ScheduledUtc);
         }
 
-        private IContentQuery<ContentItem, CommonRecord> GetBlogQuery(ContentPart<BlogPartRecord> blog, VersionOptions versionOptions) {
+        private IContentQuery<ContentItem, CommonPartRecord> GetBlogQuery(ContentPart<BlogPartRecord> blog, VersionOptions versionOptions) {
             return
-                _contentManager.Query(versionOptions, BlogPostPartDriver.ContentType.Name).Join<CommonRecord>().Where(
+                _contentManager.Query(versionOptions, BlogPostPartDriver.ContentType.Name).Join<CommonPartRecord>().Where(
                     cr => cr.Container == blog.Record.ContentItemRecord).OrderByDescending(cr => cr.CreatedUtc);
         }
     }

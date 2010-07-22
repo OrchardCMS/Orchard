@@ -14,15 +14,15 @@ namespace Orchard.Indexing.Handlers {
         public CreateIndexingTaskHandler(IIndexingTaskManager indexingTaskManager) {
             _indexingTaskManager = indexingTaskManager;
 
-            OnPublishing<ContentPart<CommonRecord>>(CreateIndexingTask);
-            OnRemoved<ContentPart<CommonRecord>>(RemoveIndexingTask);
+            OnPublishing<ContentPart<CommonPartRecord>>(CreateIndexingTask);
+            OnRemoved<ContentPart<CommonPartRecord>>(RemoveIndexingTask);
         }
 
-        void CreateIndexingTask(PublishContentContext context, ContentPart<CommonRecord> part) {
+        void CreateIndexingTask(PublishContentContext context, ContentPart<CommonPartRecord> part) {
             _indexingTaskManager.CreateUpdateIndexTask(context.ContentItem);
         }
 
-        void RemoveIndexingTask(RemoveContentContext context, ContentPart<CommonRecord> part) {
+        void RemoveIndexingTask(RemoveContentContext context, ContentPart<CommonPartRecord> part) {
             _indexingTaskManager.CreateDeleteIndexTask(context.ContentItem);
         }
 

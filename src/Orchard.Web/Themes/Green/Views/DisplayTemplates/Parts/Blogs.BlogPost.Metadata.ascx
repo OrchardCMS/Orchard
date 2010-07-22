@@ -1,4 +1,4 @@
-﻿<%@ Control Language="C#" Inherits="Orchard.Mvc.ViewUserControl<BlogPost>" %>
+﻿<%@ Control Language="C#" Inherits="Orchard.Mvc.ViewUserControl<BlogPartPart>" %>
 <%@ Import Namespace="Orchard.Blogs.Extensions"%>
 <%@ Import Namespace="Orchard.Blogs.Models"%>
 <%@ Import Namespace="Orchard.Core.Common.Extensions" %><%

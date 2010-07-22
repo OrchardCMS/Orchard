@@ -2,7 +2,7 @@ using Orchard.ContentManagement.Records;
 using Orchard.Data.Conventions;
 
 namespace Orchard.Core.Common.Models {
-    public class BodyRecord : ContentPartVersionRecord {
+    public class BodyPartRecord : ContentPartVersionRecord {
         [StringLengthMax]
         public virtual string Text { get; set; }
 

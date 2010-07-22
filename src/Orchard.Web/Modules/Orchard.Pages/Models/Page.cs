@@ -21,8 +21,8 @@ namespace Orchard.Pages.Models {
         }
 
         public IUser Creator {
-            get { return this.As<CommonAspect>().Owner; }
-            set { this.As<CommonAspect>().Owner = value; }
+            get { return this.As<CommonPart>().Owner; }
+            set { this.As<CommonPart>().Owner = value; }
         }
 
         public bool IsPublished {
