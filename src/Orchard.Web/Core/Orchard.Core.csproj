@@ -85,6 +85,7 @@
     <Compile Include="Contents\Routes.cs" />
     <Compile Include="Contents\ViewModels\PublishContentViewModel.cs" />
     <Compile Include="Localization\ViewModels\EditLocalizationViewModel.cs" />
+    <Compile Include="PublishLater\DataMigrations\PublishLaterDataMigration.cs" />
     <Compile Include="PublishLater\Drivers\PublishLaterPartDriver.cs" />
     <Compile Include="PublishLater\Models\PublishLaterPart.cs" />
     <Compile Include="PublishLater\Handlers\PublishLaterPartHandler.cs" />
