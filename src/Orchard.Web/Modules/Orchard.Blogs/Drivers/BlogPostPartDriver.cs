@@ -7,7 +7,7 @@ using Orchard.Localization;
 
 namespace Orchard.Blogs.Drivers {
     [UsedImplicitly]                                                                                                                                                                                        
-    public class BlogPostDriver : ContentItemDriver<BlogPostPart> {
+    public class BlogPostPartDriver : ContentItemDriver<BlogPostPart> {
         public IOrchardServices Services { get; set; }
 
         public readonly static ContentType ContentType = new ContentType {
@@ -15,7 +15,7 @@ namespace Orchard.Blogs.Drivers {
                                                                              DisplayName = "Blog Post"
                                                                          };
 
-        public BlogPostDriver(IOrchardServices services) {
+        public BlogPostPartDriver(IOrchardServices services) {
             Services = services;
             T = NullLocalizer.Instance;
         }

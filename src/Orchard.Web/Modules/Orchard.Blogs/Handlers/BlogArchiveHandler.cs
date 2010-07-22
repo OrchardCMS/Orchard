@@ -29,7 +29,7 @@ namespace Orchard.Blogs.Handlers {
             //INFO: (erikpo) Get all blog posts for the current blog
             var postsQuery =
                 from bpr in commonRepository.Table
-                where bpr.ContentItemRecord.ContentType.Name == BlogPostDriver.ContentType.Name && bpr.Container.Id == blogPostPart.BlogPart.Record.Id
+                where bpr.ContentItemRecord.ContentType.Name == BlogPostPartDriver.ContentType.Name && bpr.Container.Id == blogPostPart.BlogPart.Record.Id
                 orderby bpr.PublishedUtc
                 select bpr;
 

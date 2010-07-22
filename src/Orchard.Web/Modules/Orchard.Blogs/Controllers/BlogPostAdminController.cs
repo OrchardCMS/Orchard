@@ -31,7 +31,7 @@ namespace Orchard.Blogs.Controllers {
             if (!Services.Authorizer.Authorize(Permissions.EditBlogPost, T("Not allowed to create blog post")))
                 return new HttpUnauthorizedResult();
 
-            var blogPost = Services.ContentManager.New<BlogPostPart>(BlogPostDriver.ContentType.Name);
+            var blogPost = Services.ContentManager.New<BlogPostPart>(BlogPostPartDriver.ContentType.Name);
 
             if (blogPost.BlogPart == null)
                 return new NotFoundResult();
@@ -48,7 +48,7 @@ namespace Orchard.Blogs.Controllers {
             if (!Services.Authorizer.Authorize(Permissions.EditBlogPost, T("Couldn't create blog post")))
                 return new HttpUnauthorizedResult();
 
-            var blogPost = Services.ContentManager.New<BlogPostPart>(BlogPostDriver.ContentType.Name);
+            var blogPost = Services.ContentManager.New<BlogPostPart>(BlogPostPartDriver.ContentType.Name);
             
             if (blogPost.BlogPart == null)
                 return new NotFoundResult();

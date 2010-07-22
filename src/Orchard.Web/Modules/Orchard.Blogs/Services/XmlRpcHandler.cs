@@ -159,7 +159,7 @@ namespace Orchard.Blogs.Services {
             var description = content.Optional<string>("description");
             var slug = content.Optional<string>("wp_slug");
 
-            var blogPost = _contentManager.New<BlogPostPart>(BlogPostDriver.ContentType.Name);
+            var blogPost = _contentManager.New<BlogPostPart>(BlogPostPartDriver.ContentType.Name);
             blogPost.BlogPart = blog;
             blogPost.Title = title;
             blogPost.Slug = slug;
