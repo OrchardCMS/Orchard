@@ -21,13 +21,13 @@ namespace Orchard.Search.Controllers {
         protected virtual ISite CurrentSite { get; [UsedImplicitly] private set; }
 
         public ActionResult Index(string q, int page = 1, int pageSize = 10) {
-            var searchFields = CurrentSite.As<SearchSettings>().Record.SearchedFields.Split(new[] {',', ' '}, StringSplitOptions.RemoveEmptyEntries);
+            var searchFields = CurrentSite.As<SearchSettingsPart>().Record.SearchedFields.Split(new[] {',', ' '}, StringSplitOptions.RemoveEmptyEntries);
 
             var searchViewModel = new SearchViewModel {
                 Query = q,
                 DefaultPageSize = 10, // <- yeah, I know :|
                 PageOfResults = _searchService.Query(q, page, pageSize, 
-                    CurrentSite.As<SearchSettings>().Record.FilterCulture,
+                    CurrentSite.As<SearchSettingsPart>().Record.FilterCulture,
                     searchFields, 
                     searchHit => new SearchResultViewModel {
                         Content = _contentManager.BuildDisplayModel(_contentManager.Get(searchHit.ContentItemId), "SummaryForSearch"),

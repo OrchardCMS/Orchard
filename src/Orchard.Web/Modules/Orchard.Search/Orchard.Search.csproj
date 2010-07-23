@@ -68,10 +68,10 @@
     <Compile Include="Controllers\SearchController.cs" />
     <Compile Include="DataMigrations\SearchDataMigration.cs" />
     <Compile Include="Filters\SearchFilter.cs" />
-    <Compile Include="Models\SearchSettings.cs" />
-    <Compile Include="Models\SearchSettingsRecord.cs" />
+    <Compile Include="Models\SearchSettingsPart.cs" />
+    <Compile Include="Models\SearchSettingsPartRecord.cs" />
     <Compile Include="Routes.cs" />
-    <Compile Include="Handlers\SearchSettingsHandler.cs" />
+    <Compile Include="Handlers\SearchSettingsPartHandler.cs" />
     <Compile Include="Services\ISearchService.cs" />
     <Compile Include="Services\SearchService.cs" />
     <Compile Include="ViewModels\SearchResultViewModel.cs" />
