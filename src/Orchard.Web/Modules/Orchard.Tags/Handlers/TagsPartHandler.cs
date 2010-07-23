@@ -8,10 +8,10 @@ using Orchard.Tags.Models;
 
 namespace Orchard.Tags.Handlers {
     [UsedImplicitly]
-    public class HasTagsHandler : ContentHandler {
-        public HasTagsHandler(IRepository<Tag> tagsRepository, IRepository<TagsContentItems> tagsContentItemsRepository) {
+    public class TagsPartHandler : ContentHandler {
+        public TagsPartHandler(IRepository<Tag> tagsRepository, IRepository<TagsContentItems> tagsContentItemsRepository) {
  
-            OnLoading<HasTags>((context, tags) => {
+            OnLoading<TagsPart>((context, tags) => {
 
                 // provide names of all tags on demand
                 tags._allTags.Loader(list => tagsRepository.Table.ToList());
@@ -28,11 +28,11 @@ namespace Orchard.Tags.Handlers {
 
             });
 
-            OnRemoved<HasTags>((context, ht) => {
+            OnRemoved<TagsPart>((context, tags) => {
                 tagsContentItemsRepository.Flush();
 
-                HasTags tags = context.ContentItem.As<HasTags>();
-                foreach (var tag in tags.CurrentTags) {
+                TagsPart tagsPart = context.ContentItem.As<TagsPart>();
+                foreach (var tag in tagsPart.CurrentTags) {
                     if (!tagsContentItemsRepository.Fetch(x => x.ContentItemId == context.ContentItem.Id).Any()) {
                         tagsRepository.Delete(tag);
                     }

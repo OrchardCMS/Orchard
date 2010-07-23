@@ -11,11 +11,11 @@ using Orchard.Tags.ViewModels;
 
 namespace Orchard.Tags.Drivers {
     [UsedImplicitly]
-    public class HasTagsDriver : ContentPartDriver<HasTags> {
+    public class TagsPartDriver : ContentPartDriver<TagsPart> {
         private readonly ITagService _tagService;
         private readonly IAuthorizationService _authorizationService;
 
-        public HasTagsDriver(ITagService tagService,
+        public TagsPartDriver(ITagService tagService,
                              IAuthorizationService authorizationService) {
             _tagService = tagService;
             _authorizationService = authorizationService;
@@ -23,11 +23,11 @@ namespace Orchard.Tags.Drivers {
 
         public virtual IUser CurrentUser { get; set; }
 
-        protected override DriverResult Display(HasTags part, string displayType) {
+        protected override DriverResult Display(TagsPart part, string displayType) {
             return ContentPartTemplate(part, "Parts/Tags.ShowTags").Location(part.GetLocation(displayType));
         }
 
-        protected override DriverResult Editor(HasTags part) {
+        protected override DriverResult Editor(TagsPart part) {
             if (!_authorizationService.TryCheckAccess(Permissions.ApplyTag, CurrentUser, part))
                 return null;
 
@@ -37,7 +37,7 @@ namespace Orchard.Tags.Drivers {
             return ContentPartTemplate(model, "Parts/Tags.EditTags").Location(part.GetLocation("Editor"));
         }
 
-        protected override DriverResult Editor(HasTags part, IUpdateModel updater) {
+        protected override DriverResult Editor(TagsPart part, IUpdateModel updater) {
             if (!_authorizationService.TryCheckAccess(Permissions.ApplyTag, CurrentUser, part))
                 return null;
 
