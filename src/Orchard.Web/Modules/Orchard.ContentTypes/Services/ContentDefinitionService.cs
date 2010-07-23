@@ -7,6 +7,7 @@ using Orchard.ContentManagement.Drivers;
 using Orchard.ContentManagement.MetaData;
 using Orchard.ContentManagement.MetaData.Models;
 using Orchard.ContentTypes.ViewModels;
+using Orchard.Core.Contents.Settings;
 using Orchard.Localization;
 
 namespace Orchard.ContentTypes.Services {
@@ -70,6 +71,7 @@ namespace Orchard.ContentTypes.Services {
 
             var contentTypeDefinition = new ContentTypeDefinition(name, typeViewModel.DisplayName);
             _contentDefinitionManager.StoreTypeDefinition(contentTypeDefinition);
+            _contentDefinitionManager.AlterTypeDefinition(name, cfg => cfg.Creatable());
 
             return new EditTypeViewModel(contentTypeDefinition);
         }

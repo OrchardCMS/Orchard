@@ -7,4 +7,5 @@ orchardversion: 0.5.0
 features:
     Orchard.ContentTypes:
         Description: ContentTypes modules enables the creation and alteration of content types not based on code.
+        Dependencies: Contents
         Category: Content

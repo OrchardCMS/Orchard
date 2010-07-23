@@ -8,4 +8,5 @@ description: The pages module enables the creation and management of pages on an
 features:
     Orchard.Pages:
         Description: Simple pages.
+        Dependencies: Contents
         Category: Content
