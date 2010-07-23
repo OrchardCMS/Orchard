@@ -11,6 +11,7 @@ namespace Orchard.Core.Routable.ViewModels {
         public string Title { get; set; }
         public string Slug { get; set; }
         public int? ContainerId { get; set; }
+        public bool PromoteToHomePage { get; set; }
 
         public string DisplayLeadingPath { get; set; }
     }

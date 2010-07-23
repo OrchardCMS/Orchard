@@ -33,7 +33,6 @@ namespace Orchard.Blogs.Services {
 
         public void Create(BlogPart blogPart) {
             _contentManager.Create(blogPart.ContentItem);
-            _blogSlugConstraint.AddSlug(blogPart.Slug);
         }
 
         public void Edit(BlogPart blogPart) {

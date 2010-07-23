@@ -763,14 +763,15 @@ table .button {
 /* Core Modules
 ----------------------------------------------------------*/
 /* Routable */
-.permalink input {
+.permalink input.text {
     background:transparent;
     border-color:#EAE9D9;
     border-style:dashed;
     margin-left:0;
+    margin-right:2em;
 	width:350px;
 }
-.permalink input:focus {
+.permalink input.text:focus {
     background:#FFF;
     border-color:#666d51;
     border-style:solid;

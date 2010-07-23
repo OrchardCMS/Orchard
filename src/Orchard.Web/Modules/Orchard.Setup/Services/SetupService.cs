@@ -176,7 +176,7 @@ namespace Orchard.Setup.Services {
 
                     // set site theme
                     var themeService = environment.Resolve<IThemeService>();
-                    themeService.SetSiteTheme("Classic");
+                    themeService.SetSiteTheme("Contoso");
 
                     // add default culture
                     var cultureManager = environment.Resolve<ICultureManager>();
@@ -196,7 +196,6 @@ namespace Orchard.Setup.Services {
                         .WithPart("CommentsPart")
                         .WithPart("TagsPart")
                         .WithPart("LocalizationPart")
-                        .Creatable()
                         .Indexed());
                     contentDefinitionManager.AlterTypeDefinition("Page", cfg => cfg
                         .DisplayedAs("Page")

@@ -9,9 +9,9 @@
 <fieldset class="permalink">
     <label class="sub" for="Slug"><%: T("Permalink")%><br /><span><%: Request.ToRootUrlString()%>/<%: Model.DisplayLeadingPath %></span></label>
     <span><%: Html.TextBoxFor(m => m.Slug, new { @class = "text" })%></span>
+    <%: Html.EditorFor(m => m.PromoteToHomePage) %>
+    <label for="<%:ViewData.TemplateInfo.GetFullHtmlFieldId("PromoteToHomePage") %>" class="forcheckbox"><%: T("Set as home page") %></label>
 </fieldset>
-
-
 <% using (this.Capture("end-of-page-scripts")) { %>
 <script type="text/javascript">
     $(function(){

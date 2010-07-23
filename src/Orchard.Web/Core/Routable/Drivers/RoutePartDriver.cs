@@ -1,4 +1,7 @@
-﻿using Orchard.ContentManagement;
+﻿using System.Collections.Generic;
+using System.Linq;
+using JetBrains.Annotations;
+using Orchard.ContentManagement;
 using Orchard.ContentManagement.Aspects;
 using Orchard.ContentManagement.Drivers;
 using Orchard.Core.ContentsLocation.Models;
@@ -6,22 +9,27 @@ using Orchard.Core.Routable.Models;
 using Orchard.Core.Routable.Services;
 using Orchard.Core.Routable.ViewModels;
 using Orchard.Localization;
+using Orchard.Services;
+using Orchard.Settings;
 using Orchard.UI.Notify;
 
 namespace Orchard.Core.Routable.Drivers {
     public class RoutePartDriver : ContentPartDriver<RoutePart> {
         private readonly IOrchardServices _services;
         private readonly IRoutableService _routableService;
+        private readonly IHomePageProvider _routableHomePageProvider;
 
-        public RoutePartDriver(IOrchardServices services, IRoutableService routableService) {
+        public RoutePartDriver(IOrchardServices services, IRoutableService routableService, IEnumerable<IHomePageProvider> homePageProviders) {
             _services = services;
             _routableService = routableService;
+            _routableHomePageProvider = homePageProviders.SingleOrDefault(p => p.GetProviderName() == RoutableHomePageProvider.Name); ;
             T = NullLocalizer.Instance;
         }
 
         private const string TemplateName = "Parts/Routable.RoutePart";
 
         public Localizer T { get; set; }
+        protected virtual ISite CurrentSite { get; [UsedImplicitly] private set; }
 
         protected override string Prefix {
             get { return "Routable"; }
@@ -68,6 +76,7 @@ namespace Orchard.Core.Routable.Drivers {
             }
 
             var location = part.GetLocation("Editor");
+            model.PromoteToHomePage = model.Id != 0 && _routableHomePageProvider != null && CurrentSite.HomePage == _routableHomePageProvider.GetSettingValue(model.Id);
             return ContentPartTemplate(model, TemplateName, Prefix).Location(location);
         }
 
@@ -97,8 +106,11 @@ namespace Orchard.Core.Routable.Drivers {
                     originalSlug, part.Slug, part.ContentItem.ContentType));
             }
 
+            if (part.ContentItem.Id != 0 && model.PromoteToHomePage && _routableHomePageProvider != null) {
+                CurrentSite.HomePage = _routableHomePageProvider.GetSettingValue(part.ContentItem.Id);
+            }
+
             return Editor(part);
         }
-
     }
 }
