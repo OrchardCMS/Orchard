@@ -6,7 +6,7 @@ using Orchard.Security;
 
 namespace Orchard.Core.Navigation.Drivers {
     [UsedImplicitly]
-    public class MenuItemDriver : ContentItemDriver<MenuItem> {
+    public class MenuItemPartDriver : ContentItemDriver<MenuItemPart> {
         private readonly IAuthorizationService _authorizationService;
 
         public readonly static ContentType ContentType = new ContentType {
@@ -14,7 +14,7 @@ namespace Orchard.Core.Navigation.Drivers {
                                                                              DisplayName = "Menu Item"
                                                                          };
 
-        public MenuItemDriver(IAuthorizationService authorizationService) {
+        public MenuItemPartDriver(IAuthorizationService authorizationService) {
             _authorizationService = authorizationService;
         }
 
@@ -26,15 +26,15 @@ namespace Orchard.Core.Navigation.Drivers {
 
         protected override string Prefix { get { return ""; } }
 
-        protected override string GetDisplayText(MenuItem item) {
-            return item.Url;
+        protected override string GetDisplayText(MenuItemPart itemPart) {
+            return itemPart.Url;
         }
 
-        protected override DriverResult Editor(MenuItem item, IUpdateModel updater) {
-            if (!_authorizationService.TryCheckAccess(Permissions.ManageMainMenu, CurrentUser, item))
+        protected override DriverResult Editor(MenuItemPart itemPart, IUpdateModel updater) {
+            if (!_authorizationService.TryCheckAccess(Permissions.ManageMainMenu, CurrentUser, itemPart))
                 return null;
 
-            updater.TryUpdateModel(item, Prefix, null, null);
+            updater.TryUpdateModel(itemPart, Prefix, null, null);
 
             return null;
         }

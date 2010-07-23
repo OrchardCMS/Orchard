@@ -230,7 +230,7 @@ namespace Orchard.Setup.Services {
                     menuItem.As<MenuPart>().MenuPosition = "1";
                     menuItem.As<MenuPart>().MenuText = T("Home").ToString();
                     menuItem.As<MenuPart>().OnMainMenu = true;
-                    menuItem.As<MenuItem>().Url = "";
+                    menuItem.As<MenuItemPart>().Url = "";
 
                     //Temporary fix for running setup on command line
                     if (HttpContext.Current != null) {

@@ -3,7 +3,7 @@ using System.Web.Mvc;
 using Orchard.ContentManagement;
 
 namespace Orchard.Core.Navigation.Models {
-    public class MenuItem : ContentPart<MenuItemRecord> {
+    public class MenuItemPart : ContentPart<MenuItemPartRecord> {
         [HiddenInput(DisplayValue = false)]
         public int Id { get { return ContentItem.Id; } }
 

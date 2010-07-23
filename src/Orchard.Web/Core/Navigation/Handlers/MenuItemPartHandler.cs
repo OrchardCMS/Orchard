@@ -6,9 +6,9 @@ using Orchard.ContentManagement.Handlers;
 
 namespace Orchard.Core.Navigation.Handlers {
     [UsedImplicitly]
-    public class MenuItemHandler : ContentHandler {
-        public MenuItemHandler(IRepository<MenuItemRecord> repository) {
-            Filters.Add(new ActivatingFilter<MenuItem>(MenuItemDriver.ContentType.Name));
+    public class MenuItemPartHandler : ContentHandler {
+        public MenuItemPartHandler(IRepository<MenuItemPartRecord> repository) {
+            Filters.Add(new ActivatingFilter<MenuItemPart>(MenuItemPartDriver.ContentType.Name));
             Filters.Add(StorageFilter.For(repository));
         }
     }
