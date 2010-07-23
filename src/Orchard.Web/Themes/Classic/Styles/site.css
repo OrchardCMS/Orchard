@@ -313,6 +313,35 @@ span.message {
     content:"DEBUG » ";
 }
 
+/* Localization
+-------------------------------------------------------------- */
+
+.content-localization .content-localizations ul {
+    overflow: auto;
+}
+
+
+.content-localization .content-localizations li {
+    border-bottom: 1px;
+    float: left;
+    margin-left:.5em;
+    padding: 3px;
+    border: 1px solid #CCC;
+}
+
+.content-localization .content-localizations li:hover {
+    background-color: #ebebeb;
+}
+
+
+.content-localization .content-localizations li a {
+    text-decoration: none;
+}
+
+.content-localization .content-localizations li a:hover, .content-localization .content-localizations li a:visited {
+    text-decoration: none;
+}
+
 
 /* Misc classes
 -------------------------------------------------------------- */

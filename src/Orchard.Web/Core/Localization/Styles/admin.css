@@ -26,6 +26,12 @@
 .culture-selection fieldset {
     padding-top:0;
 }
+
+.culture-selection label {
+    padding-top:0;
+    display: inline;
+}
+
 .culture-selection div {
     font-size:1.4em;
 }
