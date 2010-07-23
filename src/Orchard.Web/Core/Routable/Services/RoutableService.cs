@@ -14,7 +14,7 @@ namespace Orchard.Core.Routable.Services {
             _contentManager = contentManager;
         }
 
-        public void FillSlug<TModel>(TModel model) where TModel : IsRoutable {
+        public void FillSlug<TModel>(TModel model) where TModel : RoutePart {
             if (!string.IsNullOrEmpty(model.Slug) || string.IsNullOrEmpty(model.Title))
                 return;
 
@@ -30,7 +30,7 @@ namespace Orchard.Core.Routable.Services {
             model.Slug = slug.ToLowerInvariant();
         }
 
-        public void FillSlug<TModel>(TModel model, Func<string, string> generateSlug) where TModel : IsRoutable {
+        public void FillSlug<TModel>(TModel model, Func<string, string> generateSlug) where TModel : RoutePart {
             if (!string.IsNullOrEmpty(model.Slug) || string.IsNullOrEmpty(model.Title))
                 return;
 
@@ -60,12 +60,12 @@ namespace Orchard.Core.Routable.Services {
                        : null;
         }
 
-        public IEnumerable<IsRoutable> GetSimilarSlugs(string contentType, string slug)
+        public IEnumerable<RoutePart> GetSimilarSlugs(string contentType, string slug)
         {
             return
-                _contentManager.Query().Join<RoutableRecord>()
+                _contentManager.Query().Join<RoutePartRecord>()
                     .List()
-                    .Select(i => i.As<IsRoutable>())
+                    .Select(i => i.As<RoutePart>())
                     .Where(routable => routable.Path != null && routable.Path.Equals(slug, StringComparison.OrdinalIgnoreCase)) // todo: for some reason the filter doesn't work within the query, even without StringComparison or StartsWith
                     .ToArray();
         }
@@ -75,7 +75,7 @@ namespace Orchard.Core.Routable.Services {
             return slug == null || String.IsNullOrEmpty(slug.Trim()) || Regex.IsMatch(slug, @"^[^/:?#\[\]@!$&'()*+,;=\s]+$");
         }
 
-        public bool ProcessSlug(IsRoutable part)
+        public bool ProcessSlug(RoutePart part)
         {
             FillSlug(part);
 

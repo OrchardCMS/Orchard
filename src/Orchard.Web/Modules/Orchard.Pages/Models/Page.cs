@@ -12,12 +12,12 @@ namespace Orchard.Pages.Models {
         public int Id { get { return ContentItem.Id; } }
 
         public string Title {
-            get { return this.As<IsRoutable>().Title; }
+            get { return this.As<RoutePart>().Title; }
         }
 
         public string Slug {
-            get { return this.As<IsRoutable>().Slug; }
-            set { this.As<IsRoutable>().Slug = value; }
+            get { return this.As<RoutePart>().Slug; }
+            set { this.As<RoutePart>().Slug = value; }
         }
 
         public IUser Creator {

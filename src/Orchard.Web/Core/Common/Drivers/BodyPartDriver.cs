@@ -93,7 +93,7 @@ namespace Orchard.Core.Common.Drivers {
                 if (common == null)
                     return this;
 
-                var routable = common.Container.As<IsRoutable>();
+                var routable = common.Container.As<RoutePart>();
                 if (routable == null)
                     return this;
 
@@ -102,7 +102,7 @@ namespace Orchard.Core.Common.Drivers {
             }
 
             public PathBuilder AddSlug() {
-                var routable = _content.As<IsRoutable>();
+                var routable = _content.As<RoutePart>();
                 if (routable == null)
                     return this;
 

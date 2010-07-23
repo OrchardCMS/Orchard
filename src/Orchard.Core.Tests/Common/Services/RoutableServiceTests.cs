@@ -40,7 +40,7 @@ namespace Orchard.Core.Tests.Common.Services {
 
             builder.RegisterType<DefaultContentQuery>().As<IContentQuery>();
             builder.RegisterInstance(new UrlHelper(new RequestContext(new StubHttpContext("~/"), new RouteData()))).As<UrlHelper>();
-            builder.RegisterType<RoutableHandler>().As<IContentHandler>();
+            builder.RegisterType<RoutePartHandler>().As<IContentHandler>();
 
         }
 
@@ -51,11 +51,11 @@ namespace Orchard.Core.Tests.Common.Services {
             var contentManager = _container.Resolve<IContentManager>();
 
             var thing = contentManager.Create<Thing>(ThingDriver.ContentType.Name, t => {
-                t.As<IsRoutable>().Record = new RoutableRecord();
+                t.As<RoutePart>().Record = new RoutePartRecord();
                 t.Title = "Please do not use any of the following characters in your slugs: \":\", \"/\", \"?\", \"#\", \"[\", \"]\", \"@\", \"!\", \"$\", \"&\", \"'\", \"(\", \")\", \"*\", \"+\", \",\", \";\", \"=\"";
             });
 
-            _routableService.FillSlug(thing.As<IsRoutable>());
+            _routableService.FillSlug(thing.As<RoutePart>());
 
             Assert.That(thing.Slug, Is.EqualTo("please-do-not-use-any-of-the-following-characters-in-your-slugs-\"-\"-\"-\"-\"-\"-\"-\"-\"-\"-\"-\"-\"-\"-\"-\"-\"-\"-\"-\"-\"-\"-\"-\"-\"-\"-\"-\"-\"-\"-\"-\"-\"-\"-\"-\""));
         }
@@ -87,11 +87,11 @@ namespace Orchard.Core.Tests.Common.Services {
                 veryVeryLongTitle += "aaaaaaaaaa";
 
             var thing = contentManager.Create<Thing>(ThingDriver.ContentType.Name, t => {
-                t.As<IsRoutable>().Record = new RoutableRecord();
+                t.As<RoutePart>().Record = new RoutePartRecord();
                 t.Title = veryVeryLongTitle;
             });
 
-            _routableService.FillSlug(thing.As<IsRoutable>());
+            _routableService.FillSlug(thing.As<RoutePart>());
 
             Assert.That(veryVeryLongTitle.Length, Is.AtLeast(1001));
             Assert.That(thing.Slug.Length, Is.EqualTo(1000));
@@ -138,11 +138,11 @@ namespace Orchard.Core.Tests.Common.Services {
             var contentManager = _container.Resolve<IContentManager>();
 
             var thing = contentManager.Create<Thing>(ThingDriver.ContentType.Name, t => {
-                t.As<IsRoutable>().Record = new RoutableRecord();
+                t.As<RoutePart>().Record = new RoutePartRecord();
                 t.Title = "This Is Some Interesting Title";
             });
 
-            _routableService.FillSlug(thing.As<IsRoutable>());
+            _routableService.FillSlug(thing.As<RoutePart>());
 
             Assert.That(thing.Slug, Is.EqualTo("this-is-some-interesting-title"));
         }
@@ -152,12 +152,12 @@ namespace Orchard.Core.Tests.Common.Services {
             var contentManager = _container.Resolve<IContentManager>();
 
             var thing1 = contentManager.Create<Thing>(ThingDriver.ContentType.Name, t => {
-                t.As<IsRoutable>().Record = new RoutableRecord();
+                t.As<RoutePart>().Record = new RoutePartRecord();
                 t.Title = "This Is Some Interesting Title";
             });
 
             var thing2 = contentManager.Create<Thing>(ThingDriver.ContentType.Name, t => {
-                t.As<IsRoutable>().Record = new RoutableRecord();
+                t.As<RoutePart>().Record = new RoutePartRecord();
                 t.Title = "This Is Some Interesting Title";
             });
 
@@ -169,12 +169,12 @@ namespace Orchard.Core.Tests.Common.Services {
             var contentManager = _container.Resolve<IContentManager>();
 
             var thing = contentManager.Create<Thing>(ThingDriver.ContentType.Name, t => {
-                t.As<IsRoutable>().Record = new RoutableRecord();
+                t.As<RoutePart>().Record = new RoutePartRecord();
                 t.Title = "This Is Some Interesting Title";
             });
 
             var stuff = contentManager.Create<Stuff>(StuffDriver.ContentType.Name, s => {
-                s.As<IsRoutable>().Record = new RoutableRecord();
+                s.As<RoutePart>().Record = new RoutePartRecord();
                 s.Title = "This Is Some Interesting Title";
             });
 
@@ -185,7 +185,7 @@ namespace Orchard.Core.Tests.Common.Services {
         protected override IEnumerable<Type> DatabaseTypes {
             get {
                 return new[] {
-                                 typeof(RoutableRecord), 
+                                 typeof(RoutePartRecord), 
                                  typeof(ContentTypeRecord),
                                  typeof(ContentItemRecord), 
                                  typeof(ContentItemVersionRecord), 
@@ -201,7 +201,7 @@ namespace Orchard.Core.Tests.Common.Services {
                 Filters.Add(new ActivatingFilter<Thing>(ThingDriver.ContentType.Name));
                 Filters.Add(new ActivatingFilter<ContentPart<CommonPartVersionRecord>>(ThingDriver.ContentType.Name));
                 Filters.Add(new ActivatingFilter<CommonPart>(ThingDriver.ContentType.Name));
-                Filters.Add(new ActivatingFilter<IsRoutable>(ThingDriver.ContentType.Name));
+                Filters.Add(new ActivatingFilter<RoutePart>(ThingDriver.ContentType.Name));
             }
         }
 
@@ -209,13 +209,13 @@ namespace Orchard.Core.Tests.Common.Services {
             public int Id { get { return ContentItem.Id; } }
 
             public string Title {
-                get { return this.As<IsRoutable>().Title; }
-                set { this.As<IsRoutable>().Title = value; }
+                get { return this.As<RoutePart>().Title; }
+                set { this.As<RoutePart>().Title = value; }
             }
 
             public string Slug {
-                get { return this.As<IsRoutable>().Slug; }
-                set { this.As<IsRoutable>().Slug = value; }
+                get { return this.As<RoutePart>().Slug; }
+                set { this.As<RoutePart>().Slug = value; }
             }
         }
 
@@ -232,7 +232,7 @@ namespace Orchard.Core.Tests.Common.Services {
                 Filters.Add(new ActivatingFilter<Stuff>(StuffDriver.ContentType.Name));
                 Filters.Add(new ActivatingFilter<ContentPart<CommonPartVersionRecord>>(StuffDriver.ContentType.Name));
                 Filters.Add(new ActivatingFilter<CommonPart>(StuffDriver.ContentType.Name));
-                Filters.Add(new ActivatingFilter<IsRoutable>(StuffDriver.ContentType.Name));
+                Filters.Add(new ActivatingFilter<RoutePart>(StuffDriver.ContentType.Name));
             }
         }
 
@@ -240,13 +240,13 @@ namespace Orchard.Core.Tests.Common.Services {
             public int Id { get { return ContentItem.Id; } }
 
             public string Title {
-                get { return this.As<IsRoutable>().Title; }
-                set { this.As<IsRoutable>().Title = value; }
+                get { return this.As<RoutePart>().Title; }
+                set { this.As<RoutePart>().Title = value; }
             }
 
             public string Slug {
-                get { return this.As<IsRoutable>().Slug; }
-                set { this.As<IsRoutable>().Slug = value; }
+                get { return this.As<RoutePart>().Slug; }
+                set { this.As<RoutePart>().Slug = value; }
             }
         }
 

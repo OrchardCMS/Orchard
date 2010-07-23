@@ -14,13 +14,13 @@ namespace Orchard.Blogs.Models {
         }
 
         public string Title {
-            get { return this.As<IsRoutable>().Title; }
-            set { this.As<IsRoutable>().Title = value; }
+            get { return this.As<RoutePart>().Title; }
+            set { this.As<RoutePart>().Title = value; }
         }
 
         public string Slug {
-            get { return this.As<IsRoutable>().Slug; }
-            set { this.As<IsRoutable>().Slug = value; }
+            get { return this.As<RoutePart>().Slug; }
+            set { this.As<RoutePart>().Slug = value; }
         }
 
         public string Text {

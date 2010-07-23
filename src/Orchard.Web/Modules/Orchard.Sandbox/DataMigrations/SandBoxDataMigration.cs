@@ -24,7 +24,7 @@ namespace Orchard.Sandbox.DataMigrations {
                 cfg => cfg
                     .WithPart("SandboxPagePart")
                     .WithPart("CommonPart")
-                    .WithPart("IsRoutable")
+                    .WithPart("RoutePart")
                     .WithPart("BodyPart")
                 );
             

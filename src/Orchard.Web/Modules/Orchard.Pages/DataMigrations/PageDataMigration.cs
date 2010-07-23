@@ -10,7 +10,7 @@ namespace Orchard.Pages.DataMigrations {
               cfg => cfg
                   .WithPart("Page")
                   .WithPart("CommonPart")
-                  .WithPart("IsRoutable")
+                  .WithPart("RoutePart")
                   .WithPart("BodyPart")
                );
             

@@ -2,7 +2,7 @@
 using Orchard.ContentManagement.Aspects;
 
 namespace Orchard.Core.Routable.Models {
-    public class IsRoutable : ContentPart<RoutableRecord>, IRoutableAspect {
+    public class RoutePart : ContentPart<RoutePartRecord>, IRoutableAspect {
         public string Title {
             get { return Record.Title; }
             set { Record.Title = value; }

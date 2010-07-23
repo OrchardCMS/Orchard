@@ -27,9 +27,9 @@ namespace Orchard.DevTools.Commands {
                 var pageName = "page" + index;
                 var page = _contentManager.Create("Page", VersionOptions.Draft);
                 page.As<ICommonPart>().Owner = admin;
-                page.As<IsRoutable>().Slug = pageName;
-                page.As<IsRoutable>().Path = pageName;
-                page.As<IsRoutable>().Title = pageName;
+                page.As<RoutePart>().Slug = pageName;
+                page.As<RoutePart>().Path = pageName;
+                page.As<RoutePart>().Title = pageName;
                 page.As<BodyPart>().Text = pageName;
                 page.As<MenuPart>().OnMainMenu = true;
                 page.As<MenuPart>().MenuPosition = "5." + index;
@@ -39,9 +39,9 @@ namespace Orchard.DevTools.Commands {
                 var blogName = "blog" + index;
                 var blog = _contentManager.New("Blog");
                 blog.As<ICommonPart>().Owner = admin;
-                blog.As<IsRoutable>().Slug = blogName;
-                blog.As<IsRoutable>().Path = blogName;
-                blog.As<IsRoutable>().Title = blogName;
+                blog.As<RoutePart>().Slug = blogName;
+                blog.As<RoutePart>().Path = blogName;
+                blog.As<RoutePart>().Title = blogName;
                 blog.As<MenuPart>().OnMainMenu = true;
                 blog.As<MenuPart>().MenuPosition = "6." + index;
                 blog.As<MenuPart>().MenuText = blogName;

@@ -9,17 +9,17 @@ using Orchard.Localization;
 using Orchard.UI.Notify;
 
 namespace Orchard.Core.Routable.Drivers {
-    public class RoutableDriver : ContentPartDriver<IsRoutable> {
+    public class RoutePartDriver : ContentPartDriver<RoutePart> {
         private readonly IOrchardServices _services;
         private readonly IRoutableService _routableService;
 
-        public RoutableDriver(IOrchardServices services, IRoutableService routableService) {
+        public RoutePartDriver(IOrchardServices services, IRoutableService routableService) {
             _services = services;
             _routableService = routableService;
             T = NullLocalizer.Instance;
         }
 
-        private const string TemplateName = "Parts/Routable.IsRoutable";
+        private const string TemplateName = "Parts/Routable.RoutePart";
 
         public Localizer T { get; set; }
 
@@ -46,7 +46,7 @@ namespace Orchard.Core.Routable.Drivers {
             return null;
         }
 
-        protected override DriverResult Editor(IsRoutable part) {
+        protected override DriverResult Editor(RoutePart part) {
             var model = new RoutableEditorViewModel {
                 ContentType = part.ContentItem.ContentType,
                 Id = part.ContentItem.Id,
@@ -71,7 +71,7 @@ namespace Orchard.Core.Routable.Drivers {
             return ContentPartTemplate(model, TemplateName, Prefix).Location(location);
         }
 
-        protected override DriverResult Editor(IsRoutable part, IUpdateModel updater) {
+        protected override DriverResult Editor(RoutePart part, IUpdateModel updater) {
 
             var model = new RoutableEditorViewModel();
             updater.TryUpdateModel(model, Prefix, null, null);

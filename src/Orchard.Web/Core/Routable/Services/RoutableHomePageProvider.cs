@@ -28,11 +28,11 @@ namespace Orchard.Core.Routable.Services {
 
         public ActionResult GetHomePage(int itemId) {
             var contentItem = _contentManager.Get(itemId, VersionOptions.Published);
-            if (contentItem == null || !contentItem.Is<IsRoutable>())
+            if (contentItem == null || !contentItem.Is<RoutePart>())
                 return new NotFoundResult();
 
             var model = new RoutableDisplayViewModel {
-                Routable = _contentManager.BuildDisplayModel<IRoutableAspect>(contentItem.As<IsRoutable>(), "Detail")
+                Routable = _contentManager.BuildDisplayModel<IRoutableAspect>(contentItem.As<RoutePart>(), "Detail")
             };
 
             return new ViewResult {

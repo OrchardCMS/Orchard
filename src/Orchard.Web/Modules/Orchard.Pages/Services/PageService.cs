@@ -35,11 +35,11 @@ namespace Orchard.Pages.Services {
         public IEnumerable<Page> Get(PageStatus status) {
             switch (status) {
                 case PageStatus.All:
-                    return _contentManager.Query(PageDriver.ContentType.Name).Join<RoutableRecord>().ForVersion(VersionOptions.Latest).List().AsPart<Page>();
+                    return _contentManager.Query(PageDriver.ContentType.Name).Join<RoutePartRecord>().ForVersion(VersionOptions.Latest).List().AsPart<Page>();
                 case PageStatus.Published:
-                    return _contentManager.Query(PageDriver.ContentType.Name).Join<RoutableRecord>().ForVersion(VersionOptions.Published).List().AsPart<Page>();
+                    return _contentManager.Query(PageDriver.ContentType.Name).Join<RoutePartRecord>().ForVersion(VersionOptions.Published).List().AsPart<Page>();
                 case PageStatus.Offline:
-                    return _contentManager.Query(PageDriver.ContentType.Name).Join<RoutableRecord>().ForVersion(VersionOptions.Latest).Where<ContentPartVersionRecord>(ci => !ci.ContentItemVersionRecord.Published).List().AsPart<Page>();
+                    return _contentManager.Query(PageDriver.ContentType.Name).Join<RoutePartRecord>().ForVersion(VersionOptions.Latest).Where<ContentPartVersionRecord>(ci => !ci.ContentItemVersionRecord.Published).List().AsPart<Page>();
                 default:
                     return Enumerable.Empty<Page>();
             }
@@ -51,7 +51,7 @@ namespace Orchard.Pages.Services {
 
         public Page Get(string slug) {
             return
-                _contentManager.Query(PageDriver.ContentType.Name).Join<RoutableRecord>().Where(rr => rr.Slug == slug).List().FirstOrDefault
+                _contentManager.Query(PageDriver.ContentType.Name).Join<RoutePartRecord>().Where(rr => rr.Slug == slug).List().FirstOrDefault
                     ().As<Page>();
         }
 
@@ -61,7 +61,7 @@ namespace Orchard.Pages.Services {
 
         public Page GetLatest(string slug) {
             return
-                _contentManager.Query(VersionOptions.Latest, PageDriver.ContentType.Name).Join<RoutableRecord>().Where(rr => rr.Slug == slug)
+                _contentManager.Query(VersionOptions.Latest, PageDriver.ContentType.Name).Join<RoutePartRecord>().Where(rr => rr.Slug == slug)
                     .Slice(0, 1).FirstOrDefault().As<Page>();
         }
 

@@ -29,7 +29,7 @@ namespace Orchard.Blogs.Services {
 
         public BlogPostPart Get(BlogPart blogPart, string slug, VersionOptions versionOptions) {
             return
-                _contentManager.Query(versionOptions, BlogPostPartDriver.ContentType.Name).Join<RoutableRecord>().Where(rr => rr.Slug == slug).
+                _contentManager.Query(versionOptions, BlogPostPartDriver.ContentType.Name).Join<RoutePartRecord>().Where(rr => rr.Slug == slug).
                     Join<CommonPartRecord>().Where(cr => cr.Container == blogPart.Record.ContentItemRecord).List().
                     SingleOrDefault().As<BlogPostPart>();
         }

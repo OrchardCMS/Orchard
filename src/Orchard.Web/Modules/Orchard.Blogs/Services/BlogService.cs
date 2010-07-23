@@ -20,13 +20,13 @@ namespace Orchard.Blogs.Services {
 
         public BlogPart Get(string slug) {
             return _contentManager.Query<BlogPart, BlogPartRecord>()
-                .Join<RoutableRecord>().Where(rr => rr.Slug == slug)
+                .Join<RoutePartRecord>().Where(rr => rr.Slug == slug)
                 .List().FirstOrDefault();
         }
 
         public IEnumerable<BlogPart> Get() {
             return _contentManager.Query<BlogPart, BlogPartRecord>()
-                .Join<RoutableRecord>()
+                .Join<RoutePartRecord>()
                 .OrderBy(br => br.Title)
                 .List();
         }
