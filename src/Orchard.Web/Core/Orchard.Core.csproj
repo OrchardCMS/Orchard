@@ -244,6 +244,11 @@
     <Content Include="Contents\Views\DisplayTemplates\Parts\Contents.Publish.SummaryAdmin.ascx" />
     <Content Include="Contents\Views\DisplayTemplates\Parts\Contents.Publish.ascx" />
     <Content Include="Localization\Views\EditorTemplates\Parts\Localization.Translation.ascx" />
+    <Content Include="PublishLater\Content\Admin\images\draft.gif" />
+    <Content Include="PublishLater\Content\Admin\images\offline.gif" />
+    <Content Include="PublishLater\Content\Admin\images\online.gif" />
+    <Content Include="PublishLater\Content\Admin\images\published.gif" />
+    <Content Include="PublishLater\Content\Admin\images\scheduled.gif" />
     <Content Include="PublishLater\Views\DisplayTemplates\Parts\PublishLater.Metadata.ascx" />
     <Content Include="PublishLater\Views\DisplayTemplates\Parts\PublishLater.Metadata.SummaryAdmin.ascx" />
     <Content Include="Common\Views\EditorTemplates\Fields\Common.TextField.ascx" />
