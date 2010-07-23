@@ -6,6 +6,7 @@ using Orchard.ContentManagement;
 using Orchard.ContentManagement.MetaData;
 using Orchard.Core.Common.Models;
 using Orchard.Core.Common.Settings;
+using Orchard.Core.Contents.Extensions;
 using Orchard.Core.Navigation.Models;
 using Orchard.Core.Routable.Models;
 using Orchard.Core.Settings.Descriptor.Records;
@@ -192,8 +193,9 @@ namespace Orchard.Setup.Services {
                     contentDefinitionManager.AlterTypeDefinition("BlogPost", cfg => cfg
                         .DisplayedAs("Blog Post")
                         .WithPart("CommentsPart")
-                        .WithPart("HasTags")
+                        .WithPart("TagsPart")
                         .WithPart("Localized")
+                        .Creatable()
                         .Indexed());
                     contentDefinitionManager.AlterTypeDefinition("Page", cfg => cfg
                         .DisplayedAs("Page")
@@ -202,8 +204,9 @@ namespace Orchard.Setup.Services {
                         .WithPart("IsRoutable")
                         .WithPart("BodyPart")
                         .WithPart("CommentsPart")
-                        .WithPart("HasTags")
+                        .WithPart("TagsPart")
                         .WithPart("Localized")
+                        .Creatable()
                         .Indexed());
                     contentDefinitionManager.AlterPartDefinition("BodyPart", cfg => cfg
                         .WithSetting("BodyPartSettings.FlavorDefault", BodyPartSettings.FlavorDefaultDefault));
