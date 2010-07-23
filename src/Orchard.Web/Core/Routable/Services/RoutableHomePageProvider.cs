@@ -12,6 +12,7 @@ namespace Orchard.Core.Routable.Services {
     [UsedImplicitly]
     public class RoutableHomePageProvider : IHomePageProvider {
         private readonly IContentManager _contentManager;
+        public const string Name = "RoutableHomePageProvider";
 
         public RoutableHomePageProvider(IOrchardServices services, IContentManager contentManager) {
             _contentManager = contentManager;
@@ -23,7 +24,11 @@ namespace Orchard.Core.Routable.Services {
         public Localizer T { get; set; }
 
         public string GetProviderName() {
-            return "RoutableHomePageProvider";
+            return Name;
+        }
+
+        public string GetSettingValue(int id) {
+            return GetProviderName() + ";" + id;
         }
 
         public ActionResult GetHomePage(int itemId) {

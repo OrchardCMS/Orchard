@@ -3,10 +3,5 @@
 <h1><%: Html.TitleForPage(T("Edit Blog").ToString()) %></h1>
 <% using (Html.BeginFormAntiForgeryPost()) { %>
     <%: Html.ValidationSummary() %>
-    <%: Html.EditorForItem(m => m.Blog) %>
-    <fieldset>
-        <%: Html.EditorFor(m => m.PromoteToHomePage) %>
-        <label for="PromoteToHomePage" class="forcheckbox"><%: T("Set as home page") %></label>
-    </fieldset>
-    <fieldset><input class="button primaryAction" type="submit" value="<%: T("Save") %>" /></fieldset><%
+    <%: Html.EditorForItem(m => m.Blog) %><%
    } %>

@@ -4,9 +4,11 @@ using JetBrains.Annotations;
 using Orchard.Blogs.Drivers;
 using Orchard.Blogs.Extensions;
 using Orchard.Blogs.Models;
+using Orchard.Blogs.Routing;
 using Orchard.Blogs.Services;
 using Orchard.Blogs.ViewModels;
 using Orchard.ContentManagement;
+using Orchard.Data;
 using Orchard.Localization;
 using Orchard.Mvc.Results;
 using Orchard.Settings;
@@ -18,16 +20,26 @@ namespace Orchard.Blogs.Controllers {
     public class BlogAdminController : Controller, IUpdateModel {
         private readonly IBlogService _blogService;
         private readonly IBlogPostService _blogPostService;
+        private readonly IContentManager _contentManager;
+        private readonly ITransactionManager _transactionManager;
+        private readonly IBlogSlugConstraint _blogSlugConstraint;
 
-        public BlogAdminController(IOrchardServices services, IBlogService blogService, IBlogPostService blogPostService) {
+        public BlogAdminController(IOrchardServices services,
+            IBlogService blogService,
+            IBlogPostService blogPostService,
+            IContentManager contentManager,
+            ITransactionManager transactionManager,
+            IBlogSlugConstraint blogSlugConstraint) {
             Services = services;
             _blogService = blogService;
             _blogPostService = blogPostService;
+            _contentManager = contentManager;
+            _transactionManager = transactionManager;
+            _blogSlugConstraint = blogSlugConstraint;
             T = NullLocalizer.Instance;
         }
 
         public Localizer T { get; set; }
-        protected virtual ISite CurrentSite { get; [UsedImplicitly] private set; }
         public IOrchardServices Services { get; set; }
 
         public ActionResult Create() {
@@ -47,20 +59,20 @@ namespace Orchard.Blogs.Controllers {
         }
 
         [HttpPost]
-        public ActionResult Create(CreateBlogViewModel model, bool PromoteToHomePage) {
-            //TODO: (erikpo) Might think about moving this to an ActionFilter/Attribute
+        public ActionResult Create(CreateBlogViewModel model) {
+            var blog = Services.ContentManager.New<BlogPart>(BlogPartDriver.ContentType.Name);
+
             if (!Services.Authorizer.Authorize(Permissions.ManageBlogs, T("Couldn't create blog")))
                 return new HttpUnauthorizedResult();
 
-            model.Blog = Services.ContentManager.UpdateEditorModel(Services.ContentManager.New<BlogPart>(BlogPartDriver.ContentType.Name), this);
+            _blogService.Create(blog);
+            model.Blog = _contentManager.UpdateEditorModel(blog, this);
+            _blogSlugConstraint.AddSlug(model.Blog.Item.Slug);
 
-            if (!ModelState.IsValid)
+            if (!ModelState.IsValid) {
+                _transactionManager.Cancel();
                 return View(model);
-
-            _blogService.Create(model.Blog.Item);
-
-            if (PromoteToHomePage)
-                CurrentSite.HomePage = "BlogHomePageProvider;" + model.Blog.Item.Id;
+            }
 
             return Redirect(Url.BlogForAdmin(model.Blog.Item.Slug));
         }
@@ -77,14 +89,14 @@ namespace Orchard.Blogs.Controllers {
 
             var model = new BlogEditViewModel {
                 Blog = Services.ContentManager.BuildEditorModel(blog),
-                PromoteToHomePage = CurrentSite.HomePage == "BlogHomePageProvider;" + blog.Id
+                //PromoteToHomePage = CurrentSite.HomePage == "BlogHomePageProvider;" + blog.Id
             };
 
             return View(model);
         }
 
-        [HttpPost]
-        public ActionResult Edit(string blogSlug, bool PromoteToHomePage) {
+        [HttpPost, ActionName("Edit")]
+        public ActionResult EditPOST(string blogSlug) {
             if (!Services.Authorizer.Authorize(Permissions.ManageBlogs, T("Couldn't edit blog")))
                 return new HttpUnauthorizedResult();
 
@@ -100,8 +112,8 @@ namespace Orchard.Blogs.Controllers {
             if (!ModelState.IsValid)
                 return View(model);
 
-            if (PromoteToHomePage)
-                CurrentSite.HomePage = "BlogHomePageProvider;" + model.Blog.Item.Id;
+            //if (PromoteToHomePage)
+            //    CurrentSite.HomePage = "BlogHomePageProvider;" + model.Blog.Item.Id;
 
             _blogService.Edit(model.Blog.Item);
 
