@@ -1,10 +1,8 @@
-﻿using Orchard.ContentManagement;
-
-namespace Orchard.Themes {
+﻿namespace Orchard.Themes {
     /// <summary>
     /// Interface provided by the "themes" model. 
     /// </summary>
-    public interface ITheme : IContent {
+    public interface ITheme {
         string ThemeName { get; set; }
         string DisplayName { get; set; }
         string Description { get; set; }

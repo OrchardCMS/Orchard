@@ -69,11 +69,10 @@
     <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="DataMigrations\ThemesDataMigration.cs" />
     <Compile Include="DesignerNotes\ZoneManagerEvents.cs" />
-    <Compile Include="Handlers\ThemeSiteSettingsHandler.cs" />
+    <Compile Include="Handlers\ThemeSiteSettingsPartHandler.cs" />
     <Compile Include="Models\Theme.cs" />
-    <Compile Include="Models\ThemeRecord.cs" />
-    <Compile Include="Models\ThemeSiteSettings.cs" />
-    <Compile Include="Models\ThemeSiteSettingsRecord.cs" />
+    <Compile Include="Models\ThemeSiteSettingsPart.cs" />
+    <Compile Include="Models\ThemeSiteSettingsPartRecord.cs" />
     <Compile Include="Permissions.cs" />
     <Compile Include="Preview\IPreviewTheme.cs" />
     <Compile Include="Preview\PreviewTheme.cs" />
