@@ -6,6 +6,7 @@ using Orchard.Localization;
 using Orchard.Modules.ViewModels;
 using Orchard.Mvc.Results;
 using Orchard.Packaging;
+using Orchard.Packaging.Services;
 using Orchard.Reports.Services;
 using Orchard.UI.Notify;
 

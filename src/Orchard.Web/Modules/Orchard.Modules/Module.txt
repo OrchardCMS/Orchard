@@ -8,4 +8,5 @@ description: The Modules module enables the administrator of the site to manage 
 features:
     Orchard.Modules:
         Description: Standard module and feature management.
+        Dependencies: PackagingServices
         Category: Core
