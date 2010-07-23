@@ -5,7 +5,7 @@ using Orchard.Packaging.Services;
 using Orchard.UI.Notify;
 
 namespace Orchard.Packaging.Commands {
-    [OrchardFeature("Packaging")]
+    [OrchardFeature("Orchard.Packaging")]
     public class PackagingCommands : DefaultOrchardCommandHandler {
         private readonly IPackageManager _packageManager;
         private readonly INotifier _notifier;
