@@ -8,11 +8,9 @@ namespace Orchard.Packaging.Commands {
     [OrchardFeature("Orchard.Packaging")]
     public class PackagingCommands : DefaultOrchardCommandHandler {
         private readonly IPackageManager _packageManager;
-        private readonly INotifier _notifier;
 
-        public PackagingCommands(IPackageManager packageManager, INotifier notifier) {
+        public PackagingCommands(IPackageManager packageManager) {
             _packageManager = packageManager;
-            _notifier = notifier;
         }
 
         [OrchardSwitch]
@@ -36,9 +34,6 @@ namespace Orchard.Packaging.Commands {
             }
 
             var fileInfo = new FileInfo(filename);
-            foreach (var entry in _notifier.List()) {
-                Context.Output.WriteLine(entry.Message);
-            }
             Context.Output.WriteLine(T("Package \"{0}\" successfully created", fileInfo.FullName));
         }
 
@@ -51,9 +46,7 @@ namespace Orchard.Packaging.Commands {
 
             using (var stream = File.Open(filename, FileMode.Open, FileAccess.Read)) {
                 var packageInfo = _packageManager.Install(stream);
-                foreach (var entry in _notifier.List()) {
-                    Context.Output.WriteLine(entry.Message);
-                }
+                Context.Output.WriteLine(T("Package \"{0}\" successfully installed at \"{1}\"", packageInfo.ExtensionName, packageInfo.ExtensionPath));
             }
         }
     }
