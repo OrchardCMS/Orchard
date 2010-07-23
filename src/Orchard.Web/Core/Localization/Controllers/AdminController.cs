@@ -35,7 +35,7 @@ namespace Orchard.Core.Localization.Controllers {
             if (contentItem == null)
                 return new NotFoundResult();
 
-            if (!contentItem.Is<Localized>() || contentItem.As<Localized>().MasterContentItem != null) {
+            if (!contentItem.Is<LocalizationPart>() || contentItem.As<LocalizationPart>().MasterContentItem != null) {
                 var metadata = _contentManager.GetItemMetadata(contentItem);
                 return RedirectToAction(Convert.ToString(metadata.EditorRouteValues["action"]), metadata.EditorRouteValues);
             }
@@ -71,7 +71,7 @@ namespace Orchard.Core.Localization.Controllers {
             }
             else { // create
                 contentItemTranslation = _contentManager.New(contentItem.ContentType);
-                var localized = contentItemTranslation.As<Localized>();
+                var localized = contentItemTranslation.As<LocalizationPart>();
                 localized.MasterContentItem = contentItem;
                 localized.Culture = _cultureManager.GetCultureByName(viewModel.SelectedCulture);
                 _contentManager.Create(contentItemTranslation, VersionOptions.Draft);

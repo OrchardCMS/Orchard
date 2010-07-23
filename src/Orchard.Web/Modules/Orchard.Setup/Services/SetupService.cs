@@ -195,7 +195,7 @@ namespace Orchard.Setup.Services {
                         .DisplayedAs("Blog Post")
                         .WithPart("CommentsPart")
                         .WithPart("TagsPart")
-                        .WithPart("Localized")
+                        .WithPart("LocalizationPart")
                         .Creatable()
                         .Indexed());
                     contentDefinitionManager.AlterTypeDefinition("Page", cfg => cfg
@@ -206,7 +206,7 @@ namespace Orchard.Setup.Services {
                         .WithPart("BodyPart")
                         .WithPart("CommentsPart")
                         .WithPart("TagsPart")
-                        .WithPart("Localized")
+                        .WithPart("LocalizationPart")
                         .Creatable()
                         .Indexed());
                     contentDefinitionManager.AlterPartDefinition("BodyPart", cfg => cfg

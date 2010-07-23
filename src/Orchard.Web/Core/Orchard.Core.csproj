@@ -108,7 +108,7 @@
     <Compile Include="Localization\Controllers\AdminController.cs" />
     <Compile Include="Localization\DataMigrations\LocalizationDataMigration.cs" />
     <Compile Include="Localization\ViewModels\AddLocalizationViewModel.cs" />
-    <Compile Include="Localization\Drivers\LocalizationDriver.cs" />
+    <Compile Include="Localization\Drivers\LocalizationPartDriver.cs" />
     <Compile Include="Navigation\DataMigrations\NavigationDataMigration.cs" />
     <Compile Include="Reports\ViewModels\DisplayReportViewModel.cs" />
     <Compile Include="Reports\ViewModels\ReportsAdminIndexViewModel.cs" />
@@ -156,9 +156,9 @@
     <Compile Include="Feeds\Rss\RssResult.cs" />
     <Compile Include="HomePage\Controllers\HomeController.cs" />
     <Compile Include="HomePage\Routes.cs" />
-    <Compile Include="Localization\Handlers\LocalizationHandler.cs" />
-    <Compile Include="Localization\Models\Localized.cs" />
-    <Compile Include="Localization\Models\LocalizedRecord.cs" />
+    <Compile Include="Localization\Handlers\LocalizationPartHandler.cs" />
+    <Compile Include="Localization\Models\LocalizationPart.cs" />
+    <Compile Include="Localization\Models\LocalizationPartRecord.cs" />
     <Compile Include="Navigation\AdminMenu.cs" />
     <Compile Include="Navigation\Controllers\AdminController.cs" />
     <Compile Include="Navigation\Models\MenuItem.cs" />

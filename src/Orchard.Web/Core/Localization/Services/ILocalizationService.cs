@@ -4,9 +4,9 @@ using Orchard.Core.Localization.Models;
 
 namespace Orchard.Core.Localization.Services {
     public interface ILocalizationService : IDependency {
-        Localized GetLocalizedContentItem(IContent masterContentItem, string culture);
+        LocalizationPart GetLocalizedContentItem(IContent masterContentItem, string culture);
         string GetContentCulture(IContent contentItem);
         void SetContentCulture(IContent contentItem, string culture);
-        IEnumerable<Localized> GetLocalizations(IContent contentItem);
+        IEnumerable<LocalizationPart> GetLocalizations(IContent contentItem);
     }
 }

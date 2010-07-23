@@ -4,7 +4,7 @@ using Orchard.ContentManagement.Utilities;
 using Orchard.Localization.Records;
 
 namespace Orchard.Core.Localization.Models {
-    public sealed class Localized : ContentPart<LocalizedRecord> {
+    public sealed class LocalizationPart : ContentPart<LocalizationPartRecord> {
         private readonly LazyField<CultureRecord> _culture = new LazyField<CultureRecord>();
         private readonly LazyField<IContent> _masterContentItem = new LazyField<IContent>();
 
