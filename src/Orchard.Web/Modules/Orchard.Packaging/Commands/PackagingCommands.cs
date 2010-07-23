@@ -16,8 +16,8 @@ namespace Orchard.Packaging.Commands {
         [OrchardSwitch]
         public string Filename { get; set; }
 
-        [CommandHelp("packaging create package <moduleName>\r\n\t" + "Create a package for the module <moduleName>. The default filename is <moduleName>-<moduleVersion>.zip.")]
-        [CommandName("packaging create package")]
+        [CommandHelp("package create <moduleName>\r\n\t" + "Create a package for the module <moduleName>. The default filename is <moduleName>-<moduleVersion>.zip.")]
+        [CommandName("package create")]
         [OrchardSwitches("Filename")]
         public void CreatePackage(string moduleName) {
             var packageData = _packageManager.Harvest(moduleName);
@@ -37,8 +37,8 @@ namespace Orchard.Packaging.Commands {
             Context.Output.WriteLine(T("Package \"{0}\" successfully created", fileInfo.FullName));
         }
 
-        [CommandHelp("packaging install package <filename>\r\n\t" + "Install a module from a package <filename>.")]
-        [CommandName("packaging install package")]
+        [CommandHelp("package install <filename>\r\n\t" + "Install a module from a package <filename>.")]
+        [CommandName("package install ")]
         public void InstallPackage(string filename) {
             if (!File.Exists(filename)) {
                 Context.Output.WriteLine(T("File \"{0}\" does not exist.", filename));
