@@ -22,7 +22,7 @@ namespace Orchard.Sandbox.Controllers {
 
         public ActionResult Index() {
             var model = new PageIndexViewModel {
-                Pages = Services.ContentManager.Query<SandboxPage, SandboxPageRecord>()
+                Pages = Services.ContentManager.Query<SandboxPagePart, SandboxPagePartRecord>()
                     .OrderBy(x => x.Name)
                     .List()
                     .Select(x => Services.ContentManager.BuildDisplayModel(x, "SummaryList"))
@@ -32,12 +32,12 @@ namespace Orchard.Sandbox.Controllers {
 
         public ActionResult Show(int id) {
             return View(new PageShowViewModel {
-                Page = Services.ContentManager.BuildDisplayModel<SandboxPage>(id, "Detail")
+                Page = Services.ContentManager.BuildDisplayModel<SandboxPagePart>(id, "Detail")
             });
         }
 
         public ActionResult Create() {
-            var settings = CurrentSite.Get<ContentPart<SandboxSettingsRecord>>();
+            var settings = CurrentSite.Get<ContentPart<SandboxSettingsPartRecord>>();
             if (settings.Record.AllowAnonymousEdits == false && CurrentUser == null) {
                 Services.Notifier.Error(T("Anonymous users can not create pages"));
                 return RedirectToAction("index");
@@ -49,13 +49,13 @@ namespace Orchard.Sandbox.Controllers {
 
         [HttpPost]
         public ActionResult Create(PageCreateViewModel model) {
-            var settings = CurrentSite.Get<ContentPart<SandboxSettingsRecord>>();
+            var settings = CurrentSite.Get<ContentPart<SandboxSettingsPartRecord>>();
             if (settings.Record.AllowAnonymousEdits == false && CurrentUser == null) {
                 Services.Notifier.Error(T("Anonymous users can not create pages"));
                 return RedirectToAction("index");
             }
 
-            var page = Services.ContentManager.Create<SandboxPage>(SandboxPageDriver.ContentType.Name, item => {
+            var page = Services.ContentManager.Create<SandboxPagePart>(SandboxPagePartDriver.ContentType.Name, item => {
                 item.Record.Name = model.Name;
             });
             return RedirectToAction("show", new { page.ContentItem.Id });
@@ -67,7 +67,7 @@ namespace Orchard.Sandbox.Controllers {
                 return RedirectToAction("show", new { id });
             }
 
-            var latest = Services.ContentManager.GetLatest<SandboxPage>(id);
+            var latest = Services.ContentManager.GetLatest<SandboxPagePart>(id);
             return View(new PageEditViewModel {
                 Page = Services.ContentManager.BuildEditorModel(latest)
             });
@@ -78,7 +78,7 @@ namespace Orchard.Sandbox.Controllers {
             if (IsEditAllowed() == false) {
                 return RedirectToAction("show", new { id });
             }
-            var latest = Services.ContentManager.GetDraftRequired<SandboxPage>(id);
+            var latest = Services.ContentManager.GetDraftRequired<SandboxPagePart>(id);
             var model = new PageEditViewModel {
                 Page = Services.ContentManager.UpdateEditorModel(latest, this)
             };
@@ -91,7 +91,7 @@ namespace Orchard.Sandbox.Controllers {
         }
 
         bool IsEditAllowed() {
-            var settings = CurrentSite.Get<ContentPart<SandboxSettingsRecord>>();
+            var settings = CurrentSite.Get<ContentPart<SandboxSettingsPartRecord>>();
             if (settings.Record.AllowAnonymousEdits == false && CurrentUser == null) {
                 Services.Notifier.Error(T("Anonymous users can not edit pages"));
                 return false;

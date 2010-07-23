@@ -1,4 +1,4 @@
-<%@ Control Language="C#" Inherits="Orchard.Mvc.ViewUserControl<SandboxSettingsRecord>" %>
+<%@ Control Language="C#" Inherits="Orchard.Mvc.ViewUserControl<SandboxSettingsPartRecord>" %>
 <%@ Import Namespace="Orchard.Sandbox.Models"%>
 <fieldset>
     <legend>Sandbox</legend>
