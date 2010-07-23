@@ -78,7 +78,10 @@ namespace Orchard {
             var orchardDirectory = GetOrchardDirectory(_arguments.WorkingDirectory);
             LogInfo("Orchard root directory: \"{0}\"", orchardDirectory.FullName);
 
-            return CreateHostAndExecute(orchardDirectory);
+            int result = CreateHostAndExecute(orchardDirectory);
+            if (result == 240/*special return code for "Retry"*/)
+                result = CreateHostAndExecute(orchardDirectory);
+            return result;
         }
 
         private int CreateHostAndExecute(DirectoryInfo orchardDirectory) {

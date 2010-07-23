@@ -42,18 +42,16 @@ namespace Orchard.Commands {
         }
 
         public int StartHost(TextReader input, TextWriter output) {
-
-            // This retry logic is not exactly clean, but a change in configuration
-            // sometimes need us to re-try initializing a host container.
-        Retry:
             try {
                 _hostContainer = CreateHostContainer();
                 _tenants = new Dictionary<string, IStandaloneEnvironment>();
                 return 0;
             }
             catch (OrchardCommandHostRetryException e) {
-                output.WriteLine("{0} (Retrying...)", e.Message);
-                goto Retry;
+                // Special "Retry" return code for our host
+                output.WriteLine("{0}", e.Message);
+                output.WriteLine("(Retrying...)");
+                return 240;
             }
             catch (Exception e) {
                 for (; e != null; e = e.InnerException) {
