@@ -6,7 +6,7 @@ namespace Orchard.Users.ViewModels {
 
     public class UsersIndexViewModel : BaseViewModel {
         public class Row {
-            public User User { get; set; }
+            public UserPart UserPart { get; set; }
         }
 
         public IList<Row> Rows { get; set; }

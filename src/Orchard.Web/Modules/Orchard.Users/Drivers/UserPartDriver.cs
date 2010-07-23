@@ -6,7 +6,7 @@ using Orchard.Users.Models;
 
 namespace Orchard.Users.Drivers {
     [UsedImplicitly]
-    public class UserDriver : ContentItemDriver<User> {
+    public class UserPartDriver : ContentItemDriver<UserPart> {
         public readonly static ContentType ContentType = new ContentType {
                                                                              Name = "User",
                                                                              DisplayName = "User Profile"
@@ -18,12 +18,12 @@ namespace Orchard.Users.Drivers {
             return ContentType;
         }
 
-        protected override string GetDisplayText(User item) {
+        protected override string GetDisplayText(UserPart item) {
             //TEMP: need a "display name" probably... showing login info likely not a best practice...
             return item.UserName;
         }
 
-        public override RouteValueDictionary GetEditorRouteValues(User item) {
+        public override RouteValueDictionary GetEditorRouteValues(UserPart item) {
             return new RouteValueDictionary {
                                                 {"Area", "Orchard.Users"},
                                                 {"Controller", "Admin"},

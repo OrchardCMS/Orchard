@@ -18,7 +18,7 @@ namespace Orchard.Users.Services {
         public ILogger Logger { get; set; }
 
         public string VerifyUserUnicity(string userName, string email) {
-            IEnumerable<User> allUsers = _contentManager.Query<User, UserRecord>().List();
+            IEnumerable<UserPart> allUsers = _contentManager.Query<UserPart, UserPartRecord>().List();
 
             foreach (var user in allUsers) {
                 if (String.Equals(userName.ToLower(), user.NormalizedUserName, StringComparison.OrdinalIgnoreCase)) {
@@ -33,7 +33,7 @@ namespace Orchard.Users.Services {
         }
 
         public string VerifyUserUnicity(int id, string userName, string email) {
-            IEnumerable<User> allUsers = _contentManager.Query<User, UserRecord>().List();
+            IEnumerable<UserPart> allUsers = _contentManager.Query<UserPart, UserPartRecord>().List();
             foreach (var user in allUsers) {
                 if (user.Id == id)
                     continue;

@@ -6,9 +6,9 @@ using Orchard.Users.Models;
 
 namespace Orchard.Users.Handlers {
     [UsedImplicitly]
-    public class UserHandler : ContentHandler {
-        public UserHandler(IRepository<UserRecord> repository) {
-            Filters.Add(new ActivatingFilter<User>(UserDriver.ContentType.Name));
+    public class UserPartHandler : ContentHandler {
+        public UserPartHandler(IRepository<UserPartRecord> repository) {
+            Filters.Add(new ActivatingFilter<UserPart>(UserPartDriver.ContentType.Name));
             Filters.Add(StorageFilter.For(repository));
         }
     }

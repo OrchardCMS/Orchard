@@ -68,10 +68,10 @@
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="DataMigrations\UsersDataMigration.cs" />
-    <Compile Include="Drivers\UserDriver.cs" />
-    <Compile Include="Models\User.cs" />
-    <Compile Include="Handlers\UserHandler.cs" />
-    <Compile Include="Models\UserRecord.cs" />
+    <Compile Include="Drivers\UserPartDriver.cs" />
+    <Compile Include="Models\UserPart.cs" />
+    <Compile Include="Handlers\UserPartHandler.cs" />
+    <Compile Include="Models\UserPartRecord.cs" />
     <Compile Include="Permissions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\IUserService.cs" />

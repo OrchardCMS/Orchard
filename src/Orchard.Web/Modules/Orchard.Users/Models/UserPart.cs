@@ -2,7 +2,7 @@
 using Orchard.Security;
 
 namespace Orchard.Users.Models {
-    public sealed class User : ContentPart<UserRecord>, IUser {
+    public sealed class UserPart : ContentPart<UserPartRecord>, IUser {
         public int Id {
             get { return ContentItem.Id; }
         }
