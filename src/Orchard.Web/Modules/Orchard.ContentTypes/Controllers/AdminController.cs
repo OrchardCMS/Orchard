@@ -5,6 +5,7 @@ using Orchard.ContentManagement;
 using Orchard.ContentManagement.MetaData.Models;
 using Orchard.ContentTypes.Services;
 using Orchard.ContentTypes.ViewModels;
+using Orchard.Core.Contents.Settings;
 using Orchard.Localization;
 using Orchard.Mvc.Results;
 using Orchard.UI.Notify;
@@ -113,7 +114,7 @@ namespace Orchard.ContentTypes.Controllers {
             var viewModel = new AddPartsViewModel {
                 Type = typeViewModel,
                 PartSelections = _contentDefinitionService.GetParts()
-                    .Where(cpd => !typeViewModel.Parts.Any(p => p.PartDefinition.Name == cpd.Name))
+                    .Where(cpd => !typeViewModel.Parts.Any(p => p.PartDefinition.Name == cpd.Name) && cpd.Settings.GetModel<ContentPartSettings>().Attachable)
                     .Select(cpd => new PartSelectionViewModel { PartName = cpd.Name, PartDisplayName = cpd.DisplayName })
             };
 

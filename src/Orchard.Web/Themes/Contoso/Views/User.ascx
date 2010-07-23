@@ -8,6 +8,6 @@
     <% }
        else
        { %>
-        <li><%: Html.ActionLink(T("Login").ToString(), "LogOn", new { Controller = "Account", Area = "Orchard.Users", ReturnUrl = Context.Request.RawUrl })%></li>
+        <li><%: Html.ActionLink(T("Log On").ToString(), "LogOn", new { Controller = "Account", Area = "Orchard.Users", ReturnUrl = Context.Request.RawUrl })%></li>
     <% } %>
 </ul>

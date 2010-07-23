@@ -4,6 +4,7 @@ using Orchard.Comments.Models;
 using Orchard.ContentManagement.Drivers;
 using Orchard.ContentManagement.MetaData;
 using Orchard.ContentManagement.MetaData.Builders;
+using Orchard.Core.Contents.Extensions;
 using Orchard.Data.Migration;
 
 namespace Orchard.Comments.DataMigrations {
@@ -81,6 +82,11 @@ namespace Orchard.Comments.DataMigrations {
                 }));
 
             return 3;
+        }
+
+        public int UpdateFrom3() {
+            ContentDefinitionManager.AlterPartDefinition("CommentsPart", builder => builder.Attachable());
+            return 4;
         }
     }
 }

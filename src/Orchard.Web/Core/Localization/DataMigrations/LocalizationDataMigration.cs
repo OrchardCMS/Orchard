@@ -2,6 +2,7 @@
 using Orchard.ContentManagement.Drivers;
 using Orchard.ContentManagement.MetaData;
 using Orchard.ContentManagement.MetaData.Builders;
+using Orchard.Core.Contents.Extensions;
 using Orchard.Core.Localization.Models;
 using Orchard.Data.Migration;
 
@@ -25,6 +26,11 @@ namespace Orchard.Core.Localization.DataMigrations {
                     {"Editor", new ContentLocation { Zone = "primary", Position = "1" }},
                 }));
             return 2;
+        }
+
+        public int UpdateFrom2() {
+            ContentDefinitionManager.AlterPartDefinition("LocalizationPart", builder => builder.Attachable());
+            return 3;
         }
     }
 }
