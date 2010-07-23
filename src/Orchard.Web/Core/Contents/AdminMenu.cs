@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.MetaData;
+using Orchard.Core.Contents.Settings;
 using Orchard.Localization;
 using Orchard.UI.Navigation;
 
@@ -22,7 +23,7 @@ namespace Orchard.Core.Contents {
 
             builder.Add(T("Content"), "2", menu => {
                 menu.Add(T("Manage Content"), "1", item => item.Action("List", "Admin", new { area = "Contents", id = "" }));
-                foreach (var contentTypeDefinition in contentTypeDefinitions) {
+                foreach (var contentTypeDefinition in contentTypeDefinitions.Where(ctd => ctd.Settings.GetModel<ContentTypeSettings>().Creatable)) {
                     var ci = _contentManager.New(contentTypeDefinition.Name);
                     var cim = _contentManager.GetItemMetadata(ci);
                     var createRouteValues = cim.CreateRouteValues;

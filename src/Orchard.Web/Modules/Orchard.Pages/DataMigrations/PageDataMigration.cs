@@ -16,5 +16,15 @@ namespace Orchard.Pages.DataMigrations {
             
             return 1;
         }
+
+
+        public int UpdateFrom1() {
+            ContentDefinitionManager.AlterTypeDefinition("Page",
+                cfg => cfg
+                    .WithSetting("ContentTypeSettings.Creatable", "true")
+            );
+
+            return 2;
+        }
     }
 }
