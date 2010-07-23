@@ -62,13 +62,15 @@
   </Target>
 
   <Target Name ="Compile">
-    <!--<MSBuild
-      Projects="$(SrcFolder)\Orchard.sln"
-      Targets="Build"/>-->
+    <!-- Compile to "OutputFolder" -->
     <MSBuild
       Projects="$(SrcFolder)\Orchard.sln"
       Targets="Build"
       Properties="Configuration=Release;OutputPath=$(CompileFolder)" />
+    <!-- Compile to "regular" output folder for devs using VS locally -->
+    <MSBuild
+      Projects="$(SrcFolder)\Orchard.sln"
+      Targets="Build"/>
   </Target>
 
   <Target Name ="CompileMsBuildTasks">
