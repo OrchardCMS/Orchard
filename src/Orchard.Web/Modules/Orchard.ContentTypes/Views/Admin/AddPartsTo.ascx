@@ -14,7 +14,7 @@ using (Html.BeginFormAntiForgeryPost()) { %>
                         "{0} <label for=\"{1}\" class=\"forcheckbox\">{2}</label>{3}",
                         Html.CheckBox(fieldNameStart + "IsSelected"),
                         ViewData.TemplateInfo.GetFullHtmlFieldId(fieldNameStart + "IsSelected"),
-                        partSelection.PartName,
+                        partSelection.PartDisplayName,
                         Html.Hidden(fieldNameStart + "PartName", partSelection.PartName)));
             },
             "available-parts")%>

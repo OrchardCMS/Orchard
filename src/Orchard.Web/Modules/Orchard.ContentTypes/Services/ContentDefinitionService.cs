@@ -6,6 +6,7 @@ using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
 using Orchard.ContentManagement.MetaData;
 using Orchard.ContentManagement.MetaData.Models;
+using Orchard.ContentTypes.Extensions;
 using Orchard.ContentTypes.ViewModels;
 using Orchard.Core.Contents.Extensions;
 using Orchard.Core.Contents.Settings;
@@ -149,7 +150,8 @@ namespace Orchard.ContentTypes.Services {
         public IEnumerable<EditPartViewModel> GetParts() {
             var typeNames = GetTypes().Select(ctd => ctd.Name);
             // code-defined parts
-            var codeDefinedParts = _contentPartDrivers.SelectMany(d => d.GetPartInfo().Select(cpi => new EditPartViewModel {Name = cpi.PartName}));
+            var codeDefinedParts = _contentPartDrivers
+                .SelectMany(d => d.GetPartInfo().Select(cpi => new EditPartViewModel { Name = cpi.PartName }));
             // user-defined parts
             var contentParts = _contentDefinitionManager.ListPartDefinitions().Where(cpd => !codeDefinedParts.Any(m => m.Name == cpd.Name)).Select(cpd => new EditPartViewModel(cpd));
             // all together now, except for those parts with the same name as a type (implicit type's part or a mistake)
