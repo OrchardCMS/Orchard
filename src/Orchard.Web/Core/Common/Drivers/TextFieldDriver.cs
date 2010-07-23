@@ -19,14 +19,14 @@ namespace Orchard.Core.Common.Drivers {
         }
 
         protected override DriverResult Display(ContentPart part, TextField field, string displayType) {
-            var location = field.PartFieldDefinition.Settings.GetModel<LocationSettings>().Get(displayType, "primary", "5");
+            var location = field.GetLocation(displayType, "primary", "1");
 
             return ContentFieldTemplate(field, TemplateName, GetPrefix(field, part))
                 .Location(location);
         }
 
         protected override DriverResult Editor(ContentPart part, TextField field) {
-            var location = field.PartFieldDefinition.Settings.GetModel<LocationSettings>().Get("Editor", "primary", "5");
+            var location = field.GetLocation("Editor", "primary", "1");
 
             return ContentFieldTemplate(field, TemplateName, GetPrefix(field, part))
                 .Location(location);

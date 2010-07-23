@@ -99,7 +99,7 @@ namespace Orchard.Core.ContentsLocation.Settings {
                 var viewModel = new LocationSettingsViewModel {
                     Definition = location,
                     Location = settings.Get(location.Name),
-                    DefaultLocation = new ContentLocation { Zone = "body", Position = "" }
+                    DefaultLocation = new ContentLocation { Zone = "primary", Position = "1" }
                 };
                 yield return DefinitionTemplate(viewModel, templateName: "LocationSettings", prefix: location.Name);
             }
