@@ -12,13 +12,13 @@ using Orchard.UI.Notify;
 namespace Orchard.Packaging.Controllers {
     [OrchardFeature("Gallery")]
     [Themed, Admin]
-    public class PackagingController : Controller {
+    public class GalleryController : Controller {
         private readonly IPackageManager _packageManager;
         private readonly IPackagingSourceManager _packagingSourceManager;
         private readonly IExtensionManager _extensionManager;
         private readonly INotifier _notifier;
 
-        public PackagingController(
+        public GalleryController(
             IPackageManager packageManager,
             IPackagingSourceManager packagingSourceManager,
             IExtensionManager extensionManager,

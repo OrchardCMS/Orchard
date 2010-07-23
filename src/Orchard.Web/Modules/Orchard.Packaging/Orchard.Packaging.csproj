@@ -73,7 +73,7 @@
     <Compile Include="Commands\GalleryCommands.cs" />
     <Compile Include="Commands\PackagingCommands.cs" />
     <Compile Include="Controllers\DownloadStreamResult.cs" />
-    <Compile Include="Controllers\PackagingController.cs" />
+    <Compile Include="Controllers\GalleryController.cs" />
     <Compile Include="Services\AtomExtensions.cs" />
     <Compile Include="Services\IPackageBuilder.cs" />
     <Compile Include="Services\IPackageExpander.cs" />
@@ -93,10 +93,10 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Module.txt" />
-    <Content Include="Views\Packaging\Harvest.ascx" />
-    <Content Include="Views\Packaging\Modules.ascx" />
-    <Content Include="Views\Packaging\Sources.ascx" />
-    <Content Include="Views\Packaging\_Subnav.ascx" />
+    <Content Include="Views\Gallery\Harvest.ascx" />
+    <Content Include="Views\Gallery\Modules.ascx" />
+    <Content Include="Views\Gallery\Sources.ascx" />
+    <Content Include="Views\Gallery\_Subnav.ascx" />
     <Content Include="Views\Web.config" />
   </ItemGroup>
   <ItemGroup>
