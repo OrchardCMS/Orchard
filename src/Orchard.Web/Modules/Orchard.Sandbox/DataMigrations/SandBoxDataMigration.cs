@@ -5,12 +5,12 @@ namespace Orchard.Sandbox.DataMigrations {
     public class SandboxDataMigration : DataMigrationImpl {
 
         public int Create() {
-            SchemaBuilder.CreateTable("SandboxPageRecord", table => table
+            SchemaBuilder.CreateTable("SandboxPagePartRecord", table => table
                 .ContentPartRecord()
                 .Column<string>("Name")
                 );
 
-            SchemaBuilder.CreateTable("SandboxSettingsRecord", table => table
+            SchemaBuilder.CreateTable("SandboxSettingsPartRecord", table => table
                 .ContentPartRecord()
                 .Column<bool>("AllowAnonymousEdits")
                 );
@@ -22,7 +22,7 @@ namespace Orchard.Sandbox.DataMigrations {
 
             ContentDefinitionManager.AlterTypeDefinition("SandboxPage", 
                 cfg => cfg
-                    .WithPart("SandboxPage")
+                    .WithPart("SandboxPagePart")
                     .WithPart("CommonPart")
                     .WithPart("IsRoutable")
                     .WithPart("BodyPart")
