@@ -25,7 +25,7 @@ namespace Orchard.Tags.DataMigrations {
             return 1;
         }
         public int UpdateFrom1() {
-            ContentDefinitionManager.AlterPartDefinition(typeof(HasTags).Name, cfg => cfg
+            ContentDefinitionManager.AlterPartDefinition(typeof(TagsPart).Name, cfg => cfg
                 .WithLocation(new Dictionary<string, ContentLocation> {
                     {"Default", new ContentLocation { Zone = "primary", Position = "49" }},
                     {"Editor", new ContentLocation { Zone = "primary", Position = "9" }},

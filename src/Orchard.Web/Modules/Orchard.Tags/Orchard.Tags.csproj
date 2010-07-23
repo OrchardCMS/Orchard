@@ -72,11 +72,11 @@
     <Compile Include="Services\ITagService.cs" />
     <Compile Include="ViewModels\EditTagsViewModel.cs" />
     <Compile Include="Controllers\HomeController.cs" />
-    <Compile Include="Drivers\HasTagsDriver.cs" />
+    <Compile Include="Drivers\TagsPartDriver.cs" />
     <Compile Include="Helpers\TagHelpers.cs" />
-    <Compile Include="Models\HasTags.cs" />
+    <Compile Include="Models\TagsPart.cs" />
     <Compile Include="Models\Tag.cs" />
-    <Compile Include="Handlers\HasTagsHandler.cs" />
+    <Compile Include="Handlers\TagsPartHandler.cs" />
     <Compile Include="Permissions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Routes.cs" />

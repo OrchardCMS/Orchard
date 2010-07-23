@@ -3,8 +3,8 @@ using Orchard.ContentManagement;
 using Orchard.ContentManagement.Utilities;
 
 namespace Orchard.Tags.Models {
-    public class HasTags : ContentPart {
-        public HasTags() {
+    public class TagsPart : ContentPart {
+        public TagsPart() {
             AllTags = new List<Tag>();
             CurrentTags = new List<Tag>();
         }

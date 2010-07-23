@@ -1,4 +1,4 @@
-<%@ Control Language="C#" Inherits="Orchard.Mvc.ViewUserControl<HasTags>" %>
+<%@ Control Language="C#" Inherits="Orchard.Mvc.ViewUserControl<TagsPart>" %>
 <%@ Import Namespace="Orchard.Tags.Models" %>
 <% if (Model.CurrentTags.Count > 0) { %>
     <p class="tags group">
