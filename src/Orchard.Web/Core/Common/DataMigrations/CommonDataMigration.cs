@@ -4,6 +4,7 @@ using Orchard.ContentManagement.Drivers;
 using Orchard.ContentManagement.MetaData;
 using Orchard.ContentManagement.MetaData.Builders;
 using Orchard.Core.Common.Models;
+using Orchard.Core.Contents.Extensions;
 using Orchard.Data.Migration;
 
 namespace Orchard.Core.Common.DataMigrations {
@@ -52,6 +53,12 @@ namespace Orchard.Core.Common.DataMigrations {
                     {"Editor", new ContentLocation { Zone = "primary", Position = "20" }},
                 }));
             return 3;
+        }
+
+        public int UpdateFrom3() {
+            ContentDefinitionManager.AlterPartDefinition("BodyPart", builder => builder.Attachable());
+            ContentDefinitionManager.AlterPartDefinition("CommonPart", builder => builder.Attachable());
+            return 4;
         }
     }
 }

@@ -86,6 +86,7 @@
     <Compile Include="Contents\Permissions.cs" />
     <Compile Include="Contents\Routes.cs" />
     <Compile Include="Contents\Settings\ContentTypeSettings.cs" />
+    <Compile Include="Contents\Settings\ContentPartSettings.cs" />
     <Compile Include="Contents\ViewModels\PublishContentViewModel.cs" />
     <Compile Include="Localization\ViewModels\EditLocalizationViewModel.cs" />
     <Compile Include="PublishLater\DataMigrations\PublishLaterDataMigration.cs" />

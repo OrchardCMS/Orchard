@@ -2,6 +2,7 @@
 using Orchard.ContentManagement.Drivers;
 using Orchard.ContentManagement.MetaData;
 using Orchard.ContentManagement.MetaData.Builders;
+using Orchard.Core.Contents.Extensions;
 using Orchard.Data.Migration;
 using Orchard.Tags.Models;
 
@@ -31,6 +32,11 @@ namespace Orchard.Tags.DataMigrations {
                     {"Editor", new ContentLocation { Zone = "primary", Position = "9" }},
                 }));
             return 2;
+        }
+
+        public int UpdateFrom2() {
+            ContentDefinitionManager.AlterPartDefinition("TagsPart", builder => builder.Attachable());
+            return 3;
         }
     }
 }

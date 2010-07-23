@@ -8,6 +8,6 @@ namespace Orchard.Packaging.Services {
         void RemoveSource(Guid id);
         void UpdateLists();
 
-        IEnumerable<PackagingEntry> GetModuleList();
+        IEnumerable<PackagingEntry> GetModuleList(PackagingSource packagingSource = null);
     }
 }

@@ -86,6 +86,7 @@
     <Compile Include="Services\PackagingEntry.cs" />
     <Compile Include="Services\PackagingSource.cs" />
     <Compile Include="Services\PackagingSourceManager.cs" />
+    <Compile Include="ViewModels\PackagingAddSourceViewModel.cs" />
     <Compile Include="ViewModels\PackagingHarvestViewModel.cs" />
     <Compile Include="ViewModels\PackagingModulesViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -93,6 +94,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Module.txt" />
+    <Content Include="Views\Gallery\AddSource.ascx" />
     <Content Include="Views\Gallery\Harvest.ascx" />
     <Content Include="Views\Gallery\Modules.ascx" />
     <Content Include="Views\Gallery\Sources.ascx" />

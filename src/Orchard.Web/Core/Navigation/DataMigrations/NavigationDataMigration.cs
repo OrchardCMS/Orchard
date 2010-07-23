@@ -2,6 +2,7 @@
 using Orchard.ContentManagement.Drivers;
 using Orchard.ContentManagement.MetaData;
 using Orchard.ContentManagement.MetaData.Builders;
+using Orchard.Core.Contents.Extensions;
 using Orchard.Core.Navigation.Models;
 using Orchard.Data.Migration;
 
@@ -41,6 +42,11 @@ namespace Orchard.Core.Navigation.DataMigrations {
                     {"Editor", new ContentLocation { Zone = "primary", Position = "9" }}
                 }));
             return 3;
+        }
+
+        public int UpdateFrom3() {
+            ContentDefinitionManager.AlterPartDefinition("MenuPart", builder => builder.Attachable());
+            return 4;
         }
     }
 }

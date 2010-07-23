@@ -13,7 +13,7 @@ namespace Orchard.Packaging {
             builder.Add(T("Gallery"), "5", menu => menu
                         .Add(T("Browse Gallery"), "1.0", item => item
                              .Action("Index", "Gallery", new { area = "Orchard.Packaging" }))
-                        .Add(T("Manage Feeds"), "2.0", item => item
+                        .Add(T("Gallery Feeds"), "2.0", item => item
                              .Action("Sources", "Gallery", new { area = "Orchard.Packaging" })));
         }
     }

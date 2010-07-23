@@ -2,6 +2,7 @@
 using Orchard.ContentManagement.Drivers;
 using Orchard.ContentManagement.MetaData;
 using Orchard.ContentManagement.MetaData.Builders;
+using Orchard.Core.Contents.Extensions;
 using Orchard.Core.Routable.Models;
 using Orchard.Data.Migration;
 
@@ -27,6 +28,11 @@ namespace Orchard.Core.Routable.DataMigrations {
                 } ));
 
             return 2;
+        }
+
+        public int UpdateFrom2() {
+            ContentDefinitionManager.AlterPartDefinition("RoutePart", builder => builder.Attachable());
+            return 3;
         }
     }
 }

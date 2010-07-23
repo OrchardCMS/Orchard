@@ -33,7 +33,7 @@ namespace Orchard.Packaging.Controllers {
         Localizer T { get; set; }
 
         public ActionResult Index() {
-            return Modules();
+            return Modules(Guid.Empty);
         }
 
         public ActionResult Sources() {
@@ -42,16 +42,59 @@ namespace Orchard.Packaging.Controllers {
             });
         }
 
-        public ActionResult AddSource(string url) {
-            _packagingSourceManager.AddSource(new PackagingSource { Id = Guid.NewGuid(), FeedUrl = url });
+        public ActionResult Remove(Guid id) {
+            _packagingSourceManager.RemoveSource(id);
+            _notifier.Information(T("The feed has been removed successfully."));
             Update();
             return RedirectToAction("Sources");
         }
 
+        public ActionResult AddSource() {
+            return View(new PackagingAddSourceViewModel());
+        }
 
-        public ActionResult Modules() {
+        public ActionResult AddSourceViewResult(PackagingAddSourceViewModel model) {
+            return View("AddSource", model);
+        }
+
+        [HttpPost]
+        public ActionResult AddSource(string title, string url) {
+            try {
+                if ( !String.IsNullOrEmpty(url) ) {
+                    if (!url.StartsWith("http")) {
+                        ModelState.AddModelError("Url", T("The Url is a valid").Text);
+                    }
+                }
+                else if ( String.IsNullOrWhiteSpace(url)) {
+                    ModelState.AddModelError("Url", T("Url is required").Text);
+                }
+
+                if ( String.IsNullOrWhiteSpace(title) ) {
+                    ModelState.AddModelError("Url", T("Title is required").Text);
+                }
+
+                if ( !ModelState.IsValid )
+                    return AddSourceViewResult(new PackagingAddSourceViewModel(){Title = title, Url = url});
+
+                _packagingSourceManager.AddSource(new PackagingSource { Id = Guid.NewGuid(), FeedUrl = url, FeedTitle = title });
+                _notifier.Information(T("The feed has been added successfully."));
+                Update();
+                return RedirectToAction("Sources");
+            }
+            catch ( Exception exception ) {
+                _notifier.Error(T("Adding feed failed: {0}", exception.Message));
+                return AddSourceViewResult(new PackagingAddSourceViewModel() { Title = title, Url = url });
+            }
+        }
+
+
+        public ActionResult Modules(Guid? sourceId) {
+            var selectedSource = _packagingSourceManager.GetSources().Where(s => s.Id == sourceId).FirstOrDefault();
+
             return View("Modules", new PackagingModulesViewModel {
-                Modules = _packagingSourceManager.GetModuleList()
+                Modules = _packagingSourceManager.GetModuleList(selectedSource),
+                Sources = _packagingSourceManager.GetSources().OrderBy(s => s.FeedTitle),
+                SelectedSource = selectedSource
             });
         }
 

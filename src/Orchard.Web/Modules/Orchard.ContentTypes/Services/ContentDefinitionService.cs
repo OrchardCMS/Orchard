@@ -149,11 +149,11 @@ namespace Orchard.ContentTypes.Services {
 
         public IEnumerable<EditPartViewModel> GetParts() {
             var typeNames = GetTypes().Select(ctd => ctd.Name);
+            // user-defined parts
+            var contentParts = _contentDefinitionManager.ListPartDefinitions().Select(cpd => new EditPartViewModel(cpd));
             // code-defined parts
             var codeDefinedParts = _contentPartDrivers
-                .SelectMany(d => d.GetPartInfo().Select(cpi => new EditPartViewModel { Name = cpi.PartName }));
-            // user-defined parts
-            var contentParts = _contentDefinitionManager.ListPartDefinitions().Where(cpd => !codeDefinedParts.Any(m => m.Name == cpd.Name)).Select(cpd => new EditPartViewModel(cpd));
+                .SelectMany(d => d.GetPartInfo().Where(cpd => !contentParts.Any(m => m.Name == cpd.PartName)).Select(cpi => new EditPartViewModel { Name = cpi.PartName }));
             // all together now, except for those parts with the same name as a type (implicit type's part or a mistake)
             return contentParts.Where(m => !typeNames.Contains(m.Name)).Union(codeDefinedParts).OrderBy(m => m.Name);
         }
