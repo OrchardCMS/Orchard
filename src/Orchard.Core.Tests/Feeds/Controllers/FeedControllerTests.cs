@@ -149,16 +149,16 @@ namespace Orchard.Core.Tests.Feeds.Controllers {
             var clock = new StubClock();
             var hello = new ContentItemBuilder(new ContentTypeDefinitionBuilder().Named("hello").Build())
                 .Weld<CommonPart>()
-                .Weld<IsRoutable>()
+                .Weld<RoutePart>()
                 .Weld<BodyPart>()
                 .Build();
             hello.As<CommonPart>().Record = new CommonPartRecord();
-            hello.As<IsRoutable>().Record = new RoutableRecord();
+            hello.As<RoutePart>().Record = new RoutePartRecord();
             hello.As<BodyPart>().Record = new BodyPartRecord();
 
             hello.As<CommonPart>().PublishedUtc = clock.UtcNow;
-            hello.As<IsRoutable>().Title = "alpha";
-            hello.As<IsRoutable>().Slug = "beta";
+            hello.As<RoutePart>().Title = "alpha";
+            hello.As<RoutePart>().Slug = "beta";
             hello.As<BodyPart>().Text = "gamma";
 
             var query = new StubQuery(new[] {

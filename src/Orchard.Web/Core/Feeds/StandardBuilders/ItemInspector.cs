@@ -10,14 +10,14 @@ namespace Orchard.Core.Feeds.StandardBuilders {
         private readonly IContent _item;
         private readonly ContentItemMetadata _metadata;
         private readonly ICommonPart _common;
-        private readonly IsRoutable _routable;
+        private readonly RoutePart _routable;
         private readonly BodyPart _body;
 
         public ItemInspector(IContent item, ContentItemMetadata metadata) {
             _item = item;
             _metadata = metadata;
             _common = item.Get<ICommonPart>();
-            _routable = item.Get<IsRoutable>();
+            _routable = item.Get<RoutePart>();
             _body = item.Get<BodyPart>();
         }
 

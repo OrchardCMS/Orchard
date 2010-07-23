@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Web.Mvc;
 using Orchard.ContentManagement;
+using Orchard.ContentManagement.Aspects;
 using Orchard.Core.Localization.Models;
 using Orchard.Core.Localization.Services;
 using Orchard.Core.Localization.ViewModels;
@@ -9,6 +10,7 @@ using Orchard.Localization;
 using Orchard.Localization.Services;
 using Orchard.Mvc.Results;
 using Orchard.Mvc.ViewModels;
+using Orchard.UI.Notify;
 
 namespace Orchard.Core.Localization.Controllers {
     [ValidateInput(false)]
@@ -35,7 +37,7 @@ namespace Orchard.Core.Localization.Controllers {
             if (contentItem == null)
                 return new NotFoundResult();
 
-            if (!contentItem.Is<Localized>() || contentItem.As<Localized>().MasterContentItem != null) {
+            if (!contentItem.Is<LocalizationPart>() || contentItem.As<LocalizationPart>().MasterContentItem != null) {
                 var metadata = _contentManager.GetItemMetadata(contentItem);
                 return RedirectToAction(Convert.ToString(metadata.EditorRouteValues["action"]), metadata.EditorRouteValues);
             }
@@ -71,10 +73,14 @@ namespace Orchard.Core.Localization.Controllers {
             }
             else { // create
                 contentItemTranslation = _contentManager.New(contentItem.ContentType);
-                var localized = contentItemTranslation.As<Localized>();
+                var localized = contentItemTranslation.As<LocalizationPart>();
                 localized.MasterContentItem = contentItem;
                 localized.Culture = _cultureManager.GetCultureByName(viewModel.SelectedCulture);
                 _contentManager.Create(contentItemTranslation, VersionOptions.Draft);
+
+                if (!contentItem.Has<IPublishingControlAspect>() && contentItem.VersionRecord != null && contentItem.VersionRecord.Published) {
+                    _contentManager.Publish(contentItemTranslation);
+                }
             }
 
             if (ModelState.IsValid)
@@ -86,6 +92,8 @@ namespace Orchard.Core.Localization.Controllers {
                 PrepareEditorViewModel(viewModel.Content);
                 return View(viewModel);
             }
+
+            Services.Notifier.Information(T("Created content item translation"));
 
             var metadata = _contentManager.GetItemMetadata(viewModel.Content.Item);
             if (metadata.EditorRouteValues == null)

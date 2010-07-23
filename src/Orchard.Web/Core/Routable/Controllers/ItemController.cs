@@ -30,7 +30,7 @@ namespace Orchard.Core.Routable.Controllers {
             }
 
             var hits = _contentManager
-                .Query<IsRoutable, RoutableRecord>(VersionOptions.Published)
+                .Query<RoutePart, RoutePartRecord>(VersionOptions.Published)
                 .Where(r => r.Path == matchedPath)
                 .Slice(0, 2);
             if (hits.Count() == 0) {

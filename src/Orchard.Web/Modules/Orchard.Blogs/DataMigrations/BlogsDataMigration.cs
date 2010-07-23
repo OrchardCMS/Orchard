@@ -33,7 +33,7 @@ namespace Orchard.Blogs.DataMigrations {
                 cfg => cfg
                     .WithPart("BlogPart")
                     .WithPart("CommonPart")
-                    .WithPart("IsRoutable")
+                    .WithPart("RoutePart")
                 );
 
             ContentDefinitionManager.AlterTypeDefinition("BlogPost", 
@@ -41,7 +41,7 @@ namespace Orchard.Blogs.DataMigrations {
                     .WithPart("BlogPostPart")
                     .WithPart("CommonPart")
                     .WithPart("PublishLaterPart")
-                    .WithPart("IsRoutable")
+                    .WithPart("RoutePart")
                     .WithPart("BodyPart")
                 );
 

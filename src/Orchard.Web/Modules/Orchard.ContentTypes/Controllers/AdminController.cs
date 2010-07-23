@@ -114,7 +114,7 @@ namespace Orchard.ContentTypes.Controllers {
                 Type = typeViewModel,
                 PartSelections = _contentDefinitionService.GetParts()
                     .Where(cpd => !typeViewModel.Parts.Any(p => p.PartDefinition.Name == cpd.Name))
-                    .Select(cpd => new PartSelectionViewModel { PartName = cpd.Name })
+                    .Select(cpd => new PartSelectionViewModel { PartName = cpd.Name, PartDisplayName = cpd.DisplayName })
             };
 
             return View(viewModel);
@@ -131,10 +131,8 @@ namespace Orchard.ContentTypes.Controllers {
                 return new NotFoundResult();
 
             var viewModel = new AddPartsViewModel();
-            if (!TryUpdateModel(viewModel)) {
-                viewModel.Type = typeViewModel;
-                return View(viewModel);
-            }
+            if (!TryUpdateModel(viewModel))
+                return AddPartsTo(id);
 
             var partsToAdd = viewModel.PartSelections.Where(ps => ps.IsSelected).Select(ps => ps.PartName);
             foreach (var partToAdd in partsToAdd) {
@@ -144,8 +142,7 @@ namespace Orchard.ContentTypes.Controllers {
 
             if (!ModelState.IsValid) {
                 Services.TransactionManager.Cancel(); ;
-                viewModel.Type = typeViewModel;
-                return View(viewModel);
+                return AddPartsTo(id);
             }
 
             return RedirectToAction("Edit", new {id});

@@ -215,7 +215,7 @@ namespace Orchard.Tests.DataMigration {
             }
 
             public int Create() {
-                SchemaBuilder.CreateTable("UserRecord", table => 
+                SchemaBuilder.CreateTable("UserPartRecord", table => 
                     table.Column("Id", DbType.Int32, column => 
                         column.PrimaryKey().Identity()));
 

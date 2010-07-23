@@ -100,6 +100,8 @@
     <Content Include="Global.asax" />
     <Content Include="Refresh.html" />
     <Content Include="Themes\Contoso\Views\DisplayTemplates\Items\Contents.Item.ascx" />
+    <Content Include="Themes\Contoso\Views\DisplayTemplates\Parts\Blogs.BlogPost.Metadata.ascx" />
+    <Content Include="Themes\Corporate\Views\DisplayTemplates\Parts\Blogs.BlogPost.Metadata.ascx" />
     <Content Include="Themes\TheAdmin\Scripts\admin.js" />
     <Content Include="Themes\TheAdmin\Styles\ie.css" />
     <Content Include="Themes\TheAdmin\Styles\images\menuClosed.gif" />
@@ -146,7 +148,7 @@
     <Content Include="Themes\ClassicDark\Views\DisplayTemplates\Items\Blogs.BlogPost.ascx" />
     <Content Include="Themes\ClassicDark\Views\DisplayTemplates\Items\Blogs.BlogPost.Summary.ascx" />
     <Content Include="Themes\ClassicDark\Views\DisplayTemplates\Parts\Blogs.BlogPost.Metadata.ascx" />
-    <Content Include="Themes\ClassicDark\Views\DisplayTemplates\Parts\Pages.Page.Metadata.ascx" />
+    <Content Include="Themes\ClassicDark\Views\DisplayTemplates\Parts\Common.Metadata.ascx" />
     <Content Include="Themes\ClassicDark\Views\Footer.ascx" />
     <Content Include="Themes\ClassicDark\Views\Layout.ascx" />
     <Content Include="Themes\ClassicDark\Views\ZoneTest.ascx" />
@@ -162,7 +164,7 @@
     <Content Include="Themes\Classic\Views\DisplayTemplates\Items\Blogs.Blog.Summary.ascx" />
     <Content Include="Themes\Classic\Views\DisplayTemplates\Items\Blogs.BlogPost.ascx" />
     <Content Include="Themes\Classic\Views\DisplayTemplates\Items\Blogs.BlogPost.Summary.ascx" />
-    <Content Include="Themes\Classic\Views\DisplayTemplates\Parts\Pages.Page.Metadata.ascx" />
+    <Content Include="Themes\Classic\Views\DisplayTemplates\Parts\Common.Metadata.ascx" />
     <Content Include="Themes\Classic\Views\Footer.ascx" />
     <Content Include="Themes\Classic\Views\Layout.ascx" />
     <Content Include="Themes\Classic\Views\ZoneTest.ascx" />
@@ -194,10 +196,10 @@
     <Content Include="Themes\Contoso\Zones\Sidebar-w1.html" />
     <Content Include="Themes\Contoso\Views\DisplayTemplates\Items\Blogs.Blog.ascx" />
     <Content Include="Themes\Contoso\Views\DisplayTemplates\Items\Blogs.BlogPost.ascx" />
-    <Content Include="Themes\Contoso\Views\DisplayTemplates\Items\Pages.Page.ascx" />
+    <Content Include="Themes\Contoso\Views\DisplayTemplates\Items\Contents.Item.ascx" />
     <Content Include="Themes\Contoso\Views\DisplayTemplates\Items\Blogs.BlogPost.ListByArchive.ascx" />
     <Content Include="Themes\Contoso\Views\DisplayTemplates\Parts\Comments.Comments.ascx" />
-    <Content Include="Themes\Contoso\Views\DisplayTemplates\Parts\Pages.Page.Metadata.ascx" />
+    <Content Include="Themes\Contoso\Views\DisplayTemplates\Parts\Common.Metadata.ascx" />
     <Content Include="Themes\Contoso\Views\DisplayTemplates\Parts\Tags.ShowTags.ascx" />
     <Content Include="Themes\Contoso\Views\Header.ascx" />
     <Content Include="Themes\Contoso\Scripts\easySlider.js" />
@@ -239,9 +241,9 @@
     <Content Include="Themes\Corporate\Views\DisplayTemplates\Items\Blogs.Blog.ascx" />
     <Content Include="Themes\Corporate\Views\DisplayTemplates\Items\Blogs.BlogPost.ascx" />
     <Content Include="Themes\Corporate\Views\DisplayTemplates\Items\Blogs.BlogPost.ListByArchive.ascx" />
-    <Content Include="Themes\Corporate\Views\DisplayTemplates\Items\Pages.Page.ascx" />
+    <Content Include="Themes\Corporate\Views\DisplayTemplates\Items\Contents.Item.ascx" />
     <Content Include="Themes\Corporate\Views\DisplayTemplates\Parts\Comments.Comments.ascx" />
-    <Content Include="Themes\Corporate\Views\DisplayTemplates\Parts\Pages.Page.Metadata.ascx" />
+    <Content Include="Themes\Corporate\Views\DisplayTemplates\Parts\Common.Metadata.ascx" />
     <Content Include="Themes\Corporate\Views\DisplayTemplates\Parts\Tags.ShowTags.ascx" />
     <Content Include="Themes\Corporate\Views\Footer.ascx" />
     <Content Include="Themes\Corporate\Views\Header.ascx" />
@@ -278,7 +280,7 @@
     <Content Include="Themes\Green\Styles\yui.css" />
     <Content Include="Themes\Green\Theme.png" />
     <Content Include="Themes\Green\Theme.txt" />
-    <Content Include="Themes\Green\Views\DisplayTemplates\Parts\Pages.Page.Metadata.ascx" />
+    <Content Include="Themes\Green\Views\DisplayTemplates\Parts\Common.Metadata.ascx" />
     <Content Include="Themes\Green\Views\Layout.HomePage.ascx" />
     <Content Include="Themes\Green\Views\DisplayTemplates\Items\Blogs.Blog.ascx" />
     <Content Include="Themes\Green\Views\DisplayTemplates\Items\Blogs.Blog.Summary.ascx" />

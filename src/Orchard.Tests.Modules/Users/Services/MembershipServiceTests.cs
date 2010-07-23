@@ -43,7 +43,7 @@ namespace Orchard.Tests.Modules.Users.Services {
             var databaseFileName = System.IO.Path.GetTempFileName();
             _sessionFactory = DataUtility.CreateSessionFactory(
                 databaseFileName,
-                typeof(UserRecord),
+                typeof(UserPartRecord),
                 typeof(ContentItemVersionRecord),
                 typeof(ContentItemRecord),
                 typeof(ContentTypeRecord));
@@ -65,7 +65,7 @@ namespace Orchard.Tests.Modules.Users.Services {
                 .As(typeof(IMapper<SettingsDictionary, XElement>));
             builder.RegisterType<ContentDefinitionManager>().As<IContentDefinitionManager>();
             builder.RegisterType<DefaultContentManagerSession>().As<IContentManagerSession>();
-            builder.RegisterType<UserHandler>().As<IContentHandler>();
+            builder.RegisterType<UserPartHandler>().As<IContentHandler>();
             builder.RegisterGeneric(typeof(Repository<>)).As(typeof(IRepository<>));
             _session = _sessionFactory.OpenSession();
             builder.RegisterInstance(new TestSessionLocator(_session)).As<ISessionLocator>();
@@ -84,7 +84,7 @@ namespace Orchard.Tests.Modules.Users.Services {
         public void DefaultPasswordFormatShouldBeHashedAndHaveSalt() {
             var user = _membershipService.CreateUser(new CreateUserParams("a", "b", "c", null, null, true));
 
-            var userRepository = _container.Resolve<IRepository<UserRecord>>();
+            var userRepository = _container.Resolve<IRepository<UserPartRecord>>();
             var userRecord = userRepository.Get(user.Id);
             Assert.That(userRecord.PasswordFormat, Is.EqualTo(MembershipPasswordFormat.Hashed));
             Assert.That(userRecord.Password, Is.Not.EqualTo("b"));
@@ -102,7 +102,7 @@ namespace Orchard.Tests.Modules.Users.Services {
             _session.Flush();
             _session.Clear();
 
-            var userRepository = _container.Resolve<IRepository<UserRecord>>();
+            var userRepository = _container.Resolve<IRepository<UserPartRecord>>();
             var user1Record = userRepository.Get(user1.Id);
             var user2Record = userRepository.Get(user2.Id);
             Assert.That(user1Record.PasswordSalt, Is.Not.EqualTo(user2Record.PasswordSalt));

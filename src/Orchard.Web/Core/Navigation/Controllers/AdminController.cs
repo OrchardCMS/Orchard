@@ -10,7 +10,6 @@ using Orchard.Localization;
 using Orchard.Mvc.AntiForgery;
 using Orchard.UI.Navigation;
 using Orchard.Utility;
-using MenuItem=Orchard.Core.Navigation.Models.MenuItem;
 
 namespace Orchard.Core.Navigation.Controllers {
     [ValidateInput(false)]
@@ -51,8 +50,8 @@ namespace Orchard.Core.Navigation.Controllers {
 
                 menuPart.MenuText = menuItemEntry.MenuItem.Text;
                 menuPart.MenuPosition = menuItemEntry.MenuItem.Position;
-                if (menuPart.Is<MenuItem>())
-                    menuPart.As<MenuItem>().Url = menuItemEntry.MenuItem.Url;
+                if (menuPart.Is<MenuItemPart>())
+                    menuPart.As<MenuItemPart>().Url = menuItemEntry.MenuItem.Url;
 
                 _services.ContentManager.UpdateEditorModel(menuPart, this);
             }
@@ -65,12 +64,12 @@ namespace Orchard.Core.Navigation.Controllers {
                                          MenuItem = new UI.Navigation.MenuItem {
                                                                                    Text = menuPart.MenuText,
                                                                                    Position = menuPart.MenuPosition,
-                                                                                   Url = menuPart.Is<MenuItem>()
-                                                                                             ? menuPart.As<MenuItem>().Url
+                                                                                   Url = menuPart.Is<MenuItemPart>()
+                                                                                             ? menuPart.As<MenuItemPart>().Url
                                                                                              : _navigationManager.GetUrl(null, _services.ContentManager.GetItemMetadata(menuPart).DisplayRouteValues)
                                                                                },
                                          MenuItemId = menuPart.Id,
-                                         IsMenuItem = menuPart.Is<MenuItem>()
+                                         IsMenuItem = menuPart.Is<MenuItemPart>()
                                      };
         }
 
@@ -83,7 +82,7 @@ namespace Orchard.Core.Navigation.Controllers {
             if (!_services.Authorizer.Authorize(Permissions.ManageMainMenu, T("Couldn't manage the main menu")))
                 return new HttpUnauthorizedResult();
 
-            var menuPart = _services.ContentManager.New<MenuPart>(MenuItemDriver.ContentType.Name);
+            var menuPart = _services.ContentManager.New<MenuPart>(MenuItemPartDriver.ContentType.Name);
             model.MenuItem = _services.ContentManager.UpdateEditorModel(menuPart, this);
 
             if (!ModelState.IsValid) {
@@ -108,7 +107,7 @@ namespace Orchard.Core.Navigation.Controllers {
             MenuPart menuPart = _menuService.Get(id);
 
             if (menuPart != null) {
-                if (menuPart.Is<MenuItem>())
+                if (menuPart.Is<MenuItemPart>())
                     _menuService.Delete(menuPart);
                 else
                     menuPart.OnMainMenu = false;

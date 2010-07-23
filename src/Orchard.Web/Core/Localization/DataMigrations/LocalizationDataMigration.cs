@@ -10,7 +10,7 @@ namespace Orchard.Core.Localization.DataMigrations {
 
         public int Create() {
             //CREATE TABLE Localization_LocalizedRecord (Id INTEGER not null, CultureId INTEGER, MasterContentItemId INTEGER, primary key (Id));
-            SchemaBuilder.CreateTable("LocalizedRecord", table => table
+            SchemaBuilder.CreateTable("LocalizationPartRecord", table => table
                 .ContentPartRecord()
                 .Column<int>("CultureId")
                 .Column<int>("MasterContentItemId")
@@ -19,7 +19,7 @@ namespace Orchard.Core.Localization.DataMigrations {
             return 1;
         }
         public int UpdateFrom1() {
-            ContentDefinitionManager.AlterPartDefinition(typeof(Localized).Name, cfg => cfg
+            ContentDefinitionManager.AlterPartDefinition(typeof(LocalizationPart).Name, cfg => cfg
                 .WithLocation(new Dictionary<string, ContentLocation> {
                     {"Default", new ContentLocation { Zone = "primary", Position = "5" }},
                     {"Editor", new ContentLocation { Zone = "primary", Position = "1" }},

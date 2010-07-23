@@ -10,7 +10,7 @@ namespace Orchard.Core.Navigation.DataMigrations {
 
         public int Create() {
             //CREATE TABLE Navigation_MenuItemRecord (Id INTEGER not null, Url TEXT, primary key (Id));
-            SchemaBuilder.CreateTable("MenuItemRecord", table => table
+            SchemaBuilder.CreateTable("MenuItemPartRecord", table => table
                 .ContentPartRecord()
                 .Column<string>("Url")
                 );

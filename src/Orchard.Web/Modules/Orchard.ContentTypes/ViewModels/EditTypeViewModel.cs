@@ -2,6 +2,7 @@
 using System.Linq;
 using Orchard.ContentManagement.MetaData.Models;
 using Orchard.ContentManagement.ViewModels;
+using Orchard.ContentTypes.Extensions;
 using Orchard.Mvc.ViewModels;
 
 namespace Orchard.ContentTypes.ViewModels {
@@ -80,6 +81,11 @@ namespace Orchard.ContentTypes.ViewModels {
 
         public string Prefix { get { return "PartDefinition"; } }
         public string Name { get; set; }
+        private string _displayName;
+        public string DisplayName {
+            get { return !string.IsNullOrWhiteSpace(_displayName) ? _displayName : Name.TrimEnd("Part").CamelFriendly(); }
+            set { _displayName = value; }
+        }
         public IEnumerable<TemplateViewModel> Templates { get; set; }
         public IEnumerable<EditPartFieldViewModel> Fields { get; set; }
         public SettingsDictionary Settings { get; set; }

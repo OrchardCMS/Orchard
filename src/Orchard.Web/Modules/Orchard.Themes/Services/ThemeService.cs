@@ -28,7 +28,7 @@ namespace Orchard.Themes.Services {
         protected virtual ISite CurrentSite { get; [UsedImplicitly] private set; }
 
         public ITheme GetSiteTheme() {
-            string currentThemeName = CurrentSite.As<ThemeSiteSettings>().Record.CurrentThemeName;
+            string currentThemeName = CurrentSite.As<ThemeSiteSettingsPart>().Record.CurrentThemeName;
 
             if (String.IsNullOrEmpty(currentThemeName)) {
                 return null;
@@ -39,7 +39,7 @@ namespace Orchard.Themes.Services {
 
         public void SetSiteTheme(string themeName) {
             if (GetThemeByName(themeName) != null) {
-                CurrentSite.As<ThemeSiteSettings>().Record.CurrentThemeName = themeName;
+                CurrentSite.As<ThemeSiteSettingsPart>().Record.CurrentThemeName = themeName;
             }
         }
 

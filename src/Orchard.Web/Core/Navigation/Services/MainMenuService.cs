@@ -4,7 +4,6 @@ using Orchard.ContentManagement;
 using Orchard.Core.Navigation.Models;
 using Orchard.Localization;
 using Orchard.UI.Navigation;
-using MenuItem=Orchard.Core.Navigation.Models.MenuItem;
 
 namespace Orchard.Core.Navigation.Services {
     [UsedImplicitly]
@@ -35,9 +34,9 @@ namespace Orchard.Core.Navigation.Services {
                 if (menuPart != null ) {
                     var part = menuPart;
 
-                    if (part.Is<MenuItem>())
+                    if (part.Is<MenuItemPart>())
                         builder.Add(
-                            menu => menu.Add(new LocalizedString(part.MenuText), part.MenuPosition, nib => nib.Url(part.As<MenuItem>().Url)));
+                            menu => menu.Add(new LocalizedString(part.MenuText), part.MenuPosition, nib => nib.Url(part.As<MenuItemPart>().Url)));
                     else
                         builder.Add(
                             menu =>

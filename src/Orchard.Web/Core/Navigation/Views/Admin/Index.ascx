@@ -58,7 +58,7 @@ using (Html.BeginFormAntiForgeryPost(Url.Action("create"), FormMethod.Post)) { %
             </td>
             <td>
                 <label for="Url"><%: T("Url")%></label>
-                <%: Html.EditorFor(nmvm => nmvm.NewMenuItem.MenuItem.Item.As<Orchard.Core.Navigation.Models.MenuItem>().Url)%>
+                <%: Html.EditorFor(nmvm => nmvm.NewMenuItem.MenuItem.Item.As<Orchard.Core.Navigation.Models.MenuItemPart>().Url)%>
             </td>
             <td><button class="add" type="submit"><%: T("Add") %></button></td>
         </tr>

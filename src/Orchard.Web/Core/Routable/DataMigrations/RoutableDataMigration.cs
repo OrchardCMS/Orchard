@@ -10,7 +10,7 @@ namespace Orchard.Core.Routable.DataMigrations {
 
         public int Create() {
             //CREATE TABLE Routable_RoutableRecord (Id INTEGER not null, Title TEXT, Slug TEXT, Path TEXT, ContentItemRecord_id INTEGER, primary key (Id));
-            SchemaBuilder.CreateTable("RoutableRecord", table => table
+            SchemaBuilder.CreateTable("RoutePartRecord", table => table
                 .ContentPartVersionRecord()
                 .Column<string>("Title", column => column.WithLength(1024))
                 .Column<string>("Slug")
@@ -21,7 +21,7 @@ namespace Orchard.Core.Routable.DataMigrations {
         }
 
         public int UpdateFrom1() {
-            ContentDefinitionManager.AlterPartDefinition(typeof(IsRoutable).Name, cfg => cfg
+            ContentDefinitionManager.AlterPartDefinition(typeof(RoutePart).Name, cfg => cfg
                 .WithLocation(new Dictionary<string, ContentLocation> {
                     {"Editor", new ContentLocation { Zone = "primary", Position = "before.5" }}
                 } ));

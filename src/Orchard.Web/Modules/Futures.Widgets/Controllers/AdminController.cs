@@ -21,7 +21,7 @@ namespace Futures.Widgets.Controllers {
         public Localizer T{ get; set;}
 
         public ActionResult AddWidget(string zoneName, string themeName, string returnUrl) {
-            var hasWidgetsRecord = CurrentSite.As<HasWidgets>().Record;
+            var hasWidgetsRecord = CurrentSite.As<WidgetsPart>().Record;
 
             var virtualPath = "~/Themes/" + themeName + "/Zones/" + zoneName + ".html";
             var physicalPath = Server.MapPath(virtualPath);
@@ -31,7 +31,7 @@ namespace Futures.Widgets.Controllers {
                 return Redirect(returnUrl);
             }
 
-            var widget = Services.ContentManager.Create<Widget>("HtmlWidget", init => {
+            var widget = Services.ContentManager.Create<WidgetPart>("HtmlWidget", init => {
                 init.Record.Scope = hasWidgetsRecord;
                 init.Record.Zone = zoneName;
                 init.Record.Position = "1";
