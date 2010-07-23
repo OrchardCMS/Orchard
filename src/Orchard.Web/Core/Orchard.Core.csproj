@@ -193,14 +193,14 @@
     <Compile Include="Scheduling\Models\Task.cs" />
     <Compile Include="Settings\DataMigrations\SettingsDataMigration.cs" />
     <Compile Include="Settings\ViewModels\SiteCulturesViewModel.cs" />
-    <Compile Include="Settings\Drivers\SiteSettingsDriver.cs" />
+    <Compile Include="Settings\Drivers\SiteSettingsPartDriver.cs" />
     <Compile Include="Settings\Metadata\ContentDefinitionManager.cs" />
     <Compile Include="Settings\Metadata\Records\ContentFieldDefinitionRecord.cs" />
     <Compile Include="Settings\Metadata\Records\ContentPartDefinitionRecord.cs" />
     <Compile Include="Settings\Metadata\Records\ContentPartFieldDefinitionRecord.cs" />
     <Compile Include="Settings\Metadata\Records\ContentTypeDefinitionRecord.cs" />
     <Compile Include="Settings\Metadata\Records\ContentTypePartDefinitionRecord.cs" />
-    <Compile Include="Settings\Models\SiteSettingsRecord.cs" />
+    <Compile Include="Settings\Models\SiteSettingsPartRecord.cs" />
     <Compile Include="Settings\Permissions.cs" />
     <Compile Include="Settings\State\Records\ShellFeatureStateRecord.cs" />
     <Compile Include="Settings\State\Records\ShellStateRecord.cs" />
@@ -211,8 +211,8 @@
     <Compile Include="Settings\Descriptor\ShellDescriptorManager.cs" />
     <Compile Include="Settings\AdminMenu.cs" />
     <Compile Include="Settings\Controllers\AdminController.cs" />
-    <Compile Include="Settings\Handlers\SiteSettingsHandler.cs" />
-    <Compile Include="Settings\Models\SiteSettings.cs" />
+    <Compile Include="Settings\Handlers\SiteSettingsPartHandler.cs" />
+    <Compile Include="Settings\Models\SiteSettingsPart.cs" />
     <Compile Include="Settings\Services\SiteService.cs" />
     <Compile Include="Settings\ViewModels\SettingsIndexViewModel.cs" />
     <Compile Include="XmlRpc\Controllers\HomeController.cs" />

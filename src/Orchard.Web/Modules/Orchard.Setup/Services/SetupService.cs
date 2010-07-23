@@ -167,7 +167,7 @@ namespace Orchard.Setup.Services {
 
                     // set site name and settings
                     var siteService = environment.Resolve<ISiteService>();
-                    var siteSettings = siteService.GetSiteSettings().As<SiteSettings>();
+                    var siteSettings = siteService.GetSiteSettings().As<SiteSettingsPart>();
                     siteSettings.Record.SiteSalt = Guid.NewGuid().ToString("N");
                     siteSettings.Record.SiteName = context.SiteName;
                     siteSettings.Record.SuperUser = context.AdminUsername;

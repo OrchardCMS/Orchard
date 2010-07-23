@@ -2,7 +2,7 @@
 using Orchard.Settings;
 
 namespace Orchard.Core.Settings.Models {
-    public sealed class SiteSettings : ContentPart<SiteSettingsRecord>, ISite {
+    public sealed class SiteSettingsPart : ContentPart<SiteSettingsPartRecord>, ISite {
         public static readonly ContentType ContentType = new ContentType { Name = "Site", DisplayName = "Site Settings" };
 
         public string PageTitleSeparator {

@@ -5,9 +5,9 @@ using Orchard.ContentManagement.Handlers;
 
 namespace Orchard.Core.Settings.Handlers {
     [UsedImplicitly]
-    public class SiteSettingsHandler : ContentHandler {
-        public SiteSettingsHandler(IRepository<SiteSettingsRecord> repository){
-            Filters.Add(new ActivatingFilter<SiteSettings>("Site"));
+    public class SiteSettingsPartHandler : ContentHandler {
+        public SiteSettingsPartHandler(IRepository<SiteSettingsPartRecord> repository){
+            Filters.Add(new ActivatingFilter<SiteSettingsPart>("Site"));
             Filters.Add(StorageFilter.For(repository));
         }
     }

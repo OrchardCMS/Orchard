@@ -5,15 +5,15 @@ using Orchard.Core.Settings.Models;
 
 namespace Orchard.Core.Settings.Drivers {
     [UsedImplicitly]
-    public class SiteSettingsDriver : ContentItemDriver<SiteSettings> {
+    public class SiteSettingsPartDriver : ContentItemDriver<SiteSettingsPart> {
         protected override ContentType GetContentType() {
-            return SiteSettings.ContentType;
+            return SiteSettingsPart.ContentType;
         }
 
-        protected override DriverResult Editor(SiteSettings part) {
+        protected override DriverResult Editor(SiteSettingsPart part) {
             return ContentItemTemplate("Items/Settings.Site");
         }
-        protected override DriverResult Editor(SiteSettings part, IUpdateModel updater) {
+        protected override DriverResult Editor(SiteSettingsPart part, IUpdateModel updater) {
             return ContentItemTemplate("Items/Settings.Site");
         }
     }

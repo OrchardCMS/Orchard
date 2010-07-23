@@ -6,7 +6,7 @@ using Orchard.Core.Settings.Models;
 
 namespace Orchard.Core.Settings.ViewModels {
     public class SettingsIndexViewModel : BaseViewModel {
-        public SiteSettings Site { get; set; }
+        public SiteSettingsPart Site { get; set; }
         public IEnumerable<string> SiteCultures { get; set; }
         public ContentItemViewModel ViewModel { get; set; }
         
@@ -18,23 +18,23 @@ namespace Orchard.Core.Settings.ViewModels {
 
         public string PageTitleSeparator
         {
-            get { return Site.As<SiteSettings>().Record.PageTitleSeparator; }
-            set { Site.As<SiteSettings>().Record.PageTitleSeparator = value; }
+            get { return Site.As<SiteSettingsPart>().Record.PageTitleSeparator; }
+            set { Site.As<SiteSettingsPart>().Record.PageTitleSeparator = value; }
         }
 
         public string SiteName {
-            get { return Site.As<SiteSettings>().Record.SiteName; }
-            set { Site.As<SiteSettings>().Record.SiteName = value; }
+            get { return Site.As<SiteSettingsPart>().Record.SiteName; }
+            set { Site.As<SiteSettingsPart>().Record.SiteName = value; }
         }
 
         public string SiteCulture {
-            get { return Site.As<SiteSettings>().Record.SiteCulture; }
-            set { Site.As<SiteSettings>().Record.SiteCulture = value; }
+            get { return Site.As<SiteSettingsPart>().Record.SiteCulture; }
+            set { Site.As<SiteSettingsPart>().Record.SiteCulture = value; }
         }
 
         public string SuperUser {
-            get { return Site.As<SiteSettings>().Record.SuperUser; }
-            set { Site.As<SiteSettings>().Record.SuperUser = value; }
+            get { return Site.As<SiteSettingsPart>().Record.SuperUser; }
+            set { Site.As<SiteSettingsPart>().Record.SuperUser = value; }
         }
     }
 }

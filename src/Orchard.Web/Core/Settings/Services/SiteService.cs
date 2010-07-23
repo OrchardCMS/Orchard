@@ -15,7 +15,7 @@ namespace Orchard.Core.Settings.Services {
         private readonly ICacheManager _cacheManager;
 
         public SiteService(
-            IRepository<SiteSettingsRecord> siteSettingsRepository,
+            IRepository<SiteSettingsPartRecord> siteSettingsRepository,
             IContentManager contentManager,
             ICacheManager cacheManager) {
             _contentManager = contentManager;
@@ -32,7 +32,7 @@ namespace Orchard.Core.Settings.Services {
                     .FirstOrDefault();
 
                 if (site == null) {
-                    site = _contentManager.Create<SiteSettings>("Site", item => {
+                    site = _contentManager.Create<SiteSettingsPart>("Site", item => {
                         item.Record.SiteSalt = Guid.NewGuid().ToString("N");
                         item.Record.SiteName = "My Orchard Project Application";
                         item.Record.PageTitleSeparator = " - ";
