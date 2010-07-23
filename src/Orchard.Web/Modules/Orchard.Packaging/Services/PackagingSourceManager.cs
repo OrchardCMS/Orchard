@@ -46,8 +46,8 @@ namespace Orchard.Packaging.Services {
             }
         }
 
-        public IEnumerable<PackagingEntry> GetModuleList() {
-            IEnumerable<PackagingEntry> packageInfos = GetSources()
+        public IEnumerable<PackagingEntry> GetModuleList(PackagingSource packagingSource = null) {
+            IEnumerable<PackagingEntry> packageInfos = ( packagingSource == null ? GetSources() : new [] { packagingSource })
                 .SelectMany(
                     source =>
                     Bind(ParseFeed(_appDataFolder.ReadFile(GetFeedCachePath(source))),
