@@ -16,15 +16,22 @@
 .content-localization .content-localizations>* {
     display:inline;
 }
+
+/*
+
+Removing the commas put in by the system by default and various other styling elements and putting the responsibility into the themes. [mibach]
+
 .content-localization .content-localizations li {
     border-bottom:0;
     display:inline;
     margin-left:.5em;
     padding:0;
 }
+
 .content-localization .content-localizations li::after {
     content:", ";
 }
 .content-localization .content-localizations li:last-child::after {
     content:"";
 }
+*/

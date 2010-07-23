@@ -1,6 +1,6 @@
 using Orchard.ContentManagement;
 
 namespace Orchard.Sandbox.Models {
-    public class SandboxPage : ContentPart<SandboxPageRecord> {
+    public class SandboxPagePart : ContentPart<SandboxPagePartRecord> {
     }
 }

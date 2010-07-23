@@ -6,15 +6,15 @@ using Orchard.Sandbox.Models;
 
 namespace Orchard.Sandbox.Handlers {
     [UsedImplicitly]
-    public class SandboxContentHandler : ContentHandler {
-        public SandboxContentHandler(IRepository<SandboxPageRecord> pageRepository, IRepository<SandboxSettingsRecord> settingsRepository) {
+    public class SandboxPagePartHandler : ContentHandler {
+        public SandboxPagePartHandler(IRepository<SandboxPagePartRecord> pageRepository, IRepository<SandboxSettingsPartRecord> settingsRepository) {
             // define the "SandboxPage" content type
             Filters.Add(StorageFilter.For(pageRepository) );
 
             // add settings to site, and simple record-template gui
-            Filters.Add(new ActivatingFilter<ContentPart<SandboxSettingsRecord>>("Site"));
+            Filters.Add(new ActivatingFilter<ContentPart<SandboxSettingsPartRecord>>("Site"));
             Filters.Add(StorageFilter.For(settingsRepository));
-            Filters.Add(new TemplateFilterForRecord<SandboxSettingsRecord>("SandboxSettings", "Parts/Sandbox.SiteSettings"));
+            Filters.Add(new TemplateFilterForRecord<SandboxSettingsPartRecord>("SandboxSettings", "Parts/Sandbox.SiteSettings"));
         }
     }
 }

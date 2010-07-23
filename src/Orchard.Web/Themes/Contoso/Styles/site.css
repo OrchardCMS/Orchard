@@ -372,6 +372,36 @@ body { background: #f3f4f4 url('../Content/Images/bkg.jpg') repeat-x; }
 .tagCloud a:hover { display: block; float: left; padding: 3px 5px 5px 5px; background-color: #a5cc7a; color: #668b3e; text-shadow: 1px 1px 0px #c8e6a6; -moz-border-radius: 5px;
 -webkit-border-radius: 5px; margin: 0px 10px 0px 0px; }
 
+
+/* Localization
+-------------------------------------------------------------- */
+
+.content-localization .content-localizations ul {
+    overflow: auto;
+}
+
+
+.content-localization .content-localizations li {
+    border-bottom: 1px;
+    float: left;
+    margin-left:.5em;
+    padding: 3px;
+    border: 1px solid #CCC;
+}
+
+.content-localization .content-localizations li:hover {
+    background-color: #ebebeb;
+}
+
+
+.content-localization .content-localizations li a {
+    text-decoration: none;
+}
+
+.content-localization .content-localizations li a:hover, .content-localization .content-localizations li a:visited {
+    text-decoration: none;
+}
+
 /*========= PLUGINS =========*/
 
 /*- Easy Slider -*/

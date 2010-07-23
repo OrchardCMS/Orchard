@@ -8,7 +8,7 @@ using Orchard.Sandbox.Models;
 
 namespace Orchard.Sandbox.Drivers {
     [UsedImplicitly]
-    public class SandboxPageDriver : ContentItemDriver<SandboxPage> {
+    public class SandboxPagePartDriver : ContentItemDriver<SandboxPagePart> {
         public readonly static ContentType ContentType = new ContentType {
                                                                              Name = "SandboxPage",
                                                                              DisplayName = "Sandbox Page"
@@ -17,11 +17,11 @@ namespace Orchard.Sandbox.Drivers {
         protected override ContentType GetContentType() {
             return ContentType;
         }
-        protected override string GetDisplayText(SandboxPage item) {
+        protected override string GetDisplayText(SandboxPagePart item) {
             return item.Record.Name;
         }
 
-        public override RouteValueDictionary GetDisplayRouteValues(SandboxPage item) {
+        public override RouteValueDictionary GetDisplayRouteValues(SandboxPagePart item) {
             return new RouteValueDictionary(
                 new {
                         area = "Orchard.Sandbox",
@@ -31,7 +31,7 @@ namespace Orchard.Sandbox.Drivers {
                     });
         }
 
-        public override RouteValueDictionary GetEditorRouteValues(SandboxPage item) {
+        public override RouteValueDictionary GetEditorRouteValues(SandboxPagePart item) {
             return new RouteValueDictionary(
                 new {
                         area = "Orchard.Sandbox",
@@ -41,17 +41,17 @@ namespace Orchard.Sandbox.Drivers {
                     });
         }
 
-        protected override DriverResult Display(SandboxPage part, string displayType) {
+        protected override DriverResult Display(SandboxPagePart part, string displayType) {
             return Combined(
                 ContentItemTemplate("Items/Sandbox.Page").LongestMatch(displayType, "Summary"),
                 ContentPartTemplate(part, "Parts/Sandbox.Page.Title").Location("title"));
         }
 
-        protected override DriverResult Editor(ContentItemViewModel<SandboxPage> model) {
+        protected override DriverResult Editor(ContentItemViewModel<SandboxPagePart> model) {
             return ContentItemTemplate("Items/Sandbox.Page");
         }
 
-        protected override DriverResult Editor(ContentItemViewModel<SandboxPage> model, IUpdateModel updater) {
+        protected override DriverResult Editor(ContentItemViewModel<SandboxPagePart> model, IUpdateModel updater) {
             updater.TryUpdateModel(model, Prefix, null, null);
             return ContentItemTemplate("Items/Sandbox.Page");
         }
