@@ -7,7 +7,9 @@ using System.Web.Routing;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Aspects;
 using Orchard.ContentManagement.MetaData;
+using Orchard.ContentManagement.MetaData.Models;
 using Orchard.Core.Common.Models;
+using Orchard.Core.Contents.Settings;
 using Orchard.Core.Contents.ViewModels;
 using Orchard.Data;
 using Orchard.Localization;
@@ -50,7 +52,7 @@ namespace Orchard.Core.Contents.Controllers {
             const int pageSize = 20;
             var skip = (Math.Max(model.Page ?? 0, 1) - 1) * pageSize;
 
-            var query = _contentManager.Query(VersionOptions.Latest, _contentDefinitionManager.ListTypeDefinitions().Select(ctd => ctd.Name).ToArray());
+            var query = _contentManager.Query(VersionOptions.Latest, GetCreatableTypes().Select(ctd => ctd.Name).ToArray());
 
             if (!string.IsNullOrEmpty(model.TypeName)) {
                 var contentTypeDefinition = _contentDefinitionManager.GetTypeDefinition(model.TypeName);
@@ -107,11 +109,15 @@ namespace Orchard.Core.Contents.Controllers {
 
             model.Entries = contentItems.Select(BuildEntry).ToList();
             model.Options.SelectedFilter = model.TypeName;
-            model.Options.FilterOptions = _contentDefinitionManager.ListTypeDefinitions()
+            model.Options.FilterOptions = GetCreatableTypes()
                 .Select(ctd => new KeyValuePair<string, string>(ctd.Name, ctd.DisplayName))
                 .ToList().OrderBy(kvp => kvp.Key);
 
             return View("List", model);
+        }
+
+        private IEnumerable<ContentTypeDefinition> GetCreatableTypes() {
+            return _contentDefinitionManager.ListTypeDefinitions().Where(ctd => ctd.Settings.GetModel<ContentTypeSettings>().Creatable);
         }
 
         [HttpPost, ActionName("List")]
@@ -120,7 +126,7 @@ namespace Orchard.Core.Contents.Controllers {
             var routeValues = ControllerContext.RouteData.Values;
             if (options != null) {
                 routeValues["Options.OrderBy"] = options.OrderBy; //todo: don't hard-code the key
-                if (_contentDefinitionManager.ListTypeDefinitions().Any(ctd => string.Equals(ctd.Name, options.SelectedFilter, StringComparison.OrdinalIgnoreCase))) {
+                if (GetCreatableTypes().Any(ctd => string.Equals(ctd.Name, options.SelectedFilter, StringComparison.OrdinalIgnoreCase))) {
                     routeValues["id"] = options.SelectedFilter;
                 }
                 else {
@@ -203,7 +209,7 @@ namespace Orchard.Core.Contents.Controllers {
 
         ActionResult CreatableTypeList() {
             var model = new ListContentTypesViewModel {
-                Types = _contentDefinitionManager.ListTypeDefinitions()
+                Types = GetCreatableTypes()
             };
 
             return View("CreatableTypeList", model);
