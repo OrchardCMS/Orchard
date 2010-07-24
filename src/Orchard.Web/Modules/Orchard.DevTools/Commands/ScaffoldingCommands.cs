@@ -5,17 +5,22 @@ using System.Web.Hosting;
 using Orchard.Commands;
 using Orchard.Data.Migration.Generator;
 using Orchard.DevTools.Services;
+using Orchard.Environment;
 using Orchard.Environment.Extensions;
 using Orchard.Environment.State;
 
 namespace Orchard.DevTools.Commands {
     [OrchardFeature("Scaffolding")]
     public class ScaffoldingCommands : DefaultOrchardCommandHandler {
+        private readonly IOrchardHost _orchardHost;
         private readonly IExtensionManager _extensionManager;
         private readonly ISchemaCommandGenerator _schemaCommandGenerator;
 
-        public ScaffoldingCommands(IExtensionManager extensionManager,
+        public ScaffoldingCommands(
+            IOrchardHost orchardHost,
+            IExtensionManager extensionManager,
             ISchemaCommandGenerator schemaCommandGenerator) {
+            _orchardHost = orchardHost;
             _extensionManager = extensionManager;
             _schemaCommandGenerator = schemaCommandGenerator;
         }
@@ -90,6 +95,7 @@ namespace Orchard.DevTools.Commands {
 
             IntegrateModule(moduleName);
             TouchSolution();
+            _orchardHost.ReloadExtensions();
             Context.Output.WriteLine(T("Module {0} created successfully", moduleName));
         }
 
