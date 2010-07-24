@@ -32,7 +32,7 @@ namespace Orchard.Setup.Commands {
         [OrchardSwitch]
         public string EnabledFeatures { get; set; }
 
-        [CommandHelp("setup /SiteName:<siteName> /AdminUserName:<username> /AdminPassword:<password> /DatabaseProvider:<SqlCe|SQLServer> " + 
+        [CommandHelp("setup /SiteName:<siteName> /AdminUsername:<username> /AdminPassword:<password> /DatabaseProvider:<SqlCe|SQLServer> " + 
             "/DatabaseConnectionString:<connection_string> /DatabaseTablePrefix:<table_prefix> /EnabledFeatures:<feature1,feature2,...>" +
             "\r\n\tRun first time setup for the site or for a given tenant")]
         [CommandName("setup")]
