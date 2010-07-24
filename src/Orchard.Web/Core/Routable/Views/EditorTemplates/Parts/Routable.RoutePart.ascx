@@ -18,8 +18,10 @@
         //pull slug input from tab order
         $("#<%: Html.FieldIdFor(m=>m.Slug)%>").attr("tabindex",-1);
         $("#<%: Html.FieldIdFor(m=>m.Title)%>").blur(function(){
+            var slug = $("#<%:Html.FieldIdFor(m=>m.Slug)%>");
+            if (slug.val()) { return true; }
             $(this).slugify({
-                target:$("#<%:Html.FieldIdFor(m=>m.Slug)%>"),
+                target:slug,
                 url:"<%: Url.Action("Slugify","Item",new RouteValueDictionary{{"Area","Routable"}})%>",
                 contentType:"<%: Model.ContentType %>",
                 id:"<%=Model.Id %>" <%if (Model.ContainerId != null) { %>,
