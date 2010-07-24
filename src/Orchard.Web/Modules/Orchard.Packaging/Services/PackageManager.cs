@@ -1,7 +1,9 @@
+using System;
 using System.IO;
 using System.IO.Packaging;
 using System.Linq;
 using System.Net;
+using System.Text;
 using Orchard.Environment.Extensions;
 using Orchard.Environment.Extensions.Models;
 
@@ -38,11 +40,13 @@ namespace Orchard.Packaging.Services {
             };
         }
 
-        public void Push(PackageData packageData, string feedUrl) {
+        public void Push(PackageData packageData, string feedUrl, string user, string password) {
             WebRequest request = WebRequest.Create(feedUrl);
             request.Method = "POST";
             request.ContentType = "application/x-package";
-            using (Stream requestStream = request.GetRequestStream()) {
+            request.Headers.Add("user", Convert.ToBase64String(Encoding.UTF8.GetBytes(user)));
+            request.Headers.Add("password", Convert.ToBase64String(Encoding.UTF8.GetBytes(password)));
+            using ( Stream requestStream = request.GetRequestStream() ) {
                 packageData.PackageStream.Seek(0, SeekOrigin.Begin);
                 packageData.PackageStream.CopyTo(requestStream);
             }

@@ -12,5 +12,7 @@ namespace Orchard.Packaging.ViewModels {
         public string ExtensionName { get; set; }
 
         public string FeedUrl { get; set; }
+        public string User { get; set; }
+        public string Password { get; set; }
     }
 }

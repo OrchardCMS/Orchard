@@ -2,11 +2,15 @@
 using System.IO;
 using System.IO.Packaging;
 using System.Linq;
+using System.Security.Authentication;
 using System.Security.Policy;
+using System.Text;
 using System.Web.Mvc;
 using System.Web.Routing;
 using System.ServiceModel.Syndication;
+using System.Web.Security;
 using PackageIndexReferenceImplementation.Controllers.Artifacts;
+using PackageIndexReferenceImplementation.Models;
 using PackageIndexReferenceImplementation.Services;
 
 namespace PackageIndexReferenceImplementation.Controllers {
@@ -15,9 +19,12 @@ namespace PackageIndexReferenceImplementation.Controllers {
         private readonly FeedStorage _feedStorage;
         private readonly MediaStorage _mediaStorage;
 
+        public IMembershipService MembershipService { get; set; }
+
         public AtomController() {
             _feedStorage = new FeedStorage();
             _mediaStorage = new MediaStorage();
+            if ( MembershipService == null ) { MembershipService = new AccountMembershipService(); }
         }
 
         public ActionResult Index() {
@@ -34,6 +41,13 @@ namespace PackageIndexReferenceImplementation.Controllers {
 
             var hostHeader = HttpContext.Request.Headers["Host"];
             var slugHeader = HttpContext.Request.Headers["Slug"];
+            var user = Encoding.UTF8.GetString(Convert.FromBase64String(HttpContext.Request.Headers["User"]));
+            var password = Encoding.UTF8.GetString(Convert.FromBase64String(HttpContext.Request.Headers["Password"]));
+
+            if ( !MembershipService.ValidateUser(user, password) ) {
+                throw new AuthenticationException("This credentials are not valid fo this action.");
+            }
+
             var utcNowDateString = DateTimeOffset.UtcNow.ToString("yyyy-MM-dd");
 
             var package = Package.Open(Request.InputStream, FileMode.Open, FileAccess.Read);

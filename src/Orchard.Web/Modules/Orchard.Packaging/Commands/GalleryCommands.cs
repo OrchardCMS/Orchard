@@ -10,6 +10,12 @@ namespace Orchard.Packaging.Commands {
     public class GalleryCommands : DefaultOrchardCommandHandler {
         private readonly IPackageManager _packageManager;
 
+        [OrchardSwitch]
+        public string User { get; set; }
+
+        [OrchardSwitch]
+        public string Password { get; set; }
+
         public GalleryCommands(IPackageManager packageManager) {
             _packageManager = packageManager;
         }
@@ -36,13 +42,24 @@ namespace Orchard.Packaging.Commands {
         }
 #endif
 
-        [CommandHelp("gallery submit module <moduleName> <feedUrl>\r\n\t" + "Package a module into a distributable and push it to a feed server.")]
+        [CommandHelp("gallery submit module <moduleName> <feedUrl> /User:<user> /Password:<password>\r\n\t" + "Package a module into a distributable and push it to a feed server.")]
         [CommandName("gallery submit module")]
+        [OrchardSwitches("User,Password")]
         public void SubmitModule(string moduleName, string feedUrl) {
             var packageData = _packageManager.Harvest(moduleName);
 
+            if ( String.IsNullOrWhiteSpace(User) ) {
+                Context.Output.WriteLine("Missing or incorrect User");
+                return;
+            }
+
+            if ( String.IsNullOrWhiteSpace(Password) ) {
+                Context.Output.WriteLine("Missing or incorrect Password");
+                return;
+            }
+
             try {
-                _packageManager.Push(packageData, feedUrl);
+                _packageManager.Push(packageData, feedUrl, User, Password);
                 Context.Output.WriteLine("Success");
             }
             catch (WebException webException) {
@@ -51,16 +68,27 @@ namespace Orchard.Packaging.Commands {
             }
         }
 
-        [CommandHelp("gallery submit package <filePath> <feedUrl>\r\n\t" + "Push a packaged module to a feed server.")]
+        [CommandHelp("gallery submit package <filePath> <feedUrl> /User:<user> /Password:<password>\r\n\t" + "Push a packaged module to a feed server.")]
         [CommandName("gallery submit package")]
+        [OrchardSwitches("User,Password")]
         public void SubmitPackage(string filePath, string feedUrl) {
             using (var stream = File.Open(filePath, FileMode.Open, FileAccess.Read)) {
                 var packageData = new PackageData {
                     PackageStream =  stream
                 };
 
+                if ( String.IsNullOrWhiteSpace(User) ) {
+                    Context.Output.WriteLine("Missing or incorrect User");
+                    return;
+                }
+
+                if ( String.IsNullOrWhiteSpace(Password) ) {
+                    Context.Output.WriteLine("Missing or incorrect Password");
+                    return;
+                }
+
                 try {
-                    _packageManager.Push(packageData, feedUrl);
+                    _packageManager.Push(packageData, feedUrl, User, Password);
                     Context.Output.WriteLine("Success");
                 }
                 catch (WebException webException) {

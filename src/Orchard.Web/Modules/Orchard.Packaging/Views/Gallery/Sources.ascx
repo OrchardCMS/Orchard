@@ -3,7 +3,7 @@
     <%: Html.TitleForPage(T("Gallery Feeds").ToString())%></h1>
 
 <div class="manage">
-    <%:Html.ActionLink(T("Add a Feed").Text, "AddSource", new { }, new { @class = "button primaryAction" }) %>
+    <%:Html.ActionLink(T("Add Feed").Text, "AddSource", new { }, new { @class = "button primaryAction" }) %>
 </div>
 
 	<fieldset>

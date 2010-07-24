@@ -132,7 +132,7 @@ namespace Orchard.Packaging.Controllers {
                 return View("Harvest", model);
             }
 
-            _packageManager.Push(packageData, model.FeedUrl);
+            _packageManager.Push(packageData, model.FeedUrl, model.User, model.Password);
             _notifier.Information(T("Harvested {0} and published onto {1}", model.ExtensionName, model.FeedUrl));
 
             Update();

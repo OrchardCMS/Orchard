@@ -3,11 +3,11 @@
     <%: Html.TitleForPage(T("Browse Gallery").ToString())%></h1>
 
 <div class="manage">
-        <%:Html.ActionLink("Update List", "Update", new object{}, new { @class = "button primaryAction" }) %>
+        <%:Html.ActionLink("Refresh", "Update", new object{}, new { @class = "button primaryAction" }) %>
 </div>
 <% using ( Html.BeginFormAntiForgeryPost(Url.Action("Modules", "Gallery")) ) {%>
     <fieldset class="bulk-actions">
-        <label for="filterResults" class="bulk-filter"><%:T("Show only of feed")%></label>
+        <label for="filterResults" class="bulk-filter"><%:T("Feed:")%></label>
         <select id="sourceId" name="sourceId">
             <%:Html.SelectOption("", Model.SelectedSource == null, T("Any (show all feeds)").ToString())%>
             <%
