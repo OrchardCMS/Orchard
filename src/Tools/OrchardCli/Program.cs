@@ -1,7 +1,9 @@
+using System;
+
 namespace OrchardCLI {
     public class Program {
         public static int Main(string[] args) {
-            return new CLIHost(args).Run();
+            return new CLIHost(Console.In, Console.Out, args).Run();
         }
     }
 }

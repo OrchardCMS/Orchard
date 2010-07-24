@@ -10,15 +10,15 @@ namespace OrchardCLI {
         private readonly TextReader _input;
         private readonly ICommandHostContextProvider _commandHostContextProvider;
 
-        public CLIHost(string[] args) {
-            _input = Console.In;
-            _output = Console.Out;
+        public CLIHost(TextReader input, TextWriter output, string[] args) {
+            _input = input;
+            _output = output;
             _commandHostContextProvider = new CommandHostContextProvider(args);
         }
 
         public int Run() {
             var context = CommandHostContext();
-            Console.WriteLine("Type \"help commands\" for help, \"exit\" to exit");
+            _output.WriteLine("Type \"help commands\" for help, \"exit\" to exit");
             while (true) {
                 var command = ReadCommand(context);
                 switch (command.ToLowerInvariant()) {
@@ -36,13 +36,13 @@ namespace OrchardCLI {
         }
 
         private string ReadCommand(CommandHostContext context) {
-            Console.WriteLine();
-            Console.Write("orchard> ");
-            return Console.ReadLine();
+            _output.WriteLine();
+            _output.Write("orchard> ");
+            return _input.ReadLine();
         }
 
         private CommandHostContext CommandHostContext() {
-            Console.WriteLine("Initializing Orchard session... (This might take a few seconds)");
+            _output.WriteLine("Initializing Orchard session... (This might take a few seconds)");
             var result = _commandHostContextProvider.CreateContext();
             if (result.StartSessionResult == 240/*special return code for "Retry"*/) {
                 result = _commandHostContextProvider.CreateContext();
@@ -55,21 +55,25 @@ namespace OrchardCLI {
                 return context;
 
             int result = RunCommandInSession(context, command);
-            if(result == 240) {
-                if (result == 240/*special return code for "Retry"*/) {
-                    _commandHostContextProvider.Shutdown(context);
-                    context = CommandHostContext();
-                    result = RunCommandInSession(context, command);
-                    if (result != 0)
-                        Console.WriteLine("Command returned non-zero result: {0}", result);
-                }
+            if (result == 240/*special return code for "Retry"*/) {
+                _commandHostContextProvider.Shutdown(context);
+                context = CommandHostContext();
+                result = RunCommandInSession(context, command);
+                if (result != 0)
+                    _output.WriteLine("Command returned non-zero result: {0}", result);
             }
             return context;
         }
 
         private int RunCommandInSession(CommandHostContext context, string command) {
-            var args = new OrchardParametersParser().Parse(new CommandParametersParser().Parse(ResponseFileReader.SplitArgs(command)));
-            return context.CommandHost.RunCommandInSession(_input, _output, context.Logger, args);
+            try {
+                var args = new OrchardParametersParser().Parse(new CommandParametersParser().Parse(ResponseFileReader.SplitArgs(command)));
+                return context.CommandHost.RunCommandInSession(_input, _output, context.Logger, args);
+            }
+            catch (AppDomainUnloadedException) {
+                _output.WriteLine("AppDomain of Orchard session has been unloaded. Retrying...");
+                return 240;/*special return code for "Retry"*/
+            }
         }
     }
 }
