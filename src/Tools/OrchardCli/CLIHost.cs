@@ -18,7 +18,7 @@ namespace OrchardCLI {
 
         public int Run() {
             var context = CommandHostContext();
-            _output.WriteLine("Type \"help commands\" for help, \"exit\" to exit");
+            _output.WriteLine("Type \"help commands\" for help, \"exit\" to exit, \"cls\" to clear screen");
             while (true) {
                 var command = ReadCommand(context);
                 switch (command.ToLowerInvariant()) {
@@ -28,6 +28,9 @@ namespace OrchardCLI {
                     case "e":
                         _commandHostContextProvider.Shutdown(context);
                         return 0;
+                    case "cls":
+                        Console.Clear();
+                        break;
                     default:
                         context = RunCommand(context, command);
                         break;
