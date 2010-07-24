@@ -17,8 +17,8 @@ namespace OrchardCLI {
         }
 
         public int Run() {
-            var context = _commandHostContextProvider.CreateContext();
-
+            var context = CommandHostContext();
+            Console.WriteLine("Type \"help commands\" for help, \"exit\" to exit");
             while (true) {
                 var command = ReadCommand(context);
                 switch (command.ToLowerInvariant()) {
@@ -41,12 +41,24 @@ namespace OrchardCLI {
             return Console.ReadLine();
         }
 
+        private CommandHostContext CommandHostContext() {
+            Console.WriteLine("Initializing Orchard session... (This might take a few seconds)");
+            var result = _commandHostContextProvider.CreateContext();
+            if (result.StartSessionResult == 240/*special return code for "Retry"*/) {
+                result = _commandHostContextProvider.CreateContext();
+            }
+            return result;
+        }
+
         private CommandHostContext RunCommand(CommandHostContext context, string command) {
+            if (string.IsNullOrWhiteSpace(command))
+                return context;
+
             int result = RunCommandInSession(context, command);
             if(result == 240) {
                 if (result == 240/*special return code for "Retry"*/) {
                     _commandHostContextProvider.Shutdown(context);
-                    context = _commandHostContextProvider.CreateContext();
+                    context = CommandHostContext();
                     result = RunCommandInSession(context, command);
                     if (result != 0)
                         Console.WriteLine("Command returned non-zero result: {0}", result);

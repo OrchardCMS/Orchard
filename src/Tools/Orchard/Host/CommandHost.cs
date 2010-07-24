@@ -28,9 +28,9 @@ namespace Orchard.Host {
             HostingEnvironment.UnregisterObject(this);
         }
 
-        public void StartSession(TextReader input, TextWriter output) {
+        public int StartSession(TextReader input, TextWriter output) {
             _agent = CreateAgent();
-            StartHost(_agent, input, output);
+            return StartHost(_agent, input, output);
         }
 
         public void StopSession(TextReader input, TextWriter output) {

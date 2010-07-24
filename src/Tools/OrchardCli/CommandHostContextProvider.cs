@@ -9,7 +9,7 @@ using Orchard.Host;
 using Orchard.Parameters;
 
 namespace OrchardCLI {
-    public class CommandHostContextProvider : ICommandHostContextProvider{
+    public class CommandHostContextProvider : ICommandHostContextProvider {
         private readonly string[] _args;
         private TextWriter _output;
         private TextReader _input;
@@ -27,7 +27,20 @@ namespace OrchardCLI {
         }
 
         public void Shutdown(CommandHostContext context) {
-            ShutdownHost(context);
+            try {
+                if (context.CommandHost != null) {
+                    LogInfo(context, "Shutting down Orchard session...");
+                    context.CommandHost.StopSession(_input, _output);
+                }
+            }
+            catch (AppDomainUnloadedException) {
+                LogInfo(context, "   (AppDomain already unloaded)");
+            }
+
+            if (context.AppObject != null) {
+                LogInfo(context, "Shutting down ASP.NET AppDomain...");
+                context.AppManager.ShutdownApplication(context.AppObject.ApplicationId);
+            }
         }
 
         private void Initialize(CommandHostContext context) {
@@ -64,27 +77,13 @@ namespace OrchardCLI {
             context.OrchardDirectory = GetOrchardDirectory(context.Arguments.WorkingDirectory);
             LogInfo(context, "Orchard root directory: \"{0}\"", context.OrchardDirectory.FullName);
 
-            CreateHost(context);
-            context.CommandHost.StartSession(_input, _output);
-        }
-
-        private void CreateHost(CommandHostContext context) {
-            context.AppManager = ApplicationManager.GetApplicationManager();
-
             LogInfo(context, "Creating ASP.NET AppDomain for command agent...");
+            context.AppManager = ApplicationManager.GetApplicationManager();
             context.AppObject = CreateWorkerAppDomainWithHost(context.AppManager, context.Arguments.VirtualPath, context.OrchardDirectory.FullName, typeof(CommandHost));
             context.CommandHost = (CommandHost)context.AppObject.ObjectInstance;
-        }
 
-        private void ShutdownHost(CommandHostContext context) {
-            if (context.CommandHost != null) {
-                context.CommandHost.StopSession(_input, _output);
-            }
-
-            if (context.AppObject != null) {
-                LogInfo(context, "Shutting down ASP.NET AppDomain...");
-                context.AppManager.ShutdownApplication(context.AppObject.ApplicationId);
-            }
+            LogInfo(context, "Starting Orchard session");
+            context.StartSessionResult = context.CommandHost.StartSession(_input, _output);
         }
 
         private int GeneralHelp() {
