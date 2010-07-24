@@ -83,6 +83,9 @@ namespace Orchard.Environment {
 
         IStandaloneEnvironment IOrchardHost.CreateStandaloneEnvironment(ShellSettings shellSettings) {
             Logger.Debug("Creating standalone environment for tenant {0}", shellSettings.Name);
+
+            MonitorExtensions();
+            BuildCurrent();
             var shellContext = CreateShellContext(shellSettings);
             return new StandaloneEnvironment(shellContext.LifetimeScope);
         }
