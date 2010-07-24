@@ -5,8 +5,5 @@ namespace Orchard.Packaging.ViewModels {
 
         [Required]
         public string Url { get; set; }
-
-        [Required]
-        public string Title { get; set; }
     }
 }

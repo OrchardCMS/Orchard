@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using System.Web.Mvc;
+using System.Xml.Linq;
 using Orchard.Environment.Extensions;
 using Orchard.Localization;
 using Orchard.Packaging.Services;
@@ -8,6 +9,7 @@ using Orchard.Packaging.ViewModels;
 using Orchard.Themes;
 using Orchard.UI.Admin;
 using Orchard.UI.Notify;
+using System.Xml.XPath;
 
 namespace Orchard.Packaging.Controllers {
     [OrchardFeature("Gallery")]
@@ -58,23 +60,37 @@ namespace Orchard.Packaging.Controllers {
         }
 
         [HttpPost]
-        public ActionResult AddSource(string title, string url) {
+        public ActionResult AddSource(string url) {
             try {
                 if ( !String.IsNullOrEmpty(url) ) {
                     if (!url.StartsWith("http")) {
-                        ModelState.AddModelError("Url", T("The Url is a valid").Text);
+                        ModelState.AddModelError("Url", T("The Url is not valid").Text);
                     }
                 }
                 else if ( String.IsNullOrWhiteSpace(url)) {
                     ModelState.AddModelError("Url", T("Url is required").Text);
                 }
 
-                if ( String.IsNullOrWhiteSpace(title) ) {
-                    ModelState.AddModelError("Url", T("Title is required").Text);
+                string title = null;
+                // try to load the feed
+                try {
+
+                    XNamespace atomns = "http://www.w3.org/2005/Atom" ;
+                    var feed = XDocument.Load(url, LoadOptions.PreserveWhitespace);
+                    var titleNode = feed.Descendants(atomns + "title").FirstOrDefault();
+                    if ( titleNode != null )
+                        title = titleNode.Value;
+
+                    if(String.IsNullOrWhiteSpace(title)) {
+                        ModelState.AddModelError("Url", T("The feed has no title.").Text);
+                    }
+                }
+                catch {
+                    ModelState.AddModelError("Url", T("The url of the feed or its content is not valid.").Text);
                 }
 
                 if ( !ModelState.IsValid )
-                    return AddSourceViewResult(new PackagingAddSourceViewModel(){Title = title, Url = url});
+                    return AddSourceViewResult(new PackagingAddSourceViewModel(){ Url = url });
 
                 _packagingSourceManager.AddSource(new PackagingSource { Id = Guid.NewGuid(), FeedUrl = url, FeedTitle = title });
                 _notifier.Information(T("The feed has been added successfully."));
@@ -83,7 +99,7 @@ namespace Orchard.Packaging.Controllers {
             }
             catch ( Exception exception ) {
                 _notifier.Error(T("Adding feed failed: {0}", exception.Message));
-                return AddSourceViewResult(new PackagingAddSourceViewModel() { Title = title, Url = url });
+                return AddSourceViewResult(new PackagingAddSourceViewModel() { Url = url });
             }
         }
 

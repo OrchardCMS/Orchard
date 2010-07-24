@@ -5,8 +5,6 @@
 <%using ( Html.BeginFormAntiForgeryPost(Url.Action("AddSource")) ) { %>
     <%: Html.ValidationSummary() %>
     <fieldset>
-        <label for="Title"><%: T("Feed Title") %></label>
-		<input id="Title" class="textMedium" name="Title" type="text" value="<%: Model.Title %>" />
         <label for="Url"><%: T("Feed Url") %></label>
 		<input id="Url" class="textMedium" name="Url" type="text" value="<%: Model.Url %>"/>
     </fieldset>
