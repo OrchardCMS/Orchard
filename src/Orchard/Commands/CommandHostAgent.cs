@@ -7,6 +7,7 @@ using System.Web.Routing;
 using Autofac;
 using Orchard.Environment;
 using Orchard.Environment.Configuration;
+using Orchard.Environment.State;
 using Orchard.Localization;
 using Orchard.Logging;
 using Orchard.Tasks;
@@ -54,8 +55,14 @@ namespace Orchard.Commands {
                     };
 
                     env.Resolve<ICommandManager>().Execute(parameters);
-                    return 0;
                 }
+
+                // in effect "pump messages" see PostMessage circa 1980
+                var processingEngine = _hostContainer.Resolve<IProcessingEngine>();
+                while (processingEngine.AreTasksPending())
+                    processingEngine.ExecuteNextTask();
+
+                return 0;
             }
             catch (OrchardCommandHostRetryException e) {
                 // Special "Retry" return code for our host
