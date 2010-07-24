@@ -7,7 +7,14 @@ using Orchard.Parameters;
 using Orchard.ResponseFiles;
 
 namespace Orchard.Host {
-    class CommandHost : MarshalByRefObject, IRegisteredObject {
+    /// <summary>
+    /// The CommandHost runs inside the ASP.NET AppDomain and serves as an intermediate
+    /// between the command line and the CommandHostAgent, which is known to the Orchard
+    /// Framework and has the ability to execute commands.
+    /// </summary>
+    public class CommandHost : MarshalByRefObject, IRegisteredObject {
+        private object _agent;
+
         public CommandHost() {
             HostingEnvironment.RegisterObject(this);
         }
@@ -17,12 +24,24 @@ namespace Orchard.Host {
             return null;
         }
 
-        public void Stop(bool immediate) {
+        void IRegisteredObject.Stop(bool immediate) {
             HostingEnvironment.UnregisterObject(this);
         }
 
+        public void StartSession(TextReader input, TextWriter output) {
+            _agent = CreateAgent();
+            StartHost(_agent, input, output);
+        }
+
+        public void StopSession(TextReader input, TextWriter output) {
+            if (_agent != null) {
+                StopHost(_agent, input, output);
+                _agent = null;
+            }
+        }
+
         public int RunCommand(TextReader input, TextWriter output, Logger logger, OrchardParameters args) {
-            var agent = Activator.CreateInstance("Orchard.Framework", "Orchard.Commands.CommandHostAgent").Unwrap();
+            var agent = CreateAgent();
             int result = (int)agent.GetType().GetMethod("RunSingleCommand").Invoke(agent, new object[] { 
                 input,
                 output,
@@ -33,10 +52,21 @@ namespace Orchard.Host {
             return result;
         }
 
-        public int RunCommands(TextReader input, TextWriter output, Logger logger, IEnumerable<ResponseLine> responseLines) {
-            var agent = Activator.CreateInstance("Orchard.Framework", "Orchard.Commands.CommandHostAgent").Unwrap();
+        public int RunCommandInSession(TextReader input, TextWriter output, Logger logger, OrchardParameters args) {
+            int result = (int)_agent.GetType().GetMethod("RunCommand").Invoke(_agent, new object[] { 
+                input,
+                output,
+                args.Tenant,
+                args.Arguments.ToArray(),
+                args.Switches});
 
-            int result = (int)agent.GetType().GetMethod("StartHost").Invoke(agent, new object[] { input, output });
+            return result;
+        }
+
+        public int RunCommands(TextReader input, TextWriter output, Logger logger, IEnumerable<ResponseLine> responseLines) {
+            var agent = CreateAgent();
+
+            int result = StartHost(agent, input, output);
             if (result != 0)
                 return result;
 
@@ -58,8 +88,20 @@ namespace Orchard.Host {
                 }
             }
 
-            result = (int)agent.GetType().GetMethod("StopHost").Invoke(agent, new object[] { input, output });
+            result = StopHost(agent, input, output);
             return result;
+        }
+
+        private object CreateAgent() {
+            return Activator.CreateInstance("Orchard.Framework", "Orchard.Commands.CommandHostAgent").Unwrap();
+        }
+
+        private int StopHost(object agent, TextReader input, TextWriter output) {
+            return (int)agent.GetType().GetMethod("StopHost").Invoke(agent, new object[] { input, output });
+        }
+
+        private int StartHost(object agent, TextReader input, TextWriter output) {
+            return (int)agent.GetType().GetMethod("StartHost").Invoke(agent, new object[] { input, output });
         }
     }
 }

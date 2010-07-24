@@ -30,7 +30,7 @@ namespace Orchard.ResponseFiles {
             }
         }
 
-        private IEnumerable<string> SplitArgs(string text) {
+        public static IEnumerable<string> SplitArgs(string text) {
             var sb = new StringBuilder();
             bool inString = false;
             foreach (char ch in text) {
