@@ -15,7 +15,8 @@
 	
 	<%-- Main Menu --%>
 	<div id="nav">
-        <% Html.Zone("menu"); %>
+        <% Html.Zone("menu");
+           Html.Zone("search"); %>
     </div>
 	
 	<%-- Main Content Area --%>
