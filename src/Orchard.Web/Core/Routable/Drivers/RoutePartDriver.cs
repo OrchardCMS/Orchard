@@ -76,7 +76,7 @@ namespace Orchard.Core.Routable.Drivers {
             }
 
             var location = part.GetLocation("Editor");
-            model.PromoteToHomePage = model.Id != 0 && _routableHomePageProvider != null && CurrentSite.HomePage == _routableHomePageProvider.GetSettingValue(model.Id);
+            model.PromoteToHomePage = model.Id != 0 && part.Path != null && _routableHomePageProvider != null && CurrentSite.HomePage == _routableHomePageProvider.GetSettingValue(model.Id);
             return ContentPartTemplate(model, TemplateName, Prefix).Location(location);
         }
 

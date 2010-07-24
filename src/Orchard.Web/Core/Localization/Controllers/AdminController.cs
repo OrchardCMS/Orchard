@@ -6,6 +6,7 @@ using Orchard.ContentManagement.Aspects;
 using Orchard.Core.Localization.Models;
 using Orchard.Core.Localization.Services;
 using Orchard.Core.Localization.ViewModels;
+using Orchard.Core.Routable.Models;
 using Orchard.Localization;
 using Orchard.Localization.Services;
 using Orchard.Mvc.Results;
@@ -43,14 +44,23 @@ namespace Orchard.Core.Localization.Controllers {
             }
 
             var siteCultures = _cultureManager.ListCultures().Where(s => s != _localizationService.GetContentCulture(contentItem));
+            var selectedCulture = siteCultures.SingleOrDefault(s => string.Equals(s, to, StringComparison.OrdinalIgnoreCase))
+                ?? _cultureManager.GetCurrentCulture(HttpContext); // could be null but the person doing the translating might be translating into their current culture
+
+            //todo: need a better solution for modifying some parts when translating - or go with a completely different experience
+            if (contentItem.Has<RoutePart>()) {
+                var routePart = contentItem.As<RoutePart>();
+                routePart.Slug = string.Format("{0}{2}{1}", routePart.Slug, siteCultures.Any(s => string.Equals(s, selectedCulture, StringComparison.OrdinalIgnoreCase)) ? selectedCulture : siteCultures.ElementAt(0), !string.IsNullOrWhiteSpace(routePart.Slug) ? "-" : "");
+                routePart.Path = null;
+            }
+
             var model = new AddLocalizationViewModel {
                 Id = id,
-                SelectedCulture = siteCultures.Any(s => s == to)
-                    ? to
-                    : _cultureManager.GetCurrentCulture(HttpContext), // could be null but the person doing the translating might be translating into their current culture
+                SelectedCulture = selectedCulture,
                 SiteCultures = siteCultures,
                 Content = _contentManager.BuildEditorModel(contentItem)
             };
+            Services.TransactionManager.Cancel();
 
             PrepareEditorViewModel(model.Content);
             return View(model);
