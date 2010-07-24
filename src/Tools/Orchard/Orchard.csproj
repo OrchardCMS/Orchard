@@ -72,6 +72,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ApplicationObject.cs" />
+    <Compile Include="HostContext\CommandHostContext.cs" />
+    <Compile Include="HostContext\CommandHostContextProvider.cs" />
+    <Compile Include="HostContext\ICommandHostContextProvider.cs" />
     <Compile Include="Logger.cs" />
     <Compile Include="OrchardHost.cs" />
     <Compile Include="Parameters\ICommandParametersParser.cs" />

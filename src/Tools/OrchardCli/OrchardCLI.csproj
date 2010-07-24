@@ -74,6 +74,15 @@
     <Compile Include="..\Orchard\ApplicationObject.cs">
       <Link>ApplicationObject.cs</Link>
     </Compile>
+    <Compile Include="..\Orchard\HostContext\CommandHostContext.cs">
+      <Link>HostContext\CommandHostContext.cs</Link>
+    </Compile>
+    <Compile Include="..\Orchard\HostContext\CommandHostContextProvider.cs">
+      <Link>HostContext\CommandHostContextProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\Orchard\HostContext\ICommandHostContextProvider.cs">
+      <Link>HostContext\ICommandHostContextProvider.cs</Link>
+    </Compile>
     <Compile Include="..\Orchard\Host\CommandHost.cs">
       <Link>Host\CommandHost.cs</Link>
     </Compile>
@@ -107,10 +116,7 @@
     <Compile Include="..\Orchard\ResponseFiles\ResponseFiles.cs">
       <Link>ResponseFiles\ResponseFiles.cs</Link>
     </Compile>
-    <Compile Include="CommandHostContext.cs" />
     <Compile Include="CLIHost.cs" />
-    <Compile Include="CommandHostContextProvider.cs" />
-    <Compile Include="ICommandHostContextProvider.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
