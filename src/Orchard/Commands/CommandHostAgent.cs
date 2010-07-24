@@ -59,8 +59,7 @@ namespace Orchard.Commands {
             }
             catch (OrchardCommandHostRetryException e) {
                 // Special "Retry" return code for our host
-                output.WriteLine("{0}", e.Message);
-                output.WriteLine("(Retrying...)");
+                output.WriteLine("{0} (Retrying...)", e.Message);
                 return 240;
             }
             catch (Exception e) {
@@ -82,8 +81,7 @@ namespace Orchard.Commands {
             }
             catch (OrchardCommandHostRetryException e) {
                 // Special "Retry" return code for our host
-                output.WriteLine("{0}", e.Message);
-                output.WriteLine("(Retrying...)");
+                output.WriteLine("{0} (Retrying...)", e.Message);
                 return 240;
             }
             catch (Exception e) {

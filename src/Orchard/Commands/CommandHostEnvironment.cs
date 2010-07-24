@@ -44,7 +44,7 @@ namespace Orchard.Commands {
         }
 
         public void ResetSiteCompilation() {
-            throw new OrchardCommandHostRetryException(T("A change of configuration requires the host to be restarted."));
+            throw new OrchardCommandHostRetryException(T("A change of configuration requires the session to be restarted."));
         }
     }
 }

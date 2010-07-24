@@ -7,6 +7,7 @@ using Orchard.Host;
 namespace OrchardCLI {
     public class CommandHostContext {
         public int StartSessionResult { get; set; }
+        public int RetryResult { get; set; }
         public OrchardParameters Arguments { get; set; }
         public DirectoryInfo OrchardDirectory { get; set; }
         public ApplicationManager AppManager { get; set; }

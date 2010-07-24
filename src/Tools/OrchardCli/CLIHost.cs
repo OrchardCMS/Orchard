@@ -42,9 +42,9 @@ namespace OrchardCLI {
         }
 
         private CommandHostContext CommandHostContext() {
-            _output.WriteLine("Initializing Orchard session... (This might take a few seconds)");
+            _output.WriteLine("Initializing Orchard session. (This might take a few seconds...)");
             var result = _commandHostContextProvider.CreateContext();
-            if (result.StartSessionResult == 240/*special return code for "Retry"*/) {
+            if (result.StartSessionResult == result.RetryResult) {
                 result = _commandHostContextProvider.CreateContext();
             }
             return result;
@@ -55,7 +55,7 @@ namespace OrchardCLI {
                 return context;
 
             int result = RunCommandInSession(context, command);
-            if (result == 240/*special return code for "Retry"*/) {
+            if (result == context.RetryResult) {
                 _commandHostContextProvider.Shutdown(context);
                 context = CommandHostContext();
                 result = RunCommandInSession(context, command);
@@ -71,8 +71,8 @@ namespace OrchardCLI {
                 return context.CommandHost.RunCommandInSession(_input, _output, context.Logger, args);
             }
             catch (AppDomainUnloadedException) {
-                _output.WriteLine("AppDomain of Orchard session has been unloaded. Retrying...");
-                return 240;/*special return code for "Retry"*/
+                _output.WriteLine("AppDomain of Orchard session has been unloaded. (Retrying...)");
+                return context.RetryResult;
             }
         }
     }
