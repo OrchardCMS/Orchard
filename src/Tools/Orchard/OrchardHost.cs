@@ -1,30 +1,18 @@
 ﻿using System;
 using System.Linq;
-using System.Globalization;
 using System.IO;
-using System.Reflection;
-using System.Web;
-using System.Web.Hosting;
-using Orchard.Host;
-using Orchard.Parameters;
-using System.Threading;
+using Orchard.HostContext;
 
 namespace Orchard {
     class OrchardHost {
         private readonly TextReader _input;
         private readonly TextWriter _output;
-        private readonly string[] _args;
-        private OrchardParameters _arguments;
-        private Logger _logger;
+        private readonly ICommandHostContextProvider _commandHostContextProvider;
 
         public OrchardHost(TextReader input, TextWriter output, string[] args) {
             _input = input;
             _output = output;
-            _args = args;
-        }
-
-        private bool Verbose {
-            get { return _arguments != null && _arguments.Verbose; }
+            _commandHostContextProvider = new CommandHostContextProvider(args);
         }
 
         public int Run() {
@@ -32,86 +20,46 @@ namespace Orchard {
                 return DoRun();
             }
             catch (Exception e) {
-                _output.WriteLine("Error:");
+                _output.WriteLine("Error running command:");
                 for (; e != null; e = e.InnerException) {
                     _output.WriteLine("  {0}", e.Message);
-                    if (_logger != null) {
-                        _output.WriteLine("   Stacktrace:");
-                        _output.WriteLine("{0}", e.StackTrace);
-                        _output.WriteLine();
-                    }
                 }
                 return -1;
             }
         }
 
         private int DoRun() {
-            _arguments = new OrchardParametersParser().Parse(new CommandParametersParser().Parse(_args));
-            _logger = new Logger(_arguments.Verbose, _output);
-
-            // Perform some argument validation and display usage if something is incorrect
-            bool showHelp = _arguments.Switches.ContainsKey("?");
-            if (!showHelp) {
-                showHelp = (!_arguments.Arguments.Any() && !_arguments.ResponseFiles.Any());
+            var context = CommandHostContext();
+            if (context.ShowHelp) {
+                DisplayHelp();
+                return 0;
             }
 
-            if (!showHelp) {
-                showHelp = (_arguments.Arguments.Any() && _arguments.ResponseFiles.Any());
-                if (showHelp) {
-                    _output.WriteLine("Incorrect syntax: Response files cannot be used in conjunction with commands");
-                }
-            }
-
-            if (showHelp) {
-                return GeneralHelp();
-            }
-
-            if (string.IsNullOrEmpty(_arguments.VirtualPath))
-                _arguments.VirtualPath = "/";
-            LogInfo("Virtual path: \"{0}\"", _arguments.VirtualPath);
-
-            if (string.IsNullOrEmpty(_arguments.WorkingDirectory))
-                _arguments.WorkingDirectory = Environment.CurrentDirectory;
-            LogInfo("Working directory: \"{0}\"", _arguments.WorkingDirectory);
-
-            LogInfo("Detecting orchard installation root directory...");
-            var orchardDirectory = GetOrchardDirectory(_arguments.WorkingDirectory);
-            LogInfo("Orchard root directory: \"{0}\"", orchardDirectory.FullName);
-
-            int result = CreateHostAndExecute(orchardDirectory);
-            if (result == 240/*special return code for "Retry"*/)
-                result = CreateHostAndExecute(orchardDirectory);
+            var result = Execute(context);
+            _commandHostContextProvider.Shutdown(context);
             return result;
         }
 
-        private int CreateHostAndExecute(DirectoryInfo orchardDirectory) {
-            var appManager = ApplicationManager.GetApplicationManager();
-
-            LogInfo("Creating ASP.NET AppDomain for command agent...");
-            var appObject = CreateWorkerAppDomainWithHost(appManager, _arguments.VirtualPath, orchardDirectory.FullName, typeof(CommandHost));
-            var host = (CommandHost)appObject.ObjectInstance;
-
-            LogInfo("Executing command in ASP.NET AppDomain...");
-            var result = Execute(host);
-            LogInfo("Return code for command: {0}", result);
-
-            LogInfo("Shutting down ASP.NET AppDomain...");
-            appManager.ShutdownApplication(appObject.ApplicationId);
-
+        private CommandHostContext CommandHostContext() {
+            _output.WriteLine("Initializing Orchard host. (This might take a few seconds...)");
+            var result = _commandHostContextProvider.CreateContext(false/*interactive*/);
+            if (result.StartSessionResult == result.RetryResult) {
+                result = _commandHostContextProvider.CreateContext(false/*interactive*/);
+            }
             return result;
         }
 
-        private int Execute(CommandHost host) {
-            if (_arguments.ResponseFiles.Any()) {
-                var responseLines = new ResponseFiles.ResponseFiles().ReadFiles(_arguments.ResponseFiles);
-                return host.RunCommands(_input, _output, _logger, responseLines.ToArray());
+        private int Execute(CommandHostContext context) {
+            if (context.Arguments.ResponseFiles.Any()) {
+                var responseLines = new ResponseFiles.ResponseFiles().ReadFiles(context.Arguments.ResponseFiles);
+                return context.CommandHost.RunCommands(_input, _output, context.Logger, responseLines.ToArray());
             }
             else {
-                return host.RunCommand(_input, _output, _logger, _arguments);
+                return context.CommandHost.RunCommand(_input, _output, context.Logger, context.Arguments);
             }
         }
 
-        private int GeneralHelp() {
+        private void DisplayHelp() {
             _output.WriteLine("Executes Orchard commands from a Orchard installation directory.");
             _output.WriteLine("");
             _output.WriteLine("Usage:");
@@ -160,64 +108,7 @@ namespace Orchard {
             _output.WriteLine("   /t:tenant-name");
             _output.WriteLine("       Specifies which tenant to run the command into. \"Default\" tenant by default.");
             _output.WriteLine("");
-            return 0;
-        }
-
-        private void LogInfo(string format, params object[] args) {
-            if (_logger != null)
-                _logger.LogInfo(format, args);
-        }
-
-        private DirectoryInfo GetOrchardDirectory(string directory) {
-            for (var directoryInfo = new DirectoryInfo(directory); directoryInfo != null; directoryInfo = directoryInfo.Parent) {
-                if (!directoryInfo.Exists) {
-                    throw new ApplicationException(string.Format("Directory \"{0}\" does not exist", directoryInfo.FullName));
-                }
-
-                // We look for 
-                // 1) .\web.config
-                // 2) .\bin\Orchard.Framework.dll
-                var webConfigFileInfo = new FileInfo(Path.Combine(directoryInfo.FullName, "web.config"));
-                if (!webConfigFileInfo.Exists)
-                    continue;
-
-                var binDirectoryInfo = new DirectoryInfo(Path.Combine(directoryInfo.FullName, "bin"));
-                if (!binDirectoryInfo.Exists)
-                    continue;
-
-                var orchardFrameworkFileInfo = new FileInfo(Path.Combine(binDirectoryInfo.FullName, "Orchard.Framework.dll"));
-                if (!orchardFrameworkFileInfo.Exists)
-                    continue;
-
-                return directoryInfo;
-            }
-
-            throw new ApplicationException(
-                string.Format("Directory \"{0}\" doesn't seem to contain an Orchard installation", new DirectoryInfo(directory).FullName));
-        }
-
-        private static ApplicationObject CreateWorkerAppDomainWithHost(ApplicationManager appManager, string virtualPath, string physicalPath, Type hostType) {
-            // this creates worker app domain in a way that host doesn't need to be in GAC or bin
-            // using BuildManagerHost via private reflection
-            string uniqueAppString = string.Concat(virtualPath, physicalPath).ToLowerInvariant();
-            string appId = (uniqueAppString.GetHashCode()).ToString("x", CultureInfo.InvariantCulture);
-
-            // create BuildManagerHost in the worker app domain
-            var buildManagerHostType = typeof(HttpRuntime).Assembly.GetType("System.Web.Compilation.BuildManagerHost");
-            var buildManagerHost = appManager.CreateObject(appId, buildManagerHostType, virtualPath, physicalPath, false);
-
-            // call BuildManagerHost.RegisterAssembly to make Host type loadable in the worker app domain
-            buildManagerHostType.InvokeMember(
-                "RegisterAssembly",
-                BindingFlags.Instance | BindingFlags.InvokeMethod | BindingFlags.NonPublic,
-                null,
-                buildManagerHost,
-                new object[] { hostType.Assembly.FullName, hostType.Assembly.Location });
-
-            // create Host in the worker app domain
-            return new ApplicationObject { 
-                ApplicationId = appId, 
-                ObjectInstance = appManager.CreateObject(appId, hostType, virtualPath, physicalPath, false) };
+            return;
         }
     }
 }

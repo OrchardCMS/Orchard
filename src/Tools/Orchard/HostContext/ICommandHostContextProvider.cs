@@ -1,6 +1,6 @@
-namespace OrchardCLI {
+namespace Orchard.HostContext {
     public interface ICommandHostContextProvider {
-        CommandHostContext CreateContext();
+        CommandHostContext CreateContext(bool interactive);
         void Shutdown(CommandHostContext context);
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using Orchard;
+using Orchard.HostContext;
 using Orchard.Parameters;
 using Orchard.ResponseFiles;
 
@@ -17,7 +18,26 @@ namespace OrchardCLI {
         }
 
         public int Run() {
+            try {
+                return DoRun();
+            }
+            catch (Exception e) {
+                _output.WriteLine("Error:");
+                for (; e != null; e = e.InnerException) {
+                    _output.WriteLine("  {0}", e.Message);
+                }
+                return -1;
+            }
+        }
+
+
+        public int DoRun() {
             var context = CommandHostContext();
+            if (context.ShowHelp) {
+                DisplayHelp();
+                return 0;
+            }
+
             _output.WriteLine("Type \"help commands\" for help, \"exit\" to exit, \"cls\" to clear screen");
             while (true) {
                 var command = ReadCommand(context);
@@ -46,9 +66,9 @@ namespace OrchardCLI {
 
         private CommandHostContext CommandHostContext() {
             _output.WriteLine("Initializing Orchard session. (This might take a few seconds...)");
-            var result = _commandHostContextProvider.CreateContext();
+            var result = _commandHostContextProvider.CreateContext(true/*interactive*/);
             if (result.StartSessionResult == result.RetryResult) {
-                result = _commandHostContextProvider.CreateContext();
+                result = _commandHostContextProvider.CreateContext(true/*interactive*/);
             }
             return result;
         }
@@ -77,6 +97,35 @@ namespace OrchardCLI {
                 _output.WriteLine("AppDomain of Orchard session has been unloaded. (Retrying...)");
                 return context.RetryResult;
             }
+        }
+
+        private void DisplayHelp() {
+            _output.WriteLine("Executes the Orchard interactive from a Orchard installation directory.");
+            _output.WriteLine("");
+            _output.WriteLine("Usage:");
+            _output.WriteLine("   orchardcli.exe [/switch1[:value1]] ... [/switchn[:valuen]]");
+            _output.WriteLine("");
+            _output.WriteLine("   Built-in switches");
+            _output.WriteLine("   =================");
+            _output.WriteLine("");
+            _output.WriteLine("   /WorkingDirectory:<physical-path>");
+            _output.WriteLine("   /wd:<physical-path>");
+            _output.WriteLine("       Specifies the orchard installation directory. The current directory is the default.");
+            _output.WriteLine("");
+            _output.WriteLine("   /Verbose");
+            _output.WriteLine("   /v");
+            _output.WriteLine("       Turn on verbose output");
+            _output.WriteLine("");
+            _output.WriteLine("   /VirtualPath:<virtual-path>");
+            _output.WriteLine("   /vp:<virtual-path>");
+            _output.WriteLine("       Virtual path to pass to the WebHost. Empty (i.e. root path) by default.");
+            _output.WriteLine("");
+            _output.WriteLine("   /Tenant:tenant-name");
+            _output.WriteLine("   /t:tenant-name");
+            _output.WriteLine("       Specifies which tenant to run the command into. \"Default\" tenant by default.");
+            _output.WriteLine("");
+            
+
         }
     }
 }

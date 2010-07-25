@@ -1,14 +1,14 @@
-﻿using System;
+using System;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Web;
 using System.Web.Hosting;
-using Orchard;
 using Orchard.Host;
 using Orchard.Parameters;
 
-namespace OrchardCLI {
+namespace Orchard.HostContext {
     public class CommandHostContextProvider : ICommandHostContextProvider {
         private readonly string[] _args;
         private TextWriter _output;
@@ -20,8 +20,9 @@ namespace OrchardCLI {
             _args = args;
         }
 
-        public CommandHostContext CreateContext() {
+        public CommandHostContext CreateContext(bool interactive) {
             var context = new CommandHostContext();
+            context.Interactive = interactive;
             context.RetryResult = 240;/*special return code for "Retry"*/
             Initialize(context);
             return context;
@@ -51,18 +52,24 @@ namespace OrchardCLI {
             // Perform some argument validation and display usage if something is incorrect
             bool showHelp = context.Arguments.Switches.ContainsKey("?");
             if (!showHelp) {
-                //showHelp = (!_arguments.Arguments.Any() && !_arguments.ResponseFiles.Any());
+                // If not interactive CLI, we need at least some arguments...
+                if (!context.Interactive) {
+                    showHelp = (!context.Arguments.Arguments.Any() && !context.Arguments.ResponseFiles.Any());
+                }
             }
 
             if (!showHelp) {
-                //showHelp = (_arguments.Arguments.Any() && _arguments.ResponseFiles.Any());
-                //if (showHelp) {
-                //    _output.WriteLine("Incorrect syntax: Response files cannot be used in conjunction with commands");
-                //}
+                // If not interactive CLI, we need 
+                if (!context.Interactive) {
+                    showHelp = (context.Arguments.Arguments.Any() && context.Arguments.ResponseFiles.Any());
+                    if (showHelp) {
+                        _output.WriteLine("Incorrect syntax: Response files cannot be used in conjunction with commands");
+                    }
+                }
             }
 
             if (showHelp) {
-                GeneralHelp();
+                context.ShowHelp = true;
                 return;
             }
 
@@ -85,58 +92,6 @@ namespace OrchardCLI {
 
             LogInfo(context, "Starting Orchard session");
             context.StartSessionResult = context.CommandHost.StartSession(_input, _output);
-        }
-
-        private int GeneralHelp() {
-            _output.WriteLine("Executes Orchard commands from a Orchard installation directory.");
-            _output.WriteLine("");
-            _output.WriteLine("Usage:");
-            _output.WriteLine("   orchard.exe command [arg1] ... [argn] [/switch1[:value1]] ... [/switchn[:valuen]]");
-            _output.WriteLine("   orchard.exe @response-file1 ... [@response-filen] [/switch1[:value1]] ... [/switchn[:valuen]]");
-            _output.WriteLine("");
-            _output.WriteLine("   command");
-            _output.WriteLine("       Specify the command to execute");
-            _output.WriteLine("");
-            _output.WriteLine("   [arg1] ... [argn]");
-            _output.WriteLine("       Specify additional arguments for the command");
-            _output.WriteLine("");
-            _output.WriteLine("   [/switch1[:value1]] ... [/switchn[:valuen]]");
-            _output.WriteLine("       Specify switches to apply to the command. Available switches generally ");
-            _output.WriteLine("       depend on the command executed, with the exception of a few built-in ones.");
-            _output.WriteLine("");
-            _output.WriteLine("   [@response-file1] ... [@response-filen]");
-            _output.WriteLine("       Specify one or more response files to be used for reading commands and switches.");
-            _output.WriteLine("       A response file is a text file that contains one line per command to execute.");
-            _output.WriteLine("");
-            _output.WriteLine("   Built-in commands");
-            _output.WriteLine("   =================");
-            _output.WriteLine("");
-            _output.WriteLine("   help commands");
-            _output.WriteLine("       Display the list of available commands.");
-            _output.WriteLine("");
-            _output.WriteLine("   help <command-name>");
-            _output.WriteLine("       Display help for a given command.");
-            _output.WriteLine("");
-            _output.WriteLine("   Built-in switches");
-            _output.WriteLine("   =================");
-            _output.WriteLine("");
-            _output.WriteLine("   /WorkingDirectory:<physical-path>");
-            _output.WriteLine("   /wd:<physical-path>");
-            _output.WriteLine("       Specifies the orchard installation directory. The current directory is the default.");
-            _output.WriteLine("");
-            _output.WriteLine("   /Verbose");
-            _output.WriteLine("   /v");
-            _output.WriteLine("       Turn on verbose output");
-            _output.WriteLine("");
-            _output.WriteLine("   /VirtualPath:<virtual-path>");
-            _output.WriteLine("   /vp:<virtual-path>");
-            _output.WriteLine("       Virtual path to pass to the WebHost. Empty (i.e. root path) by default.");
-            _output.WriteLine("");
-            _output.WriteLine("   /Tenant:tenant-name");
-            _output.WriteLine("   /t:tenant-name");
-            _output.WriteLine("       Specifies which tenant to run the command into. \"Default\" tenant by default.");
-            _output.WriteLine("");
-            return 1;
         }
 
         private void LogInfo(CommandHostContext context, string format, params object[] args) {
