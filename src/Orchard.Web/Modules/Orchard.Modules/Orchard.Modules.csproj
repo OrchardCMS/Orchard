@@ -69,6 +69,7 @@
     <Compile Include="Commands\FeatureCommands.cs" />
     <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
+    <Compile Include="Models\DoghouseComparer.cs" />
     <Compile Include="Models\ModuleFeature.cs" />
     <Compile Include="ViewModels\FeaturesViewModel.cs" />
     <Compile Include="Models\Module.cs" />
