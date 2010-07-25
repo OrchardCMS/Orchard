@@ -100,7 +100,7 @@ namespace OrchardCLI {
         }
 
         private void DisplayHelp() {
-            _output.WriteLine("Executes the Orchard interactive from a Orchard installation directory.");
+            _output.WriteLine("Executes the Orchard interactive command line from a Orchard installation directory.");
             _output.WriteLine("");
             _output.WriteLine("Usage:");
             _output.WriteLine("   orchardcli.exe [/switch1[:value1]] ... [/switchn[:valuen]]");
