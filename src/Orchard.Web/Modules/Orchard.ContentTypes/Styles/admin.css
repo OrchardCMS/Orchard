@@ -15,19 +15,39 @@
 .manage-part h3,
 .manage-field h3 {
     border-bottom:1px solid #EAEAEA;
+    display:relative;
+    line-height:1.4em;
+    padding-bottom:0;
     padding-top:0;
 }
 .manage-part h3,
 .manage-field h3,
-.manage-part .manage-field,
-.manage-field fieldset,
-.manage-part .settings {
+.manage-part h4,
+.manage-type .manage-part .manage-field,
+.manage-type .manage-field fieldset,
+.manage-type .manage-part .settings {
     padding-left:20px;
 }
-.manage-part .manage,
-.manage-field .manage {
+.manage-type .manage-field .settings {
+    padding-bottom:10px;
+    padding-left:0;
+}
+.manage-part h4 {
+    padding-left:0;
+}
+.manage-part .manage-field h4 {
+    line-height:1.8em;
+    padding-bottom:0;
+    padding-left:15px;
+}
+.manage-type .manage-part .manage,
+.manage-type .manage-field .manage,
+.manage-part .manage-field .manage {
     font-size:1.4em;
     margin-top:-2.4em;
+}
+.manage-part .details {
+    overflow:auto;
 }
 .manage-part .manage.minor {
     margin:0 0 -1.2em;
@@ -37,12 +57,15 @@
     font-weight:normal;
 }
 .manage-part fieldset {
-    margin:1.5em 0 0;
+    margin:.5em 0 1em;
     padding:0;
 }
 .manage-field .settings {
-    margin:-1.5em 0 0 1em;
+    margin:0 0 0 15px;
     padding-left:0;
+}
+.manage-part .settings {
+    overflow:auto;
 }
 .manage-part .settings fieldset {
     padding-left:0;
@@ -60,7 +83,10 @@ fieldset.action {
 }
 .manage-part dt,
 .manage-part dd {
-    display:inline;
+    float:left;
+}
+.manage-part dt {
+    clear:left;
 }
 .manage-part dt::after {
     content:":";

@@ -79,13 +79,12 @@ namespace Orchard.Mvc.Html {
             if (ReferenceEquals(this, other)) {
                 return true;
             }
-            return Equals(other.Container, Container) && Equals(other.ContainerVirtualPath, ContainerVirtualPath) && Equals(other.FileName, FileName) && Equals(other.Condition, Condition);
+            return Equals(other.ContainerVirtualPath, ContainerVirtualPath) && Equals(other.FileName, FileName) && Equals(other.Condition, Condition);
         }
 
         public override int GetHashCode() {
             unchecked {
-                var result = (Container != null ? Container.GetHashCode() : 0);
-                result = (result*397) ^ (ContainerVirtualPath != null ? ContainerVirtualPath.GetHashCode() : 0);
+                var result = (ContainerVirtualPath != null ? ContainerVirtualPath.GetHashCode() : 0);
                 result = (result*397) ^ (FileName != null ? FileName.GetHashCode() : 0);
                 result = (result*397) ^ (Condition != null ? Condition.GetHashCode() : 0);
                 return result;

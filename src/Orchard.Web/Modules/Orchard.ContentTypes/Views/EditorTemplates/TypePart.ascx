@@ -3,14 +3,17 @@
         <h3 itemprop="Name"><%:Model.PartDefinition.DisplayName %></h3>
         <div class="manage">
             <%:Html.ActionLink(T("Remove").Text, "RemovePartFrom", new { area = "Orchard.ContentTypes", id = Model.Type.Name, Model.PartDefinition.Name }, new { itemprop = "RemoveUrl UnsafeUrl" })%><%--// <- some experimentation--%>
-        </div><%
+        </div>
+        <div class="details"><%:Html.EditorFor(m => m.PartDefinition.Fields, "TypePartFields", "PartDefinition")
+        %><%
         if (Model.Templates.Any()) { %>
-        <div class="settings"><%
+        <div class="settings">
+            <h4><%:T("{0} Settings:", Model.PartDefinition.DisplayName) %></h4><%
         Html.RenderTemplates(Model.Templates); %>
         </div><%
         } %>
-        <%:Html.DisplayFor(m => m.PartDefinition.Settings, "Settings", "PartDefinition")
-        %><%:Html.EditorFor(m => m.PartDefinition.Fields, "TypePartFields", "PartDefinition")
-        %><%:Html.HiddenFor(m => m.PartDefinition.Name)
+        <%-- don't show global part settings for now - <%:Html.DisplayFor(m => m.PartDefinition.Settings, "Settings", "PartDefinition")
+        %>--%><%:Html.HiddenFor(m => m.PartDefinition.Name)
         %><%:Html.HiddenFor(m => m.Index) %>
+        </div>
     </fieldset>

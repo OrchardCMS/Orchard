@@ -241,6 +241,7 @@
     <Content Include="Common\Views\DisplayTemplates\Parts\Common.Metadata.ascx" />
     <Content Include="Common\Views\DisplayTemplates\Parts\Common.Metadata.SummaryAdmin.ascx" />
     <Content Include="ContentsLocation\Module.txt" />
+    <Content Include="ContentsLocation\Styles\admin.css" />
     <Content Include="ContentsLocation\Views\DefinitionTemplates\LocationSettings.ascx" />
     <Content Include="Contents\Views\DisplayTemplates\Parts\Contents.Publish.SummaryAdmin.ascx" />
     <Content Include="Contents\Views\DisplayTemplates\Parts\Contents.Publish.ascx" />

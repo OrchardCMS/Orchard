@@ -20,10 +20,10 @@ namespace Orchard.Core.ContentsLocation.Settings {
 
         private IEnumerable<LocationDefinition> GetPredefinedLocations() {
             yield return new LocationDefinition { Name = "Default", DisplayName = T("Default location (i.e. fallback if no specific override)") };
-            yield return new LocationDefinition { Name = "Detail", DisplayName = T("Location in a \"Detail\" screen") };
-            yield return new LocationDefinition { Name = "Editor", DisplayName = T("Location in a \"Editor\" screen") };
-            yield return new LocationDefinition { Name = "Summary", DisplayName = T("Location in a \"Summary\" screen (Front-end)") };
-            yield return new LocationDefinition { Name = "SummaryAdmin", DisplayName = T("Location in a \"Summary\" screen (Admin)") };
+            yield return new LocationDefinition { Name = "Detail", DisplayName = T("\"Detail\" display location") };
+            yield return new LocationDefinition { Name = "Editor", DisplayName = T("\"Editor\" display location") };
+            yield return new LocationDefinition { Name = "Summary", DisplayName = T("\"Summary\" (front-end) display location") };
+            yield return new LocationDefinition { Name = "SummaryAdmin", DisplayName = T("\"Summary\" (admin) display location") };
         }
 
         private LocationSettings MergeSettings(LocationSettings partSettings, LocationSettings partDefinitionSettings) {
