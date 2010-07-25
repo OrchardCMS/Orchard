@@ -201,7 +201,6 @@
     <Content Include="Themes\Contoso\Zones\Sidebar-w1.html" />
     <Content Include="Themes\Contoso\Views\DisplayTemplates\Items\Blogs.Blog.ascx" />
     <Content Include="Themes\Contoso\Views\DisplayTemplates\Items\Blogs.BlogPost.ascx" />
-    <Content Include="Themes\Contoso\Views\DisplayTemplates\Items\Contents.Item.ascx" />
     <Content Include="Themes\Contoso\Views\DisplayTemplates\Items\Blogs.BlogPost.ListByArchive.ascx" />
     <Content Include="Themes\Contoso\Views\DisplayTemplates\Parts\Comments.Comments.ascx" />
     <Content Include="Themes\Contoso\Views\DisplayTemplates\Parts\Common.Metadata.ascx" />
