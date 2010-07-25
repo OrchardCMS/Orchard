@@ -31,7 +31,7 @@ using (Html.BeginFormAntiForgeryPost()) { %>
 using (this.Capture("end-of-page-scripts")) { %>
 <script type="text/javascript">
     (function ($) {
-        $(".manage-part h3").expandoControl(function (controller) { return controller.nextAll(".details"); }, { collapse: true, remember: false });
+        $(".manage-field h3,.manage-part h3").expandoControl(function (controller) { return controller.nextAll(".details"); }, { collapse: true, remember: false });
         $(".manage-field h4").expandoControl(function (controller) { return controller.nextAll(".settings"); }, { collapse: true, remember: false });
     })(jQuery);
 </script><%

@@ -10,7 +10,7 @@
     margin-top:-3.1em;
 }
 .manage-part {
-    margin-bottom:2em;
+    margin-bottom:1em;
 }
 .manage-part h3,
 .manage-field h3 {
@@ -23,8 +23,8 @@
 .manage-part h3,
 .manage-field h3,
 .manage-part h4,
+.manage-type .manage-field .details,
 .manage-type .manage-part .manage-field,
-.manage-type .manage-field fieldset,
 .manage-type .manage-part .settings {
     padding-left:20px;
 }
@@ -46,6 +46,7 @@
     font-size:1.4em;
     margin-top:-2.4em;
 }
+.manage-field .details,
 .manage-part .details {
     overflow:auto;
 }
@@ -56,6 +57,7 @@
 .manage-field label {
     font-weight:normal;
 }
+.manage-field fieldset,
 .manage-part fieldset {
     margin:.5em 0 1em;
     padding:0;

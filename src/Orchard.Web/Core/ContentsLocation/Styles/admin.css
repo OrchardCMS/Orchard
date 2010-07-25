@@ -3,13 +3,15 @@
 }
 fieldset.location-setting legend {
     font-weight:normal;
+    margin:0;
+    padding-bottom:0;
 }
 fieldset.location-setting label {
     display:inline;
 }
-fieldset.location-setting input {
+fieldset.location-setting input.text-box {
     display:block;
-    width:20em;
+    width:24em;
 }
 fieldset.location-setting fieldset {
     clear:none;
