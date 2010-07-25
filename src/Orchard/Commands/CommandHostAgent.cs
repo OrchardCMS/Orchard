@@ -8,6 +8,7 @@ using Autofac;
 using Orchard.Environment;
 using Orchard.Environment.Configuration;
 using Orchard.Environment.State;
+using Orchard.FileSystems.VirtualPath;
 using Orchard.Localization;
 using Orchard.Logging;
 using Orchard.Tasks;
@@ -153,6 +154,7 @@ namespace Orchard.Commands {
             MvcSingletons(builder);
             builder.RegisterType<CommandHostEnvironment>().As<IHostEnvironment>();
             builder.RegisterType<CommandBackgroundService>().As<IBackgroundService>();
+            builder.RegisterType<CommandHostVirtualPathMonitor>().As<IVirtualPathMonitor>();
         }
 
         protected void MvcSingletons(ContainerBuilder builder) {
