@@ -43,17 +43,6 @@ namespace Orchard.Core.Routable.Drivers {
             return null;
         }
 
-        string GetContainerSlug(IContent item) {
-            var commonAspect = item.As<ICommonPart>();
-            if (commonAspect != null && commonAspect.Container != null) {
-                var routable = commonAspect.Container.As<IRoutableAspect>();
-                if (routable != null) {
-                    return routable.Slug;
-                }
-            }
-            return null;
-        }
-
         protected override DriverResult Editor(RoutePart part) {
             var model = new RoutableEditorViewModel {
                 ContentType = part.ContentItem.ContentType,
@@ -69,7 +58,7 @@ namespace Orchard.Core.Routable.Drivers {
                 model.DisplayLeadingPath = path.Substring(0, path.Length - part.Slug.Length);
             }
             else {
-                var containerSlug = GetContainerSlug(part);
+                var containerSlug = part.GetContainerSlug();
                 model.DisplayLeadingPath = !string.IsNullOrWhiteSpace(containerSlug)
                     ? string.Format("{0}/", containerSlug)
                     : "";
@@ -88,13 +77,7 @@ namespace Orchard.Core.Routable.Drivers {
             part.Slug = model.Slug;
 
             // TEMP: path format patterns replaces this logic
-            var containerSlug = GetContainerSlug(part);
-            if (string.IsNullOrEmpty(containerSlug)) {
-                part.Path = model.Slug;
-            }
-            else {
-                part.Path = containerSlug + "/" + model.Slug;
-            }
+            part.Path = part.GetPathFromSlug(model.Slug);
 
             if (!_routableService.IsSlugValid(part.Slug)) {
                 updater.AddModelError("Routable.Slug", T("Please do not use any of the following characters in your slugs: \"/\", \":\", \"?\", \"#\", \"[\", \"]\", \"@\", \"!\", \"$\", \"&\", \"'\", \"(\", \")\", \"*\", \"+\", \",\", \";\", \"=\". No spaces are allowed (please use dashes or underscores instead)."));

@@ -6,6 +6,9 @@ using JetBrains.Annotations;
 using Orchard.Blogs.Drivers;
 using Orchard.Blogs.Models;
 using Orchard.ContentManagement;
+using Orchard.ContentManagement.Aspects;
+using Orchard.Core.Common.Models;
+using Orchard.Core.Routable.Models;
 using Orchard.Core.XmlRpc;
 using Orchard.Core.XmlRpc.Models;
 using Orchard.Environment.Extensions;
@@ -160,11 +163,24 @@ namespace Orchard.Blogs.Services {
             var slug = content.Optional<string>("wp_slug");
 
             var blogPost = _contentManager.New<BlogPostPart>(BlogPostPartDriver.ContentType.Name);
-            blogPost.BlogPart = blog;
-            blogPost.Title = title;
-            blogPost.Slug = slug;
-            blogPost.Text = description;
-            blogPost.Creator = user;
+            
+            // BodyPart
+            if (blogPost.Is<BodyPart>()) {
+                blogPost.As<BodyPart>().Text = description;
+            }
+
+            //RoutePart
+            if (blogPost.Is<RoutePart>()) {
+                blogPost.As<RoutePart>().Title = title;
+                blogPost.As<RoutePart>().Slug = slug;
+                blogPost.As<RoutePart>().Path = blogPost.As<RoutePart>().GetPathFromSlug(slug);
+            }
+
+            //CommonPart
+            if (blogPost.Is<ICommonPart>()) {
+                blogPost.As<ICommonPart>().Owner = user;
+                blogPost.As<ICommonPart>().Container = blog;
+            }
 
             _contentManager.Create(blogPost.ContentItem, VersionOptions.Draft);
 
