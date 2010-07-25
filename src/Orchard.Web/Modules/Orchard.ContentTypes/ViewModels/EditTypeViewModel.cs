@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Orchard.ContentManagement.MetaData.Models;
 using Orchard.ContentManagement.ViewModels;
@@ -31,7 +32,7 @@ namespace Orchard.ContentTypes.ViewModels {
         public ContentTypeDefinition _Definition { get; private set; }
 
         private IEnumerable<EditPartFieldViewModel> GetTypeFields(ContentTypeDefinition contentTypeDefinition) {
-            var implicitTypePart = contentTypeDefinition.Parts.SingleOrDefault(p => p.PartDefinition.Name == Name);
+            var implicitTypePart = contentTypeDefinition.Parts.SingleOrDefault(p => string.Equals(p.PartDefinition.Name, Name, StringComparison.OrdinalIgnoreCase));
 
             return implicitTypePart == null
                 ? Enumerable.Empty<EditPartFieldViewModel>()
@@ -40,7 +41,7 @@ namespace Orchard.ContentTypes.ViewModels {
 
         private IEnumerable<EditTypePartViewModel> GetTypeParts(ContentTypeDefinition contentTypeDefinition) {
             return contentTypeDefinition.Parts
-                .Where(p => p.PartDefinition.Name != Name)
+                .Where(p => !string.Equals(p.PartDefinition.Name, Name, StringComparison.OrdinalIgnoreCase))
                 .Select((p, i) => new EditTypePartViewModel(i, p) { Type = this });
         }
     }

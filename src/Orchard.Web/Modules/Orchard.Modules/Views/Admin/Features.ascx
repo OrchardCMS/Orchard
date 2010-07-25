@@ -2,12 +2,13 @@
 <%@ Import Namespace="Orchard.Localization" %>
 <%@ Import Namespace="Orchard.Modules.Extensions" %>
 <%@ Import Namespace="Orchard.Modules.ViewModels"%>
-<%@ Import Namespace="Orchard.Utility.Extensions" %><%
+<%@ Import Namespace="Orchard.Utility.Extensions" %>
+<%@ Import Namespace="Orchard.Modules.Models" %><%
  Html.RegisterStyle("admin.css"); %>
 <h1><%: Html.TitleForPage(T("Manage Features").ToString()) %></h1>
 <% if (Model.Features.Count() > 0) { %>
 <ul class="<% Html.RenderPartial("UI/Switchable", "features summary-view"); %>"><%
-    var featureGroups = Model.Features.OrderBy(f => f.Descriptor.Category).GroupBy(f => f.Descriptor.Category);
+    var featureGroups = Model.Features.OrderBy(f => f.Descriptor.Category, new DoghouseComparer("Core")).GroupBy(f => f.Descriptor.Category);
     foreach (var featureGroup in featureGroups) {
         var categoryName = LocalizedString.TextOrDefault(featureGroup.First().Descriptor.Category, T("Uncategorized"));
         var categoryClassName = string.Format("category {0}", Html.Encode(categoryName.ToString().HtmlClassify()));

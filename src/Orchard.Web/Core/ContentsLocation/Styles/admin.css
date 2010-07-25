@@ -1,0 +1,25 @@
+﻿fieldset.location-setting {
+    overflow:auto;
+}
+fieldset.location-setting legend {
+    font-weight:normal;
+    margin:0;
+    padding-bottom:0;
+}
+fieldset.location-setting label {
+    display:inline;
+}
+fieldset.location-setting input.text-box {
+    display:block;
+    width:24em;
+}
+fieldset.location-setting fieldset {
+    clear:none;
+    float:left;
+    margin-right:1em;
+    margin-top:.5em;
+}
+fieldset.location-setting .default {
+    font-size:1.2em;
+    font-style:italic;
+}

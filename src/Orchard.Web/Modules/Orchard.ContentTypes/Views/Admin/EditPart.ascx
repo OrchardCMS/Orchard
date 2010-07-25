@@ -10,10 +10,14 @@ using (Html.BeginFormAntiForgeryPost()) { %>
         <%:Html.TextBoxFor(m => m.Name, new {@class = "textMedium", disabled = "disabled"}) %>
         <%:Html.HiddenFor(m => m.Name) %>
     </fieldset>
-    <% Html.RenderTemplates(Model.Templates); %>
-    <h2><%:T("Fields") %></h2>
-    <div class="manage add-to-type"><%: Html.ActionLink(T("Add").Text, "AddFieldTo", new { area = "Orchard.ContentTypes", id = Model.Name }, new { @class = "button" }) %></div>
-    <%:Html.EditorFor(m => m.Fields, "Fields", "") %>
+    <div class="manage-part">
+        <div class="settings">
+        <% Html.RenderTemplates(Model.Templates); %>
+        </div>
+        <h2><%:T("Fields") %></h2>
+        <div class="manage add-to-type"><%: Html.ActionLink(T("Add").Text, "AddFieldTo", new { area = "Orchard.ContentTypes", id = Model.Name }, new { @class = "button" }) %></div>
+        <%:Html.EditorFor(m => m.Fields, "Fields", "") %>
+    </div>
     <fieldset class="action">
         <button class="primaryAction" type="submit"><%:T("Save") %></button>
     </fieldset><%

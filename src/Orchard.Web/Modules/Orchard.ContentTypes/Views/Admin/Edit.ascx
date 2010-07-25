@@ -15,14 +15,24 @@ using (Html.BeginFormAntiForgeryPost()) { %>
         <%:Html.HiddenFor(m => m.Name) %>
     </fieldset><%
     Html.RenderTemplates(Model.Templates); %>
-    <h2><%:T("Fields") %></h2>
-    <div class="manage add-to-type"><%: Html.ActionLink(T("Add").Text, "AddFieldTo", new { area = "Orchard.ContentTypes", id = Model.Name }, new { @class = "button" }) %></div><%:
-    Html.EditorFor(m => m.Fields, "Fields", "") %>
-    <h2><%:T("Parts") %></h2>
-    <div class="manage add-to-type"><%: Html.ActionLink(T("Add").Text, "AddPartsTo", new { area = "Orchard.ContentTypes", id = Model.Name }, new { @class = "button" })%></div><%:
-    Html.EditorFor(m => m.Parts, "TypeParts", "") %>
+    <div class="manage-type">
+        <h2><%:T("Fields") %></h2>
+        <div class="manage add-to-type"><%: Html.ActionLink(T("Add").Text, "AddFieldTo", new { area = "Orchard.ContentTypes", id = Model.Name }, new { @class = "button" }) %></div><%:
+        Html.EditorFor(m => m.Fields, "Fields", "") %>
+        <h2><%:T("Parts") %></h2>
+        <div class="manage add-to-type"><%: Html.ActionLink(T("Add").Text, "AddPartsTo", new { area = "Orchard.ContentTypes", id = Model.Name }, new { @class = "button" })%></div><%:
+        Html.EditorFor(m => m.Parts, "TypeParts", "") %>
+    </div>
     <fieldset class="action">
         <button class="primaryAction" type="submit"><%:T("Save") %></button>
     </fieldset>
     </div><%
+}
+using (this.Capture("end-of-page-scripts")) { %>
+<script type="text/javascript">
+    (function ($) {
+        $(".manage-field h3,.manage-part h3").expandoControl(function (controller) { return controller.nextAll(".details"); }, { collapse: true, remember: false });
+        $(".manage-field h4").expandoControl(function (controller) { return controller.nextAll(".settings"); }, { collapse: true, remember: false });
+    })(jQuery);
+</script><%
 } %>

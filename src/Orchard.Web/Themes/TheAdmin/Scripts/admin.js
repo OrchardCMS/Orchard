@@ -14,9 +14,14 @@
             }, options);
             _this.each(function (index, element) {
                 var controller = $(element);
-                var glyph = $("<span class=\"expandoGlyph\"></span>");
+                var glyph = $("<span class=\"expando-glyph-container\"><span class=\"expando-glyph\"></span></span>");
 
                 glyph.data("controllees", getControllees(controller));
+
+                if (glyph.data("controllees").length === 0) {
+                    return;
+                }
+
                 if ((settings.remember && "closed" === $.orchard.setting(__cookieName, { key: settings.key + "-" + controller.text(), path: settings.path }))
                     || settings.collapse) {
                     glyph.addClass("closed").data("controllees").hide();
@@ -45,7 +50,7 @@
                     return false;
                 });
 
-                controller.before(glyph);
+                controller.prepend(glyph);
             });
 
             return this;
