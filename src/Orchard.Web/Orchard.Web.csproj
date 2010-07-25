@@ -100,6 +100,7 @@
     <Content Include="Global.asax" />
     <Content Include="Refresh.html" />
     <Content Include="Themes\Contoso\Styles\search.css" />
+    <Content Include="Themes\Contoso\Views\DisplayTemplates\Items\Contents.Item.ascx" />
     <Content Include="Themes\Contoso\Views\DisplayTemplates\Parts\Blogs.BlogPost.Metadata.ascx" />
     <Content Include="Themes\Contoso\Views\Orchard.Search\Search\Index.ascx" />
     <Content Include="Themes\Corporate\Views\DisplayTemplates\Parts\Blogs.BlogPost.Metadata.ascx" />
