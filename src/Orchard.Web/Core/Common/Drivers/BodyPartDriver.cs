@@ -1,25 +1,33 @@
-﻿using System.Text.RegularExpressions;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Text.RegularExpressions;
 using JetBrains.Annotations;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Aspects;
 using Orchard.ContentManagement.Drivers;
 using Orchard.Core.Common.Models;
+using Orchard.Core.Common.Services;
 using Orchard.Core.Common.Settings;
 using Orchard.Core.Common.ViewModels;
 using Orchard.Core.ContentsLocation.Models;
 using Orchard.Core.Routable.Models;
+using Orchard.Services;
 
 namespace Orchard.Core.Common.Drivers {
     [UsedImplicitly]
     public class BodyPartDriver : ContentPartDriver<BodyPart> {
-        public IOrchardServices Services { get; set; }
+        private readonly IEnumerable<IHtmlFilter> _htmlFilters;
+
         private const string TemplateName = "Parts/Common.Body";
         private const string DefaultTextEditorTemplate = "TinyMceTextEditor";
         private const string PlainTextEditorTemplate = "PlainTextEditor";
 
-        public BodyPartDriver(IOrchardServices services) {
+        public BodyPartDriver(IOrchardServices services, IEnumerable<IHtmlFilter> htmlFilters) {
+            _htmlFilters = htmlFilters;
             Services = services;
         }
+
+        public IOrchardServices Services { get; set; }
 
         protected override string Prefix {
             get { return "Body"; }
@@ -27,7 +35,8 @@ namespace Orchard.Core.Common.Drivers {
 
         // \/\/ Hackalicious on many accounts - don't copy what has been done here for the wrapper \/\/
         protected override DriverResult Display(BodyPart part, string displayType) {
-            var model = new BodyDisplayViewModel { BodyPart = part, Text = BbcodeReplace(part.Text) };
+            var bodyText = _htmlFilters.Aggregate(part.Text, (text, filter) => filter.ProcessContent(text));
+            var model = new BodyDisplayViewModel { BodyPart = part, Text = bodyText };
             var location = part.GetLocation(displayType);
 
             return Combined(
@@ -36,7 +45,7 @@ namespace Orchard.Core.Common.Drivers {
                 ContentPartTemplate(model, TemplateName, Prefix).LongestMatch(displayType, "Summary", "SummaryAdmin").Location(location),
                 Services.Authorizer.Authorize(Permissions.ChangeOwner) ? ContentPartTemplate(model, "Parts/Common.Body.ManageWrapperPost").LongestMatch(displayType, "SummaryAdmin").Location(location) : null);
         }
-        
+
         protected override DriverResult Editor(BodyPart part) {
             var model = BuildEditorViewModel(part);
             var location = part.GetLocation("Editor");
@@ -59,7 +68,7 @@ namespace Orchard.Core.Common.Drivers {
             return new BodyEditorViewModel {
                 BodyPart = part,
                 TextEditorTemplate = GetFlavor(part) == "html" ? DefaultTextEditorTemplate : PlainTextEditorTemplate,
-                AddMediaPath= new PathBuilder(part).AddContentType().AddContainerSlug().AddSlug().ToString()
+                AddMediaPath = new PathBuilder(part).AddContentType().AddContainerSlug().AddSlug().ToString()
             };
         }
 
@@ -118,25 +127,6 @@ namespace Orchard.Core.Common.Drivers {
                 else
                     _path = _path + "/" + segment;
             }
-
-        }
-
-
-        // Can be moved somewhere else once we have IoC enabled body text filters.
-        private static string BbcodeReplace(string bodyText) {
-
-            if ( string.IsNullOrEmpty(bodyText) )
-                return string.Empty;
-
-            Regex urlRegex = new Regex(@"\[url\]([^\]]+)\[\/url\]");
-            Regex urlRegexWithLink = new Regex(@"\[url=([^\]]+)\]([^\]]+)\[\/url\]");
-            Regex imgRegex = new Regex(@"\[img\]([^\]]+)\[\/img\]");
-
-            bodyText = urlRegex.Replace(bodyText, "<a href=\"$1\">$1</a>");
-            bodyText = urlRegexWithLink.Replace(bodyText, "<a href=\"$1\">$2</a>");
-            bodyText = imgRegex.Replace(bodyText, "<img src=\"$1\" />");
-
-            return bodyText;
         }
     }
 }

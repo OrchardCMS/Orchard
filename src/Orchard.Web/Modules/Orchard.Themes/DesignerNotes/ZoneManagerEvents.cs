@@ -1,17 +1,28 @@
-﻿using System.IO;
+﻿using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Web.Mvc.Html;
+using Orchard.Environment.Descriptor;
 using Orchard.Security;
+using Orchard.Services;
 using Orchard.UI.Zones;
 
 namespace Orchard.Themes.DesignerNotes {
     public class ZoneManagerEvents : IZoneManagerEvents {
         private readonly IThemeService _themeService;
         private readonly IAuthorizationService _authorizationService;
+        private readonly IShellDescriptorManager _shellDescriptorManager;
+        private readonly IEnumerable<IHtmlFilter> _htmlFilters;
 
-        public ZoneManagerEvents(IThemeService themeService, IAuthorizationService authorizationService) {
+        public ZoneManagerEvents(IThemeService themeService, 
+            IAuthorizationService authorizationService, 
+            IShellDescriptorManager shellDescriptorManager,
+            IEnumerable<IHtmlFilter> htmlFilters) {
+
             _themeService = themeService;
             _authorizationService = authorizationService;
+            _shellDescriptorManager = shellDescriptorManager;
+            _htmlFilters = htmlFilters;
         }
 
         public virtual IUser CurrentUser { get; set; }
@@ -29,6 +40,13 @@ namespace Orchard.Themes.DesignerNotes {
 
             var accessAdminPanel = _authorizationService.TryCheckAccess(
                 StandardPermissions.AccessAdminPanel, CurrentUser, null);
+            if (accessAdminPanel) {
+                //Temporary: Don't show "edit" button if "Futures.Widgets" is not enabled.
+                accessAdminPanel = _shellDescriptorManager
+                    .GetShellDescriptor()
+                    .Features
+                    .Any(f => f.Name == "Futures.Widgets");
+            }
 
             var writer = context.Html.ViewContext.Writer;
             if (accessAdminPanel) {
@@ -42,7 +60,11 @@ namespace Orchard.Themes.DesignerNotes {
                                                                               }));
                 writer.Write("</div>");
             }
-            writer.Write(File.ReadAllText(physicalPath));
+
+            var fileText = _htmlFilters
+                .Aggregate(File.ReadAllText(physicalPath), (text, filter) => filter.ProcessContent(text));
+
+            writer.Write(fileText);
             if (accessAdminPanel) {
                 writer.Write("</div>");
             }
