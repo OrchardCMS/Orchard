@@ -35,6 +35,7 @@ namespace Orchard.Core.Localization.Drivers {
             var model = new EditLocalizationViewModel {
                 SelectedCulture = part.Culture != null ? part.Culture.Culture : null,
                 SiteCultures = _cultureManager.ListCultures().Where(s => s != _cultureManager.GetSiteCulture() && !localizations.Select(l => l.Culture.Culture).Contains(s)),
+                ContentItem = part,
                 MasterContentItem = part.MasterContentItem,
                 ContentLocalizations = new ContentLocalizationsViewModel(part) { Localizations = localizations }
             };
@@ -55,17 +56,20 @@ namespace Orchard.Core.Localization.Drivers {
             return _localizationService.GetLocalizations(part.ContentItem)
                 .Select(c => {
                             var localized = c.ContentItem.As<LocalizationPart>();
-                            if (localized.Culture == null) {
-                                localized.Culture = _cultureManager.GetCultureByName(_cultureManager.GetCurrentCulture(new HttpContextWrapper(HttpContext.Current)));
-                            }
+                            if (localized.Culture == null)
+                                localized.Culture = _cultureManager.GetCultureByName(_cultureManager.GetSiteCulture());
                             return c;
                         }).ToList();
         }
 
         private IEnumerable<LocalizationPart> GetEditorLocalizations(LocalizationPart part) {
             return _localizationService.GetLocalizations(part.ContentItem)
-                .Select(c => c.ContentItem.As<LocalizationPart>())
-                .Where(l => l.MasterContentItem != null).ToList();
+                .Select(c => {
+                    var localized = c.ContentItem.As<LocalizationPart>();
+                    if (localized.Culture == null)
+                        localized.Culture = _cultureManager.GetCultureByName(_cultureManager.GetSiteCulture());
+                    return c;
+                }).ToList();
         }
     }
 }

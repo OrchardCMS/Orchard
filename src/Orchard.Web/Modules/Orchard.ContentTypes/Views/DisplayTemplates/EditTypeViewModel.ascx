@@ -5,7 +5,7 @@
         <h3><%:Model.DisplayName%></h3><%
         var creatable = Model.Settings.GetModel<ContentTypeSettings>().Creatable;
         if (creatable) { %>
-        <p class="pageStatus"><%:Html.ActionLink(T("Create a new {0}", Model.DisplayName).Text, "Create", new {area = "Contents", id = Model.Name}) %></p><%
+        <p class="pageStatus"><%:Html.ActionLink(T("Create New {0}", Model.DisplayName).Text, "Create", new {area = "Contents", id = Model.Name}) %></p><%
         } %>
     </div>
     <div class="related"><%

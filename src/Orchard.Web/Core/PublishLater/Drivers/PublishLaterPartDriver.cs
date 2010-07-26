@@ -51,17 +51,17 @@ namespace Orchard.Core.PublishLater.Drivers {
                 switch (model.Command) {
                     case "PublishNow":
                         _commonService.Publish(model.ContentItem);
-                        Services.Notifier.Information(T("{0} has been published!", model.ContentItem.TypeDefinition.DisplayName));
+                        //Services.Notifier.Information(T("{0} has been published!", model.ContentItem.TypeDefinition.DisplayName));
                         break;
                     case "PublishLater":
                         DateTime scheduled;
                         if (DateTime.TryParse(string.Format("{0} {1}", model.ScheduledPublishUtcDate, model.ScheduledPublishUtcTime), out scheduled))
                             model.ScheduledPublishUtc = scheduled;
                         _publishLaterService.Publish(model.ContentItem, model.ScheduledPublishUtc.HasValue ? model.ScheduledPublishUtc.Value : DateTime.MaxValue);
-                        Services.Notifier.Information(T("{0} has been scheduled for publishing!", model.ContentItem.TypeDefinition.DisplayName));
+                        //Services.Notifier.Information(T("{0} has been scheduled for publishing!", model.ContentItem.TypeDefinition.DisplayName));
                         break;
                     case "SaveDraft":
-                        Services.Notifier.Information(T("{0} draft has been saved!", model.ContentItem.TypeDefinition.DisplayName));
+                        //Services.Notifier.Information(T("{0} draft has been saved!", model.ContentItem.TypeDefinition.DisplayName));
                         break;
                 }
             }
