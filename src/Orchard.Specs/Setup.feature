@@ -44,6 +44,6 @@ Scenario: Calling setup on a brand new install
             | ConfirmPassword | 6655321 |
         And I hit "Finish Setup"
         And I go to "/Default.aspx"
-    Then I should see "<h1>My Site</h1>"
-        And I should see "Welcome, <strong>admin</strong>!"
+    Then I should see "My Site"
+        And I should see "Welcome"
         And I should see "you've successfully set-up your Orchard site"
