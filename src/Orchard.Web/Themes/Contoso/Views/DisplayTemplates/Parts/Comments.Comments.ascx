@@ -46,7 +46,8 @@ else { %>
     }%>
     <fieldset class="what">
         <div>
-            <label for="CommentText"><% if (Request.IsAuthenticated) { %><%: T("Hi, {0}!", Html.Encode(Page.User.Identity.Name)) %><br /><% } %><%: T("Comment") %></label>
+            <label for="CommentText">
+            <% if (Request.IsAuthenticated) { %><%: T("<span class='CommentUserName'>Leave a comment {0}!</span>", Html.Encode(Page.User.Identity.Name)) %><br /><% } %></label>
             <textarea id="CommentText" rows="10" cols="30" name="CommentText"></textarea>
         </div>
         <div>
