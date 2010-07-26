@@ -223,7 +223,7 @@ namespace Orchard.ContentTypes.Services {
             if (name.Length > 128)
                 name = name.Substring(0, 128);
 
-            return name.ToLowerInvariant();
+            return name;
         }
 
         private static string VersionName(string name) {

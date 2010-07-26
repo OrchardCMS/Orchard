@@ -192,13 +192,11 @@ namespace Orchard.Setup.Services {
 
                     var contentDefinitionManager = environment.Resolve<IContentDefinitionManager>();
                     contentDefinitionManager.AlterTypeDefinition("BlogPost", cfg => cfg
-                        .DisplayedAs("Blog Post")
                         .WithPart("CommentsPart")
                         .WithPart("TagsPart")
                         .WithPart("LocalizationPart")
                         .Indexed());
                     contentDefinitionManager.AlterTypeDefinition("Page", cfg => cfg
-                        .DisplayedAs("Page")
                         .WithPart("CommonPart")
                         .WithPart("PublishLaterPart")
                         .WithPart("RoutePart")
