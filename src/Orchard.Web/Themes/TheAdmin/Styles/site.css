@@ -239,25 +239,24 @@ form.link button:hover {
     width:0;
 }
 #navigation li {
-	margin:7px 0 20px 4px;
+	margin:5px 0 17px 4px;
 }
 #navigation ul li {
     border:0;
     margin:0;
 }
 #navigation li h3 {
-    padding:0 0 3px 8px;
+    padding:0 0 0 8px;
 }
 #navigation li h3 a, #navigation li h3 span {
-	padding:6px 4px px 0;
+	line-height:1.2em;
 }
 #navigation ul a, #navigation ul a:link, #navigation ul a:visited {
 	color:#2d2f25;
 	display:block;
 	font-size:1.4em;
-	height:28px;
-	line-height:28px;
-	padding:0 0 0 12px;
+	line-height:1.2em;
+	padding:.4em 0 .4em 12px;
 	text-decoration:none;
 }
 #navigation ul a:hover, #navigation ul a:active, #navigation ul a:focus {
