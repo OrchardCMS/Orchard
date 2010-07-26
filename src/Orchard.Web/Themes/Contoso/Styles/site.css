@@ -379,11 +379,15 @@ body { background: #f3f4f4 url('../Content/Images/bkg.jpg') repeat-x; }
 
 /* Localization
 -------------------------------------------------------------- */
+.content-localization .content-localizations h4 {
+    float: left;
+    margin: 0;
+    padding:3px;
+}
 
 .content-localization .content-localizations ul {
     overflow: auto;
 }
-
 
 .content-localization .content-localizations li {
     border-bottom: 1px;
