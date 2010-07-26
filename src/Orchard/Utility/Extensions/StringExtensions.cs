@@ -1,8 +1,20 @@
-﻿using System.Text.RegularExpressions;
+﻿using System.Linq;
+using System.Text.RegularExpressions;
 using Orchard.Localization;
 
 namespace Orchard.Utility.Extensions {
     public static class StringExtensions {
+        private static readonly Regex humps = new Regex("[A-Z][^A-Z]*");
+        public static string CamelFriendly(this string camel) {
+            if (camel == null)
+                return null;
+
+            var matches = humps.Matches(camel).OfType<Match>().Select(m => m.Value);
+            return matches.Any()
+                ? matches.Aggregate((a, b) => a + " " + b).TrimStart(' ')
+                : camel;
+        }
+
         public static string Ellipsize(this string text, int characterCount) {
             return text.Ellipsize(characterCount, "&#160;&#8230;");
         }

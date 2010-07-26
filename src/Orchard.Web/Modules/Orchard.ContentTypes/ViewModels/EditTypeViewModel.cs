@@ -5,6 +5,7 @@ using Orchard.ContentManagement.MetaData.Models;
 using Orchard.ContentManagement.ViewModels;
 using Orchard.ContentTypes.Extensions;
 using Orchard.Mvc.ViewModels;
+using Orchard.Utility.Extensions;
 
 namespace Orchard.ContentTypes.ViewModels {
     public class EditTypeViewModel : BaseViewModel {

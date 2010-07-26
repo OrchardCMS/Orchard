@@ -800,6 +800,13 @@ table .button {
 }
 
 
+/* Fields
+----------------------------------------------------------*/
+/* TextField */
+#main .summary .text-field {
+    margin:.5em 0;
+}
+
 /* ---------- Generic ---------- */
 #main .breadcrumb {
     margin-top:-1.5em;
