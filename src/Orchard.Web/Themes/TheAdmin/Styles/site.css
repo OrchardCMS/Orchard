@@ -559,12 +559,18 @@ button.remove:focus::-moz-focus-inner, .remove.button:focus::-moz-focus-inner {
 }
 .manage {
     float:right;
-    margin:0 0 10px 8px;
+    margin:0 0 1em .8em;
 }
 .actions {
     clear:right;
     padding:0;
     text-align:right;
+}
+.item-properties.actions {
+    margin-bottom:.5em;
+    margin-top:-5em;
+    overflow:hidden;
+    padding:1px;
 }
 .contentItems .actions li {
     background:inherit;
@@ -726,7 +732,7 @@ table .button {
 
 .contentItems .summary {
     overflow:auto;
-    padding:1.2em .4em;
+    padding:1.2em .4em .5em;
 }
 .contentItems .properties {
     float:left;
@@ -738,7 +744,8 @@ table .button {
     display:inline;
 }
 .contentItems.bulk-items .metadata, .contentItems.bulk-items .primary {
-    margin:.6em 0 0 2em;
+    margin:.7em 0 .7em 2em;
+    overflow:auto;
 }
 .contentItems.bulk-items .primary {
     clear:both;
@@ -803,7 +810,7 @@ table .button {
 /* Fields
 ----------------------------------------------------------*/
 /* TextField */
-#main .summary .text-field {
+#main .summary p.text-field {
     margin:.5em 0;
 }
 

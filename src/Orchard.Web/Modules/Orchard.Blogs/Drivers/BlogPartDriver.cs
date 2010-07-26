@@ -77,7 +77,7 @@ namespace Orchard.Blogs.Drivers {
                 ContentItemTemplate("Items/Blogs.Blog").LongestMatch(displayType, "Summary", "DetailAdmin", "SummaryAdmin"),
                 ContentPartTemplate(blogPart, "Parts/Blogs.Blog.Manage").Location("manage"),
                 ContentPartTemplate(blogPart, "Parts/Blogs.Blog.Metadata").Location("metadata"),
-                ContentPartTemplate(blogPart, "Parts/Blogs.Blog.Description").Location("primary"),
+                ContentPartTemplate(blogPart, "Parts/Blogs.Blog.Description").Location("manage", "after"),
                 blogPosts == null
                     ? null
                     : ContentPartTemplate(
