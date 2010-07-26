@@ -61,6 +61,7 @@ namespace Orchard.Blogs.Controllers {
                 return View(model);
             }
 
+            Services.Notifier.Information(T("Your {0} has been created.", blogPost.TypeDefinition.DisplayName));
             return Redirect(Url.BlogPostEdit(model.BlogPost.Item));
         }
 
@@ -93,13 +94,13 @@ namespace Orchard.Blogs.Controllers {
                 return new NotFoundResult();
 
             // Get draft (create a new version if needed)
-            var post = _blogPostService.Get(postId, VersionOptions.DraftRequired);
-            if (post == null)
+            var blogPost = _blogPostService.Get(postId, VersionOptions.DraftRequired);
+            if (blogPost == null)
                 return new NotFoundResult();
 
             // Validate form input
             var model = new BlogPostEditViewModel {
-                BlogPost = Services.ContentManager.UpdateEditorModel(post, this)
+                BlogPost = Services.ContentManager.UpdateEditorModel(blogPost, this)
             };
 
             TryUpdateModel(model);
@@ -109,6 +110,7 @@ namespace Orchard.Blogs.Controllers {
                 return View(model);
             }
 
+            Services.Notifier.Information(T("Your {0} has been saved.", blogPost.TypeDefinition.DisplayName));
             return Redirect(Url.BlogPostEdit(model.BlogPost.Item));
         }
 

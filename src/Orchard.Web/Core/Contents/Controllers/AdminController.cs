@@ -21,19 +21,16 @@ using Orchard.UI.Notify;
 namespace Orchard.Core.Contents.Controllers {
     [ValidateInput(false)]
     public class AdminController : Controller, IUpdateModel {
-        private readonly INotifier _notifier;
         private readonly IContentManager _contentManager;
         private readonly IContentDefinitionManager _contentDefinitionManager;
         private readonly ITransactionManager _transactionManager;
 
         public AdminController(
             IOrchardServices orchardServices,
-            INotifier notifier,
             IContentManager contentManager,
             IContentDefinitionManager contentDefinitionManager,
             ITransactionManager transactionManager) {
             Services = orchardServices;
-            _notifier = notifier;
             _contentManager = contentManager;
             _contentDefinitionManager = contentDefinitionManager;
             _transactionManager = transactionManager;
@@ -251,11 +248,10 @@ namespace Orchard.Core.Contents.Controllers {
                 return View("Create", model);
             }
 
-            if (!contentItem.Has<IPublishingControlAspect>()) {
+            if (!contentItem.Has<IPublishingControlAspect>())
                 _contentManager.Publish(contentItem);
-                _notifier.Information(T("Created content item"));
-            }
 
+            Services.Notifier.Information(string.IsNullOrWhiteSpace(model.Content.Item.TypeDefinition.DisplayName) ? T("Your content has been created.") : T("Your {0} has been created.", model.Content.Item.TypeDefinition.DisplayName));
             return RedirectToAction("Edit", new RouteValueDictionary { { "Id", contentItem.Id } });
         }
 
@@ -299,6 +295,7 @@ namespace Orchard.Core.Contents.Controllers {
             if (!contentItem.Has<IPublishingControlAspect>())
                 _contentManager.Publish(contentItem);
 
+            Services.Notifier.Information(string.IsNullOrWhiteSpace(model.Content.Item.TypeDefinition.DisplayName) ? T("Your content has been saved.") : T("Your {0} has been saved.", model.Content.Item.TypeDefinition.DisplayName));
             return RedirectToAction("Edit", new RouteValueDictionary { { "Id", contentItem.Id } });
         }
 
@@ -309,8 +306,10 @@ namespace Orchard.Core.Contents.Controllers {
             if (!Services.Authorizer.Authorize(Permissions.DeleteOthersContent, contentItem, T("Couldn't remove content")))
                 return new HttpUnauthorizedResult();
 
-            if (contentItem != null)
+            if (contentItem != null) {
                 _contentManager.Remove(contentItem);
+                Services.Notifier.Information(string.IsNullOrWhiteSpace(contentItem.TypeDefinition.DisplayName) ? T("That content has been removed.") : T("That {0} has been removed.", contentItem.TypeDefinition.DisplayName));
+            }
 
             if (!String.IsNullOrEmpty(returnUrl))
                 return Redirect(returnUrl);
@@ -329,7 +328,7 @@ namespace Orchard.Core.Contents.Controllers {
 
             _contentManager.Publish(contentItem);
             Services.ContentManager.Flush();
-            Services.Notifier.Information(T("{0} successfully published.", contentItem.TypeDefinition.DisplayName));
+            Services.Notifier.Information(string.IsNullOrWhiteSpace(contentItem.TypeDefinition.DisplayName) ? T("That content has been published.") : T("That {0} has been published.", contentItem.TypeDefinition.DisplayName));
 
             if (!String.IsNullOrEmpty(returnUrl))
                 return Redirect(returnUrl);
@@ -348,7 +347,7 @@ namespace Orchard.Core.Contents.Controllers {
 
             _contentManager.Unpublish(contentItem);
             Services.ContentManager.Flush();
-            Services.Notifier.Information(T("{0} successfully unpublished.", contentItem.TypeDefinition.DisplayName));
+            Services.Notifier.Information(string.IsNullOrWhiteSpace(contentItem.TypeDefinition.DisplayName) ? T("That content has been unpublished.") : T("That {0} has been unpublished.", contentItem.TypeDefinition.DisplayName));
 
             if (!String.IsNullOrEmpty(returnUrl))
                 return Redirect(returnUrl);
