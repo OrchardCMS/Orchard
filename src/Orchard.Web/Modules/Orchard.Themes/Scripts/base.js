@@ -4,7 +4,22 @@
         orchard: {
             __cookieName: "Orchrd", // Orchard, on a diet
             __cookieExpiration: 180, // roughly 6 months
+            ___doCookiePathHack: null,
+            __doCookiePathHack: function (path) {
+                if ($.orchard.___doCookiePathHack != null) {
+                    return $.orchard.___doCookiePathHack;
+                }
+                var testCookie = "__orchard__";
+                $.cookie(testCookie, "1", { path: path });
+                $.orchard.___doCookiePathHack = !$.cookie(testCookie);
+                $.cookie(testCookie, null);
+                return $.orchard.___doCookiePathHack;
+            },
             cookie: function (scope, value, options) { // a light-weight wrapper around $.cookie for an Orchard.* cookie name
+                // because some browsers are weird about the path
+                if (options && options.path && $.orchard.__doCookiePathHack(options.path)) {
+                    options.path = options.path.substring(0, options.path.lastIndexOf("/"));
+                }
                 return $.cookie($.orchard.__cookieName + (scope ? scope.toLowerCase() : ""), value, options);
             },
             cookiesInTheOrchard: function () {
