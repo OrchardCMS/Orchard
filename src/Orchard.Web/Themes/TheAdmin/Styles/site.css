@@ -246,7 +246,7 @@ form.link button:hover {
     margin:0;
 }
 #navigation li h3 {
-    padding:0 0 2px 8px;
+    padding:0 0 3px 8px;
 }
 #navigation li h3 a, #navigation li h3 span {
 	padding:6px 4px px 0;
@@ -269,10 +269,9 @@ form.link button:hover {
 /* todo: make generic so all toggles can use this and clean up jQuery */
 .expando-glyph-container {
     display:inline !important;
-    line-height:1em;
+    line-height:.9em;
     padding:0  !important;
     position:relative;
-    text-align:sub;
 }
 .expando-glyph {
     background:#fcfcfc no-repeat center center;

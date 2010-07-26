@@ -14,7 +14,7 @@
             }, options);
             _this.each(function (index, element) {
                 var controller = $(element);
-                var glyph = $("<span class=\"expando-glyph-container\"><span class=\"expando-glyph\"></span></span>");
+                var glyph = $("<span class=\"expando-glyph-container\"><span class=\"expando-glyph\"></span>&#8203;</span>");
 
                 glyph.data("controllees", getControllees(controller));
 
