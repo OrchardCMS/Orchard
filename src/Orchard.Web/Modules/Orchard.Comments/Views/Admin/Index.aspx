@@ -4,7 +4,7 @@
 <h1><%: Html.TitleForPage(T("Manage Comments").ToString())%></h1>
 <% using(Html.BeginFormAntiForgeryPost()) { %>
 	<%: Html.ValidationSummary() %>
-    <fieldset class="actions bulk">
+    <fieldset class="bulk-actions">
         <label for="publishActions"><%: T("Actions:") %></label>
         <select id="publishActions" name="<%: Html.NameOf(m => m.Options.BulkAction)%>">
             <%: Html.SelectOption(Model.Options.BulkAction, CommentIndexBulkAction.None, T("Choose action...").ToString()) %>
@@ -15,7 +15,7 @@
         </select>
         <input class="button" type="submit" name="submit.BulkEdit" value="<%: T("Apply") %>" />
     </fieldset>
-    <fieldset class="actions bulk">
+    <fieldset class="bulk-actions">
         <label for="filterResults"><%: T("Filter:")%></label>
         <select id="filterResults" name="<%: Html.NameOf(m => m.Options.Filter)%>">
             <%: Html.SelectOption(Model.Options.Filter, CommentIndexFilter.All, T("All Comments").ToString())%>

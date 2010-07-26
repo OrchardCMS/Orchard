@@ -2,7 +2,7 @@
 <%@ Import Namespace="Orchard.Core.Contents.ViewModels" %>
 <h1><%:Html.TitleForPage((string.IsNullOrEmpty(Model.TypeDisplayName) ? T("Manage Content") : T("Manage {0} Content", Model.TypeDisplayName)).ToString()) %></h1>
 <div class="manage">
-    <%:Html.ActionLink(!string.IsNullOrEmpty(Model.TypeDisplayName) ? T("Add new {0} content", Model.TypeDisplayName).Text : T("Add new content").Text, "Create", new { }, new { @class = "button primaryAction" }) %>
+    <%:Html.ActionLink(!string.IsNullOrEmpty(Model.TypeDisplayName) ? T("Create New {0}", Model.TypeDisplayName).Text : T("Create New Content").Text, "Create", new { }, new { @class = "button primaryAction" }) %>
 </div><%
 using (Html.BeginFormAntiForgeryPost()) { %>
     <fieldset class="bulk-actions">
@@ -18,7 +18,7 @@ using (Html.BeginFormAntiForgeryPost()) { %>
     <fieldset class="bulk-actions">
         <label for="filterResults" class="bulk-filter"><%:T("Show only of type")%></label>
         <select id="filterResults" name="<%:Html.NameOf(m => m.Options.SelectedFilter) %>">
-            <%:Html.SelectOption(Model.Options.SelectedFilter, "", T("Any (show all)").ToString()) %>
+            <%:Html.SelectOption(Model.Options.SelectedFilter, "", T("any (show all)").ToString()) %>
             <% foreach(var filterOption in Model.Options.FilterOptions) { %>
                 <%:Html.SelectOption(Model.Options.SelectedFilter, filterOption.Key, filterOption.Value) %><%
             } %>

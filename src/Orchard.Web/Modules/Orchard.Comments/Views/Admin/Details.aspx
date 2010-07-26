@@ -19,7 +19,7 @@
 </div>
 <% using(Html.BeginFormAntiForgeryPost()) { %>
 	<%: Html.ValidationSummary() %>
-    <fieldset class="actions bulk">
+    <fieldset class="bulk-actions">
         <label for="publishActions"><%: T("Actions:") %></label>
         <select id="publishActions" name="<%: Html.NameOf(m => m.Options.BulkAction)%>">
             <%: Html.SelectOption(Model.Options.BulkAction, CommentDetailsBulkAction.None, T("Choose action...").ToString())%>
@@ -30,7 +30,7 @@
         </select>
         <input class="button" type="submit" name="submit.BulkEdit" value="<%: T("Apply") %>" />
     </fieldset>
-    <fieldset class="actions bulk">
+    <fieldset class="bulk-actions">
         <label for="filterResults"><%: T("Filter:")%></label>
         <select id="filterResults" name="<%: Html.NameOf(m => m.Options.Filter)%>">
             <%: Html.SelectOption(Model.Options.Filter, CommentDetailsFilter.All, T("All Comments").ToString())%>

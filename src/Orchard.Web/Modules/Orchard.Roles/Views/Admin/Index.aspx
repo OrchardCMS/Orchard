@@ -3,7 +3,7 @@
 <h1><%: Html.TitleForPage(T("Manage Roles").ToString())%></h1>
 <% using(Html.BeginFormAntiForgeryPost()) { %>
     <%: Html.ValidationSummary() %>
-    <fieldset class="actions bulk">
+    <fieldset class="bulk-actions">
         <label for="publishActions"><%: T("Actions:") %></label>
         <select id="Select1" name="roleActions">
             <option value="1"><%: T("Remove") %></option>

@@ -3,7 +3,7 @@
 <h1><%: Html.TitleForPage(T("Manage Tags").ToString())%></h1>
 <% using(Html.BeginFormAntiForgeryPost()) { %>
 	<%: Html.ValidationSummary() %>
-    <fieldset class="actions bulk">
+    <fieldset class="bulk-actions">
         <label for="publishActions"><%: T("Actions:") %></label>
         <select id="publishActions" name="<%: Html.NameOf(m => m.BulkAction)%>">
             <%: Html.SelectOption(Model.BulkAction, TagAdminIndexBulkAction.None, T("Choose action...").ToString())%>
