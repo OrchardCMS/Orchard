@@ -46,5 +46,4 @@
             <% tagIndex++; } %>
         </table>
     </fieldset>
-    <div class="manage"><%: Html.ActionLink(T("Add a tag").ToString(), "Create", new { }, new { @class = "button primaryAction" })%></div>
 <% } %>

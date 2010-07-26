@@ -94,8 +94,4 @@ Html.RegisterStyle("admin.css"); %>
             <%}%>
         </table>
     </fieldset>
-	<div class="manage">
-	    <%: Html.ActionLink(T("Add media").ToString(), "Add", new { folderName = Model.FolderName, mediaPath = Model.MediaPath }, new { @class = "button primaryAction" })%>
-		<%: Html.ActionLink(T("Add a folder").ToString(), "Create", new { Model.MediaPath }, new { @class = "button" })%>
-    </div>
 <% } %>

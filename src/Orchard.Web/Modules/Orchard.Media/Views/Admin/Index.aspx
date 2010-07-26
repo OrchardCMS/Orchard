@@ -48,5 +48,4 @@
             <%}%>
         </table>
     </fieldset>
-    <div class="manage"><%: Html.ActionLink(T("Add a folder").ToString(), "Create", new { }, new { @class = "button primaryAction" })%></div>
 <% } %>
