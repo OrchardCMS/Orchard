@@ -39,12 +39,12 @@
                     }
 
                     if (__this.hasClass("closed") || __this.hasClass("closing")) {
-                        __this.addClass("opening")
-                            .data("controllees").slideDown(300, function () { __this.removeClass("opening").removeClass("closed").addClass("open"); });
+                        __this.data("controllees").slideDown(300, function () { __this.removeClass("opening").removeClass("closed").addClass("open"); });
+                        __this.addClass("opening");
                     }
                     else {
-                        __this.addClass("closing")
-                            .data("controllees").slideUp(300, function () { __this.removeClass("closing").removeClass("open").addClass("closed"); });
+                        __this.data("controllees").slideUp(300, function () { __this.removeClass("closing").removeClass("open").addClass("closed"); });
+                        __this.addClass("closing");
                     }
 
                     return false;
