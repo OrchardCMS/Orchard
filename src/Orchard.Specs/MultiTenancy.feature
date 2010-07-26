@@ -90,8 +90,8 @@ Scenario: A new tenant runs the setup
             | ConfirmPassword | 6655321 |
         And I hit "Finish Setup"
             And I go to "/Default.aspx"
-    Then I should see "<h1>Scott Site</h1>"
-        And I should see "Welcome, <strong>admin</strong>!"
+    Then I should see "Scott Site"
+        And I should see "Welcome"
         
 Scenario: An existing initialized tenant cannot have its database option cleared
     Given I have installed Orchard
