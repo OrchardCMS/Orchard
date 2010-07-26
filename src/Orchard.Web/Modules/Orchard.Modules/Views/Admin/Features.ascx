@@ -35,7 +35,7 @@
             <li class="<%:featureClassName%>" id="<%:featureId%>" title="<%:T("{0} is {1}", Html.AttributeEncode(feature.Descriptor.Name), featureState)%>">
                 <div class="summary">
                     <div class="properties">
-                        <h3><%:feature.Descriptor.Name%></h3>
+                        <h3><%=string.Join(".&#8203;", feature.Descriptor.Name.Split('.').Select(s => Html.Encode(s)))%></h3>
                         <p class="description"><%:feature.Descriptor.Description%></p><%
                 if (feature.Descriptor.Dependencies != null && feature.Descriptor.Dependencies.Any()) {%>
                         <div class="dependencies">
