@@ -113,30 +113,39 @@ input[type="submit"], input[type="button"] {
 /* Search
 ----------------------------------------------------------*/
 
-.search 
-{
-    margin: 12px 0 12px 0;
+.search {
+    margin: 16px 0 12px 0;
 }
 
-.search fieldset 
-{
+.search fieldset {
     overflow: auto;
+    margin: 0;
 }
 
-.search input 
-{
+.search input {
     width: auto;
     float: left;
     padding: 3px;
     margin: 0;
 }
 
-.search button 
-{
-    float: left;
+.search button {
+    padding:1px 6px;
     margin: 0 0 0 4px;
+    font-weight:600;
 }
 
+.search-summary {
+    padding:12px 0 0 0; 
+}
+
+.search-summary em {
+  font-weight:600;  
+}
+
+.search-results li.first {
+    margin:0 0 12px 0;
+}
 
 /* Tables
 ----------------------------------------------------------*/
@@ -228,6 +237,7 @@ colgroup
 	margin:33px 2px 0 0;
 	font-size:104%;
 	float:right;
+	text-align:right;
 }
 
 #maincolumn {

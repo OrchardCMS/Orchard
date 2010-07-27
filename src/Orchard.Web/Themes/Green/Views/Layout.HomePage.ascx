@@ -29,6 +29,7 @@ return false;
             <div id="logIn">
                 <%-- todo:(nheskew) this will need to all go in the header zone (user widget) --%>
                 <% Html.Include("User"); %>
+                <%Html.Zone("search");%>
             </div>
         </div>
     </div>
