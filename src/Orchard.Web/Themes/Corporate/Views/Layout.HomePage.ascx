@@ -34,11 +34,7 @@
                 <div class="top">
                     <img src="<%: Url.Content("~/Themes/Corporate/Content/Images/content-top.png") %>" /></div>
 	                <div class="content group">
-
-                        <% Html.Zone("home-hero-gallery"); %>
-
 		                <% Html.Zone("home-hero"); %>
-
 		            </div>
 	            <div class="bottom">
                     <img src="<%: Url.Content("~/Themes/Corporate/Content/Images/content-bottom.png") %>" /></div>

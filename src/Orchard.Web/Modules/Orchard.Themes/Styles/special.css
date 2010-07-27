@@ -8,6 +8,7 @@
     border-color:#8f8f8f;
 }
 .managewrapper {
+    overflow:hidden;
     position:relative;
 }
 .managewrapper .manage {

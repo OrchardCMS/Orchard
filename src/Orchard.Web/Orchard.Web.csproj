@@ -258,7 +258,6 @@
     <Content Include="Themes\Corporate\Views\LogOn.ascx" />
     <Content Include="Themes\Corporate\Views\User.ascx" />
     <Content Include="Themes\Corporate\Zones\Home-Headline.html" />
-    <Content Include="Themes\Corporate\Zones\Home-Hero-Gallery.html" />
     <Content Include="Themes\Corporate\Zones\Home-Hero.html" />
     <Content Include="Themes\Corporate\Zones\Sidebar-w1.html" />
     <Content Include="Themes\Corporate\Zones\Sidebar-w2.html" />
