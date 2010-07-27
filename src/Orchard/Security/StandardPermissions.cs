@@ -1,4 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using Orchard.Environment.Extensions.Models;
 using Orchard.Security.Permissions;
 
 namespace Orchard.Security {
@@ -6,10 +9,21 @@ namespace Orchard.Security {
         public static readonly Permission AccessAdminPanel = new Permission { Name = "AccessAdminPanel", Description = "Access admin panel" };
         public static readonly Permission AccessFrontEnd = new Permission { Name = "AccessFrontEnd", Description = "Access site front-end" };
 
-        public string ModuleName {
+        public Feature Feature {
             get {
                 // This is a lie, but it enables the permissions and stereotypes to be created
-                return "Common";
+                return new Feature {
+                    Descriptor = new FeatureDescriptor {
+                        Name = "Orchard.Framework",
+                        Category = "Core",
+                        Dependencies = Enumerable.Empty<string>(),
+                        Description = "",
+                        Extension = new ExtensionDescriptor {
+                            Name = "Orchard.Framework"
+                        }
+                    },
+                    ExportedTypes = Enumerable.Empty<Type>()
+                };
             }
         }
 

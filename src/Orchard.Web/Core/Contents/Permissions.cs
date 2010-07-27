@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Orchard.Environment.Extensions.Models;
 using Orchard.Security.Permissions;
 
 namespace Orchard.Core.Contents {
@@ -12,11 +13,7 @@ namespace Orchard.Core.Contents {
 
         public static readonly Permission MetaListContent = new Permission { ImpliedBy = new[] { EditContent, PublishContent, DeleteContent } };
 
-        public string ModuleName {
-            get {
-                return "Content";
-            }
-        }
+        public virtual Feature Feature { get; set; }
 
         public IEnumerable<Permission> GetPermissions() {
             return new [] {

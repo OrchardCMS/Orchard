@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Orchard.Environment.Extensions.Models;
 
 namespace Orchard.Security.Permissions {
     /// <summary>
@@ -6,7 +7,7 @@ namespace Orchard.Security.Permissions {
     /// the which may be granted
     /// </summary>
     public interface IPermissionProvider : IDependency {
-        string ModuleName { get; }
+        Feature Feature { get; }
         IEnumerable<Permission> GetPermissions();
         IEnumerable<PermissionStereotype> GetDefaultStereotypes();
     }

@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using JetBrains.Annotations;
+using Orchard.Environment.Extensions.Models;
 using Orchard.Security.Permissions;
 
 namespace Orchard.Roles {
@@ -9,11 +10,7 @@ namespace Orchard.Roles {
         public static readonly Permission ManageRoles = new Permission { Description = "Create and manage roles", Name = "ManageRoles" };
         public static readonly Permission ApplyRoles = new Permission { Description = "Assign users to roles", Name = "AssignUsersToRoles", ImpliedBy = new[] { ManageRoles } };
 
-        public string ModuleName {
-            get {
-                return "Roles";
-            }
-        }
+        public virtual Feature Feature { get; set; }
 
         public IEnumerable<Permission> GetPermissions() {
             return new Permission[] {

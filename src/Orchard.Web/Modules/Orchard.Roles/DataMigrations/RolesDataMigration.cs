@@ -4,11 +4,11 @@ namespace Orchard.Roles.DataMigrations {
     public class RolesDataMigration : DataMigrationImpl {
 
         public int Create() {
-            //CREATE TABLE Orchard_Roles_PermissionRecord (Id  integer, Name TEXT, ModuleName TEXT, Description TEXT, primary key (Id));
+            //CREATE TABLE Orchard_Roles_PermissionRecord (Id  integer, Name TEXT, FeatureName TEXT, Description TEXT, primary key (Id));
             SchemaBuilder.CreateTable("PermissionRecord", table => table
                 .Column<int>("Id", column => column.PrimaryKey().Identity())
                 .Column<string>("Name")
-                .Column<string>("ModuleName")
+                .Column<string>("FeatureName")
                 .Column<string>("Description")
                 );
 

@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Orchard.Environment.Extensions.Models;
 using Orchard.Security.Permissions;
 
 namespace Orchard.Blogs {
@@ -16,11 +17,7 @@ namespace Orchard.Blogs {
         public static readonly Permission MetaListOthersBlogs = new Permission { ImpliedBy = new[] { EditOthersBlogPost, PublishOthersBlogPost, DeleteOthersBlogPost } };
         public static readonly Permission MetaListBlogs = new Permission { ImpliedBy = new[] { EditBlogPost, PublishBlogPost, DeleteBlogPost } };
 
-        public string ModuleName {
-            get {
-                return "Blogs";
-            }
-        }
+        public virtual Feature Feature { get; set; }
 
         public IEnumerable<Permission> GetPermissions() {
             return new Permission[] {

@@ -1,15 +1,12 @@
 ﻿using System.Collections.Generic;
+using Orchard.Environment.Extensions.Models;
 using Orchard.Security.Permissions;
 
 namespace Orchard.MultiTenancy {
     public class Permissions : IPermissionProvider {
         public static readonly Permission ManageTenants = new Permission { Description = "Modifying Tenants of a Site", Name = "ManageTenants" };
 
-        public string ModuleName {
-            get {
-                return "MultiTenancy";
-            }
-        }
+        public virtual Feature Feature { get; set; }
 
         public IEnumerable<Permission> GetPermissions() {
             return new[] {

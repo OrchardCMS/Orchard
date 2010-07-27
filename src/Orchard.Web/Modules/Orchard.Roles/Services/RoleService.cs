@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using JetBrains.Annotations;
 using Orchard.Data;
+using Orchard.Environment.Extensions.Models;
 using Orchard.Logging;
 using Orchard.Roles.Models;
 using Orchard.Security.Permissions;
@@ -47,7 +48,7 @@ namespace Orchard.Roles.Services {
                 _permissionRepository.Create(new PermissionRecord {
                     Description = GetPermissionDescription(permissionName),
                     Name = permissionName,
-                    ModuleName = GetModuleName(permissionName)
+                    FeatureName = GetFeatureName(permissionName)
                 });
             }
             RoleRecord roleRecord = GetRoleByName(roleName);
@@ -65,7 +66,7 @@ namespace Orchard.Roles.Services {
                     _permissionRepository.Create(new PermissionRecord {
                         Description = GetPermissionDescription(permission),
                         Name = permission,
-                        ModuleName = GetModuleName(permission)
+                        FeatureName = GetFeatureName(permission)
                     });
                 }
                 PermissionRecord permissionRecord = _permissionRepository.Get(x => x.Name == permission);
@@ -73,11 +74,11 @@ namespace Orchard.Roles.Services {
             }
         }
 
-        private string GetModuleName(string permissionName) {
+        private string GetFeatureName(string permissionName) {
             foreach (var permissionProvider in _permissionProviders) {
                 foreach (var permission in permissionProvider.GetPermissions()) {
                     if (String.Equals(permissionName, permission.Name, StringComparison.OrdinalIgnoreCase)) {
-                        return permissionProvider.ModuleName;
+                        return permissionProvider.Feature.Descriptor.Name;
                     }
                 }
             }
@@ -100,20 +101,22 @@ namespace Orchard.Roles.Services {
         }
 
         public IDictionary<string, IEnumerable<Permission>> GetInstalledPermissions() {
-            Dictionary<string, IEnumerable<Permission>> installedPermissions = new Dictionary<string, IEnumerable<Permission>>();
+            var installedPermissions = new Dictionary<string, IEnumerable<Permission>>();
             foreach (var permissionProvider in _permissionProviders) {
-                IEnumerable<Permission> permissions = permissionProvider.GetPermissions();
-                if (installedPermissions.ContainsKey(permissionProvider.ModuleName))
-                    installedPermissions[permissionProvider.ModuleName] = installedPermissions[permissionProvider.ModuleName].Concat(permissions);
+                var featureName = permissionProvider.Feature.Descriptor.Name;
+                var permissions = permissionProvider.GetPermissions();
+
+                if (installedPermissions.ContainsKey(featureName))
+                    installedPermissions[featureName] = installedPermissions[featureName].Concat(permissions);
                 else
-                    installedPermissions.Add(permissionProvider.ModuleName, permissions);
+                    installedPermissions.Add(featureName, permissions);
             }
 
             return installedPermissions;
         }
 
         public IEnumerable<string> GetPermissionsForRole(int id) {
-            List<string> permissions = new List<string>();
+            var permissions = new List<string>();
             RoleRecord roleRecord = GetRole(id);
             foreach (RolesPermissionsRecord rolesPermission in roleRecord.RolesPermissions) {
                 permissions.Add(rolesPermission.Permission.Name);

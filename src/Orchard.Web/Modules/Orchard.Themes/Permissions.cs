@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Orchard.Environment.Extensions.Models;
 using Orchard.Security.Permissions;
 
 namespace Orchard.Themes {
@@ -6,11 +7,7 @@ namespace Orchard.Themes {
         public static readonly Permission ManageThemes = new Permission { Description = "Manage Themes", Name = "ManageThemes" };
         public static readonly Permission ApplyTheme = new Permission { Description = "Apply a Theme", Name = "ApplyTheme" };
 
-        public string ModuleName {
-            get {
-                return "Themes";
-            }
-        }
+        public virtual Feature Feature { get; set; }
 
         public IEnumerable<Permission> GetPermissions() {
             return new Permission[] {

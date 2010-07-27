@@ -10,9 +10,9 @@
     </fieldset>
     <fieldset>
         <legend><%: T("Permissions") %></legend>
-        <% foreach (var moduleName in Model.ModulePermissions.Keys) { %>
+        <% foreach (var featureName in Model.FeaturePermissions.Keys) { %>
         <fieldset>
-            <legend><%: T("{0} Module", moduleName) %></legend>
+            <legend><%: T("{0} Module", featureName) %></legend>
             <table class="items">
                 <colgroup>
                     <col id="Permission" />
@@ -24,7 +24,7 @@
                         <th scope="col"><%: T("Allow") %></th>
                     </tr>
                 </thead>
-                <% foreach (var permission in Model.ModulePermissions[moduleName]) { %>
+                <% foreach (var permission in Model.FeaturePermissions[featureName]) { %>
                 <tr>
                     <td><%: permission.Description %></td>
                     <td style="width:60px;/* todo: (heskew) make not inline :( */"><input type="checkbox" value="true" name="<%: T("Checkbox.{0}", permission.Name) %>"/></td>

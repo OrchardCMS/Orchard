@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Orchard.Environment.Extensions.Models;
 using Orchard.Security.Permissions;
 
 namespace Orchard.Modules {
@@ -6,9 +7,7 @@ namespace Orchard.Modules {
         public static readonly Permission ManageModules = new Permission { Description = "Manage Modules", Name = "ManageModules" };
         public static readonly Permission ManageFeatures = new Permission { Description = "Manage Features", Name = "ManageFeatures", ImpliedBy = new[] {ManageModules}};
 
-        public string ModuleName {
-            get { return "Modules"; }
-        }
+        public virtual Feature Feature { get; set; }
 
         public IEnumerable<Permission> GetPermissions() {
             return new[] {ManageModules, ManageFeatures};

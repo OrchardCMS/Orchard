@@ -38,7 +38,7 @@ namespace Orchard.Roles {
             var featureName = feature.Descriptor.Name;
 
             // when another module is being enabled, locate matching permission providers
-            var providersForEnabledModule = _permissionProviders.Where(x => x.ModuleName == featureName);
+            var providersForEnabledModule = _permissionProviders.Where(x => x.Feature.Descriptor.Name == featureName);
 
             if (providersForEnabledModule.Any()) {
                 Logger.Debug("Configuring default roles for module {0}", featureName);
