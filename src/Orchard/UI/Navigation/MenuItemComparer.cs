@@ -40,7 +40,12 @@ namespace Orchard.UI.Navigation {
             }
             if (obj.RouteValues != null) {
                 foreach (var item in obj.RouteValues) {
-                    hash ^= item.Key.GetHashCode() ^ item.Value.GetHashCode();
+                    if (item.Key != null) {
+                        hash ^= item.Key.GetHashCode();
+                    }
+                    if (item.Value != null) {
+                        hash ^= item.Value.GetHashCode();
+                    }
                 }
             }
             return hash;
