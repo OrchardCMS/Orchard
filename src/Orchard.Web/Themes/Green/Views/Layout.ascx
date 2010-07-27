@@ -53,6 +53,9 @@ return false;
 <%Html.Zone("sidebar");%>
 <ul>
 <li>
+    <%Html.Zone("search"); %>
+</li>
+<li>
     <%Html.Zone("sideBarZone1"); %>
 </li>
 <li>

@@ -28,7 +28,8 @@
         <%Html.ZoneBody("content");%>
         </div>
         <div id="sidebar">
-            <%Html.Zone("sidebar");%>
+            <% Html.Zone("search");
+               Html.Zone("sidebar");%>
         </div>
         <%-- End Content --%>
         <% Html.Include("Footer"); %>

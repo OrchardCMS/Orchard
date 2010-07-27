@@ -21,6 +21,7 @@
                 <%: Html.SiteName() %></div>
         </div>
         <% Html.Zone("menu"); %>
+        <% Html.Zone("search"); %>
     </div>
 </div>
 

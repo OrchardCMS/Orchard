@@ -242,6 +242,37 @@ form.inline p { margin-bottom:0; }
 .success a  { color: #264409; }
 
 
+/* Search
+----------------------------------------------------------*/
+
+.search 
+{
+    margin: 12px 0 12px 0;
+    position: absolute;
+    top: 24px;
+    right: 18px;
+}
+
+.search fieldset 
+{
+    overflow: auto;
+}
+
+.search input 
+{
+    width: 12em;
+    float: left;
+    padding: 3px;
+    margin: 0;
+}
+
+.search button 
+{
+    float: left;
+    margin: 0 0 0 4px;
+}
+
+
 /*========= GENERAL =========*/
 
 /* html, body {background-color: #434343; } */

@@ -52,11 +52,11 @@ blockquote, q {
 /*- Clear Fix -*/
 
 .group:after {
-    content: ".";
-    display: block;
-    height: 0;
-    clear: both;
-    visibility: hidden;
+	content: ".";
+	display: block;
+	height: 0;
+	clear: both;
+	visibility: hidden;
 }
 
 
@@ -265,7 +265,7 @@ body { background: #f3f4f4 url('../Content/Images/bkg.jpg') repeat-x; }
 
 /*- Page Navigation -*/
 
-#nav { background: transparent url('../Content/Images/menu-right.png') no-repeat right top; margin: 0px 0px 20px 0px; }
+#nav { background: transparent url('../Content/Images/menu-right.png') no-repeat right top; margin: 0px 0px 20px 0px; position: relative; }
 #nav .menu { margin: 0px; padding: 0px; height: 40px; width:725px; background: transparent url('../Content/Images/menu-left.png') no-repeat left top; }
 #nav .menu li { float:left; list-style: none; background: transparent url('../Content/Images/menu-divider.png') repeat-y right top; }
 #nav .menu li a { display:block; margin: 0px 2px 1px 0px; padding: 11px 39px 4px 39px; height: 24px; color: #FFF; font-size: 1.2em; text-decoration: none; text-shadow: 0px -1px 0px #535550; }
@@ -280,10 +280,11 @@ body { background: #f3f4f4 url('../Content/Images/bkg.jpg') repeat-x; }
 .admin li a {}
 
 /*- Search -*/
-#nav .search { display: inline; float: right; height: 40px; margin: -40px 8px 0 0; }
-#nav .search input { border-color: #6AA6BF; }
-#nav .search input, #nav .search button { height: 1.8em; padding: 0 .5em; margin: .5em 0; vertical-align: middle; }
-#nav .search button { background: #87B7CB; border: 1px solid #6AA6BF; color: #FFF; height: 1.9em; text-shadow: 0px -1px 0px #A6A6A6; }
+#nav .search { position: absolute; top: 0px; right: 12px; }
+#nav .search input { border-color: #6AA6BF; padding: 5px; }
+#nav .search input, #nav .search button { vertical-align: middle; }
+#nav .search button { background: #87B7CB; border: 1px solid #6AA6BF; color: #FFF; padding: 4px; text-shadow: 0px -1px 0px #A6A6A6; }
+
 
 /*========= Footer =========*/
 
@@ -306,7 +307,7 @@ body { background: #f3f4f4 url('../Content/Images/bkg.jpg') repeat-x; }
 .home-hero .hero-gallery { float:left; position: relative; margin: 0px 0px 0px 40px; }
 .home-hero .hero-gallery #slider { position: relative; border: solid 1px #4d8298; }
 
-    
+	
 
 /*========= Page =========*/
 
@@ -383,35 +384,35 @@ body { background: #f3f4f4 url('../Content/Images/bkg.jpg') repeat-x; }
 /* Localization
 -------------------------------------------------------------- */
 .content-localization .content-localizations h4 {
-    float: left;
-    margin: 0;
-    padding:3px;
+	float: left;
+	margin: 0;
+	padding:3px;
 }
 
 .content-localization .content-localizations ul {
-    overflow: auto;
+	overflow: auto;
 }
 
 .content-localization .content-localizations li {
-    border-bottom: 1px;
-    float: left;
-    margin-left:.5em;
-    padding: 3px;
-    border: 1px solid #CCC;
-    list-style: none;
+	border-bottom: 1px;
+	float: left;
+	margin-left:.5em;
+	padding: 3px;
+	border: 1px solid #CCC;
+	list-style: none;
 }
 
 .content-localization .content-localizations li:hover {
-    background-color: #ebebeb;
+	background-color: #ebebeb;
 }
 
 
 .content-localization .content-localizations li a {
-    text-decoration: none;
+	text-decoration: none;
 }
 
 .content-localization .content-localizations li a:hover, .content-localization .content-localizations li a:visited {
-    text-decoration: none;
+	text-decoration: none;
 }
 
 /*========= PLUGINS =========*/

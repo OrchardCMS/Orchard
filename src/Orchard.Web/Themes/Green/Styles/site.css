@@ -85,14 +85,14 @@ label {
     display: block;
     margin:8px 0 2px 0px;
     font-size:105%;
-    }
+}
 
 input[type="text"], textarea, #password {
     border-color:#cacec6;
     padding:2px;
     margin:2px 0 4px 0px;
     width:100%;
-    }
+}
 
 input[type="checkbox"] {
     margin:2px 0 4px 10px;
@@ -108,6 +108,33 @@ input[type="submit"], input[type="button"] {
 .forcheckbox {
     margin:0 0 0 4px;
     display:inline;
+}
+
+/* Search
+----------------------------------------------------------*/
+
+.search 
+{
+    margin: 12px 0 12px 0;
+}
+
+.search fieldset 
+{
+    overflow: auto;
+}
+
+.search input 
+{
+    width: auto;
+    float: left;
+    padding: 3px;
+    margin: 0;
+}
+
+.search button 
+{
+    float: left;
+    margin: 0 0 0 4px;
 }
 
 
