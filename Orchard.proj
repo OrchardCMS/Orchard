@@ -120,6 +120,7 @@
       <Stage-Bin-Exclude Include="$(WebSitesFolder)\**\bin\**\*" />
       <Stage-Web Include="$(WebSitesFolder)\Orchard.Web\**\*;$(SrcFolder)\Orchard.Web\*.csproj" />
       <Stage-Media Include="$(SrcFolder)\Orchard.Web\Media\OrchardLogo.png" />
+      <Stage-PoFiles Include="$(SrcFolder)\Orchard.Web\**\*.po" />
       <Stage-Core Include="$(WebSitesFolder)\Orchard.Core\**\*" Exclude="$(WebSitesFolder)\Orchard.Core\**\bin\**\*" />
 
       <Stage-Module-Exclude Include="@(Stage-Web);@(Stage-Core);$(WebSitesFolder)\PackageIndexReferenceImplementation\**\*"/>
@@ -145,6 +146,7 @@
 
     <Copy SourceFiles="@(Stage-Web);@(Stage-License)" DestinationFolder="$(StageFolder)\%(RecursiveDir)"/>
     <Copy SourceFiles="@(Stage-Media)" DestinationFolder="$(StageFolder)\Media"/>
+    <Copy SourceFiles="@(Stage-PoFiles)" DestinationFolder="$(StageFolder)\%(RecursiveDir)"/>
     <Copy SourceFiles="@(SqlCe-Native-Binaries-x86)" DestinationFolder="$(StageFolder)\bin\x86"/>
     <Copy SourceFiles="@(SqlCe-Native-Binaries-amd64)" DestinationFolder="$(StageFolder)\bin\amd64"/>
     <Copy SourceFiles="@(Stage-Core)" DestinationFolder="$(StageFolder)\Core\%(RecursiveDir)"/>
