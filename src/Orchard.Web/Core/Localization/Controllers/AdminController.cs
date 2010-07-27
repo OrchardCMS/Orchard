@@ -54,7 +54,8 @@ namespace Orchard.Core.Localization.Controllers {
                 routePart.Path = null;
             }
 
-            contentItem.As<LocalizationPart>().Culture.Culture = null;
+            if (contentItem.As<LocalizationPart>().Culture != null)
+                contentItem.As<LocalizationPart>().Culture.Culture = null;
             var model = new AddLocalizationViewModel {
                 Id = id,
                 SelectedCulture = selectedCulture,
