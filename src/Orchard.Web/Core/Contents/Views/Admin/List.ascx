@@ -16,7 +16,7 @@ using (Html.BeginFormAntiForgeryPost()) { %>
         <button type="submit" name="submit.BulkEdit" value="yes"><%:T("Apply") %></button>
     </fieldset>
     <fieldset class="bulk-actions">
-        <label for="filterResults" class="bulk-filter"><%:T("Show only of type")%></label>
+        <label for="filterResults" class="bulk-filter"><%:T("Show")%></label>
         <select id="filterResults" name="<%:Html.NameOf(m => m.Options.SelectedFilter) %>">
             <%:Html.SelectOption(Model.Options.SelectedFilter, "", T("any (show all)").ToString()) %>
             <% foreach(var filterOption in Model.Options.FilterOptions) { %>
@@ -25,8 +25,8 @@ using (Html.BeginFormAntiForgeryPost()) { %>
         </select>
         <label for="orderResults" class="bulk-order"><%:T("Ordered by")%></label>
         <select id="orderResults" name="<%:Html.NameOf(m => m.Options.OrderBy) %>">
-            <%:Html.SelectOption(Model.Options.OrderBy, ContentsOrder.Created, T("most recently created").ToString())%>
-            <%:Html.SelectOption(Model.Options.OrderBy, ContentsOrder.Modified, T("most recently modified").ToString())%>
+            <%:Html.SelectOption(Model.Options.OrderBy, ContentsOrder.Created, T("recently created").ToString())%>
+            <%:Html.SelectOption(Model.Options.OrderBy, ContentsOrder.Modified, T("recently modified").ToString())%>
             <%--<%:Html.SelectOption(Model.Options.OrderBy, ContentsOrder.Published, T("Date Published").ToString())%>--%>
         </select>
         <button type="submit" name="submit.Filter" value="yes please"><%:T("Apply") %></button>

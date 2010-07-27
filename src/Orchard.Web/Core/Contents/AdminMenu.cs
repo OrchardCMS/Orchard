@@ -28,7 +28,7 @@ namespace Orchard.Core.Contents {
                     var cim = _contentManager.GetItemMetadata(ci);
                     var createRouteValues = cim.CreateRouteValues;
                     if (createRouteValues.Any())
-                        menu.Add(T("Create New {0}", contentTypeDefinition.DisplayName), "1.3", item => item.Action(cim.CreateRouteValues["Action"] as string, cim.CreateRouteValues["Controller"] as string, cim.CreateRouteValues));
+                        menu.Add(T("Create {0}", contentTypeDefinition.DisplayName), "1.3", item => item.Action(cim.CreateRouteValues["Action"] as string, cim.CreateRouteValues["Controller"] as string, cim.CreateRouteValues));
                 }
             });
         }
