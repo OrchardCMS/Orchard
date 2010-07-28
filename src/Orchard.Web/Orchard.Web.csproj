@@ -104,6 +104,7 @@
     <Content Include="Themes\Contoso\Views\DisplayTemplates\Parts\Blogs.BlogPost.Metadata.ascx" />
     <Content Include="Themes\Contoso\Views\Orchard.Search\Search\Index.ascx" />
     <Content Include="Themes\Corporate\Views\DisplayTemplates\Parts\Blogs.BlogPost.Metadata.ascx" />
+    <Content Include="Themes\Green\Views\Orchard.Search\Search\Index.ascx" />
     <Content Include="Themes\TheAdmin\Scripts\admin.js" />
     <Content Include="Themes\TheAdmin\Styles\ie.css" />
     <Content Include="Themes\TheAdmin\Styles\images\menuClosed.gif" />

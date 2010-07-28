@@ -3,6 +3,7 @@ using System.IO;
 using System.Linq;
 using System.Web.Mvc.Html;
 using Orchard.Environment.Descriptor;
+using Orchard.Localization;
 using Orchard.Security;
 using Orchard.Services;
 using Orchard.UI.Zones;
@@ -23,9 +24,11 @@ namespace Orchard.Themes.DesignerNotes {
             _authorizationService = authorizationService;
             _shellDescriptorManager = shellDescriptorManager;
             _htmlFilters = htmlFilters;
+            T = NullLocalizer.Instance;
         }
 
         public virtual IUser CurrentUser { get; set; }
+        public Localizer T { get; set; }
 
         public void ZoneRendering(ZoneRenderContext context) {
             if (context.RenderingItems.Any())
@@ -51,7 +54,7 @@ namespace Orchard.Themes.DesignerNotes {
             var writer = context.Html.ViewContext.Writer;
             if (accessAdminPanel) {
                 writer.Write("<div class=\"managewrapper\"><div class=\"manage\">");
-                writer.Write(context.Html.ActionLink("Edit", "AddWidget", new {
+                writer.Write(context.Html.ActionLink(T("Edit").ToString(), "AddWidget", new {
                                                                                   Area = "Futures.Widgets",
                                                                                   Controller = "Admin",
                                                                                   context.ZoneName,
