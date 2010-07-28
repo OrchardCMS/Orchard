@@ -27,8 +27,8 @@
         <li>
         <ul class="summary">
             <div class="properties">
-                <h2><%: item.SyndicationItem.Title.Text %><span> - <%: T("Version: {0}", "1.0")%></span></h2>
-                <p><%:item.SyndicationItem.Summary.Text %></p>
+                <h2><%: (item.SyndicationItem.Title == null ? T("(No title)").Text : item.SyndicationItem.Title.Text)%><span> - <%: T("Version: {0}", "1.0")%></span></h2>
+                <p><%: (item.SyndicationItem.Summary == null ? T("(No description").Text : item.SyndicationItem.Summary.Text) %></p>
                 <ul class="pageStatus" style="color:#666; margin:.6em 0 0 0;">
                     <li><%: T("Last Updated: {0}", item.SyndicationItem.LastUpdatedTime.ToLocalTime()) %></li>
                     <li>&nbsp;&#124;&nbsp;<%: T("Author: {0}", item.SyndicationItem.Authors.Any() ? String.Join(", ", item.SyndicationItem.Authors.Select(a => a.Name)) : T("Unknown").Text)%></li>
