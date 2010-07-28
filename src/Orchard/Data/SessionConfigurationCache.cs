@@ -58,6 +58,7 @@ namespace Orchard.Data {
                 using (var stream = _appDataFolder.CreateFile(pathName)) {
                     formatter.Serialize(stream, cache.Hash);
                     formatter.Serialize(stream, cache.Configuration);
+                    stream.Close();
                 }
             }
             catch (Exception e) {
