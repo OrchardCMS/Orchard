@@ -32,11 +32,19 @@ namespace Orchard.Tags.Handlers {
                 tagsContentItemsRepository.Flush();
 
                 TagsPart tagsPart = context.ContentItem.As<TagsPart>();
-                foreach (var tag in tagsPart.CurrentTags) {
-                    if (!tagsContentItemsRepository.Fetch(x => x.ContentItemId == context.ContentItem.Id).Any()) {
+
+                // delete orphan tags (for each tag, if there is no other contentItem than the one being deleted, it's an orphan)
+                foreach ( var tag in tagsPart.CurrentTags ) {
+                    if ( tagsContentItemsRepository.Fetch(x => x.ContentItemId != context.ContentItem.Id).Count() == 0 ) {
                         tagsRepository.Delete(tag);
                     }
                 }
+
+                // delete tag links with this contentItem (tagsContentItems)
+                foreach ( var tagsContentItem in tagsContentItemsRepository.Fetch(x => x.ContentItemId == context.ContentItem.Id) ) {
+                    tagsContentItemsRepository.Delete(tagsContentItem);
+                }
+
             });
         }
     }
