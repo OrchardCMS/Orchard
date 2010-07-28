@@ -114,8 +114,8 @@ msgid "Manage Content"
 msgstr "Gérer le contenu"
 
 #: ~/Core/Contents/AdminMenu.cs
-#| msgid "Create New {0}"
-msgid "Create New {0}"
+#| msgid "Create {0}"
+msgid "Create {0}"
 msgstr "Créer {0}"
 
 #: ~/Core/Contents/Controllers/AdminController.cs
@@ -172,6 +172,16 @@ msgstr "Le contenu n'a pas pu être dépublié."
 #| msgid "{0} successfully unpublished."
 msgid "{0} successfully unpublished."
 msgstr "{0} dépublié avec succès."
+
+#: ~/Core/Contents/Controllers/AdminController.cs
+#| msgid "Your content has been created."
+msgid "Your content has been created."
+msgstr "Votre contenu a été créé avec succès."
+
+#: ~/Core/Contents/Controllers/AdminController.cs
+#| msgid "Your {0} has been created."
+msgid "Your {0} has been created."
+msgstr "Votre {0} a été créé avec succès."
 
 #: ~/Core/Contents/Views/Admin/CreatableTypeList.ascx
 #| msgid "Create New Content"
@@ -239,13 +249,13 @@ msgid "Apply"
 msgstr "Appliquer"
 
 #: ~/Core/Contents/Views/Admin/List.ascx
-#| msgid "Show only of type"
-msgid "Show only of type"
-msgstr "Montrer seulement le contenu de type"
+#| msgid "Show"
+msgid "Show"
+msgstr "Montrer"
 
 #: ~/Core/Contents/Views/Admin/List.ascx
-#| msgid "Any (show all)"
-msgid "Any (show all)"
+#| msgid "any (show all)"
+msgid "any (show all)"
 msgstr "Tous"
 
 #: ~/Core/Contents/Views/Admin/List.ascx
@@ -254,14 +264,14 @@ msgid "Ordered by"
 msgstr "Trié par"
 
 #: ~/Core/Contents/Views/Admin/List.ascx
-#| msgid "most recently created"
-msgid "most recently created"
-msgstr "date de création décroissante"
+#| msgid "recently created"
+msgid "recently created"
+msgstr "date de création"
 
 #: ~/Core/Contents/Views/Admin/List.ascx
-#| msgid "most recently modified"
-msgid "most recently modified"
-msgstr "date de modification décroissante"
+#| msgid "recently modified"
+msgid "recently modified"
+msgstr "date de modification"
 
 #: ~/Core/Contents/Views/Admin/List.ascx
 #| msgid "Date Published"
@@ -329,9 +339,9 @@ msgid "Welcome to Orchard"
 msgstr "Bienvenue dans Orchard"
 
 #: ~/Core/Dashboard/Views/Admin/Index.ascx
-#| msgid "This is the place where you can manage your web site, its appearance and its contents. Please take a moment to explore the different menu items on the left of the screen to familiarize yourself with the features of the application. For example, try to change the theme through the \"Manage Themes\" menu entry. You can also create new pages and manage existing ones through the \"Manage Pages\" menu entry or create blogs through \"Manage Blogs\"."
-msgid "This is the place where you can manage your web site, its appearance and its contents. Please take a moment to explore the different menu items on the left of the screen to familiarize yourself with the features of the application. For example, try to change the theme through the \"Manage Themes\" menu entry. You can also create new pages and manage existing ones through the \"Manage Pages\" menu entry or create blogs through \"Manage Blogs\"."
-msgstr "Ceci est l'endroit où vous pouvez gérer votre site, son apparence et son contenu. Veuillez passer un instant à explorer le menu à gauche de l'écran pour vous familiariser avec les différents aspects de l'application. Par exemple, vous pouvez changer le thème en utilisant \"Gérer les thèmes\". Vous pouvez également créer de nouvelles pages et gérer les pages existantes via \"Gérer les pages\" ou bien créer de nouveaux blogs via \"Gérer les blogs\"."
+#| msgid "This is the place where you can manage your web site, its appearance and its contents. Please take a moment to explore the different menu items on the left of the screen to familiarize yourself with the features of the application. For example, try to change the theme through the “Manage Themes” menu entry. You can also create new pages and manage existing ones through the “Manage Pages” menu entry or create blogs through “Manage Blogs”."
+msgid "This is the place where you can manage your web site, its appearance and its contents. Please take a moment to explore the different menu items on the left of the screen to familiarize yourself with the features of the application. For example, try to change the theme through the “Manage Themes” menu entry. You can also create new pages and manage existing ones through the “Manage Pages” menu entry or create blogs through “Manage Blogs”."
+msgstr "Ceci est l'endroit où vous pouvez gérer votre site, son apparence et son contenu. Veuillez passer un instant à explorer le menu à gauche de l'écran pour vous familiariser avec les différents aspects de l'application. Par exemple, vous pouvez changer le thème en utilisant "Gérer les thèmes". Vous pouvez également créer de nouvelles pages et gérer les pages existantes via "Gérer les pages" ou bien créer de nouveaux blogs via "Gérer les blogs"."
 
 #: ~/Core/Dashboard/Views/Admin/Index.ascx
 #| msgid "Have fun!"
@@ -344,9 +354,14 @@ msgid "The Orchard Team"
 msgstr "L'équipe Orchard"
 
 #: ~/Core/Localization/Views/CultureSelection.ascx
-#| msgid "Translating to"
-msgid "Translating to"
-msgstr "Traduction vers"
+#| msgid "This is the <em>{0}</em> variation of {1}."
+msgid "This is the <em>{0}</em> variation of {1}."
+msgstr "Ceci est la traduction <em>{0}</em> de {1}."
+
+#: ~/Core/Localization/Views/CultureSelection.ascx
+#| msgid "Content Localization"
+msgid "Content Localization"
+msgstr "Localisation de contenu"
 
 #: ~/Core/Localization/Views/Admin/Translate.ascx
 #| msgid "Translate Content"
@@ -748,67 +763,282 @@ msgstr "Enregistrer"
 msgid "Delete"
 msgstr "Supprimer"
 
-#: ~/Modules/Futures.Modules.Packaging/AdminMenu.cs
-#| msgid "Site Configuration"
-msgid "Site Configuration"
-msgstr "Configuration du site"
+#: ~/Modules/Orchard.Packaging/AdminMenu.cs
+#| msgid "Gallery"
+msgid "Gallery"
+msgstr "Galerie"
 
-#: ~/Modules/Futures.Modules.Packaging/AdminMenu.cs
-#| msgid "Module Packaging"
-msgid "Module Packaging"
-msgstr "Emballage de module"
+#: ~/Modules/Orchard.Packaging/AdminMenu.cs
+#| msgid "Browse Gallery"
+msgid "Browse Gallery"
+msgstr "Consulter la galerie"
 
-#: ~/Modules/Futures.Modules.Packaging/Controllers/PackagingController.cs
+#: ~/Modules/Orchard.Packaging/AdminMenu.cs
+#| msgid "Gallery Feeds"
+msgid "Gallery Feeds"
+msgstr "Flux de galerie"
+
+#: ~/Modules/Orchard.Packaging/Commands/GalleryCommands.cs
+#| msgid "Missing or incorrect User"
+msgid "Missing or incorrect User"
+msgstr "Utilisateur manquant ou incorrect."
+
+#: ~/Modules/Orchard.Packaging/Commands/GalleryCommands.cs
+#| msgid "Missing or incorrect Password"
+msgid "Missing or incorrect Password"
+msgstr "Mot de passe manquant ou incorrect."
+
+#: ~/Modules/Orchard.Packaging/Commands/GalleryCommands.cs
+#| msgid "Success"
+msgid "Success"
+msgstr "Succès"
+
+#: ~/Modules/Orchard.Packaging/Commands/PackagingCommands.cs
+#| msgid "Module \"{0}\" does not exist in this Orchard installation."
+msgid "Module \"{0}\" does not exist in this Orchard installation."
+msgstr "Le module \"{0}\" n'existe pas dans cette installation d'Orchard."
+
+#: ~/Modules/Orchard.Packaging/Commands/PackagingCommands.cs
+#| msgid "Package \"{0}\" successfully created"
+msgid "Package \"{0}\" successfully created"
+msgstr "Le paquetage \"{0}\" a été créé avec succès."
+
+#: ~/Modules/Orchard.Packaging/Commands/PackagingCommands.cs
+#| msgid "File \"{0}\" does not exist."
+msgid "File \"{0}\" does not exist."
+msgstr "Le fichier \"{0}\" n'existe pas."
+
+#: ~/Modules/Orchard.Packaging/Commands/PackagingCommands.cs
+#| msgid "Package \"{0}\" successfully installed at \"{1}\""
+msgid "Package \"{0}\" successfully installed at \"{1}\""
+msgstr "Le paquetage \"{0}\" a été installé avec succès dans \"{1}\"."
+
+#: ~/Modules/Orchard.Packaging/Controllers/GalleryController.cs
 #| msgid "List of available modules and themes is updated."
 msgid "List of available modules and themes is updated."
 msgstr "La liste des modules et thèmes disponibles est mise à jour."
 
-#: ~/Modules/Futures.Modules.Packaging/Controllers/PackagingController.cs
+#: ~/Modules/Orchard.Packaging/Controllers/GalleryController.cs
 #| msgid "May only push directly to one of the configured sources."
 msgid "May only push directly to one of the configured sources."
 msgstr "Il n'est possible de pousser que vers une des sources configurées."
 
-#: ~/Modules/Futures.Modules.Packaging/Controllers/PackagingController.cs
+#: ~/Modules/Orchard.Packaging/Controllers/GalleryController.cs
 #| msgid "Harvested {0} and published onto {1}"
 msgid "Harvested {0} and published onto {1}"
 msgstr "{0} récolté et publié vers {1}"
 
-#: ~/Modules/Futures.Modules.Packaging/Controllers/PackagingController.cs
+#: ~/Modules/Orchard.Packaging/Controllers/GalleryController.cs
 #| msgid "Installed module"
 msgid "Installed module"
 msgstr "Module installé"
 
-#: ~/Modules/Futures.Modules.Packaging/Views/Packaging/Harvest.ascx
+#: ~/Modules/Orchard.Packaging/Controllers/GalleryController.cs
+#| msgid "The feed has been removed successfully."
+msgid "The feed has been removed successfully."
+msgstr "Le flux a été enlevé avec succès."
+
+#: ~/Modules/Orchard.Packaging/Controllers/GalleryController.cs
+#| msgid "The Url is not valid"
+msgid "The Url is not valid"
+msgstr "L'Url n'est pas valide."
+
+#: ~/Modules/Orchard.Packaging/Controllers/GalleryController.cs
+#| msgid "Url is required"
+msgid "Url is required"
+msgstr "L'Url doit être spécifiée."
+
+#: ~/Modules/Orchard.Packaging/Controllers/GalleryController.cs
+#| msgid "The feed has no title."
+msgid "The feed has no title."
+msgstr "Le flux n'a pas de titre."
+
+#: ~/Modules/Orchard.Packaging/Controllers/GalleryController.cs
+#| msgid "The url of the feed or its content is not valid."
+msgid "The url of the feed or its content is not valid."
+msgstr "L'Url du flux ou son contenu n'est pas valide."
+
+#: ~/Modules/Orchard.Packaging/Controllers/GalleryController.cs
+#| msgid "The feed has been added successfully."
+msgid "The feed has been added successfully."
+msgstr "Le flux a été ajouté avec succès."
+
+#: ~/Modules/Orchard.Packaging/Controllers/GalleryController.cs
+#| msgid "Adding feed failed: {0}"
+msgid "Adding feed failed: {0}"
+msgstr "L'ajout du flux a échoué: {0}"
+
+#: ~/Modules/Orchard.Packaging/Services/PackageExpander.cs
+#| msgid "Unknown extension type \"{0}\""
+msgid "Unknown extension type \"{0}\""
+msgstr "Type d'extension inconnu: {0}"
+
+#: ~/Modules/Orchard.Packaging/Views/Gallery/_Subnav.ascx
+#| msgid "Browse Repository Packages"
+msgid "Browse Repository Packages"
+msgstr "Consulter les catalogues de paquetages"
+
+#: ~/Modules/Orchard.Packaging/Views/Gallery/_Subnav.ascx
+#| msgid "Harvest Local Packages"
+msgid "Harvest Local Packages"
+msgstr "Récolter les paquetages locaux"
+
+#: ~/Modules/Orchard.Packaging/Views/Gallery/_Subnav.ascx
+#| msgid "Edit Repository Sources"
+msgid "Edit Repository Sources"
+msgstr "Modifier les catalogues de paquetages"
+
+#: ~/Modules/Orchard.Packaging/Views/Gallery/AddSource.ascx
+#| msgid "Add a Feed"
+msgid "Add a Feed"
+msgstr "Ajouter un flux"
+
+#: ~/Modules/Orchard.Packaging/Views/Gallery/AddSource.ascx
+#| msgid "Add Feed"
+msgid "Add Feed"
+msgstr "Ajouter un flux"
+
+#: ~/Modules/Orchard.Packaging/Views/Gallery/AddSource.ascx
+#| msgid "Feed Url"
+msgid "Feed Url"
+msgstr "Url du flux"
+
+#: ~/Modules/Orchard.Packaging/Views/Gallery/Harvest.ascx
 #| msgid "Packaging"
 msgid "Packaging"
 msgstr "Emballage"
 
-#: ~/Modules/Futures.Modules.Packaging/Views/Packaging/Harvest.ascx
+#: ~/Modules/Orchard.Packaging/Views/Gallery/Harvest.ascx
 #| msgid "Harvest Packages"
 msgid "Harvest Packages"
 msgstr "Récolter des paquetages"
 
-#: ~/Modules/Futures.Modules.Packaging/Views/Packaging/Harvest.ascx
+#: ~/Modules/Orchard.Packaging/Views/Gallery/Harvest.ascx
 #| msgid "Package creation was unsuccessful. Please correct the errors and try again."
 msgid "Package creation was unsuccessful. Please correct the errors and try again."
 msgstr "La création de paquetage a échoué. Veuillez corriger les erreurs et réessayer."
 
-#: ~/Modules/Futures.Modules.Packaging/Views/Packaging/Modules.ascx
+#: ~/Modules/Orchard.Packaging/Views/Gallery/Harvest.ascx
+#| msgid "Download"
+msgid "Download"
+msgstr "Télécharger"
+
+#: ~/Modules/Orchard.Packaging/Views/Gallery/Harvest.ascx
+#| msgid "Push to {0}"
+msgid "Push to {0}"
+msgstr "Pousser vers {0}"
+
+#: ~/Modules/Orchard.Packaging/Views/Gallery/Harvest.ascx
+#| msgid "Harvest"
+msgid "Harvest"
+msgstr "Récolter"
+
+#: ~/Modules/Orchard.Packaging/Views/Gallery/Modules.ascx
 #| msgid "Packaging"
 msgid "Packaging"
 msgstr "Emballage"
 
-#: ~/Modules/Futures.Modules.Packaging/Views/Packaging/Modules.ascx
+#: ~/Modules/Orchard.Packaging/Views/Gallery/Modules.ascx
 #| msgid "Browse Packages"
 msgid "Browse Packages"
 msgstr "Consulter les paquetages"
 
-#: ~/Modules/Futures.Modules.Packaging/Views/Packaging/Sources.ascx
+#: ~/Modules/Orchard.Packaging/Views/Gallery/Modules.ascx
+#| msgid "Browse Gallery"
+msgid "Browse Gallery"
+msgstr "Consulter la galerie"
+
+#: ~/Modules/Orchard.Packaging/Views/Gallery/Modules.ascx
+#| msgid "Refresh"
+msgid "Refresh"
+msgstr "Actualiser"
+
+#: ~/Modules/Orchard.Packaging/Views/Gallery/Modules.ascx
+#| msgid "Feed:"
+msgid "Feed:"
+msgstr "Flux:"
+
+#: ~/Modules/Orchard.Packaging/Views/Gallery/Modules.ascx
+#| msgid "Any (show all feeds)"
+msgid "Any (show all feeds)"
+msgstr "Tous"
+
+#: ~/Modules/Orchard.Packaging/Views/Gallery/Modules.ascx
+#| msgid "Apply"
+msgid "Apply"
+msgstr "Appliquer"
+
+#: ~/Modules/Orchard.Packaging/Views/Gallery/Modules.ascx
+#| msgid "Version: {0}"
+msgid "Version: {0}"
+msgstr "Version: {0}"
+
+#: ~/Modules/Orchard.Packaging/Views/Gallery/Modules.ascx
+#| msgid "Last Updated: {0}"
+msgid "Last Updated: {0}"
+msgstr "Mis à jour le: {0}"
+
+#: ~/Modules/Orchard.Packaging/Views/Gallery/Modules.ascx
+#| msgid "Author: {0}"
+msgid "Author: {0}"
+msgstr "Auteur: {0}"
+
+#: ~/Modules/Orchard.Packaging/Views/Gallery/Modules.ascx
+#| msgid "Unknown"
+msgid "Unknown"
+msgstr "Inconnu"
+
+#: ~/Modules/Orchard.Packaging/Views/Gallery/Modules.ascx
+#| msgid "Install"
+msgid "Install"
+msgstr "Installer"
+
+#: ~/Modules/Orchard.Packaging/Views/Gallery/Modules.ascx
+#| msgid " | "
+msgid " | "
+msgstr " | "
+
+#: ~/Modules/Orchard.Packaging/Views/Gallery/Modules.ascx
+#| msgid "Download"
+msgid "Download"
+msgstr "Télécharger"
+
+#: ~/Modules/Orchard.Packaging/Views/Gallery/Sources.ascx
+#| msgid "Gallery Feeds"
+msgid "Gallery Feeds"
+msgstr "Flux de galerie"
+
+#: ~/Modules/Orchard.Packaging/Views/Gallery/Sources.ascx
+#| msgid "Add Feed"
+msgid "Add Feed"
+msgstr "Ajouter un flux"
+
+#: ~/Modules/Orchard.Packaging/Views/Gallery/Sources.ascx
+#| msgid "This is a table of the gallery feeds in your application"
+msgid "This is a table of the gallery feeds in your application"
+msgstr "Ceci est la liste des flux de galerie de l'application."
+
+#: ~/Modules/Orchard.Packaging/Views/Gallery/Sources.ascx
+#| msgid "Title"
+msgid "Title"
+msgstr "Titre"
+
+#: ~/Modules/Orchard.Packaging/Views/Gallery/Sources.ascx
+#| msgid "Url"
+msgid "Url"
+msgstr "Url"
+
+#: ~/Modules/Orchard.Packaging/Views/Gallery/Sources.ascx
+#| msgid "Remove"
+msgid "Remove"
+msgstr "Enlever"
+
+#: ~/Modules/Orchard.Packaging/Views/Gallery/Sources.ascx
 #| msgid "Packaging"
 msgid "Packaging"
 msgstr "Emballage"
 
-#: ~/Modules/Futures.Modules.Packaging/Views/Packaging/Sources.ascx
+#: ~/Modules/Orchard.Packaging/Views/Gallery/Sources.ascx
 #| msgid "Edit Sources"
 msgid "Edit Sources"
 msgstr "Modifier les sources"
@@ -1039,9 +1269,9 @@ msgid "Archives"
 msgstr "Archives"
 
 #: ~/Modules/Orchard.Blogs/Views/BlogPostAdmin/Create.ascx
-#| msgid "Add Post"
-msgid "Add Post"
-msgstr "Ajouter un billet"
+#| msgid "Create New Blog Post"
+msgid "Create New Blog Post"
+msgstr "Écrire un billet"
 
 #: ~/Modules/Orchard.Blogs/Views/BlogPostAdmin/Edit.ascx
 #| msgid "Edit Post"
@@ -2259,6 +2489,11 @@ msgid "The search index contains {0} document(s)."
 msgstr "L'index de recherche contient {0} document(s)."
 
 #: ~/Modules/Orchard.Indexing/Views/Admin/Index.ascx
+#| msgid "The search index contains the following fields: {0}."
+msgid "The search index contains the following fields: {0}."
+msgstr "L'index de recherche contient les champs suivants: {0}."
+
+#: ~/Modules/Orchard.Indexing/Views/Admin/Index.ascx
 #| msgid "The search index does not contain any field."
 msgid "The search index does not contain any field."
 msgstr "L'index de recherche ne contient aucun champ."
@@ -2271,7 +2506,7 @@ msgstr ", "
 #: ~/Modules/Orchard.Indexing/Views/Admin/Index.ascx
 #| msgid "The search index was last updated {0}."
 msgid "The search index was last updated {0}."
-msgstr "L'index de recherche a été mis à jour le {0}."
+msgstr "L'index de recherche a été mis à jour {0}."
 
 #: ~/Modules/Orchard.Indexing/Views/Admin/Index.ascx
 #| msgid "Update the search index now: "
@@ -3054,9 +3289,9 @@ msgid "Host"
 msgstr "Hôte"
 
 #: ~/Modules/Orchard.MultiTenancy/Views/Admin/Add.ascx
-#| msgid "Example: If host is \"orchardproject.net\", the tenant site URL is \"http://orchardproject.net/\""
-msgid "Example: If host is \"orchardproject.net\", the tenant site URL is \"http://orchardproject.net/\""
-msgstr "Exemple: si l'hôte est \"orchardproject.net\", l'URL de l'appartement est \"http://orchardproject.net/\"."
+#| msgid "Example: If host is 'orchardproject.net', the tenant site URL is 'http://orchardproject.net/'"
+msgid "Example: If host is 'orchardproject.net', the tenant site URL is 'http://orchardproject.net/'"
+msgstr "Exemple: si l'hôte est 'orchardproject.net', l'URL de l'appartement est 'http://orchardproject.net/'."
 
 #: ~/Modules/Orchard.MultiTenancy/Views/Admin/Add.ascx
 #| msgid "Database Setup"
@@ -5292,3 +5527,8 @@ msgstr "<em>aucun</em> résultat"
 #| msgid "<em>{1} - {2}</em> of <em>{0}</em> results"
 msgid "<em>{1} - {2}</em> of <em>{0}</em> results"
 msgstr "<em>résultats {1} - {2}</em> parmi <em>{0}</em> trouvés"
+
+#: ~/Modules/Orchard.Themes/DesignerNotes/ZoneManagerEvents.cs
+#| msgid "Edit"
+msgid "Edit"
+msgstr "Modifier"

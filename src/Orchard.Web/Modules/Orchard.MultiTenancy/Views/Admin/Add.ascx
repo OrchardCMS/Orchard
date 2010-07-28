@@ -12,7 +12,7 @@
         <div>
             <label for="RequestUrlHost"><%: T("Host") %></label>
             <input id="RequestUrlHost" class="textMedium" name="RequestUrlHost" type="text" />
-            <span class="hint"><%: T("Example: If host is \"orchardproject.net\", the tenant site URL is \"http://orchardproject.net/\"") %></span>
+            <span class="hint"><%: T("Example: If host is 'orchardproject.net', the tenant site URL is 'http://orchardproject.net/'") %></span>
         </div>
     </fieldset>
     <fieldset>

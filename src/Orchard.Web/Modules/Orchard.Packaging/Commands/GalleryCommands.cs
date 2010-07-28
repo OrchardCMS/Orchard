@@ -49,18 +49,18 @@ namespace Orchard.Packaging.Commands {
             var packageData = _packageManager.Harvest(moduleName);
 
             if ( String.IsNullOrWhiteSpace(User) ) {
-                Context.Output.WriteLine("Missing or incorrect User");
+                Context.Output.WriteLine(T("Missing or incorrect User"));
                 return;
             }
 
             if ( String.IsNullOrWhiteSpace(Password) ) {
-                Context.Output.WriteLine("Missing or incorrect Password");
+                Context.Output.WriteLine(T("Missing or incorrect Password"));
                 return;
             }
 
             try {
                 _packageManager.Push(packageData, feedUrl, User, Password);
-                Context.Output.WriteLine("Success");
+                Context.Output.WriteLine(T("Success"));
             }
             catch (WebException webException) {
                 var text = new StreamReader(webException.Response.GetResponseStream()).ReadToEnd();
@@ -78,18 +78,18 @@ namespace Orchard.Packaging.Commands {
                 };
 
                 if ( String.IsNullOrWhiteSpace(User) ) {
-                    Context.Output.WriteLine("Missing or incorrect User");
+                    Context.Output.WriteLine(T("Missing or incorrect User"));
                     return;
                 }
 
                 if ( String.IsNullOrWhiteSpace(Password) ) {
-                    Context.Output.WriteLine("Missing or incorrect Password");
+                    Context.Output.WriteLine(T("Missing or incorrect Password"));
                     return;
                 }
 
                 try {
                     _packageManager.Push(packageData, feedUrl, User, Password);
-                    Context.Output.WriteLine("Success");
+                    Context.Output.WriteLine(T("Success"));
                 }
                 catch (WebException webException) {
                     var text = new StreamReader(webException.Response.GetResponseStream()).ReadToEnd();

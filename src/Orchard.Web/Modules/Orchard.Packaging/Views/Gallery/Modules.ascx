@@ -3,7 +3,7 @@
     <%: Html.TitleForPage(T("Browse Gallery").ToString())%></h1>
 
 <div class="manage">
-        <%:Html.ActionLink("Refresh", "Update", new object{}, new { @class = "button primaryAction" }) %>
+        <%:Html.ActionLink(T("Refresh").ToString(), "Update", new object{}, new { @class = "button primaryAction" }) %>
 </div>
 <% using ( Html.BeginFormAntiForgeryPost(Url.Action("Modules", "Gallery")) ) {%>
     <fieldset class="bulk-actions">
@@ -35,8 +35,8 @@
                 </ul>
             </div>
             <div class="related">
-                <%:Html.ActionLink("Install", "Install", new RouteValueDictionary {{"SyndicationId",item.SyndicationItem.Id}})%><%:T(" | ") %>
-                <a href="<%:item.PackageStreamUri%>">Download</a>
+                <%:Html.ActionLink(T("Install").ToString(), "Install", new RouteValueDictionary {{"SyndicationId",item.SyndicationItem.Id}})%><%:T(" | ") %>
+                <a href="<%:item.PackageStreamUri%>"><%: T("Download") %></a>
                 
             </div>
         </ul>
