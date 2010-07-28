@@ -82,7 +82,9 @@ namespace Orchard.Comments.Services {
             comment.Record.UserName = (CurrentUser == null ? context.Author : CurrentUser.UserName);
             comment.Record.CommentedOn = context.CommentedOn;
 
-            comment.Record.Status = _commentValidator.ValidateComment(comment) ? moderateComments ? CommentStatus.Pending : CommentStatus.Approved : CommentStatus.Spam;
+            comment.Record.Status = _commentValidator.ValidateComment(comment)
+                ? moderateComments ? CommentStatus.Pending : CommentStatus.Approved
+                : CommentStatus.Spam;
 
             // store id of the next layer for large-grained operations, e.g. rss on blog
             //TODO:(rpaquay) Get rid of this (comment aspect takes care of container)

@@ -44,14 +44,14 @@ namespace Orchard.Comments.Services {
             AkismetComment akismetComment = new AkismetComment {
                 CommentAuthor = commentPart.Record.Author,
                 CommentAuthorEmail = commentPart.Record.Email,
-                Blog = commentPart.Record.SiteName,
+                Blog = akismetUrl,
                 CommentAuthorUrl = commentPart.Record.SiteName,
                 CommentContent = commentPart.Record.CommentText,
                 UserAgent = HttpContext.Current.Request.UserAgent,
             };
 
             if (akismetApi.VerifyKey()) {
-                return akismetApi.CommentCheck(akismetComment);
+                return !akismetApi.CommentCheck(akismetComment); // CommentCheck returning true == spam
             }
 
             return false;

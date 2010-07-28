@@ -9,16 +9,16 @@
     </div>
     <div>
         <%: Html.EditorFor(m => m.EnableSpamProtection) %>
-        <label class="forcheckbox" for="CommentSettings_EnableSpamProtection"><%: T("Enable spam protection") %></label>
+        <label class="forcheckbox" for="<%:Html.FieldIdFor(m => m.EnableSpamProtection) %>"><%: T("Enable spam protection") %></label>
         <%: Html.ValidationMessage("EnableSpamProtection", "*")%>
     </div>
-    <div data-controllerid="CommentSettings_EnableSpamProtection">
+    <div data-controllerid="<%:Html.FieldIdFor(m => m.EnableSpamProtection) %>">
         <label for="CommentSettings_AkismetKey"><%: T("Akismet key") %></label>
         <%: Html.EditorFor(m => m.AkismetKey) %>
         <%: Html.ValidationMessage("AkismetKey", "*")%>
     </div>
-    <div data-controllerid="CommentSettings_EnableSpamProtection">
-        <label for="CommentSettings_AkismetUrl"><%: T("Akismet endpoint URL") %></label>
+    <div data-controllerid="<%:Html.FieldIdFor(m => m.EnableSpamProtection) %>">
+        <label for="CommentSettings_AkismetUrl"><%: T("Blog URL")%></label>
         <%: Html.EditorFor(m => m.AkismetUrl) %>
         <%: Html.ValidationMessage("AkismetUrl", "*")%>
     </div>
