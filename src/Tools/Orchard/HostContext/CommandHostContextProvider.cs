@@ -20,9 +20,8 @@ namespace Orchard.HostContext {
             _args = args;
         }
 
-        public CommandHostContext CreateContext(bool interactive) {
+        public CommandHostContext CreateContext() {
             var context = new CommandHostContext();
-            context.Interactive = interactive;
             context.RetryResult = 240;/*special return code for "Retry"*/
             Initialize(context);
             return context;
@@ -50,26 +49,13 @@ namespace Orchard.HostContext {
             context.Logger = new Logger(context.Arguments.Verbose, _output);
 
             // Perform some argument validation and display usage if something is incorrect
-            bool showHelp = context.Arguments.Switches.ContainsKey("?");
-            if (!showHelp) {
-                // If not interactive CLI, we need at least some arguments...
-                if (!context.Interactive) {
-                    showHelp = (!context.Arguments.Arguments.Any() && !context.Arguments.ResponseFiles.Any());
-                }
-            }
+            context.DisplayUsageHelp = context.Arguments.Switches.ContainsKey("?");
+            if (context.DisplayUsageHelp)
+                return;
 
-            if (!showHelp) {
-                // If not interactive CLI, we need 
-                if (!context.Interactive) {
-                    showHelp = (context.Arguments.Arguments.Any() && context.Arguments.ResponseFiles.Any());
-                    if (showHelp) {
-                        _output.WriteLine("Incorrect syntax: Response files cannot be used in conjunction with commands");
-                    }
-                }
-            }
-
-            if (showHelp) {
-                context.ShowHelp = true;
+            context.DisplayUsageHelp = (context.Arguments.Arguments.Any() && context.Arguments.ResponseFiles.Any());
+            if (context.DisplayUsageHelp) {
+                _output.WriteLine("Incorrect syntax: Response files cannot be used in conjunction with commands");
                 return;
             }
 

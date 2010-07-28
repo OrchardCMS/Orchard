@@ -417,6 +417,12 @@ html, body {background-color: #FFFFFF; background-image: url(../Content/Images/b
 /* Localization
 -------------------------------------------------------------- */
 
+.content-localization .content-localizations h4 {
+    margin:0;
+    padding:3px 0 0 0;
+    vertical-align:top;
+}
+
 .content-localization .content-localizations ul {
     overflow: auto;
 }
@@ -426,7 +432,7 @@ html, body {background-color: #FFFFFF; background-image: url(../Content/Images/b
     border-bottom: 1px;
     float: left;
     margin-left:.5em;
-    padding: 3px;
+    padding: 3px 6px;
     border: 1px solid #CCC;
 }
 

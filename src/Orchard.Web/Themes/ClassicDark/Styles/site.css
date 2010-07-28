@@ -363,29 +363,26 @@ span.message {
 
 /* Localization
 -------------------------------------------------------------- */
-
+.content-localization .content-localizations h4 {
+    margin: 0;
+    vertical-align: top;
+}
 .content-localization .content-localizations ul {
     overflow: auto;
 }
-
-
 .content-localization .content-localizations li {
+    font-size: 1.0em !important;
     border-bottom: 1px;
-    float: left;
-    margin-left:.5em;
-    padding: 3px;
+    margin: 0 0 0 4px;
+    padding: 2px 6px;
     border: 1px solid #CCC;
 }
-
 .content-localization .content-localizations li:hover {
-    background-color: #ebebeb;
+    background-color: #000;
 }
-
-
 .content-localization .content-localizations li a {
     text-decoration: none;
 }
-
 .content-localization .content-localizations li a:hover, .content-localization .content-localizations li a:visited {
     text-decoration: none;
 }
