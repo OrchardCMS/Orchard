@@ -55,10 +55,6 @@ namespace Orchard.Packaging.Controllers {
             return View(new PackagingAddSourceViewModel());
         }
 
-        public ActionResult AddSourceViewResult(PackagingAddSourceViewModel model) {
-            return View("AddSource", model);
-        }
-
         [HttpPost]
         public ActionResult AddSource(string url) {
             try {
@@ -90,7 +86,7 @@ namespace Orchard.Packaging.Controllers {
                 }
 
                 if ( !ModelState.IsValid )
-                    return AddSourceViewResult(new PackagingAddSourceViewModel(){ Url = url });
+                    return View(new PackagingAddSourceViewModel { Url = url });
 
                 _packagingSourceManager.AddSource(new PackagingSource { Id = Guid.NewGuid(), FeedUrl = url, FeedTitle = title });
                 _notifier.Information(T("The feed has been added successfully."));
@@ -99,14 +95,14 @@ namespace Orchard.Packaging.Controllers {
             }
             catch ( Exception exception ) {
                 _notifier.Error(T("Adding feed failed: {0}", exception.Message));
-                return AddSourceViewResult(new PackagingAddSourceViewModel() { Url = url });
+                return View(new PackagingAddSourceViewModel { Url = url });
             }
         }
 
 
         public ActionResult Modules(Guid? sourceId) {
             var selectedSource = _packagingSourceManager.GetSources().Where(s => s.Id == sourceId).FirstOrDefault();
-
+            
             return View("Modules", new PackagingModulesViewModel {
                 Modules = _packagingSourceManager.GetModuleList(selectedSource),
                 Sources = _packagingSourceManager.GetSources().OrderBy(s => s.FeedTitle),

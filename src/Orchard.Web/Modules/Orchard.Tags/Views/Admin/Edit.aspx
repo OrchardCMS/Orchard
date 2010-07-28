@@ -4,9 +4,11 @@
 <% using(Html.BeginFormAntiForgeryPost()) { %>
     <%: Html.ValidationSummary() %>
     <fieldset>
-        <label for="Name"><%: T("Name:") %></label>
-        <input id="Id" name="Id" type="hidden" value="<%=Model.Id %>" />
-        <input id="TagName" class="text" name="TagName" type="text" value="<%: Model.TagName %>" />
-	    <input type="submit" class="button" value="<%: T("Save") %>" />
-	</fieldset>
+        <%: Html.HiddenFor(m => m.Id) %>
+        <%: Html.LabelFor(m => m.TagName) %>
+        <%: Html.TextBoxFor(m => m.TagName, new { @class = "text" })%> 
+    </fieldset>
+    <fieldset>
+        <input class="button primaryAction" type="submit" value="<%:T("Save") %>" />
+    </fieldset>
 <% } %>

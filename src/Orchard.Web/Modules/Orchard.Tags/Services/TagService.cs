@@ -40,7 +40,7 @@ namespace Orchard.Tags.Services {
         public Localizer T { get; set; }
 
         public IEnumerable<Tag> GetTags() {
-            return from tags in _tagRepository.Table.ToList() select tags;
+            return _tagRepository.Table.ToList();
         }
 
         public Tag GetTag(int id) {
@@ -59,7 +59,7 @@ namespace Orchard.Tags.Services {
                 _tagRepository.Create(tag);
             }
             else {
-                _notifier.Warning(T("Couldn't create tag: " + tagName + "it already exixts"));
+                _notifier.Warning(T("The tag {0} already exists", tagName));
             }
         }
 

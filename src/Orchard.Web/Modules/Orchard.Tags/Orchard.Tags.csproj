@@ -90,7 +90,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Module.txt" />
-    <Content Include="Views\Admin\Create.aspx" />
+    <Content Include="Views\Admin\Create.ascx" />
     <Content Include="Views\Admin\Edit.aspx" />
     <Content Include="Views\Admin\Index.aspx" />
     <Content Include="Views\Admin\Search.aspx" />
