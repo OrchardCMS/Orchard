@@ -19,6 +19,7 @@ namespace Orchard.Indexing.Handlers {
             IEnumerable<IIndexNotifierHandler> indexNotifierHandlers
             ) {
             _indexingTaskManager = indexingTaskManager;
+            _indexNotifierHandlers = indexNotifierHandlers;
 
             OnPublishing<ContentPart<CommonPartRecord>>(CreateIndexingTask);
             OnRemoved<ContentPart<CommonPartRecord>>(RemoveIndexingTask);
