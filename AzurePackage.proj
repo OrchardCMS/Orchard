@@ -89,7 +89,7 @@
     <Delete Files="$(CloudRootFolder)\App_Data" />
 
     <ItemGroup>
-      <WebConfigs Include="$(CloudRootFolder)\Modules\*\web.config" />
+      <WebConfigs Include="$(CloudRootFolder)\Modules\*\web.config;$(CloudRootFolder)\Core\web.config" />
     </ItemGroup>
 
     <Delete Files="@(WebConfigs)" />
