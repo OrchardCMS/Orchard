@@ -1,27 +1,20 @@
 using System;
-using System.Collections.Generic;
-using Castle.Core;
+using System.Collections.Concurrent;
 
 namespace Orchard.Caching {
     public class DefaultCacheHolder : ICacheHolder {
-        private readonly IDictionary<CacheKey, object> _caches = new Dictionary<CacheKey, object>();
+        private readonly ConcurrentDictionary<CacheKey, object> _caches = new ConcurrentDictionary<CacheKey, object>();
 
-        class CacheKey : Pair<Type, Pair<Type, Type>> {
+        class CacheKey : Tuple<Type, Type, Type> {
             public CacheKey(Type component, Type key, Type result)
-                : base(component, new Pair<Type, Type>(key, result)) {
+                : base(component, key, result) {
             }
         }
 
         public ICache<TKey, TResult> GetCache<TKey, TResult>(Type component) {
             var cacheKey = new CacheKey(component, typeof(TKey), typeof(TResult));
-            lock (_caches) {
-                object value;
-                if (!_caches.TryGetValue(cacheKey, out value)) {
-                    value = new Cache<TKey, TResult>();
-                    _caches[cacheKey] = value;
-                }
-                return (ICache<TKey, TResult>)value;
-            }
+            var result = _caches.GetOrAdd(cacheKey, k => new Cache<TKey, TResult>());
+            return (Cache<TKey, TResult>)result;
         }
     }
 }
