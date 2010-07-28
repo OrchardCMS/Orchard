@@ -5,6 +5,7 @@ using Orchard.Search.Services;
 using Orchard.Search.ViewModels;
 using Orchard.Settings;
 using Orchard.Search.Models;
+using System.Linq;
 using System;
 
 namespace Orchard.Search.Controllers {
