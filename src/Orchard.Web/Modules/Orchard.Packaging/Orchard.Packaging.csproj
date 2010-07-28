@@ -74,6 +74,7 @@
     <Compile Include="Commands\PackagingCommands.cs" />
     <Compile Include="Controllers\DownloadStreamResult.cs" />
     <Compile Include="Controllers\GalleryController.cs" />
+    <Compile Include="DefaultPackagingUpdater.cs" />
     <Compile Include="Services\AtomExtensions.cs" />
     <Compile Include="Services\IPackageBuilder.cs" />
     <Compile Include="Services\IPackageExpander.cs" />

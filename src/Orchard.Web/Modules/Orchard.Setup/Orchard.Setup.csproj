@@ -98,6 +98,10 @@
       <Project>{14C049FD-B35B-415A-A824-87F26B26E7FD}</Project>
       <Name>Orchard.Comments</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Orchard.Packaging\Orchard.Packaging.csproj">
+      <Project>{DFD137A2-DDB5-4D22-BE0D-FA9AD4C8B059}</Project>
+      <Name>Orchard.Packaging</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Module.txt" />
