@@ -16,8 +16,11 @@ namespace Orchard.Core.Routable.Handlers {
                 if (!string.IsNullOrEmpty(routable.Path))
                     _routablePathConstraint.AddPath(routable.Path);
             });
+
+            OnIndexing<RoutePart>((context, part) => context.DocumentIndex.Add("title", part.Record.Title).RemoveTags().Analyze());
         }
     }
+
     public class RoutePartHandlerBase : ContentHandlerBase {
         public override void GetContentItemMetadata(GetContentItemMetadataContext context) {
             var routable = context.ContentItem.As<RoutePart>();
