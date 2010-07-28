@@ -55,6 +55,7 @@ namespace Orchard.Blogs.Commands {
             var blog = _contentManager.New("Blog");
             blog.As<ICommonPart>().Owner = admin;
             blog.As<RoutePart>().Slug = Slug;
+            blog.As<RoutePart>().Path = Slug;
             blog.As<RoutePart>().Title = Title;
             if ( !String.IsNullOrWhiteSpace(MenuText) ) {
                 blog.As<MenuPart>().OnMainMenu = true;
@@ -97,7 +98,9 @@ namespace Orchard.Blogs.Commands {
                 var post = _contentManager.New("BlogPost");
                 post.As<ICommonPart>().Owner = admin;
                 post.As<ICommonPart>().Container = blog;
-                post.As<RoutePart>().Slug = Slugify(postName);
+                var slug = Slugify(postName);
+                post.As<RoutePart>().Slug = slug;
+                post.As<RoutePart>().Path = post.As<RoutePart>().GetPathFromSlug(slug);
                 post.As<RoutePart>().Title = postName;
                 post.As<BodyPart>().Text = item.Element("description").Value;
                 _contentManager.Create(post);
