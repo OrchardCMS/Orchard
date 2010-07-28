@@ -14,7 +14,6 @@ namespace Orchard.Data {
         private readonly ShellSettings _shellSettings;
         private readonly ShellBlueprint _shellBlueprint;
         private readonly IAppDataFolder _appDataFolder;
-        private readonly object _syncRoot = new object();
 
         public SessionConfigurationCache(ShellSettings shellSettings, ShellBlueprint shellBlueprint, IAppDataFolder appDataFolder) {
             _shellSettings = shellSettings;
@@ -31,11 +30,9 @@ namespace Orchard.Data {
 
             // Return previous configuration if it exsists and has the same hash as
             // the current blueprint.
-            lock (_syncRoot) {
-                var previousConfig = ReadConfiguration(hash);
-                if (previousConfig != null) {
-                    return previousConfig.Configuration;
-                }
+            var previousConfig = ReadConfiguration(hash);
+            if (previousConfig != null) {
+                return previousConfig.Configuration;
             }
 
             // Create cache and persist it
@@ -44,14 +41,11 @@ namespace Orchard.Data {
                 Configuration = builder()
             };
 
-            lock (_syncRoot) {
-                StoreConfiguration(cache);
-            }
+            StoreConfiguration(cache);
             return cache.Configuration;
         }
 
-        [Serializable]
-        public class ConfigurationCache {
+        private class ConfigurationCache {
             public string Hash { get; set; }
             public Configuration Configuration { get; set; }
         }
@@ -59,10 +53,19 @@ namespace Orchard.Data {
         private void StoreConfiguration(ConfigurationCache cache) {
             var pathName = GetPathName(_shellSettings.Name);
 
-            var formatter = new BinaryFormatter();
-            using (var stream = _appDataFolder.CreateFile(pathName)) {
-                formatter.Serialize(stream, cache.Hash);
-                formatter.Serialize(stream, cache.Configuration);
+            try {
+                var formatter = new BinaryFormatter();
+                using (var stream = _appDataFolder.CreateFile(pathName)) {
+                    formatter.Serialize(stream, cache.Hash);
+                    formatter.Serialize(stream, cache.Configuration);
+                }
+            }
+            catch (Exception e) {
+                //Note: This can happen when multiple processes/AppDomains try to save
+                //      the cached configuration at the same time. Only one concurrent
+                //      writer will win, and it's harmless for the other ones to fail.
+                for (var scan = e; scan != null; scan = scan.InnerException)
+                    Logger.Warning("Error storing new NHibernate cache configuration: {0}", scan.Message);
             }
         }
 
@@ -118,7 +121,7 @@ namespace Orchard.Data {
                     hash.AddString(property.Name);
                     hash.AddTypeReference(property.PropertyType);
 
-                    foreach(var attr in property.GetCustomAttributesData()) {
+                    foreach (var attr in property.GetCustomAttributesData()) {
                         hash.AddTypeReference(attr.Constructor.DeclaringType);
                     }
                 }
