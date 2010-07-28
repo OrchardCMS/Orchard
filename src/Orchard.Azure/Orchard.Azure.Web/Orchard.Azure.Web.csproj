@@ -166,10 +166,6 @@
       <Project>{9916839C-39FC-4CEB-A5AF-89CA7E87119F}</Project>
       <Name>Orchard.Core</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Orchard.Web\Modules\Futures.Modules.Packaging\Futures.Modules.Packaging.csproj">
-      <Project>{DFD137A2-DDB5-4D22-BE0D-FA9AD4C8B059}</Project>
-      <Name>Futures.Modules.Packaging</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\Orchard.Web\Modules\Futures.Widgets\Futures.Widgets.csproj">
       <Project>{E65E5633-C0FF-453C-A906-481C14F969D6}</Project>
       <Name>Futures.Widgets</Name>
@@ -209,6 +205,10 @@
     <ProjectReference Include="..\..\Orchard.Web\Modules\Orchard.MultiTenancy\Orchard.MultiTenancy.csproj">
       <Project>{72457126-E118-4171-A08F-9A709EE4B7FC}</Project>
       <Name>Orchard.MultiTenancy</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Orchard.Web\Modules\Orchard.Packaging\Orchard.Packaging.csproj">
+      <Project>{DFD137A2-DDB5-4D22-BE0D-FA9AD4C8B059}</Project>
+      <Name>Orchard.Packaging</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\Orchard.Web\Modules\Orchard.Roles\Orchard.Roles.csproj">
       <Project>{D10AD48F-407D-4DB5-A328-173EC7CB010F}</Project>
