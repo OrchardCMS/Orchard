@@ -5,11 +5,11 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>9.0.30729</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{33B1BC8D-E292-4972-A363-22056B207156}</ProjectGuid>
-    <OutputType>Exe</OutputType>
+    <ProjectGuid>{0DFA2E10-96C8-4E05-BC10-B710B97ECCDE}</ProjectGuid>
+    <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Orchard</RootNamespace>
-    <AssemblyName>Orchard</AssemblyName>
+    <RootNamespace>Orchard.Tests</RootNamespace>
+    <AssemblyName>Orchard.Tests</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <FileUpgradeFlags>
@@ -17,7 +17,6 @@
     <OldToolsVersion>3.5</OldToolsVersion>
     <UpgradeBackupLocation />
     <IsWebBootstrapper>false</IsWebBootstrapper>
-    <TargetFrameworkProfile />
     <PublishUrl>publish\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Disk</InstallFrom>
@@ -32,6 +31,7 @@
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -41,8 +41,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <UseVSHostingProcess>true</UseVSHostingProcess>
-    <PlatformTarget>AnyCPU</PlatformTarget>
+    <PlatformTarget>x86</PlatformTarget>
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
@@ -52,15 +51,21 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Moq, Version=4.0.812.4, Culture=neutral, PublicKeyToken=69f491c39445e920, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\lib\moq\Moq.dll</HintPath>
+    </Reference>
+    <Reference Include="nunit.framework, Version=2.5.2.9222, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\lib\nunit\nunit.framework.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
-    <Reference Include="System.Web" />
     <Reference Include="System.Xml.Linq">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
@@ -71,25 +76,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ApplicationObject.cs" />
-    <Compile Include="HostContext\CommandHostContext.cs" />
-    <Compile Include="HostContext\CommandHostContextProvider.cs" />
-    <Compile Include="HostContext\ICommandHostContextProvider.cs" />
-    <Compile Include="Logger.cs" />
-    <Compile Include="OrchardHost.cs" />
-    <Compile Include="Parameters\CommandLineParser.cs" />
-    <Compile Include="Parameters\ICommandParametersParser.cs" />
-    <Compile Include="IOrchardParametersParser.cs" />
-    <Compile Include="OrchardParameters.cs" />
-    <Compile Include="Parameters\CommandParametersParser.cs" />
-    <Compile Include="Parameters\CommandParameters.cs" />
-    <Compile Include="Host\CommandHost.cs" />
-    <Compile Include="OrchardParametersParser.cs" />
-    <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Parameters\CommandSwitch.cs" />
-    <Compile Include="ResponseFiles\ResponseFiles.cs" />
-    <Compile Include="ResponseFiles\ResponseFileReader.cs" />
+    <Compile Include="CommandLineParserTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
@@ -109,9 +97,10 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <None Include="app.config">
-      <SubType>Designer</SubType>
-    </None>
+    <ProjectReference Include="..\Orchard\Orchard.csproj">
+      <Project>{33B1BC8D-E292-4972-A363-22056B207156}</Project>
+      <Name>Orchard</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -10,10 +10,10 @@ namespace Orchard.Specs.Bindings {
     [Binding]
     public class CommandLine : BindingBase {
         [When(@"I execute >(.*)")]
-        public void WhenIExecute(string commandLine) {            
+        public void WhenIExecute(string commandLine) {
             var details = new RequestDetails();
             Binding<WebAppHosting>().Host.Execute(() => {
-                var args = commandLine.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                var args = new CommandLineParser().Parse(commandLine);
                 var parameters = new CommandParametersParser().Parse(args);
                 var agent = new CommandHostAgent();
                 var input = new StringReader("");

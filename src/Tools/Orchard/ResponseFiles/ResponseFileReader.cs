@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
+using Orchard.Parameters;
 
 namespace Orchard.ResponseFiles {
     public class ResponseLine : MarshalByRefObject {
@@ -24,47 +24,9 @@ namespace Orchard.ResponseFiles {
                         Filename = filename,
                         LineText = lineText,
                         LineNumber = i,
-                        Args = SplitArgs(lineText).ToArray()
+                        Args = new CommandLineParser().Parse(lineText).ToArray()
                     };
                 }
-            }
-        }
-
-        public static IEnumerable<string> SplitArgs(string text) {
-            var sb = new StringBuilder();
-            bool inString = false;
-            foreach (char ch in text) {
-                switch(ch){
-                    case '"':
-                        if (inString) {
-                            inString = false;
-                            yield return sb.ToString();
-                            sb.Length = 0;
-                        }
-                        else {
-                            inString = true;
-                            sb.Length = 0;
-                        }
-                        break;
-
-                    case ' ':
-                    case '\t':
-                        if (sb.Length > 0) {
-                            yield return sb.ToString();
-                            sb.Length = 0;
-                        }
-                        break;
-
-                    default:
-                        sb.Append(ch);
-                        break;
-                }
-            }
-
-            // If there was anything accumulated
-            if (sb.Length > 0) {
-                yield return sb.ToString();
-                sb.Length = 0;
             }
         }
     }

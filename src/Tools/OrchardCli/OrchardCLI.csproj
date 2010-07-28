@@ -98,6 +98,9 @@
     <Compile Include="..\Orchard\OrchardParametersParser.cs">
       <Link>OrchardParametersParser.cs</Link>
     </Compile>
+    <Compile Include="..\Orchard\Parameters\CommandLineParser.cs">
+      <Link>Parameters\CommandLineParser.cs</Link>
+    </Compile>
     <Compile Include="..\Orchard\Parameters\CommandParameters.cs">
       <Link>Parameters\CommandParameters.cs</Link>
     </Compile>

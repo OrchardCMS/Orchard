@@ -90,7 +90,7 @@ namespace OrchardCLI {
 
         private int RunCommandInSession(CommandHostContext context, string command) {
             try {
-                var args = new OrchardParametersParser().Parse(new CommandParametersParser().Parse(ResponseFileReader.SplitArgs(command)));
+                var args = new OrchardParametersParser().Parse(new CommandParametersParser().Parse(new CommandLineParser().Parse(command)));
                 return context.CommandHost.RunCommandInSession(_input, _output, context.Logger, args);
             }
             catch (AppDomainUnloadedException) {
