@@ -75,8 +75,6 @@ namespace Orchard.Core.Routable.Drivers {
             updater.TryUpdateModel(model, Prefix, null, null);
             part.Title = model.Title;
             part.Slug = model.Slug;
-
-            // TEMP: path format patterns replaces this logic
             part.Path = part.GetPathFromSlug(model.Slug);
 
             if (!_routableService.IsSlugValid(part.Slug)) {
@@ -88,6 +86,9 @@ namespace Orchard.Core.Routable.Drivers {
                 _services.Notifier.Warning(T("Slugs in conflict. \"{0}\" is already set for a previously created {2} so now it has the slug \"{1}\"",
                     originalSlug, part.Slug, part.ContentItem.ContentType));
             }
+
+            // TEMP: path format patterns replaces this logic
+            part.Path = part.GetPathFromSlug(part.Slug);
 
             if (part.ContentItem.Id != 0 && model.PromoteToHomePage && _routableHomePageProvider != null) {
                 CurrentSite.HomePage = _routableHomePageProvider.GetSettingValue(part.ContentItem.Id);
