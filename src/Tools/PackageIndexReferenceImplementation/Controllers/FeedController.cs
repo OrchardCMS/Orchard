@@ -15,13 +15,13 @@ using PackageIndexReferenceImplementation.Services;
 
 namespace PackageIndexReferenceImplementation.Controllers {
     [HandleError]
-    public class ModulesController : Controller {
+    public class FeedController : Controller {
         private readonly FeedStorage _feedStorage;
         private readonly MediaStorage _mediaStorage;
 
         public IMembershipService MembershipService { get; set; }
 
-        public ModulesController() {
+        public FeedController() {
             _feedStorage = new FeedStorage();
             _mediaStorage = new MediaStorage();
             if ( MembershipService == null ) { MembershipService = new AccountMembershipService(); }
