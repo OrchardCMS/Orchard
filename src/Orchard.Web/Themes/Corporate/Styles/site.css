@@ -434,6 +434,7 @@ html, body {background-color: #FFFFFF; background-image: url(../Content/Images/b
 
 .content-localization .content-localizations ul {
     overflow: auto;
+    list-style-type:none;
 }
 
 
