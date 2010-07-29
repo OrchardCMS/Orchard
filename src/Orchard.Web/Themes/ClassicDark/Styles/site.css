@@ -379,6 +379,7 @@ span.message {
 }
 .content-localization .content-localizations li:hover {
     background-color: #000;
+    border-color: #99ff66;
 }
 .content-localization .content-localizations li a {
     text-decoration: none;
