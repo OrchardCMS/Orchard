@@ -21,6 +21,7 @@ namespace Orchard.Environment {
         private readonly ControllerBuilder _controllerBuilder;
         private readonly IShellSettingsManager _shellSettingsManager;
         private readonly IShellContextFactory _shellContextFactory;
+        private readonly IShellDescriptorCache _shellDescriptorCache;
         private readonly IRunningShellTable _runningShellTable;
         private readonly IProcessingEngine _processingEngine;
         private readonly IExtensionLoaderCoordinator _extensionLoaderCoordinator;
@@ -32,6 +33,7 @@ namespace Orchard.Environment {
         public DefaultOrchardHost(
             IShellSettingsManager shellSettingsManager,
             IShellContextFactory shellContextFactory,
+            IShellDescriptorCache shellDescriptorCache,
             IRunningShellTable runningShellTable,
             IProcessingEngine processingEngine,
             IExtensionLoaderCoordinator extensionLoaderCoordinator,
@@ -40,6 +42,7 @@ namespace Orchard.Environment {
 
             _shellSettingsManager = shellSettingsManager;
             _shellContextFactory = shellContextFactory;
+            _shellDescriptorCache = shellDescriptorCache;
             _runningShellTable = runningShellTable;
             _processingEngine = processingEngine;
             _extensionLoaderCoordinator = extensionLoaderCoordinator;
@@ -149,6 +152,7 @@ namespace Orchard.Environment {
             _cacheManager.Get("OrchardHost_Extensions",
                               ctx => {
                                   _extensionLoaderCoordinator.MonitorExtensions(ctx.Monitor);
+                                  _shellDescriptorCache.Monitor(ctx.Monitor);
                                   _current = null;
                                   return "";
                               });
