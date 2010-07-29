@@ -6,12 +6,12 @@
     clear:right;
     float:right;
 }
+.content-localization .content-localizations {
+    font-size:.9em;
+}
 .content-localization .content-localizations li,
 .content-localization .add-localization {
     font-size:1.2em;
-}
-.content-localization .content-localizations {
-    font-size:.9em;
 }
 .content-localization .content-localizations>* {
     display:inline-block;
