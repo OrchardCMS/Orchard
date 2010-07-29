@@ -3,12 +3,12 @@
 # All rights reserved
 # This file is distributed under the BSD license
 
-#: ~/Core/Common/Drivers/CommonDriver.cs
+#: ~/Core/Common/Drivers/CommonPartDriver.cs
 #| msgid "Invalid user name"
 msgid "Invalid user name"
 msgstr "Nom d'utilisateur invalide"
 
-#: ~/Core/Common/Drivers/CommonDriver.cs
+#: ~/Core/Common/Drivers/CommonPartDriver.cs
 #| msgid "Invalid container"
 msgid "Invalid container"
 msgstr "Conteneur invalide"
@@ -23,7 +23,7 @@ msgstr "Brouillon"
 msgid "as a Draft"
 msgstr "en tant que brouillon"
 
-#: ~/Core/Common/Handlers/CommonAspectHandler.cs
+#: ~/Core/Common/Handlers/CommonPartHandler.cs
 #| msgid "Invalid user name"
 msgid "Invalid user name"
 msgstr "Nom d'utilisateur invalide"
@@ -139,9 +139,9 @@ msgid "Content successfully unpublished."
 msgstr "Contenu dépublié avec succès."
 
 #: ~/Core/Contents/Controllers/AdminController.cs
-#| msgid "Couldn't delete selected content."
-msgid "Couldn't delete selected content."
-msgstr "Le contenu sélectionné n'a pas pu être effacé."
+#| msgid "Couldn't remove selected content."
+msgid "Couldn't remove selected content."
+msgstr "Le contenu sélectionné n'a pas pu être enlevé."
 
 #: ~/Core/Contents/Controllers/AdminController.cs
 #| msgid "Content successfully removed."
@@ -152,6 +152,16 @@ msgstr "Contenu enlevé avec succès."
 #| msgid "Created content item"
 msgid "Created content item"
 msgstr "Contenus créés"
+
+#: ~/Core/Contents/Controllers/AdminController.cs
+#| msgid "Cannot create content"
+msgid "Cannot create content"
+msgstr "Impossible de créer le contenu."
+
+#: ~/Core/Contents/Controllers/AdminController.cs
+#| msgid "Couldn't create content"
+msgid "Couldn't create content"
+msgstr "Impossible de créer le contenu."
 
 #: ~/Core/Contents/Controllers/AdminController.cs
 #| msgid "Couldn't publish content"
@@ -183,6 +193,61 @@ msgstr "Votre contenu a été créé avec succès."
 msgid "Your {0} has been created."
 msgstr "Votre {0} a été créé avec succès."
 
+#: ~/Core/Contents/Controllers/AdminController.cs
+#| msgid "Cannot edit content"
+msgid "Cannot edit content"
+msgstr "Impossible de modifier le contenu."
+
+#: ~/Core/Contents/Controllers/AdminController.cs
+#| msgid "Couldn't edit content"
+msgid "Couldn't edit content"
+msgstr "Impossible de modifier le contenu."
+
+#: ~/Core/Contents/Controllers/AdminController.cs
+#| msgid "Your content has been saved."
+msgid "Your content has been saved."
+msgstr "Votre contenu a été enregistré."
+
+#: ~/Core/Contents/Controllers/AdminController.cs
+#| msgid "Your {0} has been saved."
+msgid "Your {0} has been saved."
+msgstr "Votre {0} a été enregistré(e)."
+
+#: ~/Core/Contents/Controllers/AdminController.cs
+#| msgid "Couldn't remove content"
+msgid "Couldn't remove content"
+msgstr "Impossible d'enlever le contenu."
+
+#: ~/Core/Contents/Controllers/AdminController.cs
+#| msgid "That content has been removed."
+msgid "That content has been removed."
+msgstr "La contenu a été enlevé."
+
+#: ~/Core/Contents/Controllers/AdminController.cs
+#| msgid "That {0} has been removed."
+msgid "That {0} has been removed."
+msgstr "Ce(tte) {0} a été enlevé(e)."
+
+#: ~/Core/Contents/Controllers/AdminController.cs
+#| msgid "That content has been published."
+msgid "That content has been published."
+msgstr "Ce contenu a été publié."
+
+#: ~/Core/Contents/Controllers/AdminController.cs
+#| msgid "That {0} has been published."
+msgid "That {0} has been published."
+msgstr "Ce(tte) {0} a été publié(e)."
+
+#: ~/Core/Contents/Controllers/AdminController.cs
+#| msgid "That content has been unpublished."
+msgid "That content has been unpublished."
+msgstr "Ce contenu a été dépublié."
+
+#: ~/Core/Contents/Controllers/AdminController.cs
+#| msgid "That {0} has been unpublished."
+msgid "That {0} has been unpublished."
+msgstr "Ce(tte) {0} a été dépublié(e)."
+
 #: ~/Core/Contents/Views/Admin/CreatableTypeList.ascx
 #| msgid "Create New Content"
 msgid "Create New Content"
@@ -193,10 +258,20 @@ msgstr "Créer de nouveaux contenus"
 msgid "Create Content"
 msgstr "Créer du contenu"
 
+#: ~/Core/Contents/Views/Admin/Create.ascx
+#| msgid "Create {0}"
+msgid "Create {0}"
+msgstr "Créer {0}"
+
 #: ~/Core/Contents/Views/Admin/Edit.ascx
 #| msgid "Edit Content"
 msgid "Edit Content"
 msgstr "Modifier du contenu"
+
+#: ~/Core/Contents/Views/Admin/Edit.ascx
+#| msgid "Edit {0}"
+msgid "Edit {0}"
+msgstr "Modifier {0}"
 
 #: ~/Core/Contents/Views/Admin/List.ascx
 #| msgid "Manage Content"
@@ -217,6 +292,21 @@ msgstr "Ajouter du nouveau contenu {0}"
 #| msgid "Add new content"
 msgid "Add new content"
 msgstr "Ajouter du nouveau contenu"
+
+#: ~/Core/Contents/Views/Admin/List.ascx
+#| msgid "Actions:"
+msgid "Actions:"
+msgstr "Actions:"
+
+#: ~/Core/Contents/Views/Admin/List.ascx
+#| msgid "Create New {0}"
+msgid "Create New {0}"
+msgstr "Créer {0}"
+
+#: ~/Core/Contents/Views/Admin/List.ascx
+#| msgid "Create New Content"
+msgid "Create New Content"
+msgstr "Créer un nouveau contenu"
 
 #: ~/Core/Contents/Views/Admin/List.ascx
 #| msgid "Actions:"
@@ -323,6 +413,51 @@ msgstr "Publier"
 msgid "Save"
 msgstr "Enregistrer"
 
+#: ~/Core/ContentsLocation/Settings/LocationSettingsEditorEvents.cs
+#| msgid "Default location (i.e. fallback if no specific override)"
+msgid "Default location (i.e. fallback if no specific override)"
+msgstr "Emplacement par défaut"
+
+#: ~/Core/ContentsLocation/Settings/LocationSettingsEditorEvents.cs
+#| msgid "\"Detail\" display location"
+msgid "\"Detail\" display location"
+msgstr "Emplacement 'Detail'"
+
+#: ~/Core/ContentsLocation/Settings/LocationSettingsEditorEvents.cs
+#| msgid "\"Editor\" display location"
+msgid "\"Editor\" display location"
+msgstr "Emplacement 'Editor'"
+
+#: ~/Core/ContentsLocation/Settings/LocationSettingsEditorEvents.cs
+#| msgid "\"Summary\" (front-end) display location"
+msgid "\"Summary\" (front-end) display location"
+msgstr "Emplacement 'Summary' (public)"
+
+#: ~/Core/ContentsLocation/Settings/LocationSettingsEditorEvents.cs
+#| msgid "\"Summary\" (admin) display location"
+msgid "\"Summary\" (admin) display location"
+msgstr "Emplacement 'Summary' (admin)"
+
+#: ~/Core/ContentsLocation/Views/DefinitionTemplates/LocationSettings.ascx
+#| msgid "{0}"
+msgid "{0}"
+msgstr "{0}"
+
+#: ~/Core/ContentsLocation/Views/DefinitionTemplates/LocationSettings.ascx
+#| msgid "Zone name (e.g. body, primary)"
+msgid "Zone name (e.g. body, primary)"
+msgstr "Nom de zone (par exemple body, primary)"
+
+#: ~/Core/ContentsLocation/Views/DefinitionTemplates/LocationSettings.ascx
+#| msgid " - default: {0}"
+msgid " - default: {0}"
+msgstr " - défaut: {0}"
+
+#: ~/Core/ContentsLocation/Views/DefinitionTemplates/LocationSettings.ascx
+#| msgid "Position in zone (e.g. 1, 1.0, 2.5.1)"
+msgid "Position in zone (e.g. 1, 1.0, 2.5.1)"
+msgstr "Position dans la zone (par exemple 1, 1.0, 2.5.1)"
+
 #: ~/Core/Dashboard/AdminMenu.cs
 #| msgid "Orchard"
 msgid "Orchard"
@@ -339,6 +474,11 @@ msgid "Welcome to Orchard"
 msgstr "Bienvenue dans Orchard"
 
 #: ~/Core/Dashboard/Views/Admin/Index.ascx
+#| msgid "This is the place where you can manage your web site, its appearance and its contents. Please take a moment to explore the different menu items on the left of the screen to familiarize yourself with the features of the application. For example, try to change the theme through the "Manage Themes" menu entry. You can also create new pages and manage existing ones through the "Manage Pages" menu entry or create blogs through "Manage Blogs"."
+msgid "This is the place where you can manage your web site, its appearance and its contents. Please take a moment to explore the different menu items on the left of the screen to familiarize yourself with the features of the application. For example, try to change the theme through the "Manage Themes" menu entry. You can also create new pages and manage existing ones through the "Manage Pages" menu entry or create blogs through "Manage Blogs"."
+msgstr "Ceci est l'endroit où vous pouvez gérer votre site, son apparence et son contenu. Veuillez passer un instant à explorer le menu à gauche de l'écran pour vous familiariser avec les différents aspects de l'application. Par exemple, vous pouvez changer le thème en utilisant "Gérer les thèmes". Vous pouvez également créer de nouvelles pages et gérer les pages existantes via "Gérer les pages" ou bien créer de nouveaux blogs via "Gérer les blogs"."
+
+#: ~/Core/Dashboard/Views/Admin/Index.ascx
 #| msgid "This is the place where you can manage your web site, its appearance and its contents. Please take a moment to explore the different menu items on the left of the screen to familiarize yourself with the features of the application. For example, try to change the theme through the “Manage Themes” menu entry. You can also create new pages and manage existing ones through the “Manage Pages” menu entry or create blogs through “Manage Blogs”."
 msgid "This is the place where you can manage your web site, its appearance and its contents. Please take a moment to explore the different menu items on the left of the screen to familiarize yourself with the features of the application. For example, try to change the theme through the “Manage Themes” menu entry. You can also create new pages and manage existing ones through the “Manage Pages” menu entry or create blogs through “Manage Blogs”."
 msgstr "Ceci est l'endroit où vous pouvez gérer votre site, son apparence et son contenu. Veuillez passer un instant à explorer le menu à gauche de l'écran pour vous familiariser avec les différents aspects de l'application. Par exemple, vous pouvez changer le thème en utilisant "Gérer les thèmes". Vous pouvez également créer de nouvelles pages et gérer les pages existantes via "Gérer les pages" ou bien créer de nouveaux blogs via "Gérer les blogs"."
@@ -352,6 +492,11 @@ msgstr "Amusez-vous bien!"
 #| msgid "The Orchard Team"
 msgid "The Orchard Team"
 msgstr "L'équipe Orchard"
+
+#: ~/Core/Localization/Controllers/AdminController.cs
+#| msgid "Created content item translation."
+msgid "Created content item translation."
+msgstr "Traduction de contenu créée."
 
 #: ~/Core/Localization/Views/CultureSelection.ascx
 #| msgid "This is the <em>{0}</em> variation of {1}."
@@ -368,6 +513,11 @@ msgstr "Localisation de contenu"
 msgid "Translate Content"
 msgstr "Traduire du contenu"
 
+#: ~/Core/Localization/Views/DisplayTemplates/Parts/Localization.ContentTranslations.ascx
+#| msgid "Translations:"
+msgid "Translations:"
+msgstr "Traductions:"
+
 #: ~/Core/Localization/Views/DisplayTemplates/Parts/Localization.ContentTranslations.SummaryAdmin.ascx
 #| msgid "Translations:"
 msgid "Translations:"
@@ -382,6 +532,11 @@ msgstr "+ Nouvelle traduction"
 #| msgid "Content Localization"
 msgid "Content Localization"
 msgstr "Localisation du contenu"
+
+#: ~/Core/Localization/Views/EditorTemplates/Parts/Localization.Translation.ascx
+#| msgid "This is the <em>{0}</em> variation of {1}."
+msgid "This is the <em>{0}</em> variation of {1}."
+msgstr "Ceci est la traduction <em>{0}</em> de {1}."
 
 #: ~/Core/Localization/Views/EditorTemplates/Parts/Localization.Translation.ascx
 #| msgid "Other translations:"
@@ -633,25 +788,25 @@ msgstr "Nom"
 msgid "Title"
 msgstr "Titre"
 
-#: ~/Core/Reports/Views/Admin/Index.aspx
-#| msgid "Date"
-msgid "Date"
-msgstr "Date"
-
-#: ~/Core/Routable/Drivers/RoutableDriver.cs
+#: ~/Core/Routable/Drivers/RoutePartDriver.cs
 #| msgid "Please do not use any of the following characters in your slugs: \"/\", \":\", \"?\", \"#\", \"[\", \"]\", \"@\", \"!\", \"$\", \"&\", \"'\", \"(\", \")\", \"*\", \"+\", \",\", \";\", \"=\". No spaces are allowed (please use dashes or underscores instead)."
 msgid "Please do not use any of the following characters in your slugs: \"/\", \":\", \"?\", \"#\", \"[\", \"]\", \"@\", \"!\", \"$\", \"&\", \"'\", \"(\", \")\", \"*\", \"+\", \",\", \";\", \"=\". No spaces are allowed (please use dashes or underscores instead)."
-msgstr "Merci de ne pas utiliser les caractères suivants dans vos alias: \"/\", \":\", \"?\", \"#\", \"[\", \"]\", \"@\", \"!\", \"$\", \"&\", \"'\", \"(\", \")\", \"*\", \"+\", \",\", \";\", \"=\". Les espaces ne sont pas autorisés (merci d'utiliser des tirets à la place)."
+msgstr "Merci de ne pas utiliser les caractères suivants dans vos alias: '/', ':', '?', '#', '[', ']', '@', '!', '$', '&', ''', '(', ')', '*', '+', ',', ';', '='. Les espaces ne sont pas autorisés (merci d'utiliser des tirets à la place)."
 
-#: ~/Core/Routable/Drivers/RoutableDriver.cs
+#: ~/Core/Routable/Drivers/RoutePartDriver.cs
 #| msgid "Slugs in conflict. \"{0}\" is already set for a previously created {2} so now it has the slug \"{1}\""
 msgid "Slugs in conflict. \"{0}\" is already set for a previously created {2} so now it has the slug \"{1}\""
-msgstr "Alias en conflit. \"{0}\" est déjà utilisé par un(e) {2} créé(e) précédemment. Le contenu a été sauvé avec l'alias \"{1}\"."
+msgstr "Alias en conflit. '{0}' est déjà utilisé par un(e) {2} créé(e) précédemment. Le contenu a été sauvé avec l'alias '{1}'."
 
-#: ~/Core/Routable/Views/EditorTemplates/Parts/Routable.IsRoutable.ascx
+#: ~/Core/Routable/Views/EditorTemplates/Parts/Routable.RoutePart.ascx
 #| msgid "Permalink"
 msgid "Permalink"
 msgstr "Permalink"
+
+#: ~/Core/Routable/Views/EditorTemplates/Parts/Routable.RoutePart.ascx
+#| msgid "Set as home page"
+msgid "Set as home page"
+msgstr "Utiliser comme page d'accueil"
 
 #: ~/Core/Settings/AdminMenu.cs
 #| msgid "Site Configuration"
@@ -796,22 +951,22 @@ msgstr "Succès"
 #: ~/Modules/Orchard.Packaging/Commands/PackagingCommands.cs
 #| msgid "Module \"{0}\" does not exist in this Orchard installation."
 msgid "Module \"{0}\" does not exist in this Orchard installation."
-msgstr "Le module \"{0}\" n'existe pas dans cette installation d'Orchard."
+msgstr "Le module '{0}' n'existe pas dans cette installation d'Orchard."
 
 #: ~/Modules/Orchard.Packaging/Commands/PackagingCommands.cs
 #| msgid "Package \"{0}\" successfully created"
 msgid "Package \"{0}\" successfully created"
-msgstr "Le paquetage \"{0}\" a été créé avec succès."
+msgstr "Le paquetage '{0}' a été créé avec succès."
 
 #: ~/Modules/Orchard.Packaging/Commands/PackagingCommands.cs
 #| msgid "File \"{0}\" does not exist."
 msgid "File \"{0}\" does not exist."
-msgstr "Le fichier \"{0}\" n'existe pas."
+msgstr "Le fichier '{0}' n'existe pas."
 
 #: ~/Modules/Orchard.Packaging/Commands/PackagingCommands.cs
 #| msgid "Package \"{0}\" successfully installed at \"{1}\""
 msgid "Package \"{0}\" successfully installed at \"{1}\""
-msgstr "Le paquetage \"{0}\" a été installé avec succès dans \"{1}\"."
+msgstr "Le paquetage '{0}' a été installé avec succès dans '{1}'."
 
 #: ~/Modules/Orchard.Packaging/Controllers/GalleryController.cs
 #| msgid "List of available modules and themes is updated."
@@ -974,6 +1129,16 @@ msgid "Version: {0}"
 msgstr "Version: {0}"
 
 #: ~/Modules/Orchard.Packaging/Views/Gallery/Modules.ascx
+#| msgid "(No title)"
+msgid "(No title)"
+msgstr "(pas de titre)"
+
+#: ~/Modules/Orchard.Packaging/Views/Gallery/Modules.ascx
+#| msgid "(No description"
+msgid "(No description"
+msgstr "(pas de description"
+
+#: ~/Modules/Orchard.Packaging/Views/Gallery/Modules.ascx
 #| msgid "Last Updated: {0}"
 msgid "Last Updated: {0}"
 msgstr "Mis à jour le: {0}"
@@ -1134,9 +1299,19 @@ msgid "Couldn't create blog post"
 msgstr "Le billet n'a pas pu être créé."
 
 #: ~/Modules/Orchard.Blogs/Controllers/BlogPostAdminController.cs
+#| msgid "Your {0} has been created."
+msgid "Your {0} has been created."
+msgstr "Votre {0} a été créé(e)."
+
+#: ~/Modules/Orchard.Blogs/Controllers/BlogPostAdminController.cs
 #| msgid "Couldn't edit blog post"
 msgid "Couldn't edit blog post"
 msgstr "Le billet n'a pas pu être modifié."
+
+#: ~/Modules/Orchard.Blogs/Controllers/BlogPostAdminController.cs
+#| msgid "Your {0} has been saved."
+msgid "Your {0} has been saved."
+msgstr "Votre {0} a été sauvé(e)."
 
 #: ~/Modules/Orchard.Blogs/Controllers/BlogPostAdminController.cs
 #| msgid "There is no draft to discard."
@@ -1223,6 +1398,16 @@ msgstr "Utiliser comme page d'accueil"
 msgid "Add"
 msgstr "Ajouter"
 
+#: ~/Modules/Orchard.Blogs/Views/BlogAdmin/Create.ascx
+#| msgid "Create New Blog"
+msgid "Create New Blog"
+msgstr "Créer un blog"
+
+#: ~/Modules/Orchard.Blogs/Views/BlogAdmin/Edit.ascx
+#| msgid "Blog Properties"
+msgid "Blog Properties"
+msgstr "Propriétés du blog"
+
 #: ~/Modules/Orchard.Blogs/Views/BlogAdmin/Edit.ascx
 #| msgid "Edit Blog"
 msgid "Edit Blog"
@@ -1274,8 +1459,8 @@ msgid "Create New Blog Post"
 msgstr "Écrire un billet"
 
 #: ~/Modules/Orchard.Blogs/Views/BlogPostAdmin/Edit.ascx
-#| msgid "Edit Post"
-msgid "Edit Post"
+#| msgid "Edit Blog Post"
+msgid "Edit Blog Post"
 msgstr "Modifier un billet"
 
 #: ~/Modules/Orchard.Blogs/Views/DisplayTemplates/Items/Blogs.Blog.DetailAdmin.ascx
@@ -1324,9 +1509,9 @@ msgid "Remove"
 msgstr "Enlever"
 
 #: ~/Modules/Orchard.Blogs/Views/DisplayTemplates/Parts/Blogs.Blog.Manage.ascx
-#| msgid "Edit"
-msgid "Edit"
-msgstr "Modifier"
+#| msgid "Blog Properties"
+msgid "Blog Properties"
+msgstr "Propriétés du blog"
 
 #: ~/Modules/Orchard.Blogs/Views/DisplayTemplates/Parts/Blogs.BlogPost.List.ascx
 #| msgid "There are no posts for this blog."
@@ -1367,6 +1552,11 @@ msgstr "Enlever"
 #| msgid "Apply"
 msgid "Apply"
 msgstr "Appliquer"
+
+#: ~/Modules/Orchard.Blogs/Views/EditorTemplates/Items/Blogs.Blog.ascx
+#| msgid "Add"
+msgid "Add"
+msgstr "Ajouter"
 
 #: ~/Modules/Orchard.Blogs/Views/EditorTemplates/Items/Blogs.BlogPost.ascx
 #| msgid "Save"
@@ -1773,67 +1963,67 @@ msgstr "Modifier"
 msgid "Remove Comment"
 msgstr "Enlever le commentaire"
 
-#: ~/Modules/Orchard.Comments/Views/DisplayTemplates/Parts/Comments.HasComments.ascx
+#: ~/Modules/Orchard.Comments/Views/DisplayTemplates/Parts/Comments.Comments.ascx
 #| msgid "Comments have been disabled for this content."
 msgid "Comments have been disabled for this content."
 msgstr "Les commentaires ont été désactivés pour ce contenu."
 
-#: ~/Modules/Orchard.Comments/Views/DisplayTemplates/Parts/Comments.HasComments.ascx
+#: ~/Modules/Orchard.Comments/Views/DisplayTemplates/Parts/Comments.Comments.ascx
 #| msgid "Add a Comment"
 msgid "Add a Comment"
 msgstr "Ajouter un commentaire"
 
-#: ~/Modules/Orchard.Comments/Views/DisplayTemplates/Parts/Comments.HasComments.ascx
+#: ~/Modules/Orchard.Comments/Views/DisplayTemplates/Parts/Comments.Comments.ascx
 #| msgid "log on"
 msgid "log on"
 msgstr "S'authentifier"
 
-#: ~/Modules/Orchard.Comments/Views/DisplayTemplates/Parts/Comments.HasComments.ascx
+#: ~/Modules/Orchard.Comments/Views/DisplayTemplates/Parts/Comments.Comments.ascx
 #| msgid "Name"
 msgid "Name"
 msgstr "Nom"
 
-#: ~/Modules/Orchard.Comments/Views/DisplayTemplates/Parts/Comments.HasComments.ascx
+#: ~/Modules/Orchard.Comments/Views/DisplayTemplates/Parts/Comments.Comments.ascx
 #| msgid "Email"
 msgid "Email"
 msgstr "Email"
 
-#: ~/Modules/Orchard.Comments/Views/DisplayTemplates/Parts/Comments.HasComments.ascx
+#: ~/Modules/Orchard.Comments/Views/DisplayTemplates/Parts/Comments.Comments.ascx
 #| msgid "Url"
 msgid "Url"
 msgstr "Url"
 
-#: ~/Modules/Orchard.Comments/Views/DisplayTemplates/Parts/Comments.HasComments.ascx
+#: ~/Modules/Orchard.Comments/Views/DisplayTemplates/Parts/Comments.Comments.ascx
 #| msgid "Hi, {0}!"
 msgid "Hi, {0}!"
 msgstr "Bonjour {0}!"
 
-#: ~/Modules/Orchard.Comments/Views/DisplayTemplates/Parts/Comments.HasComments.ascx
+#: ~/Modules/Orchard.Comments/Views/DisplayTemplates/Parts/Comments.Comments.ascx
 #| msgid "Comment"
 msgid "Comment"
 msgstr "Commentaire"
 
-#: ~/Modules/Orchard.Comments/Views/DisplayTemplates/Parts/Comments.HasComments.ascx
+#: ~/Modules/Orchard.Comments/Views/DisplayTemplates/Parts/Comments.Comments.ascx
 #| msgid "Submit Comment"
 msgid "Submit Comment"
 msgstr "Envoyer le commentaire"
 
-#: ~/Modules/Orchard.Comments/Views/EditorTemplates/Parts/Comments.HasComments.ascx
+#: ~/Modules/Orchard.Comments/Views/DisplayTemplates/Parts/Comments.Comments.ascx
 #| msgid "Comments"
 msgid "Comments"
 msgstr "Commentaires"
 
-#: ~/Modules/Orchard.Comments/Views/EditorTemplates/Parts/Comments.HasComments.ascx
+#: ~/Modules/Orchard.Comments/Views/DisplayTemplates/Parts/Comments.Comments.ascx
 #| msgid "Comments are shown. Existing comments are displayed."
 msgid "Comments are shown. Existing comments are displayed."
 msgstr "Les commentaires sont visibles. Les commentaires existants sont affichés."
 
-#: ~/Modules/Orchard.Comments/Views/EditorTemplates/Parts/Comments.HasComments.ascx
+#: ~/Modules/Orchard.Comments/Views/DisplayTemplates/Parts/Comments.Comments.ascx
 #| msgid "Allow new comments"
 msgid "Allow new comments"
 msgstr "Permettre les nouveaux commentaires"
 
-#: ~/Modules/Orchard.Comments/Views/EditorTemplates/Parts/Comments.HasComments.ascx
+#: ~/Modules/Orchard.Comments/Views/DisplayTemplates/Parts/Comments.Comments.ascx
 #| msgid "Enable to show the comment form. Disabling still allows the existing comments to be shown but does not allow the conversation to continue."
 msgid "Enable to show the comment form. Disabling still allows the existing comments to be shown but does not allow the conversation to continue."
 msgstr "Permettre l'affichage du formulaire de commentaire. Désactiver ceci permet aux commentaires existants d'être affichés mais ne permet pas à la conversation de se prolonger."
@@ -1859,9 +2049,9 @@ msgid "Akismet key"
 msgstr "Clé Akismet"
 
 #: ~/Modules/Orchard.Comments/Views/EditorTemplates/Parts/Comments.SiteSettings.ascx
-#| msgid "Akismet endpoint URL"
-msgid "Akismet endpoint URL"
-msgstr "URL du service Akismet"
+#| msgid "Blog URL"
+msgid "Blog URL"
+msgstr "URL du blog"
 
 #: ~/Modules/Orchard.ContentTypes/AdminMenu.cs
 #| msgid "Content"
@@ -1941,7 +2131,7 @@ msgstr "Le champ \"{0}\" a été enlevé."
 #: ~/Modules/Orchard.ContentTypes/Views/Admin/AddFieldTo.ascx
 #| msgid "Add a new field to \"{0}\""
 msgid "Add a new field to \"{0}\""
-msgstr "Ajouter un nouveau champ à \"{0}\""
+msgstr "Ajouter un nouveau champ à '{0}'"
 
 #: ~/Modules/Orchard.ContentTypes/Views/Admin/AddFieldTo.ascx
 #| msgid "Display Name"
@@ -1961,7 +2151,7 @@ msgstr "Enregistrer"
 #: ~/Modules/Orchard.ContentTypes/Views/Admin/AddPartsTo.ascx
 #| msgid "Add parts to \"{0}\""
 msgid "Add parts to \"{0}\""
-msgstr "Ajouter des pièces à \"{0}\""
+msgstr "Ajouter des pièces à '{0}'"
 
 #: ~/Modules/Orchard.ContentTypes/Views/Admin/AddPartsTo.ascx
 #| msgid "Save"
@@ -2079,9 +2269,9 @@ msgid "Save"
 msgstr "Enregistrer"
 
 #: ~/Modules/Orchard.ContentTypes/Views/Admin/List.ascx
-#| msgid "Content Types"
-msgid "Content Types"
-msgstr "Types de contenu"
+#| msgid "Manage Content Types"
+msgid "Manage Content Types"
+msgstr "Gérer les types de contenu"
 
 #: ~/Modules/Orchard.ContentTypes/Views/Admin/List.ascx
 #| msgid "Create new type"
@@ -2116,7 +2306,7 @@ msgstr "Créer une nouvelle pièce"
 #: ~/Modules/Orchard.ContentTypes/Views/Admin/RemoveFieldFrom.ascx
 #| msgid "Remove the \"{0}\" part from  \"{1}\""
 msgid "Remove the \"{0}\" part from  \"{1}\""
-msgstr "Enlever la pièce \"{0}\" de \"{1}\""
+msgstr "Enlever la pièce '{0}' de '{1}'"
 
 #: ~/Modules/Orchard.ContentTypes/Views/Admin/RemoveFieldFrom.ascx
 #| msgid "Looks like you couldn't use the fancy way to remove the field. Try hitting the button below to force the issue."
@@ -2131,7 +2321,7 @@ msgstr "Enlever"
 #: ~/Modules/Orchard.ContentTypes/Views/Admin/RemovePartFrom.ascx
 #| msgid "Remove the \"{0}\" part from  \"{1}\""
 msgid "Remove the \"{0}\" part from  \"{1}\""
-msgstr "Enlever la pièce \"{0}\" de  \"{1}\""
+msgstr "Enlever la pièce '{0}' de  '{1}'"
 
 #: ~/Modules/Orchard.ContentTypes/Views/Admin/RemovePartFrom.ascx
 #| msgid "Looks like you couldn't use the fancy way to remove the part. Try hitting the button below to force the issue."
@@ -2149,9 +2339,9 @@ msgid "Edit"
 msgstr "Modifier"
 
 #: ~/Modules/Orchard.ContentTypes/Views/DisplayTemplates/EditTypeViewModel.ascx
-#| msgid "Create a new {0}"
-msgid "Create a new {0}"
-msgstr "Créer un nouveau ou une nouvelle {0}"
+#| msgid "Create New {0}"
+msgid "Create New {0}"
+msgstr "Créer {0}"
 
 #: ~/Modules/Orchard.ContentTypes/Views/DisplayTemplates/EditTypeViewModel.ascx
 #| msgid "List Items"
@@ -2168,6 +2358,11 @@ msgstr " | "
 msgid "Edit"
 msgstr "Modifier"
 
+#: ~/Modules/Orchard.ContentTypes/Views/DisplayTemplates/Settings.ascx
+#| msgid "Global Settings"
+msgid "Global Settings"
+msgstr "Paramètres globaux"
+
 #: ~/Modules/Orchard.ContentTypes/Views/EditorTemplates/ContentTypePart.ascx
 #| msgid "Remove"
 msgid "Remove"
@@ -2182,6 +2377,11 @@ msgstr "Enlever"
 #| msgid "Remove"
 msgid "Remove"
 msgstr "Enlever"
+
+#: ~/Modules/Orchard.ContentTypes/Views/EditorTemplates/TypePart.ascx
+#| msgid "{0} Settings:"
+msgid "{0} Settings:"
+msgstr "Configuration {0}:"
 
 #: ~/Modules/Orchard.DevTools/AdminMenu.cs
 #| msgid "Site Configuration"
@@ -3006,22 +3206,22 @@ msgstr "Impossible de trouver la fonctionnalité {0}."
 #: ~/Modules/Orchard.Modules/Commands/PackagingCommands.cs
 #| msgid "Module \"{0}\" does not exist in this Orchard installation."
 msgid "Module \"{0}\" does not exist in this Orchard installation."
-msgstr "Le module \"{0}\" n'existe pas dans cette installation d'Orchard."
+msgstr "Le module '{0}' n'existe pas dans cette installation d'Orchard."
 
 #: ~/Modules/Orchard.Modules/Commands/PackagingCommands.cs
 #| msgid "Package \"{0}\" successfully created"
 msgid "Package \"{0}\" successfully created"
-msgstr "Le package \"{0}\" a été créé avec succès."
+msgstr "Le package '{0}' a été créé avec succès."
 
 #: ~/Modules/Orchard.Modules/Commands/PackagingCommands.cs
 #| msgid "File \"{0}\" does not exist."
 msgid "File \"{0}\" does not exist."
-msgstr "Le fichier \"{0}\" n'existe pas."
+msgstr "Le fichier '{0}' n'existe pas."
 
 #: ~/Modules/Orchard.Modules/Commands/PackagingCommands.cs
 #| msgid "Package \"{0}\" successfully installed at \"{1}\""
 msgid "Package \"{0}\" successfully installed at \"{1}\""
-msgstr "Le paquetage \"{0}\" a été installé avec succès dans \"{1}\"."
+msgstr "Le paquetage '{0}' a été installé avec succès dans '{1}'."
 
 #: ~/Modules/Orchard.Modules/Controllers/AdminController.cs
 #| msgid "Not allowed to manage modules"
@@ -3041,7 +3241,7 @@ msgstr "Choisissez un fichier à télécharger."
 #: ~/Modules/Orchard.Modules/Controllers/AdminController.cs
 #| msgid "Installed package \"{0}\", version {1} of type \"{2}\" at location \"{3}\""
 msgid "Installed package \"{0}\", version {1} of type \"{2}\" at location \"{3}\""
-msgstr "Le paquetage \"{0}\" version {1} de type \"{2}\" a été installé dans \"{3}\"."
+msgstr "Le paquetage '{0}' version {1} de type '{2}' a été installé dans '{3}'."
 
 #: ~/Modules/Orchard.Modules/Controllers/AdminController.cs
 #| msgid "Uploading module package failed: {0}"
@@ -3351,7 +3551,7 @@ msgstr "Hôte"
 #: ~/Modules/Orchard.MultiTenancy/Views/Admin/Edit.ascx
 #| msgid "Example: If host is \"orchardproject.net\", the tenant site URL is \"http://orchardproject.net/\""
 msgid "Example: If host is \"orchardproject.net\", the tenant site URL is \"http://orchardproject.net/\""
-msgstr "Exemple: si l'hôte est \"orchardproject.net\", l'URL de l'appartement est \"http://orchardproject.net/\"."
+msgstr "Exemple: si l'hôte est 'orchardproject.net', l'URL de l'appartement est 'http://orchardproject.net/'."
 
 #: ~/Modules/Orchard.MultiTenancy/Views/Admin/Edit.ascx
 #| msgid "Database Setup"
@@ -3833,12 +4033,12 @@ msgstr "La création du rôle a échoué: {0}"
 msgid "Editing Role failed: {0}"
 msgstr "La modification du rôle a échoué: {0}"
 
-#: ~/Modules/Orchard.Roles/Drivers/UserRolesDriver.cs
+#: ~/Modules/Orchard.Roles/Drivers/UserRolesPartDriver.cs
 #| msgid "Adding role {0} to user {1}"
 msgid "Adding role {0} to user {1}"
 msgstr "Ajout du rôle {0} à l'utilisateur {1}"
 
-#: ~/Modules/Orchard.Roles/Drivers/UserRolesDriver.cs
+#: ~/Modules/Orchard.Roles/Drivers/UserRolesPartDriver.cs
 #| msgid "Removing role {0} from user {1}"
 msgid "Removing role {0} from user {1}"
 msgstr "Effacement du rôle {0} de l'utilisateur {1}"
@@ -4199,9 +4399,9 @@ msgid "Editing tags failed: "
 msgstr "La modification des étiquettes a échoué: "
 
 #: ~/Modules/Orchard.Tags/Controllers/AdminController.cs
-#| msgid "Couldn't create tag"
-msgid "Couldn't create tag"
-msgstr "L'étiquette n'a pas pu être créée."
+#| msgid "The tag {0} already exists"
+msgid "The tag {0} already exists"
+msgstr "L'étiquette {0} existe déjà."
 
 #: ~/Modules/Orchard.Tags/Controllers/AdminController.cs
 #| msgid "Creating tag failed: "
@@ -4943,52 +5143,52 @@ msgstr "Archives"
 msgid " | Posted by {0} {1}"
 msgstr " | Posté par {0} {1}"
 
-#: ~/Themes/Contoso/Views/DisplayTemplates/Parts/Comments.HasComments.ascx
+#: ~/Themes/Contoso/Views/DisplayTemplates/Parts/Comments.Comments.ascx
 #| msgid "Comments have been disabled for this content."
 msgid "Comments have been disabled for this content."
 msgstr "Les commentaires ont été désactivés pour ce contenu."
 
-#: ~/Themes/Contoso/Views/DisplayTemplates/Parts/Comments.HasComments.ascx
+#: ~/Themes/Contoso/Views/DisplayTemplates/Parts/Comments.Comments.ascx
 #| msgid "Add a Comment"
 msgid "Add a Comment"
 msgstr "Ajouter un commentaire"
 
-#: ~/Themes/Contoso/Views/DisplayTemplates/Parts/Comments.HasComments.ascx
+#: ~/Themes/Contoso/Views/DisplayTemplates/Parts/Comments.Comments.ascx
 #| msgid "log on"
 msgid "log on"
 msgstr "Connexion"
 
-#: ~/Themes/Contoso/Views/DisplayTemplates/Parts/Comments.HasComments.ascx
+#: ~/Themes/Contoso/Views/DisplayTemplates/Parts/Comments.Comments.ascx
 #| msgid "Name"
 msgid "Name"
 msgstr "Nom"
 
-#: ~/Themes/Contoso/Views/DisplayTemplates/Parts/Comments.HasComments.ascx
+#: ~/Themes/Contoso/Views/DisplayTemplates/Parts/Comments.Comments.ascx
 #| msgid "Email"
 msgid "Email"
 msgstr "E-mail"
 
-#: ~/Themes/Contoso/Views/DisplayTemplates/Parts/Comments.HasComments.ascx
+#: ~/Themes/Contoso/Views/DisplayTemplates/Parts/Comments.Comments.ascx
 #| msgid "Url"
 msgid "Url"
 msgstr "Url"
 
-#: ~/Themes/Contoso/Views/DisplayTemplates/Parts/Comments.HasComments.ascx
+#: ~/Themes/Contoso/Views/DisplayTemplates/Parts/Comments.Comments.ascx
 #| msgid "Hi, {0}!"
 msgid "Hi, {0}!"
 msgstr "Bonjour {0}!"
 
-#: ~/Themes/Contoso/Views/DisplayTemplates/Parts/Comments.HasComments.ascx
+#: ~/Themes/Contoso/Views/DisplayTemplates/Parts/Comments.Comments.ascx
 #| msgid "Comment"
 msgid "Comment"
 msgstr "Commentaire"
 
-#: ~/Themes/Contoso/Views/DisplayTemplates/Parts/Comments.HasComments.ascx
+#: ~/Themes/Contoso/Views/DisplayTemplates/Parts/Comments.Comments.ascx
 #| msgid "Submit Comment"
 msgid "Submit Comment"
 msgstr "Envoyer le commentaire"
 
-#: ~/Themes/Contoso/Views/DisplayTemplates/Parts/Pages.Page.Metadata.ascx
+#: ~/Themes/Contoso/Views/DisplayTemplates/Parts/Common.Metadata.ascx
 #| msgid "nobody(?)"
 msgid "nobody(?)"
 msgstr "personne(?)"
@@ -4997,6 +5197,11 @@ msgstr "personne(?)"
 #| msgid "Tags:"
 msgid "Tags:"
 msgstr "Étiquettes:"
+
+#: ~/Themes/Contoso/Views/Orchard.Search/Search/Index.ascx
+#| msgid "Search"
+msgid "Search"
+msgstr "Rechercher"
 
 #: ~/Themes/Corporate/Views/LogOn.ascx
 #| msgid "Please enter your username and password."
@@ -5058,55 +5263,60 @@ msgstr "Connexion"
 msgid "Archives"
 msgstr "Archives"
 
-#: ~/Themes/Corporate/Views/DisplayTemplates/Parts/Comments.HasComments.ascx
+#: ~/Themes/Corporate/Views/DisplayTemplates/Parts/Comments.Comments.ascx
 #| msgid "Comments have been disabled for this content."
 msgid "Comments have been disabled for this content."
 msgstr "Les commentaires ont été désactivés pour ce contenu."
 
-#: ~/Themes/Corporate/Views/DisplayTemplates/Parts/Comments.HasComments.ascx
+#: ~/Themes/Corporate/Views/DisplayTemplates/Parts/Comments.Comments.ascx
 #| msgid "Add a Comment"
 msgid "Add a Comment"
 msgstr "Ajouter un commentaire"
 
-#: ~/Themes/Corporate/Views/DisplayTemplates/Parts/Comments.HasComments.ascx
+#: ~/Themes/Corporate/Views/DisplayTemplates/Parts/Comments.Comments.ascx
 #| msgid "log on"
 msgid "log on"
 msgstr "Connexion"
 
-#: ~/Themes/Corporate/Views/DisplayTemplates/Parts/Comments.HasComments.ascx
+#: ~/Themes/Corporate/Views/DisplayTemplates/Parts/Comments.Comments.ascx
 #| msgid "Name"
 msgid "Name"
 msgstr "Nom"
 
-#: ~/Themes/Corporate/Views/DisplayTemplates/Parts/Comments.HasComments.ascx
+#: ~/Themes/Corporate/Views/DisplayTemplates/Parts/Comments.Comments.ascx
 #| msgid "Email"
 msgid "Email"
 msgstr "E-mail"
 
-#: ~/Themes/Corporate/Views/DisplayTemplates/Parts/Comments.HasComments.ascx
+#: ~/Themes/Corporate/Views/DisplayTemplates/Parts/Comments.Comments.ascx
 #| msgid "Url"
 msgid "Url"
 msgstr "Url"
 
-#: ~/Themes/Corporate/Views/DisplayTemplates/Parts/Comments.HasComments.ascx
+#: ~/Themes/Corporate/Views/DisplayTemplates/Parts/Comments.Comments.ascx
 #| msgid "Hi, {0}!"
 msgid "Hi, {0}!"
 msgstr "Bonjour {0}!"
 
-#: ~/Themes/Corporate/Views/DisplayTemplates/Parts/Comments.HasComments.ascx
+#: ~/Themes/Corporate/Views/DisplayTemplates/Parts/Comments.Comments.ascx
 #| msgid "Comment"
 msgid "Comment"
 msgstr "Commentaire"
 
-#: ~/Themes/Corporate/Views/DisplayTemplates/Parts/Comments.HasComments.ascx
+#: ~/Themes/Corporate/Views/DisplayTemplates/Parts/Comments.Comments.ascx
 #| msgid "Submit Comment"
 msgid "Submit Comment"
 msgstr "Envoyer le commentaire"
 
-#: ~/Themes/Corporate/Views/DisplayTemplates/Parts/Pages.Page.Metadata.ascx
+#: ~/Themes/Green/Views/DisplayTemplates/Parts/Common.Metadata.ascx
 #| msgid "nobody(?)"
 msgid "nobody(?)"
 msgstr "personne(?)"
+
+#: ~/Themes/Green/Views/Orchard.Search/Search/Index.ascx
+#| msgid "Search"
+msgid "Search"
+msgstr "Rechercher"
 
 #: ~/Themes/Corporate/Views/DisplayTemplates/Parts/Tags.ShowTags.ascx
 #| msgid "Tags:"
@@ -5164,9 +5374,9 @@ msgid "Tenant {0} does not exist"
 msgstr "L'appartement {0} n'existe pas."
 
 #: ~/Commands/CommandHostEnvironment.cs
-#| msgid "A change of configuration requires the application to be restarted. Running the command again usually solves this problem."
-msgid "A change of configuration requires the application to be restarted. Running the command again usually solves this problem."
-msgstr "Un changement dans la configuration nécessite un redémarrage de l'application. Réexécuter la commande résoud habituellement le problème."
+#| msgid "A change of configuration requires the session to be restarted."
+msgid "A change of configuration requires the session to be restarted."
+msgstr "Un changement dans la configuration nécessite un redémarrage de la session."
 
 #: ~/Commands/DefaultCommandManager.cs
 #| msgid "Multiple commands found matching arguments \"{0}\". Commands available: {1}."
@@ -5179,19 +5389,19 @@ msgid "No command found matching arguments \"{0}\". Commands available: {1}."
 msgstr "Aucune commande pouvant répondre aux arguments \"{0}\" n'a été trouvée. Les commandes disponibles sont: {1}."
 
 #: ~/Commands/DefaultOrchardCommandHandler.cs
-#| msgid "Switch was not found: "
-msgid "Switch was not found: "
-msgstr "Le switch n'a pas été trouvé: "
+#| msgid "Switch \"{0}\" was not found"
+msgid "Switch \"{0}\" was not found"
+msgstr "Le switch '{0}' n'a pas été trouvé."
 
 #: ~/Commands/DefaultOrchardCommandHandler.cs
-#| msgid "A property of this name exists but is not decorated with the OrchardSwitch attribute: "
-msgid "A property of this name exists but is not decorated with the OrchardSwitch attribute: "
-msgstr "Il existe une propriété portant ce nom mais elle n'est pas décorée avec l'attribut OrchardSwitch: "
+#| msgid "A property \"{0}\" exists but is not decorated with \"{1}\""
+msgid "A property \"{0}\" exists but is not decorated with \"{1}\""
+msgstr "Il existe une propriété '{0}' mais elle n'est pas décorée avec l'attribut '{1}'."
 
 #: ~/Commands/DefaultOrchardCommandHandler.cs
-#| msgid "No property named {0} found of type bool, int or string."
-msgid "No property named {0} found of type bool, int or string."
-msgstr "Aucune propriété {0} de type bool, int ou string n'a été trouvée."
+#| msgid "No property named \"{0}\" found of type bool, int or string."
+msgid "No property named \"{0}\" found of type bool, int or string."
+msgstr "Aucune propriété '{0}' de type bool, int ou string n'a été trouvée."
 
 #: ~/Commands/DefaultOrchardCommandHandler.cs
 #| msgid "Command arguments don't match"
@@ -5199,9 +5409,9 @@ msgid "Command arguments don't match"
 msgstr "Les arguments de la commande ne coincident pas."
 
 #: ~/Commands/DefaultOrchardCommandHandler.cs
-#| msgid "Method {0} does not support switch {1}."
-msgid "Method {0} does not support switch {1}."
-msgstr "La méthode {0} ne supporte pas le switch {1}."
+#| msgid "Method \"{0}\" does not support switch \"{1}\"."
+msgid "Method \"{0}\" does not support switch \"{1}\"."
+msgstr "La méthode '{0}' ne supporte pas le switch '{1}'."
 
 #: ~/Commands/Builtin/HelpCommand.cs
 #| msgid "List of available commands:"
