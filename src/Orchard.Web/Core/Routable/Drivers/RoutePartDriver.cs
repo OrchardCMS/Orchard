@@ -54,8 +54,9 @@ namespace Orchard.Core.Routable.Drivers {
 
             // TEMP: path format patterns replaces this logic
             var path = part.Path;
-            if (path != null && path.EndsWith(part.Slug)) {
-                model.DisplayLeadingPath = path.Substring(0, path.Length - part.Slug.Length);
+            var slug = part.Slug ?? "";
+            if (path != null && path.EndsWith(slug)) {
+                model.DisplayLeadingPath = path.Substring(0, path.Length - slug.Length);
             }
             else {
                 var containerSlug = part.GetContainerSlug();
