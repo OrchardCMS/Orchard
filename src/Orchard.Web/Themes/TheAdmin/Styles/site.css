@@ -445,7 +445,7 @@ label input {
 }
 /* todo: (heskew) try to get .text on stuff like .text-box */
 select, textarea, input.text, input.textMedium, input.text-box {
-	padding:1px;
+    padding:3px;
     border:1px solid #bdbcbc;
 }
 input.text, input.textMedium, input.text-box {
@@ -453,6 +453,9 @@ input.text, input.textMedium, input.text-box {
 }
 input.textMedium {
     width:26em;
+}
+select {
+    padding:1px;
 }
 select:focus, textarea:focus, input.text:focus, input.text-box:focus {
 	border-color:#666d51;
@@ -472,7 +475,6 @@ textarea {
     min-height:8em;
 }
 #main input.large.text, #main textarea {
-    padding:4px;
     width:99%;
 }
 #main .primary input.large.text, #main .primary textarea {
@@ -635,6 +637,7 @@ button.ibutton {
 /* (Items) Tables
 ----------------------------------------------------------*/
 table.items {
+    margin:0 0 1.4em 0;
 	background:#fff;
 	border:1px solid #eaeaea;
 	border-bottom:none;
