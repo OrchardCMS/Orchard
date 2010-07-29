@@ -44,7 +44,7 @@ namespace PackageIndexReferenceImplementation.Controllers {
             var user = Encoding.UTF8.GetString(Convert.FromBase64String(HttpContext.Request.Headers["User"]));
             var password = Encoding.UTF8.GetString(Convert.FromBase64String(HttpContext.Request.Headers["Password"]));
 
-            if ( !MembershipService.ValidateUser(user, password) ) {
+            if ( !FormsAuthentication.Authenticate(user, password) ) {
                 throw new AuthenticationException("This credentials are not valid fo this action.");
             }
 
