@@ -102,12 +102,10 @@ namespace Orchard.Tags.Services {
         }
 
         public IEnumerable<IContent> GetTaggedContentItems(int id) {
-            List<IContent> contentItems = new List<IContent>();
-            IEnumerable<TagsContentItems> tagsContentItems = _tagsContentItemsRepository.Fetch(x => x.TagId == id);
-            foreach (var tagContentItem in tagsContentItems) {
-                contentItems.Add(_contentManager.Get(tagContentItem.ContentItemId));
-            }
-            return contentItems;
+            return _tagsContentItemsRepository
+                .Fetch(x => x.TagId == id)
+                .Select(t =>_contentManager.Get(t.ContentItemId))
+                .Where(c => c!= null);
         }
 
         public void TagContentItem(int contentItemId, string tagName) {
