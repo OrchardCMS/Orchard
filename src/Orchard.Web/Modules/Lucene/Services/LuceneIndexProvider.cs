@@ -114,19 +114,23 @@ namespace Lucene.Services {
         }
 
         public void CreateIndex(string indexName) {
-            var writer = new IndexWriter(GetDirectory(indexName), _analyzer, true, IndexWriter.MaxFieldLength.UNLIMITED);
-            writer.Close();
+            lock ( _appDataFolder ) {
+                var writer = new IndexWriter(GetDirectory(indexName), _analyzer, true, IndexWriter.MaxFieldLength.UNLIMITED);
+                writer.Close();
+            }
 
             Logger.Information("Index [{0}] created", indexName);
         }
 
         public void DeleteIndex(string indexName) {
-            new DirectoryInfo(_appDataFolder.MapPath(_appDataFolder.Combine(_basePath, indexName)))
-                .Delete(true);
+            lock ( _appDataFolder ) {
+                new DirectoryInfo(_appDataFolder.MapPath(_appDataFolder.Combine(_basePath, indexName)))
+                    .Delete(true);
 
-            var settingsFileName = GetSettingsFileName(indexName);
-            if(File.Exists(settingsFileName)) {
-                File.Delete(settingsFileName);
+                var settingsFileName = GetSettingsFileName(indexName);
+                if (File.Exists(settingsFileName)) {
+                    File.Delete(settingsFileName);
+                }
             }
         }
 
@@ -146,25 +150,27 @@ namespace Lucene.Services {
             // Remove any previous document for these content items
             Delete(indexName, indexDocuments.Select(i => i.ContentItemId));
 
-            var writer = new IndexWriter(GetDirectory(indexName), _analyzer, false, IndexWriter.MaxFieldLength.UNLIMITED);
-            LuceneDocumentIndex current = null;
+            lock ( _appDataFolder ) {
+                var writer = new IndexWriter(GetDirectory(indexName), _analyzer, false, IndexWriter.MaxFieldLength.UNLIMITED);
+                LuceneDocumentIndex current = null;
 
-            try {
+                try {
 
-                foreach ( var indexDocument in indexDocuments ) {
-                    current = indexDocument;
-                    var doc = CreateDocument(indexDocument);
-                    
-                    writer.AddDocument(doc);
-                    Logger.Debug("Document [{0}] indexed", indexDocument.ContentItemId);
+                    foreach (var indexDocument in indexDocuments) {
+                        current = indexDocument;
+                        var doc = CreateDocument(indexDocument);
+
+                        writer.AddDocument(doc);
+                        Logger.Debug("Document [{0}] indexed", indexDocument.ContentItemId);
+                    }
                 }
-            }
-            catch ( Exception ex ) {
-                Logger.Error(ex, "An unexpected error occured while add the document [{0}] from the index [{1}].", current.ContentItemId, indexName);
-            }
-            finally {
-                writer.Optimize();
-                writer.Close();
+                catch (Exception ex) {
+                    Logger.Error(ex, "An unexpected error occured while add the document [{0}] from the index [{1}].", current.ContentItemId, indexName);
+                }
+                finally {
+                    writer.Optimize();
+                    writer.Close();
+                }
             }
         }
 
@@ -177,24 +183,27 @@ namespace Lucene.Services {
                 return;
             }
 
-            var writer = new IndexWriter(GetDirectory(indexName), _analyzer, false, IndexWriter.MaxFieldLength.UNLIMITED);
+            lock ( _appDataFolder ) {
 
-            try {
-                var query = new BooleanQuery();
+                var writer = new IndexWriter(GetDirectory(indexName), _analyzer, false, IndexWriter.MaxFieldLength.UNLIMITED);
 
                 try {
-                    foreach (var id in documentIds) {
-                        query.Add(new BooleanClause(new TermQuery(new Term("id", id.ToString())), BooleanClause.Occur.SHOULD));
-                    }
+                    var query = new BooleanQuery();
 
-                    writer.DeleteDocuments(query);
+                    try {
+                        foreach (var id in documentIds) {
+                            query.Add(new BooleanClause(new TermQuery(new Term("id", id.ToString())), BooleanClause.Occur.SHOULD));
+                        }
+
+                        writer.DeleteDocuments(query);
+                    }
+                    catch (Exception ex) {
+                        Logger.Error(ex, "An unexpected error occured while removing the documents [{0}] from the index [{1}].", String.Join(", ", documentIds), indexName);
+                    }
                 }
-                catch (Exception ex) {
-                    Logger.Error(ex, "An unexpected error occured while removing the documents [{0}] from the index [{1}].", String.Join(", ", documentIds), indexName);
+                finally {
+                    writer.Close();
                 }
-            }
-            finally {
-                writer.Close();
             }
         }
 

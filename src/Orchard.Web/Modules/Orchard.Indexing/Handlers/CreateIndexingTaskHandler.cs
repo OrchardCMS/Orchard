@@ -1,4 +1,5 @@
-﻿using Orchard.ContentManagement.Handlers;
+﻿using Orchard.ContentManagement.FieldStorage.InfosetStorage;
+using Orchard.ContentManagement.Handlers;
 using Orchard.ContentManagement;
 using Orchard.Core.Common.Models;
 using Orchard.Tasks.Indexing;
@@ -21,16 +22,18 @@ namespace Orchard.Indexing.Handlers {
             _indexingTaskManager = indexingTaskManager;
             _indexNotifierHandlers = indexNotifierHandlers;
 
-            OnPublishing<ContentPart<CommonPartRecord>>(CreateIndexingTask);
-            OnRemoved<ContentPart<CommonPartRecord>>(RemoveIndexingTask);
+            OnPublishing<ContentPart>(CreateIndexingTask);
+            OnRemoved<ContentPart>(RemoveIndexingTask);
         }
 
-        void CreateIndexingTask(PublishContentContext context, ContentPart<CommonPartRecord> part) {
+        void CreateIndexingTask(PublishContentContext context, ContentPart part) {
             _indexingTaskManager.CreateUpdateIndexTask(context.ContentItem);
+            UpdateIndex();
         }
 
-        void RemoveIndexingTask(RemoveContentContext context, ContentPart<CommonPartRecord> part) {
+        void RemoveIndexingTask(RemoveContentContext context, ContentPart part) {
             _indexingTaskManager.CreateDeleteIndexTask(context.ContentItem);
+            UpdateIndex();
         }
 
         private void UpdateIndex() {
