@@ -67,12 +67,13 @@ namespace Orchard.Blogs.Controllers {
 
             _blogService.Create(blog);
             model.Blog = _contentManager.UpdateEditorModel(blog, this);
-            _blogSlugConstraint.AddSlug(model.Blog.Item.Slug);
 
             if (!ModelState.IsValid) {
                 _transactionManager.Cancel();
                 return View(model);
             }
+
+            _blogSlugConstraint.AddSlug(model.Blog.Item.Slug);
 
             return Redirect(Url.BlogForAdmin(model.Blog.Item.Slug));
         }
