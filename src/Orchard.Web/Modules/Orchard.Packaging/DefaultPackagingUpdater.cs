@@ -14,8 +14,8 @@ namespace Orchard.Packaging {
         }
 
         public void Install(Feature feature) {
-            // add http://orchardproject.net/feeds/modules as the default Modules Feed
-            _packagingSourceManager.AddSource(new PackagingSource { Id = Guid.NewGuid(), FeedTitle = "Orchard Module Gallery", FeedUrl = "http://orchardproject.net/feeds/modules" });
+            // add http://orchardproject.net/gallery/feed as the default Modules Feed
+            _packagingSourceManager.AddSource(new PackagingSource { Id = Guid.NewGuid(), FeedTitle = "Orchard Module Gallery", FeedUrl = "http://orchardproject.net/gallery/feed" });
         }
 
         public void Enable(Feature feature) {
