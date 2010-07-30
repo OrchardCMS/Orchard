@@ -37,7 +37,7 @@
              </div>
 
              <div class="properties">
-                <p><%: (item.SyndicationItem.Summary == null ? T("(No description").Text : item.SyndicationItem.Summary.Text) %>The sandbox module is a testing ground for Orchard developers and should not be activated except for testing and development purposes.</p>
+                <p><%: (item.SyndicationItem.Summary == null ? T("(No description").Text : item.SyndicationItem.Summary.Text) %></p>
                 <ul class="pageStatus">
                     <li><%: T("Last Updated: {0}", item.SyndicationItem.LastUpdatedTime.ToLocalTime()) %></li>
                     <li>&nbsp;&#124;&nbsp;<%: T("Author: {0}", item.SyndicationItem.Authors.Any() ? String.Join(", ", item.SyndicationItem.Authors.Select(a => a.Name)) : T("Unknown").Text)%></li>
