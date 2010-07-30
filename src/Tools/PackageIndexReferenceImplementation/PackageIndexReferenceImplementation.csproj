@@ -72,7 +72,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controllers\AccountController.cs" />
-    <Compile Include="Controllers\ModulesController.cs" />
+    <Compile Include="Controllers\FeedController.cs" />
     <Compile Include="Controllers\Artifacts\AtomFeedResult.cs" />
     <Compile Include="Controllers\Artifacts\AtomItemResult.cs" />
     <Compile Include="Controllers\Artifacts\ContentTypeAttribute.cs" />

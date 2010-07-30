@@ -7,7 +7,7 @@ html.dyn input.hinted {
     font-style:italic;
 }
 input#PublishLater_ScheduledPublishUtcDate {
-    width:56%;
+    width:50%;
 }
 input#PublishLater_ScheduledPublishUtcTime {
     width:36%;

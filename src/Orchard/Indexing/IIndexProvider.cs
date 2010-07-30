@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Orchard.ContentManagement;
 
 namespace Orchard.Indexing {
-    public interface IIndexProvider : IDependency {
+    public interface IIndexProvider : ISingletonDependency {
         /// <summary>
         /// Creates a new index
         /// </summary>

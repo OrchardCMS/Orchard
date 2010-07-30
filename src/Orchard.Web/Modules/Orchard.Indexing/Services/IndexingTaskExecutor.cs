@@ -103,8 +103,10 @@ namespace Orchard.Indexing.Services {
 
 
                 // nothing to do ?
-                if (taskRecords.Length + updateIndexDocuments.Count == 0)
+                if (taskRecords.Length + updateIndexDocuments.Count == 0) {
+                    Logger.Information("Index update requested, nothing to do");
                     return;
+                }
 
                 Logger.Information("Processing {0} indexing tasks", taskRecords.Length);
 

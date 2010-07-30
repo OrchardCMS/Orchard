@@ -12,6 +12,8 @@ namespace Orchard.Utility {
         public string Value { get { return _hash.ToString(); } }
 
         public void AddString(string value) {
+            if ( string.IsNullOrEmpty(value) )
+                return;
             _hash += value.GetHashCode();
         }
 

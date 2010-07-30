@@ -788,6 +788,11 @@ msgstr "Nom"
 msgid "Title"
 msgstr "Titre"
 
+#: ~/Core/Reports/Views/Admin/Index.aspx
+#| msgid "Date"
+msgid "Date"
+msgstr "Date"
+
 #: ~/Core/Routable/Drivers/RoutePartDriver.cs
 #| msgid "Please do not use any of the following characters in your slugs: \"/\", \":\", \"?\", \"#\", \"[\", \"]\", \"@\", \"!\", \"$\", \"&\", \"'\", \"(\", \")\", \"*\", \"+\", \",\", \";\", \"=\". No spaces are allowed (please use dashes or underscores instead)."
 msgid "Please do not use any of the following characters in your slugs: \"/\", \":\", \"?\", \"#\", \"[\", \"]\", \"@\", \"!\", \"$\", \"&\", \"'\", \"(\", \")\", \"*\", \"+\", \",\", \";\", \"=\". No spaces are allowed (please use dashes or underscores instead)."
@@ -2028,6 +2033,26 @@ msgstr "Permettre les nouveaux commentaires"
 msgid "Enable to show the comment form. Disabling still allows the existing comments to be shown but does not allow the conversation to continue."
 msgstr "Permettre l'affichage du formulaire de commentaire. Désactiver ceci permet aux commentaires existants d'être affichés mais ne permet pas à la conversation de se prolonger."
 
+#: ~/Modules/Orchard.Comments/Views/EditorTemplates/Parts/Comments.Comments.ascx
+#| msgid "Comments"
+msgid "Comments"
+msgstr "Commentaires"
+
+#: ~/Modules/Orchard.Comments/Views/EditorTemplates/Parts/Comments.Comments.ascx
+#| msgid "Comments are shown. Existing comments are displayed."
+msgid "Comments are shown. Existing comments are displayed."
+msgstr "Les commentaires existants sont affichés."
+
+#: ~/Modules/Orchard.Comments/Views/EditorTemplates/Parts/Comments.Comments.ascx
+#| msgid "Allow new comments"
+msgid "Allow new comments"
+msgstr "Autoriser les nouveaux commentaires"
+
+#: ~/Modules/Orchard.Comments/Views/EditorTemplates/Parts/Comments.Comments.ascx
+#| msgid "Enable to show the comment form. Disabling still allows the existing comments to be shown but does not allow the conversation to continue."
+msgid "Enable to show the comment form. Disabling still allows the existing comments to be shown but does not allow the conversation to continue."
+msgstr "Afficher le formulaire d'entrée des commentaires. Désactiver ne supprime pas l'affichage des commentaires existants mais empêche la poursuite de la conversation."
+
 #: ~/Modules/Orchard.Comments/Views/EditorTemplates/Parts/Comments.SiteSettings.ascx
 #| msgid "Comments"
 msgid "Comments"
@@ -2047,6 +2072,11 @@ msgstr "Activer la protection contre le Spam"
 #| msgid "Akismet key"
 msgid "Akismet key"
 msgstr "Clé Akismet"
+
+#: ~/Modules/Orchard.Comments/Views/EditorTemplates/Parts/Comments.SiteSettings.ascx
+#| msgid "Akismet endpoint URL"
+msgid "Akismet endpoint URL"
+msgstr "URL du service Akismet"
 
 #: ~/Modules/Orchard.Comments/Views/EditorTemplates/Parts/Comments.SiteSettings.ascx
 #| msgid "Blog URL"
@@ -2129,8 +2159,8 @@ msgid "The \"{0}\" field has been removed."
 msgstr "Le champ \"{0}\" a été enlevé."
 
 #: ~/Modules/Orchard.ContentTypes/Views/Admin/AddFieldTo.ascx
-#| msgid "Add a new field to \"{0}\""
-msgid "Add a new field to \"{0}\""
+#| msgid "Add New Field To \"{0}\""
+msgid "Add New Field To \"{0}\""
 msgstr "Ajouter un nouveau champ à '{0}'"
 
 #: ~/Modules/Orchard.ContentTypes/Views/Admin/AddFieldTo.ascx
@@ -4114,9 +4144,9 @@ msgid "Permissions"
 msgstr "Permissions"
 
 #: ~/Modules/Orchard.Roles/Views/Admin/Edit.aspx
-#| msgid "{0} Module"
-msgid "{0} Module"
-msgstr "Module {0}"
+#| msgid "{0} Feature"
+msgid "{0} Feature"
+msgstr "Fonctionnalité {0}"
 
 #: ~/Modules/Orchard.Roles/Views/Admin/Edit.aspx
 #| msgid "Permission"
@@ -4397,6 +4427,11 @@ msgstr "L'étiquette n'a pas pu être effacée."
 #| msgid "Editing tags failed: "
 msgid "Editing tags failed: "
 msgstr "La modification des étiquettes a échoué: "
+
+#: ~/Modules/Orchard.Tags/Controllers/AdminController.cs
+#| msgid "Couldn't create tag"
+msgid "Couldn't create tag"
+msgstr "L'étiquette n'a pas pu être créée."
 
 #: ~/Modules/Orchard.Tags/Controllers/AdminController.cs
 #| msgid "The tag {0} already exists"
@@ -5053,7 +5088,7 @@ msgstr "Modifier"
 msgid "Posted by {0} {1}"
 msgstr "Posté par {0} {1}"
 
-#: ~/Themes/Classic/Views/DisplayTemplates/Parts/Pages.Page.Metadata.ascx
+#: ~/Themes/Classic/Views/DisplayTemplates/Parts/Common.Metadata.ascx
 #| msgid "nobody(?)"
 msgid "nobody(?)"
 msgstr "personne(?)"
@@ -5073,7 +5108,7 @@ msgstr "Modifier"
 msgid "Posted by {0} {1}"
 msgstr "Posté par {0} {1}"
 
-#: ~/Themes/ClassicDark/Views/DisplayTemplates/Parts/Pages.Page.Metadata.ascx
+#: ~/Themes/ClassicDark/Views/DisplayTemplates/Parts/Common.Metadata.ascx
 #| msgid "nobody(?)"
 msgid "nobody(?)"
 msgstr "personne(?)"
@@ -5129,8 +5164,8 @@ msgid "Log Off"
 msgstr "Déconnexion"
 
 #: ~/Themes/Contoso/Views/User.ascx
-#| msgid "Login"
-msgid "Login"
+#| msgid "Log on"
+msgid "Log on"
 msgstr "Connexion"
 
 #: ~/Themes/Contoso/Views/DisplayTemplates/Items/Blogs.BlogPost.ListByArchive.ascx
@@ -5182,6 +5217,11 @@ msgstr "Bonjour {0}!"
 #| msgid "Comment"
 msgid "Comment"
 msgstr "Commentaire"
+
+#: ~/Themes/Contoso/Views/DisplayTemplates/Parts/Comments.Comments.ascx
+#| msgid "<span class='CommentUserName'>Leave a comment {0}!</span>"
+msgid "<span class='CommentUserName'>Leave a comment {0}!</span>"
+msgstr "<span class='CommentUserName'>Laissez-nous un commentaire, {0}!</span>"
 
 #: ~/Themes/Contoso/Views/DisplayTemplates/Parts/Comments.Comments.ascx
 #| msgid "Submit Comment"
@@ -5307,6 +5347,11 @@ msgstr "Commentaire"
 #| msgid "Submit Comment"
 msgid "Submit Comment"
 msgstr "Envoyer le commentaire"
+
+#: ~/Themes/Corporate/Views/DisplayTemplates/Parts/Common.Metadata.ascx
+#| msgid "nobody(?)"
+msgid "nobody(?)"
+msgstr "personne(?)"
 
 #: ~/Themes/Green/Views/DisplayTemplates/Parts/Common.Metadata.ascx
 #| msgid "nobody(?)"
