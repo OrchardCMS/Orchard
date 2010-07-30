@@ -140,7 +140,7 @@ namespace Orchard.Tests.Modules.Indexing {
             Assert.That(_searchBuilder.Slice(3, 3).Search().Count(), Is.EqualTo(2));
         }
 
-        [Test, Ignore("Fix pending")]
+        [Test]
         public void ShouldSortByRelevance() {
             _provider.CreateIndex("default");
             _provider.Store("default", _provider.New(1).Add("body", "michael is in the kitchen").Analyze());

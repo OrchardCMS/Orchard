@@ -62,7 +62,7 @@ namespace Orchard.Indexing {
         ISearchBuilder CreateSearchBuilder(string indexName);
 
         /// <summary>
-        /// Returns the date and time when the index was last processed
+        /// Returns the date and time when the index was last processed, or null if the index doesn't exist
         /// </summary>
         DateTime? GetLastIndexUtc(string indexName);
 
