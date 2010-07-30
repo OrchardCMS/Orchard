@@ -1,6 +1,5 @@
 using System.Linq;
 using System.Threading;
-using System.Web;
 using System.Web.Mvc;
 using System.Collections.Generic;
 using Orchard.Caching;
@@ -19,9 +18,9 @@ using Orchard.Utility.Extensions;
 namespace Orchard.Environment {
     public class DefaultOrchardHost : IOrchardHost, IShellSettingsManagerEventHandler, IShellDescriptorManagerEventHandler {
         private readonly ControllerBuilder _controllerBuilder;
+        private readonly IHostLocalRestart _hostLocalRestart;
         private readonly IShellSettingsManager _shellSettingsManager;
         private readonly IShellContextFactory _shellContextFactory;
-        private readonly IShellDescriptorCache _shellDescriptorCache;
         private readonly IRunningShellTable _runningShellTable;
         private readonly IProcessingEngine _processingEngine;
         private readonly IExtensionLoaderCoordinator _extensionLoaderCoordinator;
@@ -33,21 +32,21 @@ namespace Orchard.Environment {
         public DefaultOrchardHost(
             IShellSettingsManager shellSettingsManager,
             IShellContextFactory shellContextFactory,
-            IShellDescriptorCache shellDescriptorCache,
             IRunningShellTable runningShellTable,
             IProcessingEngine processingEngine,
             IExtensionLoaderCoordinator extensionLoaderCoordinator,
             ICacheManager cacheManager,
-            ControllerBuilder controllerBuilder) {
+            ControllerBuilder controllerBuilder,
+            IHostLocalRestart hostLocalRestart ) {
 
             _shellSettingsManager = shellSettingsManager;
             _shellContextFactory = shellContextFactory;
-            _shellDescriptorCache = shellDescriptorCache;
             _runningShellTable = runningShellTable;
             _processingEngine = processingEngine;
             _extensionLoaderCoordinator = extensionLoaderCoordinator;
             _cacheManager = cacheManager;
             _controllerBuilder = controllerBuilder;
+            _hostLocalRestart = hostLocalRestart;
 
             T = NullLocalizer.Instance;
             Logger = NullLogger.Instance;
@@ -152,7 +151,7 @@ namespace Orchard.Environment {
             _cacheManager.Get("OrchardHost_Extensions",
                               ctx => {
                                   _extensionLoaderCoordinator.MonitorExtensions(ctx.Monitor);
-                                  _shellDescriptorCache.Monitor(ctx.Monitor);
+                                  _hostLocalRestart.Monitor(ctx.Monitor);
                                   _current = null;
                                   return "";
                               });

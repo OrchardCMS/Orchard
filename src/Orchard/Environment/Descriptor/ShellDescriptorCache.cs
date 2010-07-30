@@ -27,11 +27,6 @@ namespace Orchard.Environment.Descriptor {
         /// Loss of storage is expected.
         /// </summary>
         void Store(string shellName, ShellDescriptor descriptor);
-
-        /// <summary>
-        /// Monitor changes on the persistent storage.
-        /// </summary>
-        void Monitor(Action<IVolatileToken> monitor);
     }
 
     public class ShellDescriptorCache : IShellDescriptorCache {
@@ -102,10 +97,6 @@ namespace Orchard.Environment.Descriptor {
 
             xmlDocument.Save(saveWriter);
             _appDataFolder.CreateFile(DescriptorCacheFileName, saveWriter.ToString());
-        }
-
-        public void Monitor(Action<IVolatileToken> monitor) {
-            monitor(_appDataFolder.WhenPathChanges(DescriptorCacheFileName));
         }
 
         #endregion
