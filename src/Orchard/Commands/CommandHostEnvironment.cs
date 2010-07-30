@@ -5,7 +5,7 @@ using Orchard.Environment;
 using Orchard.Localization;
 
 namespace Orchard.Commands {
-    public class CommandHostEnvironment : IHostEnvironment {
+    internal class CommandHostEnvironment : IHostEnvironment {
         public CommandHostEnvironment() {
             T = NullLocalizer.Instance;
         }

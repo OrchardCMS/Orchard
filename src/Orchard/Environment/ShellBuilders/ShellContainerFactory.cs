@@ -23,9 +23,11 @@ namespace Orchard.Environment.ShellBuilders {
 
     public class ShellContainerFactory : IShellContainerFactory {
         private readonly ILifetimeScope _lifetimeScope;
+        private readonly IShellContainerRegistrations _shellContainerRegistrations;
 
-        public ShellContainerFactory(ILifetimeScope lifetimeScope) {
+        public ShellContainerFactory(ILifetimeScope lifetimeScope, IShellContainerRegistrations shellContainerRegistrations) {
             _lifetimeScope = lifetimeScope;
+            _shellContainerRegistrations = shellContainerRegistrations;
         }
 
         public ILifetimeScope CreateContainer(ShellSettings settings, ShellBlueprint blueprint) {
@@ -94,6 +96,9 @@ namespace Orchard.Environment.ShellBuilders {
                             .InstancePerDependency()
                             .InjectActionInvoker();
                     }
+
+                    // Register code-only registrations specific to a shell
+                    _shellContainerRegistrations.Registrations(builder);
 
                     var optionalShellConfig = HostingEnvironment.MapPath("~/Config/Sites.config");
                     if (File.Exists(optionalShellConfig))

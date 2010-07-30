@@ -6,7 +6,6 @@ using System.Web.Hosting;
 using Autofac;
 using Autofac.Configuration;
 using Orchard.Caching;
-using Orchard.Data;
 using Orchard.Environment.AutofacUtil;
 using Orchard.Environment.Configuration;
 using Orchard.Environment.Extensions;
@@ -63,6 +62,7 @@ namespace Orchard.Environment {
                         .As<ICompositionStrategy>()
                         .SingleInstance();
                     {
+                        builder.RegisterType<ShellContainerRegistrations>().As<IShellContainerRegistrations>().SingleInstance();
                         builder.RegisterType<ExtensionLoaderCoordinator>().As<IExtensionLoaderCoordinator>().SingleInstance();
                         builder.RegisterType<ExtensionManager>().As<IExtensionManager>().SingleInstance();
                         {
