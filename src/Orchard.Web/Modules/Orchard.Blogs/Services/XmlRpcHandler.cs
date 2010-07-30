@@ -9,6 +9,7 @@ using Orchard.ContentManagement;
 using Orchard.ContentManagement.Aspects;
 using Orchard.Core.Common.Models;
 using Orchard.Core.Routable.Models;
+using Orchard.Core.Routable.Services;
 using Orchard.Core.XmlRpc;
 using Orchard.Core.XmlRpc.Models;
 using Orchard.Environment.Extensions;
@@ -26,16 +27,18 @@ namespace Orchard.Blogs.Services {
         private readonly IContentManager _contentManager;
         private readonly IAuthorizationService _authorizationService;
         private readonly IMembershipService _membershipService;
+        private readonly IRoutableService _routableService;
         private readonly RouteCollection _routeCollection;
 
         public XmlRpcHandler(IBlogService blogService, IBlogPostService blogPostService, IContentManager contentManager,
-            IAuthorizationService authorizationService, IMembershipService membershipService,
+            IAuthorizationService authorizationService, IMembershipService membershipService, IRoutableService routableService,
             RouteCollection routeCollection) {
             _blogService = blogService;
             _blogPostService = blogPostService;
             _contentManager = contentManager;
             _authorizationService = authorizationService;
             _membershipService = membershipService;
+            _routableService = routableService;
             _routeCollection = routeCollection;
             Logger = NullLogger.Instance;
         }
@@ -169,17 +172,18 @@ namespace Orchard.Blogs.Services {
                 blogPost.As<BodyPart>().Text = description;
             }
 
-            //RoutePart
-            if (blogPost.Is<RoutePart>()) {
-                blogPost.As<RoutePart>().Title = title;
-                blogPost.As<RoutePart>().Slug = slug;
-                blogPost.As<RoutePart>().Path = blogPost.As<RoutePart>().GetPathFromSlug(slug);
-            }
-
             //CommonPart
             if (blogPost.Is<ICommonPart>()) {
                 blogPost.As<ICommonPart>().Owner = user;
                 blogPost.As<ICommonPart>().Container = blog;
+            }
+
+            //RoutePart
+            if (blogPost.Is<RoutePart>()) {
+                blogPost.As<RoutePart>().Title = title;
+                blogPost.As<RoutePart>().Slug = slug;
+                _routableService.FillSlug(blogPost.As<RoutePart>());
+                blogPost.As<RoutePart>().Path = blogPost.As<RoutePart>().GetPathFromSlug(blogPost.As<RoutePart>().Slug);
             }
 
             _contentManager.Create(blogPost.ContentItem, VersionOptions.Draft);
