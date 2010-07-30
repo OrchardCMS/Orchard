@@ -10,6 +10,7 @@ using Autofac.Features.Indexed;
 using Autofac.Features.Metadata;
 using Castle.Core.Interceptor;
 using NUnit.Framework;
+using Orchard.Environment;
 using Orchard.Environment.AutofacUtil.DynamicProxy2;
 using Orchard.Environment.Configuration;
 using Orchard.Environment.Extensions.Models;
@@ -26,6 +27,7 @@ namespace Orchard.Tests.Environment.ShellBuilders {
         public void Init() {
             var builder = new ContainerBuilder();
             builder.RegisterType<ShellContainerFactory>().As<IShellContainerFactory>();
+            builder.RegisterType<ShellContainerRegistrations>().As<IShellContainerRegistrations>();
             builder.RegisterType<ComponentForHostContainer>();
             builder.RegisterType<ControllerActionInvoker>().As<IActionInvoker>();
             _container = builder.Build();
