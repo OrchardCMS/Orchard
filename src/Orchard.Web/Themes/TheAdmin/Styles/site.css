@@ -590,6 +590,28 @@ button.remove:focus::-moz-focus-inner, .remove.button:focus::-moz-focus-inner {
    margin-left:.3em;
 }
 
+.options 
+{
+    margin: 12px 0px 12px 0px;
+}
+
+.options span /* This is just a fix. We need to fix the base HTML */
+{
+    display: block;
+    margin: 12px 0 0 0;
+}
+
+.options span.hint /* This is just a fix. We need to fix the base HTML */
+{
+    display: block;
+    margin: 0 0 0 0;
+}
+
+.options input[type="text"] /* This is just a fix. We need to fix the base HTML */
+{
+    width:26em;
+}
+
 
 /* Icon buttons
 ----------------------------------------------------------*/

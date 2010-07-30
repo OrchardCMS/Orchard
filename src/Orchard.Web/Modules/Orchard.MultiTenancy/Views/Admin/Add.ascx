@@ -28,15 +28,17 @@
         <div>
             <%: Html.RadioButtonFor(svm => svm.DataProvider, "SqlServer", new { id = "sqlDatabaseOption" })%>
             <label for="sqlDatabaseOption" class="forcheckbox"><%: T("Use an existing SQL Server (or SQL Express) database") %></label>
-            <span data-controllerid="sqlDatabaseOption">
-            <label for="DatabaseConnectionString"><%: T("Connection string") %></label>
-            <%: Html.EditorFor(svm => svm.DatabaseConnectionString)%>
-            <span class="hint"><%: T("Example:") %><br /><%: T("Data Source=sqlServerName;Initial Catalog=dbName;Persist Security Info=True;User ID=userName;Password=password") %></span>
-            </span>
-            <span data-controllerid="sqlDatabaseOption">
-            <label for="DatabaseTablePrefix"><%: T("Database Table Prefix") %></label>
-            <%: Html.EditorFor(svm => svm.DatabaseTablePrefix)%>
-            </span>
+            <div class="options">
+                <span data-controllerid="sqlDatabaseOption">
+                    <label for="DatabaseConnectionString"><%: T("Connection string") %></label>
+                    <%: Html.EditorFor(svm => svm.DatabaseConnectionString)%>
+                    <span class="hint"><%: T("Example:") %> <%: T("Data Source=sqlServerName;Initial Catalog=dbName;Persist Security Info=True;User ID=userName;Password=password") %></span>
+                </span>
+                <span data-controllerid="sqlDatabaseOption">
+                    <label for="DatabaseTablePrefix"><%: T("Database Table Prefix") %></label>
+                    <%: Html.EditorFor(svm => svm.DatabaseTablePrefix)%>
+                </span>
+            </div>
         </div>
     </fieldset>
 	<fieldset>
