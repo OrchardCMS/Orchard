@@ -12,7 +12,7 @@
     } else {
         using (Html.BeginFormAntiForgeryPost(Url.Action("Close", new { commentedItemId = Model.CommentedItemId }), FormMethod.Post, new { @class = "inline" })) { %>
     <fieldset>
-        <button type="submit" class="remove" title="<%: T("Close Comments") %>"><%: T("Close Comments")%></button>
+        <button type="submit" class="button primaryAction" title="<%: T("Close Comments") %>"><%: T("Close Comments")%></button>
     </fieldset><%
         }
     } %>
@@ -87,7 +87,7 @@
                 <td>
                     <ul class="actions">
                         <li class="construct">
-                            <a href="<%: Url.Action("Edit", new {commentEntry.Comment.Id}) %>" class="ibutton edit" title="<%: T("Edit Comment")%>"><%: T("Edit Comment")%></a>
+                            <a href="<%: Url.Action("Edit", new {commentEntry.Comment.Id}) %>" title="<%: T("Edit Comment")%>"><%: T("Edit")%></a>
                         </li>
                         <li class="destruct">
 <%-- a form in a form doesn't quite work                            <% using (Html.BeginFormAntiForgeryPost(Url.Action("Delete", new {id = commentEntry.Comment.Id, redirectToAction = "Details"}), FormMethod.Post, new { @class = "inline" })) { %>
@@ -115,7 +115,7 @@
     } else {
         using (Html.BeginFormAntiForgeryPost(Url.Action("Close", new { commentedItemId = Model.CommentedItemId }), FormMethod.Post, new { @class = "inline" })) { %>
     <fieldset>
-        <button type="submit" class="remove" title="<%: T("Close Comments") %>"><%: T("Close Comments")%></button>
+        <button type="submit" class="button primaryAction" title="<%: T("Close Comments") %>"><%: T("Close Comments")%></button>
     </fieldset><%
         }
     } %>
