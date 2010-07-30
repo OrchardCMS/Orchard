@@ -28,12 +28,12 @@ namespace Orchard.Indexing.Handlers {
 
         void CreateIndexingTask(PublishContentContext context, ContentPart part) {
             _indexingTaskManager.CreateUpdateIndexTask(context.ContentItem);
-            UpdateIndex();
+            // UpdateIndex();
         }
 
         void RemoveIndexingTask(RemoveContentContext context, ContentPart part) {
             _indexingTaskManager.CreateDeleteIndexTask(context.ContentItem);
-            UpdateIndex();
+            // UpdateIndex();
         }
 
         private void UpdateIndex() {
