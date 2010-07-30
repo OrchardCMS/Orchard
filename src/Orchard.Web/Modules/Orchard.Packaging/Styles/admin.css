@@ -1,0 +1,17 @@
+﻿.moduleName {
+    float:left;
+    }
+    
+.contentItems .related {
+    padding:1.2em 0.4em 0.5em
+}
+
+.contentItems .properties {
+    float:none;
+    clear:both;
+}
+
+.contentItems .pageStatus {
+    margin:.8em 0;
+    color:#666;
+}

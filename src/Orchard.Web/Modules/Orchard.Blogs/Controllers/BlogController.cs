@@ -17,14 +17,12 @@ namespace Orchard.Blogs.Controllers {
         private readonly IOrchardServices _services;
         private readonly IBlogService _blogService;
         private readonly IBlogSlugConstraint _blogSlugConstraint;
-        private readonly IFeedManager _feedManager;
         private readonly RouteCollection _routeCollection;
 
-        public BlogController(IOrchardServices services, IBlogService blogService, IBlogSlugConstraint blogSlugConstraint, IFeedManager feedManager, RouteCollection routeCollection) {
+        public BlogController(IOrchardServices services, IBlogService blogService, IBlogSlugConstraint blogSlugConstraint, RouteCollection routeCollection) {
             _services = services;
             _blogService = blogService;
             _blogSlugConstraint = blogSlugConstraint;
-            _feedManager = feedManager;
             _routeCollection = routeCollection;
             Logger = NullLogger.Instance;
         }
@@ -53,7 +51,6 @@ namespace Orchard.Blogs.Controllers {
                 Blog = _services.ContentManager.BuildDisplayModel(blog, "Detail")
             };
 
-            _feedManager.Register(blog);
 
             return View(model);
         }

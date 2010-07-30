@@ -368,6 +368,8 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="ContentManagement\DataMigrations\FrameworkDataMigration.cs" />
+    <Compile Include="Environment\IHostLocalRestart.cs" />
+    <Compile Include="Environment\IShellContainerRegistrations.cs" />
     <Compile Include="FileSystems\Dependencies\DynamicModuleVirtualPathProvider.cs" />
     <Compile Include="Services\IHtmlFilter.cs" />
     <Compile Include="Utility\Hash.cs" />

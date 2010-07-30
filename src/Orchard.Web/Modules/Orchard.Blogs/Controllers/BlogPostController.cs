@@ -54,8 +54,6 @@ namespace Orchard.Blogs.Controllers {
                 BlogPost = _services.ContentManager.BuildDisplayModel(postPart, "Detail")
             };
 
-            _feedManager.Register(blogPart);
-
             return View(model);
         }
 

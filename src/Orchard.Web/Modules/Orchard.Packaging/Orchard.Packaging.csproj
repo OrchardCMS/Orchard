@@ -95,6 +95,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Module.txt" />
+    <Content Include="Styles\admin.css" />
     <Content Include="Views\Gallery\AddSource.ascx" />
     <Content Include="Views\Gallery\Harvest.ascx" />
     <Content Include="Views\Gallery\Modules.ascx" />

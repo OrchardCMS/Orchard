@@ -1,4 +1,6 @@
 ﻿<%@ Control Language="C#" Inherits="Orchard.Mvc.ViewUserControl<Orchard.Packaging.ViewModels.PackagingModulesViewModel>" %>
+<% Html.RegisterStyle("admin.css"); %>
+
 <h1>
     <%: Html.TitleForPage(T("Browse Gallery").ToString())%></h1>
 
@@ -24,22 +26,23 @@
 <% if (Model.Modules.Count() > 0) { %>
     <ul class="contentItems">
     <%foreach (var item in Model.Modules) {%>
-        <li>
-        <ul class="summary">
-            <div class="properties">
+        <li> 
+            <div class="moduleName">
                 <h2><%: (item.SyndicationItem.Title == null ? T("(No title)").Text : item.SyndicationItem.Title.Text)%><span> - <%: T("Version: {0}", "1.0")%></span></h2>
-                <p><%: (item.SyndicationItem.Summary == null ? T("(No description").Text : item.SyndicationItem.Summary.Text) %></p>
-                <ul class="pageStatus" style="color:#666; margin:.6em 0 0 0;">
-                    <li><%: T("Last Updated: {0}", item.SyndicationItem.LastUpdatedTime.ToLocalTime()) %></li>
-                    <li>&nbsp;&#124;&nbsp;<%: T("Author: {0}", item.SyndicationItem.Authors.Any() ? String.Join(", ", item.SyndicationItem.Authors.Select(a => a.Name)) : T("Unknown").Text)%></li>
-                </ul>
             </div>
+
             <div class="related">
                 <%:Html.ActionLink(T("Install").ToString(), "Install", new RouteValueDictionary {{"SyndicationId",item.SyndicationItem.Id}})%><%:T(" | ") %>
                 <a href="<%:item.PackageStreamUri%>"><%: T("Download") %></a>
-                
-            </div>
-        </ul>
+             </div>
+
+             <div class="properties">
+                <p><%: (item.SyndicationItem.Summary == null ? T("(No description").Text : item.SyndicationItem.Summary.Text) %></p>
+                <ul class="pageStatus">
+                    <li><%: T("Last Updated: {0}", item.SyndicationItem.LastUpdatedTime.ToLocalTime()) %></li>
+                    <li>&nbsp;&#124;&nbsp;<%: T("Author: {0}", item.SyndicationItem.Authors.Any() ? String.Join(", ", item.SyndicationItem.Authors.Select(a => a.Name)) : T("Unknown").Text)%></li>
+                </ul>
+           </div>   
         </li><%
       }%>
     </ul><%

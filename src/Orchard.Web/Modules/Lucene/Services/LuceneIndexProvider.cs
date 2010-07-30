@@ -125,7 +125,7 @@ namespace Lucene.Services {
                 .Delete(true);
 
             var settingsFileName = GetSettingsFileName(indexName);
-            if(File.Exists(settingsFileName)) {
+            if (File.Exists(settingsFileName)) {
                 File.Delete(settingsFileName);
             }
         }
@@ -139,7 +139,7 @@ namespace Lucene.Services {
         }
 
         public void Store(string indexName, IEnumerable<LuceneDocumentIndex> indexDocuments) {
-            if(indexDocuments.AsQueryable().Count() == 0) {
+            if (indexDocuments.AsQueryable().Count() == 0) {
                 return;
             }
 
@@ -151,15 +151,15 @@ namespace Lucene.Services {
 
             try {
 
-                foreach ( var indexDocument in indexDocuments ) {
+                foreach (var indexDocument in indexDocuments) {
                     current = indexDocument;
                     var doc = CreateDocument(indexDocument);
-                    
+
                     writer.AddDocument(doc);
                     Logger.Debug("Document [{0}] indexed", indexDocument.ContentItemId);
                 }
             }
-            catch ( Exception ex ) {
+            catch (Exception ex) {
                 Logger.Error(ex, "An unexpected error occured while add the document [{0}] from the index [{1}].", current.ContentItemId, indexName);
             }
             finally {

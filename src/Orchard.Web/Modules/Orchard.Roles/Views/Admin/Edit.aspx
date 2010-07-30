@@ -50,7 +50,7 @@
 			<% } %>
     </fieldset>
     <fieldset>
-	    <input type="submit" class="button" name="submit.Save" value="<%: T("Save") %>" />
-	    <input type="submit" class="button remove" name="submit.Delete" value="<%: T("Remove") %>" />
+	    <input type="submit" class="button primaryAction" name="submit.Save" value="<%: T("Save") %>" />
+	    <input type="submit" class="button" name="submit.Delete" value="<%: T("Remove") %>" />
 	</fieldset>
 <% } %>

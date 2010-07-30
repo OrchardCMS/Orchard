@@ -14,7 +14,7 @@
         <label for="SiteCulture"><%:T("Default Site Culture") %></label>
         <%:Html.DropDownList("SiteCulture", new SelectList(Model.SiteCultures, Model.SiteCulture)) %>
         <%:Html.ValidationMessage("SiteCulture", "*") %>
-        <%:Html.ActionLink(T("Add or remove supported cultures for the site.").ToString(), "Culture") %>
+        <p><%:Html.ActionLink(T("Add or remove supported cultures for the site.").ToString(), "Culture") %></p>
     </div>
     <div>
         <label for="PageTitleSeparator"><%:T("Page title separator") %></label>

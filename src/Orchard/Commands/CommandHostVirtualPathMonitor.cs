@@ -1,12 +1,16 @@
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using Orchard.Caching;
 using Orchard.FileSystems.VirtualPath;
 
 namespace Orchard.Commands {
-    public class CommandHostVirtualPathMonitor : IVirtualPathMonitor {
+    /// <summary>
+    /// Command line specific virtual path monitor.
+    /// Note that we make this class "internal" so that it's not auto-registered
+    /// by the Orchard Framework (it is registered explicitly by the command
+    /// line host).
+    /// </summary>
+    internal class CommandHostVirtualPathMonitor : IVirtualPathMonitor {
         private readonly IVirtualPathProvider _virtualPathProvider;
 
         public CommandHostVirtualPathMonitor(IVirtualPathProvider virtualPathProvider) {

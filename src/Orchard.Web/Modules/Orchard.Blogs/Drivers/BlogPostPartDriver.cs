@@ -1,13 +1,16 @@
 ﻿using System.Web.Routing;
 using JetBrains.Annotations;
 using Orchard.Blogs.Models;
+using Orchard.Blogs.Extensions;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
+using Orchard.Core.Feeds;
 using Orchard.Localization;
 
 namespace Orchard.Blogs.Drivers {
     [UsedImplicitly]                                                                                                                                                                                        
     public class BlogPostPartDriver : ContentItemDriver<BlogPostPart> {
+        private readonly IFeedManager _feedManager;
         public IOrchardServices Services { get; set; }
 
         public readonly static ContentType ContentType = new ContentType {
@@ -15,7 +18,8 @@ namespace Orchard.Blogs.Drivers {
                                                                              DisplayName = "Blog Post"
                                                                          };
 
-        public BlogPostPartDriver(IOrchardServices services) {
+        public BlogPostPartDriver(IOrchardServices services, IFeedManager feedManager) {
+            _feedManager = feedManager;
             Services = services;
             T = NullLocalizer.Instance;
         }
@@ -68,6 +72,14 @@ namespace Orchard.Blogs.Drivers {
                                                 {"Action", "Create"},
                                                 {"blogSlug", postPart.BlogPart.Slug},
                                             };
+        }
+
+        protected override DriverResult Display(BlogPostPart part, string displayType) {
+            if (displayType.StartsWith("Detail")) {
+                _feedManager.Register(part.BlogPart);
+            }
+
+            return base.Display(part, displayType);
         }
 
         protected override DriverResult Editor(BlogPostPart postPart) {

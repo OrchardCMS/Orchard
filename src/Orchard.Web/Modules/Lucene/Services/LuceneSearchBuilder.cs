@@ -47,6 +47,7 @@ namespace Lucene.Services {
 
             InitPendingClause();
         }
+
         public ISearchBuilder Parse(string defaultField, string query) {
             return Parse(new string[] {defaultField}, query);
         }

@@ -2,12 +2,14 @@
 using System.Linq;
 using System.Web.Routing;
 using JetBrains.Annotations;
+using Orchard.Blogs.Extensions;
 using Orchard.Blogs.Models;
 using Orchard.Blogs.Services;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
 using Orchard.Core.Contents.ViewModels;
 using Orchard.Core.ContentsLocation.Models;
+using Orchard.Core.Feeds;
 using Orchard.Localization;
 using Orchard.Mvc.ViewModels;
 
@@ -23,11 +25,13 @@ namespace Orchard.Blogs.Drivers {
 
         private readonly IContentManager _contentManager;
         private readonly IBlogPostService _blogPostService;
+        private readonly IFeedManager _feedManager;
 
-        public BlogPartDriver(IOrchardServices services, IContentManager contentManager, IBlogPostService blogPostService) {
+        public BlogPartDriver(IOrchardServices services, IContentManager contentManager, IBlogPostService blogPostService, IFeedManager feedManager) {
             Services = services;
             _contentManager = contentManager;
             _blogPostService = blogPostService;
+            _feedManager = feedManager;
             T = NullLocalizer.Instance;
         }
 
@@ -71,6 +75,7 @@ namespace Orchard.Blogs.Drivers {
             else if (displayType.StartsWith("Detail")) {
                 blogPosts = _blogPostService.Get(blogPart)
                     .Select(bp => _contentManager.BuildDisplayModel(bp, "Summary"));
+                _feedManager.Register(blogPart);
             }
 
             return Combined(

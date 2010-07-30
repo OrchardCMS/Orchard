@@ -105,6 +105,9 @@ namespace Orchard.Data {
         private Hash ComputeHash() {
             var hash = new Hash();
 
+            hash.AddString(_shellSettings.DataProvider);
+            hash.AddString(_shellSettings.DataTablePrefix);
+            hash.AddString(_shellSettings.DataConnectionString);
             hash.AddString(_shellSettings.Name);
 
             // We need to hash the assemnly names, record names and property names

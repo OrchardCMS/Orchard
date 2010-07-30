@@ -5,6 +5,7 @@ using System.Linq;
 using System.Web.Mvc;
 using System.Web.Routing;
 using Autofac;
+using Orchard.Caching;
 using Orchard.Environment;
 using Orchard.Environment.Configuration;
 using Orchard.Environment.State;
@@ -152,9 +153,24 @@ namespace Orchard.Commands {
 
         protected void ContainerRegistrations(ContainerBuilder builder) {
             MvcSingletons(builder);
-            builder.RegisterType<CommandHostEnvironment>().As<IHostEnvironment>();
-            builder.RegisterType<CommandBackgroundService>().As<IBackgroundService>();
-            builder.RegisterType<CommandHostVirtualPathMonitor>().As<IVirtualPathMonitor>();
+
+            builder.RegisterType<CommandHostEnvironment>().As<IHostEnvironment>().SingleInstance();
+            builder.RegisterType<CommandHostVirtualPathMonitor>().As<IVirtualPathMonitor>().As<IVolatileProvider>().SingleInstance();
+            builder.RegisterInstance(CreateShellRegistrations()).As<IShellContainerRegistrations>();
+        }
+
+        private CommandHostShellContainerRegistrations CreateShellRegistrations() {
+            return new CommandHostShellContainerRegistrations {
+                Registrations = shellBuilder => {
+                                    shellBuilder.RegisterType<CommandHostVirtualPathMonitor>()
+                                        .As<IVirtualPathMonitor>()
+                                        .As<IVolatileProvider>()
+                                        .InstancePerMatchingLifetimeScope("shell");
+                                    shellBuilder.RegisterType<CommandBackgroundService>()
+                                        .As<IBackgroundService>()
+                                        .InstancePerLifetimeScope();
+                                }
+            };
         }
 
         protected void MvcSingletons(ContainerBuilder builder) {
@@ -163,6 +179,10 @@ namespace Orchard.Commands {
             builder.RegisterInstance(ModelBinders.Binders);
             builder.RegisterInstance(ModelMetadataProviders.Current);
             builder.RegisterInstance(ViewEngines.Engines);
+        }
+
+        private class CommandHostShellContainerRegistrations : IShellContainerRegistrations {
+            public Action<ContainerBuilder> Registrations { get; set; }
         }
     }
 }
