@@ -52,8 +52,6 @@ namespace Orchard.Core.Navigation.Controllers {
                 menuPart.MenuPosition = menuItemEntry.MenuItem.Position;
                 if (menuPart.Is<MenuItemPart>())
                     menuPart.As<MenuItemPart>().Url = menuItemEntry.MenuItem.Url;
-
-                _services.ContentManager.UpdateEditorModel(menuPart, this);
             }
 
             return RedirectToAction("Index");
