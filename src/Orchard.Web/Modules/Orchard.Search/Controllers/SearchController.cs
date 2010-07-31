@@ -7,6 +7,8 @@ using Orchard.Settings;
 using Orchard.Search.Models;
 using System.Linq;
 using System;
+using System.Collections.Generic;
+using Orchard.Collections;
 
 namespace Orchard.Search.Controllers {
     [ValidateInput(false)]
@@ -24,16 +26,37 @@ namespace Orchard.Search.Controllers {
         public ActionResult Index(string q, int page = 1, int pageSize = 10) {
             var searchFields = CurrentSite.As<SearchSettingsPart>().Record.SearchedFields.Split(new[] {',', ' '}, StringSplitOptions.RemoveEmptyEntries);
 
+            var searchHits = _searchService.Query(q, page, pageSize, 
+                    CurrentSite.As<SearchSettingsPart>().Record.FilterCulture,
+                    searchFields, 
+                    searchHit => searchHit);
+
+            var searchResultViewModels = new List<SearchResultViewModel>();
+
+            foreach(var searchHit in searchHits) {
+                var contentItem = _contentManager.Get(searchHit.ContentItemId);
+                // ignore search results which content item has been removed or unpublished
+                if(contentItem == null){
+                    searchHits.TotalItemCount--;
+                    continue;
+                }
+
+                searchResultViewModels.Add(new SearchResultViewModel {
+                        Content = _contentManager.BuildDisplayModel(contentItem, "SummaryForSearch"),
+                        SearchHit = searchHit
+                    });
+            }
+
+            var pageOfItems = new PageOfItems<SearchResultViewModel>(searchResultViewModels) {
+                PageNumber = page,
+                PageSize = searchHits.PageSize,
+                TotalItemCount = searchHits.TotalItemCount
+            };
+
             var searchViewModel = new SearchViewModel {
                 Query = q,
                 DefaultPageSize = 10, // <- yeah, I know :|
-                PageOfResults = _searchService.Query(q, page, pageSize, 
-                    CurrentSite.As<SearchSettingsPart>().Record.FilterCulture,
-                    searchFields, 
-                    searchHit => new SearchResultViewModel {
-                        Content = _contentManager.BuildDisplayModel(_contentManager.Get(searchHit.ContentItemId), "SummaryForSearch"),
-                        SearchHit = searchHit
-                    })
+                PageOfResults = pageOfItems
             };
 
             //todo: deal with page requests beyond result count
