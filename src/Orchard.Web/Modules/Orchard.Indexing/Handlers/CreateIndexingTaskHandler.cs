@@ -22,24 +22,22 @@ namespace Orchard.Indexing.Handlers {
             _indexingTaskManager = indexingTaskManager;
             _indexNotifierHandlers = indexNotifierHandlers;
 
-            OnPublishing<ContentPart>(CreateIndexingTask);
+            OnPublished<ContentPart>(CreateIndexingTask);
             OnRemoved<ContentPart>(RemoveIndexingTask);
         }
 
         void CreateIndexingTask(PublishContentContext context, ContentPart part) {
+            // "Unpublish" case: Same as "remove"
+            if (context.PublishingItemVersionRecord == null) {
+                _indexingTaskManager.CreateDeleteIndexTask(context.ContentItem);
+                return;
+            }
+            // "Publish" case: update index
             _indexingTaskManager.CreateUpdateIndexTask(context.ContentItem);
-            // UpdateIndex();
         }
 
         void RemoveIndexingTask(RemoveContentContext context, ContentPart part) {
             _indexingTaskManager.CreateDeleteIndexTask(context.ContentItem);
-            // UpdateIndex();
-        }
-
-        private void UpdateIndex() {
-            foreach (var handler in _indexNotifierHandlers) {
-                handler.UpdateIndex(SearchIndexName);
-            }
         }
     }
 }
