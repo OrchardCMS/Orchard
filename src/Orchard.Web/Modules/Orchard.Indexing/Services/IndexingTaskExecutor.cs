@@ -59,6 +59,7 @@ namespace Orchard.Indexing.Services {
 
                 _indexProvider = _indexManager.GetSearchIndexProvider();
                 var updateIndexDocuments = new List<IDocumentIndex>();
+                var addedContentItemIds = new List<string>();
                 DateTime? lastIndexUtc;
 
                 // Do we need to rebuild the full index (first time module is used, or rebuild index requested) ?
@@ -81,6 +82,7 @@ namespace Orchard.Indexing.Services {
                             _contentManager.Index(contentItem, documentIndex);
                             if (documentIndex.IsDirty) {
                                 updateIndexDocuments.Add(documentIndex);
+                                addedContentItemIds.Add(contentItem.Id.ToString());
                             }
                         }
                         catch (Exception ex) {
@@ -116,7 +118,11 @@ namespace Orchard.Indexing.Services {
 
                 // process Delete tasks
                 try {
-                    _indexProvider.Delete(SearchIndexName, taskRecords.Where(t => t.Action == IndexingTaskRecord.Delete).Select(t => t.Id));
+                    var deleteIds = taskRecords.Where(t => t.Action == IndexingTaskRecord.Delete).Select(t => t.ContentItemRecord.Id).ToArray();
+                    if (deleteIds.Length > 0) {
+                        _indexProvider.Delete(SearchIndexName, deleteIds);
+                        Logger.Information("Deleted content items from index: {0}", String.Join(", ", deleteIds));
+                    }
                 }
                 catch (Exception ex) {
                     Logger.Warning(ex, "An error occured while removing a document from the index");
@@ -147,6 +153,7 @@ namespace Orchard.Indexing.Services {
                 if (updateIndexDocuments.Count > 0) {
                     try {
                         _indexProvider.Store(SearchIndexName, updateIndexDocuments);
+                        Logger.Information("Added content items to index: {0}", String.Join(", ", addedContentItemIds));
                     }
                     catch (Exception ex) {
                         Logger.Warning(ex, "An error occured while adding a document to the index");
