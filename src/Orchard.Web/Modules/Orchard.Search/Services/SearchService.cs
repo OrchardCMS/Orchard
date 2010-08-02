@@ -51,8 +51,9 @@ namespace Orchard.Search.Services {
                 searchBuilder = searchBuilder
                     .Slice((page > 0 ? page - 1 : 0) * (int)pageSize, (int)pageSize);
 
+            var searchResults = searchBuilder.Search();
 
-            var pageOfItems = new PageOfItems<T>(searchBuilder.Search().Select(shapeResult)) {
+            var pageOfItems = new PageOfItems<T>(searchResults.Select(shapeResult)) {
                 PageNumber = page,
                 PageSize = pageSize != null ? (int)pageSize : totalCount,
                 TotalItemCount = totalCount

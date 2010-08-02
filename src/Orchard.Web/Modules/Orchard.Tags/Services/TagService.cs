@@ -40,7 +40,7 @@ namespace Orchard.Tags.Services {
         public Localizer T { get; set; }
 
         public IEnumerable<Tag> GetTags() {
-            return from tags in _tagRepository.Table.ToList() select tags;
+            return _tagRepository.Table.ToList();
         }
 
         public Tag GetTag(int id) {
@@ -59,7 +59,7 @@ namespace Orchard.Tags.Services {
                 _tagRepository.Create(tag);
             }
             else {
-                _notifier.Warning(T("Couldn't create tag: " + tagName + "it already exixts"));
+                _notifier.Warning(T("The tag {0} already exists", tagName));
             }
         }
 
@@ -72,21 +72,40 @@ namespace Orchard.Tags.Services {
         }
 
         public void UpdateTag(int id, string tagName) {
-            Tag tag = _tagRepository.Get(id);
-            if (String.IsNullOrEmpty(tagName)) {
+            if ( String.IsNullOrEmpty(tagName) ) {
                 _notifier.Warning(T("Couldn't rename tag: name was empty"));
                 return;
             }
-            tag.TagName = tagName;
+
+            Tag tag = GetTagByName(tagName);
+            if(tag != null) {
+                // new tag name already existing => merge
+                IEnumerable<TagsContentItems> tagsContentItems = _tagsContentItemsRepository.Fetch(x => x.TagId == id);
+                
+                // get contentItems already tagged with the existing one
+                var taggedContentItems = GetTaggedContentItems(tag.Id);
+
+                foreach ( var tagContentItem in tagsContentItems ) {
+                    var tagContentItemId = tagContentItem.ContentItemId;
+                    if ( !taggedContentItems.Any(c => c.ContentItem.Id == tagContentItemId) ) {
+                        TagContentItem(tagContentItem.ContentItemId, tagName);
+                    }
+                    _tagsContentItemsRepository.Delete(tagContentItem);
+                }
+
+                _tagRepository.Delete(GetTag(id));
+            }
+            else {
+                tag = _tagRepository.Get(id);
+                tag.TagName = tagName;
+            }
         }
 
         public IEnumerable<IContent> GetTaggedContentItems(int id) {
-            List<IContent> contentItems = new List<IContent>();
-            IEnumerable<TagsContentItems> tagsContentItems = _tagsContentItemsRepository.Fetch(x => x.TagId == id);
-            foreach (var tagContentItem in tagsContentItems) {
-                contentItems.Add(_contentManager.Get(tagContentItem.ContentItemId));
-            }
-            return contentItems;
+            return _tagsContentItemsRepository
+                .Fetch(x => x.TagId == id)
+                .Select(t =>_contentManager.Get(t.ContentItemId))
+                .Where(c => c!= null);
         }
 
         public void TagContentItem(int contentItemId, string tagName) {

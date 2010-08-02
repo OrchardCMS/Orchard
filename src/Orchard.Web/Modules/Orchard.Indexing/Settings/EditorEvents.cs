@@ -19,12 +19,12 @@ namespace Orchard.Indexing.Settings {
             yield return DefinitionTemplate(model);
         }
 
-        public override IEnumerable<TemplateViewModel> PartFieldEditor(ContentPartDefinition.Field definition) {
+        public override IEnumerable<TemplateViewModel> PartFieldEditor(ContentPartFieldDefinition definition) {
             var model = definition.Settings.GetModel<FieldIndexing>();
             yield return DefinitionTemplate(model);
         }
 
-        public override IEnumerable<TemplateViewModel> PartFieldEditorUpdate(ContentPartDefinitionBuilder.FieldConfigurer builder, IUpdateModel updateModel) {
+        public override IEnumerable<TemplateViewModel> PartFieldEditorUpdate(ContentPartFieldDefinitionBuilder builder, IUpdateModel updateModel) {
             var model = new FieldIndexing();
             updateModel.TryUpdateModel(model, "FieldIndexing", null, null);
             builder.WithSetting("FieldIndexing.Included", model.Included ? true.ToString() : null);

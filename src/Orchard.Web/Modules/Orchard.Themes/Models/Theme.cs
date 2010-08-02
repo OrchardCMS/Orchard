@@ -1,9 +1,5 @@
-﻿using Orchard.ContentManagement;
-
-namespace Orchard.Themes.Models {
-    public class Theme : ContentPart<ThemeRecord>, ITheme {
-        public static readonly ContentType ContentType = new ContentType { Name = "theme", DisplayName = "Themes" };
-
+﻿namespace Orchard.Themes.Models {
+    public class Theme : ITheme {
         public string ThemeName { get; set; }
         public string DisplayName { get; set; }
         public string Description { get; set; }

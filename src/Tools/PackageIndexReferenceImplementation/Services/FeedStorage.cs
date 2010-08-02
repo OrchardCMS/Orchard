@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.IO;
 using System.Linq;
 using System.ServiceModel.Syndication;
@@ -14,7 +15,8 @@ namespace PackageIndexReferenceImplementation.Services {
             var formatter = new Atom10FeedFormatter<SyndicationFeed>();
             var feedPath = HostingEnvironment.MapPath("~/App_Data/Feed.xml");
             if (!File.Exists(feedPath)) {
-                return new SyndicationFeed();
+                string title = ConfigurationManager.AppSettings["Title"];
+                return new SyndicationFeed() { Title = new TextSyndicationContent(title)};
             }
             using (var reader = XmlReader.Create(feedPath)) {
                 formatter.ReadFrom(reader);

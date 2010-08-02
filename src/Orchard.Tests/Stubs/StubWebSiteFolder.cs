@@ -19,6 +19,10 @@ namespace Orchard.Tests.Stubs {
         }
 
         public string ReadFile(string path) {
+            return ReadFile(path, false);
+        }
+
+        public string ReadFile(string path, bool actualContent) {
             if (!File.Exists(path))
                 return null;
 
@@ -29,12 +33,12 @@ namespace Orchard.Tests.Stubs {
             throw new NotImplementedException();
         }
 
-        public IVolatileToken WhenPathChanges(string path) {
-            return new Token {IsCurrent = true};
+        public void CopyFileTo(string virtualPath, Stream destination, bool actualContent) {
+            throw new NotImplementedException();
         }
 
-        public void WhenPathChanges(string path, Action action) {
-            throw new NotImplementedException();
+        public IVolatileToken WhenPathChanges(string path) {
+            return new Token {IsCurrent = true};
         }
 
         public class Token : IVolatileToken {

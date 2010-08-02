@@ -128,25 +128,46 @@ input[type="password"] {
     width:98%;
 }
     
-button, .button, .button:visited {
-	font-size: 102%;
-	background:#4687ad;
-	border:1px solid #8f8f8f;
-	color:#fff;
-	font-weight:600;
+button, .button, .button:link, .button:visited {
+    font-size: 102%;
+    font-weight:600;
+    background:#F5F5F5;
+	background: -webkit-gradient(linear, left top, left bottom, from(#F5F5F5), to(#cbcbcb));
+	background:-moz-linear-gradient(top , #F5F5F5, #cbcbcb);
+	border:1px solid #999999;
+	color:#2D2F25;
 	cursor:pointer;
+    margin:0 0 20px 20px;
+    padding:.2em 1.4em;
 	text-align:center;
-	margin:0 0 20px 20px;
-	padding:4px 14px;
+	text-shadow: 0 1px 1px rgba(0,0,0,.2);
+	box-shadow: 0 4px 4px rgba(231,231,231,.2) inset;
+	-webkit-box-shadow: 0 4px 4px rgba(231,231,231,.2) inset;
+	-moz-box-shadow: 0 4px 4px rgba(231,231,231,.2) inset;
 }
-	
+
 button:hover, .button:hover,
 button:active, .button:active,
 button:focus, .button:focus {
-    background:#ffac40;
     border-color:#bb8b2d;
     color:#fff;
-    text-decoration:none;
+    text-decoration:none; 
+    background: #ffac40;
+	background: -webkit-gradient(linear, left top, left bottom, from(#ffac40), to(#f06015));
+	background: -moz-linear-gradient(top,  #ffac40,  #f9760d);
+
+}
+
+button:focus::-moz-focus-inner, .button:focus::-moz-focus-inner {
+    border-color:#8a8f7a;
+}
+
+.primaryAction, .primaryAction:link, .primaryAction:visited {
+    background:#4687ad;
+	background: -webkit-gradient(linear, left top, left bottom, from(#4687AD), to(#366581));
+	background:-moz-linear-gradient(top , #4687AD, #366581);
+	border:1px solid #405f71;
+	color:#fff;
 }
 
 

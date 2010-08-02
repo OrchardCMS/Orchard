@@ -2,15 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
-using JetBrains.Annotations;
 using Orchard.ContentManagement;
 using Orchard.Core.Common.Models;
 using Orchard.Core.Routable.Models;
-using Orchard.Localization;
-using Orchard.UI.Notify;
 
 namespace Orchard.Core.Routable.Services {
-    [UsedImplicitly]
     public class RoutableService : IRoutableService {
         private readonly IContentManager _contentManager;
 
@@ -18,7 +14,7 @@ namespace Orchard.Core.Routable.Services {
             _contentManager = contentManager;
         }
 
-        public void FillSlug<TModel>(TModel model) where TModel : IsRoutable {
+        public void FillSlug<TModel>(TModel model) where TModel : RoutePart {
             if (!string.IsNullOrEmpty(model.Slug) || string.IsNullOrEmpty(model.Title))
                 return;
 
@@ -34,7 +30,7 @@ namespace Orchard.Core.Routable.Services {
             model.Slug = slug.ToLowerInvariant();
         }
 
-        public void FillSlug<TModel>(TModel model, Func<string, string> generateSlug) where TModel : IsRoutable {
+        public void FillSlug<TModel>(TModel model, Func<string, string> generateSlug) where TModel : RoutePart {
             if (!string.IsNullOrEmpty(model.Slug) || string.IsNullOrEmpty(model.Title))
                 return;
 
@@ -64,13 +60,13 @@ namespace Orchard.Core.Routable.Services {
                        : null;
         }
 
-        public IEnumerable<IsRoutable> GetSimilarSlugs(string contentType, string slug)
+        public IEnumerable<RoutePart> GetSimilarSlugs(string contentType, string slug)
         {
             return
-                _contentManager.Query(contentType).Join<RoutableRecord>()
+                _contentManager.Query().Join<RoutePartRecord>()
                     .List()
-                    .Select(i => i.As<IsRoutable>())
-                    .Where(routable => routable.Slug.StartsWith(slug, StringComparison.OrdinalIgnoreCase)) // todo: for some reason the filter doesn't work within the query, even without StringComparison or StartsWith
+                    .Select(i => i.As<RoutePart>())
+                    .Where(routable => routable.Path != null && routable.Path.Equals(slug, StringComparison.OrdinalIgnoreCase)) // todo: for some reason the filter doesn't work within the query, even without StringComparison or StartsWith
                     .ToArray();
         }
 
@@ -79,7 +75,7 @@ namespace Orchard.Core.Routable.Services {
             return slug == null || String.IsNullOrEmpty(slug.Trim()) || Regex.IsMatch(slug, @"^[^/:?#\[\]@!$&'()*+,;=\s]+$");
         }
 
-        public bool ProcessSlug(IsRoutable part)
+        public bool ProcessSlug(RoutePart part)
         {
             FillSlug(part);
 
@@ -88,7 +84,7 @@ namespace Orchard.Core.Routable.Services {
                 return true;
             }
 
-            var slugsLikeThis = GetSimilarSlugs(part.ContentItem.ContentType, part.Slug);
+            var slugsLikeThis = GetSimilarSlugs(part.ContentItem.ContentType, part.Path);
 
             // If the part is already a valid content item, don't include it in the list
             // of slug to consider for conflict detection

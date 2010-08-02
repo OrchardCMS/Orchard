@@ -1,5 +1,4 @@
-﻿using System;
-using Orchard.Caching;
+﻿using Orchard.Caching;
 using Orchard.FileSystems.VirtualPath;
 
 namespace Orchard.Tests.Stubs {
@@ -9,10 +8,6 @@ namespace Orchard.Tests.Stubs {
         }
         public IVolatileToken WhenPathChanges(string virtualPath) {
             return new Token();
-        }
-
-        public void WhenPathChanges(string virtualPath, Action action) {
-            return;
         }
     }
 }

@@ -25,7 +25,7 @@ namespace Futures.Widgets {
                 return;
             }
 
-            var siteWidgets = CurrentSite.As<HasWidgets>();
+            var siteWidgets = CurrentSite.As<WidgetsPart>();
             if (siteWidgets == null) {
                 return;
             }

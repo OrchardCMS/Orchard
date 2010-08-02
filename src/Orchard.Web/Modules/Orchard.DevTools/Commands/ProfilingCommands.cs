@@ -3,6 +3,7 @@ using Orchard.ContentManagement;
 using Orchard.ContentManagement.Aspects;
 using Orchard.Core.Common.Models;
 using Orchard.Core.Navigation.Models;
+using Orchard.Core.Routable.Models;
 using Orchard.Environment.Extensions;
 using Orchard.Security;
 
@@ -25,10 +26,11 @@ namespace Orchard.DevTools.Commands {
 
                 var pageName = "page" + index;
                 var page = _contentManager.Create("Page", VersionOptions.Draft);
-                page.As<ICommonAspect>().Owner = admin;
-                page.As<RoutableAspect>().Slug = pageName;
-                page.As<RoutableAspect>().Title = pageName;
-                page.As<BodyAspect>().Text = pageName;
+                page.As<ICommonPart>().Owner = admin;
+                page.As<RoutePart>().Slug = pageName;
+                page.As<RoutePart>().Path = pageName;
+                page.As<RoutePart>().Title = pageName;
+                page.As<BodyPart>().Text = pageName;
                 page.As<MenuPart>().OnMainMenu = true;
                 page.As<MenuPart>().MenuPosition = "5." + index;
                 page.As<MenuPart>().MenuText = pageName;
@@ -36,9 +38,10 @@ namespace Orchard.DevTools.Commands {
 
                 var blogName = "blog" + index;
                 var blog = _contentManager.New("Blog");
-                blog.As<ICommonAspect>().Owner = admin;
-                blog.As<RoutableAspect>().Slug = blogName;
-                blog.As<RoutableAspect>().Title = blogName;
+                blog.As<ICommonPart>().Owner = admin;
+                blog.As<RoutePart>().Slug = blogName;
+                blog.As<RoutePart>().Path = blogName;
+                blog.As<RoutePart>().Title = blogName;
                 blog.As<MenuPart>().OnMainMenu = true;
                 blog.As<MenuPart>().MenuPosition = "6." + index;
                 blog.As<MenuPart>().MenuText = blogName;
@@ -48,11 +51,11 @@ namespace Orchard.DevTools.Commands {
                 //for (var index2 = 0; index2 != 5; ++index2) {
                 //    var postName = "post" + index;
                 //    var post = _contentManager.New("BlogPost");
-                //    post.As<ICommonAspect>().Owner = admin;
-                //    post.As<ICommonAspect>().Container = blog;
+                //    post.As<ICommonPart>().Owner = admin;
+                //    post.As<ICommonPart>().Container = blog;
                 //    post.As<RoutableAspect>().Slug = postName;
                 //    post.As<RoutableAspect>().Title = postName;
-                //    post.As<BodyAspect>().Text = postName;
+                //    post.As<BodyPart>().Text = postName;
                 //    _contentManager.Create(post);
                 //}
             }

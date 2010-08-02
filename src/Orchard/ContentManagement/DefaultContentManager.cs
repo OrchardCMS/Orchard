@@ -385,6 +385,9 @@ namespace Orchard.ContentManagement {
         }
 
         public ContentItemViewModel<TContentPart> BuildDisplayModel<TContentPart>(TContentPart content, string displayType) where TContentPart : IContent {
+            if (content == null)
+                return null;
+
             var displayModel = new ContentItemViewModel<TContentPart>(content);
             var context = new BuildDisplayModelContext(displayModel, displayType);
             foreach (var handler in Handlers) {

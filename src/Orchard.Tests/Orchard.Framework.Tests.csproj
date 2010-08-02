@@ -42,7 +42,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
-    <PlatformTarget>x86</PlatformTarget>
+    <PlatformTarget>AnyCPU</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -52,7 +52,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
-    <PlatformTarget>x86</PlatformTarget>
+    <PlatformTarget>AnyCPU</PlatformTarget>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Autofac, Version=2.1.13.813, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
@@ -108,10 +108,9 @@
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
     <Reference Include="System.Data" />
-    <Reference Include="System.Data.SQLite, Version=1.0.65.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=x86">
+    <Reference Include="System.Data.SqlServerCe, Version=3.5.1.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\lib\sqlite\System.Data.SQLite.DLL</HintPath>
-      <Private>True</Private>
+      <HintPath>..\..\lib\sqlce\System.Data.SqlServerCe.dll</HintPath>
     </Reference>
     <Reference Include="System.Runtime.Serialization">
       <RequiredTargetFramework>3.0</RequiredTargetFramework>
@@ -173,6 +172,7 @@
     <Compile Include="ContentManagement\Handlers\Coordinators\ContentPartDriverCoordinatorTests.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="ContentManagement\Records\MegaRecord.cs" />
     <Compile Include="ContentManagement\Records\DeltaRecord.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -182,6 +182,7 @@
     <Compile Include="ContentManagement\Records\GammaRecord.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="DataMigration\SchemaCommandGeneratorTests.cs" />
     <Compile Include="DataMigration\SchemaBuilderTests.cs" />
     <Compile Include="DataMigration\DataMigrationTests.cs" />
     <Compile Include="DataMigration\Utilities\NullInterpreter.cs" />
@@ -209,6 +210,7 @@
     <Compile Include="Mvc\Html\HtmlHelperExtensionsTests.cs" />
     <Compile Include="Mvc\Routes\ShellRouteTests.cs" />
     <Compile Include="Mvc\Routes\UrlPrefixTests.cs" />
+    <Compile Include="Stubs\StubReportsCoordinator.cs" />
     <Compile Include="Stubs\StubVirtualPathProvider.cs" />
     <Compile Include="Stubs\StubFileSystem.cs" />
     <Compile Include="Stubs\StubAppDataFolder.cs" />
@@ -254,6 +256,10 @@
     <Compile Include="Utility\ReflectTests.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Orchard.Web\Modules\Orchard.DevTools\Orchard.DevTools.csproj">
+      <Project>{67C1D3AF-A0EC-46B2-BAE1-DF1DA8E0B890}</Project>
+      <Name>Orchard.DevTools</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Orchard.Web\Modules\Orchard.Users\Orchard.Users.csproj">
       <Project>{79AED36E-ABD0-4747-93D3-8722B042454B}</Project>
       <Name>Orchard.Users</Name>
@@ -294,7 +300,16 @@
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
   </Target>
-  <Target Name="AfterBuild">
-  </Target>
   -->
+  <Target Name="CopySqlCeBinaries">
+    <ItemGroup>
+      <SqlCeBinariesx86 Include="$(ProjectDir)..\..\lib\sqlce\x86\*.*" />
+      <SqlCeBinariesx64 Include="$(ProjectDir)..\..\lib\sqlce\amd64\*.*" />
+    </ItemGroup>
+    <Copy SourceFiles="@(SqlCeBinariesx86)" DestinationFolder="$(OutputPath)\x86" SkipUnchangedFiles="true" />
+    <Copy SourceFiles="@(SqlCeBinariesx64)" DestinationFolder="$(OutputPath)\amd64" SkipUnchangedFiles="true" />
+  </Target>
+  <Target Name="AfterBuild">
+    <CallTarget Targets="CopySqlCeBinaries" />
+  </Target>
 </Project>

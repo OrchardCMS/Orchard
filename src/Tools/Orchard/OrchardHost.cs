@@ -1,30 +1,19 @@
 ﻿using System;
 using System.Linq;
-using System.Globalization;
 using System.IO;
-using System.Reflection;
-using System.Web;
-using System.Web.Hosting;
-using Orchard.Host;
+using Orchard.HostContext;
 using Orchard.Parameters;
-using System.Threading;
 
 namespace Orchard {
     class OrchardHost {
         private readonly TextReader _input;
         private readonly TextWriter _output;
-        private readonly string[] _args;
-        private OrchardParameters _arguments;
-        private Logger _logger;
+        private readonly ICommandHostContextProvider _commandHostContextProvider;
 
         public OrchardHost(TextReader input, TextWriter output, string[] args) {
             _input = input;
             _output = output;
-            _args = args;
-        }
-
-        private bool Verbose {
-            get { return _arguments != null && _arguments.Verbose; }
+            _commandHostContextProvider = new CommandHostContextProvider(args);
         }
 
         public int Run() {
@@ -35,88 +24,172 @@ namespace Orchard {
                 _output.WriteLine("Error:");
                 for (; e != null; e = e.InnerException) {
                     _output.WriteLine("  {0}", e.Message);
-                    if (_logger != null) {
-                        _output.WriteLine("   Stacktrace:");
-                        _output.WriteLine("{0}", e.StackTrace);
-                        _output.WriteLine();
-                    }
                 }
                 return -1;
             }
         }
 
         private int DoRun() {
-            _arguments = new OrchardParametersParser().Parse(new CommandParametersParser().Parse(_args));
-            _logger = new Logger(_arguments.Verbose, _output);
-
-            // Perform some argument validation and display usage if something is incorrect
-            bool showHelp = _arguments.Switches.ContainsKey("?");
-            if (!showHelp) {
-                showHelp = (!_arguments.Arguments.Any() && !_arguments.ResponseFiles.Any());
+            var context = CommandHostContext();
+            if (context.DisplayUsageHelp) {
+                DisplayUsageHelp();
+                return 0;
             }
 
-            if (!showHelp) {
-                showHelp = (_arguments.Arguments.Any() && _arguments.ResponseFiles.Any());
-                if (showHelp) {
-                    _output.WriteLine("Incorrect syntax: Response files cannot be used in conjunction with commands");
-                }
+            int result;
+            if (context.Arguments.Arguments.Any())
+                result = ExecuteSingleCommand(context);
+            else if (context.Arguments.ResponseFiles.Any())
+                result = ExecuteResponseFiles(context);
+            else {
+                result = ExecuteInteractive(context);
             }
 
-            if (showHelp) {
-                return GeneralHelp();
-            }
-
-            if (string.IsNullOrEmpty(_arguments.VirtualPath))
-                _arguments.VirtualPath = "/";
-            LogInfo("Virtual path: \"{0}\"", _arguments.VirtualPath);
-
-            if (string.IsNullOrEmpty(_arguments.WorkingDirectory))
-                _arguments.WorkingDirectory = Environment.CurrentDirectory;
-            LogInfo("Working directory: \"{0}\"", _arguments.WorkingDirectory);
-
-            LogInfo("Detecting orchard installation root directory...");
-            var orchardDirectory = GetOrchardDirectory(_arguments.WorkingDirectory);
-            LogInfo("Orchard root directory: \"{0}\"", orchardDirectory.FullName);
-
-            return CreateHostAndExecute(orchardDirectory);
-        }
-
-        private int CreateHostAndExecute(DirectoryInfo orchardDirectory) {
-            var appManager = ApplicationManager.GetApplicationManager();
-
-            LogInfo("Creating ASP.NET AppDomain for command agent...");
-            var appObject = CreateWorkerAppDomainWithHost(appManager, _arguments.VirtualPath, orchardDirectory.FullName, typeof(CommandHost));
-            var host = (CommandHost)appObject.ObjectInstance;
-
-            LogInfo("Executing command in ASP.NET AppDomain...");
-            var result = Execute(host);
-            LogInfo("Return code for command: {0}", result);
-
-            LogInfo("Shutting down ASP.NET AppDomain...");
-            appManager.ShutdownApplication(appObject.ApplicationId);
-
+            _commandHostContextProvider.Shutdown(context);
             return result;
         }
 
-        private int Execute(CommandHost host) {
-            if (_arguments.ResponseFiles.Any()) {
-                var responseLines = new ResponseFiles.ResponseFiles().ReadFiles(_arguments.ResponseFiles);
-                return host.RunCommands(_input, _output, _logger, responseLines.ToArray());
+        private CommandHostContext CommandHostContext() {
+            _output.WriteLine("Initializing Orchard session. (This might take a few seconds...)");
+            var result = _commandHostContextProvider.CreateContext();
+            if (result.StartSessionResult == result.RetryResult) {
+                result = _commandHostContextProvider.CreateContext();
             }
-            else {
-                return host.RunCommand(_input, _output, _logger, _arguments);
+            return result;
+        }
+
+        private int ExecuteSingleCommand(CommandHostContext context) {
+            return context.CommandHost.RunCommand(_input, _output, context.Logger, context.Arguments);
+        }
+
+
+        private int ExecuteResponseFiles(CommandHostContext context) {
+            var responseLines = new ResponseFiles.ResponseFiles().ReadFiles(context.Arguments.ResponseFiles);
+            return context.CommandHost.RunCommands(_input, _output, context.Logger, responseLines.ToArray());
+        }
+
+        public int ExecuteInteractive(CommandHostContext context) {
+            _output.WriteLine("Type \"?\" for help, \"exit\" to exit, \"cls\" to clear screen");
+            while (true) {
+                var command = ReadCommand(context);
+                switch (command.ToLowerInvariant()) {
+                    case "quit":
+                    case "q":
+                    case "exit":
+                    case "e":
+                        return 0;
+                    case "help":
+                    case "?":
+                        DisplayInteractiveHelp();
+                        break;
+                    case "cls":
+                        Console.Clear();
+                        break;
+                    default:
+                        context = RunCommand(context, command);
+                        break;
+                }
             }
         }
 
-        private int GeneralHelp() {
+        private string ReadCommand(CommandHostContext context) {
+            _output.WriteLine();
+            _output.Write("orchard> ");
+            return _input.ReadLine();
+        }
+
+        private CommandHostContext RunCommand(CommandHostContext context, string command) {
+            if (string.IsNullOrWhiteSpace(command))
+                return context;
+
+            int result = RunCommandInSession(context, command);
+            if (result == context.RetryResult) {
+                _commandHostContextProvider.Shutdown(context);
+                context = CommandHostContext();
+                result = RunCommandInSession(context, command);
+                if (result != 0)
+                    _output.WriteLine("Command returned non-zero result: {0}", result);
+            }
+            return context;
+        }
+
+        private int RunCommandInSession(CommandHostContext context, string command) {
+            try {
+                var args = new OrchardParametersParser().Parse(new CommandParametersParser().Parse(new CommandLineParser().Parse(command)));
+                return context.CommandHost.RunCommandInSession(_input, _output, context.Logger, args);
+            }
+            catch (AppDomainUnloadedException) {
+                _output.WriteLine("AppDomain of Orchard session has been unloaded. (Retrying...)");
+                return context.RetryResult;
+            }
+        }
+
+        private void DisplayInteractiveHelp() {
+            _output.WriteLine("The Orchard command interpreter supports running a few built-in commands");
+            _output.WriteLine("as well as specific commands from enabled features of an Orchard installation.");
+            _output.WriteLine("");
+            _output.WriteLine("The general syntax of commands is");
+            _output.WriteLine("");
+            _output.WriteLine("   <command-name> [arg1] ... [argn] [/switch1[:value1]] ... [/switchn[:valuen]]");
+            _output.WriteLine("");
+            _output.WriteLine("   <command-name>");
+            _output.WriteLine("       Specifies the command to execute (the command name can be multiple words separated by spaces");
+            _output.WriteLine("");
+            _output.WriteLine("   [arg1] ... [argn]");
+            _output.WriteLine("       Specifies additional arguments for the command");
+            _output.WriteLine("");
+            _output.WriteLine("   [/switch1[:value1]] ... [/switchn[:valuen]]");
+            _output.WriteLine("       Specifies switches to apply to the command. Available switches generally ");
+            _output.WriteLine("       depend on the command executed, with the exception of a few built-in ones.");
+            _output.WriteLine("");
+            _output.WriteLine("   Built-in commands");
+            _output.WriteLine("   =================");
+            _output.WriteLine("");
+            _output.WriteLine("   help|h|?");
+            _output.WriteLine("       Displays this message");
+            _output.WriteLine("");
+            _output.WriteLine("   exit|quit|e|q");
+            _output.WriteLine("       Terminates the interactive session");
+            _output.WriteLine("");
+            _output.WriteLine("   cls");
+            _output.WriteLine("       Clears the console screen");
+            _output.WriteLine("");
+            _output.WriteLine("   help commands");
+            _output.WriteLine("       Displays the list of available commands");
+            _output.WriteLine("");
+            _output.WriteLine("   help <command-name>");
+            _output.WriteLine("       Display help for a given command");
+            _output.WriteLine("");
+            _output.WriteLine("   Built-in switches");
+            _output.WriteLine("   =================");
+            _output.WriteLine("");
+            _output.WriteLine("   /Verbose");
+            _output.WriteLine("   /v");
+            _output.WriteLine("       Turns on verbose output");
+            _output.WriteLine("");
+            _output.WriteLine("   /Tenant:tenant-name");
+            _output.WriteLine("   /t:tenant-name");
+            _output.WriteLine("       Specifies which tenant to run the command into. \"Default\" tenant by default.");
+            _output.WriteLine("");
+        }
+
+        private void DisplayUsageHelp() {
             _output.WriteLine("Executes Orchard commands from a Orchard installation directory.");
             _output.WriteLine("");
             _output.WriteLine("Usage:");
-            _output.WriteLine("   orchard.exe command [arg1] ... [argn] [/switch1[:value1]] ... [/switchn[:valuen]]");
-            _output.WriteLine("   orchard.exe @response-file1 ... [@response-filen] [/switch1[:value1]] ... [/switchn[:valuen]]");
+            _output.WriteLine("   orchard.exe");
+            _output.WriteLine("       Starts the Orchard command interpreter");
             _output.WriteLine("");
-            _output.WriteLine("   command");
-            _output.WriteLine("       Specify the command to execute");
+            _output.WriteLine("   orchard.exe <command-name> [arg1] ... [argn] [/switch1[:value1]] ... [/switchn[:valuen]]");
+            _output.WriteLine("       Executes a single command");
+            _output.WriteLine("");
+            _output.WriteLine("   orchard.exe @response-file1 ... [@response-filen] [/switch1[:value1]] ... [/switchn[:valuen]]");
+            _output.WriteLine("       Executes multiples commands from response files");
+            _output.WriteLine("");
+            _output.WriteLine(" where");
+            _output.WriteLine("");
+            _output.WriteLine("   <command-name>");
+            _output.WriteLine("       Specifies the command to execute (the command name can be multiple words separated by spaces");
             _output.WriteLine("");
             _output.WriteLine("   [arg1] ... [argn]");
             _output.WriteLine("       Specify additional arguments for the command");
@@ -157,64 +230,7 @@ namespace Orchard {
             _output.WriteLine("   /t:tenant-name");
             _output.WriteLine("       Specifies which tenant to run the command into. \"Default\" tenant by default.");
             _output.WriteLine("");
-            return 0;
-        }
-
-        private void LogInfo(string format, params object[] args) {
-            if (_logger != null)
-                _logger.LogInfo(format, args);
-        }
-
-        private DirectoryInfo GetOrchardDirectory(string directory) {
-            for (var directoryInfo = new DirectoryInfo(directory); directoryInfo != null; directoryInfo = directoryInfo.Parent) {
-                if (!directoryInfo.Exists) {
-                    throw new ApplicationException(string.Format("Directory \"{0}\" does not exist", directoryInfo.FullName));
-                }
-
-                // We look for 
-                // 1) .\web.config
-                // 2) .\bin\Orchard.Framework.dll
-                var webConfigFileInfo = new FileInfo(Path.Combine(directoryInfo.FullName, "web.config"));
-                if (!webConfigFileInfo.Exists)
-                    continue;
-
-                var binDirectoryInfo = new DirectoryInfo(Path.Combine(directoryInfo.FullName, "bin"));
-                if (!binDirectoryInfo.Exists)
-                    continue;
-
-                var orchardFrameworkFileInfo = new FileInfo(Path.Combine(binDirectoryInfo.FullName, "Orchard.Framework.dll"));
-                if (!orchardFrameworkFileInfo.Exists)
-                    continue;
-
-                return directoryInfo;
-            }
-
-            throw new ApplicationException(
-                string.Format("Directory \"{0}\" doesn't seem to contain an Orchard installation", new DirectoryInfo(directory).FullName));
-        }
-
-        private static ApplicationObject CreateWorkerAppDomainWithHost(ApplicationManager appManager, string virtualPath, string physicalPath, Type hostType) {
-            // this creates worker app domain in a way that host doesn't need to be in GAC or bin
-            // using BuildManagerHost via private reflection
-            string uniqueAppString = string.Concat(virtualPath, physicalPath).ToLowerInvariant();
-            string appId = (uniqueAppString.GetHashCode()).ToString("x", CultureInfo.InvariantCulture);
-
-            // create BuildManagerHost in the worker app domain
-            var buildManagerHostType = typeof(HttpRuntime).Assembly.GetType("System.Web.Compilation.BuildManagerHost");
-            var buildManagerHost = appManager.CreateObject(appId, buildManagerHostType, virtualPath, physicalPath, false);
-
-            // call BuildManagerHost.RegisterAssembly to make Host type loadable in the worker app domain
-            buildManagerHostType.InvokeMember(
-                "RegisterAssembly",
-                BindingFlags.Instance | BindingFlags.InvokeMethod | BindingFlags.NonPublic,
-                null,
-                buildManagerHost,
-                new object[] { hostType.Assembly.FullName, hostType.Assembly.Location });
-
-            // create Host in the worker app domain
-            return new ApplicationObject { 
-                ApplicationId = appId, 
-                ObjectInstance = appManager.CreateObject(appId, hostType, virtualPath, physicalPath, false) };
+            return;
         }
     }
 }

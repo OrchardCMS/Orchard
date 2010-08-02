@@ -11,9 +11,9 @@
 	</fieldset>
     <fieldset>
         <legend><%: T("Permissions") %></legend>
-		<% foreach (var moduleName in Model.ModulePermissions.Keys) { %>
+		<% foreach (var featureName in Model.FeaturePermissions.Keys) { %>
         <fieldset>
-            <legend><%: T("{0} Module", moduleName) %></legend>
+            <legend><%: T("{0} Feature", featureName) %></legend>
 		    <table class="items">
 			    <colgroup>
 				    <col id="Col1" />
@@ -26,7 +26,7 @@
 					    <th scope="col"><%: T("Effective") %></th>
 				    </tr>
 			    </thead>
-			    <% foreach (var permission in Model.ModulePermissions[moduleName]) { %>
+			    <% foreach (var permission in Model.FeaturePermissions[featureName]) { %>
                 <tr>
 				    <td><%: permission.Description %></td>
 				    <td style="width:60px;/* todo: (heskew) make not inline :(">
@@ -50,7 +50,7 @@
 			<% } %>
     </fieldset>
     <fieldset>
-	    <input type="submit" class="button" name="submit.Save" value="<%: T("Save") %>" />
-	    <input type="submit" class="button remove" name="submit.Delete" value="<%: T("Remove") %>" />
+	    <input type="submit" class="button primaryAction" name="submit.Save" value="<%: T("Save") %>" />
+	    <input type="submit" class="button" name="submit.Delete" value="<%: T("Remove") %>" />
 	</fieldset>
 <% } %>

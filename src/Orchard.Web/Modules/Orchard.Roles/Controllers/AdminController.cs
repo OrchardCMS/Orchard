@@ -8,7 +8,6 @@ using Orchard.Roles.Models;
 using Orchard.Roles.Services;
 using Orchard.Roles.ViewModels;
 using Orchard.Security;
-using Orchard.Security.Permissions;
 using Orchard.UI.Notify;
 
 namespace Orchard.Roles.Controllers {
@@ -36,7 +35,7 @@ namespace Orchard.Roles.Controllers {
             if (!Services.Authorizer.Authorize(Permissions.ManageRoles, T("Not authorized to manage roles")))
                 return new HttpUnauthorizedResult();
 
-            var model = new RolesIndexViewModel { Rows = _roleService.GetRoles() as IList<RoleRecord> };
+            var model = new RolesIndexViewModel { Rows = _roleService.GetRoles().ToList() };
 
             return View(model);
         }
@@ -65,7 +64,7 @@ namespace Orchard.Roles.Controllers {
             if (!Services.Authorizer.Authorize(Permissions.ManageRoles, T("Not authorized to manage roles")))
                 return new HttpUnauthorizedResult();
 
-            var model = new RoleCreateViewModel { ModulePermissions = _roleService.GetInstalledPermissions() };
+            var model = new RoleCreateViewModel { FeaturePermissions = _roleService.GetInstalledPermissions() };
             return View(model);
         }
 
@@ -103,11 +102,11 @@ namespace Orchard.Roles.Controllers {
                 throw new HttpException(404, "page with id " + id + " was not found");
             }
             var model = new RoleEditViewModel { Name = role.Name, Id = role.Id, 
-                                                ModulePermissions = _roleService.GetInstalledPermissions(),
+                                                FeaturePermissions = _roleService.GetInstalledPermissions(),
                                                 CurrentPermissions = _roleService.GetPermissionsForRole(id)};
 
             var simulation = UserSimulation.Create(role.Name);
-            model.EffectivePermissions = model.ModulePermissions
+            model.EffectivePermissions = model.FeaturePermissions
                 .SelectMany(group => group.Value)
                 .Where(permission => _authorizationService.TryCheckAccess(permission, simulation, null))
                 .Select(permission=>permission.Name)

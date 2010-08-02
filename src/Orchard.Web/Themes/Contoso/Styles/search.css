@@ -1,0 +1,24 @@
+﻿form.search {
+    float:left;
+}
+form.search input {
+    display:inline;
+    width:20em;
+}
+.search-summary {
+    float:right;
+    font-style:italic;
+    margin-top:0;
+}
+.search-summary em {
+    font-weight:bold;
+}
+.search-results {
+    clear:both;
+}
+/* theme modifications */
+/*- Search (Page) -*/
+.search-results { margin: 0; padding-top: 1em; }
+.search-results li { list-style: none; }
+.search-results h3 { margin-bottom: 0; }
+.search-results .content { padding-top:0; }

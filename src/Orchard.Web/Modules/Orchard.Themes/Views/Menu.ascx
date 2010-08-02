@@ -15,7 +15,8 @@
             if (counter == count)
                 sbClass.Append("last ");
 
-            if (string.Equals(menuItem.Href, Request.ToUrlString(), StringComparison.InvariantCultureIgnoreCase))
+
+            if (string.Equals(menuItem.Href.TrimEnd('/'), Request.Path.TrimEnd('/'), StringComparison.OrdinalIgnoreCase))
                 sbClass.Append("current ");
 
             var classValue = sbClass.ToString().TrimEnd(); %>

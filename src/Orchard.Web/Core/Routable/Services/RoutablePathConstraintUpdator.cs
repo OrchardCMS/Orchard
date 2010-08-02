@@ -1,6 +1,6 @@
 using System.Linq;
 using JetBrains.Annotations;
-using Orchard.Core.Common.Models;
+using Orchard.Core.Routable.Models;
 using Orchard.Data;
 using Orchard.Environment;
 using Orchard.Tasks;
@@ -9,9 +9,9 @@ namespace Orchard.Core.Routable.Services {
     [UsedImplicitly]
     public class RoutablePathConstraintUpdator : IOrchardShellEvents, IBackgroundTask {
         private readonly IRoutablePathConstraint _pageSlugConstraint;
-        private readonly IRepository<RoutableRecord> _repository;
+        private readonly IRepository<RoutePartRecord> _repository;
 
-        public RoutablePathConstraintUpdator(IRoutablePathConstraint pageSlugConstraint, IRepository<RoutableRecord> repository) {
+        public RoutablePathConstraintUpdator(IRoutablePathConstraint pageSlugConstraint, IRepository<RoutePartRecord> repository) {
             _pageSlugConstraint = pageSlugConstraint;
             _repository = repository;
         }

@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Web;
 using System.Web.Hosting;
 using Orchard.Environment.Extensions.Loaders;
 using Orchard.FileSystems.VirtualPath;
@@ -11,8 +12,8 @@ namespace Orchard.FileSystems.Dependencies {
     public class WebFormVirtualPathProvider : VirtualPathProvider, ICustomVirtualPathProvider {
         private readonly IDependenciesFolder _dependenciesFolder;
         private readonly IEnumerable<IExtensionLoader> _loaders;
-        private readonly string[] _modulesPrefixes = { "~/Modules/", "/Modules/" };
-        private readonly string[] _themesPrefixes = { "~/Themes/", "/Themes/" };
+        private readonly string[] _modulesPrefixes = { "~/Modules/" };
+        private readonly string[] _themesPrefixes = { "~/Themes/" };
         private readonly string[] _extensions = { ".ascx", ".aspx", ".master" };
 
         public WebFormVirtualPathProvider(IDependenciesFolder dependenciesFolder, IEnumerable<IExtensionLoader> loaders) {
@@ -98,15 +99,16 @@ namespace Orchard.FileSystems.Dependencies {
         }
 
         private VirtualFileOverride GetModuleVirtualOverride(string virtualPath) {
-            var prefix = PrefixMatch(virtualPath, _modulesPrefixes);
+            var appRelativePath = VirtualPathUtility.ToAppRelative(virtualPath);
+            var prefix = PrefixMatch(appRelativePath, _modulesPrefixes);
             if (prefix == null)
                 return null;
 
-            var extension = ExtensionMatch(virtualPath, _extensions);
+            var extension = ExtensionMatch(appRelativePath, _extensions);
             if (extension == null)
                 return null;
 
-            var moduleName = ModuleMatch(virtualPath, prefix);
+            var moduleName = ModuleMatch(appRelativePath, prefix);
             if (moduleName == null)
                 return null;
 
@@ -130,11 +132,12 @@ namespace Orchard.FileSystems.Dependencies {
         }
 
         private VirtualFileOverride GetThemeVirtualOverride(string virtualPath) {
-            var prefix = PrefixMatch(virtualPath, _themesPrefixes);
+            var appRelativePath = VirtualPathUtility.ToAppRelative(virtualPath);
+            var prefix = PrefixMatch(appRelativePath, _themesPrefixes);
             if (prefix == null)
                 return null;
 
-            var extension = ExtensionMatch(virtualPath, _extensions);
+            var extension = ExtensionMatch(appRelativePath, _extensions);
             if (extension == null)
                 return null;
 

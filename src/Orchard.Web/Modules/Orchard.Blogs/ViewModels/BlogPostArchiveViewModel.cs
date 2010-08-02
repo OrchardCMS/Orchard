@@ -4,8 +4,8 @@ using Orchard.Mvc.ViewModels;
 
 namespace Orchard.Blogs.ViewModels {
     public class BlogPostArchiveViewModel : BaseViewModel {
-        public Blog Blog { get; set; }
+        public BlogPart BlogPart { get; set; }
         public ArchiveData ArchiveData { get; set; }
-        public IEnumerable<ContentItemViewModel<BlogPost>> BlogPosts { get; set; }
+        public IEnumerable<ContentItemViewModel<BlogPostPart>> BlogPosts { get; set; }
     }
 }

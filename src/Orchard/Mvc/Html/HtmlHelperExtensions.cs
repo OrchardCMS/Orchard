@@ -30,7 +30,9 @@ namespace Orchard.Mvc.Html {
         }
 
         public static string FieldIdFor<T, TResult>(this HtmlHelper<T> html, Expression<Func<T, TResult>> expression) {
-            return html.ViewData.TemplateInfo.GetFullHtmlFieldId(ExpressionHelper.GetExpressionText(expression));
+            var id = html.ViewData.TemplateInfo.GetFullHtmlFieldId(ExpressionHelper.GetExpressionText(expression));
+            // because "[" and "]" aren't replaced with "_" in GetFullHtmlFieldId
+            return id.Replace('[', '_').Replace(']', '_');
         }
 
         public static MvcHtmlString SelectOption<T>(this HtmlHelper html, T currentValue, T optionValue, string text) {

@@ -30,7 +30,7 @@ namespace Orchard.Tests.ContentManagement.Drivers.FieldStorage {
                 get { return "TestProvName"; }
             }
 
-            public IFieldStorage BindStorage(ContentPart contentPart, ContentPartDefinition.Field partFieldDefinition) {
+            public IFieldStorage BindStorage(ContentPart contentPart, ContentPartFieldDefinition partFieldDefinition) {
                 throw new NotImplementedException();
             }
 

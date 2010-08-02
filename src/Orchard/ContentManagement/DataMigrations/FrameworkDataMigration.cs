@@ -33,7 +33,7 @@ namespace Orchard.ContentManagement.DataMigrations {
                 .Column<string>("Culture")
                 );
 
-            return 0010;
+            return 1;
         }
     }
 }

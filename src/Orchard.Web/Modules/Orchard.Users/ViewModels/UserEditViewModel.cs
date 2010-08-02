@@ -23,6 +23,6 @@ namespace Orchard.Users.ViewModels {
             set { User.Item.Record.Email = value; }
         }
 
-        public ContentItemViewModel<User> User { get; set; }
+        public ContentItemViewModel<UserPart> User { get; set; }
     }
 }

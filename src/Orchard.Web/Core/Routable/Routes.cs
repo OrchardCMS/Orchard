@@ -18,24 +18,38 @@ namespace Orchard.Core.Routable {
 
         public IEnumerable<RouteDescriptor> GetRoutes() {
             return new[] {
-                             new RouteDescriptor {
-                                                     Priority = 10,
-                                                     Route = new Route(
-                                                         "{*path}",
-                                                         new RouteValueDictionary {
-                                                                                      {"area", "Routable"},
-                                                                                      {"controller", "Item"},
-                                                                                      {"action", "Display"}
-                                                                                  },
-                                                         new RouteValueDictionary {
-                                                                                      {"path", _routablePathConstraint}
-                                                                                  },
-                                                         new RouteValueDictionary {
-                                                                                      {"area", "Routable"}
-                                                                                  },
-                                                         new MvcRouteHandler())
-                                                 }
-                         };
+                new RouteDescriptor {
+                    Route = new Route(
+                        "Admin/Common/Routable/Slugify",
+                        new RouteValueDictionary {
+                            {"area", "Common"},
+                            {"controller", "Routable"},
+                            {"action", "Slugify"}
+                        },
+                        new RouteValueDictionary(),
+                        new RouteValueDictionary {
+                            {"area", "Common"}
+                        },
+                        new MvcRouteHandler())
+                },
+                new RouteDescriptor {
+                    Priority = 10,
+                    Route = new Route(
+                        "{*path}",
+                        new RouteValueDictionary {
+                            {"area", "Routable"},
+                            {"controller", "Item"},
+                            {"action", "Display"}
+                        },
+                        new RouteValueDictionary {
+                            {"path", _routablePathConstraint}
+                        },
+                        new RouteValueDictionary {
+                            {"area", "Routable"}
+                        },
+                        new MvcRouteHandler())
+                }
+            };
         }
 
    }

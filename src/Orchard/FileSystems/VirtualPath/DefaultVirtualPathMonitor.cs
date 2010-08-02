@@ -24,10 +24,6 @@ namespace Orchard.FileSystems.VirtualPath {
             return token;
         }
 
-        public void WhenPathChanges(string virtualPath, Action action) {
-            BindSignal(virtualPath, (key, value, reason) => action());
-        }
-
         private Token BindToken(string virtualPath) {
             lock (_tokens) {
                 Weak<Token> weak;

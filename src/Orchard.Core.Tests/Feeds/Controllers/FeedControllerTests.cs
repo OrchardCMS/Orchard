@@ -10,13 +10,13 @@ using NUnit.Framework;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Handlers;
 using Orchard.ContentManagement.MetaData.Builders;
-using Orchard.ContentManagement.MetaData.Models;
 using Orchard.Core.Common.Models;
 using Orchard.Core.Feeds;
 using Orchard.Core.Feeds.Controllers;
 using Orchard.Core.Feeds.Models;
 using Orchard.Core.Feeds.Rss;
 using Orchard.Core.Feeds.StandardBuilders;
+using Orchard.Core.Routable.Models;
 using Orchard.Mvc.Results;
 using Orchard.Tests.Modules;
 using Orchard.Tests.Stubs;
@@ -148,18 +148,18 @@ namespace Orchard.Core.Tests.Feeds.Controllers {
         public void CorePartValuesAreExtracted() {
             var clock = new StubClock();
             var hello = new ContentItemBuilder(new ContentTypeDefinitionBuilder().Named("hello").Build())
-                .Weld<CommonAspect>()
-                .Weld<RoutableAspect>()
-                .Weld<BodyAspect>()
+                .Weld<CommonPart>()
+                .Weld<RoutePart>()
+                .Weld<BodyPart>()
                 .Build();
-            hello.As<CommonAspect>().Record = new CommonRecord();
-            hello.As<RoutableAspect>().Record = new RoutableRecord();
-            hello.As<BodyAspect>().Record = new BodyRecord();
+            hello.As<CommonPart>().Record = new CommonPartRecord();
+            hello.As<RoutePart>().Record = new RoutePartRecord();
+            hello.As<BodyPart>().Record = new BodyPartRecord();
 
-            hello.As<CommonAspect>().PublishedUtc = clock.UtcNow;
-            hello.As<RoutableAspect>().Title = "alpha";
-            hello.As<RoutableAspect>().Slug = "beta";
-            hello.As<BodyAspect>().Text = "gamma";
+            hello.As<CommonPart>().PublishedUtc = clock.UtcNow;
+            hello.As<RoutePart>().Title = "alpha";
+            hello.As<RoutePart>().Slug = "beta";
+            hello.As<BodyPart>().Text = "gamma";
 
             var query = new StubQuery(new[] {
                 hello,

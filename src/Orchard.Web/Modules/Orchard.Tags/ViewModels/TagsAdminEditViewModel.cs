@@ -5,7 +5,7 @@ using Orchard.Mvc.ViewModels;
 namespace Orchard.Tags.ViewModels {
     public class TagsAdminEditViewModel : BaseViewModel {
         public int Id { get; set; }
-        [Required, DisplayName("Name:")]
+        [Required, DisplayName("Name")]
         public string TagName { get; set; } 
     }
 }

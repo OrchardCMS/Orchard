@@ -13,7 +13,7 @@ namespace Orchard.ContentManagement.FieldStorage {
             _storageProviders = storageProviders;
         }
 
-        public IFieldStorageProvider GetProvider(ContentPartDefinition.Field partFieldDefinition) {
+        public IFieldStorageProvider GetProvider(ContentPartFieldDefinition partFieldDefinition) {
 
             IFieldStorageProvider provider = null;
 

@@ -42,7 +42,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <UseVSHostingProcess>true</UseVSHostingProcess>
-    <PlatformTarget>x86</PlatformTarget>
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
@@ -52,7 +52,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <PlatformTarget>x86</PlatformTarget>
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
@@ -72,8 +72,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ApplicationObject.cs" />
+    <Compile Include="HostContext\CommandHostContext.cs" />
+    <Compile Include="HostContext\CommandHostContextProvider.cs" />
+    <Compile Include="HostContext\ICommandHostContextProvider.cs" />
     <Compile Include="Logger.cs" />
     <Compile Include="OrchardHost.cs" />
+    <Compile Include="Parameters\CommandLineParser.cs" />
     <Compile Include="Parameters\ICommandParametersParser.cs" />
     <Compile Include="IOrchardParametersParser.cs" />
     <Compile Include="OrchardParameters.cs" />

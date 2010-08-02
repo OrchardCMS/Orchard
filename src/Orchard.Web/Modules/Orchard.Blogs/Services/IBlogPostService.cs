@@ -5,18 +5,18 @@ using Orchard.ContentManagement;
 
 namespace Orchard.Blogs.Services {
     public interface IBlogPostService : IDependency {
-        BlogPost Get(Blog blog, string slug);
-        BlogPost Get(Blog blog, string slug, VersionOptions versionOptions);
-        BlogPost Get(int id);
-        BlogPost Get(int id, VersionOptions versionOptions);
-        IEnumerable<BlogPost> Get(Blog blog);
-        IEnumerable<BlogPost> Get(Blog blog, VersionOptions versionOptions);
-        IEnumerable<BlogPost> Get(Blog blog, ArchiveData archiveData);
-        IEnumerable<KeyValuePair<ArchiveData, int>> GetArchives(Blog blog);
-        void Delete(BlogPost blogPost);
-        void Publish(BlogPost blogPost);
-        void Publish(BlogPost blogPost, DateTime scheduledPublishUtc);
-        void Unpublish(BlogPost blogPost);
-        DateTime? GetScheduledPublishUtc(BlogPost blogPost);
+        BlogPostPart Get(BlogPart blogPart, string slug);
+        BlogPostPart Get(BlogPart blogPart, string slug, VersionOptions versionOptions);
+        BlogPostPart Get(int id);
+        BlogPostPart Get(int id, VersionOptions versionOptions);
+        IEnumerable<BlogPostPart> Get(BlogPart blogPart);
+        IEnumerable<BlogPostPart> Get(BlogPart blogPart, VersionOptions versionOptions);
+        IEnumerable<BlogPostPart> Get(BlogPart blogPart, ArchiveData archiveData);
+        IEnumerable<KeyValuePair<ArchiveData, int>> GetArchives(BlogPart blogPart);
+        void Delete(BlogPostPart blogPostPart);
+        void Publish(BlogPostPart blogPostPart);
+        void Publish(BlogPostPart blogPostPart, DateTime scheduledPublishUtc);
+        void Unpublish(BlogPostPart blogPostPart);
+        DateTime? GetScheduledPublishUtc(BlogPostPart blogPostPart);
     }
 }

@@ -7,15 +7,18 @@ if (Model.Entries.Count() > 0) { %>
 <div class="actions"><a class="add button primaryAction" href="<%: Url.BlogCreate() %>"><%: T("New Blog") %></a></div>
 <%: Html.UnorderedList(Model.Entries, (entry, i) => {
         // Add blog post count rendering into "meta" zone
-        entry.ContentItemViewModel.Zones.AddAction("meta", html => {
+        entry.ContentItemViewModel.Zones.AddAction("meta:after", html => {
             int draftCount = entry.TotalPostCount - entry.ContentItemViewModel.Item.PostCount;
             int totalPostCount = entry.TotalPostCount;
                         
             var linkText = T.Plural("1 post", "{0} posts", totalPostCount).ToString();
-            if (draftCount==0){
+            if (draftCount > 0){
                 linkText = linkText + " (" + T.Plural("1 draft", "{0} drafts", draftCount).ToString() + ")";
             }
-            
+
+            if (entry.ContentItemViewModel.Zones["meta"].Items.Count > 1)
+                html.ViewContext.Writer.Write(" | ");
+
             html.ViewContext.Writer.Write(html.Link(linkText, Url.BlogForAdmin(entry.ContentItemViewModel.Item.Slug)));
         });
 

@@ -6,7 +6,10 @@ using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
 using Orchard.ContentManagement.MetaData;
 using Orchard.ContentManagement.MetaData.Models;
+using Orchard.ContentTypes.Extensions;
 using Orchard.ContentTypes.ViewModels;
+using Orchard.Core.Contents.Extensions;
+using Orchard.Core.Contents.Settings;
 using Orchard.Localization;
 
 namespace Orchard.ContentTypes.Services {
@@ -70,6 +73,7 @@ namespace Orchard.ContentTypes.Services {
 
             var contentTypeDefinition = new ContentTypeDefinition(name, typeViewModel.DisplayName);
             _contentDefinitionManager.StoreTypeDefinition(contentTypeDefinition);
+            _contentDefinitionManager.AlterTypeDefinition(name, cfg => cfg.Creatable());
 
             return new EditTypeViewModel(contentTypeDefinition);
         }
@@ -145,10 +149,11 @@ namespace Orchard.ContentTypes.Services {
 
         public IEnumerable<EditPartViewModel> GetParts() {
             var typeNames = GetTypes().Select(ctd => ctd.Name);
-            // code-defined parts
-            var codeDefinedParts = _contentPartDrivers.SelectMany(d => d.GetPartInfo().Select(cpi => new EditPartViewModel {Name = cpi.PartName}));
             // user-defined parts
-            var contentParts = _contentDefinitionManager.ListPartDefinitions().Where(cpd => !codeDefinedParts.Any(m => m.Name == cpd.Name)).Select(cpd => new EditPartViewModel(cpd));
+            var contentParts = _contentDefinitionManager.ListPartDefinitions().Select(cpd => new EditPartViewModel(cpd));
+            // code-defined parts
+            var codeDefinedParts = _contentPartDrivers
+                .SelectMany(d => d.GetPartInfo().Where(cpd => !contentParts.Any(m => m.Name == cpd.PartName)).Select(cpi => new EditPartViewModel { Name = cpi.PartName }));
             // all together now, except for those parts with the same name as a type (implicit type's part or a mistake)
             return contentParts.Where(m => !typeNames.Contains(m.Name)).Union(codeDefinedParts).OrderBy(m => m.Name);
         }
@@ -218,7 +223,7 @@ namespace Orchard.ContentTypes.Services {
             if (name.Length > 128)
                 name = name.Substring(0, 128);
 
-            return name.ToLowerInvariant();
+            return name;
         }
 
         private static string VersionName(string name) {

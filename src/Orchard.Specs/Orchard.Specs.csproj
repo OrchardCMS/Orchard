@@ -42,7 +42,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
-    <PlatformTarget>x86</PlatformTarget>
+    <PlatformTarget>AnyCPU</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -52,7 +52,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
-    <PlatformTarget>x86</PlatformTarget>
+    <PlatformTarget>AnyCPU</PlatformTarget>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Autofac, Version=2.1.13.813, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
@@ -247,10 +247,6 @@
     <ProjectReference Include="..\Orchard.Web\Modules\Orchard.Media\Orchard.Media.csproj">
       <Project>{D9A7B330-CD22-4DA1-A95A-8DE1982AD8EB}</Project>
       <Name>Orchard.Media</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Orchard.Web\Modules\Orchard.Pages\Orchard.Pages.csproj">
-      <Project>{4A9C04A6-0986-4A92-A610-5F59FF273FB9}</Project>
-      <Name>Orchard.Pages</Name>
     </ProjectReference>
     <ProjectReference Include="..\Orchard.Web\Modules\Orchard.Roles\Orchard.Roles.csproj">
       <Project>{D10AD48F-407D-4DB5-A328-173EC7CB010F}</Project>

@@ -1,0 +1,20 @@
+using JetBrains.Annotations;
+using Orchard.Comments.Models;
+using Orchard.ContentManagement;
+using Orchard.ContentManagement.Drivers;
+
+namespace Orchard.Comments.Drivers {
+    [UsedImplicitly]
+    public class CommentPartDriver : ContentItemDriver<CommentPart> {
+        public readonly static ContentType ContentType = new ContentType {
+                                                                             Name = "Comment",
+                                                                             DisplayName = "Comment"
+                                                                         };
+
+        protected override ContentType GetContentType() {
+            return ContentType;
+        }
+
+        protected override string Prefix { get { return ""; } }
+    }
+}

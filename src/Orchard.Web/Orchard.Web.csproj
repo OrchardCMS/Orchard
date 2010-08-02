@@ -55,17 +55,16 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\fluentnhibernate\NHibernate.ByteCode.Castle.dll</HintPath>
     </Reference>
+    <Reference Include="System.Data.SqlServerCe, Version=4.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\sqlce\System.Data.SqlServerCe.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.ComponentModel.DataAnnotations">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
     <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="System.Data.SQLite, Version=1.0.65.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=x86">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\lib\sqlite\System.Data.SQLite.DLL</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="System.Web.ApplicationServices" />
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
@@ -100,7 +99,18 @@
     <Content Include="Default.aspx" />
     <Content Include="Global.asax" />
     <Content Include="Refresh.html" />
+    <Content Include="Themes\Contoso\Styles\search.css" />
+    <Content Include="Themes\Contoso\Views\DisplayTemplates\Items\Contents.Item.ascx" />
+    <Content Include="Themes\Contoso\Views\DisplayTemplates\Parts\Blogs.BlogPost.Metadata.ascx" />
+    <Content Include="Themes\Contoso\Views\Orchard.Search\Search\Index.ascx" />
+    <Content Include="Themes\Corporate\Views\DisplayTemplates\Parts\Blogs.BlogPost.Metadata.ascx" />
+    <Content Include="Themes\Green\Views\Orchard.Search\Search\Index.ascx" />
+    <Content Include="Themes\TheAdmin\Scripts\admin.js" />
     <Content Include="Themes\TheAdmin\Styles\ie.css" />
+    <Content Include="Themes\TheAdmin\Styles\images\menuClosed.gif" />
+    <Content Include="Themes\TheAdmin\Styles\images\menuClosedHover.gif" />
+    <Content Include="Themes\TheAdmin\Styles\images\menuOpen.gif" />
+    <Content Include="Themes\TheAdmin\Styles\images\menuOpenHover.gif" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
@@ -140,9 +150,8 @@
     <Content Include="Themes\ClassicDark\Views\DisplayTemplates\Items\Blogs.Blog.Summary.ascx" />
     <Content Include="Themes\ClassicDark\Views\DisplayTemplates\Items\Blogs.BlogPost.ascx" />
     <Content Include="Themes\ClassicDark\Views\DisplayTemplates\Items\Blogs.BlogPost.Summary.ascx" />
-    <Content Include="Themes\ClassicDark\Views\DisplayTemplates\Parts\Blogs.BlogPost.List.ascx" />
     <Content Include="Themes\ClassicDark\Views\DisplayTemplates\Parts\Blogs.BlogPost.Metadata.ascx" />
-    <Content Include="Themes\ClassicDark\Views\DisplayTemplates\Parts\Pages.Page.Metadata.ascx" />
+    <Content Include="Themes\ClassicDark\Views\DisplayTemplates\Parts\Common.Metadata.ascx" />
     <Content Include="Themes\ClassicDark\Views\Footer.ascx" />
     <Content Include="Themes\ClassicDark\Views\Layout.ascx" />
     <Content Include="Themes\ClassicDark\Views\ZoneTest.ascx" />
@@ -158,8 +167,7 @@
     <Content Include="Themes\Classic\Views\DisplayTemplates\Items\Blogs.Blog.Summary.ascx" />
     <Content Include="Themes\Classic\Views\DisplayTemplates\Items\Blogs.BlogPost.ascx" />
     <Content Include="Themes\Classic\Views\DisplayTemplates\Items\Blogs.BlogPost.Summary.ascx" />
-    <Content Include="Themes\Classic\Views\DisplayTemplates\Parts\Blogs.BlogPost.List.ascx" />
-    <Content Include="Themes\Classic\Views\DisplayTemplates\Parts\Pages.Page.Metadata.ascx" />
+    <Content Include="Themes\Classic\Views\DisplayTemplates\Parts\Common.Metadata.ascx" />
     <Content Include="Themes\Classic\Views\Footer.ascx" />
     <Content Include="Themes\Classic\Views\Layout.ascx" />
     <Content Include="Themes\Classic\Views\ZoneTest.ascx" />
@@ -191,11 +199,9 @@
     <Content Include="Themes\Contoso\Zones\Sidebar-w1.html" />
     <Content Include="Themes\Contoso\Views\DisplayTemplates\Items\Blogs.Blog.ascx" />
     <Content Include="Themes\Contoso\Views\DisplayTemplates\Items\Blogs.BlogPost.ascx" />
-    <Content Include="Themes\Contoso\Views\DisplayTemplates\Items\Pages.Page.ascx" />
     <Content Include="Themes\Contoso\Views\DisplayTemplates\Items\Blogs.BlogPost.ListByArchive.ascx" />
-    <Content Include="Themes\Contoso\Views\DisplayTemplates\Parts\Blogs.BlogPost.List.ascx" />
-    <Content Include="Themes\Contoso\Views\DisplayTemplates\Parts\Comments.HasComments.ascx" />
-    <Content Include="Themes\Contoso\Views\DisplayTemplates\Parts\Pages.Page.Metadata.ascx" />
+    <Content Include="Themes\Contoso\Views\DisplayTemplates\Parts\Comments.Comments.ascx" />
+    <Content Include="Themes\Contoso\Views\DisplayTemplates\Parts\Common.Metadata.ascx" />
     <Content Include="Themes\Contoso\Views\DisplayTemplates\Parts\Tags.ShowTags.ascx" />
     <Content Include="Themes\Contoso\Views\Header.ascx" />
     <Content Include="Themes\Contoso\Scripts\easySlider.js" />
@@ -237,10 +243,9 @@
     <Content Include="Themes\Corporate\Views\DisplayTemplates\Items\Blogs.Blog.ascx" />
     <Content Include="Themes\Corporate\Views\DisplayTemplates\Items\Blogs.BlogPost.ascx" />
     <Content Include="Themes\Corporate\Views\DisplayTemplates\Items\Blogs.BlogPost.ListByArchive.ascx" />
-    <Content Include="Themes\Corporate\Views\DisplayTemplates\Items\Pages.Page.ascx" />
-    <Content Include="Themes\Corporate\Views\DisplayTemplates\Parts\Blogs.BlogPost.List.ascx" />
-    <Content Include="Themes\Corporate\Views\DisplayTemplates\Parts\Comments.HasComments.ascx" />
-    <Content Include="Themes\Corporate\Views\DisplayTemplates\Parts\Pages.Page.Metadata.ascx" />
+    <Content Include="Themes\Corporate\Views\DisplayTemplates\Items\Contents.Item.ascx" />
+    <Content Include="Themes\Corporate\Views\DisplayTemplates\Parts\Comments.Comments.ascx" />
+    <Content Include="Themes\Corporate\Views\DisplayTemplates\Parts\Common.Metadata.ascx" />
     <Content Include="Themes\Corporate\Views\DisplayTemplates\Parts\Tags.ShowTags.ascx" />
     <Content Include="Themes\Corporate\Views\Footer.ascx" />
     <Content Include="Themes\Corporate\Views\Header.ascx" />
@@ -250,7 +255,6 @@
     <Content Include="Themes\Corporate\Views\LogOn.ascx" />
     <Content Include="Themes\Corporate\Views\User.ascx" />
     <Content Include="Themes\Corporate\Zones\Home-Headline.html" />
-    <Content Include="Themes\Corporate\Zones\Home-Hero-Gallery.html" />
     <Content Include="Themes\Corporate\Zones\Home-Hero.html" />
     <Content Include="Themes\Corporate\Zones\Sidebar-w1.html" />
     <Content Include="Themes\Corporate\Zones\Sidebar-w2.html" />
@@ -277,7 +281,7 @@
     <Content Include="Themes\Green\Styles\yui.css" />
     <Content Include="Themes\Green\Theme.png" />
     <Content Include="Themes\Green\Theme.txt" />
-    <Content Include="Themes\Green\Views\DisplayTemplates\Parts\Pages.Page.Metadata.ascx" />
+    <Content Include="Themes\Green\Views\DisplayTemplates\Parts\Common.Metadata.ascx" />
     <Content Include="Themes\Green\Views\Layout.HomePage.ascx" />
     <Content Include="Themes\Green\Views\DisplayTemplates\Items\Blogs.Blog.ascx" />
     <Content Include="Themes\Green\Views\DisplayTemplates\Items\Blogs.Blog.Summary.ascx" />
@@ -320,10 +324,19 @@
   <UsingTask TaskName="Microsoft.Web.Mvc.Build.CreateAreaManifest" AssemblyName="Microsoft.Web.Mvc.Build, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" />
   <UsingTask TaskName="Microsoft.Web.Mvc.Build.CopyAreaManifests" AssemblyName="Microsoft.Web.Mvc.Build, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" />
   -->
+  <Target Name="CopySqlCeBinaries">
+    <ItemGroup>
+      <SqlCeBinariesx86 Include="$(ProjectDir)..\..\lib\sqlce\x86\*.*" />
+      <SqlCeBinariesx64 Include="$(ProjectDir)..\..\lib\sqlce\amd64\*.*" />
+    </ItemGroup>
+    <Copy SourceFiles="@(SqlCeBinariesx86)" DestinationFolder="$(OutputPath)\x86" SkipUnchangedFiles="true" />
+    <Copy SourceFiles="@(SqlCeBinariesx64)" DestinationFolder="$(OutputPath)\amd64" SkipUnchangedFiles="true" />
+  </Target>
   <Target Name="AfterBuild" DependsOnTargets="AfterBuildCompiler">
     <PropertyGroup>
       <AreasManifestDir>$(ProjectDir)\..\Manifests</AreasManifestDir>
     </PropertyGroup>
+    <CallTarget Targets="CopySqlCeBinaries" />
     <!-- If this is an area child project, uncomment the following line:
     <CreateAreaManifest AreaName="$(AssemblyName)" AreaType="Child" AreaPath="$(ProjectDir)" ManifestPath="$(AreasManifestDir)" ContentFiles="@(Content)" />
     -->
@@ -342,7 +355,7 @@
           <UseIIS>False</UseIIS>
           <AutoAssignPort>False</AutoAssignPort>
           <DevelopmentServerPort>30320</DevelopmentServerPort>
-          <DevelopmentServerVPath>/</DevelopmentServerVPath>
+          <DevelopmentServerVPath>/OrchardLocal</DevelopmentServerVPath>
           <IISUrl>
           </IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>

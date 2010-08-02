@@ -1,9 +1,8 @@
 ﻿<%@ Control Language="C#" Inherits="System.Web.Mvc.ViewUserControl<BaseViewModel>" %>
 <%@ Import Namespace="Orchard.Mvc.ViewModels"%>
-<%@ Import Namespace="Orchard.Mvc.Html" %>
 
 <%
-    Html.RegisterStyle("site.css");
+    Html.RegisterStyle("site.css", "1");
    
     Model.Zones.AddRenderPartial("header", "Header", Model);
     Model.Zones.AddRenderPartial("menu", "Menu", Model);
@@ -16,7 +15,8 @@
 	
 	<%-- Main Menu --%>
 	<div id="nav">
-        <% Html.Zone("menu"); %>
+        <% Html.Zone("menu");
+           Html.Zone("search"); %>
     </div>
     
     <%-- Home Hero --%>

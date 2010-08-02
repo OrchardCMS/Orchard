@@ -2,13 +2,14 @@
 using System.IO;
 using System.Runtime.Serialization;
 using System.Xml;
+using Orchard.Caching;
 using Orchard.Environment.Descriptor.Models;
 using Orchard.FileSystems.AppData;
 using Orchard.Localization;
 using Orchard.Logging;
 
 namespace Orchard.Environment.Descriptor {
-        /// <summary>
+    /// <summary>
     /// Single service instance registered at the host level. Provides storage
     /// and recall of shell descriptor information. Default implementation uses
     /// app_data, but configured replacements could use other per-host writable location.
@@ -55,7 +56,7 @@ namespace Orchard.Environment.Descriptor {
                     var serializer = new DataContractSerializer(typeof(ShellDescriptor));
                     var reader = new StringReader(tenantNode.InnerText);
                     using (var xmlReader = XmlReader.Create(reader)) {
-                        return (ShellDescriptor) serializer.ReadObject(xmlReader, true); 
+                        return (ShellDescriptor)serializer.ReadObject(xmlReader, true);
                     }
                 }
             }
@@ -73,7 +74,7 @@ namespace Orchard.Environment.Descriptor {
             XmlNode rootNode = xmlDocument.DocumentElement;
             foreach (XmlNode tenantNode in rootNode.ChildNodes) {
                 if (String.Equals(tenantNode.Name, name, StringComparison.OrdinalIgnoreCase)) {
-                    var serializer = new DataContractSerializer(typeof (ShellDescriptor));
+                    var serializer = new DataContractSerializer(typeof(ShellDescriptor));
                     var writer = new StringWriter();
                     using (var xmlWriter = XmlWriter.Create(writer)) {
                         serializer.WriteObject(xmlWriter, descriptor);
@@ -106,8 +107,8 @@ namespace Orchard.Environment.Descriptor {
                 using (XmlWriter xmlWriter = XmlWriter.Create(writer)) {
                     if (xmlWriter != null) {
                         xmlWriter.WriteStartDocument();
-                        xmlWriter.WriteStartElement("Tenants"); 
-                        xmlWriter.WriteEndElement();              
+                        xmlWriter.WriteStartElement("Tenants");
+                        xmlWriter.WriteEndElement();
                         xmlWriter.WriteEndDocument();
                     }
                 }

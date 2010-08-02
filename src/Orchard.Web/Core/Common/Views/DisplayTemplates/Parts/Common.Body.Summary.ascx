@@ -6,4 +6,4 @@
 <%: new HtmlString(string.Format(
     "<p>{0} {1}</p>",
     Html.Excerpt(Model.Text, 200).ToString().Replace(Environment.NewLine, "</p>" + Environment.NewLine + "<p>"),
-    Html.ItemDisplayLink(T("[more]").ToString(), Model.BodyAspect.ContentItem))) %>
+    Html.ItemDisplayLink(T("[more]").ToString(), Model.BodyPart.ContentItem))) %>

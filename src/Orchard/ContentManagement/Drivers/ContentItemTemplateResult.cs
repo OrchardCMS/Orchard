@@ -12,6 +12,11 @@ namespace Orchard.ContentManagement.Drivers {
         public string TemplateName { get; set; }
 
         public override void Apply(BuildDisplayModelContext context) {
+            //todo: (heskew)evaluate - for lack of having access to the full context in a driver to conditionally return results (e.g. BlogDriver item display is otherwise being overriden by the ContentPartDriver)
+            if (!string.IsNullOrWhiteSpace(context.ViewModel.TemplateName)
+                && context.ViewModel.GetType() != typeof(ContentItemViewModel<TContent>))
+                return;
+
             context.ViewModel.TemplateName = TemplateName;
             if (context.ViewModel.GetType() != typeof(ContentItemViewModel<TContent>)) {
                 context.ViewModel.Adaptor = (html, viewModel) => {

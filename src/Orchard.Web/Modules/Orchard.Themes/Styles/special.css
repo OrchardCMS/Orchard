@@ -8,6 +8,7 @@
     border-color:#8f8f8f;
 }
 .managewrapper {
+    padding:2px 0;
     position:relative;
 }
 .managewrapper .manage {
@@ -19,6 +20,7 @@
     overflow:hidden;
     position:absolute;
     right:0;
+    top:0;
 }
 .managewrapper:hover .manage {
     display:block;

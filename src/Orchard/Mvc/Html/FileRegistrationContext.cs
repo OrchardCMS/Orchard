@@ -11,11 +11,11 @@ namespace Orchard.Mvc.Html {
         private static readonly Dictionary<string, string> _filePathAttributes = new Dictionary<string, string> {{"script", "src"}, {"link", "href"}};
         private static readonly Dictionary<string, TagRenderMode> _fileTagRenderModes = new Dictionary<string, TagRenderMode> {{"script", TagRenderMode.Normal}, {"link", TagRenderMode.SelfClosing}};
 
-        public FileRegistrationContext(ControllerContext viewContext, IViewDataContainer viewDataContainer, string tagName, string fileName)
-            : this(viewContext, viewDataContainer, tagName, fileName, _filePathAttributes[tagName], _fileTagRenderModes[tagName]) {
+        public FileRegistrationContext(ControllerContext viewContext, IViewDataContainer viewDataContainer, string tagName, string fileName, string position)
+            : this(viewContext, viewDataContainer, tagName, fileName, position, _filePathAttributes[tagName], _fileTagRenderModes[tagName]) {
         }
 
-        public FileRegistrationContext(ControllerContext viewContext, IViewDataContainer viewDataContainer, string tagName, string fileName, string filePathAttributeName, TagRenderMode fileTagRenderMode)
+        public FileRegistrationContext(ControllerContext viewContext, IViewDataContainer viewDataContainer, string tagName, string fileName, string position, string filePathAttributeName, TagRenderMode fileTagRenderMode)
             : base(viewContext.HttpContext, viewContext.RouteData) {
             _fileTagRenderMode = fileTagRenderMode;
             Container = viewDataContainer as TemplateControl;
@@ -31,6 +31,7 @@ namespace Orchard.Mvc.Html {
             }
 
             FileName = fileName;
+            Position = position;
             FilePathAttributeName = filePathAttributeName;
             _tagBuilder = new TagBuilder(tagName);
         }
@@ -40,6 +41,7 @@ namespace Orchard.Mvc.Html {
         public string FileName { get; set; }
         public string FilePathAttributeName { get; private set; }
         public string Condition { get; set; }
+        public string Position { get; set; }
 
         public void AddAttribute(string name, string value) {
             _tagBuilder.MergeAttribute(name, value);
@@ -77,13 +79,12 @@ namespace Orchard.Mvc.Html {
             if (ReferenceEquals(this, other)) {
                 return true;
             }
-            return Equals(other.Container, Container) && Equals(other.ContainerVirtualPath, ContainerVirtualPath) && Equals(other.FileName, FileName) && Equals(other.Condition, Condition);
+            return Equals(other.ContainerVirtualPath, ContainerVirtualPath) && Equals(other.FileName, FileName) && Equals(other.Condition, Condition);
         }
 
         public override int GetHashCode() {
             unchecked {
-                var result = (Container != null ? Container.GetHashCode() : 0);
-                result = (result*397) ^ (ContainerVirtualPath != null ? ContainerVirtualPath.GetHashCode() : 0);
+                var result = (ContainerVirtualPath != null ? ContainerVirtualPath.GetHashCode() : 0);
                 result = (result*397) ^ (FileName != null ? FileName.GetHashCode() : 0);
                 result = (result*397) ^ (Condition != null ? Condition.GetHashCode() : 0);
                 return result;

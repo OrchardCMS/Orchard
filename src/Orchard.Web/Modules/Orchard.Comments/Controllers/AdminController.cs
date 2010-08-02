@@ -39,7 +39,7 @@ namespace Orchard.Comments.Controllers {
                 options = new CommentIndexOptions();
 
             // Filtering
-            IEnumerable<Comment> comments;
+            IEnumerable<CommentPart> comments;
             try {
                 switch (options.Filter) {
                     case CommentIndexFilter.All:
@@ -129,7 +129,7 @@ namespace Orchard.Comments.Controllers {
                 options = new CommentDetailsOptions();
 
             // Filtering
-            IEnumerable<Comment> comments;
+            IEnumerable<CommentPart> comments;
             try {
                 switch (options.Filter) {
                     case CommentDetailsFilter.All:
@@ -261,14 +261,14 @@ namespace Orchard.Comments.Controllers {
 
         public ActionResult Edit(int id) {
             try {
-                Comment comment = _commentService.GetComment(id);
+                CommentPart commentPart = _commentService.GetComment(id);
                 var viewModel = new CommentsEditViewModel {
-                    CommentText = comment.Record.CommentText,
-                    Email = comment.Record.Email,
-                    Id = comment.Record.Id,
-                    Name = comment.Record.Author,
-                    SiteName = comment.Record.SiteName,
-                    Status = comment.Record.Status,
+                    CommentText = commentPart.Record.CommentText,
+                    Email = commentPart.Record.Email,
+                    Id = commentPart.Record.Id,
+                    Name = commentPart.Record.Author,
+                    SiteName = commentPart.Record.SiteName,
+                    Status = commentPart.Record.Status,
                 };
                 return View(viewModel);
 
@@ -319,10 +319,10 @@ namespace Orchard.Comments.Controllers {
             }
         }
 
-        private CommentEntry CreateCommentEntry(CommentRecord comment) {
+        private CommentEntry CreateCommentEntry(CommentPartRecord commentPart) {
             return new CommentEntry {
-                Comment = comment,
-                CommentedOn = _commentService.GetDisplayForCommentedContent(comment.CommentedOn).DisplayText,
+                Comment = commentPart,
+                CommentedOn = _commentService.GetDisplayForCommentedContent(commentPart.CommentedOn).DisplayText,
                 IsChecked = false,
             };
         }

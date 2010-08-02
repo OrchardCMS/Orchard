@@ -6,6 +6,6 @@ namespace Orchard.ContentManagement.FieldStorage {
         
         IFieldStorage BindStorage(
             ContentPart contentPart, 
-            ContentPartDefinition.Field partFieldDefinition);
+            ContentPartFieldDefinition partFieldDefinition);
     }
 }

@@ -21,6 +21,13 @@ namespace Orchard.Specs.Util {
             return sourcePath;
         }
 
+        public static Path DeepCopy(this Path sourcePath, string pattern, Path targetPath) {
+            sourcePath
+                .GetFiles(pattern, true /*recursive*/)
+                .ForEach(file => FileCopy(sourcePath, targetPath, file));
+            return sourcePath;
+        }
+
         public static Path ShallowCopy(this Path sourcePath, string pattern, Path targetPath) {
             sourcePath
                 .GetFiles(pattern, false /*recursive*/)

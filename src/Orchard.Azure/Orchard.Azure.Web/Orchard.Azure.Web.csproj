@@ -37,6 +37,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <PlatformTarget>AnyCPU</PlatformTarget>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Autofac, Version=2.1.13.813, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
@@ -66,7 +67,7 @@
     </Reference>
     <Reference Include="Microsoft.WindowsAzure.Diagnostics, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="Microsoft.WindowsAzure.ServiceRuntime, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <Private>True</Private>
+      <Private>False</Private>
     </Reference>
     <Reference Include="Microsoft.WindowsAzure.StorageClient, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="NHibernate.ByteCode.Castle">
@@ -85,8 +86,9 @@
     <Reference Include="System.Data.DataSetExtensions">
       <Private>False</Private>
     </Reference>
-    <Reference Include="System.Data.SQLite">
-      <HintPath>..\..\..\lib\sqlite\x64\System.Data.SQLite.DLL</HintPath>
+    <Reference Include="System.Data.SqlServerCe, Version=3.5.1.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\lib\sqlce\System.Data.SqlServerCe.dll</HintPath>
     </Reference>
     <Reference Include="System.Web.ApplicationServices">
       <Private>False</Private>
@@ -168,6 +170,10 @@
       <Project>{E65E5633-C0FF-453C-A906-481C14F969D6}</Project>
       <Name>Futures.Widgets</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\Orchard.Web\Modules\Lucene\Lucene.csproj">
+      <Project>{D5D447D7-EF8E-43A6-B9A4-3B025DD9F45D}</Project>
+      <Name>Lucene</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\Orchard.Web\Modules\Orchard.Blogs\Orchard.Blogs.csproj">
       <Project>{63FBD4D9-E1DA-4A7B-AA6A-D6074FE50867}</Project>
       <Name>Orchard.Blogs</Name>
@@ -192,10 +198,6 @@
       <Project>{D9A7B330-CD22-4DA1-A95A-8DE1982AD8EB}</Project>
       <Name>Orchard.Media</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Orchard.Web\Modules\Orchard.MetaData\Orchard.MetaData.csproj">
-      <Project>{23E04990-2A8D-41B8-9908-6DDB71EA3B23}</Project>
-      <Name>Orchard.MetaData</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\Orchard.Web\Modules\Orchard.Modules\Orchard.Modules.csproj">
       <Project>{17F86780-9A1F-4AA1-86F1-875EEC2730C7}</Project>
       <Name>Orchard.Modules</Name>
@@ -204,9 +206,9 @@
       <Project>{72457126-E118-4171-A08F-9A709EE4B7FC}</Project>
       <Name>Orchard.MultiTenancy</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Orchard.Web\Modules\Orchard.Pages\Orchard.Pages.csproj">
-      <Project>{4A9C04A6-0986-4A92-A610-5F59FF273FB9}</Project>
-      <Name>Orchard.Pages</Name>
+    <ProjectReference Include="..\..\Orchard.Web\Modules\Orchard.Packaging\Orchard.Packaging.csproj">
+      <Project>{DFD137A2-DDB5-4D22-BE0D-FA9AD4C8B059}</Project>
+      <Name>Orchard.Packaging</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\Orchard.Web\Modules\Orchard.Roles\Orchard.Roles.csproj">
       <Project>{D10AD48F-407D-4DB5-A328-173EC7CB010F}</Project>
@@ -245,17 +247,15 @@
       <Name>Orchard.Framework</Name>
       <EmbedInteropTypes>False</EmbedInteropTypes>
     </ProjectReference>
-    <ProjectReference Include="..\..\Tools\Orchard\Orchard.csproj">
-      <Project>{33B1BC8D-E292-4972-A363-22056B207156}</Project>
-      <Name>Orchard</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Orchard.Azure.csproj">
       <Project>{2505AA84-65A6-43D0-9C27-4F44FD576284}</Project>
       <Name>Orchard.Azure</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Web.config" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Web.Debug.config">

@@ -20,7 +20,9 @@ namespace Orchard.Tests.Modules.Indexing {
         
         [TestFixtureTearDown]
         public void Clean() {
-            Directory.Delete(_basePath, true);
+            if (Directory.Exists(_basePath)) {
+                Directory.Delete(_basePath, true);
+            }
         }
 
         [SetUp]

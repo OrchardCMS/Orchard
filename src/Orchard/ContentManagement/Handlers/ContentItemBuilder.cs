@@ -23,7 +23,7 @@ namespace Orchard.ContentManagement.Handlers {
 
             var typePartDefinition = _definition.Parts.FirstOrDefault(p => p.PartDefinition.Name == partName);
             if (typePartDefinition == null) {
-                typePartDefinition = new ContentTypeDefinition.Part(
+                typePartDefinition = new ContentTypePartDefinition(
                     new ContentPartDefinition(partName),
                     new SettingsDictionary());
 

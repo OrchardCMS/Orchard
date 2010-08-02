@@ -15,14 +15,14 @@ namespace Orchard.Core.Settings.DataMigrations {
                 .Column<int>("Id", column => column.PrimaryKey().Identity())
                 .Column<string>("Name")
                 .Column<bool>("Hidden")
-                .Column<string>("Settings")
+                .Column<string>("Settings", column => column.Unlimited())
                 );
 
             //CREATE TABLE Settings_ContentPartFieldDefinitionRecord (Id  integer, Name TEXT, Settings TEXT, ContentFieldDefinitionRecord_id INTEGER,  INTEGER, primary key (Id));
             SchemaBuilder.CreateTable("ContentPartFieldDefinitionRecord", table => table
                 .Column<int>("Id", column => column.PrimaryKey().Identity())
                 .Column<string>("Name")
-                .Column<string>("Settings")
+                .Column<string>("Settings", column => column.Unlimited())
                 .Column<int>("ContentFieldDefinitionRecord_id")
                 .Column<int>("ContentPartDefinitionRecord_Id")
                 );
@@ -33,13 +33,13 @@ namespace Orchard.Core.Settings.DataMigrations {
                 .Column<string>("Name")
                 .Column<string>("DisplayName")
                 .Column<bool>("Hidden")
-                .Column<string>("Settings")
+                .Column<string>("Settings", column => column.Unlimited())
                 );
 
             //CREATE TABLE Settings_ContentTypePartDefinitionRecord (Id  integer, Settings TEXT, ContentPartDefinitionRecord_id INTEGER, ContentTypeDefinitionRecord_Id INTEGER, primary key (Id));
             SchemaBuilder.CreateTable("ContentTypePartDefinitionRecord", table => table
                 .Column<int>("Id", column => column.PrimaryKey().Identity())
-                .Column<string>("Settings")
+                .Column<string>("Settings", column => column.Unlimited())
                 .Column<int>("ContentPartDefinitionRecord_id")
                 .Column<int>("ContentTypeDefinitionRecord_Id")
                 );
@@ -77,11 +77,11 @@ namespace Orchard.Core.Settings.DataMigrations {
             //CREATE TABLE Settings_ShellStateRecord (Id  integer, primary key (Id));
             SchemaBuilder.CreateTable("ShellStateRecord", table => table
                 .Column<int>("Id", column => column.PrimaryKey().Identity())
-                .Column<string>("Name")
+                .Column<string>("Unused")
                 );
 
             //CREATE TABLE Settings_SiteSettingsRecord (Id INTEGER not null, SiteSalt TEXT, SiteName TEXT, SuperUser TEXT, PageTitleSeparator TEXT, HomePage TEXT, SiteCulture TEXT, primary key (Id));
-            SchemaBuilder.CreateTable("SiteSettingsRecord", table => table
+            SchemaBuilder.CreateTable("SiteSettingsPartRecord", table => table
                 .ContentPartRecord()
                 .Column<string>("SiteSalt")
                 .Column<string>("SiteName")
@@ -91,7 +91,7 @@ namespace Orchard.Core.Settings.DataMigrations {
                 .Column<string>("SiteCulture")
                 );
 
-            return 0010;
+            return 1;
         }
     }
 }

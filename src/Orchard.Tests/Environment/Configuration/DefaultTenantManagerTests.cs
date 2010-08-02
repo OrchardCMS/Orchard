@@ -21,13 +21,13 @@ namespace Orchard.Tests.Environment.Configuration {
         [Test]
         public void SingleSettingsFileShouldComeBackAsExpected() {
 
-            _appDataFolder.CreateFile("Sites\\Default\\Settings.txt", "Name: Default\r\nDataProvider: SQLite\r\nDataConnectionString: something else");
+            _appDataFolder.CreateFile("Sites\\Default\\Settings.txt", "Name: Default\r\nDataProvider: SqlCe\r\nDataConnectionString: something else");
 
             IShellSettingsManager loader = new ShellSettingsManager(_appDataFolder, new Mock<IShellSettingsManagerEventHandler>().Object);
             var settings = loader.LoadSettings().Single();
             Assert.That(settings, Is.Not.Null);
             Assert.That(settings.Name, Is.EqualTo("Default"));
-            Assert.That(settings.DataProvider, Is.EqualTo("SQLite"));
+            Assert.That(settings.DataProvider, Is.EqualTo("SqlCe"));
             Assert.That(settings.DataConnectionString, Is.EqualTo("something else"));
         }
 
@@ -35,8 +35,8 @@ namespace Orchard.Tests.Environment.Configuration {
         [Test]
         public void MultipleFilesCanBeDetected() {
 
-            _appDataFolder.CreateFile("Sites\\Default\\Settings.txt", "Name: Default\r\nDataProvider: SQLite\r\nDataConnectionString: something else");
-            _appDataFolder.CreateFile("Sites\\Another\\Settings.txt", "Name: Another\r\nDataProvider: SQLite2\r\nDataConnectionString: something else2");
+            _appDataFolder.CreateFile("Sites\\Default\\Settings.txt", "Name: Default\r\nDataProvider: SqlCe\r\nDataConnectionString: something else");
+            _appDataFolder.CreateFile("Sites\\Another\\Settings.txt", "Name: Another\r\nDataProvider: SqlCe2\r\nDataConnectionString: something else2");
 
             IShellSettingsManager loader = new ShellSettingsManager(_appDataFolder, new Mock<IShellSettingsManagerEventHandler>().Object);
             var settings = loader.LoadSettings();
@@ -44,18 +44,18 @@ namespace Orchard.Tests.Environment.Configuration {
 
             var def = settings.Single(x => x.Name == "Default");
             Assert.That(def.Name, Is.EqualTo("Default"));
-            Assert.That(def.DataProvider, Is.EqualTo("SQLite"));
+            Assert.That(def.DataProvider, Is.EqualTo("SqlCe"));
             Assert.That(def.DataConnectionString, Is.EqualTo("something else"));
 
             var alt = settings.Single(x => x.Name == "Another");
             Assert.That(alt.Name, Is.EqualTo("Another"));
-            Assert.That(alt.DataProvider, Is.EqualTo("SQLite2"));
+            Assert.That(alt.DataProvider, Is.EqualTo("SqlCe2"));
             Assert.That(alt.DataConnectionString, Is.EqualTo("something else2"));
         }
 
         [Test]
         public void NewSettingsCanBeStored() {
-            _appDataFolder.CreateFile("Sites\\Default\\Settings.txt", "Name: Default\r\nDataProvider: SQLite\r\nDataConnectionString: something else");
+            _appDataFolder.CreateFile("Sites\\Default\\Settings.txt", "Name: Default\r\nDataProvider: SqlCe\r\nDataConnectionString: something else");
 
             IShellSettingsManager loader = new ShellSettingsManager(_appDataFolder, new Mock<IShellSettingsManagerEventHandler>().Object);
             var foo = new ShellSettings { Name = "Foo", DataProvider = "Bar", DataConnectionString = "Quux" };

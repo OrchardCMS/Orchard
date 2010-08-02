@@ -5,9 +5,9 @@
 
 <div class="archive-trail">
 <%: T("Archives").ToString()
-%> / <%: Html.Link(Model.ArchiveData.Year.ToString(), Url.BlogArchiveYear(Model.Blog.Slug, Model.ArchiveData.Year))
-%><%=Model.ArchiveData.Month > 0 ? string.Format(" / {0}", Html.Link(Model.ArchiveData.ToDateTime().ToString("MMMM"), Url.BlogArchiveMonth(Model.Blog.Slug, Model.ArchiveData.Year, Model.ArchiveData.Month))) : ""
-%><%=Model.ArchiveData.Day > 0 ? string.Format(" / {0}", Html.Link(Model.ArchiveData.Day.ToString(), Url.BlogArchiveDay(Model.Blog.Slug, Model.ArchiveData.Year, Model.ArchiveData.Month, Model.ArchiveData.Day))) : ""
+%> / <%: Html.Link(Model.ArchiveData.Year.ToString(), Url.BlogArchiveYear(Model.BlogPart.Slug, Model.ArchiveData.Year))
+%><%=Model.ArchiveData.Month > 0 ? string.Format(" / {0}", Html.Link(Model.ArchiveData.ToDateTime().ToString("MMMM"), Url.BlogArchiveMonth(Model.BlogPart.Slug, Model.ArchiveData.Year, Model.ArchiveData.Month))) : ""
+%><%=Model.ArchiveData.Day > 0 ? string.Format(" / {0}", Html.Link(Model.ArchiveData.Day.ToString(), Url.BlogArchiveDay(Model.BlogPart.Slug, Model.ArchiveData.Year, Model.ArchiveData.Month, Model.ArchiveData.Day))) : ""
 %>
 </div>
 

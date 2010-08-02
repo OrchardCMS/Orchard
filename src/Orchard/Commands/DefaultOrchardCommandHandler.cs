@@ -22,30 +22,29 @@ namespace Orchard.Commands {
 
         private void SetSwitchValues(CommandContext context) {
             if (context.Switches != null && context.Switches.Any()) {
-                foreach (var commandSwitch in context.Switches.Keys) {
-                    PropertyInfo propertyInfo = GetType().GetProperty(commandSwitch);
+                foreach (var commandSwitch in context.Switches) {
+                    PropertyInfo propertyInfo = GetType().GetProperty(commandSwitch.Key);
                     if (propertyInfo == null) {
-                        throw new InvalidOperationException(T("Switch was not found: ") + commandSwitch);
+                        throw new InvalidOperationException(T("Switch \"{0}\" was not found", commandSwitch.Key).Text);
                     }
                     if (propertyInfo.GetCustomAttributes(typeof(OrchardSwitchAttribute), false).Length == 0) {
-                        throw new InvalidOperationException(T("A property of this name exists but is not decorated with the OrchardSwitch attribute: ") + commandSwitch);
+                        throw new InvalidOperationException(T("A property \"{0}\" exists but is not decorated with \"{1}\"", commandSwitch.Key, typeof(OrchardSwitchAttribute).Name).Text);
                     }
-                    string stringValue = context.Switches[commandSwitch];
                     if (propertyInfo.PropertyType.IsAssignableFrom(typeof(bool))) {
                         bool boolValue;
-                        Boolean.TryParse(stringValue, out boolValue);
+                        Boolean.TryParse(commandSwitch.Value, out boolValue);
                         propertyInfo.SetValue(this, boolValue, null);
                     }
                     else if (propertyInfo.PropertyType.IsAssignableFrom(typeof(int))) {
                         int intValue;
-                        Int32.TryParse(stringValue, out intValue);
+                        Int32.TryParse(commandSwitch.Value, out intValue);
                         propertyInfo.SetValue(this, intValue, null);
                     }
                     else if (propertyInfo.PropertyType.IsAssignableFrom(typeof(string))) {
-                        propertyInfo.SetValue(this, stringValue, null);
+                        propertyInfo.SetValue(this, commandSwitch.Value, null);
                     }
                     else {
-                        throw new InvalidOperationException(T("No property named {0} found of type bool, int or string.", commandSwitch).ToString());
+                        throw new InvalidOperationException(T("No property named \"{0}\" found of type bool, int or string.", commandSwitch).Text);
                     }
                 }
             }
@@ -53,9 +52,11 @@ namespace Orchard.Commands {
 
         private void Invoke(CommandContext context) {
             CheckMethodForSwitches(context.CommandDescriptor.MethodInfo, context.Switches);
-            object[] invokeParameters = GetInvokeParametersForMethod(context.CommandDescriptor.MethodInfo, (context.Arguments ?? Enumerable.Empty<string>()).ToArray());
+
+            var arguments = (context.Arguments ?? Enumerable.Empty<string>()).ToArray();
+            object[] invokeParameters = GetInvokeParametersForMethod(context.CommandDescriptor.MethodInfo, arguments);
             if (invokeParameters == null) {
-                throw new InvalidOperationException(T("Command arguments don't match").ToString());
+                throw new InvalidOperationException(T("Command arguments \"{0}\" don't match command definition", string.Join(" ", arguments)).ToString());
             }
 
             this.Context = context;
@@ -65,10 +66,9 @@ namespace Orchard.Commands {
         }
 
         private static object[] GetInvokeParametersForMethod(MethodInfo methodInfo, IList<string> arguments) {
-            List<object> invokeParameters = new List<object>();
-            
-            List<string> args = new List<string>(arguments);
-            ParameterInfo[] methodParameters = methodInfo.GetParameters();
+            var invokeParameters = new List<object>();
+            var args = new List<string>(arguments);
+            var methodParameters = methodInfo.GetParameters();
             bool methodHasParams = false;
 
             if (methodParameters.Length == 0) {
@@ -96,8 +96,8 @@ namespace Orchard.Commands {
             return invokeParameters.ToArray();
         }
 
-        private void CheckMethodForSwitches(MethodInfo methodInfo, IDictionary<string,string> switches) {
-            if (switches == null || switches.Count == 0) 
+        private void CheckMethodForSwitches(MethodInfo methodInfo, IDictionary<string, string> switches) {
+            if (switches == null || switches.Count == 0)
                 return;
             var supportedSwitches = new List<string>();
             foreach (OrchardSwitchesAttribute switchesAttribute in methodInfo.GetCustomAttributes(typeof(OrchardSwitchesAttribute), false)) {
@@ -105,7 +105,7 @@ namespace Orchard.Commands {
             }
             foreach (var commandSwitch in switches.Keys) {
                 if (!supportedSwitches.Contains(commandSwitch)) {
-                    throw new InvalidOperationException(T("Method {0} does not support switch {1}.", methodInfo.Name, commandSwitch).ToString());
+                    throw new InvalidOperationException(T("Method \"{0}\" does not support switch \"{1}\".", methodInfo.Name, commandSwitch).ToString());
                 }
             }
         }

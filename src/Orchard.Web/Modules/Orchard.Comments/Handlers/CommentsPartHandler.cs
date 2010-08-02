@@ -1,0 +1,44 @@
+﻿using System.Linq;
+using JetBrains.Annotations;
+using Orchard.Comments.Models;
+using Orchard.Comments.Services;
+using Orchard.ContentManagement;
+using Orchard.Data;
+using Orchard.ContentManagement.Handlers;
+
+namespace Orchard.Comments.Handlers {
+    [UsedImplicitly]
+    public class CommentsPartHandler : ContentHandler {
+        public CommentsPartHandler(
+            IContentManager contentManager,
+            IRepository<CommentsPartRecord> commentsRepository,
+            ICommentService commentService) {
+
+            Filters.Add(StorageFilter.For(commentsRepository));
+
+            OnInitializing<CommentsPart>((ctx, x) => {
+                x.CommentsActive = true;
+                x.CommentsShown = true;
+            });
+
+            OnLoading<CommentsPart>((context, comments) => {
+                comments._comments.Loader(list => contentManager
+                    .Query<CommentPart, CommentPartRecord>()
+                    .Where(x => x.CommentedOn == context.ContentItem.Id && x.Status == CommentStatus.Approved)
+                    .List().ToList());
+
+                comments._pendingComments.Loader(list => contentManager
+                    .Query<CommentPart, CommentPartRecord>()
+                    .Where(x => x.CommentedOn == context.ContentItem.Id && x.Status == CommentStatus.Pending)
+                    .List().ToList());
+            });
+
+            OnRemoved<CommentsPart>(
+                (context, c) => {
+                    foreach (var comment in commentService.GetCommentsForCommentedContent(context.ContentItem.Id)) {
+                        contentManager.Remove(comment.ContentItem);
+                    }
+                });
+        }
+    }
+}

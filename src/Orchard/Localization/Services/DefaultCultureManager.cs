@@ -48,7 +48,7 @@ namespace Orchard.Localization.Services {
             }
         }
 
-        public string GetCurrentCulture(HttpContext requestContext) {
+        public string GetCurrentCulture(HttpContextBase requestContext) {
             var requestCulture = _cultureSelectors
                 .Select(x => x.GetCulture(requestContext))
                 .Where(x => x != null)
@@ -68,6 +68,10 @@ namespace Orchard.Localization.Services {
 
         public CultureRecord GetCultureById(int id) {
             return _cultureRepository.Get(id);
+        }
+
+        public CultureRecord GetCultureByName(string cultureName) {
+            return _cultureRepository.Get(cr => cr.Culture == cultureName);
         }
 
         public string GetSiteCulture() {

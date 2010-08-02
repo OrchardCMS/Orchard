@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Orchard.Environment.Extensions.Models;
 using Orchard.Security.Permissions;
 
 namespace Orchard.Media {
@@ -6,11 +7,7 @@ namespace Orchard.Media {
         public static readonly Permission ManageMediaFiles = new Permission { Description = "Modifying Media Files", Name = "ManageMediaFiles" };
         public static readonly Permission UploadMediaFiles = new Permission { Description = "Uploading Media Files", Name = "UploadMediaFiles", ImpliedBy = new[] { ManageMediaFiles } };
 
-        public string ModuleName {
-            get {
-                return "Media";
-            }
-        }
+        public virtual Feature Feature { get; set; }
 
         public IEnumerable<Permission> GetPermissions() {
             return new Permission[] {

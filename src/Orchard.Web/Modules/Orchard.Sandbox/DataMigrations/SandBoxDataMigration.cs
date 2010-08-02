@@ -1,20 +1,34 @@
-﻿using Orchard.Data.Migration;
+﻿using Orchard.ContentManagement.MetaData;
+using Orchard.Data.Migration;
 
 namespace Orchard.Sandbox.DataMigrations {
     public class SandboxDataMigration : DataMigrationImpl {
 
         public int Create() {
-            SchemaBuilder.CreateTable("SandboxPageRecord", table => table
+            SchemaBuilder.CreateTable("SandboxPagePartRecord", table => table
                 .ContentPartRecord()
                 .Column<string>("Name")
                 );
 
-            SchemaBuilder.CreateTable("SandboxSettingsRecord", table => table
+            SchemaBuilder.CreateTable("SandboxSettingsPartRecord", table => table
                 .ContentPartRecord()
                 .Column<bool>("AllowAnonymousEdits")
                 );
 
-            return 0010;
+            return 1;
+        }
+
+        public int UpdateFrom1() {
+
+            ContentDefinitionManager.AlterTypeDefinition("SandboxPage", 
+                cfg => cfg
+                    .WithPart("SandboxPagePart")
+                    .WithPart("CommonPart")
+                    .WithPart("RoutePart")
+                    .WithPart("BodyPart")
+                );
+            
+            return 2;
         }
     }
 }

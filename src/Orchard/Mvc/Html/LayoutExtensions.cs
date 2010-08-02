@@ -102,14 +102,25 @@ namespace Orchard.Mvc.Html {
             return html.Resolve<IResourceManager>().RegisterStyle(fileName, html);
         }
 
+        public static FileRegistrationContext RegisterStyle(this HtmlHelper html, string fileName, string position) {
+            return html.Resolve<IResourceManager>().RegisterStyle(fileName, html, position);
+        }
+
         public static FileRegistrationContext RegisterScript(this HtmlHelper html, string fileName) {
             return html.Resolve<IResourceManager>().RegisterHeadScript(fileName, html);
+        }
+
+        public static FileRegistrationContext RegisterScript(this HtmlHelper html, string fileName, string position) {
+            return html.Resolve<IResourceManager>().RegisterHeadScript(fileName, html, position);
         }
 
         public static FileRegistrationContext RegisterFootScript(this HtmlHelper html, string fileName) {
             return html.Resolve<IResourceManager>().RegisterFootScript(fileName, html);
         }
 
+        public static FileRegistrationContext RegisterFootScript(this HtmlHelper html, string fileName, string position) {
+            return html.Resolve<IResourceManager>().RegisterFootScript(fileName, html, position);
+        }
 
         public static IDisposable Capture(this ViewUserControl control, string name) {
             var writer = LayoutViewContext.From(control.ViewContext).GetNamedContent(name);

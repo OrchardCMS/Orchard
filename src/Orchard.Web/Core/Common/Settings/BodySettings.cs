@@ -22,8 +22,8 @@ namespace Orchard.Core.Common.Settings {
     }
 
     public class BodySettingsHooks : ContentDefinitionEditorEventsBase {
-        public override IEnumerable<TemplateViewModel> TypePartEditor(ContentTypeDefinition.Part definition) {
-            if (definition.PartDefinition.Name != "BodyAspect")
+        public override IEnumerable<TemplateViewModel> TypePartEditor(ContentTypePartDefinition definition) {
+            if (definition.PartDefinition.Name != "BodyPart")
                 yield break;
 
             var model = definition.Settings.GetModel<BodyTypePartSettings>();
@@ -37,15 +37,15 @@ namespace Orchard.Core.Common.Settings {
         }
 
         public override IEnumerable<TemplateViewModel> PartEditor(ContentPartDefinition definition) {
-            if (definition.Name != "BodyAspect")
+            if (definition.Name != "BodyPart")
                 yield break;
 
             var model = definition.Settings.GetModel<BodyPartSettings>();
             yield return DefinitionTemplate(model);
         }
 
-        public override IEnumerable<TemplateViewModel> TypePartEditorUpdate(ContentTypeDefinitionBuilder.PartConfigurer builder, IUpdateModel updateModel) {
-            if (builder.Name != "BodyAspect")
+        public override IEnumerable<TemplateViewModel> TypePartEditorUpdate(ContentTypePartDefinitionBuilder builder, IUpdateModel updateModel) {
+            if (builder.Name != "BodyPart")
                 yield break;
 
             var model = new BodyTypePartSettings();
@@ -55,7 +55,7 @@ namespace Orchard.Core.Common.Settings {
         }
 
         public override IEnumerable<TemplateViewModel> PartEditorUpdate(ContentPartDefinitionBuilder builder, IUpdateModel updateModel) {
-            if (builder.Name != "BodyAspect")
+            if (builder.Name != "BodyPart")
                 yield break;
 
             var model = new BodyPartSettings();

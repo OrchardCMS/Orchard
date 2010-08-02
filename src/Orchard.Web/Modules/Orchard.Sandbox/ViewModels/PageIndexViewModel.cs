@@ -4,6 +4,6 @@ using Orchard.Sandbox.Models;
 
 namespace Orchard.Sandbox.ViewModels {
     public class PageIndexViewModel : BaseViewModel {
-        public IEnumerable<ContentItemViewModel<SandboxPage>> Pages { get; set; }
+        public IEnumerable<ContentItemViewModel<SandboxPagePart>> Pages { get; set; }
     } 
 }

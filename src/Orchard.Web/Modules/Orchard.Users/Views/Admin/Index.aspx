@@ -22,14 +22,14 @@
                { %>
             <tr>
                 <td>
-                    <%: row.User.UserName %>
+                    <%: row.UserPart.UserName %>
                 </td>
                 <td>
-                    <%: row.User.Email %>
+                    <%: row.UserPart.Email %>
                 </td>
                 <td>
-                    <%: Html.ActionLink(T("Edit").ToString(), "Edit", new { row.User.Id })%> | 
-                    <%: Html.ActionLink(T("Remove").ToString(), "Delete", new { row.User.Id })%> 
+                    <%: Html.ActionLink(T("Edit").ToString(), "Edit", new { row.UserPart.Id })%> | 
+                    <%: Html.ActionLink(T("Remove").ToString(), "Delete", new { row.UserPart.Id })%> 
                 </td>
             </tr>
             <%}%>

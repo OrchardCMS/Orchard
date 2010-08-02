@@ -13,7 +13,8 @@ namespace Orchard.DevTools.Commands {
         private readonly IExtensionManager _extensionManager;
         private readonly ISchemaCommandGenerator _schemaCommandGenerator;
 
-        public ScaffoldingCommands(IExtensionManager extensionManager,
+        public ScaffoldingCommands(
+            IExtensionManager extensionManager,
             ISchemaCommandGenerator schemaCommandGenerator) {
             _extensionManager = extensionManager;
             _schemaCommandGenerator = schemaCommandGenerator;
@@ -68,7 +69,7 @@ namespace Orchard.DevTools.Commands {
                         projectFileText = projectFileText.Insert(projectFileText.LastIndexOf("</ItemGroup>"), itemGroupReference);
                     }
                     File.WriteAllText(moduleCsProjPath, projectFileText);
-
+                    TouchSolution();
                     Context.Output.WriteLine(T("Data migration created successfully in Module {0}", extension.Name));
                     return;
                 }
@@ -88,7 +89,6 @@ namespace Orchard.DevTools.Commands {
             }
 
             IntegrateModule(moduleName);
-
             Context.Output.WriteLine(T("Module {0} created successfully", moduleName));
         }
 
@@ -127,6 +127,7 @@ namespace Orchard.DevTools.Commands {
                     }
                     File.WriteAllText(moduleCsProjPath, projectFileText);
                     Context.Output.WriteLine(T("Controller {0} created successfully in Module {1}", controllerName, moduleName));
+                    TouchSolution();
                     return;
                 }
             }
@@ -155,6 +156,7 @@ namespace Orchard.DevTools.Commands {
                     solutionText = solutionText.Insert(solutionText.LastIndexOf("EndGlobalSection"), "\t{" + projectGuid + "} = {E9C9F120-07BA-4DFB-B9C3-3AFB9D44C9D5}\r\n\t");
 
                     File.WriteAllText(solutionPath, solutionText);
+                    TouchSolution();
                 }
                 else {
                     Context.Output.WriteLine(T("Warning: Solution file could not be found at {0}", solutionPath));
@@ -187,6 +189,22 @@ namespace Orchard.DevTools.Commands {
             templateText = templateText.Replace("$$ModuleName$$", moduleName);
             templateText = templateText.Replace("$$ModuleProjectGuid$$", projectGuid);
             File.WriteAllText(modulePath + "\\" + moduleName + ".csproj", templateText);
+        }
+
+        private void TouchSolution() {
+            string rootWebProjectPath = HostingEnvironment.MapPath("~/Orchard.Web.csproj");
+            string solutionPath = Directory.GetParent(rootWebProjectPath).Parent.FullName + "\\Orchard.sln";
+            if (!File.Exists(solutionPath)) {
+                Context.Output.WriteLine(T("Warning: Solution file could not be found at {0}", solutionPath));
+                return;
+            }
+
+            try {
+                File.SetLastWriteTime(solutionPath, DateTime.Now);
+            }
+            catch {
+                Context.Output.WriteLine(T("An unexpected error occured while trying to refresh the Visual Studio solution. Please reload it."));
+            }
         }
     }
 }

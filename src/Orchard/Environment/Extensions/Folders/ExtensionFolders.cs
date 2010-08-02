@@ -5,6 +5,7 @@ using System.Linq;
 using Orchard.Caching;
 using Orchard.Environment.Extensions.Models;
 using Orchard.FileSystems.WebSite;
+using Orchard.Logging;
 using Yaml.Grammar;
 
 namespace Orchard.Environment.Extensions.Folders {
@@ -34,23 +35,38 @@ namespace Orchard.Environment.Extensions.Folders {
             _manifestIsOptional = manifestIsOptional;
             _cacheManager = cacheManager;
             _webSiteFolder = webSiteFolder;
+            Logger = NullLogger.Instance;
         }
+
+        ILogger Logger { get; set; }
 
         public IEnumerable<ExtensionDescriptor> AvailableExtensions() {
             var list = new List<ExtensionDescriptor>();
             foreach (var locationPath in _paths) {
-                var subfolderPaths = _cacheManager.Get(locationPath, ctx => {
+                var path = locationPath;
+                var subList = _cacheManager.Get(locationPath, ctx => {
                     ctx.Monitor(_webSiteFolder.WhenPathChanges(ctx.Key));
-                    return _webSiteFolder.ListDirectories(ctx.Key);
+                    var subfolderPaths = _webSiteFolder.ListDirectories(ctx.Key);
+                    var localList = new List<ExtensionDescriptor>();
+                    foreach ( var subfolderPath in subfolderPaths ) {
+                        var extensionName = Path.GetFileName(subfolderPath.TrimEnd('/', '\\'));
+                        var manifestPath = Path.Combine(subfolderPath, _manifestName);
+                        ctx.Monitor(_webSiteFolder.WhenPathChanges(manifestPath));
+                        try {
+                            var descriptor = GetExtensionDescriptor(path, extensionName, manifestPath);
+                            if ( descriptor != null )
+                                localList.Add(descriptor);
+                        }
+                        catch ( Exception ex ) {
+                            // Ignore invalid module manifests
+                            Logger.Error(ex, "A module could not be loaded. It was ignored.");
+                        }
+                    }
+                    return localList;                                              
                 });
-                foreach (var subfolderPath in subfolderPaths) {
-                    var extensionName = Path.GetFileName(subfolderPath.TrimEnd('/', '\\'));
-                    var manifestPath = Path.Combine(subfolderPath, _manifestName);
-                    var descriptor = GetExtensionDescriptor(locationPath, extensionName, manifestPath);
-                    if (descriptor != null)
-                        list.Add(descriptor);
-                }
+                list.AddRange(subList);
             }
+
             return list;
         }
 

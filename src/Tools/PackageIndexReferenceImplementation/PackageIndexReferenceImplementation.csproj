@@ -50,7 +50,11 @@
     <Reference Include="System.Data.DataSetExtensions">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
-    <Reference Include="System.Web.Mvc, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="System.Web.Mvc, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\lib\aspnetmvc\System.Web.Mvc.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System.Xml.Linq">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
@@ -68,7 +72,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controllers\AccountController.cs" />
-    <Compile Include="Controllers\AtomController.cs" />
+    <Compile Include="Controllers\FeedController.cs" />
     <Compile Include="Controllers\Artifacts\AtomFeedResult.cs" />
     <Compile Include="Controllers\Artifacts\AtomItemResult.cs" />
     <Compile Include="Controllers\Artifacts\ContentTypeAttribute.cs" />
@@ -86,7 +90,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Global.asax" />
-    <Content Include="Web.config" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </Content>
@@ -106,10 +112,7 @@
     <Content Include="Scripts\MicrosoftMvcAjax.debug.js" />
     <Content Include="Scripts\MicrosoftMvcValidation.js" />
     <Content Include="Scripts\MicrosoftMvcValidation.debug.js" />
-    <Content Include="Views\Account\ChangePassword.aspx" />
-    <Content Include="Views\Account\ChangePasswordSuccess.aspx" />
     <Content Include="Views\Account\LogOn.aspx" />
-    <Content Include="Views\Account\Register.aspx" />
     <Content Include="Views\Home\About.aspx" />
     <Content Include="Views\Home\Index.aspx" />
     <Content Include="Views\Shared\Error.aspx" />

@@ -2,8 +2,8 @@
 antiforgery: enabled
 author: The Orchard Team
 website: http://orchardproject.net
-version: 0.1
-orchardversion: 0.1.2010.0312
+version: 0.5.0
+orchardversion: 0.5.0
 description: The sandbox module is a testing ground for Orchard developers and should not be activated except for testing and development purposes.
 features:
     Orchard.Sandbox:

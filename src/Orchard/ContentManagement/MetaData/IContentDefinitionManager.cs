@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Orchard.ContentManagement.MetaData.Builders;
 using Orchard.ContentManagement.MetaData.Models;
+using Orchard.Utility.Extensions;
 
 namespace Orchard.ContentManagement.MetaData {
     public interface IContentDefinitionManager : IDependency {
@@ -18,7 +19,7 @@ namespace Orchard.ContentManagement.MetaData {
 
     public static class ContentDefinitionManagerExtensions{
         public static void AlterTypeDefinition(this IContentDefinitionManager manager, string name, Action<ContentTypeDefinitionBuilder> alteration) {
-            var typeDefinition = manager.GetTypeDefinition(name) ?? new ContentTypeDefinition(name, name);
+            var typeDefinition = manager.GetTypeDefinition(name) ?? new ContentTypeDefinition(name, name.CamelFriendly());
             var builder = new ContentTypeDefinitionBuilder(typeDefinition);
             alteration(builder);
             manager.StoreTypeDefinition(builder.Build());

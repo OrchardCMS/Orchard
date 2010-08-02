@@ -8,7 +8,7 @@ namespace Orchard.Roles.ViewModels {
         public int Id { get; set; }
         [Required]
         public string Name { get; set; }
-        public IDictionary<string, IEnumerable<Permission>> ModulePermissions { get; set; }
+        public IDictionary<string, IEnumerable<Permission>> FeaturePermissions { get; set; }
         public IEnumerable<string> CurrentPermissions { get; set; }
         public IEnumerable<string> EffectivePermissions { get; set; }
     }

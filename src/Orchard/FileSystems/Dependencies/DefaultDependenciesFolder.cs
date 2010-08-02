@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
 using Orchard.Caching;
+using Orchard.Data;
 using Orchard.FileSystems.AppData;
 using Orchard.Localization;
 
@@ -49,6 +50,7 @@ namespace Orchard.FileSystems.Dependencies {
         public void StoreDescriptors(IEnumerable<DependencyDescriptor> dependencyDescriptors) {
             var existingDescriptors = LoadDescriptors().OrderBy(d => d.Name);
             var newDescriptors = dependencyDescriptors.OrderBy(d => d.Name);
+
             if (!newDescriptors.SequenceEqual(existingDescriptors, new DependencyDescriptorComparer())) {
                 WriteDependencies(PersistencePath, dependencyDescriptors);
             }

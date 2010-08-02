@@ -15,9 +15,9 @@ namespace Orchard.Users.Services {
     [UsedImplicitly]
     public class MembershipService : IMembershipService {
         private readonly IContentManager _contentManager;
-        private readonly IRepository<UserRecord> _userRepository;
+        private readonly IRepository<UserPartRecord> _userRepository;
 
-        public MembershipService(IContentManager contentManager, IRepository<UserRecord> userRepository) {
+        public MembershipService(IContentManager contentManager, IRepository<UserPartRecord> userRepository) {
             _contentManager = contentManager;
             _userRepository = userRepository;
             Logger = NullLogger.Instance;
@@ -34,7 +34,7 @@ namespace Orchard.Users.Services {
         public IUser CreateUser(CreateUserParams createUserParams) {
             Logger.Information("CreateUser {0} {1}", createUserParams.Username, createUserParams.Email);
 
-            return _contentManager.Create<User>(UserDriver.ContentType.Name, init =>
+            return _contentManager.Create<UserPart>(UserPartDriver.ContentType.Name, init =>
             {
                 init.Record.UserName = createUserParams.Username;
                 init.Record.Email = createUserParams.Email;
@@ -69,57 +69,57 @@ namespace Orchard.Users.Services {
 
 
         public void SetPassword(IUser user, string password) {
-            if (!user.Is<User>())
+            if (!user.Is<UserPart>())
                 throw new InvalidCastException();
 
-            var userRecord = user.As<User>().Record;
+            var userRecord = user.As<UserPart>().Record;
             SetPassword(userRecord, password);
         }
 
 
-        void SetPassword(UserRecord record, string password) {
+        void SetPassword(UserPartRecord partRecord, string password) {
             switch (GetSettings().PasswordFormat) {
                 case MembershipPasswordFormat.Clear:
-                    SetPasswordClear(record, password);
+                    SetPasswordClear(partRecord, password);
                     break;
                 case MembershipPasswordFormat.Hashed:
-                    SetPasswordHashed(record, password);
+                    SetPasswordHashed(partRecord, password);
                     break;
                 case MembershipPasswordFormat.Encrypted:
-                    SetPasswordEncrypted(record, password);
+                    SetPasswordEncrypted(partRecord, password);
                     break;
                 default:
                     throw new ApplicationException("Unexpected password format value");
             }
         }
 
-        private bool ValidatePassword(UserRecord record, string password) {
+        private bool ValidatePassword(UserPartRecord partRecord, string password) {
             // Note - the password format stored with the record is used
             // otherwise changing the password format on the site would invalidate
             // all logins
-            switch (record.PasswordFormat) {
+            switch (partRecord.PasswordFormat) {
                 case MembershipPasswordFormat.Clear:
-                    return ValidatePasswordClear(record, password);
+                    return ValidatePasswordClear(partRecord, password);
                 case MembershipPasswordFormat.Hashed:
-                    return ValidatePasswordHashed(record, password);
+                    return ValidatePasswordHashed(partRecord, password);
                 case MembershipPasswordFormat.Encrypted:
-                    return ValidatePasswordEncrypted(record, password);
+                    return ValidatePasswordEncrypted(partRecord, password);
                 default:
                     throw new ApplicationException("Unexpected password format value");
             }
         }
 
-        private static void SetPasswordClear(UserRecord record, string password) {
-            record.PasswordFormat = MembershipPasswordFormat.Clear;
-            record.Password = password;
-            record.PasswordSalt = null;
+        private static void SetPasswordClear(UserPartRecord partRecord, string password) {
+            partRecord.PasswordFormat = MembershipPasswordFormat.Clear;
+            partRecord.Password = password;
+            partRecord.PasswordSalt = null;
         }
 
-        private static bool ValidatePasswordClear(UserRecord record, string password) {
-            return record.Password == password;
+        private static bool ValidatePasswordClear(UserPartRecord partRecord, string password) {
+            return partRecord.Password == password;
         }
 
-        private static void SetPasswordHashed(UserRecord record, string password) {
+        private static void SetPasswordHashed(UserPartRecord partRecord, string password) {
 
             var saltBytes = new byte[0x10];
             var random = new RNGCryptoServiceProvider();
@@ -129,33 +129,33 @@ namespace Orchard.Users.Services {
 
             var combinedBytes = saltBytes.Concat(passwordBytes).ToArray();
 
-            var hashAlgorithm = HashAlgorithm.Create(record.HashAlgorithm);
+            var hashAlgorithm = HashAlgorithm.Create(partRecord.HashAlgorithm);
             var hashBytes = hashAlgorithm.ComputeHash(combinedBytes);
 
-            record.PasswordFormat = MembershipPasswordFormat.Hashed;
-            record.Password = Convert.ToBase64String(hashBytes);
-            record.PasswordSalt = Convert.ToBase64String(saltBytes);
+            partRecord.PasswordFormat = MembershipPasswordFormat.Hashed;
+            partRecord.Password = Convert.ToBase64String(hashBytes);
+            partRecord.PasswordSalt = Convert.ToBase64String(saltBytes);
         }
 
-        private static bool ValidatePasswordHashed(UserRecord record, string password) {
+        private static bool ValidatePasswordHashed(UserPartRecord partRecord, string password) {
 
-            var saltBytes = Convert.FromBase64String(record.PasswordSalt);
+            var saltBytes = Convert.FromBase64String(partRecord.PasswordSalt);
 
             var passwordBytes = Encoding.Unicode.GetBytes(password);
 
             var combinedBytes = saltBytes.Concat(passwordBytes).ToArray();
 
-            var hashAlgorithm = HashAlgorithm.Create(record.HashAlgorithm);
+            var hashAlgorithm = HashAlgorithm.Create(partRecord.HashAlgorithm);
             var hashBytes = hashAlgorithm.ComputeHash(combinedBytes);
 
-            return record.Password == Convert.ToBase64String(hashBytes);
+            return partRecord.Password == Convert.ToBase64String(hashBytes);
         }
 
-        private static void SetPasswordEncrypted(UserRecord record, string password) {
+        private static void SetPasswordEncrypted(UserPartRecord partRecord, string password) {
             throw new NotImplementedException();
         }
 
-        private static bool ValidatePasswordEncrypted(UserRecord record, string password) {
+        private static bool ValidatePasswordEncrypted(UserPartRecord partRecord, string password) {
             throw new NotImplementedException();
         }
     }

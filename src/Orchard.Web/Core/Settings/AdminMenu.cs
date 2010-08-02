@@ -9,7 +9,7 @@ namespace Orchard.Core.Settings {
         public void GetNavigation(NavigationBuilder builder) {
             builder.Add(T("Site Configuration"), "11",
                         menu => menu
-                                    .Add(T("Settings"), "2.0", item => item.Action("Index", "Admin", new { area = "Settings" }).Permission(Permissions.ManageSettings)));
+                                    .Add(T("Settings"), "10", item => item.Action("Index", "Admin", new { area = "Settings" }).Permission(Permissions.ManageSettings)));
         }
     }
 }

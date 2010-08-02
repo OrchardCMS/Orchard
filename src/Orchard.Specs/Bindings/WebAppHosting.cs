@@ -1,22 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Reflection;
-using System.Runtime.Remoting;
-using System.Web;
-using System.Web.Hosting;
-using System.Xml.Linq;
 using Castle.Core.Logging;
 using HtmlAgilityPack;
 using log4net.Appender;
 using log4net.Core;
-using log4net.Repository;
 using NUnit.Framework;
 using Orchard.Specs.Hosting;
-using Orchard.Specs.Util;
 using TechTalk.SpecFlow;
 
 namespace Orchard.Specs.Bindings {
@@ -203,6 +194,7 @@ namespace Orchard.Specs.Bindings {
                     .SelectMany(elt => elt.DescendantsAndSelf("input"))
                     .Where(node => !((node.GetAttributeValue("type", "") == "radio" || node.GetAttributeValue("type", "") == "checkbox") && node.GetAttributeValue("checked", "") != "checked"))
                     .GroupBy(elt => elt.GetAttributeValue("name", elt.GetAttributeValue("id", "")), elt => elt.GetAttributeValue("value", ""))
+                    .Where(g => !string.IsNullOrEmpty(g.Key))
                     .ToDictionary(elt => elt.Key, elt => (IEnumerable<string>)elt);
 
             Details = Host.SendRequest(urlPath, inputs);

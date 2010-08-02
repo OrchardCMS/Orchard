@@ -1,13 +1,8 @@
 ﻿<%@ Control Language="C#" Inherits="System.Web.Mvc.ViewUserControl<BaseViewModel>" %>
-<%@ Import Namespace="Orchard.Mvc.Html" %>
 <%@ Import Namespace="Orchard.Mvc.ViewModels" %>
-<%@ Import Namespace="Orchard.ContentManagement"%>
-<%@ Import Namespace="Orchard.Core.Common.Models"%>
-<%@ Import Namespace="Orchard.Blogs.Extensions"%>
-<%@ Import Namespace="Orchard.Blogs.Models"%>
 <%
-  Html.RegisterStyle("site.css");
-  Html.RegisterStyle("blog.css");
+    Html.RegisterStyle("site.css", "1");
+    Html.RegisterStyle("blog.css", "1");
 %>
 
 <%-- todo:(nheskew) this will need to be a generated menu --%>
@@ -33,7 +28,8 @@
         <%Html.ZoneBody("content");%>
         </div>
         <div id="sidebar">
-            <%Html.Zone("sidebar");%>
+            <% Html.Zone("search");
+               Html.Zone("sidebar");%>
         </div>
         <%-- End Content --%>
         <% Html.Include("Footer"); %>

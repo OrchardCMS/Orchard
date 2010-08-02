@@ -32,7 +32,7 @@ Html.RegisterStyle("admin.css"); %>
 			    </div>
 			    <div>
 			        <label for="embedPath"><%: T("Embed:")%></label>
-			        <input id="embedPath" class="textMedium" name="embedPath" type="text" readonly="readonly" value="<%: T("<img src=\"{0}\" width=\"{1}\" height=\"{2}\" alt=\"{3}\" />", ResolveUrl("~/Media/" + Model.RelativePath + "/" + Model.Name), 500, 375, Model.Caption)%>" />
+			        <input id="embedPath" class="textMedium" name="embedPath" type="text" readonly="readonly" value="<%: string.Format("<img src=\"{0}\" width=\"{1}\" height=\"{2}\" alt=\"{3}\" />", ResolveUrl("~/Media/" + Model.RelativePath + "/" + Model.Name), 500, 375, Model.Caption)%>" />
 			        <span class="hint"><%: T("Copy this html to add this image to your site.") %></span>
 			      </div>
 			  

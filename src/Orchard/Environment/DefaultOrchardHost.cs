@@ -1,6 +1,5 @@
 using System.Linq;
 using System.Threading;
-using System.Web;
 using System.Web.Mvc;
 using System.Collections.Generic;
 using Orchard.Caching;
@@ -19,6 +18,7 @@ using Orchard.Utility.Extensions;
 namespace Orchard.Environment {
     public class DefaultOrchardHost : IOrchardHost, IShellSettingsManagerEventHandler, IShellDescriptorManagerEventHandler {
         private readonly ControllerBuilder _controllerBuilder;
+        private readonly IHostLocalRestart _hostLocalRestart;
         private readonly IShellSettingsManager _shellSettingsManager;
         private readonly IShellContextFactory _shellContextFactory;
         private readonly IRunningShellTable _runningShellTable;
@@ -36,7 +36,8 @@ namespace Orchard.Environment {
             IProcessingEngine processingEngine,
             IExtensionLoaderCoordinator extensionLoaderCoordinator,
             ICacheManager cacheManager,
-            ControllerBuilder controllerBuilder) {
+            ControllerBuilder controllerBuilder,
+            IHostLocalRestart hostLocalRestart ) {
 
             _shellSettingsManager = shellSettingsManager;
             _shellContextFactory = shellContextFactory;
@@ -45,6 +46,7 @@ namespace Orchard.Environment {
             _extensionLoaderCoordinator = extensionLoaderCoordinator;
             _cacheManager = cacheManager;
             _controllerBuilder = controllerBuilder;
+            _hostLocalRestart = hostLocalRestart;
 
             T = NullLocalizer.Instance;
             Logger = NullLogger.Instance;
@@ -66,6 +68,9 @@ namespace Orchard.Environment {
             BuildCurrent();
         }
 
+        void IOrchardHost.ReloadExtensions() {
+            _current = null;
+        }
 
         void IOrchardHost.BeginRequest() {
             Logger.Debug("BeginRequest");
@@ -79,6 +84,9 @@ namespace Orchard.Environment {
 
         IStandaloneEnvironment IOrchardHost.CreateStandaloneEnvironment(ShellSettings shellSettings) {
             Logger.Debug("Creating standalone environment for tenant {0}", shellSettings.Name);
+
+            MonitorExtensions();
+            BuildCurrent();
             var shellContext = CreateShellContext(shellSettings);
             return new StandaloneEnvironment(shellContext.LifetimeScope);
         }
@@ -143,6 +151,7 @@ namespace Orchard.Environment {
             _cacheManager.Get("OrchardHost_Extensions",
                               ctx => {
                                   _extensionLoaderCoordinator.MonitorExtensions(ctx.Monitor);
+                                  _hostLocalRestart.Monitor(ctx.Monitor);
                                   _current = null;
                                   return "";
                               });

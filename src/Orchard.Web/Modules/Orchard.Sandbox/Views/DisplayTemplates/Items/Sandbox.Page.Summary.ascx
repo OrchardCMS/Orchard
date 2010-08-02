@@ -1,4 +1,4 @@
-<%@ Control Language="C#" Inherits="Orchard.Mvc.ViewUserControl<ContentItemViewModel<SandboxPage>>" %>
+<%@ Control Language="C#" Inherits="Orchard.Mvc.ViewUserControl<ContentItemViewModel<SandboxPagePart>>" %>
 <%@ Import Namespace="Orchard.Mvc.ViewModels"%>
 <%@ Import Namespace="Orchard.Sandbox.Models" %>
 <div class="item">

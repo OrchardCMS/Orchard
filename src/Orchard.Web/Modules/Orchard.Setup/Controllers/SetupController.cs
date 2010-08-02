@@ -59,7 +59,7 @@ namespace Orchard.Setup.Controllers {
                     SiteName = model.SiteName,
                     AdminUsername = model.AdminUsername,
                     AdminPassword = model.AdminPassword,
-                    DatabaseProvider = model.DatabaseOptions ? "SQLite" : "SqlServer",
+                    DatabaseProvider = model.DatabaseOptions ? "SqlCe" : "SqlServer",
                     DatabaseConnectionString = model.DatabaseConnectionString,
                     DatabaseTablePrefix = model.DatabaseTablePrefix,
                     EnabledFeatures = null // default list

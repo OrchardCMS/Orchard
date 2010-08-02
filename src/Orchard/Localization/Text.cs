@@ -23,7 +23,7 @@ namespace Orchard.Localization {
         public LocalizedString Get(string textHint, params object[] args) {
             Logger.Debug("{0} localizing '{1}'", _scope, textHint);
 
-            string currentCulture = _cultureManager.GetCurrentCulture(HttpContext.Current);
+            string currentCulture = HttpContext.Current == null ? _cultureManager.GetSiteCulture() : _cultureManager.GetCurrentCulture(new HttpContextWrapper(HttpContext.Current));
             var localizedFormat = _resourceManager.GetLocalizedString(_scope, textHint, currentCulture);
 
             return args.Length == 0 

@@ -2,6 +2,6 @@
 
 namespace Orchard.ContentManagement.FieldStorage {
     public interface IFieldStorageProviderSelector : IDependency {
-        IFieldStorageProvider GetProvider(ContentPartDefinition.Field partFieldDefinition);
+        IFieldStorageProvider GetProvider(ContentPartFieldDefinition partFieldDefinition);
     }
 }

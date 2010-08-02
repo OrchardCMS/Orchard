@@ -1,6 +1,6 @@
 ﻿<%@ Control Language="C#" Inherits="Orchard.Mvc.ViewUserControl<Orchard.Search.ViewModels.SearchViewModel>" %>
-<%@ Import Namespace="Orchard.Mvc.Html" %><%
-Html.RegisterStyle("search.css"); %>
+
+<% Html.RegisterStyle("search.css"); %>
 <h1><%:Html.TitleForPage(T("Search").Text)%></h1><%
 Html.Zone("search");
 if (!string.IsNullOrWhiteSpace(Model.Query)) {
@@ -12,6 +12,6 @@ if (!string.IsNullOrWhiteSpace(Model.Query)) {
     }
 }
 if (Model.PageOfResults != null && Model.PageOfResults.Count() > 0) { %>
-<%=Html.UnorderedList(Model.PageOfResults, (r, i) => Html.DisplayForItem(r.Content) , "search-results contentItems") %>
+<%=Html.UnorderedList(Model.PageOfResults.Where(hit => hit.Content != null), (r, i) => Html.DisplayForItem(r.Content), "search-results contentItems")%>
 <%=Html.Pager(Model.PageOfResults, Model.PageOfResults.PageNumber, Model.DefaultPageSize, new {q = Model.Query}) %><%
 } %>

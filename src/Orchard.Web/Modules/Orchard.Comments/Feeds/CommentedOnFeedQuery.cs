@@ -30,7 +30,7 @@ namespace Orchard.Comments.Feeds {
                 limit = (int)limitValue.ConvertTo(typeof(int));
 
             var comments = _contentManager
-                .Query<Comment, CommentRecord>()
+                .Query<CommentPart, CommentPartRecord>()
                 .Where(x => x.CommentedOn == commentedOn && x.Status == CommentStatus.Approved)
                 .OrderByDescending(x => x.CommentDateUtc)
                 .Slice(0, limit);

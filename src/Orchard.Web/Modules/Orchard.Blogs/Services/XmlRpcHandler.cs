@@ -6,6 +6,10 @@ using JetBrains.Annotations;
 using Orchard.Blogs.Drivers;
 using Orchard.Blogs.Models;
 using Orchard.ContentManagement;
+using Orchard.ContentManagement.Aspects;
+using Orchard.Core.Common.Models;
+using Orchard.Core.Routable.Models;
+using Orchard.Core.Routable.Services;
 using Orchard.Core.XmlRpc;
 using Orchard.Core.XmlRpc.Models;
 using Orchard.Environment.Extensions;
@@ -23,16 +27,18 @@ namespace Orchard.Blogs.Services {
         private readonly IContentManager _contentManager;
         private readonly IAuthorizationService _authorizationService;
         private readonly IMembershipService _membershipService;
+        private readonly IRoutableService _routableService;
         private readonly RouteCollection _routeCollection;
 
         public XmlRpcHandler(IBlogService blogService, IBlogPostService blogPostService, IContentManager contentManager,
-            IAuthorizationService authorizationService, IMembershipService membershipService,
+            IAuthorizationService authorizationService, IMembershipService membershipService, IRoutableService routableService,
             RouteCollection routeCollection) {
             _blogService = blogService;
             _blogPostService = blogPostService;
             _contentManager = contentManager;
             _authorizationService = authorizationService;
             _membershipService = membershipService;
+            _routableService = routableService;
             _routeCollection = routeCollection;
             Logger = NullLogger.Instance;
         }
@@ -130,7 +136,7 @@ namespace Orchard.Blogs.Services {
             var user = _membershipService.ValidateUser(userName, password);
             _authorizationService.CheckAccess(StandardPermissions.AccessFrontEnd, user, null);
 
-            var blog = _contentManager.Get<Blog>(Convert.ToInt32(blogId));
+            var blog = _contentManager.Get<BlogPart>(Convert.ToInt32(blogId));
             if (blog == null)
                 throw new ArgumentException();
 
@@ -151,7 +157,7 @@ namespace Orchard.Blogs.Services {
             var user = _membershipService.ValidateUser(userName, password);
             _authorizationService.CheckAccess(Permissions.EditBlogPost, user, null);
 
-            var blog = _contentManager.Get<Blog>(Convert.ToInt32(blogId));
+            var blog = _contentManager.Get<BlogPart>(Convert.ToInt32(blogId));
             if (blog == null)
                 throw new ArgumentException();
 
@@ -159,12 +165,26 @@ namespace Orchard.Blogs.Services {
             var description = content.Optional<string>("description");
             var slug = content.Optional<string>("wp_slug");
 
-            var blogPost = _contentManager.New<BlogPost>(BlogPostDriver.ContentType.Name);
-            blogPost.Blog = blog;
-            blogPost.Title = title;
-            blogPost.Slug = slug;
-            blogPost.Text = description;
-            blogPost.Creator = user;
+            var blogPost = _contentManager.New<BlogPostPart>(BlogPostPartDriver.ContentType.Name);
+            
+            // BodyPart
+            if (blogPost.Is<BodyPart>()) {
+                blogPost.As<BodyPart>().Text = description;
+            }
+
+            //CommonPart
+            if (blogPost.Is<ICommonPart>()) {
+                blogPost.As<ICommonPart>().Owner = user;
+                blogPost.As<ICommonPart>().Container = blog;
+            }
+
+            //RoutePart
+            if (blogPost.Is<RoutePart>()) {
+                blogPost.As<RoutePart>().Title = title;
+                blogPost.As<RoutePart>().Slug = slug;
+                _routableService.FillSlug(blogPost.As<RoutePart>());
+                blogPost.As<RoutePart>().Path = blogPost.As<RoutePart>().GetPathFromSlug(blogPost.As<RoutePart>().Slug);
+            }
 
             _contentManager.Create(blogPost.ContentItem, VersionOptions.Draft);
 
@@ -237,14 +257,14 @@ namespace Orchard.Blogs.Services {
             return true;
         }
 
-        private static XRpcStruct CreateBlogStruct(BlogPost blogPost, UrlHelper urlHelper) {
-            var url = urlHelper.AbsoluteAction(() => urlHelper.BlogPost(blogPost));
+        private static XRpcStruct CreateBlogStruct(BlogPostPart blogPostPart, UrlHelper urlHelper) {
+            var url = urlHelper.AbsoluteAction(() => urlHelper.BlogPost(blogPostPart));
             return new XRpcStruct()
-                .Set("postid", blogPost.Id)
-                .Set("dateCreated", blogPost.CreatedUtc)
-                .Set("title", blogPost.Title)
-                .Set("wp_slug", blogPost.Slug)
-                .Set("description", blogPost.Text)
+                .Set("postid", blogPostPart.Id)
+                .Set("dateCreated", blogPostPart.CreatedUtc)
+                .Set("title", blogPostPart.Title)
+                .Set("wp_slug", blogPostPart.Slug)
+                .Set("description", blogPostPart.Text)
                 .Set("link", url)
                 .Set("permaLink", url);
         }

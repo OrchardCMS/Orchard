@@ -1,4 +1,4 @@
-<%@ Control Language="C#" Inherits="Orchard.Mvc.ViewUserControl<MediaSettingsRecord>" %>
+<%@ Control Language="C#" Inherits="Orchard.Mvc.ViewUserControl<MediaSettingsPartRecord>" %>
 <%@ Import Namespace="Orchard.Media.Models"%>
 <fieldset>
     <legend><%: T("Media")%></legend>

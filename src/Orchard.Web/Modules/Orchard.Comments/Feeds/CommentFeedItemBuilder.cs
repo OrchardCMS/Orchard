@@ -24,7 +24,7 @@ namespace Orchard.Comments.Feeds {
         Localizer T { get; set; }
 
         public void Populate(FeedContext context) {
-            foreach (var feedItem in context.Response.Items.OfType<FeedItem<Comment>>()) {
+            foreach (var feedItem in context.Response.Items.OfType<FeedItem<CommentPart>>()) {
                 var comment = feedItem.Item;
                 var commentedOn = _contentManager.Get(feedItem.Item.Record.CommentedOn);
                 var commentedOnInspector = new ItemInspector(

@@ -24,7 +24,7 @@ Html.RegisterStyle("admin.css"); %>
     
     
 <% using(Html.BeginFormAntiForgeryPost()) { %>
-    <fieldset class="actions bulk">
+    <fieldset class="bulk-actions">
         <label for="publishActions"><%: T("Actions:")%></label>
 		<select id="Select1" name="publishActions">
 		    <option value="1"><%: T("Remove")%></option>
@@ -94,8 +94,4 @@ Html.RegisterStyle("admin.css"); %>
             <%}%>
         </table>
     </fieldset>
-	<div class="manage">
-	    <%: Html.ActionLink(T("Add media").ToString(), "Add", new { folderName = Model.FolderName, mediaPath = Model.MediaPath }, new { @class = "button primaryAction" })%>
-		<%: Html.ActionLink(T("Add a folder").ToString(), "Create", new { Model.MediaPath }, new { @class = "button" })%>
-    </div>
 <% } %>

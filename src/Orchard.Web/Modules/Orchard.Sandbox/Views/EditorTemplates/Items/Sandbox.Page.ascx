@@ -1,4 +1,4 @@
-<%@ Control Language="C#" Inherits="System.Web.Mvc.ViewUserControl<ContentItemViewModel<SandboxPage>>" %>
+<%@ Control Language="C#" Inherits="System.Web.Mvc.ViewUserControl<ContentItemViewModel<SandboxPagePart>>" %>
 <%@ Import Namespace="Orchard.Mvc.ViewModels"%>
 <%@ Import Namespace="Orchard.Sandbox.Models"%>
 <fieldset>

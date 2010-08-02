@@ -1,9 +1,9 @@
 ﻿<%@ Control Language="C#" Inherits="Orchard.Mvc.ViewUserControl<BaseViewModel>" %>
-<%@ Import Namespace="Orchard.Mvc.ViewModels"%>
-<%@ Import Namespace="Orchard.Mvc.Html"%><%
-Html.RegisterStyle("site.css");
-Html.RegisterStyle("ie.css").WithCondition("if (lte IE 8)").ForMedia("screen, projection");
-Html.RegisterStyle("ie6.css").WithCondition("if lte IE 6").ForMedia("screen, projection");
+<%@ Import Namespace="Orchard.Mvc.ViewModels"%><%
+Html.RegisterStyle("site.css", "1");
+Html.RegisterStyle("ie.css", "1").WithCondition("if (lte IE 8)").ForMedia("screen, projection");
+Html.RegisterStyle("ie6.css", "1").WithCondition("if (lte IE 6)").ForMedia("screen, projection");
+Html.RegisterFootScript("admin.js", "1");
 Model.Zones.AddRenderPartial("header", "Header", Model);
 Model.Zones.AddRenderPartial("header:after", "User", Model); // todo: (heskew) should be a user display or widget
 Model.Zones.AddRenderPartial("menu", "Menu", Model);

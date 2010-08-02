@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using JetBrains.Annotations;
+using Orchard.Environment.Extensions.Models;
 using Orchard.Security.Permissions;
 
 namespace Orchard.Users {
@@ -7,11 +8,7 @@ namespace Orchard.Users {
     public class Permissions : IPermissionProvider {
         public static readonly Permission ManageUsers = new Permission { Description = "Manage users", Name = "ManageUsers" };
 
-        public string ModuleName {
-            get {
-                return "Users";
-            }
-        }
+        public virtual Feature Feature { get; set; }
 
         public IEnumerable<Permission> GetPermissions() {
             return new Permission[] {

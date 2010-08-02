@@ -7,7 +7,7 @@ namespace Orchard.ContentManagement.MetaData.Builders {
     public class ContentTypeDefinitionBuilder {
         private string _name;
         private string _displayName;
-        private readonly IList<ContentTypeDefinition.Part> _parts;
+        private readonly IList<ContentTypePartDefinition> _parts;
         private readonly SettingsDictionary _settings;
 
         public ContentTypeDefinitionBuilder()
@@ -16,7 +16,7 @@ namespace Orchard.ContentManagement.MetaData.Builders {
 
         public ContentTypeDefinitionBuilder(ContentTypeDefinition existing) {
             if (existing == null) {
-                _parts = new List<ContentTypeDefinition.Part>();
+                _parts = new List<ContentTypePartDefinition>();
                 _settings = new SettingsDictionary();
             }
             else {
@@ -62,17 +62,17 @@ namespace Orchard.ContentManagement.MetaData.Builders {
             return WithPart(partName, configuration => { });
         }
 
-        public ContentTypeDefinitionBuilder WithPart(string partName, Action<PartConfigurer> configuration) {
+        public ContentTypeDefinitionBuilder WithPart(string partName, Action<ContentTypePartDefinitionBuilder> configuration) {
             return WithPart(new ContentPartDefinition(partName), configuration);
         }
 
-        public ContentTypeDefinitionBuilder WithPart(ContentPartDefinition partDefinition, Action<PartConfigurer> configuration) {
+        public ContentTypeDefinitionBuilder WithPart(ContentPartDefinition partDefinition, Action<ContentTypePartDefinitionBuilder> configuration) {
             var existingPart = _parts.SingleOrDefault(x => x.PartDefinition.Name == partDefinition.Name);
             if (existingPart != null) {
                 _parts.Remove(existingPart);
             }
             else {
-                existingPart = new ContentTypeDefinition.Part(partDefinition, new SettingsDictionary());
+                existingPart = new ContentTypePartDefinition(partDefinition, new SettingsDictionary());
             }
             var configurer = new PartConfigurerImpl(existingPart);
             configuration(configurer);
@@ -80,32 +80,16 @@ namespace Orchard.ContentManagement.MetaData.Builders {
             return this;
         }
 
-        public abstract class PartConfigurer {
-            protected readonly SettingsDictionary _settings;
-
-            protected PartConfigurer(ContentTypeDefinition.Part part) {
-                Name = part.PartDefinition.Name;
-                _settings = new SettingsDictionary(part.Settings.ToDictionary(kv => kv.Key, kv => kv.Value));
-            }
-
-            public string Name { get; private set; }
-
-            public PartConfigurer WithSetting(string name, string value) {
-                _settings[name] = value;
-                return this;
-            }
-        }
-
-        class PartConfigurerImpl : PartConfigurer {
+        class PartConfigurerImpl : ContentTypePartDefinitionBuilder {
             private readonly ContentPartDefinition _partDefinition;
 
-            public PartConfigurerImpl(ContentTypeDefinition.Part part)
+            public PartConfigurerImpl(ContentTypePartDefinition part)
                 : base(part) {
                 _partDefinition = part.PartDefinition;
             }
 
-            public ContentTypeDefinition.Part Build() {
-                return new ContentTypeDefinition.Part(_partDefinition, _settings);
+            public ContentTypePartDefinition Build() {
+                return new ContentTypePartDefinition(_partDefinition, _settings);
             }
         }
 

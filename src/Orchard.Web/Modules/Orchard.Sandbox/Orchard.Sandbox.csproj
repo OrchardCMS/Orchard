@@ -68,11 +68,11 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\PageController.cs" />
     <Compile Include="DataMigrations\SandBoxDataMigration.cs" />
-    <Compile Include="Drivers\SandboxPageDriver.cs" />
-    <Compile Include="Models\SandboxPage.cs" />
-    <Compile Include="Handlers\SandboxContentHandler.cs" />
-    <Compile Include="Models\SandboxPageRecord.cs" />
-    <Compile Include="Models\SandboxSettingsRecord.cs" />
+    <Compile Include="Drivers\SandboxPagePartDriver.cs" />
+    <Compile Include="Models\SandboxPagePart.cs" />
+    <Compile Include="Handlers\SandboxPagePartHandler.cs" />
+    <Compile Include="Models\SandboxPagePartRecord.cs" />
+    <Compile Include="Models\SandboxSettingsPartRecord.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ViewModels\PageEditViewModel.cs" />
     <Compile Include="ViewModels\PageCreateViewModel.cs" />

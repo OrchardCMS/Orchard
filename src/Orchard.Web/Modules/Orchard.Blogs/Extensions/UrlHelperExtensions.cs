@@ -48,52 +48,52 @@ namespace Orchard.Blogs.Extensions {
             return urlHelper.Action("Edit", "BlogAdmin", new {blogSlug, area = "Orchard.Blogs"});
         }
 
-        public static string BlogDelete(this UrlHelper urlHelper, string blogSlug) {
-            return urlHelper.Action("Delete", "BlogAdmin", new {blogSlug, area = "Orchard.Blogs"});
+        public static string BlogRemove(this UrlHelper urlHelper, string blogSlug) {
+            return urlHelper.Action("Remove", "BlogAdmin", new {blogSlug, area = "Orchard.Blogs"});
         }
 
-        public static string BlogPost(this UrlHelper urlHelper, BlogPost blogPost) {
-            return urlHelper.BlogPost(blogPost.Blog.Slug, blogPost.Slug);
+        public static string BlogPost(this UrlHelper urlHelper, BlogPostPart blogPostPart) {
+            return urlHelper.BlogPost(blogPostPart.BlogPart.Slug, blogPostPart.Slug);
         }
 
         public static string BlogPost(this UrlHelper urlHelper, string blogSlug, string postSlug) {
             return urlHelper.Action("Item", "BlogPost", new {blogSlug, postSlug, area = "Orchard.Blogs"});
         }
 
-        public static string BlogPostCreate(this UrlHelper urlHelper, Blog blog) {
-            return urlHelper.BlogPostCreate(blog.Slug);
+        public static string BlogPostCreate(this UrlHelper urlHelper, BlogPart blogPart) {
+            return urlHelper.BlogPostCreate(blogPart.Slug);
         }
 
         public static string BlogPostCreate(this UrlHelper urlHelper, string blogSlug) {
             return urlHelper.Action("Create", "BlogPostAdmin", new {blogSlug, area = "Orchard.Blogs"});
         }
 
-        public static string BlogPostEdit(this UrlHelper urlHelper, BlogPost blogPost) {
-            return urlHelper.BlogPostEdit(blogPost.Blog.Slug, blogPost.Id);
+        public static string BlogPostEdit(this UrlHelper urlHelper, BlogPostPart blogPostPart) {
+            return urlHelper.BlogPostEdit(blogPostPart.BlogPart.Slug, blogPostPart.Id);
         }
 
         public static string BlogPostEdit(this UrlHelper urlHelper, string blogSlug, int postId) {
             return urlHelper.Action("Edit", "BlogPostAdmin", new {blogSlug, postId, area = "Orchard.Blogs"});
         }
 
-        public static string BlogPostDelete(this UrlHelper urlHelper, BlogPost blogPost) {
-            return urlHelper.BlogPostDelete(blogPost.Blog.Slug, blogPost.Id);
+        public static string BlogPostDelete(this UrlHelper urlHelper, BlogPostPart blogPostPart) {
+            return urlHelper.BlogPostDelete(blogPostPart.BlogPart.Slug, blogPostPart.Id);
         }
 
         public static string BlogPostDelete(this UrlHelper urlHelper, string blogSlug, int postId) {
             return urlHelper.Action("Delete", "BlogPostAdmin", new {blogSlug, postId, area = "Orchard.Blogs"});
         }
 
-        public static string BlogPostPublish(this UrlHelper urlHelper, BlogPost blogPost) {
-            return urlHelper.BlogPostPublish(blogPost.Blog.Slug, blogPost.Id);
+        public static string BlogPostPublish(this UrlHelper urlHelper, BlogPostPart blogPostPart) {
+            return urlHelper.BlogPostPublish(blogPostPart.BlogPart.Slug, blogPostPart.Id);
         }
 
         public static string BlogPostPublish(this UrlHelper urlHelper, string blogSlug, int postId) {
             return urlHelper.Action("Publish", "BlogPostAdmin", new { blogSlug, postId, area = "Orchard.Blogs" });
         }
 
-        public static string BlogPostUnpublish(this UrlHelper urlHelper, BlogPost blogPost) {
-            return urlHelper.BlogPostUnpublish(blogPost.Blog.Slug, blogPost.Id);
+        public static string BlogPostUnpublish(this UrlHelper urlHelper, BlogPostPart blogPostPart) {
+            return urlHelper.BlogPostUnpublish(blogPostPart.BlogPart.Slug, blogPostPart.Id);
         }
 
         public static string BlogPostUnpublish(this UrlHelper urlHelper, string blogSlug, int postId) {

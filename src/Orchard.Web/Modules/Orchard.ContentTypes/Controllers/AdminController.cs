@@ -1,9 +1,11 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Web.Mvc;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.MetaData.Models;
 using Orchard.ContentTypes.Services;
 using Orchard.ContentTypes.ViewModels;
+using Orchard.Core.Contents.Settings;
 using Orchard.Localization;
 using Orchard.Mvc.Results;
 using Orchard.UI.Notify;
@@ -42,6 +44,14 @@ namespace Orchard.ContentTypes.Controllers {
         public ActionResult CreatePOST(CreateTypeViewModel viewModel) {
             if (!Services.Authorizer.Authorize(Permissions.CreateContentTypes, T("Not allowed to create a content type.")))
                 return new HttpUnauthorizedResult();
+
+            if(String.IsNullOrWhiteSpace(viewModel.DisplayName)) {
+                ModelState.AddModelError("DisplayName", T("The Content Type name can't be empty.").ToString());
+            }
+
+            if(_contentDefinitionService.GetTypes().Any(t => t.DisplayName == viewModel.DisplayName)) {
+                ModelState.AddModelError("DisplayName", T("A type with the same name already exists.").ToString());
+            }
 
             var typeViewModel = _contentDefinitionService.AddType(viewModel);
 
@@ -104,8 +114,8 @@ namespace Orchard.ContentTypes.Controllers {
             var viewModel = new AddPartsViewModel {
                 Type = typeViewModel,
                 PartSelections = _contentDefinitionService.GetParts()
-                    .Where(cpd => !typeViewModel.Parts.Any(p => p.PartDefinition.Name == cpd.Name))
-                    .Select(cpd => new PartSelectionViewModel { PartName = cpd.Name })
+                    .Where(cpd => !typeViewModel.Parts.Any(p => p.PartDefinition.Name == cpd.Name) && cpd.Settings.GetModel<ContentPartSettings>().Attachable)
+                    .Select(cpd => new PartSelectionViewModel { PartName = cpd.Name, PartDisplayName = cpd.DisplayName })
             };
 
             return View(viewModel);
@@ -122,10 +132,8 @@ namespace Orchard.ContentTypes.Controllers {
                 return new NotFoundResult();
 
             var viewModel = new AddPartsViewModel();
-            if (!TryUpdateModel(viewModel)) {
-                viewModel.Type = typeViewModel;
-                return View(viewModel);
-            }
+            if (!TryUpdateModel(viewModel))
+                return AddPartsTo(id);
 
             var partsToAdd = viewModel.PartSelections.Where(ps => ps.IsSelected).Select(ps => ps.PartName);
             foreach (var partToAdd in partsToAdd) {
@@ -135,8 +143,7 @@ namespace Orchard.ContentTypes.Controllers {
 
             if (!ModelState.IsValid) {
                 Services.TransactionManager.Cancel(); ;
-                viewModel.Type = typeViewModel;
-                return View(viewModel);
+                return AddPartsTo(id);
             }
 
             return RedirectToAction("Edit", new {id});

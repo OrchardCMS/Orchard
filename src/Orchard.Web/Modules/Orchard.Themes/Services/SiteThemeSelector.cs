@@ -12,7 +12,7 @@ namespace Orchard.Themes.Services {
         protected virtual ISite CurrentSite { get; [UsedImplicitly] private set; }
 
         public ThemeSelectorResult GetTheme(RequestContext context) {
-            string currentThemeName = CurrentSite.As<ThemeSiteSettings>().Record.CurrentThemeName;
+            string currentThemeName = CurrentSite.As<ThemeSiteSettingsPart>().Record.CurrentThemeName;
 
             if (String.IsNullOrEmpty(currentThemeName)) {
                 return null;

@@ -5,7 +5,7 @@ using Orchard.Environment;
 using Orchard.Localization;
 
 namespace Orchard.Commands {
-    public class CommandHostEnvironment : IHostEnvironment {
+    internal class CommandHostEnvironment : IHostEnvironment {
         public CommandHostEnvironment() {
             T = NullLocalizer.Instance;
         }
@@ -29,7 +29,7 @@ namespace Orchard.Commands {
         }
 
         public void ResetSiteCompilation() {
-            throw new OrchardCoreException(T("A change of configuration requires the application to be restarted. Running the command again usually solves this problem."));
+            throw new OrchardCommandHostRetryException(T("A change of configuration requires the session to be restarted."));
         }
     }
 }

@@ -17,14 +17,12 @@ namespace Orchard.Blogs.Controllers {
         private readonly IOrchardServices _services;
         private readonly IBlogService _blogService;
         private readonly IBlogSlugConstraint _blogSlugConstraint;
-        private readonly IFeedManager _feedManager;
         private readonly RouteCollection _routeCollection;
 
-        public BlogController(IOrchardServices services, IBlogService blogService, IBlogSlugConstraint blogSlugConstraint, IFeedManager feedManager, RouteCollection routeCollection) {
+        public BlogController(IOrchardServices services, IBlogService blogService, IBlogSlugConstraint blogSlugConstraint, RouteCollection routeCollection) {
             _services = services;
             _blogService = blogService;
             _blogSlugConstraint = blogSlugConstraint;
-            _feedManager = feedManager;
             _routeCollection = routeCollection;
             Logger = NullLogger.Instance;
         }
@@ -53,7 +51,6 @@ namespace Orchard.Blogs.Controllers {
                 Blog = _services.ContentManager.BuildDisplayModel(blog, "Detail")
             };
 
-            _feedManager.Register(blog);
 
             return View(model);
         }
@@ -61,9 +58,9 @@ namespace Orchard.Blogs.Controllers {
         public ActionResult LiveWriterManifest(string blogSlug) {
             Logger.Debug("Live Writer Manifest requested");
 
-            Blog blog = _blogService.Get(blogSlug);
+            BlogPart blogPart = _blogService.Get(blogSlug);
 
-            if (blog == null)
+            if (blogPart == null)
                 return new NotFoundResult();
 
             const string manifestUri = "http://schemas.microsoft.com/wlw/manifest/weblog";
@@ -86,9 +83,9 @@ namespace Orchard.Blogs.Controllers {
         public ActionResult Rsd(string blogSlug) {
             Logger.Debug("RSD requested");
 
-            Blog blog = _blogService.Get(blogSlug);
+            BlogPart blogPart = _blogService.Get(blogSlug);
 
-            if (blog == null)
+            if (blogPart == null)
                 return new NotFoundResult();
 
             const string manifestUri = "http://archipelago.phrasewise.com/rsd";
@@ -106,7 +103,7 @@ namespace Orchard.Blogs.Controllers {
                         new XAttribute("name", "MetaWeblog"),
                         new XAttribute("preferred", true),
                         new XAttribute("apiLink", url),
-                        new XAttribute("blogID", blog.Id))));
+                        new XAttribute("blogID", blogPart.Id))));
 
             var doc = new XDocument(new XElement(
                                         XName.Get("rsd", manifestUri),

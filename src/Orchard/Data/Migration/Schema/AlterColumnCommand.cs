@@ -23,5 +23,14 @@ namespace Orchard.Data.Migration.Schema {
             return this;
         }
 
+        public new AlterColumnCommand WithLength(int? length) {
+            base.WithLength(length);
+            return this;
+        }
+        
+        public new AlterColumnCommand Unlimited() {
+            return WithLength(10000);
+        }
+
     }
 }

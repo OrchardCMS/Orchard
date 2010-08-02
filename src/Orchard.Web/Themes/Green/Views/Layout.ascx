@@ -1,11 +1,10 @@
 ﻿<%@ Control Language="C#" Inherits="System.Web.Mvc.ViewUserControl<BaseViewModel>" %>
 <%@ Import Namespace="Orchard.Mvc.ViewModels"%>
-<%@ Import Namespace="Orchard.Mvc.Html" %>
 
 <%
-    Html.RegisterStyle("yui.css");
-    Html.RegisterStyle("site.css");
-    Html.RegisterStyle("blog.css");
+    Html.RegisterStyle("yui.css", "1");
+    Html.RegisterStyle("site.css", "1");
+    Html.RegisterStyle("blog.css", "1");
     %>
 
 <script type="text/javascript"> 
@@ -28,6 +27,7 @@ return false;
             <div id="logIn">
                 <%-- todo:(nheskew) this will need to all go in the header zone (user widget) --%>
                 <% Html.Include("User"); %>
+                <%Html.Zone("search"); %>
             </div>
         </div>
     </div>

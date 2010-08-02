@@ -1,0 +1,22 @@
+﻿.content-localization {
+    overflow:hidden;
+}
+.content-localization .content-localizations,
+.content-localization .add-localization {
+    clear:right;
+    float:right;
+}
+.content-localization .content-localizations {
+    font-size:.9em;
+}
+.content-localization .content-localizations li,
+.content-localization .add-localization {
+    font-size:1.2em;
+    float:left;
+}
+.content-localization .content-localizations>* {
+    display:inline-block;
+}
+.content-localization .localizations {
+    margin:0;
+}

@@ -85,14 +85,14 @@ label {
     display: block;
     margin:8px 0 2px 0px;
     font-size:105%;
-    }
+}
 
 input[type="text"], textarea, #password {
     border-color:#cacec6;
     padding:2px;
     margin:2px 0 4px 0px;
     width:100%;
-    }
+}
 
 input[type="checkbox"] {
     margin:2px 0 4px 10px;
@@ -110,6 +110,42 @@ input[type="submit"], input[type="button"] {
     display:inline;
 }
 
+/* Search
+----------------------------------------------------------*/
+
+.search {
+    margin: 16px 0 12px 0;
+}
+
+.search fieldset {
+    overflow: auto;
+    margin: 0;
+}
+
+.search input {
+    width: auto;
+    float: left;
+    padding: 3px;
+    margin: 0;
+}
+
+.search button {
+    padding:1px 6px;
+    margin: 0 0 0 4px;
+    font-weight:600;
+}
+
+.search-summary {
+    padding:12px 0 0 0; 
+}
+
+.search-summary em {
+  font-weight:600;  
+}
+
+.search-results li.first {
+    margin:0 0 12px 0;
+}
 
 /* Tables
 ----------------------------------------------------------*/
@@ -201,6 +237,7 @@ colgroup
 	margin:33px 2px 0 0;
 	font-size:104%;
 	float:right;
+	text-align:right;
 }
 
 #maincolumn {
@@ -342,6 +379,32 @@ span.message {
 .debug.message:before {
     content:"DEBUG » ";
 }
+
+/* Localization
+-------------------------------------------------------------- */
+.content-localization .content-localizations h4 {
+    margin:0;
+    vertical-align:top;
+}
+.content-localization .content-localizations ul {
+    overflow: auto;
+}
+.content-localization .content-localizations li {
+    border-bottom: 1px;
+    margin:0 0 0 4px;
+    padding: 2px 6px;
+    border: 1px solid #CCC;
+}
+.content-localization .content-localizations li:hover {
+    background-color: #ebebeb;
+}
+.content-localization .content-localizations li a {
+    text-decoration: none;
+}
+.content-localization .content-localizations li a:hover, .content-localization .content-localizations li a:visited {
+    text-decoration: none;
+
+
 
 /* Edit mode
 ----------------------------------------------------------*/

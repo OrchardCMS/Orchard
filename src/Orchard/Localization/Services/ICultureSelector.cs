@@ -7,6 +7,6 @@ namespace Orchard.Localization.Services {
     }
 
     public interface ICultureSelector : IDependency {
-        CultureSelectorResult GetCulture(HttpContext context);
+        CultureSelectorResult GetCulture(HttpContextBase context);
     }
 }

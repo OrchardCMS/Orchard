@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Orchard.ContentManagement.Drivers;
 using Orchard.ContentManagement.MetaData.Models;
 
 namespace Orchard.ContentManagement.MetaData.Builders {
     public class ContentPartDefinitionBuilder {
         private string _name;
-        private readonly IList<ContentPartDefinition.Field> _fields;
+        private readonly IList<ContentPartFieldDefinition> _fields;
         private readonly SettingsDictionary _settings;
 
         public ContentPartDefinitionBuilder()
@@ -15,7 +16,7 @@ namespace Orchard.ContentManagement.MetaData.Builders {
 
         public ContentPartDefinitionBuilder(ContentPartDefinition existing) {
             if (existing == null) {
-                _fields = new List<ContentPartDefinition.Field>();
+                _fields = new List<ContentPartFieldDefinition>();
                 _settings = new SettingsDictionary();
             }
             else {
@@ -53,7 +54,7 @@ namespace Orchard.ContentManagement.MetaData.Builders {
             return WithField(fieldName, configuration => { });
         }
 
-        public ContentPartDefinitionBuilder WithField(string fieldName, Action<FieldConfigurer> configuration) {
+        public ContentPartDefinitionBuilder WithField(string fieldName, Action<ContentPartFieldDefinitionBuilder> configuration) {
 
             var existingField = _fields.FirstOrDefault(x => x.Name == fieldName);
             if (existingField != null) {
@@ -63,7 +64,7 @@ namespace Orchard.ContentManagement.MetaData.Builders {
                 }
             }
             else {
-                existingField = new ContentPartDefinition.Field(fieldName);
+                existingField = new ContentPartFieldDefinition(fieldName);
             }
             var configurer = new FieldConfigurerImpl(existingField);
             configuration(configurer);
@@ -71,46 +72,75 @@ namespace Orchard.ContentManagement.MetaData.Builders {
             return this;
         }
 
-        public abstract class FieldConfigurer {
-            protected readonly SettingsDictionary _settings;
-
-            protected FieldConfigurer(ContentPartDefinition.Field field) {
-                _settings = new SettingsDictionary(field.Settings.ToDictionary(kv => kv.Key, kv => kv.Value));
-            }
-
-            public FieldConfigurer WithSetting(string name, string value) {
-                _settings[name] = value;
-                return this;
-            }
-
-            public abstract FieldConfigurer OfType(ContentFieldDefinition fieldDefinition);
-            public abstract FieldConfigurer OfType(string fieldType);
-        }
-
-        class FieldConfigurerImpl : FieldConfigurer {
+        class FieldConfigurerImpl : ContentPartFieldDefinitionBuilder {
             private ContentFieldDefinition _fieldDefinition;
             private readonly string _fieldName;
 
-            public FieldConfigurerImpl(ContentPartDefinition.Field field)
+            public FieldConfigurerImpl(ContentPartFieldDefinition field)
                 : base(field) {
                 _fieldDefinition = field.FieldDefinition;
                 _fieldName = field.Name;
             }
 
-            public ContentPartDefinition.Field Build() {
-                return new ContentPartDefinition.Field(_fieldDefinition, _fieldName, _settings);
+            public ContentPartFieldDefinition Build() {
+                return new ContentPartFieldDefinition(_fieldDefinition, _fieldName, _settings);
             }
 
-            public override FieldConfigurer OfType(ContentFieldDefinition fieldDefinition) {
+            public override ContentPartFieldDefinitionBuilder OfType(ContentFieldDefinition fieldDefinition) {
                 _fieldDefinition = fieldDefinition;
                 return this;
             }
 
-            public override FieldConfigurer OfType(string fieldType) {
+            public override ContentPartFieldDefinitionBuilder OfType(string fieldType) {
                 _fieldDefinition = new ContentFieldDefinition(fieldType);
                 return this;
             }
         }
+    }
 
+    public static class ContentPartDefinitionBuilderExtensions {
+        public static IEnumerable<KeyValuePair<string, string>> GetSettingEntries(IDictionary<string, ContentLocation> locationSettings) {
+            int entryIndex = 0;
+            foreach (var entry in locationSettings) {
+                var zone = string.IsNullOrEmpty(entry.Value.Zone) ? null : entry.Value.Zone;
+                var position = string.IsNullOrEmpty(entry.Value.Position) ? null : entry.Value.Position;
+                var locationName = (zone == null && position == null) ? null : entry.Key;
+
+                if (locationName != null) {
+                    var prefix = string.Format("LocationSettings[{0}]", entryIndex);
+                    yield return new KeyValuePair<string, string>(string.Format("{0}.Key", prefix), locationName);
+                    yield return new KeyValuePair<string, string>(string.Format("{0}.Value.Zone", prefix), zone);
+                    yield return new KeyValuePair<string, string>(string.Format("{0}.Value.Position", prefix), position);
+
+                    entryIndex++;
+                }
+            }
+
+            // Clear the remaining entries from [index -> end of collection]
+            for (int i = entryIndex; i < locationSettings.Count; i++) {
+                var prefix = string.Format("LocationSettings[{0}]", i);
+                yield return new KeyValuePair<string, string>(string.Format("{0}.Key", prefix), null);
+                yield return new KeyValuePair<string, string>(string.Format("{0}.Value.Zone", prefix), null);
+                yield return new KeyValuePair<string, string>(string.Format("{0}.Value.Position", prefix), null);
+            }
+        }
+
+        public static ContentPartDefinitionBuilder WithLocation(this ContentPartDefinitionBuilder obj, IDictionary<string, ContentLocation> settings) {
+            foreach (var entry in GetSettingEntries(settings))
+                obj = obj.WithSetting(entry.Key, entry.Value);
+            return obj;
+        }
+
+        public static ContentTypePartDefinitionBuilder WithLocation(this ContentTypePartDefinitionBuilder obj, IDictionary<string, ContentLocation> settings) {
+            foreach (var entry in GetSettingEntries(settings))
+                obj = obj.WithSetting(entry.Key, entry.Value);
+            return obj;
+        }
+
+        public static ContentPartFieldDefinitionBuilder WithLocation(this ContentPartFieldDefinitionBuilder obj, IDictionary<string, ContentLocation> settings) {
+            foreach (var entry in GetSettingEntries(settings))
+                obj = obj.WithSetting(entry.Key, entry.Value);
+            return obj;
+        }
     }
 }

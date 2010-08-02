@@ -9,11 +9,11 @@ namespace Orchard.Specs.Hosting {
             return new TraceEnabledBuilder(sessionFactoryParameters.DataFolder, sessionFactoryParameters.ConnectionString);
         }
 
-        class TraceEnabledBuilder : SQLiteDataServicesProvider {
+        class TraceEnabledBuilder : SqlCeDataServicesProvider {
             public TraceEnabledBuilder(string dataFolder, string connectionString) : base(dataFolder, connectionString) {
             }
             public override IPersistenceConfigurer GetPersistenceConfigurer(bool createDatabase) {
-                var config = (SQLiteConfiguration)base.GetPersistenceConfigurer(createDatabase);
+                var config = (MsSqlCeConfiguration)base.GetPersistenceConfigurer(createDatabase);
                 //config.ShowSql();
                 return config;
             }

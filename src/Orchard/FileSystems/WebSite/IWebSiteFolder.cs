@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using Orchard.Caching;
 
@@ -12,9 +11,10 @@ namespace Orchard.FileSystems.WebSite {
 
         bool FileExists(string virtualPath);
         string ReadFile(string virtualPath);
+        string ReadFile(string virtualPath, bool actualContent);
         void CopyFileTo(string virtualPath, Stream destination);
+        void CopyFileTo(string virtualPath, Stream destination, bool actualContent);
 
         IVolatileToken WhenPathChanges(string virtualPath);
-        void WhenPathChanges(string virtualPath, Action action);
     }
 }

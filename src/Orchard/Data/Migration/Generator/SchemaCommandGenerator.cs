@@ -1,36 +1,74 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Reflection;
 using NHibernate.Cfg;
 using NHibernate.Mapping;
 using NHibernate.Tool.hbm2ddl;
+using Orchard.ContentManagement.Records;
 using Orchard.Data.Migration.Schema;
 using Orchard.Data.Providers;
 using NHibernate.Dialect;
+using Orchard.Environment.Configuration;
+using Orchard.Environment.Descriptor.Models;
+using Orchard.Environment.Extensions;
+using Orchard.Environment.Extensions.Models;
+using Orchard.Environment.ShellBuilders;
+using Orchard.Environment.ShellBuilders.Models;
+using Orchard.Environment.State;
 
 namespace Orchard.Data.Migration.Generator {
     public class SchemaCommandGenerator : ISchemaCommandGenerator {
-        private readonly IDataServicesProviderFactory _dataServicesProviderFactory;
         private readonly ISessionFactoryHolder _sessionFactoryHolder;
+        private readonly IExtensionManager _extensionManager;
+        private readonly ICompositionStrategy _compositionStrategy;
+        private readonly ShellSettings _shellSettings;
+        private readonly IDataServicesProviderFactory _dataServicesProviderFactory;
 
         public SchemaCommandGenerator(
-            IDataServicesProviderFactory dataServicesProviderFactory,
-            ISessionFactoryHolder sessionFactoryHolder) {
-            _dataServicesProviderFactory = dataServicesProviderFactory;
+            ISessionFactoryHolder sessionFactoryHolder,
+            IExtensionManager extensionManager,
+            ICompositionStrategy compositionStrategy,
+            ShellSettings shellSettings,
+            IDataServicesProviderFactory dataServicesProviderFactory) {
             _sessionFactoryHolder = sessionFactoryHolder;
+            _extensionManager = extensionManager;
+            _compositionStrategy = compositionStrategy;
+            _shellSettings = shellSettings;
+            _dataServicesProviderFactory = dataServicesProviderFactory;
         }
 
         /// <summary>
         /// Generates SchemaCommand instances in order to create the schema for a specific feature
         /// </summary>
         public IEnumerable<SchemaCommand> GetCreateFeatureCommands(string feature, bool drop) {
-            var parameters = _sessionFactoryHolder.GetSessionFactoryParameters();
+            var dependencies = ShellStateCoordinator.OrderByDependencies(_extensionManager.AvailableExtensions()
+                .SelectMany(ext => ext.Features))
+                .Where(f => String.Equals(f.Name, feature, StringComparison.OrdinalIgnoreCase))
+                .Where(f => f.Dependencies != null)
+                .SelectMany(f => f.Dependencies)
+                .ToList();
 
-            if (!parameters.RecordDescriptors.Any()) {
+            var shellDescriptor = new ShellDescriptor {
+                Features = dependencies.Select(name => new ShellFeature { Name = name }).Union(new[] { new ShellFeature { Name = feature }, new ShellFeature { Name = "Orchard.Framework" } })
+            };
+
+            var shellBlueprint = _compositionStrategy.Compose(_shellSettings, shellDescriptor);
+
+            if ( !shellBlueprint.Records.Any() ) {
                 yield break;
             }
 
-            var configuration = _dataServicesProviderFactory.CreateProvider(parameters).BuildConfiguration(parameters);
+            //var features = dependencies.Select(name => new ShellFeature {Name = name}).Union(new[] {new ShellFeature {Name = feature}, new ShellFeature {Name = "Orchard.Framework"}});
+
+            var parameters = _sessionFactoryHolder.GetSessionFactoryParameters();
+            parameters.RecordDescriptors = shellBlueprint.Records;
+
+            var configuration = _dataServicesProviderFactory
+                .CreateProvider(parameters)
+                .BuildConfiguration(parameters);
+
             Dialect.GetDialect(configuration.Properties);
             var mapping = configuration.BuildMapping();
 
@@ -42,7 +80,10 @@ namespace Orchard.Data.Migration.Generator {
 
             foreach(var table in tables.Where(t => parameters.RecordDescriptors.Any(rd => rd.Feature.Descriptor.Name == feature && rd.TableName == t.Name))) {
                 string tableName = table.Name;
-                if(tableName.StartsWith(prefix)) {
+                var recordType = parameters.RecordDescriptors.Where(rd => rd.Feature.Descriptor.Name == feature && rd.TableName == tableName).First().Type;
+                var isContentPart = typeof(ContentPartRecord).IsAssignableFrom(recordType);
+
+                if ( tableName.StartsWith(prefix) ) {
                     tableName = tableName.Substring(prefix.Length);
                 }
 
@@ -59,10 +100,17 @@ namespace Orchard.Data.Migration.Generator {
                     command.Column(column.Name, sqlType.DbType,
                         action => {
                             if (table1.PrimaryKey.Columns.Any(c => c.Name == column1.Name)) {
-                                action.PrimaryKey().Identity();
+                                action.PrimaryKey();
+
+                                if ( !isContentPart ) {
+                                    action.Identity();
+                                }
                             }
 
-                            if (column1.IsLengthDefined()) {
+                            
+                            if ( column1.IsLengthDefined() 
+                                && new DbType[] { DbType.StringFixedLength, DbType.String, DbType.AnsiString, DbType.AnsiStringFixedLength }.Contains(sqlType.DbType) 
+                                && column1.Length != 255 ) {
                                 action.WithLength(column1.Length);
                             }
 
@@ -92,8 +140,7 @@ namespace Orchard.Data.Migration.Generator {
         /// Automatically updates a db to a functionning schema
         /// </summary>
         public void UpdateDatabase() {
-            var parameters = _sessionFactoryHolder.GetSessionFactoryParameters();
-            var configuration = _dataServicesProviderFactory.CreateProvider(parameters).BuildConfiguration(parameters);
+            var configuration = _sessionFactoryHolder.GetConfiguration();
             new SchemaUpdate(configuration).Execute(false, true);
         }
 
@@ -101,8 +148,7 @@ namespace Orchard.Data.Migration.Generator {
         /// Automatically creates a db with a functionning schema
         /// </summary>
         public void CreateDatabase() {
-            var parameters = _sessionFactoryHolder.GetSessionFactoryParameters();
-            var configuration = _dataServicesProviderFactory.CreateProvider(parameters).BuildConfiguration(parameters);
+            var configuration = _sessionFactoryHolder.GetConfiguration();
             new SchemaExport(configuration).Execute(false, true, false);
         }
 

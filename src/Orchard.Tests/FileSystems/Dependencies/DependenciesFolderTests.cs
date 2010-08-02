@@ -1,18 +1,30 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
+using Autofac;
 using NUnit.Framework;
+using Orchard.Caching;
+using Orchard.Data;
+using Orchard.FileSystems.AppData;
 using Orchard.FileSystems.Dependencies;
+using Orchard.Services;
 using Orchard.Tests.Stubs;
 
 namespace Orchard.Tests.FileSystems.Dependencies {
     [TestFixture]
     public class DependenciesFolderTests {
+        public IContainer BuildContainer() {
+            var builder = new ContainerBuilder();
+            builder.RegisterType<StubClock>().As<IClock>().SingleInstance();
+            builder.RegisterType<StubAppDataFolder>().As<IAppDataFolder>().SingleInstance();
+            builder.RegisterType<StubCacheManager>().As<ICacheManager>().SingleInstance();
+            builder.RegisterType<DefaultDependenciesFolder>().As<IDependenciesFolder>();
+            return builder.Build();
+        }
+
         [Test]
         public void LoadDescriptorsShouldReturnEmptyList() {
-            var clock = new StubClock();
-            var appDataFolder = new StubAppDataFolder(clock);
-            var dependenciesFolder = new DefaultDependenciesFolder(new StubCacheManager(), appDataFolder);
+            var dependenciesFolder = BuildContainer().Resolve<IDependenciesFolder>();
 
             var e = dependenciesFolder.LoadDescriptors();
             Assert.That(e, Is.Empty);
@@ -20,9 +32,7 @@ namespace Orchard.Tests.FileSystems.Dependencies {
 
         [Test]
         public void StoreDescriptorsShouldWork() {
-            var clock = new StubClock();
-            var appDataFolder = new StubAppDataFolder(clock);
-            var dependenciesFolder = new DefaultDependenciesFolder(new StubCacheManager(), appDataFolder);
+            var dependenciesFolder = BuildContainer().Resolve<IDependenciesFolder>();
 
             var d = new DependencyDescriptor {
                 Name = "name",
@@ -40,9 +50,10 @@ namespace Orchard.Tests.FileSystems.Dependencies {
 
         [Test]
         public void StoreDescriptorsShouldNoOpIfNoChanges() {
-            var clock = new StubClock();
-            var appDataFolder = new StubAppDataFolder(clock);
-            var dependenciesFolder = new DefaultDependenciesFolder(new StubCacheManager(), appDataFolder);
+            var container = BuildContainer();
+            var clock = (StubClock)container.Resolve<IClock>();
+            var appDataFolder = (StubAppDataFolder)container.Resolve<IAppDataFolder>();
+            var dependenciesFolder = container.Resolve<IDependenciesFolder>();
 
             var d1 = new DependencyDescriptor {
                 Name = "name1",
@@ -67,9 +78,10 @@ namespace Orchard.Tests.FileSystems.Dependencies {
 
         [Test]
         public void StoreDescriptorsShouldStoreIfChanges() {
-            var clock = new StubClock();
-            var appDataFolder = new StubAppDataFolder(clock);
-            var dependenciesFolder = new DefaultDependenciesFolder(new StubCacheManager(), appDataFolder);
+            var container = BuildContainer();
+            var clock = (StubClock)container.Resolve<IClock>();
+            var appDataFolder = (StubAppDataFolder)container.Resolve<IAppDataFolder>();
+            var dependenciesFolder = container.Resolve<IDependenciesFolder>();
 
             var d1 = new DependencyDescriptor {
                 Name = "name1",
@@ -96,9 +108,10 @@ namespace Orchard.Tests.FileSystems.Dependencies {
 
         [Test]
         public void LoadDescriptorsShouldWorkAcrossInstances() {
-            var clock = new StubClock();
-            var appDataFolder = new StubAppDataFolder(clock);
-            var dependenciesFolder = new DefaultDependenciesFolder(new StubCacheManager(), appDataFolder);
+            var container = BuildContainer();
+            var clock = (StubClock)container.Resolve<IClock>();
+            var appDataFolder = (StubAppDataFolder)container.Resolve<IAppDataFolder>();
+            var dependenciesFolder = container.Resolve<IDependenciesFolder>();
 
             var d1 = new DependencyDescriptor {
                 Name = "name1",
@@ -115,7 +128,8 @@ namespace Orchard.Tests.FileSystems.Dependencies {
             dependenciesFolder.StoreDescriptors(new[] { d1, d2 });
 
             // Create a new instance over the same appDataFolder
-            var dependenciesFolder2 = new DefaultDependenciesFolder(new StubCacheManager(), appDataFolder);
+            var dependenciesFolder2 = container.Resolve<IDependenciesFolder>();
+            Assert.That(dependenciesFolder2, Is.Not.SameAs(dependenciesFolder));
 
             // Ensure descriptors were persisted properly
             var result = dependenciesFolder2.LoadDescriptors();

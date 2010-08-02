@@ -1,8 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Orchard.ContentManagement.MetaData.Models;
 using Orchard.ContentManagement.ViewModels;
+using Orchard.ContentTypes.Extensions;
 using Orchard.Mvc.ViewModels;
+using Orchard.Utility.Extensions;
 
 namespace Orchard.ContentTypes.ViewModels {
     public class EditTypeViewModel : BaseViewModel {
@@ -30,7 +33,7 @@ namespace Orchard.ContentTypes.ViewModels {
         public ContentTypeDefinition _Definition { get; private set; }
 
         private IEnumerable<EditPartFieldViewModel> GetTypeFields(ContentTypeDefinition contentTypeDefinition) {
-            var implicitTypePart = contentTypeDefinition.Parts.SingleOrDefault(p => p.PartDefinition.Name == Name);
+            var implicitTypePart = contentTypeDefinition.Parts.SingleOrDefault(p => string.Equals(p.PartDefinition.Name, Name, StringComparison.OrdinalIgnoreCase));
 
             return implicitTypePart == null
                 ? Enumerable.Empty<EditPartFieldViewModel>()
@@ -39,7 +42,7 @@ namespace Orchard.ContentTypes.ViewModels {
 
         private IEnumerable<EditTypePartViewModel> GetTypeParts(ContentTypeDefinition contentTypeDefinition) {
             return contentTypeDefinition.Parts
-                .Where(p => p.PartDefinition.Name != Name)
+                .Where(p => !string.Equals(p.PartDefinition.Name, Name, StringComparison.OrdinalIgnoreCase))
                 .Select((p, i) => new EditTypePartViewModel(i, p) { Type = this });
         }
     }
@@ -49,7 +52,7 @@ namespace Orchard.ContentTypes.ViewModels {
             Settings = new SettingsDictionary();
         }
 
-        public EditTypePartViewModel(int index, ContentTypeDefinition.Part part) {
+        public EditTypePartViewModel(int index, ContentTypePartDefinition part) {
             Index = index;
             PartDefinition = new EditPartViewModel(part.PartDefinition);
             Settings = part.Settings;
@@ -62,7 +65,7 @@ namespace Orchard.ContentTypes.ViewModels {
         public SettingsDictionary Settings { get; set; }
         public EditTypeViewModel Type { get; set; }
         public IEnumerable<TemplateViewModel> Templates { get; set; }
-        public ContentTypeDefinition.Part _Definition { get; private set; }
+        public ContentTypePartDefinition _Definition { get; private set; }
     }
 
     public class EditPartViewModel : BaseViewModel {
@@ -80,6 +83,11 @@ namespace Orchard.ContentTypes.ViewModels {
 
         public string Prefix { get { return "PartDefinition"; } }
         public string Name { get; set; }
+        private string _displayName;
+        public string DisplayName {
+            get { return !string.IsNullOrWhiteSpace(_displayName) ? _displayName : Name.TrimEnd("Part").CamelFriendly(); }
+            set { _displayName = value; }
+        }
         public IEnumerable<TemplateViewModel> Templates { get; set; }
         public IEnumerable<EditPartFieldViewModel> Fields { get; set; }
         public SettingsDictionary Settings { get; set; }
@@ -92,7 +100,7 @@ namespace Orchard.ContentTypes.ViewModels {
             Settings = new SettingsDictionary();
         }
 
-        public EditPartFieldViewModel(int index, ContentPartDefinition.Field field) {
+        public EditPartFieldViewModel(int index, ContentPartFieldDefinition field) {
             Index = index;
             Name = field.Name;
             FieldDefinition = new EditFieldViewModel(field.FieldDefinition);
@@ -108,7 +116,7 @@ namespace Orchard.ContentTypes.ViewModels {
         public IEnumerable<TemplateViewModel> Templates { get; set; }
         public EditFieldViewModel FieldDefinition { get; set; }
         public SettingsDictionary Settings { get; set; }
-        public ContentPartDefinition.Field _Definition { get; private set; }
+        public ContentPartFieldDefinition _Definition { get; private set; }
     }
 
     public class EditFieldViewModel {

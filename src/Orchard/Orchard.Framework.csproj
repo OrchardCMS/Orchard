@@ -133,10 +133,14 @@
     <Compile Include="Caching\Signals.cs" />
     <Compile Include="Collections\IPageOfItems.cs" />
     <Compile Include="Collections\PageOfItems.cs" />
+    <Compile Include="Commands\CommandBackgroundService.cs" />
     <Compile Include="Commands\CommandHostEnvironment.cs" />
-    <Compile Include="ContentManagement\Aspects\ICommonAspect.cs">
+    <Compile Include="Commands\CommandHostVirtualPathMonitor.cs" />
+    <Compile Include="Commands\OrchardCommandHostRetryException.cs" />
+    <Compile Include="ContentManagement\Aspects\ICommonPart.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="ContentManagement\Aspects\IPublishingControlAspect.cs" />
     <Compile Include="ContentManagement\Aspects\IRoutableAspect.cs" />
     <Compile Include="ContentManagement\ContentExtensions.cs">
       <SubType>Code</SubType>
@@ -193,6 +197,7 @@
     <Compile Include="ContentManagement\Drivers\DriverResult.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="ContentManagement\Drivers\ContentLocation.cs" />
     <Compile Include="ContentManagement\FieldStorage\FieldStorageProviderSelector.cs" />
     <Compile Include="ContentManagement\Drivers\IContentFieldDriver.cs" />
     <Compile Include="ContentManagement\Drivers\IContentItemDriver.cs">
@@ -307,12 +312,16 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="ContentManagement\MetaData\Builders\ContentPartDefinitionBuilder.cs" />
+    <Compile Include="ContentManagement\MetaData\Builders\ContentPartFieldDefinitionBuilder.cs" />
     <Compile Include="ContentManagement\MetaData\Builders\ContentTypeDefinitionBuilder.cs" />
+    <Compile Include="ContentManagement\MetaData\Builders\ContentTypePartDefinitionBuilder.cs" />
     <Compile Include="ContentManagement\MetaData\ContentFieldInfo.cs" />
     <Compile Include="ContentManagement\MetaData\ContentPartInfo.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="ContentManagement\MetaData\IContentDefinitionEditorEvents.cs" />
+    <Compile Include="ContentManagement\MetaData\Models\ContentPartFieldDefinition.cs" />
+    <Compile Include="ContentManagement\MetaData\Models\ContentTypePartDefinition.cs" />
     <Compile Include="ContentManagement\MetaData\Models\SettingsDictionary.cs" />
     <Compile Include="ContentManagement\MetaData\Services\ContentDefinitionWriter.cs" />
     <Compile Include="ContentManagement\MetaData\IContentDefinitionManager.cs" />
@@ -359,12 +368,18 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="ContentManagement\DataMigrations\FrameworkDataMigration.cs" />
+    <Compile Include="Environment\IHostLocalRestart.cs" />
+    <Compile Include="Environment\IShellContainerRegistrations.cs" />
+    <Compile Include="FileSystems\Dependencies\DynamicModuleVirtualPathProvider.cs" />
+    <Compile Include="Services\IHtmlFilter.cs" />
+    <Compile Include="Utility\Hash.cs" />
+    <Compile Include="Data\ISessionConfigurationCache.cs" />
     <Compile Include="Data\Migration\Generator\ISchemaCommandGenerator.cs" />
     <Compile Include="Data\Migration\Interpreters\AbstractDataMigrationInterpreter.cs" />
     <Compile Include="Data\Migration\Interpreters\ICommandInterpreter.cs" />
     <Compile Include="Data\Migration\Interpreters\DefaultDataMigrationInterpreter.cs" />
     <Compile Include="Data\Migration\Interpreters\IDataMigrationInterpreter.cs" />
-    <Compile Include="Data\Migration\Interpreters\SqLiteCommandInterpreter.cs" />
+    <Compile Include="Data\Migration\Interpreters\SqlCeCommandInterpreter.cs" />
     <Compile Include="Data\Migration\Interpreters\StringCommandInterpreter.cs" />
     <Compile Include="Data\Migration\Schema\AddColumnCommand.cs" />
     <Compile Include="Data\Migration\Schema\ISchemaBuilderCommand.cs" />
@@ -393,9 +408,11 @@
     <Compile Include="Data\Migration\Schema\CreateTableCommand.cs" />
     <Compile Include="Data\Migration\Schema\TableCommand.cs" />
     <Compile Include="Data\Migration\Schema\SchemaCommand.cs" />
+    <Compile Include="Data\Providers\SqlCeDataServicesProvider.cs" />
     <Compile Include="Data\Providers\DataServiceParameters.cs" />
     <Compile Include="Data\Providers\IDataServicesProvider.cs" />
     <Compile Include="Data\Providers\SessionFactoryParameters.cs" />
+    <Compile Include="Data\SessionConfigurationCache.cs" />
     <Compile Include="Data\SessionLocator.cs" />
     <Compile Include="Data\IRepository.cs" />
     <Compile Include="Data\ISessionLocator.cs" />
@@ -530,7 +547,6 @@
     <Compile Include="Data\Providers\AbstractDataServicesProvider.cs" />
     <Compile Include="Data\Providers\DataServicesProviderFactory.cs" />
     <Compile Include="Data\Providers\IDataServicesProviderFactory.cs" />
-    <Compile Include="Data\Providers\SQLiteDataServicesProvider.cs" />
     <Compile Include="Data\Providers\SqlServerDataServicesProvider.cs" />
     <Compile Include="Data\Conventions\StringLengthConvention.cs" />
     <Compile Include="Data\SessionFactoryHolder.cs" />

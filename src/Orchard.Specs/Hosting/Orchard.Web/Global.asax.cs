@@ -1,10 +1,8 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
 using Autofac;
-using Autofac.Integration.Web;
 using Orchard.Environment;
 using Orchard.Environment.Configuration;
 
@@ -20,7 +18,6 @@ namespace Orchard.Specs.Hosting.Orchard.Web {
 
             var route = RouteTable.Routes.MapRoute("foo", "hello-world", new { controller = "Home", action = "Index" });
             route.RouteHandler = new HelloYetAgainHandler();
-
         }
 
         protected void Application_BeginRequest() {
@@ -41,6 +38,10 @@ namespace Orchard.Specs.Hosting.Orchard.Web {
 
         public static IOrchardHost Host {
             get { return _host; }
+        }
+
+        public static void ReloadExtensions() {
+            _host.ReloadExtensions();
         }
 
         public static IStandaloneEnvironment CreateStandaloneEnvironment(string name) {

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using Autofac;
 using Moq;
 using NUnit.Framework;
@@ -66,7 +67,8 @@ namespace Orchard.Tests.Environment.State {
         [Test]
         public void CallingExecuteCausesEventToFireAndPendingFlagToBeCleared() {
             _container.Mock<IEventBus>()
-                .Setup(x => x.Notify(It.IsAny<string>(), It.IsAny<Dictionary<string, object>>()));
+                .Setup(x => x.Notify(It.IsAny<string>(), It.IsAny<IDictionary<string, object>>()))
+                .Returns(Enumerable.Empty<object>());
 
             var engine = _container.Resolve<IProcessingEngine>();
             var pending1 = engine.AreTasksPending();

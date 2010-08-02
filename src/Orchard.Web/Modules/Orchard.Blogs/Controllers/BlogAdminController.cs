@@ -1,14 +1,14 @@
-using System;
 using System.Linq;
 using System.Web.Mvc;
 using JetBrains.Annotations;
 using Orchard.Blogs.Drivers;
 using Orchard.Blogs.Extensions;
 using Orchard.Blogs.Models;
+using Orchard.Blogs.Routing;
 using Orchard.Blogs.Services;
 using Orchard.Blogs.ViewModels;
 using Orchard.ContentManagement;
-using Orchard.Core.Common.Models;
+using Orchard.Data;
 using Orchard.Localization;
 using Orchard.Mvc.Results;
 using Orchard.Settings;
@@ -20,16 +20,26 @@ namespace Orchard.Blogs.Controllers {
     public class BlogAdminController : Controller, IUpdateModel {
         private readonly IBlogService _blogService;
         private readonly IBlogPostService _blogPostService;
+        private readonly IContentManager _contentManager;
+        private readonly ITransactionManager _transactionManager;
+        private readonly IBlogSlugConstraint _blogSlugConstraint;
 
-        public BlogAdminController(IOrchardServices services, IBlogService blogService, IBlogPostService blogPostService) {
+        public BlogAdminController(IOrchardServices services,
+            IBlogService blogService,
+            IBlogPostService blogPostService,
+            IContentManager contentManager,
+            ITransactionManager transactionManager,
+            IBlogSlugConstraint blogSlugConstraint) {
             Services = services;
             _blogService = blogService;
             _blogPostService = blogPostService;
+            _contentManager = contentManager;
+            _transactionManager = transactionManager;
+            _blogSlugConstraint = blogSlugConstraint;
             T = NullLocalizer.Instance;
         }
 
         public Localizer T { get; set; }
-        protected virtual ISite CurrentSite { get; [UsedImplicitly] private set; }
         public IOrchardServices Services { get; set; }
 
         public ActionResult Create() {
@@ -37,7 +47,7 @@ namespace Orchard.Blogs.Controllers {
             if (!Services.Authorizer.Authorize(Permissions.ManageBlogs, T("Not allowed to create blogs")))
                 return new HttpUnauthorizedResult();
 
-            var blog = Services.ContentManager.New<Blog>(BlogDriver.ContentType.Name);
+            var blog = Services.ContentManager.New<BlogPart>(BlogPartDriver.ContentType.Name);
             if (blog == null)
                 return new NotFoundResult();
 
@@ -49,20 +59,21 @@ namespace Orchard.Blogs.Controllers {
         }
 
         [HttpPost]
-        public ActionResult Create(CreateBlogViewModel model, bool PromoteToHomePage) {
-            //TODO: (erikpo) Might think about moving this to an ActionFilter/Attribute
+        public ActionResult Create(CreateBlogViewModel model) {
+            var blog = Services.ContentManager.New<BlogPart>(BlogPartDriver.ContentType.Name);
+
             if (!Services.Authorizer.Authorize(Permissions.ManageBlogs, T("Couldn't create blog")))
                 return new HttpUnauthorizedResult();
 
-            model.Blog = Services.ContentManager.UpdateEditorModel(Services.ContentManager.New<Blog>(BlogDriver.ContentType.Name), this);
+            _blogService.Create(blog);
+            model.Blog = _contentManager.UpdateEditorModel(blog, this);
 
-            if (!ModelState.IsValid)
+            if (!ModelState.IsValid) {
+                _transactionManager.Cancel();
                 return View(model);
+            }
 
-            _blogService.Create(model.Blog.Item);
-
-            if (PromoteToHomePage)
-                CurrentSite.HomePage = "BlogHomePageProvider;" + model.Blog.Item.Id;
+            _blogSlugConstraint.AddSlug(model.Blog.Item.Slug);
 
             return Redirect(Url.BlogForAdmin(model.Blog.Item.Slug));
         }
@@ -79,14 +90,14 @@ namespace Orchard.Blogs.Controllers {
 
             var model = new BlogEditViewModel {
                 Blog = Services.ContentManager.BuildEditorModel(blog),
-                PromoteToHomePage = CurrentSite.HomePage == "BlogHomePageProvider;" + blog.Id
+                //PromoteToHomePage = CurrentSite.HomePage == "BlogHomePageProvider;" + blog.Id
             };
 
             return View(model);
         }
 
-        [HttpPost]
-        public ActionResult Edit(string blogSlug, bool PromoteToHomePage) {
+        [HttpPost, ActionName("Edit")]
+        public ActionResult EditPOST(string blogSlug) {
             if (!Services.Authorizer.Authorize(Permissions.ManageBlogs, T("Couldn't edit blog")))
                 return new HttpUnauthorizedResult();
 
@@ -102,8 +113,8 @@ namespace Orchard.Blogs.Controllers {
             if (!ModelState.IsValid)
                 return View(model);
 
-            if (PromoteToHomePage)
-                CurrentSite.HomePage = "BlogHomePageProvider;" + model.Blog.Item.Id;
+            //if (PromoteToHomePage)
+            //    CurrentSite.HomePage = "BlogHomePageProvider;" + model.Blog.Item.Id;
 
             _blogService.Edit(model.Blog.Item);
 
@@ -113,17 +124,17 @@ namespace Orchard.Blogs.Controllers {
         }
 
         [HttpPost]
-        public ActionResult Delete(string blogSlug) {
+        public ActionResult Remove(string blogSlug) {
             if (!Services.Authorizer.Authorize(Permissions.ManageBlogs, T("Couldn't delete blog")))
                 return new HttpUnauthorizedResult();
 
             //TODO: (erikpo) Move looking up the current blog up into a modelbinder
-            Blog blog = _blogService.Get(blogSlug);
+            BlogPart blogPart = _blogService.Get(blogSlug);
 
-            if (blog == null)
+            if (blogPart == null)
                 return new NotFoundResult();
 
-            _blogService.Delete(blog);
+            _blogService.Delete(blogPart);
 
             Services.Notifier.Information(T("Blog was successfully deleted"));
 
@@ -143,14 +154,14 @@ namespace Orchard.Blogs.Controllers {
 
         //TODO: (erikpo) Should move the slug parameter and get call and null check up into a model binder
         public ActionResult Item(string blogSlug) {
-            Blog blog = _blogService.Get(blogSlug);
+            BlogPart blogPart = _blogService.Get(blogSlug);
 
-            if (blog == null)
+            if (blogPart == null)
                 return new NotFoundResult();
 
             //TODO: (erikpo) Need to make templatePath be more convention based so if my controller name has "Admin" in it then "Admin/{type}" is assumed
             var model = new BlogForAdminViewModel {
-                Blog = Services.ContentManager.BuildDisplayModel(blog, "DetailAdmin")
+                Blog = Services.ContentManager.BuildDisplayModel(blogPart, "DetailAdmin")
             };
 
             return View(model);

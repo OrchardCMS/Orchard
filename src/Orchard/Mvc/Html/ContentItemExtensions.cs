@@ -20,7 +20,7 @@ namespace Orchard.Mvc.Html {
                 return null;
 
             return html.ActionLink(
-                linkText ?? metadata.DisplayText ?? "view",
+                NonNullOrEmpty(linkText, metadata.DisplayText, "view"),
                 Convert.ToString(metadata.DisplayRouteValues["action"]),
                 metadata.DisplayRouteValues);
         }
@@ -30,7 +30,7 @@ namespace Orchard.Mvc.Html {
         }
 
         public static MvcHtmlString ItemEditLinkWithReturnUrl(this HtmlHelper html, string linkText, IContent content) {
-            return html.ItemEditLink(linkText, content, new {ReturnUrl = html.ViewContext.HttpContext.Request.RawUrl});
+            return html.ItemEditLink(linkText, content, new { ReturnUrl = html.ViewContext.HttpContext.Request.RawUrl });
         }
 
         public static MvcHtmlString ItemEditLink(this HtmlHelper html, string linkText, IContent content) {
@@ -43,9 +43,17 @@ namespace Orchard.Mvc.Html {
                 return null;
 
             return html.ActionLink(
-                linkText ?? metadata.DisplayText ?? "edit",
+                NonNullOrEmpty(linkText, metadata.DisplayText, "edit"),
                 Convert.ToString(metadata.EditorRouteValues["action"]),
                 metadata.EditorRouteValues.Merge(additionalRouteValues));
+        }
+
+        private static string NonNullOrEmpty(params string[] values) {
+            foreach (var value in values) {
+                if (!string.IsNullOrEmpty(value))
+                    return value;
+            }
+            return null;
         }
 
         public static MvcHtmlString ItemEditLink(this HtmlHelper html, IContent content) {

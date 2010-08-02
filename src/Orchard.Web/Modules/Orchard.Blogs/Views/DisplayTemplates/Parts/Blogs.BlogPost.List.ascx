@@ -1,5 +1,3 @@
-﻿<%@ Control Language="C#" Inherits="Orchard.Mvc.ViewUserControl<IEnumerable<ContentItemViewModel<BlogPost>>>" %>
-<%@ Import Namespace="Orchard.Mvc.ViewModels"%>
-<%@ Import Namespace="Orchard.Blogs.Models"%>
-<%: Html.UnorderedList(Model, (bp, i) => Html.DisplayForItem(bp), "blogPosts contentItems") %>
-<% if (Model.Count() < 1) { %><div class="info message"><%: T("There are no posts for this blog.") %></div><% } %>
+﻿<%@ Control Language="C#" Inherits="Orchard.Mvc.ViewUserControl<Orchard.Core.Contents.ViewModels.ListContentsViewModel>" %>
+<%: Html.UnorderedList(Model.Entries, (bp, i) => Html.DisplayForItem(bp.ViewModel), "blogPosts contentItems") %>
+<% if (Model.Entries.Count() < 1) { %><p><%: T("There are no posts for this blog.") %></p><% } %>

@@ -2,16 +2,16 @@
 
 namespace Orchard.Core.Common.ViewModels {
     public class BodyEditorViewModel {
-        public BodyAspect BodyAspect { get; set; }
+        public BodyPart BodyPart { get; set; }
 
         public string Text {
-            get { return BodyAspect.Record.Text; }
-            set { BodyAspect.Record.Text = value; }
+            get { return BodyPart.Record.Text; }
+            set { BodyPart.Record.Text = value; }
         }
 
         public string Format {
-            get { return BodyAspect.Record.Format; }
-            set { BodyAspect.Record.Format = value; }
+            get { return BodyPart.Record.Format; }
+            set { BodyPart.Record.Format = value; }
         }
 
         public string TextEditorTemplate { get; set; }

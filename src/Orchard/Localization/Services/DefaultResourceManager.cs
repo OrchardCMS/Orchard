@@ -15,10 +15,10 @@ namespace Orchard.Localization.Services {
         private readonly ICacheManager _cacheManager;
         private readonly ShellSettings _shellSettings;
         private readonly ISignals _signals;
-        const string CoreLocalizationFilePathFormat = "/Core/App_Data/Localization/{0}/orchard.core.po";
-        const string ModulesLocalizationFilePathFormat = "/Modules/{0}/App_Data/Localization/{1}/orchard.module.po";
-        const string RootLocalizationFilePathFormat = "/App_Data/Localization/{0}/orchard.root.po";
-        const string TenantLocalizationFilePathFormat = "/App_Data/Sites/{0}/Localization/{1}/orchard.po";
+        const string CoreLocalizationFilePathFormat = "~/Core/App_Data/Localization/{0}/orchard.core.po";
+        const string ModulesLocalizationFilePathFormat = "~/Modules/{0}/App_Data/Localization/{1}/orchard.module.po";
+        const string RootLocalizationFilePathFormat = "~/App_Data/Localization/{0}/orchard.root.po";
+        const string TenantLocalizationFilePathFormat = "~/App_Data/Sites/{0}/Localization/{1}/orchard.po";
 
         public DefaultResourceManager(
             ICultureManager cultureManager, 
@@ -107,10 +107,10 @@ namespace Orchard.Localization.Services {
 
         // Merging occurs from multiple locations:
         // In reverse priority order: 
-        // "/Core/App_Data/Localization/<culture_name>/orchard.core.po";
-        // "/Modules/<module_name>/App_Data/Localization/<culture_name>/orchard.module.po";
-        // "/App_Data/Localization/<culture_name>/orchard.root.po";
-        // "/App_Data/Sites/<tenant_name>/Localization/<culture_name>/orchard.po";
+        // "~/Core/App_Data/Localization/<culture_name>/orchard.core.po";
+        // "~/Modules/<module_name>/App_Data/Localization/<culture_name>/orchard.module.po";
+        // "~/App_Data/Localization/<culture_name>/orchard.root.po";
+        // "~/App_Data/Sites/<tenant_name>/Localization/<culture_name>/orchard.po";
         // The dictionary entries from po files that live in higher priority locations will
         // override the ones from lower priority locations during loading of dictionaries.
 

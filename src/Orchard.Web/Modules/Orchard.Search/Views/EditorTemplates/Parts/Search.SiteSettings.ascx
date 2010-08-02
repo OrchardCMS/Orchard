@@ -1,4 +1,4 @@
-<%@ Control Language="C#" Inherits="Orchard.Mvc.ViewUserControl<SearchSettingsRecord>" %>
+<%@ Control Language="C#" Inherits="Orchard.Mvc.ViewUserControl<SearchSettingsPartRecord>" %>
 <%@ Import Namespace="Orchard.Search.Models"%>
 <fieldset>
     <legend><%: T("Search")%></legend>

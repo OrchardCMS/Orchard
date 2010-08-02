@@ -30,7 +30,7 @@ namespace Orchard.Core.Settings.Controllers {
                 return new HttpUnauthorizedResult();
 
             var model = new SettingsIndexViewModel {
-                Site = _siteService.GetSiteSettings().As<SiteSettings>(),
+                Site = _siteService.GetSiteSettings().As<SiteSettingsPart>(),
                 SiteCultures = _cultureManager.ListCultures()
             };
             model.ViewModel = Services.ContentManager.BuildEditorModel(model.Site);
@@ -42,7 +42,7 @@ namespace Orchard.Core.Settings.Controllers {
             if (!Services.Authorizer.Authorize(Permissions.ManageSettings, T("Not authorized to manage settings")))
                 return new HttpUnauthorizedResult();
 
-            var viewModel = new SettingsIndexViewModel { Site = _siteService.GetSiteSettings().As<SiteSettings>() };
+            var viewModel = new SettingsIndexViewModel { Site = _siteService.GetSiteSettings().As<SiteSettingsPart>() };
             viewModel.ViewModel = Services.ContentManager.UpdateEditorModel(viewModel.Site.ContentItem, this);
 
             if (!TryUpdateModel(viewModel)) {
@@ -59,7 +59,7 @@ namespace Orchard.Core.Settings.Controllers {
                 return new HttpUnauthorizedResult();
 
             var viewModel = new SiteCulturesViewModel {
-                CurrentCulture = CultureInfo.CurrentCulture.Name,
+                CurrentCulture = _cultureManager.GetCurrentCulture(HttpContext),
                 SiteCultures = _cultureManager.ListCultures(),
             };
             viewModel.AvailableSystemCultures = CultureInfo.GetCultures(CultureTypes.SpecificCultures)

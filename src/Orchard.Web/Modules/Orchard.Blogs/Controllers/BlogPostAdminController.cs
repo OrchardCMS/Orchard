@@ -31,9 +31,9 @@ namespace Orchard.Blogs.Controllers {
             if (!Services.Authorizer.Authorize(Permissions.EditBlogPost, T("Not allowed to create blog post")))
                 return new HttpUnauthorizedResult();
 
-            var blogPost = Services.ContentManager.New<BlogPost>(BlogPostDriver.ContentType.Name);
+            var blogPost = Services.ContentManager.New<BlogPostPart>(BlogPostPartDriver.ContentType.Name);
 
-            if (blogPost.Blog == null)
+            if (blogPost.BlogPart == null)
                 return new NotFoundResult();
 
             var model = new CreateBlogPostViewModel {
@@ -48,11 +48,12 @@ namespace Orchard.Blogs.Controllers {
             if (!Services.Authorizer.Authorize(Permissions.EditBlogPost, T("Couldn't create blog post")))
                 return new HttpUnauthorizedResult();
 
-            var blogPost = Services.ContentManager.New<BlogPost>(BlogPostDriver.ContentType.Name);
+            var blogPost = Services.ContentManager.New<BlogPostPart>(BlogPostPartDriver.ContentType.Name);
             
-            if (blogPost.Blog == null)
+            if (blogPost.BlogPart == null)
                 return new NotFoundResult();
 
+            Services.ContentManager.Create(blogPost, VersionOptions.Draft);
             model.BlogPost = Services.ContentManager.UpdateEditorModel(blogPost, this);
 
             if (!ModelState.IsValid) {
@@ -60,24 +61,7 @@ namespace Orchard.Blogs.Controllers {
                 return View(model);
             }
 
-            Services.ContentManager.Create(model.BlogPost.Item.ContentItem, VersionOptions.Draft);
-            Services.ContentManager.UpdateEditorModel(blogPost, this);
-
-            // Execute publish command
-            switch (Request.Form["Command"]) {
-                case "PublishNow":
-                    _blogPostService.Publish(model.BlogPost.Item);
-                    Services.Notifier.Information(T("Blog post has been published"));
-                    break;
-                case "PublishLater":
-                    _blogPostService.Publish(model.BlogPost.Item, model.BlogPost.Item.ScheduledPublishUtc.Value);
-                    Services.Notifier.Information(T("Blog post has been scheduled for publishing"));
-                    break;
-                default:
-                    Services.Notifier.Information(T("Blog post draft has been saved"));
-                    break;
-            }
-
+            Services.Notifier.Information(T("Your {0} has been created.", blogPost.TypeDefinition.DisplayName));
             return Redirect(Url.BlogPostEdit(model.BlogPost.Item));
         }
 
@@ -110,13 +94,13 @@ namespace Orchard.Blogs.Controllers {
                 return new NotFoundResult();
 
             // Get draft (create a new version if needed)
-            var post = _blogPostService.Get(postId, VersionOptions.DraftRequired);
-            if (post == null)
+            var blogPost = _blogPostService.Get(postId, VersionOptions.DraftRequired);
+            if (blogPost == null)
                 return new NotFoundResult();
 
             // Validate form input
             var model = new BlogPostEditViewModel {
-                BlogPost = Services.ContentManager.UpdateEditorModel(post, this)
+                BlogPost = Services.ContentManager.UpdateEditorModel(blogPost, this)
             };
 
             TryUpdateModel(model);
@@ -126,22 +110,7 @@ namespace Orchard.Blogs.Controllers {
                 return View(model);
             }
 
-            // Execute publish command
-            switch (Request.Form["Command"]) {
-                case "PublishNow":
-                    _blogPostService.Publish(model.BlogPost.Item);
-                    Services.Notifier.Information(T("Blog post has been published"));
-                    break;
-                case "PublishLater":
-                    _blogPostService.Publish(model.BlogPost.Item, model.BlogPost.Item.ScheduledPublishUtc.Value);
-                    Services.Notifier.Information(T("Blog post has been scheduled for publishing"));
-                    break;
-                default:
-                    //_blogPostService.Unpublish(model.BlogPost.Item);
-                    Services.Notifier.Information(T("Blog post draft has been saved"));
-                    break;
-            }
-
+            Services.Notifier.Information(T("Your {0} has been saved.", blogPost.TypeDefinition.DisplayName));
             return Redirect(Url.BlogPostEdit(model.BlogPost.Item));
         }
 
@@ -175,13 +144,13 @@ namespace Orchard.Blogs.Controllers {
         }
 
         ActionResult RedirectToEdit(int id) {
-            return RedirectToEdit(Services.ContentManager.GetLatest<BlogPost>(id));
+            return RedirectToEdit(Services.ContentManager.GetLatest<BlogPostPart>(id));
         }
 
         ActionResult RedirectToEdit(IContent item) {
-            if (item == null || item.As<BlogPost>() == null)
+            if (item == null || item.As<BlogPostPart>() == null)
                 return new NotFoundResult();
-            return RedirectToAction("Edit", new { BlogSlug = item.As<BlogPost>().Blog.Slug, PostId = item.ContentItem.Id });
+            return RedirectToAction("Edit", new { BlogSlug = item.As<BlogPostPart>().BlogPart.Slug, PostId = item.ContentItem.Id });
         }
 
         [ValidateAntiForgeryTokenOrchard]

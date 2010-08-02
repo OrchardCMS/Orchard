@@ -12,14 +12,14 @@
     } else {
         using (Html.BeginFormAntiForgeryPost(Url.Action("Close", new { commentedItemId = Model.CommentedItemId }), FormMethod.Post, new { @class = "inline" })) { %>
     <fieldset>
-        <button type="submit" class="remove" title="<%: T("Close Comments") %>"><%: T("Close Comments")%></button>
+        <button type="submit" class="button primaryAction" title="<%: T("Close Comments") %>"><%: T("Close Comments")%></button>
     </fieldset><%
         }
     } %>
 </div>
 <% using(Html.BeginFormAntiForgeryPost()) { %>
 	<%: Html.ValidationSummary() %>
-    <fieldset class="actions bulk">
+    <fieldset class="bulk-actions">
         <label for="publishActions"><%: T("Actions:") %></label>
         <select id="publishActions" name="<%: Html.NameOf(m => m.Options.BulkAction)%>">
             <%: Html.SelectOption(Model.Options.BulkAction, CommentDetailsBulkAction.None, T("Choose action...").ToString())%>
@@ -30,7 +30,7 @@
         </select>
         <input class="button" type="submit" name="submit.BulkEdit" value="<%: T("Apply") %>" />
     </fieldset>
-    <fieldset class="actions bulk">
+    <fieldset class="bulk-actions">
         <label for="filterResults"><%: T("Filter:")%></label>
         <select id="filterResults" name="<%: Html.NameOf(m => m.Options.Filter)%>">
             <%: Html.SelectOption(Model.Options.Filter, CommentDetailsFilter.All, T("All Comments").ToString())%>
@@ -87,7 +87,7 @@
                 <td>
                     <ul class="actions">
                         <li class="construct">
-                            <a href="<%: Url.Action("Edit", new {commentEntry.Comment.Id}) %>" class="ibutton edit" title="<%: T("Edit Comment")%>"><%: T("Edit Comment")%></a>
+                            <a href="<%: Url.Action("Edit", new {commentEntry.Comment.Id}) %>" title="<%: T("Edit Comment")%>"><%: T("Edit")%></a>
                         </li>
                         <li class="destruct">
 <%-- a form in a form doesn't quite work                            <% using (Html.BeginFormAntiForgeryPost(Url.Action("Delete", new {id = commentEntry.Comment.Id, redirectToAction = "Details"}), FormMethod.Post, new { @class = "inline" })) { %>
@@ -115,7 +115,7 @@
     } else {
         using (Html.BeginFormAntiForgeryPost(Url.Action("Close", new { commentedItemId = Model.CommentedItemId }), FormMethod.Post, new { @class = "inline" })) { %>
     <fieldset>
-        <button type="submit" class="remove" title="<%: T("Close Comments") %>"><%: T("Close Comments")%></button>
+        <button type="submit" class="button primaryAction" title="<%: T("Close Comments") %>"><%: T("Close Comments")%></button>
     </fieldset><%
         }
     } %>

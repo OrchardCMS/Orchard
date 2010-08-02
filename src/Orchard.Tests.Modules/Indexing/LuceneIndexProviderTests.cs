@@ -20,7 +20,9 @@ namespace Orchard.Tests.Modules.Indexing {
         
         [TestFixtureTearDown]
         public void Clean() {
-            Directory.Delete(_basePath, true);
+            if (Directory.Exists(_basePath)) {
+                Directory.Delete(_basePath, true);
+            }
         }
 
         [SetUp]
@@ -190,7 +192,7 @@ namespace Orchard.Tests.Modules.Indexing {
         [Test]
         public void ProviderShouldStoreSettings() {
             _provider.CreateIndex("default");
-            Assert.That(_provider.GetLastIndexUtc("default"), Is.EqualTo(LuceneIndexProvider.DefaultMinDateTime));
+            Assert.That(_provider.GetLastIndexUtc("default"), Is.Null);
 
             _provider.SetLastIndexUtc("default", new DateTime(2010, 1, 1, 1, 1, 1, 1));
             Assert.That(_provider.GetLastIndexUtc("default"), Is.EqualTo(new DateTime(2010, 1, 1, 1, 1, 1, 0)));

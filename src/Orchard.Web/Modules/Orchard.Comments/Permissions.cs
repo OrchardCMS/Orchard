@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Orchard.Environment.Extensions.Models;
 using Orchard.Security.Permissions;
 
 namespace Orchard.Comments {
@@ -11,11 +12,7 @@ namespace Orchard.Comments {
         public static readonly Permission ManageComments = new Permission { Description = "Manage comments", Name = "ManageComments" };
         public static readonly Permission ManageOthersComments = new Permission { Description = "Manage comments for others", Name = "ManageOthersComments" };
 
-        public string ModuleName {
-            get {
-                return "Comments";
-            }
-        }
+        public virtual Feature Feature { get; set; }
 
         public IEnumerable<Permission> GetPermissions() {
             return new Permission[] {

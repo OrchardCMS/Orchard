@@ -4,9 +4,9 @@ using Orchard.Core.Feeds;
 
 namespace Orchard.Blogs.Extensions {
     public static class FeedManagerExtensions {
-        public static void Register(this IFeedManager feedManager, Blog blog) {
-            feedManager.Register(blog.Name, "rss", new RouteValueDictionary { { "containerid", blog.Id } });
-            feedManager.Register(blog.Name + " - Comments", "rss", new RouteValueDictionary { { "commentedoncontainer", blog.Id } });
+        public static void Register(this IFeedManager feedManager, BlogPart blogPart) {
+            feedManager.Register(blogPart.Name, "rss", new RouteValueDictionary { { "containerid", blogPart.Id } });
+            feedManager.Register(blogPart.Name + " - Comments", "rss", new RouteValueDictionary { { "commentedoncontainer", blogPart.Id } });
         }
     }
 }

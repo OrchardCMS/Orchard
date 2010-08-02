@@ -3,9 +3,14 @@ using System.Collections.Generic;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
+using System.Xml.Linq;
 using Autofac;
 using Moq;
 using NUnit.Framework;
+using Orchard.ContentManagement.MetaData;
+using Orchard.ContentManagement.MetaData.Models;
+using Orchard.ContentManagement.MetaData.Services;
+using Orchard.Core.Settings.Metadata;
 using Orchard.Data;
 using Orchard.Environment;
 using Orchard.ContentManagement;
@@ -30,11 +35,15 @@ namespace Orchard.Tests.Modules.Users.Controllers {
         public override void Register(ContainerBuilder builder) {
             builder.RegisterType<AdminController>().SingleInstance();
             builder.RegisterType<DefaultContentManager>().As<IContentManager>();
+            builder.RegisterType(typeof(SettingsFormatter))
+                .As(typeof(IMapper<XElement, SettingsDictionary>))
+                .As(typeof(IMapper<SettingsDictionary, XElement>));
+            builder.RegisterType<ContentDefinitionManager>().As<IContentDefinitionManager>();
             builder.RegisterType<DefaultContentManagerSession>().As<IContentManagerSession>();
             builder.RegisterType<DefaultContentQuery>().As<IContentQuery>().InstancePerDependency();
             builder.RegisterType<MembershipService>().As<IMembershipService>();
             builder.RegisterType<UserService>().As<IUserService>();
-            builder.RegisterType<UserHandler>().As<IContentHandler>();
+            builder.RegisterType<UserPartHandler>().As<IContentHandler>();
             builder.RegisterType<OrchardServices>().As<IOrchardServices>();
             builder.RegisterType<TransactionManager>().As<ITransactionManager>();
             builder.RegisterInstance(new Mock<INotifier>().Object);
@@ -44,7 +53,7 @@ namespace Orchard.Tests.Modules.Users.Controllers {
 
         protected override IEnumerable<Type> DatabaseTypes {
             get {
-                return new[] { typeof(UserRecord), 
+                return new[] { typeof(UserPartRecord), 
                     typeof(ContentTypeRecord),
                     typeof(ContentItemRecord),
                     typeof(ContentItemVersionRecord), 
@@ -57,16 +66,16 @@ namespace Orchard.Tests.Modules.Users.Controllers {
 
             var manager = _container.Resolve<IContentManager>();
 
-            var userOne = manager.New<User>("User");
-            userOne.Record = new UserRecord { UserName = "one" };
+            var userOne = manager.New<UserPart>("User");
+            userOne.Record = new UserPartRecord { UserName = "one" };
             manager.Create(userOne.ContentItem);
 
-            var userTwo = manager.New<User>("User");
-            userTwo.Record = new UserRecord { UserName = "two" };
+            var userTwo = manager.New<UserPart>("User");
+            userTwo.Record = new UserPartRecord { UserName = "two" };
             manager.Create(userTwo.ContentItem);
 
-            var userThree = manager.New<User>("User");
-            userThree.Record = new UserRecord { UserName = "three" };
+            var userThree = manager.New<UserPart>("User");
+            userThree.Record = new UserPartRecord { UserName = "three" };
             manager.Create(userThree.ContentItem);
 
             _controller = _container.Resolve<AdminController>();
@@ -116,7 +125,7 @@ namespace Orchard.Tests.Modules.Users.Controllers {
         public void EditShouldDisplayUserAndStoreChanges() {
             _authorizer.Setup(x => x.Authorize(It.IsAny<Permission>(), It.IsAny<LocalizedString>())).Returns(true);
 
-            var repository = _container.Resolve<IRepository<UserRecord>>();
+            var repository = _container.Resolve<IRepository<UserPartRecord>>();
             var id = repository.Get(x => x.UserName == "two").Id;
             var result = (ViewResult)_container.Resolve<AdminController>().Edit(id);
             var model = (UserEditViewModel)result.ViewData.Model;

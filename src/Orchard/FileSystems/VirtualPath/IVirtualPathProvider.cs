@@ -6,6 +6,7 @@ using Orchard.Caching;
 namespace Orchard.FileSystems.VirtualPath {
     public interface IVirtualPathProvider : IVolatileProvider {
         string Combine(params string[] paths);
+        string ToAppRelative(string virtualPath);
         string MapPath(string virtualPath);
 
         bool FileExists(string virtualPath);

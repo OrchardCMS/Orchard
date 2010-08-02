@@ -2,12 +2,13 @@
 antiforgery: enabled
 author: The Orchard Team
 website: http://orchardproject.net
-version: 0.1
-orchardversion: 0.1.2010.0312
+version: 0.5.0
+orchardversion: 0.5.0
 description: The Orchard Blogs module is implementing basic blogging features. 
 features:
     Orchard.Blogs:
         Description: A simple web log.
+        Dependencies: Feeds
         Category: Content
     Remote Blog Publishing:
         Description: Blog easier using a dedicated MetaWeblogAPI-compatible publishing tool.

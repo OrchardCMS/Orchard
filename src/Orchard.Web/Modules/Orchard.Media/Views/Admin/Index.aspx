@@ -3,7 +3,7 @@
 <h1><%: Html.TitleForPage(T("Manage Media Folders").ToString()) %></h1>
 <% using(Html.BeginFormAntiForgeryPost()) { %>
     <%: Html.ValidationSummary() %>
-    <fieldset class="actions bulk">
+    <fieldset class="bulk-actions">
         <label for="publishActions"><%: T("Actions:") %></label>
 		<select id="Select1" name="publishActions">
 		    <option value="1"><%: T("Remove")%></option>
@@ -48,5 +48,4 @@
             <%}%>
         </table>
     </fieldset>
-    <div class="manage"><%: Html.ActionLink(T("Add a folder").ToString(), "Create", new { }, new { @class = "button primaryAction" })%></div>
 <% } %>

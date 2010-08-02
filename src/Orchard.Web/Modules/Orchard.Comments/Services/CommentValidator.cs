@@ -25,11 +25,11 @@ namespace Orchard.Comments.Services {
         public Localizer T { get; set; }
         protected virtual ISite CurrentSite { get; [UsedImplicitly] private set; }
 
-        public bool ValidateComment(Comment comment) {
-            CommentSettingsRecord commentSettingsRecord = CurrentSite.As<CommentSettings>().Record;
-            string akismetKey = commentSettingsRecord.AkismetKey;
-            string akismetUrl = commentSettingsRecord.AkismetUrl;
-            bool enableSpamProtection = commentSettingsRecord.EnableSpamProtection;
+        public bool ValidateComment(CommentPart commentPart) {
+            CommentSettingsPartRecord commentSettingsPartRecord = CurrentSite.As<CommentSettingsPart>().Record;
+            string akismetKey = commentSettingsPartRecord.AkismetKey;
+            string akismetUrl = commentSettingsPartRecord.AkismetUrl;
+            bool enableSpamProtection = commentSettingsPartRecord.EnableSpamProtection;
             if (enableSpamProtection == false) {
                 return true;
             }
@@ -42,16 +42,16 @@ namespace Orchard.Comments.Services {
             }
             Akismet akismetApi = new Akismet(akismetKey, akismetUrl, null);
             AkismetComment akismetComment = new AkismetComment {
-                CommentAuthor = comment.Record.Author,
-                CommentAuthorEmail = comment.Record.Email,
-                Blog = comment.Record.SiteName,
-                CommentAuthorUrl = comment.Record.SiteName,
-                CommentContent = comment.Record.CommentText,
+                CommentAuthor = commentPart.Record.Author,
+                CommentAuthorEmail = commentPart.Record.Email,
+                Blog = akismetUrl,
+                CommentAuthorUrl = commentPart.Record.SiteName,
+                CommentContent = commentPart.Record.CommentText,
                 UserAgent = HttpContext.Current.Request.UserAgent,
             };
 
             if (akismetApi.VerifyKey()) {
-                return akismetApi.CommentCheck(akismetComment);
+                return !akismetApi.CommentCheck(akismetComment); // CommentCheck returning true == spam
             }
 
             return false;

@@ -54,11 +54,6 @@
     <Reference Include="System.Data.DataSetExtensions">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
-    <Reference Include="System.Data.SQLite, Version=1.0.65.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=x86">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\lib\sqlite\System.Data.SQLite.DLL</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="System.Web.Mvc, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\aspnetmvc\System.Web.Mvc.dll</HintPath>
@@ -119,10 +114,6 @@
     <ProjectReference Include="Modules\Orchard.Media\Orchard.Media.csproj">
       <Project>{D9A7B330-CD22-4DA1-A95A-8DE1982AD8EB}</Project>
       <Name>Orchard.Media</Name>
-    </ProjectReference>
-    <ProjectReference Include="Modules\Orchard.Pages\Orchard.Pages.csproj">
-      <Project>{4A9C04A6-0986-4A92-A610-5F59FF273FB9}</Project>
-      <Name>Orchard.Pages</Name>
     </ProjectReference>
     <ProjectReference Include="Modules\Orchard.Roles\Orchard.Roles.csproj">
       <Project>{D10AD48F-407D-4DB5-A328-173EC7CB010F}</Project>
@@ -203,7 +194,7 @@
     <Content Include="Themes\Green\Views\DisplayTemplates\Items\Blogs.Blog.Summary.ascx" />
     <Content Include="Themes\Green\Views\DisplayTemplates\Items\Blogs.BlogPost.Summary.ascx" />
     <Content Include="Themes\Green\Views\DisplayTemplates\Items\Pages.Page.ascx" />
-    <Content Include="Themes\Green\Views\DisplayTemplates\Parts\Comments.HasComments.ascx" />
+    <Content Include="Themes\Green\Views\DisplayTemplates\Parts\Comments.Comments.ascx" />
     <Content Include="Themes\Green\Views\Footer.ascx" />
     <Content Include="Themes\Green\Views\Layout.ascx" />
     <Content Include="Themes\Green\Views\ListOfComments.ascx" />

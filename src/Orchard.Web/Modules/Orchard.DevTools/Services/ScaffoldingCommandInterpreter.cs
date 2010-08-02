@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Data;
 using System.IO;
 using System.Linq;
 using Orchard.Data.Migration.Interpreters;
@@ -16,13 +17,45 @@ namespace Orchard.DevTools.Services {
             _output.WriteLine("\t\t\t// Creating table {0}", command.Name);
             _output.WriteLine("\t\t\tSchemaBuilder.CreateTable(\"{0}\", table => table", command.Name);
 
+
+            var matchContentPartRecord = command.TableCommands.OfType<CreateColumnCommand>().Any(
+                c =>
+                c.IsPrimaryKey
+                && c.ColumnName == "Id"
+                && !c.IsIdentity
+                && c.DbType == DbType.Int32);
+
+            var matchContentPartVersionRecord = matchContentPartRecord && command.TableCommands.OfType<CreateColumnCommand>().Any(
+                c =>
+                c.ColumnName == "ContentItemRecord_id"
+                && c.DbType == DbType.Int32);
+
+            if ( matchContentPartVersionRecord ) {
+                _output.WriteLine("\t\t\t\t.ContentPartVersionRecord()");
+            }
+            else if ( matchContentPartRecord ) {
+                _output.WriteLine("\t\t\t\t.ContentPartRecord()");
+            }
+
             foreach ( var createColumn in command.TableCommands.OfType<CreateColumnCommand>() ) {
+                if(createColumn.ColumnName == "Id" && matchContentPartRecord) {
+                    continue;
+                }
+
+                if(createColumn.ColumnName == "ContentItemRecord_id" && matchContentPartVersionRecord) {
+                    continue;
+                }
+
                 var type = createColumn.DbType.ToString();
                 var field = createColumn.ColumnName;
                 var options = new List<string>();
 
                 if ( createColumn.IsPrimaryKey ) {
                     options.Add("PrimaryKey()");
+                }
+
+                if ( createColumn.IsIdentity ) {
+                    options.Add("Identity()");
                 }
 
                 if ( createColumn.IsUnique ) {
@@ -34,7 +67,12 @@ namespace Orchard.DevTools.Services {
                 }
 
                 if ( createColumn.Length.HasValue ) {
-                    options.Add(string.Format("WithLength({0})", createColumn.Length ));
+                    if ( createColumn.Length == 10000 ) {
+                        options.Add("Unlimited()");
+                    }
+                    else {
+                        options.Add(string.Format("WithLength({0})", createColumn.Length));
+                    }
                 }
 
                 if ( createColumn.Precision > 0 ) {
