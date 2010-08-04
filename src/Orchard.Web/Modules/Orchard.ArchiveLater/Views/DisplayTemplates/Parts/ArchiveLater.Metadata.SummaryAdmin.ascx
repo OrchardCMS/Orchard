@@ -1,4 +1,4 @@
-﻿<%@ Control Language="C#" Inherits="Orchard.Mvc.ViewUserControl<ArchiveLater.ViewModels.ArchiveLaterViewModel>" %>
+﻿<%@ Control Language="C#" Inherits="Orchard.Mvc.ViewUserControl<Orchard.ArchiveLater.ViewModels.ArchiveLaterViewModel>" %>
     <%
     if ((Model.IsPublished && Model.ScheduledArchiveUtc.HasValue && Model.ScheduledArchiveUtc.Value > DateTime.UtcNow)) {%>
     <ul class="pageStatus">

@@ -1,8 +1,8 @@
 ﻿using System;
-using ArchiveLater.Models;
+using Orchard.ArchiveLater.Models;
 using Orchard.ContentManagement;
 
-namespace ArchiveLater.ViewModels {
+namespace Orchard.ArchiveLater.ViewModels {
     public class ArchiveLaterViewModel {
         private readonly ArchiveLaterPart _archiveLaterPart;
 

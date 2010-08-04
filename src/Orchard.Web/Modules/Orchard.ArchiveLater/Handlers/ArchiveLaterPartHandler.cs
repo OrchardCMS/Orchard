@@ -1,9 +1,9 @@
-﻿using ArchiveLater.Models;
-using ArchiveLater.Services;
+﻿using Orchard.ArchiveLater.Models;
+using Orchard.ArchiveLater.Services;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Handlers;
 
-namespace ArchiveLater.Handlers {
+namespace Orchard.ArchiveLater.Handlers {
     public class ArchiveLaterPartHandler : ContentHandler {
         private readonly IArchiveLaterService _archiveLaterService;
 

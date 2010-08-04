@@ -75,7 +75,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orchard.Packaging", "Orchar
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orchard.Tests", "Tools\Orchard.Tests\Orchard.Tests.csproj", "{0DFA2E10-96C8-4E05-BC10-B710B97ECCDE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orchard.ArchiveLater", "Orchard.Web\Modules\ArchiveLater\Orchard.ArchiveLater.csproj", "{1C981BB3-26F7-494C-9005-CC27A5144233}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orchard.ArchiveLater", "Orchard.Web\Modules\Orchard.ArchiveLater\Orchard.ArchiveLater.csproj", "{1C981BB3-26F7-494C-9005-CC27A5144233}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

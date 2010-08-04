@@ -3,7 +3,7 @@ using Orchard.ContentManagement;
 using Orchard.Logging;
 using Orchard.Tasks.Scheduling;
 
-namespace ArchiveLater.Handlers {
+namespace Orchard.ArchiveLater.Handlers {
     [UsedImplicitly]
     public class UnpublishingTaskHandler : IScheduledTaskHandler {
         private readonly IContentManager _contentManager;

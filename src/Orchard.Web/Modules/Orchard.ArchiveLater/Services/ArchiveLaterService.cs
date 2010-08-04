@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Linq;
-using ArchiveLater.Models;
+using Orchard.ArchiveLater.Models;
 using Orchard.ContentManagement;
 using Orchard.Tasks.Scheduling;
 
-namespace ArchiveLater.Services {
+namespace Orchard.ArchiveLater.Services {
     public class ArchiveLaterService : IArchiveLaterService {
         private const string UnpublishTaskType = "Unpublish";
 

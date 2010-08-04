@@ -1,1 +1,1 @@
-﻿<%@ Control Language="C#" Inherits="Orchard.Mvc.ViewUserControl<ArchiveLater.ViewModels.ArchiveLaterViewModel>" %>
+﻿<%@ Control Language="C#" Inherits="Orchard.Mvc.ViewUserControl<Orhard.ArchiveLater.ViewModels.ArchiveLaterViewModel>" %>

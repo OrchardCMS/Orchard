@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using ArchiveLater.Models;
+using Orchard.ArchiveLater.Models;
 using Orchard.ContentManagement.Drivers;
 using Orchard.ContentManagement.MetaData;
 using Orchard.ContentManagement.MetaData.Builders;

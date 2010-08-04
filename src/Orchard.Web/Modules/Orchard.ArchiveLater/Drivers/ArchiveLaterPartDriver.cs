@@ -1,8 +1,8 @@
 ﻿using System;
-using ArchiveLater.Models;
-using ArchiveLater.Services;
-using ArchiveLater.ViewModels;
 using Orchard;
+using Orchard.ArchiveLater.Models;
+using Orchard.ArchiveLater.Services;
+using Orchard.ArchiveLater.ViewModels;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
 using Orchard.Core.Common.Services;
