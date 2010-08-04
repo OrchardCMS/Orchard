@@ -51,7 +51,7 @@ namespace Orchard.Tests.Data.Builders {
 
 
 
-        [Test, Ignore("Fix pending")]
+        [Test]
         public void SqlCeSchemaShouldBeGeneratedAndUsable() {
 
             var recordDescriptors = new[] {
@@ -92,7 +92,7 @@ namespace Orchard.Tests.Data.Builders {
 
         }
 
-        [Test, Ignore("Fix pending")]
+        [Test]
         public void SqlServerSchemaShouldBeGeneratedAndUsable() {
             var databasePath = Path.Combine(_tempDataFolder, "Orchard.mdf");
             CreateSqlServerDatabase(databasePath);
