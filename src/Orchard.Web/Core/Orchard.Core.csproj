@@ -188,8 +188,8 @@
     <Compile Include="Routable\ViewModels\RoutableDisplayViewModel.cs" />
     <Compile Include="Scheduling\DataMigrations\SchedulingDataMigration.cs" />
     <Compile Include="Scheduling\Models\ScheduledTaskRecord.cs" />
-    <Compile Include="Scheduling\Services\PublishingTaskHandler.cs" />
-    <Compile Include="Scheduling\Services\PublishingTaskManager.cs" />
+    <Compile Include="PublishLater\Handlers\PublishingTaskHandler.cs" />
+    <Compile Include="PublishLater\Services\PublishingTaskManager.cs" />
     <Compile Include="Scheduling\Services\ScheduledTaskManager.cs" />
     <Compile Include="Scheduling\Services\ScheduledTaskExecutor.cs" />
     <Compile Include="Scheduling\Models\Task.cs" />

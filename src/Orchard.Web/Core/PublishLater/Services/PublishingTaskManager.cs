@@ -4,11 +4,10 @@ using JetBrains.Annotations;
 using Orchard.ContentManagement;
 using Orchard.Tasks.Scheduling;
 
-namespace Orchard.Core.Scheduling.Services {
+namespace Orchard.Core.PublishLater.Services {
     [UsedImplicitly]
     public class PublishingTaskManager : IPublishingTaskManager {
         private const string PublishTaskType = "Publish";
-        private const string UnpublishTaskType = "Unpublish";
 
         private readonly IScheduledTaskManager _scheduledTaskManager;
 
@@ -29,7 +28,7 @@ namespace Orchard.Core.Scheduling.Services {
         }
 
         public void DeleteTasks(ContentItem item) {
-            _scheduledTaskManager.DeleteTasks(item, task => task.TaskType == PublishTaskType || task.TaskType == UnpublishTaskType);
+            _scheduledTaskManager.DeleteTasks(item, task => task.TaskType == PublishTaskType);
         }
     }
 }

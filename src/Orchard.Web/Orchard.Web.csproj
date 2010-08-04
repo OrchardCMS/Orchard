@@ -130,7 +130,9 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Config\Diagnostics.config" />
+    <Content Include="Config\Diagnostics.config">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Themes\TheAdmin\Styles\images\icons.png" />
     <Content Include="Themes\TheAdmin\Styles\images\tableHeaderBackgroundRed.gif" />
     <Content Include="Themes\TheAdmin\Styles\site.css" />

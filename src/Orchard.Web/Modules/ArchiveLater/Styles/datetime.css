@@ -1,0 +1,14 @@
+﻿html.dyn label.forpicker {
+    display:none;
+}
+/* todo: (heskew) let themes take care of this */
+html.dyn input.hinted {
+    color:#ccc;
+    font-style:italic;
+}
+input#ArchiveLater_ScheduledArchiveDate {
+    width:50%;
+}
+input#ArchiveLater_ScheduledArchiveTime {
+    width:36%;
+}
