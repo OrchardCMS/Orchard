@@ -350,7 +350,38 @@ namespace Orchard.Mvc.Html {
         public static MvcHtmlString AntiForgeryTokenOrchard(this HtmlHelper htmlHelper) {
             var siteSalt = htmlHelper.Resolve<ISiteService>().GetSiteSettings().SiteSalt;
 
-            return htmlHelper.AntiForgeryToken(siteSalt);
+            try {
+                return htmlHelper.AntiForgeryToken(siteSalt);
+            }
+            catch(System.Web.Mvc.HttpAntiForgeryException e) {
+                // Work-around an issue in MVC 2:  If the browser sends a cookie that is not
+                // coming from this server (this can happen if the user didn't close their browser
+                // while the application server configuration changed), clear it up
+                // so that a new one is generated and sent to the browser. This is harmless
+                // from a security point of view, since we are _issuing_ an anti-forgery token,
+                // not validating input.
+
+                // Remove the token so that MVC will create a new one.
+                var antiForgeryTokenName = htmlHelper.GetAntiForgeryTokenName();
+                htmlHelper.ViewContext.HttpContext.Request.Cookies.Remove(antiForgeryTokenName);
+
+                // Try again
+                return htmlHelper.AntiForgeryToken(siteSalt);
+            }
+        }
+
+        private static string GetAntiForgeryTokenName(this HtmlHelper htmlHelper) {
+            // Generate the same cookie name as MVC
+            var appPath = htmlHelper.ViewContext.HttpContext.Request.ApplicationPath;
+            const string antiForgeryTokenName = "__RequestVerificationToken";
+            if (string.IsNullOrEmpty(appPath)) {
+                return antiForgeryTokenName;
+            }
+            return antiForgeryTokenName + '_' + Base64EncodeForCookieName(appPath);
+        }
+
+        private static string Base64EncodeForCookieName(string s) {
+            return Convert.ToBase64String(Encoding.UTF8.GetBytes(s)).Replace('+', '.').Replace('/', '-').Replace('=', '_');
         }
 
         #endregion
