@@ -45,14 +45,14 @@ namespace Orchard.Users.Commands {
                 return userUnicityMessage;
             }
             if (Password == null || Password.Length < MinPasswordLength) {
-                return String.Format("You must specify a password of {0} or more characters.", MinPasswordLength);
+                return T("You must specify a password of {0} or more characters.", MinPasswordLength).ToString();
             }
 
             var user = _membershipService.CreateUser(new CreateUserParams(UserName, Password, Email, null, null, true));
             if (user != null)
-                return "User created successfully";
+                return T("User created successfully").ToString();
             else
-                return "The authentication provider returned an error";
+                return T("The authentication provider returned an error").ToString();
         }
 
         int MinPasswordLength {
