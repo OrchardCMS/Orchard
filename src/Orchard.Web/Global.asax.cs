@@ -22,12 +22,10 @@ namespace Orchard.Web {
         }
 
         protected void Application_Start() {
-            // This is temporary until MVC2 is officially released.
+            // This is temporary until MVC3 is officially released.
             // We want to avoid running against an outdated preview installed in the GAC
             CheckMvcVersion(
-                new Version("2.0.50217.0")/*MVC2 RTM file version #*/,
-                new Version("2.0.50129.0")/*MVC2 RC2 file version #*/,
-                new Version("2.0.41211.0")/*MVC2 RC file version #*/);
+                new Version("3.0.10714.0")/*MVC3 Preview 1 file version #*/);
 
             RegisterRoutes(RouteTable.Routes);
 
