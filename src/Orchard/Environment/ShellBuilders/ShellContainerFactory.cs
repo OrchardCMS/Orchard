@@ -93,7 +93,11 @@ namespace Orchard.Environment.ShellBuilders {
                             .EnableDynamicProxy(dynamicProxyContext)
                             .Keyed<IController>(serviceKey)
                             .InstancePerDependency()
-                            .InjectActionInvoker();
+                            .OnActivating(e => {
+                                              var controller = e.Instance as Controller;
+                                              if (controller != null)
+                                                  controller.ActionInvoker = (IActionInvoker)e.Context.Resolve(new TypedService(typeof(IActionInvoker)));
+                                          });
                     }
 
                     // Register code-only registrations specific to a shell
