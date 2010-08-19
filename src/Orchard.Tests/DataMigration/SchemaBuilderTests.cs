@@ -50,7 +50,6 @@ namespace Orchard.Tests.DataMigration {
             builder.RegisterInstance(new DefaultContentManagerTests.TestSessionLocator(session)).As<ISessionLocator>();
             builder.RegisterInstance(new ShellBlueprint { Records = Enumerable.Empty<RecordBlueprint>() }).As<ShellBlueprint>();
             builder.RegisterInstance(new ShellSettings { Name = "temp", DataProvider = "SqlCe", DataTablePrefix = "TEST_" }).As<ShellSettings>();
-            builder.RegisterType<SqlCeCommandInterpreter>().As<ICommandInterpreter>();
             builder.RegisterModule(new DataModule());
             _container = builder.Build();
 
@@ -153,8 +152,8 @@ namespace Orchard.Tests.DataMigration {
                     .Column("City", DbType.String)
                     .Column("ZIP", DbType.Int32, column => column.Unique())
                     .Column("UserId", DbType.Int32, column => column.NotNull()))
-                .CreateForeignKey("User_Address", "User", new[] { "UserId" }, "User", new[] { "Id" })
-                .DropForeignKey("User", "User_Address");
+                .CreateForeignKey("FK_User", "Address", new[] { "UserId" }, "User", new[] { "Id" })
+                .DropForeignKey("Address", "FK_User");
 
         }
     }

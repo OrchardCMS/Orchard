@@ -25,6 +25,8 @@ namespace Orchard.Blogs.DataMigrations {
                 .Column<int>("PostCount")
                 );
 
+            SchemaBuilder.CreateForeignKey()
+
             return 1;
         }
 

@@ -379,7 +379,7 @@
     <Compile Include="Data\Migration\Interpreters\ICommandInterpreter.cs" />
     <Compile Include="Data\Migration\Interpreters\DefaultDataMigrationInterpreter.cs" />
     <Compile Include="Data\Migration\Interpreters\IDataMigrationInterpreter.cs" />
-    <Compile Include="Data\Migration\Interpreters\SqlCeCommandInterpreter.cs" />
+    <Compile Include="Data\Migration\Interpreters\SQLiteCommandInterpreter.cs" />
     <Compile Include="Data\Migration\Interpreters\StringCommandInterpreter.cs" />
     <Compile Include="Data\Migration\Schema\AddColumnCommand.cs" />
     <Compile Include="Data\Migration\Schema\ISchemaBuilderCommand.cs" />
