@@ -71,7 +71,7 @@ namespace Orchard.Core.Routable.Drivers {
         }
 
         protected override DriverResult Editor(RoutePart part, IUpdateModel updater) {
-
+            
             var model = new RoutableEditorViewModel();
             updater.TryUpdateModel(model, Prefix, null, null);
             part.Title = model.Title;

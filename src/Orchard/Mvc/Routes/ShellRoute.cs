@@ -136,12 +136,14 @@ namespace Orchard.Mvc.Routes {
             }
 
             public void ProcessRequest(HttpContext context) {
-                _containerProvider.BeginRequestLifetime();
-                try {
-                    _httpHandler.ProcessRequest(context);
-                }
-                finally {
-                    _containerProvider.EndRequestLifetime();
+                using (DefaultOrchardHostContainer.ContainerProviderScope(_containerProvider)) {
+                    _containerProvider.BeginRequestLifetime();
+                    try {
+                        _httpHandler.ProcessRequest(context);
+                    }
+                    finally {
+                        _containerProvider.EndRequestLifetime();
+                    }
                 }
             }
 
@@ -155,6 +157,7 @@ namespace Orchard.Mvc.Routes {
 
         class HttpAsyncHandler : HttpHandler, IHttpAsyncHandler {
             private readonly IHttpAsyncHandler _httpAsyncHandler;
+            private IDisposable _scope;
 
             public HttpAsyncHandler(ContainerProvider containerProvider, IHttpAsyncHandler httpAsyncHandler)
                 : base(containerProvider, httpAsyncHandler) {
@@ -162,12 +165,14 @@ namespace Orchard.Mvc.Routes {
             }
 
             public IAsyncResult BeginProcessRequest(HttpContext context, AsyncCallback cb, object extraData) {
+                _scope = DefaultOrchardHostContainer.ContainerProviderScope(_containerProvider);
                 _containerProvider.BeginRequestLifetime();
                 try {
                     return _httpAsyncHandler.BeginProcessRequest(context, cb, extraData);
                 }
                 catch {
                     _containerProvider.EndRequestLifetime();
+                    _scope.Dispose();
                     throw;
                 }
             }
@@ -178,6 +183,7 @@ namespace Orchard.Mvc.Routes {
                 }
                 finally {
                     _containerProvider.EndRequestLifetime();
+                    _scope.Dispose();
                 }
             }
         }
