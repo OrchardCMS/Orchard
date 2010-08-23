@@ -59,9 +59,9 @@ namespace Orchard.Core.Routable.Drivers {
                 model.DisplayLeadingPath = path.Substring(0, path.Length - slug.Length);
             }
             else {
-                var containerSlug = part.GetContainerSlug();
-                model.DisplayLeadingPath = !string.IsNullOrWhiteSpace(containerSlug)
-                    ? string.Format("{0}/", containerSlug)
+                var containerPath = part.GetContainerPath();
+                model.DisplayLeadingPath = !string.IsNullOrWhiteSpace(containerPath)
+                    ? string.Format("{0}/", containerPath)
                     : "";
             }
 

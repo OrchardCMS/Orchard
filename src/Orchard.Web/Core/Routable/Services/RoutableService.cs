@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using Orchard.ContentManagement;
-using Orchard.Core.Common.Models;
 using Orchard.Core.Routable.Models;
 
 namespace Orchard.Core.Routable.Services {
@@ -37,11 +36,12 @@ namespace Orchard.Core.Routable.Services {
             model.Slug = generateSlug(model.Title).ToLowerInvariant();
         }
 
-        public string GenerateUniqueSlug(string slugCandidate, IEnumerable<string> existingSlugs) {
-            if (existingSlugs == null || !existingSlugs.Contains(slugCandidate))
+        public string GenerateUniqueSlug(RoutePart part, IEnumerable<string> existingPaths) {
+            var slugCandidate = part.Slug;
+            if (existingPaths == null || !existingPaths.Contains(part.Path))
                 return slugCandidate;
 
-            int? version = existingSlugs.Select(s => GetSlugVersion(slugCandidate, s)).OrderBy(i => i).LastOrDefault();
+            int? version = existingPaths.Select(s => GetSlugVersion(slugCandidate, s)).OrderBy(i => i).LastOrDefault();
 
             return version != null
                        ? string.Format("{0}-{1}", slugCandidate, version)
@@ -60,13 +60,12 @@ namespace Orchard.Core.Routable.Services {
                        : null;
         }
 
-        public IEnumerable<RoutePart> GetSimilarSlugs(string contentType, string slug)
-        {
+        public IEnumerable<RoutePart> GetSimilarPaths(string path) {
             return
                 _contentManager.Query().Join<RoutePartRecord>()
                     .List()
                     .Select(i => i.As<RoutePart>())
-                    .Where(routable => routable.Path != null && routable.Path.Equals(slug, StringComparison.OrdinalIgnoreCase)) // todo: for some reason the filter doesn't work within the query, even without StringComparison or StartsWith
+                    .Where(routable => routable.Path != null && routable.Path.StartsWith(path, StringComparison.OrdinalIgnoreCase)) // todo: for some reason the filter doesn't work within the query, even without StringComparison or StartsWith
                     .ToArray();
         }
 
@@ -84,19 +83,18 @@ namespace Orchard.Core.Routable.Services {
                 return true;
             }
 
-            var slugsLikeThis = GetSimilarSlugs(part.ContentItem.ContentType, part.Path);
+            var pathsLikeThis = GetSimilarPaths(part.Path);
 
-            // If the part is already a valid content item, don't include it in the list
-            // of slug to consider for conflict detection
-            if (part.ContentItem.Id != 0)
-                slugsLikeThis = slugsLikeThis.Where(p => p.ContentItem.Id != part.ContentItem.Id);
+            // Don't include this part in the list
+            // of slugs to consider for conflict detection
+            pathsLikeThis = pathsLikeThis.Where(p => p.ContentItem.Id != part.ContentItem.Id);
 
             //todo: (heskew) need better messages
-            if (slugsLikeThis.Count() > 0)
+            if (pathsLikeThis.Count() > 0)
             {
                 var originalSlug = part.Slug;
                 //todo: (heskew) make auto-uniqueness optional
-                part.Slug = GenerateUniqueSlug(part.Slug, slugsLikeThis.Select(p => p.Slug));
+                part.Slug = GenerateUniqueSlug(part, pathsLikeThis.Select(p => p.Path));
 
                 if (originalSlug != part.Slug) {
                     return false;
