@@ -1,7 +1,7 @@
 ﻿using Orchard.Data.Migration.Schema;
 
 namespace Orchard.Data.Migration.Interpreters {
-    public class SqlCeCommandInterpreter :
+    public class SQLiteCommandInterpreter :
         ICommandInterpreter<DropColumnCommand>,
         ICommandInterpreter<AlterColumnCommand>,
         ICommandInterpreter<CreateForeignKeyCommand>,
@@ -34,7 +34,7 @@ namespace Orchard.Data.Migration.Interpreters {
         }
 
         public string DataProvider {
-            get { return "SqlCe"; }
+            get { return "SQLite"; }
         }
     }
 }

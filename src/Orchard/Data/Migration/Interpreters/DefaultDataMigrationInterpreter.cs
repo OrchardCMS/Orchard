@@ -186,7 +186,7 @@ namespace Orchard.Data.Migration.Interpreters {
 
             builder.AppendFormat("alter table {0} alter column {1} ",
                 _dialect.QuoteForTableName(PrefixTableName(command.TableName)),
-                _dialect.QuoteForColumnName(command.TableName));
+                _dialect.QuoteForColumnName(command.ColumnName));
 
             // type
             if (command.DbType != DbType.Object) {
@@ -195,7 +195,7 @@ namespace Orchard.Data.Migration.Interpreters {
 
             // [default value]
             if (!string.IsNullOrEmpty(command.Default)) {
-                builder.Append(" default ").Append(command.Default).Append(Space);
+                builder.Append(" set default ").Append(command.Default).Append(Space);
             }
             _sqlStatements.Add(builder.ToString());
         }
@@ -250,7 +250,7 @@ namespace Orchard.Data.Migration.Interpreters {
 
             builder.Append(_dialect.GetAddForeignKeyConstraintString(command.Name,
                 command.SrcColumns,
-                command.DestTable,
+                _dialect.QuoteForTableName(PrefixTableName(command.DestTable)),
                 command.DestColumns,
                 false));
 
@@ -266,7 +266,7 @@ namespace Orchard.Data.Migration.Interpreters {
 
             var builder = new StringBuilder();
 
-            builder.AppendFormat("alter table {0} drop constraint {1}", command.SrcTable, command.Name);
+            builder.AppendFormat("alter table {0} drop constraint {1}", _dialect.QuoteForTableName(PrefixTableName(command.SrcTable)), command.Name);
             _sqlStatements.Add(builder.ToString());
 
             RunPendingStatements();
