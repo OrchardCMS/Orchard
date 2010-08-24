@@ -100,7 +100,7 @@ namespace Orchard.Blogs.Commands {
                 post.As<ICommonPart>().Container = blog;
                 var slug = Slugify(postName);
                 post.As<RoutePart>().Slug = slug;
-                post.As<RoutePart>().Path = post.As<RoutePart>().GetPathFromSlug(slug);
+                post.As<RoutePart>().Path = post.As<RoutePart>().GetPathWithSlug(slug);
                 post.As<RoutePart>().Title = postName;
                 post.As<BodyPart>().Text = item.Element("description").Value;
                 _contentManager.Create(post);

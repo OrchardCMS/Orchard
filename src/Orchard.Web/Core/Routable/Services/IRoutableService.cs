@@ -4,8 +4,7 @@ using Orchard.Core.Routable.Models;
 
 namespace Orchard.Core.Routable.Services {
     public interface IRoutableService : IDependency {
-        void FillSlug<TModel>(TModel model) where TModel : RoutePart;
-        void FillSlug<TModel>(TModel model, Func<string, string> generateSlug) where TModel : RoutePart;
+        void FillSlugFromTitle<TModel>(TModel model) where TModel : RoutePart;
         string GenerateUniqueSlug(RoutePart part, IEnumerable<string> existingPaths);
 
         /// <summary>

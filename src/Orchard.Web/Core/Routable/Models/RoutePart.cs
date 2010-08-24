@@ -29,7 +29,7 @@ namespace Orchard.Core.Routable.Models {
             return null;
         }
 
-        public string GetPathFromSlug(string slug) {
+        public string GetPathWithSlug(string slug) {
             // TEMP: path format patterns replaces this logic
             var containerPath = GetContainerPath();
             if (string.IsNullOrEmpty(containerPath)) {

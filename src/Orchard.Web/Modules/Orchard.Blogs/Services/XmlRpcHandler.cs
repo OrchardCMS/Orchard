@@ -182,8 +182,8 @@ namespace Orchard.Blogs.Services {
             if (blogPost.Is<RoutePart>()) {
                 blogPost.As<RoutePart>().Title = title;
                 blogPost.As<RoutePart>().Slug = slug;
-                _routableService.FillSlug(blogPost.As<RoutePart>());
-                blogPost.As<RoutePart>().Path = blogPost.As<RoutePart>().GetPathFromSlug(blogPost.As<RoutePart>().Slug);
+                _routableService.FillSlugFromTitle(blogPost.As<RoutePart>());
+                blogPost.As<RoutePart>().Path = blogPost.As<RoutePart>().GetPathWithSlug(blogPost.As<RoutePart>().Slug);
             }
 
             _contentManager.Create(blogPost.ContentItem, VersionOptions.Draft);

@@ -13,7 +13,7 @@ namespace Orchard.Core.Routable.Services {
             _contentManager = contentManager;
         }
 
-        public void FillSlug<TModel>(TModel model) where TModel : RoutePart {
+        public void FillSlugFromTitle<TModel>(TModel model) where TModel : RoutePart {
             if (!string.IsNullOrEmpty(model.Slug) || string.IsNullOrEmpty(model.Title))
                 return;
 
@@ -27,13 +27,6 @@ namespace Orchard.Core.Routable.Services {
                 slug = slug.Substring(0, 1000);
 
             model.Slug = slug.ToLowerInvariant();
-        }
-
-        public void FillSlug<TModel>(TModel model, Func<string, string> generateSlug) where TModel : RoutePart {
-            if (!string.IsNullOrEmpty(model.Slug) || string.IsNullOrEmpty(model.Title))
-                return;
-
-            model.Slug = generateSlug(model.Title).ToLowerInvariant();
         }
 
         public string GenerateUniqueSlug(RoutePart part, IEnumerable<string> existingPaths) {
@@ -74,24 +67,21 @@ namespace Orchard.Core.Routable.Services {
             return slug == null || String.IsNullOrEmpty(slug.Trim()) || Regex.IsMatch(slug, @"^[^/:?#\[\]@!$&'()*+,;=\s]+$");
         }
 
-        public bool ProcessSlug(RoutePart part)
-        {
-            FillSlug(part);
+        public bool ProcessSlug(RoutePart part) {
+            FillSlugFromTitle(part);
 
             if (string.IsNullOrEmpty(part.Slug))
-            {
                 return true;
-            }
 
+            part.Path = part.GetPathWithSlug(part.Slug);
             var pathsLikeThis = GetSimilarPaths(part.Path);
 
-            // Don't include this part in the list
+            // Don't include *this* part in the list
             // of slugs to consider for conflict detection
             pathsLikeThis = pathsLikeThis.Where(p => p.ContentItem.Id != part.ContentItem.Id);
 
             //todo: (heskew) need better messages
-            if (pathsLikeThis.Count() > 0)
-            {
+            if (pathsLikeThis.Count() > 0) {
                 var originalSlug = part.Slug;
                 //todo: (heskew) make auto-uniqueness optional
                 part.Slug = GenerateUniqueSlug(part, pathsLikeThis.Select(p => p.Path));

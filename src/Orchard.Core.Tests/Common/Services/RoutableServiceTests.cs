@@ -63,7 +63,7 @@ namespace Orchard.Core.Tests.Common.Services {
                 t.Title = "Please do not use any of the following characters in your slugs: \":\", \"/\", \"?\", \"#\", \"[\", \"]\", \"@\", \"!\", \"$\", \"&\", \"'\", \"(\", \")\", \"*\", \"+\", \",\", \";\", \"=\"";
             });
 
-            _routableService.FillSlug(thing.As<RoutePart>());
+            _routableService.FillSlugFromTitle(thing.As<RoutePart>());
 
             Assert.That(thing.Slug, Is.EqualTo("please-do-not-use-any-of-the-following-characters-in-your-slugs-\"-\"-\"-\"-\"-\"-\"-\"-\"-\"-\"-\"-\"-\"-\"-\"-\"-\"-\"-\"-\"-\"-\"-\"-\"-\"-\"-\"-\"-\"-\"-\"-\"-\"-\"-\""));
         }
@@ -93,7 +93,7 @@ namespace Orchard.Core.Tests.Common.Services {
                 veryVeryLongTitle += "aaaaaaaaaa";
 
             var thing = CreateRoutePart(veryVeryLongTitle);
-            _routableService.FillSlug(thing);
+            _routableService.FillSlugFromTitle(thing);
 
             Assert.That(veryVeryLongTitle.Length, Is.AtLeast(1001));
             Assert.That(thing.Slug.Length, Is.EqualTo(1000));
@@ -139,7 +139,7 @@ namespace Orchard.Core.Tests.Common.Services {
         public void GeneratedSlugIsLowerCased() {
             var thing = CreateRoutePart("This Is Some Interesting Title");
 
-            _routableService.FillSlug(thing);
+            _routableService.FillSlugFromTitle(thing);
 
             Assert.That(thing.Slug, Is.EqualTo("this-is-some-interesting-title"));
         }

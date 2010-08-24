@@ -76,7 +76,6 @@ namespace Orchard.Core.Routable.Drivers {
             updater.TryUpdateModel(model, Prefix, null, null);
             part.Title = model.Title;
             part.Slug = model.Slug;
-            part.Path = part.GetPathFromSlug(model.Slug);
 
             if (!_routableService.IsSlugValid(part.Slug)) {
                 updater.AddModelError("Routable.Slug", T("Please do not use any of the following characters in your slugs: \"/\", \":\", \"?\", \"#\", \"[\", \"]\", \"@\", \"!\", \"$\", \"&\", \"'\", \"(\", \")\", \"*\", \"+\", \",\", \";\", \"=\". No spaces are allowed (please use dashes or underscores instead)."));
@@ -89,7 +88,7 @@ namespace Orchard.Core.Routable.Drivers {
             }
 
             // TEMP: path format patterns replaces this logic
-            part.Path = part.GetPathFromSlug(part.Slug);
+            part.Path = part.GetPathWithSlug(part.Slug);
 
             if (part.ContentItem.Id != 0 && model.PromoteToHomePage && _routableHomePageProvider != null) {
                 CurrentSite.HomePage = _routableHomePageProvider.GetSettingValue(part.ContentItem.Id);
