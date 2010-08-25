@@ -36,11 +36,16 @@ namespace Orchard.Environment {
                 TryResolveAtScope(Scope.CurrentLifetimeScope, key, serviceType, out value);
         }
 
-        static object CreateInstance(Type t) {
+        object CreateInstance(Type t) {
             if (t.IsAbstract || t.IsInterface)
                 return null;
 
-            return Activator.CreateInstance(t);
+            var instance = Activator.CreateInstance(t);
+            if (instance is IContextualizable) {
+                var effectiveContainer = Scope.CurrentLifetimeScope ?? _container;
+                (instance as IContextualizable).Hook(() => effectiveContainer.InjectUnsetProperties(instance));
+            }
+            return instance;
         }
 
         TService Resolve<TService>(Type serviceType, TService defaultValue = default(TService)) {
