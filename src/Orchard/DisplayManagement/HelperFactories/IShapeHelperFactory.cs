@@ -1,5 +1,5 @@
 ﻿namespace Orchard.DisplayManagement {
-    public interface IShapeHelperFactory : ISingletonDependency {
+    public interface IShapeHelperFactory : IDependency {
         ShapeHelper CreateShapeHelper();
     }
 }

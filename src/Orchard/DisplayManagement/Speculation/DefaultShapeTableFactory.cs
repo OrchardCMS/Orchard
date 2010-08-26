@@ -23,10 +23,29 @@ namespace Orchard.DisplayManagement {
                     var provider = shapeProvider;
                     yield return new ShapeTable.Entry {
                         ShapeType = methodInfo.Name,
-                        Target = ctx => info.Invoke(provider, new object[0])
+                        Target = ctx => PerformInvoke(ctx, info, provider)
                     };
                 }
             }
+        }
+
+        private object PerformInvoke(DisplayContext displayContext, MethodInfo methodInfo, IShapeProvider shapeProvider) {
+            // oversimplification for the sake of evolving
+            dynamic shape = displayContext.Value;
+            var arguments = methodInfo.GetParameters()
+                .Select(parameter => BindParameter(displayContext, parameter));
+
+            return methodInfo.Invoke(shapeProvider, arguments.ToArray());
+        }
+
+        private object BindParameter(DisplayContext displayContext, ParameterInfo parameter) {
+            if (parameter.Name == "Shape")
+                return displayContext.Value;
+
+            if (parameter.Name == "Display")
+                return displayContext.Display;
+
+            return ((dynamic)(displayContext.Value))[parameter.Name];
         }
 
         static bool IsAcceptableMethod(MethodInfo methodInfo) {

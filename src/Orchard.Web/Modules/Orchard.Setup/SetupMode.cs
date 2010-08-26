@@ -11,6 +11,9 @@ using Orchard.ContentManagement.MetaData.Builders;
 using Orchard.Data.Migration.Interpreters;
 using Orchard.Data.Providers;
 using Orchard.Data.Migration;
+using Orchard.DisplayManagement;
+using Orchard.DisplayManagement.Secondary;
+using Orchard.DisplayManagement.Shapes;
 using Orchard.Environment.Extensions;
 using Orchard.Localization;
 using Orchard.Mvc;
@@ -58,6 +61,11 @@ namespace Orchard.Setup {
             builder.RegisterType<DefaultDataMigrationInterpreter>().As<IDataMigrationInterpreter>().InstancePerLifetimeScope();
             builder.RegisterType<DataMigrationManager>().As<IDataMigrationManager>().InstancePerLifetimeScope();
 
+            // in progress - adding services for display/shape support in setup
+            builder.RegisterType<DisplayHelperFactory>().As<IDisplayHelperFactory>();
+            builder.RegisterType<DefaultDisplayManager>().As<IDisplayManager>();
+            builder.RegisterType<DefaultShapeBuilder>().As<IShapeBuilder>();
+            builder.RegisterType<DefaultShapeTableFactory>().As<IShapeTableFactory>(); 
         }
 
 

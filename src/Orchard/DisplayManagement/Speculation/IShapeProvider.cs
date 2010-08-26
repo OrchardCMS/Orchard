@@ -1,3 +1,3 @@
 ﻿namespace Orchard.DisplayManagement {
-    public interface IShapeProvider : ISingletonDependency{}
+    public interface IShapeProvider : IDependency{}
 }

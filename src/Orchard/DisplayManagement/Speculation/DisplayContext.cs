@@ -8,7 +8,8 @@ using Orchard.DisplayManagement.Shapes;
 
 namespace Orchard.DisplayManagement {
     public class DisplayContext  {
+        public DisplayHelper Display { get; set; }
         public ViewContext ViewContext { get; set; }
-        public Shape Shape { get; set; }
+        public object Value { get; set; }
     }
 }

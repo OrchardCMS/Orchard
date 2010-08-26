@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 
 namespace Orchard.DisplayManagement {
-    public interface IShapeTableFactory : ISingletonDependency {
+    public interface IShapeTableFactory : IDependency {
         ShapeTable CreateShapeTable();
     }
 }

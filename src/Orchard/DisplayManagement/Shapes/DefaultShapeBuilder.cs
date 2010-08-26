@@ -1,18 +1,50 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using ClaySharp;
 
 namespace Orchard.DisplayManagement.Shapes {
     public class DefaultShapeBuilder : IShapeBuilder {
         public Shape Build(string shapeType, INamedEnumerable<object> parameters) {
-            var shape = ClayActivator.CreateInstance<Shape>(new IClayBehavior[]{
-                new ClaySharp.Behaviors.InterfaceProxyBehavior(),
-                new ClaySharp.Behaviors.PropBehavior(),
-                new ClaySharp.Behaviors.NilResultBehavior()});
+
+            var positional = parameters.Positional;
+
+            var baseType = positional.Take(1).OfType<Type>().SingleOrDefault();
+            if (baseType == null) {
+                // default to common base class
+                baseType = typeof(Shape);
+            }
+            else {
+                // consume the first argument
+                positional = positional.Skip(1);
+            }
+            IClayBehavior[] behaviors;
+
+            if (baseType == typeof(Array)) {
+                // array is a hint - not an intended base class
+                baseType = typeof (Shape);
+                behaviors = new IClayBehavior[] {
+                    new ClaySharp.Behaviors.InterfaceProxyBehavior(),
+                    new ClaySharp.Behaviors.PropBehavior(),
+                    new ClaySharp.Behaviors.ArrayBehavior(),
+                    new ClaySharp.Behaviors.NilResultBehavior()
+                };
+            }
+            else {
+                behaviors = new IClayBehavior[] {
+                    new ClaySharp.Behaviors.InterfaceProxyBehavior(),
+                    new ClaySharp.Behaviors.PropBehavior(),
+                    new ClaySharp.Behaviors.NilResultBehavior()
+                };
+            }
+
+            // consideration - types without default constructors could consume positional arguments?
+            var shape = ClayActivator.CreateInstance(baseType, behaviors);
 
             shape.Attributes = new ShapeAttributes { Type = shapeType };
 
-            if (parameters.Positional.Any()) {
-                var initializer = parameters.Positional.Single();
+            // only one non-Type, non-named argument is allowed
+            var initializer = positional.SingleOrDefault();
+            if (initializer != null) {
                 foreach (var prop in initializer.GetType().GetProperties()) {
                     shape[prop.Name] = prop.GetValue(initializer, null);
                 }
