@@ -13,7 +13,6 @@ using Orchard.Data.Providers;
 using Orchard.Data.Migration;
 using Orchard.DisplayManagement;
 using Orchard.DisplayManagement.Implementation;
-using Orchard.DisplayManagement.Secondary;
 using Orchard.DisplayManagement.Shapes;
 using Orchard.Environment.Extensions;
 using Orchard.Localization;

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Web;
+using Orchard.DisplayManagement.Implementation;
 
 namespace Orchard.DisplayManagement {
     public class ShapeTable {

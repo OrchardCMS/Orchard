@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Linq;
 using ClaySharp;
+using Orchard.DisplayManagement.Shapes;
 
-namespace Orchard.DisplayManagement.Shapes {
+namespace Orchard.DisplayManagement.Implementation {
     public class DefaultShapeFactory : IShapeFactory {
         public IShape Create(string shapeType, INamedEnumerable<object> parameters) {
 

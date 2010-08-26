@@ -1,5 +1,4 @@
-﻿using System.Runtime.CompilerServices;
-using System.Web.Mvc;
+﻿using System.Web.Mvc;
 
 namespace Orchard.DisplayManagement {
     /// <summary>

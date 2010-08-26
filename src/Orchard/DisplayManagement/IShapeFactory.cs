@@ -1,5 +1,4 @@
 ﻿using ClaySharp;
-using Orchard.DisplayManagement.Shapes;
 
 namespace Orchard.DisplayManagement {
     /// <summary>

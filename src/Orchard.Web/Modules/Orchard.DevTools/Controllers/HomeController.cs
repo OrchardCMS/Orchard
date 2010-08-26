@@ -20,10 +20,10 @@ namespace Orchard.DevTools.Controllers {
         public HomeController(INotifier notifier, IShapeHelperFactory shapeHelperFactory) {
             _notifier = notifier;
             T = NullLocalizer.Instance;
-            New = shapeHelperFactory.CreateHelper();
+            Shape = shapeHelperFactory.CreateHelper();
         }
 
-        dynamic New { get; set; }
+        dynamic Shape { get; set; }
 
         public Localizer T { get; set; }
 
@@ -58,18 +58,18 @@ namespace Orchard.DevTools.Controllers {
 
         public ActionResult UsingShapes() {
 
-            ViewModel.Page = New.Page()
-                .Main(New.Zone(typeof (Array), Name: "Main"))
-                .Messages(New.Zone(typeof (Array), Name: "Messages"))
-                .Sidebar(New.Zone(typeof (Array), Name: "Sidebar"));
+            ViewModel.Page = Shape.Page()
+                .Main(Shape.Zone(typeof (Array), Name: "Main"))
+                .Messages(Shape.Zone(typeof (Array), Name: "Messages"))
+                .Sidebar(Shape.Zone(typeof (Array), Name: "Sidebar"));
 
-            ViewModel.Page.Add("Messages:5", New.Message(Content: T("This is a test"), Severity: "Really bad!!!"));
+            //ViewModel.Page.Add("Messages:5", New.Message(Content: T("This is a test"), Severity: "Really bad!!!"));
 
             ViewModel.Page.Messages.Add(
-                New.Message(Content: T("This is a test"), Severity: "Really bad!!!"));
+                Shape.Message(Content: T("This is a test"), Severity: "Really bad!!!"));
 
-            var model = New.Message(
-                Content: New.Explosion(Height: 100, Width: 200),
+            var model = Shape.Message(
+                Content: Shape.Explosion(Height: 100, Width: 200),
                 Severity: "Meh");
 
             ViewModel.Page.Messages.Add(new HtmlString("<hr/>abuse<hr/>"));

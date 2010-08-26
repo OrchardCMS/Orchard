@@ -8,7 +8,6 @@ using Autofac;
 using NUnit.Framework;
 using Orchard.DisplayManagement;
 using Orchard.DisplayManagement.Implementation;
-using Orchard.DisplayManagement.Secondary;
 using Orchard.DisplayManagement.Shapes;
 
 namespace Orchard.Tests.DisplayManagement {

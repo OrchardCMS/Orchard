@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Web.Mvc;
-using Orchard.DisplayManagement.Shapes;
+﻿using System.Web.Mvc;
 
-namespace Orchard.DisplayManagement {
+namespace Orchard.DisplayManagement.Implementation {
     public class DisplayContext  {
         public DisplayHelper Display { get; set; }
         public ViewContext ViewContext { get; set; }

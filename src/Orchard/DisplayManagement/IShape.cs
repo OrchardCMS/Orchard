@@ -1,7 +1,4 @@
-﻿using System.Runtime.CompilerServices;
-using Orchard.DisplayManagement.Shapes;
-
-namespace Orchard.DisplayManagement {
+﻿namespace Orchard.DisplayManagement {
     /// <summary>
     /// Interface present on dynamic shapes. 
     /// May be used to access attributes in a strongly typed fashion.

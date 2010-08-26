@@ -1,13 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using ClaySharp;
-using Orchard.DisplayManagement.Implementation;
-using Orchard.DisplayManagement.Shapes;
 
-namespace Orchard.DisplayManagement {
+namespace Orchard.DisplayManagement.Implementation {
 
     /// <summary>
     /// Refactor: I this doesn't really need to exist, does it? 

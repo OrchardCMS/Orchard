@@ -3,21 +3,20 @@ using System.Dynamic;
 using System.Linq.Expressions;
 using System.Runtime.CompilerServices;
 using System.Web;
-using System.Web.Mvc;
 using Microsoft.CSharp.RuntimeBinder;
-using Orchard.DisplayManagement.Implementation;
 using Orchard.DisplayManagement.Shapes;
 using Orchard.Localization;
 
-namespace Orchard.DisplayManagement.Secondary {
+namespace Orchard.DisplayManagement.Implementation {
     public class DefaultDisplayManager : IDisplayManager {
         private readonly IShapeTableFactory _shapeTableFactory;
 
-        private static CallSite<Func<CallSite, object, IShape>> _convertAsShapeCallsite = CallSite<Func<CallSite, object, IShape>>.Create(
+        // this need to be Shape instead of IShape - cast to interface throws error on clr types like HtmlString
+        private static readonly CallSite<Func<CallSite, object, Shape>> _convertAsShapeCallsite = CallSite<Func<CallSite, object, Shape>>.Create(
                 new ForgivingConvertBinder(
                     (ConvertBinder)Binder.Convert(
-                    CSharpBinderFlags.ConvertExplicit | CSharpBinderFlags.CheckedContext,
-                    typeof(IShape),
+                    CSharpBinderFlags.ConvertExplicit,
+                    typeof(Shape),
                     null/*typeof(DefaultDisplayManager)*/)));
 
         public DefaultDisplayManager(IShapeTableFactory shapeTableFactory) {
@@ -41,10 +40,13 @@ namespace Orchard.DisplayManagement.Secondary {
                 return CoerceHtmlString(context.Value);
 
             var shapeTable = _shapeTableFactory.CreateShapeTable();
+            //preproc loop / event (alter shape, swapping type)
+
             ShapeTable.Entry entry;
             if (shapeTable.Entries.TryGetValue(shapeAttributes.Type, out entry)) {
                 return Process(entry, shape, context);
             }
+            //postproc / content html alteration/wrapping/etc
             throw new OrchardException(T("Shape type {0} not found", shapeAttributes.Type));
         }
 

@@ -24,15 +24,16 @@ namespace Orchard.DevTools {
             tag.GenerateId("zone-" + Shape.Name);
             tag.AddCssClass("zone-" + Shape.Name);
             tag.AddCssClass("zone");
-            tag.InnerHtml = Smash(DisplayAll(Display, Shape)).ToString();
+            tag.InnerHtml = Combine(DisplayAll(Display, Shape).ToArray()).ToString();
             return new HtmlString(tag.ToString());
         }
-
+        
         public IHtmlString Message(dynamic Display, object Content, string Severity) {
             return Display(new HtmlString("<p class=\"message\">"), Severity ?? "Neutral", ": ", Content, new HtmlString("</p>"));
         }
 
-        private static IHtmlString Smash(IEnumerable<IHtmlString> contents) {
+
+        static IHtmlString Combine(IEnumerable<IHtmlString> contents) {
             return new HtmlString(contents.Aggregate("", (a, b) => a + b));
         }
 

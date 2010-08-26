@@ -7,6 +7,7 @@ using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Web;
 using Microsoft.CSharp.RuntimeBinder;
+using Orchard.DisplayManagement.Implementation;
 using Binder = Microsoft.CSharp.RuntimeBinder.Binder;
 
 namespace Orchard.DisplayManagement {

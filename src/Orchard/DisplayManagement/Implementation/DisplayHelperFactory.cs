@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Web.Mvc;
 using ClaySharp;
-using Orchard.DisplayManagement.Implementation;
-using Orchard.DisplayManagement.Shapes;
 
-namespace Orchard.DisplayManagement {
+namespace Orchard.DisplayManagement.Implementation {
     public class DisplayHelperFactory : IDisplayHelperFactory {
         static private readonly DisplayHelperBehavior[] _behaviors = new[] { new DisplayHelperBehavior() };
         private readonly IDisplayManager _displayManager;
