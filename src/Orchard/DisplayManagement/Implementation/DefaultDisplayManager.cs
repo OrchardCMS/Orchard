@@ -5,6 +5,7 @@ using System.Runtime.CompilerServices;
 using System.Web;
 using System.Web.Mvc;
 using Microsoft.CSharp.RuntimeBinder;
+using Orchard.DisplayManagement.Implementation;
 using Orchard.DisplayManagement.Shapes;
 using Orchard.Localization;
 
@@ -12,7 +13,12 @@ namespace Orchard.DisplayManagement.Secondary {
     public class DefaultDisplayManager : IDisplayManager {
         private readonly IShapeTableFactory _shapeTableFactory;
 
-        private static CallSite<Func<CallSite, object, Shape>> _convertAsShapeCallsite;
+        private static CallSite<Func<CallSite, object, IShape>> _convertAsShapeCallsite = CallSite<Func<CallSite, object, IShape>>.Create(
+                new ForgivingConvertBinder(
+                    (ConvertBinder)Binder.Convert(
+                    CSharpBinderFlags.ConvertExplicit | CSharpBinderFlags.CheckedContext,
+                    typeof(IShape),
+                    null/*typeof(DefaultDisplayManager)*/)));
 
         public DefaultDisplayManager(IShapeTableFactory shapeTableFactory) {
             _shapeTableFactory = shapeTableFactory;
@@ -23,14 +29,6 @@ namespace Orchard.DisplayManagement.Secondary {
 
 
         public IHtmlString Execute(DisplayContext context) {
-            if (_convertAsShapeCallsite == null) {
-                _convertAsShapeCallsite = CallSite<Func<CallSite, object, Shape>>.Create(
-                new ForgivingConvertBinder(
-                    (ConvertBinder)Binder.Convert(
-                    CSharpBinderFlags.ConvertExplicit | CSharpBinderFlags.CheckedContext,
-                    typeof(Shape),
-                    null/*typeof(DefaultDisplayManager)*/)));
-            }
             var shape = _convertAsShapeCallsite.Target(_convertAsShapeCallsite, context.Value);
 
             // non-shape arguements are returned as a no-op
@@ -61,7 +59,7 @@ namespace Orchard.DisplayManagement.Secondary {
             return new HtmlString(HttpUtility.HtmlEncode(value));
         }
 
-        private IHtmlString Process(ShapeTable.Entry entry, Shape shape, DisplayContext context) {
+        private IHtmlString Process(ShapeTable.Entry entry, IShape shape, DisplayContext context) {
             return CoerceHtmlString(entry.Target(context));
         }
 

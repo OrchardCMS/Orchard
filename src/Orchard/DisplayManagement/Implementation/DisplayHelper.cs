@@ -4,22 +4,27 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using ClaySharp;
+using Orchard.DisplayManagement.Implementation;
 using Orchard.DisplayManagement.Shapes;
 
 namespace Orchard.DisplayManagement {
 
-
+    /// <summary>
+    /// Refactor: I this doesn't really need to exist, does it? 
+    /// It can all be an aspect of a display helper behavior implementation...
+    /// Or should this remain a CLR type for clarity?
+    /// </summary>
     public class DisplayHelper {
         private readonly IDisplayManager _displayManager;
-        private readonly IShapeBuilder _shapeBuilder;
+        private readonly IShapeFactory _shapeFactory;
 
         public DisplayHelper(
             IDisplayManager displayManager,
-            IShapeBuilder shapeBuilder,
+            IShapeFactory shapeFactory,
             ViewContext viewContext,
             IViewDataContainer viewDataContainer) {
             _displayManager = displayManager;
-            _shapeBuilder = shapeBuilder;
+            _shapeFactory = shapeFactory;
             ViewContext = viewContext;
             ViewDataContainer = viewDataContainer;
         }
@@ -60,7 +65,7 @@ namespace Orchard.DisplayManagement {
         }
 
         private object ShapeTypeExecute(string name, INamedEnumerable<object> parameters) {
-            var shape = _shapeBuilder.Build(name, parameters);
+            var shape = _shapeFactory.Create(name, parameters);
             return ShapeExecute(shape);
         }
 

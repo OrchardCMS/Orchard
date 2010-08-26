@@ -1,8 +1,14 @@
 ﻿<div>
   
-  @Display.Title(text:"This is everything")
-  @Display(Model)
+a  @Display.Title(text:"This is everything")
+b  @Display(Model)
 
-  @Display(View.Page)
+c  @Display(View.Page)
+
+d  @Display.Message(Content:"Madness!!!")
+
+e  @Display.Explosion(Width:40)
+
+f  @Display.Message(Content: @Display.Explosion(Height:10,Width:15))
 
 </div>

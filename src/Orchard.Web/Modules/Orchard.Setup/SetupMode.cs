@@ -12,6 +12,7 @@ using Orchard.Data.Migration.Interpreters;
 using Orchard.Data.Providers;
 using Orchard.Data.Migration;
 using Orchard.DisplayManagement;
+using Orchard.DisplayManagement.Implementation;
 using Orchard.DisplayManagement.Secondary;
 using Orchard.DisplayManagement.Shapes;
 using Orchard.Environment.Extensions;
@@ -64,7 +65,7 @@ namespace Orchard.Setup {
             // in progress - adding services for display/shape support in setup
             builder.RegisterType<DisplayHelperFactory>().As<IDisplayHelperFactory>();
             builder.RegisterType<DefaultDisplayManager>().As<IDisplayManager>();
-            builder.RegisterType<DefaultShapeBuilder>().As<IShapeBuilder>();
+            builder.RegisterType<DefaultShapeFactory>().As<IShapeFactory>();
             builder.RegisterType<DefaultShapeTableFactory>().As<IShapeTableFactory>(); 
         }
 

@@ -1,24 +1,25 @@
 ﻿using System;
 using System.Web.Mvc;
 using ClaySharp;
+using Orchard.DisplayManagement.Implementation;
 using Orchard.DisplayManagement.Shapes;
 
 namespace Orchard.DisplayManagement {
     public class DisplayHelperFactory : IDisplayHelperFactory {
         static private readonly DisplayHelperBehavior[] _behaviors = new[] { new DisplayHelperBehavior() };
         private readonly IDisplayManager _displayManager;
-        private readonly IShapeBuilder _shapeBuilder;
+        private readonly IShapeFactory _shapeFactory;
 
-        public DisplayHelperFactory(IDisplayManager displayManager, IShapeBuilder shapeBuilder) {
+        public DisplayHelperFactory(IDisplayManager displayManager, IShapeFactory shapeFactory) {
             _displayManager = displayManager;
-            _shapeBuilder = shapeBuilder;
+            _shapeFactory = shapeFactory;
         }
 
-        public DisplayHelper CreateDisplayHelper(ViewContext viewContext, IViewDataContainer viewDataContainer) {
-            return (DisplayHelper)ClayActivator.CreateInstance<DisplayHelper>(
+        public dynamic CreateHelper(ViewContext viewContext, IViewDataContainer viewDataContainer) {
+            return ClayActivator.CreateInstance<DisplayHelper>(
                 _behaviors,
                 _displayManager,
-                _shapeBuilder,
+                _shapeFactory,
                 viewContext,
                 viewDataContainer);
         }

@@ -15,23 +15,23 @@ namespace Orchard.Tests.DisplayManagement {
         [SetUp]
         public void Init() {
             var builder = new ContainerBuilder();
-            builder.RegisterType<DefaultShapeBuilder>().As<IShapeBuilder>();
+            builder.RegisterType<DefaultShapeFactory>().As<IShapeFactory>();
             _container = builder.Build();
         }
 
         
         [Test]
         public void ShapeHasAttributesType() {
-            var factory = _container.Resolve<IShapeBuilder>();
-            dynamic foo = factory.Build("Foo", ArgsUtility.Empty());
+            var factory = _container.Resolve<IShapeFactory>();
+            dynamic foo = factory.Create("Foo", ArgsUtility.Empty());
             ShapeAttributes attributes = foo.Attributes;
             Assert.That(attributes.Type, Is.EqualTo("Foo"));
         }
 
         [Test]
         public void CreateShapeWithNamedArguments() {
-            var factory = _container.Resolve<IShapeBuilder>();
-            var foo = factory.Build("Foo", ArgsUtility.Named(new { one = 1, two = "dos" }));
+            var factory = _container.Resolve<IShapeFactory>();
+            var foo = factory.Create("Foo", ArgsUtility.Named(new { one = 1, two = "dos" }));
         }
     }
 }

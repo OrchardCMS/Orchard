@@ -1,13 +1,19 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Web;
+using Microsoft.CSharp.RuntimeBinder;
+using Binder = Microsoft.CSharp.RuntimeBinder.Binder;
 
 namespace Orchard.DisplayManagement {
     public class DefaultShapeTableFactory : IShapeTableFactory {
-        private readonly IEnumerable<IShapeProvider> _shapeProviders;
+        private readonly IEnumerable<IShapeDriver> _shapeProviders;
 
-        public DefaultShapeTableFactory(IEnumerable<IShapeProvider> shapeProviders) {
+        public DefaultShapeTableFactory(IEnumerable<IShapeDriver> shapeProviders) {
             _shapeProviders = shapeProviders;
         }
 
@@ -29,13 +35,13 @@ namespace Orchard.DisplayManagement {
             }
         }
 
-        private object PerformInvoke(DisplayContext displayContext, MethodInfo methodInfo, IShapeProvider shapeProvider) {
+        private object PerformInvoke(DisplayContext displayContext, MethodInfo methodInfo, IShapeDriver shapeDriver) {
             // oversimplification for the sake of evolving
             dynamic shape = displayContext.Value;
             var arguments = methodInfo.GetParameters()
                 .Select(parameter => BindParameter(displayContext, parameter));
 
-            return methodInfo.Invoke(shapeProvider, arguments.ToArray());
+            return methodInfo.Invoke(shapeDriver, arguments.ToArray());
         }
 
         private object BindParameter(DisplayContext displayContext, ParameterInfo parameter) {
@@ -45,8 +51,28 @@ namespace Orchard.DisplayManagement {
             if (parameter.Name == "Display")
                 return displayContext.Display;
 
-            return ((dynamic)(displayContext.Value))[parameter.Name];
+            var result = ((dynamic)(displayContext.Value))[parameter.Name];
+            var converter = _converters.GetOrAdd(
+                parameter.ParameterType,
+                CompileConverter);
+            return converter(result);
         }
+
+        static Func<object, object> CompileConverter(Type targetType) {
+            var valueParameter = Expression.Parameter(typeof (object), "value");
+
+            return Expression.Lambda<Func<object, object>>(
+                Expression.Convert(
+                    Expression.Dynamic(
+                        Binder.Convert(CSharpBinderFlags.ConvertExplicit, targetType, null),
+                        targetType,
+                        valueParameter),
+                    typeof (object)),
+                valueParameter).Compile();
+        }
+
+        static readonly ConcurrentDictionary<Type, Func<object, object>> _converters =
+            new ConcurrentDictionary<Type, Func<object, object>>();
 
         static bool IsAcceptableMethod(MethodInfo methodInfo) {
             if (methodInfo.IsSpecialName)

@@ -6,13 +6,13 @@ using System.Web.Mvc;
 using Orchard.DisplayManagement;
 
 namespace Orchard.DevTools {
-    public class Shapes : IShapeProvider {
+    public class Shapes : IShapeDriver {
         public IHtmlString Title(dynamic text) {
             return new HtmlString("<h2>" + text + "</h2>");
         }
 
-        public IHtmlString Explosion(int Height, int Width) {
-            return new HtmlString(string.Format("<div>Boom {0}x{1}</div>", Height, Width));
+        public IHtmlString Explosion(int? Height, int? Width) {
+            return new HtmlString(string.Format("<span>Boom {0}x{1}</span>", Height, Width));
         }
 
         public IHtmlString Page(dynamic Display, dynamic Shape) {
@@ -29,7 +29,7 @@ namespace Orchard.DevTools {
         }
 
         public IHtmlString Message(dynamic Display, object Content, string Severity) {
-            return Display(Severity, ": ", Content);
+            return Display(new HtmlString("<p class=\"message\">"), Severity ?? "Neutral", ": ", Content, new HtmlString("</p>"));
         }
 
         private static IHtmlString Smash(IEnumerable<IHtmlString> contents) {

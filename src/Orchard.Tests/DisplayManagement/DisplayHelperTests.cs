@@ -8,6 +8,7 @@ using ClaySharp.Implementation;
 using Moq;
 using NUnit.Framework;
 using Orchard.DisplayManagement;
+using Orchard.DisplayManagement.Implementation;
 using Orchard.DisplayManagement.Shapes;
 
 namespace Orchard.Tests.DisplayManagement {
@@ -18,14 +19,14 @@ namespace Orchard.Tests.DisplayManagement {
             var viewContext = new ViewContext();
 
             var displayManager = new Mock<IDisplayManager>();
-            var shapeFactory = new Mock<IShapeBuilder>();
+            var shapeFactory = new Mock<IShapeFactory>();
 
             var displayHelperFactory = new DisplayHelperFactory(displayManager.Object, shapeFactory.Object);
-            var displayHelper = displayHelperFactory.CreateDisplayHelper(viewContext, null);
+            var displayHelper = displayHelperFactory.CreateHelper(viewContext, null);
 
             displayHelper.Invoke("Pager", ArgsUtility.Positional(1, 2, 3, 4));
 
-            shapeFactory.Verify(sf=>sf.Build("Pager", It.IsAny<INamedEnumerable<object>>()));
+            shapeFactory.Verify(sf => sf.Create("Pager", It.IsAny<INamedEnumerable<object>>()));
             //displayManager.Verify(dm => dm.Execute(It.IsAny<Shape>(), viewContext, null));
         }
         [Test]
@@ -33,14 +34,14 @@ namespace Orchard.Tests.DisplayManagement {
             var viewContext = new ViewContext();
 
             var displayManager = new Mock<IDisplayManager>();
-            var shapeFactory = new Mock<IShapeBuilder>();
+            var shapeFactory = new Mock<IShapeFactory>();
 
             var displayHelperFactory = new DisplayHelperFactory(displayManager.Object, shapeFactory.Object);
-            var display = (dynamic)displayHelperFactory.CreateDisplayHelper(viewContext, null);
+            var display = (dynamic)displayHelperFactory.CreateHelper(viewContext, null);
 
             display.Pager(1, 2, 3, 4);
 
-            shapeFactory.Verify(sf => sf.Build("Pager", It.IsAny<INamedEnumerable<object>>()));
+            shapeFactory.Verify(sf => sf.Create("Pager", It.IsAny<INamedEnumerable<object>>()));
             //displayManager.Verify(dm => dm.Execute(It.IsAny<Shape>(), viewContext, null));
         }
 
@@ -51,10 +52,10 @@ namespace Orchard.Tests.DisplayManagement {
             var viewContext = new ViewContext();
 
             var displayManager = new Mock<IDisplayManager>();
-            var shapeFactory = new Mock<IShapeBuilder>();
+            var shapeFactory = new Mock<IShapeFactory>();
 
             var displayHelperFactory = new DisplayHelperFactory(displayManager.Object, shapeFactory.Object);
-            var display = (dynamic)displayHelperFactory.CreateDisplayHelper(viewContext, null);
+            var display = (dynamic)displayHelperFactory.CreateHelper(viewContext, null);
             var outline = new Shape { Attributes = new ShapeAttributes { Type = "Outline" } };
             display(outline);
 

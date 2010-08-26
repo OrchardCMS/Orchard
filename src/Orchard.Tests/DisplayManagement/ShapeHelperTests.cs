@@ -5,6 +5,7 @@ using System.Text;
 using Autofac;
 using NUnit.Framework;
 using Orchard.DisplayManagement;
+using Orchard.DisplayManagement.Implementation;
 using Orchard.DisplayManagement.Shapes;
 
 namespace Orchard.Tests.DisplayManagement {
@@ -16,14 +17,14 @@ namespace Orchard.Tests.DisplayManagement {
         public void Init() {
             var builder = new ContainerBuilder();
             builder.RegisterType<ShapeHelperFactory>().As<IShapeHelperFactory>();
-            builder.RegisterType<DefaultShapeBuilder>().As<IShapeBuilder>();
+            builder.RegisterType<DefaultShapeFactory>().As<IShapeFactory>();
             _container = builder.Build();
 
         }
 
         [Test]
         public void CreatingNewShapeTypeByName() {
-            dynamic shape = _container.Resolve<IShapeHelperFactory>().CreateShapeHelper();
+            dynamic shape = _container.Resolve<IShapeHelperFactory>().CreateHelper();
 
             var alpha = shape.Alpha();
 
@@ -32,7 +33,7 @@ namespace Orchard.Tests.DisplayManagement {
 
         [Test]
         public void CreatingShapeWithAdditionalNamedParameters() {
-            dynamic shape = _container.Resolve<IShapeHelperFactory>().CreateShapeHelper();
+            dynamic shape = _container.Resolve<IShapeHelperFactory>().CreateHelper();
 
             var alpha = shape.Alpha(one: 1, two: "dos");
 
@@ -43,7 +44,7 @@ namespace Orchard.Tests.DisplayManagement {
 
         [Test]
         public void WithPropertyBearingObjectInsteadOfNamedParameters() {
-            dynamic shape = _container.Resolve<IShapeHelperFactory>().CreateShapeHelper();
+            dynamic shape = _container.Resolve<IShapeHelperFactory>().CreateHelper();
 
             var alpha = shape.Alpha(new { one = 1, two = "dos" });
 

@@ -19,14 +19,14 @@ namespace Orchard.Tests.DisplayManagement {
 
         [Test]
         public void ShapeTableRecognizesMethodNames() {
-            var stf = CreateShapeTableFactory(cfg => cfg.RegisterType<Test>().As<IShapeProvider>());
+            var stf = CreateShapeTableFactory(cfg => cfg.RegisterType<Test>().As<IShapeDriver>());
             var shapeTable = stf.CreateShapeTable();
             Assert.That(shapeTable.Entries.Count(), Is.EqualTo(2));
             Assert.That(shapeTable.Entries.ContainsKey("Pager"));
             Assert.That(shapeTable.Entries.ContainsKey("Email"));
         }
 
-        public class Test : IShapeProvider {
+        public class Test : IShapeDriver {
             public void Pager() {
             }
 

@@ -7,6 +7,7 @@ using System.Web.Mvc;
 using Autofac;
 using NUnit.Framework;
 using Orchard.DisplayManagement;
+using Orchard.DisplayManagement.Implementation;
 using Orchard.DisplayManagement.Secondary;
 using Orchard.DisplayManagement.Shapes;
 
@@ -19,15 +20,15 @@ namespace Orchard.Tests.DisplayManagement {
         public void Init() {
             var builder = new ContainerBuilder();
             builder.RegisterType<DefaultDisplayManager>().As<IDisplayManager>();
-            builder.RegisterType<DefaultShapeBuilder>().As<IShapeBuilder>();
+            builder.RegisterType<DefaultShapeFactory>().As<IShapeFactory>();
             builder.RegisterType<DisplayHelperFactory>().As<IDisplayHelperFactory>();
             builder.RegisterType<ShapeHelperFactory>().As<IShapeHelperFactory>();
             builder.RegisterType<DefaultShapeTableFactory>().As<IShapeTableFactory>();
-            builder.RegisterType<SimpleShapes>().As<IShapeProvider>();
+            builder.RegisterType<SimpleShapes>().As<IShapeDriver>();
             _container = builder.Build();
         }
 
-        public class SimpleShapes : IShapeProvider {
+        public class SimpleShapes : IShapeDriver {
             public IHtmlString Something() {
                 return new HtmlString("<br/>");
             }
@@ -41,9 +42,9 @@ namespace Orchard.Tests.DisplayManagement {
         public void RenderingSomething() {
             var viewContext = new ViewContext();
             
-            dynamic Display = _container.Resolve<IDisplayHelperFactory>().CreateDisplayHelper(viewContext, null);
+            dynamic Display = _container.Resolve<IDisplayHelperFactory>().CreateHelper(viewContext, null);
 
-            dynamic New = _container.Resolve<IShapeHelperFactory>().CreateShapeHelper();
+            dynamic New = _container.Resolve<IShapeHelperFactory>().CreateHelper();
 
             var result1 = Display.Something();
             var result2 = ((DisplayHelper)Display).ShapeExecute((Shape)New.Pager());

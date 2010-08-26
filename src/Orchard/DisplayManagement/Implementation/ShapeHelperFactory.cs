@@ -1,23 +1,19 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using ClaySharp;
-using Orchard.DisplayManagement.Shapes;
 
-namespace Orchard.DisplayManagement {
+namespace Orchard.DisplayManagement.Implementation {
     public class ShapeHelperFactory : IShapeHelperFactory {
         static private readonly ShapeHelperBehavior[] _behaviors = new[] { new ShapeHelperBehavior() };
-        private readonly IShapeBuilder _shapeBuilder;
+        private readonly IShapeFactory _shapeFactory;
 
-        public ShapeHelperFactory(IShapeBuilder shapeBuilder) {
-            _shapeBuilder = shapeBuilder;
+        public ShapeHelperFactory(IShapeFactory shapeFactory) {
+            _shapeFactory = shapeFactory;
         }
 
-        public ShapeHelper CreateShapeHelper() {
-            return (ShapeHelper)ClayActivator.CreateInstance<ShapeHelper>(
-                _behaviors,
-                _shapeBuilder);
+        public dynamic CreateHelper() {
+            return ClayActivator.CreateInstance<ShapeHelper>(
+                _behaviors, 
+                _shapeFactory);
         }
 
         class ShapeHelperBehavior : ClayBehavior {

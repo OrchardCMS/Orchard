@@ -35,7 +35,7 @@ namespace Orchard.Mvc.ViewEngines.Razor {
                 contextualize();
 
             _localizer = LocalizationUtilities.Resolve(ViewContext, VirtualPath);
-            _display = DisplayHelperFactory.CreateDisplayHelper(ViewContext, this);
+            _display = DisplayHelperFactory.CreateHelper(ViewContext, this);
         }
 
 

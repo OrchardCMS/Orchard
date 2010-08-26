@@ -377,22 +377,24 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="ContentManagement\DataMigrations\FrameworkDataMigration.cs" />
-    <Compile Include="DisplayManagement\Secondary\DefaultDisplayManager.cs" />
-    <Compile Include="DisplayManagement\Shapes\DefaultShapeBuilder.cs" />
-    <Compile Include="DisplayManagement\HelperFactories\IShapeHelperFactory.cs" />
-    <Compile Include="DisplayManagement\HelperFactories\IDisplayHelperFactory.cs" />
+    <Compile Include="DisplayManagement\Implementation\DefaultDisplayManager.cs" />
+    <Compile Include="DisplayManagement\Implementation\DefaultShapeFactory.cs" />
+    <Compile Include="DisplayManagement\IShapeHelperFactory.cs" />
+    <Compile Include="DisplayManagement\IDisplayHelperFactory.cs" />
+    <Compile Include="DisplayManagement\IShape.cs" />
+    <Compile Include="DisplayManagement\IShapeAttributes.cs" />
     <Compile Include="DisplayManagement\Shapes\Shape.cs" />
     <Compile Include="DisplayManagement\Shapes\ShapeAttributes.cs" />
     <Compile Include="DisplayManagement\Speculation\DefaultShapeTableFactory.cs" />
-    <Compile Include="DisplayManagement\Speculation\DisplayContext.cs" />
-    <Compile Include="DisplayManagement\DisplayHelper.cs" />
-    <Compile Include="DisplayManagement\HelperFactories\DisplayHelperFactory.cs" />
-    <Compile Include="DisplayManagement\IDisplayManager.cs" />
-    <Compile Include="DisplayManagement\Shapes\IShapeBuilder.cs" />
-    <Compile Include="DisplayManagement\Speculation\IShapeProvider.cs" />
+    <Compile Include="DisplayManagement\Implementation\DisplayContext.cs" />
+    <Compile Include="DisplayManagement\Implementation\DisplayHelper.cs" />
+    <Compile Include="DisplayManagement\Implementation\DisplayHelperFactory.cs" />
+    <Compile Include="DisplayManagement\Implementation\IDisplayManager.cs" />
+    <Compile Include="DisplayManagement\IShapeFactory.cs" />
+    <Compile Include="DisplayManagement\IShapeDriver.cs" />
     <Compile Include="DisplayManagement\Speculation\IShapeTableFactory.cs" />
-    <Compile Include="DisplayManagement\ShapeHelper.cs" />
-    <Compile Include="DisplayManagement\HelperFactories\ShapeHelperFactory.cs" />
+    <Compile Include="DisplayManagement\Implementation\ShapeHelper.cs" />
+    <Compile Include="DisplayManagement\Implementation\ShapeHelperFactory.cs" />
     <Compile Include="DisplayManagement\Speculation\ShapeTable.cs" />
     <Compile Include="Environment\IContextualizable.cs" />
     <Compile Include="Environment\IHostLocalRestart.cs" />

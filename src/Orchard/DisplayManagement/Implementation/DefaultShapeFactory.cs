@@ -3,8 +3,8 @@ using System.Linq;
 using ClaySharp;
 
 namespace Orchard.DisplayManagement.Shapes {
-    public class DefaultShapeBuilder : IShapeBuilder {
-        public Shape Build(string shapeType, INamedEnumerable<object> parameters) {
+    public class DefaultShapeFactory : IShapeFactory {
+        public IShape Create(string shapeType, INamedEnumerable<object> parameters) {
 
             var positional = parameters.Positional;
 
