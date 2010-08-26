@@ -64,7 +64,7 @@ namespace Orchard.Core.Routable.Services {
 
         public bool IsSlugValid(string slug) {
             // see http://tools.ietf.org/html/rfc3987 for prohibited chars
-            return slug == null || String.IsNullOrEmpty(slug.Trim()) || Regex.IsMatch(slug, @"^[^/:?#\[\]@!$&'()*+,;=\s]+$");
+            return slug == null || String.IsNullOrEmpty(slug.Trim()) || Regex.IsMatch(slug, @"^[^:?#\[\]@!$&'()*+,;=\s]+$");
         }
 
         public bool ProcessSlug(RoutePart part) {

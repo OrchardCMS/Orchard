@@ -24,7 +24,7 @@ using System.Web.Routing;
 using Orchard.Tests.Stubs;
 using Orchard.UI.Notify;
 
-namespace Orchard.Core.Tests.Common.Services {
+namespace Orchard.Core.Tests.Routable.Services {
     [TestFixture]
     public class RoutableServiceTests : DatabaseEnabledTestsBase {
         [SetUp]
@@ -60,12 +60,17 @@ namespace Orchard.Core.Tests.Common.Services {
 
             var thing = contentManager.Create<Thing>(ThingDriver.ContentType.Name, t => {
                 t.As<RoutePart>().Record = new RoutePartRecord();
-                t.Title = "Please do not use any of the following characters in your slugs: \":\", \"/\", \"?\", \"#\", \"[\", \"]\", \"@\", \"!\", \"$\", \"&\", \"'\", \"(\", \")\", \"*\", \"+\", \",\", \";\", \"=\"";
+                t.Title = "Please do not use any of the following characters in your slugs: \":\", \"?\", \"#\", \"[\", \"]\", \"@\", \"!\", \"$\", \"&\", \"'\", \"(\", \")\", \"*\", \"+\", \",\", \";\", \"=\"";
             });
 
             _routableService.FillSlugFromTitle(thing.As<RoutePart>());
 
-            Assert.That(thing.Slug, Is.EqualTo("please-do-not-use-any-of-the-following-characters-in-your-slugs-\"-\"-\"-\"-\"-\"-\"-\"-\"-\"-\"-\"-\"-\"-\"-\"-\"-\"-\"-\"-\"-\"-\"-\"-\"-\"-\"-\"-\"-\"-\"-\"-\"-\"-\"-\""));
+            Assert.That(thing.Slug, Is.EqualTo("please-do-not-use-any-of-the-following-characters-in-your-slugs-\"-\"-\"-\"-\"-\"-\"-\"-\"-\"-\"-\"-\"-\"-\"-\"-\"-\"-\"-\"-\"-\"-\"-\"-\"-\"-\"-\"-\"-\"-\"-\"-\"-\""));
+        }
+
+        [Test]
+        public void SlashInSlugIsAllowed() {
+            Assert.That(_routableService.IsSlugValid("some/page"), Is.True);
         }
 
         [Test]
@@ -80,7 +85,7 @@ namespace Orchard.Core.Tests.Common.Services {
         public void InvalidCharacterShouldBeRefusedInSlugs() {
             Assert.That(_routableService.IsSlugValid("aaaa-_aaaa"), Is.True);
 
-            foreach (var c in @"/:?#[]@!$&'()*+,;= ") {
+            foreach (var c in @":?#[]@!$&'()*+,;= ") {
                 Assert.That(_routableService.IsSlugValid("a" + c + "b"), Is.False);
             }
         }
