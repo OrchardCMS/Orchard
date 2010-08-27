@@ -825,11 +825,6 @@ table .button {
 .settings legend {
     margin:0 0 -.4em 0;
 }
-/* todo: This style is the same as textMedium. Consolidate if possible */
-.settings input.text, .settings input.text-box {
-    width:26em;
-}
-
 
 /* Fields
 ----------------------------------------------------------*/
