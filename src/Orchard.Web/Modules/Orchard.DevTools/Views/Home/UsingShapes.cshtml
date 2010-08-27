@@ -1,14 +1,21 @@
 ﻿<div>
-  
-a  @Display.Title(text:"This is everything")
-b  @Display(Model)
 
-c  @Display(View.Page)
+    <style>#goodlink:after {content:'(url from css: ' attr(href) ')';} .bigredborderfromabadclassname {border:3px solid red;}</style>
+    a  @Display.Title(text:"This is everything")
+    b  @Display(Model)
 
-d  @Display.Message(Content:"Madness!!!")
+    c  @Display(View.Page)
 
-e  @Display.Explosion(Width:40)
+    c.a @Display.Link(Url: "http://orchardproject.net", Content: "Help, I'm in an anchor!!", Attributes: new {title = "foo"})
+    c.b @Display.Link(
+            Url: "http://orchardproject.net",
+            Content: @Display.Image(Url: "http://orchardproject.net/content/images/heroShot.jpg", Attributes: new {@class = "bigredborderfromabadclassname"}),
+            Attributes: new {id = "goodlink"})
 
-f  @Display.Message(Content: @Display.Explosion(Height:10,Width:15))
+    d  @Display.Message(Content:"Madness!!!")
+
+    e  @Display.Explosion(Width:40)
+
+    f  @Display.Message(Content: @Display.Explosion(Height:10,Width:15))
 
 </div>

@@ -68,6 +68,9 @@ namespace Orchard.DevTools.Controllers {
             ViewModel.Page.Messages.Add(
                 Shape.Message(Content: T("This is a test"), Severity: "Really bad!!!"));
 
+            ViewModel.Page.Sidebar.Add(
+                Shape.Link(Url: "http://orchard.codeplex.com", Content: Shape.Image(Url: "http://orchardproject.net/Content/images/orchardLogo.jpg").Attributes(new { @class = "bigredborderfromabadclassname" })));
+
             var model = Shape.Message(
                 Content: Shape.Explosion(Height: 100, Width: 200),
                 Severity: "Meh");

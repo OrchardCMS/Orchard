@@ -6,6 +6,8 @@ using System.Linq.Expressions;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Web;
+using System.Web.Routing;
+using ClaySharp.Implementation;
 using Microsoft.CSharp.RuntimeBinder;
 using Orchard.DisplayManagement.Implementation;
 using Binder = Microsoft.CSharp.RuntimeBinder.Binder;
@@ -51,6 +53,11 @@ namespace Orchard.DisplayManagement {
 
             if (parameter.Name == "Display")
                 return displayContext.Display;
+
+            if (parameter.Name == "Attributes") {
+                var attributes = new RouteValueDictionary(((dynamic) (displayContext.Value))[parameter.Name]);
+                return Arguments.From(attributes.Values, attributes.Keys);
+            }
 
             var result = ((dynamic)(displayContext.Value))[parameter.Name];
             var converter = _converters.GetOrAdd(
