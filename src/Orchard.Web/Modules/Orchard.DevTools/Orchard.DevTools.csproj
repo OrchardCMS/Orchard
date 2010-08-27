@@ -125,6 +125,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <None Include="Views\Home\FormShapes.cshtml" />
     <None Include="Views\Home\UsingShapes.cshtml" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

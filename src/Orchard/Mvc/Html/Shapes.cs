@@ -1,6 +1,5 @@
 ﻿using System.Web;
 using System.Web.Mvc;
-using System.Web.Routing;
 using ClaySharp;
 using Orchard.DisplayManagement;
 
@@ -19,5 +18,28 @@ namespace Orchard.Mvc.Html {
             tagBuilder.MergeAttribute("src", Url);
             return Display(new HtmlString(tagBuilder.ToString(TagRenderMode.SelfClosing)));
         }
+
+        #region form and company
+
+        public IHtmlString Form(dynamic Display, dynamic Shape, object Submit) {
+            return Display(new HtmlString("<form>" + Display(Shape.Fieldsets, Submit).ToString() + "</form>"));
+        }
+
+        public IHtmlString FormSubmit(dynamic Display, dynamic Shape) {
+            return Display(new HtmlString("<button type='submit'>" + Shape.Text + "</button>"));
+        }
+
+        public IHtmlString InputPassword(dynamic Display, dynamic Shape) {
+            return Display(new HtmlString("<label>" + Shape.Text + "</label><input type='password' name='" + Shape.Name + "' value='" + (Shape.Value == null ? "" : Shape.Value) + "' />"));
+        }
+
+        public IHtmlString InputText(dynamic Display, dynamic Shape, INamedEnumerable<object> Attributes) {
+            // not optimal obviously, just testing the waters
+            return Display(new HtmlString("<label>" + Shape.Text + "</label>"
+                + "<input type='text'" + (Attributes.Named.ContainsKey("autofocus") ? " autofocus" : "" )+ " name='" + Shape.Name
+                    + "' value='" + (Shape.Value == null ? "" : Shape.Value) + "' />")); // <- otherwise Shape.Value is "ClaySharp.Clay"
+        }
+
+        #endregion
     }
 }
