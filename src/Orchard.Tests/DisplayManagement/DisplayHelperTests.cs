@@ -56,7 +56,7 @@ namespace Orchard.Tests.DisplayManagement {
 
             var displayHelperFactory = new DisplayHelperFactory(displayManager.Object, shapeFactory.Object);
             var display = (dynamic)displayHelperFactory.CreateHelper(viewContext, null);
-            var outline = new Shape { Attributes = new ShapeAttributes { Type = "Outline" } };
+            var outline = new Shape { ShapeMetadata = new ShapeMetadata { Type = "Outline" } };
             display(outline);
 
             //displayManager.Verify(dm => dm.Execute(outline, viewContext, null));

@@ -382,9 +382,9 @@
     <Compile Include="DisplayManagement\IShapeHelperFactory.cs" />
     <Compile Include="DisplayManagement\IDisplayHelperFactory.cs" />
     <Compile Include="DisplayManagement\IShape.cs" />
-    <Compile Include="DisplayManagement\IShapeAttributes.cs" />
+    <Compile Include="DisplayManagement\IShapeMetadata.cs" />
     <Compile Include="DisplayManagement\Shapes\Shape.cs" />
-    <Compile Include="DisplayManagement\Shapes\ShapeAttributes.cs" />
+    <Compile Include="DisplayManagement\Shapes\ShapeMetadata.cs" />
     <Compile Include="DisplayManagement\Speculation\DefaultShapeTableFactory.cs" />
     <Compile Include="DisplayManagement\Implementation\DisplayContext.cs" />
     <Compile Include="DisplayManagement\Implementation\DisplayHelper.cs" />
@@ -400,6 +400,7 @@
     <Compile Include="Environment\IHostLocalRestart.cs" />
     <Compile Include="Environment\IShellContainerRegistrations.cs" />
     <Compile Include="FileSystems\Dependencies\DynamicModuleVirtualPathProvider.cs" />
+    <Compile Include="Mvc\Html\Shapes.cs" />
     <Compile Include="Mvc\ViewEngines\Razor\RazorCompilationEventsShim.cs" />
     <Compile Include="Mvc\ViewEngines\Razor\RazorViewEngineProvider.cs" />
     <Compile Include="Mvc\ViewEngines\Razor\WebViewPage.cs" />

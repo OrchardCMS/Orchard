@@ -34,20 +34,20 @@ namespace Orchard.DisplayManagement.Implementation {
             if (shape == null)
                 return CoerceHtmlString(context.Value);
 
-            var shapeAttributes = shape.Attributes;
+            var shapeMetadata = shape.ShapeMetadata;
             // can't really cope with a shape that has no type information
-            if (shapeAttributes == null || string.IsNullOrEmpty(shapeAttributes.Type))
+            if (shapeMetadata == null || string.IsNullOrEmpty(shapeMetadata.Type))
                 return CoerceHtmlString(context.Value);
 
             var shapeTable = _shapeTableFactory.CreateShapeTable();
             //preproc loop / event (alter shape, swapping type)
 
             ShapeTable.Entry entry;
-            if (shapeTable.Entries.TryGetValue(shapeAttributes.Type, out entry)) {
+            if (shapeTable.Entries.TryGetValue(shapeMetadata.Type, out entry)) {
                 return Process(entry, shape, context);
             }
             //postproc / content html alteration/wrapping/etc
-            throw new OrchardException(T("Shape type {0} not found", shapeAttributes.Type));
+            throw new OrchardException(T("Shape type {0} not found", shapeMetadata.Type));
         }
 
         private IHtmlString CoerceHtmlString(object value) {
