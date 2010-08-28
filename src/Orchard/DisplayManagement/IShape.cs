@@ -5,6 +5,6 @@
     /// Note: Anything on this interface is a reserved word for the purpose of shape properties
     /// </summary>    
     public interface IShape {
-        IShapeAttributes Attributes { get; set; }
+        IShapeMetadata Metadata { get; set; }
     }
 }

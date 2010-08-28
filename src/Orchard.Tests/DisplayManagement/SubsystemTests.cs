@@ -5,10 +5,15 @@ using System.Text;
 using System.Web;
 using System.Web.Mvc;
 using Autofac;
+using Moq;
 using NUnit.Framework;
 using Orchard.DisplayManagement;
+using Orchard.DisplayManagement.Descriptors;
+using Orchard.DisplayManagement.Descriptors.ShapeAttributeStrategy;
 using Orchard.DisplayManagement.Implementation;
 using Orchard.DisplayManagement.Shapes;
+using Orchard.Environment;
+using Orchard.Tests.Utility;
 
 namespace Orchard.Tests.DisplayManagement {
     [TestFixture]
@@ -18,20 +23,28 @@ namespace Orchard.Tests.DisplayManagement {
         [SetUp]
         public void Init() {
             var builder = new ContainerBuilder();
+            builder.RegisterModule(new ShapeAttributeBindingModule());
+            builder.RegisterType<ShapeAttributeBindingStrategy>().As<IShapeDescriptorBindingStrategy>();
             builder.RegisterType<DefaultDisplayManager>().As<IDisplayManager>();
             builder.RegisterType<DefaultShapeFactory>().As<IShapeFactory>();
             builder.RegisterType<DisplayHelperFactory>().As<IDisplayHelperFactory>();
             builder.RegisterType<ShapeHelperFactory>().As<IShapeHelperFactory>();
-            builder.RegisterType<DefaultShapeTableFactory>().As<IShapeTableFactory>();
-            builder.RegisterType<SimpleShapes>().As<IShapeDriver>();
+            builder.RegisterType<DefaultShapeTableManager>().As<IShapeTableManager>();
+            builder.RegisterType<SimpleShapes>();
+            builder.RegisterAutoMocking(MockBehavior.Loose);
             _container = builder.Build();
+            _container.Resolve<Mock<IOrchardHostContainer>>()
+                .Setup(x => x.Resolve<IComponentContext>())
+                .Returns(_container);
         }
 
-        public class SimpleShapes : IShapeDriver {
+        public class SimpleShapes {
+            [Shape]
             public IHtmlString Something() {
                 return new HtmlString("<br/>");
             }
 
+            [Shape]
             public IHtmlString Pager() {
                 return new HtmlString("<div>hello</div>");
             }

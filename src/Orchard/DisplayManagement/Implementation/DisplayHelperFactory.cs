@@ -26,6 +26,8 @@ namespace Orchard.DisplayManagement.Implementation {
             public override object InvokeMember(Func<object> proceed, object target, string name, INamedEnumerable<object> args) {
                 return ((DisplayHelper)target).Invoke(name, args);
             }
+             
+            
         }
     }
 }

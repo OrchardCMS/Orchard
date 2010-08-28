@@ -194,7 +194,10 @@
     <Compile Include="Data\StubLocator.cs" />
     <Compile Include="DisplayManagement\ArgsUtility.cs" />
     <Compile Include="DisplayManagement\DefaultDisplayManagerTests.cs" />
-    <Compile Include="DisplayManagement\DefaultShapeTableFactoryTests.cs" />
+    <Compile Include="DisplayManagement\Descriptors\ContainerTestBase.cs" />
+    <Compile Include="DisplayManagement\Descriptors\DefaultShapeTableFactoryTests.cs" />
+    <Compile Include="DisplayManagement\Descriptors\DefaultShapeTableManagerTests.cs" />
+    <Compile Include="DisplayManagement\Descriptors\ShapeAttributeBindingStrategyTests.cs" />
     <Compile Include="DisplayManagement\DisplayHelperTests.cs" />
     <Compile Include="DisplayManagement\ShapeFactoryTests.cs" />
     <Compile Include="DisplayManagement\SubsystemTests.cs" />

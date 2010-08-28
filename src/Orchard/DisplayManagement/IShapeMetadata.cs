@@ -1,5 +1,5 @@
 ﻿namespace Orchard.DisplayManagement {
-    public interface IShapeAttributes {
+    public interface IShapeMetadata {
         string Type { get; set; }
         string Position { get; set; }
     }
