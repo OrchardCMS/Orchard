@@ -55,14 +55,22 @@ namespace Orchard.DevTools.Controllers {
         }
 
         public ActionResult FormShapes() {
-            var model = Shape.Form(Submit: Shape.FormSubmit(Text: T("Finish Setup")))
-                .Fieldsets(Shape.Zone(typeof (Array), Name: "Fieldsets"));
+            var model = Shape.Form()
+                .Fieldsets(Shape.Fieldsets(typeof(Array))
+                    .Add(Shape.Fieldset(typeof(Array)).Name("site")
+                        .Add(Shape.InputText().Name("SiteName").Text(T("Site Name")).Value(T("some default/pre-pop value...").Text))
+                    )
+                    .Add(Shape.Fieldset(typeof(Array)).Name("admin")
+                        .Add(Shape.InputText().Name("AdminUsername").Text(T("Admin Username")))
+                        .Add(Shape.InputPassword().Name("AdminPassword").Text(T("Admin Password")))
+                    )
+                    .Add(Shape.Fieldset(typeof(Array)).Name("actions")
+                        .Add(Shape.FormSubmit().Text(T("Finish Setup")))
+                    )
+                );
 
-            model.Fieldsets.Add(Shape.InputText(Name: "SiteName", Text: T("Site Name"), Value: T("some default/pre-pop value...")));
-            model.Fieldsets.Add(Shape.InputText(Name: "AdminUsername", Text: T("Admin Username")));
-            model.Fieldsets.Add(Shape.InputPassword(Name: "AdminPassword", Text: T("Admin Password")));
-
-            model.Fieldsets[0].Attributes(new {autofocus = "autofocus"}); // <-- could be applied by some other behavior - need to be able to modify attributes instead of clobbering them like this
+            // get at the first input?
+            //model.Fieldsets[0].Attributes(new {autofocus = "autofocus"}); // <-- could be applied by some other behavior - need to be able to modify attributes instead of clobbering them like this
 
             return View(model);
         }
