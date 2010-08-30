@@ -70,9 +70,16 @@ namespace Orchard.DevTools.Controllers {
                 );
 
             // get at the first input?
-            //model.Fieldsets[0].Attributes(new {autofocus = "autofocus"}); // <-- could be applied by some other behavior - need to be able to modify attributes instead of clobbering them like this
+            model.Fieldsets[0][0].Attributes(new {autofocus = "autofocus"}); // <-- could be applied by some other behavior - need to be able to modify attributes instead of clobbering them like this
 
             return View(model);
+        }
+
+        [HttpPost, ActionName("FormShapes")]
+        public ActionResult FormShapesPOST() {
+            //all reqs are fail
+            ModelState.AddModelError("AdminUsername", "The admin username is wrong.");
+            return FormShapes();
         }
 
         public ActionResult UsingShapes() {

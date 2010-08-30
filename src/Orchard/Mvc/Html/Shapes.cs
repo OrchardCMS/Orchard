@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.Mvc.Html;
+using System.Web.Routing;
 using ClaySharp;
 using Orchard.DisplayManagement;
 using Orchard.Localization;
@@ -20,14 +22,14 @@ namespace Orchard.Mvc.Html {
                 InnerHtml = Display(Content).ToString()
             };
             a.MergeAttributes(Attributes.Named);
-            a.MergeAttribute("href", Url);
+            a.MergeAttribute("href", Url, true);
             return Display(new HtmlString(a.ToString()));
         }
 
         public IHtmlString Image(dynamic Display, string Url, INamedEnumerable<object> Attributes) {
             var img = new TagBuilder("img");
             img.MergeAttributes(Attributes.Named);
-            img.MergeAttribute("src", Url);
+            img.MergeAttribute("src", Url, true);
             return Display(new HtmlString(img.ToString(TagRenderMode.SelfClosing)));
         }
 
@@ -45,17 +47,22 @@ namespace Orchard.Mvc.Html {
             };
             li.MergeAttributes(Attributes.Named);
             if (!string.IsNullOrWhiteSpace(Shape.Content.Name as string))
-                li.MergeAttribute("class", Shape.Content.Name);
+                li.MergeAttribute("class", Shape.Content.Name); //, true); //need a merge value...
             return Display(new HtmlString(li.ToString()));
         }
 
         #region form and company
 
-        public IHtmlString Form(dynamic Display, dynamic Shape, object Submit, INamedEnumerable<object> Attributes) {
+        public IHtmlString Form(dynamic Display, dynamic Shape, object Submit, INamedEnumerable<object> Attributes, HtmlHelper Html) {
             var form = new TagBuilder("form") {
                 InnerHtml = Display(Shape.Fieldsets).ToString()
             };
             form.MergeAttributes(Attributes.Named);
+            form.MergeAttribute("method", "POST");
+
+            if (string.Equals(form.Attributes["method"], "POST", StringComparison.OrdinalIgnoreCase))
+                form.InnerHtml += Html.AntiForgeryTokenOrchard();
+
             return Display(new HtmlString(form.ToString()));
         }
 
@@ -94,13 +101,18 @@ namespace Orchard.Mvc.Html {
             return Display(Shape);
         }
 
-        public IHtmlString Input(dynamic Display, dynamic Shape, INamedEnumerable<object> Attributes) {
+        public IHtmlString Input(dynamic Display, dynamic Shape, INamedEnumerable<object> Attributes, HtmlHelper Html) {
             var input = new TagBuilder("input");
             input.MergeAttributes(Attributes.Named);
-            input.MergeAttribute("name", Shape.Name);
+            input.MergeAttribute("name", Shape.Name, true);
             if (!string.IsNullOrWhiteSpace(Shape.Value as string))
-                input.MergeAttribute("value", Shape.Value);
-            return Display(new HtmlString(input.ToString(TagRenderMode.SelfClosing)));
+                input.MergeAttribute("value", Shape.Value, true);
+            return Display(
+                new HtmlString(input.ToString(TagRenderMode.SelfClosing)),
+                New.ValidationMessage().For(Shape));
+        }
+        public IHtmlString ValidationMessage(dynamic Display, dynamic For, HtmlHelper Html) {
+            return Display(Html.ValidationMessage(For.Name as string));
         }
 
         public IHtmlString Label(dynamic Display, dynamic Shape, INamedEnumerable<object> Attributes) {
@@ -115,20 +127,26 @@ namespace Orchard.Mvc.Html {
             return new HtmlString(Shape.ToString());
         }
 
-        public IHtmlString InputPassword(dynamic Display, dynamic Shape) {
+        public IHtmlString InputPassword(dynamic Display, dynamic Shape, INamedEnumerable<object> Attributes) {
             Shape.ShapeMetadata.Type = "Input";
-            Shape.Attributes(new { type = "password" });
+            var attributes = new RouteValueDictionary(Attributes.Named);
+            attributes["type"] = "password";
+            Shape.Attributes(attributes);
             return Display(
                 New.Label().Text(Shape.Text),
-                Shape); //need validation shape
+                Shape);
         }
 
-        public IHtmlString InputText(dynamic Display, dynamic Shape) {
+        public IHtmlString InputText(dynamic Display, dynamic Shape, INamedEnumerable<object> Attributes) {
             Shape.ShapeMetadata.Type = "Input";
-            Shape.Attributes(new { type = "text" });
+            //could use a mergeattributes equiv if we go down this route
+            // also, Attributes.Named["type"] and equiv are NYI (INamedEnumerable is awesome but currently R/O)
+            var attributes = new RouteValueDictionary(Attributes.Named);
+            attributes["type"] = "text";
+            Shape.Attributes(attributes);
             return Display(
                 New.Label().Text(Shape.Text),
-                Shape); //need validation shape
+                Shape);
         }
 
         #endregion

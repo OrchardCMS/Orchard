@@ -4,8 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
-using System.Runtime.CompilerServices;
-using System.Web;
+using System.Web.Mvc;
 using System.Web.Routing;
 using ClaySharp.Implementation;
 using Microsoft.CSharp.RuntimeBinder;
@@ -15,9 +14,11 @@ using Binder = Microsoft.CSharp.RuntimeBinder.Binder;
 namespace Orchard.DisplayManagement {
     public class DefaultShapeTableFactory : IShapeTableFactory {
         private readonly IEnumerable<IShapeDriver> _shapeProviders;
+        private readonly RouteCollection _routeCollection;
 
-        public DefaultShapeTableFactory(IEnumerable<IShapeDriver> shapeProviders) {
+        public DefaultShapeTableFactory(IEnumerable<IShapeDriver> shapeProviders, RouteCollection routeCollection) {
             _shapeProviders = shapeProviders;
+            _routeCollection = routeCollection;
         }
 
         public ShapeTable CreateShapeTable() {
@@ -59,11 +60,22 @@ namespace Orchard.DisplayManagement {
                 return Arguments.From(attributes.Values, attributes.Keys);
             }
 
+            if (parameter.Name == "Html") {
+                return new HtmlHelper(
+                    displayContext.ViewContext,
+                    new ViewDataContainer { ViewData = displayContext.ViewContext.ViewData },
+                    _routeCollection);
+            }
+
             var result = ((dynamic)(displayContext.Value))[parameter.Name];
             var converter = _converters.GetOrAdd(
                 parameter.ParameterType,
                 CompileConverter);
             return converter(result);
+        }
+
+        class ViewDataContainer : IViewDataContainer {
+            public ViewDataDictionary ViewData { get; set; }
         }
 
         static Func<object, object> CompileConverter(Type targetType) {
