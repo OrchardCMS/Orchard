@@ -9,6 +9,7 @@ using Orchard.DisplayManagement.Descriptors.ShapeAttributeStrategy;
 using Orchard.DisplayManagement.Implementation;
 using Orchard.Environment;
 using Orchard.Environment.Extensions.Models;
+using Orchard.Tests.Utility;
 
 namespace Orchard.Tests.DisplayManagement.Descriptors {
     [TestFixture]
@@ -16,6 +17,7 @@ namespace Orchard.Tests.DisplayManagement.Descriptors {
         private FeatureDescriptor _testFeature;
 
         protected override void Register(Autofac.ContainerBuilder builder) {
+            builder.RegisterAutoMocking();
             _testFeature = new FeatureDescriptor { Name = "Testing", Extension = new ExtensionDescriptor { Name = "Testing" } };
             builder.RegisterType<ShapeAttributeBindingStrategy>().As<IShapeDescriptorBindingStrategy>();
             builder.RegisterInstance(new TestProvider()).WithMetadata("Feature", _testFeature);

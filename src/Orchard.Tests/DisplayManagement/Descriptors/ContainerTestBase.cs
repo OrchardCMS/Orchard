@@ -10,7 +10,6 @@ namespace Orchard.Tests.DisplayManagement.Descriptors {
         [SetUp]
         public virtual void Init() {
             var builder = new ContainerBuilder();
-            builder.RegisterAutoMocking();
             Register(builder);
             _container = builder.Build();
             Resolve(_container);

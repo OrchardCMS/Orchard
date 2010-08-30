@@ -29,7 +29,10 @@ namespace Orchard.DevTools {
             tag.GenerateId("zone-" + Shape.Name);
             tag.AddCssClass("zone-" + Shape.Name);
             tag.AddCssClass("zone");
-            tag.InnerHtml = Combine(DisplayAll(Display, Shape).ToArray()).ToString();
+
+            IEnumerable<IHtmlString> all = DisplayAll(Display, Shape);
+            tag.InnerHtml = Combine(all.ToArray()).ToString();
+
             return new HtmlString(tag.ToString());
         }
 

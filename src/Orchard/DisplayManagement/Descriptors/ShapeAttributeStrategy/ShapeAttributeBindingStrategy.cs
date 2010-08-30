@@ -13,13 +13,14 @@ using Orchard.Environment;
 namespace Orchard.DisplayManagement.Descriptors.ShapeAttributeStrategy {
     public class ShapeAttributeBindingStrategy : IShapeDescriptorBindingStrategy {
         private readonly IEnumerable<ShapeAttributeOccurrence> _shapeAttributeOccurrences;
-        private readonly IOrchardHostContainer _orchardHostContainer;
+        private readonly IComponentContext _componentContext;        
 
         public ShapeAttributeBindingStrategy(
             IEnumerable<ShapeAttributeOccurrence> shapeAttributeOccurrences,
-            IOrchardHostContainer orchardHostContainer) {
+            IComponentContext componentContext) {
             _shapeAttributeOccurrences = shapeAttributeOccurrences;
-            _orchardHostContainer = orchardHostContainer;
+            // todo: using a component context won't work when this is singleton
+            _componentContext = componentContext;
         }
 
         public void Discover(ShapeTableBuilder builder) {
@@ -37,8 +38,7 @@ namespace Orchard.DisplayManagement.Descriptors.ShapeAttributeStrategy {
             ShapeAttributeOccurrence attributeOccurrence,
             ShapeDescriptor descriptor) {
             return context => {
-                       var componentContext = _orchardHostContainer.Resolve<IComponentContext>();
-                       var serviceInstance = componentContext.Resolve(attributeOccurrence.Registration, Enumerable.Empty<Parameter>());
+                var serviceInstance = _componentContext.Resolve(attributeOccurrence.Registration, Enumerable.Empty<Parameter>());
                 
                 // oversimplification for the sake of evolving
                 return PerformInvoke(context, attributeOccurrence.MethodInfo, serviceInstance);

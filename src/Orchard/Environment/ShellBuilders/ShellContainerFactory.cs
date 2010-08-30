@@ -52,6 +52,7 @@ namespace Orchard.Environment.ShellBuilders {
 
                     builder.Register(ctx => dynamicProxyContext);
                     builder.Register(ctx => settings);
+                    builder.Register(ctx => blueprint.Descriptor);
                     builder.Register(ctx => blueprint);
 
                     var moduleIndex = intermediateScope.Resolve<IIndex<Type, IModule>>();

@@ -380,6 +380,8 @@
     <Compile Include="DisplayManagement\Descriptors\DefaultShapeTableFactory.cs" />
     <Compile Include="DisplayManagement\Descriptors\ShapeAttributeStrategy\ShapeAttributeBindingModule.cs" />
     <Compile Include="DisplayManagement\Descriptors\ShapeAttributeStrategy\ShapeAttributeOccurrence.cs" />
+    <Compile Include="DisplayManagement\Descriptors\ShapeTemplateStrategy\IShapeTemplateHarvester.cs" />
+    <Compile Include="DisplayManagement\Descriptors\ShapeTemplateStrategy\ShapeTemplateBindingStrategy.cs" />
     <Compile Include="DisplayManagement\ShapeAttribute.cs" />
     <Compile Include="DisplayManagement\Descriptors\ShapeAttributeStrategy\ShapeAttributeBindingStrategy.cs" />
     <Compile Include="DisplayManagement\Implementation\DefaultDisplayManager.cs" />

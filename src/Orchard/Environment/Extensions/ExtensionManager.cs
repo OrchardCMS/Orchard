@@ -10,6 +10,8 @@ using Orchard.Environment.Extensions.Loaders;
 using Orchard.Environment.Extensions.Models;
 using Orchard.Localization;
 using Orchard.Logging;
+using Orchard.Utility;
+using Orchard.Utility.Extensions;
 
 namespace Orchard.Environment.Extensions {
     public class ExtensionManager : IExtensionManager {
@@ -31,6 +33,15 @@ namespace Orchard.Environment.Extensions {
         public IEnumerable<ExtensionDescriptor> AvailableExtensions() {
             return _folders.SelectMany(folder => folder.AvailableExtensions());
         }
+        
+        public IEnumerable<FeatureDescriptor> AvailableFeatures() {
+            var featureDescriptors = AvailableExtensions().SelectMany(ext => ext.Features);
+            var featureDescriptorsOrdered = featureDescriptors.OrderByDependencies((item, dep) =>
+                                                                             item.Dependencies != null &&
+                                                                             item.Dependencies.Any(x => StringComparer.OrdinalIgnoreCase.Equals(x, dep.Name)));
+            return featureDescriptorsOrdered.ToReadOnlyCollection();
+        }
+
 
         private IEnumerable<ExtensionEntry> LoadedModules() {
             foreach (var descriptor in AvailableExtensions()) {

@@ -411,5 +411,39 @@ orchardversion: 1
             Assert.That(minimalisticModule.Features.Count(), Is.EqualTo(1));
             Assert.That(minimalisticModule.Features.Single().Name, Is.EqualTo("Minimalistic"));
         }
+
+
+        [Test]
+        public void FeatureDescriptorsAreInDependencyOrder() {
+            var extensionLoader = new StubLoaders();
+            var extensionFolder = new StubFolders();
+
+            extensionFolder.Manifests.Add("Alpha", @"
+name: Alpha
+version: 1.0.3
+orchardversion: 1
+features:
+  Alpha:
+    Dependencies: Gamma
+");
+
+            extensionFolder.Manifests.Add("Beta", @"
+name: Beta
+version: 1.0.3
+orchardversion: 1
+");
+            extensionFolder.Manifests.Add("Gamma", @"
+name: Gamma
+version: 1.0.3
+orchardversion: 1
+features:
+  Gamma:
+    Dependencies: Beta
+");
+
+            IExtensionManager extensionManager = new ExtensionManager(new[] { extensionFolder }, new[] { extensionLoader });
+            var features = extensionManager.AvailableFeatures();
+            Assert.That(features.Aggregate("<", (a,b)=>a+b.Name+"<"), Is.EqualTo("<Beta<Gamma<Alpha<"));
+        }
     }
 }
