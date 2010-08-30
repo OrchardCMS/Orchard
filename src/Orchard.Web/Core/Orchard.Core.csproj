@@ -90,6 +90,13 @@
     <Compile Include="Contents\Settings\ContentPartSettings.cs" />
     <Compile Include="Contents\ViewModels\PublishContentViewModel.cs" />
     <Compile Include="Localization\ViewModels\EditLocalizationViewModel.cs" />
+    <Compile Include="Messaging\DataMigrations\MessagingDataMigration.cs" />
+    <Compile Include="Messaging\Drivers\MessageSettingsPartDriver.cs" />
+    <Compile Include="Messaging\Handlers\MessageSettingsPartHandler.cs" />
+    <Compile Include="Messaging\Models\MessageSettingsPart.cs" />
+    <Compile Include="Messaging\Models\MessageSettingsPartRecord.cs" />
+    <Compile Include="Messaging\Services\DefaultMessageManager.cs" />
+    <Compile Include="Messaging\ViewModels\MessageSettingsPartViewModel.cs" />
     <Compile Include="PublishLater\DataMigrations\PublishLaterDataMigration.cs" />
     <Compile Include="PublishLater\Drivers\PublishLaterPartDriver.cs" />
     <Compile Include="PublishLater\Models\PublishLaterPart.cs" />
@@ -247,6 +254,8 @@
     <Content Include="Contents\Views\DisplayTemplates\Parts\Contents.Publish.SummaryAdmin.ascx" />
     <Content Include="Contents\Views\DisplayTemplates\Parts\Contents.Publish.ascx" />
     <Content Include="Localization\Views\EditorTemplates\Parts\Localization.Translation.ascx" />
+    <Content Include="Messaging\Module.txt" />
+    <Content Include="Messaging\Views\EditorTemplates\Parts\Messaging.MessageSettings.ascx" />
     <Content Include="PublishLater\Content\Admin\images\draft.gif" />
     <Content Include="PublishLater\Content\Admin\images\offline.gif" />
     <Content Include="PublishLater\Content\Admin\images\online.gif" />
@@ -366,6 +375,7 @@
     <Content Include="Reports\Views\Web.config" />
     <Content Include="PublishLater\Views\Web.config" />
     <Content Include="ContentsLocation\Views\Web.config" />
+    <Content Include="Messaging\Views\Web.config" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />

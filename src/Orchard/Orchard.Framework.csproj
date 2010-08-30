@@ -371,6 +371,11 @@
     <Compile Include="Environment\IHostLocalRestart.cs" />
     <Compile Include="Environment\IShellContainerRegistrations.cs" />
     <Compile Include="FileSystems\Dependencies\DynamicModuleVirtualPathProvider.cs" />
+    <Compile Include="Messaging\Events\IMessageEventHandler.cs" />
+    <Compile Include="Messaging\Models\Message.cs" />
+    <Compile Include="Messaging\Models\MessageContext.cs" />
+    <Compile Include="Messaging\Services\IMessageManager.cs" />
+    <Compile Include="Messaging\Services\IMessagingChannel.cs" />
     <Compile Include="Services\IHtmlFilter.cs" />
     <Compile Include="Utility\Hash.cs" />
     <Compile Include="Data\ISessionConfigurationCache.cs" />

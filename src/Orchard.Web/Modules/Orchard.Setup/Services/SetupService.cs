@@ -80,6 +80,7 @@ namespace Orchard.Setup.Services {
                     "Routable",
                     "Settings",
                     "XmlRpc",
+                    "Messaging",
                     "Orchard.Users",
                     "Orchard.Roles",
                     "TinyMce",
