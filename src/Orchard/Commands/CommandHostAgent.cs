@@ -173,12 +173,10 @@ namespace Orchard.Commands {
             };
         }
 
-        protected void MvcSingletons(ContainerBuilder builder) {
-            builder.RegisterInstance(ControllerBuilder.Current);
-            builder.RegisterInstance(RouteTable.Routes);
-            builder.RegisterInstance(ModelBinders.Binders);
-            builder.RegisterInstance(ModelMetadataProviders.Current);
-            builder.RegisterInstance(ViewEngines.Engines);
+        static void MvcSingletons(ContainerBuilder builder) {
+            builder.Register(ctx => RouteTable.Routes).SingleInstance();
+            builder.Register(ctx => ModelBinders.Binders).SingleInstance();
+            builder.Register(ctx => ViewEngines.Engines).SingleInstance();
         }
 
         private class CommandHostShellContainerRegistrations : IShellContainerRegistrations {

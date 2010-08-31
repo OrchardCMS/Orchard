@@ -5,7 +5,7 @@ namespace Orchard.Core.Contents.ViewModels {
         public int Id { get; set; }
         public ContentItemViewModel Content { get; set; }
     }
-     public class DisplayItemViewModel : BaseViewModel {
+     public class DisplayItemViewModel {
         public ContentItemViewModel Content { get; set; }
     }
 }

@@ -17,7 +17,6 @@ using Orchard.Utility.Extensions;
 
 namespace Orchard.Environment {
     public class DefaultOrchardHost : IOrchardHost, IShellSettingsManagerEventHandler, IShellDescriptorManagerEventHandler {
-        private readonly ControllerBuilder _controllerBuilder;
         private readonly IHostLocalRestart _hostLocalRestart;
         private readonly IShellSettingsManager _shellSettingsManager;
         private readonly IShellContextFactory _shellContextFactory;
@@ -36,16 +35,13 @@ namespace Orchard.Environment {
             IProcessingEngine processingEngine,
             IExtensionLoaderCoordinator extensionLoaderCoordinator,
             ICacheManager cacheManager,
-            ControllerBuilder controllerBuilder,
             IHostLocalRestart hostLocalRestart ) {
-
             _shellSettingsManager = shellSettingsManager;
             _shellContextFactory = shellContextFactory;
             _runningShellTable = runningShellTable;
             _processingEngine = processingEngine;
             _extensionLoaderCoordinator = extensionLoaderCoordinator;
             _cacheManager = cacheManager;
-            _controllerBuilder = controllerBuilder;
             _hostLocalRestart = hostLocalRestart;
 
             T = NullLocalizer.Instance;
@@ -62,8 +58,7 @@ namespace Orchard.Environment {
         void IOrchardHost.Initialize() {
             Logger.Information("Initializing");
             ViewEngines.Engines.Insert(0, LayoutViewEngine.CreateShim());
-            _controllerBuilder.SetControllerFactory(new OrchardControllerFactory());
-            //ServiceLocator.SetLocator(t => _containerProvider.RequestLifetime.Resolve(t));
+            
 
             BuildCurrent();
         }

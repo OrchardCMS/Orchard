@@ -11,6 +11,7 @@ namespace Orchard.Mvc {
     public class MvcModule : Module {
 
         protected override void Load(ContainerBuilder moduleBuilder) {
+            moduleBuilder.RegisterType<OrchardControllerFactory>().As<IControllerFactory>().InstancePerDependency();
             moduleBuilder.RegisterType<FilterResolvingActionInvoker>().As<IActionInvoker>().InstancePerDependency();
             moduleBuilder.RegisterType<ShellRoute>().InstancePerDependency();
 

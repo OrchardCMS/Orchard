@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.IO;
 using System.Web.Hosting;
+using System.Web.Mvc;
 using Autofac;
 using Autofac.Configuration;
 using Orchard.Caching;
@@ -129,7 +130,9 @@ namespace Orchard.Environment {
                 }
             }
 
-            OrchardHostContainerRegistry.RegisterHostContainer(new DefaultOrchardHostContainer(container));
+            var hostContainer = new DefaultOrchardHostContainer(container);
+            MvcServiceLocator.SetCurrent(hostContainer);
+            OrchardHostContainerRegistry.RegisterHostContainer(hostContainer);
 
             return container;
         }

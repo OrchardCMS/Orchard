@@ -75,10 +75,12 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\Castle Windsor 2.0\bin\Castle.DynamicProxy2.dll</HintPath>
     </Reference>
+    <Reference Include="ClaySharp, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL" />
     <Reference Include="FluentNHibernate, Version=1.0.0.593, Culture=neutral, PublicKeyToken=8aa435e3cb308880, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\fluentnhibernate\FluentNHibernate.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.CSharp" />
     <Reference Include="Moq, Version=4.0.812.4, Culture=neutral, PublicKeyToken=69f491c39445e920, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\moq\Moq.dll</HintPath>
@@ -119,7 +121,7 @@
     <Reference Include="System.Web.Abstractions">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
-    <Reference Include="System.Web.Mvc, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+    <Reference Include="System.Web.Mvc, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\aspnetmvc\System.Web.Mvc.dll</HintPath>
     </Reference>
@@ -190,6 +192,16 @@
     <Compile Include="Data\Builders\SessionFactoryBuilderTests.cs" />
     <Compile Include="Data\RepositoryTests.cs" />
     <Compile Include="Data\StubLocator.cs" />
+    <Compile Include="DisplayManagement\ArgsUtility.cs" />
+    <Compile Include="DisplayManagement\DefaultDisplayManagerTests.cs" />
+    <Compile Include="DisplayManagement\Descriptors\ContainerTestBase.cs" />
+    <Compile Include="DisplayManagement\Descriptors\DefaultShapeTableFactoryTests.cs" />
+    <Compile Include="DisplayManagement\Descriptors\DefaultShapeTableManagerTests.cs" />
+    <Compile Include="DisplayManagement\Descriptors\ShapeAttributeBindingStrategyTests.cs" />
+    <Compile Include="DisplayManagement\Descriptors\ShapeTemplateBindingStrategyTests.cs" />
+    <Compile Include="DisplayManagement\ShapeFactoryTests.cs" />
+    <Compile Include="DisplayManagement\SubsystemTests.cs" />
+    <Compile Include="DisplayManagement\ShapeHelperTests.cs" />
     <Compile Include="Environment\AutofacUtil\AutofacTests.cs" />
     <Compile Include="Environment\AutofacUtil\DynamicProxy2\DynamicProxyTests.cs" />
     <Compile Include="Environment\Extensions\ExtensionLoaderCoordinatorTests.cs" />
@@ -270,7 +282,9 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
+    <None Include="App.config">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Environment\Extensions\FoldersData\Sample1\Module.txt" />

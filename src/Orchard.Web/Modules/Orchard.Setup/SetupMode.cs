@@ -11,6 +11,10 @@ using Orchard.ContentManagement.MetaData.Builders;
 using Orchard.Data.Migration.Interpreters;
 using Orchard.Data.Providers;
 using Orchard.Data.Migration;
+using Orchard.DisplayManagement;
+using Orchard.DisplayManagement.Descriptors;
+using Orchard.DisplayManagement.Implementation;
+using Orchard.DisplayManagement.Shapes;
 using Orchard.Environment.Extensions;
 using Orchard.Localization;
 using Orchard.Mvc;
@@ -18,6 +22,7 @@ using Orchard.Mvc.Filters;
 using Orchard.Mvc.ModelBinders;
 using Orchard.Mvc.Routes;
 using Orchard.Mvc.ViewEngines;
+using Orchard.Mvc.ViewEngines.Razor;
 using Orchard.Mvc.ViewEngines.WebForms;
 using Orchard.Settings;
 using Orchard.Setup.Commands;
@@ -37,6 +42,7 @@ namespace Orchard.Setup {
             builder.RegisterType<RoutePublisher>().As<IRoutePublisher>().InstancePerLifetimeScope();
             builder.RegisterType<ModelBinderPublisher>().As<IModelBinderPublisher>().InstancePerLifetimeScope();
             builder.RegisterType<WebFormViewEngineProvider>().As<IViewEngineProvider>().InstancePerLifetimeScope();
+            builder.RegisterType<RazorViewEngineProvider>().As<IViewEngineProvider>().InstancePerLifetimeScope();
             builder.RegisterType<ViewEngineFilter>().As<IFilterProvider>().InstancePerLifetimeScope();
             builder.RegisterType<ThemeFilter>().As<IFilterProvider>().InstancePerLifetimeScope();
             builder.RegisterType<PageTitleBuilder>().As<IPageTitleBuilder>().InstancePerLifetimeScope();
@@ -56,6 +62,11 @@ namespace Orchard.Setup {
             builder.RegisterType<DefaultDataMigrationInterpreter>().As<IDataMigrationInterpreter>().InstancePerLifetimeScope();
             builder.RegisterType<DataMigrationManager>().As<IDataMigrationManager>().InstancePerLifetimeScope();
 
+            // in progress - adding services for display/shape support in setup
+            builder.RegisterType<DisplayHelperFactory>().As<IDisplayHelperFactory>();
+            builder.RegisterType<DefaultDisplayManager>().As<IDisplayManager>();
+            builder.RegisterType<DefaultShapeFactory>().As<IShapeFactory>();
+            builder.RegisterType<DefaultShapeTableManager>().As<IShapeTableManager>(); 
         }
 
 

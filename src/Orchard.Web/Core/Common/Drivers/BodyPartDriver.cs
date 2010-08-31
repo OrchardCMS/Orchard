@@ -19,7 +19,8 @@ namespace Orchard.Core.Common.Drivers {
         private readonly IEnumerable<IHtmlFilter> _htmlFilters;
 
         private const string TemplateName = "Parts/Common.Body";
-        private const string DefaultTextEditorTemplate = "TinyMceTextEditor";
+        //todo: change back - or to something better
+        private const string DefaultTextEditorTemplate = "PlainTextEditor"; //"TinyMceTextEditor";
         private const string PlainTextEditorTemplate = "PlainTextEditor";
 
         public BodyPartDriver(IOrchardServices services, IEnumerable<IHtmlFilter> htmlFilters) {

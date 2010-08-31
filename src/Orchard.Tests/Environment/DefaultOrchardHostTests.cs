@@ -93,6 +93,11 @@ namespace Orchard.Tests.Environment {
                 yield return ext;
             }
 
+            public IEnumerable<FeatureDescriptor> AvailableFeatures() {
+                // note - doesn't order properly
+                return AvailableExtensions().SelectMany(ed => ed.Features);
+            }
+
             public IEnumerable<Feature> LoadFeatures(IEnumerable<FeatureDescriptor> featureDescriptors) {
                 foreach (var descriptor in featureDescriptors) {
                     if (descriptor.Name == "Orchard.Framework") {

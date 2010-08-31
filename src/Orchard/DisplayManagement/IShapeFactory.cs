@@ -1,0 +1,11 @@
+﻿using ClaySharp;
+
+namespace Orchard.DisplayManagement {
+    /// <summary>
+    /// Service that creates new instances of dynamic shape objects
+    /// This may be used directly, or through the IShapeHelperFactory.
+    /// </summary>
+    public interface IShapeFactory : IDependency {
+        IShape Create(string shapeType, INamedEnumerable<object> parameters);
+    }
+}
