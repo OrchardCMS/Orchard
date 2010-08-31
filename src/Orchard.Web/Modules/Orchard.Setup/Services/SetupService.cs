@@ -66,31 +66,32 @@ namespace Orchard.Setup.Services {
                 string[] hardcoded = {
                     "Orchard.Framework",
                     "Common",
-                    "PublishLater",
+                    //"PublishLater",
                     "Contents",
-                    "ContentsLocation",
+                    //"ContentsLocation",
                     "Dashboard",
-                    "Reports",
-                    "Feeds",
+                    //"Reports",
+                    //"Feeds",
                     "HomePage",
-                    "Navigation",
-                    "Scheduling",
-                    "Indexing",
-                    "Localization",
+                    //"Navigation",
+                    //"Scheduling",
+                    //"Indexing",
+                    //"Localization",
                     "Routable",
                     "Settings",
-                    "XmlRpc",
+                    //"XmlRpc",
                     "Orchard.Users",
                     "Orchard.Roles",
-                    "TinyMce",
-                    "PackagingServices",
+                    //"TinyMce",
+                    //"PackagingServices",
                     "Orchard.Modules",
                     "Orchard.Themes",
-                    "Orchard.Blogs",
-                    "Orchard.Comments",
-                    "Orchard.Tags",
-                    "Orchard.Media",
-                    "Futures.Widgets"};
+                    //"Orchard.Blogs",
+                    //"Orchard.Comments",
+                    //"Orchard.Tags",
+                    //"Orchard.Media",
+                    //"Futures.Widgets"
+                };
 
                 context.EnabledFeatures = hardcoded;
             }
@@ -191,21 +192,23 @@ namespace Orchard.Setup.Services {
                     //hackInstallationGenerator.GenerateInstallEvents();
 
                     var contentDefinitionManager = environment.Resolve<IContentDefinitionManager>();
-                    contentDefinitionManager.AlterTypeDefinition("BlogPost", cfg => cfg
-                        .WithPart("CommentsPart")
-                        .WithPart("TagsPart")
-                        .WithPart("LocalizationPart")
-                        .Indexed());
+                    //contentDefinitionManager.AlterTypeDefinition("BlogPost", cfg => cfg
+                    //    .WithPart("CommentsPart")
+                    //    .WithPart("TagsPart")
+                    //    .WithPart("LocalizationPart")
+                    //    .Indexed()
+                    //    );
                     contentDefinitionManager.AlterTypeDefinition("Page", cfg => cfg
                         .WithPart("CommonPart")
-                        .WithPart("PublishLaterPart")
+                        //.WithPart("PublishLaterPart")
                         .WithPart("RoutePart")
                         .WithPart("BodyPart")
-                        .WithPart("CommentsPart")
-                        .WithPart("TagsPart")
-                        .WithPart("LocalizationPart")
+                        //.WithPart("CommentsPart")
+                        //.WithPart("TagsPart")
+                        //.WithPart("LocalizationPart")
                         .Creatable()
-                        .Indexed());
+                        //.Indexed()
+                        );
                     contentDefinitionManager.AlterPartDefinition("BodyPart", cfg => cfg
                         .WithSetting("BodyPartSettings.FlavorDefault", BodyPartSettings.FlavorDefaultDefault));
 
@@ -216,18 +219,18 @@ namespace Orchard.Setup.Services {
                     page.As<RoutePart>().Path = "home"; 
                     page.As<RoutePart>().Title = T("Home").ToString();
                     page.As<CommonPart>().Owner = user;
-                    if (page.Has<CommentsPart>()) {
-                        page.As<CommentsPart>().CommentsShown = false;
-                    }
+                    //if (page.Has<CommentsPart>()) {
+                    //    page.As<CommentsPart>().CommentsShown = false;
+                    //}
                     contentManager.Publish(page);
                     siteSettings.Record.HomePage = "RoutableHomePageProvider;" + page.Id;
 
                     // add a menu item for the shiny new home page
-                    var menuItem = contentManager.Create("MenuItem");
-                    menuItem.As<MenuPart>().MenuPosition = "1";
-                    menuItem.As<MenuPart>().MenuText = T("Home").ToString();
-                    menuItem.As<MenuPart>().OnMainMenu = true;
-                    menuItem.As<MenuItemPart>().Url = "";
+                    //var menuItem = contentManager.Create("MenuItem");
+                    //menuItem.As<MenuPart>().MenuPosition = "1";
+                    //menuItem.As<MenuPart>().MenuText = T("Home").ToString();
+                    //menuItem.As<MenuPart>().OnMainMenu = true;
+                    //menuItem.As<MenuItemPart>().Url = "";
 
                     //Temporary fix for running setup on command line
                     if (HttpContext.Current != null) {

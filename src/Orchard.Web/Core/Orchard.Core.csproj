@@ -39,6 +39,7 @@
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Microsoft.CSharp" />
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
@@ -267,7 +268,6 @@
     <Content Include="Contents\Views\DisplayTemplates\Items\Contents.Item.Summary.ascx" />
     <Content Include="Contents\Views\EditorTemplates\Items\Contents.Item.ascx" />
     <Content Include="Contents\Views\Item\Preview.aspx" />
-    <Content Include="Contents\Views\Item\Display.aspx" />
     <Content Include="Localization\Styles\admin.css" />
     <Content Include="Localization\Styles\base.css" />
     <Content Include="Localization\Views\DisplayTemplates\Parts\Localization.ContentTranslations.Summary.ascx" />
@@ -366,6 +366,8 @@
     <Content Include="Reports\Views\Web.config" />
     <Content Include="PublishLater\Views\Web.config" />
     <Content Include="ContentsLocation\Views\Web.config" />
+    <None Include="Contents\Views\Content.cshtml" />
+    <None Include="Contents\Views\Item\Display.cshtml" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />
