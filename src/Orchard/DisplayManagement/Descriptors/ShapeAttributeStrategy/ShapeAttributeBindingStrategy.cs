@@ -5,23 +5,28 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Web;
+using System.Web.Mvc;
+using System.Web.Routing;
 using Autofac;
 using Autofac.Core;
+using ClaySharp.Implementation;
 using Microsoft.CSharp.RuntimeBinder;
 using Orchard.DisplayManagement.Implementation;
-using Orchard.Environment;
 
 namespace Orchard.DisplayManagement.Descriptors.ShapeAttributeStrategy {
     public class ShapeAttributeBindingStrategy : IShapeDescriptorBindingStrategy {
         private readonly IEnumerable<ShapeAttributeOccurrence> _shapeAttributeOccurrences;
-        private readonly IComponentContext _componentContext;        
+        private readonly IComponentContext _componentContext;
+        private readonly RouteCollection _routeCollection;
 
         public ShapeAttributeBindingStrategy(
             IEnumerable<ShapeAttributeOccurrence> shapeAttributeOccurrences,
-            IComponentContext componentContext) {
+            IComponentContext componentContext,
+            RouteCollection routeCollection) {
             _shapeAttributeOccurrences = shapeAttributeOccurrences;
             // todo: using a component context won't work when this is singleton
             _componentContext = componentContext;
+            _routeCollection = routeCollection;
         }
 
         public void Discover(ShapeTableBuilder builder) {
@@ -65,9 +70,27 @@ namespace Orchard.DisplayManagement.Descriptors.ShapeAttributeStrategy {
             if (parameter.Name == "Display")
                 return displayContext.Display;
 
+            if (parameter.Name == "Attributes") {
+                var attributes = new RouteValueDictionary(((dynamic)(displayContext.Value))[parameter.Name]);
+                return Arguments.From(attributes.Values, attributes.Keys);
+            }
+
+            // meh
+            if (parameter.Name == "Html") {
+                return new HtmlHelper(
+                    displayContext.ViewContext,
+                    new ViewDataContainer { ViewData = displayContext.ViewContext.ViewData },
+                    _routeCollection);
+            }
+
             var result = ((dynamic)(displayContext.Value))[parameter.Name];
             var converter = _converters.GetOrAdd(parameter.ParameterType, CompileConverter);
             return converter.Invoke((object)result);
+        }
+
+        // ++meh
+        class ViewDataContainer : IViewDataContainer {
+            public ViewDataDictionary ViewData { get; set; }
         }
 
         static readonly ConcurrentDictionary<Type, Func<object, object>> _converters =

@@ -7,16 +7,16 @@ using System.Web.Mvc.Html;
 using System.Web.Routing;
 using ClaySharp;
 using Orchard.DisplayManagement;
-using Orchard.Localization;
 
 namespace Orchard.Mvc.Html {
-    public class Shapes : IShapeDriver {
+    public class Shapes : IDependency {
         public Shapes(IShapeHelperFactory shapeHelperFactory) {
             New = shapeHelperFactory.CreateHelper();
         }
 
         dynamic New { get; set; }
 
+        [Shape]
         public IHtmlString Link(dynamic Display, object Content, string Url, INamedEnumerable<object> Attributes) {
             var a = new TagBuilder("a") {
                 InnerHtml = Display(Content).ToString()
@@ -26,6 +26,7 @@ namespace Orchard.Mvc.Html {
             return Display(new HtmlString(a.ToString()));
         }
 
+        [Shape]
         public IHtmlString Image(dynamic Display, string Url, INamedEnumerable<object> Attributes) {
             var img = new TagBuilder("img");
             img.MergeAttributes(Attributes.Named);
@@ -33,6 +34,7 @@ namespace Orchard.Mvc.Html {
             return Display(new HtmlString(img.ToString(TagRenderMode.SelfClosing)));
         }
 
+        [Shape]
         public IHtmlString UnorderedList(dynamic Display, dynamic Shape, INamedEnumerable<object> Attributes) {
             var ul = new TagBuilder("ul") {
                 InnerHtml = Combine(DisplayAll(Display, Shape, New.ListItem())).ToString()
@@ -41,6 +43,7 @@ namespace Orchard.Mvc.Html {
             return Display(new HtmlString(ul.ToString()));
         }
 
+        [Shape]
         public IHtmlString ListItem(dynamic Display, dynamic Shape, INamedEnumerable<object> Attributes) {
             var li = new TagBuilder("li") {
                 InnerHtml = Display(Shape.Content).ToString()
@@ -53,6 +56,7 @@ namespace Orchard.Mvc.Html {
 
         #region form and company
 
+        [Shape]
         public IHtmlString Form(dynamic Display, dynamic Shape, object Submit, INamedEnumerable<object> Attributes, HtmlHelper Html) {
             var form = new TagBuilder("form") {
                 InnerHtml = Display(Shape.Fieldsets).ToString()
@@ -66,10 +70,12 @@ namespace Orchard.Mvc.Html {
             return Display(new HtmlString(form.ToString()));
         }
 
+        [Shape]
         public IHtmlString Fieldsets(dynamic Display, dynamic Shape) {
             return Display(new HtmlString(Combine(DisplayAll(Display, Shape)).ToString()));
         }
 
+        [Shape]
         public IHtmlString Fieldset(dynamic Display, dynamic Shape, INamedEnumerable<object> Attributes) {
             var fieldset = new TagBuilder("fieldset");
             fieldset.MergeAttributes(Attributes.Named);
@@ -77,7 +83,7 @@ namespace Orchard.Mvc.Html {
                 fieldset.MergeAttribute("class", Shape.Name);
 
             if (Shape.Count > 1) {
-                Shape.ShapeMetadata.Type = "UnorderedList";
+                Shape.Metadata.Type = "UnorderedList";
                 fieldset.InnerHtml = Display(Shape).ToString();
             }
             else {
@@ -87,6 +93,7 @@ namespace Orchard.Mvc.Html {
             return Display(new HtmlString(fieldset.ToString()));
         }
 
+        [Shape]
         public IHtmlString FormButton(dynamic Display, dynamic Shape, INamedEnumerable<object> Attributes) {
             var button = new TagBuilder("button") {
                 InnerHtml = Display(Shape.Text).ToString() //not caring about anything other than text at the moment
@@ -95,12 +102,14 @@ namespace Orchard.Mvc.Html {
             return Display(new HtmlString(button.ToString()));
         }
 
+        [Shape]
         public IHtmlString FormSubmit(dynamic Display, dynamic Shape) {
-            Shape.ShapeMetadata.Type = "FormButton";
+            Shape.Metadata.Type = "FormButton";
             Shape.Attributes(new { type = "submit" });
             return Display(Shape);
         }
 
+        [Shape]
         public IHtmlString Input(dynamic Display, dynamic Shape, INamedEnumerable<object> Attributes, HtmlHelper Html) {
             var input = new TagBuilder("input");
             input.MergeAttributes(Attributes.Named);
@@ -111,10 +120,13 @@ namespace Orchard.Mvc.Html {
                 new HtmlString(input.ToString(TagRenderMode.SelfClosing)),
                 New.ValidationMessage().For(Shape));
         }
+
+        [Shape]
         public IHtmlString ValidationMessage(dynamic Display, dynamic For, HtmlHelper Html) {
             return Display(Html.ValidationMessage(For.Name as string));
         }
 
+        [Shape]
         public IHtmlString Label(dynamic Display, dynamic Shape, INamedEnumerable<object> Attributes) {
             var label = new TagBuilder("label") {
                 InnerHtml = Display(Shape.Text).ToString()
@@ -123,12 +135,14 @@ namespace Orchard.Mvc.Html {
             return Display(new HtmlString(label.ToString()));
         }
 
+        [Shape]
         public IHtmlString Text(dynamic Shape) {
             return new HtmlString(Shape.ToString());
         }
 
+        [Shape]
         public IHtmlString InputPassword(dynamic Display, dynamic Shape, INamedEnumerable<object> Attributes) {
-            Shape.ShapeMetadata.Type = "Input";
+            Shape.Metadata.Type = "Input";
             var attributes = new RouteValueDictionary(Attributes.Named);
             attributes["type"] = "password";
             Shape.Attributes(attributes);
@@ -137,9 +151,10 @@ namespace Orchard.Mvc.Html {
                 Shape);
         }
 
+        [Shape]
         public IHtmlString InputText(dynamic Display, dynamic Shape, INamedEnumerable<object> Attributes) {
-            Shape.ShapeMetadata.Type = "Input";
-            //could use a mergeattributes equiv if we go down this route
+            Shape.Metadata.Type = "Input";
+            // could use a mergeattributes equiv if we go down this route
             // also, Attributes.Named["type"] and equiv are NYI (INamedEnumerable is awesome but currently R/O)
             var attributes = new RouteValueDictionary(Attributes.Named);
             attributes["type"] = "text";
