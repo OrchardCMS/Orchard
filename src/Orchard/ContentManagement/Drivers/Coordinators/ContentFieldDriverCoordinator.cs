@@ -29,11 +29,11 @@ namespace Orchard.ContentManagement.Drivers.Coordinators {
                     var fieldTypeName = partFieldDefinition.FieldDefinition.Name;
                     var fieldInfo = fieldInfos.FirstOrDefault(x => x.FieldTypeName == fieldTypeName);
                     if (fieldInfo != null) {
-                        var storage = _fieldStorageProviderSelector
-                            .GetProvider(partFieldDefinition)
-                            .BindStorage(contentPart, partFieldDefinition);
-                        var field = fieldInfo.Factory(partFieldDefinition, storage);
-                        contentPart.Weld(field);
+var storage = _fieldStorageProviderSelector
+    .GetProvider(partFieldDefinition)
+    .BindStorage(contentPart, partFieldDefinition);
+var field = fieldInfo.Factory(partFieldDefinition, storage);
+contentPart.Weld(field);
                     }
                 }
             }

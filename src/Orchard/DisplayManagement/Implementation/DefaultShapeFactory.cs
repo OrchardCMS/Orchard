@@ -41,7 +41,7 @@ namespace Orchard.DisplayManagement.Implementation {
             // consideration - types without default constructors could consume positional arguments?
             var shape = ClayActivator.CreateInstance(baseType, behaviors);
 
-            shape.ShapeMetadata = new ShapeMetadata { Type = shapeType };
+            shape.Metadata = new ShapeMetadata { Type = shapeType };
 
             // only one non-Type, non-named argument is allowed
             var initializer = positional.SingleOrDefault();

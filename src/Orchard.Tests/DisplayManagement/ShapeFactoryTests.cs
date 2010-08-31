@@ -25,7 +25,7 @@ namespace Orchard.Tests.DisplayManagement {
         public void ShapeHasAttributesType() {
             var factory = _container.Resolve<IShapeFactory>();
             dynamic foo = factory.Create("Foo", ArgsUtility.Empty());
-            ShapeMetadata metadata = foo.Attributes;
+            ShapeMetadata metadata = foo.Metadata;
             Assert.That(metadata.Type, Is.EqualTo("Foo"));
         }
 

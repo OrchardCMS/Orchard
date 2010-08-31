@@ -1,4 +1,5 @@
-﻿using System.Web;
+﻿using System;
+using System.Web;
 using System.Web.Compilation;
 using System.Web.Mvc;
 
@@ -6,8 +7,12 @@ namespace Orchard.Mvc.ViewEngines.WebForms {
     public class WebFormViewEngineForAspNet4 : WebFormViewEngine {
         protected override bool FileExists(ControllerContext controllerContext, string virtualPath) {
             try {
-
-                return BuildManager.GetObjectFactory(virtualPath, false) != null;
+                if (virtualPath.EndsWith(".aspx", StringComparison.InvariantCultureIgnoreCase) ||
+                    virtualPath.EndsWith(".ascx", StringComparison.InvariantCultureIgnoreCase) ||
+                    virtualPath.EndsWith(".master", StringComparison.InvariantCultureIgnoreCase)) {
+                    return BuildManager.GetObjectFactory(virtualPath, false) != null;
+                }
+                return false;
             }
             catch (HttpException exception) {
                 // Reproducing base class behavior, however these this code path should

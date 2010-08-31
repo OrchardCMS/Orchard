@@ -28,7 +28,7 @@ namespace Orchard.Tests.DisplayManagement {
 
             var alpha = shape.Alpha();
 
-            Assert.That(alpha.Attributes.Type, Is.EqualTo("Alpha"));
+            Assert.That(alpha.Metadata.Type, Is.EqualTo("Alpha"));
         }
 
         [Test]
@@ -37,7 +37,7 @@ namespace Orchard.Tests.DisplayManagement {
 
             var alpha = shape.Alpha(one: 1, two: "dos");
 
-            Assert.That(alpha.Attributes.Type, Is.EqualTo("Alpha"));
+            Assert.That(alpha.Metadata.Type, Is.EqualTo("Alpha"));
             Assert.That(alpha.one, Is.EqualTo(1));
             Assert.That(alpha.two, Is.EqualTo("dos"));
         }
@@ -48,7 +48,7 @@ namespace Orchard.Tests.DisplayManagement {
 
             var alpha = shape.Alpha(new { one = 1, two = "dos" });
 
-            Assert.That(alpha.Attributes.Type, Is.EqualTo("Alpha"));
+            Assert.That(alpha.Metadata.Type, Is.EqualTo("Alpha"));
             Assert.That(alpha.one, Is.EqualTo(1));
             Assert.That(alpha.two, Is.EqualTo("dos"));
         }

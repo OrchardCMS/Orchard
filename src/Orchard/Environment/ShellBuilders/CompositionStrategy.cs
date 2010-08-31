@@ -47,6 +47,8 @@ namespace Orchard.Environment.ShellBuilders {
             var records = BuildBlueprint(features, IsRecord, (t, f) => BuildRecord(t, f, settings));
 
             return new ShellBlueprint {
+                Settings = settings,
+                Descriptor = descriptor,
                 Dependencies = dependencies.Concat(modules).ToArray(),
                 Controllers = controllers,
                 Records = records,
