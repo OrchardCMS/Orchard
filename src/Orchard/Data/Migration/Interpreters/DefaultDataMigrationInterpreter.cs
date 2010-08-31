@@ -162,7 +162,7 @@ namespace Orchard.Data.Migration.Interpreters {
                 return;
             }
 
-            builder.AppendFormat("alter table {0} add column ", _dialect.QuoteForTableName(PrefixTableName(command.TableName)));
+            builder.AppendFormat("alter table {0} add ", _dialect.QuoteForTableName(PrefixTableName(command.TableName)));
 
             Visit(builder, (CreateColumnCommand)command);
             _sqlStatements.Add(builder.ToString());
