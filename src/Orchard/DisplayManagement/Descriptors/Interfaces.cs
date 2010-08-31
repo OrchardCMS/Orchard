@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Web;
 using Orchard.DisplayManagement.Implementation;
 using Orchard.Environment.Extensions.Models;
 
@@ -24,10 +25,9 @@ namespace Orchard.DisplayManagement.Descriptors {
 
     public class ShapeDescriptor {
         public string ShapeType { get; set; }
-        public ShapeBinding Binding { get; set; }
+        public Func<DisplayContext, IHtmlString> Binding { get; set; }
     }
 
-    public delegate object ShapeBinding(DisplayContext displayContext);
 
     public class ShapeTableBuilder {
         readonly IList<ShapeDescriptorAlterationBuilderImpl> _descriptorBuilders = new List<ShapeDescriptorAlterationBuilderImpl>();
@@ -89,11 +89,11 @@ namespace Orchard.DisplayManagement.Descriptors {
             return this;
         }
 
-        public ShapeDescriptorAlterationBuilder BoundAs(Func<ShapeDescriptor, ShapeBinding> binder) {
+        public ShapeDescriptorAlterationBuilder BoundAs(Func<ShapeDescriptor, Func<DisplayContext, IHtmlString>> binder) {
             // schedule the configuration
             return Configure(descriptor => {
-                
-                ShapeBinding target = null;
+
+                Func<DisplayContext, IHtmlString> target = null;
 
                 // announce the binding, which may be reconfigured before it's used
                 descriptor.Binding = displayContext => {

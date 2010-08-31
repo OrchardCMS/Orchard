@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+using System.Web;
 using Autofac;
 using Autofac.Core;
 using Microsoft.CSharp.RuntimeBinder;
@@ -34,7 +35,7 @@ namespace Orchard.DisplayManagement.Descriptors.ShapeAttributeStrategy {
             }
         }
 
-        private ShapeBinding CreateDelegate(
+        private Func<DisplayContext, IHtmlString> CreateDelegate(
             ShapeAttributeOccurrence attributeOccurrence,
             ShapeDescriptor descriptor) {
             return context => {
@@ -46,11 +47,15 @@ namespace Orchard.DisplayManagement.Descriptors.ShapeAttributeStrategy {
         }
 
 
-        private object PerformInvoke(DisplayContext displayContext, MethodInfo methodInfo, object serviceInstance) {
+        private IHtmlString PerformInvoke(DisplayContext displayContext, MethodInfo methodInfo, object serviceInstance) {
             var arguments = methodInfo.GetParameters()
                 .Select(parameter => BindParameter(displayContext, parameter));
 
-            return methodInfo.Invoke(serviceInstance, arguments.ToArray());
+            return CoerceHtmlString(methodInfo.Invoke(serviceInstance, arguments.ToArray()));
+        }
+
+        private static IHtmlString CoerceHtmlString(object invoke) {
+            return invoke as IHtmlString ?? (invoke != null ? new HtmlString(invoke.ToString()) : null);
         }
 
         private object BindParameter(DisplayContext displayContext, ParameterInfo parameter) {
