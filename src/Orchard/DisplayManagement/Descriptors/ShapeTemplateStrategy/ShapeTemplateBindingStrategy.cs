@@ -3,6 +3,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Web;
 using System.Web.Mvc;
 using System.Web.Mvc.Html;
 using Orchard.DisplayManagement.Implementation;
@@ -79,7 +80,7 @@ namespace Orchard.DisplayManagement.Descriptors.ShapeTemplateStrategy {
             }
         }
 
-        private object Render(ShapeDescriptor shapeDescriptor, DisplayContext displayContext, HarvestShapeInfo harvestShapeInfo, HarvestShapeHit harvestShapeHit) {
+        private IHtmlString Render(ShapeDescriptor shapeDescriptor, DisplayContext displayContext, HarvestShapeInfo harvestShapeInfo, HarvestShapeHit harvestShapeHit) {
             var htmlHelper = new HtmlHelper(displayContext.ViewContext, displayContext.ViewDataContainer);
             //return htmlHelper.Partial(harvestShapeInfo.TemplateVirtualPath, displayContext.Value);
             return htmlHelper.Partial(harvestShapeInfo.TemplateVirtualPath.Replace("\\", "/") + ".cshtml", displayContext.Value);
