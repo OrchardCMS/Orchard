@@ -188,7 +188,9 @@
     <Compile Include="DataMigration\Utilities\NullInterpreter.cs" />
     <Compile Include="DataUtility.cs" />
     <Compile Include="Data\Builders\SessionFactoryBuilderTests.cs" />
+    <Compile Include="Data\ProviderUtilities.cs" />
     <Compile Include="Data\RepositoryTests.cs" />
+    <Compile Include="Data\ProvidersTests.cs" />
     <Compile Include="Data\StubLocator.cs" />
     <Compile Include="Environment\AutofacUtil\AutofacTests.cs" />
     <Compile Include="Environment\AutofacUtil\DynamicProxy2\DynamicProxyTests.cs" />
@@ -210,6 +212,7 @@
     <Compile Include="Mvc\Html\HtmlHelperExtensionsTests.cs" />
     <Compile Include="Mvc\Routes\ShellRouteTests.cs" />
     <Compile Include="Mvc\Routes\UrlPrefixTests.cs" />
+    <Compile Include="Records\BigRecord.cs" />
     <Compile Include="Stubs\StubReportsCoordinator.cs" />
     <Compile Include="Stubs\StubVirtualPathProvider.cs" />
     <Compile Include="Stubs\StubFileSystem.cs" />
