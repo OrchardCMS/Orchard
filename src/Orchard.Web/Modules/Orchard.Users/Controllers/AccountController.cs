@@ -10,6 +10,11 @@ using Orchard.Mvc.ViewModels;
 using Orchard.Security;
 using Orchard.Users.Services;
 using Orchard.Users.ViewModels;
+using Orchard.Settings;
+using JetBrains.Annotations;
+using Orchard.ContentManagement;
+using Orchard.Users.Models;
+using Orchard.Mvc.Results;
 
 namespace Orchard.Users.Controllers {
     [HandleError]
@@ -31,6 +36,7 @@ namespace Orchard.Users.Controllers {
 
         public ILogger Logger { get; set; }
         public Localizer T { get; set; }
+        protected virtual ISite CurrentSite { get; [UsedImplicitly] private set; }
 
         public ActionResult AccessDenied() {
             var returnUrl = Request.QueryString["ReturnUrl"];
@@ -87,6 +93,12 @@ namespace Orchard.Users.Controllers {
         }
 
         public ActionResult Register() {
+            // ensure users can register
+            var registrationSettings = CurrentSite.As<RegistrationSettingsPart>();
+            if ( !registrationSettings.UsersCanRegister ) {
+                return new NotFoundResult();
+            }
+
             ViewData["PasswordLength"] = MinPasswordLength;
 
             return View(new BaseViewModel());
@@ -94,6 +106,12 @@ namespace Orchard.Users.Controllers {
 
         [HttpPost]
         public ActionResult Register(string userName, string email, string password, string confirmPassword) {
+            // ensure users can register
+            var registrationSettings = CurrentSite.As<RegistrationSettingsPart>();
+            if ( !registrationSettings.UsersCanRegister ) {
+                return new NotFoundResult();
+            }
+
             ViewData["PasswordLength"] = MinPasswordLength;
 
             if (ValidateRegistration(userName, email, password, confirmPassword)) {

@@ -4,32 +4,29 @@ using System.Linq;
 using JetBrains.Annotations;
 using Orchard.ContentManagement;
 using Orchard.Core.Messaging.Models;
-using Orchard.Data;
 using Orchard.Logging;
 using Orchard.Messaging.Events;
 using Orchard.Messaging.Models;
 using Orchard.Messaging.Services;
 using Orchard.Settings;
+using Orchard.ContentManagement.Records;
 
 namespace Orchard.Core.Messaging.Services {
     public class DefaultMessageManager : IMessageManager {
         private readonly IMessageEventHandler _messageEventHandler;
         private readonly IEnumerable<IMessagingChannel> _channels;
-        private readonly IRepository<Message> _messageRepository;
         
         protected virtual ISite CurrentSite { get; [UsedImplicitly] private set; }
         public ILogger Logger { get; set; }
 
         public DefaultMessageManager(
             IMessageEventHandler messageEventHandler,
-            IEnumerable<IMessagingChannel> channels,
-            IRepository<Message> messageRepository) {
+            IEnumerable<IMessagingChannel> channels) {
             _messageEventHandler = messageEventHandler;
             _channels = channels;
-            _messageRepository = messageRepository;
         }
 
-        public void Send(Message message) {
+        public void Send(ContentItemRecord recipient, string type, string service = null) {
             if ( !HasChannels() )
                 return;
 
@@ -39,15 +36,19 @@ namespace Orchard.Core.Messaging.Services {
                 return;
             }
 
-            Logger.Information("Sending message {0}", message.Type);
+            Logger.Information("Sending message {0}", type);
             try {
 
                 // if the service is not explicit, use the default one, as per settings configuration
-                if ( String.IsNullOrWhiteSpace(message.Service) ) {
-                    message.Service = messageSettings.DefaultChannelService;
+                if ( String.IsNullOrWhiteSpace(service) ) {
+                    service = messageSettings.DefaultChannelService;
                 }
 
-                var context = new MessageContext(message);
+                var context = new MessageContext {
+                    Recipient = recipient,
+                    Type = type,
+                    Service = service
+                };
 
                 _messageEventHandler.Sending(context);
 
@@ -57,10 +58,10 @@ namespace Orchard.Core.Messaging.Services {
 
                 _messageEventHandler.Sent(context);
 
-                Logger.Information("Message {0} sent", message.Type);
+                Logger.Information("Message {0} sent", type);
             }
             catch ( Exception e ) {
-                Logger.Error(e, "An error occured while sending the message {0}", message.Type);
+                Logger.Error(e, "An error occured while sending the message {0}", type);
             }
         }
 

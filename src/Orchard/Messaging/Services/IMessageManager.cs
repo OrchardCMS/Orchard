@@ -1,12 +1,12 @@
 ﻿using System.Collections.Generic;
-using Orchard.Messaging.Models;
+using Orchard.ContentManagement.Records;
 
 namespace Orchard.Messaging.Services {
     public interface IMessageManager : IDependency {
         /// <summary>
-        /// Sends a message without using the queue
+        /// Sends a message to a channel
         /// </summary>
-        void Send(Message message);
+        void Send(ContentItemRecord recipient, string type, string service = null);
 
         /// <summary>
         /// Wether at least one channel is active on the current site

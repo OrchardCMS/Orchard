@@ -1,5 +1,4 @@
 ﻿using Orchard.Messaging.Events;
-using Orchard.Core.Messaging.Models;
 using Orchard.ContentManagement;
 using Orchard.Users.Models;
 using Orchard.Messaging.Models;
@@ -13,7 +12,7 @@ namespace Orchard.Email.Services {
         }
 
         public void Sending(MessageContext context) {
-            var contentItem = _contentManager.Get(context.Message.Recipient.Id);
+            var contentItem = _contentManager.Get(context.Recipient.Id);
             if ( contentItem == null )
                 return;
 
@@ -21,7 +20,7 @@ namespace Orchard.Email.Services {
             if ( recipient == null )
                 return;
 
-            context.Properties.Add(EmailMessagingChannel.EmailAddress, recipient.Email);
+            context.MailMessage.To.Add(recipient.Email);
         }
 
         public void Sent(MessageContext context) {

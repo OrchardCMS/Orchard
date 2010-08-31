@@ -10,20 +10,25 @@ using Orchard.ContentManagement;
 using Orchard.Security;
 using Orchard.Users.Drivers;
 using Orchard.Users.Models;
+using Orchard.Settings;
+using Orchard.Messaging.Services;
 
 namespace Orchard.Users.Services {
     [UsedImplicitly]
     public class MembershipService : IMembershipService {
         private readonly IContentManager _contentManager;
+        private readonly IMessageManager _messageManager;
         private readonly IRepository<UserPartRecord> _userRepository;
 
-        public MembershipService(IContentManager contentManager, IRepository<UserPartRecord> userRepository) {
+        public MembershipService(IContentManager contentManager, IRepository<UserPartRecord> userRepository, IMessageManager messageManager ) {
             _contentManager = contentManager;
             _userRepository = userRepository;
+            _messageManager = messageManager;
             Logger = NullLogger.Instance;
         }
 
         public ILogger Logger { get; set; }
+        protected virtual ISite CurrentSite { get; [UsedImplicitly] private set; }
 
         public MembershipSettings GetSettings() {
             var settings = new MembershipSettings();
@@ -34,14 +39,35 @@ namespace Orchard.Users.Services {
         public IUser CreateUser(CreateUserParams createUserParams) {
             Logger.Information("CreateUser {0} {1}", createUserParams.Username, createUserParams.Email);
 
-            return _contentManager.Create<UserPart>(UserPartDriver.ContentType.Name, init =>
+            var registrationSettings = CurrentSite.As<RegistrationSettingsPart>();
+
+            var user = _contentManager.Create<UserPart>(UserPartDriver.ContentType.Name, init =>
             {
                 init.Record.UserName = createUserParams.Username;
                 init.Record.Email = createUserParams.Email;
                 init.Record.NormalizedUserName = createUserParams.Username.ToLower();
                 init.Record.HashAlgorithm = "SHA1";
                 SetPassword(init.Record, createUserParams.Password);
+                init.Record.RegistrationStatus = registrationSettings.UsersAreModerated ? UserStatus.Pending : UserStatus.Approved;
+                init.Record.EmailStatus = registrationSettings.UsersMustValidateEmail ? UserStatus.Pending : UserStatus.Approved;
+
             });
+
+            if ( registrationSettings.UsersMustValidateEmail ) {
+                SendEmailValidationMessage(user);
+            }
+
+            if ( registrationSettings.UsersAreModerated && registrationSettings.NotifyModeration ) {
+                var superUser = GetUser(CurrentSite.SuperUser);
+                if(superUser != null)
+                    _messageManager.Send(superUser.ContentItem.Record, MessageTypes.Moderation);
+            }
+
+            return user;
+        }
+
+        public void SendEmailValidationMessage(IUser user) {
+            _messageManager.Send(user.ContentItem.Record, MessageTypes.Validation);
         }
 
         public IUser GetUser(string username) {
@@ -58,15 +84,21 @@ namespace Orchard.Users.Services {
             var lowerName = userNameOrEmail == null ? "" : userNameOrEmail.ToLower();
 
             var userRecord = _userRepository.Get(x => x.NormalizedUserName == lowerName);
+
             if(userRecord == null)
                 userRecord = _userRepository.Get(x => x.Email == lowerName);
+
             if (userRecord == null || ValidatePassword(userRecord, password) == false)
+                return null;
+
+            if ( userRecord.EmailStatus != UserStatus.Approved )
+                return null;
+
+            if ( userRecord.RegistrationStatus != UserStatus.Approved )
                 return null;
 
             return _contentManager.Get<IUser>(userRecord.Id);
         }
-
-
 
         public void SetPassword(IUser user, string password) {
             if (!user.Is<UserPart>())

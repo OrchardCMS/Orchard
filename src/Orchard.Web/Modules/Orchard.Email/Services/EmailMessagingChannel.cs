@@ -2,14 +2,10 @@
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Mail;
-using System.Web;
-using System.Web.Hosting;
 using JetBrains.Annotations;
 using Orchard.ContentManagement;
 using Orchard.Localization;
 using Orchard.Logging;
-using Orchard.Core.Messaging.Models;
-using Orchard.Core.Messaging.Services;
 using Orchard.Email.Models;
 using Orchard.Settings;
 using Orchard.Messaging.Services;
@@ -19,7 +15,6 @@ namespace Orchard.Email.Services {
     public class EmailMessagingChannel : IMessagingChannel {
 
         public const string EmailService = "Email";
-        public const string EmailAddress = "EmailAddress";
 
         public EmailMessagingChannel() {
             Logger = NullLogger.Instance;
@@ -30,7 +25,7 @@ namespace Orchard.Email.Services {
         public Localizer T { get; set; }
 
         public void SendMessage(MessageContext context) {
-            if ( context.Message.Service.ToLower() != EmailService )
+            if ( !context.Service.Equals(EmailService, StringComparison.InvariantCultureIgnoreCase) )
                 return;
 
             var smtpSettings = CurrentSite.As<SmtpSettingsPart>();
@@ -45,9 +40,7 @@ namespace Orchard.Email.Services {
                 smtpClient.Credentials = new NetworkCredential(smtpSettings.UserName, smtpSettings.Password);
             }
 
-            var emailAddress = context.Properties[EmailAddress];
-
-            if(String.IsNullOrWhiteSpace(emailAddress)) {
+            if(context.MailMessage.To.Count == 0) {
                 Logger.Error("Recipient is missing an email address");
                 return;
             }
@@ -59,31 +52,16 @@ namespace Orchard.Email.Services {
             smtpClient.EnableSsl = smtpSettings.EnableSsl;
             smtpClient.DeliveryMethod = SmtpDeliveryMethod.Network;
 
-            var message = new MailMessage {
-                From = new MailAddress(smtpSettings.Address), 
-                Subject = context.Message.Subject ?? "", 
-                Body = context.Message.Body ?? "",
-                IsBodyHtml = context.Message.Body != null && context.Message.Body.Contains("<") && context.Message.Body.Contains(">")
-            };
-
-            message.To.Add(emailAddress);
+            context.MailMessage.From = new MailAddress(smtpSettings.Address);
+            context.MailMessage.IsBodyHtml = context.MailMessage.Body != null && context.MailMessage.Body.Contains("<") && context.MailMessage.Body.Contains(">");
 
             try {
-                smtpClient.Send(message);
-                Logger.Debug("Message sent to {0}: {1}", emailAddress, context.Message.Subject);
+                smtpClient.Send(context.MailMessage);
+                Logger.Debug("Message sent to {0}: {1}", context.MailMessage.To[0].Address, context.Type);
             }
             catch(Exception e) {
-                Logger.Error(e, "An unexpected error while sending a message to {0}: {1}", emailAddress, context.Message.Subject);
+                Logger.Error(e, "An unexpected error while sending a message to {0}: {1}", context.MailMessage.To[0].Address, context.Type);
             }
-        }
-
-        public bool IsRecipientValidated(ContentItem contentItem) {
-            return false;
-        }
-
-        public void ValidateRecipient(ContentItem contentItem) {
-            var context = new MessageContext(new Message { Recipient = contentItem.Record, Body = "Please validate your account", Service = "email", Subject = "Validate your account" } );
-            SendMessage(context);
         }
 
         public IEnumerable<string> GetAvailableServices() {

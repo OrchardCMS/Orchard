@@ -69,9 +69,15 @@
     <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="DataMigrations\UsersDataMigration.cs" />
     <Compile Include="Drivers\UserPartDriver.cs" />
+    <Compile Include="Handlers\ModerationMessageAlteration.cs" />
+    <Compile Include="Handlers\RegistrationSettingsPartHandler.cs" />
+    <Compile Include="Models\MessageTypes.cs" />
+    <Compile Include="Models\RegistrationSettingsPart.cs" />
+    <Compile Include="Models\RegistrationSettingsPartRecord.cs" />
     <Compile Include="Models\UserPart.cs" />
     <Compile Include="Handlers\UserPartHandler.cs" />
     <Compile Include="Models\UserPartRecord.cs" />
+    <Compile Include="Models\UserStatus.cs" />
     <Compile Include="Permissions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\IUserService.cs" />
@@ -95,6 +101,7 @@
     <Content Include="Views\Admin\EditorTemplates\inputPasswordLarge.ascx" />
     <Content Include="Views\Admin\EditorTemplates\inputTextLarge.ascx" />
     <Content Include="Views\Admin\Index.aspx" />
+    <Content Include="Views\EditorTemplates\Parts\Users.RegistrationSettings.ascx" />
     <Content Include="Web.config" />
     <Content Include="Views\Web.config" />
   </ItemGroup>
