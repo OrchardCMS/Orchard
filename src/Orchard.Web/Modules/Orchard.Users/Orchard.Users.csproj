@@ -69,8 +69,10 @@
     <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="DataMigrations\UsersDataMigration.cs" />
     <Compile Include="Drivers\UserPartDriver.cs" />
+    <Compile Include="Events\UserContext.cs" />
     <Compile Include="Handlers\ModerationMessageAlteration.cs" />
     <Compile Include="Handlers\RegistrationSettingsPartHandler.cs" />
+    <Compile Include="Events\IUserEventHandler.cs" />
     <Compile Include="Models\MessageTypes.cs" />
     <Compile Include="Models\RegistrationSettingsPart.cs" />
     <Compile Include="Models\RegistrationSettingsPartRecord.cs" />

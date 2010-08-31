@@ -9,21 +9,26 @@ using Orchard.Logging;
 using Orchard.ContentManagement;
 using Orchard.Security;
 using Orchard.Users.Drivers;
+using Orchard.Users.Events;
 using Orchard.Users.Models;
 using Orchard.Settings;
 using Orchard.Messaging.Services;
+using System.Collections;
+using System.Collections.Generic;
 
 namespace Orchard.Users.Services {
     [UsedImplicitly]
     public class MembershipService : IMembershipService {
         private readonly IContentManager _contentManager;
         private readonly IMessageManager _messageManager;
+        private readonly IEnumerable<IUserEventHandler> _userEventHandlers;
         private readonly IRepository<UserPartRecord> _userRepository;
 
-        public MembershipService(IContentManager contentManager, IRepository<UserPartRecord> userRepository, IMessageManager messageManager ) {
+        public MembershipService(IContentManager contentManager, IRepository<UserPartRecord> userRepository, IMessageManager messageManager, IEnumerable<IUserEventHandler> userEventHandlers) {
             _contentManager = contentManager;
             _userRepository = userRepository;
             _messageManager = messageManager;
+            _userEventHandlers = userEventHandlers;
             Logger = NullLogger.Instance;
         }
 
@@ -41,17 +46,30 @@ namespace Orchard.Users.Services {
 
             var registrationSettings = CurrentSite.As<RegistrationSettingsPart>();
 
-            var user = _contentManager.Create<UserPart>(UserPartDriver.ContentType.Name, init =>
-            {
-                init.Record.UserName = createUserParams.Username;
-                init.Record.Email = createUserParams.Email;
-                init.Record.NormalizedUserName = createUserParams.Username.ToLower();
-                init.Record.HashAlgorithm = "SHA1";
-                SetPassword(init.Record, createUserParams.Password);
-                init.Record.RegistrationStatus = registrationSettings.UsersAreModerated ? UserStatus.Pending : UserStatus.Approved;
-                init.Record.EmailStatus = registrationSettings.UsersMustValidateEmail ? UserStatus.Pending : UserStatus.Approved;
+            var user = _contentManager.New<UserPart>(UserPartDriver.ContentType.Name);
 
-            });
+            user.Record.UserName = createUserParams.Username;
+            user.Record.Email = createUserParams.Email;
+            user.Record.NormalizedUserName = createUserParams.Username.ToLower();
+            user.Record.HashAlgorithm = "SHA1";
+            SetPassword(user.Record, createUserParams.Password);
+            user.Record.RegistrationStatus = registrationSettings.UsersAreModerated ? UserStatus.Pending : UserStatus.Approved;
+            user.Record.EmailStatus = registrationSettings.UsersMustValidateEmail ? UserStatus.Pending : UserStatus.Approved;
+
+            var userContext = new UserContext {User = user, Cancel = false};
+            foreach(var userEventHandler in _userEventHandlers) {
+                userEventHandler.Creating(userContext);
+            }
+
+            if(userContext.Cancel) {
+                return null;
+            }
+
+            _contentManager.Create(user);
+
+            foreach ( var userEventHandler in _userEventHandlers ) {
+                userEventHandler.Created(userContext);
+            }
 
             if ( registrationSettings.UsersMustValidateEmail ) {
                 SendEmailValidationMessage(user);
