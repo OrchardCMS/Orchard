@@ -90,6 +90,8 @@
     <Compile Include="ViewModels\UsersIndexViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\Admin\images\offline.gif" />
+    <Content Include="Content\Admin\images\online.gif" />
     <Content Include="Module.txt" />
     <Content Include="Views\Account\ChangePassword.ascx" />
     <Content Include="Views\Account\ChangePasswordSuccess.ascx" />

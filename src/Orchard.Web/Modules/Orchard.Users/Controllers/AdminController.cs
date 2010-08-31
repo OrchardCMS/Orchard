@@ -1,8 +1,10 @@
 using System.Linq;
 using System.Web.Mvc;
+using JetBrains.Annotations;
 using Orchard.ContentManagement;
 using Orchard.Localization;
 using Orchard.Security;
+using Orchard.Settings;
 using Orchard.UI.Notify;
 using Orchard.Users.Drivers;
 using Orchard.Users.Models;
@@ -27,6 +29,7 @@ namespace Orchard.Users.Controllers {
 
         public IOrchardServices Services { get; set; }
         public Localizer T { get; set; }
+        protected virtual ISite CurrentSite { get; [UsedImplicitly] private set; }
 
         public ActionResult Index() {
             if (!Services.Authorizer.Authorize(Permissions.ManageUsers, T("Not authorized to list users")))
@@ -142,6 +145,39 @@ namespace Orchard.Users.Controllers {
             Services.ContentManager.Remove(Services.ContentManager.Get(id));
 
             Services.Notifier.Information(T("User deleted"));
+            return RedirectToAction("Index");
+        }
+
+        public ActionResult Approve(int id) {
+            if ( !Services.Authorizer.Authorize(Permissions.ManageUsers, T("Not authorized to manage users")) )
+                return new HttpUnauthorizedResult();
+
+            var user = Services.ContentManager.Get(id);
+
+            if ( user != null ) {
+                user.As<UserPart>().RegistrationStatus = UserStatus.Approved;
+                Services.Notifier.Information(T("User approved"));
+            }
+
+            return RedirectToAction("Index");
+        }
+
+        public ActionResult Moderate(int id) {
+            if ( !Services.Authorizer.Authorize(Permissions.ManageUsers, T("Not authorized to manage users")) )
+                return new HttpUnauthorizedResult();
+
+            var user = Services.ContentManager.Get(id);
+
+            if ( user != null ) {
+                if ( CurrentSite.SuperUser.Equals(user.As<UserPart>().UserName) ) {
+                    Services.Notifier.Error(T("Super user can't be moderated"));
+                }
+                else {
+                    user.As<UserPart>().RegistrationStatus = UserStatus.Pending;
+                    Services.Notifier.Information(T("User moderated"));
+                }
+            }
+
             return RedirectToAction("Index");
         }
 
