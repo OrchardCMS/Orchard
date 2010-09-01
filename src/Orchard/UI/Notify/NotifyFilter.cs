@@ -51,7 +51,6 @@ namespace Orchard.UI.Notify {
         }
 
         public void OnResultExecuting(ResultExecutingContext filterContext) {
-#if REFACTORING
             var viewResult = filterContext.Result as ViewResultBase;
 
             // if it's not a view result, a redirect for example
@@ -82,7 +81,6 @@ namespace Orchard.UI.Notify {
 
             if (!messageEntries.Any())
                 return;
-#endif
 
             var shape = _shapeHelperFactory.CreateHelper();
             var messagesZone = _workContextAccessor.GetContext(filterContext).CurrentPage.Zones["Messages"];

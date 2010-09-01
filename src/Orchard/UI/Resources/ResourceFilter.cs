@@ -4,7 +4,6 @@ using Orchard.Mvc.Filters;
 using Orchard.Mvc.ViewEngines;
 
 namespace Orchard.UI.Resources {
-#if REFACTORING
     public class ResourceFilter : FilterProvider, IResultFilter {
         private readonly IResourceManager _resourceManager;
         private readonly IWorkContextAccessor _workContextAccessor;
@@ -34,4 +33,3 @@ namespace Orchard.UI.Resources {
         public void OnResultExecuted(ResultExecutedContext filterContext) {}
     }
 }
-#endif
