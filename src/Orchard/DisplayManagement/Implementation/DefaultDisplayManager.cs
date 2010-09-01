@@ -11,7 +11,6 @@ using Orchard.Localization;
 namespace Orchard.DisplayManagement.Implementation {
     public class DefaultDisplayManager : IDisplayManager {
         private readonly IShapeTableManager _shapeTableManager;
-        private readonly IShapeTableFactory _shapeTableFactory;
 
         // this need to be Shape instead of IShape - cast to interface throws error on clr types like HtmlString
         private static readonly CallSite<Func<CallSite, object, Shape>> _convertAsShapeCallsite = CallSite<Func<CallSite, object, Shape>>.Create(

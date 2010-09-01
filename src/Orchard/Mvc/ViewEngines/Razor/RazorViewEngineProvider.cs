@@ -95,7 +95,7 @@ namespace Orchard.Mvc.ViewEngines.Razor {
             var fileNames = _virtualPathProvider.ListFiles(virtualPath).Select(Path.GetFileName);
             foreach (var fileName in fileNames) {
                 if (fileName.EndsWith(".cshtml", StringComparison.OrdinalIgnoreCase)) {
-                    yield return fileName.Substring(0, fileName.Length - ".cshtml".Length);
+                    yield return fileName;
                 }
             }
         }

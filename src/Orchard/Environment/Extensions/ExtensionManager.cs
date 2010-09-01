@@ -36,10 +36,24 @@ namespace Orchard.Environment.Extensions {
         
         public IEnumerable<FeatureDescriptor> AvailableFeatures() {
             var featureDescriptors = AvailableExtensions().SelectMany(ext => ext.Features);
-            var featureDescriptorsOrdered = featureDescriptors.OrderByDependencies((item, dep) =>
-                                                                             item.Dependencies != null &&
-                                                                             item.Dependencies.Any(x => StringComparer.OrdinalIgnoreCase.Equals(x, dep.Name)));
+            var featureDescriptorsOrdered = featureDescriptors.OrderByDependencies(HasDependency);
             return featureDescriptorsOrdered.ToReadOnlyCollection();
+        }
+
+        /// <summary>
+        /// Returns true if the item has an explicit or implicit dependency on the subject
+        /// </summary>
+        /// <param name="item"></param>
+        /// <param name="subject"></param>
+        /// <returns></returns>
+        static bool HasDependency(FeatureDescriptor item, FeatureDescriptor subject) {
+            // Themes implicitly depend on modules to ensure build and override ordering
+            if (item.Extension.ExtensionType == "Theme" && subject.Extension.ExtensionType == "Module")
+                return true;
+
+            // Return based on explicit dependencies
+            return item.Dependencies != null &&
+                   item.Dependencies.Any(x => StringComparer.OrdinalIgnoreCase.Equals(x, subject.Name));
         }
 
 

@@ -36,7 +36,9 @@ namespace Orchard.DisplayManagement.Descriptors.ShapeAttributeStrategy {
                 builder.Describe
                     .Named(shapeType)
                     .From(occurrence.Feature)
-                    .BoundAs(descriptor => CreateDelegate(occurrence, descriptor));
+                    .BoundAs(
+                        occurrence.MethodInfo.DeclaringType.FullName + "::" + occurrence.MethodInfo.Name,
+                        descriptor => CreateDelegate(occurrence, descriptor));
             }
         }
 
@@ -45,7 +47,7 @@ namespace Orchard.DisplayManagement.Descriptors.ShapeAttributeStrategy {
             ShapeDescriptor descriptor) {
             return context => {
                 var serviceInstance = _componentContext.Resolve(attributeOccurrence.Registration, Enumerable.Empty<Parameter>());
-                
+
                 // oversimplification for the sake of evolving
                 return PerformInvoke(context, attributeOccurrence.MethodInfo, serviceInstance);
             };

@@ -310,6 +310,7 @@
     <Content Include="Themes\TheAdmin\Views\User.ascx" />
     <Content Include="Themes\TheAdmin\Views\Header.ascx" />
     <Content Include="Themes\Web.config" />
+    <None Include="Themes\TheAdmin\Views\Message.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

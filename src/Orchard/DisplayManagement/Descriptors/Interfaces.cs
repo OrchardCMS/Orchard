@@ -25,6 +25,13 @@ namespace Orchard.DisplayManagement.Descriptors {
 
     public class ShapeDescriptor {
         public string ShapeType { get; set; }
+        
+        /// <summary>
+        /// The BindingSource is informational text about the source of the Binding delegate. Not used except for 
+        /// troubleshooting.
+        /// </summary>
+        public string BindingSource { get; set; }
+
         public Func<DisplayContext, IHtmlString> Binding { get; set; }
     }
 
@@ -89,11 +96,13 @@ namespace Orchard.DisplayManagement.Descriptors {
             return this;
         }
 
-        public ShapeDescriptorAlterationBuilder BoundAs(Func<ShapeDescriptor, Func<DisplayContext, IHtmlString>> binder) {
+        public ShapeDescriptorAlterationBuilder BoundAs(string bindingSource, Func<ShapeDescriptor, Func<DisplayContext, IHtmlString>> binder) {
             // schedule the configuration
             return Configure(descriptor => {
 
                 Func<DisplayContext, IHtmlString> target = null;
+
+                descriptor.BindingSource = bindingSource;
 
                 // announce the binding, which may be reconfigured before it's used
                 descriptor.Binding = displayContext => {

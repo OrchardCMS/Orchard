@@ -18,7 +18,8 @@ namespace Orchard.DisplayManagement.Descriptors {
                     bindingStrategy.Discover(builder);
                 }
                 // placeholder - alterations will need to be selective and in a particular order 
-
+                
+                // GroupBy has been determined to preserve the order of items in original series
                 _shapeTable = new ShapeTable {
                     Descriptors = builder.Build()
                         .GroupBy(alteration => alteration.ShapeType)

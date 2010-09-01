@@ -77,6 +77,7 @@
     <Compile Include="Controllers\ContentController.cs" />
     <Compile Include="Controllers\DatabaseUpdateController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\InventoryController.cs" />
     <Compile Include="Controllers\MetadataController.cs" />
     <Compile Include="Handlers\DebugLinkHandler.cs" />
     <Compile Include="Models\ShowDebugLink.cs" />
@@ -127,6 +128,7 @@
   <ItemGroup>
     <None Include="Views\Home\FormShapes.cshtml" />
     <None Include="Views\Home\UsingShapes.cshtml" />
+    <None Include="Views\Inventory\ShapeTable.cshtml" />
     <None Include="Views\Rounded.cshtml" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

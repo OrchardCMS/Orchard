@@ -38,7 +38,7 @@ namespace Orchard.DisplayManagement.Descriptors.ShapeTemplateStrategy {
             var harvesterInfos = _harvesters.Select(harvester => new { harvester, subPaths = harvester.SubPaths() });
 
             var availableFeatures = _extensionManager.AvailableFeatures();
-            var activeFeatures = availableFeatures.Where(fd => _shellDescriptor.Features.Any(sf => sf.Name == fd.Name));
+            var activeFeatures = availableFeatures.Where(fd => FeatureIsTheme(fd) || FeatureIsEnabled(fd));
             var activeExtensions = Once(activeFeatures);
 
             var hits = activeExtensions.SelectMany(extensionDescriptor => {
@@ -50,7 +50,7 @@ namespace Orchard.DisplayManagement.Descriptors.ShapeTemplateStrategy {
 
                 var fileContexts = pathContexts.SelectMany(pathContext => _shapeTemplateViewEngines.SelectMany(ve => {
                     var fileNames = ve.DetectTemplateFileNames(pathContext.virtualPath);
-                    return fileNames.Select(fileName => new { fileName, fileVirtualPath = Path.Combine(pathContext.virtualPath, fileName), pathContext });
+                    return fileNames.Select(fileName => new { fileName = Path.GetFileNameWithoutExtension(fileName), fileVirtualPath = Path.Combine(pathContext.virtualPath, fileName).Replace('\\','/'), pathContext });
                 }));
 
                 var shapeContexts = fileContexts.SelectMany(fileContext => {
@@ -75,15 +75,24 @@ namespace Orchard.DisplayManagement.Descriptors.ShapeTemplateStrategy {
                     builder.Describe
                         .From(featureDescriptor)
                         .Named(iter.shapeContext.harvestShapeHit.ShapeType)
-                        .BoundAs(shapeDescriptor => displayContext => Render(shapeDescriptor, displayContext, hit.shapeContext.harvestShapeInfo, hit.shapeContext.harvestShapeHit));
+                        .BoundAs(
+                            hit.shapeContext.harvestShapeInfo.TemplateVirtualPath, 
+                            shapeDescriptor => displayContext => Render(shapeDescriptor, displayContext, hit.shapeContext.harvestShapeInfo, hit.shapeContext.harvestShapeHit));
                 }
             }
         }
 
+        private bool FeatureIsTheme(FeatureDescriptor fd) {
+            return fd.Extension.ExtensionType == "Theme";
+        }
+
+        private bool FeatureIsEnabled(FeatureDescriptor fd) {
+            return _shellDescriptor.Features.Any(sf => sf.Name == fd.Name);
+        }
+
         private IHtmlString Render(ShapeDescriptor shapeDescriptor, DisplayContext displayContext, HarvestShapeInfo harvestShapeInfo, HarvestShapeHit harvestShapeHit) {
             var htmlHelper = new HtmlHelper(displayContext.ViewContext, displayContext.ViewDataContainer);
-            //return htmlHelper.Partial(harvestShapeInfo.TemplateVirtualPath, displayContext.Value);
-            return htmlHelper.Partial(harvestShapeInfo.TemplateVirtualPath.Replace("\\", "/") + ".cshtml", displayContext.Value);
+            return htmlHelper.Partial(harvestShapeInfo.TemplateVirtualPath, displayContext.Value);
         }
 
     }
