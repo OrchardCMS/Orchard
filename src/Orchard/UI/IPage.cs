@@ -1,8 +1,8 @@
-﻿using Orchard.UI.Zones;
+﻿using System;
+using System.Web.Mvc;
 
 namespace Orchard.UI {
     public interface IPage {
-
         IZoneCollection Zones { get; }
     }
 
@@ -13,5 +13,7 @@ namespace Orchard.UI {
     public interface IZone {
         void Add(object item);
         void Add(object item, string position);
+        void Add(Action<HtmlHelper> action);
+        void Add(Action<HtmlHelper> action, string position);
     }
 }

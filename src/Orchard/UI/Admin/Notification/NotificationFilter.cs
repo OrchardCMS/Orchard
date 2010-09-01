@@ -28,10 +28,9 @@ namespace Orchard.UI.Admin.Notification {
                 return;
 
             var shape = _shapeHelperFactory.CreateHelper();
-            foreach(var messageEntry in messageEntries) {
-                _workContextAccessor.GetContext(filterContext.RequestContext.HttpContext).CurrentPage.Zones["Messages"].Add(shape.Message(messageEntry));
-                // need extension to enable -> _workContextAccessor.GetContext(filterContext).CurrentPage.Zones["Messages"].Add(shape.Message());
-            }
+            var messagesZone = _workContextAccessor.GetContext(filterContext).CurrentPage.Zones["Messages"];
+            foreach(var messageEntry in messageEntries)
+                messagesZone.Add(shape.Message(messageEntry));
         }
 
         public void OnResultExecuted(ResultExecutedContext filterContext) {}

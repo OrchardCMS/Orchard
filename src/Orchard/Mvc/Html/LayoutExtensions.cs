@@ -86,7 +86,7 @@ namespace Orchard.Mvc.Html {
             manager.Render(html, html.ViewData.Model.Zones, null, null, except);
         }
 
-        //public static void ZoneBody<TModel>(this HtmlHelper<TModel> html, string zoneName) where TModel : BaseViewModel {
+        //public static void ZoneBody<TModel>(this HtmlHelper<TModel> html, string zoneName) where TModel  {
         //    html.Zone(zoneName, () => html.RenderBody());
         //}
 

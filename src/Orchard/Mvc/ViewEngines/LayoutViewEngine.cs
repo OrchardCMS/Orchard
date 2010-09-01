@@ -24,8 +24,8 @@ namespace Orchard.Mvc.ViewEngines {
             var skipLayoutViewEngine = false;
             if (string.IsNullOrEmpty(masterName) == false)
                 skipLayoutViewEngine = true;
-            //if (!ThemeFilter.IsApplied(controllerContext.RequestContext))
-            //    skipLayoutViewEngine = true;
+            if (!ThemeFilter.IsApplied(controllerContext.RequestContext))
+                skipLayoutViewEngine = true;
             if (_viewEngines == null || _viewEngines.Count == 0)
                 skipLayoutViewEngine = true;
             if (skipLayoutViewEngine)

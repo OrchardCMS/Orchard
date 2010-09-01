@@ -2,39 +2,21 @@
 using JetBrains.Annotations;
 using Orchard.Logging;
 using Orchard.Mvc.Filters;
-using Orchard.Mvc.ViewModels;
 
 namespace Orchard.Security {
     [UsedImplicitly]
-    public class SecurityFilter : FilterProvider, IResultFilter, IExceptionFilter {
-        private readonly IAuthenticationService _authenticationService;
-
-        public SecurityFilter(IAuthenticationService authenticationService) {
-            _authenticationService = authenticationService;
+    public class SecurityFilter : FilterProvider, IExceptionFilter {
+        public SecurityFilter() {
             Logger = NullLogger.Instance;
         }
 
         public ILogger Logger { get; set; }
 
-        public void OnResultExecuting(ResultExecutingContext filterContext) {
 #if REFACTORING
-            var baseViewModel = BaseViewModel.From(filterContext.Result);
-            if (baseViewModel == null)
-                return;
-
-            if (baseViewModel.CurrentUser == null)
-                baseViewModel.CurrentUser = _authenticationService.GetAuthenticatedUser();
 #endif
-        }
-
-        public void OnResultExecuted(ResultExecutedContext filterContext) {
-
-        }
-
         public void OnException(ExceptionContext filterContext) {
-            if (!(filterContext.Exception is OrchardSecurityException)) {
+            if (!(filterContext.Exception is OrchardSecurityException))
                 return;
-            }
 
             try {
                 Logger.Information(filterContext.Exception, "Security exception converted to access denied result");
