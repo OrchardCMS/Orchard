@@ -227,41 +227,17 @@
       <Project>{9916839C-39FC-4CEB-A5AF-89CA7E87119F}</Project>
       <Name>Orchard.Core</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Orchard.Web\Modules\Futures.Widgets\Futures.Widgets.csproj">
-      <Project>{E65E5633-C0FF-453C-A906-481C14F969D6}</Project>
-      <Name>Futures.Widgets</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Orchard.Web\Modules\Orchard.Blogs\Orchard.Blogs.csproj">
-      <Project>{63FBD4D9-E1DA-4A7B-AA6A-D6074FE50867}</Project>
-      <Name>Orchard.Blogs</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Orchard.Web\Modules\Orchard.Comments\Orchard.Comments.csproj">
-      <Project>{14C049FD-B35B-415A-A824-87F26B26E7FD}</Project>
-      <Name>Orchard.Comments</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Orchard.Web\Modules\Orchard.DevTools\Orchard.DevTools.csproj">
       <Project>{67C1D3AF-A0EC-46B2-BAE1-DF1DA8E0B890}</Project>
       <Name>Orchard.DevTools</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Orchard.Web\Modules\Orchard.Media\Orchard.Media.csproj">
-      <Project>{D9A7B330-CD22-4DA1-A95A-8DE1982AD8EB}</Project>
-      <Name>Orchard.Media</Name>
     </ProjectReference>
     <ProjectReference Include="..\Orchard.Web\Modules\Orchard.Roles\Orchard.Roles.csproj">
       <Project>{D10AD48F-407D-4DB5-A328-173EC7CB010F}</Project>
       <Name>Orchard.Roles</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Orchard.Web\Modules\Orchard.Sandbox\Orchard.Sandbox.csproj">
-      <Project>{17C44253-65A2-4597-98C7-16EE576824B6}</Project>
-      <Name>Orchard.Sandbox</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Orchard.Web\Modules\Orchard.Setup\Orchard.Setup.csproj">
       <Project>{8C7FCBC2-E6E1-405E-BFB5-D8D9E67A09C4}</Project>
       <Name>Orchard.Setup</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Orchard.Web\Modules\Orchard.Tags\Orchard.Tags.csproj">
-      <Project>{5D0F00F0-26C9-4785-AD61-B85710C60EB0}</Project>
-      <Name>Orchard.Tags</Name>
     </ProjectReference>
     <ProjectReference Include="..\Orchard.Web\Modules\Orchard.Users\Orchard.Users.csproj">
       <Project>{79AED36E-ABD0-4747-93D3-8722B042454B}</Project>

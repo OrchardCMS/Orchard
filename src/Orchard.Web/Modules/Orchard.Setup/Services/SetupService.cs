@@ -1,13 +1,11 @@
 ﻿using System;
 using System.Linq;
 using System.Web;
-using Orchard.Comments.Models;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.MetaData;
 using Orchard.Core.Common.Models;
 using Orchard.Core.Common.Settings;
 using Orchard.Core.Contents.Extensions;
-using Orchard.Core.Navigation.Models;
 using Orchard.Core.Routable.Models;
 using Orchard.Core.Settings.Descriptor.Records;
 using Orchard.Core.Settings.Models;
@@ -19,7 +17,6 @@ using Orchard.Environment.Configuration;
 using Orchard.Environment.ShellBuilders;
 using Orchard.Environment.Descriptor;
 using Orchard.Environment.Descriptor.Models;
-using Orchard.Indexing;
 using Orchard.Localization;
 using Orchard.Localization.Services;
 using Orchard.Reports.Services;
@@ -84,13 +81,15 @@ namespace Orchard.Setup.Services {
                     "Orchard.Roles",
                     //"TinyMce",
                     //"PackagingServices",
-                    "Orchard.Modules",
+                    //"Orchard.Modules",
                     "Orchard.Themes",
                     //"Orchard.Blogs",
                     //"Orchard.Comments",
                     //"Orchard.Tags",
                     //"Orchard.Media",
                     //"Futures.Widgets"
+
+                    "Orchard.DevTools"
                 };
 
                 context.EnabledFeatures = hardcoded;

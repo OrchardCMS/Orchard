@@ -107,8 +107,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DatabaseEnabledTestsBase.cs" />
-    <Compile Include="Indexing\LuceneIndexProviderTests.cs" />
-    <Compile Include="Indexing\LuceneSearchBuilderTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Roles\Controllers\AdminControllerTests.cs" />
     <Compile Include="Roles\Services\RoleServiceTests.cs" />
@@ -128,14 +126,6 @@
     <ProjectReference Include="..\Orchard.Web\Core\Orchard.Core.csproj">
       <Project>{9916839C-39FC-4CEB-A5AF-89CA7E87119F}</Project>
       <Name>Orchard.Core</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Orchard.Web\Modules\Lucene\Lucene.csproj">
-      <Project>{D5D447D7-EF8E-43A6-B9A4-3B025DD9F45D}</Project>
-      <Name>Lucene</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Orchard.Web\Modules\Orchard.Indexing\Orchard.Indexing.csproj">
-      <Project>{EA2B9121-EF54-40A6-A53E-6593C86EE696}</Project>
-      <Name>Orchard.Indexing</Name>
     </ProjectReference>
     <ProjectReference Include="..\Orchard.Web\Modules\Orchard.Roles\Orchard.Roles.csproj">
       <Project>{D10AD48F-407D-4DB5-A328-173EC7CB010F}</Project>
@@ -170,6 +160,9 @@
       <ProductName>Windows Installer 3.1</ProductName>
       <Install>true</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Indexing\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
