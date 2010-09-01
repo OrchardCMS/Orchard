@@ -142,14 +142,6 @@ namespace Orchard.Tests.Environment {
             }
         }
 
-        [Test]
-        public void HostShouldSetControllerFactory() {
-            var host = _lifetime.Resolve<IOrchardHost>();
-
-            Assert.That(_controllerBuilder.GetControllerFactory(), Is.TypeOf<DefaultControllerFactory>());
-            host.Initialize();
-            Assert.That(_controllerBuilder.GetControllerFactory(), Is.TypeOf<OrchardControllerFactory>());
-        }
 
 
         [Test]

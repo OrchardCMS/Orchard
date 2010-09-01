@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Web.Routing;
 using Autofac;
 using Moq;
 using NUnit.Framework;
@@ -21,6 +22,7 @@ namespace Orchard.Tests.DisplayManagement.Descriptors {
             _testFeature = new FeatureDescriptor { Name = "Testing", Extension = new ExtensionDescriptor { Name = "Testing" } };
             builder.RegisterType<ShapeAttributeBindingStrategy>().As<IShapeDescriptorBindingStrategy>();
             builder.RegisterInstance(new TestProvider()).WithMetadata("Feature", _testFeature);
+            builder.RegisterInstance(new RouteCollection());
             builder.RegisterModule(new ShapeAttributeBindingModule());
         }
 

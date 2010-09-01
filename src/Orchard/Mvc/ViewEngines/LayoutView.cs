@@ -40,10 +40,14 @@ namespace Orchard.Mvc.ViewEngines {
         }
 
         private static ViewDataDictionary CoerceViewData(ViewDataDictionary dictionary) {
+#if REFACTORING
             if (dictionary.Model is BaseViewModel)
                 return dictionary;
 
             return new ViewDataDictionary<BaseViewModel>(BaseViewModel.From(dictionary));
+#else
+            return null;
+#endif
         }
 
 

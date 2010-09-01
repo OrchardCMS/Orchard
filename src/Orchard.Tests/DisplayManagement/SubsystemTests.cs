@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.Routing;
 using Autofac;
 using Moq;
 using NUnit.Framework;
@@ -31,6 +32,7 @@ namespace Orchard.Tests.DisplayManagement {
             builder.RegisterType<ShapeHelperFactory>().As<IShapeHelperFactory>();
             builder.RegisterType<DefaultShapeTableManager>().As<IShapeTableManager>();
             builder.RegisterType<SimpleShapes>();
+            builder.RegisterInstance(new RouteCollection());
             builder.RegisterAutoMocking(MockBehavior.Loose);
             _container = builder.Build();
             _container.Resolve<Mock<IOrchardHostContainer>>()

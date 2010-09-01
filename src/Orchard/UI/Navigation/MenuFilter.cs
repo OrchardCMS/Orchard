@@ -14,6 +14,7 @@ namespace Orchard.UI.Navigation {
         }
 
         public void OnResultExecuting(ResultExecutingContext filterContext) {
+#if REFACTORING
             var baseViewModel = BaseViewModel.From(filterContext.Result);
             if (baseViewModel == null)
                 return;
@@ -23,6 +24,7 @@ namespace Orchard.UI.Navigation {
                 menuName = "admin";
 
             baseViewModel.Menu = _navigationManager.BuildMenu(menuName);
+#endif
         }
 
         public void OnResultExecuted(ResultExecutedContext filterContext) {

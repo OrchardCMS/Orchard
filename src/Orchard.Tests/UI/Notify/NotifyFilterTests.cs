@@ -58,6 +58,8 @@ namespace Orchard.Tests.UI.Notify {
             Assert.That(executedContext.Controller.TempData["messages"], Is.StringContaining("dont-destroy"));
         }
 
+#if REFACTORING
+
         [Test]
         public void TempDataBuildsMessagesWhenResultExecutingIsBaseViewModel() {
             var sink = new Notifier();
@@ -82,5 +84,6 @@ namespace Orchard.Tests.UI.Notify {
             Assert.That(model.Messages, Has.Some.Property("Message").EqualTo(T("dont-destroy")));
             Assert.That(model.Messages, Has.Some.Property("Message").EqualTo(T("Working")));
         }
+#endif
     }
 }

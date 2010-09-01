@@ -1,4 +1,6 @@
-﻿using System;
+﻿#if REFACTORING
+#error This must move to the Modules tests to accomodateOrchard.DevTools assembly reference
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Data;
@@ -274,3 +276,4 @@ features:
         }
     }
 }
+#endif

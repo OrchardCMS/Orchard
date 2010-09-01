@@ -5,6 +5,7 @@ using Orchard.Mvc.ViewEngines;
 using Orchard.Mvc.ViewModels;
 
 namespace Orchard.UI.Resources {
+#if REFACTORING
     public class ResourceFilter : FilterProvider, IResultFilter {
         private readonly IResourceManager _resourceManager;
 
@@ -34,4 +35,5 @@ namespace Orchard.UI.Resources {
         public void OnResultExecuted(ResultExecutedContext filterContext) {
         }
     }
+#endif
 }

@@ -47,6 +47,7 @@ namespace Orchard.UI.Notify {
         }
 
         public void OnResultExecuting(ResultExecutingContext filterContext) {
+#if REFACTORING
             var viewResult = filterContext.Result as ViewResultBase;
 
             // if it's not a view result, a redirect for example
@@ -82,6 +83,7 @@ namespace Orchard.UI.Notify {
 
             baseViewModel.Messages = baseViewModel.Messages == null ? messageEntries : baseViewModel.Messages.Union(messageEntries).ToList();
             baseViewModel.Zones.AddRenderPartial("content:before", "Messages", baseViewModel.Messages);
+#endif
         }
 
         public void OnResultExecuted(ResultExecutedContext filterContext) {

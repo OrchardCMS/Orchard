@@ -17,12 +17,14 @@ namespace Orchard.Security {
         public ILogger Logger { get; set; }
 
         public void OnResultExecuting(ResultExecutingContext filterContext) {
+#if REFACTORING
             var baseViewModel = BaseViewModel.From(filterContext.Result);
             if (baseViewModel == null)
                 return;
 
             if (baseViewModel.CurrentUser == null)
                 baseViewModel.CurrentUser = _authenticationService.GetAuthenticatedUser();
+#endif
         }
 
         public void OnResultExecuted(ResultExecutedContext filterContext) {

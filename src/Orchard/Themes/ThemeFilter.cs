@@ -19,6 +19,7 @@ namespace Orchard.Themes {
         }
 
         public void OnResultExecuting(ResultExecutingContext filterContext) {
+#if REFACTORING
             var viewResult = filterContext.Result as ViewResult;
             if (viewResult == null)
                 return;
@@ -28,6 +29,7 @@ namespace Orchard.Themes {
                 return;
 
             Apply(filterContext.RequestContext);
+#endif
         }
 
         public void OnResultExecuted(ResultExecutedContext filterContext) {

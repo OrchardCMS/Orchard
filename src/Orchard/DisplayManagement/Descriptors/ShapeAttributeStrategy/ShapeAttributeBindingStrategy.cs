@@ -77,22 +77,17 @@ namespace Orchard.DisplayManagement.Descriptors.ShapeAttributeStrategy {
                 return Arguments.From(attributes.Values, attributes.Keys);
             }
 
-            // meh
+            // meh--
             if (parameter.Name == "Html") {
                 return new HtmlHelper(
                     displayContext.ViewContext,
-                    new ViewDataContainer { ViewData = displayContext.ViewContext.ViewData },
+                    displayContext.ViewDataContainer,
                     _routeCollection);
             }
 
             var result = ((dynamic)(displayContext.Value))[parameter.Name];
             var converter = _converters.GetOrAdd(parameter.ParameterType, CompileConverter);
             return converter.Invoke((object)result);
-        }
-
-        // ++meh
-        class ViewDataContainer : IViewDataContainer {
-            public ViewDataDictionary ViewData { get; set; }
         }
 
         static readonly ConcurrentDictionary<Type, Func<object, object>> _converters =

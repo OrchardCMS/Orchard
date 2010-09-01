@@ -445,12 +445,14 @@ namespace Orchard.Mvc.Html {
         }
 
         private static void AddRenderActionHelper(this HtmlHelper html, string location, string actionName, string controllerName, RouteValueDictionary routeValues) {
+#if REFACTORING
             // Retrieve the "BaseViewModel" for zones if we have one
             var baseViewModel = BaseViewModel.From(html.ViewData);
             if (baseViewModel == null)
                 return;
 
             baseViewModel.Zones.AddRenderAction(location, actionName, controllerName, routeValues);
+#endif
         }
 
         #endregion
