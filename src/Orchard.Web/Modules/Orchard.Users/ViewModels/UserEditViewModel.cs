@@ -1,11 +1,10 @@
 using System.ComponentModel.DataAnnotations;
 using System.Web.Mvc;
-using Orchard.ContentManagement;
 using Orchard.Mvc.ViewModels;
 using Orchard.Users.Models;
 
 namespace Orchard.Users.ViewModels {
-    public class UserEditViewModel : BaseViewModel {
+    public class UserEditViewModel  {
         [HiddenInput(DisplayValue = false)]
         public int Id {
             get { return User.Item.Id; }

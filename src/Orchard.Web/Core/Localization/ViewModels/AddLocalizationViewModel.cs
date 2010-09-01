@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 using Orchard.Mvc.ViewModels;
 
 namespace Orchard.Core.Localization.ViewModels {
-    public class AddLocalizationViewModel : BaseViewModel {
+    public class AddLocalizationViewModel  {
         public int Id { get; set; }
         [Required]
         public string SelectedCulture { get; set; }

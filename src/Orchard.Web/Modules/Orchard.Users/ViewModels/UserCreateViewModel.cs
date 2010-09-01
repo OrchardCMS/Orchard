@@ -1,10 +1,9 @@
 using System.ComponentModel.DataAnnotations;
 using Orchard.Mvc.ViewModels;
 using Orchard.Security;
-using Orchard.Users.Models;
 
 namespace Orchard.Users.ViewModels {
-    public class UserCreateViewModel : BaseViewModel {
+    public class UserCreateViewModel  {
         [Required]
         public string UserName { get; set; }
 

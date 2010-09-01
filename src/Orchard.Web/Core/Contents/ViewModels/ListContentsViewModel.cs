@@ -3,7 +3,7 @@ using Orchard.ContentManagement;
 using Orchard.Mvc.ViewModels;
 
 namespace Orchard.Core.Contents.ViewModels {
-    public class ListContentsViewModel : BaseViewModel {
+    public class ListContentsViewModel  {
         public ListContentsViewModel() {
             Options = new ContentOptions();
         }

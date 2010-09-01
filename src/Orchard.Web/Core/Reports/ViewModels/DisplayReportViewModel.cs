@@ -1,9 +1,7 @@
-﻿using System.Collections.Generic;
-using Orchard.Mvc.ViewModels;
-using Orchard.Reports;
+﻿using Orchard.Reports;
 
 namespace Orchard.Core.Reports.ViewModels {
-    public class DisplayReportViewModel : BaseViewModel {
+    public class DisplayReportViewModel  {
         public Report Report { get; set; }
     }
 }
