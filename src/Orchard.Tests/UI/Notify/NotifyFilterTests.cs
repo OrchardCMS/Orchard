@@ -19,7 +19,9 @@ namespace Orchard.Tests.UI.Notify {
             return new ActionExecutedContext(controllerContext, actionDescriptor, false/*cancelled*/, null/*exception*/);
         }
 
-        [Test]
+#if REFACTORING
+
+       [Test]
         public void AfterActionExecutedMessagesShouldAppearInTempData() {
             var sink = new Notifier();
             var filter = new NotifyFilter(sink);
@@ -57,8 +59,6 @@ namespace Orchard.Tests.UI.Notify {
             Assert.That(executedContext.Controller.TempData["messages"], Is.StringContaining("dont-destroy"));
             Assert.That(executedContext.Controller.TempData["messages"], Is.StringContaining("dont-destroy"));
         }
-
-#if REFACTORING
 
         [Test]
         public void TempDataBuildsMessagesWhenResultExecutingIsBaseViewModel() {

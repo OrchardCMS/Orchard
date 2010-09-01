@@ -95,10 +95,6 @@ namespace Orchard.Themes.Controllers {
             }
         }
 
-        public ActionResult Install() {
-            return View(new BaseViewModel());
-        }
-
         [HttpPost]
         public ActionResult Install(FormCollection input) {
             try {

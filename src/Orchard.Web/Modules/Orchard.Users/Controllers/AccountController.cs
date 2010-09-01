@@ -6,7 +6,6 @@ using System.Web.Mvc;
 using System.Web.Security;
 using Orchard.Logging;
 using Orchard.Mvc.Extensions;
-using Orchard.Mvc.ViewModels;
 using Orchard.Security;
 using Orchard.Users.Services;
 using Orchard.Users.ViewModels;
@@ -44,7 +43,7 @@ namespace Orchard.Users.Controllers {
             //TODO: (erikpo) Add a setting for whether or not to log access denieds since these can fill up a database pretty fast from bots on a high traffic site
             Logger.Information("Access denied to user #{0} '{1}' on {2}", currentUser.Id, currentUser.UserName, returnUrl);
 
-            return View(new BaseViewModel());
+            return View();
         }
 
         public ActionResult LogOn() {
@@ -89,7 +88,7 @@ namespace Orchard.Users.Controllers {
         public ActionResult Register() {
             ViewData["PasswordLength"] = MinPasswordLength;
 
-            return View(new BaseViewModel());
+            return View();
         }
 
         [HttpPost]
@@ -118,7 +117,7 @@ namespace Orchard.Users.Controllers {
         public ActionResult ChangePassword() {
             ViewData["PasswordLength"] = MinPasswordLength;
 
-            return View(new BaseViewModel());
+            return View();
         }
 
         [Authorize]
@@ -152,7 +151,7 @@ namespace Orchard.Users.Controllers {
         }
 
         public ActionResult ChangePasswordSuccess() {
-            return View(new BaseViewModel());
+            return View();
         }
 
         protected override void OnActionExecuting(ActionExecutingContext filterContext) {

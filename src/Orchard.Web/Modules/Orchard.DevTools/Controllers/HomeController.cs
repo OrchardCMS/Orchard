@@ -1,15 +1,12 @@
 using System;
-using System.Dynamic;
 using System.Web;
 using System.Web.Mvc;
 using Orchard.DevTools.Models;
 using Orchard.DisplayManagement;
 using Orchard.Localization;
-using Orchard.Mvc.ViewModels;
 using Orchard.Themes;
 using Orchard.UI.Notify;
 using Orchard.UI.Admin;
-using Orchard.UI.Zones;
 
 namespace Orchard.DevTools.Controllers {
     [Themed]
@@ -28,7 +25,7 @@ namespace Orchard.DevTools.Controllers {
         public Localizer T { get; set; }
 
         public ActionResult Index() {
-            return View(new BaseViewModel());
+            return View();
         }
 
         public ActionResult NotAuthorized() {
