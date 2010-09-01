@@ -24,7 +24,8 @@ namespace Orchard.Users.DataMigrations {
             // Adds registration fields to previous versions
             SchemaBuilder
                 .AlterTable("UserPartRecord", table => table.AddColumn<string>("RegistrationStatus", c => c.WithDefault("'Approved'")))
-                .AlterTable("UserPartRecord", table => table.AddColumn<string>("EmailStatus", c => c.WithDefault("'Approved'")));
+                .AlterTable("UserPartRecord", table => table.AddColumn<string>("EmailStatus", c => c.WithDefault("'Approved'")))
+                .AlterTable("UserPartRecord", table => table.AddColumn<string>("EmailChallengeToken"));
 
             // Site Settings record
             SchemaBuilder.CreateTable("RegistrationSettingsPartRecord", table => table

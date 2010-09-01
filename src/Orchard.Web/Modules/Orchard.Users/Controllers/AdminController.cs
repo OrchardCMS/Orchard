@@ -10,6 +10,7 @@ using Orchard.Users.Drivers;
 using Orchard.Users.Models;
 using Orchard.Users.Services;
 using Orchard.Users.ViewModels;
+using Orchard.Mvc.Extensions;
 
 namespace Orchard.Users.Controllers {
     [ValidateInput(false)]

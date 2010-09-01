@@ -26,7 +26,7 @@ namespace Orchard.Core.Messaging.Services {
             _channels = channels;
         }
 
-        public void Send(ContentItemRecord recipient, string type, string service = null) {
+        public void Send(ContentItemRecord recipient, string type, string service = null, Dictionary<string, string> properties = null) {
             if ( !HasChannels() )
                 return;
 
@@ -40,7 +40,7 @@ namespace Orchard.Core.Messaging.Services {
             try {
 
                 // if the service is not explicit, use the default one, as per settings configuration
-                if ( String.IsNullOrWhiteSpace(service) ) {
+                if (String.IsNullOrWhiteSpace(service)) {
                     service = messageSettings.DefaultChannelService;
                 }
 
@@ -49,6 +49,11 @@ namespace Orchard.Core.Messaging.Services {
                     Type = type,
                     Service = service
                 };
+
+                if ( properties != null ) {
+                    foreach (var key in properties.Keys)
+                        context.Properties.Add(key, properties[key]);
+                }
 
                 _messageEventHandler.Sending(context);
 

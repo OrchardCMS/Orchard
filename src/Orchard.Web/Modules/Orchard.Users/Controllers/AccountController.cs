@@ -116,10 +116,16 @@ namespace Orchard.Users.Controllers {
 
             if (ValidateRegistration(userName, email, password, confirmPassword)) {
                 // Attempt to register the user
-                var user = _membershipService.CreateUser(new CreateUserParams(userName, password, email, null, null, true));
-
+                var user = _membershipService.CreateUser(new CreateUserParams(userName, password, email, null, null, false));
 
                 if (user != null) {
+                    if ( user.As<UserPart>().EmailStatus == UserStatus.Pending ) {
+                        string challengeToken = _membershipService.GetEncryptedChallengeToken(user.As<UserPart>());
+                        _membershipService.SendChallengeEmail(user.As<UserPart>(), Url.AbsoluteAction(() => Url.Action("ChallengeEmail", "Account", new { Area = "Orchard.Users", token = challengeToken })));
+
+                        return RedirectToAction("ChallengeEmailSent");
+                    }
+
                     _authenticationService.SignIn(user, false /* createPersistentCookie */);
                     return Redirect("~/");
                 }
@@ -171,6 +177,21 @@ namespace Orchard.Users.Controllers {
 
         public ActionResult ChangePasswordSuccess() {
             return View(new BaseViewModel());
+        }
+
+        public ActionResult ChallengeEmailSent() {
+            return View(new BaseViewModel());
+        }
+
+        public ActionResult ChallengeEmail(string token) {
+            var user = _membershipService.ValidateChallengeToken(token);
+
+            if ( user != null ) {
+                _authenticationService.SignIn(user, false /* createPersistentCookie */);
+                return View("ChallengeEmailSuccess");
+            }
+
+            return View("ChallengeEmailFail");
         }
 
         protected override void OnActionExecuting(ActionExecutingContext filterContext) {

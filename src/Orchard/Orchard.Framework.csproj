@@ -93,6 +93,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\linqnhibernate\NHibernate.Linq.dll</HintPath>
     </Reference>
+    <Reference Include="Orchard.Users">
+      <HintPath>..\Orchard.Web\Modules\Orchard.Email\Bin\Orchard.Users.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
@@ -746,7 +749,6 @@
     <Compile Include="Security\IUser.cs" />
     <Compile Include="Security\Permissions\IPermissionProvider.cs" />
     <Compile Include="Security\Permissions\Permission.cs" />
-    <Compile Include="Security\Providers\OrchardMembershipProvider.cs" />
     <Compile Include="Security\Providers\OrchardRoleProvider.cs" />
     <Compile Include="Services\Clock.cs" />
     <Compile Include="FileSystems\Media\FileSystemStorageProvider.cs" />

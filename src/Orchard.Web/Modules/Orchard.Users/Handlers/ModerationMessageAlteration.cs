@@ -27,7 +27,7 @@ namespace Orchard.Users.Handlers {
 
             if ( context.Type == MessageTypes.Validation ) {
                 context.MailMessage.Subject = "User account validation";
-                context.MailMessage.Body = string.Format("Dear {0}, please click on the folowwing link to validate you email address: {1}", recipient.UserName, "http://foo");
+                context.MailMessage.Body = string.Format("Dear {0}, please <a href=\"{1}\">click here</a> to validate you email address.", recipient.UserName, context.Properties["ChallengeUrl"]);
             }
 
         }
