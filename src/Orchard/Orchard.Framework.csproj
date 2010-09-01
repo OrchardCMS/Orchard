@@ -722,7 +722,6 @@
     <Compile Include="Mvc\ViewEngines\LayoutViewContext.cs" />
     <Compile Include="Mvc\ViewEngines\ViewEngineFilter.cs" />
     <Compile Include="Mvc\ViewEngines\WebForms\WebFormViewEngineProvider.cs" />
-    <Compile Include="Mvc\ViewModels\BaseViewModel.cs" />
     <Compile Include="UI\Admin\AdminThemeSelector.cs" />
     <Compile Include="UI\Navigation\INavigationManager.cs" />
     <Compile Include="UI\Navigation\NavigationItemBuilder.cs" />
