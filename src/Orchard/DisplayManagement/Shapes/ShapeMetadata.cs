@@ -2,5 +2,6 @@
     public class ShapeMetadata : IShapeMetadata {
         public string Type { get; set; }
         public string Position { get; set; }
+        public bool WasExecuted { get; set; }
     }
 }

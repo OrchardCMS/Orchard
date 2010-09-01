@@ -6,9 +6,11 @@ using Orchard.UI.Admin;
 namespace Orchard.UI.Navigation {
     public class MenuFilter : FilterProvider, IResultFilter {
         private readonly INavigationManager _navigationManager;
+        private readonly IWorkContextAccessor _workContextAccessor;
 
-        public MenuFilter(INavigationManager navigationManager) {
+        public MenuFilter(INavigationManager navigationManager, IWorkContextAccessor workContextAccessor) {
             _navigationManager = navigationManager;
+            _workContextAccessor = workContextAccessor;
         }
 
         public void OnResultExecuting(ResultExecutingContext filterContext) {
