@@ -149,6 +149,22 @@ namespace Orchard.Users.Controllers {
             return RedirectToAction("Index");
         }
 
+        public ActionResult SendChallengeEmail(int id) {
+            if ( !Services.Authorizer.Authorize(Permissions.ManageUsers, T("Not authorized to manage users")) )
+                return new HttpUnauthorizedResult();
+
+            var user = Services.ContentManager.Get(id);
+
+            if ( user != null ) {
+                string challengeToken = _membershipService.GetEncryptedChallengeToken(user.As<UserPart>());
+                _membershipService.SendChallengeEmail(user.As<UserPart>(), Url.AbsoluteAction(() => Url.Action("ChallengeEmail", "Account", new {Area = "Orchard.Users", token = challengeToken})));
+            }
+
+            Services.Notifier.Information(T("Challenge email sent"));
+
+            return RedirectToAction("Index");
+        }
+
         public ActionResult Approve(int id) {
             if ( !Services.Authorizer.Authorize(Permissions.ManageUsers, T("Not authorized to manage users")) )
                 return new HttpUnauthorizedResult();

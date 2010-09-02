@@ -183,15 +183,23 @@ namespace Orchard.Users.Controllers {
             return View(new BaseViewModel());
         }
 
+        public ActionResult ChallengeEmailSuccess() {
+            return View(new BaseViewModel());
+        }
+
+        public ActionResult ChallengeEmailFail() {
+            return View(new BaseViewModel());
+        }
+
         public ActionResult ChallengeEmail(string token) {
             var user = _membershipService.ValidateChallengeToken(token);
 
             if ( user != null ) {
                 _authenticationService.SignIn(user, false /* createPersistentCookie */);
-                return View("ChallengeEmailSuccess");
+                return RedirectToAction("ChallengeEmailSuccess");
             }
 
-            return View("ChallengeEmailFail");
+            return RedirectToAction("ChallengeEmailFail");
         }
 
         protected override void OnActionExecuting(ActionExecutingContext filterContext) {

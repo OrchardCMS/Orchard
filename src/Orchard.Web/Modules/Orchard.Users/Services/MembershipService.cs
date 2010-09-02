@@ -134,31 +134,27 @@ namespace Orchard.Users.Services {
         public IUser GetUser(string username) {
             var lowerName = username == null ? "" : username.ToLower();
 
-            var userRecord = _userRepository.Get(x => x.NormalizedUserName == lowerName);
-            if (userRecord == null) {
-                return null;
-            }
-            return _contentManager.Get<IUser>(userRecord.Id);
+            return _contentManager.Query<UserPart, UserPartRecord>().Where(u => u.NormalizedUserName == lowerName).List().FirstOrDefault();
         }
 
         public IUser ValidateUser(string userNameOrEmail, string password) {
             var lowerName = userNameOrEmail == null ? "" : userNameOrEmail.ToLower();
 
-            var userRecord = _userRepository.Get(x => x.NormalizedUserName == lowerName);
+            var user = _contentManager.Query<UserPart, UserPartRecord>().Where(u => u.NormalizedUserName == lowerName).List().FirstOrDefault();
 
-            if(userRecord == null)
-                userRecord = _userRepository.Get(x => x.Email == lowerName);
+            if(user == null)
+                user = _contentManager.Query<UserPart, UserPartRecord>().Where(u => u.Email == lowerName).List().FirstOrDefault();
 
-            if (userRecord == null || ValidatePassword(userRecord, password) == false)
+            if ( user == null || ValidatePassword(user.As<UserPart>().Record, password) == false )
                 return null;
 
-            if ( userRecord.EmailStatus != UserStatus.Approved )
+            if ( user.EmailStatus != UserStatus.Approved )
                 return null;
 
-            if ( userRecord.RegistrationStatus != UserStatus.Approved )
+            if ( user.RegistrationStatus != UserStatus.Approved )
                 return null;
 
-            return _contentManager.Get<IUser>(userRecord.Id);
+            return user;
         }
 
         public void SetPassword(IUser user, string password) {

@@ -37,7 +37,10 @@
                 <td>
                     <%: Html.ActionLink(T("Edit").ToString(), "Edit", new { row.UserPart.Id })%> | 
                     <%: Html.ActionLink(T("Remove").ToString(), "Delete", new { row.UserPart.Id })%> | 
-                    <%: row.UserPart.RegistrationStatus == UserStatus.Pending ? Html.ActionLink(T("Approve").ToString(), "Approve", new { row.UserPart.Id }) : Html.ActionLink(T("Moderate").ToString(), "Moderate", new { row.UserPart.Id })%>
+                    <%: row.UserPart.RegistrationStatus == UserStatus.Pending ? Html.ActionLink(T("Approve").ToString(), "Approve", new { row.UserPart.Id }) : Html.ActionLink(T("Disable").ToString(), "Moderate", new { row.UserPart.Id })%>
+                    <% if ( row.UserPart.EmailStatus == UserStatus.Pending ) { %> | 
+                        <%: Html.ActionLink(T("Challenge Email").ToString(), "SendChallengeEmail", new { row.UserPart.Id })%>
+                    <% } %>
                 </td>
             </tr>
             <%}%>
