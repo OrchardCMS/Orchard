@@ -82,7 +82,6 @@
     <Compile Include="Common\ViewModels\TextContentFieldDisplayViewModel.cs" />
     <Compile Include="Common\ViewModels\TextContentFieldEditorViewModel.cs" />
     <Compile Include="Contents\Controllers\ItemController.cs" />
-    <Compile Include="Contents\Drivers\ContentsDriver.cs" />
     <Compile Include="Contents\Extensions\MetaDataExtensions.cs" />
     <Compile Include="Contents\Handlers\ContentsHandler.cs" />
     <Compile Include="Contents\Permissions.cs" />
@@ -196,7 +195,6 @@
     <Compile Include="Scheduling\Models\Task.cs" />
     <Compile Include="Settings\DataMigrations\SettingsDataMigration.cs" />
     <Compile Include="Settings\ViewModels\SiteCulturesViewModel.cs" />
-    <Compile Include="Settings\Drivers\SiteSettingsPartDriver.cs" />
     <Compile Include="Settings\Metadata\ContentDefinitionManager.cs" />
     <Compile Include="Settings\Metadata\Records\ContentFieldDefinitionRecord.cs" />
     <Compile Include="Settings\Metadata\Records\ContentPartDefinitionRecord.cs" />
