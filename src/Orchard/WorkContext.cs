@@ -1,4 +1,6 @@
-﻿using Orchard.Security;
+﻿using System;
+using Autofac;
+using Orchard.Security;
 using Orchard.Settings;
 using Orchard.UI;
 

@@ -2,7 +2,7 @@
 using NUnit.Framework;
 using Orchard.Tests.Utility;
 
-namespace Orchard.Tests.DisplayManagement.Descriptors {
+namespace Orchard.Tests {
     public class ContainerTestBase {
 
         protected IContainer _container;

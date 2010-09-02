@@ -402,10 +402,12 @@
     <Compile Include="DisplayManagement\Descriptors\Interfaces.cs" />
     <Compile Include="DisplayManagement\Implementation\ShapeHelper.cs" />
     <Compile Include="DisplayManagement\Implementation\ShapeHelperFactory.cs" />
+    <Compile Include="Environment\DefaultWorkContextAccessor.cs" />
     <Compile Include="Environment\IContextualizable.cs" />
     <Compile Include="Environment\IHostLocalRestart.cs" />
     <Compile Include="Environment\IShellContainerRegistrations.cs" />
     <Compile Include="FileSystems\Dependencies\DynamicModuleVirtualPathProvider.cs" />
+    <Compile Include="Mvc\IHttpContextAccessor.cs" />
     <Compile Include="IWorkContextAccessor.cs" />
     <Compile Include="WorkContextExtensions.cs" />
     <Compile Include="Mvc\Html\Shapes.cs" />
