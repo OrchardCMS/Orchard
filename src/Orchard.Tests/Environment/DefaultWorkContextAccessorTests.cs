@@ -37,7 +37,7 @@ namespace Orchard.Tests.Environment {
             var accessor = _container.Resolve<IWorkContextAccessor>();
             var httpContext = new StubHttpContext();
             
-            var workContextScope = accessor.CreateContextScope(httpContext);
+            var workContextScope = accessor.CreateWorkContextScope(httpContext);
             Assert.That(workContextScope.WorkContext, Is.Not.Null);
 
             var workContext = accessor.GetContext(httpContext);
@@ -48,11 +48,11 @@ namespace Orchard.Tests.Environment {
         public void DifferentHttpContextWillHoldDifferentWorkContext() {
             var accessor = _container.Resolve<IWorkContextAccessor>();
             var httpContext1 = new StubHttpContext();
-            var workContextScope1 = accessor.CreateContextScope(httpContext1);
+            var workContextScope1 = accessor.CreateWorkContextScope(httpContext1);
             var workContext1 = accessor.GetContext(httpContext1);
 
             var httpContext2 = new StubHttpContext();
-            var workContextScope2 = accessor.CreateContextScope(httpContext2);
+            var workContextScope2 = accessor.CreateWorkContextScope(httpContext2);
             var workContext2 = accessor.GetContext(httpContext2);
 
             Assert.That(workContext1, Is.Not.Null);
@@ -69,7 +69,7 @@ namespace Orchard.Tests.Environment {
 
             Assert.That(accessor.GetContext(httpContext), Is.Null);
 
-            var scope = accessor.CreateContextScope(httpContext);
+            var scope = accessor.CreateWorkContextScope(httpContext);
             Assert.That(accessor.GetContext(httpContext), Is.Not.Null);
             
             scope.Dispose();
@@ -89,11 +89,11 @@ namespace Orchard.Tests.Environment {
             Assert.That(accessor1.GetContext(httpContext), Is.Null);
             Assert.That(accessor2.GetContext(httpContext), Is.Null);
 
-            var scope1 = accessor1.CreateContextScope(httpContext);
+            var scope1 = accessor1.CreateWorkContextScope(httpContext);
             Assert.That(accessor1.GetContext(httpContext), Is.Not.Null);
             Assert.That(accessor2.GetContext(httpContext), Is.Null);
 
-            var scope2 = accessor2.CreateContextScope(httpContext);
+            var scope2 = accessor2.CreateWorkContextScope(httpContext);
             Assert.That(accessor1.GetContext(httpContext), Is.Not.Null);
             Assert.That(accessor2.GetContext(httpContext), Is.Not.Null);
 
@@ -120,7 +120,7 @@ namespace Orchard.Tests.Environment {
             Assert.That(accessor.GetContext(ambientHttpContext), Is.Null);
             Assert.That(accessor.GetContext(explicitHttpContext), Is.Null);
 
-            var scope = accessor.CreateContextScope();
+            var scope = accessor.CreateWorkContextScope();
             Assert.That(accessor.GetContext(), Is.Not.Null);
             Assert.That(accessor.GetContext(ambientHttpContext), Is.Not.Null);
             Assert.That(accessor.GetContext(explicitHttpContext), Is.Null);
@@ -143,7 +143,7 @@ namespace Orchard.Tests.Environment {
 
             Assert.That(accessor.GetContext(), Is.Null);
 
-            var scope = accessor.CreateContextScope();
+            var scope = accessor.CreateWorkContextScope();
             Assert.That(accessor.GetContext(), Is.Not.Null);
 
             scope.Dispose();
@@ -161,11 +161,11 @@ namespace Orchard.Tests.Environment {
             Assert.That(accessor1.GetContext(), Is.Null);
             Assert.That(accessor2.GetContext(), Is.Null);
 
-            var scope1 = accessor1.CreateContextScope();
+            var scope1 = accessor1.CreateWorkContextScope();
             Assert.That(accessor1.GetContext(), Is.Not.Null);
             Assert.That(accessor2.GetContext(), Is.Null);
 
-            var scope2 = accessor2.CreateContextScope();
+            var scope2 = accessor2.CreateWorkContextScope();
             Assert.That(accessor1.GetContext(), Is.Not.Null);
             Assert.That(accessor2.GetContext(), Is.Not.Null);
 

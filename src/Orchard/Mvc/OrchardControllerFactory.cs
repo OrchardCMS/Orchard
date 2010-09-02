@@ -6,7 +6,7 @@ using Autofac.Integration.Web;
 
 namespace Orchard.Mvc {
     public class OrchardControllerFactory : DefaultControllerFactory {
-         
+
         public override IController CreateController(RequestContext requestContext, string controllerName) {
             var routeData = requestContext.RouteData;
 
@@ -19,12 +19,14 @@ namespace Orchard.Mvc {
             // Now that the request container is known - try to resolve the controller            
             object controller;
             var service = new KeyedService(serviceKey, typeof(IController));
-            
-            // Locate the container this route is bound against
-            var container = GetRequestContainer(routeData);
 
-            if (container != null &&
-                container.TryResolve(service, out controller)) {
+            // Locate the container this route is bound against
+            var workContextAccessor = GetWorkContextAccessor(routeData);
+
+            var workContext = workContextAccessor != null ? workContextAccessor.GetContext(requestContext.HttpContext) : null;
+
+            if (workContext != null &&
+                workContext.Service<ILifetimeScope>().TryResolve(service, out controller)) {
                 return (IController)controller;
             }
 
@@ -54,14 +56,13 @@ namespace Orchard.Mvc {
             return GetAreaName(routeData.Route);
         }
 
-        public static ILifetimeScope GetRequestContainer(RouteData routeData) {
+        static IWorkContextAccessor GetWorkContextAccessor(RouteData routeData) {
             object dataTokenValue;
             if (routeData != null &&
                 routeData.DataTokens != null &&
-                routeData.DataTokens.TryGetValue("IContainerProvider", out dataTokenValue) &&
-                dataTokenValue is IContainerProvider) {
-                var containerProvider = (IContainerProvider) dataTokenValue;
-                return containerProvider.RequestLifetime;
+                routeData.DataTokens.TryGetValue("IWorkContextAccessor", out dataTokenValue) &&
+                dataTokenValue is IWorkContextAccessor) {
+                return (IWorkContextAccessor)dataTokenValue;
             }
             return null;
         }

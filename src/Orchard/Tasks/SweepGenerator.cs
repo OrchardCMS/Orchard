@@ -56,7 +56,7 @@ namespace Orchard.Tasks {
 
         public void DoWork() {
             // makes an inner container, similar to the per-request container
-            using (var standaloneEnvironment = new StandaloneEnvironment(_container)) {
+            using (var standaloneEnvironment = _container.CreateWorkContextScope()) {
                 // resolve the manager and invoke it
                 var manager = standaloneEnvironment.Resolve<IBackgroundService>();
                 manager.Sweep();

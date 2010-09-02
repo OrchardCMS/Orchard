@@ -403,7 +403,6 @@
     <Compile Include="DisplayManagement\Implementation\ShapeHelper.cs" />
     <Compile Include="DisplayManagement\Implementation\ShapeHelperFactory.cs" />
     <Compile Include="Environment\DefaultWorkContextAccessor.cs" />
-    <Compile Include="Environment\IContextualizable.cs" />
     <Compile Include="Environment\IHostLocalRestart.cs" />
     <Compile Include="Environment\IShellContainerRegistrations.cs" />
     <Compile Include="FileSystems\Dependencies\DynamicModuleVirtualPathProvider.cs" />
@@ -613,7 +612,6 @@
     <Compile Include="Environment\Descriptor\Models\ShellDescriptor.cs" />
     <Compile Include="Environment\ShellBuilders\ShellContainerFactory.cs" />
     <Compile Include="Environment\Configuration\ShellSettings.cs" />
-    <Compile Include="Environment\StandaloneEnvironment.cs" />
     <Compile Include="Events\DefaultOrchardEventBus.cs" />
     <Compile Include="Events\EventsInterceptor.cs" />
     <Compile Include="Events\EventsModule.cs" />
@@ -673,7 +671,6 @@
     <Compile Include="Mvc\Html\FileRegistrationContext.cs" />
     <Compile Include="Mvc\Html\MvcFormAntiForgeryPost.cs" />
     <Compile Include="Mvc\Html\SiteServiceExtensions.cs" />
-    <Compile Include="Environment\FiniteContainerProvider.cs" />
     <Compile Include="Tasks\Scheduling\IScheduledTaskHandler.cs" />
     <Compile Include="Tasks\Scheduling\IScheduledTaskManager.cs" />
     <Compile Include="Tasks\Scheduling\ScheduledTaskContext.cs" />

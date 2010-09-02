@@ -61,7 +61,7 @@ namespace Orchard.Environment.ShellBuilders {
             var shellScope = _shellContainerFactory.CreateContainer(settings, blueprint);
 
             ShellDescriptor currentDescriptor;
-            using (var standaloneEnvironment = new StandaloneEnvironment(shellScope)) {
+            using (var standaloneEnvironment = shellScope.CreateWorkContextScope()) {
                 var shellDescriptorManager = standaloneEnvironment.Resolve<IShellDescriptorManager>();
                 currentDescriptor = shellDescriptorManager.GetShellDescriptor();
             }

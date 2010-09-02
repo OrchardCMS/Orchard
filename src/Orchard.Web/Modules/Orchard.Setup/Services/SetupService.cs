@@ -112,7 +112,8 @@ namespace Orchard.Setup.Services {
 
             // initialize database explicitly, and store shell descriptor
             var bootstrapLifetimeScope = _shellContainerFactory.CreateContainer(shellSettings, shellBlueprint);
-            using ( var environment = new StandaloneEnvironment(bootstrapLifetimeScope) ) {
+
+            using (var environment = bootstrapLifetimeScope.CreateWorkContextScope()) {
 
                 // check if the database is already created (in case an exception occured in the second phase)
                 var shellDescriptorRepository = environment.Resolve<IRepository<ShellDescriptorRecord>>();

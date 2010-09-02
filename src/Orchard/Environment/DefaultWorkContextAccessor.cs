@@ -39,7 +39,7 @@ namespace Orchard.Environment {
             return _threadStaticContexts.TryGetValue(_workContextKey, out workContext) ? workContext : null;
         }
 
-        public IWorkContextScope CreateContextScope(HttpContextBase httpContext) {
+        public IWorkContextScope CreateWorkContextScope(HttpContextBase httpContext) {
 
             var workLifetime = SpawnWorkLifetime(builder => {
                 builder.Register(ctx => httpContext)
@@ -56,10 +56,10 @@ namespace Orchard.Environment {
         }
 
 
-        public IWorkContextScope CreateContextScope() {
+        public IWorkContextScope CreateWorkContextScope() {
             var httpContext = _httpContextAccessor.Current();
             if (httpContext != null)
-                return CreateContextScope(httpContext);
+                return CreateWorkContextScope(httpContext);
 
             var workLifetime = SpawnWorkLifetime(builder => {
                 builder.Register(ctx => httpContext)
@@ -116,6 +116,10 @@ namespace Orchard.Environment {
             public WorkContext WorkContext {
                 get { return _workContext; }
             }
+
+            public TService Resolve<TService>() {
+                return WorkContext.Service<TService>();
+            }
         }
 
         class ThreadStaticScopeImplementation : IWorkContextScope {
@@ -138,6 +142,10 @@ namespace Orchard.Environment {
 
             public WorkContext WorkContext {
                 get { return _workContext; }
+            }
+
+            public TService Resolve<TService>() {
+                return WorkContext.Service<TService>();
             }
         }
     }

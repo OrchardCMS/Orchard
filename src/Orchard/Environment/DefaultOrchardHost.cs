@@ -14,6 +14,7 @@ using Orchard.Logging;
 using Orchard.Mvc;
 using Orchard.Mvc.ViewEngines;
 using Orchard.Utility.Extensions;
+using Autofac;
 
 namespace Orchard.Environment {
     public class DefaultOrchardHost : IOrchardHost, IShellSettingsManagerEventHandler, IShellDescriptorManagerEventHandler {
@@ -77,13 +78,13 @@ namespace Orchard.Environment {
             EndRequest();
         }
 
-        IStandaloneEnvironment IOrchardHost.CreateStandaloneEnvironment(ShellSettings shellSettings) {
+        IWorkContextScope IOrchardHost.CreateStandaloneEnvironment(ShellSettings shellSettings) {
             Logger.Debug("Creating standalone environment for tenant {0}", shellSettings.Name);
 
             MonitorExtensions();
             BuildCurrent();
             var shellContext = CreateShellContext(shellSettings);
-            return new StandaloneEnvironment(shellContext.LifetimeScope);
+            return shellContext.LifetimeScope.CreateWorkContextScope();
         }
 
         IEnumerable<ShellContext> BuildCurrent() {

@@ -4,13 +4,14 @@ using System.Web;
 namespace Orchard {
     public interface IWorkContextAccessor : ISingletonDependency {
         WorkContext GetContext(HttpContextBase httpContext);
-        IWorkContextScope CreateContextScope(HttpContextBase httpContext);
+        IWorkContextScope CreateWorkContextScope(HttpContextBase httpContext);
 
         WorkContext GetContext();
-        IWorkContextScope CreateContextScope();
+        IWorkContextScope CreateWorkContextScope();
     }
 
     public interface IWorkContextScope : IDisposable {
         WorkContext WorkContext { get; }
+        TService Resolve<TService>();
     }
 }

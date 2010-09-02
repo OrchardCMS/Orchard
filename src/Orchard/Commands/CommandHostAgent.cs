@@ -128,7 +128,7 @@ namespace Orchard.Commands {
         }
 
 
-        private IStandaloneEnvironment CreateStandaloneEnvironment(string tenant) {
+        private IWorkContextScope CreateStandaloneEnvironment(string tenant) {
             var host = _hostContainer.Resolve<IOrchardHost>();
             var tenantManager = _hostContainer.Resolve<IShellSettingsManager>();
 

@@ -5,8 +5,8 @@ using Orchard.Mvc;
 namespace Orchard.Localization {
     public class LocalizationUtilities {
         public static Localizer Resolve(ControllerContext controllerContext, string scope) {
-            var context = OrchardControllerFactory.GetRequestContainer(controllerContext.RouteData);
-            return context == null ? NullLocalizer.Instance : Resolve(context, scope);
+            var context = controllerContext.GetWorkContext();
+            return context == null ? NullLocalizer.Instance : Resolve(context.Service<ILifetimeScope>(), scope);
         }
 
         public static Localizer Resolve(IComponentContext context, string scope) {

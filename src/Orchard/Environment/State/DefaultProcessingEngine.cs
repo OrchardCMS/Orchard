@@ -68,7 +68,7 @@ namespace Orchard.Environment.State {
         private void Execute(Entry entry) {
             var shellContext = _shellContextFactory.CreateDescribedContext(entry.ShellSettings, entry.ShellDescriptor);
             using (shellContext.LifetimeScope) {
-                using (var standaloneEnvironment = new StandaloneEnvironment(shellContext.LifetimeScope)) {
+                using (var standaloneEnvironment = shellContext.LifetimeScope.CreateWorkContextScope()) {
                     var eventBus = standaloneEnvironment.Resolve<IEventBus>();
 
                     Logger.Information("Executing event {0} in process {1} for shell {2}", 
