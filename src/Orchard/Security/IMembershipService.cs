@@ -1,6 +1,4 @@
-﻿using Orchard.Users.Models;
-
-namespace Orchard.Security {
+﻿namespace Orchard.Security {
     public interface IMembershipService : IDependency {
         MembershipSettings GetSettings();
 
@@ -11,7 +9,7 @@ namespace Orchard.Security {
         void SetPassword(IUser user, string password);
 
         IUser ValidateChallengeToken(string challengeToken);
-        void SendChallengeEmail(UserPart user, string url);
-        string GetEncryptedChallengeToken(UserPart user);
+        void SendChallengeEmail(IUser user, string url);
+        string GetEncryptedChallengeToken(IUser user);
     }
 }

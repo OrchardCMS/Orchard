@@ -93,9 +93,6 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\linqnhibernate\NHibernate.Linq.dll</HintPath>
     </Reference>
-    <Reference Include="Orchard.Users">
-      <HintPath>..\Orchard.Web\Modules\Orchard.Email\Bin\Orchard.Users.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
