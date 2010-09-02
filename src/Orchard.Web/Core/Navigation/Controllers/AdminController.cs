@@ -80,8 +80,8 @@ namespace Orchard.Core.Navigation.Controllers {
             if (!_services.Authorizer.Authorize(Permissions.ManageMainMenu, T("Couldn't manage the main menu")))
                 return new HttpUnauthorizedResult();
 
-            var menuPart = _services.ContentManager.New<MenuPart>(MenuItemPartDriver.ContentType.Name);
-            model.MenuItem = _services.ContentManager.UpdateEditorModel(menuPart, this);
+            var menuPart = _services.ContentManager.New<MenuPart>("MenuItem");
+            model.MenuItem = _services.ContentManager.UpdateEditorShape(menuPart, this);
 
             if (!ModelState.IsValid) {
                 _services.TransactionManager.Cancel();

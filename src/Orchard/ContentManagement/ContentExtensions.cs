@@ -165,26 +165,26 @@ namespace Orchard.ContentManagement {
 
         /* Display and editor convenience extension methods */
 
-        public static ContentItemViewModel<T> BuildDisplayModel<T>(this IContentManager manager, int id, string displayType) where T : class, IContent {
+        public static ContentItemViewModel<T> BuildDisplayShape<T>(this IContentManager manager, int id, string displayType) where T : class, IContent {
             var content = manager.Get<T>(id);
             if (content == null)
                 return null;
-            return manager.BuildDisplayModel(content, displayType);
+            return manager.BuildDisplayShape(content, displayType);
         }
 
-        public static ContentItemViewModel<T> BuildEditorModel<T>(this IContentManager manager, int id) where T : class, IContent {
+        public static ContentItemViewModel<T> BuildEditorShape<T>(this IContentManager manager, int id) where T : class, IContent {
             var content = manager.Get<T>(id);
             if (content == null)
                 return null;
-            return manager.BuildEditorModel(content);
+            return manager.BuildEditorShape(content);
 
         }
 
-        public static ContentItemViewModel<T> UpdateEditorModel<T>(this IContentManager manager, int id, IUpdateModel updater) where T : class, IContent {
+        public static ContentItemViewModel<T> UpdateEditorShape<T>(this IContentManager manager, int id, IUpdateModel updater) where T : class, IContent {
             var content = manager.Get<T>(id);
             if (content == null)
                 return null;
-            return manager.UpdateEditorModel(content, updater);
+            return manager.UpdateEditorShape(content, updater);
         }
 
 

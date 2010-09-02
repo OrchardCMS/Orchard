@@ -20,7 +20,7 @@ namespace Orchard.Core.Contents.Controllers {
             var contentItem = _contentManager.Get(id, VersionOptions.Published);
 
             var model = Shape.Content(
-                _contentManager.BuildDisplayModel(contentItem, "Detail")
+                _contentManager.BuildDisplayShape(contentItem, "Detail")
             );
             //PrepareDisplayViewModel(model.Content);
             return View(model);
@@ -37,7 +37,7 @@ namespace Orchard.Core.Contents.Controllers {
             var contentItem = _contentManager.Get(id, versionOptions);
 
             var model = new DisplayItemViewModel {
-                Content = _contentManager.BuildDisplayModel(contentItem, "Detail")
+                Content = _contentManager.BuildDisplayShape(contentItem, "Detail")
             };
             PrepareDisplayViewModel(model.Content);
             return View("Preview", model);

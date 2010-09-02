@@ -6,7 +6,7 @@ using Orchard.ContentManagement.ViewModels;
 namespace Orchard.Tests.ContentManagement.Models {
     public class AlphaHandler : ContentHandler {
         public AlphaHandler() {
-            OnGetDisplayViewModel<Alpha>((ctx, part) => ctx.AddDisplay(new TemplateViewModel(part) { Position = "3" }));
+            OnGetDisplayShape<Alpha>((ctx, part) => ctx.AddDisplay(new TemplateViewModel(part) { Position = "3" }));
         }
         public override IEnumerable<ContentType> GetContentTypes() {
             return new[] { new ContentType { Name = "alpha" } };

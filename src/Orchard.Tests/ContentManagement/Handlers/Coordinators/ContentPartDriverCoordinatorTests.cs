@@ -7,6 +7,8 @@ using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
 using Orchard.ContentManagement.Drivers.Coordinators;
 using Orchard.ContentManagement.Handlers;
+using Orchard.DisplayManagement;
+using Orchard.DisplayManagement.Implementation;
 using Orchard.Environment.AutofacUtil;
 using Orchard.Mvc.ViewModels;
 using Orchard.Tests.Utility;
@@ -22,14 +24,15 @@ namespace Orchard.Tests.ContentManagement.Handlers.Coordinators {
             var builder = new ContainerBuilder();
             //builder.RegisterModule(new ImplicitCollectionSupportModule());
             builder.RegisterType<ContentPartDriverCoordinator>().As<IContentHandler>();
-            builder.RegisterAutoMocking();
+            builder.RegisterType<ShapeHelperFactory>().As<IShapeHelperFactory>();
+            builder.RegisterAutoMocking(MockBehavior.Loose);
             _container = builder.Build();
         }
 
         [Test]
         public void DriverHandlerShouldNotThrowException() {
             var contentHandler = _container.Resolve<IContentHandler>();
-            contentHandler.BuildDisplayModel(null);
+            contentHandler.BuildDisplayShape(null);
         }
 
         [Test]
@@ -41,12 +44,17 @@ namespace Orchard.Tests.ContentManagement.Handlers.Coordinators {
             builder.RegisterInstance(driver2.Object);
             builder.Update(_container);
             var contentHandler = _container.Resolve<IContentHandler>();
+            var shapeHelperFactory = _container.Resolve<IShapeHelperFactory>();
 
-            var ctx = new BuildDisplayModelContext(new ContentItemViewModel(new ContentItem()), null);
+            var shape = shapeHelperFactory.CreateHelper();
+            ContentItem foo = shape.Foo();
+            var ctx = new BuildDisplayModelContext(new ContentItemViewModel(foo), "");
 
-            driver1.Verify(x => x.BuildDisplayModel(ctx), Times.Never());
-            contentHandler.BuildDisplayModel(ctx);
-            driver1.Verify(x => x.BuildDisplayModel(ctx));
+            driver1.Verify(x => x.BuildDisplayShape(ctx), Times.Never());
+            driver2.Verify(x => x.BuildDisplayShape(ctx), Times.Never());
+            contentHandler.BuildDisplayShape(ctx);
+            driver1.Verify(x => x.BuildDisplayShape(ctx));
+            driver2.Verify(x => x.BuildDisplayShape(ctx));
         }
 
         [Test]
@@ -55,15 +63,18 @@ namespace Orchard.Tests.ContentManagement.Handlers.Coordinators {
             var builder = new ContainerUpdater();
             builder.RegisterInstance(driver).As<IContentPartDriver>();
             builder.Update(_container);
-
             var contentHandler = _container.Resolve<IContentHandler>();
+            var shapeHelperFactory = _container.Resolve<IShapeHelperFactory>();
 
-            var item = new ContentItem();
-            item.Weld(new StubPart { Foo = new[] { "a", "b", "c" } });
+            var contentItem = new ContentItem();
+            contentItem.Weld(new StubPart { Foo = new[] { "a", "b", "c" } });
+
+            var shape = shapeHelperFactory.CreateHelper();
+            var item = shape.Item(contentItem);
 
             var ctx = new BuildDisplayModelContext(new ContentItemViewModel(item), "");
             Assert.That(ctx.ViewModel.Zones.Count(), Is.EqualTo(0));
-            contentHandler.BuildDisplayModel(ctx);
+            contentHandler.BuildDisplayShape(ctx);
             Assert.That(ctx.ViewModel.Zones.Count(), Is.EqualTo(1));
             Assert.That(ctx.ViewModel.Zones.Single().Key, Is.EqualTo("topmeta"));
             Assert.That(ctx.ViewModel.Zones.Single().Value.Items.OfType<ContentPartDisplayZoneItem>().Single().Prefix, Is.EqualTo("Stub"));

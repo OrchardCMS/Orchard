@@ -190,7 +190,7 @@ namespace Orchard.Core.Contents.Controllers {
             var entry = new ListContentsViewModel.Entry {
                 ContentItem = contentItem,
                 ContentItemMetadata = _contentManager.GetItemMetadata(contentItem),
-                ViewModel = _contentManager.BuildDisplayModel(contentItem, "SummaryAdmin"),
+                ViewModel = _contentManager.BuildDisplayShape(contentItem, "SummaryAdmin"),
             };
             if (string.IsNullOrEmpty(entry.ContentItemMetadata.DisplayText)) {
                 entry.ContentItemMetadata.DisplayText = string.Format("[{0}#{1}]", contentItem.ContentType, contentItem.Id);
@@ -225,7 +225,7 @@ namespace Orchard.Core.Contents.Controllers {
 
             var model = new CreateItemViewModel {
                 Id = id,
-                Content = _contentManager.BuildEditorModel(contentItem)
+                Content = _contentManager.BuildEditorShape(contentItem)
             };
             PrepareEditorViewModel(model.Content);
             return View("Create", model);
@@ -240,7 +240,7 @@ namespace Orchard.Core.Contents.Controllers {
                 return new HttpUnauthorizedResult();
 
             _contentManager.Create(contentItem, VersionOptions.Draft);
-            model.Content = _contentManager.UpdateEditorModel(contentItem, this);
+            model.Content = _contentManager.UpdateEditorShape(contentItem, this);
 
             if (!ModelState.IsValid) {
                 _transactionManager.Cancel();
@@ -266,7 +266,7 @@ namespace Orchard.Core.Contents.Controllers {
 
             var model = new EditItemViewModel {
                 Id = id,
-                Content = _contentManager.BuildEditorModel(contentItem)
+                Content = _contentManager.BuildEditorShape(contentItem)
             };
 
             PrepareEditorViewModel(model.Content);
@@ -284,7 +284,7 @@ namespace Orchard.Core.Contents.Controllers {
             if (!Services.Authorizer.Authorize(Permissions.EditOthersContent, contentItem, T("Couldn't edit content")))
                 return new HttpUnauthorizedResult();
 
-            model.Content = _contentManager.UpdateEditorModel(contentItem, this);
+            model.Content = _contentManager.UpdateEditorShape(contentItem, this);
             if (!ModelState.IsValid) {
                 _transactionManager.Cancel();
                 PrepareEditorViewModel(model.Content);

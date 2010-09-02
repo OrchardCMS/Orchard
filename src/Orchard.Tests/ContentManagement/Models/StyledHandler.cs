@@ -4,7 +4,7 @@ using Orchard.ContentManagement.ViewModels;
 namespace Orchard.Tests.ContentManagement.Models {
     public class StyledHandler : ContentHandler {
         public StyledHandler() {
-            OnGetDisplayViewModel<Styled>((ctx, part) => ctx.AddDisplay(new TemplateViewModel(part) { Position = "10" }));
+            OnGetDisplayShape<Styled>((ctx, part) => ctx.AddDisplay(new TemplateViewModel(part) { Position = "10" }));
         }
 
         protected override void Activating(ActivatingContentContext context) {

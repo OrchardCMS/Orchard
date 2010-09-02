@@ -4,7 +4,6 @@ using Orchard.ContentManagement;
 using Orchard.Localization;
 using Orchard.Security;
 using Orchard.UI.Notify;
-using Orchard.Users.Drivers;
 using Orchard.Users.Models;
 using Orchard.Users.Services;
 using Orchard.Users.ViewModels;
@@ -50,9 +49,9 @@ namespace Orchard.Users.Controllers {
             if (!Services.Authorizer.Authorize(Permissions.ManageUsers, T("Not authorized to manage users")))
                 return new HttpUnauthorizedResult();
 
-            var user = Services.ContentManager.New<IUser>(UserPartDriver.ContentType.Name);
+            var user = Services.ContentManager.New<IUser>("User");
             var model = new UserCreateViewModel {
-                User = Services.ContentManager.BuildEditorModel(user)
+                User = Services.ContentManager.BuildEditorShape(user)
             };
             return View(model);
         }
@@ -62,8 +61,8 @@ namespace Orchard.Users.Controllers {
             if (!Services.Authorizer.Authorize(Permissions.ManageUsers, T("Not authorized to manage users")))
                 return new HttpUnauthorizedResult();
 
-            var user = Services.ContentManager.New<IUser>(UserPartDriver.ContentType.Name);
-            model.User = Services.ContentManager.UpdateEditorModel(user, this);
+            var user = Services.ContentManager.New<IUser>("User");
+            model.User = Services.ContentManager.UpdateEditorShape(user, this);
             if (!ModelState.IsValid) {
                 Services.TransactionManager.Cancel();
                 return View(model);
@@ -84,7 +83,7 @@ namespace Orchard.Users.Controllers {
                                                          model.Email,
                                                          null, null, true));
 
-            model.User = Services.ContentManager.UpdateEditorModel(user, this);
+            model.User = Services.ContentManager.UpdateEditorShape(user, this);
 
             if (ModelState.IsValid == false) {
                 Services.TransactionManager.Cancel();
@@ -99,7 +98,7 @@ namespace Orchard.Users.Controllers {
                 return new HttpUnauthorizedResult();
             
             return View(new UserEditViewModel {
-                User = Services.ContentManager.BuildEditorModel<UserPart>(id)
+                User = Services.ContentManager.BuildEditorShape<UserPart>(id)
             });
         }
 
@@ -109,7 +108,7 @@ namespace Orchard.Users.Controllers {
                 return new HttpUnauthorizedResult();
             
             var model = new UserEditViewModel {
-                User = Services.ContentManager.UpdateEditorModel<UserPart>(id, this)
+                User = Services.ContentManager.UpdateEditorShape<UserPart>(id, this)
             };
 
             TryUpdateModel(model);

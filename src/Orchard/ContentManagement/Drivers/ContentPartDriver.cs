@@ -7,17 +7,17 @@ namespace Orchard.ContentManagement.Drivers {
         protected virtual string Prefix { get { return ""; } }
         protected virtual string Zone { get { return "body"; } }
 
-        DriverResult IContentPartDriver.BuildDisplayModel(BuildDisplayModelContext context) {
+        DriverResult IContentPartDriver.BuildDisplayShape(BuildDisplayModelContext context) {
             var part = context.ContentItem.As<TContent>();
             return part == null ? null : Display(part, context.DisplayType);
         }
 
-        DriverResult IContentPartDriver.BuildEditorModel(BuildEditorModelContext context) {
+        DriverResult IContentPartDriver.BuildEditorShape(BuildEditorModelContext context) {
             var part = context.ContentItem.As<TContent>();
             return part == null ? null : Editor(part);
         }
 
-        DriverResult IContentPartDriver.UpdateEditorModel(UpdateEditorModelContext context) {
+        DriverResult IContentPartDriver.UpdateEditorShape(UpdateEditorModelContext context) {
             var part = context.ContentItem.As<TContent>();
             return part == null ? null : Editor(part, context.Updater);
         }

@@ -33,7 +33,7 @@ namespace Orchard.Core.Settings.Controllers {
                 Site = _siteService.GetSiteSettings().As<SiteSettingsPart>(),
                 SiteCultures = _cultureManager.ListCultures()
             };
-            model.ViewModel = Services.ContentManager.BuildEditorModel(model.Site);
+            model.ViewModel = Services.ContentManager.BuildEditorShape(model.Site);
             return View(model);
         }
 
@@ -43,7 +43,7 @@ namespace Orchard.Core.Settings.Controllers {
                 return new HttpUnauthorizedResult();
 
             var viewModel = new SettingsIndexViewModel { Site = _siteService.GetSiteSettings().As<SiteSettingsPart>() };
-            viewModel.ViewModel = Services.ContentManager.UpdateEditorModel(viewModel.Site.ContentItem, this);
+            viewModel.ViewModel = Services.ContentManager.UpdateEditorShape(viewModel.Site.ContentItem, this);
 
             if (!TryUpdateModel(viewModel)) {
                 return View(viewModel);
