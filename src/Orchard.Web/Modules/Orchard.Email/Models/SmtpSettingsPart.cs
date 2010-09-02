@@ -1,4 +1,6 @@
-﻿using Orchard.ContentManagement;
+﻿using System.Text;
+using System.Web.Security;
+using Orchard.ContentManagement;
 using System;
 
 namespace Orchard.Email.Models {
@@ -40,8 +42,8 @@ namespace Orchard.Email.Models {
         }
 
         public string Password {
-            get { return Record.Password; }
-            set { Record.Password = value; }
+            get { return String.IsNullOrWhiteSpace(Record.Password) ? String.Empty : Encoding.UTF8.GetString(MachineKey.Decode(Record.Password, MachineKeyProtection.All)); ; }
+            set { Record.Password = String.IsNullOrWhiteSpace(value) ? String.Empty : MachineKey.Encode(Encoding.UTF8.GetBytes(value), MachineKeyProtection.All); }
         }
     }
 }

@@ -1,4 +1,4 @@
-<%@ Control Language="C#" Inherits="Orchard.Mvc.ViewUserControl<SmtpSettingsPartRecord>" %>
+<%@ Control Language="C#" Inherits="Orchard.Mvc.ViewUserControl<SmtpSettingsPart>" %>
 <%@ Import Namespace="Orchard.Email.Models"%>
 <%@ Import Namespace="System.Net.Mail" %>
 <fieldset>

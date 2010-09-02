@@ -9,7 +9,6 @@ namespace Orchard.Email.Handlers {
         public SmtpSettingsPartHandler(IRepository<SmtpSettingsPartRecord> repository) {
             Filters.Add(new ActivatingFilter<SmtpSettingsPart>("Site"));
             Filters.Add(StorageFilter.For(repository));
-            Filters.Add(new TemplateFilterForRecord<SmtpSettingsPartRecord>("SmtpSettings", "Parts/Smtp.SiteSettings"));
         }
     }
 }
