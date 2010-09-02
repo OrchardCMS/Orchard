@@ -6,7 +6,6 @@ using System.Text;
 using System.Web.Security;
 using System.Xml.Linq;
 using JetBrains.Annotations;
-using Orchard.Data;
 using Orchard.Logging;
 using Orchard.ContentManagement;
 using Orchard.Security;
@@ -16,7 +15,6 @@ using Orchard.Users.Models;
 using Orchard.Settings;
 using Orchard.Messaging.Services;
 using System.Collections.Generic;
-using System.Web.Mvc;
 
 namespace Orchard.Users.Services {
     [UsedImplicitly]
@@ -25,11 +23,9 @@ namespace Orchard.Users.Services {
         private readonly IContentManager _contentManager;
         private readonly IMessageManager _messageManager;
         private readonly IEnumerable<IUserEventHandler> _userEventHandlers;
-        private readonly IRepository<UserPartRecord> _userRepository;
 
-        public MembershipService(IContentManager contentManager, IRepository<UserPartRecord> userRepository, IMessageManager messageManager, IEnumerable<IUserEventHandler> userEventHandlers) {
+        public MembershipService(IContentManager contentManager, IMessageManager messageManager, IEnumerable<IUserEventHandler> userEventHandlers) {
             _contentManager = contentManager;
-            _userRepository = userRepository;
             _messageManager = messageManager;
             _userEventHandlers = userEventHandlers;
             Logger = NullLogger.Instance;
@@ -83,7 +79,7 @@ namespace Orchard.Users.Services {
             return user;
         }
 
-        public void SendChallengeEmail(UserPart user, string url) {
+        public void SendChallengeEmail(IUser user, string url) {
             _messageManager.Send(user.ContentItem.Record, MessageTypes.Validation, "Email", new Dictionary<string, string> { { "ChallengeUrl", url } });
         }
 
@@ -107,7 +103,7 @@ namespace Orchard.Users.Services {
             return user;
         }
 
-        public string GetEncryptedChallengeToken(UserPart user) {
+        public string GetEncryptedChallengeToken(IUser user) {
             var challengeToken = new XElement("Token", new XAttribute("username", user.UserName), new XAttribute("validate-by-utc", DateTime.UtcNow.Add(DelayToValidate).ToString(CultureInfo.InvariantCulture))).ToString();
             var data = Encoding.UTF8.GetBytes(challengeToken);
             return MachineKey.Encode(data, MachineKeyProtection.All);
