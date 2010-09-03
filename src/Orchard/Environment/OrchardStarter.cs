@@ -116,8 +116,10 @@ namespace Orchard.Environment {
                 }
             }
 
+            ControllerBuilder.Current.SetControllerFactory(new OrchardControllerFactory());
+
             var hostContainer = new DefaultOrchardHostContainer(container);
-            MvcServiceLocator.SetCurrent(hostContainer);
+            //MvcServiceLocator.SetCurrent(hostContainer);
             OrchardHostContainerRegistry.RegisterHostContainer(hostContainer);
 
             return container;

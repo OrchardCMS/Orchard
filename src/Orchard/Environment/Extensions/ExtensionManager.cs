@@ -33,7 +33,7 @@ namespace Orchard.Environment.Extensions {
         public IEnumerable<ExtensionDescriptor> AvailableExtensions() {
             return _folders.SelectMany(folder => folder.AvailableExtensions());
         }
-        
+
         public IEnumerable<FeatureDescriptor> AvailableFeatures() {
             var featureDescriptors = AvailableExtensions().SelectMany(ext => ext.Features);
             var featureDescriptorsOrdered = featureDescriptors.OrderByDependencies(HasDependency);
@@ -61,7 +61,13 @@ namespace Orchard.Environment.Extensions {
             foreach (var descriptor in AvailableExtensions()) {
                 // Extensions that are Themes don't have buildable components.
                 if (String.Equals(descriptor.ExtensionType, "Module", StringComparison.OrdinalIgnoreCase)) {
-                    var entry = BuildEntry(descriptor);
+                    ExtensionEntry entry = null;
+                    try {
+                        entry = BuildEntry(descriptor);
+                    }
+                    catch (HttpCompileException ex) {
+                        Logger.Warning(ex, "Unable to load module {0}", descriptor.Name);
+                    }
                     if (entry != null)
                         yield return entry;
                 }

@@ -20,10 +20,7 @@ namespace Orchard.Mvc {
             object controller;
             var service = new KeyedService(serviceKey, typeof(IController));
 
-            // Locate the container this route is bound against
-            var workContextAccessor = GetWorkContextAccessor(routeData);
-
-            var workContext = workContextAccessor != null ? workContextAccessor.GetContext(requestContext.HttpContext) : null;
+            var workContext = requestContext.GetWorkContext();
 
             if (workContext != null &&
                 workContext.Resolve<ILifetimeScope>().TryResolve(service, out controller)) {
@@ -54,17 +51,6 @@ namespace Orchard.Mvc {
             }
 
             return GetAreaName(routeData.Route);
-        }
-
-        static IWorkContextAccessor GetWorkContextAccessor(RouteData routeData) {
-            object dataTokenValue;
-            if (routeData != null &&
-                routeData.DataTokens != null &&
-                routeData.DataTokens.TryGetValue("IWorkContextAccessor", out dataTokenValue) &&
-                dataTokenValue is IWorkContextAccessor) {
-                return (IWorkContextAccessor)dataTokenValue;
-            }
-            return null;
         }
     }
 }
