@@ -1,28 +1,37 @@
 ﻿using System;
+using System.Globalization;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using System.Web.Security;
+using System.Xml.Linq;
 using JetBrains.Annotations;
-using Orchard.Data;
 using Orchard.Logging;
 using Orchard.ContentManagement;
 using Orchard.Security;
+using Orchard.Users.Events;
 using Orchard.Users.Models;
+using Orchard.Settings;
+using Orchard.Messaging.Services;
+using System.Collections.Generic;
 
 namespace Orchard.Users.Services {
     [UsedImplicitly]
     public class MembershipService : IMembershipService {
+        private static readonly TimeSpan DelayToValidate = new TimeSpan(7, 0, 0, 0); // one week to validate email
         private readonly IContentManager _contentManager;
-        private readonly IRepository<UserPartRecord> _userRepository;
+        private readonly IMessageManager _messageManager;
+        private readonly IEnumerable<IUserEventHandler> _userEventHandlers;
 
-        public MembershipService(IContentManager contentManager, IRepository<UserPartRecord> userRepository) {
+        public MembershipService(IContentManager contentManager, IMessageManager messageManager, IEnumerable<IUserEventHandler> userEventHandlers) {
             _contentManager = contentManager;
-            _userRepository = userRepository;
+            _messageManager = messageManager;
+            _userEventHandlers = userEventHandlers;
             Logger = NullLogger.Instance;
         }
 
         public ILogger Logger { get; set; }
+        protected virtual ISite CurrentSite { get; [UsedImplicitly] private set; }
 
         public MembershipSettings GetSettings() {
             var settings = new MembershipSettings();
@@ -33,39 +42,123 @@ namespace Orchard.Users.Services {
         public IUser CreateUser(CreateUserParams createUserParams) {
             Logger.Information("CreateUser {0} {1}", createUserParams.Username, createUserParams.Email);
 
-            return _contentManager.Create<UserPart>("User", init =>
-            {
-                init.Record.UserName = createUserParams.Username;
-                init.Record.Email = createUserParams.Email;
-                init.Record.NormalizedUserName = createUserParams.Username.ToLower();
-                init.Record.HashAlgorithm = "SHA1";
-                SetPassword(init.Record, createUserParams.Password);
-            });
+            var registrationSettings = CurrentSite.As<RegistrationSettingsPart>();
+
+            var user = _contentManager.New<UserPart>("User");
+
+            user.Record.UserName = createUserParams.Username;
+            user.Record.Email = createUserParams.Email;
+            user.Record.NormalizedUserName = createUserParams.Username.ToLower();
+            user.Record.HashAlgorithm = "SHA1";
+            SetPassword(user.Record, createUserParams.Password);
+
+            if ( registrationSettings != null ) {
+                user.Record.RegistrationStatus = registrationSettings.UsersAreModerated ? UserStatus.Pending : UserStatus.Approved;
+                user.Record.EmailStatus = registrationSettings.UsersMustValidateEmail ? UserStatus.Pending : UserStatus.Approved;
+            }
+
+            if(createUserParams.IsApproved) {
+                user.Record.RegistrationStatus = UserStatus.Approved;
+                user.Record.EmailStatus = UserStatus.Approved;
+            }
+
+            var userContext = new UserContext {User = user, Cancel = false};
+            foreach(var userEventHandler in _userEventHandlers) {
+                userEventHandler.Creating(userContext);
+            }
+
+            if(userContext.Cancel) {
+                return null;
+            }
+
+            _contentManager.Create(user);
+
+            foreach ( var userEventHandler in _userEventHandlers ) {
+                userEventHandler.Created(userContext);
+            }
+
+            if ( registrationSettings != null  && registrationSettings.UsersAreModerated && registrationSettings.NotifyModeration && !createUserParams.IsApproved ) {
+                var superUser = GetUser(CurrentSite.SuperUser);
+                if(superUser != null)
+                    _messageManager.Send(superUser.ContentItem.Record, MessageTypes.Moderation);
+            }
+
+            return user;
+        }
+
+        public void SendChallengeEmail(IUser user, string url) {
+            _messageManager.Send(user.ContentItem.Record, MessageTypes.Validation, "Email", new Dictionary<string, string> { { "ChallengeUrl", url } });
+        }
+
+        public IUser ValidateChallengeToken(string challengeToken) {
+            string username;
+            DateTime validateByUtc;
+
+            if(!DecryptChallengeToken(challengeToken, out username, out validateByUtc)) {
+                return null;
+            }
+
+            if ( validateByUtc < DateTime.UtcNow )
+                return null;
+
+            var user = GetUser(username);
+            if ( user == null )
+                return null;
+
+            user.As<UserPart>().EmailStatus = UserStatus.Approved;
+
+            return user;
+        }
+
+        public string GetEncryptedChallengeToken(IUser user) {
+            var challengeToken = new XElement("Token", new XAttribute("username", user.UserName), new XAttribute("validate-by-utc", DateTime.UtcNow.Add(DelayToValidate).ToString(CultureInfo.InvariantCulture))).ToString();
+            var data = Encoding.UTF8.GetBytes(challengeToken);
+            return MachineKey.Encode(data, MachineKeyProtection.All);
+        }
+
+        private static bool DecryptChallengeToken(string challengeToken, out string username, out DateTime validateByUtc) {
+            username = null;
+            validateByUtc = DateTime.UtcNow;
+
+            try {
+                var data = MachineKey.Decode(challengeToken, MachineKeyProtection.All);
+                var xml = Encoding.UTF8.GetString(data);
+                var element = XElement.Parse(xml);
+                username = element.Attribute("username").Value;
+                validateByUtc = DateTime.Parse(element.Attribute("validate-by-utc").Value, CultureInfo.InvariantCulture);
+                return true;
+            }
+            catch {
+                return false;
+            }
+
         }
 
         public IUser GetUser(string username) {
             var lowerName = username == null ? "" : username.ToLower();
 
-            var userRecord = _userRepository.Get(x => x.NormalizedUserName == lowerName);
-            if (userRecord == null) {
-                return null;
-            }
-            return _contentManager.Get<IUser>(userRecord.Id);
+            return _contentManager.Query<UserPart, UserPartRecord>().Where(u => u.NormalizedUserName == lowerName).List().FirstOrDefault();
         }
 
         public IUser ValidateUser(string userNameOrEmail, string password) {
             var lowerName = userNameOrEmail == null ? "" : userNameOrEmail.ToLower();
 
-            var userRecord = _userRepository.Get(x => x.NormalizedUserName == lowerName);
-            if(userRecord == null)
-                userRecord = _userRepository.Get(x => x.Email == lowerName);
-            if (userRecord == null || ValidatePassword(userRecord, password) == false)
+            var user = _contentManager.Query<UserPart, UserPartRecord>().Where(u => u.NormalizedUserName == lowerName).List().FirstOrDefault();
+
+            if(user == null)
+                user = _contentManager.Query<UserPart, UserPartRecord>().Where(u => u.Email == lowerName).List().FirstOrDefault();
+
+            if ( user == null || ValidatePassword(user.As<UserPart>().Record, password) == false )
                 return null;
 
-            return _contentManager.Get<IUser>(userRecord.Id);
+            if ( user.EmailStatus != UserStatus.Approved )
+                return null;
+
+            if ( user.RegistrationStatus != UserStatus.Approved )
+                return null;
+
+            return user;
         }
-
-
 
         public void SetPassword(IUser user, string password) {
             if (!user.Is<UserPart>())
@@ -92,7 +185,7 @@ namespace Orchard.Users.Services {
             }
         }
 
-        private bool ValidatePassword(UserPartRecord partRecord, string password) {
+        private static bool ValidatePassword(UserPartRecord partRecord, string password) {
             // Note - the password format stored with the record is used
             // otherwise changing the password format on the site would invalidate
             // all logins
@@ -146,7 +239,7 @@ namespace Orchard.Users.Services {
 
             var hashAlgorithm = HashAlgorithm.Create(partRecord.HashAlgorithm);
             var hashBytes = hashAlgorithm.ComputeHash(combinedBytes);
-
+            
             return partRecord.Password == Convert.ToBase64String(hashBytes);
         }
 
@@ -157,5 +250,6 @@ namespace Orchard.Users.Services {
         private static bool ValidatePasswordEncrypted(UserPartRecord partRecord, string password) {
             throw new NotImplementedException();
         }
+
     }
 }

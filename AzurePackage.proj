@@ -99,6 +99,14 @@
       XPath="/configuration/system.web/compilation/@debug"
       Value="false" />
 
+    <XmlUpdate XmlFileName="$(CloudRootFolder)\web.config"
+      XPath="/configuration/system.web/machineKey/@validationKey"
+      Value="AutoGenerate" />
+
+    <XmlUpdate XmlFileName="$(CloudRootFolder)\web.config"
+      XPath="/configuration/system.web/machineKey/@decryptionKey"
+      Value="AutoGenerate" />
+    
     <XmlUpdate XmlFileName="$(CloudRootFolder)\Config\Diagnostics.config"
       XPath="/system.diagnostics/trace/@autoflush"
       Value="false" />

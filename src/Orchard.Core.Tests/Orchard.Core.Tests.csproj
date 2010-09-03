@@ -101,6 +101,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Common\Providers\CommonPartProviderTests.cs" />
+    <Compile Include="Body\BodyPartTests.cs" />
     <Compile Include="Routable\Services\RoutableServiceTests.cs" />
     <Compile Include="Feeds\Controllers\FeedControllerTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

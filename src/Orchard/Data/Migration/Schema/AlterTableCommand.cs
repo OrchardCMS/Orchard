@@ -18,6 +18,11 @@ namespace Orchard.Data.Migration.Schema {
             TableCommands.Add(command);
         }
 
+        public void AddColumn<T>(string columnName, Action<AddColumnCommand> column = null) {
+            var dbType = SchemaUtils.ToDbType(typeof(T));
+            AddColumn(columnName, dbType, column);
+        }
+
         public void DropColumn(string columnName) {
             var command = new DropColumnCommand(Name, columnName);
             TableCommands.Add(command);
