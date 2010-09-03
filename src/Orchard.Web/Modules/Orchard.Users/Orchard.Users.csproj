@@ -45,6 +45,7 @@
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
     <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Security" />
     <Reference Include="System.Web.ApplicationServices" />
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
@@ -68,10 +69,17 @@
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="DataMigrations\UsersDataMigration.cs" />
-    <Compile Include="Drivers\UserPartDriver.cs" />
+    <Compile Include="Events\UserContext.cs" />
+    <Compile Include="Handlers\ModerationMessageAlteration.cs" />
+    <Compile Include="Handlers\RegistrationSettingsPartHandler.cs" />
+    <Compile Include="Events\IUserEventHandler.cs" />
+    <Compile Include="Models\MessageTypes.cs" />
+    <Compile Include="Models\RegistrationSettingsPart.cs" />
+    <Compile Include="Models\RegistrationSettingsPartRecord.cs" />
     <Compile Include="Models\UserPart.cs" />
     <Compile Include="Handlers\UserPartHandler.cs" />
     <Compile Include="Models\UserPartRecord.cs" />
+    <Compile Include="Models\UserStatus.cs" />
     <Compile Include="Permissions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\IUserService.cs" />
@@ -84,10 +92,15 @@
     <Compile Include="ViewModels\UsersIndexViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\Admin\images\offline.gif" />
+    <Content Include="Content\Admin\images\online.gif" />
     <Content Include="Module.txt" />
     <Content Include="Views\Account\ChangePassword.ascx" />
     <Content Include="Views\Account\ChangePasswordSuccess.ascx" />
     <Content Include="Views\Account\AccessDenied.ascx" />
+    <Content Include="Views\Account\ChallengeEmailSuccess.ascx" />
+    <Content Include="Views\Account\ChallengeEmailSent.ascx" />
+    <Content Include="Views\Account\ChallengeEmailFail.ascx" />
     <Content Include="Views\Account\LogOn.ascx" />
     <Content Include="Views\Account\Register.ascx" />
     <Content Include="Views\Admin\Edit.aspx" />
@@ -95,6 +108,7 @@
     <Content Include="Views\Admin\EditorTemplates\inputPasswordLarge.ascx" />
     <Content Include="Views\Admin\EditorTemplates\inputTextLarge.ascx" />
     <Content Include="Views\Admin\Index.aspx" />
+    <Content Include="Views\EditorTemplates\Parts\Users.RegistrationSettings.ascx" />
     <Content Include="Web.config" />
     <Content Include="Views\Web.config" />
   </ItemGroup>

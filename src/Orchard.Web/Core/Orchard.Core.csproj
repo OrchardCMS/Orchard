@@ -82,7 +82,6 @@
     <Compile Include="Common\ViewModels\TextContentFieldDisplayViewModel.cs" />
     <Compile Include="Common\ViewModels\TextContentFieldEditorViewModel.cs" />
     <Compile Include="Contents\Controllers\ItemController.cs" />
-    <Compile Include="Contents\Drivers\ContentsDriver.cs" />
     <Compile Include="Contents\Extensions\MetaDataExtensions.cs" />
     <Compile Include="Contents\Handlers\ContentsHandler.cs" />
     <Compile Include="Contents\Permissions.cs" />
@@ -91,6 +90,13 @@
     <Compile Include="Contents\Settings\ContentPartSettings.cs" />
     <Compile Include="Contents\ViewModels\PublishContentViewModel.cs" />
     <Compile Include="Localization\ViewModels\EditLocalizationViewModel.cs" />
+    <Compile Include="Messaging\DataMigrations\MessagingDataMigration.cs" />
+    <Compile Include="Messaging\Drivers\MessageSettingsPartDriver.cs" />
+    <Compile Include="Messaging\Handlers\MessageSettingsPartHandler.cs" />
+    <Compile Include="Messaging\Models\MessageSettingsPart.cs" />
+    <Compile Include="Messaging\Models\MessageSettingsPartRecord.cs" />
+    <Compile Include="Messaging\Services\DefaultMessageManager.cs" />
+    <Compile Include="Messaging\ViewModels\MessageSettingsPartViewModel.cs" />
     <Compile Include="PublishLater\DataMigrations\PublishLaterDataMigration.cs" />
     <Compile Include="PublishLater\Drivers\PublishLaterPartDriver.cs" />
     <Compile Include="PublishLater\Models\PublishLaterPart.cs" />
@@ -196,7 +202,6 @@
     <Compile Include="Scheduling\Models\Task.cs" />
     <Compile Include="Settings\DataMigrations\SettingsDataMigration.cs" />
     <Compile Include="Settings\ViewModels\SiteCulturesViewModel.cs" />
-    <Compile Include="Settings\Drivers\SiteSettingsPartDriver.cs" />
     <Compile Include="Settings\Metadata\ContentDefinitionManager.cs" />
     <Compile Include="Settings\Metadata\Records\ContentFieldDefinitionRecord.cs" />
     <Compile Include="Settings\Metadata\Records\ContentPartDefinitionRecord.cs" />
@@ -248,6 +253,8 @@
     <Content Include="Contents\Views\DisplayTemplates\Parts\Contents.Publish.SummaryAdmin.ascx" />
     <Content Include="Contents\Views\DisplayTemplates\Parts\Contents.Publish.ascx" />
     <Content Include="Localization\Views\EditorTemplates\Parts\Localization.Translation.ascx" />
+    <Content Include="Messaging\Module.txt" />
+    <Content Include="Messaging\Views\EditorTemplates\Parts\Messaging.MessageSettings.ascx" />
     <Content Include="PublishLater\Content\Admin\images\draft.gif" />
     <Content Include="PublishLater\Content\Admin\images\offline.gif" />
     <Content Include="PublishLater\Content\Admin\images\online.gif" />
@@ -366,6 +373,7 @@
     <Content Include="Reports\Views\Web.config" />
     <Content Include="PublishLater\Views\Web.config" />
     <Content Include="ContentsLocation\Views\Web.config" />
+    <Content Include="Messaging\Views\Web.config" />
     <None Include="Contents\Views\Content.cshtml" />
     <None Include="Contents\Views\Item\Display.cshtml" />
   </ItemGroup>

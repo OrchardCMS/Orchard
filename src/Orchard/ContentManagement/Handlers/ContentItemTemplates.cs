@@ -22,7 +22,7 @@ namespace Orchard.ContentManagement.Handlers {
             _updater = (context, viewModel) => context.Updater.TryUpdateModel(viewModel, "", null, null);
         }
 
-        protected override void BuildDisplayModel(BuildDisplayModelContext context, TContent instance) {
+        protected override void BuildDisplayShape(BuildDisplayModelContext context, TContent instance) {
             context.ViewModel.TemplateName = _templateName;
             var longestMatch = LongestMatch(context.DisplayType);
             if (!string.IsNullOrEmpty(longestMatch))
@@ -54,7 +54,7 @@ namespace Orchard.ContentManagement.Handlers {
             });
         }
 
-        protected override void BuildEditorModel(BuildEditorModelContext context, TContent instance) {
+        protected override void BuildEditorShape(BuildEditorModelContext context, TContent instance) {
             context.ViewModel.TemplateName = _templateName;
             context.ViewModel.Prefix = _prefix;
             if (context.ViewModel.GetType() != typeof(ContentItemViewModel<TContent>)) {
@@ -67,7 +67,7 @@ namespace Orchard.ContentManagement.Handlers {
             }
         }
 
-        protected override void UpdateEditorModel(UpdateEditorModelContext context, TContent instance) {
+        protected override void UpdateEditorShape(UpdateEditorModelContext context, TContent instance) {
             if (context.ViewModel is ContentItemViewModel<TContent>)
                 _updater(context, (ContentItemViewModel<TContent>)context.ViewModel);
             else

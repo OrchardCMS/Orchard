@@ -380,37 +380,47 @@ namespace Orchard.ContentManagement {
             };
             foreach (var handler in Handlers) {
                 handler.GetContentItemMetadata(context);
+                //-- was - from ContentItemDriver --
+                //void IContentItemDriver.GetContentItemMetadata(GetContentItemMetadataContext context) {
+                //  var item = context.ContentItem.As<TContent>();
+                //  if (item != null) {
+                //    context.Metadata.DisplayText = GetDisplayText(item) ?? context.Metadata.DisplayText;
+                //    context.Metadata.DisplayRouteValues = GetDisplayRouteValues(item) ?? context.Metadata.DisplayRouteValues;
+                //    context.Metadata.EditorRouteValues = GetEditorRouteValues(item) ?? context.Metadata.EditorRouteValues;
+                //    context.Metadata.CreateRouteValues = GetCreateRouteValues(item) ?? context.Metadata.CreateRouteValues;
+                //  }
+                //}
             }
             return context.Metadata;
         }
 
-        public ContentItemViewModel<TContentPart> BuildDisplayModel<TContentPart>(TContentPart content, string displayType) where TContentPart : IContent {
+        public ContentItemViewModel<TContentPart> BuildDisplayShape<TContentPart>(TContentPart content, string displayType) where TContentPart : IContent {
             if (content == null)
                 return null;
 
             var displayModel = new ContentItemViewModel<TContentPart>(content);
             var context = new BuildDisplayModelContext(displayModel, displayType);
             foreach (var handler in Handlers) {
-                handler.BuildDisplayModel(context);
+                handler.BuildDisplayShape(context);
             }
             return displayModel;
         }
 
-        public ContentItemViewModel<TContentPart> BuildEditorModel<TContentPart>(TContentPart content) where TContentPart : IContent {
+        public ContentItemViewModel<TContentPart> BuildEditorShape<TContentPart>(TContentPart content) where TContentPart : IContent {
             var editorModel = new ContentItemViewModel<TContentPart>(content);
             var context = new BuildEditorModelContext(editorModel);
             foreach (var handler in Handlers) {
-                handler.BuildEditorModel(context);
+                handler.BuildEditorShape(context);
             }
             return editorModel;
         }
 
-        public ContentItemViewModel<TContentPart> UpdateEditorModel<TContentPart>(TContentPart content, IUpdateModel updater) where TContentPart : IContent {
+        public ContentItemViewModel<TContentPart> UpdateEditorShape<TContentPart>(TContentPart content, IUpdateModel updater) where TContentPart : IContent {
             var editorModel = new ContentItemViewModel<TContentPart>(content);
 
             var context = new UpdateEditorModelContext(editorModel, updater);
             foreach (var handler in Handlers) {
-                handler.UpdateEditorModel(context);
+                handler.UpdateEditorShape(context);
             }
             return editorModel;
         }

@@ -21,5 +21,15 @@ namespace Orchard.Users.Models {
             get { return Record.NormalizedUserName; }
             set { Record.NormalizedUserName = value; }
         }
+
+        public UserStatus RegistrationStatus {
+            get { return Record.RegistrationStatus; }
+            set { Record.RegistrationStatus = value; }
+        }
+
+        public UserStatus EmailStatus {
+            get { return Record.EmailStatus; }
+            set { Record.EmailStatus = value; }
+        }
     }
 }

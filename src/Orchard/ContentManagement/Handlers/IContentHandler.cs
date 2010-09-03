@@ -23,8 +23,8 @@ namespace Orchard.ContentManagement.Handlers {
         void Indexed(IndexContentContext context);
 
         void GetContentItemMetadata(GetContentItemMetadataContext context);
-        void BuildDisplayModel(BuildDisplayModelContext context);
-        void BuildEditorModel(BuildEditorModelContext context);
-        void UpdateEditorModel(UpdateEditorModelContext context);
+        void BuildDisplayShape(BuildDisplayModelContext context);
+        void BuildEditorShape(BuildEditorModelContext context);
+        void UpdateEditorShape(UpdateEditorModelContext context);
     }
 }

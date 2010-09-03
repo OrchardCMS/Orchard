@@ -37,7 +37,7 @@ namespace Orchard.Core.Routable.Services {
                 return new NotFoundResult();
 
             var model = new RoutableDisplayViewModel {
-                Routable = _contentManager.BuildDisplayModel<IRoutableAspect>(contentItem.As<RoutePart>(), "Detail")
+                Routable = _contentManager.BuildDisplayShape<IRoutableAspect>(contentItem.As<RoutePart>(), "Detail")
             };
 
             return new ViewResult {

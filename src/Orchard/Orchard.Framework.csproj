@@ -188,12 +188,6 @@
     </Compile>
     <Compile Include="ContentManagement\Drivers\ContentFieldDriver.cs" />
     <Compile Include="ContentManagement\Drivers\Coordinators\ContentFieldDriverCoordinator.cs" />
-    <Compile Include="ContentManagement\Drivers\ContentItemDriver.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="ContentManagement\Drivers\Coordinators\ContentItemDriverCoordinator.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="ContentManagement\Drivers\ContentItemTemplateResult.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -210,9 +204,6 @@
     <Compile Include="ContentManagement\Drivers\ContentLocation.cs" />
     <Compile Include="ContentManagement\FieldStorage\FieldStorageProviderSelector.cs" />
     <Compile Include="ContentManagement\Drivers\IContentFieldDriver.cs" />
-    <Compile Include="ContentManagement\Drivers\IContentItemDriver.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="ContentManagement\Drivers\IContentPartDriver.cs" />
     <Compile Include="ContentManagement\FieldStorage\IFieldStorage.cs" />
     <Compile Include="ContentManagement\FieldStorage\IFieldStorageProvider.cs" />
@@ -408,6 +399,10 @@
     <Compile Include="Environment\IShellContainerRegistrations.cs" />
     <Compile Include="FileSystems\Dependencies\DynamicModuleVirtualPathProvider.cs" />
     <Compile Include="Mvc\IHttpContextAccessor.cs" />
+    <Compile Include="Messaging\Events\IMessageEventHandler.cs" />
+    <Compile Include="Messaging\Models\MessageContext.cs" />
+    <Compile Include="Messaging\Services\IMessageManager.cs" />
+    <Compile Include="Messaging\Services\IMessagingChannel.cs" />
     <Compile Include="IWorkContextAccessor.cs" />
     <Compile Include="WorkContextExtensions.cs" />
     <Compile Include="Mvc\Html\Shapes.cs" />
@@ -781,7 +776,6 @@
     <Compile Include="Security\IUser.cs" />
     <Compile Include="Security\Permissions\IPermissionProvider.cs" />
     <Compile Include="Security\Permissions\Permission.cs" />
-    <Compile Include="Security\Providers\OrchardMembershipProvider.cs" />
     <Compile Include="Security\Providers\OrchardRoleProvider.cs" />
     <Compile Include="Services\Clock.cs" />
     <Compile Include="FileSystems\Media\FileSystemStorageProvider.cs" />

@@ -9,6 +9,11 @@ using Orchard.Mvc.Extensions;
 using Orchard.Security;
 using Orchard.Users.Services;
 using Orchard.Users.ViewModels;
+using Orchard.Settings;
+using JetBrains.Annotations;
+using Orchard.ContentManagement;
+using Orchard.Users.Models;
+using Orchard.Mvc.Results;
 
 namespace Orchard.Users.Controllers {
     [HandleError]
@@ -30,6 +35,7 @@ namespace Orchard.Users.Controllers {
 
         public ILogger Logger { get; set; }
         public Localizer T { get; set; }
+        protected virtual ISite CurrentSite { get; [UsedImplicitly] private set; }
 
         public ActionResult AccessDenied() {
             var returnUrl = Request.QueryString["ReturnUrl"];
@@ -86,6 +92,12 @@ namespace Orchard.Users.Controllers {
         }
 
         public ActionResult Register() {
+            // ensure users can register
+            var registrationSettings = CurrentSite.As<RegistrationSettingsPart>();
+            if ( !registrationSettings.UsersCanRegister ) {
+                return new NotFoundResult();
+            }
+
             ViewData["PasswordLength"] = MinPasswordLength;
 
             return View();
@@ -93,14 +105,26 @@ namespace Orchard.Users.Controllers {
 
         [HttpPost]
         public ActionResult Register(string userName, string email, string password, string confirmPassword) {
+            // ensure users can register
+            var registrationSettings = CurrentSite.As<RegistrationSettingsPart>();
+            if ( !registrationSettings.UsersCanRegister ) {
+                return new NotFoundResult();
+            }
+
             ViewData["PasswordLength"] = MinPasswordLength;
 
             if (ValidateRegistration(userName, email, password, confirmPassword)) {
                 // Attempt to register the user
-                var user = _membershipService.CreateUser(new CreateUserParams(userName, password, email, null, null, true));
-
+                var user = _membershipService.CreateUser(new CreateUserParams(userName, password, email, null, null, false));
 
                 if (user != null) {
+                    if ( user.As<UserPart>().EmailStatus == UserStatus.Pending ) {
+                        string challengeToken = _membershipService.GetEncryptedChallengeToken(user.As<UserPart>());
+                        _membershipService.SendChallengeEmail(user.As<UserPart>(), Url.AbsoluteAction(() => Url.Action("ChallengeEmail", "Account", new { Area = "Orchard.Users", token = challengeToken })));
+
+                        return RedirectToAction("ChallengeEmailSent");
+                    }
+
                     _authenticationService.SignIn(user, false /* createPersistentCookie */);
                     return Redirect("~/");
                 }
@@ -152,6 +176,29 @@ namespace Orchard.Users.Controllers {
 
         public ActionResult ChangePasswordSuccess() {
             return View();
+        }
+
+        public ActionResult ChallengeEmailSent() {
+            return View();
+        }
+
+        public ActionResult ChallengeEmailSuccess() {
+            return View();
+        }
+
+        public ActionResult ChallengeEmailFail() {
+            return View();
+        }
+
+        public ActionResult ChallengeEmail(string token) {
+            var user = _membershipService.ValidateChallengeToken(token);
+
+            if ( user != null ) {
+                _authenticationService.SignIn(user, false /* createPersistentCookie */);
+                return RedirectToAction("ChallengeEmailSuccess");
+            }
+
+            return RedirectToAction("ChallengeEmailFail");
         }
 
         protected override void OnActionExecuting(ActionExecutingContext filterContext) {

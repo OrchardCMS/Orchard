@@ -83,7 +83,7 @@ namespace Orchard.Data.Providers {
 
             protected override void InitializeParameter(IDbDataParameter dbParam, string name, SqlType sqlType) {
                 base.InitializeParameter(dbParam, name, sqlType);
-                if (sqlType.Length <= 4000) {
+                if ( sqlType.Length <= 4000 ) {
                     return;
                 }
 

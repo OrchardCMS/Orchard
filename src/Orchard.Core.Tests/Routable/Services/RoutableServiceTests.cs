@@ -58,7 +58,7 @@ namespace Orchard.Core.Tests.Routable.Services {
         public void InvalidCharactersShouldBeReplacedByADash() {
             var contentManager = _container.Resolve<IContentManager>();
 
-            var thing = contentManager.Create<Thing>(ThingDriver.ContentType.Name, t => {
+            var thing = contentManager.Create<Thing>("thing", t => {
                 t.As<RoutePart>().Record = new RoutePartRecord();
                 t.Title = "Please do not use any of the following characters in your slugs: \":\", \"?\", \"#\", \"[\", \"]\", \"@\", \"!\", \"$\", \"&\", \"'\", \"(\", \")\", \"*\", \"+\", \",\", \";\", \"=\"";
             });
@@ -159,13 +159,13 @@ namespace Orchard.Core.Tests.Routable.Services {
 
         private RoutePart CreateRoutePart(string title, string slug = "", string containerPath = "") {
             var contentManager = _container.Resolve<IContentManager>();
-            return contentManager.Create<Thing>(ThingDriver.ContentType.Name, t => {
+            return contentManager.Create<Thing>("thing", t => {
                                                                                        t.As<RoutePart>().Record = new RoutePartRecord();
                                                                                        if (!string.IsNullOrWhiteSpace(slug))
                                                                                            t.As<RoutePart>().Slug = slug;
                                                                                        t.Title = title;
                                                                                        if (!string.IsNullOrWhiteSpace(containerPath)) {
-                                                                                           t.As<ICommonPart>().Container = contentManager.Create<Thing>(ThingDriver.ContentType.Name, tt => {
+                                                                                           t.As<ICommonPart>().Container = contentManager.Create<Thing>("thing", tt => {
                                                                                                                                                                                           tt.As<RoutePart>().Path = containerPath;
                                                                                                                                                                                           tt.As<RoutePart>().Slug = containerPath;
                                                                                                                                                                                       });
@@ -191,10 +191,10 @@ namespace Orchard.Core.Tests.Routable.Services {
         [UsedImplicitly]
         public class ThingHandler : ContentHandler {
             public ThingHandler() {
-                Filters.Add(new ActivatingFilter<Thing>(ThingDriver.ContentType.Name));
-                Filters.Add(new ActivatingFilter<ContentPart<CommonPartVersionRecord>>(ThingDriver.ContentType.Name));
-                Filters.Add(new ActivatingFilter<CommonPart>(ThingDriver.ContentType.Name));
-                Filters.Add(new ActivatingFilter<RoutePart>(ThingDriver.ContentType.Name));
+                Filters.Add(new ActivatingFilter<Thing>("thing"));
+                Filters.Add(new ActivatingFilter<ContentPart<CommonPartVersionRecord>>("thing"));
+                Filters.Add(new ActivatingFilter<CommonPart>("thing"));
+                Filters.Add(new ActivatingFilter<RoutePart>("thing"));
             }
         }
 
@@ -212,20 +212,13 @@ namespace Orchard.Core.Tests.Routable.Services {
             }
         }
 
-        public class ThingDriver : ContentItemDriver<Thing> {
-            public readonly static ContentType ContentType = new ContentType {
-                Name = "thing",
-                DisplayName = "Thing"
-            };
-        }
-
         [UsedImplicitly]
         public class StuffHandler : ContentHandler {
             public StuffHandler() {
-                Filters.Add(new ActivatingFilter<Stuff>(StuffDriver.ContentType.Name));
-                Filters.Add(new ActivatingFilter<ContentPart<CommonPartVersionRecord>>(StuffDriver.ContentType.Name));
-                Filters.Add(new ActivatingFilter<CommonPart>(StuffDriver.ContentType.Name));
-                Filters.Add(new ActivatingFilter<RoutePart>(StuffDriver.ContentType.Name));
+                Filters.Add(new ActivatingFilter<Stuff>("stuff"));
+                Filters.Add(new ActivatingFilter<ContentPart<CommonPartVersionRecord>>("stuff"));
+                Filters.Add(new ActivatingFilter<CommonPart>("stuff"));
+                Filters.Add(new ActivatingFilter<RoutePart>("stuff"));
             }
         }
 
@@ -241,13 +234,6 @@ namespace Orchard.Core.Tests.Routable.Services {
                 get { return this.As<RoutePart>().Slug; }
                 set { this.As<RoutePart>().Slug = value; }
             }
-        }
-
-        public class StuffDriver : ContentItemDriver<Stuff> {
-            public readonly static ContentType ContentType = new ContentType {
-                Name = "stuff",
-                DisplayName = "Stuff"
-            };
         }
     }
 }

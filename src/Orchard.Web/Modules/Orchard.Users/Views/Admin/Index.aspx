@@ -1,4 +1,5 @@
 <%@ Page Language="C#" Inherits="Orchard.Mvc.ViewPage<UsersIndexViewModel>" %>
+<%@ Import Namespace="Orchard.Users.Models" %>
 <%@ Import Namespace="Orchard.Users.ViewModels"%>
 <h1><%: Html.TitleForPage(T("Manage Users").ToString()) %></h1>
 <% using (Html.BeginFormAntiForgeryPost()) { %>
@@ -22,6 +23,12 @@
                { %>
             <tr>
                 <td>
+                    <% if(row.UserPart.RegistrationStatus == UserStatus.Approved) { %>
+                    <img class="icon" src="<%=ResolveUrl("~/Modules/Orchard.Users/Content/Admin/images/online.gif") %>" alt="<%:T("Approved") %>" title="<%:T("User is approved") %>" /> 
+                    <% } 
+                    else { %>
+                    <img class="icon" src="<%=ResolveUrl("~/Modules/Orchard.Users/Content/Admin/images/offline.gif") %>" alt="<%:T("Moderated") %>" title="<%:T("User is moderated") %>" />
+                    <% } %>
                     <%: row.UserPart.UserName %>
                 </td>
                 <td>
@@ -29,7 +36,11 @@
                 </td>
                 <td>
                     <%: Html.ActionLink(T("Edit").ToString(), "Edit", new { row.UserPart.Id })%> | 
-                    <%: Html.ActionLink(T("Remove").ToString(), "Delete", new { row.UserPart.Id })%> 
+                    <%: Html.ActionLink(T("Remove").ToString(), "Delete", new { row.UserPart.Id })%> | 
+                    <%: row.UserPart.RegistrationStatus == UserStatus.Pending ? Html.ActionLink(T("Approve").ToString(), "Approve", new { row.UserPart.Id }) : Html.ActionLink(T("Disable").ToString(), "Moderate", new { row.UserPart.Id })%>
+                    <% if ( row.UserPart.EmailStatus == UserStatus.Pending ) { %> | 
+                        <%: Html.ActionLink(T("Challenge Email").ToString(), "SendChallengeEmail", new { row.UserPart.Id })%>
+                    <% } %>
                 </td>
             </tr>
             <%}%>

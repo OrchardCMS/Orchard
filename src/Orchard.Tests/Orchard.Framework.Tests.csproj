@@ -190,7 +190,9 @@
     <Compile Include="DataMigration\Utilities\NullInterpreter.cs" />
     <Compile Include="DataUtility.cs" />
     <Compile Include="Data\Builders\SessionFactoryBuilderTests.cs" />
+    <Compile Include="Data\ProviderUtilities.cs" />
     <Compile Include="Data\RepositoryTests.cs" />
+    <Compile Include="Data\ProvidersTests.cs" />
     <Compile Include="Data\StubLocator.cs" />
     <Compile Include="DisplayManagement\ArgsUtility.cs" />
     <Compile Include="DisplayManagement\DefaultDisplayManagerTests.cs" />
@@ -223,6 +225,7 @@
     <Compile Include="Mvc\Html\HtmlHelperExtensionsTests.cs" />
     <Compile Include="Mvc\Routes\ShellRouteTests.cs" />
     <Compile Include="Mvc\Routes\UrlPrefixTests.cs" />
+    <Compile Include="Records\BigRecord.cs" />
     <Compile Include="Stubs\StubReportsCoordinator.cs" />
     <Compile Include="Stubs\StubVirtualPathProvider.cs" />
     <Compile Include="Stubs\StubFileSystem.cs" />

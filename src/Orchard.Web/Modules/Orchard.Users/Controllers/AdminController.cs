@@ -1,13 +1,15 @@
 using System.Linq;
 using System.Web.Mvc;
+using JetBrains.Annotations;
 using Orchard.ContentManagement;
 using Orchard.Localization;
 using Orchard.Security;
+using Orchard.Settings;
 using Orchard.UI.Notify;
-using Orchard.Users.Drivers;
 using Orchard.Users.Models;
 using Orchard.Users.Services;
 using Orchard.Users.ViewModels;
+using Orchard.Mvc.Extensions;
 
 namespace Orchard.Users.Controllers {
     [ValidateInput(false)]
@@ -27,6 +29,7 @@ namespace Orchard.Users.Controllers {
 
         public IOrchardServices Services { get; set; }
         public Localizer T { get; set; }
+        protected virtual ISite CurrentSite { get; [UsedImplicitly] private set; }
 
         public ActionResult Index() {
             if (!Services.Authorizer.Authorize(Permissions.ManageUsers, T("Not authorized to list users")))
@@ -50,9 +53,9 @@ namespace Orchard.Users.Controllers {
             if (!Services.Authorizer.Authorize(Permissions.ManageUsers, T("Not authorized to manage users")))
                 return new HttpUnauthorizedResult();
 
-            var user = Services.ContentManager.New<IUser>(UserPartDriver.ContentType.Name);
+            var user = Services.ContentManager.New<IUser>("User");
             var model = new UserCreateViewModel {
-                User = Services.ContentManager.BuildEditorModel(user)
+                User = Services.ContentManager.BuildEditorShape(user)
             };
             return View(model);
         }
@@ -62,8 +65,8 @@ namespace Orchard.Users.Controllers {
             if (!Services.Authorizer.Authorize(Permissions.ManageUsers, T("Not authorized to manage users")))
                 return new HttpUnauthorizedResult();
 
-            var user = Services.ContentManager.New<IUser>(UserPartDriver.ContentType.Name);
-            model.User = Services.ContentManager.UpdateEditorModel(user, this);
+            var user = Services.ContentManager.New<IUser>("User");
+            model.User = Services.ContentManager.UpdateEditorShape(user, this);
             if (!ModelState.IsValid) {
                 Services.TransactionManager.Cancel();
                 return View(model);
@@ -84,7 +87,7 @@ namespace Orchard.Users.Controllers {
                                                          model.Email,
                                                          null, null, true));
 
-            model.User = Services.ContentManager.UpdateEditorModel(user, this);
+            model.User = Services.ContentManager.UpdateEditorShape(user, this);
 
             if (ModelState.IsValid == false) {
                 Services.TransactionManager.Cancel();
@@ -99,7 +102,7 @@ namespace Orchard.Users.Controllers {
                 return new HttpUnauthorizedResult();
             
             return View(new UserEditViewModel {
-                User = Services.ContentManager.BuildEditorModel<UserPart>(id)
+                User = Services.ContentManager.BuildEditorShape<UserPart>(id)
             });
         }
 
@@ -109,7 +112,7 @@ namespace Orchard.Users.Controllers {
                 return new HttpUnauthorizedResult();
             
             var model = new UserEditViewModel {
-                User = Services.ContentManager.UpdateEditorModel<UserPart>(id, this)
+                User = Services.ContentManager.UpdateEditorShape<UserPart>(id, this)
             };
 
             TryUpdateModel(model);
@@ -142,6 +145,55 @@ namespace Orchard.Users.Controllers {
             Services.ContentManager.Remove(Services.ContentManager.Get(id));
 
             Services.Notifier.Information(T("User deleted"));
+            return RedirectToAction("Index");
+        }
+
+        public ActionResult SendChallengeEmail(int id) {
+            if ( !Services.Authorizer.Authorize(Permissions.ManageUsers, T("Not authorized to manage users")) )
+                return new HttpUnauthorizedResult();
+
+            var user = Services.ContentManager.Get(id);
+
+            if ( user != null ) {
+                string challengeToken = _membershipService.GetEncryptedChallengeToken(user.As<UserPart>());
+                _membershipService.SendChallengeEmail(user.As<UserPart>(), Url.AbsoluteAction(() => Url.Action("ChallengeEmail", "Account", new {Area = "Orchard.Users", token = challengeToken})));
+            }
+
+            Services.Notifier.Information(T("Challenge email sent"));
+
+            return RedirectToAction("Index");
+        }
+
+        public ActionResult Approve(int id) {
+            if ( !Services.Authorizer.Authorize(Permissions.ManageUsers, T("Not authorized to manage users")) )
+                return new HttpUnauthorizedResult();
+
+            var user = Services.ContentManager.Get(id);
+
+            if ( user != null ) {
+                user.As<UserPart>().RegistrationStatus = UserStatus.Approved;
+                Services.Notifier.Information(T("User approved"));
+            }
+
+            return RedirectToAction("Index");
+        }
+
+        public ActionResult Moderate(int id) {
+            if ( !Services.Authorizer.Authorize(Permissions.ManageUsers, T("Not authorized to manage users")) )
+                return new HttpUnauthorizedResult();
+
+            var user = Services.ContentManager.Get(id);
+
+            if ( user != null ) {
+                if ( CurrentSite.SuperUser.Equals(user.As<UserPart>().UserName) ) {
+                    Services.Notifier.Error(T("Super user can't be moderated"));
+                }
+                else {
+                    user.As<UserPart>().RegistrationStatus = UserStatus.Pending;
+                    Services.Notifier.Information(T("User moderated"));
+                }
+            }
+
             return RedirectToAction("Index");
         }
 
