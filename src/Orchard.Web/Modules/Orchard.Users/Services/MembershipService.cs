@@ -52,8 +52,16 @@ namespace Orchard.Users.Services {
             user.Record.NormalizedUserName = createUserParams.Username.ToLower();
             user.Record.HashAlgorithm = "SHA1";
             SetPassword(user.Record, createUserParams.Password);
-            user.Record.RegistrationStatus = registrationSettings.UsersAreModerated && !createUserParams.IsApproved ? UserStatus.Pending : UserStatus.Approved;
-            user.Record.EmailStatus = registrationSettings.UsersMustValidateEmail && !createUserParams.IsApproved ? UserStatus.Pending : UserStatus.Approved;
+
+            if ( registrationSettings != null ) {
+                user.Record.RegistrationStatus = registrationSettings.UsersAreModerated ? UserStatus.Pending : UserStatus.Approved;
+                user.Record.EmailStatus = registrationSettings.UsersMustValidateEmail ? UserStatus.Pending : UserStatus.Approved;
+            }
+
+            if(createUserParams.IsApproved) {
+                user.Record.RegistrationStatus = UserStatus.Approved;
+                user.Record.EmailStatus = UserStatus.Approved;
+            }
 
             var userContext = new UserContext {User = user, Cancel = false};
             foreach(var userEventHandler in _userEventHandlers) {
@@ -70,7 +78,7 @@ namespace Orchard.Users.Services {
                 userEventHandler.Created(userContext);
             }
 
-            if ( registrationSettings.UsersAreModerated && registrationSettings.NotifyModeration && !createUserParams.IsApproved ) {
+            if ( registrationSettings != null  && registrationSettings.UsersAreModerated && registrationSettings.NotifyModeration && !createUserParams.IsApproved ) {
                 var superUser = GetUser(CurrentSite.SuperUser);
                 if(superUser != null)
                     _messageManager.Send(superUser.ContentItem.Record, MessageTypes.Moderation);
