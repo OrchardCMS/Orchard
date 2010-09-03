@@ -165,7 +165,7 @@ namespace Orchard.Tests.ContentManagement {
 
         [Test]
         public void GetContentTypesShouldReturnAllTypes() {
-            var types = _manager.GetContentTypes();
+            var types = _manager.GetContentTypeDefinitions();
             Assert.That(types.Count(), Is.EqualTo(4));
             Assert.That(types, Has.Some.With.Property("Name").EqualTo("alpha"));
             Assert.That(types, Has.Some.With.Property("Name").EqualTo("beta"));
