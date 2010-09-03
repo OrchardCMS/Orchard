@@ -603,7 +603,6 @@
     <Compile Include="Environment\AutofacUtil\DynamicProxy2\ConstructorFinderWrapper.cs" />
     <Compile Include="FileSystems\AppData\AppDataFolder.cs" />
     <Compile Include="Environment\Configuration\ShellSettingsManager.cs" />
-    <Compile Include="Environment\AutofacUtil\ContainerUpdater.cs" />
     <Compile Include="Environment\ShellBuilders\ShellContextFactory.cs" />
     <Compile Include="Environment\ShellBuilders\ShellContext.cs" />
     <Compile Include="Environment\Descriptor\ShellDescriptorCache.cs" />

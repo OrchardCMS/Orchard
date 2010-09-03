@@ -50,7 +50,6 @@ namespace Orchard.Tests.Environment {
             _container = OrchardStarter.CreateHostContainer(
                 builder => {
                     builder.RegisterInstance(new StubShellSettingsLoader()).As<IShellSettingsManager>();
-                    builder.RegisterType<StubContainerProvider>().As<IContainerProvider>().InstancePerLifetimeScope();
                     builder.RegisterType<RoutePublisher>().As<IRoutePublisher>();
                     builder.RegisterType<ModelBinderPublisher>().As<IModelBinderPublisher>();
                     builder.RegisterType<ShellContextFactory>().As<IShellContextFactory>();
@@ -81,9 +80,6 @@ namespace Orchard.Tests.Environment {
             _container.Mock<IOrchardShellEvents>()
                 .Setup(e => e.Activated());
 
-            var updater = new ContainerUpdater();
-            updater.RegisterInstance(_container).SingleInstance();
-            updater.Update(_lifetime);
         }
 
         public class StubExtensionManager : IExtensionManager {

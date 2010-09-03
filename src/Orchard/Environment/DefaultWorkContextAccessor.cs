@@ -15,7 +15,7 @@ namespace Orchard.Environment {
         readonly object _workContextKey = new object();
 
         [ThreadStatic]
-        static readonly ConcurrentDictionary<object, WorkContext> _threadStaticContexts = new ConcurrentDictionary<object, WorkContext>();
+        static ConcurrentDictionary<object, WorkContext> _threadStaticContexts;
 
         public DefaultWorkContextAccessor(
             IHttpContextAccessor httpContextAccessor,
@@ -36,7 +36,7 @@ namespace Orchard.Environment {
                 return GetContext(httpContext);
 
             WorkContext workContext;
-            return _threadStaticContexts.TryGetValue(_workContextKey, out workContext) ? workContext : null;
+            return EnsureThreadStaticContexts().TryGetValue(_workContextKey, out workContext) ? workContext : null;
         }
 
         public IWorkContextScope CreateWorkContextScope(HttpContextBase httpContext) {
@@ -71,8 +71,12 @@ namespace Orchard.Environment {
             });
             return new ThreadStaticScopeImplementation(
                 workLifetime,
-                _threadStaticContexts,
+                EnsureThreadStaticContexts(),
                 _workContextKey);
+        }
+
+        static ConcurrentDictionary<object, WorkContext> EnsureThreadStaticContexts() {
+            return _threadStaticContexts ?? (_threadStaticContexts = new ConcurrentDictionary<object, WorkContext>());
         }
 
         private ILifetimeScope SpawnWorkLifetime(Action<ContainerBuilder> configurationAction) {
@@ -87,8 +91,8 @@ namespace Orchard.Environment {
                 _componentContext = componentContext;
             }
 
-            public override T Service<T>() {
-                throw new NotImplementedException();
+            public override T Resolve<T>() {
+                return _componentContext.Resolve<T>();
             }
 
             public override T State<T>() {
@@ -118,7 +122,7 @@ namespace Orchard.Environment {
             }
 
             public TService Resolve<TService>() {
-                return WorkContext.Service<TService>();
+                return WorkContext.Resolve<TService>();
             }
         }
 
@@ -145,7 +149,7 @@ namespace Orchard.Environment {
             }
 
             public TService Resolve<TService>() {
-                return WorkContext.Service<TService>();
+                return WorkContext.Resolve<TService>();
             }
         }
     }

@@ -19,7 +19,6 @@ namespace Orchard.Mvc.ViewEngines.Razor {
     public abstract class WebViewPage<TModel> : System.Web.Mvc.WebViewPage<TModel> {
         private object _display;
         private Localizer _localizer = NullLocalizer.Instance;
-        private IEnumerable<Action> _contexturalizers = Enumerable.Empty<Action>();
 
 
         public Localizer T { get { return _localizer; } }
@@ -32,7 +31,7 @@ namespace Orchard.Mvc.ViewEngines.Razor {
             base.InitHelpers();
 
             var workContext = ViewContext.GetWorkContext();
-            workContext.Service<IContainer>().InjectUnsetProperties(this);
+            workContext.Resolve<IComponentContext>().InjectUnsetProperties(this);
 
             _localizer = LocalizationUtilities.Resolve(ViewContext, VirtualPath);
             _display = DisplayHelperFactory.CreateHelper(ViewContext, this);

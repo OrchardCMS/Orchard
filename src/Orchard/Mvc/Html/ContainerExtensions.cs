@@ -19,7 +19,7 @@ namespace Orchard.Mvc.Html {
             if (workContext == null)
                 throw new ApplicationException("Unable to resolve");
 
-            return workContext.Service<TService>();
+            return workContext.Resolve<TService>();
         }
     }
 }

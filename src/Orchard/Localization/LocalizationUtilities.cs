@@ -6,7 +6,7 @@ namespace Orchard.Localization {
     public class LocalizationUtilities {
         public static Localizer Resolve(ControllerContext controllerContext, string scope) {
             var context = controllerContext.GetWorkContext();
-            return context == null ? NullLocalizer.Instance : Resolve(context.Service<ILifetimeScope>(), scope);
+            return context == null ? NullLocalizer.Instance : Resolve(context.Resolve<ILifetimeScope>(), scope);
         }
 
         public static Localizer Resolve(IComponentContext context, string scope) {

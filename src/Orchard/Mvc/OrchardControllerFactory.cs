@@ -26,7 +26,7 @@ namespace Orchard.Mvc {
             var workContext = workContextAccessor != null ? workContextAccessor.GetContext(requestContext.HttpContext) : null;
 
             if (workContext != null &&
-                workContext.Service<ILifetimeScope>().TryResolve(service, out controller)) {
+                workContext.Resolve<ILifetimeScope>().TryResolve(service, out controller)) {
                 return (IController)controller;
             }
 

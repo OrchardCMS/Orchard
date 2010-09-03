@@ -36,7 +36,7 @@ namespace Orchard.Tests.ContentManagement.Handlers.Coordinators {
         public void AllDriversShouldBeCalled() {
             var driver1 = new Mock<IContentPartDriver>();
             var driver2 = new Mock<IContentPartDriver>();
-            var builder = new ContainerUpdater();
+            var builder = new ContainerBuilder();
             builder.RegisterInstance(driver1.Object);
             builder.RegisterInstance(driver2.Object);
             builder.Update(_container);
@@ -52,7 +52,7 @@ namespace Orchard.Tests.ContentManagement.Handlers.Coordinators {
         [Test]
         public void TestDriverCanAddDisplay() {
             var driver = new StubPartDriver();
-            var builder = new ContainerUpdater();
+            var builder = new ContainerBuilder();
             builder.RegisterInstance(driver).As<IContentPartDriver>();
             builder.Update(_container);
 
