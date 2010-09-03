@@ -14,6 +14,7 @@ namespace Orchard.UI.Resources {
         }
 
         public void OnResultExecuting(ResultExecutingContext filterContext) {
+#if REFACTORING
             var headZone = _workContextAccessor.GetContext().CurrentPage.Zones["Head"];
             headZone.Add(html => html.ViewContext.Writer.Write(_resourceManager.GetMetas()), ":metas");
             headZone.Add(html => html.ViewContext.Writer.Write(_resourceManager.GetStyles()), ":styles");
@@ -28,6 +29,7 @@ namespace Orchard.UI.Resources {
                         html.ViewContext.Writer.Write(captured);
                 },
                 ":after");
+#endif
         }
 
         public void OnResultExecuted(ResultExecutedContext filterContext) {}

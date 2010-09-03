@@ -5,6 +5,7 @@ using System.Web.Routing;
 using Orchard.Mvc.ViewModels;
 
 namespace Orchard.UI.Zones {
+#if REFACTORING
     public interface IZoneContainer {
         ZoneCollection Zones { get; }
     }
@@ -76,4 +77,5 @@ namespace Orchard.UI.Zones {
 
         }
     }
+#endif
 }

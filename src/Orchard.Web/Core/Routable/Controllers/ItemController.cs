@@ -3,12 +3,10 @@ using System.Linq;
 using System.Web.Mvc;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Aspects;
-using Orchard.Core.Common.Models;
 using Orchard.Core.Routable.Models;
-using Orchard.Core.Routable.ViewModels;
 using Orchard.Data;
+using Orchard.DisplayManagement;
 using Orchard.Localization;
-using Orchard.Mvc.ViewModels;
 
 namespace Orchard.Core.Routable.Controllers {
     [ValidateInput(false)]
@@ -17,11 +15,14 @@ namespace Orchard.Core.Routable.Controllers {
         private readonly ITransactionManager _transactionManager;
         private readonly IRoutablePathConstraint _routablePathConstraint;
 
-        public ItemController(IContentManager contentManager, ITransactionManager transactionManager, IRoutablePathConstraint routablePathConstraint) {
+        public ItemController(IContentManager contentManager, ITransactionManager transactionManager, IRoutablePathConstraint routablePathConstraint, IShapeHelperFactory shapeHelperFactory) {
             _contentManager = contentManager;
             _transactionManager = transactionManager;
             _routablePathConstraint = routablePathConstraint;
+            Shape = shapeHelperFactory.CreateHelper();
         }
+
+        dynamic Shape { get; set; }
 
         public ActionResult Display(string path) {
             var matchedPath = _routablePathConstraint.FindPath(path);
@@ -39,17 +40,9 @@ namespace Orchard.Core.Routable.Controllers {
             if (hits.Count() != 1) {
                 throw new ApplicationException("Ambiguous content");
             }
-            var model = new RoutableDisplayViewModel {
-                Routable = _contentManager.BuildDisplayShape<IRoutableAspect>(hits.Single(), "Detail")
-            };
-            PrepareDisplayViewModel(model.Routable);
-            return View("Display", model);
-        }
 
-        private void PrepareDisplayViewModel(ContentItemViewModel<IRoutableAspect> itemViewModel) {
-            if (string.IsNullOrEmpty(itemViewModel.TemplateName)) {
-                itemViewModel.TemplateName = "Items/Contents.Item";
-            }
+            var model = _contentManager.BuildDisplayModel<IRoutableAspect>(hits.Single(), "Detail");
+            return View(Shape.Model(model));
         }
 
         public ActionResult Slugify(string contentType, int? id, int? containerId) {
@@ -71,7 +64,7 @@ namespace Orchard.Core.Routable.Controllers {
                 }
             }
 
-            _contentManager.UpdateEditorShape(contentItem, this);
+            _contentManager.UpdateEditorModel(contentItem, this);
             _transactionManager.Cancel();
 
             return Json(contentItem.As<IRoutableAspect>().Slug ?? slug);

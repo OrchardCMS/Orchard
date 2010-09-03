@@ -1,8 +1,6 @@
 ﻿using System.Web.Mvc;
 using Orchard.ContentManagement;
-using Orchard.Core.Contents.ViewModels;
 using Orchard.DisplayManagement;
-using Orchard.Mvc.ViewModels;
 
 namespace Orchard.Core.Contents.Controllers {
     public class ItemController : Controller {
@@ -18,12 +16,8 @@ namespace Orchard.Core.Contents.Controllers {
         // /Contents/Item/Display/72
         public ActionResult Display(int id) {
             var contentItem = _contentManager.Get(id, VersionOptions.Published);
-
-            var model = Shape.Content(
-                _contentManager.BuildDisplayShape(contentItem, "Detail")
-            );
-            //PrepareDisplayViewModel(model.Content);
-            return View(model);
+            var model = _contentManager.BuildDisplayModel(contentItem, "Detail");
+            return View(Shape.Model(model));
         }
 
         // /Contents/Item/Preview/72
@@ -35,18 +29,8 @@ namespace Orchard.Core.Contents.Controllers {
             }
 
             var contentItem = _contentManager.Get(id, versionOptions);
-
-            var model = new DisplayItemViewModel {
-                Content = _contentManager.BuildDisplayShape(contentItem, "Detail")
-            };
-            PrepareDisplayViewModel(model.Content);
-            return View("Preview", model);
-        }
-
-        private static void PrepareDisplayViewModel(ContentItemViewModel itemViewModel) {
-            if (string.IsNullOrEmpty(itemViewModel.TemplateName)) {
-                itemViewModel.TemplateName = "Items/Contents.Item";
-            }
+            var model = _contentManager.BuildDisplayModel(contentItem, "Detail");
+            return View(Shape.Model(model));
         }
     }
 }

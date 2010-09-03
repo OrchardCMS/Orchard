@@ -2,6 +2,7 @@
 using Orchard.UI.Zones;
 
 namespace Orchard.Themes.Services {
+#if REFACTORING
     public class ThemeZoneManagerEvents : IZoneManagerEvents {
         public ThemeZoneManagerEvents() {
             T = NullLocalizer.Instance;
@@ -47,4 +48,5 @@ namespace Orchard.Themes.Services {
 #endif
         }
     }
+#endif
 }

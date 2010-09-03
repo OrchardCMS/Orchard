@@ -3,6 +3,7 @@ using System.Web.Mvc;
 using Orchard.Events;
 
 namespace Orchard.UI.Zones {
+#if REFACTORING
     public interface IZoneManagerEvents : IEventHandler {
         void ZoneRendering(ZoneRenderContext context);
         void ZoneItemRendering(ZoneRenderContext context, ZoneItem item);
@@ -15,5 +16,5 @@ namespace Orchard.UI.Zones {
         public string ZoneName { get; set; }
         public IEnumerable<ZoneItem> RenderingItems { get; set; }
     }
-
+#endif
 }

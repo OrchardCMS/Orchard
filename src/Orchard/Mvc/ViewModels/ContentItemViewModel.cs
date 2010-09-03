@@ -4,6 +4,7 @@ using Orchard.ContentManagement;
 using Orchard.UI.Zones;
 
 namespace Orchard.Mvc.ViewModels {
+#if REFACTORING
     public class ContentItemViewModel : IZoneContainer {
         private ContentItem _item;
 
@@ -70,4 +71,5 @@ namespace Orchard.Mvc.ViewModels {
             base.SetItem(value);
         }
     }
+#endif
 }

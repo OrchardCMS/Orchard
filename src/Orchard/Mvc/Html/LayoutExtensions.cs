@@ -2,18 +2,18 @@
 using System.IO;
 using System.Web.Mvc;
 using System.Web.UI;
+using Microsoft.WebPages;
 using Orchard.Mvc.ViewEngines;
-using Orchard.Mvc.ViewModels;
 using Orchard.UI.PageClass;
 using Orchard.UI.PageTitle;
 using Orchard.UI.Resources;
-using Orchard.UI.Zones;
+using HtmlHelper = System.Web.Mvc.HtmlHelper;
 
 namespace Orchard.Mvc.Html {
     public static class LayoutExtensions {
-        public static void RenderBody(this HtmlHelper html) {
+        public static HelperResult RenderOrchardBody(this HtmlHelper html) {
             LayoutViewContext layoutViewContext = LayoutViewContext.From(html.ViewContext);
-            html.ViewContext.Writer.Write(layoutViewContext.BodyContent);
+            return new HelperResult(writer => writer.Write(layoutViewContext.BodyContent));
         }
 
         public static MvcHtmlString Body(this HtmlHelper html) {
@@ -60,35 +60,6 @@ namespace Orchard.Mvc.Html {
 
             return MvcHtmlString.Create(html.Encode(pageClassBuilder.ToString()));
         }
-
-        public static void Zone<TModel>(this HtmlHelper<TModel> html, string zoneName, string partitions) where TModel : IZoneContainer {
-            var manager = html.Resolve<IZoneManager>();
-
-            manager.Render(html, html.ViewData.Model.Zones, zoneName, partitions, null);
-        }
-
-        public static void Zone<TModel>(this HtmlHelper<TModel> html, string zoneName) where TModel : IZoneContainer {
-            html.Zone(zoneName, string.Empty);
-        }
-
-        public static void Zone<TModel>(this HtmlHelper<TModel> html, string zoneName, Action action) where TModel : IZoneContainer {
-            //TODO: again, IoC could move this AddAction (or similar) method out of the data-bearing object
-            html.ViewData.Model.Zones.AddAction(zoneName, x => action());
-            html.Zone(zoneName, string.Empty);
-        }
-
-        public static void ZonesAny<TModel>(this HtmlHelper<TModel> html) where TModel : IZoneContainer {
-            html.ZonesExcept();
-        }
-
-        public static void ZonesExcept<TModel>(this HtmlHelper<TModel> html, params string[] except) where TModel : IZoneContainer {
-            var manager = html.Resolve<IZoneManager>();
-            manager.Render(html, html.ViewData.Model.Zones, null, null, except);
-        }
-
-        //public static void ZoneBody<TModel>(this HtmlHelper<TModel> html, string zoneName) where TModel  {
-        //    html.Zone(zoneName, () => html.RenderBody());
-        //}
 
         public static void RegisterMeta(this HtmlHelper html, string name, string content) {
             html.Resolve<IResourceManager>().RegisterMeta(name, content);

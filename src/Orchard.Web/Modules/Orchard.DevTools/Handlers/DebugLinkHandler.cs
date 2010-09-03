@@ -1,6 +1,5 @@
 ﻿using JetBrains.Annotations;
 using Orchard.ContentManagement.Handlers;
-using Orchard.ContentManagement.ViewModels;
 using Orchard.DevTools.Models;
 
 namespace Orchard.DevTools.Handlers {
@@ -9,12 +8,12 @@ namespace Orchard.DevTools.Handlers {
         protected override void BuildDisplayShape(BuildDisplayModelContext context) {
             var devToolsSettings = context.ContentItem.TypeDefinition.Settings.GetModel<Settings.DevToolsSettings>();
             if (devToolsSettings.ShowDebugLinks)
-                context.AddDisplay(new TemplateViewModel(new ShowDebugLink { ContentItem = context.ContentItem }) { TemplateName = "Parts/DevTools.ShowDebugLink", ZoneName = "recap", Position = "9999" });
+                context.ContentItem.Zones["Recap"].Add(new ShowDebugLink { ContentItem = context.ContentItem }, "9999");
         }
         protected override void BuildEditorShape(BuildEditorModelContext context) {
             var devToolsSettings = context.ContentItem.TypeDefinition.Settings.GetModel<Settings.DevToolsSettings>();
             if (devToolsSettings.ShowDebugLinks)
-                context.AddEditor(new TemplateViewModel(new ShowDebugLink { ContentItem = context.ContentItem }) { TemplateName = "Parts/DevTools.ShowDebugLink", ZoneName = "recap", Position = "9999" });
+                context.ContentItem.Zones["Recap"].Add(new ShowDebugLink { ContentItem = context.ContentItem }, "9999");
         }
     }
 }

@@ -2,6 +2,7 @@ using System.Linq;
 using System.Web.Mvc;
 using JetBrains.Annotations;
 using Orchard.ContentManagement;
+using Orchard.DisplayManagement;
 using Orchard.Localization;
 using Orchard.Security;
 using Orchard.Settings;
@@ -20,13 +21,16 @@ namespace Orchard.Users.Controllers {
         public AdminController(
             IOrchardServices services,
             IMembershipService membershipService,
-            IUserService userService) {
+            IUserService userService,
+            IShapeHelperFactory shapeHelperFactory) {
             Services = services;
             _membershipService = membershipService;
             _userService = userService;
             T = NullLocalizer.Instance;
+            Shape = shapeHelperFactory.CreateHelper();
         }
 
+        dynamic Shape { get; set; }
         public IOrchardServices Services { get; set; }
         public Localizer T { get; set; }
         protected virtual ISite CurrentSite { get; [UsedImplicitly] private set; }
@@ -46,7 +50,7 @@ namespace Orchard.Users.Controllers {
                     .ToList()
             };
 
-            return View(model);
+            return View(Shape.Model(model));
         }
 
         public ActionResult Create() {
@@ -55,9 +59,9 @@ namespace Orchard.Users.Controllers {
 
             var user = Services.ContentManager.New<IUser>("User");
             var model = new UserCreateViewModel {
-                User = Services.ContentManager.BuildEditorShape(user)
+                User = Services.ContentManager.BuildEditorModel(user)
             };
-            return View(model);
+            return View(Shape.Model(model));
         }
 
         [HttpPost, ActionName("Create")]
@@ -66,10 +70,10 @@ namespace Orchard.Users.Controllers {
                 return new HttpUnauthorizedResult();
 
             var user = Services.ContentManager.New<IUser>("User");
-            model.User = Services.ContentManager.UpdateEditorShape(user, this);
+            model.User = Services.ContentManager.UpdateEditorModel(user, this);
             if (!ModelState.IsValid) {
                 Services.TransactionManager.Cancel();
-                return View(model);
+                return View(Shape.Model(model));
             }
 
             string userExistsMessage = _userService.VerifyUserUnicity(model.UserName, model.Email);
@@ -87,14 +91,14 @@ namespace Orchard.Users.Controllers {
                                                          model.Email,
                                                          null, null, true));
 
-            model.User = Services.ContentManager.UpdateEditorShape(user, this);
+            model.User = Services.ContentManager.UpdateEditorModel(user, this);
 
             if (ModelState.IsValid == false) {
                 Services.TransactionManager.Cancel();
-                return View(model);
+                return View(Shape.Model(model));
             }
 
-            return RedirectToAction("edit", new {user.Id});
+            return RedirectToAction("edit", new { user.Id });
         }
 
         public ActionResult Edit(int id) {
@@ -122,7 +126,7 @@ namespace Orchard.Users.Controllers {
                 return View(model);
             }
 
-            model.User.Item.NormalizedUserName = model.UserName.ToLower();
+            model.User.As<UserPart>().NormalizedUserName = model.UserName.ToLower();
 
             string userExistsMessage = _userService.VerifyUserUnicity(id, model.UserName, model.Email);
             if (userExistsMessage != null) {

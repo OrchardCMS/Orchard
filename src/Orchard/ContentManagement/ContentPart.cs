@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Orchard.ContentManagement.MetaData.Models;
 using Orchard.ContentManagement.Utilities;
+using Orchard.UI;
 
 namespace Orchard.ContentManagement {
     public class ContentPart : IContent {
@@ -13,6 +14,15 @@ namespace Orchard.ContentManagement {
         }
 
         public virtual ContentItem ContentItem { get; set; }
+
+        //interesting thought, should/could parts also have zones (would then have zones on the page, content item and parts...)?
+        private readonly IZoneCollection _zones = new ZoneCollection();
+        public virtual IZoneCollection Zones {
+            get {
+                return _zones;
+            }
+        }
+
         public ContentTypeDefinition TypeDefinition { get { return ContentItem.TypeDefinition; } }
         public ContentTypePartDefinition TypePartDefinition { get; set; }
         public ContentPartDefinition PartDefinition { get { return TypePartDefinition.PartDefinition; } }

@@ -9,7 +9,7 @@ namespace Orchard.ContentManagement.Handlers {
         // todo: (heskew) use _prefix?
         private readonly string _prefix;
         private readonly string[] _displayTypes;
-        private Action<UpdateEditorModelContext, ContentItemViewModel<TContent>> _updater;
+        private Action<UpdateEditorModelContext, IContent> _updater;
 
         public ContentItemTemplates(string templateName)
             : this(templateName, "") {
@@ -23,6 +23,7 @@ namespace Orchard.ContentManagement.Handlers {
         }
 
         protected override void BuildDisplayShape(BuildDisplayModelContext context, TContent instance) {
+#if REFACTORING
             context.ViewModel.TemplateName = _templateName;
             var longestMatch = LongestMatch(context.DisplayType);
             if (!string.IsNullOrEmpty(longestMatch))
@@ -38,6 +39,7 @@ namespace Orchard.ContentManagement.Handlers {
                         html.RouteCollection);
                 };
             }
+#endif
         }
 
         class ViewDataContainer : IViewDataContainer {
@@ -55,6 +57,7 @@ namespace Orchard.ContentManagement.Handlers {
         }
 
         protected override void BuildEditorShape(BuildEditorModelContext context, TContent instance) {
+#if REFACTORING
             context.ViewModel.TemplateName = _templateName;
             context.ViewModel.Prefix = _prefix;
             if (context.ViewModel.GetType() != typeof(ContentItemViewModel<TContent>)) {
@@ -65,18 +68,21 @@ namespace Orchard.ContentManagement.Handlers {
                         html.RouteCollection);
                 };
             }
+#endif
         }
 
         protected override void UpdateEditorShape(UpdateEditorModelContext context, TContent instance) {
+#if REFACTORING
             if (context.ViewModel is ContentItemViewModel<TContent>)
                 _updater(context, (ContentItemViewModel<TContent>)context.ViewModel);
             else
                 _updater(context, new ContentItemViewModel<TContent>(context.ViewModel));
             context.ViewModel.TemplateName = _templateName;
             context.ViewModel.Prefix = _prefix;
+#endif
         }
 
-        public void Updater(Action<UpdateEditorModelContext, ContentItemViewModel<TContent>> updater) {
+        public void Updater(Action<UpdateEditorModelContext, IContent> updater) {
             _updater = updater;
         }
     }

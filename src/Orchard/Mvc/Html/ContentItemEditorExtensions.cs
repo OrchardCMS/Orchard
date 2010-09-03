@@ -5,6 +5,7 @@ using System.Web.Mvc.Html;
 using Orchard.Mvc.ViewModels;
 
 namespace Orchard.Mvc.Html {
+#if REFACTORING
     public static class ContentItemEditorExtensions {
         public static MvcHtmlString EditorForItem<TModel, TItemModel>(this HtmlHelper<TModel> html, TItemModel item) where TItemModel : ContentItemViewModel {
             return html.EditorForItem(x => item);
@@ -21,4 +22,5 @@ namespace Orchard.Mvc.Html {
             return html.EditorFor(expression, model.TemplateName, model.Prefix ?? "");
         }
     }
+#endif
 }

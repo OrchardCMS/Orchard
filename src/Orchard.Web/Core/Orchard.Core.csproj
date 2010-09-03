@@ -376,6 +376,7 @@
     <Content Include="Messaging\Views\Web.config" />
     <None Include="Contents\Views\Content.cshtml" />
     <None Include="Contents\Views\Item\Display.cshtml" />
+    <None Include="HomePage\Views\HomePage.cshtml" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />

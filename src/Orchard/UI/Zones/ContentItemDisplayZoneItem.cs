@@ -3,6 +3,7 @@ using Orchard.Mvc.Html;
 using Orchard.Mvc.ViewModels;
 
 namespace Orchard.UI.Zones {
+#if REFACTORING
     public class ContentItemDisplayZoneItem : ZoneItem {
         public ContentItemViewModel ViewModel { get; set; }
 
@@ -11,4 +12,5 @@ namespace Orchard.UI.Zones {
             html.ViewContext.Writer.Write(htmlString);
         }
     }
+#endif
 }

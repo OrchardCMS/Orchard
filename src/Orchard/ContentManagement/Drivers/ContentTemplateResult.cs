@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using Orchard.ContentManagement.Handlers;
 
 namespace Orchard.ContentManagement.Drivers {
@@ -17,13 +16,14 @@ namespace Orchard.ContentManagement.Drivers {
         }
 
         public override void Apply(BuildDisplayModelContext context) {
-            context.ViewModel.Zones.AddDisplayPart(
-                Zone + ":" + Position, Model, TemplateName, Prefix);
+            context.ContentItem.Zones[Zone].Add(Model, Position);
+            //Zone + ":" + Position, Model, TemplateName, Prefix);
         }
 
         public override void Apply(BuildEditorModelContext context) {
-            context.ViewModel.Zones.AddEditorPart(
-                Zone + ":" + Position, Model, TemplateName, Prefix);
+            context.ContentItem.Zones[Zone].Add(Model, Position);
+            //context.ViewModel.Zones.AddEditorPart(
+            //    Zone + ":" + Position, Model, TemplateName, Prefix);
         }
 
         public ContentTemplateResult Location(string zone) {
