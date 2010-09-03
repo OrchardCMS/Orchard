@@ -1,4 +1,5 @@
-﻿using Orchard.Data.Migration;
+﻿using System.Data;
+using Orchard.Data.Migration;
 
 namespace Orchard.ContentManagement.DataMigrations {
     public class FrameworkDataMigration : DataMigrationImpl {
@@ -34,6 +35,14 @@ namespace Orchard.ContentManagement.DataMigrations {
                 );
 
             return 1;
+        }
+
+        public int UpdateFrom1() {
+            SchemaBuilder
+                .AlterTable("ContentItemRecord", table => table
+                    .AlterColumn("Data", column => column.WithType(DbType.String).Unlimited()));
+
+            return 2;
         }
     }
 }
