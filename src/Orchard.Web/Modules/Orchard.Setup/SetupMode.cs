@@ -24,6 +24,7 @@ using Orchard.Mvc.ModelBinders;
 using Orchard.Mvc.Routes;
 using Orchard.Mvc.ViewEngines;
 using Orchard.Mvc.ViewEngines.Razor;
+using Orchard.Mvc.ViewEngines.ThemeAwareness;
 using Orchard.Mvc.ViewEngines.WebForms;
 using Orchard.Settings;
 using Orchard.Setup.Commands;
@@ -44,7 +45,7 @@ namespace Orchard.Setup {
             builder.RegisterType<ModelBinderPublisher>().As<IModelBinderPublisher>().InstancePerLifetimeScope();
             builder.RegisterType<WebFormViewEngineProvider>().As<IViewEngineProvider>().InstancePerLifetimeScope();
             builder.RegisterType<RazorViewEngineProvider>().As<IViewEngineProvider>().InstancePerLifetimeScope();
-            builder.RegisterType<ViewEngineFilter>().As<IFilterProvider>().InstancePerLifetimeScope();
+            builder.RegisterType<CurrentThemeFilter>().As<IFilterProvider>().InstancePerLifetimeScope();
             builder.RegisterType<ThemeFilter>().As<IFilterProvider>().InstancePerLifetimeScope();
             builder.RegisterType<PageTitleBuilder>().As<IPageTitleBuilder>().InstancePerLifetimeScope();
             builder.RegisterType<ZoneManager>().As<IZoneManager>().InstancePerLifetimeScope();
@@ -69,7 +70,11 @@ namespace Orchard.Setup {
             builder.RegisterType<DefaultDisplayManager>().As<IDisplayManager>();
             builder.RegisterType<DefaultShapeFactory>().As<IShapeFactory>();
             builder.RegisterType<ShapeHelperFactory>().As<IShapeHelperFactory>();
-            builder.RegisterType<DefaultShapeTableManager>().As<IShapeTableManager>(); 
+            builder.RegisterType<DefaultShapeTableManager>().As<IShapeTableManager>();
+
+            builder.RegisterType<ThemeAwareViewEngine>().As<IThemeAwareViewEngine>();
+            builder.RegisterType<ConfiguredEnginesCache>().As<IConfiguredEnginesCache>(); 
+            
         }
 
 

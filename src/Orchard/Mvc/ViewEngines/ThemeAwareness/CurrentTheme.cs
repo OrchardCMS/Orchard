@@ -1,35 +1,27 @@
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using System.Web.Mvc;
-using Orchard.Environment.Extensions;
 using Orchard.Logging;
 using Orchard.Mvc.Filters;
 using Orchard.Themes;
 
-namespace Orchard.Mvc.ViewEngines {
+namespace Orchard.Mvc.ViewEngines.ThemeAwareness {
 
-    public class ViewEngineFilter : FilterProvider, IResultFilter {
-        private readonly ViewEngineCollection _viewEngines;
+    public class CurrentThemeFilter : FilterProvider, IResultFilter {
         private readonly IThemeService _themeService;
-        private readonly IExtensionManager _extensionManager;
-        private readonly IEnumerable<IViewEngineProvider> _viewEngineProviders;
+        private readonly WorkContext _workContext;
 
-        public ViewEngineFilter(
-            ViewEngineCollection viewEngines,
-            IThemeService themeService,
-            IExtensionManager extensionManager,
-            IEnumerable<IViewEngineProvider> viewEngineProviders) {
-            _viewEngines = viewEngines;
+        public CurrentThemeFilter(IThemeService themeService, WorkContext workContext) {
             _themeService = themeService;
-            _extensionManager = extensionManager;
-            _viewEngineProviders = viewEngineProviders;
+            _workContext = workContext;
             Logger = NullLogger.Instance;
         }
 
         public ILogger Logger { get; set; }
 
         public void OnResultExecuting(ResultExecutingContext filterContext) {
+            if (_workContext.CurrentTheme == null) {
+                _workContext.CurrentTheme = _themeService.GetRequestTheme(filterContext.RequestContext);
+            }
+#if REFACTORING
             var viewResultBase = filterContext.Result as ViewResultBase;
             if (viewResultBase == null) {
                 return;
@@ -70,14 +62,7 @@ namespace Orchard.Mvc.ViewEngines {
 
             viewResultBase.ViewEngineCollection = new ViewEngineCollection(_viewEngines.ToList());
             viewResultBase.ViewEngineCollection.Insert(0, layoutViewEngine);
-        }
-
-        static bool ViewEngineIsForwarded(IViewEngine x) {
-            // default view engine, and layout view engine, are not forwarded to 
-            // be used for resolving partials
-            return 
-                x.GetType().Assembly != typeof(LayoutViewEngine).Assembly &&
-                x.GetType() != typeof(WebFormViewEngine);
+#endif
         }
 
         public void OnResultExecuted(ResultExecutedContext filterContext) {

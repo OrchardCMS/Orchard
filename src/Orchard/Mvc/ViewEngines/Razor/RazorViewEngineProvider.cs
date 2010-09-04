@@ -91,6 +91,17 @@ namespace Orchard.Mvc.ViewEngines.Razor {
             return viewEngine;
         }
 
+        public IViewEngine CreateBareViewEngine() {
+            return new CshtmlViewEngine {
+                MasterLocationFormats = DisabledFormats,
+                ViewLocationFormats = DisabledFormats,
+                PartialViewLocationFormats = DisabledFormats,
+                AreaMasterLocationFormats = DisabledFormats,
+                AreaViewLocationFormats = DisabledFormats,
+                AreaPartialViewLocationFormats = DisabledFormats,
+            };
+        }
+
         public IEnumerable<string> DetectTemplateFileNames(string virtualPath) {
             var fileNames = _virtualPathProvider.ListFiles(virtualPath).Select(Path.GetFileName);
             foreach (var fileName in fileNames) {

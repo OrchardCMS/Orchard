@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Web.Mvc;
 using Orchard.Logging;
 
@@ -84,6 +85,18 @@ namespace Orchard.Mvc.ViewEngines.WebForms {
             };
 
             return viewEngine;
+        }
+
+
+        public IViewEngine CreateBareViewEngine() {
+            return new WebFormViewEngineForAspNet4 {
+                MasterLocationFormats = DisabledFormats,
+                ViewLocationFormats = DisabledFormats,
+                PartialViewLocationFormats = DisabledFormats,
+                AreaMasterLocationFormats = DisabledFormats,
+                AreaViewLocationFormats = DisabledFormats,
+                AreaPartialViewLocationFormats = DisabledFormats,
+            };
         }
     }
 }

@@ -23,6 +23,7 @@ using Orchard.FileSystems.VirtualPath;
 using Orchard.FileSystems.WebSite;
 using Orchard.Logging;
 using Orchard.Mvc;
+using Orchard.Mvc.ViewEngines.ThemeAwareness;
 using Orchard.Services;
 
 namespace Orchard.Environment {
@@ -117,6 +118,8 @@ namespace Orchard.Environment {
             }
 
             ControllerBuilder.Current.SetControllerFactory(new OrchardControllerFactory());
+            ViewEngines.Engines.Clear();
+            ViewEngines.Engines.Add(new ThemeArareViewEngineShim());
 
             var hostContainer = new DefaultOrchardHostContainer(container);
             //MvcServiceLocator.SetCurrent(hostContainer);

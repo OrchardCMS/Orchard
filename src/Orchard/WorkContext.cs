@@ -3,6 +3,7 @@ using System.Web;
 using Autofac;
 using Orchard.Security;
 using Orchard.Settings;
+using Orchard.Themes;
 using Orchard.UI;
 
 namespace Orchard {
@@ -19,6 +20,8 @@ namespace Orchard {
         public IUser CurrentUser {
             get { return State<IUser>(); }
         }
+
+        public ITheme CurrentTheme { get; set; }
 
         public abstract T Resolve<T>();
         public abstract T State<T>();

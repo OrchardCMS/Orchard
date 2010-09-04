@@ -58,9 +58,6 @@ namespace Orchard.Environment {
 
         void IOrchardHost.Initialize() {
             Logger.Information("Initializing");
-            ViewEngines.Engines.Insert(0, LayoutViewEngine.CreateShim());
-            
-
             BuildCurrent();
         }
 
