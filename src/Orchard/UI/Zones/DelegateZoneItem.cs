@@ -2,6 +2,7 @@ using System;
 using System.Web.Mvc;
 
 namespace Orchard.UI.Zones {
+#if REFACTORING
     public class DelegateZoneItem : ZoneItem {
         public Action<HtmlHelper> Action { get; set; }
 
@@ -9,4 +10,5 @@ namespace Orchard.UI.Zones {
             Action(html);
         }
     }
+#endif
 }

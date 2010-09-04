@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using Orchard.Mvc.ViewModels;
+using Orchard.ContentManagement;
 
 namespace Orchard.Core.Localization.ViewModels {
     public class AddLocalizationViewModel  {
@@ -8,6 +8,6 @@ namespace Orchard.Core.Localization.ViewModels {
         [Required]
         public string SelectedCulture { get; set; }
         public IEnumerable<string> SiteCultures { get; set; }
-        public ContentItemViewModel Content { get; set; }
+        public IContent Content { get; set; }
     }
 }

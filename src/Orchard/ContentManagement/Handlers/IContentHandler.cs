@@ -1,9 +1,5 @@
-﻿using System.Collections.Generic;
-
-namespace Orchard.ContentManagement.Handlers {
+﻿namespace Orchard.ContentManagement.Handlers {
     public interface IContentHandler : IEvents {
-        IEnumerable<ContentType> GetContentTypes();
-
         void Activating(ActivatingContentContext context);
         void Activated(ActivatedContentContext context);
         void Initializing(InitializingContentContext context);

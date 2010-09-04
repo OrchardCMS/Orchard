@@ -2,6 +2,7 @@ using System.Web.Mvc;
 using System.Web.Mvc.Html;
 
 namespace Orchard.UI.Zones {
+#if REFACTORING
     public class ContentPartEditorZoneItem : ZoneItem {
         public object Model { get; set; }
         public string TemplateName { get; set; }
@@ -12,4 +13,5 @@ namespace Orchard.UI.Zones {
                 html.EditorFor(m => Model, TemplateName, Prefix));
         }
     }
+#endif
 }

@@ -1,14 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.Web.Mvc;
 using Orchard.ContentManagement;
-using Orchard.Mvc.ViewModels;
 using Orchard.Core.Settings.Models;
 
 namespace Orchard.Core.Settings.ViewModels {
     public class SettingsIndexViewModel  {
         public SiteSettingsPart Site { get; set; }
         public IEnumerable<string> SiteCultures { get; set; }
-        public ContentItemViewModel ViewModel { get; set; }
         
 
         [HiddenInput(DisplayValue = false)]

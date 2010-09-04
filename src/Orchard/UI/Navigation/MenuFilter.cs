@@ -16,6 +16,7 @@ namespace Orchard.UI.Navigation {
         }
 
         public void OnResultExecuting(ResultExecutingContext filterContext) {
+#if REFACTORING
             var menuName = "main";
             if (AdminFilter.IsApplied(filterContext.RequestContext))
                 menuName = "admin";
@@ -23,6 +24,7 @@ namespace Orchard.UI.Navigation {
             //todo: (heskew) does the menu need to be on Page?
             var shape = _shapeHelperFactory.CreateHelper();
             _workContextAccessor.GetContext(filterContext).CurrentPage.Zones["Navigation"].Add(shape.Menu(_navigationManager.BuildMenu(menuName)));
+#endif
         }
 
         public void OnResultExecuted(ResultExecutedContext filterContext) {}

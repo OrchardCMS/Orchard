@@ -1,6 +1,5 @@
 using System.ComponentModel.DataAnnotations;
-using Orchard.Mvc.ViewModels;
-using Orchard.Security;
+using Orchard.ContentManagement;
 
 namespace Orchard.Users.ViewModels {
     public class UserCreateViewModel  {
@@ -16,6 +15,6 @@ namespace Orchard.Users.ViewModels {
         [Required, DataType(DataType.Password)]
         public string ConfirmPassword { get; set; }
 
-        public ContentItemViewModel<IUser> User { get; set; }
+        public IContent User { get; set; }
     }
 }

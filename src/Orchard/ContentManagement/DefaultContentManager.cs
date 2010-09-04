@@ -5,6 +5,7 @@ using Autofac;
 using Orchard.ContentManagement.Handlers;
 using Orchard.ContentManagement.MetaData;
 using Orchard.ContentManagement.MetaData.Builders;
+using Orchard.ContentManagement.MetaData.Models;
 using Orchard.ContentManagement.Records;
 using Orchard.Data;
 using Orchard.Indexing;
@@ -43,10 +44,8 @@ namespace Orchard.ContentManagement {
             }
         }
 
-        public IEnumerable<ContentType> GetContentTypes() {
-            return Handlers.Aggregate(
-                Enumerable.Empty<ContentType>(),
-                (types, handler) => types.Concat(handler.GetContentTypes()));
+        public IEnumerable<ContentTypeDefinition> GetContentTypeDefinitions() {
+            return _contentDefinitionManager.ListTypeDefinitions();
         }
 
         public virtual ContentItem New(string contentType) {
@@ -394,35 +393,28 @@ namespace Orchard.ContentManagement {
             return context.Metadata;
         }
 
-        public ContentItemViewModel<TContentPart> BuildDisplayShape<TContentPart>(TContentPart content, string displayType) where TContentPart : IContent {
-            if (content == null)
-                return null;
-
-            var displayModel = new ContentItemViewModel<TContentPart>(content);
-            var context = new BuildDisplayModelContext(displayModel, displayType);
+        public TContent BuildDisplayModel<TContent>(TContent content, string displayType) where TContent : IContent {
+            var context = new BuildDisplayModelContext(content, displayType);
             foreach (var handler in Handlers) {
                 handler.BuildDisplayShape(context);
             }
-            return displayModel;
+            return content;
         }
 
-        public ContentItemViewModel<TContentPart> BuildEditorShape<TContentPart>(TContentPart content) where TContentPart : IContent {
-            var editorModel = new ContentItemViewModel<TContentPart>(content);
-            var context = new BuildEditorModelContext(editorModel);
+        public TContent BuildEditorModel<TContent>(TContent content) where TContent : IContent {
+            var context = new BuildEditorModelContext(content);
             foreach (var handler in Handlers) {
                 handler.BuildEditorShape(context);
             }
-            return editorModel;
+            return content;
         }
 
-        public ContentItemViewModel<TContentPart> UpdateEditorShape<TContentPart>(TContentPart content, IUpdateModel updater) where TContentPart : IContent {
-            var editorModel = new ContentItemViewModel<TContentPart>(content);
-
-            var context = new UpdateEditorModelContext(editorModel, updater);
+        public TContent UpdateEditorModel<TContent>(TContent content, IUpdateModel updater) where TContent : IContent {
+            var context = new UpdateEditorModelContext(content, updater);
             foreach (var handler in Handlers) {
                 handler.UpdateEditorShape(context);
             }
-            return editorModel;
+            return content;
         }
 
         public IContentQuery<ContentItem> Query() {

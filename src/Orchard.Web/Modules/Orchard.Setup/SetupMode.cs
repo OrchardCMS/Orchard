@@ -27,12 +27,10 @@ using Orchard.Mvc.ViewEngines.Razor;
 using Orchard.Mvc.ViewEngines.ThemeAwareness;
 using Orchard.Mvc.ViewEngines.WebForms;
 using Orchard.Settings;
-using Orchard.Setup.Commands;
 using Orchard.Themes;
 using Orchard.UI.Notify;
 using Orchard.UI.PageClass;
 using Orchard.UI.PageTitle;
-using Orchard.UI.Zones;
 
 namespace Orchard.Setup {
     public class SetupMode : Module {
@@ -48,7 +46,6 @@ namespace Orchard.Setup {
             builder.RegisterType<CurrentThemeFilter>().As<IFilterProvider>().InstancePerLifetimeScope();
             builder.RegisterType<ThemeFilter>().As<IFilterProvider>().InstancePerLifetimeScope();
             builder.RegisterType<PageTitleBuilder>().As<IPageTitleBuilder>().InstancePerLifetimeScope();
-            builder.RegisterType<ZoneManager>().As<IZoneManager>().InstancePerLifetimeScope();
             builder.RegisterType<PageClassBuilder>().As<IPageClassBuilder>().InstancePerLifetimeScope();
             builder.RegisterType<Notifier>().As<INotifier>().InstancePerLifetimeScope();
             builder.RegisterType<NotifyFilter>().As<IFilterProvider>().InstancePerLifetimeScope();

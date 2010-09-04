@@ -1,12 +1,5 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-
-namespace Orchard.ContentManagement.Handlers {
+﻿namespace Orchard.ContentManagement.Handlers {
     public class ContentHandlerBase : IContentHandler {
-        public virtual IEnumerable<ContentType> GetContentTypes() {
-            return Enumerable.Empty<ContentType>();
-        }
-
         public virtual void Activating(ActivatingContentContext context) {}
         public virtual void Activated(ActivatedContentContext context) {}
         public virtual void Initializing(InitializingContentContext context) {}

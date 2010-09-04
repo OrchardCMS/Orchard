@@ -9,6 +9,7 @@ using Orchard.Services;
 using Orchard.UI.Zones;
 
 namespace Orchard.Themes.DesignerNotes {
+#if REFACTORING
     public class ZoneManagerEvents : IZoneManagerEvents {
         private readonly IThemeService _themeService;
         private readonly IAuthorizationService _authorizationService;
@@ -82,4 +83,5 @@ namespace Orchard.Themes.DesignerNotes {
         public void ZoneRendered(ZoneRenderContext context) {
         }
     }
+#endif
 }

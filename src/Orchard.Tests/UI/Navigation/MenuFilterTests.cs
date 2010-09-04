@@ -4,7 +4,6 @@ using System.Web.Routing;
 using Moq;
 using NUnit.Framework;
 using Orchard.Localization;
-using Orchard.Mvc.ViewModels;
 using Orchard.Security;
 using Orchard.Tests.Stubs;
 using Orchard.UI.Admin;

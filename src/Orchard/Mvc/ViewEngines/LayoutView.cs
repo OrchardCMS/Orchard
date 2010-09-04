@@ -46,7 +46,7 @@ namespace Orchard.Mvc.ViewEngines {
 
             return new ViewDataDictionary<BaseViewModel>(BaseViewModel.From(dictionary));
 #else
-            return null;
+            return dictionary;
 #endif
         }
 

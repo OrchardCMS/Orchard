@@ -5,7 +5,8 @@ using System.Web.Mvc.Html;
 using Orchard.Mvc.ViewModels;
 
 namespace Orchard.Mvc.Html {
-    public static class ContentItemDisplayExtensions {
+ #if REFACTORING
+   public static class ContentItemDisplayExtensions {
         public static MvcHtmlString DisplayForItem<TModel, TItemModel>(this HtmlHelper<TModel> html, TItemModel item) where TItemModel : ContentItemViewModel {
             return html.DisplayForItem(x => item);
         }
@@ -21,4 +22,5 @@ namespace Orchard.Mvc.Html {
             return html.DisplayFor(expression, model.TemplateName, model.Prefix ?? "");
         }
     }
+#endif
 }

@@ -141,6 +141,8 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Config\Sample.Host.config" />
+    <None Include="Themes\Contoso\Views\HomePage\Home\Index.cshtml" />
+    <None Include="Themes\Contoso\Views\Layout.HomePage.cshtml" />
     <None Include="Themes\TheAdmin\Styles\images\icons.psd" />
     <Content Include="Themes\ClassicDark\Content\Images\bodyBackgroundgrey.gif" />
     <Content Include="Themes\ClassicDark\Content\Images\sidebarBackground.gif" />
@@ -212,7 +214,7 @@
     <Content Include="Themes\Contoso\Theme.txt" />
     <Content Include="Themes\Contoso\Views\Footer.ascx" />
     <Content Include="Themes\Contoso\Views\Layout.ascx" />
-    <Content Include="Themes\Contoso\Views\Layout.HomePage.ascx" />
+    <Content Include="Themes\Contoso\Views\_Layout.HomePage.ascx" />
     <Content Include="Themes\Contoso\Views\ListOfComments.ascx" />
     <Content Include="Themes\Contoso\Views\LogOn.ascx" />
     <Content Include="Themes\Contoso\Views\User.ascx" />

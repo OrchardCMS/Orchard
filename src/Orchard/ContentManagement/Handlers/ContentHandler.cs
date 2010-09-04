@@ -181,10 +181,6 @@ namespace Orchard.ContentManagement.Handlers {
             }
         }
 
-        public virtual IEnumerable<ContentType> GetContentTypes() {
-            return Enumerable.Empty<ContentType>();
-        }
-
         void IContentHandler.Activating(ActivatingContentContext context) {
             foreach (var filter in Filters.OfType<IContentActivatingFilter>())
                 filter.Activating(context);

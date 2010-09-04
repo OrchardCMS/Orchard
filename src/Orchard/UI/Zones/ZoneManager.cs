@@ -6,7 +6,7 @@ using Orchard.Logging;
 using Orchard.UI.Navigation;
 
 namespace Orchard.UI.Zones {
-
+#if REFACTORING
     public class ZoneManager : IZoneManager {
         private readonly IEnumerable<IZoneManagerEvents> _zoneManagerEventHandler;
 
@@ -95,4 +95,5 @@ namespace Orchard.UI.Zones {
             public IEnumerable<ZoneItem> Items { get; set; }
         }
     }
+#endif
 }

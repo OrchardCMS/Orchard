@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using Orchard.ContentManagement;
-using Orchard.Mvc.ViewModels;
 
 namespace Orchard.Core.Contents.ViewModels {
     public class ListContentsViewModel  {
@@ -25,7 +24,6 @@ namespace Orchard.Core.Contents.ViewModels {
         public class Entry {
             public ContentItem ContentItem { get; set; }
             public ContentItemMetadata ContentItemMetadata { get; set; }
-            public ContentItemViewModel ViewModel { get; set; }
         }
 
         #endregion

@@ -1,10 +1,11 @@
 using System.Collections.Generic;
+using Orchard.ContentManagement.MetaData.Models;
 using Orchard.Indexing;
 using Orchard.Mvc.ViewModels;
 
 namespace Orchard.ContentManagement {
     public interface IContentManager : IDependency {
-        IEnumerable<ContentType> GetContentTypes();
+        IEnumerable<ContentTypeDefinition> GetContentTypeDefinitions();
 
         ContentItem New(string contentType);
         
@@ -26,9 +27,9 @@ namespace Orchard.ContentManagement {
 
         ContentItemMetadata GetItemMetadata(IContent contentItem);
 
-        ContentItemViewModel<TContent> BuildDisplayShape<TContent>(TContent content, string displayType) where TContent : IContent;
-        ContentItemViewModel<TContent> BuildEditorShape<TContent>(TContent content) where TContent : IContent;
-        ContentItemViewModel<TContent> UpdateEditorShape<TContent>(TContent content, IUpdateModel updater) where TContent : IContent;
+        TContent BuildDisplayModel<TContent>(TContent content, string displayType) where TContent : IContent;
+        TContent BuildEditorModel<TContent>(TContent content) where TContent : IContent;
+        TContent UpdateEditorModel<TContent>(TContent content, IUpdateModel updater) where TContent : IContent;
     }
 
     public class VersionOptions {

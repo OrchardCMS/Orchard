@@ -172,9 +172,6 @@
     <Compile Include="ContentManagement\ContentPart.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="ContentManagement\ContentType.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="ContentManagement\DefaultContentManager.cs">
       <SubType>Code</SubType>
     </Compile>
