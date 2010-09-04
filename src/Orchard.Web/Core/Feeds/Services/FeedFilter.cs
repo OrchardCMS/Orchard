@@ -14,7 +14,7 @@ namespace Orchard.Core.Feeds.Services {
         }
 
         public void OnResultExecuting(ResultExecutingContext filterContext) {
-            _workContextAccessor.GetContext(filterContext).CurrentPage.Zones["Head"].Add(html => html.ViewContext.Writer.Write(_feedManager.GetRegisteredLinks(html)), ":after");
+            _workContextAccessor.GetContext(filterContext).Page.Zones["Head"].Add(html => html.ViewContext.Writer.Write(_feedManager.GetRegisteredLinks(html)), ":after");
         }
 
         public void OnResultExecuted(ResultExecutedContext filterContext) {}

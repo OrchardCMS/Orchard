@@ -83,7 +83,7 @@ namespace Orchard.UI.Notify {
                 return;
 
             var shape = _shapeHelperFactory.CreateHelper();
-            var messagesZone = _workContextAccessor.GetContext(filterContext).CurrentPage.Zones["Messages"];
+            var messagesZone = _workContextAccessor.GetContext(filterContext).Page.Zones["Messages"];
             foreach(var messageEntry in messageEntries)
                 messagesZone.Add(shape.Message(messageEntry));
 

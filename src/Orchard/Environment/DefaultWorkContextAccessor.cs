@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Linq;
 using System.Web;
 using Autofac;
 using Orchard.Mvc;
@@ -85,18 +86,25 @@ namespace Orchard.Environment {
 
 
         class WorkContextImplementation : WorkContext {
-            private readonly IComponentContext _componentContext;
+            readonly IComponentContext _componentContext;
+            readonly ConcurrentDictionary<string, object> _state = new ConcurrentDictionary<string, object>();
+            readonly IEnumerable<IWorkContextStateProvider> _workContextStateProviders;
 
             public WorkContextImplementation(IComponentContext componentContext) {
                 _componentContext = componentContext;
+                _workContextStateProviders = componentContext.Resolve<IEnumerable<IWorkContextStateProvider>>();
             }
 
             public override T Resolve<T>() {
                 return _componentContext.Resolve<T>();
             }
 
-            public override T State<T>() {
-                throw new NotImplementedException();
+            public override T GetState<T>(string name) {
+                return (T)_state.GetOrAdd(name, x => _workContextStateProviders.Select(wcsp => wcsp.Get<T>(x)).Where(t => !Equals(t, default(T))).FirstOrDefault());
+            }
+
+            public override void SetState<T>(string name, T value) {
+                _state[name] = value;
             }
         }
 

@@ -1,19 +1,25 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
+using System.Web;
 using System.Web.Mvc;
+using Orchard.DisplayManagement;
 
 namespace Orchard.Mvc.ViewEngines.ThemeAwareness {
     public interface ILayoutAwareViewEngine : IDependency, IViewEngine {
     }
 
     public class LayoutAwareViewEngine : ILayoutAwareViewEngine {
+        private readonly WorkContext _workContext;
         private readonly IThemeAwareViewEngine _themeAwareViewEngine;
+        private readonly IDisplayHelperFactory _displayHelperFactory;
 
-        public LayoutAwareViewEngine(IThemeAwareViewEngine themeAwareViewEngine) {
+        public LayoutAwareViewEngine(
+            WorkContext workContext,
+            IThemeAwareViewEngine themeAwareViewEngine,
+            IDisplayHelperFactory displayHelperFactory) {
+            _workContext = workContext;
             _themeAwareViewEngine = themeAwareViewEngine;
+            _displayHelperFactory = displayHelperFactory;
         }
 
         public ViewEngineResult FindPartialView(ControllerContext controllerContext, string partialViewName, bool useCache) {
@@ -21,77 +27,50 @@ namespace Orchard.Mvc.ViewEngines.ThemeAwareness {
         }
 
         public ViewEngineResult FindView(ControllerContext controllerContext, string viewName, string masterName, bool useCache) {
-            var bodyView = _themeAwareViewEngine.FindPartialView(controllerContext, viewName, useCache, true);
-            var layoutView = _themeAwareViewEngine.FindPartialView(controllerContext, "Layout", useCache, true);
-            var documentView = _themeAwareViewEngine.FindPartialView(controllerContext, "Document", useCache, true);
+            var findBody = _themeAwareViewEngine.FindPartialView(controllerContext, viewName, useCache, true);
 
-            if (bodyView.View == null ||
-                layoutView.View == null ||
-                documentView.View == null) {
-
-                var missingTemplatesResult = new ViewEngineResult(
-                    (bodyView.SearchedLocations ?? Enumerable.Empty<string>())
-                        .Concat((layoutView.SearchedLocations ?? Enumerable.Empty<string>()))
-                        .Concat((documentView.SearchedLocations ?? Enumerable.Empty<string>()))
-                    );
-
-                return missingTemplatesResult;
+            if (findBody.View == null) {
+                return findBody;
             }
 
-            var view = new LayoutView(new[] {
-                bodyView,
-                layoutView,
-                documentView,
-            });
+            var layoutView = new LayoutView((viewContext, writer, viewDataContainer) => {
+                var buffer = new StringWriter();
+                findBody.View.Render(viewContext, buffer);
 
-            return new ViewEngineResult(view, this);
+                _workContext.Page.Zones["Content"].Add(new HtmlString(buffer.ToString()), "5");
+
+                var display = _displayHelperFactory.CreateHelper(viewContext, viewDataContainer);
+                IHtmlString result = display(_workContext.Page);
+                writer.Write(result.ToHtmlString());
+
+            }, (context, view) => findBody.ViewEngine.ReleaseView(context, findBody.View));
+
+            return new ViewEngineResult(layoutView, this);
         }
 
         public void ReleaseView(ControllerContext controllerContext, IView view) {
             var layoutView = (LayoutView)view;
-            layoutView.ReleaseViews(controllerContext);
+            layoutView.ReleaseView(controllerContext, view);
         }
 
-        class LayoutView : IView {
-            private readonly ViewEngineResult[] _viewEngineResults;
+        class LayoutView : IView, IViewDataContainer {
+            private readonly Action<ViewContext, TextWriter, IViewDataContainer> _render;
+            private readonly Action<ControllerContext, IView> _releaseView;
 
-            public LayoutView(ViewEngineResult[] viewEngineResults) {
-                _viewEngineResults = viewEngineResults;
+            public LayoutView(Action<ViewContext, TextWriter, IViewDataContainer> render, Action<ControllerContext, IView> releaseView) {
+                _render = render;
+                _releaseView = releaseView;
             }
+
+            public ViewDataDictionary ViewData { get; set; }
 
             public void Render(ViewContext viewContext, TextWriter writer) {
-                var layoutViewContext = LayoutViewContext.From(viewContext);
-
-                for (var index = 0; index != _viewEngineResults.Length; ++index) {
-                    bool isFirst = index == 0;
-                    bool isLast = index == _viewEngineResults.Length - 1;
-
-                    var effectiveWriter = isLast ? viewContext.Writer : new StringWriter();
-                    var effectiveViewData = isFirst ? viewContext.ViewData : CoerceViewData(viewContext.ViewData);
-                    var viewEngineResult = _viewEngineResults[index];
-
-                    var effectiveContext = new ViewContext(
-                            viewContext,
-                            viewEngineResult.View,
-                            effectiveViewData,
-                            viewContext.TempData,
-                            effectiveWriter);
-
-                    viewEngineResult.View.Render(effectiveContext, effectiveWriter);
-
-                    if (!isLast)
-                        layoutViewContext.BodyContent = effectiveWriter.ToString();
-                }
+                ViewData = viewContext.ViewData;
+                _render(viewContext, writer, this);
             }
 
-            private static ViewDataDictionary CoerceViewData(ViewDataDictionary dictionary) {
-                return dictionary;
-            }
-
-            public void ReleaseViews(ControllerContext context) {
-                foreach (var viewEngineResult in _viewEngineResults) {
-                    viewEngineResult.ViewEngine.ReleaseView(context, viewEngineResult.View);
-                }
+            public void ReleaseView(ControllerContext context, IView view) {
+                _releaseView(context, view);
             }
         }
     }

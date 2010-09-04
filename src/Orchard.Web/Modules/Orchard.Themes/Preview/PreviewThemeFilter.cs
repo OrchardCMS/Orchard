@@ -33,7 +33,7 @@ namespace Orchard.Themes.Preview {
                                              };
 
             var shape = _shapeHelperFactory.CreateHelper();
-            _workContextAccessor.GetContext(filterContext).CurrentPage.Zones["Body"].Add(shape.ThemePreview(model), ":before");
+            _workContextAccessor.GetContext(filterContext).Page.Zones["Body"].Add(shape.ThemePreview(model), ":before");
         }
 
         public void OnResultExecuted(ResultExecutedContext filterContext) {}

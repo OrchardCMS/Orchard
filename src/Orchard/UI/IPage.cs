@@ -24,29 +24,36 @@ namespace Orchard.UI {
     }
 
     public interface IZone {
-        void Add(object item);
-        void Add(object item, string position);
-        void Add(Action<HtmlHelper> action);
-        void Add(Action<HtmlHelper> action, string position);
+        string ZoneName { get; set; }
+        IZone Add(object item);
+        IZone Add(object item, string position);
+        IZone Add(Action<HtmlHelper> action);
+        IZone Add(Action<HtmlHelper> action, string position);
     }
 
-    class Zone : IZone {
+    public class Zone : IZone {
         private readonly IList<object> _items = new List<object>();
 
-        public void Add(object item) {
+        public virtual string ZoneName { get; set; }
+
+        public virtual IZone Add(object item) {
             _items.Add(item);
+            return this;
         }
 
-        public void Add(object item, string position) {
+        public virtual IZone Add(object item, string position) {
             _items.Add(item); // not messing with position at the moment
+            return this;
         }
 
-        public void Add(Action<HtmlHelper> action) {
+        public virtual IZone Add(Action<HtmlHelper> action) {
             //throw new NotImplementedException();
+            return this;
         }
 
-        public void Add(Action<HtmlHelper> action, string position) {
+        public virtual IZone Add(Action<HtmlHelper> action, string position) {
             //throw new NotImplementedException();
+            return this;
         }
     }
 }

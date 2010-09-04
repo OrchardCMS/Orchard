@@ -71,8 +71,8 @@ namespace Orchard.Setup {
 
             builder.RegisterType<ThemeAwareViewEngine>().As<IThemeAwareViewEngine>();
             builder.RegisterType<LayoutAwareViewEngine>().As<ILayoutAwareViewEngine>();
-            builder.RegisterType<ConfiguredEnginesCache>().As<IConfiguredEnginesCache>(); 
-            
+            builder.RegisterType<ConfiguredEnginesCache>().As<IConfiguredEnginesCache>();
+            builder.RegisterType<PageWorkContextStateProvider>().As<IWorkContextStateProvider>().As<IShapeEvents>();
         }
 
 
