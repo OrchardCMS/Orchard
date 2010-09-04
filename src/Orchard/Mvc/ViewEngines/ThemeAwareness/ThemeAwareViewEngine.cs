@@ -7,7 +7,9 @@ using Orchard.Environment.Extensions;
 using Orchard.Themes;
 
 namespace Orchard.Mvc.ViewEngines.ThemeAwareness {
-    public interface IThemeAwareViewEngine : IDependency, IViewEngine {
+    public interface IThemeAwareViewEngine : IDependency {
+        ViewEngineResult FindPartialView(ControllerContext controllerContext, string partialViewName, bool useCache, bool useDeepPaths);
+        ViewEngineResult FindView(ControllerContext controllerContext, string viewName, string masterName, bool useCache, bool useDeepPaths);
     }
 
     public class ThemeAwareViewEngine : IThemeAwareViewEngine {
@@ -31,23 +33,32 @@ namespace Orchard.Mvc.ViewEngines.ThemeAwareness {
             _shellDescriptor = shellDescriptor;
         }
 
-        public ViewEngineResult FindPartialView(ControllerContext controllerContext, string partialViewName, bool useCache) {
-            IViewEngine engines = _nullEngines;
+        public ViewEngineResult FindPartialView(ControllerContext controllerContext, string partialViewName, bool useCache, bool useDeepPaths) {
+            var engines = _nullEngines;
 
             if (partialViewName.StartsWith("/") || partialViewName.StartsWith("~")) {
                 engines = BareEngines();
             }
             else if (_workContext.CurrentTheme != null) {
-                if (controllerContext is ViewContext) {
-                    engines = ShallowEngines(_workContext.CurrentTheme);
-                }
-                else {
-                    engines = DeepEngines(_workContext.CurrentTheme);
-                }
+                engines = useDeepPaths ? DeepEngines(_workContext.CurrentTheme) : ShallowEngines(_workContext.CurrentTheme);
             }
 
             return engines.FindPartialView(controllerContext, partialViewName, useCache);
         }
+
+        public ViewEngineResult FindView(ControllerContext controllerContext, string viewName, string masterName, bool useCache, bool useDeepPaths) {
+            var engines = _nullEngines;
+
+            if (viewName.StartsWith("/") || viewName.StartsWith("~")) {
+                engines = BareEngines();
+            }
+            else if (_workContext.CurrentTheme != null) {
+                engines = useDeepPaths ? DeepEngines(_workContext.CurrentTheme) : ShallowEngines(_workContext.CurrentTheme);
+            }
+
+            return engines.FindView(controllerContext, viewName, masterName, useCache);
+        }
+
 
         private IViewEngine BareEngines() {
             return _configuredEnginesCache.BindBareEngines(() => new ViewEngineCollectionWrapper(_viewEngineProviders.Select(vep => vep.CreateBareViewEngine())));
@@ -73,10 +84,6 @@ namespace Orchard.Mvc.ViewEngines.ThemeAwareness {
 
                 return new ViewEngineCollectionWrapper(engines);
             });
-        }
-
-        public ViewEngineResult FindView(ControllerContext controllerContext, string viewName, string masterName, bool useCache) {
-            return FindPartialView(controllerContext, viewName, useCache);
         }
 
         public void ReleaseView(ControllerContext controllerContext, IView view) {

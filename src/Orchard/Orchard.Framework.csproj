@@ -140,6 +140,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Mvc\ViewEngines\ThemeAwareness\ConfiguredEnginesCache.cs" />
+    <Compile Include="Mvc\ViewEngines\ThemeAwareness\LayoutAwareViewEngine.cs" />
     <Compile Include="Mvc\ViewEngines\ThemeAwareness\ThemeAwareViewEngine.cs" />
     <Compile Include="Mvc\ViewEngines\ThemeAwareness\ThemeAwareViewEngineShim.cs" />
     <Compile Include="Mvc\ViewEngines\ThemeAwareness\ViewEngineCollectionWrapper.cs" />
@@ -717,7 +718,7 @@
     <Compile Include="Mvc\ViewEngines\LayoutView.cs" />
     <Compile Include="Mvc\ViewEngines\LayoutViewEngine.cs" />
     <Compile Include="Mvc\ViewEngines\LayoutViewContext.cs" />
-    <Compile Include="Mvc\ViewEngines\ThemeAwareness\CurrentTheme.cs" />
+    <Compile Include="Mvc\ViewEngines\ThemeAwareness\ThemedViewResultFilter.cs" />
     <Compile Include="Mvc\ViewEngines\WebForms\WebFormViewEngineProvider.cs" />
     <Compile Include="UI\Admin\AdminThemeSelector.cs" />
     <Compile Include="UI\Navigation\INavigationManager.cs" />

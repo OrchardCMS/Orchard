@@ -43,7 +43,7 @@ namespace Orchard.Setup {
             builder.RegisterType<ModelBinderPublisher>().As<IModelBinderPublisher>().InstancePerLifetimeScope();
             builder.RegisterType<WebFormViewEngineProvider>().As<IViewEngineProvider>().InstancePerLifetimeScope();
             builder.RegisterType<RazorViewEngineProvider>().As<IViewEngineProvider>().InstancePerLifetimeScope();
-            builder.RegisterType<CurrentThemeFilter>().As<IFilterProvider>().InstancePerLifetimeScope();
+            builder.RegisterType<ThemedViewResultFilter>().As<IFilterProvider>().InstancePerLifetimeScope();
             builder.RegisterType<ThemeFilter>().As<IFilterProvider>().InstancePerLifetimeScope();
             builder.RegisterType<PageTitleBuilder>().As<IPageTitleBuilder>().InstancePerLifetimeScope();
             builder.RegisterType<PageClassBuilder>().As<IPageClassBuilder>().InstancePerLifetimeScope();
@@ -70,6 +70,7 @@ namespace Orchard.Setup {
             builder.RegisterType<DefaultShapeTableManager>().As<IShapeTableManager>();
 
             builder.RegisterType<ThemeAwareViewEngine>().As<IThemeAwareViewEngine>();
+            builder.RegisterType<LayoutAwareViewEngine>().As<ILayoutAwareViewEngine>();
             builder.RegisterType<ConfiguredEnginesCache>().As<IConfiguredEnginesCache>(); 
             
         }

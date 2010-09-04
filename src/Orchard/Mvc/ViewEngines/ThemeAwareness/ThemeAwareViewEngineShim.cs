@@ -13,15 +13,15 @@ namespace Orchard.Mvc.ViewEngines.ThemeAwareness {
 
         public ViewEngineResult FindPartialView(ControllerContext controllerContext, string partialViewName, bool useCache) {
             return Forward(
-                controllerContext, 
-                dve => dve.FindPartialView(controllerContext, partialViewName, useCache),
+                controllerContext,
+                dve => dve.FindPartialView(controllerContext, partialViewName, useCache, false /*useDeepPaths*/),
                 EmptyViewEngineResult);
         }
 
         public ViewEngineResult FindView(ControllerContext controllerContext, string viewName, string masterName, bool useCache) {
             return Forward(
                 controllerContext,
-                dve => dve.FindView(controllerContext, viewName, masterName, useCache),
+                dve => dve.FindView(controllerContext, viewName, masterName, useCache, false /*useDeepPaths*/),
                 EmptyViewEngineResult);
         }
 
