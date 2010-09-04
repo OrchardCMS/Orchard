@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using NUnit.Framework;
 using Orchard.Logging;
 
@@ -48,7 +46,7 @@ namespace Orchard.Tests {
             public object[] LogArgs { get; set; }
         }
 
-        private interface ITestEvents : IEvents {
+        private interface ITestEvents : IDependency {
             void Hello(string name);
         }
 

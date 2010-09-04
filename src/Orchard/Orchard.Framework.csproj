@@ -649,7 +649,7 @@
     <Compile Include="Environment\Extensions\Loaders\PrecompiledExtensionLoader.cs" />
     <Compile Include="Environment\Extensions\Loaders\ReferencedExtensionLoader.cs" />
     <Compile Include="Environment\Extensions\Folders\ThemeFolders.cs" />
-    <Compile Include="IEvents.cs" />
+    <Compile Include="InvokeExtensions.cs" />
     <Compile Include="Localization\IText.cs" />
     <Compile Include="Localization\LocalizationModule.cs" />
     <Compile Include="Localization\LocalizationUtilities.cs" />

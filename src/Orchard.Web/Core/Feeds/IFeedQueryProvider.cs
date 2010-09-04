@@ -1,7 +1,7 @@
 ﻿using Orchard.Core.Feeds.Models;
 
 namespace Orchard.Core.Feeds {
-    public interface IFeedQueryProvider : IEvents {
+    public interface IFeedQueryProvider : IDependency {
         FeedQueryMatch Match(FeedContext context);
     }
 

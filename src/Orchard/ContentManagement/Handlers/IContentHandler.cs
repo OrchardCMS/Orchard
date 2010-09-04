@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 
 namespace Orchard.ContentManagement.Handlers {
-    public interface IContentHandler : IEvents {
+    public interface IContentHandler : IDependency {
         IEnumerable<ContentType> GetContentTypes();
 
         void Activating(ActivatingContentContext context);

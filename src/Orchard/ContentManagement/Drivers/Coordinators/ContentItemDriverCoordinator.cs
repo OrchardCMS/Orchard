@@ -2,6 +2,7 @@
 using JetBrains.Annotations;
 using Orchard.ContentManagement.Handlers;
 using Orchard.Logging;
+using Orchard.Utility.Extensions;
 
 namespace Orchard.ContentManagement.Drivers.Coordinators {
     [UsedImplicitly]
