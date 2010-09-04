@@ -9,7 +9,6 @@ namespace Orchard.Search.Handlers {
         public SearchSettingsPartHandler(IRepository<SearchSettingsPartRecord> repository) {
             Filters.Add(new ActivatingFilter<SearchSettingsPart>("Site"));
             Filters.Add(StorageFilter.For(repository));
-            Filters.Add(new TemplateFilterForRecord<SearchSettingsPartRecord>("CommentSettings", "Parts/Search.SiteSettings"));
         }
     }
 }

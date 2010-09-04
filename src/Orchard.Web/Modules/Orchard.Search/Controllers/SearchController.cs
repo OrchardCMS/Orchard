@@ -24,7 +24,7 @@ namespace Orchard.Search.Controllers {
         protected virtual ISite CurrentSite { get; [UsedImplicitly] private set; }
 
         public ActionResult Index(string q, int page = 1, int pageSize = 10) {
-            var searchFields = CurrentSite.As<SearchSettingsPart>().Record.SearchedFields.Split(new[] {',', ' '}, StringSplitOptions.RemoveEmptyEntries);
+            var searchFields = CurrentSite.As<SearchSettingsPart>().SearchedFields;
 
             var searchHits = _searchService.Query(q, page, pageSize, 
                     CurrentSite.As<SearchSettingsPart>().Record.FilterCulture,

@@ -67,6 +67,7 @@
   <ItemGroup>
     <Compile Include="Controllers\SearchController.cs" />
     <Compile Include="DataMigrations\SearchDataMigration.cs" />
+    <Compile Include="Drivers\SearchSettingsPartDriver.cs" />
     <Compile Include="Filters\SearchFilter.cs" />
     <Compile Include="Models\SearchSettingsPart.cs" />
     <Compile Include="Models\SearchSettingsPartRecord.cs" />
@@ -74,6 +75,7 @@
     <Compile Include="Handlers\SearchSettingsPartHandler.cs" />
     <Compile Include="Services\ISearchService.cs" />
     <Compile Include="Services\SearchService.cs" />
+    <Compile Include="ViewModels\SearchSettingsViewModel.cs" />
     <Compile Include="ViewModels\SearchResultViewModel.cs" />
     <Compile Include="ViewModels\SearchViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
