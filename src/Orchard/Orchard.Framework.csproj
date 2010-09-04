@@ -715,8 +715,6 @@
     <Compile Include="Mvc\Results\NotFoundResult.cs" />
     <Compile Include="Mvc\Routes\RouteExtensions.cs" />
     <Compile Include="Mvc\ViewEngines\IViewEngineProvider.cs" />
-    <Compile Include="Mvc\ViewEngines\LayoutView.cs" />
-    <Compile Include="Mvc\ViewEngines\LayoutViewEngine.cs" />
     <Compile Include="Mvc\ViewEngines\LayoutViewContext.cs" />
     <Compile Include="Mvc\ViewEngines\ThemeAwareness\ThemedViewResultFilter.cs" />
     <Compile Include="Mvc\ViewEngines\WebForms\WebFormViewEngineProvider.cs" />
