@@ -4,8 +4,8 @@ using System.Web.Mvc;
 using Orchard.Environment;
 
 namespace Orchard.Mvc.ViewEngines.ThemeAwareness {
-    public class ThemeArareViewEngineShim : IViewEngine, IShim {
-        public ThemeArareViewEngineShim() {
+    public class ThemeAwareViewEngineShim : IViewEngine, IShim {
+        public ThemeAwareViewEngineShim() {
             OrchardHostContainerRegistry.RegisterShim(this);
         }
 

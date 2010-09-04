@@ -119,7 +119,7 @@ namespace Orchard.Environment {
 
             ControllerBuilder.Current.SetControllerFactory(new OrchardControllerFactory());
             ViewEngines.Engines.Clear();
-            ViewEngines.Engines.Add(new ThemeArareViewEngineShim());
+            ViewEngines.Engines.Add(new ThemeAwareViewEngineShim());
 
             var hostContainer = new DefaultOrchardHostContainer(container);
             //MvcServiceLocator.SetCurrent(hostContainer);
