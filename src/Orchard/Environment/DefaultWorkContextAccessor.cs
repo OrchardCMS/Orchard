@@ -100,7 +100,12 @@ namespace Orchard.Environment {
             }
 
             public override T GetState<T>(string name) {
-                return (T)_state.GetOrAdd(name, x => _workContextStateProviders.Select(wcsp => wcsp.Get<T>(x)).Where(t => !Equals(t, default(T))).FirstOrDefault());
+                return (T)_state.GetOrAdd(name, x => GetStateInternal<T>(x));
+            }
+
+            private T GetStateInternal<T>(string name) {
+                return _workContextStateProviders.Select(wcsp => wcsp.Get<T>(name))
+                    .FirstOrDefault(value => !Equals(value, default(T)));
             }
 
             public override void SetState<T>(string name, T value) {

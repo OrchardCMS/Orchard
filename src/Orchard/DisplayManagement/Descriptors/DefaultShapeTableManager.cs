@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Orchard.DisplayManagement.Descriptors {
@@ -9,30 +10,41 @@ namespace Orchard.DisplayManagement.Descriptors {
             _bindingStrategies = bindingStrategies;
         }
 
-        private ShapeTable _shapeTable;
+        ConcurrentDictionary<string, ShapeTable> _tables = new ConcurrentDictionary<string, ShapeTable>();
 
         public ShapeTable GetShapeTable(string themeName) {
-            if (_shapeTable == null) {
+            return _tables.GetOrAdd(themeName ?? "", x => {
                 var builder = new ShapeTableBuilder();
                 foreach (var bindingStrategy in _bindingStrategies) {
                     bindingStrategy.Discover(builder);
                 }
-                // placeholder - alterations will need to be selective and in a particular order 
-                
-                // GroupBy has been determined to preserve the order of items in original series
-                _shapeTable = new ShapeTable {
-                    Descriptors = builder.Build()
-                        .GroupBy(alteration => alteration.ShapeType)
-                        .Select(group => group.Aggregate(
-                            new ShapeDescriptor { ShapeType = group.Key },
-                            (d, a) => {
-                                a.Alter(d);
-                                return d;
-                            }))
-                        .ToDictionary(sd => sd.ShapeType)
+
+                var alterations = builder.Build()
+                    .Where(alteration => IsModuleOrRequestedTheme(alteration, themeName));
+
+                var descriptors = alterations.GroupBy(alteration => alteration.ShapeType)
+                    .Select(group => group.Aggregate(
+                        new ShapeDescriptor { ShapeType = group.Key },
+                        (descriptor, alteration) => {
+                            alteration.Alter(descriptor);
+                            return descriptor;
+                        }));
+
+                return new ShapeTable {
+                    Descriptors = descriptors.ToDictionary(sd => sd.ShapeType)
                 };
+            });
+        }
+
+        static bool IsModuleOrRequestedTheme(ShapeDescriptorAlteration alteration, string themeName) {
+            if (alteration == null || 
+                alteration.Feature == null ||
+                alteration.Feature.Extension == null) {
+                return false;
             }
-            return _shapeTable;
+
+            return alteration.Feature.Extension.ExtensionType == "Module" ||
+                   (alteration.Feature.Extension.ExtensionType == "Theme" && alteration.Feature.Name == themeName);
         }
     }
 }

@@ -37,7 +37,7 @@ namespace Orchard.Mvc.ViewEngines.ThemeAwareness {
                 var buffer = new StringWriter();
                 findBody.View.Render(viewContext, buffer);
 
-                _workContext.Page.Zones["Content"].Add(new HtmlString(buffer.ToString()), "5");
+                _workContext.Page.Zones.Content.Add(new HtmlString(buffer.ToString()), "5");
 
                 var display = _displayHelperFactory.CreateHelper(viewContext, viewDataContainer);
                 IHtmlString result = display(_workContext.Page);

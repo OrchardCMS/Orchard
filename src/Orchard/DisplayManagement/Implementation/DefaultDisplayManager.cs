@@ -11,6 +11,7 @@ using Orchard.Localization;
 namespace Orchard.DisplayManagement.Implementation {
     public class DefaultDisplayManager : IDisplayManager {
         private readonly IShapeTableManager _shapeTableManager;
+        private readonly IWorkContextAccessor _workContextAccessor;
 
         // this need to be Shape instead of IShape - cast to interface throws error on clr types like HtmlString
         private static readonly CallSite<Func<CallSite, object, Shape>> _convertAsShapeCallsite = CallSite<Func<CallSite, object, Shape>>.Create(
@@ -20,8 +21,11 @@ namespace Orchard.DisplayManagement.Implementation {
                     typeof(Shape),
                     null/*typeof(DefaultDisplayManager)*/)));
 
-        public DefaultDisplayManager(IShapeTableManager shapeTableManager) {
+        public DefaultDisplayManager(
+            IShapeTableManager shapeTableManager,
+            IWorkContextAccessor workContextAccessor) {
             _shapeTableManager = shapeTableManager;
+            _workContextAccessor = workContextAccessor;
             T = NullLocalizer.Instance;
         }
 
@@ -32,7 +36,7 @@ namespace Orchard.DisplayManagement.Implementation {
 
             var shape = _convertAsShapeCallsite.Target(_convertAsShapeCallsite, context.Value);
 
-            // non-shape arguements are returned as a no-op
+            // non-shape arguments are returned as a no-op
             if (shape == null)
                 return CoerceHtmlString(context.Value);
 
@@ -41,7 +45,8 @@ namespace Orchard.DisplayManagement.Implementation {
             if (shapeMetadata == null || string.IsNullOrEmpty(shapeMetadata.Type))
                 return CoerceHtmlString(context.Value);
 
-            var shapeTable = _shapeTableManager.GetShapeTable(null);
+            var workContext = _workContextAccessor.GetContext(context.ViewContext);
+            var shapeTable = _shapeTableManager.GetShapeTable(workContext.CurrentTheme.ThemeName);
             //preproc loop / event (alter shape, swapping type)
 
             ShapeDescriptor shapeDescriptor;
@@ -63,7 +68,7 @@ namespace Orchard.DisplayManagement.Implementation {
             return new HtmlString(HttpUtility.HtmlEncode(value));
         }
 
-        private IHtmlString Process(ShapeDescriptor shapeDescriptor, IShape shape, DisplayContext context) {
+        private IHtmlString Process(ShapeDescriptor shapeDescriptor, IShape shape, DisplayContext context) {            
             return CoerceHtmlString(shapeDescriptor.Binding(context));
         }
 

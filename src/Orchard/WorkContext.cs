@@ -18,8 +18,8 @@ namespace Orchard {
             set { SetState("HttpContext", value); }
         }
 
-        public IPage Page {
-            get { return GetState<IPage>("Page"); }
+        public dynamic Page {
+            get { return GetState<object>("Page"); }
             set { SetState("Page", value); }
         }
 

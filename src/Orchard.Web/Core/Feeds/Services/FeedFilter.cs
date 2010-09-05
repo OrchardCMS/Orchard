@@ -1,6 +1,7 @@
 using System.Web.Mvc;
 using JetBrains.Annotations;
 using Orchard.Mvc.Filters;
+using Orchard.UI;
 
 namespace Orchard.Core.Feeds.Services {
     [UsedImplicitly]
@@ -14,7 +15,8 @@ namespace Orchard.Core.Feeds.Services {
         }
 
         public void OnResultExecuting(ResultExecutingContext filterContext) {
-            _workContextAccessor.GetContext(filterContext).Page.Zones["Head"].Add(html => html.ViewContext.Writer.Write(_feedManager.GetRegisteredLinks(html)), ":after");
+            IPage page  =_workContextAccessor.GetContext(filterContext).Page;
+            page.Zones["Head"].Add((HtmlHelper html) => html.ViewContext.Writer.Write(_feedManager.GetRegisteredLinks(html)), ":after");
         }
 
         public void OnResultExecuted(ResultExecutedContext filterContext) {}

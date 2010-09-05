@@ -2,12 +2,18 @@
 using System.Collections.Generic;
 using System.Linq;
 using ClaySharp;
+using Orchard.DisplayManagement.Descriptors;
 using Orchard.DisplayManagement.Shapes;
 
 namespace Orchard.DisplayManagement.Implementation {
-    public interface IShapeEvents : IDependency {
+    public interface IShapeFactoryEvents : IDependency {
         void Creating(ShapeCreatingContext context);
         void Created(ShapeCreatedContext context);
+    }
+
+    public abstract class ShapeFactoryEvents : IShapeFactoryEvents{
+        public virtual void Creating(ShapeCreatingContext context) {}
+        public virtual void Created(ShapeCreatedContext context) {}
     }
 
     public class ShapeCreatingContext {
@@ -27,13 +33,19 @@ namespace Orchard.DisplayManagement.Implementation {
 
 
     public class DefaultShapeFactory : IShapeFactory {
-        private readonly IEnumerable<Lazy<IShapeEvents>> _events;
+        private readonly IEnumerable<Lazy<IShapeFactoryEvents>> _events;
+        private readonly IShapeTableManager _shapeTableManager;
 
-        public DefaultShapeFactory(IEnumerable<Lazy<IShapeEvents>> events) {
+        public DefaultShapeFactory(IEnumerable<Lazy<IShapeFactoryEvents>> events, IShapeTableManager shapeTableManager) {
             _events = events;
+            _shapeTableManager = shapeTableManager;
         }
 
         public IShape Create(string shapeType, INamedEnumerable<object> parameters) {
+            var defaultShapeTable = _shapeTableManager.GetShapeTable(null);
+            ShapeDescriptor shapeDescriptor;
+            defaultShapeTable.Descriptors.TryGetValue(shapeType, out shapeDescriptor);
+
             var creatingContext = new ShapeCreatingContext {
                 ShapeFactory = this,
                 ShapeType = shapeType,
@@ -50,7 +62,6 @@ namespace Orchard.DisplayManagement.Implementation {
                 // consume the first argument
                 positional = positional.Skip(1);
             }
-            IClayBehavior[] behaviors;
 
             if (creatingContext.BaseType == typeof(Array)) {
                 // array is a hint - not an intended base class
@@ -70,10 +81,17 @@ namespace Orchard.DisplayManagement.Implementation {
                 };
             }
 
+            // "creating" events may add behaviors and alter base type
             foreach (var ev in _events) {
                 ev.Value.Creating(creatingContext);
             }
+            if (shapeDescriptor != null && shapeDescriptor.Creating != null) {
+                foreach (var ev in shapeDescriptor.Creating) {
+                    ev(creatingContext);
+                }
+            }
 
+            // create the new instance
             var createdContext = new ShapeCreatedContext {
                 ShapeFactory = this,
                 ShapeType = creatingContext.ShapeType,
@@ -81,6 +99,22 @@ namespace Orchard.DisplayManagement.Implementation {
             };
             createdContext.Shape.Metadata = new ShapeMetadata { Type = shapeType };
 
+            // "created" events provides default values and new object initialization
+            foreach (var ev in _events) {
+                ev.Value.Created(createdContext);
+            }
+            if (shapeDescriptor != null && shapeDescriptor.Created != null) {
+                foreach (var ev in shapeDescriptor.Created) {
+                    ev(createdContext);
+                }
+            }
+            foreach (var ev in creatingContext.OnCreated) {
+                ev(createdContext);
+            }
+
+
+            // other properties passed with call overlay any defaults, so are after the created events
+            
             // only one non-Type, non-named argument is allowed
             var initializer = positional.SingleOrDefault();
             if (initializer != null) {
@@ -91,13 +125,6 @@ namespace Orchard.DisplayManagement.Implementation {
 
             foreach (var kv in parameters.Named) {
                 createdContext.Shape[kv.Key] = kv.Value;
-            }
-
-            foreach (var ev in creatingContext.OnCreated) {
-                ev(createdContext);
-            }
-            foreach (var ev in _events) {
-                ev.Value.Created(createdContext);
             }
 
             return createdContext.Shape;

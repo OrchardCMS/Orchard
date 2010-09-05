@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Web.Mvc;
+using Orchard.DisplayManagement.Shapes;
 
 namespace Orchard.UI {
     public interface IPage {
@@ -31,7 +33,7 @@ namespace Orchard.UI {
         IZone Add(Action<HtmlHelper> action, string position);
     }
 
-    public class Zone : IZone {
+    public class Zone : Shape, IZone {
         private readonly IList<object> _items = new List<object>();
 
         public virtual string ZoneName { get; set; }
@@ -54,6 +56,12 @@ namespace Orchard.UI {
         public virtual IZone Add(Action<HtmlHelper> action, string position) {
             //throw new NotImplementedException();
             return this;
+        }
+
+        public virtual IList<object> Items {
+            get {
+                return _items;
+            }
         }
     }
 }

@@ -1,16 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Web.Mvc;
-using Autofac;
-using ClaySharp;
-using Orchard.ContentManagement;
-using Orchard.Data.Migration;
+﻿using Autofac;
 using Orchard.DisplayManagement;
-using Orchard.Environment;
 using Orchard.Localization;
-using Orchard.Mvc.Html;
 using Orchard.Security;
 using Orchard.Security.Permissions;
 

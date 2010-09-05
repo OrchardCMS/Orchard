@@ -1,6 +1,6 @@
-<%@ Control Language="C#" Inherits="System.Web.Mvc.ViewUserControl<BaseViewModel>" %>
-<%@ Import Namespace="Orchard.Mvc.ViewModels" %>
-<%  //todo: (heskew) this should really be using the IResourceManager if it's to be a theme especially for the jquery dep (w/out needing to copy into this theme...)
+<%@ Control Language="C#" Inherits="Orchard.Mvc.ViewUserControl" %>
+
+<%--  //todo: (heskew) this should really be using the IResourceManager if it's to be a theme especially for the jquery dep (w/out needing to copy into this theme...)
     var jquery = ResolveUrl("~/Modules/Orchard.Themes/Scripts/jquery-1.4.2.js");
     Model.Zones.AddAction("head:scripts", html =>
       html.ViewContext.Writer.Write(@"<script type=""text/javascript"" src=""" + jquery + @"""></script>"));
@@ -15,10 +15,12 @@
       html.ViewContext.Writer.Write(@"<link rel=""stylesheet"" type=""text/css"" href=""" + siteCss + @"""/>"));
     var ie6Css = ResolveUrl("../Styles/ie6.css");
     Model.Zones.AddAction("head:styles", html =>
-      html.ViewContext.Writer.Write(@"<!--[if lte IE 6]><link rel=""stylesheet"" type=""text/css"" media=""screen, projection"" href=""" + ie6Css + @"""/><![endif]-->")); %>
+      html.ViewContext.Writer.Write(@"<!--[if lte IE 6]><link rel=""stylesheet"" type=""text/css"" media=""screen, projection"" href=""" + ie6Css + @"""/><![endif]-->")); 
+      --%>
 <div id="header">
 	<div id="branding"><h1>Welcome to Orchard</h1></div>
 </div>
 <div id="main">
-    <%Html.ZoneBody("content"); %>
+    
+    <%: Display(Model.Content) %>
 </div>

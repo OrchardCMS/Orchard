@@ -79,7 +79,7 @@ namespace Orchard.Mvc.ViewEngines.Razor {
 
             //Logger.Debug("UniversalFormats (module): \r\n\t-{0}", string.Join("\r\n\t-", universalFormats));
 
-            var viewEngine = new CshtmlViewEngine {
+            var viewEngine = new RazorViewEngine {
                 MasterLocationFormats = DisabledFormats,
                 ViewLocationFormats = universalFormats,
                 PartialViewLocationFormats = universalFormats,
@@ -92,7 +92,7 @@ namespace Orchard.Mvc.ViewEngines.Razor {
         }
 
         public IViewEngine CreateBareViewEngine() {
-            return new CshtmlViewEngine {
+            return new RazorViewEngine {
                 MasterLocationFormats = DisabledFormats,
                 ViewLocationFormats = DisabledFormats,
                 PartialViewLocationFormats = DisabledFormats,

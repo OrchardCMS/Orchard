@@ -13,6 +13,7 @@ using Orchard.Data.Providers;
 using Orchard.Data.Migration;
 using Orchard.DisplayManagement;
 using Orchard.DisplayManagement.Descriptors;
+using Orchard.DisplayManagement.Descriptors.ShapeTemplateStrategy;
 using Orchard.DisplayManagement.Implementation;
 using Orchard.DisplayManagement.Shapes;
 using Orchard.Environment;
@@ -31,6 +32,7 @@ using Orchard.Themes;
 using Orchard.UI.Notify;
 using Orchard.UI.PageClass;
 using Orchard.UI.PageTitle;
+using Orchard.UI.Zones;
 
 namespace Orchard.Setup {
     public class SetupMode : Module {
@@ -41,8 +43,8 @@ namespace Orchard.Setup {
             builder.RegisterModule(new CommandModule());
             builder.RegisterType<RoutePublisher>().As<IRoutePublisher>().InstancePerLifetimeScope();
             builder.RegisterType<ModelBinderPublisher>().As<IModelBinderPublisher>().InstancePerLifetimeScope();
-            builder.RegisterType<WebFormViewEngineProvider>().As<IViewEngineProvider>().InstancePerLifetimeScope();
-            builder.RegisterType<RazorViewEngineProvider>().As<IViewEngineProvider>().InstancePerLifetimeScope();
+            builder.RegisterType<WebFormViewEngineProvider>().As<IViewEngineProvider>().As<IShapeTemplateViewEngine>().InstancePerLifetimeScope();
+            builder.RegisterType<RazorViewEngineProvider>().As<IViewEngineProvider>().As<IShapeTemplateViewEngine>().InstancePerLifetimeScope();
             builder.RegisterType<ThemedViewResultFilter>().As<IFilterProvider>().InstancePerLifetimeScope();
             builder.RegisterType<ThemeFilter>().As<IFilterProvider>().InstancePerLifetimeScope();
             builder.RegisterType<PageTitleBuilder>().As<IPageTitleBuilder>().InstancePerLifetimeScope();
@@ -52,7 +54,7 @@ namespace Orchard.Setup {
             builder.RegisterType<DataServicesProviderFactory>().As<IDataServicesProviderFactory>().InstancePerLifetimeScope();
             builder.RegisterType<DefaultCommandManager>().As<ICommandManager>().InstancePerLifetimeScope();
             builder.RegisterType<HelpCommand>().As<ICommandHandler>().InstancePerLifetimeScope();
-            builder.RegisterType<DefaultWorkContextAccessor>().As<IWorkContextAccessor>();
+            builder.RegisterType<DefaultWorkContextAccessor>().As<IWorkContextAccessor>().InstancePerMatchingLifetimeScope("shell");
 
             // setup mode specific implementations of needed service interfaces
             builder.RegisterType<SafeModeThemeService>().As<IThemeService>().InstancePerLifetimeScope();
@@ -72,7 +74,11 @@ namespace Orchard.Setup {
             builder.RegisterType<ThemeAwareViewEngine>().As<IThemeAwareViewEngine>();
             builder.RegisterType<LayoutAwareViewEngine>().As<ILayoutAwareViewEngine>();
             builder.RegisterType<ConfiguredEnginesCache>().As<IConfiguredEnginesCache>();
-            builder.RegisterType<PageWorkContextStateProvider>().As<IWorkContextStateProvider>().As<IShapeEvents>();
+            builder.RegisterType<PageWorkContext>().As<IWorkContextStateProvider>();
+
+            builder.RegisterType<CoreShapes>().As<IShapeDescriptorBindingStrategy>();
+            builder.RegisterType<ShapeTemplateBindingStrategy>().As<IShapeDescriptorBindingStrategy>();
+            builder.RegisterType<BasicShapeTemplateHarvester>().As<IShapeTemplateHarvester>();
         }
 
 
