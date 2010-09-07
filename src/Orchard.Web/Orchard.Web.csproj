@@ -143,7 +143,7 @@
   <ItemGroup>
     <Content Include="Config\Sample.Host.config" />
     <None Include="Themes\Contoso\Views\HomePage\Home\Index.cshtml" />
-    <None Include="Themes\Contoso\Views\Layout.HomePage.cshtml" />
+    <None Include="Themes\Contoso\Views\Layout-HomePage.cshtml" />
     <None Include="Themes\TheAdmin\Styles\images\icons.psd" />
     <Content Include="Themes\ClassicDark\Content\Images\bodyBackgroundgrey.gif" />
     <Content Include="Themes\ClassicDark\Content\Images\sidebarBackground.gif" />

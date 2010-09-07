@@ -246,7 +246,7 @@ namespace Orchard.Core.Contents.Controllers {
 
             Services.Notifier.Information(string.IsNullOrWhiteSpace(model.TypeDefinition.DisplayName)
                 ? T("Your content has been created.")
-                : T("Your {0} has been created.", model.TypeDefinition.DisplayName));
+                : T("Your {0} has been created.", contentItem.TypeDefinition.DisplayName));
             return RedirectToAction("Edit", new RouteValueDictionary { { "Id", contentItem.Id } });
         }
 
@@ -286,7 +286,7 @@ namespace Orchard.Core.Contents.Controllers {
 
             Services.Notifier.Information(string.IsNullOrWhiteSpace(model.TypeDefinition.DisplayName)
                 ? T("Your content has been saved.")
-                : T("Your {0} has been saved.", model.TypeDefinition.DisplayName));
+                : T("Your {0} has been saved.", contentItem.TypeDefinition.DisplayName));
             return RedirectToAction("Edit", new RouteValueDictionary { { "Id", contentItem.Id } });
         }
 

@@ -1,9 +1,8 @@
-namespace Orchard.ContentManagement.Handlers {
-    public class BuildEditorModelContext {
-        public BuildEditorModelContext(IContent content) {
-            ContentItem = content.ContentItem;            
-        }
+using Orchard.DisplayManagement;
 
-        public ContentItem ContentItem { get; set; }
+namespace Orchard.ContentManagement.Handlers {
+    public class BuildEditorModelContext : BuildModelContext {
+        public BuildEditorModelContext(IContent content, IShape model, IShapeHelperFactory shapeHelperFactory) : base(content, model, shapeHelperFactory) {
+        }
     }
 }

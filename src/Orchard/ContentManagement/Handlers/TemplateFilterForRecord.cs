@@ -1,6 +1,8 @@
-﻿using Orchard.ContentManagement.Records;
+﻿using System;
+using Orchard.ContentManagement.Records;
 
 namespace Orchard.ContentManagement.Handlers {
+    [Obsolete]
     public class TemplateFilterForRecord<TRecord> : TemplateFilterBase<ContentPart<TRecord>> where TRecord : ContentPartRecord, new() {
         private readonly string _prefix;
         private string _location;
@@ -22,13 +24,13 @@ namespace Orchard.ContentManagement.Handlers {
             return this;
         }
 
-        protected override void BuildEditorShape(BuildEditorModelContext context, ContentPart<TRecord> part) {
-            context.ContentItem.Zones[_location].Add(part.Record, _position);
-        }
+        //protected override void BuildEditorShape(BuildEditorModelContext context, ContentPart<TRecord> part) {
+        //    context.ContentItem.Zones[_location].Add(part.Record, _position);
+        //}
 
-        protected override void UpdateEditorShape(UpdateEditorModelContext context, ContentPart<TRecord> part) {
-            context.Updater.TryUpdateModel(part.Record, _prefix, null, null);
-            BuildEditorShape(context, part);
-        }
+        //protected override void UpdateEditorShape(UpdateEditorModelContext context, ContentPart<TRecord> part) {
+        //    context.Updater.TryUpdateModel(part.Record, _prefix, null, null);
+        //    BuildEditorShape(context, part);
+        //}
     }
 }

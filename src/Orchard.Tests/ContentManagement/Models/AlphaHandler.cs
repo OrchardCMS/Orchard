@@ -3,7 +3,7 @@
 namespace Orchard.Tests.ContentManagement.Models {
     public class AlphaHandler : ContentHandler {
         public AlphaHandler() {
-            OnGetDisplayShape<Alpha>((ctx, part) => ctx.ContentItem.Zones["Main"].Add(part, "3"));
+            OnGetDisplayShape<Alpha>((ctx, part) => ctx.Model.Zones["Main"].Add(part, "3"));
         }
         
         protected override void Activating(ActivatingContentContext context) {

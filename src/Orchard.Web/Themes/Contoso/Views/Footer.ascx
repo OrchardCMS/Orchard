@@ -1,4 +1,4 @@
-﻿<%@ Control Language="C#" Inherits="System.Web.Mvc.ViewUserControl<BaseViewModel>" %>
+﻿<%@ Control Language="C#" Inherits="Orchard.Mvc.ViewUserControl" %>
 <%@ Import Namespace="Orchard.Mvc.ViewModels" %>
 <div class="footer group">
     <ul class="group">

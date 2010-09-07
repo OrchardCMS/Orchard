@@ -2,12 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using Autofac;
+using ClaySharp.Implementation;
 using Orchard.ContentManagement.Handlers;
 using Orchard.ContentManagement.MetaData;
 using Orchard.ContentManagement.MetaData.Builders;
 using Orchard.ContentManagement.MetaData.Models;
 using Orchard.ContentManagement.Records;
 using Orchard.Data;
+using Orchard.DisplayManagement;
 using Orchard.Indexing;
 using Orchard.Mvc.ViewModels;
 
@@ -19,6 +21,7 @@ namespace Orchard.ContentManagement {
         private readonly IRepository<ContentItemVersionRecord> _contentItemVersionRepository;
         private readonly IContentDefinitionManager _contentDefinitionManager;
         private readonly Func<IContentManagerSession> _contentManagerSession;
+        private readonly IShapeHelperFactory _shapeHelperFactory;
 
         public DefaultContentManager(
             IComponentContext context,
@@ -26,13 +29,15 @@ namespace Orchard.ContentManagement {
             IRepository<ContentItemRecord> contentItemRepository,
             IRepository<ContentItemVersionRecord> contentItemVersionRepository,
             IContentDefinitionManager contentDefinitionManager,
-            Func<IContentManagerSession> contentManagerSession) {
+            Func<IContentManagerSession> contentManagerSession,
+            IShapeHelperFactory shapeHelperFactory) {
             _context = context;
             _contentTypeRepository = contentTypeRepository;
             _contentItemRepository = contentItemRepository;
             _contentItemVersionRepository = contentItemVersionRepository;
             _contentDefinitionManager = contentDefinitionManager;
             _contentManagerSession = contentManagerSession;
+            _shapeHelperFactory = shapeHelperFactory;
         }
 
         private IEnumerable<IContentHandler> _handlers;
@@ -393,28 +398,31 @@ namespace Orchard.ContentManagement {
             return context.Metadata;
         }
 
-        public TContent BuildDisplayModel<TContent>(TContent content, string displayType) where TContent : IContent {
-            var context = new BuildDisplayModelContext(content, displayType);
+        public dynamic BuildDisplayModel<TContent>(TContent content, string displayType) where TContent : IContent {
+            var shapeHelper = _shapeHelperFactory.CreateHelper();
+            var context = new BuildDisplayModelContext(content, displayType, shapeHelper.Create("Item", Arguments.Empty()), _shapeHelperFactory);
             foreach (var handler in Handlers) {
                 handler.BuildDisplayShape(context);
             }
-            return content;
+            return context.Model;
         }
 
-        public TContent BuildEditorModel<TContent>(TContent content) where TContent : IContent {
-            var context = new BuildEditorModelContext(content);
+        public dynamic BuildEditorModel<TContent>(TContent content) where TContent : IContent {
+            var shapeHelper = _shapeHelperFactory.CreateHelper();
+            var context = new BuildEditorModelContext(content, shapeHelper.Create("Item", Arguments.Empty()), _shapeHelperFactory);
             foreach (var handler in Handlers) {
                 handler.BuildEditorShape(context);
             }
-            return content;
+            return context.Model;
         }
 
-        public TContent UpdateEditorModel<TContent>(TContent content, IUpdateModel updater) where TContent : IContent {
-            var context = new UpdateEditorModelContext(content, updater);
+        public dynamic UpdateEditorModel<TContent>(TContent content, IUpdateModel updater) where TContent : IContent {
+            var shapeHelper = _shapeHelperFactory.CreateHelper();
+            var context = new UpdateEditorModelContext(content, updater, shapeHelper.Create("Item", Arguments.Empty()), _shapeHelperFactory);
             foreach (var handler in Handlers) {
                 handler.UpdateEditorShape(context);
             }
-            return content;
+            return context.Model;
         }
 
         public IContentQuery<ContentItem> Query() {

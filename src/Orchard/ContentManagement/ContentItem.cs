@@ -15,13 +15,6 @@ namespace Orchard.ContentManagement {
         private readonly IList<ContentPart> _parts;
         ContentItem IContent.ContentItem { get { return this; } }
 
-        private readonly IZoneCollection _zones = new ZoneCollection();
-        public virtual IZoneCollection Zones {
-            get {
-                return _zones;
-            }
-        }
-
         public int Id { get { return Record == null ? 0 : Record.Id; } }
         public int Version { get { return VersionRecord == null ? 0 : VersionRecord.Number; } }
 

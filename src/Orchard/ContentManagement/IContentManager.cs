@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Orchard.ContentManagement.MetaData.Models;
+using Orchard.DisplayManagement;
 using Orchard.Indexing;
 using Orchard.Mvc.ViewModels;
 
@@ -27,9 +28,9 @@ namespace Orchard.ContentManagement {
 
         ContentItemMetadata GetItemMetadata(IContent contentItem);
 
-        TContent BuildDisplayModel<TContent>(TContent content, string displayType) where TContent : IContent;
-        TContent BuildEditorModel<TContent>(TContent content) where TContent : IContent;
-        TContent UpdateEditorModel<TContent>(TContent content, IUpdateModel updater) where TContent : IContent;
+        dynamic BuildDisplayModel<TContent>(TContent content, string displayType) where TContent : IContent;
+        dynamic BuildEditorModel<TContent>(TContent content) where TContent : IContent;
+        dynamic UpdateEditorModel<TContent>(TContent content, IUpdateModel updater) where TContent : IContent;
     }
 
     public class VersionOptions {

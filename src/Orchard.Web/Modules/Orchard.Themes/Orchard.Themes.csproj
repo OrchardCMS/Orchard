@@ -104,16 +104,18 @@
     <Content Include="Views\Admin\Install.aspx" />
     <Content Include="Views\Admin\ThemePreview.ascx" />
     <Content Include="Views\DisplayTemplates\Items\ContentItem.ascx" />
-    <Content Include="Views\_Document.aspx" />
+    <None Include="Views\Document.aspx_" />
     <Content Include="Views\EditorTemplates\Items\ContentItem.ascx" />
     <Content Include="Views\Header.ascx" />
     <Content Include="Views\HeadPreload.ascx" />
-    <Content Include="Views\Layout.ascx" />
-    <Content Include="Views\Menu.ascx" />
-    <Content Include="Views\Messages.ascx" />
+    <None Include="Views\Layout.ascx_" />
+    <None Include="Views\Menu.ascx_" />
+    <None Include="Views\Menu.cshtml" />
+    <None Include="Views\MenuItem.cshtml" />
+    <None Include="Views\Messages.ascx_" />
     <Content Include="Views\NotFound.ascx" />
     <Content Include="Views\UI\Switchable.ascx" />
-    <Content Include="Views\User.ascx" />
+    <None Include="Views\User.ascx_" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>

@@ -1,22 +1,23 @@
-﻿<%@ Control Language="C#" Inherits="System.Web.Mvc.ViewUserControl<BaseViewModel>" %>
+﻿<%@ Control Language="C#" Inherits="Orchard.Mvc.ViewUserControl" %>
 <%@ Import Namespace="Orchard.Mvc.ViewModels"%>
+<%@ Import Namespace="Orchard.DisplayManagement.Shapes" %>
 
 <%
     Html.RegisterStyle("site.css", "1");
-    
-    Model.Zones.AddRenderPartial("header", "Header", Model);
-    Model.Zones.AddRenderPartial("menu", "Menu", Model);
-    Model.Zones.AddRenderPartial("footer", "Footer", Model);
+
+    Model.Header.Add(New.Header());
+    Model.Header.Add(New.Footer());
+    Model.Content.Add(Model.Metadata.ChildContent, "5");    
 %>
 
 <div id="container">
     <%-- Header --%>
-    <% Html.Zone("header"); %>
+    <%: Display(Model.Header)) %>
 	
 	<%-- Main Menu --%>
 	<div id="nav">
-        <% Html.Zone("menu");
-           Html.Zone("search"); %>
+        <%: Display(Model.Navigation) %>
+        <%: Display(Model.Search) %>
     </div>
 	
 	<%-- Main Content Area --%>
@@ -25,14 +26,16 @@
 	    <div class="content sub">
 	        <div class="content-items group">
 		        <div class="main">
-			        <% Html.ZoneBody("content"); %>
+			        <%: Display(Model.Content) %>
 		        </div>
 		        <div class="sidebar">
                     
                     <%-- START Blog Sidebars --%>
-		            <%Html.Zone("sidebar");%>
+		            <%: Display(Model.Sidebar) %>
 		            <%-- END Blog Sidebars --%>
-
+                    
+                    <%--these would be widgets--%>
+                    <%--
                     <div class="side-block">
                         <% Html.Zone("sidebar-w1"); %>
                     </div>
@@ -41,11 +44,11 @@
                     </div>
                     <div class="side-block">
                         <% Html.Zone("sidebar-w3"); %>
-                    </div>
+                    </div>--%>
 		        </div>
 		    </div>
 	    </div>
 	</div>
 	
 	<%-- Footer --%>
-	<% Html.Zone("footer"); %>
+	<%: Display(Model.Footer) %>
