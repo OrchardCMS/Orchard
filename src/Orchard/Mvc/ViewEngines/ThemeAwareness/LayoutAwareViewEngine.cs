@@ -27,23 +27,24 @@ namespace Orchard.Mvc.ViewEngines.ThemeAwareness {
         }
 
         public ViewEngineResult FindView(ControllerContext controllerContext, string viewName, string masterName, bool useCache) {
-            var findBody = _themeAwareViewEngine.FindPartialView(controllerContext, viewName, useCache, true);
+            var viewResult = _themeAwareViewEngine.FindPartialView(controllerContext, viewName, useCache, true);
 
-            if (findBody.View == null) {
-                return findBody;
+            if (viewResult.View == null) {
+                return viewResult;
             }
 
             var layoutView = new LayoutView((viewContext, writer, viewDataContainer) => {
                 var buffer = new StringWriter();
-                findBody.View.Render(viewContext, buffer);
 
-                _workContext.Page.Zones.Content.Add(new HtmlString(buffer.ToString()), "5");
+                viewResult.View.Render(viewContext, buffer);
+
+                _workContext.Page.Metadata.ChildContent = new HtmlString(buffer.ToString());
 
                 var display = _displayHelperFactory.CreateHelper(viewContext, viewDataContainer);
                 IHtmlString result = display(_workContext.Page);
                 writer.Write(result.ToHtmlString());
 
-            }, (context, view) => findBody.ViewEngine.ReleaseView(context, findBody.View));
+            }, (context, view) => viewResult.ViewEngine.ReleaseView(context, viewResult.View));
 
             return new ViewEngineResult(layoutView, this);
         }

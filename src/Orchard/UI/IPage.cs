@@ -25,7 +25,7 @@ namespace Orchard.UI {
         }
     }
 
-    public interface IZone {
+    public interface IZone : IEnumerable {
         string ZoneName { get; set; }
         IZone Add(object item);
         IZone Add(object item, string position);
@@ -62,6 +62,10 @@ namespace Orchard.UI {
             get {
                 return _items;
             }
+        }
+
+        public virtual IEnumerator GetEnumerator() {
+            return _items.GetEnumerator();
         }
     }
 }

@@ -23,14 +23,16 @@ namespace Orchard.UI.Zones {
     public class CoreShapes : IShapeDescriptorBindingStrategy {
         public void Discover(ShapeTableBuilder builder) {
             var feature = new FeatureDescriptor {
+                Name = "Orchard.Framework",
+                Extension = new ExtensionDescriptor {
                     Name = "Orchard.Framework",
-                    Extension = new ExtensionDescriptor {
-                        Name = "Orchard.Framework",
-                        ExtensionType = "Module",
-                    }
-                };
+                    ExtensionType = "Module",
+                }
+            };
+
             builder.Describe.Named("Layout").From(feature)
-                .OnCreating(context => context.Behaviors.Add(new ZoneHoldingBehavior(context.ShapeFactory)));
+                .OnCreating(context => context.Behaviors.Add(new ZoneHoldingBehavior(context.ShapeFactory)))
+                .Configure(d => d.FrameTypes.Add("Document"));
 
             builder.Describe.Named("Zone").From(feature)
                 .OnCreating(context => context.BaseType = typeof(Zone));

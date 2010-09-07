@@ -391,7 +391,6 @@
     <Compile Include="DisplayManagement\IShapeHelperFactory.cs" />
     <Compile Include="DisplayManagement\IDisplayHelperFactory.cs" />
     <Compile Include="DisplayManagement\IShape.cs" />
-    <Compile Include="DisplayManagement\IShapeMetadata.cs" />
     <Compile Include="DisplayManagement\Shapes\Shape.cs" />
     <Compile Include="DisplayManagement\Shapes\ShapeMetadata.cs" />
     <Compile Include="DisplayManagement\Descriptors\DefaultShapeTableManager.cs" />

@@ -51,10 +51,20 @@ namespace Orchard.DisplayManagement.Implementation {
 
             ShapeDescriptor shapeDescriptor;
             if (shapeTable.Descriptors.TryGetValue(shapeMetadata.Type, out shapeDescriptor)) {
-                return Process(shapeDescriptor, shape, context);
+                shape.Metadata.ChildContent = Process(shapeDescriptor, shape, context);
             }
-            //postproc / content html alteration/wrapping/etc
-            throw new OrchardException(T("Shape type {0} not found", shapeMetadata.Type));
+            else {
+                throw new OrchardException(T("Shape type {0} not found", shapeMetadata.Type));
+            }
+
+            foreach (var frameType in shape.Metadata.FrameTypes) {
+                ShapeDescriptor frameDescriptor;
+                if (shapeTable.Descriptors.TryGetValue(frameType, out frameDescriptor)) {
+                    shape.Metadata.ChildContent = Process(frameDescriptor, shape, context);
+                }
+            }
+
+            return shape.Metadata.ChildContent;
         }
 
         private IHtmlString CoerceHtmlString(object value) {
@@ -68,7 +78,7 @@ namespace Orchard.DisplayManagement.Implementation {
             return new HtmlString(HttpUtility.HtmlEncode(value));
         }
 
-        private IHtmlString Process(ShapeDescriptor shapeDescriptor, IShape shape, DisplayContext context) {            
+        private IHtmlString Process(ShapeDescriptor shapeDescriptor, IShape shape, DisplayContext context) {
             return CoerceHtmlString(shapeDescriptor.Binding(context));
         }
 
@@ -83,9 +93,10 @@ namespace Orchard.DisplayManagement.Implementation {
             public override DynamicMetaObject FallbackConvert(DynamicMetaObject target, DynamicMetaObject errorSuggestion) {
                 // adjust the normal csharp convert binder to allow failure to become null.
                 // this causes the same net effect as the "as" keyword, but may be applied to dynamic objects
-                return _innerBinder.FallbackConvert(
+                var result = _innerBinder.FallbackConvert(
                     target,
                     errorSuggestion ?? new DynamicMetaObject(Expression.Default(_innerBinder.ReturnType), GetTypeRestriction(target)));
+                return result;
             }
 
             static BindingRestrictions GetTypeRestriction(DynamicMetaObject obj) {

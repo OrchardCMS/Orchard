@@ -20,7 +20,7 @@ namespace Orchard.Mvc {
 
         public override void InitHelpers() {
             base.InitHelpers();
-            
+
             var workContext = ViewContext.GetWorkContext();
             workContext.Resolve<IComponentContext>().InjectUnsetProperties(this);
 
@@ -35,5 +35,8 @@ namespace Orchard.Mvc {
         public bool AuthorizedFor(Permission permission) {
             return Authorizer.Authorize(permission);
         }
+    }
+
+    public class ViewPage : ViewPage<dynamic> {
     }
 }

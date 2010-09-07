@@ -7,6 +7,7 @@ using NUnit.Framework;
 using Orchard.DisplayManagement;
 using Orchard.DisplayManagement.Descriptors;
 using Orchard.DisplayManagement.Implementation;
+using Orchard.DisplayManagement.Shapes;
 using Orchard.Environment;
 using Orchard.Mvc;
 using Orchard.UI.Zones;
@@ -33,7 +34,7 @@ namespace Orchard.Tests.UI {
         [Test]
         public void WorkContextPageIsLayoutShape() {
             var page = _workContext.Page;
-            IShapeMetadata pageMetadata = page.Metadata;
+            ShapeMetadata pageMetadata = page.Metadata;
             Assert.That(pageMetadata.Type, Is.EqualTo("Layout"));
             Assert.That(page.Metadata.Type, Is.EqualTo("Layout"));
         }

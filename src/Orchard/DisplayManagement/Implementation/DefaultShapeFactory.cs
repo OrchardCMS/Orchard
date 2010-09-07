@@ -85,7 +85,7 @@ namespace Orchard.DisplayManagement.Implementation {
             foreach (var ev in _events) {
                 ev.Value.Creating(creatingContext);
             }
-            if (shapeDescriptor != null && shapeDescriptor.Creating != null) {
+            if (shapeDescriptor != null) {
                 foreach (var ev in shapeDescriptor.Creating) {
                     ev(creatingContext);
                 }
@@ -97,13 +97,17 @@ namespace Orchard.DisplayManagement.Implementation {
                 ShapeType = creatingContext.ShapeType,
                 Shape = ClayActivator.CreateInstance(creatingContext.BaseType, creatingContext.Behaviors)
             };
-            createdContext.Shape.Metadata = new ShapeMetadata { Type = shapeType };
+            var shapeMetadata = new ShapeMetadata { Type = shapeType };
+            createdContext.Shape.Metadata = shapeMetadata;
+
+            if (shapeDescriptor != null)
+                shapeMetadata.FrameTypes = shapeMetadata.FrameTypes.Concat(shapeDescriptor.FrameTypes).ToList();
 
             // "created" events provides default values and new object initialization
             foreach (var ev in _events) {
                 ev.Value.Created(createdContext);
             }
-            if (shapeDescriptor != null && shapeDescriptor.Created != null) {
+            if (shapeDescriptor != null) {
                 foreach (var ev in shapeDescriptor.Created) {
                     ev(createdContext);
                 }
