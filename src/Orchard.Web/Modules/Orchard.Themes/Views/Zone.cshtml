@@ -1,6 +1,6 @@
 ﻿@{
 	var id = Model.Id;
-	if (id == null) {
+	if (id == null && Model.ZoneName != null) {
 		id = (Model.Parent.Id == null ? "" : Model.Parent.Id + "-") + "Zone-" + Model.ZoneName;
 	}
 }
