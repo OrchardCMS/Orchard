@@ -1,0 +1,9 @@
+﻿@{
+	var id = Model.Id;
+	if (id == null) {
+		id = (Model.Parent.Id == null ? "" : Model.Parent.Id + "-") + "Zone-" + Model.ZoneName;
+	}
+}
+<div id="@id" class="Zone Zone-@Model.ZoneName">
+    @foreach (var item in Model) {@Display(item)}
+</div><!-- /@id -->

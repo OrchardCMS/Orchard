@@ -79,6 +79,10 @@ namespace Orchard.DisplayManagement.Implementation {
         }
 
         private IHtmlString Process(ShapeDescriptor shapeDescriptor, IShape shape, DisplayContext context) {
+            if (shapeDescriptor == null || shapeDescriptor.Binding == null) {
+                //todo: create result from all child shapes
+                return shape.Metadata.ChildContent ?? new HtmlString("");
+            }
             return CoerceHtmlString(shapeDescriptor.Binding(context));
         }
 

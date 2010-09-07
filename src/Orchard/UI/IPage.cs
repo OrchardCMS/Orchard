@@ -27,45 +27,21 @@ namespace Orchard.UI {
 
     public interface IZone : IEnumerable {
         string ZoneName { get; set; }
-        IZone Add(object item);
-        IZone Add(object item, string position);
+        Shape Add(object item);
+        Shape Add(object item, string position);
         IZone Add(Action<HtmlHelper> action);
         IZone Add(Action<HtmlHelper> action, string position);
     }
 
     public class Zone : Shape, IZone {
-        private readonly IList<object> _items = new List<object>();
-
         public virtual string ZoneName { get; set; }
 
-        public virtual IZone Add(object item) {
-            _items.Add(item);
-            return this;
+        public IZone Add(Action<HtmlHelper> action) {
+            throw new NotImplementedException();
         }
 
-        public virtual IZone Add(object item, string position) {
-            _items.Add(item); // not messing with position at the moment
-            return this;
-        }
-
-        public virtual IZone Add(Action<HtmlHelper> action) {
-            //throw new NotImplementedException();
-            return this;
-        }
-
-        public virtual IZone Add(Action<HtmlHelper> action, string position) {
-            //throw new NotImplementedException();
-            return this;
-        }
-
-        public virtual IList<object> Items {
-            get {
-                return _items;
-            }
-        }
-
-        public virtual IEnumerator GetEnumerator() {
-            return _items.GetEnumerator();
+        public IZone Add(Action<HtmlHelper> action, string position) {
+            throw new NotImplementedException();
         }
     }
 }

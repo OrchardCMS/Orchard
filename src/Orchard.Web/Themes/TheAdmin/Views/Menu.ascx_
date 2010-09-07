@@ -1,7 +1,8 @@
-﻿<%@ Control Language="C#" Inherits="Orchard.Mvc.ViewUserControl<BaseViewModel>" %>
+﻿<%@ Control Language="C#" Inherits="Orchard.Mvc.ViewUserControl" %>
 <%@ Import Namespace="Orchard.Mvc.ViewModels"%>
-<ul id="navigation" role="navigation">
+
 <%--//todo: get the settings from the cookie to class-ify parts of the menu that should be closed on load--%>
+<%--<ul id="navigation" role="navigation">
     <%if (Model.Menu != null) {
           foreach (var menuSection in Model.Menu) {
               // todo: (heskew) need some help(er)
@@ -29,4 +30,4 @@
         $("#navigation h3").expandoControl(function(controller) { return controller.next(); }, { key: "N42", path: "<%:ResolveUrl("~/") %>" });
     })(jQuery);
 </script>
-<% } %>
+<% } %>--%>

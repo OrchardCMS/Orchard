@@ -94,7 +94,7 @@ namespace Orchard.UI.Zones {
                     dynamic parent = _parent;
 
                     dynamic zone = _shapeFactory.Create("Zone", Arguments.Empty());
-                    zone.ZoneName = _potentialZoneName;
+                    zone.Parent(_parent).ZoneName(_potentialZoneName);
                     parent[_potentialZoneName] = zone;
 
                     if (argsCount == 1)

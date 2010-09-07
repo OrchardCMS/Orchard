@@ -33,12 +33,17 @@ namespace Orchard.Mvc.ViewEngines.ThemeAwareness {
                 return viewResult;
             }
 
-            var layoutView = new LayoutView((viewContext, writer, viewDataContainer) => {
-                var buffer = new StringWriter();
+            var layoutView = new LayoutView((viewContext, writer, viewDataContainer) => {                
+                var bufferViewContext = new ViewContext(
+                    viewContext, 
+                    viewContext.View, 
+                    viewContext.ViewData, 
+                    viewContext.TempData, 
+                    new StringWriter());
 
-                viewResult.View.Render(viewContext, buffer);
+                viewResult.View.Render(bufferViewContext, bufferViewContext.Writer);
 
-                _workContext.Page.Metadata.ChildContent = new HtmlString(buffer.ToString());
+                _workContext.Page.Metadata.ChildContent = new HtmlString(bufferViewContext.Writer.ToString());
 
                 var display = _displayHelperFactory.CreateHelper(viewContext, viewDataContainer);
                 IHtmlString result = display(_workContext.Page);

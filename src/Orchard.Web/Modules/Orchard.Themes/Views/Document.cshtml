@@ -1,4 +1,8 @@
 ﻿@using Orchard.Mvc.Html
+@{
+	Model.Body.Add(Model.Metadata.ChildContent, "5");
+}
+
 <!DOCTYPE html>
 @//"en" needs to change to the current culture, btw
 @//all inline styles for tmp reference only
@@ -18,7 +22,7 @@
 <body class="@Html.ClassForPage()">
     <section>
         <h1>document template</h1>
-@Html.RenderOrchardBody()
+		@Display(Model.Body)
     </section>
 </body>
 </html>

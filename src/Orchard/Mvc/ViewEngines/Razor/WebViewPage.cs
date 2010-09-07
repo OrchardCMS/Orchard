@@ -34,7 +34,7 @@ namespace Orchard.Mvc.ViewEngines.Razor {
 
     }
 
-    public abstract class WebViewPage : WebViewPage<object> {
+    public abstract class WebViewPage : WebViewPage<dynamic> {
     }
 
 }

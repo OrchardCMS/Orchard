@@ -1,4 +1,4 @@
 <%@ Control Language="C#" Inherits="Orchard.Mvc.ViewUserControl" %>
-<div class="zone zone-<%:Model.ZoneName %>">
+<div class="Zone Zone-<%:Model.ZoneName %>">
     <%foreach (var item in Model) {%><%:Display(item)%><%}%>
-</div>
+</div><!-- Zone-<%:Model.ZoneName %> -->

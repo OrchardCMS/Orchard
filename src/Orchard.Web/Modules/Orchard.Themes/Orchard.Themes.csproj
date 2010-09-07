@@ -130,6 +130,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Views\Document.cshtml" />
+    <None Include="Views\Zone.cshtml" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />
