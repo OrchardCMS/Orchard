@@ -8,12 +8,15 @@ namespace Orchard.Mvc.ViewEngines.Razor {
 
     public abstract class WebViewPage<TModel> : System.Web.Mvc.WebViewPage<TModel> {
         private object _display;
+        private object _new;
         private Localizer _localizer = NullLocalizer.Instance;
 
 
         public Localizer T { get { return _localizer; } }
         public dynamic Display { get { return _display; } }
+        public dynamic New { get { return _new; } }
         public IDisplayHelperFactory DisplayHelperFactory { get; set; }
+        public IShapeHelperFactory ShapeHelperFactory { get; set; }
 
         public IAuthorizer Authorizer { get; set; }
 
@@ -25,6 +28,7 @@ namespace Orchard.Mvc.ViewEngines.Razor {
 
             _localizer = LocalizationUtilities.Resolve(ViewContext, VirtualPath);
             _display = DisplayHelperFactory.CreateHelper(ViewContext, this);
+            _new = ShapeHelperFactory.CreateHelper();
         }
 
 

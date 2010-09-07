@@ -9,11 +9,14 @@ using Orchard.Security.Permissions;
 namespace Orchard.Mvc {
     public class ViewUserControl<TModel> : System.Web.Mvc.ViewUserControl<TModel> {
         private object _display;
+        private object _new;
         private Localizer _localizer = NullLocalizer.Instance;
 
         public Localizer T { get { return _localizer; } }
         public dynamic Display { get { return _display; } }
+        public dynamic New { get { return _new; } }
         public IDisplayHelperFactory DisplayHelperFactory { get; set; }
+        public IShapeHelperFactory ShapeHelperFactory { get; set; }
 
         public IAuthorizer Authorizer { get; set; }
 
@@ -23,6 +26,7 @@ namespace Orchard.Mvc {
 
             _localizer = LocalizationUtilities.Resolve(viewContext, AppRelativeVirtualPath);
             _display = DisplayHelperFactory.CreateHelper(viewContext, this);
+            _new = ShapeHelperFactory.CreateHelper();
 
             base.RenderView(viewContext);
         }
