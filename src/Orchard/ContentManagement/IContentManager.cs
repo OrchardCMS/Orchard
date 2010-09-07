@@ -1,8 +1,6 @@
 using System.Collections.Generic;
 using Orchard.ContentManagement.MetaData.Models;
-using Orchard.DisplayManagement;
 using Orchard.Indexing;
-using Orchard.Mvc.ViewModels;
 
 namespace Orchard.ContentManagement {
     public interface IContentManager : IDependency {

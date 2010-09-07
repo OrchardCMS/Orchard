@@ -1,5 +1,4 @@
 ﻿<%@ Control Language="C#" Inherits="Orchard.Mvc.ViewUserControl" %>
-<%@ Import Namespace="Orchard.Mvc.ViewModels"%>
 <%@ Import Namespace="Orchard.DisplayManagement.Shapes" %>
 
 <%
@@ -12,7 +11,7 @@
 
 <div id="container">
     <%-- Header --%>
-    <%: Display(Model.Header)) %>
+    <%: Display(Model.Header) %>
 	
 	<%-- Main Menu --%>
 	<div id="nav">

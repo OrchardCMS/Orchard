@@ -1,4 +1,3 @@
-using System;
 using Orchard.DisplayManagement;
 
 namespace Orchard.ContentManagement.Handlers {

@@ -1,7 +1,6 @@
 using System;
 using System.Linq;
 using System.Web.Mvc;
-using Orchard.Mvc.ViewModels;
 
 namespace Orchard.ContentManagement.Handlers {
     public class ContentItemTemplates<TContent> : TemplateFilterBase<TContent> where TContent : class, IContent {

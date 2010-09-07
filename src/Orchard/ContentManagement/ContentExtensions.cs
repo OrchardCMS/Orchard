@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using Orchard.ContentManagement.Records;
-using Orchard.Mvc.ViewModels;
 
 namespace Orchard.ContentManagement {
     public static class ContentCreateExtensions {

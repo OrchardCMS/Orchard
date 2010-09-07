@@ -11,7 +11,6 @@ using Orchard.ContentManagement.Records;
 using Orchard.Data;
 using Orchard.DisplayManagement;
 using Orchard.Indexing;
-using Orchard.Mvc.ViewModels;
 
 namespace Orchard.ContentManagement {
     public class DefaultContentManager : IContentManager {

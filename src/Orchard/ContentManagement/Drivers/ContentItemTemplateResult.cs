@@ -1,7 +1,6 @@
 using System.Linq;
 using System.Web.Mvc;
 using Orchard.ContentManagement.Handlers;
-using Orchard.Mvc.ViewModels;
 
 namespace Orchard.ContentManagement.Drivers {
     public class ContentItemTemplateResult<TContent> : DriverResult where TContent : class, IContent {
