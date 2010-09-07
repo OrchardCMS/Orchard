@@ -88,41 +88,14 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\orchard.ico" />
-    <Content Include="Scripts\base.js" />
-    <Content Include="Scripts\jquery.switchable.js" />
     <Content Include="Styles\admin.css" />
-    <Content Include="Styles\Images\detail-view-on.gif" />
-    <Content Include="Styles\Images\detail-view.gif" />
-    <Content Include="Styles\Images\summary-view-on.gif" />
-    <Content Include="Styles\Images\summary-view.gif" />
-    <Content Include="Styles\Images\toolBarActiveButtonBackground.gif" />
-    <Content Include="Styles\Images\toolBarBackground.gif" />
-    <Content Include="Styles\Images\toolBarHoverButtonBackground.gif" />
-    <Content Include="Styles\jquery.switchable.css" />
-    <Content Include="Styles\special.css" />
     <Content Include="Views\Admin\Index.aspx" />
     <Content Include="Views\Admin\Install.aspx" />
     <Content Include="Views\Admin\ThemePreview.ascx" />
-    <Content Include="Views\DisplayTemplates\Items\ContentItem.ascx" />
-    <None Include="Views\Document.aspx_" />
-    <Content Include="Views\EditorTemplates\Items\ContentItem.ascx" />
-    <Content Include="Views\Header.ascx" />
-    <Content Include="Views\HeadPreload.ascx" />
-    <None Include="Views\Layout.ascx_" />
-    <None Include="Views\Menu.ascx_" />
-    <None Include="Views\Menu.cshtml" />
-    <None Include="Views\MenuItem.cshtml" />
-    <None Include="Views\Messages.ascx_" />
-    <Content Include="Views\NotFound.ascx" />
-    <Content Include="Views\UI\Switchable.ascx" />
-    <None Include="Views\User.ascx_" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Module.txt" />
-    <Content Include="Scripts\jquery-1.4.2.js" />
-    <Content Include="Scripts\jquery-1.4.2.min.js" />
-    <Content Include="Views\Web.config" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\Orchard\Orchard.Framework.csproj">
@@ -131,8 +104,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Views\Document.cshtml" />
-    <None Include="Views\Zone.cshtml" />
+    <Content Include="Views\Web.config" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />
