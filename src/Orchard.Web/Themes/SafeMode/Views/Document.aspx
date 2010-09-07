@@ -1,5 +1,4 @@
 <%@ Page Language="C#" Inherits="Orchard.Mvc.ViewPage" %>
-<%@ Import Namespace="Orchard.Mvc.ViewModels"%>
 <%@ Import Namespace="Orchard.Mvc.Html"
 %><!DOCTYPE html>
 <html lang="en" class="static">
