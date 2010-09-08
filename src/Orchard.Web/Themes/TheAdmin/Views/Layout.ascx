@@ -2,22 +2,24 @@
 <%@ Import Namespace="Orchard.Security" %>
 <%@ Import Namespace="Orchard.DisplayManagement.Descriptors" %>
 <%@ Import Namespace="Orchard" %>
+<%@ Import Namespace="Orchard.ContentManagement" %>
 <%
     Model.Content.Add(Model.Metadata.ChildContent, "5");
 
     // these are just hacked together to fire existing partials... can change
     Model.Header.Add(Display.Header());
 
+    // <experimentation>
     var thisUser = Html.Resolve<IAuthenticationService>().GetAuthenticatedUser();
-    
     Model.Header.Add(Display.User(CurrentUser: thisUser), "after");
     
     Model.CurrentUser = thisUser;
-    Model.Header.Add(Display.Partial(TemplateName: "User"), "after");
+    Model.Header.Add(Display.Partial(TemplateName: "User"), "after");   
+     
+    var userDetail = Html.Resolve<IContentManager>().BuildDisplayModel(thisUser, "Detail");
+    Model.Content.Add(userDetail);
+    // </experimentation>
     
-    var userDisplay = thisUser.ContentItem.ContentManager.BuildDisplayModel(thisUser, "Detail");
-    Model.Content.Add(userDisplay);
-
     Html.RegisterStyle("site.css", "1");
     Html.RegisterStyle("ie.css", "1").WithCondition("if (lte IE 8)").ForMedia("screen, projection");
     Html.RegisterStyle("ie6.css", "1").WithCondition("if (lte IE 6)").ForMedia("screen, projection");

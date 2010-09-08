@@ -57,7 +57,7 @@ namespace Orchard.DisplayManagement.Implementation {
                 throw new OrchardException(T("Shape type {0} not found", shapeMetadata.Type));
             }
 
-            foreach (var frameType in shape.Metadata.FrameTypes) {
+            foreach (var frameType in shape.Metadata.Wrappers) {
                 ShapeDescriptor frameDescriptor;
                 if (shapeTable.Descriptors.TryGetValue(frameType, out frameDescriptor)) {
                     shape.Metadata.ChildContent = Process(frameDescriptor, shape, context);

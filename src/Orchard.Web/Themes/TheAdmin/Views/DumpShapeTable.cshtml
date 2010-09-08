@@ -7,9 +7,9 @@
 	<ul>
 		@foreach(var descriptor in shapeTable.Descriptors) {
 			<li>@descriptor.Key : @descriptor.Value.BindingSource 
-				@if(descriptor.Value.FrameTypes.Any()){
-					foreach(var ft in descriptor.Value.FrameTypes) {
-						@(" +"+ft)
+				@if(descriptor.Value.Wrappers.Any()){
+					foreach(var wrapper in descriptor.Value.Wrappers) {
+						@(" +"+wrapper)
 					}
 				}
 			</li>

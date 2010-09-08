@@ -402,6 +402,7 @@
     <None Include="Contents\Views\Content.cshtml" />
     <None Include="Contents\Views\Item\Display.cshtml" />
     <None Include="HomePage\Views\HomePage.cshtml" />
+    <None Include="Shapes\Views\Item.cshtml" />
     <None Include="Shapes\Views\Document.aspx_" />
     <None Include="Shapes\Views\Document.cshtml" />
     <None Include="Shapes\Views\Layout.ascx_" />

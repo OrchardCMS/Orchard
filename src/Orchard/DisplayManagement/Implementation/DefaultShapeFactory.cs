@@ -101,7 +101,7 @@ namespace Orchard.DisplayManagement.Implementation {
             createdContext.Shape.Metadata = shapeMetadata;
 
             if (shapeDescriptor != null)
-                shapeMetadata.FrameTypes = shapeMetadata.FrameTypes.Concat(shapeDescriptor.FrameTypes).ToList();
+                shapeMetadata.Wrappers = shapeMetadata.Wrappers.Concat(shapeDescriptor.Wrappers).ToList();
 
             // "created" events provides default values and new object initialization
             foreach (var ev in _events) {
