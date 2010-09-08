@@ -23,8 +23,10 @@ namespace Orchard.Tests.UI {
             builder.RegisterType<DefaultShapeFactory>().As<IShapeFactory>();
             builder.RegisterType<DefaultShapeTableManager>().As<IShapeTableManager>();
             builder.RegisterType<PageWorkContext>().As<IWorkContextStateProvider>();
-            builder.RegisterType<CoreShapes>().As<IShapeDescriptorBindingStrategy>();
+            //builder.RegisterType<CoreShapes>().As<IShapeDescriptorBindingStrategy>();
             builder.RegisterType<NumberIsAlwaysFortyTwo>().As<IShapeFactoryEvents>();
+
+            throw new NotImplementedException("this test fixture needs to move to modules tests now");
         }
 
         protected override void Resolve(IContainer container) {

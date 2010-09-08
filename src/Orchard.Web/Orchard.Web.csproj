@@ -309,6 +309,7 @@
     <Content Include="Themes\TheAdmin\Styles\images\backgroundHeader.gif" />
     <Content Include="Themes\TheAdmin\Styles\images\orchardLogo.gif" />
     <Content Include="Themes\TheAdmin\Theme.png" />
+    <None Include="Themes\TheAdmin\Views\DumpShapeTable.cshtml" />
     <None Include="Themes\TheAdmin\Views\MenuItem.cshtml" />
     <None Include="Themes\TheAdmin\Views\Menu.cshtml" />
     <None Include="Themes\TheAdmin\Views\Menu.ascx_" />

@@ -20,15 +20,15 @@ namespace Orchard.DisplayManagement.Descriptors.ShapeAttributeStrategy {
                                                         sa,
                                                         mi,
                                                         registration,
-                                                        () => GetFeatureDescriptor(registration))))
+                                                        () => GetFeature(registration))))
                 .ToArray();
 
             if (occurrences.Any())
                 _occurrences.AddRange(occurrences);
         }
 
-        private static FeatureDescriptor GetFeatureDescriptor(IComponentRegistration registration) {
-            object value; return registration.Metadata.TryGetValue("Feature", out value) ? value as FeatureDescriptor : null;
+        private static Feature GetFeature(IComponentRegistration registration) {
+            object value; return registration.Metadata.TryGetValue("Feature", out value) ? value as Feature : null;
         }
     }
 }

@@ -1,0 +1,18 @@
+﻿@using Orchard
+@using Orchard.DisplayManagement.Descriptors
+@{
+	var workContext = ViewContext.GetWorkContext();
+	var shapeTable = workContext.Resolve<IShapeTableManager>().GetShapeTable(workContext.CurrentTheme.ThemeName);
+    
+	<ul>
+		@foreach(var descriptor in shapeTable.Descriptors) {
+			<li>@descriptor.Key : @descriptor.Value.BindingSource 
+				@if(descriptor.Value.FrameTypes.Any()){
+					foreach(var ft in descriptor.Value.FrameTypes) {
+						@(" +"+ft)
+					}
+				}
+			</li>
+		}
+	</ul>
+}

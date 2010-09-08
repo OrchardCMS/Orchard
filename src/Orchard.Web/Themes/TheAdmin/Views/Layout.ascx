@@ -1,26 +1,45 @@
 ﻿<%@ Control Language="C#" Inherits="Orchard.Mvc.ViewUserControl" %>
 <%@ Import Namespace="Orchard.Security" %>
+<%@ Import Namespace="Orchard.DisplayManagement.Descriptors" %>
+<%@ Import Namespace="Orchard" %>
 <%
-Model.Content.Add(Model.Metadata.ChildContent, "5");
+    Model.Content.Add(Model.Metadata.ChildContent, "5");
 
-// these are just hacked together to fire existing partials... can change
-Model.Header.Add(Display.Header());
-Model.Header.Add(Display.User(CurrentUser:Html.Resolve<IAuthenticationService>().GetAuthenticatedUser()), "after");
+    // these are just hacked together to fire existing partials... can change
+    Model.Header.Add(Display.Header());
 
-Html.RegisterStyle("site.css", "1");
-Html.RegisterStyle("ie.css", "1").WithCondition("if (lte IE 8)").ForMedia("screen, projection");
-Html.RegisterStyle("ie6.css", "1").WithCondition("if (lte IE 6)").ForMedia("screen, projection");
-Html.RegisterFootScript("admin.js", "1");
+    var thisUser = Html.Resolve<IAuthenticationService>().GetAuthenticatedUser();
     
-// these are just hacked together to fire existing partials... can change
+    Model.Header.Add(Display.User(CurrentUser: thisUser), "after");
     
-//Model.Zones.AddRenderPartial("header", "Header", Model);
-//Model.Zones.AddRenderPartial("header:after", "User", Model); // todo: (heskew) should be a user display or widget
+    Model.CurrentUser = thisUser;
+    Model.Header.Add(Display.Partial(TemplateName: "User"), "after");
+    
+    var userDisplay = thisUser.ContentItem.ContentManager.BuildDisplayModel(thisUser, "Detail");
+    Model.Content.Add(userDisplay);
+
+    Html.RegisterStyle("site.css", "1");
+    Html.RegisterStyle("ie.css", "1").WithCondition("if (lte IE 8)").ForMedia("screen, projection");
+    Html.RegisterStyle("ie6.css", "1").WithCondition("if (lte IE 6)").ForMedia("screen, projection");
+    Html.RegisterFootScript("admin.js", "1");
+
+    // these are just hacked together to fire existing partials... can change
+
+    //Model.Zones.AddRenderPartial("header", "Header", Model);
+    //Model.Zones.AddRenderPartial("header:after", "User", Model); // todo: (heskew) should be a user display or widget
 %>
-<div id="header" role="banner"><%: Display(Model.Header) %></div>
+<div id="header" role="banner">
+    <%: Display(Model.Header) %></div>
 <div id="content">
-    <div id="navshortcut"><a href="#Menu-admin"><%: T("Skip to navigation") %></a></div>
-    <div id="main" role="main"><%: Display(Model.Content) %></div>
-    <div id="menu"><%: Display(Model.Navigation) %></div>
+    <div id="navshortcut">
+        <a href="#Menu-admin">
+            <%: T("Skip to navigation") %></a></div>
+    <div id="main" role="main">
+        <%: Display(Model.Content) %></div>
+    <div id="menu">
+        <%: Display(Model.Navigation) %></div>
 </div>
-<div id="footer" role="contentinfo"><%: Display(Model.Footer) %></div>
+<div id="footer" role="contentinfo">
+    <%: Display(Model.Footer) %></div>
+
+<%: Display.DumpShapeTable() %>

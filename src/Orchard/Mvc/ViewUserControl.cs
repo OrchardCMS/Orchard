@@ -7,7 +7,7 @@ using Orchard.Security;
 using Orchard.Security.Permissions;
 
 namespace Orchard.Mvc {
-    public class ViewUserControl<TModel> : System.Web.Mvc.ViewUserControl<TModel> {
+    public class ViewUserControl<TModel> : System.Web.Mvc.ViewUserControl<TModel>,IOrchardViewPage {
         private object _display;
         private object _new;
         private Localizer _localizer = NullLocalizer.Instance;

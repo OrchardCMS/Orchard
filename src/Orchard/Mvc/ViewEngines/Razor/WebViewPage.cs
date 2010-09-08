@@ -6,7 +6,7 @@ using Orchard.Security.Permissions;
 
 namespace Orchard.Mvc.ViewEngines.Razor {
 
-    public abstract class WebViewPage<TModel> : System.Web.Mvc.WebViewPage<TModel> {
+    public abstract class WebViewPage<TModel> : System.Web.Mvc.WebViewPage<TModel>, IOrchardViewPage {
         private object _display;
         private object _new;
         private Localizer _localizer = NullLocalizer.Instance;
