@@ -337,7 +337,6 @@
     <Content Include="Shapes\Styles\special.css" />
     <Content Include="Shapes\Views\DisplayTemplates\Items\ContentItem.ascx" />
     <Content Include="Shapes\Views\EditorTemplates\Items\ContentItem.ascx" />
-    <Content Include="Shapes\Views\Header.ascx" />
     <Content Include="Shapes\Views\HeadPreload.ascx" />
     <Content Include="Shapes\Views\NotFound.ascx" />
     <Content Include="Shapes\Views\UI\Switchable.ascx" />
@@ -402,15 +401,15 @@
     <None Include="Contents\Views\Content.cshtml" />
     <None Include="Contents\Views\Item\Display.cshtml" />
     <None Include="HomePage\Views\HomePage.cshtml" />
-    <None Include="Shapes\Views\Item.cshtml" />
-    <None Include="Shapes\Views\Document.aspx_" />
     <None Include="Shapes\Views\Document.cshtml" />
-    <None Include="Shapes\Views\Layout.ascx_" />
+    <None Include="Shapes\Views\User.cshtml" />
+    <None Include="Shapes\Views\Header.cshtml" />
+    <None Include="Shapes\Views\Item.cshtml" />
+    <None Include="Shapes\Views\Layout.cshtml" />
     <None Include="Shapes\Views\Menu.ascx_" />
     <None Include="Shapes\Views\Menu.cshtml" />
     <None Include="Shapes\Views\MenuItem.cshtml" />
     <None Include="Shapes\Views\Messages.ascx_" />
-    <None Include="Shapes\Views\User.ascx_" />
     <Content Include="Shapes\Views\Web.config" />
     <None Include="Shapes\Views\Zone.cshtml" />
   </ItemGroup>

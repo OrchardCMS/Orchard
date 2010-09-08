@@ -1,0 +1,32 @@
+﻿@// Html.RegisterStyle("site.css");
+<div id="page">
+    <div id="header">
+@{ 
+    Model.Header.Add(Display.Header(), "5");
+    Model.Header.Add(Display.User(), "10");
+    Model.Menu.Add(Display.Menu(), "5");
+}
+@Display(Model.Header)
+@Display(Model.Menu)
+    </div>
+    <div id="main">
+        <div id="content-wrapper">
+            <div id="content">
+@Display(Model.Content)
+            </div>
+        </div>
+        <div id="sidebar-wrapper">
+            <div id="sidebar">
+@Display(Model.Sidebar)
+            </div>
+        </div>
+    </div>
+    <div id="footer-wrapper">
+        <div id="footer">
+@{ 
+    Model.Footer.Add(Display.Footer(), "5");
+}
+@Display(Model.Footer)
+        </div>
+    </div>
+</div>
