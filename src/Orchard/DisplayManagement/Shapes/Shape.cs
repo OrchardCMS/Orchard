@@ -1,7 +1,5 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using Microsoft.WebPages;
 
 namespace Orchard.DisplayManagement.Shapes {
     public class Shape : IShape, IEnumerable {
@@ -23,6 +21,11 @@ namespace Orchard.DisplayManagement.Shapes {
                 // need to implemented positioned wrapper for non-shape objects
             }
             _items.Add(item); // not messing with position at the moment
+            return this;
+        }
+
+        public virtual Shape AddRange(IEnumerable<object> items) {
+            ((List<object>)_items).AddRange(items);
             return this;
         }
 
