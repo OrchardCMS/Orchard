@@ -18,6 +18,7 @@ namespace Orchard.DisplayManagement.Implementation {
 
     public class ShapeCreatingContext {
         public IShapeFactory ShapeFactory { get; set; }
+        public dynamic New { get; set; }
         public string ShapeType { get; set; }
         public Type BaseType { get; set; }
         public IList<IClayBehavior> Behaviors { get; set; }
@@ -26,6 +27,7 @@ namespace Orchard.DisplayManagement.Implementation {
 
     public class ShapeCreatedContext {
         public IShapeFactory ShapeFactory { get; set; }
+        public dynamic New { get; set; }
         public string ShapeType { get; set; }
         public dynamic Shape { get; set; }
     }
@@ -35,10 +37,15 @@ namespace Orchard.DisplayManagement.Implementation {
     public class DefaultShapeFactory : IShapeFactory {
         private readonly IEnumerable<Lazy<IShapeFactoryEvents>> _events;
         private readonly IShapeTableManager _shapeTableManager;
+        private readonly Lazy<IShapeHelperFactory> _shapeHelperFactory;
 
-        public DefaultShapeFactory(IEnumerable<Lazy<IShapeFactoryEvents>> events, IShapeTableManager shapeTableManager) {
+        public DefaultShapeFactory(
+            IEnumerable<Lazy<IShapeFactoryEvents>> events, 
+            IShapeTableManager shapeTableManager, 
+            Lazy<IShapeHelperFactory> shapeHelperFactory) {
             _events = events;
             _shapeTableManager = shapeTableManager;
+            _shapeHelperFactory = shapeHelperFactory;
         }
 
         public IShape Create(string shapeType, INamedEnumerable<object> parameters) {
@@ -47,7 +54,8 @@ namespace Orchard.DisplayManagement.Implementation {
             defaultShapeTable.Descriptors.TryGetValue(shapeType, out shapeDescriptor);
 
             var creatingContext = new ShapeCreatingContext {
-                ShapeFactory = this,
+                New = _shapeHelperFactory.Value.CreateHelper(),
+                ShapeFactory=this,
                 ShapeType = shapeType,
                 OnCreated = new List<Action<ShapeCreatedContext>>()
             };
@@ -93,7 +101,7 @@ namespace Orchard.DisplayManagement.Implementation {
 
             // create the new instance
             var createdContext = new ShapeCreatedContext {
-                ShapeFactory = this,
+                New = creatingContext.New,
                 ShapeType = creatingContext.ShapeType,
                 Shape = ClayActivator.CreateInstance(creatingContext.BaseType, creatingContext.Behaviors)
             };

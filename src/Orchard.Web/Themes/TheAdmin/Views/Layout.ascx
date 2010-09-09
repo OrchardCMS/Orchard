@@ -4,8 +4,6 @@
 <%@ Import Namespace="Orchard" %>
 <%@ Import Namespace="Orchard.ContentManagement" %>
 <%
-    Model.Content.Add(Model.Metadata.ChildContent, "5");
-
     // these are just hacked together to fire existing partials... can change
     Model.Header.Add(Display.Header());
 

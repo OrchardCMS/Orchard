@@ -7,6 +7,7 @@ using System.Web.Mvc;
 using System.Web.Mvc.Html;
 using Orchard.DisplayManagement;
 using Orchard.DisplayManagement.Descriptors;
+using Orchard.DisplayManagement.Shapes;
 using Orchard.Environment.Extensions.Models;
 using Orchard.UI;
 using Orchard.UI.Zones;
@@ -21,8 +22,12 @@ namespace Orchard.Core.Shapes {
             // the root page shape named 'Layout' is wrapped with 'Document'
             // and has an automatic zone creating behavior
             builder.Describe.Named("Layout").From(Feature.Descriptor)
+                .Configure(descriptor => descriptor.Wrappers.Add("Document"))
                 .OnCreating(creating => creating.Behaviors.Add(new ZoneHoldingBehavior(creating.ShapeFactory)))
-                .Configure(descriptor => descriptor.Wrappers.Add("Document"));
+                .OnCreated(created => {
+                    created.Shape.Zones.Content.Add(created.New.PlaceChildContent(Source: created.Shape), "5");
+                    created.Shape.Zones.Body.Add(created.New.PlaceChildContent(Source: created.Shape), "5");
+                });
 
             // 'Zone' shapes are built on the Zone base class
             builder.Describe.Named("Zone").From(Feature.Descriptor)
@@ -31,12 +36,14 @@ namespace Orchard.Core.Shapes {
             // 'List' shapes start with several empty collections
             builder.Describe.Named("List").From(Feature.Descriptor)
                 .OnCreated(created => {
-                    created.Shape.Tag = "ol";
+                    created.Shape.Tag = "ul";
                     created.Shape.Classes = new List<string>();
                     created.Shape.Attributes = new Dictionary<string, string>();
                     created.Shape.ItemClasses = new List<string>();
                     created.Shape.ItemAttributes = new Dictionary<string, string>();
                 });
+
+
         }
 
         static object DetermineModel(HtmlHelper Html, object Model) {
@@ -66,7 +73,7 @@ namespace Orchard.Core.Shapes {
             IEnumerable<string> ItemClasses,
             IDictionary<string, string> ItemAttributes) {
 
-            var listTagName = string.IsNullOrEmpty(Tag) ? "ol" : Tag;
+            var listTagName = string.IsNullOrEmpty(Tag) ? "ul" : Tag;
             const string itemTagName = "li";
 
             var listTag = GetTagBuilder(listTagName, Id, Classes, Attributes);
@@ -90,6 +97,10 @@ namespace Orchard.Core.Shapes {
             Output.Write(listTag.ToString(TagRenderMode.EndTag));
         }
 
+        [Shape]
+        public IHtmlString PlaceChildContent(dynamic Source) {
+            return Source.Metadata.ChildContent;
+        }
 
         [Shape]
         public IHtmlString Partial(HtmlHelper Html, string TemplateName, object Model) {
