@@ -105,15 +105,19 @@ namespace Orchard.Core.Contents.Controllers {
 
             //-- instead of this (having the ordering and skip/take after the query)
 
-            contentItems = contentItems.Skip(skip).Take(pageSize);
+            contentItems = contentItems.Skip(skip).Take(pageSize).ToList();
 
-            model.Entries = contentItems.Select(BuildEntry).ToList();
-            model.Options.SelectedFilter = model.TypeName;
-            model.Options.FilterOptions = GetCreatableTypes()
-                .Select(ctd => new KeyValuePair<string, string>(ctd.Name, ctd.DisplayName))
-                .ToList().OrderBy(kvp => kvp.Key);
+            //model.Entries = contentItems.Select(BuildEntry).ToList();
+            //model.Options.SelectedFilter = model.TypeName;
+            //model.Options.FilterOptions = GetCreatableTypes()
+            //    .Select(ctd => new KeyValuePair<string, string>(ctd.Name, ctd.DisplayName))
+            //    .ToList().OrderBy(kvp => kvp.Key);
 
-            return View(Shape.Model(model));
+            var list = Shape.List();
+            foreach (var item in contentItems)
+                list.Add(Shape.Content(item));
+
+            return View(list);
         }
 
         private IEnumerable<ContentTypeDefinition> GetCreatableTypes() {

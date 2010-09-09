@@ -251,6 +251,7 @@
     <Content Include="ContentsLocation\Module.txt" />
     <Content Include="ContentsLocation\Styles\admin.css" />
     <Content Include="ContentsLocation\Views\DefinitionTemplates\LocationSettings.ascx" />
+    <None Include="Contents\Views\Admin\List.cshtml" />
     <Content Include="Contents\Views\DisplayTemplates\Parts\Contents.Publish.SummaryAdmin.ascx" />
     <Content Include="Contents\Views\DisplayTemplates\Parts\Contents.Publish.ascx" />
     <Content Include="Localization\Views\EditorTemplates\Parts\Localization.Translation.ascx" />
@@ -270,7 +271,7 @@
     <Content Include="Contents\Views\Admin\Edit.ascx" />
     <Content Include="Contents\Views\Admin\CreatableTypeList.ascx" />
     <Content Include="Contents\Views\Admin\Create.ascx" />
-    <Content Include="Contents\Views\Admin\List.ascx" />
+    <None Include="Contents\Views\Admin\List.ascx_" />
     <Content Include="Contents\Views\DisplayTemplates\Items\Contents.Item.ascx" />
     <Content Include="Contents\Views\DisplayTemplates\Items\Contents.Item.SummaryAdmin.ascx" />
     <Content Include="Contents\Views\DisplayTemplates\Items\Contents.Item.Summary.ascx" />

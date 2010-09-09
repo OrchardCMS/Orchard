@@ -31,7 +31,7 @@ namespace Orchard.Core.Shapes {
             // 'List' shapes start with several empty collections
             builder.Describe.Named("List").From(Feature.Descriptor)
                 .OnCreated(created => {
-                    created.Shape.Tag = "ul";
+                    created.Shape.Tag = "ol";
                     created.Shape.Classes = new List<string>();
                     created.Shape.Attributes = new Dictionary<string, string>();
                     created.Shape.ItemClasses = new List<string>();
@@ -66,7 +66,7 @@ namespace Orchard.Core.Shapes {
             IEnumerable<string> ItemClasses,
             IDictionary<string, string> ItemAttributes) {
 
-            var listTagName = string.IsNullOrEmpty(Tag) ? "ul" : Tag;
+            var listTagName = string.IsNullOrEmpty(Tag) ? "ol" : Tag;
             const string itemTagName = "li";
 
             var listTag = GetTagBuilder(listTagName, Id, Classes, Attributes);
