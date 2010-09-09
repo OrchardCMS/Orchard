@@ -14,6 +14,7 @@ using Orchard.Data.Providers;
 using Orchard.Data.Migration;
 using Orchard.DisplayManagement;
 using Orchard.DisplayManagement.Descriptors;
+using Orchard.DisplayManagement.Descriptors.ShapeAttributeStrategy;
 using Orchard.DisplayManagement.Descriptors.ShapeTemplateStrategy;
 using Orchard.DisplayManagement.Implementation;
 using Orchard.DisplayManagement.Shapes;
@@ -80,9 +81,11 @@ namespace Orchard.Setup {
             builder.RegisterType<ConfiguredEnginesCache>().As<IConfiguredEnginesCache>();
             builder.RegisterType<PageWorkContext>().As<IWorkContextStateProvider>();
 
-            builder.RegisterType<CoreShapes>().As<IShapeDescriptorBindingStrategy>().WithProperty("Feature", Feature);
+            builder.RegisterType<CoreShapes>().As<IShapeDescriptorBindingStrategy>().WithProperty("Feature", Feature).WithMetadata("Feature", Feature);
             builder.RegisterType<ShapeTemplateBindingStrategy>().As<IShapeDescriptorBindingStrategy>();
             builder.RegisterType<BasicShapeTemplateHarvester>().As<IShapeTemplateHarvester>();
+            builder.RegisterType<ShapeAttributeBindingStrategy>().As<IShapeDescriptorBindingStrategy>();
+            builder.RegisterModule(new ShapeAttributeBindingModule());
         }
 
 
