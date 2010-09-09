@@ -11,11 +11,6 @@
     var thisUser = Html.Resolve<IAuthenticationService>().GetAuthenticatedUser();
     Model.Header.Add(Display.User(CurrentUser: thisUser), "after");
     
-    Model.CurrentUser = thisUser;
-    Model.Header.Add(Display.Partial(TemplateName: "User"), "after");   
-     
-    var userDetail = Html.Resolve<IContentManager>().BuildDisplayModel(thisUser, "Detail");
-    Model.Content.Add(userDetail);
     // </experimentation>
     
     Html.RegisterStyle("site.css", "1");

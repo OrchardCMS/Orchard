@@ -6,35 +6,52 @@ WorkContext.Page == Layout shape
 
 ==shapes==
 
-.Id
-.Classes
-.Attributes
-
-
 Document [:Layout]
 
-Layout
-- Zones (meta-property)
-- Title
-
+Layout (.Wrappers[Document])
+.Zones (meta-property)
+.Title
 
 Zone
--ZoneName
+.ZoneName
 
 Menu
--MenuName
+.MenuName
 
 MenuItem
 -Text
 -Href
 -RouteValues
--Item
-
-Menu
-  MenuItem
+-Item (clr object)
 
 List: ul|ol + li*
--Items (meta-property, bound to shape children or passed in)
+.Items (meta-property, bound to shape children or passed in)
+.Id
+.Classes
+.Attributes
+.ItemClasses
+.ItemAttributes
+
+Items_Content
+.Zones (meta-property)
+.ContentItem (clr object)
+
+PlaceChildContent
+.Source (another shape, presumed rendered)
+
+Partial
+.TemplateName
+.Model (optional - default use current)
+
+DisplayTemplate
+.TemplateName
+.Model (optional - default use current)
+.Prefix (optional - default use current)
+
+EditorTemplate
+.TemplateName
+.Model (optional - default use current)
+.Prefix (optional - default use current)
 
 Pager
 -CurrentPage
@@ -42,33 +59,10 @@ Pager
 -Count
 ?PageSize ?? 1
 
-Shape.Pager(CurrentPage:page, PageSize:10, ItemCount:53)
-Shape.Pager(CurrentPage:page, PageCount:6)
-Shape.Pager(CurrentPage:page)
-
-  x
-  y
-  z
-
-
-List 
- x
- y
- z
-
-Items_Content
-Items_Content__BlogPost
-Items_Content__Page
-Items_Content__Product
-
 Parts/Content
 
 Fields/Content
 
-
-.Items_Content()
-.Items_Widget()
-.Items_User()
 
 ==template discovery strategy==
 Items/Content.cshtml -> "Items_Content"

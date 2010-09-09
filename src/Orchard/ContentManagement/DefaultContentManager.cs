@@ -370,7 +370,7 @@ namespace Orchard.ContentManagement {
 
         public dynamic BuildDisplayModel<TContent>(TContent content, string displayType) where TContent : IContent {
             var shapeHelper = _shapeHelperFactory.CreateHelper();
-            var itemShape = shapeHelper.Item(ContentItem:content.ContentItem);
+            var itemShape = shapeHelper.Items_Content(ContentItem:content.ContentItem);
             var context = new BuildDisplayModelContext(content, displayType, itemShape, _shapeHelperFactory);
             Handlers.Invoke(handler => handler.BuildDisplayShape(context), Logger);
             return context.Model;
@@ -378,7 +378,7 @@ namespace Orchard.ContentManagement {
 
         public dynamic BuildEditorModel<TContent>(TContent content) where TContent : IContent {
             var shapeHelper = _shapeHelperFactory.CreateHelper();
-            var itemShape = shapeHelper.Item(ContentItem:content.ContentItem);
+            var itemShape = shapeHelper.Items_Content(ContentItem: content.ContentItem);
             var context = new BuildEditorModelContext(content, itemShape, _shapeHelperFactory);
             Handlers.Invoke(handler => handler.BuildEditorShape(context), Logger);
             return context.Model;
@@ -386,7 +386,7 @@ namespace Orchard.ContentManagement {
 
         public dynamic UpdateEditorModel<TContent>(TContent content, IUpdateModel updater) where TContent : IContent {
             var shapeHelper = _shapeHelperFactory.CreateHelper();
-            var itemShape = shapeHelper.Item(ContentItem:content.ContentItem);
+            var itemShape = shapeHelper.Items_Content(ContentItem: content.ContentItem);
             var context = new UpdateEditorModelContext(content, updater, itemShape, _shapeHelperFactory);
             Handlers.Invoke(handler => handler.UpdateEditorShape(context), Logger);
             return context.Model;
