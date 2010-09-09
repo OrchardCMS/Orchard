@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
@@ -12,6 +14,7 @@ using Autofac.Core;
 using ClaySharp.Implementation;
 using Microsoft.CSharp.RuntimeBinder;
 using Orchard.DisplayManagement.Implementation;
+using Orchard.DisplayManagement.Shapes;
 
 namespace Orchard.DisplayManagement.Descriptors.ShapeAttributeStrategy {
     public class ShapeAttributeBindingStrategy : IShapeDescriptorBindingStrategy {
@@ -55,27 +58,30 @@ namespace Orchard.DisplayManagement.Descriptors.ShapeAttributeStrategy {
 
 
         private IHtmlString PerformInvoke(DisplayContext displayContext, MethodInfo methodInfo, object serviceInstance) {
+            var output = new StringWriter();
             var arguments = methodInfo.GetParameters()
-                .Select(parameter => BindParameter(displayContext, parameter));
+                .Select(parameter => BindParameter(displayContext, parameter, output));
 
-            return CoerceHtmlString(methodInfo.Invoke(serviceInstance, arguments.ToArray()));
+            var returnValue = methodInfo.Invoke(serviceInstance, arguments.ToArray());
+            if (methodInfo.ReturnType != typeof(void)) {
+                output.Write(returnValue);
+            }
+            return CoerceHtmlString(output);
         }
 
         private static IHtmlString CoerceHtmlString(object invoke) {
             return invoke as IHtmlString ?? (invoke != null ? new HtmlString(invoke.ToString()) : null);
         }
 
-        private object BindParameter(DisplayContext displayContext, ParameterInfo parameter) {
+        private object BindParameter(DisplayContext displayContext, ParameterInfo parameter, TextWriter output) {
             if (parameter.Name == "Shape")
                 return displayContext.Value;
 
             if (parameter.Name == "Display")
                 return displayContext.Display;
 
-            if (parameter.Name == "Attributes") {
-                var attributes = new RouteValueDictionary(((dynamic)(displayContext.Value))[parameter.Name]);
-                return Arguments.From(attributes.Values, attributes.Keys);
-            }
+            if (parameter.Name == "Output" && parameter.ParameterType == typeof(TextWriter))
+                return output;
 
             // meh--
             if (parameter.Name == "Html") {
@@ -85,10 +91,30 @@ namespace Orchard.DisplayManagement.Descriptors.ShapeAttributeStrategy {
                     _routeCollection);
             }
 
-            var result = ((dynamic)(displayContext.Value))[parameter.Name];
+            var getter = _getters.GetOrAdd(parameter.Name, n =>
+                CallSite<Func<CallSite, object, dynamic>>.Create(
+                Microsoft.CSharp.RuntimeBinder.Binder.GetMember(
+                CSharpBinderFlags.None, n, null, new[] { CSharpArgumentInfo.Create(CSharpArgumentInfoFlags.None, null) })));
+
+            var result = getter.Target(getter, displayContext.Value);
+
+            //var result = ((dynamic)(displayContext.Value))[parameter.Name];
+            if (result == null)
+                return null;
+
+            //if (parameter.Name == "Attributes") {
+            //    var attributes = new RouteValueDictionary(result);
+            //    return Arguments.From(attributes.Values, attributes.Keys);
+            //}
+
             var converter = _converters.GetOrAdd(parameter.ParameterType, CompileConverter);
-            return converter.Invoke((object)result);
+            var argument = converter.Invoke((object)result);
+            return argument;
         }
+
+
+        static readonly ConcurrentDictionary<string, CallSite<Func<CallSite, object, dynamic>>> _getters =
+            new ConcurrentDictionary<string, CallSite<Func<CallSite, object, dynamic>>>();
 
         static readonly ConcurrentDictionary<Type, Func<object, object>> _converters =
             new ConcurrentDictionary<Type, Func<object, object>>();

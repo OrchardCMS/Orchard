@@ -87,7 +87,6 @@
     <Content Include="ScaffoldingTemplates\DataMigration.txt" />
     <Compile Include="Services\ScaffoldingCommandInterpreter.cs" />
     <Compile Include="Settings\DevToolsSettings.cs" />
-    <Compile Include="Shapes.cs" />
     <Compile Include="ViewModels\CommandsExecuteViewModel.cs" />
     <Compile Include="ViewModels\ContentIndexViewModel.cs" />
     <Compile Include="ViewModels\ContentDetailsViewModel.cs" />

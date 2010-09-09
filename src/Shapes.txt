@@ -1,0 +1,91 @@
+
+==context==
+
+WorkContext.Page == Layout shape
+
+
+==shapes==
+
+.Id
+.Classes
+.Attributes
+
+
+Document [:Layout]
+
+Layout
+- Zones (meta-property)
+- Title
+
+
+Zone
+-ZoneName
+
+Menu
+-MenuName
+
+MenuItem
+-Text
+-Href
+-RouteValues
+-Item
+
+Menu
+  MenuItem
+
+List: ul|ol + li*
+-Items (meta-property, bound to shape children or passed in)
+
+Pager
+-CurrentPage
+-RouteValues
+-Count
+?PageSize ?? 1
+
+Shape.Pager(CurrentPage:page, PageSize:10, ItemCount:53)
+Shape.Pager(CurrentPage:page, PageCount:6)
+Shape.Pager(CurrentPage:page)
+
+  x
+  y
+  z
+
+
+List 
+ x
+ y
+ z
+
+Items_Content
+Items_Content__BlogPost
+Items_Content__Page
+Items_Content__Product
+
+Parts/Content
+
+Fields/Content
+
+
+.Items_Content()
+.Items_Widget()
+.Items_User()
+
+==template discovery strategy==
+Items/Content.cshtml -> "Items_Content"
+Items/Content-Page.cshtml -> "Items_Content__Page"
+Items/Content-45.cshtml -> "Items_Content__45"
+Items/Page.cshtml -> "Items_Content__Page"
+Items/BlogPost.cshtml -> "Items_Content__BlogPost"
+
+Widgets-TwitterThing.cshtml -> "Widget__TwitterThing"
+
+Items/User.cshtml -> "Items_User"
+
+Parts/Yarg -> "Parts_Yarg"
+Parts/Yarg-BlogPost -> "Parts_Yarg__BlogPost"
+
+==template discovery strategy==
+
+==templates==
+Header
+Footer

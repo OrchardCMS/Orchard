@@ -53,6 +53,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClaySharp", "..\Clay\src\Cl
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClaySharp.Tests", "..\Clay\src\ClaySharp.Tests\ClaySharp.Tests.csproj", "{10369238-A590-48BF-8D3E-E83EB6F0C931}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_Notes", "_Notes", "{8A49DB66-40B2-4B6A-BFF0-D4839A240D00}"
+	ProjectSection(SolutionItems) = preProject
+		Shapes.txt = Shapes.txt
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		CodeCoverage|Any CPU = CodeCoverage|Any CPU

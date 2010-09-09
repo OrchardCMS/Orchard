@@ -17,7 +17,7 @@ namespace Orchard.DisplayManagement.Shapes {
 
         public virtual Shape Add(object item, string position) {
             try {
-                ((dynamic) item).Metadata.Position = position;
+                ((dynamic)item).Metadata.Position = position;
             }
             catch {
                 // need to implemented positioned wrapper for non-shape objects
@@ -28,6 +28,10 @@ namespace Orchard.DisplayManagement.Shapes {
 
         public virtual IEnumerator GetEnumerator() {
             return _items.GetEnumerator();
+        }
+     
+        public virtual IEnumerable<dynamic> Items {
+            get { return _items; }
         }
     }
 }

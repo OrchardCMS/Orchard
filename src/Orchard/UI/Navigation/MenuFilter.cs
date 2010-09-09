@@ -39,7 +39,7 @@ namespace Orchard.UI.Navigation {
                     .Text(menuItem.Text)
                     .Href(menuItem.Href)
                     .RouteValues(menuItem.RouteValues)
-                    .Object(menuItem);
+                    .Item(menuItem);
                 
                 if (menuItem.Items != null && menuItem.Items.Any()) {
                     PopulateMenu(shape, menuItemShape, menuItem.Items);

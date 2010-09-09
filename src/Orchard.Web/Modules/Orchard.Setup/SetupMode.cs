@@ -19,6 +19,7 @@ using Orchard.DisplayManagement.Implementation;
 using Orchard.DisplayManagement.Shapes;
 using Orchard.Environment;
 using Orchard.Environment.Extensions;
+using Orchard.Environment.Extensions.Models;
 using Orchard.Localization;
 using Orchard.Mvc;
 using Orchard.Mvc.Filters;
@@ -37,6 +38,8 @@ using Orchard.UI.Zones;
 
 namespace Orchard.Setup {
     public class SetupMode : Module {
+        public Feature Feature { get; set; }
+
         protected override void Load(ContainerBuilder builder) {
 
             // standard services needed in setup mode
@@ -77,7 +80,7 @@ namespace Orchard.Setup {
             builder.RegisterType<ConfiguredEnginesCache>().As<IConfiguredEnginesCache>();
             builder.RegisterType<PageWorkContext>().As<IWorkContextStateProvider>();
 
-            builder.RegisterType<CoreShapes>().As<IShapeDescriptorBindingStrategy>();
+            builder.RegisterType<CoreShapes>().As<IShapeDescriptorBindingStrategy>().WithProperty("Feature", Feature);
             builder.RegisterType<ShapeTemplateBindingStrategy>().As<IShapeDescriptorBindingStrategy>();
             builder.RegisterType<BasicShapeTemplateHarvester>().As<IShapeTemplateHarvester>();
         }
