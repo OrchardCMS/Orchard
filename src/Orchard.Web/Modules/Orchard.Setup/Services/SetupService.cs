@@ -6,6 +6,7 @@ using Orchard.ContentManagement.MetaData;
 using Orchard.Core.Common.Models;
 using Orchard.Core.Common.Settings;
 using Orchard.Core.Contents.Extensions;
+using Orchard.Core.Navigation.Models;
 using Orchard.Core.Routable.Models;
 using Orchard.Core.Settings.Descriptor.Records;
 using Orchard.Core.Settings.Models;
@@ -71,7 +72,7 @@ namespace Orchard.Setup.Services {
                     //"Reports",
                     //"Feeds",
                     "HomePage",
-                    //"Navigation",
+                    "Navigation",
                     //"Scheduling",
                     //"Indexing",
                     //"Localization",
@@ -228,11 +229,11 @@ namespace Orchard.Setup.Services {
                     siteSettings.Record.HomePage = "RoutableHomePageProvider;" + page.Id;
 
                     // add a menu item for the shiny new home page
-                    //var menuItem = contentManager.Create("MenuItem");
-                    //menuItem.As<MenuPart>().MenuPosition = "1";
-                    //menuItem.As<MenuPart>().MenuText = T("Home").ToString();
-                    //menuItem.As<MenuPart>().OnMainMenu = true;
-                    //menuItem.As<MenuItemPart>().Url = "";
+                    var menuItem = contentManager.Create("MenuItem");
+                    menuItem.As<MenuPart>().MenuPosition = "1";
+                    menuItem.As<MenuPart>().MenuText = T("Home").ToString();
+                    menuItem.As<MenuPart>().OnMainMenu = true;
+                    menuItem.As<MenuItemPart>().Url = "";
 
                     //Temporary fix for running setup on command line
                     if (HttpContext.Current != null) {
