@@ -107,7 +107,6 @@ namespace Orchard.Core.Contents.Controllers {
 
             contentItems = contentItems.Skip(skip).Take(pageSize).ToList();
 
-            //model.Entries = contentItems.Select(BuildEntry).ToList();
             model.Options.SelectedFilter = model.TypeName;
             model.Options.FilterOptions = GetCreatableTypes()
                 .Select(ctd => new KeyValuePair<string, string>(ctd.Name, ctd.DisplayName))
@@ -115,15 +114,10 @@ namespace Orchard.Core.Contents.Controllers {
 
 
             var list = Shape.List();
-            list.AddRange(contentItems);
-
-            var list2 = Shape.List();
-            var items = contentItems.Select(ci=>_contentManager.BuildDisplayModel(ci, "SummaryAdmin"));
-            list2.AddRange(items);
+            list.AddRange(contentItems.Select(ci => _contentManager.BuildDisplayModel(ci, "SummaryAdmin")));
 
             var viewModel = Shape.ViewModel()
                 .ContentItems(list)
-                .ContentItems2(list2)
                 .Options(model.Options)
                 .TypeDisplayName(model.TypeDisplayName ?? "");
 
@@ -201,25 +195,6 @@ namespace Orchard.Core.Contents.Controllers {
                 return Redirect(returnUrl);
 
             return RedirectToAction("List");
-        }
-
-        private ListContentsViewModel.Entry BuildEntry(ContentItem contentItem) {
-            var entry = new ListContentsViewModel.Entry {
-                ContentItem = _contentManager.BuildDisplayModel(contentItem, "SummaryAdmin"),
-                ContentItemMetadata = _contentManager.GetItemMetadata(contentItem),
-            };
-            if (string.IsNullOrEmpty(entry.ContentItemMetadata.DisplayText)) {
-                entry.ContentItemMetadata.DisplayText = string.Format("[{0}#{1}]", contentItem.ContentType, contentItem.Id);
-            }
-            if (entry.ContentItemMetadata.EditorRouteValues == null) {
-                entry.ContentItemMetadata.EditorRouteValues = new RouteValueDictionary {
-                    {"Area", "Contents"},
-                    {"Controller", "Admin"},
-                    {"Action", "Edit"},
-                    {"Id", contentItem.Id}
-                };
-            }
-            return entry;
         }
 
         ActionResult CreatableTypeList() {

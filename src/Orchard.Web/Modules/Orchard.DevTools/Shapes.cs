@@ -7,7 +7,10 @@ namespace Orchard.DevTools {
         }
 
         public void Created(ShapeCreatedContext context) {
-            context.Shape.Metadata.Wrappers.Add("ThinBorder");
+            if (context.ShapeType != "Layout")
+                context.Shape.Metadata.Wrappers.Add("ThinBorder");
+            if (context.ShapeType == "Header")
+                context.Shape.Metadata.Wrappers.Add("HackStyle");
         }
     }
 }

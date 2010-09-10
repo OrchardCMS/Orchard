@@ -5,4 +5,4 @@
 	var shapeTable = workContext.Resolve<IShapeTableManager>().GetShapeTable(workContext.CurrentTheme.ThemeName);
 	var descriptor = shapeTable.Descriptors[Model.Metadata.Type];	
 }
-<div class="thinborder" title="@Model.Metadata.Type @descriptor.BindingSource">@Display(Model.Metadata.ChildContent)</div>
+<div class="thin-dotted-orange-border-with-a-little-padding" title="@Model.Metadata.Type @descriptor.BindingSource">@Display(Model.Metadata.ChildContent)</div>
