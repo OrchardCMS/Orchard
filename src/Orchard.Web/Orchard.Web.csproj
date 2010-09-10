@@ -216,7 +216,7 @@
     <Content Include="Themes\Contoso\Theme.txt" />
     <Content Include="Themes\Contoso\Views\Footer.ascx" />
     <Content Include="Themes\Contoso\Views\ListOfComments.ascx" />
-    <Content Include="Themes\Contoso\Views\LogOn.ascx" />
+    <None Include="Themes\Contoso\Views\LogOn.ascx_" />
     <None Include="Themes\Contoso\Views\User.ascx_" />
     <Content Include="Themes\Corporate\Content\Images\bkg.jpg" />
     <Content Include="Themes\Corporate\Content\Images\consult-bkg.png" />

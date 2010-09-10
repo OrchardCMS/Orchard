@@ -50,7 +50,7 @@ namespace Orchard.Users.Controllers {
                     .ToList()
             };
 
-            return View(Shape.Model(model));
+            return View(model);
         }
 
         public ActionResult Create() {
@@ -61,7 +61,7 @@ namespace Orchard.Users.Controllers {
             var model = new UserCreateViewModel {
                 User = Services.ContentManager.BuildEditorModel(user)
             };
-            return View(Shape.Model(model));
+            return View(model);
         }
 
         [HttpPost, ActionName("Create")]
@@ -73,7 +73,7 @@ namespace Orchard.Users.Controllers {
             model.User = Services.ContentManager.UpdateEditorModel(user, this);
             if (!ModelState.IsValid) {
                 Services.TransactionManager.Cancel();
-                return View(Shape.Model(model));
+                return View(model);
             }
 
             string userExistsMessage = _userService.VerifyUserUnicity(model.UserName, model.Email);
@@ -95,7 +95,7 @@ namespace Orchard.Users.Controllers {
 
             if (ModelState.IsValid == false) {
                 Services.TransactionManager.Cancel();
-                return View(Shape.Model(model));
+                return View(model);
             }
 
             return RedirectToAction("edit", new { user.Id });
@@ -106,7 +106,7 @@ namespace Orchard.Users.Controllers {
                 return new HttpUnauthorizedResult();
             
             return View(new UserEditViewModel {
-                User = Services.ContentManager.BuildEditorShape<UserPart>(id)
+                User = Services.ContentManager.Get<UserPart>(id)
             });
         }
 
@@ -116,7 +116,7 @@ namespace Orchard.Users.Controllers {
                 return new HttpUnauthorizedResult();
             
             var model = new UserEditViewModel {
-                User = Services.ContentManager.UpdateEditorShape<UserPart>(id, this)
+                User = Services.ContentManager.Get<UserPart>(id)
             };
 
             TryUpdateModel(model);

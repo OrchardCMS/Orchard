@@ -1,0 +1,34 @@
+@model Orchard.Users.ViewModels.UserCreateViewModel
+
+<h1>@Html.TitleForPage(T("Add User").ToString()) </h1>
+@using (Html.BeginFormAntiForgeryPost()) { 
+    @Html.ValidationSummary() 
+    
+    <fieldset>
+        @Html.LabelFor(m=>m.UserName)
+        @Html.TextBoxFor(m=>m.UserName, new { @class = "textMedium" })
+        @Html.ValidationMessageFor(m=>m.UserName, "*")
+    </fieldset>
+
+    <fieldset>
+        @Html.LabelFor(m=>m.Email)
+        @Html.TextBoxFor(m=>m.Email, new { @class = "textMedium" })
+        @Html.ValidationMessageFor(m=>m.Email, "*")
+    </fieldset>
+
+    <fieldset>
+        @Html.LabelFor(m=>m.Password)
+        @Html.PasswordFor(m=>m.Password, new { @class = "textMedium" })
+        @Html.ValidationMessageFor(m=>m.Password, "*")
+    </fieldset>
+
+    <fieldset>
+        @Html.LabelFor(m=>m.ConfirmPassword)
+        @Html.PasswordFor(m=>m.ConfirmPassword, new { @class = "textMedium" })
+        @Html.ValidationMessageFor(m=>m.ConfirmPassword, "*")
+    </fieldset>
+
+    <fieldset>
+        <input class="button primaryAction" type="submit" value="@T("Add")" />
+    </fieldset>
+ } 
