@@ -315,8 +315,8 @@
     <Content Include="Localization\Views\CultureSelection.ascx" />
     <Content Include="Routable\Module.txt" />
     <Content Include="Routable\Scripts\jquery.slugify.js" />
-    <Content Include="Routable\Views\EditorTemplates\Parts\Routable.RoutePart.ascx" />
-    <Content Include="Routable\Views\Item\Display.ascx" />
+    <None Include="Routable\Views\EditorTemplates\Parts\Routable.RoutePart.cshtml" />
+    <None Include="Routable\Views\Item\Display.cshtml" />
     <Content Include="Settings\Module.txt" />
     <Content Include="Settings\Styles\admin.css" />
     <None Include="Settings\Views\Admin\Index.cshtml" />
@@ -344,7 +344,7 @@
     <Content Include="Shapes\Views\UI\Switchable.ascx" />
     <Content Include="Web.config" />
     <Content Include="XmlRpc\Module.txt" />
-    <Content Include="XmlRpc\Views\Home\Index.aspx" />
+    <None Include="XmlRpc\Views\Home\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\Clay\src\ClaySharp\ClaySharp.csproj">

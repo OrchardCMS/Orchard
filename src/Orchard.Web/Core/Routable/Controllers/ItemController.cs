@@ -42,7 +42,7 @@ namespace Orchard.Core.Routable.Controllers {
             }
 
             var model = _contentManager.BuildDisplayModel<IRoutableAspect>(hits.Single(), "Detail");
-            return View(Shape.Model(model));
+            return View(model);
         }
 
         public ActionResult Slugify(string contentType, int? id, int? containerId) {
