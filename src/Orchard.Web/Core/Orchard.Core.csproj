@@ -240,15 +240,15 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Common\Module.txt" />
-    <Content Include="Common\Views\DefinitionTemplates\BodyTypePartSettings.ascx" />
-    <Content Include="Common\Views\DefinitionTemplates\BodyPartSettings.ascx" />
-    <Content Include="Common\Views\DisplayTemplates\Fields\Common.TextField.ascx" />
-    <Content Include="Common\Views\DisplayTemplates\Parts\Common.Body.SummaryAdmin.ascx" />
-    <Content Include="Common\Views\DisplayTemplates\Parts\Common.Body.Manage.SummaryAdmin.ascx" />
-    <Content Include="Common\Views\DisplayTemplates\Parts\Common.Body.ManageWrapperPost.SummaryAdmin.ascx" />
-    <Content Include="Common\Views\DisplayTemplates\Parts\Common.Body.ManageWrapperPre.SummaryAdmin.ascx" />
-    <Content Include="Common\Views\DisplayTemplates\Parts\Common.Metadata.ascx" />
-    <Content Include="Common\Views\DisplayTemplates\Parts\Common.Metadata.SummaryAdmin.ascx" />
+    <None Include="Common\Views\DefinitionTemplates\BodyTypePartSettings.cshtml" />
+    <None Include="Common\Views\DefinitionTemplates\BodyPartSettings.cshtml" />
+    <None Include="Common\Views\DisplayTemplates\Fields\Common.TextField.cshtml" />
+    <None Include="Common\Views\DisplayTemplates\Parts\Common.Body.SummaryAdmin.cshtml" />
+    <None Include="Common\Views\DisplayTemplates\Parts\Common.Body.Manage.SummaryAdmin.cshtml" />
+    <None Include="Common\Views\DisplayTemplates\Parts\Common.Body.ManageWrapperPost.SummaryAdmin.cshtml" />
+    <None Include="Common\Views\DisplayTemplates\Parts\Common.Body.ManageWrapperPre.SummaryAdmin.cshtml" />
+    <None Include="Common\Views\DisplayTemplates\Parts\Common.Metadata.cshtml" />
+    <None Include="Common\Views\DisplayTemplates\Parts\Common.Metadata.SummaryAdmin.cshtml" />
     <Content Include="ContentsLocation\Module.txt" />
     <Content Include="ContentsLocation\Styles\admin.css" />
     <Content Include="ContentsLocation\Views\DefinitionTemplates\LocationSettings.ascx" />
@@ -265,9 +265,9 @@
     <Content Include="PublishLater\Content\Admin\images\scheduled.gif" />
     <Content Include="PublishLater\Views\DisplayTemplates\Parts\PublishLater.Metadata.ascx" />
     <Content Include="PublishLater\Views\DisplayTemplates\Parts\PublishLater.Metadata.SummaryAdmin.ascx" />
-    <Content Include="Common\Views\EditorTemplates\Fields\Common.TextField.ascx" />
-    <Content Include="Common\Views\EditorTemplates\Parts\Common.Container.ascx" />
-    <Content Include="Common\Views\EditorTemplates\PlainTextEditor.ascx" />
+    <None Include="Common\Views\EditorTemplates\Fields\Common.TextField.cshtml" />
+    <None Include="Common\Views\EditorTemplates\Parts\Common.Container.cshtml" />
+    <None Include="Common\Views\EditorTemplates\PlainTextEditor.cshtml" />
     <Content Include="Contents\Module.txt" />
     <Content Include="Contents\Views\Admin\Edit.ascx" />
     <Content Include="Contents\Views\Admin\CreatableTypeList.ascx" />
@@ -366,9 +366,9 @@
     <Content Include="Common\Views\Web.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Common\Views\DisplayTemplates\Parts\Common.Body.ascx" />
-    <Content Include="Common\Views\EditorTemplates\Parts\Common.Body.ascx" />
-    <Content Include="Common\Views\EditorTemplates\Parts\Common.Owner.ascx" />
+    <None Include="Common\Views\DisplayTemplates\Parts\Common.Body.cshtml" />
+    <None Include="Common\Views\EditorTemplates\Parts\Common.Body.cshtml" />
+    <None Include="Common\Views\EditorTemplates\Parts\Common.Owner.cshtml" />
     <Content Include="Feeds\Module.txt" />
     <Content Include="Navigation\Module.txt" />
     <Content Include="Scheduling\Module.txt" />
@@ -376,17 +376,17 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Dashboard\Module.txt" />
-    <Content Include="Dashboard\Views\Admin\Index.ascx" />
+    <None Include="Dashboard\Views\Admin\Index.cshtml" />
     <Content Include="HomePage\Module.txt" />
-    <Content Include="Navigation\Views\Admin\Index.ascx" />
-    <Content Include="Navigation\Views\EditorTemplates\Parts\Navigation.EditMenuPart.ascx" />
+    <None Include="Navigation\Views\Admin\Index.cshtml" />
+    <None Include="Navigation\Views\EditorTemplates\Parts\Navigation.EditMenuPart.cshtml" />
     <Content Include="Navigation\Views\Web.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Common\Views\DisplayTemplates\Parts\Common.Body.Summary.ascx" />
-    <Content Include="Common\Views\DisplayTemplates\Parts\Common.Body.ManageWrapperPost.ascx" />
-    <Content Include="Common\Views\DisplayTemplates\Parts\Common.Body.ManageWrapperPre.ascx" />
-    <Content Include="Common\Views\DisplayTemplates\Parts\Common.Body.Manage.ascx" />
+    <None Include="Common\Views\DisplayTemplates\Parts\Common.Body.Summary.cshtml" />
+    <None Include="Common\Views\DisplayTemplates\Parts\Common.Body.ManageWrapperPost.cshtml" />
+    <None Include="Common\Views\DisplayTemplates\Parts\Common.Body.ManageWrapperPre.cshtml" />
+    <None Include="Common\Views\DisplayTemplates\Parts\Common.Body.Manage.cshtml" />
     <Content Include="Dashboard\Views\Web.config" />
   </ItemGroup>
   <ItemGroup />

@@ -2,7 +2,6 @@
 using System.Linq;
 using System.Web.Mvc;
 using Orchard.ContentManagement;
-using Orchard.Core.Navigation.Drivers;
 using Orchard.Core.Navigation.Models;
 using Orchard.Core.Navigation.Services;
 using Orchard.Core.Navigation.ViewModels;
@@ -42,9 +41,9 @@ namespace Orchard.Core.Navigation.Controllers {
                 model = new NavigationManagementViewModel();
 
             if (model.MenuItemEntries == null || model.MenuItemEntries.Count() < 1)
-                model.MenuItemEntries = _menuService.Get().Select(menuPart => CreateMenuItemEntries(menuPart)).OrderBy(menuPartEntry => menuPartEntry.MenuItem.Position, new PositionComparer()).ToList();
+                model.MenuItemEntries = _menuService.Get().Select(CreateMenuItemEntries).OrderBy(menuPartEntry => menuPartEntry.MenuItem.Position, new PositionComparer()).ToList();
 
-            return View(Shape.Model(model));
+            return View(model);
         }
 
         [HttpPost, ActionName("Index")]
@@ -66,7 +65,7 @@ namespace Orchard.Core.Navigation.Controllers {
 
         private MenuItemEntry CreateMenuItemEntries(MenuPart menuPart) {
             return new MenuItemEntry {
-                                         MenuItem = new UI.Navigation.MenuItem {
+                                         MenuItem = new MenuItem {
                                                                                    Text = menuPart.MenuText,
                                                                                    Position = menuPart.MenuPosition,
                                                                                    Url = menuPart.Is<MenuItemPart>()
