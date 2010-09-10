@@ -399,13 +399,12 @@
     <Content Include="PublishLater\Views\Web.config" />
     <Content Include="ContentsLocation\Views\Web.config" />
     <Content Include="Messaging\Views\Web.config" />
-    <None Include="Contents\Views\Content.cshtml" />
+    <None Include="Contents\Views\Items\Content.cshtml" />
     <None Include="Contents\Views\Item\Display.cshtml" />
     <None Include="HomePage\Views\HomePage.cshtml" />
     <None Include="Shapes\Views\Document.cshtml" />
     <None Include="Shapes\Views\User.cshtml" />
     <None Include="Shapes\Views\Header.cshtml" />
-    <None Include="Shapes\Views\Item.cshtml" />
     <None Include="Shapes\Views\Layout.cshtml" />
     <None Include="Shapes\Views\Menu.ascx_" />
     <None Include="Shapes\Views\Menu.cshtml" />

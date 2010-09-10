@@ -23,6 +23,5 @@
     </div>
 </div>
 <div id="main">
-    <% Model.Content.Add(Model.Metadata.ChildContent, "5"); %>
     <%: Display(Model.Content) %>
 </div>

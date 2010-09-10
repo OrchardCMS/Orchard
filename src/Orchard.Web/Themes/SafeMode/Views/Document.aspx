@@ -13,7 +13,6 @@
     <script type="text/javascript">document.documentElement.className="dyn";</script>
 </head>
 <body class="<%: Html.ClassForPage() %>">
-<% Model.Body.Add(Model.Metadata.ChildContent, "5"); %>
 <%: Display(Model.Body) %>
 </body>
 </html>

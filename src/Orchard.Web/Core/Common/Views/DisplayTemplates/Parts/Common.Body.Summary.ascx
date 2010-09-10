@@ -5,5 +5,5 @@
     //also, ...this is ugly--%>
 <%: new HtmlString(string.Format(
     "<p>{0} {1}</p>",
-    Html.Excerpt(Model.Text, 200).ToString().Replace(Environment.NewLine, "</p>" + Environment.NewLine + "<p>"),
+    Html.Excerpt(Model.Html.ToString(), 200).ToString().Replace(Environment.NewLine, "</p>" + Environment.NewLine + "<p>"),
     Html.ItemDisplayLink(T("[more]").ToString(), Model.BodyPart.ContentItem))) %>

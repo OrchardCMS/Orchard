@@ -84,7 +84,7 @@ namespace Orchard.Core.Contents.Controllers {
 
             //-- but resorting to
 
-            IEnumerable<ContentItem> contentItems = query.List();
+            var contentItems = query.List();
             switch (model.Options.OrderBy) {
                 case ContentsOrder.Modified:
                     contentItems = contentItems.OrderByDescending(ci => ci.VersionRecord.Id);
@@ -108,16 +108,21 @@ namespace Orchard.Core.Contents.Controllers {
             contentItems = contentItems.Skip(skip).Take(pageSize).ToList();
 
             //model.Entries = contentItems.Select(BuildEntry).ToList();
-            //model.Options.SelectedFilter = model.TypeName;
-            //model.Options.FilterOptions = GetCreatableTypes()
-            //    .Select(ctd => new KeyValuePair<string, string>(ctd.Name, ctd.DisplayName))
-            //    .ToList().OrderBy(kvp => kvp.Key);
+            model.Options.SelectedFilter = model.TypeName;
+            model.Options.FilterOptions = GetCreatableTypes()
+                .Select(ctd => new KeyValuePair<string, string>(ctd.Name, ctd.DisplayName))
+                .ToList().OrderBy(kvp => kvp.Key);
+
 
             var list = Shape.List();
-            foreach (var item in contentItems)
-                list.Add(Shape.Content(item));
+            list.AddRange(contentItems);
 
-            return View(list);
+            var viewModel = Shape.ViewModel()
+                .ContentItems(list)
+                .Options(model.Options)
+                .TypeDisplayName(model.TypeDisplayName ?? "");
+
+            return View(viewModel);
         }
 
         private IEnumerable<ContentTypeDefinition> GetCreatableTypes() {

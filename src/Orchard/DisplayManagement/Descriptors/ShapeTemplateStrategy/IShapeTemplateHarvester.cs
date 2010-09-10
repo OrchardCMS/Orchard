@@ -29,21 +29,29 @@ namespace Orchard.DisplayManagement.Descriptors.ShapeTemplateStrategy {
             var lastDot = info.FileName.IndexOf('.');
             if (lastDot <= 0) {
                 yield return new HarvestShapeHit {
-                    ShapeType = Adjust(info.FileName)
+                    ShapeType = Adjust(info.SubPath, info.FileName)
                 };
             }
             else {
                 yield return new HarvestShapeHit {
-                    ShapeType = Adjust(info.FileName.Substring(0, lastDot)),
+                    ShapeType = Adjust(info.SubPath, info.FileName.Substring(0, lastDot)),
                     DisplayType = info.FileName.Substring(lastDot + 1)
                 };
             }
         }
 
-        static string Adjust(string fileName) {
+        static string Adjust(string subPath, string fileName) {
+            var leader="";
+            if (subPath.StartsWith("Views/")) {
+                leader = subPath.Substring("Views/".Length) + "_";
+            }
+            if (leader == "Items_" && !fileName.StartsWith("Content")) {
+                leader = "Items_Content__";
+            }
+
             // canonical shape type names must not have - or . to be compatible 
-            // with display and shape api calls
-            return fileName.Replace('-', '_').Replace('.', '_');
+            // with display and shape api calls)))
+            return leader + fileName.Replace("--", "__").Replace("-", "__").Replace('.', '_');
         }
     }
 

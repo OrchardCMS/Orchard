@@ -6,7 +6,6 @@
 
     Model.Header.Add(New.Header());
     Model.Header.Add(New.Footer());
-    Model.Content.Add(Model.Metadata.ChildContent, "5");    
 %>
 
 <div id="container">

@@ -1,4 +1,5 @@
 ﻿using ClaySharp;
+using ClaySharp.Implementation;
 
 namespace Orchard.DisplayManagement {
     /// <summary>
@@ -7,5 +8,11 @@ namespace Orchard.DisplayManagement {
     /// </summary>
     public interface IShapeFactory : IDependency {
         IShape Create(string shapeType, INamedEnumerable<object> parameters);
+    }
+
+    public static class ShapeFactoryExtensions {
+        public static IShape Create(this IShapeFactory factory, string shapeType) {
+            return factory.Create(shapeType, Arguments.Empty());
+        }
     }
 }
