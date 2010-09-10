@@ -6,7 +6,7 @@ namespace Orchard.Core.Contents {
 
         public void Creating(ShapeCreatingContext creating) {
             if (creating.ShapeType.StartsWith("Items_Content"))
-                creating.Behaviors.Add(new ZoneHoldingBehavior(creating.ShapeFactory));
+                creating.Behaviors.Add(new ZoneHoldingBehavior(name => creating.New.ContentZone()));
         }
 
         public void Created(ShapeCreatedContext created) {

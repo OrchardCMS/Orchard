@@ -3,10 +3,17 @@ using System.Collections.Generic;
 
 namespace Orchard.DisplayManagement.Shapes {
     public class Shape : IShape, IEnumerable {
-        public virtual ShapeMetadata Metadata { get; set; }
 
         private readonly IList<object> _items = new List<object>();
+        private readonly IList<string> _classes = new List<string>();
+        private readonly IDictionary<string, string> _attributes = new Dictionary<string, string>();
 
+        public virtual ShapeMetadata Metadata { get; set; }
+
+        public virtual string Id { get; set; }
+        public virtual IList<string> Classes { get { return _classes; } }
+        public virtual IDictionary<string, string> Attributes { get { return _attributes; } }
+        public virtual IEnumerable<dynamic> Items { get { return _items; } }
 
         public virtual Shape Add(object item) {
             _items.Add(item);
@@ -32,9 +39,7 @@ namespace Orchard.DisplayManagement.Shapes {
         public virtual IEnumerator GetEnumerator() {
             return _items.GetEnumerator();
         }
-     
-        public virtual IEnumerable<dynamic> Items {
-            get { return _items; }
-        }
+
+
     }
 }

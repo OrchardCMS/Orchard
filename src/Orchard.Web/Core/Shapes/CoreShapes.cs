@@ -21,10 +21,15 @@ namespace Orchard.Core.Shapes {
             // and has an automatic zone creating behavior
             builder.Describe.Named("Layout").From(Feature.Descriptor)
                 .Configure(descriptor => descriptor.Wrappers.Add("Document"))
-                .OnCreating(creating => creating.Behaviors.Add(new ZoneHoldingBehavior(creating.ShapeFactory)))
+                .OnCreating(creating => creating.Behaviors.Add(new ZoneHoldingBehavior(name => creating.New.Zone())))
                 .OnCreated(created => {
-                    created.Shape.Zones.Content.Add(created.New.PlaceChildContent(Source: created.Shape), "5");
-                    created.Shape.Zones.Body.Add(created.New.PlaceChildContent(Source: created.Shape), "5");
+                    created.Shape.Head = created.New.DocumentZone();
+                    created.Shape.Body = created.New.DocumentZone();
+                    created.Shape.Tail = created.New.DocumentZone();
+                    created.Shape.Body.Add(created.New.PlaceChildContent(Source: created.Shape), "5");
+
+                    created.Shape.Content = created.New.Zone();
+                    created.Shape.Content.Add(created.New.PlaceChildContent(Source: created.Shape), "5");
                 });
 
             // 'Zone' shapes are built on the Zone base class

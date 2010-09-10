@@ -406,6 +406,8 @@
     <None Include="Contents\Views\Items\Content.SummaryAdmin.cshtml" />
     <None Include="Contents\Views\Item\Display.cshtml" />
     <None Include="HomePage\Views\HomePage.cshtml" />
+    <None Include="Shapes\Views\ContentZone.cshtml" />
+    <None Include="Shapes\Views\DocumentZone.cshtml" />
     <None Include="Shapes\Views\Document.cshtml" />
     <None Include="Shapes\Views\User.cshtml" />
     <None Include="Shapes\Views\Header.cshtml" />

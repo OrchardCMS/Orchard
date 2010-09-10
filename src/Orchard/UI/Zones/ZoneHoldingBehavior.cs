@@ -20,10 +20,10 @@ namespace Orchard.UI.Zones {
     /// 
     /// </summary>
     public class ZoneHoldingBehavior : ClayBehavior {
-        private readonly IShapeFactory _shapeFactory;
+        private readonly Func<string, dynamic> _zoneFactory;
 
-        public ZoneHoldingBehavior(IShapeFactory shapeFactory) {
-            _shapeFactory = shapeFactory;
+        public ZoneHoldingBehavior(Func<string, dynamic> zoneFactory) {
+            _zoneFactory = zoneFactory;
         }
 
         public override object GetMember(Func<object> proceed, object self, string name) {
@@ -31,30 +31,30 @@ namespace Orchard.UI.Zones {
                 // provide a robot for zone manipulation on parent object
                 return ClayActivator.CreateInstance(new IClayBehavior[] {                
                     new InterfaceProxyBehavior(),
-                    new ZonesBehavior(_shapeFactory, self) 
+                    new ZonesBehavior(_zoneFactory, self) 
                 });
             }
-            
+
             var result = proceed();
             if (((dynamic)result) == null) {
-                
+
                 // substitute nil results with a robot that turns adds a zone on
                 // the parent when .Add is invoked
                 return ClayActivator.CreateInstance(new IClayBehavior[] { 
                     new InterfaceProxyBehavior(),
                     new NilBehavior(),
-                    new ZoneOnDemandBehavior(_shapeFactory, self, name) 
+                    new ZoneOnDemandBehavior(_zoneFactory, self, name) 
                 });
             }
             return result;
         }
 
         public class ZonesBehavior : ClayBehavior {
-            private readonly IShapeFactory _shapeFactory;
+            private readonly Func<string, dynamic> _zoneFactory;
             private readonly object _parent;
 
-            public ZonesBehavior(IShapeFactory shapeFactory, object parent) {
-                _shapeFactory = shapeFactory;
+            public ZonesBehavior(Func<string, dynamic> zoneFactory, object parent) {
+                _zoneFactory = zoneFactory;
                 _parent = parent;
             }
 
@@ -64,7 +64,7 @@ namespace Orchard.UI.Zones {
                     return ClayActivator.CreateInstance(new IClayBehavior[] { 
                         new InterfaceProxyBehavior(),
                         new NilBehavior(),
-                        new ZoneOnDemandBehavior(_shapeFactory, _parent, name) 
+                        new ZoneOnDemandBehavior(_zoneFactory, _parent, name) 
                     });
                 }
                 return parentMember;
@@ -78,12 +78,12 @@ namespace Orchard.UI.Zones {
         }
 
         public class ZoneOnDemandBehavior : ClayBehavior {
-            private readonly IShapeFactory _shapeFactory;
+            private readonly Func<string, dynamic> _zoneFactory;
             private readonly object _parent;
             private readonly string _potentialZoneName;
 
-            public ZoneOnDemandBehavior(IShapeFactory shapeFactory, object parent, string potentialZoneName) {
-                _shapeFactory = shapeFactory;
+            public ZoneOnDemandBehavior(Func<string, dynamic> zoneFactory, object parent, string potentialZoneName) {
+                _zoneFactory = zoneFactory;
                 _parent = parent;
                 _potentialZoneName = potentialZoneName;
             }
@@ -93,14 +93,14 @@ namespace Orchard.UI.Zones {
                 if (name == "Add" && (argsCount == 1 || argsCount == 2)) {
                     dynamic parent = _parent;
 
-                    dynamic zone = _shapeFactory.Create("Zone", Arguments.Empty());
+                    dynamic zone = _zoneFactory(_potentialZoneName);
                     zone.Parent = _parent;
                     zone.ZoneName = _potentialZoneName;
                     parent[_potentialZoneName] = zone;
 
                     if (argsCount == 1)
                         return zone.Add(args.Single());
-                    
+
                     return zone.Add(args.First(), (string)args.Last());
                 }
                 return proceed();
