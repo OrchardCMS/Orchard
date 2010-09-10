@@ -146,6 +146,7 @@
     <Compile Include="DisplayManagement\Descriptors\ShapeTable.cs" />
     <Compile Include="DisplayManagement\Descriptors\ShapeTableBuilder.cs" />
     <Compile Include="Mvc\IOrchardViewPage.cs" />
+    <Compile Include="Mvc\Spooling\HtmlStringWriter.cs" />
     <Compile Include="Mvc\ViewEngines\Razor\RazorViewEngine.cs" />
     <Compile Include="UI\Zones\PageWorkContext.cs" />
     <Compile Include="UI\Zones\ZoneHoldingBehavior.cs" />

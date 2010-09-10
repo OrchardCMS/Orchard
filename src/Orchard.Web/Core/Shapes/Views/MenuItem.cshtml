@@ -4,12 +4,12 @@
 }
 @{
 if (string.IsNullOrWhiteSpace((string)Model.Text)) {
-    foreach(var item in Model) {@Display(item);}
+    @DisplayChildren(Model)
 } else {
     <li><a href="@Model.Href">@Model.Text</a>
     @if (items.Any()) {
         <ul>
-        @foreach(var item in Model) {@Display(item);}
+        @DisplayChildren(Model)
         </ul>
     }
     </li>

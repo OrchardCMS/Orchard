@@ -15,6 +15,7 @@ using ClaySharp.Implementation;
 using Microsoft.CSharp.RuntimeBinder;
 using Orchard.DisplayManagement.Implementation;
 using Orchard.DisplayManagement.Shapes;
+using Orchard.Mvc.Spooling;
 
 namespace Orchard.DisplayManagement.Descriptors.ShapeAttributeStrategy {
     public class ShapeAttributeBindingStrategy : IShapeDescriptorBindingStrategy {
@@ -58,15 +59,15 @@ namespace Orchard.DisplayManagement.Descriptors.ShapeAttributeStrategy {
 
 
         private IHtmlString PerformInvoke(DisplayContext displayContext, MethodInfo methodInfo, object serviceInstance) {
-            var output = new StringWriter();
+            var output = new HtmlStringWriter();
             var arguments = methodInfo.GetParameters()
                 .Select(parameter => BindParameter(displayContext, parameter, output));
 
             var returnValue = methodInfo.Invoke(serviceInstance, arguments.ToArray());
             if (methodInfo.ReturnType != typeof(void)) {
-                output.Write(returnValue);
+                output.Write(CoerceHtmlString(returnValue));
             }
-            return CoerceHtmlString(output);
+            return output;
         }
 
         private static IHtmlString CoerceHtmlString(object invoke) {

@@ -3,6 +3,7 @@ using System.Web.Mvc;
 using Autofac;
 using Orchard.DisplayManagement;
 using Orchard.Localization;
+using Orchard.Mvc.Spooling;
 using Orchard.Security;
 using Orchard.Security.Permissions;
 
@@ -37,6 +38,14 @@ namespace Orchard.Mvc {
 
         public bool AuthorizedFor(Permission permission) {
             return Authorizer.Authorize(permission);
+        }
+
+        public IHtmlString DisplayChildren(dynamic shape) {
+            var writer = new HtmlStringWriter();
+            foreach (var item in shape) {
+                writer.Write(Display(item));
+            }
+            return writer;
         }
     }
 

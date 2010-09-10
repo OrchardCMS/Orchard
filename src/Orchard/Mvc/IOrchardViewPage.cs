@@ -1,4 +1,5 @@
-﻿using Orchard.Localization;
+﻿using System.Web;
+using Orchard.Localization;
 
 namespace Orchard.Mvc {
     /// <summary>
@@ -8,5 +9,6 @@ namespace Orchard.Mvc {
     public interface IOrchardViewPage {
         Localizer T { get; }
         dynamic Display { get; }
+        IHtmlString DisplayChildren(object shape);
     }
 }

@@ -3,6 +3,7 @@ using System.IO;
 using System.Web;
 using System.Web.Mvc;
 using Orchard.DisplayManagement;
+using Orchard.Mvc.Spooling;
 
 namespace Orchard.Mvc.ViewEngines.ThemeAwareness {
     public interface ILayoutAwareViewEngine : IDependency, IViewEngine {
@@ -33,17 +34,18 @@ namespace Orchard.Mvc.ViewEngines.ThemeAwareness {
                 return viewResult;
             }
 
-            var layoutView = new LayoutView((viewContext, writer, viewDataContainer) => {                
-                var bufferViewContext = new ViewContext(
+            var layoutView = new LayoutView((viewContext, writer, viewDataContainer) => {
+                var childContentWriter = new HtmlStringWriter();
+
+                var childContentViewContext = new ViewContext(
                     viewContext, 
                     viewContext.View, 
                     viewContext.ViewData, 
-                    viewContext.TempData, 
-                    new StringWriter());
+                    viewContext.TempData,
+                    childContentWriter);
 
-                viewResult.View.Render(bufferViewContext, bufferViewContext.Writer);
-
-                _workContext.Page.Metadata.ChildContent = new HtmlString(bufferViewContext.Writer.ToString());
+                viewResult.View.Render(childContentViewContext, childContentWriter);
+                _workContext.Page.Metadata.ChildContent = childContentWriter;
 
                 var display = _displayHelperFactory.CreateHelper(viewContext, viewDataContainer);
                 IHtmlString result = display(_workContext.Page);

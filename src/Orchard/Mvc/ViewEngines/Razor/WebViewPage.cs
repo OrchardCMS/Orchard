@@ -1,6 +1,9 @@
-﻿using Autofac;
+﻿using System;
+using System.Web;
+using Autofac;
 using Orchard.DisplayManagement;
 using Orchard.Localization;
+using Orchard.Mvc.Spooling;
 using Orchard.Security;
 using Orchard.Security.Permissions;
 
@@ -14,6 +17,8 @@ namespace Orchard.Mvc.ViewEngines.Razor {
 
         public Localizer T { get { return _localizer; } }
         public dynamic Display { get { return _display; } }
+        
+
         public dynamic New { get { return _new; } }
         public IDisplayHelperFactory DisplayHelperFactory { get; set; }
         public IShapeHelperFactory ShapeHelperFactory { get; set; }
@@ -36,6 +41,13 @@ namespace Orchard.Mvc.ViewEngines.Razor {
             return Authorizer.Authorize(permission);
         }
 
+        public IHtmlString DisplayChildren(dynamic shape) {
+            var writer = new HtmlStringWriter();
+            foreach (var item in shape) {
+                writer.Write(Display(item));
+            }
+            return writer;
+        }
     }
 
     public abstract class WebViewPage : WebViewPage<dynamic> {
