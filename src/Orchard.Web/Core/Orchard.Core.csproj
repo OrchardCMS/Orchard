@@ -88,6 +88,7 @@
     <Compile Include="Contents\Routes.cs" />
     <Compile Include="Contents\Settings\ContentTypeSettings.cs" />
     <Compile Include="Contents\Settings\ContentPartSettings.cs" />
+    <Compile Include="Contents\Shapes.cs" />
     <Compile Include="Contents\ViewModels\PublishContentViewModel.cs" />
     <Compile Include="Localization\ViewModels\EditLocalizationViewModel.cs" />
     <Compile Include="Messaging\DataMigrations\MessagingDataMigration.cs" />
@@ -402,6 +403,7 @@
     <None Include="Contents\Views\Items\Content.cshtml" />
     <None Include="Contents\Views\Items\Content.Edit.cshtml" />
     <None Include="Contents\Views\Items\Content.Summary.cshtml" />
+    <None Include="Contents\Views\Items\Content.SummaryAdmin.cshtml" />
     <None Include="Contents\Views\Item\Display.cshtml" />
     <None Include="HomePage\Views\HomePage.cshtml" />
     <None Include="Shapes\Views\Document.cshtml" />

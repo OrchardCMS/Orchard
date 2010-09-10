@@ -1,5 +1,6 @@
 ﻿@using Orchard.Core.Contents.ViewModels
-<h1>@//Html.TitleForPage((string.IsNullOrEmpty(Model.TypeDisplayName) ? T("Manage Content") : T("Manage {0} Content", Model.TypeDisplayName)).ToString())</h1>
+<h1>@//Html.TitleForPage((string.IsNullOrEmpty(Model.TypeDisplayName) ? T("Manage Content") : T("Manage {0} Content", Model.TypeDisplayName)).ToString())
+</h1>
 <div class="manage">
     @Html.ActionLink((string)(!string.IsNullOrEmpty((string)Model.TypeDisplayName) ? T("Create New {0}", Model.TypeDisplayName).Text : T("Create New Content").Text), "Create", null, new { @class = "button primaryAction" })
 </div>
@@ -31,5 +32,6 @@
     </fieldset>
     <fieldset class="contentItems bulk-items">
 @Display(Model.ContentItems)
+@Display(Model.ContentItems2)
     </fieldset>
 }

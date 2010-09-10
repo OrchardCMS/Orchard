@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Web;
@@ -8,7 +6,6 @@ using System.Web.Mvc;
 using System.Web.Mvc.Html;
 using Orchard.DisplayManagement;
 using Orchard.DisplayManagement.Descriptors;
-using Orchard.DisplayManagement.Shapes;
 using Orchard.Environment.Extensions.Models;
 using Orchard.UI;
 using Orchard.UI.Zones;
@@ -29,9 +26,6 @@ namespace Orchard.Core.Shapes {
                     created.Shape.Zones.Content.Add(created.New.PlaceChildContent(Source: created.Shape), "5");
                     created.Shape.Zones.Body.Add(created.New.PlaceChildContent(Source: created.Shape), "5");
                 });
-
-            builder.Describe.Named("Items_Content").From(Feature.Descriptor)
-                .OnCreating(creating => creating.Behaviors.Add(new ZoneHoldingBehavior(creating.ShapeFactory)));
 
             // 'Zone' shapes are built on the Zone base class
             builder.Describe.Named("Zone").From(Feature.Descriptor)
@@ -135,8 +129,8 @@ namespace Orchard.Core.Shapes {
         }
 
         static string DeterminePrefix(HtmlHelper Html, string Prefix) {
-            var actualPrefix = string.IsNullOrEmpty(Prefix) 
-                                   ? Html.ViewContext.ViewData.TemplateInfo.HtmlFieldPrefix 
+            var actualPrefix = string.IsNullOrEmpty(Prefix)
+                                   ? Html.ViewContext.ViewData.TemplateInfo.HtmlFieldPrefix
                                    : Html.ViewContext.ViewData.TemplateInfo.GetFullHtmlFieldName(Prefix);
             return actualPrefix;
         }

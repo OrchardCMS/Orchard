@@ -88,6 +88,7 @@
     <Content Include="ScaffoldingTemplates\DataMigration.txt" />
     <Compile Include="Services\ScaffoldingCommandInterpreter.cs" />
     <Compile Include="Settings\DevToolsSettings.cs" />
+    <Compile Include="Shapes.cs" />
     <Compile Include="ViewModels\CommandsExecuteViewModel.cs" />
     <Compile Include="ViewModels\ContentIndexViewModel.cs" />
     <Compile Include="ViewModels\ContentDetailsViewModel.cs" />
@@ -126,6 +127,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <None Include="Views\ThinBorder.cshtml" />
     <None Include="Views\Home\FormShapes.cshtml" />
     <None Include="Views\Home\UsingShapes.cshtml" />
     <None Include="Views\Inventory\ShapeTable.cshtml" />

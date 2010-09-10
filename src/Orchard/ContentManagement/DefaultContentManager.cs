@@ -383,8 +383,7 @@ namespace Orchard.ContentManagement {
             var shapeHelper = _shapeHelperFactory.CreateHelper();
 
             var shapeTypeName = string.IsNullOrEmpty(displayType) ? "Items_Content" : ("Items_Content_" + displayType);
-            _shapeHelperCalls.Invoke(shapeHelper, shapeTypeName);
-            var itemShape = shapeHelper.Items_Content();
+            var itemShape = _shapeHelperCalls.Invoke(shapeHelper, shapeTypeName);
 
             itemShape.ContentItem = content.ContentItem;
 

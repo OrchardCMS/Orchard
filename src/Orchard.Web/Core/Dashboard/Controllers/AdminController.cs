@@ -21,7 +21,7 @@ namespace Orchard.Core.Dashboard.Controllers {
 
             var list = shape.List();
 
-            list.Add(_contentManager.BuildDisplayModel(CurrentUser, "Detail"));
+            list.Add(_contentManager.BuildDisplayModel(CurrentUser, ""));
             foreach (var contentItem in _contentManager.Query().Join<BodyPartRecord>().List()) {
                 list.Add(_contentManager.BuildDisplayModel(contentItem, "Summary"));
             }

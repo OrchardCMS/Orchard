@@ -1,0 +1,8 @@
+﻿@using Orchard
+@using Orchard.DisplayManagement.Descriptors
+@{
+	var workContext = ViewContext.GetWorkContext();
+	var shapeTable = workContext.Resolve<IShapeTableManager>().GetShapeTable(workContext.CurrentTheme.ThemeName);
+	var descriptor = shapeTable.Descriptors[Model.Metadata.Type];	
+}
+<div class="thinborder" title="@Model.Metadata.Type @descriptor.BindingSource">@Display(Model.Metadata.ChildContent)</div>

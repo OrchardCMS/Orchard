@@ -117,8 +117,13 @@ namespace Orchard.Core.Contents.Controllers {
             var list = Shape.List();
             list.AddRange(contentItems);
 
+            var list2 = Shape.List();
+            var items = contentItems.Select(ci=>_contentManager.BuildDisplayModel(ci, "SummaryAdmin"));
+            list2.AddRange(items);
+
             var viewModel = Shape.ViewModel()
                 .ContentItems(list)
+                .ContentItems2(list2)
                 .Options(model.Options)
                 .TypeDisplayName(model.TypeDisplayName ?? "");
 
