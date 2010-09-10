@@ -1,8 +1,11 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using Autofac;
 using ClaySharp.Implementation;
+using Microsoft.CSharp.RuntimeBinder;
 using Orchard.ContentManagement.Handlers;
 using Orchard.ContentManagement.MetaData;
 using Orchard.ContentManagement.MetaData.Builders;
@@ -368,17 +371,32 @@ namespace Orchard.ContentManagement {
             return context.Metadata;
         }
 
+        static readonly CallSiteCollection _shapeHelperCalls = new CallSiteCollection(shapeTypeName => Binder.InvokeMember(
+            CSharpBinderFlags.None,
+            shapeTypeName,
+            Enumerable.Empty<Type>(),
+            null,
+            new[] { CSharpArgumentInfo.Create(CSharpArgumentInfoFlags.None, null) }));
+
+
         public dynamic BuildDisplayModel<TContent>(TContent content, string displayType) where TContent : IContent {
             var shapeHelper = _shapeHelperFactory.CreateHelper();
-            var itemShape = shapeHelper.Items_Content(ContentItem:content.ContentItem);
+
+            var shapeTypeName = string.IsNullOrEmpty(displayType) ? "Items_Content" : ("Items_Content_" + displayType);
+            _shapeHelperCalls.Invoke(shapeHelper, shapeTypeName);
+            var itemShape = shapeHelper.Items_Content();
+
+            itemShape.ContentItem = content.ContentItem;
+
             var context = new BuildDisplayModelContext(content, displayType, itemShape, _shapeHelperFactory);
             Handlers.Invoke(handler => handler.BuildDisplayShape(context), Logger);
             return context.Model;
         }
 
+
         public dynamic BuildEditorModel<TContent>(TContent content) where TContent : IContent {
             var shapeHelper = _shapeHelperFactory.CreateHelper();
-            var itemShape = shapeHelper.Items_Content(ContentItem: content.ContentItem);
+            var itemShape = shapeHelper.Items_Content_Edit(ContentItem: content.ContentItem);
             var context = new BuildEditorModelContext(content, itemShape, _shapeHelperFactory);
             Handlers.Invoke(handler => handler.BuildEditorShape(context), Logger);
             return context.Model;
@@ -386,7 +404,7 @@ namespace Orchard.ContentManagement {
 
         public dynamic UpdateEditorModel<TContent>(TContent content, IUpdateModel updater) where TContent : IContent {
             var shapeHelper = _shapeHelperFactory.CreateHelper();
-            var itemShape = shapeHelper.Items_Content(ContentItem: content.ContentItem);
+            var itemShape = shapeHelper.Items_Content_Edit(ContentItem: content.ContentItem);
             var context = new UpdateEditorModelContext(content, updater, itemShape, _shapeHelperFactory);
             Handlers.Invoke(handler => handler.UpdateEditorShape(context), Logger);
             return context.Model;
@@ -425,5 +443,21 @@ namespace Orchard.ContentManagement {
         //        ? _indexManager.GetSearchIndexProvider().CreateSearchBuilder("Search") 
         //        : new NullSearchBuilder();
         //}
+    }
+    class CallSiteCollection : ConcurrentDictionary<string, CallSite<Func<CallSite, object, object>>> {
+        readonly Func<string, CallSite<Func<CallSite, object, object>>> _valueFactory;
+
+        public CallSiteCollection(Func<string, CallSite<Func<CallSite, object, object>>> callSiteFactory) {
+            _valueFactory = callSiteFactory;
+        }
+
+        public CallSiteCollection(Func<string, CallSiteBinder> callSiteBinderFactory) {
+            _valueFactory = key => CallSite<Func<CallSite, object, object>>.Create(callSiteBinderFactory(key));
+        }
+
+        public object Invoke(object callee, string key) {
+            var callSite = GetOrAdd(key, _valueFactory);
+            return callSite.Target(callSite, callee);
+        }
     }
 }

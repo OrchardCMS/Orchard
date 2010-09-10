@@ -29,29 +29,41 @@ namespace Orchard.DisplayManagement.Descriptors.ShapeTemplateStrategy {
             var lastDot = info.FileName.IndexOf('.');
             if (lastDot <= 0) {
                 yield return new HarvestShapeHit {
-                    ShapeType = Adjust(info.SubPath, info.FileName)
+                    ShapeType = Adjust(info.SubPath, info.FileName, null)
                 };
             }
             else {
+                var displayType = info.FileName.Substring(lastDot + 1);
                 yield return new HarvestShapeHit {
-                    ShapeType = Adjust(info.SubPath, info.FileName.Substring(0, lastDot)),
-                    DisplayType = info.FileName.Substring(lastDot + 1)
+                    ShapeType = Adjust(info.SubPath, info.FileName.Substring(0, lastDot), displayType),
+                    DisplayType = displayType
                 };
             }
         }
 
-        static string Adjust(string subPath, string fileName) {
-            var leader="";
+        static string Adjust(string subPath, string fileName, string displayType) {
+            var leader = "";
             if (subPath.StartsWith("Views/")) {
                 leader = subPath.Substring("Views/".Length) + "_";
             }
+
             if (leader == "Items_" && !fileName.StartsWith("Content")) {
                 leader = "Items_Content__";
             }
 
             // canonical shape type names must not have - or . to be compatible 
             // with display and shape api calls)))
-            return leader + fileName.Replace("--", "__").Replace("-", "__").Replace('.', '_');
+            var shapeType = leader + fileName.Replace("--", "__").Replace("-", "__").Replace('.', '_');
+
+            if (string.IsNullOrEmpty(displayType)) {
+                return shapeType;
+            }
+            var firstBreakingSeparator = shapeType.IndexOf("__");
+            if (firstBreakingSeparator <= 0) {
+                return shapeType + "_" + displayType;
+            }
+
+            return shapeType.Substring(0, firstBreakingSeparator) + "_" + displayType + shapeType.Substring(firstBreakingSeparator);
         }
     }
 
