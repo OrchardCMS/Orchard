@@ -37,10 +37,10 @@ namespace Orchard.Core.Settings.Controllers {
 
             var site = _siteService.GetSiteSettings().As<SiteSettingsPart>();
             var model = new SettingsIndexViewModel {
-                Site = Services.ContentManager.BuildEditorModel(site),
+                Site = site,
                 SiteCultures = _cultureManager.ListCultures()
             };
-            return View(Shape.Model(model));
+            return View(model);
         }
 
         [HttpPost, ActionName("Index")]
@@ -53,7 +53,7 @@ namespace Orchard.Core.Settings.Controllers {
 
             if (!ModelState.IsValid) {
                 Services.TransactionManager.Cancel();
-                return View(Shape.Model(model));
+                return View(model);
             }
 
             Services.Notifier.Information(T("Settings updated"));
@@ -73,7 +73,7 @@ namespace Orchard.Core.Settings.Controllers {
                 .Select(ci => ci.Name)
                 .Where(s => !model.SiteCultures.Contains(s));
 
-            return View(Shape.Model(model));
+            return View(model);
         }
 
         [HttpPost]

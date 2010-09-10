@@ -319,8 +319,8 @@
     <Content Include="Routable\Views\Item\Display.ascx" />
     <Content Include="Settings\Module.txt" />
     <Content Include="Settings\Styles\admin.css" />
-    <Content Include="Settings\Views\Admin\Index.ascx" />
-    <Content Include="Settings\Views\Admin\Culture.ascx" />
+    <None Include="Settings\Views\Admin\Index.cshtml" />
+    <None Include="Settings\Views\Admin\Culture.cshtml" />
     <Content Include="Settings\Views\DisplayTemplates\CurrentCulture.ascx" />
     <Content Include="Settings\Views\DisplayTemplates\RemovableCulture.ascx" />
     <Content Include="Shapes\Module.txt" />
