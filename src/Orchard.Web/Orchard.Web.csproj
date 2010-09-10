@@ -146,6 +146,7 @@
     <None Include="Themes\Contoso\Views\HomePage\Home\Index.cshtml" />
     <None Include="Themes\Contoso\Views\Layout.ascx_" />
     <None Include="Themes\Contoso\Views\Layout.HomePage.ascx_" />
+    <None Include="Themes\SafeMode\Views\DocumentZone.cshtml" />
     <None Include="Themes\TheAdmin\Styles\images\icons.psd" />
     <Content Include="Themes\ClassicDark\Content\Images\bodyBackgroundgrey.gif" />
     <Content Include="Themes\ClassicDark\Content\Images\sidebarBackground.gif" />

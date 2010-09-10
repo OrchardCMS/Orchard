@@ -307,8 +307,8 @@
     <Content Include="PublishLater\Styles\ui.timepickr.css" />
     <Content Include="PublishLater\Views\EditorTemplates\Parts\PublishLater.ascx" />
     <Content Include="Reports\Module.txt" />
-    <Content Include="Reports\Views\Admin\Display.aspx" />
-    <Content Include="Reports\Views\Admin\Index.aspx" />
+    <None Include="Reports\Views\Admin\Display.cshtml" />
+    <None Include="Reports\Views\Admin\Index.cshtml" />
     <Content Include="Localization\Module.txt" />
     <Content Include="Localization\Views\Admin\Translate.ascx" />
     <Content Include="Localization\Views\DisplayTemplates\Parts\Localization.ContentTranslations.SummaryAdmin.ascx" />

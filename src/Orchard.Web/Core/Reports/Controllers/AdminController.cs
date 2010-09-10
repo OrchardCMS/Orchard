@@ -17,13 +17,13 @@ namespace Orchard.Core.Reports.Controllers {
         public ActionResult Index() {
             var model = new ReportsAdminIndexViewModel { Reports = _reportsManager.GetReports().ToList() };
 
-            return View(Shape.Model(model));
+            return View(model);
         }
 
         public ActionResult Display(int id) {
             var model = new DisplayReportViewModel { Report = _reportsManager.Get(id) };
 
-            return View(Shape.Model(model));
+            return View(model);
         }
 
     }
