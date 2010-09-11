@@ -6,6 +6,7 @@ using System.Web.Mvc;
 using System.Web.Mvc.Html;
 using Orchard.DisplayManagement;
 using Orchard.DisplayManagement.Descriptors;
+using Orchard.DisplayManagement.Implementation;
 using Orchard.Environment.Extensions.Models;
 using Orchard.UI;
 using Orchard.UI.Zones;
@@ -21,7 +22,7 @@ namespace Orchard.Core.Shapes {
             // and has an automatic zone creating behavior
             builder.Describe.Named("Layout").From(Feature.Descriptor)
                 .Configure(descriptor => descriptor.Wrappers.Add("Document"))
-                .OnCreating(creating => creating.Behaviors.Add(new ZoneHoldingBehavior(name => creating.New.Zone())))
+                .OnCreating(creating => creating.Behaviors.Add(new ZoneHoldingBehavior(name => CreateZone(creating, name))))
                 .OnCreated(created => {
                     created.Shape.Head = created.New.DocumentZone();
                     created.Shape.Body = created.New.DocumentZone();
@@ -35,18 +36,24 @@ namespace Orchard.Core.Shapes {
             // 'Zone' shapes are built on the Zone base class
             builder.Describe.Named("Zone").From(Feature.Descriptor)
                 .OnCreating(creating => creating.BaseType = typeof(Zone));
-
+            
             // 'List' shapes start with several empty collections
             builder.Describe.Named("List").From(Feature.Descriptor)
                 .OnCreated(created => {
                     created.Shape.Tag = "ul";
-                    created.Shape.Classes = new List<string>();
-                    created.Shape.Attributes = new Dictionary<string, string>();
                     created.Shape.ItemClasses = new List<string>();
                     created.Shape.ItemAttributes = new Dictionary<string, string>();
                 });
+        }
 
+        private object CreateZone(ShapeCreatingContext context, string zoneName) {
+            var name = zoneName.ToLower();
 
+            var zone = context.New.Zone();
+            zone.Id = "zone-" + name;
+            zone.Classes.Add(zone.Id);
+            zone.Classes.Add("zone");
+            return zone;
         }
 
 
