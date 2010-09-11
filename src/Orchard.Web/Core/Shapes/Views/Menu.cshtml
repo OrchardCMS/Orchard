@@ -1,3 +1,10 @@
-﻿<ul id="Menu-@Model.MenuName" class="Menu Menu-@Model.MenuName">
-	@DisplayChildren(Model)
-</ul><!-- /Menu-@Model.MenuName -->
+﻿@{
+	// these should move somewhere else
+	Model.Id = "menu-" + Model.MenuName.ToLower();
+	Model.Classes.Add(Model.Id);
+	Model.Classes.Add("menu");
+	var tag = Html.Resolve<Orchard.DisplayManagement.Shapes.ITagBuilderFactory>().Create(Model, "ul");
+}
+@tag.StartElement
+@DisplayChildren(Model)
+@tag.EndElement <!-- /@Model.Id -->
