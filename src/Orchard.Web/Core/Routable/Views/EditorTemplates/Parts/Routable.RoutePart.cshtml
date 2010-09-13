@@ -1,6 +1,5 @@
 ﻿@model Orchard.Core.Routable.ViewModels.RoutableEditorViewModel
 @using Orchard.Utility.Extensions
-@using Orchard.Mvc.Spooling
 
 <fieldset>
     @Html.LabelFor(m => m.Title)
@@ -13,11 +12,8 @@
     <label for="@ViewData.TemplateInfo.GetFullHtmlFieldId("PromoteToHomePage")" class="forcheckbox">@T("Set as home page")</label>
 </fieldset>
 
-@{
-	Html.RegisterFootScript("jquery.slugify.js");
-
-	OutputStack.Push(new HtmlStringWriter());
-	try {
+	@Html.RegisterFootScript("jquery.slugify.js");
+    @using(Html.RenderFootContent()){
 		<script type="text/javascript">
 			$(function(){
 				//pull slug input from tab order
@@ -35,9 +31,4 @@
 				})
 			})
 		</script> 
-	}
-	finally {
-		var script = OutputStack.Pop();
-		WorkContext.Page.Tail.Add(script);
-	}
-}
+    }

@@ -249,11 +249,11 @@
     <None Include="Common\Views\DisplayTemplates\Parts\Common.Metadata.SummaryAdmin.cshtml" />
     <Content Include="ContentsLocation\Module.txt" />
     <Content Include="ContentsLocation\Styles\admin.css" />
-    <Content Include="ContentsLocation\Views\DefinitionTemplates\LocationSettings.ascx" />
+    <None Include="ContentsLocation\Views\DefinitionTemplates\LocationSettings.cshtml" />
     <None Include="Contents\Views\Admin\Create.cshtml" />
     <None Include="Contents\Views\Admin\Edit.cshtml" />
     <None Include="Contents\Views\Admin\List.cshtml" />
-    <Content Include="Localization\Views\EditorTemplates\Parts\Localization.Translation.ascx" />
+    <None Include="Localization\Views\EditorTemplates\Parts\Localization.Translation.cshtml" />
     <Content Include="Messaging\Module.txt" />
     <Content Include="Messaging\Views\EditorTemplates\Parts\Messaging.MessageSettings.ascx" />
     <Content Include="PublishLater\Content\Admin\images\draft.gif" />
@@ -270,8 +270,8 @@
     <Content Include="Contents\Views\Admin\CreatableTypeList.ascx" />
     <Content Include="Localization\Styles\admin.css" />
     <Content Include="Localization\Styles\base.css" />
-    <Content Include="Localization\Views\DisplayTemplates\Parts\Localization.ContentTranslations.Summary.ascx" />
-    <Content Include="Localization\Views\DisplayTemplates\Parts\Localization.ContentTranslations.ascx" />
+    <None Include="Localization\Views\DisplayTemplates\Parts\Localization.ContentTranslations.Summary.cshtml" />
+    <None Include="Localization\Views\DisplayTemplates\Parts\Localization.ContentTranslations.cshtml" />
     <Content Include="PublishLater\Module.txt" />
     <Content Include="PublishLater\Scripts\jquery.ui.core.js" />
     <Content Include="PublishLater\Scripts\jquery.ui.datepicker.js" />
@@ -301,9 +301,9 @@
     <None Include="Reports\Views\Admin\Display.cshtml" />
     <None Include="Reports\Views\Admin\Index.cshtml" />
     <Content Include="Localization\Module.txt" />
-    <Content Include="Localization\Views\Admin\Translate.ascx" />
-    <Content Include="Localization\Views\DisplayTemplates\Parts\Localization.ContentTranslations.SummaryAdmin.ascx" />
-    <Content Include="Localization\Views\CultureSelection.ascx" />
+    <None Include="Localization\Views\Admin\Translate.cshtml" />
+    <None Include="Localization\Views\DisplayTemplates\Parts\Localization.ContentTranslations.SummaryAdmin.cshtml" />
+    <None Include="Localization\Views\CultureSelection.cshtml" />
     <Content Include="Routable\Module.txt" />
     <Content Include="Routable\Scripts\jquery.slugify.js" />
     <None Include="Routable\Views\EditorTemplates\Parts\Routable.RoutePart.cshtml" />

@@ -8,6 +8,7 @@ using System.Web.Mvc.Html;
 using System.Web.Routing;
 using Orchard.Collections;
 using Orchard.Localization;
+using Orchard.Mvc.Spooling;
 using Orchard.Services;
 using Orchard.Settings;
 using Orchard.Utility;
@@ -16,6 +17,24 @@ using System.Web;
 
 namespace Orchard.Mvc.Html {
     public static class HtmlHelperExtensions {
+
+        private class FootContentRenderer : IDisposable {
+            readonly dynamic _model;
+
+            public FootContentRenderer(HtmlHelper html) {
+                _model = html.ViewDataContainer;
+                _model.OutputStack.Push(new HtmlStringWriter());
+            }
+            public void Dispose() {
+                var script = _model.OutputStack.Pop();
+                _model.WorkContext.Page.Tail.Add(script);
+            }
+        }
+
+        public static IDisposable RenderFootContent(this HtmlHelper html) {
+            return new FootContentRenderer(html);
+        }
+
         public static string NameOf<T>(this HtmlHelper<T> html, Expression<Action<T>> expression) {
             return Reflect.NameOf(html.ViewData.Model, expression);
         }

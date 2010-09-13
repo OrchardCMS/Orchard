@@ -71,7 +71,7 @@ namespace Orchard.Core.Localization.Controllers {
             };
             Services.TransactionManager.Cancel();
 
-            return View(Shape.Model(model));
+            return View(model);
         }
 
         [HttpPost, ActionName("Translate")]
@@ -111,7 +111,7 @@ namespace Orchard.Core.Localization.Controllers {
                 model.SiteCultures = _cultureManager.ListCultures().Where(s => s != _localizationService.GetContentCulture(contentItem) && s != _cultureManager.GetSiteCulture());
                 contentItem.As<LocalizationPart>().Culture.Culture = null;
                 model.Content = _contentManager.BuildEditorModel(contentItem);
-                return View(Shape.Model(model));
+                return View(model);
             }
 
             Services.Notifier.Information(T("Created content item translation."));
