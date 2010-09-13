@@ -10,5 +10,6 @@ namespace Orchard.Mvc {
         Localizer T { get; }
         dynamic Display { get; }
         IHtmlString DisplayChildren(object shape);
+        WorkContext WorkContext { get; }
     }
 }

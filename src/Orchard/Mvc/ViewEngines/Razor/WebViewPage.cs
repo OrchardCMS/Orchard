@@ -13,10 +13,12 @@ namespace Orchard.Mvc.ViewEngines.Razor {
         private object _display;
         private object _new;
         private Localizer _localizer = NullLocalizer.Instance;
+        private WorkContext _workContext;
 
 
         public Localizer T { get { return _localizer; } }
         public dynamic Display { get { return _display; } }
+        public WorkContext WorkContext { get { return _workContext; } }
         
 
         public dynamic New { get { return _new; } }
@@ -28,8 +30,8 @@ namespace Orchard.Mvc.ViewEngines.Razor {
         public override void InitHelpers() {
             base.InitHelpers();
 
-            var workContext = ViewContext.GetWorkContext();
-            workContext.Resolve<IComponentContext>().InjectUnsetProperties(this);
+            _workContext = ViewContext.GetWorkContext();
+            _workContext.Resolve<IComponentContext>().InjectUnsetProperties(this);
 
             _localizer = LocalizationUtilities.Resolve(ViewContext, VirtualPath);
             _display = DisplayHelperFactory.CreateHelper(ViewContext, this);
@@ -48,6 +50,7 @@ namespace Orchard.Mvc.ViewEngines.Razor {
             }
             return writer;
         }
+
     }
 
     public abstract class WebViewPage : WebViewPage<dynamic> {

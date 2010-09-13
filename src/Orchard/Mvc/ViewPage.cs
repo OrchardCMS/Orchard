@@ -1,4 +1,5 @@
-﻿using System.Web;
+﻿using System;
+using System.Web;
 using System.Web.Mvc;
 using Autofac;
 using Orchard.DisplayManagement;
@@ -13,9 +14,11 @@ namespace Orchard.Mvc {
     public class ViewPage<TModel> : System.Web.Mvc.ViewPage<TModel>, IOrchardViewPage {
         private object _display;
         private Localizer _localizer = NullLocalizer.Instance;
+        private WorkContext _workContext;
 
         public Localizer T { get { return _localizer; } }
         public dynamic Display { get { return _display; } }
+        public WorkContext WorkContext { get { return _workContext; } }
         public IDisplayHelperFactory DisplayHelperFactory { get; set; }
 
         public IAuthorizer Authorizer { get; set; }
@@ -23,8 +26,8 @@ namespace Orchard.Mvc {
         public override void InitHelpers() {
             base.InitHelpers();
 
-            var workContext = ViewContext.GetWorkContext();
-            workContext.Resolve<IComponentContext>().InjectUnsetProperties(this);
+            _workContext = ViewContext.GetWorkContext();
+            _workContext.Resolve<IComponentContext>().InjectUnsetProperties(this);
 
             _localizer = LocalizationUtilities.Resolve(ViewContext, AppRelativeVirtualPath);
             _display = DisplayHelperFactory.CreateHelper(ViewContext, this);
@@ -45,6 +48,7 @@ namespace Orchard.Mvc {
             }
             return writer;
         }
+
     }
 
     public class ViewPage : ViewPage<dynamic> {
