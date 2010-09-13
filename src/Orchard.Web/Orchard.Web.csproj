@@ -143,7 +143,6 @@
   <ItemGroup>
     <Content Include="Config\Sample.Host.config" />
     <None Include="Themes\Contoso\Views\Header.ascx_" />
-    <None Include="Themes\Contoso\Views\HomePage\Home\Index.cshtml" />
     <None Include="Themes\Contoso\Views\Layout.ascx_" />
     <None Include="Themes\Contoso\Views\Layout.HomePage.ascx_" />
     <None Include="Themes\SafeMode\Views\DocumentZone.cshtml" />

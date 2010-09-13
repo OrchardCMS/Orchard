@@ -1,6 +1,5 @@
 ﻿using System.Web.Mvc;
 using JetBrains.Annotations;
-using Orchard.ContentManagement.Aspects;
 using Orchard.Core.Routable.Models;
 using Orchard.DisplayManagement;
 using Orchard.Localization;
@@ -38,11 +37,11 @@ namespace Orchard.Core.Routable.Services {
             if (contentItem == null || !contentItem.Is<RoutePart>())
                 return new NotFoundResult();
 
-            var model = _contentManager.BuildDisplayModel(contentItem, "Detail");
+            var model = _contentManager.BuildDisplayModel(contentItem, "_HomePage");
 
             return new ViewResult {
-                //ViewName = "~/Core/Routable/Views/Item/Display.ascx",
-                ViewData = new ViewDataDictionary<dynamic>(Shape.HomePage(model))
+                ViewName = "Display",
+                ViewData = new ViewDataDictionary<dynamic>(model)
             };
         }
     }

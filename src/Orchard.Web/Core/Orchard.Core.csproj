@@ -297,6 +297,7 @@
     <Content Include="PublishLater\Styles\ui.timepickr.css" />
     <Content Include="PublishLater\Views\EditorTemplates\Parts\PublishLater.ascx" />
     <Content Include="Reports\Module.txt" />
+    <None Include="Contents\Views\Items\Content-HomePage.cshtml" />
     <None Include="Reports\Views\Admin\Display.cshtml" />
     <None Include="Reports\Views\Admin\Index.cshtml" />
     <Content Include="Localization\Module.txt" />
@@ -335,6 +336,7 @@
     <Content Include="Web.config" />
     <Content Include="XmlRpc\Module.txt" />
     <None Include="Shapes\Views\Display.cshtml" />
+    <None Include="Shapes\Views\Menu.ascx_" />
     <None Include="XmlRpc\Views\Home\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
@@ -395,14 +397,12 @@
     <None Include="Contents\Views\Items\Content.Edit.cshtml" />
     <None Include="Contents\Views\Items\Content.Summary.cshtml" />
     <None Include="Contents\Views\Items\Content.SummaryAdmin.cshtml" />
-    <None Include="HomePage\Views\HomePage.cshtml" />
     <None Include="Shapes\Views\ContentZone.cshtml" />
     <None Include="Shapes\Views\DocumentZone.cshtml" />
     <None Include="Shapes\Views\Document.cshtml" />
     <None Include="Shapes\Views\User.cshtml" />
     <None Include="Shapes\Views\Header.cshtml" />
     <None Include="Shapes\Views\Layout.cshtml" />
-    <None Include="Shapes\Views\Menu.ascx_" />
     <None Include="Shapes\Views\Menu.cshtml" />
     <None Include="Shapes\Views\MenuItem.cshtml" />
     <None Include="Shapes\Views\Messages.ascx_" />
