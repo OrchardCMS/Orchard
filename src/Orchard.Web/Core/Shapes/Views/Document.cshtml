@@ -3,7 +3,7 @@
 <html lang="en" class="static @Html.ClassForPage()"> 
 <head> 
     <meta charset="utf-8" /> 
-    <title>@View.Page .Title</title> 
+    <title>@Html.Title(Html.SiteName())</title> 
     @//could be a resource - at least need to get at the right location and this is something 
     <link rel="shortcut icon" type="image/x-icon" href="/modules/orchard.themes/Content/orchard.ico" /> 
     @{

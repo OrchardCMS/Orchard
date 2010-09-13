@@ -8,14 +8,14 @@ WorkContext.Page == Layout shape
 
 Document [:Layout]
 
-Layout (.Wrappers[Document])
+Layout (Body) (.Wrappers[Document])
 .Zones (meta-property)
 .Title
 
 Zone
 .ZoneName
 
-Menu
+Menu (in Body.Navigation)
 .MenuName
 
 MenuItem
@@ -32,9 +32,10 @@ List: ul|ol + li*
 .ItemClasses
 .ItemAttributes
 
-Items_Content
+Items_Content (a single content item)
 .Zones (meta-property)
 .ContentItem (clr object)
+.Title (from Orchard.Core.Routable(.Handlers.RoutePartHandler))
 
 PlaceChildContent
 .Source (another shape, presumed rendered)

@@ -249,7 +249,9 @@
     <None Include="Common\Views\DisplayTemplates\Parts\Common.Metadata.SummaryAdmin.cshtml" />
     <Content Include="ContentsLocation\Module.txt" />
     <Content Include="ContentsLocation\Styles\admin.css" />
-    <None Include="ContentsLocation\Views\DefinitionTemplates\LocationSettings.cshtml" />
+    <Content Include="ContentsLocation\Views\DefinitionTemplates\LocationSettings.ascx" />
+    <None Include="Contents\Views\Admin\Create.cshtml" />
+    <None Include="Contents\Views\Admin\Edit.cshtml" />
     <None Include="Contents\Views\Admin\List.cshtml" />
     <Content Include="Localization\Views\EditorTemplates\Parts\Localization.Translation.ascx" />
     <Content Include="Messaging\Module.txt" />
@@ -265,10 +267,7 @@
     <None Include="Common\Views\EditorTemplates\Parts\Common.Container.cshtml" />
     <None Include="Common\Views\EditorTemplates\PlainTextEditor.cshtml" />
     <Content Include="Contents\Module.txt" />
-    <None Include="Contents\Views\Admin\Edit.cshtml" />
     <Content Include="Contents\Views\Admin\CreatableTypeList.ascx" />
-    <None Include="Contents\Views\Admin\Create.cshtml" />
-    <None Include="Contents\Views\Item\Preview.cshtml" />
     <Content Include="Localization\Styles\admin.css" />
     <Content Include="Localization\Styles\base.css" />
     <Content Include="Localization\Views\DisplayTemplates\Parts\Localization.ContentTranslations.Summary.ascx" />
@@ -298,7 +297,6 @@
     <Content Include="PublishLater\Styles\ui.timepickr.css" />
     <Content Include="PublishLater\Views\EditorTemplates\Parts\PublishLater.ascx" />
     <Content Include="Reports\Module.txt" />
-    <None Include="Contents\Views\Items\Content.Detail.cshtml" />
     <None Include="Reports\Views\Admin\Display.cshtml" />
     <None Include="Reports\Views\Admin\Index.cshtml" />
     <Content Include="Localization\Module.txt" />
@@ -308,7 +306,6 @@
     <Content Include="Routable\Module.txt" />
     <Content Include="Routable\Scripts\jquery.slugify.js" />
     <None Include="Routable\Views\EditorTemplates\Parts\Routable.RoutePart.cshtml" />
-    <None Include="Routable\Views\Item\Display.cshtml" />
     <None Include="Routable\Views\DisplayTemplates\Parts\Routable.RoutePart.cshtml" />
     <Content Include="Settings\Module.txt" />
     <Content Include="Settings\Styles\admin.css" />
@@ -337,6 +334,7 @@
     <Content Include="Shapes\Views\UI\Switchable.ascx" />
     <Content Include="Web.config" />
     <Content Include="XmlRpc\Module.txt" />
+    <None Include="Shapes\Views\Display.cshtml" />
     <None Include="XmlRpc\Views\Home\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
@@ -397,7 +395,6 @@
     <None Include="Contents\Views\Items\Content.Edit.cshtml" />
     <None Include="Contents\Views\Items\Content.Summary.cshtml" />
     <None Include="Contents\Views\Items\Content.SummaryAdmin.cshtml" />
-    <None Include="Contents\Views\Item\Display.cshtml" />
     <None Include="HomePage\Views\HomePage.cshtml" />
     <None Include="Shapes\Views\ContentZone.cshtml" />
     <None Include="Shapes\Views\DocumentZone.cshtml" />

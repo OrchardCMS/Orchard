@@ -34,6 +34,8 @@ namespace Orchard.Core.Routable.Handlers {
                     routable.Path = routable.GetPathWithSlug(routable.Slug);
                 });
 
+            OnGetDisplayShape<RoutePart>((context, routable) => context.Model.Title = routable.Title);
+
             OnPublished<RoutePart>((context, routable) => {
                 if (context.PublishingItemVersionRecord != null)
                     processSlug(routable);

@@ -379,7 +379,7 @@ namespace Orchard.ContentManagement {
             new[] { CSharpArgumentInfo.Create(CSharpArgumentInfoFlags.None, null) }));
 
 
-        public dynamic BuildDisplayModel<TContent>(TContent content, string displayType) where TContent : IContent {
+        public dynamic BuildDisplayModel<TContent>(TContent content, string displayType = "") where TContent : IContent {
             var shapeHelper = _shapeHelperFactory.CreateHelper();
 
             var shapeTypeName = string.IsNullOrEmpty(displayType) ? "Items_Content" : ("Items_Content_" + displayType);

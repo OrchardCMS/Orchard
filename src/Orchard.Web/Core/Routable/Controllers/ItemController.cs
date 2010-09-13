@@ -41,7 +41,7 @@ namespace Orchard.Core.Routable.Controllers {
                 throw new ApplicationException("Ambiguous content");
             }
 
-            var model = _contentManager.BuildDisplayModel<IRoutableAspect>(hits.Single(), "Detail");
+            var model = _contentManager.BuildDisplayModel<IRoutableAspect>(hits.Single());
             return View(model);
         }
 
