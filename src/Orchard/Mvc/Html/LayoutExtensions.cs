@@ -1,8 +1,10 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using System.Web.Mvc;
 using System.Web.UI;
 using Microsoft.WebPages;
+using Orchard.Localization;
 using Orchard.Mvc.ViewEngines;
 using Orchard.UI.PageClass;
 using Orchard.UI.PageTitle;
@@ -43,6 +45,15 @@ namespace Orchard.Mvc.Html {
                 return null;
 
             html.AppendTitleParts(titleParts);
+
+            return MvcHtmlString.Create(html.Encode(titleParts[0]));
+        }
+
+        public static MvcHtmlString TitleForPage(this HtmlHelper html, params LocalizedString[] titleParts) {
+            if (titleParts == null || titleParts.Length < 1)
+                return null;
+
+            html.AppendTitleParts(titleParts.Select(part=>part.ToString()).ToArray());
 
             return MvcHtmlString.Create(html.Encode(titleParts[0]));
         }
