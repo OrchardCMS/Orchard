@@ -1,9 +1,8 @@
-﻿using Orchard.ContentManagement.Aspects;
+﻿using Orchard.Core.Routable.Models;
 
 namespace Orchard.Core.Routable.ViewModels {
-#if REFACTORING
    public class RoutableDisplayViewModel  {
-        public ContentItemViewModel<IRoutableAspect> Routable {get;set;}
-    }
-#endif
+       public string Title { get { return RoutePart.Title; } }
+       public RoutePart RoutePart { get; set; }
+   }
 }

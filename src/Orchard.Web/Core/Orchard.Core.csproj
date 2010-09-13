@@ -307,6 +307,7 @@
     <Content Include="PublishLater\Styles\ui.timepickr.css" />
     <Content Include="PublishLater\Views\EditorTemplates\Parts\PublishLater.ascx" />
     <Content Include="Reports\Module.txt" />
+    <None Include="Contents\Views\Items\Content.Detail.cshtml" />
     <None Include="Reports\Views\Admin\Display.cshtml" />
     <None Include="Reports\Views\Admin\Index.cshtml" />
     <Content Include="Localization\Module.txt" />
@@ -317,6 +318,7 @@
     <Content Include="Routable\Scripts\jquery.slugify.js" />
     <None Include="Routable\Views\EditorTemplates\Parts\Routable.RoutePart.cshtml" />
     <None Include="Routable\Views\Item\Display.cshtml" />
+    <None Include="Routable\Views\DisplayTemplates\Parts\Routable.RoutePart.cshtml" />
     <Content Include="Settings\Module.txt" />
     <Content Include="Settings\Styles\admin.css" />
     <None Include="Settings\Views\Admin\Index.cshtml" />
