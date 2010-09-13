@@ -106,7 +106,6 @@
     <Compile Include="PublishLater\Services\IPublishLaterService.cs" />
     <Compile Include="PublishLater\ViewModels\PublishLaterViewModel.cs" />
     <Compile Include="Routable\Services\RoutableHomePageProvider.cs" />
-    <Compile Include="Contents\ViewModels\EditItemViewModel.cs" />
     <Compile Include="Contents\ViewModels\ListContentsViewModel.cs" />
     <Compile Include="Contents\ViewModels\ListContentTypesViewModel.cs" />
     <Compile Include="Localization\Services\ILocalizationService.cs" />
@@ -142,7 +141,6 @@
     <Compile Include="Common\ViewModels\OwnerEditorViewModel.cs" />
     <Compile Include="Contents\AdminMenu.cs" />
     <Compile Include="Contents\Controllers\AdminController.cs" />
-    <Compile Include="Contents\ViewModels\CreateItemViewModel.cs" />
     <Compile Include="Dashboard\AdminMenu.cs" />
     <Compile Include="Dashboard\Controllers\AdminController.cs" />
     <Compile Include="Dashboard\Routes.cs" />
@@ -269,9 +267,9 @@
     <None Include="Common\Views\EditorTemplates\Parts\Common.Container.cshtml" />
     <None Include="Common\Views\EditorTemplates\PlainTextEditor.cshtml" />
     <Content Include="Contents\Module.txt" />
-    <Content Include="Contents\Views\Admin\Edit.ascx" />
+    <None Include="Contents\Views\Admin\Edit.cshtml" />
     <Content Include="Contents\Views\Admin\CreatableTypeList.ascx" />
-    <Content Include="Contents\Views\Admin\Create.ascx" />
+    <None Include="Contents\Views\Admin\Create.cshtml" />
     <None Include="Contents\Views\Admin\List.ascx_" />
     <Content Include="Contents\Views\DisplayTemplates\Items\Contents.Item.ascx" />
     <Content Include="Contents\Views\DisplayTemplates\Items\Contents.Item.SummaryAdmin.ascx" />

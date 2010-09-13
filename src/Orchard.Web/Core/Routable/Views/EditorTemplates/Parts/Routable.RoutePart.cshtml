@@ -12,7 +12,9 @@
     @Html.EditorFor(m => m.PromoteToHomePage)
     <label for="@ViewData.TemplateInfo.GetFullHtmlFieldId("PromoteToHomePage")" class="forcheckbox">@T("Set as home page")</label>
 </fieldset>
-@using (this.Capture("end-of-page-scripts")) {
+
+@// todo: (sebros) add this script at the end of the page
+@/* 
 <script type="text/javascript">
     $(function(){
         //pull slug input from tab order
@@ -24,9 +26,9 @@
                 target:slug,
                 url:"@Url.Action("Slugify","Item",new RouteValueDictionary{{"Area","Routable"}})",
                 contentType:"@Model.ContentType",
-                id:"@Model.Id" @if (Model.ContainerId != null) {,
-                containerId:@Model.ContainerId}
+                id:"@Model.Id" @if (Model.ContainerId != null) { <text>, containerId:@Model.ContainerId</text> }
             })
         })
-    })</script>
-}
+    })
+</script>
+*/

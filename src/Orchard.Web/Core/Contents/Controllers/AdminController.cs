@@ -211,7 +211,7 @@ namespace Orchard.Core.Contents.Controllers {
                 return new HttpUnauthorizedResult();
 
             var model = _contentManager.BuildEditorModel(contentItem);
-            return View(Shape.Model(Content: model));
+            return View(model);
         }
 
 
@@ -227,13 +227,13 @@ namespace Orchard.Core.Contents.Controllers {
 
             if (!ModelState.IsValid) {
                 _transactionManager.Cancel();
-                return View(Shape.Model(Content: model));
+                return View(model);
             }
 
             if (!contentItem.Has<IPublishingControlAspect>())
                 _contentManager.Publish(contentItem);
 
-            Services.Notifier.Information(string.IsNullOrWhiteSpace(model.TypeDefinition.DisplayName)
+            Services.Notifier.Information(string.IsNullOrWhiteSpace(contentItem.TypeDefinition.DisplayName)
                 ? T("Your content has been created.")
                 : T("Your {0} has been created.", contentItem.TypeDefinition.DisplayName));
             return RedirectToAction("Edit", new RouteValueDictionary { { "Id", contentItem.Id } });
@@ -250,7 +250,7 @@ namespace Orchard.Core.Contents.Controllers {
 
             var model = _contentManager.BuildEditorModel(contentItem);
 
-            return View(Shape.Model(Content: model));
+            return View(model);
         }
 
         [HttpPost, ActionName("Edit")]
@@ -266,14 +266,14 @@ namespace Orchard.Core.Contents.Controllers {
             var model = _contentManager.UpdateEditorModel(contentItem, this);
             if (!ModelState.IsValid) {
                 _transactionManager.Cancel();
-                return View("Edit", Shape.Model(Content: model));
+                return View("Edit", model);
             }
 
             //need to go about this differently - to know when to publish (IPlublishableAspect ?)
             if (!contentItem.Has<IPublishingControlAspect>())
                 _contentManager.Publish(contentItem);
 
-            Services.Notifier.Information(string.IsNullOrWhiteSpace(model.TypeDefinition.DisplayName)
+            Services.Notifier.Information(string.IsNullOrWhiteSpace(contentItem.TypeDefinition.DisplayName)
                 ? T("Your content has been saved.")
                 : T("Your {0} has been saved.", contentItem.TypeDefinition.DisplayName));
             return RedirectToAction("Edit", new RouteValueDictionary { { "Id", contentItem.Id } });
