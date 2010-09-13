@@ -1,7 +1,7 @@
 ﻿@model Orchard.Core.Routable.ViewModels.RoutableEditorViewModel
 @using Orchard.Utility.Extensions
+@using Orchard.Mvc.Spooling
 
-@Html.RegisterFootScript("jquery.slugify.js");
 <fieldset>
     @Html.LabelFor(m => m.Title)
     @Html.TextBoxFor(m => m.Title, new { @class = "large text" })
@@ -13,22 +13,31 @@
     <label for="@ViewData.TemplateInfo.GetFullHtmlFieldId("PromoteToHomePage")" class="forcheckbox">@T("Set as home page")</label>
 </fieldset>
 
-@// todo: (sebros) add this script at the end of the page
-@/* 
-<script type="text/javascript">
-    $(function(){
-        //pull slug input from tab order
-        $("#@Html.FieldIdFor(m=>m.Slug)").attr("tabindex",-1);
-        $("#@Html.FieldIdFor(m=>m.Title)").blur(function(){
-            var slug = $("#@Html.FieldIdFor(m=>m.Slug)");
-            if (slug.val()) { return true; }
-            $(this).slugify({
-                target:slug,
-                url:"@Url.Action("Slugify","Item",new RouteValueDictionary{{"Area","Routable"}})",
-                contentType:"@Model.ContentType",
-                id:"@Model.Id" @if (Model.ContainerId != null) { <text>, containerId:@Model.ContainerId</text> }
-            })
-        })
-    })
-</script>
-*/
+@{
+	Html.RegisterFootScript("jquery.slugify.js");
+
+	OutputStack.Push(new HtmlStringWriter());
+	try {
+		<script type="text/javascript">
+			$(function(){
+				//pull slug input from tab order
+				$("#@Html.FieldIdFor(m=>m.Slug)").attr("tabindex",-1);
+				$("#@Html.FieldIdFor(m=>m.Title)").blur(function(){
+					var slug = $("#@Html.FieldIdFor(m=>m.Slug)");
+					if (slug.val()) { return true; }
+					$(this).slugify({
+						target:slug,
+						contentType:"@Model.ContentType",
+						id:"@Model.Id",
+						@if (Model.ContainerId != null) {<text>containerId:@Model.ContainerId,</text>}
+						url:"@Url.Action("Slugify","Item",new RouteValueDictionary{{"Area","Routable"}})"
+					})
+				})
+			})
+		</script> 
+	}
+	finally {
+		var script = OutputStack.Pop();
+		WorkContext.Page.Tail.Add(script);
+	}
+}

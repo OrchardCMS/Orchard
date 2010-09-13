@@ -1,7 +1,11 @@
-﻿content item -> @Model.ContentItem.ContentType
-
-@Display(Model.primary)
-
-<fieldset>
-    <input class="button primaryAction" type="submit" name="submit.Save" value="@T("Save")"/>
-</fieldset>
+﻿<div class="sections">
+    <div class="primary">
+        @Display(Model.primary)
+    </div>
+    <div class="secondary">
+        @Display(Model.secondary)
+        <fieldset>
+            <input class="button primaryAction" type="submit" name="submit.Save" value="@T("Save")"/>
+        </fieldset>
+    </div>
+</div>
