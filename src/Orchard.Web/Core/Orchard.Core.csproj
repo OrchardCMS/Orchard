@@ -251,8 +251,6 @@
     <Content Include="ContentsLocation\Styles\admin.css" />
     <Content Include="ContentsLocation\Views\DefinitionTemplates\LocationSettings.ascx" />
     <None Include="Contents\Views\Admin\List.cshtml" />
-    <Content Include="Contents\Views\DisplayTemplates\Parts\Contents.Publish.SummaryAdmin.ascx" />
-    <Content Include="Contents\Views\DisplayTemplates\Parts\Contents.Publish.ascx" />
     <Content Include="Localization\Views\EditorTemplates\Parts\Localization.Translation.ascx" />
     <Content Include="Messaging\Module.txt" />
     <Content Include="Messaging\Views\EditorTemplates\Parts\Messaging.MessageSettings.ascx" />
@@ -270,12 +268,7 @@
     <None Include="Contents\Views\Admin\Edit.cshtml" />
     <Content Include="Contents\Views\Admin\CreatableTypeList.ascx" />
     <None Include="Contents\Views\Admin\Create.cshtml" />
-    <None Include="Contents\Views\Admin\List.ascx_" />
-    <Content Include="Contents\Views\DisplayTemplates\Items\Contents.Item.ascx" />
-    <Content Include="Contents\Views\DisplayTemplates\Items\Contents.Item.SummaryAdmin.ascx" />
-    <Content Include="Contents\Views\DisplayTemplates\Items\Contents.Item.Summary.ascx" />
-    <Content Include="Contents\Views\EditorTemplates\Items\Contents.Item.ascx" />
-    <Content Include="Contents\Views\Item\Preview.aspx" />
+    <None Include="Contents\Views\Item\Preview.cshtml" />
     <Content Include="Localization\Styles\admin.css" />
     <Content Include="Localization\Styles\base.css" />
     <Content Include="Localization\Views\DisplayTemplates\Parts\Localization.ContentTranslations.Summary.ascx" />
