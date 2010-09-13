@@ -1,8 +1,7 @@
 ﻿using System.Collections.Generic;
-using Orchard.Mvc.ViewModels;
 
 namespace Orchard.ContentTypes.ViewModels {
-    public class AddPartsViewModel : BaseViewModel {
+    public class AddPartsViewModel {
         public AddPartsViewModel() {
             PartSelections = new List<PartSelectionViewModel>();
         }

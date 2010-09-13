@@ -1,11 +1,9 @@
-<%@ Control Language="C#" Inherits="Orchard.Mvc.ViewUserControl<Orchard.ContentTypes.ViewModels.AddPartsViewModel>" %>
-<%
-Html.RegisterStyle("admin.css"); %>
-<h1><%:Html.TitleForPage(T("Add Parts To \"{0}\"", Model.Type.DisplayName).ToString())%></h1><%
-using (Html.BeginFormAntiForgeryPost()) { %>
-    <%:Html.ValidationSummary() %>
+@model Orchard.ContentTypes.ViewModels.AddPartsViewModel
+@Html.RegisterStyle("admin.css");
+<h1>@Html.TitleForPage(T("Add Parts To \"{0}\"", Model.Type.DisplayName).ToString())</h1>@using (Html.BeginFormAntiForgeryPost()) {
+    @Html.ValidationSummary()
     <fieldset>
-        <%:Html.UnorderedList(
+        @Html.UnorderedList(
             Model.PartSelections,
             (partSelection, i) => {
                 var fieldNameStart = "PartSelections[" + i + "].";
@@ -17,9 +15,8 @@ using (Html.BeginFormAntiForgeryPost()) { %>
                         partSelection.PartDisplayName,
                         Html.Hidden(fieldNameStart + "PartName", partSelection.PartName)));
             },
-            "available-parts")%>
+            "available-parts")
     </fieldset>
     <fieldset>
-        <button class="primaryAction" type="submit"><%:T("Save") %></button>
-    </fieldset><%
-} %>
+        <button class="primaryAction" type="submit">@T("Save")</button>
+    </fieldset>}

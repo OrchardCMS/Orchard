@@ -249,7 +249,7 @@
     <None Include="Common\Views\DisplayTemplates\Parts\Common.Metadata.SummaryAdmin.cshtml" />
     <Content Include="ContentsLocation\Module.txt" />
     <Content Include="ContentsLocation\Styles\admin.css" />
-    <Content Include="ContentsLocation\Views\DefinitionTemplates\LocationSettings.ascx" />
+    <None Include="ContentsLocation\Views\DefinitionTemplates\LocationSettings.cshtml" />
     <None Include="Contents\Views\Admin\List.cshtml" />
     <Content Include="Localization\Views\EditorTemplates\Parts\Localization.Translation.ascx" />
     <Content Include="Messaging\Module.txt" />
