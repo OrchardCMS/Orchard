@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Web;
 using Autofac;
+using Microsoft.WebPages;
 using Orchard.DisplayManagement;
 using Orchard.Localization;
 using Orchard.Mvc.Spooling;
@@ -51,26 +52,27 @@ namespace Orchard.Mvc.ViewEngines.Razor {
         }
 
         public IDisposable Capture(Action<IHtmlString> callback) {
-            return new ViewContextSubstitution(this, callback);
+            return new CaptureScope(this, callback);
+        }
+
+        class CaptureScope : IDisposable {
+            readonly WebPageBase _viewPage;
+            readonly Action<IHtmlString> _callback;
+
+            public CaptureScope(WebPageBase viewPage, Action<IHtmlString> callback) {
+                _viewPage = viewPage;
+                _callback = callback;
+                _viewPage.OutputStack.Push(new HtmlStringWriter());
+            }
+
+            void IDisposable.Dispose() {
+                var writer = (HtmlStringWriter)_viewPage.OutputStack.Pop();
+                _callback(writer);
+            }
         }
     }
 
     public abstract class WebViewPage : WebViewPage<dynamic> {
     }
 
-    public class ViewContextSubstitution : IDisposable {
-        public dynamic _viewPage;
-        private readonly Action<IHtmlString> _callback;
-
-        public ViewContextSubstitution(dynamic viewPage, Action<IHtmlString> callback) {
-            _viewPage = viewPage;
-            _callback = callback;
-            _viewPage.OutputStack.Push(new HtmlStringWriter());
-        }
-
-        public void Dispose() {
-            var script = _viewPage.OutputStack.Pop().ToString();
-            _callback(new HtmlString(script));
-        }
-    }
 }
