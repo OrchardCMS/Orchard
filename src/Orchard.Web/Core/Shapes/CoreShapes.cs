@@ -14,31 +14,30 @@ using Orchard.UI.Zones;
 // ReSharper disable InconsistentNaming
 
 namespace Orchard.Core.Shapes {
-    public class CoreShapes : IShapeDescriptorBindingStrategy {
-        public Feature Feature { get; set; }
-
+    public class CoreShapes : IShapeTableProvider {
         public void Discover(ShapeTableBuilder builder) {
             // the root page shape named 'Layout' is wrapped with 'Document'
             // and has an automatic zone creating behavior
-            builder.Describe.Named("Layout").From(Feature.Descriptor)
+            builder.Describe("Layout")
                 .Configure(descriptor => descriptor.Wrappers.Add("Document"))
                 .OnCreating(creating => creating.Behaviors.Add(new ZoneHoldingBehavior(name => CreateZone(creating, name))))
                 .OnCreated(created => {
-                    created.Shape.Head = created.New.DocumentZone();
-                    created.Shape.Body = created.New.DocumentZone();
-                    created.Shape.Tail = created.New.DocumentZone();
-                    created.Shape.Body.Add(created.New.PlaceChildContent(Source: created.Shape), "5");
+                    var page = created.Shape;
+                    page.Head = created.New.DocumentZone();
+                    page.Body = created.New.DocumentZone();
+                    page.Tail = created.New.DocumentZone();
+                    page.Content = created.New.Zone();
 
-                    created.Shape.Content = created.New.Zone();
-                    created.Shape.Content.Add(created.New.PlaceChildContent(Source: created.Shape), "5");
+                    page.Body.Add(created.New.PlaceChildContent(Source: page), "5");
+                    page.Content.Add(created.New.PlaceChildContent(Source: page), "5");
                 });
 
             // 'Zone' shapes are built on the Zone base class
-            builder.Describe.Named("Zone").From(Feature.Descriptor)
+            builder.Describe("Zone")
                 .OnCreating(creating => creating.BaseType = typeof(Zone));
-            
+
             // 'List' shapes start with several empty collections
-            builder.Describe.Named("List").From(Feature.Descriptor)
+            builder.Describe("List")
                 .OnCreated(created => {
                     created.Shape.Tag = "ul";
                     created.Shape.ItemClasses = new List<string>();

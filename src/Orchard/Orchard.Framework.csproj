@@ -384,7 +384,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="ContentManagement\DataMigrations\FrameworkDataMigration.cs" />
-    <Compile Include="DisplayManagement\Descriptors\DefaultShapeTableFactory.cs" />
     <Compile Include="DisplayManagement\Descriptors\ShapeAttributeStrategy\ShapeAttributeBindingModule.cs" />
     <Compile Include="DisplayManagement\Descriptors\ShapeAttributeStrategy\ShapeAttributeOccurrence.cs" />
     <Compile Include="DisplayManagement\Descriptors\ShapeTemplateStrategy\IShapeTemplateHarvester.cs" />

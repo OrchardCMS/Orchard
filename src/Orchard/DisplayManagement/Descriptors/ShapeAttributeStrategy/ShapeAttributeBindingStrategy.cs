@@ -18,7 +18,7 @@ using Orchard.DisplayManagement.Shapes;
 using Orchard.Mvc.Spooling;
 
 namespace Orchard.DisplayManagement.Descriptors.ShapeAttributeStrategy {
-    public class ShapeAttributeBindingStrategy : IShapeDescriptorBindingStrategy {
+    public class ShapeAttributeBindingStrategy : IShapeTableProvider {
         private readonly IEnumerable<ShapeAttributeOccurrence> _shapeAttributeOccurrences;
         private readonly IComponentContext _componentContext;
         private readonly RouteCollection _routeCollection;
@@ -37,9 +37,8 @@ namespace Orchard.DisplayManagement.Descriptors.ShapeAttributeStrategy {
             foreach (var iter in _shapeAttributeOccurrences) {
                 var occurrence = iter;
                 var shapeType = occurrence.ShapeAttribute.ShapeType ?? occurrence.MethodInfo.Name;
-                builder.Describe
-                    .Named(shapeType)
-                    .From(occurrence.Feature.Descriptor)
+                builder.Describe(shapeType)
+                    .From(occurrence.Feature)
                     .BoundAs(
                         occurrence.MethodInfo.DeclaringType.FullName + "::" + occurrence.MethodInfo.Name,
                         descriptor => CreateDelegate(occurrence, descriptor));

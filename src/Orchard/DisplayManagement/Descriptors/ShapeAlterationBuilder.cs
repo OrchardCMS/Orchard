@@ -7,16 +7,16 @@ using Orchard.Environment.Extensions.Models;
 
 namespace Orchard.DisplayManagement.Descriptors {
     public class ShapeAlterationBuilder {
-        protected FeatureDescriptor _feature;
+        protected Feature _feature;
         protected string _shapeType;
         protected readonly IList<Action<ShapeDescriptor>> _configurations = new List<Action<ShapeDescriptor>>();
 
-        public ShapeAlterationBuilder Named(string shapeType) {
+        public ShapeAlterationBuilder(Feature feature, string shapeType) {
+            _feature = feature;
             _shapeType = shapeType;
-            return this;
         }
 
-        public ShapeAlterationBuilder From(FeatureDescriptor feature) {
+        public ShapeAlterationBuilder From(Feature feature) {
             _feature = feature;
             return this;
         }
@@ -60,5 +60,10 @@ namespace Orchard.DisplayManagement.Descriptors {
                 descriptor.Created = existing.Concat(new[] { action });
             });
         }
+
+        
+            public ShapeAlteration Build() {
+                return new ShapeAlteration(_shapeType, _feature, _configurations.ToArray());
+            }
     }
 }

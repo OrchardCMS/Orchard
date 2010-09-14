@@ -12,7 +12,7 @@ using Orchard.Environment.Extensions;
 using Orchard.Environment.Extensions.Models;
 
 namespace Orchard.DisplayManagement.Descriptors.ShapeTemplateStrategy {
-    public class ShapeTemplateBindingStrategy : IShapeDescriptorBindingStrategy {
+    public class ShapeTemplateBindingStrategy : IShapeTableProvider {
         private readonly ShellDescriptor _shellDescriptor;
         private readonly IExtensionManager _extensionManager;
         private readonly IEnumerable<IShapeTemplateHarvester> _harvesters;
@@ -50,7 +50,7 @@ namespace Orchard.DisplayManagement.Descriptors.ShapeTemplateStrategy {
 
                 var fileContexts = pathContexts.SelectMany(pathContext => _shapeTemplateViewEngines.SelectMany(ve => {
                     var fileNames = ve.DetectTemplateFileNames(pathContext.virtualPath);
-                    return fileNames.Select(fileName => new { fileName = Path.GetFileNameWithoutExtension(fileName), fileVirtualPath = Path.Combine(pathContext.virtualPath, fileName).Replace('\\','/'), pathContext });
+                    return fileNames.Select(fileName => new { fileName = Path.GetFileNameWithoutExtension(fileName), fileVirtualPath = Path.Combine(pathContext.virtualPath, fileName).Replace('\\', '/'), pathContext });
                 }));
 
                 var shapeContexts = fileContexts.SelectMany(fileContext => {
@@ -72,11 +72,10 @@ namespace Orchard.DisplayManagement.Descriptors.ShapeTemplateStrategy {
                 var hit = iter;
                 var featureDescriptors = iter.extensionDescriptor.Features.Where(fd => fd.Name == hit.extensionDescriptor.Name);
                 foreach (var featureDescriptor in featureDescriptors) {
-                    builder.Describe
-                        .From(featureDescriptor)
-                        .Named(iter.shapeContext.harvestShapeHit.ShapeType)
+                    builder.Describe(iter.shapeContext.harvestShapeHit.ShapeType)
+                        .From(new Feature { Descriptor = featureDescriptor })
                         .BoundAs(
-                            hit.shapeContext.harvestShapeInfo.TemplateVirtualPath, 
+                            hit.shapeContext.harvestShapeInfo.TemplateVirtualPath,
                             shapeDescriptor => displayContext => Render(shapeDescriptor, displayContext, hit.shapeContext.harvestShapeInfo, hit.shapeContext.harvestShapeHit));
                 }
             }

@@ -197,7 +197,6 @@
     <Compile Include="DisplayManagement\DefaultDisplayManagerTests.cs" />
     <Compile Include="ContainerTestBase.cs" />
     <Compile Include="DisplayManagement\Descriptors\BasicShapeTemplateHarvesterTests.cs" />
-    <Compile Include="DisplayManagement\Descriptors\DefaultShapeTableFactoryTests.cs" />
     <Compile Include="DisplayManagement\Descriptors\DefaultShapeTableManagerTests.cs" />
     <Compile Include="DisplayManagement\Descriptors\ShapeAttributeBindingStrategyTests.cs" />
     <Compile Include="DisplayManagement\Descriptors\ShapeTemplateBindingStrategyTests.cs" />

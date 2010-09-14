@@ -81,10 +81,10 @@ namespace Orchard.Setup {
             builder.RegisterType<ConfiguredEnginesCache>().As<IConfiguredEnginesCache>();
             builder.RegisterType<PageWorkContext>().As<IWorkContextStateProvider>();
 
-            builder.RegisterType<CoreShapes>().As<IShapeDescriptorBindingStrategy>().WithProperty("Feature", Feature).WithMetadata("Feature", Feature);
-            builder.RegisterType<ShapeTemplateBindingStrategy>().As<IShapeDescriptorBindingStrategy>();
+            builder.RegisterType<CoreShapes>().As<IShapeTableProvider>().WithProperty("Feature", Feature).WithMetadata("Feature", Feature);
+            builder.RegisterType<ShapeTemplateBindingStrategy>().As<IShapeTableProvider>();
             builder.RegisterType<BasicShapeTemplateHarvester>().As<IShapeTemplateHarvester>();
-            builder.RegisterType<ShapeAttributeBindingStrategy>().As<IShapeDescriptorBindingStrategy>();
+            builder.RegisterType<ShapeAttributeBindingStrategy>().As<IShapeTableProvider>();
             builder.RegisterModule(new ShapeAttributeBindingModule());
         }
 

@@ -25,7 +25,7 @@ namespace Orchard.Tests.DisplayManagement.Descriptors {
             _testViewEngine = new TestViewEngine();
 
             builder.Register(ctx => _descriptor);
-            builder.RegisterType<ShapeTemplateBindingStrategy>().As<IShapeDescriptorBindingStrategy>();
+            builder.RegisterType<ShapeTemplateBindingStrategy>().As<IShapeTableProvider>();
             builder.RegisterType<BasicShapeTemplateHarvester>().As<IShapeTemplateHarvester>();
             builder.RegisterInstance(_testViewEngine).As<IShapeTemplateViewEngine>();
 
@@ -84,12 +84,14 @@ namespace Orchard.Tests.DisplayManagement.Descriptors {
             AddEnabledFeature("Alpha");
 
             _testViewEngine.Add("~/Modules/Alpha/Views/AlphaShape.blah", null);
-            var strategy = _container.Resolve<IShapeDescriptorBindingStrategy>();
-            var builder = new ShapeTableBuilder();
-            strategy.Discover(builder);
-            var alterations = builder.Build();
+            var strategy = _container.Resolve<IShapeTableProvider>();
 
-            Assert.That(alterations.Any(alt => alt.ShapeType == "AlphaShape"));
+            IList<ShapeAlterationBuilder> alterationBuilders = new List<ShapeAlterationBuilder>();
+            var builder = new ShapeTableBuilder(alterationBuilders,null);
+            strategy.Discover(builder);
+            var alterations = alterationBuilders.Select(alterationBuilder=>alterationBuilder.Build());
+
+            Assert.That(alterations.Any(alteration => alteration.ShapeType == "AlphaShape"));
         }
 
     }

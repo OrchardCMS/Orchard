@@ -5,6 +5,7 @@ using System.Text;
 using Autofac;
 using NUnit.Framework;
 using Orchard.DisplayManagement;
+using Orchard.DisplayManagement.Descriptors;
 using Orchard.DisplayManagement.Implementation;
 using Orchard.DisplayManagement.Shapes;
 
@@ -17,6 +18,8 @@ namespace Orchard.Tests.DisplayManagement {
         public void Init() {
             var builder = new ContainerBuilder();
             builder.RegisterType<DefaultShapeFactory>().As<IShapeFactory>();
+            builder.RegisterType<DefaultShapeTableManager>().As<IShapeTableManager>();
+            builder.RegisterType<ShapeHelperFactory>().As<IShapeHelperFactory>();
             _container = builder.Build();
         }
 
