@@ -31,7 +31,7 @@ namespace Orchard.Search.Services {
         IPageOfItems<T> ISearchService.Query<T>(string query, int page, int? pageSize, bool filterCulture, string[] searchFields, Func<ISearchHit, T> shapeResult) {
 
             if (string.IsNullOrWhiteSpace(query))
-                return null;
+                return new PageOfItems<T>(Enumerable.Empty<T>());
 
             var searchBuilder = Search().Parse(searchFields, query);
 
