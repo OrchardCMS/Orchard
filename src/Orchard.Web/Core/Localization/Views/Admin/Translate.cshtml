@@ -6,7 +6,8 @@ Model.Content.Zones.AddRenderPartial("primary:before", "CultureSelection", Model
     @Html.ValidationSummary()
     @Html.EditorForItem(m=>m.Content)
 }
-@using (Html.RenderFootContent() ) {
+
+@using(Html.Capture(script => WorkContext.Page.Tail.Add(script) ){
 <script type="text/javascript">
     (function ($) {
         // grab the slug input

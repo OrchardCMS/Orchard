@@ -19,7 +19,6 @@ namespace Orchard.Mvc.ViewEngines.Razor {
         public Localizer T { get { return _localizer; } }
         public dynamic Display { get { return _display; } }
         public WorkContext WorkContext { get { return _workContext; } }
-        
 
         public dynamic New { get { return _new; } }
         public IDisplayHelperFactory DisplayHelperFactory { get; set; }
@@ -51,9 +50,27 @@ namespace Orchard.Mvc.ViewEngines.Razor {
             return writer;
         }
 
+        public IDisposable Capture(Action<IHtmlString> callback) {
+            return new ViewContextSubstitution(this, callback);
+        }
     }
 
     public abstract class WebViewPage : WebViewPage<dynamic> {
     }
 
+    public class ViewContextSubstitution : IDisposable {
+        public dynamic _viewPage;
+        private readonly Action<IHtmlString> _callback;
+
+        public ViewContextSubstitution(dynamic viewPage, Action<IHtmlString> callback) {
+            _viewPage = viewPage;
+            _callback = callback;
+            _viewPage.OutputStack.Push(new HtmlStringWriter());
+        }
+
+        public void Dispose() {
+            var script = _viewPage.OutputStack.Pop().ToString();
+            _callback(new HtmlString(script));
+        }
+    }
 }

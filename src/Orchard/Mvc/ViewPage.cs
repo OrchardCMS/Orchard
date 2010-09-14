@@ -1,11 +1,10 @@
 ﻿using System;
+using System.IO;
 using System.Web;
 using System.Web.Mvc;
 using Autofac;
 using Orchard.DisplayManagement;
-using Orchard.DisplayManagement.Implementation;
 using Orchard.Localization;
-using Orchard.Mvc.Html;
 using Orchard.Mvc.Spooling;
 using Orchard.Security;
 using Orchard.Security.Permissions;
@@ -19,6 +18,7 @@ namespace Orchard.Mvc {
         public Localizer T { get { return _localizer; } }
         public dynamic Display { get { return _display; } }
         public WorkContext WorkContext { get { return _workContext; } }
+
         public IDisplayHelperFactory DisplayHelperFactory { get; set; }
 
         public IAuthorizer Authorizer { get; set; }
@@ -47,6 +47,10 @@ namespace Orchard.Mvc {
                 writer.Write(Display(item));
             }
             return writer;
+        }
+
+        public IDisposable Capture(Action<IHtmlString> callback) {
+            throw new NotImplementedException();
         }
 
     }

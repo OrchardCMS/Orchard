@@ -1,3 +1,4 @@
+using System;
 using System.Web;
 using System.Web.Mvc;
 using Autofac;
@@ -18,6 +19,7 @@ namespace Orchard.Mvc {
         public dynamic Display { get { return _display; } }
         public dynamic New { get { return _new; } }
         public WorkContext WorkContext { get { return _workContext; } }
+        
         public IDisplayHelperFactory DisplayHelperFactory { get; set; }
         public IShapeHelperFactory ShapeHelperFactory { get; set; }
 
@@ -49,6 +51,11 @@ namespace Orchard.Mvc {
             }
             return writer;
         }
+
+        public IDisposable Capture(Action<IHtmlString> callback) {
+            throw new NotImplementedException();
+        }
+
     }
 
     public class ViewUserControl : ViewUserControl<dynamic> {

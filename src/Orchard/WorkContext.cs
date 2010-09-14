@@ -1,10 +1,7 @@
-﻿using System;
-using System.Web;
-using Autofac;
+﻿using System.Web;
 using Orchard.Security;
 using Orchard.Settings;
 using Orchard.Themes;
-using Orchard.UI;
 
 namespace Orchard {
     public abstract class WorkContext {

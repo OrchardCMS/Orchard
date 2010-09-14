@@ -13,7 +13,7 @@
 </fieldset>
 
 	@Html.RegisterFootScript("jquery.slugify.js");
-    @using(Html.RenderFootContent()){
+    @using(Capture(script => WorkContext.Page.Tail.Add(script))){
 		<script type="text/javascript">
 			$(function(){
 				//pull slug input from tab order

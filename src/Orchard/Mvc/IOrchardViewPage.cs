@@ -1,4 +1,5 @@
-﻿using System.Web;
+﻿using System;
+using System.Web;
 using Orchard.Localization;
 
 namespace Orchard.Mvc {
@@ -11,5 +12,6 @@ namespace Orchard.Mvc {
         dynamic Display { get; }
         IHtmlString DisplayChildren(object shape);
         WorkContext WorkContext { get; }
+        IDisposable Capture(Action<IHtmlString> callback);
     }
 }

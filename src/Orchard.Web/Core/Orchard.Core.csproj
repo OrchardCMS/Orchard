@@ -255,7 +255,7 @@
     <None Include="Contents\Views\Admin\List.cshtml" />
     <None Include="Localization\Views\EditorTemplates\Parts\Localization.Translation.cshtml" />
     <Content Include="Messaging\Module.txt" />
-    <Content Include="Messaging\Views\EditorTemplates\Parts\Messaging.MessageSettings.ascx" />
+    <None Include="Messaging\Views\EditorTemplates\Parts\Messaging.MessageSettings.cshtml" />
     <Content Include="PublishLater\Content\Admin\images\draft.gif" />
     <Content Include="PublishLater\Content\Admin\images\offline.gif" />
     <Content Include="PublishLater\Content\Admin\images\online.gif" />
