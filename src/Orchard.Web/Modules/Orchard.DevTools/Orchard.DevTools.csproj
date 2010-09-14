@@ -127,6 +127,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <None Include="Views\HackScript.cshtml" />
     <None Include="Views\HackStyle.cshtml" />
     <None Include="Views\ThinBorder.cshtml" />
     <None Include="Views\Home\FormShapes.cshtml" />
