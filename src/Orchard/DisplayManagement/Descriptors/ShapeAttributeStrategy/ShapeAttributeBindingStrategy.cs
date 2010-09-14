@@ -93,29 +93,23 @@ namespace Orchard.DisplayManagement.Descriptors.ShapeAttributeStrategy {
             }
 
             var getter = _getters.GetOrAdd(parameter.Name, n =>
-                CallSite<Func<CallSite, object, dynamic>>.Create(
+                CallSite<Func<CallSite, object, object>>.Create(
                 Microsoft.CSharp.RuntimeBinder.Binder.GetMember(
                 CSharpBinderFlags.None, n, null, new[] { CSharpArgumentInfo.Create(CSharpArgumentInfoFlags.None, null) })));
 
             var result = getter.Target(getter, displayContext.Value);
 
-            //var result = ((dynamic)(displayContext.Value))[parameter.Name];
             if (result == null)
                 return null;
 
-            //if (parameter.Name == "Attributes") {
-            //    var attributes = new RouteValueDictionary(result);
-            //    return Arguments.From(attributes.Values, attributes.Keys);
-            //}
-
             var converter = _converters.GetOrAdd(parameter.ParameterType, CompileConverter);
-            var argument = converter.Invoke((object)result);
+            var argument = converter.Invoke(result);
             return argument;
         }
 
 
-        static readonly ConcurrentDictionary<string, CallSite<Func<CallSite, object, dynamic>>> _getters =
-            new ConcurrentDictionary<string, CallSite<Func<CallSite, object, dynamic>>>();
+        static readonly ConcurrentDictionary<string, CallSite<Func<CallSite, object, object>>> _getters =
+            new ConcurrentDictionary<string, CallSite<Func<CallSite, object, object>>>();
 
         static readonly ConcurrentDictionary<Type, Func<object, object>> _converters =
             new ConcurrentDictionary<Type, Func<object, object>>();
