@@ -51,29 +51,30 @@ namespace Orchard.Mvc {
         }
 
         public IDisposable Capture(Action<IHtmlString> callback) {
-            return new ViewContextSubstitution(Writer, callback);
+            return new CaptureScope(Writer, callback);
+        }
+
+        public class CaptureScope : IDisposable {
+            private readonly HtmlTextWriter _context;
+            private readonly Action<IHtmlString> _callback;
+            private readonly TextWriter _oldWriter;
+            private readonly HtmlStringWriter _writer;
+
+            public CaptureScope(HtmlTextWriter context, Action<IHtmlString> callback) {
+                _context = context;
+                _oldWriter = _context.InnerWriter;
+                _callback = callback;
+                _context.InnerWriter = _writer = new HtmlStringWriter();
+            }
+
+            public void Dispose() {
+                _callback(_writer);
+                _context.InnerWriter = _oldWriter;
+            }
         }
 
     }
 
-    public class ViewContextSubstitution : IDisposable {
-        private readonly HtmlTextWriter _context;
-        private readonly Action<IHtmlString> _callback;
-        private readonly TextWriter _oldWriter;
-        private readonly TextWriter _writer;
-
-        public ViewContextSubstitution(HtmlTextWriter context, Action<IHtmlString> callback) {
-            _context = context;
-            _oldWriter = _context.InnerWriter;
-            _callback = callback;
-            _context.InnerWriter = _writer = new StringWriter();
-        }
-
-        public void Dispose() {
-            _callback(new HtmlString(_writer.ToString()));
-            _context.InnerWriter = _oldWriter;
-        }
-    }
     public class ViewPage : ViewPage<dynamic> {
     }
 }

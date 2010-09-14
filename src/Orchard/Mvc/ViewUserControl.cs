@@ -53,7 +53,7 @@ namespace Orchard.Mvc {
         }
 
         public IDisposable Capture(Action<IHtmlString> callback) {
-            return new ViewContextSubstitution(Writer, callback);
+            return new ViewPage.CaptureScope(Writer, callback);
         }
 
     }
