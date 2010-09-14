@@ -1,7 +1,9 @@
 ﻿@model Orchard.Tags.ViewModels.TagsAdminIndexViewModel
 
+@using Orchard.Tags.ViewModels
+
 <h1>@Html.TitleForPage(T("Manage Tags").ToString()) </h1>
-@using (Html.BeginFormAntiForgeryPost())  { 
+
     @Html.ValidationSummary()
 
 	<fieldset class="bulk-actions">
@@ -26,11 +28,12 @@
 				    <th scope="col">@T("Name")</th>
 				    <th scope="col"></th>
             </thead>
-            @foreach (var tagEntry in Model.Tags) { 
+			@{var tagIndex = 0;}
+			@foreach (var tagEntry in Model.Tags) { 
             <tr>
                 <td>
-                    <input type="hidden" value="@Model.Tags[tagIndex].Tag.Id" name="@Html.NameOf(m => m.Tags[ti].Tag.Id)"/>
-                    <input type="checkbox" value="true" name="@Html.NameOf(m => m.Tags[ti].IsChecked)"/>
+                    <input type="hidden" value="@Model.Tags[tagIndex].Tag.Id" name="@Html.NameOf(m => m.Tags[tagIndex].Tag.Id)"/>
+                    <input type="checkbox" value="true" name="@Html.NameOf(m => m.Tags[tagIndex].IsChecked)"/>
                 </td>
                 <td>
                     @Html.ActionLink(Html.Encode(tagEntry.Tag.TagName), "Search", new {id = tagEntry.Tag.Id})
@@ -39,7 +42,7 @@
                     @Html.ActionLink(T("Edit").ToString(), "Edit", new {id = tagEntry.Tag.Id})
                 </td>
             </tr>
-            }
+            tagIndex = tagIndex + 1;
+			}
         </table>
     </fieldset>
-}

@@ -1,7 +1,6 @@
 ﻿@model Orchard.Media.ViewModels.MediaFolderIndexViewModel
 
 <h1>@Html.TitleForPage(T("Manage Media Folders").ToString())</h1>
-@using(Html.BeginFormAntiForgeryPost()) {
     @Html.ValidationSummary()
     <fieldset class="bulk-actions">
         <label for="publishActions">@T("Actions:")</label>
@@ -47,4 +46,3 @@
             }
         </table>
     </fieldset>
-}
