@@ -39,7 +39,7 @@ namespace Orchard.Data.Migration.Interpreters {
             _reportsCoordinator = reportsCoordinator;
 
             Logger = NullLogger.Instance;
-
+            T = NullLocalizer.Instance;
             var configuration = _sessionFactoryHolder.GetConfiguration();
             _dialect = Dialect.GetDialect(configuration.Properties);
         }
@@ -191,6 +191,11 @@ namespace Orchard.Data.Migration.Interpreters {
             // type
             if (command.DbType != DbType.Object) {
                 builder.Append(GetTypeName(command.DbType, command.Length, command.Precision, command.Scale));
+            }
+            else {
+                if(command.Length > 0 || command.Precision > 0 || command.Scale > 0) {
+                    throw new OrchardException(T("Error while executing data migration: you need to specify the field's type in order to change it's properies"));
+                }
             }
 
             // [default value]
