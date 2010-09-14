@@ -53,7 +53,7 @@ namespace Orchard.Mvc {
         }
 
         public IDisposable Capture(Action<IHtmlString> callback) {
-            throw new NotImplementedException();
+            return new ViewContextSubstitution(Writer, callback);
         }
 
     }

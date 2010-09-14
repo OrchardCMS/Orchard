@@ -2,6 +2,7 @@
 using System.IO;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.UI;
 using Autofac;
 using Orchard.DisplayManagement;
 using Orchard.Localization;
@@ -50,11 +51,29 @@ namespace Orchard.Mvc {
         }
 
         public IDisposable Capture(Action<IHtmlString> callback) {
-            throw new NotImplementedException();
+            return new ViewContextSubstitution(Writer, callback);
         }
 
     }
 
+    public class ViewContextSubstitution : IDisposable {
+        private readonly HtmlTextWriter _context;
+        private readonly Action<IHtmlString> _callback;
+        private readonly TextWriter _oldWriter;
+        private readonly TextWriter _writer;
+
+        public ViewContextSubstitution(HtmlTextWriter context, Action<IHtmlString> callback) {
+            _context = context;
+            _oldWriter = _context.InnerWriter;
+            _callback = callback;
+            _context.InnerWriter = _writer = new StringWriter();
+        }
+
+        public void Dispose() {
+            _callback(new HtmlString(_writer.ToString()));
+            _context.InnerWriter = _oldWriter;
+        }
+    }
     public class ViewPage : ViewPage<dynamic> {
     }
 }
