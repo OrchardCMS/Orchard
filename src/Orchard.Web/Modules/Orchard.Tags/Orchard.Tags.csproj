@@ -90,16 +90,16 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Module.txt" />
-    <Content Include="Views\Admin\Create.aspx" />
-    <Content Include="Views\Admin\Edit.aspx" />
-    <Content Include="Views\Admin\Index.aspx" />
-    <Content Include="Views\Admin\Search.aspx" />
-    <Content Include="Views\Home\Index.ascx" />
-    <Content Include="Views\Home\Search.ascx" />
-    <Content Include="Views\DisplayTemplates\Parts\Tags.ShowTags.ascx" />
-    <Content Include="Views\EditorTemplates\Parts\Tags.EditTags.ascx" />
+    <None Include="Views\Admin\Create.cshtml" />
     <Content Include="Web.config" />
     <Content Include="Views\Web.config" />
+    <None Include="Views\Admin\Edit.cshtml" />
+    <None Include="Views\Admin\Index.cshtml" />
+    <None Include="Views\Admin\Search.cshtml" />
+    <None Include="Views\DisplayTemplates\Parts\Tags.ShowTags.cshtml" />
+    <None Include="Views\EditorTemplates\Parts\Tags.EditTags.cshtml" />
+    <None Include="Views\Home\Index.cshtml" />
+    <None Include="Views\Home\Search.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\Orchard\Orchard.Framework.csproj">

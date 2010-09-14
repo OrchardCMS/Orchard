@@ -1,10 +1,9 @@
 ﻿using System.Collections.Generic;
 using Orchard.ContentManagement;
-using Orchard.Mvc.ViewModels;
 
 namespace Orchard.Tags.ViewModels {
-    public class TagsSearchViewModel : BaseViewModel {
+    public class TagsSearchViewModel {
         public string TagName { get; set; }
-        public IEnumerable<ContentItemViewModel<IContent>> Items { get; set; }
+        public IEnumerable<IContent> Items { get; set; }
     }
 }

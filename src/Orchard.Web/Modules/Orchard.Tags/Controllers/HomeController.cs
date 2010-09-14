@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
 using JetBrains.Annotations;
@@ -45,7 +46,7 @@ namespace Orchard.Tags.Controllers {
 
             var viewModel = new TagsSearchViewModel {
                 TagName = tag.TagName,
-                Items = items.ToList()
+                Items = (IList<IContent>) items.ToList<object>()
             };
 
             return View(viewModel);
