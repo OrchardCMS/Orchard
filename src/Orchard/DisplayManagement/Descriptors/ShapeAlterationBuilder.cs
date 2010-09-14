@@ -7,13 +7,22 @@ using Orchard.Environment.Extensions.Models;
 
 namespace Orchard.DisplayManagement.Descriptors {
     public class ShapeAlterationBuilder {
-        protected Feature _feature;
-        protected string _shapeType;
-        protected readonly IList<Action<ShapeDescriptor>> _configurations = new List<Action<ShapeDescriptor>>();
+        Feature _feature;
+        readonly string _shapeType;
+        readonly string _bindingName;
+        readonly IList<Action<ShapeDescriptor>> _configurations = new List<Action<ShapeDescriptor>>();
 
         public ShapeAlterationBuilder(Feature feature, string shapeType) {
             _feature = feature;
-            _shapeType = shapeType;
+            _bindingName = shapeType;
+            var delimiterIndex = shapeType.IndexOf("__");
+
+            if (delimiterIndex < 0) {
+                _shapeType = shapeType;
+            }
+            else {
+                _shapeType = shapeType.Substring(0, delimiterIndex);
+            }
         }
 
         public ShapeAlterationBuilder From(Feature feature) {
@@ -33,7 +42,7 @@ namespace Orchard.DisplayManagement.Descriptors {
                 Func<DisplayContext, IHtmlString> target = null;
 
                 var binding = new ShapeBinding {
-                    BindingName = _shapeType,
+                    BindingName = _bindingName,
                     BindingSource = bindingSource,
                     Binding = displayContext => {
 
