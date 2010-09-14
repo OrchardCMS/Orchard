@@ -214,7 +214,7 @@
     <Content Include="Themes\Contoso\Styles\site.css" />
     <Content Include="Themes\Contoso\Theme.png" />
     <Content Include="Themes\Contoso\Theme.txt" />
-    <Content Include="Themes\Contoso\Views\Footer.ascx" />
+    <None Include="Themes\Contoso\Views\Footer.ascx_" />
     <Content Include="Themes\Contoso\Views\ListOfComments.ascx" />
     <None Include="Themes\Contoso\Views\LogOn.ascx_" />
     <None Include="Themes\Contoso\Views\User.ascx_" />
