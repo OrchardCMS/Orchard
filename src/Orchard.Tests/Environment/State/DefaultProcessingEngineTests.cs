@@ -1,13 +1,16 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Web;
 using Autofac;
 using Moq;
 using NUnit.Framework;
+using Orchard.Environment;
 using Orchard.Environment.Configuration;
 using Orchard.Environment.ShellBuilders;
 using Orchard.Environment.State;
 using Orchard.Environment.Descriptor.Models;
 using Orchard.Events;
+using Orchard.Mvc;
 using Orchard.Tests.Utility;
 
 namespace Orchard.Tests.Environment.State {
@@ -20,6 +23,7 @@ namespace Orchard.Tests.Environment.State {
         public void Init() {
             var builder = new ContainerBuilder();
             builder.RegisterType<DefaultProcessingEngine>().As<IProcessingEngine>();
+            builder.RegisterType<DefaultWorkContextAccessor>().As<IWorkContextAccessor>();
             builder.RegisterAutoMocking();
             _container = builder.Build();
 
@@ -32,6 +36,9 @@ namespace Orchard.Tests.Environment.State {
             _container.Mock<IShellContextFactory>()
                 .Setup(x => x.CreateDescribedContext(_shellContext.Settings, _shellContext.Descriptor))
                 .Returns(_shellContext);
+            _container.Mock<IHttpContextAccessor>()
+                .Setup(x=>x.Current())
+                .Returns(default(HttpContextBase));
 
         }
 

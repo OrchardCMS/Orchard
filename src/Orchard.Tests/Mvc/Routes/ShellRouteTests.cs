@@ -11,6 +11,7 @@ using Moq;
 using NUnit.Framework;
 using Orchard.Environment;
 using Orchard.Environment.Configuration;
+using Orchard.Mvc;
 using Orchard.Mvc.Routes;
 using Orchard.Tests.Stubs;
 using Orchard.Tests.Utility;
@@ -35,16 +36,20 @@ namespace Orchard.Tests.Mvc.Routes {
             rootBuilder.Register(ctx => _routes);
             rootBuilder.RegisterType<ShellRoute>().InstancePerDependency();
             rootBuilder.RegisterType<RunningShellTable>().As<IRunningShellTable>().SingleInstance();
+            rootBuilder.RegisterType<DefaultWorkContextAccessor>().As<IWorkContextAccessor>().InstancePerMatchingLifetimeScope("shell");
+            rootBuilder.RegisterType<HttpContextAccessor>().As<IHttpContextAccessor>();
 
             _rootContainer = rootBuilder.Build();
 
             _containerA = _rootContainer.BeginLifetimeScope(
+                "shell",
                 builder => {
                     builder.Register(ctx => _settingsA);
                     builder.RegisterType<RoutePublisher>().As<IRoutePublisher>().InstancePerLifetimeScope();
                 });
 
             _containerB = _rootContainer.BeginLifetimeScope(
+                "shell",
                 builder => {
                     builder.Register(ctx => _settingsB);
                     builder.RegisterType<RoutePublisher>().As<IRoutePublisher>().InstancePerLifetimeScope();

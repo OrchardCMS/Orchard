@@ -1,0 +1,6 @@
+﻿@{
+	var tag = Html.Resolve<Orchard.DisplayManagement.Shapes.ITagBuilderFactory>().Create(Model, "div");
+}
+@tag.StartElement
+@DisplayChildren(Model)
+@tag.EndElement <!-- /@Model.Id -->

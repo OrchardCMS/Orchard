@@ -30,6 +30,10 @@ namespace Orchard.Tests.Utility {
             public AutoMockSource(MockBehavior behavior) {
                 _behavior = behavior;
             }
+            
+            public bool IsAdapterForIndividualComponents {
+                get { return false; }
+            }
 
             IEnumerable<IComponentRegistration> IRegistrationSource.RegistrationsFor(
                 Service service,

@@ -6,11 +6,11 @@ using Orchard.Logging;
 
 namespace Orchard.Tasks {
     public class SweepGenerator : IOrchardShellEvents {
-        private readonly IContainer _container;
+        private readonly IWorkContextAccessor _workContextAccessor;
         private readonly Timer _timer;
 
-        public SweepGenerator(IContainer container) {
-            _container = container;
+        public SweepGenerator(IWorkContextAccessor workContextAccessor) {
+            _workContextAccessor = workContextAccessor;
             _timer = new Timer();
             _timer.Elapsed += Elapsed;
             Logger = NullLogger.Instance;
@@ -56,9 +56,9 @@ namespace Orchard.Tasks {
 
         public void DoWork() {
             // makes an inner container, similar to the per-request container
-            using (var standaloneEnvironment = new StandaloneEnvironment(_container)) {
+            using (var scope = _workContextAccessor.CreateWorkContextScope()) {
                 // resolve the manager and invoke it
-                var manager = standaloneEnvironment.Resolve<IBackgroundService>();
+                var manager = scope.Resolve<IBackgroundService>();
                 manager.Sweep();
             }
         }

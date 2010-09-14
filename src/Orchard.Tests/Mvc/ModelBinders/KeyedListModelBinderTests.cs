@@ -39,7 +39,7 @@ namespace Orchard.Tests.Mvc.ModelBinders {
                 ValueProvider = input.ToValueProvider() 
             };
 
-            var binder = new KeyedListModelBinder<Foo>(binders, providers, foo => foo.Name);
+            var binder = new KeyedListModelBinder<Foo>(binders, foo => foo.Name);
 
             var result = (IList<Foo>)binder.BindModel(controllerContext, bindingContext);
 

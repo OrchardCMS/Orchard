@@ -2,8 +2,8 @@
 using System.Reflection;
 using System.Web;
 using System.Web.Mvc;
+using Orchard.DisplayManagement;
 using Orchard.Localization;
-using Orchard.Mvc.ViewModels;
 using Orchard.Security;
 using Orchard.Themes.Preview;
 using Orchard.Themes.ViewModels;
@@ -15,13 +15,20 @@ namespace Orchard.Themes.Controllers {
         private readonly IThemeService _themeService;
         private readonly IPreviewTheme _previewTheme;
 
-        public AdminController(IOrchardServices services, IThemeService themeService, IPreviewTheme previewTheme, IAuthorizer authorizer, INotifier notifier) {
+        public AdminController(
+            IOrchardServices services,
+            IThemeService themeService,
+            PreviewTheme previewTheme,
+            IAuthorizer authorizer,
+            INotifier notifier,
+            IShapeHelperFactory shapeHelperFactory) {
             Services = services;
             _themeService = themeService;
             _previewTheme = previewTheme;
             T = NullLocalizer.Instance;
         }
 
+        dynamic Shape { get; set; }
         public IOrchardServices Services{ get; set; }
         public Localizer T { get; set; }
 
@@ -30,11 +37,11 @@ namespace Orchard.Themes.Controllers {
                 var themes = _themeService.GetInstalledThemes();
                 var currentTheme = _themeService.GetSiteTheme();
                 var model = new ThemesIndexViewModel { CurrentTheme = currentTheme, Themes = themes };
-                return View(model);
+                return View(Shape.Model(model));
             }
             catch (Exception exception) {
                 Services.Notifier.Error(T("Listing themes failed: " + exception.Message));
-                return View(new ThemesIndexViewModel());
+                return View(Shape.Model(new ThemesIndexViewModel()));
             }
         }
 
@@ -93,10 +100,6 @@ namespace Orchard.Themes.Controllers {
                 Services.Notifier.Error(T("Activating theme failed: " + exception.Message));
                 return RedirectToAction("Index");
             }
-        }
-
-        public ActionResult Install() {
-            return View(new BaseViewModel());
         }
 
         [HttpPost]

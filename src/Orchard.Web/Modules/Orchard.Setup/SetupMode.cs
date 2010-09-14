@@ -8,19 +8,29 @@ using Orchard.Commands.Builtin;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Handlers;
 using Orchard.ContentManagement.MetaData.Builders;
+using Orchard.Core.Shapes;
 using Orchard.Data.Migration.Interpreters;
 using Orchard.Data.Providers;
 using Orchard.Data.Migration;
+using Orchard.DisplayManagement;
+using Orchard.DisplayManagement.Descriptors;
+using Orchard.DisplayManagement.Descriptors.ShapeAttributeStrategy;
+using Orchard.DisplayManagement.Descriptors.ShapeTemplateStrategy;
+using Orchard.DisplayManagement.Implementation;
+using Orchard.DisplayManagement.Shapes;
+using Orchard.Environment;
 using Orchard.Environment.Extensions;
+using Orchard.Environment.Extensions.Models;
 using Orchard.Localization;
 using Orchard.Mvc;
 using Orchard.Mvc.Filters;
 using Orchard.Mvc.ModelBinders;
 using Orchard.Mvc.Routes;
 using Orchard.Mvc.ViewEngines;
+using Orchard.Mvc.ViewEngines.Razor;
+using Orchard.Mvc.ViewEngines.ThemeAwareness;
 using Orchard.Mvc.ViewEngines.WebForms;
 using Orchard.Settings;
-using Orchard.Setup.Commands;
 using Orchard.Themes;
 using Orchard.UI.Notify;
 using Orchard.UI.PageClass;
@@ -29,6 +39,8 @@ using Orchard.UI.Zones;
 
 namespace Orchard.Setup {
     public class SetupMode : Module {
+        public Feature Feature { get; set; }
+
         protected override void Load(ContainerBuilder builder) {
 
             // standard services needed in setup mode
@@ -36,17 +48,18 @@ namespace Orchard.Setup {
             builder.RegisterModule(new CommandModule());
             builder.RegisterType<RoutePublisher>().As<IRoutePublisher>().InstancePerLifetimeScope();
             builder.RegisterType<ModelBinderPublisher>().As<IModelBinderPublisher>().InstancePerLifetimeScope();
-            builder.RegisterType<WebFormViewEngineProvider>().As<IViewEngineProvider>().InstancePerLifetimeScope();
-            builder.RegisterType<ViewEngineFilter>().As<IFilterProvider>().InstancePerLifetimeScope();
+            builder.RegisterType<WebFormViewEngineProvider>().As<IViewEngineProvider>().As<IShapeTemplateViewEngine>().InstancePerLifetimeScope();
+            builder.RegisterType<RazorViewEngineProvider>().As<IViewEngineProvider>().As<IShapeTemplateViewEngine>().InstancePerLifetimeScope();
+            builder.RegisterType<ThemedViewResultFilter>().As<IFilterProvider>().InstancePerLifetimeScope();
             builder.RegisterType<ThemeFilter>().As<IFilterProvider>().InstancePerLifetimeScope();
             builder.RegisterType<PageTitleBuilder>().As<IPageTitleBuilder>().InstancePerLifetimeScope();
-            builder.RegisterType<ZoneManager>().As<IZoneManager>().InstancePerLifetimeScope();
             builder.RegisterType<PageClassBuilder>().As<IPageClassBuilder>().InstancePerLifetimeScope();
             builder.RegisterType<Notifier>().As<INotifier>().InstancePerLifetimeScope();
             builder.RegisterType<NotifyFilter>().As<IFilterProvider>().InstancePerLifetimeScope();
             builder.RegisterType<DataServicesProviderFactory>().As<IDataServicesProviderFactory>().InstancePerLifetimeScope();
             builder.RegisterType<DefaultCommandManager>().As<ICommandManager>().InstancePerLifetimeScope();
             builder.RegisterType<HelpCommand>().As<ICommandHandler>().InstancePerLifetimeScope();
+            builder.RegisterType<DefaultWorkContextAccessor>().As<IWorkContextAccessor>().InstancePerMatchingLifetimeScope("shell");
 
             // setup mode specific implementations of needed service interfaces
             builder.RegisterType<SafeModeThemeService>().As<IThemeService>().InstancePerLifetimeScope();
@@ -56,6 +69,23 @@ namespace Orchard.Setup {
             builder.RegisterType<DefaultDataMigrationInterpreter>().As<IDataMigrationInterpreter>().InstancePerLifetimeScope();
             builder.RegisterType<DataMigrationManager>().As<IDataMigrationManager>().InstancePerLifetimeScope();
 
+            // in progress - adding services for display/shape support in setup
+            builder.RegisterType<DisplayHelperFactory>().As<IDisplayHelperFactory>();
+            builder.RegisterType<DefaultDisplayManager>().As<IDisplayManager>();
+            builder.RegisterType<DefaultShapeFactory>().As<IShapeFactory>();
+            builder.RegisterType<ShapeHelperFactory>().As<IShapeHelperFactory>();
+            builder.RegisterType<DefaultShapeTableManager>().As<IShapeTableManager>();
+
+            builder.RegisterType<ThemeAwareViewEngine>().As<IThemeAwareViewEngine>();
+            builder.RegisterType<LayoutAwareViewEngine>().As<ILayoutAwareViewEngine>();
+            builder.RegisterType<ConfiguredEnginesCache>().As<IConfiguredEnginesCache>();
+            builder.RegisterType<PageWorkContext>().As<IWorkContextStateProvider>();
+
+            builder.RegisterType<CoreShapes>().As<IShapeTableProvider>().WithProperty("Feature", Feature).WithMetadata("Feature", Feature);
+            builder.RegisterType<ShapeTemplateBindingStrategy>().As<IShapeTableProvider>();
+            builder.RegisterType<BasicShapeTemplateHarvester>().As<IShapeTemplateHarvester>();
+            builder.RegisterType<ShapeAttributeBindingStrategy>().As<IShapeTableProvider>();
+            builder.RegisterModule(new ShapeAttributeBindingModule());
         }
 
 

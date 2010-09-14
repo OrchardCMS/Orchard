@@ -1,7 +1,5 @@
-﻿using Orchard.Mvc.ViewModels;
-
-namespace Orchard.ContentTypes.ViewModels {
-    public class CreateTypeViewModel : BaseViewModel {
+﻿namespace Orchard.ContentTypes.ViewModels {
+    public class CreateTypeViewModel  {
         public string DisplayName { get; set; }
     }
 }

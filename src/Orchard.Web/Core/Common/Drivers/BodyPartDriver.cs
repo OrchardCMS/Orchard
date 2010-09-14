@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Web;
 using JetBrains.Annotations;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Aspects;
@@ -19,7 +20,8 @@ namespace Orchard.Core.Common.Drivers {
         private readonly IEnumerable<IHtmlFilter> _htmlFilters;
 
         private const string TemplateName = "Parts/Common.Body";
-        private const string DefaultTextEditorTemplate = "TinyMceTextEditor";
+        //todo: change back - or to something better
+        private const string DefaultTextEditorTemplate = "PlainTextEditor"; //"TinyMceTextEditor";
         private const string PlainTextEditorTemplate = "PlainTextEditor";
 
         public BodyPartDriver(IOrchardServices services, IEnumerable<IHtmlFilter> htmlFilters) {
@@ -36,7 +38,7 @@ namespace Orchard.Core.Common.Drivers {
         // \/\/ Hackalicious on many accounts - don't copy what has been done here for the wrapper \/\/
         protected override DriverResult Display(BodyPart part, string displayType) {
             var bodyText = _htmlFilters.Aggregate(part.Text, (text, filter) => filter.ProcessContent(text));
-            var model = new BodyDisplayViewModel { BodyPart = part, Text = bodyText };
+            var model = new BodyDisplayViewModel { BodyPart = part, Html = new HtmlString(bodyText) };
             var location = part.GetLocation(displayType);
 
             return Combined(

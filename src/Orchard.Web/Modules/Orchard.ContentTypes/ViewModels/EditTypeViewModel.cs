@@ -4,11 +4,10 @@ using System.Linq;
 using Orchard.ContentManagement.MetaData.Models;
 using Orchard.ContentManagement.ViewModels;
 using Orchard.ContentTypes.Extensions;
-using Orchard.Mvc.ViewModels;
 using Orchard.Utility.Extensions;
 
 namespace Orchard.ContentTypes.ViewModels {
-    public class EditTypeViewModel : BaseViewModel {
+    public class EditTypeViewModel  {
         public EditTypeViewModel() {
             Settings = new SettingsDictionary();
             Fields = new List<EditPartFieldViewModel>();
@@ -68,7 +67,7 @@ namespace Orchard.ContentTypes.ViewModels {
         public ContentTypePartDefinition _Definition { get; private set; }
     }
 
-    public class EditPartViewModel : BaseViewModel {
+    public class EditPartViewModel {
         public EditPartViewModel() {
             Fields = new List<EditPartFieldViewModel>();
             Settings = new SettingsDictionary();

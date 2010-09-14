@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Orchard.Environment.Configuration;
 using Orchard.Environment.Descriptor.Models;
 using Orchard.Environment.Extensions.Models;
 
@@ -11,6 +12,9 @@ namespace Orchard.Environment.ShellBuilders.Models {
     /// and is passed into the IShellContainerFactory.
     /// </summary>
     public class ShellBlueprint {
+        public ShellSettings Settings { get; set; }
+        public ShellDescriptor Descriptor { get; set; }
+
         public IEnumerable<DependencyBlueprint> Dependencies { get; set; }
         public IEnumerable<ControllerBlueprint> Controllers { get; set; }
         public IEnumerable<RecordBlueprint> Records { get; set; }

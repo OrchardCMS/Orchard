@@ -1,0 +1,17 @@
+﻿@{
+  // odd formatting in this file is to cause more attractive results in the output.
+  var items = (IEnumerable<dynamic>)Enumerable.Cast<dynamic>(Model);
+}
+@{
+if (string.IsNullOrWhiteSpace((string)Model.Text)) {
+    @DisplayChildren(Model)
+} else {
+    <li><a href="@Model.Href">@Model.Text</a>
+    @if (items.Any()) {
+        <ul>
+        @DisplayChildren(Model)
+        </ul>
+    }
+    </li>
+    }
+}

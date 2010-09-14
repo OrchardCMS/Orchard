@@ -2,11 +2,11 @@ using System.Linq;
 using System.Web.Mvc;
 using JetBrains.Annotations;
 using Orchard.ContentManagement;
+using Orchard.DisplayManagement;
 using Orchard.Localization;
 using Orchard.Security;
 using Orchard.Settings;
 using Orchard.UI.Notify;
-using Orchard.Users.Drivers;
 using Orchard.Users.Models;
 using Orchard.Users.Services;
 using Orchard.Users.ViewModels;
@@ -21,13 +21,16 @@ namespace Orchard.Users.Controllers {
         public AdminController(
             IOrchardServices services,
             IMembershipService membershipService,
-            IUserService userService) {
+            IUserService userService,
+            IShapeHelperFactory shapeHelperFactory) {
             Services = services;
             _membershipService = membershipService;
             _userService = userService;
             T = NullLocalizer.Instance;
+            Shape = shapeHelperFactory.CreateHelper();
         }
 
+        dynamic Shape { get; set; }
         public IOrchardServices Services { get; set; }
         public Localizer T { get; set; }
         protected virtual ISite CurrentSite { get; [UsedImplicitly] private set; }
@@ -54,7 +57,7 @@ namespace Orchard.Users.Controllers {
             if (!Services.Authorizer.Authorize(Permissions.ManageUsers, T("Not authorized to manage users")))
                 return new HttpUnauthorizedResult();
 
-            var user = Services.ContentManager.New<IUser>(UserPartDriver.ContentType.Name);
+            var user = Services.ContentManager.New<IUser>("User");
             var model = new UserCreateViewModel {
                 User = Services.ContentManager.BuildEditorModel(user)
             };
@@ -66,7 +69,7 @@ namespace Orchard.Users.Controllers {
             if (!Services.Authorizer.Authorize(Permissions.ManageUsers, T("Not authorized to manage users")))
                 return new HttpUnauthorizedResult();
 
-            var user = Services.ContentManager.New<IUser>(UserPartDriver.ContentType.Name);
+            var user = Services.ContentManager.New<IUser>("User");
             model.User = Services.ContentManager.UpdateEditorModel(user, this);
             if (!ModelState.IsValid) {
                 Services.TransactionManager.Cancel();
@@ -95,7 +98,7 @@ namespace Orchard.Users.Controllers {
                 return View(model);
             }
 
-            return RedirectToAction("edit", new {user.Id});
+            return RedirectToAction("edit", new { user.Id });
         }
 
         public ActionResult Edit(int id) {
@@ -103,7 +106,7 @@ namespace Orchard.Users.Controllers {
                 return new HttpUnauthorizedResult();
             
             return View(new UserEditViewModel {
-                User = Services.ContentManager.BuildEditorModel<UserPart>(id)
+                User = Services.ContentManager.Get<UserPart>(id)
             });
         }
 
@@ -113,7 +116,7 @@ namespace Orchard.Users.Controllers {
                 return new HttpUnauthorizedResult();
             
             var model = new UserEditViewModel {
-                User = Services.ContentManager.UpdateEditorModel<UserPart>(id, this)
+                User = Services.ContentManager.Get<UserPart>(id)
             };
 
             TryUpdateModel(model);
@@ -123,7 +126,7 @@ namespace Orchard.Users.Controllers {
                 return View(model);
             }
 
-            model.User.Item.NormalizedUserName = model.UserName.ToLower();
+            model.User.As<UserPart>().NormalizedUserName = model.UserName.ToLower();
 
             string userExistsMessage = _userService.VerifyUserUnicity(id, model.UserName, model.Email);
             if (userExistsMessage != null) {

@@ -1,4 +1,5 @@
-﻿using Autofac;
+﻿using System.Web;
+using Autofac;
 using Autofac.Core.Registration;
 using Moq;
 using NUnit.Framework;
@@ -8,6 +9,7 @@ using Orchard.Environment.ShellBuilders;
 using Orchard.Environment.Descriptor;
 using Orchard.Environment.Descriptor.Models;
 using Orchard.Environment.ShellBuilders.Models;
+using Orchard.Mvc;
 using Orchard.Tests.Utility;
 
 namespace Orchard.Tests.Environment.ShellBuilders {
@@ -19,6 +21,7 @@ namespace Orchard.Tests.Environment.ShellBuilders {
         public void Init() {
             var builder = new ContainerBuilder();
             builder.RegisterType<ShellContextFactory>().As<IShellContextFactory>();
+            builder.RegisterType<DefaultWorkContextAccessor>().As<IWorkContextAccessor>();
             builder.RegisterAutoMocking(Moq.MockBehavior.Strict);
             _container = builder.Build();
         }
@@ -45,6 +48,10 @@ namespace Orchard.Tests.Environment.ShellBuilders {
             _container.Mock<IShellDescriptorManager>()
                 .Setup(x => x.GetShellDescriptor())
                 .Returns(descriptor);
+
+            _container.Mock<IHttpContextAccessor>()
+                .Setup(x => x.Current())
+                .Returns(default(HttpContextBase));
 
             var factory = _container.Resolve<IShellContextFactory>();
 

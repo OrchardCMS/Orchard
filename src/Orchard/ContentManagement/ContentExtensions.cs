@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using Orchard.ContentManagement.Records;
-using Orchard.Mvc.ViewModels;
 
 namespace Orchard.ContentManagement {
     public static class ContentCreateExtensions {
@@ -165,23 +164,23 @@ namespace Orchard.ContentManagement {
 
         /* Display and editor convenience extension methods */
 
-        public static ContentItemViewModel<T> BuildDisplayModel<T>(this IContentManager manager, int id, string displayType) where T : class, IContent {
-            var content = manager.Get<T>(id);
+        public static TContent BuildDisplayShape<TContent>(this IContentManager manager, int id, string displayType) where TContent : class, IContent {
+            var content = manager.Get<TContent>(id);
             if (content == null)
                 return null;
             return manager.BuildDisplayModel(content, displayType);
         }
 
-        public static ContentItemViewModel<T> BuildEditorModel<T>(this IContentManager manager, int id) where T : class, IContent {
-            var content = manager.Get<T>(id);
+        public static TContent BuildEditorShape<TContent>(this IContentManager manager, int id) where TContent : class, IContent {
+            var content = manager.Get<TContent>(id);
             if (content == null)
                 return null;
             return manager.BuildEditorModel(content);
 
         }
 
-        public static ContentItemViewModel<T> UpdateEditorModel<T>(this IContentManager manager, int id, IUpdateModel updater) where T : class, IContent {
-            var content = manager.Get<T>(id);
+        public static TContent UpdateEditorShape<TContent>(this IContentManager manager, int id, IUpdateModel updater) where TContent : class, IContent {
+            var content = manager.Get<TContent>(id);
             if (content == null)
                 return null;
             return manager.UpdateEditorModel(content, updater);

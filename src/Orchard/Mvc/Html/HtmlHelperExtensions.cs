@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
@@ -8,7 +9,6 @@ using System.Web.Mvc.Html;
 using System.Web.Routing;
 using Orchard.Collections;
 using Orchard.Localization;
-using Orchard.Mvc.ViewModels;
 using Orchard.Services;
 using Orchard.Settings;
 using Orchard.Utility;
@@ -17,6 +17,7 @@ using System.Web;
 
 namespace Orchard.Mvc.Html {
     public static class HtmlHelperExtensions {
+
         public static string NameOf<T>(this HtmlHelper<T> html, Expression<Action<T>> expression) {
             return Reflect.NameOf(html.ViewData.Model, expression);
         }
@@ -422,38 +423,5 @@ namespace Orchard.Mvc.Html {
         }
 
         #endregion
-
-        #region AddRenderAction
-
-        public static void AddRenderAction(this HtmlHelper html, string location, string actionName) {
-            AddRenderActionHelper(html, location, actionName, null/*controllerName*/, null);
-        }
-        public static void AddRenderAction(this HtmlHelper html, string location, string actionName, object routeValues) {
-            AddRenderActionHelper(html, location, actionName, null/*controllerName*/, new RouteValueDictionary(routeValues));
-        }
-        public static void AddRenderAction(this HtmlHelper html, string location, string actionName, RouteValueDictionary routeValues) {
-            AddRenderActionHelper(html, location, actionName, null/*controllerName*/, routeValues);
-        }
-        public static void AddRenderAction(this HtmlHelper html, string location, string actionName, string controllerName) {
-            AddRenderActionHelper(html, location, actionName, controllerName, null/*RouteValueDictionary*/);
-        }
-        public static void AddRenderAction(this HtmlHelper html, string location, string actionName, string controllerName, object routeValues) {
-            AddRenderActionHelper(html, location, actionName, controllerName, new RouteValueDictionary(routeValues));
-        }
-        public static void AddRenderAction(this HtmlHelper html, string location, string actionName, string controllerName, RouteValueDictionary routeValues) {
-            AddRenderActionHelper(html, location, actionName, controllerName, routeValues);
-        }
-
-        private static void AddRenderActionHelper(this HtmlHelper html, string location, string actionName, string controllerName, RouteValueDictionary routeValues) {
-            // Retrieve the "BaseViewModel" for zones if we have one
-            var baseViewModel = BaseViewModel.From(html.ViewData);
-            if (baseViewModel == null)
-                return;
-
-            baseViewModel.Zones.AddRenderAction(location, actionName, controllerName, routeValues);
-        }
-
-        #endregion
-
     }
 }

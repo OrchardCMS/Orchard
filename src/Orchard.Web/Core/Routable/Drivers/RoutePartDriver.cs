@@ -43,6 +43,17 @@ namespace Orchard.Core.Routable.Drivers {
             return null;
         }
 
+        protected override DriverResult Display(RoutePart part, string displayType) {
+            var model = new RoutableDisplayViewModel {RoutePart = part};
+            var location = part.GetLocation(displayType);
+
+            //todo: give this part a default location
+            if (location == null || location.Zone == null)
+                location = new ContentLocation {Position = "5", Zone = "Header"};
+
+            return ContentPartTemplate(model, TemplateName, Prefix).LongestMatch(displayType, "Summary", "SummaryAdmin").Location(location);
+        }
+
         protected override DriverResult Editor(RoutePart part) {
             var model = new RoutableEditorViewModel {
                 ContentType = part.ContentItem.ContentType,
@@ -71,7 +82,7 @@ namespace Orchard.Core.Routable.Drivers {
         }
 
         protected override DriverResult Editor(RoutePart part, IUpdateModel updater) {
-
+            
             var model = new RoutableEditorViewModel();
             updater.TryUpdateModel(model, Prefix, null, null);
             part.Title = model.Title;

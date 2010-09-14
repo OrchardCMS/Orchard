@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Web.Mvc;
 using JetBrains.Annotations;
 using Orchard.Logging;
-using Orchard.Mvc.ViewModels;
 using Orchard.Services;
 using Orchard.Settings;
 using Orchard.Themes;
@@ -25,14 +24,13 @@ namespace Orchard.Core.HomePage.Controllers {
         public ActionResult Index() {
             try {
                 var homepage = CurrentSite.HomePage;
-                if (String.IsNullOrEmpty(homepage)) {
-                    return View(new BaseViewModel());
-                }
+                if (String.IsNullOrEmpty(homepage))
+                    return View();
 
                 var homePageParameters = homepage.Split(';');
-                if (homePageParameters.Length != 2) {
-                    return View(new BaseViewModel());
-                }
+                if (homePageParameters.Length != 2)
+                    return View();
+
                 var providerName = homePageParameters[0];
                 var item = Int32.Parse(homePageParameters[1]);
 
@@ -50,10 +48,10 @@ namespace Orchard.Core.HomePage.Controllers {
                     return result;
                 }
 
-                return View(new BaseViewModel());
+                return View();
             }
             catch {
-                return View(new BaseViewModel());
+                return View();
             }
         }
     }

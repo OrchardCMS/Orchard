@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.IO;
 using System.Web.Hosting;
+using System.Web.Mvc;
 using Autofac;
 using Autofac.Configuration;
 using Orchard.Caching;
@@ -21,6 +22,8 @@ using Orchard.FileSystems.Dependencies;
 using Orchard.FileSystems.VirtualPath;
 using Orchard.FileSystems.WebSite;
 using Orchard.Logging;
+using Orchard.Mvc;
+using Orchard.Mvc.ViewEngines.ThemeAwareness;
 using Orchard.Services;
 
 namespace Orchard.Environment {
@@ -42,6 +45,7 @@ namespace Orchard.Environment {
             builder.RegisterType<AppDataFolderRoot>().As<IAppDataFolderRoot>().SingleInstance();
             builder.RegisterType<DefaultExtensionCompiler>().As<IExtensionCompiler>().SingleInstance();
             builder.RegisterType<DefaultProjectFileParser>().As<IProjectFileParser>().SingleInstance();
+            builder.RegisterType<HttpContextAccessor>().As<IHttpContextAccessor>().SingleInstance();
 
             RegisterVolatileProvider<WebSiteFolder, IWebSiteFolder>(builder);
             RegisterVolatileProvider<AppDataFolder, IAppDataFolder>(builder);
@@ -59,23 +63,18 @@ namespace Orchard.Environment {
                 {
                     builder.RegisterType<ShellDescriptorCache>().As<IShellDescriptorCache>().SingleInstance();
 
-                    builder.RegisterType<CompositionStrategy>()
-                        .As<ICompositionStrategy>()
-                        .SingleInstance();
+                    builder.RegisterType<CompositionStrategy>().As<ICompositionStrategy>().SingleInstance();
                     {
                         builder.RegisterType<ShellContainerRegistrations>().As<IShellContainerRegistrations>().SingleInstance();
                         builder.RegisterType<ExtensionLoaderCoordinator>().As<IExtensionLoaderCoordinator>().SingleInstance();
                         builder.RegisterType<ExtensionManager>().As<IExtensionManager>().SingleInstance();
                         {
-                            builder.RegisterType<ModuleFolders>().As<IExtensionFolders>()
-                                .WithParameter(new NamedParameter("paths", new[] { "~/Core", "~/Modules" }))
-                                .SingleInstance();
-                            builder.RegisterType<AreaFolders>().As<IExtensionFolders>()
-                                .WithParameter(new NamedParameter("paths", new[] { "~/Areas" }))
-                                .SingleInstance();
-                            builder.RegisterType<ThemeFolders>().As<IExtensionFolders>()
-                                .WithParameter(new NamedParameter("paths", new[] { "~/Core", "~/Themes" }))
-                                .SingleInstance();
+                            builder.RegisterType<ModuleFolders>().As<IExtensionFolders>().SingleInstance()
+                                .WithParameter(new NamedParameter("paths", new[] { "~/Core", "~/Modules" }));
+                            builder.RegisterType<AreaFolders>().As<IExtensionFolders>().SingleInstance()
+                                .WithParameter(new NamedParameter("paths", new[] { "~/Areas" }));
+                            builder.RegisterType<ThemeFolders>().As<IExtensionFolders>().SingleInstance()
+                                .WithParameter(new NamedParameter("paths", new[] { "~/Core", "~/Themes" }));
 
                             builder.RegisterType<AreaExtensionLoader>().As<IExtensionLoader>().SingleInstance();
                             builder.RegisterType<CoreExtensionLoader>().As<IExtensionLoader>().SingleInstance();
@@ -95,13 +94,6 @@ namespace Orchard.Environment {
             builder.RegisterType<RunningShellTable>().As<IRunningShellTable>().SingleInstance();
             builder.RegisterType<DefaultOrchardShell>().As<IOrchardShell>().InstancePerMatchingLifetimeScope("shell");
 
-            // The container provider gives you access to the lowest container at the time, 
-            // and dynamically creates a per-request container. The EndRequestLifetime method
-            // still needs to be called on end request, but that's the host component's job to worry about
-            //builder.RegisterType<ContainerProvider>().As<IContainerProvider>().InstancePerLifetimeScope();
-
-
-
             registrations(builder);
 
 
@@ -113,10 +105,6 @@ namespace Orchard.Environment {
             if (File.Exists(optionalHostConfig))
                 builder.RegisterModule(new ConfigurationSettingsReader(ConfigurationSettingsReader.DefaultSectionName, optionalHostConfig));
 
-            builder
-                .Register(ctx => new LifetimeScopeContainer(ctx.Resolve<ILifetimeScope>()))
-                .As<IContainer>()
-                .InstancePerMatchingLifetimeScope("shell");
 
             var container = builder.Build();
 
@@ -129,10 +117,17 @@ namespace Orchard.Environment {
                 }
             }
 
-            OrchardHostContainerRegistry.RegisterHostContainer(new DefaultOrchardHostContainer(container));
+            ControllerBuilder.Current.SetControllerFactory(new OrchardControllerFactory());
+            ViewEngines.Engines.Clear();
+            ViewEngines.Engines.Add(new ThemeAwareViewEngineShim());
+
+            var hostContainer = new DefaultOrchardHostContainer(container);
+            //MvcServiceLocator.SetCurrent(hostContainer);
+            OrchardHostContainerRegistry.RegisterHostContainer(hostContainer);
 
             return container;
         }
+
 
         private static void RegisterVolatileProvider<TRegister, TService>(ContainerBuilder builder) where TService : IVolatileProvider {
             builder.RegisterType<TRegister>()

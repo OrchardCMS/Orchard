@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Linq;
 using System.Web;
-using Orchard.Comments.Models;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.MetaData;
 using Orchard.Core.Common.Models;
@@ -19,7 +18,6 @@ using Orchard.Environment.Configuration;
 using Orchard.Environment.ShellBuilders;
 using Orchard.Environment.Descriptor;
 using Orchard.Environment.Descriptor.Models;
-using Orchard.Indexing;
 using Orchard.Localization;
 using Orchard.Localization.Services;
 using Orchard.Reports.Services;
@@ -66,32 +64,36 @@ namespace Orchard.Setup.Services {
                 string[] hardcoded = {
                     "Orchard.Framework",
                     "Common",
-                    "PublishLater",
+                    "Shapes",
+                    //"PublishLater",
                     "Contents",
-                    "ContentsLocation",
+                    //"ContentsLocation",
                     "Dashboard",
                     "Reports",
-                    "Feeds",
+                    //"Feeds",
                     "HomePage",
                     "Navigation",
-                    "Scheduling",
-                    "Indexing",
-                    "Localization",
+                    //"Scheduling",
+                    //"Indexing",
+                    //"Localization",
                     "Routable",
                     "Settings",
                     "XmlRpc",
                     "Messaging",
                     "Orchard.Users",
                     "Orchard.Roles",
-                    "TinyMce",
+                    //"TinyMce",
                     "PackagingServices",
                     "Orchard.Modules",
                     "Orchard.Themes",
-                    "Orchard.Blogs",
-                    "Orchard.Comments",
-                    "Orchard.Tags",
-                    "Orchard.Media",
-                    "Futures.Widgets"};
+                    //"Orchard.Blogs",
+                    //"Orchard.Comments",
+                    //"Orchard.Tags",
+                    //"Orchard.Media",
+                    //"Futures.Widgets"
+
+                    "Orchard.DevTools"
+                };
 
                 context.EnabledFeatures = hardcoded;
             }
@@ -113,7 +115,8 @@ namespace Orchard.Setup.Services {
 
             // initialize database explicitly, and store shell descriptor
             var bootstrapLifetimeScope = _shellContainerFactory.CreateContainer(shellSettings, shellBlueprint);
-            using ( var environment = new StandaloneEnvironment(bootstrapLifetimeScope) ) {
+
+            using (var environment = bootstrapLifetimeScope.CreateWorkContextScope()) {
 
                 // check if the database is already created (in case an exception occured in the second phase)
                 var shellDescriptorRepository = environment.Resolve<IRepository<ShellDescriptorRecord>>();
@@ -192,21 +195,23 @@ namespace Orchard.Setup.Services {
                     //hackInstallationGenerator.GenerateInstallEvents();
 
                     var contentDefinitionManager = environment.Resolve<IContentDefinitionManager>();
-                    contentDefinitionManager.AlterTypeDefinition("BlogPost", cfg => cfg
-                        .WithPart("CommentsPart")
-                        .WithPart("TagsPart")
-                        .WithPart("LocalizationPart")
-                        .Indexed());
+                    //contentDefinitionManager.AlterTypeDefinition("BlogPost", cfg => cfg
+                    //    .WithPart("CommentsPart")
+                    //    .WithPart("TagsPart")
+                    //    .WithPart("LocalizationPart")
+                    //    .Indexed()
+                    //    );
                     contentDefinitionManager.AlterTypeDefinition("Page", cfg => cfg
                         .WithPart("CommonPart")
-                        .WithPart("PublishLaterPart")
+                        //.WithPart("PublishLaterPart")
                         .WithPart("RoutePart")
                         .WithPart("BodyPart")
-                        .WithPart("CommentsPart")
-                        .WithPart("TagsPart")
-                        .WithPart("LocalizationPart")
+                        //.WithPart("CommentsPart")
+                        //.WithPart("TagsPart")
+                        //.WithPart("LocalizationPart")
                         .Creatable()
-                        .Indexed());
+                        //.Indexed()
+                        );
                     contentDefinitionManager.AlterPartDefinition("BodyPart", cfg => cfg
                         .WithSetting("BodyPartSettings.FlavorDefault", BodyPartSettings.FlavorDefaultDefault));
 
@@ -217,9 +222,9 @@ namespace Orchard.Setup.Services {
                     page.As<RoutePart>().Path = "home"; 
                     page.As<RoutePart>().Title = T("Home").ToString();
                     page.As<CommonPart>().Owner = user;
-                    if (page.Has<CommentsPart>()) {
-                        page.As<CommentsPart>().CommentsShown = false;
-                    }
+                    //if (page.Has<CommentsPart>()) {
+                    //    page.As<CommentsPart>().CommentsShown = false;
+                    //}
                     contentManager.Publish(page);
                     siteSettings.Record.HomePage = "RoutableHomePageProvider;" + page.Id;
 

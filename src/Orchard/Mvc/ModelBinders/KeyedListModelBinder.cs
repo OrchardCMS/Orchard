@@ -10,10 +10,9 @@ namespace Orchard.Mvc.ModelBinders {
 
         public KeyedListModelBinder(
             ModelBinderDictionary binders,
-            ModelMetadataProvider providers,
             Func<T, string> keySelector) {
             _binders = binders;
-            _providers = providers;
+            _providers = ModelMetadataProviders.Current;
             _keySelector = keySelector;
         }
 

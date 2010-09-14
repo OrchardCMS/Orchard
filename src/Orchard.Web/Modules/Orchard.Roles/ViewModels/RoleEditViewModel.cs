@@ -1,10 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using Orchard.Mvc.ViewModels;
 using Orchard.Security.Permissions;
 
 namespace Orchard.Roles.ViewModels {
-    public class RoleEditViewModel : BaseViewModel {
+    public class RoleEditViewModel  {
         public int Id { get; set; }
         [Required]
         public string Name { get; set; }

@@ -4,9 +4,9 @@ using Orchard.ContentManagement.MetaData;
 
 namespace Orchard.ContentManagement.Drivers {
     public interface IContentPartDriver : IDependency {
-        DriverResult BuildDisplayModel(BuildDisplayModelContext context);
-        DriverResult BuildEditorModel(BuildEditorModelContext context);
-        DriverResult UpdateEditorModel(UpdateEditorModelContext context);
+        DriverResult BuildDisplayShape(BuildDisplayModelContext context);
+        DriverResult BuildEditorShape(BuildEditorModelContext context);
+        DriverResult UpdateEditorShape(UpdateEditorModelContext context);
 
         IEnumerable<ContentPartInfo> GetPartInfo();
     }

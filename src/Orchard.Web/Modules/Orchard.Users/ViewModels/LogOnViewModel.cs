@@ -1,7 +1,5 @@
-﻿using Orchard.Mvc.ViewModels;
-
-namespace Orchard.Users.ViewModels {
-    public class LogOnViewModel : BaseViewModel {
+﻿namespace Orchard.Users.ViewModels {
+    public class LogOnViewModel  {
         public string Title { get; set; }
     }
 }

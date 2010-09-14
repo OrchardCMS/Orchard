@@ -1,9 +1,8 @@
 using System.ComponentModel.DataAnnotations;
 using Orchard.Setup.Annotations;
-using Orchard.Mvc.ViewModels;
 
 namespace Orchard.Setup.ViewModels {
-    public class SetupViewModel : BaseViewModel {
+    public class SetupViewModel  {
         public SetupViewModel() {
             DatabaseOptions = true;
         }

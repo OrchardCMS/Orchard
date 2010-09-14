@@ -6,6 +6,7 @@ using Orchard.Data;
 using Orchard.DevTools.ViewModels;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Records;
+using Orchard.DisplayManagement;
 
 namespace Orchard.DevTools.Controllers {
     public class ContentController : Controller {
@@ -14,10 +15,13 @@ namespace Orchard.DevTools.Controllers {
 
         public ContentController(
             IRepository<ContentTypeRecord> contentTypeRepository,
-            IContentManager contentManager) {
+            IContentManager contentManager,
+            IShapeHelperFactory shapeHelperFactory) {
             _contentTypeRepository = contentTypeRepository;
             _contentManager = contentManager;
         }
+
+        dynamic Shape { get; set; }
 
         public ActionResult Index() {
             return View(new ContentIndexViewModel {
@@ -34,10 +38,10 @@ namespace Orchard.DevTools.Controllers {
                 .Select(x => x.GetType())
                 .SelectMany(x => AllTypes(x))
                 .Distinct();
-            model.DisplayModel = _contentManager.BuildDisplayModel(model.Item, "Detail");
-            model.EditorModel = _contentManager.BuildEditorModel(model.Item);
+            model.DisplayShape = _contentManager.BuildDisplayModel(model.Item, "Detail");
+            model.EditorShape = _contentManager.BuildEditorModel(model.Item);
 
-            return View(model);
+            return View(Shape.Model(model));
         }
 
         static IEnumerable<Type> AllTypes(Type type) {

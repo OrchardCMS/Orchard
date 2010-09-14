@@ -44,7 +44,7 @@ namespace Orchard.Specs.Hosting.Orchard.Web {
             _host.ReloadExtensions();
         }
 
-        public static IStandaloneEnvironment CreateStandaloneEnvironment(string name) {
+        public static IWorkContextScope CreateStandaloneEnvironment(string name) {
             var settings = _hostContainer.Resolve<IShellSettingsManager>().LoadSettings().SingleOrDefault(x => x.Name == name);
             return Host.CreateStandaloneEnvironment(settings);
         }

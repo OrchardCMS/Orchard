@@ -9,15 +9,15 @@ namespace Orchard.ContentManagement.Drivers {
         protected virtual string Prefix { get { return ""; } }
         protected virtual string Zone { get { return "body"; } }
 
-        DriverResult IContentFieldDriver.BuildDisplayModel(BuildDisplayModelContext context) {
+        DriverResult IContentFieldDriver.BuildDisplayShape(BuildDisplayModelContext context) {
             return Process(context.ContentItem, (part, field) => Display(part, field, context.DisplayType));
         }
 
-        DriverResult IContentFieldDriver.BuildEditorModel(BuildEditorModelContext context) {
+        DriverResult IContentFieldDriver.BuildEditorShape(BuildEditorModelContext context) {
             return Process(context.ContentItem, Editor);
         }
 
-        DriverResult IContentFieldDriver.UpdateEditorModel(UpdateEditorModelContext context) {
+        DriverResult IContentFieldDriver.UpdateEditorShape(UpdateEditorModelContext context) {
             return Process(context.ContentItem, (part, field) => Editor(part, field, context.Updater));
         }
 

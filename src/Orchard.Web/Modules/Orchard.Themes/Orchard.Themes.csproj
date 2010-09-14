@@ -6,7 +6,7 @@
     <ProductVersion>9.0.30729</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{CDE24A24-01D3-403C-84B9-37722E18DFB7}</ProjectGuid>
-    <ProjectTypeGuids>{F85E285D-A4E0-4152-9332-AB1D724D3325};{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Orchard.Themes</RootNamespace>
@@ -39,6 +39,7 @@
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Microsoft.CSharp" />
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.ComponentModel.DataAnnotations">
@@ -49,13 +50,13 @@
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
     <Reference Include="System.Web.Extensions" />
-    <Reference Include="System.Web.Mvc, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\lib\aspnetmvc\System.Web.Mvc.dll</HintPath>
-    </Reference>
     <Reference Include="System.Drawing" />
     <Reference Include="System.Web" />
     <Reference Include="System.Web.Abstractions" />
+    <Reference Include="System.Web.Mvc, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\lib\aspnetmvc\System.Web.Mvc.dll</HintPath>
+    </Reference>
     <Reference Include="System.Web.Routing" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Configuration" />
@@ -87,45 +88,23 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\orchard.ico" />
-    <Content Include="Scripts\base.js" />
-    <Content Include="Scripts\jquery.switchable.js" />
     <Content Include="Styles\admin.css" />
-    <Content Include="Styles\Images\detail-view-on.gif" />
-    <Content Include="Styles\Images\detail-view.gif" />
-    <Content Include="Styles\Images\summary-view-on.gif" />
-    <Content Include="Styles\Images\summary-view.gif" />
-    <Content Include="Styles\Images\toolBarActiveButtonBackground.gif" />
-    <Content Include="Styles\Images\toolBarBackground.gif" />
-    <Content Include="Styles\Images\toolBarHoverButtonBackground.gif" />
-    <Content Include="Styles\jquery.switchable.css" />
-    <Content Include="Styles\special.css" />
     <Content Include="Views\Admin\Index.aspx" />
     <Content Include="Views\Admin\Install.aspx" />
     <Content Include="Views\Admin\ThemePreview.ascx" />
-    <Content Include="Views\DisplayTemplates\Items\ContentItem.ascx" />
-    <Content Include="Views\Document.aspx" />
-    <Content Include="Views\EditorTemplates\Items\ContentItem.ascx" />
-    <Content Include="Views\Header.ascx" />
-    <Content Include="Views\HeadPreload.ascx" />
-    <Content Include="Views\Layout.ascx" />
-    <Content Include="Views\Menu.ascx" />
-    <Content Include="Views\Messages.ascx" />
-    <Content Include="Views\NotFound.ascx" />
-    <Content Include="Views\UI\Switchable.ascx" />
-    <Content Include="Views\User.ascx" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Module.txt" />
-    <Content Include="Scripts\jquery-1.4.2.js" />
-    <Content Include="Scripts\jquery-1.4.2.min.js" />
-    <Content Include="Views\Web.config" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\Orchard\Orchard.Framework.csproj">
       <Project>{2D1D92BB-4555-4CBE-8D0E-63563D6CE4C6}</Project>
       <Name>Orchard.Framework</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Web.config" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />

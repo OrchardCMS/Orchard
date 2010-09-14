@@ -1,12 +1,21 @@
-﻿using System.Linq;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using System.Web.Mvc;
+using Orchard.DisplayManagement.Descriptors.ShapeTemplateStrategy;
+using Orchard.FileSystems.VirtualPath;
 using Orchard.Logging;
 
 namespace Orchard.Mvc.ViewEngines.WebForms {
-    public class WebFormViewEngineProvider : IViewEngineProvider {
-        public WebFormViewEngineProvider() {
+    public class WebFormViewEngineProvider : IViewEngineProvider, IShapeTemplateViewEngine {
+        private readonly IVirtualPathProvider _virtualPathProvider;
+
+        public WebFormViewEngineProvider(IVirtualPathProvider virtualPathProvider) {
+            _virtualPathProvider = virtualPathProvider;
             Logger = NullLogger.Instance;
         }
+
         static string[] DisabledFormats = new[] { "~/Disabled" };
 
         public ILogger Logger { get; set; }
@@ -85,5 +94,27 @@ namespace Orchard.Mvc.ViewEngines.WebForms {
 
             return viewEngine;
         }
+
+
+        public IViewEngine CreateBareViewEngine() {
+            return new WebFormViewEngineForAspNet4 {
+                MasterLocationFormats = DisabledFormats,
+                ViewLocationFormats = DisabledFormats,
+                PartialViewLocationFormats = DisabledFormats,
+                AreaMasterLocationFormats = DisabledFormats,
+                AreaViewLocationFormats = DisabledFormats,
+                AreaPartialViewLocationFormats = DisabledFormats,
+            };
+        }
+
+        public IEnumerable<string> DetectTemplateFileNames(string virtualPath) {
+            var fileNames = _virtualPathProvider.ListFiles(virtualPath).Select(Path.GetFileName);
+            foreach (var fileName in fileNames) {
+                if (fileName.EndsWith(".aspx", StringComparison.OrdinalIgnoreCase) ||
+                    fileName.EndsWith(".ascx", StringComparison.OrdinalIgnoreCase)) {
+                    yield return fileName;
+                }
+            }
+        }    
     }
 }

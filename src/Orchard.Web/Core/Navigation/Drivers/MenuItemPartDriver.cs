@@ -6,32 +6,20 @@ using Orchard.Security;
 
 namespace Orchard.Core.Navigation.Drivers {
     [UsedImplicitly]
-    public class MenuItemPartDriver : ContentItemDriver<MenuItemPart> {
+    public class MenuItemPartDriver : ContentPartDriver<MenuItemPart> {
         private readonly IAuthorizationService _authorizationService;
+        private readonly IWorkContextAccessor _workContextAccessor;
 
-        public readonly static ContentType ContentType = new ContentType {
-                                                                             Name = "MenuItem",
-                                                                             DisplayName = "Menu Item"
-                                                                         };
-
-        public MenuItemPartDriver(IAuthorizationService authorizationService) {
+        public MenuItemPartDriver(IAuthorizationService authorizationService, IWorkContextAccessor workContextAccessor) {
             _authorizationService = authorizationService;
-        }
-
-        public virtual IUser CurrentUser { get; set; }
-
-        protected override ContentType GetContentType() {
-            return ContentType;
-        }
-
-        protected override string Prefix { get { return ""; } }
-
-        protected override string GetDisplayText(MenuItemPart itemPart) {
-            return itemPart.Url;
+            _workContextAccessor = workContextAccessor;
         }
 
         protected override DriverResult Editor(MenuItemPart itemPart, IUpdateModel updater) {
-            if (!_authorizationService.TryCheckAccess(Permissions.ManageMainMenu, CurrentUser, itemPart))
+            //todo: (heskew) need context
+            var currentUser = _workContextAccessor.GetContext().CurrentUser;
+
+            if (!_authorizationService.TryCheckAccess(Permissions.ManageMainMenu, currentUser, itemPart))
                 return null;
 
             updater.TryUpdateModel(itemPart, Prefix, null, null);

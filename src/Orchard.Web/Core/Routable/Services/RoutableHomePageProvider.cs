@@ -1,8 +1,7 @@
 ﻿using System.Web.Mvc;
 using JetBrains.Annotations;
-using Orchard.ContentManagement.Aspects;
 using Orchard.Core.Routable.Models;
-using Orchard.Core.Routable.ViewModels;
+using Orchard.DisplayManagement;
 using Orchard.Localization;
 using Orchard.Mvc.Results;
 using Orchard.Services;
@@ -14,12 +13,14 @@ namespace Orchard.Core.Routable.Services {
         private readonly IContentManager _contentManager;
         public const string Name = "RoutableHomePageProvider";
 
-        public RoutableHomePageProvider(IOrchardServices services, IContentManager contentManager) {
+        public RoutableHomePageProvider(IOrchardServices services, IContentManager contentManager, IShapeHelperFactory shapeHelperFactory) {
             _contentManager = contentManager;
             Services = services;
             T = NullLocalizer.Instance;
+            Shape = shapeHelperFactory.CreateHelper();
         }
 
+        dynamic Shape { get; set; }
         public IOrchardServices Services { get; private set; }
         public Localizer T { get; set; }
 
@@ -36,13 +37,11 @@ namespace Orchard.Core.Routable.Services {
             if (contentItem == null || !contentItem.Is<RoutePart>())
                 return new NotFoundResult();
 
-            var model = new RoutableDisplayViewModel {
-                Routable = _contentManager.BuildDisplayModel<IRoutableAspect>(contentItem.As<RoutePart>(), "Detail")
-            };
+            var model = _contentManager.BuildDisplayModel(contentItem);
 
             return new ViewResult {
-                ViewName = "~/Core/Routable/Views/Item/Display.ascx",
-                ViewData = new ViewDataDictionary<RoutableDisplayViewModel>(model)
+                ViewName = "Display",
+                ViewData = new ViewDataDictionary<dynamic>(model)
             };
         }
     }

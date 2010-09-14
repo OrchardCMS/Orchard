@@ -200,40 +200,6 @@ namespace Orchard.Tests.Data {
             Assert.That(two.Name, Is.EqualTo("two"));
         }
 
-        [Test]
-        public void TransactionShouldCallActionAndCommitWhenSuccessful() {
-            CreateThreeFoos();
-            _fooRepos.Transaction(() => { _fooRepos.Get(f => f.Name == "one").Name = "uno"; });
 
-            // need to evict all entities from session - otherwise modified class instances are selected
-            _session.Clear();
-
-            var foos = _fooRepos.Fetch(f => f.Name == "one" || f.Name == "uno");
-            Assert.That(foos.Count(), Is.EqualTo(1));
-            Assert.That(foos, Has.Some.Property("Name").EqualTo("uno"));
-            Assert.That(foos, Has.None.Property("Name").EqualTo("one"));
-        }
-
-        [Test]
-        public void ExceptionsShouldRollbackTransactionAndRethrowOutOfMethod() {
-            CreateThreeFoos();
-            try {
-                _fooRepos.Transaction(() => {
-                    _fooRepos.Get(f => f.Name == "one").Name = "uno";
-                    throw new ApplicationException("boom");
-                });
-            }
-            catch (Exception ex) {
-                Assert.That(ex.Message, Is.EqualTo("boom"));
-            }
-
-            // need to evict all entities from session - otherwise modified class instances are selected
-            _session.Clear();
-
-            var foos = _fooRepos.Fetch(f => f.Name == "one" || f.Name == "uno");
-            Assert.That(foos.Count(), Is.EqualTo(1));
-            Assert.That(foos, Has.None.Property("Name").EqualTo("uno"));
-            Assert.That(foos, Has.Some.Property("Name").EqualTo("one"));
-        }
     }
 }

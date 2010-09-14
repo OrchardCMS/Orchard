@@ -52,6 +52,7 @@ namespace Orchard.Environment.ShellBuilders {
 
                     builder.Register(ctx => dynamicProxyContext);
                     builder.Register(ctx => settings);
+                    builder.Register(ctx => blueprint.Descriptor);
                     builder.Register(ctx => blueprint);
 
                     var moduleIndex = intermediateScope.Resolve<IIndex<Type, IModule>>();
@@ -93,7 +94,11 @@ namespace Orchard.Environment.ShellBuilders {
                             .EnableDynamicProxy(dynamicProxyContext)
                             .Keyed<IController>(serviceKey)
                             .InstancePerDependency()
-                            .InjectActionInvoker();
+                            .OnActivating(e => {
+                                              var controller = e.Instance as Controller;
+                                              if (controller != null)
+                                                  controller.ActionInvoker = (IActionInvoker)e.Context.Resolve(new TypedService(typeof(IActionInvoker)));
+                                          });
                     }
 
                     // Register code-only registrations specific to a shell

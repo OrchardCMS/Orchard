@@ -2,7 +2,6 @@
 using System.Web.Mvc;
 using Orchard.Data.Migration.Generator;
 using Orchard.Localization;
-using Orchard.Mvc.ViewModels;
 using Orchard.UI.Admin;
 using Orchard.UI.Notify;
 
@@ -21,7 +20,7 @@ namespace Orchard.DevTools.Controllers {
         public Localizer T { get; set; }
 
         public ActionResult Index() {
-            return View(new BaseViewModel());
+            return View();
         }
 
         public ActionResult UpdateDatabase() {

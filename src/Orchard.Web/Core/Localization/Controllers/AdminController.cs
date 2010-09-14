@@ -7,10 +7,10 @@ using Orchard.Core.Localization.Models;
 using Orchard.Core.Localization.Services;
 using Orchard.Core.Localization.ViewModels;
 using Orchard.Core.Routable.Models;
+using Orchard.DisplayManagement;
 using Orchard.Localization;
 using Orchard.Localization.Services;
 using Orchard.Mvc.Results;
-using Orchard.Mvc.ViewModels;
 using Orchard.UI.Notify;
 
 namespace Orchard.Core.Localization.Controllers {
@@ -20,14 +20,21 @@ namespace Orchard.Core.Localization.Controllers {
         private readonly ICultureManager _cultureManager;
         private readonly ILocalizationService _localizationService;
 
-        public AdminController(IOrchardServices orchardServices, IContentManager contentManager, ICultureManager cultureManager, ILocalizationService localizationService) {
+        public AdminController(
+            IOrchardServices orchardServices,
+            IContentManager contentManager,
+            ICultureManager cultureManager,
+            ILocalizationService localizationService,
+            IShapeHelperFactory shapeHelperFactory) {
             _contentManager = contentManager;
             _cultureManager = cultureManager;
             _localizationService = localizationService;
             T = NullLocalizer.Instance;
             Services = orchardServices;
+            Shape = shapeHelperFactory.CreateHelper();
         }
 
+        dynamic Shape { get; set; }
         public Localizer T { get; set; }
         public IOrchardServices Services { get; set; }
 
@@ -64,7 +71,6 @@ namespace Orchard.Core.Localization.Controllers {
             };
             Services.TransactionManager.Cancel();
 
-            PrepareEditorViewModel(model.Content);
             return View(model);
         }
 
@@ -75,11 +81,11 @@ namespace Orchard.Core.Localization.Controllers {
             if (contentItem == null)
                 return new NotFoundResult();
 
-            var viewModel = new AddLocalizationViewModel();
-            TryUpdateModel(viewModel);
+            var model = new AddLocalizationViewModel();
+            TryUpdateModel(model);
 
             ContentItem contentItemTranslation = null;
-            var existingTranslation = _localizationService.GetLocalizedContentItem(contentItem, viewModel.SelectedCulture);
+            var existingTranslation = _localizationService.GetLocalizedContentItem(contentItem, model.SelectedCulture);
             if (existingTranslation != null) {
                 // edit existing
                 contentItemTranslation = _contentManager.Get(existingTranslation.ContentItem.Id, VersionOptions.DraftRequired);
@@ -89,8 +95,8 @@ namespace Orchard.Core.Localization.Controllers {
                 contentItemTranslation = _contentManager.New(contentItem.ContentType);
                 var localized = contentItemTranslation.As<LocalizationPart>();
                 localized.MasterContentItem = contentItem;
-                if (!string.IsNullOrWhiteSpace(viewModel.SelectedCulture))
-                    localized.Culture = _cultureManager.GetCultureByName(viewModel.SelectedCulture);
+                if (!string.IsNullOrWhiteSpace(model.SelectedCulture))
+                    localized.Culture = _cultureManager.GetCultureByName(model.SelectedCulture);
                 _contentManager.Create(contentItemTranslation, VersionOptions.Draft);
 
                 if (!contentItem.Has<IPublishingControlAspect>() && contentItem.VersionRecord != null && contentItem.VersionRecord.Published) {
@@ -98,30 +104,23 @@ namespace Orchard.Core.Localization.Controllers {
                 }
             }
 
-            viewModel.Content = _contentManager.UpdateEditorModel(contentItemTranslation, this);
+            model.Content = _contentManager.UpdateEditorModel(contentItemTranslation, this);
 
             if (!ModelState.IsValid) {
                 Services.TransactionManager.Cancel();
-                viewModel.SiteCultures = _cultureManager.ListCultures().Where(s => s != _localizationService.GetContentCulture(contentItem) && s != _cultureManager.GetSiteCulture());
+                model.SiteCultures = _cultureManager.ListCultures().Where(s => s != _localizationService.GetContentCulture(contentItem) && s != _cultureManager.GetSiteCulture());
                 contentItem.As<LocalizationPart>().Culture.Culture = null;
-                viewModel.Content = _contentManager.BuildEditorModel(contentItem);
-                PrepareEditorViewModel(viewModel.Content);
-                return View(viewModel);
+                model.Content = _contentManager.BuildEditorModel(contentItem);
+                return View(model);
             }
 
             Services.Notifier.Information(T("Created content item translation."));
 
-            var metadata = _contentManager.GetItemMetadata(viewModel.Content.Item);
+            var metadata = _contentManager.GetItemMetadata(model.Content);
             if (metadata.EditorRouteValues == null)
                 return null; //todo: (heskew) redirect to somewhere better than nowhere
 
             return RedirectToRoute(metadata.EditorRouteValues);
-        }
-
-        private static void PrepareEditorViewModel(ContentItemViewModel itemViewModel) {
-            if (string.IsNullOrEmpty(itemViewModel.TemplateName)) {
-                itemViewModel.TemplateName = "Items/Contents.Item";
-            }
         }
 
         bool IUpdateModel.TryUpdateModel<TModel>(TModel model, string prefix, string[] includeProperties, string[] excludeProperties) {

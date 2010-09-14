@@ -16,9 +16,6 @@ using Orchard.Data;
 using Orchard.Environment;
 using Orchard.Security;
 using Orchard.Tests.Modules;
-using System.Web.Mvc;
-using System.Web.Routing;
-using Orchard.Tests.Stubs;
 using Orchard.UI.Notify;
 
 namespace Orchard.Core.Tests.Body {
@@ -44,7 +41,7 @@ namespace Orchard.Core.Tests.Body {
         public void BodyCanHandleLongText() {
             var contentManager = _container.Resolve<IContentManager>();
 
-            contentManager.Create<Thing>(ThingDriver.ContentType.Name, t => {
+            contentManager.Create<Thing>(ThingDriver.ContentTypeName, t => {
                 t.As<BodyPart>().Record = new BodyPartRecord();
                 t.Text = new String('x', 10000);
             });
@@ -72,10 +69,10 @@ namespace Orchard.Core.Tests.Body {
         [UsedImplicitly]
         public class ThingHandler : ContentHandler {
             public ThingHandler() {
-                Filters.Add(new ActivatingFilter<Thing>(ThingDriver.ContentType.Name));
-                Filters.Add(new ActivatingFilter<ContentPart<CommonPartVersionRecord>>(ThingDriver.ContentType.Name));
-                Filters.Add(new ActivatingFilter<CommonPart>(ThingDriver.ContentType.Name));
-                Filters.Add(new ActivatingFilter<BodyPart>(ThingDriver.ContentType.Name));
+                Filters.Add(new ActivatingFilter<Thing>(ThingDriver.ContentTypeName));
+                Filters.Add(new ActivatingFilter<ContentPart<CommonPartVersionRecord>>(ThingDriver.ContentTypeName));
+                Filters.Add(new ActivatingFilter<CommonPart>(ThingDriver.ContentTypeName));
+                Filters.Add(new ActivatingFilter<BodyPart>(ThingDriver.ContentTypeName));
             }
         }
 
@@ -89,11 +86,8 @@ namespace Orchard.Core.Tests.Body {
 
         }
 
-        public class ThingDriver : ContentItemDriver<Thing> {
-            public readonly static ContentType ContentType = new ContentType {
-                Name = "thing",
-                DisplayName = "Thing"
-            };
+        public class ThingDriver : ContentPartDriver<Thing> {
+            public static readonly string ContentTypeName = "thing";
         }
 
     }

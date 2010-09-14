@@ -1,9 +1,5 @@
-﻿using System.Collections.Generic;
-
-namespace Orchard.ContentManagement.Handlers {
+﻿namespace Orchard.ContentManagement.Handlers {
     public interface IContentHandler : IDependency {
-        IEnumerable<ContentType> GetContentTypes();
-
         void Activating(ActivatingContentContext context);
         void Activated(ActivatedContentContext context);
         void Initializing(InitializingContentContext context);
@@ -23,8 +19,8 @@ namespace Orchard.ContentManagement.Handlers {
         void Indexed(IndexContentContext context);
 
         void GetContentItemMetadata(GetContentItemMetadataContext context);
-        void BuildDisplayModel(BuildDisplayModelContext context);
-        void BuildEditorModel(BuildEditorModelContext context);
-        void UpdateEditorModel(UpdateEditorModelContext context);
+        void BuildDisplayShape(BuildDisplayModelContext context);
+        void BuildEditorShape(BuildEditorModelContext context);
+        void UpdateEditorShape(UpdateEditorModelContext context);
     }
 }

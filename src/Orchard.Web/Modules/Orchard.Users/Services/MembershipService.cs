@@ -9,7 +9,6 @@ using JetBrains.Annotations;
 using Orchard.Logging;
 using Orchard.ContentManagement;
 using Orchard.Security;
-using Orchard.Users.Drivers;
 using Orchard.Users.Events;
 using Orchard.Users.Models;
 using Orchard.Settings;
@@ -45,7 +44,7 @@ namespace Orchard.Users.Services {
 
             var registrationSettings = CurrentSite.As<RegistrationSettingsPart>();
 
-            var user = _contentManager.New<UserPart>(UserPartDriver.ContentType.Name);
+            var user = _contentManager.New<UserPart>("User");
 
             user.Record.UserName = createUserParams.Username;
             user.Record.Email = createUserParams.Email;
