@@ -9,7 +9,7 @@
 <p>@Html.ActionLink(T("Media Folders").ToString(), "Index") &#62; 
     @foreach (FolderNavigation navigation in MediaHelpers.GetFolderNavigationHierarchy(Model.MediaPath)) {
         @Html.ActionLink(navigation.FolderName, "Edit",
-                  new {name = navigation.FolderName, mediaPath = navigation.FolderPath}) &#62;
+                  new {name = navigation.FolderName, mediaPath = navigation.FolderPath})
     }
     @T("Edit Media")</p>
  </div>   
