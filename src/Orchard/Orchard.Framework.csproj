@@ -145,6 +145,7 @@
     <Compile Include="DisplayManagement\Descriptors\ShapeAlterationBuilder.cs" />
     <Compile Include="DisplayManagement\Descriptors\ShapeTable.cs" />
     <Compile Include="DisplayManagement\Descriptors\ShapeTableBuilder.cs" />
+    <Compile Include="DisplayManagement\Implementation\IShapeFactoryEvents.cs" />
     <Compile Include="DisplayManagement\Shapes\ITagBuilderFactory.cs" />
     <Compile Include="Mvc\IOrchardViewPage.cs" />
     <Compile Include="Mvc\Spooling\HtmlStringWriter.cs" />

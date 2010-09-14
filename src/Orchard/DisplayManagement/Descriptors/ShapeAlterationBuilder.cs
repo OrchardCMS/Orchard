@@ -42,6 +42,7 @@ namespace Orchard.DisplayManagement.Descriptors {
                 Func<DisplayContext, IHtmlString> target = null;
 
                 var binding = new ShapeBinding {
+                    ShapeDescriptor = descriptor,
                     BindingName = _bindingName,
                     BindingSource = bindingSource,
                     Binding = displayContext => {
