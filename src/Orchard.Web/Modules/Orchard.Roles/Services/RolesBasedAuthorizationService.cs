@@ -47,9 +47,8 @@ namespace Orchard.Roles.Services {
 
             for (var adjustmentLimiter = 0; adjustmentLimiter != 3; ++adjustmentLimiter) {
                 if (!context.Granted && context.User != null) {
-                    if (String.Equals(context.User.UserName, "Administrator", StringComparison.OrdinalIgnoreCase) ||
-                        ((!String.IsNullOrEmpty(CurrentSite.SuperUser) &&
-                           String.Equals(context.User.UserName, CurrentSite.SuperUser, StringComparison.OrdinalIgnoreCase)))) {
+                    if (!String.IsNullOrEmpty(CurrentSite.SuperUser) &&
+                           String.Equals(context.User.UserName, CurrentSite.SuperUser, StringComparison.OrdinalIgnoreCase)) {
                         context.Granted = true;
                     }
                 }
