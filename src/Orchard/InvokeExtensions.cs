@@ -7,11 +7,13 @@ using Orchard.Logging;
 using Orchard.Security;
 
 namespace Orchard {
-    public interface IEvents : IDependency {
-    }
 
-    public static class EventsExtensions {
-        public static void Invoke<TEvents>(this IEnumerable<TEvents> events, Action<TEvents> dispatch, ILogger logger) where TEvents : IEvents {
+    public static class InvokeExtensions {
+
+        /// <summary>
+        /// Safely invoke methods by catching non fatal exceptions and logging them
+        /// </summary>
+        public static void Invoke<TEvents>(this IEnumerable<TEvents> events, Action<TEvents> dispatch, ILogger logger) {
             foreach (var sink in events) {
                 try {
                     dispatch(sink);

@@ -1,5 +1,5 @@
 ﻿namespace Orchard.ContentManagement.Handlers {
-    public interface IContentHandler : IEvents {
+    public interface IContentHandler : IDependency {
         void Activating(ActivatingContentContext context);
         void Activated(ActivatedContentContext context);
         void Initializing(InitializingContentContext context);
