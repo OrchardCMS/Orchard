@@ -1,7 +1,7 @@
 ﻿@model Orchard.Tags.ViewModels.TagsAdminIndexViewModel
 
 <h1>@Html.TitleForPage(T("Manage Tags").ToString()) </h1>
-@using (Html.BeginFormAntiForgeryPost()) { 
+@using (Html.BeginFormAntiForgeryPost())  { 
     @Html.ValidationSummary()
 
 	<fieldset class="bulk-actions">
@@ -29,7 +29,7 @@
             @foreach (var tagEntry in Model.Tags) { 
             <tr>
                 <td>
-                    <input type="hidden" value="<%=Model.Tags[tagIndex].Tag.Id%>" name="@Html.NameOf(m => m.Tags[ti].Tag.Id)"/>
+                    <input type="hidden" value="@Model.Tags[tagIndex].Tag.Id" name="@Html.NameOf(m => m.Tags[ti].Tag.Id)"/>
                     <input type="checkbox" value="true" name="@Html.NameOf(m => m.Tags[ti].IsChecked)"/>
                 </td>
                 <td>
@@ -42,4 +42,4 @@
             }
         </table>
     </fieldset>
-} 
+}

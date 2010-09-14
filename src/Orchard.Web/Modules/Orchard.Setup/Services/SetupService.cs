@@ -89,7 +89,7 @@ namespace Orchard.Setup.Services {
                     //"Orchard.Blogs",
                     //"Orchard.Comments",
                     "Orchard.Tags",
-                    //"Orchard.Media",
+                    "Orchard.Media",
                     //"Futures.Widgets"
 
                     "Orchard.DevTools"
