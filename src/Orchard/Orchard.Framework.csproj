@@ -149,6 +149,8 @@
     <Compile Include="Mvc\IOrchardViewPage.cs" />
     <Compile Include="Mvc\Spooling\HtmlStringWriter.cs" />
     <Compile Include="Mvc\ViewEngines\Razor\RazorViewEngine.cs" />
+    <Compile Include="Security\CurrentUserWorkContext.cs" />
+    <Compile Include="Settings\CurrentSiteWorkContext.cs" />
     <Compile Include="UI\Zones\PageWorkContext.cs" />
     <Compile Include="UI\Zones\ZoneHoldingBehavior.cs" />
     <Compile Include="Mvc\ViewEngines\ThemeAwareness\ConfiguredEnginesCache.cs" />
@@ -676,7 +678,6 @@
     <Compile Include="Mvc\AntiForgery\AntiForgeryAuthorizationFilter.cs" />
     <Compile Include="Mvc\Html\FileRegistrationContext.cs" />
     <Compile Include="Mvc\Html\MvcFormAntiForgeryPost.cs" />
-    <Compile Include="Mvc\Html\SiteServiceExtensions.cs" />
     <Compile Include="Tasks\Scheduling\IScheduledTaskHandler.cs" />
     <Compile Include="Tasks\Scheduling\IScheduledTaskManager.cs" />
     <Compile Include="Tasks\Scheduling\ScheduledTaskContext.cs" />
