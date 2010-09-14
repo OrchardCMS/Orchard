@@ -10,21 +10,38 @@ namespace Orchard.DisplayManagement.Descriptors {
             Creating = Enumerable.Empty<Action<ShapeCreatingContext>>();
             Created = Enumerable.Empty<Action<ShapeCreatedContext>>();
             Wrappers = new List<string>();
+            Bindings = new Dictionary<string, ShapeBinding>();
         }
 
         public string ShapeType { get; set; }
-        
+
         /// <summary>
         /// The BindingSource is informational text about the source of the Binding delegate. Not used except for 
         /// troubleshooting.
         /// </summary>
-        public string BindingSource { get; set; }
+        public string BindingSource {
+            get {
+                return Bindings[ShapeType].BindingSource;
+            }
+        }
 
-        public Func<DisplayContext, IHtmlString> Binding { get; set; }
+        public Func<DisplayContext, IHtmlString> Binding {
+            get {
+                return Bindings[ShapeType].Binding;
+            }
+        }
 
-        public IEnumerable<Action<ShapeCreatingContext>> Creating {get;set;}
-        public IEnumerable<Action<ShapeCreatedContext>> Created {get;set;}
+        public IDictionary<string, ShapeBinding> Bindings { get; set; }
+
+        public IEnumerable<Action<ShapeCreatingContext>> Creating { get; set; }
+        public IEnumerable<Action<ShapeCreatedContext>> Created { get; set; }
 
         public IList<string> Wrappers { get; set; }
+    }
+
+    public class ShapeBinding {
+        public string BindingName { get; set; }
+        public string BindingSource { get; set; }
+        public Func<DisplayContext, IHtmlString> Binding { get; set; }
     }
 }

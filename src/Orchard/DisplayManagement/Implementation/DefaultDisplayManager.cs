@@ -49,9 +49,11 @@ namespace Orchard.DisplayManagement.Implementation {
             var shapeTable = _shapeTableManager.GetShapeTable(workContext.CurrentTheme.ThemeName);
             //preproc loop / event (alter shape, swapping type)
 
+
             ShapeDescriptor shapeDescriptor;
-            if (shapeTable.Descriptors.TryGetValue(shapeMetadata.Type, out shapeDescriptor)) {
-                shape.Metadata.ChildContent = Process(shapeDescriptor, shape, context);
+            ShapeBinding shapeBinding;
+            if (TryGetDescriptor(shapeMetadata.Type, shapeTable, out shapeDescriptor, out shapeBinding)) {
+                shape.Metadata.ChildContent = Process(shapeDescriptor, shapeBinding, shape, context);
             }
             else {
                 throw new OrchardException(T("Shape type {0} not found", shapeMetadata.Type));
@@ -59,15 +61,35 @@ namespace Orchard.DisplayManagement.Implementation {
 
             foreach (var frameType in shape.Metadata.Wrappers) {
                 ShapeDescriptor frameDescriptor;
-                if (shapeTable.Descriptors.TryGetValue(frameType, out frameDescriptor)) {
-                    shape.Metadata.ChildContent = Process(frameDescriptor, shape, context);
+                ShapeBinding frameBinding;
+                if (TryGetDescriptor(frameType, shapeTable, out frameDescriptor, out frameBinding)) {
+                    shape.Metadata.ChildContent = Process(frameDescriptor, frameBinding, shape, context);
                 }
             }
 
             return shape.Metadata.ChildContent;
         }
 
-        private IHtmlString CoerceHtmlString(object value) {
+        static bool TryGetDescriptor(string shapeType, ShapeTable shapeTable, out ShapeDescriptor shapeDescriptor, out ShapeBinding shapeBinding) {
+
+            var shapeTypeScan = shapeType;
+            for (; ; ) {
+                if (shapeTable.Descriptors.TryGetValue(shapeTypeScan, out shapeDescriptor) &&
+                    shapeDescriptor.Bindings.TryGetValue(shapeTypeScan, out shapeBinding)) {
+                    return true;
+                }
+
+                var delimiterIndex = shapeTypeScan.LastIndexOf("__");
+                if (delimiterIndex < 0) {
+                    shapeBinding = null;
+                    return false;
+                }
+
+                shapeTypeScan = shapeTypeScan.Substring(0, delimiterIndex);
+            }
+        }
+
+        static IHtmlString CoerceHtmlString(object value) {
             if (value == null)
                 return null;
 
@@ -78,12 +100,13 @@ namespace Orchard.DisplayManagement.Implementation {
             return new HtmlString(HttpUtility.HtmlEncode(value));
         }
 
-        private IHtmlString Process(ShapeDescriptor shapeDescriptor, IShape shape, DisplayContext context) {
-            if (shapeDescriptor == null || shapeDescriptor.Binding == null) {
+        static IHtmlString Process(ShapeDescriptor shapeDescriptor, ShapeBinding shapeBinding, IShape shape, DisplayContext context) {
+
+            if (shapeDescriptor == null || shapeBinding == null || shapeBinding.Binding == null) {
                 //todo: create result from all child shapes
                 return shape.Metadata.ChildContent ?? new HtmlString("");
             }
-            return CoerceHtmlString(shapeDescriptor.Binding(context));
+            return CoerceHtmlString(shapeBinding.Binding(context));
         }
 
         class ForgivingConvertBinder : ConvertBinder {

@@ -32,18 +32,21 @@ namespace Orchard.DisplayManagement.Descriptors {
 
                 Func<DisplayContext, IHtmlString> target = null;
 
-                descriptor.BindingSource = bindingSource;
+                var binding = new ShapeBinding {
+                    BindingName = _shapeType,
+                    BindingSource = bindingSource,
+                    Binding = displayContext => {
 
-                // announce the binding, which may be reconfigured before it's used
-                descriptor.Binding = displayContext => {
+                        // when used, first realize the actual target once
+                        if (target == null)
+                            target = binder(descriptor);
 
-                    // when used, first realize the actual target once
-                    if (target == null)
-                        target = binder(descriptor);
-
-                    // and execute the re
-                    return target(displayContext);
+                        // and execute the re
+                        return target(displayContext);
+                    }
                 };
+                descriptor.Bindings[_shapeType] = binding;
+
             });
         }
 
@@ -61,9 +64,8 @@ namespace Orchard.DisplayManagement.Descriptors {
             });
         }
 
-        
-            public ShapeAlteration Build() {
-                return new ShapeAlteration(_shapeType, _feature, _configurations.ToArray());
-            }
+        public ShapeAlteration Build() {
+            return new ShapeAlteration(_shapeType, _feature, _configurations.ToArray());
+        }
     }
 }
