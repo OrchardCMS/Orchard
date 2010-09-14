@@ -45,7 +45,7 @@ namespace Orchard.Tests.DisplayManagement.Descriptors {
             }
         }
 
-        private IEnumerable<ShapeDescriptorAlteration> GetInitializers() {
+        private IEnumerable<ShapeAlteration> GetInitializers() {
             var strategy = _container.Resolve<IShapeDescriptorBindingStrategy>();
             var builder = new ShapeTableBuilder();
             strategy.Discover(builder);

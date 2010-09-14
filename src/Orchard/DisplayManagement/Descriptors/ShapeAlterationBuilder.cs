@@ -6,27 +6,27 @@ using Orchard.DisplayManagement.Implementation;
 using Orchard.Environment.Extensions.Models;
 
 namespace Orchard.DisplayManagement.Descriptors {
-    public class ShapeDescriptorAlterationBuilder {
+    public class ShapeAlterationBuilder {
         protected FeatureDescriptor _feature;
         protected string _shapeType;
         protected readonly IList<Action<ShapeDescriptor>> _configurations = new List<Action<ShapeDescriptor>>();
 
-        public ShapeDescriptorAlterationBuilder Named(string shapeType) {
+        public ShapeAlterationBuilder Named(string shapeType) {
             _shapeType = shapeType;
             return this;
         }
 
-        public ShapeDescriptorAlterationBuilder From(FeatureDescriptor feature) {
+        public ShapeAlterationBuilder From(FeatureDescriptor feature) {
             _feature = feature;
             return this;
         }
 
-        public ShapeDescriptorAlterationBuilder Configure(Action<ShapeDescriptor> action) {
+        public ShapeAlterationBuilder Configure(Action<ShapeDescriptor> action) {
             _configurations.Add(action);
             return this;
         }
 
-        public ShapeDescriptorAlterationBuilder BoundAs(string bindingSource, Func<ShapeDescriptor, Func<DisplayContext, IHtmlString>> binder) {
+        public ShapeAlterationBuilder BoundAs(string bindingSource, Func<ShapeDescriptor, Func<DisplayContext, IHtmlString>> binder) {
             // schedule the configuration
             return Configure(descriptor => {
 
@@ -47,14 +47,14 @@ namespace Orchard.DisplayManagement.Descriptors {
             });
         }
 
-        public ShapeDescriptorAlterationBuilder OnCreating(Action<ShapeCreatingContext> action) {
+        public ShapeAlterationBuilder OnCreating(Action<ShapeCreatingContext> action) {
             return Configure(descriptor => {
                 var existing = descriptor.Creating ?? Enumerable.Empty<Action<ShapeCreatingContext>>();
                 descriptor.Creating = existing.Concat(new[] { action });
             });
         }
 
-        public ShapeDescriptorAlterationBuilder OnCreated(Action<ShapeCreatedContext> action) {
+        public ShapeAlterationBuilder OnCreated(Action<ShapeCreatedContext> action) {
             return Configure(descriptor => {
                 var existing = descriptor.Created ?? Enumerable.Empty<Action<ShapeCreatedContext>>();
                 descriptor.Created = existing.Concat(new[] { action });

@@ -141,8 +141,8 @@
   <ItemGroup>
     <Compile Include="ContentManagement\Handlers\BuildModelContext.cs" />
     <Compile Include="DisplayManagement\Descriptors\ShapeDescriptor.cs" />
-    <Compile Include="DisplayManagement\Descriptors\ShapeDescriptorAlteration.cs" />
-    <Compile Include="DisplayManagement\Descriptors\ShapeDescriptorAlterationBuilder.cs" />
+    <Compile Include="DisplayManagement\Descriptors\ShapeAlteration.cs" />
+    <Compile Include="DisplayManagement\Descriptors\ShapeAlterationBuilder.cs" />
     <Compile Include="DisplayManagement\Descriptors\ShapeTable.cs" />
     <Compile Include="DisplayManagement\Descriptors\ShapeTableBuilder.cs" />
     <Compile Include="DisplayManagement\Shapes\ITagBuilderFactory.cs" />

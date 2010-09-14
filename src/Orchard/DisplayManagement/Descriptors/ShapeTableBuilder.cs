@@ -3,23 +3,23 @@ using System.Linq;
 
 namespace Orchard.DisplayManagement.Descriptors {
     public class ShapeTableBuilder {
-        readonly IList<ShapeDescriptorAlterationBuilderImpl> _descriptorBuilders = new List<ShapeDescriptorAlterationBuilderImpl>();
+        readonly IList<ShapeAlterationBuilderImpl> _descriptorBuilders = new List<ShapeAlterationBuilderImpl>();
 
-        public ShapeDescriptorAlterationBuilder Describe {
+        public ShapeAlterationBuilder Describe {
             get {
-                var db = new ShapeDescriptorAlterationBuilderImpl();
+                var db = new ShapeAlterationBuilderImpl();
                 _descriptorBuilders.Add(db);
                 return db;
             }
         }
 
-        public IEnumerable<ShapeDescriptorAlteration> Build() {
+        public IEnumerable<ShapeAlteration> Build() {
             return _descriptorBuilders.Select(b => b.Build());
         }
 
-        class ShapeDescriptorAlterationBuilderImpl : ShapeDescriptorAlterationBuilder {
-            public ShapeDescriptorAlteration Build() {
-                return new ShapeDescriptorAlteration(_shapeType, _feature, _configurations.ToArray());
+        class ShapeAlterationBuilderImpl : ShapeAlterationBuilder {
+            public ShapeAlteration Build() {
+                return new ShapeAlteration(_shapeType, _feature, _configurations.ToArray());
             }
         }
     }

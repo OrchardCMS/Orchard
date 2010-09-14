@@ -36,7 +36,7 @@ namespace Orchard.DisplayManagement.Descriptors {
             });
         }
 
-        static bool IsModuleOrRequestedTheme(ShapeDescriptorAlteration alteration, string themeName) {
+        static bool IsModuleOrRequestedTheme(ShapeAlteration alteration, string themeName) {
             if (alteration == null || 
                 alteration.Feature == null ||
                 alteration.Feature.Extension == null) {

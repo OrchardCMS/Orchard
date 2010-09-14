@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using Orchard.Environment.Extensions.Models;
 
 namespace Orchard.DisplayManagement.Descriptors {
-    public class ShapeDescriptorAlteration {
+    public class ShapeAlteration {
         private readonly IList<Action<ShapeDescriptor>> _configurations;
 
-        public ShapeDescriptorAlteration(string shapeType, FeatureDescriptor feature, IList<Action<ShapeDescriptor>> configurations) {
+        public ShapeAlteration(string shapeType, FeatureDescriptor feature, IList<Action<ShapeDescriptor>> configurations) {
             _configurations = configurations;
             ShapeType = shapeType;
             Feature = feature;
