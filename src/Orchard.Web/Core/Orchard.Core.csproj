@@ -315,7 +315,6 @@
     <None Include="Routable\Views\DisplayTemplates\Parts\Routable.RoutePart.cshtml" />
     <Content Include="Settings\Module.txt" />
     <Content Include="Settings\Styles\admin.css" />
-    <None Include="Settings\Views\Admin\Copy of Index.cshtml" />
     <None Include="Settings\Views\Admin\Index.cshtml" />
     <None Include="Settings\Views\Admin\Culture.cshtml" />
     <Content Include="Settings\Views\DisplayTemplates\CurrentCulture.ascx" />

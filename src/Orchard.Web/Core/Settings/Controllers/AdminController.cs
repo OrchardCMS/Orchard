@@ -45,8 +45,8 @@ namespace Orchard.Core.Settings.Controllers {
             if (!Services.Authorizer.Authorize(Permissions.ManageSettings, T("Not authorized to manage settings")))
                 return new HttpUnauthorizedResult();
 
-            var site = _siteService.GetSiteSettings().As<SiteSettingsPart>();
-            var model = new SiteSettingsPartViewModel { Site = Services.ContentManager.UpdateEditorModel(site, this) };
+            var site = _siteService.GetSiteSettings();
+            var model = Services.ContentManager.UpdateEditorModel(site, this);
 
             if (!ModelState.IsValid) {
                 Services.TransactionManager.Cancel();

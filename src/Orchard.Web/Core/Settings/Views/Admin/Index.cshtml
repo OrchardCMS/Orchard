@@ -1,7 +1,7 @@
 ﻿<h1>@Html.TitleForPage(T("Manage Settings").ToString())</h1>
 @using (Html.BeginFormAntiForgeryPost()) {
 @Html.ValidationSummary()
-@//todo : (sebros) Zone names are not consistent for settings parts, clean it
+
 @Display(Model.body)
 @Display(Model.primary)
 <fieldset>
