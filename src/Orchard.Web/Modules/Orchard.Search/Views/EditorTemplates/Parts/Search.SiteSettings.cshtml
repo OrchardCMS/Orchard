@@ -1,0 +1,22 @@
+﻿@model Orchard.Search.ViewModels.SearchSettingsViewModel
+@using Orchard.Search.ViewModels
+
+<fieldset>
+    <legend>@T("Search")</legend>
+    <div>
+        @{var entryIndex = 0;}
+        @if (Model.Entries != null) {
+           foreach(var modelEntry in Model.Entries) {
+           if(Model.Entries[entryIndex].Selected) {
+               <input type="checkbox" value="true" checked="checked" name="@Html.FieldNameFor(m => m.Entries[entryIndex].Selected)" id="@Html.FieldIdFor(m => m.Entries[entryIndex].Selected)"/> 
+           }
+           else {
+               <input type="checkbox" value="true" name="@Html.FieldNameFor(m => m.Entries[entryIndex].Selected)" id="@Html.FieldIdFor(m => m.Entries[entryIndex].Selected)"/> 
+           }
+           @Html.HiddenFor(m => m.Entries[entryIndex].Field)
+           <label class="forcheckbox" for="@Html.FieldIdFor(m => m.Entries[entryIndex].Selected)">@Model.Entries[entryIndex].Field</label>
+           entryIndex = entryIndex + 1;
+         }
+        }
+    </div>
+</fieldset>
