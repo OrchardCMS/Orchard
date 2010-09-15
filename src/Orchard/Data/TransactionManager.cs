@@ -34,10 +34,11 @@ namespace Orchard.Data {
 
         void IDisposable.Dispose() {
             if (_scope != null) {
-                if (!_cancelled){
+                if (!_cancelled) {
                     Logger.Debug("Marking transaction as complete");
                     _scope.Complete();
                 }
+
                 Logger.Debug("Final work for transaction being performed");
                 _scope.Dispose();
                 Logger.Debug("Transaction disposed");

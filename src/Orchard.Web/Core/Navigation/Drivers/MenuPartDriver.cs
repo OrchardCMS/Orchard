@@ -32,16 +32,20 @@ namespace Orchard.Core.Navigation.Drivers {
         }
 
         protected override DriverResult Editor(MenuPart part, IUpdateModel updater) {
-            if (!_authorizationService.TryCheckAccess(Permissions.ManageMainMenu, CurrentUser, part))
+            if (!_authorizationService.TryCheckAccess(Permissions.ManageMainMenu, CurrentUser, part)) {
                 return null;
+            }
 
-            if (string.IsNullOrEmpty(part.MenuPosition))
+            if (string.IsNullOrEmpty(part.MenuPosition)) {
                 part.MenuPosition = Position.GetNext(_navigationManager.BuildMenu("main"));
+            }
 
             updater.TryUpdateModel(part, Prefix, null, null);
-            if (part.OnMainMenu && String.IsNullOrEmpty(part.MenuText)) {
+
+            if (part.OnMainMenu && string.IsNullOrEmpty(part.MenuText)) {
                 updater.AddModelError("MenuText", T("The MenuText field is required"));
             }
+
             return ContentPartTemplate(part, "Parts/Navigation.EditMenuPart").Location(part.GetLocation("Editor"));
         }
     }

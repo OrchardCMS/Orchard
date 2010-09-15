@@ -93,7 +93,7 @@ namespace Orchard.Data.Migration.Generator {
 
                 var command = new CreateTableCommand(tableName);
                 
-                foreach(var column in table.ColumnIterator) {
+                foreach (var column in table.ColumnIterator) {
                     var table1 = table;
                     var column1 = column;
                     var sqlType = column1.GetSqlTypeCode(mapping);
@@ -109,8 +109,8 @@ namespace Orchard.Data.Migration.Generator {
 
                             
                             if ( column1.IsLengthDefined() 
-                                && new DbType[] { DbType.StringFixedLength, DbType.String, DbType.AnsiString, DbType.AnsiStringFixedLength }.Contains(sqlType.DbType) 
-                                && column1.Length != 255 ) {
+                                && new DbType[] { DbType.StringFixedLength, DbType.String, DbType.AnsiString, DbType.AnsiStringFixedLength }.Contains(sqlType.DbType)
+                                && column1.Length != Column.DefaultLength) {
                                 action.WithLength(column1.Length);
                             }
 
