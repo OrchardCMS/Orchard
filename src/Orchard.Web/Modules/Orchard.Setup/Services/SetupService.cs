@@ -74,7 +74,7 @@ namespace Orchard.Setup.Services {
                     "HomePage",
                     "Navigation",
                     //"Scheduling",
-                    //"Indexing",
+                    "Indexing",
                     //"Localization",
                     "Routable",
                     "Settings",
