@@ -1,0 +1,82 @@
+﻿@model Orchard.Comments.ViewModels.CommentsIndexViewModel
+@using Orchard.Comments.Models
+
+<h1>@Html.TitleForPage(T("Manage Comments").ToString())</h1>
+@using(Html.BeginFormAntiForgeryPost()) { 
+	@Html.ValidationSummary() 
+    <fieldset class="bulk-actions">
+        <label for="publishActions">@T("Actions:")</label>
+        <select id="publishActions" name="@Html.NameOf(m => m.Options.BulkAction)">
+            @Html.SelectOption(Model.Options.BulkAction, CommentIndexBulkAction.None, T("Choose action...").ToString())
+            @Html.SelectOption(Model.Options.BulkAction, CommentIndexBulkAction.Approve, T("Approve").ToString()) 
+            @Html.SelectOption(Model.Options.BulkAction, CommentIndexBulkAction.Pend, T("Pend").ToString())
+            @Html.SelectOption(Model.Options.BulkAction, CommentIndexBulkAction.MarkAsSpam, T("Mark as Spam").ToString())
+            @Html.SelectOption(Model.Options.BulkAction, CommentIndexBulkAction.Delete, T("Remove").ToString())
+        </select>
+        <input class="button" type="submit" name="submit.BulkEdit" value="@T("Apply")" />
+    </fieldset>
+    <fieldset class="bulk-actions">
+        <label for="filterResults">@T("Filter:")</label>
+        <select id="filterResults" name="@Html.NameOf(m => m.Options.Filter)">
+            @Html.SelectOption(Model.Options.Filter, CommentIndexFilter.All, T("All Comments").ToString())
+            @Html.SelectOption(Model.Options.Filter, CommentIndexFilter.Approved, T("Approved Comments").ToString())
+            @Html.SelectOption(Model.Options.Filter, CommentIndexFilter.Pending, T("Pending Comments").ToString())
+            @Html.SelectOption(Model.Options.Filter, CommentIndexFilter.Spam, T("Spam").ToString())
+        </select>
+        <input class="button" type="submit" name="submit.Filter" value="@T("Apply")"/>
+    </fieldset>
+    <fieldset>
+	    <table class="items" summary="@T("This is a table of the comments in your application")">
+		    <colgroup>
+			    <col id="Col1" />
+			    <col id="Col2" />
+			    <col id="Col3" />
+			    <col id="Col4" />
+			    <col id="Col5" />
+			    <col id="Col6" />
+			    <col id="Col7" />
+		    </colgroup>
+		    <thead>
+			    <tr>
+				    <th scope="col">&nbsp;&darr;</th>
+				    <th scope="col">@T("Status")</th>
+				    <th scope="col">@T("Author")</th>
+				    <th scope="col">@T("Comment")</th>
+				    <th scope="col">@T("Date")</th>
+				    <th scope="col">@T("Commented On")</th>
+			        <th scope="col"></th>
+			    </tr>
+		    </thead>
+            @{var commentIndex = 0;}
+            @foreach (var commentEntry in Model.Comments) {
+            <tr>
+                <td>
+                    <input type="hidden" value="@Model.Comments[commentIndex].Comment.Id" name="@Html.NameOf(m => m.Comments[commentIndex].Comment.Id)"/>
+                    <input type="checkbox" value="true" name="@Html.NameOf(m => m.Comments[commentIndex].IsChecked)"/>
+                </td>
+                <td>
+                @if (commentEntry.Comment.Status == CommentStatus.Spam) { T("Spam") } 
+                       else if (commentEntry.Comment.Status == CommentStatus.Pending) { T("Pending") } 
+                       else { T("Approved") }</td>
+                <td>@commentEntry.Comment.UserName</td>
+                <td>
+                @if (commentEntry.Comment.CommentText != null) {
+                    commentEntry.Comment.CommentText.Length > 23 ? commentEntry.Comment.CommentText.Substring(0, 24) : (commentEntry.Comment.CommentText + T(" ..."))
+                } 
+                </td>
+                <td>@Html.DateTime(commentEntry.Comment.CommentDateUtc.GetValueOrDefault())</td>
+                <td>@Html.ActionLink(commentEntry.CommentedOn, "Details", new { id = commentEntry.Comment.CommentedOn })</td>
+                <td>
+                    <ul class="actions">
+                        <li class="construct">
+                            <a href="@Url.Action("Edit", new {commentEntry.Comment.Id})" title="@T("Edit")">@T("Edit")</a>
+                        </li>
+                        <li class="destruct"></li>
+                    </ul>
+                </td>
+            </tr>
+            commentIndex = commentIndex + 1;
+            } 
+        </table>
+    </fieldset>
+} 

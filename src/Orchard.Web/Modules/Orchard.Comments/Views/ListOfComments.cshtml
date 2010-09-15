@@ -1,0 +1,16 @@
+﻿@model IEnumerable<Orchard.Comments.Models.CommentPart>
+@using Orchard.Comments.Models
+
+<ul class="comments">
+@foreach (var comment in Model) { 
+    <li>
+        <div class="comment">
+            <span class="who">@Html.LinkOrDefault(comment.Record.UserName, comment.Record.SiteName, new { rel = "nofollow" })</span>
+            <span>said @Html.Link(Html.DateTimeRelative(comment.Record.CommentDateUtc.GetValueOrDefault(), T).ToString(), "#")</span>
+        </div>
+        <div class="text">
+            <p>@comment.Record.CommentText</p>
+        </div>
+    </li>
+} 
+</ul>

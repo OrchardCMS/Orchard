@@ -1,8 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using Orchard.Mvc.ViewModels;
 
 namespace Orchard.Comments.ViewModels {
-    public class CommentsCreateViewModel : BaseViewModel {
+    public class CommentsCreateViewModel {
         [Required]
         public string Name { get; set; }
         public string Email { get; set; }

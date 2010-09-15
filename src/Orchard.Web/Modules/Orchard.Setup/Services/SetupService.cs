@@ -87,7 +87,7 @@ namespace Orchard.Setup.Services {
                     "Orchard.Modules",
                     "Orchard.Themes",
                     //"Orchard.Blogs",
-                    //"Orchard.Comments",
+                    "Orchard.Comments",
                     "Orchard.Tags",
                     "Orchard.Media",
                     //"Futures.Widgets"
