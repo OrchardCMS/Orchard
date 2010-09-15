@@ -26,7 +26,7 @@ namespace Orchard.Core.Messaging.Drivers {
 
         protected override DriverResult Editor(MessageSettingsPart part) {
 
-            var model = new ContentSubscriptionPartViewModel {
+            var model = new MessageSettingsPartViewModel {
                 ChannelServices = _messageQueueManager.GetAvailableChannelServices(),
                 MessageSettings = part
             };
@@ -35,7 +35,7 @@ namespace Orchard.Core.Messaging.Drivers {
         }
 
         protected override DriverResult Editor(MessageSettingsPart part, IUpdateModel updater) {
-            var model = new ContentSubscriptionPartViewModel {
+            var model = new MessageSettingsPartViewModel {
                 MessageSettings = part
             };
 

@@ -1,4 +1,4 @@
-@model ContentSubscriptionPartViewModel
+@model MessageSettingsPartViewModel
 @using Orchard.Core.Messaging.Models
 @using Orchard.Core.Messaging.ViewModels
 <fieldset>
@@ -8,10 +8,11 @@
         @if ( Model.ChannelServices.Any() ) {
             <select id="@Html.FieldIdFor(m => m.MessageSettings.DefaultChannelService)" name="@Html.FieldNameFor(m => m.MessageSettings.DefaultChannelService)">
             @foreach ( var service in Model.ChannelServices ) {
-                <option @{ if(Model.MessageSettings.DefaultChannelService == service) { <text>selected="selected"</text> } } value="@service">@service</option>
+                <option @if(Model.MessageSettings.DefaultChannelService == service) { <text>selected="selected"</text> } value="@service">@service</option>
              }
-           }
-           else {
+             </select>
+        }
+        else {
            <span class="hint">@T("You must enable a messaging channel (e.g., Orchard.Email) before being able to send messages.")</span>
         }
 
