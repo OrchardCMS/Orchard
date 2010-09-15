@@ -9,7 +9,7 @@ namespace Orchard.Users.Handlers {
         public RegistrationSettingsPartHandler(IRepository<RegistrationSettingsPartRecord> repository) {
             Filters.Add(new ActivatingFilter<RegistrationSettingsPart>("Site"));
             Filters.Add(StorageFilter.For(repository));
-            Filters.Add(new TemplateFilterForRecord<RegistrationSettingsPartRecord>("RegistrationSettings"));
+            Filters.Add(new TemplateFilterForRecord<RegistrationSettingsPartRecord>("RegistrationSettings", "Parts/Users.RegistrationSettings"));
         }
     }
 }

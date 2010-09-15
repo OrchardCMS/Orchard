@@ -200,6 +200,7 @@
     <Compile Include="Scheduling\Services\ScheduledTaskExecutor.cs" />
     <Compile Include="Scheduling\Models\Task.cs" />
     <Compile Include="Settings\DataMigrations\SettingsDataMigration.cs" />
+    <Compile Include="Settings\Drivers\SiteSettingsPartDriver.cs" />
     <Compile Include="Settings\ViewModels\SiteCulturesViewModel.cs" />
     <Compile Include="Settings\Metadata\ContentDefinitionManager.cs" />
     <Compile Include="Settings\Metadata\Records\ContentFieldDefinitionRecord.cs" />
@@ -221,7 +222,7 @@
     <Compile Include="Settings\Handlers\SiteSettingsPartHandler.cs" />
     <Compile Include="Settings\Models\SiteSettingsPart.cs" />
     <Compile Include="Settings\Services\SiteService.cs" />
-    <Compile Include="Settings\ViewModels\SettingsIndexViewModel.cs" />
+    <Compile Include="Settings\ViewModels\SiteSettingsPartViewModel.cs" />
     <Compile Include="Shapes\CoreShapes.cs" />
     <Compile Include="XmlRpc\Controllers\HomeController.cs" />
     <Compile Include="XmlRpc\Controllers\LiveWriterController.cs" />
@@ -310,6 +311,7 @@
     <None Include="Routable\Views\DisplayTemplates\Parts\Routable.RoutePart.cshtml" />
     <Content Include="Settings\Module.txt" />
     <Content Include="Settings\Styles\admin.css" />
+    <None Include="Settings\Views\Admin\Copy of Index.cshtml" />
     <None Include="Settings\Views\Admin\Index.cshtml" />
     <None Include="Settings\Views\Admin\Culture.cshtml" />
     <Content Include="Settings\Views\DisplayTemplates\CurrentCulture.ascx" />
@@ -335,6 +337,7 @@
     <Content Include="Shapes\Views\UI\Switchable.ascx" />
     <Content Include="Web.config" />
     <Content Include="XmlRpc\Module.txt" />
+    <None Include="Settings\Views\EditorTemplates\Parts\Settings.SiteSettingsPart.cshtml" />
     <None Include="Shapes\Views\Display.cshtml" />
     <None Include="Shapes\Views\Menu.ascx_" />
     <None Include="XmlRpc\Views\Home\Index.cshtml" />
@@ -365,7 +368,6 @@
     <Content Include="Feeds\Module.txt" />
     <Content Include="Navigation\Module.txt" />
     <Content Include="Scheduling\Module.txt" />
-    <Content Include="Settings\Views\EditorTemplates\Items\Settings.Site.ascx" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Dashboard\Module.txt" />

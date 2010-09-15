@@ -4,7 +4,7 @@ using Orchard.ContentManagement;
 using Orchard.Core.Settings.Models;
 
 namespace Orchard.Core.Settings.ViewModels {
-    public class SettingsIndexViewModel  {
+    public class SiteSettingsPartViewModel  {
         public SiteSettingsPart Site { get; set; }
         public IEnumerable<string> SiteCultures { get; set; }
         

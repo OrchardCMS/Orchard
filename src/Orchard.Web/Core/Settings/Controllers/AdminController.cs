@@ -35,11 +35,8 @@ namespace Orchard.Core.Settings.Controllers {
             if (!Services.Authorizer.Authorize(Permissions.ManageSettings, T("Not authorized to manage settings")))
                 return new HttpUnauthorizedResult();
 
-            var site = _siteService.GetSiteSettings().As<SiteSettingsPart>();
-            var model = new SettingsIndexViewModel {
-                Site = site,
-                SiteCultures = _cultureManager.ListCultures()
-            };
+            var model = Services.ContentManager.BuildEditorModel(_siteService.GetSiteSettings());
+
             return View(model);
         }
 
@@ -49,7 +46,7 @@ namespace Orchard.Core.Settings.Controllers {
                 return new HttpUnauthorizedResult();
 
             var site = _siteService.GetSiteSettings().As<SiteSettingsPart>();
-            var model = new SettingsIndexViewModel { Site = Services.ContentManager.UpdateEditorModel(site, this) };
+            var model = new SiteSettingsPartViewModel { Site = Services.ContentManager.UpdateEditorModel(site, this) };
 
             if (!ModelState.IsValid) {
                 Services.TransactionManager.Cancel();

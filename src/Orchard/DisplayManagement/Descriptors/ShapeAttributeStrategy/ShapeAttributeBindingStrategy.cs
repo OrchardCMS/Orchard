@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
@@ -45,6 +46,7 @@ namespace Orchard.DisplayManagement.Descriptors.ShapeAttributeStrategy {
             }
         }
 
+        [DebuggerStepThrough]
         private Func<DisplayContext, IHtmlString> CreateDelegate(
             ShapeAttributeOccurrence attributeOccurrence,
             ShapeDescriptor descriptor) {
@@ -55,8 +57,7 @@ namespace Orchard.DisplayManagement.Descriptors.ShapeAttributeStrategy {
                 return PerformInvoke(context, attributeOccurrence.MethodInfo, serviceInstance);
             };
         }
-
-
+        
         private IHtmlString PerformInvoke(DisplayContext displayContext, MethodInfo methodInfo, object serviceInstance) {
             var output = new HtmlStringWriter();
             var arguments = methodInfo.GetParameters()

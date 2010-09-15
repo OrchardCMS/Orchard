@@ -1,12 +1,11 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
 using System.Web.SessionState;
 using Autofac;
-using Autofac.Integration.Web;
 using Orchard.Environment;
-using Orchard.Environment.AutofacUtil;
 using Orchard.Environment.Configuration;
 
 namespace Orchard.Mvc.Routes {
@@ -150,6 +149,7 @@ namespace Orchard.Mvc.Routes {
                 }
             }
 
+            [DebuggerStepThrough]
             public void EndProcessRequest(IAsyncResult result) {
                 try {
                     _httpAsyncHandler.EndProcessRequest(result);

@@ -5,8 +5,8 @@ using Orchard.ContentManagement.Handlers;
 
 namespace Orchard.Core.Messaging.Handlers {
     [UsedImplicitly]
-    public class SmtpSettingsPartHandler : ContentHandler {
-        public SmtpSettingsPartHandler(IRepository<MessageSettingsPartRecord> repository) {
+    public class MessageSettingsPartHandler : ContentHandler {
+        public MessageSettingsPartHandler(IRepository<MessageSettingsPartRecord> repository) {
             Filters.Add(new ActivatingFilter<MessageSettingsPart>("Site"));
             Filters.Add(StorageFilter.For(repository));
         }
