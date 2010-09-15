@@ -83,13 +83,13 @@
     <Content Include="Content\Admin\images\enabled.gif" />
     <Content Include="Module.txt" />
     <Content Include="Styles\admin.css" />
-    <Content Include="Views\Admin\Add.ascx" />
-    <Content Include="Views\Admin\Edit.ascx" />
-    <Content Include="Views\Admin\DisplayTemplates\ActionsForUninitialized.ascx" />
-    <Content Include="Views\Admin\DisplayTemplates\ActionsForDisabled.ascx" />
-    <Content Include="Views\Admin\DisplayTemplates\ActionsForInvalid.ascx" />
-    <Content Include="Views\Admin\DisplayTemplates\ActionsForRunning.ascx" />
-    <Content Include="Views\Admin\Index.ascx" />
+    <None Include="Views\Admin\Add.cshtml" />
+    <None Include="Views\Admin\Edit.cshtml" />
+    <None Include="Views\Admin\DisplayTemplates\ActionsForUninitialized.cshtml" />
+    <None Include="Views\Admin\DisplayTemplates\ActionsForDisabled.cshtml" />
+    <None Include="Views\Admin\DisplayTemplates\ActionsForInvalid.cshtml" />
+    <None Include="Views\Admin\DisplayTemplates\ActionsForRunning.cshtml" />
+    <None Include="Views\Admin\Index.cshtml" />
     <Content Include="Web.config" />
     <Content Include="Views\Web.config" />
   </ItemGroup>

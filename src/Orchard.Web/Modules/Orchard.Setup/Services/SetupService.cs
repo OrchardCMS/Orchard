@@ -82,14 +82,14 @@ namespace Orchard.Setup.Services {
                     "Messaging",
                     "Orchard.Users",
                     "Orchard.Roles",
-                    //"TinyMce",
+                    "TinyMce",
                     "PackagingServices",
                     "Orchard.Modules",
                     "Orchard.Themes",
                     //"Orchard.Blogs",
                     //"Orchard.Comments",
-                    //"Orchard.Tags",
-                    //"Orchard.Media",
+                    "Orchard.Tags",
+                    "Orchard.Media",
                     //"Futures.Widgets"
 
                     "Orchard.DevTools"

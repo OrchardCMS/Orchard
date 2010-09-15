@@ -95,13 +95,6 @@
     <Content Include="Content\Admin\images\folder.gif" />
     <Content Include="Module.txt" />
     <Content Include="Styles\admin.css" />
-    <Content Include="Views\Admin\Add.aspx" />
-    <Content Include="Views\Admin\Create.aspx" />
-    <Content Include="Views\Admin\Edit.aspx" />
-    <Content Include="Views\Admin\EditMedia.aspx" />
-    <Content Include="Views\Admin\EditProperties.aspx" />
-    <Content Include="Views\Admin\Index.aspx" />
-    <Content Include="Views\EditorTemplates\Parts\Media.SiteSettings.ascx" />
     <Content Include="Web.config" />
     <Content Include="Content\Site.css" />
     <Content Include="Views\Web.config" />
@@ -115,6 +108,15 @@
       <Project>{9916839C-39FC-4CEB-A5AF-89CA7E87119F}</Project>
       <Name>Orchard.Core</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Views\Admin\Add.cshtml" />
+    <None Include="Views\Admin\Create.cshtml" />
+    <None Include="Views\Admin\Edit.cshtml" />
+    <None Include="Views\Admin\EditMedia.cshtml" />
+    <None Include="Views\Admin\EditProperties.cshtml" />
+    <None Include="Views\Admin\Index.cshtml" />
+    <None Include="Views\EditorTemplates\Parts\Media.SiteSettings.cshtml" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />

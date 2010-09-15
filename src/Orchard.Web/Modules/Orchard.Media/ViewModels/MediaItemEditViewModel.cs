@@ -1,8 +1,7 @@
 ﻿using System;
-using Orchard.Mvc.ViewModels;
 
 namespace Orchard.Media.ViewModels {
-    public class MediaItemEditViewModel : BaseViewModel {
+    public class MediaItemEditViewModel {
         public string Name { get; set; }
         public string Caption { get; set; }
         public long Size { get; set; }
