@@ -1,5 +1,6 @@
 ﻿@model Orchard.Comments.ViewModels.CommentsIndexViewModel
 @using Orchard.Comments.Models
+@using Orchard.Comments.ViewModels
 
 <h1>@Html.TitleForPage(T("Manage Comments").ToString())</h1>
 @using(Html.BeginFormAntiForgeryPost()) { 
@@ -55,13 +56,14 @@
                     <input type="checkbox" value="true" name="@Html.NameOf(m => m.Comments[commentIndex].IsChecked)"/>
                 </td>
                 <td>
-                @if (commentEntry.Comment.Status == CommentStatus.Spam) { T("Spam") } 
-                       else if (commentEntry.Comment.Status == CommentStatus.Pending) { T("Pending") } 
-                       else { T("Approved") }</td>
+                @if (commentEntry.Comment.Status == CommentStatus.Spam) { T("Spam"); } 
+                       else if (commentEntry.Comment.Status == CommentStatus.Pending) { T("Pending"); } 
+                       else { T("Approved"); }</td>
                 <td>@commentEntry.Comment.UserName</td>
                 <td>
                 @if (commentEntry.Comment.CommentText != null) {
-                    commentEntry.Comment.CommentText.Length > 23 ? commentEntry.Comment.CommentText.Substring(0, 24) : (commentEntry.Comment.CommentText + T(" ..."))
+                    var text = commentEntry.Comment.CommentText.Length > 23 ? commentEntry.Comment.CommentText.Substring(0, 24) : (commentEntry.Comment.CommentText + T(" ..."));
+                    @text
                 } 
                 </td>
                 <td>@Html.DateTime(commentEntry.Comment.CommentDateUtc.GetValueOrDefault())</td>
