@@ -1,15 +1,20 @@
 using System.Web.Mvc;
 using Orchard.Mvc.Filters;
-using Orchard.Mvc.ViewModels;
-using Orchard.Search.ViewModels;
 
 namespace Orchard.Search.Filters {
     public class SearchFilter : FilterProvider, IResultFilter {
-        public void OnResultExecuting(ResultExecutingContext filterContext) {
-            var viewModel = filterContext.Controller.ViewData.Model as BaseViewModel;
+        private readonly IWorkContextAccessor _workContextAccessor;
 
-            if (viewModel != null)
-                viewModel.Zones.AddRenderPartial("search", "SearchForm", viewModel is SearchViewModel ? viewModel : new SearchViewModel());
+        public SearchFilter(IWorkContextAccessor workContextAccessor) {
+            _workContextAccessor = workContextAccessor;
+        }
+
+        public void OnResultExecuting(ResultExecutingContext filterContext) {
+            dynamic search = filterContext.Controller.ViewData.Model;
+            var workContext = _workContextAccessor.GetContext(filterContext);
+
+            if (search != null)
+                workContext.Page.Search.Add(search);
         }
 
         public void OnResultExecuted(ResultExecutedContext filterContext) {

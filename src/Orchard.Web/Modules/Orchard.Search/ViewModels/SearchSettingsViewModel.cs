@@ -1,8 +1,7 @@
-﻿using Orchard.Mvc.ViewModels;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace Orchard.Search.ViewModels {
-    public class SearchSettingsViewModel : BaseViewModel {
+    public class SearchSettingsViewModel {
         public IList<SearchSettingsEntry> Entries { get; set; }
     }
 
