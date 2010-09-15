@@ -5,7 +5,7 @@ using Orchard.ContentManagement.MetaData;
 namespace Orchard.ContentManagement.Drivers {
     public abstract class ContentPartDriver<TContent> : IContentPartDriver where TContent : ContentPart, new() {
         protected virtual string Prefix { get { return ""; } }
-        protected virtual string Zone { get { return "body"; } }
+        protected virtual string Zone { get { return "primary"; } }
 
         DriverResult IContentPartDriver.BuildDisplayShape(BuildDisplayModelContext context) {
             var part = context.ContentItem.As<TContent>();
