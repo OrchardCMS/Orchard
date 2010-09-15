@@ -15,7 +15,7 @@
                 <p>@module.Description</p>}
                 <ul class="pageStatus" style="color:#666; margin:.6em 0 0 0;">
                     <li>@T("Features: {0}", MvcHtmlString.Create(string.Join(", ", module.Features.Select(f => Html.Link(f.Name, string.Format("{0}#{1}", Url.Action("features", new { area = "Orchard.Modules" }), f.Name.AsFeatureId(n => T(n)))).ToString()).OrderBy(s => s).ToArray())))</li>
-                    <li>&nbsp;&#124;&nbsp;@T("Author: {0}", !string.IsNullOrEmpty(module.Author) ? module.Author : (new []{"Bradley", "Bertrand", "Renaud", "Suha", "Sebastien", "Jon", "Nathan", "Erik"})[(module.DisplayName.Length + (new Random()).Next()) % 7])</li>
+                    <li>&nbsp;&#124;&nbsp;@T("Author: {0}", !string.IsNullOrEmpty(module.Author) ? module.Author : (new []{"Bradley", "Bertrand", "Renaud", "Suha", "Sebastien", "Jon", "Nathan", "Erik", "Andre"})[(module.DisplayName.Length + (new Random()).Next()) % 7])</li>
                     <li>&nbsp;&#124;&nbsp;@T("Website: {0}", !string.IsNullOrEmpty(module.HomePage) ? module.HomePage : "http://orchardproject.net")</li>
                 </ul>
             </div>
