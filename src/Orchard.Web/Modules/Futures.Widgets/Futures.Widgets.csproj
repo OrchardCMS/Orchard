@@ -59,7 +59,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controllers\AdminController.cs" />
-    <Compile Include="Drivers\WidgetsPartDriver.cs" />
     <Compile Include="Handlers\WidgetsPartHandler.cs" />
     <Compile Include="DataMigrations\WidgetsDataMigration.cs" />
     <Compile Include="Models\WidgetsPartRecord.cs" />
