@@ -90,7 +90,7 @@
     <Content Include="Content\orchard.ico" />
     <Content Include="Styles\admin.css" />
     <None Include="Views\Admin\Index.cshtml" />
-    <Content Include="Views\Admin\Install.aspx" />
+    <None Include="Views\Admin\Install.cshtml" />
     <None Include="Views\ThemePreview.cshtml" />
     <Content Include="Web.config" />
   </ItemGroup>
