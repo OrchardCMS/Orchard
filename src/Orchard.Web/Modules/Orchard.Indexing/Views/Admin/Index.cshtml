@@ -1,5 +1,10 @@
 ﻿@model Orchard.Indexing.ViewModels.IndexViewModel
 
+@/* 
+migrate to new resource manager
+<% Html.RegisterStyle("admin.css"); %>
+ */
+
 <h1>@Html.TitleForPage(T("Search Index Management").ToString())</h1>
 @using (Html.BeginForm("update", "admin", FormMethod.Post, new {area = "Orchard.Indexing"})) { 
     <fieldset>
