@@ -18,6 +18,7 @@ using Orchard.Environment.Configuration;
 using Orchard.Environment.ShellBuilders;
 using Orchard.Environment.Descriptor;
 using Orchard.Environment.Descriptor.Models;
+using Orchard.Indexing;
 using Orchard.Localization;
 using Orchard.Localization.Services;
 using Orchard.Reports.Services;
@@ -210,7 +211,7 @@ namespace Orchard.Setup.Services {
                         //.WithPart("TagsPart")
                         //.WithPart("LocalizationPart")
                         .Creatable()
-                        //.Indexed()
+                        .Indexed()
                         );
                     contentDefinitionManager.AlterPartDefinition("BodyPart", cfg => cfg
                         .WithSetting("BodyPartSettings.FlavorDefault", BodyPartSettings.FlavorDefaultDefault));
