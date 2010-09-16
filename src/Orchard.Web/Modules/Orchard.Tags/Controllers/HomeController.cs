@@ -3,6 +3,7 @@ using System.Linq;
 using System.Web.Mvc;
 using JetBrains.Annotations;
 using Orchard.ContentManagement;
+using Orchard.DisplayManagement;
 using Orchard.Localization;
 using Orchard.Logging;
 using Orchard.Security;
@@ -15,10 +16,12 @@ namespace Orchard.Tags.Controllers {
     public class HomeController : Controller {
         private readonly ITagService _tagService;
         private readonly IContentManager _contentManager;
+        private readonly IShapeHelperFactory _shapeHelperFactory;
 
-        public HomeController(ITagService tagService, IContentManager contentManager) {
+        public HomeController(ITagService tagService, IContentManager contentManager, IShapeHelperFactory shapeHelperFactory) {
             _tagService = tagService;
             _contentManager = contentManager;
+            _shapeHelperFactory = shapeHelperFactory;
             T = NullLocalizer.Instance;
         }
 
@@ -40,13 +43,15 @@ namespace Orchard.Tags.Controllers {
                 return RedirectToAction("Index");
             }
 
-            var items =
-                _tagService.GetTaggedContentItems(tag.Id).Select(
-                    ic => _contentManager.BuildDisplayModel(ic, "SummaryForSearch"));
+            var shape = _shapeHelperFactory.CreateHelper();
+            var list = shape.List();
+            foreach (var taggedContentItem in _tagService.GetTaggedContentItems(tag.Id)) {
+                list.Add(_contentManager.BuildDisplayModel(taggedContentItem, "Summary"));
+            }
 
             var viewModel = new TagsSearchViewModel {
                 TagName = tag.TagName,
-                Items = (IList<IContent>) items.ToList<object>()
+                List = list
             };
 
             return View(viewModel);
