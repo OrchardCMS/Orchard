@@ -20,11 +20,7 @@ namespace Orchard.Mvc.Html {
         }
 
         public static string ThemePath(this HtmlHelper helper, ITheme theme, string path) {
-            Control parent = helper.ViewDataContainer as Control;
-            
-            Argument.ThrowIfNull(parent, "helper.ViewDataContainer");
-
-            return parent.ResolveUrl(helper.Resolve<IExtensionManager>().GetThemeLocation(theme) + path);
+            return helper.Resolve<IExtensionManager>().GetThemeLocation(theme) + path;
         }
     }
 }
