@@ -266,8 +266,8 @@
     <Content Include="PublishLater\Content\Admin\images\online.gif" />
     <Content Include="PublishLater\Content\Admin\images\published.gif" />
     <Content Include="PublishLater\Content\Admin\images\scheduled.gif" />
-    <Content Include="PublishLater\Views\DisplayTemplates\Parts\PublishLater.Metadata.ascx" />
-    <Content Include="PublishLater\Views\DisplayTemplates\Parts\PublishLater.Metadata.SummaryAdmin.ascx" />
+    <None Include="PublishLater\Views\DisplayTemplates\Parts\PublishLater.Metadata.cshtml" />
+    <None Include="PublishLater\Views\DisplayTemplates\Parts\PublishLater.Metadata.SummaryAdmin.cshtml" />
     <None Include="Common\Views\EditorTemplates\Fields\Common.TextField.cshtml" />
     <None Include="Common\Views\EditorTemplates\Parts\Common.Container.cshtml" />
     <None Include="Common\Views\EditorTemplates\PlainTextEditor.cshtml" />
@@ -300,7 +300,7 @@
     <Content Include="PublishLater\Styles\jquery-ui-1.7.2.custom.css" />
     <Content Include="PublishLater\Styles\ui.datepicker.css" />
     <Content Include="PublishLater\Styles\ui.timepickr.css" />
-    <Content Include="PublishLater\Views\EditorTemplates\Parts\PublishLater.ascx" />
+    <None Include="PublishLater\Views\EditorTemplates\Parts\PublishLater.cshtml" />
     <Content Include="Reports\Module.txt" />
     <None Include="Contents\Views\Items\Content-HomePage.cshtml" />
     <None Include="Reports\Views\Admin\Display.cshtml" />
