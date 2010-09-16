@@ -1,36 +1,29 @@
 ﻿using System;
 using System.Web;
-using System.Web.Routing;
+using Orchard.Mvc;
 
 namespace Orchard.Themes.Preview {
-    public class PreviewTheme : IPreviewTheme, IThemeSelector {
+    public class PreviewTheme : IPreviewTheme {
+        private readonly IHttpContextAccessor _httpContextAccessor;
         private static readonly string PreviewThemeKey = typeof(PreviewTheme).FullName;
-        private readonly HttpContextBase _httpContext;
 
-        public PreviewTheme(HttpContextBase httpContext) {
-            _httpContext = httpContext;
+        public PreviewTheme(IHttpContextAccessor httpContextAccessor) {
+            _httpContextAccessor = httpContextAccessor;
         }
 
         public string GetPreviewTheme() {
-            return Convert.ToString(_httpContext.Session[PreviewThemeKey]);
+            var httpContext = _httpContextAccessor.Current();
+            return Convert.ToString(httpContext.Session[PreviewThemeKey]);
         }
 
         public void SetPreviewTheme(string themeName) {
+            var httpContext = _httpContextAccessor.Current();
             if (string.IsNullOrEmpty(themeName)) {
-                _httpContext.Session.Remove(PreviewThemeKey);
+                httpContext.Session.Remove(PreviewThemeKey);
             }
             else {
-                _httpContext.Session[PreviewThemeKey] = themeName;
+                httpContext.Session[PreviewThemeKey] = themeName;
             }
         }
-
-        public ThemeSelectorResult GetTheme(RequestContext context) {
-            var previewThemeName = GetPreviewTheme();
-            if (string.IsNullOrEmpty(previewThemeName))
-                return null;
-
-            return new ThemeSelectorResult { Priority = 90, ThemeName = previewThemeName };
-        }
-
     }
 }

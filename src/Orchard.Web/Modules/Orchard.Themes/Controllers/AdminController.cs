@@ -18,7 +18,7 @@ namespace Orchard.Themes.Controllers {
         public AdminController(
             IOrchardServices services,
             IThemeService themeService,
-            PreviewTheme previewTheme,
+            IPreviewTheme previewTheme,
             IAuthorizer authorizer,
             INotifier notifier,
             IShapeHelperFactory shapeHelperFactory) {
@@ -37,11 +37,11 @@ namespace Orchard.Themes.Controllers {
                 var themes = _themeService.GetInstalledThemes();
                 var currentTheme = _themeService.GetSiteTheme();
                 var model = new ThemesIndexViewModel { CurrentTheme = currentTheme, Themes = themes };
-                return View(Shape.Model(model));
+                return View(model);
             }
             catch (Exception exception) {
                 Services.Notifier.Error(T("Listing themes failed: " + exception.Message));
-                return View(Shape.Model(new ThemesIndexViewModel()));
+                return View(new ThemesIndexViewModel());
             }
         }
 
@@ -100,6 +100,10 @@ namespace Orchard.Themes.Controllers {
                 Services.Notifier.Error(T("Activating theme failed: " + exception.Message));
                 return RedirectToAction("Index");
             }
+        }
+
+        public ActionResult Install() {
+            return View();
         }
 
         [HttpPost]

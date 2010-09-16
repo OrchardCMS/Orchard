@@ -23,19 +23,20 @@ namespace Orchard.Themes.Preview {
             if (string.IsNullOrEmpty(previewThemeName))
                 return;
 
-            var themes = _themeService.GetInstalledThemes();
-            var model = new PreviewViewModel {
-                                                 Themes = themes.Select(theme => new SelectListItem {
-                                                                                                        Text = theme.DisplayName,
-                                                                                                        Value = theme.ThemeName,
-                                                                                                        Selected = theme.ThemeName == previewThemeName
-                                                                                                    })
-                                             };
+            var installedThemes = _themeService.GetInstalledThemes();
+            var themeListItems = installedThemes
+                .Select(theme => new SelectListItem {
+                    Text = theme.DisplayName,
+                    Value = theme.ThemeName,
+                    Selected = theme.ThemeName == previewThemeName
+                })
+                .ToList();
+
 
             var shape = _shapeHelperFactory.CreateHelper();
-            _workContextAccessor.GetContext(filterContext).Page.Zones["Body"].Add(shape.ThemePreview(model), ":before");
+            _workContextAccessor.GetContext(filterContext).Page.Zones["Body"].Add(shape.ThemePreview(Themes: themeListItems), ":before");
         }
 
-        public void OnResultExecuted(ResultExecutedContext filterContext) {}
+        public void OnResultExecuted(ResultExecutedContext filterContext) { }
     }
 }
