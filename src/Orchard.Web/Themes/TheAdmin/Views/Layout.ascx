@@ -29,6 +29,9 @@
     <div id="navshortcut">
         <a href="#Menu-admin">
             <%: T("Skip to navigation") %></a></div>
+    <div id="messages">
+        <%: Display(Model.Messages) %>
+    </div>
     <div id="main" role="main">
         <%: Display(Model.Content) %></div>
     <div id="menu">

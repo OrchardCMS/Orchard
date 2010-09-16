@@ -336,6 +336,7 @@
     <Content Include="Shapes\Views\DisplayTemplates\Items\ContentItem.ascx" />
     <Content Include="Shapes\Views\EditorTemplates\Items\ContentItem.ascx" />
     <Content Include="Shapes\Views\HeadPreload.ascx" />
+    <None Include="Shapes\Views\Message.cshtml" />
     <None Include="Shapes\Views\NotFound.cshtml" />
     <Content Include="Shapes\Views\UI\Switchable.ascx" />
     <Content Include="Web.config" />
@@ -406,7 +407,6 @@
     <None Include="Shapes\Views\Layout.cshtml" />
     <None Include="Shapes\Views\Menu.cshtml" />
     <None Include="Shapes\Views\MenuItem.cshtml" />
-    <None Include="Shapes\Views\Messages.ascx_" />
     <Content Include="Shapes\Views\Web.config" />
     <None Include="Shapes\Views\Zone.cshtml" />
   </ItemGroup>
