@@ -336,7 +336,7 @@
     <Content Include="Shapes\Views\DisplayTemplates\Items\ContentItem.ascx" />
     <Content Include="Shapes\Views\EditorTemplates\Items\ContentItem.ascx" />
     <Content Include="Shapes\Views\HeadPreload.ascx" />
-    <Content Include="Shapes\Views\NotFound.ascx" />
+    <None Include="Shapes\Views\NotFound.cshtml" />
     <Content Include="Shapes\Views\UI\Switchable.ascx" />
     <Content Include="Web.config" />
     <Content Include="XmlRpc\Module.txt" />
