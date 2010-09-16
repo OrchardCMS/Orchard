@@ -90,9 +90,9 @@ namespace Orchard.Setup.Services {
                     "Orchard.Comments",
                     "Orchard.Tags",
                     "Orchard.Media",
-                    //"Futures.Widgets"
+                    "Futures.Widgets",
 
-                    "Orchard.DevTools"
+                    "Orchard.DevTools",
                 };
 
                 context.EnabledFeatures = hardcoded;

@@ -103,6 +103,7 @@
     <Content Include="Themes\Contoso\Views\DisplayTemplates\Items\Contents.Item.ascx" />
     <Content Include="Themes\Contoso\Views\DisplayTemplates\Parts\Blogs.BlogPost.Metadata.ascx" />
     <Content Include="Themes\Contoso\Views\Orchard.Search\Search\Index.ascx" />
+    <Content Include="Themes\Contoso\Zones\Footer.html" />
     <Content Include="Themes\Corporate\Views\DisplayTemplates\Parts\Blogs.BlogPost.Metadata.ascx" />
     <Content Include="Themes\Green\Views\Orchard.Search\Search\Index.ascx" />
     <Content Include="Themes\SafeMode\Views\Zone.ascx" />

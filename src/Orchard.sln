@@ -76,6 +76,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orchard.Indexing", "Orchard
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orchard.Search", "Orchard.Web\Modules\Orchard.Search\Orchard.Search.csproj", "{4BE4EB01-AC56-4048-924E-2CA77F509ABA}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Futures.Widgets", "Orchard.Web\Modules\Futures.Widgets\Futures.Widgets.csproj", "{E65E5633-C0FF-453C-A906-481C14F969D6}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		CodeCoverage|Any CPU = CodeCoverage|Any CPU
@@ -395,6 +397,16 @@ Global
 		{4BE4EB01-AC56-4048-924E-2CA77F509ABA}.FxCop|Any CPU.Build.0 = Release|Any CPU
 		{4BE4EB01-AC56-4048-924E-2CA77F509ABA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4BE4EB01-AC56-4048-924E-2CA77F509ABA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E65E5633-C0FF-453C-A906-481C14F969D6}.CodeCoverage|Any CPU.ActiveCfg = Release|Any CPU
+		{E65E5633-C0FF-453C-A906-481C14F969D6}.CodeCoverage|Any CPU.Build.0 = Release|Any CPU
+		{E65E5633-C0FF-453C-A906-481C14F969D6}.Coverage|Any CPU.ActiveCfg = Release|Any CPU
+		{E65E5633-C0FF-453C-A906-481C14F969D6}.Coverage|Any CPU.Build.0 = Release|Any CPU
+		{E65E5633-C0FF-453C-A906-481C14F969D6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E65E5633-C0FF-453C-A906-481C14F969D6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E65E5633-C0FF-453C-A906-481C14F969D6}.FxCop|Any CPU.ActiveCfg = Release|Any CPU
+		{E65E5633-C0FF-453C-A906-481C14F969D6}.FxCop|Any CPU.Build.0 = Release|Any CPU
+		{E65E5633-C0FF-453C-A906-481C14F969D6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E65E5633-C0FF-453C-A906-481C14F969D6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -428,5 +440,6 @@ Global
 		{33B1BC8D-E292-4972-A363-22056B207156} = {383DBA32-4A3E-48D1-AAC3-75377A694452}
 		{8A4E42CE-79F8-4BE2-8B1E-A6B83432123B} = {383DBA32-4A3E-48D1-AAC3-75377A694452}
 		{0DFA2E10-96C8-4E05-BC10-B710B97ECCDE} = {383DBA32-4A3E-48D1-AAC3-75377A694452}
+		{E65E5633-C0FF-453C-A906-481C14F969D6} = {E75A4CE4-CAA6-41E4-B951-33ACC60DC77C}
 	EndGlobalSection
 EndGlobal

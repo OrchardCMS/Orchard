@@ -1,40 +1,44 @@
 ﻿using System.Web.Mvc;
 using Futures.Widgets.Models;
+using Orchard;
 using Orchard.ContentManagement;
 using Orchard.Mvc.Filters;
-using Orchard.Mvc.ViewModels;
 using Orchard.Settings;
 using Orchard.UI.Admin;
 
 namespace Futures.Widgets {
     public class WidgetFilter : FilterProvider, IActionFilter {
         private readonly IContentManager _contentManager;
+        private readonly IWorkContextAccessor _workContextAccessor;
 
-        public WidgetFilter(IContentManager contentManager) {
+        public WidgetFilter(IContentManager contentManager, IWorkContextAccessor workContextAccessor) {
             _contentManager = contentManager;
+            _workContextAccessor = workContextAccessor;
         }
-
-        public virtual ISite CurrentSite { get; set; }
 
         public void OnActionExecuting(ActionExecutingContext filterContext) {
         }
 
         public void OnActionExecuted(ActionExecutedContext filterContext) {
-            var model = BaseViewModel.From(filterContext.Result);
-            if (model == null || AdminFilter.IsApplied(filterContext.RequestContext)) {
+            var workContext = _workContextAccessor.GetContext(filterContext);
+
+            if (workContext == null ||
+                workContext.Page == null ||
+                workContext.CurrentSite == null ||
+                AdminFilter.IsApplied(filterContext.RequestContext)) {
                 return;
             }
 
-            var siteWidgets = CurrentSite.As<WidgetsPart>();
+            var siteWidgets = workContext.CurrentSite.As<WidgetsPart>();
             if (siteWidgets == null) {
                 return;
             }
 
-            var zones = model.Zones;
+            var zones = workContext.Page.Zones;
             foreach (var widget in siteWidgets.Widgets) {
-                zones.AddDisplayItem(
-                    widget.Record.Zone + ":" + widget.Record.Position,
-                    _contentManager.BuildDisplayModel(widget, "Widget"));
+                var widgetShape = _contentManager.BuildDisplayModel(widget);
+
+                zones[widget.Record.Zone].Add(widgetShape, widget.Record.Position);
             }
         }
     }
