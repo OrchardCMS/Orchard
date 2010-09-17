@@ -1,11 +1,7 @@
 ﻿@model Orchard.Media.ViewModels.MediaFolderEditPropertiesViewModel
 @using Orchard.Media.Helpers
 @using Orchard.Media.Models
-
-@/* 
-migrate to new resource manager
-<% Html.RegisterStyle("admin.css"); %>
- */
+@Style.Require("MediaAdmin");
 
 <h1>@Html.TitleForPage(T("Folder Properties").ToString())</h1>
 <div class="breadCrumbs">

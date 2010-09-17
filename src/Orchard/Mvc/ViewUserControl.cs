@@ -4,12 +4,17 @@ using System.Web.Mvc;
 using Autofac;
 using Orchard.DisplayManagement;
 using Orchard.Localization;
+using Orchard.Mvc.Html;
 using Orchard.Mvc.Spooling;
 using Orchard.Security;
 using Orchard.Security.Permissions;
+using Orchard.UI.Resources;
 
 namespace Orchard.Mvc {
     public class ViewUserControl<TModel> : System.Web.Mvc.ViewUserControl<TModel>,IOrchardViewPage {
+        private ScriptRegister _scriptRegister;
+        private ResourceRegister _stylesheetRegister;
+        
         private object _display;
         private object _new;
         private Localizer _localizer = NullLocalizer.Instance;
@@ -25,6 +30,40 @@ namespace Orchard.Mvc {
 
         public IAuthorizer Authorizer { get; set; }
 
+        public ScriptRegister Script {
+            get {
+                return _scriptRegister ??
+                    (_scriptRegister = new ScriptRegister(Html.ViewDataContainer, Html.Resolve<IResourceManager>()));
+            }
+        }
+
+        public ResourceRegister Style {
+            get {
+                return _stylesheetRegister ??
+                    (_stylesheetRegister = new ResourceRegister(Html.ViewDataContainer, Html.Resolve<IResourceManager>(), "stylesheet"));
+            }
+        }
+
+        public virtual void RegisterLink(LinkEntry link) {
+            Html.Resolve<IResourceManager>().RegisterLink(link);
+        }
+
+        public void SetMeta(string name, string content) {
+            SetMeta(new MetaEntry { Name = name, Content = content });
+        }
+
+        public virtual void SetMeta(MetaEntry meta) {
+            Html.Resolve<IResourceManager>().SetMeta(meta);
+        }
+
+        public void AppendMeta(string name, string content, string contentSeparator) {
+            AppendMeta(new MetaEntry { Name = name, Content = content }, contentSeparator);
+        }
+
+        public virtual void AppendMeta(MetaEntry meta, string contentSeparator) {
+            Html.Resolve<IResourceManager>().AppendMeta(meta, contentSeparator);
+        }
+        
         public override void RenderView(ViewContext viewContext) {
             _workContext = viewContext.GetWorkContext();
             _workContext.Resolve<IComponentContext>().InjectUnsetProperties(this);

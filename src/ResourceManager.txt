@@ -1,0 +1,39 @@
+ResourceManager Notes from Bertrand
+====================================
+
+No default parameters
+Refactor to take over resource manager name
+Better interface pattern for defining resources
+Script.Load API that is a view engine specific helper and that directs rendering within the using (using Idisposable pattern) to a buffer that can be rendered later.
+Script.Require returns RequireSettings and has fluent api to add stuff later.
+When using the shortcut registration+require Script.Require("../script/foo.js") we resolve the url to an app-relative path and use that as the id.
+If you want ot define a debug version in that case, just do a proper registration.
+To decide if the app is in debug mode, we look at a setting on the require, then at site setting mode and as a last resort on the compilation mode of the app.
+Merge asap, then debug, then refactor.
+
+Raw notes from Dave during meeting:
+====================================
+	Script.RequireHead("TinyMce");
+	Script.RequireFoot("TinyMce", new RequireSettings { DebugMode = false });
+
+	Script.Require("Foo", "1.4.2", d => {
+		d.SetUrl("dfdf")
+	});
+
+	Script.Require("~/modules/mymodule/scripts/foo.min?.js")
+	Script.Require("/orchardlocal/dfdfd/foo.js")
+
+// no defualt params
+// better interface/pattern for defining resources
+// Script.Load (view-engine specific helper required)
+// Script.Require returns RequireSettings and has fluent api?
+// Add Script.RequireHead <-- or no due to fluent api
+// Rename Localization resource manager
+// Require w/ app relative url means inline definitin of url only, resolved url is resource name
+// Site setting for debug mode true false or from web.config setting
+// Fix TODO items, including moving all copies of jQuery and jQuery related scripts into the new Orchard.jQuery module.
+
+
+	//using(Script.InlineTailScriptAfterEverythingElseOnThePageWithoutLambda()) {
+	//}
+

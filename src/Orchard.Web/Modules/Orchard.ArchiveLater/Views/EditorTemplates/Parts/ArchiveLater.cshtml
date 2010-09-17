@@ -1,19 +1,12 @@
 ﻿@model Orchard.ArchiveLater.ViewModels.ArchiveLaterViewModel
 @using System.Web.Mvc.Html
-
-@/* 
-migrate to new resource manager
-<% Html.RegisterStyle("datetime.css"); %>
-<% Html.RegisterStyle("jquery-ui-1.7.2.custom.css"); %>
-<% Html.RegisterStyle("ui.datepicker.css"); %>
-<% Html.RegisterStyle("ui.timepickr.css"); %>
-<% Html.RegisterFootScript("jquery.ui.core.js"); %>
-<% Html.RegisterFootScript("jquery.ui.widget.js"); %>
-<% Html.RegisterFootScript("jquery.ui.datepicker.js"); %>
-<% Html.RegisterFootScript("jquery.utils.js"); %>
-<% Html.RegisterFootScript("ui.timepickr.js"); %>
- */
-
+@{
+    Style.Require("jQueryUtils_TimePicker");
+    Style.Require("jQueryUI_DatePicker");
+    Style.Require("ArchiveLater_DatePicker");
+    Script.RequireFoot("jQueryUI_DatePicker");
+    Script.RequireFoot("jQueryUtils_TimePicker");
+}
 
 <fieldset>
     <legend>@T("Archive Settings")</legend>

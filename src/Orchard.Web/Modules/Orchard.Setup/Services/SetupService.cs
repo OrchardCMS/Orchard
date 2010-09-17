@@ -94,6 +94,7 @@ namespace Orchard.Setup.Services {
                     "Futures.Widgets",
 
                     "Orchard.DevTools",
+                    "Orchard.jQuery"
                 };
 
                 context.EnabledFeatures = hardcoded;

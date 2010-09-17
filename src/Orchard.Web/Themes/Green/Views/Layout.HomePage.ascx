@@ -1,11 +1,12 @@
 ﻿<%@ Control Language="C#" Inherits="System.Web.Mvc.ViewUserControl<BaseViewModel>" %>
 <%@ Import Namespace="Orchard.Mvc.ViewModels"%>
+<%@ Import Namespace="Orchard.UI.Resources" %>
 
 <%
-    Html.RegisterStyle("yui.css", "1");
-    Html.RegisterStyle("site.css", "1");
-    Html.RegisterStyle("blog.css", "1");
-    %>
+    Html.Resolve<IResourceManager>().Require(new RequireSettings { Type = "stylesheet", Name = "Green_YUI" });
+    Html.Resolve<IResourceManager>().Require(new RequireSettings { Type = "stylesheet", Name = "Green" });
+    Html.Resolve<IResourceManager>().Require(new RequireSettings { Type = "stylesheet", Name = "Green_Blog" });
+%>
     
 <script type="text/javascript"> 
 $(document).ready(function(){

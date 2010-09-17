@@ -1,5 +1,5 @@
 ﻿<%@ Control Language="C#" Inherits="Orchard.Mvc.ViewUserControl<Orchard.Search.ViewModels.SearchViewModel>" %>
-<% Html.RegisterStyle("search.css"); %>
+<% Style.Require("Contoso_Search"); %>
 <h1 class="page-title"><%:Html.TitleForPage(T("Search").Text)%></h1><%
 Html.Zone("search");
 if (!string.IsNullOrWhiteSpace(Model.Query)) {

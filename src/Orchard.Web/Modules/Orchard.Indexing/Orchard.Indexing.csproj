@@ -59,6 +59,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AdminMenu.cs" />
+    <Compile Include="IndexingResourceManifest.cs" />
     <Compile Include="Commands\IndexingCommands.cs" />
     <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="DataMigrations\IndexingDataMigration.cs" />

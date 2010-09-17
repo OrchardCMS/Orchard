@@ -93,6 +93,7 @@
     <Reference Include="Microsoft.WebPages, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\aspnetmvc\Microsoft.WebPages.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="NHibernate, Version=2.1.0.4000, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -429,6 +430,14 @@
     <Compile Include="Mvc\ViewEngines\Razor\WebViewPage.cs" />
     <Compile Include="Services\IHtmlFilter.cs" />
     <Compile Include="UI\IPage.cs" />
+    <Compile Include="UI\Resources\ResourceRegister.cs" />
+    <Compile Include="UI\Resources\IResourceManifest.cs" />
+    <Compile Include="UI\Resources\MetaEntry.cs" />
+    <Compile Include="UI\Resources\RequireSettings.cs" />
+    <Compile Include="UI\Resources\ResourceDefinition.cs" />
+    <Compile Include="UI\Resources\ResourceLocation.cs" />
+    <Compile Include="UI\Resources\ResourceManifest.cs" />
+    <Compile Include="UI\Resources\ResourceRequiredContext.cs" />
     <Compile Include="Utility\Hash.cs" />
     <Compile Include="Data\ISessionConfigurationCache.cs" />
     <Compile Include="Data\Migration\Generator\ISchemaCommandGenerator.cs" />

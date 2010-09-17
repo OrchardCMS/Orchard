@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Web;
+using System.Web.Mvc;
 using System.Web.Routing;
 using Autofac;
 using Orchard.Commands;
@@ -35,7 +36,9 @@ using Orchard.Themes;
 using Orchard.UI.Notify;
 using Orchard.UI.PageClass;
 using Orchard.UI.PageTitle;
+using Orchard.UI.Resources;
 using Orchard.UI.Zones;
+using IFilterProvider = Orchard.Mvc.Filters.IFilterProvider;
 
 namespace Orchard.Setup {
     public class SetupMode : Module {
@@ -60,6 +63,8 @@ namespace Orchard.Setup {
             builder.RegisterType<DefaultCommandManager>().As<ICommandManager>().InstancePerLifetimeScope();
             builder.RegisterType<HelpCommand>().As<ICommandHandler>().InstancePerLifetimeScope();
             builder.RegisterType<DefaultWorkContextAccessor>().As<IWorkContextAccessor>().InstancePerMatchingLifetimeScope("shell");
+            builder.RegisterType<ResourceManager>().As<IResourceManager>().InstancePerLifetimeScope();
+            builder.RegisterType<ResourceFilter>().As<FilterProvider>().InstancePerLifetimeScope();
 
             // setup mode specific implementations of needed service interfaces
             builder.RegisterType<SafeModeThemeService>().As<IThemeService>().InstancePerLifetimeScope();

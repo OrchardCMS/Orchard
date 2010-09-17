@@ -1,10 +1,5 @@
 ﻿@model Orchard.Search.ViewModels.SearchViewModel
-
-@/* 
-migrate to new resource manager
-<% Html.RegisterStyle("search.css"); %>
- */
-
+@Style.Require("Search");
 
 <h1>@Html.TitleForPage(T("Search").Text)</h1>
 @Html.Zone("search")

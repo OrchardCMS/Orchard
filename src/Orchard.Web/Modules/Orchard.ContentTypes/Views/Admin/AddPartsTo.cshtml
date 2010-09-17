@@ -1,5 +1,5 @@
 @model Orchard.ContentTypes.ViewModels.AddPartsViewModel
-@Html.RegisterStyle("admin.css");
+@Style.Require("ContentTypesAdmin");
 <h1>@Html.TitleForPage(T("Add Parts To \"{0}\"", Model.Type.DisplayName).ToString())</h1>@using (Html.BeginFormAntiForgeryPost()) {
     @Html.ValidationSummary()
     <fieldset>

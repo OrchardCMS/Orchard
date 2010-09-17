@@ -1,8 +1,11 @@
 ﻿<%@ Control Language="C#" AutoEventWireup="true" Inherits="Orchard.Mvc.ViewUserControl<BlogArchivesViewModel>" %>
 <%@ Import Namespace="Orchard.Blogs.ViewModels"%>
 <%@ Import Namespace="Orchard.Blogs.Extensions"%>
-<% Html.RegisterStyle("archives.css"); %>
-<% Html.RegisterFootScript("archives.js"); %>
+<%@ Import Namespace="Orchard.UI.Resources" %>
+<%
+Style.Require("Green_Archives");
+Script.Require(new RequireSettings {ResourceName = "archives.js", Location = ResourceLocation.Foot});
+%>
 <div class="archives">
     <h4 class="collapsible"><%: T("Archives") %></h4><%
     if (Model.Archives.Count() > 0) {

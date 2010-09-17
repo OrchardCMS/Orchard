@@ -1,8 +1,10 @@
 ﻿<%@ Control Language="C#" AutoEventWireup="true" Inherits="Orchard.Mvc.ViewUserControl<BlogArchivesViewModel>" %>
 <%@ Import Namespace="Orchard.Blogs.ViewModels"%>
 <%@ Import Namespace="Orchard.Blogs.Extensions"%>
-<% Html.RegisterStyle("archives.css"); %>
-<% Html.RegisterFootScript("archives.js"); %>
+<%
+    Style.Require("BlogsArchives");
+    Script.RequireFoot("BlogsArchives");
+%>
 <div class="archives">
     <h3><%: T("Archives") %></h3><%
     if (Model.Archives.Count() > 0) {

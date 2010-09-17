@@ -1,6 +1,12 @@
+using System;
+using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Web.Mvc;
+using Orchard.DisplayManagement;
 using Orchard.Mvc.Filters;
+using Orchard.Mvc.Html;
 using Orchard.Mvc.ViewEngines;
 
 namespace Orchard.UI.Resources {
@@ -8,30 +14,26 @@ namespace Orchard.UI.Resources {
         private readonly IResourceManager _resourceManager;
         private readonly IWorkContextAccessor _workContextAccessor;
 
-        public ResourceFilter(IResourceManager resourceManager, IWorkContextAccessor workContextAccessor) {
+        public ResourceFilter(IResourceManager resourceManager, IWorkContextAccessor workContextAccessor, IShapeHelperFactory shapeHelperFactory) {
             _resourceManager = resourceManager;
             _workContextAccessor = workContextAccessor;
+            Shape = shapeHelperFactory.CreateHelper();
         }
+
+        private dynamic Shape { get; set; }
 
         public void OnResultExecuting(ResultExecutingContext filterContext) {
-#if REFACTORING
-            var headZone = _workContextAccessor.GetContext().CurrentPage.Zones["Head"];
-            headZone.Add(html => html.ViewContext.Writer.Write(_resourceManager.GetMetas()), ":metas");
-            headZone.Add(html => html.ViewContext.Writer.Write(_resourceManager.GetStyles()), ":styles");
-            headZone.Add(html => html.ViewContext.Writer.Write(_resourceManager.GetLinks(html)), ":links");
-            headZone.Add(html => html.ViewContext.Writer.Write(_resourceManager.GetHeadScripts()), ":scripts");
-
-            _workContextAccessor.GetContext().CurrentPage.Zones["Body"].Add(
-                html => {
-                    html.ViewContext.Writer.Write(_resourceManager.GetFootScripts());
-                    TextWriter captured;
-                    if (LayoutViewContext.From(html.ViewContext).Contents.TryGetValue("end-of-page-scripts", out captured))
-                        html.ViewContext.Writer.Write(captured);
-                },
-                ":after");
-#endif
+            var ctx = _workContextAccessor.GetContext();
+            var head = ctx.Page.Head;
+            var tail = ctx.Page.Tail;
+            head.Add(Shape.Metas().ResourceManager(_resourceManager));
+            head.Add(Shape.HeadLinks().ResourceManager(_resourceManager));
+            head.Add(Shape.StylesheetLinks().ResourceManager(_resourceManager));
+            head.Add(Shape.HeadScripts().ResourceManager(_resourceManager));
+            tail.Add(Shape.FootScripts().ResourceManager(_resourceManager));
         }
 
-        public void OnResultExecuted(ResultExecutedContext filterContext) {}
+        public void OnResultExecuted(ResultExecutedContext filterContext) {
+        }
     }
 }

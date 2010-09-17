@@ -126,6 +126,7 @@
     <Content Include="Scripts\utils\validate.js" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="TinyMceResourceManifest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

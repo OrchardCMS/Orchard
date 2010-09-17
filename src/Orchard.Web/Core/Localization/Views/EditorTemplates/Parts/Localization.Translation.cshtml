@@ -1,7 +1,7 @@
 ﻿@model Orchard.Core.Localization.ViewModels.EditLocalizationViewModel
-@Html.RegisterStyle("admin.css");
+@Style.Require("LocalizationAdmin");
 @if (Model.ContentItem.ContentItem.Id > 0 && Model.SelectedCulture != null && Model.ContentLocalizations.Localizations.Count() > 0) {
-Html.RegisterStyle("base.css");
+Style.Require("Localization");
 <fieldset class="localization culture-selection">
     <fieldset class="culture-selected">
         <label for="SelectedCulture">@T("Content Localization")</label>

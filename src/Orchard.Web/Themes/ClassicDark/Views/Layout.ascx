@@ -1,8 +1,11 @@
 ﻿<%@ Control Language="C#" Inherits="System.Web.Mvc.ViewUserControl<BaseViewModel>" %>
 <%@ Import Namespace="Orchard.Mvc.ViewModels" %>
+<%@ Import Namespace="Orchard.UI.Resources" %>
 <%
-    Html.RegisterStyle("site.css", "1");
-    Html.RegisterStyle("blog.css", "1");
+    // todo: this is verbose because this view does not inherit from an Orchard base view and so does not
+    // benefit from Style.Require().
+    Html.Resolve<IResourceManager>().Require(new RequireSettings { Type = "stylesheet", Name = "ClassicDark" });
+    Html.Resolve<IResourceManager>().Require(new RequireSettings { Type = "stylesheet", Name = "ClassicDark_Blog" });
 %>
 
 <%-- todo:(nheskew) this will need to be a generated menu --%>

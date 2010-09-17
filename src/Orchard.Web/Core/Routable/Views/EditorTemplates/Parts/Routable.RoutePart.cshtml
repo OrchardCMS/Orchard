@@ -12,7 +12,7 @@
     <label for="@ViewData.TemplateInfo.GetFullHtmlFieldId("PromoteToHomePage")" class="forcheckbox">@T("Set as home page")</label>
 </fieldset>
 
-	@Html.RegisterFootScript("jquery.slugify.js");
+	@Script.RequireFoot("Slugify");
     @using(Capture(script => WorkContext.Page.Tail.Add(script))){
 		<script type="text/javascript">
 			$(function(){

@@ -1,0 +1,11 @@
+﻿name: Orchard.jQuery
+antiforgery: enabled
+author: The Orchard Team
+website: http://orchardproject.net
+version: 0.5.0
+orchardversion: 0.5.0
+description: The jQuery module contains the jQuery and related script libraries.
+features:
+    Orchard.jQuery:
+        Description: A common location for jQuery and related script libraries.
+        Category: Resources
