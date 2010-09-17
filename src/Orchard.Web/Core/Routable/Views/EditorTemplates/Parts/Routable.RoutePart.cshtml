@@ -1,5 +1,6 @@
 ﻿@model Orchard.Core.Routable.ViewModels.RoutableEditorViewModel
 @using Orchard.Utility.Extensions
+@Script.Require("Slugify");
 
 <fieldset>
     @Html.LabelFor(m => m.Title)
@@ -11,7 +12,6 @@
     @Html.EditorFor(m => m.PromoteToHomePage)
     <label for="@ViewData.TemplateInfo.GetFullHtmlFieldId("PromoteToHomePage")" class="forcheckbox">@T("Set as home page")</label>
 </fieldset>
-@//todo: IResourceManager -> Html.RegisterFootScript("jquery.slugify.js");
 @using(Capture(script => WorkContext.Page.Tail.Add(script))){
 	<script type="text/javascript">
 		$(function(){
