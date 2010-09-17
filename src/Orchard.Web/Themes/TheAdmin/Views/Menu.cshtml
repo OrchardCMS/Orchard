@@ -1,0 +1,14 @@
+﻿﻿<ul id="navigation">
+	@foreach(var firstLevelMenuItem in Model) {
+        <li>
+            <h3><a href="#">@firstLevelMenuItem.Text</a></h3>
+            <ul class="menuItems">
+        	@foreach(var secondLevelMenuItem in firstLevelMenuItem) {
+                <li>
+                    <a href="@secondLevelMenuItem.Href">@secondLevelMenuItem.Text</a>
+                </li>
+            }
+            </ul>
+        </li>
+    }
+</ul>

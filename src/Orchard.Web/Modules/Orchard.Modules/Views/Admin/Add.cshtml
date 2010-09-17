@@ -1,5 +1,8 @@
 ﻿@model ModuleAddViewModel
 @using Orchard.Modules.ViewModels
+@{
+    Style.Require("ModulesAdmin");
+}
 
 @{
     <h1>@Html.TitleForPage(T("Install a Module").ToString())</h1>
