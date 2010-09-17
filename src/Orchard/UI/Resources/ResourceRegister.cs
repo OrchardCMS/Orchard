@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Web.Mvc;
 using System.Web.UI;
+using JetBrains.Annotations;
 
 namespace Orchard.UI.Resources {
     public class ResourceRegister {
@@ -17,70 +18,23 @@ namespace Orchard.UI.Resources {
             _resourceType = resourceType;
         }
 
-        public void Require(string resourceName) {
-            Require(resourceName, null, null);
+        public RequireSettings Require(string resourceName) {
+            return Require(resourceName, (string)null);
         }
 
-        public void Require(string resourceName, string minimumVersion) {
-            Require(resourceName, minimumVersion, null);
-        }
-
-        public void Require(string resourceName, Action<ResourceDefinition> inlineDefinition) {
-            Require(resourceName, null, inlineDefinition);
-        }
-
-        public void Require(string resourceName, string minimumVersion, Action<ResourceDefinition> inlineDefinition) {
-            Require(resourceName, new RequireSettings {
-                MinimumVersion = minimumVersion,
-                InlineDefinition = inlineDefinition,
-            });
-        }
-
-        public void Require(RequireSettings settings) {
-            Require(settings.Name, settings);
-        }
-
-        protected void Require(string resourceName, RequireSettings settings) {
-            if (settings == null) {
-                throw new ArgumentNullException("settings");
-            }
-            settings.Type = String.IsNullOrEmpty(settings.Type) ? _resourceType : settings.Type;
-            settings.Name = String.IsNullOrEmpty(settings.Name) ? resourceName : settings.Name;
+        public virtual RequireSettings Require(string resourceName, string minimumVersion) {
+            var settings = _resourceManager.Require(_resourceType, resourceName)
+                .WithMinimumVersion(minimumVersion);
             if (_templateContainer != null) {
-                settings.BasePath = ResourceDefinition.GetBasePathFromViewPath(_resourceType, _templateContainer.AppRelativeVirtualPath);
+                settings.WithBasePath(ResourceDefinition.GetBasePathFromViewPath(_resourceType, _templateContainer.AppRelativeVirtualPath));
             }
-            _resourceManager.Require(settings);
+            return settings;
         }
-
     }
 
     public class ScriptRegister : ResourceRegister {
         public ScriptRegister(IViewDataContainer container, IResourceManager resourceManager) : base(container, resourceManager, "script") {
         }
-
-        public void RequireFoot(string scriptName) {
-            RequireFoot(scriptName, null, null);
-        }
-
-        public void RequireFoot(string scriptName, string minimumVersion) {
-            RequireFoot(scriptName, minimumVersion, null);
-        }
-
-        public void RequireFoot(string scriptName, Action<ResourceDefinition> inlineDefinition) {
-            RequireFoot(scriptName, null, inlineDefinition);
-        }
-
-        public void RequireFoot(string scriptName, string minimumVersion, Action<ResourceDefinition> inlineDefinition) {
-            Require(scriptName, new RequireSettings {
-                MinimumVersion = minimumVersion,
-                InlineDefinition = inlineDefinition,
-                Location = ResourceLocation.Foot
-            });
-        }
-
-        public void RequireFoot(RequireSettings settings) {
-            settings.Location = ResourceLocation.Foot;
-            Require(settings.Name, settings);
-        }
+        // todo: Head/Tail registration
     }
 }

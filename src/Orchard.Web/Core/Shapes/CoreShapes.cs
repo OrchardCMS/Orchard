@@ -69,11 +69,6 @@ namespace Orchard.Core.Shapes {
             return tagBuilder;
         }
 
-        //[Shape]
-        //public HtmlString Resource(ResourceRequiredContext Resource, RequireSettings DefaultSettings, string AppPath) {
-        //    return new HtmlString(Resource.GetTagBuilder(DefaultSettings, AppPath).ToString());
-        //}
-
         [Shape]
         public void HeadScripts(HtmlHelper Html, IResourceManager ResourceManager) {
             WriteResources(Html, ResourceManager, "script", ResourceLocation.Head, null);

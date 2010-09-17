@@ -10,7 +10,7 @@ namespace Orchard.UI.Resources {
         ResourceManifest DynamicResources { get; }
         ResourceDefinition FindResource(RequireSettings settings);
         void NotRequired(string resourceType, string resourceName);
-        void Require(RequireSettings settings);
+        RequireSettings Require(string resourceType, string resourceName);
         void RegisterLink(LinkEntry link);
         void SetMeta(MetaEntry meta);
         void AppendMeta(MetaEntry meta, string contentSeparator);

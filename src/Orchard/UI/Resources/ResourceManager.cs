@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Globalization;
 using System.Linq;
+using JetBrains.Annotations;
 
 namespace Orchard.UI.Resources {
     public class ResourceManager : IResourceManager {
@@ -26,17 +27,30 @@ namespace Orchard.UI.Resources {
             }
         }
 
-        public virtual void Require(RequireSettings settings) {
-            RequireSettings existingSettings;
-            var key = new Tuple<string, string>(settings.Type, settings.Name);
-            if (_required.TryGetValue(key, out existingSettings)) {
-                settings = settings.Combine(existingSettings);
+        public virtual RequireSettings Require(string resourceType, [NotNull] string resourceName) {
+            if (resourceType == null) {
+                throw new ArgumentNullException("resourceType");
             }
-            _builtResources[settings.Type] = null;
-            _required[key] = settings;
+            if (resourceName == null) {
+                throw new ArgumentNullException("resourceName");
+            }
+            RequireSettings settings;
+            var key = new Tuple<string, string>(resourceType, resourceName);
+            if (!_required.TryGetValue(key, out settings)) {
+                settings = new RequireSettings {Type = resourceType, Name = resourceName};
+                _required[key] = settings;
+            }
+            _builtResources[resourceType] = null;
+            return settings;
         }
 
         public virtual void NotRequired(string resourceType, string resourceName) {
+            if (resourceType == null) {
+                throw new ArgumentNullException("resourceType");
+            }
+            if (resourceName == null) {
+                throw new ArgumentNullException("resourceName");
+            }
             var key = new Tuple<string, string>(resourceType, resourceName);
             _builtResources[resourceType] = null;
             _required.Remove(key);

@@ -12,21 +12,73 @@ namespace Orchard.UI.Resources {
         public ResourceLocation Location { get; set; }
         public Action<ResourceDefinition> InlineDefinition { get; set; }
 
+        public RequireSettings AtHead() {
+            return AtLocation(ResourceLocation.Head);
+        }
+
+        public RequireSettings AtFoot() {
+            return AtLocation(ResourceLocation.Foot);
+        }
+
+        public RequireSettings AtLocation(ResourceLocation location) {
+            // if head is specified it takes precedence since it's safer than foot
+            Location = (ResourceLocation)Math.Max((int)Location, (int)location);
+            return this;
+        }
+
+        public RequireSettings UseCulture(string cultureName) {
+            if (!String.IsNullOrEmpty(cultureName)) {
+                Culture = cultureName;
+            }
+            return this;
+        }
+
+        public RequireSettings UseDebugMode() {
+            return UseDebugMode(true);
+        }
+
+        public RequireSettings UseDebugMode(bool debugMode) {
+            DebugMode |= debugMode;
+            return this;
+        }
+
+        public RequireSettings UseCdn() {
+            return UseCdn(true);
+        }
+
+        public RequireSettings UseCdn(bool cdn) {
+            CdnMode |= cdn;
+            return this;
+        }
+
+        public RequireSettings WithMinimumVersion(string minimumVersion) {
+            MinimumVersion = String.IsNullOrEmpty(MinimumVersion)
+                ? minimumVersion
+                : (MinimumVersion.CompareTo(minimumVersion) > 0 ? minimumVersion : MinimumVersion);
+            return this;
+        }
+
+        public RequireSettings WithBasePath(string basePath) {
+            BasePath = basePath;
+            return this;
+        }
+
+        public RequireSettings Define(Action<ResourceDefinition> resourceDefinition) {
+            InlineDefinition = resourceDefinition ?? InlineDefinition;
+            return this;
+        }
+
         public RequireSettings Combine(RequireSettings other) {
-            return new RequireSettings {
+            return (new RequireSettings {
                 Name = Name,
-                Type = Type,
-                InlineDefinition = other.InlineDefinition ?? InlineDefinition,
-                BasePath = String.IsNullOrEmpty(other.BasePath) ? BasePath : other.BasePath,
-                CdnMode = CdnMode || other.CdnMode,
-                DebugMode = DebugMode || other.DebugMode,
-                Culture = String.IsNullOrEmpty(other.Culture) ? Culture : other.Culture,
-                MinimumVersion = String.IsNullOrEmpty(MinimumVersion)
-                    ? other.MinimumVersion
-                    : MinimumVersion.CompareTo(other.MinimumVersion) > 0 ? other.MinimumVersion : MinimumVersion,
-                // if head is specified it takes precedence since it's safer than foot
-                Location = (ResourceLocation) Math.Max((int)Location, (int)other.Location),
-            };
+                Type = Type
+            }).AtLocation(other.Location)
+                .WithBasePath(other.BasePath)
+                .UseCdn(other.CdnMode)
+                .UseDebugMode(other.DebugMode)
+                .UseCulture(other.Culture)
+                .WithMinimumVersion(other.MinimumVersion)
+                .Define(other.InlineDefinition);
         }
     }
 }

@@ -4,7 +4,7 @@
 <%@ Import Namespace="Orchard.UI.Resources" %>
 <%
 Style.Require("Green_Archives");
-Script.Require(new RequireSettings {ResourceName = "archives.js", Location = ResourceLocation.Foot});
+Script.Require("BlogsArchives");
 %>
 <div class="archives">
     <h4 class="collapsible"><%: T("Archives") %></h4><%

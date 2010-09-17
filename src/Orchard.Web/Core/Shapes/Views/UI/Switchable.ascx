@@ -3,8 +3,8 @@
 <%
     // todo: use Style.Require and Script.Require when this is converted to use a base Orchard view type.
     var rm = Html.Resolve<IResourceManager>();
-    rm.Require(new RequireSettings { ResourceType = "stylesheet", ResourceName = "Switchable" });
-    rm.Require(new RequireSettings { ResourceType = "script", ResourceName = "Switchable", Location = ResourceLocation.Foot });
+    rm.Require("stylesheet", "Switchable");
+    rm.Require("script", "Switchable");
     var cssClass = string.Format("{0} switchable", Model);
     
  %>
