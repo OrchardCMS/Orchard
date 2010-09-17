@@ -1,8 +1,9 @@
 ﻿<%@ Control Language="C#" Inherits="System.Web.Mvc.ViewUserControl<BaseViewModel>" %>
 <%@ Import Namespace="Orchard.Mvc.ViewModels"%>
+<%@ Import Namespace="Orchard.UI.Resources" %>
 
 <%
-    Html.RegisterStyle("site.css", "1");
+    Html.Resolve<IResourceManager>().Require(new RequireSettings { Type = "stylesheet", Name = "Corporate" });
    
     Model.Zones.AddRenderPartial("header", "Header", Model);
     Model.Zones.AddRenderPartial("menu", "Menu", Model);

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Web;
@@ -8,7 +9,9 @@ using Orchard.DisplayManagement;
 using Orchard.DisplayManagement.Descriptors;
 using Orchard.DisplayManagement.Implementation;
 using Orchard.Environment.Extensions.Models;
+using Orchard.Mvc.ViewEngines;
 using Orchard.UI;
+using Orchard.UI.Resources;
 using Orchard.UI.Zones;
 
 // ReSharper disable InconsistentNaming
@@ -64,6 +67,58 @@ namespace Orchard.Core.Shapes {
             if (id != null)
                 tagBuilder.GenerateId(id);
             return tagBuilder;
+        }
+
+        //[Shape]
+        //public HtmlString Resource(ResourceRequiredContext Resource, RequireSettings DefaultSettings, string AppPath) {
+        //    return new HtmlString(Resource.GetTagBuilder(DefaultSettings, AppPath).ToString());
+        //}
+
+        [Shape]
+        public void HeadScripts(HtmlHelper Html, IResourceManager ResourceManager) {
+            WriteResources(Html, ResourceManager, "script", ResourceLocation.Head, null);
+        }
+
+        [Shape]
+        public void FootScripts(HtmlHelper Html, IResourceManager ResourceManager) {
+            WriteResources(Html, ResourceManager, "script", null, ResourceLocation.Head);
+            TextWriter captured;
+            if (LayoutViewContext.From(Html.ViewContext).Contents.TryGetValue("end-of-page-scripts", out captured)) {
+                Html.ViewContext.Writer.Write(captured);
+            }
+        }
+
+        [Shape]
+        public void Metas(HtmlHelper Html, IResourceManager ResourceManager) {
+            foreach (var meta in ResourceManager.GetRegisteredMetas()) {
+                Html.ViewContext.Writer.WriteLine(meta.GetTag());
+            }
+        }
+
+        [Shape]
+        public void HeadLinks(HtmlHelper Html, IResourceManager ResourceManager) {
+            foreach (var link in ResourceManager.GetRegisteredLinks()) {
+                Html.ViewContext.Writer.WriteLine(link.GetTag());
+            }
+        }
+
+        [Shape]
+        public void StylesheetLinks(HtmlHelper Html, IResourceManager ResourceManager) {
+            WriteResources(Html, ResourceManager, "stylesheet", null, null);
+        }
+
+        private static void WriteResources(HtmlHelper html, IResourceManager rm, string resourceType, ResourceLocation? includeLocation, ResourceLocation? excludeLocation) {
+            var defaultSettings = new RequireSettings {
+                DebugMode = html.ViewContext.HttpContext.IsDebuggingEnabled,
+                Culture = CultureInfo.CurrentUICulture.Name,
+            };
+            var requiredResources = rm.BuildRequiredResources(resourceType);
+            var appPath = html.ViewContext.HttpContext.Request.ApplicationPath;
+            foreach (var context in requiredResources.Where(r =>
+                (includeLocation.HasValue ? r.Settings.Location == includeLocation.Value : true) &&
+                (excludeLocation.HasValue ? r.Settings.Location != excludeLocation.Value : true))) {
+                html.ViewContext.Writer.WriteLine(context.GetTagBuilder(defaultSettings, appPath).ToString());
+            }
         }
 
         [Shape]

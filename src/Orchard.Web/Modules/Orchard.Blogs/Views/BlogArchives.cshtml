@@ -2,9 +2,9 @@
 @using Orchard.Blogs.ViewModels
 @{
     BlogPostArchiveViewModel model = Model.Archives;
+    Style.Require("BlogsArchives");
+    Script.RequireFoot("BlogsArchives");
 }
-@//todo: IResourceManager -> Html.RegisterStyle("archives.css");
-@//todo: IResourceManager -> Html.RegisterFootScript("archives.js");
 <div class="archives">
     <h3>@T("Archives")</h3>
     @if (model.Archives.Count() > 0) {

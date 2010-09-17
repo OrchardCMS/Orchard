@@ -6,25 +6,45 @@ using System.Web.UI;
 using Autofac;
 using Orchard.DisplayManagement;
 using Orchard.Localization;
+using Orchard.Mvc.Html;
 using Orchard.Mvc.Spooling;
 using Orchard.Security;
 using Orchard.Security.Permissions;
+using Orchard.UI.Resources;
 
 namespace Orchard.Mvc {
     public class ViewPage<TModel> : System.Web.Mvc.ViewPage<TModel>, IOrchardViewPage {
+        private ScriptRegister _scriptRegister;
+        private ResourceRegister _stylesheetRegister;
+
         private object _display;
         private Localizer _localizer = NullLocalizer.Instance;
         private WorkContext _workContext;
 
         public Localizer T { get { return _localizer; } }
         public dynamic Display { get { return _display; } }
+        public ScriptRegister Script {
+            get {
+                return _scriptRegister ??
+                    (_scriptRegister = new ScriptRegister(Html.ViewDataContainer, Html.Resolve<IResourceManager>()));
+            }
+        }
+        
         public WorkContext WorkContext { get { return _workContext; } }
 
         public IDisplayHelperFactory DisplayHelperFactory { get; set; }
 
         public IAuthorizer Authorizer { get; set; }
+        
 
-        public override void InitHelpers() {
+        public ResourceRegister Style {
+            get {
+                return _stylesheetRegister ??
+                    (_stylesheetRegister = new ResourceRegister(Html.ViewDataContainer, Html.Resolve<IResourceManager>(), "stylesheet"));
+            }
+        }
+        
+	public override void InitHelpers() {
             base.InitHelpers();
 
             _workContext = ViewContext.GetWorkContext();
@@ -34,13 +54,33 @@ namespace Orchard.Mvc {
             _display = DisplayHelperFactory.CreateHelper(ViewContext, this);
         }
 
+        public virtual void RegisterLink(LinkEntry link) {
+            Html.Resolve<IResourceManager>().RegisterLink(link);
+        }
+
+        public void SetMeta(string name, string content) {
+            SetMeta(new MetaEntry { Name = name, Content = content });
+        }
+
+        public virtual void SetMeta(MetaEntry meta) {
+            Html.Resolve<IResourceManager>().SetMeta(meta);
+        }
+        
+        public void AppendMeta(string name, string content, string contentSeparator) {
+            AppendMeta(new MetaEntry { Name = name, Content = content }, contentSeparator);
+        }        
+
+        public virtual void AppendMeta(MetaEntry meta, string contentSeparator) {
+            Html.Resolve<IResourceManager>().AppendMeta(meta, contentSeparator);
+        }
+                
         public MvcHtmlString H(string value) {
             return MvcHtmlString.Create(Html.Encode(value));
         }
 
         public bool AuthorizedFor(Permission permission) {
             return Authorizer.Authorize(permission);
-        }
+        }        
 
         public IHtmlString DisplayChildren(dynamic shape) {
             var writer = new HtmlStringWriter();

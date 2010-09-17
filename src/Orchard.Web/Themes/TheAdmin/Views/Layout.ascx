@@ -1,9 +1,14 @@
 ﻿<%@ Control Language="C#" Inherits="Orchard.Mvc.ViewUserControl" %>
 <%@ Import Namespace="Orchard.Security" %>
 <%@ Import Namespace="Orchard.DisplayManagement.Descriptors" %>
+<%@ Import Namespace="Orchard.UI.Resources" %>
 <%@ Import Namespace="Orchard" %>
 <%@ Import Namespace="Orchard.ContentManagement" %>
 <%
+Style.Require("TheAdmin");
+Script.Require("TheAdmin");
+RegisterLink(new LinkEntry { Condition = "lte IE 8", Rel = "stylesheet", Type = "text/css", Href = ResolveUrl("../Styles/ie.css") }.AddAttribute("media", "screen, projection"));
+RegisterLink(new LinkEntry { Condition = "lte IE 6", Rel = "stylesheet", Type = "text/css", Href = ResolveUrl("../Styles/ie6.css") }.AddAttribute("media", "screen, projection"));
     // these are just hacked together to fire existing partials... can change
     Model.Header.Add(Display.Header());
 
@@ -13,10 +18,6 @@
     
     // </experimentation>
     
-    Html.RegisterStyle("site.css", "1");
-    Html.RegisterStyle("ie.css", "1").WithCondition("if (lte IE 8)").ForMedia("screen, projection");
-    Html.RegisterStyle("ie6.css", "1").WithCondition("if (lte IE 6)").ForMedia("screen, projection");
-    Html.RegisterFootScript("admin.js", "1");
 
     // these are just hacked together to fire existing partials... can change
 
@@ -29,6 +30,9 @@
     <div id="navshortcut">
         <a href="#Menu-admin">
             <%: T("Skip to navigation") %></a></div>
+    <div id="messages">
+        <%: Display(Model.Messages) %>
+    </div>
     <div id="main" role="main">
         <%: Display(Model.Content) %></div>
     <div id="menu">

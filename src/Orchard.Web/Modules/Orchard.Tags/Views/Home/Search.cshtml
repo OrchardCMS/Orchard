@@ -1,5 +1,11 @@
 ﻿@model Orchard.Tags.ViewModels.TagsSearchViewModel
 
-@Html.AddTitleParts(T("Tags").ToString(), T("Contents tagged with {0}", Model.TagName).ToString());
-<h1 class="page-title">@T("Contents tagged with <span>{0}</span>", Html.Encode(Model.TagName))</h1>
-@Html.UnorderedList(Model.Items, (c, i) => Html.DisplayForItem(c), "taggedPosts contentItems")
+@{ 
+	Html.AddTitleParts(T("Tags").ToString()); 
+	Html.AddTitleParts(T("Contents tagged with {0}", Model.TagName).ToString());
+	Model.List.Classes.Add("taggedPosts");
+	Model.List.Classes.Add("contentItems");
+}
+
+<h1 class="page-title">@T("Contents tagged with <span>{0}</span>", Model.TagName)</h1>
+@Display(Model.List)

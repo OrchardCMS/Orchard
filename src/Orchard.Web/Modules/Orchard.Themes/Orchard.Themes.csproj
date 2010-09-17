@@ -67,6 +67,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AdminMenu.cs" />
+    <Compile Include="ThemesResourceManifest.cs" />
     <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="DataMigrations\ThemesDataMigration.cs" />
     <Compile Include="DesignerNotes\ZoneManagerEvents.cs" />
@@ -78,20 +79,20 @@
     <Compile Include="Preview\IPreviewTheme.cs" />
     <Compile Include="Preview\PreviewTheme.cs" />
     <Compile Include="Preview\PreviewThemeFilter.cs" />
+    <Compile Include="Preview\PreviewThemeSelector.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\SafeModeThemeSelector.cs" />
     <Compile Include="Services\SiteThemeSelector.cs" />
     <Compile Include="Services\ThemeService.cs" />
     <Compile Include="Services\ThemeZoneManagerEvents.cs" />
-    <Compile Include="ViewModels\PreviewViewModel.cs" />
     <Compile Include="ViewModels\ThemesIndexViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\orchard.ico" />
     <Content Include="Styles\admin.css" />
-    <Content Include="Views\Admin\Index.aspx" />
-    <Content Include="Views\Admin\Install.aspx" />
-    <Content Include="Views\Admin\ThemePreview.ascx" />
+    <None Include="Views\Admin\Index.cshtml" />
+    <None Include="Views\Admin\Install.cshtml" />
+    <None Include="Views\ThemePreview.cshtml" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>

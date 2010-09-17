@@ -94,6 +94,7 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Themes\ThemesResourceManifest.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Default.aspx" />
@@ -103,6 +104,7 @@
     <Content Include="Themes\Contoso\Views_\DisplayTemplates\Items\Contents.Item.ascx" />
     <Content Include="Themes\Contoso\Views_\DisplayTemplates\Parts\Blogs.BlogPost.Metadata.ascx" />
     <Content Include="Themes\Contoso\Views_\Orchard.Search\Search\Index.ascx" />
+    <Content Include="Themes\Contoso\Zones\Footer.html" />
     <Content Include="Themes\Corporate\Views\DisplayTemplates\Parts\Blogs.BlogPost.Metadata.ascx" />
     <Content Include="Themes\Green\Views\Orchard.Search\Search\Index.ascx" />
     <Content Include="Themes\SafeMode\Views\Zone.ascx" />

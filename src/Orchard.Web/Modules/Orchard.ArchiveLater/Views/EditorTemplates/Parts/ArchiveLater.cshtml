@@ -1,5 +1,12 @@
 ﻿@model Orchard.ArchiveLater.ViewModels.ArchiveLaterViewModel
 @using System.Web.Mvc.Html
+@{
+    Style.Require("jQueryUtils_TimePicker");
+    Style.Require("jQueryUI_DatePicker");
+    Style.Require("ArchiveLater_DatePicker");
+    Script.RequireFoot("jQueryUI_DatePicker");
+    Script.RequireFoot("jQueryUtils_TimePicker");
+}
 
 <fieldset>
     <legend>@T("Archive Settings")</legend>

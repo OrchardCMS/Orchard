@@ -39,6 +39,7 @@
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Microsoft.CSharp" />
     <Reference Include="System" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Web.ApplicationServices" />
@@ -58,7 +59,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controllers\AdminController.cs" />
-    <Compile Include="Drivers\WidgetsPartDriver.cs" />
     <Compile Include="Handlers\WidgetsPartHandler.cs" />
     <Compile Include="DataMigrations\WidgetsDataMigration.cs" />
     <Compile Include="Models\WidgetsPartRecord.cs" />
@@ -71,7 +71,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Module.txt" />
-    <Content Include="Views\Admin\Edit.ascx" />
+    <None Include="Views\Admin\Edit.cshtml" />
     <Content Include="Web.config" />
     <Content Include="Views\Web.config" />
   </ItemGroup>

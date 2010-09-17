@@ -1,5 +1,5 @@
 ﻿<%@ Control Language="C#" Inherits="Orchard.Mvc.ViewUserControl<Orchard.Search.ViewModels.SearchViewModel>" %>
-<% Html.RegisterStyle("search.css"); %>
+<% Style.Require("Green_Search"); %>
 <h1 class="page-title"><%:Html.TitleForPage(T("Search").Text)%></h1><%
 if (!string.IsNullOrWhiteSpace(Model.Query)) {
     if (Model.PageOfResults.Count() == 0) { %>

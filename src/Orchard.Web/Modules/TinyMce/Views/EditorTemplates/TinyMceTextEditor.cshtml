@@ -1,8 +1,6 @@
 ﻿@model Orchard.Core.Common.ViewModels.BodyEditorViewModel
 @{ 
-    using(Capture(script => WorkContext.Page.Head.Add(script))) {
-        <script type="text/javascript" src="@Href("~/Modules/TinyMce/Scripts/tiny_mce.js")"></script>
-    }
+	Script.Require("TinyMce");
     using(Capture(script => WorkContext.Page.Tail.Add(script))) {
         <script type="text/javascript">
             tinyMCE.init({

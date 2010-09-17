@@ -72,36 +72,32 @@ namespace Orchard.Mvc.Html {
             return MvcHtmlString.Create(html.Encode(pageClassBuilder.ToString()));
         }
 
-        public static void RegisterMeta(this HtmlHelper html, string name, string content) {
-            html.Resolve<IResourceManager>().RegisterMeta(name, content);
+        public static void RegisterLink(this HtmlHelper html, string rel, string type, string href) {
+            RegisterLink(html, new LinkEntry {
+                Rel = rel,
+                Type = type,
+                Href = href
+            });
         }
 
-        public static void RegisterLink(this HtmlHelper html, LinkEntry entry) {
-            html.Resolve<IResourceManager>().RegisterLink(entry, html);
+        public static void RegisterLink(this HtmlHelper html, LinkEntry link) {
+            html.Resolve<IResourceManager>().RegisterLink(link);
         }
 
-        public static FileRegistrationContext RegisterStyle(this HtmlHelper html, string fileName) {
-            return html.Resolve<IResourceManager>().RegisterStyle(fileName, html);
+        public static void SetMeta(this HtmlHelper html, string name, string content) {
+            SetMeta(html, new MetaEntry { Name = name, Content = content });
         }
 
-        public static FileRegistrationContext RegisterStyle(this HtmlHelper html, string fileName, string position) {
-            return html.Resolve<IResourceManager>().RegisterStyle(fileName, html, position);
+        public static void SetMeta(this HtmlHelper html, MetaEntry meta) {
+            html.Resolve<IResourceManager>().SetMeta(meta);
         }
 
-        public static FileRegistrationContext RegisterScript(this HtmlHelper html, string fileName) {
-            return html.Resolve<IResourceManager>().RegisterHeadScript(fileName, html);
+        public static void AppendMeta(this HtmlHelper html, string name, string content, string contentSeparator) {
+            AppendMeta(html, new MetaEntry { Name = name, Content = content }, contentSeparator);
         }
 
-        public static FileRegistrationContext RegisterScript(this HtmlHelper html, string fileName, string position) {
-            return html.Resolve<IResourceManager>().RegisterHeadScript(fileName, html, position);
-        }
-
-        public static FileRegistrationContext RegisterFootScript(this HtmlHelper html, string fileName) {
-            return html.Resolve<IResourceManager>().RegisterFootScript(fileName, html);
-        }
-
-        public static FileRegistrationContext RegisterFootScript(this HtmlHelper html, string fileName, string position) {
-            return html.Resolve<IResourceManager>().RegisterFootScript(fileName, html, position);
+        public static void AppendMeta(this HtmlHelper html, MetaEntry meta, string contentSeparator) {
+            html.Resolve<IResourceManager>().AppendMeta(meta, contentSeparator);
         }
 
         public static IDisposable Capture(this ViewUserControl control, string name) {

@@ -78,6 +78,7 @@
     <Compile Include="Controllers\DownloadStreamResult.cs" />
     <Compile Include="Controllers\GalleryController.cs" />
     <Compile Include="DefaultPackagingUpdater.cs" />
+    <Compile Include="PackagingResourceManifest.cs" />
     <Compile Include="Services\AtomExtensions.cs" />
     <Compile Include="Services\IPackageBuilder.cs" />
     <Compile Include="Services\IPackageExpander.cs" />
@@ -103,7 +104,7 @@
     <None Include="Views\Gallery\Harvest.cshtml" />
     <None Include="Views\Gallery\Modules.cshtml" />
     <None Include="Views\Gallery\Sources.cshtml" />
-    <Content Include="Views\Gallery\_Subnav.ascx" />
+    <None Include="Views\Gallery\_Subnav.cshtml" />
     <Content Include="Views\Web.config" />
   </ItemGroup>
   <ItemGroup>

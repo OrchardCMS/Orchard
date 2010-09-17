@@ -1,0 +1,9 @@
+﻿@model Futures.Widgets.ViewModels.WidgetEditViewModel
+
+<h1>@Html.TitleForPage(T("Edit Widget").ToString())</h1>
+
+@using (Html.BeginFormAntiForgeryPost()) { 
+    @Html.ValidationSummary()
+    @Display(Model.Widget)
+	@Html.HiddenFor(m => m.ReturnUrl)
+} 

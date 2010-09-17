@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Web;
 using Orchard.Localization;
+using Orchard.UI.Resources;
 
 namespace Orchard.Mvc {
     /// <summary>
@@ -9,9 +10,17 @@ namespace Orchard.Mvc {
     /// </summary>
     public interface IOrchardViewPage {
         Localizer T { get; }
+        ScriptRegister Script { get;  }
+        ResourceRegister Style { get; }
         dynamic Display { get; }
         IHtmlString DisplayChildren(object shape);
         WorkContext WorkContext { get; }
         IDisposable Capture(Action<IHtmlString> callback);
+
+        void RegisterLink(LinkEntry link);
+        void SetMeta(string name, string content);
+        void SetMeta(MetaEntry meta);
+        void AppendMeta(string name, string content, string contentSeparator);
+        void AppendMeta(MetaEntry meta, string contentSeparator);
     }
 }

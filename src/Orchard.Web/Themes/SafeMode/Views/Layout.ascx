@@ -1,21 +1,12 @@
 <%@ Control Language="C#" Inherits="Orchard.Mvc.ViewUserControl" %>
-<%--  //todo: (heskew) this should really be using the IResourceManager if it's to be a theme especially for the jquery dep (w/out needing to copy into this theme...)
-    var jquery = ResolveUrl("~/Modules/Orchard.Themes/Scripts/jquery-1.4.2.js");
-    Model.Zones.AddAction("head:scripts", html =>
-      html.ViewContext.Writer.Write(@"<script type=""text/javascript"" src=""" + jquery + @"""></script>"));
-    var basejs = ResolveUrl("~/Modules/Orchard.Themes/Scripts/base.js");
-    Model.Zones.AddAction("content:after", html =>
-      html.ViewContext.Writer.Write(@"<script type=""text/javascript"" src=""" + basejs + @"""></script>"));
-    var setupjs = ResolveUrl("~/Modules/Orchard.Setup/Scripts/setup.js");
-    Model.Zones.AddAction("content:after", html =>
-      html.ViewContext.Writer.Write(@"<script type=""text/javascript"" src=""" + setupjs + @"""></script>"));
-    var siteCss = ResolveUrl("../Styles/site.css");
-    Model.Zones.AddAction("head:styles", html =>
-      html.ViewContext.Writer.Write(@"<link rel=""stylesheet"" type=""text/css"" href=""" + siteCss + @"""/>"));
-    var ie6Css = ResolveUrl("../Styles/ie6.css");
-    Model.Zones.AddAction("head:styles", html =>
-      html.ViewContext.Writer.Write(@"<!--[if lte IE 6]><link rel=""stylesheet"" type=""text/css"" media=""screen, projection"" href=""" + ie6Css + @"""/><![endif]-->")); 
---%>
+<%@ Import Namespace="Orchard.UI.Resources" %>
+<%
+    Script.Require("jQuery", "1.4.2");
+    Script.Require("Theme_Base");
+    Script.Require("Setup");
+    Style.Require("SafeMode");
+    RegisterLink(new LinkEntry { Condition = "lte IE 6", Rel = "stylesheet", Type="text/css", Href = ResolveUrl("../Styles/ie6.css")}.AddAttribute("media", "screen, projection"));
+%>
 <div id="header">
     <div id="branding">
         <h1>

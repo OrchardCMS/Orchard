@@ -1,171 +1,155 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Collections.Specialized;
+using System.Globalization;
 using System.Linq;
-using System.Text;
-using System.Web.Mvc;
-using JetBrains.Annotations;
-using Orchard.Localization;
-using Orchard.Mvc.Html;
 
 namespace Orchard.UI.Resources {
-    [UsedImplicitly]
     public class ResourceManager : IResourceManager {
-        private const string ConditionFormat = "\r\n<!--[{0}]>{{0}}<![endif]-->";
-        private const string MetaFormat = "\r\n<meta name=\"{0}\" content=\"{1}\" />";
-        private readonly Dictionary<string, string> _metas;
-        private readonly List<FileRegistrationContext> _styles;
-        private readonly List<LinkEntry> _links;
-        private readonly List<FileRegistrationContext> _headScripts;
-        private readonly List<FileRegistrationContext> _footScripts;
+        private readonly Dictionary<Tuple<String, String>, RequireSettings> _required = new Dictionary<Tuple<String, String>, RequireSettings>();
+        private readonly Lazy<DynamicResourceManifest> _dynamicResourceProvider = new Lazy<DynamicResourceManifest>();
+        private readonly List<LinkEntry> _links = new List<LinkEntry>();
+        private readonly Dictionary<string, MetaEntry> _metas = new Dictionary<string, MetaEntry>();
+        private readonly Dictionary<string, IList<ResourceRequiredContext>> _builtResources = new Dictionary<string, IList<ResourceRequiredContext>>();
 
-        public ResourceManager() {
-            _metas = new Dictionary<string, string>(20) {{"generator", "Orchard"}};
-            _styles = new List<FileRegistrationContext>(10);
-            _links = new List<LinkEntry>();
-            _headScripts = new List<FileRegistrationContext>(10);
-            _footScripts = new List<FileRegistrationContext>(5);
-            T = NullLocalizer.Instance;
+        public ResourceManager(IEnumerable<IResourceManifest> resourceProviders) {
+            ResourceProviders = resourceProviders;
         }
 
-        public Localizer T { get; set; }
+        public IEnumerable<IResourceManifest> ResourceProviders { get; private set; }
 
-        public void RegisterMeta(string name, string content) {
-            if (!string.IsNullOrEmpty(name) && !_metas.ContainsKey(name))
-                _metas.Add(name, content);
-        }
-
-        public FileRegistrationContext RegisterStyle(string fileName, HtmlHelper html) {
-            return RegisterStyle(fileName, html, "5");
-        }
-
-        public FileRegistrationContext RegisterHeadScript(string fileName, HtmlHelper html) {
-            return RegisterHeadScript(fileName, html, "5");
-        }
-
-        public FileRegistrationContext RegisterFootScript(string fileName, HtmlHelper html) {
-            return RegisterFootScript(fileName, html, "5");
-        }
-
-        public FileRegistrationContext RegisterStyle(string fileName, HtmlHelper html, string position) {
-            if (string.IsNullOrEmpty(fileName))
-                throw new ArgumentException(T("Style fileName was not given.").ToString());
-
-            var context = new FileRegistrationContext(html.ViewContext, html.ViewDataContainer, "link", fileName, position);
-            context.SetAttribute("type", "text/css");
-            context.SetAttribute("rel", "stylesheet");
-
-            if (!_styles.Contains(context))
-                _styles.Add(context);
-
-            return context;
-        }
-
-        public void RegisterLink(LinkEntry entry, HtmlHelper html) {
-            _links.Add(entry);
-        }
-
-        public FileRegistrationContext RegisterHeadScript(string fileName, HtmlHelper html, string position) {
-            if (string.IsNullOrEmpty(fileName))
-                throw new ArgumentException(T("Head script fileName was not given.").ToString());
-
-            var context = new FileRegistrationContext(html.ViewContext, html.ViewDataContainer, "script", fileName, position);
-            context.SetAttribute("type", "text/javascript");
-
-            if (!_headScripts.Contains(context))
-                _headScripts.Add(context);
-
-            return context;
-        }
-
-        public FileRegistrationContext RegisterFootScript(string fileName, HtmlHelper html, string position) {
-            if (string.IsNullOrEmpty(fileName))
-                throw new ArgumentException(T("Foot script fileName was not given.").ToString());
-
-            var context = new FileRegistrationContext(html.ViewContext, html.ViewDataContainer, "script", fileName, position);
-            context.SetAttribute("type", "text/javascript");
-
-            if (!_footScripts.Contains(context))
-                _footScripts.Add(context);
-
-            return context;
-        }
-
-        public MvcHtmlString GetMetas() {
-            return
-                MvcHtmlString.Create(string.Join("",
-                                                 _metas.Select(m => string.Format(MetaFormat, m.Key, m.Value)).Reverse().ToArray()));
-        }
-
-        public MvcHtmlString GetStyles() {
-            return GetFiles(_styles, "/styles/");
-        }
-
-        public MvcHtmlString GetLinks(HtmlHelper html) {
-            var sb = new StringBuilder();
-            foreach (var link in _links) {
-                sb.Append("\r\n");
-                sb.Append(@"<link");
-
-                if (!string.IsNullOrEmpty(link.Rel)) {
-                    sb
-                        .Append(@" rel=""")
-                        .Append(html.AttributeEncode(link.Rel))
-                        .Append(@"""");
-                }
-
-                if (!string.IsNullOrEmpty(link.Type)) {
-                    sb
-                        .Append(@" type=""")
-                        .Append(html.AttributeEncode(link.Type))
-                        .Append(@"""");
-                }
-
-                if (!string.IsNullOrEmpty(link.Title)) {
-                    sb
-                        .Append(@" title=""")
-                        .Append(html.AttributeEncode(link.Title))
-                        .Append(@"""");
-                }
-
-                if (!string.IsNullOrEmpty(link.Href)) {
-                    sb
-                        .Append(@" href=""")
-                        .Append(html.AttributeEncode(link.Href))
-                        .Append(@"""");
-                }
-
-                sb.Append(@" />");
+        // represents resources that were required during the request but that had no matching resource provider
+        public virtual ResourceManifest DynamicResources {
+            get {
+                return _dynamicResourceProvider.Value;
             }
-
-            return MvcHtmlString.Create(sb.ToString());
         }
 
-        public MvcHtmlString GetHeadScripts() {
-            return GetFiles(_headScripts, "/scripts/");
+        public virtual void Require(RequireSettings settings) {
+            RequireSettings existingSettings;
+            var key = new Tuple<string, string>(settings.Type, settings.Name);
+            if (_required.TryGetValue(key, out existingSettings)) {
+                settings = settings.Combine(existingSettings);
+            }
+            _builtResources[settings.Type] = null;
+            _required[key] = settings;
         }
 
-        public MvcHtmlString GetFootScripts() {
-            return GetFiles(_footScripts, "/scripts/");
+        public virtual void NotRequired(string resourceType, string resourceName) {
+            var key = new Tuple<string, string>(resourceType, resourceName);
+            _builtResources[resourceType] = null;
+            _required.Remove(key);
         }
 
-        private static MvcHtmlString GetFiles(IEnumerable<FileRegistrationContext> fileRegistrationContexts, string containerRelativePath) {
-            return
-                MvcHtmlString.Create(string.Join("",
-                                                 fileRegistrationContexts
-                                                 .OrderBy(c => c.Position)
-                                                 .Select(
-                                                     c =>
-                                                     string.Format(
-                                                         !string.IsNullOrEmpty(c.Condition)
-                                                             ? string.Format(ConditionFormat, c.Condition)
-                                                             : "{0}",
-                                                         GetTag(c, c.GetFilePath(containerRelativePath)))).
-                                                     ToArray()));
+        public virtual ResourceDefinition FindResource(RequireSettings settings) {
+            // find the resource with the given type and name
+            // that has at least the given version number. If multiple,
+            // return the resource with the greatest version number.
+            // If not found and an inlineDefinition is given, define the resource on the fly
+            // using the action.
+            var name = settings.Name;
+            var type = settings.Type;
+            var minimumVersion = settings.MinimumVersion;
+            var resource = (from p in ResourceProviders
+                            from r in p.GetResources(type)
+                            where r.Key == name && (String.IsNullOrEmpty(minimumVersion) || String.CompareOrdinal(r.Value.Version ?? "", minimumVersion) >= 0)
+                            orderby r.Value.Version descending
+                            select r.Value).FirstOrDefault();
+            if (resource == null && _dynamicResourceProvider.IsValueCreated) {
+                resource = (from r in _dynamicResourceProvider.Value.GetResources(type)
+                            where r.Key == name && (String.IsNullOrEmpty(minimumVersion) || String.CompareOrdinal(r.Value.Version ?? "", minimumVersion) >= 0)
+                            orderby r.Value.Version descending
+                            select r.Value).FirstOrDefault();
+            }
+            if (resource == null && settings.InlineDefinition != null) {
+                // defining it on the fly
+                resource = DynamicResources.DefineResource(type, name)
+                    .SetBasePath(settings.BasePath)
+                    .SetVersion(minimumVersion);
+                settings.InlineDefinition(resource);
+            }
+            return resource;
         }
 
-        private static string GetTag(FileRegistrationContext fileRegistrationContext, string filePath) {
-            fileRegistrationContext.SetAttribute(fileRegistrationContext.FilePathAttributeName, filePath);
-            return fileRegistrationContext.GetTag();
+        public virtual IEnumerable<RequireSettings> GetRequiredResources(string type) {
+            return from r in _required
+                   where r.Key.Item1 == type
+                   select r.Value;
         }
+
+        public virtual IList<LinkEntry> GetRegisteredLinks() {
+            return _links.AsReadOnly();
+        }
+
+        public virtual IList<MetaEntry> GetRegisteredMetas() {
+            return _metas.Values.ToList().AsReadOnly();
+        }
+
+        public virtual IList<ResourceRequiredContext> BuildRequiredResources(string resourceType) {
+            IList<ResourceRequiredContext> requiredResources;
+            if (_builtResources.TryGetValue(resourceType, out requiredResources) && requiredResources != null) {
+                return requiredResources;
+            }
+            var allResources = new OrderedDictionary();
+            foreach (var settings in GetRequiredResources(resourceType)) {
+                var resource = FindResource(settings);
+                if (resource == null) {
+                    throw String.IsNullOrEmpty(settings.MinimumVersion)
+                        ? new InvalidOperationException(String.Format(CultureInfo.CurrentCulture, "A '{1}' named '{0}' could not be found.", settings.Name, settings.Type))
+                        : new InvalidOperationException(String.Format(CultureInfo.CurrentCulture, "A '{2}' named '{0}' with version greater than or equal to '{1}' could not be found.", settings.Name, settings.MinimumVersion, settings.Type));
+                }
+                ExpandDependencies(resource, settings, allResources);
+            }
+            requiredResources = (from DictionaryEntry entry in allResources
+                                 select new ResourceRequiredContext {Resource = (ResourceDefinition) entry.Key, Settings = (RequireSettings) entry.Value}).ToList();
+            _builtResources[resourceType] = requiredResources;
+            return requiredResources;
+        }
+
+        protected virtual void ExpandDependencies(ResourceDefinition resource, RequireSettings settings, OrderedDictionary allResources) {
+            if (resource == null) {
+                return;
+            }
+            if (allResources.Contains(resource)) {
+                settings = ((RequireSettings) allResources[resource]).Combine(settings);
+            }
+            settings.Type = resource.Type;
+            settings.Name = resource.Name;
+            if (resource.Dependencies != null) {
+                var dependencies = from d in resource.Dependencies
+                                   select FindResource(new RequireSettings { Type = resource.Type, Name = d });
+                foreach (var dependency in dependencies) {
+                    if (dependency == null) {
+                        continue;
+                    }
+                    ExpandDependencies(dependency, settings, allResources);
+                }
+            }
+            allResources[resource] = settings;
+        }
+
+        public void RegisterLink(LinkEntry link) {
+            _links.Add(link);
+        }
+
+        public void SetMeta(MetaEntry meta) {
+            if (meta == null || String.IsNullOrEmpty(meta.Name)) {
+                return;
+            }
+            _metas[meta.Name] = meta;
+        }
+
+        public void AppendMeta(MetaEntry meta, string contentSeparator) {
+            if (meta == null || String.IsNullOrEmpty(meta.Name)) {
+                return;
+            }
+            MetaEntry existingMeta;
+            if (_metas.TryGetValue(meta.Name, out existingMeta)) {
+                meta = MetaEntry.Combine(existingMeta, meta, contentSeparator);
+            }
+            _metas[meta.Name] = meta;
+        }
+
     }
 }
