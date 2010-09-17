@@ -2,6 +2,11 @@
 @using Orchard.Modules.Extensions
 @using Orchard.Mvc.Html
 @using Orchard.Modules.ViewModels
+
+@{
+    Style.Require("ModulesAdmin");
+}
+
 <h1>@Html.TitleForPage(T("Installed Modules").ToString())</h1>
 <div class="manage">@Html.ActionLink(T("Install a module").ToString(), "Add", null, new { @class = "button primaryAction" })</div>
 @if (Model.Modules.Count() > 0) {

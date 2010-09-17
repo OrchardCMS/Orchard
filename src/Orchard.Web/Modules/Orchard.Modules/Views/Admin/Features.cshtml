@@ -5,7 +5,11 @@
 @using Orchard.Utility.Extensions
 @using Orchard.Modules.Models
 
-<h1>@Html.TitleForPage(T("Manage Features").ToString()).</h1>
+@{
+    Style.Require("ModulesAdmin");
+}
+
+<h1>@Html.TitleForPage(T("Manage Features").ToString())</h1>
 @if (Model.Features.Count() > 0) {
 <ul class="features summary-view">@{
     var featureGroups = Model.Features.OrderBy(f => f.Descriptor.Category, new DoghouseComparer("Core")).GroupBy(f => f.Descriptor.Category);
