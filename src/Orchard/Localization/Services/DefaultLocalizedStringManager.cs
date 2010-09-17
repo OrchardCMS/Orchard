@@ -8,7 +8,7 @@ using Orchard.Environment.Extensions;
 using Orchard.FileSystems.WebSite;
 
 namespace Orchard.Localization.Services {
-    public class DefaultResourceManager : IResourceManager {
+    public class DefaultLocalizedStringManager : ILocalizedStringManager {
         private readonly IWebSiteFolder _webSiteFolder;
         private readonly ICultureManager _cultureManager;
         private readonly IExtensionManager _extensionManager;
@@ -20,7 +20,7 @@ namespace Orchard.Localization.Services {
         const string RootLocalizationFilePathFormat = "~/App_Data/Localization/{0}/orchard.root.po";
         const string TenantLocalizationFilePathFormat = "~/App_Data/Sites/{0}/Localization/{1}/orchard.po";
 
-        public DefaultResourceManager(
+        public DefaultLocalizedStringManager(
             ICultureManager cultureManager, 
             IWebSiteFolder webSiteFolder, 
             IExtensionManager extensionManager,

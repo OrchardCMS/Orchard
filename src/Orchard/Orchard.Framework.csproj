@@ -152,6 +152,8 @@
     <Compile Include="DisplayManagement\Descriptors\ShapeTableBuilder.cs" />
     <Compile Include="DisplayManagement\Implementation\IShapeFactoryEvents.cs" />
     <Compile Include="DisplayManagement\Shapes\ITagBuilderFactory.cs" />
+    <Compile Include="Localization\Services\DefaultLocalizedStringManager.cs" />
+    <Compile Include="Localization\Services\ILocalizedStringManager.cs" />
     <Compile Include="Mvc\IOrchardViewPage.cs" />
     <Compile Include="Mvc\Spooling\HtmlStringWriter.cs" />
     <Compile Include="Mvc\ViewEngines\Razor\RazorViewEngine.cs" />
@@ -546,12 +548,10 @@
     <Compile Include="Indexing\NullSearchBuilder.cs" />
     <Compile Include="Indexing\IIndexNotifierHandler.cs" />
     <Compile Include="Localization\Services\DefaultCultureManager.cs" />
-    <Compile Include="Localization\Services\DefaultResourceManager.cs" />
     <Compile Include="Indexing\DefaultIndexManager.cs" />
     <Compile Include="Indexing\IIndexManager.cs" />
     <Compile Include="Localization\Services\ICultureManager.cs" />
     <Compile Include="Localization\Services\ICultureSelector.cs" />
-    <Compile Include="Localization\Services\IResourceManager.cs" />
     <Compile Include="Localization\Records\CultureRecord.cs" />
     <Compile Include="Localization\Services\SiteCultureSelector.cs" />
     <Compile Include="Mvc\Html\TemplateViewModelExtensions.cs" />
