@@ -25,8 +25,6 @@ namespace Orchard.Environment {
             _lifetimeScope = lifetimeScope;
         }
 
-
-
         public WorkContext GetContext(HttpContextBase httpContext) {
             return httpContext.Items[_workContextKey] as WorkContext;
         }
@@ -55,7 +53,6 @@ namespace Orchard.Environment {
                 httpContext,
                 _workContextKey);
         }
-
 
         public IWorkContextScope CreateWorkContextScope() {
             var httpContext = _httpContextAccessor.Current();

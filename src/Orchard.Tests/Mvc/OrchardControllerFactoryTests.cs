@@ -29,7 +29,6 @@ namespace Orchard.Tests.Mvc {
             InjectKnownControllerTypes(_controllerFactory, typeof (FooController), typeof (BarController));
         }
 
-
         [Test]
         public void IContainerProvidersRequestContainerFromRouteDataShouldUseTokenWhenPresent() {
             var requestContext = GetRequestContext(_containerProvider);

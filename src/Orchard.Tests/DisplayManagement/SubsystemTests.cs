@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Web;
+﻿using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
 using Autofac;
@@ -14,6 +10,7 @@ using Orchard.DisplayManagement.Descriptors.ShapeAttributeStrategy;
 using Orchard.DisplayManagement.Implementation;
 using Orchard.DisplayManagement.Shapes;
 using Orchard.Environment;
+using Orchard.Environment.Extensions.Models;
 using Orchard.Tests.Utility;
 
 namespace Orchard.Tests.DisplayManagement {
@@ -23,6 +20,24 @@ namespace Orchard.Tests.DisplayManagement {
 
         [SetUp]
         public void Init() {
+            var testFeature = new Feature
+            {
+                Descriptor = new FeatureDescriptor
+                {
+                    Name = "Testing",
+                    Extension = new ExtensionDescriptor
+                    {
+                        Name = "Testing",
+                        ExtensionType = "Module",
+                    }
+                }
+            };
+
+            var workContext = new DefaultDisplayManagerTests.TestWorkContext
+            {
+                CurrentTheme = new DefaultDisplayManagerTests.Theme { ThemeName = "Hello" }
+            };
+
             var builder = new ContainerBuilder();
             builder.RegisterModule(new ShapeAttributeBindingModule());
             builder.RegisterType<ShapeAttributeBindingStrategy>().As<IShapeTableProvider>();
@@ -31,9 +46,11 @@ namespace Orchard.Tests.DisplayManagement {
             builder.RegisterType<DisplayHelperFactory>().As<IDisplayHelperFactory>();
             builder.RegisterType<ShapeHelperFactory>().As<IShapeHelperFactory>();
             builder.RegisterType<DefaultShapeTableManager>().As<IShapeTableManager>();
-            builder.RegisterType<SimpleShapes>();
+            builder.RegisterInstance(new DefaultDisplayManagerTests.TestWorkContextAccessor(workContext)).As<IWorkContextAccessor>();
+            builder.RegisterInstance(new SimpleShapes()).WithMetadata("Feature", testFeature);
             builder.RegisterInstance(new RouteCollection());
             builder.RegisterAutoMocking(MockBehavior.Loose);
+
             _container = builder.Build();
             _container.Resolve<Mock<IOrchardHostContainer>>()
                 .Setup(x => x.Resolve<IComponentContext>())
@@ -54,16 +71,13 @@ namespace Orchard.Tests.DisplayManagement {
 
         [Test]
         public void RenderingSomething() {
-            var viewContext = new ViewContext();
-            
-            dynamic Display = _container.Resolve<IDisplayHelperFactory>().CreateHelper(viewContext, null);
+            dynamic displayHelperFactory = _container.Resolve<IDisplayHelperFactory>().CreateHelper(new ViewContext(), null);
+            dynamic shapeHelperFactory = _container.Resolve<IShapeHelperFactory>().CreateHelper();
 
-            dynamic New = _container.Resolve<IShapeHelperFactory>().CreateHelper();
+            var result1 = displayHelperFactory.Something();
+            var result2 = ((DisplayHelper)displayHelperFactory).ShapeExecute((Shape)shapeHelperFactory.Pager());
 
-            var result1 = Display.Something();
-            var result2 = ((DisplayHelper)Display).ShapeExecute((Shape)New.Pager());
-            
-            Display(New.Pager());
+            displayHelperFactory(shapeHelperFactory.Pager());
 
             Assert.That(result1.ToString(), Is.EqualTo("<br/>"));
             Assert.That(result2.ToString(), Is.EqualTo("<div>hello</div>"));
