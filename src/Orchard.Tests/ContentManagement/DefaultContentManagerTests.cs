@@ -7,16 +7,26 @@ using NHibernate;
 using NUnit.Framework;
 using Orchard.ContentManagement.MetaData;
 using Orchard.ContentManagement.MetaData.Builders;
+using Orchard.ContentManagement.MetaData.Models;
 using Orchard.Data;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Handlers;
 using Orchard.ContentManagement.Records;
 using Orchard.Tests.ContentManagement.Records;
 using Orchard.Tests.ContentManagement.Models;
+using Orchard.DisplayManagement.Descriptors;
+using Orchard.DisplayManagement.Implementation;
+using Orchard.DisplayManagement;
+using System.Collections.Generic;
 
 namespace Orchard.Tests.ContentManagement {
     [TestFixture]
     public class DefaultContentManagerTests {
+        private const string DefaultAlphaName = "alpha";
+        private const string DefaultBetaName = "beta";
+        private const string DefaultGammaName = "gamma";
+        private const string DefaultDeltaName = "delta";
+
         private IContainer _container;
         private IContentManager _manager;
         private ISessionFactory _sessionFactory;
@@ -58,6 +68,9 @@ namespace Orchard.Tests.ContentManagement {
             builder.RegisterType<EpsilonHandler>().As<IContentHandler>();
             builder.RegisterType<FlavoredHandler>().As<IContentHandler>();
             builder.RegisterType<StyledHandler>().As<IContentHandler>();
+            builder.RegisterType<DefaultShapeTableManager>().As<IShapeTableManager>();
+            builder.RegisterType<DefaultShapeFactory>().As<IShapeFactory>();
+            builder.RegisterType<ShapeHelperFactory>().As<IShapeHelperFactory>();
 
             builder.RegisterGeneric(typeof(Repository<>)).As(typeof(IRepository<>));
 
@@ -82,7 +95,7 @@ namespace Orchard.Tests.ContentManagement {
 
         [Test]
         public void AlphaDriverShouldWeldItsPart() {
-            var foo = _manager.New("alpha");
+            var foo = _manager.New(DefaultAlphaName);
 
             Assert.That(foo.Is<Alpha>(), Is.True);
             Assert.That(foo.As<Alpha>(), Is.Not.Null);
@@ -92,20 +105,20 @@ namespace Orchard.Tests.ContentManagement {
 
         [Test]
         public void StronglyTypedNewShouldTypeCast() {
-            var foo = _manager.New<Alpha>("alpha");
+            var foo = _manager.New<Alpha>(DefaultAlphaName);
             Assert.That(foo, Is.Not.Null);
             Assert.That(foo.GetType(), Is.EqualTo(typeof(Alpha)));
         }
 
         [Test, ExpectedException(typeof(InvalidCastException))]
         public void StronglyTypedNewShouldThrowCastExceptionIfNull() {
-            _manager.New<Beta>("alpha");
+            _manager.New<Beta>(DefaultAlphaName);
         }
 
         [Test]
         public void AlphaIsFlavoredAndStyledAndBetaIsFlavoredOnly() {
-            var alpha = _manager.New<Alpha>("alpha");
-            var beta = _manager.New<Beta>("beta");
+            var alpha = _manager.New<Alpha>(DefaultAlphaName);
+            var beta = _manager.New<Beta>(DefaultBetaName);
 
             Assert.That(alpha.Is<Flavored>(), Is.True);
             Assert.That(alpha.Is<Styled>(), Is.True);
@@ -115,10 +128,10 @@ namespace Orchard.Tests.ContentManagement {
 
         [Test]
         public void GetByIdShouldDetermineTypeAndLoadParts() {
-            var modelRecord = CreateModelRecord("alpha");
+            var modelRecord = CreateModelRecord(DefaultAlphaName);
 
             var contentItem = _manager.Get(modelRecord.Id);
-            Assert.That(contentItem.ContentType, Is.EqualTo("alpha"));
+            Assert.That(contentItem.ContentType, Is.EqualTo(DefaultAlphaName));
             Assert.That(contentItem.Id, Is.EqualTo(modelRecord.Id));
         }
 
@@ -126,9 +139,9 @@ namespace Orchard.Tests.ContentManagement {
         [Test]
         public void ModelPartWithRecordShouldCallRepositoryToPopulate() {
 
-            CreateModelRecord("gamma");
-            CreateModelRecord("gamma");
-            var modelRecord = CreateModelRecord("gamma");
+            CreateModelRecord(DefaultGammaName);
+            CreateModelRecord(DefaultGammaName);
+            var modelRecord = CreateModelRecord(DefaultGammaName);
 
             var model = _manager.Get(modelRecord.Id);
 
@@ -145,7 +158,7 @@ namespace Orchard.Tests.ContentManagement {
             // re-fetch from database
             model = _manager.Get(modelRecord.Id);
 
-            Assert.That(model.ContentType, Is.EqualTo("gamma"));
+            Assert.That(model.ContentType, Is.EqualTo(DefaultGammaName));
             Assert.That(model.Id, Is.EqualTo(modelRecord.Id));
             Assert.That(model.Is<Gamma>(), Is.True);
             Assert.That(model.As<Gamma>().Record, Is.Not.Null);
@@ -155,24 +168,48 @@ namespace Orchard.Tests.ContentManagement {
 
         [Test]
         public void CreateShouldMakeModelAndContentTypeRecords() {
-            var beta = _manager.New("beta");
+            var beta = _manager.New(DefaultBetaName);
             _manager.Create(beta);
 
             var modelRecord = _container.Resolve<IRepository<ContentItemRecord>>().Get(beta.Id);
             Assert.That(modelRecord, Is.Not.Null);
-            Assert.That(modelRecord.ContentType.Name, Is.EqualTo("beta"));
+            Assert.That(modelRecord.ContentType.Name, Is.EqualTo(DefaultBetaName));
         }
 
+        /// <summary>
+        /// Tests that the GetContentTypeDefinitions returns only the registered types.
+        /// </summary>
         [Test]
         public void GetContentTypesShouldReturnAllTypes() {
-            var types = _manager.GetContentTypeDefinitions();
-            Assert.That(types.Count(), Is.EqualTo(4));
-            Assert.That(types, Has.Some.With.Property("Name").EqualTo("alpha"));
-            Assert.That(types, Has.Some.With.Property("Name").EqualTo("beta"));
-            Assert.That(types, Has.Some.With.Property("Name").EqualTo("gamma"));
-            Assert.That(types, Has.Some.With.Property("Name").EqualTo("delta"));
-        }
+            // Register the types and obtain them
+            ContentTypeDefinition alphaType = new ContentTypeDefinitionBuilder()
+                .Named(DefaultAlphaName)
+                .Build();
 
+            ContentTypeDefinition betaType = new ContentTypeDefinitionBuilder()
+                .Named(DefaultBetaName)
+                .Build();
+
+            ContentTypeDefinition gammaType = new ContentTypeDefinitionBuilder()
+                .Named(DefaultGammaName)
+                .Build();
+
+            ContentTypeDefinition deltaType = new ContentTypeDefinitionBuilder()
+                .Named(DefaultDeltaName)
+                .Build();
+
+            _contentDefinitionManager.Setup(contentDefinitionManager => contentDefinitionManager.ListTypeDefinitions())
+                .Returns(new List<ContentTypeDefinition> { alphaType, betaType, gammaType, deltaType });
+            
+            var types = _manager.GetContentTypeDefinitions();
+
+            // Validate that the expected types were obtained
+            Assert.That(types.Count(), Is.EqualTo(4));
+            Assert.That(types, Has.Some.With.Property("Name").EqualTo(DefaultAlphaName));
+            Assert.That(types, Has.Some.With.Property("Name").EqualTo(DefaultBetaName));
+            Assert.That(types, Has.Some.With.Property("Name").EqualTo(DefaultGammaName));
+            Assert.That(types, Has.Some.With.Property("Name").EqualTo(DefaultDeltaName));
+        }
 
         [Test]
         public void BigStringsShouldNotBeTruncated() {
@@ -211,7 +248,7 @@ namespace Orchard.Tests.ContentManagement {
 
         [Test]
         public void InitialVersionShouldBeOne() {
-            var gamma1 = _manager.Create<Gamma>("gamma");
+            var gamma1 = _manager.Create<Gamma>(DefaultGammaName);
             Assert.That(gamma1.ContentItem.Record, Is.Not.Null);
             Assert.That(gamma1.ContentItem.VersionRecord, Is.Not.Null);
             Assert.That(gamma1.ContentItem.Version, Is.EqualTo(1));
@@ -237,7 +274,7 @@ namespace Orchard.Tests.ContentManagement {
 
         [Test]
         public void InitialVersionCanBeSpecifiedAndIsPublished() {
-            var gamma1 = _manager.Create<Gamma>("gamma", VersionOptions.Number(4));
+            var gamma1 = _manager.Create<Gamma>(DefaultGammaName, VersionOptions.Number(4));
 
             Assert.That(gamma1.ContentItem.Version, Is.EqualTo(4));
             Assert.That(gamma1.ContentItem.VersionRecord.Published, Is.True);
@@ -248,7 +285,7 @@ namespace Orchard.Tests.ContentManagement {
 
         [Test]
         public void PublishedShouldBeLatestButNotDraft() {
-            var gamma1 = _manager.Create("gamma", VersionOptions.Published);
+            var gamma1 = _manager.Create(DefaultGammaName, VersionOptions.Published);
 
             var gammaPublished = _manager.Get(gamma1.Id, VersionOptions.Published);
             var gammaLatest = _manager.Get(gamma1.Id, VersionOptions.Latest);
@@ -261,7 +298,7 @@ namespace Orchard.Tests.ContentManagement {
 
         [Test]
         public void DraftShouldBeLatestButNotPublished() {
-            var gamma1 = _manager.Create("gamma", VersionOptions.Draft);
+            var gamma1 = _manager.Create(DefaultGammaName, VersionOptions.Draft);
 
             var gammaPublished = _manager.Get(gamma1.Id, VersionOptions.Published);
             var gammaLatest = _manager.Get(gamma1.Id, VersionOptions.Latest);
@@ -275,7 +312,7 @@ namespace Orchard.Tests.ContentManagement {
 
         [Test]
         public void CreateDraftShouldNotCreateExtraDraftCopies() {
-            var gamma1 = _manager.Create("gamma", VersionOptions.Draft);
+            var gamma1 = _manager.Create(DefaultGammaName, VersionOptions.Draft);
             _session.Flush();
             _session.Clear();
 
@@ -307,7 +344,7 @@ namespace Orchard.Tests.ContentManagement {
         [Test]
         public void DraftRequiredShouldBuildNewVersionIfLatestIsAlreadyPublished() {
             Trace.WriteLine("gamma1");
-            var gamma1 = _manager.Create("gamma", VersionOptions.Published);
+            var gamma1 = _manager.Create(DefaultGammaName, VersionOptions.Published);
             Trace.WriteLine("flush");
             _session.Flush();
             _session.Clear();
@@ -364,7 +401,7 @@ namespace Orchard.Tests.ContentManagement {
         [Test]
         public void NonVersionedPartsAreBoundToSameRecord() {
             Trace.WriteLine("gamma1");
-            var gamma1 = _manager.Create<Gamma>("gamma", VersionOptions.Published, init => init.Record.Frap = "version one");
+            var gamma1 = _manager.Create<Gamma>(DefaultGammaName, VersionOptions.Published, init => init.Record.Frap = "version one");
             Trace.WriteLine("gamma2");
             var gamma2 = _manager.Get<Gamma>(gamma1.ContentItem.Id, VersionOptions.DraftRequired);
             Assert.That(gamma1.Record.Frap, Is.EqualTo("version one"));
@@ -399,7 +436,7 @@ namespace Orchard.Tests.ContentManagement {
 
         [Test]
         public void VersionedPartsShouldBeDifferentRecordsWithClonedData() {
-            var gamma1 = _manager.Create<Gamma>("gamma", VersionOptions.Published, init => init.Record.Frap = "version one");
+            var gamma1 = _manager.Create<Gamma>(DefaultGammaName, VersionOptions.Published, init => init.Record.Frap = "version one");
             var epsilon1 = gamma1.As<Epsilon>();
             epsilon1.Record.Quad = "epsilon one";
 
@@ -449,7 +486,7 @@ namespace Orchard.Tests.ContentManagement {
         [Test]
         public void GetAllVersionsShouldReturnHistoryInOrder() {
             Trace.WriteLine("gamma1");
-            var gamma1 = _manager.Create("gamma", VersionOptions.Published);
+            var gamma1 = _manager.Create(DefaultGammaName, VersionOptions.Published);
             Flush();
 
             Trace.WriteLine("gamma2");
@@ -497,18 +534,18 @@ namespace Orchard.Tests.ContentManagement {
         [Test, Ignore("Fix pending")]
         public void ExistingTypeAndPartDefinitionShouldBeUsed() {
             var alphaType = new ContentTypeDefinitionBuilder()
-                .Named("alpha")
+                .Named(DefaultAlphaName)
                 .WithSetting("x", "1")
                 .WithPart("foo")
                 .WithPart("Flavored", part => part.WithSetting("spin", "clockwise"))
                 .Build();
 
             _contentDefinitionManager
-                .Setup(x => x.GetTypeDefinition("alpha"))
+                .Setup(x => x.GetTypeDefinition(DefaultAlphaName))
                 .Returns(alphaType);
 
-            var contentItem = _manager.New("alpha");
-            Assert.That(contentItem.ContentType, Is.EqualTo("alpha"));
+            var contentItem = _manager.New(DefaultAlphaName);
+            Assert.That(contentItem.ContentType, Is.EqualTo(DefaultAlphaName));
             Assert.That(contentItem.TypeDefinition, Is.Not.Null);
             Assert.That(contentItem.TypeDefinition, Is.SameAs(alphaType));
 
@@ -520,7 +557,7 @@ namespace Orchard.Tests.ContentManagement {
 
         [Test]
         public void FieldsCanBeWeldIntoParts() {
-            var contentItem = _manager.New("alpha");
+            var contentItem = _manager.New(DefaultAlphaName);
             var part = contentItem.As<Flavored>();
             var field = new Phi();
             part.Weld(field);
@@ -529,7 +566,7 @@ namespace Orchard.Tests.ContentManagement {
 
         [Test]
         public void PartGetReturnsFieldWithName() {
-            var contentItem = _manager.New("alpha");
+            var contentItem = _manager.New(DefaultAlphaName);
             var part = contentItem.As<Flavored>();
             var field = new Phi();
             part.Weld(field);

@@ -31,7 +31,6 @@ namespace Orchard.DisplayManagement.Implementation {
 
         public Localizer T { get; set; }
 
-
         public IHtmlString Execute(DisplayContext context) {
 
             var shape = _convertAsShapeCallsite.Target(_convertAsShapeCallsite, context.Value);
@@ -47,8 +46,7 @@ namespace Orchard.DisplayManagement.Implementation {
 
             var workContext = _workContextAccessor.GetContext(context.ViewContext);
             var shapeTable = _shapeTableManager.GetShapeTable(workContext.CurrentTheme.ThemeName);
-            //preproc loop / event (alter shape, swapping type)
-
+            // preproc loop / event (alter shape, swapping type)
 
             ShapeDescriptor shapeDescriptor;
             ShapeBinding shapeBinding;
@@ -103,7 +101,7 @@ namespace Orchard.DisplayManagement.Implementation {
         static IHtmlString Process(ShapeDescriptor shapeDescriptor, ShapeBinding shapeBinding, IShape shape, DisplayContext context) {
 
             if (shapeDescriptor == null || shapeBinding == null || shapeBinding.Binding == null) {
-                //todo: create result from all child shapes
+                // todo: create result from all child shapes
                 return shape.Metadata.ChildContent ?? new HtmlString("");
             }
             return CoerceHtmlString(shapeBinding.Binding(context));

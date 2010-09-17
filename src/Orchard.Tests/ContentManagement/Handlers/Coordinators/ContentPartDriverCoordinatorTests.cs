@@ -45,7 +45,7 @@ namespace Orchard.Tests.ContentManagement.Handlers.Coordinators {
             var contentHandler = _container.Resolve<IContentHandler>();
 
             var contentItem = new ContentItem();
-            var context = new BuildDisplayModelContext(contentItem, "", null, null);
+            var context = new BuildDisplayModelContext(contentItem, "", null, new ShapeHelperFactory(null));
 
             driver1.Verify(x => x.BuildDisplayShape(context), Times.Never());
             driver2.Verify(x => x.BuildDisplayShape(context), Times.Never());

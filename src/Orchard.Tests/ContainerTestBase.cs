@@ -1,6 +1,5 @@
 ﻿using Autofac;
 using NUnit.Framework;
-using Orchard.Tests.Utility;
 
 namespace Orchard.Tests {
     public class ContainerTestBase {

@@ -8,8 +8,11 @@ using Orchard.Data;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Handlers;
 using Orchard.ContentManagement.Records;
+using Orchard.DisplayManagement;
+using Orchard.DisplayManagement.Descriptors;
 using Orchard.Tests.ContentManagement.Records;
 using Orchard.Tests.ContentManagement.Models;
+using Orchard.DisplayManagement.Implementation;
 
 namespace Orchard.Tests.ContentManagement {
     [TestFixture]
@@ -54,7 +57,10 @@ namespace Orchard.Tests.ContentManagement {
             builder.RegisterType<DeltaHandler>().As<IContentHandler>();
             builder.RegisterType<EpsilonHandler>().As<IContentHandler>();
             builder.RegisterType<FlavoredHandler>().As<IContentHandler>();
-            builder.RegisterType<StyledHandler>().As<IContentHandler>();
+            builder.RegisterType<StyledHandler>().As<IContentHandler>();           
+            builder.RegisterType<DefaultShapeTableManager>().As<IShapeTableManager>();
+            builder.RegisterType<DefaultShapeFactory>().As<IShapeFactory>();
+            builder.RegisterType<ShapeHelperFactory>().As<IShapeHelperFactory>();
 
             builder.RegisterGeneric(typeof(Repository<>)).As(typeof(IRepository<>));
 

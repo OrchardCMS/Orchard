@@ -354,7 +354,7 @@ namespace Orchard.Mvc.Html {
             try {
                 return htmlHelper.AntiForgeryToken(siteSalt);
             }
-            catch(System.Web.Mvc.HttpAntiForgeryException e) {
+            catch(System.Web.Mvc.HttpAntiForgeryException) {
                 // Work-around an issue in MVC 2:  If the browser sends a cookie that is not
                 // coming from this server (this can happen if the user didn't close their browser
                 // while the application server configuration changed), clear it up
