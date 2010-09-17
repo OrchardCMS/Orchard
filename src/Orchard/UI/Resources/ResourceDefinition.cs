@@ -29,7 +29,6 @@ namespace Orchard.UI.Resources {
         };
 
         private string _basePath;
-        private readonly TagRenderMode _tagRenderMode;
         private readonly Dictionary<RequireSettings, string> _urlResolveCache = new Dictionary<RequireSettings, string>();
 
         public ResourceDefinition(ResourceManifest manifest, string type, string name) {
@@ -37,7 +36,7 @@ namespace Orchard.UI.Resources {
             Type = type;
             Name = name;
             TagBuilder = new TagBuilder(_resourceTypeTagNames.ContainsKey(type) ? _resourceTypeTagNames[type] : "meta");
-            _tagRenderMode = _fileTagRenderModes.ContainsKey(TagBuilder.TagName) ? _fileTagRenderModes[TagBuilder.TagName] : TagRenderMode.Normal;
+            TagRenderMode = _fileTagRenderModes.ContainsKey(TagBuilder.TagName) ? _fileTagRenderModes[TagBuilder.TagName] : TagRenderMode.Normal;
             Dictionary<string, string> attributes;
             if (_resourceAttributes.TryGetValue(type, out attributes)) {
                 foreach(var pair in attributes) {
@@ -78,6 +77,7 @@ namespace Orchard.UI.Resources {
         public string TagName {
             get { return TagBuilder.TagName; }
         }
+        public TagRenderMode TagRenderMode { get; private set; }
         public string Name { get; private set; }
         public string Type { get; private set; }
         public string Version { get; private set; }
@@ -118,7 +118,11 @@ namespace Orchard.UI.Resources {
             return this;
         }
 
-        public ResourceDefinition SetUrl(string url, string urlDebug = null) {
+        public ResourceDefinition SetUrl(string url) {
+            return SetUrl(url, null);
+        }
+
+        public ResourceDefinition SetUrl(string url, string urlDebug) {
             if (String.IsNullOrEmpty(url)) {
                 throw new ArgumentNullException("url");
             }
@@ -129,7 +133,15 @@ namespace Orchard.UI.Resources {
             return this;
         }
 
-        public ResourceDefinition SetCdn(string cdnUrl, string cdnUrlDebug = null, bool? cdnSupportsSsl = null) {
+        public ResourceDefinition SetCdn(string cdnUrl) {
+            return SetCdn(cdnUrl, null, null);
+        }
+
+        public ResourceDefinition SetCdn(string cdnUrl, string cdnUrlDebug) {
+            return SetCdn(cdnUrl, cdnUrlDebug, null);
+        }
+
+        public ResourceDefinition SetCdn(string cdnUrl, string cdnUrlDebug, bool? cdnSupportsSsl) {
             if (String.IsNullOrEmpty(cdnUrl)) {
                 throw new ArgumentNullException("cdnUrl");
             }

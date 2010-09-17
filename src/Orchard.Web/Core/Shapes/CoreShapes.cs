@@ -117,7 +117,7 @@ namespace Orchard.Core.Shapes {
             foreach (var context in requiredResources.Where(r =>
                 (includeLocation.HasValue ? r.Settings.Location == includeLocation.Value : true) &&
                 (excludeLocation.HasValue ? r.Settings.Location != excludeLocation.Value : true))) {
-                html.ViewContext.Writer.WriteLine(context.GetTagBuilder(defaultSettings, appPath).ToString());
+                html.ViewContext.Writer.WriteLine(context.GetTagBuilder(defaultSettings, appPath).ToString(context.Resource.TagRenderMode));
             }
         }
 
