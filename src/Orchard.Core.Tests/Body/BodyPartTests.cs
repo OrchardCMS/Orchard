@@ -13,6 +13,9 @@ using Orchard.ContentManagement.Records;
 using Orchard.Core.Common.Handlers;
 using Orchard.Core.Common.Models;
 using Orchard.Data;
+using Orchard.DisplayManagement;
+using Orchard.DisplayManagement.Descriptors;
+using Orchard.DisplayManagement.Implementation;
 using Orchard.Environment;
 using Orchard.Security;
 using Orchard.Tests.Modules;
@@ -30,6 +33,9 @@ namespace Orchard.Core.Tests.Body {
             builder.RegisterInstance(new Mock<IAuthorizer>().Object);
             builder.RegisterInstance(new Mock<INotifier>().Object);
             builder.RegisterType<OrchardServices>().As<IOrchardServices>();
+            builder.RegisterType<DefaultShapeTableManager>().As<IShapeTableManager>();
+            builder.RegisterType<DefaultShapeFactory>().As<IShapeFactory>();
+            builder.RegisterType<ShapeHelperFactory>().As<IShapeHelperFactory>();
 
             builder.RegisterType<ThingHandler>().As<IContentHandler>();
 

@@ -16,6 +16,9 @@ using Orchard.Core.Routable.Handlers;
 using Orchard.Core.Routable.Models;
 using Orchard.Core.Routable.Services;
 using Orchard.Data;
+using Orchard.DisplayManagement;
+using Orchard.DisplayManagement.Descriptors;
+using Orchard.DisplayManagement.Implementation;
 using Orchard.Environment;
 using Orchard.Security;
 using Orchard.Tests.Modules;
@@ -46,6 +49,9 @@ namespace Orchard.Core.Tests.Routable.Services {
             builder.RegisterType<StuffHandler>().As<IContentHandler>();
             builder.RegisterType<RoutableService>().As<IRoutableService>();
             builder.RegisterType<RoutablePathConstraint>().As<IRoutablePathConstraint>();
+            builder.RegisterType<DefaultShapeTableManager>().As<IShapeTableManager>();
+            builder.RegisterType<DefaultShapeFactory>().As<IShapeFactory>();
+            builder.RegisterType<ShapeHelperFactory>().As<IShapeHelperFactory>();
 
             builder.RegisterType<DefaultContentQuery>().As<IContentQuery>();
             builder.RegisterInstance(new UrlHelper(new RequestContext(new StubHttpContext("~/"), new RouteData()))).As<UrlHelper>();

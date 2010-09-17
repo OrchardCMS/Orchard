@@ -10,6 +10,9 @@ using Orchard.ContentManagement.Records;
 using Orchard.Core.Scheduling.Models;
 using Orchard.Core.Scheduling.Services;
 using Orchard.Data;
+using Orchard.DisplayManagement;
+using Orchard.DisplayManagement.Descriptors;
+using Orchard.DisplayManagement.Implementation;
 using Orchard.Tasks.Scheduling;
 using Orchard.Tests.Modules;
 
@@ -34,6 +37,9 @@ namespace Orchard.Core.Tests.Scheduling {
             builder.RegisterInstance(_mockServices.Object);
             builder.RegisterType<DefaultContentManager>().As<IContentManager>();
             builder.RegisterType<DefaultContentManagerSession>().As<IContentManagerSession>();
+            builder.RegisterType<DefaultShapeTableManager>().As<IShapeTableManager>();
+            builder.RegisterType<DefaultShapeFactory>().As<IShapeFactory>();
+            builder.RegisterType<ShapeHelperFactory>().As<IShapeHelperFactory>();
             builder.RegisterInstance(new Mock<IContentDefinitionManager>().Object);
 
             builder.RegisterType<ScheduledTaskManager>().As<IScheduledTaskManager>();
