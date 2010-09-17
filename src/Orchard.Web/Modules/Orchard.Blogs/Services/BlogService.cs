@@ -3,7 +3,6 @@ using System.Linq;
 using JetBrains.Annotations;
 using Orchard.Blogs.Models;
 using Orchard.Blogs.Routing;
-using Orchard.Core.Common.Models;
 using Orchard.ContentManagement;
 using Orchard.Core.Routable.Models;
 
@@ -29,14 +28,6 @@ namespace Orchard.Blogs.Services {
                 .Join<RoutePartRecord>()
                 .OrderBy(br => br.Title)
                 .List();
-        }
-
-        public void Create(BlogPart blogPart) {
-            _contentManager.Create(blogPart.ContentItem);
-        }
-
-        public void Edit(BlogPart blogPart) {
-            _blogSlugConstraint.AddSlug(blogPart.Slug);
         }
 
         public void Delete(BlogPart blogPart) {

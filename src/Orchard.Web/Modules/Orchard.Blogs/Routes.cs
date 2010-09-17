@@ -239,6 +239,7 @@ namespace Orchard.Blogs {
                                                          new MvcRouteHandler())
                                                  },
                              new RouteDescriptor {
+                                                     Priority = 11,
                                                      Route = new Route(
                                                          "{blogSlug}/{postSlug}",
                                                          new RouteValueDictionary {
@@ -255,7 +256,8 @@ namespace Orchard.Blogs {
                                                          new MvcRouteHandler())
                                                  },
                              new RouteDescriptor {
-                                                     Route = new Route(
+                                                    Priority = 11,
+                                                    Route = new Route(
                                                          "{blogSlug}",
                                                          new RouteValueDictionary {
                                                                                       {"area", "Orchard.Blogs"},

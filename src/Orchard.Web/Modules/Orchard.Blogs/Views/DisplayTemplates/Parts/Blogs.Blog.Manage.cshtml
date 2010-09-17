@@ -1,0 +1,7 @@
+﻿@using Orchard.Blogs.Extensions
+@if (AuthorizedFor(Orchard.Blogs.Permissions.ManageBlogs)) {
+//todo: IResourceManager -> Html.RegisterStyle("admin.css"); 
+<div class="item-properties actions">
+    <p><a href="@Url.BlogEdit((string)Model.Slug)" class="edit">@T("Blog Properties")</a></p>
+</div>
+}

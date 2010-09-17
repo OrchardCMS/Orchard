@@ -258,6 +258,7 @@
     <None Include="Contents\Views\Admin\Create.cshtml" />
     <None Include="Contents\Views\Admin\Edit.cshtml" />
     <None Include="Contents\Views\Admin\List.cshtml" />
+    <None Include="Feeds\Views\Feed.cshtml" />
     <None Include="Localization\Views\EditorTemplates\Parts\Localization.Translation.cshtml" />
     <Content Include="Messaging\Module.txt" />
     <None Include="Messaging\Views\EditorTemplates\Parts\Messaging.MessageSettings.cshtml" />

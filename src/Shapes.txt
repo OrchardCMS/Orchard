@@ -35,7 +35,10 @@ List: ul|ol + li*
 Items_Content (a single content item)
 .Zones (meta-property)
 .ContentItem (clr object)
+.Path (from Orchard.Core.Routable(.Handlers.RoutePartHandler))
+.Slug (*necessary?* from Orchard.Core.Routable(.Handlers.RoutePartHandler))
 .Title (from Orchard.Core.Routable(.Handlers.RoutePartHandler))
+.Description (from Orchard.Blogs(.Handlers.BlogPartHandler))
 
 PlaceChildContent
 .Source (another shape, presumed rendered)

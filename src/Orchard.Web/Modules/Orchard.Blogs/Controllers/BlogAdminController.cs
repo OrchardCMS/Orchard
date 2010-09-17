@@ -1,17 +1,15 @@
 using System.Linq;
 using System.Web.Mvc;
-using JetBrains.Annotations;
-using Orchard.Blogs.Drivers;
 using Orchard.Blogs.Extensions;
 using Orchard.Blogs.Models;
 using Orchard.Blogs.Routing;
 using Orchard.Blogs.Services;
-using Orchard.Blogs.ViewModels;
 using Orchard.ContentManagement;
+using Orchard.ContentManagement.Aspects;
 using Orchard.Data;
+using Orchard.DisplayManagement;
 using Orchard.Localization;
 using Orchard.Mvc.Results;
-using Orchard.Settings;
 using Orchard.UI.Admin;
 using Orchard.UI.Notify;
 
@@ -29,7 +27,8 @@ namespace Orchard.Blogs.Controllers {
             IBlogPostService blogPostService,
             IContentManager contentManager,
             ITransactionManager transactionManager,
-            IBlogSlugConstraint blogSlugConstraint) {
+            IBlogSlugConstraint blogSlugConstraint,
+            IShapeHelperFactory shapeHelperFactory) {
             Services = services;
             _blogService = blogService;
             _blogPostService = blogPostService;
@@ -37,8 +36,10 @@ namespace Orchard.Blogs.Controllers {
             _transactionManager = transactionManager;
             _blogSlugConstraint = blogSlugConstraint;
             T = NullLocalizer.Instance;
+            Shape = shapeHelperFactory.CreateHelper();
         }
 
+        dynamic Shape { get; set; }
         public Localizer T { get; set; }
         public IOrchardServices Services { get; set; }
 
@@ -47,35 +48,34 @@ namespace Orchard.Blogs.Controllers {
             if (!Services.Authorizer.Authorize(Permissions.ManageBlogs, T("Not allowed to create blogs")))
                 return new HttpUnauthorizedResult();
 
-            var blog = Services.ContentManager.New<BlogPart>(BlogPartDriver.ContentType.Name);
+            var blog = Services.ContentManager.New<BlogPart>("Blog");
             if (blog == null)
                 return new NotFoundResult();
 
-            var model = new CreateBlogViewModel {
-                Blog = Services.ContentManager.BuildEditorModel(blog)
-            };
-
+            var model = Services.ContentManager.BuildEditorModel(blog);
             return View(model);
         }
 
-        [HttpPost]
-        public ActionResult Create(CreateBlogViewModel model) {
-            var blog = Services.ContentManager.New<BlogPart>(BlogPartDriver.ContentType.Name);
+        [HttpPost, ActionName("Create")]
+        public ActionResult CreatePOST() {
+            var blog = Services.ContentManager.New<BlogPart>("Blog");
 
             if (!Services.Authorizer.Authorize(Permissions.ManageBlogs, T("Couldn't create blog")))
                 return new HttpUnauthorizedResult();
 
-            _blogService.Create(blog);
-            model.Blog = _contentManager.UpdateEditorModel(blog, this);
+            _contentManager.Create(blog, VersionOptions.Draft);
+            var model = _contentManager.UpdateEditorModel(blog, this);
 
             if (!ModelState.IsValid) {
                 _transactionManager.Cancel();
                 return View(model);
             }
 
-            _blogSlugConstraint.AddSlug(model.Blog.Item.Slug);
+            if (!blog.Has<IPublishingControlAspect>())
+                _contentManager.Publish(blog.ContentItem);
 
-            return Redirect(Url.BlogForAdmin(model.Blog.Item.Slug));
+            _blogSlugConstraint.AddSlug((string)model.Slug);
+            return Redirect(Url.BlogForAdmin((string)model.Slug));
         }
 
         public ActionResult Edit(string blogSlug) {
@@ -88,11 +88,7 @@ namespace Orchard.Blogs.Controllers {
             if (blog == null)
                 return new NotFoundResult();
 
-            var model = new BlogEditViewModel {
-                Blog = Services.ContentManager.BuildEditorModel(blog),
-                //PromoteToHomePage = CurrentSite.HomePage == "BlogHomePageProvider;" + blog.Id
-            };
-
+            var model = Services.ContentManager.BuildEditorModel(blog);
             return View(model);
         }
 
@@ -106,20 +102,12 @@ namespace Orchard.Blogs.Controllers {
             if (blog == null)
                 return new NotFoundResult();
 
-            var model = new BlogEditViewModel {
-                Blog = Services.ContentManager.UpdateEditorModel(blog, this),
-            };
-
+            var model = Services.ContentManager.UpdateEditorModel(blog, this);
             if (!ModelState.IsValid)
                 return View(model);
 
-            //if (PromoteToHomePage)
-            //    CurrentSite.HomePage = "BlogHomePageProvider;" + model.Blog.Item.Id;
-
-            _blogService.Edit(model.Blog.Item);
-
+            _blogSlugConstraint.AddSlug(blog.Slug);
             Services.Notifier.Information(T("Blog information updated"));
-
             return Redirect(Url.BlogsForAdmin());
         }
 
@@ -137,19 +125,22 @@ namespace Orchard.Blogs.Controllers {
             _blogService.Delete(blogPart);
 
             Services.Notifier.Information(T("Blog was successfully deleted"));
-
             return Redirect(Url.BlogsForAdmin());
         }
 
         public ActionResult List() {
-            //TODO: (erikpo) Need to make templatePath be more convention based so if my controller name has "Admin" in it then "Admin/{type}" is assumed
-            var model = new AdminBlogsViewModel {
-                Entries = _blogService.Get()
-                    .Select(b => Services.ContentManager.BuildDisplayModel(b, "SummaryAdmin"))
-                    .Select(vm => new AdminBlogEntry { ContentItemViewModel = vm, TotalPostCount = _blogPostService.Get(vm.Item, VersionOptions.Latest).Count()})
-            };
+            var list = Shape.List();
+            list.AddRange(_blogService.Get()
+                              .Select(b => {
+                                          var blog = Services.ContentManager.BuildDisplayModel(b, "SummaryAdmin.Blog");
+                                          blog.TotalPostCount = _blogPostService.Get(b, VersionOptions.Latest).Count();
+                                          return blog;
+                                      }));
 
-            return View(model);
+            var viewModel = Shape.ViewModel()
+                .ContentItems(list);
+
+            return View(viewModel);
         }
 
         //TODO: (erikpo) Should move the slug parameter and get call and null check up into a model binder
@@ -160,10 +151,7 @@ namespace Orchard.Blogs.Controllers {
                 return new NotFoundResult();
 
             //TODO: (erikpo) Need to make templatePath be more convention based so if my controller name has "Admin" in it then "Admin/{type}" is assumed
-            var model = new BlogForAdminViewModel {
-                Blog = Services.ContentManager.BuildDisplayModel(blogPart, "DetailAdmin")
-            };
-
+            var model = Services.ContentManager.BuildDisplayModel(blogPart, "Admin.Blog");
             return View(model);
         }
 

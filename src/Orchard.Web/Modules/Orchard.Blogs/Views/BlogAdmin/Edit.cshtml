@@ -1,0 +1,5 @@
+<h1>@Html.TitleForPage(T("Blog Properties").ToString())</h1>
+@using (Html.BeginFormAntiForgeryPost()) {
+    @Html.ValidationSummary()
+    @Display(Model)
+}

@@ -3,7 +3,6 @@ using System.Linq;
 using System.Web.Mvc;
 using System.Web.Routing;
 using JetBrains.Annotations;
-using Orchard.Blogs.Drivers;
 using Orchard.Blogs.Models;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Aspects;
@@ -165,7 +164,7 @@ namespace Orchard.Blogs.Services {
             var description = content.Optional<string>("description");
             var slug = content.Optional<string>("wp_slug");
 
-            var blogPost = _contentManager.New<BlogPostPart>(BlogPostPartDriver.ContentType.Name);
+            var blogPost = _contentManager.New<BlogPostPart>("BlogPost");
             
             // BodyPart
             if (blogPost.Is<BodyPart>()) {

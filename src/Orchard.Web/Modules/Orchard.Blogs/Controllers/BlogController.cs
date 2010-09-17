@@ -3,12 +3,10 @@ using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
 using System.Xml.Linq;
-using Orchard.Blogs.Extensions;
 using Orchard.Blogs.Models;
 using Orchard.Blogs.Routing;
 using Orchard.Blogs.Services;
-using Orchard.Blogs.ViewModels;
-using Orchard.Core.Feeds;
+using Orchard.DisplayManagement;
 using Orchard.Logging;
 using Orchard.Mvc.Results;
 
@@ -19,22 +17,28 @@ namespace Orchard.Blogs.Controllers {
         private readonly IBlogSlugConstraint _blogSlugConstraint;
         private readonly RouteCollection _routeCollection;
 
-        public BlogController(IOrchardServices services, IBlogService blogService, IBlogSlugConstraint blogSlugConstraint, RouteCollection routeCollection) {
+        public BlogController(IOrchardServices services, IBlogService blogService, IBlogSlugConstraint blogSlugConstraint, RouteCollection routeCollection, IShapeHelperFactory shapeHelperFactory) {
             _services = services;
             _blogService = blogService;
             _blogSlugConstraint = blogSlugConstraint;
             _routeCollection = routeCollection;
             Logger = NullLogger.Instance;
+            Shape = shapeHelperFactory.CreateHelper();
         }
 
+        dynamic Shape { get; set; }
         protected ILogger Logger { get; set; }
 
         public ActionResult List() {
-            var model = new BlogsViewModel {
-                Blogs = _blogService.Get().Select(b => _services.ContentManager.BuildDisplayModel(b, "Summary"))
-            };
+            var blogs = _blogService.Get().Select(b => _services.ContentManager.BuildDisplayModel(b, "Summary.Blog"));
 
-            return View(model);
+            var list = Shape.List();
+            list.AddRange(blogs);
+
+            var viewModel = Shape.ViewModel()
+                .ContentItems(list);
+
+            return View(viewModel);
         }
 
         //TODO: (erikpo) Should move the slug parameter and get call and null check up into a model binder
@@ -47,11 +51,7 @@ namespace Orchard.Blogs.Controllers {
             if (blog == null)
                 return new NotFoundResult();
 
-            var model = new BlogViewModel {
-                Blog = _services.ContentManager.BuildDisplayModel(blog, "Detail")
-            };
-
-
+            var model = _services.ContentManager.BuildDisplayModel(blog, "Blog");
             return View(model);
         }
 

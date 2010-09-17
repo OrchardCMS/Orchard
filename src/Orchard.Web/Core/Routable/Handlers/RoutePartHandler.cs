@@ -34,7 +34,9 @@ namespace Orchard.Core.Routable.Handlers {
                     routable.Path = routable.GetPathWithSlug(routable.Slug);
                 });
 
-            OnGetDisplayShape<RoutePart>((context, routable) => context.Model.Title = routable.Title);
+            OnGetDisplayShape<RoutePart>(SetModelProperties);
+            OnGetEditorShape<RoutePart>(SetModelProperties);
+            OnUpdateEditorShape<RoutePart>(SetModelProperties);
 
             OnPublished<RoutePart>((context, routable) => {
                 if (context.PublishingItemVersionRecord != null)
@@ -44,6 +46,13 @@ namespace Orchard.Core.Routable.Handlers {
             });
 
             OnIndexing<RoutePart>((context, part) => context.DocumentIndex.Add("title", part.Record.Title).RemoveTags().Analyze());
+        }
+
+        private static void SetModelProperties(BuildModelContext context, RoutePart routable) {
+            var item = context.Model;
+            item.Title = routable.Title;
+            item.Slug = routable.Slug;
+            item.Path = routable.Path;
         }
 
         public Localizer T { get; set; }

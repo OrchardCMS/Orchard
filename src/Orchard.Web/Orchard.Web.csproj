@@ -100,9 +100,9 @@
     <Content Include="Global.asax" />
     <Content Include="Refresh.html" />
     <Content Include="Themes\Contoso\Styles\search.css" />
-    <Content Include="Themes\Contoso\Views\DisplayTemplates\Items\Contents.Item.ascx" />
-    <Content Include="Themes\Contoso\Views\DisplayTemplates\Parts\Blogs.BlogPost.Metadata.ascx" />
-    <Content Include="Themes\Contoso\Views\Orchard.Search\Search\Index.ascx" />
+    <Content Include="Themes\Contoso\Views_\DisplayTemplates\Items\Contents.Item.ascx" />
+    <Content Include="Themes\Contoso\Views_\DisplayTemplates\Parts\Blogs.BlogPost.Metadata.ascx" />
+    <Content Include="Themes\Contoso\Views_\Orchard.Search\Search\Index.ascx" />
     <Content Include="Themes\Corporate\Views\DisplayTemplates\Parts\Blogs.BlogPost.Metadata.ascx" />
     <Content Include="Themes\Green\Views\Orchard.Search\Search\Index.ascx" />
     <Content Include="Themes\SafeMode\Views\Zone.ascx" />
@@ -142,9 +142,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Config\Sample.Host.config" />
-    <None Include="Themes\Contoso\Views\Header.ascx_" />
-    <None Include="Themes\Contoso\Views\Layout.ascx_" />
-    <None Include="Themes\Contoso\Views\Layout.HomePage.ascx_" />
+    <None Include="Themes\Contoso\Views_\Header.ascx_" />
+    <None Include="Themes\Contoso\Views_\Layout.ascx_" />
+    <None Include="Themes\Contoso\Views_\Layout.HomePage.ascx_" />
     <None Include="Themes\SafeMode\Views\DocumentZone.cshtml" />
     <None Include="Themes\TheAdmin\Styles\images\icons.psd" />
     <Content Include="Themes\ClassicDark\Content\Images\bodyBackgroundgrey.gif" />
@@ -204,20 +204,20 @@
     <Content Include="Themes\Contoso\Zones\Home-Hero-Gallery.html" />
     <Content Include="Themes\Contoso\Zones\Home-Hero.html" />
     <Content Include="Themes\Contoso\Zones\Sidebar-w1.html" />
-    <Content Include="Themes\Contoso\Views\DisplayTemplates\Items\Blogs.Blog.ascx" />
-    <Content Include="Themes\Contoso\Views\DisplayTemplates\Items\Blogs.BlogPost.ascx" />
-    <Content Include="Themes\Contoso\Views\DisplayTemplates\Items\Blogs.BlogPost.ListByArchive.ascx" />
-    <Content Include="Themes\Contoso\Views\DisplayTemplates\Parts\Comments.Comments.ascx" />
-    <Content Include="Themes\Contoso\Views\DisplayTemplates\Parts\Common.Metadata.ascx" />
-    <Content Include="Themes\Contoso\Views\DisplayTemplates\Parts\Tags.ShowTags.ascx" />
+    <Content Include="Themes\Contoso\Views_\DisplayTemplates\Items\Blogs.Blog.ascx" />
+    <Content Include="Themes\Contoso\Views_\DisplayTemplates\Items\Blogs.BlogPost.ascx" />
+    <Content Include="Themes\Contoso\Views_\DisplayTemplates\Items\Blogs.BlogPost.ListByArchive.ascx" />
+    <Content Include="Themes\Contoso\Views_\DisplayTemplates\Parts\Comments.Comments.ascx" />
+    <Content Include="Themes\Contoso\Views_\DisplayTemplates\Parts\Common.Metadata.ascx" />
+    <Content Include="Themes\Contoso\Views_\DisplayTemplates\Parts\Tags.ShowTags.ascx" />
     <Content Include="Themes\Contoso\Scripts\easySlider.js" />
     <Content Include="Themes\Contoso\Styles\site.css" />
     <Content Include="Themes\Contoso\Theme.png" />
     <Content Include="Themes\Contoso\Theme.txt" />
-    <None Include="Themes\Contoso\Views\Footer.ascx_" />
-    <Content Include="Themes\Contoso\Views\ListOfComments.ascx" />
-    <None Include="Themes\Contoso\Views\LogOn.ascx_" />
-    <None Include="Themes\Contoso\Views\User.ascx_" />
+    <None Include="Themes\Contoso\Views_\Footer.ascx_" />
+    <Content Include="Themes\Contoso\Views_\ListOfComments.ascx" />
+    <None Include="Themes\Contoso\Views_\LogOn.ascx_" />
+    <None Include="Themes\Contoso\Views_\User.ascx_" />
     <Content Include="Themes\Corporate\Content\Images\bkg.jpg" />
     <Content Include="Themes\Corporate\Content\Images\consult-bkg.png" />
     <Content Include="Themes\Corporate\Content\Images\content-bkg.png" />

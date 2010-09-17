@@ -1,107 +1,65 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using System.Web.Routing;
 using JetBrains.Annotations;
 using Orchard.Blogs.Extensions;
 using Orchard.Blogs.Models;
 using Orchard.Blogs.Services;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
-using Orchard.Core.Contents.ViewModels;
 using Orchard.Core.ContentsLocation.Models;
 using Orchard.Core.Feeds;
+using Orchard.DisplayManagement;
 using Orchard.Localization;
-using Orchard.Mvc.ViewModels;
 
 namespace Orchard.Blogs.Drivers {
     [UsedImplicitly]
-    public class BlogPartDriver : ContentItemDriver<BlogPart> {
+    public class BlogPartDriver : ContentPartDriver<BlogPart> {
         public IOrchardServices Services { get; set; }
-
-        public readonly static ContentType ContentType = new ContentType {
-                                                                             Name = "Blog",
-                                                                             DisplayName = "Blog"
-                                                                         };
 
         private readonly IContentManager _contentManager;
         private readonly IBlogPostService _blogPostService;
         private readonly IFeedManager _feedManager;
 
-        public BlogPartDriver(IOrchardServices services, IContentManager contentManager, IBlogPostService blogPostService, IFeedManager feedManager) {
+        public BlogPartDriver(IOrchardServices services, IContentManager contentManager, IBlogPostService blogPostService, IFeedManager feedManager, IShapeHelperFactory shapeHelperFactory) {
             Services = services;
             _contentManager = contentManager;
             _blogPostService = blogPostService;
             _feedManager = feedManager;
             T = NullLocalizer.Instance;
+            Shape = shapeHelperFactory.CreateHelper();
         }
 
+        dynamic Shape { get; set; }
         public Localizer T { get; set; }
-
-        protected override ContentType GetContentType() {
-            return ContentType;
-        }
 
         protected override string Prefix { get { return ""; } }
 
-        protected override string GetDisplayText(BlogPart item) {
-            return item.Name;
-        }
-
-        public override RouteValueDictionary GetDisplayRouteValues(BlogPart blogPart) {
-            return new RouteValueDictionary {
-                                                {"Area", "Orchard.Blogs"},
-                                                {"Controller", "Blog"},
-                                                {"Action", "Item"},
-                                                {"blogSlug", blogPart.Slug}
-                                            };
-        }
-
-        public override RouteValueDictionary GetEditorRouteValues(BlogPart blogPart) {
-            return new RouteValueDictionary {
-                                                {"Area", "Orchard.Blogs"},
-                                                {"Controller", "Blog"},
-                                                {"Action", "Edit"},
-                                                {"blogSlug", blogPart.Slug}
-                                            };
-        }
-
         protected override DriverResult Display(BlogPart blogPart, string displayType) {
 
-            IEnumerable<ContentItemViewModel<BlogPostPart>> blogPosts = null;
-            if (displayType.StartsWith("DetailAdmin")) {
+            IEnumerable<dynamic > blogPosts = null;
+            if (displayType.StartsWith("Admin")) {
                 blogPosts = _blogPostService.Get(blogPart, VersionOptions.Latest)
-                    .Select(bp => _contentManager.BuildDisplayModel(bp, "SummaryAdmin"));
+                    .Select(bp => _contentManager.BuildDisplayModel(bp, "SummaryAdmin.BlogPost"));
             }
-            else if (displayType.StartsWith("Detail")) {
+            else if (!displayType.Contains("Summary")) {
                 blogPosts = _blogPostService.Get(blogPart)
-                    .Select(bp => _contentManager.BuildDisplayModel(bp, "Summary"));
+                    .Select(bp => _contentManager.BuildDisplayModel(bp, "Summary.BlogPost"));
                 _feedManager.Register(blogPart);
             }
 
+            var blogPostList = Shape.List();
+            blogPostList.AddRange(blogPosts);
+
             return Combined(
-                ContentItemTemplate("Items/Blogs.Blog").LongestMatch(displayType, "Summary", "DetailAdmin", "SummaryAdmin"),
                 ContentPartTemplate(blogPart, "Parts/Blogs.Blog.Manage").Location("manage"),
                 ContentPartTemplate(blogPart, "Parts/Blogs.Blog.Metadata").Location("metadata"),
                 ContentPartTemplate(blogPart, "Parts/Blogs.Blog.Description").Location("manage", "after"),
-                blogPosts == null
-                    ? null
-                    : ContentPartTemplate(
-                        new ListContentsViewModel {
-                            ContainerId = blogPart.Id,
-                            Entries = blogPosts.Select(bp => new ListContentsViewModel.Entry {
-                                ContentItem = bp.Item.ContentItem,
-                                ContentItemMetadata = _contentManager.GetItemMetadata(bp.Item.ContentItem),
-                                ViewModel = bp
-                            }).ToList()
-                        },
-                        "Parts/Blogs.BlogPost.List",
-                        "").LongestMatch(displayType, "DetailAdmin").Location("primary"));
+                ContentPartTemplate(blogPostList, "Parts/Blogs.BlogPost.List").LongestMatch(displayType, "Admin").Location("primary"));
         }
 
         protected override DriverResult Editor(BlogPart blogPart) {
             var location = blogPart.GetLocation("Editor");
             return Combined(
-                ContentItemTemplate("Items/Blogs.Blog"),
                 ContentPartTemplate(blogPart, "Parts/Blogs.Blog.Fields").Location(location));
         }
 

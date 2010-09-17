@@ -1,10 +1,9 @@
 using System.Web.Mvc;
-using Orchard.Blogs.Drivers;
 using Orchard.Blogs.Extensions;
 using Orchard.Blogs.Models;
 using Orchard.Blogs.Services;
-using Orchard.Blogs.ViewModels;
 using Orchard.ContentManagement;
+using Orchard.ContentManagement.Aspects;
 using Orchard.Localization;
 using Orchard.Mvc.AntiForgery;
 using Orchard.Mvc.Results;
@@ -31,40 +30,44 @@ namespace Orchard.Blogs.Controllers {
             if (!Services.Authorizer.Authorize(Permissions.EditBlogPost, T("Not allowed to create blog post")))
                 return new HttpUnauthorizedResult();
 
-            var blogPost = Services.ContentManager.New<BlogPostPart>(BlogPostPartDriver.ContentType.Name);
-
+            var blogPost = Services.ContentManager.New<BlogPostPart>("BlogPost");
             if (blogPost.BlogPart == null)
                 return new NotFoundResult();
 
-            var model = new CreateBlogPostViewModel {
-                BlogPost = Services.ContentManager.BuildEditorModel(blogPost)
-            };
+            var model = Services.ContentManager.BuildEditorModel(blogPost);
+
+            //todo: (heskew) unhack
+            model.Metadata.Type += ".BlogPost";
 
             return View(model);
         }
 
-        [HttpPost]
-        public ActionResult Create(CreateBlogPostViewModel model) {
+        [HttpPost, ActionName("Create")]
+        public ActionResult CreatePOST() {
             if (!Services.Authorizer.Authorize(Permissions.EditBlogPost, T("Couldn't create blog post")))
                 return new HttpUnauthorizedResult();
 
-            var blogPost = Services.ContentManager.New<BlogPostPart>(BlogPostPartDriver.ContentType.Name);
-            
+            var blogPost = Services.ContentManager.New<BlogPostPart>("BlogPost");
             if (blogPost.BlogPart == null)
                 return new NotFoundResult();
 
             Services.ContentManager.Create(blogPost, VersionOptions.Draft);
-            model.BlogPost = Services.ContentManager.UpdateEditorModel(blogPost, this);
+            var model = Services.ContentManager.UpdateEditorModel(blogPost, this);
 
             if (!ModelState.IsValid) {
                 Services.TransactionManager.Cancel();
                 return View(model);
             }
 
+            if (!blogPost.Has<IPublishingControlAspect>())
+                Services.ContentManager.Publish(blogPost.ContentItem);
+
             Services.Notifier.Information(T("Your {0} has been created.", blogPost.TypeDefinition.DisplayName));
-            return Redirect(Url.BlogPostEdit(model.BlogPost.Item));
+            return Redirect(Url.BlogPostEdit((string)model.Blog.Slug, (int)model.ContentItem.Id));
         }
 
+        //todo: the content shape template has extra bits that the core contents module does not (remove draft functionality)
+        //todo: - move this extra functionality there or somewhere else that's appropriate?
         public ActionResult Edit(string blogSlug, int postId) {
             if (!Services.Authorizer.Authorize(Permissions.EditBlogPost, T("Couldn't edit blog post")))
                 return new HttpUnauthorizedResult();
@@ -77,9 +80,10 @@ namespace Orchard.Blogs.Controllers {
             if (post == null)
                 return new NotFoundResult();
 
-            var model = new BlogPostEditViewModel {
-                BlogPost = Services.ContentManager.BuildEditorModel(post)
-            };
+            var model = Services.ContentManager.BuildEditorModel(post);
+
+            //todo: (heskew) unhack
+            model.Metadata.Type += ".BlogPost";
 
             return View(model);
         }
@@ -99,19 +103,14 @@ namespace Orchard.Blogs.Controllers {
                 return new NotFoundResult();
 
             // Validate form input
-            var model = new BlogPostEditViewModel {
-                BlogPost = Services.ContentManager.UpdateEditorModel(blogPost, this)
-            };
-
-            TryUpdateModel(model);
-
+            var model = Services.ContentManager.UpdateEditorModel(blogPost, this);
             if (!ModelState.IsValid) {
                 Services.TransactionManager.Cancel();
                 return View(model);
             }
 
             Services.Notifier.Information(T("Your {0} has been saved.", blogPost.TypeDefinition.DisplayName));
-            return Redirect(Url.BlogPostEdit(model.BlogPost.Item));
+            return Redirect(Url.BlogPostEdit((BlogPostPart)model.ContentItem.Get(typeof(BlogPostPart))));
         }
 
         [ValidateAntiForgeryTokenOrchard]
