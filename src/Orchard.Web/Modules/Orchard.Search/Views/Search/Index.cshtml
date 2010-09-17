@@ -1,5 +1,5 @@
 ﻿@model Orchard.Search.ViewModels.SearchViewModel
-@Style.Require("Search");
+@{ Style.Require("Search"); }
 
 <h1>@Html.TitleForPage(T("Search").Text)</h1>
 @Html.Zone("search")

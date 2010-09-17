@@ -1,5 +1,5 @@
 ﻿@model Orchard.Themes.ViewModels.ThemesIndexViewModel
-@Style.Require("ThemesAdmin");
+@{ Style.Require("ThemesAdmin"); }
 <h1>@Html.TitleForPage(T("Manage Themes").ToString())</h1>
 @if (Model.CurrentTheme == null) {
 	<p>

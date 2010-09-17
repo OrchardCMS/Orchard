@@ -1,5 +1,5 @@
 @model Orchard.ContentTypes.ViewModels.ListContentTypesViewModel
-@Style.Require("ContentTypesAdmin");
+@{ Style.Require("ContentTypesAdmin"); }
 <h1>@Html.TitleForPage(T("Manage Content Types").ToString())</h1>
 <div class="manage">
     @Html.ActionLink(T("Create new type").ToString(), "Create", new{Controller="Admin",Area="Orchard.ContentTypes"}, new { @class = "button primaryAction" })

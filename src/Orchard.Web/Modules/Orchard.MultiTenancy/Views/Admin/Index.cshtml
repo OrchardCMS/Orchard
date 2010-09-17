@@ -1,7 +1,7 @@
 ﻿@model Orchard.MultiTenancy.ViewModels.TenantsIndexViewModel
 @using Orchard.MultiTenancy.Extensions
 
-@Style.Require("MultiTenancyAdmin");
+@{ Style.Require("MultiTenancyAdmin"); }
 
 <h1>@Html.TitleForPage(T("List of Site's Tenants").ToString())</h1>
 <div class="manage">@Html.ActionLink(T("Add a Tenant").ToString(), "Add", new {area = "Orchard.MultiTenancy"}, new { @class = "button primaryAction" })</div>
