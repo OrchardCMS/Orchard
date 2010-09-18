@@ -5,10 +5,12 @@ using System.Text;
 using System.Web;
 using System.Web.Mvc;
 using Autofac;
+using Autofac.Integration.Web;
 using NUnit.Framework;
 using Orchard.DisplayManagement.Descriptors;
 using Orchard.DisplayManagement.Implementation;
 using Orchard.DisplayManagement.Shapes;
+using Orchard.Tests.Stubs;
 using Orchard.Themes;
 
 namespace Orchard.Tests.DisplayManagement {
@@ -79,8 +81,14 @@ namespace Orchard.Tests.DisplayManagement {
 
         public class TestWorkContext : WorkContext {
             readonly IDictionary<string, object> _state = new Dictionary<string, object>();
+            public IContainerProvider ContainerProvider { get; set; }
 
             public override T Resolve<T>() {
+                if (typeof(T) == typeof(ILifetimeScope))
+                {
+                    return (T) ContainerProvider.RequestLifetime;
+                }
+                
                 throw new NotImplementedException();
             }
 
