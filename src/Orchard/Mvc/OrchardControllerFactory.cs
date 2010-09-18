@@ -2,7 +2,6 @@ using System.Web.Mvc;
 using System.Web.Routing;
 using Autofac;
 using Autofac.Core;
-using Autofac.Integration.Web;
 
 namespace Orchard.Mvc {
     public class OrchardControllerFactory : DefaultControllerFactory {
