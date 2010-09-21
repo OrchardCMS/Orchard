@@ -15,7 +15,7 @@
             <meta itemprop="Name" content="@Model.Name" />
             @Html.HiddenFor(m => m.Name)
         </fieldset>
-        @Display(Model)
+        
         <div class="manage-type">
             <h2>@T("Fields")</h2>
             <div class="manage add-to-type">
@@ -34,12 +34,11 @@
     </div> 
 }
 
-@//todo: (sebros) move at the end of the page
-@/*
+@using(Script.Foot()){
 <script type="text/javascript">
     (function ($) {
         $(".manage-field h3,.manage-part h3").expandoControl(function (controller) { return controller.nextAll(".details"); }, { collapse: true, remember: false });
         $(".manage-field h4").expandoControl(function (controller) { return controller.nextAll(".settings"); }, { collapse: true, remember: false });
     })(jQuery);
 </script>
-*/
+}
