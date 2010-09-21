@@ -20,7 +20,7 @@ namespace Orchard.UI.Admin.Notification {
                 return;
 
             // if it's not a view result, a redirect for example
-            if (filterContext.Result is ViewResultBase)
+            if (!(filterContext.Result is ViewResultBase))
                 return;
             
             var messageEntries = _notificationManager.GetNotifications().ToList();

@@ -85,7 +85,7 @@ namespace Orchard.UI.Notify {
             var shape = _shapeHelperFactory.CreateHelper();
             var messagesZone = _workContextAccessor.GetContext(filterContext).Page.Zones["Messages"];
             foreach(var messageEntry in messageEntries)
-                messagesZone.Add(shape.Message(messageEntry));
+                messagesZone = messagesZone.Add(shape.Message(messageEntry));
 
             //todo: (heskew) probably need to keep duplicate messages from being pushed into the zone like the previous behavior
             //baseViewModel.Messages = baseViewModel.Messages == null ? messageEntries .Messages.Union(messageEntries).ToList();
