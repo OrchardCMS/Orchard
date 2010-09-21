@@ -7,8 +7,9 @@ Model.Content.Zones.AddRenderPartial("primary:before", "CultureSelection", Model
     @Html.EditorForItem(m=>m.Content)
 }
 
-@using(Html.Capture(script => WorkContext.Page.Tail.Add(script) ){
+@using(Script.Foot()){
 <script type="text/javascript">
+//<![CDATA[
     (function ($) {
         // grab the slug input
         var slug = $("#Routable_Slug");
@@ -27,5 +28,6 @@ Model.Content.Zones.AddRenderPartial("primary:before", "CultureSelection", Model
             });
         }
     })(jQuery);
+//]]>
 </script>
 }

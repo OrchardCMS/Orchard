@@ -4,12 +4,12 @@ ResourceManager Notes from Bertrand
 x No default parameters
 x Refactor to take over resource manager name
 Better interface pattern for defining resources
-Script.Load API that is a view engine specific helper and that directs rendering within the using (using Idisposable pattern) to a buffer that can be rendered later.
+x Script.Load API that is a view engine specific helper and that directs rendering within the using (using Idisposable pattern) to a buffer that can be rendered later.
 x Script.Require returns RequireSettings and has fluent api to add stuff later.
 When using the shortcut registration+require Script.Require("../script/foo.js") we resolve the url to an app-relative path and use that as the id.
 If you want ot define a debug version in that case, just do a proper registration.
 To decide if the app is in debug mode, we look at a setting on the require, then at site setting mode and as a last resort on the compilation mode of the app.
-Merge asap, then debug, then refactor.
+x Merge asap, then debug, then refactor.
 
 Raw notes from Dave during meeting:
 ====================================
@@ -25,13 +25,13 @@ Raw notes from Dave during meeting:
 
 // x no defualt params
 // better interface/pattern for defining resources
-// Script.Load (view-engine specific helper required)
+// x Script.Load (view-engine specific helper required)
 // x Script.Require returns RequireSettings and has fluent api?
 // x (no) Add Script.RequireHead <-- or no due to fluent api
 // x Rename Localization resource manager
 // Require w/ app relative url means inline definitin of url only, resolved url is resource name
 // Site setting for debug mode true false or from web.config setting
-// Moved all copies of jquery and jquery related scripts to a single location
+// x Moved all copies of jquery and jquery related scripts to a single location
 // Get minified versions of any external scripts that we don't currently have.
 // Integrate MS ajax min to build to minify our own js and css files?
 

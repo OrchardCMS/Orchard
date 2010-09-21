@@ -26,7 +26,7 @@ namespace Orchard.Mvc {
         public ScriptRegister Script {
             get {
                 return _scriptRegister ??
-                    (_scriptRegister = new ScriptRegister(Html.ViewDataContainer, Html.Resolve<IResourceManager>()));
+                    (_scriptRegister = new ViewPageScriptRegister(Writer, Html.ViewDataContainer, Html.Resolve<IResourceManager>()));
             }
         }
         
@@ -44,7 +44,7 @@ namespace Orchard.Mvc {
             }
         }
         
-	public override void InitHelpers() {
+	    public override void InitHelpers() {
             base.InitHelpers();
 
             _workContext = ViewContext.GetWorkContext();
@@ -113,6 +113,22 @@ namespace Orchard.Mvc {
             }
         }
 
+        internal class ViewPageScriptRegister : ScriptRegister {
+            private readonly HtmlTextWriter _context;
+
+            public ViewPageScriptRegister(HtmlTextWriter context, IViewDataContainer container, IResourceManager resourceManager)
+                : base(container, resourceManager) {
+                _context = context;
+            }
+
+            public override IDisposable Head() {
+                return new CaptureScope(_context, s => ResourceManager.RegisterHeadScript(s.ToString()));
+            }
+
+            public override IDisposable Foot() {
+                return new CaptureScope(_context, s => ResourceManager.RegisterFootScript(s.ToString()));
+            }
+        }
     }
 
     public class ViewPage : ViewPage<dynamic> {

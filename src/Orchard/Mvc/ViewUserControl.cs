@@ -33,7 +33,7 @@ namespace Orchard.Mvc {
         public ScriptRegister Script {
             get {
                 return _scriptRegister ??
-                    (_scriptRegister = new ScriptRegister(Html.ViewDataContainer, Html.Resolve<IResourceManager>()));
+                    (_scriptRegister = new ViewPage.ViewPageScriptRegister(Writer, Html.ViewDataContainer, Html.Resolve<IResourceManager>()));
             }
         }
 

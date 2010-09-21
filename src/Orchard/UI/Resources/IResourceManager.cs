@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace Orchard.UI.Resources {
     public interface IResourceManager : IDependency {
@@ -6,11 +7,15 @@ namespace Orchard.UI.Resources {
         IList<ResourceRequiredContext> BuildRequiredResources(string resourceType);
         IList<LinkEntry> GetRegisteredLinks();
         IList<MetaEntry> GetRegisteredMetas();
+        IList<String> GetRegisteredHeadScripts();
+        IList<String> GetRegisteredFootScripts();
         IEnumerable<IResourceManifest> ResourceProviders { get; }
         ResourceManifest DynamicResources { get; }
         ResourceDefinition FindResource(RequireSettings settings);
         void NotRequired(string resourceType, string resourceName);
         RequireSettings Require(string resourceType, string resourceName);
+        void RegisterHeadScript(string script);
+        void RegisterFootScript(string script);
         void RegisterLink(LinkEntry link);
         void SetMeta(MetaEntry meta);
         void AppendMeta(MetaEntry meta, string contentSeparator);

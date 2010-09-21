@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Web;
+using System.Web.Mvc;
 using Autofac;
 using Microsoft.WebPages;
 using Orchard.DisplayManagement;
@@ -33,7 +34,7 @@ namespace Orchard.Mvc.ViewEngines.Razor {
         public ScriptRegister Script {
             get {
                 return _scriptRegister ??
-                    (_scriptRegister = new ScriptRegister(Html.ViewDataContainer, Html.Resolve<IResourceManager>()));
+                    (_scriptRegister = new WebViewScriptRegister(this, Html.ViewDataContainer, Html.Resolve<IResourceManager>()));
             }
         }
 
@@ -106,9 +107,25 @@ namespace Orchard.Mvc.ViewEngines.Razor {
                 _callback(writer);
             }
         }
+
+        class WebViewScriptRegister : ScriptRegister {
+            private readonly WebPageBase _viewPage;
+
+            public WebViewScriptRegister(WebPageBase viewPage, IViewDataContainer container, IResourceManager resourceManager)
+                : base(container, resourceManager) {
+                _viewPage = viewPage;
+            }
+
+            public override IDisposable Head() {
+                return new CaptureScope(_viewPage, s => ResourceManager.RegisterHeadScript(s.ToString()));
+            }
+
+            public override IDisposable Foot() {
+                return new CaptureScope(_viewPage, s => ResourceManager.RegisterFootScript(s.ToString()));
+            }
+        }
     }
 
     public abstract class WebViewPage : WebViewPage<dynamic> {
     }
-
 }

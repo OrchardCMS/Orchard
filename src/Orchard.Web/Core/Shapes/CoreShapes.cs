@@ -89,15 +89,13 @@ namespace Orchard.Core.Shapes {
         [Shape]
         public void HeadScripts(HtmlHelper Html, IResourceManager ResourceManager) {
             WriteResources(Html, ResourceManager, "script", ResourceLocation.Head, null);
+            WriteLiteralScripts(Html, ResourceManager.GetRegisteredHeadScripts());
         }
 
         [Shape]
         public void FootScripts(HtmlHelper Html, IResourceManager ResourceManager) {
             WriteResources(Html, ResourceManager, "script", null, ResourceLocation.Head);
-            TextWriter captured;
-            if (LayoutViewContext.From(Html.ViewContext).Contents.TryGetValue("end-of-page-scripts", out captured)) {
-                Html.ViewContext.Writer.Write(captured);
-            }
+            WriteLiteralScripts(Html, ResourceManager.GetRegisteredFootScripts());
         }
 
         [Shape]
@@ -117,6 +115,16 @@ namespace Orchard.Core.Shapes {
         [Shape]
         public void StylesheetLinks(HtmlHelper Html, IResourceManager ResourceManager) {
             WriteResources(Html, ResourceManager, "stylesheet", null, null);
+        }
+
+        private static void WriteLiteralScripts(HtmlHelper html, IEnumerable<string> scripts) {
+            if (scripts == null) {
+                return;
+            }
+            var writer = html.ViewContext.Writer;
+            foreach (string script in scripts) {
+                writer.WriteLine(script);
+            }
         }
 
         private static void WriteResources(HtmlHelper html, IResourceManager rm, string resourceType, ResourceLocation? includeLocation, ResourceLocation? excludeLocation) {

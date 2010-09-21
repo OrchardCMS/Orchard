@@ -13,6 +13,8 @@ namespace Orchard.UI.Resources {
         private readonly List<LinkEntry> _links = new List<LinkEntry>();
         private readonly Dictionary<string, MetaEntry> _metas = new Dictionary<string, MetaEntry>();
         private readonly Dictionary<string, IList<ResourceRequiredContext>> _builtResources = new Dictionary<string, IList<ResourceRequiredContext>>();
+        private List<String> _headScripts;
+        private List<String> _footScripts;
 
         public ResourceManager(IEnumerable<IResourceManifest> resourceProviders) {
             ResourceProviders = resourceProviders;
@@ -42,6 +44,20 @@ namespace Orchard.UI.Resources {
             }
             _builtResources[resourceType] = null;
             return settings;
+        }
+
+        public virtual void RegisterHeadScript(string script) {
+            if (_headScripts == null) {
+                _headScripts = new List<string>();
+            }
+            _headScripts.Add(script);
+        }
+
+        public virtual void RegisterFootScript(string script) {
+            if (_footScripts == null) {
+                _footScripts = new List<string>();
+            }
+            _footScripts.Add(script);
         }
 
         public virtual void NotRequired(string resourceType, string resourceName) {
@@ -98,6 +114,14 @@ namespace Orchard.UI.Resources {
 
         public virtual IList<MetaEntry> GetRegisteredMetas() {
             return _metas.Values.ToList().AsReadOnly();
+        }
+
+        public virtual IList<String> GetRegisteredHeadScripts() {
+            return _headScripts == null ? null : _headScripts.AsReadOnly();
+        }
+
+        public virtual IList<String> GetRegisteredFootScripts() {
+            return _footScripts == null ? null : _footScripts.AsReadOnly();
         }
 
         public virtual IList<ResourceRequiredContext> BuildRequiredResources(string resourceType) {
