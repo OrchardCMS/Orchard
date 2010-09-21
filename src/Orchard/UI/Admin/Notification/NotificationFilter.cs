@@ -30,7 +30,7 @@ namespace Orchard.UI.Admin.Notification {
             var shape = _shapeHelperFactory.CreateHelper();
             var messagesZone = _workContextAccessor.GetContext(filterContext).Page.Zones["Messages"];
             foreach(var messageEntry in messageEntries)
-                messagesZone.Add(shape.Message(messageEntry));
+                messagesZone = messagesZone.Add(shape.Message(messageEntry));
         }
 
         public void OnResultExecuted(ResultExecutedContext filterContext) {}
