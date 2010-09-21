@@ -62,6 +62,7 @@ namespace Orchard.Core.Routable.Handlers {
         public override void GetContentItemMetadata(GetContentItemMetadataContext context) {
             var routable = context.ContentItem.As<RoutePart>();
             if (routable != null) {
+                context.Metadata.DisplayText = routable.Title;
                 context.Metadata.DisplayRouteValues = new RouteValueDictionary {
                     {"Area", "Routable"},
                     {"Controller", "Item"},

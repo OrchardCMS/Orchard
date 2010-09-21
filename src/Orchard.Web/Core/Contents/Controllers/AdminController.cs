@@ -198,7 +198,13 @@ namespace Orchard.Core.Contents.Controllers {
         }
 
         ActionResult CreatableTypeList() {
-            return View(Shape.Model(Types: GetCreatableTypes()));
+            var list = Shape.List();
+            list.AddRange(GetCreatableTypes());
+
+            var viewModel = Shape.ViewModel()
+                .ContentTypes(list);
+
+            return View("CreatableTypeList", viewModel);
         }
 
         public ActionResult Create(string id) {

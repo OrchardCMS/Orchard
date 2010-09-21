@@ -279,7 +279,7 @@
     <None Include="Common\Views\EditorTemplates\Parts\Common.Container.cshtml" />
     <None Include="Common\Views\EditorTemplates\PlainTextEditor.cshtml" />
     <Content Include="Contents\Module.txt" />
-    <Content Include="Contents\Views\Admin\CreatableTypeList.ascx" />
+    <None Include="Contents\Views\Admin\CreatableTypeList.cshtml" />
     <Content Include="Localization\Styles\admin.css" />
     <Content Include="Localization\Styles\base.css" />
     <None Include="Localization\Views\DisplayTemplates\Parts\Localization.ContentTranslations.Summary.cshtml" />
@@ -288,7 +288,6 @@
     <Content Include="PublishLater\Styles\datetime.css" />
     <None Include="PublishLater\Views\EditorTemplates\Parts\PublishLater.cshtml" />
     <Content Include="Reports\Module.txt" />
-    <None Include="Contents\Views\Items\Content-HomePage.cshtml" />
     <None Include="Reports\Views\Admin\Display.cshtml" />
     <None Include="Reports\Views\Admin\Index.cshtml" />
     <Content Include="Localization\Module.txt" />

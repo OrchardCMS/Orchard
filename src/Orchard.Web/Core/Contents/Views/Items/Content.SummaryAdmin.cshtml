@@ -4,7 +4,6 @@
 	ContentItem contentItem = Model.ContentItem;
 	var returnUrl = ViewContext.RequestContext.HttpContext.Request.ToUrlString();
 }
-
 <div class="summary" itemscope="itemscope" itemid="@contentItem.Id" itemtype="http://orchardproject.net/data/ContentItem">
     <div class="properties">
         <input type="checkbox" value="@contentItem.Id" name="itemIds"/>

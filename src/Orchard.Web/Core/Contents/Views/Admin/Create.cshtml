@@ -1,3 +1,8 @@
+@{
+    var typeDisplayName = Model.ContentItem.TypeDefinition.DisplayName;
+	var pageTitle = T("Create {0}", typeDisplayName);
+}
+<h1>@Html.TitleForPage((string)pageTitle.Text)</h1>
 @using (Html.BeginFormAntiForgeryPost()) {
     @Html.ValidationSummary()
     @Display(Model)

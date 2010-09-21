@@ -1,8 +1,16 @@
 ﻿@using Orchard.Core.Contents.ViewModels
-<h1>@//Html.TitleForPage((string.IsNullOrEmpty(Model.TypeDisplayName) ? T("Manage Content") : T("Manage {0} Content", Model.TypeDisplayName)).ToString())
-</h1>
+@{
+    var typeDisplayName = Model.TypeDisplayName;
+    var pageTitle = T("Manage Content");
+    var createLinkText = T("Create New Content");
+    if (!string.IsNullOrWhiteSpace(typeDisplayName)) {
+        pageTitle = T("Manage {0} Content", typeDisplayName);
+        createLinkText = T("Create New {0}", typeDisplayName);
+    }
+}
+<h1>@Html.TitleForPage(pageTitle)</h1>
 <div class="manage">
-    @Html.ActionLink((string)(!string.IsNullOrEmpty((string)Model.TypeDisplayName) ? T("Create New {0}", Model.TypeDisplayName).Text : T("Create New Content").Text), "Create", null, new { @class = "button primaryAction" })
+    @Html.ActionLink(createLinkText.Text, "Create", new { Area = "Contents", Id = (string)Model.Options.SelectedFilter }, new { @class = "button primaryAction" })
 </div>
 @using (Html.BeginFormAntiForgeryPost()) {
     <fieldset class="bulk-actions">
@@ -20,7 +28,7 @@
         <select id="filterResults" name="Options.SelectedFilter">
             @Html.SelectOption((string)Model.Options.SelectedFilter, "", T("any (show all)").ToString())
             @foreach(var filterOption in Model.Options.FilterOptions) {
-                @Html.SelectOption((String)Model.Options.SelectedFilter, (string)filterOption.Key, (string)filterOption.Value)
+                @Html.SelectOption((string)Model.Options.SelectedFilter, (string)filterOption.Key, (string)filterOption.Value)
             }
         </select>
         <label for="orderResults" class="bulk-order">@T("Ordered by")</label>
