@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Globalization;
 using System.Linq;
+using System.Web;
+using System.Web.Hosting;
 using JetBrains.Annotations;
 
 namespace Orchard.UI.Resources {
@@ -29,7 +31,7 @@ namespace Orchard.UI.Resources {
             }
         }
 
-        public virtual RequireSettings Require(string resourceType, [NotNull] string resourceName) {
+        public virtual RequireSettings Require(string resourceType, string resourceName) {
             if (resourceType == null) {
                 throw new ArgumentNullException("resourceType");
             }
@@ -44,6 +46,32 @@ namespace Orchard.UI.Resources {
             }
             _builtResources[resourceType] = null;
             return settings;
+        }
+
+        public virtual RequireSettings Include(string resourceType, string resourcePath) {
+            return Include(resourceType, resourcePath, null);
+        }
+
+        public virtual RequireSettings Include(string resourceType, string resourcePath, string relativeFromPath) {
+            if (resourceType == null) {
+                throw new ArgumentNullException("resourceType");
+            }
+            if (resourcePath == null) {
+                throw new ArgumentNullException("resourcePath");
+            }
+
+            if (VirtualPathUtility.IsAppRelative(resourcePath)) {
+                // ~/ ==> convert to absolute path (e.g. /orchard/..)
+                resourcePath = VirtualPathUtility.ToAbsolute(resourcePath);
+            }
+            else if (!VirtualPathUtility.IsAbsolute(resourcePath) && !Uri.IsWellFormedUriString(resourcePath, UriKind.Absolute)) {
+                // appears to be a relative path (e.g. 'foo.js' or '../foo.js', not "/foo.js" or "http://..")
+                if (String.IsNullOrEmpty(relativeFromPath)) {
+                    throw new InvalidOperationException("ResourcePath cannot be relative unless a base relative path is also provided.");
+                }
+                resourcePath = VirtualPathUtility.ToAbsolute(VirtualPathUtility.Combine(relativeFromPath, resourcePath));
+            }
+            return Require(resourceType, resourcePath).Define(d => d.SetUrl(resourcePath));
         }
 
         public virtual void RegisterHeadScript(string script) {

@@ -13,6 +13,8 @@ namespace Orchard.UI.Resources {
         ResourceManifest DynamicResources { get; }
         ResourceDefinition FindResource(RequireSettings settings);
         void NotRequired(string resourceType, string resourceName);
+        RequireSettings Include(string resourceType, string resourcePath);
+        RequireSettings Include(string resourceType, string resourcePath, string relativeFromPath);
         RequireSettings Require(string resourceType, string resourceName);
         void RegisterHeadScript(string script);
         void RegisterFootScript(string script);
