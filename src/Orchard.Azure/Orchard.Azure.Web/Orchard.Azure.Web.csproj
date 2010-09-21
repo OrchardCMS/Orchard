@@ -146,6 +146,7 @@
     <Compile Include="WebRole.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Error.aspx" />
     <Content Include="Global.asax" />
   </ItemGroup>
   <ItemGroup>

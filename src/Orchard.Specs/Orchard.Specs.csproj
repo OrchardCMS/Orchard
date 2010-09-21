@@ -181,6 +181,7 @@
     </Content>
     <Content Include="Hosting\Orchard.Web\Core\Web.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
     </Content>
     <Content Include="Hosting\Orchard.Web\Themes\Web.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
