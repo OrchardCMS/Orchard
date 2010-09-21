@@ -5,13 +5,23 @@ using System.Text;
 using System.Web.Mvc;
 using System.Web.UI;
 using JetBrains.Annotations;
+using Microsoft.WebPages;
 
 namespace Orchard.UI.Resources {
     public class ResourceRegister {
-        private readonly TemplateControl _templateContainer;
+        private string _baseVirtualPath;
 
         public ResourceRegister(IViewDataContainer container, IResourceManager resourceManager, string resourceType) {
-            _templateContainer = container as TemplateControl;
+            var templateControl = container as TemplateControl;
+            if (templateControl != null) {
+                _baseVirtualPath = templateControl.AppRelativeVirtualPath;
+            }
+            else {
+                var webPage = container as WebPageBase;
+                if (webPage != null) {
+                    _baseVirtualPath = webPage.VirtualPath;
+                }
+            }
             ResourceManager = resourceManager;
             ResourceType = resourceType;
         }
@@ -26,8 +36,8 @@ namespace Orchard.UI.Resources {
         public virtual RequireSettings Require(string resourceName, string minimumVersion) {
             var settings = ResourceManager.Require(ResourceType, resourceName)
                 .WithMinimumVersion(minimumVersion);
-            if (_templateContainer != null) {
-                settings.WithBasePath(ResourceDefinition.GetBasePathFromViewPath(ResourceType, _templateContainer.AppRelativeVirtualPath));
+            if (_baseVirtualPath != null) {
+                settings.WithBasePath(ResourceDefinition.GetBasePathFromViewPath(ResourceType, _baseVirtualPath));
             }
             return settings;
         }

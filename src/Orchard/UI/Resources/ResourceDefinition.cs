@@ -195,7 +195,7 @@ namespace Orchard.UI.Resources {
                     url = Path.ChangeExtension(url, nearestCulture + "." + Path.GetExtension(url));
                 }
             }
-            if (!Uri.IsWellFormedUriString(url, UriKind.Absolute) && !VirtualPathUtility.IsAbsolute(url) && !VirtualPathUtility.IsAppRelative(url)) {
+            if (!Uri.IsWellFormedUriString(url, UriKind.Absolute) && !VirtualPathUtility.IsAbsolute(url) && !VirtualPathUtility.IsAppRelative(url) && !String.IsNullOrEmpty(BasePath)) {
                 // relative urls are relative to the base path of the module that defined the manifest
                 url = VirtualPathUtility.Combine(BasePath, url);
             }

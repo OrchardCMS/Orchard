@@ -94,7 +94,6 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Themes\ThemesResourceManifest.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Default.aspx" />
