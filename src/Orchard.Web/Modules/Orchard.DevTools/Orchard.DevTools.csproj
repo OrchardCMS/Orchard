@@ -130,7 +130,9 @@
     <None Include="Views\HackScript.cshtml" />
     <None Include="Views\HackStyle.cshtml" />
     <None Include="Views\ThinBorder.cshtml" />
-    <None Include="Views\Home\FormShapes.cshtml" />
+    <None Include="Views\Home\FormShapes.cshtml">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="Views\Home\UsingShapes.cshtml" />
     <None Include="Views\Inventory\ShapeTable.cshtml" />
   </ItemGroup>

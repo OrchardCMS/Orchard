@@ -182,7 +182,7 @@ namespace Orchard.Setup.Services {
 
                     // set site theme
                     var themeService = environment.Resolve<IThemeService>();
-                    themeService.SetSiteTheme("Contoso");
+                    themeService.SetSiteTheme("Classic");
 
                     // add default culture
                     var cultureManager = environment.Resolve<ICultureManager>();

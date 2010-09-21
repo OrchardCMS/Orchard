@@ -176,7 +176,7 @@ td.even {
 }
 
 
-#logindisplay {
+.user-display {
     font-size:1.4em;
 	margin:1em auto;
 	text-align:right;

@@ -136,7 +136,6 @@
     <Content Include="Themes\TheAdmin\Styles\images\tableHeaderBackgroundRed.gif" />
     <Content Include="Themes\TheAdmin\Styles\site.css" />
     <Content Include="Themes\TheAdmin\Theme.txt" />
-    <None Include="Themes\Classic\Views\Zone.cshtml" />
     <None Include="Themes\SafeMode\Views\Document.cshtml" />
     <None Include="Themes\TheAdmin\Views\Layout.cshtml" />
   </ItemGroup>
@@ -160,20 +159,13 @@
     <Content Include="Themes\ClassicDark\Views\ZoneTest.ascx" />
     <Content Include="Themes\ClassicDark\Zones\Sidebar.html" />
     <Content Include="Themes\Classic\Content\Images\sidebarBackground.gif" />
-    <Content Include="Themes\Classic\Views\DisplayTemplates\Parts\Blogs.BlogPost.Metadata.ascx" />
     <Content Include="Themes\Classic\Zones\Sidebar.html" />
     <Content Include="Themes\Classic\Styles\blog.css" />
     <Content Include="Themes\Classic\Styles\site.css" />
     <Content Include="Themes\Classic\Theme.png" />
     <Content Include="Themes\Classic\Theme.txt" />
-    <Content Include="Themes\Classic\Views\DisplayTemplates\Items\Blogs.Blog.ascx" />
-    <Content Include="Themes\Classic\Views\DisplayTemplates\Items\Blogs.Blog.Summary.ascx" />
-    <Content Include="Themes\Classic\Views\DisplayTemplates\Items\Blogs.BlogPost.ascx" />
-    <Content Include="Themes\Classic\Views\DisplayTemplates\Items\Blogs.BlogPost.Summary.ascx" />
-    <Content Include="Themes\Classic\Views\DisplayTemplates\Parts\Common.Metadata.ascx" />
-    <Content Include="Themes\Classic\Views\Footer.ascx" />
-    <Content Include="Themes\Classic\Views\Layout.ascx" />
-    <Content Include="Themes\Classic\Views\ZoneTest.ascx" />
+    <None Include="Themes\Classic\Views\Footer.cshtml" />
+    <None Include="Themes\Classic\Views\Layout.cshtml" />
     <Content Include="Themes\Contoso\Content\Images\bkg.jpg" />
     <Content Include="Themes\Contoso\Content\Images\comment-arrow.png" />
     <Content Include="Themes\Contoso\Content\Images\content-bkg.png" />

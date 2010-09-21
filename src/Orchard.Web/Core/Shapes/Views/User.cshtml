@@ -1,5 +1,5 @@
 ﻿@using System.Web.Mvc
-        <div id="user-display">
+        <div class="user-display">
 @if (Request.IsAuthenticated) {
         @T("Welcome, <strong>{0}</strong>!", WorkContext.CurrentUser.UserName)
         @Html.ActionLink(T("Log Off").ToString(), "LogOff", new { Controller = "Account", Area = "Orchard.Users", ReturnUrl = Context.Request.RawUrl })
