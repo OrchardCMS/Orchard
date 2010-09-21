@@ -14,30 +14,29 @@ namespace Orchard.Specs.Hosting.Orchard.Web {
         protected void Application_Start() {
             _hostContainer = OrchardStarter.CreateHostContainer(MvcSingletons);
             _host = _hostContainer.Resolve<IOrchardHost>();
-            Host.Initialize();
+            _host.Initialize();
 
             var route = RouteTable.Routes.MapRoute("foo", "hello-world", new { controller = "Home", action = "Index" });
             route.RouteHandler = new HelloYetAgainHandler();
         }
 
         protected void Application_BeginRequest() {
-            Host.BeginRequest();
+            Context.Items["originalHttpContext"] = Context;
+
+            _host.BeginRequest();
         }
 
         protected void Application_EndRequest() {
-            Host.EndRequest();
+            _host.EndRequest();
         }
 
         protected void MvcSingletons(ContainerBuilder builder) {
-            builder.RegisterInstance(ControllerBuilder.Current);
-            builder.RegisterInstance(RouteTable.Routes);
-            builder.RegisterInstance(ModelBinders.Binders);
-            builder.RegisterInstance(ModelMetadataProviders.Current);
-            builder.RegisterInstance(ViewEngines.Engines);
-        }
+            builder.Register(ctx => RouteTable.Routes).SingleInstance();
+            builder.Register(ctx => ModelBinders.Binders).SingleInstance();
+            builder.Register(ctx => ViewEngines.Engines).SingleInstance();
 
-        public static IOrchardHost Host {
-            get { return _host; }
+            builder.RegisterInstance(ControllerBuilder.Current);
+            builder.RegisterInstance(ModelMetadataProviders.Current);
         }
 
         public static void ReloadExtensions() {
@@ -46,7 +45,14 @@ namespace Orchard.Specs.Hosting.Orchard.Web {
 
         public static IWorkContextScope CreateStandaloneEnvironment(string name) {
             var settings = _hostContainer.Resolve<IShellSettingsManager>().LoadSettings().SingleOrDefault(x => x.Name == name);
-            return Host.CreateStandaloneEnvironment(settings);
+            if (settings == null) {
+                settings = new ShellSettings {
+                    Name = name,
+                    State = new TenantState("Uninitialized")
+                };
+            }
+
+            return _host.CreateStandaloneEnvironment(settings);
         }
     }
 }

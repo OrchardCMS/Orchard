@@ -356,21 +356,21 @@ form.link button:hover {
 	margin:10px 0 4px 0;
     padding:4px;
 }
-div.message {
+messages div.message {
     clear:both;
 }
 span.message {
     display:block;
 	margin:4px 0 4px 4px;
 }
-.message a {
+.messages a {
     font-weight:bold;
 }
-.confirmation.message {
+.message-Confirmation {
 	background:#D1F2A5; /* green */
 	border:1px solid #BCD994;
 }
-.warning.message {
+.message-Warning {
 	background:#fdf5bc; /* yellow */
 	border:1px solid #ffea9b;
 }
@@ -383,7 +383,7 @@ span.message {
 	background:#e68585; /* red */
 	color:#fff;
 }
-.info.message {
+.message-Information {
     background:#e6f1c9; /* green */
 	border:1px solid #cfe493;
 	color:#062232;
