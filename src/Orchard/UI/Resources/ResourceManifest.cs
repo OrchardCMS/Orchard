@@ -57,9 +57,9 @@ namespace Orchard.UI.Resources {
             // But the ResourceManifest defined in Orchard.Web/themes is not loading for some reason
             DefineStyle("Admin").SetUrl("~/modules/orchard.themes/styles/admin.css");
 
-            DefineScript("ThemeBase").SetUrl("~/modules/orchard.themes/scripts/base.js").SetDependencies("jQuery");
-            DefineStyle("Theme").SetUrl("~/modules/orchard.themes/styles/site.css"); // todo: missing
-            DefineStyle("ThemeSpecial").SetUrl("~/modules/orchard.themes/styles/special.css");
+            DefineScript("ShapesBase").SetUrl("~/core/shapes/scripts/base.js").SetDependencies("jQuery");
+            DefineStyle("Shapes").SetUrl("~/core/shapes/styles/site.css"); // todo: missing
+            DefineStyle("ShapesSpecial").SetUrl("~/core/shapes/styles/special.css");
 
             DefineStyle("Classic").SetUrl("~/themes/classic/styles/site.css");
             DefineStyle("Classic_Blog").SetUrl("~/themes/classic/styles/blog.css");
@@ -80,7 +80,7 @@ namespace Orchard.UI.Resources {
             DefineStyle("Green_Blog").SetUrl("~/themes/green/styles/blog.css");
             DefineStyle("Green_YUI").SetUrl("~/themes/green/styles/yui.css");
 
-            DefineStyle("SafeMode").SetUrl("~/themes/green/styles/site.css");
+            DefineStyle("SafeMode").SetUrl("~/themes/safemode/styles/site.css");
 
             DefineStyle("TheAdmin").SetUrl("~/themes/theadmin/styles/site.css");
             DefineStyle("TheAdmin_IE").SetUrl("~/themes/theadmin/styles/ie.css");

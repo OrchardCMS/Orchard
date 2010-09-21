@@ -382,7 +382,6 @@
     <None Include="Contents\Views\Items\Content.Summary.cshtml" />
     <None Include="Contents\Views\Items\Content.SummaryAdmin.cshtml" />
     <None Include="Shapes\Views\ContentZone.cshtml" />
-    <None Include="Shapes\Views\DocumentZone.cshtml" />
     <None Include="Shapes\Views\Document.cshtml" />
     <None Include="Shapes\Views\User.cshtml" />
     <None Include="Shapes\Views\Header.cshtml" />
@@ -390,7 +389,6 @@
     <None Include="Shapes\Views\Menu.cshtml" />
     <None Include="Shapes\Views\MenuItem.cshtml" />
     <Content Include="Shapes\Views\Web.config" />
-    <None Include="Shapes\Views\Zone.cshtml" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />

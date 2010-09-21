@@ -104,7 +104,6 @@
     <Content Include="Themes\Contoso\Zones\Footer.html" />
     <Content Include="Themes\Corporate\Views\DisplayTemplates\Parts\Blogs.BlogPost.Metadata.ascx" />
     <Content Include="Themes\Green\Views\Orchard.Search\Search\Index.ascx" />
-    <Content Include="Themes\SafeMode\Views\Zone.ascx" />
     <Content Include="Themes\TheAdmin\Scripts\admin.js" />
     <Content Include="Themes\TheAdmin\Styles\ie.css" />
     <Content Include="Themes\TheAdmin\Styles\images\menuClosed.gif" />
@@ -137,11 +136,12 @@
     <Content Include="Themes\TheAdmin\Styles\images\tableHeaderBackgroundRed.gif" />
     <Content Include="Themes\TheAdmin\Styles\site.css" />
     <Content Include="Themes\TheAdmin\Theme.txt" />
+    <None Include="Themes\Classic\Views\Zone.cshtml" />
+    <None Include="Themes\SafeMode\Views\Document.cshtml" />
     <None Include="Themes\TheAdmin\Views\Layout.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Config\Sample.Host.config" />
-    <None Include="Themes\SafeMode\Views\DocumentZone.cshtml" />
     <None Include="Themes\TheAdmin\Styles\images\icons.psd" />
     <Content Include="Themes\ClassicDark\Content\Images\bodyBackgroundgrey.gif" />
     <Content Include="Themes\ClassicDark\Content\Images\sidebarBackground.gif" />
@@ -287,8 +287,7 @@
     <Content Include="Themes\SafeMode\Styles\site.css" />
     <Content Include="Themes\SafeMode\Theme.png" />
     <Content Include="Themes\SafeMode\Theme.txt" />
-    <Content Include="Themes\SafeMode\Views\Document.aspx" />
-    <Content Include="Themes\SafeMode\Views\Layout.ascx" />
+    <None Include="Themes\SafeMode\Views\Layout.cshtml" />
     <Content Include="Themes\TheAdmin\Styles\ie6.css" />
     <Content Include="Themes\TheAdmin\Styles\images\backgroundGradient.gif" />
     <Content Include="Themes\TheAdmin\Styles\images\backgroundHeader.gif" />

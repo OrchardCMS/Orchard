@@ -63,8 +63,9 @@ namespace Orchard.Setup {
             builder.RegisterType<DefaultCommandManager>().As<ICommandManager>().InstancePerLifetimeScope();
             builder.RegisterType<HelpCommand>().As<ICommandHandler>().InstancePerLifetimeScope();
             builder.RegisterType<DefaultWorkContextAccessor>().As<IWorkContextAccessor>().InstancePerMatchingLifetimeScope("shell");
+            builder.RegisterType<ThemesResourceManifest>().As<IResourceManifest>().InstancePerLifetimeScope();
             builder.RegisterType<ResourceManager>().As<IResourceManager>().InstancePerLifetimeScope();
-            builder.RegisterType<ResourceFilter>().As<FilterProvider>().InstancePerLifetimeScope();
+            builder.RegisterType<ResourceFilter>().As<IFilterProvider>().InstancePerLifetimeScope();
 
             // setup mode specific implementations of needed service interfaces
             builder.RegisterType<SafeModeThemeService>().As<IThemeService>().InstancePerLifetimeScope();
@@ -86,7 +87,6 @@ namespace Orchard.Setup {
             builder.RegisterType<ConfiguredEnginesCache>().As<IConfiguredEnginesCache>();
             builder.RegisterType<PageWorkContext>().As<IWorkContextStateProvider>();
 
-            builder.RegisterType<CoreShapes>().As<IShapeTableProvider>().WithProperty("Feature", Feature).WithMetadata("Feature", Feature);
             builder.RegisterType<ShapeTemplateBindingStrategy>().As<IShapeTableProvider>();
             builder.RegisterType<BasicShapeTemplateHarvester>().As<IShapeTemplateHarvester>();
             builder.RegisterType<ShapeAttributeBindingStrategy>().As<IShapeTableProvider>();

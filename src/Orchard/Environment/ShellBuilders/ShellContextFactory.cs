@@ -99,7 +99,11 @@ namespace Orchard.Environment.ShellBuilders {
 
             var descriptor = new ShellDescriptor {
                 SerialNumber = -1,
-                Features = new[] { new ShellFeature { Name = "Orchard.Setup" } },
+                Features = new[] {
+                    new ShellFeature { Name = "Orchard.Setup" },
+                    new ShellFeature { Name = "Shapes" },
+                    new ShellFeature { Name = "Orchard.jQuery" },
+                },
             };
 
             var blueprint = _compositionStrategy.Compose(settings, descriptor);

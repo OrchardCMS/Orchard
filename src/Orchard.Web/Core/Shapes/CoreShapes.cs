@@ -8,7 +8,6 @@ using System.Web.Mvc.Html;
 using Orchard.DisplayManagement;
 using Orchard.DisplayManagement.Descriptors;
 using Orchard.DisplayManagement.Implementation;
-using Orchard.Environment.Extensions.Models;
 using Orchard.Mvc.ViewEngines;
 using Orchard.UI;
 using Orchard.UI.Resources;
@@ -64,9 +63,27 @@ namespace Orchard.Core.Shapes {
             tagBuilder.MergeAttributes(attributes, false);
             foreach (var cssClass in classes ?? Enumerable.Empty<string>())
                 tagBuilder.AddCssClass(cssClass);
-            if (id != null)
+            if (!string.IsNullOrWhiteSpace(id))
                 tagBuilder.GenerateId(id);
             return tagBuilder;
+        }
+
+        [Shape]
+        public void Zone(dynamic Display, dynamic Shape, TextWriter Output) {
+            string id = Shape.Id;
+            IEnumerable<string> classes = Shape.Classes;
+            IDictionary<string, string> attributes = Shape.Attributes;
+            var zoneWrapper = GetTagBuilder("div", id, classes, attributes);
+            Output.Write(zoneWrapper.ToString(TagRenderMode.StartTag));
+            foreach (var item in Shape)
+                Output.Write(Display(item));
+            Output.Write(zoneWrapper.ToString(TagRenderMode.EndTag));
+        }
+
+        [Shape]
+        public void DocumentZone(dynamic Display, dynamic Shape, TextWriter Output) {
+            foreach (var item in Shape)
+                Output.Write(Display(item));
         }
 
         [Shape]
