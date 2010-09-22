@@ -208,7 +208,6 @@ namespace Orchard.Setup.Services {
                         .WithPart("PublishLaterPart")
                         .WithPart("RoutePart")
                         .WithPart("BodyPart")
-                        .WithPart("CommentsPart")
                         .WithPart("TagsPart")
                         .WithPart("LocalizationPart")
                         .Creatable()
