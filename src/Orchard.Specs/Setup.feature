@@ -4,36 +4,42 @@ Feature: Setup
     I want to setup a new site from the default screen
 
 Scenario: Root request shows setup form
-    Given I have a clean site
-        And I have module "Orchard.Setup"
-        And I have theme "SafeMode"
+    Given I have a clean site with
+            | extension | names |
+            | module | Orchard.Setup, Orchard.Users, Orchard.Roles, Orchard.Comments, Orchard.Themes, Orchard.jQuery, TinyMce |
+            | core | Common, Contents, ContentsLocation, Dashboard, Feeds, HomePage, Navigation, Routable, PublishLater, Scheduling, Settings, Shapes, XmlRpc  |
+            | theme | SafeMode |
     When I go to "/Default.aspx"
     Then I should see "Welcome to Orchard"
         And I should see "Finish Setup"
         And the status should be 200 OK
 
 Scenario: Setup folder also shows setup form
-    Given I have a clean site
-        And I have module "Orchard.Setup"
-        And I have theme "SafeMode"
+    Given I have a clean site with
+            | extension | names |
+            | module | Orchard.Setup, Orchard.Users, Orchard.Roles, Orchard.Comments, Orchard.Themes, Orchard.jQuery, TinyMce |
+            | core | Common, Contents, ContentsLocation, Dashboard, Feeds, HomePage, Navigation, Routable, PublishLater, Scheduling, Settings, Shapes, XmlRpc  |
+            | theme | SafeMode |
     When I go to "/Setup"
     Then I should see "Welcome to Orchard"
         And I should see "Finish Setup"
         And the status should be 200 OK
 
 Scenario: Some of the initial form values are required
-    Given I have a clean site
-        And I have module "Orchard.Setup"
-        And I have theme "SafeMode"
+    Given I have a clean site with
+            | extension | names |
+            | module | Orchard.Setup, Orchard.Users, Orchard.Roles, Orchard.Comments, Orchard.Themes, Orchard.jQuery, TinyMce |
+            | core | Common, Contents, ContentsLocation, Dashboard, Feeds, HomePage, Navigation, Routable, PublishLater, Scheduling, Settings, Shapes, XmlRpc  |
+            | theme | SafeMode |
     When I go to "/Setup"
         And I hit "Finish Setup"
-    Then I should see "Site name is required"
-        And I should see "Password is required"
+    Then I should see "<input autofocus="autofocus" class="input-validation-error" id="SiteName" name="SiteName" type="text" value="" />"
+        And I should see "<input class="input-validation-error" id="AdminPassword" name="AdminPassword" type="password" />"
 
 Scenario: Calling setup on a brand new install
     Given I have a clean site with
             | extension | names |
-            | module | Orchard.Setup, Orchard.Users, Orchard.Roles, Orchard.Comments, Orchard.Themes, Orchard.jQuery, Orchard.Contents, TinyMce |
+            | module | Orchard.Setup, Orchard.Users, Orchard.Roles, Orchard.Comments, Orchard.Themes, Orchard.jQuery, TinyMce |
             | core | Common, Contents, ContentsLocation, Dashboard, Feeds, HomePage, Navigation, Routable, PublishLater, Scheduling, Settings, Shapes, XmlRpc  |
             | theme | SafeMode, Classic |
         And I am on "/Setup"

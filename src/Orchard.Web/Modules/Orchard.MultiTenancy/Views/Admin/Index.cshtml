@@ -10,8 +10,7 @@
     <li class="tenant @tenant.State.CurrentState">
         <div class="summary">
             <div class="properties">
-                <h3>@tenant.Name
-                    @if (!string.IsNullOrEmpty(tenant.RequestUrlHost)) {
+                <h3>@tenant.Name @if (!string.IsNullOrEmpty(tenant.RequestUrlHost)) {
                          <span class="tenantHost"> - @Html.Link(Url.Tenant(tenant), Url.Tenant(tenant))</span>
                     }</h3>
             </div>
