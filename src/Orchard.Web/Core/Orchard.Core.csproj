@@ -87,6 +87,7 @@
     <Compile Include="Common\ViewModels\TextContentFieldDisplayViewModel.cs" />
     <Compile Include="Common\ViewModels\TextContentFieldEditorViewModel.cs" />
     <Compile Include="Contents\Controllers\ItemController.cs" />
+    <Compile Include="Contents\Drivers\ContentsDriver.cs" />
     <Compile Include="Contents\Extensions\MetaDataExtensions.cs" />
     <Compile Include="Contents\Handlers\ContentsHandler.cs" />
     <Compile Include="Contents\Permissions.cs" />
@@ -266,6 +267,8 @@
     <None Include="Contents\Views\Admin\List.cshtml" />
     <None Include="Feeds\Views\Feed.cshtml" />
     <None Include="Localization\Views\EditorTemplates\Parts\Localization.Translation.cshtml" />
+    <Content Include="Contents\Views\DisplayTemplates\Parts\Contents.Publish.ascx" />
+    <None Include="Contents\Views\DisplayTemplates\Parts\Contents.Publish.SummaryAdmin.cshtml" />
     <Content Include="Messaging\Module.txt" />
     <None Include="Messaging\Views\EditorTemplates\Parts\Messaging.MessageSettings.cshtml" />
     <Content Include="PublishLater\Content\Admin\images\draft.gif" />
