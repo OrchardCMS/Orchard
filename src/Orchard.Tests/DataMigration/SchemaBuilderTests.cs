@@ -96,7 +96,7 @@ namespace Orchard.Tests.DataMigration {
                     .Column("Lastname", DbType.String, column => column.WithLength(100).NotNull())
                     .Column("SN", DbType.AnsiString, column => column.WithLength(40).Unique())
                     .Column("Salary", DbType.Decimal, column => column.WithPrecision(9).WithScale(2))
-                    .Column("Gender", DbType.Decimal, column => column.WithDefault("''"))
+                    .Column("Gender", DbType.Decimal, column => column.WithDefault(""))
                     );
         }
 
@@ -109,7 +109,7 @@ namespace Orchard.Tests.DataMigration {
                     .Column("Lastname", DbType.String, column => column.WithLength(100).NotNull())
                     .Column("SN", DbType.AnsiString, column => column.WithLength(40).Unique())
                     .Column("Salary", DbType.Decimal, column => column.WithPrecision(9).WithScale(2))
-                    .Column("Gender", DbType.Decimal, column => column.WithDefault("''"))
+                    .Column("Gender", DbType.Decimal, column => column.WithDefault(""))
                     );
 
             _schemaBuilder
@@ -133,7 +133,7 @@ namespace Orchard.Tests.DataMigration {
                 .AlterTable("User", table => table
                     .AddColumn("Age", DbType.Int32))
                 .AlterTable("User", table => table
-                    .AlterColumn("Lastname", column => column.WithDefault("'John'")))
+                    .AlterColumn("Lastname", column => column.WithDefault("John")))
                 .AlterTable("User", table => table
                     .DropColumn("Firstname")
                 );

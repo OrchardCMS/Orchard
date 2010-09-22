@@ -17,7 +17,7 @@ namespace Orchard.Data.Migration.Schema {
 
         public DbType DbType { get; private set; }
 
-        public string Default { get; private set; }
+        public object Default { get; private set; }
 
         public int? Length { get; private set; }
 
@@ -26,7 +26,7 @@ namespace Orchard.Data.Migration.Schema {
             return this;
         }
 
-        public ColumnCommand WithDefault(string @default) {
+        public ColumnCommand WithDefault(object @default) {
             Default = @default;
             return this;
         }
