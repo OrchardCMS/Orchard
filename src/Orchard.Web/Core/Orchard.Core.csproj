@@ -267,7 +267,7 @@
     <None Include="Contents\Views\Admin\List.cshtml" />
     <None Include="Feeds\Views\Feed.cshtml" />
     <None Include="Localization\Views\EditorTemplates\Parts\Localization.Translation.cshtml" />
-    <Content Include="Contents\Views\DisplayTemplates\Parts\Contents.Publish.ascx" />
+    <None Include="Contents\Views\DisplayTemplates\Parts\Contents.Publish.cshtml" />
     <None Include="Contents\Views\DisplayTemplates\Parts\Contents.Publish.SummaryAdmin.cshtml" />
     <Content Include="Messaging\Module.txt" />
     <None Include="Messaging\Views\EditorTemplates\Parts\Messaging.MessageSettings.cshtml" />
@@ -319,12 +319,10 @@
     <Content Include="Shapes\Styles\Images\toolBarHoverButtonBackground.gif" />
     <Content Include="Shapes\Styles\jquery.switchable.css" />
     <Content Include="Shapes\Styles\special.css" />
-    <Content Include="Shapes\Views\DisplayTemplates\Items\ContentItem.ascx" />
-    <Content Include="Shapes\Views\EditorTemplates\Items\ContentItem.ascx" />
     <None Include="Shapes\Views\HeadPreload.cshtml" />
     <None Include="Shapes\Views\Message.cshtml" />
     <None Include="Shapes\Views\NotFound.cshtml" />
-    <Content Include="Shapes\Views\UI\Switchable.ascx" />
+    <None Include="Shapes\Views\UI\Switchable.cshtml" />
     <Content Include="Web.config" />
     <Content Include="XmlRpc\Module.txt" />
     <None Include="Settings\Views\EditorTemplates\Parts\Settings.SiteSettingsPart.cshtml" />
