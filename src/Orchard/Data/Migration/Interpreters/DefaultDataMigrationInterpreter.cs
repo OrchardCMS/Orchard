@@ -200,7 +200,7 @@ namespace Orchard.Data.Migration.Interpreters {
             }
 
             // [default value]
-            if (!string.IsNullOrEmpty(command.Default)) {
+            if (command.Default != null) {
                 builder.Append(" set default ").Append(ConvertToSqlValue(command.Default)).Append(Space);
             }
             _sqlStatements.Add(builder.ToString());
@@ -304,7 +304,7 @@ namespace Orchard.Data.Migration.Interpreters {
             }
 
             // [default value]
-            if (!string.IsNullOrEmpty(command.Default)) {
+            if (command.Default != null) {
                 builder.Append(" default ").Append(ConvertToSqlValue(command.Default)).Append(Space);
             }
 
