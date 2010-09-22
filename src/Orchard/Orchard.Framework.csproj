@@ -159,6 +159,7 @@
     <Compile Include="Mvc\ViewEngines\Razor\RazorViewEngine.cs" />
     <Compile Include="Security\CurrentUserWorkContext.cs" />
     <Compile Include="Settings\CurrentSiteWorkContext.cs" />
+    <Compile Include="Settings\ResourceDebugMode.cs" />
     <Compile Include="UI\Zones\PageWorkContext.cs" />
     <Compile Include="UI\Zones\ZoneHoldingBehavior.cs" />
     <Compile Include="Mvc\ViewEngines\ThemeAwareness\ConfiguredEnginesCache.cs" />

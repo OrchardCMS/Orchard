@@ -1,4 +1,5 @@
-﻿using Orchard.Data.Migration;
+﻿using System.Data;
+using Orchard.Data.Migration;
 
 namespace Orchard.Core.Settings.DataMigrations {
     public class SettingsDataMigration : DataMigrationImpl {
@@ -92,6 +93,13 @@ namespace Orchard.Core.Settings.DataMigrations {
                 );
 
             return 1;
+        }
+
+        public int UpdateFrom1() {
+            SchemaBuilder.AlterTable("SiteSettingsPartRecord", table => table
+                .AddColumn("ResourceDebugMode", DbType.String, column => column.WithDefault("FromAppSetting"))
+                );
+            return 2;
         }
     }
 }

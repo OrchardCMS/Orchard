@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -9,6 +10,7 @@ using Orchard.DisplayManagement;
 using Orchard.DisplayManagement.Descriptors;
 using Orchard.DisplayManagement.Implementation;
 using Orchard.Mvc.ViewEngines;
+using Orchard.Settings;
 using Orchard.UI;
 using Orchard.UI.Resources;
 using Orchard.UI.Zones;
@@ -17,6 +19,14 @@ using Orchard.UI.Zones;
 
 namespace Orchard.Core.Shapes {
     public class CoreShapes : IShapeTableProvider {
+        private readonly IWorkContextAccessor _workContextAccessor;
+
+        public CoreShapes(IWorkContextAccessor workContextAccessor) {
+            // needed to get CurrentSite.
+            // note that injecting ISiteService here causes a stack overflow in AutoFac!
+            _workContextAccessor = workContextAccessor;
+        }
+
         public void Discover(ShapeTableBuilder builder) {
             // the root page shape named 'Layout' is wrapped with 'Document'
             // and has an automatic zone creating behavior
@@ -88,13 +98,15 @@ namespace Orchard.Core.Shapes {
 
         [Shape]
         public void HeadScripts(HtmlHelper Html, IResourceManager ResourceManager) {
-            WriteResources(Html, ResourceManager, "script", ResourceLocation.Head, null);
+            WriteResources(Html, _workContextAccessor.GetContext(Html.ViewContext).CurrentSite,
+                ResourceManager, "script", ResourceLocation.Head, null);
             WriteLiteralScripts(Html, ResourceManager.GetRegisteredHeadScripts());
         }
 
         [Shape]
         public void FootScripts(HtmlHelper Html, IResourceManager ResourceManager) {
-            WriteResources(Html, ResourceManager, "script", null, ResourceLocation.Head);
+            WriteResources(Html, _workContextAccessor.GetContext(Html.ViewContext).CurrentSite,
+                ResourceManager, "script", null, ResourceLocation.Head);
             WriteLiteralScripts(Html, ResourceManager.GetRegisteredFootScripts());
         }
 
@@ -114,7 +126,8 @@ namespace Orchard.Core.Shapes {
 
         [Shape]
         public void StylesheetLinks(HtmlHelper Html, IResourceManager ResourceManager) {
-            WriteResources(Html, ResourceManager, "stylesheet", null, null);
+            WriteResources(Html, _workContextAccessor.GetContext(Html.ViewContext).CurrentSite,
+                ResourceManager, "stylesheet", null, null);
         }
 
         private static void WriteLiteralScripts(HtmlHelper html, IEnumerable<string> scripts) {
@@ -127,9 +140,22 @@ namespace Orchard.Core.Shapes {
             }
         }
 
-        private static void WriteResources(HtmlHelper html, IResourceManager rm, string resourceType, ResourceLocation? includeLocation, ResourceLocation? excludeLocation) {
+        private static void WriteResources(HtmlHelper html, ISite site, IResourceManager rm, string resourceType, ResourceLocation? includeLocation, ResourceLocation? excludeLocation) {
+            bool debugMode;
+            switch(site.ResourceDebugMode) {
+                case ResourceDebugMode.Enabled:
+                    debugMode = true;
+                    break;
+                case ResourceDebugMode.Disabled:
+                    debugMode = false;
+                    break;
+                default:
+                    Debug.Assert(site.ResourceDebugMode == ResourceDebugMode.FromAppSetting, "Unknown ResourceDebugMode value.");
+                    debugMode = html.ViewContext.HttpContext.IsDebuggingEnabled;
+                    break;
+            }
             var defaultSettings = new RequireSettings {
-                DebugMode = html.ViewContext.HttpContext.IsDebuggingEnabled,
+                DebugMode = debugMode,
                 Culture = CultureInfo.CurrentUICulture.Name,
             };
             var requiredResources = rm.BuildRequiredResources(resourceType);

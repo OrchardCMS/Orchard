@@ -2,6 +2,7 @@
 using System.Web.Mvc;
 using Orchard.ContentManagement;
 using Orchard.Core.Settings.Models;
+using Orchard.Settings;
 
 namespace Orchard.Core.Settings.ViewModels {
     public class SiteSettingsPartViewModel  {
@@ -33,6 +34,11 @@ namespace Orchard.Core.Settings.ViewModels {
         public string SuperUser {
             get { return Site.As<SiteSettingsPart>().Record.SuperUser; }
             set { Site.As<SiteSettingsPart>().Record.SuperUser = value; }
+        }
+
+        public ResourceDebugMode ResourceDebugMode {
+            get { return Site.As<SiteSettingsPart>().ResourceDebugMode; }
+            set { Site.As<SiteSettingsPart>().ResourceDebugMode = value; }
         }
     }
 }

@@ -72,13 +72,13 @@ namespace Orchard.UI.Resources {
             return (new RequireSettings {
                 Name = Name,
                 Type = Type
-            }).AtLocation(other.Location)
-                .WithBasePath(other.BasePath)
-                .UseCdn(other.CdnMode)
-                .UseDebugMode(other.DebugMode)
-                .UseCulture(other.Culture)
-                .WithMinimumVersion(other.MinimumVersion)
-                .Define(other.InlineDefinition);
+            }).AtLocation(Location).AtLocation(other.Location)
+                .WithBasePath(BasePath).WithBasePath(other.BasePath)
+                .UseCdn(CdnMode).UseCdn(other.CdnMode)
+                .UseDebugMode(DebugMode).UseDebugMode(other.DebugMode)
+                .UseCulture(Culture).UseCulture(other.Culture)
+                .WithMinimumVersion(MinimumVersion).WithMinimumVersion(other.MinimumVersion)
+                .Define(InlineDefinition).Define(other.InlineDefinition);
         }
     }
 }

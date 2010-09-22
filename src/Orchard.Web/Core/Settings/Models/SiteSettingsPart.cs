@@ -27,5 +27,9 @@ namespace Orchard.Core.Settings.Models {
             get { return Record.SiteCulture; }
             set { Record.SiteCulture = value; }
         }
+        public ResourceDebugMode ResourceDebugMode {
+            get { return Record.ResourceDebugMode; }
+            set { Record.ResourceDebugMode = value; }
+        }
     }
 }

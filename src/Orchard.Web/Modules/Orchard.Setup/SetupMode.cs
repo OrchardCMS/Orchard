@@ -86,6 +86,7 @@ namespace Orchard.Setup {
             builder.RegisterType<LayoutAwareViewEngine>().As<ILayoutAwareViewEngine>();
             builder.RegisterType<ConfiguredEnginesCache>().As<IConfiguredEnginesCache>();
             builder.RegisterType<PageWorkContext>().As<IWorkContextStateProvider>();
+            builder.RegisterType<SafeModeSiteWorkContextProvider>().As<IWorkContextStateProvider>();
 
             builder.RegisterType<ShapeTemplateBindingStrategy>().As<IShapeTableProvider>();
             builder.RegisterType<BasicShapeTemplateHarvester>().As<IShapeTemplateHarvester>();
@@ -129,6 +130,13 @@ namespace Orchard.Setup {
             public void UninstallTheme(string themeName) { }
         }
 
+        class SafeModeSiteWorkContextProvider : IWorkContextStateProvider {
+            public T Get<T>(string name) {
+                if (name == "CurrentSite")
+                    return (T)(ISite) new SafeModeSite();
+                return default(T);
+            }
+        }
 
         class SafeModeSiteService : ISiteService {
             public ISite GetSiteSettings() {
@@ -169,6 +177,11 @@ namespace Orchard.Setup {
 
             public string SiteCulture {
                 get { return ""; }
+                set { throw new NotImplementedException(); }
+            }
+
+            public ResourceDebugMode ResourceDebugMode {
+                get { return ResourceDebugMode.FromAppSetting;  }
                 set { throw new NotImplementedException(); }
             }
         }
