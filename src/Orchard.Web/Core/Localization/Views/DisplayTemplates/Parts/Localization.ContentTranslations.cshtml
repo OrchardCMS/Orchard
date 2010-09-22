@@ -1,5 +1,7 @@
 ﻿@model Orchard.Core.Localization.ViewModels.ContentLocalizationsViewModel
-@Style.Require("Localization");
+@{
+    Style.Require("Localization");
+}
 @if (Model.Localizations.Count() > 0) {
 <div class="content-localization">
     <div class="content-localizations">
