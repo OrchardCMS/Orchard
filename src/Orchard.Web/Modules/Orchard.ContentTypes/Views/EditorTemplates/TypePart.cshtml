@@ -8,7 +8,9 @@
         @if (Model.Templates.Any()) {
         <div class="settings">
             <h4>@T("{0} Settings:", Model.PartDefinition.DisplayName)</h4>
-            @DisplayChildren(Model.Templates)
+            @{ 
+                Html.RenderTemplates(Model.Templates); 
+            }
         </div>
         }
         @//don't show global part settings for now - @Html.DisplayFor(m => m.PartDefinition.Settings, "Settings", "PartDefinition")
