@@ -76,7 +76,7 @@ namespace Orchard.Setup.Services {
                     "Navigation",
                     "Scheduling",
                     "Indexing",
-                    //"Localization",
+                    "Localization",
                     "Routable",
                     "Settings",
                     "XmlRpc",
@@ -197,20 +197,20 @@ namespace Orchard.Setup.Services {
                     //hackInstallationGenerator.GenerateInstallEvents();
 
                     var contentDefinitionManager = environment.Resolve<IContentDefinitionManager>();
-                    //contentDefinitionManager.AlterTypeDefinition("BlogPost", cfg => cfg
-                    //    .WithPart("CommentsPart")
-                    //    .WithPart("TagsPart")
-                    //    .WithPart("LocalizationPart")
-                    //    .Indexed()
-                    //    );
+                    contentDefinitionManager.AlterTypeDefinition("BlogPost", cfg => cfg
+                        .WithPart("CommentsPart")
+                        .WithPart("TagsPart")
+                        .WithPart("LocalizationPart")
+                        .Indexed()
+                        );
                     contentDefinitionManager.AlterTypeDefinition("Page", cfg => cfg
                         .WithPart("CommonPart")
-                        //.WithPart("PublishLaterPart")
+                        .WithPart("PublishLaterPart")
                         .WithPart("RoutePart")
                         .WithPart("BodyPart")
-                        //.WithPart("CommentsPart")
-                        //.WithPart("TagsPart")
-                        //.WithPart("LocalizationPart")
+                        .WithPart("CommentsPart")
+                        .WithPart("TagsPart")
+                        .WithPart("LocalizationPart")
                         .Creatable()
                         .Indexed()
                         );
@@ -224,9 +224,6 @@ namespace Orchard.Setup.Services {
                     page.As<RoutePart>().Path = "home"; 
                     page.As<RoutePart>().Title = T("Home").ToString();
                     page.As<CommonPart>().Owner = user;
-                    //if (page.Has<CommentsPart>()) {
-                    //    page.As<CommentsPart>().CommentsShown = false;
-                    //}
                     contentManager.Publish(page);
                     siteSettings.Record.HomePage = "RoutableHomePageProvider;" + page.Id;
 
