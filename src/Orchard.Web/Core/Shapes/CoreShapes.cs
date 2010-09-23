@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
@@ -40,8 +42,8 @@ namespace Orchard.Core.Shapes {
                     page.Tail = created.New.DocumentZone();
                     page.Content = created.New.Zone();
 
-                    page.Body.Add(created.New.PlaceChildContent(Source: page), "5");
-                    page.Content.Add(created.New.PlaceChildContent(Source: page), "5");
+                    page.Body.Add(created.New.PlaceChildContent(Source: page));
+                    page.Content.Add(created.New.PlaceChildContent(Source: page));
                 });
 
             // 'Zone' shapes are built on the Zone base class
@@ -85,16 +87,112 @@ namespace Orchard.Core.Shapes {
             IDictionary<string, string> attributes = Shape.Attributes;
             var zoneWrapper = GetTagBuilder("div", id, classes, attributes);
             Output.Write(zoneWrapper.ToString(TagRenderMode.StartTag));
-            foreach (var item in Shape)
+            foreach (var item in ordered_hack(Shape))
                 Output.Write(Display(item));
             Output.Write(zoneWrapper.ToString(TagRenderMode.EndTag));
         }
 
         [Shape]
-        public void DocumentZone(dynamic Display, dynamic Shape, TextWriter Output) {
-            foreach (var item in Shape)
+        public void ContentZone(dynamic Display, dynamic Shape, TextWriter Output) {
+            foreach (var item in ordered_hack(Shape))
                 Output.Write(Display(item));
         }
+
+        [Shape]
+        public void DocumentZone(dynamic Display, dynamic Shape, TextWriter Output) {
+            foreach (var item in ordered_hack(Shape))
+                Output.Write(Display(item));
+        }
+
+        #region ordered_hack
+
+        private static IEnumerable<dynamic> ordered_hack(dynamic shape) {
+            IEnumerable<dynamic> unordered = shape;
+            if (unordered == null || unordered.Count() < 2)
+                return shape;
+
+            var i = 1;
+            var progress = 1;
+            var flatPositionComparer = new FlatPositionComparer();
+            var ordering = unordered.Select(item => {
+                                                var position = (item == null || item.GetType().GetProperty("Metadata") == null || item.Metadata.GetType().GetProperty("Position") == null)
+                                                                   ? null
+                                                                   : item.Metadata.Position;
+                                                return new {item, position};
+                                            }).ToList();
+
+            // since this isn't sticking around (hence, the "hack" in the name), throwing (in) a gnome 
+            while (i < ordering.Count()) {
+                if (flatPositionComparer.Compare(ordering[i].position, ordering[i-1].position) > -1) {
+                    if (i == progress)
+                        progress = ++i;
+                    else
+                        i = progress;
+                }
+                else {
+                    var higherThanItShouldBe = ordering[i];
+                    ordering[i] = ordering[i-1];
+                    ordering[i-1] = higherThanItShouldBe;
+                    if (i > 1)
+                        --i;
+                }
+            }
+
+            return ordering.Select(ordered => ordered.item).ToList();
+        }
+
+        private class FlatPositionComparer : IComparer<string> {
+            public int Compare(string x, string y) {
+                if (x == y)
+                    return 0;
+
+                // "" == "5"
+                x = string.IsNullOrWhiteSpace(x) ? "5" : x.TrimStart(':'); // ':' is _sometimes_ used as a partition identifier
+                y = string.IsNullOrWhiteSpace(y) ? "5" : y.TrimStart(':');
+
+                var xParts = x.Split(new[] {'.'}, StringSplitOptions.RemoveEmptyEntries);
+                var yParts = y.Split(new[] {'.'}, StringSplitOptions.RemoveEmptyEntries);
+                for (var i = 0; i < xParts.Count(); i++) {
+                    if (yParts.Length < i - 1) // x is further defined meaning it comes after y (e.g. x == 1.2.3 and y == 1.2)
+                        return 1;
+
+                    int xPos;
+                    int yPos;
+
+                    xParts[i] = normalizeKnownPartitions(xParts[i]);
+                    yParts[i] = normalizeKnownPartitions(yParts[i]);
+
+                    var xIsInt = int.TryParse(xParts[i], out xPos);
+                    var yIsInt = int.TryParse(yParts[i], out yPos);
+
+                    if (!xIsInt && !yIsInt)
+                        return string.Compare(x, y, StringComparison.OrdinalIgnoreCase);
+                    if (!xIsInt || (yIsInt && xPos > yPos)) // non-int after int or greater x pos than y pos (which is an int)
+                        return 1;
+                    if (!yIsInt || xPos < yPos)
+                        return -1;
+                }
+
+                if (xParts.Length < yParts.Length) // all things being equal y might be further defined than x (e.g. x == 1.2 and y == 1.2.3)
+                    return -1;
+
+                return 0;
+            }
+
+            private static string normalizeKnownPartitions(string partition) {
+                if (partition.Length < 5) // known partitions are long
+                    return partition;
+
+                if (string.Compare(partition, "before", StringComparison.OrdinalIgnoreCase) == 0)
+                    return "-9999";
+                if (string.Compare(partition, "after", StringComparison.OrdinalIgnoreCase) == 0)
+                    return "9999";
+
+                return partition;
+            }
+        }
+
+        #endregion
 
         [Shape]
         public void HeadScripts(HtmlHelper Html, IResourceManager ResourceManager) {

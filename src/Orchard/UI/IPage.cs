@@ -27,18 +27,12 @@ namespace Orchard.UI {
 
     public interface IZone : IEnumerable {
         string ZoneName { get; set; }
-        Shape Add(object item);
         Shape Add(object item, string position);
-        IZone Add(Action<HtmlHelper> action);
         IZone Add(Action<HtmlHelper> action, string position);
     }
 
     public class Zone : Shape, IZone {
         public virtual string ZoneName { get; set; }
-
-        public IZone Add(Action<HtmlHelper> action) {
-            throw new NotImplementedException();
-        }
 
         public IZone Add(Action<HtmlHelper> action, string position) {
             throw new NotImplementedException();

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 
 namespace Orchard.DisplayManagement.Shapes {
     public class Shape : IShape, IEnumerable {
+        private const string DefaultPosition = "5";
 
         private readonly IList<object> _items = new List<object>();
         private readonly IList<string> _classes = new List<string>();
@@ -15,12 +16,7 @@ namespace Orchard.DisplayManagement.Shapes {
         public virtual IDictionary<string, string> Attributes { get { return _attributes; } }
         public virtual IEnumerable<dynamic> Items { get { return _items; } }
 
-        public virtual Shape Add(object item) {
-            _items.Add(item);
-            return this;
-        }
-
-        public virtual Shape Add(object item, string position) {
+        public virtual Shape Add(object item, string position = DefaultPosition) {
             try {
                 ((dynamic)item).Metadata.Position = position;
             }
@@ -31,8 +27,9 @@ namespace Orchard.DisplayManagement.Shapes {
             return this;
         }
 
-        public virtual Shape AddRange(IEnumerable<object> items) {
-            ((List<object>)_items).AddRange(items);
+        public virtual Shape AddRange(IEnumerable<object> items, string position = DefaultPosition) {
+            foreach (var item in items)
+                Add(item, position);
             return this;
         }
 

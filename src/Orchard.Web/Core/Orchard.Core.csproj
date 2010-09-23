@@ -379,10 +379,11 @@
     <Content Include="ContentsLocation\Views\Web.config" />
     <Content Include="Messaging\Views\Web.config" />
     <None Include="Contents\Views\Items\Content.cshtml" />
-    <None Include="Contents\Views\Items\Content.Edit.cshtml" />
+    <None Include="Contents\Views\Items\Content.Edit.cshtml">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="Contents\Views\Items\Content.Summary.cshtml" />
     <None Include="Contents\Views\Items\Content.SummaryAdmin.cshtml" />
-    <None Include="Shapes\Views\ContentZone.cshtml" />
     <None Include="Shapes\Views\Document.cshtml" />
     <None Include="Shapes\Views\User.cshtml" />
     <None Include="Shapes\Views\Header.cshtml" />

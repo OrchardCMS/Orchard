@@ -26,7 +26,7 @@ namespace Orchard.DisplayManagement.Implementation {
 
         public IShape Create(string shapeType, INamedEnumerable<object> parameters) {
             var defaultShapeTable = _shapeTableManager.GetShapeTable(null);
-            ShapeDescriptor shapeDescriptor;
+            ShapeDescriptor shapeDescriptor; 
             defaultShapeTable.Descriptors.TryGetValue(shapeType, out shapeDescriptor);
 
             var creatingContext = new ShapeCreatingContext {
