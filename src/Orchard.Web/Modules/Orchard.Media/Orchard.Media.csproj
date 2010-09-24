@@ -111,13 +111,13 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Views\Admin\Add.cshtml" />
-    <None Include="Views\Admin\Create.cshtml" />
-    <None Include="Views\Admin\Edit.cshtml" />
-    <None Include="Views\Admin\EditMedia.cshtml" />
-    <None Include="Views\Admin\EditProperties.cshtml" />
-    <None Include="Views\Admin\Index.cshtml" />
-    <None Include="Views\EditorTemplates\Parts\Media.SiteSettings.cshtml" />
+    <Content Include="Views\Admin\Add.cshtml" />
+    <Content Include="Views\Admin\Create.cshtml" />
+    <Content Include="Views\Admin\Edit.cshtml" />
+    <Content Include="Views\Admin\EditMedia.cshtml" />
+    <Content Include="Views\Admin\EditProperties.cshtml" />
+    <Content Include="Views\Admin\Index.cshtml" />
+    <Content Include="Views\EditorTemplates\Parts\Media.SiteSettings.cshtml" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />

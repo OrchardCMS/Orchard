@@ -81,7 +81,7 @@
     <Content Include="Views\Web.config" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Views\EditorTemplates\Parts\Smtp.SiteSettings.cshtml" />
+    <Content Include="Views\EditorTemplates\Parts\Smtp.SiteSettings.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\Orchard\Orchard.Framework.csproj">

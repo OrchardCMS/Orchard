@@ -96,9 +96,9 @@
     <Content Include="Views\Web.config" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Views\Admin\Index.cshtml" />
-    <None Include="Views\DefinitionTemplates\FieldIndexing.cshtml" />
-    <None Include="Views\DefinitionTemplates\TypeIndexing.cshtml" />
+    <Content Include="Views\Admin\Index.cshtml" />
+    <Content Include="Views\DefinitionTemplates\FieldIndexing.cshtml" />
+    <Content Include="Views\DefinitionTemplates\TypeIndexing.cshtml" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />

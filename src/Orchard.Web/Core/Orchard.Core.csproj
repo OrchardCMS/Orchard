@@ -250,61 +250,61 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Common\Module.txt" />
-    <None Include="Common\Views\DefinitionTemplates\BodyTypePartSettings.cshtml" />
-    <None Include="Common\Views\DefinitionTemplates\BodyPartSettings.cshtml" />
-    <None Include="Common\Views\DisplayTemplates\Fields\Common.TextField.cshtml" />
-    <None Include="Common\Views\DisplayTemplates\Parts\Common.Body.SummaryAdmin.cshtml" />
-    <None Include="Common\Views\DisplayTemplates\Parts\Common.Body.Manage.SummaryAdmin.cshtml" />
-    <None Include="Common\Views\DisplayTemplates\Parts\Common.Body.ManageWrapperPost.SummaryAdmin.cshtml" />
-    <None Include="Common\Views\DisplayTemplates\Parts\Common.Body.ManageWrapperPre.SummaryAdmin.cshtml" />
-    <None Include="Common\Views\DisplayTemplates\Parts\Common.Metadata.cshtml" />
-    <None Include="Common\Views\DisplayTemplates\Parts\Common.Metadata.SummaryAdmin.cshtml" />
+    <Content Include="Common\Views\DefinitionTemplates\BodyTypePartSettings.cshtml" />
+    <Content Include="Common\Views\DefinitionTemplates\BodyPartSettings.cshtml" />
+    <Content Include="Common\Views\DisplayTemplates\Fields\Common.TextField.cshtml" />
+    <Content Include="Common\Views\DisplayTemplates\Parts\Common.Body.SummaryAdmin.cshtml" />
+    <Content Include="Common\Views\DisplayTemplates\Parts\Common.Body.Manage.SummaryAdmin.cshtml" />
+    <Content Include="Common\Views\DisplayTemplates\Parts\Common.Body.ManageWrapperPost.SummaryAdmin.cshtml" />
+    <Content Include="Common\Views\DisplayTemplates\Parts\Common.Body.ManageWrapperPre.SummaryAdmin.cshtml" />
+    <Content Include="Common\Views\DisplayTemplates\Parts\Common.Metadata.cshtml" />
+    <Content Include="Common\Views\DisplayTemplates\Parts\Common.Metadata.SummaryAdmin.cshtml" />
     <Content Include="ContentsLocation\Module.txt" />
     <Content Include="ContentsLocation\Styles\admin.css" />
-    <None Include="ContentsLocation\Views\DefinitionTemplates\LocationSettings.cshtml" />
-    <None Include="Contents\Views\Admin\Create.cshtml" />
-    <None Include="Contents\Views\Admin\Edit.cshtml" />
-    <None Include="Contents\Views\Admin\List.cshtml" />
-    <None Include="Feeds\Views\Feed.cshtml" />
-    <None Include="Localization\Views\EditorTemplates\Parts\Localization.Translation.cshtml" />
-    <None Include="Contents\Views\DisplayTemplates\Parts\Contents.Publish.cshtml" />
-    <None Include="Contents\Views\DisplayTemplates\Parts\Contents.Publish.SummaryAdmin.cshtml" />
+    <Content Include="ContentsLocation\Views\DefinitionTemplates\LocationSettings.cshtml" />
+    <Content Include="Contents\Views\Admin\Create.cshtml" />
+    <Content Include="Contents\Views\Admin\Edit.cshtml" />
+    <Content Include="Contents\Views\Admin\List.cshtml" />
+    <Content Include="Feeds\Views\Feed.cshtml" />
+    <Content Include="Localization\Views\EditorTemplates\Parts\Localization.Translation.cshtml" />
+    <Content Include="Contents\Views\DisplayTemplates\Parts\Contents.Publish.cshtml" />
+    <Content Include="Contents\Views\DisplayTemplates\Parts\Contents.Publish.SummaryAdmin.cshtml" />
     <Content Include="Messaging\Module.txt" />
-    <None Include="Messaging\Views\EditorTemplates\Parts\Messaging.MessageSettings.cshtml" />
+    <Content Include="Messaging\Views\EditorTemplates\Parts\Messaging.MessageSettings.cshtml" />
     <Content Include="PublishLater\Content\Admin\images\draft.gif" />
     <Content Include="PublishLater\Content\Admin\images\offline.gif" />
     <Content Include="PublishLater\Content\Admin\images\online.gif" />
     <Content Include="PublishLater\Content\Admin\images\published.gif" />
     <Content Include="PublishLater\Content\Admin\images\scheduled.gif" />
-    <None Include="PublishLater\Views\DisplayTemplates\Parts\PublishLater.Metadata.cshtml" />
-    <None Include="PublishLater\Views\DisplayTemplates\Parts\PublishLater.Metadata.SummaryAdmin.cshtml" />
-    <None Include="Common\Views\EditorTemplates\Fields\Common.TextField.cshtml" />
-    <None Include="Common\Views\EditorTemplates\Parts\Common.Container.cshtml" />
-    <None Include="Common\Views\EditorTemplates\PlainTextEditor.cshtml" />
+    <Content Include="PublishLater\Views\DisplayTemplates\Parts\PublishLater.Metadata.cshtml" />
+    <Content Include="PublishLater\Views\DisplayTemplates\Parts\PublishLater.Metadata.SummaryAdmin.cshtml" />
+    <Content Include="Common\Views\EditorTemplates\Fields\Common.TextField.cshtml" />
+    <Content Include="Common\Views\EditorTemplates\Parts\Common.Container.cshtml" />
+    <Content Include="Common\Views\EditorTemplates\PlainTextEditor.cshtml" />
     <Content Include="Contents\Module.txt" />
-    <None Include="Contents\Views\Admin\CreatableTypeList.cshtml" />
+    <Content Include="Contents\Views\Admin\CreatableTypeList.cshtml" />
     <Content Include="Localization\Styles\admin.css" />
     <Content Include="Localization\Styles\base.css" />
-    <None Include="Localization\Views\DisplayTemplates\Parts\Localization.ContentTranslations.Summary.cshtml" />
-    <None Include="Localization\Views\DisplayTemplates\Parts\Localization.ContentTranslations.cshtml" />
+    <Content Include="Localization\Views\DisplayTemplates\Parts\Localization.ContentTranslations.Summary.cshtml" />
+    <Content Include="Localization\Views\DisplayTemplates\Parts\Localization.ContentTranslations.cshtml" />
     <Content Include="PublishLater\Module.txt" />
     <Content Include="PublishLater\Styles\datetime.css" />
-    <None Include="PublishLater\Views\EditorTemplates\Parts\PublishLater.cshtml" />
+    <Content Include="PublishLater\Views\EditorTemplates\Parts\PublishLater.cshtml" />
     <Content Include="Reports\Module.txt" />
-    <None Include="Reports\Views\Admin\Display.cshtml" />
-    <None Include="Reports\Views\Admin\Index.cshtml" />
+    <Content Include="Reports\Views\Admin\Display.cshtml" />
+    <Content Include="Reports\Views\Admin\Index.cshtml" />
     <Content Include="Localization\Module.txt" />
-    <None Include="Localization\Views\Admin\Translate.cshtml" />
-    <None Include="Localization\Views\DisplayTemplates\Parts\Localization.ContentTranslations.SummaryAdmin.cshtml" />
-    <None Include="Localization\Views\CultureSelection.cshtml" />
+    <Content Include="Localization\Views\Admin\Translate.cshtml" />
+    <Content Include="Localization\Views\DisplayTemplates\Parts\Localization.ContentTranslations.SummaryAdmin.cshtml" />
+    <Content Include="Localization\Views\CultureSelection.cshtml" />
     <Content Include="Routable\Module.txt" />
     <Content Include="Routable\Scripts\jquery.slugify.js" />
-    <None Include="Routable\Views\EditorTemplates\Parts\Routable.RoutePart.cshtml" />
-    <None Include="Routable\Views\DisplayTemplates\Parts\Routable.RoutePart.cshtml" />
+    <Content Include="Routable\Views\EditorTemplates\Parts\Routable.RoutePart.cshtml" />
+    <Content Include="Routable\Views\DisplayTemplates\Parts\Routable.RoutePart.cshtml" />
     <Content Include="Settings\Module.txt" />
     <Content Include="Settings\Styles\admin.css" />
-    <None Include="Settings\Views\Admin\Index.cshtml" />
-    <None Include="Settings\Views\Admin\Culture.cshtml" />
+    <Content Include="Settings\Views\Admin\Index.cshtml" />
+    <Content Include="Settings\Views\Admin\Culture.cshtml" />
     <Content Include="Settings\Views\DisplayTemplates\CurrentCulture.ascx" />
     <Content Include="Settings\Views\DisplayTemplates\RemovableCulture.ascx" />
     <Content Include="Shapes\Module.txt" />
@@ -319,15 +319,15 @@
     <Content Include="Shapes\Styles\Images\toolBarHoverButtonBackground.gif" />
     <Content Include="Shapes\Styles\jquery.switchable.css" />
     <Content Include="Shapes\Styles\special.css" />
-    <None Include="Shapes\Views\HeadPreload.cshtml" />
-    <None Include="Shapes\Views\Message.cshtml" />
-    <None Include="Shapes\Views\NotFound.cshtml" />
-    <None Include="Shapes\Views\UI\Switchable.cshtml" />
+    <Content Include="Shapes\Views\HeadPreload.cshtml" />
+    <Content Include="Shapes\Views\Message.cshtml" />
+    <Content Include="Shapes\Views\NotFound.cshtml" />
+    <Content Include="Shapes\Views\UI\Switchable.cshtml" />
     <Content Include="Web.config" />
     <Content Include="XmlRpc\Module.txt" />
-    <None Include="Settings\Views\EditorTemplates\Parts\Settings.SiteSettingsPart.cshtml" />
-    <None Include="Shapes\Views\Display.cshtml" />
-    <None Include="XmlRpc\Views\Home\Index.cshtml" />
+    <Content Include="Settings\Views\EditorTemplates\Parts\Settings.SiteSettingsPart.cshtml" />
+    <Content Include="Shapes\Views\Display.cshtml" />
+    <Content Include="XmlRpc\Views\Home\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Orchard\Orchard.Framework.csproj">
@@ -345,26 +345,26 @@
     <Content Include="Common\Views\Web.config" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Common\Views\DisplayTemplates\Parts\Common.Body.cshtml" />
-    <None Include="Common\Views\EditorTemplates\Parts\Common.Body.cshtml" />
-    <None Include="Common\Views\EditorTemplates\Parts\Common.Owner.cshtml" />
+    <Content Include="Common\Views\DisplayTemplates\Parts\Common.Body.cshtml" />
+    <Content Include="Common\Views\EditorTemplates\Parts\Common.Body.cshtml" />
+    <Content Include="Common\Views\EditorTemplates\Parts\Common.Owner.cshtml" />
     <Content Include="Feeds\Module.txt" />
     <Content Include="Navigation\Module.txt" />
     <Content Include="Scheduling\Module.txt" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Dashboard\Module.txt" />
-    <None Include="Dashboard\Views\Admin\Index.cshtml" />
+    <Content Include="Dashboard\Views\Admin\Index.cshtml" />
     <Content Include="HomePage\Module.txt" />
-    <None Include="Navigation\Views\Admin\Index.cshtml" />
-    <None Include="Navigation\Views\EditorTemplates\Parts\Navigation.EditMenuPart.cshtml" />
+    <Content Include="Navigation\Views\Admin\Index.cshtml" />
+    <Content Include="Navigation\Views\EditorTemplates\Parts\Navigation.EditMenuPart.cshtml" />
     <Content Include="Navigation\Views\Web.config" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Common\Views\DisplayTemplates\Parts\Common.Body.Summary.cshtml" />
-    <None Include="Common\Views\DisplayTemplates\Parts\Common.Body.ManageWrapperPost.cshtml" />
-    <None Include="Common\Views\DisplayTemplates\Parts\Common.Body.ManageWrapperPre.cshtml" />
-    <None Include="Common\Views\DisplayTemplates\Parts\Common.Body.Manage.cshtml" />
+    <Content Include="Common\Views\DisplayTemplates\Parts\Common.Body.Summary.cshtml" />
+    <Content Include="Common\Views\DisplayTemplates\Parts\Common.Body.ManageWrapperPost.cshtml" />
+    <Content Include="Common\Views\DisplayTemplates\Parts\Common.Body.ManageWrapperPre.cshtml" />
+    <Content Include="Common\Views\DisplayTemplates\Parts\Common.Body.Manage.cshtml" />
     <Content Include="Dashboard\Views\Web.config" />
   </ItemGroup>
   <ItemGroup />
@@ -378,18 +378,17 @@
     <Content Include="PublishLater\Views\Web.config" />
     <Content Include="ContentsLocation\Views\Web.config" />
     <Content Include="Messaging\Views\Web.config" />
-    <None Include="Contents\Views\Items\Content.cshtml" />
-    <None Include="Contents\Views\Items\Content.Edit.cshtml">
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="Contents\Views\Items\Content.Summary.cshtml" />
-    <None Include="Contents\Views\Items\Content.SummaryAdmin.cshtml" />
-    <None Include="Shapes\Views\Document.cshtml" />
-    <None Include="Shapes\Views\User.cshtml" />
-    <None Include="Shapes\Views\Header.cshtml" />
-    <None Include="Shapes\Views\Layout.cshtml" />
-    <None Include="Shapes\Views\Menu.cshtml" />
-    <None Include="Shapes\Views\MenuItem.cshtml" />
+    <Content Include="Contents\Views\Items\Content.cshtml" />
+    <Content Include="Contents\Views\Items\Content.Edit.cshtml" />
+    <Content Include="Contents\Views\Items\Content.Summary.cshtml" />
+    <Content Include="Contents\Views\Items\Content.SummaryAdmin.cshtml" />
+    <Content Include="Shapes\Views\Document.cshtml" />
+    <Content Include="Shapes\Views\User.cshtml" />
+    <Content Include="Shapes\Views\Header.cshtml" />
+    <Content Include="Shapes\Views\Layout.cshtml" />
+    <Content Include="Shapes\Views\Menu.cshtml" />
+    <Content Include="Shapes\Views\MenuItem.cshtml" />
+
     <Content Include="Shapes\Views\Web.config" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

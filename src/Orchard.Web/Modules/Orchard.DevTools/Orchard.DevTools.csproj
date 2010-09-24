@@ -127,14 +127,14 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Views\HackScript.cshtml" />
-    <None Include="Views\HackStyle.cshtml" />
-    <None Include="Views\ThinBorder.cshtml" />
-    <None Include="Views\Home\FormShapes.cshtml">
+    <Content Include="Views\HackScript.cshtml" />
+    <Content Include="Views\HackStyle.cshtml" />
+    <Content Include="Views\ThinBorder.cshtml" />
+    <Content Include="Views\Home\FormShapes.cshtml">
       <SubType>Designer</SubType>
-    </None>
-    <None Include="Views\Home\UsingShapes.cshtml" />
-    <None Include="Views\Inventory\ShapeTable.cshtml" />
+    </Content>
+    <Content Include="Views\Home\UsingShapes.cshtml" />
+    <Content Include="Views\Inventory\ShapeTable.cshtml" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />

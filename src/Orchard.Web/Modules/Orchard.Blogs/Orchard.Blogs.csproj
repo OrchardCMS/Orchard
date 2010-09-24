@@ -111,7 +111,7 @@
     <Content Include="Scripts\archives.js" />
     <Content Include="Styles\admin.css" />
     <Content Include="Styles\archives.css" />
-    <None Include="Views\BlogArchives.cshtml" />
+    <Content Include="Views\BlogArchives.cshtml" />
     <Content Include="Views\BlogAdmin\Create.cshtml" />
     <Content Include="Views\BlogAdmin\Edit.cshtml" />
     <Content Include="Views\BlogAdmin\Item.cshtml" />
@@ -119,14 +119,14 @@
     <Content Include="Views\BlogPostAdmin\Create.cshtml" />
     <Content Include="Views\BlogPostAdmin\Edit.cshtml" />
     <Content Include="Views\BlogPost\Item.cshtml" />
-    <None Include="Views\BlogPost\ListByArchive.cshtml" />
+    <Content Include="Views\BlogPost\ListByArchive.cshtml" />
     <Content Include="Views\Blog\Item.cshtml" />
     <Content Include="Views\Blog\List.cshtml" />
-    <None Include="Views\DisplayTemplates\Parts\Blogs.Blog.Manage.cshtml" />
-    <None Include="Views\DisplayTemplates\Parts\Blogs.Blog.Description.cshtml" />
-    <None Include="Views\DisplayTemplates\Parts\Blogs.Blog.Metadata.cshtml" />
+    <Content Include="Views\DisplayTemplates\Parts\Blogs.Blog.Manage.cshtml" />
+    <Content Include="Views\DisplayTemplates\Parts\Blogs.Blog.Description.cshtml" />
+    <Content Include="Views\DisplayTemplates\Parts\Blogs.Blog.Metadata.cshtml" />
     <Content Include="Views\DisplayTemplates\Parts\Blogs.BlogPost.List.cshtml" />
-    <None Include="Views\EditorTemplates\Parts\Blogs.Blog.Fields.cshtml" />
+    <Content Include="Views\EditorTemplates\Parts\Blogs.Blog.Fields.cshtml" />
     <Content Include="Views\DisplayTemplates\Parts\Blogs.BlogPost.List.Admin.cshtml">
       <SubType>Code</SubType>
     </Content>

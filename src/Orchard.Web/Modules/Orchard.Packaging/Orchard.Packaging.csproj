@@ -100,11 +100,11 @@
   <ItemGroup>
     <Content Include="Module.txt" />
     <Content Include="Styles\admin.css" />
-    <None Include="Views\Gallery\AddSource.cshtml" />
-    <None Include="Views\Gallery\Harvest.cshtml" />
-    <None Include="Views\Gallery\Modules.cshtml" />
-    <None Include="Views\Gallery\Sources.cshtml" />
-    <None Include="Views\Gallery\_Subnav.cshtml" />
+    <Content Include="Views\Gallery\AddSource.cshtml" />
+    <Content Include="Views\Gallery\Harvest.cshtml" />
+    <Content Include="Views\Gallery\Modules.cshtml" />
+    <Content Include="Views\Gallery\Sources.cshtml" />
+    <Content Include="Views\Gallery\_Subnav.cshtml" />
     <Content Include="Views\Web.config" />
   </ItemGroup>
   <ItemGroup>

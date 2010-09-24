@@ -136,8 +136,8 @@
     <Content Include="Themes\TheAdmin\Styles\images\tableHeaderBackgroundRed.gif" />
     <Content Include="Themes\TheAdmin\Styles\site.css" />
     <Content Include="Themes\TheAdmin\Theme.txt" />
-    <None Include="Themes\SafeMode\Views\Document.cshtml" />
-    <None Include="Themes\TheAdmin\Views\Layout.cshtml" />
+    <Content Include="Themes\SafeMode\Views\Document.cshtml" />
+    <Content Include="Themes\TheAdmin\Views\Layout.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Config\Sample.Host.config" />
@@ -164,8 +164,8 @@
     <Content Include="Themes\Classic\Styles\site.css" />
     <Content Include="Themes\Classic\Theme.png" />
     <Content Include="Themes\Classic\Theme.txt" />
-    <None Include="Themes\Classic\Views\Footer.cshtml" />
-    <None Include="Themes\Classic\Views\Layout.cshtml" />
+    <Content Include="Themes\Classic\Views\Footer.cshtml" />
+    <Content Include="Themes\Classic\Views\Layout.cshtml" />
     <Content Include="Themes\Contoso\Content\Images\bkg.jpg" />
     <Content Include="Themes\Contoso\Content\Images\comment-arrow.png" />
     <Content Include="Themes\Contoso\Content\Images\content-bkg.png" />
@@ -279,15 +279,15 @@
     <Content Include="Themes\SafeMode\Styles\site.css" />
     <Content Include="Themes\SafeMode\Theme.png" />
     <Content Include="Themes\SafeMode\Theme.txt" />
-    <None Include="Themes\SafeMode\Views\Layout.cshtml" />
+    <Content Include="Themes\SafeMode\Views\Layout.cshtml" />
     <Content Include="Themes\TheAdmin\Styles\ie6.css" />
     <Content Include="Themes\TheAdmin\Styles\images\backgroundGradient.gif" />
     <Content Include="Themes\TheAdmin\Styles\images\backgroundHeader.gif" />
     <Content Include="Themes\TheAdmin\Styles\images\orchardLogo.gif" />
     <Content Include="Themes\TheAdmin\Theme.png" />
-    <None Include="Themes\TheAdmin\Views\DumpShapeTable.cshtml" />
-    <None Include="Themes\TheAdmin\Views\User.cshtml" />
-    <None Include="Themes\TheAdmin\Views\Header.cshtml" />
+    <Content Include="Themes\TheAdmin\Views\DumpShapeTable.cshtml" />
+    <Content Include="Themes\TheAdmin\Views\User.cshtml" />
+    <Content Include="Themes\TheAdmin\Views\Header.cshtml" />
     <Content Include="Themes\Web.config" />
   </ItemGroup>
   <ItemGroup>

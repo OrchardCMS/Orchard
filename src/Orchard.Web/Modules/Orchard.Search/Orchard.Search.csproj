@@ -97,9 +97,9 @@
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Views\EditorTemplates\Parts\Search.SiteSettings.cshtml" />
-    <None Include="Views\SearchForm.cshtml" />
-    <None Include="Views\Search\Index.cshtml" />
+    <Content Include="Views\EditorTemplates\Parts\Search.SiteSettings.cshtml" />
+    <Content Include="Views\SearchForm.cshtml" />
+    <Content Include="Views\Search\Index.cshtml" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />

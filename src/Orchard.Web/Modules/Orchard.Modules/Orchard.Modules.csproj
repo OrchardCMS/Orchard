@@ -82,8 +82,8 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Module.txt" />
-    <None Include="Views\Admin\Add.cshtml" />
-    <None Include="Views\Admin\Index.cshtml" />
+    <Content Include="Views\Admin\Add.cshtml" />
+    <Content Include="Views\Admin\Index.cshtml" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
@@ -100,7 +100,7 @@
     <Content Include="Content\Admin\images\disabled.gif" />
     <Content Include="Content\Admin\images\enabled.gif" />
     <Content Include="styles\admin.css" />
-    <None Include="Views\Admin\Features.cshtml" />
+    <Content Include="Views\Admin\Features.cshtml" />
     <Content Include="Views\Web.config" />
   </ItemGroup>
   <ItemGroup />
