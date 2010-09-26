@@ -157,8 +157,8 @@ Dependencies
             if (width) {
                 this._dom.menu.css(
                     'left',
-                    pos.left + elementWidth < windowWidth
-                        ? pos.left - width + elementWidth
+                    pos.left + width < windowWidth
+                        ? pos.left
                         : windowWidth - width
                     );
             }
