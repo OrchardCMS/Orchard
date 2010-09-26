@@ -22,13 +22,13 @@ namespace Orchard.Core.Routable {
                     Route = new Route(
                         "Admin/Common/Routable/Slugify",
                         new RouteValueDictionary {
-                            {"area", "Common"},
-                            {"controller", "Routable"},
+                            {"area", "Routable"},
+                            {"controller", "Item"},
                             {"action", "Slugify"}
                         },
                         new RouteValueDictionary(),
                         new RouteValueDictionary {
-                            {"area", "Common"}
+                            {"area", "Routable"}
                         },
                         new MvcRouteHandler())
                 },

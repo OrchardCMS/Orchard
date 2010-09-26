@@ -233,9 +233,6 @@
     <Compile Include="ContentManagement\FieldStorage\IFieldStorageProvider.cs" />
     <Compile Include="ContentManagement\FieldStorage\IFieldStorageProviderSelector.cs" />
     <Compile Include="ContentManagement\FieldStorage\InfosetStorage\InfosetStorageProvider.cs" />
-    <Compile Include="ContentManagement\Extenstions\UrlHelperExtensions.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="ContentManagement\FieldStorage\InfosetStorage\InfosetHandler.cs" />
     <Compile Include="ContentManagement\FieldStorage\InfosetStorage\InfosetPart.cs" />
     <Compile Include="ContentManagement\FieldStorage\SimpleFieldStorage.cs" />
