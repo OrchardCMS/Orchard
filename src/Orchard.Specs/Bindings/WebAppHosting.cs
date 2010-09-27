@@ -213,7 +213,7 @@ namespace Orchard.Specs.Bindings {
             }
         }
 
-        [Then(@"the status should be (.*) (.*)")]
+        [Then(@"the status should be (.*) ""(.*)""")]
         public void ThenTheStatusShouldBe(int statusCode, string statusDescription) {
             Assert.That(Details.StatusCode, Is.EqualTo(statusCode));
             Assert.That(Details.StatusDescription, Is.EqualTo(statusDescription));

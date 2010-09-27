@@ -69,7 +69,7 @@ testRunner.When("I go to \"admin/media\"");
 #line 10
 testRunner.Then("I should see \"Manage Media Folders\"");
 #line 11
-testRunner.And("the status should be 200 OK");
+testRunner.And("the status should be 200 \"OK\"");
 #line hidden
             testRunner.CollectScenarioErrors();
         }
@@ -105,7 +105,7 @@ testRunner.Then("I should see \"Manage Media Folders\"");
 #line 23
 testRunner.And("I should see \"Hello World\"");
 #line 24
-testRunner.And("the status should be 200 OK");
+testRunner.And("the status should be 200 \"OK\"");
 #line hidden
             testRunner.CollectScenarioErrors();
         }

@@ -12,7 +12,7 @@ Scenario: Root request shows setup form
     When I go to "/Default.aspx"
     Then I should see "Welcome to Orchard"
         And I should see "Finish Setup"
-        And the status should be 200 OK
+        And the status should be 200 "OK"
 
 Scenario: Setup folder also shows setup form
     Given I have a clean site with
@@ -23,7 +23,7 @@ Scenario: Setup folder also shows setup form
     When I go to "/Setup"
     Then I should see "Welcome to Orchard"
         And I should see "Finish Setup"
-        And the status should be 200 OK
+        And the status should be 200 "OK"
 
 Scenario: Some of the initial form values are required
     Given I have a clean site with

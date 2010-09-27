@@ -84,7 +84,7 @@ testRunner.Then("I should see \"Welcome to Orchard\"");
 #line 14
 testRunner.And("I should see \"Finish Setup\"");
 #line 15
-testRunner.And("the status should be 200 OK");
+testRunner.And("the status should be 200 \"OK\"");
 #line hidden
             testRunner.CollectScenarioErrors();
         }
@@ -120,7 +120,7 @@ testRunner.Then("I should see \"Welcome to Orchard\"");
 #line 25
 testRunner.And("I should see \"Finish Setup\"");
 #line 26
-testRunner.And("the status should be 200 OK");
+testRunner.And("the status should be 200 \"OK\"");
 #line hidden
             testRunner.CollectScenarioErrors();
         }

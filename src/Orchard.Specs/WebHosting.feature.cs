@@ -67,7 +67,7 @@ testRunner.When("I go to \"Content/Static.txt\"");
 #line 9
 testRunner.Then("I should see \"Hello world!\"");
 #line 10
-testRunner.And("the status should be 200 OK");
+testRunner.And("the status should be 200 \"OK\"");
 #line hidden
             testRunner.CollectScenarioErrors();
         }
@@ -86,7 +86,7 @@ testRunner.When("I go to \"Simple/Page.aspx\"");
 #line 15
 testRunner.Then("I should see \"Hello again\"");
 #line 16
-testRunner.And("the status should be 200 OK");
+testRunner.And("the status should be 200 \"OK\"");
 #line hidden
             testRunner.CollectScenarioErrors();
         }
@@ -103,7 +103,7 @@ testRunner.Given("I have a clean site based on Simple.Web");
 #line 20
 testRunner.When("I go to \"hello-world\"");
 #line 21
-testRunner.Then("the status should be 200 OK");
+testRunner.Then("the status should be 200 \"OK\"");
 #line 22
 testRunner.And("I should see \"Hello yet again\"");
 #line hidden
@@ -124,7 +124,7 @@ testRunner.When("I go to \"/simple/page.aspx\"");
 #line 27
 testRunner.And("I follow \"next page\"");
 #line 28
-testRunner.Then("the status should be 200 OK");
+testRunner.Then("the status should be 200 \"OK\"");
 #line 29
 testRunner.And("I should see \"Hello yet again\"");
 #line hidden
@@ -197,6 +197,40 @@ testRunner.When("I go to \"/simple/redir.aspx\"");
 testRunner.And("I am redirected");
 #line 52
 testRunner.Then("I should see \"Hello again\"");
+#line hidden
+            testRunner.CollectScenarioErrors();
+        }
+        
+        [NUnit.Framework.TestAttribute()]
+        [NUnit.Framework.DescriptionAttribute("Not found modules file")]
+        public virtual void NotFoundModulesFile()
+        {
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Not found modules file", ((string[])(null)));
+#line 54
+this.ScenarioSetup(scenarioInfo);
+#line 55
+testRunner.Given("I have a clean site based on Simple.Web");
+#line 56
+testRunner.When("I go to \"/Modules/Orchard.Blogs/module.txt\"");
+#line 57
+testRunner.Then("the status should be 404 \"Not Found\"");
+#line hidden
+            testRunner.CollectScenarioErrors();
+        }
+        
+        [NUnit.Framework.TestAttribute()]
+        [NUnit.Framework.DescriptionAttribute("Not found themes file")]
+        public virtual void NotFoundThemesFile()
+        {
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Not found themes file", ((string[])(null)));
+#line 59
+this.ScenarioSetup(scenarioInfo);
+#line 60
+testRunner.Given("I have a clean site based on Simple.Web");
+#line 61
+testRunner.When("I go to \"/Themes/Classic/theme.txt\"");
+#line 62
+testRunner.Then("the status should be 404 \"Not Found\"");
 #line hidden
             testRunner.CollectScenarioErrors();
         }
