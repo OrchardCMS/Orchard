@@ -74,7 +74,7 @@
     <Compile Include="Common\Fields\TextField.cs" />
     <Compile Include="Common\Security\AuthorizationEventHandler.cs" />
     <Compile Include="Common\Services\BbcodeFilter.cs" />
-    <Compile Include="ContentsLocation\ContentsLocationResourceManifest.cs" />
+    <Compile Include="ContentsLocation\ResourceManifest.cs" />
     <Compile Include="ContentsLocation\Models\LocationDefinition.cs" />
     <Compile Include="Common\Services\ICommonService.cs" />
     <Compile Include="Common\Services\CommonService.cs" />
@@ -96,7 +96,7 @@
     <Compile Include="Contents\Settings\ContentPartSettings.cs" />
     <Compile Include="Contents\Shapes.cs" />
     <Compile Include="Contents\ViewModels\PublishContentViewModel.cs" />
-    <Compile Include="Localization\Resources\LocalizationResourceManifest.cs" />
+    <Compile Include="Localization\Resources\ResourceManifest.cs" />
     <Compile Include="Localization\ViewModels\EditLocalizationViewModel.cs" />
     <Compile Include="Messaging\DataMigrations\MessagingDataMigration.cs" />
     <Compile Include="Messaging\Drivers\MessageSettingsPartDriver.cs" />
@@ -105,7 +105,7 @@
     <Compile Include="Messaging\Models\MessageSettingsPartRecord.cs" />
     <Compile Include="Messaging\Services\DefaultMessageManager.cs" />
     <Compile Include="Messaging\ViewModels\MessageSettingsPartViewModel.cs" />
-    <Compile Include="PublishLater\PublishLaterResourceManifest.cs" />
+    <Compile Include="PublishLater\ResourceManifest.cs" />
     <Compile Include="PublishLater\DataMigrations\PublishLaterDataMigration.cs" />
     <Compile Include="PublishLater\Drivers\PublishLaterPartDriver.cs" />
     <Compile Include="PublishLater\Models\PublishLaterPart.cs" />
@@ -113,7 +113,7 @@
     <Compile Include="PublishLater\Services\PublishLaterService.cs" />
     <Compile Include="PublishLater\Services\IPublishLaterService.cs" />
     <Compile Include="PublishLater\ViewModels\PublishLaterViewModel.cs" />
-    <Compile Include="Routable\RoutableResourceManifest.cs" />
+    <Compile Include="Routable\ResourceManifest.cs" />
     <Compile Include="Routable\Services\RoutableHomePageProvider.cs" />
     <Compile Include="Contents\ViewModels\ListContentsViewModel.cs" />
     <Compile Include="Contents\ViewModels\ListContentTypesViewModel.cs" />
@@ -208,7 +208,7 @@
     <Compile Include="Scheduling\Services\ScheduledTaskManager.cs" />
     <Compile Include="Scheduling\Services\ScheduledTaskExecutor.cs" />
     <Compile Include="Scheduling\Models\Task.cs" />
-    <Compile Include="Settings\SettingsResourceManifest.cs" />
+    <Compile Include="Settings\ResourceManifest.cs" />
     <Compile Include="Settings\DataMigrations\SettingsDataMigration.cs" />
     <Compile Include="Settings\Drivers\SiteSettingsPartDriver.cs" />
     <Compile Include="Settings\ViewModels\SiteCulturesViewModel.cs" />
@@ -233,7 +233,7 @@
     <Compile Include="Settings\Models\SiteSettingsPart.cs" />
     <Compile Include="Settings\Services\SiteService.cs" />
     <Compile Include="Settings\ViewModels\SiteSettingsPartViewModel.cs" />
-    <Compile Include="Shapes\CoreShapesResourceManifest.cs" />
+    <Compile Include="Shapes\ResourceManifest.cs" />
     <Compile Include="Shapes\CoreShapes.cs" />
     <Compile Include="XmlRpc\Controllers\HomeController.cs" />
     <Compile Include="XmlRpc\Controllers\LiveWriterController.cs" />
@@ -388,7 +388,6 @@
     <Content Include="Shapes\Views\Layout.cshtml" />
     <Content Include="Shapes\Views\Menu.cshtml" />
     <Content Include="Shapes\Views\MenuItem.cshtml" />
-
     <Content Include="Shapes\Views\Web.config" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

@@ -65,7 +65,7 @@
     <Reference Include="System.EnterpriseServices" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="SearchResourceManifest.cs" />
+    <Compile Include="ResourceManifest.cs" />
     <Compile Include="Controllers\SearchController.cs" />
     <Compile Include="DataMigrations\SearchDataMigration.cs" />
     <Compile Include="Drivers\SearchSettingsPartDriver.cs" />

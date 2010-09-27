@@ -67,7 +67,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AdminMenu.cs" />
-    <Compile Include="BlogsResourceManifest.cs" />
+    <Compile Include="ResourceManifest.cs" />
     <Compile Include="Commands\BlogCommands.cs" />
     <Compile Include="Controllers\BlogAdminController.cs" />
     <Compile Include="DataMigrations\BlogsDataMigration.cs" />
