@@ -15,7 +15,7 @@
             <meta itemprop="Name" content="@Model.Name" />
             @Html.HiddenFor(m => m.Name)
         </fieldset>
-        
+        @{ Html.RenderTemplates(Model.Templates); }
         <div class="manage-type">
             <h2>@T("Fields")</h2>
             <div class="manage add-to-type">
