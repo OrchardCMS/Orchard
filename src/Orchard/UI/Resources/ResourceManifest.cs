@@ -3,7 +3,7 @@ using System.Web;
 using Orchard.Environment.Extensions.Models;
 
 namespace Orchard.UI.Resources {
-    public abstract class ResourceManifest : IResourceManifest {
+    public class ResourceManifest : IResourceManifest {
         private string _basePath;
         private readonly IDictionary<string, IDictionary<string, ResourceDefinition>> _resources = new Dictionary<string, IDictionary<string, ResourceDefinition>>();
 
@@ -22,11 +22,11 @@ namespace Orchard.UI.Resources {
             return definition;
         }
 
-        protected ResourceDefinition DefineScript(string name) {
+        public ResourceDefinition DefineScript(string name) {
             return DefineResource("script", name);
         }
 
-        protected ResourceDefinition DefineStyle(string name) {
+        public ResourceDefinition DefineStyle(string name) {
             return DefineResource("stylesheet", name);
         }
 
@@ -48,6 +48,4 @@ namespace Orchard.UI.Resources {
         }
     }
 
-    internal class DynamicResourceManifest : ResourceManifest {
-    }
 }

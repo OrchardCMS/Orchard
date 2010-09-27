@@ -5,9 +5,9 @@ using System.Text;
 using Orchard.UI.Resources;
 
 namespace Orchard.Core.Settings {
-    public class SettingsResourceManifest : ResourceManifest {
-        public SettingsResourceManifest() {
-            DefineStyle("SettingsAdmin").SetUrl("admin.css");
+    public class ResourceManifest : IResourceManifestProvider {
+        public void BuildManifests(ResourceManifestBuilder builder) {
+            builder.Add().DefineStyle("SettingsAdmin").SetUrl("admin.css");
         }
     }
 }

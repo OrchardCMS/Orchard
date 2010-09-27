@@ -5,9 +5,9 @@ using System.Text;
 using Orchard.UI.Resources;
 
 namespace Orchard.ContentTypes {
-    public class ContentTypesResourceManifest : ResourceManifest {
-        public ContentTypesResourceManifest() {
-            DefineStyle("ContentTypesAdmin").SetUrl("admin.css");
+    public class ResourceManifest : IResourceManifestProvider {
+        public void BuildManifests(ResourceManifestBuilder builder) {
+            builder.Add().DefineStyle("ContentTypesAdmin").SetUrl("admin.css");
         }
     }
 }

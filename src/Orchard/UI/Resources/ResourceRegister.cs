@@ -9,7 +9,7 @@ using Microsoft.WebPages;
 
 namespace Orchard.UI.Resources {
     public class ResourceRegister {
-        private string _viewVirtualPath;
+        private readonly string _viewVirtualPath;
 
         public ResourceRegister(IViewDataContainer container, IResourceManager resourceManager, string resourceType) {
             var templateControl = container as TemplateControl;
@@ -29,10 +29,6 @@ namespace Orchard.UI.Resources {
         protected IResourceManager ResourceManager { get; private set; }
         protected string ResourceType { get; private set; }
 
-        public RequireSettings Require(string resourceName) {
-            return Require(resourceName, (string)null);
-        }
-
         public RequireSettings Include(string resourcePath) {
             if (resourcePath == null) {
                 throw new ArgumentNullException("resourcePath");
@@ -40,12 +36,11 @@ namespace Orchard.UI.Resources {
             return ResourceManager.Include(ResourceType, resourcePath, ResourceDefinition.GetBasePathFromViewPath(ResourceType, _viewVirtualPath));
         }
 
-        public virtual RequireSettings Require(string resourceName, string minimumVersion) {
+        public virtual RequireSettings Require(string resourceName) {
             if (resourceName == null) {
                 throw new ArgumentNullException("resourceName");
             }
-            var settings = ResourceManager.Require(ResourceType, resourceName)
-                .WithMinimumVersion(minimumVersion);
+            var settings = ResourceManager.Require(ResourceType, resourceName);
             if (_viewVirtualPath != null) {
                 settings.WithBasePath(ResourceDefinition.GetBasePathFromViewPath(ResourceType, _viewVirtualPath));
             }

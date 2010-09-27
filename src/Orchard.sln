@@ -49,7 +49,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orchard.Tests", "Tools\Orch
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_Notes", "_Notes", "{8A49DB66-40B2-4B6A-BFF0-D4839A240D00}"
 	ProjectSection(SolutionItems) = preProject
-		ResourceManager.txt = ResourceManager.txt
 		Shapes.txt = Shapes.txt
 	EndProjectSection
 EndProject

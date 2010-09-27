@@ -5,9 +5,9 @@ using System.Text;
 using Orchard.UI.Resources;
 
 namespace Orchard.Indexing {
-    public class IndexingResourceManifest : ResourceManifest {
-        public IndexingResourceManifest() {
-            DefineStyle("IndexingAdmin").SetUrl("admin.css"); // todo: this does not exist
+    public class ResourceManifest : IResourceManifestProvider {
+        public void BuildManifests(ResourceManifestBuilder builder) {
+            builder.Add().DefineStyle("IndexingAdmin").SetUrl("admin.css"); // todo: this does not exist
         }
     }
 }

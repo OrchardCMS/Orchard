@@ -3,9 +3,9 @@ using Orchard.UI.Navigation;
 using Orchard.UI.Resources;
 
 namespace Orchard.Media {
-    public class MediaResourceManifest : ResourceManifest {
-        public MediaResourceManifest() {
-            DefineStyle("MediaAdmin").SetUrl("admin.css");
+    public class ResourceManifest : IResourceManifestProvider {
+        public void BuildManifests(ResourceManifestBuilder builder) {
+            builder.Add().DefineStyle("MediaAdmin").SetUrl("admin.css");
         }
     }
 }

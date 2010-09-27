@@ -1,13 +1,7 @@
 using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.IO;
-using System.Linq;
 using System.Web.Mvc;
 using Orchard.DisplayManagement;
 using Orchard.Mvc.Filters;
-using Orchard.Mvc.Html;
-using Orchard.Mvc.ViewEngines;
 
 namespace Orchard.UI.Resources {
     public class ResourceFilter : FilterProvider, IResultFilter {

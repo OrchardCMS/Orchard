@@ -5,12 +5,13 @@ using System.Text;
 using Orchard.UI.Resources;
 
 namespace Orchard.Blogs {
-    public class BlogsResourceManifest : ResourceManifest {
-        public BlogsResourceManifest() {
-            DefineStyle("BlogsAdmin").SetUrl("admin.css");
-            DefineStyle("BlogsArchives").SetUrl("archives.css");
+    public class ResourceManifest : IResourceManifestProvider {
+        public void BuildManifests(ResourceManifestBuilder builder) {
+            var manifest = builder.Add();
+            manifest.DefineStyle("BlogsAdmin").SetUrl("admin.css");
+            manifest.DefineStyle("BlogsArchives").SetUrl("archives.css");
 
-            DefineScript("BlogsArchives").SetUrl("archives.js").SetDependencies("jQuery");
+            manifest.DefineScript("BlogsArchives").SetUrl("archives.js").SetDependencies("jQuery");
         }
     }
 }

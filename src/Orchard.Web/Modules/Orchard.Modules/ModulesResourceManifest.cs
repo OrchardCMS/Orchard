@@ -5,9 +5,9 @@ using System.Text;
 using Orchard.UI.Resources;
 
 namespace Orchard.Modules {
-    public class ModulesResourceManifest : ResourceManifest {
-        public ModulesResourceManifest() {
-            DefineStyle("ModulesAdmin").SetUrl("admin.css");
+    public class ResourceManifest : IResourceManifestProvider {
+        public void BuildManifests(ResourceManifestBuilder builder) {
+            builder.Add().DefineStyle("ModulesAdmin").SetUrl("admin.css");
         }
     }
 }

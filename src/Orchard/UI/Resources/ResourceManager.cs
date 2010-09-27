@@ -5,29 +5,42 @@ using System.Collections.Specialized;
 using System.Globalization;
 using System.Linq;
 using System.Web;
-using System.Web.Hosting;
-using JetBrains.Annotations;
+using Autofac.Features.Metadata;
+using Orchard.DisplayManagement.Descriptors;
 
 namespace Orchard.UI.Resources {
     public class ResourceManager : IResourceManager {
         private readonly Dictionary<Tuple<String, String>, RequireSettings> _required = new Dictionary<Tuple<String, String>, RequireSettings>();
-        private readonly Lazy<DynamicResourceManifest> _dynamicResourceProvider = new Lazy<DynamicResourceManifest>();
         private readonly List<LinkEntry> _links = new List<LinkEntry>();
         private readonly Dictionary<string, MetaEntry> _metas = new Dictionary<string, MetaEntry>();
         private readonly Dictionary<string, IList<ResourceRequiredContext>> _builtResources = new Dictionary<string, IList<ResourceRequiredContext>>();
+        private readonly IEnumerable<Meta<IResourceManifestProvider, IFeatureMetadata>> _providers;
+        private ResourceManifest _dynamicManifest;
         private List<String> _headScripts;
         private List<String> _footScripts;
+        private IEnumerable<IResourceManifest> _manifests;
 
-        public ResourceManager(IEnumerable<IResourceManifest> resourceProviders) {
-            ResourceProviders = resourceProviders;
+        public ResourceManager(IEnumerable<Meta<IResourceManifestProvider, IFeatureMetadata>> resourceProviders) {
+            _providers = resourceProviders;
         }
 
-        public IEnumerable<IResourceManifest> ResourceProviders { get; private set; }
+        public IEnumerable<IResourceManifest> ResourceProviders {
+            get {
+                if (_manifests == null) {
+                    var builder = new ResourceManifestBuilder();
+                    foreach (var provider in _providers) {
+                        builder.Feature = provider.Metadata.Feature;
+                        provider.Value.BuildManifests(builder);
+                    }
+                    _manifests = builder.ResourceManifests;
+                }
+                return _manifests;
+            }
+        }
 
-        // represents resources that were required during the request but that had no matching resource provider
         public virtual ResourceManifest DynamicResources {
             get {
-                return _dynamicResourceProvider.Value;
+                return _dynamicManifest ?? (_dynamicManifest = new ResourceManifest());
             }
         }
 
@@ -108,23 +121,21 @@ namespace Orchard.UI.Resources {
             // using the action.
             var name = settings.Name;
             var type = settings.Type;
-            var minimumVersion = settings.MinimumVersion;
             var resource = (from p in ResourceProviders
                             from r in p.GetResources(type)
-                            where r.Key == name && (String.IsNullOrEmpty(minimumVersion) || String.CompareOrdinal(r.Value.Version ?? "", minimumVersion) >= 0)
+                            where r.Key == name
                             orderby r.Value.Version descending
                             select r.Value).FirstOrDefault();
-            if (resource == null && _dynamicResourceProvider.IsValueCreated) {
-                resource = (from r in _dynamicResourceProvider.Value.GetResources(type)
-                            where r.Key == name && (String.IsNullOrEmpty(minimumVersion) || String.CompareOrdinal(r.Value.Version ?? "", minimumVersion) >= 0)
+            if (resource == null && _dynamicManifest != null) {
+                resource = (from r in _dynamicManifest.GetResources(type)
+                            where r.Key == name
                             orderby r.Value.Version descending
                             select r.Value).FirstOrDefault();
             }
             if (resource == null && settings.InlineDefinition != null) {
                 // defining it on the fly
                 resource = DynamicResources.DefineResource(type, name)
-                    .SetBasePath(settings.BasePath)
-                    .SetVersion(minimumVersion);
+                    .SetBasePath(settings.BasePath);
                 settings.InlineDefinition(resource);
             }
             return resource;
@@ -161,9 +172,7 @@ namespace Orchard.UI.Resources {
             foreach (var settings in GetRequiredResources(resourceType)) {
                 var resource = FindResource(settings);
                 if (resource == null) {
-                    throw String.IsNullOrEmpty(settings.MinimumVersion)
-                        ? new InvalidOperationException(String.Format(CultureInfo.CurrentCulture, "A '{1}' named '{0}' could not be found.", settings.Name, settings.Type))
-                        : new InvalidOperationException(String.Format(CultureInfo.CurrentCulture, "A '{2}' named '{0}' with version greater than or equal to '{1}' could not be found.", settings.Name, settings.MinimumVersion, settings.Type));
+                    throw new InvalidOperationException(String.Format(CultureInfo.CurrentCulture, "A '{1}' named '{0}' could not be found.", settings.Name, settings.Type));
                 }
                 ExpandDependencies(resource, settings, allResources);
             }

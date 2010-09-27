@@ -5,11 +5,12 @@ using System.Text;
 using Orchard.UI.Resources;
 
 namespace Orchard.Core.Localization.Resources {
-    public class LocalizationResourceManifest : ResourceManifest {
-        public LocalizationResourceManifest() {
+    public class ResourceManifest : IResourceManifestProvider {
+        public void BuildManifests(ResourceManifestBuilder builder) {
+            var manifest = builder.Add();
             // todo: move this file
-            DefineStyle("Localization").SetUrl("base.css");
-            DefineStyle("LocalizationAdmin").SetUrl("admin.css");
+            manifest.DefineStyle("Localization").SetUrl("base.css");
+            manifest.DefineStyle("LocalizationAdmin").SetUrl("admin.css");
         }
     }
 }

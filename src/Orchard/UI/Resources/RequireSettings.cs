@@ -8,7 +8,6 @@ namespace Orchard.UI.Resources {
         public string Culture { get; set; }
         public bool DebugMode { get; set; }
         public bool CdnMode { get; set; }
-        public string MinimumVersion { get; set; }
         public ResourceLocation Location { get; set; }
         public Action<ResourceDefinition> InlineDefinition { get; set; }
 
@@ -51,13 +50,6 @@ namespace Orchard.UI.Resources {
             return this;
         }
 
-        public RequireSettings WithMinimumVersion(string minimumVersion) {
-            MinimumVersion = String.IsNullOrEmpty(MinimumVersion)
-                ? minimumVersion
-                : (MinimumVersion.CompareTo(minimumVersion) > 0 ? minimumVersion : MinimumVersion);
-            return this;
-        }
-
         public RequireSettings WithBasePath(string basePath) {
             BasePath = basePath;
             return this;
@@ -77,7 +69,6 @@ namespace Orchard.UI.Resources {
                 .UseCdn(CdnMode).UseCdn(other.CdnMode)
                 .UseDebugMode(DebugMode).UseDebugMode(other.DebugMode)
                 .UseCulture(Culture).UseCulture(other.Culture)
-                .WithMinimumVersion(MinimumVersion).WithMinimumVersion(other.MinimumVersion)
                 .Define(InlineDefinition).Define(other.InlineDefinition);
         }
     }
