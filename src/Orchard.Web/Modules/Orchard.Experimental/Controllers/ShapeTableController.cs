@@ -5,10 +5,10 @@ using Orchard.UI.Admin;
 
 namespace Orchard.Experimental.Controllers {
     [Themed, Admin]
-    public class InventoryController : Controller {
+    public class ShapeTableController : Controller {
         private readonly IShapeTableManager _shapeTableManager;
 
-        public InventoryController(IShapeTableManager shapeTableManager) {
+        public ShapeTableController(IShapeTableManager shapeTableManager) {
             _shapeTableManager = shapeTableManager;
         }
 
