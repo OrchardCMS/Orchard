@@ -366,14 +366,6 @@ span.message {
 .messages a {
     font-weight:bold;
 }
-.message-Confirmation {
-	background:#D1F2A5; /* green */
-	border:1px solid #BCD994;
-}
-.message-Warning {
-	background:#fdf5bc; /* yellow */
-	border:1px solid #ffea9b;
-}
 /* todo: (heskew) what else (other inputs) needs this? */
 .critical.message, .validation-summary-errors,
 .input-validation-error.text-box, .input-validation-error.text {
@@ -388,7 +380,15 @@ span.message {
 	border:1px solid #cfe493;
 	color:#062232;
 }
-.debug.message {
+.message-Warning {
+	background:#fdf5bc; /* yellow */
+	border:1px solid #ffea9b;
+}
+.message-Error {
+	background:#e68585; /* green */
+	border:1px solid #990808;
+	color:#fff;
+}.debug.message {
     background:#eee;
 	border:1px dashed #D2D6C6;
 	color:#7a7a7a;

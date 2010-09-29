@@ -1,0 +1,14 @@
+﻿<html>
+<body onload="iframeResizePipe()">
+    <iframe id="helpframe" src="" frameborder="0" width="0" height="0"></iframe>
+    <script type="text/javascript">
+        function iframeResizePipe() {
+            var height = document.body.scrollHeight;
+            var helpFrame = document.getElementById('helpframe') || frames['helpframe'];
+            helpFrame.src = 'Admin/DashboardProxy' + '#' + height;
+        }
+    </script>
+
+    <!-- Your advisory message here -->
+</body>
+</html>

@@ -26,6 +26,21 @@ namespace Orchard.Core.Dashboard {
                                                                                       {"area", "Dashboard"}
                                                                                   },
                                                          new MvcRouteHandler())
+                                                 },
+                            new RouteDescriptor {
+                                                     Priority = -5,
+                                                     Route = new Route(
+                                                         "Admin/DashboardProxy",
+                                                         new RouteValueDictionary {
+                                                                                      {"area", "Dashboard"},
+                                                                                      {"controller", "Helper"},
+                                                                                      {"action", "Index"}
+                                                                                  },
+                                                         new RouteValueDictionary(),
+                                                         new RouteValueDictionary {
+                                                                                      {"area", "Dashboard"}
+                                                                                  },
+                                                         new MvcRouteHandler())
                                                  }
                          };
         }
