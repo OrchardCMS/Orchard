@@ -72,7 +72,8 @@ namespace Orchard.Themes.Services {
                                          HomePage = descriptor.WebSite ?? String.Empty,
                                          ThemeName = descriptor.Name,
                                          Version = descriptor.Version ?? String.Empty,
-                                         Tags = descriptor.Tags ?? String.Empty
+                                         Tags = descriptor.Tags ?? String.Empty,
+                                         Zones = descriptor.Zones ?? String.Empty,
                                      };
                 }
             }
@@ -90,7 +91,8 @@ namespace Orchard.Themes.Services {
                                                 HomePage = descriptor.WebSite ?? String.Empty,
                                                 ThemeName = descriptor.Name,
                                                 Version = descriptor.Version ?? String.Empty,
-                                                Tags = descriptor.Tags ?? String.Empty
+                                                Tags = descriptor.Tags ?? String.Empty,
+                                                Zones = descriptor.Zones ?? String.Empty,
                                             };
                     if (!theme.Tags.Contains("hidden")) {
                         themes.Add(theme);

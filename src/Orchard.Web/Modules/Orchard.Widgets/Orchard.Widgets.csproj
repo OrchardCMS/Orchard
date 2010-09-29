@@ -59,6 +59,12 @@
   <ItemGroup>
     <Compile Include="AdminMenu.cs" />
     <Compile Include="Controllers\AdminController.cs" />
+    <Compile Include="Models\Layer.cs" />
+    <Compile Include="Models\LayerPart.cs" />
+    <Compile Include="Models\LayerPartRecord.cs" />
+    <Compile Include="Models\LayerZone.cs" />
+    <Compile Include="Models\WidgetPart.cs" />
+    <Compile Include="Models\WidgetPartRecord.cs" />
     <Compile Include="Permissions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -69,6 +75,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Handlers\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Core\Orchard.Core.csproj">
