@@ -1,15 +1,16 @@
 ﻿using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("Futures.Widgets")]
+[assembly: AssemblyTitle("Orchard.Widgets")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("Futures.Widgets")]
-[assembly: AssemblyCopyright("Copyright © CodePlex Foundation 2009")]
+[assembly: AssemblyCompany("MSIT")]
+[assembly: AssemblyProduct("Orchard.Widgets")]
+[assembly: AssemblyCopyright("Copyright © MSIT 2010")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -19,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("8c179868-e814-4277-a0af-b71707c3bff4")]
+[assembly: Guid("c326e210-8edd-45ba-a686-02c1370c3ad1")]
 
 // Version information for an assembly consists of the following four values:
 //
@@ -30,5 +31,5 @@ using System.Runtime.InteropServices;
 //
 // You can specify all the values or you can default the Revision and Build Numbers 
 // by using the '*' as shown below:
-[assembly: AssemblyVersion("0.5.0")]
-[assembly: AssemblyFileVersion("0.5.0")]
+[assembly: AssemblyVersion("1.0.0.0")]
+[assembly: AssemblyFileVersion("1.0.0.0")]

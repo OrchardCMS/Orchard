@@ -93,16 +93,6 @@ msgstr "Invalid serial number for shell descriptor"
 msgid "Manage Settings"
 msgstr "Manage Settings"
 
-#: ~/Modules/Futures.Widgets/Controllers/AdminController.cs
-#| msgid : "Designer notes not found."
-msgid "Designer notes not found."
-msgstr "Designer notes not found."
-
-#: ~/Modules/Futures.Widgets/Views/Admin/Edit.ascx
-#| msgid : "Edit Widget"
-msgid "Edit Widget"
-msgstr "Edit Widget"
-
 #: ~/Modules/Orchard.Blogs/Controllers/BlogAdminController.cs
 #| msgid : "Not allowed to create blogs"
 msgid "Not allowed to create blogs"
@@ -1952,6 +1942,26 @@ msgstr "Edit"
 #| msgid : "Remove"
 msgid "Remove"
 msgstr "Remove"
+
+#: ~/Modules/Orchard.Widgets/Views/Admin/Index.cshtml
+#| msgid : "Manage Layers"
+msgid "Manage Layers"
+msgstr "Manage Layers"
+
+#: ~/Modules/Orchard.Widgets/Views/Admin/Index.cshtml
+#| msgid : "Add a new layer"
+msgid "Add a new layer"
+msgstr "Add a new layer"
+
+#: ~/Modules/Orchard.Widgets/AdminMenu.cs
+#| msgid : "Manage Widgets"
+msgid "Manage Widgets"
+msgstr "Manage Widgets"
+
+#: ~/Modules/Orchard.Widgets/AdminMenu.cs
+#| msgid : "Widgets"
+msgid "Widgets"
+msgstr "Widgets"
 
 #: ~/Themes/Classic/Views/DisplayTemplates/Parts/Pages.Page.Metadata.ascx
 #| msgid : "nobody(?)"
