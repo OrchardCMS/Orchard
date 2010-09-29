@@ -76,7 +76,7 @@
     <Compile Include="Controllers\CommandsController.cs" />
     <Compile Include="Controllers\ContentController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
-    <Compile Include="Controllers\InventoryController.cs" />
+    <Compile Include="Controllers\ShapeTableController.cs" />
     <Compile Include="Controllers\MetadataController.cs" />
     <Compile Include="DebugFilter.cs" />
     <Compile Include="Handlers\DebugLinkHandler.cs" />
@@ -131,7 +131,7 @@
     <Content Include="Views\Home\UsingShapes.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Inventory\ShapeTable.cshtml" />
+    <Content Include="Views\ShapeTable\ShapeTable.cshtml" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />
