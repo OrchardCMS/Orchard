@@ -1,0 +1,18 @@
+﻿Name: Experimental module
+antiforgery: enabled
+author: The Orchard Team
+website: http://orchardproject.net
+version: 0.1.0
+orchardversion: 0.6.0
+description: 
+features:
+    Profiling:
+        Description: Tools to help profile Orchard.
+        Category: Developer
+        Dependencies: Orchard.Experimental
+    Orchard.Experimental.WebCommandLine:
+        Description: Enables site administrators to execute Orchard.exe commands via web interface
+        Category: Developer
+    Orchard.Experimental:
+        Description: An assortment of debugging tools.
+        Category: Developer
