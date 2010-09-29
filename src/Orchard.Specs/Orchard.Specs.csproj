@@ -228,10 +228,6 @@
       <Project>{9916839C-39FC-4CEB-A5AF-89CA7E87119F}</Project>
       <Name>Orchard.Core</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Orchard.Web\Modules\Orchard.DevTools\Orchard.DevTools.csproj">
-      <Project>{67C1D3AF-A0EC-46B2-BAE1-DF1DA8E0B890}</Project>
-      <Name>Orchard.DevTools</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Orchard.Web\Modules\Orchard.Roles\Orchard.Roles.csproj">
       <Project>{D10AD48F-407D-4DB5-A328-173EC7CB010F}</Project>
       <Name>Orchard.Roles</Name>

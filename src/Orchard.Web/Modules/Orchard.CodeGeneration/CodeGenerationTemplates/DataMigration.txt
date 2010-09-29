@@ -1,0 +1,18 @@
+﻿using System;
+using System.Collections.Generic;
+using Orchard.ContentManagement.Drivers;
+using Orchard.ContentManagement.MetaData;
+using Orchard.ContentManagement.MetaData.Builders;
+using Orchard.Core.Contents.Extensions;
+using Orchard.Data.Migration;
+
+namespace $$FeatureName$$.DataMigrations {
+    public class $$ClassName$$DataMigration : DataMigrationImpl {
+
+        public int Create() {
+$$Commands$$
+
+            return 1;
+        }
+    }
+}
