@@ -1,6 +1,6 @@
-using Orchard.ContentManagement;
+﻿using Orchard.ContentManagement;
 
-namespace Futures.Widgets.Models {
+namespace Orchard.Widgets.Models {
     public class WidgetPart : ContentPart<WidgetPartRecord> {
     }
 }

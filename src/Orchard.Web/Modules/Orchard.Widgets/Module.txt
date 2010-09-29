@@ -1,0 +1,11 @@
+﻿name: Widgets
+antiforgery: enabled
+author: The Orchard Team
+website: http://orchardproject.net
+version: 0.5.0
+orchardversion: 0.5.0
+description: An implementation of widgets for Orchard.
+features:
+    Orchard.Widgets:
+        Description: An implementation of widgets.
+        Category: Widget

@@ -1,13 +1,11 @@
-﻿using System.Web.Mvc;
-using Futures.Widgets.Models;
-using Orchard;
+﻿using System;
+using System.Web.Mvc;
 using Orchard.ContentManagement;
 using Orchard.Mvc.Filters;
-using Orchard.Settings;
 using Orchard.UI.Admin;
 
-namespace Futures.Widgets {
-    public class WidgetFilter : FilterProvider, IActionFilter {
+namespace Orchard.Widgets.Filters {
+    public class WidgetFilter : FilterProvider, IResultFilter {
         private readonly IContentManager _contentManager;
         private readonly IWorkContextAccessor _workContextAccessor;
 
@@ -16,10 +14,10 @@ namespace Futures.Widgets {
             _workContextAccessor = workContextAccessor;
         }
 
-        public void OnActionExecuting(ActionExecutingContext filterContext) {
+        public void OnResultExecuting(ResultExecutingContext filterContext) {
         }
 
-        public void OnActionExecuted(ActionExecutedContext filterContext) {
+        public void OnResultExecuted(ResultExecutedContext filterContext) {
             var workContext = _workContextAccessor.GetContext(filterContext);
 
             if (workContext == null ||
@@ -29,17 +27,11 @@ namespace Futures.Widgets {
                 return;
             }
 
-            var siteWidgets = workContext.CurrentSite.As<WidgetsPart>();
-            if (siteWidgets == null) {
-                return;
-            }
-
-            var zones = workContext.Page.Zones;
-            foreach (var widget in siteWidgets.Widgets) {
-                var widgetShape = _contentManager.BuildDisplayModel(widget);
-
-                zones[widget.Record.Zone].Add(widgetShape, widget.Record.Position);
-            }
+            // Get Layers
+            // Get LayerZones
+            // Get WidgetParts
+            // BuildDisplayModel
+            // Add to Zone.
         }
     }
 }
