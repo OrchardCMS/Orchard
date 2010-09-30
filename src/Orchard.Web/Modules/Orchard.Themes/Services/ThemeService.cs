@@ -11,7 +11,6 @@ using Orchard.ContentManagement;
 using Orchard.Modules;
 using Orchard.Settings;
 using Orchard.Themes.Models;
-using Orchard.Environment.Descriptor;
 
 namespace Orchard.Themes.Services {
     [UsedImplicitly]
@@ -83,7 +82,6 @@ namespace Orchard.Themes.Services {
             foreach (var descriptor in _extensionManager.AvailableExtensions()) {
                 if (String.Equals(descriptor.Name, name, StringComparison.OrdinalIgnoreCase)) {
                     return CreateTheme(descriptor);
-                                         Zones = descriptor.Zones ?? String.Empty,
                 }
             }
             return null;
@@ -103,7 +101,6 @@ namespace Orchard.Themes.Services {
 
                 ITheme theme = CreateTheme(descriptor);
 
-                                                Zones = descriptor.Zones ?? String.Empty,
                 if (!theme.Tags.Contains("hidden")) {
                     themes.Add(theme);
                 }
@@ -127,7 +124,8 @@ namespace Orchard.Themes.Services {
                 HomePage = descriptor.WebSite ?? String.Empty,
                 ThemeName = descriptor.Name,
                 Version = descriptor.Version ?? String.Empty,
-                Tags = descriptor.Tags ?? String.Empty
+                Tags = descriptor.Tags ?? String.Empty,
+                Zones = descriptor.Zones ?? String.Empty,
             };
         }
     }
