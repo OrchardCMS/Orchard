@@ -17,6 +17,7 @@ namespace Orchard.CodeGeneration.Commands {
 
     [OrchardFeature("Generate")]
     public class CodeGenerationCommands : DefaultOrchardCommandHandler {
+
         private readonly IExtensionManager _extensionManager;
         private readonly ISchemaCommandGenerator _schemaCommandGenerator;
 
@@ -55,7 +56,7 @@ namespace Orchard.CodeGeneration.Commands {
 
         [CommandHelp("generate create datamigration <feature-name> \r\n\t" + "Create a new Data Migration class")]
         [CommandName("generate create datamigration")]
-        public void CreateDataMigration(string featureName) {
+        public bool CreateDataMigration(string featureName) {
             Context.Output.WriteLine(T("Creating Data Migration for {0}", featureName));
 
             ExtensionDescriptor extensionDescriptor = _extensionManager.AvailableExtensions().FirstOrDefault(extension => extension.ExtensionType == "Module" &&
@@ -63,7 +64,7 @@ namespace Orchard.CodeGeneration.Commands {
 
             if (extensionDescriptor == null) {
                 Context.Output.WriteLine(T("Creating data migration failed: target Feature {0} could not be found.", featureName));
-                return;
+                return false;
             }
 
             string dataMigrationsPath = HostingEnvironment.MapPath("~/Modules/" + extensionDescriptor.Name + "/DataMigrations/");
@@ -77,7 +78,7 @@ namespace Orchard.CodeGeneration.Commands {
 
             if (File.Exists(dataMigrationPath)) {
                 Context.Output.WriteLine(T("Data migration already exists in target Module {0}.", extensionDescriptor.Name));
-                return;
+                return false;
             }
 
             List<SchemaCommand> commands = _schemaCommandGenerator.GetCreateFeatureCommands(featureName, false).ToList();
@@ -111,21 +112,25 @@ namespace Orchard.CodeGeneration.Commands {
             File.WriteAllText(moduleCsProjPath, projectFileText);
             TouchSolution(Context.Output, T);
             Context.Output.WriteLine(T("Data migration created successfully in Module {0}", extensionDescriptor.Name));
+
+            return true;
         }
 
         [CommandHelp("generate create module <module-name> [/IncludeInSolution:true|false]\r\n\t" + "Create a new Orchard module")]
         [CommandName("generate create module")]
         [OrchardSwitches("IncludeInSolution")]
-        public void CreateModule(string moduleName) {
+        public bool CreateModule(string moduleName) {
             Context.Output.WriteLine(T("Creating Module {0}", moduleName));
 
             if ( _extensionManager.AvailableExtensions().Any(extension => String.Equals(moduleName, extension.DisplayName, StringComparison.OrdinalIgnoreCase)) ) {
                 Context.Output.WriteLine(T("Creating Module {0} failed: a module of the same name already exists", moduleName));
-                return;
+                return false;
             }
 
             IntegrateModule(moduleName);
             Context.Output.WriteLine(T("Module {0} created successfully", moduleName));
+
+            return true;
         }
 
         [CommandName("generate create theme")]

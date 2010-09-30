@@ -1,5 +1,5 @@
 ﻿#if REFACTORING
-#error This must move to the Modules tests to accomodateOrchard.Experimental assembly reference
+#error This must move to the Modules tests to accomodate Orchard.Experimental assembly reference
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;

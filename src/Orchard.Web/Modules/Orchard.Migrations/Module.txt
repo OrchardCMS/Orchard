@@ -1,0 +1,11 @@
+﻿Name: Migration module
+antiforgery: enabled
+author: The Orchard Team
+website: http://orchardproject.net
+version: 0.1.0
+orchardversion: 0.6.0
+description: 
+features:
+    Orchard.Migration:
+        Description: Database migration action.
+        Category: Developer
