@@ -162,7 +162,6 @@ namespace Orchard.Tests.DisplayManagement {
             Assert.That(result.ToString(), Is.EqualTo("Hi there!"));
         }
 
-
         [Test]
         public void RenderAlternateShape() {
             var displayManager = _container.Resolve<IDisplayManager>();

@@ -1,0 +1,58 @@
+﻿<!DOCTYPE html> 
+<html lang="en" class="static @Html.ClassForPage()"> 
+<head> 
+    <meta charset="utf-8" /> 
+    <title>@Html.Title(WorkContext.CurrentSite.SiteName)</title> 
+    <script>(function(d){d.className="dyn "+d.className.substring(7,d.length);})(document.documentElement);</script> 
+</head> 
+<body>
+    <div id="layout-wrapper">
+        <header id="layout-header">
+            <h1><a href="#">The Theme Machine</a></h1>
+            <!--zone: navigation -->
+            <nav>
+                <ul>
+                    <li class="first current"><a href="#">Home</a></li>
+                    <li><a href="#">Blog</a></li>
+                    <li><a href="#">About</a></li>
+                    <li><a href="#">Full Page</a></li>
+                    <li><a href="#">Image Page</a></li>
+                    <li><a href="#">Gallery Page</a></li>
+                    <li><a href="#">Nested Page</a></li>
+                    <li class="last"><a href="#">Contact</a></li>
+                </ul>
+            </nav>
+            <!--/zone: navigation -->
+        </header>
+        <section>
+          <article>
+            <header>
+              <h1><a href="#">Title</a></h1>
+            </header>
+            <section>
+              <p>Lorem ipsum...</p>
+            </section>
+          </article>
+          <article>
+            <header>
+              <h1><a href="#">Title</a></h1>
+            </header>
+            <section>
+              <p>Lorem ipsum...</p>
+            </section>
+          </article>
+          <article>
+            <header>
+              <h1><a href="#">Title</a></h1>
+            </header>
+            <section>
+              <p>Lorem ipsum...</p>
+            </section>
+          </article>
+        </section>
+        <footer>
+          <p>Copyright © 2008 All Rights</p>
+        </footer>
+    </div>
+</body>
+</html>

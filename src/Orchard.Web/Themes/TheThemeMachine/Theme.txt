@@ -1,0 +1,6 @@
+﻿Name: The Theme Machine
+Author: jowall, mibach, loudej, heskew
+Description: It's a *really* good theme, yo.
+Version: 0.1
+Tags: Awesome
+Website: http://orchardproject.net
