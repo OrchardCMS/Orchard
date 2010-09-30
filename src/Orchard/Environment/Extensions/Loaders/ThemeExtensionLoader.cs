@@ -31,6 +31,14 @@ namespace Orchard.Environment.Extensions.Loaders {
                     return null;
                 }
 
+                var assemblyPath = _virtualPathProvider.Combine(descriptor.Location, descriptor.Name, "bin",
+                                                descriptor.Name + ".dll");
+
+                // ignore themes with /bin in this loader
+                if ( !_virtualPathProvider.FileExists(assemblyPath) )
+                    return null;
+
+
                 return new ExtensionProbeEntry {
                     Descriptor = descriptor,
                     LastWriteTimeUtc = DateTime.MinValue,
