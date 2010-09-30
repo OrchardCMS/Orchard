@@ -1,5 +1,5 @@
 ﻿#if REFACTORING
-#error This must move to the Modules tests to accomodateOrchard.DevTools assembly reference
+#error This must move to the Modules tests to accomodateOrchard.Experimental assembly reference
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -114,7 +114,7 @@ features:
         }
 
         public class StubLoaders : IExtensionLoader {
-            #region Implementation of IExtensionLoader
+#region Implementation of IExtensionLoader
 
             public int Order {
                 get { return 1; }

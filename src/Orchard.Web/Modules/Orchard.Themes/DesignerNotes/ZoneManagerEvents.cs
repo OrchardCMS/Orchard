@@ -45,18 +45,18 @@ namespace Orchard.Themes.DesignerNotes {
             var accessAdminPanel = _authorizationService.TryCheckAccess(
                 StandardPermissions.AccessAdminPanel, CurrentUser, null);
             if (accessAdminPanel) {
-                //Temporary: Don't show "edit" button if "Futures.Widgets" is not enabled.
+                //Temporary: Don't show "edit" button if "Orchard.Widgets" is not enabled.
                 accessAdminPanel = _shellDescriptorManager
                     .GetShellDescriptor()
                     .Features
-                    .Any(f => f.Name == "Futures.Widgets");
+                    .Any(f => f.Name == "Orchard.Widgets");
             }
 
             var writer = context.Html.ViewContext.Writer;
             if (accessAdminPanel) {
                 writer.Write("<div class=\"managewrapper\"><div class=\"manage\">");
                 writer.Write(context.Html.ActionLink(T("Edit").ToString(), "AddWidget", new {
-                                                                                  Area = "Futures.Widgets",
+                                                                                  Area = "Orchard.Widgets",
                                                                                   Controller = "Admin",
                                                                                   context.ZoneName,
                                                                                   theme.ThemeName,

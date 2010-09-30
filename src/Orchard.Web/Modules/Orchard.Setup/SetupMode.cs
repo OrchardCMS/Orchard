@@ -115,6 +115,7 @@ namespace Orchard.Setup {
                 public string Author { get; set; }
                 public string HomePage { get; set; }
                 public string Tags { get; set; }
+                public string Zones { get; set; }
             }
 
             private readonly SafeModeTheme _theme = new SafeModeTheme {

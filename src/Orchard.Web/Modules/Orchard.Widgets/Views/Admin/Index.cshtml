@@ -1,0 +1,6 @@
+﻿<h1>@Html.TitleForPage(T("Manage Layers").ToString()) </h1>
+@using (Html.BeginFormAntiForgeryPost()) { 
+    @Html.ValidationSummary()
+    <div class="manage">@Html.ActionLink(T("Add a new layer").ToString(), "Create", new { }, new { @class = "button primaryAction" })</div>
+    <p>Layers ...</p>
+} 

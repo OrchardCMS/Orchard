@@ -91,9 +91,7 @@ namespace Orchard.Setup.Services {
                     "Orchard.Comments",
                     "Orchard.Tags",
                     "Orchard.Media",
-                    "Futures.Widgets",
-
-                    "Orchard.DevTools",
+                    "Orchard.Widgets",
                     "Orchard.jQuery"
                 };
 

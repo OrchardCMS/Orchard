@@ -83,6 +83,7 @@ namespace Orchard.Themes.Services {
             foreach (var descriptor in _extensionManager.AvailableExtensions()) {
                 if (String.Equals(descriptor.Name, name, StringComparison.OrdinalIgnoreCase)) {
                     return CreateTheme(descriptor);
+                                         Zones = descriptor.Zones ?? String.Empty,
                 }
             }
             return null;
@@ -102,6 +103,7 @@ namespace Orchard.Themes.Services {
 
                 ITheme theme = CreateTheme(descriptor);
 
+                                                Zones = descriptor.Zones ?? String.Empty,
                 if (!theme.Tags.Contains("hidden")) {
                     themes.Add(theme);
                 }
