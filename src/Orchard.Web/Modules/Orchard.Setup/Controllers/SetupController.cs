@@ -12,8 +12,7 @@ using Orchard.Themes;
 using Orchard.UI.Notify;
 
 namespace Orchard.Setup.Controllers {
-    [ValidateInput(false)]
-    [Themed]
+    [ValidateInput(false), Themed]
     public class SetupController : Controller {
         private readonly IAppDataFolder _appDataFolder;
         private readonly INotifier _notifier;

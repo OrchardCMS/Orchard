@@ -4,9 +4,9 @@ using System.Web.Mvc;
 using Orchard.Core.Feeds.Models;
 using Orchard.Logging;
 using Orchard.Mvc.Results;
+using Orchard.Themes;
 
 namespace Orchard.Core.Feeds.Controllers {
-
     public class FeedController : Controller {
         private readonly IEnumerable<IFeedBuilderProvider> _feedFormatProviders;
         private readonly IEnumerable<IFeedQueryProvider> _feedQueryProviders;

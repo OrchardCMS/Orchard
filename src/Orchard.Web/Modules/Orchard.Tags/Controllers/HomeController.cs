@@ -10,9 +10,10 @@ using Orchard.Security;
 using Orchard.Settings;
 using Orchard.Tags.Services;
 using Orchard.Tags.ViewModels;
+using Orchard.Themes;
 
 namespace Orchard.Tags.Controllers {
-    [ValidateInput(false)]
+    [ValidateInput(false), Themed]
     public class HomeController : Controller {
         private readonly ITagService _tagService;
         private readonly IContentManager _contentManager;

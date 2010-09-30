@@ -7,6 +7,7 @@ using Orchard.Core.Routable.Models;
 using Orchard.Data;
 using Orchard.DisplayManagement;
 using Orchard.Localization;
+using Orchard.Themes;
 
 namespace Orchard.Core.Routable.Controllers {
     [ValidateInput(false)]
@@ -24,6 +25,7 @@ namespace Orchard.Core.Routable.Controllers {
 
         dynamic Shape { get; set; }
 
+        [Themed]
         public ActionResult Display(string path) {
             var matchedPath = _routablePathConstraint.FindPath(path);
             if (string.IsNullOrEmpty(matchedPath)) {

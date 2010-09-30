@@ -1,8 +1,10 @@
 ﻿using System.Web.Mvc;
 using Orchard.ContentManagement;
 using Orchard.DisplayManagement;
+using Orchard.Themes;
 
 namespace Orchard.Core.Contents.Controllers {
+    [Themed]
     public class ItemController : Controller {
         private readonly IContentManager _contentManager;
 

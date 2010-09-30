@@ -17,8 +17,7 @@ using Orchard.Users.Models;
 using Orchard.Mvc.Results;
 
 namespace Orchard.Users.Controllers {
-    [HandleError]
-    [Themed]
+    [HandleError, Themed]
     public class AccountController : Controller {
         private readonly IAuthenticationService _authenticationService;
         private readonly IMembershipService _membershipService;

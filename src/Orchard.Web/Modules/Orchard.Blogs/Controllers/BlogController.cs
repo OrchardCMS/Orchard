@@ -9,8 +9,10 @@ using Orchard.Blogs.Services;
 using Orchard.DisplayManagement;
 using Orchard.Logging;
 using Orchard.Mvc.Results;
+using Orchard.Themes;
 
 namespace Orchard.Blogs.Controllers {
+    [Themed]
     public class BlogController : Controller {
         private readonly IOrchardServices _services;
         private readonly IBlogService _blogService;

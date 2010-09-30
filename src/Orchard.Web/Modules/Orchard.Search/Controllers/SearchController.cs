@@ -9,9 +9,10 @@ using System.Linq;
 using System;
 using System.Collections.Generic;
 using Orchard.Collections;
+using Orchard.Themes;
 
 namespace Orchard.Search.Controllers {
-    [ValidateInput(false)]
+    [ValidateInput(false), Themed]
     public class SearchController : Controller {
         private readonly ISearchService _searchService;
         private readonly IContentManager _contentManager;
