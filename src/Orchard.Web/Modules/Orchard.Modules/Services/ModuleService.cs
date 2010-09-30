@@ -53,7 +53,7 @@ namespace Orchard.Modules.Services {
 
         public IEnumerable<IModuleFeature> GetAvailableFeatures() {
             var enabledFeatures = _shellDescriptorManager.GetShellDescriptor().Features;
-            return GetInstalledModules()
+            return _extensionManager.AvailableExtensions()
                 .SelectMany(m => _extensionManager.LoadFeatures(m.Features))
                 .Select(f => AssembleModuleFromDescriptor(f, enabledFeatures
                     .FirstOrDefault(sf => string.Equals(sf.Name, f.Descriptor.Name, StringComparison.OrdinalIgnoreCase)) != null));
