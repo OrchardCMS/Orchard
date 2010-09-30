@@ -35,7 +35,7 @@ namespace Orchard.Environment.Extensions.Loaders {
                                                 descriptor.Name + ".dll");
 
                 // ignore themes with /bin in this loader
-                if ( !_virtualPathProvider.FileExists(assemblyPath) )
+                if ( _virtualPathProvider.FileExists(assemblyPath) )
                     return null;
 
 
