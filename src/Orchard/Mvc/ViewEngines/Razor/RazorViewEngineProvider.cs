@@ -67,6 +67,7 @@ namespace Orchard.Mvc.ViewEngines.Razor {
             var areaFormats = new[] {
                                         "~/Core/{2}/Views/{1}/{0}.cshtml",
                                         "~/Modules/{2}/Views/{1}/{0}.cshtml",
+                                        "~/Themes/{2}/Views/{1}/{0}.cshtml",
                                     };
 
             //Logger.Debug("AreaFormats (module): \r\n\t-{0}", string.Join("\r\n\t-", areaFormats));

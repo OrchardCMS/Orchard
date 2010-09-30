@@ -70,6 +70,8 @@ namespace Orchard.Mvc.ViewEngines.WebForms {
                                         "~/Core/{2}/Views/{1}/{0}.aspx",
                                         "~/Modules/{2}/Views/{1}/{0}.ascx",
                                         "~/Modules/{2}/Views/{1}/{0}.aspx",
+                                        "~/Themes/{2}/Views/{1}/{0}.ascx",
+                                        "~/Themes/{2}/Views/{1}/{0}.aspx",
                                     };
 
             //Logger.Debug("AreaFormats (module): \r\n\t-{0}", string.Join("\r\n\t-", areaFormats));

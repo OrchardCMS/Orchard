@@ -10,6 +10,8 @@ using Orchard.Environment.Extensions.Loaders;
 using Orchard.Environment.Extensions.Models;
 using Orchard.Localization;
 using Orchard.Logging;
+using Orchard.Settings;
+using Orchard.Themes;
 using Orchard.Utility;
 using Orchard.Utility.Extensions;
 
@@ -57,20 +59,17 @@ namespace Orchard.Environment.Extensions {
         }
 
 
-        private IEnumerable<ExtensionEntry> LoadedModules() {
-            foreach (var descriptor in AvailableExtensions()) {
-                // Extensions that are Themes don't have buildable components.
-                if (String.Equals(descriptor.ExtensionType, "Module", StringComparison.OrdinalIgnoreCase)) {
-                    ExtensionEntry entry = null;
-                    try {
-                        entry = BuildEntry(descriptor);
-                    }
-                    catch (HttpCompileException ex) {
-                        Logger.Warning(ex, "Unable to load module {0}", descriptor.Name);
-                    }
-                    if (entry != null)
-                        yield return entry;
+        private IEnumerable<ExtensionEntry> LoadedExtensions() {
+            foreach ( var descriptor in AvailableExtensions() ) {
+                ExtensionEntry entry = null;
+                try {
+                    entry = BuildEntry(descriptor);
                 }
+                catch (HttpCompileException ex) {
+                    Logger.Warning(ex, "Unable to load extension {0}", descriptor.Name);
+                }
+                if (entry != null)
+                    yield return entry;
             }
         }
 
@@ -82,11 +81,12 @@ namespace Orchard.Environment.Extensions {
 
         private Feature LoadFeature(FeatureDescriptor featureDescriptor) {
             var featureName = featureDescriptor.Name;
+
             string extensionName = GetExtensionForFeature(featureName);
             if (extensionName == null)
                 throw new ArgumentException(T("Feature {0} was not found in any of the installed extensions", featureName).ToString());
 
-            var extension = LoadedModules().Where(x => x.Descriptor.Name == extensionName).FirstOrDefault();
+            var extension = LoadedExtensions().Where(x => x.Descriptor.Name == extensionName).FirstOrDefault();
             if (extension == null)
                 throw new InvalidOperationException(T("Extension {0} is not active", extensionName).ToString());
 

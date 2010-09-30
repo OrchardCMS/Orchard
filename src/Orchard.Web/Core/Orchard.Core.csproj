@@ -96,6 +96,7 @@
     <Compile Include="Contents\Settings\ContentPartSettings.cs" />
     <Compile Include="Contents\Shapes.cs" />
     <Compile Include="Contents\ViewModels\PublishContentViewModel.cs" />
+    <Compile Include="Dashboard\Controllers\HelperController.cs" />
     <Compile Include="Localization\ResourceManifest.cs" />
     <Compile Include="Localization\ViewModels\EditLocalizationViewModel.cs" />
     <Compile Include="Messaging\DataMigrations\MessagingDataMigration.cs" />
@@ -389,6 +390,7 @@
     <Content Include="Shapes\Views\Menu.cshtml" />
     <Content Include="Shapes\Views\MenuItem.cshtml" />
     <Content Include="Shapes\Views\Web.config" />
+    <Content Include="Dashboard\Views\Helper\Index.cshtml" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />

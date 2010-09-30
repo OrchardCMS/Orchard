@@ -5,22 +5,28 @@ using System.Web;
 using System.Web.Routing;
 using JetBrains.Annotations;
 using Orchard.Environment.Extensions;
+using Orchard.Environment.Extensions.Models;
 using Orchard.Logging;
 using Orchard.ContentManagement;
+using Orchard.Modules;
 using Orchard.Settings;
 using Orchard.Themes.Models;
+using Orchard.Environment.Descriptor;
 
 namespace Orchard.Themes.Services {
     [UsedImplicitly]
     public class ThemeService : IThemeService {
         private readonly IExtensionManager _extensionManager;
         private readonly IEnumerable<IThemeSelector> _themeSelectors;
+        private readonly IModuleService _moduleService;
 
         public ThemeService(
             IExtensionManager extensionManager,
-            IEnumerable<IThemeSelector> themeSelectors) {
+            IEnumerable<IThemeSelector> themeSelectors,
+            IModuleService moduleService) {
             _extensionManager = extensionManager;
             _themeSelectors = themeSelectors;
+            _moduleService = moduleService;
             Logger = NullLogger.Instance;
         }
 
@@ -39,6 +45,17 @@ namespace Orchard.Themes.Services {
 
         public void SetSiteTheme(string themeName) {
             if (GetThemeByName(themeName) != null) {
+
+                var currentTheme = CurrentSite.As<ThemeSiteSettingsPart>().Record.CurrentThemeName;
+
+                if ( !String.IsNullOrEmpty(currentTheme) ) {
+                    _moduleService.DisableFeatures(new[] {currentTheme}, true);
+                }
+
+                if ( !String.IsNullOrEmpty(themeName) ) {
+                    _moduleService.EnableFeatures(new[] {themeName}, true);
+                }
+
                 CurrentSite.As<ThemeSiteSettingsPart>().Record.CurrentThemeName = themeName;
             }
         }
@@ -65,36 +82,28 @@ namespace Orchard.Themes.Services {
         public ITheme GetThemeByName(string name) {
             foreach (var descriptor in _extensionManager.AvailableExtensions()) {
                 if (String.Equals(descriptor.Name, name, StringComparison.OrdinalIgnoreCase)) {
-                    return new Theme {
-                                         Author = descriptor.Author ?? String.Empty,
-                                         Description = descriptor.Description ?? String.Empty,
-                                         DisplayName = descriptor.DisplayName ?? String.Empty,
-                                         HomePage = descriptor.WebSite ?? String.Empty,
-                                         ThemeName = descriptor.Name,
-                                         Version = descriptor.Version ?? String.Empty,
-                                         Tags = descriptor.Tags ?? String.Empty
-                                     };
+                    return CreateTheme(descriptor);
                 }
             }
             return null;
         }
 
+        /// <summary>
+        /// Loads only enabled themes
+        /// </summary>
         public IEnumerable<ITheme> GetInstalledThemes() {
-            List<ITheme> themes = new List<ITheme>();
+
+            var themes = new List<ITheme>();
             foreach (var descriptor in _extensionManager.AvailableExtensions()) {
-                if (String.Equals(descriptor.ExtensionType, "Theme", StringComparison.OrdinalIgnoreCase)) {
-                    Theme theme = new Theme {
-                                                Author = descriptor.Author ?? String.Empty,
-                                                Description = descriptor.Description ?? String.Empty,
-                                                DisplayName = descriptor.DisplayName ?? String.Empty,
-                                                HomePage = descriptor.WebSite ?? String.Empty,
-                                                ThemeName = descriptor.Name,
-                                                Version = descriptor.Version ?? String.Empty,
-                                                Tags = descriptor.Tags ?? String.Empty
-                                            };
-                    if (!theme.Tags.Contains("hidden")) {
-                        themes.Add(theme);
-                    }
+                
+                if (!String.Equals(descriptor.ExtensionType, "Theme", StringComparison.OrdinalIgnoreCase)) {
+                    continue;
+                }
+
+                ITheme theme = CreateTheme(descriptor);
+
+                if (!theme.Tags.Contains("hidden")) {
+                    themes.Add(theme);
                 }
             }
             return themes;
@@ -106,6 +115,18 @@ namespace Orchard.Themes.Services {
 
         public void UninstallTheme(string themeName) {
             _extensionManager.UninstallExtension("Theme", themeName);
+        }
+
+        private ITheme CreateTheme(ExtensionDescriptor descriptor) {
+            return new Theme {
+                Author = descriptor.Author ?? String.Empty,
+                Description = descriptor.Description ?? String.Empty,
+                DisplayName = descriptor.DisplayName ?? String.Empty,
+                HomePage = descriptor.WebSite ?? String.Empty,
+                ThemeName = descriptor.Name,
+                Version = descriptor.Version ?? String.Empty,
+                Tags = descriptor.Tags ?? String.Empty
+            };
         }
     }
 }

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Orchard.Environment.Extensions.Models;
@@ -86,7 +87,7 @@ namespace Orchard.Environment.Extensions.Loaders {
                 return null;
 
             var desc = _dependenciesFolder.GetDescriptor(descriptor.Name);
-            if (desc == null)
+            if ( desc == null )
                 return null;
 
             return new ExtensionProbeEntry {
