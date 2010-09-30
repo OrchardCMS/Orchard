@@ -4,6 +4,8 @@ using System.Web;
 using System.Web.Mvc;
 using Orchard.DisplayManagement;
 using Orchard.Mvc.Spooling;
+using Orchard.Themes;
+using Orchard.UI.Admin;
 
 namespace Orchard.Mvc.ViewEngines.ThemeAwareness {
     public interface ILayoutAwareViewEngine : IDependency, IViewEngine {
@@ -31,6 +33,11 @@ namespace Orchard.Mvc.ViewEngines.ThemeAwareness {
             var viewResult = _themeAwareViewEngine.FindPartialView(controllerContext, viewName, useCache, true);
 
             if (viewResult.View == null) {
+                return viewResult;
+            }
+
+            // Don't layout the result if it's not an Admin controller and it's disabled
+            if ( !AdminFilter.IsApplied(controllerContext.RequestContext) && !ThemeFilter.IsApplied(controllerContext.RequestContext) ) {
                 return viewResult;
             }
 
