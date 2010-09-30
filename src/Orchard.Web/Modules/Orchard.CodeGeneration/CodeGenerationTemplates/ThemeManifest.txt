@@ -1,0 +1,7 @@
+﻿name: $$ThemeName$$
+author: The Orchard Team
+website: http://www.orchardproject.net
+description: Description for the theme
+version: 1.0
+# todo: provide tags
+# tags: Classic, Serif
