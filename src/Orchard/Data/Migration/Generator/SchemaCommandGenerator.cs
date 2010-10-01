@@ -13,9 +13,7 @@ using NHibernate.Dialect;
 using Orchard.Environment.Configuration;
 using Orchard.Environment.Descriptor.Models;
 using Orchard.Environment.Extensions;
-using Orchard.Environment.Extensions.Models;
 using Orchard.Environment.ShellBuilders;
-using Orchard.Environment.ShellBuilders.Models;
 using Orchard.Environment.State;
 
 namespace Orchard.Data.Migration.Generator {

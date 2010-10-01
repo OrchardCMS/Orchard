@@ -8,7 +8,6 @@ using NHibernate;
 using NHibernate.Dialect;
 using NHibernate.SqlTypes;
 using Orchard.Data.Migration.Schema;
-using Orchard.Data.Providers;
 using Orchard.Environment.Configuration;
 using Orchard.Localization;
 using Orchard.Logging;

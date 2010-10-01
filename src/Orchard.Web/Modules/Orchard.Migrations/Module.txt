@@ -6,6 +6,10 @@ version: 0.1.0
 orchardversion: 0.6.0
 description: 
 features:
-    Orchard.Migration:
+	Orchard.Migration:
+		Description: Data migration commands.
+		Category: Migrations
+    DatabaseMigration:
         Description: Database migration action.
-        Category: Developer
+		Dependencies: Orchard.Migration
+        Category: Migrations

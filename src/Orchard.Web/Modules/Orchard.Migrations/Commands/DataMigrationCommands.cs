@@ -1,10 +1,14 @@
 ﻿using System;
 using System.Linq;
 using Orchard.Commands;
+using Orchard.Data.Migration;
 using Orchard.Data.Migration.Generator;
 using Orchard.Data.Migration.Interpreters;
+using Orchard.Environment.Extensions;
 
-namespace Orchard.Data.Migration.Commands {
+namespace Orchard.Migrations.Commands {
+
+    [OrchardFeature("Orchard.Migration")]
     public class DataMigrationCommands : DefaultOrchardCommandHandler {
         private readonly IDataMigrationManager _dataMigrationManager;
         private readonly IDataMigrationInterpreter _dataMigrationInterpreter;
