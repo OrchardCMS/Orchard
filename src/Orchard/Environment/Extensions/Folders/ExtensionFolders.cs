@@ -5,6 +5,7 @@ using System.Linq;
 using Orchard.Caching;
 using Orchard.Environment.Extensions.Models;
 using Orchard.FileSystems.WebSite;
+using Orchard.Localization;
 using Orchard.Logging;
 using Yaml.Grammar;
 
@@ -36,8 +37,10 @@ namespace Orchard.Environment.Extensions.Folders {
             _cacheManager = cacheManager;
             _webSiteFolder = webSiteFolder;
             Logger = NullLogger.Instance;
+            T = NullLocalizer.Instance;
         }
 
+        Localizer T { get; set; }
         ILogger Logger { get; set; }
 
         public IEnumerable<ExtensionDescriptor> AvailableExtensions() {
@@ -126,20 +129,7 @@ namespace Orchard.Environment.Extensions.Folders {
                 Zones = GetValue(fields, "zones"),
             };
 
-            // in case of themes, there are no features
-            if ( extensionDescriptor.ExtensionType == "Module" ) {
-                extensionDescriptor.Features = GetFeaturesForExtension(GetMapping(fields, "features"), extensionDescriptor);
-            }
-            else {
-                var featureDescriptor = new FeatureDescriptor {
-                    Extension = extensionDescriptor,
-                    Name = extensionDescriptor.Name,
-                    Category = "Themes",
-                    Description = extensionDescriptor.Description
-                };
-
-                extensionDescriptor.Features = new[] {featureDescriptor};
-            }
+            extensionDescriptor.Features = GetFeaturesForExtension(GetMapping(fields, "features"), extensionDescriptor);
 
             return extensionDescriptor;
         }
@@ -171,7 +161,7 @@ namespace Orchard.Environment.Extensions.Folders {
                 featureDescriptors.Add(new FeatureDescriptor {
                     Name = extensionDescriptor.Name,
                     Dependencies = new string[0],
-                    Extension = extensionDescriptor,
+                    Extension = extensionDescriptor
                 });
             }
             return featureDescriptors;

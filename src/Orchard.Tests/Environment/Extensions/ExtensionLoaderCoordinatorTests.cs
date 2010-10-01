@@ -22,7 +22,7 @@ namespace Orchard.Tests.Environment.Extensions {
         [SetUp]
         public void Init() {
             var builder = new ContainerBuilder();
-            _folders = new StubFolders();
+            _folders = new StubFolders("Module");
             builder.RegisterInstance(_folders).As<IExtensionFolders>();
             builder.RegisterType<ExtensionManager>().As<IExtensionManager>();
             _container = builder.Build();
@@ -30,7 +30,10 @@ namespace Orchard.Tests.Environment.Extensions {
         }
 
         public class StubFolders : IExtensionFolders {
-            public StubFolders() {
+            private readonly string _extensionType;
+
+            public StubFolders(string extensionType) {
+                _extensionType = extensionType;
                 Manifests = new Dictionary<string, string>();
             }
 
@@ -40,7 +43,7 @@ namespace Orchard.Tests.Environment.Extensions {
                 foreach (var e in Manifests) {
                     string name = e.Key;
                     var parseResult = ExtensionFolders.ParseManifest(Manifests[name]);
-                    yield return ExtensionFolders.GetDescriptorForExtension("~/", name, "Module", parseResult);
+                    yield return ExtensionFolders.GetDescriptorForExtension("~/", name, _extensionType, parseResult);
                 }
             }
         }
@@ -249,7 +252,7 @@ features:
         [Test]
         public void ExtensionManagerShouldLoadFeatures() {
             var extensionLoader = new StubLoaders();
-            var extensionFolder = new StubFolders();
+            var extensionFolder = new StubFolders("Module");
 
             extensionFolder.Manifests.Add("TestModule", @"
 name: TestModule
@@ -275,7 +278,7 @@ features:
         [Test]
         public void ExtensionManagerFeaturesContainNonAbstractClasses() {
             var extensionLoader = new StubLoaders();
-            var extensionFolder = new StubFolders();
+            var extensionFolder = new StubFolders("Module");
 
             extensionFolder.Manifests.Add("TestModule", @"
 name: TestModule
@@ -310,7 +313,7 @@ features:
         [Test]
         public void ExtensionManagerTestFeatureAttribute() {
             var extensionLoader = new StubLoaders();
-            var extensionFolder = new StubFolders();
+            var extensionFolder = new StubFolders("Module");
 
             extensionFolder.Manifests.Add("TestModule", @"
 name: TestModule
@@ -340,7 +343,7 @@ features:
         [Test]
         public void ExtensionManagerLoadFeatureReturnsTypesFromSpecificFeaturesWithFeatureAttribute() {
             var extensionLoader = new StubLoaders();
-            var extensionFolder = new StubFolders();
+            var extensionFolder = new StubFolders("Module");
 
             extensionFolder.Manifests.Add("TestModule", @"
 name: TestModule
@@ -368,7 +371,7 @@ features:
         [Test]
         public void ExtensionManagerLoadFeatureDoesNotReturnTypesFromNonMatchingFeatures() {
             var extensionLoader = new StubLoaders();
-            var extensionFolder = new StubFolders();
+            var extensionFolder = new StubFolders("Module");
 
             extensionFolder.Manifests.Add("TestModule", @"
 name: TestModule
@@ -397,7 +400,26 @@ features:
         [Test]
         public void ModuleNameIsIntroducedAsFeatureImplicitly() {
             var extensionLoader = new StubLoaders();
-            var extensionFolder = new StubFolders();
+            var extensionFolder = new StubFolders("Module");
+
+            extensionFolder.Manifests.Add("Minimalistic", @"
+name: Minimalistic
+version: 1.0.3
+orchardversion: 1
+");
+
+            IExtensionManager extensionManager = new ExtensionManager(new[] { extensionFolder }, new[] { extensionLoader });
+            var minimalisticModule = extensionManager.AvailableExtensions().Single(x => x.Name == "Minimalistic");
+
+            Assert.That(minimalisticModule.Features.Count(), Is.EqualTo(1));
+            Assert.That(minimalisticModule.Features.Single().Name, Is.EqualTo("Minimalistic"));
+        }
+
+
+        [Test]
+        public void ThemeNameIsIntroducedAsFeatureImplicitly() {
+            var extensionLoader = new StubLoaders();
+            var extensionFolder = new StubFolders("Theme");
 
             extensionFolder.Manifests.Add("Minimalistic", @"
 name: Minimalistic
