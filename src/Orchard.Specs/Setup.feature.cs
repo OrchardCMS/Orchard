@@ -177,7 +177,7 @@ this.ScenarioSetup(scenarioInfo);
             table4.AddRow(new string[] {
                         "module",
                         "Orchard.Setup, Orchard.Users, Orchard.Roles, Orchard.Comments, Orchard.Themes, Or" +
-                            "chard.jQuery, TinyMce"});
+                            "chard.Modules, Orchard.jQuery, TinyMce"});
             table4.AddRow(new string[] {
                         "core",
                         "Common, Contents, ContentsLocation, Dashboard, Feeds, HomePage, Navigation, Routa" +
