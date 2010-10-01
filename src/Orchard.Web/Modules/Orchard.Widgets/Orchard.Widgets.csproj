@@ -59,19 +59,16 @@
   <ItemGroup>
     <Compile Include="AdminMenu.cs" />
     <Compile Include="Controllers\AdminController.cs" />
+    <Compile Include="DataMigrations\WidgetsDataMigration.cs" />
     <Compile Include="Handlers\LayerPartHandler.cs" />
     <Compile Include="Handlers\WidgetPartHandler.cs" />
-    <Compile Include="Models\Layer.cs" />
     <Compile Include="Models\LayerPart.cs" />
     <Compile Include="Models\LayerPartRecord.cs" />
-    <Compile Include="Models\LayerZone.cs" />
     <Compile Include="Models\WidgetPart.cs" />
     <Compile Include="Models\WidgetPartRecord.cs" />
     <Compile Include="Permissions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Filters\WidgetFilter.cs" />
-    <Compile Include="Services\IWidgetService.cs" />
-    <Compile Include="Services\WidgetService.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Module.txt" />
