@@ -3,7 +3,7 @@
 <%@ Import Namespace="Orchard.Blogs.Extensions"%>
 <%@ Import Namespace="Orchard.UI.Resources" %>
 <%
-Style.Require("Green_Archives");
+Style.Include("site.css");
 Script.Require("BlogsArchives");
 %>
 <div class="archives">

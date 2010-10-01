@@ -1,10 +1,6 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Web.Mvc;
 using System.Web.UI;
-using JetBrains.Annotations;
 using Microsoft.WebPages;
 
 namespace Orchard.UI.Resources {
@@ -33,7 +29,14 @@ namespace Orchard.UI.Resources {
             if (resourcePath == null) {
                 throw new ArgumentNullException("resourcePath");
             }
-            return ResourceManager.Include(ResourceType, resourcePath, ResourceDefinition.GetBasePathFromViewPath(ResourceType, _viewVirtualPath));
+            return ResourceManager.Include(ResourceType, resourcePath, null, ResourceDefinition.GetBasePathFromViewPath(ResourceType, _viewVirtualPath));
+        }
+
+        public RequireSettings Include(string resourceDebugPath, string resourcePath) {
+            if (resourcePath == null) {
+                throw new ArgumentNullException("resourcePath");
+            }
+            return ResourceManager.Include(ResourceType, resourcePath, resourceDebugPath, ResourceDefinition.GetBasePathFromViewPath(ResourceType, _viewVirtualPath));
         }
 
         public virtual RequireSettings Require(string resourceName) {

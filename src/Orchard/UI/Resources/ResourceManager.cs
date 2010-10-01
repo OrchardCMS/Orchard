@@ -20,6 +20,17 @@ namespace Orchard.UI.Resources {
         private List<String> _footScripts;
         private IEnumerable<IResourceManifest> _manifests;
 
+        private static string FixPath(string resourcePath, string relativeFromPath) {
+            if (!String.IsNullOrEmpty(resourcePath) && !VirtualPathUtility.IsAbsolute(resourcePath) && !Uri.IsWellFormedUriString(resourcePath, UriKind.Absolute)) {
+                // appears to be a relative path (e.g. 'foo.js' or '../foo.js', not "/foo.js" or "http://..")
+                if (String.IsNullOrEmpty(relativeFromPath)) {
+                    throw new InvalidOperationException("ResourcePath cannot be relative unless a base relative path is also provided.");
+                }
+                resourcePath = VirtualPathUtility.ToAbsolute(VirtualPathUtility.Combine(relativeFromPath, resourcePath));
+            }
+            return resourcePath;
+        }
+
         public ResourceManager(IEnumerable<Meta<IResourceManifestProvider, IFeatureMetadata>> resourceProviders) {
             _providers = resourceProviders;
         }
@@ -61,11 +72,11 @@ namespace Orchard.UI.Resources {
             return settings;
         }
 
-        public virtual RequireSettings Include(string resourceType, string resourcePath) {
+        public virtual RequireSettings Include(string resourceType, string resourcePath, string resourceDebugPath) {
             return Include(resourceType, resourcePath, null);
         }
 
-        public virtual RequireSettings Include(string resourceType, string resourcePath, string relativeFromPath) {
+        public virtual RequireSettings Include(string resourceType, string resourcePath, string resourceDebugPath, string relativeFromPath) {
             if (resourceType == null) {
                 throw new ArgumentNullException("resourceType");
             }
@@ -77,14 +88,9 @@ namespace Orchard.UI.Resources {
                 // ~/ ==> convert to absolute path (e.g. /orchard/..)
                 resourcePath = VirtualPathUtility.ToAbsolute(resourcePath);
             }
-            else if (!VirtualPathUtility.IsAbsolute(resourcePath) && !Uri.IsWellFormedUriString(resourcePath, UriKind.Absolute)) {
-                // appears to be a relative path (e.g. 'foo.js' or '../foo.js', not "/foo.js" or "http://..")
-                if (String.IsNullOrEmpty(relativeFromPath)) {
-                    throw new InvalidOperationException("ResourcePath cannot be relative unless a base relative path is also provided.");
-                }
-                resourcePath = VirtualPathUtility.ToAbsolute(VirtualPathUtility.Combine(relativeFromPath, resourcePath));
-            }
-            return Require(resourceType, resourcePath).Define(d => d.SetUrl(resourcePath));
+            resourcePath = FixPath(resourcePath, relativeFromPath);
+            resourceDebugPath = FixPath(resourceDebugPath, relativeFromPath);
+            return Require(resourceType, resourcePath).Define(d => d.SetUrl(resourcePath, resourceDebugPath));
         }
 
         public virtual void RegisterHeadScript(string script) {

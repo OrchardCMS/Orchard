@@ -3,7 +3,7 @@
 <%@ Import Namespace="Orchard.UI.Resources" %>
 
 <%
-    Html.Resolve<IResourceManager>().Require(new RequireSettings { Type = "stylesheet", Name = "Corporate" });
+    Html.Resolve<IResourceManager>().Include("stylesheet", "site.css", null);
    
     Model.Zones.AddRenderPartial("header", "Header", Model);
     Model.Zones.AddRenderPartial("menu", "Menu", Model);

@@ -3,9 +3,9 @@
 <%@ Import Namespace="Orchard.UI.Resources" %>
 
 <%
-    Html.Resolve<IResourceManager>().Require(new RequireSettings { Type = "stylesheet", Name = "Green_YUI" });
-    Html.Resolve<IResourceManager>().Require(new RequireSettings { Type = "stylesheet", Name = "Green" });
-    Html.Resolve<IResourceManager>().Require(new RequireSettings { Type = "stylesheet", Name = "Green_Blog" });
+    Html.Resolve<IResourceManager>().Include("stylesheet", "yui.css", null);
+    Html.Resolve<IResourceManager>().Include("stylesheet", "site.css", null);
+    Html.Resolve<IResourceManager>().Include("stylesheet", "blog.css", null);
 %>
 
 <script type="text/javascript"> 
