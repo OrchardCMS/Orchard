@@ -65,16 +65,16 @@ namespace Orchard.CodeGeneration.Commands {
                 return false;
             }
 
-            string dataMigrationsPath = HostingEnvironment.MapPath("~/Modules/" + extensionDescriptor.Name + "/DataMigrations/");
-            string dataMigrationPath = dataMigrationsPath + extensionDescriptor.DisplayName + "DataMigration.cs";
+            string dataMigrationFolderPath = HostingEnvironment.MapPath("~/Modules/" + extensionDescriptor.Name + "/");
+            string dataMigrationFilePath = dataMigrationFolderPath + "Migration.cs";
             string templatesPath = HostingEnvironment.MapPath("~/Modules/Orchard." + ModuleName + "/CodeGenerationTemplates/");
             string moduleCsProjPath = HostingEnvironment.MapPath(string.Format("~/Modules/{0}/{0}.csproj", extensionDescriptor.Name));
                     
-            if (!Directory.Exists(dataMigrationsPath)) {
-                Directory.CreateDirectory(dataMigrationsPath);
+            if (!Directory.Exists(dataMigrationFolderPath)) {
+                Directory.CreateDirectory(dataMigrationFolderPath);
             }
 
-            if (File.Exists(dataMigrationPath)) {
+            if (File.Exists(dataMigrationFilePath)) {
                 Context.Output.WriteLine(T("Data migration already exists in target Module {0}.", extensionDescriptor.Name));
                 return false;
             }
@@ -91,9 +91,8 @@ namespace Orchard.CodeGeneration.Commands {
 
             string dataMigrationText = File.ReadAllText(templatesPath + "DataMigration.txt");
             dataMigrationText = dataMigrationText.Replace("$$FeatureName$$", featureName);
-            dataMigrationText = dataMigrationText.Replace("$$ClassName$$", extensionDescriptor.DisplayName);
             dataMigrationText = dataMigrationText.Replace("$$Commands$$", stringWriter.ToString());
-            File.WriteAllText(dataMigrationPath, dataMigrationText);
+            File.WriteAllText(dataMigrationFilePath, dataMigrationText);
 
             string projectFileText = File.ReadAllText(moduleCsProjPath);
 
@@ -370,6 +369,7 @@ namespace Orchard.CodeGeneration.Commands {
             }
             else {
                 var projectText = File.ReadAllText(_orchardWebProj);
+
                 // find where the first ItemGroup is after any References
                 var refIndex = projectText.LastIndexOf("<Reference Include");
                 if (refIndex != -1) {
