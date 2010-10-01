@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Web;
 using Orchard.Environment.Extensions.Models;
@@ -5,7 +6,7 @@ using Orchard.Environment.Extensions.Models;
 namespace Orchard.UI.Resources {
     public class ResourceManifest : IResourceManifest {
         private string _basePath;
-        private readonly IDictionary<string, IDictionary<string, ResourceDefinition>> _resources = new Dictionary<string, IDictionary<string, ResourceDefinition>>();
+        private readonly IDictionary<string, IDictionary<string, ResourceDefinition>> _resources = new Dictionary<string, IDictionary<string, ResourceDefinition>>(StringComparer.OrdinalIgnoreCase);
 
         public virtual Feature Feature { get; set; }
 
@@ -33,7 +34,7 @@ namespace Orchard.UI.Resources {
         public virtual IDictionary<string, ResourceDefinition> GetResources(string resourceType) {
             IDictionary<string, ResourceDefinition> resources;
             if (!_resources.TryGetValue(resourceType, out resources)) {
-                _resources[resourceType] = resources = new Dictionary<string, ResourceDefinition>();
+                _resources[resourceType] = resources = new Dictionary<string, ResourceDefinition>(StringComparer.OrdinalIgnoreCase);
             }
             return resources;
         }

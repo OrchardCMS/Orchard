@@ -13,7 +13,7 @@ namespace Orchard.UI.Resources {
         private readonly Dictionary<Tuple<String, String>, RequireSettings> _required = new Dictionary<Tuple<String, String>, RequireSettings>();
         private readonly List<LinkEntry> _links = new List<LinkEntry>();
         private readonly Dictionary<string, MetaEntry> _metas = new Dictionary<string, MetaEntry>();
-        private readonly Dictionary<string, IList<ResourceRequiredContext>> _builtResources = new Dictionary<string, IList<ResourceRequiredContext>>();
+        private readonly Dictionary<string, IList<ResourceRequiredContext>> _builtResources = new Dictionary<string, IList<ResourceRequiredContext>>(StringComparer.OrdinalIgnoreCase);
         private readonly IEnumerable<Meta<IResourceManifestProvider, IFeatureMetadata>> _providers;
         private ResourceManifest _dynamicManifest;
         private List<String> _headScripts;
