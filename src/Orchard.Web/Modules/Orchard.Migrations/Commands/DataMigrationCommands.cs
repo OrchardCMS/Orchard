@@ -8,7 +8,7 @@ using Orchard.Environment.Extensions;
 
 namespace Orchard.Migrations.Commands {
 
-    [OrchardFeature("Orchard.Migration")]
+    [OrchardFeature("Orchard.Migrations")]
     public class DataMigrationCommands : DefaultOrchardCommandHandler {
         private readonly IDataMigrationManager _dataMigrationManager;
         private readonly IDataMigrationInterpreter _dataMigrationInterpreter;

@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Text.RegularExpressions;
 using System.Web.Hosting;
 using Orchard.Commands;
 using Orchard.Data.Migration.Generator;
@@ -15,7 +14,6 @@ using Orchard.Localization;
 
 namespace Orchard.CodeGeneration.Commands {
 
-    [OrchardFeature("Generate")]
     public class CodeGenerationCommands : DefaultOrchardCommandHandler {
 
         private readonly IExtensionManager _extensionManager;

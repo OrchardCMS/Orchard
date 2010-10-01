@@ -1,4 +1,4 @@
-﻿Name: Experimental module
+﻿Name: Experimental
 antiforgery: enabled
 author: The Orchard Team
 website: http://orchardproject.net
