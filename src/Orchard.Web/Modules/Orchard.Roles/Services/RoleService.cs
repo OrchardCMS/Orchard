@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using JetBrains.Annotations;
 using Orchard.Data;
-using Orchard.Environment.Extensions.Models;
+using Orchard.Localization;
 using Orchard.Logging;
 using Orchard.Roles.Models;
 using Orchard.Security.Permissions;
@@ -22,8 +22,10 @@ namespace Orchard.Roles.Services {
             _permissionRepository = permissionRepository;
             _permissionProviders = permissionProviders;
             Logger = NullLogger.Instance;
+            T = NullLocalizer.Instance;
         }
 
+        public Localizer T { get; set; }
         public ILogger Logger { get; set; }
 
         public IEnumerable<RoleRecord> GetRoles() {
@@ -105,11 +107,16 @@ namespace Orchard.Roles.Services {
             foreach (var permissionProvider in _permissionProviders) {
                 var featureName = permissionProvider.Feature.Descriptor.Name;
                 var permissions = permissionProvider.GetPermissions();
+                foreach(var permission in permissions) {
+                    var category = permission.Category;
 
-                if (installedPermissions.ContainsKey(featureName))
-                    installedPermissions[featureName] = installedPermissions[featureName].Concat(permissions);
-                else
-                    installedPermissions.Add(featureName, permissions);
+                    string title = String.IsNullOrWhiteSpace(category) ? T("{0} Feature", featureName).Text : T(category).Text;
+
+                    if ( installedPermissions.ContainsKey(title) )
+                        installedPermissions[title] = installedPermissions[title].Concat( new [] {permission});
+                    else
+                        installedPermissions.Add(title, permissions);
+                }
             }
 
             return installedPermissions;
