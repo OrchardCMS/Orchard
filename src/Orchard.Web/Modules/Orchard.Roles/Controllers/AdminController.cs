@@ -102,11 +102,11 @@ namespace Orchard.Roles.Controllers {
                 throw new HttpException(404, "page with id " + id + " was not found");
             }
             var model = new RoleEditViewModel { Name = role.Name, Id = role.Id, 
-                                                FeaturePermissions = _roleService.GetInstalledPermissions(),
+                                                RoleCategoryPermissions = _roleService.GetInstalledPermissions(),
                                                 CurrentPermissions = _roleService.GetPermissionsForRole(id)};
 
             var simulation = UserSimulation.Create(role.Name);
-            model.EffectivePermissions = model.FeaturePermissions
+            model.EffectivePermissions = model.RoleCategoryPermissions
                 .SelectMany(group => group.Value)
                 .Where(permission => _authorizationService.TryCheckAccess(permission, simulation, null))
                 .Select(permission=>permission.Name)

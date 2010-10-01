@@ -113,9 +113,9 @@ namespace Orchard.Roles.Services {
                     string title = String.IsNullOrWhiteSpace(category) ? T("{0} Feature", featureName).Text : T(category).Text;
 
                     if ( installedPermissions.ContainsKey(title) )
-                        installedPermissions[title] = installedPermissions[title].Concat( new [] {permission});
+                        installedPermissions[title] = installedPermissions[title].Concat( new [] {permission} );
                     else
-                        installedPermissions.Add(title, permissions);
+                        installedPermissions.Add(title, new[] { permission });
                 }
             }
 
