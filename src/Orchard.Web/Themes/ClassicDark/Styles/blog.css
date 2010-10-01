@@ -15,17 +15,19 @@ ul.blogs p {
 }
 
 .postsummary {
+    padding: 0 0 4px 0;
 	border-bottom:1px dotted #474747;
 }
 
 .meta {
+	font-size:1.5em;
 	font-style:italic;
 	color:#999;
 }
 
 .tagCloud {
     font-style:italic;
-    font-size:120%;
+    font-size:1.8em;
 }
 
 .tagCloud li {
@@ -39,5 +41,14 @@ ul.blogs p {
 }
 
 ul.archiveMonthList li {
+    font-size:1.5em;
     padding:8px;
+}
+
+.comment span {
+    font-size:1.4em;
+}
+
+.text p {
+    margin:0 0 1.4em 0;
 }

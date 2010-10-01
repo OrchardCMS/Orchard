@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -145,6 +145,8 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Config\Sample.Host.config" />
+    <Content Include="Themes\ClassicDark\Views\Footer.cshtml" />
+    <Content Include="Themes\ClassicDark\Views\Layout.cshtml" />
     <None Include="Themes\TheAdmin\Styles\images\icons.psd" />
     <Content Include="Themes\ClassicDark\Content\Images\bodyBackgroundgrey.gif" />
     <Content Include="Themes\ClassicDark\Content\Images\sidebarBackground.gif" />
@@ -152,15 +154,6 @@
     <Content Include="Themes\ClassicDark\Styles\site.css" />
     <Content Include="Themes\ClassicDark\Theme.png" />
     <Content Include="Themes\ClassicDark\Theme.txt" />
-    <Content Include="Themes\ClassicDark\Views\DisplayTemplates\Items\Blogs.Blog.ascx" />
-    <Content Include="Themes\ClassicDark\Views\DisplayTemplates\Items\Blogs.Blog.Summary.ascx" />
-    <Content Include="Themes\ClassicDark\Views\DisplayTemplates\Items\Blogs.BlogPost.ascx" />
-    <Content Include="Themes\ClassicDark\Views\DisplayTemplates\Items\Blogs.BlogPost.Summary.ascx" />
-    <Content Include="Themes\ClassicDark\Views\DisplayTemplates\Parts\Blogs.BlogPost.Metadata.ascx" />
-    <Content Include="Themes\ClassicDark\Views\DisplayTemplates\Parts\Common.Metadata.ascx" />
-    <Content Include="Themes\ClassicDark\Views\Footer.ascx" />
-    <Content Include="Themes\ClassicDark\Views\Layout.ascx" />
-    <Content Include="Themes\ClassicDark\Views\ZoneTest.ascx" />
     <Content Include="Themes\ClassicDark\Zones\Sidebar.html" />
     <Content Include="Themes\Classic\Content\Images\sidebarBackground.gif" />
     <Content Include="Themes\Classic\Zones\Sidebar.html" />

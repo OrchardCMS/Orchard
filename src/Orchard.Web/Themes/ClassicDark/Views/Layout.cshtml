@@ -1,0 +1,34 @@
+﻿@using Orchard.UI.Resources
+@{
+    Style.Require("ClassicDark");
+    Style.Require("ClassicDark_Blog");
+}
+<div id="wrapper">
+@// HTML.Include will render a div with a class="user-display"
+@// Can use this -> {Html.Include("User");}
+@// or the following. At least they appear to do the same thing currently. The first is a standard Html.Include, the second "displays the (New) User shape"
+@Display.User()
+@// Top Navigation and branding
+<div id="headercontainer">
+    <div id="header">
+        <h1>@WorkContext.CurrentSite.SiteName</h1>
+        <div class="menucontainer">
+@Display(Model.Navigation)
+        </div>
+        <div class="clearBoth"></div>
+    </div>
+</div>
+
+<div id="main">
+        <div id="content">
+        @// Main Content
+@Display(Model.Content)
+        </div>
+        <div id="sidebar">
+@Display(Model.search)
+@Display(Model.sidebar)
+        </div>
+        @// End Content
+@Display.Footer(Navigation:Model.Navigation)
+    </div>
+</div>
