@@ -5,8 +5,8 @@ using Orchard.ContentManagement.MetaData;
 using Orchard.ContentManagement.MetaData.Builders;
 using Orchard.Data.Migration;
 
-namespace Orchard.Blogs.DataMigrations {
-    public class BlogsDataMigration : DataMigrationImpl {
+namespace Orchard.Blogs {
+    public class Migrations : DataMigrationImpl {
 
         public int Create() {
             //CREATE TABLE Orchard_Blogs_BlogPartArchiveRecord (Id  integer, Year INTEGER, Month INTEGER, PostCount INTEGER, Blog_id INTEGER, primary key (Id));

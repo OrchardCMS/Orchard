@@ -69,7 +69,7 @@
     <Compile Include="AdminMenu.cs" />
     <Compile Include="ResourceManifest.cs" />
     <Compile Include="Controllers\AdminController.cs" />
-    <Compile Include="DataMigrations\ThemesDataMigration.cs" />
+    <Compile Include="Migrations.cs" />
     <Compile Include="DesignerNotes\ZoneManagerEvents.cs" />
     <Compile Include="Handlers\ThemeSiteSettingsPartHandler.cs" />
     <Compile Include="Models\Theme.cs" />

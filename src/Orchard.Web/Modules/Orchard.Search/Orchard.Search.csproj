@@ -67,7 +67,7 @@
   <ItemGroup>
     <Compile Include="ResourceManifest.cs" />
     <Compile Include="Controllers\SearchController.cs" />
-    <Compile Include="DataMigrations\SearchDataMigration.cs" />
+    <Compile Include="Migrations.cs" />
     <Compile Include="Drivers\SearchSettingsPartDriver.cs" />
     <Compile Include="Filters\SearchFilter.cs" />
     <Compile Include="Models\SearchSettingsPart.cs" />

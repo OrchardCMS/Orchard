@@ -1,6 +1,6 @@
 ﻿using Orchard.Data.Migration;
 
-namespace Orchard.Roles.DataMigrations {
+namespace Orchard.Roles {
     public class RolesDataMigration : DataMigrationImpl {
 
         public int Create() {

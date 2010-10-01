@@ -1,6 +1,6 @@
 ﻿using Orchard.Data.Migration;
 
-namespace Orchard.Media.DataMigrations {
+namespace Orchard.Media {
     public class MediaDataMigration : DataMigrationImpl {
 
         public int Create() {

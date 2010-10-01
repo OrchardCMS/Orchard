@@ -8,7 +8,7 @@ using Orchard.Environment.State;
 using Orchard.Events;
 using Orchard.Widgets.Models;
 
-namespace Orchard.Widgets.DataMigrations {
+namespace Orchard.Widgets {
     public interface IDefaultLayersInitializer : IEventHandler {
         void CreateDefaultLayers();
     }

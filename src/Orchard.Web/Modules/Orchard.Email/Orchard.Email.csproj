@@ -65,7 +65,7 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DataMigrations\EmailDataMigration.cs" />
+    <Compile Include="Migrations.cs" />
     <Compile Include="Drivers\SmtpSettingsPartDriver.cs" />
     <Compile Include="Handlers\SmtpSettingsPartHandler.cs" />
     <Compile Include="Models\SmtpSettingsPart.cs" />

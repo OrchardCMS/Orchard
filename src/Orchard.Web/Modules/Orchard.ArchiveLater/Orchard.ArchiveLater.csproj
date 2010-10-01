@@ -68,7 +68,7 @@
     <Reference Include="System.EnterpriseServices" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DataMigrations\ArchiveLaterDataMigration.cs" />
+    <Compile Include="Migrations.cs" />
     <Compile Include="Drivers\ArchiveLaterPartDriver.cs" />
     <Compile Include="Handlers\ArchiveLaterPartHandler.cs" />
     <Compile Include="Handlers\UnpublishingTaskHandler.cs" />

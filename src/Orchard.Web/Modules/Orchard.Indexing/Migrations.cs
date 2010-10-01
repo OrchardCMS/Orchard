@@ -1,8 +1,8 @@
 ﻿using System;
 using Orchard.Data.Migration;
 
-namespace Orchard.Indexing.DataMigrations {
-    public class IndexingDataMigration : DataMigrationImpl {
+namespace Orchard.Indexing {
+    public class Migrations : DataMigrationImpl {
 
         public int Create() {
             SchemaBuilder.CreateTable("IndexingTaskRecord", table => table

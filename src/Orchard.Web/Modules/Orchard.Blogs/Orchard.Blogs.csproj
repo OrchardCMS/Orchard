@@ -70,7 +70,7 @@
     <Compile Include="ResourceManifest.cs" />
     <Compile Include="Commands\BlogCommands.cs" />
     <Compile Include="Controllers\BlogAdminController.cs" />
-    <Compile Include="DataMigrations\BlogsDataMigration.cs" />
+    <Compile Include="Migrations.cs" />
     <Compile Include="Drivers\BlogPartDriver.cs" />
     <Compile Include="Controllers\BlogPostAdminController.cs" />
     <Compile Include="Controllers\BlogPostController.cs" />

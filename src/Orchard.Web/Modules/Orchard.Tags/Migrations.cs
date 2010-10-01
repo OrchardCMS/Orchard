@@ -6,7 +6,7 @@ using Orchard.Core.Contents.Extensions;
 using Orchard.Data.Migration;
 using Orchard.Tags.Models;
 
-namespace Orchard.Tags.DataMigrations {
+namespace Orchard.Tags {
     public class TagsDataMigration : DataMigrationImpl {
 
         public int Create() {

@@ -7,8 +7,8 @@ using Orchard.ContentManagement.MetaData.Builders;
 using Orchard.Core.Contents.Extensions;
 using Orchard.Data.Migration;
 
-namespace Orchard.Comments.DataMigrations {
-    public class CommentsDataMigration : DataMigrationImpl {
+namespace Orchard.Comments {
+    public class Migrations : DataMigrationImpl {
     
         public int Create() {
             //CREATE TABLE Orchard_Comments_ClosedCommentsRecord (Id  integer, ContentItemId INTEGER, primary key (Id));

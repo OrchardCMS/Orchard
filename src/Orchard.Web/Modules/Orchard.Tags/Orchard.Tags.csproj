@@ -68,7 +68,7 @@
   <ItemGroup>
     <Compile Include="AdminMenu.cs" />
     <Compile Include="Controllers\AdminController.cs" />
-    <Compile Include="DataMigrations\TagsDataMigration.cs" />
+    <Compile Include="Migrations.cs" />
     <Compile Include="Models\TagsContentItems.cs" />
     <Compile Include="Services\ITagService.cs" />
     <Compile Include="ViewModels\EditTagsViewModel.cs" />

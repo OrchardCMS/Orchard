@@ -1,6 +1,6 @@
 ﻿using Orchard.Data.Migration;
 
-namespace Orchard.Search.DataMigrations {
+namespace Orchard.Search {
     public class SearchDataMigration : DataMigrationImpl {
 
         public int Create() {

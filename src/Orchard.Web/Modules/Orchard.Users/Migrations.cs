@@ -1,6 +1,6 @@
 ﻿using Orchard.Data.Migration;
 
-namespace Orchard.Users.DataMigrations {
+namespace Orchard.Users {
     public class UsersDataMigration : DataMigrationImpl {
 
         public int Create() {

@@ -1,7 +1,7 @@
 ﻿using Orchard.Data.Migration;
 
-namespace Orchard.Email.DataMigrations {
-    public class EmailDataMigration : DataMigrationImpl {
+namespace Orchard.Email {
+    public class Migrations : DataMigrationImpl {
 
         public int Create() {
 

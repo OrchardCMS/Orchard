@@ -59,7 +59,7 @@
   <ItemGroup>
     <Compile Include="AdminMenu.cs" />
     <Compile Include="Controllers\AdminController.cs" />
-    <Compile Include="DataMigrations\WidgetsDataMigration.cs" />
+    <Compile Include="Migrations.cs" />
     <Compile Include="Handlers\LayerPartHandler.cs" />
     <Compile Include="Handlers\WidgetPartHandler.cs" />
     <Compile Include="Models\LayerPart.cs" />
@@ -75,9 +75,7 @@
     <Content Include="Web.config" />
     <Content Include="Views\Web.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="App_Data\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <ProjectReference Include="..\..\Core\Orchard.Core.csproj">
       <Project>{9916839C-39FC-4CEB-A5AF-89CA7E87119F}</Project>

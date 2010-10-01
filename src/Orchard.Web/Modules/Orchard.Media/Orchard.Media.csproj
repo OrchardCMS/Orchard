@@ -72,7 +72,7 @@
     <Compile Include="AdminMenu.cs" />
     <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="ResourceManifest.cs" />
-    <Compile Include="DataMigrations\MediaDataMigration.cs" />
+    <Compile Include="Migrations.cs" />
     <Compile Include="Helpers\MediaHelpers.cs" />
     <Compile Include="Models\MediaSettingsPart.cs" />
     <Compile Include="Handlers\MediaSettingsPartHandler.cs" />

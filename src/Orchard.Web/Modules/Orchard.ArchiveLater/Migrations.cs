@@ -6,8 +6,8 @@ using Orchard.ContentManagement.MetaData.Builders;
 using Orchard.Core.Contents.Extensions;
 using Orchard.Data.Migration;
 
-namespace ArchiveLater.DataMigrations {
-    public class ArchiveLaterDataMigration : DataMigrationImpl {
+namespace Orchard.ArchiveLater {
+    public class Migrations : DataMigrationImpl {
         public int Create() {
             ContentDefinitionManager.AlterPartDefinition(typeof(ArchiveLaterPart).Name, cfg => cfg
                 .WithLocation(new Dictionary<string, ContentLocation> {
