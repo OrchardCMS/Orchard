@@ -11,9 +11,9 @@
 	</fieldset>
     <fieldset>
         <legend>@T("Permissions")</legend>
-		@foreach (var featureName in Model.FeaturePermissions.Keys) {
+		@foreach (var category in Model.RoleCategoryPermissions.Keys) {
         <fieldset>
-            <legend>@T("{0} Feature", featureName)</legend>
+            <legend>@category</legend>
 		    <table class="items">
 			    <colgroup>
 				    <col id="Col1" />
@@ -26,7 +26,7 @@
 					    <th scope="col">@T("Effective")</th>
 				    </tr>
 			    </thead>
-			    @foreach (var permission in Model.FeaturePermissions[featureName]) {
+			    @foreach (var permission in Model.RoleCategoryPermissions[category]) {
                 <tr>
 				    <td>@permission.Description</td>
 				    <td style="width:60px;">
