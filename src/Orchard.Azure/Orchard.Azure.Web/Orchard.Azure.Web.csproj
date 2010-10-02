@@ -6,7 +6,7 @@
     <ProductVersion>9.0.30729</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{0DF8F426-9F30-4918-8F64-A5B40BA12D10}</ProjectGuid>
-    <ProjectTypeGuids>{e53f8fea-eae0-44a6-8774-ffd645390401};{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Orchard.Azure.Web</RootNamespace>
@@ -146,7 +146,6 @@
     <Compile Include="WebRole.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Error.aspx" />
     <Content Include="Global.asax" />
   </ItemGroup>
   <ItemGroup>
@@ -167,10 +166,6 @@
       <Project>{9916839C-39FC-4CEB-A5AF-89CA7E87119F}</Project>
       <Name>Orchard.Core</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Orchard.Web\Modules\Futures.Widgets\Futures.Widgets.csproj">
-      <Project>{E65E5633-C0FF-453C-A906-481C14F969D6}</Project>
-      <Name>Futures.Widgets</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\Orchard.Web\Modules\Lucene\Lucene.csproj">
       <Project>{D5D447D7-EF8E-43A6-B9A4-3B025DD9F45D}</Project>
       <Name>Lucene</Name>
@@ -178,6 +173,10 @@
     <ProjectReference Include="..\..\Orchard.Web\Modules\Orchard.Blogs\Orchard.Blogs.csproj">
       <Project>{63FBD4D9-E1DA-4A7B-AA6A-D6074FE50867}</Project>
       <Name>Orchard.Blogs</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Orchard.Web\Modules\Orchard.CodeGeneration\Orchard.CodeGeneration.csproj">
+      <Project>{C0C45321-B51D-4D8D-9B7B-AA4C2E0B2962}</Project>
+      <Name>Orchard.CodeGeneration</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\Orchard.Web\Modules\Orchard.Comments\Orchard.Comments.csproj">
       <Project>{14C049FD-B35B-415A-A824-87F26B26E7FD}</Project>
@@ -187,9 +186,9 @@
       <Project>{0E7646E8-FE8F-43C1-8799-D97860925EC4}</Project>
       <Name>Orchard.ContentTypes</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Orchard.Web\Modules\Orchard.DevTools\Orchard.DevTools.csproj">
-      <Project>{67C1D3AF-A0EC-46B2-BAE1-DF1DA8E0B890}</Project>
-      <Name>Orchard.DevTools</Name>
+    <ProjectReference Include="..\..\Orchard.Web\Modules\Orchard.Experimental\Orchard.Experimental.csproj">
+      <Project>{AB3C207C-0126-4143-8D62-1119DF80D366}</Project>
+      <Name>Orchard.Experimental</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\Orchard.Web\Modules\Orchard.Indexing\Orchard.Indexing.csproj">
       <Project>{EA2B9121-EF54-40A6-A53E-6593C86EE696}</Project>
@@ -214,10 +213,6 @@
     <ProjectReference Include="..\..\Orchard.Web\Modules\Orchard.Roles\Orchard.Roles.csproj">
       <Project>{D10AD48F-407D-4DB5-A328-173EC7CB010F}</Project>
       <Name>Orchard.Roles</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Orchard.Web\Modules\Orchard.Sandbox\Orchard.Sandbox.csproj">
-      <Project>{17C44253-65A2-4597-98C7-16EE576824B6}</Project>
-      <Name>Orchard.Sandbox</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\Orchard.Web\Modules\Orchard.Search\Orchard.Search.csproj">
       <Project>{4BE4EB01-AC56-4048-924E-2CA77F509ABA}</Project>
