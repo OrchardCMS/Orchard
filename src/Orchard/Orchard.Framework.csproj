@@ -431,7 +431,6 @@
     <Compile Include="DisplayManagement\Implementation\DisplayHelperFactory.cs" />
     <Compile Include="DisplayManagement\Implementation\IDisplayManager.cs" />
     <Compile Include="DisplayManagement\IShapeFactory.cs" />
-    <Compile Include="DisplayManagement\IShapeProvider.cs" />
     <Compile Include="DisplayManagement\Descriptors\Interfaces.cs" />
     <Compile Include="DisplayManagement\Implementation\ShapeHelper.cs" />
     <Compile Include="DisplayManagement\Implementation\ShapeHelperFactory.cs" />
