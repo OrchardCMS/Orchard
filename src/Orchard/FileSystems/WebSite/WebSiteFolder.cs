@@ -41,21 +41,6 @@ namespace Orchard.FileSystems.WebSite {
             }
             return (from VirtualFile file in HostingEnvironment.VirtualPathProvider.GetDirectory(virtualPath).Files
                     select file.VirtualPath).Concat(ListFiles(ListDirectories(virtualPath)));
-/*
-
-            var path = HostingEnvironment.MapPath(virtualPath);
-            if (path == null || !Directory.Exists(path)) {
-                return Enumerable.Empty<string>();
-            }
-
-            if (!path.EndsWith("\\")) {
-                path += "\\";
-            }
-
-            var files = Directory.GetFiles(path, searchPattern, recursive ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly);
-            // strip base path to make it relative and replace '\' with '/'
-            return from file in files
-                   select "~/" + file.Replace(path, "").Replace("\\", "/");*/
         }
         
         public bool FileExists(string virtualPath) {
