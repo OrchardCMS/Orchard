@@ -21,9 +21,12 @@ namespace Orchard.Widgets {
         }
 
         public void CreateDefaultLayers() {
-            _contentManager.Create<LayerPart>("Layer", t => t.Record.Name = "Default");
-            _contentManager.Create<LayerPart>("Layer", t => t.Record.Name = "Authenticated");
-            _contentManager.Create<LayerPart>("Layer", t => t.Record.Name = "Anonymous");
+            IContent defaultLayer = _contentManager.Create<LayerPart>("Layer", t => { t.Record.Name = "Default"; t.Record.LayerRule = "true"; });
+            _contentManager.Publish(defaultLayer.ContentItem);
+            IContent authenticatedLayer = _contentManager.Create<LayerPart>("Layer", t => { t.Record.Name = "Authenticated"; t.Record.LayerRule = "Authenticated"; });
+            _contentManager.Publish(authenticatedLayer.ContentItem);
+            IContent anonymousLayer = _contentManager.Create<LayerPart>("Layer", t => { t.Record.Name = "Anonymous"; t.Record.LayerRule = "not Authenticated"; });
+            _contentManager.Publish(anonymousLayer.ContentItem);
         }
     }
 
@@ -43,7 +46,7 @@ namespace Orchard.Widgets {
                 .ContentPartRecord()
                 .Column<string>("Name")
                 .Column<string>("Description")
-                .Column<string>("Rule")
+                .Column<string>("LayerRule")
                 );
 
             SchemaBuilder.CreateTable("WidgetPartRecord", table => table
