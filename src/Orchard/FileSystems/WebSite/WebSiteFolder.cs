@@ -27,6 +27,36 @@ namespace Orchard.FileSystems.WebSite {
                 .Select(d => d.VirtualPath)
                 .ToArray();
         }
+
+        private IEnumerable<string> ListFiles(IEnumerable<string> directories) {
+            return from dir in directories
+                   from file in ListFiles(dir, true)
+                   select file;
+        }
+
+        public IEnumerable<string> ListFiles(string virtualPath, bool recursive) {
+            if (!recursive) {
+                return from VirtualFile file in HostingEnvironment.VirtualPathProvider.GetDirectory(virtualPath).Files
+                       select file.VirtualPath;
+            }
+            return (from VirtualFile file in HostingEnvironment.VirtualPathProvider.GetDirectory(virtualPath).Files
+                    select file.VirtualPath).Concat(ListFiles(ListDirectories(virtualPath)));
+/*
+
+            var path = HostingEnvironment.MapPath(virtualPath);
+            if (path == null || !Directory.Exists(path)) {
+                return Enumerable.Empty<string>();
+            }
+
+            if (!path.EndsWith("\\")) {
+                path += "\\";
+            }
+
+            var files = Directory.GetFiles(path, searchPattern, recursive ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly);
+            // strip base path to make it relative and replace '\' with '/'
+            return from file in files
+                   select "~/" + file.Replace(path, "").Replace("\\", "/");*/
+        }
         
         public bool FileExists(string virtualPath) {
             return HostingEnvironment.VirtualPathProvider.FileExists(virtualPath);

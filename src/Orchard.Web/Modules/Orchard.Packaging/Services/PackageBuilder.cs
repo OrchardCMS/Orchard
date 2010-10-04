@@ -5,6 +5,8 @@ using System.IO.Packaging;
 using System.Linq;
 using System.Net.Mime;
 using System.Reflection;
+using System.Web;
+using System.Web.Hosting;
 using System.Xml.Linq;
 using Orchard.Environment.Extensions;
 using Orchard.Environment.Extensions.Models;
@@ -15,6 +17,19 @@ namespace Orchard.Packaging.Services {
     public class PackageBuilder : IPackageBuilder {
         private readonly IExtensionManager _extensionManager;
         private readonly IWebSiteFolder _webSiteFolder;
+
+        private static readonly string[] _ignoredThemeExtensions = new[] {
+            "obj", "pdb", "exclude"
+        };
+        private static readonly string[] _ignoredThemePaths = new[] {
+            "/obj/"
+        };
+
+        private static bool IgnoreFile(string filePath) {
+            return String.IsNullOrEmpty(filePath) ||
+                _ignoredThemePaths.Any(filePath.Contains) ||
+                _ignoredThemeExtensions.Contains(Path.GetExtension(filePath) ?? "");
+        }
 
         public PackageBuilder(IExtensionManager extensionManager, IWebSiteFolder webSiteFolder) {
             _extensionManager = extensionManager;
@@ -27,7 +42,7 @@ namespace Orchard.Packaging.Services {
             var context = new CreateContext();
             BeginPackage(context);
             try {
-                EstablishPaths(context, _webSiteFolder, extensionDescriptor.Location, extensionDescriptor.Name);
+                EstablishPaths(context, _webSiteFolder, extensionDescriptor.Location, extensionDescriptor.Name, extensionDescriptor.ExtensionType);
                 SetCoreProperties(context, extensionDescriptor);
 
                 string projectFile = extensionDescriptor.Name + ".csproj";
@@ -35,6 +50,10 @@ namespace Orchard.Packaging.Services {
                     EmbedVirtualFile(context, projectFile, MediaTypeNames.Text.Xml);
                     EmbedProjectFiles(context, "Compile", "Content", "None", "EmbeddedResource");
                     EmbedReferenceFiles(context);
+                }
+                else if (extensionDescriptor.ExtensionType == "Theme") {
+                    // this is a simple theme with no csproj
+                    EmbedThemeFiles(context);
                 }
             }
             finally {
@@ -110,6 +129,21 @@ namespace Orchard.Packaging.Services {
             }
         }
 
+        private void EmbedThemeFiles(CreateContext context) {
+            var basePath = HostingEnvironment.VirtualPathProvider.GetDirectory(context.SourcePath).VirtualPath;
+            foreach (var virtualPath in context.SourceFolder.ListFiles(context.SourcePath, true)) {
+                // ignore dlls, etc
+                if (IgnoreFile(virtualPath)) {
+                    continue;
+                }
+                // full virtual path given but we need the relative path so it can be put into
+                // the package that way (the package itself is the logical base path).
+                // Get it by stripping the basePath off including the slash.
+                var relativePath = virtualPath.Replace(basePath, "");
+                EmbedVirtualFile(context, relativePath, MediaTypeNames.Application.Octet);
+            }
+        }
+
         private XName Ns(string localName) {
             return XName.Get(localName, "http://schemas.microsoft.com/developer/msbuild/2003");
         }
@@ -120,9 +154,14 @@ namespace Orchard.Packaging.Services {
             context.Package = Package.Open(context.Stream, FileMode.Create, FileAccess.ReadWrite);
         }
 
-        private static void EstablishPaths(CreateContext context, IWebSiteFolder webSiteFolder, string locationPath, string moduleName) {
+        private static void EstablishPaths(CreateContext context, IWebSiteFolder webSiteFolder, string locationPath, string moduleName, string moduleType) {
             context.SourceFolder = webSiteFolder;
-            context.SourcePath = "~/Modules/" + moduleName + "/";
+            if (moduleType == "Theme") {
+                context.SourcePath = "~/Themes/" + moduleName + "/";
+            }
+            else {
+                context.SourcePath = "~/Modules/" + moduleName + "/";
+            }
             context.TargetPath = "\\" + moduleName + "\\";
         }
 

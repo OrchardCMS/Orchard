@@ -8,6 +8,7 @@ namespace Orchard.FileSystems.WebSite {
     /// </summary>
     public interface IWebSiteFolder : IVolatileProvider {
         IEnumerable<string> ListDirectories(string virtualPath);
+        IEnumerable<string> ListFiles(string virtualPath, bool recursive);
 
         bool FileExists(string virtualPath);
         string ReadFile(string virtualPath);
