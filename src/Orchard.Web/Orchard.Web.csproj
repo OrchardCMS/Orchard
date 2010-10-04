@@ -286,6 +286,10 @@
     <Content Include="Themes\TheAdmin\Views\Header.cshtml" />
     <Content Include="Themes\Web.config" />
     <Content Include="Themes\TheThemeMachine\Views\Layout.cshtml" />
+    <Content Include="Themes\TheThemeMachine\Views\Zone.cshtml" />
+    <Content Include="Themes\TheThemeMachine\Views\Zone-Sidebar.cshtml" />
+    <Content Include="Themes\TheThemeMachine\Views\Zone-Navigation.cshtml" />
+    <Content Include="Themes\TheThemeMachine\Views\Menu.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
