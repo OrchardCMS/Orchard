@@ -88,6 +88,7 @@
     <Compile Include="Common\ViewModels\TextContentFieldEditorViewModel.cs" />
     <Compile Include="Contents\Controllers\ItemController.cs" />
     <Compile Include="Contents\Drivers\ContentsDriver.cs" />
+    <Compile Include="Contents\DynamicPermissions.cs" />
     <Compile Include="Contents\Extensions\MetaDataExtensions.cs" />
     <Compile Include="Contents\Handlers\ContentsHandler.cs" />
     <Compile Include="Contents\Permissions.cs" />

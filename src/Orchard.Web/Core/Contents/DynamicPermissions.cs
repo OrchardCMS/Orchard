@@ -7,7 +7,7 @@ using Orchard.Core.Contents.Settings;
 using Orchard.Environment.Extensions.Models;
 using Orchard.Security.Permissions;
 
-namespace Orchard.ContentTypes {
+namespace Orchard.Core.Contents {
     public class DynamicPermissions : IPermissionProvider {
         public static readonly Permission ManageContentType = new Permission { Name = "ManageContentType{0}", Description = "Manage {0}" };
 
