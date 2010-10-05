@@ -33,9 +33,9 @@ namespace Orchard.Themes.Services {
         protected virtual ISite CurrentSite { get; [UsedImplicitly] private set; }
 
         public ITheme GetSiteTheme() {
-            string currentThemeName = CurrentSite.As<ThemeSiteSettingsPart>().Record.CurrentThemeName;
+            string currentThemeName = CurrentSite.As<ThemeSiteSettingsPart>().CurrentThemeName;
 
-            if (String.IsNullOrEmpty(currentThemeName)) {
+            if (string.IsNullOrEmpty(currentThemeName)) {
                 return null;
             }
 
@@ -43,24 +43,35 @@ namespace Orchard.Themes.Services {
         }
 
         public void SetSiteTheme(string themeName) {
-            if (GetThemeByName(themeName) != null) {
+            if (string.IsNullOrWhiteSpace(themeName))
+                return;
 
-                var currentTheme = CurrentSite.As<ThemeSiteSettingsPart>().Record.CurrentThemeName;
+            //todo: (heskew) need messages given in addition to all of these early returns so something meaningful can be presented to the user
+            var themeToSet = GetThemeByName(themeName);
+            if (themeToSet == null)
+                return;
 
-                if ( !String.IsNullOrEmpty(currentTheme) ) {
-                    _moduleService.DisableFeatures(new[] {currentTheme}, true);
-                }
-
-                if ( !String.IsNullOrEmpty(themeName) ) {
-                    _moduleService.EnableFeatures(new[] {themeName}, true);
-                }
-
-                CurrentSite.As<ThemeSiteSettingsPart>().Record.CurrentThemeName = themeName;
+            //if there's a base theme, it needs to be present
+            ITheme baseTheme = null;
+            if (!string.IsNullOrWhiteSpace(themeToSet.BaseTheme)) {
+                baseTheme = GetThemeByName(themeToSet.BaseTheme);
+                if (baseTheme == null)
+                    return;
             }
+
+            var currentTheme = CurrentSite.As<ThemeSiteSettingsPart>().CurrentThemeName;
+            if ( !string.IsNullOrEmpty(currentTheme) )
+                _moduleService.DisableFeatures(new[] {currentTheme}, true);
+
+            if (baseTheme != null)
+                _moduleService.EnableFeatures(new[] {themeToSet.BaseTheme});
+
+            _moduleService.EnableFeatures(new[] {themeToSet.ThemeName}, true);
+
+            CurrentSite.As<ThemeSiteSettingsPart>().Record.CurrentThemeName = themeToSet.ThemeName;
         }
 
         public ITheme GetRequestTheme(RequestContext requestContext) {
-
             var requestTheme = _themeSelectors
                 .Select(x => x.GetTheme(requestContext))
                 .Where(x => x != null)
@@ -80,7 +91,7 @@ namespace Orchard.Themes.Services {
 
         public ITheme GetThemeByName(string name) {
             foreach (var descriptor in _extensionManager.AvailableExtensions()) {
-                if (String.Equals(descriptor.Name, name, StringComparison.OrdinalIgnoreCase)) {
+                if (string.Equals(descriptor.Name, name, StringComparison.OrdinalIgnoreCase)) {
                     return CreateTheme(descriptor);
                 }
             }
@@ -91,11 +102,10 @@ namespace Orchard.Themes.Services {
         /// Loads only enabled themes
         /// </summary>
         public IEnumerable<ITheme> GetInstalledThemes() {
-
             var themes = new List<ITheme>();
             foreach (var descriptor in _extensionManager.AvailableExtensions()) {
-                
-                if (!String.Equals(descriptor.ExtensionType, "Theme", StringComparison.OrdinalIgnoreCase)) {
+
+                if (!string.Equals(descriptor.ExtensionType, "Theme", StringComparison.OrdinalIgnoreCase)) {
                     continue;
                 }
 
@@ -116,16 +126,17 @@ namespace Orchard.Themes.Services {
             _extensionManager.UninstallExtension("Theme", themeName);
         }
 
-        private ITheme CreateTheme(ExtensionDescriptor descriptor) {
+        private static ITheme CreateTheme(ExtensionDescriptor descriptor) {
             return new Theme {
-                Author = descriptor.Author ?? String.Empty,
-                Description = descriptor.Description ?? String.Empty,
-                DisplayName = descriptor.DisplayName ?? String.Empty,
-                HomePage = descriptor.WebSite ?? String.Empty,
+                Author = descriptor.Author ?? "",
+                Description = descriptor.Description ?? "",
+                DisplayName = descriptor.DisplayName ?? "",
+                HomePage = descriptor.WebSite ?? "",
                 ThemeName = descriptor.Name,
-                Version = descriptor.Version ?? String.Empty,
-                Tags = descriptor.Tags ?? String.Empty,
-                Zones = descriptor.Zones ?? String.Empty,
+                Version = descriptor.Version ?? "",
+                Tags = descriptor.Tags ?? "",
+                Zones = descriptor.Zones ?? "",
+                BaseTheme = descriptor.BaseTheme ?? "",
             };
         }
     }

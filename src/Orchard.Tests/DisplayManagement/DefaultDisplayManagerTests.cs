@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Web;
 using System.Web.Mvc;
 using Autofac;
@@ -10,7 +8,6 @@ using NUnit.Framework;
 using Orchard.DisplayManagement.Descriptors;
 using Orchard.DisplayManagement.Implementation;
 using Orchard.DisplayManagement.Shapes;
-using Orchard.Tests.Stubs;
 using Orchard.Themes;
 
 namespace Orchard.Tests.DisplayManagement {
@@ -42,6 +39,7 @@ namespace Orchard.Tests.DisplayManagement {
             public string HomePage { get; set; }
             public string Tags { get; set; }
             public string Zones { get; set; }
+            public string BaseTheme { get; set; }
         }
 
 

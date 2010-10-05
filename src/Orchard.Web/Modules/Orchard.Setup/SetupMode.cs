@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Web;
-using System.Web.Mvc;
 using System.Web.Routing;
 using Autofac;
 using Orchard.Commands;
@@ -9,7 +8,6 @@ using Orchard.Commands.Builtin;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Handlers;
 using Orchard.ContentManagement.MetaData.Builders;
-using Orchard.Core.Shapes;
 using Orchard.Data.Migration.Interpreters;
 using Orchard.Data.Providers;
 using Orchard.Data.Migration;
@@ -18,13 +16,10 @@ using Orchard.DisplayManagement.Descriptors;
 using Orchard.DisplayManagement.Descriptors.ShapeAttributeStrategy;
 using Orchard.DisplayManagement.Descriptors.ShapeTemplateStrategy;
 using Orchard.DisplayManagement.Implementation;
-using Orchard.DisplayManagement.Shapes;
 using Orchard.Environment;
-using Orchard.Environment.Extensions;
 using Orchard.Environment.Extensions.Models;
 using Orchard.Localization;
 using Orchard.Mvc;
-using Orchard.Mvc.Filters;
 using Orchard.Mvc.ModelBinders;
 using Orchard.Mvc.Routes;
 using Orchard.Mvc.ViewEngines;
@@ -116,6 +111,7 @@ namespace Orchard.Setup {
                 public string HomePage { get; set; }
                 public string Tags { get; set; }
                 public string Zones { get; set; }
+                public string BaseTheme { get; set; }
             }
 
             private readonly SafeModeTheme _theme = new SafeModeTheme {
