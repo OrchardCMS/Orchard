@@ -123,6 +123,18 @@ namespace Orchard.Tests.Modules.Themes.Services {
             Assert.That(siteTheme.ThemeName, Is.EqualTo("ThemeOne"));
         }
 
+        [Test]
+        public void ThemeWithCircularBaseDepTrowsExceptionOnActivation() {
+            _themeService.SetSiteTheme("ThemeOne");
+            try {
+                _themeService.SetSiteTheme("ThemeFourBasedOnFive");
+            } catch (InvalidOperationException ex) {
+                Assert.That(ex.Message, Is.StringMatching("ThemeFiveBasedOnFour"));
+            }
+            var siteTheme = _themeService.GetSiteTheme();
+            Assert.That(siteTheme.ThemeName, Is.EqualTo("ThemeOne"));
+        }
+
         #region Stubs
 
         public class TestSessionLocator : ISessionLocator {
@@ -155,6 +167,8 @@ namespace Orchard.Tests.Modules.Themes.Services {
                     new ExtensionDescriptor {Name = "ThemeOne", ExtensionType = "Theme"},
                     new ExtensionDescriptor {Name = "ThemeTwo", BaseTheme = "ThemeOne", ExtensionType = "Theme"},
                     new ExtensionDescriptor {Name = "ThemeThree", BaseTheme = "TheThemeThatIsntThere", ExtensionType = "Theme"},
+                    new ExtensionDescriptor {Name = "ThemeFourBasedOnFive", BaseTheme = "ThemeFiveBasedOnFour", ExtensionType = "Theme"},
+                    new ExtensionDescriptor {Name = "ThemeFiveBasedOnFour", BaseTheme = "ThemeFourBasedOnFive", ExtensionType = "Theme"},
                 };
 
                 foreach (var extension in extensions) {

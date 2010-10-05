@@ -6,6 +6,7 @@ using System.Web.Routing;
 using JetBrains.Annotations;
 using Orchard.Environment.Extensions;
 using Orchard.Environment.Extensions.Models;
+using Orchard.Localization;
 using Orchard.Logging;
 using Orchard.ContentManagement;
 using Orchard.Modules;
@@ -27,8 +28,10 @@ namespace Orchard.Themes.Services {
             _themeSelectors = themeSelectors;
             _moduleService = moduleService;
             Logger = NullLogger.Instance;
+            T = NullLocalizer.Instance;
         }
 
+        public Localizer T { get; set; }
         public ILogger Logger { get; set; }
         protected virtual ISite CurrentSite { get; [UsedImplicitly] private set; }
 
@@ -51,24 +54,69 @@ namespace Orchard.Themes.Services {
             if (themeToSet == null)
                 return;
 
-            //if there's a base theme, it needs to be present
-            ITheme baseTheme = null;
-            if (!string.IsNullOrWhiteSpace(themeToSet.BaseTheme)) {
-                baseTheme = GetThemeByName(themeToSet.BaseTheme);
-                if (baseTheme == null)
-                    return;
-            }
+            // ensure all base themes down the line are present and accounted for
+            //todo: (heskew) dito on the need of a meaningful message
+            if (!AllBaseThemesAreInstalled(themeToSet.BaseTheme))
+                return;
 
-            var currentTheme = CurrentSite.As<ThemeSiteSettingsPart>().CurrentThemeName;
-            if ( !string.IsNullOrEmpty(currentTheme) )
-                _moduleService.DisableFeatures(new[] {currentTheme}, true);
+            // disable all theme features
+            DisableThemeFeatures(CurrentSite.As<ThemeSiteSettingsPart>().CurrentThemeName);
 
-            if (baseTheme != null)
-                _moduleService.EnableFeatures(new[] {themeToSet.BaseTheme});
-
-            _moduleService.EnableFeatures(new[] {themeToSet.ThemeName}, true);
+            // enable all theme features
+            EnableThemeFeatures(themeToSet.ThemeName);
 
             CurrentSite.As<ThemeSiteSettingsPart>().Record.CurrentThemeName = themeToSet.ThemeName;
+        }
+
+        private bool AllBaseThemesAreInstalled(string baseThemeName) {
+            var themesSeen = new List<string>();
+            while (!string.IsNullOrWhiteSpace(baseThemeName)) {
+                //todo: (heskew) need a better way to protect from recursive references
+                if (themesSeen.Contains(baseThemeName))
+                    throw new InvalidOperationException(T("The theme \"{0}\" was already seen - looks like we're going aruond in circles.", baseThemeName).Text);
+                themesSeen.Add(baseThemeName);
+
+                var baseTheme = GetThemeByName(baseThemeName);
+                if (baseTheme == null)
+                    return false;
+                baseThemeName = baseTheme.BaseTheme;
+            }
+
+            return true;
+        }
+
+        private void DisableThemeFeatures(string themeName) {
+            var themes = new Queue<string>();
+            while (themeName != null) {
+                if (themes.Contains(themeName))
+                    throw new InvalidOperationException(T("The theme \"{0}\" is already in the stack of themes that need features disabled.", themeName).Text);
+                themes.Enqueue(themeName);
+
+                var theme = GetThemeByName(themeName);
+                themeName = !string.IsNullOrWhiteSpace(theme.BaseTheme)
+                    ? theme.BaseTheme
+                    : null;
+            }
+
+            while (themes.Count > 0)
+                _moduleService.DisableFeatures(new[] { themes.Dequeue() });
+        }
+
+        private void EnableThemeFeatures(string themeName) {
+            var themes = new Stack<string>();
+            while(themeName != null) {
+                if (themes.Contains(themeName))
+                    throw new InvalidOperationException(T("The theme \"{0}\" is already in the stack of themes that need features enabled.", themeName).Text);
+                themes.Push(themeName);
+
+                var theme = GetThemeByName(themeName);
+                themeName = !string.IsNullOrWhiteSpace(theme.BaseTheme)
+                    ? theme.BaseTheme
+                    : null;
+            }
+
+            while (themes.Count > 0)
+                _moduleService.DisableFeatures(new[] {themes.Pop()});
         }
 
         public ITheme GetRequestTheme(RequestContext requestContext) {
