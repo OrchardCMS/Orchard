@@ -130,7 +130,7 @@ namespace Orchard.Packaging.Services {
         }
 
         private void EmbedThemeFiles(CreateContext context) {
-            var basePath = HostingEnvironment.VirtualPathProvider.GetDirectory(context.SourcePath).VirtualPath;
+            var basePath = context.SourcePath;
             foreach (var virtualPath in context.SourceFolder.ListFiles(context.SourcePath, true)) {
                 // ignore dlls, etc
                 if (IgnoreFile(virtualPath)) {
