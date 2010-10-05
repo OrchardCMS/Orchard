@@ -59,6 +59,8 @@
   <ItemGroup>
     <Compile Include="AdminMenu.cs" />
     <Compile Include="Controllers\AdminController.cs" />
+    <Compile Include="Drivers\LayerPartDriver.cs" />
+    <Compile Include="Drivers\WidgetPartDriver.cs" />
     <Compile Include="Migrations.cs" />
     <Compile Include="Handlers\LayerPartHandler.cs" />
     <Compile Include="Handlers\WidgetPartHandler.cs" />
