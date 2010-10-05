@@ -1,34 +1,49 @@
-﻿@using Orchard.UI.Resources
-@{
-    Style.Include("~/themes/Classic/styles/site.css");
-    Style.Include("~/themes/Classic/styles/blog.css");
-}
-<div id="wrapper">
-@// HTML.Include will render a div with a class="user-display"
-@// Can use this -> {Html.Include("User");}
-@// or the following. At least they appear to do the same thing currently. The first is a standard Html.Include, the second "displays the (New) User shape"
-@Display.User()
-@// Top Navigation and branding
-<div id="headercontainer">
-    <div id="header">
-        <h1>@WorkContext.CurrentSite.SiteName</h1>
-        <div class="menucontainer">
-@Display(Model.Navigation)
-        </div>
-        <div class="clearBoth"></div>
-    </div>
-</div>
+﻿@{
+    // cool stuff goes up here
+    var homeUrl = Href("~/");
 
-<div id="main">
-        <div id="content">
-        @// Main Content
-@Display(Model.Content)
+    // Zone is an alias for Display
+    Func<dynamic, dynamic> Zone = x => Display(x);
+}
+<div id="layout-wrapper">
+    <header id="layout-header">
+        @// needs to be the page title, not page (head) title...
+        <h1><a href="@homeUrl">@Model.Title</a></h1>
+        @if(Model.Header != null) {
+        <div id="header">
+            @Zone(Model.Header)
         </div>
-        <div id="sidebar">
-@Display(Model.search)
-@Display(Model.sidebar)
+        }
+        @if(Model.Navigation != null) {
+        <div id="navigation">
+            @Zone(Model.Navigation)
         </div>
-        @// End Content
-@Display.Footer(Navigation:Model.Navigation)
+        }
+    </header>
+    @if(Model.Messages != null) {
+    <div id="messages">
+        @Zone(Model.Messages)
     </div>
+    }
+    @if(Model.Featured != null) {
+    <div id="featured">
+        @Zone(Model.Featured)
+    </div>
+    }
+    @// the model content for the page is in the Content zone @ the default position (nothing, zero, zilch)
+    @if(Model.Content != null) {
+    <div id="content">
+        @Zone(Model.Content)
+    </div>
+    }
+    @if(Model.Sidebar != null) {
+    <aside>
+        @Zone(Model.Sidebar)
+    </aside>
+    }
+    @if(Model.Footer != null) {
+    <footer>
+        @Zone(Model.Footer)
+    </footer>
+    }
 </div>

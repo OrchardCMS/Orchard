@@ -15,7 +15,7 @@
      @//Model.Zones.AddRenderPartial("head:before", "HeadPreload", Model);
      @//Html.Zone("head", ":metas :styles :scripts"); %>
 	 @Display(Model.Head)
-    <script>(function(d){d.className="dyn "+d.className.substring(7,d.length);})(document.documentElement);</script> 
+    <script>(function(d){d.className="dyn"+d.className.substring(6,d.className.length);})(document.documentElement);</script> 
 </head> 
 <body> 
 @Display(Model.Body)
