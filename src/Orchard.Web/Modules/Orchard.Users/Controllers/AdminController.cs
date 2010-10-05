@@ -104,9 +104,11 @@ namespace Orchard.Users.Controllers {
         public ActionResult Edit(int id) {
             if (!Services.Authorizer.Authorize(Permissions.ManageUsers, T("Not authorized to manage users")))
                 return new HttpUnauthorizedResult();
-            
+
+            var user = Services.ContentManager.Get<UserPart>(id);
+
             return View(new UserEditViewModel {
-                User = Services.ContentManager.Get<UserPart>(id)
+                User = Services.ContentManager.BuildEditorModel(user) 
             });
         }
 
@@ -114,9 +116,10 @@ namespace Orchard.Users.Controllers {
         public ActionResult EditPOST(int id) {
             if (!Services.Authorizer.Authorize(Permissions.ManageUsers, T("Not authorized to manage users")))
                 return new HttpUnauthorizedResult();
-            
+
+            var user = Services.ContentManager.Get(id);
             var model = new UserEditViewModel {
-                User = Services.ContentManager.Get<UserPart>(id)
+                User = Services.ContentManager.UpdateEditorModel(user, this)
             };
 
             TryUpdateModel(model);

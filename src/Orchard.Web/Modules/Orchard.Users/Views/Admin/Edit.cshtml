@@ -16,6 +16,8 @@
         @Html.ValidationMessageFor(m=>m.Email, "*")
     </fieldset>
 
+    @Display(Model.User)
+
     <fieldset>
         <input class="button primaryAction" type="submit" value="@T("Save") " />
     </fieldset>
