@@ -10,7 +10,7 @@ namespace Orchard.Widgets.RuleEngine {
         }
 
         public void Process(RuleContext ruleContext) {
-            if (!String.Equals(ruleContext.FunctionName, "Url", StringComparison.OrdinalIgnoreCase)) {
+            if (!String.Equals(ruleContext.FunctionName, "url", StringComparison.OrdinalIgnoreCase)) {
                 return;
             }
 
