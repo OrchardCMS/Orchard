@@ -86,6 +86,7 @@
     <Compile Include="Common\ViewModels\ContainerEditorViewModel.cs" />
     <Compile Include="Common\ViewModels\TextContentFieldDisplayViewModel.cs" />
     <Compile Include="Common\ViewModels\TextContentFieldEditorViewModel.cs" />
+    <Compile Include="Contents\AuthorizationEventHandler.cs" />
     <Compile Include="Contents\Controllers\ItemController.cs" />
     <Compile Include="Contents\Drivers\ContentsDriver.cs" />
     <Compile Include="Contents\DynamicPermissions.cs" />
