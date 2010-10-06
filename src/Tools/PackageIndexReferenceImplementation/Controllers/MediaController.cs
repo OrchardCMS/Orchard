@@ -32,7 +32,7 @@ namespace PackageIndexReferenceImplementation.Controllers {
             Stream previewStream;
             DateTime lastModified;
             if (package.PartExists(previewUri)) {
-                lastModified = _mediaStorage.GetLastModifiedDate(id);
+                lastModified = _mediaStorage.GetLastModifiedDate(id + ":" + contentType);
                 previewStream = package.GetPart(new Uri("/" + themeName + "/Theme.png", UriKind.Relative)).GetStream();
             }
             else {
