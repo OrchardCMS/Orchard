@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Linq;
 using System.Web.Hosting;
 
@@ -23,6 +24,15 @@ namespace PackageIndexReferenceImplementation.Services {
             var safeIdentifier = GetSafeIdentifier(identifier);
             var filePath = HostingEnvironment.MapPath("~/App_Data/Media/" + safeIdentifier);
             return new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.Read);
+        }
+
+        public DateTime GetLastModifiedDate(string identifier) {
+            if (!Directory.Exists(HostingEnvironment.MapPath("~/App_Data/Media")))
+                Directory.CreateDirectory(HostingEnvironment.MapPath("~/App_Data/Media"));
+
+            var safeIdentifier = GetSafeIdentifier(identifier);
+            var filePath = HostingEnvironment.MapPath("~/App_Data/Media/" + safeIdentifier);
+            return File.GetLastWriteTimeUtc(filePath);
         }
 
         static string GetSafeIdentifier(string identifier) {
