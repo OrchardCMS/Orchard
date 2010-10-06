@@ -3,7 +3,7 @@
 
 <h1>@Html.TitleForPage(T("Browse Gallery - Modules").ToString())</h1>
 
-<div class="manage">@Html.ActionLink(T("Refresh").ToString(), "Update", new { cameFrom = "Themes" }, new { @class = "button primaryAction" })</div>
+<div class="manage">@Html.ActionLink(T("Refresh").ToString(), "Update", new { cameFrom = "Modules" }, new { @class = "button primaryAction" })</div>
 @using ( Html.BeginFormAntiForgeryPost(Url.Action("Modules", "Gallery")) ) {
     <fieldset class="bulk-actions">
         <label for="filterResults" class="bulk-filter">@T("Feed:")</label>
