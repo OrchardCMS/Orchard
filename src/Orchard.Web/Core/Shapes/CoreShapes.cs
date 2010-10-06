@@ -64,7 +64,6 @@ namespace Orchard.Core.Shapes {
 
             var zone = context.New.Zone();
             zone.Id = "zone-" + name;
-            zone.Classes.Add(zone.Id);
             zone.Classes.Add("zone");
             return zone;
         }
