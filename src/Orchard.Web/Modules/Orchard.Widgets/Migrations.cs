@@ -65,6 +65,7 @@ namespace Orchard.Widgets {
                 cfg => cfg
                     .WithPart("WidgetPart")
                     .WithPart("BodyPart")
+                    .WithSetting("stereotype", "widget")
                 );
 
             CreateDefaultLayers();
