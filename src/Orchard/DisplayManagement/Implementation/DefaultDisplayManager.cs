@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Dynamic;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Runtime.CompilerServices;
 using System.Web;
@@ -50,7 +52,7 @@ namespace Orchard.DisplayManagement.Implementation {
 
             ShapeDescriptor shapeDescriptor;
             ShapeBinding shapeBinding;
-            if (TryGetDescriptor(shapeMetadata.Type, shapeTable, out shapeDescriptor, out shapeBinding)) {
+            if (TryGetDescriptorBinding(shapeMetadata.Type, shapeMetadata.Alternates, shapeTable, out shapeDescriptor, out shapeBinding)) {
                 shape.Metadata.ChildContent = Process(shapeDescriptor, shapeBinding, shape, context);
             }
             else {
@@ -60,7 +62,7 @@ namespace Orchard.DisplayManagement.Implementation {
             foreach (var frameType in shape.Metadata.Wrappers) {
                 ShapeDescriptor frameDescriptor;
                 ShapeBinding frameBinding;
-                if (TryGetDescriptor(frameType, shapeTable, out frameDescriptor, out frameBinding)) {
+                if (TryGetDescriptorBinding(frameType, Enumerable.Empty<string>(), shapeTable, out frameDescriptor, out frameBinding)) {
                     shape.Metadata.ChildContent = Process(frameDescriptor, frameBinding, shape, context);
                 }
             }
@@ -68,18 +70,32 @@ namespace Orchard.DisplayManagement.Implementation {
             return shape.Metadata.ChildContent;
         }
 
-        static bool TryGetDescriptor(string shapeType, ShapeTable shapeTable, out ShapeDescriptor shapeDescriptor, out ShapeBinding shapeBinding) {
+        static bool TryGetDescriptorBinding(string shapeType, IEnumerable<string> shapeAlternates, ShapeTable shapeTable, out ShapeDescriptor shapeDescriptor, out ShapeBinding shapeBinding) {
+            // shape alternates are optional, fully qualified binding names
+            // the earliest added alternates have the lowest priority
+            // the descriptor returned is based on the binding that is matched, so it may be an entirely
+            // different descriptor if the alternate has a different base name
+            foreach (var shapeAlternate in shapeAlternates.Reverse()) {
+                if (shapeTable.Bindings.TryGetValue(shapeAlternate, out shapeBinding)) {
+                    shapeDescriptor = shapeBinding.ShapeDescriptor;
+                    return true;
+                }
+            }
 
+            // when no alternates match, the shapeType is used to find the longest matching binding
+            // the shapetype name can break itself into shorter fallbacks at double-underscore marks
+            // so the shapetype itself may contain a longer alternate forms that falls back to a shorter one
             var shapeTypeScan = shapeType;
             for (; ; ) {
-                if (shapeTable.Descriptors.TryGetValue(shapeTypeScan, out shapeDescriptor) &&
-                    shapeDescriptor.Bindings.TryGetValue(shapeTypeScan, out shapeBinding)) {
+                if (shapeTable.Bindings.TryGetValue(shapeTypeScan, out shapeBinding)) {
+                    shapeDescriptor = shapeBinding.ShapeDescriptor;
                     return true;
                 }
 
                 var delimiterIndex = shapeTypeScan.LastIndexOf("__");
                 if (delimiterIndex < 0) {
                     shapeBinding = null;
+                    shapeDescriptor = null;
                     return false;
                 }
 

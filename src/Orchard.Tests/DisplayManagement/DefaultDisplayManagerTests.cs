@@ -20,7 +20,10 @@ namespace Orchard.Tests.DisplayManagement {
         WorkContext _workContext;
 
         protected override void Register(Autofac.ContainerBuilder builder) {
-            _defaultShapeTable = new ShapeTable { Descriptors = new Dictionary<string, ShapeDescriptor>() };
+            _defaultShapeTable = new ShapeTable {
+                Descriptors = new Dictionary<string, ShapeDescriptor>(),
+                Bindings = new Dictionary<string, ShapeBinding>()
+            };
             _workContext = new TestWorkContext {
                 CurrentTheme = new Theme { ThemeName = "Hello" }
             };
@@ -85,11 +88,10 @@ namespace Orchard.Tests.DisplayManagement {
             public IContainerProvider ContainerProvider { get; set; }
 
             public override T Resolve<T>() {
-                if (typeof(T) == typeof(ILifetimeScope))
-                {
-                    return (T) ContainerProvider.RequestLifetime;
+                if (typeof(T) == typeof(ILifetimeScope)) {
+                    return (T)ContainerProvider.RequestLifetime;
                 }
-                
+
                 throw new NotImplementedException();
             }
 
@@ -104,8 +106,10 @@ namespace Orchard.Tests.DisplayManagement {
         }
 
         void AddShapeDescriptor(ShapeDescriptor shapeDescriptor) {
+            _defaultShapeTable.Descriptors[shapeDescriptor.ShapeType] = shapeDescriptor;
             foreach (var binding in shapeDescriptor.Bindings) {
-                _defaultShapeTable.Descriptors[binding.Key] = shapeDescriptor;
+                binding.Value.ShapeDescriptor = shapeDescriptor;
+                _defaultShapeTable.Bindings[binding.Key] = binding.Value;
             }
         }
 
@@ -163,7 +167,7 @@ namespace Orchard.Tests.DisplayManagement {
         }
 
         [Test]
-        public void RenderAlternateShape() {
+        public void RenderAlternateShapeExplicitly() {
             var displayManager = _container.Resolve<IDisplayManager>();
 
             var shape = new Shape {
@@ -187,6 +191,40 @@ namespace Orchard.Tests.DisplayManagement {
 
             var result = displayManager.Execute(CreateDisplayContext(shape));
             Assert.That(result.ToString(), Is.EqualTo("Hello again!"));
+        }
+
+        [Test]
+        public void RenderAlternateShapeByMostRecentlyAddedMatchingAlternate() {
+            var displayManager = _container.Resolve<IDisplayManager>();
+
+            var shape = new Shape {
+                Metadata = new ShapeMetadata {
+                    Type = "Foo"
+                }
+            };
+            shape.Metadata.Alternates.Add("Foo__1");
+            shape.Metadata.Alternates.Add("Foo__2");
+            shape.Metadata.Alternates.Add("Foo__3");
+
+            var descriptor = new ShapeDescriptor {
+                ShapeType = "Foo",
+            };
+            descriptor.Bindings["Foo"] = new ShapeBinding {
+                BindingName = "Foo",
+                Binding = ctx => new HtmlString("Hi there!"),
+            };
+            descriptor.Bindings["Foo__1"] = new ShapeBinding {
+                BindingName = "Foo__1",
+                Binding = ctx => new HtmlString("Hello (1)!"),
+            };
+            descriptor.Bindings["Foo__2"] = new ShapeBinding {
+                BindingName = "Foo__2",
+                Binding = ctx => new HtmlString("Hello (2)!"),
+            };
+            AddShapeDescriptor(descriptor);
+
+            var result = displayManager.Execute(CreateDisplayContext(shape));
+            Assert.That(result.ToString(), Is.EqualTo("Hello (2)!"));
         }
     }
 }
