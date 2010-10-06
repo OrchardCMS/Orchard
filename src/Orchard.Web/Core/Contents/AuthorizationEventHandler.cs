@@ -6,8 +6,7 @@ using Orchard.Core.Contents.Settings;
 using Orchard.Security;
 using Orchard.Security.Permissions;
 
-namespace Orchard.Core.Contents
-{
+namespace Orchard.Core.Contents {
     [UsedImplicitly]
     public class AuthorizationEventHandler : IAuthorizationServiceEventHandler {
         public void Checking(CheckAccessContext context) { }
@@ -21,14 +20,21 @@ namespace Orchard.Core.Contents
 
             // replace permission if more specific version exists
             if ( typeDefinition.Settings.GetModel<ContentTypeSettings>().Creatable ) {
-                Permission permission = context.Permission;
+                var permission = context.Permission;
 
                 if ( context.Permission.Name == Permissions.PublishContent.Name )
                     permission = DynamicPermissions.CreateDynamicPersion(DynamicPermissions.PublishContent, typeDefinition);
-                if ( context.Permission.Name == Permissions.EditContent.Name)
+                if ( context.Permission.Name == Permissions.EditContent.Name )
                     permission = DynamicPermissions.CreateDynamicPersion(DynamicPermissions.EditContent, typeDefinition);
-                if ( context.Permission.Name == Permissions.DeleteContent.Name)
+                if ( context.Permission.Name == Permissions.DeleteContent.Name )
                     permission = DynamicPermissions.CreateDynamicPersion(DynamicPermissions.DeleteContent, typeDefinition);
+                
+                if ( context.Permission.Name == Permissions.PublishOthersContent.Name )
+                    permission = DynamicPermissions.CreateDynamicPersion(DynamicPermissions.PublishOthersContent, typeDefinition);
+                if ( context.Permission.Name == Permissions.EditOthersContent.Name )
+                    permission = DynamicPermissions.CreateDynamicPersion(DynamicPermissions.EditOthersContent, typeDefinition);
+                if ( context.Permission.Name == Permissions.DeleteOthersContent.Name )
+                    permission = DynamicPermissions.CreateDynamicPersion(DynamicPermissions.DeleteOthersContent, typeDefinition);
 
                 // converts the permission if the owner is someone else
                 if ( HasOtherOwner(context.User, context.Content) ) {
@@ -57,6 +63,17 @@ namespace Orchard.Core.Contents
                 return false;
 
             return user.Id != common.Owner.Id;
+        }
+
+                private static Permission GetOwnerVariation(Permission permission)
+        {
+            if (permission.Name == Contents.Permissions.PublishOthersContent.Name)
+                return Contents.Permissions.PublishContent;
+            if (permission.Name == Contents.Permissions.EditOthersContent.Name)
+                return Contents.Permissions.EditContent;
+            if (permission.Name == Contents.Permissions.DeleteOthersContent.Name)
+                return Contents.Permissions.DeleteContent;
+            return null;
         }
     }
 }
