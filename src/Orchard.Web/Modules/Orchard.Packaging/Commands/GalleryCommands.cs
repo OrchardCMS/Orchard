@@ -63,7 +63,10 @@ namespace Orchard.Packaging.Commands {
                 Context.Output.WriteLine(T("Success"));
             }
             catch (WebException webException) {
-                var text = new StreamReader(webException.Response.GetResponseStream()).ReadToEnd();
+                string text = "";
+                if (webException.Response != null) {
+                    text = new StreamReader(webException.Response.GetResponseStream()).ReadToEnd();
+                }
                 throw new ApplicationException(text);
             }
         }

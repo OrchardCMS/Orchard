@@ -1,0 +1,19 @@
+﻿@using Orchard.Mvc.Html
+@using Orchard.UI.Resources
+@{
+	RegisterLink(new LinkEntry {Type = "image/x-icon", Rel = "shortcut icon", Href = Url.Content("~/modules/orchard.themes/Content/orchard.ico")});
+}
+<!DOCTYPE html> 
+<html lang="en" class="static @Html.ClassForPage()"> 
+<head> 
+    <meta charset="utf-8" />
+    <title>@Model.Title</title> 
+    @Display(Model.Head)
+    <script>(function(d){d.className="dyn"+d.className.substring(6,d.className.length);})(document.documentElement);</script> 
+</head> 
+<body>
+@// Layout (template) is in the Body zone @ the default position (nothing, zero, zilch)
+@Display(Model.Body)
+@Display(Model.Tail)
+</body>
+</html>

@@ -14,6 +14,10 @@ namespace Orchard.Tests.Stubs {
             return Directory.GetDirectories(path);
         }
 
+        public IEnumerable<string> ListFiles(string path, bool recursive) {
+            throw new NotImplementedException();
+        }
+
         public bool FileExists(string virtualPath) {
             throw new NotImplementedException();
         }

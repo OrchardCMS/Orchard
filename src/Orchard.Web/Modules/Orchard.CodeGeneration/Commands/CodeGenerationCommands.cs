@@ -20,10 +20,10 @@ namespace Orchard.CodeGeneration.Commands {
         private readonly ISchemaCommandGenerator _schemaCommandGenerator;
 
         private static readonly string[] _ignoredExtensions = new [] {
-            "dll", "obj", "pdb", "exclude"
+            "obj", "pdb", "exclude"
         };
         private static readonly string[] _ignoredPaths = new [] {
-            "/bin/", "/obj/"
+            "/obj/"
         };
         private static readonly string[] _themeDirectories = new [] {
             "", "Content", "Styles", "Scripts", "Views", "Zones"
