@@ -7,7 +7,7 @@ using Autofac;
 
 namespace Orchard.Environment {
 
-    public class DefaultOrchardHostContainer : IOrchardHostContainer, IMvcServiceLocator {
+    public class DefaultOrchardHostContainer : IOrchardHostContainer, IDependencyResolver {
         private readonly IContainer _container;
 
 
@@ -48,7 +48,7 @@ namespace Orchard.Environment {
         TService Resolve<TService>(Type serviceType, Func<Type, TService> defaultFactory) {
             object value;
             return TryResolve(null, serviceType, out value) ? (TService)value : defaultFactory(serviceType);
-        }
+            }
 
         TService Resolve<TService>(Type serviceType, string key, Func<Type, TService> defaultFactory) {
             object value;
@@ -60,43 +60,12 @@ namespace Orchard.Environment {
             return Resolve(typeof(TService), default(TService));
         }
 
-        object IServiceProvider.GetService(Type serviceType) {
+        object IDependencyResolver.GetService(Type serviceType) {
             // Resolve service, or null
             return Resolve(serviceType, default(object));
         }
 
-        object IServiceLocator.GetInstance(Type serviceType) {
-            // Create instance, or default ctor
-            return Resolve(serviceType, CreateInstance);
-        }
-
-        object IServiceLocator.GetInstance(Type serviceType, string key) {
-            // Create instance, or default ctor
-            return Resolve(serviceType, key, CreateInstance);
-        }
-
-        TService IServiceLocator.GetInstance<TService>() {
-            // Create instance, or default ctor
-            return Resolve(typeof(TService), t => (TService)CreateInstance(t));
-        }
-
-        TService IServiceLocator.GetInstance<TService>(string key) {
-            // Create instance, or default ctor
-            return Resolve(typeof(TService), key, t => (TService)CreateInstance(t));
-        }
-
-        IEnumerable<TService> IServiceLocator.GetAllInstances<TService>() {
-            return Resolve(typeof(IEnumerable<TService>), Enumerable.Empty<TService>());
-        }
-
-        IEnumerable<object> IServiceLocator.GetAllInstances(Type serviceType) {
-            return Resolve<IEnumerable>(typeof(IEnumerable<>).MakeGenericType(serviceType), Enumerable.Empty<object>()).Cast<object>();
-        }
-
-        void IMvcServiceLocator.Release(object instance) {
-            // Autofac manages component disposal lifecycle internally.
-        }
-
-
+        IEnumerable<object> IDependencyResolver.GetServices(Type serviceType) {
+            return Resolve<IEnumerable>(typeof(IEnumerable<>).MakeGenericType(serviceType), Enumerable.Empty<object>()).Cast<object>();        }
     }
 }

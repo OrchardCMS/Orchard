@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.WebPages;
 using Autofac;
-using Microsoft.WebPages;
 using Orchard.DisplayManagement;
 using Orchard.Localization;
 using Orchard.Mvc.Html;

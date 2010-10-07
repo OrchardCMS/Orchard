@@ -83,9 +83,9 @@
     <Compile Include="ViewModels\SetupViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Setup\Index.cshtml">
+    <None Include="Views\Setup\Index.cshtml">
       <SubType>Designer</SubType>
-    </Content>
+    </None>
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
