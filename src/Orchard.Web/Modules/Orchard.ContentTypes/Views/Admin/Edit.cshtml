@@ -9,9 +9,9 @@
         <fieldset>
             <label for="DisplayName">@T("Display Name")</label>
             @Html.TextBoxFor(m => m.DisplayName, new { @class = "textMedium" })
-            @// todo: if we continue to go down the midrodata route, some helpers would be nice
+            @* todo: if we continue to go down the midrodata route, some helpers would be nice *@
             <meta itemprop="DisplayName" content="@Model.DisplayName" />
-            @// has unintended consequences (renamging the type) - changing the name creates a new type of that name
+            @* has unintended consequences (renamging the type) - changing the name creates a new type of that name *@
             <meta itemprop="Name" content="@Model.Name" />
             @Html.HiddenFor(m => m.Name)
         </fieldset>

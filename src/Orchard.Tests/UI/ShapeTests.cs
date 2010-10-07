@@ -22,7 +22,7 @@ namespace Orchard.Tests.UI {
             builder.RegisterType<DefaultWorkContextAccessor>().As<IWorkContextAccessor>();
             builder.RegisterType<DefaultShapeFactory>().As<IShapeFactory>();
             builder.RegisterType<DefaultShapeTableManager>().As<IShapeTableManager>();
-            builder.RegisterType<PageWorkContext>().As<IWorkContextStateProvider>();
+            builder.RegisterType<LayoutWorkContext>().As<IWorkContextStateProvider>();
             //builder.RegisterType<CoreShapes>().As<IShapeTableProvider>();
             builder.RegisterType<NumberIsAlwaysFortyTwo>().As<IShapeFactoryEvents>();
 
@@ -35,74 +35,74 @@ namespace Orchard.Tests.UI {
 
         [Test, Ignore("implementation pending")]
         public void WorkContextPageIsLayoutShape() {
-            var page = _workContext.Page;
-            ShapeMetadata pageMetadata = page.Metadata;
+            var layout = _workContext.Layout;
+            ShapeMetadata pageMetadata = layout.Metadata;
             Assert.That(pageMetadata.Type, Is.EqualTo("Layout"));
-            Assert.That(page.Metadata.Type, Is.EqualTo("Layout"));
+            Assert.That(layout.Metadata.Type, Is.EqualTo("Layout"));
         }
 
         [Test, Ignore("implementation pending")]
         public void PagePropertiesAreNil() {
-            var page = _workContext.Page;
-            var pageFoo = page.Foo;
+            var layout = _workContext.Layout;
+            var pageFoo = layout.Foo;
             Assert.That(pageFoo == null);
         }
 
         [Test, Ignore("implementation pending")]
         public void PageZonesPropertyIsNotNil() {
-            var page = _workContext.Page;
-            var pageZones = page.Zones;
+            var layout = _workContext.Layout;
+            var pageZones = layout.Zones;
             Assert.That(pageZones != null);
             Assert.That(pageZones.Foo == null);
         }
 
         [Test, Ignore("implementation pending")]
         public void AddingToZonePropertyMakesItExist() {
-            var page = _workContext.Page;
-            Assert.That(page.Zones.Foo == null);
+            var layout = _workContext.Layout;
+            Assert.That(layout.Zones.Foo == null);
 
-            var pageZonesFoo = page.Zones.Foo;
+            var pageZonesFoo = layout.Zones.Foo;
             pageZonesFoo.Add("hello");
 
-            Assert.That(page.Zones.Foo != null);
-            Assert.That(page.Foo != null);
-            Assert.That(page.Foo.Metadata.Type, Is.EqualTo("Zone"));
+            Assert.That(layout.Zones.Foo != null);
+            Assert.That(layout.Foo != null);
+            Assert.That(layout.Foo.Metadata.Type, Is.EqualTo("Zone"));
         }
 
         [Test, Ignore("implementation pending")]
         public void AddingToZoneIndexedMakesItExist() {
-            var page = _workContext.Page;
-            Assert.That(page.Zones["Foo"] == null);
+            var layout = _workContext.Layout;
+            Assert.That(layout.Zones["Foo"] == null);
 
-            var pageZonesFoo = page.Zones["Foo"];
+            var pageZonesFoo = layout.Zones["Foo"];
             pageZonesFoo.Add("hello");
 
-            Assert.That(page.Zones["Foo"] != null);
-            Assert.That(page["Foo"] != null);
-            Assert.That(page["Foo"].Metadata.Type, Is.EqualTo("Zone"));
+            Assert.That(layout.Zones["Foo"] != null);
+            Assert.That(layout["Foo"] != null);
+            Assert.That(layout["Foo"].Metadata.Type, Is.EqualTo("Zone"));
         }
 
         [Test, Ignore("implementation pending")]
         public void CallingAddOnNilPropertyMakesItBecomeZone() {
-            var page = _workContext.Page;
-            Assert.That(page.Foo == null);
+            var layout = _workContext.Layout;
+            Assert.That(layout.Foo == null);
 
-            page.Foo.Add("hello");
+            layout.Foo.Add("hello");
 
-            Assert.That(page.Foo != null);
-            Assert.That(page.Foo.Metadata.Type, Is.EqualTo("Zone"));
+            Assert.That(layout.Foo != null);
+            Assert.That(layout.Foo.Metadata.Type, Is.EqualTo("Zone"));
         }
 
         [Test, Ignore("implementation pending")]
         public void ZoneContentsAreEnumerable() {
-            var page = _workContext.Page;
-            Assert.That(page.Foo == null);
+            var layout = _workContext.Layout;
+            Assert.That(layout.Foo == null);
 
-            page.Foo.Add("hello");
-            page.Foo.Add("world");
+            layout.Foo.Add("hello");
+            layout.Foo.Add("world");
 
             var list = new List<object>();
-            foreach (var item in page.Foo) {
+            foreach (var item in layout.Foo) {
                 list.Add(item);
             }
 
@@ -126,11 +126,11 @@ namespace Orchard.Tests.UI {
 
         [Test, Ignore("implementation pending")]
         public void NumberIsFortyTwo() {
-            var page = _workContext.Page;
-            Assert.That(page.Number, Is.EqualTo(42));
-            Assert.That(page.Foo.Number == null);
-            page.Foo.Add("yarg");
-            Assert.That(page.Foo.Number, Is.EqualTo(42));
+            var layout = _workContext.Layout;
+            Assert.That(layout.Number, Is.EqualTo(42));
+            Assert.That(layout.Foo.Number == null);
+            layout.Foo.Add("yarg");
+            Assert.That(layout.Foo.Number, Is.EqualTo(42));
         }
     }
 

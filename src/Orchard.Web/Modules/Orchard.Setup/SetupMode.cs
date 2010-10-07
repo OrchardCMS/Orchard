@@ -86,7 +86,7 @@ namespace Orchard.Setup {
             builder.RegisterType<ThemeAwareViewEngine>().As<IThemeAwareViewEngine>();
             builder.RegisterType<LayoutAwareViewEngine>().As<ILayoutAwareViewEngine>();
             builder.RegisterType<ConfiguredEnginesCache>().As<IConfiguredEnginesCache>();
-            builder.RegisterType<PageWorkContext>().As<IWorkContextStateProvider>();
+            builder.RegisterType<LayoutWorkContext>().As<IWorkContextStateProvider>();
             builder.RegisterType<SafeModeSiteWorkContextProvider>().As<IWorkContextStateProvider>();
 
             builder.RegisterType<ShapeTemplateBindingStrategy>().As<IShapeTableProvider>();

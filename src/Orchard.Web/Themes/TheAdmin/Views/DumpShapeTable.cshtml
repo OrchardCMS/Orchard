@@ -1,5 +1,5 @@
-﻿@using Orchard
-@using Orchard.DisplayManagement.Descriptors
+﻿@using Orchard;
+@using Orchard.DisplayManagement.Descriptors;
 @{
 	var workContext = ViewContext.GetWorkContext();
 	var shapeTable = workContext.Resolve<IShapeTableManager>().GetShapeTable(workContext.CurrentTheme.ThemeName);

@@ -36,19 +36,33 @@ namespace Orchard.Core.Shapes {
                 .Configure(descriptor => descriptor.Wrappers.Add("Document"))
                 .OnCreating(creating => creating.Behaviors.Add(new ZoneHoldingBehavior(name => CreateZone(creating, name))))
                 .OnCreated(created => {
-                    var page = created.Shape;
-                    page.Head = created.New.DocumentZone();
-                    page.Body = created.New.DocumentZone();
-                    page.Tail = created.New.DocumentZone();
-                    page.Content = created.New.Zone();
+                    var layout = created.Shape;
+                    layout.Head = created.New.DocumentZone();
+                    layout.Body = created.New.DocumentZone();
+                    layout.Tail = created.New.DocumentZone();
+                    layout.Content = created.New.Zone();
 
-                    page.Body.Add(created.New.PlaceChildContent(Source: page));
-                    page.Content.Add(created.New.PlaceChildContent(Source: page));
+                    layout.Body.Add(created.New.PlaceChildContent(Source: layout));
+                    layout.Content.Add(created.New.PlaceChildContent(Source: layout));
                 });
 
             // 'Zone' shapes are built on the Zone base class
             builder.Describe("Zone")
-                .OnCreating(creating => creating.BaseType = typeof(Zone));
+                .OnCreating(creating => creating.BaseType = typeof (Zone));
+                //.OnDisplaying(displaying => {
+                //                  var name = displaying.Shape.ZoneName.ToLower();
+                //                  var zone = displaying.Shape;
+                //                  zone.Classes.Add("zone-" + name);
+                //                  zone.Classes.Add("zone");
+                //              });
+
+            //builder.Describe("menu")
+            //    .OnDisplaying(displaying => {
+            //                      var name = displaying.Shape.MenuName.ToLower();
+            //                      var menu = displaying.Shape;
+            //                      menu.Classes.Add("menu-" + name);
+            //                      menu.Classes.Add("menu");
+            //                  });
 
             // 'List' shapes start with several empty collections
             builder.Describe("List")
@@ -61,14 +75,11 @@ namespace Orchard.Core.Shapes {
 
         private object CreateZone(ShapeCreatingContext context, string zoneName) {
             var name = zoneName.ToLower();
-
             var zone = context.New.Zone();
             zone.Id = "zone-" + name;
-            zone.Classes.Add(zone.Id);
             zone.Classes.Add("zone");
             return zone;
         }
-
 
         static TagBuilder GetTagBuilder(string tagName, string id, IEnumerable<string> classes, IDictionary<string, string> attributes) {
             var tagBuilder = new TagBuilder(tagName);

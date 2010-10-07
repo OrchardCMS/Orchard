@@ -35,7 +35,7 @@ namespace Orchard.Blogs.Filters {
                 BlogPart blog = model.ContentItem.Get(typeof (BlogPart));
                 var blogArchives = shape.BlogArchives()
                     .Archives(new BlogPostArchiveViewModel { BlogPart = blog, Archives = _blogPostService.GetArchives(blog) });
-                workContext.Page.Sidebar.Add(blogArchives);
+                workContext.Layout.Sidebar.Add(blogArchives);
                 return;
             }
 
@@ -43,7 +43,7 @@ namespace Orchard.Blogs.Filters {
                 BlogPart blog = model.Blog.ContentItem.Get(typeof (BlogPart));
                 var blogArchives = shape.BlogArchives()
                     .Archives(new BlogPostArchiveViewModel { BlogPart = blog, Archives = _blogPostService.GetArchives(blog) });
-                workContext.Page.Sidebar.Add(blogArchives);
+                workContext.Layout.Sidebar.Add(blogArchives);
                 return;
             }
         }

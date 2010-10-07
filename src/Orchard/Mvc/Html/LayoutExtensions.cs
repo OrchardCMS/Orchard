@@ -3,12 +3,11 @@ using System.IO;
 using System.Linq;
 using System.Web.Mvc;
 using System.Web.UI;
-using Microsoft.WebPages;
+using System.Web.WebPages;
 using Orchard.Localization;
 using Orchard.Mvc.ViewEngines;
 using Orchard.UI.PageClass;
 using Orchard.UI.PageTitle;
-using Orchard.UI.Resources;
 using HtmlHelper = System.Web.Mvc.HtmlHelper;
 
 namespace Orchard.Mvc.Html {

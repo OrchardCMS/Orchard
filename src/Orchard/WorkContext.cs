@@ -15,9 +15,9 @@ namespace Orchard {
             set { SetState("HttpContext", value); }
         }
 
-        public dynamic Page {
-            get { return GetState<object>("Page"); }
-            set { SetState("Page", value); }
+        public dynamic Layout {
+            get { return GetState<object>("Layout"); }
+            set { SetState("Layout", value); }
         }
 
         public ISite CurrentSite {

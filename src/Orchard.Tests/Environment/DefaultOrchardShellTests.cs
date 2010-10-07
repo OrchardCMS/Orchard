@@ -8,6 +8,7 @@ using NUnit.Framework;
 using Orchard.Environment;
 using Orchard.Mvc.ModelBinders;
 using Orchard.Mvc.Routes;
+using IModelBinderProvider = Orchard.Mvc.ModelBinders.IModelBinderProvider;
 
 namespace Orchard.Tests.Environment {
     [TestFixture]

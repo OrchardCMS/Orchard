@@ -52,10 +52,10 @@ namespace Orchard.Mvc.ViewEngines.ThemeAwareness {
                     childContentWriter);
 
                 viewResult.View.Render(childContentViewContext, childContentWriter);
-                _workContext.Page.Metadata.ChildContent = childContentWriter;
+                _workContext.Layout.Metadata.ChildContent = childContentWriter;
 
                 var display = _displayHelperFactory.CreateHelper(viewContext, viewDataContainer);
-                IHtmlString result = display(_workContext.Page);
+                IHtmlString result = display(_workContext.Layout);
                 writer.Write(result.ToHtmlString());
 
             }, (context, view) => viewResult.ViewEngine.ReleaseView(context, viewResult.View));

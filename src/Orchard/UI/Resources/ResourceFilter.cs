@@ -18,8 +18,8 @@ namespace Orchard.UI.Resources {
 
         public void OnResultExecuting(ResultExecutingContext filterContext) {
             var ctx = _workContextAccessor.GetContext();
-            var head = ctx.Page.Head;
-            var tail = ctx.Page.Tail;
+            var head = ctx.Layout.Head;
+            var tail = ctx.Layout.Tail;
             head.Add(Shape.Metas().ResourceManager(_resourceManager));
             head.Add(Shape.HeadLinks().ResourceManager(_resourceManager));
             head.Add(Shape.StylesheetLinks().ResourceManager(_resourceManager));

@@ -26,6 +26,7 @@ using Orchard.Mvc.Routes;
 using Orchard.Tests.Environment.TestDependencies;
 using Orchard.Tests.Stubs;
 using Orchard.Tests.Utility;
+using IModelBinderProvider = Orchard.Mvc.ModelBinders.IModelBinderProvider;
 
 namespace Orchard.Tests.Environment {
     [TestFixture]

@@ -1,7 +1,7 @@
 using System;
 using System.Web.Mvc;
 using System.Web.UI;
-using Microsoft.WebPages;
+using System.Web.WebPages;
 
 namespace Orchard.UI.Resources {
     public class ResourceRegister {
