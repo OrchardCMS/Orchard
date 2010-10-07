@@ -90,7 +90,7 @@ namespace Orchard.Specs.Bindings {
             });
         }
 
-        
+        // returns permissions as they are used in controllers for each action
         private static Permission GetPermissionForAction(string action) {
             switch ( action ) {
                 case "publish":

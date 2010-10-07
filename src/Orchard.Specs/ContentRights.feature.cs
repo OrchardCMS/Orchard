@@ -96,120 +96,120 @@ testRunner.And("\"user1\" should be able to \"delete\" a \"Page\" owned by \"use
         }
         
         [NUnit.Framework.TestAttribute()]
-        [NUnit.Framework.DescriptionAttribute("Users can\'t edit a Page if they don\'t have the EditContent permission")]
-        public virtual void UsersCanTEditAPageIfTheyDonTHaveTheEditContentPermission()
+        [NUnit.Framework.DescriptionAttribute("Users can create a Page of others if they have PublishContent permission")]
+        public virtual void UsersCanCreateAPageOfOthersIfTheyHavePublishContentPermission()
         {
-            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Users can\'t edit a Page if they don\'t have the EditContent permission", ((string[])(null)));
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Users can create a Page of others if they have PublishContent permission", ((string[])(null)));
 #line 20
 this.ScenarioSetup(scenarioInfo);
 #line 21
 testRunner.Given("I have installed Orchard");
 #line 22
-testRunner.When("I have a role \"CustomRole\" with permissions \"DeleteContent\"");
+testRunner.When("I have a role \"CustomRole\" with permissions \"PublishContent\"");
 #line 23
 testRunner.And("I have a user \"user1\" with roles \"CustomRole\"");
 #line 24
-testRunner.Then("\"user1\" should not be able to \"publish\" a \"Page\" owned by \"user1\"");
-#line 25
-testRunner.And("\"user1\" should not be able to \"edit\" a \"Page\" owned by \"user1\"");
-#line 26
-testRunner.And("\"user1\" should be able to \"delete\" a \"Page\" owned by \"user1\"");
-#line hidden
-            testRunner.CollectScenarioErrors();
-        }
-        
-        [NUnit.Framework.TestAttribute()]
-        [NUnit.Framework.DescriptionAttribute("Users can create and edit a Page even if they only have the PublishContent permis" +
-            "sion")]
-        public virtual void UsersCanCreateAndEditAPageEvenIfTheyOnlyHaveThePublishContentPermission()
-        {
-            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Users can create and edit a Page even if they only have the PublishContent permis" +
-                    "sion", ((string[])(null)));
-#line 28
-this.ScenarioSetup(scenarioInfo);
-#line 29
-testRunner.Given("I have installed Orchard");
-#line 30
-testRunner.When("I have a role \"CustomRole\" with permissions \"PublishContent\"");
-#line 31
-testRunner.And("I have a user \"user1\" with roles \"CustomRole\"");
-#line 32
-testRunner.Then("\"user1\" should be able to \"publish\" a \"Page\" owned by \"user1\"");
-#line 33
-testRunner.And("\"user1\" should be able to \"edit\" a \"Page\" owned by \"user1\"");
-#line 34
-testRunner.And("\"user1\" should not be able to \"delete\" a \"Page\" owned by \"user1\"");
-#line hidden
-            testRunner.CollectScenarioErrors();
-        }
-        
-        [NUnit.Framework.TestAttribute()]
-        [NUnit.Framework.DescriptionAttribute("Users can create a Page if they have PublishContent for Page")]
-        public virtual void UsersCanCreateAPageIfTheyHavePublishContentForPage()
-        {
-            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Users can create a Page if they have PublishContent for Page", ((string[])(null)));
-#line 36
-this.ScenarioSetup(scenarioInfo);
-#line 37
-testRunner.Given("I have installed Orchard");
-#line 38
-testRunner.When("I have a role \"CustomRole\" with permissions \"Publish_Page\"");
-#line 39
-testRunner.And("I have a user \"user1\" with roles \"CustomRole\"");
-#line 40
-testRunner.Then("\"user1\" should be able to \"publish\" a \"Page\" owned by \"user1\"");
-#line 41
-testRunner.And("\"user1\" should be able to \"edit\" a \"Page\" owned by \"user1\"");
-#line 42
-testRunner.And("\"user1\" should not be able to \"delete\" a \"Page\" owned by \"user1\"");
-#line hidden
-            testRunner.CollectScenarioErrors();
-        }
-        
-        [NUnit.Framework.TestAttribute()]
-        [NUnit.Framework.DescriptionAttribute("Users can\'t create a Page for others if they only have PublishContent")]
-        public virtual void UsersCanTCreateAPageForOthersIfTheyOnlyHavePublishContent()
-        {
-            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Users can\'t create a Page for others if they only have PublishContent", ((string[])(null)));
-#line 44
-this.ScenarioSetup(scenarioInfo);
-#line 45
-testRunner.Given("I have installed Orchard");
-#line 46
-testRunner.When("I have a role \"CustomRole\" with permissions \"PublishContent\"");
-#line 47
-testRunner.And("I have a user \"user1\" with roles \"CustomRole\"");
-#line 48
 testRunner.And("I have a user \"user2\" with roles \"Administrator\"");
-#line 49
-testRunner.Then("\"user1\" should not be able to \"publish\" a \"Page\" owned by \"user2\"");
-#line 50
-testRunner.And("\"user1\" should not be able to \"edit\" a \"Page\" owned by \"user2\"");
-#line 51
+#line 25
+testRunner.Then("\"user1\" should be able to \"publish\" a \"Page\" owned by \"user2\"");
+#line 26
+testRunner.And("\"user1\" should be able to \"edit\" a \"Page\" owned by \"user2\"");
+#line 27
 testRunner.And("\"user1\" should not be able to \"delete\" a \"Page\" owned by \"user2\"");
 #line hidden
             testRunner.CollectScenarioErrors();
         }
         
         [NUnit.Framework.TestAttribute()]
-        [NUnit.Framework.DescriptionAttribute("Users can create a Page for others if they have PublishOthersContent")]
-        public virtual void UsersCanCreateAPageForOthersIfTheyHavePublishOthersContent()
+        [NUnit.Framework.DescriptionAttribute("Users can create a Page if they have PublishOwnContent for Page")]
+        public virtual void UsersCanCreateAPageIfTheyHavePublishOwnContentForPage()
         {
-            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Users can create a Page for others if they have PublishOthersContent", ((string[])(null)));
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Users can create a Page if they have PublishOwnContent for Page", ((string[])(null)));
+#line 29
+this.ScenarioSetup(scenarioInfo);
+#line 30
+testRunner.Given("I have installed Orchard");
+#line 31
+testRunner.When("I have a role \"CustomRole\" with permissions \"Publish_Page\"");
+#line 32
+testRunner.And("I have a user \"user1\" with roles \"CustomRole\"");
+#line 33
+testRunner.Then("\"user1\" should be able to \"publish\" a \"Page\" owned by \"user1\"");
+#line 34
+testRunner.And("\"user1\" should be able to \"edit\" a \"Page\" owned by \"user1\"");
+#line 35
+testRunner.And("\"user1\" should not be able to \"delete\" a \"Page\" owned by \"user1\"");
+#line hidden
+            testRunner.CollectScenarioErrors();
+        }
+        
+        [NUnit.Framework.TestAttribute()]
+        [NUnit.Framework.DescriptionAttribute("Users can create and edit a Page even if they only have the PublishOwnContent per" +
+            "mission")]
+        public virtual void UsersCanCreateAndEditAPageEvenIfTheyOnlyHaveThePublishOwnContentPermission()
+        {
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Users can create and edit a Page even if they only have the PublishOwnContent per" +
+                    "mission", ((string[])(null)));
+#line 37
+this.ScenarioSetup(scenarioInfo);
+#line 38
+testRunner.Given("I have installed Orchard");
+#line 39
+testRunner.When("I have a role \"CustomRole\" with permissions \"PublishOwnContent\"");
+#line 40
+testRunner.And("I have a user \"user1\" with roles \"CustomRole\"");
+#line 41
+testRunner.Then("\"user1\" should be able to \"publish\" a \"Page\" owned by \"user1\"");
+#line 42
+testRunner.And("\"user1\" should be able to \"edit\" a \"Page\" owned by \"user1\"");
+#line 43
+testRunner.And("\"user1\" should not be able to \"delete\" a \"Page\" owned by \"user1\"");
+#line hidden
+            testRunner.CollectScenarioErrors();
+        }
+        
+        [NUnit.Framework.TestAttribute()]
+        [NUnit.Framework.DescriptionAttribute("Users can\'t edit a Page if they don\'t have the EditContent permission")]
+        public virtual void UsersCanTEditAPageIfTheyDonTHaveTheEditContentPermission()
+        {
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Users can\'t edit a Page if they don\'t have the EditContent permission", ((string[])(null)));
+#line 45
+this.ScenarioSetup(scenarioInfo);
+#line 46
+testRunner.Given("I have installed Orchard");
+#line 47
+testRunner.When("I have a role \"CustomRole\" with permissions \"DeleteContent\"");
+#line 48
+testRunner.And("I have a user \"user1\" with roles \"CustomRole\"");
+#line 49
+testRunner.Then("\"user1\" should not be able to \"publish\" a \"Page\" owned by \"user1\"");
+#line 50
+testRunner.And("\"user1\" should not be able to \"edit\" a \"Page\" owned by \"user1\"");
+#line 51
+testRunner.And("\"user1\" should be able to \"delete\" a \"Page\" owned by \"user1\"");
+#line hidden
+            testRunner.CollectScenarioErrors();
+        }
+        
+        [NUnit.Framework.TestAttribute()]
+        [NUnit.Framework.DescriptionAttribute("Users can\'t create a Page for others if they only have PublishOwnContent")]
+        public virtual void UsersCanTCreateAPageForOthersIfTheyOnlyHavePublishOwnContent()
+        {
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Users can\'t create a Page for others if they only have PublishOwnContent", ((string[])(null)));
 #line 53
 this.ScenarioSetup(scenarioInfo);
 #line 54
 testRunner.Given("I have installed Orchard");
 #line 55
-testRunner.When("I have a role \"CustomRole\" with permissions \"PublishOthersContent\"");
+testRunner.When("I have a role \"CustomRole\" with permissions \"PublishOwnContent\"");
 #line 56
 testRunner.And("I have a user \"user1\" with roles \"CustomRole\"");
 #line 57
 testRunner.And("I have a user \"user2\" with roles \"Administrator\"");
 #line 58
-testRunner.Then("\"user1\" should be able to \"publish\" a \"Page\" owned by \"user2\"");
+testRunner.Then("\"user1\" should not be able to \"publish\" a \"Page\" owned by \"user2\"");
 #line 59
-testRunner.And("\"user1\" should be able to \"edit\" a \"Page\" owned by \"user2\"");
+testRunner.And("\"user1\" should not be able to \"edit\" a \"Page\" owned by \"user2\"");
 #line 60
 testRunner.And("\"user1\" should not be able to \"delete\" a \"Page\" owned by \"user2\"");
 #line hidden
@@ -221,72 +221,97 @@ testRunner.And("\"user1\" should not be able to \"delete\" a \"Page\" owned by \
         public virtual void UsersCanTCreateAPageForOthersIfTheyOnlyHavePublish_Page()
         {
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Users can\'t create a Page for others if they only have Publish_Page", ((string[])(null)));
+#line 62
+this.ScenarioSetup(scenarioInfo);
 #line 63
-this.ScenarioSetup(scenarioInfo);
+testRunner.Given("I have installed Orchard");
 #line 64
-testRunner.Given("I have installed Orchard");
-#line 65
 testRunner.When("I have a role \"CustomRole\" with permissions \"Publish_Page\"");
+#line 65
+testRunner.And("I have a user \"user1\" with roles \"CustomRole\"");
 #line 66
-testRunner.And("I have a user \"user1\" with roles \"CustomRole\"");
+testRunner.And("I have a user \"user2\" with roles \"Administrator\"");
 #line 67
-testRunner.And("I have a user \"user2\" with roles \"Administrator\"");
+testRunner.Then("\"user1\" should be able to \"publish\" a \"Page\" owned by \"user2\"");
 #line 68
-testRunner.Then("\"user1\" should be able to \"publish\" a \"Page\" owned by \"user2\"");
+testRunner.And("\"user1\" should be able to \"edit\" a \"Page\" owned by \"user2\"");
 #line 69
-testRunner.And("\"user1\" should be able to \"edit\" a \"Page\" owned by \"user2\"");
-#line 70
 testRunner.And("\"user1\" should not be able to \"delete\" a \"Page\" owned by \"user2\"");
 #line hidden
             testRunner.CollectScenarioErrors();
         }
         
         [NUnit.Framework.TestAttribute()]
-        [NUnit.Framework.DescriptionAttribute("Users can create a Page for others if they only have PublishOthers_Page")]
-        public virtual void UsersCanCreateAPageForOthersIfTheyOnlyHavePublishOthers_Page()
+        [NUnit.Framework.DescriptionAttribute("Users can create a Page for others if they only have Publish_Page")]
+        public virtual void UsersCanCreateAPageForOthersIfTheyOnlyHavePublish_Page()
         {
-            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Users can create a Page for others if they only have PublishOthers_Page", ((string[])(null)));
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Users can create a Page for others if they only have Publish_Page", ((string[])(null)));
+#line 71
+this.ScenarioSetup(scenarioInfo);
 #line 72
-this.ScenarioSetup(scenarioInfo);
-#line 73
 testRunner.Given("I have installed Orchard");
+#line 73
+testRunner.When("I have a role \"CustomRole\" with permissions \"Publish_Page\"");
 #line 74
-testRunner.When("I have a role \"CustomRole\" with permissions \"PublishOthers_Page\"");
-#line 75
 testRunner.And("I have a user \"user1\" with roles \"CustomRole\"");
-#line 76
+#line 75
 testRunner.And("I have a user \"user2\" with roles \"Administrator\"");
-#line 77
+#line 76
 testRunner.Then("\"user1\" should be able to \"publish\" a \"Page\" owned by \"user2\"");
-#line 78
+#line 77
 testRunner.And("\"user1\" should be able to \"edit\" a \"Page\" owned by \"user2\"");
-#line 79
+#line 78
 testRunner.And("\"user1\" should not be able to \"delete\" a \"Page\" owned by \"user2\"");
 #line hidden
             testRunner.CollectScenarioErrors();
         }
         
         [NUnit.Framework.TestAttribute()]
-        [NUnit.Framework.DescriptionAttribute("Users can delete a Page for others if they only have DeleteOthers_Page")]
-        public virtual void UsersCanDeleteAPageForOthersIfTheyOnlyHaveDeleteOthers_Page()
+        [NUnit.Framework.DescriptionAttribute("Users can delete a Page for others if they only have Delete_Page")]
+        public virtual void UsersCanDeleteAPageForOthersIfTheyOnlyHaveDelete_Page()
         {
-            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Users can delete a Page for others if they only have DeleteOthers_Page", ((string[])(null)));
-#line 81
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Users can delete a Page for others if they only have Delete_Page", ((string[])(null)));
+#line 80
 this.ScenarioSetup(scenarioInfo);
-#line 82
+#line 81
 testRunner.Given("I have installed Orchard");
+#line 82
+testRunner.When("I have a role \"CustomRole\" with permissions \"Delete_Page\"");
 #line 83
-testRunner.When("I have a role \"CustomRole\" with permissions \"DeleteOthers_Page\"");
-#line 84
 testRunner.And("I have a user \"user1\" with roles \"CustomRole\"");
-#line 85
+#line 84
 testRunner.And("I have a user \"user2\" with roles \"Administrator\"");
-#line 86
+#line 85
 testRunner.Then("\"user1\" should not be able to \"publish\" a \"Page\" owned by \"user2\"");
-#line 87
+#line 86
 testRunner.And("\"user1\" should not be able to \"edit\" a \"Page\" owned by \"user2\"");
-#line 88
+#line 87
 testRunner.And("\"user1\" should be able to \"delete\" a \"Page\" owned by \"user2\"");
+#line hidden
+            testRunner.CollectScenarioErrors();
+        }
+        
+        [NUnit.Framework.TestAttribute()]
+        [NUnit.Framework.DescriptionAttribute("Users can\'t delete a Page for others if they only have DeleteOwn_Page")]
+        public virtual void UsersCanTDeleteAPageForOthersIfTheyOnlyHaveDeleteOwn_Page()
+        {
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Users can\'t delete a Page for others if they only have DeleteOwn_Page", ((string[])(null)));
+#line 90
+this.ScenarioSetup(scenarioInfo);
+#line 91
+testRunner.Given("I have installed Orchard");
+#line 92
+testRunner.When("I have a role \"CustomRole\" with permissions \"DeleteOwn_Page\"");
+#line 93
+testRunner.And("I have a user \"user1\" with roles \"CustomRole\"");
+#line 94
+testRunner.And("I have a user \"user2\" with roles \"Administrator\"");
+#line 95
+testRunner.Then("\"user1\" should not be able to \"publish\" a \"Page\" owned by \"user2\"");
+#line 96
+testRunner.And("\"user1\" should not be able to \"edit\" a \"Page\" owned by \"user2\"");
+#line 97
+testRunner.And("\"user1\" should not be able to \"delete\" a \"Page\" owned by \"user2\"");
 #line hidden
             testRunner.CollectScenarioErrors();
         }

@@ -17,6 +17,31 @@ Scenario: Users can't create a Page if they don't have the PublishContent permis
 		And "user1" should be able to "edit" a "Page" owned by "user1"
 		And "user1" should be able to "delete" a "Page" owned by "user1"
 
+Scenario: Users can create a Page of others if they have PublishContent permission
+    Given I have installed Orchard
+	When I have a role "CustomRole" with permissions "PublishContent"
+		And I have a user "user1" with roles "CustomRole"
+		And I have a user "user2" with roles "Administrator"
+    Then "user1" should be able to "publish" a "Page" owned by "user2"
+		And "user1" should be able to "edit" a "Page" owned by "user2"
+		And "user1" should not be able to "delete" a "Page" owned by "user2"
+
+Scenario: Users can create a Page if they have PublishOwnContent for Page
+    Given I have installed Orchard
+	When I have a role "CustomRole" with permissions "Publish_Page"
+		And I have a user "user1" with roles "CustomRole"
+    Then "user1" should be able to "publish" a "Page" owned by "user1"
+		And "user1" should be able to "edit" a "Page" owned by "user1"
+		And "user1" should not be able to "delete" a "Page" owned by "user1"
+
+Scenario: Users can create and edit a Page even if they only have the PublishOwnContent permission
+    Given I have installed Orchard
+	When I have a role "CustomRole" with permissions "PublishOwnContent"
+		And I have a user "user1" with roles "CustomRole"
+    Then "user1" should be able to "publish" a "Page" owned by "user1"
+		And "user1" should be able to "edit" a "Page" owned by "user1"
+		And "user1" should not be able to "delete" a "Page" owned by "user1"
+
 Scenario: Users can't edit a Page if they don't have the EditContent permission
     Given I have installed Orchard
 	When I have a role "CustomRole" with permissions "DeleteContent"
@@ -25,40 +50,14 @@ Scenario: Users can't edit a Page if they don't have the EditContent permission
 		And "user1" should not be able to "edit" a "Page" owned by "user1"
 		And "user1" should be able to "delete" a "Page" owned by "user1"
 
-Scenario: Users can create and edit a Page even if they only have the PublishContent permission
+Scenario: Users can't create a Page for others if they only have PublishOwnContent
     Given I have installed Orchard
-	When I have a role "CustomRole" with permissions "PublishContent"
-		And I have a user "user1" with roles "CustomRole"
-    Then "user1" should be able to "publish" a "Page" owned by "user1"
-		And "user1" should be able to "edit" a "Page" owned by "user1"
-		And "user1" should not be able to "delete" a "Page" owned by "user1"
-
-Scenario: Users can create a Page if they have PublishContent for Page
-    Given I have installed Orchard
-	When I have a role "CustomRole" with permissions "Publish_Page"
-		And I have a user "user1" with roles "CustomRole"
-    Then "user1" should be able to "publish" a "Page" owned by "user1"
-		And "user1" should be able to "edit" a "Page" owned by "user1"
-		And "user1" should not be able to "delete" a "Page" owned by "user1"
-
-Scenario: Users can't create a Page for others if they only have PublishContent
-    Given I have installed Orchard
-	When I have a role "CustomRole" with permissions "PublishContent"
+	When I have a role "CustomRole" with permissions "PublishOwnContent"
 		And I have a user "user1" with roles "CustomRole"
 		And I have a user "user2" with roles "Administrator"
     Then "user1" should not be able to "publish" a "Page" owned by "user2"
 		And "user1" should not be able to "edit" a "Page" owned by "user2"
 		And "user1" should not be able to "delete" a "Page" owned by "user2"
-
-Scenario: Users can create a Page for others if they have PublishOthersContent
-    Given I have installed Orchard
-	When I have a role "CustomRole" with permissions "PublishOthersContent"
-		And I have a user "user1" with roles "CustomRole"
-		And I have a user "user2" with roles "Administrator"
-    Then "user1" should be able to "publish" a "Page" owned by "user2"
-		And "user1" should be able to "edit" a "Page" owned by "user2"
-		And "user1" should not be able to "delete" a "Page" owned by "user2"
-
 
 Scenario: Users can't create a Page for others if they only have Publish_Page
     Given I have installed Orchard
@@ -69,20 +68,30 @@ Scenario: Users can't create a Page for others if they only have Publish_Page
 		And "user1" should be able to "edit" a "Page" owned by "user2"
 		And "user1" should not be able to "delete" a "Page" owned by "user2"
 
-Scenario: Users can create a Page for others if they only have PublishOthers_Page
+Scenario: Users can create a Page for others if they only have Publish_Page
     Given I have installed Orchard
-	When I have a role "CustomRole" with permissions "PublishOthers_Page"
+	When I have a role "CustomRole" with permissions "Publish_Page"
 		And I have a user "user1" with roles "CustomRole"
 		And I have a user "user2" with roles "Administrator"
     Then "user1" should be able to "publish" a "Page" owned by "user2"
 		And "user1" should be able to "edit" a "Page" owned by "user2"
 		And "user1" should not be able to "delete" a "Page" owned by "user2"
 
-Scenario: Users can delete a Page for others if they only have DeleteOthers_Page
+Scenario: Users can delete a Page for others if they only have Delete_Page
     Given I have installed Orchard
-	When I have a role "CustomRole" with permissions "DeleteOthers_Page"
+	When I have a role "CustomRole" with permissions "Delete_Page"
 		And I have a user "user1" with roles "CustomRole"
 		And I have a user "user2" with roles "Administrator"
     Then "user1" should not be able to "publish" a "Page" owned by "user2"
 		And "user1" should not be able to "edit" a "Page" owned by "user2"
 		And "user1" should be able to "delete" a "Page" owned by "user2"
+
+
+Scenario: Users can't delete a Page for others if they only have DeleteOwn_Page
+    Given I have installed Orchard
+	When I have a role "CustomRole" with permissions "DeleteOwn_Page"
+		And I have a user "user1" with roles "CustomRole"
+		And I have a user "user2" with roles "Administrator"
+    Then "user1" should not be able to "publish" a "Page" owned by "user2"
+		And "user1" should not be able to "edit" a "Page" owned by "user2"
+		And "user1" should not be able to "delete" a "Page" owned by "user2"

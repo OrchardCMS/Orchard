@@ -9,14 +9,14 @@ using Orchard.Security.Permissions;
 
 namespace Orchard.Core.Contents {
     public class DynamicPermissions : IPermissionProvider {
-        public static readonly Permission PublishOthersContent = new Permission { Description = "Publish or unpublish {0} for others", Name = "PublishOthers_{0}", ImpliedBy = new[] { Permissions.PublishOthersContent } };
-        public static readonly Permission PublishContent = new Permission { Description = "Publish or unpublish {0}", Name = "Publish_{0}", ImpliedBy = new[] { PublishOthersContent, Permissions.PublishContent } };
-        public static readonly Permission EditOthersContent = new Permission { Description = "Edit {0} for others", Name = "EditOthers_{0}", ImpliedBy = new[] { PublishOthersContent, Permissions.EditOthersContent } };
-        public static readonly Permission EditContent = new Permission { Description = "Edit {0}", Name = "EditContent", ImpliedBy = new[] { EditOthersContent, PublishContent, Permissions.EditContent } };
-        public static readonly Permission DeleteOthersContent = new Permission { Description = "Delete {0} for others", Name = "DeleteOthers_{0}", ImpliedBy = new[] { Permissions.DeleteOthersContent } };
-        public static readonly Permission DeleteContent = new Permission { Description = "Delete {0}", Name = "Delete_{0}", ImpliedBy = new[] { DeleteOthersContent, Permissions.DeleteContent } };
+        public static readonly Permission PublishContent = new Permission { Description = "Publish or unpublish {0} for others", Name = "Publish_{0}", ImpliedBy = new[] { Permissions.PublishContent } };
+        public static readonly Permission PublishOwnContent = new Permission { Description = "Publish or unpublish {0}", Name = "PublishOwn_{0}", ImpliedBy = new[] { PublishContent, Permissions.PublishOwnContent } };
+        public static readonly Permission EditContent = new Permission { Description = "Edit {0} for others", Name = "Edit_{0}", ImpliedBy = new[] { PublishContent, Permissions.PublishContent } };
+        public static readonly Permission EditOwnContent = new Permission { Description = "Edit {0}", Name = "EditOwn_{0}", ImpliedBy = new[] { EditContent, PublishOwnContent, Permissions.EditOwnContent } };
+        public static readonly Permission DeleteContent = new Permission { Description = "Delete {0} for others", Name = "Delete_{0}", ImpliedBy = new[] { Permissions.DeleteContent } };
+        public static readonly Permission DeleteOwnContent = new Permission { Description = "Delete {0}", Name = "DeleteOwn_{0}", ImpliedBy = new[] { DeleteContent, Permissions.DeleteOwnContent } };
 
-        public static readonly Permission[] PermissionTemplates = new[] {PublishOthersContent, PublishContent, EditOthersContent, EditContent, DeleteOthersContent, DeleteContent};
+        public static readonly Permission[] PermissionTemplates = new[] {PublishContent, PublishOwnContent, EditContent, EditOwnContent, DeleteContent, DeleteOwnContent};
 
         private readonly IContentDefinitionManager _contentDefinitionManager;
 
