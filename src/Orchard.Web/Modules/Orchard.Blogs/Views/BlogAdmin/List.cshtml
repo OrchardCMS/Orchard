@@ -1,4 +1,4 @@
-@using Orchard.Blogs.Extensions
+@using Orchard.Blogs.Extensions;
 <h1>@Html.TitleForPage(T("Manage Blogs").ToString())</h1>
 @if (Model.ContentItems.Items.Count > 0) { 
 <div class="actions"><a class="add button primaryAction" href="@Url.BlogCreate()">@T("New Blog")</a></div>

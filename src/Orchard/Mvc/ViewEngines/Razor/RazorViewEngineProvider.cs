@@ -50,7 +50,7 @@ namespace Orchard.Mvc.ViewEngines.Razor {
 
             //Logger.Debug("AreaPartialViewLocationFormats (theme): \r\n\t-{0}", string.Join("\r\n\t-", areaPartialViewLocationFormats));
 
-            var viewEngine = new CshtmlViewEngine {
+            var viewEngine = new RazorViewEngine {
                 MasterLocationFormats = DisabledFormats,
                 ViewLocationFormats = DisabledFormats,
                 PartialViewLocationFormats = partialViewLocationFormats,

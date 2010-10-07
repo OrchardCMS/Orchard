@@ -1,5 +1,7 @@
 ﻿@model Orchard.Setup.ViewModels.SetupViewModel
 
+@Html.Partial("~/Themes/Classic/Theme.txt2")
+
 <h1>@Html.TitleForPage(T("Get Started").ToString())</h1>
 
 @using (Html.BeginFormAntiForgeryPost()) {

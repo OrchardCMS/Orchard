@@ -14,7 +14,7 @@ namespace Orchard.Search.Filters {
             var workContext = _workContextAccessor.GetContext(filterContext);
 
             if (search != null)
-                workContext.Page.Search.Add(search);
+                workContext.Layout.Search.Add(search);
         }
 
         public void OnResultExecuted(ResultExecutedContext filterContext) {

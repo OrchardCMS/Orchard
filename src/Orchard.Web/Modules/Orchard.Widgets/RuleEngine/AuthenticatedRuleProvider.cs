@@ -11,7 +11,7 @@ namespace Orchard.Widgets.RuleEngine {
         }
 
         public void Process(RuleContext ruleContext) { 
-            if (!String.Equals(ruleContext.FunctionName, "Authenticated", StringComparison.OrdinalIgnoreCase)) {
+            if (!String.Equals(ruleContext.FunctionName, "authenticated", StringComparison.OrdinalIgnoreCase)) {
                 return;
             }
 

@@ -1,12 +1,12 @@
-﻿@using Orchard.Blogs.Extensions
-@using Orchard.Blogs.Models
+﻿@using Orchard.Blogs.Extensions;
+@using Orchard.Blogs.Models;
 <div class="summary">
     <div class="related">
         <a href="@Url.Blog((string)Model.Slug)" title="@T("View")">@T("View")</a>@T(" | ")
         <a href="@Url.BlogForAdmin((string)Model.Slug)" title="@T("List Posts")">@T("List Posts")</a>@T(" | ")
         <a href="@Url.BlogPostCreate((BlogPart)Model.ContentItem.Get(typeof(BlogPart)))" title="@T("New Post")">@T("New Post")</a>@T(" | ")
         <a href="@Url.BlogEdit((string)Model.Slug)" title="@T("Edit")">@T("Edit")</a>@T(" | ")
-        @//todo: (heskew) this is a bit too verbose. need template helpers for all ibuttons
+        @* todo: (heskew) this is a bit too verbose. need template helpers for all ibuttons *@
         @using (Html.BeginFormAntiForgeryPost(Url.BlogRemove((string)Model.Slug), FormMethod.Post, new { @class = "inline link" })) {
         <button type="submit" class="linkButton" title="@T("Remove")">@T("Remove")</button>
         }
@@ -14,7 +14,7 @@
     <div class="properties">
         <h3>@Html.Link((string)Model.Title, Url.BlogForAdmin((string)Model.Slug))</h3>
         <p>@Display(Model.meta)</p>
-        @//<p>[list of authors] [modify blog access]</p>
+        @* <p>[list of authors] [modify blog access]</p> *@
         <p>@Model.Description</p>              
     </div>
     <div style="clear:both;"></div>

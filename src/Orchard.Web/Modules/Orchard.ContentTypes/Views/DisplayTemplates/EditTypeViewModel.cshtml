@@ -1,5 +1,5 @@
 ﻿@model Orchard.ContentTypes.ViewModels.EditTypeViewModel
-@using Orchard.Core.Contents.Settings
+@using Orchard.Core.Contents.Settings;
 <div class="summary">
     <div class="properties">
         <h3>@Model.DisplayName</h3>@{ var creatable = Model.Settings.GetModel<ContentTypeSettings>().Creatable; }

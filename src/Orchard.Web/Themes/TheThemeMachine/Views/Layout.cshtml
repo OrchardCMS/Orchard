@@ -1,14 +1,22 @@
 ﻿@{
+    Style.Include("site.css");
+
     // cool stuff goes up here
     var homeUrl = Href("~/");
 
     // Zone is an alias for Display
     Func<dynamic, dynamic> Zone = x => Display(x);
+
+    if (Model.Sidebar != null) {
+        Html.AddPageClassNames(new[]{"icanhassidebar"});
+    }
 }
+@Model.TitleFromMenu
 <div id="layout-wrapper">
+@Display.User()
     <header id="layout-header">
-        @// needs to be the page title, not page (head) title...
-        <h1><a href="@homeUrl">@Model.Title</a></h1>
+        @* needs to be the page title, not page (head) title... *@
+        <h1><a href="@homeUrl">@WorkContext.CurrentSite.SiteName</a></h1>
         @if(Model.Header != null) {
         <div id="header">
             @Zone(Model.Header)
@@ -30,20 +38,20 @@
         @Zone(Model.Featured)
     </div>
     }
-    @// the model content for the page is in the Content zone @ the default position (nothing, zero, zilch)
+    @* the model content for the page is in the Content zone @ the default position (nothing, zero, zilch) *@
     @if(Model.Content != null) {
     <div id="content">
         @Zone(Model.Content)
     </div>
     }
     @if(Model.Sidebar != null) {
-    <aside>
+    <aside class="sidebar">
         @Zone(Model.Sidebar)
     </aside>
     }
-    @if(Model.Footer != null) {
-    <footer>
-        @Zone(Model.Footer)
+
+    <footer id="sitemap">
+       Powered by Awesomeness...
     </footer>
-    }
+
 </div>

@@ -30,7 +30,7 @@ namespace Orchard.UI.Navigation {
             var menuShape = shape.Menu().MenuName(menuName);
             PopulateMenu(shape, menuShape, menuItems);
 
-            workContext.Page.Navigation.Add(menuShape);
+            workContext.Layout.Navigation.Add(menuShape);
         }
 
         private void PopulateMenu(dynamic shape, dynamic parentShape, IEnumerable<MenuItem> menuItems) {

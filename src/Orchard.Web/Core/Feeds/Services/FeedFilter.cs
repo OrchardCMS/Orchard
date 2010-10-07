@@ -18,10 +18,10 @@ namespace Orchard.Core.Feeds.Services {
         dynamic Shape { get; set; }
 
         public void OnResultExecuting(ResultExecutingContext filterContext) {
-            var page  =_workContextAccessor.GetContext(filterContext).Page;
+            var layout = _workContextAccessor.GetContext(filterContext).Layout;
             var feed = Shape.Feed()
                 .FeedManager(_feedManager);
-            page.Zones.Head.Add(feed, ":after");
+            layout.Zones.Head.Add(feed, ":after");
         }
 
         public void OnResultExecuted(ResultExecutedContext filterContext) {}

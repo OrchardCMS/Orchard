@@ -1,4 +1,4 @@
-@using Orchard.Blogs.Extensions
+@using Orchard.Blogs.Extensions;
 <h1 class="page-title">@Html.TitleForPage(T("Archives").Text, (string)Model.ArchiveData.Year.ToString(), (string)(Model.ArchiveData.Month > 0 ? new DateTime(Model.ArchiveData.Year, Model.ArchiveData.Month, 1).ToString("MMMM") : null), (string)(Model.ArchiveData.Day > 0 ? Model.ArchiveData.Day.ToString() : null))</h1>
 <div class="archive-trail">
 @T("Archives") / 

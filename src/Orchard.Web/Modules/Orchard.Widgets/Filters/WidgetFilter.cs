@@ -24,7 +24,7 @@ namespace Orchard.Widgets.Filters {
             var workContext = _workContextAccessor.GetContext(filterContext);
 
             if (workContext == null ||
-                workContext.Page == null ||
+                workContext.Layout == null ||
                 workContext.CurrentSite == null ||
                 AdminFilter.IsApplied(filterContext.RequestContext)) {
                 return;
@@ -43,7 +43,7 @@ namespace Orchard.Widgets.Filters {
             }
 
             // Build and add shape to zone.
-            var zones = workContext.Page.Zones;
+            var zones = workContext.Layout.Zones;
             foreach (var widgetPart in widgetParts) {
                 if (activeLayerIds.Contains(widgetPart.As<ICommonPart>().Container.ContentItem.Id)) {
                     var widgetShape = _contentManager.BuildDisplayModel(widgetPart);

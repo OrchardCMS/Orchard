@@ -1,5 +1,5 @@
 ﻿@model Orchard.Core.Settings.ViewModels.SiteSettingsPartViewModel
-@using Orchard.Settings
+@using Orchard.Settings;
 @{
 	var resourceDebugMode = new SelectList(new object[] {
 		new { Id = (int)ResourceDebugMode.FromAppSetting, Text = "Use web.config setting" },

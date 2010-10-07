@@ -8,6 +8,7 @@ using Orchard.Environment.Extensions.Models;
 using Orchard.Logging;
 using Orchard.Mvc.ModelBinders;
 using Orchard.Mvc.Routes;
+using IModelBinderProvider = Orchard.Mvc.ModelBinders.IModelBinderProvider;
 
 namespace Orchard.Environment {
     public class DefaultOrchardShell : IOrchardShell {

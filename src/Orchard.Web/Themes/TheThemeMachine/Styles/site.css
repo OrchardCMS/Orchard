@@ -1,0 +1,181 @@
+﻿/* Reset
+***************************************************************/
+
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, font, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	outline: 0;
+	font-weight: inherit;
+	font-style: inherit;
+	font-size: 100%;
+	font-family: inherit;
+	vertical-align: baseline;
+}
+/* remember to define focus styles! */
+:focus {
+	outline: 0;
+}
+body {
+	line-height: 1;
+	color: black;
+	background: white;
+}
+ol, ul {
+	list-style: none;
+}
+/* tables still need 'cellspacing="0"' in the markup */
+table {
+	border-collapse: separate;
+	border-spacing: 0;
+}
+caption, th, td {
+	text-align: left;
+	font-weight: normal;
+}
+blockquote:before, blockquote:after,
+q:before, q:after {
+	content: "";
+}
+blockquote, q {
+	quotes: "" "";
+}
+
+/* Tell the browser to render HTML 5 elements as block */  
+header, footer, aside, nav, article {  
+	display: block;  
+}  
+
+/* Clearing Float
+***************************************************************/
+.group:after {
+    content: ".";
+    display: block;
+    height: 0;
+    clear: both;
+    visibility: hidden;
+    }
+
+.group {display: inline-block;}  /* for IE/Mac */
+
+/* Typography (Optional)
+***************************************************************/
+
+
+
+/* General
+***************************************************************/
+/* Default font settings. 
+   The font-size 62.5% sets the base font to 10px */
+body { 
+  font-size: 62.5%;
+  color: #333; 
+  background: #fff;
+  font-family: Segoe UI,Trebuchet,Arial,Sans-Serif;
+}
+
+a {}
+a:link {}
+a:hover{}
+a:visited{}
+
+/* Headings */
+
+h1,h2,h3,h4,h5,h6 { font-weight: normal; }
+
+h1 { font-size: 3em;}
+h2 { font-size: 1.3em; }
+h3 { font-size: 1.2em; }
+h4 { font-size: 1.1em; }
+h5 { font-size: 1em;   }
+h6 { font-size: 1em; }
+
+h1 img, h2 img, h3 img, 
+h4 img, h5 img, h6 img {
+  margin: 0;
+}
+
+p {
+	font-size:1.2em;
+	line-height:2em;
+}
+
+/* Structure
+***************************************************************/
+#layout-wrapper {
+	width:960px;
+	margin:0 auto;
+}
+
+#header {}
+       #logo {}
+       
+       
+/* Navigation */
+
+nav ul li {
+	margin:2em 0 0 0;
+	float:left;	
+	}
+
+nav ul li a {
+    font-size:1.4em;
+	margin:0 1.8em;
+	display:block;
+	text-decoration:none;
+	text-transform:uppercase;
+	float:left;
+}
+
+#footer {}
+
+/* Main
+***************************************************************/
+
+/* Secondary
+***************************************************************/
+
+/* Forms
+***************************************************************/
+
+/* Misc
+***************************************************************/
+
+/* For testing purposes */
+
+#layout-wrapper {
+	border:1px solid #CCC;
+}
+
+
+/* Sidebar off - Content Zone 960 */
+#content {
+	background-color:#e8e8e8;
+	width: 960px;
+    clear:both;
+}
+
+/* Sidebar on - Content Zone 640 */
+.icanhassidebar #content {
+	background-color:#e8e8e8;
+	width: 640px;
+	float:left;
+    clear:both;
+}
+
+.sidebar {
+    background-color:#f6f6f6;
+    width: 320px;
+	float:right;
+}
+
+#sitemap {
+    clear:both;
+}

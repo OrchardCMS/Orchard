@@ -1,8 +1,8 @@
-﻿@using Orchard.Blogs.Extensions
-@using Orchard.Blogs.Models
-@using Orchard.Core.Common.Extensions
-@using Orchard.Core.Common.Models
-@using Orchard.Core.Common.ViewModels
+﻿@using Orchard.Blogs.Extensions;
+@using Orchard.Blogs.Models;
+@using Orchard.Core.Common.Extensions;
+@using Orchard.Core.Common.Models;
+@using Orchard.Core.Common.ViewModels;
 <h2>@Html.Link((string)Model.Title, Url.BlogPost((BlogPostPart)Model.ContentItem.Get(typeof(BlogPostPart))))</h2>
 <div class="meta">@Html.PublishedState(new CommonMetadataViewModel((CommonPart)Model.ContentItem.Get(typeof(CommonPart))), T) | @Display(Model.meta)</div>
 <div class="content">@Display(Model.primary)</div>

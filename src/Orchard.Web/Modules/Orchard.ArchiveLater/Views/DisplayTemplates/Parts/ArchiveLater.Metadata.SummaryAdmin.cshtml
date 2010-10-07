@@ -1,5 +1,5 @@
 ﻿@model Orchard.ArchiveLater.ViewModels.ArchiveLaterViewModel
-@using Orchard.Mvc.Html
+@using Orchard.Mvc.Html;
 
 @if ((Model.IsPublished && Model.ScheduledArchiveUtc.HasValue && Model.ScheduledArchiveUtc.Value > DateTime.UtcNow)) { 
 <ul class="pageStatus">

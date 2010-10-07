@@ -3,6 +3,7 @@ using System.Web.Mvc;
 using System.Xml;
 using System.Xml.Linq;
 using Orchard.Mvc.ModelBinders;
+using IModelBinderProvider = Orchard.Mvc.ModelBinders.IModelBinderProvider;
 
 namespace Orchard.Core.XmlRpc.Models {
     public class ModelBinderProvider : IModelBinderProvider, IModelBinder {

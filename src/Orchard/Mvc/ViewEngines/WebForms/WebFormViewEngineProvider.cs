@@ -51,7 +51,7 @@ namespace Orchard.Mvc.ViewEngines.WebForms {
 
             //Logger.Debug("AreaPartialViewLocationFormats (theme): \r\n\t-{0}", string.Join("\r\n\t-", areaPartialViewLocationFormats));
 
-            var viewEngine = new WebFormViewEngineForAspNet4 {
+            var viewEngine = new WebFormViewEngine {
                 MasterLocationFormats = DisabledFormats,
                 ViewLocationFormats = DisabledFormats,
                 PartialViewLocationFormats = partialViewLocationFormats,
@@ -85,7 +85,7 @@ namespace Orchard.Mvc.ViewEngines.WebForms {
 
             //Logger.Debug("UniversalFormats (module): \r\n\t-{0}", string.Join("\r\n\t-", universalFormats));
 
-            var viewEngine = new WebFormViewEngineForAspNet4 {
+            var viewEngine = new WebFormViewEngine {
                 MasterLocationFormats = DisabledFormats,
                 ViewLocationFormats = universalFormats,
                 PartialViewLocationFormats = universalFormats,
@@ -99,7 +99,7 @@ namespace Orchard.Mvc.ViewEngines.WebForms {
 
 
         public IViewEngine CreateBareViewEngine() {
-            return new WebFormViewEngineForAspNet4 {
+            return new WebFormViewEngine {
                 MasterLocationFormats = DisabledFormats,
                 ViewLocationFormats = DisabledFormats,
                 PartialViewLocationFormats = DisabledFormats,
