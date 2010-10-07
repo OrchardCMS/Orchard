@@ -169,7 +169,6 @@
     <Compile Include="Localization\Services\ILocalizedStringManager.cs" />
     <Compile Include="Mvc\IOrchardViewPage.cs" />
     <Compile Include="Mvc\Spooling\HtmlStringWriter.cs" />
-    <Compile Include="Mvc\ViewEngines\Razor\RazorViewEngine.cs" />
     <Compile Include="Scripting\IScriptingManager.cs" />
     <Compile Include="Scripting\IScriptingRuntime.cs" />
     <Compile Include="Scripting\ScriptingManager.cs" />
@@ -584,7 +583,6 @@
     <Compile Include="Environment\DefaultOrchardHost.cs" />
     <Compile Include="Mvc\OrchardControllerFactory.cs" />
     <Compile Include="Environment\IOrchardHost.cs" />
-    <Compile Include="Mvc\ViewEngines\WebForms\WebFormViewEngineForAspNet4.cs" />
     <Compile Include="OrchardCoreException.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Indexing\IIndexDocument.cs" />
