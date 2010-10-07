@@ -1,11 +1,11 @@
-﻿name: Search
-antiforgery: enabled
-author: The Orchard Team
-website: http://orchardproject.net
-version: 0.5.0
-orchardversion: 0.5.0
-description: The search module enables the management of the search index and provides the front-end searching user interface.
-features:
+﻿Name: Search
+AntiForgery: enabled
+Author: The Orchard Team
+Website: http://orchardproject.net
+Version: 0.5.0
+OrchardVersion: 0.5.0
+Description: The search module enables the management of the search index and provides the front-end searching user interface.
+Features:
     Orchard.Search:
         Description: Standard interface to Orchard's built-in search.
         Category: Search

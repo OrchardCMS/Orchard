@@ -1,7 +1,7 @@
-﻿name: Classic Dark
-author: Jonathan Wall
-description: Dark version of the Classic theme.
-version: 1.0
-tags: Classic, Dark, Serif 
-website: http://www.orchardproject.net
-zones: Sidebar
+﻿Name: Classic Dark
+Author: Jonathan Wall
+Description: Dark version of the Classic theme.
+Version: 1.0
+Tags: Classic, Dark, Serif 
+Website: http://www.orchardproject.net
+Zones: Sidebar

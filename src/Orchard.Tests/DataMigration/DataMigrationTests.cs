@@ -228,10 +228,10 @@ namespace Orchard.Tests.DataMigration {
             Init(new[] {typeof (DataMigrationEmpty)});
 
             _folders.Manifests.Add("Module2", @"
-name: Module2
-version: 0.1
-orchardversion: 1
-features:
+Name: Module2
+Version: 0.1
+OrchardVersion: 1
+Features:
   Feature1: 
     Description: Feature
 ");
@@ -245,10 +245,10 @@ features:
             Init(new[] { typeof(DataMigration11) });
 
             _folders.Manifests.Add("Module1", @"
-name: Module1
-version: 0.1
-orchardversion: 1
-features:
+Name: Module1
+Version: 0.1
+OrchardVersion: 1
+Features:
   Feature1: 
     Description: Feature
 ");
@@ -262,10 +262,10 @@ features:
             Init(new[] { typeof(DataMigration11Create) });
 
             _folders.Manifests.Add("Module1", @"
-name: Module1
-version: 0.1
-orchardversion: 1
-features:
+Name: Module1
+Version: 0.1
+OrchardVersion: 1
+Features:
   Feature1: 
     Description: Feature
 ");
@@ -281,10 +281,10 @@ features:
             Init(new[] {typeof (DataMigrationCreateCanBeFollowedByUpdates)});
 
             _folders.Manifests.Add("Module1", @"
-name: Module1
-version: 0.1
-orchardversion: 1
-features:
+Name: Module1
+Version: 0.1
+OrchardVersion: 1
+Features:
   Feature1: 
     Description: Feature
 ");
@@ -299,10 +299,10 @@ features:
             Init(new[] { typeof(DataMigrationSameMigrationClassCanEvolve) });
 
             _folders.Manifests.Add("Module1", @"
-name: Module1
-version: 0.1
-orchardversion: 1
-features:
+Name: Module1
+Version: 0.1
+OrchardVersion: 1
+Features:
   Feature1: 
     Description: Feature
 ");
@@ -322,20 +322,20 @@ features:
             Init(new[] { typeof(DataMigrationDependenciesModule1), typeof(DataMigrationDependenciesModule2) });
 
             _folders.Manifests.Add("Module1", @"
-name: Module1
-version: 0.1
-orchardversion: 1
-features:
+Name: Module1
+Version: 0.1
+OrchardVersion: 1
+Features:
   Feature1: 
     Description: Feature
     Dependencies: Feature2
 ");
 
             _folders.Manifests.Add("Module2", @"
-name: Module2
-version: 0.1
-orchardversion: 1
-features:
+Name: Module2
+Version: 0.1
+OrchardVersion: 1
+Features:
   Feature2: 
     Description: Feature
 ");
@@ -351,10 +351,10 @@ features:
             Init(new[] { typeof(DataMigrationWithSchemaBuilder) });
 
             _folders.Manifests.Add("Module1", @"
-name: Module1
-version: 0.1
-orchardversion: 1
-features:
+Name: Module1
+Version: 0.1
+OrchardVersion: 1
+Features:
   Feature1: 
     Description: Feature
 ");
@@ -369,10 +369,10 @@ features:
             Init(new[] { typeof(DataMigrationFeatureNeedUpdate1), typeof(DataMigrationFeatureNeedUpdate2), typeof(DataMigrationFeatureNeedUpdate3) });
 
             _folders.Manifests.Add("Module1", @"
-name: Module1
-version: 0.1
-orchardversion: 1
-features:
+Name: Module1
+Version: 0.1
+OrchardVersion: 1
+Features:
   Feature1: 
     Description: Feature
   Feature2: 
@@ -418,10 +418,10 @@ features:
             Init(new[] { typeof(DataMigrationSimpleBuilder) });
 
             _folders.Manifests.Add("Module1", @"
-name: Module1
-version: 0.1
-orchardversion: 1
-features:
+Name: Module1
+Version: 0.1
+OrchardVersion: 1
+Features:
   Feature1: 
     Description: Feature
 ");

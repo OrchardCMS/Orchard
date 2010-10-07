@@ -1,11 +1,11 @@
-﻿name: MultiTenancy
-antiforgery: enabled
-author: The Orchard Team
-website: http://orchardproject.net
-version: 0.5.0
-orchardversion: 0.5.0
-description: The multi-tenancy module enables multiple Orchard sites to run in isolation inside of a single web application, improving site density on a single server or hosted account.
-features:
+﻿Name: MultiTenancy
+AntiForgery: enabled
+Author: The Orchard Team
+Website: http://orchardproject.net
+Version: 0.5.0
+OrchardVersion: 0.5.0
+Description: The multi-tenancy module enables multiple Orchard sites to run in isolation inside of a single web application, improving site density on a single server or hosted account.
+Features:
     Orchard.MultiTenancy:
         Description: Configure multiple site tenants.
         Category: Hosting

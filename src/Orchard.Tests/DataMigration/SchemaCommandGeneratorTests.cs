@@ -88,10 +88,10 @@ namespace Orchard.Tests.DataMigration {
             _generator = _container.Resolve<ISchemaCommandGenerator>();
 
             _folders.Manifests.Add("Feature1", @"
-name: Module1
-version: 0.1
-orchardversion: 1
-features:
+Name: Module1
+Version: 0.1
+OrchardVersion: 1
+Features:
   Feature1: 
     Description: Feature
 ");

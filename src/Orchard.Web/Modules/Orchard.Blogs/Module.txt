@@ -1,11 +1,11 @@
-﻿name: Blogs
-antiforgery: enabled
-author: The Orchard Team
-website: http://orchardproject.net
-version: 0.5.0
-orchardversion: 0.5.0
-description: The Orchard Blogs module is implementing basic blogging features. 
-features:
+﻿Name: Blogs
+AntiForgery: enabled
+Author: The Orchard Team
+Website: http://orchardproject.net
+Version: 0.5.0
+OrchardVersion: 0.5.0
+Description: The Orchard Blogs module is implementing basic blogging features. 
+Features:
     Orchard.Blogs:
         Description: A simple web log.
         Dependencies: Feeds
