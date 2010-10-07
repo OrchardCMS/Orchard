@@ -55,7 +55,7 @@ header, footer, aside, nav, article {
 
 /* Clearing Float
 ***************************************************************/
-group:after {
+.group:after {
     content: ".";
     display: block;
     height: 0;
@@ -150,6 +150,32 @@ nav ul li a {
 
 /* For testing purposes */
 
-div, nav, section {
+#layout-wrapper {
 	border:1px solid #CCC;
+}
+
+
+/* Sidebar off - Content Zone 960 */
+#content {
+	background-color:#e8e8e8;
+	width: 960px;
+    clear:both;
+}
+
+/* Sidebar on - Content Zone 640 */
+.icanhassidebar #content {
+	background-color:#e8e8e8;
+	width: 640px;
+	float:left;
+    clear:both;
+}
+
+.sidebar {
+    background-color:#f6f6f6;
+    width: 320px;
+	float:right;
+}
+
+#sitemap {
+    clear:both;
 }
