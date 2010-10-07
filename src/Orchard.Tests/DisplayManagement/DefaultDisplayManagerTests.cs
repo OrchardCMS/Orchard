@@ -32,8 +32,20 @@ namespace Orchard.Tests.DisplayManagement {
             builder.RegisterType<DefaultDisplayManager>().As<IDisplayManager>();
             builder.RegisterType<TestShapeTableManager>().As<IShapeTableManager>();
             builder.RegisterType<TestWorkContextAccessor>().As<IWorkContextAccessor>();
+            builder.RegisterType<TestDisplayEvents>().As<IShapeDisplayEvents>()
+                .As<TestDisplayEvents>()
+                .InstancePerLifetimeScope();
+
             builder.Register(ctx => _defaultShapeTable);
             builder.Register(ctx => _workContext);
+        }
+
+        class TestDisplayEvents : IShapeDisplayEvents {
+            public Action<ShapeDisplayingContext> Displaying = ctx => { };
+            public Action<ShapeDisplayedContext> Displayed = ctx => { };
+
+            void IShapeDisplayEvents.Displaying(ShapeDisplayingContext context) { Displaying(context); }
+            void IShapeDisplayEvents.Displayed(ShapeDisplayedContext context) { Displayed(context); }
         }
 
         public class Theme : ITheme {
@@ -209,22 +221,108 @@ namespace Orchard.Tests.DisplayManagement {
             var descriptor = new ShapeDescriptor {
                 ShapeType = "Foo",
             };
-            descriptor.Bindings["Foo"] = new ShapeBinding {
-                BindingName = "Foo",
-                Binding = ctx => new HtmlString("Hi there!"),
-            };
-            descriptor.Bindings["Foo__1"] = new ShapeBinding {
-                BindingName = "Foo__1",
-                Binding = ctx => new HtmlString("Hello (1)!"),
-            };
-            descriptor.Bindings["Foo__2"] = new ShapeBinding {
-                BindingName = "Foo__2",
-                Binding = ctx => new HtmlString("Hello (2)!"),
-            };
+            AddBinding(descriptor, "Foo", ctx => new HtmlString("Hi there!"));
+            AddBinding(descriptor, "Foo__1", ctx => new HtmlString("Hello (1)!"));
+            AddBinding(descriptor, "Foo__2", ctx => new HtmlString("Hello (2)!"));
             AddShapeDescriptor(descriptor);
 
             var result = displayManager.Execute(CreateDisplayContext(shape));
             Assert.That(result.ToString(), Is.EqualTo("Hello (2)!"));
+        }
+
+        private static void AddBinding(ShapeDescriptor descriptor, string bindingName, Func<DisplayContext, IHtmlString> binding) {
+            descriptor.Bindings[bindingName] = new ShapeBinding {
+                BindingName = bindingName,
+                Binding = binding,
+            };
+        }
+
+
+        [Test]
+        public void IShapeDisplayEventsIsCalled() {
+            var displayManager = _container.Resolve<IDisplayManager>();
+
+            var shape = new Shape {
+                Metadata = new ShapeMetadata {
+                    Type = "Foo"
+                }
+            };
+
+            var descriptor = new ShapeDescriptor {
+                ShapeType = "Foo",
+            };
+            AddBinding(descriptor, "Foo", ctx => new HtmlString("yarg"));
+            AddShapeDescriptor(descriptor);
+
+            var displayingEventCount = 0;
+            var displayedEventCount = 0;
+            _container.Resolve<TestDisplayEvents>().Displaying = ctx => { ++displayingEventCount; };
+            _container.Resolve<TestDisplayEvents>().Displayed = ctx => { ++displayedEventCount; ctx.ChildContent = new HtmlString("[" + ctx.ChildContent.ToHtmlString() + "]"); };
+
+            var result = displayManager.Execute(CreateDisplayContext(shape));
+
+            Assert.That(displayingEventCount, Is.EqualTo(1));
+            Assert.That(displayedEventCount, Is.EqualTo(1));
+            Assert.That(result.ToString(), Is.EqualTo("[yarg]"));
+        }
+
+
+        [Test]
+        public void ShapeDescriptorDisplayingAndDisplayedAreCalled() {
+            var displayManager = _container.Resolve<IDisplayManager>();
+
+            var shape = new Shape {
+                Metadata = new ShapeMetadata {
+                    Type = "Foo"
+                }
+            };
+
+            var descriptor = new ShapeDescriptor {
+                ShapeType = "Foo",
+            };
+            AddBinding(descriptor, "Foo", ctx => new HtmlString("yarg"));
+            AddShapeDescriptor(descriptor);
+
+            var displayingEventCount = 0;
+            var displayedEventCount = 0;
+            descriptor.Displaying = new Action<ShapeDisplayingContext>[] { ctx => { ++displayingEventCount; } };
+            descriptor.Displayed = new Action<ShapeDisplayedContext>[] { ctx => { ++displayedEventCount; ctx.ChildContent = new HtmlString("[" + ctx.ChildContent.ToHtmlString() + "]"); } };
+
+            var result = displayManager.Execute(CreateDisplayContext(shape));
+
+            Assert.That(displayingEventCount, Is.EqualTo(1));
+            Assert.That(displayedEventCount, Is.EqualTo(1));
+            Assert.That(result.ToString(), Is.EqualTo("[yarg]"));
+        }
+
+        [Test]
+        public void DisplayingEventFiresEarlyEnoughToAddAlternateShapeBindingNames() {
+            var displayManager = _container.Resolve<IDisplayManager>();
+
+            var shapeFoo = new Shape {
+                Metadata = new ShapeMetadata {
+                    Type = "Foo"
+                }
+            };
+            var descriptorFoo = new ShapeDescriptor {
+                ShapeType = "Foo",
+            };
+            AddBinding(descriptorFoo, "Foo", ctx => new HtmlString("alpha"));
+            AddShapeDescriptor(descriptorFoo);
+
+            var descriptorBar = new ShapeDescriptor {
+                ShapeType = "Bar",
+            };
+            AddBinding(descriptorBar, "Bar", ctx => new HtmlString("beta"));
+            AddShapeDescriptor(descriptorBar);
+
+
+            var resultNormally = displayManager.Execute(CreateDisplayContext(shapeFoo));
+            descriptorFoo.Displaying = new Action<ShapeDisplayingContext>[] { ctx => ctx.ShapeMetadata.Alternates.Add("Bar") };
+            var resultWithOverride = displayManager.Execute(CreateDisplayContext(shapeFoo));
+
+            Assert.That(resultNormally.ToString(), Is.EqualTo("alpha"));
+            Assert.That(resultWithOverride.ToString(), Is.EqualTo("beta"));
         }
     }
 }
