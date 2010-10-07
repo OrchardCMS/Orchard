@@ -188,7 +188,7 @@
     <Content Include="Themes\Classic\Theme.png" />
     <Content Include="Themes\Classic\Theme.txt" />
     <Content Include="Themes\Classic\Views\Footer.cshtml" />
-    <Content Include="Themes\Classic\Views\Layout.ascx" />
+    <None Include="Themes\Classic\Views\Layout.cshtml" />
     <Content Include="Themes\Contoso\Content\Images\bkg.jpg" />
     <Content Include="Themes\Contoso\Content\Images\comment-arrow.png" />
     <Content Include="Themes\Contoso\Content\Images\content-bkg.png" />

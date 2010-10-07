@@ -1,5 +1,5 @@
-﻿@using Orchard.Core.Contents.ViewModels
-@using Orchard.Utility.Extensions
+﻿@using Orchard.Core.Contents.ViewModels;
+@using Orchard.Utility.Extensions;
 @if (Model.Items.Count > 0) {
     using (Html.BeginFormAntiForgeryPost(Url.Action("List", "Admin", new { area = "Contents", id = "" }))) {
     <fieldset class="bulk-actions">

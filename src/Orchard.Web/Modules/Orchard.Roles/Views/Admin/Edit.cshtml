@@ -1,5 +1,5 @@
 @model RoleEditViewModel
-@using Orchard.Roles.ViewModels
+@using Orchard.Roles.ViewModels;
 <h1>@Html.TitleForPage(T("Edit Role").ToString())</h1>
 @using(Html.BeginFormAntiForgeryPost()) {
     Html.ValidationSummary();

@@ -1,5 +1,5 @@
-﻿@using Orchard.Blogs.Extensions
-@using Orchard.UI.Resources
+﻿@using Orchard.Blogs.Extensions;
+@using Orchard.UI.Resources;
 @{
     RegisterLink(new LinkEntry { Rel = "wlwmanifest", Type = "application/wlwmanifest+xml", Href = Url.BlogLiveWriterManifest((string)Model.Slug) });
     RegisterLink(new LinkEntry { Rel = "EditURI", Type = "application/rsd+xml", Title = "RSD", Href = Url.BlogRsd((string)Model.Slug) });

@@ -1,5 +1,5 @@
-﻿@using Orchard.Blogs.Extensions
-@using Orchard.Blogs.Models
+﻿@using Orchard.Blogs.Extensions;
+@using Orchard.Blogs.Models;
 <h2>@Html.Link((string)Model.Title, Url.Blog((string)Model.Slug))</h2>
 @if (!string.IsNullOrEmpty((string)Model.Description)) {
     <p>@Model.Description</p>
