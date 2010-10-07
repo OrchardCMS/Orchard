@@ -1,11 +1,11 @@
 ﻿Name: Messaging
-antiforgery: enabled
-author: The Orchard Team
-website: http://orchardproject.net
-version: 0.1.0
-orchardversion: 0.6.0
-description: The Messaging module adds messaging functionalities.
-features:
+AntiForgery: enabled
+Author: The Orchard Team
+Website: http://orchardproject.net
+Version: 0.1.0
+OrchardVersion: 0.6.0
+Description: The Messaging module adds messaging functionalities.
+Features:
     Messaging:
         Description: Messaging services.
         Category: Messaging

@@ -1,11 +1,11 @@
-﻿name: Shapes
-antiforgery: enabled
-author: The Orchard Team
-website: http://orchardproject.net
-version: 0.5.0
-orchardversion: 0.5.0
-description: The shapes module contains core shape templates and display hooks.
-features:
+﻿Name: Shapes
+AntiForgery: enabled
+Author: The Orchard Team
+Website: http://orchardproject.net
+Version: 0.5.0
+OrchardVersion: 0.5.0
+Description: The shapes module contains core shape templates and display hooks.
+Features:
     Shapes:
         Description: Core shape templates and display hooks.
         Category: Core

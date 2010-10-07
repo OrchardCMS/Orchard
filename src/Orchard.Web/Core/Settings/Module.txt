@@ -1,11 +1,11 @@
-﻿name: Settings
-antiforgery: enabled
-author: The Orchard Team
-website: http://orchardproject.net
-version: 0.5.0
-orchardversion: 0.5.0
-description: The settings module creates site settings that other modules can contribute to.
-features:
+﻿Name: Settings
+AntiForgery: enabled
+Author: The Orchard Team
+Website: http://orchardproject.net
+Version: 0.5.0
+OrchardVersion: 0.5.0
+Description: The settings module creates site settings that other modules can contribute to.
+Features:
     Settings:
         Description: Site settings.
         Category: Core
