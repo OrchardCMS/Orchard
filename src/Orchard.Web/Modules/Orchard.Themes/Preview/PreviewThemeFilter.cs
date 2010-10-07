@@ -34,7 +34,7 @@ namespace Orchard.Themes.Preview {
 
 
             var shape = _shapeHelperFactory.CreateHelper();
-            _workContextAccessor.GetContext(filterContext).Page.Zones["Body"].Add(shape.ThemePreview(Themes: themeListItems), ":before");
+            _workContextAccessor.GetContext(filterContext).Layout.Zones["Body"].Add(shape.ThemePreview(Themes: themeListItems), ":before");
         }
 
         public void OnResultExecuted(ResultExecutedContext filterContext) { }

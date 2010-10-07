@@ -1,7 +1,7 @@
 
 ==context==
 
-WorkContext.Page == Layout shape
+WorkContext.Layout == Layout shape
 
 
 ==shapes==

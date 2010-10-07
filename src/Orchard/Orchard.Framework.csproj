@@ -181,7 +181,7 @@
     <Compile Include="UI\Widgets\IRuleManager.cs" />
     <Compile Include="UI\Widgets\IRuleProvider.cs" />
     <Compile Include="UI\Widgets\RuleContext.cs" />
-    <Compile Include="UI\Zones\PageWorkContext.cs" />
+    <Compile Include="UI\Zones\LayoutWorkContext.cs" />
     <Compile Include="UI\Zones\ZoneHoldingBehavior.cs" />
     <Compile Include="Mvc\ViewEngines\ThemeAwareness\ConfiguredEnginesCache.cs" />
     <Compile Include="Mvc\ViewEngines\ThemeAwareness\LayoutAwareViewEngine.cs" />

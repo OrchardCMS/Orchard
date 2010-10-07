@@ -36,14 +36,14 @@ namespace Orchard.Core.Shapes {
                 .Configure(descriptor => descriptor.Wrappers.Add("Document"))
                 .OnCreating(creating => creating.Behaviors.Add(new ZoneHoldingBehavior(name => CreateZone(creating, name))))
                 .OnCreated(created => {
-                    var page = created.Shape;
-                    page.Head = created.New.DocumentZone();
-                    page.Body = created.New.DocumentZone();
-                    page.Tail = created.New.DocumentZone();
-                    page.Content = created.New.Zone();
+                    var layout = created.Shape;
+                    layout.Head = created.New.DocumentZone();
+                    layout.Body = created.New.DocumentZone();
+                    layout.Tail = created.New.DocumentZone();
+                    layout.Content = created.New.Zone();
 
-                    page.Body.Add(created.New.PlaceChildContent(Source: page));
-                    page.Content.Add(created.New.PlaceChildContent(Source: page));
+                    layout.Body.Add(created.New.PlaceChildContent(Source: layout));
+                    layout.Content.Add(created.New.PlaceChildContent(Source: layout));
                 });
 
             // 'Zone' shapes are built on the Zone base class
