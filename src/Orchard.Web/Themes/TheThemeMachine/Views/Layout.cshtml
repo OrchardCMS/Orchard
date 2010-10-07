@@ -13,7 +13,7 @@
 }
 <div id="layout-wrapper">
     <header id="layout-header">
-        @// needs to be the page title, not page (head) title...
+        @* needs to be the page title, not page (head) title... *@
         <h1><a href="@homeUrl">@WorkContext.CurrentSite.SiteName</a></h1>
         @if(Model.Header != null) {
         <div id="header">
@@ -36,7 +36,7 @@
         @Zone(Model.Featured)
     </div>
     }
-    @// the model content for the page is in the Content zone @ the default position (nothing, zero, zilch)
+    @* the model content for the page is in the Content zone @ the default position (nothing, zero, zilch) *@
     @if(Model.Content != null) {
     <div id="content">
         @Zone(Model.Content)

@@ -1,6 +1,6 @@
 ﻿@model Orchard.Core.PublishLater.ViewModels.PublishLaterViewModel
     <ul class="pageStatus">
-        <li>@// Published or not
+        <li>@* Published or not *@
         @if (Model.HasPublished) {
             <img class="icon" src="@Href("~/Core/PublishLater/Content/Admin/images/online.gif")" alt="@T("Online")" title="@T("The page is currently online")" /> <text>@T("Published")&nbsp;&#124;&nbsp;</text>
         }
@@ -9,7 +9,7 @@
         }
         </li>
         <li>
-        @// Does the page have a draft
+        @* Does the page have a draft *@
         @if (Model.HasDraft) {
             <img class="icon" src="@Href("~/Core/PublishLater/Content/Admin/images/draft.gif")" alt="@T("Draft")" title="@T("The page has a draft")" /><text> @T("Draft")&nbsp;&#124;&nbsp;</text>
         }

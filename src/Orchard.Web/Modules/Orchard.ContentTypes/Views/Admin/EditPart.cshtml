@@ -6,7 +6,7 @@
     @Html.ValidationSummary()
     <fieldset>
         <label for="Name">@T("Name")</label>
-        @// has unintended consequences (renamging the part) - changing the name creates a new part of that name
+        @* has unintended consequences (renamging the part) - changing the name creates a new part of that name  *@
         @Html.TextBoxFor(m => m.Name, new {@class = "textMedium", disabled = "disabled"})
         @Html.HiddenFor(m => m.Name)
     </fieldset>
