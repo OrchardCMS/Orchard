@@ -41,12 +41,13 @@ namespace Orchard.DisplayManagement.Descriptors {
                         }));
 
                 return new ShapeTable {
-                    Descriptors = descriptors.ToDictionary(sd => sd.ShapeType)
+                    Descriptors = descriptors.ToDictionary(sd => sd.ShapeType),
+                    Bindings = descriptors.SelectMany(sd => sd.Bindings).ToDictionary(kv => kv.Key, kv => kv.Value),
                 };
             });
         }
 
-        
+
         static bool IsModuleOrRequestedTheme(ShapeAlteration alteration, string themeName) {
             if (alteration == null ||
                 alteration.Feature == null ||

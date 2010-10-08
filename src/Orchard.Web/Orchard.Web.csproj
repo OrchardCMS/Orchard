@@ -139,10 +139,14 @@
     <Content Include="Themes\TheThemeMachine\Styles\site.css" />
     <Content Include="Themes\TheThemeMachine\Theme.png" />
     <Content Include="Themes\TheThemeMachine\Theme.txt" />
+    <None Include="Themes\TheThemeMachine\Views\TempFeatured.cshtml">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="Themes\TheThemeMachine\Views\Document.cshtml" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
+    <None Include="Themes\TheThemeMachine\Views\MenuItem.cshtml_" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Orchard\Orchard.Framework.csproj">
@@ -314,7 +318,7 @@
     <Content Include="Themes\Web.config" />
     <Content Include="Themes\TheThemeMachine\Views\Items\Content.Blog.cshtml" />
     <None Include="Themes\TheThemeMachine\Views\Layout.cshtml" />
-    <None Include="Themes\TheThemeMachine\Views\Menu.cshtml">
+    <None Include="Themes\TheThemeMachine\Views\Menu.cshtml_">
       <SubType>Designer</SubType>
     </None>
   </ItemGroup>
