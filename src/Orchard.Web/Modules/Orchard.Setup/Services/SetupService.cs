@@ -185,7 +185,6 @@ namespace Orchard.Setup.Services {
                     // add default culture
                     var cultureManager = environment.Resolve<ICultureManager>();
                     cultureManager.AddCulture("en-US");
-                    cultureManager.AddCulture("fr");
 
                     var contentManager = environment.Resolve<IContentManager>();
 

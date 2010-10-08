@@ -7,7 +7,8 @@
 @Html.ValidationSummary()
 <fieldset class="addCulture">
     <label for="CultureName">@T("Add a culture...")</label>
-    @Html.DropDownList("CultureName", new SelectList(Model.AvailableSystemCultures.OrderBy(s => s), Model.CurrentCulture))
+    @Html.DropDownList("SystemCultureName", new SelectList(Model.AvailableSystemCultures.OrderBy(s => s), Model.CurrentCulture))
+	@T("Other"): @Html.TextBox("CultureName")
     <button class="primaryAction" type="submit">@T("Add")</button>
 </fieldset>
 }
