@@ -1,4 +1,5 @@
-﻿using System.Globalization;
+﻿using System;
+using System.Globalization;
 using System.Linq;
 using System.Web.Mvc;
 using Orchard.Core.Settings.Models;
@@ -74,11 +75,15 @@ namespace Orchard.Core.Settings.Controllers {
         }
 
         [HttpPost]
-        public ActionResult AddCulture(string cultureName) {
+        public ActionResult AddCulture(string systemCultureName, string cultureName) {
             if (!Services.Authorizer.Authorize(Permissions.ManageSettings, T("Not authorized to manage settings")))
                 return new HttpUnauthorizedResult();
 
-            _cultureManager.AddCulture(cultureName);
+            cultureName = string.IsNullOrWhiteSpace(cultureName) ? systemCultureName : cultureName;
+
+            if (!string.IsNullOrWhiteSpace(cultureName)) {
+                _cultureManager.AddCulture(cultureName);
+            }
             return RedirectToAction("Culture");
         }
 
