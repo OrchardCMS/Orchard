@@ -3,7 +3,7 @@
   var items = (IEnumerable<dynamic>)Enumerable.Cast<dynamic>(Model);
 }
 @{
-if (HasText(Model.Text)) {
+if (!HasText(Model.Text)) {
     @DisplayChildren(Model)
 } else {
     <li><a href="@Model.Href">@Model.Text</a>

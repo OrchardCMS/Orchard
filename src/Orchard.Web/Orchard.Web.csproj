@@ -146,7 +146,7 @@
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
-    <None Include="Themes\TheThemeMachine\Views\MenuItem.cshtml_" />
+    <None Include="Themes\TheThemeMachine\Views\MenuItem.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Orchard\Orchard.Framework.csproj">
@@ -318,7 +318,7 @@
     <Content Include="Themes\Web.config" />
     <Content Include="Themes\TheThemeMachine\Views\Items\Content.Blog.cshtml" />
     <None Include="Themes\TheThemeMachine\Views\Layout.cshtml" />
-    <None Include="Themes\TheThemeMachine\Views\Menu.cshtml_">
+    <None Include="Themes\TheThemeMachine\Views\Menu.cshtml">
       <SubType>Designer</SubType>
     </None>
   </ItemGroup>

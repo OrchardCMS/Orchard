@@ -3,12 +3,14 @@ using System.Web;
 using System.Web.Mvc;
 using Autofac;
 using Orchard.DisplayManagement;
+using Orchard.DisplayManagement.Shapes;
 using Orchard.Localization;
 using Orchard.Mvc.Html;
 using Orchard.Mvc.Spooling;
 using Orchard.Security;
 using Orchard.Security.Permissions;
 using Orchard.UI.Resources;
+using TagBuilder = System.Web.Mvc.TagBuilder;
 
 namespace Orchard.Mvc {
     public class ViewUserControl<TModel> : System.Web.Mvc.ViewUserControl<TModel>,IOrchardViewPage {
@@ -18,11 +20,13 @@ namespace Orchard.Mvc {
         private object _display;
         private object _new;
         private Localizer _localizer = NullLocalizer.Instance;
+        private object _layout;
         private WorkContext _workContext;
 
         public Localizer T { get { return _localizer; } }
         public dynamic Display { get { return _display; } }
         public dynamic New { get { return _new; } }
+        public dynamic Layout { get { return _layout; } }
         public WorkContext WorkContext { get { return _workContext; } }
         
         public IDisplayHelperFactory DisplayHelperFactory { get; set; }
@@ -70,6 +74,7 @@ namespace Orchard.Mvc {
 
             _localizer = LocalizationUtilities.Resolve(viewContext, AppRelativeVirtualPath);
             _display = DisplayHelperFactory.CreateHelper(viewContext, this);
+            _layout = _workContext.Layout;
             _new = ShapeHelperFactory.CreateHelper();
 
             base.RenderView(viewContext);
@@ -81,6 +86,14 @@ namespace Orchard.Mvc {
 
         public bool AuthorizedFor(Permission permission) {
             return Authorizer.Authorize(permission);
+        }
+
+        public bool HasText(object thing) {
+            return !string.IsNullOrWhiteSpace(thing as string);
+        }
+
+        public TagBuilder Tag(dynamic shape, string tagName) {
+            return Html.Resolve<ITagBuilderFactory>().Create(shape, tagName);
         }
 
         public IHtmlString DisplayChildren(dynamic shape) {

@@ -4,12 +4,14 @@ using System.Web.Mvc;
 using System.Web.WebPages;
 using Autofac;
 using Orchard.DisplayManagement;
+using Orchard.DisplayManagement.Shapes;
 using Orchard.Localization;
 using Orchard.Mvc.Html;
 using Orchard.Mvc.Spooling;
 using Orchard.Security;
 using Orchard.Security.Permissions;
 using Orchard.UI.Resources;
+using TagBuilder = System.Web.Mvc.TagBuilder;
 
 namespace Orchard.Mvc.ViewEngines.Razor {
 
@@ -24,7 +26,8 @@ namespace Orchard.Mvc.ViewEngines.Razor {
 
         public Localizer T { get { return _localizer; } }
         public dynamic Display { get { return _display; } }
-        public dynamic Layout { get { return _layout; } }
+        // review: (heskew) is it going to be a problem?
+        public new dynamic Layout { get { return _layout; } }
         public WorkContext WorkContext { get { return _workContext; } }
 
         public dynamic New { get { return _new; } }
@@ -81,6 +84,14 @@ namespace Orchard.Mvc.ViewEngines.Razor {
 
         public bool AuthorizedFor(Permission permission) {
             return Authorizer.Authorize(permission);
+        }
+
+        public bool HasText(object thing) {
+            return !string.IsNullOrWhiteSpace(thing as string);
+        }
+
+        public TagBuilder Tag(dynamic shape, string tagName) {
+            return Html.Resolve<ITagBuilderFactory>().Create(shape, tagName);
         }
 
         public IHtmlString DisplayChildren(dynamic shape) {
