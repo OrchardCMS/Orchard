@@ -8,7 +8,7 @@
     Func<dynamic, dynamic> Zone = x => Display(x);
 
     if (Model.Sidebar != null) {
-        Html.AddPageClassNames(new[]{"has-sidebar"});
+        Html.AddPageClassNames(new[]{"icanhassidebar"});
     }
 }
 <div id="layout-wrapper">
@@ -32,36 +32,28 @@
     </div>
     }
 
- @* This code would inject text into the Featured zone.
+   @* This code would inject text into the Featured zone.
     @{WorkContext.Layout.Featured.Add("just some text in featured");}
-*@
+  *@
 
   @{
   WorkContext.Layout.Featured.Add(New.Featured(insertMessage:"This is a featured blog post."));
   }
-  @if(Model.Featured != null) {
-     <div class="zone-featured group">
+
+    @if(Model.Featured != null) {
+    <div id="featured" class="group">
         @Zone(Model.Featured)
     </div>
     }
 
-  @{
-  WorkContext.Layout.Recent.Add(New.Recent());
-  }
-  @if(Model.Featured != null) {
-    <div class="group">
-        @Zone(Model.Recent)
-    </div>
-    }
-
     @* the model content for the page is in the Content zone @ the default position (nothing, zero, zilch) *@
-    @if(Model.Content != null) {
-    <div id="content" class="group">
+    @if(Model.Content == null) {
+    <div id="content">
         @Zone(Model.Content)
     </div>
     }
     else {
-    <div id="content" class="group">
+    <div id="content">
         Let's take over the home page
     </div>
     }
