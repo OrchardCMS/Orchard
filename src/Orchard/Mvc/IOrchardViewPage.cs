@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Web;
+using Orchard.DisplayManagement.Shapes;
 using Orchard.Localization;
 using Orchard.UI.Resources;
 
@@ -22,5 +23,8 @@ namespace Orchard.Mvc {
         void SetMeta(MetaEntry meta);
         void AppendMeta(string name, string content, string contentSeparator);
         void AppendMeta(MetaEntry meta, string contentSeparator);
+        
+        bool HasText(object thing);
+        OrchardTagBuilder Tag(dynamic shape, string tagName);
     }
 }

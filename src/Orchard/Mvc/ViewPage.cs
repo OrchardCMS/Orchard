@@ -91,7 +91,7 @@ namespace Orchard.Mvc {
             return !string.IsNullOrWhiteSpace(thing as string);
         }
 
-        public TagBuilder Tag(dynamic shape, string tagName) {
+        public OrchardTagBuilder Tag(dynamic shape, string tagName) {
             return Html.Resolve<ITagBuilderFactory>().Create(shape, tagName);
         }
 

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
@@ -11,7 +10,7 @@ using System.Web.Mvc.Html;
 using Orchard.DisplayManagement;
 using Orchard.DisplayManagement.Descriptors;
 using Orchard.DisplayManagement.Implementation;
-using Orchard.Mvc.ViewEngines;
+using Orchard.DisplayManagement.Shapes;
 using Orchard.Settings;
 using Orchard.UI;
 using Orchard.UI.Resources;
@@ -48,13 +47,15 @@ namespace Orchard.Core.Shapes {
 
             // 'Zone' shapes are built on the Zone base class
             builder.Describe("Zone")
-                .OnCreating(creating => creating.BaseType = typeof (Zone));
-                //.OnDisplaying(displaying => {
-                //                  var name = displaying.Shape.ZoneName.ToLower();
-                //                  var zone = displaying.Shape;
-                //                  zone.Classes.Add("zone-" + name);
-                //                  zone.Classes.Add("zone");
-                //              });
+                .OnCreating(creating => creating.BaseType = typeof(Zone))
+                .OnDisplaying(displaying => {
+                    var zone = displaying.Shape;
+                    ShapeMetadata zoneMetadata = zone.Metadata;
+                    String name = zone.ZoneName;
+                    zone.Classes.Add("zone-" + name.ToLower());
+                    zone.Classes.Add("zone");
+                    zoneMetadata.Alternates.Add("Zone__" + name);
+                });
 
             //builder.Describe("menu")
             //    .OnDisplaying(displaying => {
@@ -126,15 +127,15 @@ namespace Orchard.Core.Shapes {
             var progress = 1;
             var flatPositionComparer = new FlatPositionComparer();
             var ordering = unordered.Select(item => {
-                                                var position = (item == null || item.GetType().GetProperty("Metadata") == null || item.Metadata.GetType().GetProperty("Position") == null)
-                                                                   ? null
-                                                                   : item.Metadata.Position;
-                                                return new {item, position};
-                                            }).ToList();
+                var position = (item == null || item.GetType().GetProperty("Metadata") == null || item.Metadata.GetType().GetProperty("Position") == null)
+                                   ? null
+                                   : item.Metadata.Position;
+                return new { item, position };
+            }).ToList();
 
             // since this isn't sticking around (hence, the "hack" in the name), throwing (in) a gnome 
             while (i < ordering.Count()) {
-                if (flatPositionComparer.Compare(ordering[i].position, ordering[i-1].position) > -1) {
+                if (flatPositionComparer.Compare(ordering[i].position, ordering[i - 1].position) > -1) {
                     if (i == progress)
                         progress = ++i;
                     else
@@ -142,8 +143,8 @@ namespace Orchard.Core.Shapes {
                 }
                 else {
                     var higherThanItShouldBe = ordering[i];
-                    ordering[i] = ordering[i-1];
-                    ordering[i-1] = higherThanItShouldBe;
+                    ordering[i] = ordering[i - 1];
+                    ordering[i - 1] = higherThanItShouldBe;
                     if (i > 1)
                         --i;
                 }
@@ -161,8 +162,8 @@ namespace Orchard.Core.Shapes {
                 x = string.IsNullOrWhiteSpace(x) ? "5" : x.TrimStart(':'); // ':' is _sometimes_ used as a partition identifier
                 y = string.IsNullOrWhiteSpace(y) ? "5" : y.TrimStart(':');
 
-                var xParts = x.Split(new[] {'.'}, StringSplitOptions.RemoveEmptyEntries);
-                var yParts = y.Split(new[] {'.'}, StringSplitOptions.RemoveEmptyEntries);
+                var xParts = x.Split(new[] { '.' }, StringSplitOptions.RemoveEmptyEntries);
+                var yParts = y.Split(new[] { '.' }, StringSplitOptions.RemoveEmptyEntries);
                 for (var i = 0; i < xParts.Count(); i++) {
                     if (yParts.Length < i - 1) // x is further defined meaning it comes after y (e.g. x == 1.2.3 and y == 1.2)
                         return 1;
@@ -251,7 +252,7 @@ namespace Orchard.Core.Shapes {
 
         private static void WriteResources(HtmlHelper html, ISite site, IResourceManager rm, string resourceType, ResourceLocation? includeLocation, ResourceLocation? excludeLocation) {
             bool debugMode;
-            switch(site.ResourceDebugMode) {
+            switch (site.ResourceDebugMode) {
                 case ResourceDebugMode.Enabled:
                     debugMode = true;
                     break;
