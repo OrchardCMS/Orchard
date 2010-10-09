@@ -139,9 +139,11 @@
     <Content Include="Themes\TheThemeMachine\Styles\site.css" />
     <Content Include="Themes\TheThemeMachine\Theme.png" />
     <Content Include="Themes\TheThemeMachine\Theme.txt" />
-    <None Include="Themes\TheThemeMachine\Views\TempFeatured.cshtml">
-      <SubType>Designer</SubType>
-    </None>
+    <None Include="Themes\TheThemeMachine\Views\Content.cshtml" />
+    <None Include="Themes\TheThemeMachine\Views\Featured.cshtml" />
+    <None Include="Themes\TheThemeMachine\Views\Layout-Blog.cshtml" />
+    <None Include="Themes\TheThemeMachine\Views\Layout-homePage.cshtml" />
+    <None Include="Themes\TheThemeMachine\Views\Recent.cshtml" />
     <None Include="Themes\TheThemeMachine\Views\Document.cshtml" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
