@@ -136,7 +136,7 @@ namespace Orchard.Tests.Modules.Widgets.Services {
             Assert.That(layer.Record.Description, Is.EqualTo(layerDescription));
         }
 
-        [Test, Ignore("Fix pending")]
+        [Test]
         public void GetWidgetTest() {
             const string layerName = "Test layer 1";
             const string layerDescription = "Test layer 1";
@@ -154,11 +154,12 @@ namespace Orchard.Tests.Modules.Widgets.Services {
             widgetResult = _widgetService.GetWidget(0);
             Assert.That(widgetResult, Is.Null, "Still yields null on an invalid identifier");
 
+            _contentManager.Flush();
             widgetResult = _widgetService.GetWidget(widgetPart.Id);
             Assert.That(widgetResult.Id, Is.EqualTo(widgetPart.Id), "Returns correct widget");
         }
 
-        [Test, Ignore("Fix pending")]
+        [Test]
         public void GetWidgetsTest() {
             const string layerName = "Test layer 1";
             const string layerDescription = "Test layer 1";
@@ -173,12 +174,15 @@ namespace Orchard.Tests.Modules.Widgets.Services {
 
             WidgetPart widgetPart = _widgetService.CreateWidget(layerPart.Id, "HtmlWidget", widgetTitle1, "1", "");
             Assert.That(widgetPart, Is.Not.Null);
+            _contentManager.Flush();
 
             widgetResults = _widgetService.GetWidgets();
             Assert.That(widgetResults.Count(), Is.EqualTo(1));
             Assert.That(widgetResults.First().Id, Is.EqualTo(widgetPart.Id));
 
             _widgetService.CreateWidget(layerPart.Id, "HtmlWidget", widgetTitle2, "2", "");
+            _contentManager.Flush();
+
             widgetResults = _widgetService.GetWidgets();
             Assert.That(widgetResults.Count(), Is.EqualTo(2));
         }
