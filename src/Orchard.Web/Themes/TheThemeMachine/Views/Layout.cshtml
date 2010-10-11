@@ -8,14 +8,27 @@
     Func<dynamic, dynamic> Zone = x => Display(x);
 
     if (Model.Sidebar != null) {
-        Html.AddPageClassNames(new[]{"has-sidebar"});
+        Model.Classes.Add("has-sidebar");
     }
+
+    //Model.Attributes.Add("onclick", "javscript:alert('woot')"); 
+
+    Model.Id = "layout-wrapper";
+    var tag = Tag (Model, "div");
+
 }
 
+@* Add a wrapping div around everything *@
+@tag.StartElement
+
+@* needs to be the page title, not page (head) title... *@
+@* Adds text and html to the header zone *@
+
+@using(Capture(branding => WorkContext.Layout.Header.Add(branding) )) {
+ <h1 id="branding"><a href="@homeUrl">@WorkContext.CurrentSite.SiteName</a></h1>
+}
 
     <header id="layout-header">
-        @* needs to be the page title, not page (head) title... *@
-        <h1><a href="@homeUrl">@WorkContext.CurrentSite.SiteName</a></h1>
         @if(Model.Header != null) {
         <div id="header">
             @Zone(Model.Header)
@@ -31,7 +44,7 @@
         }
 
 
-<div id="layout-wrapper">
+<div id="layout-content" class="group">
     @if(Model.Messages != null) {
     <div id="messages">
         @Zone(Model.Messages)
@@ -60,6 +73,13 @@
     </div>
     }
 
+    @{WorkContext.Layout.Sidebar1.Add("just some text in featured");}
+    @if(Model.Sidebar1 != null) {
+    <aside class="sidebar">
+        @Zone(Model.Sidebar1)
+    </aside>
+    }
+
     @* the model content for the page is in the Content zone @ the default position (nothing, zero, zilch) *@
     @if(Model.Content != null) {
     <div id="content" class="group">
@@ -78,16 +98,20 @@
     </aside>
     }
 
+</div>
+
+  @{
+  WorkContext.Layout.Footer.Add(@Display.User());
+  }
     @if(Model.Footer != null) {
-    <footer>
+    <footer id="layout-footer" class="group">
         @Zone(Model.Footer)
     </footer>
     }
     else {
-    <footer id="sitemap">
+    <footer id="layout-footer">
     Powered by Orchard @Display.User()
     </footer>
 }
 
-
-</div>
+@tag.EndElement

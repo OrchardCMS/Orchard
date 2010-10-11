@@ -63,7 +63,7 @@ header, footer, aside, nav, article {
     visibility: hidden;
     }
 
-.group {display: inline-block;}  /* for IE/Mac */
+/*.group {display: inline-block;}*/  /* for IE/Mac */
 
 /* Typography (Optional)
 ***************************************************************/
@@ -102,38 +102,67 @@ h4 img, h5 img, h6 img {
   margin: 0;
 }
 
-p {
+p, .meta {
 	font-size:1.3em;
 	line-height:2em;
 }
 
 /* Structure
 ***************************************************************/
-#layout-wrapper, #layout-header {
+#layout-header, #layout-content, #layout-footer {
 	width:960px;
 	margin:0 auto;
 }
 
-#header {}
-       #logo {}
-       
-       
-/* Navigation 
+#layout-header {
+    border:1px solid #ff0000;
+    background: #53a4ca;
+}
 
-nav ul li {
-	margin:2em 0 0 0;
-	float:left;	
-	}
+#branding a {
+    color:#fff;
+    text-decoration:none;
+    padding:48px 12px;
+}
 
-nav ul li a {
-    font-size:1.4em;
-	margin:0 1.8em;
-	display:block;
-	text-decoration:none;
-	text-transform:uppercase;
+
+#layout-wrapper {
+	border:1px solid #CCC;
+}
+
+/* Sidebar off - Content Zone 960 */
+#content {
+    clear:both;
+    /*padding:12px;*/
+}
+
+/*Right Sidebar on - Content Zone 600 */
+.has-sidebar #content {
+	background-color:#e8e8e8;
+	width: 600px;
+    /*padding:12px 6px 6px 12px;*/
 	float:left;
-} */
+    clear:both;
+}
 
+/*Left Sidebar on - Content Zone 600 
+
+.has-sidebar #content {
+	float:right;
+}*/
+
+.sidebar {
+    background-color:#f6f6f6;
+    width: 360px;
+	float:right;
+}
+
+#sitemap {
+    clear:both;
+}
+
+       
+/* Navigation */
 
 
 #navigation {
@@ -232,42 +261,13 @@ form.inline p { margin-bottom:0; }
 /* For testing purposes */
 
 
-#layout-header {
-    border:1px solid #CCC;
-}
 
-#layout-wrapper {
-	border:1px solid #CCC;
-}
 
-/* Sidebar off - Content Zone 960 */
-#content {
-    clear:both;
-    padding:12px;
-}
-
-/* Sidebar on - Content Zone 600 */
-.has-sidebar #content {
-	background-color:#e8e8e8;
-	width: 582px;
-    padding:12px 6px 6px 12px;
-	float:left;
-    clear:both;
-}
-
-.sidebar {
-    background-color:#f6f6f6;
-    width: 360px;
-	float:right;
-}
-
-#sitemap {
-    clear:both;
-}
 
 .zone {
-    padding:6px;
+    /*padding:6px;*/
 }
+
 
 /* Featured Zone - switch to an image */
 
