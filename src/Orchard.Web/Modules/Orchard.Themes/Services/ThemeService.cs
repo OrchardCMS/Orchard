@@ -195,7 +195,7 @@ namespace Orchard.Themes.Services {
             return new Theme {
                 Author = TryLocalize("Author", descriptor.Author, localizer) ?? "",
                 Description = TryLocalize("Description", descriptor.Description, localizer) ?? "",
-                DisplayName = TryLocalize("DisplayName", descriptor.DisplayName, localizer) ?? "",
+                DisplayName = TryLocalize("Name", descriptor.DisplayName, localizer) ?? "",
                 HomePage = TryLocalize("Website", descriptor.WebSite, localizer) ?? "",
                 ThemeName = descriptor.Name,
                 Version = descriptor.Version ?? "",
