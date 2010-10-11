@@ -108,7 +108,7 @@ namespace Orchard.Users.Controllers {
             var user = Services.ContentManager.Get<UserPart>(id);
 
             return View(new UserEditViewModel {
-                User = Services.ContentManager.BuildEditorModel(user) 
+                User = Services.ContentManager.BuildEditor(user) 
             });
         }
 
@@ -119,7 +119,7 @@ namespace Orchard.Users.Controllers {
 
             var user = Services.ContentManager.Get(id);
             var model = new UserEditViewModel {
-                User = Services.ContentManager.UpdateEditorModel(user, this)
+                User = Services.ContentManager.UpdateEditor(user, this)
             };
 
             TryUpdateModel(model);
