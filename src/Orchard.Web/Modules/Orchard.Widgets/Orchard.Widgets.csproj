@@ -33,8 +33,13 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="ClaySharp, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\lib\claysharp\ClaySharp.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
     <Reference Include="System.Web.ApplicationServices" />
@@ -59,15 +64,15 @@
   <ItemGroup>
     <Compile Include="AdminMenu.cs" />
     <Compile Include="Controllers\AdminController.cs" />
-    <Compile Include="Drivers\WidgetBagPartDriver.cs" />
     <Compile Include="Drivers\LayerPartDriver.cs" />
+    <Compile Include="Drivers\WidgetBagPartDriver.cs" />
     <Compile Include="Drivers\WidgetPartDriver.cs" />
     <Compile Include="Migrations.cs" />
     <Compile Include="Handlers\LayerPartHandler.cs" />
     <Compile Include="Handlers\WidgetPartHandler.cs" />
-    <Compile Include="Models\WidgetBagPart.cs" />
     <Compile Include="Models\LayerPart.cs" />
     <Compile Include="Models\LayerPartRecord.cs" />
+    <Compile Include="Models\WidgetBagPart.cs" />
     <Compile Include="Models\WidgetPart.cs" />
     <Compile Include="Models\WidgetPartRecord.cs" />
     <Compile Include="Permissions.cs" />
@@ -77,8 +82,14 @@
     <Compile Include="RuleEngine\AuthenticatedRuleProvider.cs" />
     <Compile Include="RuleEngine\RuleManager.cs" />
     <Compile Include="RuleEngine\UrlRuleProvider.cs" />
+    <Compile Include="Services\IWidgetsService.cs" />
+    <Compile Include="Services\WidgetsService.cs" />
+    <Compile Include="ViewModels\WidgetsIndexViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\Admin\images\edit.gif" />
+    <Content Include="Content\Admin\images\moveup.gif" />
+    <Content Include="Content\Admin\images\movedown.gif" />
     <Content Include="Module.txt" />
     <Content Include="Styles\admin.css" />
     <Content Include="Web.config" />
@@ -96,7 +107,13 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <None Include="Views\Admin\AddLayer.cshtml" />
+    <None Include="Views\Admin\AddWidget.cshtml" />
+    <None Include="Views\Admin\EditWidget.cshtml" />
+    <None Include="Views\Admin\EditLayer.cshtml" />
     <None Include="Views\Admin\Index.cshtml" />
+    <None Include="Views\EditorTemplates\Parts\Widgets.WidgetPart.cshtml" />
+    <None Include="Views\EditorTemplates\Parts\Widgets.LayerPart.cshtml" />
     <None Include="Views\EditorTemplates\Parts\Widgets.WidgetBagPart.cshtml" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

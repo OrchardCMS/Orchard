@@ -132,6 +132,7 @@
     <Compile Include="Values.cs" />
     <Compile Include="Users\Controllers\AdminControllerTests.cs" />
     <Compile Include="Users\Services\MembershipServiceTests.cs" />
+    <Compile Include="Widgets\Services\WidgetsServiceTest.cs" />
     <Compile Include="Widgets\WidgetsTests.cs" />
     <Compile Include="XmlRpc\Controllers\HomeControllerTests.cs" />
     <Compile Include="XmlRpc\Services\XmlRpcReaderTests.cs" />

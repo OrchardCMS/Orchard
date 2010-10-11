@@ -1,0 +1,9 @@
+﻿<h1>@Html.TitleForPage(T("Edit Layer").ToString())</h1>
+    @using (Html.BeginFormAntiForgeryPost()) {
+    @Html.ValidationSummary()
+    @Display(Model)
+
+    <fieldset>
+        <input type="submit" name="submit.Delete" class="button" value="@T("Delete")" />
+    </fieldset>
+}
