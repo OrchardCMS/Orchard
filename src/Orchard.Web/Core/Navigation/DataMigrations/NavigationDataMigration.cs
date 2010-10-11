@@ -39,7 +39,7 @@ namespace Orchard.Core.Navigation.DataMigrations {
         public int UpdateFrom2() {
             ContentDefinitionManager.AlterPartDefinition(typeof(MenuPart).Name, cfg => cfg
                 .WithLocation(new Dictionary<string, ContentLocation> {
-                    {"Editor", new ContentLocation { Zone = "primary", Position = "9" }}
+                    {"Editor", new ContentLocation { Zone = "Primary", Position = "9" }}
                 }));
             return 3;
         }

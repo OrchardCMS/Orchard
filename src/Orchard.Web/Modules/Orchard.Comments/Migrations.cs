@@ -68,11 +68,11 @@ namespace Orchard.Comments {
         public int UpdateFrom2() {
             ContentDefinitionManager.AlterPartDefinition(typeof(CommentsPart).Name, cfg => cfg
                 .WithLocation(new Dictionary<string, ContentLocation> {
-                    {"Default", new ContentLocation { Zone = "primary", Position = "before.5" }},
-                    {"Detail", new ContentLocation { Zone = "primary", Position = "after.5" }},
+                    {"Default", new ContentLocation { Zone = "Primary", Position = "before.5" }},
+                    {"Detail", new ContentLocation { Zone = "Primary", Position = "after.5" }},
                     {"SummaryAdmin", new ContentLocation { Zone = "meta", Position = null }},
                     {"Summary", new ContentLocation { Zone = "meta", Position = "5" }},
-                    {"Editor", new ContentLocation { Zone = "primary", Position = "10" }},
+                    {"Editor", new ContentLocation { Zone = "Primary", Position = "10" }},
                 }));
 
             ContentDefinitionManager.AlterPartDefinition(typeof(CommentsContainerPart).Name, cfg => cfg

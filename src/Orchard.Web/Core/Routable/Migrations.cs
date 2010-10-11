@@ -24,7 +24,7 @@ namespace Orchard.Core.Routable {
         public int UpdateFrom1() {
             ContentDefinitionManager.AlterPartDefinition(typeof(RoutePart).Name, cfg => cfg
                 .WithLocation(new Dictionary<string, ContentLocation> {
-                    {"Editor", new ContentLocation { Zone = "primary", Position = "before.5" }}
+                    {"Editor", new ContentLocation { Zone = "Primary", Position = "before.5" }}
                 } ));
 
             return 2;

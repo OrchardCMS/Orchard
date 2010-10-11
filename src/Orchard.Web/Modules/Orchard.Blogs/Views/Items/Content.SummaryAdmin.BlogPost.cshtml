@@ -18,5 +18,5 @@
         @Html.Link(T("Remove").Text, Url.Action("Remove", "Admin", new { area = "Contents", id = contentItem.Id, returnUrl }), new { itemprop = "RemoveUrl UnsafeUrl" })
         <br />@Display(Model.meta)
     </div>
-    <div class="primary">@Display(Model.primary)</div>
+    <div class="primary">@Display(Model.Primary)</div>
 </div>

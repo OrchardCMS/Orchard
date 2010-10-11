@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Web.Mvc;
 using Orchard.ContentManagement.MetaData.Models;
 using Orchard.ContentManagement.Utilities;
 using Orchard.UI;
@@ -21,6 +22,14 @@ namespace Orchard.ContentManagement {
             get {
                 return _zones;
             }
+        }
+
+        /// <summary>
+        /// The ContentItem's identifier.
+        /// </summary>
+        [HiddenInput(DisplayValue = false)]
+        public int Id {
+            get { return ContentItem.Id; }
         }
 
         public ContentTypeDefinition TypeDefinition { get { return ContentItem.TypeDefinition; } }

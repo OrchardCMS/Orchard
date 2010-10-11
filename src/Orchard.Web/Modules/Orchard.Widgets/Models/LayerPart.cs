@@ -6,14 +6,6 @@ namespace Orchard.Widgets.Models {
     public class LayerPart : ContentPart<LayerPartRecord> {
         
         /// <summary>
-        /// The layer's identifier.
-        /// </summary>
-        [HiddenInput(DisplayValue = false)]
-        public int Id {
-            get { return ContentItem.Id; }
-        }
-        
-        /// <summary>
         /// The layer's name.
         /// </summary>
         [Required]
