@@ -7,9 +7,21 @@
     // Zone is an alias for Display
     Func<dynamic, dynamic> Zone = x => Display(x);
 
-    if (Model.Sidebar != null) {
+
+
+    if (Model.Sidebar != null && Model.Sidebar2 == null) {
         Model.Classes.Add("has-sidebar");
     }
+    else if (Model.Sidebar == null && Model.Sidebar2 != null) {
+        Model.Classes.Add("has-sidebar-left");
+    }
+    else if (Model.Sidebar != null && Model.Sidebar2 != null) {
+        Model.Classes.Add("has-sidebars");
+    }
+    else {
+
+    }
+
 
     //Model.Attributes.Add("onclick", "javscript:alert('woot')"); 
 
@@ -73,10 +85,9 @@
     </div>
     }
 
-    @{WorkContext.Layout.Sidebar1.Add("just some text in featured");}
-    @if(Model.Sidebar1 != null) {
-    <aside class="sidebar">
-        @Zone(Model.Sidebar1)
+    @if(Model.Sidebar2 != null) {
+    <aside class="sidebar secondary">
+        @Zone(Model.Sidebar2)
     </aside>
     }
 
@@ -86,14 +97,10 @@
         @Zone(Model.Content)
     </div>
     }
-    else {
-    <div id="content" class="group">
-        Let's take over the home page
-    </div>
-    }
+ 
 
     @if(Model.Sidebar != null) {
-    <aside class="sidebar">
+    <aside class="sidebar primary">
         @Zone(Model.Sidebar)
     </aside>
     }
