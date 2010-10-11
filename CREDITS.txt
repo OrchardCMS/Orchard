@@ -75,6 +75,11 @@ Website:      http://htmlagilitypack.codeplex.com/
 Copyright:    Copyright (c) 2003-20010 Simon Mourier
 License:      MS-PL
 
+html5shim
+-----
+Website:      http://code.google.com/p/html5shim/
+License:      MIT
+
 IESI Collections
 -----
 Website:      http://www.codeproject.com/KB/recipes/sets.aspx
