@@ -70,7 +70,7 @@ namespace Orchard.Widgets {
                     .WithPart("WidgetPart")
                     .WithPart("BodyPart")
                     .WithPart("CommonPart")
-                    .WithSetting("stereotype", "widget")
+                    .WithSetting("Stereotype", "Widget")
                 );
 
             CreateDefaultLayers();

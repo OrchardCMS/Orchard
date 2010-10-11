@@ -8,14 +8,6 @@ namespace Orchard.Widgets.Models {
     public class WidgetPart : ContentPart<WidgetPartRecord> {
         
         /// <summary>
-        /// The widget's identifier.
-        /// </summary>
-        [HiddenInput(DisplayValue = false)]
-        public int Id {
-            get { return ContentItem.Id; }
-        }
-
-        /// <summary>
         /// The widget's title.
         /// </summary>
         [Required]
