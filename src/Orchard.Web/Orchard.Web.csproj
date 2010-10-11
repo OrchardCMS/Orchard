@@ -147,7 +147,7 @@
     <None Include="Themes\TheThemeMachine\Views\Featured.cshtml">
       <SubType>Designer</SubType>
     </None>
-    <None Include="Themes\TheThemeMachine\Views\Document.cshtml" />
+    <None Include="Themes\TheThemeMachine\Views\_Document.cshtml" />
     <None Include="Themes\TheThemeMachine\Views\Content.cshtml" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
