@@ -144,13 +144,13 @@ namespace Orchard.Environment.Extensions.Folders {
                     };
                     var featureMapping = (Mapping)entity.Value;
                     foreach (var featureEntity in featureMapping.Entities) {
-                        if (String.Equals(featureEntity.Key.ToString(), "Description", StringComparison.OrdinalIgnoreCase)) {
+                        if (featureEntity.Key.ToString() == "Description") {
                             featureDescriptor.Description = featureEntity.Value.ToString();
                         }
-                        else if (String.Equals(featureEntity.Key.ToString(), "Category", StringComparison.OrdinalIgnoreCase)) {
+                        else if (featureEntity.Key.ToString() == "Category") {
                             featureDescriptor.Category = featureEntity.Value.ToString();
                         }
-                        else if (String.Equals(featureEntity.Key.ToString(), "Dependencies", StringComparison.OrdinalIgnoreCase)) {
+                        else if (featureEntity.Key.ToString() == "Dependencies") {
                             featureDescriptor.Dependencies = ParseFeatureDependenciesEntry(featureEntity.Value.ToString());
                         }
                     }
