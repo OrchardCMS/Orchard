@@ -12,17 +12,17 @@ namespace Orchard.Comments.Drivers {
                 return null;
 
             if (displayType.StartsWith("Detail"))
-                return ContentShape(shapeHelper.Comments_Comments(ContentPart: part)).Location(part.GetLocation("Detail"));
+                return ContentShape(shapeHelper.Parts_Comments_Comments(ContentPart: part)).Location(part.GetLocation("Detail"));
 
             if (displayType == "SummaryAdmin")
-                return ContentShape(shapeHelper.Comments_CountAdmin(ContentPart: part, CommentCount: part.Comments.Count, PendingCount: part.PendingComments.Count))
+                return ContentShape(shapeHelper.Parts_Comments_CountAdmin(ContentPart: part, CommentCount: part.Comments.Count, PendingCount: part.PendingComments.Count))
                     .Location(part.GetLocation("SummaryAdmin"));
 
             var location = displayType.Contains("Summary")
                                ? part.GetLocation("Summary")
                                : part.GetLocation(displayType);
 
-            return ContentShape(shapeHelper.Comments_Count(ContentPart: part, CommentCount: part.Comments.Count, PendingCount: part.PendingComments.Count))
+            return ContentShape(shapeHelper.Parts_Comments_Count(ContentPart: part, CommentCount: part.Comments.Count, PendingCount: part.PendingComments.Count))
                 .Location(location);
         }
 

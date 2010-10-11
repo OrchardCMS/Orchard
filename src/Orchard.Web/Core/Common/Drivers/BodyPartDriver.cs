@@ -35,7 +35,7 @@ namespace Orchard.Core.Common.Drivers {
 
         protected override DriverResult Display(BodyPart part, string displayType, dynamic shapeHelper) {
             var bodyText = _htmlFilters.Aggregate(part.Text, (text, filter) => filter.ProcessContent(text));
-            var body = shapeHelper.Common_Body(ContentPart: part, Html: new HtmlString(bodyText));
+            var body = shapeHelper.Parts_Common_Body(ContentPart: part, Html: new HtmlString(bodyText));
             if (!string.IsNullOrWhiteSpace(displayType))
                 body.Metadata.Type = string.Format("{0}.{1}", body.Metadata.Type, displayType);
             var location = part.GetLocation(displayType);

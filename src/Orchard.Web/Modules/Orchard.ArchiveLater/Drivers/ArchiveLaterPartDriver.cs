@@ -29,7 +29,7 @@ namespace ArchiveLater.Drivers {
         public IOrchardServices Services { get; set; }
 
         protected override DriverResult Display(ArchiveLaterPart part, string displayType, dynamic shapeHelper) {
-            var metadata = shapeHelper.ArchiveLater_Metadata(ContentPart: part, ScheduledArchiveUtc: part.ScheduledArchiveUtc.Value);
+            var metadata = shapeHelper.Parts_ArchiveLater_Metadata(ContentPart: part, ScheduledArchiveUtc: part.ScheduledArchiveUtc.Value);
             if (!string.IsNullOrWhiteSpace(displayType))
                 metadata.Metadata.Type = string.Format("{0}.{1}", metadata.Metadata.Type, displayType);
             var location = part.GetLocation(displayType);

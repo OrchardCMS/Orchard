@@ -28,7 +28,7 @@ namespace Orchard.Core.PublishLater.Drivers {
         public IOrchardServices Services { get; set; }
 
         protected override DriverResult Display(PublishLaterPart part, string displayType, dynamic shapeHelper) {
-            var metadata = shapeHelper.PublishLater_Metadata(ContentPart: part, ScheduledPublishUtc: part.ScheduledPublishUtc.Value);
+            var metadata = shapeHelper.Parts_PublishLater_Metadata(ContentPart: part, ScheduledPublishUtc: part.ScheduledPublishUtc.Value);
             if (!string.IsNullOrWhiteSpace(displayType))
                 metadata.Metadata.Type = string.Format("{0}.{1}", metadata.Metadata.Type, displayType);
             var location = part.GetLocation(displayType);

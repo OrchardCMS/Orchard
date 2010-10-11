@@ -37,20 +37,20 @@ namespace Orchard.Blogs.Drivers {
         protected override DriverResult Display(BlogPart part, string displayType, dynamic shapeHelper) {
             var driverResults = new List<DriverResult>();
 
-            var metadata = shapeHelper.Blogs_Blog_Manage(ContentPart: part);
-            metadata.Metadata.Type = "Blogs_Blog.Manage";
+            var metadata = shapeHelper.Parts_Blogs_Blog_Manage(ContentPart: part);
+            metadata.Metadata.Type = "Parts_Blogs_Blog.Manage";
             driverResults.Add(ContentShape(metadata).Location("manage"));
 
-            var description = shapeHelper.Blogs_Blog_Description(ContentPart: part);
-            description.Metadata.Type = "Blogs_Blog.Description";
+            var description = shapeHelper.Parts_Blogs_Blog_Description(ContentPart: part);
+            description.Metadata.Type = "Parts_Blogs_Blog.Description";
             driverResults.Add(ContentShape(description).Location("manage", "after"));
 
             if (displayType.StartsWith("Admin")) {
                 var list = shapeHelper.List();
                 list.AddRange(_blogPostService.Get(part, VersionOptions.Latest)
                                           .Select(bp => _contentManager.BuildDisplay(bp, "SummaryAdmin.BlogPost")));
-                var blogPostList = shapeHelper.Blogs_BlogPost_List(ContentPart: part, BlogPosts: list);
-                blogPostList.Metadata.Type = "Blogs_BlogPost.List.Admin";
+                var blogPostList = shapeHelper.Parts_Blogs_BlogPost_List(ContentPart: part, BlogPosts: list);
+                blogPostList.Metadata.Type = "Parts_Blogs_BlogPost.List.Admin";
                 var contentShape = ContentShape(blogPostList).Location("primary");
                 driverResults.Add(contentShape);
             }
@@ -58,8 +58,8 @@ namespace Orchard.Blogs.Drivers {
                 var list = shapeHelper.List();
                 list.AddRange(_blogPostService.Get(part)
                                           .Select(bp => _contentManager.BuildDisplay(bp, "Summary.BlogPost")));
-                var blogPostList = shapeHelper.Blogs_BlogPost_List(ContentPart: part, BlogPosts: list);
-                blogPostList.Metadata.Type = "Blogs_BlogPost.List";
+                var blogPostList = shapeHelper.Parts_Blogs_BlogPost_List(ContentPart: part, BlogPosts: list);
+                blogPostList.Metadata.Type = "Parts_Blogs_BlogPost.List";
                 var contentShape = ContentShape(blogPostList).Location("primary");
                 driverResults.Add(contentShape);
 

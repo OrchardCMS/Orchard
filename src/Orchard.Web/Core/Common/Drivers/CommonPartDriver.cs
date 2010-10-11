@@ -36,7 +36,7 @@ namespace Orchard.Core.Common.Drivers {
         public IOrchardServices Services { get; set; }
 
         protected override DriverResult Display(CommonPart part, string displayType, dynamic shapeHelper) {
-            var metadata = shapeHelper.Common_Metadata(ContentPart: part);
+            var metadata = shapeHelper.Parts_Common_Metadata(ContentPart: part);
             if (!string.IsNullOrWhiteSpace(displayType))
                 metadata.Metadata.Type = string.Format("{0}.{1}", metadata.Metadata.Type, displayType);
             var location = part.GetLocation(displayType);

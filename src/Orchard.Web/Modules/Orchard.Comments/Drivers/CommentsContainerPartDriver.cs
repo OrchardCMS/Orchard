@@ -20,9 +20,9 @@ namespace Orchard.Comments.Drivers {
                 int pendingCount = parts.Aggregate(0, (seed, item) => seed + (item.Has<CommentsPart>() ? item.As<CommentsPart>().PendingComments.Count : 0));
 
                 if (displayType == "SummaryAdmin")
-                    return ContentShape(shapeHelper.Comments_CountAdmin(ContentPart: part, CommentCount: count, PendingCount: pendingCount)).Location(part.GetLocation("SummaryAdmin"));
+                    return ContentShape(shapeHelper.Parts_Comments_CountAdmin(ContentPart: part, CommentCount: count, PendingCount: pendingCount)).Location(part.GetLocation("SummaryAdmin"));
 
-                return ContentShape(shapeHelper.Comments_Count(ContentPart: part, CommentCount: count, PendingCount: pendingCount)).Location(part.GetLocation("Summary"));
+                return ContentShape(shapeHelper.Parts_Comments_Count(ContentPart: part, CommentCount: count, PendingCount: pendingCount)).Location(part.GetLocation("Summary"));
             }
 
             return null;

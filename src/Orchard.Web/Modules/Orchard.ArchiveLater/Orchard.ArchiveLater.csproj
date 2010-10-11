@@ -98,8 +98,8 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\ArchiveLater.Metadata.cshtml" />
-    <Content Include="Views\ArchiveLater.Metadata.SummaryAdmin.cshtml" />
+    <Content Include="Views\Parts\ArchiveLater.Metadata.cshtml" />
+    <Content Include="Views\Parts\ArchiveLater.Metadata.SummaryAdmin.cshtml" />
     <Content Include="Views\EditorTemplates\Parts\ArchiveLater.cshtml" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
