@@ -68,7 +68,7 @@ namespace Orchard.Modules.Commands {
                 }
             }
             else {
-                Context.Output.WriteLine(T("Could not enable Features: {0}", string.Join(",", featureNames)));
+                Context.Output.WriteLine(T("Could not enable features: {0}", string.Join(",", featureNames)));
                 listAvailableFeatures = true;
             }
             if (listAvailableFeatures)
