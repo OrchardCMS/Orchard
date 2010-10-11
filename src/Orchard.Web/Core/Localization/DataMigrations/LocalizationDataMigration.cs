@@ -22,8 +22,8 @@ namespace Orchard.Core.Localization.DataMigrations {
         public int UpdateFrom1() {
             ContentDefinitionManager.AlterPartDefinition(typeof(LocalizationPart).Name, cfg => cfg
                 .WithLocation(new Dictionary<string, ContentLocation> {
-                    {"Default", new ContentLocation { Zone = "primary", Position = "5" }},
-                    {"Editor", new ContentLocation { Zone = "primary", Position = "1" }},
+                    {"Default", new ContentLocation { Zone = "Primary", Position = "5" }},
+                    {"Editor", new ContentLocation { Zone = "Primary", Position = "1" }},
                 }));
             return 2;
         }

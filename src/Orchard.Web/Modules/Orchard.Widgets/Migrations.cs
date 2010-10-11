@@ -82,21 +82,21 @@ namespace Orchard.Widgets {
             ContentDefinitionManager.AlterPartDefinition(typeof(LayerPart).Name, 
                 cfg => cfg
                     .WithLocation(new Dictionary<string, ContentLocation> {
-                        {"Editor", new ContentLocation { Zone = "primary", Position = "1" }}
+                        {"Editor", new ContentLocation { Zone = "Primary", Position = "1" }}
                     })
                 );
 
             ContentDefinitionManager.AlterPartDefinition(typeof(WidgetPart).Name, 
                 cfg => cfg
                     .WithLocation(new Dictionary<string, ContentLocation> {
-                        {"Editor", new ContentLocation { Zone = "primary", Position = "1" }}
+                        {"Editor", new ContentLocation { Zone = "Primary", Position = "1" }}
                    })
                 );
 
             ContentDefinitionManager.AlterPartDefinition(typeof(WidgetBagPart).Name,
                 cfg => cfg
                     .WithLocation(new Dictionary<string, ContentLocation> {
-                        {"Editor", new ContentLocation {Zone = "primary", Position = "5"}}
+                        {"Editor", new ContentLocation {Zone = "Primary", Position = "5"}}
                     })
                 );
             ContentDefinitionManager.AlterTypeDefinition("WidgetPage",

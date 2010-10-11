@@ -28,8 +28,8 @@ namespace Orchard.Tags {
         public int UpdateFrom1() {
             ContentDefinitionManager.AlterPartDefinition(typeof(TagsPart).Name, cfg => cfg
                 .WithLocation(new Dictionary<string, ContentLocation> {
-                    {"Default", new ContentLocation { Zone = "primary", Position = "49" }},
-                    {"Editor", new ContentLocation { Zone = "primary", Position = "9" }},
+                    {"Default", new ContentLocation { Zone = "Primary", Position = "49" }},
+                    {"Editor", new ContentLocation { Zone = "Primary", Position = "9" }},
                 }));
             return 2;
         }

@@ -51,7 +51,7 @@ namespace Orchard.Blogs {
         public int UpdateFrom2() {
             ContentDefinitionManager.AlterPartDefinition(typeof(BlogPart).Name, cfg => cfg
                 .WithLocation(new Dictionary<string, ContentLocation> {
-                    {"Editor", new ContentLocation { Zone = "primary", Position = "1" }}
+                    {"Editor", new ContentLocation { Zone = "Primary", Position = "1" }}
                 }));
             return 3;
         }
