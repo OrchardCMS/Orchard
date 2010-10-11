@@ -132,7 +132,7 @@
     </Content>
     <Content Include="Views\Items\Content.Admin.Blog.cshtml" />
     <Content Include="Views\Items\Content.Blog.cshtml" />
-    <Content Include="Views\Items\Content.BlogPost.cshtml" />
+    <Content Include="Views\Items\Content.Detail.BlogPost.cshtml" />
     <Content Include="Views\Items\Content.Edit.Blog.cshtml">
       <SubType>Code</SubType>
     </Content>
@@ -167,19 +167,19 @@
     <Content Include="Views\Parts\Tags.ShowTags.Summary.BlogPost.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Parts\PublishLater.Metadata.BlogPost.cshtml" />
+    <Content Include="Views\Parts\PublishLater.Metadata.Detail.BlogPost.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Parts\Common.Metadata.BlogPost.cshtml" />
+    <Content Include="Views\Parts\Common.Metadata.Detail.BlogPost.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Parts\Localization.ContentTranslations.BlogPost.cshtml" />
+    <Content Include="Views\Parts\Localization.ContentTranslations.Detail.BlogPost.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Parts\Common.Body.BlogPost.cshtml" />
+    <Content Include="Views\Parts\Common.Body.Detail.BlogPost.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Parts\Tags.ShowTags.BlogPost.cshtml" />
+    <Content Include="Views\Parts\Tags.ShowTags.Detail.BlogPost.cshtml" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />

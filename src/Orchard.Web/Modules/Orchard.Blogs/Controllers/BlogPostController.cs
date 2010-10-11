@@ -51,7 +51,7 @@ namespace Orchard.Blogs.Controllers {
             if (postPart == null)
                 return new NotFoundResult();
 
-            var model = _services.ContentManager.BuildDisplay(postPart, "BlogPost");
+            var model = _services.ContentManager.BuildDisplay(postPart, "Detail.BlogPost");
 
             return View(model);
         }

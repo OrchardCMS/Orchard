@@ -1,12 +1,11 @@
-﻿@model Orchard.Comments.Models.CommentsPart
-@using Orchard.Comments.Models;
+﻿@using Orchard.Comments.Models;
 @using Orchard.Comments;
 @using Orchard.Security;
 @using Orchard.Utility.Extensions;
 
-@if (Model.Comments.Count > 0) { 
-<h2 id="comments">@T.Plural("1 Comment", "{0} Comments", Model.Comments.Count)</h2>
-@Html.RenderPartial("ListOfComments", Model.Comments);
+@if (Model.ContentPart.Comments.Count > 0) { 
+<h2 id="comments">@T.Plural("1 Comment", "{0} Comments", (int)Model.ContentPart.Comments.Count)</h2>
+Html.RenderPartial("ListOfComments", (IEnumerable<Orchard.Comments.Models.CommentPart>)Model.ContentPart.Comments);
 }
 
 @if (Model.CommentsActive == false) {
@@ -21,7 +20,7 @@ else if(!Request.IsAuthenticated && !AuthorizedFor(Permissions.AddComment)) {
 using (Html.BeginForm("Create", "Comment", new { area = "Orchard.Comments" }, FormMethod.Post, new { @class = "comment" })) { 
     @Html.ValidationSummary() 
     <h2 id="addacomment">@T("Add a Comment")</h2>
-    @if (!Request.IsAuthenticated) { 
+    if (!Request.IsAuthenticated) { 
     <fieldset class="who">
         <div>
             <label for="Name">@T("Name")</label>
@@ -37,18 +36,17 @@ using (Html.BeginForm("Create", "Comment", new { area = "Orchard.Comments" }, Fo
         </div>
     </fieldset>
     } else {
-        var currentUser = Html.Resolve<IAuthenticationService>().GetAuthenticatedUser();
-        @Html.Hidden("Name", currentUser.UserName ?? "")
-        @Html.Hidden("Email", currentUser.Email ?? "")
+        @Html.Hidden("Name", WorkContext.CurrentUser.UserName ?? "")
+        @Html.Hidden("Email", WorkContext.CurrentUser.Email ?? "")
     }
     <fieldset class="what">
         <div>
-            <label for="CommentText">@if (Request.IsAuthenticated) { T("Hi, {0}!", Html.Encode(Page.User.Identity.Name))<br /> } @T("Comment")</label>
+            <label for="CommentText">@if (Request.IsAuthenticated) { @T("Hi, {0}!", Html.Encode(WorkContext.CurrentUser.UserName))<br /> } @T("Comment")</label>
             <textarea id="CommentText" rows="10" cols="30" name="CommentText"></textarea>
         </div>
         <div>
             <input type="submit" class="button" value="@T("Submit Comment")" />
-            @Html.Hidden("CommentedOn", Model.ContentItem.Id) 
+            @Html.Hidden("CommentedOn", (int)Model.ContentPart.ContentItem.Id) 
             @Html.Hidden("ReturnUrl", Context.Request.ToUrlString()) 
             @Html.AntiForgeryTokenOrchard() 
         </div>
