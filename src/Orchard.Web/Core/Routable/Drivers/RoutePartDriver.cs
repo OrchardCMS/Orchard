@@ -45,7 +45,7 @@ namespace Orchard.Core.Routable.Drivers {
         }
 
         protected override DriverResult Display(RoutePart part, string displayType, dynamic shapeHelper) {
-            var routePart = shapeHelper.Parts_Routable_RoutePart(ContentPart: part, Title: part.Title);
+            var routePart = shapeHelper.Parts_RoutableTitle(ContentPart: part, Title: part.Title);
             if (!string.IsNullOrWhiteSpace(displayType))
                 routePart.Metadata.Type = string.Format("{0}.{1}", routePart.Metadata.Type, displayType);
             var location = part.GetLocation(displayType, "Header", "5");

@@ -378,23 +378,28 @@ namespace Orchard.ContentManagement {
             new[] { CSharpArgumentInfo.Create(CSharpArgumentInfoFlags.None, null) }));
 
 
-        public dynamic BuildDisplay(dynamic content, string displayType = "") {
+        public dynamic BuildDisplay(IContent content, string displayType = "") {
+            var contentTypeDefinition = content.ContentItem.TypeDefinition;
+            string stereotype;
+            if (!contentTypeDefinition.Settings.TryGetValue("Stereotype", out stereotype))
+                stereotype = "Content";
+
+            var shapeTypeName = "Items_" + stereotype;
+            var shapeDisplayType = string.IsNullOrWhiteSpace(displayType) ? "Detail" : displayType;
+
             var shapeHelper = _shapeHelperFactory.CreateHelper();
-
-            var shapeTypeName = string.IsNullOrEmpty(displayType) ? "Items_Content" : ("Items_Content_" + displayType);
             var itemShape = _shapeHelperCalls.Invoke(shapeHelper, shapeTypeName);
+           
+            itemShape.ContentItem = content.ContentItem;            
+            itemShape.Metadata.DisplayType = shapeDisplayType;
 
-            IContent iContent = content;
-            if (iContent != null)
-                itemShape.ContentItem = iContent.ContentItem;
-
-            var context = new BuildDisplayContext(itemShape, content, displayType, _shapeHelperFactory);
+            var context = new BuildDisplayContext(itemShape, content, shapeDisplayType, _shapeHelperFactory);
             Handlers.Invoke(handler => handler.BuildDisplay(context), Logger);
             return context.Shape;
         }
 
 
-        public dynamic BuildEditor(dynamic content) {
+        public dynamic BuildEditor(IContent content) {
             var shapeHelper = _shapeHelperFactory.CreateHelper();
             var itemShape = shapeHelper.Items_Content_Edit();
 
@@ -407,7 +412,7 @@ namespace Orchard.ContentManagement {
             return context.Shape;
         }
 
-        public dynamic UpdateEditor(dynamic content, IUpdateModel updater) {
+        public dynamic UpdateEditor(IContent content, IUpdateModel updater) {
             var shapeHelper = _shapeHelperFactory.CreateHelper();
             var itemShape = shapeHelper.Items_Content_Edit();
 
