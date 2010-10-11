@@ -55,7 +55,7 @@ namespace Orchard.DisplayManagement.Descriptors {
                         return target(displayContext);
                     }
                 };
-                descriptor.Bindings[_shapeType] = binding;
+                descriptor.Bindings[_bindingName] = binding;
 
             });
         }

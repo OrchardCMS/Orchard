@@ -32,7 +32,7 @@ namespace Orchard.DisplayManagement.Descriptors {
                 var alterations = builderFactory.BuildAlterations()
                     .Where(alteration => IsModuleOrRequestedTheme(alteration, themeName));
 
-                var descriptors = alterations.GroupBy(alteration => alteration.ShapeType)
+                var descriptors = alterations.GroupBy(alteration => alteration.ShapeType, StringComparer.OrdinalIgnoreCase)
                     .Select(group => group.Aggregate(
                         new ShapeDescriptor { ShapeType = group.Key },
                         (descriptor, alteration) => {
@@ -41,8 +41,8 @@ namespace Orchard.DisplayManagement.Descriptors {
                         }));
 
                 return new ShapeTable {
-                    Descriptors = descriptors.ToDictionary(sd => sd.ShapeType),
-                    Bindings = descriptors.SelectMany(sd => sd.Bindings).ToDictionary(kv => kv.Key, kv => kv.Value),
+                    Descriptors = descriptors.ToDictionary(sd => sd.ShapeType, StringComparer.OrdinalIgnoreCase),
+                    Bindings = descriptors.SelectMany(sd => sd.Bindings).ToDictionary(kv => kv.Key, kv => kv.Value, StringComparer.OrdinalIgnoreCase),
                 };
             });
         }
