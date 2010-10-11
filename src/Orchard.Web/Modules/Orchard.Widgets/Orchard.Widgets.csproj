@@ -107,15 +107,13 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Views\Admin\AddLayer.cshtml">
-      <SubType>Designer</SubType>
-    </None>
+    <None Include="Views\Admin\AddLayer.cshtml" />
     <None Include="Views\Admin\AddWidget.cshtml" />
     <None Include="Views\Admin\EditWidget.cshtml" />
     <None Include="Views\Admin\EditLayer.cshtml" />
     <None Include="Views\Admin\Index.cshtml" />
-    <Content Include="Views\EditorTemplates\Parts\Widgets.WidgetPart.cshtml" />
-    <Content Include="Views\EditorTemplates\Parts\Widgets.LayerPart.cshtml" />
+    <None Include="Views\EditorTemplates\Parts\Widgets.WidgetPart.cshtml" />
+    <None Include="Views\EditorTemplates\Parts\Widgets.LayerPart.cshtml" />
     <None Include="Views\EditorTemplates\Parts\Widgets.WidgetBagPart.cshtml" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

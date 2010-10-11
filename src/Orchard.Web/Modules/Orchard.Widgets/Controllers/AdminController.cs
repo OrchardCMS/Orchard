@@ -84,7 +84,8 @@ namespace Orchard.Widgets.Controllers {
                         _widgetsService.MoveWidgetUp(int.Parse(moveUpAction));
                     }
                 }
-            } catch (Exception exception) {
+            } 
+            catch (Exception exception) {
                 Services.Notifier.Error(T("Moving widget failed: {0}", exception.Message));
             }
 
@@ -95,8 +96,7 @@ namespace Orchard.Widgets.Controllers {
             if (!Services.Authorizer.Authorize(Permissions.ManageWidgets, T(NotAuthorizedManageWidgetsLabel)))
                 return new HttpUnauthorizedResult();
 
-            try
-            {
+            try {
                 WidgetPart widgetPart = Services.ContentManager.New<WidgetPart>(widgetType);
                 if (widgetPart == null)
                     return new NotFoundResult();
@@ -104,16 +104,14 @@ namespace Orchard.Widgets.Controllers {
                 dynamic model = Services.ContentManager.BuildEditor(widgetPart);
                 return View(model);
             }
-            catch (Exception exception)
-            {
+            catch (Exception exception) {
                 Services.Notifier.Error(T("Creating widget failed: {0}", exception.Message));
                 return RedirectToAction("Index");
             }
         }
 
         [HttpPost, ActionName("AddWidget")]
-        public ActionResult AddWidgetPOST(int layerId, string widgetType)
-        {
+        public ActionResult AddWidgetPOST(int layerId, string widgetType) {
             if (!Services.Authorizer.Authorize(Permissions.ManageWidgets, T(NotAuthorizedManageWidgetsLabel)))
                 return new HttpUnauthorizedResult();
 
@@ -132,8 +130,7 @@ namespace Orchard.Widgets.Controllers {
                 Services.Notifier.Information(T("Your {0} has been created.", widgetPart.TypeDefinition.DisplayName));
                 return RedirectToAction("Index");
             }
-            catch (Exception exception)
-            {
+            catch (Exception exception) {
                 Services.Notifier.Error(T("Creating widget failed: {0}", exception.Message));
                 return RedirectToAction("Index");
             }
@@ -151,8 +148,7 @@ namespace Orchard.Widgets.Controllers {
                 dynamic model = Services.ContentManager.BuildEditor(layerPart);
                 return View(model);
             }
-            catch (Exception exception)
-            {
+            catch (Exception exception) {
                 Services.Notifier.Error(T("Creating layer failed: {0}", exception.Message));
                 return RedirectToAction("Index");
             }
@@ -177,8 +173,7 @@ namespace Orchard.Widgets.Controllers {
                 Services.Notifier.Information(T("Your {0} has been created.", layerPart.TypeDefinition.DisplayName));
                 return RedirectToAction("Index");
             }
-            catch (Exception exception)
-            {
+            catch (Exception exception) {
                 Services.Notifier.Error(T("Creating layer failed: {0}", exception.Message));
                 return RedirectToAction("Index");
             }
@@ -197,8 +192,7 @@ namespace Orchard.Widgets.Controllers {
                 dynamic model = Services.ContentManager.BuildEditor(layerPart);
                 return View(model);
             }
-            catch (Exception exception)
-            {
+            catch (Exception exception) {
                 Services.Notifier.Error(T("Editing layer failed: {0}", exception.Message));
                 return RedirectToAction("Index");
             }
@@ -224,8 +218,7 @@ namespace Orchard.Widgets.Controllers {
                 Services.Notifier.Information(T("Your {0} has been saved.", layerPart.TypeDefinition.DisplayName));
                 return RedirectToAction("Index");
             }
-            catch (Exception exception)
-            {
+            catch (Exception exception) {
                 Services.Notifier.Error(T("Editing layer failed: {0}", exception.Message));
                 return RedirectToAction("Index");
             }
@@ -262,8 +255,7 @@ namespace Orchard.Widgets.Controllers {
                 dynamic model = Services.ContentManager.BuildEditor(widgetPart);
                 return View(model);
             }
-            catch (Exception exception)
-            {
+            catch (Exception exception) {
                 Services.Notifier.Error(T("Editing widget failed: {0}", exception.Message));
                 return RedirectToAction("Index");
             }
@@ -289,8 +281,7 @@ namespace Orchard.Widgets.Controllers {
                 Services.Notifier.Information(T("Your {0} has been saved.", widgetPart.TypeDefinition.DisplayName));
                 return RedirectToAction("Index");
             }
-            catch (Exception exception)
-            {
+            catch (Exception exception) {
                 Services.Notifier.Error(T("Editing widget failed: {0}", exception.Message));
                 return RedirectToAction("Index");
             }
@@ -305,7 +296,8 @@ namespace Orchard.Widgets.Controllers {
             try {
                 _widgetsService.DeleteWidget(id);
                 Services.Notifier.Information(T("Widget was successfully deleted"));
-            } catch (Exception exception) {
+            } 
+            catch (Exception exception) {
                 Services.Notifier.Error(T("Removing Widget failed: {0}", exception.Message));
             }
 

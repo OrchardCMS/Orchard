@@ -198,8 +198,7 @@ namespace Orchard.Tests.Modules.Widgets.Services {
         }
 
         [Test]
-        public void GetZonesTest()
-        {
+        public void GetZonesTest() {
             IEnumerable<string> zones = _widgetService.GetZones();
             Assert.That(zones.Count(), Is.EqualTo(2), "One zone on the mock list");
             Assert.That(zones.FirstOrDefault(zone => zone == ThemeZoneName1), Is.Not.Null);
