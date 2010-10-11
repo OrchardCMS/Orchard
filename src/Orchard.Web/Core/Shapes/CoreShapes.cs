@@ -36,12 +36,14 @@ namespace Orchard.Core.Shapes {
                 .OnCreating(creating => creating.Behaviors.Add(new ZoneHoldingBehavior(name => CreateZone(creating, name))))
                 .OnCreated(created => {
                     var layout = created.Shape;
-                    layout.Head = created.New.DocumentZone();
-                    layout.Body = created.New.DocumentZone();
-                    layout.Tail = created.New.DocumentZone();
-                    layout.Content = created.New.Zone();
+                    layout.Head = created.New.DocumentZone(ZoneName: "Head");
+                    layout.Body = created.New.DocumentZone(ZoneName: "Body");
+                    layout.Tail = created.New.DocumentZone(ZoneName: "Tail");
 
                     layout.Body.Add(created.New.PlaceChildContent(Source: layout));
+
+                    layout.Content = created.New.Zone();
+                    layout.Content.ZoneName = "Content";
                     layout.Content.Add(created.New.PlaceChildContent(Source: layout));
                 });
 
@@ -51,7 +53,7 @@ namespace Orchard.Core.Shapes {
             builder.Describe("Zone")
                 .OnCreating(creating => creating.BaseType = typeof(Zone))
                 .OnDisplaying(displaying => {
-                    var zone = displaying.Shape;                    
+                    var zone = displaying.Shape;
                     zone.Classes.Add("zone-" + zone.ZoneName.ToLower());
                     zone.Classes.Add("zone");
                     zone.Metadata.Alternates.Add("Zone__" + zone.ZoneName);
@@ -67,8 +69,9 @@ namespace Orchard.Core.Shapes {
 
             builder.Describe("MenuItem")
                 .OnDisplaying(displaying => {
-                    var menu = displaying.Shape.Menu;
-                    menu.Metadata.Alternates.Add("MenuItem__" + menu.MenuName);
+                    var menuItem = displaying.Shape;
+                    var menu = menuItem.Menu;
+                    menuItem.Metadata.Alternates.Add("MenuItem__" + menu.MenuName);
                 });
 
             // 'List' shapes start with several empty collections

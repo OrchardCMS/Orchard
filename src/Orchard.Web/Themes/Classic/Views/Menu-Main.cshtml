@@ -2,9 +2,9 @@
     // Model is Model.Menu from the layout (Layout.Menu)
 	var tag = Tag(Model, "ul");
 }
-<nav>2
-    [@tag.StartElement
+<nav>
+    @tag.StartElement
         @* see MenuItem shape template *@
-        @DisplayChildren(Model)
-    @tag.EndElement]
+        [@DisplayChildren(Model)]
+    @tag.EndElement
 </nav>

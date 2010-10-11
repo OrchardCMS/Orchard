@@ -18,8 +18,8 @@ namespace Orchard.Tests.DisplayManagement {
 
         protected override void Register(Autofac.ContainerBuilder builder) {
             _defaultShapeTable = new ShapeTable {
-                Descriptors = new Dictionary<string, ShapeDescriptor>(),
-                Bindings = new Dictionary<string, ShapeBinding>()
+                Descriptors = new Dictionary<string, ShapeDescriptor>(StringComparer.OrdinalIgnoreCase),
+                Bindings = new Dictionary<string, ShapeBinding>(StringComparer.OrdinalIgnoreCase)
             };
             _workContext = new TestWorkContext {
                 CurrentTheme = new Theme { ThemeName = "Hello" }
@@ -321,6 +321,27 @@ namespace Orchard.Tests.DisplayManagement {
 
             Assert.That(resultNormally.ToString(), Is.EqualTo("alpha"));
             Assert.That(resultWithOverride.ToString(), Is.EqualTo("beta"));
+        }
+
+
+        [Test]
+        public void ShapeTypeAndBindingNamesAreNotCaseSensitive() {
+            var displayManager = _container.Resolve<IDisplayManager>();
+
+            var shapeFoo = new Shape {
+                Metadata = new ShapeMetadata {
+                    Type = "foo"
+                }
+            };
+            var descriptorFoo = new ShapeDescriptor {
+                ShapeType = "Foo",
+            };
+            AddBinding(descriptorFoo, "Foo", ctx => new HtmlString("alpha"));
+            AddShapeDescriptor(descriptorFoo);
+
+            var result = displayManager.Execute(CreateDisplayContext(shapeFoo));
+
+            Assert.That(result.ToString(), Is.EqualTo("alpha"));            
         }
     }
 }
