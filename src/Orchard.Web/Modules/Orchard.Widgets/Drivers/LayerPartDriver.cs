@@ -11,7 +11,7 @@ namespace Orchard.Widgets.Drivers {
 
         protected override DriverResult Editor(LayerPart layerPart, dynamic shapeHelper) {
             ContentLocation location = layerPart.GetLocation("Editor");
-            return ContentPartTemplate(layerPart, "Parts/Widgets.Layer").Location(location);
+            return ContentPartTemplate(layerPart, "Parts/Widgets.LayerPart").Location(location);
         }
 
         protected override DriverResult Editor(LayerPart layerPart, IUpdateModel updater, dynamic shapeHelper) {

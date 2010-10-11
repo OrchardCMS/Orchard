@@ -19,7 +19,7 @@ namespace Orchard.Widgets.Drivers {
             widgetPart.AvailableZones = _widgetsService.GetZones();
 
             ContentLocation location = widgetPart.GetLocation("Editor");
-            return ContentPartTemplate(widgetPart, "Parts/Widgets.Widget").Location(location);
+            return ContentPartTemplate(widgetPart, "Parts/Widgets.WidgetPart").Location(location);
         }
 
         protected override DriverResult Editor(WidgetPart widgetPart, IUpdateModel updater, dynamic shapeHelper) {
