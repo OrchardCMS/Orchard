@@ -24,12 +24,12 @@ namespace Orchard.ContentManagement.Handlers {
             return this;
         }
 
-        protected override void BuildEditorShape(BuildEditorModelContext context, ContentPart<TRecord> part) {
-            var templateShape = context.Shape.EditorTemplate(TemplateName: _templateName, Model: part.Record, Prefix: _prefix);
-            context.Model.Zones[_location].Add(templateShape, _position);
+        protected override void BuildEditorShape(BuildEditorContext context, ContentPart<TRecord> part) {
+            var templateShape = context.New.EditorTemplate(TemplateName: _templateName, Model: part.Record, Prefix: _prefix);
+            context.Shape.Zones[_location].Add(templateShape, _position);
         }
 
-        protected override void UpdateEditorShape(UpdateEditorModelContext context, ContentPart<TRecord> part) {
+        protected override void UpdateEditorShape(UpdateEditorContext context, ContentPart<TRecord> part) {
             context.Updater.TryUpdateModel(part.Record, _prefix, null, null);
             BuildEditorShape(context, part);
         }

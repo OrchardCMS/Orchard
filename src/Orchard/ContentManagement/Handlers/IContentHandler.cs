@@ -19,8 +19,8 @@
         void Indexed(IndexContentContext context);
 
         void GetContentItemMetadata(GetContentItemMetadataContext context);
-        void BuildDisplayShape(BuildDisplayModelContext context);
-        void BuildEditorShape(BuildEditorModelContext context);
-        void UpdateEditorShape(UpdateEditorModelContext context);
+        void BuildDisplay(BuildDisplayContext context);
+        void BuildEditor(BuildEditorContext context);
+        void UpdateEditor(UpdateEditorContext context);
     }
 }

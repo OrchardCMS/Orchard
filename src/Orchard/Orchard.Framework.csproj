@@ -159,7 +159,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ContentManagement\Handlers\BuildModelContext.cs" />
+    <Compile Include="ContentManagement\Drivers\ContentShapeResult.cs" />
+    <Compile Include="ContentManagement\Handlers\BuildShapeContext.cs" />
     <Compile Include="DisplayManagement\Descriptors\ShapeDescriptor.cs" />
     <Compile Include="DisplayManagement\Descriptors\ShapeAlteration.cs" />
     <Compile Include="DisplayManagement\Descriptors\ShapeAlterationBuilder.cs" />
@@ -270,10 +271,10 @@
     <Compile Include="ContentManagement\Handlers\ActivatingFilter.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="ContentManagement\Handlers\BuildDisplayModelContext.cs">
+    <Compile Include="ContentManagement\Handlers\BuildDisplayContext.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="ContentManagement\Handlers\BuildEditorModelContext.cs">
+    <Compile Include="ContentManagement\Handlers\BuildEditorContext.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="ContentManagement\Handlers\ContentContextBase.cs">
@@ -337,7 +338,7 @@
     <Compile Include="ContentManagement\Handlers\TemplateFilterForRecord.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="ContentManagement\Handlers\UpdateEditorModelContext.cs">
+    <Compile Include="ContentManagement\Handlers\UpdateEditorContext.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="ContentManagement\Handlers\VersionContentContext.cs">

@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using Autofac;
-using ClaySharp.Implementation;
 using Microsoft.CSharp.RuntimeBinder;
 using Orchard.ContentManagement.Handlers;
 using Orchard.ContentManagement.MetaData;
@@ -379,34 +378,46 @@ namespace Orchard.ContentManagement {
             new[] { CSharpArgumentInfo.Create(CSharpArgumentInfoFlags.None, null) }));
 
 
-        public dynamic BuildDisplayModel<TContent>(TContent content, string displayType = "") where TContent : IContent {
+        public dynamic BuildDisplay(dynamic content, string displayType = "") {
             var shapeHelper = _shapeHelperFactory.CreateHelper();
 
             var shapeTypeName = string.IsNullOrEmpty(displayType) ? "Items_Content" : ("Items_Content_" + displayType);
             var itemShape = _shapeHelperCalls.Invoke(shapeHelper, shapeTypeName);
 
-            itemShape.ContentItem = content.ContentItem;
+            IContent iContent = content;
+            if (iContent != null)
+                itemShape.ContentItem = iContent.ContentItem;
 
-            var context = new BuildDisplayModelContext(content, displayType, itemShape, _shapeHelperFactory);
-            Handlers.Invoke(handler => handler.BuildDisplayShape(context), Logger);
-            return context.Model;
+            var context = new BuildDisplayContext(itemShape, content, displayType, _shapeHelperFactory);
+            Handlers.Invoke(handler => handler.BuildDisplay(context), Logger);
+            return context.Shape;
         }
 
 
-        public dynamic BuildEditorModel<TContent>(TContent content) where TContent : IContent {
+        public dynamic BuildEditor(dynamic content) {
             var shapeHelper = _shapeHelperFactory.CreateHelper();
-            var itemShape = shapeHelper.Items_Content_Edit(ContentItem: content.ContentItem);
-            var context = new BuildEditorModelContext(content, itemShape, _shapeHelperFactory);
-            Handlers.Invoke(handler => handler.BuildEditorShape(context), Logger);
-            return context.Model;
+            var itemShape = shapeHelper.Items_Content_Edit();
+
+            IContent iContent = content;
+            if (iContent != null)
+                itemShape.ContentItem = iContent.ContentItem;
+
+            var context = new BuildEditorContext(itemShape, content, _shapeHelperFactory);
+            Handlers.Invoke(handler => handler.BuildEditor(context), Logger);
+            return context.Shape;
         }
 
-        public dynamic UpdateEditorModel<TContent>(TContent content, IUpdateModel updater) where TContent : IContent {
+        public dynamic UpdateEditor(dynamic content, IUpdateModel updater) {
             var shapeHelper = _shapeHelperFactory.CreateHelper();
-            var itemShape = shapeHelper.Items_Content_Edit(ContentItem: content.ContentItem);
-            var context = new UpdateEditorModelContext(content, updater, itemShape, _shapeHelperFactory);
-            Handlers.Invoke(handler => handler.UpdateEditorShape(context), Logger);
-            return context.Model;
+            var itemShape = shapeHelper.Items_Content_Edit();
+
+            IContent iContent = content;
+            if (iContent != null)
+                itemShape.ContentItem = iContent.ContentItem;
+
+            var context = new UpdateEditorContext(itemShape, content, updater, _shapeHelperFactory);
+            Handlers.Invoke(handler => handler.UpdateEditor(context), Logger);
+            return context.Shape;
         }
 
         public IContentQuery<ContentItem> Query() {

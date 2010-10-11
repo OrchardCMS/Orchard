@@ -15,14 +15,14 @@ namespace Orchard.ContentManagement.Drivers {
             Prefix = prefix;
         }
 
-        public override void Apply(BuildDisplayModelContext context) {
-            var templateShape = context.Shape.DisplayTemplate(TemplateName: TemplateName, Model: Model, Prefix: Prefix);
-            context.Model.Zones[Zone].Add(templateShape, Position);
+        public override void Apply(BuildDisplayContext context) {
+            var templateShape = context.New.DisplayTemplate(TemplateName: TemplateName, Model: Model, Prefix: Prefix);
+            context.Shape.Zones[Zone].Add(templateShape, Position);
         }
 
-        public override void Apply(BuildEditorModelContext context) {
-            var templateShape = context.Shape.EditorTemplate(TemplateName: TemplateName, Model: Model, Prefix: Prefix);
-            context.Model.Zones[Zone].Add(templateShape, Position);
+        public override void Apply(BuildEditorContext context) {
+            var templateShape = context.New.EditorTemplate(TemplateName: TemplateName, Model: Model, Prefix: Prefix);
+            context.Shape.Zones[Zone].Add(templateShape, Position);
         }
 
         public ContentTemplateResult Location(string zone) {

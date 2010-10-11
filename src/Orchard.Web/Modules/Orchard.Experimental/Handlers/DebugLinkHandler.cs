@@ -5,15 +5,15 @@ using Orchard.Experimental.Models;
 namespace Orchard.Experimental.Handlers {
     [UsedImplicitly]
     public class DebugLinkHandler : ContentHandler {
-        protected override void BuildDisplayShape(BuildDisplayModelContext context) {
+        protected override void BuildDisplayShape(BuildDisplayContext context) {
             var experimentalSettings = context.ContentItem.TypeDefinition.Settings.GetModel<Settings.ExperimentalSettings>();
             if (experimentalSettings.ShowDebugLinks)
-                context.Model.Zones["Recap"].Add(new ShowDebugLink { ContentItem = context.ContentItem }, "9999");
+                context.Shape.Zones["Recap"].Add(new ShowDebugLink { ContentItem = context.ContentItem }, "9999");
         }
-        protected override void BuildEditorShape(BuildEditorModelContext context) {
+        protected override void BuildEditorShape(BuildEditorContext context) {
             var experimentalSettings = context.ContentItem.TypeDefinition.Settings.GetModel<Settings.ExperimentalSettings>();
             if (experimentalSettings.ShowDebugLinks)
-                context.Model.Zones["Recap"].Add(new ShowDebugLink { ContentItem = context.ContentItem }, "9999");
+                context.Shape.Zones["Recap"].Add(new ShowDebugLink { ContentItem = context.ContentItem }, "9999");
         }
     }
 }

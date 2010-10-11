@@ -114,7 +114,7 @@ namespace Orchard.Core.Contents.Controllers {
 
 
             var list = Shape.List();
-            list.AddRange(contentItems.Select(ci => _contentManager.BuildDisplayModel(ci, "SummaryAdmin")));
+            list.AddRange(contentItems.Select(ci => _contentManager.BuildDisplay(ci, "SummaryAdmin")));
 
             var viewModel = Shape.ViewModel()
                 .ContentItems(list)
@@ -216,7 +216,7 @@ namespace Orchard.Core.Contents.Controllers {
             if (!Services.Authorizer.Authorize(Permissions.PublishContent, contentItem, T("Cannot create content")))
                 return new HttpUnauthorizedResult();
 
-            var model = _contentManager.BuildEditorModel(contentItem);
+            var model = _contentManager.BuildEditor(contentItem);
             return View(model);
         }
 
@@ -229,7 +229,7 @@ namespace Orchard.Core.Contents.Controllers {
                 return new HttpUnauthorizedResult();
 
             _contentManager.Create(contentItem, VersionOptions.Draft);
-            var model = _contentManager.UpdateEditorModel(contentItem, this);
+            var model = _contentManager.UpdateEditor(contentItem, this);
 
             if (!ModelState.IsValid) {
                 _transactionManager.Cancel();
@@ -254,7 +254,7 @@ namespace Orchard.Core.Contents.Controllers {
             if (!Services.Authorizer.Authorize(Permissions.EditOthersContent, contentItem, T("Cannot edit content")))
                 return new HttpUnauthorizedResult();
 
-            var model = _contentManager.BuildEditorModel(contentItem);
+            var model = _contentManager.BuildEditor(contentItem);
 
             return View(model);
         }
@@ -269,7 +269,7 @@ namespace Orchard.Core.Contents.Controllers {
             if (!Services.Authorizer.Authorize(Permissions.EditOthersContent, contentItem, T("Couldn't edit content")))
                 return new HttpUnauthorizedResult();
 
-            var model = _contentManager.UpdateEditorModel(contentItem, this);
+            var model = _contentManager.UpdateEditor(contentItem, this);
             if (!ModelState.IsValid) {
                 _transactionManager.Cancel();
                 return View("Edit", model);

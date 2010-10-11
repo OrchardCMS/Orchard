@@ -4,6 +4,6 @@
 }
 @if (AuthorizedFor(Orchard.Blogs.Permissions.ManageBlogs)) {
 <div class="item-properties actions">
-    <p><a href="@Url.BlogEdit((string)Model.Slug)" class="edit">@T("Blog Properties")</a></p>
+    <p><a href="@Url.BlogEdit((string)Model.ContentPart.Slug)" class="edit">@T("Blog Properties")</a></p>
 </div>
 }

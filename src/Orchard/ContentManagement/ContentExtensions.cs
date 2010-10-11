@@ -168,14 +168,14 @@ namespace Orchard.ContentManagement {
             var content = manager.Get<TContent>(id);
             if (content == null)
                 return null;
-            return manager.BuildDisplayModel(content, displayType);
+            return manager.BuildDisplay(content, displayType);
         }
 
         public static TContent BuildEditorShape<TContent>(this IContentManager manager, int id) where TContent : class, IContent {
             var content = manager.Get<TContent>(id);
             if (content == null)
                 return null;
-            return manager.BuildEditorModel(content);
+            return manager.BuildEditor(content);
 
         }
 
@@ -183,7 +183,7 @@ namespace Orchard.ContentManagement {
             var content = manager.Get<TContent>(id);
             if (content == null)
                 return null;
-            return manager.UpdateEditorModel(content, updater);
+            return manager.UpdateEditor(content, updater);
         }
 
 

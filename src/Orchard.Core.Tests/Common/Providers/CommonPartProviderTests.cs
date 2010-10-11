@@ -109,7 +109,7 @@ namespace Orchard.Core.Tests.Common.Providers {
             var item = contentManager.Create<ICommonPart>("test-item", VersionOptions.Draft, init => { });
             var viewModel = new OwnerEditorViewModel() { Owner = "User" };
             updateModel.Setup(x => x.TryUpdateModel(viewModel, "", null, null)).Returns(true);
-            contentManager.UpdateEditorModel(item.ContentItem, updateModel.Object);
+            contentManager.UpdateEditor(item.ContentItem, updateModel.Object);
         }
 
         class UpdatModelStub : IUpdateModel {
@@ -148,7 +148,7 @@ namespace Orchard.Core.Tests.Common.Providers {
 
             var updater = new UpdatModelStub() { Owner = null };
 
-            contentManager.UpdateEditorModel(item.ContentItem, updater);
+            contentManager.UpdateEditor(item.ContentItem, updater);
         }
 
         [Test, Ignore("Fix pending")]
@@ -166,7 +166,7 @@ namespace Orchard.Core.Tests.Common.Providers {
 
             var updater = new UpdatModelStub() {Owner = ""};
 
-            contentManager.UpdateEditorModel(item.ContentItem, updater);
+            contentManager.UpdateEditor(item.ContentItem, updater);
 
             Assert.That(updater.ModelErrors.ContainsKey("CommonPart.Owner"), Is.True);
         }

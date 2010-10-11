@@ -48,8 +48,8 @@ namespace Orchard.Core.Routable.Handlers {
             OnIndexing<RoutePart>((context, part) => context.DocumentIndex.Add("title", part.Record.Title).RemoveTags().Analyze());
         }
 
-        private static void SetModelProperties(BuildModelContext context, RoutePart routable) {
-            var item = context.Model;
+        private static void SetModelProperties(BuildShapeContext context, RoutePart routable) {
+            var item = context.Shape;
             item.Title = routable.Title;
             item.Slug = routable.Slug;
             item.Path = routable.Path;

@@ -59,7 +59,7 @@ namespace Orchard.Users.Controllers {
 
             var user = Services.ContentManager.New<IUser>("User");
             var model = new UserCreateViewModel {
-                User = Services.ContentManager.BuildEditorModel(user)
+                User = Services.ContentManager.BuildEditor(user)
             };
             return View(model);
         }
@@ -70,7 +70,7 @@ namespace Orchard.Users.Controllers {
                 return new HttpUnauthorizedResult();
 
             var user = Services.ContentManager.New<IUser>("User");
-            model.User = Services.ContentManager.UpdateEditorModel(user, this);
+            model.User = Services.ContentManager.UpdateEditor(user, this);
             if (!ModelState.IsValid) {
                 Services.TransactionManager.Cancel();
                 return View(model);
@@ -91,7 +91,7 @@ namespace Orchard.Users.Controllers {
                                                          model.Email,
                                                          null, null, true));
 
-            model.User = Services.ContentManager.UpdateEditorModel(user, this);
+            model.User = Services.ContentManager.UpdateEditor(user, this);
 
             if (ModelState.IsValid == false) {
                 Services.TransactionManager.Cancel();

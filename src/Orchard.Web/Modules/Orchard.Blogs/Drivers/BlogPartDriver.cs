@@ -34,38 +34,50 @@ namespace Orchard.Blogs.Drivers {
 
         protected override string Prefix { get { return ""; } }
 
-        protected override DriverResult Display(BlogPart blogPart, string displayType) {
+        protected override DriverResult Display(BlogPart part, string displayType, dynamic shapeHelper) {
+            var driverResults = new List<DriverResult>();
 
-            IEnumerable<dynamic > blogPosts = null;
+            var metadata = shapeHelper.Blogs_Blog_Manage(ContentPart: part);
+            metadata.Metadata.Type = "Blogs_Blog.Manage";
+            driverResults.Add(ContentShape(metadata).Location("manage"));
+
+            var description = shapeHelper.Blogs_Blog_Description(ContentPart: part);
+            description.Metadata.Type = "Blogs_Blog.Description";
+            driverResults.Add(ContentShape(description).Location("manage", "after"));
+
             if (displayType.StartsWith("Admin")) {
-                blogPosts = _blogPostService.Get(blogPart, VersionOptions.Latest)
-                    .Select(bp => _contentManager.BuildDisplayModel(bp, "SummaryAdmin.BlogPost"));
+                var list = shapeHelper.List();
+                list.AddRange(_blogPostService.Get(part, VersionOptions.Latest)
+                                          .Select(bp => _contentManager.BuildDisplay(bp, "SummaryAdmin.BlogPost")));
+                var blogPostList = shapeHelper.Blogs_BlogPost_List(ContentPart: part, BlogPosts: list);
+                blogPostList.Metadata.Type = "Blogs_BlogPost.List.Admin";
+                var contentShape = ContentShape(blogPostList).Location("primary");
+                driverResults.Add(contentShape);
             }
             else if (!displayType.Contains("Summary")) {
-                blogPosts = _blogPostService.Get(blogPart)
-                    .Select(bp => _contentManager.BuildDisplayModel(bp, "Summary.BlogPost"));
-                _feedManager.Register(blogPart);
+                var list = shapeHelper.List();
+                list.AddRange(_blogPostService.Get(part)
+                                          .Select(bp => _contentManager.BuildDisplay(bp, "Summary.BlogPost")));
+                var blogPostList = shapeHelper.Blogs_BlogPost_List(ContentPart: part, BlogPosts: list);
+                blogPostList.Metadata.Type = "Blogs_BlogPost.List";
+                var contentShape = ContentShape(blogPostList).Location("primary");
+                driverResults.Add(contentShape);
+
+                _feedManager.Register(part);
             }
 
-            var blogPostList = Shape.List();
-            blogPostList.AddRange(blogPosts);
-
-            return Combined(
-                ContentPartTemplate(blogPart, "Parts/Blogs.Blog.Manage").Location("manage"),
-                ContentPartTemplate(blogPart, "Parts/Blogs.Blog.Metadata").Location("metadata"),
-                ContentPartTemplate(blogPart, "Parts/Blogs.Blog.Description").Location("manage", "after"),
-                ContentPartTemplate(blogPostList, "Parts/Blogs.BlogPost.List").LongestMatch(displayType, "Admin").Location("primary"));
+            return Combined(driverResults.ToArray());
         }
 
-        protected override DriverResult Editor(BlogPart blogPart) {
+        protected override DriverResult Editor(BlogPart blogPart, dynamic shapeHelper) {
             var location = blogPart.GetLocation("Editor");
             return Combined(
                 ContentPartTemplate(blogPart, "Parts/Blogs.Blog.Fields").Location(location));
         }
 
-        protected override DriverResult Editor(BlogPart blogPart, IUpdateModel updater) {
+        protected override DriverResult Editor(BlogPart blogPart, IUpdateModel updater, dynamic shapeHelper) {
             updater.TryUpdateModel(blogPart, Prefix, null, null);
-            return Editor(blogPart);
+            return Editor(blogPart, shapeHelper);
         }
     }
 }

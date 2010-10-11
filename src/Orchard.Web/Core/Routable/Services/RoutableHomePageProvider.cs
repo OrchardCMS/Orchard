@@ -37,7 +37,7 @@ namespace Orchard.Core.Routable.Services {
             if (contentItem == null || !contentItem.Is<RoutePart>())
                 return new NotFoundResult();
 
-            var model = _contentManager.BuildDisplayModel(contentItem);
+            var model = _contentManager.BuildDisplay(contentItem);
 
             return new ViewResult {
                 ViewName = "Display",

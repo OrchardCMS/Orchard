@@ -1,13 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text.RegularExpressions;
 using System.Web;
 using JetBrains.Annotations;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Aspects;
 using Orchard.ContentManagement.Drivers;
 using Orchard.Core.Common.Models;
-using Orchard.Core.Common.Services;
 using Orchard.Core.Common.Settings;
 using Orchard.Core.Common.ViewModels;
 using Orchard.Core.ContentsLocation.Models;
@@ -35,26 +33,29 @@ namespace Orchard.Core.Common.Drivers {
             get { return "Body"; }
         }
 
-        // \/\/ Hackalicious on many accounts - don't copy what has been done here for the wrapper \/\/
-        protected override DriverResult Display(BodyPart part, string displayType) {
+        protected override DriverResult Display(BodyPart part, string displayType, dynamic shapeHelper) {
             var bodyText = _htmlFilters.Aggregate(part.Text, (text, filter) => filter.ProcessContent(text));
-            var model = new BodyDisplayViewModel { BodyPart = part, Html = new HtmlString(bodyText) };
+            var body = shapeHelper.Common_Body(ContentPart: part, Html: new HtmlString(bodyText));
+            if (!string.IsNullOrWhiteSpace(displayType))
+                body.Metadata.Type = string.Format("{0}.{1}", body.Metadata.Type, displayType);
             var location = part.GetLocation(displayType);
 
-            return Combined(
-                Services.Authorizer.Authorize(Permissions.ChangeOwner) ? ContentPartTemplate(model, "Parts/Common.Body.ManageWrapperPre").LongestMatch(displayType, "SummaryAdmin").Location(location) : null,
-                Services.Authorizer.Authorize(Permissions.ChangeOwner) ? ContentPartTemplate(model, "Parts/Common.Body.Manage").LongestMatch(displayType, "SummaryAdmin").Location(location) : null,
-                ContentPartTemplate(model, TemplateName, Prefix).LongestMatch(displayType, "Summary", "SummaryAdmin").Location(location),
-                Services.Authorizer.Authorize(Permissions.ChangeOwner) ? ContentPartTemplate(model, "Parts/Common.Body.ManageWrapperPost").LongestMatch(displayType, "SummaryAdmin").Location(location) : null);
+            //return Combined(
+            //    Services.Authorizer.Authorize(Permissions.ChangeOwner) ? ContentPartTemplate(model, "Parts/Common.Body.ManageWrapperPre").LongestMatch(displayType, "SummaryAdmin").Location(location) : null,
+            //    Services.Authorizer.Authorize(Permissions.ChangeOwner) ? ContentPartTemplate(model, "Parts/Common.Body.Manage").LongestMatch(displayType, "SummaryAdmin").Location(location) : null,
+            //    ContentPartTemplate(model, TemplateName, Prefix).LongestMatch(displayType, "Summary", "SummaryAdmin").Location(location),
+            //    Services.Authorizer.Authorize(Permissions.ChangeOwner) ? ContentPartTemplate(model, "Parts/Common.Body.ManageWrapperPost").LongestMatch(displayType, "SummaryAdmin").Location(location) : null);
+
+            return ContentShape(body).Location(location);
         }
 
-        protected override DriverResult Editor(BodyPart part) {
+        protected override DriverResult Editor(BodyPart part, dynamic shapeHelper) {
             var model = BuildEditorViewModel(part);
             var location = part.GetLocation("Editor");
             return ContentPartTemplate(model, TemplateName, Prefix).Location(location);
         }
 
-        protected override DriverResult Editor(BodyPart part, IUpdateModel updater) {
+        protected override DriverResult Editor(BodyPart part, IUpdateModel updater, dynamic shapeHelper) {
             var model = BuildEditorViewModel(part);
             updater.TryUpdateModel(model, Prefix, null, null);
 

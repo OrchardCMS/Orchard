@@ -13,13 +13,13 @@ namespace Orchard.Comments.Drivers {
 
         protected override string Prefix { get { return "CommentSettings"; } }
 
-        protected override DriverResult Editor(CommentSettingsPart part) {
+        protected override DriverResult Editor(CommentSettingsPart part, dynamic shapeHelper) {
             return ContentPartTemplate(part.Record, "Parts/Comments.SiteSettings");
         }
 
-        protected override DriverResult Editor(CommentSettingsPart part, IUpdateModel updater) {
+        protected override DriverResult Editor(CommentSettingsPart part, IUpdateModel updater, dynamic shapeHelper) {
             updater.TryUpdateModel(part.Record, Prefix, null, null);
-            return Editor(part);
+            return Editor(part, shapeHelper);
         }
     }
 }

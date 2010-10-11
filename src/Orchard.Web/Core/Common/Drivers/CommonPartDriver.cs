@@ -35,19 +35,21 @@ namespace Orchard.Core.Common.Drivers {
         public Localizer T { get; set; }
         public IOrchardServices Services { get; set; }
 
-        protected override DriverResult Display(CommonPart part, string displayType) {
-            return ContentPartTemplate(new CommonMetadataViewModel(part), "Parts/Common.Metadata")
-                .LongestMatch(displayType, "Summary", "SummaryAdmin")
-                .Location(part.GetLocation(displayType));
+        protected override DriverResult Display(CommonPart part, string displayType, dynamic shapeHelper) {
+            var metadata = shapeHelper.Common_Metadata(ContentPart: part);
+            if (!string.IsNullOrWhiteSpace(displayType))
+                metadata.Metadata.Type = string.Format("{0}.{1}", metadata.Metadata.Type, displayType);
+            var location = part.GetLocation(displayType);
+            return ContentShape(metadata).Location(location);
         }
 
-        protected override DriverResult Editor(CommonPart part) {
+        protected override DriverResult Editor(CommonPart part, dynamic shapeHelper) {
             return Combined(
                 OwnerEditor(part, null),
                 ContainerEditor(part, null));
         }
 
-        protected override DriverResult Editor(CommonPart instance, ContentManagement.IUpdateModel updater) {
+        protected override DriverResult Editor(CommonPart instance, IUpdateModel updater, dynamic shapeHelper) {
             // this event is hooked so the modified timestamp is changed when an edit-post occurs.            
             instance.ModifiedUtc = _clock.UtcNow;
             instance.VersionModifiedUtc = _clock.UtcNow;

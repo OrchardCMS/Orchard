@@ -36,25 +36,25 @@ namespace Orchard.ContentManagement.Drivers.Coordinators {
             }
         }
 
-        public override void BuildDisplayShape(BuildDisplayModelContext context) {
+        public override void BuildDisplay(BuildDisplayContext context) {
             _drivers.Invoke(driver => {
-                var result = driver.BuildDisplayShape(context);
+                var result = driver.BuildDisplay(context);
                 if (result != null)
                     result.Apply(context);
             }, Logger);
         }
 
-        public override void BuildEditorShape(BuildEditorModelContext context) {
+        public override void BuildEditor(BuildEditorContext context) {
             _drivers.Invoke(driver => {
-                var result = driver.BuildEditorShape(context);
+                var result = driver.BuildEditor(context);
                 if (result != null)
                     result.Apply(context);
             }, Logger);
         }
 
-        public override void UpdateEditorShape(UpdateEditorModelContext context) {
+        public override void UpdateEditor(UpdateEditorContext context) {
             _drivers.Invoke(driver => {
-                var result = driver.UpdateEditorShape(context);
+                var result = driver.UpdateEditor(context);
                 if (result != null)
                     result.Apply(context);
             }, Logger);

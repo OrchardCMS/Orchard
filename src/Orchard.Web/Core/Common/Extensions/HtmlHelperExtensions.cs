@@ -1,6 +1,6 @@
+using System;
 using System.Web.Mvc;
 using Orchard.Core.Common.ViewModels;
-using Orchard.Core.Contents.ViewModels;
 using Orchard.Localization;
 using Orchard.Mvc.Html;
 
@@ -15,11 +15,11 @@ namespace Orchard.Core.Common.Extensions {
         }
 
         public static LocalizedString PublishedWhenForModel(this HtmlHelper<CommonMetadataViewModel> htmlHelper, Localizer T) {
-            return htmlHelper.PublishedWhen(htmlHelper.ViewData.Model, T);
+            return htmlHelper.PublishedWhen(htmlHelper.ViewData.Model.VersionPublishedUtc, T);
         }
 
-        public static LocalizedString PublishedWhen(this HtmlHelper htmlHelper, CommonMetadataViewModel metadata, Localizer T) {
-            return htmlHelper.DateTimeRelative(metadata.VersionPublishedUtc, T("as a Draft"), T);
+        public static LocalizedString PublishedWhen(this HtmlHelper htmlHelper, DateTime? versionPublishedUtc, Localizer T) {
+            return htmlHelper.DateTimeRelative(versionPublishedUtc, T("as a Draft"), T);
         }
     }
 }

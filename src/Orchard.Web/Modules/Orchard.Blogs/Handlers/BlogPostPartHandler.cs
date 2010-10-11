@@ -61,8 +61,8 @@ namespace Orchard.Blogs.Handlers {
                     blogPost => context.ContentManager.Remove(blogPost.ContentItem)));
         }
 
-        private static void SetModelProperties(BuildModelContext context, BlogPostPart blogPost) {
-            context.Model.Blog = blogPost.BlogPart;
+        private static void SetModelProperties(BuildShapeContext context, BlogPostPart blogPost) {
+            context.Shape.Blog = blogPost.BlogPart;
         }
 
         Localizer T { get; set; }

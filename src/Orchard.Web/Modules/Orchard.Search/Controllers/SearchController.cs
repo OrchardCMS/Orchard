@@ -43,7 +43,7 @@ namespace Orchard.Search.Controllers {
                 }
 
                 searchResultViewModels.Add(new SearchResultViewModel {
-                        Content = _contentManager.BuildDisplayModel(contentItem, "SummaryForSearch"),
+                        Content = _contentManager.BuildDisplay(contentItem, "SummaryForSearch"),
                         SearchHit = searchHit
                     });
             }

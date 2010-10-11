@@ -22,7 +22,7 @@ namespace Orchard.Core.Messaging.Drivers {
 
         protected override string Prefix { get { return "MessageSettings"; } }
 
-        protected override DriverResult Editor(MessageSettingsPart part) {
+        protected override DriverResult Editor(MessageSettingsPart part, dynamic shapeHelper) {
 
             var model = new MessageSettingsPartViewModel {
                 ChannelServices = _messageQueueManager.GetAvailableChannelServices(),
@@ -32,7 +32,7 @@ namespace Orchard.Core.Messaging.Drivers {
             return ContentPartTemplate(model, "Parts/Messaging.MessageSettings");
         }
 
-        protected override DriverResult Editor(MessageSettingsPart part, IUpdateModel updater) {
+        protected override DriverResult Editor(MessageSettingsPart part, IUpdateModel updater, dynamic shapeHelper) {
             var model = new MessageSettingsPartViewModel {
                 MessageSettings = part
             };

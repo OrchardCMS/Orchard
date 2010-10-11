@@ -19,8 +19,8 @@
         public virtual void Indexed(IndexContentContext context) {}
 
         public virtual void GetContentItemMetadata(GetContentItemMetadataContext context) {}
-        public virtual void BuildDisplayShape(BuildDisplayModelContext context) {}
-        public virtual void BuildEditorShape(BuildEditorModelContext context) {}
-        public virtual void UpdateEditorShape(UpdateEditorModelContext context) {}
+        public virtual void BuildDisplay(BuildDisplayContext context) {}
+        public virtual void BuildEditor(BuildEditorContext context) {}
+        public virtual void UpdateEditor(UpdateEditorContext context) {}
     }
 }

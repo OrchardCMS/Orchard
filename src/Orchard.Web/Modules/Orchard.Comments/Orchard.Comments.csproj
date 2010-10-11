@@ -43,6 +43,7 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\lib\joel.net.akismet\Joel.Net.Akismet.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.CSharp" />
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.ComponentModel.DataAnnotations">
@@ -126,9 +127,9 @@
     <Content Include="Views\Admin\Details.cshtml" />
     <Content Include="Views\Admin\Edit.cshtml" />
     <Content Include="Views\Admin\Index.cshtml" />
-    <Content Include="Views\DisplayTemplates\Parts\Comments.Comments.cshtml" />
-    <Content Include="Views\DisplayTemplates\Parts\Comments.Count.cshtml" />
-    <Content Include="Views\DisplayTemplates\Parts\Comments.CountAdmin.cshtml" />
+    <Content Include="Views\Comments.Comments.cshtml" />
+    <Content Include="Views\Comments.Count.cshtml" />
+    <Content Include="Views\Comments.CountAdmin.cshtml" />
     <Content Include="Views\EditorTemplates\Parts\Comments.Comments.cshtml" />
     <Content Include="Views\EditorTemplates\Parts\Comments.SiteSettings.cshtml" />
     <Content Include="Views\ListOfComments.cshtml" />

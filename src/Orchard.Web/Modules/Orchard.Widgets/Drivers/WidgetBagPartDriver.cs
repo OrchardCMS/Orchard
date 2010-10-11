@@ -8,7 +8,7 @@ namespace Orchard.Widgets.Drivers {
     public class WidgetBagPartDriver : ContentPartDriver<WidgetBagPart> {
         private const string TemplateName = "Parts/Widgets.WidgetBagPart";
 
-        protected override DriverResult Editor(WidgetBagPart part) {
+        protected override DriverResult Editor(WidgetBagPart part, dynamic shapeHelper) {
             var location = part.GetLocation("Editor");
             return ContentPartTemplate("", TemplateName, Prefix).Location(location);
         }

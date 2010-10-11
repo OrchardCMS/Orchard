@@ -23,11 +23,15 @@ namespace Orchard.Tags.Drivers {
 
         public virtual IUser CurrentUser { get; set; }
 
-        protected override DriverResult Display(TagsPart part, string displayType) {
-            return ContentPartTemplate(part, "Parts/Tags.ShowTags").Location(part.GetLocation(displayType));
+        protected override DriverResult Display(TagsPart part, string displayType, dynamic shapeHelper) {
+            var showTags = shapeHelper.Tags_ShowTags(ContentPart: part, Tags: part.CurrentTags);
+            if (!string.IsNullOrWhiteSpace(displayType))
+                showTags.Metadata.Type = string.Format("{0}.{1}", showTags.Metadata.Type, displayType);
+            var location = part.GetLocation(displayType);
+            return ContentShape(showTags).Location(location);
         }
 
-        protected override DriverResult Editor(TagsPart part) {
+        protected override DriverResult Editor(TagsPart part, dynamic shapeHelper) {
             if (!_authorizationService.TryCheckAccess(Permissions.ApplyTag, CurrentUser, part))
                 return null;
 
@@ -37,7 +41,7 @@ namespace Orchard.Tags.Drivers {
             return ContentPartTemplate(model, "Parts/Tags.EditTags").Location(part.GetLocation("Editor"));
         }
 
-        protected override DriverResult Editor(TagsPart part, IUpdateModel updater) {
+        protected override DriverResult Editor(TagsPart part, IUpdateModel updater, dynamic shapeHelper) {
             if (!_authorizationService.TryCheckAccess(Permissions.ApplyTag, CurrentUser, part))
                 return null;
 

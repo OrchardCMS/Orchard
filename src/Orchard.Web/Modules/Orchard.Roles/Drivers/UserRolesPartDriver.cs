@@ -41,7 +41,7 @@ namespace Orchard.Roles.Drivers {
 
         public Localizer T { get; set; }
 
-        protected override DriverResult Editor(UserRolesPart userRolesPart) {
+        protected override DriverResult Editor(UserRolesPart userRolesPart, dynamic shapeHelper) {
             // don't show editor without apply roles permission
             if (!_authorizationService.TryCheckAccess(Permissions.ApplyRoles, _authenticationService.GetAuthenticatedUser(), userRolesPart))
                 return null;
@@ -62,7 +62,7 @@ namespace Orchard.Roles.Drivers {
             return ContentPartTemplate(model, "Parts/Roles.UserRoles");
         }
 
-        protected override DriverResult Editor(UserRolesPart userRolesPart, IUpdateModel updater) {
+        protected override DriverResult Editor(UserRolesPart userRolesPart, IUpdateModel updater, dynamic shapeHelper) {
             // don't apply editor without apply roles permission
             if (!_authorizationService.TryCheckAccess(Permissions.ApplyRoles, _authenticationService.GetAuthenticatedUser(), userRolesPart))
                 return null;

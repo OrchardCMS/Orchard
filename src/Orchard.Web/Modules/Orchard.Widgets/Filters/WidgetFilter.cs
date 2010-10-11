@@ -46,7 +46,7 @@ namespace Orchard.Widgets.Filters {
             var zones = workContext.Layout.Zones;
             foreach (var widgetPart in widgetParts) {
                 if (activeLayerIds.Contains(widgetPart.As<ICommonPart>().Container.ContentItem.Id)) {
-                    var widgetShape = _contentManager.BuildDisplayModel(widgetPart);
+                    var widgetShape = _contentManager.BuildDisplay(widgetPart);
                     zones[widgetPart.Record.Zone].Add(widgetShape, widgetPart.Record.Position);
                 }
             }

@@ -87,7 +87,7 @@ namespace Orchard.Core.Navigation.Controllers {
                 return new HttpUnauthorizedResult();
 
             var menuPart = _services.ContentManager.New<MenuPart>("MenuItem");
-            model.MenuItem = _services.ContentManager.UpdateEditorModel(menuPart, this);
+            model.MenuItem = _services.ContentManager.UpdateEditor(menuPart, this);
 
             if (!ModelState.IsValid) {
                 _services.TransactionManager.Cancel();

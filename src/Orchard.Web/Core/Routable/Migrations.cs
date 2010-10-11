@@ -6,8 +6,8 @@ using Orchard.Core.Contents.Extensions;
 using Orchard.Core.Routable.Models;
 using Orchard.Data.Migration;
 
-namespace Orchard.Core.Routable.DataMigrations {
-    public class RoutableDataMigration : DataMigrationImpl {
+namespace Orchard.Core.Routable {
+    public class Migrations : DataMigrationImpl {
 
         public int Create() {
             //CREATE TABLE Routable_RoutableRecord (Id INTEGER not null, Title TEXT, Slug TEXT, Path TEXT, ContentItemRecord_id INTEGER, primary key (Id));
