@@ -15,12 +15,17 @@ namespace Orchard.Modules.Services {
         private const string ModuleExtensionType = "module";
         private readonly IExtensionManager _extensionManager;
         private readonly IShellDescriptorManager _shellDescriptorManager;
+        private readonly IWorkContextAccessor _workContextAccessor;
 
-        public ModuleService(IOrchardServices orchardServices, IExtensionManager extensionManager,
-                             IShellDescriptorManager shellDescriptorManager) {
+        public ModuleService(
+                IOrchardServices orchardServices, 
+                IExtensionManager extensionManager,
+                IShellDescriptorManager shellDescriptorManager,
+                IWorkContextAccessor workContextAccessor) {
             Services = orchardServices;
             _extensionManager = extensionManager;
             _shellDescriptorManager = shellDescriptorManager;
+            _workContextAccessor = workContextAccessor;
             T = NullLocalizer.Instance;
         }
 
@@ -187,17 +192,37 @@ namespace Orchard.Modules.Services {
                     : featuresInQuestion.First()));
         }
 
-        private static IModule AssembleModuleFromDescriptor(ExtensionDescriptor extensionDescriptor) {
+        private static string TryLocalize(string key, string original, Localizer localizer) {
+            var localized = localizer(key).Text;
+
+            if(key == localized) {
+                // no specific localization available
+                return original;
+            }
+
+            return localized;
+        }
+
+        private IModule AssembleModuleFromDescriptor(ExtensionDescriptor extensionDescriptor) {
+
+            var localizer = LocalizationUtilities.Resolve(_workContextAccessor.GetContext(), String.Concat(extensionDescriptor.Location, "/", extensionDescriptor.Name, "/Module.txt"));
+
             return new Module {
-                                  ModuleName = extensionDescriptor.Name,
-                                  DisplayName = extensionDescriptor.DisplayName,
-                                  Description = extensionDescriptor.Description,
-                                  Version = extensionDescriptor.Version,
-                                  Author = extensionDescriptor.Author,
-                                  HomePage = extensionDescriptor.WebSite,
-                                  Tags = extensionDescriptor.Tags,
-                                  Features = extensionDescriptor.Features
-                              };
+                ModuleName = extensionDescriptor.Name,
+                DisplayName = TryLocalize("Name", extensionDescriptor.DisplayName, localizer),
+                Description = TryLocalize("Description", extensionDescriptor.Description, localizer),
+                Version = extensionDescriptor.Version,
+                Author = TryLocalize("Author", extensionDescriptor.Author, localizer),
+                HomePage = TryLocalize("Website", extensionDescriptor.WebSite, localizer),
+                Tags = TryLocalize("Tags", extensionDescriptor.Tags, localizer),
+                Features = extensionDescriptor.Features.Select(f => new FeatureDescriptor {
+                    Category = TryLocalize(f.Name + " Category", f.Category, localizer),
+                    Dependencies = f.Dependencies,
+                    Description = TryLocalize(f.Description + " Description", f.Description, localizer),
+                    Extension = f.Extension,
+                    Name = f.Name
+                })
+            };
         }
 
         private static IModuleFeature AssembleModuleFromDescriptor(Feature feature, bool isEnabled) {

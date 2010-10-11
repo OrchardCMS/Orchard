@@ -19,14 +19,17 @@ namespace Orchard.Themes.Services {
         private readonly IExtensionManager _extensionManager;
         private readonly IEnumerable<IThemeSelector> _themeSelectors;
         private readonly IModuleService _moduleService;
+        private IWorkContextAccessor _workContextAccessor;
 
         public ThemeService(
             IExtensionManager extensionManager,
             IEnumerable<IThemeSelector> themeSelectors,
-            IModuleService moduleService) {
+            IModuleService moduleService,
+            IWorkContextAccessor workContextAccessor) {
             _extensionManager = extensionManager;
             _themeSelectors = themeSelectors;
             _moduleService = moduleService;
+            _workContextAccessor = workContextAccessor;
             Logger = NullLogger.Instance;
             T = NullLocalizer.Instance;
         }
@@ -174,15 +177,29 @@ namespace Orchard.Themes.Services {
             _extensionManager.UninstallExtension("Theme", themeName);
         }
 
-        private static ITheme CreateTheme(ExtensionDescriptor descriptor) {
+        private static string TryLocalize(string key, string original, Localizer localizer) {
+            var localized = localizer(key).Text;
+
+            if ( key == localized ) {
+                // no specific localization available
+                return original;
+            }
+
+            return localized;
+        }
+
+        private ITheme CreateTheme(ExtensionDescriptor descriptor) {
+
+            var localizer = LocalizationUtilities.Resolve(_workContextAccessor.GetContext(), String.Concat(descriptor.Location, "/", descriptor.Name, "/Theme.txt"));
+
             return new Theme {
-                Author = descriptor.Author ?? "",
-                Description = descriptor.Description ?? "",
-                DisplayName = descriptor.DisplayName ?? "",
-                HomePage = descriptor.WebSite ?? "",
+                Author = TryLocalize("Author", descriptor.Author, localizer) ?? "",
+                Description = TryLocalize("Description", descriptor.Description, localizer) ?? "",
+                DisplayName = TryLocalize("DisplayName", descriptor.DisplayName, localizer) ?? "",
+                HomePage = TryLocalize("Website", descriptor.WebSite, localizer) ?? "",
                 ThemeName = descriptor.Name,
                 Version = descriptor.Version ?? "",
-                Tags = descriptor.Tags ?? "",
+                Tags = TryLocalize("Tags", descriptor.Tags, localizer) ?? "",
                 Zones = descriptor.Zones ?? "",
                 BaseTheme = descriptor.BaseTheme ?? "",
             };

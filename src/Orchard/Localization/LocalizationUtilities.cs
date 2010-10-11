@@ -1,12 +1,15 @@
 ﻿using System.Web.Mvc;
 using Autofac;
-using Orchard.Mvc;
 
 namespace Orchard.Localization {
     public class LocalizationUtilities {
+        public static Localizer Resolve(WorkContext workContext, string scope) {
+            return workContext == null ? NullLocalizer.Instance : Resolve(workContext.Resolve<ILifetimeScope>(), scope);
+        }
+
         public static Localizer Resolve(ControllerContext controllerContext, string scope) {
-            var context = controllerContext.GetWorkContext();
-            return context == null ? NullLocalizer.Instance : Resolve(context.Resolve<ILifetimeScope>(), scope);
+            var workContext = controllerContext.GetWorkContext();
+            return Resolve(workContext, scope);
         }
 
         public static Localizer Resolve(IComponentContext context, string scope) {
