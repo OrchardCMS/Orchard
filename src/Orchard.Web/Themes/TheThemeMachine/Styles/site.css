@@ -109,7 +109,7 @@ p {
 
 /* Structure
 ***************************************************************/
-#layout-wrapper {
+#layout-wrapper, #layout-header {
 	width:960px;
 	margin:0 auto;
 }
@@ -118,7 +118,7 @@ p {
        #logo {}
        
        
-/* Navigation */
+/* Navigation 
 
 nav ul li {
 	margin:2em 0 0 0;
@@ -132,6 +132,42 @@ nav ul li a {
 	text-decoration:none;
 	text-transform:uppercase;
 	float:left;
+} */
+
+
+
+#navigation {
+    width: 960px;
+	margin: 4px auto;
+	display:block;
+    border-bottom: 1px solid #999;
+}
+
+nav ul {
+	padding: 0 0 0 8px;
+}
+
+nav ul li
+ {
+	border:1px solid #999;
+	background:#e7e7e7;
+	display:block;
+	float:left;
+	margin:0 2px -1px 0;
+}
+
+nav ul li.on {
+	border-bottom: 1px solid #fff;
+	background:#fff;
+}
+
+nav ul a {
+	padding:0 18px;
+    display:block;
+	float:left;
+    font-size:1.4em;
+    text-decoration:none;
+    line-height:24px;
 }
 
 #footer {}
@@ -195,6 +231,11 @@ form.inline p { margin-bottom:0; }
 
 /* For testing purposes */
 
+
+#layout-header {
+    border:1px solid #CCC;
+}
+
 #layout-wrapper {
 	border:1px solid #CCC;
 }
@@ -244,4 +285,9 @@ form.inline p { margin-bottom:0; }
     float:left;
     width: 462px;
     margin: 6px;
+}
+
+
+.clearfix {
+	clear:both;
 }

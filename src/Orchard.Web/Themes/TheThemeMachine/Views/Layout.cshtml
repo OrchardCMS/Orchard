@@ -11,7 +11,8 @@
         Html.AddPageClassNames(new[]{"has-sidebar"});
     }
 }
-<div id="layout-wrapper">
+
+
     <header id="layout-header">
         @* needs to be the page title, not page (head) title... *@
         <h1><a href="@homeUrl">@WorkContext.CurrentSite.SiteName</a></h1>
@@ -20,12 +21,17 @@
             @Zone(Model.Header)
         </div>
         }
+    </header>
+
+
         @if(Model.Navigation != null) {
-        <div id="navigation">
+        <div id="navigation" class="group">
             @Zone(Model.Navigation)
         </div>
         }
-    </header>
+
+
+<div id="layout-wrapper">
     @if(Model.Messages != null) {
     <div id="messages">
         @Zone(Model.Messages)
