@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Web.Mvc;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Aspects;
@@ -46,7 +45,7 @@ namespace Orchard.Widgets.Filters {
             var zones = workContext.Layout.Zones;
             foreach (var widgetPart in widgetParts) {
                 if (activeLayerIds.Contains(widgetPart.As<ICommonPart>().Container.ContentItem.Id)) {
-                    var widgetShape = _contentManager.BuildDisplayModel(widgetPart);
+                    var widgetShape = _contentManager.BuildDisplay(widgetPart);
                     zones[widgetPart.Record.Zone].Add(widgetShape, widgetPart.Record.Position);
                 }
             }

@@ -1,6 +1,5 @@
 ﻿using JetBrains.Annotations;
 using Orchard.Comments.Models;
-using Orchard.Comments.ViewModels;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
 using Orchard.Core.ContentsLocation.Models;
@@ -8,35 +7,30 @@ using Orchard.Core.ContentsLocation.Models;
 namespace Orchard.Comments.Drivers {
     [UsedImplicitly]
     public class CommentsPartDriver : ContentPartDriver<CommentsPart> {
-        protected override DriverResult Display(CommentsPart part, string displayType) {
-            if (part.CommentsShown == false) {
+        protected override DriverResult Display(CommentsPart part, string displayType, dynamic shapeHelper) {
+            if (part.CommentsShown == false)
                 return null;
-            }
 
-            // todo: (heskew) need to be more flexible with displaying parts somehow. e.g. where should the...
-            // comment count go in any given skin or what if the skin builder doesn't want the count
-            if (displayType.StartsWith("Detail")) {
-                return ContentPartTemplate(part, "Parts/Comments.Comments").Location(part.GetLocation("Detail"));
-            }
-            else if (displayType == "SummaryAdmin") {
-                var model = new CommentCountViewModel(part);
-                return ContentPartTemplate(model, "Parts/Comments.CountAdmin").Location(part.GetLocation("SummaryAdmin"));
-            }
-            else if (displayType.Contains("Summary")) {
-                var model = new CommentCountViewModel(part);
-                return ContentPartTemplate(model, "Parts/Comments.Count").Location(part.GetLocation("Summary"));
-            }
-            else {
-                var model = new CommentCountViewModel(part);
-                return ContentPartTemplate(model, "Parts/Comments.Count").Location(part.GetLocation(displayType));
-            }
+            if (displayType.StartsWith("Detail"))
+                return ContentShape(shapeHelper.Parts_Comments_Comments(ContentPart: part)).Location(part.GetLocation("Detail"));
+
+            if (displayType == "SummaryAdmin")
+                return ContentShape(shapeHelper.Parts_Comments_CountAdmin(ContentPart: part, CommentCount: part.Comments.Count, PendingCount: part.PendingComments.Count))
+                    .Location(part.GetLocation("SummaryAdmin"));
+
+            var location = displayType.Contains("Summary")
+                               ? part.GetLocation("Summary")
+                               : part.GetLocation(displayType);
+
+            return ContentShape(shapeHelper.Parts_Comments_Count(ContentPart: part, CommentCount: part.Comments.Count, PendingCount: part.PendingComments.Count))
+                .Location(location);
         }
 
-        protected override DriverResult Editor(CommentsPart part) {
+        protected override DriverResult Editor(CommentsPart part, dynamic shapeHelper) {
             return ContentPartTemplate(part, "Parts/Comments.Comments").Location(part.GetLocation("Editor"));
         }
 
-        protected override DriverResult Editor(CommentsPart part, IUpdateModel updater) {
+        protected override DriverResult Editor(CommentsPart part, IUpdateModel updater, dynamic shapeHelper) {
             updater.TryUpdateModel(part, Prefix, null, null);
             return ContentPartTemplate(part, "Parts/Comments.Comments").Location(part.GetLocation("Editor"));
         }

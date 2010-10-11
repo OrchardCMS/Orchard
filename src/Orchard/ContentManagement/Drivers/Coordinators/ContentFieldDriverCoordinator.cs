@@ -39,7 +39,7 @@ namespace Orchard.ContentManagement.Drivers.Coordinators {
             }
         }
 
-        public override void BuildDisplayShape(BuildDisplayModelContext context) {
+        public override void BuildDisplay(BuildDisplayContext context) {
             _drivers.Invoke(driver => {
                 var result = driver.BuildDisplayShape(context);
                 if (result != null)
@@ -47,7 +47,7 @@ namespace Orchard.ContentManagement.Drivers.Coordinators {
             }, Logger);
         }
 
-        public override void BuildEditorShape(BuildEditorModelContext context) {
+        public override void BuildEditor(BuildEditorContext context) {
             _drivers.Invoke(driver => {
                 var result = driver.BuildEditorShape(context);
                 if (result != null)
@@ -55,7 +55,7 @@ namespace Orchard.ContentManagement.Drivers.Coordinators {
             }, Logger);
         }
 
-        public override void UpdateEditorShape(UpdateEditorModelContext context) {
+        public override void UpdateEditor(UpdateEditorContext context) {
             _drivers.Invoke(driver => {
                 var result = driver.UpdateEditorShape(context);
                 if (result != null)

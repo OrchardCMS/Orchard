@@ -23,7 +23,7 @@ namespace Orchard.Search.Drivers {
 
         protected override string Prefix { get { return "SearchSettings"; } }
 
-        protected override DriverResult Editor(SearchSettingsPart part) {
+        protected override DriverResult Editor(SearchSettingsPart part, dynamic shapeHelper) {
             var model = new SearchSettingsViewModel();
             var searchedFields = part.SearchedFields;
 
@@ -37,14 +37,14 @@ namespace Orchard.Search.Drivers {
             return ContentPartTemplate(model, "Parts/Search.SiteSettings");
         }
 
-        protected override DriverResult Editor(SearchSettingsPart part, IUpdateModel updater) {
+        protected override DriverResult Editor(SearchSettingsPart part, IUpdateModel updater, dynamic shapeHelper) {
             var model = new SearchSettingsViewModel();
             
             if(updater.TryUpdateModel(model, Prefix, null, null)) {
                 part.SearchedFields = model.Entries.Where(e => e.Selected).Select(e => e.Field).ToArray();
             }
 
-            return Editor(part);
+            return Editor(part, shapeHelper);
         }
     }
 }

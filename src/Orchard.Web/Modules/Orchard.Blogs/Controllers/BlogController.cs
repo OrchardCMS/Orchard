@@ -32,7 +32,7 @@ namespace Orchard.Blogs.Controllers {
         protected ILogger Logger { get; set; }
 
         public ActionResult List() {
-            var blogs = _blogService.Get().Select(b => _services.ContentManager.BuildDisplayModel(b, "Summary.Blog"));
+            var blogs = _blogService.Get().Select(b => _services.ContentManager.BuildDisplay(b, "Summary.Blog"));
 
             var list = Shape.List();
             list.AddRange(blogs);
@@ -53,7 +53,8 @@ namespace Orchard.Blogs.Controllers {
             if (blog == null)
                 return new NotFoundResult();
 
-            var model = _services.ContentManager.BuildDisplayModel(blog, "Blog");
+            //todo: (heskew) "Blog" should be an alternative instead of a display type
+            var model = _services.ContentManager.BuildDisplay(blog, "Blog");
             return View(model);
         }
 

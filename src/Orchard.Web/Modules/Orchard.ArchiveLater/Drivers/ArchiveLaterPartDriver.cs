@@ -28,18 +28,19 @@ namespace ArchiveLater.Drivers {
         public Localizer T { get; set; }
         public IOrchardServices Services { get; set; }
 
-        protected override DriverResult Display(ArchiveLaterPart part, string displayType) {
-            var model = new ArchiveLaterViewModel(part) {
-                ScheduledArchiveUtc = part.ScheduledArchiveUtc.Value
-            };
-            return ContentPartTemplate(model, "Parts/ArchiveLater.Metadata").LongestMatch(displayType, "Summary", "SummaryAdmin").Location(part.GetLocation(displayType));
+        protected override DriverResult Display(ArchiveLaterPart part, string displayType, dynamic shapeHelper) {
+            var metadata = shapeHelper.Parts_ArchiveLater_Metadata(ContentPart: part, ScheduledArchiveUtc: part.ScheduledArchiveUtc.Value);
+            if (!string.IsNullOrWhiteSpace(displayType))
+                metadata.Metadata.Type = string.Format("{0}.{1}", metadata.Metadata.Type, displayType);
+            var location = part.GetLocation(displayType);
+            return ContentShape(metadata).Location(location);
         }
 
-        protected override DriverResult Editor(ArchiveLaterPart part) {
+        protected override DriverResult Editor(ArchiveLaterPart part, dynamic shapeHelper) {
             return ArchiveEditor(part, null);
         }
 
-        protected override DriverResult Editor(ArchiveLaterPart instance, IUpdateModel updater) {
+        protected override DriverResult Editor(ArchiveLaterPart instance, IUpdateModel updater, dynamic shapeHelper) {
             return ArchiveEditor(instance, updater);
         }
 

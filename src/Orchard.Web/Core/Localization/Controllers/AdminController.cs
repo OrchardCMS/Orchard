@@ -67,7 +67,7 @@ namespace Orchard.Core.Localization.Controllers {
                 Id = id,
                 SelectedCulture = selectedCulture,
                 SiteCultures = siteCultures,
-                Content = _contentManager.BuildEditorModel(contentItem)
+                Content = _contentManager.BuildEditor(contentItem)
             };
             Services.TransactionManager.Cancel();
 
@@ -104,13 +104,13 @@ namespace Orchard.Core.Localization.Controllers {
                 }
             }
 
-            model.Content = _contentManager.UpdateEditorModel(contentItemTranslation, this);
+            model.Content = _contentManager.UpdateEditor(contentItemTranslation, this);
 
             if (!ModelState.IsValid) {
                 Services.TransactionManager.Cancel();
                 model.SiteCultures = _cultureManager.ListCultures().Where(s => s != _localizationService.GetContentCulture(contentItem) && s != _cultureManager.GetSiteCulture());
                 contentItem.As<LocalizationPart>().Culture.Culture = null;
-                model.Content = _contentManager.BuildEditorModel(contentItem);
+                model.Content = _contentManager.BuildEditor(contentItem);
                 return View(model);
             }
 

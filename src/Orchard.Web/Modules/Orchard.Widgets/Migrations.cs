@@ -1,6 +1,9 @@
 ﻿using System.Collections.Generic;
 using Orchard.ContentManagement;
+using Orchard.ContentManagement.Drivers;
 using Orchard.ContentManagement.MetaData;
+using Orchard.ContentManagement.MetaData.Builders;
+using Orchard.Core.Contents.Extensions;
 using Orchard.Data.Migration;
 using Orchard.Environment.Configuration;
 using Orchard.Environment.Descriptor.Models;
@@ -59,18 +62,50 @@ namespace Orchard.Widgets {
             ContentDefinitionManager.AlterTypeDefinition("Layer",
                cfg => cfg
                    .WithPart("LayerPart")
+                   .WithPart("CommonPart")
                 );
 
             ContentDefinitionManager.AlterTypeDefinition("HtmlWidget",
                 cfg => cfg
                     .WithPart("WidgetPart")
                     .WithPart("BodyPart")
+                    .WithPart("CommonPart")
                     .WithSetting("stereotype", "widget")
                 );
 
             CreateDefaultLayers();
 
             return 1;
+        }
+
+        public int UpdateFrom1() {
+            ContentDefinitionManager.AlterPartDefinition(typeof(LayerPart).Name, 
+                cfg => cfg
+                    .WithLocation(new Dictionary<string, ContentLocation> {
+                        {"Editor", new ContentLocation { Zone = "primary", Position = "1" }}
+                    })
+                );
+
+            ContentDefinitionManager.AlterPartDefinition(typeof(WidgetPart).Name, 
+                cfg => cfg
+                    .WithLocation(new Dictionary<string, ContentLocation> {
+                        {"Editor", new ContentLocation { Zone = "primary", Position = "1" }}
+                   })
+                );
+
+            ContentDefinitionManager.AlterPartDefinition(typeof(WidgetBagPart).Name,
+                cfg => cfg
+                    .WithLocation(new Dictionary<string, ContentLocation> {
+                        {"Editor", new ContentLocation {Zone = "primary", Position = "5"}}
+                    })
+                );
+            ContentDefinitionManager.AlterTypeDefinition("WidgetPage",
+                cfg => cfg
+                    .WithPart("RoutePart")
+                    .WithPart("WidgetBagPart")
+                    .Creatable()
+                );
+            return 2;
         }
 
         private void CreateDefaultLayers() {

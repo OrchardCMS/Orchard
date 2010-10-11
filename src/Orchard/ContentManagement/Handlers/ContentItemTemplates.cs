@@ -8,7 +8,7 @@ namespace Orchard.ContentManagement.Handlers {
         // todo: (heskew) use _prefix?
         private readonly string _prefix;
         private readonly string[] _displayTypes;
-        private Action<UpdateEditorModelContext, IContent> _updater;
+        private Action<UpdateEditorContext, IContent> _updater;
 
         public ContentItemTemplates(string templateName)
             : this(templateName, "") {
@@ -21,7 +21,7 @@ namespace Orchard.ContentManagement.Handlers {
             _updater = (context, viewModel) => context.Updater.TryUpdateModel(viewModel, "", null, null);
         }
 
-        protected override void BuildDisplayShape(BuildDisplayModelContext context, TContent instance) {
+        protected override void BuildDisplayShape(BuildDisplayContext context, TContent instance) {
 #if REFACTORING
             context.ViewModel.TemplateName = _templateName;
             var longestMatch = LongestMatch(context.DisplayType);
@@ -55,7 +55,7 @@ namespace Orchard.ContentManagement.Handlers {
             });
         }
 
-        protected override void BuildEditorShape(BuildEditorModelContext context, TContent instance) {
+        protected override void BuildEditorShape(BuildEditorContext context, TContent instance) {
 #if REFACTORING
             context.ViewModel.TemplateName = _templateName;
             context.ViewModel.Prefix = _prefix;
@@ -70,7 +70,7 @@ namespace Orchard.ContentManagement.Handlers {
 #endif
         }
 
-        protected override void UpdateEditorShape(UpdateEditorModelContext context, TContent instance) {
+        protected override void UpdateEditorShape(UpdateEditorContext context, TContent instance) {
 #if REFACTORING
             if (context.ViewModel is ContentItemViewModel<TContent>)
                 _updater(context, (ContentItemViewModel<TContent>)context.ViewModel);
@@ -81,7 +81,7 @@ namespace Orchard.ContentManagement.Handlers {
 #endif
         }
 
-        public void Updater(Action<UpdateEditorModelContext, IContent> updater) {
+        public void Updater(Action<UpdateEditorContext, IContent> updater) {
             _updater = updater;
         }
     }

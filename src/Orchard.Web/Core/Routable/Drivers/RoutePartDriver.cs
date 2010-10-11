@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using JetBrains.Annotations;
 using Orchard.ContentManagement;
@@ -35,7 +36,7 @@ namespace Orchard.Core.Routable.Drivers {
             get { return "Routable"; }
         }
 
-        int? GetContainerId(IContent item) {
+        static int? GetContainerId(IContent item) {
             var commonPart = item.As<ICommonPart>();
             if (commonPart != null && commonPart.Container != null) {
                 return commonPart.Container.ContentItem.Id;
@@ -43,18 +44,15 @@ namespace Orchard.Core.Routable.Drivers {
             return null;
         }
 
-        protected override DriverResult Display(RoutePart part, string displayType) {
-            var model = new RoutableDisplayViewModel {RoutePart = part};
-            var location = part.GetLocation(displayType);
-
-            //todo: give this part a default location
-            if (location == null || location.Zone == null)
-                location = new ContentLocation {Position = "5", Zone = "Header"};
-
-            return ContentPartTemplate(model, TemplateName, Prefix).LongestMatch(displayType, "Summary", "SummaryAdmin").Location(location);
+        protected override DriverResult Display(RoutePart part, string displayType, dynamic shapeHelper) {
+            var routePart = shapeHelper.Parts_Routable_RoutePart(ContentPart: part, Title: part.Title);
+            if (!string.IsNullOrWhiteSpace(displayType))
+                routePart.Metadata.Type = string.Format("{0}.{1}", routePart.Metadata.Type, displayType);
+            var location = part.GetLocation(displayType, "Header", "5");
+            return ContentShape(routePart).Location(location);
         }
 
-        protected override DriverResult Editor(RoutePart part) {
+        protected override DriverResult Editor(RoutePart part, dynamic shapeHelper) {
             var model = new RoutableEditorViewModel {
                 ContentType = part.ContentItem.ContentType,
                 Id = part.ContentItem.Id,
@@ -81,7 +79,7 @@ namespace Orchard.Core.Routable.Drivers {
             return ContentPartTemplate(model, TemplateName, Prefix).Location(location);
         }
 
-        protected override DriverResult Editor(RoutePart part, IUpdateModel updater) {
+        protected override DriverResult Editor(RoutePart part, IUpdateModel updater, dynamic shapeHelper) {
             
             var model = new RoutableEditorViewModel();
             updater.TryUpdateModel(model, Prefix, null, null);
@@ -105,7 +103,7 @@ namespace Orchard.Core.Routable.Drivers {
                 CurrentSite.HomePage = _routableHomePageProvider.GetSettingValue(part.ContentItem.Id);
             }
 
-            return Editor(part);
+            return Editor(part, shapeHelper);
         }
     }
 }

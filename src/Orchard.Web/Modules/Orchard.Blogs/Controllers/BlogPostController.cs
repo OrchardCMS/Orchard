@@ -51,7 +51,7 @@ namespace Orchard.Blogs.Controllers {
             if (postPart == null)
                 return new NotFoundResult();
 
-            var model = _services.ContentManager.BuildDisplayModel(postPart, "BlogPost");
+            var model = _services.ContentManager.BuildDisplay(postPart, "Detail.BlogPost");
 
             return View(model);
         }
@@ -66,7 +66,7 @@ namespace Orchard.Blogs.Controllers {
             var archive = new ArchiveData(archiveData);
 
             var list = Shape.List();
-            list.AddRange(_blogPostService.Get(blogPart, archive).Select(b => _services.ContentManager.BuildDisplayModel(b, "Summary.BlogPost")));
+            list.AddRange(_blogPostService.Get(blogPart, archive).Select(b => _services.ContentManager.BuildDisplay(b, "Summary.BlogPost")));
 
             _feedManager.Register(blogPart);
 

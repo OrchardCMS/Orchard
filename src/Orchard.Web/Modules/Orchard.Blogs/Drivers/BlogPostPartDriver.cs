@@ -21,11 +21,11 @@ namespace Orchard.Blogs.Drivers {
 
         protected override string Prefix { get { return ""; } }
 
-        protected override DriverResult Display(BlogPostPart part, string displayType) {
+        protected override DriverResult Display(BlogPostPart part, string displayType, dynamic shapeHelper) {
             if (displayType.StartsWith("Detail"))
                 _feedManager.Register(part.BlogPart);
 
-            return base.Display(part, displayType);
+            return null;
         }
     }
 }

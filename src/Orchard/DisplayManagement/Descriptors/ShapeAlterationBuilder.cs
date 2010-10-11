@@ -55,7 +55,7 @@ namespace Orchard.DisplayManagement.Descriptors {
                         return target(displayContext);
                     }
                 };
-                descriptor.Bindings[_shapeType] = binding;
+                descriptor.Bindings[_bindingName] = binding;
 
             });
         }
@@ -71,6 +71,20 @@ namespace Orchard.DisplayManagement.Descriptors {
             return Configure(descriptor => {
                 var existing = descriptor.Created ?? Enumerable.Empty<Action<ShapeCreatedContext>>();
                 descriptor.Created = existing.Concat(new[] { action });
+            });
+        }
+        
+        public ShapeAlterationBuilder OnDisplaying(Action<ShapeDisplayingContext> action) {
+            return Configure(descriptor => {
+                var existing = descriptor.Displaying ?? Enumerable.Empty<Action<ShapeDisplayingContext>>();
+                descriptor.Displaying = existing.Concat(new[] { action });
+            });
+        }
+
+        public ShapeAlterationBuilder OnDisplayed(Action<ShapeDisplayedContext> action) {
+            return Configure(descriptor => {
+                var existing = descriptor.Displayed ?? Enumerable.Empty<Action<ShapeDisplayedContext>>();
+                descriptor.Displayed = existing.Concat(new[] { action });
             });
         }
 

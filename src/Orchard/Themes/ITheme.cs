@@ -11,5 +11,6 @@
         string HomePage { get; set; }
         string Tags { get; set; }
         string Zones { get; set; }
+        string BaseTheme { get; set; }
     }
 }

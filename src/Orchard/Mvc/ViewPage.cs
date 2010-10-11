@@ -5,12 +5,14 @@ using System.Web.Mvc;
 using System.Web.UI;
 using Autofac;
 using Orchard.DisplayManagement;
+using Orchard.DisplayManagement.Shapes;
 using Orchard.Localization;
 using Orchard.Mvc.Html;
 using Orchard.Mvc.Spooling;
 using Orchard.Security;
 using Orchard.Security.Permissions;
 using Orchard.UI.Resources;
+using TagBuilder = System.Web.Mvc.TagBuilder;
 
 namespace Orchard.Mvc {
     public class ViewPage<TModel> : System.Web.Mvc.ViewPage<TModel>, IOrchardViewPage {
@@ -19,6 +21,7 @@ namespace Orchard.Mvc {
 
         private object _display;
         private Localizer _localizer = NullLocalizer.Instance;
+        private object _layout;
         private WorkContext _workContext;
 
         public Localizer T { get { return _localizer; } }
@@ -29,7 +32,8 @@ namespace Orchard.Mvc {
                     (_scriptRegister = new ViewPageScriptRegister(Writer, Html.ViewDataContainer, Html.Resolve<IResourceManager>()));
             }
         }
-        
+
+        public dynamic Layout { get { return _layout; } }
         public WorkContext WorkContext { get { return _workContext; } }
 
         public IDisplayHelperFactory DisplayHelperFactory { get; set; }
@@ -52,6 +56,7 @@ namespace Orchard.Mvc {
 
             _localizer = LocalizationUtilities.Resolve(ViewContext, AppRelativeVirtualPath);
             _display = DisplayHelperFactory.CreateHelper(ViewContext, this);
+            _layout = _workContext.Layout;
         }
 
         public virtual void RegisterLink(LinkEntry link) {
@@ -80,7 +85,15 @@ namespace Orchard.Mvc {
 
         public bool AuthorizedFor(Permission permission) {
             return Authorizer.Authorize(permission);
-        }        
+        }
+
+        public bool HasText(object thing) {
+            return !string.IsNullOrWhiteSpace(thing as string);
+        }
+
+        public OrchardTagBuilder Tag(dynamic shape, string tagName) {
+            return Html.Resolve<ITagBuilderFactory>().Create(shape, tagName);
+        }
 
         public IHtmlString DisplayChildren(dynamic shape) {
             var writer = new HtmlStringWriter();

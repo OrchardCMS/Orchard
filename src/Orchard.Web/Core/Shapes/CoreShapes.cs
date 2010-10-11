@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
@@ -11,7 +10,7 @@ using System.Web.Mvc.Html;
 using Orchard.DisplayManagement;
 using Orchard.DisplayManagement.Descriptors;
 using Orchard.DisplayManagement.Implementation;
-using Orchard.Mvc.ViewEngines;
+using Orchard.DisplayManagement.Shapes;
 using Orchard.Settings;
 using Orchard.UI;
 using Orchard.UI.Resources;
@@ -34,35 +33,46 @@ namespace Orchard.Core.Shapes {
             // and has an automatic zone creating behavior
             builder.Describe("Layout")
                 .Configure(descriptor => descriptor.Wrappers.Add("Document"))
-                .OnCreating(creating => creating.Behaviors.Add(new ZoneHoldingBehavior(name => CreateZone(creating, name))))
+                .OnCreating(creating => creating.Behaviors.Add(new ZoneHoldingBehavior(name => CreateZone(creating))))
                 .OnCreated(created => {
                     var layout = created.Shape;
-                    layout.Head = created.New.DocumentZone();
-                    layout.Body = created.New.DocumentZone();
-                    layout.Tail = created.New.DocumentZone();
-                    layout.Content = created.New.Zone();
+                    layout.Head = created.New.DocumentZone(ZoneName: "Head");
+                    layout.Body = created.New.DocumentZone(ZoneName: "Body");
+                    layout.Tail = created.New.DocumentZone(ZoneName: "Tail");
 
                     layout.Body.Add(created.New.PlaceChildContent(Source: layout));
+
+                    layout.Content = created.New.Zone();
+                    layout.Content.ZoneName = "Content";
                     layout.Content.Add(created.New.PlaceChildContent(Source: layout));
                 });
 
             // 'Zone' shapes are built on the Zone base class
+            // They have class="zone zone-{name}"
+            // and the template can be specialized with "Zone-{Name}" base file name
             builder.Describe("Zone")
-                .OnCreating(creating => creating.BaseType = typeof (Zone));
-                //.OnDisplaying(displaying => {
-                //                  var name = displaying.Shape.ZoneName.ToLower();
-                //                  var zone = displaying.Shape;
-                //                  zone.Classes.Add("zone-" + name);
-                //                  zone.Classes.Add("zone");
-                //              });
+                .OnCreating(creating => creating.BaseType = typeof(Zone))
+                .OnDisplaying(displaying => {
+                    var zone = displaying.Shape;
+                    zone.Classes.Add("zone-" + zone.ZoneName.ToLower());
+                    zone.Classes.Add("zone");
+                    zone.Metadata.Alternates.Add("Zone__" + zone.ZoneName);
+                });
 
-            //builder.Describe("menu")
-            //    .OnDisplaying(displaying => {
-            //                      var name = displaying.Shape.MenuName.ToLower();
-            //                      var menu = displaying.Shape;
-            //                      menu.Classes.Add("menu-" + name);
-            //                      menu.Classes.Add("menu");
-            //                  });
+            builder.Describe("Menu")
+                .OnDisplaying(displaying => {
+                    var menu = displaying.Shape;
+                    menu.Classes.Add("menu-" + menu.MenuName.ToLower());
+                    menu.Classes.Add("menu");
+                    menu.Metadata.Alternates.Add("Menu__" + menu.MenuName);
+                });
+
+            builder.Describe("MenuItem")
+                .OnDisplaying(displaying => {
+                    var menuItem = displaying.Shape;
+                    var menu = menuItem.Menu;
+                    menuItem.Metadata.Alternates.Add("MenuItem__" + menu.MenuName);
+                });
 
             // 'List' shapes start with several empty collections
             builder.Describe("List")
@@ -73,12 +83,8 @@ namespace Orchard.Core.Shapes {
                 });
         }
 
-        private object CreateZone(ShapeCreatingContext context, string zoneName) {
-            var name = zoneName.ToLower();
-            var zone = context.New.Zone();
-            zone.Id = "zone-" + name;
-            zone.Classes.Add("zone");
-            return zone;
+        static object CreateZone(ShapeCreatingContext context) {
+            return context.New.Zone();
         }
 
         static TagBuilder GetTagBuilder(string tagName, string id, IEnumerable<string> classes, IDictionary<string, string> attributes) {
@@ -126,15 +132,15 @@ namespace Orchard.Core.Shapes {
             var progress = 1;
             var flatPositionComparer = new FlatPositionComparer();
             var ordering = unordered.Select(item => {
-                                                var position = (item == null || item.GetType().GetProperty("Metadata") == null || item.Metadata.GetType().GetProperty("Position") == null)
-                                                                   ? null
-                                                                   : item.Metadata.Position;
-                                                return new {item, position};
-                                            }).ToList();
+                var position = (item == null || item.GetType().GetProperty("Metadata") == null || item.Metadata.GetType().GetProperty("Position") == null)
+                                   ? null
+                                   : item.Metadata.Position;
+                return new { item, position };
+            }).ToList();
 
             // since this isn't sticking around (hence, the "hack" in the name), throwing (in) a gnome 
             while (i < ordering.Count()) {
-                if (flatPositionComparer.Compare(ordering[i].position, ordering[i-1].position) > -1) {
+                if (flatPositionComparer.Compare(ordering[i].position, ordering[i - 1].position) > -1) {
                     if (i == progress)
                         progress = ++i;
                     else
@@ -142,8 +148,8 @@ namespace Orchard.Core.Shapes {
                 }
                 else {
                     var higherThanItShouldBe = ordering[i];
-                    ordering[i] = ordering[i-1];
-                    ordering[i-1] = higherThanItShouldBe;
+                    ordering[i] = ordering[i - 1];
+                    ordering[i - 1] = higherThanItShouldBe;
                     if (i > 1)
                         --i;
                 }
@@ -161,8 +167,8 @@ namespace Orchard.Core.Shapes {
                 x = string.IsNullOrWhiteSpace(x) ? "5" : x.TrimStart(':'); // ':' is _sometimes_ used as a partition identifier
                 y = string.IsNullOrWhiteSpace(y) ? "5" : y.TrimStart(':');
 
-                var xParts = x.Split(new[] {'.'}, StringSplitOptions.RemoveEmptyEntries);
-                var yParts = y.Split(new[] {'.'}, StringSplitOptions.RemoveEmptyEntries);
+                var xParts = x.Split(new[] { '.' }, StringSplitOptions.RemoveEmptyEntries);
+                var yParts = y.Split(new[] { '.' }, StringSplitOptions.RemoveEmptyEntries);
                 for (var i = 0; i < xParts.Count(); i++) {
                     if (yParts.Length < i - 1) // x is further defined meaning it comes after y (e.g. x == 1.2.3 and y == 1.2)
                         return 1;
@@ -251,7 +257,7 @@ namespace Orchard.Core.Shapes {
 
         private static void WriteResources(HtmlHelper html, ISite site, IResourceManager rm, string resourceType, ResourceLocation? includeLocation, ResourceLocation? excludeLocation) {
             bool debugMode;
-            switch(site.ResourceDebugMode) {
+            switch (site.ResourceDebugMode) {
                 case ResourceDebugMode.Enabled:
                     debugMode = true;
                     break;

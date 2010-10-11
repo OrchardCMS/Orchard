@@ -9,6 +9,8 @@ namespace Orchard.DisplayManagement.Descriptors {
         public ShapeDescriptor() {
             Creating = Enumerable.Empty<Action<ShapeCreatingContext>>();
             Created = Enumerable.Empty<Action<ShapeCreatedContext>>();
+            Displaying = Enumerable.Empty<Action<ShapeDisplayingContext>>();
+            Displayed = Enumerable.Empty<Action<ShapeDisplayedContext>>();
             Wrappers = new List<string>();
             Bindings = new Dictionary<string, ShapeBinding>();
         }
@@ -35,6 +37,9 @@ namespace Orchard.DisplayManagement.Descriptors {
 
         public IEnumerable<Action<ShapeCreatingContext>> Creating { get; set; }
         public IEnumerable<Action<ShapeCreatedContext>> Created { get; set; }
+
+        public IEnumerable<Action<ShapeDisplayingContext>> Displaying { get; set; }
+        public IEnumerable<Action<ShapeDisplayedContext>> Displayed { get; set; }
 
         public IList<string> Wrappers { get; set; }
     }

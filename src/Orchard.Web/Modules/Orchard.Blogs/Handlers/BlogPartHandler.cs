@@ -10,8 +10,8 @@ namespace Orchard.Blogs.Handlers {
             Filters.Add(StorageFilter.For(repository));
 
             OnGetDisplayShape<BlogPart>((context, blog) => {
-                                            context.Model.Description = blog.Description;
-                                            context.Model.PostCount = blog.PostCount;
+                                            context.Shape.Description = blog.Description;
+                                            context.Shape.PostCount = blog.PostCount;
                                         });
         }
     }

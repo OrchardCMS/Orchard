@@ -8,53 +8,110 @@
     Func<dynamic, dynamic> Zone = x => Display(x);
 
     if (Model.Sidebar != null) {
-        Html.AddPageClassNames(new[]{"icanhassidebar"});
+        Model.Classes.Add("has-sidebar");
     }
 
-    WorkContext.Layout.Featured.Add(New.TempFeatured(Hello:"bob"));
-    WorkContext.Layout.Featured.Add("just some text in featured");
+    //Model.Attributes.Add("onclick", "javscript:alert('woot')"); 
+
+    Model.Id = "layout-wrapper";
+    var tag = Tag (Model, "div");
+
 }
-@Model.TitleFromMenu
-<div id="layout-wrapper">
-@Display.User()
+
+@* Add a wrapping div around everything *@
+@tag.StartElement
+
+@* needs to be the page title, not page (head) title... *@
+@* Adds text and html to the header zone *@
+
+@using(Capture(branding => WorkContext.Layout.Header.Add(branding) )) {
+ <h1 id="branding"><a href="@homeUrl">@WorkContext.CurrentSite.SiteName</a></h1>
+}
+
     <header id="layout-header">
-        @* needs to be the page title, not page (head) title... *@
-        <h1><a href="@homeUrl">@WorkContext.CurrentSite.SiteName</a></h1>
         @if(Model.Header != null) {
         <div id="header">
             @Zone(Model.Header)
         </div>
         }
+    </header>
+
+
         @if(Model.Navigation != null) {
-        <div id="navigation">
+        <div id="navigation" class="group">
             @Zone(Model.Navigation)
         </div>
         }
-    </header>
+
+
+<div id="layout-content" class="group">
     @if(Model.Messages != null) {
     <div id="messages">
         @Zone(Model.Messages)
     </div>
     }
-    @if(Model.Featured != null) {
-    <div id="featured">
+
+ @* This code would inject text into the Featured zone.
+    @{WorkContext.Layout.Featured.Add("just some text in featured");}
+*@
+
+  @{
+  WorkContext.Layout.Featured.Add(New.Featured(insertMessage:"This is a featured blog post."));
+  }
+  @if(Model.Featured != null) {
+     <div class="zone-featured group">
         @Zone(Model.Featured)
     </div>
     }
+
+  @{
+  WorkContext.Layout.Recent.Add(New.Recent());
+  }
+  @if(Model.Featured != null) {
+    <div class="group">
+        @Zone(Model.Recent)
+    </div>
+    }
+
+    @{WorkContext.Layout.Sidebar1.Add("just some text in featured");}
+    @if(Model.Sidebar1 != null) {
+    <aside class="sidebar">
+        @Zone(Model.Sidebar1)
+    </aside>
+    }
+
     @* the model content for the page is in the Content zone @ the default position (nothing, zero, zilch) *@
     @if(Model.Content != null) {
-    <div id="content">
+    <div id="content" class="group">
         @Zone(Model.Content)
     </div>
     }
+    else {
+    <div id="content" class="group">
+        Let's take over the home page
+    </div>
+    }
+
     @if(Model.Sidebar != null) {
     <aside class="sidebar">
         @Zone(Model.Sidebar)
     </aside>
     }
 
-    <footer id="sitemap">
-       Powered by Awesomeness...
-    </footer>
-
 </div>
+
+  @{
+  WorkContext.Layout.Footer.Add(@Display.User());
+  }
+    @if(Model.Footer != null) {
+    <footer id="layout-footer" class="group">
+        @Zone(Model.Footer)
+    </footer>
+    }
+    else {
+    <footer id="layout-footer">
+    Powered by Orchard @Display.User()
+    </footer>
+}
+
+@tag.EndElement

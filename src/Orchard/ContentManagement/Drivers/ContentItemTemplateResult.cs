@@ -10,7 +10,7 @@ namespace Orchard.ContentManagement.Drivers {
 
         public string TemplateName { get; set; }
 
-        public override void Apply(BuildDisplayModelContext context) {
+        public override void Apply(BuildDisplayContext context) {
 #if REFACTORING
             //todo: (heskew)evaluate - for lack of having access to the full context in a driver to conditionally return results (e.g. BlogDriver item display is otherwise being overriden by the ContentPartDriver)
             if (!string.IsNullOrWhiteSpace(context.ViewModel.TemplateName)
@@ -29,7 +29,7 @@ namespace Orchard.ContentManagement.Drivers {
 #endif
         }
 
-        public override void Apply(BuildEditorModelContext context) {
+        public override void Apply(BuildEditorContext context) {
 #if REFACTORING
             context.ViewModel.TemplateName = TemplateName;
             if (context.ViewModel.GetType() != typeof(ContentItemViewModel<TContent>)) {

@@ -35,7 +35,7 @@ namespace Orchard.Widgets.RuleEngine {
 
         public class CallbackApi {
             private readonly RuleManager _ruleManager;
-
+            
             public CallbackApi(RuleManager ruleManager) {
                 _ruleManager = ruleManager;
             }

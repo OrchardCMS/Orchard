@@ -1,0 +1,60 @@
+﻿﻿.widgetsbag-editor h5 {
+    color:#4c4c4c;
+    font-weight:bold;
+}
+
+.availableWidgets {
+    float: left;
+    width: 35%;
+}
+
+.availableLayers {
+    float: left;
+    margin: 0 0 0 2em;
+    width: 45%;
+}
+
+.layerZones {
+    float: left;
+    width: 75%;
+}
+
+.layerZones .zone {
+    font-weight:700;
+	background:#f5f5f5;
+	border: 1px solid #f1f1f1;
+	padding: 1em 2em 1em 2em;
+	margin: 0 0 1em 0;
+}
+
+.layerZones .zoneWidget {
+    margin: 0 0 1em 0;
+    padding: 1em 2em 1em 3em;
+	background:#ffffff;
+	border: 1px solid #f1f1f1;
+	vertical-align: middle;
+}
+
+.layers {
+    margin: 1em 0 0 0;
+    float: left;
+}
+
+.layers ul {
+	background: #f5f5f5;
+	border: 1px solid #f1f1f1;
+}
+
+.layers .currentLayer {
+	background: #c3d9ff;
+}
+
+.layers .editLayer img {
+    float: right;
+    margin: 0 0 0 1em;
+}
+
+.layerZones ul li ul {
+	margin: 0;
+	padding: 0;
+}

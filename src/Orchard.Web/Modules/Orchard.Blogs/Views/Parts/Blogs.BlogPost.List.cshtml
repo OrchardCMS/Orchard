@@ -1,0 +1,7 @@
+﻿@{
+    IEnumerable<object> blogPosts = Model.BlogPosts;
+}
+@Display(blogPosts)
+@if (blogPosts == null || blogPosts.Count() < 1) {
+<p>@T("There are no posts for this blog.")</p>
+}

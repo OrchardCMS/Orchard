@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using JetBrains.Annotations;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
@@ -22,15 +21,15 @@ namespace Orchard.Core.Localization.Drivers {
             _localizationService = localizationService;
         }
 
-        protected override DriverResult Display(LocalizationPart part, string displayType) {
-            var model = new ContentLocalizationsViewModel(part) {
-                Localizations = GetDisplayLocalizations(part)
-            };
-
-            return ContentPartTemplate(model, "Parts/Localization.ContentTranslations", TemplatePrefix).LongestMatch(displayType, "Summary", "SummaryAdmin").Location(part.GetLocation(displayType));
+        protected override DriverResult Display(LocalizationPart part, string displayType, dynamic shapeHelper) {
+            var contentTranslations = shapeHelper.Parts_Localization_ContentTranslations(ContentPart: part, Localizations: GetDisplayLocalizations(part));
+            if (!string.IsNullOrWhiteSpace(displayType))
+                contentTranslations.Metadata.Type = string.Format("{0}.{1}", contentTranslations.Metadata.Type, displayType);
+            var location = part.GetLocation(displayType);
+            return ContentShape(contentTranslations).Location(location);
         }
 
-        protected override DriverResult Editor(LocalizationPart part) {
+        protected override DriverResult Editor(LocalizationPart part, dynamic shapeHelper) {
             var localizations = GetEditorLocalizations(part).ToList();
             var model = new EditLocalizationViewModel {
                 SelectedCulture = part.Culture != null ? part.Culture.Culture : null,
@@ -43,13 +42,13 @@ namespace Orchard.Core.Localization.Drivers {
             return ContentPartTemplate(model, "Parts/Localization.Translation", TemplatePrefix).Location(part.GetLocation("Editor"));
         }
 
-        protected override DriverResult Editor(LocalizationPart part, IUpdateModel updater) {
+        protected override DriverResult Editor(LocalizationPart part, IUpdateModel updater, dynamic shapeHelper) {
             var model = new EditLocalizationViewModel();
             if (updater != null && updater.TryUpdateModel(model, TemplatePrefix, null, null)) {
                 _localizationService.SetContentCulture(part, model.SelectedCulture);
             }
 
-            return Editor(part);
+            return Editor(part, shapeHelper);
         }
 
         private IEnumerable<LocalizationPart> GetDisplayLocalizations(LocalizationPart part) {

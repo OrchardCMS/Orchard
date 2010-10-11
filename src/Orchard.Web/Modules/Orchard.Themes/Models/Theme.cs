@@ -8,5 +8,6 @@
         public string HomePage { get; set; }
         public string Tags { get; set; }
         public string Zones { get; set; }
+        public string BaseTheme { get; set; }
     }
 }

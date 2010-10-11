@@ -139,14 +139,20 @@
     <Content Include="Themes\TheThemeMachine\Styles\site.css" />
     <Content Include="Themes\TheThemeMachine\Theme.png" />
     <Content Include="Themes\TheThemeMachine\Theme.txt" />
-    <None Include="Themes\TheThemeMachine\Views\TempFeatured.cshtml">
+    <None Include="Themes\TheThemeMachine\Views\Layout-homePage.cshtml" />
+    <None Include="Themes\TheThemeMachine\Views\Recent.cshtml">
       <SubType>Designer</SubType>
     </None>
-    <None Include="Themes\TheThemeMachine\Views\Document.cshtml" />
+    <None Include="Themes\TheThemeMachine\Views\Layout-Blog.cshtml" />
+    <None Include="Themes\TheThemeMachine\Views\Featured.cshtml">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Themes\TheThemeMachine\Views\_Document.cshtml" />
+    <None Include="Themes\TheThemeMachine\Views\Content.cshtml" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
-    <None Include="Themes\TheThemeMachine\Views\MenuItem.cshtml_" />
+    <None Include="Themes\TheThemeMachine\Views\MenuItem.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Orchard\Orchard.Framework.csproj">
@@ -318,7 +324,7 @@
     <Content Include="Themes\Web.config" />
     <Content Include="Themes\TheThemeMachine\Views\Items\Content.Blog.cshtml" />
     <None Include="Themes\TheThemeMachine\Views\Layout.cshtml" />
-    <None Include="Themes\TheThemeMachine\Views\Menu.cshtml_">
+    <None Include="Themes\TheThemeMachine\Views\Menu.cshtml">
       <SubType>Designer</SubType>
     </None>
   </ItemGroup>

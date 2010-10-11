@@ -19,7 +19,7 @@ namespace Orchard.Core.Settings.Drivers {
 
         protected override string Prefix { get { return "SiteSettings"; } }
 
-        protected override DriverResult Editor(SiteSettingsPart part) {
+        protected override DriverResult Editor(SiteSettingsPart part, dynamic shapeHelper) {
             var site = _siteService.GetSiteSettings().As<SiteSettingsPart>();
 
             var model = new SiteSettingsPartViewModel {
@@ -30,7 +30,7 @@ namespace Orchard.Core.Settings.Drivers {
             return ContentPartTemplate(model, "Parts/Settings.SiteSettingsPart");
         }
 
-        protected override DriverResult Editor(SiteSettingsPart part, IUpdateModel updater) {
+        protected override DriverResult Editor(SiteSettingsPart part, IUpdateModel updater, dynamic shapeHelper) {
             var site = _siteService.GetSiteSettings().As<SiteSettingsPart>();
             var model = new SiteSettingsPartViewModel { Site = site };
 

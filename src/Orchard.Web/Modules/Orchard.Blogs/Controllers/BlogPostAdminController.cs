@@ -34,7 +34,7 @@ namespace Orchard.Blogs.Controllers {
             if (blogPost.BlogPart == null)
                 return new NotFoundResult();
 
-            var model = Services.ContentManager.BuildEditorModel(blogPost);
+            var model = Services.ContentManager.BuildEditor(blogPost);
 
             //todo: (heskew) unhack
             model.Metadata.Type += ".BlogPost";
@@ -52,7 +52,7 @@ namespace Orchard.Blogs.Controllers {
                 return new NotFoundResult();
 
             Services.ContentManager.Create(blogPost, VersionOptions.Draft);
-            var model = Services.ContentManager.UpdateEditorModel(blogPost, this);
+            var model = Services.ContentManager.UpdateEditor(blogPost, this);
 
             if (!ModelState.IsValid) {
                 Services.TransactionManager.Cancel();
@@ -80,7 +80,7 @@ namespace Orchard.Blogs.Controllers {
             if (post == null)
                 return new NotFoundResult();
 
-            var model = Services.ContentManager.BuildEditorModel(post);
+            var model = Services.ContentManager.BuildEditor(post);
 
             //todo: (heskew) unhack
             model.Metadata.Type += ".BlogPost";
@@ -103,7 +103,7 @@ namespace Orchard.Blogs.Controllers {
                 return new NotFoundResult();
 
             // Validate form input
-            var model = Services.ContentManager.UpdateEditorModel(blogPost, this);
+            var model = Services.ContentManager.UpdateEditor(blogPost, this);
             if (!ModelState.IsValid) {
                 Services.TransactionManager.Cancel();
                 return View(model);

@@ -6,6 +6,7 @@ using System.Web.Routing;
 using JetBrains.Annotations;
 using Orchard.Environment.Extensions;
 using Orchard.Environment.Extensions.Models;
+using Orchard.Localization;
 using Orchard.Logging;
 using Orchard.ContentManagement;
 using Orchard.Modules;
@@ -27,15 +28,17 @@ namespace Orchard.Themes.Services {
             _themeSelectors = themeSelectors;
             _moduleService = moduleService;
             Logger = NullLogger.Instance;
+            T = NullLocalizer.Instance;
         }
 
+        public Localizer T { get; set; }
         public ILogger Logger { get; set; }
         protected virtual ISite CurrentSite { get; [UsedImplicitly] private set; }
 
         public ITheme GetSiteTheme() {
-            string currentThemeName = CurrentSite.As<ThemeSiteSettingsPart>().Record.CurrentThemeName;
+            string currentThemeName = CurrentSite.As<ThemeSiteSettingsPart>().CurrentThemeName;
 
-            if (String.IsNullOrEmpty(currentThemeName)) {
+            if (string.IsNullOrEmpty(currentThemeName)) {
                 return null;
             }
 
@@ -43,24 +46,80 @@ namespace Orchard.Themes.Services {
         }
 
         public void SetSiteTheme(string themeName) {
-            if (GetThemeByName(themeName) != null) {
+            if (string.IsNullOrWhiteSpace(themeName))
+                return;
 
-                var currentTheme = CurrentSite.As<ThemeSiteSettingsPart>().Record.CurrentThemeName;
+            //todo: (heskew) need messages given in addition to all of these early returns so something meaningful can be presented to the user
+            var themeToSet = GetThemeByName(themeName);
+            if (themeToSet == null)
+                return;
 
-                if ( !String.IsNullOrEmpty(currentTheme) ) {
-                    _moduleService.DisableFeatures(new[] {currentTheme}, true);
-                }
+            // ensure all base themes down the line are present and accounted for
+            //todo: (heskew) dito on the need of a meaningful message
+            if (!AllBaseThemesAreInstalled(themeToSet.BaseTheme))
+                return;
 
-                if ( !String.IsNullOrEmpty(themeName) ) {
-                    _moduleService.EnableFeatures(new[] {themeName}, true);
-                }
+            // disable all theme features
+            DisableThemeFeatures(CurrentSite.As<ThemeSiteSettingsPart>().CurrentThemeName);
 
-                CurrentSite.As<ThemeSiteSettingsPart>().Record.CurrentThemeName = themeName;
+            // enable all theme features
+            EnableThemeFeatures(themeToSet.ThemeName);
+
+            CurrentSite.As<ThemeSiteSettingsPart>().Record.CurrentThemeName = themeToSet.ThemeName;
+        }
+
+        private bool AllBaseThemesAreInstalled(string baseThemeName) {
+            var themesSeen = new List<string>();
+            while (!string.IsNullOrWhiteSpace(baseThemeName)) {
+                //todo: (heskew) need a better way to protect from recursive references
+                if (themesSeen.Contains(baseThemeName))
+                    throw new InvalidOperationException(T("The theme \"{0}\" was already seen - looks like we're going aruond in circles.", baseThemeName).Text);
+                themesSeen.Add(baseThemeName);
+
+                var baseTheme = GetThemeByName(baseThemeName);
+                if (baseTheme == null)
+                    return false;
+                baseThemeName = baseTheme.BaseTheme;
             }
+
+            return true;
+        }
+
+        private void DisableThemeFeatures(string themeName) {
+            var themes = new Queue<string>();
+            while (themeName != null) {
+                if (themes.Contains(themeName))
+                    throw new InvalidOperationException(T("The theme \"{0}\" is already in the stack of themes that need features disabled.", themeName).Text);
+                themes.Enqueue(themeName);
+
+                var theme = GetThemeByName(themeName);
+                themeName = !string.IsNullOrWhiteSpace(theme.BaseTheme)
+                    ? theme.BaseTheme
+                    : null;
+            }
+
+            while (themes.Count > 0)
+                _moduleService.DisableFeatures(new[] { themes.Dequeue() });
+        }
+
+        private void EnableThemeFeatures(string themeName) {
+            var themes = new Stack<string>();
+            while(themeName != null) {
+                if (themes.Contains(themeName))
+                    throw new InvalidOperationException(T("The theme \"{0}\" is already in the stack of themes that need features enabled.", themeName).Text);
+                themes.Push(themeName);
+
+                var theme = GetThemeByName(themeName);
+                themeName = !string.IsNullOrWhiteSpace(theme.BaseTheme)
+                    ? theme.BaseTheme
+                    : null;
+            }
+
+            while (themes.Count > 0)
+                _moduleService.DisableFeatures(new[] {themes.Pop()});
         }
 
         public ITheme GetRequestTheme(RequestContext requestContext) {
-
             var requestTheme = _themeSelectors
                 .Select(x => x.GetTheme(requestContext))
                 .Where(x => x != null)
@@ -80,7 +139,7 @@ namespace Orchard.Themes.Services {
 
         public ITheme GetThemeByName(string name) {
             foreach (var descriptor in _extensionManager.AvailableExtensions()) {
-                if (String.Equals(descriptor.Name, name, StringComparison.OrdinalIgnoreCase)) {
+                if (string.Equals(descriptor.Name, name, StringComparison.OrdinalIgnoreCase)) {
                     return CreateTheme(descriptor);
                 }
             }
@@ -91,11 +150,10 @@ namespace Orchard.Themes.Services {
         /// Loads only enabled themes
         /// </summary>
         public IEnumerable<ITheme> GetInstalledThemes() {
-
             var themes = new List<ITheme>();
             foreach (var descriptor in _extensionManager.AvailableExtensions()) {
-                
-                if (!String.Equals(descriptor.ExtensionType, "Theme", StringComparison.OrdinalIgnoreCase)) {
+
+                if (!string.Equals(descriptor.ExtensionType, "Theme", StringComparison.OrdinalIgnoreCase)) {
                     continue;
                 }
 
@@ -116,16 +174,17 @@ namespace Orchard.Themes.Services {
             _extensionManager.UninstallExtension("Theme", themeName);
         }
 
-        private ITheme CreateTheme(ExtensionDescriptor descriptor) {
+        private static ITheme CreateTheme(ExtensionDescriptor descriptor) {
             return new Theme {
-                Author = descriptor.Author ?? String.Empty,
-                Description = descriptor.Description ?? String.Empty,
-                DisplayName = descriptor.DisplayName ?? String.Empty,
-                HomePage = descriptor.WebSite ?? String.Empty,
+                Author = descriptor.Author ?? "",
+                Description = descriptor.Description ?? "",
+                DisplayName = descriptor.DisplayName ?? "",
+                HomePage = descriptor.WebSite ?? "",
                 ThemeName = descriptor.Name,
-                Version = descriptor.Version ?? String.Empty,
-                Tags = descriptor.Tags ?? String.Empty,
-                Zones = descriptor.Zones ?? String.Empty,
+                Version = descriptor.Version ?? "",
+                Tags = descriptor.Tags ?? "",
+                Zones = descriptor.Zones ?? "",
+                BaseTheme = descriptor.BaseTheme ?? "",
             };
         }
     }

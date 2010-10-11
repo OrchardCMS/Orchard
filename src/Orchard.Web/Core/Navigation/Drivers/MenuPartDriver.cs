@@ -24,14 +24,14 @@ namespace Orchard.Core.Navigation.Drivers {
         public virtual IUser CurrentUser { get; set; }
         public Localizer T { get; set; }
 
-        protected override DriverResult Editor(MenuPart part) {
+        protected override DriverResult Editor(MenuPart part, dynamic shapeHelper) {
             if (!_authorizationService.TryCheckAccess(Permissions.ManageMainMenu, CurrentUser, part))
                 return null;
 
             return ContentPartTemplate(part, "Parts/Navigation.EditMenuPart").Location(part.GetLocation("Editor"));
         }
 
-        protected override DriverResult Editor(MenuPart part, IUpdateModel updater) {
+        protected override DriverResult Editor(MenuPart part, IUpdateModel updater, dynamic shapeHelper) {
             if (!_authorizationService.TryCheckAccess(Permissions.ManageMainMenu, CurrentUser, part)) {
                 return null;
             }

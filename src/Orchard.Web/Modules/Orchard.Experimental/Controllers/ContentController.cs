@@ -39,8 +39,8 @@ namespace Orchard.Experimental.Controllers {
                 .Select(x => x.GetType())
                 .SelectMany(x => AllTypes(x))
                 .Distinct();
-            model.DisplayShape = _contentManager.BuildDisplayModel(model.Item, "Detail");
-            model.EditorShape = _contentManager.BuildEditorModel(model.Item);
+            model.DisplayShape = _contentManager.BuildDisplay(model.Item, "Detail");
+            model.EditorShape = _contentManager.BuildEditor(model.Item);
 
             return View(Shape.Model(model));
         }

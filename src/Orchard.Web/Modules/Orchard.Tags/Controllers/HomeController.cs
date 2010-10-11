@@ -47,7 +47,7 @@ namespace Orchard.Tags.Controllers {
             var shape = _shapeHelperFactory.CreateHelper();
             var list = shape.List();
             foreach (var taggedContentItem in _tagService.GetTaggedContentItems(tag.Id)) {
-                list.Add(_contentManager.BuildDisplayModel(taggedContentItem, "Summary"));
+                list.Add(_contentManager.BuildDisplay(taggedContentItem, "Summary"));
             }
 
             var viewModel = new TagsSearchViewModel {

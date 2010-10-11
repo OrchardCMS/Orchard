@@ -7,7 +7,6 @@ using Orchard.Core.PublishLater.Models;
 using Orchard.Core.PublishLater.Services;
 using Orchard.Core.PublishLater.ViewModels;
 using Orchard.Localization;
-using Orchard.UI.Notify;
 
 namespace Orchard.Core.PublishLater.Drivers {
     public class PublishLaterPartDriver : ContentPartDriver<PublishLaterPart> {
@@ -28,18 +27,19 @@ namespace Orchard.Core.PublishLater.Drivers {
         public Localizer T { get; set; }
         public IOrchardServices Services { get; set; }
 
-        protected override DriverResult Display(PublishLaterPart part, string displayType) {
-            var model = new PublishLaterViewModel(part) {
-                ScheduledPublishUtc = part.ScheduledPublishUtc.Value
-            };
-            return ContentPartTemplate(model, "Parts/PublishLater.Metadata").LongestMatch(displayType, "Summary", "SummaryAdmin").Location(part.GetLocation(displayType));
+        protected override DriverResult Display(PublishLaterPart part, string displayType, dynamic shapeHelper) {
+            var metadata = shapeHelper.Parts_PublishLater_Metadata(ContentPart: part, ScheduledPublishUtc: part.ScheduledPublishUtc.Value);
+            if (!string.IsNullOrWhiteSpace(displayType))
+                metadata.Metadata.Type = string.Format("{0}.{1}", metadata.Metadata.Type, displayType);
+            var location = part.GetLocation(displayType);
+            return ContentShape(metadata).Location(location);
         }
 
-        protected override DriverResult Editor(PublishLaterPart part) {
+        protected override DriverResult Editor(PublishLaterPart part, dynamic shapeHelper) {
             return PublishEditor(part, null);
         }
 
-        protected override DriverResult Editor(PublishLaterPart instance, IUpdateModel updater) {
+        protected override DriverResult Editor(PublishLaterPart instance, IUpdateModel updater, dynamic shapeHelper) {
             return PublishEditor(instance, updater);
         }
 

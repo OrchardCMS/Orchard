@@ -6,15 +6,15 @@ namespace Orchard.ContentManagement.Drivers {
             }
         }
 
-        protected override DriverResult Display(TPart part, string displayType) {
+        protected override DriverResult Display(TPart part, string displayType, dynamic shapeHelper) {
             return ContentPartTemplate(part);
         }
         
-        protected override DriverResult Editor(TPart part) {
+        protected override DriverResult Editor(TPart part, dynamic shapeHelper) {
             return ContentPartTemplate(part);
         }
         
-        protected override DriverResult Editor(TPart part, IUpdateModel updater) {
+        protected override DriverResult Editor(TPart part, IUpdateModel updater, dynamic shapeHelper) {
             updater.TryUpdateModel(part, Prefix, null, null);
             return ContentPartTemplate(part);
         }

@@ -159,12 +159,14 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ContentManagement\Handlers\BuildModelContext.cs" />
+    <Compile Include="ContentManagement\Drivers\ContentShapeResult.cs" />
+    <Compile Include="ContentManagement\Handlers\BuildShapeContext.cs" />
     <Compile Include="DisplayManagement\Descriptors\ShapeDescriptor.cs" />
     <Compile Include="DisplayManagement\Descriptors\ShapeAlteration.cs" />
     <Compile Include="DisplayManagement\Descriptors\ShapeAlterationBuilder.cs" />
     <Compile Include="DisplayManagement\Descriptors\ShapeTable.cs" />
     <Compile Include="DisplayManagement\Descriptors\ShapeTableBuilder.cs" />
+    <Compile Include="DisplayManagement\Implementation\IShapeDisplayEvents.cs" />
     <Compile Include="DisplayManagement\Implementation\IShapeFactoryEvents.cs" />
     <Compile Include="DisplayManagement\Shapes\ITagBuilderFactory.cs" />
     <Compile Include="Environment\Extensions\Loaders\RawThemeExtensionLoader.cs" />
@@ -269,10 +271,10 @@
     <Compile Include="ContentManagement\Handlers\ActivatingFilter.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="ContentManagement\Handlers\BuildDisplayModelContext.cs">
+    <Compile Include="ContentManagement\Handlers\BuildDisplayContext.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="ContentManagement\Handlers\BuildEditorModelContext.cs">
+    <Compile Include="ContentManagement\Handlers\BuildEditorContext.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="ContentManagement\Handlers\ContentContextBase.cs">
@@ -336,7 +338,7 @@
     <Compile Include="ContentManagement\Handlers\TemplateFilterForRecord.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="ContentManagement\Handlers\UpdateEditorModelContext.cs">
+    <Compile Include="ContentManagement\Handlers\UpdateEditorContext.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="ContentManagement\Handlers\VersionContentContext.cs">
@@ -433,7 +435,6 @@
     <Compile Include="DisplayManagement\Implementation\DisplayHelperFactory.cs" />
     <Compile Include="DisplayManagement\Implementation\IDisplayManager.cs" />
     <Compile Include="DisplayManagement\IShapeFactory.cs" />
-    <Compile Include="DisplayManagement\IShapeProvider.cs" />
     <Compile Include="DisplayManagement\Descriptors\Interfaces.cs" />
     <Compile Include="DisplayManagement\Implementation\ShapeHelper.cs" />
     <Compile Include="DisplayManagement\Implementation\ShapeHelperFactory.cs" />

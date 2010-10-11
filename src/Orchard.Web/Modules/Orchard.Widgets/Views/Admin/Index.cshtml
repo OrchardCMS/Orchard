@@ -1,6 +1,92 @@
-﻿<h1>@Html.TitleForPage(T("Manage Layers").ToString()) </h1>
-@using (Html.BeginFormAntiForgeryPost()) { 
-    @Html.ValidationSummary()
-    <div class="manage">@Html.ActionLink(T("Add a new layer").ToString(), "Create", new { }, new { @class = "button primaryAction" })</div>
-    <p>Layers ...</p>
-} 
+﻿@model WidgetsIndexViewModel;
+@using Orchard.Widgets.Models;
+@using Orchard.Widgets.ViewModels;
+@{ Style.Require("WidgetsAdmin"); }
+
+<h1>@Html.TitleForPage(T("Manage Widgets").ToString())</h1>
+
+@using(Html.BeginFormAntiForgeryPost()) {
+    Html.ValidationSummary();
+
+	<div class="manage">@Html.ActionLink(T("Add a layer").ToString(), "AddLayer", new { }, new { @class = "button primaryAction" })</div>
+
+	<div id="widgets" class="widgets">
+		
+		<div class="availableWidgets">
+			<h2>Available Widgets</h2>
+
+			<fieldset>
+				<table class="items" summary="@T("This is a table of the widgets currently available for use in your application.")">
+					<colgroup>
+						<col id="Col1" />
+						<col id="Col2" />
+					</colgroup>
+					<thead>
+						<tr>
+							<th scope="col">@T("Name")</th>
+							<th scope="col"></th>
+						</tr>
+					</thead>
+					@foreach (string widget in Model.WidgetTypes) {
+						<tr>
+							<td>@widget</td>
+							<td>@Html.ActionLink(T("Add").ToString(), "AddWidget", new { layerId = Model.CurrentLayer.Id, widgetType = widget })</td>
+						</tr>
+					}
+				</table>
+
+			</fieldset>
+		</div>
+
+		<div class="availableLayers">
+				<h2>Widget Layers</h2>
+
+			<fieldset>
+				<div class="layerZonesWidgets">
+					<ul class="layerZones">
+						@foreach (string zone in Model.Zones) {
+							<li>
+								<div class="zone">@zone</div>
+								<ul>
+									@foreach (WidgetPart widget in Model.CurrentLayerWidgets.Where(widgetPart => widgetPart.Zone == zone).OrderBy(widgetPart => widgetPart.Position)) {
+										<li class="zoneWidget">
+											@if (widget.Position != "1") {
+												<input type="image" name="submit.MoveUp.@widget.Id" src="@Url.Content("~/modules/orchard.widgets/Content/Admin/images/moveup.gif")" alt="Move up" value="@widget.Id" />
+											}
+											@if (int.Parse(widget.Position) < Model.CurrentLayerWidgets.Where(widgetPart => widgetPart.Zone == zone).Count()) {
+												<input type="image" name="submit.MoveDown.@widget.Id" src="@Url.Content("~/modules/orchard.widgets/Content/Admin/images/movedown.gif")" alt="Move down" value="@widget.Id" />
+											}
+											@Html.ActionLink(@widget.Title, "EditWidget", new { @widget.Id })
+										</li>
+									}
+								</ul>
+							</li>
+						}
+					</ul>
+				</div>
+
+				<div class="layers">
+					<ul>
+						@foreach (var layer in Model.Layers) {
+							if (layer.Id == Model.CurrentLayer.Id) {
+								<li class="currentLayer editLayer">
+									@Html.ActionLink(@layer.Name, "Index", new { @layer.Id })
+									<a href="@Url.Action("EditLayer", new { @layer.Id })">
+										<img width="15" height="15" src="@Url.Content("~/modules/orchard.widgets/Content/Admin/images/edit.gif")" />
+									</a>
+								</li>
+							} else {
+								<li class="editLayer">
+									@Html.ActionLink(@layer.Name, "Index", new { @layer.Id })
+									<a href="@Url.Action("EditLayer", new { @layer.Id })">
+										<img width="15" height="15" src="@Url.Content("~/modules/orchard.widgets/Content/Admin/images/edit.gif")" />
+									</a>
+								</li>
+							}
+						}
+					<ul>
+				</div>
+			</fieldset>
+		</div>
+	</div>
+}

@@ -15,7 +15,7 @@ namespace Orchard.Core.Navigation.Drivers {
             _workContextAccessor = workContextAccessor;
         }
 
-        protected override DriverResult Editor(MenuItemPart itemPart, IUpdateModel updater) {
+        protected override DriverResult Editor(MenuItemPart itemPart, IUpdateModel updater, dynamic shapeHelper) {
             //todo: (heskew) need context
             var currentUser = _workContextAccessor.GetContext().CurrentUser;
 

@@ -127,6 +127,7 @@ namespace Orchard.Environment.Extensions.Folders {
                 Tags = GetValue(fields, "Tags"),
                 AntiForgery = GetValue(fields, "AntiForgery"),
                 Zones = GetValue(fields, "Zones"),
+                BaseTheme = GetValue(fields, "basetheme"),
             };
 
             extensionDescriptor.Features = GetFeaturesForExtension(GetMapping(fields, "Features"), extensionDescriptor);

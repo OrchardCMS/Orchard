@@ -52,7 +52,7 @@ namespace Orchard.Blogs.Controllers {
             if (blog == null)
                 return new NotFoundResult();
 
-            var model = Services.ContentManager.BuildEditorModel(blog);
+            var model = Services.ContentManager.BuildEditor(blog);
             return View(model);
         }
 
@@ -64,7 +64,7 @@ namespace Orchard.Blogs.Controllers {
                 return new HttpUnauthorizedResult();
 
             _contentManager.Create(blog, VersionOptions.Draft);
-            var model = _contentManager.UpdateEditorModel(blog, this);
+            var model = _contentManager.UpdateEditor(blog, this);
 
             if (!ModelState.IsValid) {
                 _transactionManager.Cancel();
@@ -88,7 +88,7 @@ namespace Orchard.Blogs.Controllers {
             if (blog == null)
                 return new NotFoundResult();
 
-            var model = Services.ContentManager.BuildEditorModel(blog);
+            var model = Services.ContentManager.BuildEditor(blog);
             return View(model);
         }
 
@@ -102,7 +102,7 @@ namespace Orchard.Blogs.Controllers {
             if (blog == null)
                 return new NotFoundResult();
 
-            var model = Services.ContentManager.UpdateEditorModel(blog, this);
+            var model = Services.ContentManager.UpdateEditor(blog, this);
             if (!ModelState.IsValid)
                 return View(model);
 
@@ -132,7 +132,7 @@ namespace Orchard.Blogs.Controllers {
             var list = Shape.List();
             list.AddRange(_blogService.Get()
                               .Select(b => {
-                                          var blog = Services.ContentManager.BuildDisplayModel(b, "SummaryAdmin.Blog");
+                                          var blog = Services.ContentManager.BuildDisplay(b, "SummaryAdmin.Blog");
                                           blog.TotalPostCount = _blogPostService.Get(b, VersionOptions.Latest).Count();
                                           return blog;
                                       }));
@@ -151,7 +151,7 @@ namespace Orchard.Blogs.Controllers {
                 return new NotFoundResult();
 
             //TODO: (erikpo) Need to make templatePath be more convention based so if my controller name has "Admin" in it then "Admin/{type}" is assumed
-            var model = Services.ContentManager.BuildDisplayModel(blogPart, "Admin.Blog");
+            var model = Services.ContentManager.BuildDisplay(blogPart, "Admin.Blog");
             return View(model);
         }
 
