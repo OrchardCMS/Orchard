@@ -17,6 +17,7 @@ namespace Orchard.Localization.Services {
         private readonly ISignals _signals;
         const string CoreLocalizationFilePathFormat = "~/Core/App_Data/Localization/{0}/orchard.core.po";
         const string ModulesLocalizationFilePathFormat = "~/Modules/{0}/App_Data/Localization/{1}/orchard.module.po";
+        const string ThemesLocalizationFilePathFormat = "~/Themes/{0}/App_Data/Localization/{1}/orchard.theme.po";
         const string RootLocalizationFilePathFormat = "~/App_Data/Localization/{0}/orchard.root.po";
         const string TenantLocalizationFilePathFormat = "~/App_Data/Sites/{0}/Localization/{1}/orchard.po";
 
@@ -109,6 +110,7 @@ namespace Orchard.Localization.Services {
         // In reverse priority order: 
         // "~/Core/App_Data/Localization/<culture_name>/orchard.core.po";
         // "~/Modules/<module_name>/App_Data/Localization/<culture_name>/orchard.module.po";
+        // "~/Themes/<theme_name>/App_Data/Localization/<culture_name>/orchard.theme.po";
         // "~/App_Data/Localization/<culture_name>/orchard.root.po";
         // "~/App_Data/Sites/<tenant_name>/Localization/<culture_name>/orchard.po";
         // The dictionary entries from po files that live in higher priority locations will
@@ -124,13 +126,24 @@ namespace Orchard.Localization.Services {
                 context.Monitor(_webSiteFolder.WhenPathChanges(corePath));
             }
 
-            foreach (var module in _extensionManager.AvailableExtensions()) {
-                if (String.Equals(module.ExtensionType, "Module")) {
+            foreach ( var module in _extensionManager.AvailableExtensions() ) {
+                if ( String.Equals(module.ExtensionType, "Module") ) {
                     string modulePath = string.Format(ModulesLocalizationFilePathFormat, module.Name, culture);
                     text = _webSiteFolder.ReadFile(modulePath);
-                    if (text != null) {
+                    if ( text != null ) {
                         ParseLocalizationStream(text, translations, true);
                         context.Monitor(_webSiteFolder.WhenPathChanges(modulePath));
+                    }
+                }
+            }
+
+            foreach ( var theme in _extensionManager.AvailableExtensions() ) {
+                if ( String.Equals(theme.ExtensionType, "Theme") ) {
+                    string themePath = string.Format(ThemesLocalizationFilePathFormat, theme.Name, culture);
+                    text = _webSiteFolder.ReadFile(themePath);
+                    if ( text != null ) {
+                        ParseLocalizationStream(text, translations, true);
+                        context.Monitor(_webSiteFolder.WhenPathChanges(themePath));
                     }
                 }
             }
