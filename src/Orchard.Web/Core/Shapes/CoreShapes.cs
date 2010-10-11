@@ -46,24 +46,30 @@ namespace Orchard.Core.Shapes {
                 });
 
             // 'Zone' shapes are built on the Zone base class
+            // They have class="zone zone-{name}"
+            // and the template can be specialized with "Zone-{Name}" base file name
             builder.Describe("Zone")
                 .OnCreating(creating => creating.BaseType = typeof(Zone))
                 .OnDisplaying(displaying => {
-                    var zone = displaying.Shape;
-                    ShapeMetadata zoneMetadata = zone.Metadata;
-                    String name = zone.ZoneName;
-                    zone.Classes.Add("zone-" + name.ToLower());
+                    var zone = displaying.Shape;                    
+                    zone.Classes.Add("zone-" + zone.ZoneName.ToLower());
                     zone.Classes.Add("zone");
-                    zoneMetadata.Alternates.Add("Zone__" + name);
+                    zone.Metadata.Alternates.Add("Zone__" + zone.ZoneName);
                 });
 
-            //builder.Describe("menu")
-            //    .OnDisplaying(displaying => {
-            //                      var name = displaying.Shape.MenuName.ToLower();
-            //                      var menu = displaying.Shape;
-            //                      menu.Classes.Add("menu-" + name);
-            //                      menu.Classes.Add("menu");
-            //                  });
+            builder.Describe("Menu")
+                .OnDisplaying(displaying => {
+                    var menu = displaying.Shape;
+                    menu.Classes.Add("menu-" + menu.MenuName.ToLower());
+                    menu.Classes.Add("menu");
+                    menu.Metadata.Alternates.Add("Menu__" + menu.MenuName);
+                });
+
+            builder.Describe("MenuItem")
+                .OnDisplaying(displaying => {
+                    var menu = displaying.Shape.Menu;
+                    menu.Metadata.Alternates.Add("MenuItem__" + menu.MenuName);
+                });
 
             // 'List' shapes start with several empty collections
             builder.Describe("List")

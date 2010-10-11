@@ -139,6 +139,9 @@
     <Content Include="Themes\TheThemeMachine\Styles\site.css" />
     <Content Include="Themes\TheThemeMachine\Theme.png" />
     <Content Include="Themes\TheThemeMachine\Theme.txt" />
+    <None Include="Themes\Classic\Views\Menu-Main.cshtml">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="Themes\Classic\Views\Zone-Navigation.cshtml" />
     <None Include="Themes\TheThemeMachine\Views\TempFeatured.cshtml">
       <SubType>Designer</SubType>
