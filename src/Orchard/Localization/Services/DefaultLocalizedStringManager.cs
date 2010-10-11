@@ -47,12 +47,13 @@ namespace Orchard.Localization.Services {
 
             foreach (var culture in cultures) {
                 if (String.Equals(cultureName, culture.CultureName, StringComparison.OrdinalIgnoreCase)) {
-                    string scopedKey = scope + "|" + text;
-                    string genericKey = "|" + text;
+                    string scopedKey = (scope + "|" + text).ToLowerInvariant();
                     if (culture.Translations.ContainsKey(scopedKey)) {
                         return culture.Translations[scopedKey];
                     }
-                    if (culture.Translations.ContainsKey(genericKey)) {
+
+                    string genericKey = ("|" + text).ToLowerInvariant();
+                    if ( culture.Translations.ContainsKey(genericKey) ) {
                         return culture.Translations[genericKey];
                     }
 
@@ -64,8 +65,8 @@ namespace Orchard.Localization.Services {
         }
 
         private static string GetParentTranslation(string scope, string text, string cultureName, IEnumerable<CultureDictionary> cultures) {
-            string scopedKey = scope + "|" + text;
-            string genericKey = "|" + text;
+            string scopedKey = (scope + "|" + text).ToLowerInvariant();
+            string genericKey = ("|" + text).ToLowerInvariant();
             try {
                 CultureInfo cultureInfo = CultureInfo.GetCultureInfo(cultureName);
                 CultureInfo parentCultureInfo = cultureInfo.Parent;
@@ -183,24 +184,13 @@ namespace Orchard.Localization.Services {
                 if (poLine.StartsWith("msgstr")) {
                     string translation = ParseTranslation(poLine);
                     if (!String.IsNullOrEmpty(id)) {
-                        if (!String.IsNullOrEmpty(scope)) {
-                            string scopedKey = scope + "|" + id;
-                            if (!translations.ContainsKey(scopedKey)) {
-                                translations.Add(scopedKey, translation);
-                            }
-                            else {
-                                if (merge) {
-                                    translations[scopedKey] = translation;
-                                }
-                            }
-                        }
-                        string genericKey = "|" + id;
-                        if (!translations.ContainsKey(genericKey)) {
-                            translations.Add(genericKey, translation);
+                        string scopedKey = (scope + "|" + id).ToLowerInvariant();
+                        if (!translations.ContainsKey(scopedKey)) {
+                            translations.Add(scopedKey, translation);
                         }
                         else {
                             if (merge) {
-                                translations[genericKey] = translation;
+                                translations[scopedKey] = translation;
                             }
                         }
                     }
